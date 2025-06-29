@@ -59,7 +59,7 @@ void FollowMon_OverworldCB(void)
         return;
     }
 
-    if(sFollowMonData.spawnCountdown == 0  && CountActiveFollowMon() < 4)
+    if(sFollowMonData.spawnCountdown == 0)
     {
         s16 x, y;
 
