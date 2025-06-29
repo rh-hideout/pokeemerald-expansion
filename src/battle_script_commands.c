@@ -12173,6 +12173,7 @@ static bool32 MoveEffectBlockedAbilityPreventsSpecificStatDrop(struct MoveEffect
         result->battlescriptPush = TRUE;
         result->lastUsedAbility = result->battlerAbility;
         result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
+        result->scriptingBattler = result->effectBattler; // required for BattleScript_AbilityNoSpecificStatLoss
         result->nextInstr = failPtr;
         result->failed = TRUE;
     }
@@ -12189,7 +12190,7 @@ static bool32 MoveEffectBlockedByFlowerVeil(struct MoveEffectResult *result, con
         else
         {
             result->battlescriptPush = TRUE;
-            result->scriptingBattler = result->effectBattler;
+            result->scriptingBattler = result->effectBattler; // required for BattleScript_FlowerVeilProtectsRet
             result->nextInstr = failPtr;
             result->lastUsedAbility = ABILITY_FLOWER_VEIL;
             result->blockedByAbility = index; // Sets gBattlerAbility
@@ -12364,8 +12365,8 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
     // DebugPrintf("mirrorArmored: %d, allowPtr: %d", flags.mirrorArmored, flags.allowPtr);
     ChangeStatBuffsWithResult(&result, flags);
     // DebugPrintf("After ChangeStatBuffsWithResult: %d, %d (onlyChecking: %d)", result.failed, result.statChanger, flags.onlyChecking);
-    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, BattleScript_MirrorArmorReflect, gBattlescriptCurrInstr);
-    if (flags.onlyChecking)
+    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, BattleScript_AbilityNoSpecificStatLoss, gBattlescriptCurrInstr);
+    if (flags.onlyChecking && !flags.allowPtr)
     {
         gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
         return result.failed;
@@ -12381,7 +12382,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         return STAT_CHANGE_WORKED;
     }
 
-    if (!result.failed)
+    if (!result.failed && !flags.onlyChecking)
     {
         if (result.statChanger.isNegative)
             MoveEffect_LowerStatsCallback(&result);
@@ -12396,7 +12397,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
     // Apply the results of the move effect
     SetMoveEffectTriggerResult(&result);
 
-    // DebugPrintf("gBattlescriptCurrInstr %d", gBattlescriptCurrInstr);
+    DebugPrintf("gBattlescriptCurrInstr %d", gBattlescriptCurrInstr);
 
     return result.failed;
 }
@@ -18226,7 +18227,6 @@ void BS_TrySpectralThiefSteal(void)
 
     u32 stat;
     bool32 contrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
-    gBattleStruct->hasStoredStatBuffs = FALSE; // Stats to steal.
     gBattleScripting.animArg1 = 0;
 
     for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
