@@ -6550,13 +6550,12 @@ BattleScript_PowerConstruct::
 	flushtextbox
 	printstring STRINGID_POWERCONSTRUCTPRESENCEOFMANY
 	waitmessage B_WAIT_TIME_SHORT
-	copybyte gBattlerAbility, gBattlerAttacker
-	call BattleScript_AbilityPopUp
-	handleformchange BS_ATTACKER, 0
-	handleformchange BS_ATTACKER, 1
-	playanimation BS_ATTACKER, B_ANIM_POWER_CONSTRUCT
+	call BattleScript_AbilityPopUpScripting
+	handleformchange BS_SCRIPTING, 0
+	handleformchange BS_SCRIPTING, 1
+	playanimation BS_SCRIPTING, B_ANIM_POWER_CONSTRUCT
 	waitanimation
-	handleformchange BS_ATTACKER, 2
+	handleformchange BS_SCRIPTING, 2
 	printstring STRINGID_POWERCONSTRUCTTRANSFORM
 	waitmessage B_WAIT_TIME_SHORT
 	end3
@@ -6581,14 +6580,14 @@ BattleScript_GulpMissileFormChange::
 
 BattleScript_AttackerFormChange::
 	pause 5
-	call BattleScript_AbilityPopUpScripting
+	call BattleScript_AbilityPopUp
 	flushtextbox
 BattleScript_AttackerFormChangeNoPopup::
-	handleformchange BS_SCRIPTING, 0
-	handleformchange BS_SCRIPTING, 1
-	playanimation BS_SCRIPTING, B_ANIM_FORM_CHANGE
+	handleformchange BS_ATTACKER, 0
+	handleformchange BS_ATTACKER, 1
+	playanimation BS_ATTACKER, B_ANIM_FORM_CHANGE
 	waitanimation
-	handleformchange BS_SCRIPTING, 2
+	handleformchange BS_ATTACKER, 2
 	return
 
 BattleScript_AttackerFormChangeEnd3::
