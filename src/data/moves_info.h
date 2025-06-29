@@ -2866,7 +2866,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Minimizes the user's size to\n"
         #if B_MINIMIZE_EVASION >= GEN_5
             "sharply raise evasiveness."),
-        #else 
+        #else
             "raise evasiveness."),
         #endif
         .effect = EFFECT_MINIMIZE,
@@ -3704,7 +3704,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
         #if B_UPDATED_MOVE_DATA >= GEN_5
             "Envelops the foes in a toxic\n"
-        #else 
+        #else
             "Envelops the foe in a toxic\n"
         #endif
             "gas that may poison."),
@@ -6053,7 +6053,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "User spins and removes some\n"
         #if B_SPEED_BUFFING_RAPID_SPIN >= GEN_8
             "effects, while upping speed."),
-        #else 
+        #else
             "effects."),
         #endif
         .effect = EFFECT_RAPID_SPIN,
@@ -6280,7 +6280,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             "The type and effectiveness\n"
             "vary with the user."),
-        #endif 
+        #endif
         .power = B_HIDDEN_POWER_DMG >= GEN_6 ? 60 : 1,
         .effect = EFFECT_HIDDEN_POWER,
         .type = TYPE_NORMAL,
@@ -9621,7 +9621,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Whips up a breeze, doubling\n"
         #if B_TAILWIND_TURNS >= GEN_5
             "ally Speed for 4 turns."),
-        #else 
+        #else
             "ally Speed for 3 turns."),
         #endif
         .effect = EFFECT_TAILWIND,
