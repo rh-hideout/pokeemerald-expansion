@@ -882,10 +882,9 @@ struct MoveEffectResult
     bool32 failed:1;
     bool32 isAbility:1;
     bool32 battlescriptPush:1;
-    bool32 battlescriptPushPlusOne:1;
     bool32 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
-    bool32 recordBattlerItem:1;
-    bool32 recordBattlerAbility:1;
+    bool32 blockedByItem:1; // Sets lastUsedItem
+    bool32 recordBattlerAbility:1; // Records the target's ability (not the same as lastUsedAbility, which could be a target's ability e.g. Flower Veil)
     enum StatusTrigger statusTrigger:2;
 
     // Mostly for stats
@@ -895,8 +894,8 @@ struct MoveEffectResult
     bool32 notProtectAffected:1;
     bool32 statDropPrevention:1;
     bool32 mirrorArmored:1;
-    bool32 atLeastOneStatChangeSuccess:1;
-    const u8 *nextInstr;
+    const u8 *nextInstr; // Where to set gBattlescriptCurrInstr when calculated
+    const u8 *pushInstr; // Instruction that will be pushed if battlescriptPush is set
     u16 currentMove;
     u16 battlerAbility;
     u16 lastUsedAbility;
@@ -1449,7 +1448,7 @@ static inline u32 CountStatChangerStats(union StatChanger statChanger)
 {
     return !!statChanger.attack +
         !!statChanger.defense +
-        !!statChanger.speed + 
+        !!statChanger.speed +
         !!statChanger.spAttack +
         !!statChanger.spDefense +
         !!statChanger.accuracy +
@@ -1460,7 +1459,7 @@ static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChan
 {
     return (statChanger.attack > 1) ||
         (statChanger.defense > 1) ||
-        (statChanger.speed > 1) || 
+        (statChanger.speed > 1) ||
         (statChanger.spAttack > 1) ||
         (statChanger.spDefense > 1) ||
         (statChanger.accuracy > 1) ||
