@@ -5056,11 +5056,11 @@ static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *nu
     {
         for (i = 0; i < NUM_ALL_MACHINES; i++)
         {
-            move = GetTMHMMoveId(i);
+            move = GetTMHMMoveId(i + 1);
             if (move != MOVE_NONE && CanLearnTeachableMove(species, move))
             {
                 isTMMove[move] = TRUE;
-                sStatsMovesTMHM_ID[*numTMHMMoves] = GetTMHMItemId(i);
+                sStatsMovesTMHM_ID[*numTMHMMoves] = GetTMHMItemId(i + 1);
                 (*numTMHMMoves)++;
                 sStatsMoves[movesTotal] = move;
                 movesTotal++;
@@ -5074,10 +5074,10 @@ static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *nu
             move = teachableLearnset[i];
             for (u16 j = 0; j < NUM_ALL_MACHINES; j++)
             {
-                if (GetTMHMMoveId(j) == move)
+                if (GetTMHMMoveId(j + 1) == move)
                 {
                     isTMMove[move] = TRUE;
-                    sStatsMovesTMHM_ID[*numTMHMMoves] = GetTMHMItemId(j);
+                    sStatsMovesTMHM_ID[*numTMHMMoves] = GetTMHMItemId(j + 1);
                     (*numTMHMMoves)++;
                     sStatsMoves[movesTotal] = move;
                     movesTotal++;
