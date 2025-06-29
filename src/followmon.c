@@ -42,6 +42,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.list[slot].isShiny = objectEvent->shiny;
     sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
     sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
+    sFollowMonData.list[slot].onWater = MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior);
 
     sFollowMonData.spawnCountdown += 60;
 }
@@ -84,7 +85,7 @@ void FollowMon_OverworldCB(void)
                 gObjectEvents[objectEventId].range.rangeY = 8;
 
                 // Only used for save/load as well as loading encounters, 
-                // Most of teh time, followmon data is tracked in sFollowMonData
+                // Most of the time, followmon data is tracked in sFollowMonData
                 const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 gObjectEvents[objectEventId].shiny = followMon->isShiny;
                 gObjectEvents[objectEventId].spawnTimeOfDay = followMon->timeOfDay;
@@ -136,7 +137,6 @@ void FollowMon_OverworldCB(void)
                     else 
                     {
                         PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]), 25); 
-                        //MetatileBehavior_IsSurfableWaterOrUnderwater(gObjectEvents[objectEventId].currentMetatileBehavior)
                         if (IsSpawningWaterMons())
                             spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
                         else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
