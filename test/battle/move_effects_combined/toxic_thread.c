@@ -148,6 +148,7 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and target is a
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_POISON || gSpeciesInfo[SPECIES_ODDISH].types[1] == TYPE_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
