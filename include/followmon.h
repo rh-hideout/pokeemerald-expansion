@@ -9,12 +9,18 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
+// Could be reduced to an u8 but I prefer to leave some potential for more advanced features
 struct FollowMon
 {
-    u32 personality;
-    u16 species;
-    u16 level;
+    u16 isShiny:1;
+    u16 onWater:1;
+    u16 timeOfDay:2;
+    u16 unused:4;
+    u16 encounterIndex:8;
+    
 };
+
+#define EMPTY_FOLLOWMON 0xFF;
 
 struct FollowMonData
 {

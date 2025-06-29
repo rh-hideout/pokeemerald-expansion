@@ -330,7 +330,7 @@ static u32 ChooseWildMonIndex_Fishing(u8 rod)
     return wildMonIndex;
 }
 
-static u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area)
+u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area)
 {
     u8 min;
     u8 max;
@@ -579,45 +579,21 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
     return TRUE;
 }
 
-bool8 GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
+void GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
 {
-    //struct WildPokemon *wildMon;
-    const struct WildPokemonInfo *wildMonInfo;
-    u32 headerId;
-    u8 wildMonIndex = 0;
-    enum TimeOfDay timeOfDay;
-
-    headerId = GetCurrentMapWildMonHeaderId();
+    u32 headerId = GetCurrentMapWildMonHeaderId();
     if (inWater) {
-        wildMonIndex = ChooseWildMonIndex_Water();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-        followMon->level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_WATER);
+        followMon->encounterIndex = ChooseWildMonIndex_WaterRock() + 1;
+        followMon->timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        followMon->onWater = TRUE;
 
     } else {
-        wildMonIndex = ChooseWildMonIndex_Land();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-        followMon->level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_LAND);
+        followMon->encounterIndex = ChooseWildMonIndex_Land() + 1;
+        followMon->timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+        followMon->onWater = FALSE;
     }
 
-    if (wildMonInfo == NULL) {
-        return FALSE;
-    }
-    
-    followMon->species = wildMonInfo->wildPokemon[wildMonIndex].species;
-    followMon->personality = Random32();
-
-    /*
-    gender = GetGenderFromSpeciesAndPersonality(*species, personality);
-    u32 shinyValue = GET_SHINY_VALUE(gSaveBlock2Ptr->playerTrainerId, personality);
-    followMon->gfxId = OBJ_EVENT_MON + species
-    if (isShiny)
-        followMon->gfxId += OBJ_EVENT_MON_SHINY
-    if (gender == MON_FEMALE)
-        followMon->gfxId += OBJ_EVENT_MON_FEMALE
-    */
-    return TRUE;
+    followMon->isShiny = ComputePlayerShinyOdds(Random32());
 }
 
 static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 rod)

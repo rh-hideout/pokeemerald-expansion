@@ -24,16 +24,17 @@ static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
+static u16 GetFollowMonSpecies(struct FollowMon *followMon);
 static u8 CountActiveObjectEvents();
 static u8 ActiveSpawnSlotCount();
-static bool8 isFollowMonFemale(u8 spawnSlot);
-static bool8 isFollowMonShiny(u8 spawnSlot);
 static bool8 IsSafeToSpawnObjectEvents(void);
 static u8 FindObjectEventForGfx(u16 gfxId);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static bool8 IsInsidePlayerMap(s16 x, s16 y);
 static void GetMapSize(s32 *width, s32 *height);
+
+#define sEncounterIndex trainerRange_berryTreeId
 
 void FollowMon_OverworldCB()
 {
@@ -85,7 +86,13 @@ void FollowMon_OverworldCB()
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
                 gObjectEvents[objectEventId].range.rangeX = 8;
                 gObjectEvents[objectEventId].range.rangeY = 8;
-                
+
+                // Only used for save/load as well as loading encounters, 
+                // Most of teh time, followmon data is tracked in sFollowMonData
+                const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
+                gObjectEvents[objectEventId].shiny = followMon->isShiny;
+                gObjectEvents[objectEventId].spawnTimeOfDay = followMon->timeOfDay;
+                gObjectEvents[objectEventId].sEncounterIndex = followMon->encounterIndex;
 
                 // Hide reflections for spawns in water
                 // (It just looks weird)
@@ -124,7 +131,7 @@ void FollowMon_OverworldCB()
 
                 if(objectEventId != OBJECT_EVENTS_COUNT)
                 {
-                    if(isFollowMonShiny(spawnSlot))
+                    if(sFollowMonData.list[spawnSlot].isShiny)
                     {
                         PlaySE(SE_SHINY);
                         spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
@@ -132,7 +139,8 @@ void FollowMon_OverworldCB()
                     }
                     else 
                     {
-                        PlayCry_Normal(sFollowMonData.list[spawnSlot].species, 25); 
+                        PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]), 25); 
+                        //MetatileBehavior_IsSurfableWaterOrUnderwater(gObjectEvents[objectEventId].currentMetatileBehavior)
                         if (IsSpawningWaterMons())
                             spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
                         else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
@@ -149,7 +157,7 @@ void FollowMon_OverworldCB()
     }
 }
 
-static u8 NextSpawnMonSlot()
+static u8 NextSpawnMonSlot(void)
 {
     u8 slot;
 
@@ -157,7 +165,7 @@ static u8 NextSpawnMonSlot()
 
     for(slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; ++slot)
     {
-        if(!sFollowMonData.list[slot].species)
+        if(sFollowMonData.list[slot].encounterIndex == 0)
             break;
     }
 
@@ -179,8 +187,7 @@ static u8 NextSpawnMonSlot()
         return INVALID_SPAWN_SLOT;
     }
 
-    if (!GenerateFollowMon(&sFollowMonData.list[slot], IsSpawningWaterMons()))
-        return INVALID_SPAWN_SLOT;
+    GenerateFollowMon(&sFollowMonData.list[slot], IsSpawningWaterMons());
 
     return slot;
 }
@@ -277,28 +284,45 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 }
 
 void CreateFollowMonEncounter(void) {
+    struct ObjectEvent *curObject;
     u8 lastTalkedId = VarGet(VAR_LAST_TALKED);
     u8 objEventId = GetObjectEventIdByLocalIdAndMap(lastTalkedId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-    u16 slot = 0;
 
     if(objEventId < OBJECT_EVENTS_COUNT)
     {
-            struct ObjectEvent *curObject = &gObjectEvents[objEventId];
-            if(FollowMon_IsMonObject(curObject))
-               slot = curObject->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+            curObject = &gObjectEvents[objEventId];
+            if(!FollowMon_IsMonObject(curObject))
+               return;
+    } else 
+        return;
+
+    const struct WildPokemonInfo *wildMonInfo;
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u8 index = curObject->sEncounterIndex - 1;
+    u8 level = 0;
+    if (MetatileBehavior_IsSurfableWaterOrUnderwater(curObject->currentMetatileBehavior)) {
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[curObject->spawnTimeOfDay].waterMonsInfo;
+        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, index, WILD_AREA_WATER);
+    } else {
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[curObject->spawnTimeOfDay].landMonsInfo;
+        level = ChooseWildMonLevel(wildMonInfo->wildPokemon,index, WILD_AREA_LAND);
     }
+
+    u16 species = wildMonInfo->wildPokemon[index].species;
+    bool8 shiny = curObject->shiny;
 
     ZeroEnemyPartyMons();
     CreateMon(
         &gEnemyParty[0],
-        sFollowMonData.list[slot].species,
-        sFollowMonData.list[slot].level,
+        species,
+        level,
         USE_RANDOM_IVS, 
-        TRUE, 
-        sFollowMonData.list[slot].personality, 
-        OT_ID_PRESET,
-        T1_READ_32(gSaveBlock2Ptr->playerTrainerId)
+        FALSE, 
+        0, 
+        OT_ID_PLAYER_ID,
+        0
     );
+    SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
 
 
@@ -387,13 +411,7 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
         return TRUE;
     }
 
-    // Check gfx id
-    if(graphicsId >= OBJ_EVENT_GFX_VAR_FIRST && graphicsId <= OBJ_EVENT_GFX_VAR_LAST)
-    {
-        graphicsId = VarGet(VAR_OBJ_GFX_ID_0 + (object->graphicsId - OBJ_EVENT_GFX_VAR_FIRST));
-    }
-
-    if(object->graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && object->graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+    if(graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
         return TRUE;
 
     return FALSE;
@@ -420,12 +438,11 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 {
     u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
-    graphicsId = OBJ_EVENT_MON;
-    graphicsId += sFollowMonData.list[slot].species;
-    if (isFollowMonShiny(slot))
+    u16 species = GetFollowMonSpecies(&sFollowMonData.list[slot]);
+
+    graphicsId = OBJ_EVENT_MON + species;
+    if (sFollowMonData.list[slot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
-    if (isFollowMonFemale(slot))
-        graphicsId += OBJ_EVENT_MON_FEMALE;
     return graphicsId;
 }
 
@@ -434,10 +451,20 @@ void FollowMon_OnWarp(void)
     sFollowMonData.spawnCountdown = 0;
     sFollowMonData.activeCount = 0;
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++) {
-        sFollowMonData.list[i].species = 0;
-        sFollowMonData.list[i].personality = 0;
-        sFollowMonData.list[i].level = 0;
+        sFollowMonData.list[i].encounterIndex = 0;
     }
+}
+
+static u16 GetFollowMonSpecies(struct FollowMon *followMon)
+{
+    u16 species = 0;
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    if (followMon->onWater) {
+       species = gWildMonHeaders[headerId].encounterTypes[followMon->timeOfDay].waterMonsInfo->wildPokemon[followMon->encounterIndex - 1].species;
+    } else {
+       species = gWildMonHeaders[headerId].encounterTypes[followMon->timeOfDay].landMonsInfo->wildPokemon[followMon->encounterIndex - 1].species;
+    }
+    return species;
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
@@ -468,7 +495,7 @@ static u8 ActiveSpawnSlotCount()
     u8 count = CountFreePaletteSlots();
     for(slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; ++slot)
     {
-        if(sFollowMonData.list[slot].species)
+        if(sFollowMonData.list[slot].encounterIndex == 0)
             ++count;
     }
 
@@ -485,21 +512,6 @@ void RemoveAllFollowMonObjects(void) {
         if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_0 && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
             RemoveObjectEvent(&gObjectEvents[i]);
     }
-}
-
-static bool8 isFollowMonFemale(u8 spawnSlot)
-{
-    u16 species = sFollowMonData.list[spawnSlot].species;
-    u32 personality = sFollowMonData.list[spawnSlot].personality;
-    u8 gender = GetGenderFromSpeciesAndPersonality(species, personality);
-    return (gender == MON_FEMALE);
-}
-
-static bool8 isFollowMonShiny(u8 spawnSlot)
-{
-    u32 personality = sFollowMonData.list[spawnSlot].personality;
-    u32 shinyValue = GET_SHINY_VALUE(T1_READ_32(gSaveBlock2Ptr->playerTrainerId), personality);
-    return (shinyValue < SHINY_ODDS);
 }
 
 static u8 FindObjectEventForGfx(u16 gfxId)

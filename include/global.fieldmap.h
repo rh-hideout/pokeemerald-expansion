@@ -216,7 +216,7 @@ struct ObjectEvent
              u32 hideReflection:1;
              u32 shiny:1; // OW mon shininess
              u32 jumpDone:1;
-             u32 padding:2;
+             u32 spawnTimeOfDay:2; // Used for FollowMon
     /*0x04*/ u16 graphicsId; // 12 bits for species; high 4 bits for form
     /*0x06*/ u8 movementType;
     /*0x07*/ u8 trainerType;
@@ -238,7 +238,7 @@ struct ObjectEvent
     /*0x1A*/ u8 fieldEffectSpriteId;
     /*0x1B*/ u8 warpArrowSpriteId;
     /*0x1C*/ u8 movementActionId;
-    /*0x1D*/ u8 trainerRange_berryTreeId;
+    /*0x1D*/ u8 trainerRange_berryTreeId; //Also stores encounterIndex for FollowMon
     /*0x1E*/ u8 currentMetatileBehavior;
     /*0x1F*/ u8 previousMetatileBehavior;
     /*0x20*/ u8 previousMovementDirection:4;
