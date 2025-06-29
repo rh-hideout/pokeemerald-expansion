@@ -572,7 +572,7 @@ static void Cmd_setuserstatus3(void);
 static void Cmd_assistattackselect(void);
 static void Cmd_trysetmagiccoat(void);
 static void Cmd_trysetsnatch(void);
-static void Cmd_unused2(void);
+static void Cmd_setstatchanger(void);
 static void Cmd_switchoutabilities(void);
 static void Cmd_jumpifhasnohp(void);
 static void Cmd_jumpifnotcurrentmoveargtype(void);
@@ -831,7 +831,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_assistattackselect,                      //0xDE
     Cmd_trysetmagiccoat,                         //0xDF
     Cmd_trysetsnatch,                            //0xE0
-    Cmd_unused2,                                 //0xE1
+    Cmd_setstatchanger,                          //0xE1
     Cmd_switchoutabilities,                      //0xE2
     Cmd_jumpifhasnohp,                           //0xE3
     Cmd_jumpifnotcurrentmoveargtype,             //0xE4
@@ -15248,8 +15248,12 @@ static void Cmd_trysetsnatch(void)
     }
 }
 
-static void Cmd_unused2(void)
+static void Cmd_setstatchanger(void)
 {
+    CMD_ARGS(u8 stat, u8 stages, bool8 down);
+
+    SetStatChanger(cmd->stat, cmd->stages * powInt(-1, cmd->down));
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_switchoutabilities(void)
