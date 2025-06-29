@@ -169,8 +169,6 @@ enum
 enum
 {
     LIST_STATUS4_ELECTRIFIED,
-    LIST_STATUS4_MUD_SPORT,
-    LIST_STATUS4_WATER_SPORT,
     LIST_STATUS4_SALT_CURE,
     LIST_STATUS4_SYRUP_BOMB,
     LIST_STATUS4_GLAIVE_RUSH,
@@ -348,8 +346,6 @@ static const u8 sText_LaserFocus[] = _("Laser Focus");
 static const u8 sText_PowerTrick[] = _("Power Trick");
 static const u8 sText_SkyDropped[] = _("Sky Dropped");
 static const u8 sText_Electrified[] = _("Electrified");
-static const u8 sText_MudSport[] = _("Mud Sport");
-static const u8 sText_WaterSport[] = _("Water Sport");
 static const u8 sText_InfiniteConfusion[] = _("Infinite Confusion");
 static const u8 sText_SaltCure[] = _("Salt Cure");
 static const u8 sText_SyrupBomb[] = _("Syrup Bomb");
@@ -548,6 +544,8 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Foresight"), VOLATILE_FORESIGHT},
     {COMPOUND_STRING("DragonCheer"), VOLATILE_DRAGON_CHEER},
     {COMPOUND_STRING("FocusEnergy"), VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("MudSport"),   VOLATILE_MUD_SPORT},
+    {COMPOUND_STRING("WaterSport"), VOLATILE_WATER_SPORT},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -580,8 +578,6 @@ static const struct ListMenuItem sStatus3ListItems[] =
 static const struct ListMenuItem sStatus4ListItems[] =
 {
     {sText_Electrified, LIST_STATUS4_ELECTRIFIED},
-    {sText_MudSport, LIST_STATUS4_MUD_SPORT},
-    {sText_WaterSport, LIST_STATUS4_WATER_SPORT},
     {sText_SaltCure, LIST_STATUS4_SALT_CURE},
     {sText_SyrupBomb, LIST_STATUS4_SYRUP_BOMB},
     {sText_GlaiveRush, LIST_STATUS4_GLAIVE_RUSH},

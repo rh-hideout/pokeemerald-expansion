@@ -5209,35 +5209,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 break;
         }
         break;
-    case ABILITYEFFECT_FIELD_SPORT:
-        switch (gLastUsedAbility)
-        {
-        case ABILITYEFFECT_MUD_SPORT:
-            for (i = 0; i < gBattlersCount; i++)
-            {
-                if (gStatuses4[i] & STATUS4_MUD_SPORT)
-                    effect = i + 1;
-            }
-            break;
-        case ABILITYEFFECT_WATER_SPORT:
-            for (i = 0; i < gBattlersCount; i++)
-            {
-                if (gStatuses4[i] & STATUS4_WATER_SPORT)
-                    effect = i + 1;
-            }
-            break;
-        default:
-            for (i = 0; i < gBattlersCount; i++)
-            {
-                if (gBattleMons[i].ability == ability)
-                {
-                    gLastUsedAbility = ability;
-                    effect = i + 1;
-                }
-            }
-            break;
-        }
-        break;
     case ABILITYEFFECT_ON_WEATHER: // For ability effects that activate when the battle weather changes.
         gLastUsedAbility = GetBattlerAbility(battler);
         switch (gLastUsedAbility)
@@ -7943,6 +7914,40 @@ u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter)
     return basePower;
 }
 
+static inline u32 IsFieldMudSportAffected(u32 moveType)
+{
+    if (moveType == TYPE_ELECTRIC && (gFieldStatuses & STATUS_FIELD_MUDSPORT))
+        return TRUE;
+
+    if (B_SPORT_TURNS < GEN_6)
+    {
+        for (u32 battler = 0; battler < gBattlersCount; battler++)
+        {
+            if (gBattleMons[battler].volatiles.mudSport)
+                return TRUE;
+        }
+    }
+    
+    return FALSE;
+}
+
+static inline u32 IsFieldWaterSportAffected(u32 moveType)
+{
+    if (moveType == TYPE_FIRE && (gFieldStatuses & STATUS_FIELD_WATERSPORT))
+        return TRUE;
+
+    if (B_SPORT_TURNS < GEN_6)
+    {
+        for (u32 battler = 0; battler < gBattlersCount; battler++)
+        {
+            if (gBattleMons[battler].volatiles.waterSport)
+                return TRUE;
+        }
+    }
+
+    return FALSE;
+}
+
 static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
 {
     u32 battlerAtk = ctx->battlerAtk;
@@ -8278,12 +8283,9 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
     if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-
-    if (moveType == TYPE_ELECTRIC && ((gFieldStatuses & STATUS_FIELD_MUDSPORT)
-    || AbilityBattleEffects(ABILITYEFFECT_FIELD_SPORT, 0, 0, ABILITYEFFECT_MUD_SPORT, 0)))
+    if (IsFieldMudSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(B_SPORT_DMG_REDUCTION >= GEN_5 ? 0.33 : 0.5));
-    if (moveType == TYPE_FIRE && ((gFieldStatuses & STATUS_FIELD_WATERSPORT)
-    || AbilityBattleEffects(ABILITYEFFECT_FIELD_SPORT, 0, 0, ABILITYEFFECT_WATER_SPORT, 0)))
+    if (IsFieldWaterSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(B_SPORT_DMG_REDUCTION >= GEN_5 ? 0.33 : 0.5));
 
     // attacker's abilities
