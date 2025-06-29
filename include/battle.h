@@ -975,7 +975,7 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
 #define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
-#define STAT_BUFF_NEGATIVE 0x80                     // 0x80, the sign bit
+#define STAT_BUFF_NEGATIVE 0x1                     // 0x80, the sign bit
 
 #define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
 
@@ -1361,7 +1361,7 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 
 static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 lowering)
 {
-    return lowering ? (gBattleMons[gBattlerAttacker].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[gBattlerAttacker].statStages[stat]);
+    return lowering ? (gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[battler].statStages[stat]);
 }
 
 static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)

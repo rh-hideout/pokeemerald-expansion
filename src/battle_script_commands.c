@@ -12319,7 +12319,7 @@ static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
 static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
 {
     s32 stage;
-    bool32 atLeastOneStatChangeSuccess;
+    bool32 atLeastOneStatChangeSuccess = FALSE;
     for (u32 statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
     {
         stage = GetStatChangerStatValue(result->statChanger, statId);
@@ -12447,6 +12447,8 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
     // Even if only checking one stat at a time, need to check all stats
     // that we're trying to raise in order to ensure the correct stat change anim
     result->failed = CheckStatChangerForAllStats(result);
+
+    // DebugPrintf("result->failed %d", result->failed);
 
     return result;
 }
