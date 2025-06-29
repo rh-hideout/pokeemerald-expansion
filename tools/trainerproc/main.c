@@ -149,6 +149,9 @@ struct Trainer
 
     struct String pool_prune;
     int pool_prune_line;
+
+    struct String copy_pool;
+    int copy_pool_line;
 };
 
 static bool is_empty_string(struct String s)
@@ -1280,6 +1283,13 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->pool_prune_line = value.location.line;
             trainer->pool_prune = token_string(&value);
         }
+        else if (is_literal_token(&key, "Copy Pool"))
+        {
+            if (trainer->copy_pool_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Copy Pool'");
+            trainer->copy_pool_line = value.location.line;
+            trainer->copy_pool = token_string(&value);
+        }
         else
         {
             any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
@@ -1307,7 +1317,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
         while (match_empty_line(p)) {}
         if (!parse_pokemon_header(p, &nickname, &species, &gender, &item))
         {
-            if (i > 0 || ends_with(trainer->id, "_NONE"))
+            if (i > 0 || ends_with(trainer->id, "_NONE") || !is_empty_string(trainer->copy_pool))
                 break;
             if (!p->error)
                 set_parse_error(p, p->location, "expected nickname or species");
@@ -1519,7 +1529,7 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
         }
     }
 
-    if (trainer->party_size_line && trainer->party_size > trainer->pokemon_n)
+    if (trainer->party_size_line && trainer->party_size > trainer->pokemon_n && is_empty_string(trainer->copy_pool))
     {
         set_show_parse_error(p, p->location, "partySize larger than supplied pool");
     }
@@ -1853,21 +1863,32 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, ",\n");
         }
 
+        if (!is_empty_string(trainer->copy_pool))
+        {
+            fprintf(f, "#line %d\n", trainer->copy_pool_line);
+            fprintf(f, "        .overrideTrainer = ");
+            fprint_string(f, trainer->copy_pool);
+            fprintf(f, ",\n");
+        }
+
         if (trainer->party_size_line)
         {
             fprintf(f, "#line %d\n", trainer->party_size_line);
             fprintf(f, "        .partySize = %d,\n", trainer->party_size);
-            fprintf(f, "        .poolSize = %d,\n", trainer->pokemon_n);
-            fprintf(f, "        .party = (const struct TrainerMon[])\n");
-            fprintf(f, "        {\n");
+            if (is_empty_string(trainer->copy_pool))
+            {
+                fprintf(f, "        .poolSize = %d,\n", trainer->pokemon_n);
+                fprintf(f, "        .party = (const struct TrainerMon[])\n");
+                fprintf(f, "        {\n");
+            }
         }
-        else
+        else if (is_empty_string(trainer->copy_pool))
         {
             fprintf(f, "        .partySize = %d,\n", trainer->pokemon_n);
             fprintf(f, "        .party = (const struct TrainerMon[])\n");
             fprintf(f, "        {\n");
         }
-        for (int j = 0; j < trainer->pokemon_n; j++)
+        for (int j = 0; j < trainer->pokemon_n && is_empty_string(trainer->copy_pool); j++)
         {
             struct Pokemon *pokemon = &trainer->pokemon[j];
             fprintf(f, "            {\n");
@@ -2030,7 +2051,8 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
 
             fprintf(f, "            },\n");
         }
-        fprintf(f, "        },\n");
+        if (is_empty_string(trainer->copy_pool))
+            fprintf(f, "        },\n");
         fprintf(f, "    },\n");
     }
 }
