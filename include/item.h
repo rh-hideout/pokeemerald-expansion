@@ -3,7 +3,43 @@
 
 #include "constants/item.h"
 #include "constants/items.h"
+#include "constants/moves.h"
 #include "constants/tms_hms.h"
+
+/* Expands to:
+ * enum
+ * {
+ *   ITEM_TM_FOCUS_PUNCH,
+ *   ...
+ *   ITEM_HM_CUT,
+ *   ...
+ * }; */
+#define ENUM_TM(id) CAT(ITEM_TM_, id),
+#define ENUM_HM(id) CAT(ITEM_HM_, id),
+enum
+{
+    ENUM_TM_START_ = ITEM_TM01 - 1,
+    FOREACH_TM(ENUM_TM)
+
+    ENUM_HM_START_ = ITEM_HM01 - 1,
+    FOREACH_HM(ENUM_HM)
+};
+#undef ENUM_TM
+#undef ENUM_HM
+
+/* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
+ * gTMHMItemMoveIds. Each one in src/data/items.h should have an index in the .tmHmIndex field.
+ */
+#define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
+enum TMHMIndex
+{
+    FOREACH_TMHM(UNPACK_TM_HM_ENUM)
+    NUM_ALL_MACHINES,
+    NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
+    NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
+};
+
+#undef UNPACK_TM_HM_ENUM
 
 typedef void (*ItemUseFunc)(u8);
 
@@ -20,8 +56,12 @@ struct Item
     u8 holdEffectParam;
     u8 importance:2;
     u8 notConsumed:1;
-    u8 padding:5;
-    enum Pocket pocket:8;
+    enum Pocket pocket:5;
+    union PACKED {
+        u8 index; // Used for sorting !! DO NOT USE IN data/items/h as it does not check type !!
+        enum TMHMIndex tmHmIndex:8;
+        // enum BerryIndex berryIndex:8; // Coming soon...
+    };
     u8 type;
     u8 battleUsage;
     u8 flingPower;
@@ -29,14 +69,31 @@ struct Item
     const u16 *iconPalette;
 };
 
-struct __attribute__((packed, aligned(2))) BagPocket
+struct ALIGNED(2) BagPocket
 {
     struct ItemSlot *itemSlots;
     u16 capacity;
 };
 
+struct TmHmIndexKey
+{
+    u16 itemId;
+    u16 moveId;
+};
+
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
+extern const struct TmHmIndexKey gTMHMItemMoveIds[];
+
+static inline u16 GetTMHMItemId(enum TMHMIndex index)
+{
+    return gTMHMItemMoveIds[index].itemId;
+}
+
+static inline u16 GetTMHMMoveId(enum TMHMIndex index)
+{
+    return gTMHMItemMoveIds[index].moveId;
+}
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
@@ -84,26 +141,5 @@ u32 GetItemFlingPower(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 u32 GetItemStatus2Mask(u16 itemId);
 u32 GetItemSellPrice(u32 itemId);
-
-/* Expands to:
- * enum
- * {
- *   ITEM_TM_FOCUS_PUNCH,
- *   ...
- *   ITEM_HM_CUT,
- *   ...
- * }; */
-#define ENUM_TM(id) CAT(ITEM_TM_, id),
-#define ENUM_HM(id) CAT(ITEM_HM_, id),
-enum
-{
-    ENUM_TM_START_ = ITEM_TM01 - 1,
-    FOREACH_TM(ENUM_TM)
-
-    ENUM_HM_START_ = ITEM_HM01 - 1,
-    FOREACH_HM(ENUM_HM)
-};
-#undef ENUM_TM
-#undef ENUM_HM
 
 #endif // GUARD_ITEM_H

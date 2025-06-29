@@ -3236,10 +3236,11 @@ static void DebugAction_PCBag_Fill_PocketPokeBalls(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 {
-    u16 itemId;
+    u16 index, itemId;
 
-    for (itemId = ITEM_TM01; itemId <= ITEM_HM08; itemId++)
+    for (index = 0; index < NUM_ALL_MACHINES; index++)
     {
+        itemId = GetTMHMItemId(index + 1);
         if (CheckBagHasSpace(itemId, 1) && ItemIdToBattleMoveId(itemId) != MOVE_NONE)
             AddBagItem(itemId, 1);
     }

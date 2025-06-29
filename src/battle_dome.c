@@ -27,6 +27,7 @@
 #include "sound.h"
 #include "pokemon_icon.h"
 #include "data.h"
+#include "item.h"
 #include "international_string_util.h"
 #include "trainer_pokemon_sprites.h"
 #include "scanline_effect.h"
@@ -3976,12 +3977,12 @@ static bool32 IsDomeLuckyMove(u32 move)
 static bool32 IsDomePopularMove(u32 move)
 {
     u8 i;
-    for (i = 0; i < NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES; i++)
+    for (i = 0; i < NUM_ALL_MACHINES; i++)
     {
-        if (ItemIdToBattleMoveId(ITEM_TM01 + i) == move)
+        if (GetTMHMMoveId(i + 1) == move)
             return TRUE;
     }
-    if (i == NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES)
+    if (i == NUM_ALL_MACHINES)
         return FALSE;
     // Filter in TMs/HMs
     if (GetMovePower(move) >= 90)
