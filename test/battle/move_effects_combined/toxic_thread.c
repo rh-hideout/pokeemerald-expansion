@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(GetMoveEffect(MOVE_TOXIC_THREAD) == EFFECT_TOXIC_THREAD);
+}
+
 SINGLE_BATTLE_TEST("Toxic Thread both reduces speed and inflicts Poison")
 {
     GIVEN {
@@ -22,6 +27,7 @@ SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't go lower")
 {
     KNOWN_FAILING; // #7243
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SCARY_FACE) == EFFECT_SPEED_DOWN_2);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -66,6 +72,7 @@ SINGLE_BATTLE_TEST("Toxic Thread still inflicts Poison if speed can't be lowered
 SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target can't be Poisoned")
 {
     GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_BRONZOR].types[0] == TYPE_STEEL || gSpeciesInfo[SPECIES_BRONZOR].types[1] == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_BRONZOR);
     } WHEN {
@@ -82,6 +89,8 @@ SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target can't be Poiso
 SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target is already Poisoned")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
