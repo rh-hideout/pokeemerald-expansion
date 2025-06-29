@@ -26,7 +26,6 @@ static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
 static u16 GetFollowMonSpecies(struct FollowMon *followMon);
 static u8 CountActiveObjectEvents();
-static u8 ActiveSpawnSlotCount();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static u8 FindObjectEventForGfx(u16 gfxId);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
@@ -48,22 +47,7 @@ void FollowMon_OverworldCB()
         return;
     }
 
-    // Speed up spawning
-    if(FALSE)
-    {
-        if(sFollowMonData.activeCount <= 1)
-        {
-            // Super fast spawn for new things on screen
-            sFollowMonData.spawnCountdown = min(sFollowMonData.spawnCountdown, 15);
-        }
-        else if(sFollowMonData.activeCount <= (ActiveSpawnSlotCount() - 1))
-        {
-            // Fast spawn to reach capacity
-            sFollowMonData.spawnCountdown = min(sFollowMonData.spawnCountdown, 60);
-        }
-    }
-
-    if(sFollowMonData.spawnCountdown == 0)
+    if(sFollowMonData.spawnCountdown == 0  && sFollowMonData.activeCount < 4)
     {
         s16 x, y;
 
@@ -430,7 +414,8 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-
+    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    sFollowMonData.list[spawnSlot].encounterIndex = 0;
     if(sFollowMonData.activeCount != 0)
         --sFollowMonData.activeCount;
 }
@@ -483,19 +468,6 @@ static u8 CountActiveObjectEvents()
     for(i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         if(gObjectEvents[i].active)
-            ++count;
-    }
-
-    return count;
-}
-
-static u8 ActiveSpawnSlotCount()
-{
-    u8 slot;
-    u8 count = CountFreePaletteSlots();
-    for(slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; ++slot)
-    {
-        if(sFollowMonData.list[slot].encounterIndex == 0)
             ++count;
     }
 
