@@ -12,6 +12,7 @@ struct FollowerNPCSpriteGraphics
     u16 acroBikeId;
     u16 surfId;
     u16 underwaterId;
+    bool8 hasRunningFrames;
 };
 
 enum FollowerNPCDataTypes
@@ -76,6 +77,11 @@ enum FollowerNPCHandleEscalatorFinishTaskStates{
     MOVE_FOLLOWER_UP,
     MOVEMENT_FINISH
 };
+
+#define FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES    0x1
+
+#define FNPC_NONE   0
+#define FNPC_ALWAYS 2
 
 void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value);
 const u8 *GetFollowerNPCScriptPointer(void);

@@ -3437,11 +3437,6 @@ static void DebugAction_CreateFollowerNPC(u8 taskId)
     DestroyFollowerNPC();
     SetFollowerNPCData(FNPC_DATA_BATTLE_PARTNER, PARTNER_STEVEN);
     CreateFollowerNPC(gfx, FNPC_ALL, Debug_Follower_NPC_Event_Script);
-    if (gfx != OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL && gfx != OBJ_EVENT_GFX_RIVAL_MAY_NORMAL)
-    {
-        u32 flags = GetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS);
-        SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, (flags &= ~FNPC_RUNNING));
-    }
     UnlockPlayerFieldControls();
 }
 

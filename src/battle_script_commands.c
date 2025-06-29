@@ -2879,8 +2879,15 @@ static void Cmd_resultmessage(void)
             return;
         }
 
-        if (gBattleStruct->missStringId[gBattlerTarget] > B_MSG_AVOIDED_ATK) // Wonder Guard or Levitate - show the ability pop-up
-            CreateAbilityPopUp(gBattlerTarget, gBattleMons[gBattlerTarget].ability, IsDoubleBattle());
+        if (gBattleStruct->missStringId[gBattlerTarget] > B_MSG_AVOIDED_ATK) // Wonder Guard or Levitate
+        {
+            gBattlerAbility = gBattlerTarget;
+            gBattleCommunication[MULTISTRING_CHOOSER] = gBattleStruct->missStringId[gBattlerTarget];
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            BattleScriptCall(BattleScript_AbilityAvoidsDamage);
+            return;
+        }
+
         gBattleCommunication[MSG_DISPLAY] = 1;
         stringId = gMissStringIds[gBattleStruct->missStringId[gBattlerTarget]];
     }
@@ -6309,7 +6316,6 @@ static void Cmd_moveend(void)
                 && IsBattlerAlive(gBattlerTarget)
                 && gBattlerAttacker != gBattlerTarget
                 && !IsBattlerAlly(gBattlerAttacker, gBattlerTarget)
-                && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
                 && IsBattlerTurnDamaged(gBattlerTarget)
                 && !IsBattleMoveStatus(gCurrentMove)
                 && CompareStat(gBattlerTarget, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
@@ -6756,8 +6762,7 @@ static void Cmd_moveend(void)
                 && IsBattlerTurnDamaged(gBattlerTarget)
                 && IsBattlerAlive(gBattlerTarget)
                 && gBattlerAttacker != gBattlerTarget
-                && (moveType == TYPE_FIRE || CanBurnHitThaw(gCurrentMove))
-                && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+                && (moveType == TYPE_FIRE || CanBurnHitThaw(gCurrentMove)))
             {
                 gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FREEZE;
                 BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
@@ -6766,10 +6771,10 @@ static void Cmd_moveend(void)
                 effect = TRUE;
             }
             if (gBattleMons[gBattlerTarget].status1 & STATUS1_FROSTBITE
+                && IsBattlerTurnDamaged(gBattlerTarget)
                 && IsBattlerAlive(gBattlerTarget)
                 && gBattlerAttacker != gBattlerTarget
-                && MoveThawsUser(originallyUsedMove)
-                && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
+                && MoveThawsUser(originallyUsedMove))
             {
                 gBattleMons[gBattlerTarget].status1 &= ~STATUS1_FROSTBITE;
                 BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].status1), &gBattleMons[gBattlerTarget].status1);
@@ -14311,7 +14316,7 @@ static void Cmd_recoverbasedonsunlight(void)
             else
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
         }
-        else
+        else if (GetGenConfig(GEN_CONFIG_TIME_OF_DAY_HEALING_MOVES) != GEN_2)
         {
             if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
@@ -14319,6 +14324,39 @@ static void Cmd_recoverbasedonsunlight(void)
                 gBattleStruct->moveDamage[gBattlerAttacker] = 20 * GetNonDynamaxMaxHP(gBattlerAttacker) / 30;
             else // not sunny weather
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
+        }
+        else // B_TIME_OF_DAY_HEALING_MOVES == GEN_2
+        {
+            u32 healingModifier = 1;
+            u32 time = GetTimeOfDay();
+            
+            switch (GetMoveEffect(gCurrentMove))
+            {
+            case EFFECT_MOONLIGHT:
+                if (time == TIME_NIGHT || time == TIME_EVENING)
+                    healingModifier = 2;
+                break;
+            case EFFECT_MORNING_SUN:
+                if ((OW_TIMES_OF_DAY == GEN_3 && time == TIME_DAY) // Gen 3 doesn't have morning
+                  || (OW_TIMES_OF_DAY != GEN_3 && time == TIME_MORNING))
+                    healingModifier = 2;
+                break;
+            case EFFECT_SYNTHESIS:
+                if (time == TIME_DAY)
+                    healingModifier = 2;
+                break;
+            default:
+                healingModifier = 1;
+                break;
+            }
+            
+            if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA)
+                gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
+            else if (gBattleWeather & B_WEATHER_SUN)
+                gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
+            else // not sunny weather
+                gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
+            
         }
 
         if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
@@ -16407,7 +16445,8 @@ static void Cmd_jumpifcaptivateaffected(void)
 static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS(u8 trigger);
-
+    gBattlescriptCurrInstr = cmd->nextInstr - 1;
+    
     switch (cmd->trigger)
     {
     case TRIGGER_ON_ABILITY:
@@ -17722,8 +17761,7 @@ void BS_TryActivateGulpMissile(void)
 {
     NATIVE_ARGS();
 
-    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-        && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
+    if (!gProtectStructs[gBattlerAttacker].confusionSelfDmg
         && IsBattlerAlive(gBattlerAttacker)
         && IsBattlerTurnDamaged(gBattlerTarget)
         && gBattleMons[gBattlerTarget].species != SPECIES_CRAMORANT
@@ -18600,4 +18638,19 @@ void BS_JumpIfAbilityCantBeSuppressed(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TryActivateAbilityShield(void)
+{
+    NATIVE_ARGS(u8 battler);
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
+    if (GetBattlerAbilityNoAbilityShield(battler) != GetBattlerAbility(battler))
+    {
+        gLastUsedItem = gBattleMons[battler].item;
+        RecordItemEffectBattle(battler, GetItemHoldEffect(gLastUsedItem));
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
+    }
 }
