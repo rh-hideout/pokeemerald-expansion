@@ -1037,6 +1037,54 @@ void CreateMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 hasFix
     CalculateMonStats(mon);
 }
 
+bool32 ComputePlayerShinyOdds(u32 personality)
+{
+    bool32 isShiny;
+
+    u32 value = gSaveBlock2Ptr->playerTrainerId[0]
+      | (gSaveBlock2Ptr->playerTrainerId[1] << 8)
+      | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
+      | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
+
+    if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
+    {
+        isShiny = FALSE;
+    }
+    else if (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY))
+    {
+        isShiny = TRUE;
+    }
+    else if (P_ONLY_OBTAINABLE_SHINIES && InBattlePyramid())
+    {
+        isShiny = FALSE;
+    }
+    else if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall())
+    {
+        isShiny = FALSE;
+    }
+    else
+    {
+        u32 totalRerolls = 0;
+        if (CheckBagHasItem(ITEM_SHINY_CHARM, 1))
+            totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
+        if (LURE_STEP_COUNT != 0)
+            totalRerolls += 1;
+        if (I_FISHING_CHAIN && gIsFishingEncounter)
+            totalRerolls += CalculateChainFishingShinyRolls();
+        if (gDexNavSpecies)
+            totalRerolls += CalculateDexNavShinyRolls();
+
+        while (GET_SHINY_VALUE(value, personality) >= SHINY_ODDS && totalRerolls > 0)
+        {
+            personality = Random32();
+            totalRerolls--;
+        }
+
+        isShiny = GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
+    }
+    return isShiny;
+}
+
 void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, u8 hasFixedPersonality, u32 fixedPersonality, u8 otIdType, u32 fixedOtId)
 {
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
@@ -1068,41 +1116,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
               | (gSaveBlock2Ptr->playerTrainerId[2] << 16)
               | (gSaveBlock2Ptr->playerTrainerId[3] << 24);
 
-        if (P_FLAG_FORCE_NO_SHINY != 0 && FlagGet(P_FLAG_FORCE_NO_SHINY))
-        {
-            isShiny = FALSE;
-        }
-        else if (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY))
-        {
-            isShiny = TRUE;
-        }
-        else if (P_ONLY_OBTAINABLE_SHINIES && (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE || (B_FLAG_NO_CATCHING != 0 && FlagGet(B_FLAG_NO_CATCHING))))
-        {
-            isShiny = FALSE;
-        }
-        else if (P_NO_SHINIES_WITHOUT_POKEBALLS && !HasAtLeastOnePokeBall())
-        {
-            isShiny = FALSE;
-        }
-        else
-        {
-            u32 totalRerolls = 0;
-            if (CheckBagHasItem(ITEM_SHINY_CHARM, 1))
-                totalRerolls += I_SHINY_CHARM_ADDITIONAL_ROLLS;
-            if (LURE_STEP_COUNT != 0)
-                totalRerolls += 1;
-            totalRerolls += CalculateChainFishingShinyRolls();
-            if (gDexNavSpecies)
-                totalRerolls += CalculateDexNavShinyRolls();
-
-            while (GET_SHINY_VALUE(value, personality) >= SHINY_ODDS && totalRerolls > 0)
-            {
-                personality = Random32();
-                totalRerolls--;
-            }
-
-            isShiny = GET_SHINY_VALUE(value, personality) < SHINY_ODDS;
-        }
+        isShiny = ComputePlayerShinyOdds(personality);
     }
 
     if (hasFixedPersonality)
