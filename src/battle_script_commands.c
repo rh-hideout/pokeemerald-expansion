@@ -12591,7 +12591,7 @@ static void Cmd_twoturnmoveschargestringandanimation(void)
 
 static void Cmd_trynonvolatilestatus(void)
 {
-    CMD_ARGS(const u8 *failInstr);
+    CMD_ARGS();
     bool32 canInflictStatus = TRUE;
 
     if (!CanSetNonVolatileStatus(
