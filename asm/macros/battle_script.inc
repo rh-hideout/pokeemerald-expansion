@@ -2461,6 +2461,11 @@
 	.4byte \jumpInstr
 	.endm
 
+	.macro tryactivateabilityshield battler:req
+	callnative BS_TryActivateAbilityShield
+	.byte \battler
+	.endm
+
 	.macro setallytonexttarget jumpInstr:req
 	jumpifbyte CMP_GREATER_THAN, gBattlerTarget, 0x1, 1f
 	addbyte gBattlerTarget, 0x2

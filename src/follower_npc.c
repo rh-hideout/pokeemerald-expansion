@@ -50,6 +50,7 @@ static void SetFollowerNPCScriptPointer(const u8 *script);
 static void PlayerLogCoordinates(struct ObjectEvent *player);
 static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, const u8 *script);
 static u32 GetFollowerNPCSprite(void);
+static bool32 FollowerNPCHasRunningFrames(void);
 static bool32 IsStateMovement(u32 state);
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 static u32 ReturnFollowerNPCDelayedState(u32 direction);
@@ -212,9 +213,12 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
     SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
     SetFollowerNPCScriptPointer(script);
     SetFollowerNPCData(FNPC_DATA_EVENT_FLAG, flag);
-    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
     SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
+    if (FollowerNPCHasRunningFrames())
+        followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
+        
+    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
@@ -255,6 +259,18 @@ static u32 GetFollowerNPCSprite(void)
     }
 
     return GetFollowerNPCData(FNPC_DATA_GFX_ID);
+}
+
+static bool32 FollowerNPCHasRunningFrames(void)
+{
+    for (u32 i = 0; i < NELEMS(gFollowerNPCAlternateSprites); i++)
+    {
+        if (gFollowerNPCAlternateSprites[i].normalId == GetFollowerNPCData(FNPC_DATA_GFX_ID)
+         && gFollowerNPCAlternateSprites[i].hasRunningFrames == TRUE)
+            return TRUE;
+    }
+
+    return FALSE;
 }
 
 static bool32 IsStateMovement(u32 state)
@@ -696,10 +712,13 @@ void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr)
     
     SetFollowerNPCData(FNPC_DATA_IN_PROGRESS, TRUE);
     SetFollowerNPCData(FNPC_DATA_GFX_ID, follower->graphicsId);
-    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
     SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
     SetFollowerNPCData(FNPC_DATA_COME_OUT_DOOR, FNPC_DOOR_NONE);
     SetFollowerNPCScriptPointer(scriptPtr);
+    if (FollowerNPCHasRunningFrames())
+        followerFlags |= FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES;
+        
+    SetFollowerNPCData(FNPC_DATA_FOLLOWER_FLAGS, followerFlags);
 
     // If the player is biking and the follower flags prohibit biking, force the player to dismount the bike.
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE)
