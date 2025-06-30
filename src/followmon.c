@@ -29,6 +29,7 @@ static u16 GetFollowMonSpecies(struct FollowMon *followMon);
 static u8 CountActiveObjectEvents();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static u8 FindObjectEventForGfx(u16 gfxId);
+static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static bool8 IsInsidePlayerMap(s16 x, s16 y);
@@ -63,8 +64,10 @@ void FollowMon_OverworldCB(void)
     if(sFollowMonData.spawnCountdown == 0)
     {
         s16 x, y;
+        const struct WildPokemonInfo *wildMonInfo = NULL;
+        wildMonInfo = GetActiveEncounterTable(IsSpawningWaterMons());
 
-        if(IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
+        if(wildMonInfo && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
         {
             u16 spawnSlot = NextSpawnMonSlot();
 
@@ -530,6 +533,22 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
     }
 
     return FALSE;
+}
+
+static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    if (headerId == HEADER_NONE)
+        return NULL;
+    enum TimeOfDay timeOfDay;
+
+    if (onWater) {
+        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        return gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
+    }
+    timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+    return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
+    
 }
 
 static bool8 AreElevationsCompatible(u8 a, u8 b)
