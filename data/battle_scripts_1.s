@@ -1836,20 +1836,20 @@ BattleScript_EffectToxicThread::
 	setstatchanger STAT_SPEED, 1, TRUE
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_FailedFromAtkString
-	jumpifstat BS_TARGET, CMP_NOT_EQUAL, STAT_SPEED, MIN_STAT_STAGE, BattleScript_ToxicThreadWorks
-	jumpifstatus BS_TARGET, STATUS1_PSN_ANY, BattleScript_FailedFromAtkString
+	checknonvolatiletrigger MOVE_EFFECT_POISON, BattleScript_EffectStatDownFromAccCheck
 BattleScript_ToxicThreadWorks:
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
+	attackanimation
+	waitanimation
+	setstatchanger STAT_SPEED, 1, TRUE
 	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_ToxicThreadTryPsn
 	jumpifbyte CMP_LESS_THAN, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_ToxicThreadDoAnim
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_FELL_EMPTY, BattleScript_ToxicThreadTryPsn
 	pause B_WAIT_TIME_SHORT
 	goto BattleScript_ToxicThreadPrintString
 BattleScript_ToxicThreadDoAnim::
-	attackanimation
-	waitanimation
 	setgraphicalstatchangevalues
 	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 BattleScript_ToxicThreadPrintString::
@@ -3144,6 +3144,7 @@ BattleScript_EffectEvasionDown::
 BattleScript_EffectStatDown:
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_FailedFromAtkString
+BattleScript_EffectStatDownFromAccCheck:
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 BattleScript_StatDownFromAttackString:
 	attackstring

@@ -834,8 +834,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0x94
+	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
 	.byte 0x94
+	.2byte \nonVolatile
+	.4byte \failInstr
 	.endm
 
 	.macro copybidedmg
