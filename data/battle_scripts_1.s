@@ -9586,8 +9586,8 @@ BattleScript_EffectRaiseCritAlliesAnim::
 	copybyte gBattlerTarget, gBattlerAttacker
 BattleScript_RaiseCritAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-	setstatchanger STAT_ATK, 0, FALSE @ for animation
-	statbuffchange BS_TARGET, 0, BattleScript_RaiseCritAlliesIncrement @ for animation
+	statchangeanimation BS_TARGET, STAT_ATK
+	waitanimation
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseCritAlliesIncrement:

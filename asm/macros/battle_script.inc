@@ -1097,8 +1097,12 @@
 	.byte 0xc7
 	.endm
 
-	.macro unused_c8
+	.macro statchangeanimation battler:req, stats:req, stages=1, down=FALSE
 	.byte 0xc8
+	.byte \battler
+	.byte \stats
+	.byte \stages
+	.byte \down
 	.endm
 
 	.macro trymemento failInstr:req
@@ -1220,7 +1224,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setstatchanger stat:req, stages:req, down:req
+	.macro setstatchanger stat:req, stages:req, down=FALSE
 	.byte 0xe1
 	.byte \stat
 	.byte \stages
