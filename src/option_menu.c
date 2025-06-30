@@ -1,10 +1,12 @@
 #include "global.h"
 #include "option_menu.h"
 #include "bg.h"
+#include "event_data.h"
 #include "gpu_regs.h"
 #include "international_string_util.h"
 #include "main.h"
 #include "menu.h"
+#include "overworld.h"
 #include "palette.h"
 #include "scanline_effect.h"
 #include "sprite.h"
@@ -367,7 +369,16 @@ static void Task_OptionMenuFadeOut(u8 taskId)
     {
         DestroyTask(taskId);
         FreeAllWindowBuffers();
-        SetMainCallback2(gMain.savedCallback);
+
+        if (FlagGet(FLAG_OPTIONS_FROM_START_MENU))
+        {
+            FlagClear(FLAG_OPTIONS_FROM_START_MENU);
+            SetMainCallback2(CB2_ReturnToField);
+        }
+        else
+        {
+            SetMainCallback2(gMain.savedCallback);
+        }
     }
 }
 
