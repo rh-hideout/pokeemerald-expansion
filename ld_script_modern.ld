@@ -53,7 +53,6 @@ SECTIONS {
     .text ORIGIN(ROM) :
     ALIGN(4)
     {
-        KEEP(*(.text.consts));
         src/rom_header.o(.text*);
         src/rom_header_gf.o(.text.*);
         src/rom_header_rhh.o(.text.*);
