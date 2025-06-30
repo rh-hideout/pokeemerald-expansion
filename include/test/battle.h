@@ -884,6 +884,10 @@ struct moveWithPP {
 
 #define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 #define OPPONENT(species) for (OpenPokemon(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -917,6 +921,7 @@ void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
 void ClearFlagAfterTest(void);
 void OpenPokemon(u32 sourceLine, u32 side, u32 species);
+void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);

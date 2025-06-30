@@ -1288,9 +1288,6 @@ static void CB2_HandleStartMultiPartnerBattle(void)
         break;
     case 16:
         // Finish, start battle
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN, "CB2_HandleStartMultiPartnerBattle case 16");
-        #endif
         if (BattleInitAllSprites(&gBattleCommunication[SPRITES_INIT_STATE1], &gBattleCommunication[SPRITES_INIT_STATE2]))
         {
             TrySetLinkBattleTowerEnemyPartyLevel();

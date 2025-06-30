@@ -1629,7 +1629,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
-    INVALID_IF(species > SPECIES_EGG, "Invalid species: %d", species);
+    INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
     if ((side & BIT_SIDE) == B_SIDE_PLAYER)
     {
@@ -1641,6 +1641,59 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
         partySize = &DATA.opponentPartySize;
         party = DATA.recordedBattle.opponentParty;
     }
+    INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
+    DATA.currentSide = side;
+    DATA.currentPartyIndex = *partySize;
+    DATA.currentMon = &party[DATA.currentPartyIndex];
+    DATA.gender = 0xFF; // Male
+    DATA.nature = NATURE_HARDY;
+    (*partySize)++;
+
+    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
+    data = MOVE_NONE;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+    data = 0;
+    if (B_FRIENDSHIP_BOOST)
+    {
+        // This way, we avoid the boost affecting tests unless explicitly stated.
+        SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
+        CalculateMonStats(DATA.currentMon);
+    }
+}
+
+void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species)
+{
+
+    s32 i, data;
+    u8 *partySize;
+    struct Pokemon *party;
+    INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
+    ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
+    if (side == B_POSITION_PLAYER_LEFT)
+    {
+        partySize = &DATA.playerPartySize;
+        party = DATA.recordedBattle.playerParty;
+    }
+    else if (side == B_POSITION_PLAYER_RIGHT)
+    {
+        partySize = &DATA.playerPartySize;
+        if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
+            *partySize = 3;
+        party = DATA.recordedBattle.playerParty;
+    } 
+    else if (side == B_POSITION_OPPONENT_LEFT)
+    {
+        partySize = &DATA.opponentPartySize;
+        party = DATA.recordedBattle.opponentParty;
+    } 
+    else
+    {
+        partySize = &DATA.opponentPartySize;
+        if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
+            *partySize = 3;
+        party = DATA.recordedBattle.opponentParty;
+    } 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.currentSide = side;
     DATA.currentPartyIndex = *partySize;
@@ -2283,6 +2336,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     u32 moveId, moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
+    
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "MOVE outside TURN");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "MOVE is not allowed for opponent in AI tests. Use EXPECT_MOVE instead");
@@ -2292,6 +2346,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     if (GetMoveEffect(moveId) == EFFECT_REVIVAL_BLESSING)
         requirePartyIndex = MoveGetFirstFainted(battlerId) != PARTY_SIZE;
+
 
     // Check party menu moves.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetMoveName(moveId));

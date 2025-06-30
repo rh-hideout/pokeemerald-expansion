@@ -379,9 +379,6 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
                                         || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
                                         || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
     {
-        #ifndef NDEBUG
-    MgbaPrintf(MGBA_LOG_WARN, "OpponentHandleDrawTrainerPic");
-    #endif
         if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
@@ -389,17 +386,11 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
                 xPos = 176;
             else
                 xPos = 200;
-            #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN, "B_POSITION_OPPONENT_LEFT%d", xPos);
-            #endif
         }
         else
         {
             trainerPicId = TRAINER_PIC_RED;
             xPos = 152;
-            #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN, "B_POSITION_OPPONENT_RIGHT%d", xPos);
-            #endif
         }
     }
     else 

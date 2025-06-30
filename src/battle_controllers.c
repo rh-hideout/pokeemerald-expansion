@@ -132,24 +132,10 @@ static void InitBtlControllersInternal(void)
     bool32 isInGamePartner = (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER);
     bool32 isAIvsAI = IsAiVsAiBattle();
 
-    #ifndef NDEBUG
-MgbaPrintf(MGBA_LOG_WARN,"isLink%d", isLink);
-MgbaPrintf(MGBA_LOG_WARN,"isDouble%d", isDouble);
-MgbaPrintf(MGBA_LOG_WARN,"isMaster%d", isMaster);
-MgbaPrintf(MGBA_LOG_WARN,"isRecorded%d", isRecorded);
-MgbaPrintf(MGBA_LOG_WARN,"isRecordedMaster%d", isRecordedMaster);
-MgbaPrintf(MGBA_LOG_WARN,"isRecordedLink%d", isRecordedLink);
-MgbaPrintf(MGBA_LOG_WARN,"isMulti%d", isMulti);
-MgbaPrintf(MGBA_LOG_WARN,"isInGamePartner%d", isInGamePartner);
-MgbaPrintf(MGBA_LOG_WARN,"isAIvsAI%d", isAIvsAI);
-#endif
 
 // BATTLE_TEST_MULTI passes
     if (!isLink || isMaster)
     {
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN, "gBattleMainFunc = BeginBattleIntro");
-        #endif
         gBattleMainFunc = BeginBattleIntro;
     }
 
@@ -158,9 +144,6 @@ MgbaPrintf(MGBA_LOG_WARN,"isAIvsAI%d", isAIvsAI);
         gBattlersCount = 2;
     else
     {
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN, "gBattlersCount = MAX_BATTLERS_COUNT");
-        #endif
         gBattlersCount = MAX_BATTLERS_COUNT;
     }
 
@@ -272,9 +255,9 @@ MgbaPrintf(MGBA_LOG_WARN,"isAIvsAI%d", isAIvsAI);
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
             else if (isInGamePartner && isRecorded)
             {
-                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToRecordedPartner;
                 #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"Player 2 = SetControllerToPlayerPartner");
+                MgbaPrintf(MGBA_LOG_WARN,"Player 2 = SetControllerToRecordedPartner");
                 #endif
             }
             else if (isRecorded)
@@ -327,20 +310,11 @@ MgbaPrintf(MGBA_LOG_WARN,"isAIvsAI%d", isAIvsAI);
             }
             else
                 gBattlerPartyIndexes[3] = 3;
-            #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[0]%d", gBattlerPartyIndexes[0]);
-            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[1]%d", gBattlerPartyIndexes[1]);
-            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[2]%d", gBattlerPartyIndexes[2]);
-            MgbaPrintf(MGBA_LOG_WARN,"gBattlerPartyIndexes[3]%d", gBattlerPartyIndexes[3]);
-            #endif
         }
     }
     else
     {
         u8 multiplayerId = isLink ? GetMultiplayerId() : gRecordedBattleMultiplayerId;
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"multiplayerId%d", multiplayerId);
-        #endif
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
             u32 linkPositionLeft, linkPositionRight;
@@ -405,6 +379,11 @@ static inline bool32 IsControllerPlayer(u32 battler)
 static inline bool32 IsControllerRecordedPlayer(u32 battler)
 {
     return (gBattlerControllerEndFuncs[battler] == RecordedPlayerBufferExecCompleted);
+}
+
+static inline bool32 IsControllerRecordedPartner(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == RecordedPartnerBufferExecCompleted);
 }
 
 static inline bool32 IsControllerOpponent(u32 battler)
@@ -519,14 +498,23 @@ static void PrepareBufferDataTransfer(u32 battler, u32 bufferId, u8 *data, u16 s
         switch (bufferId)
         {
         case B_COMM_TO_CONTROLLER:
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"PrepareBufferDataTransfer B_COMM_TO_CONTROLLER");
+        #endif
             for (i = 0; i < size; data++, i++)
                 gBattleResources->bufferA[battler][i] = *data;
             break;
         case B_COMM_TO_ENGINE:
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"PrepareBufferDataTransfer B_COMM_TO_ENGINE");
+        #endif
             for (i = 0; i < size; data++, i++)
                 gBattleResources->bufferB[battler][i] = *data;
             break;
         }
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"PrepareBufferDataTransfer");
+        #endif
     }
 }
 
@@ -1178,6 +1166,9 @@ void BtlController_EmitDataTransfer(u32 battler, u32 bufferId, u16 size, void *d
     for (i = 0; i < size; i++)
         gBattleResources->transferBuffer[4 + i] = *(u8 *)(data++);
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, size + 4);
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_EmitDataTransfer");
+    #endif
 }
 
 static void UNUSED BtlController_EmitDMA3Transfer(u32 battler, u32 bufferId, void *dst, u16 size, void *data)
@@ -1419,6 +1410,9 @@ void BtlController_EmitDebugMenu(u32 battler, u32 bufferId)
 // Can be used for all the controllers.
 void BtlController_Complete(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_Complete");
+    #endif
     gBattlerControllerEndFuncs[battler](battler);
 }
 
@@ -2224,6 +2218,9 @@ static void Controller_HitAnimation(u32 battler)
 // Used for all the commands which do nothing.
 void BtlController_Empty(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_Empty");
+    #endif
     BtlController_Complete(battler);
 }
 
@@ -2244,10 +2241,13 @@ void BtlController_HandleGetMonData(u32 battler)
     u32 size = 0;
     u8 monToCheck;
     s32 i;
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_HandleGetMonData");
+    #endif
 
     if (gBattleResources->bufferA[battler][2] == 0)
     {
-        size += GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], monData);
+        size += GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], monData);   
     }
     else
     {
@@ -2260,13 +2260,18 @@ void BtlController_HandleGetMonData(u32 battler)
         }
     }
     BtlController_EmitDataTransfer(battler, B_COMM_TO_ENGINE, size, monData);
+    
     BtlController_Complete(battler);
 }
 
 void BtlController_HandleGetRawMonData(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_HandleGetRawMonData");
+    #endif
     struct BattlePokemon battleMon;
     struct Pokemon *mon = GetBattlerMon(battler);
+
 
     u8 *src = (u8 *)mon + gBattleResources->bufferA[battler][1];
     u8 *dst = (u8 *)&battleMon + gBattleResources->bufferA[battler][1];
@@ -2281,12 +2286,16 @@ void BtlController_HandleGetRawMonData(u32 battler)
 
 void BtlController_HandleSetMonData(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"BtlController_HandleSetMonData");
+    #endif
     struct Pokemon *party = GetBattlerParty(battler);
     u32 i, monToCheck;
 
     if (gBattleResources->bufferA[battler][2] == 0)
     {
         SetBattlerMonData(battler, party, gBattlerPartyIndexes[battler]);
+        
     }
     else
     {
@@ -2346,6 +2355,7 @@ void BtlController_HandleSwitchInAnim(u32 battler)
     bool32 isPlayerSide = (IsControllerPlayer(battler)
                         || IsControllerPlayerPartner(battler)
                         || IsControllerRecordedPlayer(battler)
+                        || IsControllerRecordedPartner(battler)
                         || IsControllerLinkPartner(battler));
 
     if (IsControllerPlayer(battler))
@@ -2640,6 +2650,7 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
         if (IsControllerPlayer(battler)
          || IsControllerRecordedPlayer(battler)
+         || IsControllerRecordedPartner(battler)
          || IsControllerWally(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
