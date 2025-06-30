@@ -482,29 +482,29 @@ static void StatsChangeAnimation_Step2(u8 taskId)
     AnimLoadCompressedBgGfx(animBgData.bgId, gStatAnim_Gfx, animBgData.tilesOffset);
     switch (sAnimStatsChangeData->aAnimStatId)
     {
-    case STAT_ANIM_PAL_ATK:
+    case STAT_ATK:
         LoadPalette(gStatAnim_Attack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_DEF:
+    case STAT_DEF:
         LoadPalette(gStatAnim_Defense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_ACC:
+    case STAT_ACC:
         LoadPalette(gStatAnim_Accuracy_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_SPEED:
+    case STAT_SPEED:
         LoadPalette(gStatAnim_Speed_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_EVASION:
+    case STAT_EVASION:
         LoadPalette(gStatAnim_Evasion_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_SPATK:
+    case STAT_SPATK:
         LoadPalette(gStatAnim_SpAttack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
-    case STAT_ANIM_PAL_SPDEF:
+    case STAT_SPDEF:
         LoadPalette(gStatAnim_SpDefense_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     default:
- // case STAT_ANIM_PAL_MULTIPLE:
+ // case STAT_MULTIPLE:
         LoadPalette(gStatAnim_Multiple_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
         break;
     }

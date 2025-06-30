@@ -85,6 +85,8 @@
 #define STAT_ACC     6 // Only in battles.
 #define STAT_EVASION 7 // Only in battles.
 
+#define STAT_MULTIPLE 0x3F // Used in battle_anim_status_effects.c
+
 #define NUM_NATURE_STATS (NUM_STATS - 1) // excludes HP
 #define NUM_BATTLE_STATS (NUM_STATS + 2) // includes Accuracy and Evasion
 #define NUM_BOOSTABLE_STATS (NUM_BATTLE_STATS - 1) // excludes HP

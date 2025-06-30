@@ -200,17 +200,6 @@ void SetSpritePrimaryCoordsFromSecondaryCoords(struct Sprite *sprite);
 u8 GetBattlerSpriteDefault_Y(u8 battler);
 u8 GetSubstituteSpriteDefault_Y(u8 battler);
 
-enum StatAnimPal {
-    STAT_ANIM_PAL_ATK,
-    STAT_ANIM_PAL_DEF,
-    STAT_ANIM_PAL_SPEED,
-    STAT_ANIM_PAL_SPATK,
-    STAT_ANIM_PAL_SPDEF,
-    STAT_ANIM_PAL_ACC,
-    STAT_ANIM_PAL_EVASION,
-    STAT_ANIM_PAL_MULTIPLE = 0xFF
-};
-
 void LaunchStatusAnimation(u8 battler, u8 statusAnimId);
 extern const union AnimCmd *const gAnims_SpinningSparkle[];
 

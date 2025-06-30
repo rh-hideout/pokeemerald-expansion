@@ -2931,7 +2931,7 @@ static void ChooseStatBoostAnimation(u32 battler)
 
     for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
     {
-        if ((queuedStatBoost = gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == STAT_BUFF_NONE)
+        if ((queuedStatBoost = gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == 0)
             continue;
 
         gBattleScripting.animArg1 = GetStatAnimArg(statsOrder[stat] + 1, queuedStatBoost, gBattleScripting.animArg1 != 0);

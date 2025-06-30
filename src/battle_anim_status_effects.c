@@ -529,34 +529,13 @@ static void AnimTask_FrozenIceCube_Step4(u8 taskId)
 
 void AnimTask_StatsChange(u8 taskId)
 {
-    s16 animArg = (s16)gBattleSpritesDataPtr->animationData->animArg;
-    bool16 goesDown = (animArg < 0);
-    s16 animPalId = 0;
-    bool16 sharply = FALSE;
+    union StatAnimArg animArg = (union StatAnimArg) gBattleSpritesDataPtr->animationData->animArg;
 
-    switch (animArg)
-    {
-        case STAT_BUFF_NONE:
-            DestroyAnimVisualTask(taskId);
-            return;
-        case STAT_BUFF_MULTIPLE_PLUS2:
-        case STAT_BUFF_MULTIPLE_MINUS2:
-            sharply = TRUE;
-        case STAT_BUFF_MULTIPLE_PLUS1:
-        case STAT_BUFF_MULTIPLE_MINUS1:
-            animPalId = STAT_ANIM_PAL_MULTIPLE;
-            break;
-        default:
-            sharply = (abs(animArg) > NUM_BOOSTABLE_STATS);
-            animPalId = (abs(animArg) - 1) % NUM_BOOSTABLE_STATS;
-            break;
-    }
-
-    gBattleAnimArgs[0] = goesDown;
-    gBattleAnimArgs[1] = animPalId;
+    gBattleAnimArgs[0] = animArg.isNegative;
+    gBattleAnimArgs[1] = animArg.stat;
     gBattleAnimArgs[2] = FALSE; // Whether it's the target, rather than attacker
     gBattleAnimArgs[3] = FALSE; // Whether it hits multiple battlers
-    gBattleAnimArgs[4] = sharply;
+    gBattleAnimArgs[4] = animArg.harshly;
     gTasks[taskId].func = InitStatsChangeAnimation;
     gTasks[taskId].func(taskId);
 }

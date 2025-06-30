@@ -6170,7 +6170,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 if (numStatBuffs > 0)
                 {
                     if (numStatBuffs > 1)
-                        gBattleScripting.animArg1 = STAT_BUFF_MULTIPLE_PLUS1;
+                        ((union StatAnimArg *) &gBattleScripting.animArg1)->stat = STAT_MULTIPLE;
 
                     gLastUsedAbility = abilityAtk;
                     gBattlerAbility = battlerAtk;
@@ -12084,26 +12084,21 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
     // For moves that raise several stats, the scripts are written in such a way that
     // they are raised one at a time. However, the animation requires taking into
     // account all stats that will be raised by that move at once.
-    u32 changeableStatsCount = (singleStatOnly && statChanger.statId) ?
-        1 :
-        CountStatChangerStats(statChanger);
-    if (!gBattleScripting.statAnimPlayed)
+    u32 changeableStatsCount = singleStatOnly ? 1: CountStatChangerStats(statChanger);
+    if (!gBattleScripting.statAnimPlayed && changeableStatsCount > 0) // failsafe
     {
         // This prevents the stat change animation going off multiple times per turn
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
+
         MarkBattlerForControllerExec(battler);
         BtlController_EmitBattleAnimation(
             battler,
             B_COMM_TO_CONTROLLER,
             B_ANIM_STATS_CHANGE,
             &gDisableStructs[battler],
-            GetStatAnimArgBase(
-                statChanger.statId,
-                gBattleScripting.statAnimPlayed ?
-                    AnyStatChangerStatIsSharpOrHarsh(statChanger) :
-                    (GetStatChangerStage(statChanger, statChanger.statId) > 1),
-                gBattleScripting.statAnimPlayed,
-                statChanger.isNegative
+            GetStatAnimArgFromStatChanger(
+                statChanger,
+                (changeableStatsCount > 1)
             ));
     }
     else if (changeableStatsCount == 1) // final stat that can be changed
@@ -18248,56 +18243,62 @@ void BS_TrySpectralThiefSteal(void)
         return;
     }
 
-    u32 stat;
-    bool32 contrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
     gBattleScripting.animArg1 = 0;
+    union StatChanger statChanger = {0};
+    statChanger.isNegative = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
 
-    for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
-    {
-        if (gBattleMons[gBattlerTarget].statStages[stat] <= DEFAULT_STAT_STAGE)
-            continue;
-
-        gBattleStruct->storedStatBuffs[stat] = min(
-            MaxRaiseOrLowerStatAmount(gBattlerAttacker, stat, contrary),
-            gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE
-        ) * NegativeIfTrue(contrary);
-        gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
-        gBattleStruct->hasStoredStatBuffs |= (gBattleStruct->storedStatBuffs[stat] != 0);
-
-        // Determining the animation
-        if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
-            gBattleScripting.animArg1 = GetStatAnimArg(stat, gBattleStruct->storedStatBuffs[stat], gBattleScripting.animArg1 == 0);
+#define ADD_STOLEN_STAT_BOOST(_stat, _statChangerField)                                                                                                                                      \
+    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                                                                                                                                    \
+    {                                                                                                                                                                                        \
+        statChanger._statChangerField = min(gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE, MaxRaiseOrLowerStatAmount(gBattlerAttacker, _stat, statChanger.isNegative)); \
+        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;                                                                                                                  \
     }
 
-    gBattlescriptCurrInstr = (gBattleStruct->hasStoredStatBuffs == TRUE) ? cmd->jumpInstr : cmd->nextInstr;
+    // Add every stat to the statchanger
+    ADD_STOLEN_STAT_BOOST(STAT_ATK, attack);
+    ADD_STOLEN_STAT_BOOST(STAT_DEF, defense);
+    ADD_STOLEN_STAT_BOOST(STAT_SPEED, speed);
+    ADD_STOLEN_STAT_BOOST(STAT_SPATK, spAttack);
+    ADD_STOLEN_STAT_BOOST(STAT_SPDEF, spDefense);
+    ADD_STOLEN_STAT_BOOST(STAT_ACC, accuracy);
+    ADD_STOLEN_STAT_BOOST(STAT_EVASION, evasion);
+
+    // If we managed to steal stats - play an animation, go to the Spectral Thief animation
+    if (statChanger.allStats != 0)
+    {
+        gBattleScripting.animArg1 = GetStatAnimArgFromStatChanger(statChanger, FALSE);
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_SpectralThiefPrintStats(void)
 {
     NATIVE_ARGS();
 
-    if (gBattleStruct->hasStoredStatBuffs == TRUE) // Stats to boost
+    if (gBattleScripting.statChanger.allStats != 0) // Stats to boost
     {
         for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
         {
-            if (gBattleStruct->storedStatBuffs[stat] != STAT_BUFF_NONE)
+            if (GetStatChangerStatValue(gBattleScripting.statChanger, stat))
             {
-                SetStatChanger(stat, gBattleStruct->storedStatBuffs[stat]);
-                if (ChangeStatBuffs(
+                // To do - get string printing to loop
+                gBattleScripting.statChanger.statId = stat;
+                if (ChangeStatBuffsStatChanger(
                         gBattlerAttacker,
-                        gBattleStruct->storedStatBuffs[stat],
-                        stat,
+                        gBattleScripting.statChanger,
                         STAT_CHANGE_CERTAIN,
-                        0, NULL) == STAT_CHANGE_WORKED)
+                        NULL) == STAT_CHANGE_WORKED)
                 {
-                    BattleScriptCall((gBattleStruct->storedStatBuffs[stat] < 0) ? BattleScript_StatDown : BattleScript_StatUp);
-                    gBattleStruct->storedStatBuffs[stat] = STAT_BUFF_NONE;
+                    BattleScriptCall(gBattleScripting.statChanger.isNegative ? BattleScript_StatDown : BattleScript_StatUp);
+                    SetStatChangerStatValue(&gBattleScripting.statChanger, stat, 0);
                     return;
                 }
-                gBattleStruct->storedStatBuffs[stat] = STAT_BUFF_NONE;
+                SetStatChangerStatValue(&gBattleScripting.statChanger, stat, 0);
             }
         }
-        gBattleStruct->hasStoredStatBuffs = FALSE;
+        gBattleScripting.statChanger.value = 0;
     }
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

@@ -71,43 +71,6 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
-enum StatAnimArg
-{
-    STAT_BUFF_MULTIPLE_MINUS2 = -NUM_BOOSTABLE_STATS * 2 - 2,
-    STAT_BUFF_MULTIPLE_MINUS1 = -NUM_BOOSTABLE_STATS * 2 - 1,
-    STAT_BUFF_MINUS2_EVA = -STAT_EVASION - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_ACC = -STAT_ACC - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_SPD = -STAT_SPDEF - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_SPA = -STAT_SPATK - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_SPE = -STAT_SPEED - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_DEF = -STAT_DEF - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS2_ATK = -STAT_ATK - NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MINUS1_EVA = -STAT_EVASION,
-    STAT_BUFF_MINUS1_ACC = -STAT_ACC,
-    STAT_BUFF_MINUS1_SPD = -STAT_SPDEF,
-    STAT_BUFF_MINUS1_SPA = -STAT_SPATK,
-    STAT_BUFF_MINUS1_SPE = -STAT_SPEED,
-    STAT_BUFF_MINUS1_DEF = -STAT_DEF,
-    STAT_BUFF_MINUS1_ATK = -STAT_ATK,
-    STAT_BUFF_NONE = 0,
-    STAT_BUFF_PLUS1_ATK = STAT_ATK,
-    STAT_BUFF_PLUS1_DEF = STAT_DEF,
-    STAT_BUFF_PLUS1_SPE = STAT_SPEED,
-    STAT_BUFF_PLUS1_SPA = STAT_SPATK,
-    STAT_BUFF_PLUS1_SPD = STAT_SPDEF,
-    STAT_BUFF_PLUS1_ACC = STAT_ACC,
-    STAT_BUFF_PLUS1_EVA = STAT_EVASION,
-    STAT_BUFF_PLUS2_ATK = STAT_ATK + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_DEF = STAT_DEF + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_SPE = STAT_SPEED + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_SPA = STAT_SPATK + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_SPD = STAT_SPDEF + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_ACC = STAT_ACC + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_PLUS2_EVA = STAT_EVASION + NUM_BOOSTABLE_STATS,
-    STAT_BUFF_MULTIPLE_PLUS1 = STAT_BUFF_MULTIPLE_MINUS1 * -1,
-    STAT_BUFF_MULTIPLE_PLUS2 = STAT_BUFF_MULTIPLE_MINUS2 * -1,
-};
-
 // Cleared each time a mon leaves the field, either by switching out or fainting
 struct DisableStruct
 {
@@ -751,10 +714,6 @@ struct BattleStruct
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum BattleIntroStates introState:8;
-    union {
-        bool8 hasStoredStatBuffs;
-        s8 storedStatBuffs[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
-    };
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
     u16 hpBefore[MAX_BATTLERS_COUNT]; // Hp of battlers before using a move. For Berserk and Anger Shell.
@@ -852,6 +811,17 @@ union StatChanger
     struct {
         u32 flags:4;
         u32 allStats:28;
+    };
+};
+
+union PACKED StatAnimArg
+{
+    u8 value;
+    u16 value_u16; // So that we can cast from a u16
+    struct PACKED {
+        u8 isNegative:1;
+        u8 harshly:1;
+        u8 stat:6;
     };
 };
 
@@ -1357,16 +1327,6 @@ static inline u32 MaxRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
     return lowering ? (gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[battler].statStages[stat]);
 }
 
-static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
-{
-    return (multiple ? (STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater) : (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * NegativeIfTrue(lowering);
-}
-
-static inline enum StatAnimArg GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
-{
-    return GetStatAnimArgBase(stat, abs(amount) > 1, multiple, amount < 0);
-}
-
 static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32 stage, bool32 doNotSetStatId)
 {
     return (union StatChanger) ((((union StatChanger) {
@@ -1470,6 +1430,37 @@ static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChan
 {
     // 0xEEEEEEE will OR with any stat that has a greater stage than 1;
     return (statChanger.allStats & 0xEEEEEEE);
+}
+
+static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 singleStatOnly)
+{
+    return statChanger.statId ? statChanger.statId :
+        (!singleStatOnly && CountStatChangerStats(statChanger) > 1) ? STAT_MULTIPLE :
+        statChanger.attack > 0 ? STAT_ATK :
+        statChanger.defense > 0 ? STAT_DEF :
+        statChanger.speed > 0 ? STAT_SPEED :
+        statChanger.spAttack > 0 ? STAT_SPATK :
+        statChanger.spDefense > 0 ? STAT_SPDEF :
+        statChanger.accuracy > 0 ? STAT_ACC :
+        statChanger.evasion > 0 ? STAT_EVASION : 0; // Fail state
+}
+
+static inline u8 GetStatAnimArgFromStatChanger(union StatChanger statChanger, bool32 singleStatOnly)
+{
+    return ((union StatAnimArg) {
+        .isNegative = statChanger.isNegative,
+        .harshly = AnyStatChangerStatIsSharpOrHarsh(statChanger),
+        .stat = GetStatChangerStat(statChanger, singleStatOnly),
+    }).value;
+}
+
+static inline u8 GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
+{
+    return ((union StatAnimArg) {
+        .isNegative = (amount < 0),
+        .harshly = (abs(amount) > 1),
+        .stat = multiple ? STAT_MULTIPLE : stat,
+    }).value;
 }
 
 #endif // GUARD_BATTLE_H
