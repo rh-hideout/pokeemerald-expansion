@@ -12140,8 +12140,10 @@ static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 
 
 static bool32 MoveEffectBlockedByProtect(struct MoveEffectResult *result, const u8 *failPtr)
 {
-    return MoveEffectBlockedMisc(result, (gMovesInfo[result->currentMove].effect != EFFECT_CURSE && !result->notProtectAffected
-        && IsBattlerProtected(result->battlerAtk, result->effectBattler, result->currentMove)), failPtr);
+    bool32 fail = gMovesInfo[result->currentMove].effect != EFFECT_CURSE
+               && !result->notProtectAffected
+               && IsBattlerProtected(result->battlerAtk, result->effectBattler, result->currentMove);
+    return MoveEffectBlockedMisc(result, fail, failPtr);
 }
 
 static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
