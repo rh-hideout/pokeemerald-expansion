@@ -1177,4 +1177,7 @@ struct MapPosition
 extern bool32 gLoadFail;
 #endif // T_SHOULD_RUN_MOVE_ANIM
 
+u32 CalcGFHeader();
+u32 CalcRHHHeader();
+
 #endif // GUARD_GLOBAL_H

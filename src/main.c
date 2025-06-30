@@ -115,7 +115,7 @@ void AgbMain(void)
 
     gSoftResetDisabled = FALSE;
 
-    if (gFlashMemoryPresent != TRUE)
+    if (gFlashMemoryPresent != TRUE || CalcGFHeader() < 1 || CalcRHHHeader() < 1)
         SetMainCallback2((SAVE_TYPE_ERROR_SCREEN) ? CB2_FlashNotDetectedScreen : NULL);
 
     gLinkTransferringData = FALSE;

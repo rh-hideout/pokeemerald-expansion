@@ -42,3 +42,12 @@ USED static const struct RHHRomHeader sRHHRomHeader =
     .itemsCount = ITEMS_COUNT,
     .itemNameLength = ITEM_NAME_LENGTH,
 };
+
+u32 CalcRHHHeader()
+{
+    u32 size = sizeof(struct RHHRomHeader) / 4;
+    u32 returnVal = 0;
+    for (u32 i = 0; i < size; i++)
+        returnVal += ((u32 *)&sRHHRomHeader)[i];
+    return returnVal;
+}

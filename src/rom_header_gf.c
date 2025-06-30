@@ -178,3 +178,12 @@ USED static const struct GFRomHeader sGFRomHeader = {
     .moveDescriptions = NULL,
     .unk20 = 0x00000000, // 0xFFFFFFFF in FRLG
 };
+
+u32 CalcGFHeader()
+{
+    u32 size = sizeof(struct GFRomHeader) / 4;
+    u32 returnVal = 0;
+    for (u32 i = 0; i < size; i++)
+        returnVal += ((u32 *)&sGFRomHeader)[i];
+    return returnVal;
+}
