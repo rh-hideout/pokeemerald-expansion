@@ -71,6 +71,43 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
+enum StatAnimArg
+{
+    STAT_BUFF_MULTIPLE_MINUS2 = -NUM_BOOSTABLE_STATS * 2 - 2,
+    STAT_BUFF_MULTIPLE_MINUS1 = -NUM_BOOSTABLE_STATS * 2 - 1,
+    STAT_BUFF_MINUS2_EVA = -STAT_EVASION - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_ACC = -STAT_ACC - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPD = -STAT_SPDEF - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPA = -STAT_SPATK - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_SPE = -STAT_SPEED - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_DEF = -STAT_DEF - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS2_ATK = -STAT_ATK - NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MINUS1_EVA = -STAT_EVASION,
+    STAT_BUFF_MINUS1_ACC = -STAT_ACC,
+    STAT_BUFF_MINUS1_SPD = -STAT_SPDEF,
+    STAT_BUFF_MINUS1_SPA = -STAT_SPATK,
+    STAT_BUFF_MINUS1_SPE = -STAT_SPEED,
+    STAT_BUFF_MINUS1_DEF = -STAT_DEF,
+    STAT_BUFF_MINUS1_ATK = -STAT_ATK,
+    STAT_BUFF_NONE = 0,
+    STAT_BUFF_PLUS1_ATK = STAT_ATK,
+    STAT_BUFF_PLUS1_DEF = STAT_DEF,
+    STAT_BUFF_PLUS1_SPE = STAT_SPEED,
+    STAT_BUFF_PLUS1_SPA = STAT_SPATK,
+    STAT_BUFF_PLUS1_SPD = STAT_SPDEF,
+    STAT_BUFF_PLUS1_ACC = STAT_ACC,
+    STAT_BUFF_PLUS1_EVA = STAT_EVASION,
+    STAT_BUFF_PLUS2_ATK = STAT_ATK + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_DEF = STAT_DEF + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPE = STAT_SPEED + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPA = STAT_SPATK + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_SPD = STAT_SPDEF + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_ACC = STAT_ACC + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_PLUS2_EVA = STAT_EVASION + NUM_BOOSTABLE_STATS,
+    STAT_BUFF_MULTIPLE_PLUS1 = STAT_BUFF_MULTIPLE_MINUS1 * -1,
+    STAT_BUFF_MULTIPLE_PLUS2 = STAT_BUFF_MULTIPLE_MINUS2 * -1,
+};
+
 // Cleared each time a mon leaves the field, either by switching out or fainting
 struct DisableStruct
 {
@@ -714,7 +751,10 @@ struct BattleStruct
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     enum BattleIntroStates introState:8;
-    u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
+    union {
+        bool8 hasStoredStatBuffs;
+        s8 storedStatBuffs[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
+    };
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     u16 tracedAbility[MAX_BATTLERS_COUNT];
     u16 hpBefore[MAX_BATTLERS_COUNT]; // Hp of battlers before using a move. For Berserk and Anger Shell.
@@ -794,6 +834,81 @@ struct AiBattleData
     u8 padding:6;
 };
 
+union TRANSPARENT StatChanger
+{
+    int raw;
+    u32 value;
+    struct {
+        bool32 isNegative:1;
+        u32 statId:3; // If doing only a single stat, populate its ID here. If multiple, leave as 0
+        u32 attack:4;
+        u32 defense:4;
+        u32 speed:4;
+        u32 spAttack:4;
+        u32 spDefense:4;
+        u32 accuracy:4;
+        u32 evasion:4;
+    };
+    struct {
+        u32 flags:4;
+        u32 allStats:28;
+    };
+};
+
+union TRANSPARENT StatFlags
+{
+    int raw;
+    u8 allStats;
+    u32 value;
+    struct {
+        u32 unused:1; // HP
+        u32 attack:1;
+        u32 defense:1;
+        u32 speed:1;
+        u32 spAttack:1;
+        u32 spDefense:1;
+        u32 accuracy:1;
+        u32 evasion:1;
+        u32 padding:24;
+    };
+};
+
+struct MoveEffectResult
+{
+    enum MoveEffects moveEffect:8;
+    bool32 certain:1;
+    bool32 primary:1;
+    bool32 affectsUser:1;
+    bool32 failed:1;
+    bool32 isAbility:1;
+    bool32 battlescriptPush:1;
+    bool32 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
+    bool32 blockedByItem:1; // Sets lastUsedItem
+    bool32 recordBattlerAbility:1; // Records the target's ability (not the same as lastUsedAbility, which could be a target's ability e.g. Flower Veil)
+    enum StatusTrigger statusTrigger:2;
+
+    // Mostly for stats
+    bool32 statChangeEffect:1;
+    bool32 statLowered:1;
+    bool32 notProtectAffected:1;
+    bool32 statDropPrevention:1;
+    bool32 mirrorArmored:1;
+    const u8 *nextInstr; // Where to set gBattlescriptCurrInstr when calculated
+    const u8 *pushInstr; // Instruction that will be pushed if battlescriptPush is set
+    u16 currentMove;
+    u16 battlerAbility;
+    u16 lastUsedAbility;
+    u16 battlerItem;
+    u16 lastUsedItem;
+    enum ItemHoldEffect battlerHoldEffect:8;
+    u8 multistring;
+    u16 battlerAtk:4;
+    u16 battlerDef:4;
+    u16 effectBattler:4;
+    u16 scriptingBattler:4;
+    union StatChanger statChanger;
+};
+
 // The palaceFlags member of struct BattleStruct contains 1 flag per move to indicate which moves the AI should consider,
 // and 1 flag per battler to indicate whether the battler is awake and at <= 50% HP (which affects move choice).
 // The assert below is to ensure palaceFlags is large enough to store these flags without overlap.
@@ -856,37 +971,27 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
-#define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
-#define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
-#define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
-#define STAT_BUFF_NEGATIVE 0x80                     // 0x80, the sign bit
-
-#define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
-
-#define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7))
-
 #define DO_ACCURACY_CHECK 2 // Don't skip the accuracy check before the move might be absorbed
 
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 unused1;
-    s32 bideDmg;
+    union StatChanger statChanger;
+    union StatChanger savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused2;
+    u8 unused1;
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
+    u8 unused2;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch. Option for noobs but oh well.
     u8 battler;
     u8 animTurn;
     u8 animTargetsHit;
-    u8 statChanger;
+    u8 unused3;
     bool8 statAnimPlayed;
     u8 getexpState;
     u8 battleStyle;
@@ -1241,6 +1346,113 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+}
+
+static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 lowering)
+{
+    return lowering ? (gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[battler].statStages[stat]);
+}
+
+static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
+{
+    return (multiple ? (STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater) : (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
+}
+
+static inline enum StatAnimArg GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
+{
+    return GetStatAnimArgBase(stat, abs(amount) > 1, multiple, amount < 0);
+}
+
+static inline u32 PrepareStatChangerAny(union StatFlags stats, s32 stage, bool32 multiple)
+{
+    return (((union StatChanger) {
+        .attack = stats.attack, // All 1 or 0 depending on if the stat is selected in 'stats'
+        .defense = stats.defense,
+        .speed = stats.speed,
+        .spAttack = stats.spAttack,
+        .spDefense = stats.spDefense,
+        .accuracy = stats.accuracy,
+        .evasion = stats.evasion,
+    }).value
+        * abs(stage)) // Multiplies by the stage
+        | (stage < 0) // isNegative
+        | ((multiple || (popcount(stats.allStats) > 1)) ? 0 : (log2Int(stats.allStats) << 1)); // statId;
+}
+
+static inline u32 CalcStatChangerValue(u32 statId, s32 stage)
+{
+    return PrepareStatChangerAny(1 << statId, stage, FALSE);
+}
+
+static inline u32 PrepareStatChangerMultiple(union StatFlags stats, s32 stage)
+{
+    return PrepareStatChangerAny(stats, stage, TRUE);
+}
+
+static inline void SetStatChanger(u32 statId, s32 stage)
+{
+    gBattleScripting.statChanger.value = CalcStatChangerValue(statId, stage);
+}
+
+static inline u32 GetStatChangerStage(union StatChanger statChanger, u32 statId)
+{
+    return (statChanger.value >> (statId * 4)) & 0xF;
+}
+
+static inline s32 GetStatChangerStatValue(union StatChanger statChanger, u32 statId)
+{
+    return GetStatChangerStage(statChanger, statId) * powInt(-1, statChanger.isNegative);
+}
+
+static inline void SetStatChangerStatValue(union StatChanger *statChanger, u32 statId, u32 value)
+{
+    switch (statId)
+    {
+        case STAT_ATK:
+            statChanger->attack = value;
+            return;
+        case STAT_DEF:
+            statChanger->defense = value;
+            return;
+        case STAT_SPEED:
+            statChanger->speed = value;
+            return;
+        case STAT_SPATK:
+            statChanger->spAttack = value;
+            return;
+        case STAT_SPDEF:
+            statChanger->spDefense = value;
+            return;
+        case STAT_ACC:
+            statChanger->accuracy = value;
+            return;
+        case STAT_EVASION:
+            statChanger->evasion = value;
+        default:
+            return;
+    }
+}
+
+static inline u32 CountStatChangerStats(union StatChanger statChanger)
+{
+    return !!statChanger.attack +
+        !!statChanger.defense +
+        !!statChanger.speed +
+        !!statChanger.spAttack +
+        !!statChanger.spDefense +
+        !!statChanger.accuracy +
+        !!statChanger.evasion;
+}
+
+static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChanger)
+{
+    return (statChanger.attack > 1) ||
+        (statChanger.defense > 1) ||
+        (statChanger.speed > 1) ||
+        (statChanger.spAttack > 1) ||
+        (statChanger.spDefense > 1) ||
+        (statChanger.accuracy > 1) ||
+        (statChanger.evasion > 1);
 }
 
 #endif // GUARD_BATTLE_H

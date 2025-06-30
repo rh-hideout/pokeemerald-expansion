@@ -62,10 +62,36 @@
 
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #define max(a, b) ((a) >= (b) ? (a) : (b))
-
-#if MODERN
 #define abs(x) (((x) < 0) ? -(x) : (x))
-#endif
+
+static inline s32 powInt(s32 num, u32 exponent)
+{
+    s32 result = 1;
+    for (; exponent > 0; exponent--)
+    {
+        result *= num;
+    }
+    return result;
+}
+
+static inline u32 popcount(u32 word)
+{
+    u32 result = 0;
+    for (; word != 0; word >>= 0x1)
+        result += (word & 1);
+
+    return result;
+}
+
+// Only approximates if the input is not an exact power of 2
+static inline u32 log2Int(u32 word)
+{
+    u32 result = 0;
+    for (; word > 1; word >>= 0x1)
+        result++;
+
+    return result;
+}
 
 // Used in cases where division by 0 can occur in the retail version.
 // Avoids invalid opcodes on some emulators, and the otherwise UB.

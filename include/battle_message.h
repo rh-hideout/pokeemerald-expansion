@@ -233,6 +233,15 @@
     textVar[4] = B_BUFF_EOS;                                    \
 }
 
+static inline void CopyStringToArray(u8 *dest, u32 *index, u32 stringId, bool32 end)
+{
+    dest[(*index)++] = B_BUFF_STRING;
+    dest[(*index)++] = stringId;
+    dest[(*index)++] = stringId >> 8;
+    if (end)
+        dest[*index] = B_BUFF_EOS;
+}
+
 struct BattleMsgData
 {
     u16 currentMove;

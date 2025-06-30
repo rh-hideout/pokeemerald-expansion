@@ -1097,8 +1097,12 @@
 	.byte 0xc7
 	.endm
 
-	.macro unused_c8
+	.macro statchangeanimation battler:req, stats:req, stages=1, down=FALSE
 	.byte 0xc8
+	.byte \battler
+	.byte \stats
+	.byte \stages
+	.byte \down
 	.endm
 
 	.macro trymemento failInstr:req
@@ -1220,9 +1224,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused2 ptr:req
+	.macro setstatchanger stat:req, stages:req, down=FALSE
 	.byte 0xe1
-	.4byte \ptr
+	.byte \stat
+	.byte \stages
+	.byte \down
 	.endm
 
 	.macro switchoutabilities battler:req
@@ -2354,10 +2360,6 @@
 	.endm
 
 @ helpful macros
-	.macro setstatchanger stat:req, stages:req, down:req
-	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
-	.endm
-
 	.macro chosenstatus1animation battler:req, status:req
 	chosenstatusanimation \battler, 0x0, \status
 	.endm
