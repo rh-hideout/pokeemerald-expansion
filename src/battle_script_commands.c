@@ -7344,6 +7344,23 @@ static void Cmd_moveend(void)
             else
                 gBattleScripting.moveendState++;
             break;
+        case MOVEEND_THIRD_MOVE_BLOCK:
+            switch (moveEffect)
+            {
+            case EFFECT_REMOVE_TERRAIN_IF_SET:
+            case EFFECT_REMOVE_TERRAIN:
+                if (IsBattlerAlive(gBattlerAttacker) && IsBattlerTurnDamaged(gBattlerTarget))
+                {
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                    effect = TRUE;
+                }
+                break;
+            default:
+                break;
+            }
+            gBattleScripting.moveendState++;
+            break;
         case MOVEEND_HIT_ESCAPE:
             if (moveEffect == EFFECT_HIT_ESCAPE
              && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
@@ -17266,17 +17283,7 @@ void BS_ApplySaltCure(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfMovePropertyArgument(void)
-{
-    NATIVE_ARGS(u8 argument, const u8 *jumpInstr);
-
-    if (GetMoveEffectArg_MoveProperty(gCurrentMove) == cmd->argument)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetRemoveTerrain(void)
+void BS_SetTerrain(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
     u32 statusFlag = 0;
@@ -17299,48 +17306,19 @@ void BS_SetRemoveTerrain(void)
         statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
-    case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        switch (GetMoveEffectArg_MoveProperty(gCurrentMove))
-        {
-        case ARG_SET_PSYCHIC_TERRAIN: // Genesis Supernova
-            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
-            break;
-        case ARG_TRY_REMOVE_TERRAIN_HIT: // Splintered Stormshards
-        case ARG_TRY_REMOVE_TERRAIN_FAIL: // Steel Roller
-            if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
-            {
-                // No terrain to remove, jump to battle script pointer.
-                gBattlescriptCurrInstr = cmd->jumpInstr;
-            }
-            else
-            {
-                // Remove all terrains.
-                RemoveAllTerrains();
-                gBattlescriptCurrInstr = cmd->nextInstr;
-            }
-            return;
-        default:
-            break;
-        }
+    case EFFECT_HIT_SET_TERRAIN:
+        statusFlag = GetMoveTerrainFlag(gCurrentMove);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
     default:
         break;
     }
+    enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
 
-    if (gFieldStatuses & statusFlag || statusFlag == 0)
-    {
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    }
-    else
-    {
-        enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-
-        gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-        gFieldStatuses |= statusFlag;
-        gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
+    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+    gFieldStatuses |= statusFlag;
+    gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_JumpIfTerrainAffected(void)

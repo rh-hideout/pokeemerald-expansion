@@ -280,6 +280,7 @@ enum MoveEndEffects
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_EJECT_PACK,
+    MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_HIT_ESCAPE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
@@ -296,10 +297,5 @@ enum MoveEndEffects
 #define B_SWITCH_NORMAL     0
 #define B_SWITCH_HIT        1   // dragon tail, circle throw
 #define B_SWITCH_RED_CARD   2
-
-// Argument labels for EFFECT_HIT_SET_REMOVE_TERRAIN
-#define ARG_SET_PSYCHIC_TERRAIN        0
-#define ARG_TRY_REMOVE_TERRAIN_HIT     1
-#define ARG_TRY_REMOVE_TERRAIN_FAIL    2
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
