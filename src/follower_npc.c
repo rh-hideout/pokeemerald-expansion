@@ -1179,10 +1179,6 @@ void FollowerNPC_HandleSprite(void)
         else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE);
     }
-    else if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
-    {
-        TryUpdateFollowerNPCSpriteUnderwater();
-    }
     else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
