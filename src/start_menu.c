@@ -42,6 +42,7 @@
 #include "text.h"
 #include "text_window.h"
 #include "trainer_card.h"
+#include "ui_start_menu.h"
 #include "window.h"
 #include "union_room.h"
 #include "dexnav.h"
@@ -571,10 +572,12 @@ static void CreateStartMenuTask(TaskFunc followupFunc)
 
 static bool8 FieldCB_ReturnToFieldStartMenu(void)
 {
-    if (InitStartMenuStep() == FALSE)
+    /*if (InitStartMenuStep() == FALSE)
     {
         return FALSE;
-    }
+    }*/
+
+    StartMenu_Init();
 
     ReturnToFieldOpenStartMenu();
     return TRUE;
