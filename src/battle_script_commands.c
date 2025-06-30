@@ -12096,10 +12096,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
             B_COMM_TO_CONTROLLER,
             B_ANIM_STATS_CHANGE,
             &gDisableStructs[battler],
-            GetStatAnimArgFromStatChanger(
-                statChanger,
-                (changeableStatsCount > 1)
-            ));
+            GetStatAnimArgFromStatChanger(statChanger, singleStatOnly));
     }
     else if (changeableStatsCount == 1) // final stat that can be changed
         gBattleScripting.statAnimPlayed = FALSE;
