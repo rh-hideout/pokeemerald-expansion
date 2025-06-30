@@ -39,7 +39,7 @@ static void GetMapSize(s32 *width, s32 *height);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
-    u8 slot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    u8 slot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     sFollowMonData.list[slot].isShiny = objectEvent->shiny;
     sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
     sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
@@ -75,7 +75,7 @@ void FollowMon_OverworldCB(void)
             {
                 u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
-                    OBJ_EVENT_GFX_FOLLOW_MON_0 + spawnSlot,
+                    OBJ_EVENT_GFX_FOLLOW_MON_FIRST + spawnSlot,
                     MOVEMENT_TYPE_WANDER_AROUND,
                     localId,
                     x,
@@ -120,9 +120,9 @@ void FollowMon_OverworldCB(void)
         u8 objectEventId;
         enum FollowMonSpawnAnim spawnAnimType;
 
-        for(gfxId = OBJ_EVENT_GFX_FOLLOW_MON_0; gfxId < OBJ_EVENT_GFX_FOLLOW_MON_LAST; ++gfxId)
+        for(gfxId = OBJ_EVENT_GFX_FOLLOW_MON_FIRST; gfxId < OBJ_EVENT_GFX_FOLLOW_MON_LAST; ++gfxId)
         {
-            spawnSlot = gfxId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+            spawnSlot = gfxId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
             bitFlag = (1 << spawnSlot);
 
             if((sFollowMonData.pendingSpawnAnim & bitFlag) != 0)
@@ -404,13 +404,13 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
     u16 localId = object->localId;
     u16 graphicsId = object->graphicsId;
 
-    if(localId >= OBJ_EVENT_ID_FOLLOW_MON_FIRST && localId <= OBJ_EVENT_ID_FOLLOW_MON_LAST)
+    if (localId >= OBJ_EVENT_ID_FOLLOW_MON_FIRST && localId <= OBJ_EVENT_ID_FOLLOW_MON_LAST)
     {
         // Fast check
         return TRUE;
     }
 
-    if(graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+    if (IS_FOLLOWMON_GFXID(graphicsId))
         return TRUE;
 
     return FALSE;
@@ -419,20 +419,20 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
 
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
-    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
 
     sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
 }
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
 }
 
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 {
-    u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_0;
+    u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     u16 species = GetFollowMonSpecies(&sFollowMonData.list[slot]);
 
     graphicsId = OBJ_EVENT_MON + species;
@@ -502,7 +502,7 @@ static bool8 IsSpawningWaterMons()
 
 void RemoveAllFollowMonObjects(void) {
     for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i) {
-        if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_0 && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
+        if(IS_FOLLOWMON_GFXID(gObjectEvents[i].graphicsId))
             RemoveObjectEvent(&gObjectEvents[i]);
     }
 }

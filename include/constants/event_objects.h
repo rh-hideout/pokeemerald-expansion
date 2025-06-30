@@ -288,6 +288,7 @@
 #define OBJ_EVENT_GFX_FOLLOW_MON_FIRST           OBJ_EVENT_GFX_FOLLOW_MON_0
 #define OBJ_EVENT_GFX_FOLLOW_MON_LAST            OBJ_EVENT_GFX_FOLLOW_MON_5
 
+#define IS_FOLLOWMON_GFXID(gfxID)                (gfxID >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && gfxID <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
 #define OBJ_EVENT_MON_SHINY         (1u << 13)
