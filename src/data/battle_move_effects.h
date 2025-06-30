@@ -238,7 +238,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_RECOIL_IF_MISS] =
     {
-        .battleScript = BattleScript_EffectRecoilIfMiss,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
     },
 
@@ -1876,9 +1876,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_RECOIL_HP_25] =
+    [EFFECT_STRUGGLE] =
     {
-        .battleScript = BattleScript_EffectRecoilHP25,
+        .battleScript = BattleScript_EffectStruggle,
         .battleTvScore = 0, // TODO: Assign points
     },
 

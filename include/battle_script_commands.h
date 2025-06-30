@@ -25,7 +25,7 @@ struct PickupItem
 s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, u32 abilityAtk, u32 abilityDef, u32 holdEffectAtk);
 s32 GetCritHitOdds(s32 critChanceIndex);
 u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect);
-u8 GetBattlerTurnOrderNum(u8 battlerId);
+u8 GetBattlerTurnOrderNum(u8 battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
 void SetMoveEffect(bool32 primary, bool32 certain);
@@ -34,7 +34,7 @@ void BattleDestroyYesNoCursorAt(u8 cursorPosition);
 void BattleCreateYesNoCursorAt(u8 cursorPosition);
 void BufferMoveToLearnIntoBattleTextBuff2(void);
 void HandleBattleWindow(u8 xStart, u8 yStart, u8 xEnd, u8 yEnd, u8 flags);
-bool8 UproarWakeUpCheck(u8 battlerId);
+bool8 UproarWakeUpCheck(u8 battler);
 bool32 DoesSubstituteBlockMove(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 DoesDisguiseBlockMove(u32 battler, u32 move);
 bool32 CanPoisonType(u8 battlerAttacker, u8 battlerTarget);
@@ -58,7 +58,7 @@ bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 
-extern void (* const gBattleScriptingCommandsTable[])(void);
+extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];
 
 #endif // GUARD_BATTLE_SCRIPT_COMMANDS_H

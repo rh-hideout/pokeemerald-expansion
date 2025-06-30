@@ -606,6 +606,10 @@ const struct SpriteTemplate gSparkBeamSpriteTemplate =
     .callback = AnimToTargetInSinWave,
 };
 
+// args[0] - initial sprite x
+// args[1] - initial sprite y
+// args[2] - attacker or target
+// args[3] - affine anim number
 static void AnimAquaTail(struct Sprite *sprite)
 {
     StartSpriteAffineAnim(sprite, gBattleAnimArgs[3]);
@@ -618,6 +622,8 @@ static void AnimAquaTail(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+// args[0] - initial x delta
+// args[1] - initial y delta
 static void AnimKnockOffAquaTail(struct Sprite *sprite)
 {
     if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
@@ -651,26 +657,36 @@ static void AnimKnockOffAquaTailStep(struct Sprite *sprite)
     sprite->data[2]++;
 }
 
+#define tRaindropSpawnTimer    data[0]
+#define tRaindropUnused        data[1]
+#define tRaindropSpawnInterval data[2]
+#define tRaindropSpawnDuration data[3] // number of frames over which we spawn raindrops
+
 void AnimTask_CreateRaindrops(u8 taskId)
 {
     u8 x, y;
 
-    if (gTasks[taskId].data[0] == 0)
+    if (gTasks[taskId].tRaindropSpawnTimer == 0)
     {
-        gTasks[taskId].data[1] = gBattleAnimArgs[0];
-        gTasks[taskId].data[2] = gBattleAnimArgs[1];
-        gTasks[taskId].data[3] = gBattleAnimArgs[2];
+        gTasks[taskId].tRaindropUnused        = gBattleAnimArgs[0];
+        gTasks[taskId].tRaindropSpawnInterval = gBattleAnimArgs[1];
+        gTasks[taskId].tRaindropSpawnDuration = gBattleAnimArgs[2];
     }
-    gTasks[taskId].data[0]++;
-    if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
+    gTasks[taskId].tRaindropSpawnTimer++;
+    if (gTasks[taskId].tRaindropSpawnTimer % gTasks[taskId].tRaindropSpawnInterval == 1)
     {
         x = Random2() % DISPLAY_WIDTH;
         y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gRainDropSpriteTemplate, x, y, 4);
     }
-    if (gTasks[taskId].data[0] == gTasks[taskId].data[3])
+    if (gTasks[taskId].tRaindropSpawnTimer == gTasks[taskId].tRaindropSpawnDuration)
         DestroyAnimVisualTask(taskId);
 }
+
+#undef tRaindropSpawnTimer
+#undef tRaindropUnused
+#undef tRaindropSpawnInterval
+#undef tRaindropSpawnDuration
 
 static void AnimRainDrop(struct Sprite *sprite)
 {
@@ -681,6 +697,10 @@ static void AnimRainDrop_Step(struct Sprite *sprite)
 {
     if (++sprite->data[0] <= 13)
     {
+        //
+        // Make the raindrop fall, but only until it reaches the 
+        // impact/splash frames of its animation.
+        //
         sprite->x2++;
         sprite->y2 += 4;
     }
@@ -885,6 +905,7 @@ static void AnimToTargetInSinWave_Step(struct Sprite *sprite)
     }
 }
 
+// args[0] - duration
 void AnimTask_StartSinAnimTimer(u8 taskId)
 {
     gTasks[taskId].data[0] = gBattleAnimArgs[0];
@@ -938,7 +959,7 @@ static void AnimHydroCannonCharge_Step(struct Sprite *sprite)
 // Flashing blue orbs move from the attacker to the target. Second stage of Hydro Cannon
 static void AnimHydroCannonBeam(struct Sprite *sprite)
 {
-    bool8 animType;
+    bool8 respectMonPicOffsets;
     u8 coordType;
     if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
@@ -947,14 +968,14 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
             gBattleAnimArgs[0] *= -1;
     }
     if ((gBattleAnimArgs[5] & 0xFF00) == 0)
-        animType = TRUE;
+        respectMonPicOffsets = TRUE;
     else
-        animType = FALSE;
+        respectMonPicOffsets = FALSE;
     if ((u8)gBattleAnimArgs[5] == 0)
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     else
         coordType = BATTLER_COORD_Y;
-    InitSpritePosToAnimAttacker(sprite, animType);
+    InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
     if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
     sprite->data[0] = gBattleAnimArgs[4];
@@ -975,6 +996,10 @@ static void AnimWaterGunDroplet(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+// args[0] - initial sprite x
+// args[1] - initial sprite y
+// args[2] - counter
+// args[3] - attacker or target
 void AnimSmallBubblePair(struct Sprite *sprite)
 {
     if (gBattleAnimArgs[3] != ANIM_ATTACKER)

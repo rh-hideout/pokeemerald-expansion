@@ -6893,7 +6893,7 @@ Class: School Kid
 Pic: School Kid F
 Gender: Female
 Music: Girl
-Double Battle: No
+Double Battle: Yes
 AI: Conservative / Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Prefer Baton Pass / Smart Switching
 
 Murkrow @ Eviolite
@@ -6901,6 +6901,8 @@ Ability: Prankster
 Level: 18
 - Tailwind
 - Helping Hand
+- Sunny Day
+- Acrobatics
 
 Mudbray @ Soft Sand
 Ability: Stamina

@@ -255,7 +255,8 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     }
 
     // Check if mon gets one shot
-    if(maxDamageTaken > gBattleMons[battler].hp)
+    if(maxDamageTaken > gBattleMons[battler].hp
+        && !(gItemsInfo[gBattleMons[battler].item].holdEffect == HOLD_EFFECT_FOCUS_SASH || (!IsMoldBreakerTypeAbility(opposingBattler, gBattleMons[opposingBattler].ability) && B_STURDY >= GEN_5 && aiAbility == ABILITY_STURDY)))
     {
         getsOneShot = TRUE;
     }
@@ -1251,7 +1252,7 @@ void AI_TrySwitchOrUseItem(u32 battler)
         }
     }
 
-    BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
 }
 
 // If there are two(or more) mons to choose from, always choose one that has baton pass
@@ -1398,7 +1399,7 @@ bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon)
 {
     u8 defType1 = battleMon->types[0], defType2 = battleMon->types[1], tSpikesLayers;
-    u16 heldItemEffect = ItemId_GetHoldEffect(battleMon->item);
+    u16 heldItemEffect = GetItemHoldEffect(battleMon->item);
     u32 maxHP = battleMon->maxHP, ability = battleMon->ability, status = battleMon->status1;
     u32 spikesDamage = 0, tSpikesDamage = 0, hazardDamage = 0;
     u32 hazardFlags = gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_SAFEGUARD);
@@ -1456,7 +1457,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 static s32 GetSwitchinWeatherImpact(void)
 {
     s32 weatherImpact = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    u32 holdEffect = GetItemHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     if (HasWeatherEffect())
     {
@@ -1521,7 +1522,7 @@ static s32 GetSwitchinWeatherImpact(void)
 static u32 GetSwitchinRecurringHealing(void)
 {
     u32 recurringHealing = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    u32 holdEffect = GetItemHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_KLUTZ)
@@ -1555,7 +1556,7 @@ static u32 GetSwitchinRecurringHealing(void)
 static u32 GetSwitchinRecurringDamage(void)
 {
     u32 passiveDamage = 0, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, ability = AI_DATA->switchinCandidate.battleMon.ability;
-    u32 holdEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    u32 holdEffect = GetItemHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
@@ -1587,7 +1588,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
 {
     u8 defType1 = AI_DATA->switchinCandidate.battleMon.types[0], defType2 = AI_DATA->switchinCandidate.battleMon.types[1];
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
-    u16 heldItemEffect = ItemId_GetHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
+    u16 heldItemEffect = GetItemHoldEffect(AI_DATA->switchinCandidate.battleMon.item);
     u32 status = AI_DATA->switchinCandidate.battleMon.status1, ability = AI_DATA->switchinCandidate.battleMon.ability, maxHP = AI_DATA->switchinCandidate.battleMon.maxHP;
     u32 statusDamage = 0;
 
@@ -1665,8 +1666,8 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
     u32 recurringHealing = GetSwitchinRecurringHealing();
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0, singleUseItemHeal = 0;
-    u16 maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, item = AI_DATA->switchinCandidate.battleMon.item, heldItemEffect = ItemId_GetHoldEffect(item);
-    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = ItemId_GetHoldEffectParam(item);
+    u16 maxHP = AI_DATA->switchinCandidate.battleMon.maxHP, item = AI_DATA->switchinCandidate.battleMon.item, heldItemEffect = GetItemHoldEffect(item);
+    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 opposingAbility = gBattleMons[opposingBattler].ability, ability = AI_DATA->switchinCandidate.battleMon.ability;
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
@@ -1691,7 +1692,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
         currentHP = currentHP - damageTaken;
 
         // One shot prevention effects
-        if (damageTaken >= maxHP && currentHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && B_STURDY >= GEN_5 && ability == ABILITY_STURDY)))
+        if (damageTaken >= maxHP && startingHP == maxHP && (heldItemEffect == HOLD_EFFECT_FOCUS_SASH || (!opponentCanBreakMold && B_STURDY >= GEN_5 && ability == ABILITY_STURDY)) && hitsToKO < 1)
             currentHP = 1;
 
         // If mon is still alive, apply weather impact first, as it might KO the mon before it can heal with its item (order is weather -> item -> status)
@@ -1850,7 +1851,7 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, u32 battlerSwitchi
     // Switch out effects
     if (!IsDoubleBattle()) // Not handling doubles' additional complexity
     {
-        if (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) && movedSecond)
+        if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) && movedSecond)
             return TRUE;
         if (AI_DATA->ejectButtonSwitch)
             return TRUE;
@@ -2064,7 +2065,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     }
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-     && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+     && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
         return aceMonId;
 
     return PARTY_SIZE;
@@ -2181,7 +2182,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
 
         // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
         if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-        && (IsSwitchOutEffect(GetMoveEffect(gLastUsedMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
+        && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || AI_DATA->ejectButtonSwitch || AI_DATA->ejectPackSwitch))
             return aceMonId;
 
         return PARTY_SIZE;
@@ -2246,11 +2247,11 @@ static bool32 ShouldUseItem(u32 battler)
         item = gBattleResources->battleHistory->trainerItems[i];
         if (item == ITEM_NONE)
             continue;
-        itemEffects = ItemId_GetEffect(item);
+        itemEffects = GetItemEffect(item);
         if (itemEffects == NULL)
             continue;
 
-        switch (ItemId_GetBattleUsage(item))
+        switch (GetItemBattleUsage(item))
         {
         case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
             shouldUse = AI_ShouldHeal(battler, 0);
@@ -2309,7 +2310,7 @@ static bool32 ShouldUseItem(u32 battler)
             // Set selected party ID to current battler if none chosen.
             if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
                 gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
-            BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_USE_ITEM, 0);
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
             gBattleStruct->chosenItem[battler] = item;
             gBattleResources->battleHistory->trainerItems[i] = 0;
             return shouldUse;

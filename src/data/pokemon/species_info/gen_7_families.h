@@ -2944,7 +2944,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .frontPic = gMonFrontPic_Lurantis,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 2,
-        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 5),
+            ANIMCMD_FRAME(1, 35),
+            ANIMCMD_FRAME(0, 1),
+        ),
         .frontAnimId = ANIM_GROW_VIBRATE,
         .backPic = gMonBackPic_Lurantis,
         .backPicSize = MON_COORDS_SIZE(56, 64),
@@ -7398,7 +7402,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .natDexNum = NATIONAL_DEX_MELMETAL,
         .categoryName = _("Hex Nut"),
         .height = 25,
-        .weight = 800,
+        .weight = 8000,
         .description = COMPOUND_STRING(
             "Revered long ago for its capacity to\n"
             "create iron from nothing, for some reason\n"

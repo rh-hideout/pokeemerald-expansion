@@ -89,7 +89,7 @@ void EnableVCountIntrAtLine150(void);
 
 #define B_START_SELECT (B_BUTTON | START_BUTTON | SELECT_BUTTON)
 
-void AgbMain()
+void AgbMain(void)
 {
     *(vu16 *)BG_PLTT = RGB_WHITE; // Set the backdrop to white on startup
     InitGpuRegManager();
@@ -124,7 +124,7 @@ void AgbMain()
 #if (LOG_HANDLER == LOG_HANDLER_MGBA_PRINT)
     (void) MgbaOpen();
 #elif (LOG_HANDLER == LOG_HANDLER_AGB_PRINT)
-    AGBPrintfInit();
+    AGBPrintInit();
 #endif
 #endif
     gAgbMainLoop_sp = __builtin_frame_address(0);

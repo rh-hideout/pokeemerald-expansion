@@ -729,8 +729,9 @@
 #define STRINGID_ITDOESNTAFFECTTWOFOES                727
 #define STRINGID_SENDCAUGHTMONPARTYORBOX              728
 #define STRINGID_PKMNSENTTOPCAFTERCATCH               729
+#define STRINGID_TOXICSPIKESBADLYPOISONED             730
 
-#define BATTLESTRINGS_COUNT                           730
+#define BATTLESTRINGS_COUNT                           731
 
 // This is the string id that gBattleStringsTable starts with.
 // String ids before this (e.g. STRINGID_INTROMSG) are not in the table,

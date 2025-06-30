@@ -1100,7 +1100,7 @@
 	.byte \battler
 	.endm
 
-	.macro callterrainattack
+	.macro callenvironmentattack
 	.byte 0xcc
 	.endm
 
@@ -1140,10 +1140,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro trywish turnNumber:req, failInstr:req
+	.macro trywish turnNumber:req, failInstr:req, blockedInstr:req
 	.byte 0xd4
 	.byte \turnNumber
 	.4byte \failInstr
+	.4byte \blockedInstr
 	.endm
 
 	.macro settoxicspikes failInstr:req
@@ -1255,7 +1256,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro settypetoterrain failInstr:req
+	.macro settypetoenvironment failInstr:req
 	.byte 0xeb
 	.4byte \failInstr
 	.endm
@@ -1269,7 +1270,7 @@
 	.byte 0xed
 	.endm
 
-	.macro removelightscreenreflect
+	.macro removescreens
 	.byte 0xee
 	.endm
 
@@ -1331,7 +1332,7 @@
 	.byte \stat
 	.endm
 
-	.macro jumpifoppositegenders jumpInstr:req
+	.macro jumpifcaptivateaffected jumpInstr:req
 	.byte 0xfc
 	.4byte \jumpInstr
 	.endm
@@ -1367,6 +1368,10 @@
 	callnative BS_RestoreAttacker
 	.endm
 
+	.macro jumpifintimidateabilityprevented
+	callnative BS_JumpIfIntimidateAbilityPrevented
+	.endm
+
 	.macro metalburstdamagecalculator failInstr:req
 	callnative BS_CalcMetalBurstDmg
 	.4byte \failInstr
@@ -1381,6 +1386,10 @@
 	.macro itemstatchangeeffects battler:req
 	callnative BS_RunStatChangeItems
 	.byte \battler
+	.endm
+
+	.macro tryintimidatejectpack
+	callnative BS_TryIntimidatEjectpack
 	.endm
 
 	.macro allyswitchswapbattlers
@@ -1614,6 +1623,11 @@
 	.4byte \ptr
 	.endm
 
+	.macro undodynamax battler:req
+	callnative BS_UndoDynamax
+	.byte \battler
+	.endm
+
 	.macro trytrainerslidezmovemsg
 	callnative BS_TryTrainerSlideZMoveMsg
 	.endm
@@ -1740,10 +1754,6 @@
 	.macro storehealingwish battler:req
 	callnative BS_StoreHealingWish
 	.byte \battler
-	.endm
-
-	.macro hitswitchtargetfailed
-	callnative BS_HitSwitchTargetFailed
 	.endm
 
 	.macro tryrevivalblessing, failInstr:req
@@ -2375,6 +2385,10 @@
 	.macro swapstats stat:req
 	callnative BS_SwapStats
 	.byte \stat
+	.endm
+
+	.macro restoresavedmove
+	callnative BS_RestoreSavedMove
 	.endm
 
 @ helpful macros

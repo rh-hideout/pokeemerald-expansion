@@ -60,11 +60,11 @@ extern u8 gRecordedBattleMultiplayerId;
 
 void RecordedBattle_Init(u8 mode);
 void RecordedBattle_SetTrainerInfo(void);
-void RecordedBattle_SetBattlerAction(u8 battlerId, u8 action);
-void RecordedBattle_ClearBattlerAction(u8 battlerId, u8 bytesToClear);
-u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battlerId);
+void RecordedBattle_SetBattlerAction(u8 battler, u8 action);
+void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear);
+u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler);
 u8 RecordedBattle_BufferNewBattlerData(u8 *dst);
-void RecordedBattle_RecordAllBattlerData(u8 *data);
+void RecordedBattle_RecordAllBattlerData(u8 *src);
 bool32 CanCopyRecordedBattleSaveData(void);
 bool32 MoveRecordedBattleToSaveData(void);
 void SetPartiesFromRecordedSave(struct RecordedBattleSave *src);

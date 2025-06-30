@@ -1,6 +1,6 @@
 gText_Birch_Welcome::
 	.string "My name is BIRCH.\p"
-	.string "But everyone calls me DADDY.\p"
+	.string "But people call me DADDY.\p"
 	.string "$"
 
 gText_Birch_Pokemon::
@@ -9,7 +9,7 @@ gText_Birch_Pokemon::
 
 gText_Birch_MainSpeech::
 	.string "Welcome to Improved Emerald\n"
-	.string "by ShadowzLmao\pain"
+	.string "by ShadowzLmao\n"
 	.string "The goal of this RomHack is\l"
 	.string "to be tougher than RR and R&B.\p"
 	.string "Never heard? Too bad! Good luck!\p"

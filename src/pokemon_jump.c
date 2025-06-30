@@ -1076,7 +1076,7 @@ static void RecvLinkData_Leader(void)
         sPokemonJump->allPlayersReady = TRUE;
 }
 
-static bool32 (* const sPokeJumpLeaderFuncs[])(void) =
+static bool32 (*const sPokeJumpLeaderFuncs[])(void) =
 {
     [FUNC_GAME_INTRO]     = GameIntro_Leader,
     [FUNC_WAIT_ROUND]     = WaitRound_Leader,
@@ -1175,7 +1175,7 @@ static void RecvLinkData_Member(void)
     }
 }
 
-static bool32 (* const sPokeJumpMemberFuncs[])(void) =
+static bool32 (*const sPokeJumpMemberFuncs[])(void) =
 {
     [FUNC_GAME_INTRO]     = GameIntro_Member,
     [FUNC_WAIT_ROUND]     = WaitRound_Member,

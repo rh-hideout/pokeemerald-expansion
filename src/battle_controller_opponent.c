@@ -404,7 +404,7 @@ static void OpponentBufferExecCompleted(u32 battler)
     {
         u8 playerId = GetMultiplayerId();
 
-        PrepareBufferDataTransferLink(battler, 2, 4, &playerId);
+        PrepareBufferDataTransferLink(battler, B_COMM_CONTROLLER_IS_DONE, 4, &playerId);
         gBattleResources->bufferA[battler][0] = CONTROLLER_TERMINATOR_NOP;
     }
     else
@@ -540,7 +540,7 @@ static void OpponentHandleChooseMove(u32 battler)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
-            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, ChooseMoveAndTargetInBattlePalace(battler));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, ChooseMoveAndTargetInBattlePalace(battler));
         }
         else
         {
@@ -549,13 +549,13 @@ static void OpponentHandleChooseMove(u32 battler)
             switch (chosenMoveId)
             {
             case AI_CHOICE_WATCH:
-                BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_SAFARI_WATCH_CAREFULLY, 0);
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SAFARI_WATCH_CAREFULLY, 0);
                 break;
             case AI_CHOICE_FLEE:
-                BtlController_EmitTwoReturnValues(battler, BUFFER_B, B_ACTION_RUN, 0);
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_RUN, 0);
                 break;
             case 6:
-                BtlController_EmitTwoReturnValues(battler, BUFFER_B, 15, gBattlerTarget);
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 15, gBattlerTarget);
                 break;
             default:
                 {
@@ -573,11 +573,11 @@ static void OpponentHandleChooseMove(u32 battler)
                      && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
                      && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveId])))
                     {
-                        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (RET_GIMMICK) | (gBattlerTarget << 8));
+                        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (RET_GIMMICK) | (gBattlerTarget << 8));
                     }
                     else
                     {
-                        BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (gBattlerTarget << 8));
+                        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (gBattlerTarget << 8));
                     }
                 }
                 break;
@@ -596,7 +596,7 @@ static void OpponentHandleChooseMove(u32 battler)
         } while (move == MOVE_NONE);
 
         if (GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_USER)
-            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (battler << 8));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (battler << 8));
         else if (IsDoubleBattle())
         {
             do {
@@ -629,17 +629,17 @@ static void OpponentHandleChooseMove(u32 battler)
                     }
                 }
                 if (isPartnerEnemy && CanTargetBattler(battler, target, move))
-                    BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (GetBattlerAtPosition(BATTLE_PARTNER(battler)) << 8));
+                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (GetBattlerAtPosition(BATTLE_PARTNER(battler)) << 8));
                 else
-                    BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (target << 8));
+                    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (target << 8));
             }
             else
             {
-                BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (target << 8));
+                BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (target << 8));
             }
         }
         else
-            BtlController_EmitTwoReturnValues(battler, BUFFER_B, 10, (chosenMoveId) | (GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) << 8));
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveId) | (GetBattlerAtPosition(B_POSITION_PLAYER_LEFT) << 8));
 
         OpponentBufferExecCompleted(battler);
     }
@@ -647,7 +647,7 @@ static void OpponentHandleChooseMove(u32 battler)
 
 static void OpponentHandleChooseItem(u32 battler)
 {
-    BtlController_EmitOneReturnValue(battler, BUFFER_B, gBattleStruct->chosenItem[battler]);
+    BtlController_EmitOneReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->chosenItem[battler]);
     OpponentBufferExecCompleted(battler);
 }
 
@@ -720,7 +720,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
     #if TESTING
     TestRunner_Battle_CheckSwitch(battler, chosenMonId);
     #endif // TESTING
-    BtlController_EmitChosenMonReturnValue(battler, BUFFER_B, chosenMonId, NULL);
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     OpponentBufferExecCompleted(battler);
 }
 

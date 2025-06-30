@@ -310,8 +310,8 @@ void Ai_InitPartyStruct(void)
     bool32 isOmniscient = (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_OMNISCIENT) || (AI_THINKING_STRUCT->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_OMNISCIENT);
     struct Pokemon *mon;
 
-    AI_PARTY->count[B_SIDE_PLAYER] = gPlayerPartyCount;
-    AI_PARTY->count[B_SIDE_OPPONENT] = gEnemyPartyCount;
+    AI_PARTY->count[B_SIDE_PLAYER] = CalculatePlayerPartyCount();
+    AI_PARTY->count[B_SIDE_OPPONENT] = CalculateEnemyPartyCount();
 
     // Save first 2 or 4(in doubles) mons
     CopyBattlerDataToAIParty(B_POSITION_PLAYER_LEFT, B_SIDE_PLAYER);
@@ -336,7 +336,7 @@ void Ai_InitPartyStruct(void)
             u32 j;
             mon = &gPlayerParty[i];
             AI_PARTY->mons[B_SIDE_PLAYER][i].item = GetMonData(mon, MON_DATA_HELD_ITEM);
-            AI_PARTY->mons[B_SIDE_PLAYER][i].heldEffect = ItemId_GetHoldEffect(AI_PARTY->mons[B_SIDE_PLAYER][i].item);
+            AI_PARTY->mons[B_SIDE_PLAYER][i].heldEffect = GetItemHoldEffect(AI_PARTY->mons[B_SIDE_PLAYER][i].item);
             AI_PARTY->mons[B_SIDE_PLAYER][i].ability = GetMonAbility(mon);
             for (j = 0; j < MAX_MON_MOVES; j++)
                 AI_PARTY->mons[B_SIDE_PLAYER][i].moves[j] = GetMonData(mon, MON_DATA_MOVE1 + j);
@@ -473,6 +473,8 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     battlersCount = gBattlersCount;
 
     AI_DATA->aiCalcInProgress = TRUE;
+    if (DEBUG_AI_DELAY_TIMER)
+        CycleCountStart();
     for (battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
         if (!IsBattlerAlive(battlerAtk))
@@ -488,6 +490,9 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
 
         SetBattlerAiMovesData(aiData, battlerAtk, battlersCount, weather);
     }
+    if (DEBUG_AI_DELAY_TIMER)
+        // We add to existing to compound multiple calls
+        gBattleStruct->aiDelayCycles += CycleCountEnd();
     AI_DATA->aiCalcInProgress = FALSE;
 }
 
@@ -1133,7 +1138,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_STUFF_CHEEKS:
-            if (ItemId_GetPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
+            if (GetItemPocket(gBattleMons[battlerAtk].item) != POCKET_BERRIES)
                 return 0;   // cannot even select
             //fallthrough
         case EFFECT_DEFENSE_UP:
@@ -4163,7 +4168,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (aiData->abilities[battlerAtk] == ABILITY_RIPEN)
         {
             u32 item = GetUsedHeldItem(battlerAtk);
-            u32 toHeal = (ItemId_GetHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / ItemId_GetHoldEffectParam(item);
+            u32 toHeal = (GetItemHoldEffectParam(item) == 10) ? 10 : gBattleMons[battlerAtk].maxHP / GetItemHoldEffectParam(item);
 
             if (IsStatBoostingBerry(item) && aiData->hpPercents[battlerAtk] > 60)
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -4676,13 +4681,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                 case MOVE_EFFECT_BUG_BITE:   // And pluck
                     if (gBattleMons[battlerDef].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                         break;
-                    else if (ItemId_GetPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
+                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case MOVE_EFFECT_INCINERATE:
                     if (gBattleMons[battlerDef].status2 & STATUS2_SUBSTITUTE || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                         break;
-                    else if (ItemId_GetPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
+                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
                 case MOVE_EFFECT_SMACK_DOWN:
@@ -5030,7 +5035,7 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     return score;
 }
 
-// Adds score bonus to best powered move
+// Adds score bonus to OHKOs and 2HKOs
 static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
@@ -5360,19 +5365,19 @@ static s32 AI_PowerfulStatus(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SUNNY_DAY:
-        if (!(AI_GetWeather() & (B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_RAIN_DANCE:
-        if (!(AI_GetWeather() & (B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_HAIL:
-        if (!(AI_GetWeather() & (B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
         break;
     case EFFECT_SNOWSCAPE:
-        if (!(AI_GetWeather() & (B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY)))
+        if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) == WEATHER_INACTIVE)
             ADJUST_SCORE(POWERFUL_STATUS_MOVE);
     }
 

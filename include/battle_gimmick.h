@@ -17,8 +17,8 @@ struct GimmickInfo
     const struct SpritePalette *triggerPal;        // trigger gfx data
     const struct SpriteSheet *triggerSheet;
     const struct SpriteTemplate *triggerTemplate;
-    const struct SpritePalette *indicatorPal;      // indicator gfx data
-    const struct SpriteSheet *indicatorSheet;
+    const u32 indicatorPalTag;
+    const u8 *indicatorData;
     bool32 (*CanActivate)(u32 battler);
     void (*ActivateGimmick)(u32 battler);
 };

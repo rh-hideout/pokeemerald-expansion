@@ -1589,7 +1589,7 @@ static void Debug_InitializeBattle(u8 taskId)
     }
 
     // Set terrain
-    gBattleTerrain = sDebugBattleData->battleTerrain;
+    gBattleEnvironment = sDebugBattleData->battleTerrain;
 
     // Populate enemy party
     for (i = 0; i < PARTY_SIZE; i++)
@@ -2962,8 +2962,8 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     SetMonData(&mon, MON_DATA_DYNAMAX_LEVEL, &dmaxLevel);
 
     // tera type
-    if (teraType >= NUMBER_OF_MON_TYPES)
-        teraType = TYPE_NONE;
+    if (teraType == TYPE_NONE || teraType == TYPE_MYSTERY || teraType >= NUMBER_OF_MON_TYPES)
+        teraType = GetTeraTypeFromPersonality(&mon);
     SetMonData(&mon, MON_DATA_TERA_TYPE, &teraType);
 
     //IVs
@@ -3166,7 +3166,7 @@ static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
+        if (GetItemPocket(itemId) == POCKET_ITEMS && CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }
 }
@@ -3210,7 +3210,7 @@ static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId)
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
-        if (ItemId_GetPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
+        if (GetItemPocket(itemId) == POCKET_KEY_ITEMS && CheckBagHasSpace(itemId, 1))
             AddBagItem(itemId, 1);
     }
 }

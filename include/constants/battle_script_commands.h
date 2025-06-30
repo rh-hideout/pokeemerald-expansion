@@ -219,13 +219,11 @@ enum CmdVarious
 
 // Cmd_manipulatedamage
 #define DMG_CHANGE_SIGN         1
-#define DMG_RECOIL_FROM_MISS    2
-#define DMG_DOUBLED             3
-#define DMG_1_8_TARGET_HP       4
-#define DMG_FULL_ATTACKER_HP    5
-#define DMG_CURR_ATTACKER_HP    6
-#define DMG_BIG_ROOT            7
-#define DMG_RECOIL_FROM_IMMUNE  8  // Used to calculate recoil for the Gen 4 version of Jump Kick
+#define DMG_DOUBLED             2
+#define DMG_1_8_TARGET_HP       3
+#define DMG_FULL_ATTACKER_HP    4
+#define DMG_CURR_ATTACKER_HP    5
+#define DMG_BIG_ROOT            6
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -273,9 +271,9 @@ enum MoveEndEffects
     MOVEEND_ITEM_EFFECTS_TARGET,
     MOVEEND_MOVE_EFFECTS2,
     MOVEEND_ITEM_EFFECTS_ALL,
+    MOVEEND_SYMBIOSIS,
     MOVEEND_HIT_SWITCH_TARGET,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
-    MOVEEND_NUM_HITS,
     MOVEEND_SUBSTITUTE,
     MOVEEND_SKY_DROP_CONFUSE,
     MOVEEND_UPDATE_LAST_MOVES,
@@ -287,19 +285,20 @@ enum MoveEndEffects
     MOVEEND_RAPID_SPIN,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_MAGICIAN, // Occurs after final multi-hit strike, and after other items/abilities would activate
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Eject Pack
     MOVEEND_RED_CARD, // Red Card triggers before Eject Pack
-    MOVEEND_EJECT_ITEMS,
-    MOVEEND_WHITE_HERB,
+    MOVEEND_EJECT_BUTTON,
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
-    MOVEEND_CHANGED_ITEMS,
-    MOVEEND_PICKPOCKET,
-    MOVEEND_DANCER,
     MOVEEND_EMERGENCY_EXIT,
-    MOVEEND_SYMBIOSIS,
+    MOVEEND_EJECT_PACK,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
+    MOVEEND_PICKPOCKET,
+    MOVEEND_WHITE_HERB,
+    MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
     MOVEEND_SET_EVOLUTION_TRACKER,
     MOVEEND_CLEAR_BITS,
+    MOVEEND_DANCER,
     MOVEEND_PURSUIT_NEXT_ACTION,
     MOVEEND_COUNT,
 };
