@@ -93,6 +93,11 @@ static inline u32 log2Int(u32 word)
     return result;
 }
 
+static inline s32 NegativeIfTrue(bool32 condition)
+{
+    return condition ? -1 : 1;
+}
+
 // Used in cases where division by 0 can occur in the retail version.
 // Avoids invalid opcodes on some emulators, and the otherwise UB.
 #ifdef UBFIX

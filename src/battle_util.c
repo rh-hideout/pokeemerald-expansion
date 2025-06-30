@@ -4272,7 +4272,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     {
                         // MoodyCantLowerStat already checks that both stats are different
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        gBattleScripting.savedStatChanger.value = CalcStatChangerValue(i, -1);
+                        gBattleScripting.savedStatChanger = CalcStatChangerValue(i, -1);
                     }
                     BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
                     effect++;
@@ -5889,9 +5889,9 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
         bool32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gEffectBattler = gBattleScripting.battler = battler;
-        SetStatChanger(statId, 1 + ripen);
+        SetStatChanger(statId, ripen ? 2 : 1);
 
-        gBattleScripting.animArg1 = GetStatAnimArg(statId, 1 + ripen, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, ripen ? 2 : 1, FALSE);
         gBattleScripting.animArg2 = 0;
 
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
@@ -5998,9 +5998,9 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, enum 
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gEffectBattler = battler;
 
-        SetStatChanger(statId, 1 + ripen);
+        SetStatChanger(statId, ripen ? 2 : 1);
         gBattleScripting.battler = battler;
-        gBattleScripting.animArg1 = GetStatAnimArg(statId, 1 + ripen, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, ripen ? 2 : 1, FALSE);
         gBattleScripting.animArg2 = 0;
         BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
