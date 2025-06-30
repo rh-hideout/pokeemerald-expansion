@@ -69,6 +69,25 @@ enum EncounterType
 #define DEXNAV_MASK_SPECIES         0x3FFF  // First 14 bits
 #define DEXNAV_MASK_ENVIRONMENT     0xC000  // Last two bit
 
+// Bits 0-1: Color mode (0=16 colors (4bpp), 1=256 colors (8bpp))
+#define BG_COLOR_16         0x0
+#define BG_COLOR_256        0x80
+
+// Bits 2-3: Screen size (0-3)
+#define BG_SCREEN_SIZE_0    0x00  // 256x256
+#define BG_SCREEN_SIZE_1    0x400 // 512x256
+#define BG_SCREEN_SIZE_2    0x800 // 256x512
+#define BG_SCREEN_SIZE_3    0xC00 // 512x512
+
+// Bits 8-9: Character base block (tile data)
+#define BG_CHAR_BASE(n)     (((n) & 3) << 2)
+
+// Bits 10-14: Screen base block (tile map)
+#define BG_SCREEN_BASE(n)   (((n) & 0x1F) << 8)
+
+// Bits 0-2: Priority (0=highest)
+#define BG_PRIORITY(n)      ((n) & 3)
+
 void EndDexNavSearch(u8 taskId);
 void Task_OpenDexNavFromStartMenu(u8 taskId);
 bool8 TryStartDexNavSearch(void);
@@ -77,6 +96,7 @@ void ResetDexNavSearch(void);
 bool8 TryFindHiddenPokemon(void);
 u32 CalculateDexNavShinyRolls(void);
 void IncrementDexNavChain(void);
+void Task_DexNavSearch(u8 taskId);
 
 extern u16 gDexNavSpecies;
 

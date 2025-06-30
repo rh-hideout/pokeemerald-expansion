@@ -186,7 +186,7 @@ static const u16 sIconPal[] = INCBIN_U16("graphics/start_menu/icons.gbapal");
 static const u16 sButtonPal[] = INCBIN_U16("graphics/start_menu/buttons.gbapal");
 
 // --PAGE-LOGIC---
-#define MAX_ICONS_PER_PAGE 6
+#define MAX_ICONS_PER_PAGE 5
 
 static const struct WindowTemplate sSaveInfoWindowTemplate = {
     .bg = 0,
@@ -917,8 +917,8 @@ static void StartMenu_CreateSprites(void)
     };
 
     u32 x = 224;
-    u32 yBase = 12;
-    u32 ySpacing = 25;
+    u32 yBase = 17;
+    u32 ySpacing = 29;
 
     u32 totalUnlocked = 0;
     for (u32 i = 0; i < ARRAY_COUNT(iconEntries); i++) {

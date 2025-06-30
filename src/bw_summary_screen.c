@@ -44,6 +44,7 @@
 #include "text.h"
 #include "tv.h"
 #include "window.h"
+#include "config/bw_summary_screen.h"
 #include "constants/battle_move_effects.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"

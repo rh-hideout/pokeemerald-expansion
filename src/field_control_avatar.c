@@ -228,6 +228,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         {
             // Close the popup immediately
             HideMapNamePopUpWindow();
+            if (FuncIsActiveTask(Task_DexNavSearch))
+            {
+                u8 taskId = FindTaskIdByFunc(Task_DexNavSearch);
+                EndDexNavSearch(taskId);
+            }
             PlaySE(SE_WIN_OPEN);
             StartMenu_Init();
             return TRUE;
@@ -235,6 +240,11 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         else
         {
             PlaySE(SE_WIN_OPEN);
+            if (FuncIsActiveTask(Task_DexNavSearch))
+            {
+                u8 taskId = FindTaskIdByFunc(Task_DexNavSearch);
+                EndDexNavSearch(taskId);
+            }
             StartMenu_Init();
             return TRUE;
         }

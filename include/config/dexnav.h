@@ -1,8 +1,16 @@
 #ifndef GUARD_CONFIG_DEXNAV_H
 #define GUARD_CONFIG_DEXNAV_H
 
+#include "config/options.h"
+
 #define DEXNAV_ENABLED                TRUE  // Whether or not DexNav is enabled. If TRUE, flags/vars below must all be non-zero
 #define USE_DEXNAV_SEARCH_LEVELS      TRUE  /* WARNING: POSSIBLY EXCEEDS SAVEBLOCK SPACE! REQUIRES 1 BYTE PER SPECIES */
+
+#if SCROLLING_BGS
+#define DEXNAV_SCROLLING_BG           TRUE  // Enables the B2W2 scrolling background on the DexNav GUI screen
+#else
+#define DEXNAV_SCROLLING_BG           FALSE // Enables the B2W2 scrolling background on the DexNav GUI screen
+#endif
 
 // Flag/var defines
 #define DN_FLAG_SEARCHING             FLAG_DEXNAV_SEARCHING     // Searching for mon
