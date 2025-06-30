@@ -53,8 +53,10 @@ SECTIONS {
     .text ORIGIN(ROM) :
     ALIGN(4)
     {
-        src/rom_header.o(.text*);
+        KEEP(src/rom_header.o(.text*));
+        KEEP(src/rom_header_gf.o(.text.consts));
         src/rom_header_gf.o(.text.*);
+        KEEP(src/rom_header_rhh.o(.text.consts));
         src/rom_header_rhh.o(.text.*);
         src/crt0.o(.text);
         *libagbsyscall.a:*.o(.text*);
@@ -62,6 +64,7 @@ SECTIONS {
         *libc.a:*.o(.text*);
         *libnosys.a:*.o(.text*);
         asm/*.o(.text*);
+        KEEP(*.o(.text.consts));
         *.o(.text*);
         *.o(.eh_frame);
     } > ROM =0
