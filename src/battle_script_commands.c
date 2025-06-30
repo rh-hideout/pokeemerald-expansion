@@ -322,7 +322,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
 static void TrySetDestinyBondToHappen(void);
 static void SetMoveEffectTriggerResult(struct MoveEffectResult *result);
 static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, union StatFlags stats, const u8 *failPtr);
-static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags);
+static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags);
 static bool32 IsMonGettingExpSentOut(void);
 static void InitLevelUpBanner(void);
 static bool8 SlideInLevelUpBanner(void);
@@ -12414,7 +12414,7 @@ static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatC
     return ChangeStatBuffsStatChanger(battler, (CalcStatChangerValue(statId, statValue) | PrepareStatChangerAny(stats, 1, TRUE)), flags, failPtr);
 }
 
-static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
+static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
 {
     result->battlerAbility = GetBattlerAbility(result->effectBattler);
     result->battlerHoldEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
@@ -12444,14 +12444,12 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
         MoveEffectBlockedByAbilityPreventingSpecificStatDrop(result, BattleScript_AbilityNoSpecificStatLoss) ||
         MoveEffectBlockedByMirrorArmor(result, BattleScript_MirrorArmorReflect))
     )
-        return result;
+        return;
 
     // Passed all ability & item checks - check stat changer for all stats
     // Even if only checking one stat at a time, need to check all stats
     // that we're trying to raise in order to ensure the correct stat change anim
     result->failed = CheckStatChangerForAllStats(result);
-
-    return result;
 }
 
 static void Cmd_statbuffchange(void)
