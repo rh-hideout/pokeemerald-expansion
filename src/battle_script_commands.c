@@ -3268,30 +3268,37 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
     if (result->recordBattlerAbility)
         RecordAbilityBattle(result->effectBattler, result->battlerAbility);
 
+    // If blocked by ability, set appropriate flags
+    if (result->blockedByAbility)
+    {
+        gLastUsedAbility = result->lastUsedAbility;
+        gBattlerAbility = result->blockedByAbility - 1;
+        RecordAbilityBattle(gBattlerAbility, gLastUsedAbility);
+
+        // If Mirror Armor, need to set statchanger
+        if (result->battlerAbility == ABILITY_MIRROR_ARMOR)
+            gBattleScripting.statChanger = result->statChanger.value;
+    }
+
+    // If blocked by item, set appropriate flags
+    if (result->blockedByItem)
+        gLastUsedItem = result->lastUsedItem;
+
+    // Sets the statLowered special status - prevents something like Mist activating several times
+    if (result->statLowered)
+        gSpecialStatuses[result->effectBattler].statLowered = TRUE;
+
+    // Set result variables
+    gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
+    gEffectBattler = result->effectBattler;
+
+    // Sets scripting battler
+    if (result->scriptingBattler)
+        gBattleScripting.battler = result->scriptingBattler - 1;
+
     // Push and set next instruction
     if (result->nextInstr)
     {
-        // If blocked by ability, set appropriate flags
-        if (result->blockedByAbility)
-        {
-            gLastUsedAbility = result->lastUsedAbility;
-            gBattlerAbility = result->blockedByAbility - 1;
-            RecordAbilityBattle(gBattlerAbility, gLastUsedAbility);
-        }
-
-        // If blocked by item, set appropriate flags
-        if (result->blockedByItem)
-            gLastUsedItem = result->lastUsedItem;
-
-        // Sets the statLowered special status - prevents something like Mist activating several times
-        if (result->statLowered)
-            gSpecialStatuses[result->effectBattler].statLowered = TRUE;
-
-        // Set result variables
-        gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
-        gEffectBattler = result->effectBattler;
-        gBattleScripting.battler = result->scriptingBattler;
-
         // Try push and go to next instruction
         if (result->battlescriptPush && result->pushInstr)
             BattleScriptPush(result->pushInstr);
@@ -12070,20 +12077,27 @@ static u16 ReverseStatChangeMoveEffect(u16 moveEffect)
     }
 }
 
-static void TryPlayStatChangeAnimation(struct MoveEffectResult *result)
+static void TryPlayStatChangeAnimation(struct MoveEffectResult *result, bool32 singleStatOnly)
 {
-    u32 changeableStatsCount = CountStatChangerStats(result->statChanger);
+    u32 changeableStatsCount = (singleStatOnly && result->statChanger.statId) ?
+        1 :
+        CountStatChangerStats(result->statChanger);
+        // DebugPrintf("changeableStatsCount %d", changeableStatsCount);
     if (!gBattleScripting.statAnimPlayed)
     {
-        // DebugPrintf("changeableStatsCount %d", changeableStatsCount);
-        // DebugPrintf("Statchanger: %d, anim: %d", result->statChanger, 
+        gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
+        // DebugPrintf("Statchanger: %d, stat: %d, stage: %d, anim: %d",
+        //     result->statChanger,
+        //     result->statChanger.statId,
+        //     GetStatChangerStage(result->statChanger, result->statChanger.statId),
         //     GetStatAnimArgBase(
         //         result->statChanger.statId,
-        //         AnyStatChangerStatIsSharpOrHarsh(result->statChanger),
+        //         gBattleScripting.statAnimPlayed ?
+        //             AnyStatChangerStatIsSharpOrHarsh(result->statChanger) :
+        //             (GetStatChangerStage(result->statChanger, result->statChanger.statId) > 1),
         //         gBattleScripting.statAnimPlayed,
         //         result->statChanger.isNegative
         //     ));
-        gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
         MarkBattlerForControllerExec(result->effectBattler);
         BtlController_EmitBattleAnimation(
             result->effectBattler,
@@ -12092,7 +12106,9 @@ static void TryPlayStatChangeAnimation(struct MoveEffectResult *result)
             &gDisableStructs[result->effectBattler],
             GetStatAnimArgBase(
                 result->statChanger.statId,
-                AnyStatChangerStatIsSharpOrHarsh(result->statChanger),
+                gBattleScripting.statAnimPlayed ?
+                    AnyStatChangerStatIsSharpOrHarsh(result->statChanger) :
+                    (GetStatChangerStage(result->statChanger, result->statChanger.statId) > 1),
                 gBattleScripting.statAnimPlayed,
                 result->statChanger.isNegative
             ));
@@ -12120,7 +12136,7 @@ static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 
         else
         {
             result->battlescriptPush = TRUE;
-            result->scriptingBattler = result->effectBattler;
+            result->scriptingBattler = result->effectBattler + 1;
             result->nextInstr = failPtr;
             result->statLowered = TRUE;
         }
@@ -12135,7 +12151,7 @@ static bool32 MoveEffectBlockedByProtect(struct MoveEffectResult *result, const 
         && IsBattlerProtected(result->battlerAtk, result->effectBattler, result->currentMove)), failPtr);
 }
 
-static bool32 MoveEffectBlockedItemOrAbilityPreventsAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
+static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
 {
     if ((result->battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->battlerAbility)) &&
         (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE)
@@ -12144,7 +12160,7 @@ static bool32 MoveEffectBlockedItemOrAbilityPreventsAnyStatDrop(struct MoveEffec
             result->nextInstr = result->pushInstr;
         else
         {
-            result->scriptingBattler = result->effectBattler;
+            result->scriptingBattler = result->effectBattler + 1;
             if (result->battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET)
             {
                 result->lastUsedItem = gBattleMons[result->effectBattler].item;
@@ -12166,7 +12182,7 @@ static bool32 MoveEffectBlockedItemOrAbilityPreventsAnyStatDrop(struct MoveEffec
     return result->failed;
 }
 
-static bool32 MoveEffectBlockedAbilityPreventsSpecificStatDrop(struct MoveEffectResult *result, const u8 *failPtr)
+static bool32 MoveEffectBlockedByAbilityPreventingSpecificStatDrop(struct MoveEffectResult *result, const u8 *failPtr)
 {
     if (!result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, result->statChanger.statId))
     {
@@ -12174,7 +12190,7 @@ static bool32 MoveEffectBlockedAbilityPreventsSpecificStatDrop(struct MoveEffect
         result->battlescriptPush = TRUE;
         result->lastUsedAbility = result->battlerAbility;
         result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
-        result->scriptingBattler = result->effectBattler; // required for BattleScript_AbilityNoSpecificStatLoss
+        result->scriptingBattler = result->effectBattler + 1; // required for BattleScript_AbilityNoSpecificStatLoss
         result->nextInstr = failPtr;
         result->failed = TRUE;
     }
@@ -12191,7 +12207,7 @@ static bool32 MoveEffectBlockedByFlowerVeil(struct MoveEffectResult *result, con
         else
         {
             result->battlescriptPush = TRUE;
-            result->scriptingBattler = result->effectBattler; // required for BattleScript_FlowerVeilProtectsRet
+            result->scriptingBattler = result->effectBattler + 1; // required for BattleScript_FlowerVeilProtectsRet
             result->nextInstr = failPtr;
             result->lastUsedAbility = ABILITY_FLOWER_VEIL;
             result->blockedByAbility = index; // Sets gBattlerAbility
@@ -12207,8 +12223,9 @@ static bool32 MoveEffectBlockedByMirrorArmor(struct MoveEffectResult *result, co
     if (result->battlerAbility == ABILITY_MIRROR_ARMOR && !result->mirrorArmored && result->battlerAtk != result->battlerDef && result->effectBattler == result->battlerDef)
     {
         result->battlescriptPush = TRUE;
-        result->scriptingBattler = result->effectBattler;
+        result->scriptingBattler = result->effectBattler + 1;
         result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
+        result->recordBattlerAbility = TRUE;
         result->nextInstr = failPtr;
         result->failed = TRUE;
     }
@@ -12233,7 +12250,7 @@ static void StatChangeStringGenerator(struct MoveEffectResult *result, s32 statV
     CopyStringToArray(gBattleTextBuff2, &index, sStatChangeStrings[0][statValue > 0], TRUE); // fell or rose
 
     // Set multistring depending on mon raising/lowering stats
-    gBattleCommunication[MULTISTRING_CHOOSER] = (result->battlerDef == result->effectBattler); // B_MSG_ATTACKER_STAT_ROSE/FELL or B_MSG_DEFENDER_STAT_ROSE/FELL
+    result->multistring = (result->battlerDef == result->effectBattler); // B_MSG_ATTACKER_STAT_ROSE/FELL or B_MSG_DEFENDER_STAT_ROSE/FELL
 }
 
 // This does NOT do checking to make sure stat stages are within allowed bounds
@@ -12272,12 +12289,11 @@ static void MoveEffect_LowerStatsCallback(struct MoveEffectResult *result)
     gProtectStructs[result->effectBattler].tryEjectPack = TRUE;
     gProtectStructs[result->effectBattler].lashOutAffected = TRUE;
 
-    if (ShouldDefiantCompetitiveActivate(result->effectBattler, result->battlerAbility))
-        result->statChanger.value = 0; // use single stat animations when Defiant/Competitive activate
-    // else
-    //     result->statChanger.value &= ~(4u << result->statChanger.statId); // To do
+    // Must be set here BEFORE the check for Defiant
+    gSpecialStatuses[result->effectBattler].changedStatsBattlerId = result->battlerAtk;
 
-    TryPlayStatChangeAnimation(result);
+    // use single stat animations when Defiant/Competitive activate
+    TryPlayStatChangeAnimation(result, ShouldDefiantCompetitiveActivate(result->effectBattler, result->battlerAbility));
 }
 
 static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
@@ -12313,7 +12329,7 @@ static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
         }
     }
 
-    TryPlayStatChangeAnimation(result);
+    TryPlayStatChangeAnimation(result, FALSE);
 }
 
 static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
@@ -12343,20 +12359,18 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
             }
         }
     }
-    // DebugPrintf("Result multistring %d", result->multistring);
     return !atLeastOneStatChangeSuccess;
 }
 
 static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger statChanger, union StatChangeFlags flags, const u8 *failPtr)
 {
-    // DebugPrintf("Init multistring %d", gBattleCommunication[MULTISTRING_CHOOSER]);
     struct MoveEffectResult result = (struct MoveEffectResult){
         .battlerAtk = gBattlerAttacker,
         .battlerDef = gBattlerTarget,
         .effectBattler = battler,
         .currentMove = gCurrentMove,
         .moveEffect = (statChanger.isNegative ? MOVE_EFFECT_LOWER_STATS : MOVE_EFFECT_RAISE_STATS),
-        .certain = flags.certain | (battler == gBattlerAttacker),
+        .certain = flags.certain | ((battler == gBattlerAttacker) & !flags.mirrorArmored),
         .notProtectAffected = flags.notProtectAffected,
         .statDropPrevention = flags.statDropPrevention,
         .mirrorArmored = flags.mirrorArmored,
@@ -12365,11 +12379,10 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .statChangeEffect = TRUE,
     };
 
-    // DebugPrintf("Battlers: battler (%d), battlerAtk (%d), battlerDef (%d)", battler, gBattlerAttacker, gBattlerTarget);
-
+    // DebugPrintf("Mirror armored %d, statChanger %d, battler %d, attacker %d", flags.mirrorArmored, statChanger.value, battler, gBattlerAttacker);
     ChangeStatBuffsWithResult(&result, flags);
     // DebugPrintf("After ChangeStatBuffsWithResult: %d, %d (onlyChecking: %d) (multistring: %d)", result.failed, result.statChanger, flags.onlyChecking, result.multistring);
-    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, failPtr, gBattlescriptCurrInstr);
+    // DebugPrintf("NextInstr: %d, Desired instruction: %d, current instruction: %d", result.nextInstr, BattleScript_MirrorArmorReflect, gBattlescriptCurrInstr);
     PREPARE_STAT_BUFFER(gBattleTextBuff1, result.statChanger.statId);
 
     if (result.multistring == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
@@ -12417,7 +12430,6 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
 {
     result->battlerAbility = GetBattlerAbility(result->effectBattler);
     result->battlerHoldEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
-    result->changedStatsBattlerId = result->battlerAtk;
 
     if (result->battlerAbility == ABILITY_CONTRARY)
     {
@@ -12436,9 +12448,9 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
     if (result->statChanger.isNegative && // Stat decrease.
         (MoveEffectBlockedByMist(result, BattleScript_MistProtected) ||
         MoveEffectBlockedByProtect(result, BattleScript_ButItFailed) ||
-        MoveEffectBlockedItemOrAbilityPreventsAnyStatDrop(result, BattleScript_ItemNoStatLoss, BattleScript_AbilityNoStatLoss) ||
-        MoveEffectBlockedAbilityPreventsSpecificStatDrop(result, BattleScript_AbilityNoSpecificStatLoss) ||
+        MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(result, BattleScript_ItemNoStatLoss, BattleScript_AbilityNoStatLoss) ||
         MoveEffectBlockedByFlowerVeil(result, BattleScript_FlowerVeilProtectsRet) ||
+        MoveEffectBlockedByAbilityPreventingSpecificStatDrop(result, BattleScript_AbilityNoSpecificStatLoss) ||
         MoveEffectBlockedByMirrorArmor(result, BattleScript_MirrorArmorReflect))
     )
         return result;
@@ -12448,7 +12460,7 @@ static struct MoveEffectResult *ChangeStatBuffsWithResult(struct MoveEffectResul
     // that we're trying to raise in order to ensure the correct stat change anim
     result->failed = CheckStatChangerForAllStats(result);
 
-    // DebugPrintf("result->failed %d", result->failed);
+    // DebugPrintf("result->failed %d, %d", result->failed, CheckStatChangerForAllStats(result));
 
     return result;
 }
@@ -16808,6 +16820,7 @@ static bool32 CanAbilityPreventStatLoss(u32 abilityDef)
     case ABILITY_CLEAR_BODY:
     case ABILITY_FULL_METAL_BODY:
     case ABILITY_WHITE_SMOKE:
+        DebugPrintf("wtf %d", abilityDef);
         return TRUE;
     }
     return FALSE;

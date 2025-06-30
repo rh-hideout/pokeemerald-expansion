@@ -890,7 +890,6 @@ struct MoveEffectResult
     // Mostly for stats
     bool32 statChangeEffect:1;
     bool32 statLowered:1;
-    bool32 changedStatsBattlerId:3;
     bool32 notProtectAffected:1;
     bool32 statDropPrevention:1;
     bool32 mirrorArmored:1;
@@ -1366,7 +1365,8 @@ static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
 
 static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
 {
-    return (multiple ? STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater: (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
+    DebugPrintf("stat %d doubleOrGreater %d multiple %d lowering %d");
+    return (multiple ? (STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater) : (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
 }
 
 static inline enum StatAnimArg GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
