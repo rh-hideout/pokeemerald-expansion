@@ -3277,7 +3277,7 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
 
         // If Mirror Armor, need to set statchanger
         if (result->battlerAbility == ABILITY_MIRROR_ARMOR)
-            gBattleScripting.statChanger = result->statChanger.value;
+            gBattleScripting.statChanger = result->statChanger;
     }
 
     // If blocked by item, set appropriate flags
@@ -12086,8 +12086,9 @@ static void TryPlayStatChangeAnimation(struct MoveEffectResult *result, bool32 s
     if (!gBattleScripting.statAnimPlayed)
     {
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
-        // DebugPrintf("Statchanger: %d, stat: %d, stage: %d, anim: %d",
+        // DebugPrintf("Statchanger: %d, count: %d, stat: %d, stage: %d, anim: %d",
         //     result->statChanger,
+        //     changeableStatsCount,
         //     result->statChanger.statId,
         //     GetStatChangerStage(result->statChanger, result->statChanger.statId),
         //     GetStatAnimArgBase(
@@ -12479,7 +12480,7 @@ static void Cmd_statbuffchange(void)
     // DebugPrintf("Init multistring %d", gBattleCommunication[MULTISTRING_CHOOSER]);
     if (ChangeStatBuffsStatChanger(
             GetBattlerForBattleScript(cmd->battler),
-            gBattleScripting.statChanger | PrepareStatChangerAny(stats, 1, TRUE),
+            gBattleScripting.statChanger.value | PrepareStatChangerAny(stats, 1, TRUE),
             flags,
             failInstr) == STAT_CHANGE_WORKED)
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -16820,7 +16821,6 @@ static bool32 CanAbilityPreventStatLoss(u32 abilityDef)
     case ABILITY_CLEAR_BODY:
     case ABILITY_FULL_METAL_BODY:
     case ABILITY_WHITE_SMOKE:
-        DebugPrintf("wtf %d", abilityDef);
         return TRUE;
     }
     return FALSE;

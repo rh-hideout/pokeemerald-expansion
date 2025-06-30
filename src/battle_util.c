@@ -1165,9 +1165,9 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     // Support for Contrary ability.
     // If a move attempted to raise stat - print "won't increase".
     // If a move attempted to lower stat - print "won't decrease".
-    if (stringId == STRINGID_STATSWONTDECREASE && !(gBattleScripting.statChanger & STAT_BUFF_NEGATIVE))
+    if (stringId == STRINGID_STATSWONTDECREASE && !gBattleScripting.statChanger.isNegative)
         stringId = STRINGID_STATSWONTINCREASE;
-    else if (stringId == STRINGID_STATSWONTINCREASE && gBattleScripting.statChanger & STAT_BUFF_NEGATIVE)
+    else if (stringId == STRINGID_STATSWONTINCREASE && gBattleScripting.statChanger.isNegative)
         stringId = STRINGID_STATSWONTDECREASE;
 
     else if (stringId == STRINGID_STATSWONTDECREASE2 && battlerAbility == ABILITY_CONTRARY)
@@ -1699,7 +1699,7 @@ bool32 MoodyCantRaiseStat(u32 stat)
 // gBattlerAttacker is the battler that's trying to lower their stats and due to limitations of RandomUniformExcept, cannot be an argument
 bool32 MoodyCantLowerStat(u32 stat)
 {
-    return stat == GET_STAT_BUFF_ID(gBattleScripting.statChanger) || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
+    return (stat == gBattleScripting.statChanger.statId) || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
 }
 
 void TryToRevertMimicryAndFlags(void)
@@ -4261,7 +4261,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                             validToRaise |= 1u << i;
                     }
 
-                    gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
+                    gBattleScripting.statChanger.value = gBattleScripting.savedStatChanger.value = 0; // for raising and lowering stat respectively
                     if (validToRaise) // Find stat to raise
                     {
                         i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
@@ -4272,7 +4272,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     {
                         // MoodyCantLowerStat already checks that both stats are different
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        gBattleScripting.savedStatChanger = CalcStatChangerValue(i, -1);
+                        gBattleScripting.savedStatChanger.value = CalcStatChangerValue(i, -1);
                     }
                     BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
                     effect++;

@@ -971,24 +971,14 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
-#define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
-#define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
-#define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
-#define STAT_BUFF_NEGATIVE 0x1                     // 0x80, the sign bit
-
-#define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
-
-#define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
-#define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7))
-
 #define DO_ACCURACY_CHECK 2 // Don't skip the accuracy check before the move might be absorbed
 
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    u32 statChanger;
-    u32 savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
+    union StatChanger statChanger;
+    union StatChanger savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
     u8 multihitString[6];
     bool8 expOnCatch;
     u8 unused1;
@@ -1365,7 +1355,6 @@ static inline u32 CanRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
 
 static inline enum StatAnimArg GetStatAnimArgBase(u32 stat, u32 doubleOrGreater, bool32 multiple, bool32 lowering)
 {
-    DebugPrintf("stat %d doubleOrGreater %d multiple %d lowering %d");
     return (multiple ? (STAT_BUFF_MULTIPLE_PLUS1 + doubleOrGreater) : (stat + doubleOrGreater * NUM_BOOSTABLE_STATS)) * powInt(-1, lowering);
 }
 
@@ -1402,7 +1391,7 @@ static inline u32 PrepareStatChangerMultiple(union StatFlags stats, s32 stage)
 
 static inline void SetStatChanger(u32 statId, s32 stage)
 {
-    gBattleScripting.statChanger = CalcStatChangerValue(statId, stage);
+    gBattleScripting.statChanger.value = CalcStatChangerValue(statId, stage);
 }
 
 static inline u32 GetStatChangerStage(union StatChanger statChanger, u32 statId)
@@ -1438,7 +1427,7 @@ static inline void SetStatChangerStatValue(union StatChanger *statChanger, u32 s
             statChanger->accuracy = value;
             return;
         case STAT_EVASION:
-            statChanger->accuracy = value;
+            statChanger->evasion = value;
         default:
             return;
     }
