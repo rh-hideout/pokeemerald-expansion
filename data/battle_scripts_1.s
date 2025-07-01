@@ -9329,7 +9329,7 @@ BattleScript_TryFaint:
 	tryfaintmon BS_TARGET
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectRemoveTerrainIfSet::
+BattleScript_EffectSteelRoller::
 	attackcanceler
 	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_FailedFromAtkString
 	goto BattleScript_HitFromAccCheck

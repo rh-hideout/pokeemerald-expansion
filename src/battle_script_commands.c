@@ -7344,23 +7344,6 @@ static void Cmd_moveend(void)
             else
                 gBattleScripting.moveendState++;
             break;
-        case MOVEEND_THIRD_MOVE_BLOCK:
-            switch (moveEffect)
-            {
-            case EFFECT_REMOVE_TERRAIN_IF_SET:
-            case EFFECT_REMOVE_TERRAIN:
-                if (IsBattlerAlive(gBattlerAttacker) && IsBattlerTurnDamaged(gBattlerTarget))
-                {
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
-                    effect = TRUE;
-                }
-                break;
-            default:
-                break;
-            }
-            gBattleScripting.moveendState++;
-            break;
         case MOVEEND_HIT_ESCAPE:
             if (moveEffect == EFFECT_HIT_ESCAPE
              && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
@@ -7379,6 +7362,24 @@ static void Cmd_moveend(void)
                 effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
             else
                 gBattleScripting.moveendState++;
+            break;
+        case MOVEEND_REMOVE_TERRAIN:
+            if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER // Steel Roller has to check the chosen move, Otherwise it would fail in certain cases
+             && IsBattlerTurnDamaged(gBattlerTarget))
+            {
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                effect = TRUE;
+            }
+            else if (moveEffect == EFFECT_ICE_SPINNER
+                  && IsBattlerAlive(gBattlerAttacker)
+                  && IsBattlerTurnDamaged(gBattlerTarget))
+            {
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                effect = TRUE;
+            }
+            gBattleScripting.moveendState++;
             break;
         case MOVEEND_SYMBIOSIS:
             for (i = 0; i < gBattlersCount; i++)

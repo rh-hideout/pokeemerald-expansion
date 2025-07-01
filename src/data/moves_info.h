@@ -18444,7 +18444,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Destroys terrain. Fails if\n"
             "ground isn't terrain."),
-        .effect = EFFECT_REMOVE_TERRAIN_IF_SET,
+        .effect = EFFECT_STEEL_ROLLER,
         .power = 130,
         .type = TYPE_STEEL,
         .accuracy = 100,
@@ -19878,7 +19878,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Ice-covered feet hit a foe\n"
             "and destroy the terrain."),
-        .effect = EFFECT_REMOVE_TERRAIN,
+        .effect = EFFECT_ICE_SPINNER,
         .power = 80,
         .type = TYPE_ICE,
         .accuracy = 100,
@@ -21583,7 +21583,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Lycanroc attacks with full\n"
             "force. Removes all terrain."),
-        .effect = EFFECT_REMOVE_TERRAIN,
+        .effect = EFFECT_ICE_SPINNER,
         .power = 190,
         .type = TYPE_ROCK,
         .accuracy = 0,

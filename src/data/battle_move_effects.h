@@ -2219,15 +2219,15 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_REMOVE_TERRAIN] =
+    [EFFECT_ICE_SPINNER] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_REMOVE_TERRAIN_IF_SET] =
+    [EFFECT_STEEL_ROLLER] =
     {
-        .battleScript = BattleScript_EffectRemoveTerrainIfSet,
+        .battleScript = BattleScript_EffectSteelRoller,
         .battleTvScore = 0, // TODO: Assign points
     },
 };

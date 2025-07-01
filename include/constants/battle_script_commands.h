@@ -243,7 +243,7 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-// cases for Cmd_moveend
+// cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
@@ -280,10 +280,10 @@ enum MoveEndEffects
     MOVEEND_LIFEORB_SHELLBELL, // Includes shell bell, throat spray, etc
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_EJECT_PACK,
-    MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_HIT_ESCAPE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
+    MOVEEND_REMOVE_TERRAIN,
     MOVEEND_WHITE_HERB,
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
