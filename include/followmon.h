@@ -24,8 +24,9 @@ struct FollowMon
 
 struct FollowMonData
 {
-    bool8 pendingInterction;
-    u8 spawnSlot;
+    bool8 pendingInteraction;
+    u8 oldestSlot:4;
+    u8 usedSlots:4;
     u16 spawnCountdown;
     u16 pendingSpawnAnim;
     struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];

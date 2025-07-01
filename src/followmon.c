@@ -46,6 +46,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.list[slot].onWater = MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior);
 
     sFollowMonData.spawnCountdown += 60;
+    sFollowMonData.usedSlots++;
 }
 
 
@@ -147,7 +148,7 @@ void FollowMon_OverworldCB(void)
                         else
                             spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
                     }
-                    // Instantly play a small animation to ground the spawning a bit (Disable for now)
+                    // Instantly play a small animation to ground the spawning a bit
                     MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
                     sFollowMonData.pendingSpawnAnim &= ~bitFlag;
                 }
@@ -160,20 +161,14 @@ static u8 NextSpawnMonSlot(void)
 {
     u8 slot;
 
-    slot = FOLLOWMON_MAX_SPAWN_SLOTS;
-
-    for(slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; ++slot)
-    {
-        if(sFollowMonData.list[slot].encounterIndex == 0)
-            break;
-    }
+    slot = sFollowMonData.usedSlots;
 
     // All mon slots are in use
     if(slot == FOLLOWMON_MAX_SPAWN_SLOTS)
     {
         // Cycle through so we remove the oldest mon first
-        sFollowMonData.spawnSlot = (sFollowMonData.spawnSlot + 1) % FOLLOWMON_MAX_SPAWN_SLOTS;
-        slot = sFollowMonData.spawnSlot;   
+        sFollowMonData.oldestSlot = (sFollowMonData.oldestSlot + 1) % FOLLOWMON_MAX_SPAWN_SLOTS;
+        slot = sFollowMonData.oldestSlot;   
     }
 
     // Remove any existing id by this slot
@@ -200,82 +195,79 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     s16 x, y;
     u8 closeDistance;
 
-    for(tryCount = 0; tryCount < 3; ++tryCount)
+    // Spawn further away when surfing
+    if(IsSpawningWaterMons())
+        closeDistance = 3;
+    else
+        closeDistance = 1;
+
+    // Select a random tile in [-7, -4] [7, 4] range
+    // Make sure is not directly next to player
+    do
     {
-        // Spawn further away when surfing
-        if(IsSpawningWaterMons())
-            closeDistance = 3;
-        else
-            closeDistance = 1;
+        x = (s16)(Random() % 15) - 7;
+        y = (s16)(Random() % 9) - 4;
+    }
+    while (abs(x) <= closeDistance && abs(y) <= closeDistance);
 
-        // Select a random tile in [-7, -4] [7, 4] range
-        // Make sure is not directly next to player
-        do
+    // We won't spawn mons in in the immediate facing direction
+    // (stops mons spawning in as I'm running in a straight line)
+    switch (GetPlayerFacingDirection())
+    {
+    case DIR_NORTH:
+        if(x == 0 && y < 0)
+            x = -1;
+        break;
+    case DIR_SOUTH:
+        if(x == 0  && y > 0)
+            x = 1;
+        break;
+
+    case DIR_EAST:
+        if(y == 0 && x > 0)
+            y = -1;
+        break;
+    case DIR_WEST:
+        if(y == 0 && x < 0)
+            y = 1;
+        break;
+    }
+    
+    PlayerGetDestCoords(&playerX, &playerY);
+    x += playerX;
+    y += playerY;
+
+    elevation = MapGridGetElevationAt(x, y);
+
+    if (!IsInsidePlayerMap(x, y)) {
+        return FALSE;
+    }
+    // 0 is change of elevation, 15 is multiple elevation e.g. bridges
+    // Causes weird interaction issues so just don't let mons spawn here
+    if (elevation == 0 || elevation == 15)
+        return FALSE;
+
+    tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
+    if(IsSpawningWaterMons())
+    {
+        if(MetatileBehavior_IsWaterWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
         {
-            x = (s16)(Random() % 15) - 7;
-            y = (s16)(Random() % 9) - 4;
-        }
-        while (abs(x) <= closeDistance && abs(y) <= closeDistance);
+            *outX = x;
+            *outY = y;
 
-        // We won't spawn mons in in the immediate facing direction
-        // (stops mons spawning in as I'm running in a straight line)
-        switch (GetPlayerFacingDirection())
+            if(!CheckForObjectEventAtLocation(x, y))
+                return TRUE;
+        }
+    }
+    else
+    {
+        if(MetatileBehavior_IsLandWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
         {
-        case DIR_NORTH:
-            if(x == 0 && y < 0)
-                x = -1;
-            break;
-        case DIR_SOUTH:
-            if(x == 0  && y > 0)
-                x = 1;
-            break;
+            *outX = x;
+            *outY = y;
 
-        case DIR_EAST:
-            if(y == 0 && x > 0)
-                y = -1;
-            break;
-        case DIR_WEST:
-            if(y == 0 && x < 0)
-                y = 1;
-            break;
-        }
-        
-        PlayerGetDestCoords(&playerX, &playerY);
-        x += playerX;
-        y += playerY;
-
-        elevation = MapGridGetElevationAt(x, y);
-
-        if (!IsInsidePlayerMap(x, y)) {
-            return FALSE;
-        }
-        // 0 is change of elevation, 15 is multiple elevation e.g. bridges
-        // Causes weird interaction issues so just don't let mons spawn here
-        if (elevation == 0 || elevation == 15)
-            return FALSE;
-
-        tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-        if(IsSpawningWaterMons())
-        {
-            if(MetatileBehavior_IsWaterWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
-            {
-                *outX = x;
-                *outY = y;
-
-                if(!CheckForObjectEventAtLocation(x, y))
-                    return TRUE;
-            }
-        }
-        else
-        {
-            if(MetatileBehavior_IsLandWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
-            {
-                *outX = x;
-                *outY = y;
-
-                if(!CheckForObjectEventAtLocation(x, y))
-                    return TRUE;
-            }
+            if(!CheckForObjectEventAtLocation(x, y))
+                return TRUE;
         }
     }
 
@@ -331,17 +323,17 @@ bool8 FollowMon_ProcessMonInteraction(void)
     if(VarGet(VAR_REPEL_STEP_COUNT) != 0)
     {
         // Never auto trigger battle whilst repel is active
-        sFollowMonData.pendingInterction = FALSE;
+        sFollowMonData.pendingInteraction = FALSE;
         return FALSE;
     }
 
-    if(sFollowMonData.pendingInterction)
+    if(sFollowMonData.pendingInteraction)
     {
         u8 i;
         struct ObjectEvent *curObject;
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     
-        sFollowMonData.pendingInterction = FALSE;
+        sFollowMonData.pendingInteraction = FALSE;
         
         for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
         {
@@ -372,22 +364,21 @@ bool8 FollowMon_ProcessMonInteraction(void)
 
 bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
-    struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    if (collider == player)
+    if (collider->isPlayer)
     {
         // Player can walk on top of follow mon
         if(FollowMon_IsMonObject(obstacle))
         {
-            sFollowMonData.pendingInterction = TRUE;
+            sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
         }
     }
-    else if(obstacle == player)
+    else if(obstacle->isPlayer)
     {
         // Follow mon can walk onto player
         if(FollowMon_IsMonObject(collider))
         {
-            sFollowMonData.pendingInterction = TRUE;
+            sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
         }
     } else if(!FollowMon_IsMonObject(collider) && FollowMon_IsMonObject(obstacle))
@@ -404,12 +395,6 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
     u16 localId = object->localId;
     u16 graphicsId = object->graphicsId;
 
-    if (localId >= OBJ_EVENT_ID_FOLLOW_MON_FIRST && localId <= OBJ_EVENT_ID_FOLLOW_MON_LAST)
-    {
-        // Fast check
-        return TRUE;
-    }
-
     if (IS_FOLLOWMON_GFXID(graphicsId))
         return TRUE;
 
@@ -420,7 +405,7 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-
+    sFollowMonData.usedSlots++;
     sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
 }
 
@@ -428,6 +413,7 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
+    sFollowMonData.usedSlots--;
 }
 
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
@@ -444,6 +430,7 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 void FollowMon_OnWarp(void)
 {
     sFollowMonData.spawnCountdown = 0;
+    sFollowMonData.usedSlots = 0;
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++) {
         sFollowMonData.list[i].encounterIndex = 0;
     }
