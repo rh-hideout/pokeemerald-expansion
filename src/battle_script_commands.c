@@ -1420,7 +1420,7 @@ static void Cmd_attackcanceler(void)
      && effect != EFFECT_COUNTER
      && effect != EFFECT_UPPER_HAND)
     {
-        if (!CanIgnoreContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
+        if (!CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
             gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
@@ -1436,7 +1436,7 @@ static void Cmd_attackcanceler(void)
         gBattleCommunication[MISS_TYPE] = B_MSG_PROTECTED;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    else if (gProtectStructs[gBattlerTarget].beakBlastCharge && !CanIgnoreContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
+    else if (gProtectStructs[gBattlerTarget].beakBlastCharge && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
     {
         gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;

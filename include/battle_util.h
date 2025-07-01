@@ -263,7 +263,7 @@ enum ItemHoldEffect GetBattlerHoldEffect(u32 battler, bool32 checkNegating);
 enum ItemHoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler, bool32 checkNegating);
 enum ItemHoldEffect GetBattlerHoldEffectInternal(u32 battler, bool32 checkNegating, bool32 checkAbility);
 u32 GetBattlerHoldEffectParam(u32 battler);
-bool32 CanIgnoreContactEffects(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move);
+bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move);
 bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move);
 bool32 IsBattlerGrounded(u32 battler);
 u32 GetMoveSlot(u16 *moves, u32 move);
