@@ -11,6 +11,7 @@
 #include "item_menu.h"
 #include "main.h"
 #include "malloc.h"
+#include "party_menu.h"
 #include "random.h"
 #include "test/battle.h"
 #include "window.h"
@@ -2173,11 +2174,15 @@ void CloseTurn(u32 sourceLine)
     DATA.turns++;
 }
 
+//Debug Prints show this is NOT running for BATTLE_TEST_MULTI and BATTLE_TEST_AI_MULTI. 
+//It does run for BATTLE_TEST_AI_TWO_VS_ONE, however for BATTLE_TEST_TWO_VS_ONE it runs but Regirock [2] struggles. 
+//Perhaps the Set Move for Regirock[2] isn't working correctly.
+//Need to find out why it is not running for BATTLE_TEST_MULTI and BATTLE_TEST_AI_MULTI. 
 static struct Pokemon *CurrentMon(s32 battlerId)
 {
     struct Pokemon *party;
     const struct BattleTest *test = GetBattleTest();
-    if ((battlerId & BIT_SIDE) == B_SIDE_PLAYER)
+    if (battlerId == B_POSITION_PLAYER_LEFT || battlerId == B_POSITION_PLAYER_RIGHT)
         party = DATA.recordedBattle.playerParty;
     else
         party = DATA.recordedBattle.opponentParty;
@@ -2186,49 +2191,48 @@ static struct Pokemon *CurrentMon(s32 battlerId)
     {
         switch (test->type) 
         {
-            case BATTLE_TEST_SINGLES:
-            case BATTLE_TEST_WILD:
-            case BATTLE_TEST_AI_SINGLES:
-            case BATTLE_TEST_DOUBLES:
-            case BATTLE_TEST_AI_DOUBLES:
-                #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
-                #endif
-                return &party[DATA.currentMonIndexes[battlerId]];
             case BATTLE_TEST_MULTI:
             case BATTLE_TEST_AI_MULTI:
-                #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]]);
-                #endif
+                gBattlerPartyIndexes[0] = 0;
+                gBattlerPartyIndexes[1] = 0;
+                gBattlerPartyIndexes[2] = 1;
+                gBattlerPartyIndexes[3] = 3;
                 return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
-            case BATTLE_TEST_TWO_VS_ONE:
-            case BATTLE_TEST_AI_TWO_VS_ONE:
-                if(battlerId == B_POSITION_OPPONENT_LEFT || battlerId == B_POSITION_OPPONENT_RIGHT )
-                {
-                    #ifndef NDEBUG
-                    MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
-                    #endif
-                    return &party[DATA.currentMonIndexes[battlerId]];
-                }
-                else
-                {
-                    #ifndef NDEBUG
-                    MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]]);
-                    #endif
-                    return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
-                }
-            default:
-                return &party[DATA.currentMonIndexes[battlerId]];
                 #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon battlerId %d", battlerId);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon gBattlerPartyIndexes %d", gBattlerPartyIndexes[battlerId]);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
                 #endif
                 break;
+            case BATTLE_TEST_TWO_VS_ONE:
+            case BATTLE_TEST_AI_TWO_VS_ONE:
+                gBattlerPartyIndexes[0] = 0;
+                gBattlerPartyIndexes[1] = 0;
+                gBattlerPartyIndexes[2] = 1; // Setting "gBattlerPartyIndexes[2] = 1" allows Kangaskhan in AI 2v1 test to use Celebrate, but does NOT let Non-AI 2v1 Regirock click a move.
+                gBattlerPartyIndexes[3] = 3; // Setting "gBattlerPartyIndexes[3] = 3" allows Wobb in Non-AI 2v1 test to use Celebrate; AI 2v1 Haunter uses Shadow Ball regardless.
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon battlerId %d", battlerId);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon gBattlerPartyIndexes %d", gBattlerPartyIndexes[battlerId]);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
+                #endif
+                return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
+                break;
+            default:
+                return &party[DATA.currentMonIndexes[battlerId]];
+                break;
         }
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
+                #endif
+        return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
     }
     else
         return &party[DATA.currentMonIndexes[battlerId]];
         #ifndef NDEBUG
             MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+            MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %d", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[battlerId]],MON_DATA_SPECIES)));
+            
             #endif
 }
 

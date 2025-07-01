@@ -83,7 +83,7 @@ AI_MULTI_BATTLE_TEST("AI will not switch into a partner Pokémon in a multibattl
         MULTI_PARTNER(SPECIES_KANGASKHAN);
         // No moves to damage player.
         MULTI_OPPONENT_A(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
-        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_LICK); }
         MULTI_OPPONENT_A(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
         MULTI_OPPONENT_B(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
         
@@ -115,7 +115,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 
         // No moves to damage player.
         MULTI_OPPONENT_A(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
         MULTI_OPPONENT_A(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
-        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_LICK); }
         MULTI_OPPONENT_A(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
     } WHEN {
         TURN { EXPECT_SWITCH(opponentLeft, 3); };

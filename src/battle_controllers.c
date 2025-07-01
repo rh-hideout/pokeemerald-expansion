@@ -2198,37 +2198,7 @@ void BtlController_HandleGetMonData(u32 battler)
     u32 size = 0;
     u8 monToCheck;
     s32 i;
-    if(!TESTING)
-    {
-        switch (GetBattleTest()->type) 
-        {
-            case BATTLE_TEST_MULTI:
-            case BATTLE_TEST_AI_MULTI:
-                BufferBattlePartyCurrentOrderBySide(0, 0);
-                BufferBattlePartyCurrentOrderBySide(1, 0);
-                BufferBattlePartyCurrentOrderBySide(2, 1);
-                BufferBattlePartyCurrentOrderBySide(3, 1);
-                gBattlerPartyIndexes[0] = 0;
-                gBattlerPartyIndexes[1] = 0;
-                gBattlerPartyIndexes[2] = 3;
-                gBattlerPartyIndexes[3] = 3;
-                break;
-            case BATTLE_TEST_TWO_VS_ONE:
-            case BATTLE_TEST_AI_TWO_VS_ONE:
-                BufferBattlePartyCurrentOrderBySide(0, 0);
-                BufferBattlePartyCurrentOrderBySide(1, 0);
-                BufferBattlePartyCurrentOrderBySide(2, 1);
-                BufferBattlePartyCurrentOrderBySide(3, 1);
-                gBattlerPartyIndexes[0] = 0;
-                gBattlerPartyIndexes[1] = 0;
-                gBattlerPartyIndexes[2] = 3;
-                gBattlerPartyIndexes[3] = 1;
-                break;
-            default:
-                break;
-        }
-    }
-
+    
     if (gBattleResources->bufferA[battler][2] == 0)
     {
         size += GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], monData);   
