@@ -56,7 +56,6 @@ SECTIONS {
         src/rom_header.o(.text*);
         KEEP(*.o(.text.header_gf));
         KEEP(*.o(.text.header_rhh));
-        src/rom_header_rhh.o(.text.*);
         src/crt0.o(.text);
         *libagbsyscall.a:*.o(.text*);
         *libgcc.a:*.o(.text*);
