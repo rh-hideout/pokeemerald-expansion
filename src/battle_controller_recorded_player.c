@@ -110,27 +110,15 @@ void SetControllerToRecordedPlayer(u32 battler)
 
 static void RecordedPlayerBufferRunCommand(u32 battler)
 {
-    #ifndef NDEBUG
-    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand");
-    #endif
     if (IsBattleControllerActiveOnLocal(battler))
     {
-        #ifndef NDEBUG
-    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - Active");
-    #endif
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sRecordedPlayerBufferCommands))
         {
             sRecordedPlayerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
-            #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - In Array");
-        #endif
         }
         else
         {
             BtlController_Complete(battler);
-            #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - Complete");
-        #endif
         }
     }
 }

@@ -179,7 +179,7 @@ static void InvokeTestFunction(const struct BattleTest *test)
     }
 }
 
-static const struct BattleTest *GetBattleTest(void)
+const struct BattleTest *GetBattleTest(void)
 {
     const struct BattleTest *test = gTestRunnerState.test->data;
     return test;
@@ -2176,11 +2176,60 @@ void CloseTurn(u32 sourceLine)
 static struct Pokemon *CurrentMon(s32 battlerId)
 {
     struct Pokemon *party;
+    const struct BattleTest *test = GetBattleTest();
     if ((battlerId & BIT_SIDE) == B_SIDE_PLAYER)
         party = DATA.recordedBattle.playerParty;
     else
         party = DATA.recordedBattle.opponentParty;
-    return &party[DATA.currentMonIndexes[battlerId]];
+    
+    if(TESTING)
+    {
+        switch (test->type) 
+        {
+            case BATTLE_TEST_SINGLES:
+            case BATTLE_TEST_WILD:
+            case BATTLE_TEST_AI_SINGLES:
+            case BATTLE_TEST_DOUBLES:
+            case BATTLE_TEST_AI_DOUBLES:
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+                #endif
+                return &party[DATA.currentMonIndexes[battlerId]];
+            case BATTLE_TEST_MULTI:
+            case BATTLE_TEST_AI_MULTI:
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]]);
+                #endif
+                return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
+            case BATTLE_TEST_TWO_VS_ONE:
+            case BATTLE_TEST_AI_TWO_VS_ONE:
+                if(battlerId == B_POSITION_OPPONENT_LEFT || battlerId == B_POSITION_OPPONENT_RIGHT )
+                {
+                    #ifndef NDEBUG
+                    MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+                    #endif
+                    return &party[DATA.currentMonIndexes[battlerId]];
+                }
+                else
+                {
+                    #ifndef NDEBUG
+                    MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]]);
+                    #endif
+                    return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
+                }
+            default:
+                return &party[DATA.currentMonIndexes[battlerId]];
+                #ifndef NDEBUG
+                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+                #endif
+                break;
+        }
+    }
+    else
+        return &party[DATA.currentMonIndexes[battlerId]];
+        #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
+            #endif
 }
 
 s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
@@ -2235,13 +2284,18 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 {
     u32 i;
     struct Pokemon *mon = CurrentMon(battlerId);
-
+#ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"Species %S", GetSpeciesName(GetMonData(mon, MON_DATA_SPECIES)));
+        #endif
     if (ctx->explicitMove)
     {
         INVALID_IF(ctx->move == MOVE_NONE || ctx->move >= MOVES_COUNT, "Illegal move: %d", ctx->move);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             *moveId = GetMonData(mon, MON_DATA_MOVE1 + i);
+            #ifndef NDEBUG
+            MgbaPrintf(MGBA_LOG_WARN,"*moveId %S", GetMoveName(GetMonData(mon, MON_DATA_MOVE1 + i)));
+            #endif
             if (*moveId == ctx->move)
             {
                 *moveSlot = i;
@@ -2342,6 +2396,9 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "MOVE is not allowed for opponent in AI tests. Use EXPECT_MOVE instead");
 
     MoveGetIdAndSlot(battlerId, &ctx, &moveId, &moveSlot, sourceLine);
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"MoveGetIdAndSlot %d", battlerId);
+    #endif
     target = MoveGetTarget(battlerId, moveId, &ctx, sourceLine);
 
     if (GetMoveEffect(moveId) == EFFECT_REVIVAL_BLESSING)

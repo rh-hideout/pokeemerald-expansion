@@ -175,14 +175,8 @@ void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
 
 u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler)
 {
-    #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedBattle_GetBattlerAction");
-        #endif
     if (gTestRunnerEnabled)
     {
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedBattle_GetBattlerAction%d", GetBattlerPosition(battler));
-        #endif
         TestRunner_Battle_CheckBattleRecordActionType(battler, sBattlerRecordSizes[battler], actionType);
     }
 

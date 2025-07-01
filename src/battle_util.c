@@ -1571,6 +1571,9 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 
     gPotentialItemEffectBattler = battler;
 
+    if(TESTING && battler == B_POSITION_PLAYER_RIGHT)
+        return unusableMoves;
+
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         move = gBattleMons[battler].moves[i];
@@ -1639,6 +1642,9 @@ bool32 AreAllMovesUnusable(u32 battler)
     {
         gProtectStructs[battler].noValidMoves = TRUE;
         gSelectionBattleScripts[battler] = BattleScript_NoMovesLeft;
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"unusable == ALL_MOVES_MASK %d", battler);
+        #endif
     }
     else
     {
