@@ -1529,14 +1529,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifmovepropertyargument argument:req, jumpInstr:req
-	callnative BS_JumpIfMovePropertyArgument
-	.byte \argument
-	.4byte \jumpInstr
-	.endm
-
-	.macro setremoveterrain failInstr:req
-	callnative BS_SetRemoveTerrain
+	.macro setterrain failInstr:req
+	callnative BS_SetTerrain
 	.4byte \failInstr
 	.endm
 

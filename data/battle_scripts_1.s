@@ -2248,7 +2248,7 @@ BattleScript_EffectPsychicTerrain::
 	attackcanceler
 	attackstring
 	ppreduce
-	setremoveterrain BattleScript_ButItFailed
+	setterrain BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	printfromtable gTerrainStringIds
@@ -9303,12 +9303,11 @@ BattleScript_ExtremeEvoboostSpDef::
 BattleScript_ExtremeEvoboostEnd::
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectHitSetRemoveTerrain::
+BattleScript_EffectHitSetTerrain::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
-	jumpifmovepropertyargument ARG_TRY_REMOVE_TERRAIN_FAIL, BattleScript_RemoveTerrain
 	critcalc
 	damagecalc
 	adjustdamage
@@ -9323,7 +9322,7 @@ BattleScript_EffectHitSetRemoveTerrain::
 	waitmessage B_WAIT_TIME_LONG
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	setremoveterrain BattleScript_TryFaint
+	setterrain BattleScript_TryFaint
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -9331,30 +9330,17 @@ BattleScript_TryFaint:
 	tryfaintmon BS_TARGET
 	goto BattleScript_MoveEnd
 
-BattleScript_RemoveTerrain:
-	jumpifterrainaffected BS_TARGET, STATUS_FIELD_TERRAIN_ANY, BattleScript_RemoveTerrain_Cont
-	goto BattleScript_ButItFailed
-BattleScript_RemoveTerrain_Cont:
-	critcalc
-	damagecalc
-	adjustdamage
-	attackanimation
-	waitanimation
-	effectivenesssound
-	hitanimation BS_TARGET
-	waitstate
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET
-	critmessage
-	waitmessage B_WAIT_TIME_LONG
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
+BattleScript_EffectSteelRoller::
+	attackcanceler
+	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_FailedFromAtkString
+	goto BattleScript_HitFromAccCheck
+
+BattleScript_RemoveTerrain::
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
-	goto BattleScript_MoveEnd
+	return
 
 BattleScript_Pickpocket::
 	call BattleScript_AbilityPopUp

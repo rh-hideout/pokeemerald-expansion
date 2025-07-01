@@ -548,8 +548,8 @@ bool32 IsDamageMoveUnusable(u32 battlerAtk, u32 battlerDef, u32 move, u32 moveTy
         if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveArgType(move)))
             return TRUE;
         break;
-    case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY) && GetMoveEffectArg_MoveProperty(move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
+    case EFFECT_STEEL_ROLLER:
+        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:
@@ -827,7 +827,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
             simDamage.median = ApplyModifiersAfterDmgRoll(simDamage.median, &damageCalcData, effectivenessMultiplier,
                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
                                                             aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef]);
-                                                            
+
             simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
             simDamage.maximum = ApplyModifiersAfterDmgRoll(simDamage.maximum, &damageCalcData, effectivenessMultiplier,
                                                             aiData->abilities[battlerAtk], aiData->abilities[battlerDef],
