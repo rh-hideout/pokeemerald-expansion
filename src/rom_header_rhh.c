@@ -27,7 +27,7 @@ struct RHHRomHeader
     /*0x17*/ u8 padding;
 };
 
-KEEP_SECTION USED static const struct RHHRomHeader sRHHRomHeader =
+__attribute__((section(".text.header_rhh"))) USED static const struct RHHRomHeader sRHHRomHeader =
 {
     .rhh_magic = { 'R', 'H', 'H', 'E', 'X', 'P' },
     .expansionVersionMajor = EXPANSION_VERSION_MAJOR,
