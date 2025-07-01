@@ -43,6 +43,7 @@ prefabs.json
 *.js
 /pokeemerald-*.png
 src/data/map_group_count.h
+include/constants/heal_locations.h
 tools/trainerproc/trainerproc
 tools/compresSmol/compresSmol
 tools/compresSmol/compresSmolTilemap

@@ -133,7 +133,6 @@ SINGLE_BATTLE_TEST("Anticipation considers Synchronoise as an ordinary Psychic-t
 
 SINGLE_BATTLE_TEST("Anticipation considers Freeze-Dry as an ordinary Ice-type move")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_FREEZE_DRY) == TYPE_ICE);
         ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 0) == TYPE_WATER);
@@ -150,7 +149,6 @@ SINGLE_BATTLE_TEST("Anticipation considers Freeze-Dry as an ordinary Ice-type mo
 
 SINGLE_BATTLE_TEST("Anticipation considers Flying Press as an ordinary Fighting-type move")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveType(MOVE_FLYING_PRESS) == TYPE_FIGHTING);
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
@@ -280,7 +278,6 @@ SINGLE_BATTLE_TEST("Anticipation treats dynamic move types as their base type (N
 
 SINGLE_BATTLE_TEST("Anticipation does not consider Strong Winds on type matchups")
 {
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 0) == TYPE_DRAGON);
         ASSUME(GetSpeciesType(SPECIES_RAYQUAZA_MEGA, 1) == TYPE_FLYING);

@@ -128,7 +128,7 @@ struct DisableStruct
     u8 usedProteanLibero:1;
     u8 flashFireBoosted:1;
     u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
-    u8 boosterEnergyActivates:1;
+    u8 boosterEnergyActivated:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
     u8 neutralizingGas:1;
@@ -160,7 +160,7 @@ struct ProtectStruct
     u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
-    u16 statFell:1;
+    u16 tryEjectPack:1;
     u16 pranksterElevated:1;
     u16 quickDraw:1;
     u16 beakBlastCharge:1;
@@ -575,7 +575,6 @@ struct BattlerState
     u8 targetsDone[MAX_BATTLERS_COUNT];
 
     u32 commandingDondozo:1;
-    u32 absent:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
     u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
@@ -589,7 +588,7 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 padding:16;
+    u32 padding:17;
     // End of Word
 };
 
@@ -756,14 +755,13 @@ struct BattleStruct
     u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
-    u8 categoryOverride; // for Z-Moves and Max Moves
+    enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
     u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
-    u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
-    u8 cheekPouchActivated:1;
-    u8 padding2:3;
+    u16 opponentMonCanTera:6;
+    u16 opponentMonCanDynamax:6;
+    u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -777,13 +775,11 @@ struct BattleStruct
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
-    u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
     u8 noTargetPresent:1;
+    u8 cheekPouchActivated:1;
+    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u16 opponentMonCanTera:6;
-    u16 opponentMonCanDynamax:6;
-    u16 padding:4;
 };
 
 struct AiBattleData

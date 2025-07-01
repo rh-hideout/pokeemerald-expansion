@@ -139,11 +139,9 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
-// Volatile status ailments
-// These are removed after exiting the battle or switching
-/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
- * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
- */
+/* Volatile status ailments
+ * These are removed after exiting the battle or switching
+ *  Enum,                                       Type                               Type, max value, flags */
 #define VOLATILE_DEFINITIONS(F) \
     F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 7), V_BATON_PASSABLE) \
     F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
@@ -255,7 +253,7 @@ enum Volatile
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 
-#define HITMARKER_UNUSED_1              (1 << 4)
+#define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -263,25 +261,24 @@ enum Volatile
 #define HITMARKER_NO_ATTACKSTRING       (1 << 9)
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
-#define HITMARKER_UNUSED_2              (1 << 12)
+#define HITMARKER_UNUSED_12             (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
-#define HITMARKER_SYNCHRONIZE_EFFECT    (1 << 14)
+#define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
-#define HITMARKER_UNUSED_3              (1 << 18)
+#define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
 #define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
-#define HITMARKER_UNUSED_4              (1 << 21)
+#define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
 #define HITMARKER_GRUDGE                (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
-#define HITMARKER_UNUSED_5              (1 << 26)
-#define HITMARKER_CHARGING              (1 << 27)
+#define HITMARKER_UNUSED_26             (1 << 26)
+#define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
-#define HITMARKER_STRING_PRINTED        (1 << 29)
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
@@ -392,7 +389,6 @@ enum MoveEffects
     MOVE_EFFECT_TRI_ATTACK,
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
-    MOVE_EFFECT_CHARGING,
     MOVE_EFFECT_WRAP,
     MOVE_EFFECT_ATK_PLUS_1,
     MOVE_EFFECT_DEF_PLUS_1,
@@ -511,15 +507,12 @@ enum MoveEffects
     NUM_MOVE_EFFECTS
 };
 
-#define PRIMARY_STATUS_MOVE_EFFECT      MOVE_EFFECT_FROSTBITE // All above move effects apply primary status
 #if B_USE_FROSTBITE == TRUE
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FROSTBITE
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
 
-#define MOVE_EFFECT_AFFECTS_USER        0x2000
-#define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.

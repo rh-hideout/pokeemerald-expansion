@@ -102,18 +102,22 @@
 	jumpifhalfword CMP_EQUAL, sMOVE_EFFECT, MOVE_EFFECT_CONTINUE, 1b
 	.endm
 
-	.macro seteffectprimary moveEffect=0
+	.macro seteffectprimary battler:req, effectBattler:req, moveEffect=0
 	.if \moveEffect != 0
 		setmoveeffect \moveEffect
 	.endif
 	.byte 0x16
+	.byte \battler
+	.byte \effectBattler
 	.endm
 
-	.macro seteffectsecondary moveEffect=0
+	.macro seteffectsecondary battler:req, effectBattler:req, moveEffect=0
 	.if \moveEffect != 0
 		setmoveeffect \moveEffect
 	.endif
 	.byte 0x17
+	.byte \battler
+	.byte \effectBattler
 	.endm
 
 	.macro clearvolatile battler:req, volatile:req
@@ -350,6 +354,10 @@
 	.2byte \frames
 	.endm
 
+	.macro setchargingturn
+	.byte 0x40
+	.endm
+
 	.macro waitstate
 	.byte 0x3a
 	.endm
@@ -408,15 +416,12 @@
 	.4byte \argPtr
 	.endm
 
-	.macro setgraphicalstatchangevalues
+	.macro unused_0x47
 	.byte 0x47
 	.endm
 
-	.macro playstatchangeanimation battler:req, stats:req, flags:req
+	.macro unused_0x48
 	.byte 0x48
-	.byte \battler
-	.byte \stats
-	.byte \flags
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -763,10 +768,12 @@
 	.byte 0x88
 	.endm
 
-	.macro statbuffchange flags:req, failInstr:req
+	.macro statbuffchange battler:req, flags:req, failInstr:req, stats=0
 	.byte 0x89
+	.byte \battler
 	.2byte \flags
 	.4byte \failInstr
+	.byte \stats
 	.endm
 
 	.macro normalisebuffs
@@ -825,7 +832,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused_0x94
+	.macro setstatuswithability
 	.byte 0x94
 	.endm
 
@@ -958,10 +965,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setvolatile volatile:req, battler=BS_TARGET, value=TRUE
+	.macro setvolatile battler:req, volatile:req, value=TRUE
 	.byte 0xb1
-	.byte \volatile
 	.byte \battler
+	.byte \volatile
 	.byte \value
 	.endm
 
@@ -1330,8 +1337,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setnonvolatilestatus
+	.macro setnonvolatilestatus trigger:req
 	.byte 0xfd
+	.byte \trigger
 	.endm
 
 	.macro tryworryseed failInstr:req
@@ -1380,16 +1388,12 @@
 	.byte \battler
 	.endm
 
-	.macro tryintimidatejectpack
-	callnative BS_TryIntimidatEjectpack
-	.endm
-
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
 
-	.macro allyswitchfailchance jumpInstr:req
-	callnative BS_AllySwitchFailChance
+	.macro tryallyswitch jumpInstr:req
+	callnative BS_TryAllySwitch
 	.4byte \jumpInstr
 	.endm
 
@@ -1436,10 +1440,6 @@
 
 	.macro setglaiverush
 	callnative BS_SetGlaiveRush
-	.endm
-
-	.macro tryrelicsong
-	callnative BS_TryRelicSong
 	.endm
 
 	.macro setpledge jumpInstr:req
@@ -2435,6 +2435,17 @@
 	1:
 	.endm
 
+	.macro jumpifabilitycantbesuppressed battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityCantBeSuppressed
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro tryactivateabilityshield battler:req
+	callnative BS_TryActivateAbilityShield
+	.byte \battler
+	.endm
+
 	.macro setallytonexttarget jumpInstr:req
 	jumpifbyte CMP_GREATER_THAN, gBattlerTarget, 0x1, 1f
 	addbyte gBattlerTarget, 0x2
@@ -2499,11 +2510,10 @@
 	ANIM_ON = TRUE
 
 	setstatchanger \stat, \amount, \mode
-	statbuffchange STAT_CHANGE_ALLOW_PTR, \script
-	setgraphicalstatchangevalues
-	.if \animation == TRUE
-		playanimation \battler, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	.if \animation == FALSE
+		setbyte sSTAT_ANIM_PLAYED, TRUE
 	.endif
+	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, \script
 	.ifnb \customString
 		printstring \customString
 	.else
@@ -2532,4 +2542,9 @@
 	.macro jumpifnowhiteout jumpInstr:req
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
+	.endm
+
+	.macro tryboosterenergy onFieldStatus:req
+	callnative BS_TryBoosterEnergy
+	.byte \onFieldStatus
 	.endm
