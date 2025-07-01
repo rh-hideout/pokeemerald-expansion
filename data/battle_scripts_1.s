@@ -1248,7 +1248,9 @@ BattleScript_SpectralThiefSteal::
 	printstring STRINGID_SPECTRALTHIEFSTEAL
 	waitmessage B_WAIT_TIME_LONG
 	setbyte sB_ANIM_ARG2, 0
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_EffectSpectralThiefFromDamage
 	printstatchangestrings
+	waitmessage B_WAIT_TIME_LONG
 	flushtextbox
 	goto BattleScript_EffectSpectralThiefFromDamage
 

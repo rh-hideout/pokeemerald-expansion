@@ -854,6 +854,8 @@
 	.byte 0x94
 	.4byte 2f
 	printsavedstring
+	jumpifbyte CMP_EQUAL, sSTATCHANGER_STRING_KEY, 0, 2f
+	waitmessage B_WAIT_TIME_LONG
 	goto 1b
 	2:
 	.endm

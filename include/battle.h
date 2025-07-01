@@ -1437,7 +1437,7 @@ static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChan
 
 static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 singleStatOnly)
 {
-    return statChanger.statId ? statChanger.statId :
+    return (singleStatOnly && statChanger.statId) ? statChanger.statId :
         (!singleStatOnly && CountStatChangerStats(statChanger) > 1) ? STAT_MULTIPLE :
         statChanger.attack > 0 ? STAT_ATK :
         statChanger.defense > 0 ? STAT_DEF :

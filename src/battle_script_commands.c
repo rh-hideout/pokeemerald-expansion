@@ -13037,19 +13037,24 @@ static void Cmd_printstatchangestrings(void)
             );
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
-        else
+        else // Otherwise, print all strings in a loop
         {
-            // Otherwise, print all strings in a loop
-            for (u32 statId = STAT_ATK; statId < NUM_BATTLE_STATS; statId++)
+            // Print strings in the correct order
+            u8 sStatChangeStringsOrder[] = {
+                STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION
+            };
+
+            for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
             {
-                if (gBattleScripting.statChangerStringKey.value & TO_BIT(statId))
+                if (gBattleScripting.statChangerStringKey.value & TO_BIT(sStatChangeStringsOrder[i]))
                 {
-                    gBattleScripting.statChangerStringKey.value &= ~TO_BIT(statId);
-                    if ((stage = GetStatChangerStatValue(gBattleScripting.statChanger, statId)) != 0
+                    gBattleScripting.statChangerStringKey.value &= ~TO_BIT(sStatChangeStringsOrder[i]);
+                    if ((stage = GetStatChangerStatValue(gBattleScripting.statChanger, sStatChangeStringsOrder[i])) != 0
                       || !gBattleScripting.statChangerStringKey.skipZeroString)
                     {
-                        PrintSingleStatChangeStat(TRUE, statId, stage);
+                        PrintSingleStatChangeStat(TRUE, sStatChangeStringsOrder[i], stage);
                         gBattlescriptCurrInstr = cmd->nextInstr;
+                        gBattleScripting.statChangerStringKey.skipZeroString &= !gBattleScripting.statChangerStringKey.allStats;
                         return;
                     }
                 }
@@ -18299,11 +18304,15 @@ void BS_RemoveTerrain(void)
 }
 
 
-#define ADD_STOLEN_STAT_BOOST(_stat, _statField)                                                     \
-    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                                            \
-    {                                                                                                \
-        statChanger._statField = gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE; \
-        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;                          \
+#define ADD_STOLEN_STAT_BOOST(_stat, _statField)                                \
+    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                       \
+    {                                                                           \
+        statChanger._statField = min(                                           \
+            MaxRaiseOrLowerStatAmount(gBattlerAttacker, _stat, hasContrary),    \
+            gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE  \
+        );                                                                      \
+        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;     \
+        foundStatsToSteal = TRUE;                                               \
     }
 
 void BS_TrySpectralThiefSteal(void)
@@ -18316,20 +18325,14 @@ void BS_TrySpectralThiefSteal(void)
         return;
     }
 
-    gBattleScripting.animArg1 = 0;
-    gBattleScripting.statChanger.value = 0;
+    bool32 foundStatsToSteal = FALSE, hasContrary = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
     union StatChanger statChanger = {0};
 
     // Add every stat to the statchanger
     FOREACH_STAT_STATCHANGER(ADD_STOLEN_STAT_BOOST)
 
     // If we managed to steal stats - play an animation, go to the Spectral Thief animation
-    if (statChanger.allStats != 0 && ChangeStatBuffsStatChanger(
-        gBattlerAttacker,
-        statChanger,
-        STAT_CHANGE_CERTAIN,
-        NULL) == STAT_CHANGE_WORKED
-    )
+    if (foundStatsToSteal)
     {
         gBattleScripting.statChanger = statChanger;
         gBattleScripting.animArg1 = GetStatAnimArgFromStatChanger(statChanger, FALSE);
