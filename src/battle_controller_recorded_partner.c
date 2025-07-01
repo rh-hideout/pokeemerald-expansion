@@ -8,9 +8,9 @@
 #include "battle_interface.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
-#include "battle_z_move.h"
 #include "bg.h"
 #include "data.h"
+#include "item_menu.h"
 #include "item_use.h"
 #include "link.h"
 #include "main.h"
@@ -24,13 +24,12 @@
 #include "sound.h"
 #include "string_util.h"
 #include "task.h"
+#include "test_runner.h"
 #include "text.h"
 #include "util.h"
 #include "window.h"
 #include "constants/battle_anim.h"
-#include "constants/battle_partner.h"
 #include "constants/songs.h"
-#include "constants/party_menu.h"
 #include "constants/trainers.h"
 
 static void RecordedPartnerHandleDrawTrainerPic(u32 battler);
@@ -38,6 +37,8 @@ static void RecordedPartnerHandleTrainerSlideBack(u32 battler);
 static void RecordedPartnerHandleChooseAction(u32 battler);
 static void RecordedPartnerHandleChooseMove(u32 battler);
 static void RecordedPartnerHandleChoosePokemon(u32 battler);
+static void RecordedPartnerHandleStatusIconUpdate(u32 battler);
+static void RecordedPartnerHandleStatusAnimation(u32 battler);
 static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPartnerHandleEndLinkBattle(u32 battler);
@@ -59,7 +60,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
     [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
-    [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
+    [CONTROLLER_BALLTHROWANIM]            = PlayerHandleBallThrowAnim,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
     [CONTROLLER_PRINTSTRING]              = BtlController_HandlePrintString,
@@ -71,9 +72,9 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
     [CONTROLLER_CHOOSEPOKEMON]            = RecordedPartnerHandleChoosePokemon,
     [CONTROLLER_23]                       = BtlController_Empty,
     [CONTROLLER_HEALTHBARUPDATE]          = BtlController_HandleHealthBarUpdate,
-    [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate, // Partner's player gets experience the same way as the player.
-    [CONTROLLER_STATUSICONUPDATE]         = BtlController_HandleStatusIconUpdate,
-    [CONTROLLER_STATUSANIMATION]          = BtlController_HandleStatusAnimation,
+    [CONTROLLER_EXPUPDATE]                = PlayerHandleExpUpdate,
+    [CONTROLLER_STATUSICONUPDATE]         = RecordedPartnerHandleStatusIconUpdate,
+    [CONTROLLER_STATUSANIMATION]          = RecordedPartnerHandleStatusAnimation,
     [CONTROLLER_STATUSXOR]                = BtlController_Empty,
     [CONTROLLER_DATATRANSFER]             = BtlController_Empty,
     [CONTROLLER_DMA3TRANSFER]             = BtlController_Empty,
@@ -106,85 +107,181 @@ void SetControllerToRecordedPartner(u32 battler)
 {
     gBattlerControllerEndFuncs[battler] = RecordedPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedPartnerBufferRunCommand;
+
 }
 
 static void RecordedPartnerBufferRunCommand(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerBufferRunCommand");
+    #endif
     if (IsBattleControllerActiveOnLocal(battler))
     {
+        #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerBufferRunCommand - Active");
+    #endif
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sRecordedPartnerBufferCommands))
+        {
             sRecordedPartnerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerBufferRunCommand - In Array");
+        #endif
+        }
         else
+        {
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerBufferRunCommand - Complete");
+        #endif
             BtlController_Complete(battler);
+        }
     }
 }
 
-static void Intro_WaitForHealthbox(u32 battler)
+static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
 {
-    bool32 finished = FALSE;
+    bool32 healthboxAnimDone = FALSE;
 
-    if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
     {
-        if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
-            finished = TRUE;
+        if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
+        {
+            if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
+                healthboxAnimDone = TRUE;
+        }
+        else
+        {
+            if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
+                && gSprites[gHealthboxSpriteIds[BATTLE_PARTNER(battler)]].callback == SpriteCallbackDummy)
+            {
+                healthboxAnimDone = TRUE;
+            }
+        }
+
+        if (healthboxAnimDone && gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim
+            && gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim)
+        {
+            gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = FALSE;
+            gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
+
+            gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
+            gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
+
+            FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
+            FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+
+            HandleLowHpMusicChange(GetBattlerMon(battler), battler);
+            if (IsDoubleBattle())
+                HandleLowHpMusicChange(GetBattlerMon(BATTLE_PARTNER(battler)), BATTLE_PARTNER(battler));
+
+            gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
+            gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
+        }
     }
     else
     {
-        if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
-            && gSprites[gHealthboxSpriteIds[BATTLE_PARTNER(battler)]].callback == SpriteCallbackDummy)
+        if (!IsDoubleBattle() || (IsDoubleBattle() && (gBattleTypeFlags & BATTLE_TYPE_MULTI)))
         {
-            finished = TRUE;
+            if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy)
+                healthboxAnimDone = TRUE;
         }
-    }
+        else
+        {
+            if (gSprites[gHealthboxSpriteIds[battler]].callback == SpriteCallbackDummy
+                && gSprites[gHealthboxSpriteIds[BATTLE_PARTNER(battler)]].callback == SpriteCallbackDummy)
+            {
+                healthboxAnimDone = TRUE;
+            }
+        }
 
-    if (IsCryPlayingOrClearCrySongs())
-        finished = FALSE;
+        if (IsCryPlayingOrClearCrySongs())
+            healthboxAnimDone = FALSE;
 
-    if (finished)
-    {
-        gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
-        gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
+        if (healthboxAnimDone)
+        {
+            gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 3;
+            gBattlerControllerFuncs[battler] = BtlController_Intro_DelayAndEnd;
+        }
     }
 }
 
-void Controller_RecordedPartnerShowIntroHealthbox(u32 battler)
+static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 {
-    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
-        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive
-        && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
-        && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy
-        && ++gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay != 1)
-    {
-        gBattleSpritesDataPtr->healthBoxesData[battler].introEndDelay = 0;
-        TryShinyAnimation(battler, GetBattlerMon(battler));
+    bool32 bgmRestored = FALSE;
 
-        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
+    {
+        if (!gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim
+        && !gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive)
+            TryShinyAnimation(battler, GetBattlerMon(battler));
+
+        if (!gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim
+        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
+            TryShinyAnimation(BATTLE_PARTNER(battler), GetBattlerMon(BATTLE_PARTNER(battler)));
+    }
+
+    if (!gBattleSpritesDataPtr->healthBoxesData[battler].ballAnimActive
+        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].ballAnimActive)
+    {
+        if (!gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted)
         {
-            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
-            UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
-            StartHealthboxSlideIn(BATTLE_PARTNER(battler));
-            SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            {
+                UpdateHealthboxAttribute(gHealthboxSpriteIds[BATTLE_PARTNER(battler)], GetBattlerMon(BATTLE_PARTNER(battler)), HEALTHBOX_ALL);
+                StartHealthboxSlideIn(BATTLE_PARTNER(battler));
+                SetHealthboxSpriteVisible(gHealthboxSpriteIds[BATTLE_PARTNER(battler)]);
+            }
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
+            StartHealthboxSlideIn(battler);
+            SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
         }
+        gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted = TRUE;
+    }
+
+    if (gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted
+        && !gBattleSpritesDataPtr->healthBoxesData[battler].waitForCry
+        && !gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].waitForCry
+        && !IsCryPlayingOrClearCrySongs())
+    {
+        if (!gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored)
+        {
+            if ((gBattleTypeFlags & BATTLE_TYPE_LINK) && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            {
+                if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
+                    m4aMPlayContinue(&gMPlayInfo_BGM);
+            }
+            else
+            {
+                m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
+            }
+
+        }
+        gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored = TRUE;
+        bgmRestored = TRUE;
+    }
+
+    if (bgmRestored && gSprites[gBattleControllerData[battler]].callback == SpriteCallbackDummy
+        && gSprites[gBattlerSpriteIds[battler]].callback == SpriteCallbackDummy)
+    {
+        if (IsDoubleBattle() && !(gBattleTypeFlags & BATTLE_TYPE_MULTI))
+            DestroySprite(&gSprites[gBattleControllerData[BATTLE_PARTNER(battler)]]);
 
         DestroySprite(&gSprites[gBattleControllerData[battler]]);
-        UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], GetBattlerMon(battler), HEALTHBOX_ALL);
-        StartHealthboxSlideIn(battler);
-        SetHealthboxSpriteVisible(gHealthboxSpriteIds[battler]);
-
         gBattleSpritesDataPtr->animationData->introAnimActive = FALSE;
-
-        gBattlerControllerFuncs[battler] = Intro_WaitForHealthbox;
+        gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored = FALSE;
+        gBattleSpritesDataPtr->healthBoxesData[battler].healthboxSlideInStarted = FALSE;
+        gBattlerControllerFuncs[battler] = Intro_WaitForShinyAnimAndHealthbox;
     }
 }
 
 void RecordedPartnerBufferExecCompleted(u32 battler)
 {
+
     gBattlerControllerFuncs[battler] = RecordedPartnerBufferRunCommand;
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
     {
-        u8 playerId = GetMultiplayerId();
+        u8 partnerId = GetMultiplayerId();
 
-        PrepareBufferDataTransferLink(battler, B_COMM_CONTROLLER_IS_DONE, 4, &playerId);
+        PrepareBufferDataTransferLink(battler, B_COMM_CONTROLLER_IS_DONE, 4, &partnerId);
         gBattleResources->bufferA[battler][0] = CONTROLLER_TERMINATOR_NOP;
     }
     else
@@ -193,9 +290,6 @@ void RecordedPartnerBufferExecCompleted(u32 battler)
     }
 }
 
-// some explanation here
-// in emerald it's possible to have a tag battle in the battle frontier facilities with AI
-// which use the front sprite for both the player and the partner as opposed to any other battles (including the one with Steven) that use the back pic as well as animate it
 static void RecordedPartnerHandleDrawTrainerPic(u32 battler)
 {
     bool32 isFrontPic;
@@ -243,60 +337,42 @@ static void RecordedPartnerHandleTrainerSlideBack(u32 battler)
     BtlController_HandleTrainerSlideBack(battler, 35, FALSE);
 }
 
+static void ChooseActionInBattlePalace(u32 battler)
+{
+    if (gBattleCommunication[4] >= gBattlersCount / 2)
+    {
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_BATTLE_PALACE_ACTION, battler), 0);
+        BtlController_Complete(battler);
+    }
+}
+
 static void RecordedPartnerHandleChooseAction(u32 battler)
 {
-    if(TESTING)
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
-        BtlController_Complete(battler);
+        gBattlerControllerFuncs[battler] = ChooseActionInBattlePalace;
     }
     else
     {
-        AI_TrySwitchOrUseItem(battler);
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
         BtlController_Complete(battler);
+        #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerHandleChooseAction");
+        #endif
     }
 }
 
 static void RecordedPartnerHandleChooseMove(u32 battler)
 {
-    #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerHandleChooseMove");
-        #endif
-    if(TESTING)
+    if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
-        u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
-        u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"moveIndex Partner %d", moveIndex);
-        #endif
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
     }
     else
     {
-        u32 chosenMoveIndex;
-        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-
-        chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
-        gBattlerTarget = gAiBattleData->chosenTarget[battler];
-        u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
-
-        if (moveTarget & MOVE_TARGET_USER)
-            gBattlerTarget = battler;
-        else if (moveTarget & MOVE_TARGET_BOTH)
-        {
-            gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-            if (gAbsentBattlerFlags & (1u << gBattlerTarget))
-                gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        }
-        // If partner can and should use a gimmick (considering trainer data), do it
-        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && IsAIUsingGimmick(battler))
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
-        }
-        else
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (gBattlerTarget << 8));
-        }
+        u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
+        u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
     }
 
     BtlController_Complete(battler);
@@ -304,68 +380,40 @@ static void RecordedPartnerHandleChooseMove(u32 battler)
 
 static void RecordedPartnerHandleChoosePokemon(u32 battler)
 {
-    if(TESTING)
-    {
-        gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
-        gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
-        BtlController_Complete(battler);
-    }
-    else
-    {
-        s32 chosenMonId;
-        // Choosing Revival Blessing target
-        if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
-        {
-            chosenMonId = gSelectedMonPartyId = GetFirstFaintedPartyIndex(battler);
-        }
-        // Switching out
-        else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gPlayerParty[gBattleStruct->monToSwitchIntoId[battler]]))
-        {
-            chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
+    gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
+    gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
+    BtlController_Complete(battler);
+}
 
-            if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gPlayerParty[chosenMonId])) // just switch to the next mon
-            {
-                s32 firstId = (IsAiVsAiBattle()) ? 0 : (PARTY_SIZE / 2);
-                u32 battler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-                u32 battler2 = IsDoubleBattle() ? GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) : battler1;
-
-                for (chosenMonId = firstId; chosenMonId < PARTY_SIZE; chosenMonId++)
-                {
-                    if (GetMonData(&gPlayerParty[chosenMonId], MON_DATA_HP) != 0
-                        && chosenMonId != gBattlerPartyIndexes[battler1]
-                        && chosenMonId != gBattlerPartyIndexes[battler2])
-                    {
-                        break;
-                    }
-                }
-            }
-            gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        }
-        else // Mon to switch out has been already chosen.
-        {
-            chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
-            gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
-            gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        }
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
-        BtlController_Complete(battler);
+static void RecordedPartnerHandleStatusIconUpdate(u32 battler)
+{
+    if (!IsBattleSEPlaying(battler))
+    {
+        DoStatusIconUpdate(battler);
+        if (gTestRunnerEnabled)
+            TestRunner_Battle_RecordStatus1(battler, GetMonData(GetBattlerMon(battler), MON_DATA_STATUS));
     }
+}
+
+static void RecordedPartnerHandleStatusAnimation(u32 battler)
+{
+    BtlController_HandleStatusAnimation(battler);
 }
 
 static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler)
 {
+    u32 trainerPicId;
     const u16 *trainerPal;
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
-
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-        trainerPal = gTrainerBacksprites[gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic].palette.data;
-    else if (IsAiVsAiBattle())
-        trainerPal = gTrainerSprites[GetTrainerPicFromId(gPartnerTrainerId)].palette.data;
+    if(TESTING)
+        trainerPicId = TRAINER_BACK_PIC_STEVEN;
+    else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK)
+        trainerPicId = gLinkPlayers[GetBattlerMultiplayerId(battler)].gender + TRAINER_BACK_PIC_BRENDAN;
     else
-        trainerPal = gTrainerSprites[GetFrontierTrainerFrontSpriteId(gPartnerTrainerId)].palette.data; // 2 vs 2 multi battle in Battle Frontier, load front sprite and pal.
+        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
 
-    BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Controller_RecordedPartnerShowIntroHealthbox);
+    trainerPal = gTrainerBacksprites[trainerPicId].palette.data;
+    BtlController_HandleIntroTrainerBallThrow(battler, 0xD6F9, trainerPal, 24, Intro_TryShinyAnimShowHealthbox);
 }
 
 static void RecordedPartnerHandleDrawPartyStatusSummary(u32 battler)
@@ -381,5 +429,3 @@ static void RecordedPartnerHandleEndLinkBattle(u32 battler)
     BtlController_Complete(battler);
     gBattlerControllerFuncs[battler] = SetBattleEndCallbacks;
 }
-
-

@@ -923,7 +923,6 @@ void ClearFlagAfterTest(void);
 void OpenPokemon(u32 sourceLine, u32 side, u32 species);
 void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species);
 void ClosePokemon(u32 sourceLine);
-const struct BattleTest *GetBattleTest(void);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
 void AIFlags_(u32 sourceLine, u64 flags);

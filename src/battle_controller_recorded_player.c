@@ -110,15 +110,27 @@ void SetControllerToRecordedPlayer(u32 battler)
 
 static void RecordedPlayerBufferRunCommand(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand");
+    #endif
     if (IsBattleControllerActiveOnLocal(battler))
     {
+        #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - Active");
+    #endif
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sRecordedPlayerBufferCommands))
         {
             sRecordedPlayerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - In Array");
+        #endif
         }
         else
         {
             BtlController_Complete(battler);
+            #ifndef NDEBUG
+        MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerBufferRunCommand - Complete");
+        #endif
         }
     }
 }
@@ -313,7 +325,7 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
             else // first mon
                 xPos = 32;
 
-            // !TESTING added as otherwise first test battle loaded incorrect position.. 
+            // !TESTING added as otherwise first test battle load 
             if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
             {
                 xPos = 90;
@@ -362,9 +374,6 @@ static void RecordedPlayerHandleChooseAction(u32 battler)
     }
     else
     {
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerHandleChooseAction");
-        #endif
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
         BtlController_Complete(battler);
     }
@@ -372,6 +381,9 @@ static void RecordedPlayerHandleChooseAction(u32 battler)
 
 static void RecordedPlayerHandleChooseMove(u32 battler)
 {
+    #ifndef NDEBUG
+    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerHandleChooseMove");
+    #endif
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));
@@ -380,9 +392,6 @@ static void RecordedPlayerHandleChooseMove(u32 battler)
     {
         u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
         u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"moveIndex Player %d", moveIndex);
-        #endif
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
     }
 

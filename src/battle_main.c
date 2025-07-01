@@ -4244,9 +4244,6 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_USE_MOVE:
                     if (AreAllMovesUnusable(battler))
                     {
-                        #ifndef NDEBUG
-                        MgbaPrintf(MGBA_LOG_WARN,"AreAllMovesUnusable(battler): %d", battler);
-                        #endif
                         gBattleCommunication[battler] = STATE_SELECTION_SCRIPT;
                         gBattleStruct->selectionScriptFinished[battler] = FALSE;
                         gBattleStruct->stateIdAfterSelScript[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
