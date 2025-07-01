@@ -1573,16 +1573,12 @@ BattleScript_EffectAfterYou::
 
 BattleScript_MoveEffectFlameBurst::
 	tryfaintmon BS_TARGET
-	copybyte sBATTLER, sSAVED_BATTLER
 	printstring STRINGID_BURSTINGFLAMESHIT
 	waitmessage B_WAIT_TIME_LONG
-	savetarget
-	copybyte gBattlerTarget, sSAVED_BATTLER
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE
-	healthbarupdate BS_TARGET
-	datahpupdate BS_TARGET
-	tryfaintmon BS_TARGET
-	restoretarget
+	healthbarupdate BS_SCRIPTING
+	datahpupdate BS_SCRIPTING
+	tryfaintmon BS_SCRIPTING
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectPowerTrick::
@@ -7634,12 +7630,9 @@ BattleScript_SupremeOverlordActivates::
 
 BattleScript_CostarActivates::
 	pause B_WAIT_TIME_SHORT
-	savetarget
-	copybyte gBattlerTarget, sBATTLER
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNCOPIEDSTATCHANGES
 	waitmessage B_WAIT_TIME_LONG
-	restoretarget
 	end3
 
 BattleScript_ZeroToHeroActivates::
@@ -8187,11 +8180,11 @@ BattleScript_FriskMsg::
 
 BattleScript_FriskActivates::
 	saveattacker
-        savetarget
+	savetarget
 	copybyte gBattlerAttacker, sBATTLER
 	tryfriskmsg BS_SCRIPTING
 	restoreattacker
-        restoretarget
+	restoretarget
 	end3
 
 BattleScript_ImposterActivates::
