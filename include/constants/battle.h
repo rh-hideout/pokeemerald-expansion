@@ -143,9 +143,9 @@ enum VolatileFlags
  * These are removed after exiting the battle or switching
  *  Enum,                                       Type                               Type, max value, flags */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 7), V_BATON_PASSABLE) \
+    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 6), V_BATON_PASSABLE) \
     F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
-    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 7)) \
+    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 5)) \
     F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
     F(VOLATILE_BIDE,                            bideTurns,                         (u32, 3)) \
     F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 3)) \
@@ -153,7 +153,7 @@ enum VolatileFlags
     F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
     F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
     F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
-    F(VOLATILE_INFATUATION,                     infatuation,                       (u32, 15)) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, TO_BITFIELD(MAX_BATTLERS_COUNT))) \
     F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
     F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \

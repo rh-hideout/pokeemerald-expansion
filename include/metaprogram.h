@@ -179,4 +179,7 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 /* Finds the required digits to display the number (maximum 4) */
 #define MAX_DIGITS(_num) 1 + !!(_num / 10) + !!(_num / 100) + !!(_num / 1000)
 
+/* Converts int n to an n-wide bitfield */
+#define TO_BITFIELD(_num) (1 << (max(1, _num) - 1))
+
 #endif
