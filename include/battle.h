@@ -821,6 +821,25 @@ union TRANSPARENT StatFlags
     };
 };
 
+union PACKED StatChangerStringKey
+{
+    u8 value;
+    struct PACKED {
+        u8 skipZeroString:1; // Skips "couldn't go any lower/higher!" strings
+        u8 attack:1;
+        u8 defense:1;
+        u8 speed:1;
+        u8 spAttack:1;
+        u8 spDefense:1;
+        u8 accuracy:1;
+        u8 evasion:1;
+    };
+    struct PACKED {
+        u8 unused:1;
+        u8 allStats:7;
+    };
+};
+
 struct MoveEffectResult
 {
     // Should be populated at initialisation
@@ -848,16 +867,17 @@ struct MoveEffectResult
     u32 scriptingBattler:3; // gBattleScripting.battler
     u16 lastUsedAbility; // Sets gLastUsedAbility
     u16 lastUsedItem; // Sets gLastUsedItem (e.g. for Knock Off)
-    u16 multistring:4; // Sets gBattleCommunication[MULTISTRING_CHOOSER]
-    u32 battlescriptPush:1; // Whether or not to push pushInstr before going to nextInstr
-    u32 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
-    u32 blockedByItem:1; // If blocked by an item (e.g. Clear Amulet, Covert Cloak)
-    u32 recordBattlerAbility:1; // Records the target's ability (not the same as lastUsedAbility, which could be an ally's ability e.g. Flower Veil)
-    u32 statLowered:1; // Set to prevent Mist activating multiple times in a single turn
-    u32 padding2:20;
+    union StatChangerStringKey statChangerStringKey;
+    u8 multistring:4; // Sets gBattleCommunication[MULTISTRING_CHOOSER]
+    u8 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
+    u8 blockedByItem:1; // If blocked by an item (e.g. Clear Amulet, Covert Cloak)
+    u16 battlescriptPush:1; // Whether or not to push pushInstr before going to nextInstr
+    u16 recordBattlerAbility:1; // Records the target's ability (not the same as lastUsedAbility, which could be an ally's ability e.g. Flower Veil)
+    u16 statLowered:1; // Set to prevent Mist activating multiple times in a single turn
+    u16 padding2:12;
 
-    // "Result": whether or not the move fails and/or where to go next
-    u32 failed:1;
+    // "Result": whether or not the move effect fails and/or where to go next
+    u16 failed:1;
     const u8 *nextInstr; // Where to set gBattlescriptCurrInstr when calculated
 };
 
@@ -931,9 +951,9 @@ struct BattleScripting
 {
     union StatChanger statChanger;
     union StatChanger savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
-    u8 multihitString[6];
+    union StatChangerStringKey statChangerStringKey;
     bool8 expOnCatch;
-    u8 unused1;
+    u8 multihitString[6];
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;

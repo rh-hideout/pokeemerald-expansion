@@ -4,9 +4,9 @@
 // The following correspond to the struct members of BattleScripting by adding their offset
 #define sSTATCHANGER                 (gBattleScripting + 0x00) // statChanger
 #define sSAVED_STAT_CHANGER          (gBattleScripting + 0x04) // savedStatChanger
-#define sMULTIHIT_STRING             (gBattleScripting + 0x08) // multihitString
-#define sEXP_CATCH                   (gBattleScripting + 0x0E) // expOnCatch
-#define sUNUSED                      (gBattleScripting + 0x0F) // unused1
+#define sSTATCHANGER_STRING_KEY      (gBattleScripting + 0x08) // statChangerStringKey
+#define sEXP_CATCH                   (gBattleScripting + 0x09) // expOnCatch
+#define sMULTIHIT_STRING             (gBattleScripting + 0x0A) // multihitString
 #define sB_ANIM_ARG1                 (gBattleScripting + 0x10) // animArg1
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x11) // animArg2
 #define sSAVED_STRINID               (gBattleScripting + 0x12) // savedStringId

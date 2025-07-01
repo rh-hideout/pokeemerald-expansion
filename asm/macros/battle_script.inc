@@ -87,8 +87,13 @@
 	.endm
 
 	.macro printfromtable ptr:req
-	.byte 0x13
-	.4byte \ptr
+	@ a little hacky but ensures backwards compatibility
+	.if \ptr == gStatUpStringIds || \ptr == gStatDownStringIds
+		printstatchangestrings
+	.else
+		.byte 0x13
+		.4byte \ptr
+	.endif
 	.endm
 
 	.macro printselectionstringfromtable ptr:req
@@ -844,8 +849,13 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setstatuswithability
+	.macro printstatchangestrings
+	1:
 	.byte 0x94
+	.4byte 2f
+	printsavedstring
+	goto 1b
+	2:
 	.endm
 
 	.macro copybidedmg
@@ -1797,10 +1807,6 @@
 	.macro tryspectralthiefsteal jumpInstr:req
 	callnative BS_TrySpectralThiefSteal
 	.4byte \jumpInstr
-	.endm
-
-	.macro spectralthiefprintstats
-	callnative BS_SpectralThiefPrintStats
 	.endm
 
 	.macro setmoveresultflags flags:req

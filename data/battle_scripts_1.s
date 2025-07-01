@@ -1248,7 +1248,7 @@ BattleScript_SpectralThiefSteal::
 	printstring STRINGID_SPECTRALTHIEFSTEAL
 	waitmessage B_WAIT_TIME_LONG
 	setbyte sB_ANIM_ARG2, 0
-	spectralthiefprintstats
+	printstatchangestrings
 	flushtextbox
 	goto BattleScript_EffectSpectralThiefFromDamage
 
