@@ -1408,6 +1408,7 @@ static inline void SetStatChangerStatValue(union StatChanger *statChanger, u32 s
         return;
     case STAT_EVASION:
         statChanger->evasion = value;
+        return;
     default:
         return;
     }
