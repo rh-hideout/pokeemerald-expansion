@@ -203,6 +203,37 @@ enum SkyDropState
 #define SKY_DROP_NO_TARGET 0xFF
 #define SKY_DROP_RELEASED_TARGET 0xFE
 
+union StatChanger
+{
+    int raw;
+    u32 value;
+    struct {
+        bool32 isNegative:1;
+        u32 statId:3; // If doing only a single stat, populate its ID here. If multiple, leave as 0
+        u32 attack:4;
+        u32 defense:4;
+        u32 speed:4;
+        u32 spAttack:4;
+        u32 spDefense:4;
+        u32 accuracy:4;
+        u32 evasion:4;
+    };
+    struct {
+        u32 flags:4;
+        u32 allStats:28;
+    };
+};
+
+// Helpful macro to go through every stat in the statchanger
+#define FOREACH_STAT_STATCHANGER(F) \
+    F(STAT_ATK, attack)             \
+    F(STAT_DEF, defense)            \
+    F(STAT_SPEED, speed)            \
+    F(STAT_SPATK, spAttack)         \
+    F(STAT_SPDEF, spDefense)        \
+    F(STAT_ACC, accuracy)           \
+    F(STAT_EVASION, evasion)
+
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
@@ -405,5 +436,6 @@ u32 GetMonVolatile(u32 battler, enum Volatile volatile);
 void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
 bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat);
+void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger);
 
 #endif // GUARD_BATTLE_UTIL_H

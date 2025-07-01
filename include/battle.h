@@ -792,28 +792,6 @@ struct AiBattleData
     u8 choiceWatch:1;
     u8 padding:6;
 };
-
-union StatChanger
-{
-    int raw;
-    u32 value;
-    struct {
-        bool32 isNegative:1;
-        u32 statId:3; // If doing only a single stat, populate its ID here. If multiple, leave as 0
-        u32 attack:4;
-        u32 defense:4;
-        u32 speed:4;
-        u32 spAttack:4;
-        u32 spDefense:4;
-        u32 accuracy:4;
-        u32 evasion:4;
-    };
-    struct {
-        u32 flags:4;
-        u32 allStats:28;
-    };
-};
-
 union PACKED StatAnimArg
 {
     u8 value;
@@ -1428,8 +1406,13 @@ static inline u32 CountStatChangerStats(union StatChanger statChanger)
 
 static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChanger)
 {
-    // 0xEEEEEEE will OR with any stat that has a greater stage than 1;
-    return (statChanger.allStats & 0xEEEEEEE);
+    return statChanger.attack > 1
+        || statChanger.defense > 1
+        || statChanger.speed > 1
+        || statChanger.spAttack > 1
+        || statChanger.spDefense > 1
+        || statChanger.accuracy > 1
+        || statChanger.evasion > 1;
 }
 
 static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 singleStatOnly)

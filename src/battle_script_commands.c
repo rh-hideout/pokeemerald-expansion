@@ -12282,13 +12282,11 @@ static void MoveEffect_LowerStatsCallback(struct MoveEffectResult *result)
 
 static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
 {
-    s32 statValue = GetStatChangerStatValue(result->statChanger, result->statChanger.statId);
-
     // Physically change the battler's stats
     ChangeBattlerStats(result->statChanger, result->effectBattler);
 
     // Prepare the string to be printed
-    StatChangeStringGenerator(result, statValue);
+    StatChangeStringGenerator(result, GetStatChangerStatValue(result->statChanger, result->statChanger.statId));
 
     // Set volatiles
     gProtectStructs[result->effectBattler].statRaised = TRUE;
@@ -12301,19 +12299,12 @@ static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
 
         if (GetBattlerAbility(battler) == ABILITY_OPPORTUNIST
             && gProtectStructs[result->effectBattler].activateOpportunist == 0) // don't activate opportunist on other mon's opportunist raises
-        {
             gProtectStructs[battler].activateOpportunist = 2; // set stats to copy
-        }
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_MIRROR_HERB)
-        {
             gProtectStructs[battler].eatMirrorHerb = 1;
-        }
 
         if (gProtectStructs[battler].activateOpportunist == 2 || gProtectStructs[battler].eatMirrorHerb == 1)
-        {
-            gQueuedStatBoosts[battler].stats |= (1 << (result->statChanger.statId - 1));    // -1 to start at atk
-            gQueuedStatBoosts[battler].statChanges[result->statChanger.statId - 1] += statValue;
-        }
+            QueueStatBoostsForMirrorHerbOpportunist(battler, result->statChanger);
     }
 
     TryPlayStatChangeAnimation(result->effectBattler, result->statChanger, FALSE);
@@ -18230,6 +18221,14 @@ void BS_RemoveTerrain(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+
+#define ADD_STOLEN_STAT_BOOST(_stat, _statField)                                                                                                                                        \
+    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                                                                                                                               \
+    {                                                                                                                                                                                   \
+        statChanger._statField = min(gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE, MaxRaiseOrLowerStatAmount(gBattlerAttacker, _stat, statChanger.isNegative));   \
+        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;                                                                                                             \
+    }
+
 void BS_TrySpectralThiefSteal(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
@@ -18244,21 +18243,8 @@ void BS_TrySpectralThiefSteal(void)
     union StatChanger statChanger = {0};
     statChanger.isNegative = (GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY);
 
-#define ADD_STOLEN_STAT_BOOST(_stat, _statChangerField)                                                                                                                                      \
-    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                                                                                                                                    \
-    {                                                                                                                                                                                        \
-        statChanger._statChangerField = min(gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE, MaxRaiseOrLowerStatAmount(gBattlerAttacker, _stat, statChanger.isNegative)); \
-        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;                                                                                                                  \
-    }
-
     // Add every stat to the statchanger
-    ADD_STOLEN_STAT_BOOST(STAT_ATK, attack);
-    ADD_STOLEN_STAT_BOOST(STAT_DEF, defense);
-    ADD_STOLEN_STAT_BOOST(STAT_SPEED, speed);
-    ADD_STOLEN_STAT_BOOST(STAT_SPATK, spAttack);
-    ADD_STOLEN_STAT_BOOST(STAT_SPDEF, spDefense);
-    ADD_STOLEN_STAT_BOOST(STAT_ACC, accuracy);
-    ADD_STOLEN_STAT_BOOST(STAT_EVASION, evasion);
+    FOREACH_STAT_STATCHANGER(ADD_STOLEN_STAT_BOOST)
 
     // If we managed to steal stats - play an animation, go to the Spectral Thief animation
     if (statChanger.allStats != 0)

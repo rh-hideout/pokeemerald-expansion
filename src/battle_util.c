@@ -11432,3 +11432,21 @@ bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
         || (ability == ABILITY_HYPER_CUTTER && stat == STAT_ATK)
         || (ability == ABILITY_BIG_PECKS && stat == STAT_DEF));
 }
+
+#define ADD_STAT_TO_QUEUED_STAT_BOOSTS(_stat, _statField)                       \
+    gQueuedStatBoosts[battler].stats |= (1 << (_stat - 1));                     \
+    gQueuedStatBoosts[battler].statChanges[_stat - 1] += statChanger._statField;
+
+void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger)
+{
+    if (statChanger.statId)
+    {
+        gQueuedStatBoosts[battler].stats |= (1 << (statChanger.statId - 1));    // -1 to start at atk
+        gQueuedStatBoosts[battler].statChanges[statChanger.statId - 1] += GetStatChangerStage(statChanger, statChanger.statId);
+    }
+    else
+    {
+        // Go through each stat and update queued stat boosts
+        FOREACH_STAT_STATCHANGER(ADD_STAT_TO_QUEUED_STAT_BOOSTS)
+    }
+}
