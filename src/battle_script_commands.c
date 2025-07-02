@@ -7391,6 +7391,7 @@ static void Cmd_moveend(void)
                     u32 item = gBattleMons[gBattlerAttacker].item;
                     gBattleMons[gBattlerAttacker].item = ITEM_NONE;
                     gBattleStruct->battlerState[gBattlerAttacker].canPickupItem = TRUE;
+                    gBattleStruct->usedHeldItems[gBattlerPartyIndexes[gBattlerAttacker]][GetBattlerSide(gBattlerAttacker)] = item;
                     CheckSetUnburden(gBattlerAttacker);
                     BtlController_EmitSetMonData(
                         gBattlerAttacker,
@@ -7401,6 +7402,7 @@ static void Cmd_moveend(void)
                         &gBattleMons[gBattlerAttacker].item);
                     MarkBattlerForControllerExec(gBattlerAttacker);
                     ClearBattlerItemEffectHistory(gBattlerAttacker);
+
                     if (!TrySymbiosis(gBattlerAttacker, item, TRUE))
                         effect = TRUE;
                 }
