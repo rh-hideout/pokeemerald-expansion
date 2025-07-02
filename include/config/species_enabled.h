@@ -23,7 +23,9 @@
 #define P_NEW_EVOS_IN_REGIONAL_DEX       TRUE
 
 // Battle gimmick specific Forms.
-#define P_MEGA_EVOLUTIONS                FALSE
+#define P_MEGA_EVOLUTIONS                TRUE
+// All custom megas with ID greater than this config will be disabled.
+#define FROSTY_MEGAS                     SPECIES_EGG
 #define P_PRIMAL_REVERSIONS              FALSE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              FALSE // Ultra Necrozma only.
 #define P_GIGANTAMAX_FORMS               FALSE
@@ -604,8 +606,5 @@
 #define P_FAMILY_IRON_CROWN              P_GEN_9_POKEMON
 #define P_FAMILY_TERAPAGOS               P_GEN_9_POKEMON
 #define P_FAMILY_PECHARUNT               P_GEN_9_POKEMON
-
-// All custom megas with ID less than config will be enabled.
-#define FROSTY_MEGAS                     SPECIES_EGG
 
 #endif // GUARD_CONFIG_SPECIES_ENABLED_H
