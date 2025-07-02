@@ -4801,7 +4801,14 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, u32 holdEffect)
         speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     else if (ability == ABILITY_QUARK_DRIVE && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleStruct->boosterEnergyActivates & (1u << battler)))
         speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
-
+    else if (ability == ABILITY_SANDY_SOUL && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && ((gBattleWeather & B_WEATHER_SANDSTORM && WEATHER_HAS_EFFECT) || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_TERRAFORM && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_PRODIGAL && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
+    else if (ability == ABILITY_MYTHIC_BLOOD && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED) && (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN || gBattleStruct->boosterEnergyActivates & (1u << battler)))
+        speed = (GetHighestStatId(battler) == STAT_SPEED) ? (speed * 150) / 100 : speed;
     // stat stages
     speed *= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][0];
     speed /= gStatStageRatios[gBattleMons[battler].statStages[STAT_SPEED]][1];
@@ -4883,6 +4890,12 @@ s8 GetMovePriority(u32 battler, u16 move)
     if (ability == ABILITY_VENOM_SURGE
         && (BATTLER_MAX_HP(battler))
         && gMovesInfo[move].type == TYPE_POISON)
+    {
+        priority++;
+    }
+    if (ability == ABILITY_FIRE_DRIFT
+        && (BATTLER_MAX_HP(battler))
+        && gMovesInfo[move].type == TYPE_FIRE)
     {
         priority++;
     }
@@ -6067,6 +6080,14 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost)
     else if (gMovesInfo[move].soundMove && ability == ABILITY_LIQUID_VOICE)
     {
         return TYPE_WATER;
+    }
+    else if (gMovesInfo[move].soundMove && ability == ABILITY_CHILL_SONG)
+    {
+        return TYPE_ICE;
+    }
+    else if (gMovesInfo[move].soundMove && ability == ABILITY_SAND_SONG)
+    {
+        return TYPE_GROUND;
     }
     else if (moveEffect == EFFECT_AURA_WHEEL && species == SPECIES_MORPEKO_HANGRY)
     {

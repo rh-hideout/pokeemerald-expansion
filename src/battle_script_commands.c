@@ -7821,6 +7821,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             case ABILITY_FORECAST:
             case ABILITY_FLOWER_GIFT:
             case ABILITY_PROTOSYNTHESIS:
+            case ABILITY_SANDY_SOUL:
                 if (AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, i, 0, 0, 0))
                     return TRUE;
                 break;
@@ -8588,7 +8589,9 @@ static void Cmd_removeitem(void)
 
     // Popped Air Balloon cannot be restored by any means.
     // Corroded items cannot be restored either.
-    if (GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_AIR_BALLOON
+    if (GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_AIR_BALLOON 
+        && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_HARD_HAT 
+        && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAND_BAG
         && gMovesInfo[gCurrentMove].effect != EFFECT_CORROSIVE_GAS)
         gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)] = itemId; // Remember if switched out
 
@@ -15632,6 +15635,9 @@ static void Cmd_handleballthrow(void)
             case BALL_BEAST:
                 ballMultiplier = 10;
                 break;
+            case BALL_CYRO:
+                if (B_WEATHER_SNOW || gBattlerAttacker, TYPE_ICE)
+                ballMultiplier = 300;
             }
         }
 
@@ -17688,7 +17694,7 @@ void BS_TryWindRiderPower(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u16 ability = GetBattlerAbility(battler);
     if (GetBattlerSide(battler) == GetBattlerSide(gBattlerAttacker)
-        && (ability == ABILITY_WIND_RIDER || ability == ABILITY_WIND_POWER))
+        && (ability == ABILITY_WIND_RIDER || ability == ABILITY_WIND_POWER || ability == ABILITY_INFLATE))
     {
         gLastUsedAbility = ability;
         RecordAbilityBattle(battler, gLastUsedAbility);
@@ -17700,6 +17706,8 @@ void BS_TryWindRiderPower(void)
         gBattlescriptCurrInstr = cmd->failInstr;
     }
 }
+
+
 
 void BS_ActivateWeatherChangeAbilities(void)
 {

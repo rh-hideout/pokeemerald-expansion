@@ -430,10 +430,11 @@ static const u8 sText_YouThrowABallNowRight[] = _("You throw a BALL now, right?\
 // static const u8 sText_TiedOpponentByReferee[];
 // static const u8 sText_QuestionForfeitMatch[];
 // static const u8 sText_ForfeitedMatch[];
-// static const u8 sText_Trainer1WinText[];
-// static const u8 sText_Trainer2WinText[];
-// static const u8 sText_TwoInGameTrainersDefeated[];
-// static const u8 sText_Trainer2LoseText[];
+//static const u8 sText_Trainer1WinText[];
+//static const u8 sText_Trainer2WinText[];
+//static const u8 sText_TwoInGameTrainersDefeated[];
+static const u8 sText_TwoInGameTrainersDefeated[] = _("You defeated {B_TRAINER1_NAME_WITH_CLASS} and {B_TRAINER2_NAME_WITH_CLASS}!\p");
+//static const u8 sText_Trainer2LoseText[];
 
 // New battle strings.
 const u8 gText_drastically[] = _("drastically ");
@@ -798,7 +799,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNOBTAINEDXYOBTAINEDZ]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} obtained {B_BUFF1}.\p{B_DEF_NAME_WITH_PREFIX} obtained {B_BUFF2}."),
     [STRINGID_BUTNOEFFECT]                          = COMPOUND_STRING("But it had no effect!"),
     [STRINGID_PKMNSXHADNOEFFECTONY]                 = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX}'s {B_SCR_ACTIVE_ABILITY} had no effect on {B_EFF_NAME_WITH_PREFIX2}!"), //not in gen 5+, ability popup
-    //[STRINGID_TWOENEMIESDEFEATED]                   = sText_TwoInGameTrainersDefeated,
+    [STRINGID_TWOENEMIESDEFEATED]                   = sText_TwoInGameTrainersDefeated,
     [STRINGID_TRAINER2LOSETEXT]                     = COMPOUND_STRING("{B_TRAINER2_LOSE_TEXT}"),
     [STRINGID_PKMNINCAPABLEOFPOWER]                 = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} appears incapable of using its power!"),
     [STRINGID_GLINTAPPEARSINEYE]                    = COMPOUND_STRING("A glint appears in {B_SCR_NAME_WITH_PREFIX2}'s eyes!"),
@@ -1165,7 +1166,17 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_PKMNALREADYHASFROSTBITE]              = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX} is already frostbitten!"),
     [STRINGID_PKMNDROPPEDITEM]                      = COMPOUND_STRING("Wild {B_OPPONENT_MON1_NAME} dropped an item!"),
     [STRINGID_ADDEDTOBAG]                           = COMPOUND_STRING("{B_PLAYER_NAME} put away the {B_BUFF1}\nin the BAG."),
-    [STRINGID_BAGISFULL]                            = COMPOUND_STRING("Too bad! The BAG is full…"),    
+    [STRINGID_BAGISFULL]                            = COMPOUND_STRING("Too bad! The BAG is full…"),  
+    [STRINGID_SNOWSTALKERHPDROP]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s {B_ATK_ABILITY} takes its toll!"), //don't think this message is displayed anymore  
+    [STRINGID_SANDACTIVATEDABILITY]                 = COMPOUND_STRING("The Sandstorm activated {B_SCR_NAME_WITH_PREFIX2}'s Sandy Soul!"),
+    [STRINGID_GRASSYTERRAINACTIVATEDABILITY]        = COMPOUND_STRING("The Grassy Terrain activated {B_SCR_NAME_WITH_PREFIX2}'s Terraform!"),
+    [STRINGID_PSYCHICTERRAINACTIVATEDABILITY]       = COMPOUND_STRING("The Psychic Terrain activated {B_SCR_NAME_WITH_PREFIX2}'s Prodigal!"),
+    [STRINGID_MISTYTERRAINACTIVATEDABILITY]         = COMPOUND_STRING("The Misty Terrain activated {B_SCR_NAME_WITH_PREFIX2}'s Mythic Blood!"),
+    [STRINGID_HARDHATIN]                            = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is protected by its Hard hat!"),
+    [STRINGID_SANDBAGIN]                            = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} is protected by its Sand Bag!"),
+    [STRINGID_HARDHATPOP]                           = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Hard Hat broke!"),
+    [STRINGID_SANDBAGPOP]                           = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Sand Bag broke!"),
+    [STRINGID_SUBBERRY]                            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Sub-Berry created a substitute!"), 
 };
 
 const u16 gTrainerUsedItemStringIds[] =

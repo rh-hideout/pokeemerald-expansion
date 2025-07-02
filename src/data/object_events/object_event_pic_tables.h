@@ -1209,6 +1209,9 @@ static const struct SpriteFrameImage sPicTable_Ball_BEAST[] = {
 static const struct SpriteFrameImage sPicTable_Ball_STRANGE[] = {
     POKEBALL_PIC_FRAMES(Strange),
 };
+static const struct SpriteFrameImage sPicTable_Ball_CYRO[] = {
+    POKEBALL_PIC_FRAMES(Premier),
+};
 #endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
 

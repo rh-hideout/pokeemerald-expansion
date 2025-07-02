@@ -411,6 +411,7 @@ const u32 gObjectEventPic_MoonBall[] = INCBIN_U32("graphics/object_events/pics/m
 const u32 gObjectEventPic_SportBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_sport.4bpp");
 const u32 gObjectEventPic_DreamBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_dream.4bpp");
 const u32 gObjectEventPic_BeastBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_beast.4bpp");
+const u32 gObjectEventPic_CyroBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_premier.4bpp");
 #ifdef ITEM_STRANGE_BALL
 const u32 gObjectEventPic_StrangeBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_strange.4bpp");
 #endif //ITEM_STRANGE_BALL
@@ -453,4 +454,5 @@ const u16 gObjectEventPal_BeastBall[] = INCBIN_U16("graphics/object_events/pics/
 #ifdef ITEM_STRANGE_BALL
 const u16 gObjectEventPal_StrangeBall[] = INCBIN_U16("graphics/object_events/pics/misc/ball_strange.gbapal");
 #endif //ITEM_STRANGE_BALL
+const u16 gObjectEventPal_CyroBall[] = INCBIN_U16("graphics/object_events/pics/misc/ball_premier.gbapal");
 #endif //OW_FOLLOWERS_POKEBALLS

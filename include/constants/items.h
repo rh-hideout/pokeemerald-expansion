@@ -496,15 +496,6 @@
 #define ITEM_ADAMANT_ORB 401
 #define ITEM_LUSTROUS_ORB 402
 #define ITEM_GRISEOUS_ORB 403
-#define ITEM_BARK_ARMOR 828
-#define ITEM_TOXIN_BOOSTER 829
-#define ITEM_FESTIVE_COAT 830
-#define ITEM_CURSED_TOY 831
-#define ITEM_MUSIC_BIRDBOX 832
-#define ITEM_BLADE_ARMOR 833
-#define ITEM_HOENN_SEACAKE 834
-#define ITEM_SPIRIT_CHIME 835
-#define ITEM_CAMO_CLOAK 836
 
 
 // Incenses
@@ -1004,10 +995,87 @@
 
 #define ITEM_STRANGE_BALL 828
 
-// HOPO BERRY
-// LEGEND PLATE
+//Custom Items
 
-#define ITEMS_COUNT 829
+//Mega Stones
+#define ITEM_EMPOLEONITE_X 829
+#define ITEM_EMPOLEONITE_Y 830
+#define ITEM_VENUSAURITE_Y 831
+#define ITEM_BLASTOISINITE_Y 832
+#define ITEM_BUTTERFRITE 833
+#define ITEM_MACHAMPITE 834
+#define ITEM_GENGARITE_Y 835
+#define ITEM_KINGLERITE 836
+#define ITEM_LAPRASITE 837
+#define ITEM_EEVEEITE 838
+#define ITEM_SNORLAXITE 839
+#define ITEM_GARBODORITE 840
+#define ITEM_MELMETALITE 841
+#define ITEM_RILLABOOMITE_X 842
+#define ITEM_RILLABOOMITE_Y 843
+#define ITEM_CINDERACITE 844
+#define ITEM_INTELEONITE 845
+#define ITEM_CORVIKNITE 846
+#define ITEM_ORBEETLITE 847
+#define ITEM_DREDNITE 848
+#define ITEM_COALOSSALITE 849
+#define ITEM_SANDACONDITE 850
+#define ITEM_TOXTRICITE 851
+#define ITEM_CENTISKORCHITE 852
+#define ITEM_HATTERITE 853
+#define ITEM_GRIMMSNARLITE 854      
+#define ITEM_ALCREMITE 855
+#define ITEM_COPPERAJITE 856
+#define ITEM_DURALUDONITE 857
+#define ITEM_URSHIFITE_X 858
+#define ITEM_URSHIFITE_Y 859
+#define ITEM_DUSKNOIRITE 860
+#define ITEM_INFERNITE 861
+#define ITEM_LUXRITE 862
+#define ITEM_ROSERITE 863
+#define ITEM_SLAKITE 864
+#define ITEM_TORTERRITE 865
+#define ITEM_SAMUROTTITE_X 866
+#define ITEM_SKELEDITE 867
+#define ITEM_MILOTITE 868
+#define ITEM_RAICHITE 869
+#define ITEM_TROPIUSITE 870
+#define ITEM_SILVER_ORB 871
+#define ITEM_RAINBOW_ORB 872
+
+//Balls
+// #define ITEM_DIGI_BALL 873
+// #define ITEM_RESET_BALL 874
+#define ITEM_CYRO_BALL 875
+
+//Berries
+// #define ITEM_GLOWBERRY 876       //makes shiny
+#define ITEM_SUB_BERRY 877        //at 25% hp make substitute
+#define ITEM_MOLT_BERRY 878      //at 25% hp burn opponent
+#define ITEM_ZAPPA_BERRY 879     //at 25% hp paralyze opponent
+#define ITEM_ARCTI_BERRY 880     //at 25% hp frostite opponent
+// HOPO BERRY //leppa berry but restores 5PP to all moves when procs
+
+//Held
+// #define ITEM_RIOT_SHIELD 881
+#define ITEM_SNIPER_GOGGLES 882
+// #define ITEM_GLUE_TRAP 883       //holder cannot switch out
+// #define ITEM_RESET_BUTTON 884
+#define ITEM_SAND_BAG 885
+#define ITEM_HARD_HAT 886
+#define ITEM_LOVERS_GIFT 887
+#define ITEM_FROST_ORB 888
+#define ITEM_IRON_MASK 889
+#define ITEM_FESTIVE_COAT 890  //buff delibird
+#define ITEM_MUSIC_BOX 891      //buff chatot and sqwakabilly
+#define ITEM_MARACCAS 892      //buff marractus  NEED TO CHANGE SPELLING
+// #define ITEM_SOUL_LANTERN 893   //buff spiritomb
+#define ITEM_TOXIN_BOOSTER 894
+// LEGEND PLATE //very complicated item that generally is only for arceus, could remodel into anti tera item?
+//maybe an item that inflicts torment but boosts move power?
+
+
+#define ITEMS_COUNT 895
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

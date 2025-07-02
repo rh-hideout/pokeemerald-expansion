@@ -519,7 +519,7 @@ extern const u8 BattleScript_AromaVeilProtectsRet[];
 extern const u8 BattleScript_EffectDucknWeave[];
 extern const u8 BattleScript_SunSoulActivates[];
 extern const u8 BattleScript_IrritateActivates[];
-extern const u8 BattleScript_TricksterActivates[];
+extern const u8 BattleScript_FrightenActivates[];
 extern const u8 BattleScript_LowerAtkSpAtk[];
 extern const u8 BattleScript_Terastallization[];
 extern const u8 BattleScript_BoosterEnergyEnd2[];
@@ -868,5 +868,17 @@ extern const u8 BattleScript_DamageToQuarterTargetHP[];
 extern const u8 BattleScript_EffectFickleBeam[];
 extern const u8 BattleScript_FickleBeamDoubled[];
 extern const u8 BattleScript_SteelShot[];
+extern const u8 BattleScript_EffectPlatShield[];
+extern const u8 BattleScript_SpikyArmorActivates[];
+extern const u8 BattleScript_SnowStalkerActivates[];
+extern const u8 BattleScript_SandySoulActivates[];
+extern const u8 BattleScript_FrostOrb[];
+extern const u8 BattleScript_HardHatMsgIn[];
+extern const u8 BattleScript_SandBagMsgIn[];
+extern const u8 BattleScript_HardHatPop[];
+extern const u8 BattleScript_SandBagPop[];
+extern const u8 BattleScript_InflateActivatesMoveEnd[];
+extern const u8 BattleScript_SubBerry[];
+
 
 #endif // GUARD_BATTLE_SCRIPTS_H

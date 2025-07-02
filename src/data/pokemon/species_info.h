@@ -206,7 +206,6 @@ const struct SpeciesInfo gSpeciesInfo[] =
     },
 
     /* You may add any custom species below this point based on the following structure: */
-
     /*
     [SPECIES_NONE] =
     {

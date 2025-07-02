@@ -989,6 +989,17 @@ static const u16 sDeoxysFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_DEOXYS
 
+#if P_FAMILY_PIPLUP
+static const u16 sEmpoleonFormSpeciesIdTable[] = {
+    SPECIES_EMPOLEON,
+#if P_MEGA_EVOLUTIONS
+    SPECIES_EMPOLEON_MEGA_X,
+    SPECIES_EMPOLEON_MEGA_Y,
+#endif
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_PIPLUP
+
 #if P_FAMILY_BURMY
 static const u16 sBurmyFormSpeciesIdTable[] = {
     SPECIES_BURMY_PLANT,

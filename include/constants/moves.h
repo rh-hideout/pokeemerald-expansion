@@ -1071,14 +1071,47 @@
 #define MOVE_GHASTLY_BURST 1005
 #define MOVE_NOSEDIVE 1006
 #define MOVE_FLURRY_O_BLOWS 1007
-// #define MOVE_
-// #define MOVE_
-//charge turn in snow
-//charge turn in sand
+#define MOVE_TRIPLE_SPIKE 1008        //dugtrio ground type triple dive or triple axel
+#define MOVE_FRIGID_PUNCH 1009       //ice sucker punch
+#define MOVE_ANCIENT_WING 1010
+#define MOVE_SHELL_SLASH 1011
+#define MOVE_SHELL_BURST 1012
+#define MOVE_MOLT 1013
+#define MOVE_RAIN_BUFFER 1014
+#define MOVE_BATTERING_RAM 1015
+#define MOVE_PLATINUM_SHIELD 1016
+// #define MOVE_AVIAN_DIVE 1017
+#define MOVE_GEYSER_LAUNCH 1018
+#define MOVE_RAINBOW_FREEZE 1019
+#define MOVE_STORM_SIPHON 1020
+#define MOVE_TITAN_MAW 1021
+// #define MOVE_WITCHS_HEX 1022     //if on psychic or mystic terrain give enemy negative omni boost
+#define MOVE_EMPERORS_DIVE 1023     //water power up punch for def does extra damage versus minimize
+#define MOVE_PARASITE 1024          //leech seed
+#define MOVE_AROMATIC_GALE 1025     //bug type clear smog
+#define MOVE_UMBRAL_STRIKE 1026     //dark chance to lower enemy atk
+#define MOVE_SNEAKY_SCAM 1027       //dark special prio move
+#define MOVE_GLACIAL_TEMPEST 1028   //electro shot but snow
+#define MOVE_DESERT_STORM 1029      //sand electro shot
+#define MOVE_TREMOR_BARGE 1030      //sand electro shot physical
+
+
 //do defensive growth in sand
+// Ancient Wing- flying move boosted in sand
+// Shell slash - rock move boosted in rain
+// Shell burst - rock move boosted in rain
+// Molt - cure status and raise speed
+// Sand Barrier - raise def and summon sand
+// Battering ram- rock move that ignores enemies defense changes/protect if first doesn't work
+// Platinum Shield- raises def spdef and ATK by 2 stages lowers speed and spA by one stage
+// Avian dive- flying switch move that heals
+// Geyser launch- prio move 40 BP always lowers enemy speed
+// Rainbow Freeze- ice move boosted in snow
+// Storm siphon- physical water drain move
+// Titan Maw- always Crit bite move
 
 
-#define MOVES_COUNT_GEN9 1008
+#define MOVES_COUNT_GEN9 1031
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

@@ -2266,4 +2266,29 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 //        .battleScript = BattleScript_EffectHit,
 //        .battleTvScore = 0, // TODO: Assign points
 //    },
+    [EFFECT_SNOW_BOOST] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_SAND_BOOST] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_RAIN_BOOST] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_PLAT_SHIELD] =
+    {
+        .battleScript = BattleScript_EffectPlatShield,
+        .battleTvScore = 0, // TODO: Assign points
+        .encourageEncore = TRUE,
+    },
+
 };
