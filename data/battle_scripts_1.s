@@ -2841,13 +2841,7 @@ BattleScript_EffectNaturalGift::
 	jumpifability BS_ATTACKER, ABILITY_KLUTZ, BattleScript_ButItFailed
 	jumpifstatus3 BS_ATTACKER, STATUS3_EMBARGO, BattleScript_ButItFailed
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	call BattleScript_EffectHit_RetFromCritCalc
-	jumpifmovehadnoeffect BattleScript_EffectNaturalGiftEnd
-	checkparentalbondcounter 2, BattleScript_EffectNaturalGiftEnd
-	removeitem BS_ATTACKER
-BattleScript_EffectNaturalGiftEnd:
-	tryfaintmon BS_TARGET
-	goto BattleScript_MoveEnd
+	call BattleScript_HitFromCritCalc
 
 BattleScript_MakeMoveMissed::
 	setmoveresultflags MOVE_RESULT_MISSED

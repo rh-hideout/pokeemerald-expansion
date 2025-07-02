@@ -347,6 +347,7 @@ static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, u16 move);
 static void ResetValuesForCalledMove(void);
 static void TryRestoreDamageAfterCheekPouch(u32 battler);
+static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -7363,21 +7364,48 @@ static void Cmd_moveend(void)
             else
                 gBattleScripting.moveendState++;
             break;
-        case MOVEEND_REMOVE_TERRAIN:
-            if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER // Steel Roller has to check the chosen move, Otherwise it would fail in certain cases
-             && IsBattlerTurnDamaged(gBattlerTarget))
+        case MOVEEND_THIRD_MOVE_BLOCK:
+            // Special case for Steel Roller since it has to check the chosen move
+            if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER && IsBattlerTurnDamaged(gBattlerTarget))
             {
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
                 effect = TRUE;
+                gBattleScripting.moveendState++;
+                break;
             }
-            else if (moveEffect == EFFECT_ICE_SPINNER
-                  && IsBattlerAlive(gBattlerAttacker)
-                  && IsBattlerTurnDamaged(gBattlerTarget))
+
+            switch (moveEffect)
             {
-                BattleScriptPushCursor();
-                gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
-                effect = TRUE;
+            case EFFECT_ICE_SPINNER:
+                if (IsBattlerAlive(gBattlerAttacker) && IsBattlerTurnDamaged(gBattlerTarget))
+                {
+                    BattleScriptPushCursor();
+                    gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                    effect = TRUE;
+                }
+                break;
+            case EFFECT_NATURAL_GIFT:
+                if (!(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE) && GetItemPocket(gBattleMons[gBattlerAttacker].item) == POCKET_BERRIES)
+                {
+                    u32 item = gBattleMons[gBattlerAttacker].item;
+                    gBattleMons[gBattlerAttacker].item = ITEM_NONE;
+                    gBattleStruct->battlerState[gBattlerAttacker].canPickupItem = TRUE;
+                    CheckSetUnburden(gBattlerAttacker);
+                    BtlController_EmitSetMonData(
+                        gBattlerAttacker,
+                        B_COMM_TO_CONTROLLER,
+                        REQUEST_HELDITEM_BATTLE,
+                        0,
+                        sizeof(gBattleMons[gBattlerAttacker].item),
+                        &gBattleMons[gBattlerAttacker].item);
+                    MarkBattlerForControllerExec(gBattlerAttacker);
+                    ClearBattlerItemEffectHistory(gBattlerAttacker);
+                    if (!TrySymbiosis(gBattlerAttacker, item, TRUE))
+                        effect = TRUE;
+                }
+            default:
+                break;
             }
             gBattleScripting.moveendState++;
             break;
@@ -9193,7 +9221,7 @@ static void BestowItem(u32 battlerAtk, u32 battlerDef)
 }
 
 // Called by Cmd_removeitem. itemId represents the item that was removed, not being given.
-static bool32 TrySymbiosis(u32 battler, u32 itemId)
+static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd)
 {
     if (!gBattleStruct->itemLost[B_SIDE_PLAYER][gBattlerPartyIndexes[battler]].stolen
         && gBattleStruct->changedItems[battler] == ITEM_NONE
@@ -9207,7 +9235,10 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
         BestowItem(BATTLE_PARTNER(battler), battler);
         gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
         gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
-        BattleScriptPush(gBattlescriptCurrInstr + 2);
+        if (moveEnd)
+            BattleScriptPushCursor();
+        else
+            BattleScriptPush(gBattlescriptCurrInstr + 2);
         gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
         return TRUE;
     }
@@ -9245,7 +9276,7 @@ static void Cmd_removeitem(void)
     MarkBattlerForControllerExec(battler);
 
     ClearBattlerItemEffectHistory(battler);
-    if (!TryCheekPouch(battler, itemId) && !TrySymbiosis(battler, itemId))
+    if (!TryCheekPouch(battler, itemId) && !TrySymbiosis(battler, itemId, FALSE))
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
