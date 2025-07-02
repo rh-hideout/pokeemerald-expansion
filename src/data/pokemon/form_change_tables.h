@@ -374,8 +374,10 @@ static const struct FormChange sGalladeFormChangeTable[] = {
 #if P_FAMILY_SLAKOTH
 static const struct FormChange sSlakingFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SLAKING
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SLAKING_MEGA, ITEM_SLAKITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_SLAKING
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_SLAKOTH
@@ -464,8 +466,10 @@ static const struct FormChange sBanetteFormChangeTable[] = {
 #if P_FAMILY_DUSKULL
 static const struct FormChange sDusknoirFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_DUSKNOIR
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_DUSKNOIR_MEGA, ITEM_DUSKNOIRITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_DUSKNOIR
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_DUSKULL
@@ -473,8 +477,10 @@ static const struct FormChange sDusknoirFormChangeTable[] = {
 #if P_FAMILY_TROPIUS
 static const struct FormChange sTropiusFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TROPIUS
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_TROPIUS_MEGA, ITEM_TROPIUSITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_TROPIUS
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_TROPIUS
@@ -500,8 +506,10 @@ static const struct FormChange sGlalieFormChangeTable[] = {
 #if P_FAMILY_FEEBAS
 static const struct FormChange sMiloticFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_MILOTIC
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_MILOTIC_MEGA, ITEM_MILOTITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_MILOTIC
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_FEEBAS
@@ -653,8 +661,10 @@ static const struct FormChange sLuxrayFormChangeTable[] = {
 #if P_FAMILY_BUDEW
 static const struct FormChange sRoseradeFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_ROSERADE
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_ROSERADE_MEGA, ITEM_ROSERITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_ROSERADE
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_BUDEW
