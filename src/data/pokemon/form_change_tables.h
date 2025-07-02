@@ -1179,7 +1179,12 @@ static const struct FormChange sMelmetalFormChangeTable[] =
 {
 #if P_GIGANTAMAX_FORMS
     {FORM_CHANGE_BATTLE_GIGANTAMAX, SPECIES_MELMETAL_GMAX},
-#endif
+#endif // P_GIGANTAMAX_FORMS
+#if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_MELMETAL
+// TODO(frosty): Add form change for Melmetal
+#endif // FROSTY_MEGAS >= SPECIES_MELMETAL
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_MELTAN
