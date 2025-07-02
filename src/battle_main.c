@@ -3156,7 +3156,7 @@ void SwitchInClearSetData(u32 battler)
         gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
                                        | STATUS3_GASTRO_ACID | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
                                        | STATUS3_AQUA_RING | STATUS3_POWER_TRICK);
-        gStatuses4[battler] &= (STATUS4_MUD_SPORT | STATUS4_WATER_SPORT | STATUS4_INFINITE_CONFUSION);
+        gStatuses4[battler] &= STATUS4_INFINITE_CONFUSION;
         for (i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(battler, i)
@@ -3199,6 +3199,7 @@ void SwitchInClearSetData(u32 battler)
         gDisableStructs[battler].perishSongTimer = disableStructCopy.perishSongTimer;
         gDisableStructs[battler].battlerPreventingEscape = disableStructCopy.battlerPreventingEscape;
         gDisableStructs[battler].embargoTimer = disableStructCopy.embargoTimer;
+        gDisableStructs[battler].healBlockTimer = disableStructCopy.healBlockTimer;
     }
     else if (effect == EFFECT_SHED_TAIL)
     {

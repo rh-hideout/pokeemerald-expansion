@@ -561,8 +561,8 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
             return TRUE;
         break;
-    case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY) && GetMoveEffectArg_MoveProperty(ctx->move) == ARG_TRY_REMOVE_TERRAIN_FAIL)
+    case EFFECT_STEEL_ROLLER:
+        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
             return TRUE;
         break;
     case EFFECT_POLTERGEIST:

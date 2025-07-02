@@ -849,23 +849,25 @@
 	.4byte \failInstr
 	.endm
 
-	.macro printstatchangestrings
-	1:
+	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
 	.byte 0x94
-	.4byte 2f
-	printsavedstring
-	jumpifbyte CMP_EQUAL, sSTATCHANGER_STRING_KEY, 0, 2f
-	waitmessage B_WAIT_TIME_LONG
-	goto 1b
-	2:
+	.2byte \nonVolatile
+	.4byte \failInstr
 	.endm
 
 	.macro copybidedmg
 	.byte 0x95
 	.endm
 
-	.macro unused_96
+	.macro printstatchangestrings
+	1:
 	.byte 0x96
+	.4byte 2f
+	printsavedstring
+	jumpifbyte CMP_EQUAL, sSTATCHANGER_STRING_KEY, 0, 2f
+	waitmessage B_WAIT_TIME_LONG
+	goto 1b
+	2:
 	.endm
 
 	.macro tryinfatuating failInstr:req
@@ -1548,14 +1550,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifmovepropertyargument argument:req, jumpInstr:req
-	callnative BS_JumpIfMovePropertyArgument
-	.byte \argument
-	.4byte \jumpInstr
-	.endm
-
-	.macro setremoveterrain failInstr:req
-	callnative BS_SetRemoveTerrain
+	.macro setterrain failInstr:req
+	callnative BS_SetTerrain
 	.4byte \failInstr
 	.endm
 
