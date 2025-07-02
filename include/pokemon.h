@@ -310,8 +310,8 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeBitSize, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeBitSize));
-#define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:FIRST(__VA_ARGS__),) _fieldName)
+#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
+#define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
 struct Volatiles
 {
@@ -373,12 +373,7 @@ struct BattlePokemon
     /*0x45*/ u32 experience;
     /*0x49*/ u32 personality;
     /*0x4D*/ u32 status1;
-    /*0x51*/ union {
-        struct {
-            u32 status2; // To be expanded to include Status3/4
-        };
-        struct Volatiles volatiles;
-    };
+    /*0x51*/ struct Volatiles volatiles;
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;
     /*0x62*/ bool8 isShiny;

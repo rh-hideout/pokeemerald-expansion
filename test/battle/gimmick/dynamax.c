@@ -1221,7 +1221,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Terror traps both opponents")
         MESSAGE("The opposing Wobbuffet can no longer escape!");
         MESSAGE("The opposing Wobbuffet can no longer escape!");
     } THEN { // Can't find good way to test trapping
-        EXPECT(opponentLeft->status2 & STATUS2_ESCAPE_PREVENTION);
+        EXPECT(opponentLeft->volatiles.escapePrevention);
     }
 }
 
@@ -1238,7 +1238,7 @@ SINGLE_BATTLE_TEST("Dynamax: Baton Pass passes G-Max Terror's escape prevention 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_TERROR, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
     } THEN {
-        EXPECT(opponent->status2 & STATUS2_ESCAPE_PREVENTION);
+        EXPECT(opponent->volatiles.escapePrevention);
     }
 }
 
