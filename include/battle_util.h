@@ -219,16 +219,6 @@ union StatChanger
     };
 };
 
-// Helpful macro to go through every stat in the statchanger
-#define FOREACH_STAT_STATCHANGER(F) \
-    F(STAT_ATK, attack)             \
-    F(STAT_DEF, defense)            \
-    F(STAT_SPEED, speed)            \
-    F(STAT_SPATK, spAttack)         \
-    F(STAT_SPDEF, spDefense)        \
-    F(STAT_ACC, accuracy)           \
-    F(STAT_EVASION, evasion)
-
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);

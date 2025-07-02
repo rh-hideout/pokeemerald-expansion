@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 #define GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
 
+#include "constants/pokemon.h"
+
 // The following correspond to the struct members of BattleScripting by adding their offset
 #define sSTATCHANGER                 (gBattleScripting + 0x00) // statChanger
 #define sSAVED_STAT_CHANGER          (gBattleScripting + 0x04) // savedStatChanger
@@ -228,14 +230,30 @@ enum CmdVarious
 #define STAT_CHANGE_CERTAIN                 (1 << 6)
 
 // stat flags for TryPlayStatChangeAnimation
-#define BIT_HP                      (1 << 0)
-#define BIT_ATK                     (1 << 1)
-#define BIT_DEF                     (1 << 2)
-#define BIT_SPEED                   (1 << 3)
-#define BIT_SPATK                   (1 << 4)
-#define BIT_SPDEF                   (1 << 5)
-#define BIT_ACC                     (1 << 6)
-#define BIT_EVASION                 (1 << 7)
+enum StatBits
+{
+    BIT_HP = (1 << STAT_HP),
+    BIT_ATK = (1 << STAT_ATK),
+    BIT_DEF = (1 << STAT_DEF),
+    BIT_SPEED = (1 << STAT_SPEED),
+    BIT_SPATK = (1 << STAT_SPATK),
+    BIT_SPDEF = (1 << STAT_SPDEF),
+    BIT_ACC = (1 << STAT_ACC),
+    BIT_EVASION = (1 << STAT_EVASION),
+};
+
+// wider stag flags for setstatchanger
+enum StatBuffBits
+{
+    STAT_BUFF_NEGATIVE = 1,
+    STAT_BUFF_ATK = (1 << (4 * STAT_ATK)),
+    STAT_BUFF_DEF = (1 << (4 * STAT_DEF)),
+    STAT_BUFF_SPEED = (1 << (4 * STAT_SPEED)),
+    STAT_BUFF_SPATK = (1 << (4 * STAT_SPATK)),
+    STAT_BUFF_SPDEF = (1 << (4 * STAT_SPDEF)),
+    STAT_BUFF_ACC = (1 << (4 * STAT_ACC)),
+    STAT_BUFF_EVASION = (1 << (4 * STAT_EVASION)),
+};
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 

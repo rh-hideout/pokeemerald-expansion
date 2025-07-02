@@ -12148,7 +12148,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
     // they are raised one at a time. However, the animation requires taking into
     // account all stats that will be raised by that move at once.
     u32 changeableStatsCount = singleStatOnly ? 1: CountStatChangerStats(statChanger);
-    if (!gBattleScripting.statAnimPlayed && changeableStatsCount > 0) // failsafe
+    if ((!gBattleScripting.statAnimPlayed || !statChanger.statId) && changeableStatsCount > 0) // failsafe
     {
         // This prevents the stat change animation going off multiple times per turn
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
@@ -12161,7 +12161,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
             &gDisableStructs[battler],
             GetStatAnimArgFromStatChanger(statChanger, singleStatOnly));
     }
-    else if (changeableStatsCount == 1) // final stat that can be changed
+    else // final stat that can be changed
         gBattleScripting.statAnimPlayed = FALSE;
 }
 

@@ -89,11 +89,20 @@
 
 #define NUM_NATURE_STATS (NUM_STATS - 1) // excludes HP
 #define NUM_BATTLE_STATS (NUM_STATS + 2) // includes Accuracy and Evasion
-#define NUM_BOOSTABLE_STATS (NUM_BATTLE_STATS - 1) // excludes HP
 
 #define MIN_STAT_STAGE     0
 #define DEFAULT_STAT_STAGE 6
 #define MAX_STAT_STAGE    12
+
+// Helpful macro to go through every stat in the statchanger
+#define FOREACH_STAT_STATCHANGER(F) \
+    F(STAT_ATK, attack)             \
+    F(STAT_DEF, defense)            \
+    F(STAT_SPEED, speed)            \
+    F(STAT_SPATK, spAttack)         \
+    F(STAT_SPDEF, spDefense)        \
+    F(STAT_ACC, accuracy)           \
+    F(STAT_EVASION, evasion)
 
 // Shiny odds
 #define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
