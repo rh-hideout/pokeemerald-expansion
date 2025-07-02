@@ -1520,8 +1520,10 @@ static const struct FormChange sEnamorusFormChangeTable[] = {
 #if P_FAMILY_FUECOCO
 static const struct FormChange sSkeledirgeFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SKELEDIRGE
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SKELEDIRGE_MEGA, ITEM_SKELEDITE},
-#endif
+#endif // FROSTY_MEGAS >= SPECIES_SKELEDIRGE
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_FUECOCO

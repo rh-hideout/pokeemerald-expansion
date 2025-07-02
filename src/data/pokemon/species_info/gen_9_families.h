@@ -379,6 +379,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SKELEDIRGE
     [SPECIES_SKELEDIRGE_MEGA] =
     {
         .baseHP        = 104,
@@ -440,7 +441,8 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .levelUpLearnset = sSkeledirgeLevelUpLearnset,
         .teachableLearnset = sSkeledirgeTeachableLearnset,
     },
-#endif
+#endif // FROSTY_MEGAS >= SPECIES_SKELEDIRGE
+#endif // P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_FUECOCO
 
 #if P_FAMILY_QUAXLY
