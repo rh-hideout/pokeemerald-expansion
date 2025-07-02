@@ -1239,22 +1239,24 @@ static void Cmd_attackcanceler(void)
 
 
     u32 abilityDef = GetBattlerAbility(gBattlerTarget);
-    if (CanAbilityBlockMove(gBattlerAttacker,
-                            gBattlerTarget,
-                            GetBattlerAbility(gBattlerAttacker),
-                            abilityDef,
-                            gCurrentMove,
-                            ABILITY_RUN_SCRIPT))
+    if (CanAbilityBlockMove(
+            gBattlerAttacker,
+            gBattlerTarget,
+            GetBattlerAbility(gBattlerAttacker),
+            abilityDef,
+            gCurrentMove,
+            ABILITY_RUN_SCRIPT))
         return;
 
     if (GetMoveNonVolatileStatus(gCurrentMove) == MOVE_EFFECT_PARALYSIS)
     {
-        if (CanAbilityAbsorbMove(gBattlerAttacker,
-                                 gBattlerTarget,
-                                 abilityDef,
-                                 gCurrentMove,
-                                 GetBattleMoveType(gCurrentMove),
-                                 ABILITY_RUN_SCRIPT))
+        if (CanAbilityAbsorbMove(
+                gBattlerAttacker,
+                gBattlerTarget,
+                abilityDef,
+                gCurrentMove,
+                GetBattleMoveType(gCurrentMove),
+                ABILITY_RUN_SCRIPT))
             return;
     }
 
@@ -2415,6 +2417,7 @@ static bool32 ProcessPreAttackAnimationFuncs(void)
     if (IsDoubleSpreadMove())
     {
         u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+
         if (!gBattleStruct->printedStrongWindsWeakenedAttack)
         {
             for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
@@ -5949,9 +5952,13 @@ static u32 GetNextTarget(u32 moveTarget, bool32 excludeCurrent)
     u32 battler;
     for (battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
-        if (battler != gBattlerAttacker
-         && !(excludeCurrent && battler == gBattlerTarget)
-         && IsBattlerAlive(battler)
+        if (battler == gBattlerAttacker || !IsBattlerAlive(battler))
+            continue;
+
+        if (GetMoveEffect(gCurrentMove) == EFFECT_SYNCHRONOISE && !DoBattlersShareType(gBattlerAttacker, battler))
+            continue;
+
+        if (!(excludeCurrent && battler == gBattlerTarget)
          && !gBattleStruct->battlerState[gBattlerAttacker].targetsDone[battler]
          && (!IsBattlerAlly(battler, gBattlerAttacker) || moveTarget == MOVE_TARGET_FOES_AND_ALLY))
             break;
@@ -18652,4 +18659,22 @@ void BS_TryActivateAbilityShield(void)
         RecordItemEffectBattle(battler, GetItemHoldEffect(gLastUsedItem));
         BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
+}
+
+void BS_TrySynchronoise(void)
+{
+    NATIVE_ARGS(const u8 *jumpInstr);
+
+    for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
+    {
+        if (gBattlerAttacker == battlerDef || !IsBattlerAlive(battlerDef))
+            continue;
+
+        if (DoBattlersShareType(gBattlerAttacker, battlerDef))
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+            return;
+        }
+    }
+    gBattlescriptCurrInstr = cmd->jumpInstr;
 }
