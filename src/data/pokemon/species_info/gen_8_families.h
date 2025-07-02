@@ -191,6 +191,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_RILLABOOM
     [SPECIES_RILLABOOM_MEGA_X] =
     {
         .baseHP        = 100,
@@ -300,7 +301,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sRillaboomFormSpeciesIdTable,
         .formChangeTable = sRillaboomFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_RILLABOOM
 #endif //P_MEGA_EVOLUTIONS
+
 #if P_GIGANTAMAX_FORMS
     [SPECIES_RILLABOOM_GMAX] =
     {
@@ -548,7 +551,8 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
-    [SPECIES_CINDERACE_GMAX] =
+#if FROSTY_MEGAS >= SPECIES_CINDERACE
+    [SPECIES_CINDERACE_MEGA] =
     {
         .baseHP        = 80,
         .baseAttack    = 161,   //+45
@@ -603,6 +607,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sCinderaceFormSpeciesIdTable,
         .formChangeTable = sCinderaceFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_CINDERACE
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
     [SPECIES_CINDERACE_GMAX] =
@@ -853,6 +858,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_INTELEON
      [SPECIES_INTELEON_MEGA] =
     {
         .baseHP        = 70,
@@ -908,6 +914,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sInteleonFormSpeciesIdTable,
         .formChangeTable = sInteleonFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_INTELEON
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -1287,6 +1294,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_CORVIKNIGHT
     [SPECIES_CORVIKNIGHT_MEGA] =
     {
         .baseHP        = 98,
@@ -1342,6 +1350,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sCorviknightFormSpeciesIdTable,
         .formChangeTable = sCorviknightFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_CORVIKNIGHT
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
     [SPECIES_CORVIKNIGHT_GMAX] =
@@ -1595,6 +1604,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_ORBEETLE
     [SPECIES_ORBEETLE_MEGA] =
     {
         .baseHP        = 60,
@@ -1651,6 +1661,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sOrbeetleFormSpeciesIdTable,
         .formChangeTable = sOrbeetleFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_ORBEETLE
 #endif //P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
     [SPECIES_ORBEETLE_GMAX] =
@@ -2216,6 +2227,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_DREDNAW
     [SPECIES_DREDNAW_MEGA] =
     {
         .baseHP        = 90,
@@ -2271,6 +2283,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sDrednawFormSpeciesIdTable,
         .formChangeTable = sDrednawFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_DREDNAW
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -2646,6 +2659,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_COALOSSAL
     [SPECIES_COALOSSAL_MEGA] =
     {
         .baseHP        = 110,
@@ -2701,6 +2715,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sCoalossalFormSpeciesIdTable,
         .formChangeTable = sCoalossalFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_COALOSSAL
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -3321,6 +3336,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SANDACONDA
     [SPECIES_SANDACONDA_MEGA] =
     {
         .baseHP        = 72,
@@ -3376,6 +3392,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sSandacondaFormSpeciesIdTable,
         .formChangeTable = sSandacondaFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_SANDACONDA
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -3869,6 +3886,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TOXTRICITY
     [SPECIES_TOXTRICITY_MEGA] =
     {
         .baseHP        = 75,
@@ -3924,6 +3942,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sToxtricityFormSpeciesIdTable,
         .formChangeTable = sToxtricityAmpedFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_TOXTRICITY
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -4224,6 +4243,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_CENTISKORCH
     [SPECIES_CENTISKORCH_MEGA] =
     {
         .baseHP        = 100,
@@ -4279,6 +4299,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sCentiskorchFormSpeciesIdTable,
         .formChangeTable = sCentiskorchFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_CENTISKORCH
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -4907,6 +4928,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_HATTERENE
     [SPECIES_HATTERENE_MEGA] =
     {
         .baseHP        = 57,
@@ -4962,6 +4984,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sHattereneFormSpeciesIdTable,
         .formChangeTable = sHattereneFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_HATTERENE
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -5212,6 +5235,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_GRIMMSNARL
     [SPECIES_GRIMMSNARL_MEGA] =
     {
         .baseHP        = 95,
@@ -5267,6 +5291,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sGrimmsnarlFormSpeciesIdTable,
         .formChangeTable = sGrimmsnarlFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_GRIMMSNARL
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -5527,6 +5552,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_ALCREMIE_RIBBON_RAINBOW_SWIRL]     = ALCREMIE_REGULAR_SPECIES_INFO(Ribbon,     RainbowSwirl, BODY_COLOR_YELLOW),
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_ALCREMIE
      [SPECIES_ALCREMIE_MEGA] =
     {
         .baseHP        = 65,                                                    
@@ -5582,6 +5608,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sAlcremieFormSpeciesIdTable,
         .formChangeTable = sAlcremieFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_ALCREMIE
 #endif //P_MEGA_EVOLUTIONS
     
 #if P_GIGANTAMAX_FORMS
@@ -6443,6 +6470,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_COPPERAJAH
     [SPECIES_COPPERAJAH_MEGA] =
     {
         .baseHP        = 122,
@@ -6499,6 +6527,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sCopperajahFormSpeciesIdTable,
         .formChangeTable = sCopperajahFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_COPPERAJAH
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -6878,6 +6907,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_DURALUDON
     [SPECIES_DURALUDON_MEGA] =
     {
         .baseHP        = 70,
@@ -6934,6 +6964,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sDuraludonFormSpeciesIdTable,
         .formChangeTable = sDuraludonFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_DURALUDON
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS
@@ -7775,6 +7806,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_URSHIFU_SINGLE_STRIKE
     [SPECIES_URSHIFU_SINGLE_STRIKE_MEGA] =
     {
         .baseHP        = 100,
@@ -7832,7 +7864,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sUrshifuFormSpeciesIdTable,
         .formChangeTable = sUrshifuSingleStrikeFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_URSHIFU_SINGLE_STRIKE
 #endif //P_MEGA_EVOLUTIONS
+
 #if P_GIGANTAMAX_FORMS
     [SPECIES_URSHIFU_SINGLE_STRIKE_GMAX] =
     {
@@ -7958,6 +7992,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_URSHIFU_RAPID_STRIKE
     [SPECIES_URSHIFU_RAPID_STRIKE_MEGA] =
     {
         .baseHP        = 100,
@@ -8015,7 +8050,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .formSpeciesIdTable = sUrshifuFormSpeciesIdTable,
         .formChangeTable = sUrshifuRapidStrikeFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_URSHIFU_RAPID_STRIKE
 #endif //P_MEGA_EVOLUTIONS
+
 #if P_GIGANTAMAX_FORMS
     [SPECIES_URSHIFU_RAPID_STRIKE_GMAX] =
     {

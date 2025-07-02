@@ -200,6 +200,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TORTERRA_MEGA
     [SPECIES_TORTERRA_MEGA] =
     {
         .baseHP        = 95,
@@ -269,6 +270,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .levelUpLearnset = sTorterraLevelUpLearnset,
         .teachableLearnset = sTorterraTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_TORTERRA_MEGA
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_TURTWIG
 
@@ -471,6 +473,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_INFERNAPE_MEGA
     [SPECIES_INFERNAPE_MEGA] =
     {
         .baseHP        = 76,
@@ -540,6 +543,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .levelUpLearnset = sInfernapeLevelUpLearnset,
         .teachableLearnset = sInfernapeTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_INFERNAPE_MEGA
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_CHIMCHAR
 
@@ -749,6 +753,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_EMPOLEON
     [SPECIES_EMPOLEON_MEGA_X] =
     {
          .baseHP       = 84,
@@ -888,6 +893,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sEmpoleonFormSpeciesIdTable,
         .formChangeTable = sEmpoleonFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_EMPOLEON
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_PIPLUP
 
@@ -1655,6 +1661,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_LUXRAY
     [SPECIES_LUXRAY_MEGA] =
     {
         .baseHP        = 80,
@@ -1718,6 +1725,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         // .formSpeciesIdTable = sShinxFormSpeciesIdTable, //bulag
         .formChangeTable = sLuxrayFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_LUXRAY
 #endif //P_MEGA_EVOLUTIONS
 
 #endif //P_FAMILY_SHINX

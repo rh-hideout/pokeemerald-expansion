@@ -7165,6 +7165,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_MELMETAL
     [SPECIES_MELMETAL_MEGA] =
     {
         .baseHP        = 135,
@@ -7223,6 +7224,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .formSpeciesIdTable = sMelmetalFormSpeciesIdTable,
         .formChangeTable = sMelmetalFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_MELMETAL
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS

@@ -3224,6 +3224,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SLAKING
     [SPECIES_SLAKING_MEGA] =
     {
         .baseHP        = 160,
@@ -3291,6 +3292,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sSlakingLevelUpLearnset,
         .teachableLearnset = sSlakingTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_SLAKING
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SLAKOTH
 
@@ -5505,6 +5507,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_ROSERADE
     [SPECIES_ROSERADE_MEGA] =
     {
         .baseHP        = 60,
@@ -5582,6 +5585,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sRoseradeLevelUpLearnset,
         .teachableLearnset = sRoseradeTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_ROSERADE
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_GEN_4_CROSS_EVOS
 #endif //P_FAMILY_ROSELIA
@@ -8166,6 +8170,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_MILOTIC
     [SPECIES_MILOTIC_MEGA] =
     {
         .baseHP        = 95,
@@ -8234,6 +8239,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sMiloticLevelUpLearnset,
         .teachableLearnset = sMiloticTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_MILOTIC
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_FEEBAS
 
@@ -8984,6 +8990,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_DUSKNOIR
     [SPECIES_DUSKNOIR_MEGA] =
     {
         .baseHP        = 45,
@@ -9054,6 +9061,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sDusknoirLevelUpLearnset,
         .teachableLearnset = sDusknoirTeachableLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_DUSKNOIR
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_GEN_4_CROSS_EVOS
 #endif //P_FAMILY_DUSKULL
@@ -9122,6 +9130,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TROPIUS
     [SPECIES_TROPIUS_MEGA] =
     {
         .baseHP        = 102, 
@@ -9184,6 +9193,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .teachableLearnset = sTropiusTeachableLearnset,
         .eggMoveLearnset = sTropiusEggMoveLearnset,
     },
+#endif //FROSTY_MEGAS >= SPECIES_TROPIUS
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_TROPIUS
 
