@@ -12175,7 +12175,7 @@ static bool32 MoveEffectBlockedByProtect(struct MoveEffectResult *result, const 
 
 static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
 {
-    if ((result->battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->battlerAbility)) &&
+    if ((result->holdEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->battlerAbility)) &&
         (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE)
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
@@ -12183,7 +12183,7 @@ static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveE
         else
         {
             result->scriptingBattler = result->effectBattler + 1;
-            if (result->battlerHoldEffect == HOLD_EFFECT_CLEAR_AMULET)
+            if (result->holdEffect == HOLD_EFFECT_CLEAR_AMULET)
             {
                 result->lastUsedItem = gBattleMons[result->effectBattler].item;
                 result->battlescriptPush = TRUE;
@@ -12424,7 +12424,7 @@ static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatC
 static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
 {
     result->battlerAbility = GetBattlerAbility(result->effectBattler);
-    result->battlerHoldEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
+    result->holdEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
 
     if (result->battlerAbility == ABILITY_CONTRARY)
     {

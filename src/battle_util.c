@@ -11416,10 +11416,21 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
 
 bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
 {
-    return (stat > 0) && (((ability == ABILITY_KEEN_EYE || ability == ABILITY_MINDS_EYE) && stat == STAT_ACC)
-        || (B_ILLUMINATE_EFFECT >= GEN_9 && ability == ABILITY_ILLUMINATE && stat == STAT_ACC)
-        || (ability == ABILITY_HYPER_CUTTER && stat == STAT_ATK)
-        || (ability == ABILITY_BIG_PECKS && stat == STAT_DEF));
+    switch (ability)
+    {
+        case ABILITY_ILLUMINATE:
+            if (B_ILLUMINATE_EFFECT < GEN_9)
+                return FALSE;
+        case ABILITY_KEEN_EYE:
+        case ABILITY_MINDS_EYE:
+            return stat == STAT_ACC;
+        case ABILITY_HYPER_CUTTER:
+            return stat == STAT_ATK;
+        case ABILITY_BIG_PECKS:
+            return stat == STAT_DEF;
+        default:
+            return FALSE;
+    }
 }
 
 #define ADD_STAT_TO_QUEUED_STAT_BOOSTS(_stat, _statField)                       \

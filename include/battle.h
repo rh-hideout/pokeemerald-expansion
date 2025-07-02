@@ -848,7 +848,7 @@ struct MoveEffectResult
     u16 battlerAbility; // gEffectBattler ability
     u16 battlerItem; // gEffectBattler held item
     enum MoveEffects moveEffect:8; // Current move effect
-    enum ItemHoldEffect battlerHoldEffect:8; // gEffectBattler's item hold effect
+    enum ItemHoldEffect holdEffect:8; // gEffectBattler's item hold effect
     union StatChanger statChanger;
     u32 battlerAtk:3; // gBattlerAttacker
     u32 battlerDef:3; // gBattlerTarget
@@ -1340,7 +1340,7 @@ static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32
     };
 
     // Apply stat stage and return
-    statChanger.allStats *= min(MAX_BITS(4), abs(stage));
+    statChanger.allStats *= min(MAX_STAT_STAGE, abs(stage));
 
     return statChanger;
 }
