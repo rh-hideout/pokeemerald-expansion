@@ -699,6 +699,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SAMUROTT
     [SPECIES_SAMUROTT_H_MEGA] =
     {
         .baseHP        = 90,
@@ -762,6 +763,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .teachableLearnset = sSamurottHisuiTeachableLearnset,
         .formSpeciesIdTable = sSamurottFormSpeciesIdTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_SAMUROTT
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_HISUIAN_FORMS
 #endif //P_FAMILY_OSHAWOTT
@@ -5832,6 +5834,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_GARBODOR
     [SPECIES_GARBODOR_MEGA] =
     {
         .baseHP        = 80,
@@ -5890,6 +5893,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .formSpeciesIdTable = sGarbodorFormSpeciesIdTable,
         .formChangeTable = sGarbodorFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_GARBODOR
 #endif //P_MEGA_EVOLUTIONS
 
 #if P_GIGANTAMAX_FORMS

@@ -837,8 +837,10 @@ static const struct FormChange sArceusFormChangeTable[] = {
 #if P_FAMILY_OSHAWOTT
 static const struct FormChange sSamurottFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SAMUROTT
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SAMUROTT_H_MEGA, ITEM_SAMUROTTITE_X},
-#endif
+#endif // FROSTY_MEGAS >= SPECIES_SAMUROTT
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_OSHAWOTT
@@ -875,8 +877,10 @@ static const struct FormChange sDarmanitanGalarFormChangeTable[] = {
 #if P_FAMILY_TRUBBISH
 static const struct FormChange sGarbodorFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_GARBODOR
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_GARBODOR_MEGA, ITEM_GARBODORITE},
-#endif
+#endif // FROSTY_MEGAS >= SPECIES_GARBODOR
+#endif // P_MEGA_EVOLUTIONS
 #if P_GIGANTAMAX_FORMS
     {FORM_CHANGE_BATTLE_GIGANTAMAX, SPECIES_GARBODOR_GMAX},
 #endif
