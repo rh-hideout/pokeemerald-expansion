@@ -440,8 +440,9 @@ static void BattleTest_Run(void *data)
     {
         // TODO: If a battler is taking the default action maybe it
         // should not require an explicit speed?
-        if (DATA.explicitSpeeds[B_SIDE_PLAYER] != (1 << DATA.playerPartySize) - 1
-         || DATA.explicitSpeeds[B_SIDE_OPPONENT] != (1 << DATA.opponentPartySize) - 1)
+        // TODO: Multibattle test exclusion in place until a way to rework this check is identified.
+        if ((DATA.explicitSpeeds[B_SIDE_PLAYER] != (1 << DATA.playerPartySize) - 1
+         || DATA.explicitSpeeds[B_SIDE_OPPONENT] != (1 << DATA.opponentPartySize) - 1) && !IsMultibattleTest())
         {
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
         }
@@ -1604,14 +1605,14 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
 
 void AIFlags_(u32 sourceLine, u64 flags)
 {
-    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     DATA.recordedBattle.AI_scripts = flags;
     DATA.hasAI = TRUE;
 }
 
 void AILogScores(u32 sourceLine)
 {
-    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
+    INVALID_IF(!IsAITest(), "AI_LOG is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     DATA.logAI = TRUE;
 }
 
@@ -1647,14 +1648,14 @@ void ClearFlagAfterTest(void)
     }
 }
 
-void OpenPokemon(u32 sourceLine, u32 side, u32 species)
+void OpenPokemon(u32 sourceLine, u32 position, u32 species)
 {
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
-    if ((side & BIT_SIDE) == B_SIDE_PLAYER)
+    if ((position & BIT_SIDE) == B_SIDE_PLAYER)
     {
         partySize = &DATA.playerPartySize;
         party = DATA.recordedBattle.playerParty;
@@ -1665,7 +1666,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
         party = DATA.recordedBattle.opponentParty;
     }
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
-    DATA.currentSide = side;
+    DATA.currentPosition = position;
     DATA.currentPartyIndex = *partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
@@ -1685,7 +1686,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     }
 }
 
-void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species)
+void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
 {
 
     s32 i, data;
@@ -1693,19 +1694,19 @@ void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species)
     struct Pokemon *party;
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
-    if (side == B_POSITION_PLAYER_LEFT)
+    if (position == B_POSITION_PLAYER_LEFT)
     {
         partySize = &DATA.playerPartySize;
         party = DATA.recordedBattle.playerParty;
     }
-    else if (side == B_POSITION_PLAYER_RIGHT)
+    else if (position == B_POSITION_PLAYER_RIGHT)
     {
         partySize = &DATA.playerPartySize;
         if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.playerParty;
     } 
-    else if (side == B_POSITION_OPPONENT_LEFT)
+    else if (position == B_POSITION_OPPONENT_LEFT)
     {
         partySize = &DATA.opponentPartySize;
         party = DATA.recordedBattle.opponentParty;
@@ -1718,7 +1719,7 @@ void OpenPokemonMulti(u32 sourceLine, u32 side, u32 species)
         party = DATA.recordedBattle.opponentParty;
     } 
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
-    DATA.currentSide = side;
+    DATA.currentPosition = position;
     DATA.currentPartyIndex = *partySize;
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
@@ -1763,10 +1764,10 @@ void ClosePokemon(u32 sourceLine)
 {
     s32 i;
     u32 data;
-    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.currentSide] & (1 << DATA.currentPartyIndex)), "Speed required");
+    INVALID_IF(DATA.hasExplicitSpeeds && !(DATA.explicitSpeeds[DATA.currentPosition] & (1 << DATA.currentPartyIndex)), "Speed required");
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if ((i & BIT_SIDE) == DATA.currentSide
+        if (i == DATA.currentPosition
          && DATA.currentMonIndexes[i] == DATA.currentPartyIndex)
         {
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
@@ -1826,7 +1827,7 @@ void Ability_(u32 sourceLine, u32 ability)
     // Store forced ability to be set when the battle starts if invalid.
     if (i == NUM_ABILITY_SLOTS)
     {
-        DATA.forcedAbilities[DATA.currentSide][DATA.currentPartyIndex] = ability;
+        DATA.forcedAbilities[DATA.currentPosition][DATA.currentPartyIndex] = ability;
     }
 }
 
@@ -1890,7 +1891,7 @@ void Speed_(u32 sourceLine, u32 speed)
     INVALID_IF(speed == 0, "Illegal speed: %d", speed);
     SetMonData(DATA.currentMon, MON_DATA_SPEED, &speed);
     DATA.hasExplicitSpeeds = TRUE;
-    DATA.explicitSpeeds[DATA.currentSide] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitSpeeds[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
 }
 
 void HPIV_(u32 sourceLine, u32 hpIV)
@@ -1955,7 +1956,7 @@ void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
         u32 pp = GetMovePP(moves[i]);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
     }
-    DATA.explicitMoves[DATA.currentSide] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
 }
 
 void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
@@ -1970,7 +1971,7 @@ void MovesWithPP_(u32 sourceLine, struct moveWithPP moveWithPP[MAX_MON_MOVES])
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &moveWithPP[i].moveId);
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &moveWithPP[i].pp);
     }
-    DATA.explicitMoves[DATA.currentSide] |= 1 << DATA.currentPartyIndex;
+    DATA.explicitMoves[DATA.currentPosition] |= 1 << DATA.currentPartyIndex;
 }
 
 void Friendship_(u32 sourceLine, u32 friendship)
@@ -2429,7 +2430,7 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
     s32 target;
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_MOVE outside TURN");
-    INVALID_IF(!IsAITest(), "EXPECT_MOVE is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
+    INVALID_IF(!IsAITest(), "EXPECT_MOVE is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     MoveGetIdAndSlot(battlerId, ctx, &moveId, &moveSlot, sourceLine);
     target = MoveGetTarget(battlerId, moveId, ctx, sourceLine);
 
@@ -2459,7 +2460,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     s32 i, id;
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SEND_OUT outside TURN");
-    INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
+    INVALID_IF(!IsAITest(), "EXPECT_SEND_OUT is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "EXPECT_SEND_OUT to invalid party index");
     for (i = 0; i < STATE->battlersCount; i++)
     {
@@ -2511,7 +2512,7 @@ void Score(u32 sourceLine, struct BattlePokemon *battler, u32 cmp, bool32 toValu
     s32 battlerId = battler - gBattleMons;
     s32 turn = DATA.turns;
 
-    INVALID_IF(!IsAITest(), "SCORE_%s%s is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST", sCmpToStringTable[cmp], (toValue == TRUE) ? "_VAL" : "");
+    INVALID_IF(!IsAITest(), "SCORE_%s%s is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, & AI_TWO_VS_ONE_TEST", sCmpToStringTable[cmp], (toValue == TRUE) ? "_VAL" : "");
 
     for (i = 0; i < MAX_AI_SCORE_COMPARISION_PER_TURN; i++)
     {
@@ -2595,7 +2596,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
     s32 i, id;
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "EXPECT_SWITCH outside TURN");
-    INVALID_IF(!IsAITest(), "EXPECT_SWITCH is usable only in AI_SINGLE_BATTLE_TEST & AI_DOUBLE_BATTLE_TEST");
+    INVALID_IF(!IsAITest(), "EXPECT_SWITCH is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");
     INVALID_IF(partyIndex >= ((battlerId & BIT_SIDE) == B_SIDE_PLAYER ? DATA.playerPartySize : DATA.opponentPartySize), "EXPECT_SWITCH to invalid party index");
 

@@ -679,7 +679,7 @@ struct BattleTestData
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[NUM_BATTLE_SIDES];
     u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
-    u8 currentSide;
+    u8 currentPosition;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
