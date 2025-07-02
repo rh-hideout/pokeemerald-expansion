@@ -12336,6 +12336,7 @@ static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
         if (GetBattlerAbility(battler) == ABILITY_OPPORTUNIST
             && gProtectStructs[result->effectBattler].activateOpportunist == 0) // don't activate opportunist on other mon's opportunist raises
             gProtectStructs[battler].activateOpportunist = 2; // set stats to copy
+
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_MIRROR_HERB)
             gProtectStructs[battler].eatMirrorHerb = 1;
 
@@ -12378,7 +12379,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
     }
 
     // Skips "can't go any higher!" messages if changing multiple stats
-    result->statChangerKey.skipFailStrings = (atLeastOneStatChangeSuccess & !result->statChanger.statId);
+    result->statChangerKey.skipFailStrings = (atLeastOneStatChangeSuccess && !result->statChanger.statId);
     return !atLeastOneStatChangeSuccess;
 }
 
@@ -12390,7 +12391,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .effectBattler = battler,
         .move = gCurrentMove,
         .moveEffect = (statChanger.isNegative ? MOVE_EFFECT_LOWER_STATS : MOVE_EFFECT_RAISE_STATS),
-        .certain = flags.certain | ((battler == gBattlerAttacker) & !flags.mirrorArmored & !flags.statDropPrevention),
+        .certain = (flags.certain || ((battler == gBattlerAttacker) && !flags.mirrorArmored && !flags.statDropPrevention)),
         .notProtectAffected = flags.notProtectAffected,
         .statDropPrevention = flags.statDropPrevention,
         .mirrorArmored = flags.mirrorArmored,
@@ -12464,13 +12465,13 @@ static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union Sta
     else if (result->battlerAbility == ABILITY_SIMPLE)
     {
         // Double all stats but make sure we don't overflow
-        result->statChanger.attack = max(MAX_STAT_STAGE, result->statChanger.attack * 2);
-        result->statChanger.defense = max(MAX_STAT_STAGE, result->statChanger.defense * 2);
-        result->statChanger.speed = max(MAX_STAT_STAGE, result->statChanger.speed * 2);
-        result->statChanger.spAttack = max(MAX_STAT_STAGE, result->statChanger.spAttack * 2);
-        result->statChanger.spDefense = max(MAX_STAT_STAGE, result->statChanger.spDefense * 2);
-        result->statChanger.accuracy = max(MAX_STAT_STAGE, result->statChanger.accuracy * 2);
-        result->statChanger.evasion = max(MAX_STAT_STAGE, result->statChanger.evasion * 2);
+        result->statChanger.attack = min(MAX_STAT_STAGE, result->statChanger.attack * 2);
+        result->statChanger.defense = min(MAX_STAT_STAGE, result->statChanger.defense * 2);
+        result->statChanger.speed = min(MAX_STAT_STAGE, result->statChanger.speed * 2);
+        result->statChanger.spAttack = min(MAX_STAT_STAGE, result->statChanger.spAttack * 2);
+        result->statChanger.spDefense = min(MAX_STAT_STAGE, result->statChanger.spDefense * 2);
+        result->statChanger.accuracy = min(MAX_STAT_STAGE, result->statChanger.accuracy * 2);
+        result->statChanger.evasion = min(MAX_STAT_STAGE, result->statChanger.evasion * 2);
         result->recordBattlerAbility = TRUE;
     }
 
