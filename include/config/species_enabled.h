@@ -605,4 +605,7 @@
 #define P_FAMILY_TERAPAGOS               P_GEN_9_POKEMON
 #define P_FAMILY_PECHARUNT               P_GEN_9_POKEMON
 
+// All custom megas with ID less than config will be enabled.
+#define FROSTY_MEGAS                     SPECIES_EGG
+
 #endif // GUARD_CONFIG_SPECIES_ENABLED_H
