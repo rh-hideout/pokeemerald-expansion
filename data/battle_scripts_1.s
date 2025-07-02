@@ -7168,19 +7168,19 @@ BattleScript_DrizzleActivates::
 	end3
 
 BattleScript_AbilityRaisesDefenderStat::
+	printsavedstring
+BattleScript_AbilityRaisesDefenderStatAfterPrintString:
 	pause B_WAIT_TIME_SHORT
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_AbilityCantRaiseDefenderStat
 	call BattleScript_AbilityPopUp
 	statbuffchange BS_TARGET, 0, BattleScript_AbilityCantRaiseDefenderStat
-	printstring STRINGID_DEFENDERSSTATROSE
-	waitmessage B_WAIT_TIME_LONG
+	printstatchangestrings
 	return
 
 BattleScript_AbilityCantRaiseDefenderStat::
 	saveattacker
 	copybyte gBattlerAttacker, gBattlerTarget
 	printstring STRINGID_STATSWONTINCREASE
-	waitmessage B_WAIT_TIME_LONG
 	restoreattacker
 	return
 
@@ -7430,6 +7430,16 @@ BattleScript_ActivateWeatherAbilities_Loop:
 	restoretarget
 	return
 
+BattleScript_TryIntimidateRattledActivation:
+	jumpifability BS_TARGET, ABILITY_RATTLED, BattleScript_TryIntimidateRattledActivationTry
+	return
+BattleScript_TryIntimidateRattledActivationTry:
+	copybyte gBattlerAbility, gBattlerTarget
+	setstatchanger STAT_SPEED, 1, FALSE
+	call BattleScript_AbilityRaisesDefenderStatAfterPrintString
+BattleScript_TryIntimidateRattledActivationRet:
+	return
+
 BattleScript_TryIntimidateHoldEffects:
 	itemstatchangeeffects BS_TARGET
 	jumpifnoholdeffect BS_TARGET, HOLD_EFFECT_ADRENALINE_ORB, BattleScript_TryIntimidateHoldEffectsRet
@@ -7467,6 +7477,9 @@ BattleScript_IntimidateEffect_WaitString:
 	saveattacker
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
+.if B_UPDATED_INTIMIDATE >= GEN_8
+	call BattleScript_TryIntimidateRattledActivation
+.endif
 	call BattleScript_TryIntimidateHoldEffects
 	restoreattacker
 	restoretarget

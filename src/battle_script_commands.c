@@ -3315,10 +3315,10 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
         gSpecialStatuses[result->effectBattler].statLowered = TRUE;
 
     // Set result variables
-    if (result->statChangerStringKey.allStats)
+    if (result->statChangerKey.allStats)
     {
         gBattleScripting.statChanger = result->statChanger;
-        gBattleScripting.statChangerStringKey = result->statChangerStringKey;
+        gBattleScripting.statChangerKey = result->statChangerKey;
     }
     gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
     gEffectBattler = result->effectBattler;
@@ -12316,7 +12316,7 @@ static void MoveEffect_LowerStatsCallback(struct MoveEffectResult *result)
     gSpecialStatuses[result->effectBattler].changedStatsBattlerId = result->battlerAtk;
 
     // use single stat animations when Defiant/Competitive activate
-    TryPlayStatChangeAnimation(result->effectBattler, result->statChanger, ShouldDefiantCompetitiveActivate(result->effectBattler, result->battlerAbility));
+    TryPlayStatChangeAnimation(result->effectBattler, result->statChanger, ShouldDefiantCompetitiveActivate(result->effectBattler));
 }
 
 static void MoveEffect_RaiseStatsCallback(struct MoveEffectResult *result)
@@ -12356,7 +12356,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
         if (stage != 0)
         {
             // Set the bit to print a string (whether or not it fails)
-            result->statChangerStringKey.value |= TO_BIT(statId);
+            result->statChangerKey.value |= TO_BIT(statId);
 
             if ((stage < 0 && !result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, statId))
                 || (stage = min(abs(stage), MaxRaiseOrLowerStatAmount(result->effectBattler, statId, result->statChanger.isNegative))) == 0)
@@ -12378,7 +12378,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
     }
 
     // Skips "can't go any higher!" messages if changing multiple stats
-    result->statChangerStringKey.skipZeroString = (atLeastOneStatChangeSuccess & !result->statChanger.statId);
+    result->statChangerKey.skipFailStrings = (atLeastOneStatChangeSuccess & !result->statChanger.statId);
     return !atLeastOneStatChangeSuccess;
 }
 
@@ -12406,7 +12406,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
     {
         // Has to be set now - even if only checking
         gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
-        gBattleScripting.statChangerStringKey = result.statChangerStringKey;
+        gBattleScripting.statChangerKey = result.statChangerKey;
         PREPARE_STAT_BUFFER(gBattleTextBuff1, result.statChanger.statId);
 
         // If not allowing pointer, script continues normally
@@ -12422,7 +12422,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
             return result.failed;
 
         // Cannot set statChanger if only checking
-        result.statChangerStringKey.value = 0;
+        result.statChangerKey.value = 0;
     }
 
     // Run callbacks to extract result variables
@@ -13053,16 +13053,36 @@ static void Cmd_copybidedmg(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static inline void PrintSingleStatChangeStat(bool32 prepareBuffers, u32 statId, s32 stage)
+bool32 DefiantCompetitiveActivated(u32 battler, s32 stage, union StatChangerKey *key)
 {
-    if (prepareBuffers)
+    if (stage < 0 && ShouldDefiantCompetitiveActivate(battler) && !gBattleScripting.useSavedStatChanger)
     {
-        // Buffer the stat
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+        // Save current key and stat changer
+        gBattleScripting.savedStatChangerKey = *key;
+        gBattleScripting.savedStatChangerKey.backupSaveBit |= !key->allStats;
+        gBattleScripting.savedStatChanger = gBattleScripting.statChanger;
 
-        // Generate the appropriate string - send to gBattleTextBuff2
-        GenerateAndBufferStatChangeString(gBattleTextBuff2, stage);
+        // Add Defiant/Competitive stat changes to saved stat changer and call script
+        gBattlerAbility = battler;
+        BattleScriptPush(gBattlescriptCurrInstr);
+        gBattlescriptCurrInstr = BattleScript_AbilityRaisesDefenderStat;
+        if (GetBattlerAbility(battler) == ABILITY_DEFIANT)
+            SetStatChanger(STAT_ATK, 2);
+        else
+            SetStatChanger(STAT_SPATK, 2);
+
+        return TRUE;
     }
+    return FALSE;
+}
+
+static inline void PrintSingleStatChange(u32 statId, s32 stage)
+{
+    // Buffer the stat
+    PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+
+    // Generate the appropriate string - send to gBattleTextBuff2
+    GenerateAndBufferStatChangeString(gBattleTextBuff2, stage);
 
     // gBattleCommunication[MULTISTRING_CHOOSER] must already be set!!
     // Carve out an exception for certain effects - they have to use gStatUpStringIds 
@@ -13072,49 +13092,74 @@ static inline void PrintSingleStatChangeStat(bool32 prepareBuffers, u32 statId, 
         gBattleScripting.savedStringId = gStatUpStringIds[gBattleCommunication[MULTISTRING_CHOOSER]];
 }
 
+bool32 HandleSingleStat(u32 stat, const u8 *nextInstr, union StatChanger *statChanger, union StatChangerKey *key)
+{
+    s32 stage;
+
+    // Keyed bit to print stat change
+    if (key->value & TO_BIT(stat))
+    {
+        key->value &= ~TO_BIT(stat);
+        if ((stage = GetStatChangerStatValue(*statChanger, stat)) != 0 || !key->skipFailStrings)
+        {
+            PrintSingleStatChange(stat, stage);
+
+            // If Defiant/Competitive would be activated here, we need
+            // to interrupt the function to call it. To do this, we save
+            // the current key to gBattleScripting.savedStatChangerKey
+            if (!DefiantCompetitiveActivated(gBattlerTarget, stage, key))
+            {
+                // otherwise, wipe the key if this is the last stat in the sequence
+                key->skipFailStrings &= !key->allStats;
+                gBattlescriptCurrInstr = nextInstr;
+            }
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 static void Cmd_printstatchangestrings(void)
 {
     CMD_ARGS(const u8 *endPtr);
-    s32 stage;
+    union StatChangerKey *key = &gBattleScripting.statChangerKey;
+    union StatChanger *statChanger = &gBattleScripting.statChanger;
+    u32 i, stat;
+    bool32 usingSavedStatChanger = gBattleScripting.useSavedStatChanger;
+
+    // By default, go to the end
     gBattlescriptCurrInstr = cmd->endPtr;
 
-    if (gBattleScripting.statChangerStringKey.allStats != 0)
+    if (key->allStats != 0)
     {
-        // If we have selected a single string to be printed, print JUST that string
-        if (gBattleScripting.statChanger.statId)
-        {
-            PrintSingleStatChangeStat(
-                FALSE, // string buffers should already have been prepared in ChangeStatBuffs
-                gBattleScripting.statChanger.statId,
-                GetStatChangerStatValue(gBattleScripting.statChanger, gBattleScripting.statChanger.statId)
-            );
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-        else // Otherwise, print all strings in a loop
+        if (statChanger->statId)
+            HandleSingleStat(statChanger->statId, cmd->nextInstr, statChanger, key);
+        else
         {
             // Print strings in the correct order
             u8 sStatChangeStringsOrder[] = {
-                STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION
+                STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION, STAT_MULTIPLE
             };
 
-            for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
+            // If statChanger->statId is selected, only print the string for that stat
+            // Otherwise, loop through all of them
+            for (i = 0, stat = STAT_ATK; i < NUM_BATTLE_STATS; stat = sStatChangeStringsOrder[i++])
             {
-                if (gBattleScripting.statChangerStringKey.value & TO_BIT(sStatChangeStringsOrder[i]))
-                {
-                    gBattleScripting.statChangerStringKey.value &= ~TO_BIT(sStatChangeStringsOrder[i]);
-                    if ((stage = GetStatChangerStatValue(gBattleScripting.statChanger, sStatChangeStringsOrder[i])) != 0
-                      || !gBattleScripting.statChangerStringKey.skipZeroString)
-                    {
-                        PrintSingleStatChangeStat(TRUE, sStatChangeStringsOrder[i], stage);
-                        gBattlescriptCurrInstr = cmd->nextInstr;
-                        gBattleScripting.statChangerStringKey.skipZeroString &= !gBattleScripting.statChangerStringKey.allStats;
-                        return;
-                    }
-                }
+                if (HandleSingleStat(stat, cmd->nextInstr, statChanger, key))
+                    return;
             }
         }
     }
-    gBattleScripting.statChangerStringKey.value = 0;
+
+    if (usingSavedStatChanger)
+    {
+        gBattleScripting.statChangerKey = gBattleScripting.savedStatChangerKey;
+        gBattleScripting.statChangerKey.skipFailStrings &= !!gBattleScripting.savedStatChangerKey.allStats;
+        gBattleScripting.statChanger = gBattleScripting.savedStatChanger;
+        gBattleScripting.useSavedStatChanger = FALSE;
+    }
+    else
+        gBattleScripting.statChangerKey.value = 0;
 }
 
 static void Cmd_tryinfatuating(void)

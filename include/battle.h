@@ -821,11 +821,11 @@ union TRANSPARENT StatFlags
     };
 };
 
-union PACKED StatChangerStringKey
+union PACKED StatChangerKey
 {
     u8 value;
     struct PACKED {
-        u8 skipZeroString:1; // Skips "couldn't go any lower/higher!" strings
+        u8 skipFailStrings:1; // Skips "couldn't go any lower/higher!" strings
         u8 attack:1;
         u8 defense:1;
         u8 speed:1;
@@ -835,7 +835,7 @@ union PACKED StatChangerStringKey
         u8 evasion:1;
     };
     struct PACKED {
-        u8 unused:1;
+        u8 backupSaveBit:1; // Marks a savedStatChanger even if allStats = 0
         u8 allStats:7;
     };
 };
@@ -867,7 +867,7 @@ struct MoveEffectResult
     u32 scriptingBattler:3; // gBattleScripting.battler
     u16 lastUsedAbility; // Sets gLastUsedAbility
     u16 lastUsedItem; // Sets gLastUsedItem (e.g. for Knock Off)
-    union StatChangerStringKey statChangerStringKey;
+    union StatChangerKey statChangerKey;
     u8 multistring:4; // Sets gBattleCommunication[MULTISTRING_CHOOSER]
     u8 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
     u8 blockedByItem:1; // If blocked by an item (e.g. Clear Amulet, Covert Cloak)
@@ -951,14 +951,17 @@ struct BattleScripting
 {
     union StatChanger statChanger;
     union StatChanger savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
-    union StatChangerStringKey statChangerStringKey;
-    bool8 expOnCatch;
+    union StatChangerKey statChangerKey;
+    union {
+        bool8 useSavedStatChanger;
+        union StatChangerKey savedStatChangerKey;
+    };
     u8 multihitString[6];
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
     u8 moveendState;
-    u8 unused2;
+    bool8 expOnCatch;
     u8 shiftSwitched; // When the game tells you the next enemy's pokemon and you switch. Option for noobs but oh well.
     u8 battler;
     u8 animTurn;
@@ -1353,6 +1356,11 @@ static inline union StatChanger CalcStatChangerValue(u32 statId, s32 stage)
 static inline void SetStatChanger(u32 statId, s32 stage)
 {
     gBattleScripting.statChanger = CalcStatChangerValue(statId, stage);
+}
+
+static inline void SetSavedStatChanger(u32 statId, s32 stage)
+{
+    gBattleScripting.savedStatChanger = CalcStatChangerValue(statId, stage);
 }
 
 #define SET_STAT_FLAG_IF_MISSING(_stat, _statField) statChanger._statField = statChanger._statField ? statChanger._statField : stats._statField;

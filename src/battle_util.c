@@ -1143,9 +1143,9 @@ bool32 WasUnableToUseMove(u32 battler)
     return FALSE;
 }
 
-bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability)
+bool32 ShouldDefiantCompetitiveActivate(u32 battler)
 {
-    u32 side = GetBattlerSide(battler);
+    u32 side = GetBattlerSide(battler), ability = GetBattlerAbility(battler);
     if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
         return FALSE;
     // if an ally dropped the stats (except for Sticky Web), don't activate
@@ -1161,7 +1161,6 @@ bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability)
 void PrepareStringBattle(enum StringID stringId, u32 battler)
 {
     u16 battlerAbility = GetBattlerAbility(battler);
-    u16 targetAbility = GetBattlerAbility(gBattlerTarget);
     // Support for Contrary ability.
     // If a move attempted to raise stat - print "won't increase".
     // If a move attempted to lower stat - print "won't decrease".
@@ -1174,25 +1173,6 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         stringId = STRINGID_STATSWONTINCREASE2;
     else if (stringId == STRINGID_STATSWONTINCREASE2 && battlerAbility == ABILITY_CONTRARY)
         stringId = STRINGID_STATSWONTDECREASE2;
-
-    // Check Defiant and Competitive stat raise whenever a stat is lowered.
-    else if ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_PKMNCUTSATTACKWITH)
-              && ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
-    {
-        gBattlerAbility = gBattlerTarget;
-        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
-        if (targetAbility == ABILITY_DEFIANT)
-            SetStatChanger(STAT_ATK, 2);
-        else
-            SetStatChanger(STAT_SPATK, 2);
-    }
-    else if (B_UPDATED_INTIMIDATE >= GEN_8 && stringId == STRINGID_PKMNCUTSATTACKWITH && targetAbility == ABILITY_RATTLED
-            && CompareStat(gBattlerTarget, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
-    {
-        gBattlerAbility = gBattlerTarget;
-        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
-        SetStatChanger(STAT_SPEED, 1);
-    }
 
     if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNWASNTAFFECTED || stringId == STRINGID_PKMNUNAFFECTED))
         TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
@@ -4262,7 +4242,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     {
                         // MoodyCantLowerStat already checks that both stats are different
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        gBattleScripting.savedStatChanger = CalcStatChangerValue(i, -1);
+                        SetSavedStatChanger(i, -1);
                     }
                     BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
                     effect++;
