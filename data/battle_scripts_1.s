@@ -3883,13 +3883,13 @@ BattleScript_AlreadyHasSubstitute::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_SubBerry:
-setsubstitute
-attackanimation
-waitanimation
-printstring STRINGID_SUBBERRY
-waitmessage B_WAIT_TIME_LONG
-end2
+BattleScript_SubBerry::
+	setsubstitute
+	attackanimation
+	waitanimation
+	printstring STRINGID_SUBBERRY
+	waitmessage B_WAIT_TIME_LONG
+	end2
 
 BattleScript_MoveUsedMustRecharge::
 	printstring STRINGID_PKMNMUSTRECHARGE
@@ -9283,13 +9283,13 @@ BattleScript_AirBaloonMsgPop::
 	removeitem BS_TARGET
 	return
 
-BattleScript_HardHatMsgPop::
+BattleScript_HardHatPop::
 	printstring STRINGID_HARDHATPOP
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_TARGET
 	return
 
-BattleScript_SandBagMsgPop::
+BattleScript_SandBagPop::
 	printstring STRINGID_SANDBAGPOP
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_TARGET
