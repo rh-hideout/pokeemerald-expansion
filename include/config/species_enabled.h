@@ -24,7 +24,7 @@
 
 // Battle gimmick specific Forms.
 #define P_MEGA_EVOLUTIONS                TRUE
-// All custom megas with ID greater than this config will be disabled.
+// All custom megas with ID less than this config will be disabled.
 #define FROSTY_MEGAS                     SPECIES_EGG
 #define P_PRIMAL_REVERSIONS              FALSE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              FALSE // Ultra Necrozma only.
