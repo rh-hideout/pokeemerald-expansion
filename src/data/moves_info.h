@@ -13592,7 +13592,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_STEEL,
-        .accuracy = 90,
+        .accuracy = 90, //+5
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -16461,7 +16461,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
             "A strong ray that harshly\n"
             "lowers Sp. Attack."),
         .effect = EFFECT_HIT,
-        .power = 140,
+        .power = 130,   //-10
         .type = TYPE_FAIRY,
         .accuracy = 90,
         .pp = 5,
@@ -21858,7 +21858,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
 
     [MOVE_ARC_STRIKE] =
     {
-        .name = COMPOUND_STRING("Arc Strike"),
+        .name = COMPOUND_STRING("Arc Bolt"),
         .description = COMPOUND_STRING(
             "Shoots 2 to 5 bolts in a row\n"
             "to strike the foe."),
@@ -22300,7 +22300,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .name = COMPOUND_STRING("Combustion"),
         .description = COMPOUND_STRING(
             "Builds accelerating flames to\n"
-            "gain speed to strike the foe."),
+            "burn hazards and strike."),
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_8 ? 50 : 20,
         .type = TYPE_FIRE,
@@ -24707,15 +24707,19 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .name = COMPOUND_STRING("Rainbow Freeze"),
         .description = COMPOUND_STRING(
             "This move's power increases\n"
-            "when in snow."),
+            "1.5x when in snow."),
         .effect = EFFECT_SNOW_BOOST,
         .power = 70,
         .type = TYPE_ICE,
         .accuracy = 100,
         .pp = 15,
-        .target = MOVE_TARGET_SELECTED,
+        .target = MOVE_TARGET_BOTH,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FROSTBITE,
+            .chance = 20,
+        }),
         .battleAnimScript = gBattleAnimMove_AuroraBeam,
     },
 

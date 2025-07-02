@@ -402,6 +402,7 @@
 #define ABILITY_TRAINED_MIND 366 //scrappy but psychic v dark
 #define ABILITY_SNOW_STALKER 367  //solar power for snow
 #define ABILITY_SANDY_SOUL 368   //protosynthesis with sand
+//royal coat aka shield dust for pyroar
 //remember to build the description doc for 328+
 
 #define ABILITIES_COUNT_GEN9 371
