@@ -624,8 +624,10 @@ static const struct FormChange sDeoxysSpeedFormChangeTable[] = {
 #if P_FAMILY_TURTWIG
 static const struct FormChange sTorterraFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TORTERRA
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_TORTERRA_MEGA, ITEM_TORTERRITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_TORTERRA
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_TURTWIG
@@ -633,8 +635,10 @@ static const struct FormChange sTorterraFormChangeTable[] = {
 #if P_FAMILY_CHIMCHAR
 static const struct FormChange sInfernapeFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_INFERNAPE
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_INFERNAPE_MEGA, ITEM_INFERNITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_INFERNAPE
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_CHIMCHAR
@@ -652,8 +656,10 @@ static const struct FormChange sEmpoleonFormChangeTable[] = {
 #if P_FAMILY_SHINX
 static const struct FormChange sLuxrayFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_LUXRAY
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_LUXRAY_MEGA, ITEM_LUXRITE},
-#endif 
+#endif // FROSTY_MEGAS >= SPECIES_LUXRAY
+#endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_SHINX
