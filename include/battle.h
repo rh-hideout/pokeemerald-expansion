@@ -844,7 +844,7 @@ struct MoveEffectResult
 {
     // Should be populated at initialisation
     const u8 *pushInstr; // Instruction that will be pushed if battlescriptPush is set
-    u16 currentMove; // gCurrentMove
+    u16 move; // gCurrentMove
     u16 battlerAbility; // gEffectBattler ability
     u16 battlerItem; // gEffectBattler held item
     enum MoveEffects moveEffect:8; // Current move effect
@@ -867,7 +867,7 @@ struct MoveEffectResult
     u32 scriptingBattler:3; // gBattleScripting.battler
     u16 lastUsedAbility; // Sets gLastUsedAbility
     u16 lastUsedItem; // Sets gLastUsedItem (e.g. for Knock Off)
-    union StatChangerKey statChangerKey;
+    union StatChangerKey statChangerKey; // Keeps the list of stats that need to have a string displayed
     u8 multistring:4; // Sets gBattleCommunication[MULTISTRING_CHOOSER]
     u8 blockedByAbility:3; // Has to correspond to battler (to account for ally abilities like Flower Veil)
     u8 blockedByItem:1; // If blocked by an item (e.g. Clear Amulet, Covert Cloak)
@@ -952,8 +952,8 @@ struct BattleScripting
     union StatChanger statChanger;
     union StatChanger savedStatChanger; // For further use, if attempting to change stat two times(ex. Moody)
     union StatChangerKey statChangerKey;
-    union {
-        bool8 useSavedStatChanger;
+    union PACKED {
+        bool8 haveSavedStatChanger;
         union StatChangerKey savedStatChangerKey;
     };
     u8 multihitString[6];

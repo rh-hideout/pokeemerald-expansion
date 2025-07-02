@@ -7167,9 +7167,9 @@ BattleScript_DrizzleActivates::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
-BattleScript_AbilityRaisesDefenderStat::
+BattleScript_AbilityRaisesDefenderStatPrintString::
 	printsavedstring
-BattleScript_AbilityRaisesDefenderStatAfterPrintString:
+BattleScript_AbilityRaisesDefenderStat:
 	pause B_WAIT_TIME_SHORT
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_AbilityCantRaiseDefenderStat
 	call BattleScript_AbilityPopUp
@@ -7430,14 +7430,25 @@ BattleScript_ActivateWeatherAbilities_Loop:
 	restoretarget
 	return
 
-BattleScript_TryIntimidateRattledActivation:
-	jumpifability BS_TARGET, ABILITY_RATTLED, BattleScript_TryIntimidateRattledActivationTry
+BattleScript_TryIntimidateAbilityEffects:
+	jumpifability BS_TARGET, ABILITY_DEFIANT, BattleScript_TryIntimidateDefiantActivation
+	jumpifability BS_TARGET, ABILITY_COMPETITIVE, BattleScript_TryIntimidateCompetitiveActivation
+.if B_UPDATED_INTIMIDATE >= GEN_8
+	jumpifability BS_TARGET, ABILITY_RATTLED, BattleScript_TryIntimidateRattledActivation
+.endif
 	return
-BattleScript_TryIntimidateRattledActivationTry:
-	copybyte gBattlerAbility, gBattlerTarget
+BattleScript_TryIntimidateDefiantActivation:
+	setstatchanger STAT_ATK, 2, FALSE
+	goto BattleScript_TryIntimidateAbilityActivation
+BattleScript_TryIntimidateCompetitiveActivation:
+	setstatchanger STAT_SPATK, 2, FALSE
+	goto BattleScript_TryIntimidateAbilityActivation
+BattleScript_TryIntimidateRattledActivation:
 	setstatchanger STAT_SPEED, 1, FALSE
-	call BattleScript_AbilityRaisesDefenderStatAfterPrintString
-BattleScript_TryIntimidateRattledActivationRet:
+BattleScript_TryIntimidateAbilityActivation:
+	copybyte gBattlerAbility, sBATTLER
+	call BattleScript_AbilityRaisesDefenderStat
+BattleScript_TryIntimidateAbilityEffectRet:
 	return
 
 BattleScript_TryIntimidateHoldEffects:
@@ -7477,9 +7488,7 @@ BattleScript_IntimidateEffect_WaitString:
 	saveattacker
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
-.if B_UPDATED_INTIMIDATE >= GEN_8
-	call BattleScript_TryIntimidateRattledActivation
-.endif
+	call BattleScript_TryIntimidateAbilityEffects
 	call BattleScript_TryIntimidateHoldEffects
 	restoreattacker
 	restoretarget

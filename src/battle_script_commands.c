@@ -12175,7 +12175,7 @@ static inline bool32 MoveEffectBlockedMisc(struct MoveEffectResult *result, bool
 static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 *failPtr)
 {
     if (gSideTimers[GetBattlerSide(result->effectBattler)].mistTimer &&
-        !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE &&
+        !result->certain && gMovesInfo[result->move].effect != EFFECT_CURSE &&
         !(result->effectBattler == result->battlerDef &&
           GetBattlerAbility(result->battlerAtk) == ABILITY_INFILTRATOR))
     {
@@ -12195,16 +12195,16 @@ static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 
 
 static bool32 MoveEffectBlockedByProtect(struct MoveEffectResult *result, const u8 *failPtr)
 {
-    bool32 fail = gMovesInfo[result->currentMove].effect != EFFECT_CURSE
+    bool32 fail = gMovesInfo[result->move].effect != EFFECT_CURSE
                && !result->notProtectAffected
-               && IsBattlerProtected(result->battlerAtk, result->effectBattler, result->currentMove);
+               && IsBattlerProtected(result->battlerAtk, result->effectBattler, result->move);
     return MoveEffectBlockedMisc(result, fail, failPtr);
 }
 
 static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
 {
     if ((result->holdEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->battlerAbility)) &&
-        (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->currentMove].effect != EFFECT_CURSE)
+        (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->move].effect != EFFECT_CURSE)
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
             result->nextInstr = result->pushInstr;
@@ -12388,7 +12388,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .battlerAtk = gBattlerAttacker,
         .battlerDef = gBattlerTarget,
         .effectBattler = battler,
-        .currentMove = gCurrentMove,
+        .move = gCurrentMove,
         .moveEffect = (statChanger.isNegative ? MOVE_EFFECT_LOWER_STATS : MOVE_EFFECT_RAISE_STATS),
         .certain = flags.certain | ((battler == gBattlerAttacker) & !flags.mirrorArmored & !flags.statDropPrevention),
         .notProtectAffected = flags.notProtectAffected,
@@ -13055,7 +13055,7 @@ static void Cmd_copybidedmg(void)
 
 bool32 DefiantCompetitiveActivated(u32 battler, s32 stage, union StatChangerKey *key)
 {
-    if (stage < 0 && ShouldDefiantCompetitiveActivate(battler) && !gBattleScripting.useSavedStatChanger)
+    if (stage < 0 && ShouldDefiantCompetitiveActivate(battler) && !gBattleScripting.haveSavedStatChanger)
     {
         // Save current key and stat changer
         gBattleScripting.savedStatChangerKey = *key;
@@ -13065,7 +13065,7 @@ bool32 DefiantCompetitiveActivated(u32 battler, s32 stage, union StatChangerKey 
         // Add Defiant/Competitive stat changes to saved stat changer and call script
         gBattlerAbility = battler;
         BattleScriptPush(gBattlescriptCurrInstr);
-        gBattlescriptCurrInstr = BattleScript_AbilityRaisesDefenderStat;
+        gBattlescriptCurrInstr = BattleScript_AbilityRaisesDefenderStatPrintString;
         if (GetBattlerAbility(battler) == ABILITY_DEFIANT)
             SetStatChanger(STAT_ATK, 2);
         else
@@ -13124,8 +13124,7 @@ static void Cmd_printstatchangestrings(void)
     CMD_ARGS(const u8 *endPtr);
     union StatChangerKey *key = &gBattleScripting.statChangerKey;
     union StatChanger *statChanger = &gBattleScripting.statChanger;
-    u32 i, stat;
-    bool32 usingSavedStatChanger = gBattleScripting.useSavedStatChanger;
+    bool32 usingSavedStatChanger = gBattleScripting.haveSavedStatChanger;
 
     // By default, go to the end
     gBattlescriptCurrInstr = cmd->endPtr;
@@ -13138,14 +13137,14 @@ static void Cmd_printstatchangestrings(void)
         {
             // Print strings in the correct order
             u8 sStatChangeStringsOrder[] = {
-                STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION, STAT_MULTIPLE
+                STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION
             };
 
             // If statChanger->statId is selected, only print the string for that stat
             // Otherwise, loop through all of them
-            for (i = 0, stat = STAT_ATK; i < NUM_BATTLE_STATS; stat = sStatChangeStringsOrder[i++])
+            for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
             {
-                if (HandleSingleStat(stat, cmd->nextInstr, statChanger, key))
+                if (HandleSingleStat(sStatChangeStringsOrder[i], cmd->nextInstr, statChanger, key))
                     return;
             }
         }
@@ -13156,7 +13155,7 @@ static void Cmd_printstatchangestrings(void)
         gBattleScripting.statChangerKey = gBattleScripting.savedStatChangerKey;
         gBattleScripting.statChangerKey.skipFailStrings &= !!gBattleScripting.savedStatChangerKey.allStats;
         gBattleScripting.statChanger = gBattleScripting.savedStatChanger;
-        gBattleScripting.useSavedStatChanger = FALSE;
+        gBattleScripting.haveSavedStatChanger = FALSE;
     }
     else
         gBattleScripting.statChangerKey.value = 0;

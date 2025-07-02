@@ -7,7 +7,7 @@
 #define sSTATCHANGER                 (gBattleScripting + 0x00) // statChanger
 #define sSAVED_STAT_CHANGER          (gBattleScripting + 0x04) // savedStatChanger
 #define sSTATCHANGER_KEY             (gBattleScripting + 0x08) // statChangerKey
-#define sUSE_SAVED_STATCHANGER       (gBattleScripting + 0x09) // useSavedStatChanger
+#define sHAVE_SAVED_STATCHANGER      (gBattleScripting + 0x09) // haveSavedStatChanger
 #define sMULTIHIT_STRING             (gBattleScripting + 0x0A) // multihitString
 #define sB_ANIM_ARG1                 (gBattleScripting + 0x10) // animArg1
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x11) // animArg2
