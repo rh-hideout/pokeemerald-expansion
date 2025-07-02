@@ -287,9 +287,6 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
                 xPos = 176;
             else
                 xPos = 200;
-            #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN, "B_POSITION_OPPONENT_LEFT%d", xPos);
-            #endif
         }
         else
         {
@@ -328,9 +325,6 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
             trainerPicId = PlayerGenderToFrontTrainerPicId(gLinkPlayers[gRecordedBattleMultiplayerId ^ BIT_SIDE].gender);
         }
     }
-     #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN, "trainerPicId%d", trainerPicId);
-            #endif
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
 }
 

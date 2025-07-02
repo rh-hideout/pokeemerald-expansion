@@ -160,22 +160,22 @@ MULTI_BATTLE_TEST("A spread move will do correct damage to the second mon if the
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
         MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); }
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); MOVE(playerRight, MOVE_DAZZLING_GLEAM); }
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &damage[0]);
         HP_BAR(opponentRight, captureDamage: &damage[1]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &damage[2]);
         HP_BAR(opponentRight, captureDamage: &damage[3]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
         HP_BAR(opponentRight, captureDamage: &damage[4]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentRight, captureDamage: &damage[5]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);
@@ -194,22 +194,22 @@ TWO_VS_ONE_BATTLE_TEST("A spread move will do correct damage to the second mon i
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
         MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); }
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); MOVE(playerRight, MOVE_DAZZLING_GLEAM); }
-        TURN { MOVE(playerLeft, MOVE_DAZZLING_GLEAM); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &damage[0]);
         HP_BAR(opponentRight, captureDamage: &damage[1]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentLeft, captureDamage: &damage[2]);
         HP_BAR(opponentRight, captureDamage: &damage[3]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
         HP_BAR(opponentRight, captureDamage: &damage[4]);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_DAZZLING_GLEAM, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
         HP_BAR(opponentRight, captureDamage: &damage[5]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);

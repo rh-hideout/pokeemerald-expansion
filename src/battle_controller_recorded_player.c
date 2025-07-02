@@ -369,9 +369,6 @@ static void RecordedPlayerHandleChooseAction(u32 battler)
 
 static void RecordedPlayerHandleChooseMove(u32 battler)
 {
-    #ifndef NDEBUG
-    MgbaPrintf(MGBA_LOG_WARN,"RecordedPlayerHandleChooseMove");
-    #endif
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
     {
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, ChooseMoveAndTargetInBattlePalace(battler));

@@ -260,16 +260,10 @@ static void RecordedPartnerHandleChooseAction(u32 battler)
 
 static void RecordedPartnerHandleChooseMove(u32 battler)
 {
-    #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"RecordedPartnerHandleChooseMove");
-        #endif
     if(TESTING)
     {
         u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
         u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"moveIndex Partner %d", moveIndex);
-        #endif
         BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
     }
     else

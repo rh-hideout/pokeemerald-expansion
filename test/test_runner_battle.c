@@ -326,17 +326,23 @@ static void BattleTest_Run(void *data)
     {
     case BATTLE_TEST_WILD:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.hasAI = TRUE;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = TRAINER_RED;
         DATA.hasAI = TRUE;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_AI_MULTI:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
@@ -344,34 +350,54 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = TRAINER_RED;
         DATA.hasAI = TRUE;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 3;
+        DATA.currentMonIndexes[3] = 3;
         break;
     case BATTLE_TEST_AI_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = 0xFFFF;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 3;
+        DATA.currentMonIndexes[3] = 1;
         DATA.hasAI = TRUE;
         break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        for (i = 0; i < STATE->battlersCount; i++)
+            DATA.currentMonIndexes[i] = i / 2;
         break;
     case BATTLE_TEST_MULTI:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS;
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 3;
+        DATA.currentMonIndexes[3] = 3;
         break;
     case BATTLE_TEST_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = 0xFFFF;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 3;
+        DATA.currentMonIndexes[3] = 1;
         break;
     }
 
@@ -382,9 +408,6 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.playersLanguage[i] = GAME_LANGUAGE;
         DATA.recordedBattle.playersBattlers[i] = i;
     }
-
-    for (i = 0; i < STATE->battlersCount; i++)
-        DATA.currentMonIndexes[i] = i / 2;
 
     STATE->runRandomly = TRUE;
     STATE->runGiven = TRUE;
@@ -2181,59 +2204,12 @@ void CloseTurn(u32 sourceLine)
 static struct Pokemon *CurrentMon(s32 battlerId)
 {
     struct Pokemon *party;
-    const struct BattleTest *test = GetBattleTest();
     if (battlerId == B_POSITION_PLAYER_LEFT || battlerId == B_POSITION_PLAYER_RIGHT)
         party = DATA.recordedBattle.playerParty;
     else
         party = DATA.recordedBattle.opponentParty;
-    
-    if(TESTING)
-    {
-        switch (test->type) 
-        {
-            case BATTLE_TEST_MULTI:
-            case BATTLE_TEST_AI_MULTI:
-                gBattlerPartyIndexes[0] = 0;
-                gBattlerPartyIndexes[1] = 0;
-                gBattlerPartyIndexes[2] = 1;
-                gBattlerPartyIndexes[3] = 3;
-                return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
-                #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon battlerId %d", battlerId);
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon gBattlerPartyIndexes %d", gBattlerPartyIndexes[battlerId]);
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
-                #endif
-                break;
-            case BATTLE_TEST_TWO_VS_ONE:
-            case BATTLE_TEST_AI_TWO_VS_ONE:
-                gBattlerPartyIndexes[0] = 0;
-                gBattlerPartyIndexes[1] = 0;
-                gBattlerPartyIndexes[2] = 1; // Setting "gBattlerPartyIndexes[2] = 1" allows Kangaskhan in AI 2v1 test to use Celebrate, but does NOT let Non-AI 2v1 Regirock click a move.
-                gBattlerPartyIndexes[3] = 3; // Setting "gBattlerPartyIndexes[3] = 3" allows Wobb in Non-AI 2v1 test to use Celebrate; AI 2v1 Haunter uses Shadow Ball regardless.
-                #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon battlerId %d", battlerId);
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon gBattlerPartyIndexes %d", gBattlerPartyIndexes[battlerId]);
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
-                #endif
-                return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
-                break;
-            default:
-                return &party[DATA.currentMonIndexes[battlerId]];
-                break;
-        }
-                #ifndef NDEBUG
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
-                MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %S", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]],MON_DATA_SPECIES)));
-                #endif
-        return &party[DATA.currentMonIndexes[gBattlerPartyIndexes[battlerId]]];
-    }
-    else
-        return &party[DATA.currentMonIndexes[battlerId]];
-        #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon( %d", &party[DATA.currentMonIndexes[battlerId]]);
-            MgbaPrintf(MGBA_LOG_WARN,"*CurrentMon Species %d", GetSpeciesName(GetMonData(&party[DATA.currentMonIndexes[battlerId]],MON_DATA_SPECIES)));
-            
-            #endif
+
+    return &party[DATA.currentMonIndexes[battlerId]];
 }
 
 s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 sourceLine)
@@ -2288,18 +2264,13 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 {
     u32 i;
     struct Pokemon *mon = CurrentMon(battlerId);
-#ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"Species %S", GetSpeciesName(GetMonData(mon, MON_DATA_SPECIES)));
-        #endif
+
     if (ctx->explicitMove)
     {
         INVALID_IF(ctx->move == MOVE_NONE || ctx->move >= MOVES_COUNT, "Illegal move: %d", ctx->move);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             *moveId = GetMonData(mon, MON_DATA_MOVE1 + i);
-            #ifndef NDEBUG
-            MgbaPrintf(MGBA_LOG_WARN,"*moveId %S", GetMoveName(GetMonData(mon, MON_DATA_MOVE1 + i)));
-            #endif
             if (*moveId == ctx->move)
             {
                 *moveSlot = i;
@@ -2400,9 +2371,6 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "MOVE is not allowed for opponent in AI tests. Use EXPECT_MOVE instead");
 
     MoveGetIdAndSlot(battlerId, &ctx, &moveId, &moveSlot, sourceLine);
-    #ifndef NDEBUG
-    MgbaPrintf(MGBA_LOG_WARN,"MoveGetIdAndSlot %d", battlerId);
-    #endif
     target = MoveGetTarget(battlerId, moveId, &ctx, sourceLine);
 
     if (GetMoveEffect(moveId) == EFFECT_REVIVAL_BLESSING)
@@ -2424,9 +2392,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
 
     if (!(DATA.actionBattlers & (1 << battlerId)))
-    {
         PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_MOVE);
-    }
 
     if (!ctx.explicitAllowed || ctx.allowed)
     {

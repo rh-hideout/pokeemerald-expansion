@@ -1642,9 +1642,6 @@ bool32 AreAllMovesUnusable(u32 battler)
     {
         gProtectStructs[battler].noValidMoves = TRUE;
         gSelectionBattleScripts[battler] = BattleScript_NoMovesLeft;
-        #ifndef NDEBUG
-        MgbaPrintf(MGBA_LOG_WARN,"unusable == ALL_MOVES_MASK %d", battler);
-        #endif
     }
     else
     {
