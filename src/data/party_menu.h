@@ -30,8 +30,8 @@ static const struct BgTemplate sPartyMenuBgTemplates[] =
     {
         .bg = 3,
         .charBaseIndex = 2,
-        .mapBaseIndex = 27,
-        .screenSize = 1,
+        .mapBaseIndex = 26,
+        .screenSize = 0,
         .paletteMode = 0,
         .priority = 3,
         .baseTile = 0
