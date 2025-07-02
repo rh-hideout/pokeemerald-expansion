@@ -23,7 +23,12 @@
 #define P_NEW_EVOS_IN_REGIONAL_DEX       TRUE
 
 // Battle gimmick specific Forms.
-#define P_MEGA_EVOLUTIONS                FALSE
+#define P_MEGA_EVOLUTIONS                TRUE
+// Custom megas will be enabled if FROSTY_MEGAS is greater than or equal to the species ID.
+// SPECIES_EGG (1567) means all custom megas enabled.
+// 0 means no custom megas will be enabled.
+// SPECIES_EEVEE (133) would enable Eevee and all megas whose IDs are lower than Eevee.
+#define FROSTY_MEGAS                     0
 #define P_PRIMAL_REVERSIONS              FALSE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              FALSE // Ultra Necrozma only.
 #define P_GIGANTAMAX_FORMS               FALSE
