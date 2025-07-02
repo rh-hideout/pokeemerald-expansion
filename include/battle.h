@@ -1327,7 +1327,9 @@ static inline u32 MaxRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
 
 static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32 stage, bool32 doNotSetStatId)
 {
-    return (union StatChanger) ((((union StatChanger) {
+    union StatChanger statChanger = (union StatChanger) {
+        .isNegative = (stage < 0),
+        .statId = (doNotSetStatId || (popcount(stats.allStats) > 1)) ? 0 : log2Int(stats.allStats),
         .attack = stats.attack, // All 1 or 0 depending on if the stat is selected in 'stats'
         .defense = stats.defense,
         .speed = stats.speed,
@@ -1335,10 +1337,12 @@ static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32
         .spDefense = stats.spDefense,
         .accuracy = stats.accuracy,
         .evasion = stats.evasion,
-    }).value
-        * abs(stage)) // Multiplies by the stage
-        | (stage < 0) // isNegative
-        | ((doNotSetStatId || (popcount(stats.allStats) > 1)) ? 0 : (log2Int(stats.allStats) << 1))); // statId;
+    };
+
+    // Apply stat stage and return
+    statChanger.allStats *= min(MAX_BITS(4), abs(stage));
+
+    return statChanger;
 }
 
 static inline union StatChanger CalcStatChangerValue(u32 statId, s32 stage)
@@ -1351,9 +1355,19 @@ static inline void SetStatChanger(u32 statId, s32 stage)
     gBattleScripting.statChanger = CalcStatChangerValue(statId, stage);
 }
 
-static inline union StatChanger OrStatChangers(union StatChanger statChangerA, union StatChanger statChangerB)
+#define SET_STAT_FLAG_IF_MISSING(_stat, _statField) statChanger._statField = statChanger._statField ? statChanger._statField : stats._statField;
+
+// Used to create stat changer combined with the `stats` arg of setstatbuffchange
+// This arg is used in current (by the time you read this, older?) scripts as input into the resulting stat change animation
+// while we actually only raise one stat a time - which must already have been set to gBattleScripting.statChanger
+// The solution is to set statId so that we know which stat we're "actually" raising, but set the other bits just for the animation
+static inline union StatChanger StatChangerWithStatBitsForAnim(union StatChanger statChanger, union StatFlags stats)
 {
-    return (union StatChanger) (statChangerA.value | statChangerB.value);
+    if (statChanger.statId && stats.allStats != 0) // If statId is not set, we must not set the other bits
+    {
+        FOREACH_STAT_STATCHANGER(SET_STAT_FLAG_IF_MISSING)
+    }
+    return statChanger;
 }
 
 static inline u32 GetStatChangerStage(union StatChanger statChanger, u32 statId)
@@ -1458,12 +1472,12 @@ static inline u8 GetStatAnimArgFromStatChanger(union StatChanger statChanger, bo
     }).value;
 }
 
-static inline u8 GetStatAnimArg(u32 stat, s32 amount, bool32 multiple)
+static inline u8 GetStatAnimArg(u32 stat, s32 amount)
 {
     return ((union StatAnimArg) {
         .isNegative = (amount < 0),
         .harshly = (abs(amount) > 1),
-        .stat = multiple ? STAT_MULTIPLE : stat,
+        .stat = min(stat, STAT_MULTIPLE),
     }).value;
 }
 

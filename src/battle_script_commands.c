@@ -6154,7 +6154,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
 
                 SetStatChanger(stat, numMonsFainted);
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
-                gBattleScripting.animArg1 = GetStatAnimArg(stat, numMonsFainted, FALSE);
+                gBattleScripting.animArg1 = GetStatAnimArg(stat, numMonsFainted);
                 BattleScriptCall(BattleScript_RaiseStatOnFaintingTarget);
                 effect = TRUE;
             }
@@ -6188,17 +6188,17 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 u32 numStatBuffs = 0;
                 if (CompareStat(battlerAtk, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_ATK, 1, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_ATK, 1);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPATK, 1, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPATK, 1);
                     numStatBuffs++;
                 }
                 if (CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPEED, 1, FALSE);
+                    gBattleScripting.animArg1 = GetStatAnimArg(STAT_SPEED, 1);
                     numStatBuffs++;
                 }
 
@@ -12418,7 +12418,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
 
 static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, union StatFlags stats, const u8 *failPtr)
 {
-    return ChangeStatBuffsStatChanger(battler, OrStatChangers(CalcStatChangerValue(statId, statValue), PrepareStatChangerAny(stats, 1, TRUE)), flags, failPtr);
+    return ChangeStatBuffsStatChanger(battler, StatChangerWithStatBitsForAnim(CalcStatChangerValue(statId, statValue), stats), flags, failPtr);
 }
 
 static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
@@ -12472,13 +12472,12 @@ static void Cmd_statbuffchange(void)
     CMD_ARGS(u8 battler, u16 flags, const u8 *failInstr, u8 stats);
 
     u16 flags = cmd->flags;
-    u32 stats = cmd->stats;
     const u8 *ptrBefore = gBattlescriptCurrInstr;
     const u8 *failInstr = cmd->failInstr;
 
     if (ChangeStatBuffsStatChanger(
             GetBattlerForBattleScript(cmd->battler),
-            OrStatChangers(gBattleScripting.statChanger, PrepareStatChangerAny(stats, 1, TRUE)),
+            StatChangerWithStatBitsForAnim(gBattleScripting.statChanger, cmd->stats),
             flags,
             failInstr) == STAT_CHANGE_WORKED)
         gBattlescriptCurrInstr = cmd->nextInstr;

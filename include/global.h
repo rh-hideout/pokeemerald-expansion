@@ -64,16 +64,6 @@
 #define max(a, b) ((a) >= (b) ? (a) : (b))
 #define abs(x) (((x) < 0) ? -(x) : (x))
 
-static inline s32 powInt(s32 num, u32 exponent)
-{
-    s32 result = 1;
-    for (; exponent > 0; exponent--)
-    {
-        result *= num;
-    }
-    return result;
-}
-
 static inline u32 popcount(u32 word)
 {
     u32 result = 0;
