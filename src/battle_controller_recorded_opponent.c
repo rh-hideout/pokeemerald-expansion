@@ -31,6 +31,7 @@
 #include "constants/battle_anim.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
 
 static void RecordedOpponentHandleDrawTrainerPic(u32 battler);
 static void RecordedOpponentHandleTrainerSlideBack(u32 battler);
@@ -275,10 +276,7 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
     u32 trainerPicId;
 
     // Sets Multibattle test opponent sprites to not be Hiker
-    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
+    if (IsMultibattleTest())
     {
         if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
@@ -309,22 +307,17 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
         }
         else
-        {
             trainerPicId = PlayerGenderToFrontTrainerPicId(GetBattlerLinkPlayerGender(battler));
-        }
     }
     else
     {
         xPos = 176;
         if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
-        {
             trainerPicId = GetUnionRoomTrainerPic();
-        }
         else
-        {
             trainerPicId = PlayerGenderToFrontTrainerPicId(gLinkPlayers[gRecordedBattleMultiplayerId ^ BIT_SIDE].gender);
-        }
     }
+
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
 }
 

@@ -135,9 +135,7 @@ static void InitBtlControllersInternal(void)
 
 
     if (!isLink || isMaster)
-    {
         gBattleMainFunc = BeginBattleIntro;
-    }
 
     if (!isDouble)
         gBattlersCount = 2;
@@ -146,7 +144,7 @@ static void InitBtlControllersInternal(void)
 
     if ((gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         || !isMulti
-        || (isMulti && isRecorded) //NOTE: Added because multibattle tests are not setting player as primary; better solution perhaps needed
+        || (IsMultibattleTest())
         || (!isLink && !isRecorded)
         || (isLink && !isDouble))
     {
@@ -208,16 +206,17 @@ static void InitBtlControllersInternal(void)
                 isOpponent1Recorded = (!isInGamePartner && isRecorded && !isMulti && isRecordedLink);
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
+
             if (isOpponent1Recorded)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_1]] = SetControllerToRecordedOpponent;
             else
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_1]] = SetControllerToOpponent;
 
             // Player 2
-            if (isInGamePartner && !isRecorded)
-                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
-            else if (isInGamePartner && isRecorded)
+            if (IsMultibattleTest())
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToRecordedPartner;
+            else if (isInGamePartner && !isRecorded)
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayerPartner;
             else if (isRecorded)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToRecordedPlayer;
             else if (isAIvsAI)
@@ -250,9 +249,7 @@ static void InitBtlControllersInternal(void)
             gBattlerPartyIndexes[1] = 0;
             gBattlerPartyIndexes[2] = 3;
             if (!isLink && isInGamePartner && (BATTLE_TWO_VS_ONE_OPPONENT || WILD_DOUBLE_BATTLE))
-            {
                 gBattlerPartyIndexes[3] = 1;
-            }
             else
                 gBattlerPartyIndexes[3] = 3;
         }
@@ -260,6 +257,7 @@ static void InitBtlControllersInternal(void)
     else
     {
         u8 multiplayerId = isLink ? GetMultiplayerId() : gRecordedBattleMultiplayerId;
+
         for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
             u32 linkPositionLeft, linkPositionRight;
@@ -440,12 +438,10 @@ static void PrepareBufferDataTransfer(u32 battler, u32 bufferId, u8 *data, u16 s
         switch (bufferId)
         {
         case B_COMM_TO_CONTROLLER:
-
             for (i = 0; i < size; data++, i++)
                 gBattleResources->bufferA[battler][i] = *data;
             break;
         case B_COMM_TO_ENGINE:
-
             for (i = 0; i < size; data++, i++)
                 gBattleResources->bufferB[battler][i] = *data;
             break;
@@ -2142,7 +2138,7 @@ static void Controller_HitAnimation(u32 battler)
             gSprites[spriteId].invisible ^= 1;
         gSprites[spriteId].data[1]++;
     }
-} 
+}
 
 // Used for all the commands which do nothing.
 void BtlController_Empty(u32 battler)
@@ -2167,10 +2163,10 @@ void BtlController_HandleGetMonData(u32 battler)
     u32 size = 0;
     u8 monToCheck;
     s32 i;
-    
+
     if (gBattleResources->bufferA[battler][2] == 0)
     {
-        size += GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], monData);   
+        size += GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], monData);
     }
     else
     {
@@ -2183,7 +2179,6 @@ void BtlController_HandleGetMonData(u32 battler)
         }
     }
     BtlController_EmitDataTransfer(battler, B_COMM_TO_ENGINE, size, monData);
-    
     BtlController_Complete(battler);
 }
 
@@ -2191,7 +2186,6 @@ void BtlController_HandleGetRawMonData(u32 battler)
 {
     struct BattlePokemon battleMon;
     struct Pokemon *mon = GetBattlerMon(battler);
-
 
     u8 *src = (u8 *)mon + gBattleResources->bufferA[battler][1];
     u8 *dst = (u8 *)&battleMon + gBattleResources->bufferA[battler][1];
@@ -2212,7 +2206,7 @@ void BtlController_HandleSetMonData(u32 battler)
     if (gBattleResources->bufferA[battler][2] == 0)
     {
         SetBattlerMonData(battler, party, gBattlerPartyIndexes[battler]);
-    }           
+    }
     else
     {
         monToCheck = gBattleResources->bufferA[battler][2];
@@ -2371,6 +2365,7 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSpawn;
     else
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = SpriteCB_TrainerSlideIn;
+    
     gBattlerControllerFuncs[battler] = Controller_WaitForTrainerPic;
 }
 

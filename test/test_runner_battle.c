@@ -1649,7 +1649,6 @@ void ClearFlagAfterTest(void)
 
 void OpenPokemon(u32 sourceLine, u32 side, u32 species)
 {
-
     s32 i, data;
     u8 *partySize;
     struct Pokemon *party;
@@ -2197,10 +2196,6 @@ void CloseTurn(u32 sourceLine)
     DATA.turns++;
 }
 
-//Debug Prints show this is NOT running for BATTLE_TEST_MULTI and BATTLE_TEST_AI_MULTI. 
-//It does run for BATTLE_TEST_AI_TWO_VS_ONE, however for BATTLE_TEST_TWO_VS_ONE it runs but Regirock [2] struggles. 
-//Perhaps the Set Move for Regirock[2] isn't working correctly.
-//Need to find out why it is not running for BATTLE_TEST_MULTI and BATTLE_TEST_AI_MULTI. 
 static struct Pokemon *CurrentMon(s32 battlerId)
 {
     struct Pokemon *party;
@@ -2208,7 +2203,6 @@ static struct Pokemon *CurrentMon(s32 battlerId)
         party = DATA.recordedBattle.playerParty;
     else
         party = DATA.recordedBattle.opponentParty;
-
     return &party[DATA.currentMonIndexes[battlerId]];
 }
 
@@ -2365,7 +2359,6 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     u32 moveId, moveSlot;
     s32 target;
     bool32 requirePartyIndex = FALSE;
-    
 
     INVALID_IF(DATA.turnState == TURN_CLOSED, "MOVE outside TURN");
     INVALID_IF(IsAITest() && (battlerId & BIT_SIDE) == B_SIDE_OPPONENT, "MOVE is not allowed for opponent in AI tests. Use EXPECT_MOVE instead");
@@ -2375,7 +2368,6 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
 
     if (GetMoveEffect(moveId) == EFFECT_REVIVAL_BLESSING)
         requirePartyIndex = MoveGetFirstFainted(battlerId) != PARTY_SIZE;
-
 
     // Check party menu moves.
     INVALID_IF(requirePartyIndex && !ctx.explicitPartyIndex, "%S requires explicit party index", GetMoveName(moveId));
@@ -2392,7 +2384,9 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
 
     if (!(DATA.actionBattlers & (1 << battlerId)))
+    {
         PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_MOVE);
+    }
 
     if (!ctx.explicitAllowed || ctx.allowed)
     {

@@ -47,6 +47,7 @@
 #include "pokemon_summary_screen.h"
 #include "type_icons.h"
 #include "pokedex.h"
+#include "test/battle.h"
 
 static void PlayerHandleLoadMonSprite(u32 battler);
 static void PlayerHandleDrawTrainerPic(u32 battler);
@@ -1864,15 +1865,12 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     bool32 isFrontPic;
     s16 xPos, yPos;
     u32 trainerPicId;
-    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
+    if (IsMultibattleTest())
     {
-            trainerPicId = TRAINER_BACK_PIC_BRENDAN;
-            xPos = 32;
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-        }
+        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        xPos = 32;
+        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+    }
     else
     {
         trainerPicId = PlayerGetTrainerBackPicId();
@@ -1889,10 +1887,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
                 yPos = 80;
             }
             else
-            {
                 yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-            }
-
         }
         else
         {
@@ -1908,9 +1903,7 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
         isFrontPic = TRUE;
     }
     else // Use back pic in all the other usual circumstances.
-    {
         isFrontPic = FALSE;
-    }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
 }

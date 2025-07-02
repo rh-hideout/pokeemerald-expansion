@@ -1058,6 +1058,20 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *);
 void UseItem(u32 sourceLine, struct BattlePokemon *, struct ItemContext);
 void SendOut(u32 sourceLine, struct BattlePokemon *, u32 partyIndex);
 
+static inline bool8 IsMultibattleTest(void)
+{
+    switch (GetBattleTest()->type)
+    {
+        case BATTLE_TEST_AI_MULTI:
+        case BATTLE_TEST_AI_TWO_VS_ONE:
+        case BATTLE_TEST_MULTI:
+        case BATTLE_TEST_TWO_VS_ONE:
+            return TRUE;
+        default:
+            return FALSE;
+    }
+}
+
 /* Scene */
 
 #define SCENE for (; gBattleTestRunnerState->runScene; gBattleTestRunnerState->runScene = FALSE)

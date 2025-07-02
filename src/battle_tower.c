@@ -39,6 +39,7 @@
 #include "constants/trainers.h"
 #include "constants/event_objects.h"
 #include "constants/moves.h"
+#include "test/battle.h"
 
 // EWRAM vars.
 EWRAM_DATA const struct BattleFrontierTrainer *gFacilityTrainers = NULL;
@@ -3555,7 +3556,7 @@ bool32 ValidateBattleTowerRecord(u8 recordId) // unused
 
 void TrySetLinkBattleTowerEnemyPartyLevel(void)
 {
-    if (!TESTING)
+    if (!IsMultibattleTest())
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {

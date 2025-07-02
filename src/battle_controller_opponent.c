@@ -39,6 +39,7 @@
 #include "constants/trainers.h"
 #include "trainer_hill.h"
 #include "test_runner.h"
+#include "test/battle.h"
 
 static void OpponentHandleDrawTrainerPic(u32 battler);
 static void OpponentHandleTrainerSlideBack(u32 battler);
@@ -312,7 +313,7 @@ void OpponentBufferExecCompleted(u32 battler)
 static u32 OpponentGetTrainerPicId(u32 battlerId)
 {
     u32 trainerPicId;
-    
+
     if (gBattleTypeFlags & BATTLE_TYPE_SECRET_BASE)
     {
         trainerPicId = GetSecretBaseTrainerPicIndex();
@@ -374,10 +375,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     u32 trainerPicId;
     
     // Sets Multibattle test opponent sprites to not be Hiker
-    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
+    if (IsMultibattleTest())
     {
         if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
@@ -393,7 +391,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
             xPos = 152;
         }
     }
-    else 
+    else
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
     
@@ -405,9 +403,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
                 xPos = 200;
         }
         else
-        {
             xPos = 176;
-        }
     }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);

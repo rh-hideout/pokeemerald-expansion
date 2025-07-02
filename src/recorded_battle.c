@@ -176,9 +176,7 @@ void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
 u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler)
 {
     if (gTestRunnerEnabled)
-    {
         TestRunner_Battle_CheckBattleRecordActionType(battler, sBattlerRecordSizes[battler], actionType);
-    }
 
     // Trying to read past array or invalid action byte, battle is over.
     if (sBattlerRecordSizes[battler] >= BATTLER_RECORD_SIZE || sBattleRecords[battler][sBattlerRecordSizes[battler]] == 0xFF)

@@ -42,7 +42,6 @@ static void RecordedPartnerHandleChoosePokemon(u32 battler);
 static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedPartnerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPartnerHandleEndLinkBattle(u32 battler);
-
 static void RecordedPartnerBufferRunCommand(u32 battler);
 
 static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -203,38 +202,11 @@ static void RecordedPartnerHandleDrawTrainerPic(u32 battler)
     s16 xPos, yPos;
     u32 trainerPicId;
 
-    enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
+    trainerPicId = TRAINER_BACK_PIC_STEVEN;
+    xPos = 90;
+    yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
 
-    if (TESTING)
-    {
-        trainerPicId = TRAINER_BACK_PIC_STEVEN;
-        xPos = 90;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-    }
-    else if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-    {
-        trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
-        xPos = 90;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-    }
-    else if (IsAiVsAiBattle())
-    {
-        trainerPicId = GetTrainerPicFromId(gPartnerTrainerId);
-        xPos = 60;
-        yPos = 80;
-    }
-    else
-    {
-        trainerPicId = GetFrontierTrainerFrontSpriteId(gPartnerTrainerId);
-        xPos = 32;
-        yPos = 80;
-    }
-
-    // Use back pic only if the partner Steven or is custom.
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-        isFrontPic = FALSE;
-    else
-        isFrontPic = TRUE;
+    isFrontPic = FALSE;
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
 }
@@ -246,106 +218,25 @@ static void RecordedPartnerHandleTrainerSlideBack(u32 battler)
 
 static void RecordedPartnerHandleChooseAction(u32 battler)
 {
-    if(TESTING)
-    {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
-        BtlController_Complete(battler);
-    }
-    else
-    {
-        AI_TrySwitchOrUseItem(battler);
-        BtlController_Complete(battler);
-    }
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, RecordedBattle_GetBattlerAction(RECORDED_ACTION_TYPE, battler), 0);
+    BtlController_Complete(battler);
 }
 
 static void RecordedPartnerHandleChooseMove(u32 battler)
 {
-    if(TESTING)
-    {
-        u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
-        u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
-    }
-    else
-    {
-        u32 chosenMoveIndex;
-        struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
-
-        chosenMoveIndex = gAiBattleData->chosenMoveIndex[battler];
-        gBattlerTarget = gAiBattleData->chosenTarget[battler];
-        u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
-
-        if (moveTarget & MOVE_TARGET_USER)
-            gBattlerTarget = battler;
-        else if (moveTarget & MOVE_TARGET_BOTH)
-        {
-            gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-            if (gAbsentBattlerFlags & (1u << gBattlerTarget))
-                gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-        }
-        // If partner can and should use a gimmick (considering trainer data), do it
-        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && IsAIUsingGimmick(battler))
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
-        }
-        else
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (gBattlerTarget << 8));
-        }
-    }
+    u8 moveIndex = RecordedBattle_GetBattlerAction(RECORDED_MOVE_SLOT, battler);
+    u8 target = RecordedBattle_GetBattlerAction(RECORDED_MOVE_TARGET, battler);
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, moveIndex | (target << 8));
 
     BtlController_Complete(battler);
 }
 
 static void RecordedPartnerHandleChoosePokemon(u32 battler)
 {
-    if(TESTING)
-    {
-        gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
-        gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
-        BtlController_Complete(battler);
-    }
-    else
-    {
-        s32 chosenMonId;
-        // Choosing Revival Blessing target
-        if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
-        {
-            chosenMonId = gSelectedMonPartyId = GetFirstFaintedPartyIndex(battler);
-        }
-        // Switching out
-        else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gPlayerParty[gBattleStruct->monToSwitchIntoId[battler]]))
-        {
-            chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
-
-            if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gPlayerParty[chosenMonId])) // just switch to the next mon
-            {
-                s32 firstId = (IsAiVsAiBattle()) ? 0 : (PARTY_SIZE / 2);
-                u32 battler1 = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
-                u32 battler2 = IsDoubleBattle() ? GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT) : battler1;
-
-                for (chosenMonId = firstId; chosenMonId < PARTY_SIZE; chosenMonId++)
-                {
-                    if (GetMonData(&gPlayerParty[chosenMonId], MON_DATA_HP) != 0
-                        && chosenMonId != gBattlerPartyIndexes[battler1]
-                        && chosenMonId != gBattlerPartyIndexes[battler2])
-                    {
-                        break;
-                    }
-                }
-            }
-            gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        }
-        else // Mon to switch out has been already chosen.
-        {
-            chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
-            gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
-            gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        }
-        BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
-        BtlController_Complete(battler);
-    }
+    gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
+    gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
+    BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
+    BtlController_Complete(battler);
 }
 
 static void RecordedPartnerHandleIntroTrainerBallThrow(u32 battler)

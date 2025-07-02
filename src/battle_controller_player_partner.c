@@ -31,6 +31,7 @@
 #include "constants/songs.h"
 #include "constants/party_menu.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
 
 static void PlayerPartnerHandleDrawTrainerPic(u32 battler);
 static void PlayerPartnerHandleTrainerSlideBack(u32 battler);
@@ -204,7 +205,7 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
 
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
-    if (TESTING)
+    if (IsMultibattleTest())
     {
         trainerPicId = TRAINER_BACK_PIC_STEVEN;
         xPos = 90;

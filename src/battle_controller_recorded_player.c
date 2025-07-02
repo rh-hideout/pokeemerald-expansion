@@ -5,7 +5,6 @@
 #include "battle_controllers.h"
 #include "battle_message.h"
 #include "battle_interface.h"
-#include "battle_setup.h"
 #include "bg.h"
 #include "data.h"
 #include "item_menu.h"
@@ -29,6 +28,7 @@
 #include "constants/battle_anim.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
 
 static void RecordedPlayerHandleDrawTrainerPic(u32 battler);
 static void RecordedPlayerHandleTrainerSlideBack(u32 battler);
@@ -41,7 +41,6 @@ static void RecordedPlayerHandleStatusAnimation(u32 battler);
 static void RecordedPlayerHandleIntroTrainerBallThrow(u32 battler);
 static void RecordedPlayerHandleDrawPartyStatusSummary(u32 battler);
 static void RecordedPlayerHandleEndLinkBattle(u32 battler);
-
 static void RecordedPlayerBufferRunCommand(u32 battler);
 
 static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -113,13 +112,9 @@ static void RecordedPlayerBufferRunCommand(u32 battler)
     if (IsBattleControllerActiveOnLocal(battler))
     {
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sRecordedPlayerBufferCommands))
-        {
             sRecordedPlayerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
-        }
         else
-        {
             BtlController_Complete(battler);
-        }
     }
 }
 
@@ -282,13 +277,9 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
     u32 trainerPicId;
 
     // Sets Multibattle test player sprites to not be Hiker
-    if (TESTING && ((gBattleTypeFlags & BATTLE_TYPE_IS_MASTER && gBattleTypeFlags & BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI && gBattleTypeFlags &  BATTLE_TYPE_TWO_OPPONENTS)
-                                        || (BATTLE_TYPE_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_IS_MASTER && gBattleTypeFlags &  BATTLE_TYPE_RECORDED_LINK && gBattleTypeFlags &  BATTLE_TYPE_TRAINER && gBattleTypeFlags &  BATTLE_TYPE_INGAME_PARTNER && gBattleTypeFlags &  BATTLE_TYPE_MULTI)))
+    if (IsMultibattleTest())
     {
         trainerPicId = TRAINER_BACK_PIC_BRENDAN;
-        
         xPos = 32;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
@@ -302,9 +293,7 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
                 trainerPicId = gLinkPlayers[gRecordedBattleMultiplayerId].gender;
         }
         else
-        {
             trainerPicId = gLinkPlayers[0].gender;
-        }
 
         if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
         {
@@ -313,17 +302,14 @@ static void RecordedPlayerHandleDrawTrainerPic(u32 battler)
             else // first mon
                 xPos = 32;
 
-            // !TESTING added as otherwise first test battle load 
+            // !TESTING added as otherwise first test battle sprite is positioned incorrectly
             if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && !TESTING)
             {
                 xPos = 90;
                 yPos = 80;
             }
             else
-            {
                 yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-            }
-
         }
         else
         {

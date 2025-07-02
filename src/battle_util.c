@@ -1571,8 +1571,6 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 
     gPotentialItemEffectBattler = battler;
 
-    if(TESTING && battler == B_POSITION_PLAYER_RIGHT)
-        return unusableMoves;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
