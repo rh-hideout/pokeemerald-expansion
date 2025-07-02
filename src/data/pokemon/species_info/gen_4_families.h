@@ -753,6 +753,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
     },
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_EMPOLEON
     [SPECIES_EMPOLEON_MEGA_X] =
     {
          .baseHP       = 84,
@@ -892,6 +893,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .formSpeciesIdTable = sEmpoleonFormSpeciesIdTable,
         .formChangeTable = sEmpoleonFormChangeTable,
     },
+#endif //FROSTY_MEGAS >= SPECIES_EMPOLEON
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_PIPLUP
 

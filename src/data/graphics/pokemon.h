@@ -1163,11 +1163,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_GENDER_DIFFERENCES
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_RAICHU
     const u32 gMonFrontPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/front.png");
     const u32 gMonPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/normal.pal");
     const u32 gMonBackPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/back.png");
     const u32 gMonShinyPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/shiny.pal");
     const u8 gMonIcon_RaichuMega[] = INCBIN_U8("graphics/pokemon/raichu/mega/icon.png");
+#endif //FROSTY_MEGAS >= SPECIES_RAICHU
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Raichu[] = INCBIN_U8("graphics/pokemon/raichu/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -10952,12 +10954,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SLAKING
     const u32 gMonFrontPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.png");
     const u32 gMonPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.pal");
     const u32 gMonBackPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslakingback.png");
     const u32 gMonShinyPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.pal");
     const u8 gMonIcon_SlakingMega[] = INCBIN_U8("graphics/pokemon/slaking/icon.4bpp");
-
+#endif //FROSTY_MEGAS >= SPECIES_SLAKING
 #endif //P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SLAKOTH
 
@@ -11829,11 +11832,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_GEN_4_CROSS_EVOS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_ROSERADE
     const u32 gMonFrontPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.png");
     const u32 gMonPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.pal");
     const u32 gMonBackPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade_back.png");
     const u32 gMonShinyPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.pal");
     const u8 gMonIcon_RoseradeMega[] = INCBIN_U8("graphics/pokemon/roserade/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_ROSERADE
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Roserade[] = INCBIN_U8("graphics/pokemon/roserade/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -12914,12 +12919,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_GENDER_DIFFERENCES
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_MILOTIC
     const u32 gMonFrontPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/anim_front.png");
     const u32 gMonPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/normal.pal");
     const u32 gMonBackPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/back.png");
     const u32 gMonShinyPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/shiny.pal");
     const u8 gMonIcon_MiloticMega[] = INCBIN_U8("graphics/pokemon/milotic/mega/icon.png");
-
+#endif //FROSTY_MEGAS >= SPECIES_MILOTIC
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Milotic[] = INCBIN_U8("graphics/pokemon/milotic/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -13153,11 +13159,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_DUSKNOIR
     const u32 gMonFrontPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.png");
     const u32 gMonPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.pal");
     const u32 gMonBackPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirback.png");
     const u32 gMonShinyPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirshiny.pal");
     const u8 gMonIcon_DusknoirMega[] = INCBIN_U8("graphics/pokemon/dusknoir/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_DUSKNOIR
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Dusknoir[] = INCBIN_U8("graphics/pokemon/dusknoir/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -13202,11 +13210,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_TROPIUS
     const u32 gMonFrontPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/front.png");
     const u32 gMonPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/normal.pal");
     const u32 gMonBackPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/back.png");
     const u32 gMonShinyPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/shiny.pal");
     const u8 gMonIcon_TropiusMega[] = INCBIN_U8("graphics/pokemon/tropius/mega/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_TROPIUS
 #endif //P_MEGA_EVOLUTIONS
 
 #endif //P_FAMILY_TROPIUS
@@ -14262,11 +14272,13 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
-const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.png");
+#if FROSTY_MEGAS >= SPECIES_TORTERRA
+    const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.png");
     const u32 gMonPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.pal");
     const u32 gMonBackPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterraback.png");
     const u32 gMonShinyPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.pal");
     const u8 gMonIcon_TorterraMega[] = INCBIN_U8("graphics/pokemon/torterra/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_TORTERRA
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Torterra[] = INCBIN_U8("graphics/pokemon/torterra/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -14332,11 +14344,13 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_INFERNAPE
     const u32 gMonFrontPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernape.png");
     const u32 gMonPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapenormal.pal");
     const u32 gMonBackPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeback.png");
     const u32 gMonShinyPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeshiny.pal");
     const u8 gMonIcon_InfernapeMega[] = INCBIN_U8("graphics/pokemon/infernape/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_INFERNAPE
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Infernape[] = INCBIN_U8("graphics/pokemon/infernape/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -14401,6 +14415,7 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_EMPOLEON
     const u32 gMonFrontPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/front.png.lz");
     const u32 gMonPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/normal.pal.lz");
     const u32 gMonBackPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/back.png.lz");
@@ -14412,6 +14427,7 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
     const u32 gMonBackPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megaempoleond_back.png");
     const u32 gMonShinyPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megadshiny.pal");
     const u8 gMonIcon_EmpoleonMegaY[] = INCBIN_U8("graphics/pokemon/Empoleon/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_EMPOLEON
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_Empoleon[] = INCBIN_COMP("graphics/pokemon/empoleon/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
@@ -14668,11 +14684,13 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
 #endif //P_GENDER_DIFFERENCES
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_LUXRAY
     const u32 gMonFrontPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.png");
     const u32 gMonPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.pal");
     const u32 gMonBackPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxrayback.png");
     const u32 gMonShinyPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/mega/luxray/megaluxrayshiny.pal");
     const u8 gMonIcon_LuxrayMega[] = INCBIN_U8("graphics/pokemon/luxray/icon.4bpp");
+#endif //FROSTY_MEGAS >= SPECIES_LUXRAY
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Luxray[] = INCBIN_U8("graphics/pokemon/luxray/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -16363,11 +16381,13 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SAMUROTT
     const u32 gMonFrontPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/front.png");
     const u32 gMonPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/normal.pal");
     const u32 gMonBackPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/back.png");
     const u32 gMonShinyPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/shiny.pal");
     const u8 gMonIcon_SamurottHisuiMega[] = INCBIN_U8("graphics/pokemon/samurott/hisui/mega/icon.png");
+#endif //FROSTY_MEGAS >= SPECIES_SAMUROTT
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_SamurottHisui[] = INCBIN_COMP("graphics/pokemon/samurott/hisui/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
@@ -25319,11 +25339,13 @@ const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/me
 #endif //OW_POKEMON_OBJECT_EVENTS
 
 #if P_MEGA_EVOLUTIONS
+#if FROSTY_MEGAS >= SPECIES_SKELEDIRGE
     const u32 gMonFrontPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/front.png");
     const u32 gMonPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/normal.pal");
     const u32 gMonBackPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/back.png");
     const u32 gMonShinyPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/shiny.pal");
     const u8 gMonIcon_SkeledirgeMega[] = INCBIN_U8("graphics/pokemon/skeledirge/mega/icon.png");
+#endif //FROSTY_MEGAS >= SPECIES_SKELEDIRGE
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Skeledirge[] = INCBIN_U8("graphics/pokemon/skeledirge/footprint.1bpp");
 #endif //P_FOOTPRINTS
