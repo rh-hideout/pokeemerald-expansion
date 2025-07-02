@@ -167,7 +167,9 @@ enum VolatileFlags
     F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE)
+    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE)
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
 #define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize)

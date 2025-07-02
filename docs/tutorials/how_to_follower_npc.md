@@ -24,6 +24,11 @@ This would turn object number 3 on the current map into an NPC follower, give th
 
 The object ***MUST*** have an event flag or the NPC follower will not be created!
 
+## Create a Follower
+The `createfollowernpc` macro will create a new follower without needing to convert an existing NPC. It works similarly to `setfollowernpc`, but instead of providing an object id, you give it a GFX id. For example, if you wanted to create a follower with the May sprite, you could do something like this:  
+`createfollowernpc OBJ_EVENT_GFX_RIVAL_MAY_NORMAL, FNPC_ALL, EventScript_MayFollow`  
+The created follower NPC will initially be invisible until the player takes a step.
+
 ## Follower Flags
 These are required to tell the game what behavior you want the NPC follower to have. They are defined in [include/constants/follower_npc.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/constants/follower_npc.h). The second list of flags is the same as the first, but with shortened names to make them easier to type when scripting. The first 7 flags in the list are individual behaviors, whereas the remaining three are bundles of flags. For example, if you use `FNPC_SURF` in `setfollowernpc`, the NPC follower will be able to Surf behind the player. If you use `FNPC_ALL_WATER` instead, the NPC follower will be able to Dive and go up Waterfalls in addition to being able to Surf. Feel free to add your own custom bundles of flags to the file to meet your needs.
 

@@ -2050,13 +2050,13 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_MUD_SPORT:
             if (gFieldStatuses & STATUS_FIELD_MUDSPORT
-              || gStatuses4[battlerAtk] & STATUS4_MUD_SPORT
+              || gBattleMons[battlerAtk].volatiles.mudSport
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_WATER_SPORT:
             if (gFieldStatuses & STATUS_FIELD_WATERSPORT
-              || gStatuses4[battlerAtk] & STATUS4_WATER_SPORT
+              || gBattleMons[battlerAtk].volatiles.waterSport
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;

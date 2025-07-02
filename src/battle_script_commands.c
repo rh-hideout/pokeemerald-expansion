@@ -66,6 +66,8 @@
 #include "config/battle.h"
 #include "data/battle_move_effects.h"
 #include "test/battle.h"
+#include "follower_npc.h"
+#include "load_save.h"
 
 // table to avoid ugly powing on gba (courtesy of doesnt)
 // this returns (i^2.5)/4
@@ -494,7 +496,7 @@ static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
 static void Cmd_setlightscreen(void);
 static void Cmd_tryKO(void);
-static void Cmd_unused_0x94(void);
+static void Cmd_checknonvolatiletrigger(void);
 static void Cmd_copybidedmg(void);
 static void Cmd_unused_96(void);
 static void Cmd_tryinfatuating(void);
@@ -753,7 +755,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_givepaydaymoney,                         //0x91
     Cmd_setlightscreen,                          //0x92
     Cmd_tryKO,                                   //0x93
-    Cmd_unused_0x94,                             //0x94
+    Cmd_checknonvolatiletrigger,                 //0x94
     Cmd_copybidedmg,                             //0x95
     Cmd_unused_96,                               //0x96
     Cmd_tryinfatuating,                          //0x97
@@ -1383,7 +1385,7 @@ static void Cmd_attackcanceler(void)
      && effect != EFFECT_COUNTER
      && effect != EFFECT_UPPER_HAND)
     {
-        if (IsMoveMakingContact(gCurrentMove, gBattlerAttacker))
+        if (!CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
             gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
@@ -1399,7 +1401,7 @@ static void Cmd_attackcanceler(void)
         gBattleCommunication[MISS_TYPE] = B_MSG_PROTECTED;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    else if (gProtectStructs[gBattlerTarget].beakBlastCharge && IsMoveMakingContact(gCurrentMove, gBattlerAttacker))
+    else if (gProtectStructs[gBattlerTarget].beakBlastCharge && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove))
     {
         gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -3713,8 +3715,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
          && !(gStatuses3[BATTLE_PARTNER(gBattlerTarget)] & STATUS3_SEMI_INVULNERABLE)
          && GetBattlerAbility(BATTLE_PARTNER(gBattlerTarget)) != ABILITY_MAGIC_GUARD)
         {
-            i = BATTLE_PARTNER(gBattlerTarget);
-            gBattleScripting.savedBattler = i;
+            gBattleScripting.battler = i = BATTLE_PARTNER(gBattlerTarget);
             gBattleStruct->moveDamage[i] = gBattleMons[i].maxHP / 16;
             if (gBattleStruct->moveDamage[i] == 0)
                 gBattleStruct->moveDamage[i] = 1;
@@ -3777,7 +3778,12 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_BUG_BITE:
-        if (GetItemPocket(gBattleMons[gEffectBattler].item) == POCKET_BERRIES
+        if (GetBattlerHoldEffect(gEffectBattler, TRUE) == HOLD_EFFECT_JABOCA_BERRY)
+        {
+            // jaboca berry triggers instead of being stolen
+            gBattlescriptCurrInstr++;
+        }
+        else if (GetItemPocket(gBattleMons[gEffectBattler].item) == POCKET_BERRIES
             && battlerAbility != ABILITY_STICKY_HOLD)
         {
             // target loses their berry
@@ -7064,7 +7070,7 @@ static void Cmd_moveend(void)
             if (IsBattlerAlive(gBattlerAttacker)
               && gBattleMons[gBattlerAttacker].item != ITEM_NONE        // Attacker must be holding an item
               && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerAttacker)] & (1u << gBattlerPartyIndexes[gBattlerAttacker]))   // But not knocked off
-              && IsMoveMakingContact(gCurrentMove, gBattlerAttacker)    // Pickpocket requires contact
+              && IsMoveMakingContact(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), gCurrentMove)    // Pickpocket requires contact
               && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))           // Obviously attack needs to have worked
             {
                 u8 battlers[4] = {0, 1, 2, 3};
@@ -7172,6 +7178,24 @@ static void Cmd_moveend(void)
                 effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
             else
                 gBattleScripting.moveendState++;
+            break;
+        case MOVEEND_REMOVE_TERRAIN:
+            if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER // Steel Roller has to check the chosen move, Otherwise it would fail in certain cases
+             && IsBattlerTurnDamaged(gBattlerTarget))
+            {
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                effect = TRUE;
+            }
+            else if (moveEffect == EFFECT_ICE_SPINNER
+                  && IsBattlerAlive(gBattlerAttacker)
+                  && IsBattlerTurnDamaged(gBattlerTarget))
+            {
+                BattleScriptPushCursor();
+                gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
+                effect = TRUE;
+            }
+            gBattleScripting.moveendState++;
             break;
         case MOVEEND_SYMBIOSIS:
             for (i = 0; i < gBattlersCount; i++)
@@ -8994,7 +9018,6 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId)
         BestowItem(BATTLE_PARTNER(battler), battler);
         gLastUsedAbility = gBattleMons[BATTLE_PARTNER(battler)].ability;
         gBattleScripting.battler = gBattlerAbility = BATTLE_PARTNER(battler);
-        gBattlerAttacker = battler;
         BattleScriptPush(gBattlescriptCurrInstr + 2);
         gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
         return TRUE;
@@ -11554,9 +11577,14 @@ static void Cmd_jumpifnexttargetvalid(void)
     }
 
     if (gBattlerTarget >= gBattlersCount)
+    {
+        gBattlerTarget = gBattlersCount - 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
+    }
     else
+    {
         gBattlescriptCurrInstr = jumpInstr;
+    }
 }
 
 static void Cmd_tryhealhalfhealth(void)
@@ -12471,12 +12499,13 @@ static void Cmd_trynonvolatilestatus(void)
     CMD_ARGS();
     bool32 canInflictStatus = TRUE;
 
-    if (!CanSetNonVolatileStatus(gBattlerAttacker,
-                                 gBattlerTarget,
-                                 GetBattlerAbility(gBattlerAttacker),
-                                 GetBattlerAbility(gBattlerTarget),
-                                 GetMoveNonVolatileStatus(gCurrentMove),
-                                 STATUS_RUN_SCRIPT))
+    if (!CanSetNonVolatileStatus(
+            gBattlerAttacker,
+            gBattlerTarget,
+            GetBattlerAbility(gBattlerAttacker),
+            GetBattlerAbility(gBattlerTarget),
+            GetMoveNonVolatileStatus(gCurrentMove),
+            STATUS_RUN_SCRIPT))
         canInflictStatus = FALSE;
 
     if (canInflictStatus && DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
@@ -12926,8 +12955,22 @@ static void Cmd_tryKO(void)
 #undef FOCUS_BANDED
 #undef AFFECTION_ENDURED
 
-static void Cmd_unused_0x94(void)
+static void Cmd_checknonvolatiletrigger(void)
 {
+    CMD_ARGS(u16 nonVolatile, const u8 *failInstr);
+
+    if (!CanSetNonVolatileStatus(
+            gBattlerAttacker,
+            gBattlerTarget,
+            GetBattlerAbility(gBattlerAttacker),
+            GetBattlerAbility(gBattlerTarget),
+            cmd->nonVolatile,
+            STATUS_CHECK_TRIGGER))
+        gBattlescriptCurrInstr = cmd->failInstr;
+    else if (DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
+        gBattlescriptCurrInstr = cmd->failInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_copybidedmg(void)
@@ -14328,7 +14371,7 @@ static void Cmd_recoverbasedonsunlight(void)
         {
             u32 healingModifier = 1;
             u32 time = GetTimeOfDay();
-            
+
             switch (GetMoveEffect(gCurrentMove))
             {
             case EFFECT_MOONLIGHT:
@@ -14348,14 +14391,14 @@ static void Cmd_recoverbasedonsunlight(void)
                 healingModifier = 1;
                 break;
             }
-            
+
             if (!(gBattleWeather & B_WEATHER_ANY) || !HasWeatherEffect() || GetBattlerHoldEffect(gBattlerAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA)
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
             else if (gBattleWeather & B_WEATHER_SUN)
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else // not sunny weather
                 gBattleStruct->moveDamage[gBattlerAttacker] = healingModifier * GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
-            
+
         }
 
         if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
@@ -15392,9 +15435,9 @@ static void Cmd_settypebasedhalvers(void)
         }
         else
         {
-            if (!(gStatuses4[gBattlerAttacker] & STATUS4_MUD_SPORT))
+            if (!gBattleMons[gBattlerAttacker].volatiles.waterSport)
             {
-                gStatuses4[gBattlerAttacker] |= STATUS4_MUD_SPORT;
+                gBattleMons[gBattlerAttacker].volatiles.waterSport = TRUE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_ELECTRIC;
                 worked = TRUE;
             }
@@ -15414,9 +15457,9 @@ static void Cmd_settypebasedhalvers(void)
         }
         else
         {
-            if (!(gStatuses4[gBattlerAttacker] & STATUS4_WATER_SPORT))
+            if (!gBattleMons[gBattlerAttacker].volatiles.mudSport)
             {
-                gStatuses4[gBattlerAttacker] |= STATUS4_WATER_SPORT;
+                gBattleMons[gBattlerAttacker].volatiles.mudSport = TRUE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEAKEN_FIRE;
                 worked = TRUE;
             }
@@ -15942,6 +15985,9 @@ static void Cmd_givecaughtmon(void)
 {
     CMD_ARGS(const u8 *passInstr);
     enum GiveCaughtMonStates state = gBattleCommunication[MULTIUSE_STATE];
+    // Restore players party in order to handle properly the case when a wild mon is caught.
+    if (IsNPCFollowerWildBattle())
+        LoadPlayerParty();
 
     switch (state)
     {
@@ -16082,6 +16128,9 @@ static void Cmd_givecaughtmon(void)
         break;
     }
     }
+    // Save the player's party again to not interferes with RestorePartyAfterFollowerNPCBattle() called after battle.
+    if (IsNPCFollowerWildBattle())
+        SavePlayerParty();
 }
 
 static void Cmd_trysetcaughtmondexflags(void)
@@ -16445,7 +16494,7 @@ static void Cmd_setnonvolatilestatus(void)
 {
     CMD_ARGS(u8 trigger);
     gBattlescriptCurrInstr = cmd->nextInstr - 1;
-    
+
     switch (cmd->trigger)
     {
     case TRIGGER_ON_ABILITY:
@@ -17183,17 +17232,7 @@ void BS_ApplySaltCure(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfMovePropertyArgument(void)
-{
-    NATIVE_ARGS(u8 argument, const u8 *jumpInstr);
-
-    if (GetMoveEffectArg_MoveProperty(gCurrentMove) == cmd->argument)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetRemoveTerrain(void)
+void BS_SetTerrain(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
     u32 statusFlag = 0;
@@ -17216,48 +17255,19 @@ void BS_SetRemoveTerrain(void)
         statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
-    case EFFECT_HIT_SET_REMOVE_TERRAIN:
-        switch (GetMoveEffectArg_MoveProperty(gCurrentMove))
-        {
-        case ARG_SET_PSYCHIC_TERRAIN: // Genesis Supernova
-            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
-            break;
-        case ARG_TRY_REMOVE_TERRAIN_HIT: // Splintered Stormshards
-        case ARG_TRY_REMOVE_TERRAIN_FAIL: // Steel Roller
-            if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
-            {
-                // No terrain to remove, jump to battle script pointer.
-                gBattlescriptCurrInstr = cmd->jumpInstr;
-            }
-            else
-            {
-                // Remove all terrains.
-                RemoveAllTerrains();
-                gBattlescriptCurrInstr = cmd->nextInstr;
-            }
-            return;
-        default:
-            break;
-        }
+    case EFFECT_HIT_SET_TERRAIN:
+        statusFlag = GetMoveTerrainFlag(gCurrentMove);
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
         break;
     default:
         break;
     }
+    enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
 
-    if (gFieldStatuses & statusFlag || statusFlag == 0)
-    {
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    }
-    else
-    {
-        enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-
-        gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-        gFieldStatuses |= statusFlag;
-        gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
+    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+    gFieldStatuses |= statusFlag;
+    gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_JumpIfTerrainAffected(void)

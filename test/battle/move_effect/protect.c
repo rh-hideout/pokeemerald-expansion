@@ -618,3 +618,20 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
         EXPECT_EQ(results[4].damage, results[5].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            HP_BAR(opponent);
+            STATUS_ICON(player, STATUS1_BURN);
+        }
+    }
+}
