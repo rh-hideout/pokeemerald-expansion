@@ -1,47 +1,58 @@
 PalletTown_PlayersHouse_2F_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_PlayersHouse_2F_OnTransition
-	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PalletTown_PlayersHouse_2F_OnWarp
+@	map_script MAP_SCRIPT_ON_TRANSITION, PalletTown_PlayersHouse_2F_OnTransition
+@	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PalletTown_PlayersHouse_2F_OnWarp
 	.byte 0
 
 PalletTown_PlayersHouse_2F_OnTransition::
-	call_if_eq VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 0, PalletTown_PlayersHouse_2F_EventScript_SetRespawn
+@	call_if_eq VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 0, PalletTown_PlayersHouse_2F_EventScript_SetRespawn
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_SetRespawn::
-	setrespawn HEAL_LOCATION_PALLET_TOWN
-	return
+@	setrespawn HEAL_LOCATION_PALLET_TOWN
+@	return
 
 PalletTown_PlayersHouse_2F_OnWarp::
-	map_script_2 VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 0, PalletTown_PlayersHouse_2F_FirstWarpIn
+@	map_script_2 VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 0, PalletTown_PlayersHouse_2F_FirstWarpIn
 	.2byte 0
 
 PalletTown_PlayersHouse_2F_FirstWarpIn::
-	turnobject LOCALID_PLAYER, DIR_NORTH
-	setvar VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 1
+@	turnobject LOCALID_PLAYER, DIR_NORTH
+@	setvar VAR_MAP_SCENE_PALLET_TOWN_PLAYERS_HOUSE_2F, 1
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_NES::
-	msgbox PalletTown_PlayersHouse_2F_Text_PlayedWithNES, MSGBOX_SIGN
+@	msgbox PalletTown_PlayersHouse_2F_Text_PlayedWithNES, MSGBOX_SIGN
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_Sign::
-	msgbox PalletTown_PlayersHouse_2F_Text_PressLRForHelp, MSGBOX_SIGN
+@	msgbox PalletTown_PlayersHouse_2F_Text_PressLRForHelp, MSGBOX_SIGN
 	end
 
 PalletTown_PlayersHouse_2F_EventScript_PC::
-	lockall
-	setvar VAR_0x8004, 1
-	special DoPCTurnOnEffect
-	playse SE_PC_ON
-	msgbox gText_PlayerHouseBootPC
-	special BedroomPC
-	waitstate
-	releaseall
+@	lockall
+@	setvar VAR_0x8004, 1
+@	special DoPCTurnOnEffect
+@	playse SE_PC_ON
+@	msgbox gText_PlayerHouseBootPC
+@	special BedroomPC
+@	waitstate
+@	releaseall
 	end
 
 EventScript_PalletTown_PlayersHouse_2F_ShutDownPC::
-	setvar VAR_0x8004, 1
-	playse SE_PC_OFF
-	special DoPCTurnOffEffect
-	releaseall
+@	setvar VAR_0x8004, 1
+@	playse SE_PC_OFF
+@	special DoPCTurnOffEffect
+@	releaseall
 	end
+
+PalletTown_PlayersHouse_2F_Text_PlayedWithNES::
+    .string "{PLAYER} played with the NES.\p"
+    .string "…Okay!\n"
+    .string "It's time to go!$"
+
+PalletTown_PlayersHouse_2F_Text_PressLRForHelp::
+    .string "It's a posted notice…\p"
+    .string "If you're confused, ask for HELP!\n"
+    .string "Press the L or R Button!$"
+

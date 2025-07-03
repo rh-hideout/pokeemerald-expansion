@@ -87,3 +87,7 @@ RocketHideout_Elevator_EventScript_NeedKey::
 	msgbox RocketHideout_Elevator_Text_AppearsToNeedAKey
 	releaseall
 	end
+
+RocketHideout_Elevator_Text_AppearsToNeedAKey::
+    .string "It appears to need a key.$"
+

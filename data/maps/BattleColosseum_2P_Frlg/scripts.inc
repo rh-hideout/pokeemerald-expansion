@@ -1,2 +1,2 @@
-BattleColosseum_2P_MapScripts::
+BattleColosseum_2P_MapScripts_Frlg::
 	.byte 0

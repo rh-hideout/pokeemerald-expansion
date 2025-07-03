@@ -1,9 +1,9 @@
-UnionRoom_MapScripts::
-	map_script MAP_SCRIPT_ON_RESUME, UnionRoom_OnResume
-	map_script MAP_SCRIPT_ON_TRANSITION, UnionRoom_OnTransition
+UnionRoom_MapScripts_Frlg::
+	map_script MAP_SCRIPT_ON_RESUME, UnionRoom_OnResume_Frlg
+	map_script MAP_SCRIPT_ON_TRANSITION, UnionRoom_OnTransition_Frlg
 	.byte 0
 
-UnionRoom_OnResume::
+UnionRoom_OnResume_Frlg::
 	setflag FLAG_HIDE_UNION_ROOM_PLAYER_1
 	setflag FLAG_HIDE_UNION_ROOM_PLAYER_2
 	setflag FLAG_HIDE_UNION_ROOM_PLAYER_3
@@ -23,11 +23,11 @@ UnionRoom_OnResume::
 	special RunUnionRoom
 	end
 
-UnionRoom_OnTransition::
+UnionRoom_OnTransition_Frlg::
 	setflag FLAG_TEMP_HIDE_FOLLOWER
 	end
 
-UnionRoom_EventScript_Player1::
+UnionRoom_EventScript_Player1_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 1
@@ -35,7 +35,7 @@ UnionRoom_EventScript_Player1::
 	release
 	end
 
-UnionRoom_EventScript_Player2::
+UnionRoom_EventScript_Player2_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 2
@@ -43,7 +43,7 @@ UnionRoom_EventScript_Player2::
 	release
 	end
 
-UnionRoom_EventScript_Player3::
+UnionRoom_EventScript_Player3_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 3
@@ -51,7 +51,7 @@ UnionRoom_EventScript_Player3::
 	release
 	end
 
-UnionRoom_EventScript_Player4::
+UnionRoom_EventScript_Player4_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 4
@@ -59,7 +59,7 @@ UnionRoom_EventScript_Player4::
 	release
 	end
 
-UnionRoom_EventScript_Player5::
+UnionRoom_EventScript_Player5_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 5
@@ -67,7 +67,7 @@ UnionRoom_EventScript_Player5::
 	release
 	end
 
-UnionRoom_EventScript_Player6::
+UnionRoom_EventScript_Player6_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 6
@@ -75,7 +75,7 @@ UnionRoom_EventScript_Player6::
 	release
 	end
 
-UnionRoom_EventScript_Player7::
+UnionRoom_EventScript_Player7_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 7
@@ -83,7 +83,7 @@ UnionRoom_EventScript_Player7::
 	release
 	end
 
-UnionRoom_EventScript_Player8::
+UnionRoom_EventScript_Player8_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 8
@@ -91,7 +91,7 @@ UnionRoom_EventScript_Player8::
 	release
 	end
 
-UnionRoom_EventScript_Attendant::
+UnionRoom_EventScript_Attendant_Frlg::
 	lock
 	faceplayer
 	setvar VAR_RESULT, 9
@@ -99,7 +99,7 @@ UnionRoom_EventScript_Attendant::
 	release
 	end
 
-UnionRoom_EventScript_Unused::
+UnionRoom_EventScript_Unused_Frlg::
 	lockall
 	setvar VAR_RESULT, 10
 	waitstate

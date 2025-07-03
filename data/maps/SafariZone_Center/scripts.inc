@@ -17,3 +17,15 @@ SafariZone_Center_EventScript_TrainerTips::
 SafariZone_Center_EventScript_AreaSign::
 	msgbox SafariZone_Center_Text_CenterArea, MSGBOX_SIGN
 	end
+
+SafariZone_Center_Text_RestHouse::
+    .string "REST HOUSE$"
+
+SafariZone_Center_Text_PressStartToCheckTime::
+    .string "TRAINER TIPS\p"
+    .string "Press START to check\n"
+    .string "remaining time.$"
+
+SafariZone_Center_Text_CenterArea::
+    .string "CENTER AREA$"
+

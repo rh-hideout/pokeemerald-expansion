@@ -10,3 +10,7 @@ MtEmber_RubyPath_B5F_EventScript_Ruby::
 	giveitem_msg MtEmber_RubyPath_B3F_Text_FoundARuby, ITEM_RUBY, 1, MUS_OBTAIN_KEY_ITEM
 	release
 	end
+
+MtEmber_RubyPath_B3F_Text_FoundARuby::
+    .string "{PLAYER} found a RUBY!$"
+

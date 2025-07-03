@@ -52,3 +52,19 @@ PokemonLeague_HallOfFame_Movement_EnterRoom::
 	walk_up
 	walk_up
 	step_end
+
+PokemonLeague_HallOfFame_Text_OakCongratulations::
+    .string "OAK: Er-hem!\n"
+    .string "Congratulations, {PLAYER}!\p"
+    .string "This floor is the POKéMON HALL OF\n"
+    .string "FAME.\p"
+    .string "POKéMON LEAGUE CHAMPIONS are\n"
+    .string "honored for their exploits here.\p"
+    .string "Their POKéMON are also recorded in\n"
+    .string "the HALL OF FAME.\p"
+    .string "{PLAYER}!\p"
+    .string "You have worked hard to become\n"
+    .string "the new LEAGUE CHAMPION.\p"
+    .string "Congratulations, {PLAYER}, you and\n"
+    .string "your POKéMON are HALL OF FAMERS!$"
+
