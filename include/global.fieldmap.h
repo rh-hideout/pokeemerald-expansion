@@ -145,6 +145,8 @@ struct BgEvent
         } hiddenItem;
         u32 secretBaseId;
     } bgUnion;
+    u8 quantity:7;
+    bool8 underfoot:1;
 };
 
 struct MapEvents
