@@ -40,6 +40,7 @@
 #include "constants/event_objects.h"
 #include "constants/moves.h"
 #include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 // EWRAM vars.
 EWRAM_DATA const struct BattleFrontierTrainer *gFacilityTrainers = NULL;

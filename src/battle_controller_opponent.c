@@ -40,6 +40,7 @@
 #include "trainer_hill.h"
 #include "test_runner.h"
 #include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void OpponentHandleDrawTrainerPic(u32 battler);
 static void OpponentHandleTrainerSlideBack(u32 battler);

@@ -180,10 +180,24 @@ static void InvokeTestFunction(const struct BattleTest *test)
     }
 }
 
-const struct BattleTest *GetBattleTest(void)
+static const struct BattleTest *GetBattleTest(void)
 {
     const struct BattleTest *test = gTestRunnerState.test->data;
     return test;
+}
+
+bool8 IsMultibattleTest(void)
+{
+    switch (GetBattleTest()->type)
+    {
+        case BATTLE_TEST_AI_MULTI:
+        case BATTLE_TEST_AI_TWO_VS_ONE:
+        case BATTLE_TEST_MULTI:
+        case BATTLE_TEST_TWO_VS_ONE:
+            return TRUE;
+        default:
+            return FALSE;
+    }
 }
 
 static bool32 IsAITest(void)

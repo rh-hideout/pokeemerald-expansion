@@ -32,6 +32,7 @@
 #include "constants/songs.h"
 #include "constants/trainers.h"
 #include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void RecordedOpponentHandleDrawTrainerPic(u32 battler);
 static void RecordedOpponentHandleTrainerSlideBack(u32 battler);

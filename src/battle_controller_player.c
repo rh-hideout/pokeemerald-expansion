@@ -48,6 +48,7 @@
 #include "type_icons.h"
 #include "pokedex.h"
 #include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void PlayerHandleLoadMonSprite(u32 battler);
 static void PlayerHandleDrawTrainerPic(u32 battler);
