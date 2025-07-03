@@ -1035,7 +1035,6 @@
 
 	.macro copyfoestats unused:req
 	.byte 0xbd
-	.4byte \unused
 	.endm
 
 	.macro rapidspinfree

@@ -14269,7 +14269,7 @@ static void Cmd_halvehp(void)
 // Psych Up
 static void Cmd_copyfoestats(void)
 {
-    CMD_ARGS(const u8 *unused);
+    CMD_ARGS();
 
     s32 i;
 
@@ -14277,8 +14277,9 @@ static void Cmd_copyfoestats(void)
     {
         gBattleMons[gBattlerAttacker].statStages[i] = gBattleMons[gBattlerTarget].statStages[i];
     }
+    gBattleScripting.battler = gBattlerTarget;
 
-    gBattlescriptCurrInstr = cmd->nextInstr; // Has an unused jump ptr(possibly for a failed attempt) parameter.
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_rapidspinfree(void)
