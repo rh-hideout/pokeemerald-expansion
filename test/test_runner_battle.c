@@ -2409,7 +2409,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
+        if ((battlerId & BIT_SIDE) == (i & BIT_SIDE))
             INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "SWITCH to battler");
     }
 
@@ -2431,7 +2431,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
+        if ((battlerId & BIT_SIDE) == (i & BIT_SIDE))
             INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "EXPECT_SWITCH to battler");
     }
 
