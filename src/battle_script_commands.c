@@ -12689,7 +12689,7 @@ static void Cmd_forcerandomswitch(void)
             gBattleStruct->battlerState[gBattlerTarget].forcedSwitch = TRUE;
             gBattleStruct->monToSwitchIntoId[gBattlerTarget] = validMons[RandomUniform(RNG_FORCE_RANDOM_SWITCH, 0, validMonsCount - 1)];
 
-            if (!IsMultiBattle())
+            if (!TESTING && !IsMultiBattle())
                 SwitchPartyOrder(gBattlerTarget);
 
             if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
