@@ -3298,6 +3298,13 @@ BattleScript_MirrorArmorReflectStickyWeb:
 	call BattleScript_MirrorArmorReflectStatLoss
 	goto BattleScript_StickyWebOnSwitchInEnd
 
+BattleScript_MirrorArmorReflectShrapnel:
+	call BattleScript_AbilityPopUp
+	setattackertoshrapneluser
+	jumpifbyteequal gBattlerAttacker, gBattlerTarget, BattleScript_SteelSurgeInEnd   @ Sticky web user not on field -> no stat loss
+	call BattleScript_MirrorArmorReflectStatLoss
+	goto BattleScript_SteelSurgeInEnd
+
 BattleScript_StatDown::
 	playanimation BS_EFFECT_BATTLER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
 	printfromtable gStatDownStringIds
@@ -6476,6 +6483,29 @@ BattleScript_StickyWebOnSwitchInEnd:
 	restoretarget
 	restoreattacker
 	setbyte sSTICKY_WEB_STAT_DROP, 0
+	return
+
+BattleScript_SteelSurgeOnSwitchIn::
+	savetarget
+	saveattacker
+	copybyte gBattlerTarget, sBATTLER
+	printstring STRINGID_STEELSURGESWITCHIN
+	waitmessage B_WAIT_TIME_LONG
+	jumpifability BS_TARGET, ABILITY_MIRROR_ARMOR, BattleScript_MirrorArmorReflectStickyWeb
+	statbuffchange STAT_CHANGE_ALLOW_PTR, BattleScript_SteelSurgeOnSwitchInEnd
+	jumpifbyte CMP_LESS_THAN, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_SteelSurgeOnSwitchInStatAnim
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_FELL_EMPTY, BattleScript_SteelSurgeOnSwitchInEnd
+	pause B_WAIT_TIME_SHORT
+	goto BattleScript_SteelSurgeOnSwitchInPrintStatMsg
+BattleScript_SteelSurgeOnSwitchInStatAnim:
+	setgraphicalstatchangevalues
+	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+BattleScript_SteelSurgeOnSwitchInPrintStatMsg:
+	printfromtable gStatDownStringIds
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_SteelSurgeOnSwitchInEnd:
+	restoretarget
+	restoreattacker
 	return
 
 BattleScript_PerishSongTakesLife::

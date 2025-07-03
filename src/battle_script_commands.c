@@ -7768,16 +7768,27 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_StickyWebOnSwitchIn;
     }
+    // else if (!(gDisableStructs[battler].steelSurgeDone)
+    //     && (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_STEELSURGE)
+    //     && IsBattlerAffectedByHazards(battler, FALSE)
+    //     && GetBattlerAbility(battler) != ABILITY_MAGIC_GUARD)
+    // {
+    //     gDisableStructs[battler].steelSurgeDone = TRUE;
+    //     gBattleMoveDamage = GetStealthHazardDamage(gMovesInfo[MOVE_G_MAX_STEELSURGE].type, battler);
+
+    //     if (gBattleMoveDamage != 0)
+    //         SetDmgHazardsBattlescript(battler, B_MSG_SHARPSTEELDMG);
+    // }
     else if (!(gDisableStructs[battler].steelSurgeDone)
         && (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_STEELSURGE)
         && IsBattlerAffectedByHazards(battler, FALSE)
-        && GetBattlerAbility(battler) != ABILITY_MAGIC_GUARD)
+        && IsBattlerGrounded(battler))
     {
         gDisableStructs[battler].steelSurgeDone = TRUE;
-        gBattleMoveDamage = GetStealthHazardDamage(gMovesInfo[MOVE_G_MAX_STEELSURGE].type, battler);
-
-        if (gBattleMoveDamage != 0)
-            SetDmgHazardsBattlescript(battler, B_MSG_SHARPSTEELDMG);
+        gBattleScripting.battler = battler;
+        SET_STATCHANGER(STAT_DEF, 1, TRUE);
+        BattleScriptPushCursor();
+        gBattlescriptCurrInstr = BattleScript_SteelSurgeOnSwitchIn;
     }
     else if (gBattleMons[battler].hp != gBattleMons[battler].maxHP && gBattleStruct->zmove.healReplacement)
     {

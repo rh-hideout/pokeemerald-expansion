@@ -11465,11 +11465,12 @@ s32 GetStealthHazardDamageByTypesAndHP(u8 hazardType, u8 type1, u8 type2, u32 ma
     case UQ_4_12(0.0):
         dmg = 0;
         break;
-    case UQ_4_12(0.25):
-        dmg = maxHp / 32;
-        if (dmg == 0)
-            dmg = 1;
-        break;
+    //stealth rock damage nerf
+    // case UQ_4_12(0.25):
+    //     dmg = maxHp / 32;
+    //     if (dmg == 0)
+    //         dmg = 1;
+    //     break;
     case UQ_4_12(0.5):
         dmg = maxHp / 16;
         if (dmg == 0)
@@ -11485,10 +11486,10 @@ s32 GetStealthHazardDamageByTypesAndHP(u8 hazardType, u8 type1, u8 type2, u32 ma
         if (dmg == 0)
             dmg = 1;
         break;
-    case UQ_4_12(4.0):
-        dmg = maxHp / 2;
-        if (dmg == 0)
-            dmg = 1;
+    // case UQ_4_12(4.0):
+    //     dmg = maxHp / 2;
+    //     if (dmg == 0)
+    //         dmg = 1;
         break;
     }
 
