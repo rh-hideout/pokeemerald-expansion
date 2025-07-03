@@ -376,6 +376,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         )
         .levelUpLearnset = sSkeledirgeLevelUpLearnset,
         .teachableLearnset = sSkeledirgeTeachableLearnset,
+        .formChangeTable = sSkeledirgeFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -440,6 +441,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sSkeledirgeLevelUpLearnset,
         .teachableLearnset = sSkeledirgeTeachableLearnset,
+        .formChangeTable = sSkeledirgeFormChangeTable,
     },
 #endif // FROSTY_MEGAS >= SPECIES_SKELEDIRGE
 #endif // P_MEGA_EVOLUTIONS

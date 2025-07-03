@@ -197,6 +197,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         )
         .levelUpLearnset = sTorterraLevelUpLearnset,
         .teachableLearnset = sTorterraTeachableLearnset,
+        .formChangeTable = sTorterraFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -269,6 +270,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sTorterraLevelUpLearnset,
         .teachableLearnset = sTorterraTeachableLearnset,
+        .formChangeTable = sTorterraFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_TORTERRA_MEGA
 #endif //P_MEGA_EVOLUTIONS
@@ -470,6 +472,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         )
         .levelUpLearnset = sInfernapeLevelUpLearnset,
         .teachableLearnset = sInfernapeTeachableLearnset,
+        .formChangeTable = sInfernapeFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -542,6 +545,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sInfernapeLevelUpLearnset,
         .teachableLearnset = sInfernapeTeachableLearnset,
+        .formChangeTable = sInfernapeFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_INFERNAPE_MEGA
 #endif //P_MEGA_EVOLUTIONS
@@ -750,6 +754,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         )
         .levelUpLearnset = sEmpoleonLevelUpLearnset,
         .teachableLearnset = sEmpoleonTeachableLearnset,
+        .formChangeTable = sEmpoleonFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -1658,6 +1663,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         )
         .levelUpLearnset = sLuxrayLevelUpLearnset,
         .teachableLearnset = sLuxrayTeachableLearnset,
+        .formChangeTable = sLuxrayFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
