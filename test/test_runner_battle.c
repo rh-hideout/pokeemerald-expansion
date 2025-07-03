@@ -186,20 +186,6 @@ static const struct BattleTest *GetBattleTest(void)
     return test;
 }
 
-bool8 IsMultibattleTest(void)
-{
-    switch (GetBattleTest()->type)
-    {
-        case BATTLE_TEST_AI_MULTI:
-        case BATTLE_TEST_AI_TWO_VS_ONE:
-        case BATTLE_TEST_MULTI:
-        case BATTLE_TEST_TWO_VS_ONE:
-            return TRUE;
-        default:
-            return FALSE;
-    }
-}
-
 static bool32 IsAITest(void)
 {
     switch (GetBattleTest()->type)
@@ -454,9 +440,21 @@ static void BattleTest_Run(void *data)
     {
         // TODO: If a battler is taking the default action maybe it
         // should not require an explicit speed?
-        // TODO: Multibattle test exclusion in place until a way to rework this check is identified.
-        if ((DATA.explicitSpeeds[B_SIDE_PLAYER] != (1 << DATA.playerPartySize) - 1
-         || DATA.explicitSpeeds[B_SIDE_OPPONENT] != (1 << DATA.opponentPartySize) - 1) && !IsMultibattleTest())
+        /* 
+        TODO: Multibattle tests fail with speed set - need to work out how to accommodate different party sizes.
+        Inserting the below works for when each position has only one mon only but is not smart enough for varying parties.
+        && (DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (DATA.playerPartySize) - 3
+         || DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT] != (1 << DATA.playerPartySize) - 8
+         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (DATA.opponentPartySize) - 3
+        || DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT] != (1 << DATA.opponentPartySize) - 8) // 2v2 Multi
+        && (DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (DATA.playerPartySize) - 3
+         || DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT] != (1 << DATA.playerPartySize) - 8
+         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (1 << DATA.opponentPartySize) - 1)) // 2v1 Multi
+         */
+
+        if ((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (1 << DATA.playerPartySize) - 1
+         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (1 << DATA.opponentPartySize) - 1)) // Singles and Doubles only
+         
         {
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
         }

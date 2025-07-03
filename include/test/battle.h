@@ -677,7 +677,7 @@ struct BattleTestData
     u8 opponentPartySize;
     u8 explicitMoves[NUM_BATTLE_SIDES];
     bool8 hasExplicitSpeeds;
-    u8 explicitSpeeds[NUM_BATTLE_SIDES];
+    u8 explicitSpeeds[MAX_BATTLERS_COUNT];
     u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 currentPosition;
     u8 currentPartyIndex;
@@ -954,6 +954,33 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, u32 teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
+
+static inline bool8 IsMultibattleTest(void)
+{
+    u32 isMaster = gBattleTypeFlags & BATTLE_TYPE_IS_MASTER;
+    u32 isRecordedMaster = gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER;
+    u32 isRecordedLink = gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK;
+    u32 isTrainer = gBattleTypeFlags & BATTLE_TYPE_TRAINER;
+    u32 isIngamePartner = gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER;
+    u32 isMulti = gBattleTypeFlags & BATTLE_TYPE_MULTI;
+    u32 isTwoOpponents = gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS;
+
+    if(TESTING)
+    {
+        if(isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
+            return TRUE;
+        else if(isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti)
+            return TRUE;
+        else if(isMaster && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
+            return TRUE;
+        else if(isMaster && isTrainer && isIngamePartner && isMulti)
+            return TRUE;
+        else
+            return FALSE;
+    }
+    else
+        return FALSE;
+}
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
