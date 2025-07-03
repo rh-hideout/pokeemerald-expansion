@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Hunger Switch does not switch Morpeko's form after switching
     } WHEN {
         TURN { }
         TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_ROAR); }
-        TURN { SWITCH(player, 0); }
+        TURN { SWITCH(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);

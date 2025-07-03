@@ -2397,7 +2397,7 @@ static inline bool32 TryTeraShellDistortTypeMatchups(u32 battlerDef)
 
 // According to Gen5 Weakness berry activation happens after the attackanimation.
 // It doesn't have any impact on gameplay and is only a visual thing which can be adjusted later.
-static inline bool32 TryActivateWeakenessBerry(u32 battlerDef)
+static inline bool32 TryActivateWeaknessBerry(u32 battlerDef)
 {
     if (gSpecialStatuses[battlerDef].berryReduced && gBattleMons[battlerDef].item != ITEM_NONE)
     {
@@ -2440,7 +2440,7 @@ static bool32 ProcessPreAttackAnimationFuncs(void)
 
             if (TryTeraShellDistortTypeMatchups(battlerDef))
                 return TRUE;
-            if (TryActivateWeakenessBerry(battlerDef))
+            if (TryActivateWeaknessBerry(battlerDef))
                 return TRUE;
         }
     }
@@ -2450,7 +2450,7 @@ static bool32 ProcessPreAttackAnimationFuncs(void)
             return TRUE;
         if (TryTeraShellDistortTypeMatchups(gBattlerTarget))
             return TRUE;
-        if (TryActivateWeakenessBerry(gBattlerTarget))
+        if (TryActivateWeaknessBerry(gBattlerTarget))
             return TRUE;
     }
 
