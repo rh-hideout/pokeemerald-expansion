@@ -2412,7 +2412,7 @@ static void SafariTextIntoHealthboxObject(void *dest, u8 *windowTileData, u32 wi
 
 #define ABILITY_POP_UP_POS_X_DIFF  64
 #define ABILITY_POP_UP_POS_X_SLIDE 128
-#define ABILITY_POP_UP_POS_X_SPEED 16
+#define ABILITY_POP_UP_POS_X_SPEED 4
 
 #define ABILITY_POP_UP_WIN_WIDTH   10
 #define ABILITY_POP_UP_STR_WIDTH   (ABILITY_POP_UP_WIN_WIDTH * 8)
@@ -2423,6 +2423,19 @@ static void SafariTextIntoHealthboxObject(void *dest, u8 *windowTileData, u32 wi
 #define ABILITY_POP_UP_OPPONENT_RIGHT_WIN_W 3
 
 #define ABILITY_POP_UP_WAIT_FRAMES 30
+
+/*
+ * BG = BackGround
+ * FG = ForeGround
+ * SH = SHadow
+ */
+#define ABILITY_POP_UP_BATTLER_BG_TXTCLR 2
+#define ABILITY_POP_UP_BATTLER_FG_TXTCLR 7
+#define ABILITY_POP_UP_BATTLER_SH_TXTCLR 1
+
+#define ABILITY_POP_UP_ABILITY_BG_TXTCLR 7
+#define ABILITY_POP_UP_ABILITY_FG_TXTCLR 9
+#define ABILITY_POP_UP_ABILITY_SH_TXTCLR 1
 
 #define sState          data[0]
 #define sAutoDestroy    data[1]
@@ -2446,9 +2459,10 @@ enum
     TAG_ABILITY_POP_UP_OPPONENT1,
     TAG_ABILITY_POP_UP_PLAYER2,
     TAG_ABILITY_POP_UP_OPPONENT2,
+    TAG_LAST_BALL_WINDOW,
 };
 
-static const u16 sAbilityPopUpGfx[] = INCBIN_U16("graphics/battle_interface/ability_pop_up.4bpp");
+static const u32 sAbilityPopUpGfx[] = INCBIN_U32("graphics/battle_interface/ability_pop_up.4bpp");
 static const u16 sAbilityPopUpPalette[] = INCBIN_U16("graphics/battle_interface/ability_pop_up.gbapal");
 
 static const struct SpriteSheet sSpriteSheet_AbilityPopUp =
@@ -2585,7 +2599,7 @@ static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum),
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum),
                         0, 0,
-                        2, 7, 1,
+                        ABILITY_POP_UP_BATTLER_BG_TXTCLR, ABILITY_POP_UP_BATTLER_FG_TXTCLR, ABILITY_POP_UP_BATTLER_SH_TXTCLR,
                         TRUE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
 }
 
@@ -2595,13 +2609,13 @@ static void PrintAbilityOnAbilityPopUp(u32 ability, u8 spriteId1, u8 spriteId2)
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         0, 4,
-                        7, 9, 1,
+                        ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
                         FALSE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
     PrintOnAbilityPopUp(gAbilitiesInfo[ability].name,
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         0, 4,
-                        7, 9, 1,
+                        ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
                         FALSE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
 }
 
@@ -2670,9 +2684,8 @@ void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
     // Create only one instance, as it's only used for
     // tracking the SpriteSheet(s) and SpritePalette.
     if (!IsAnyAbilityPopUpActive())
-    {
         CreateTask(Task_FreeAbilityPopUpGfx, 5);
-    }
+
     gBattleStruct->battlerState[battler].activeAbilityPopUps = TRUE;
 
     gSprites[spriteIds[0]].sIsMain = TRUE;
@@ -2789,7 +2802,6 @@ static void Task_FreeAbilityPopUpGfx(u8 taskId)
 #undef sIsMain
 
 // last used ball
-#define LAST_BALL_WINDOW_TAG 0xD721
 
 static const struct OamData sOamData_LastUsedBall =
 {
@@ -2810,7 +2822,7 @@ static const struct OamData sOamData_LastUsedBall =
 
 static const struct SpriteTemplate sSpriteTemplate_LastUsedBallWindow =
 {
-    .tileTag = LAST_BALL_WINDOW_TAG,
+    .tileTag = TAG_LAST_BALL_WINDOW,
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_LastUsedBall,
     .anims = gDummySpriteAnimTable,
@@ -2860,7 +2872,7 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
 #endif
 static const struct SpriteSheet sSpriteSheet_LastUsedBallWindow =
 {
-    sLastUsedBallWindowGfx, sizeof(sLastUsedBallWindowGfx), LAST_BALL_WINDOW_TAG
+    sLastUsedBallWindowGfx, sizeof(sLastUsedBallWindowGfx), TAG_LAST_BALL_WINDOW
 };
 
 #if B_MOVE_DESCRIPTION_BUTTON == R_BUTTON
@@ -2939,7 +2951,7 @@ void TryAddLastUsedBallItemSprites(void)
 
     // window
     LoadSpritePalette(&sSpritePalette_AbilityPopUp);
-    if (GetSpriteTileStartByTag(LAST_BALL_WINDOW_TAG) == 0xFFFF)
+    if (GetSpriteTileStartByTag(TAG_LAST_BALL_WINDOW) == 0xFFFF)
         LoadSpriteSheet(&sSpriteSheet_LastUsedBallWindow);
 
     if (gBattleStruct->ballSpriteIds[1] == MAX_SPRITES)
@@ -2957,7 +2969,7 @@ void TryAddLastUsedBallItemSprites(void)
 
 static void DestroyLastUsedBallWinGfx(struct Sprite *sprite)
 {
-    FreeSpriteTilesByTag(LAST_BALL_WINDOW_TAG);
+    FreeSpriteTilesByTag(TAG_LAST_BALL_WINDOW);
     FreeSpritePaletteByTag(TAG_ABILITY_POP_UP);
     DestroySprite(sprite);
     gBattleStruct->ballSpriteIds[1] = MAX_SPRITES;
