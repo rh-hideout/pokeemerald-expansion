@@ -17,14 +17,13 @@ SINGLE_BATTLE_TEST("Natural Gift removes berry if move fails due to an immunity"
 
 SINGLE_BATTLE_TEST("Natural Gift does not remove berry if user is ejected out")
 {
-    KNOWN_FAILING; // The test runner does not remember items given to a species.
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PECHA_BERRY); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
     } WHEN {
         TURN { MOVE(player, MOVE_NATURAL_GIFT); }
-        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_NATURAL_GIFT, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
