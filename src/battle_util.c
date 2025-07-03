@@ -1679,7 +1679,7 @@ bool32 MoodyCantRaiseStat(u32 stat)
 // gBattlerAttacker is the battler that's trying to lower their stats and due to limitations of RandomUniformExcept, cannot be an argument
 bool32 MoodyCantLowerStat(u32 stat)
 {
-    return (stat == gBattleScripting.statChanger.statId) || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
+    return GetStatChangerStage(gBattleScripting.statChanger, stat) > 0 || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
 }
 
 void TryToRevertMimicryAndFlags(void)

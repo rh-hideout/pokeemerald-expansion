@@ -3323,13 +3323,6 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
     gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
     gEffectBattler = result->effectBattler;
 
-    // Buffer the stat text (required for ability activation)
-    if (gBattleScripting.statChanger.statId)
-    {
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleScripting.statChanger.statId);
-        GenerateAndBufferStatChangeString(gBattleTextBuff2, GetStatChangerStatValue(gBattleScripting.statChanger, gBattleScripting.statChanger.statId));
-    }
-
     // Sets scripting battler
     if (result->scriptingBattler)
         gBattleScripting.battler = result->scriptingBattler - 1;
@@ -12159,7 +12152,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
             B_COMM_TO_CONTROLLER,
             B_ANIM_STATS_CHANGE,
             &gDisableStructs[battler],
-            GetStatAnimArgFromStatChanger(statChanger, singleStatOnly));
+            GetStatAnimArgFromStatChanger(statChanger, singleStatOnly ? statChanger.statId : 0)); // To do - get this work with Defiant
     }
     else // final stat that can be changed
         gBattleScripting.statAnimPlayed = FALSE;
@@ -12379,12 +12372,13 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
     }
 
     // Skips "can't go any higher!" messages if changing multiple stats
-    result->statChangerKey.skipFailStrings = (atLeastOneStatChangeSuccess && !result->statChanger.statId);
+    result->statChangerKey.skipFailStrings = atLeastOneStatChangeSuccess && !(result->multistring == B_MSG_STAT_WONT_DECREASE || result->multistring == B_MSG_STAT_WONT_INCREASE);
     return !atLeastOneStatChangeSuccess;
 }
 
 static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger statChanger, union StatChangeFlags flags, const u8 *failPtr)
 {
+    u32 stat;
     struct MoveEffectResult result = (struct MoveEffectResult) {
         .battlerAtk = gBattlerAttacker,
         .battlerDef = gBattlerTarget,
@@ -12403,12 +12397,18 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
 
     ChangeStatBuffsWithResult(&result, flags);
 
+    // Buffer the stat text (required for ability activation)
+    if ((stat = GetStatChangerStat(result.statChanger, TRUE)) && stat != STAT_MULTIPLE)
+    {
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
+        GenerateAndBufferStatChangeString(gBattleTextBuff2, GetStatChangerStatValue(gBattleScripting.statChanger, stat));
+    }
+
     if (result.multistring == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
     {
         // Has to be set now - even if only checking
         gBattleCommunication[MULTISTRING_CHOOSER] = result.multistring;
         gBattleScripting.statChangerKey = result.statChangerKey;
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, result.statChanger.statId);
 
         // If not allowing pointer, script continues normally
         if (!flags.allowPtr)
@@ -12447,7 +12447,7 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
 
 static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, union StatFlags stats, const u8 *failPtr)
 {
-    return ChangeStatBuffsStatChanger(battler, StatChangerWithStatBitsForAnim(CalcStatChangerValue(statId, statValue), stats), flags, failPtr);
+    return ChangeStatBuffsStatChanger(battler, StatChangerWithStatBitsForAnim(CalcStatChangerValue(statId, statValue, TRUE), stats), flags, failPtr);
 }
 
 static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
@@ -14770,7 +14770,7 @@ static void Cmd_statchangeanimation(void)
 
     TryPlayStatChangeAnimation(
         GetBattlerForBattleScript(cmd->battler),
-        CalcStatChangerValue(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down)),
+        CalcStatChangerValue(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down), TRUE),
         FALSE
     );
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -15448,7 +15448,7 @@ static void Cmd_setstatchanger(void)
 {
     CMD_ARGS(u8 stat, u8 stages, bool8 down);
 
-    SetStatChanger(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down));
+    gBattleScripting.statChanger = CalcStatChangerValue(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down), TRUE),
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -18389,7 +18389,7 @@ void BS_TrySpectralThiefSteal(void)
     if (foundStatsToSteal)
     {
         gBattleScripting.statChanger = statChanger;
-        gBattleScripting.animArg1 = GetStatAnimArgFromStatChanger(statChanger, FALSE);
+        gBattleScripting.animArg1 = GetStatAnimArgFromStatChanger(statChanger, 0);
         gBattlescriptCurrInstr = cmd->jumpInstr;
     }
     else

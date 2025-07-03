@@ -64,25 +64,6 @@
 #define max(a, b) ((a) >= (b) ? (a) : (b))
 #define abs(x) (((x) < 0) ? -(x) : (x))
 
-static inline u32 popcount(u32 word)
-{
-    u32 result = 0;
-    for (; word != 0; word >>= 0x1)
-        result += (word & 1);
-
-    return result;
-}
-
-// Only approximates if the input is not an exact power of 2
-static inline u32 log2Int(u32 word)
-{
-    u32 result = 0;
-    for (; word > 1; word >>= 0x1)
-        result++;
-
-    return result;
-}
-
 static inline s32 NegativeIfTrue(bool32 condition)
 {
     return condition ? -1 : 1;

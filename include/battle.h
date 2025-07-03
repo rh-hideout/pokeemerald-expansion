@@ -1328,11 +1328,11 @@ static inline u32 MaxRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 loweri
     return lowering ? (gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[battler].statStages[stat]);
 }
 
-static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32 stage, bool32 doNotSetStatId)
+static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32 stage, u32 backwardsCompatibleStat)
 {
     union StatChanger statChanger = (union StatChanger) {
         .isNegative = (stage < 0),
-        .statId = (doNotSetStatId || (popcount(stats.allStats) > 1)) ? 0 : log2Int(stats.allStats),
+        .statId = backwardsCompatibleStat,
         .attack = stats.attack, // All 1 or 0 depending on if the stat is selected in 'stats'
         .defense = stats.defense,
         .speed = stats.speed,
@@ -1348,22 +1348,21 @@ static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32
     return statChanger;
 }
 
-static inline union StatChanger CalcStatChangerValue(u32 statId, s32 stage)
+// setBackwardsCompatibleStatId need ONLY be set with older scripts using `setstatchanger` or `statbuffchange`
+static inline union StatChanger CalcStatChangerValue(u32 statId, s32 stage, bool32 setBackwardsCompatibleStatId)
 {
-    return PrepareStatChangerAny(1 << statId, stage, FALSE);
+    return PrepareStatChangerAny(TO_BIT(statId), stage, setBackwardsCompatibleStatId ? statId : 0);
 }
 
 static inline void SetStatChanger(u32 statId, s32 stage)
 {
-    gBattleScripting.statChanger = CalcStatChangerValue(statId, stage);
+    gBattleScripting.statChanger = CalcStatChangerValue(statId, stage, TRUE); // True for backwards compatibility with Mirror Herb/Opportunist
 }
 
 static inline void SetSavedStatChanger(u32 statId, s32 stage)
 {
-    gBattleScripting.savedStatChanger = CalcStatChangerValue(statId, stage);
+    gBattleScripting.savedStatChanger = CalcStatChangerValue(statId, stage, TRUE); // True for backwards compatibility with Mirror Herb/Opportunist
 }
-
-#define SET_STAT_FLAG_IF_MISSING(_stat, _statField) statChanger._statField = statChanger._statField ? statChanger._statField : stats._statField;
 
 // Used to create stat changer combined with the `stats` arg of setstatbuffchange
 // This arg is used in current (by the time you read this, older?) scripts as input into the resulting stat change animation
@@ -1373,7 +1372,13 @@ static inline union StatChanger StatChangerWithStatBitsForAnim(union StatChanger
 {
     if (statChanger.statId && stats.allStats != 0) // If statId is not set, we must not set the other bits
     {
-        FOREACH_STAT_STATCHANGER(SET_STAT_FLAG_IF_MISSING)
+        statChanger.attack = statChanger.attack ? statChanger.attack : stats.attack;
+        statChanger.defense = statChanger.defense ? statChanger.defense : stats.defense;
+        statChanger.speed = statChanger.speed ? statChanger.speed : stats.speed;
+        statChanger.spAttack = statChanger.spAttack ? statChanger.spAttack : stats.spAttack;
+        statChanger.spDefense = statChanger.spDefense ? statChanger.spDefense : stats.spDefense;
+        statChanger.accuracy = statChanger.accuracy ? statChanger.accuracy : stats.accuracy;
+        statChanger.evasion = statChanger.evasion ? statChanger.evasion : stats.evasion;
     }
     return statChanger;
 }
@@ -1458,25 +1463,36 @@ static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChan
         || statChanger.evasion > 1;
 }
 
-static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 singleStatOnly)
+static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 backwardsCompatible)
 {
-    return (singleStatOnly && statChanger.statId) ? statChanger.statId :
-        (!singleStatOnly && CountStatChangerStats(statChanger) > 1) ? STAT_MULTIPLE :
-        statChanger.attack > 0 ? STAT_ATK :
-        statChanger.defense > 0 ? STAT_DEF :
-        statChanger.speed > 0 ? STAT_SPEED :
-        statChanger.spAttack > 0 ? STAT_SPATK :
-        statChanger.spDefense > 0 ? STAT_SPDEF :
-        statChanger.accuracy > 0 ? STAT_ACC :
-        statChanger.evasion > 0 ? STAT_EVASION : 0; // Fail state
+    if (backwardsCompatible && statChanger.statId)
+        return statChanger.statId;
+    else if (CountStatChangerStats(statChanger) > 1)
+        return STAT_MULTIPLE;
+    else if (statChanger.attack)
+        return STAT_ATK;
+    else if (statChanger.defense)
+        return STAT_DEF;
+    else if (statChanger.speed)
+        return STAT_SPEED;
+    else if (statChanger.spAttack)
+        return STAT_SPATK;
+    else if (statChanger.spDefense)
+        return STAT_SPDEF;
+    else if (statChanger.accuracy)
+        return STAT_ACC;
+    else if (statChanger.evasion)
+        return STAT_EVASION;
+    else
+        return 0; // Fail state
 }
 
-static inline u8 GetStatAnimArgFromStatChanger(union StatChanger statChanger, bool32 singleStatOnly)
+static inline u8 GetStatAnimArgFromStatChanger(union StatChanger statChanger, u32 singleStatOnly)
 {
     return ((union StatAnimArg) {
         .isNegative = statChanger.isNegative,
         .harshly = AnyStatChangerStatIsSharpOrHarsh(statChanger),
-        .stat = GetStatChangerStat(statChanger, singleStatOnly),
+        .stat = singleStatOnly ? singleStatOnly : GetStatChangerStat(statChanger, FALSE),
     }).value;
 }
 
