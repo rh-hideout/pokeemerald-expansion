@@ -2551,14 +2551,14 @@ static void TextIntoAbilityPopUp(void *dest, u8 *windowTileData, s32 windowWidth
     #undef PIXELS
 }
 
-static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 printNickname, u32 battlerPosition)
+static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTileData2, u32 x, u32 y, u32 bgColor, u32 fgColor, u32 shadowColor, u32 printNickname, u32 battler)
 {
     u32 windowId, fontId;
     u8 *windowTileData = AddTextPrinterAndCreateWindowOnAbilityPopUp(str, x, y, bgColor, fgColor, shadowColor, &windowId);
     u32 size1 = ABILITY_POP_UP_OPPONENT_LEFT_WIN_W, size2 = ABILITY_POP_UP_OPPONENT_RIGHT_WIN_W;
 
     spriteTileData1 += TILE_OFFSET_4BPP(1);
-    if ((battlerPosition & BIT_SIDE) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
     {
         size1 = ABILITY_POP_UP_PLAYER_LEFT_WIN_W, size2 = ABILITY_POP_UP_PLAYER_RIGHT_WIN_W;
         // Increment again as the *first* column of the sprite
@@ -2600,7 +2600,7 @@ static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum),
                         0, 0,
                         ABILITY_POP_UP_BATTLER_BG_TXTCLR, ABILITY_POP_UP_BATTLER_FG_TXTCLR, ABILITY_POP_UP_BATTLER_SH_TXTCLR,
-                        TRUE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
+                        TRUE, gSprites[spriteId1].sBattlerId);
 }
 
 static void PrintAbilityOnAbilityPopUp(u32 ability, u8 spriteId1, u8 spriteId2)
@@ -2610,13 +2610,13 @@ static void PrintAbilityOnAbilityPopUp(u32 ability, u8 spriteId1, u8 spriteId2)
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         0, 4,
                         ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
-                        FALSE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
+                        FALSE, gSprites[spriteId1].sBattlerId);
     PrintOnAbilityPopUp(gAbilitiesInfo[ability].name,
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId1].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         (void *)(OBJ_VRAM0) + TILE_OFFSET_4BPP(gSprites[spriteId2].oam.tileNum) + TILE_OFFSET_4BPP(8),
                         0, 4,
                         ABILITY_POP_UP_ABILITY_BG_TXTCLR, ABILITY_POP_UP_ABILITY_FG_TXTCLR, ABILITY_POP_UP_ABILITY_SH_TXTCLR,
-                        FALSE, GetBattlerPosition(gSprites[spriteId1].sBattlerId));
+                        FALSE, gSprites[spriteId1].sBattlerId);
 }
 
 static inline bool32 IsAnyAbilityPopUpActive(void)
@@ -2663,7 +2663,7 @@ void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
     }
 
     coords = isDoubleBattle ? sAbilityPopUpCoordsDoubles : sAbilityPopUpCoordsSingles;
-    xSlide = (battlerPosition & BIT_SIDE) == B_SIDE_PLAYER ? -ABILITY_POP_UP_POS_X_SLIDE : ABILITY_POP_UP_POS_X_SLIDE;
+    xSlide = IsOnPlayerSide(battler) ? -ABILITY_POP_UP_POS_X_SLIDE : ABILITY_POP_UP_POS_X_SLIDE;
 
     template = sSpriteTemplate_AbilityPopUp;
     template.tileTag = tileTag;
@@ -2673,7 +2673,7 @@ void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
     spriteIds[1] = CreateSprite(&template, coords[battlerPosition][0] + xSlide + ABILITY_POP_UP_POS_X_DIFF,
                                            coords[battlerPosition][1], 0);
 
-    if ((battlerPosition & BIT_SIDE) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(battler))
     {
         gSprites[spriteIds[0]].sIsPlayerSide = TRUE;
         gSprites[spriteIds[1]].sIsPlayerSide = TRUE;
