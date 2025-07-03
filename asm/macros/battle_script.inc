@@ -1033,7 +1033,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoestats unused:req
+	.macro copyfoestats
 	.byte 0xbd
 	.endm
 
