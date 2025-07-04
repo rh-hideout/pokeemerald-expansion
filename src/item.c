@@ -523,7 +523,7 @@ static inline bool32 ItemIndexCompare(u16 itemA, u16 itemB, enum SortPocket sort
 
 void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket)
 {
-    u32 i, j, itemId_i, quantity_i, itemId_j, quantity_j;
+    u16 i, j, itemId_i, quantity_i, itemId_j, quantity_j;
     struct BagPocket *pocket = &gBagPockets[pocketId];
 
     for (i = 0; i < pocket->capacity - 1; i++)

@@ -1131,8 +1131,10 @@ void UpdatePocketItemList(u8 pocketId)
     switch (pocketId)
     {
     case POCKET_TM_HM:
+        SortPocket(pocketId, SORT_POCKET_TM_HM);
+        break;
     case POCKET_BERRIES:
-        SortPocketByItemId(pocketId);
+        SortPocket(pocketId, SORT_POCKET_BY_ITEM_ID);
         break;
     default:
         CompactItemsInBagPocket(pocketId);

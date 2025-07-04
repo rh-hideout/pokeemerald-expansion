@@ -30,7 +30,7 @@ TEST("TMs and HMs are sorted correctly in the bag")
         additem ITEM_HM02;
     );
 
-    SortPocketByItemId(POCKET_TM_HM);
+    SortPocket(POCKET_TM_HM, SORT_POCKET_TM_HM);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_TM01);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_TM05);
@@ -67,7 +67,7 @@ TEST("Berries are sorted correctly in the bag")
         additem ITEM_CHERI_BERRY;
     );
 
-    SortPocketByItemId(POCKET_BERRIES);
+    SortPocket(POCKET_BERRIES, SORT_POCKET_BY_ITEM_ID);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_CHERI_BERRY);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_ORAN_BERRY);
