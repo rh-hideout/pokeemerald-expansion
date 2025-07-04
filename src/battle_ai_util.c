@@ -1432,7 +1432,7 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
     if (gDisableStructs[battlerId].overwrittenAbility)
         return gDisableStructs[battlerId].overwrittenAbility;
 
-    // The AI knows its own ability.
+    // The AI knows its own ability, and omniscience handling
     if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab() && ASSUME_STAB_SEES_ABILITY))
         return knownAbility;
 
