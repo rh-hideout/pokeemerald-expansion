@@ -2016,9 +2016,9 @@ void CloseTurn(u32 sourceLine)
     {
         if (!(DATA.actionBattlers & (1 << i)))
         {
-             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
+            if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
-             else
+            else
                 Move(sourceLine, &gBattleMons[i], (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
         }
     }
@@ -2409,7 +2409,7 @@ void Switch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if ((battlerId & BIT_SIDE) == (i & BIT_SIDE))
+        if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
             INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "SWITCH to battler");
     }
 
@@ -2431,7 +2431,7 @@ void ExpectSwitch(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 
     for (i = 0; i < STATE->battlersCount; i++)
     {
-        if ((battlerId & BIT_SIDE) == (i & BIT_SIDE))
+        if (battlerId != i && (battlerId & BIT_SIDE) == (i & BIT_SIDE))
             INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "EXPECT_SWITCH to battler");
     }
 

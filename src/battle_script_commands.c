@@ -7431,6 +7431,11 @@ static void Cmd_getswitchedmondata(void)
     if (gBattleControllerExecFlags)
         return;
 
+    if (TESTING 
+     && gBattlerPartyIndexes[battler] == gBattleStruct->monToSwitchIntoId[battler]
+     && gBattleStruct->hpBefore[battler] != 0) // battler is alive
+        Test_ExitWithResult(TEST_RESULT_ERROR, 0, ":L:%s:%d: battler is trying to switch to themself", __FILE__, __LINE__);
+
     gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler];
 
     BtlController_EmitGetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_ALL_BATTLE, 1u << gBattlerPartyIndexes[battler]);
@@ -12689,7 +12694,7 @@ static void Cmd_forcerandomswitch(void)
             gBattleStruct->battlerState[gBattlerTarget].forcedSwitch = TRUE;
             gBattleStruct->monToSwitchIntoId[gBattlerTarget] = validMons[RandomUniform(RNG_FORCE_RANDOM_SWITCH, 0, validMonsCount - 1)];
 
-            if (!TESTING && !IsMultiBattle())
+            if (!IsMultiBattle())
                 SwitchPartyOrder(gBattlerTarget);
 
             if ((gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
