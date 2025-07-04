@@ -533,6 +533,17 @@ void Ai_UpdateFaintData(u32 battler)
     aiMon->isFainted = TRUE;
 }
 
+void RecordMovesBasedOnStab(u32 battler)
+{
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        u32 playerMove = gBattleMons[battler].moves[i];
+        if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove != 0))
+            RecordKnownMove(battler, playerMove);
+    }
+}
+
 void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
 {
     u32 ability, holdEffect;
@@ -546,19 +557,8 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
 
-    if (IsAiBattlerAssumingStab(battler) || IsAiBattlerAssumingStab(BATTLE_PARTNER(battler)))
+    if (IsAiBattlerAssumingStab())
         RecordMovesBasedOnStab(battler);
-}
-
-void RecordMovesBasedOnStab(u32 battler)
-{
-    u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        u32 playerMove = gBattleMons[battler].moves[i];
-        if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove != 0))
-            RecordKnownMove(battler, playerMove);
-    }
 }
 
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)

@@ -76,6 +76,9 @@
 // AI_FLAG_ASSUME_STAB settings
 #define ASSUME_STAB_SEES_ABILITY                                FALSE // Flag also gives omniscience for player's ability. Can use AI_FLAG_WEIGH_ABILITY_PREDICTION instead for smarter prediction without omniscience.
 
+// AI_FLAG_SMART_SWITCHING settings
+#define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
+
 // AI's acceptable number of hits to KO the partner via friendly fire in a double battle.
 #define FRIENDLY_FIRE_RISKY_THRESHOLD           2
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
