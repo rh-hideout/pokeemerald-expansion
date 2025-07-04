@@ -9,23 +9,23 @@
 /* Expands to:
  * enum
  * {
- *   ITEM_TM_FOCUS_PUNCH,
+ *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
  *   ...
- *   ITEM_HM_CUT,
+ *   ITEM_HM_CUT = ITM_HM01,
  *   ...
  * }; */
-#define ENUM_TM(id) CAT(ITEM_TM_, id),
-#define ENUM_HM(id) CAT(ITEM_HM_, id),
-enum
+#define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
+#define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
+#define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
+enum TMHMItemId
 {
-    ENUM_TM_START_ = ITEM_TM01 - 1,
-    FOREACH_TM(ENUM_TM)
-
-    ENUM_HM_START_ = ITEM_HM01 - 1,
-    FOREACH_HM(ENUM_HM)
+    RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
+    RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
 };
+
 #undef ENUM_TM
 #undef ENUM_HM
+#undef TO_TMHM_NUMS
 
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
@@ -73,7 +73,7 @@ struct ALIGNED(2) BagPocket
 
 struct TmHmIndexKey
 {
-    u16 itemId;
+    enum TMHMItemId itemId:16;
     u16 moveId;
 };
 
@@ -125,7 +125,7 @@ static inline u16 GetItemTMHMMoveId(u16 item)
 #undef UNPACK_ITEM_TO_TM_MOVE_ID
 #undef UNPACK_ITEM_TO_HM_MOVE_ID
 
-static inline u16 GetTMHMItemId(enum TMHMIndex index)
+static inline enum TMHMItemId GetTMHMItemId(enum TMHMIndex index)
 {
     return gTMHMItemMoveIds[index].itemId;
 }
