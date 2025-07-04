@@ -2132,17 +2132,6 @@ u16 *GetMovesArray(u32 battler)
     if (IsAiBattlerAware(battler) || IsAiBattlerAware(BATTLE_PARTNER(battler)))
         return gBattleMons[battler].moves;
 
-    else if (IsAiBattlerAssumingStab(battler) || IsAiBattlerAssumingStab(BATTLE_PARTNER(battler)))
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            u32 playerMove = gBattleMons[battler].moves[i];
-            if (IsSpeciesOfType(gBattleMons[battler].species, GetMoveType(playerMove)) && GetMovePower(playerMove != 0))
-                RecordKnownMove(battler, playerMove);
-        }
-        return gBattleHistory->usedMoves[battler];
-    }
-
     else
         return gBattleHistory->usedMoves[battler];
 }
