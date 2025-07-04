@@ -43,6 +43,27 @@ EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 #include "data/pokemon/item_effects.h"
 #include "data/items.h"
 
+#define UNPACK_TM_ITEM_ID(_tm) [CAT(ENUM_TM_HM_, _tm) + 1] = { CAT(ITEM_TM_, _tm), CAT(MOVE_, _tm) },
+#define UNPACK_HM_ITEM_ID(_hm) [CAT(ENUM_TM_HM_, _hm) + 1] = { CAT(ITEM_HM_, _hm), CAT(MOVE_, _hm) },
+
+const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
+{
+    [0] = { ITEM_NONE, MOVE_NONE }, // Failsafe
+    FOREACH_TM(UNPACK_TM_ITEM_ID)
+    FOREACH_HM(UNPACK_HM_ITEM_ID)
+    /*
+     * Expands to the following:
+     * 
+     * [1] = { ITEM_TM_FOCUS_PUNCH, MOVE_FOCUS_PUNCH },
+     * [2] = { ITEM_TM_DRAGON_CLAW, MOVE_DRAGON_CLAW },
+     * [3] = { ITEM_TM_WATER_PULSE, MOVE_WATER_PULSE },
+     * etc etc
+    */
+};
+
+#undef UNPACK_TM_ITEM_ID
+#undef UNPACK_HM_ITEM_ID
+
 static void (*const sBagPocket_GetSetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos, u16 *itemId, u16 *quantity, bool32 isSetting) =
 {
     [POCKET_ITEMS] = BagPocket_GetSetSlotDataGeneric,
@@ -486,9 +507,23 @@ void CompactItemsInBagPocket(enum Pocket pocketId)
     BagPocket_CompactItems(&gBagPockets[pocketId]);
 }
 
-void SortPocketByItemId(enum Pocket pocketId)
+// Opens the possibility of sorting by other means e.g. ghoulslash's advanced sorting
+static inline bool32 ItemIndexCompare(u16 itemA, u16 itemB, enum SortPocket sortPocket)
 {
-    u16 i, j, itemId_i, quantity_i, itemId_j, quantity_j;
+    switch (sortPocket)
+    {
+        case SORT_POCKET_BY_ITEM_ID:
+            return itemA > itemB;
+        case SORT_POCKET_TM_HM:
+            return GetItemTMHMIndex(itemA) > GetItemTMHMIndex(itemB);
+        default:
+            return FALSE;
+    }
+}
+
+void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket)
+{
+    u32 i, j, itemId_i, quantity_i, itemId_j, quantity_j;
     struct BagPocket *pocket = &gBagPockets[pocketId];
 
     for (i = 0; i < pocket->capacity - 1; i++)
@@ -497,7 +532,7 @@ void SortPocketByItemId(enum Pocket pocketId)
         for (j = i + 1; j < pocket->capacity; j++)
         {
             BagPocket_GetSlotData(pocket, j, &itemId_j, &quantity_j);
-            if (itemId_j && (!itemId_i || itemId_i > itemId_j))
+            if (itemId_j && (!itemId_i || ItemIndexCompare(itemId_i, itemId_j, sortPocket)))
             {
                 BagPocket_SetSlotData(pocket, i, &itemId_j, &quantity_j);
                 BagPocket_SetSlotData(pocket, j, &itemId_i, &quantity_i);
@@ -923,4 +958,9 @@ u32 GetItemStatus2Mask(u16 itemId)
         return STATUS2_CONFUSION;
     else
         return 0;
+}
+
+u32 GetItemSellPrice(u32 itemId)
+{
+    return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
 }

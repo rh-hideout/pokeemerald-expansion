@@ -10,6 +10,15 @@ TEST("TMs and HMs are sorted correctly in the bag")
 {
     struct BagPocket *pocket = &gBagPockets[POCKET_TM_HM];
 
+    ASSUME(GetItemPocket(ITEM_HM07) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_TM25) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_TM14) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_TM42) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_HM05) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_TM05) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_TM01) == POCKET_TM_HM);
+    ASSUME(GetItemPocket(ITEM_HM02) == POCKET_TM_HM);
+
     RUN_OVERWORLD_SCRIPT(
         additem ITEM_HM07;
         additem ITEM_TM25;
@@ -37,6 +46,15 @@ TEST("TMs and HMs are sorted correctly in the bag")
 TEST("Berries are sorted correctly in the bag")
 {
     struct BagPocket *pocket = &gBagPockets[POCKET_BERRIES];
+
+    ASSUME(GetItemPocket(ITEM_POMEG_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_MAGOST_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_KELPSY_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_MICLE_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_CHARTI_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_GANLON_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_ORAN_BERRY) == POCKET_BERRIES);
+    ASSUME(GetItemPocket(ITEM_CHERI_BERRY) == POCKET_BERRIES);
 
     RUN_OVERWORLD_SCRIPT(
         additem ITEM_POMEG_BERRY;
@@ -66,6 +84,13 @@ TEST("Items are correctly compacted in the bag")
 {
     struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
     memset(pocket->itemSlots, 0, sizeof(gSaveBlock1Ptr->bag.items));
+
+    ASSUME(GetItemPocket(ITEM_NUGGET) == POCKET_ITEMS);
+    ASSUME(GetItemPocket(ITEM_BIG_NUGGET) == POCKET_ITEMS);
+    ASSUME(GetItemPocket(ITEM_TINY_MUSHROOM) == POCKET_ITEMS);
+    ASSUME(GetItemPocket(ITEM_BIG_MUSHROOM) == POCKET_ITEMS);
+    ASSUME(GetItemPocket(ITEM_PEARL) == POCKET_ITEMS);
+    ASSUME(GetItemPocket(ITEM_BIG_PEARL) == POCKET_ITEMS);
 
     RUN_OVERWORLD_SCRIPT(
         additem ITEM_NUGGET;

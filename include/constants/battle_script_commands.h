@@ -222,8 +222,10 @@ enum CmdVarious
 #define STAT_CHANGE_ALLOW_PTR               (1 << 0)   // If set, allow use of jumpptr. If not set and unable to raise/lower stats, jump to failInstr.
 #define STAT_CHANGE_MIRROR_ARMOR            (1 << 1)   // Stat change redirection caused by Mirror Armor ability.
 #define STAT_CHANGE_ONLY_CHECKING           (1 << 2)   // Checks if the stat change can occur. Does not change stats or play stat change animation.
-#define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 5)
-#define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 6)
+#define STAT_CHANGE_NOT_PROTECT_AFFECTED    (1 << 3)
+#define STAT_CHANGE_UPDATE_MOVE_EFFECT      (1 << 4)
+#define STAT_CHANGE_CHECK_PREVENTION        (1 << 5)
+#define STAT_CHANGE_CERTAIN                 (1 << 6)
 
 // stat flags for TryPlayStatChangeAnimation
 #define BIT_HP                      (1 << 0)
@@ -237,7 +239,7 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-// cases for Cmd_moveend
+// cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
@@ -278,6 +280,7 @@ enum MoveEndEffects
     MOVEEND_HIT_ESCAPE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
+    MOVEEND_REMOVE_TERRAIN,
     MOVEEND_WHITE_HERB,
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
@@ -292,16 +295,18 @@ enum MoveEndEffects
 #define B_SWITCH_HIT        1   // dragon tail, circle throw
 #define B_SWITCH_RED_CARD   2
 
-// Argument labels for EFFECT_HIT_SET_REMOVE_TERRAIN
-#define ARG_SET_PSYCHIC_TERRAIN        0
-#define ARG_TRY_REMOVE_TERRAIN_HIT     1
-#define ARG_TRY_REMOVE_TERRAIN_FAIL    2
-
 enum StatusTrigger
 {
     TRIGGER_ON_MOVE,
     TRIGGER_ON_ABILITY,
-    TRIGGER_ON_ATTACKER,
+    TRIGGER_ON_PROTECT,
+};
+
+enum TriggerOnFieldStatus
+{
+    ON_ANY,
+    ON_TERRAIN,
+    ON_WEATHER,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

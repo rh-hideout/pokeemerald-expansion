@@ -141,7 +141,7 @@ enum VolatileFlags
 
 // Volatile status ailments
 // These are removed after exiting the battle or switching
-/* Definitions with names e.g. "Confusion" are accessible in the debug menu 
+/* Definitions with names e.g. "Confusion" are accessible in the debug menu
  * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
  */
 #define VOLATILE_DEFINITIONS(F) \
@@ -167,7 +167,9 @@ enum VolatileFlags
     F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE)
+    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE)
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
 #define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize)
@@ -390,7 +392,6 @@ enum MoveEffects
     MOVE_EFFECT_TRI_ATTACK,
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
-    MOVE_EFFECT_CHARGING,
     MOVE_EFFECT_WRAP,
     MOVE_EFFECT_ATK_PLUS_1,
     MOVE_EFFECT_DEF_PLUS_1,
@@ -515,8 +516,6 @@ enum MoveEffects
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
 
-#define MOVE_EFFECT_AFFECTS_USER        0x2000
-#define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
