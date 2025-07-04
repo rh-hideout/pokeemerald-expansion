@@ -12173,7 +12173,9 @@ static bool32 MoveEffectBlockedByMist(struct MoveEffectResult *result, const u8 
           GetBattlerAbility(result->battlerAtk) == ABILITY_INFILTRATOR))
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
+        {
             result->nextInstr = result->pushInstr;
+        }
         else
         {
             result->battlescriptPush = TRUE;
@@ -12200,7 +12202,9 @@ static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveE
         (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->move].effect != EFFECT_CURSE)
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
+        {
             result->nextInstr = result->pushInstr;
+        }
         else
         {
             result->scriptingBattler = result->effectBattler + 1;
@@ -12247,7 +12251,9 @@ static bool32 MoveEffectBlockedByFlowerVeil(struct MoveEffectResult *result, con
     if ((index = IsFlowerVeilProtected(result->effectBattler)) && !result->certain)
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
+        {
             result->nextInstr = result->pushInstr;
+        }
         else
         {
             result->battlescriptPush = TRUE;
