@@ -245,7 +245,6 @@ static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
 static void DebugAction_ToggleFlag(u8 taskId);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
-static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_Warp_Warp(u8 taskId);
