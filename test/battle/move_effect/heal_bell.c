@@ -95,7 +95,7 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)"
 
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(GEN_CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Heal Bell cures inactive Soundproof Pokemon (Gen5+)")
 
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(GEN_CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
         PLAYER(SPECIES_EXPLOUD) { Ability(ability); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
@@ -150,7 +150,7 @@ SINGLE_BATTLE_TEST("Heal Bell cures a Soundproof user (Gen5, Gen8+)")
     PARAMETRIZE { config = GEN_8; }
     GIVEN {
         ASSUME(IsSoundMove(MOVE_HEAL_BELL));
-        WITH_CONFIG(GEN_CONFIG_HEAL_BELL_SOUNDPROOF, config);
+        WITH_CONFIG(CONFIG_HEAL_BELL_SOUNDPROOF, config);
         PLAYER(SPECIES_EXPLOUD) { Ability(ABILITY_SOUNDPROOF); Status1(STATUS1_POISON); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

@@ -33,7 +33,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit twice 37.5/35% of the time")
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -53,7 +53,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit thrice 37.5/35% of the time")
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit four times 12.5/15% of the time")
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("Multi hit Moves hit five times 12.5/15% of the time")
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

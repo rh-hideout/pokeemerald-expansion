@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Critical hits deal 100% (Gen 1-5) or 50% (Gen 6+) more damag
     PARAMETRIZE { criticalHit = TRUE;  genConfig = GEN_5; }
     PARAMETRIZE { criticalHit = TRUE;  genConfig = GEN_6; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_MULTIPLIER, genConfig);
+        WITH_CONFIG(CONFIG_CRIT_MULTIPLIER, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
