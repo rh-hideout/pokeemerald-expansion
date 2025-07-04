@@ -28,7 +28,7 @@ enum
 #undef ENUM_HM
 
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
- * gTMHMItemMoveIds. Each one in src/data/items.h should have an index in the .tmHmIndex field.
+ * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
  */
 #define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
 enum TMHMIndex
@@ -57,11 +57,7 @@ struct Item
     u8 importance:2;
     u8 notConsumed:1;
     enum Pocket pocket:5;
-    union PACKED {
-        u8 index; // Used for sorting !! DO NOT USE IN data/items/h as it does not check type !!
-        enum TMHMIndex tmHmIndex:8;
-        // enum BerryIndex berryIndex:8; // Coming soon...
-    };
+    u8 padding;
     u8 type;
     u8 battleUsage;
     u8 flingPower;
@@ -84,6 +80,50 @@ struct TmHmIndexKey
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
+
+#define UNPACK_ITEM_TO_TM_INDEX(_tm) case CAT(ITEM_TM_, _tm): return CAT(ENUM_TM_HM_, _tm) + 1;
+#define UNPACK_ITEM_TO_HM_INDEX(_hm) case CAT(ITEM_HM_, _hm): return CAT(ENUM_TM_HM_, _hm) + 1;
+#define UNPACK_ITEM_TO_TM_MOVE_ID(_tm) case CAT(ITEM_TM_, _tm): return CAT(MOVE_, _tm);
+#define UNPACK_ITEM_TO_HM_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
+
+static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
+{
+    switch (item)
+    {
+        /* Expands to:
+         * case ITEM_TM_FOCUS_PUNCH:
+         *     return 1;
+         * case ITEM_TM_DRAGON_CLAW:
+         *      return 2;
+         * etc */
+        FOREACH_TM(UNPACK_ITEM_TO_TM_INDEX)
+        FOREACH_HM(UNPACK_ITEM_TO_HM_INDEX)
+        default:
+            return 0;
+    }
+}
+
+static inline u16 GetItemTMHMMoveId(u16 item)
+{
+    switch (item)
+    {
+        /* Expands to:
+         * case ITEM_TM_FOCUS_PUNCH:
+         *     return MOVE_FOCUS_PUNCH;
+         * case ITEM_TM_DRAGON_CLAW:
+         *      return MOVE_DRAGON_CLAW;
+         * etc */
+        FOREACH_TM(UNPACK_ITEM_TO_TM_MOVE_ID)
+        FOREACH_HM(UNPACK_ITEM_TO_HM_MOVE_ID)
+        default:
+            return MOVE_NONE;
+    }
+}
+
+#undef UNPACK_ITEM_TO_TM_INDEX
+#undef UNPACK_ITEM_TO_HM_INDEX
+#undef UNPACK_ITEM_TO_TM_MOVE_ID
+#undef UNPACK_ITEM_TO_HM_MOVE_ID
 
 static inline u16 GetTMHMItemId(enum TMHMIndex index)
 {

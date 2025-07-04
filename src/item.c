@@ -615,7 +615,7 @@ void SortBerriesOrTMHMs(enum Pocket pocketId)
                     continue;
                 if (pocketId == POCKET_BERRIES && GetBagItemId(pocketId, i) <= GetBagItemId(pocketId, j)) // To do
                     continue;
-                if (pocketId == POCKET_TM_HM && gItemsInfo[GetBagItemId(pocketId, i)].index <= gItemsInfo[GetBagItemId(pocketId, j)].index)
+                if (pocketId == POCKET_TM_HM && GetItemTMHMIndex(GetBagItemId(pocketId, i)) <= GetItemTMHMIndex(GetBagItemId(pocketId, j)))
                     continue;
             }
             SwapItemSlots(pocketId, i, j);
