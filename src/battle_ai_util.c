@@ -1433,7 +1433,7 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
         return gDisableStructs[battlerId].overwrittenAbility;
 
     // The AI knows its own ability.
-    if (IsAiBattlerAware(battlerId))
+    if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab(battlerId) && ASSUME_STAB_SEES_ABILITY))
         return knownAbility;
 
     // Check neutralizing gas, gastro acid
