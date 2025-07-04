@@ -1164,11 +1164,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_RAICHU
-    const u32 gMonFrontPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/front.png");
-    const u32 gMonPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/normal.pal");
-    const u32 gMonBackPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/back.png");
-    const u32 gMonShinyPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/shiny.pal");
-    const u8 gMonIcon_RaichuMega[] = INCBIN_U8("graphics/pokemon/raichu/mega/icon.png");
+    const u32 gMonFrontPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/front.4bpp.lz");
+    const u32 gMonPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_RaichuMega[] = INCBIN_U32("graphics/pokemon/raichu/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_RaichuMega[] = INCBIN_U8("graphics/pokemon/raichu/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_RAICHU
 #endif //P_MEGA_EVOLUTIONS
 
@@ -10903,10 +10903,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_SLAKING
-    const u32 gMonFrontPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.png");
-    const u32 gMonPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.pal");
-    const u32 gMonBackPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslakingback.png");
-    const u32 gMonShinyPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.pal");
+    const u32 gMonFrontPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.4bpp.lz");
+    const u32 gMonPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.gbapal.lz");
+    const u32 gMonBackPic_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslakingback.4bpp.lz");
+    const u32 gMonShinyPalette_SlakingMega[] = INCBIN_U32("graphics/pokemon/slaking/mega/megaslaking.gbapal.lz");
     const u8 gMonIcon_SlakingMega[] = INCBIN_U8("graphics/pokemon/slaking/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_SLAKING
 #endif //P_MEGA_EVOLUTIONS
@@ -11781,10 +11781,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_ROSERADE
-    const u32 gMonFrontPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.png");
-    const u32 gMonPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.pal");
-    const u32 gMonBackPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade_back.png");
-    const u32 gMonShinyPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.pal");
+    const u32 gMonFrontPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.4bpp.lz");
+    const u32 gMonPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.gbapal.lz");
+    const u32 gMonBackPic_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade_back.4bpp.lz");
+    const u32 gMonShinyPalette_RoseradeMega[] = INCBIN_U32("graphics/pokemon/roserade/mega/megaroserade.gbapal.lz");
     const u8 gMonIcon_RoseradeMega[] = INCBIN_U8("graphics/pokemon/roserade/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_ROSERADE
 #endif //P_MEGA_EVOLUTIONS
@@ -12858,11 +12858,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_MILOTIC
-    const u32 gMonFrontPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/anim_front.png");
-    const u32 gMonPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/normal.pal");
-    const u32 gMonBackPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/back.png");
-    const u32 gMonShinyPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/shiny.pal");
-    const u8 gMonIcon_MiloticMega[] = INCBIN_U8("graphics/pokemon/milotic/mega/icon.png");
+    const u32 gMonFrontPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/front.4bpp.lz");
+    const u32 gMonPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_MiloticMega[] = INCBIN_U32("graphics/pokemon/milotic/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_MiloticMega[] = INCBIN_U8("graphics/pokemon/milotic/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_MILOTIC
 #endif //P_MEGA_EVOLUTIONS
 
@@ -13088,10 +13088,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_DUSKNOIR
-    const u32 gMonFrontPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.png");
-    const u32 gMonPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.pal");
-    const u32 gMonBackPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirback.png");
-    const u32 gMonShinyPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirshiny.pal");
+    const u32 gMonFrontPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.4bpp.lz");
+    const u32 gMonPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoir.gbapal.lz");
+    const u32 gMonBackPic_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirback.4bpp.lz");
+    const u32 gMonShinyPalette_DusknoirMega[] = INCBIN_U32("graphics/pokemon/dusknoir/mega/megadusknoirshiny.gbapal.lz");
     const u8 gMonIcon_DusknoirMega[] = INCBIN_U8("graphics/pokemon/dusknoir/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_DUSKNOIR
 #endif //P_MEGA_EVOLUTIONS
@@ -13129,10 +13129,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_TROPIUS
-    const u32 gMonFrontPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/front.png");
-    const u32 gMonPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/normal.pal");
-    const u32 gMonBackPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/back.png");
-    const u32 gMonShinyPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/shiny.pal");
+    const u32 gMonFrontPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/front.4bpp.lz");
+    const u32 gMonPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_TropiusMega[] = INCBIN_U32("graphics/pokemon/tropius/mega/shiny.gbapal.lz");
     const u8 gMonIcon_TropiusMega[] = INCBIN_U8("graphics/pokemon/tropius/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_TROPIUS
 #endif //P_MEGA_EVOLUTIONS
@@ -14191,10 +14191,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_TORTERRA
-    const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.png");
-    const u32 gMonPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.pal");
-    const u32 gMonBackPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterraback.png");
-    const u32 gMonShinyPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.pal");
+    const u32 gMonFrontPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.4bpp.lz");
+    const u32 gMonPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.gbapal.lz");
+    const u32 gMonBackPic_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterraback.4bpp.lz");
+    const u32 gMonShinyPalette_TorterraMega[] = INCBIN_U32("graphics/pokemon/torterra/mega/megatorterra.gbapal.lz");
     const u8 gMonIcon_TorterraMega[] = INCBIN_U8("graphics/pokemon/torterra/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_TORTERRA
 #endif //P_MEGA_EVOLUTIONS
@@ -14253,10 +14253,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_INFERNAPE
-    const u32 gMonFrontPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernape.png");
-    const u32 gMonPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapenormal.pal");
-    const u32 gMonBackPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeback.png");
-    const u32 gMonShinyPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeshiny.pal");
+    const u32 gMonFrontPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernape.4bpp.lz");
+    const u32 gMonPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapenormal.gbapal.lz");
+    const u32 gMonBackPic_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeback.4bpp.lz");
+    const u32 gMonShinyPalette_InfernapeMega[] = INCBIN_U32("graphics/pokemon/infernape/mega/megainfernapeshiny.gbapal.lz");
     const u8 gMonIcon_InfernapeMega[] = INCBIN_U8("graphics/pokemon/infernape/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_INFERNAPE
 #endif //P_MEGA_EVOLUTIONS
@@ -14314,16 +14314,16 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_EMPOLEON
-    const u32 gMonFrontPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/front.png.lz");
-    const u32 gMonPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/normal.pal.lz");
-    const u32 gMonBackPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/back.png.lz");
-    const u32 gMonShinyPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/shiny.pal.lz");
+    const u32 gMonFrontPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/front.4bpp.lz");
+    const u32 gMonPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/normal.gbapal.lz");
+    const u32 gMonBackPic_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/back.4bpp.lz");
+    const u32 gMonShinyPalette_EmpoleonMegaX[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_x/shiny.gbapal.lz");
     const u8 gMonIcon_EmpoleonMegaX[] = INCBIN_U8("graphics/pokemon/Empoleon/icon.4bpp");
 
-    const u32 gMonFrontPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megaempoleond.png");
-    const u32 gMonPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megadnormal.pal");
-    const u32 gMonBackPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megaempoleond_back.png");
-    const u32 gMonShinyPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megadshiny.pal");
+    const u32 gMonFrontPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megaempoleond.4bpp.lz");
+    const u32 gMonPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megadnormal.gbapal.lz");
+    const u32 gMonBackPic_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megaempoleond_back.4bpp.lz");
+    const u32 gMonShinyPalette_EmpoleonMegaY[] = INCBIN_U32("graphics/pokemon/Empoleon/mega_y/megadshiny.gbapal.lz");
     const u8 gMonIcon_EmpoleonMegaY[] = INCBIN_U8("graphics/pokemon/Empoleon/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_EMPOLEON
 #endif //P_MEGA_EVOLUTIONS
@@ -14576,10 +14576,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_LUXRAY
-    const u32 gMonFrontPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.png");
-    const u32 gMonPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.pal");
-    const u32 gMonBackPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxrayback.png");
-    const u32 gMonShinyPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/mega/luxray/megaluxrayshiny.pal");
+    const u32 gMonFrontPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.4bpp.lz");
+    const u32 gMonPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxray.gbapal.lz");
+    const u32 gMonBackPic_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxrayback.4bpp.lz");
+    const u32 gMonShinyPalette_LuxrayMega[] = INCBIN_U32("graphics/pokemon/luxray/mega/megaluxrayshiny.gbapal.lz");
     const u8 gMonIcon_LuxrayMega[] = INCBIN_U8("graphics/pokemon/luxray/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_LUXRAY
 #endif //P_MEGA_EVOLUTIONS
@@ -16262,11 +16262,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_SAMUROTT
-    const u32 gMonFrontPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/front.png");
-    const u32 gMonPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/normal.pal");
-    const u32 gMonBackPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/back.png");
-    const u32 gMonShinyPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/shiny.pal");
-    const u8 gMonIcon_SamurottHisuiMega[] = INCBIN_U8("graphics/pokemon/samurott/hisui/mega/icon.png");
+    const u32 gMonFrontPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/front.4bpp.lz");
+    const u32 gMonPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_SamurottHisuiMega[] = INCBIN_U32("graphics/pokemon/samurott/hisui/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_SamurottHisuiMega[] = INCBIN_U8("graphics/pokemon/samurott/hisui/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_SAMUROTT
 #endif //P_MEGA_EVOLUTIONS
 
@@ -22859,11 +22859,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonShinyPalette_RillaboomMegaX[] = INCBIN_U32("graphics/pokemon/rillaboom/gmax/shiny.gbapal.lz");
     const u8 gMonIcon_RillaboomMegaX[] = INCBIN_U8("graphics/pokemon/rillaboom/gmax/icon.4bpp");
 
-    const u32 gMonFrontPic_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/front.png");
-    const u32 gMonBackPic_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/back.png");
-    const u32 gMonPalette_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/normal.pal");
-    const u32 gMonShinyPalette_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/shiny.pal");
-    const u8 gMonIcon_RillaboomMegaY[] = INCBIN_U8("graphics/pokemon/rillaboom/mega/icon.png");
+    const u32 gMonFrontPic_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/front.4bpp.lz");
+    const u32 gMonBackPic_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/back.4bpp.lz");
+    const u32 gMonPalette_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/normal.gbapal.lz");
+    const u32 gMonShinyPalette_RillaboomMegaY[] = INCBIN_U32("graphics/pokemon/rillaboom/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_RillaboomMegaY[] = INCBIN_U8("graphics/pokemon/rillaboom/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_RILLABOOM
 #endif //P_MEGA_EVOLUTIONS
 
@@ -25094,11 +25094,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_SKELEDIRGE
-    const u32 gMonFrontPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/front.png");
-    const u32 gMonPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/normal.pal");
-    const u32 gMonBackPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/back.png");
-    const u32 gMonShinyPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/shiny.pal");
-    const u8 gMonIcon_SkeledirgeMega[] = INCBIN_U8("graphics/pokemon/skeledirge/mega/icon.png");
+    const u32 gMonFrontPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/front.4bpp.lz");
+    const u32 gMonPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/normal.gbapal.lz");
+    const u32 gMonBackPic_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/back.4bpp.lz");
+    const u32 gMonShinyPalette_SkeledirgeMega[] = INCBIN_U32("graphics/pokemon/skeledirge/mega/shiny.gbapal.lz");
+    const u8 gMonIcon_SkeledirgeMega[] = INCBIN_U8("graphics/pokemon/skeledirge/mega/icon.4bpp");
 #endif //FROSTY_MEGAS >= SPECIES_SKELEDIRGE
 #endif //P_MEGA_EVOLUTIONS
 

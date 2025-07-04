@@ -666,7 +666,7 @@ static const struct FormChange sLuxrayFormChangeTable[] = {
 };
 #endif //P_FAMILY_SHINX
 
-#if P_FAMILY_BUDEW
+#if P_FAMILY_ROSELIA
 static const struct FormChange sRoseradeFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
 #if FROSTY_MEGAS >= SPECIES_ROSERADE
@@ -675,7 +675,7 @@ static const struct FormChange sRoseradeFormChangeTable[] = {
 #endif // P_MEGA_EVOLUTIONS
     {FORM_CHANGE_TERMINATOR},
 };
-#endif //P_FAMILY_BUDEW
+#endif //P_FAMILY_ROSELIA
 
 
 #if P_FAMILY_BURMY

@@ -1177,6 +1177,7 @@ const u8 *const gBattleStringsTable[BATTLESTRINGS_COUNT] =
     [STRINGID_HARDHATPOP]                           = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Hard Hat broke!"),
     [STRINGID_SANDBAGPOP]                           = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Sand Bag broke!"),
     [STRINGID_SUBBERRY]                            = COMPOUND_STRING("{B_DEF_NAME_WITH_PREFIX}'s Sub-Berry created a substitute!"), 
+    [STRINGID_STEELSURGESWITCHIN]                    = COMPOUND_STRING("{B_SCR_NAME_WITH_PREFIX} was caught in the sharp shrapnel!"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =

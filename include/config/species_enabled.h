@@ -28,7 +28,7 @@
 // SPECIES_EGG (1567) means all custom megas enabled.
 // 0 means no custom megas will be enabled.
 // SPECIES_EEVEE (133) would enable Eevee and all megas whose IDs are lower than Eevee.
-#define FROSTY_MEGAS                     0
+#define FROSTY_MEGAS                     1567
 #define P_PRIMAL_REVERSIONS              FALSE // Groudon and Kyogre only.
 #define P_ULTRA_BURST_FORMS              FALSE // Ultra Necrozma only.
 #define P_GIGANTAMAX_FORMS               FALSE

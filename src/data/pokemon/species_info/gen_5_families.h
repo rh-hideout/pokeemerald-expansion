@@ -696,6 +696,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sSamurottHisuiLevelUpLearnset,
         .teachableLearnset = sSamurottHisuiTeachableLearnset,
         .formSpeciesIdTable = sSamurottFormSpeciesIdTable,
+        .formChangeTable = sSamurottFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -762,6 +763,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .levelUpLearnset = sSamurottHisuiLevelUpLearnset,
         .teachableLearnset = sSamurottHisuiTeachableLearnset,
         .formSpeciesIdTable = sSamurottFormSpeciesIdTable,
+        .formChangeTable = sSamurottFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_SAMUROTT
 #endif //P_MEGA_EVOLUTIONS

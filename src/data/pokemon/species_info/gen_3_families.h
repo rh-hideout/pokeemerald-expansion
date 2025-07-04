@@ -3221,6 +3221,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         )
         .levelUpLearnset = sSlakingLevelUpLearnset,
         .teachableLearnset = sSlakingTeachableLearnset,
+        .formChangeTable = sSlakingFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -3291,6 +3292,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sSlakingLevelUpLearnset,
         .teachableLearnset = sSlakingTeachableLearnset,
+        .formChangeTable = sSlakingFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_SLAKING
 #endif //P_MEGA_EVOLUTIONS
@@ -5504,6 +5506,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         )
         .levelUpLearnset = sRoseradeLevelUpLearnset,
         .teachableLearnset = sRoseradeTeachableLearnset,
+        .formChangeTable = sRoseradeFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -5584,6 +5587,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sRoseradeLevelUpLearnset,
         .teachableLearnset = sRoseradeTeachableLearnset,
+        .formChangeTable = sRoseradeFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_ROSERADE
 #endif //P_MEGA_EVOLUTIONS
@@ -8167,6 +8171,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         )
         .levelUpLearnset = sMiloticLevelUpLearnset,
         .teachableLearnset = sMiloticTeachableLearnset,
+        .formChangeTable = sMiloticFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -8238,6 +8243,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sMiloticLevelUpLearnset,
         .teachableLearnset = sMiloticTeachableLearnset,
+        .formChangeTable = sMiloticFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_MILOTIC
 #endif //P_MEGA_EVOLUTIONS
@@ -8987,6 +8993,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         )
         .levelUpLearnset = sDusknoirLevelUpLearnset,
         .teachableLearnset = sDusknoirTeachableLearnset,
+        .formChangeTable = sDusknoirFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -9060,6 +9067,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .isMegaEvolution = TRUE,
         .levelUpLearnset = sDusknoirLevelUpLearnset,
         .teachableLearnset = sDusknoirTeachableLearnset,
+        .formChangeTable = sDusknoirFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_DUSKNOIR
 #endif //P_MEGA_EVOLUTIONS
@@ -9127,6 +9135,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sTropiusLevelUpLearnset,
         .teachableLearnset = sTropiusTeachableLearnset,
         .eggMoveLearnset = sTropiusEggMoveLearnset,
+        .formChangeTable = sTropiusFormChangeTable,
     },
 
 #if P_MEGA_EVOLUTIONS
@@ -9192,6 +9201,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .levelUpLearnset = sTropiusLevelUpLearnset,
         .teachableLearnset = sTropiusTeachableLearnset,
         .eggMoveLearnset = sTropiusEggMoveLearnset,
+        .formChangeTable = sTropiusFormChangeTable,
     },
 #endif //FROSTY_MEGAS >= SPECIES_TROPIUS
 #endif //P_MEGA_EVOLUTIONS
