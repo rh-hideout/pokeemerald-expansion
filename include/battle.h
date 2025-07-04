@@ -1332,7 +1332,7 @@ static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32
 {
     union StatChanger statChanger = (union StatChanger) {
         .isNegative = (stage < 0),
-        .statId = backwardsCompatibleStat,
+        .backwardsCompatibleStatId = backwardsCompatibleStat,
         .attack = stats.attack, // All 1 or 0 depending on if the stat is selected in 'stats'
         .defense = stats.defense,
         .speed = stats.speed,
@@ -1367,10 +1367,10 @@ static inline void SetSavedStatChanger(u32 statId, s32 stage)
 // Used to create stat changer combined with the `stats` arg of setstatbuffchange
 // This arg is used in current (by the time you read this, older?) scripts as input into the resulting stat change animation
 // while we actually only raise one stat a time - which must already have been set to gBattleScripting.statChanger
-// The solution is to set statId so that we know which stat we're "actually" raising, but set the other bits just for the animation
+// The solution is to set `backwardsCompatibleStatId` so that we know which stat we're "actually" raising, but set the other bits just for the animation
 static inline union StatChanger StatChangerWithStatBitsForAnim(union StatChanger statChanger, union StatFlags stats)
 {
-    if (statChanger.statId && stats.allStats != 0) // If statId is not set, we must not set the other bits
+    if (statChanger.backwardsCompatibleStatId && stats.allStats != 0) // If backwardsCompatibleStatId is not set, we must not set the other bits
     {
         statChanger.attack = statChanger.attack ? statChanger.attack : stats.attack;
         statChanger.defense = statChanger.defense ? statChanger.defense : stats.defense;
@@ -1465,8 +1465,8 @@ static inline bool32 AnyStatChangerStatIsSharpOrHarsh(union StatChanger statChan
 
 static inline u8 GetStatChangerStat(union StatChanger statChanger, bool32 backwardsCompatible)
 {
-    if (backwardsCompatible && statChanger.statId)
-        return statChanger.statId;
+    if (backwardsCompatible && statChanger.backwardsCompatibleStatId)
+        return statChanger.backwardsCompatibleStatId;
     else if (CountStatChangerStats(statChanger) > 1)
         return STAT_MULTIPLE;
     else if (statChanger.attack)

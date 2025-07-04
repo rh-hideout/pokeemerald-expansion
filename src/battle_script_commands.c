@@ -12141,7 +12141,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
     // they are raised one at a time. However, the animation requires taking into
     // account all stats that will be raised by that move at once.
     u32 changeableStatsCount = singleStatOnly ? 1: CountStatChangerStats(statChanger);
-    if ((!gBattleScripting.statAnimPlayed || !statChanger.statId) && changeableStatsCount > 0) // failsafe
+    if ((!gBattleScripting.statAnimPlayed || !statChanger.backwardsCompatibleStatId) && changeableStatsCount > 0) // failsafe
     {
         // This prevents the stat change animation going off multiple times per turn
         gBattleScripting.statAnimPlayed = (changeableStatsCount > 1);
@@ -12152,7 +12152,7 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
             B_COMM_TO_CONTROLLER,
             B_ANIM_STATS_CHANGE,
             &gDisableStructs[battler],
-            GetStatAnimArgFromStatChanger(statChanger, singleStatOnly ? statChanger.statId : 0)); // To do - get this work with Defiant
+            GetStatAnimArgFromStatChanger(statChanger, singleStatOnly ? statChanger.backwardsCompatibleStatId : 0)); // To do - get this work with Defiant
     }
     else // final stat that can be changed
         gBattleScripting.statAnimPlayed = FALSE;
@@ -12227,9 +12227,10 @@ static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveE
 
 static bool32 MoveEffectBlockedByAbilityPreventingSpecificStatDrop(struct MoveEffectResult *result, const u8 *failPtr)
 {
-    if (!result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, result->statChanger.statId))
+    // To do - update this to handle cases where we're checking multiple stats at once
+    if (!result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, result->statChanger.backwardsCompatibleStatId))
     {
-        SetStatChangerStatValue(&result->statChanger, result->statChanger.statId, 0);
+        SetStatChangerStatValue(&result->statChanger, result->statChanger.backwardsCompatibleStatId, 0);
         result->battlescriptPush = TRUE;
         result->lastUsedAbility = result->battlerAbility;
         result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
@@ -12280,8 +12281,8 @@ static bool32 MoveEffectBlockedByMirrorArmor(struct MoveEffectResult *result, co
 static void ChangeBattlerStats(union StatChanger statChanger, u32 battler)
 {
     // If only raising the one stat, adjust that one
-    if (statChanger.statId)
-        gBattleMons[battler].statStages[statChanger.statId] += GetStatChangerStatValue(statChanger, statChanger.statId);
+    if (statChanger.backwardsCompatibleStatId)
+        gBattleMons[battler].statStages[statChanger.backwardsCompatibleStatId] += GetStatChangerStatValue(statChanger, statChanger.backwardsCompatibleStatId);
     else // Otherwise raise all of them
     {
         // Whether it's a drop or a raise
@@ -12359,7 +12360,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
                 SetStatChangerStatValue(&result->statChanger, statId, 0);
 
                 // If only changing the one stat and we've hit the limit - set multistring
-                if (result->statChanger.statId == statId && stage == 0)
+                if (result->statChanger.backwardsCompatibleStatId == statId && stage == 0)
                     result->multistring = result->statChanger.isNegative ? B_MSG_STAT_WONT_DECREASE : B_MSG_STAT_WONT_INCREASE;
             }
             else
@@ -13132,8 +13133,8 @@ static void Cmd_printstatchangestrings(void)
 
     if (key->allStats != 0)
     {
-        if (statChanger->statId)
-            HandleSingleStat(statChanger->statId, cmd->nextInstr, statChanger, key);
+        if (statChanger->backwardsCompatibleStatId)
+            HandleSingleStat(statChanger->backwardsCompatibleStatId, cmd->nextInstr, statChanger, key);
         else
         {
             // Print strings in the correct order
@@ -13141,7 +13142,7 @@ static void Cmd_printstatchangestrings(void)
                 STAT_ATK, STAT_DEF, STAT_SPATK, STAT_SPDEF, STAT_SPEED, STAT_ACC, STAT_EVASION
             };
 
-            // If statChanger->statId is selected, only print the string for that stat
+            // If statChanger->backwardsCompatibleStatId is selected, only print the string for that stat
             // Otherwise, loop through all of them
             for (u32 i = 0; i < NUM_BATTLE_STATS; i++)
             {
@@ -18357,18 +18358,6 @@ void BS_RemoveTerrain(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-
-#define ADD_STOLEN_STAT_BOOST(_stat, _statField)                                \
-    if(gBattleMons[gBattlerTarget].statStages[_stat] > 0)                       \
-    {                                                                           \
-        statChanger._statField = min(                                           \
-            MaxRaiseOrLowerStatAmount(gBattlerAttacker, _stat, hasContrary),    \
-            gBattleMons[gBattlerTarget].statStages[_stat] - DEFAULT_STAT_STAGE  \
-        );                                                                      \
-        gBattleMons[gBattlerTarget].statStages[_stat] = DEFAULT_STAT_STAGE;     \
-        foundStatsToSteal = TRUE;                                               \
-    }
-
 void BS_TrySpectralThiefSteal(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
@@ -18383,7 +18372,18 @@ void BS_TrySpectralThiefSteal(void)
     union StatChanger statChanger = {0};
 
     // Add every stat to the statchanger
-    FOREACH_STAT_STATCHANGER(ADD_STOLEN_STAT_BOOST)
+    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    {
+        if(gBattleMons[gBattlerTarget].statStages[stat] > 0)
+        {
+            SetStatChangerStatValue(&statChanger, stat, min(
+                MaxRaiseOrLowerStatAmount(gBattlerAttacker, stat, hasContrary),
+                gBattleMons[gBattlerTarget].statStages[stat] - DEFAULT_STAT_STAGE
+            ));
+            gBattleMons[gBattlerTarget].statStages[stat] = DEFAULT_STAT_STAGE;
+            foundStatsToSteal = TRUE;
+        }
+    }
 
     // If we managed to steal stats - play an animation, go to the Spectral Thief animation
     if (foundStatsToSteal)

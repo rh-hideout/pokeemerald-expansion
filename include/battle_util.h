@@ -204,7 +204,7 @@ union StatChanger
     u32 value;
     struct {
         bool32 isNegative:1;
-        u32 statId:3; // If doing only a single stat, populate its ID here. If multiple, leave as 0
+        u32 backwardsCompatibleStatId:3; // DO NOT USE THIS! It only exists to maintain compatibilty with existing scripts which can only check one stat at a time
         u32 attack:4;
         u32 defense:4;
         u32 speed:4;

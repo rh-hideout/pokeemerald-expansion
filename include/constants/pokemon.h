@@ -94,16 +94,6 @@
 #define DEFAULT_STAT_STAGE 6
 #define MAX_STAT_STAGE    12
 
-// Helpful macro to go through every stat in the statchanger
-#define FOREACH_STAT_STATCHANGER(F) \
-    F(STAT_ATK, attack)             \
-    F(STAT_DEF, defense)            \
-    F(STAT_SPEED, speed)            \
-    F(STAT_SPATK, spAttack)         \
-    F(STAT_SPDEF, spDefense)        \
-    F(STAT_ACC, accuracy)           \
-    F(STAT_EVASION, evasion)
-
 // Shiny odds
 #define SHINY_ODDS 8 // Actual probability is SHINY_ODDS/65536
 

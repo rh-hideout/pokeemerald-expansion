@@ -1145,7 +1145,8 @@ bool32 WasUnableToUseMove(u32 battler)
 
 bool32 ShouldDefiantCompetitiveActivate(u32 battler)
 {
-    u32 side = GetBattlerSide(battler), ability = GetBattlerAbility(battler);
+    u32 side = GetBattlerSide(battler);
+    u32 ability = GetBattlerAbility(battler);
     if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
         return FALSE;
     // if an ally dropped the stats (except for Sticky Web), don't activate
@@ -11412,20 +11413,20 @@ bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
     }
 }
 
-#define ADD_STAT_TO_QUEUED_STAT_BOOSTS(_stat, _statField)                       \
-    gQueuedStatBoosts[battler].stats |= (1 << (_stat - 1));                     \
-    gQueuedStatBoosts[battler].statChanges[_stat - 1] += statChanger._statField;
+static inline void QueueSingleStatBoost(u32 battler, union StatChanger statChanger, u32 stat)
+{
+    gQueuedStatBoosts[battler].stats |= (1 << (stat - 1));    // -1 to start at atk
+    gQueuedStatBoosts[battler].statChanges[stat - 1] += GetStatChangerStage(statChanger, stat);
+}
 
 void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger)
 {
-    if (statChanger.statId)
-    {
-        gQueuedStatBoosts[battler].stats |= (1 << (statChanger.statId - 1));    // -1 to start at atk
-        gQueuedStatBoosts[battler].statChanges[statChanger.statId - 1] += GetStatChangerStage(statChanger, statChanger.statId);
-    }
+    if (statChanger.backwardsCompatibleStatId)
+        QueueSingleStatBoost(battler, statChanger, statChanger.backwardsCompatibleStatId);
     else
     {
         // Go through each stat and update queued stat boosts
-        FOREACH_STAT_STATCHANGER(ADD_STAT_TO_QUEUED_STAT_BOOSTS)
+        for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+            QueueSingleStatBoost(battler, statChanger, stat);
     }
 }
