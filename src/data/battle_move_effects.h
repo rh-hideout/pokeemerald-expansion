@@ -1978,9 +1978,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HIT_SET_REMOVE_TERRAIN] =
+    [EFFECT_HIT_SET_TERRAIN] =
     {
-        .battleScript = BattleScript_EffectHitSetRemoveTerrain,
+        .battleScript = BattleScript_EffectHitSetTerrain,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2216,6 +2216,18 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SMACK_DOWN] =
     {
         .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_ICE_SPINNER] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_STEEL_ROLLER] =
+    {
+        .battleScript = BattleScript_EffectSteelRoller,
         .battleTvScore = 0, // TODO: Assign points
     },
 };

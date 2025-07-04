@@ -1816,6 +1816,7 @@ void CB2_WhiteOut(void)
         else
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;
         state = 0;
+        SetFollowerNPCData(FNPC_DATA_SURF_BLOB, FNPC_SURF_BLOB_NONE);
         DoMapLoadLoop(&state);
         SetFieldVBlankCallback();
         SetMainCallback1(CB1_Overworld);

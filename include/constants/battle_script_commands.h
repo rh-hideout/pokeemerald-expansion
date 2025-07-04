@@ -243,7 +243,7 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-// cases for Cmd_moveend
+// cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
@@ -283,6 +283,7 @@ enum MoveEndEffects
     MOVEEND_HIT_ESCAPE,
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
+    MOVEEND_REMOVE_TERRAIN,
     MOVEEND_WHITE_HERB,
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
@@ -296,10 +297,5 @@ enum MoveEndEffects
 #define B_SWITCH_NORMAL     0
 #define B_SWITCH_HIT        1   // dragon tail, circle throw
 #define B_SWITCH_RED_CARD   2
-
-// Argument labels for EFFECT_HIT_SET_REMOVE_TERRAIN
-#define ARG_SET_PSYCHIC_TERRAIN        0
-#define ARG_TRY_REMOVE_TERRAIN_HIT     1
-#define ARG_TRY_REMOVE_TERRAIN_FAIL    2
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
