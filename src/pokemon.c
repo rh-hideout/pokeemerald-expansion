@@ -6003,7 +6003,7 @@ const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFema
     }
 }
 
-#define OR_MOVE_IS_HM(index, _hm) || (move == MOVE_##_hm)
+#define OR_MOVE_IS_HM(_hm) || (move == MOVE_##_hm)
 
 bool32 IsMoveHM(u16 move)
 {

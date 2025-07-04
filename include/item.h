@@ -14,11 +14,14 @@
  *   ITEM_HM_CUT,
  *   ...
  * }; */
-#define ENUM_TM(index, id) CAT(ITEM_TM_, id) = ITEM_TM## index,
-#define ENUM_HM(index, id) CAT(ITEM_HM_, id) = ITEM_HM## index,
+#define ENUM_TM(id) CAT(ITEM_TM_, id),
+#define ENUM_HM(id) CAT(ITEM_HM_, id),
 enum
 {
+    ENUM_TM_START_ = ITEM_TM01 - 1,
     FOREACH_TM(ENUM_TM)
+
+    ENUM_HM_START_ = ITEM_HM01 - 1,
     FOREACH_HM(ENUM_HM)
 };
 #undef ENUM_TM
@@ -27,18 +30,16 @@ enum
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. Each one in src/data/items.h should have an index in the .tmHmIndex field.
  */
-#define UNPACK_TM_ENUM(index, _tmHm) CAT(ENUM_TM_HM_, _tmHm) = REMOVE_LEADING_ZEROES(index) - 1,
-#define UNPACK_HM_ENUM(index, _tmHm) CAT(ENUM_TM_HM_, _tmHm) = REMOVE_LEADING_ZEROES(index) + NUM_TECHNICAL_MACHINES - 1,
+#define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
 enum TMHMIndex
 {
-    FOREACH_TM(UNPACK_TM_ENUM)
-    NUM_TECHNICAL_MACHINES,
-    FOREACH_HM(UNPACK_HM_ENUM)
+    FOREACH_TMHM(UNPACK_TM_HM_ENUM)
     NUM_ALL_MACHINES,
+    NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
+    NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
 
-#undef UNPACK_TM_ENUM
-#undef UNPACK_HM_ENUM
+#undef UNPACK_TM_HM_ENUM
 
 typedef void (*ItemUseFunc)(u8);
 
