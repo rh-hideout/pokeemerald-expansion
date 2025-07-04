@@ -5,6 +5,7 @@
 #include "gpu_regs.h"
 #include "malloc.h"
 #include "menu.h"
+#include "decompress.h"
 
 #define DISPCNT_ALL_BG_AND_MODE_BITS    (DISPCNT_BG_ALL_ON | 0x7)
 
@@ -874,7 +875,7 @@ void CopyToBgTilemapBuffer(u32 bg, const void *src, u32 mode, u32 destOffset)
         if (mode != 0)
             CpuCopy16(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)), mode);
         else
-            LZ77UnCompWram(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)));
+            DecompressDataWithHeaderWram(src, (void *)(sGpuBgConfigs2[bg].tilemap + (destOffset * 2)));
     }
 }
 
@@ -920,7 +921,7 @@ void CopyToBgTilemapBufferRect(u32 bg, const void *src, u8 destX, u8 destY, u8 w
         {
         case BG_TYPE_NORMAL:
         {
-            const u16 * srcCopy = src;
+            const u16 *srcCopy = src;
             for (destY16 = destY; destY16 < (destY + height); destY16++)
             {
                 for (destX16 = destX; destX16 < (destX + width); destX16++)

@@ -20,6 +20,7 @@ enum EndTurnResolutionOrder
     ENDTURN_VARIOUS,
     ENDTURN_WEATHER,
     ENDTURN_WEATHER_DAMAGE,
+    ENDTURN_GEN_3_BERRY_ACTIVATION,
     ENDTURN_EMERGENCY_EXIT_1,
     ENDTURN_AFFECTION,
     ENDTURN_FUTURE_SIGHT,
@@ -106,15 +107,6 @@ enum FourthEventBlock
     FOURTH_EVENT_BLOCK_HUNGER_SWITCH,
     FOURTH_EVENT_BLOCK_EJECT_PACK,
 };
-
-static inline bool32 IsBattlerProtectedByMagicGuard(u32 battler, u32 ability)
-{
-    if (ability != ABILITY_MAGIC_GUARD)
-        return FALSE;
-
-    RecordAbilityBattle(battler, ability);
-    return TRUE;
-}
 
 static u32 GetBattlerSideForMessage(u32 side)
 {
@@ -243,7 +235,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !IS_BATTLER_ANY_TYPE(gBattlerAttacker, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && !(gStatuses3[gBattlerAttacker] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
          && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
-         && !IsBattlerProtectedByMagicGuard(battler, ability))
+         && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
             if (gBattleStruct->moveDamage[battler] == 0)
@@ -267,7 +259,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && !(gStatuses3[battler] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
              && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
-             && !IsBattlerProtectedByMagicGuard(battler, ability))
+             && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
                 if (gBattleStruct->moveDamage[battler] == 0)
@@ -280,6 +272,20 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
         break;
     }
 
+    return effect;
+}
+
+static bool32 HandleEndTurnGenThreeBerryActivation(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    if (B_HP_BERRIES >= GEN_4) // Skip handler for > Gen3
+    {
+        gBattleStruct->endTurnEventsCounter++;
+        return effect;
+    }
+    gBattleStruct->turnEffectsBattlerId++;
+    effect = TryRestoreHPBerries(battler, ITEMEFFECT_NORMAL);
     return effect;
 }
 
@@ -305,7 +311,7 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
             gBattlerAbility = battler;
             gLastUsedAbility = ability;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || GetBattlerSide(battler) == B_SIDE_PLAYER)
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
                 BattleScriptExecute(BattleScript_EmergencyExitEnd2);
             else
                 BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
@@ -325,7 +331,7 @@ static bool32 HandleEndTurnAffection(u32 battler)
 
     if (!B_AFFECTION_MECHANICS
      || !IsBattlerAlive(battler)
-     || GetBattlerSide(battler) != B_SIDE_PLAYER)
+     || !IsOnPlayerSide(battler))
         return effect;
 
     if (GetBattlerAffectionHearts(gBattlerAttacker) >= AFFECTION_FOUR_HEARTS && (Random() % 100 < 20))
@@ -368,7 +374,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
         gBattlerAttacker = gWishFutureKnock.futureSightBattlerIndex[battler];
         gCurrentMove = gWishFutureKnock.futureSightMove[battler];
 
-        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget))
+        if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);
 
         BattleScriptExecute(BattleScript_MonTookFutureAttack);
@@ -390,7 +396,7 @@ static bool32 HandleEndTurnWish(u32 battler)
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
         if (B_WISH_HP_SOURCE >= GEN_5)
         {
-            if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+            if (IsOnPlayerSide(battler))
                 gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
             else
                 gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
@@ -401,7 +407,9 @@ static bool32 HandleEndTurnWish(u32 battler)
         }
 
         gBattleStruct->moveDamage[battler] *= -1;
-        if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
+        if (gStatuses3[battler] & STATUS3_HEAL_BLOCK)
+            BattleScriptExecute(BattleScript_WishButHealBlocked);
+        else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             BattleScriptExecute(BattleScript_WishButFullHp);
         else
             BattleScriptExecute(BattleScript_WishComesTrue);
@@ -426,7 +434,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
             if (IsBattlerAlive(battler)
              && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
-             && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+             && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
             {
                 gBattlerAttacker = battler;
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 6;
@@ -442,7 +450,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-            BtlController_EmitStatusAnimation(battler, BUFFER_A, FALSE, STATUS1_BURN);
+            BtlController_EmitStatusAnimation(battler, B_COMM_TO_CONTROLLER, FALSE, STATUS1_BURN);
             MarkBattlerForControllerExec(battler);
             BattleScriptExecute(BattleScript_HurtByTheSeaOfFire);
             effect = TRUE;
@@ -462,8 +470,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 gBattleMons[battler].status2 &= ~STATUS2_MULTIPLETURNS;
                 if (!(gBattleMons[battler].status2 & STATUS2_CONFUSION))
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION | MOVE_EFFECT_AFFECTS_USER;
-                    SetMoveEffect(TRUE, FALSE);
+                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
+                    SetMoveEffect(battler, battler, TRUE, FALSE);
                     if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;
@@ -473,7 +481,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler))
+        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler) && IsBattlerGrounded(battler))
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
@@ -504,7 +512,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         {
         case HOLD_EFFECT_LEFTOVERS:
         case HOLD_EFFECT_BLACK_SLUDGE:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
             break;
         default:
@@ -566,7 +574,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
     if (gStatuses3[battler] & STATUS3_LEECHSEED
      && IsBattlerAlive(gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER)
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         gBattlerTarget = gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER; // Notice gBattlerTarget is actually the HP receiver.
         gBattleScripting.animArg1 = gBattlerTarget;
@@ -605,7 +613,7 @@ static bool32 HandleEndTurnPoison(u32 battler)
 
     if ((gBattleMons[battler].status1 & STATUS1_POISON || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, ability))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         if (ability == ABILITY_POISON_HEAL)
         {
@@ -653,7 +661,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
 
     if (gBattleMons[battler].status1 & STATUS1_BURN
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, ability))
+     && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
         if (ability == ABILITY_HEATPROOF)
@@ -679,7 +687,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
 
     if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
         if (gBattleStruct->moveDamage[battler] == 0)
@@ -699,7 +707,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_NIGHTMARE
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
         {
@@ -726,7 +734,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_CURSED
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
         if (gBattleStruct->moveDamage[battler] == 0)
@@ -746,8 +754,11 @@ static bool32 HandleEndTurnWrap(u32 battler)
 
     if (gBattleMons[battler].status2 & STATUS2_WRAPPED && IsBattlerAlive(battler))
     {
-        if (--gDisableStructs[battler].wrapTurns != 0 && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+        if (--gDisableStructs[battler].wrapTurns != 0)
         {
+            if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+                return effect;
+
             gBattleScripting.animArg1 = gBattleStruct->wrappedMove[battler];
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
@@ -780,7 +791,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 
     if (gStatuses4[battler] & STATUS4_SALT_CURE
      && IsBattlerAlive(battler)
-     && !IsBattlerProtectedByMagicGuard(battler, GetBattlerAbility(battler)))
+     && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
             gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 4;
@@ -1027,7 +1038,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
                     gBattleMons[battler].status1 |= ((Random() % 4) + 3);
 
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
-                BtlController_EmitSetMonData(battler, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+                BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
                 BattleScriptExecute(BattleScript_YawnMakesAsleep);
             }
@@ -1349,7 +1360,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                     gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_NIGHTMARE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = 1;
                     BattleScriptExecute(BattleScript_MonWokeUpInUproar);
-                    BtlController_EmitSetMonData(gBattlerAttacker, BUFFER_A, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
+                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
                     MarkBattlerForControllerExec(gBattlerAttacker);
                     break;
                 }
@@ -1412,11 +1423,11 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         case HOLD_EFFECT_FLAME_ORB:
         case HOLD_EFFECT_STICKY_BARB:
         case HOLD_EFFECT_TOXIC_ORB:
-            if (ItemBattleEffects(ITEMEFFECT_ORBS, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_ORBS, battler))
                 effect = TRUE;
             break;
-        case HOLD_EFFECT_RESTORE_STATS:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+        case HOLD_EFFECT_WHITE_HERB:
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
             break;
         default:
@@ -1474,7 +1485,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
         enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler, FALSE))
+            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
                 effect = TRUE;
         }
         gBattleStruct->eventBlockCounter = 0;
@@ -1509,6 +1520,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_VARIOUS] = HandleEndTurnVarious,
     [ENDTURN_WEATHER] = HandleEndTurnWeather,
     [ENDTURN_WEATHER_DAMAGE] = HandleEndTurnWeatherDamage,
+    [ENDTURN_GEN_3_BERRY_ACTIVATION] = HandleEndTurnGenThreeBerryActivation,
     [ENDTURN_EMERGENCY_EXIT_1] = HandleEndTurnEmergencyExit,
     [ENDTURN_AFFECTION] = HandleEndTurnAffection,
     [ENDTURN_FUTURE_SIGHT] = HandleEndTurnFutureSight,

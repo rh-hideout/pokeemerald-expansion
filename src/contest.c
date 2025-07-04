@@ -420,7 +420,7 @@ static const union AffineAnimCmd sAffineAnim_SliderHeart_SpinAppear[] =
     AFFINEANIMCMD_END
 };
 
-static const union AffineAnimCmd* const sAffineAnims_SliderHeart[] =
+static const union AffineAnimCmd *const sAffineAnims_SliderHeart[] =
 {
     [SLIDER_HEART_ANIM_NORMAL]    = sAffineAnim_SliderHeart_Normal,
     [SLIDER_HEART_ANIM_DISAPPEAR] = sAffineAnim_SliderHeart_SpinDisappear,
@@ -1133,8 +1133,8 @@ void LoadContestBgAfterMoveAnim(void)
 {
     s32 i;
 
-    LZDecompressVram(gContestInterfaceGfx, (void *)VRAM);
-    LZDecompressVram(gContestAudienceGfx, (void *)(BG_SCREEN_ADDR(4)));
+    DecompressDataWithHeaderVram(gContestInterfaceGfx, (void *)VRAM);
+    DecompressDataWithHeaderVram(gContestAudienceGfx, (void *)(BG_SCREEN_ADDR(4)));
     CopyToBgTilemapBuffer(3, gContestAudienceTilemap, 0, 0);
     CopyBgTilemapBufferToVram(3);
     LoadPalette(gContestInterfaceAudiencePalette, BG_PLTT_OFFSET, BG_PLTT_SIZE);
@@ -1414,10 +1414,10 @@ static bool8 SetupContestGraphics(u8 *stateVar)
         RequestDma3Fill(0, (void *)VRAM + 0x10000, 0x8000, 1);
         break;
     case 1:
-        LZDecompressVram(gContestInterfaceGfx, (void *)VRAM);
+        DecompressDataWithHeaderVram(gContestInterfaceGfx, (void *)VRAM);
         break;
     case 2:
-        LZDecompressVram(gContestAudienceGfx, (void *)(BG_SCREEN_ADDR(4)));
+        DecompressDataWithHeaderVram(gContestAudienceGfx, (void *)(BG_SCREEN_ADDR(4)));
         DmaCopyLarge32(3, (void *)(BG_SCREEN_ADDR(4)), eUnzippedContestAudience_Gfx, 0x2000, 0x1000);
         break;
     case 3:
@@ -1449,13 +1449,13 @@ static bool8 SetupContestGraphics(u8 *stateVar)
         CreateApplauseMeterSprite();
         CreateJudgeAttentionEyeTask();
         CreateUnusedBlendTask();
-        gBattlerPositions[0] = B_POSITION_PLAYER_LEFT;
-        gBattlerPositions[1] = B_POSITION_OPPONENT_LEFT;
-        gBattlerPositions[2] = B_POSITION_OPPONENT_RIGHT;
-        gBattlerPositions[3] = B_POSITION_PLAYER_RIGHT;
+        gBattlerPositions[B_BATTLER_0] = B_POSITION_PLAYER_LEFT;
+        gBattlerPositions[B_BATTLER_1] = B_POSITION_OPPONENT_LEFT;
+        gBattlerPositions[B_BATTLER_2] = B_POSITION_OPPONENT_RIGHT;
+        gBattlerPositions[B_BATTLER_3] = B_POSITION_PLAYER_RIGHT;
         gBattleTypeFlags = 0;
-        gBattlerAttacker = B_POSITION_PLAYER_RIGHT;
-        gBattlerTarget = B_POSITION_OPPONENT_RIGHT;
+        gBattlerAttacker = B_BATTLER_2;
+        gBattlerTarget = B_BATTLER_3;
         // Unclear why judge sprite is assigned here
         // Overwritten in APPEALSTATE_SLIDE_MON_IN with the attacking contest mon
         gBattlerSpriteIds[gBattlerAttacker] = CreateJudgeSprite();
@@ -5411,7 +5411,7 @@ static void SetMoveSpecificAnimData(u8 contestant)
     switch (move)
     {
     case MOVE_CURSE:
-        if (gSpeciesInfo[species].types[0] == TYPE_GHOST || gSpeciesInfo[species].types[1] == TYPE_GHOST)
+        if (GetSpeciesType(species, 0) == TYPE_GHOST || GetSpeciesType(species, 1) == TYPE_GHOST)
             gAnimMoveTurn = 0;
         else
             gAnimMoveTurn = 1;

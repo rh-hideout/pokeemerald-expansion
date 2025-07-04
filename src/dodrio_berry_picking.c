@@ -1,6 +1,7 @@
 #include "global.h"
 #include "malloc.h"
 #include "bg.h"
+#include "decompress.h"
 #include "dodrio_berry_picking.h"
 #include "dynamic_placeholder_text_util.h"
 #include "event_data.h"
@@ -275,13 +276,13 @@ struct DodrioGame
     /*0x3308*/ struct DodrioGame_ScoreResults scoreResults[MAX_RFU_PLAYERS];
 }; // size = 0x3330
 
-EWRAM_DATA static struct DodrioGame * sGame = NULL;
-EWRAM_DATA static u16 * sDodrioSpriteIds[MAX_RFU_PLAYERS] = {NULL};
-EWRAM_DATA static u16 * sCloudSpriteIds[NUM_CLOUDS] = {NULL};
-EWRAM_DATA static u16 * sBerrySpriteIds[NUM_BERRY_COLUMNS] = {NULL};
-EWRAM_DATA static u16 * sBerryIconSpriteIds[NUM_BERRY_TYPES] = {NULL};
-EWRAM_DATA static struct StatusBar * sStatusBar = NULL;
-EWRAM_DATA static struct DodrioGame_Gfx * sGfx = NULL;
+EWRAM_DATA static struct DodrioGame *sGame = NULL;
+EWRAM_DATA static u16 *sDodrioSpriteIds[MAX_RFU_PLAYERS] = {NULL};
+EWRAM_DATA static u16 *sCloudSpriteIds[NUM_CLOUDS] = {NULL};
+EWRAM_DATA static u16 *sBerrySpriteIds[NUM_BERRY_COLUMNS] = {NULL};
+EWRAM_DATA static u16 *sBerryIconSpriteIds[NUM_BERRY_TYPES] = {NULL};
+EWRAM_DATA static struct StatusBar *sStatusBar = NULL;
+EWRAM_DATA static struct DodrioGame_Gfx *sGfx = NULL;
 
 static bool32 sExitingGame;
 
@@ -558,16 +559,16 @@ static const u32 sDuplicateGfx[] = INCBIN_U32("graphics/dodrio_berry_picking/tre
                                      "graphics/dodrio_berry_picking/shiny.gbapal",
                                      "graphics/dodrio_berry_picking/status.gbapal",
                                      "graphics/dodrio_berry_picking/berries.gbapal",
-                                     "graphics/dodrio_berry_picking/berries.4bpp.lz",
+                                     "graphics/dodrio_berry_picking/berries.4bpp.smol",
                                      "graphics/dodrio_berry_picking/cloud.gbapal",
-                                     "graphics/dodrio_berry_picking/bg.4bpp.lz",
-                                     "graphics/dodrio_berry_picking/tree_border.4bpp.lz",
-                                     "graphics/dodrio_berry_picking/status.4bpp.lz",
-                                     "graphics/dodrio_berry_picking/cloud.4bpp.lz",
-                                     "graphics/dodrio_berry_picking/dodrio.4bpp.lz",
-                                     "graphics/dodrio_berry_picking/bg.bin.lz",
-                                     "graphics/dodrio_berry_picking/tree_border_right.bin.lz",
-                                     "graphics/dodrio_berry_picking/tree_border_left.bin.lz");
+                                     "graphics/dodrio_berry_picking/bg.4bpp.smol",
+                                     "graphics/dodrio_berry_picking/tree_border.4bpp.smol",
+                                     "graphics/dodrio_berry_picking/status.4bpp.smol",
+                                     "graphics/dodrio_berry_picking/cloud.4bpp.smol",
+                                     "graphics/dodrio_berry_picking/dodrio.4bpp.smol",
+                                     "graphics/dodrio_berry_picking/bg.bin.smolTM",
+                                     "graphics/dodrio_berry_picking/tree_border_right.bin.smolTM",
+                                     "graphics/dodrio_berry_picking/tree_border_left.bin.smolTM");
 
 
 static const u8 sBerryFallDelays[][3] =
@@ -695,7 +696,7 @@ static void ResetTasksAndSprites(void)
     FreeAllSpritePalettes();
 }
 
-static void InitDodrioGame(struct DodrioGame * game)
+static void InitDodrioGame(struct DodrioGame *game)
 {
     u8 i;
 
@@ -1433,7 +1434,7 @@ static void Task_NewGameIntro(u8 taskId)
 
 static void Task_CommunicateMonInfo(u8 taskId)
 {
-    s16 * data = gTasks[taskId].data;
+    s16 *data = gTasks[taskId].data;
     u8 i;
 
     switch (tState)
@@ -1759,7 +1760,7 @@ static void HandleSound_Member(void)
     }
     for (i = berryStart; i < berryEnd; i++)
     {
-        struct DodrioGame_Berries * berries = &sGame->players[sGame->multiplayerId].berries;
+        struct DodrioGame_Berries *berries = &sGame->players[sGame->multiplayerId].berries;
         if (berries->fallDist[i] >= MAX_FALL_DIST)
         {
             if (!sGame->playingSquishSound[i])
@@ -1802,7 +1803,7 @@ static void VBlankCB_DodrioGame(void)
     ProcessSpriteCopyRequests();
 }
 
-static void InitMonInfo(struct DodrioGame_MonInfo * monInfo, struct Pokemon *mon)
+static void InitMonInfo(struct DodrioGame_MonInfo *monInfo, struct Pokemon *mon)
 {
     monInfo->isShiny = IsMonShiny(mon);
 }
@@ -1861,7 +1862,7 @@ static void InitFirstWaveOfBerries(void)
 
     for (i = berryStart; i < berryEnd; i++)
     {
-        struct DodrioGame_Berries * berries = &sGame->player.berries;
+        struct DodrioGame_Berries *berries = &sGame->player.berries;
         berries->fallDist[i] = (i % 2 == 0) ? 1 : 0;
         berries->ids[i] = BERRY_BLUE;
     }
@@ -1995,7 +1996,7 @@ static bool32 TryPickBerry(u8 playerId, u8 pickState, u8 column)
 {
     s32 pick = 0;
     u8 numPlayersIdx = sGame->numPlayers - 1;
-    struct DodrioGame_Berries * berries = &sGame->player.berries;
+    struct DodrioGame_Berries *berries = &sGame->player.berries;
 
     switch (pickState)
     {
@@ -3098,6 +3099,7 @@ struct ReadyToStartPacket
 {
     u8 id;
     bool8 ALIGNED(4) ready;
+    u32 unused; // Put here, so that packet has the same size as gRfu.packet(12 bytes).
 };
 
 static void SendPacket_ReadyToStart(bool32 ready)
@@ -3302,6 +3304,7 @@ struct PickStatePacket
 {
     u8 id;
     u8 ALIGNED(4) pickState;
+    u32 unused; // Put here, so that packet has the same size as gRfu.packet(12 bytes).
 };
 
 static void SendPacket_PickState(u8 pickState)
@@ -3333,6 +3336,7 @@ struct ReadyToEndPacket
 {
     u8 id;
     bool32 ready;
+    u32 unused; // Put here, so that packet has the same size as gRfu.packet(12 bytes).
 };
 
 static void SendPacket_ReadyToEnd(bool32 ready)
@@ -3598,16 +3602,16 @@ static const u16 sDodrioNormal_Pal[]        = INCBIN_U16("graphics/dodrio_berry_
 static const u16 sDodrioShiny_Pal[]         = INCBIN_U16("graphics/dodrio_berry_picking/shiny.gbapal");
 static const u16 sStatus_Pal[]              = INCBIN_U16("graphics/dodrio_berry_picking/status.gbapal");
 static const u16 sBerries_Pal[]             = INCBIN_U16("graphics/dodrio_berry_picking/berries.gbapal");
-static const u32 sBerries_Gfx[]             = INCBIN_U32("graphics/dodrio_berry_picking/berries.4bpp.lz");
+static const u32 sBerries_Gfx[]             = INCBIN_U32("graphics/dodrio_berry_picking/berries.4bpp.smol");
 static const u16 sCloud_Pal[]               = INCBIN_U16("graphics/dodrio_berry_picking/cloud.gbapal");
-static const u32 sBg_Gfx[]                  = INCBIN_U32("graphics/dodrio_berry_picking/bg.4bpp.lz");
-static const u32 sTreeBorder_Gfx[]          = INCBIN_U32("graphics/dodrio_berry_picking/tree_border.4bpp.lz");
-static const u32 sStatus_Gfx[]              = INCBIN_U32("graphics/dodrio_berry_picking/status.4bpp.lz");
-static const u32 sCloud_Gfx[]               = INCBIN_U32("graphics/dodrio_berry_picking/cloud.4bpp.lz");
-static const u32 sDodrio_Gfx[]              = INCBIN_U32("graphics/dodrio_berry_picking/dodrio.4bpp.lz");
-static const u32 sBg_Tilemap[]              = INCBIN_U32("graphics/dodrio_berry_picking/bg.bin.lz");
-static const u32 sTreeBorderRight_Tilemap[] = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_right.bin.lz");
-static const u32 sTreeBorderLeft_Tilemap[]  = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_left.bin.lz");
+static const u32 sBg_Gfx[]                  = INCBIN_U32("graphics/dodrio_berry_picking/bg.4bpp.smol");
+static const u32 sTreeBorder_Gfx[]          = INCBIN_U32("graphics/dodrio_berry_picking/tree_border.4bpp.smol");
+static const u32 sStatus_Gfx[]              = INCBIN_U32("graphics/dodrio_berry_picking/status.4bpp.smol");
+static const u32 sCloud_Gfx[]               = INCBIN_U32("graphics/dodrio_berry_picking/cloud.4bpp.smol");
+static const u32 sDodrio_Gfx[]              = INCBIN_U32("graphics/dodrio_berry_picking/dodrio.4bpp.smol");
+static const u32 sBg_Tilemap[]              = INCBIN_U32("graphics/dodrio_berry_picking/bg.bin.smolTM");
+static const u32 sTreeBorderRight_Tilemap[] = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_right.bin.smolTM");
+static const u32 sTreeBorderLeft_Tilemap[]  = INCBIN_U32("graphics/dodrio_berry_picking/tree_border_left.bin.smolTM");
 
 static const struct OamData sOamData_Dodrio =
 {
@@ -3830,7 +3834,7 @@ static void LoadDodrioGfx(void)
     struct SpritePalette normal = {sDodrioNormal_Pal, PALTAG_DODRIO_NORMAL};
     struct SpritePalette shiny = {sDodrioShiny_Pal, PALTAG_DODRIO_SHINY};
 
-    LZ77UnCompWram(sDodrio_Gfx, ptr);
+    DecompressDataWithHeaderWram(sDodrio_Gfx, ptr);
     if (ptr)
     {
         struct SpriteSheet sheet = {ptr, 0x3000, GFXTAG_DODRIO};
@@ -3841,7 +3845,7 @@ static void LoadDodrioGfx(void)
     LoadSpritePalette(&shiny);
 }
 
-static void CreateDodrioSprite(struct DodrioGame_MonInfo * monInfo, u8 playerId, u8 id, u8 numPlayers)
+static void CreateDodrioSprite(struct DodrioGame_MonInfo *monInfo, u8 playerId, u8 id, u8 numPlayers)
 {
     struct SpriteTemplate template =
     {
@@ -4013,7 +4017,7 @@ static void CreateStatusBarSprites(void)
     void *ptr = AllocZeroed(0x180);
     struct SpritePalette pal = {sStatus_Pal, PALTAG_STATUS};
 
-    LZ77UnCompWram(sStatus_Gfx, ptr);
+    DecompressDataWithHeaderWram(sStatus_Gfx, ptr);
     // This check should be one line up.
     if (ptr)
     {
@@ -4155,7 +4159,7 @@ static void LoadBerryGfx(void)
     void *ptr = AllocZeroed(0x480);
     struct SpritePalette pal = {sBerries_Pal, PALTAG_BERRIES};
 
-    LZ77UnCompWram(sBerries_Gfx, ptr);
+    DecompressDataWithHeaderWram(sBerries_Gfx, ptr);
     if (ptr)
     {
         struct SpriteSheet sheet = {ptr, 0x480, GFXTAG_BERRIES};
@@ -4303,7 +4307,7 @@ static void CreateCloudSprites(void)
     void *ptr = AllocZeroed(0x400);
     struct SpritePalette pal = {sCloud_Pal, PALTAG_CLOUD};
 
-    LZ77UnCompWram(sCloud_Gfx, ptr);
+    DecompressDataWithHeaderWram(sCloud_Gfx, ptr);
     if (ptr)
     {
         struct SpriteSheet sheet = {ptr, 0x400, GFXTAG_CLOUD};

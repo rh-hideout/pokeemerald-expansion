@@ -312,7 +312,9 @@ top:
             const char *color;
             const char *result;
 
-            if (gTestRunnerState.result == gTestRunnerState.expectedResult)
+            if (gTestRunnerState.result == gTestRunnerState.expectedResult
+             || (gTestRunnerState.result == TEST_RESULT_FAIL
+              && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
             {
                 color = "\e[32m";
                 Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
@@ -330,7 +332,7 @@ top:
             switch (gTestRunnerState.result)
             {
             case TEST_RESULT_FAIL:
-                if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL)
+                if (gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL)
                 {
                     result = "KNOWN_FAILING";
                     color = "\e[33m";
@@ -387,7 +389,9 @@ top:
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
-            else if (gTestRunnerState.expectedResult == gTestRunnerState.result)
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 || (gTestRunnerState.result == TEST_RESULT_FAIL
+                  && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
                 Test_MgbaPrintf(":K%s%s\e[0m", color, result);
             else
                 Test_MgbaPrintf(":F%s%s\e[0m", color, result);
@@ -684,12 +688,22 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 'S':
                 pokeS = va_arg(va, const u8 *);
-                while ((c = *pokeS++) != EOS)
+                if (pokeS == NULL)
                 {
-                    if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                        i = MgbaPutchar_(i, c);
-                    else
-                        i = MgbaPutchar_(i, '?');
+                    i = MgbaPutchar_(i, 'N');
+                    i = MgbaPutchar_(i, 'U');
+                    i = MgbaPutchar_(i, 'L');
+                    i = MgbaPutchar_(i, 'L');
+                }
+                else
+                {
+                    while ((c = *pokeS++) != EOS)
+                    {
+                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
+                            i = MgbaPutchar_(i, c);
+                        else
+                            i = MgbaPutchar_(i, '?');
+                    }
                 }
                 break;
             }

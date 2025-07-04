@@ -9,12 +9,12 @@ extern s32 gFieldEffectArguments[8];
 extern void (*gPostMenuFieldCallback)(void);
 extern bool8 (*gFieldCallback2)(void);
 
-u32 FieldEffectStart(u8);
+u32 FieldEffectStart(u8 id);
 bool8 FieldEffectActiveListContains(u8 id);
 void FieldEffectActiveListClear(void);
 void ReturnToFieldFromFlyMapSelect(void);
 void FieldCallback_UseFly(void);
-u8 AddNewGameBirchObject(s16, s16, u8);
+u8 AddNewGameBirchObject(s16 x, s16 y, u8 subpriority);
 void FieldEffectStop(struct Sprite *sprite, u8 id);
 u8 CreateTrainerSprite(u8 trainerSpriteID, s16 x, s16 y, u8 subpriority, u8 *buffer);
 void FldEff_TeleportWarpOut(void);
@@ -41,14 +41,13 @@ void StartEscalatorWarp(u8 metatileBehavior, u8 priority);
 void StartLavaridgeGymB1FWarp(u8 priority);
 void StartLavaridgeGym1FWarp(u8 priority);
 
-void SpriteCB_AshPuff(struct Sprite *);
-void SpriteCB_AshLaunch(struct Sprite *);
+void SpriteCB_AshPuff(struct Sprite *sprite);
+void SpriteCB_AshLaunch(struct Sprite *sprite);
 
 void MultiplyPaletteRGBComponents(u16 i, u8 r, u8 g, u8 b);
 void FreeResourcesAndDestroySprite(struct Sprite *sprite, u8 spriteId);
 u8 CreateMonSprite_PicBox(u16 species, s16 x, s16 y, u8 subpriority);
 void StartEscapeRopeFieldEffect(void);
 void FieldEffectFreeGraphicsResources(struct Sprite *sprite);
-void FieldEff_CaveDust(void);
 
 #endif // GUARD_FIELD_EFFECTS_H

@@ -451,28 +451,6 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and if the user is Terastallized it keeps its own Tera Type")
-{
-    KNOWN_FAILING; // Transform seems to be bugged in tests.
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
-        OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_TRANSFORM); }
-        TURN { MOVE(player, MOVE_EARTHQUAKE); }
-        // TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH, target: player, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        // turn 2
-        MESSAGE("Wobbuffet used Earthquake!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
-        HP_BAR(opponent);
-        // turn 3
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("It doesn't affect Ditto…");
-        NOT { HP_BAR(opponent); }
-    }
-}
-
 // Stellar Type checks
 SINGLE_BATTLE_TEST("(TERA) Stellar type does not change the user's defensive profile", s16 damage)
 {
@@ -777,20 +755,39 @@ SINGLE_BATTLE_TEST("(TERA) Terapagos retains its base defensive profile when Ter
     }
 }
 
-SINGLE_BATTLE_TEST("(TERA) Illusion breaks if the pokemon Terastalizes")
+SINGLE_BATTLE_TEST("(TERA) Illusion breaks if the pokemon Terastallizes when illusioned as a mon that changes forms by Terastallizing")
 {
-    KNOWN_FAILING; // #5015
     u32 species;
     PARAMETRIZE { species = SPECIES_TERAPAGOS; }
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_OGERPON; }
     GIVEN {
-        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_DARK); }
+        ASSUME(DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_TERASTALLIZATION));
+        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_BUG); }
         PLAYER(species);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
     } SCENE {
-        MESSAGE("Zoroark's Illusion wore off!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
+    }
+}
+
+// Visual test to make sure Zoroark appears as Wobbuffet/Zigzagoon until illusion breaks
+SINGLE_BATTLE_TEST("(TERA) Illusion doesn't break upon Terastallizing when illusioned as a mon that doesn't change forms by Terastallizing")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+    PARAMETRIZE { species = SPECIES_ZIGZAGOON; }
+    GIVEN {
+        ASSUME(!DoesSpeciesHaveFormChangeMethod(species, FORM_CHANGE_BATTLE_TERASTALLIZATION));
+        PLAYER(SPECIES_ZOROARK) { TeraType(TYPE_BUG); }
+        PLAYER(species);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
     }
 }
 
