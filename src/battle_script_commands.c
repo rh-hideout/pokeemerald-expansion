@@ -61,6 +61,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_slide.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
 #include "battle_util.h"
 #include "constants/pokemon.h"
 #include "config/battle.h"
@@ -7431,7 +7432,7 @@ static void Cmd_getswitchedmondata(void)
     if (gBattleControllerExecFlags)
         return;
 
-    if (TESTING 
+    if (TESTING
      && gBattlerPartyIndexes[battler] == gBattleStruct->monToSwitchIntoId[battler]
      && gBattleStruct->hpBefore[battler] != 0) // battler is alive
         Test_ExitWithResult(TEST_RESULT_ERROR, 0, ":L:%s:%d: battler is trying to switch to themself", __FILE__, __LINE__);
