@@ -1500,7 +1500,7 @@ u32 FldEff_Bubbles(void)
         break;
     
     default: // Shiny spawn
-        visual = FLDEFFOBJ_BUBBLES;
+        visual = FLDEFFOBJ_SHINY_SPARKLE;
         xOffset = 0;
         yOffset = 0;
         break;

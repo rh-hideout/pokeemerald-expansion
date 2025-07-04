@@ -156,18 +156,26 @@ void FollowMon_OverworldCB(void)
         }
     }
 }
+static u8 GetMaxFollowMonSpawns(void)
+{
+    if (IsSpawningWaterMons() || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+        return 5;
+    else
+        return 3;
+}
 
 static u8 NextSpawnMonSlot(void)
 {
     u8 slot;
+    u8 maxSpawns = GetMaxFollowMonSpawns();
 
     slot = sFollowMonData.usedSlots;
 
     // All mon slots are in use
-    if(slot == FOLLOWMON_MAX_SPAWN_SLOTS)
+    if(slot >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
-        sFollowMonData.oldestSlot = (sFollowMonData.oldestSlot + 1) % FOLLOWMON_MAX_SPAWN_SLOTS;
+        sFollowMonData.oldestSlot = (sFollowMonData.oldestSlot + 1) % maxSpawns;
         slot = sFollowMonData.oldestSlot;   
     }
 
