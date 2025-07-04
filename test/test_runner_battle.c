@@ -438,22 +438,45 @@ static void BattleTest_Run(void *data)
 
     if (DATA.hasExplicitSpeeds)
     {
-        // TODO: If a battler is taking the default action maybe it
-        // should not require an explicit speed?
-        /* 
-        TODO: Multibattle tests fail with speed set - need to work out how to accommodate different party sizes.
-        Inserting the below works for when each position has only one mon only but is not smart enough for varying parties.
-        && (DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (DATA.playerPartySize) - 3
-         || DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT] != (1 << DATA.playerPartySize) - 8
-         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (DATA.opponentPartySize) - 3
-        || DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT] != (1 << DATA.opponentPartySize) - 8) // 2v2 Multi
-        && (DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (DATA.playerPartySize) - 3
-         || DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT] != (1 << DATA.playerPartySize) - 8
-         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (1 << DATA.opponentPartySize) - 1)) // 2v1 Multi
-         */
+        u8 revisedPlayerExplicitSpeeds = 0;
+        u8 revisedPartnerExplicitSpeeds = 0;
+        u8 revisedOpponentAExplicitSpeeds = 0;
+        u8 revisedOpponentBExplicitSpeeds = 0;
 
-        if ((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] != (1 << DATA.playerPartySize) - 1
-         || DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] != (1 << DATA.opponentPartySize) - 1)) // Singles and Doubles only
+        for (i = 0; i < 3; i++)
+        {
+            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+                revisedPlayerExplicitSpeeds |= 1 << i;
+        }
+        for (i = 3; i < PARTY_SIZE; i++)
+        {
+            if(GetMonData(&DATA.recordedBattle.playerParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            {
+                if(DATA.currentPosition == B_POSITION_PLAYER_LEFT)
+                    revisedPlayerExplicitSpeeds |= 1 << i;
+                else
+                    revisedPartnerExplicitSpeeds |= 1 << i;
+            }
+        }
+
+        for (i = 0; i < 3; i++)
+        {
+            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+                revisedOpponentAExplicitSpeeds |= 1 << i;
+        }
+        for (i = 3; i < PARTY_SIZE; i++)
+        {
+            if(GetMonData(&DATA.recordedBattle.opponentParty[i], MON_DATA_SPECIES, NULL) != SPECIES_NONE)
+            {
+                if(DATA.currentPosition == B_POSITION_OPPONENT_LEFT)
+                    revisedOpponentAExplicitSpeeds |= 1 << i;
+                else
+                    revisedOpponentBExplicitSpeeds |= 1 << i;
+            }
+        }
+
+        if (((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] + DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT]) != (revisedPlayerExplicitSpeeds + revisedPartnerExplicitSpeeds)
+         || (DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] + DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT]) != (revisedOpponentAExplicitSpeeds + revisedOpponentBExplicitSpeeds)))
          
         {
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
