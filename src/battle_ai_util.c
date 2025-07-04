@@ -2129,7 +2129,6 @@ u16 *GetMovesArray(u32 battler)
 {
     if (IsAiBattlerAware(battler) || IsAiBattlerAware(BATTLE_PARTNER(battler)))
         return gBattleMons[battler].moves;
-
     else
         return gBattleHistory->usedMoves[battler];
 }
