@@ -132,6 +132,15 @@ bool32 IsAiBattlerAware(u32 battlerId)
     return BattlerHasAi(battlerId);
 }
 
+bool32 IsAiBattlerAssumingStab()
+{
+    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STAB
+     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STAB)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
     if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_WEIGH_ABILITY_PREDICTION
@@ -1423,8 +1432,8 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
     if (gDisableStructs[battlerId].overwrittenAbility)
         return gDisableStructs[battlerId].overwrittenAbility;
 
-    // The AI knows its own ability.
-    if (IsAiBattlerAware(battlerId))
+    // The AI knows its own ability, and omniscience handling
+    if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab() && ASSUME_STAB_SEES_ABILITY))
         return knownAbility;
 
     // Check neutralizing gas, gastro acid

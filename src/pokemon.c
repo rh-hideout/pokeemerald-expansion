@@ -7154,3 +7154,11 @@ void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
 {
     gSaveBlock1Ptr->playerParty[index] = *mon;
 }
+
+u32 IsSpeciesOfType(u32 species, u32 type)
+{
+    if (gSpeciesInfo[species].types[0] == type
+     || gSpeciesInfo[species].types[1] == type)
+        return TRUE;
+    return FALSE;
+}

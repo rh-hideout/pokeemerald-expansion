@@ -192,6 +192,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     opposingBattler = GetBattlerAtPosition(opposingPosition);
+    u16 *playerMoves = GetMovesArray(opposingBattler);
 
     // Gets types of player (opposingBattler) and computer (battler)
     atkType1 = gBattleMons[opposingBattler].types[0];
@@ -255,7 +256,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     // Get max damage mon could take
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        playerMove = gBattleMons[opposingBattler].moves[i];
+        playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[i] : playerMoves[i];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, i, AI_DEFENDING, gAiLogicData);
@@ -1941,11 +1942,12 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
 {
     int i = 0;
     u32 playerMove;
+    u16 *playerMoves = GetMovesArray(opposingBattler);
     s32 damageTaken = 0, maxDamageTaken = 0;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        playerMove = gBattleMons[opposingBattler].moves[i];
+        playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[i] : playerMoves[i];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH)
         {
             damageTaken = AI_CalcPartyMonDamage(playerMove, opposingBattler, battler, battleMon, AI_DEFENDING);
