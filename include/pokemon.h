@@ -16,7 +16,7 @@
 #define FORM_SPECIES_END (0xffff)
 
 // Property labels for Get(Box)MonData / Set(Box)MonData
-enum {
+enum MonData {
     MON_DATA_PERSONALITY,
     MON_DATA_STATUS,
     MON_DATA_OT_ID,
@@ -239,6 +239,7 @@ union PokemonSubstruct
     struct PokemonSubstruct2 type2;
     struct PokemonSubstruct3 type3;
     u16 raw[NUM_SUBSTRUCT_BYTES / 2]; // /2 because it's u16, not u8
+    u32 raw32[NUM_SUBSTRUCT_BYTES / 4]; // /4 because it's u32 not u8
 };
 
 struct BoxPokemon
