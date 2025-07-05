@@ -128,8 +128,8 @@ struct DisableStruct
     u8 steelSurgeDone:1;
     u8 usedProteanLibero:1;
     u8 flashFireBoosted:1;
-    enum Abilities overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
-    u8 boosterEnergyActivates:1;
+    u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
+    u8 boosterEnergyActivated:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
     u8 neutralizingGas:1;
@@ -161,7 +161,7 @@ struct ProtectStruct
     u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
-    u16 statFell:1;
+    u16 tryEjectPack:1;
     u16 pranksterElevated:1;
     u16 quickDraw:1;
     u16 beakBlastCharge:1;
@@ -756,7 +756,7 @@ struct BattleStruct
     u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
-    u8 categoryOverride; // for Z-Moves and Max Moves
+    enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
     u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
