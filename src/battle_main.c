@@ -2026,7 +2026,24 @@ static u8 CreateNPCTrainerParty(struct Pokemon *party, u16 trainerNum, bool8 fir
     u8 retVal;
     if (trainerNum == TRAINER_SECRET_BASE)
         return 0;
-    retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
+    if (GetTrainerStructFromId(trainerNum)->overrideTrainer)
+    {
+        struct Trainer tempTrainer;
+        memcpy(&tempTrainer, GetTrainerStructFromId(trainerNum), sizeof(struct Trainer));
+        const struct Trainer *origTrainer = GetTrainerStructFromId(tempTrainer.overrideTrainer);
+
+        tempTrainer.party = origTrainer->party;
+
+        tempTrainer.poolSize = origTrainer->poolSize;
+        if (tempTrainer.partySize == 0)
+            tempTrainer.partySize = origTrainer->partySize;
+
+        retVal = CreateNPCTrainerPartyFromTrainer(party, (const struct Trainer *)(&tempTrainer), firstTrainer, gBattleTypeFlags);
+    }
+    else
+    {
+        retVal = CreateNPCTrainerPartyFromTrainer(party, GetTrainerStructFromId(trainerNum), firstTrainer, gBattleTypeFlags);
+    }
     return retVal;
 }
 
