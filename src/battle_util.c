@@ -1143,9 +1143,10 @@ bool32 WasUnableToUseMove(u32 battler)
     return FALSE;
 }
 
-bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability)
+bool32 ShouldDefiantCompetitiveActivate(u32 battler)
 {
     u32 side = GetBattlerSide(battler);
+    u32 ability = GetBattlerAbility(battler);
     if (ability != ABILITY_DEFIANT && ability != ABILITY_COMPETITIVE)
         return FALSE;
     // if an ally dropped the stats (except for Sticky Web), don't activate
@@ -1161,38 +1162,18 @@ bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability)
 void PrepareStringBattle(enum StringID stringId, u32 battler)
 {
     u16 battlerAbility = GetBattlerAbility(battler);
-    u16 targetAbility = GetBattlerAbility(gBattlerTarget);
     // Support for Contrary ability.
     // If a move attempted to raise stat - print "won't increase".
     // If a move attempted to lower stat - print "won't decrease".
-    if (stringId == STRINGID_STATSWONTDECREASE && !(gBattleScripting.statChanger & STAT_BUFF_NEGATIVE))
+    if (stringId == STRINGID_STATSWONTDECREASE && !gBattleScripting.statChanger.isNegative)
         stringId = STRINGID_STATSWONTINCREASE;
-    else if (stringId == STRINGID_STATSWONTINCREASE && gBattleScripting.statChanger & STAT_BUFF_NEGATIVE)
+    else if (stringId == STRINGID_STATSWONTINCREASE && gBattleScripting.statChanger.isNegative)
         stringId = STRINGID_STATSWONTDECREASE;
 
     else if (stringId == STRINGID_STATSWONTDECREASE2 && battlerAbility == ABILITY_CONTRARY)
         stringId = STRINGID_STATSWONTINCREASE2;
     else if (stringId == STRINGID_STATSWONTINCREASE2 && battlerAbility == ABILITY_CONTRARY)
         stringId = STRINGID_STATSWONTDECREASE2;
-
-    // Check Defiant and Competitive stat raise whenever a stat is lowered.
-    else if ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_PKMNCUTSATTACKWITH)
-              && ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
-    {
-        gBattlerAbility = gBattlerTarget;
-        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
-        if (targetAbility == ABILITY_DEFIANT)
-            SET_STATCHANGER(STAT_ATK, 2, FALSE);
-        else
-            SET_STATCHANGER(STAT_SPATK, 2, FALSE);
-    }
-    else if (B_UPDATED_INTIMIDATE >= GEN_8 && stringId == STRINGID_PKMNCUTSATTACKWITH && targetAbility == ABILITY_RATTLED
-            && CompareStat(gBattlerTarget, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
-    {
-        gBattlerAbility = gBattlerTarget;
-        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
-        SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-    }
 
     if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNWASNTAFFECTED || stringId == STRINGID_PKMNUNAFFECTED))
         TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
@@ -1699,7 +1680,7 @@ bool32 MoodyCantRaiseStat(u32 stat)
 // gBattlerAttacker is the battler that's trying to lower their stats and due to limitations of RandomUniformExcept, cannot be an argument
 bool32 MoodyCantLowerStat(u32 stat)
 {
-    return stat == GET_STAT_BUFF_ID(gBattleScripting.statChanger) || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
+    return GetStatChangerStage(gBattleScripting.statChanger, stat) > 0 || CompareStat(gBattlerAttacker, stat, MIN_STAT_STAGE, CMP_EQUAL);
 }
 
 void TryToRevertMimicryAndFlags(void)
@@ -2913,53 +2894,30 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
         && gBattleMons[battler].hp <= cutoff;
 }
 
-#define ANIM_STAT_HP      0
-#define ANIM_STAT_ATK     1
-#define ANIM_STAT_DEF     2
-#define ANIM_STAT_SPATK   3
-#define ANIM_STAT_SPDEF   4
-#define ANIM_STAT_SPEED   5
-#define ANIM_STAT_ACC     6
-#define ANIM_STAT_EVASION 7
 static void ChooseStatBoostAnimation(u32 battler)
 {
-    u32 stat;
-    bool32 statBuffMoreThan1 = FALSE;
+    u32 queuedStatBoost, stat;
     u32 static const statsOrder[NUM_BATTLE_STATS] =
     {
-        [ANIM_STAT_HP]      = STAT_HP,
-        [ANIM_STAT_ATK]     = STAT_ATK,
-        [ANIM_STAT_DEF]     = STAT_DEF,
-        [ANIM_STAT_SPATK]   = STAT_SPATK,
-        [ANIM_STAT_SPDEF]   = STAT_SPDEF,
-        [ANIM_STAT_SPEED]   = STAT_SPEED,
-        [ANIM_STAT_ACC]     = STAT_ACC,
-        [ANIM_STAT_EVASION] = STAT_EVASION,
+        STAT_HP,
+        STAT_ATK,
+        STAT_DEF,
+        STAT_SPATK,
+        STAT_SPDEF,
+        STAT_SPEED,
+        STAT_ACC,
+        STAT_EVASION,
     };
     gBattleScripting.animArg1 = 0;
 
-    for (stat = 1; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
+    for (stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++) // Start loop at 1 to avoid STAT_HP
     {
-        if ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == 0)
+        if ((queuedStatBoost = gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) == 0)
             continue;
 
-        if (!statBuffMoreThan1)
-            statBuffMoreThan1 = ((gQueuedStatBoosts[battler].stats & (1 << statsOrder[stat])) > 1);
-
-        if (gBattleScripting.animArg1 != 0) // Already set in a different stat so now boosting multiple stats
-            gBattleScripting.animArg1 = (statBuffMoreThan1 ? STAT_ANIM_MULTIPLE_PLUS2 : STAT_ANIM_MULTIPLE_PLUS1);
-        else
-            gBattleScripting.animArg1 = GET_STAT_BUFF_ID((statsOrder[stat] + 1)) + (statBuffMoreThan1 ? STAT_ANIM_PLUS2 : STAT_ANIM_PLUS1);
+        gBattleScripting.animArg1 = GetStatAnimArg(gBattleScripting.animArg1 != 0 ? STAT_MULTIPLE : statsOrder[stat] + 1, queuedStatBoost);
     }
 }
-#undef ANIM_STAT_HP
-#undef ANIM_STAT_ATK
-#undef ANIM_STAT_DEF
-#undef ANIM_STAT_SPATK
-#undef ANIM_STAT_SPDEF
-#undef ANIM_STAT_SPEED
-#undef ANIM_STAT_ACC
-#undef ANIM_STAT_EVASION
 
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, u32 move, enum AbilityEffectOptions option)
 {
@@ -3183,7 +3141,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 
             else
                 battleScript = BattleScript_MoveStatDrain_PPLoss;
 
-            SET_STATCHANGER(statId, statAmount, FALSE);
+            SetStatChanger(statId, statAmount);
             if (B_ABSORBING_ABILITY_STRING < GEN_5)
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
         }
@@ -3727,8 +3685,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
                 if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
                 {
-                    SET_STATCHANGER(statId, 1, FALSE);
-                    PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
+                    SetStatChanger(statId, 1);
                     BattleScriptPushCursorAndCallback(BattleScript_AttackerAbilityStatRaiseEnd3);
                     effect++;
                 }
@@ -3879,7 +3836,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gBattlerAbility = gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_ATK, 1, TRUE);
+                SetStatChanger(STAT_ATK, -1);
                 BattleScriptPushCursorAndCallback(BattleScript_IntimidateActivates);
                 effect++;
             }
@@ -3931,7 +3888,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (B_INTREPID_SWORD == GEN_9)
                     gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].intrepidSwordBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                SetStatChanger(STAT_ATK, 1);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
                 effect++;
             }
@@ -3943,7 +3900,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (B_DAUNTLESS_SHIELD == GEN_9)
                     gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].dauntlessShieldBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_DEF, 1, FALSE);
+                SetStatChanger(STAT_DEF, 1);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
                 effect++;
             }
@@ -3954,7 +3911,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_TAILWIND)
             {
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                SetStatChanger(STAT_ATK, 1);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
                 effect++;
             }
@@ -4104,7 +4061,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     break;
 
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(stat, 1, FALSE);
+                SetStatChanger(stat, 1);
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
                 effect++;
             }
@@ -4255,7 +4212,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             case ABILITY_SPEED_BOOST:
                 if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
                 {
-                    SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+                    SetStatChanger(STAT_SPEED, 1);
                     BattleScriptPushCursorAndCallback(BattleScript_SpeedBoostActivates);
                     gBattleScripting.battler = battler;
                     effect++;
@@ -4275,18 +4232,18 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                             validToRaise |= 1u << i;
                     }
 
-                    gBattleScripting.statChanger = gBattleScripting.savedStatChanger = 0; // for raising and lowering stat respectively
+                    gBattleScripting.statChanger.value = gBattleScripting.savedStatChanger.value = 0; // for raising and lowering stat respectively
                     if (validToRaise) // Find stat to raise
                     {
                         i = RandomUniformExcept(RNG_MOODY_INCREASE, STAT_ATK, statsNum - 1, MoodyCantRaiseStat);
-                        SET_STATCHANGER(i, 2, FALSE);
+                        SetStatChanger(i, 2);
                         validToLower &= ~(1u << i); // Can't lower the same stat as raising.
                     }
                     if (validToLower) // Find stat to lower
                     {
                         // MoodyCantLowerStat already checks that both stats are different
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
-                        SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
+                        SetSavedStatChanger(i, -1);
                     }
                     BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
                     effect++;
@@ -4399,7 +4356,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                SetStatChanger(STAT_ATK, 1);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4411,7 +4368,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+                SetStatChanger(STAT_SPEED, 1);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4423,7 +4380,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_DEF, 2, FALSE);
+                SetStatChanger(STAT_DEF, 2);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4435,7 +4392,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_DEF, 1, FALSE);
+                SetStatChanger(STAT_DEF, 1);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4449,7 +4406,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && CompareStat(battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                SetStatChanger(STAT_SPATK, 1);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4534,7 +4491,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerAlive(battler)
              && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
             {
-                SET_STATCHANGER(STAT_ATK, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_ATK], FALSE);
+                SetStatChanger(STAT_ATK, MAX_STAT_STAGE - gBattleMons[battler].statStages[STAT_ATK]);
                 BattleScriptCall(BattleScript_TargetsStatWasMaxedOut);
                 effect++;
             }
@@ -4562,7 +4519,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), move))
             {
-                SET_STATCHANGER(STAT_SPEED, 1, TRUE);
+                SetStatChanger(STAT_SPEED, -1);
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_GooeyActivates);
                 gHitMarker |= HITMARKER_STATUS_ABILITY_EFFECT;
@@ -4763,7 +4720,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && (moveType == TYPE_FIRE || moveType == TYPE_WATER))
             {
                 gEffectBattler = battler;
-                SET_STATCHANGER(STAT_SPEED, 6, FALSE);
+                SetStatChanger(STAT_SPEED, 6);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -4849,7 +4806,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && moveType == TYPE_FIRE)
             {
                 gEffectBattler = gBattlerTarget;
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                SetStatChanger(STAT_ATK, 1);
                 BattleScriptCall(BattleScript_TargetAbilityStatRaiseRet);
                 effect++;
             }
@@ -5858,14 +5815,12 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
 {
     if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN) && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, itemId), itemId))
     {
+        bool32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gEffectBattler = gBattleScripting.battler = battler;
-        if (GetBattlerAbility(battler) == ABILITY_RIPEN)
-            SET_STATCHANGER(statId, 2, FALSE);
-        else
-            SET_STATCHANGER(statId, 1, FALSE);
+        SetStatChanger(statId, ripen ? 2 : 1);
 
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, ripen ? 2 : 1);
         gBattleScripting.animArg2 = 0;
 
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
@@ -5907,12 +5862,9 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCa
         gBattleTextBuff2[6] = stringId >> 8;
         gBattleTextBuff2[7] = EOS;
         gEffectBattler = battler;
-        if (battlerAbility == ABILITY_RIPEN)
-            SET_STATCHANGER(stat, 4, FALSE);
-        else
-            SET_STATCHANGER(stat, 2, FALSE);
+        SetStatChanger(stat, (battlerAbility == ABILITY_RIPEN ? 4 : 2));
 
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS2 + stat;
+        gBattleScripting.animArg1 = GetStatAnimArg(stat, 2);
         gBattleScripting.animArg2 = 0;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
@@ -5971,16 +5923,13 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, enum 
              && IsBattlerTurnDamaged(battler)))
         )
     {
+        bool32 ripen = (GetBattlerAbility(battler) == ABILITY_RIPEN);
         BufferStatChange(battler, statId, STRINGID_STATROSE);
-
         gEffectBattler = battler;
-        if (GetBattlerAbility(battler) == ABILITY_RIPEN)
-            SET_STATCHANGER(statId, 2, FALSE);
-        else
-            SET_STATCHANGER(statId, 1, FALSE);
 
+        SetStatChanger(statId, ripen ? 2 : 1);
         gBattleScripting.battler = battler;
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        gBattleScripting.animArg1 = GetStatAnimArg(statId, ripen ? 2 : 1);
         gBattleScripting.animArg2 = 0;
         BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
@@ -5995,8 +5944,8 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
         BufferStatChange(battler, statId, STRINGID_STATROSE);
         gLastUsedItem = itemId; // For surge abilities
         gEffectBattler = gBattleScripting.battler = battler;
-        SET_STATCHANGER(statId, 1, FALSE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
+        SetStatChanger(statId, 1);
+        gBattleScripting.animArg1 = statId;
         gBattleScripting.animArg2 = 0;
         if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
@@ -6037,8 +5986,8 @@ static enum ItemEffect ConsumeBerserkGene(u32 battler, enum ItemCaseId caseID)
 
     BufferStatChange(battler, STAT_ATK, STRINGID_STATROSE);
     gBattlerAttacker = gEffectBattler = battler;
-    SET_STATCHANGER(STAT_ATK, 2, FALSE);
-    gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_ATK;
+    SetStatChanger(STAT_ATK, 2);
+    gBattleScripting.animArg1 = GetStatAnimArg(STAT_ATK, 2);
     gBattleScripting.animArg2 = 0;
     if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
         BattleScriptExecute(BattleScript_BerserkGeneRetEnd2);
@@ -6967,7 +6916,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             {
                 gBattleStruct->blunderPolicy = FALSE;
                 gLastUsedItem = atkItem;
-                SET_STATCHANGER(STAT_SPEED, 2, FALSE);
+                SetStatChanger(STAT_SPEED, 2);
                 effect = ITEM_STATS_CHANGE;
                 BattleScriptCall(BattleScript_AttackerItemStatRaise);
             }
@@ -7027,7 +6976,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             {
                 gLastUsedItem = atkItem;
                 gBattleScripting.battler = gBattlerAttacker;
-                SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                SetStatChanger(STAT_SPATK, 1);
                 effect = ITEM_STATS_CHANGE;
                 BattleScriptCall(BattleScript_AttackerItemStatRaise);
             }
@@ -7080,7 +7029,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 {
                     effect = ITEM_STATS_CHANGE;
                     BattleScriptCall(BattleScript_TargetItemStatRaise);
-                    SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                    SetStatChanger(STAT_ATK, 1);
                 }
                 break;
             case HOLD_EFFECT_LUMINOUS_MOSS:
@@ -7090,7 +7039,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 {
                     effect = ITEM_STATS_CHANGE;
                     BattleScriptCall(BattleScript_TargetItemStatRaise);
-                    SET_STATCHANGER(STAT_SPDEF, 1, FALSE);
+                    SetStatChanger(STAT_SPDEF, 1);
                 }
                 break;
             case HOLD_EFFECT_CELL_BATTERY:
@@ -7100,7 +7049,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 {
                     effect = ITEM_STATS_CHANGE;
                     BattleScriptCall(BattleScript_TargetItemStatRaise);
-                    SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                    SetStatChanger(STAT_ATK, 1);
                 }
                 break;
             case HOLD_EFFECT_ABSORB_BULB:
@@ -7110,7 +7059,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 {
                     effect = ITEM_STATS_CHANGE;
                     BattleScriptCall(BattleScript_TargetItemStatRaise);
-                    SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+                    SetStatChanger(STAT_SPATK, 1);
                 }
                 break;
             case HOLD_EFFECT_ENIGMA_BERRY: // consume and heal if hit by super effective move
@@ -10695,8 +10644,8 @@ bool32 TryRoomService(u32 battler)
     {
         BufferStatChange(battler, STAT_SPEED, STRINGID_STATFELL);
         gEffectBattler = gBattleScripting.battler = battler;
-        SET_STATCHANGER(STAT_SPEED, 1, TRUE);
-        gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_SPEED;
+        SetStatChanger(STAT_SPEED, -1);
+        gBattleScripting.animArg1 = STAT_SPEED;
         gBattleScripting.animArg2 = 0;
         gLastUsedItem = gBattleMons[battler].item;
         return TRUE;
@@ -11442,5 +11391,42 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
         */
         default: // Invalid volatile status
             return;
+    }
+}
+
+bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat)
+{
+    switch (ability)
+    {
+        case ABILITY_ILLUMINATE:
+            if (B_ILLUMINATE_EFFECT < GEN_9)
+                return FALSE;
+        case ABILITY_KEEN_EYE:
+        case ABILITY_MINDS_EYE:
+            return stat == STAT_ACC;
+        case ABILITY_HYPER_CUTTER:
+            return stat == STAT_ATK;
+        case ABILITY_BIG_PECKS:
+            return stat == STAT_DEF;
+        default:
+            return FALSE;
+    }
+}
+
+static inline void QueueSingleStatBoost(u32 battler, union StatChanger statChanger, u32 stat)
+{
+    gQueuedStatBoosts[battler].stats |= (1 << (stat - 1));    // -1 to start at atk
+    gQueuedStatBoosts[battler].statChanges[stat - 1] += GetStatChangerStage(statChanger, stat);
+}
+
+void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger)
+{
+    if (statChanger.backwardsCompatibleStatId)
+        QueueSingleStatBoost(battler, statChanger, statChanger.backwardsCompatibleStatId);
+    else
+    {
+        // Go through each stat and update queued stat boosts
+        for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+            QueueSingleStatBoost(battler, statChanger, stat);
     }
 }

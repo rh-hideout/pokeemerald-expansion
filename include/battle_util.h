@@ -198,6 +198,27 @@ enum SkyDropState
 #define SKY_DROP_NO_TARGET 0xFF
 #define SKY_DROP_RELEASED_TARGET 0xFE
 
+union StatChanger
+{
+    int raw;
+    u32 value;
+    struct {
+        bool32 isNegative:1;
+        u32 backwardsCompatibleStatId:3; // DO NOT USE THIS! It only exists to maintain compatibilty with existing scripts which can only check one stat at a time
+        u32 attack:4;
+        u32 defense:4;
+        u32 speed:4;
+        u32 spAttack:4;
+        u32 spDefense:4;
+        u32 accuracy:4;
+        u32 evasion:4;
+    };
+    struct {
+        u32 flags:4;
+        u32 allStats:28;
+    };
+};
+
 void HandleAction_ThrowBall(void);
 u32 GetCurrentBattleWeather(void);
 bool32 EndOrContinueWeather(void);
@@ -223,7 +244,7 @@ void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
 bool32 WasUnableToUseMove(u32 battler);
-bool32 ShouldDefiantCompetitiveActivate(u32 battler, u32 ability);
+bool32 ShouldDefiantCompetitiveActivate(u32 battler);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);
 void OpponentSwitchInResetSentPokesToOpponentValue(u32 battler);
@@ -400,5 +421,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID);
 u32 GetMonVolatile(u32 battler, enum Volatile volatile);
 void SetMonVolatile(u32 battler, enum Volatile volatile, u32 newValue);
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
+bool32 AbilityPreventsSpecificStatDrop(u32 ability, u32 stat);
+void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger);
 
 #endif // GUARD_BATTLE_UTIL_H

@@ -1280,7 +1280,9 @@ BattleScript_SpectralThiefSteal::
 	printstring STRINGID_SPECTRALTHIEFSTEAL
 	waitmessage B_WAIT_TIME_LONG
 	setbyte sB_ANIM_ARG2, 0
-	spectralthiefprintstats
+	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_EffectSpectralThiefFromDamage
+	printstatchangestrings
+	waitmessage B_WAIT_TIME_LONG
 	flushtextbox
 	goto BattleScript_EffectSpectralThiefFromDamage
 
@@ -2037,30 +2039,13 @@ BattleScript_EffectQuiverDance::
 	attackcanceler
 	attackstring
 	ppreduce
-	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_SPATK, MAX_STAT_STAGE, BattleScript_QuiverDanceDoMoveAnim
-	jumpifstat BS_ATTACKER, CMP_LESS_THAN, STAT_SPDEF, MAX_STAT_STAGE, BattleScript_QuiverDanceDoMoveAnim
-	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_SPEED, MAX_STAT_STAGE, BattleScript_CantRaiseMultipleStats
-BattleScript_QuiverDanceDoMoveAnim::
+	setword sSTATCHANGER, STAT_BUFF_SPATK | STAT_BUFF_SPDEF | STAT_BUFF_SPEED
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_CantRaiseMultipleStats
 	attackanimation
 	waitanimation
-	setstatchanger STAT_SPATK, 1, FALSE
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_QuiverDanceTrySpDef, BIT_SPDEF | BIT_SPEED
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_QuiverDanceTrySpDef
-	printfromtable gStatUpStringIds
+	statbuffchange BS_ATTACKER, 0, NULL
+	printstatchangestrings
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_QuiverDanceTrySpDef::
-	setstatchanger STAT_SPDEF, 1, FALSE
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_QuiverDanceTrySpeed, BIT_SPEED
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_QuiverDanceTrySpeed
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_QuiverDanceTrySpeed::
-	setstatchanger STAT_SPEED, 1, FALSE
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_QuiverDanceEnd
-	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_QuiverDanceEnd
-	printfromtable gStatUpStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_QuiverDanceEnd::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectVictoryDance::
@@ -7182,20 +7167,20 @@ BattleScript_DrizzleActivates::
 	call BattleScript_ActivateWeatherAbilities
 	end3
 
-BattleScript_AbilityRaisesDefenderStat::
+BattleScript_AbilityRaisesDefenderStatPrintString::
+	printsavedstring
+BattleScript_AbilityRaisesDefenderStat:
 	pause B_WAIT_TIME_SHORT
 	statbuffchange BS_TARGET, STAT_CHANGE_ONLY_CHECKING, BattleScript_AbilityCantRaiseDefenderStat
 	call BattleScript_AbilityPopUp
 	statbuffchange BS_TARGET, 0, BattleScript_AbilityCantRaiseDefenderStat
-	printstring STRINGID_DEFENDERSSTATROSE
-	waitmessage B_WAIT_TIME_LONG
+	printstatchangestrings
 	return
 
 BattleScript_AbilityCantRaiseDefenderStat::
 	saveattacker
 	copybyte gBattlerAttacker, gBattlerTarget
 	printstring STRINGID_STATSWONTINCREASE
-	waitmessage B_WAIT_TIME_LONG
 	restoreattacker
 	return
 
@@ -7251,14 +7236,14 @@ sZero:
 
 BattleScript_MoodyActivates::
 	call BattleScript_AbilityPopUp
-	jumpifbyteequal sSTATCHANGER, sZero, BattleScript_MoodyLower
+	jumpifword CMP_EQUAL, sSTATCHANGER, 0, BattleScript_MoodyLower
 	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_MoodyLower
 	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_ROSE, BattleScript_MoodyLower
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_MoodyLower:
-	jumpifbyteequal sSAVED_STAT_CHANGER, sZero, BattleScript_MoodyEnd
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
+	jumpifword CMP_EQUAL, sSAVED_STAT_CHANGER, 0, BattleScript_MoodyEnd
+	copyword sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_ATTACKER, STAT_CHANGE_CERTAIN | STAT_CHANGE_NOT_PROTECT_AFFECTED, BattleScript_MoodyEnd
 	jumpifbyte CMP_GREATER_THAN, cMULTISTRING_CHOOSER, B_MSG_DEFENDER_STAT_FELL, BattleScript_MoodyEnd
 	printfromtable gStatDownStringIds
@@ -7445,6 +7430,27 @@ BattleScript_ActivateWeatherAbilities_Loop:
 	restoretarget
 	return
 
+BattleScript_TryIntimidateAbilityEffects:
+	jumpifability BS_TARGET, ABILITY_DEFIANT, BattleScript_TryIntimidateDefiantActivation
+	jumpifability BS_TARGET, ABILITY_COMPETITIVE, BattleScript_TryIntimidateCompetitiveActivation
+.if B_UPDATED_INTIMIDATE >= GEN_8
+	jumpifability BS_TARGET, ABILITY_RATTLED, BattleScript_TryIntimidateRattledActivation
+.endif
+	return
+BattleScript_TryIntimidateDefiantActivation:
+	setstatchanger STAT_ATK, 2, FALSE
+	goto BattleScript_TryIntimidateAbilityActivation
+BattleScript_TryIntimidateCompetitiveActivation:
+	setstatchanger STAT_SPATK, 2, FALSE
+	goto BattleScript_TryIntimidateAbilityActivation
+BattleScript_TryIntimidateRattledActivation:
+	setstatchanger STAT_SPEED, 1, FALSE
+BattleScript_TryIntimidateAbilityActivation:
+	copybyte gBattlerAbility, sBATTLER
+	call BattleScript_AbilityRaisesDefenderStat
+BattleScript_TryIntimidateAbilityEffectRet:
+	return
+
 BattleScript_TryIntimidateHoldEffects:
 	itemstatchangeeffects BS_TARGET
 	jumpifnoholdeffect BS_TARGET, HOLD_EFFECT_ADRENALINE_ORB, BattleScript_TryIntimidateHoldEffectsRet
@@ -7482,6 +7488,7 @@ BattleScript_IntimidateEffect_WaitString:
 	saveattacker
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
+	call BattleScript_TryIntimidateAbilityEffects
 	call BattleScript_TryIntimidateHoldEffects
 	restoreattacker
 	restoretarget
@@ -9015,7 +9022,7 @@ BattleScript_ZMoveActivateStatus::
 	playanimation BS_ATTACKER, B_ANIM_ZMOVE_ACTIVATE, NULL
 	setzeffect
 	restoretarget
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
+	copyword sSTATCHANGER, sSAVED_STAT_CHANGER
 	return
 
 BattleScript_ZMoveActivatePowder::
@@ -9593,8 +9600,8 @@ BattleScript_EffectRaiseCritAlliesAnim::
 	copybyte gBattlerTarget, gBattlerAttacker
 BattleScript_RaiseCritAlliesLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseCritAlliesIncrement
-	setstatchanger STAT_ATK, 0, FALSE @ for animation
-	statbuffchange BS_TARGET, 0, BattleScript_RaiseCritAlliesIncrement @ for animation
+	statchangeanimation BS_TARGET, STAT_ATK
+	waitanimation
 	printstring STRINGID_PKMNGETTINGPUMPED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_RaiseCritAlliesIncrement:

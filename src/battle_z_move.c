@@ -525,17 +525,17 @@ void SetZEffect(void)
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
         break;
     case Z_EFFECT_ATK_UP_1 ... Z_EFFECT_EVSN_UP_1:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_1 + 1, 1, FALSE);
+        SetStatChanger(effect - Z_EFFECT_ATK_UP_1 + 1, 1);
         BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
         gBattlescriptCurrInstr = BattleScript_StatUpZMove;
         break;
     case Z_EFFECT_ATK_UP_2 ... Z_EFFECT_EVSN_UP_2:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_2 + 1, 2, FALSE);
+        SetStatChanger(effect - Z_EFFECT_ATK_UP_2 + 1, 2);
         BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
         gBattlescriptCurrInstr = BattleScript_StatUpZMove;
         break;
     case Z_EFFECT_ATK_UP_3 ... Z_EFFECT_EVSN_UP_3:
-        SET_STATCHANGER(effect - Z_EFFECT_ATK_UP_3 + 1, 3, FALSE);
+        SetStatChanger(effect - Z_EFFECT_ATK_UP_3 + 1, 3);
         BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
         gBattlescriptCurrInstr = BattleScript_StatUpZMove;
         break;

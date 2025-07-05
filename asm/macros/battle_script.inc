@@ -87,8 +87,13 @@
 	.endm
 
 	.macro printfromtable ptr:req
-	.byte 0x13
-	.4byte \ptr
+	@ a little hacky but ensures backwards compatibility
+	.if \ptr == gStatUpStringIds || \ptr == gStatDownStringIds
+		printstatchangestrings
+	.else
+		.byte 0x13
+		.4byte \ptr
+	.endif
 	.endm
 
 	.macro printselectionstringfromtable ptr:req
@@ -854,8 +859,15 @@
 	.byte 0x95
 	.endm
 
-	.macro unused_96
+	.macro printstatchangestrings
+	1:
 	.byte 0x96
+	.4byte 2f
+	printsavedstring
+	jumpifbyte CMP_EQUAL, sSTATCHANGER_KEY, 0, 2f
+	waitmessage B_WAIT_TIME_LONG
+	goto 1b
+	2:
 	.endm
 
 	.macro tryinfatuating failInstr:req
@@ -1098,8 +1110,12 @@
 	.byte 0xc7
 	.endm
 
-	.macro unused_c8
+	.macro statchangeanimation battler:req, stats:req, stages=1, down=FALSE
 	.byte 0xc8
+	.byte \battler
+	.byte \stats
+	.byte \stages
+	.byte \down
 	.endm
 
 	.macro trymemento failInstr:req
@@ -1221,9 +1237,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro unused2 ptr:req
+	.macro setstatchanger stat:req, stages:req, down=FALSE
 	.byte 0xe1
-	.4byte \ptr
+	.byte \stat
+	.byte \stages
+	.byte \down
 	.endm
 
 	.macro switchoutabilities battler:req
@@ -1788,10 +1806,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro spectralthiefprintstats
-	callnative BS_SpectralThiefPrintStats
-	.endm
-
 	.macro setmoveresultflags flags:req
 	callnative BS_SetMoveResultFlags
 	.2byte \flags
@@ -2349,10 +2363,6 @@
 	.endm
 
 @ helpful macros
-	.macro setstatchanger stat:req, stages:req, down:req
-	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
-	.endm
-
 	.macro chosenstatus1animation battler:req, status:req
 	chosenstatusanimation \battler, 0x0, \status
 	.endm
