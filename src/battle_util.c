@@ -2513,6 +2513,7 @@ static enum MoveCanceller CancellerMultiTargetMoves(void)
 
             if (gBattlerAttacker == battlerDef
              || !IsBattlerAlive(battlerDef)
+             || (GetMoveEffect(gCurrentMove) == EFFECT_SYNCHRONOISE && !DoBattlersShareType(gBattlerAttacker, battlerDef))
              || (moveTarget == MOVE_TARGET_BOTH && gBattlerAttacker == BATTLE_PARTNER(battlerDef))
              || IsBattlerProtected(gBattlerAttacker, battlerDef, gCurrentMove)) // Missing Invulnerable check
             {
@@ -7914,7 +7915,7 @@ static inline u32 IsFieldMudSportAffected(u32 moveType)
                 return TRUE;
         }
     }
-    
+
     return FALSE;
 }
 
