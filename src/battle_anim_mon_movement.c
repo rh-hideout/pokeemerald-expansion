@@ -517,22 +517,22 @@ static void SlideMonToOriginalPos(struct Sprite *sprite)
     else
         monSpriteId = gBattlerSpriteIds[gBattleAnimTarget];
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
-    sprite->data[2] = gSprites[monSpriteId].x;
-    sprite->data[3] = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
-    sprite->data[4] = gSprites[monSpriteId].y;
+    sprite->sDuration_ltf = gBattleAnimArgs[2];
+    sprite->sInputStartX_ltf = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
+    sprite->sInputEndX_ltf = gSprites[monSpriteId].x;
+    sprite->sInputStartY_ltf = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
+    sprite->sInputEndY_ltf = gSprites[monSpriteId].y;
     InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = 0;
-    sprite->data[4] = 0;
+    sprite->sCurXOffsetFixedPoint_ltf = 0;
+    sprite->sCurYOffsetFixedPoint_ltf = 0;
     sprite->data[5] = gSprites[monSpriteId].x2;
     sprite->data[6] = gSprites[monSpriteId].y2;
     sprite->invisible = TRUE;
 
     if (gBattleAnimArgs[1] == 1)
-        sprite->data[2] = 0;
+        sprite->sYIncrement_ltf = 0;
     else if (gBattleAnimArgs[1] == 2)
-        sprite->data[1] = 0;
+        sprite->sXIncrement_ltf = 0;
 
     sprite->data[7] = gBattleAnimArgs[1];
     sprite->data[7] |= monSpriteId << 8;
@@ -578,7 +578,7 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
     lo = sprite->data[7] & 0xff;
     monSpriteId = sprite->data[7] >> 8;
     monSprite = &gSprites[monSpriteId];
-    if (sprite->data[0] == 0)
+    if (sprite->sDuration_ltf == 0)
     {
         if (lo < 2)
             monSprite->x2 = 0;
@@ -590,11 +590,11 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
     }
     else
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        monSprite->x2 = (s8)(sprite->data[3] >> 8) + sprite->data[5];
-        monSprite->y2 = (s8)(sprite->data[4] >> 8) + sprite->data[6];
+        sprite->sDuration_ltf--;
+        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
+        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
+        monSprite->x2 = (s8)(sprite->sCurXOffsetFixedPoint_ltf >> 8) + sprite->data[5];
+        monSprite->y2 = (s8)(sprite->sCurYOffsetFixedPoint_ltf >> 8) + sprite->data[6];
     }
 }
 
@@ -625,15 +625,15 @@ static void SlideMonToOffset(struct Sprite *sprite)
         }
     }
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = gSprites[monSpriteId].x;
-    sprite->data[2] = gSprites[monSpriteId].x + gBattleAnimArgs[1];
-    sprite->data[3] = gSprites[monSpriteId].y;
-    sprite->data[4] = gSprites[monSpriteId].y + gBattleAnimArgs[2];
+    sprite->sDuration_ltf = gBattleAnimArgs[4];
+    sprite->sInputStartX_ltf = gSprites[monSpriteId].x;
+    sprite->sInputEndX_ltf = gSprites[monSpriteId].x + gBattleAnimArgs[1];
+    sprite->sInputStartY_ltf = gSprites[monSpriteId].y;
+    sprite->sInputEndY_ltf = gSprites[monSpriteId].y + gBattleAnimArgs[2];
     InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = 0;
-    sprite->data[4] = 0;
-    sprite->data[5] = monSpriteId;
+    sprite->sCurXOffsetFixedPoint_ltf = 0;
+    sprite->sCurYOffsetFixedPoint_ltf = 0;
+    sprite->sSpriteId_ltf = monSpriteId;
     sprite->invisible = TRUE;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     sprite->callback = TranslateSpriteLinearByIdFixedPoint;
@@ -692,15 +692,16 @@ static void SlideMonToOffsetAndBack(struct Sprite *sprite)
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
         }
     }
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = gSprites[spriteId].x + gSprites[spriteId].x2;
-    sprite->data[2] = sprite->data[1] + gBattleAnimArgs[1];
-    sprite->data[3] = gSprites[spriteId].y + gSprites[spriteId].y2;
-    sprite->data[4] = sprite->data[3] + gBattleAnimArgs[2];
+    sprite->sDuration_ltf = gBattleAnimArgs[4];
+    sprite->sInputStartX_ltf = gSprites[spriteId].x + gSprites[spriteId].x2;
+    sprite->sInputEndX_ltf = sprite->sInputStartX_ltf + gBattleAnimArgs[1];
+    sprite->sInputStartY_ltf = gSprites[spriteId].y + gSprites[spriteId].y2;
+    sprite->sInputEndY_ltf = sprite->sInputStartY_ltf + gBattleAnimArgs[2];
     InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = gSprites[spriteId].x2 << 8;
-    sprite->data[4] = gSprites[spriteId].y2 << 8;
-    sprite->data[5] = spriteId;
+    sprite->sCurXOffsetFixedPoint_ltf = gSprites[spriteId].x2 << 8;
+    sprite->sCurYOffsetFixedPoint_ltf = gSprites[spriteId].y2 << 8;
+    sprite->sSpriteId_ltf = spriteId;
+    // TODO: unused field entirely
     sprite->data[6] = gBattleAnimArgs[5];
     if (!gBattleAnimArgs[5])
     {
