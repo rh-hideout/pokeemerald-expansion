@@ -14687,7 +14687,7 @@ static void Cmd_curestatuswithmove(void)
     u32 shouldHeal;
 
     if (GetMoveEffect(gCurrentMove) == EFFECT_REFRESH)
-        shouldHeal = gBattleMons[gBattlerAttacker].status1 & STATUS1_REFRESH;
+        shouldHeal = gBattleMons[gBattlerAttacker].status1 & STATUS1_CAN_MOVE;
     else // Take Heart
         shouldHeal = gBattleMons[gBattlerAttacker].status1 & STATUS1_ANY;
 
@@ -15871,9 +15871,9 @@ static void Cmd_handleballthrow(void)
             * (gBattleMons[gBattlerTarget].maxHP * 3 - gBattleMons[gBattlerTarget].hp * 2)
             / (3 * gBattleMons[gBattlerTarget].maxHP);
 
-        if (gBattleMons[gBattlerTarget].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
+        if (gBattleMons[gBattlerTarget].status1 & STATUS1_INCAPACITATED)
             odds *= 2;
-        if (gBattleMons[gBattlerTarget].status1 & (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE))
+        if (gBattleMons[gBattlerTarget].status1 & STATUS1_CAN_MOVE)
             odds = (odds * 15) / 10;
 
         if (gBattleResults.catchAttempts[ballId] < 255)

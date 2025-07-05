@@ -1870,7 +1870,7 @@ bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 
 bool32 IsBattlerDamagedByStatus(u32 battler)
 {
-    return gBattleMons[battler].status1 & (STATUS1_BURN | STATUS1_FROSTBITE | STATUS1_POISON | STATUS1_TOXIC_POISON)
+    return gBattleMons[battler].status1 & STATUS1_DAMAGING
         || gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_NIGHTMARE | STATUS2_CURSED)
         || gStatuses3[battler] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED)
         || gStatuses4[battler] & (STATUS4_SALT_CURE)
@@ -4809,7 +4809,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
     if (gBattleMons[battlerDef].status1 & STATUS1_SLEEP)
         scoreIncrease += GOOD_EFFECT;
-    else if (gBattleMons[battlerDef].status1 & (STATUS1_BURN | STATUS1_PSN_ANY | STATUS1_FROSTBITE))
+    else if (gBattleMons[battlerDef].status1 & STATUS1_DAMAGING)
         scoreIncrease += DECENT_EFFECT;
 
     if (IsBattlerPredictedToSwitch(battlerDef))

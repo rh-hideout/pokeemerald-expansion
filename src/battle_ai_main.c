@@ -1059,7 +1059,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     }
 
     // Don't use anything but super effective thawing moves if target is frozen if any other attack available
-    if (((GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0) || CanBurnHitThaw(move)) && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & (STATUS1_FROSTBITE | STATUS1_FREEZE)))
+    if (((GetMoveType(move) == TYPE_FIRE && GetMovePower(move) != 0) || CanBurnHitThaw(move)) && effectiveness < UQ_4_12(2.0) && (gBattleMons[battlerDef].status1 & STATUS1_ICY_ANY))
     {
         u32 aiMove;
         for (i = 0; i < MAX_MON_MOVES; i++)
@@ -2029,7 +2029,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_REFRESH:
-            if (!(gBattleMons[battlerDef].status1 & (STATUS1_PSN_ANY | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_FROSTBITE)))
+            if (!(gBattleMons[battlerDef].status1 & STATUS1_CAN_MOVE))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_PSYCHO_SHIFT:
@@ -2085,7 +2085,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_BIDE:
             if (!HasDamagingMove(battlerDef)
               || aiData->hpPercents[battlerAtk] < 30 //Close to death
-              || gBattleMons[battlerDef].status1 & (STATUS1_SLEEP | STATUS1_FREEZE)) //No point in biding if can't take damage
+              || gBattleMons[battlerDef].status1 & STATUS1_INCAPACITATED) //No point in biding if can't take damage
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_HIT_SWITCH_TARGET:
@@ -2565,7 +2565,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && GetMoveEffect(aiData->partnerMove) == EFFECT_PLEDGE
                   && move != aiData->partnerMove) // Different pledge moves
                 {
-                    if (gBattleMons[BATTLE_PARTNER(battlerAtk)].status1 & (STATUS1_SLEEP | STATUS1_FREEZE))
+                    if (gBattleMons[BATTLE_PARTNER(battlerAtk)].status1 & STATUS1_INCAPACITATED)
                     // && gBattleMons[BATTLE_PARTNER(battlerAtk)].status1 != 1) // Will wake up this turn - how would AI know
                         ADJUST_SCORE(-10); // Don't use combo move if your partner will cause failure
                 }
@@ -3835,7 +3835,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(10);
 
     // check thawing moves
-    if ((gBattleMons[battlerAtk].status1 & (STATUS1_FREEZE | STATUS1_FROSTBITE)) && MoveThawsUser(move))
+    if (gBattleMons[battlerAtk].status1 & STATUS1_ICY_ANY && MoveThawsUser(move))
         ADJUST_SCORE(10);
 
     // check burn / frostbite
