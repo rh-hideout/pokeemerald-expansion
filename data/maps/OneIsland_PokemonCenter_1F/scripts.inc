@@ -97,12 +97,12 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 @	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 @	waitmovement 0
 @	msgbox OneIsland_PokemonCenter_1F_Text_CanYouDeliverThisMeteoritePlayer
-@	msgreceiveditem OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_METEORITE, 1, MUS_OBTAIN_KEY_ITEM
+@	msgreceiveditem OneIsland_PokemonCenter_1F_Text_AcceptedMeteoriteFromBill, ITEM_METEORITE, 1, MUS_RG_OBTAIN_KEY_ITEM
 @	additem ITEM_METEORITE
 @	applymovement LOCALID_CELIO, Common_Movement_WalkInPlaceFasterDown
 @	waitmovement 0
 @	msgbox OneIsland_PokemonCenter_1F_Text_CelioPleaseTakeThis
-@	giveitem_msg OneIsland_PokemonCenter_1F_Text_ObtainedTriPass, ITEM_TRI_PASS, 1, MUS_OBTAIN_KEY_ITEM
+@	giveitem_msg OneIsland_PokemonCenter_1F_Text_ObtainedTriPass, ITEM_TRI_PASS, 1, MUS_RG_OBTAIN_KEY_ITEM
 @	msgbox OneIsland_PokemonCenter_1F_Text_PassLetsYouTravelBetweenIslands
 @	call_if_ge VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2, OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage
 @	call_if_lt VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2, OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap
@@ -128,7 +128,7 @@ OneIsland_PokemonCenter_1F_EventScript_IntroducePlayerNotChamp::
 
 OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage::
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message OneIsland_PokemonCenter_1F_Text_ReceivedExtraPageForTownMap
 @	waitmessage
 @	waitfanfare
@@ -138,7 +138,7 @@ OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMapPage::
 OneIsland_PokemonCenter_1F_EventScript_ReceiveTownMap::
 @	setflag FLAG_HIDE_TOWN_MAP
 @	setvar VAR_MAP_SCENE_PALLET_TOWN_RIVALS_HOUSE, 2
-@	giveitem_msg OneIsland_PokemonCenter_1F_Text_ReceivedTownMap, ITEM_TOWN_MAP, 1, MUS_OBTAIN_KEY_ITEM
+@	giveitem_msg OneIsland_PokemonCenter_1F_Text_ReceivedTownMap, ITEM_TOWN_MAP, 1, MUS_RG_OBTAIN_KEY_ITEM
 @	return
 
 OneIsland_PokemonCenter_1F_Movement_PlayerWalkToCelio::
@@ -177,7 +177,7 @@ OneIsland_PokemonCenter_1F_Movement_StepAsideLeft::
 OneIsland_PokemonCenter_1F_EventScript_Nurse::
 @	lock
 @	faceplayer
-@	call EventScript_PkmnCenterNurse
+@	call Common_EventScript_PkmnCenterNurse
 @	release
 	end
 
@@ -322,11 +322,11 @@ OneIsland_PokemonCenter_1F_EventScript_GiveRainbowPass::
 @	additem ITEM_RAINBOW_PASS
 @	setflag FLAG_SYS_SEVII_MAP_4567
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message OneIsland_PokemonCenter_1F_Text_ReturnedTriPassForRainbowPass
 @	waitmessage
 @	waitfanfare
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message OneIsland_PokemonCenter_1F_Text_ObtainedExtraMapPage
 @	waitmessage
 @	waitfanfare

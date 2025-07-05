@@ -96,7 +96,7 @@ TrainerTower_Lobby_EventScript_EnterEnd::
 TrainerTower_Lobby_EventScript_Nurse::
 @	lock
 @	faceplayer
-@	call EventScript_PkmnCenterNurse
+@	call Common_EventScript_PkmnCenterNurse
 @	release
 	end
 

@@ -1,4 +1,4 @@
-UnionRoom_MapScripts_Frlg::
+UnionRoom_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, UnionRoom_OnResume_Frlg
 	map_script MAP_SCRIPT_ON_TRANSITION, UnionRoom_OnTransition_Frlg
 	.byte 0

@@ -698,7 +698,7 @@ PewterCity_EventScript_AideGiveRunningShoes::
 @	call_if_eq VAR_TEMP_1, 3, PewterCity_EventScript_AideApproachPlayer3
 @	msgbox PewterCity_Text_AskedToDeliverThis
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message PewterCity_Text_ReceivedRunningShoesFromAide
 @	waitmessage
 @	waitfanfare

@@ -15,7 +15,7 @@ NavelRock_Summit_EventScript_HideHoOh::
 
 NavelRock_Summit_EventScript_TryShowHoOh::
 @	setvar VAR_TEMP_1, 1
-@	goto_if_set FLAG_HO_OH_FLEW_AWAY, EventScript_Return
+@	goto_if_set FLAG_HO_OH_FLEW_AWAY, Common_EventScript_NopReturn
 @	setvar VAR_TEMP_1, 0
 @	clearflag FLAG_HIDE_HO_OH
 @	return
@@ -26,7 +26,7 @@ NavelRock_Summit_OnResume::
 
 NavelRock_Summit_EventScript_TryRemoveHoOh::
 @	specialvar VAR_RESULT, GetBattleOutcome
-@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, EventScript_Return
+@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
 @	removeobject LOCALID_NAVEL_ROCK_HO_OH
 @	return
 

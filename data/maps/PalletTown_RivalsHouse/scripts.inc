@@ -141,7 +141,7 @@ PalletTown_RivalsHouse_EventScript_GiveTownMap::
 @	applymovement LOCALID_DAISY, Common_Movement_FacePlayer
 @	waitmovement 0
 @	delay 12
-@	giveitem_msg PalletTown_RivalsHouse_Text_ReceivedTownMapFromDaisy, ITEM_TOWN_MAP, 1, MUS_OBTAIN_KEY_ITEM
+@	giveitem_msg PalletTown_RivalsHouse_Text_ReceivedTownMapFromDaisy, ITEM_TOWN_MAP, 1, MUS_RG_OBTAIN_KEY_ITEM
 @	release
 	end
 

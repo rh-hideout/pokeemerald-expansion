@@ -10,7 +10,7 @@ IndigoPlateau_PokemonCenter_1F_OnTransition::
 	end
 
 IndigoPlateau_PokemonCenter_1F_EventScript_CheckBlockDoor::
-@	goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, EventScript_Return
+@	goto_if_set FLAG_SYS_CAN_LINK_WITH_RS, Common_EventScript_NopReturn
 @	setobjectxyperm LOCALID_LEAGUE_DOOR_GUARD, 4, 2
 @	return
 
@@ -65,7 +65,7 @@ IndigoPlateau_PokemonCenter_1F_Items::
 IndigoPlateau_PokemonCenter_1F_EventScript_Nurse::
 @	lock
 @	faceplayer
-@	call EventScript_PkmnCenterNurse
+@	call Common_EventScript_PkmnCenterNurse
 @	release
 	end
 

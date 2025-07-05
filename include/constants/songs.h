@@ -447,7 +447,7 @@
 #define MUS_RG_OAK_LAB              513 // MUS_RG_KENKYU
 #define MUS_RG_OAK                  514 // MUS_RG_OHKIDO
 #define MUS_RG_POKE_CENTER          515 // MUS_RG_POKECEN
-#define MUS_RG_SS_ANNE              516 // MUS_RG_SANTOAN
+#define MUS_SS_ANNE              516 // MUS_RG_SANTOAN
 #define MUS_RG_SURF                 517 // MUS_RG_NAMINORI
 #define MUS_RG_POKE_TOWER           518 // MUS_RG_P_TOWER
 #define MUS_RG_SILPH                519 // MUS_RG_SHIRUHU

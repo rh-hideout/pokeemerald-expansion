@@ -23,7 +23,7 @@ BirthIsland_Exterior_EventScript_HideDeoxysAndPuzzle_Frlg::
 @	return
 
 BirthIsland_Exterior_EventScript_TryShowDeoxysPuzzle_Frlg::
-@	goto_if_set FLAG_DEOXYS_FLEW_AWAY, EventScript_Return
+@	goto_if_set FLAG_DEOXYS_FLEW_AWAY, Common_EventScript_NopReturn
 @	clearflag FLAG_HIDE_BIRTH_ISLAND_METEORITE
 @	clearflag FLAG_SYS_DEOXYS_AWAKENED
 @	return
@@ -34,7 +34,7 @@ BirthIsland_Exterior_Frlg_OnResume::
 
 BirthIsland_Exterior_EventScript_TryRemoveDeoxys_Frlg::
 @	specialvar VAR_RESULT, GetBattleOutcome
-@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, EventScript_Return
+@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
 @	removeobject LOCALID_BIRTH_ISLAND_DEOXYS
 @	return
 

@@ -1,4 +1,4 @@
-NavelRock_Harbor_MapScripts_Frlg::
+NavelRock_Harbor_Frlg_MapScripts::
 	.byte 0
 
 NavelRock_Harbor_EventScript_Sailor_Frlg::

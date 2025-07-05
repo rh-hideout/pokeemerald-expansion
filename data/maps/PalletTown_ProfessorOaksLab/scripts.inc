@@ -99,7 +99,7 @@ PalletTown_ProfessorOaksLab_EventScript_NationalDexScene::
 @	call_if_eq VAR_FACING, DIR_EAST, PalletTown_ProfessorOaksLab_EventScript_OakBringDexesOverEast
 @	call_if_eq VAR_FACING, DIR_WEST, PalletTown_ProfessorOaksLab_EventScript_OakBringDexesOverWest
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message PalletTown_ProfessorOaksLab_Text_PlayersPokedexWasUpgraded
 @	waitmessage
 @	waitfanfare
@@ -648,7 +648,7 @@ PalletTown_ProfessorOaksLab_EventScript_ReceiveDexScene::
 @	call_if_eq VAR_FACING, DIR_WEST, PalletTown_ProfessorOaksLab_EventScript_OakBringDexesOverWest
 @	delay 10
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message PalletTown_ProfessorOaksLab_Text_ReceivedPokedexFromOak
 @	waitmessage
 @	waitfanfare
@@ -1124,7 +1124,7 @@ PalletTown_ProfessorOaksLab_EventScript_ChoseStarter::
 @	bufferspeciesname STR_VAR_1, PLAYER_STARTER_SPECIES
 @	message PalletTown_ProfessorOaksLab_Text_ReceivedMonFromOak
 @	waitmessage
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	waitfanfare
 @	msgbox Text_GiveNicknameToThisMon, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, YES, EventScript_GiveNicknameToStarter
@@ -1170,7 +1170,7 @@ PalletTown_ProfessorOaksLab_EventScript_RivalTakesStarter::
 @	bufferspeciesname STR_VAR_1, RIVAL_STARTER_SPECIES
 @	message PalletTown_ProfessorOaksLab_Text_RivalReceivedMonFromOak
 @	waitmessage
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	waitfanfare
 @	setvar VAR_MAP_SCENE_PALLET_TOWN_PROFESSOR_OAKS_LAB, 3
 @	call_if_set FLAG_OPENED_START_MENU, PalletTown_ProfessorOaksLab_EventScript_ReadyEndSignLadyScene

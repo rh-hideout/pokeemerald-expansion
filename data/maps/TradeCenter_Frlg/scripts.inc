@@ -1,2 +1,2 @@
-TradeCenter_MapScripts_Frlg::
+TradeCenter_Frlg_MapScripts::
 	.byte 0

@@ -2,7 +2,7 @@
   "id": "MAP_ROUTE11_EAST_ENTRANCE_1F",
   "name": "Route11_EastEntrance_1F",
   "layout": "LAYOUT_ENTRANCE_1F",
-  "music": "MUS_VERMILLION",
+  "music": "MUS_RG_VERMILLION",
   "region_map_section": "MAPSEC_ROUTE_11",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

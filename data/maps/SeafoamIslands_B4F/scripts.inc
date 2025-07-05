@@ -14,7 +14,7 @@ SeafoamIslands_B4F_OnResume::
 
 SeafoamIslands_B4F_EventScript_TryRemoveArticuno::
 @	specialvar VAR_RESULT, GetBattleOutcome
-@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, EventScript_Return
+@	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
 @	removeobject VAR_LAST_TALKED
 @	return
 

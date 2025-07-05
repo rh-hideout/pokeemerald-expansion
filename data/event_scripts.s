@@ -1172,6 +1172,12 @@ Common_EventScript_BagIsFull::
 	msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
 	return
 
+EventScript_BagIsFull::
+	textcolor NPC_TEXT_COLOR_NEUTRAL
+	msgbox gText_TooBadBagIsFull
+	release
+	end
+
 Common_EventScript_ShowNoRoomForDecor::
 	msgbox gText_NoRoomLeftForAnother, MSGBOX_DEFAULT
 	release
@@ -1529,6 +1535,56 @@ EventScript_VsSeekerChargingDone::
 	special VsSeekerResetObjectMovementAfterChargeComplete
 	releaseall
 	end
+
+@ FRLG scripts
+
+EventScript_SetExitingCyclingRoad::
+	lockall
+	clearflag FLAG_SYS_ON_CYCLING_ROAD
+	setvar VAR_MAP_SCENE_ROUTE16, 0
+	releaseall
+	end
+
+EventScript_SetEnteringCyclingRoad::
+	lockall
+	setvar VAR_MAP_SCENE_ROUTE16, 1
+	releaseall
+	end
+
+VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman::
+	lock
+	faceplayer
+	goto_if_set FLAG_GOT_VS_SEEKER, VermilionCity_PokemonCenter_1F_EventScript_ExplainVSSeeker
+	msgbox VermilionCity_PokemonCenter_1F_Text_UrgeToBattleSomeoneAgain
+	setflag FLAG_GOT_VS_SEEKER
+	giveitem ITEM_VS_SEEKER
+	goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
+	msgbox VermilionCity_PokemonCenter_1F_Text_UseDeviceForRematches
+	release
+	end
+
+VermilionCity_PokemonCenter_1F_EventScript_ExplainVSSeeker::
+	msgbox VermilionCity_PokemonCenter_1F_Text_ExplainVSSeeker
+	release
+	end
+
+EventScript_TryDarkenRuins::
+	goto_if_set FLAG_SYS_UNLOCKED_TANOBY_RUINS, Common_EventScript_NopReturn
+	setweather WEATHER_SHADE
+	doweather
+	return
+
+
+	.include "data/scripts/trainers_frlg.inc"
+	.include "data/scripts/trainer_tower.inc"
+	.include "data/scripts/fame_checker.inc"
+	.include "data/scripts/item_ball_scripts_frlg.inc"
+	.include "data/scripts/silphco_doors.inc"
+	.include "data/scripts/move_tutors_frlg.inc"
+	.include "data/scripts/cable_club_frlg.inc"
+	.include "data/scripts/trainer_card.inc"
+	.include "data/scripts/day_care_frlg.inc"
+	.include "data/scripts/mystery_event_club.inc"
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"

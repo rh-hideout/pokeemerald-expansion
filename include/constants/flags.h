@@ -3,6 +3,8 @@
 
 #include "constants/opponents.h"
 #include "constants/rematches.h"
+#include "constants/flags_frlg.h"
+
 
 // Temporary Flags
 // These temporary flags are are cleared every time a map is loaded. They are used

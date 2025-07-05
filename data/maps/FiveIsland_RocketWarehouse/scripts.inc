@@ -131,7 +131,7 @@ FiveIsland_RocketWarehouse_EventScript_DefeatedAdmin1::
 	end
 
 FiveIsland_RocketWarehouse_EventScript_PlayerFaceAdmin1::
-@	goto_if_eq PLAYER_X_POS, 27, EventScript_Return
+@	goto_if_eq PLAYER_X_POS, 27, Common_EventScript_NopReturn
 @	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
 @	waitmovement 0
 @	return

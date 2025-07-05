@@ -1,4 +1,4 @@
-SafariZone_North_MapScripts_Frlg::
+SafariZone_North_Frlg_MapScripts::
 	.byte 0
 
 SafariZone_North_EventScript_RestHouseSign::

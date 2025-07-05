@@ -5,7 +5,7 @@ SixIsland_DottedHole_SapphireRoom_EventScript_Sapphire::
 @	lock
 @	faceplayer
 @	textcolor NPC_TEXT_COLOR_NEUTRAL
-@	playfanfare MUS_OBTAIN_KEY_ITEM
+@	playfanfare MUS_RG_OBTAIN_KEY_ITEM
 @	message SixIsland_DottedHole_SapphireRoom_Text_FoundSapphire
 @	waitmessage
 @	waitfanfare

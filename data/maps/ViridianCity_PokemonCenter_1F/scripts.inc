@@ -10,7 +10,7 @@ ViridianCity_PokemonCenter_1F_OnTransition::
 ViridianCity_PokemonCenter_1F_EventScript_Nurse::
 	lock
 	faceplayer
-	call EventScript_PkmnCenterNurse
+	call Common_EventScript_PkmnCenterNurse
 	release
 	end
 

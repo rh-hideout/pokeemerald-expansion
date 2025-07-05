@@ -2,7 +2,7 @@
   "id": "MAP_NAVEL_ROCK_EXTERIOR_FRLG",
   "name": "NavelRock_Exterior_Frlg",
   "layout": "LAYOUT_NAVEL_ROCK_EXTERIOR_FRLG",
-  "music": "MUS_SEVII_ROUTE",
+  "music": "MUS_RG_SEVII_ROUTE",
   "region_map_section": "MAPSEC_NAVEL_ROCK_FRLG",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

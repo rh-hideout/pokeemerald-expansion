@@ -1,4 +1,4 @@
-BirthIsland_Harbor_MapScripts_Frlg::
+BirthIsland_Harbor_Frlg_MapScripts::
 	.byte 0
 
 BirthIsland_Harbor_EventScript_Sailor_Frlg::

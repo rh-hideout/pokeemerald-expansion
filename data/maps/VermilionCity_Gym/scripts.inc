@@ -44,7 +44,7 @@ VermilionCity_Gym_OnTransition::
 	end
 
 VermilionCity_Gym_EventScript_InitTrashCans::
-@	goto_if_set FLAG_FOUND_BOTH_VERMILION_GYM_SWITCHES, EventScript_Return
+@	goto_if_set FLAG_FOUND_BOTH_VERMILION_GYM_SWITCHES, Common_EventScript_NopReturn
 @	special SetVermilionTrashCans
 @	copyvar VAR_TEMP_0, SWITCH1_ID
 @	copyvar VAR_TEMP_1, SWITCH2_ID

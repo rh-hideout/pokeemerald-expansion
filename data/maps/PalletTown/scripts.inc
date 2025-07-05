@@ -13,8 +13,8 @@ PalletTown_OnTransition::
 	end
 
 PalletTown_EventScript_TryReadySignLady::
-@	goto_if_unset FLAG_OPENED_START_MENU, EventScript_Return
-@	goto_if_ge VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY, 1, EventScript_Return
+@	goto_if_unset FLAG_OPENED_START_MENU, Common_EventScript_NopReturn
+@	goto_if_ge VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY, 1, Common_EventScript_NopReturn
 @	setvar VAR_MAP_SCENE_PALLET_TOWN_SIGN_LADY, 1
 @	return
 
