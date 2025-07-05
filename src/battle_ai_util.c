@@ -5273,7 +5273,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
             return GOOD_EFFECT;
         break;
     case ABILITY_GUTS:
-        if (HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL) && gBattleMons[battler].status1 & (STATUS1_REFRESH))
+        if (HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL) && gBattleMons[battler].status1 & (STATUS1_CAN_MOVE))
             return GOOD_EFFECT;
         break;
     case ABILITY_HUGE_POWER:
