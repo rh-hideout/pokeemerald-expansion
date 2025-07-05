@@ -165,8 +165,8 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
 bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetRain(u32 battlerAtk, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetRain(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetSun(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef);
 bool32 IsHealingMove(u32 move);
 bool32 HasHealingEffect(u32 battler);
@@ -208,6 +208,7 @@ bool32 IsWakeupTurn(u32 battler);
 bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
+bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather);
 bool32 IsMoxieTypeAbility(u32 ability);
 bool32 DoesAbilityRaiseStatsWhenLowered(u32 ability);
 bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability);

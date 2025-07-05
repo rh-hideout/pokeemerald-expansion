@@ -1762,16 +1762,47 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
     return FALSE;
 }
 
+bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather)
+{
+    switch (ability)
+    {
+    case ABILITY_FORECAST:
+        return (weather & (B_WEATHER_RAIN | B_WEATHER_SUN | B_WEATHER_ICY_ANY));
+    case ABILITY_MAGIC_GUARD:
+    case ABILITY_OVERCOAT:
+        return (weather & B_WEATHER_DAMAGING);
+    case ABILITY_SAND_FORCE:
+    case ABILITY_SAND_RUSH:
+    case ABILITY_SAND_VEIL:
+        return (weather & B_WEATHER_SANDSTORM);
+    case ABILITY_ICE_BODY:
+    case ABILITY_ICE_FACE:
+    case ABILITY_SLUSH_RUSH:
+    case ABILITY_SNOW_CLOAK:
+        return (weather & B_WEATHER_ICY_ANY);
+    case ABILITY_DRY_SKIN:
+    case ABILITY_HYDRATION:
+    case ABILITY_RAIN_DISH:
+    case ABILITY_SWIFT_SWIM:
+        return (weather & B_WEATHER_RAIN);
+    case ABILITY_CHLOROPHYLL:
+    case ABILITY_FLOWER_GIFT:
+    case ABILITY_HARVEST:
+    case ABILITY_LEAF_GUARD:
+    case ABILITY_ORICHALCUM_PULSE:
+    case ABILITY_PROTOSYNTHESIS:
+    case ABILITY_SOLAR_POWER:
+        return (weather & B_WEATHER_SUN);
+    }
+    return FALSE;
+}
+
 bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     if (IsWeatherActive(B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
-    if (ability == ABILITY_SAND_VEIL
-     || ability == ABILITY_SAND_RUSH
-     || ability == ABILITY_SAND_FORCE
-     || ability == ABILITY_OVERCOAT
-     || ability == ABILITY_MAGIC_GUARD
+    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SANDSTORM)
      || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
      || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
      || HasMoveWithEffect(battler, EFFECT_SHORE_UP)
@@ -1784,15 +1815,10 @@ bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffe
 
 bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
+    if (IsWeatherActive(B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
-    if (ability == ABILITY_SNOW_CLOAK
-     || ability == ABILITY_ICE_BODY
-     || ability == ABILITY_FORECAST
-     || ability == ABILITY_SLUSH_RUSH
-     || ability == ABILITY_MAGIC_GUARD
-     || ability == ABILITY_OVERCOAT
+    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_HAIL)
      || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
@@ -1804,38 +1830,29 @@ bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
     return FALSE;
 }
 
-bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
+bool32 ShouldSetRain(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
-    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
-     && (atkAbility == ABILITY_SWIFT_SWIM
-      || atkAbility == ABILITY_FORECAST
-      || atkAbility == ABILITY_HYDRATION
-      || atkAbility == ABILITY_RAIN_DISH
-      || atkAbility == ABILITY_DRY_SKIN
-      || HasMoveWithFlag(battlerAtk, MoveAlwaysHitsInRain)
-      || HasMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL)
-      || HasMoveWithType(battlerAtk, TYPE_WATER)))
+    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA 
+      && (DoesAbilityBenefitFromWeather(ability, B_WEATHER_RAIN)
+      || HasMoveWithFlag(battler, MoveAlwaysHitsInRain)
+      || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL)
+      || HasMoveWithType(battler, TYPE_WATER)))
     {
         return TRUE;
     }
     return FALSE;
 }
 
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
+bool32 ShouldSetSun(u32 battlerAtk, u32 ability, enum ItemHoldEffect holdEffect)
 {
     if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
-    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
-     && (atkAbility == ABILITY_CHLOROPHYLL
-      || atkAbility == ABILITY_FLOWER_GIFT
-      || atkAbility == ABILITY_FORECAST
-      || atkAbility == ABILITY_LEAF_GUARD
-      || atkAbility == ABILITY_SOLAR_POWER
-      || atkAbility == ABILITY_HARVEST
+    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA 
+      && (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SUN)
       || HasMoveWithEffect(battlerAtk, EFFECT_SOLAR_BEAM)
       || HasMoveWithEffect(battlerAtk, EFFECT_MORNING_SUN)
       || HasMoveWithEffect(battlerAtk, EFFECT_SYNTHESIS)
@@ -1851,13 +1868,10 @@ bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffe
 
 bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
+    if (IsWeatherActive(B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
         return FALSE;
 
-    if (ability == ABILITY_SNOW_CLOAK
-     || ability == ABILITY_ICE_BODY
-     || ability == ABILITY_FORECAST
-     || ability == ABILITY_SLUSH_RUSH
+    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SNOW)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
      || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
@@ -3636,8 +3650,8 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     {
     case EFFECT_AURORA_VEIL:
         // Use only in Hail and only if AI doesn't already have Reflect, Light Screen or Aurora Veil itself active.
-        if ((AI_GetWeather() & (B_WEATHER_HAIL | B_WEATHER_SNOW))
-            && !(gSideStatuses[atkSide] & (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)))
+        if ((AI_GetWeather() & B_WEATHER_ICY_ANY)
+            && !(gSideStatuses[atkSide] & SIDE_STATUS_SCREEN_ANY))
             return TRUE;
         break;
     case EFFECT_REFLECT:
