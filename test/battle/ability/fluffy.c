@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Fluffy does not alter damage of fire-type moves that make di
 
 SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct contact even if protected by Protective Pads", s16 damage)
 {
-    u32 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Fluffy halves damage taken from moves that make direct conta
 
 SINGLE_BATTLE_TEST("Fluffy does not halve damage taken from moves that make direct contact but are ignored by Punching Glove", s16 damage)
 {
-    u32 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_KLUTZ; }
     PARAMETRIZE { ability = ABILITY_FLUFFY; }
     GIVEN {

@@ -120,7 +120,7 @@ SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", 
 
 SINGLE_BATTLE_TEST("Normalize doesn't boost power of affected moves by 20% (< Gen7)", s16 damage)
 {
-    u32 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't boost power of affected moves by 20% (< Ge
 
 SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s16 damage)
 {
-    u32 ability;
+    enum Abilities ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 

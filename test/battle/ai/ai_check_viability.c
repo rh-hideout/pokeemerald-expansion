@@ -293,7 +293,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
 
 AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
 {
-    u32 ability, move;
+    enum Abilities ability, move;
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
     PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
