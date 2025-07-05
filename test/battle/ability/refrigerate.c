@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Refrigerate boosts power of affected moves by 20% (Gen7+) or
     PARAMETRIZE { ability = ABILITY_REFRIGERATE;    genConfig = GEN_6; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, genConfig);
+        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, genConfig);
         PLAYER(SPECIES_AMAURA) { Ability(ability); Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

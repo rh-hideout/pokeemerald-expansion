@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Paralysis reduces Speed by 50% (Gen 7+) or 75% (Gen 1-6)")
     PARAMETRIZE { playerSpeed = 98;  playerFirst = FALSE; genConfig = GEN_7; }
     PARAMETRIZE { playerSpeed = 102; playerFirst = TRUE;  genConfig = GEN_7; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PARALYSIS_SPEED, genConfig);
+        WITH_CONFIG(CONFIG_PARALYSIS_SPEED, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_PARALYSIS); Speed(playerSpeed); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); }
     } WHEN {

@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Leek increases critical hit ratio by 2 stages for the Farfet
     }
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(gSpeciesInfo[SPECIES_FARFETCHD].baseSpeed == 60);
         ASSUME(gSpeciesInfo[SPECIES_FARFETCHD_GALAR].baseSpeed == 55);
         ASSUME(gSpeciesInfo[SPECIES_SIRFETCHD].baseSpeed == 65);
