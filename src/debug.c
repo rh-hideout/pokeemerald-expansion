@@ -345,6 +345,7 @@ extern const u8 Debug_EventScript_FontTest[];
 extern const u8 Debug_EventScript_CheckEVs[];
 extern const u8 Debug_EventScript_CheckIVs[];
 extern const u8 Debug_EventScript_InflictStatus1[];
+extern const u8 Debug_EventScript_SetHiddenNature[];
 extern const u8 Debug_EventScript_Script_1[];
 extern const u8 Debug_EventScript_Script_2[];
 extern const u8 Debug_EventScript_Script_3[];
@@ -572,6 +573,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
     { COMPOUND_STRING("Hatch an Egg"),       DebugAction_ExecuteScript, Debug_HatchAnEgg },
     { COMPOUND_STRING("Heal party"),         DebugAction_Party_HealParty },
     { COMPOUND_STRING("Inflict Status1"),    DebugAction_ExecuteScript, Debug_EventScript_InflictStatus1 },
+    { COMPOUND_STRING("Set Hidden Nature"),  DebugAction_ExecuteScript, Debug_EventScript_SetHiddenNature },
     { COMPOUND_STRING("Check EVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckEVs },
     { COMPOUND_STRING("Check IVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckIVs },
     { COMPOUND_STRING("Clear Party"),        DebugAction_Party_ClearParty },
@@ -3418,7 +3420,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     }
 }
 
-static const u32 gDebugFollowerNPCGraphics[] = 
+static const u32 gDebugFollowerNPCGraphics[] =
 {
     OBJ_EVENT_GFX_RIVAL_BRENDAN_NORMAL,
     OBJ_EVENT_GFX_RIVAL_MAY_NORMAL,
