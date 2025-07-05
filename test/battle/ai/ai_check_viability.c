@@ -1,6 +1,9 @@
+#include "constants/battle_ai.h"
+#include "constants/moves.h"
 #include "global.h"
 #include "test/battle.h"
 #include "battle_ai_util.h"
+#include "test/test.h"
 
 ASSUMPTIONS
 {
@@ -253,3 +256,57 @@ AI_SINGLE_BATTLE_TEST("AI prioritizes Pursuit if it would KO opponent")
         TURN { SWITCH(player, 1); EXPECT_MOVE(opponent, MOVE_PURSUIT); SEND_OUT(player, 1); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Quick Guard against Quick Attack when opponent would die of poison")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZUBAT) { Moves(MOVE_QUICK_ATTACK); Status1(STATUS1_TOXIC_POISON); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_QUICK_GUARD, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_QUICK_GUARD); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would die of poison")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZUBAT) { Moves(MOVE_EARTHQUAKE); Status1(STATUS1_TOXIC_POISON); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        OPPONENT(SPECIES_RATTATA) { Moves(MOVE_WIDE_GUARD, MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZUBAT) { Moves(MOVE_REST, MOVE_SLEEP_TALK, MOVE_AIR_CUTTER); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE);
+        OPPONENT(SPECIES_BUDEW) { Moves(MOVE_WORRY_SEED, MOVE_SLUDGE_BOMB); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_AIR_CUTTER); EXPECT_MOVE(opponent, MOVE_WORRY_SEED); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
+{
+    u32 ability, move;
+    PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
+    PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
+
+    GIVEN {
+        PLAYER(SPECIES_SERPERIOR) { Moves(move); Ability(ability); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        OPPONENT(SPECIES_SWOOBAT) { Moves(MOVE_GUST, MOVE_SIMPLE_BEAM); }
+    } WHEN {
+        if (ability == ABILITY_CONTRARY && move == MOVE_LEAF_STORM)
+            TURN { MOVE(player, move); EXPECT_MOVE(opponent, MOVE_SIMPLE_BEAM); }
+        else
+            TURN { MOVE(player, move); NOT_EXPECT_MOVE(opponent, MOVE_SIMPLE_BEAM); }
+    }
+}
+
+

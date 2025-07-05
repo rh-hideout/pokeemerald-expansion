@@ -69,7 +69,7 @@ struct MoveInfo
     const u8 *description;
     u16 effect;
     u16 type:5;     // Up to 32
-    u16 category:2;
+    enum DamageCategory category:2;
     u16 power:9;    // up to 511
     // end of word
     u16 accuracy:7;
@@ -131,9 +131,10 @@ struct MoveInfo
     bool32 parentalBondBanned:1;
     bool32 skyBattleBanned:1;
     bool32 sketchBanned:1;
+    bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:7;
+    u32 padding:6;
     // end of word
 
     union {
@@ -199,7 +200,7 @@ static inline u32 GetMoveType(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }
 
-static inline u32 GetMoveCategory(u32 moveId)
+static inline enum DamageCategory GetMoveCategory(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].category;
 }
@@ -474,6 +475,11 @@ static inline bool32 IsMoveSketchBanned(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].sketchBanned;
 }
 
+static inline bool32 IsMoveDampBanned(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].dampBanned;
+}
+
 static inline bool32 IsValidApprenticeMove(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
@@ -497,6 +503,11 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
+}
+
+static inline u32 GetMoveTerrainFlag(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.moveProperty;
 }
 
 static inline u32 GetMoveEffectArg_Status(u32 moveId)

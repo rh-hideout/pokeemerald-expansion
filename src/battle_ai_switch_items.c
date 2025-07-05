@@ -230,7 +230,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
                 // Get maximum damage mon can deal
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData);
-                if(damageDealt > maxDamageDealt && !AI_DoesChoiceItemBlockMove(battler, aiMove))
+                if (damageDealt > maxDamageDealt && !AI_DoesChoiceItemBlockMove(battler, aiMove))
                 {
                     maxDamageDealt = damageDealt;
                     aiBestMove = aiMove;
@@ -272,14 +272,14 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
     hitsToKoAI = GetNoOfHitsToKOBattlerDmg(maxDamageTaken, battler);
 
     // Check if mon gets one shot
-    if(maxDamageTaken > gBattleMons[battler].hp
+    if (maxDamageTaken > gBattleMons[battler].hp
         && !(gItemsInfo[gBattleMons[battler].item].holdEffect == HOLD_EFFECT_FOCUS_SASH || (!IsMoldBreakerTypeAbility(opposingBattler, gBattleMons[opposingBattler].ability) && B_STURDY >= GEN_5 && aiAbility == ABILITY_STURDY)))
     {
         getsOneShot = TRUE;
     }
 
     // Check if current mon can 1v1 in spite of bad matchup, and don't switch out if it can
-    if(hitsToKoPlayer < hitsToKoAI || (hitsToKoPlayer == hitsToKoAI && AI_IsFaster(battler, opposingBattler, aiBestMove)))
+    if (hitsToKoPlayer < hitsToKoAI || (hitsToKoPlayer == hitsToKoAI && AI_IsFaster(battler, opposingBattler, aiBestMove)))
         return FALSE;
 
     // If we don't have any other viable options, don't switch out
@@ -628,7 +628,7 @@ static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
 
         monAbility = GetMonAbility(&party[i]);
 
-        if (CanAbilityTrapOpponent(monAbility, opposingBattler) || (CanAbilityTrapOpponent(AI_GetBattlerAbility(opposingBattler), opposingBattler) && monAbility == ABILITY_TRACE))
+        if (CanAbilityTrapOpponent(monAbility, opposingBattler) || (CanAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && monAbility == ABILITY_TRACE))
         {
             // If mon in slot i is the most suitable switchin candidate, then it's a trapper than wins 1v1
             if (i == gAiLogicData->mostSuitableMonId[battler] && RandomPercentage(RNG_AI_SWITCH_FREE_TURN, GetSwitchChance(SHOULD_SWITCH_FREE_TURN)))
@@ -1702,7 +1702,7 @@ static u32 GetSwitchinRecurringDamage(void)
         else if (holdEffect == HOLD_EFFECT_STICKY_BARB)
         {
             passiveDamage = maxHP / 8;
-            if(passiveDamage == 0)
+            if (passiveDamage == 0)
                 passiveDamage = 1;
         }
     }
@@ -1727,7 +1727,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
                 statusDamage = maxHP / 16;
             else
                 statusDamage = maxHP / 8;
-            if(ability == ABILITY_HEATPROOF)
+            if (ability == ABILITY_HEATPROOF)
                 statusDamage = statusDamage / 2;
             if (statusDamage == 0)
                 statusDamage = 1;
@@ -1827,7 +1827,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler)
 
         // Check if we're at a single use healing item threshold
         if (gAiLogicData->switchinCandidate.battleMon.ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
-         && !(opposingAbility == ABILITY_UNNERVE && GetPocketByItemId(item) == POCKET_BERRIES))
+         && !(opposingAbility == ABILITY_UNNERVE && GetItemPocket(item) == POCKET_BERRIES))
         {
             switch (heldItemEffect)
             {
@@ -1990,7 +1990,7 @@ static inline bool32 IsFreeSwitch(enum SwitchType switchType, u32 battlerSwitchi
             return TRUE;
         if (gAiLogicData->ejectPackSwitch)
         {
-            u32 opposingAbility = AI_GetBattlerAbility(opposingBattler);
+            u32 opposingAbility = GetBattlerAbilityIgnoreMoldBreaker(opposingBattler);
             // If faster, not a free switch; likely lowered own stats
             if (!movedSecond && opposingAbility != ABILITY_INTIMIDATE && opposingAbility != ABILITY_SUPERSWEET_SYRUP) // Intimidate triggers switches before turn starts
                 return FALSE;
@@ -2095,10 +2095,10 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             }
 
             // Track max hits to KO and set defensive mon
-            if(hitsToKOAI > maxHitsToKO && (canSwitchinWin1v1 || gAiThinkingStruct->aiFlags[battler] & AI_FLAG_STALL))
+            if (hitsToKOAI > maxHitsToKO && (canSwitchinWin1v1 || gAiThinkingStruct->aiFlags[battler] & AI_FLAG_STALL))
             {
                 maxHitsToKO = hitsToKOAI;
-                if(maxHitsToKO > defensiveMonHitKOThreshold)
+                if (maxHitsToKO > defensiveMonHitKOThreshold)
                     defensiveMonId = i;
             }
 
@@ -2126,7 +2126,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 // Check that mon isn't one shot and set best damage mon
                 if (damageDealt > maxDamageDealt)
                 {
-                    if((isFreeSwitch && hitsToKOAI > 1) || hitsToKOAI > 2) // This is a "default", we have uniquely low standards
+                    if ((isFreeSwitch && hitsToKOAI > 1) || hitsToKOAI > 2) // This is a "default", we have uniquely low standards
                     {
                         maxDamageDealt = damageDealt;
                         damageMonId = i;
@@ -2160,7 +2160,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
                 // If mon can trap
                 if ((CanAbilityTrapOpponent(gAiLogicData->switchinCandidate.battleMon.ability, opposingBattler)
-                    || (CanAbilityTrapOpponent(AI_GetBattlerAbility(opposingBattler), opposingBattler) && gAiLogicData->switchinCandidate.battleMon.ability == ABILITY_TRACE))
+                    || (CanAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gAiLogicData->switchinCandidate.battleMon.ability == ABILITY_TRACE))
                     && CountUsablePartyMons(opposingBattler) > 0
                     && canSwitchinWin1v1)
                     trapperId = i;
@@ -2395,12 +2395,11 @@ static bool32 ShouldUseItem(u32 battler)
         case EFFECT_ITEM_CURE_STATUS:
             if (itemEffects[3] & ITEM3_SLEEP && gBattleMons[battler].status1 & STATUS1_SLEEP)
                 shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_POISON && (gBattleMons[battler].status1 & STATUS1_POISON
-                                               || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON))
+            if (itemEffects[3] & ITEM3_POISON && gBattleMons[battler].status1 & STATUS1_PSN_ANY)
                 shouldUse = TRUE;
             if (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
                 shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_FREEZE && (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE))
+            if (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
                 shouldUse = TRUE;
             if (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
                 shouldUse = TRUE;

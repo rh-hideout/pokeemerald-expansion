@@ -139,15 +139,19 @@ SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Court Changed")
+SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Court Changed (Gen8)")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_DEFIANT_STICKY_WEB, GEN_8);
+        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);
@@ -162,19 +166,29 @@ SINGLE_BATTLE_TEST("Defiant doesn't activate after Sticky Web lowers Speed if Co
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Mankey's Attack sharply rose!");
         }
+        // Defiant triggers correctly after Sticky Web
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack fell!");
+        ABILITY_POPUP(player, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack sharply rose!");
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant correctly activates after Sticky Web lowers Speed if Court Changed")
+SINGLE_BATTLE_TEST("Defiant activates after Sticky Web lowers Speed if Court Changed (Gen9)")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_DEFIANT_STICKY_WEB, GEN_9);
+        ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
+        ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
+        ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_STICKY_WEB); MOVE(opponent, MOVE_COURT_CHANGE); }
-        TURN { SWITCH(player, 1); }
-        TURN { MOVE(opponent, MOVE_GROWL);}
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_GROWL);}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COURT_CHANGE, opponent);
@@ -183,12 +197,9 @@ SINGLE_BATTLE_TEST("Defiant correctly activates after Sticky Web lowers Speed if
         MESSAGE("Mankey was caught in a sticky web!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Mankey's Speed fell!");
-        // Defiant doesn't activate
-        NONE_OF {
-            ABILITY_POPUP(player, ABILITY_DEFIANT);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Mankey's Attack sharply rose!");
-        }
+        ABILITY_POPUP(player, ABILITY_DEFIANT);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+        MESSAGE("Mankey's Attack sharply rose!");
         // Defiant triggers correctly after Sticky Web
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
