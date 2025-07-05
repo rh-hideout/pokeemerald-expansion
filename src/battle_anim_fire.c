@@ -1296,6 +1296,12 @@ static void AnimWillOWispFire(struct Sprite *sprite)
     sprite->data[3] += 0xC0 * 2;
     sprite->data[4] += 0xA0;
 
+    if (IsDoubleBattle()
+     && !IsContest()
+     && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimTarget))
+     && GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
+        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
+
     sprite->x2 = Sin(sprite->data[1], sprite->data[3] >> 8);
     sprite->y2 = Cos(sprite->data[1], sprite->data[4] >> 8);
 
