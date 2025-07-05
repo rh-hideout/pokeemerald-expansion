@@ -204,7 +204,7 @@ static void InitBtlControllersInternal(void)
             // Opponent 1
             bool32 isOpponent1Recorded;
             if (isDouble)
-                isOpponent1Recorded = (!isInGamePartner && isRecorded && !isMulti && isRecordedLink);
+                isOpponent1Recorded = ((!isInGamePartner && isRecorded && !isMulti && isRecordedLink) || (IsMultibattleTest() && isRecordedLink));
             else
                 isOpponent1Recorded = isRecorded && isRecordedLink;
 
@@ -226,7 +226,9 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayer;
 
             // Opponent 2
-            if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
+            if(IsMultibattleTest() && isRecordedLink)
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToRecordedOpponent;
+            else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToOpponent;
             else
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToRecordedOpponent;

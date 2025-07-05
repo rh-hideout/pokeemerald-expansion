@@ -2091,7 +2091,19 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                 {
                     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-                        stringPtr = sText_TwoLinkTrainersWantToBattlePause;
+                    {
+                        if(TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                        {
+                            if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                                stringPtr = sText_Trainer1WantsToBattle;
+                            else
+                                stringPtr = sText_TwoTrainersWantToBattle;
+                        }
+                        else if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                            stringPtr = sText_LinkTrainerWantsToBattlePause;
+                        else
+                            stringPtr = sText_TwoLinkTrainersWantToBattlePause;
+                    }
                     else
                         stringPtr = sText_TwoLinkTrainersWantToBattle;
                 }
@@ -2228,7 +2240,19 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 }
                 else
                 {
-                    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                    if (TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                    {
+                        if (gBattleScripting.battler == 1)
+                            stringPtr = sText_Trainer1SentOutPkmn;
+                        else
+                        {
+                            if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                                stringPtr = sText_Trainer2SentOutPkmn;
+                            else
+                                stringPtr = sText_Trainer1SentOutPkmn2;
+                        }
+                    }
+                    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
                         stringPtr = sText_LinkTrainerMultiSentOutPkmn;
                     else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
                         stringPtr = sText_Trainer1SentOutPkmn2;

@@ -282,7 +282,7 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
         if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
-            if(gBattleTypeFlags & BATTLE_TWO_VS_ONE_OPPONENT)
+            if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                 xPos = 176;
             else
                 xPos = 200;
