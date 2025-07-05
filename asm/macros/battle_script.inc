@@ -1033,9 +1033,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoestats unused:req
+	.macro copyfoestats
 	.byte 0xbd
-	.4byte \unused
 	.endm
 
 	.macro rapidspinfree

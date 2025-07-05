@@ -353,13 +353,11 @@ static u16 GetRandomAlternateMove(u8 monId)
                 // NOTE: Below is an infinite loop if a species which cannot learn TMs is assigned to an Apprentice
                 do
                 {
-                    id = Random() % (NUM_TECHNICAL_MACHINES + NUM_HIDDEN_MACHINES);
-                    shouldUseMove = CanLearnTeachableMove(species, ItemIdToBattleMoveId(ITEM_TM01 + id));
+                    id = (Random() % NUM_ALL_MACHINES) + 1;
+                    move = GetTMHMMoveId(id);
+                    shouldUseMove = CanLearnTeachableMove(species, move);
                 }
                 while (!shouldUseMove);
-
-                move = ItemIdToBattleMoveId(ITEM_TM01 + id);
-                shouldUseMove = TRUE;
 
                 if (numLearnsetMoves <= MAX_MON_MOVES)
                     j = 0;
