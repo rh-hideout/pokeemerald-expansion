@@ -1619,8 +1619,21 @@ BattleScript_EffectPsychoShiftCanWork:
 
 BattleScript_EffectSynchronoise::
 	attackcanceler
-	trysynchronoise BattleScript_FailedFromAtkString
-	goto BattleScript_HitFromAccCheck
+	attackstring
+	pause B_WAIT_TIME_MED
+	ppreduce
+	trysynchronoise BattleScript_MoveEnd
+	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
+	goto BattleScript_HitFromCritCalc
+
+BattleScript_ItDoesntAffectFoe::
+	savetarget
+	copybyte gBattlerTarget, sBATTLER
+	printstring STRINGID_ITDOESNTAFFECT
+	waitmessage B_WAIT_TIME_SHORT
+	flushtextbox
+	restoretarget
+	return
 
 BattleScript_MoveEffectSmackDown::
 	printstring STRINGID_FELLSTRAIGHTDOWN

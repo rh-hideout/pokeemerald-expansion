@@ -30,7 +30,10 @@ DOUBLE_BATTLE_TEST("Synchronoise will fail if there is no corresponding typing o
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SYNCHRONOISE, playerLeft);
         MESSAGE("Wobbuffet used Synchronoise!");
-        MESSAGE("But it failed!");
+        MESSAGE("It doesn't affect the opposing Bulbasaur…");
+        MESSAGE("It doesn't affect Bulbasaur…");
+        MESSAGE("It doesn't affect the opposing Bulbasaur…");
+        NOT MESSAGE("But it failed!");
     }
 }
 
