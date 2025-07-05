@@ -7312,6 +7312,10 @@ const struct SpriteTemplate gOmegaGeyserSpriteTemplate =
     .callback = SpriteCB_Geyser,
 };
 
+// Moves objects (ice crystals) in a wave-like behavior. Seen in Max Flutterby
+// arg 0: initial x pixel offset
+// arg 1: initial y pixel offset
+// arg 2: wave amplitude
 const struct SpriteTemplate gIceShardSpriteTemplate =
 {
     .tileTag = ANIM_TAG_ICE_CRYSTALS,
@@ -7450,7 +7454,7 @@ const struct SpriteTemplate sCirclingShockSpiralOutwardSpriteTemplate =
     .tileTag = ANIM_TAG_SHOCK,
     .paletteTag = ANIM_TAG_SHOCK,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
-    .anims = sAnims_UnusedCirclingShock,
+    .anims = sAnims_CirclingElectricShock,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFireSpiralOutward,
@@ -9452,8 +9456,8 @@ static void SpriteCB_MaxFlutterbyStep1(struct Sprite* sprite)
 {
     if (!FuncIsActiveTask(AnimTask_DynamaxGrowthStep))
     {
-        if (gAnimMoveIndex != MOVE_INFERNAL_PARADE &&
-                gAnimMoveIndex != MOVE_ASTRAL_BARRAGE)
+        if (gAnimMoveIndex != MOVE_INFERNAL_PARADE
+         && gAnimMoveIndex != MOVE_ASTRAL_BARRAGE)
             PlaySE(SE_M_SAND_ATTACK);
 
         StartSpriteAffineAnim(sprite, 1);

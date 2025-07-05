@@ -541,12 +541,15 @@ static void AnimSludgeProjectile(struct Sprite *sprite)
         {
             sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
             sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-        } else
+        }
+        else
         {
             sprite->data[2] = GetBattlerSpriteCoord(targetPartner, BATTLER_COORD_X_2);
             sprite->data[4] = GetBattlerSpriteCoord(targetPartner, BATTLER_COORD_Y_PIC_OFFSET);
         }
-    } else {
+    }
+    else
+    {
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     }

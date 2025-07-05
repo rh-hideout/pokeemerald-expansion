@@ -257,6 +257,10 @@ const struct SpriteTemplate gPunishmentImpactSpriteTemplate =
     .callback = AnimPunishment,
 };
 
+// See AnimShadowBall in battle_anim_ghost.c for more specifics
+// arg 0: duration step 1 (attacker -> center)
+// arg 1: duration step 2 (spin center)
+// arg 2: duration step 3 (center -> target)
 const struct SpriteTemplate gDarkPulseSpriteTemplate =
 {
     .tileTag = ANIM_TAG_PURPLE_RING,
