@@ -16,8 +16,6 @@ SINGLE_BATTLE_TEST("Overcoat blocks powder and spore moves")
     }
 }
 
-
-
 DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
 {
     GIVEN {
