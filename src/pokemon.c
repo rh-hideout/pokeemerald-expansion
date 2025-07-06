@@ -1663,34 +1663,17 @@ static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
     union PokemonSubstruct *substruct3 = GetSubstruct(boxMon, boxMon->personality, 3);
     s32 i;
 
-    if (boxMon->unencrypted)
-    {
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
-            checksum += (substruct0->raw[i] ^ boxMon->personality) ^ boxMon->otId;
+    for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
+        checksum += substruct0->raw[i];
 
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
-            checksum += (substruct1->raw[i] ^ boxMon->personality) ^ boxMon->otId;
+    for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
+        checksum += substruct1->raw[i];
 
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
-            checksum += (substruct2->raw[i] ^ boxMon->personality) ^ boxMon->otId;
+    for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
+        checksum += substruct2->raw[i];
 
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
-            checksum += (substruct3->raw[i] ^ boxMon->personality) ^ boxMon->otId;
-    }
-    else
-    {
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
-            checksum += substruct0->raw[i];
-
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
-            checksum += substruct1->raw[i];
-
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
-            checksum += substruct2->raw[i];
-
-        for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
-            checksum += substruct3->raw[i];
-    }
+    for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
+        checksum += substruct3->raw[i];
 
     return checksum;
 }
