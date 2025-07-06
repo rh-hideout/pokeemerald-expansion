@@ -5288,6 +5288,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
             return WORST_EFFECT;
         return NO_INCREASE;
     case ABILITY_INTIMIDATE:
+    {
         u32 abilityDef = aiData->abilities[FOE(battler)];
         if (DoesIntimidateRaiseStats(abilityDef))
         {
@@ -5314,6 +5315,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
             }
             return IncreaseStatDownScore(battler, FOE(battler), STAT_ATK);
         }
+    }
     case ABILITY_NO_GUARD:
         if (HasLowAccuracyMove(battler, FOE(battler)))
             return GOOD_EFFECT;
