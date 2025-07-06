@@ -289,27 +289,36 @@ enum Volatile
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
 #define SIDE_STATUS_LIGHTSCREEN             (1 << 1)
-#define SIDE_STATUS_STICKY_WEB              (1 << 2)
-#define SIDE_STATUS_SPIKES                  (1 << 4)
-#define SIDE_STATUS_SAFEGUARD               (1 << 5)
-#define SIDE_STATUS_FUTUREATTACK            (1 << 6)
-#define SIDE_STATUS_MIST                    (1 << 8)
-// (1 << 9) previously was SIDE_STATUS_SPIKES_DAMAGED
-#define SIDE_STATUS_TAILWIND                (1 << 10)
-#define SIDE_STATUS_AURORA_VEIL             (1 << 11)
-#define SIDE_STATUS_LUCKY_CHANT             (1 << 12)
-#define SIDE_STATUS_TOXIC_SPIKES            (1 << 13)
-#define SIDE_STATUS_STEALTH_ROCK            (1 << 14)
-// Missing flags previously were SIDE_STATUS_TOXIC_SPIKES_DAMAGED, SIDE_STATUS_STEALTH_ROCK_DAMAGED, SIDE_STATUS_STICKY_WEB_DAMAGED
-#define SIDE_STATUS_STEELSURGE              (1 << 18)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 19)
-#define SIDE_STATUS_RAINBOW                 (1 << 20)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 21)
-#define SIDE_STATUS_SWAMP                   (1 << 22)
+#define SIDE_STATUS_SAFEGUARD               (1 << 2)
+#define SIDE_STATUS_FUTUREATTACK            (1 << 3)
+#define SIDE_STATUS_MIST                    (1 << 4)
+#define SIDE_STATUS_TAILWIND                (1 << 5)
+#define SIDE_STATUS_AURORA_VEIL             (1 << 6)
+#define SIDE_STATUS_LUCKY_CHANT             (1 << 7)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 8)
+#define SIDE_STATUS_RAINBOW                 (1 << 9)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 10)
+#define SIDE_STATUS_SWAMP                   (1 << 11)
 
-#define SIDE_STATUS_HAZARDS_ANY    (SIDE_STATUS_SPIKES | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE)
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
 #define SIDE_STATUS_PLEDGE_ANY     (SIDE_STATUS_RAINBOW | SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_SWAMP)
+
+#define SIDE_STATUS_TOXIC_SPIKES 0
+#define SIDE_STATUS_STEALTH_ROCK 0
+#define SIDE_STATUS_STEELSURGE 0
+#define SIDE_STATUS_STICKY_WEB 0
+#define SIDE_STATUS_SPIKES 0
+
+enum Hazards
+{
+    HAZARDS_NONE,
+    HAZARDS_SPIKES,
+    HAZARDS_STICKY_WEB,
+    HAZARDS_TOXIC_SPIKES,
+    HAZARDS_STEALTH_ROCK,
+    HAZARDS_STEELSURGE,
+    HAZARDS_MAX_COUNT,
+};
 
 // Used for damaging entry hazards based on type
 enum TypeSideHazard

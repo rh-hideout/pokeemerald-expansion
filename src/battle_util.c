@@ -7914,7 +7914,7 @@ static inline u32 IsFieldMudSportAffected(u32 moveType)
                 return TRUE;
         }
     }
-    
+
     return FALSE;
 }
 
@@ -11442,5 +11442,76 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
         */
         default: // Invalid volatile status
             return;
+    }
+}
+
+// Hazards are added to a queue and applied based in order (FIFO)
+void PushHazardTypeToQueue(u32 side, enum Hazards hazardType)
+{
+    if (!IsHazardOnSide(side, hazardType)) // Failsafe
+        gBattleStruct->hazardsQueue[side][gBattleStruct->numHazards[side]++] = hazardType;
+}
+
+bool32 IsHazardOnSide(u32 side, enum Hazards hazardType)
+{
+    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
+    {
+        if (gBattleStruct->hazardsQueue[side][i] == hazardType)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType)
+{
+    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
+    {
+        if (gBattleStruct->hazardsQueue[side][i] == hazardType)
+        {
+            gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
+            if (hazardType == HAZARDS_SPIKES)
+                gSideTimers[side].spikesAmount = 0;
+            else if (hazardType == HAZARDS_TOXIC_SPIKES)
+                gSideTimers[side].toxicSpikesAmount = 0;
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+void RemoveAllHazardsFromField(u32 side)
+{
+    gSideTimers[side].spikesAmount = 0;
+    gSideTimers[side].toxicSpikesAmount = 0;
+    gBattleStruct->numHazards[side] = 0;
+    for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)
+        gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
+}
+
+void RemoveHazardFromField(u32 side, enum Hazards hazardType)
+{
+    u32 i;
+    for (i = 0; i < HAZARDS_MAX_COUNT; i++)
+    {
+        if (gBattleStruct->hazardsQueue[side][i] == hazardType)
+        {
+            gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
+            gBattleStruct->numHazards[side]--;
+            if (hazardType == HAZARDS_SPIKES)
+                gSideTimers[side].spikesAmount = 0;
+            else if (hazardType == HAZARDS_TOXIC_SPIKES)
+                gSideTimers[side].toxicSpikesAmount = 0;
+            break;
+        }
+    }
+    while (i < HAZARDS_MAX_COUNT)
+    {
+        if (i+1 == HAZARDS_MAX_COUNT)
+        {
+            gBattleStruct->hazardsQueue[side][i] = HAZARDS_NONE;
+            break;
+        }
+        gBattleStruct->hazardsQueue[side][i] = gBattleStruct->hazardsQueue[side][i+1];
+        i++;
     }
 }

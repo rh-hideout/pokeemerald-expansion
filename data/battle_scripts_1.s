@@ -6135,53 +6135,13 @@ BattleScript_LeechSeedFree::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_SpikesFree::
-	printstring STRINGID_PKMNBLEWAWAYSPIKES
+BattleScript_SpinHazardsAway::
+	printfromtable gSpinHazardsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_ToxicSpikesFree::
-	printstring STRINGID_PKMNBLEWAWAYTOXICSPIKES
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_StickyWebFree::
-	printstring STRINGID_PKMNBLEWAWAYSTICKYWEB
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_StealthRockFree::
-	printstring STRINGID_PKMNBLEWAWAYSTEALTHROCK
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_SteelsurgeFree::
-	printstring STRINGID_PKMNBLEWAWAYSHARPSTEEL
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_SpikesDefog::
-	printstring STRINGID_SPIKESDISAPPEAREDFROMTEAM
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_ToxicSpikesDefog::
-	printstring STRINGID_TOXICSPIKESDISAPPEAREDFROMTEAM
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_StickyWebDefog::
-	printstring STRINGID_STICKYWEBDISAPPEAREDFROMTEAM
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_StealthRockDefog::
-	printstring STRINGID_STEALTHROCKDISAPPEAREDFROMTEAM
-	waitmessage B_WAIT_TIME_LONG
-	return
-
-BattleScript_SteelsurgeDefog::
-	printstring STRINGID_SHARPSTEELDISAPPEAREDFROMTEAM
+BattleScript_DefogClearHazards::
+	printfromtable gDefogHazardsStringIds
 	waitmessage B_WAIT_TIME_LONG
 	return
 

@@ -154,8 +154,8 @@ DOUBLE_BATTLE_TEST("Defog removes Stealth Rock and Sticky Web from user's side (
         ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
         if (move == MOVE_DEFOG && B_DEFOG_EFFECT_CLEARING >= GEN_6) {
-            MESSAGE("The pointed stones disappeared from around your team!");
             MESSAGE("The sticky web has disappeared from the ground around your team!");
+            MESSAGE("The pointed stones disappeared from around your team!");
         }
         // Switch happens
         SWITCH_OUT_MESSAGE("Wobbuffet");
@@ -365,15 +365,15 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
 
         if (B_DEFOG_EFFECT_CLEARING >= GEN_6) {
             MESSAGE("The spikes disappeared from the ground around your team!");
-            MESSAGE("The pointed stones disappeared from around your team!");
-            MESSAGE("The poison spikes disappeared from the ground around your team!");
             MESSAGE("The sticky web has disappeared from the ground around your team!");
+            MESSAGE("The poison spikes disappeared from the ground around your team!");
+            MESSAGE("The pointed stones disappeared from around your team!");
 
             // Opponent side
             MESSAGE("The spikes disappeared from the ground around the opposing team!");
-            MESSAGE("The pointed stones disappeared from around the opposing team!");
-            MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
             MESSAGE("The sticky web has disappeared from the ground around the opposing team!");
+            MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+            MESSAGE("The pointed stones disappeared from around the opposing team!");
         }
     }
 }

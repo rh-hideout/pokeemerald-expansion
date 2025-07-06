@@ -63,3 +63,25 @@ SINGLE_BATTLE_TEST("Rapid Spin: Mortal Spin blows away Wrap, hazards and poisons
         MESSAGE("Wobbuffet blew away Stealth Rock!");
     }
 }
+
+SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK); }
+        TURN { MOVE(opponent, MOVE_STICKY_WEB); }
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(opponent, MOVE_SPIKES); MOVE(player, MOVE_RAPID_SPIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAPID_SPIN, player);
+
+        MESSAGE("Wobbuffet blew away Spikes!");
+        MESSAGE("Wobbuffet blew away Sticky Web!");
+        MESSAGE("Wobbuffet blew away Toxic Spikes!");
+        MESSAGE("Wobbuffet blew away Stealth Rock!");
+    }
+}
