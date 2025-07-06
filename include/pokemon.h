@@ -232,6 +232,14 @@ struct PokemonSubstruct3
                              max(sizeof(struct PokemonSubstruct2),     \
                                  sizeof(struct PokemonSubstruct3)))))
 
+enum SubstructType
+{
+    SUBSTRUCT_TYPE_0,
+    SUBSTRUCT_TYPE_1,
+    SUBSTRUCT_TYPE_2,
+    SUBSTRUCT_TYPE_3,
+};
+
 union PokemonSubstruct
 {
     struct PokemonSubstruct0 type0;
@@ -260,7 +268,7 @@ struct BoxPokemon
     u16 checksum;
     u16 hpLost:14; // 16383 HP.
     u16 shinyModifier:1;
-    u16 unused_1E:1;
+    u16 unencrypted:1; // Saved mons always encrypted - gPlayerParty etc mons are not
 
     union
     {
@@ -879,6 +887,7 @@ u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
 u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);
+void LoadSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 

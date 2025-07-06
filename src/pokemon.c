@@ -76,7 +76,7 @@ struct SpeciesItem
 };
 
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon);
-static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, u8 substructType);
+static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType);
 static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
@@ -1663,17 +1663,34 @@ static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
     union PokemonSubstruct *substruct3 = GetSubstruct(boxMon, boxMon->personality, 3);
     s32 i;
 
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
-        checksum += substruct0->raw[i];
+    if (boxMon->unencrypted)
+    {
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
+            checksum += (substruct0->raw[i] ^ boxMon->personality) ^ boxMon->otId;
 
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
-        checksum += substruct1->raw[i];
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
+            checksum += (substruct1->raw[i] ^ boxMon->personality) ^ boxMon->otId;
 
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
-        checksum += substruct2->raw[i];
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
+            checksum += (substruct2->raw[i] ^ boxMon->personality) ^ boxMon->otId;
 
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
-        checksum += substruct3->raw[i];
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
+            checksum += (substruct3->raw[i] ^ boxMon->personality) ^ boxMon->otId;
+    }
+    else
+    {
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
+            checksum += substruct0->raw[i];
+
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
+            checksum += substruct1->raw[i];
+
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
+            checksum += substruct2->raw[i];
+
+        for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
+            checksum += substruct3->raw[i];
+    }
 
     return checksum;
 }
@@ -2194,8 +2211,10 @@ void SetMultiuseSpriteTemplateToTrainerFront(u16 trainerPicId, u8 battlerPositio
 
 static void EncryptBoxMon(struct BoxPokemon *boxMon)
 {
-    u32 i;
-    for (i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
+    if (boxMon->unencrypted)
+        return;
+
+    for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
     {
         boxMon->secure.raw[i] ^= boxMon->personality;
         boxMon->secure.raw[i] ^= boxMon->otId;
@@ -2204,8 +2223,10 @@ static void EncryptBoxMon(struct BoxPokemon *boxMon)
 
 static void DecryptBoxMon(struct BoxPokemon *boxMon)
 {
-    u32 i;
-    for (i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
+    if (boxMon->unencrypted)
+        return;
+
+    for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
     {
         boxMon->secure.raw[i] ^= boxMon->otId;
         boxMon->secure.raw[i] ^= boxMon->personality;
@@ -2219,24 +2240,27 @@ case n:                                                                 \
         switch (substructType)                                          \
         {                                                               \
         case 0:                                                         \
-            substruct = &boxMon->secure.substructs[v1];                          \
+            substruct = &boxMon->secure.substructs[v1];                 \
             break;                                                      \
         case 1:                                                         \
-            substruct = &boxMon->secure.substructs[v2];                          \
+            substruct = &boxMon->secure.substructs[v2];                 \
             break;                                                      \
         case 2:                                                         \
-            substruct = &boxMon->secure.substructs[v3];                          \
+            substruct = &boxMon->secure.substructs[v3];                 \
             break;                                                      \
         case 3:                                                         \
-            substruct = &boxMon->secure.substructs[v4];                          \
+            substruct = &boxMon->secure.substructs[v4];                 \
             break;                                                      \
         }                                                               \
         break;                                                          \
     }                                                                   \
 
 
-static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, u8 substructType)
+static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType)
 {
+    if (boxMon->unencrypted)
+        return &boxMon->secure.substructs[substructType];
+
     union PokemonSubstruct *substruct = NULL;
 
     switch (personality % 24)
@@ -7145,12 +7169,85 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index)
     return &gSaveBlock1Ptr->playerParty[index];
 }
 
+void LoadSavedPlayerPartyMon(u32 index)
+{
+    struct Pokemon *savedMon = GetSavedPlayerPartyMon(index);
+    gPlayerParty[index] = *savedMon;
+
+    // Copy substructs and decrypt
+    for (enum SubstructType substructType = SUBSTRUCT_TYPE_0; substructType <= SUBSTRUCT_TYPE_3; substructType++)
+       gPlayerParty[index].box.secure.substructs[substructType] = *GetSubstruct(&savedMon->box, savedMon->box.personality, substructType);
+
+    DecryptBoxMon(&gPlayerParty[index].box);
+    gPlayerParty[index].box.unencrypted = TRUE;
+}
+
 u8 *GetSavedPlayerPartyCount(void)
 {
     return &gSaveBlock1Ptr->playerPartyCount;
 }
 
+#define SAVE_SUBSTRUCT_CASE(n, v1, v2, v3, v4)                                          \
+case n:                                                                                 \
+    {                                                                                   \
+                                                                                        \
+        switch (substructType)                                                          \
+        {                                                                               \
+        case 0:                                                                         \
+            gSaveBlock1Ptr->playerParty[index].box.secure.substructs[v1] = *substruct;  \
+            break;                                                                      \
+        case 1:                                                                         \
+            gSaveBlock1Ptr->playerParty[index].box.secure.substructs[v2] = *substruct;  \
+            break;                                                                      \
+        case 2:                                                                         \
+            gSaveBlock1Ptr->playerParty[index].box.secure.substructs[v3] = *substruct;  \
+            break;                                                                      \
+        case 3:                                                                         \
+            gSaveBlock1Ptr->playerParty[index].box.secure.substructs[v4] = *substruct;  \
+            break;                                                                      \
+        }                                                                               \
+        break;                                                                          \
+    }                                                                                   \
+
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
 {
     gSaveBlock1Ptr->playerParty[index] = *mon;
+
+    // Save substructs in right order then encrypt
+    if (mon->box.unencrypted)
+    {
+        gSaveBlock1Ptr->playerParty[index].box.unencrypted = FALSE;
+        for (enum SubstructType substructType = SUBSTRUCT_TYPE_0; substructType <= SUBSTRUCT_TYPE_3; substructType++)
+        {
+            union PokemonSubstruct *substruct = &mon->box.secure.substructs[substructType];
+            switch (mon->box.personality % 24)
+            {
+                SAVE_SUBSTRUCT_CASE( 0,0,1,2,3)
+                SAVE_SUBSTRUCT_CASE( 1,0,1,3,2)
+                SAVE_SUBSTRUCT_CASE( 2,0,2,1,3)
+                SAVE_SUBSTRUCT_CASE( 3,0,3,1,2)
+                SAVE_SUBSTRUCT_CASE( 4,0,2,3,1)
+                SAVE_SUBSTRUCT_CASE( 5,0,3,2,1)
+                SAVE_SUBSTRUCT_CASE( 6,1,0,2,3)
+                SAVE_SUBSTRUCT_CASE( 7,1,0,3,2)
+                SAVE_SUBSTRUCT_CASE( 8,2,0,1,3)
+                SAVE_SUBSTRUCT_CASE( 9,3,0,1,2)
+                SAVE_SUBSTRUCT_CASE(10,2,0,3,1)
+                SAVE_SUBSTRUCT_CASE(11,3,0,2,1)
+                SAVE_SUBSTRUCT_CASE(12,1,2,0,3)
+                SAVE_SUBSTRUCT_CASE(13,1,3,0,2)
+                SAVE_SUBSTRUCT_CASE(14,2,1,0,3)
+                SAVE_SUBSTRUCT_CASE(15,3,1,0,2)
+                SAVE_SUBSTRUCT_CASE(16,2,3,0,1)
+                SAVE_SUBSTRUCT_CASE(17,3,2,0,1)
+                SAVE_SUBSTRUCT_CASE(18,1,2,3,0)
+                SAVE_SUBSTRUCT_CASE(19,1,3,2,0)
+                SAVE_SUBSTRUCT_CASE(20,2,1,3,0)
+                SAVE_SUBSTRUCT_CASE(21,3,1,2,0)
+                SAVE_SUBSTRUCT_CASE(22,2,3,1,0)
+                SAVE_SUBSTRUCT_CASE(23,3,2,1,0)
+            }
+        }
+        EncryptBoxMon(&gSaveBlock1Ptr->playerParty[index].box);
+    }
 }

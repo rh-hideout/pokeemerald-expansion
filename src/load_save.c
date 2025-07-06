@@ -184,7 +184,7 @@ void LoadPlayerParty(void)
     for (i = 0; i < PARTY_SIZE; i++)
     {
         u32 data;
-        gPlayerParty[i] = *GetSavedPlayerPartyMon(i);
+        LoadSavedPlayerPartyMon(i);
 
         // TODO: Turn this into a save migration once those are available.
         // At which point we can remove hp and status from Pokemon entirely.
