@@ -967,7 +967,7 @@ static void BagMenu_ItemPrintCallback(u8 windowId, u32 itemIndex, u8 y)
     if (itemIndex != LIST_CANCEL)
     {
         u16 itemId, itemQuantity;
-        int offset;
+        s32 offset;
 
         if (gBagMenu->toSwapPos != NOT_SWAPPING)
         {

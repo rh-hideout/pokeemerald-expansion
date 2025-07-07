@@ -61,12 +61,6 @@ void *AllocZeroed_(u32 size, const char *location);
 void Free(void *pointer);
 void InitHeap(void *heapStart, u32 heapSize);
 
-static inline u32 FreeAndReturn(void *pointer, u32 retVal)
-{
-    Free(pointer);
-    return retVal;
-}
-
 const struct MemBlock *HeapHead(void);
 const char *MemBlockLocation(const struct MemBlock *block);
 
