@@ -2422,7 +2422,7 @@ static void SafariTextIntoHealthboxObject(void *dest, u8 *windowTileData, u32 wi
 #define ABILITY_POP_UP_OPPONENT_LEFT_WIN_W  7
 #define ABILITY_POP_UP_OPPONENT_RIGHT_WIN_W 3
 
-#define ABILITY_POP_UP_WAIT_FRAMES 30
+#define ABILITY_POP_UP_WAIT_FRAMES 48
 
 /*
  * BG = BackGround
