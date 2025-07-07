@@ -2985,7 +2985,7 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     u32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
     u32 side = GetBattlerSide(currBattler);
 
-    if (gBattleStruct->numHazards[side] == 0)
+    if (!AreAnyHazardsOnSide(side))
         return FALSE;
 
     if (ability == ABILITY_MAGIC_GUARD)
@@ -2997,30 +2997,19 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     if (holdEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS)
         return FALSE;
 
-    for (u32 hazard = 0; hazard < HAZARDS_MAX_COUNT; hazard++)
+    if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK))
+        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, type1, type2, maxHp);
+    if (IsHazardOnSide(side, HAZARDS_STEELSURGE))
+        hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, maxHp);
+
+    if (IsHazardOnSide(side, HAZARDS_SPIKES) && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
+        && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
+        || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY))
     {
-        switch (gBattleStruct->hazardsQueue[side][hazard])
-        {
-        case HAZARDS_SPIKES:
-            if ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
-                && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
-                || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY)
-            {
-                s32 spikesDmg = maxHp / ((5 - gSideTimers[GetBattlerSide(currBattler)].spikesAmount) * 2);
-                if (spikesDmg == 0)
-                    spikesDmg = 1;
-                hazardDamage += spikesDmg;
-            }
-            break;
-        case HAZARDS_STEELSURGE:
-            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, maxHp);
-            break;
-        case HAZARDS_STEALTH_ROCK:
-            hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, type1, type2, maxHp);
-            break;
-        default:
-            break;
-        }
+        s32 spikesDmg = maxHp / ((5 - gSideTimers[GetBattlerSide(currBattler)].spikesAmount) * 2);
+        if (spikesDmg == 0)
+            spikesDmg = 1;
+        hazardDamage += spikesDmg;
     }
 
     if (hazardDamage >= GetMonData(mon, MON_DATA_HP))
@@ -4798,9 +4787,9 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
 
 void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 {
-    if (gBattleStruct->numHazards[GetBattlerSide(battlerAtk)] > 0 && CountUsablePartyMons(battlerAtk) != 0)
+    if (AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
         ADJUST_SCORE_PTR(GOOD_EFFECT);
-    if (gBattleStruct->numHazards[GetBattlerSide(battlerDef)] > 0 && CountUsablePartyMons(battlerDef) != 0)
+    if (AreAnyHazardsOnSide(GetBattlerSide(battlerDef)) && CountUsablePartyMons(battlerDef) != 0)
         ADJUST_SCORE_PTR(-2);
 
     if (gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE && AI_IsFaster(battlerAtk, battlerDef, move))

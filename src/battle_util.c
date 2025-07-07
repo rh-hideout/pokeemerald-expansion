@@ -11462,6 +11462,11 @@ bool32 IsHazardOnSide(u32 side, enum Hazards hazardType)
     return FALSE;
 }
 
+bool32 AreAnyHazardsOnSide(u32 side)
+{
+    return gBattleStruct->numHazards[side] > 0;
+}
+
 bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType)
 {
     for (u32 i = 0; i < HAZARDS_MAX_COUNT; i++)

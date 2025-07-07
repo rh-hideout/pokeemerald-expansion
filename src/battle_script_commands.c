@@ -4290,8 +4290,8 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         break;
     case MOVE_EFFECT_DEFOG:
         if (gSideStatuses[GetBattlerSide(gBattlerTarget)] & SIDE_STATUS_SCREEN_ANY
-            || gBattleStruct->numHazards[GetBattlerSide(gBattlerTarget)] > 0
-            || gBattleStruct->numHazards[GetBattlerSide(gBattlerAttacker)] > 0
+            || AreAnyHazardsOnSide(GetBattlerSide(gBattlerTarget))
+            || AreAnyHazardsOnSide(GetBattlerSide(gBattlerAttacker))
             || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
         {
             BattleScriptPush(gBattlescriptCurrInstr + 1);
@@ -9571,7 +9571,7 @@ static void RemoveAllTerrains(void)
 
 static bool32 DefogClearHazards(u32 saveBattler, u32 side, bool32 clear)
 {
-    if (gBattleStruct->numHazards[side] == 0)
+    if (!AreAnyHazardsOnSide(side))
         return FALSE;
 
     for (u32 hazardType = HAZARDS_NONE + 1; hazardType < HAZARDS_MAX_COUNT; hazardType++)
@@ -14340,7 +14340,7 @@ static void Cmd_rapidspinfree(void)
         gStatuses3[gBattlerAttacker] &= ~STATUS3_LEECHSEED_BATTLER;
         BattleScriptCall(BattleScript_LeechSeedFree);
     }
-    else if (gBattleStruct->numHazards[atkSide] > 0)
+    else if (AreAnyHazardsOnSide(atkSide))
     {
         for (u32 hazardType = HAZARDS_NONE + 1; hazardType < HAZARDS_MAX_COUNT; hazardType++)
         {
