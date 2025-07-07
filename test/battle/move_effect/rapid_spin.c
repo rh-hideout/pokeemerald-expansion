@@ -83,5 +83,12 @@ SINGLE_BATTLE_TEST("Rapid Spin blows away all hazards")
         MESSAGE("Wobbuffet blew away Sticky Web!");
         MESSAGE("Wobbuffet blew away Toxic Spikes!");
         MESSAGE("Wobbuffet blew away Stealth Rock!");
+    } THEN {
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][4], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][5], HAZARDS_NONE);
     }
 }
