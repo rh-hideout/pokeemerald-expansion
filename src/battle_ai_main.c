@@ -5812,7 +5812,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 unmodifiedScore = score;
     u32 ability = gBattleMons[battlerAtk].ability;
     bool32 opposingHazardFlags = DoesSideHaveDamagingHazards(GetBattlerSide(battlerDef));
-    u32 aiHazardFlags = AreAnyHazardsOnSide(GetBattlerSide(battlerAtk));
+    bool32 aiHazardFlags = AreAnyHazardsOnSide(GetBattlerSide(battlerAtk));
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     struct AiLogicData *aiData = gAiLogicData;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
