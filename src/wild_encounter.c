@@ -221,7 +221,7 @@ u32 ChooseWildMonIndex_Land(void)
 // WATER_WILD_COUNT
 u32 ChooseWildMonIndex_Water(void)
 {
-    u8 wildMonIndex = 0;
+    u32 wildMonIndex = 0;
     bool8 swap = FALSE;
     u8 rand = Random() % ENCOUNTER_CHANCE_WATER_MONS_TOTAL;
 
@@ -248,7 +248,7 @@ u32 ChooseWildMonIndex_Water(void)
 // ROCK_WILD_COUNT
 u32 ChooseWildMonIndex_Rock(void)
 {
-    u8 wildMonIndex = 0;
+    u32 wildMonIndex = 0;
     bool8 swap = FALSE;
     u8 rand = Random() % ENCOUNTER_CHANCE_ROCK_SMASH_MONS_TOTAL;
 
