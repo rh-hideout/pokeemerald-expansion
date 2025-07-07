@@ -246,7 +246,7 @@ u32 ChooseWildMonIndex_Water(void)
 }
 
 // ROCK_WILD_COUNT
-u32 ChooseWildMonIndex_Rock(void)
+u32 ChooseWildMonIndex_Rocks(void)
 {
     u32 wildMonIndex = 0;
     bool8 swap = FALSE;
@@ -559,7 +559,7 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
         wildMonIndex = ChooseWildMonIndex_Water();
         break;
     case WILD_AREA_ROCKS:
-        wildMonIndex = ChooseWildMonIndex_Rock();
+        wildMonIndex = ChooseWildMonIndex_Rocks();
         break;
     default:
     case WILD_AREA_FISHING:
