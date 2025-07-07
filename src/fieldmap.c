@@ -406,6 +406,21 @@ u8 MapGridGetCollisionAt(int x, int y)
     return (block & MAPGRID_COLLISION_MASK) >> MAPGRID_COLLISION_SHIFT;
 }
 
+u32 GetNumTilesInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_TILES_IN_PRIMARY_FRLG : NUM_TILES_IN_PRIMARY;
+}
+
+u32 GetNumMetatilesInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_METATILES_IN_PRIMARY_FRLG : NUM_METATILES_IN_PRIMARY;
+}
+
+u32 GetNumPalsInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_PALS_IN_PRIMARY_FRLG : NUM_PALS_IN_PRIMARY;
+}
+
 u32 MapGridGetMetatileIdAt(int x, int y)
 {
     u16 block = GetMapGridBlockAt(x, y);
@@ -419,7 +434,7 @@ u32 MapGridGetMetatileIdAt(int x, int y)
 u32 MapGridGetMetatileAttributeAt(s16 x, s16 y, u8 attributeType)
 {
     u16 metatileId = MapGridGetMetatileIdAt(x, y);
-    return GetAttributeByMetatileIdAndMapLayout(metatileId, attributeType);
+    return GetAttributeByMetatileIdAndMapLayout(metatileId, attributeType, gMapHeader.mapLayout->isFrlg);
 }
 
 u32 MapGridGetMetatileBehaviorAt(int x, int y)
@@ -585,24 +600,27 @@ static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
     [MB_FRLG_UP_LEFT_STAIR_WARP] = MB_UP_LEFT_STAIR_WARP,
     [MB_FRLG_DOWN_RIGHT_STAIR_WARP] = MB_DOWN_RIGHT_STAIR_WARP,
     [MB_FRLG_DOWN_LEFT_STAIR_WARP] = MB_DOWN_LEFT_STAIR_WARP,
+    [MB_FRLG_NORTH_ARROW_WARP] = MB_NORTH_ARROW_WARP,
+    [MB_FRLG_SOUTH_ARROW_WARP] = MB_SOUTH_ARROW_WARP,
+    [MB_FRLG_WEST_ARROW_WARP] = MB_WEST_ARROW_WARP,
+    [MB_FRLG_EAST_ARROW_WARP] = MB_EAST_ARROW_WARP,
+    [MB_FRLG_PC] = MB_PLAYER_ROOM_PC_ON,
+    [MB_FRLG_WARP_DOOR] = MB_ANIMATED_DOOR
 };
 
 static u32 TranslateFrlgBehaviour(u32 behavior)
 {
-    if (!IS_FRLG)
-        return behavior;
-
     if (behavior >= NUM_METATILE_BEHAVIORS)
         return MB_INVALID;
     return sFrlgToEmeraldBehavior[behavior];
 }
 
-u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType)
+u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType, bool32 isFrlg)
 {
     if (attributeType >= METATILE_ATTRIBUTE_COUNT) // Check for METATILE_ATTRIBUTES_ALL
         return attributes;
 
-    if (IS_FRLG)
+    if (isFrlg)
     {
         if (attributeType == METATILE_ATTRIBUTE_BEHAVIOR)
             return TranslateFrlgBehaviour((attributes & sMetatileAttrMasks[attributeType]) >> sMetatileAttrShifts[attributeType]);
@@ -613,31 +631,52 @@ u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType)
     return (attributes & sMetatileAttrMasksEmerald[attributeType]) >> sMetatileAttrShiftsEmerald[attributeType];
 }
 
-#if IS_FRLG
-typedef u32 AttributeType;
-#else
-typedef u16 AttributeType;
-#endif
-
-u32 GetAttributeByMetatileIdAndMapLayout(u16 metatile, u8 attributeType)
+static u32 GetAttributeByMetatileIdAndMapLayoutFrlg(u16 metatile, u8 attributeType)
 {
-    const AttributeType *attributes;
-
-    if (metatile < NUM_METATILES_IN_PRIMARY)
+    u32 attribute;
+    if (metatile < GetNumMetatilesInPrimary(gMapHeader.mapLayout))
     {
-        attributes = (const AttributeType*)gMapHeader.mapLayout->primaryTileset->metatileAttributes;
+        const u32 *attributes = (const u32*)gMapHeader.mapLayout->primaryTileset->metatileAttributes;
+        attribute = attributes[metatile];
     }
     else if (metatile < NUM_METATILES_TOTAL)
     {
-        metatile -= NUM_METATILES_IN_PRIMARY;
-        attributes = (const AttributeType*) gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
+        const u32 *attributes = (const u32*) gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
+        metatile -= GetNumMetatilesInPrimary(gMapHeader.mapLayout);
+        attribute = attributes[metatile];
     }
     else
     {
         return MB_INVALID;
     }
 
-    return ExtractMetatileAttribute(attributes[metatile], attributeType);
+    return ExtractMetatileAttribute(attribute, attributeType, TRUE);
+}
+
+u32 GetAttributeByMetatileIdAndMapLayout(u16 metatile, u8 attributeType, bool32 isFrlg)
+{
+    u32 attribute;
+
+    if (isFrlg)
+        return GetAttributeByMetatileIdAndMapLayoutFrlg(metatile, attributeType);
+
+    if (metatile < GetNumMetatilesInPrimary(gMapHeader.mapLayout))
+    {
+        const u16 *attributes = (const u16*)gMapHeader.mapLayout->primaryTileset->metatileAttributes;
+        attribute = attributes[metatile];
+    }
+    else if (metatile < NUM_METATILES_TOTAL)
+    {
+        const u16 *attributes = (const u16*)gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
+        metatile -= GetNumMetatilesInPrimary(gMapHeader.mapLayout);
+        attribute = attributes[metatile];
+    }
+    else
+    {
+        return MB_INVALID;
+    }
+
+    return ExtractMetatileAttribute(attribute, attributeType, FALSE);
 }
 
 void SaveMapView(void)
@@ -1098,7 +1137,7 @@ static void UNUSED ApplyGlobalTintToPaletteSlot(u8 slot, u8 count)
 
 }
 
-static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded)
+static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded, u32 numPalsInPrimary)
 {
     if (tileset)
     {
@@ -1116,9 +1155,9 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
             // All 'gTilesetPalettes_' arrays should have ALIGNED(4) in them,
             // but we use SmartCopy here just in case they don't
             if (skipFaded)
-                CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                CpuCopy16(tileset->palettes[numPalsInPrimary], &gPlttBufferUnfaded[destOffset], size);
             else
-                LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                LoadPaletteFast(tileset->palettes[numPalsInPrimary], destOffset, size);
         }
         else
         {
@@ -1130,35 +1169,35 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
 
 void CopyPrimaryTilesetToVram(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVram(mapLayout->primaryTileset, NUM_TILES_IN_PRIMARY, 0);
+    CopyTilesetToVram(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
 }
 
 void CopySecondaryTilesetToVram(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVram(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+    CopyTilesetToVram(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
 }
 
 void CopySecondaryTilesetToVramUsingHeap(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+    CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
 }
 
 static void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout)
 {
-    LoadTilesetPalette(mapLayout->primaryTileset, 0, NUM_PALS_IN_PRIMARY * PLTT_SIZE_4BPP, FALSE);
+    LoadTilesetPalette(mapLayout->primaryTileset, 0, GetNumPalsInPrimary(mapLayout) * PLTT_SIZE_4BPP, FALSE, GetNumPalsInPrimary(mapLayout));
 }
 
 void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
 {
-    LoadTilesetPalette(mapLayout->secondaryTileset, NUM_PALS_IN_PRIMARY * 16, (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * PLTT_SIZE_4BPP, skipFaded);
+    LoadTilesetPalette(mapLayout->secondaryTileset, GetNumPalsInPrimary(mapLayout) * 16, (NUM_PALS_TOTAL - GetNumPalsInPrimary(mapLayout)) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
 {
     if (mapLayout)
     {
-        CopyTilesetToVramUsingHeap(mapLayout->primaryTileset, NUM_TILES_IN_PRIMARY, 0);
-        CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+        CopyTilesetToVramUsingHeap(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
+        CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
     }
 }
 

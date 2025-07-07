@@ -86,6 +86,7 @@ struct MapLayout
     /*0x0C*/ const u16 *map;
     /*0x10*/ const struct Tileset *primaryTileset;
     /*0x14*/ const struct Tileset *secondaryTileset;
+    bool32 isFrlg;
 };
 
 struct BackupMapLayout
@@ -145,8 +146,8 @@ struct BgEvent
         } hiddenItem;
         u32 secretBaseId;
     } bgUnion;
-    u8 quantity:7;
-    bool8 underfoot:1;
+    u32 quantity:31;
+    bool32 underfoot:1;
 };
 
 struct MapEvents

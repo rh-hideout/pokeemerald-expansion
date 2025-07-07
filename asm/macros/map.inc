@@ -98,7 +98,7 @@
 		.2byte \arg6
 		.2byte \arg7
 	.endif
-	.byte \arg8
+	.4byte \arg8
 	inc _num_signs
 	.endm
 
