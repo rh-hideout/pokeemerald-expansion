@@ -273,7 +273,7 @@ u32 ChooseWildMonIndex_Rocks(void)
 }
 
 // FISH_WILD_COUNT
-u32 ChooseWildMonIndex_Fishing(u8 rod)
+static u32 ChooseWildMonIndex_Fishing(u8 rod)
 {
     u8 wildMonIndex = 0;
     bool8 swap = FALSE;
