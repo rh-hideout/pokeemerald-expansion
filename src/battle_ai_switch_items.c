@@ -2078,9 +2078,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
-
-            if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
-                damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, AI_ATTACKING);
+            damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, AI_ATTACKING);
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
             isSwitchinFirst = AI_WhoStrikesFirstPartyMon(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, aiMove);
