@@ -1248,11 +1248,11 @@
 	.endm
 
 	@ Sets a berry tree's berry and growth stage. treeId is any BERRY_TREE_* constant (an index into berryTrees in SaveBlock1),
-	@ berry is any ITEM_TO_BERRY(ITEM_BERRY_NAME) value, and growthStage is any BERRY_STAGE_* constant.
-	.macro setberrytree treeId:req, berry:req, growthStage:req
+	@ itemId is any ITEM_X_BERRY value, and growthStage is any BERRY_STAGE_* constant.
+	.macro setberrytree treeId:req, itemId:req, growthStage:req
 	.byte SCR_OP_SETBERRYTREE
 	.byte \treeId
-	.byte \berry
+	.2byte \itemId
 	.byte \growthStage
 	.endm
 
@@ -2652,4 +2652,11 @@
 	.macro changefollowerbattler battlePartner:req
 	callnative ScriptChangeFollowerNPCBattlePartner
 	.2byte \battlePartner
+	.endm
+
+	@ Gives a random berry - see Script_GiveRandomBerry for details
+	.macro giverandomberry randomBerryEnum:req
+	callnative Script_GiveRandomBerry
+	.byte \randomBerryEnum
+	giveitem VAR_RESULT
 	.endm

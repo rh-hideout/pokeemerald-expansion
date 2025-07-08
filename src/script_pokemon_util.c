@@ -624,3 +624,78 @@ void Script_SetStatus1(struct ScriptContext *ctx)
         SetMonData(&gPlayerParty[slot], MON_DATA_STATUS, &status1);
     }
 }
+
+void Script_GiveRandomBerry(struct ScriptContext *ctx)
+{
+    enum RandomBerry randomBerry = ScriptReadByte(ctx);
+
+    switch (randomBerry)
+    {
+    case RANDOM_BERRY_PRETTY_PETAL_FLOWER_SHOP:
+        {
+            enum BerryItemId randomBerries[] = {
+                ITEM_CHERI_BERRY,
+                ITEM_CHESTO_BERRY,
+                ITEM_PECHA_BERRY,
+                ITEM_RAWST_BERRY,
+                ITEM_ASPEAR_BERRY,
+                ITEM_LEPPA_BERRY,
+                ITEM_ORAN_BERRY,
+                ITEM_PERSIM_BERRY,
+            };
+
+            gSpecialVar_Result = RandomElement(RNG_RANDOM_BERRY, randomBerries);
+        }
+        break;
+    case RANDOM_BERRY_BERRY_MASTER:
+    case RANDOM_BERRY_KIRI:
+        {
+            enum BerryItemId randomBerries[] = {
+                ITEM_POMEG_BERRY,
+                ITEM_KELPSY_BERRY,
+                ITEM_QUALOT_BERRY,
+                ITEM_HONDEW_BERRY,
+                ITEM_GREPA_BERRY,
+                ITEM_TAMATO_BERRY,
+                ITEM_CORNN_BERRY,
+                ITEM_MAGOST_BERRY,
+                ITEM_RABUTA_BERRY,
+                ITEM_NOMEL_BERRY,
+            };
+
+            gSpecialVar_Result = RandomElement(RNG_RANDOM_BERRY, randomBerries);
+        }
+        break;
+    case RANDOM_BERRY_BERRY_MASTER_WIFE:
+        {
+            enum BerryItemId randomBerries[] = {
+                ITEM_CHERI_BERRY,
+                ITEM_CHESTO_BERRY,
+                ITEM_PECHA_BERRY,
+                ITEM_RAWST_BERRY,
+                ITEM_ASPEAR_BERRY,
+                ITEM_LEPPA_BERRY,
+                ITEM_ORAN_BERRY,
+                ITEM_PERSIM_BERRY,
+                ITEM_LUM_BERRY,
+                ITEM_SITRUS_BERRY,
+            };
+
+            gSpecialVar_Result = RandomElement(RNG_RANDOM_BERRY, randomBerries);
+        }
+        break;
+    case RANDOM_BERRY_ROUTE_114_MAN:
+        {
+            enum BerryItemId randomBerries[] = {
+                ITEM_RAZZ_BERRY,
+                ITEM_BLUK_BERRY,
+                ITEM_NANAB_BERRY,
+                ITEM_WEPEAR_BERRY,
+                ITEM_PINAP_BERRY,
+            };
+
+            gSpecialVar_Result = RandomElement(RNG_RANDOM_BERRY, randomBerries);
+        }
+        break;
+    }
+}

@@ -2579,12 +2579,15 @@ bool8 ScrCmd_playslotmachine(struct ScriptContext *ctx)
 bool8 ScrCmd_setberrytree(struct ScriptContext *ctx)
 {
     u8 treeId = ScriptReadByte(ctx);
-    u8 berry = ScriptReadByte(ctx);
+    u16 itemId = VarGet(ScriptReadHalfword(ctx));
     u8 growthStage = ScriptReadByte(ctx);
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    enum BerryIndex berryIndex = GetBerryIndex(itemId);
 
-    PlantBerryTree(treeId, berry, growthStage, FALSE);
+    if (berryIndex)
+        PlantBerryTree(treeId, berryIndex, growthStage, FALSE);
+
     return FALSE;
 }
 

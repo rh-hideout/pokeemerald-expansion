@@ -136,25 +136,8 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
-#define UNPACK_BERRY_INDEX(_berry) INDEX_##_berry##_BERRY,
-#define UNPACK_BERRY_ITEM_ID(_berry) ENUM_ITEM_ID_##_berry##_BERRY = ITEM_##_berry##_BERRY,
 #define GET_BERRY_INDEX(_itemId) case ITEM_##_itemId##_BERRY: return INDEX_##_itemId##_BERRY;
 #define GET_BERRY_ITEM_ID(_index) case INDEX_##_index##_BERRY: return ITEM_##_index##_BERRY;
-
-enum BerryIndex
-{
-    INDEX_BERRY_NONE,
-    FOREACH_BERRY(UNPACK_BERRY_INDEX)
-    INDEX_ENIGMA_BERRY_E_READER,
-    NUM_BERRIES = INDEX_ENIGMA_BERRY_E_READER,
-};
-
-enum BerryItemId
-{
-    ENUM_ITEM_ID_BERRY_NONE = ITEM_NONE,
-    FOREACH_BERRY(UNPACK_BERRY_ITEM_ID)
-    ENUM_ITEM_ID_ENIGMA_BERRY_E_READER = ITEM_ENIGMA_BERRY_E_READER,
-};
 
 static inline enum BerryIndex GetBerryIndex(enum BerryItemId berryItemId)
 {
@@ -166,7 +149,7 @@ static inline enum BerryIndex GetBerryIndex(enum BerryItemId berryItemId)
     }
 };
 
-static inline enum BerryItemId GetBerryIndex(enum BerryIndex berryIndex)
+static inline enum BerryItemId GetBerryItemId(enum BerryIndex berryIndex)
 {
     switch (berryIndex)
     {
@@ -176,8 +159,6 @@ static inline enum BerryItemId GetBerryIndex(enum BerryIndex berryIndex)
     }
 };
 
-#undef UNPACK_BERRY_INDEX
-#undef UNPACK_BERRY_ITEM_ID
 #undef GET_BERRY_INDEX
 #undef GET_BERRY_ITEM_ID
 
