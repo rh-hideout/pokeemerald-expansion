@@ -26,8 +26,8 @@
 // Switches between simulated battle calc and actual battle combat
 enum FunctionCallOption
 {
-    AI_CHECK,  // Check the function without running scripts / setting any flags
-    CHECK_TRIGGER, // Check the function without running scripts / setting any flags. Almost the same as AI_CHECK but some function calls can be different
+    CHECK_TRIGGER, // Check the function without running scripts / setting any flags.
+    AI_CHECK,  // Check the function without running scripts / setting any flags. Same as CHECK_TRIGGER but only used when additional data has to be fetched during ai calcs
     RUN_SCRIPT, // Used during actual combat where a script has to be run / flags need to be set
 };
 
