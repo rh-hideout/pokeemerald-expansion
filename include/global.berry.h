@@ -4,6 +4,8 @@
 #define BERRY_NAME_LENGTH 6
 #define BERRY_ITEM_EFFECT_COUNT 18
 
+#include "item_menu_icons.h"
+
 struct Berry
 {
     const u8 name[BERRY_NAME_LENGTH + 1];
@@ -25,6 +27,13 @@ struct Berry
     u8 sour;
     u8 smoothness;
     u8 drainRate;
+    struct {
+        u8 difficulty; // The number of A presses required to crush it
+        u16 powder;
+    } berryCrushData;
+    const struct SpriteFrameImage *berryTreePicTable;
+    const u8 *berryTreePaletteSlotTable;
+    struct TilesPal berryTilesPal;
 };
 
 // with no const fields

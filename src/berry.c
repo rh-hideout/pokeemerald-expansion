@@ -57,6 +57,9 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .name = _("?????"),
         .description1 = COMPOUND_STRING("????????"),
         .description2 = COMPOUND_STRING("????????"),
+        .berryTreePicTable = gPicTable_DurinBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
+        .berryTilesPal = {gBerryPic_Enigma, gBerryPalette_Enigma},
     },
     [INDEX_CHERI_BERRY] =
     {
@@ -79,6 +82,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_CheriBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cheri,
+        .berryTilesPal = {gBerryPic_Cheri,  gBerryPalette_Cheri},        
     },
 
     [INDEX_CHESTO_BERRY] =
@@ -102,6 +109,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_ChestoBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Chesto,
+        .berryTilesPal = {gBerryPic_Chesto, gBerryPalette_Chesto},
     },
 
     [INDEX_PECHA_BERRY] =
@@ -125,6 +136,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 4,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_PechaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pecha,
+        .berryTilesPal = {gBerryPic_Pecha,  gBerryPalette_Pecha},
     },
 
     [INDEX_RAWST_BERRY] =
@@ -148,6 +163,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_RawstBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rawst,
+        .berryTilesPal = {gBerryPic_Rawst,  gBerryPalette_Rawst},
     },
 
     [INDEX_ASPEAR_BERRY] =
@@ -171,6 +190,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_AspearBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aspear,
+        .berryTilesPal = {gBerryPic_Aspear, gBerryPalette_Aspear},
     },
 
     [INDEX_LEPPA_BERRY] =
@@ -194,6 +217,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_LeppaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Leppa,
+        .berryTilesPal = {gBerryPic_Leppa,  gBerryPalette_Leppa},
     },
 
     [INDEX_ORAN_BERRY] =
@@ -217,6 +244,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 4,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_OranBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Oran,
+        .berryTilesPal = {gBerryPic_Oran,   gBerryPalette_Oran},
     },
 
     [INDEX_PERSIM_BERRY] =
@@ -240,6 +271,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_PersimBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Persim,
+        .berryTilesPal = {gBerryPic_Persim, gBerryPalette_Persim},
     },
 
     [INDEX_LUM_BERRY] =
@@ -263,6 +298,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 12,
         .weedsBonus = 1,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_LumBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lum,
+        .berryTilesPal = {gBerryPic_Lum,    gBerryPalette_Lum},
     },
 
     [INDEX_SITRUS_BERRY] =
@@ -286,6 +325,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 12,
         .weedsBonus = 1,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_SitrusBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Sitrus,
+        .berryTilesPal = {gBerryPic_Sitrus, gBerryPalette_Sitrus},
     },
 
     [INDEX_FIGY_BERRY] =
@@ -309,6 +352,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_FigyBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Figy,
+        .berryTilesPal = {gBerryPic_Figy,   gBerryPalette_Figy},
     },
 
     [INDEX_WIKI_BERRY] =
@@ -332,6 +379,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_WikiBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wiki,
+        .berryTilesPal = {gBerryPic_Wiki,   gBerryPalette_Wiki},
     },
 
     [INDEX_MAGO_BERRY] =
@@ -355,6 +406,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_MagoBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Mago,
+        .berryTilesPal = {gBerryPic_Mago,   gBerryPalette_Mago},
     },
 
     [INDEX_AGUAV_BERRY] =
@@ -378,6 +433,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_AguavBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aguav,
+        .berryTilesPal = {gBerryPic_Aguav,  gBerryPalette_Aguav},
     },
 
     [INDEX_IAPAPA_BERRY] =
@@ -401,6 +460,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 15,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_IapapaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Iapapa,
+        .berryTilesPal = {gBerryPic_Iapapa, gBerryPalette_Iapapa},
     },
 
     [INDEX_RAZZ_BERRY] =
@@ -424,6 +487,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_RazzBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
+        .berryTilesPal = {gBerryPic_Razz,   gBerryPalette_Razz},
     },
 
     [INDEX_BLUK_BERRY] =
@@ -447,6 +514,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_RazzBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
+        .berryTilesPal = {gBerryPic_Bluk,   gBerryPalette_Bluk},
     },
 
     [INDEX_NANAB_BERRY] =
@@ -470,6 +541,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_MagoBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Mago,
+        .berryTilesPal = {gBerryPic_Nanab,  gBerryPalette_Nanab},
     },
 
     [INDEX_WEPEAR_BERRY] =
@@ -493,6 +568,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_WepearBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wepear,
+        .berryTilesPal = {gBerryPic_Wepear, gBerryPalette_Wepear},
     },
 
     [INDEX_PINAP_BERRY] =
@@ -516,6 +595,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_IapapaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Iapapa,
+        .berryTilesPal = {gBerryPic_Pinap,  gBerryPalette_Pinap},
     },
 
     [INDEX_POMEG_BERRY] =
@@ -539,6 +622,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_PomegBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
+        .berryTilesPal = {gBerryPic_Pomeg,  gBerryPalette_Pomeg},
     },
 
     [INDEX_KELPSY_BERRY] =
@@ -562,6 +649,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_KelpsyBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kelpsy,
+        .berryTilesPal = {gBerryPic_Kelpsy, gBerryPalette_Kelpsy},
     },
 
     [INDEX_QUALOT_BERRY] =
@@ -585,6 +676,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_WepearBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Wepear,
+        .berryTilesPal = {gBerryPic_Qualot, gBerryPalette_Qualot},
     },
 
     [INDEX_HONDEW_BERRY] =
@@ -608,6 +703,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_HondewBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
+        .berryTilesPal = {gBerryPic_Hondew, gBerryPalette_Hondew},
     },
 
     [INDEX_GREPA_BERRY] =
@@ -631,6 +730,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_GrepaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
+        .berryTilesPal = {gBerryPic_Grepa,  gBerryPalette_Grepa},
     },
 
     [INDEX_TAMATO_BERRY] =
@@ -654,6 +757,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 5,
         .weedsBonus = 3,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 130, .powder = 150},
+        .berryTreePicTable = gPicTable_TamatoBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tamato,
+        .berryTilesPal = {gBerryPic_Tamato, gBerryPalette_Tamato},
     },
 
     [INDEX_CORNN_BERRY] =
@@ -677,6 +784,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 130, .powder = 150},
+        .berryTreePicTable = gPicTable_CornnBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
+        .berryTilesPal = {gBerryPic_Cornn,  gBerryPalette_Cornn},
     },
 
     [INDEX_MAGOST_BERRY] =
@@ -700,6 +811,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 130, .powder = 150},
+        .berryTreePicTable = gPicTable_PomegBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
+        .berryTilesPal = {gBerryPic_Magost, gBerryPalette_Magost},
     },
 
     [INDEX_RABUTA_BERRY] =
@@ -723,6 +838,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 130, .powder = 150},
+        .berryTreePicTable = gPicTable_RabutaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rabuta,
+        .berryTilesPal = {gBerryPic_Rabuta, gBerryPalette_Rabuta},
     },
 
     [INDEX_NOMEL_BERRY] =
@@ -746,6 +865,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 130, .powder = 150},
+        .berryTreePicTable = gPicTable_NomelBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Nomel,
+        .berryTilesPal = {gBerryPic_Nomel,  gBerryPalette_Nomel},
     },
 
     [INDEX_SPELON_BERRY] =
@@ -769,6 +892,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 160, .powder = 250},
+        .berryTreePicTable = gPicTable_SpelonBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Spelon,
+        .berryTilesPal = {gBerryPic_Spelon, gBerryPalette_Spelon},
     },
 
     [INDEX_PAMTRE_BERRY] =
@@ -792,6 +919,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 160, .powder = 250},
+        .berryTreePicTable = gPicTable_PamtreBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pamtre,
+        .berryTilesPal = {gBerryPic_Pamtre, gBerryPalette_Pamtre},
     },
 
     [INDEX_WATMEL_BERRY] =
@@ -815,6 +946,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 160, .powder = 250},
+        .berryTreePicTable = gPicTable_RabutaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rabuta,
+        .berryTilesPal = {gBerryPic_Watmel, gBerryPalette_Watmel},
     },
 
     [INDEX_DURIN_BERRY] =
@@ -838,6 +973,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 160, .powder = 250},
+        .berryTreePicTable = gPicTable_DurinBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
+        .berryTilesPal = {gBerryPic_Durin,  gBerryPalette_Durin},
     },
 
     [INDEX_BELUE_BERRY] =
@@ -861,6 +1000,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 2,
         .pestsBonus = 6,
+        .berryCrushData = {.difficulty = 160, .powder = 250},
+        .berryTreePicTable = gPicTable_HondewBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
+        .berryTilesPal = {gBerryPic_Belue,  gBerryPalette_Belue},
     },
 
     [INDEX_CHILAN_BERRY] =
@@ -884,6 +1027,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  80, .powder =  70},
+        .berryTreePicTable = gPicTable_GrepaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
+        .berryTilesPal = {gBerryPic_Chilan, gBerryPalette_Chilan},
     },
 
     [INDEX_OCCA_BERRY] =
@@ -907,6 +1054,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty = 100, .powder = 100},
+        .berryTreePicTable = gPicTable_OccaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Occa,
+        .berryTilesPal = {gBerryPic_Occa, gBerryPalette_Occa},
     },
 
     [INDEX_PASSHO_BERRY] =
@@ -930,6 +1081,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  60, .powder =  30},
+        .berryTreePicTable = gPicTable_CornnBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
+        .berryTilesPal = {gBerryPic_Passho, gBerryPalette_Passho},
     },
 
     [INDEX_WACAN_BERRY] =
@@ -953,6 +1108,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_RazzBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Razz,
+        .berryTilesPal = {gBerryPic_Wacan, gBerryPalette_Wacan},
     },
 
     [INDEX_RINDO_BERRY] =
@@ -976,6 +1135,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_TamatoBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tamato,
+        .berryTilesPal = {gBerryPic_Rindo, gBerryPalette_Rindo},
     },
 
     [INDEX_YACHE_BERRY] =
@@ -999,6 +1162,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_YacheBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Yache,
+        .berryTilesPal = {gBerryPic_Yache, gBerryPalette_Yache},
     },
 
     [INDEX_CHOPLE_BERRY] =
@@ -1022,6 +1189,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_ChopleBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Chople,
+        .berryTilesPal = {gBerryPic_Chople, gBerryPalette_Chople},
     },
 
     [INDEX_KEBIA_BERRY] =
@@ -1045,6 +1216,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_KebiaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kebia,
+        .berryTilesPal = {gBerryPic_Kebia, gBerryPalette_Kebia},
     },
 
     [INDEX_SHUCA_BERRY] =
@@ -1068,6 +1243,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  20},
+        .berryTreePicTable = gPicTable_ShucaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Shuca,
+        .berryTilesPal = {gBerryPic_Shuca, gBerryPalette_Shuca},
     },
 
     [INDEX_COBA_BERRY] =
@@ -1091,6 +1270,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_RawstBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rawst,
+        .berryTilesPal = {gBerryPic_Coba, gBerryPalette_Coba},
     },
 
     [INDEX_PAYAPA_BERRY] =
@@ -1114,6 +1297,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_PayapaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Payapa,
+        .berryTilesPal = {gBerryPic_Payapa, gBerryPalette_Payapa},
     },
 
     [INDEX_TANGA_BERRY] =
@@ -1137,6 +1324,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_TangaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Tanga,
+        .berryTilesPal = {gBerryPic_Tanga, gBerryPalette_Tanga},
     },
 
     [INDEX_CHARTI_BERRY] =
@@ -1160,6 +1351,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_LansatBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lansat,
+        .berryTilesPal = {gBerryPic_Charti, gBerryPalette_Charti},
     },
 
     [INDEX_KASIB_BERRY] =
@@ -1183,6 +1378,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_KasibBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Kasib,
+        .berryTilesPal = {gBerryPic_Kasib, gBerryPalette_Kasib},
     },
 
     [INDEX_HABAN_BERRY] =
@@ -1206,6 +1405,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  50, .powder =  30},
+        .berryTreePicTable = gPicTable_HabanBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Haban,
+        .berryTilesPal = {gBerryPic_Haban, gBerryPalette_Haban},
     },
 
     [INDEX_COLBUR_BERRY] =
@@ -1229,6 +1432,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_ColburBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Colbur,
+        .berryTilesPal = {gBerryPic_Colbur, gBerryPalette_Colbur},
     },
 
     [INDEX_BABIRI_BERRY] =
@@ -1252,6 +1459,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  80, .powder =  50},
+        .berryTreePicTable = gPicTable_LiechiBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Liechi,
+        .berryTilesPal = {gBerryPic_Babiri, gBerryPalette_Babiri},
     },
 
     [INDEX_ROSELI_BERRY] =
@@ -1275,6 +1486,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 10,
         .weedsBonus = 1,
         .pestsBonus = 4,
+        .berryCrushData = {.difficulty =  60, .powder =  50},
+        .berryTreePicTable = gPicTable_RoseliBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Roseli,
+        .berryTilesPal = {gBerryPic_Roseli, gBerryPalette_Roseli},
     },
 
     [INDEX_LIECHI_BERRY] =
@@ -1298,6 +1513,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 180, .powder = 500},
+        .berryTreePicTable = gPicTable_LiechiBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Liechi,
+        .berryTilesPal = {gBerryPic_Liechi, gBerryPalette_Liechi},
     },
 
     [INDEX_GANLON_BERRY] =
@@ -1321,6 +1540,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 180, .powder = 500},
+        .berryTreePicTable = gPicTable_HondewBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Hondew,
+        .berryTilesPal = {gBerryPic_Ganlon, gBerryPalette_Ganlon},
     },
 
     [INDEX_SALAC_BERRY] =
@@ -1344,6 +1567,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 180, .powder = 500},
+        .berryTreePicTable = gPicTable_AguavBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Aguav,
+        .berryTilesPal = {gBerryPic_Salac,  gBerryPalette_Salac},
     },
 
     [INDEX_PETAYA_BERRY] =
@@ -1367,6 +1594,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 180, .powder = 500},
+        .berryTreePicTable = gPicTable_PomegBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pomeg,
+        .berryTilesPal = {gBerryPic_Petaya, gBerryPalette_Petaya},
     },
 
     [INDEX_APICOT_BERRY] =
@@ -1390,6 +1621,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 180, .powder = 500},
+        .berryTreePicTable = gPicTable_GrepaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Grepa,
+        .berryTilesPal = {gBerryPic_Apicot, gBerryPalette_Apicot},
     },
 
     [INDEX_LANSAT_BERRY] =
@@ -1413,6 +1648,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 1,
         .weedsBonus = 0,
         .pestsBonus = 1,
+        .berryCrushData = {.difficulty = 200, .powder = 750},
+        .berryTreePicTable = gPicTable_LansatBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Lansat,
+        .berryTilesPal = {gBerryPic_Lansat, gBerryPalette_Lansat},
     },
 
     [INDEX_STARF_BERRY] =
@@ -1436,6 +1675,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 1,
         .weedsBonus = 0,
         .pestsBonus = 1,
+        .berryCrushData = {.difficulty = 200, .powder = 750},
+        .berryTreePicTable = gPicTable_CornnBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Cornn,
+        .berryTilesPal = {gBerryPic_Starf,  gBerryPalette_Starf},
     },
 
     [INDEX_ENIGMA_BERRY] =
@@ -1459,6 +1702,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 150, .powder = 200},
+        .berryTreePicTable = gPicTable_DurinBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
+        .berryTilesPal = {gBerryPic_Enigma, gBerryPalette_Enigma},
     },
 
     [INDEX_MICLE_BERRY] =
@@ -1482,6 +1729,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 130, .powder = 250},
+        .berryTreePicTable = gPicTable_MicleBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Micle,
+        .berryTilesPal = {gBerryPic_Micle, gBerryPalette_Micle},
     },
 
     [INDEX_CUSTAP_BERRY] =
@@ -1505,6 +1756,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 200, .powder = 750},
+        .berryTreePicTable = gPicTable_CustapBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Custap,
+        .berryTilesPal = {gBerryPic_Custap, gBerryPalette_Custap},
     },
 
     [INDEX_JABOCA_BERRY] =
@@ -1528,6 +1783,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 130, .powder = 250},
+        .berryTreePicTable = gPicTable_JabocaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Jaboca,
+        .berryTilesPal = {gBerryPic_Jaboca, gBerryPalette_Jaboca},
     },
 
     [INDEX_ROWAP_BERRY] =
@@ -1551,6 +1810,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 130, .powder = 250},
+        .berryTreePicTable = gPicTable_RowapBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Rowap,
+        .berryTilesPal = {gBerryPic_Rowap, gBerryPalette_Rowap},
     },
 
     [INDEX_KEE_BERRY] =
@@ -1574,6 +1837,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 160, .powder = 500},
+        .berryTreePicTable = gPicTable_PechaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Pecha,
+        .berryTilesPal = {gBerryPic_Kee, gBerryPalette_Kee},
     },
 
     [INDEX_MARANGA_BERRY] =
@@ -1597,6 +1864,10 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 2,
+        .berryCrushData = {.difficulty = 160, .powder = 500},
+        .berryTreePicTable = gPicTable_OccaBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Occa,
+        .berryTilesPal = {gBerryPic_Maranga, gBerryPalette_Maranga},
     },
 
     [INDEX_ENIGMA_BERRY_E_READER] =
@@ -1620,79 +1891,11 @@ const struct Berry gBerries[NUM_BERRIES + 1] =
         .waterBonus = 2,
         .weedsBonus = 0,
         .pestsBonus = 0,
+        .berryCrushData = {.difficulty = 150, .powder = 200},
+        .berryTreePicTable = gPicTable_DurinBerryTree,
+        .berryTreePaletteSlotTable = gBerryTreePaletteSlotTable_Durin,
+        .berryTilesPal = {gBerryPic_Enigma, gBerryPalette_Enigma},
     },
-};
-
-const struct BerryCrushBerryData gBerryCrush_BerryData[NUM_BERRIES + 1] = {
-    [INDEX_BERRY_NONE]            = {0},
-    [INDEX_CHERI_BERRY]           = {.difficulty =  50, .powder =  20},
-    [INDEX_CHESTO_BERRY]          = {.difficulty =  50, .powder =  20},
-    [INDEX_PECHA_BERRY]           = {.difficulty =  50, .powder =  20},
-    [INDEX_RAWST_BERRY]           = {.difficulty =  50, .powder =  20},
-    [INDEX_ASPEAR_BERRY]          = {.difficulty =  50, .powder =  20},
-    [INDEX_LEPPA_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_ORAN_BERRY]            = {.difficulty =  50, .powder =  30},
-    [INDEX_PERSIM_BERRY]          = {.difficulty =  50, .powder =  30},
-    [INDEX_LUM_BERRY]             = {.difficulty =  50, .powder =  30},
-    [INDEX_SITRUS_BERRY]          = {.difficulty =  50, .powder =  30},
-    [INDEX_FIGY_BERRY]            = {.difficulty =  60, .powder =  50},
-    [INDEX_WIKI_BERRY]            = {.difficulty =  60, .powder =  50},
-    [INDEX_MAGO_BERRY]            = {.difficulty =  60, .powder =  50},
-    [INDEX_AGUAV_BERRY]           = {.difficulty =  60, .powder =  50},
-    [INDEX_IAPAPA_BERRY]          = {.difficulty =  60, .powder =  50},
-    [INDEX_RAZZ_BERRY]            = {.difficulty =  80, .powder =  70},
-    [INDEX_BLUK_BERRY]            = {.difficulty =  80, .powder =  70},
-    [INDEX_NANAB_BERRY]           = {.difficulty =  80, .powder =  70},
-    [INDEX_WEPEAR_BERRY]          = {.difficulty =  80, .powder =  70},
-    [INDEX_PINAP_BERRY]           = {.difficulty =  80, .powder =  70},
-    [INDEX_POMEG_BERRY]           = {.difficulty = 100, .powder = 100},
-    [INDEX_KELPSY_BERRY]          = {.difficulty = 100, .powder = 100},
-    [INDEX_QUALOT_BERRY]          = {.difficulty = 100, .powder = 100},
-    [INDEX_HONDEW_BERRY]          = {.difficulty = 100, .powder = 100},
-    [INDEX_GREPA_BERRY]           = {.difficulty = 100, .powder = 100},
-    [INDEX_TAMATO_BERRY]          = {.difficulty = 130, .powder = 150},
-    [INDEX_CORNN_BERRY]           = {.difficulty = 130, .powder = 150},
-    [INDEX_MAGOST_BERRY]          = {.difficulty = 130, .powder = 150},
-    [INDEX_RABUTA_BERRY]          = {.difficulty = 130, .powder = 150},
-    [INDEX_NOMEL_BERRY]           = {.difficulty = 130, .powder = 150},
-    [INDEX_SPELON_BERRY]          = {.difficulty = 160, .powder = 250},
-    [INDEX_PAMTRE_BERRY]          = {.difficulty = 160, .powder = 250},
-    [INDEX_WATMEL_BERRY]          = {.difficulty = 160, .powder = 250},
-    [INDEX_DURIN_BERRY]           = {.difficulty = 160, .powder = 250},
-    [INDEX_BELUE_BERRY]           = {.difficulty = 160, .powder = 250},
-    [INDEX_CHILAN_BERRY]          = {.difficulty =  80, .powder =  70},
-    [INDEX_OCCA_BERRY]            = {.difficulty = 100, .powder = 100},
-    [INDEX_PASSHO_BERRY]          = {.difficulty =  60, .powder =  30},
-    [INDEX_WACAN_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_RINDO_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_YACHE_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_CHOPLE_BERRY]          = {.difficulty =  50, .powder =  30},
-    [INDEX_KEBIA_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_SHUCA_BERRY]           = {.difficulty =  50, .powder =  20},
-    [INDEX_COBA_BERRY]            = {.difficulty =  50, .powder =  30},
-    [INDEX_PAYAPA_BERRY]          = {.difficulty =  50, .powder =  30},
-    [INDEX_TANGA_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_CHARTI_BERRY]          = {.difficulty =  50, .powder =  30},
-    [INDEX_KASIB_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_HABAN_BERRY]           = {.difficulty =  50, .powder =  30},
-    [INDEX_COLBUR_BERRY]          = {.difficulty =  60, .powder =  50},
-    [INDEX_BABIRI_BERRY]          = {.difficulty =  80, .powder =  50},
-    [INDEX_ROSELI_BERRY]          = {.difficulty =  60, .powder =  50},
-    [INDEX_LIECHI_BERRY]          = {.difficulty = 180, .powder = 500},
-    [INDEX_GANLON_BERRY]          = {.difficulty = 180, .powder = 500},
-    [INDEX_SALAC_BERRY]           = {.difficulty = 180, .powder = 500},
-    [INDEX_PETAYA_BERRY]          = {.difficulty = 180, .powder = 500},
-    [INDEX_APICOT_BERRY]          = {.difficulty = 180, .powder = 500},
-    [INDEX_LANSAT_BERRY]          = {.difficulty = 200, .powder = 750},
-    [INDEX_STARF_BERRY]           = {.difficulty = 200, .powder = 750},
-    [INDEX_ENIGMA_BERRY]          = {.difficulty = 150, .powder = 200},
-    [INDEX_MICLE_BERRY]           = {.difficulty = 130, .powder = 250},
-    [INDEX_CUSTAP_BERRY]          = {.difficulty = 200, .powder = 750},
-    [INDEX_JABOCA_BERRY]          = {.difficulty = 130, .powder = 250},
-    [INDEX_ROWAP_BERRY]           = {.difficulty = 130, .powder = 250},
-    [INDEX_KEE_BERRY]             = {.difficulty = 160, .powder = 500},
-    [INDEX_MARANGA_BERRY]         = {.difficulty = 160, .powder = 500},
-    [INDEX_ENIGMA_BERRY_E_READER] = {.difficulty = 150, .powder = 200}
 };
 
 const struct BerryTree gBlankBerryTree = {};
