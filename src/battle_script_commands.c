@@ -288,20 +288,6 @@ static const s32 sExperienceScalingFactors[] =
     159767,
 };
 
-static const u16 sTrappingMoves[NUM_TRAPPING_MOVES] =
-{
-    MOVE_BIND,
-    MOVE_WRAP,
-    MOVE_FIRE_SPIN,
-    MOVE_CLAMP,
-    MOVE_WHIRLPOOL,
-    MOVE_SAND_TOMB,
-    MOVE_MAGMA_STORM,
-    MOVE_INFESTATION,
-    MOVE_SNAP_TRAP,
-    MOVE_THUNDER_CAGE
-};
-
 static const u16 sWhiteOutBadgeMoney[9] = { 8, 16, 24, 36, 48, 64, 80, 100, 120 };
 
 enum GiveCaughtMonStates
@@ -3188,12 +3174,6 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
 
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
-
-            for (gBattleCommunication[MULTISTRING_CHOOSER] = 0; gBattleCommunication[MULTISTRING_CHOOSER] < NUM_TRAPPING_MOVES; gBattleCommunication[MULTISTRING_CHOOSER]++)
-            {
-                if (sTrappingMoves[gBattleCommunication[MULTISTRING_CHOOSER]] == gCurrentMove)
-                    break;
-            }
         }
         break;
     case MOVE_EFFECT_ATK_PLUS_1:
@@ -4124,6 +4104,7 @@ static void Cmd_setadditionaleffects(void)
                 if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
                 {
                     gBattleScripting.moveEffect = additionalEffect->moveEffect;
+                    gBattleCommunication[MULTISTRING_CHOOSER] = additionalEffect->multistring;
 
                     SetMoveEffect(
                         gBattlerAttacker,
