@@ -3711,19 +3711,19 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
                 switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
                 {
                 case 1:
-                    viableMoveScores[i] -= 2;
+                    viableMoveScores[currId] += 2;
                     break;
                 case -1:
-                    viableMoveScores[currId] -= 2;
+                    viableMoveScores[i] += 2;
                     break;
                 }
                 switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                 {
                 case 1:
-                    viableMoveScores[i] -= 1;
+                    viableMoveScores[currId] += 1;
                     break;
                 case -1:
-                    viableMoveScores[currId] -= 1;
+                    viableMoveScores[i] += 1;
                     break;
                 }
             }
