@@ -24083,6 +24083,14 @@ static const struct LevelUpMove sBungaloonLevelUpLearnset[] = {
    LEVEL_UP_MOVE(69, MOVE_MISTY_EXPLOSION),
    LEVEL_UP_END
    };
+static const struct LevelUpMove sEnvileLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 0, MOVE_BADDY_BAD),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sKaustikrokLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 0, MOVE_BADDY_BAD),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sWattitudeLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 1, MOVE_THUNDER), 
     LEVEL_UP_END
@@ -24923,11 +24931,23 @@ static const struct LevelUpMove sCristaniumLevelUpLearnset[] = {
 static const struct LevelUpMove sTokoyakiLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_STEAM_ERUPTION),
    LEVEL_UP_END
-   };
+    };
 static const struct LevelUpMove sOnsenpuraLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_STEAM_ERUPTION),
    LEVEL_UP_END
-};
+    };
+static const struct LevelUpMove sPeasolLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_SACRED_SWORD),
+   LEVEL_UP_END
+    };
+static const struct LevelUpMove sVaponobiLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_SACRED_SWORD),
+   LEVEL_UP_END
+    };
+static const struct LevelUpMove sHaarshogunLevelUpLearnset[] = {
+   LEVEL_UP_MOVE( 1, MOVE_SACRED_SWORD),
+   LEVEL_UP_END
+   };
 static const struct LevelUpMove sSimionachLevelUpLearnset[] = {
    LEVEL_UP_MOVE( 1, MOVE_PSYCHIC_NOISE),
    LEVEL_UP_END

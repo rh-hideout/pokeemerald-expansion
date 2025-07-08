@@ -1986,8 +1986,13 @@
 #define SPECIES_BRAXITYTAN                              1854
 #define SPECIES_TUNGHASKA                               1855
 #define SPECIES_MEATIER                                 1856
+#define SPECIES_KAUSTIKROK                              1857
+#define SPECIES_ENVILE                                  1858
+#define SPECIES_HAARSHOGUN                              1859
+#define SPECIES_VAPONOBI                                1860
+#define SPECIES_PEASOL                                  1861
 
-#define SPECIES_EGG (SPECIES_MEATIER + 1)
+#define SPECIES_EGG (SPECIES_PEASOL + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

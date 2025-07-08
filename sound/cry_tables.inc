@@ -3027,6 +3027,15 @@ gCryTable::
 
 	cry Cry_Meatier
 
+	cry Cry_Kaustikrok
+
+	cry Cry_Envile
+
+	cry Cry_Haarshogun
+
+	cry Cry_Vaponobi
+
+	cry Cry_Peasol
 .endif
 
 	.align 2
@@ -6058,4 +6067,14 @@ gCryTable_Reverse::
 	cry_reverse Cry_Tunghaska
 
 	cry_reverse Cry_Meatier
+
+	cry_reverse Cry_Kaustikrok
+
+	cry_reverse Cry_Envile
+
+	cry_reverse Cry_Haarshogun
+
+	cry_reverse Cry_Vaponobi
+
+	cry_reverse Cry_Peasol
 .endif

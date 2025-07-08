@@ -7358,6 +7358,26 @@ Cry_Tunghaska::
 	.align 2	
 Cry_Meatier::
 	.incbin "sound/direct_sound_samples/cries/meatier.bin"
+
+	.align 2	
+Cry_Kaustikrok::
+	.incbin "sound/direct_sound_samples/cries/kaustikrok.bin"
+
+	.align 2	
+Cry_Envile::
+	.incbin "sound/direct_sound_samples/cries/envile.bin"
+
+	.align 2	
+Cry_Haarshogun::
+	.incbin "sound/direct_sound_samples/cries/haarshogun.bin"
+
+	.align 2	
+Cry_Vaponobi::
+	.incbin "sound/direct_sound_samples/cries/vaponobi.bin"
+
+	.align 2	
+Cry_Peasol::
+	.incbin "sound/direct_sound_samples/cries/peasol.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED
