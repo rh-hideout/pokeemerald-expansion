@@ -2654,9 +2654,10 @@
 	.2byte \battlePartner
 	.endm
 
-	@ Gives a random berry - see Script_GiveRandomBerry for details
-	.macro giverandomberry randomBerryEnum:req
+	@ Gives a random berry between the index ranges
+	.macro giverandomberry loBerry:req, hiBerry:eq
 	callnative Script_GiveRandomBerry
-	.byte \randomBerryEnum
+	.byte \loBerry
+	.byte \hiBerry
 	giveitem VAR_RESULT
 	.endm

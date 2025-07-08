@@ -627,23 +627,8 @@ void Script_SetStatus1(struct ScriptContext *ctx)
 
 void Script_GiveRandomBerry(struct ScriptContext *ctx)
 {
-    enum RandomBerry randomBerry = ScriptReadByte(ctx);
+    enum BerryIndex loBerry = ScriptReadByte(ctx);
+    enum BerryIndex hiBerry = ScriptReadByte(ctx);
 
-    switch (randomBerry)
-    {
-    case RANDOM_BERRY_PRETTY_PETAL_FLOWER_SHOP:
-        gSpecialVar_Result = GetBerryItemId(RandomUniform(RNG_RANDOM_BERRY, INDEX_CHERI_BERRY, INDEX_PERSIM_BERRY));
-        break;
-    case RANDOM_BERRY_BERRY_MASTER:
-    case RANDOM_BERRY_KIRI:
-        gSpecialVar_Result = GetBerryItemId(RandomUniform(RNG_RANDOM_BERRY, INDEX_POMEG_BERRY, INDEX_NOMEL_BERRY));
-        break;
-    case RANDOM_BERRY_BERRY_MASTER_WIFE:
-    case RANDOM_BERRY_BERRY_GENTLEMAN:
-        gSpecialVar_Result = GetBerryItemId(RandomUniform(RNG_RANDOM_BERRY, INDEX_CHERI_BERRY, INDEX_SITRUS_BERRY));
-        break;
-    case RANDOM_BERRY_ROUTE_114_MAN:
-        gSpecialVar_Result = GetBerryItemId(RandomUniform(RNG_RANDOM_BERRY, INDEX_RAZZ_BERRY, INDEX_PINAP_BERRY));
-        break;
-    }
+    gSpecialVar_Result = GetBerryItemId(RandomUniform(RNG_RANDOM_BERRY, loBerry, hiBerry));
 }

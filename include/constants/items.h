@@ -1006,17 +1006,6 @@
 // Its icon is defined at ITEMS_COUNT as the "return to field" arrow
 #define ITEM_LIST_END 0xFFFF
 
-// Range of berries given out by various NPCS
-enum RandomBerry
-{
-    RANDOM_BERRY_PRETTY_PETAL_FLOWER_SHOP,
-    RANDOM_BERRY_BERRY_MASTER,
-    RANDOM_BERRY_BERRY_MASTER_WIFE,
-    RANDOM_BERRY_BERRY_GENTLEMAN,
-    RANDOM_BERRY_KIRI,
-    RANDOM_BERRY_ROUTE_114_MAN,
-};
-
 #define UNPACK_BERRY_INDEX(_berry) INDEX_##_berry##_BERRY,
 #define UNPACK_BERRY_ITEM_ID(_berry) ENUM_ITEM_ID_##_berry##_BERRY = ITEM_##_berry##_BERRY,
 

@@ -136,16 +136,18 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
-#define GET_BERRY_INDEX(_itemId) case ITEM_##_itemId##_BERRY: return INDEX_##_itemId##_BERRY;
-#define GET_BERRY_ITEM_ID(_index) case INDEX_##_index##_BERRY: return ITEM_##_index##_BERRY;
+#define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
+#define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
 
 static inline enum BerryIndex GetBerryIndex(enum BerryItemId berryItemId)
 {
     switch (berryItemId)
     {
-        FOREACH_BERRY(GET_BERRY_INDEX)
-        default:
-            return INDEX_BERRY_NONE;
+    FOREACH_BERRY(GET_BERRY_INDEX)
+    case ENUM_ITEM_ID_ENIGMA_BERRY_E_READER:
+        return INDEX_ENIGMA_BERRY_E_READER;
+    default:
+        return INDEX_BERRY_NONE;
     }
 };
 
@@ -153,9 +155,11 @@ static inline enum BerryItemId GetBerryItemId(enum BerryIndex berryIndex)
 {
     switch (berryIndex)
     {
-        FOREACH_BERRY(GET_BERRY_ITEM_ID)
-        default:
-            return ITEM_NONE;
+    FOREACH_BERRY(GET_BERRY_ITEM_ID)
+    case INDEX_ENIGMA_BERRY_E_READER:
+        return ENUM_ITEM_ID_ENIGMA_BERRY_E_READER;
+    default:
+        return ITEM_NONE;
     }
 };
 
