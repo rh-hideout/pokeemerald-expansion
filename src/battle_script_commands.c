@@ -1118,12 +1118,12 @@ bool32 IsMoveNotAllowedInSkyBattles(u32 move)
 
 u32 NumAffectedSpreadMoveTargets(void)
 {
-    u32 battler, targetCount = 0;
+    u32 targetCount = 0;
 
     if (!IsDoubleSpreadMove())
         return targetCount;
 
-    for (battler = 0; battler < gBattlersCount; battler++)
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (!(gBattleStruct->moveResultFlags[battler] & MOVE_RESULT_NO_EFFECT))
             targetCount++;
@@ -1940,8 +1940,8 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
     }
     else
     {
-        critChance  = 2 * ((gBattleMons[battlerAtk].volatiles.focusEnergy) != 0)
-                    + 1 * ((gBattleMons[battlerAtk].volatiles.dragonCheer) != 0)
+        critChance  = 2 * (gBattleMons[battlerAtk].volatiles.focusEnergy != 0)
+                    + 1 * (gBattleMons[battlerAtk].volatiles.dragonCheer != 0)
                     + GetMoveCriticalHitStage(move)
                     + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
                     + 2 * (B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS)
@@ -9911,7 +9911,7 @@ static void Cmd_various(void)
     {
         VARIOUS_ARGS(u8 infatuateWith);
         gBattleScripting.battler = battler;
-        gBattleMons[battler].volatiles.infatuation = GetBattlerForBattleScript(cmd->infatuateWith) + 1;
+        gBattleMons[battler].volatiles.infatuation = INFATUATED_WITH(GetBattlerForBattleScript(cmd->infatuateWith));
         gBattlescriptCurrInstr = cmd->nextInstr;
         return;
     }
@@ -11085,7 +11085,7 @@ static void Cmd_various(void)
         }
 
         // Confuse target if they were in the middle of Petal Dance/Outrage/Thrash when targeted.
-        if (gBattleMons[gBattlerTarget].volatiles.lockConfusionTurns != 0)
+        if (gBattleMons[gBattlerTarget].volatiles.lockConfusionTurns)
             gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
         return;
     }
@@ -11102,7 +11102,7 @@ static void Cmd_various(void)
             gBattleStruct->skyDropTargets[gEffectBattler] = SKY_DROP_NO_TARGET;
 
             // If the target was in the middle of Outrage/Thrash/etc. when targeted by Sky Drop, confuse them on release and do proper animation
-            if (gBattleMons[gEffectBattler].volatiles.lockConfusionTurns != 0 && CanBeConfused(gEffectBattler))
+            if (gBattleMons[gEffectBattler].volatiles.lockConfusionTurns && CanBeConfused(gEffectBattler))
             {
                 gBattleMons[gEffectBattler].volatiles.lockConfusionTurns = 0;
                 gBattlerAttacker = gEffectBattler;
@@ -12928,7 +12928,7 @@ static void Cmd_tryinfatuating(void)
         }
         else
         {
-            gBattleMons[gBattlerTarget].volatiles.infatuation = gBattlerAttacker + 1;
+            gBattleMons[gBattlerTarget].volatiles.infatuation = INFATUATED_WITH(gBattlerAttacker);
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
     }
@@ -18381,7 +18381,7 @@ void BS_TrySetInfatuation(void)
         && !IsAbilityOnSide(gBattlerTarget, ABILITY_AROMA_VEIL)
         && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget))
     {
-        gBattleMons[gBattlerTarget].volatiles.infatuation = gBattlerAttacker + 1;
+        gBattleMons[gBattlerTarget].volatiles.infatuation = INFATUATED_WITH(gBattlerAttacker);
         gBattleCommunication[MULTIUSE_STATE] = 2;
         gEffectBattler = gBattlerTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;

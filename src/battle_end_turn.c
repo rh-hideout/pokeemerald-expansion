@@ -458,7 +458,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (gBattleMons[battler].volatiles.lockConfusionTurns != 0 && !(gStatuses3[battler] & STATUS3_SKY_DROPPED))
+        if (gBattleMons[battler].volatiles.lockConfusionTurns && !(gStatuses3[battler] & STATUS3_SKY_DROPPED))
         {
             gBattleMons[battler].volatiles.lockConfusionTurns--;
             if (WasUnableToUseMove(battler))

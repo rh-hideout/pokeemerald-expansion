@@ -153,7 +153,7 @@ enum VolatileFlags
     F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
     F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
     F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
-    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, TO_BITFIELD(MAX_BATTLERS_COUNT))) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, MAX_BITS(4))) \
     F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
     F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
@@ -179,6 +179,9 @@ enum Volatile
     VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
     /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
 };
+
+// Helper macros
+#define INFATUATED_WITH(battler) (battler + 1)
 
 // Old flags
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)

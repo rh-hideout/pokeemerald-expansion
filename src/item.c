@@ -1023,12 +1023,12 @@ bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile _volatile)
     const u8 *effect = GetItemEffect(itemId);
     switch (_volatile)
     {
-        case VOLATILE_CONFUSION:
-            return (effect[3] & ITEM3_STATUS_ALL) || (effect[3] & ITEM3_CONFUSION);
-        case VOLATILE_INFATUATION:
-            return (effect[3] & ITEM3_STATUS_ALL) || (effect[0] & ITEM0_INFATUATION);
-        default:
-            return FALSE;
+    case VOLATILE_CONFUSION:
+        return (effect[3] & ITEM3_STATUS_ALL) || (effect[3] & ITEM3_CONFUSION);
+    case VOLATILE_INFATUATION:
+        return (effect[3] & ITEM3_STATUS_ALL) || (effect[0] & ITEM0_INFATUATION);
+    default:
+        return FALSE;
     }
 }
 

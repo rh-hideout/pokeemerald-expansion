@@ -3179,7 +3179,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gBattleMons[i].volatiles.infatuation == battler + 1)
+        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
         if (gBattleMons[i].volatiles.wrapped && gBattleStruct->wrappedBy[i] == battler)
             gBattleMons[i].volatiles.wrapped = FALSE;
@@ -3296,7 +3296,7 @@ const u8* FaintClearSetData(u32 battler)
     {
         if (gBattleMons[i].volatiles.escapePrevention && gDisableStructs[i].battlerPreventingEscape == battler)
             gBattleMons[i].volatiles.escapePrevention = FALSE;
-        if (gBattleMons[i].volatiles.infatuation == battler + 1)
+        if (gBattleMons[i].volatiles.infatuation == INFATUATED_WITH(battler))
             gBattleMons[i].volatiles.infatuation = 0;
         if (gBattleMons[i].volatiles.wrapped && gBattleStruct->wrappedBy[i] == battler)
             gBattleMons[i].volatiles.wrapped = FALSE;
@@ -3402,14 +3402,14 @@ const u8* FaintClearSetData(u32 battler)
 
             // If the target was sky dropped in the middle of using Outrage/Petal Dance/Thrash,
             // confuse them upon release and print "confused via fatigue" message and animation.
-            if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns != 0)
+            if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns)
             {
                 gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns = 0;
 
                 // If the released mon can be confused, do so.
                 // Don't use CanBeConfused here, since it can cause issues in edge cases.
                 if (!(GetBattlerAbility(otherSkyDropper) == ABILITY_OWN_TEMPO
-                    || gBattleMons[otherSkyDropper].volatiles.confusionTurns != 0
+                    || gBattleMons[otherSkyDropper].volatiles.confusionTurns
                     || IsBattlerTerrainAffected(otherSkyDropper, STATUS_FIELD_MISTY_TERRAIN)))
                 {
                     gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;

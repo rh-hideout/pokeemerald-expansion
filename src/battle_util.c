@@ -1056,7 +1056,7 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     // If target was sky dropped in the middle of Outrage/Thrash/Petal Dance,
     // confuse them upon release and display "confused by fatigue" message & animation.
     // Don't do this if this CancelMultiTurnMoves is caused by falling asleep via Yawn.
-    if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns != 0 && skyDropState != SKY_DROP_STATUS_YAWN)
+    if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns && skyDropState != SKY_DROP_STATUS_YAWN)
     {
         gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns = 0;
 
@@ -1094,7 +1094,7 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     }
 
     // Clear skyDropTargets data, unless this CancelMultiTurnMoves is caused by Yawn, attackcanceler, or VARIOUS_GRAVITY_ON_AIRBORNE_MONS
-    if (!(gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns != 0) && gBattleStruct->skyDropTargets[battler] < 4)
+    if (!(gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns) && gBattleStruct->skyDropTargets[battler] < 4)
     {
         gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
         gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
@@ -1114,7 +1114,7 @@ const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
         gBattleMons[battler].volatiles.multipleTurns = 0;
         gBattleMons[battler].volatiles.lockConfusionTurns = 0;
     }
-    else if (gBattleMons[battler].volatiles.lockConfusionTurns == 0
+    else if (!gBattleMons[battler].volatiles.lockConfusionTurns
      || gBattleMons[battler].volatiles.lockConfusionTurns > 1)
     {
         gBattleMons[battler].volatiles.multipleTurns = 0;
@@ -2234,9 +2234,9 @@ static enum MoveCanceller CancellerInfatuation(void)
 
 static enum MoveCanceller CancellerBide(void)
 {
-    if (gBattleMons[gBattlerAttacker].volatiles.bideTurns != 0)
+    if (gBattleMons[gBattlerAttacker].volatiles.bideTurns)
     {
-        if (--gBattleMons[gBattlerAttacker].volatiles.bideTurns != 0)
+        if (--gBattleMons[gBattlerAttacker].volatiles.bideTurns)
         {
             gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
         }
@@ -4753,7 +4753,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_OBLIVIOUS)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL))
             {
-                gBattleMons[gBattlerAttacker].volatiles.infatuation = gBattlerTarget + 1;
+                gBattleMons[gBattlerAttacker].volatiles.infatuation = INFATUATED_WITH(gBattlerTarget);
                 BattleScriptCall(BattleScript_CuteCharmActivates);
                 effect++;
             }
