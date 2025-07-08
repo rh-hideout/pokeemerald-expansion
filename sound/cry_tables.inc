@@ -2969,6 +2969,64 @@ gCryTable::
 
 	cry Cry_Polybrawnk
 
+	cry Cry_Ankhurah
+
+	cry Cry_Ankhpu
+
+	cry Cry_Ankhira
+
+	cry Cry_Copolar
+
+	cry Cry_Pechit
+
+	cry Cry_Pegui
+
+	cry Cry_SkubmarineAnti
+
+	cry Cry_SkubmarinePro
+
+	cry Cry_SkubaAnti
+
+	cry Cry_SkubaPro
+
+	cry Cry_Sherifuego
+
+	cry Cry_Picantero
+
+	cry Cry_Frijolero
+
+	cry Cry_Rootchew
+
+	cry Cry_Toofgrew
+
+	cry Cry_Hognaw
+
+	cry Cry_Primiteve
+
+	cry Cry_Primitool
+
+	cry Cry_Kramberry
+
+	cry Cry_Fettorch
+
+	cry Cry_Manicle
+
+	cry Cry_Smogars
+	
+	cry Cry_Dogan
+
+	cry Cry_Vergilion
+
+	cry Cry_Devante
+
+	cry Cry_Leopawn
+
+	cry Cry_Braxitytan
+
+	cry Cry_Tunghaska
+
+	cry Cry_Meatier
+
 .endif
 
 	.align 2
@@ -5942,4 +6000,62 @@ gCryTable_Reverse::
 	cry_reverse Cry_Polybrawni
 
 	cry_reverse Cry_Polybrawnk
+
+	cry_reverse Cry_Ankhurah
+
+	cry_reverse Cry_Ankhpu
+
+	cry_reverse Cry_Ankhira
+
+	cry_reverse Cry_Copolar
+
+	cry_reverse Cry_Pechit
+
+	cry_reverse Cry_Pegui
+
+	cry_reverse Cry_SkubmarineAnti
+
+	cry_reverse Cry_SkubmarinePro
+
+	cry_reverse Cry_SkubaAnti
+
+	cry_reverse Cry_SkubaPro
+
+	cry_reverse Cry_Sherifuego
+
+	cry_reverse Cry_Picantero
+
+	cry_reverse Cry_Frijolero
+
+	cry_reverse Cry_Rootchew
+
+	cry_reverse Cry_Toofgrew
+
+	cry_reverse Cry_Hognaw
+
+	cry_reverse Cry_Primiteve
+
+	cry_reverse Cry_Primitool
+
+	cry_reverse Cry_Kramberry
+
+	cry_reverse Cry_Fettorch
+
+	cry_reverse Cry_Manicle
+
+	cry_reverse Cry_Smogars
+
+	cry_reverse Cry_Dogan
+
+	cry_reverse Cry_Vergilion
+
+	cry_reverse Cry_Devante
+
+	cry_reverse Cry_Leopawn
+
+	cry_reverse Cry_Braxitytan
+
+	cry_reverse Cry_Tunghaska
+
+	cry_reverse Cry_Meatier
 .endif

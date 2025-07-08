@@ -7242,6 +7242,122 @@ Cry_Polybrawni::
 	.align 2	
 Cry_Polybrawnk::
 	.incbin "sound/direct_sound_samples/cries/polybrawnk.bin"
+
+	.align 2	
+Cry_Ankhurah::
+	.incbin "sound/direct_sound_samples/cries/ankhurah.bin"
+
+	.align 2	
+Cry_Ankhpu::
+	.incbin "sound/direct_sound_samples/cries/ankhpu.bin"
+
+	.align 2	
+Cry_Ankhira::
+	.incbin "sound/direct_sound_samples/cries/ankhira.bin"
+
+	.align 2	
+Cry_Copolar::
+	.incbin "sound/direct_sound_samples/cries/copolar.bin"
+
+	.align 2	
+Cry_Pechit::
+	.incbin "sound/direct_sound_samples/cries/pechit.bin"
+
+	.align 2	
+Cry_Pegui::
+	.incbin "sound/direct_sound_samples/cries/pegui.bin"
+
+	.align 2	
+Cry_SkubmarineAnti::
+	.incbin "sound/direct_sound_samples/cries/skubmarineanti.bin"
+
+	.align 2	
+Cry_SkubmarinePro::
+	.incbin "sound/direct_sound_samples/cries/skubmarinepro.bin"
+
+	.align 2	
+Cry_SkubaAnti::
+	.incbin "sound/direct_sound_samples/cries/skubaanti.bin"
+
+	.align 2	
+Cry_SkubaPro::
+	.incbin "sound/direct_sound_samples/cries/skubapro.bin"
+
+	.align 2	
+Cry_Sherifuego::
+	.incbin "sound/direct_sound_samples/cries/sherifuego.bin"
+
+	.align 2	
+Cry_Picantero::
+	.incbin "sound/direct_sound_samples/cries/picantero.bin"
+
+	.align 2	
+Cry_Frijolero::
+	.incbin "sound/direct_sound_samples/cries/frijolero.bin"
+
+	.align 2	
+Cry_Rootchew::
+	.incbin "sound/direct_sound_samples/cries/rootchew.bin"
+
+	.align 2	
+Cry_Toofgrew::
+	.incbin "sound/direct_sound_samples/cries/toofgrew.bin"
+
+	.align 2	
+Cry_Hognaw::
+	.incbin "sound/direct_sound_samples/cries/hognaw.bin"
+
+	.align 2	
+Cry_Primiteve::
+	.incbin "sound/direct_sound_samples/cries/primiteve.bin"
+
+	.align 2	
+Cry_Primitool::
+	.incbin "sound/direct_sound_samples/cries/primitool.bin"
+
+	.align 2	
+Cry_Kramberry::
+	.incbin "sound/direct_sound_samples/cries/kramberry.bin"
+
+	.align 2	
+Cry_Fettorch::
+	.incbin "sound/direct_sound_samples/cries/fettorch.bin"
+
+	.align 2	
+Cry_Manicle::
+	.incbin "sound/direct_sound_samples/cries/manicle.bin"
+
+	.align 2	
+Cry_Smogars::
+	.incbin "sound/direct_sound_samples/cries/smogars.bin"
+
+	.align 2	
+Cry_Dogan::
+	.incbin "sound/direct_sound_samples/cries/dogan.bin"
+
+	.align 2	
+Cry_Vergilion::
+	.incbin "sound/direct_sound_samples/cries/vergilion.bin"
+
+	.align 2	
+Cry_Devante::
+	.incbin "sound/direct_sound_samples/cries/devante.bin"
+
+	.align 2	
+Cry_Leopawn::
+	.incbin "sound/direct_sound_samples/cries/leopawn.bin"
+
+	.align 2	
+Cry_Braxitytan::
+	.incbin "sound/direct_sound_samples/cries/braxitytan.bin"
+
+	.align 2	
+Cry_Tunghaska::
+	.incbin "sound/direct_sound_samples/cries/tunghaska.bin"
+
+	.align 2	
+Cry_Meatier::
+	.incbin "sound/direct_sound_samples/cries/meatier.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED

@@ -997,11 +997,12 @@
 #define ITEM_MOLUGANION 829
 #define ITEM_CURSED_FANG 830
 #define ITEM_CRIMSON_LENS 831
+#define ITEM_SKUB 832
 
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 832
+#define ITEMS_COUNT 833
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

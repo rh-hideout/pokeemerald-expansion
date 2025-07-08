@@ -1953,8 +1953,41 @@
 #define SPECIES_POLYBRAWN_P                             1824
 #define SPECIES_POLYBRAWN_I                             1825
 #define SPECIES_POLYBRAWN_K                             1826
+#define SPECIES_ANKHURAH                                1827
+#define SPECIES_ANKHPU                                  1828
+#define SPECIES_ANKHIRA                                 1829
+#define SPECIES_COPOLAR                                 SPECIES_COPOLAR_MALE
+#define SPECIES_COPOLAR_MALE                            1830
+#define SPECIES_COPOLAR_FEMALE                          1831
+#define SPECIES_PECHIT                                  1832
+#define SPECIES_PEGUI                                   1833
+#define SPECIES_SKUBMARINE                              SPECIES_SKUBMARINE_ANTI
+#define SPECIES_SKUBMARINE_ANTI                         1834
+#define SPECIES_SKUBMARINE_PRO                          1835
+#define SPECIES_SKUBA                              SPECIES_SKUBA_ANTI
+#define SPECIES_SKUBA_ANTI                              1836
+#define SPECIES_SKUBA_PRO                               1837
+#define SPECIES_SHERIFUEGO                              1838
+#define SPECIES_PICANTERO                               1839
+#define SPECIES_FRIJOLERO                               1840
+#define SPECIES_ROOTCHEW                                1841
+#define SPECIES_TOOFGREW                                1842
+#define SPECIES_HOGNAW                                  1843
+#define SPECIES_PRIMITEVE                               1844
+#define SPECIES_PRIMITOOL                               1845
+#define SPECIES_KRAMBERRY                               1846
+#define SPECIES_FETTORCH                                1847
+#define SPECIES_MANICLE                                 1848
+#define SPECIES_SMOGARS                                 1849
+#define SPECIES_DOGAN                                   1850
+#define SPECIES_VERGILION                               1851
+#define SPECIES_DEVANTE                                 1852
+#define SPECIES_LEOPAWN                                 1853
+#define SPECIES_BRAXITYTAN                              1854
+#define SPECIES_TUNGHASKA                               1855
+#define SPECIES_MEATIER                                 1856
 
-#define SPECIES_EGG (SPECIES_POLYBRAWN_K + 1)
+#define SPECIES_EGG (SPECIES_MEATIER + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

@@ -14152,4 +14152,21 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_CrimsonLens,
         .iconPalette = gItemIconPalette_CrimsonLens,
     },
+
+    [ITEM_SKUB] =
+    {
+        .name = _("Skub"),
+        .price = 1500,
+        .holdEffect = HOLD_EFFECT_SKUB,
+        .description = COMPOUND_STRING(
+            "Increases Skuba's\n"
+            "Controversial\n"
+            "stats.\n"),
+        .pocket = POCKET_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CannotUse,
+        .flingPower = 120,
+        .iconPic = gItemIcon_Skub,
+        .iconPalette = gItemIconPalette_Skub,
+    },
 };

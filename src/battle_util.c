@@ -10801,6 +10801,10 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
         if (atkBaseSpeciesId == SPECIES_AMPSTAR && (B_LIGHT_BALL_ATTACK_BOOST >= GEN_4 || IsBattleMoveSpecial(move)))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
+    case HOLD_EFFECT_SKUB:
+        if ((atkBaseSpeciesId == SPECIES_SKUBMARINE_ANTI || atkBaseSpeciesId == SPECIES_SKUBA_ANTI) && (B_LIGHT_BALL_ATTACK_BOOST || IsBattleMoveSpecial(move)))
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+        break;
     case HOLD_EFFECT_CHOICE_BAND:
         if (IsBattleMovePhysical(move) && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
@@ -10966,6 +10970,10 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
         break;
     case HOLD_EFFECT_ASSAULT_VEST:
         if (!usesDefStat)
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
+    break;
+        case HOLD_EFFECT_SKUB:
+        if ((gBattleMons[battlerDef].species == SPECIES_SKUBA_PRO || gBattleMons[battlerDef].species == SPECIES_SKUBMARINE_PRO ) && (gBattleMons[battlerDef].species))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case HOLD_EFFECT_SOUL_DEW:

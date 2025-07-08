@@ -1168,6 +1168,9 @@ const u32 gItemIconPalette_CursedFang[] = INCBIN_U32("graphics/items/icon_palett
 const u32 gItemIcon_CrimsonLens[] = INCBIN_U32("graphics/items/icons/crimson_lens.4bpp.lz");
 const u32 gItemIconPalette_CrimsonLens[] = INCBIN_U32("graphics/items/icon_palettes/crimson_lens.gbapal.lz");
 
+const u32 gItemIcon_Skub[] = INCBIN_U32("graphics/items/icons/skub.4bpp.lz");
+const u32 gItemIconPalette_Skub[] = INCBIN_U32("graphics/items/icon_palettes/skub.gbapal.lz");
+
 // Incenses
 
 const u32 gItemIcon_SeaIncense[] = INCBIN_U32("graphics/items/icons/sea_incense.4bpp.lz");

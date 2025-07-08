@@ -2280,3 +2280,19 @@ SPECIES_POLYBRAWN_I,
 SPECIES_POLYBRAWN_K,
 FORM_SPECIES_END,
 };
+static const u16 sCopolarFormSpeciesIdTable[] = {
+    SPECIES_COPOLAR_MALE,
+    SPECIES_COPOLAR_FEMALE,
+    FORM_SPECIES_END,
+};
+static const u16 sSkubmarineFormSpeciesIdTable [] = {
+    SPECIES_SKUBMARINE_ANTI,
+    SPECIES_SKUBMARINE_PRO,
+    FORM_SPECIES_END,
+};
+
+static const u16 sSkubaFormSpeciesIdTable [] = {
+    SPECIES_SKUBA_ANTI,
+    SPECIES_SKUBA_PRO,
+    FORM_SPECIES_END,
+};
