@@ -139,6 +139,17 @@ If you look at the example [here](#srcdatamoves_infoh), you can see that Thunder
 
 All additional effects with a defined chance (even 100%) are treated as "secondary effects". This means that they are nullified by Sheer Force, blocked by Shield Dust or the Covert Cloak, and have their chance modified by Serene Grace. Additional effects without a chance field (effectively setting it to 0) are treated as "primary effects", which means that they cannot be blocked by the aforementioned items and abilities and their chance to occur cannot be modified; they will *always* happen.
 
+Depending on the move effect, it is possible to also set a `multistring` value. For example:
+
+```
+.additionalEffects = ADDITIONAL_EFFECTS({
+    .moveEffect = MOVE_EFFECT_WRAP,
+    .multistring = B_MSG_WRAPPED_MAGMA_STORM,
+}),
+```
+
+For Magma Storm, we not only want the wrapping move effect, we want to give it a unique string when it activates. The index is an enum defined in `battle_string_ids.h` and it corresponds to an entry (for this move effect) in the `gWrappedStringIds` list in battle_message.c. For custom strings, you need to add an enum and an entry respectively. For new custom move effects, you will have to add a new set of enums and a new table of strings.
+
 Each move can have up to 3 additional effects, allowing you to construct monstrosities like this:
 ```
 [MOVE_POUND] =
