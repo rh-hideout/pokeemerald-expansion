@@ -54,7 +54,6 @@ enum {
     ABILITYEFFECT_ATK_SYNCHRONIZE,
     ABILITYEFFECT_MOVE_END_OTHER,
     ABILITYEFFECT_NEUTRALIZINGGAS,
-    ABILITYEFFECT_FIELD_SPORT,         // Only used if B_SPORT_TURNS >= GEN_6
     ABILITYEFFECT_ON_WEATHER,
     ABILITYEFFECT_ON_TERRAIN,
     ABILITYEFFECT_SWITCH_IN_TERRAIN,
@@ -62,10 +61,6 @@ enum {
     ABILITYEFFECT_OPPORTUNIST,
     ABILITYEFFECT_SWITCH_IN_STATUSES,
 };
-
-// Special cases
-#define ABILITYEFFECT_MUD_SPORT                  252 // Only used if B_SPORT_TURNS >= GEN_6
-#define ABILITYEFFECT_WATER_SPORT                253 // Only used if B_SPORT_TURNS >= GEN_6
 
 // For the first argument of ItemBattleEffects, to deteremine which block of item effects to try
 enum ItemCaseId
@@ -280,7 +275,8 @@ enum ItemHoldEffect GetBattlerHoldEffect(u32 battler, bool32 checkNegating);
 enum ItemHoldEffect GetBattlerHoldEffectIgnoreAbility(u32 battler, bool32 checkNegating);
 enum ItemHoldEffect GetBattlerHoldEffectInternal(u32 battler, bool32 checkNegating, bool32 checkAbility);
 u32 GetBattlerHoldEffectParam(u32 battler);
-bool32 IsMoveMakingContact(u32 move, u32 battlerAtk);
+bool32 CanBattlerAvoidContactEffects(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move);
+bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, enum ItemHoldEffect holdEffectAtk, u32 move);
 bool32 IsBattlerGrounded(u32 battler);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
@@ -405,5 +401,11 @@ u32 GetMonVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
 bool32 ItemHealMonVolatile(u32 battler, u16 itemId);
+void PushHazardTypeToQueue(u32 side, enum Hazards hazardType);
+bool32 IsHazardOnSide(u32 side, enum Hazards hazardType);
+bool32 AreAnyHazardsOnSide(u32 side);
+void RemoveAllHazardsFromField(u32 side);
+bool32 IsHazardOnSideAndClear(u32 side, enum Hazards hazardType);
+void RemoveHazardFromField(u32 side, enum Hazards hazardType);
 
 #endif // GUARD_BATTLE_UTIL_H

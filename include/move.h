@@ -505,6 +505,11 @@ static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
 }
 
+static inline u32 GetMoveTerrainFlag(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.moveProperty;
+}
+
 static inline u32 GetMoveEffectArg_Status(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.status;
