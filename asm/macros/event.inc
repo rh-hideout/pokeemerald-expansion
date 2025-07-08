@@ -1248,11 +1248,14 @@
 	.endm
 
 	@ Sets a berry tree's berry and growth stage. treeId is any BERRY_TREE_* constant (an index into berryTrees in SaveBlock1),
-	@ itemId is any ITEM_X_BERRY value, and growthStage is any BERRY_STAGE_* constant.
-	.macro setberrytree treeId:req, itemId:req, growthStage:req
+	@ berryIndex is any INDEX_X_BERRY value, and growthStage is any BERRY_STAGE_* constant.
+	.macro setberrytree treeId:req, berryIndex:req, growthStage:req
+	.if \berryIndex == 0 || \berryIndex > NUM_BERRIES
+		.error "setberrytree must use a valid berry index"
+	.endif
 	.byte SCR_OP_SETBERRYTREE
 	.byte \treeId
-	.2byte \itemId
+	.byte \berryIndex
 	.byte \growthStage
 	.endm
 
@@ -2592,7 +2595,7 @@
 		.2byte \battlePartner
 		.4byte \script
 		updatefollowingmon
-        1:
+		1:
 	.else
 		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2655,7 +2658,12 @@
 	.endm
 
 	@ Gives a random berry between the index ranges
-	.macro giverandomberry loBerry:req, hiBerry:eq
+	.macro giverandomberry loBerry:req, hiBerry:req
+	.if \loBerry == 0 || \loBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for loBerry"
+	.elseif \hiBerry == 0 || \hiBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for hiBerry"
+	.endif
 	callnative Script_GiveRandomBerry
 	.byte \loBerry
 	.byte \hiBerry
