@@ -1984,7 +1984,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_TORMENT:
             if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
                 ADJUST_SCORE(-10);
-            else if (gBattleMons[battlerDef].volatiles.torment == TRUE
+            else if (gBattleMons[battlerDef].volatiles.torment
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {
                 ADJUST_SCORE(-10);
@@ -3010,8 +3010,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-7);
             break;
         case EFFECT_PERISH_SONG:
-            if (!(gBattleMons[battlerDef].volatiles.escapePrevention
-                || gBattleMons[battlerDef].volatiles.wrapped))
+            if (!(gBattleMons[battlerDef].volatiles.escapePrevention || gBattleMons[battlerDef].volatiles.wrapped))
             {
                 if (IsTrappingMove(aiData->partnerMove) || predictedMove == MOVE_INGRAIN)
                     ADJUST_SCORE(WEAK_EFFECT);
@@ -3066,8 +3065,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         }
         break;
     case EFFECT_DRAGON_CHEER:
-        if (gBattleMons[battlerAtkPartner].volatiles.dragonCheer || gBattleMons[battlerAtkPartner].volatiles.focusEnergy
-          || !HasDamagingMove(battlerAtkPartner))
+        if (gBattleMons[battlerAtkPartner].volatiles.dragonCheer 
+         || gBattleMons[battlerAtkPartner].volatiles.focusEnergy
+         || !HasDamagingMove(battlerAtkPartner))
             ADJUST_SCORE(-5);
         else if (atkPartnerHoldEffect == HOLD_EFFECT_SCOPE_LENS
               || IS_BATTLER_OF_TYPE(battlerAtkPartner, TYPE_DRAGON)

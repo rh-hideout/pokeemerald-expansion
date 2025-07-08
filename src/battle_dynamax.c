@@ -188,7 +188,7 @@ void ActivateDynamax(u32 battler)
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
 
     // Try Gigantamax form change.
-    if (!(gBattleMons[battler].volatiles.transformed)) // Ditto cannot Gigantamax.
+    if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.
         TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX);
 
     BattleScriptExecute(BattleScript_DynamaxBegins);

@@ -691,7 +691,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 && gAiLogicData->abilities[opposingBattler] != ABILITY_KEEN_EYE
                 && gAiLogicData->abilities[opposingBattler] != ABILITY_MINDS_EYE
                 && (B_ILLUMINATE_EFFECT >= GEN_9 && gAiLogicData->abilities[opposingBattler] != ABILITY_ILLUMINATE)
-                && !(gBattleMons[battler].volatiles.foresight)
+                && !gBattleMons[battler].volatiles.foresight
                 && !(gStatuses3[battler] & STATUS3_MIRACLE_EYED))
                 switchMon = FALSE;
 
