@@ -5,10 +5,10 @@ FourIsland_Mart_EventScript_Clerk::
 @	goto_if_questlog EventScript_ReleaseEnd
 @	lock
 @	faceplayer
-@	message Text_MayIHelpYou
+@	message gText_HowMayIServeYou
 @	waitmessage
 @	pokemart FourIsland_Mart_Items
-@	msgbox Text_PleaseComeAgain
+@	msgbox gText_PleaseComeAgain
 @	release
 	end
 

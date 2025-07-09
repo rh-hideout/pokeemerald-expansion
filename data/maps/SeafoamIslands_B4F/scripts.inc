@@ -51,8 +51,8 @@ SeafoamIslands_B4F_OnLoad::
 	end
 
 SeafoamIslands_B4F_EventScript_SetCalmWaterNearStairs::
-@	setmetatile 12, 14, METATILE_General_CalmWater, 0
-@	setmetatile 13, 14, METATILE_General_CalmWater, 0
+@	setmetatile 12, 14, METATILE_GeneralFrlg_CalmWater, 0
+@	setmetatile 13, 14, METATILE_GeneralFrlg_CalmWater, 0
 	end
 
 SeafoamIslands_B4F_OnWarp::

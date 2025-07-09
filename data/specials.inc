@@ -570,3 +570,4 @@ gSpecials::
 	def_special SetFlavorTextFlagFromSpecialVars
 	def_special DisableMsgBoxWalkaway
 	def_special SetWalkingIntoSignVars
+	def_special StartOldManTutorialBattle

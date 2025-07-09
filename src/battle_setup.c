@@ -435,6 +435,16 @@ void StartWallyTutorialBattle(void)
     CreateBattleStartTask(B_TRANSITION_SLICE, 0);
 }
 
+void StartOldManTutorialBattle(void)
+{
+    StartWallyTutorialBattle();
+    // CreateMaleMon(&gEnemyParty[0], SPECIES_WEEDLE, 5);
+    // LockPlayerFieldControls();
+    // gMain.savedCallback = CB2_ReturnToFieldContinueScriptPlayMapMusic;
+    // gBattleTypeFlags = BATTLE_TYPE_OLD_MAN_TUTORIAL;
+    // CreateBattleStartTask(B_TRANSITION_SLICE, 0);
+}
+
 void BattleSetup_StartScriptedWildBattle(void)
 {
     LockPlayerFieldControls();

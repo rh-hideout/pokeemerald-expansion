@@ -17,10 +17,10 @@ CeladonCity_DepartmentStore_2F_EventScript_ClerkItems::
 @	goto_if_questlog EventScript_ReleaseEnd
 @	lock
 @	faceplayer
-@	message Text_MayIHelpYou
+@	message gText_HowMayIServeYou
 @	waitmessage
 @	pokemart CeladonCity_DepartmentStore_2F_Items
-@	msgbox Text_PleaseComeAgain
+@	msgbox gText_PleaseComeAgain
 @	release
 	end
 
@@ -43,10 +43,10 @@ CeladonCity_DepartmentStore_2F_EventScript_ClerkTMs::
 @	goto_if_questlog EventScript_ReleaseEnd
 @	lock
 @	faceplayer
-@	message Text_MayIHelpYou
+@	message gText_HowMayIServeYou
 @	waitmessage
 @	pokemart CeladonCity_DepartmentStore_2F_TMs
-@	msgbox Text_PleaseComeAgain
+@	msgbox gText_PleaseComeAgain
 @	release
 	end
 

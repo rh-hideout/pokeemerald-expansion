@@ -1098,7 +1098,7 @@ CableClub_EventScript_OpenUnionRoomBarrier_FRLG::
 	return
 
 CableClub_EventScript_CloseUnionRoomBarrier_FRLG::
-@	setmetatile 5, 3, METATILE_PokemonCenter_CounterBarrier, 1
+@	setmetatile 5, 3, METATILE_PokemonCenter_CounterBarrierFrlg, 1
 	return
 
 CableClub_EventScript_OpenDirectCornerBarrier_FRLG::
@@ -1106,7 +1106,7 @@ CableClub_EventScript_OpenDirectCornerBarrier_FRLG::
 	return
 
 CableClub_EventScript_CloseDirectCornerBarrier_FRLG::
-@	setmetatile 9, 3, METATILE_PokemonCenter_CounterBarrier, 1
+@	setmetatile 9, 3, METATILE_PokemonCenter_CounterBarrierFrlg, 1
 	return
 
 CableClub_EventScript_OpenGameCornerBarrier_FRLG::
