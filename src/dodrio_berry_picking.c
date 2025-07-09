@@ -2696,7 +2696,7 @@ static void ResetPickState(void)
 
 static u16 GetPrizeItemId(void)
 {
-    return sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE] + FIRST_BERRY_INDEX;
+    return GetBerryItemId(sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE] + 1);
 }
 
 static u8 GetNumPlayers(void)

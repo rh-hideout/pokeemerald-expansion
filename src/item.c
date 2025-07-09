@@ -198,11 +198,9 @@ bool8 CheckBagHasItem(u16 itemId, u16 count)
 
 bool8 HasAtLeastOneBerry(void)
 {
-    u16 i;
-
-    for (i = FIRST_BERRY_INDEX; i <= LAST_BERRY_INDEX; i++)
+    for (enum BerryIndex berryIndex = 1; berryIndex < NUM_BERRIES; berryIndex++)
     {
-        if (CheckBagHasItem(i, 1) == TRUE)
+        if (CheckBagHasItem(GetBerryItemId(berryIndex), 1) == TRUE)
         {
             gSpecialVar_Result = TRUE;
             return TRUE;

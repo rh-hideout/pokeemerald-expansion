@@ -3252,8 +3252,9 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 {
     u16 itemId;
 
-    for (itemId = FIRST_BERRY_INDEX; itemId < LAST_BERRY_INDEX; itemId++)
+    for (enum BerryIndex berryIndex = 1; berryIndex < NUM_BERRIES; berryIndex++)
     {
+        itemId = GetBerryItemId(berryIndex);
         if (CheckBagHasSpace(itemId, MAX_BAG_ITEM_CAPACITY))
             AddBagItem(itemId, MAX_BAG_ITEM_CAPACITY);
     }
