@@ -674,7 +674,6 @@ static u32 PpStallReduction(u32 move, u32 battlerAtk)
 static void AdjustBestDamagingMoveScore(u32 battlerAtk, u32 battlerDef)
 {
     u32 bestScore = AI_SCORE_DEFAULT;
-    u16 *moves = GetMovesArray(battlerAtk);
     
     // Find highest comparison score
     for (int i = 0; i < MAX_MON_MOVES; i++)
