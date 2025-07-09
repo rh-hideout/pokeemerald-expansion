@@ -4405,8 +4405,14 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPDEF));
         break;
     case EFFECT_SWAGGER:
-        if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY))
+        if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY) 
+         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_PSYCH_UP)
+         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
             ADJUST_SCORE(DECENT_EFFECT);
+        if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
+            ADJUST_SCORE(GOOD_EFFECT);
+        IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
+        break;
     case EFFECT_FLATTER:
         if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_PSYCH_UP)
          || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
@@ -4439,11 +4445,11 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_DEFOG:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
-            || (gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)))
+            || (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_FOG))
         {
             ADJUST_SCORE(GOOD_EFFECT);
         }
-        else if (!IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_SPIKES)) //Don't blow away hazards if you set them up
+        else if (!AreAnyHazardsOnSide(GetBattlerSide(battlerDef)) || CountUsablePartyMons(battlerDef) == 0) //Don't blow away hazards if you set them up
         {
             if (isDoubleBattle)
             {
