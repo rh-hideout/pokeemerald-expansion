@@ -3251,3 +3251,13 @@ void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
     if (ctx->breakOnTrainerBattle && sScriptConditionTable[condition][ctx->comparisonResult] == 1)
         StopScript(ctx);
 }
+
+bool8 ScrCmd_textcolor(struct ScriptContext * ctx)
+{
+    // gSpecialVar_PrevTextColor = gSpecialVar_TextColor;
+    u16 UNUSED gSpecialVar_TextColor = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    return FALSE;
+}

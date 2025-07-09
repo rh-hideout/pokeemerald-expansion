@@ -224,3 +224,7 @@ EventScript_NoRoomForHiddenItem::
 	setvar VAR_RESULT, 0
 	releaseall
 	end
+
+EventScript_RestorePrevTextColor::
+	copyvar VAR_TEXT_COLOR, VAR_PREV_TEXT_COLOR
+	return
