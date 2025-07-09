@@ -397,6 +397,8 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
         {
             aiMove = gBattleMons[battler].moves[moveIndex];
             if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) > UQ_4_12(0.0) && aiMove != MOVE_NONE
+                && !CanAbilityAbsorbMove(battler, opposingBattler, gBattleMons[opposingBattler].ability, aiMove, GetBattleMoveType(aiMove), ABILITY_CHECK_TRIGGER_AI)
+                && !CanAbilityBlockMove(battler, opposingBattler, gBattleMons[battler].ability, gBattleMons[opposingBattler].ability, aiMove, ABILITY_CHECK_TRIGGER_AI)
                 && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || gMovesInfo[aiMove].power != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
                 return FALSE;
         }
