@@ -1388,7 +1388,7 @@ static void CreateBerrySprites(struct BerryCrushGame *game, struct BerryCrushGam
             &sSpriteTemplate_PlayerBerry,
             sPlayerBerrySpriteTags[i],
             sPlayerBerrySpriteTags[i],
-            game->players[i].berryId);
+            GetBerryItemId(game->players[i].berryId));
         gfx->berrySprites[i] = &gSprites[spriteId];
         gfx->berrySprites[i]->oam.priority = 3;
         gfx->berrySprites[i]->affineAnimPaused = TRUE;
@@ -2393,8 +2393,8 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
         for (i = 0; i < game->playerCount; i++)
         {
             game->players[i].berryId = gBlockRecvBuffer[i][0];
-            if (game->players[i].berryId > LAST_BERRY_INDEX + 1)
-                game->players[i].berryId = 0;
+            if (game->players[i].berryId > NUM_BERRIES)
+                game->players[i].berryId = 1;
             game->targetAPresses += gBerries[game->players[i].berryId].berryCrushDifficulty;
             game->powder += gBerries[game->players[i].berryId].berryCrushPowder;
         }
@@ -3476,7 +3476,7 @@ static void ResetGame(struct BerryCrushGame *game)
     game->sparkleCounter = 0;
     for (i = 0; i < MAX_RFU_PLAYERS; i++)
     {
-        game->players[i].berryId = -1;
+        game->players[i].berryId = 0;
         game->players[i].inputTime = 0;
         game->players[i].neatInputStreak = 0;
         game->players[i].timeSincePrevInput = 1;
