@@ -672,24 +672,6 @@ static u32 PpStallReduction(u32 move, u32 battlerAtk)
     return returnValue;
 }
 
-static void AdjustBestDamagingMoveScore(u32 battlerAtk, u32 battlerDef)
-{
-    u32 bestScore = AI_SCORE_DEFAULT;
-    
-    // Find highest comparison score
-    for (int i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (gAiThinkingStruct->moveComparisonScore[i] > bestScore)
-            bestScore = gAiThinkingStruct->moveComparisonScore[i];
-    }
-    // Increase score for corresponding move(s), accomodating ties
-    for (int i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (gAiThinkingStruct->moveComparisonScore[i] == bestScore)
-            gAiThinkingStruct->score[i] += BEST_DAMAGE_MOVE;
-    }
-}
-
 static u32 ChooseMoveOrAction_Singles(u32 battler)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -3764,7 +3746,20 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                 gAiThinkingStruct->moveComparisonScore[currId] = viableMoveScores[currId];
         }
     }
-    AdjustBestDamagingMoveScore(battlerAtk, battlerDef);
+    u32 bestScore = AI_SCORE_DEFAULT;
+    
+    // Find highest comparison score
+    for (int i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gAiThinkingStruct->moveComparisonScore[i] > bestScore)
+            bestScore = gAiThinkingStruct->moveComparisonScore[i];
+    }
+    // Increase score for corresponding move(s), accomodating ties
+    for (int i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gAiThinkingStruct->moveComparisonScore[i] == bestScore)
+            gAiThinkingStruct->score[i] += BEST_DAMAGE_MOVE;
+    }
 }
 
 static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
