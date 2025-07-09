@@ -14,6 +14,7 @@
 #include "debug.h"
 #include "event_data.h"
 #include "item.h"
+#include "math_util.h"
 #include "pokemon.h"
 #include "random.h"
 #include "recorded_battle.h"
@@ -3652,7 +3653,7 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
 {
     u32 i;
     bool32 multipleBestMoves = FALSE;
-    s32 viableMoveScores[MAX_MON_MOVES];
+    u32 viableMoveScores[MAX_MON_MOVES];
     s32 bestViableMoveScore;
     s32 noOfHits[MAX_MON_MOVES];
     s32 score = 0;
@@ -3704,26 +3705,26 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
                 multipleBestMoves = TRUE;
                 // We need to make sure it's the current move which is objectively better.
                 if (isTwoTurnNotSemiInvulnerableMove[i] && !isTwoTurnNotSemiInvulnerableMove[currId])
-                    viableMoveScores[i] -= 3;
+                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
                 else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
-                    viableMoveScores[currId] -= 3;
+                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
 
                 switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
                 {
                 case 1:
-                    viableMoveScores[currId] += 2;
+                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                     break;
                 case -1:
-                    viableMoveScores[i] += 2;
+                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                     break;
                 }
                 switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                 {
                 case 1:
-                    viableMoveScores[currId] += 1;
+                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                     break;
                 case -1:
-                    viableMoveScores[i] += 1;
+                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                     break;
                 }
             }
@@ -3739,7 +3740,7 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
                 if (viableMoveScores[i] > bestViableMoveScore)
                     bestViableMoveScore = viableMoveScores[i];
             }
-            // Unless a better move was found increase score of current move
+            // Increase score of current move if it is decisively the best option
             if (viableMoveScores[currId] == bestViableMoveScore)
                 ADJUST_SCORE(BEST_DAMAGE_MOVE);
         }
