@@ -2393,7 +2393,7 @@ static bool32 IsBadEgg(struct BoxPokemon *boxMon)
 
 static ALWAYS_INLINE bool32 IsEggOrBadEgg(struct BoxPokemon *boxMon)
 {
-    return IsBadEgg(boxMon) || GetSubstruct3(boxMon)->isEgg;
+    return GetSubstruct3(boxMon)->isEgg || IsBadEgg(boxMon);
 }
 
 /* GameFreak called GetBoxMonData with either 2 or 3 arguments, for type
@@ -2486,7 +2486,7 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             break;
         }
         case MON_DATA_SPECIES:
-            retVal = boxMon->isBadEgg ? SPECIES_EGG : GetSubstruct0(boxMon)->species;
+            retVal = IsBadEgg(boxMon) ? SPECIES_EGG : GetSubstruct0(boxMon)->species;
             break;
         case MON_DATA_HELD_ITEM:
             retVal = GetSubstruct0(boxMon)->heldItem;
@@ -2793,7 +2793,7 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             retVal = boxMon->language;
             break;
         case MON_DATA_SANITY_IS_BAD_EGG:
-            retVal = boxMon->isBadEgg;
+            retVal = IsBadEgg(boxMon);
             break;
         case MON_DATA_SANITY_HAS_SPECIES:
             retVal = boxMon->hasSpecies;
