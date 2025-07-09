@@ -872,7 +872,7 @@ AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to be
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
         ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
-        ASSUME(GetMoveAdditionalEffectCount(MOVE_SURF) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
         ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
         ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
