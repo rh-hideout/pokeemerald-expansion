@@ -607,6 +607,10 @@ static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
     [MB_FRLG_PC] = MB_PLAYER_ROOM_PC_ON,
     [MB_FRLG_WARP_DOOR] = MB_ANIMATED_DOOR,
     [MB_FRLG_TALL_GRASS] = MB_TALL_GRASS,
+    [MB_FRLG_JUMP_NORTH] = MB_JUMP_NORTH,
+    [MB_FRLG_JUMP_SOUTH] = MB_JUMP_SOUTH,
+    [MB_FRLG_JUMP_WEST] = MB_JUMP_WEST,
+    [MB_FRLG_JUMP_EAST] = MB_JUMP_EAST,
 };
 
 static u32 TranslateFrlgBehaviour(u32 behavior)
