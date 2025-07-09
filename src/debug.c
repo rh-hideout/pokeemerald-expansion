@@ -379,7 +379,7 @@ extern const u8 Debug_EventScript_FakeRTCNotEnabled[];
 extern const u8 Debug_BerryPestsDisabled[];
 extern const u8 Debug_BerryWeedsDisabled[];
 
-extern const u8 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon[];
+extern const u8 Common_EventScript_MoveRelearner[];
 
 #include "data/map_group_count.h"
 
@@ -570,7 +570,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_PCBag[] =
 
 static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
 {
-    { COMPOUND_STRING("Move Reminder"),      DebugAction_ExecuteScript, FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon },
+    { COMPOUND_STRING("Move Reminder"),      DebugAction_ExecuteScript, Common_EventScript_MoveRelearner },
     { COMPOUND_STRING("Hatch an Egg"),       DebugAction_ExecuteScript, Debug_HatchAnEgg },
     { COMPOUND_STRING("Heal party"),         DebugAction_Party_HealParty },
     { COMPOUND_STRING("Inflict Status1"),    DebugAction_ExecuteScript, Debug_EventScript_InflictStatus1 },
@@ -4003,6 +4003,17 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId)
 
 // *******************************
 // Actions Party/Boxes
+
+// these are commented out since they're not used
+/*static void DebugAction_Party_MoveReminder(u8 taskId)
+{
+    Debug_DestroyMenu_Full_Script(taskId, Common_EventScript_MoveRelearner);
+}
+
+static void DebugAction_Party_HatchAnEgg(u8 taskId)
+{
+    Debug_DestroyMenu_Full_Script(taskId, Debug_HatchAnEgg);
+}*/
 
 static void DebugAction_Party_HealParty(u8 taskId)
 {
