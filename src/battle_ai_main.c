@@ -38,6 +38,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler);
 static inline void BattleAI_DoAIProcessing(struct AiThinkingStruct *aiThink, u32 battlerAtk, u32 battlerDef);
 static inline void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink, struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef);
 static bool32 IsPinchBerryItemEffect(enum ItemHoldEffect holdEffect);
+static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef);
 
 // ewram
 EWRAM_DATA const u8 *gAIScriptPtr = NULL;   // Still used in contests
@@ -713,7 +714,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     }
 
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
-        AdjustBestDamagingMoveScore(battler, opposingBattler);
+        AI_CompareDamagingMoves(battler, opposingBattler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -792,7 +793,7 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
                 gAiThinkingStruct->aiLogicId++;
             }
             if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
-                AdjustBestDamagingMoveScore(battler, gBattlerTarget);
+                AI_CompareDamagingMoves(battler, gBattlerTarget);
 
             mostViableMovesScores[0] = gAiThinkingStruct->score[0];
             mostViableMovesIndices[0] = 0;
@@ -3672,9 +3673,9 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
          && noOfHitsToFaintPartner < (friendlyFireThreshold * 2));
 }
 
-static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
+static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 {
-    u32 i;
+    u32 i, currId;
     bool32 multipleBestMoves = FALSE;
     u32 viableMoveScores[MAX_MON_MOVES];
     s32 noOfHits[MAX_MON_MOVES];
@@ -3682,80 +3683,88 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
     u16 *moves = GetMovesArray(battlerAtk);
     bool8 isTwoTurnNotSemiInvulnerableMove[MAX_MON_MOVES];
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (currId = 0; currId < MAX_MON_MOVES; currId++)
     {
-        if (moves[i] != MOVE_NONE && GetMovePower(moves[i]) != 0)
+        if (IS_TARGETING_PARTNER(battlerAtk, battlerDef)
+        || GetMovePower(moves[currId]) == 0 || GetNoOfHitsToKOBattler(battlerAtk, battlerDef, currId, AI_ATTACKING) == 0
+        || (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == moves[currId]))
+            continue;
+        for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            noOfHits[i] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, i, AI_ATTACKING);
-            if (ShouldUseSpreadDamageMove(battlerAtk,moves[i], i, noOfHits[i]))
+            if (moves[i] != MOVE_NONE && GetMovePower(moves[i]) != 0)
+            {
+                noOfHits[i] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, i, AI_ATTACKING);
+                if (ShouldUseSpreadDamageMove(battlerAtk,moves[i], i, noOfHits[i]))
+                {
+                    noOfHits[i] = -1;
+                    viableMoveScores[i] = 0;
+                    isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
+                }
+                else if (noOfHits[i] < leastHits && noOfHits[i] != 0)
+                {
+                    leastHits = noOfHits[i];
+                }
+                viableMoveScores[i] = AI_SCORE_DEFAULT;
+                isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
+            }
+            else
             {
                 noOfHits[i] = -1;
                 viableMoveScores[i] = 0;
                 isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
             }
-            else if (noOfHits[i] < leastHits && noOfHits[i] != 0)
-            {
-                leastHits = noOfHits[i];
-            }
-            viableMoveScores[i] = AI_SCORE_DEFAULT;
-            isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
         }
-        else
-        {
-            noOfHits[i] = -1;
-            viableMoveScores[i] = 0;
-            isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
-        }
-    }
 
-    // Priority list:
-    // 1. Less no of hits to ko
-    // 2. Not charging
-    // 3. More accuracy
-    // 4. Better effect
+        // Priority list:
+        // 1. Less no of hits to ko
+        // 2. Not charging
+        // 3. More accuracy
+        // 4. Better effect
 
-    // Current move requires the least hits to KO. Compare with other moves.
-    if (leastHits == noOfHits[currId])
-    {
-        for (i = 0; i < MAX_MON_MOVES; i++)
+        // Current move requires the least hits to KO. Compare with other moves.
+        if (leastHits == noOfHits[currId])
         {
-            if (i == currId)
-                continue;
-            if (noOfHits[currId] == noOfHits[i])
+            for (i = 0; i < MAX_MON_MOVES; i++)
             {
-                multipleBestMoves = TRUE;
-                // We need to make sure it's the current move which is objectively better.
-                if (isTwoTurnNotSemiInvulnerableMove[i] && !isTwoTurnNotSemiInvulnerableMove[currId])
-                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
-                else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
-                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                if (i == currId)
+                    continue;
+                if (noOfHits[currId] == noOfHits[i])
+                {
+                    multipleBestMoves = TRUE;
+                    // We need to make sure it's the current move which is objectively better.
+                    if (isTwoTurnNotSemiInvulnerableMove[i] && !isTwoTurnNotSemiInvulnerableMove[currId])
+                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                    else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
+                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
 
-                switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
-                {
-                case 1:
-                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
-                    break;
-                case -1:
-                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
-                    break;
-                }
-                switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
-                {
-                case 1:
-                    viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
-                    break;
-                case -1:
-                    viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
-                    break;
+                    switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
+                    {
+                    case 1:
+                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
+                        break;
+                    case -1:
+                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
+                        break;
+                    }
+                    switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
+                    {
+                    case 1:
+                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
+                        break;
+                    case -1:
+                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
+                        break;
+                    }
                 }
             }
+            // Turns out the current move deals the most dmg compared to the other 3.
+            if (!multipleBestMoves)
+                gAiThinkingStruct->moveComparisonScore[currId] = UINT32_MAX;
+            else
+                gAiThinkingStruct->moveComparisonScore[currId] = viableMoveScores[currId];
         }
-        // Turns out the current move deals the most dmg compared to the other 3.
-        if (!multipleBestMoves)
-            gAiThinkingStruct->moveComparisonScore[currId] = UINT32_MAX;
-        else
-            gAiThinkingStruct->moveComparisonScore[currId] = viableMoveScores[currId];
     }
+    AdjustBestDamagingMoveScore(battlerAtk, battlerDef);
 }
 
 static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
@@ -5346,8 +5355,6 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
             if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE)
                 && GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == move)
                 ADJUST_SCORE(BEST_DAMAGE_MOVE);
-            else
-                AI_CompareDamagingMoves(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex);
         }
     }
 
