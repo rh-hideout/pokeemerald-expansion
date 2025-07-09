@@ -48,7 +48,7 @@ LavenderTown_House2_EventScript_CantNicknameTradeMon::
 
 LavenderTown_House2_EventScript_ChooseNewNickname::
 @	msgbox LavenderTown_House2_Text_WhatShallNewNicknameBe
-@	call EventScript_ChangePokemonNickname
+@	call Common_EventScript_NameReceivedPartyMon
 @	specialvar VAR_RESULT, NameRaterWasNicknameChanged
 @	special BufferMonNickname
 @	goto_if_eq VAR_RESULT, TRUE, LavenderTown_House2_EventScript_ChoseNewNickname

@@ -11,7 +11,7 @@ Route2_EastBuilding_EventScript_Aide::
 @	msgbox Route2_EastBuilding_Text_GiveHM05IfSeen10Mons, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, Aide_EventScript_DeclineCheckMons
 @	setvar VAR_0x8004, 0
-@	specialvar VAR_RESULT, GetPokedexCount
+@	specialvar VAR_RESULT, GetFrlgPokedexCount
 @	buffernumberstring STR_VAR_3, VAR_0x8006
 @	call Route2_EastBuilding_EventScript_GetAideRequestInfo
 @	goto_if_lt VAR_0x8006, REQUIRED_SEEN_MONS, Aide_EventScript_HaventCaughtEnough

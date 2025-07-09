@@ -7,6 +7,7 @@ extern void (*gPokedexVBlankCB)(void);
 void ResetPokedex(void);
 u16 GetNationalPokedexCount(u8 caseID);
 u16 GetHoennPokedexCount(u8 caseID);
+u16 GetKantoPokedexCount(u8 caseID);
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality);
 s8 GetSetPokedexFlag(u16 nationalDexNo, u8 caseID);
 void DrawFootprint(u8 windowId, u16 species);

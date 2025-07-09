@@ -23,7 +23,7 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 @	textcolor NPC_TEXT_COLOR_MALE
 @	playse SE_EXIT
 @	delay 5
-@	playbgm MUS_ENCOUNTER_RIVAL, 0
+@	playbgm MUS_RG_ENCOUNTER_RIVAL, 0
 @	addobject LOCALID_SS_ANNE_RIVAL
 @	delay 10
 @	applymovement LOCALID_SS_ANNE_RIVAL, Common_Movement_WalkInPlaceFasterDown
@@ -40,7 +40,7 @@ SSAnne_2F_Corridor_EventScript_RivalTrigger::
 @	msgbox SSAnne_2F_Corridor_Text_RivalPostBattle
 @	closemessage
 @	delay 10
-@	playbgm MUS_RIVAL_EXIT, 0
+@	playbgm MUS_RG_RIVAL_EXIT, 0
 @	call_if_eq VAR_TEMP_1, 0, SSAnne_2F_Corridor_EventScript_RivalExitLeft
 @	call_if_eq VAR_TEMP_1, 1, SSAnne_2F_Corridor_EventScript_RivalExitMid
 @	call_if_eq VAR_TEMP_1, 2, SSAnne_2F_Corridor_EventScript_RivalExitRight

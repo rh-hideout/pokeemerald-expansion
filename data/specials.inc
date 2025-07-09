@@ -563,3 +563,6 @@ gSpecials::
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special EnterCode
 	def_special GetCodeFeedback
+	def_special GetFrlgPokedexCount
+	def_special HasAllMons
+	def_special GetProfOaksRatingMessage
