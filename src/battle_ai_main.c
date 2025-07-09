@@ -3654,7 +3654,7 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
     u32 i;
     bool32 multipleBestMoves = FALSE;
     u32 viableMoveScores[MAX_MON_MOVES];
-    s32 bestViableMoveScore;
+    u32 bestViableMoveScore;
     s32 noOfHits[MAX_MON_MOVES];
     s32 score = 0;
     s32 leastHits = 1000;
