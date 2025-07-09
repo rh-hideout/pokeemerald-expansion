@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "wonder_news.h"
 #include "constants/items.h"
+#include "item.h"
 
 // Every 4th reward for sending Wonder News to a link partner is a "big" reward.
 #define MAX_SENT_REWARD 4
