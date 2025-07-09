@@ -79,4 +79,10 @@
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
 #define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD    4
 
+// AI's desired stat changes for Guard Split and Power Split, treated as %
+#define GUARD_SPLIT_ALLY_PERCENTAGE     200
+#define GUARD_SPLIT_ENEMY_PERCENTAGE    50
+#define POWER_SPLIT_ALLY_PERCENTAGE     150
+#define POWER_SPLIT_ENEMY_PERCENTAGE    50
+
 #endif // GUARD_CONFIG_AI_H
