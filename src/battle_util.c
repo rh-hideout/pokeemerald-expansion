@@ -10375,28 +10375,27 @@ u32 GetIllusionMonSpecies(u32 battler)
 
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, u32 battler)
 {
-    s32 id;
-    s32 PARTY_END=6;
-    s32 PARTY_START=0;
+    s32 partyEnd=6;
+    s32 partyStart=0;
 
     // Adjust party search range for Multibattles and Player vs two-trainers
-    if((GetBattlerParty(battler) == gPlayerParty && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
-        || (GetBattlerParty(battler) == gEnemyParty && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)))
+    if((GetBattlerSide(battler) == B_SIDE_PLAYER && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
+        || (GetBattlerSide(battler) == B_SIDE_OPPONENT && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)))
         {
             if((GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) || (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT))
             {
-                PARTY_END = 3;
-                PARTY_START = 0;
+                partyEnd = 3;
+                partyStart = 0;
             }
             else
             {
-                PARTY_END = 6;
-                PARTY_START = 3;
+                partyEnd = 6;
+                partyStart = 3;
             }
         }
 
     // Find last alive non-egg pokemon.
-    for (id = PARTY_END - 1; id >= PARTY_START; id--)
+    for (s32 id = partyEnd - 1; id >= partyStart; id--)
     {
         if (GetMonData(&party[id], MON_DATA_SANITY_HAS_SPECIES)
             && GetMonData(&party[id], MON_DATA_HP)
@@ -10408,10 +10407,10 @@ u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pok
             if (&party[id] != mon && &party[id] != partnerMon)
                 return id;
             else // If this pokemon or its partner is last in the party, ignore Illusion.
-                return PARTY_END;
+                return partyEnd;
         }
     }
-    return PARTY_END;
+    return partyEnd;
 }
 
 bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
