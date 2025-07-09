@@ -3655,11 +3655,26 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
          && noOfHitsToFaintPartner < (friendlyFireThreshold * 2));
 }
 
+static bool32 ShouldCompareMove(u32 battlerAtk, u32 battlerDef, u32 moveIndex, u16 move)
+{
+    if (IS_TARGETING_PARTNER(battlerAtk, battlerDef))
+        return FALSE;
+    if (GetMovePower(move) == 0)
+        return FALSE;
+    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, moveIndex, AI_ATTACKING) == 0)
+        return FALSE;
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == move)
+        return FALSE;
+    return TRUE;
+}
+
 static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 {
     u32 i, currId;
+    u32 tempMoveScores[MAX_MON_MOVES];
+    u32 moveComparisonScores[MAX_MON_MOVES];
+    u32 bestScore = AI_SCORE_DEFAULT;
     bool32 multipleBestMoves = FALSE;
-    u32 viableMoveScores[MAX_MON_MOVES];
     s32 noOfHits[MAX_MON_MOVES];
     s32 leastHits = 1000;
     u16 *moves = GetMovesArray(battlerAtk);
@@ -3667,9 +3682,8 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 
     for (currId = 0; currId < MAX_MON_MOVES; currId++)
     {
-        if (IS_TARGETING_PARTNER(battlerAtk, battlerDef)
-        || GetMovePower(moves[currId]) == 0 || GetNoOfHitsToKOBattler(battlerAtk, battlerDef, currId, AI_ATTACKING) == 0
-        || (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == moves[currId]))
+        moveComparisonScores[currId] = 0;
+        if (!ShouldCompareMove(battlerAtk, battlerDef, currId, moves[currId]))
             continue;
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
@@ -3679,20 +3693,20 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                 if (ShouldUseSpreadDamageMove(battlerAtk,moves[i], i, noOfHits[i]))
                 {
                     noOfHits[i] = -1;
-                    viableMoveScores[i] = 0;
+                    tempMoveScores[i] = 0;
                     isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
                 }
                 else if (noOfHits[i] < leastHits && noOfHits[i] != 0)
                 {
                     leastHits = noOfHits[i];
                 }
-                viableMoveScores[i] = AI_SCORE_DEFAULT;
+                tempMoveScores[i] = AI_SCORE_DEFAULT;
                 isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
             }
             else
             {
                 noOfHits[i] = -1;
-                viableMoveScores[i] = 0;
+                tempMoveScores[i] = 0;
                 isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
             }
         }
@@ -3715,49 +3729,48 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     multipleBestMoves = TRUE;
                     // We need to make sure it's the current move which is objectively better.
                     if (isTwoTurnNotSemiInvulnerableMove[i] && !isTwoTurnNotSemiInvulnerableMove[currId])
-                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
                     else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
-                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
+                        tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
 
                     switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
                     {
                     case 1:
-                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
+                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                         break;
                     case -1:
-                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
+                        tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                         break;
                     }
                     switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                     {
                     case 1:
-                        viableMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
+                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                         break;
                     case -1:
-                        viableMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
+                        tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                         break;
                     }
                 }
             }
             // Turns out the current move deals the most dmg compared to the other 3.
             if (!multipleBestMoves)
-                gAiThinkingStruct->moveComparisonScore[currId] = UINT32_MAX;
+                moveComparisonScores[currId] = UINT32_MAX;
             else
-                gAiThinkingStruct->moveComparisonScore[currId] = viableMoveScores[currId];
+                moveComparisonScores[currId] = tempMoveScores[currId];
         }
     }
-    u32 bestScore = AI_SCORE_DEFAULT;
     
     // Find highest comparison score
     for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gAiThinkingStruct->moveComparisonScore[i] > bestScore)
-            bestScore = gAiThinkingStruct->moveComparisonScore[i];
+        if (moveComparisonScores[i] > bestScore)
+            bestScore = moveComparisonScores[i];
     }
     // Increase score for corresponding move(s), accomodating ties
     for (int i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (gAiThinkingStruct->moveComparisonScore[i] == bestScore)
+        if (moveComparisonScores[i] == bestScore)
             gAiThinkingStruct->score[i] += BEST_DAMAGE_MOVE;
     }
 }
