@@ -2595,7 +2595,7 @@
 		.2byte \battlePartner
 		.4byte \script
 		updatefollowingmon
-		1:
+	1:
 	.else
 		.error "setfollowernpc unavailable with FNPC_ENABLE_NPC_FOLLOWERS defined as FALSE"
 	.endif
@@ -2660,9 +2660,10 @@
 	@ Gives a random berry between the index ranges
 	.macro giverandomberry loBerry:req, hiBerry:req
 	.if \loBerry == 0 || \loBerry > NUM_BERRIES
-		.error "giverandomberry must use a valid berry index for loBerry"
-	.elseif \hiBerry == 0 || \hiBerry > NUM_BERRIES
-		.error "giverandomberry must use a valid berry index for hiBerry"
+		.error "giverandomberry must use a valid berry index for first argument"
+	.endif
+	.if \hiBerry == 0 || \hiBerry > NUM_BERRIES
+		.error "giverandomberry must use a valid berry index for second argument"
 	.endif
 	callnative Script_GiveRandomBerry
 	.byte \loBerry

@@ -2634,12 +2634,12 @@ void ObjectEventInteractionGetBerryCountString(void)
         count = 1;
 
     gSpecialVar_0x8006 = GetBerryItemId(berry);
-    CopyItemNameHandlePlural(GetBerryItemId(berry), gStringVar1, count);
+    CopyItemNameHandlePlural(gSpecialVar_0x8006, gStringVar1, count);
     berry = GetTreeMutationValue(treeId);
     if (berry > 0)
     {
         count = 1;
-        CopyItemNameHandlePlural(GetBerryItemId(berry), gStringVar3, count);
+        CopyItemNameHandlePlural(gSpecialVar_0x8006, gStringVar3, count);
         gSpecialVar_Result = TRUE;
     }
     else
@@ -2658,9 +2658,7 @@ void Bag_ChooseMulch(void)
 
 void ObjectEventInteractionPlantBerryTree(void)
 {
-    u8 berry = GetBerryIndex(gSpecialVar_ItemId);
-
-    PlantBerryTree(GetObjectEventBerryTreeId(gSelectedObjectEvent), berry, BERRY_STAGE_PLANTED, TRUE);
+    PlantBerryTree(GetObjectEventBerryTreeId(gSelectedObjectEvent), GetBerryIndex(gSpecialVar_ItemId), BERRY_STAGE_PLANTED, TRUE);
     ObjectEventInteractionGetBerryTreeData();
 }
 

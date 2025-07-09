@@ -4,8 +4,6 @@
 #define BERRY_NAME_LENGTH 6
 #define BERRY_ITEM_EFFECT_COUNT 18
 
-#include "item_menu_icons.h"
-
 struct Berry
 {
     const u8 name[BERRY_NAME_LENGTH + 1];

@@ -1648,7 +1648,7 @@ static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 b
             ranking = i;
             j = game->players[i].berryId;
             if (j > NUM_BERRIES)
-                j = 0;
+                j = 1;
             StringCopy(gStringVar1, gBerries[j].name);
             StringExpandPlaceholders(gStringVar4, sResultsTexts[page]);
             break;

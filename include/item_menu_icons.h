@@ -1,8 +1,6 @@
 #ifndef GUARD_ITEM_MENU_ICONS_H
 #define GUARD_ITEM_MENU_ICONS_H
 
-#include "sprite.h"
-
 extern const struct CompressedSpriteSheet gBagMaleSpriteSheet;
 extern const struct CompressedSpriteSheet gBagFemaleSpriteSheet;
 extern const struct SpritePalette gBagPaletteTable;

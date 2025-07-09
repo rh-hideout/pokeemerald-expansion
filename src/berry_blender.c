@@ -1554,8 +1554,8 @@ static void SetOpponentsBerryData(u16 playerBerryItemId, u8 playersNum, struct B
     else
     {
         opponentSetId = GetBerryIndex(playerBerryItemId);
-        if (opponentSetId >= NUM_NPC_BERRIES)
-            opponentSetId = (opponentSetId % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
+        if (opponentSetId > NUM_NPC_BERRIES)
+            opponentSetId = ((opponentSetId - 1) % NUM_NPC_BERRIES) + NUM_NPC_BERRIES;
     }
     for (i = 0; i < playersNum - 1; i++)
     {
@@ -3545,7 +3545,7 @@ static bool8 PrintBlendingResults(void)
         for (i = 0; i < BLENDER_MAX_PLAYERS; i++)
         {
             if (sBerryBlender->chosenItemId[i] != 0)
-                berryIds[i] = sBerryBlender->chosenItemId[i];
+                berryIds[i] = GetBerryIndex(sBerryBlender->chosenItemId[i]);
             if (sBerryBlender->arrowIdToPlayerId[i] != NO_PLAYER)
             {
                 PutWindowTilemap(i);
