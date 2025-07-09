@@ -3,7 +3,7 @@
 
 void SetEnigmaBerry(u8 *src);
 bool32 IsEnigmaBerryValid(void);
-const struct Berry *GetBerryInfo(u8 berry);
+const struct Berry *GetBerryInfo(enum BerryIndex berry);
 struct BerryTree *GetBerryTreeInfo(u8 id);
 bool32 ObjectEventInteractionWaterBerryTree(void);
 bool8 IsPlayerFacingEmptyBerryTreePatch(void);
@@ -14,7 +14,6 @@ void PlantBerryTree(u8 id, u8 berry, u8 stage, bool8 allowGrowth);
 void RemoveBerryTree(u8 id);
 u8 GetBerryTypeByBerryTreeId(u8 id);
 u8 GetStageByBerryTreeId(u8 id);
-u8 ItemIdToBerryType(u16 item);
 void GetBerryNameByBerryType(u8 berry, u8 *string);
 void Bag_ChooseBerry(void);
 void Bag_ChooseMulch(void);

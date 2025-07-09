@@ -716,9 +716,6 @@
 #define ITEM_MARANGA_BERRY 580
 #define ITEM_ENIGMA_BERRY_E_READER 581
 
-#define FIRST_BERRY_INDEX ITEM_CHERI_BERRY
-#define LAST_BERRY_INDEX  ITEM_ENIGMA_BERRY_E_READER
-
 // TMs/HMs
 #define ITEM_TM01 582
 #define ITEM_TM02 583
@@ -1027,11 +1024,6 @@ enum BerryItemId
 #undef UNPACK_BERRY_INDEX
 #undef UNPACK_BERRY_ITEM_ID
 
-#define BERRY_TO_ITEM_ID_INDEX(_berry) (ITEM_##_berry##_BERRY, INDEX_##_berry##_BERRY),
-#define COMPARE_BERRY(_itemId, _berryItemIdIndex) INVOKE_WITH_B(COMPARE_BERRY_, _berryItemIdIndex, _itemId)
-#define COMPARE_BERRY_(_berryItemId, _berryIndex, _itemId) (_itemId) == _berryItemId ? _berryIndex :
-
-#define ITEM_TO_BERRY(itemId) (RECURSIVELY(R_FOR_EACH_WITH(COMPARE_BERRY, (itemId), FOREACH_BERRY(BERRY_TO_ITEM_ID_INDEX))) (itemId) == ITEM_ENIGMA_BERRY_E_READER ? INDEX_ENIGMA_BERRY_E_READER : 0)
 #define ITEM_TO_MAIL(itemId) ((itemId) - FIRST_MAIL_INDEX)
 #define MAIL_NONE 0xFF
 #define ITEM_TO_MULCH(itemId)(((itemId) - ITEM_GROWTH_MULCH) + 1)

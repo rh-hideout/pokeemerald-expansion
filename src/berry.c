@@ -16,7 +16,6 @@
 #include "constants/event_object_movement.h"
 #include "constants/items.h"
 
-static u16 BerryTypeToItemId(u16 berry);
 static u8 BerryTreeGetNumStagesWatered(struct BerryTree *tree);
 static u8 GetNumStagesWateredByBerryTreeId(u8 id);
 static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water);
@@ -2214,9 +2213,9 @@ bool32 IsEnigmaBerryValid(void)
 #endif //FREE_ENIGMA_BERRY
 }
 
-const struct Berry *GetBerryInfo(u8 berry)
+const struct Berry *GetBerryInfo(enum BerryIndex berry)
 {
-    if (berry == ITEM_TO_BERRY(ITEM_ENIGMA_BERRY_E_READER) && IsEnigmaBerryValid())
+    if (berry == INDEX_ENIGMA_BERRY_E_READER && IsEnigmaBerryValid())
     {
     #if FREE_ENIGMA_BERRY == FALSE
         return (struct Berry *)(&gSaveBlock1Ptr->enigmaBerry.berry);
@@ -2226,9 +2225,9 @@ const struct Berry *GetBerryInfo(u8 berry)
     }
     else
     {
-        if (berry == BERRY_NONE || berry > ITEM_TO_BERRY(LAST_BERRY_INDEX))
-            berry = ITEM_TO_BERRY(FIRST_BERRY_INDEX);
-        return &gBerries[berry - 1];
+        if (berry == BERRY_NONE || berry > NUM_BERRIES)
+            berry = 1;
+        return &gBerries[berry];
     }
 }
 
@@ -2477,26 +2476,6 @@ u8 GetMulchByBerryTreeId(u8 id)
     return gSaveBlock1Ptr->berryTrees[id].mulch;
 }
 
-u8 ItemIdToBerryType(u16 item)
-{
-    u16 berry = item - FIRST_BERRY_INDEX;
-
-    if (berry > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
-        return ITEM_TO_BERRY(FIRST_BERRY_INDEX);
-    else
-        return ITEM_TO_BERRY(item);
-}
-
-static u16 BerryTypeToItemId(u16 berry)
-{
-    u16 item = berry - 1;
-
-    if (item > LAST_BERRY_INDEX - FIRST_BERRY_INDEX)
-        return FIRST_BERRY_INDEX;
-    else
-        return berry + FIRST_BERRY_INDEX - 1;
-}
-
 void GetBerryNameByBerryType(u8 berry, u8 *string)
 {
     memcpy(string, GetBerryInfo(berry)->name, BERRY_NAME_LENGTH);
@@ -2634,7 +2613,7 @@ void ObjectEventInteractionGetBerryTreeData(void)
         gSpecialVar_0x8004 = GetStageByBerryTreeId(id);
     gSpecialVar_0x8005 = GetNumStagesWateredByBerryTreeId(id);
     gSpecialVar_0x8006 = GetBerryCountByBerryTreeId(id);
-    CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar1, gSpecialVar_0x8006);
+    CopyItemNameHandlePlural(GetBerryItemId(berry), gStringVar1, gSpecialVar_0x8006);
 }
 
 void ObjectEventInteractionGetBerryName(void)
@@ -2654,13 +2633,13 @@ void ObjectEventInteractionGetBerryCountString(void)
     if (GetStageByBerryTreeId(treeId) != BERRY_STAGE_BERRIES)
         count = 1;
 
-    gSpecialVar_0x8006 = BerryTypeToItemId(berry);
-    CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar1, count);
+    gSpecialVar_0x8006 = GetBerryItemId(berry);
+    CopyItemNameHandlePlural(GetBerryItemId(berry), gStringVar1, count);
     berry = GetTreeMutationValue(treeId);
     if (berry > 0)
     {
         count = 1;
-        CopyItemNameHandlePlural(BerryTypeToItemId(berry), gStringVar3, count);
+        CopyItemNameHandlePlural(GetBerryItemId(berry), gStringVar3, count);
         gSpecialVar_Result = TRUE;
     }
     else
@@ -2679,7 +2658,7 @@ void Bag_ChooseMulch(void)
 
 void ObjectEventInteractionPlantBerryTree(void)
 {
-    u8 berry = ItemIdToBerryType(gSpecialVar_ItemId);
+    u8 berry = GetBerryIndex(gSpecialVar_ItemId);
 
     PlantBerryTree(GetObjectEventBerryTreeId(gSelectedObjectEvent), berry, BERRY_STAGE_PLANTED, TRUE);
     ObjectEventInteractionGetBerryTreeData();
@@ -2701,14 +2680,14 @@ void ObjectEventInteractionPickBerryTree(void)
 
     if (!OW_BERRY_MUTATIONS || mutation == 0)
     {
-        gSpecialVar_0x8004 = AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id));
+        gSpecialVar_0x8004 = AddBagItem(GetBerryItemId(berry), GetBerryCountByBerryTreeId(id));
         return;
     }
-    gSpecialVar_0x8004 = (CheckBagHasSpace(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id)) && CheckBagHasSpace(BerryTypeToItemId(mutation), 1)) + 2;
+    gSpecialVar_0x8004 = (CheckBagHasSpace(GetBerryItemId(berry), GetBerryCountByBerryTreeId(id)) && CheckBagHasSpace(GetBerryItemId(mutation), 1)) + 2;
     if (gSpecialVar_0x8004 == 3)
     {
-        AddBagItem(BerryTypeToItemId(berry), GetBerryCountByBerryTreeId(id));
-        AddBagItem(BerryTypeToItemId(mutation), 1);
+        AddBagItem(GetBerryItemId(berry), GetBerryCountByBerryTreeId(id));
+        AddBagItem(GetBerryItemId(mutation), 1);
     }
 }
 
@@ -2809,20 +2788,20 @@ bool8 PlayerHasMulch(void)
 
 #if OW_BERRY_MUTATIONS == TRUE
 static const u8 sBerryMutations[][3] = {
-    {ITEM_TO_BERRY(ITEM_IAPAPA_BERRY), ITEM_TO_BERRY(ITEM_MAGO_BERRY),   ITEM_TO_BERRY(ITEM_POMEG_BERRY)},
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
-    {ITEM_TO_BERRY(ITEM_ORAN_BERRY),   ITEM_TO_BERRY(ITEM_PECHA_BERRY),  ITEM_TO_BERRY(ITEM_QUALOT_BERRY)},
-    {ITEM_TO_BERRY(ITEM_CHESTO_BERRY), ITEM_TO_BERRY(ITEM_PERSIM_BERRY), ITEM_TO_BERRY(ITEM_KELPSY_BERRY)},
-    {ITEM_TO_BERRY(ITEM_ASPEAR_BERRY), ITEM_TO_BERRY(ITEM_LEPPA_BERRY),  ITEM_TO_BERRY(ITEM_HONDEW_BERRY)},
-    {ITEM_TO_BERRY(ITEM_AGUAV_BERRY),  ITEM_TO_BERRY(ITEM_FIGY_BERRY),   ITEM_TO_BERRY(ITEM_GREPA_BERRY)},
-    {ITEM_TO_BERRY(ITEM_LUM_BERRY),    ITEM_TO_BERRY(ITEM_SITRUS_BERRY), ITEM_TO_BERRY(ITEM_TAMATO_BERRY)},
-    {ITEM_TO_BERRY(ITEM_HONDEW_BERRY), ITEM_TO_BERRY(ITEM_YACHE_BERRY),  ITEM_TO_BERRY(ITEM_LIECHI_BERRY)},
-    {ITEM_TO_BERRY(ITEM_QUALOT_BERRY), ITEM_TO_BERRY(ITEM_TANGA_BERRY),  ITEM_TO_BERRY(ITEM_GANLON_BERRY)},
-    {ITEM_TO_BERRY(ITEM_GREPA_BERRY),  ITEM_TO_BERRY(ITEM_ROSELI_BERRY), ITEM_TO_BERRY(ITEM_SALAC_BERRY)},
-    {ITEM_TO_BERRY(ITEM_POMEG_BERRY),  ITEM_TO_BERRY(ITEM_KASIB_BERRY),  ITEM_TO_BERRY(ITEM_PETAYA_BERRY)},
-    {ITEM_TO_BERRY(ITEM_KELPSY_BERRY), ITEM_TO_BERRY(ITEM_WACAN_BERRY),  ITEM_TO_BERRY(ITEM_APICOT_BERRY)},
-    {ITEM_TO_BERRY(ITEM_GANLON_BERRY), ITEM_TO_BERRY(ITEM_LIECHI_BERRY), ITEM_TO_BERRY(ITEM_KEE_BERRY)},
-    {ITEM_TO_BERRY(ITEM_SALAC_BERRY),  ITEM_TO_BERRY(ITEM_PETAYA_BERRY), ITEM_TO_BERRY(ITEM_MARANGA_BERRY)},
+    {INDEX_IAPAPA_BERRY, INDEX_MAGO_BERRY,   INDEX_POMEG_BERRY},
+    {INDEX_CHESTO_BERRY, INDEX_PERSIM_BERRY, INDEX_KELPSY_BERRY},
+    {INDEX_ORAN_BERRY,   INDEX_PECHA_BERRY,  INDEX_QUALOT_BERRY},
+    {INDEX_CHESTO_BERRY, INDEX_PERSIM_BERRY, INDEX_KELPSY_BERRY},
+    {INDEX_ASPEAR_BERRY, INDEX_LEPPA_BERRY,  INDEX_HONDEW_BERRY},
+    {INDEX_AGUAV_BERRY,  INDEX_FIGY_BERRY,   INDEX_GREPA_BERRY},
+    {INDEX_LUM_BERRY,    INDEX_SITRUS_BERRY, INDEX_TAMATO_BERRY},
+    {INDEX_HONDEW_BERRY, INDEX_YACHE_BERRY,  INDEX_LIECHI_BERRY},
+    {INDEX_QUALOT_BERRY, INDEX_TANGA_BERRY,  INDEX_GANLON_BERRY},
+    {INDEX_GREPA_BERRY,  INDEX_ROSELI_BERRY, INDEX_SALAC_BERRY},
+    {INDEX_POMEG_BERRY,  INDEX_KASIB_BERRY,  INDEX_PETAYA_BERRY},
+    {INDEX_KELPSY_BERRY, INDEX_WACAN_BERRY,  INDEX_APICOT_BERRY},
+    {INDEX_GANLON_BERRY, INDEX_LIECHI_BERRY, INDEX_KEE_BERRY},
+    {INDEX_SALAC_BERRY,  INDEX_PETAYA_BERRY, INDEX_MARANGA_BERRY},
     // Up to one more Mutation can be added here for a total of 15 (only 4 bits are allocated)
 };
 

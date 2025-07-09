@@ -655,7 +655,7 @@ static void SetPlayerBerryDataInBattleStruct(void)
     }
     else
     {
-        const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+        const struct Berry *berryData = GetBerryInfo(INDEX_ENIGMA_BERRY_E_READER);
 
         for (i = 0; i < BERRY_NAME_LENGTH; i++)
             battleBerry->name[i] = berryData->name[i];
@@ -700,7 +700,7 @@ static void SetAllPlayersBerryData(void)
         }
         else
         {
-            const struct Berry *berryData = GetBerryInfo(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER));
+            const struct Berry *berryData = GetBerryInfo(INDEX_ENIGMA_BERRY_E_READER);
 
             for (i = 0; i < BERRY_NAME_LENGTH; i++)
             {

@@ -106,7 +106,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
 {
     bool8 hasItem = CheckPartyMonHasHeldItem(ITEM_ENIGMA_BERRY_E_READER);
     if (hasItem == TRUE)
-        GetBerryNameByBerryType(ItemIdToBerryType(ITEM_ENIGMA_BERRY_E_READER), gStringVar1);
+        GetBerryNameByBerryType(INDEX_ENIGMA_BERRY_E_READER, gStringVar1);
 
     return hasItem;
 }
