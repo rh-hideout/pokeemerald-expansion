@@ -671,6 +671,25 @@ static u32 PpStallReduction(u32 move, u32 battlerAtk)
     return returnValue;
 }
 
+static void AdjustBestDamagingMoveScore(u32 battlerAtk, u32 battlerDef)
+{
+    u32 bestScore = AI_SCORE_DEFAULT;
+    u16 *moves = GetMovesArray(battlerAtk);
+    
+    // Find highest comparison score
+    for (int i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gAiThinkingStruct->moveComparisonScore[i] > bestScore)
+            bestScore = gAiThinkingStruct->moveComparisonScore[i];
+    }
+    // Increase score for corresponding move(s), accomodating ties
+    for (int i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (gAiThinkingStruct->moveComparisonScore[i] == bestScore)
+            gAiThinkingStruct->score[i] += BEST_DAMAGE_MOVE;
+    }
+}
+
 static u32 ChooseMoveOrAction_Singles(u32 battler)
 {
     u8 currentMoveArray[MAX_MON_MOVES];
@@ -693,6 +712,9 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
+
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
+        AdjustBestDamagingMoveScore(battler, opposingBattler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -770,6 +792,8 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
                 flags >>= (u64)1;
                 gAiThinkingStruct->aiLogicId++;
             }
+            if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
+                AdjustBestDamagingMoveScore(battler, gBattlerTarget);
 
             mostViableMovesScores[0] = gAiThinkingStruct->score[0];
             mostViableMovesIndices[0] = 0;
@@ -3649,14 +3673,12 @@ static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 mov
          && noOfHitsToFaintPartner < (friendlyFireThreshold * 2));
 }
 
-static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
+static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
 {
     u32 i;
     bool32 multipleBestMoves = FALSE;
     u32 viableMoveScores[MAX_MON_MOVES];
-    u32 bestViableMoveScore;
     s32 noOfHits[MAX_MON_MOVES];
-    s32 score = 0;
     s32 leastHits = 1000;
     u16 *moves = GetMovesArray(battlerAtk);
     bool8 isTwoTurnNotSemiInvulnerableMove[MAX_MON_MOVES];
@@ -3731,22 +3753,10 @@ static s32 AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef, u32 currId)
         }
         // Turns out the current move deals the most dmg compared to the other 3.
         if (!multipleBestMoves)
-            ADJUST_SCORE(BEST_DAMAGE_MOVE);
+            gAiThinkingStruct->moveComparisonScore[currId] = UINT32_MAX;
         else
-        {
-            bestViableMoveScore = 0;
-            for (i = 0; i < MAX_MON_MOVES; i++)
-            {
-                if (viableMoveScores[i] > bestViableMoveScore)
-                    bestViableMoveScore = viableMoveScores[i];
-            }
-            // Increase score of current move if it is decisively the best option
-            if (viableMoveScores[currId] == bestViableMoveScore)
-                ADJUST_SCORE(BEST_DAMAGE_MOVE);
-        }
+            gAiThinkingStruct->moveComparisonScore[currId] = viableMoveScores[currId];
     }
-
-    return score;
 }
 
 static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
@@ -5338,7 +5348,7 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
                 && GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == move)
                 ADJUST_SCORE(BEST_DAMAGE_MOVE);
             else
-                ADJUST_SCORE(AI_CompareDamagingMoves(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex));
+                AI_CompareDamagingMoves(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex);
         }
     }
 
