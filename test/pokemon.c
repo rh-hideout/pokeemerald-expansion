@@ -450,3 +450,31 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
     EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
     EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }
+
+
+TEST("Unencrypted GetMonData")
+{
+    CreateMon(&gSaveBlock1Ptr->playerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    SetMonData(&gSaveBlock1Ptr->playerParty[0], MON_DATA_EXP, &exp);
+    LoadSavedPlayerPartyMon(0); // ensures that saveblock mon 0 and gPlayerParty mon 0 are the same - but the latter is decrypted
+    struct Benchmark unencrypted, encrypted;
+    u32 exp1 = 0, exp2 = 0;
+    BENCHMARK(&unencrypted) { exp1 = GetMonData(&gPlayerParty[0], MON_DATA_EXP); }
+    BENCHMARK(&encrypted) { exp2 = GetMonData(&gSaveBlock1Ptr->playerParty[0], MON_DATA_EXP); }
+    EXPECT_EQ(exp1, exp2);
+    EXPECT_FASTER(unencrypted, encrypted);
+}
+
+TEST("Unencrypted SetMonData")
+{
+    CreateMon(&gSaveBlock1Ptr->playerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    LoadSavedPlayerPartyMon(0); // ensures that saveblock mon 0 and gPlayerParty mon 0 are the same - but the latter is decrypted
+    struct Benchmark unencrypted, encrypted;
+    BENCHMARK(&unencrypted) { SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp); }
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_BAD_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EXP), exp);
+    BENCHMARK(&encrypted) { SetMonData(&gSaveBlock1Ptr->playerParty[0], MON_DATA_EXP, &exp); }
+    EXPECT_FASTER(unencrypted, encrypted);
+}
