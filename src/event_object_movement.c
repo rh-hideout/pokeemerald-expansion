@@ -221,8 +221,6 @@ static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphics
 static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female);
 static u16 GetUnownSpecies(struct Pokemon *mon);
 
-static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
-
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction);
 
 const u8 gReflectionEffectPaletteMap[16] = {

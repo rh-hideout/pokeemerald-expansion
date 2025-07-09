@@ -572,11 +572,11 @@ static struct BerryDynamicGfx *LoadBerryGfx(u8 berryId)
 {
     struct SpritePalette pal;
 
-    pal.data = gBerries[berryId].berryTilesPal.pal;
+    pal.data = gBerries[berryId].berryPal;
     pal.tag = TAG_BERRY_PIC_PAL + berryId;
     LoadSpritePalette(&pal);
     struct BerryDynamicGfx *gfxAlloced = Alloc(sizeof(struct BerryDynamicGfx));
-    void *buffer = malloc_and_decompress(gBerries[berryId].berryTilesPal.tiles, NULL);
+    void *buffer = malloc_and_decompress(gBerries[berryId].berryPic, NULL);
     ArrangeBerryGfx(buffer, gfxAlloced->gfx);
     Free(buffer);
 

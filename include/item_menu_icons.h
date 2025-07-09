@@ -1,17 +1,13 @@
 #ifndef GUARD_ITEM_MENU_ICONS_H
 #define GUARD_ITEM_MENU_ICONS_H
 
+#include "sprite.h"
+
 extern const struct CompressedSpriteSheet gBagMaleSpriteSheet;
 extern const struct CompressedSpriteSheet gBagFemaleSpriteSheet;
 extern const struct SpritePalette gBagPaletteTable;
 extern const struct CompressedSpriteSheet gBerryCheckCircleSpriteSheet;
 extern const struct SpritePalette gBerryCheckCirclePaletteTable;
-
-struct TilesPal
-{
-    const u32 *tiles;
-    const u16 *pal;
-};
 
 void RemoveBagSprite(u8 id);
 void AddBagVisualSprite(u8 bagPocketId);

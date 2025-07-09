@@ -1153,7 +1153,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTree = {
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = NULL,
     .anims = sAnimTable_BerryTree,
-    .images = sPicTable_PechaBerryTree,
+    .images = gPicTable_PechaBerryTree,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
@@ -1172,7 +1172,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeEarlyStag
     .oam = &gObjectEventBaseOam_16x16,
     .subspriteTables = sOamTables_16x16,
     .anims = sAnimTable_BerryTree,
-    .images = sPicTable_PechaBerryTree,
+    .images = gPicTable_PechaBerryTree,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 
@@ -1191,7 +1191,7 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BerryTreeLateStage
     .oam = &gObjectEventBaseOam_16x32,
     .subspriteTables = sOamTables_16x32,
     .anims = sAnimTable_BerryTree,
-    .images = sPicTable_PechaBerryTree,
+    .images = gPicTable_PechaBerryTree,
     .affineAnims = gDummySpriteAffineAnimTable,
 };
 

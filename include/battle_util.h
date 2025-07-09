@@ -100,14 +100,6 @@ enum ItemEffect
 #define CRITICAL_HIT_BLOCKED -1
 #define CRITICAL_HIT_ALWAYS  -2
 
-// for Natural Gift and Fling
-struct TypePower
-{
-    u8 type;
-    u8 power;
-    u16 effect;
-};
-
 enum MoveSuccessOrder
 {
     CANCELLER_FLAGS,
@@ -156,8 +148,6 @@ enum MoveCanceller
     MOVE_STEP_BREAK,
     MOVE_STEP_REMOVES_STATUS,
 };
-
-extern const struct TypePower gNaturalGiftTable[];
 
 struct DamageContext
 {
