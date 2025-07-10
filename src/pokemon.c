@@ -1654,26 +1654,19 @@ void CreateEnemyEventMon(void)
     }
 }
 
+struct WordIn2
+{
+    u16 hWord1;
+    u16 hWord2;
+};
+
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
 {
     u16 checksum = 0;
-    union PokemonSubstruct *substruct0 = GetSubstruct(boxMon, boxMon->personality, 0);
-    union PokemonSubstruct *substruct1 = GetSubstruct(boxMon, boxMon->personality, 1);
-    union PokemonSubstruct *substruct2 = GetSubstruct(boxMon, boxMon->personality, 2);
-    union PokemonSubstruct *substruct3 = GetSubstruct(boxMon, boxMon->personality, 3);
-    s32 i;
+    struct WordIn2 *raw = (struct WordIn2 *)boxMon->secure.raw;
 
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct0->raw); i++)
-        checksum += substruct0->raw[i];
-
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct1->raw); i++)
-        checksum += substruct1->raw[i];
-
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct2->raw); i++)
-        checksum += substruct2->raw[i];
-
-    for (i = 0; i < (s32)ARRAY_COUNT(substruct3->raw); i++)
-        checksum += substruct3->raw[i];
+    for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++, raw++)
+        checksum += (raw->hWord1 + raw->hWord2);
 
     return checksum;
 }
@@ -2359,22 +2352,22 @@ union EvolutionTracker
 
 static ALWAYS_INLINE struct PokemonSubstruct0 *GetSubstruct0(struct BoxPokemon *boxMon)
 {
-    return &GetSubstruct(boxMon, boxMon->personality, 0)->type0;
+    return boxMon->unencrypted ? &boxMon->secure.substructs[SUBSTRUCT_TYPE_0].type0 : &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_0))->type0;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct1 *GetSubstruct1(struct BoxPokemon *boxMon)
 {
-    return &GetSubstruct(boxMon, boxMon->personality, 1)->type1;
+    return boxMon->unencrypted ? &boxMon->secure.substructs[SUBSTRUCT_TYPE_1].type1 : &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_1))->type1;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct2 *GetSubstruct2(struct BoxPokemon *boxMon)
 {
-    return &GetSubstruct(boxMon, boxMon->personality, 2)->type2;
+    return boxMon->unencrypted ? &boxMon->secure.substructs[SUBSTRUCT_TYPE_2].type2 : &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_2))->type2;
 }
 
 static ALWAYS_INLINE struct PokemonSubstruct3 *GetSubstruct3(struct BoxPokemon *boxMon)
 {
-    return &GetSubstruct(boxMon, boxMon->personality, 3)->type3;
+    return boxMon->unencrypted ? &boxMon->secure.substructs[SUBSTRUCT_TYPE_3].type3 : &(GetSubstruct(boxMon, boxMon->personality, SUBSTRUCT_TYPE_3))->type3;
 }
 
 static bool32 IsBadEgg(struct BoxPokemon *boxMon)
