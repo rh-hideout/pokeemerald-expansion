@@ -15998,14 +15998,6 @@ static void Cmd_displaydexinfo(void)
             gBattleCommunication[TASK_ID] = DisplayCaughtMonDexPage(species,
                                                                     GetMonData(mon, MON_DATA_IS_SHINY),
                                                                     GetMonData(mon, MON_DATA_PERSONALITY));
-            // Some heap must be freed to display the HGSS dex
-            // THIS MIGHT COME BACK TO BITE US IN THE FUTURE
-            // BUT IT'S A PROBLEM FOR WHOEVER IMPLEMENTS
-            // SNAG BALLS, maybe
-            FREE_AND_SET_NULL(gAiBattleData);
-            FREE_AND_SET_NULL(gAiThinkingStruct);
-            FREE_AND_SET_NULL(gAiLogicData);
-            FREE_AND_SET_NULL(gAiPartyData);
             gBattleCommunication[0]++;
         }
         break;
