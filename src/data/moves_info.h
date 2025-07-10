@@ -314,7 +314,11 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Ice Punch"),
         .description = COMPOUND_STRING(
             "An icy punch that may\n"
+        #if B_USE_FROSTBITE == TRUE
             "leave the foe with frostbite."),
+        #else
+            "freeze the foe."),
+        #endif
         .effect = EFFECT_HIT,
         .power = 75,
         .type = TYPE_ICE,
@@ -9012,7 +9016,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Poison Tail"),
         .description = COMPOUND_STRING(
             "Has a high critical-hit\n"
-            "ratio. 10\% poison."),
+            "ratio. 10% poison."),
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_POISON,
@@ -9265,7 +9269,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Water Pulse"),
         .description = COMPOUND_STRING(
             "Attacks with ultrasonic\n"
-            "waves. 20\% confuse the foe."),
+            "waves. 20% confuse the foe."),
         .effect = EFFECT_HIT,
         .power = 60,
         .type = TYPE_WATER,
@@ -10275,7 +10279,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Flare Blitz"),
         .description = COMPOUND_STRING(
             "Charges at the foe recklessly.\n"
-            "10\% burn, 33% recoil."),
+            "10% burn, 33% recoil."),
         .effect = EFFECT_RECOIL,
         .power = 120,
         .type = TYPE_FIRE,
@@ -10303,7 +10307,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Force Palm"),
         .description = COMPOUND_STRING(
             "A shock wave attack with a\n"
-            "30\% to paralyze the foe."),
+            "30% to paralyze the foe."),
         .effect = EFFECT_HIT,
         .power = 60,
         .type = TYPE_FIGHTING,
@@ -10377,7 +10381,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Poison Jab"),
         .description = COMPOUND_STRING(
             "A stabbing attack with a\n"
-            "30\% to poison the foe."),
+            "30% to poison the foe."),
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_POISON,
@@ -10403,7 +10407,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Dark Pulse"),
         .description = COMPOUND_STRING(
             "Attacks with a horrible\n"
-            "aura. 20\% to flinch."),
+            "aura. 20% to flinch."),
         .effect = EFFECT_HIT,
         .power = 80,
         .type = TYPE_DARK,
@@ -10497,7 +10501,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Air Slash"),
         .description = COMPOUND_STRING(
             "Attacks with a blade of\n"
-            "air. 30\% to flinch."),
+            "air. 30% to flinch."),
         .effect = EFFECT_HIT,
         .power = 75,
         .type = TYPE_FLYING,
@@ -10546,7 +10550,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .name = COMPOUND_STRING("Bug Buzz"),
         .description = COMPOUND_STRING(
             "A damaging sound wave with\n"
-            "a 10\% to lower Sp. Def."),
+            "a 10% to lower Sp. Def."),
         .effect = EFFECT_HIT,
         .power = 90,
         .type = TYPE_BUG,
@@ -11285,7 +11289,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Discharge"),
         .description = COMPOUND_STRING(
-            "Zaps all other {PKMN} with\n"
+            "Zaps all other Pokémon with\n"
             "electricity. May paralyze."),
         .effect = EFFECT_HIT,
         .power = 80,
