@@ -160,7 +160,7 @@ static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
     return TRUE;
 }
 
-static bool32 AI_DoesChoiceItemBlockMove(u32 battler, u32 move)
+static bool32 AI_DoesChoiceEffectBlockMove(u32 battler, u32 move)
 {
     // Choice locked into something else
     if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move
@@ -227,12 +227,12 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             if (!IsBattleMoveStatus(aiMove))
             {
                 // Check if mon has a super effective move
-                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceItemBlockMove(battler, aiMove))
+                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
                     hasSuperEffectiveMove = TRUE;
 
                 // Get maximum damage mon can deal
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData);
-                if (damageDealt > maxDamageDealt && !AI_DoesChoiceItemBlockMove(battler, aiMove))
+                if (damageDealt > maxDamageDealt && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
                 {
                     maxDamageDealt = damageDealt;
                     aiBestMove = aiMove;
@@ -485,7 +485,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
             // Only check damage if it's a damaging move
             if (!IsBattleMoveStatus(aiMove))
             {
-                if (!AI_DoesChoiceItemBlockMove(battler, aiMove) && AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
+                if (!AI_DoesChoiceEffectBlockMove(battler, aiMove) && AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData) > gBattleMons[opposingBattler].hp)
                     return FALSE;
             }
         }
@@ -804,7 +804,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             move = gBattleMons[battler].moves[i];
-            if (move == MOVE_NONE || AI_DoesChoiceItemBlockMove(battler, move))
+            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
                 continue;
 
             if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
@@ -823,7 +823,7 @@ static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler)
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
             move = gBattleMons[battler].moves[i];
-            if (move == MOVE_NONE || AI_DoesChoiceItemBlockMove(battler, move))
+            if (move == MOVE_NONE || AI_DoesChoiceEffectBlockMove(battler, move))
                 continue;
 
             if (AI_GetMoveEffectiveness(move, battler, opposingBattler) >= UQ_4_12(2.0))
