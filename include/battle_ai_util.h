@@ -60,6 +60,7 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 bool32 IsAiVsAiBattle(void);
 bool32 BattlerHasAi(u32 battlerId);
 bool32 IsAiBattlerAware(u32 battlerId);
+bool32 IsAiBattlerAssumingStab(void);
 void ClearBattlerMoveHistory(u32 battlerId);
 void RecordLastUsedMoveBy(u32 battlerId, u32 move);
 void RecordAllMoves(u32 battler);
@@ -177,6 +178,7 @@ bool32 HasThawingMove(u32 battler);
 bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);
 bool32 IsSelfStatLoweringEffect(enum BattleMoveEffects effect);
+bool32 IsSelfStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsSwitchOutEffect(enum BattleMoveEffects effect);
 bool32 IsChaseEffect(enum BattleMoveEffects effect);
 bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);
@@ -208,10 +210,14 @@ bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
 bool32 IsMoxieTypeAbility(u32 ability);
-bool32 ShouldTriggerAbility(u32 battler, u32 ability);
+bool32 DoesAbilityRaiseStatsWhenLowered(u32 ability);
+bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability);
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct AiLogicData *aiData);
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, struct AiLogicData *aiData);
+s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData *aiData);
 
 // partner logic
-#define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))
+bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 u32 GetAllyChosenMove(u32 battlerId);
 bool32 IsValidDoubleBattle(u32 battlerAtk);
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);

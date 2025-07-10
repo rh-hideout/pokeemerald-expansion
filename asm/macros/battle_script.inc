@@ -1045,9 +1045,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoestats unused:req
+	.macro copyfoestats
 	.byte 0xbd
-	.4byte \unused
 	.endm
 
 	.macro rapidspinfree
@@ -2470,6 +2469,11 @@
 	.macro tryactivateabilityshield battler:req
 	callnative BS_TryActivateAbilityShield
 	.byte \battler
+	.endm
+
+	.macro trysynchronoise jumpInstr:req
+	callnative BS_TrySynchronoise
+	.4byte \jumpInstr
 	.endm
 
 	.macro setallytonexttarget jumpInstr:req

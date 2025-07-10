@@ -132,6 +132,15 @@ bool32 IsAiBattlerAware(u32 battlerId)
     return BattlerHasAi(battlerId);
 }
 
+bool32 IsAiBattlerAssumingStab()
+{
+    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STAB
+     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STAB)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
     if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_WEIGH_ABILITY_PREDICTION
@@ -514,16 +523,16 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
         partnerDefAbility = aiData->abilities[BATTLE_PARTNER(ctx->battlerDef)];
     }
 
-    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, AI_CHECK))
         return TRUE;
 
-    if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, ABILITY_CHECK_TRIGGER))
+    if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
         return TRUE;
 
     // Limited to Lighning Rod and Storm Drain because otherwise the AI would consider Water Absorb, etc...
     if (partnerDefAbility == ABILITY_LIGHTNING_ROD || partnerDefAbility == ABILITY_STORM_DRAIN)
     {
-        if (CanAbilityAbsorbMove(ctx->battlerAtk, BATTLE_PARTNER(ctx->battlerDef), partnerDefAbility, ctx->move, ctx->moveType, ABILITY_CHECK_TRIGGER))
+        if (CanAbilityAbsorbMove(ctx->battlerAtk, BATTLE_PARTNER(ctx->battlerDef), partnerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
             return TRUE;
     }
 
@@ -1423,8 +1432,8 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
     if (gDisableStructs[battlerId].overwrittenAbility)
         return gDisableStructs[battlerId].overwrittenAbility;
 
-    // The AI knows its own ability.
-    if (IsAiBattlerAware(battlerId))
+    // The AI knows its own ability, and omniscience handling
+    if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab() && ASSUME_STAB_SEES_ABILITY))
         return knownAbility;
 
     // Check neutralizing gas, gastro acid
@@ -1870,7 +1879,7 @@ bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 
 bool32 IsBattlerDamagedByStatus(u32 battler)
 {
-    return gBattleMons[battler].status1 & (STATUS1_BURN | STATUS1_FROSTBITE | STATUS1_POISON | STATUS1_TOXIC_POISON)
+    return gBattleMons[battler].status1 & STATUS1_DAMAGING
         || gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_NIGHTMARE | STATUS2_CURSED)
         || gStatuses3[battler] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED)
         || gStatuses4[battler] & (STATUS4_SALT_CURE)
@@ -1981,6 +1990,9 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
 
     // Don't decrese stat if opposing battler has Encore
     if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
+        return NO_INCREASE;
+
+    if (DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerDef]))
         return NO_INCREASE;
 
     // TODO: Avoid decreasing stat if
@@ -2358,6 +2370,28 @@ bool32 HasMoveThatLowersOwnStats(u32 battlerId)
     return FALSE;
 }
 
+bool32 HasMoveThatRaisesOwnStats(u32 battlerId)
+{
+    s32 i, j;
+    u32 aiMove;
+    u16 *moves = GetMovesArray(battlerId);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        aiMove = moves[i];
+        if (aiMove != MOVE_NONE && aiMove != MOVE_UNAVAILABLE)
+        {
+            u32 additionalEffectCount = GetMoveAdditionalEffectCount(aiMove);
+            for (j = 0; j < additionalEffectCount; j++)
+            {
+                const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(aiMove, j);
+                if (IsSelfStatRaisingEffect(additionalEffect->moveEffect) && additionalEffect->self)
+                    return TRUE;
+            }
+        }
+    }
+    return FALSE;
+}
+
 bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect)
 {
     s32 i;
@@ -2582,6 +2616,31 @@ bool32 IsSelfStatLoweringEffect(enum BattleMoveEffects effect)
     case MOVE_EFFECT_V_CREATE:
     case MOVE_EFFECT_ATK_DEF_DOWN:
     case MOVE_EFFECT_DEF_SPDEF_DOWN:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 IsSelfStatRaisingEffect(enum BattleMoveEffects effect)
+{
+    // Self stat lowering moves like Power Up Punch or Charge Beam
+    switch (effect)
+    {
+    case MOVE_EFFECT_ATK_PLUS_1:
+    case MOVE_EFFECT_DEF_PLUS_1:
+    case MOVE_EFFECT_SPD_PLUS_1:
+    case MOVE_EFFECT_SP_ATK_PLUS_1:
+    case MOVE_EFFECT_SP_DEF_PLUS_1:
+    case MOVE_EFFECT_EVS_PLUS_1:
+    case MOVE_EFFECT_ACC_PLUS_1:
+    case MOVE_EFFECT_ATK_PLUS_2:
+    case MOVE_EFFECT_DEF_PLUS_2:
+    case MOVE_EFFECT_SPD_PLUS_2:
+    case MOVE_EFFECT_SP_ATK_PLUS_2:
+    case MOVE_EFFECT_SP_DEF_PLUS_2:
+    case MOVE_EFFECT_EVS_PLUS_2:
+    case MOVE_EFFECT_ACC_PLUS_2:
         return TRUE;
     default:
         return FALSE;
@@ -2929,13 +2988,13 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     u32 ability = GetMonAbility(mon);   // we know our own party data
     enum ItemHoldEffect holdEffect;
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
-    u32 flags = gSideStatuses[GetBattlerSide(currBattler)] & (SIDE_STATUS_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES);
     s32 hazardDamage = 0;
     u32 type1 = GetSpeciesType(species, 0);
     u32 type2 = GetSpeciesType(species, 1);
     u32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
+    u32 side = GetBattlerSide(currBattler);
 
-    if (flags == 0)
+    if (!AreAnyHazardsOnSide(side))
         return FALSE;
 
     if (ability == ABILITY_MAGIC_GUARD)
@@ -2947,12 +3006,12 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     if (holdEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS)
         return FALSE;
 
-    if (flags & SIDE_STATUS_STEALTH_ROCK)
+    if (IsHazardOnSide(side, HAZARDS_STEALTH_ROCK))
         hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_POINTED_STONES, type1, type2, maxHp);
-    if ((flags & SIDE_STATUS_STEELSURGE))
+    if (IsHazardOnSide(side, HAZARDS_STEELSURGE))
         hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, type1, type2, maxHp);
 
-    if (flags & SIDE_STATUS_SPIKES && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
+    if (IsHazardOnSide(side, HAZARDS_SPIKES) && ((type1 != TYPE_FLYING && type2 != TYPE_FLYING
         && ability != ABILITY_LEVITATE && holdEffect != HOLD_EFFECT_AIR_BALLOON)
         || holdEffect == HOLD_EFFECT_IRON_BALL || gFieldStatuses & STATUS_FIELD_GRAVITY))
     {
@@ -3020,7 +3079,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
                         return SHOULD_PIVOT;
 
                     /* TODO - check if switchable mon unafffected by/will remove hazards
-                    if (gSideStatuses[battlerAtk] & SIDE_STATUS_SPIKES && switchScore >= SWITCHING_INCREASE_CAN_REMOVE_HAZARDS)
+                    if (IsHazardOnSide(GetBattlerSide(battlerAtk, HAZARDS_SPIKES) && switchScore >= SWITCHING_INCREASE_CAN_REMOVE_HAZARDS)
                         return SHOULD_PIVOT;*/
 
                     /*if (BattlerWillFaintFromSecondaryDamage(battlerAtk, gAiLogicData->abilities[battlerAtk]) && switchScore >= SWITCHING_INCREASE_WALLS_FOE)
@@ -3102,7 +3161,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
                     if (!hasStatBoost)
                     {
                         // TODO - check if switching prevents/removes hazards
-                        //if (gSideStatuses[battlerAtk] & SIDE_STATUS_SPIKES && switchScore >= SWITCHING_INCREASE_CAN_REMOVE_HAZARDS)
+                        //if (IsHazardOnSide(GetBattlerSide(battlerAtk, HAZARDS_SPIKES) && switchScore >= SWITCHING_INCREASE_CAN_REMOVE_HAZARDS)
                             //return SHOULD_PIVOT;
 
                         // TODO - not always a good idea
@@ -3616,6 +3675,12 @@ bool32 IsValidDoubleBattle(u32 battlerAtk)
       && ((IsBattlerAlive(BATTLE_OPPOSITE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtk)))) || IsBattlerAlive(BATTLE_PARTNER(battlerAtk))))
         return TRUE;
     return FALSE;
+}
+
+// TODO: Handling for when the 'partner' is not actually a partner, a la Battle Royale or B_WILD_NATURAL_ENEMIES
+bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
+{
+    return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
 u32 GetAllyChosenMove(u32 battlerId)
@@ -4731,9 +4796,9 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
 
 void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 {
-    if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerAtk) != 0)
+    if (AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
         ADJUST_SCORE_PTR(GOOD_EFFECT);
-    if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_HAZARDS_ANY && CountUsablePartyMons(battlerDef) != 0)
+    if (AreAnyHazardsOnSide(GetBattlerSide(battlerDef)) && CountUsablePartyMons(battlerDef) != 0)
         ADJUST_SCORE_PTR(-2);
 
     if (gBattleMons[battlerAtk].status2 & STATUS2_SUBSTITUTE && AI_IsFaster(battlerAtk, battlerDef, move))
@@ -4809,7 +4874,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
     if (gBattleMons[battlerDef].status1 & STATUS1_SLEEP)
         scoreIncrease += GOOD_EFFECT;
-    else if (gBattleMons[battlerDef].status1 & (STATUS1_BURN | STATUS1_PSN_ANY | STATUS1_FROSTBITE))
+    else if (gBattleMons[battlerDef].status1 & STATUS1_DAMAGING)
         scoreIncrease += DECENT_EFFECT;
 
     if (IsBattlerPredictedToSwitch(battlerDef))
@@ -4887,50 +4952,417 @@ bool32 IsMoxieTypeAbility(u32 ability)
     }
 }
 
-// Should the AI use a spread move to deliberately activate its partner's ability?
-bool32 ShouldTriggerAbility(u32 battler, u32 ability)
+bool32 DoesAbilityRaiseStatsWhenLowered(u32 ability)
 {
     switch (ability)
     {
+    case ABILITY_CONTRARY:
+    case ABILITY_COMPETITIVE:
+    case ABILITY_DEFIANT:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 DoesIntimidateRaiseStats(u32 ability)
+{
+    switch (ability)
+    {
+    case ABILITY_COMPETITIVE:
+    case ABILITY_CONTRARY:
+    case ABILITY_DEFIANT:
+    case ABILITY_GUARD_DOG:
+    case ABILITY_RATTLED:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+// TODO: work out when to attack into the player's contextually 'beneficial' ability
+bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability)
+{
+    if (IsTargetingPartner(battlerAtk, battlerDef))
+    {
+        switch (ability)
+        {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
             if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
                 return FALSE;
             else
-                return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
+                return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
 
         case ABILITY_DEFIANT:
         case ABILITY_JUSTIFIED:
         case ABILITY_MOXIE:
         case ABILITY_SAP_SIPPER:
         case ABILITY_THERMAL_EXCHANGE:
-            return (BattlerStatCanRise(battler, ability, STAT_ATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL));
+            return (BattlerStatCanRise(battlerDef, ability, STAT_ATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL));
 
         case ABILITY_COMPETITIVE:
-            return (BattlerStatCanRise(battler, ability, STAT_SPATK) && HasMoveWithCategory(battler, DAMAGE_CATEGORY_SPECIAL));
+            return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));
 
+        // TODO: logic for when to trigger Contrary
         case ABILITY_CONTRARY:
             return TRUE;
 
         case ABILITY_DRY_SKIN:
         case ABILITY_VOLT_ABSORB:
         case ABILITY_WATER_ABSORB:
-            return (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_HP_AWARE);
+            return (gAiThinkingStruct->aiFlags[battlerDef] & AI_FLAG_HP_AWARE);
 
         case ABILITY_RATTLED:
         case ABILITY_STEAM_ENGINE:
-            return BattlerStatCanRise(battler, ability, STAT_SPEED);
+            return BattlerStatCanRise(battlerDef, ability, STAT_SPEED);
 
         case ABILITY_FLASH_FIRE:
-            return (HasMoveWithType(battler, TYPE_FIRE) && !gDisableStructs[battler].flashFireBoosted);
+            return (HasMoveWithType(battlerDef, TYPE_FIRE) && !gDisableStructs[battlerDef].flashFireBoosted);
 
         case ABILITY_WATER_COMPACTION:
         case ABILITY_WELL_BAKED_BODY:
-            return (BattlerStatCanRise(battler, ability, STAT_DEF));
+            return (BattlerStatCanRise(battlerDef, ability, STAT_DEF));
 
         default:
             return FALSE;
+        }
     }
+    else
+    {
+        return FALSE;
+    }
+}
+
+// Used by CheckBadMove; this is determining purely if the effect CAN change an ability, not if it SHOULD.
+// At the moment, the parts about Mummy and Wandering Spirit are not actually used.
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct AiLogicData *aiData)
+{
+    // Dynamaxed Pokemon are immune to some ability-changing effects.
+    if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+    {
+        switch (effect)
+        {
+        case EFFECT_ENTRAINMENT:
+        case EFFECT_SKILL_SWAP:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    if (gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)
+        return FALSE;
+
+    u32 atkAbility = aiData->abilities[battlerAtk];
+    u32 defAbility = aiData->abilities[battlerDef];
+    bool32 hasSameAbility = (atkAbility == defAbility);
+
+    if (defAbility == ABILITY_NONE)
+        return FALSE;
+
+    if (atkAbility == ABILITY_NONE)
+    {
+        switch (effect)
+        {
+        case EFFECT_DOODLE:
+        case EFFECT_ENTRAINMENT:
+        case EFFECT_ROLE_PLAY:
+        case EFFECT_SKILL_SWAP:
+            return FALSE;
+
+        default:
+            break;
+        }
+    }
+
+    // Checking for Ability-specific immunities.
+    switch (effect)
+    {
+    case EFFECT_DOODLE:
+        if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
+            return FALSE;
+
+        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        {
+            u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
+            if (gAbilitiesInfo[partnerAbility].cantBeSuppressed)
+                return FALSE;
+            if (partnerAbility == defAbility)
+                return FALSE;
+        }
+        break;
+
+    case EFFECT_ROLE_PLAY:
+        if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
+            return FALSE;
+        break;
+
+    case EFFECT_SKILL_SWAP:
+        if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSwapped || gAbilitiesInfo[defAbility].cantBeSwapped)
+            return FALSE;
+        break;
+
+    case EFFECT_GASTRO_ACID:
+        if (gAbilitiesInfo[defAbility].cantBeSuppressed)
+            return FALSE;
+        break;
+
+    case EFFECT_ENTRAINMENT:
+        if (hasSameAbility || gAbilitiesInfo[defAbility].cantBeOverwritten || gAbilitiesInfo[atkAbility].cantBeCopied)
+            return FALSE;
+        break;
+
+    case EFFECT_SIMPLE_BEAM:
+        if (defAbility == ABILITY_SIMPLE || gAbilitiesInfo[defAbility].cantBeOverwritten)
+            return FALSE;
+        break;
+
+    case EFFECT_WORRY_SEED:
+        if (defAbility == ABILITY_INSOMNIA || gAbilitiesInfo[defAbility].cantBeOverwritten)
+            return FALSE;
+        break;
+
+    default:
+        return FALSE;
+    }
+
+    if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        switch (effect)
+        {
+        case EFFECT_ENTRAINMENT:
+        case EFFECT_GASTRO_ACID:
+        case EFFECT_ROLE_PLAY:
+        case EFFECT_SIMPLE_BEAM:
+        case EFFECT_SKILL_SWAP:
+        case EFFECT_WORRY_SEED:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        switch (effect)
+        {
+        case EFFECT_DOODLE:
+        case EFFECT_ROLE_PLAY:
+        case EFFECT_SKILL_SWAP:
+            return FALSE;
+        default:
+            break;
+        }
+    }
+
+    return TRUE;
+}
+
+bool32 DoesEffectReplaceTargetAbility(u32 effect)
+{
+    switch (effect)
+    {
+    case EFFECT_ENTRAINMENT:
+    case EFFECT_GASTRO_ACID:
+    case EFFECT_SIMPLE_BEAM:
+    case EFFECT_SKILL_SWAP:
+    case EFFECT_WORRY_SEED:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, struct AiLogicData *aiData)
+{
+    bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
+    u32 abilityAtk = aiData->abilities[battlerAtk];
+    u32 abilityDef = aiData->abilities[battlerDef];
+    bool32 partnerHasBadAbility = FALSE;
+    u32 partnerAbility = ABILITY_NONE;
+    bool32 attackerHasBadAbility = (gAbilitiesInfo[abilityAtk].aiRating < 0);
+    s32 currentAbilityScore, transferredAbilityScore = 0;
+
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    {
+        partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
+        if (!(gAbilitiesInfo[partnerAbility].cantBeSuppressed) && (gAbilitiesInfo[partnerAbility].aiRating < 0))
+            partnerHasBadAbility = TRUE;
+    }
+
+    if (effect == EFFECT_GASTRO_ACID)
+        abilityAtk = ABILITY_NONE;
+    else if (effect == EFFECT_SIMPLE_BEAM)
+        abilityAtk = ABILITY_SIMPLE;
+    else if (effect == EFFECT_WORRY_SEED)
+        abilityAtk = ABILITY_INSOMNIA;
+
+    if (effect == EFFECT_DOODLE || effect == EFFECT_ROLE_PLAY || effect == EFFECT_SKILL_SWAP)
+    {
+        if (partnerHasBadAbility && effect == EFFECT_DOODLE)
+            ADJUST_SCORE_PTR(DECENT_EFFECT);
+
+        if (attackerHasBadAbility)
+            ADJUST_SCORE_PTR(DECENT_EFFECT);
+
+        currentAbilityScore = BattlerBenefitsFromAbilityScore(battlerAtk, abilityAtk, aiData);
+        transferredAbilityScore = BattlerBenefitsFromAbilityScore(battlerAtk, abilityDef, aiData);
+        ADJUST_SCORE_PTR(transferredAbilityScore - currentAbilityScore);
+    }
+
+    if (isTargetingPartner)
+    {
+        if (DoesEffectReplaceTargetAbility(effect))
+        {
+            if (partnerHasBadAbility)
+                ADJUST_SCORE_PTR(BEST_EFFECT);
+
+            currentAbilityScore = BattlerBenefitsFromAbilityScore(battlerDef, abilityDef, aiData);
+            transferredAbilityScore = BattlerBenefitsFromAbilityScore(battlerDef, abilityAtk, aiData);
+            ADJUST_SCORE_PTR(transferredAbilityScore - currentAbilityScore);
+        }
+        else // This is only Role Play as Doodle can't target the partner
+        {
+            ADJUST_SCORE_PTR(-20);
+        }
+
+        // Trigger Plus or Minus in modern gens. This is not in the overarching function because Skill Swap is rarely beneficial here.
+        if (B_PLUS_MINUS_INTERACTION >= GEN_5)
+        {
+            if (((effect == EFFECT_ENTRAINMENT) && (abilityAtk == ABILITY_PLUS || abilityAtk == ABILITY_MINUS)) || ((effect == EFFECT_ROLE_PLAY) && (abilityDef == ABILITY_PLUS || abilityDef == ABILITY_MINUS)))
+                ADJUST_SCORE_PTR(DECENT_EFFECT);
+        }
+
+    }
+    // Targeting an opponent.
+    else
+    {
+        // We already checked if we want their ability, so now we look to see if we want them to lose their ability.
+        if (DoesEffectReplaceTargetAbility(effect))
+        {
+            currentAbilityScore = BattlerBenefitsFromAbilityScore(battlerDef, abilityDef, aiData);
+            transferredAbilityScore = BattlerBenefitsFromAbilityScore(battlerDef, abilityAtk, aiData);
+            ADJUST_SCORE_PTR(currentAbilityScore - transferredAbilityScore);
+        }
+    }
+}
+
+s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData *aiData)
+{
+    if (gAbilitiesInfo[ability].aiRating < 0)
+        return WORST_EFFECT;
+
+    switch (ability)
+    {
+    // Transferrable abilities that can be assumed to be always beneficial.
+    case ABILITY_CLEAR_BODY:
+    case ABILITY_GOOD_AS_GOLD:
+    case ABILITY_MAGIC_GUARD:
+    case ABILITY_MOODY:
+    case ABILITY_PURIFYING_SALT:
+    case ABILITY_SPEED_BOOST:
+    case ABILITY_WHITE_SMOKE:
+        return GOOD_EFFECT;
+    // Conditional ability logic goes here.
+    case ABILITY_COMPOUND_EYES:
+        if (HasMoveWithLowAccuracy(battler, FOE(battler), 90, TRUE, aiData->abilities[battler], aiData->abilities[FOE(battler)], aiData->holdEffects[battler], aiData->holdEffects[FOE(battler)]))
+            return GOOD_EFFECT;
+        break;
+    case ABILITY_CONTRARY:
+        if (HasMoveThatLowersOwnStats(battler))
+            return BEST_EFFECT;
+        if (HasMoveThatRaisesOwnStats(battler))
+            return AWFUL_EFFECT;
+        break;
+    case ABILITY_FRIEND_GUARD:
+    case ABILITY_POWER_SPOT:
+    case ABILITY_VICTORY_STAR:
+        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && aiData->abilities[BATTLE_PARTNER(battler)] != ability)
+            return BEST_EFFECT;
+        break;
+    case ABILITY_GUTS:
+        if (HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL) && gBattleMons[battler].status1 & (STATUS1_CAN_MOVE))
+            return GOOD_EFFECT;
+        break;
+    case ABILITY_HUGE_POWER:
+    case ABILITY_PURE_POWER:
+        if (HasMoveWithCategory(battler, DAMAGE_CATEGORY_PHYSICAL))
+            return BEST_EFFECT;
+        break;
+    // Also used to Worry Seed WORRY_SEED
+    case ABILITY_INSOMNIA:
+    case ABILITY_VITAL_SPIRIT:
+        if (HasMoveWithEffect(battler, EFFECT_REST))
+            return WORST_EFFECT;
+        break;
+    case ABILITY_INTIMIDATE:
+    {
+        u32 abilityDef = aiData->abilities[FOE(battler)];
+        if (DoesIntimidateRaiseStats(abilityDef))
+        {
+            return AWFUL_EFFECT;
+        }
+        else
+        {
+            if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(FOE(battler))))
+            {
+                abilityDef = aiData->abilities[BATTLE_PARTNER(FOE(battler))];
+                if (DoesIntimidateRaiseStats(abilityDef))
+                {
+                    return AWFUL_EFFECT;
+                }
+                else
+                {
+                    s32 score1 = IncreaseStatDownScore(battler, FOE(battler), STAT_ATK);
+                    s32 score2 = IncreaseStatDownScore(battler, BATTLE_PARTNER(FOE(battler)), STAT_ATK);
+                    if (score1 > score2)
+                        return score1;
+                    else
+                        return score2;
+                }
+            }
+            return IncreaseStatDownScore(battler, FOE(battler), STAT_ATK);
+        }
+    }
+    case ABILITY_NO_GUARD:
+        if (HasLowAccuracyMove(battler, FOE(battler)))
+            return GOOD_EFFECT;
+        break;
+    // Toxic counter ticks upward while Poison Healed; losing Poison Heal while Toxiced can KO.
+    case ABILITY_POISON_HEAL:
+        if (gBattleMons[battler].status1 & (STATUS1_POISON))
+            return WEAK_EFFECT;
+        if (gBattleMons[battler].status1 & (STATUS1_TOXIC_POISON))
+            return BEST_EFFECT;
+        if (gBattleMons[battler].status1 & STATUS1_ANY)
+            return NO_INCREASE;
+        break;
+    // Also used to Simple Beam SIMPLE_BEAM.
+    case ABILITY_SIMPLE:
+        // Prioritize moves like Metal Claw, Charge Beam, or Power up Punch
+        if (HasMoveThatRaisesOwnStats(battler))
+            return GOOD_EFFECT;
+        return NO_INCREASE;
+    case ABILITY_BEADS_OF_RUIN:
+    case ABILITY_SWORD_OF_RUIN:
+    case ABILITY_TABLETS_OF_RUIN:
+    case ABILITY_VESSEL_OF_RUIN:
+        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+        {
+            if (aiData->abilities[BATTLE_PARTNER(battler)] != ability)
+                return GOOD_EFFECT;
+            else
+                return NO_INCREASE;
+        }
+        return GOOD_EFFECT;
+    case ABILITY_NONE:
+        return NO_INCREASE;
+    default:
+        break;
+    }
+
+    return WEAK_EFFECT;
 }
 
 u32 GetThinkingBattler(u32 battler)
