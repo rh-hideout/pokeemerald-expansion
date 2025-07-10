@@ -2844,14 +2844,12 @@ u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field)
     return GetBoxMonData3(boxMon, field, NULL);
 }
 
-#define SET8(lhs) (lhs) = *data
-#define SET16(lhs) (lhs) = data[0] + (data[1] << 8)
-#define SET32(lhs) (lhs) = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24)
+#define SET8(lhs) (lhs) = *dataArg.byte
+#define SET16(lhs) (lhs) = *dataArg.hWord
+#define SET32(lhs) (lhs) = *dataArg.word
 
-void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
+void SetMonData(struct Pokemon *mon, s32 field, union SetMonDataArg dataArg)
 {
-    const u8 *data = dataArg;
-
     switch (field)
     {
     case MON_DATA_STATUS:
@@ -2901,15 +2899,13 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
     case MON_DATA_SPECIES_OR_EGG:
         break;
     default:
-        SetBoxMonData(&mon->box, field, data);
+        SetBoxMonData(&mon->box, field, dataArg);
         break;
     }
 }
 
-void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
+void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, union SetMonDataArg dataArg)
 {
-    const u8 *data = dataArg;
-
     if (field > MON_DATA_ENCRYPT_SEPARATOR)
     {
         if (!boxMon->unencrypted)
@@ -2933,13 +2929,13 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             s32 i;
             struct PokemonSubstruct0 *substruct0 = GetSubstruct0(boxMon);
             for (i = 0; i < min(sizeof(boxMon->nickname), POKEMON_NAME_LENGTH); i++)
-                boxMon->nickname[i] = data[i];
+                boxMon->nickname[i] = dataArg.byte[i];
             if (field != MON_DATA_NICKNAME10)
             {
                 if (POKEMON_NAME_LENGTH >= 11)
-                    substruct0->nickname11 = data[10];
+                    substruct0->nickname11 = dataArg.byte[10];
                 if (POKEMON_NAME_LENGTH >= 12)
-                    substruct0->nickname12 = data[11];
+                    substruct0->nickname12 = dataArg.byte[11];
             }
             else
             {
@@ -3211,7 +3207,7 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         {
             s32 i;
             for (i = 0; i < PLAYER_NAME_LENGTH; i++)
-                boxMon->otName[i] = data[i];
+                boxMon->otName[i] = dataArg.byte[i];
             break;
         }
         case MON_DATA_MARKINGS:
