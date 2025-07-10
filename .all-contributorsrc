@@ -118,7 +118,8 @@
       "profile": "https://linktr.ee/pkmnsnfrn",
       "contributions": [
         "maintenance",
-        "code"
+        "code",
+        "projectManagement"
       ]
     },
     {
@@ -223,7 +224,7 @@
       "name": "Ruby",
       "avatar_url": "https://avatars.githubusercontent.com/u/178652077?v=4",
       "profile": "https://github.com/RubyRaven6",
-            "contributions": [
+      "contributions": [
         "code",
         "doc"
       ]
@@ -255,10 +256,91 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "bassforte123",
+      "name": "bassforte123",
+      "avatar_url": "https://avatars.githubusercontent.com/u/130828119?v=4",
+      "profile": "https://github.com/bassforte123",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "iriv24",
+      "name": "iriv24",
+      "avatar_url": "https://avatars.githubusercontent.com/u/40581123?v=4",
+      "profile": "https://github.com/iriv24",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Bivurnum",
+      "name": "Bivurnum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/147376167?v=4",
+      "profile": "https://github.com/Bivurnum",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Emiliasky",
+      "name": "Emilia Daelman",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48217459?v=4",
+      "profile": "https://github.com/Emiliasky",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    },
+    {
+      "login": "ravepossum",
+      "name": "RavePossum",
+      "avatar_url": "https://avatars.githubusercontent.com/u/145081120?v=4",
+      "profile": "https://github.com/ravepossum",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "fakuzatsu",
+      "name": "Zatsu",
+      "avatar_url": "https://avatars.githubusercontent.com/u/118256341?v=4",
+      "profile": "https://github.com/fakuzatsu",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "poetahto",
+      "name": "poetahto",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11669335?v=4",
+      "profile": "https://github.com/poetahto",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "lordraindance2",
+      "name": "lordraindance2",
+      "avatar_url": "https://avatars.githubusercontent.com/u/47706100?v=4",
+      "profile": "https://github.com/lordraindance2",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "pablopenna",
+      "name": "Pablo Pena",
+      "avatar_url": "https://avatars.githubusercontent.com/u/11214682?v=4",
+      "profile": "https://github.com/pablopenna",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "linkToUsage": true,
-  "commitType": "docs",
-  "skipCi": true
+  "commitType": "docs"
 }

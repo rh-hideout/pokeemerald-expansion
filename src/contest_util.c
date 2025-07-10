@@ -964,7 +964,8 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
 
 static void Task_SetSeenWinnerMon(u8 taskId)
 {
-    int i, nationalDexNum;
+    int i;
+    enum NationalDexOrder nationalDexNum;
 
     if (JOY_NEW(A_BUTTON))
     {

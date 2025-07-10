@@ -28,7 +28,8 @@ A: Making lamps glow is not part of the tileset itself.  Instead, place certain 
 These object events should use `OBJ_EVENT_GFX_LIGHT_SPRITE` and then as their `trainer_sight_or_berry_tree_id` (called Sight Radius/Berry Tree ID in porymap), use `LIGHT_TYPE_BALL` for round lights (such as candles or gas lamps), `LIGHT_TYPE_PKMN_CENTER_SIGN` over a Pok&eacute;mon Center sign, or `LIGHT_TYPE_POKE_MART_SIGN` over a Pok&eacute;mart sign.
 
 ### Q: How do I mark certain colors in a palette as light-blended?
-A: Create a `.pla` file in the same folder as the `.pal` with the same name. This can be done on any kind of palette; the commit to revert listed up above only applies it to tilesets, but you could easily do it for object events as well. Of note, there is a [commit reverted for being out of scope](https://github.com/rh-hideout/pokeemerald-expansion/pull/6562/commits/348f5967ac8d383c827b415e1040234a3f28626f) to make a follower Ampharos's tail glow.
+A: Create a `.pla` file in the same folder as the `.pal` with the same name. This can be done on any kind of palette, except for palette 0, which is skipped over.
+The commit to revert listed up above only applies it to tilesets, but you could easily do it for object events as well. Of note, there is a [commit reverted for being out of scope](https://github.com/rh-hideout/pokeemerald-expansion/pull/6562/commits/348f5967ac8d383c827b415e1040234a3f28626f) to make a follower Ampharos's tail glow. Do note that in order to light-blend the object, a proper `.pal` file is required. Generating a `.gbapal` directly from the image is not enough.
 
 In this file you can enter color indices [0,15]
 on separate lines to mark those colors as being light-blended, i.e:
@@ -60,3 +61,6 @@ Any other graphical error should be reported.
 
 ### Q: How do I disable shadows for certain locations?
 A: Shadows can be disabled for certain locations by modifying the `CurrentMapHasShadows` function in `src/overworld.c`.
+
+### Q: How do I change the default light-blend color?
+A: The default color is handled by the `#define DEFAULT_LIGHT_COLOR` in `src/palette.c`.

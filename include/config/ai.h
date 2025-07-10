@@ -55,6 +55,7 @@
 
 // AI move scoring
 #define STATUS_MOVE_FOCUS_PUNCH_CHANCE                          50 // Chance the AI will use a status move if the player's best move is Focus Punch
+#define BOOST_INTO_HAZE_CHANCE                                  0 // Chance the AI will use a stat boosting move if the player has used Haze
 
 // AI damage calc considerations
 #define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit
@@ -77,5 +78,11 @@
 #define FRIENDLY_FIRE_RISKY_THRESHOLD           2
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
 #define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD    4
+
+// AI's desired stat changes for Guard Split and Power Split, treated as %
+#define GUARD_SPLIT_ALLY_PERCENTAGE     200
+#define GUARD_SPLIT_ENEMY_PERCENTAGE    50
+#define POWER_SPLIT_ALLY_PERCENTAGE     150
+#define POWER_SPLIT_ENEMY_PERCENTAGE    50
 
 #endif // GUARD_CONFIG_AI_H
