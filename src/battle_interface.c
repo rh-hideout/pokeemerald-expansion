@@ -2579,7 +2579,7 @@ static void PrintOnAbilityPopUp(const u8 *str, u8 *spriteTileData1, u8 *spriteTi
 
 static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
 {
-    u32 i = 0, lastChar;
+    u32 totalChar = 0, lastChar;
     struct Pokemon *illusionMon = GetIllusionMonPtr(battler);
 
     if (illusionMon != NULL)
@@ -2587,10 +2587,10 @@ static void PrintBattlerOnAbilityPopUp(u8 battler, u8 spriteId1, u8 spriteId2)
     else
         GetMonData(GetBattlerMon(battler), MON_DATA_NICKNAME, gStringVar1);
 
-    while (gStringVar1[i] != EOS)
-        i++;
+    while (gStringVar1[totalChar] != EOS)
+        totalChar++;
 
-    lastChar = gStringVar1[i - 1];
+    lastChar = gStringVar1[totalChar - 1];
     StringAppend(gStringVar1, COMPOUND_STRING("'"));
     if (lastChar != CHAR_S && lastChar != CHAR_s)
         StringAppend(gStringVar1, COMPOUND_STRING("s"));
@@ -2621,14 +2621,14 @@ static void PrintAbilityOnAbilityPopUp(u32 ability, u8 spriteId1, u8 spriteId2)
 
 static inline bool32 IsAnyAbilityPopUpActive(void)
 {
-    u32 i = 0;
+    u32 activeAbilityPopUps = 0;
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleStruct->battlerState[battler].activeAbilityPopUps)
-            i++;
+            activeAbilityPopUps++;
     }
 
-    return i;
+    return activeAbilityPopUps;
 }
 
 void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
