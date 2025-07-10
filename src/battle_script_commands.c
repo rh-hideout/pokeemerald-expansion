@@ -3270,22 +3270,41 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffects ef
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
 }
 
+struct StatChangeStrings {
+    u16 base;
+    u16 by2Prefix;
+    u16 by3OrMorePrefix;
+};
+
+static const struct StatChangeStrings sStatRaiseStrings =
+{
+    .base = STRINGID_STATROSE,
+    .by2Prefix = STRINGID_STATSHARPLY,
+    .by3OrMorePrefix, STRINGID_DRASTICALLY,
+};
+
+static const struct StatChangeStrings sStatLowerStrings =
+{
+    .base = STRINGID_STATFELL,
+    .by2Prefix = STRINGID_STATHARSHLY,
+    .by3OrMorePrefix = STRINGID_SEVERLY,
+};
+
 static inline void GenerateAndBufferStatChangeString(u8 *textBuffer, s32 statValue)
 {
+    const struct StatChangeStrings *strings = statValue > 0 ? &sStatRaiseStrings : &sStatLowerStrings;
+
     u32 index = 0;
-    static u16 sStatChangeStrings[][2] =
-    {
-        {STRINGID_STATFELL, STRINGID_STATROSE},
-        {STRINGID_STATHARSHLY, STRINGID_STATSHARPLY},
-        {STRINGID_SEVERELY, STRINGID_DRASTICALLY}
-    };
 
     // Start the string
     textBuffer[index++] = B_BUFF_PLACEHOLDER_BEGIN;
 
-    if (abs(statValue) > 1) // harshly/severely or sharply/drastically
-        CopyStringToArray(textBuffer, &index, sStatChangeStrings[1 + (abs(statValue) > 2)][statValue > 0]);
-    CopyStringToArray(textBuffer, &index, sStatChangeStrings[0][statValue > 0]); // fell or rose
+    if (abs(statValue) >= 3)
+        CopyStringToArray(textBuffer, &index, strings->by3OrMorePrefix);
+    else if (abs(statValue) >= 2)
+        CopyStringToArray(textBuffer, &index, strings->by2Prefix);
+
+    CopyStringToArray(textBuffer, &index, strings->base);
 }
 
 static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
