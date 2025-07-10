@@ -756,16 +756,8 @@ u32 GetMonData2(struct Pokemon *mon, s32 field);
 u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data);
 u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field);
 
-union TRANSPARENT SetMonDataArg
-{
-    const void *any;
-    u8 *byte;
-    u16 *hWord;
-    u32 *word;
-};
-
-void SetMonData(struct Pokemon *mon, s32 field, union SetMonDataArg dataArg);
-void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, union SetMonDataArg dataArg);
+void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg);
+void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg);
 void CopyMon(void *dest, void *src, size_t size);
 u8 GiveMonToPlayer(struct Pokemon *mon);
 u8 CopyMonToPC(struct Pokemon *mon);
