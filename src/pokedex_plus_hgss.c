@@ -4233,7 +4233,6 @@ static void Task_ExitCaughtMonPage(u8 taskId)
         {
             Free(sPokedexView);
             sPokedexView = NULL;
-            MgbaPrintf(MGBA_LOG_WARN, "Freed dex");
         }
 
         DestroyTask(taskId);
