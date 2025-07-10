@@ -231,19 +231,20 @@ EWRAM_DATA u64 gDebugAIFlags = 0;
 // *******************************
 // Define functions
 static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *items);
+static u8 Debug_GenerateListMenuNames(void);
 static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
 static void Debug_RefreshListMenu(u8 taskId);
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
-static void DebugAction_OpenSubMenuFlagsVars(u8 taskId);
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script);
+static void DebugAction_ToggleFlag(u8 taskId);
 
 static void DebugTask_HandleMenuInput_General(u8 taskId);
-static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId);
 
 static void DebugAction_Util_Fly(u8 taskId);
 static void DebugAction_Util_Warp_Warp(u8 taskId);
@@ -637,20 +638,20 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
     [DEBUG_FLAGVAR_MENU_ITEM_VARS]                 = { COMPOUND_STRING("Set Var XYZ…"),                      DebugAction_FlagsVars_Vars },
     [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_ALL]         = { COMPOUND_STRING("Pokédex Flags All"),                 DebugAction_FlagsVars_PokedexFlags_All },
     [DEBUG_FLAGVAR_MENU_ITEM_DEXFLAGS_RESET]       = { COMPOUND_STRING("Pokédex Flags Reset"),               DebugAction_FlagsVars_PokedexFlags_Reset },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Pokédex"),         DebugAction_FlagsVars_SwitchDex },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX]        = { COMPOUND_STRING("Toggle {STR_VAR_1}National Dex"),    DebugAction_FlagsVars_SwitchNatDex },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV]       = { COMPOUND_STRING("Toggle {STR_VAR_1}PokéNav"),         DebugAction_FlagsVars_SwitchPokeNav },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Match Call"),      DebugAction_FlagsVars_SwitchMatchCall },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Running Shoes"),   DebugAction_FlagsVars_RunningShoes },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Fly Flags"),       DebugAction_FlagsVars_ToggleFlyFlags },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}All badges"),      DebugAction_FlagsVars_ToggleBadgeFlags },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Game clear"),      DebugAction_FlagsVars_ToggleGameClear },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS] = { COMPOUND_STRING("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_FlagsVars_ToggleFrontierPass },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_FlagsVars_CollisionOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_FlagsVars_EncounterOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_FlagsVars_TrainerSeeOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_FlagsVars_BagUseOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { COMPOUND_STRING("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_FlagsVars_CatchingOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKEDEX]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Pokédex"),         DebugAction_ToggleFlag, DebugAction_FlagsVars_SwitchDex },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_NATDEX]        = { COMPOUND_STRING("Toggle {STR_VAR_1}National Dex"),    DebugAction_ToggleFlag, DebugAction_FlagsVars_SwitchNatDex },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_POKENAV]       = { COMPOUND_STRING("Toggle {STR_VAR_1}PokéNav"),         DebugAction_ToggleFlag, DebugAction_FlagsVars_SwitchPokeNav },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_MATCH_CALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Match Call"),      DebugAction_ToggleFlag, DebugAction_FlagsVars_SwitchMatchCall },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_RUN_SHOES]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Running Shoes"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_RunningShoes },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_LOCATIONS]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Fly Flags"),       DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleFlyFlags },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BADGES_ALL]    = { COMPOUND_STRING("Toggle {STR_VAR_1}All badges"),      DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleBadgeFlags },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_GAME_CLEAR]    = { COMPOUND_STRING("Toggle {STR_VAR_1}Game clear"),      DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleGameClear },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_FRONTIER_PASS] = { COMPOUND_STRING("Toggle {STR_VAR_1}Frontier Pass"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_ToggleFrontierPass },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_CollisionOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_EncounterOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_ToggleFlag, DebugAction_FlagsVars_TrainerSeeOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_ToggleFlag, DebugAction_FlagsVars_BagUseOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { COMPOUND_STRING("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_ToggleFlag, DebugAction_FlagsVars_CatchingOnOff },
     { NULL }
 };
 
@@ -776,49 +777,6 @@ static const struct DebugMenuOption *Debug_GetCurrentCallbackMenu(void)
     return callbackItems;
 }
 
-static void Debug_ShowMenuFromTemplate(void (*HandleInput)(u8), struct ListMenuTemplate LMtemplate)
-{
-    struct ListMenuTemplate menuTemplate;
-    u8 windowId;
-    u8 menuTaskId;
-    u8 inputTaskId;
-
-    // create window
-    HideMapNamePopUpWindow();
-    LoadMessageBoxAndBorderGfx();
-    windowId = AddWindow(&sDebugMenuWindowTemplateMain);
-    DrawStdWindowFrame(windowId, FALSE);
-
-    // create list menu
-    menuTemplate = LMtemplate;
-    menuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
-    menuTemplate.windowId = windowId;
-    menuTemplate.header_X = 0;
-    menuTemplate.item_X = 8;
-    menuTemplate.cursor_X = 0;
-    menuTemplate.upText_Y = 1;
-    menuTemplate.cursorPal = 2;
-    menuTemplate.fillValue = 1;
-    menuTemplate.cursorShadowPal = 3;
-    menuTemplate.lettersSpacing = 1;
-    menuTemplate.itemVerticalPadding = 0;
-    menuTemplate.scrollMultiple = LIST_NO_MULTIPLE_SCROLL;
-    menuTemplate.fontId = DEBUG_MENU_FONT;
-    menuTemplate.cursorKind = 0;
-    menuTaskId = ListMenuInit(&menuTemplate, 0, 0);
-
-    // create input handler task
-    inputTaskId = CreateTask(HandleInput, 3);
-    gTasks[inputTaskId].tMenuTaskId = menuTaskId;
-    gTasks[inputTaskId].tWindowId = windowId;
-    gTasks[inputTaskId].tSubWindowId = 0;
-
-    Debug_RefreshListMenu(inputTaskId);
-
-    // draw everything
-    CopyWindowToVram(windowId, COPYWIN_FULL);
-}
-
 static bool32 IsSubMenuAction(const void *action)
 {
     return action == DebugAction_OpenSubMenu
@@ -845,21 +803,30 @@ static void Debug_ShowMenu(DebugFunc HandleInput, const struct DebugMenuOption *
     windowId = AddWindow(&sDebugMenuWindowTemplateMain);
     DrawStdWindowFrame(windowId, FALSE);
 
-    u32 i = 0;
-    for (i = 0; items[i].text != NULL; i++)
+    u32 totalItems = 0;
+
+    if (sDebugMenuListData->listId == 1)
     {
-        sDebugMenuListData->listItems[i].id = i;
-        StringExpandPlaceholders(gStringVar4, items[i].text);
-        if (IsSubMenuAction(items[i].action))
-            StringAppend(gStringVar4, sDebugText_Arrow);
-        StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
-        sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+        totalItems = Debug_GenerateListMenuNames();
+    }
+    else
+    {
+        for (u32 i = 0; items[i].text != NULL; i++)
+        {
+            sDebugMenuListData->listItems[i].id = i;
+            StringExpandPlaceholders(gStringVar4, items[i].text);
+            if (IsSubMenuAction(items[i].action))
+                StringAppend(gStringVar4, sDebugText_Arrow);
+            StringCopy(&sDebugMenuListData->itemNames[i][0], gStringVar4);
+            sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
+            totalItems++;
+        }
     }
 
     // create list menu
     menuTemplate.items = sDebugMenuListData->listItems;
     menuTemplate.moveCursorFunc = ListMenuDefaultCursorMoveFunc;
-    menuTemplate.totalItems = i;
+    menuTemplate.totalItems = totalItems;
     menuTemplate.maxShowed = DEBUG_MENU_HEIGHT_MAIN;
     menuTemplate.windowId = windowId;
     menuTemplate.header_X = 0;
@@ -1068,12 +1035,17 @@ static u8 Debug_CheckToggleFlags(u8 id)
     return result;
 }
 
-static void Debug_GenerateListMenuNames(u32 totalItems)
+static u8 Debug_GenerateListMenuNames(void)
 {
     const u8 sColor_Red[] = _("{COLOR RED}");
     const u8 sColor_Green[] = _("{COLOR GREEN}");
     u32 i, flagResult = 0;
     u8 const *name = NULL;
+
+    u8 totalItems = 0;
+    if (sDebugMenuListData->listId == 1)
+        // Failsafe to prevent memory corruption
+        totalItems = min(ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1, DEBUG_MAX_MENU_ITEMS);
 
     // Copy item names for all entries but the last (which is Cancel)
     for (i = 0; i < totalItems; i++)
@@ -1104,25 +1076,12 @@ static void Debug_GenerateListMenuNames(u32 totalItems)
         sDebugMenuListData->listItems[i].name = &sDebugMenuListData->itemNames[i][0];
         sDebugMenuListData->listItems[i].id = i;
     }
+    return totalItems;
 }
 
 static void Debug_RefreshListMenu(u8 taskId)
 {
-    u8 totalItems = 0;
-
-    if (sDebugMenuListData->listId == 1)
-    {
-        for (u32 i = 0; i < ARRAY_COUNT(sDebugMenu_Actions_Flags); i++)
-        {
-            sDebugMenuListData->listItems[i].id = i;
-            sDebugMenuListData->listItems[i].name = sDebugMenu_Actions_Flags[i].text;
-        }
-        totalItems = gMultiuseListMenuTemplate.totalItems = ARRAY_COUNT(sDebugMenu_Actions_Flags) - 1;
-    }
-
-    // Failsafe to prevent memory corruption
-    totalItems = min(totalItems, DEBUG_MAX_MENU_ITEMS);
-    Debug_GenerateListMenuNames(totalItems);
+    u8 totalItems = Debug_GenerateListMenuNames();
 
     // Set list menu data
     gMultiuseListMenuTemplate.items = sDebugMenuListData->listItems;
@@ -1143,17 +1102,6 @@ static void Debug_RefreshListMenu(u8 taskId)
     gMultiuseListMenuTemplate.cursorKind = 0;
 }
 
-static void Debug_RedrawListMenu(u8 taskId)
-{
-    u8 listTaskId = gTasks[taskId].tMenuTaskId;
-    u16 scrollOffset, selectedRow;
-    ListMenuGetScrollAndRow(listTaskId, &scrollOffset, &selectedRow);
-
-    DestroyListMenuTask(gTasks[taskId].tMenuTaskId, &scrollOffset, &selectedRow);
-    Debug_RefreshListMenu(taskId);
-    gTasks[taskId].tMenuTaskId = ListMenuInit(&gMultiuseListMenuTemplate, scrollOffset, selectedRow);
-}
-
 static void DebugTask_HandleMenuInput_General(u8 taskId)
 {
     const struct DebugMenuOption *options = Debug_GetCurrentCallbackMenu();
@@ -1166,11 +1114,22 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (option.action != NULL)
         {
             if (IsSubMenuAction(option.action))
+            {
                 ((DebugSubmenuFunc)option.action)(taskId, option.actionParams);
+            }
             else if (option.action == DebugAction_ExecuteScript)
+            {
                 Debug_DestroyMenu_Full_Script(taskId, (const u8 *)option.actionParams);
+            }
+            else if (option.action == DebugAction_ToggleFlag)
+            {
+                ((DebugFunc)option.actionParams)(taskId);
+                DebugAction_ToggleFlag(taskId);
+            }
             else
+            {
                 ((DebugFunc)option.action)(taskId);
+            }
         }
     }
     else if (JOY_NEW(B_BUTTON))
@@ -1179,10 +1138,9 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
         if (Debug_GetCurrentCallbackMenu() != NULL && Debug_RemoveCallbackMenu() != 0)
         {
             Debug_DestroyMenu(taskId);
-            if (sDebugMenuListData->listId == 1)
-                Debug_ShowMenu(DebugTask_HandleMenuInput_FlagsVars, NULL);
-            else
-                Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
+            if (sDebugMenuListData->listId != 0)
+                sDebugMenuListData->listId = 0;
+            Debug_ShowMenu(DebugTask_HandleMenuInput_General, NULL);
         }
         else
         {
@@ -1192,57 +1150,17 @@ static void DebugTask_HandleMenuInput_General(u8 taskId)
     }
 }
 
-
-static void DebugTask_HandleMenuInput_FlagsVars(u8 taskId)
-{
-    DebugSubmenuFunc func;
-    u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-
-    if (JOY_NEW(A_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        if ((func = sDebugMenu_Actions_Flags[input].action) != NULL)
-        {
-            if (input == DEBUG_FLAGVAR_MENU_ITEM_FLAGS || input == DEBUG_FLAGVAR_MENU_ITEM_VARS)
-            {
-                Debug_RedrawListMenu(taskId);
-                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
-            }
-            else
-            {
-                func(taskId, sDebugMenu_Actions_Flags[input].actionParams);
-                Debug_GenerateListMenuNames(gMultiuseListMenuTemplate.totalItems);
-                RedrawListMenu(gTasks[taskId].tMenuTaskId);
-            }
-
-            // Remove TRUE/FALSE window for functions that haven't been assigned flags
-            if (gTasks[taskId].tInput == 0xFF)
-            {
-                ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
-                RemoveWindow(gTasks[taskId].tSubWindowId);
-                Free(sDebugMenuListData);
-            }
-        }
-    }
-    else if (JOY_NEW(B_BUTTON))
-    {
-        PlaySE(SE_SELECT);
-        Debug_DestroyMenu(taskId);
-        Debug_ShowMainMenu();
-    }
-}
-
-static void DebugAction_OpenSubMenuFlagsVars(u8 taskId)
+static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items)
 {
     Debug_DestroyMenu(taskId);
     sDebugMenuListData->listId = 1;
-    Debug_RefreshListMenu(taskId);
-    Debug_ShowMenuFromTemplate(DebugTask_HandleMenuInput_FlagsVars, gMultiuseListMenuTemplate);
+    Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
 }
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items)
 {
     Debug_DestroyMenu(taskId);
+    sDebugMenuListData->listId = 0;
     Debug_ShowMenu(DebugTask_HandleMenuInput_General, items);
 }
 
@@ -1262,6 +1180,12 @@ static void DebugAction_OpenSubMenuFakeRTC(u8 taskId, const struct DebugMenuOpti
 static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
 {
     Debug_DestroyMenu_Full_Script(taskId, script);
+}
+
+static void DebugAction_ToggleFlag(u8 taskId)
+{
+    Debug_GenerateListMenuNames();
+    RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
 static void DebugAction_OpenSubMenuCreateFollowerNPC(u8 taskId, const struct DebugMenuOption *items)

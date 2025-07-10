@@ -7153,7 +7153,7 @@ BattleScript_AbilityPopUp::
 	tryactivateabilityshield BS_ABILITY_BATTLER
 	.if B_ABILITY_POP_UP == TRUE
 	showabilitypopup BS_ABILITY_BATTLER
-	pause 40
+	pause B_WAIT_TIME_SHORT
 	.endif
 	recordability BS_ABILITY_BATTLER
 	sethword sABILITY_OVERWRITE, 0
@@ -7166,13 +7166,13 @@ BattleScript_AbilityPopUpScripting:
 BattleScript_AbilityPopUpOverwriteThenNormal:
 	setbyte sFIXED_ABILITY_POPUP, TRUE
 	showabilitypopup BS_ABILITY_BATTLER
-	pause 60
+	pause B_WAIT_TIME_SHORT
 	sethword sABILITY_OVERWRITE, 0
 	updateabilitypopup BS_ABILITY_BATTLER
-	pause 20
+	pause B_WAIT_TIME_SHORT
 	recordability BS_ABILITY_BATTLER
 	destroyabilitypopup
-	pause 40
+	setbyte sFIXED_ABILITY_POPUP, FALSE
 	return
 
 BattleScript_SpeedBoostActivates::
@@ -7401,7 +7401,6 @@ BattleScript_TryIntimidateHoldEffectsRet:
 BattleScript_IntimidateActivates::
 	savetarget
 	call BattleScript_AbilityPopUp
-	destroyabilitypopup
 	setbyte gBattlerTarget, 0
 BattleScript_IntimidateLoop:
 	jumpiftargetally BattleScript_IntimidateLoopIncrement
@@ -7964,8 +7963,8 @@ BattleScript_CursedBodyActivates::
 
 BattleScript_MummyActivates::
 .if B_ABILITY_POP_UP == TRUE
-	call BattleScript_AbilityPopUpTarget
 	setbyte sFIXED_ABILITY_POPUP, TRUE
+	call BattleScript_AbilityPopUpTarget
 	copybyte gBattlerAbility, gBattlerAttacker
 	copyhword sABILITY_OVERWRITE, gLastUsedAbility
 	call BattleScript_AbilityPopUpOverwriteThenNormal
