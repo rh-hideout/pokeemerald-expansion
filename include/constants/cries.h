@@ -2733,6 +2733,8 @@ enum {
     CRY_HAARSHOGUN,
     CRY_VAPONOBI,
     CRY_PEASOL,
+    CRY_ECCOSMIC,
+    CRY_NEBULITE,
     CRY_COUNT,
 };
 

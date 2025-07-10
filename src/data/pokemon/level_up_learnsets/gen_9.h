@@ -26063,6 +26063,14 @@ static const struct LevelUpMove sJahlLevelUpLearnset[] = {
    LEVEL_UP_MOVE(56, MOVE_EARTHQUAKE),
    LEVEL_UP_MOVE(60, MOVE_FISSURE),
    LEVEL_UP_END
+    };
+static const struct LevelUpMove sNebuliteLevelUpLearnset[] = { 
+   LEVEL_UP_MOVE( 1, MOVE_LUSTER_PURGE),
+   LEVEL_UP_END
+   };
+static const struct LevelUpMove sEccosmicLevelUpLearnset[] = { 
+   LEVEL_UP_MOVE( 1, MOVE_LUSTER_PURGE),
+   LEVEL_UP_END
    };
 static const struct LevelUpMove sLoberLevelUpLearnset[] = { 
    LEVEL_UP_MOVE( 1, MOVE_WATER_GUN),

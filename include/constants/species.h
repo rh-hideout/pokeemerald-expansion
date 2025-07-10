@@ -1991,8 +1991,24 @@
 #define SPECIES_HAARSHOGUN                              1859
 #define SPECIES_VAPONOBI                                1860
 #define SPECIES_PEASOL                                  1861
+#define SPECIES_ECCOSMIC                              SPECIES_ECCOSMIC_ANDROMEDA
+#define SPECIES_ECCOSMIC_ANDROMEDA                      1862
+#define SPECIES_ECCOSMIC_MAGELLANIC                     1863
+#define SPECIES_ECCOSMIC_SOL                            1864
+#define SPECIES_ECCOSMIC_STARBURST                      1865
+#define SPECIES_ECCOSMIC_QUASAR                         1866
+#define SPECIES_ECCOSMIC_NEBULA                         1867
+#define SPECIES_ECCOSMIC_MILKY                          1868
+#define SPECIES_NEBULITE                              SPECIES_NEBULITE_ANDROMEDA
+#define SPECIES_NEBULITE_ANDROMEDA                      1869
+#define SPECIES_NEBULITE_MAGELLANIC                     1870
+#define SPECIES_NEBULITE_SOL                            1871
+#define SPECIES_NEBULITE_STARBURST                      1872
+#define SPECIES_NEBULITE_QUASAR                         1873
+#define SPECIES_NEBULITE_NEBULA                         1874
+#define SPECIES_NEBULITE_MILKY                          1875
 
-#define SPECIES_EGG (SPECIES_PEASOL + 1)
+#define SPECIES_EGG (SPECIES_NEBULITE_MILKY + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

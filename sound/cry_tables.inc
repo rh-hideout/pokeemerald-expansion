@@ -3036,6 +3036,10 @@ gCryTable::
 	cry Cry_Vaponobi
 
 	cry Cry_Peasol
+
+	cry Cry_Eccosmic
+
+	cry Cry_Nebulite
 .endif
 
 	.align 2
@@ -6077,4 +6081,8 @@ gCryTable_Reverse::
 	cry_reverse Cry_Vaponobi
 
 	cry_reverse Cry_Peasol
+
+	cry_reverse Cry_Eccosmic
+
+	cry_reverse Cry_Nebulite
 .endif

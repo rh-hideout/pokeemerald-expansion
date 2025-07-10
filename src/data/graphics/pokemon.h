@@ -27969,6 +27969,92 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
    const u8 gMonIcon_Lemirethun[] = INCBIN_U8("graphics/pokemon/lemirethun/icon.4bpp");
    const u8 gMonFootprint_Lemirethun[] = INCBIN_U8("graphics/pokemon/lemirethun/footprint.1bpp");
 
+   const u32 gMonFrontPic_Nebulite[] = INCBIN_U32("graphics/pokemon/nebulite/front.4bpp.lz");
+   const u32 gMonBackPic_Nebulite[] = INCBIN_U32("graphics/pokemon/nebulite/back.4bpp.lz");
+   const u32 gMonPalette_Nebulite[] = INCBIN_U32("graphics/pokemon/nebulite/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Nebulite[] = INCBIN_U32("graphics/pokemon/nebulite/shiny.gbapal.lz");
+   const u8 gMonIcon_Nebulite[] = INCBIN_U8("graphics/pokemon/nebulite/icon.4bpp");
+   const u8 gMonFootprint_Nebulite[] = INCBIN_U8("graphics/pokemon/nebulite/footprint.1bpp");
+
+   const u32 gMonFrontPic_NebuliteMagellanic[] = INCBIN_U32("graphics/pokemon/nebulite/magellanic/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteMagellanic[] = INCBIN_U32("graphics/pokemon/nebulite/magellanic/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteMagellanic[] = INCBIN_U32("graphics/pokemon/nebulite/magellanic/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteMagellanic[] = INCBIN_U32("graphics/pokemon/nebulite/magellanic/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteMagellanic[] = INCBIN_U8("graphics/pokemon/nebulite/magellanic/icon.4bpp");
+
+   const u32 gMonFrontPic_NebuliteSol[] = INCBIN_U32("graphics/pokemon/nebulite/sol/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteSol[] = INCBIN_U32("graphics/pokemon/nebulite/sol/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteSol[] = INCBIN_U32("graphics/pokemon/nebulite/sol/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteSol[] = INCBIN_U32("graphics/pokemon/nebulite/sol/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteSol[] = INCBIN_U8("graphics/pokemon/nebulite/sol/icon.4bpp");
+
+   const u32 gMonFrontPic_NebuliteStarburst[] = INCBIN_U32("graphics/pokemon/nebulite/starburst/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteStarburst[] = INCBIN_U32("graphics/pokemon/nebulite/starburst/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteStarburst[] = INCBIN_U32("graphics/pokemon/nebulite/starburst/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteStarburst[] = INCBIN_U32("graphics/pokemon/nebulite/starburst/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteStarburst[] = INCBIN_U8("graphics/pokemon/nebulite/starburst/icon.4bpp");
+
+   const u32 gMonFrontPic_NebuliteQuasar[] = INCBIN_U32("graphics/pokemon/nebulite/quasar/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteQuasar[] = INCBIN_U32("graphics/pokemon/nebulite/quasar/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteQuasar[] = INCBIN_U32("graphics/pokemon/nebulite/quasar/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteQuasar[] = INCBIN_U32("graphics/pokemon/nebulite/quasar/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteQuasar[] = INCBIN_U8("graphics/pokemon/nebulite/quasar/icon.4bpp");
+
+   const u32 gMonFrontPic_NebuliteNebula[] = INCBIN_U32("graphics/pokemon/nebulite/nebula/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteNebula[] = INCBIN_U32("graphics/pokemon/nebulite/nebula/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteNebula[] = INCBIN_U32("graphics/pokemon/nebulite/nebula/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteNebula[] = INCBIN_U32("graphics/pokemon/nebulite/nebula/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteNebula[] = INCBIN_U8("graphics/pokemon/nebulite/nebula/icon.4bpp");
+
+   const u32 gMonFrontPic_NebuliteMilky[] = INCBIN_U32("graphics/pokemon/nebulite/milky/front.4bpp.lz");
+   const u32 gMonPalette_NebuliteMilky[] = INCBIN_U32("graphics/pokemon/nebulite/milky/normal.gbapal.lz");
+   const u32 gMonBackPic_NebuliteMilky[] = INCBIN_U32("graphics/pokemon/nebulite/milky/back.4bpp.lz");
+   const u32 gMonShinyPalette_NebuliteMilky[] = INCBIN_U32("graphics/pokemon/nebulite/milky/shiny.gbapal.lz");
+   const u8 gMonIcon_NebuliteMilky[] = INCBIN_U8("graphics/pokemon/nebulite/milky/icon.4bpp");
+
+   const u32 gMonFrontPic_Eccosmic[] = INCBIN_U32("graphics/pokemon/eccosmic/front.4bpp.lz");
+   const u32 gMonBackPic_Eccosmic[] = INCBIN_U32("graphics/pokemon/eccosmic/back.4bpp.lz");
+   const u32 gMonPalette_Eccosmic[] = INCBIN_U32("graphics/pokemon/eccosmic/normal.gbapal.lz");
+   const u32 gMonShinyPalette_Eccosmic[] = INCBIN_U32("graphics/pokemon/eccosmic/shiny.gbapal.lz");
+   const u8 gMonIcon_Eccosmic[] = INCBIN_U8("graphics/pokemon/eccosmic/icon.4bpp");
+   const u8 gMonFootprint_Eccosmic[] = INCBIN_U8("graphics/pokemon/eccosmic/footprint.1bpp");
+
+   const u32 gMonFrontPic_EccosmicMagellanic[] = INCBIN_U32("graphics/pokemon/eccosmic/magellanic/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicMagellanic[] = INCBIN_U32("graphics/pokemon/eccosmic/magellanic/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicMagellanic[] = INCBIN_U32("graphics/pokemon/eccosmic/magellanic/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicMagellanic[] = INCBIN_U32("graphics/pokemon/eccosmic/magellanic/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicMagellanic[] = INCBIN_U8("graphics/pokemon/eccosmic/magellanic/icon.4bpp");
+
+   const u32 gMonFrontPic_EccosmicSol[] = INCBIN_U32("graphics/pokemon/eccosmic/sol/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicSol[] = INCBIN_U32("graphics/pokemon/eccosmic/sol/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicSol[] = INCBIN_U32("graphics/pokemon/eccosmic/sol/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicSol[] = INCBIN_U32("graphics/pokemon/eccosmic/sol/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicSol[] = INCBIN_U8("graphics/pokemon/eccosmic/sol/icon.4bpp");
+
+   const u32 gMonFrontPic_EccosmicStarburst[] = INCBIN_U32("graphics/pokemon/eccosmic/starburst/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicStarburst[] = INCBIN_U32("graphics/pokemon/eccosmic/starburst/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicStarburst[] = INCBIN_U32("graphics/pokemon/eccosmic/starburst/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicStarburst[] = INCBIN_U32("graphics/pokemon/eccosmic/starburst/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicStarburst[] = INCBIN_U8("graphics/pokemon/eccosmic/starburst/icon.4bpp");
+
+   const u32 gMonFrontPic_EccosmicQuasar[] = INCBIN_U32("graphics/pokemon/eccosmic/quasar/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicQuasar[] = INCBIN_U32("graphics/pokemon/eccosmic/quasar/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicQuasar[] = INCBIN_U32("graphics/pokemon/eccosmic/quasar/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicQuasar[] = INCBIN_U32("graphics/pokemon/eccosmic/quasar/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicQuasar[] = INCBIN_U8("graphics/pokemon/eccosmic/quasar/icon.4bpp");
+
+   const u32 gMonFrontPic_EccosmicNebula[] = INCBIN_U32("graphics/pokemon/eccosmic/nebula/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicNebula[] = INCBIN_U32("graphics/pokemon/eccosmic/nebula/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicNebula[] = INCBIN_U32("graphics/pokemon/eccosmic/nebula/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicNebula[] = INCBIN_U32("graphics/pokemon/eccosmic/nebula/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicNebula[] = INCBIN_U8("graphics/pokemon/eccosmic/nebula/icon.4bpp");
+
+   const u32 gMonFrontPic_EccosmicMilky[] = INCBIN_U32("graphics/pokemon/eccosmic/milky/front.4bpp.lz");
+   const u32 gMonPalette_EccosmicMilky[] = INCBIN_U32("graphics/pokemon/eccosmic/milky/normal.gbapal.lz");
+   const u32 gMonBackPic_EccosmicMilky[] = INCBIN_U32("graphics/pokemon/eccosmic/milky/back.4bpp.lz");
+   const u32 gMonShinyPalette_EccosmicMilky[] = INCBIN_U32("graphics/pokemon/eccosmic/milky/shiny.gbapal.lz");
+   const u8 gMonIcon_EccosmicMilky[] = INCBIN_U8("graphics/pokemon/eccosmic/milky/icon.4bpp");
+
    const u32 gMonFrontPic_Lober[] = INCBIN_U32("graphics/pokemon/lober/front.4bpp.lz");
    const u32 gMonBackPic_Lober[] = INCBIN_U32("graphics/pokemon/lober/back.4bpp.lz");
    const u32 gMonPalette_Lober[] = INCBIN_U32("graphics/pokemon/lober/normal.gbapal.lz");

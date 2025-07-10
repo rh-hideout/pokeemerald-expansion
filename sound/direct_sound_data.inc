@@ -7378,6 +7378,14 @@ Cry_Vaponobi::
 	.align 2	
 Cry_Peasol::
 	.incbin "sound/direct_sound_samples/cries/peasol.bin"
+
+	.align 2	
+Cry_Eccosmic::
+	.incbin "sound/direct_sound_samples/cries/eccosmic.bin"
+
+	.align 2	
+Cry_Nebulite::
+	.incbin "sound/direct_sound_samples/cries/nebulite.bin"
 	
 	.align 2
 .endif @ P_CRIES_ENABLED
