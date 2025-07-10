@@ -12152,7 +12152,7 @@ static void ChangeBattlerStats(union StatChanger statChanger, u32 battler)
     else // Otherwise raise all of them
     {
         // Whether it's a drop or a raise
-        s32 negativeModifier = NegativeIfTrue(statChanger.isNegative);
+        s32 negativeModifier = (statChanger.isNegative ? -1 : 1);
 
         // Adjust all stats
         gBattleMons[battler].statStages[STAT_ATK] += (statChanger.attack * negativeModifier);
@@ -12258,7 +12258,6 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .mirrorArmored = flags.mirrorArmored,
         .pushInstr = failPtr,
         .statChanger = statChanger,
-        .statChangeEffect = TRUE,
         .multistring = (gBattlerTarget == battler), // Set multistring depending on mon raising/lowering stats
     };
 
@@ -14621,7 +14620,7 @@ static void Cmd_statchangeanimation(void)
 
     TryPlayStatChangeAnimation(
         GetBattlerForBattleScript(cmd->battler),
-        CalcStatChangerValue(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down), TRUE),
+        CalcStatChangerValue(cmd->stat, cmd->stages * (cmd->down ? -1 : 1), TRUE),
         FALSE
     );
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -15299,7 +15298,7 @@ static void Cmd_setstatchanger(void)
 {
     CMD_ARGS(u8 stat, u8 stages, bool8 down);
 
-    gBattleScripting.statChanger = CalcStatChangerValue(cmd->stat, cmd->stages * NegativeIfTrue(cmd->down), TRUE),
+    gBattleScripting.statChanger = CalcStatChangerValue(cmd->stat, cmd->stages * (cmd->down ? -1 : 1), TRUE),
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

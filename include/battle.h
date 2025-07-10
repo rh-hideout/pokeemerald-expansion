@@ -841,9 +841,9 @@ struct MoveEffectResult
 {
     // Should be populated at initialisation
     const u8 *pushInstr; // Instruction that will be pushed if battlescriptPush is set
-    u16 move; // gCurrentMove
+    const u16 move; // gCurrentMove
+    const u16 battlerItem; // gEffectBattler held item
     u16 battlerAbility; // gEffectBattler ability
-    u16 battlerItem; // gEffectBattler held item
     enum MoveEffects moveEffect:8; // Current move effect
     enum ItemHoldEffect holdEffect:8; // gEffectBattler's item hold effect
     union StatChanger statChanger;
@@ -851,11 +851,9 @@ struct MoveEffectResult
     u32 battlerDef:3; // gBattlerTarget
     u32 effectBattler:3; // The "effect" battler is the target to which the move effect is applied (not necessarily gBattlerTarget)
     u32 certain:1;
-    u32 primary:1;
-    u32 padding:14; // Future flags coming soon...
+    u32 padding:16; // Future flags coming soon...
 
     // statChanger flags that must also be set on init
-    u32 statChangeEffect:1;
     u32 notProtectAffected:1; // Bypasses Protect (e.g. Intimidate Attack drop)
     u32 statDropPrevention:1;
     u32 mirrorArmored:1;
@@ -1405,7 +1403,7 @@ static inline u32 GetStatChangerStage(union StatChanger statChanger, u32 statId)
 
 static inline s32 GetStatChangerStatValue(union StatChanger statChanger, u32 statId)
 {
-    return GetStatChangerStage(statChanger, statId) * NegativeIfTrue(statChanger.isNegative);
+    return GetStatChangerStage(statChanger, statId) * (statChanger.isNegative ? -1 : 1);
 }
 
 static inline void SetStatChangerStatValue(union StatChanger *statChanger, u32 statId, u32 value)
