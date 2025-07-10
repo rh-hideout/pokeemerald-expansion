@@ -487,3 +487,19 @@ MtChimney_Text_SawyerDefeat:
 MtChimney_Text_SawyerPostBattle:
 	.string "I think I need a dip in LAVARIDGE\n"
 	.string "HOT SPRING with the locals!$"
+
+MtChimney_Text_SawyerRegister:
+	.string "I like little fireballs like you.\n"
+	.string "Let me register you in my POKéNAV.$"
+
+MtChimney_Text_SawyerRematchIntro:
+	.string "I'm happily surrounded by hot people\n"
+	.string "around these parts. I won't lose!$"
+
+MtChimney_Text_SawyerRematchDefeat:
+	.string "Gosh, you're still the same\n"
+	.string "firebrand as before!$"
+
+MtChimney_Text_SawyerPostRematch:
+	.string "Actually, it really is hot here.\n"
+	.string "I'm overdressed for these parts.$"
