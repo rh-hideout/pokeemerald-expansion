@@ -156,19 +156,6 @@
       "flag": "FLAG_HIDE_LILYCOVE_CITY_AQUA_GRUNTS"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 61,
-      "y": 36,
-      "elevation": 5,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
-      "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_REPEL",
-      "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_LILYCOVE_CITY_MAX_REPEL"
-    },
-    {
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 43,
       "y": 18,
@@ -260,6 +247,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LILYCOVE_WOMAN_1",
       "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
       "x": 41,
       "y": 25,
@@ -273,6 +261,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LILYCOVE_MAN_1",
       "graphics_id": "OBJ_EVENT_GFX_MAN_2",
       "x": 40,
       "y": 25,
@@ -444,9 +433,7 @@
       "dest_warp_id": "1"
     }
   ],
-  "coord_events": [
-
-  ],
+  "coord_events": [],
   "bg_events": [
     {
       "type": "sign",
@@ -535,22 +522,6 @@
       "elevation": 3,
       "item": "ITEM_HEART_SCALE",
       "flag": "FLAG_HIDDEN_ITEM_LILYCOVE_CITY_HEART_SCALE"
-    },
-    {
-      "type": "hidden_item",
-      "x": 61,
-      "y": 7,
-      "elevation": 0,
-      "item": "ITEM_PP_UP",
-      "flag": "FLAG_HIDDEN_ITEM_LILYCOVE_CITY_PP_UP"
-    },
-    {
-      "type": "hidden_item",
-      "x": 64,
-      "y": 31,
-      "elevation": 0,
-      "item": "ITEM_POKE_BALL",
-      "flag": "FLAG_HIDDEN_ITEM_LILYCOVE_CITY_POKE_BALL"
     },
     {
       "type": "sign",

@@ -1,7 +1,4 @@
-.set LOCALID_BRIDGE_KECLEON, 23
-.set LOCALID_STEVEN, 24
-.set LOCALID_BRIDGE_KECLEON_SHADOW, 29  @ They use a second object which is identical to Kecleon but has a reflection palette tag for the bridge shadow
-
+@ LOCALID_BRIDGE_KECLEON_SHADOW is a second object which is identical to LOCALID_BRIDGE_KECLEON but has a reflection palette tag for the bridge shadow
 Route120_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, Route120_OnResume
 	map_script MAP_SCRIPT_ON_TRANSITION, Route120_OnTransition
@@ -89,7 +86,23 @@ Route120_EventScript_SetRainyWeather::
 Route120_EventScript_BerryBeauty::
 	lock
 	faceplayer
-	release
+	dotimebasedevents
+	goto_if_set FLAG_DAILY_ROUTE_120_RECEIVED_BERRY, Route120_EventScript_ReceivedBerry
+	msgbox Route120_Text_BerriesExpressionOfLoveIsntIt, MSGBOX_YESNO
+	call_if_eq VAR_RESULT, YES, Route120_EventScript_BerryLove
+	call_if_eq VAR_RESULT, NO, Route120_EventScript_BerryNotLove
+	specialvar VAR_RESULT, GetPlayerTrainerIdOnesDigit
+	switch VAR_RESULT
+	case 0, Route120_EventScript_GiveFigyBerry
+	case 5, Route120_EventScript_GiveFigyBerry
+	case 1, Route120_EventScript_GiveWikiBerry
+	case 6, Route120_EventScript_GiveWikiBerry
+	case 2, Route120_EventScript_GiveMagoBerry
+	case 7, Route120_EventScript_GiveMagoBerry
+	case 3, Route120_EventScript_GiveAguavBerry
+	case 8, Route120_EventScript_GiveAguavBerry
+	case 4, Route120_EventScript_GiveIapapaBerry
+	case 9, Route120_EventScript_GiveIapapaBerry
 	end
 
 Route120_EventScript_GiveFigyBerry::
@@ -164,7 +177,7 @@ Route120_EventScript_StevenBattleKecleon::
 	closemessage
 	call_if_eq VAR_FACING, DIR_NORTH, Route120_EventScript_PlayerApproachKecleonNorth
 	call_if_eq VAR_FACING, DIR_WEST, Route120_EventScript_PlayerApproachKecleonWest
-	applymovement LOCALID_STEVEN, Common_Movement_WalkInPlaceFasterLeft
+	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	delay 20
 	msgbox Route120_Text_StevenUsedDevonScope, MSGBOX_DEFAULT
@@ -177,7 +190,7 @@ Route120_EventScript_StevenBattleKecleon::
 	playmoncry SPECIES_KECLEON, CRY_MODE_ENCOUNTER
 	delay 40
 	waitmoncry
-	setwildbattle SPECIES_KECLEON, 30
+	setwildbattle SPECIES_KECLEON, 62
 	setvar VAR_0x8009, 0
 	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	dowildbattle
@@ -198,21 +211,21 @@ Route120_EventScript_RemoveBridgeKecleonPostBattle::
 	end
 
 Route120_EventScript_StevenGiveDeconScope::
-	applymovement LOCALID_STEVEN, Common_Movement_WalkInPlaceFasterDown
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterUp
+	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterDown
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	msgbox Route120_Text_StevenGiveDevonScope, MSGBOX_DEFAULT
 	giveitem ITEM_DEVON_SCOPE
 	setflag FLAG_RECEIVED_DEVON_SCOPE
 	msgbox Route120_Text_StevenGoodbye, MSGBOX_DEFAULT
 	closemessage
-	applymovement LOCALID_STEVEN, Common_Movement_WalkInPlaceFasterDown
+	applymovement LOCALID_ROUTE120_STEVEN, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	delay 50
 	setfieldeffectargument 0, 1
 	dofieldeffect FLDEFF_NPCFLY_OUT
 	delay 15
-	removeobject LOCALID_STEVEN
+	removeobject LOCALID_ROUTE120_STEVEN
 	waitfieldeffect FLDEFF_NPCFLY_OUT
 	setmetatile 13, 15, METATILE_Fortree_WoodBridge1_Top, FALSE
 	setmetatile 12, 16, METATILE_Fortree_WoodBridge1_Bottom, FALSE
@@ -223,12 +236,12 @@ Route120_EventScript_StevenGiveDeconScope::
 	end
 
 Route120_EventScript_PlayerApproachKecleonNorth::
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	return
 
 Route120_EventScript_PlayerApproachKecleonWest::
-	applymovement OBJ_EVENT_ID_PLAYER, Route120_Movement_ApproachKecleonWest
+	applymovement LOCALID_PLAYER, Route120_Movement_ApproachKecleonWest
 	waitmovement 0
 	return
 
@@ -255,24 +268,9 @@ Route120_EventScript_Colin::
 	end
 
 Route120_EventScript_Robert::
-	trainerbattle_single TRAINER_ROBERT_1, Route120_Text_RobertIntro, Route120_Text_RobertDefeat, Route120_EventScript_RegisterRobert
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route120_EventScript_RematchRobert
+	trainerbattle_single TRAINER_ROBERT_1, Route120_Text_RobertIntro, Route120_Text_RobertDefeat
 	msgbox Route120_Text_RobertPostBattle, MSGBOX_DEFAULT
 	release
-	end
-
-Route120_EventScript_RegisterRobert::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route120_Text_RobertRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_ROBERT_1
-	release
-	end
-
-Route120_EventScript_RematchRobert::
-	trainerbattle_rematch TRAINER_ROBERT_1, Route120_Text_RobertRematchIntro, Route120_Text_RobertRematchDefeat
-	msgbox Route120_Text_RobertPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route120_EventScript_Lorenzo::
@@ -286,24 +284,9 @@ Route120_EventScript_Jenna::
 	end
 
 Route120_EventScript_Jeffrey::
-	trainerbattle_single TRAINER_JEFFREY_1, Route120_Text_JeffreyIntro, Route120_Text_JeffreyDefeat, Route120_EventScript_RegisterJeffrey
-	specialvar VAR_RESULT, ShouldTryRematchBattle
-	goto_if_eq VAR_RESULT, TRUE, Route120_EventScript_RematchJeffrey
+	trainerbattle_single TRAINER_JEFFREY_1, Route120_Text_JeffreyIntro, Route120_Text_JeffreyDefeat
 	msgbox Route120_Text_JeffreyPostBattle, MSGBOX_DEFAULT
 	release
-	end
-
-Route120_EventScript_RegisterJeffrey::
-	special PlayerFaceTrainerAfterBattle
-	waitmovement 0
-	msgbox Route120_Text_JeffreyRegister, MSGBOX_DEFAULT
-	register_matchcall TRAINER_JEFFREY_1
-	release
-	end
-
-Route120_EventScript_RematchJeffrey::
-	trainerbattle_rematch TRAINER_JEFFREY_1, Route120_Text_JeffreyRematchIntro, Route120_Text_JeffreyRematchDefeat
-	msgbox Route120_Text_JeffreyPostRematch, MSGBOX_AUTOCLOSE
 	end
 
 Route120_EventScript_Jennifer::

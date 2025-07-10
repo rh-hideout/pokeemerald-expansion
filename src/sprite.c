@@ -26,6 +26,9 @@
 
 #define SPRITE_TILE_IS_ALLOCATED(n) ((sSpriteTileAllocBitmap[(n) / 8] >> ((n) % 8)) & 1)
 
+#if T_SHOULD_RUN_MOVE_ANIM
+EWRAM_DATA bool32 gLoadFail = FALSE;
+#endif // T_SHOULD_RUN_MOVE_ANIM
 
 struct SpriteCopyRequest
 {
@@ -1449,6 +1452,10 @@ static u16 LoadSpriteSheetWithOffset(const struct SpriteSheet *sheet, u32 offset
 
     if (tileStart < 0)
     {
+#if T_SHOULD_RUN_MOVE_ANIM
+        gLoadFail = TRUE;
+#endif // T_SHOULD_RUN_MOVE_ANIM
+        DebugPrintf("Tile: %u", sheet->tag);
         return 0;
     }
     else
@@ -1588,6 +1595,14 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
     }
 }
 
+u32 LoadSpritePaletteWithTag(const u16 *pal, u16 tag)
+{
+    struct SpritePalette spritePal;
+    spritePal.data = pal;
+    spritePal.tag = tag;
+    return LoadSpritePalette(&spritePal);
+}
+
 void LoadSpritePalettes(const struct SpritePalette *palettes)
 {
     u32 i;
@@ -1596,9 +1611,17 @@ void LoadSpritePalettes(const struct SpritePalette *palettes)
             break;
 }
 
+u8 LoadSpritePaletteInSlot(const struct SpritePalette *palette, u8 paletteNum)
+{
+    paletteNum = min(15, paletteNum);
+    sSpritePaletteTags[paletteNum] = palette->tag;
+    DoLoadSpritePalette(palette->data, paletteNum * 16);
+    return paletteNum;
+}
+
 void DoLoadSpritePalette(const u16 *src, u16 paletteOffset)
 {
-    LoadPalette(src, OBJ_PLTT_OFFSET + paletteOffset, PLTT_SIZE_4BPP);
+    LoadPaletteFast(src, OBJ_PLTT_OFFSET + paletteOffset, PLTT_SIZE_4BPP);
 }
 
 u32 AllocSpritePalette(u16 tag)

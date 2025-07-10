@@ -12,9 +12,10 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_GYM",
-  "connections": 0,
+  "connections": null,
   "object_events": [
     {
+      "local_id": "LOCALID_ELI",
       "graphics_id": "OBJ_EVENT_GFX_HIKER",
       "x": 5,
       "y": 14,
@@ -41,6 +42,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_KEEGAN",
       "graphics_id": "OBJ_EVENT_GFX_MAN_5",
       "x": 3,
       "y": 9,
@@ -54,6 +56,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_JEFF",
       "graphics_id": "OBJ_EVENT_GFX_MAN_5",
       "x": 5,
       "y": 2,
@@ -111,10 +114,6 @@
       "dest_warp_id": "7"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

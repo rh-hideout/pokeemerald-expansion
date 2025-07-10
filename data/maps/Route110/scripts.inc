@@ -233,17 +233,17 @@ Route110_EventScript_RivalExit::
 	end
 
 Route110_EventScript_RivalApproachPlayer1::
-	applymovement LOCALID_RIVAL, Route110_Movement_RivalApproachPlayer1
+	applymovement LOCALID_ROUTE110_RIVAL, Route110_Movement_RivalApproachPlayer1
 	waitmovement 0
 	return
 
 Route110_EventScript_RivalApproachPlayer2::
-	applymovement LOCALID_RIVAL, Route110_Movement_RivalApproachPlayer2
+	applymovement LOCALID_ROUTE110_RIVAL, Route110_Movement_RivalApproachPlayer2
 	waitmovement 0
 	return
 
 Route110_EventScript_RivalApproachPlayer3::
-	applymovement LOCALID_RIVAL, Route110_Movement_RivalApproachPlayer3
+	applymovement LOCALID_ROUTE110_RIVAL, Route110_Movement_RivalApproachPlayer3
 	waitmovement 0
 	return
 

@@ -734,7 +734,7 @@ struct BattleTestRunnerState
     bool8 runThen:1;
     bool8 runFinally:1;
     bool8 runningFinally:1;
-    bool8 tearDownBattle:1;
+    bool8 hasTornDownBattle:1;
     struct BattleTestData data;
     u8 *results;
     u8 checkProgressParameter;
@@ -873,7 +873,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
-void AIFlags_(u32 sourceLine, u32 flags);
+void AIFlags_(u32 sourceLine, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);

@@ -34,12 +34,12 @@ MtChimney_EventScript_Maxie::
 	lockall
 	playbgm MUS_ENCOUNTER_MAGMA, FALSE
 	msgbox MtChimney_Text_MeteoriteWillActivateVolcano, MSGBOX_DEFAULT
-	applymovement LOCALID_MAXIE, Common_Movement_FacePlayer
+	applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_FacePlayer
 	waitmovement 0
 	playse SE_PIN
-	applymovement LOCALID_MAXIE, Common_Movement_ExclamationMark
+	applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_MAXIE, Common_Movement_Delay48
+	applymovement LOCALID_MT_CHIMNEY_MAXIE, Common_Movement_Delay48
 	waitmovement 0
 	msgbox MtChimney_Text_MaxieIntro, MSGBOX_DEFAULT
 	trainerbattle_no_intro TRAINER_MAXIE_MT_CHIMNEY, MtChimney_Text_MaxieDefeat
@@ -56,12 +56,12 @@ MtChimney_EventScript_Maxie::
 	removeobject LOCALID_MELISSA_GRUNT
 	removeobject LOCALID_SHELBY_GRUNT
 	setflag FLAG_HIDE_MT_CHIMNEY_TEAM_MAGMA
-	fadescreen FADE_FROM_BLACK
-	setobjectxyperm LOCALID_ARCHIE, 10, 12
-	addobject LOCALID_ARCHIE
+	fadescreenswapbuffers FADE_FROM_BLACK
+	setobjectxyperm LOCALID_MT_CHIMNEY_ARCHIE, 10, 12
+	addobject LOCALID_MT_CHIMNEY_ARCHIE
 	call_if_eq VAR_FACING, DIR_EAST, MtChimney_EventScript_ArchieApproachPlayerEast
 	call_if_eq VAR_FACING, DIR_NORTH, MtChimney_EventScript_ArchieApproachPlayerNorth
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	msgbox MtChimney_Text_ArchieThankYou, MSGBOX_DEFAULT
 	closemessage
@@ -86,45 +86,32 @@ MtChimney_Text_BusyMagmaGrunt:
 	.string "This battle is legit free, no cap.$"
 
 MtChimney_EventScript_ArchieApproachPlayerEast::
-	applymovement LOCALID_ARCHIE, MtChimney_Movement_ArchieApproachPlayerEast
+	applymovement LOCALID_MT_CHIMNEY_ARCHIE, MtChimney_Movement_ArchieApproachPlayerEast
 	waitmovement 0
 	return
 
 MtChimney_EventScript_ArchieApproachPlayerNorth::
-	applymovement LOCALID_ARCHIE, MtChimney_Movement_ArchieApproachPlayerNorth
+	applymovement LOCALID_MT_CHIMNEY_ARCHIE, MtChimney_Movement_ArchieApproachPlayerNorth
 	waitmovement 0
 	return
 
 MtChimney_EventScript_ArchieExitEast::
-	applymovement LOCALID_ARCHIE, MtChimney_Movement_ArchieExitEast
+	applymovement LOCALID_MT_CHIMNEY_ARCHIE, MtChimney_Movement_ArchieExitEast
 	waitmovement 0
 	return
 
 MtChimney_EventScript_ArchieExitNorth::
-	applymovement LOCALID_ARCHIE, MtChimney_Movement_ArchieExitNorth
+	applymovement LOCALID_MT_CHIMNEY_ARCHIE, MtChimney_Movement_ArchieExitNorth
 	waitmovement 0
 	return
 
 MtChimney_EventScript_LavaCookieLady::
 	lock
 	faceplayer
-	giveitem ITEM_ABSOLITE
-	giveitem ITEM_ABOMASITE
-	giveitem ITEM_AGGRONITE
-	giveitem ITEM_BEEDRILLITE
-	giveitem ITEM_BANETTITE
-	giveitem ITEM_BLASTOISINITE
-	giveitem ITEM_CAMERUPTITE
-	giveitem ITEM_HOUNDOOMINITE
-	giveitem ITEM_GLALITITE
-	giveitem ITEM_MAWILITE
-	giveitem ITEM_MANECTITE
-	giveitem ITEM_SABLENITE
-	giveitem ITEM_STEELIXITE
-	giveitem ITEM_VENUSAURITE
 	goto_if_set FLAG_LAVA_COOKIE, MtChimney_EventScript_LavaCookiesGone
 	msgbox MtChimney_Text_ThankYouDear, MSGBOX_DEFAULT
 	giveitem ITEM_ABILITY_PATCH
+	giveitem ITEM_HOUNDOOMINITE
 	setflag FLAG_LAVA_COOKIE
 	release
 	end

@@ -1,5 +1,3 @@
-.set LOCALID_DAYCARE_LADY, 1
-
 Route117_EventScript_DaycareMan::
 	lock
 	faceplayer
@@ -189,8 +187,6 @@ Route117_PokemonDayCare_EventScript_CheckEnoughMoney::
 	end
 
 Route117_PokemonDayCare_EventScript_RetrieveMon::
-	applymovement LOCALID_DAYCARE_LADY, Route117_PokemonDayCare_Movement_RetrieveDaycareMon
-	waitmovement 0
 	specialvar VAR_RESULT, TakePokemonFromDaycare
 	special SubtractMoneyFromVar0x8005
 	playse SE_SHOP

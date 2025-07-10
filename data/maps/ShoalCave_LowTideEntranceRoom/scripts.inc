@@ -18,18 +18,11 @@ ShoalCave_LowTideEntranceRoom_EventScript_SetLowTide::
 ShoalCave_LowTideEntranceRoom_EventScript_ShellBellExpert::
 	lock
 	faceplayer
-	checkitem ITEM_SHOAL_SALT, 4
-	goto_if_eq VAR_RESULT, FALSE, ShoalCave_LowTideEntranceRoom_EventScript_NotEnoughShoalSaltOrShells
-	checkitem ITEM_SHOAL_SHELL, 4
-	goto_if_eq VAR_RESULT, FALSE, ShoalCave_LowTideEntranceRoom_EventScript_NotEnoughShoalSaltOrShells
 	msgbox ShoalCave_LowTideEntranceRoom_Text_WouldYouLikeShellBell, MSGBOX_YESNO
-	goto_if_eq VAR_RESULT, NO, ShoalCave_LowTideEntranceRoom_EventScript_DeclineShellBell
 	checkitemspace ITEM_SHELL_BELL
 	call_if_eq VAR_RESULT, FALSE, ShoalCave_LowTideEntranceRoom_EventScript_CheckSpaceWillBeFreed
 	goto_if_eq VAR_RESULT, 2, ShoalCave_LowTideEntranceRoom_EventScript_NoRoomForShellBell
 	msgbox ShoalCave_LowTideEntranceRoom_Text_MakeShellBellRightAway, MSGBOX_DEFAULT
-	removeitem ITEM_SHOAL_SALT, 4
-	removeitem ITEM_SHOAL_SHELL, 4
 	giveitem ITEM_SHELL_BELL
 	msgbox ShoalCave_LowTideEntranceRoom_Text_ExplainShellBell, MSGBOX_DEFAULT
 	release

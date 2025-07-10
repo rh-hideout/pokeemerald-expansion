@@ -130,39 +130,39 @@ Route104_EventScript_Girl2::
 	end
 
 Route104_EventScript_SailToDewford::
-	setobjectsubpriority LOCALID_BRINEY_R104, MAP_ROUTE104, 0
-	setobjectsubpriority OBJ_EVENT_ID_PLAYER, MAP_ROUTE104, 0
-	applymovement LOCALID_BRINEY_R104, Route104_Movement_BrineyBoardBoat
+	setobjectsubpriority LOCALID_ROUTE104_BRINEY, MAP_ROUTE104, 0
+	setobjectsubpriority LOCALID_PLAYER, MAP_ROUTE104, 0
+	applymovement LOCALID_ROUTE104_BRINEY, Route104_Movement_BrineyBoardBoat
 	waitmovement 0
-	removeobject LOCALID_BRINEY_R104
-	applymovement OBJ_EVENT_ID_PLAYER, Route104_Movement_PlayerBoardBoat
+	removeobject LOCALID_ROUTE104_BRINEY
+	applymovement LOCALID_PLAYER, Route104_Movement_PlayerBoardBoat
 	waitmovement 0
 	hideobjectat OBJ_EVENT_ID_PLAYER, MAP_ROUTE104
 	hideobjectat OBJ_EVENT_GFX_MR_BRINEYS_BOAT, MAP_DEWFORD_TOWN
 	call Common_EventScript_PlayBrineysBoatMusic
-	applymovement LOCALID_BOAT_R104, Route104_Movement_SailToDewford
+	applymovement LOCALID_ROUTE104_BOAT, Route104_Movement_SailToDewford
 	applymovement OBJ_EVENT_ID_PLAYER, Route104_Movement_SailToDewford
 	waitmovement 0
 	delay 50
-	applymovement OBJ_EVENT_ID_PLAYER, Route104_Movement_PlayerExitBoat
+	applymovement LOCALID_PLAYER, Route104_Movement_PlayerExitBoat
 	waitmovement 0
 	call Common_EventScript_StopBrineysBoatMusic
-	showobjectat OBJ_EVENT_ID_PLAYER, MAP_DEWFORD_TOWN
-	applymovement OBJ_EVENT_ID_PLAYER, Route104_Movement_PlayerMoveForBriney
+	showobjectat LOCALID_PLAYER, MAP_DEWFORD_TOWN
+	applymovement LOCALID_PLAYER, Route104_Movement_PlayerMoveForBriney
 	waitmovement 0
-	setobjectxyperm LOCALID_BRINEY_DEWFORD, 12, 8
-	addobject LOCALID_BRINEY_DEWFORD
-	setobjectsubpriority LOCALID_BRINEY_DEWFORD, MAP_DEWFORD_TOWN, 0
+	setobjectxyperm LOCALID_DEWFORD_BRINEY, 12, 8
+	addobject LOCALID_DEWFORD_BRINEY
+	setobjectsubpriority LOCALID_DEWFORD_BRINEY, MAP_DEWFORD_TOWN, 0
 	clearflag FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN
-	applymovement LOCALID_BRINEY_DEWFORD, Route104_Movement_BrineyExitBoat
+	applymovement LOCALID_DEWFORD_BRINEY, Route104_Movement_BrineyExitBoat
 	waitmovement 0
-	addobject LOCALID_BOAT_DEWFORD
+	addobject LOCALID_DEWFORD_BOAT
 	clearflag FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN
 	call Common_EventScript_StopBrineysBoatMusic
 	copyvar VAR_BRINEY_LOCATION, VAR_0x8008
-	resetobjectsubpriority OBJ_EVENT_ID_PLAYER, MAP_ROUTE104
-	resetobjectsubpriority LOCALID_BRINEY_DEWFORD, MAP_DEWFORD_TOWN
-	copyobjectxytoperm LOCALID_BRINEY_DEWFORD
+	resetobjectsubpriority LOCALID_PLAYER, MAP_ROUTE104
+	resetobjectsubpriority LOCALID_DEWFORD_BRINEY, MAP_DEWFORD_TOWN
+	copyobjectxytoperm LOCALID_DEWFORD_BRINEY
 	setvar VAR_BOARD_BRINEY_BOAT_STATE, 0
 	goto_if_unset FLAG_DELIVERED_STEVEN_LETTER, Route104_EventScript_DeliverLetterReminder
 	goto_if_set FLAG_DELIVERED_STEVEN_LETTER, Route104_EventScript_LandedInDewford

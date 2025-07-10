@@ -1,7 +1,7 @@
 {
   "id": "MAP_ROUTE104_POKE_CENTER",
   "name": "Route104_PokeCenter",
-  "layout": "LAYOUT_ROUTE104_POKE_CENTER",
+  "layout": "LAYOUT_POKEMON_CENTER_1F",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_ROUTE_104",
   "requires_flash": false,

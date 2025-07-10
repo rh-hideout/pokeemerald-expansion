@@ -83,6 +83,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE121_GRUNT_1",
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 30,
       "y": 8,
@@ -96,6 +97,7 @@
       "flag": "FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS"
     },
     {
+      "local_id": "LOCALID_ROUTE121_GRUNT_2",
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 30,
       "y": 7,
@@ -109,6 +111,7 @@
       "flag": "FLAG_HIDE_ROUTE_121_TEAM_AQUA_GRUNTS"
     },
     {
+      "local_id": "LOCALID_ROUTE121_GRUNT_3",
       "graphics_id": "OBJ_EVENT_GFX_AQUA_MEMBER_M",
       "x": 31,
       "y": 7,

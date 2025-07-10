@@ -81,7 +81,7 @@ MauvilleCity_Gym_EventScript_Wattson::
 	goto_if_eq VAR_NEW_MAUVILLE_STATE, 2, MauvilleCity_Gym_EventScript_CompletedNewMauville
 	msgbox MauvilleCity_Gym_Text_WattsonPostBattle, MSGBOX_DEFAULT
 	setflag FLAG_HIDE_ROUTE_109_MR_BRINEY_BOAT
-	hideobjectat LOCALID_BOAT_R109, MAP_ROUTE109
+	hideobjectat LOCALID_ROUTE109_BOAT, MAP_ROUTE109
 	release
 	end
 

@@ -1,8 +1,3 @@
-.equ LOCALID_JACE, 1
-.equ LOCALID_KEEGAN, 2
-.equ LOCALID_JEFF, 3
-.equ LOCALID_ELI, 4
-
 LavaridgeTown_Gym_B1F_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, LavaridgeTown_Gym_B1F_OnTransition
 	.byte 0
@@ -37,7 +32,7 @@ LavaridgeTown_Gym_B1F_EventScript_CheckBuryTrainers::
 	setobjectmovementtype LOCALID_KEEGAN, MOVEMENT_TYPE_BURIED
 LavaridgeTown_Gym_B1F_EventScript_CheckBuryJace::
 	goto_if_defeated TRAINER_JACE, LavaridgeTown_Gym_B1F_EventScript_CheckBuryJeff
-	setobjectmovementtype LOCALID_JACE, MOVEMENT_TYPE_BURIED
+	setobjectmovementtype LOCALID_JEFF, MOVEMENT_TYPE_BURIED
 LavaridgeTown_Gym_B1F_EventScript_CheckBuryJeff::
 	goto_if_defeated TRAINER_JEFF, LavaridgeTown_Gym_B1F_EventScript_CheckBuryEli
 	setobjectmovementtype LOCALID_JEFF, MOVEMENT_TYPE_BURIED

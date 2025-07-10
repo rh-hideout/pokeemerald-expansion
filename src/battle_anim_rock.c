@@ -378,7 +378,7 @@ static void AnimStealthRock(struct Sprite *sprite)
     InitSpritePosToAnimAttacker(sprite, TRUE);
     SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &x, &y);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
     sprite->data[0] = gBattleAnimArgs[4];
@@ -454,7 +454,7 @@ void AnimRockFragment(struct Sprite *sprite)
     StartSpriteAnim(sprite, gBattleAnimArgs[5]);
     AnimateSprite(sprite);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x -= gBattleAnimArgs[0];
     else
         sprite->x += gBattleAnimArgs[0];
@@ -485,11 +485,7 @@ void AnimRockFragment(struct Sprite *sprite)
 // args[6] - attacker or target
 void AnimParticleInVortex(struct Sprite *sprite)
 {
-    if (IsDoubleBattle()
-    && (gAnimMoveIndex == MOVE_BLEAKWIND_STORM 
-     || gAnimMoveIndex == MOVE_SANDSEAR_STORM
-     || gAnimMoveIndex == MOVE_SPRINGTIDE_STORM
-     || gAnimMoveIndex == MOVE_WILDBOLT_STORM))
+    if (IsDoubleBattle() && GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
         InitSpritePosToAnimTargetsCentre(sprite, FALSE);
     else
         InitSpritePosToAnimBattler(gBattleAnimArgs[6], sprite, FALSE);
@@ -542,9 +538,9 @@ void AnimTask_LoadSandstormBackground(u8 taskId)
     GetBattleAnimBg1Data(&animBg);
     AnimLoadCompressedBgGfx(animBg.bgId, gBattleAnimBgImage_Sandstorm, animBg.tilesOffset);
     AnimLoadCompressedBgTilemapHandleContest(&animBg, gBattleAnimBgTilemap_Sandstorm, FALSE);
-    LoadCompressedPalette(gBattleAnimSpritePal_FlyingDirt, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
+    LoadPalette(gBattleAnimSpritePal_FlyingDirt, BG_PLTT_ID(animBg.paletteId), PLTT_SIZE_4BPP);
 
-    if (gBattleAnimArgs[0] && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (gBattleAnimArgs[0] && !IsOnPlayerSide(gBattleAnimAttacker))
         var0 = 1;
 
     gTasks[taskId].data[0] = var0;
@@ -641,7 +637,7 @@ void AnimFlyingSandCrescent(struct Sprite *sprite)
 {
     if (sprite->sState == 0)
     {
-        if (gBattleAnimArgs[3] != 0 && GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (gBattleAnimArgs[3] != 0 && !IsOnPlayerSide(gBattleAnimAttacker))
         {
             sprite->x = DISPLAY_WIDTH + 64;
             gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -764,10 +760,10 @@ void AnimTask_TectonicRageRollout(u8 taskId)
 
     task = &gTasks[taskId];
 
-    var0 = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
-    var1 = GetBattlerSpriteCoord(gBattleAnimAttacker, 1) + 24;
-    var2 = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
-    var3 = GetBattlerSpriteCoord(gBattleAnimTarget, 1) + 24;
+    var0 = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    var1 = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + 24;
+    var2 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    var3 = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + 24;
 
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget)
         var3 = var1;
@@ -974,7 +970,7 @@ static void AnimRockTomb_Step(struct Sprite *sprite)
 
 void AnimRockBlastRock(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         StartSpriteAffineAnim(sprite, 1);
 
     TranslateAnimSpriteToTargetMonLocation(sprite);

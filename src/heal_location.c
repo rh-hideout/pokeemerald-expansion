@@ -13,7 +13,7 @@ u32 GetHealLocationIndexByMap(u16 mapGroup, u16 mapNum)
 
     for (i = 0; i < ARRAY_COUNT(sHealLocations); i++)
     {
-        if (sHealLocations[i].group == mapGroup && sHealLocations[i].map == mapNum)
+        if (sHealLocations[i].mapGroup == mapGroup && sHealLocations[i].mapNum == mapNum)
             return i + 1;
     }
     return HEAL_LOCATION_NONE;
@@ -34,8 +34,8 @@ u32 GetHealLocationIndexByWarpData(struct WarpData *warp)
     u32 i;
     for (i = 0; i < ARRAY_COUNT(sHealLocations); i++)
     {
-        if (sHealLocations[i].group == warp->mapGroup
-        && sHealLocations[i].map == warp->mapNum
+        if (sHealLocations[i].mapGroup == warp->mapGroup
+        && sHealLocations[i].mapNum == warp->mapNum
         && sHealLocations[i].x == warp->x
         && sHealLocations[i].y == warp->y)
             return i + 1;
@@ -58,8 +58,8 @@ static bool32 IsLastHealLocation(u32 healLocation)
     const struct HealLocation *loc = GetHealLocation(healLocation);
     const struct WarpData *warpData = &gSaveBlock1Ptr->lastHealLocation;
 
-    return warpData->mapGroup == loc->group
-        && warpData->mapNum == loc->map
+    return warpData->mapGroup == loc->mapGroup
+        && warpData->mapNum == loc->mapNum
         && warpData->warpId == WARP_ID_NONE
         && warpData->x == loc->x
         && warpData->y == loc->y;
@@ -78,7 +78,7 @@ bool32 IsLastHealLocationPlayerHouse()
 
 u32 GetHealNpcLocalId(u32 healLocationId)
 {
-    if (healLocationId == HEAL_LOCATION_NONE || healLocationId >= HEAL_LOCATION_COUNT)
+    if (healLocationId == HEAL_LOCATION_NONE || healLocationId >= NUM_HEAL_LOCATIONS)
         return 0;
 
     return sHealNpcLocalId[healLocationId - 1];
@@ -97,8 +97,8 @@ void SetWhiteoutRespawnWarpAndHealerNPC(struct WarpData *warp)
     }
 
     pkmCenterHealLocation = sHealLocationsPokemonCenter[healLocationId - 1];
-    warp->mapGroup = pkmCenterHealLocation.group;
-    warp->mapNum = pkmCenterHealLocation.map;
+    warp->mapGroup = pkmCenterHealLocation.mapGroup;
+    warp->mapNum = pkmCenterHealLocation.mapNum;
     warp->warpId = WARP_ID_NONE;
     warp->x = pkmCenterHealLocation.x;
     warp->y = pkmCenterHealLocation.y;

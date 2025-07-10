@@ -265,6 +265,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE110_RIVAL",
       "graphics_id": "OBJ_EVENT_GFX_VAR_0",
       "x": 34,
       "y": 54,

@@ -97,10 +97,10 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS",
-      "x": 17,
-      "y": 19,
+      "x": 23,
+      "y": 21,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -110,10 +110,10 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS",
-      "x": 18,
-      "y": 19,
+      "x": 23,
+      "y": 20,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_type": "MOVEMENT_TYPE_FACE_LEFT",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -156,7 +156,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_BIG_PEARL",
+      "trainer_sight_or_berry_tree_id": "ITEM_SHARPEDONITE",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_125_BIG_PEARL"
     }
@@ -170,37 +170,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-    {
-      "type": "secret_base",
-      "x": 53,
-      "y": 10,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_RED_CAVE1_2"
-    },
-    {
-      "type": "secret_base",
-      "x": 55,
-      "y": 11,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_RED_CAVE4_2"
-    },
-    {
-      "type": "secret_base",
-      "x": 7,
-      "y": 25,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE2_2"
-    },
-    {
-      "type": "secret_base",
-      "x": 24,
-      "y": 32,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE4_2"
-    }
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

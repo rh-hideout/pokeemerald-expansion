@@ -225,6 +225,7 @@ EverGrandeCity_EventScript_GiveCresselia::
 EverGrandeCity_EventScript_GiveShayminS::
 	call EverGrandeCity_EventScript_SetFlags
 	givemon SPECIES_SHAYMIN_SKY, 95
+	giveitem ITEM_GRACIDEA
 	return
 
 EverGrandeCity_EventScript_GiveDialga::

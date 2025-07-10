@@ -9,7 +9,7 @@ SlateportCity_BattleTentLobby_OnWarp:
 
 SlateportCity_BattleTentLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	turnobject LOCALID_PLAYER, DIR_NORTH
 	end
 
 SlateportCity_BattleTentLobby_OnFrame:

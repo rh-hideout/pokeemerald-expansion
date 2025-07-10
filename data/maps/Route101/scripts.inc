@@ -1,6 +1,3 @@
-.set LOCALID_BIRCH, 2
-.set LOCALID_ZIGZAGOON, 4
-
 Route101_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route101_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, Route101_OnFrame
@@ -35,7 +32,7 @@ Route101_EventScript_PreventExitSouth::
 	lockall
 	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
 	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_PreventExitSouth
+	applymovement LOCALID_PLAYER, Route101_Movement_PreventExitSouth
 	waitmovement 0
 	releaseall
 	end
@@ -44,7 +41,7 @@ Route101_EventScript_PreventExitWest::
 	lockall
 	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
 	closemessage
-	applymovement OBJ_EVENT_ID_PLAYER, Route101_Movement_PreventExitWest
+	applymovement LOCALID_PLAYER, Route101_Movement_PreventExitWest
 	waitmovement 0
 	releaseall
 	end
@@ -84,13 +81,13 @@ Route101_EventScript_BirchsBag::
 	setflag FLAG_SYS_POKEMON_GET
 	setflag FLAG_RESCUED_BIRCH
 	fadescreen FADE_TO_BLACK
-	removeobject LOCALID_ZIGZAGOON
-	setobjectxy OBJ_EVENT_ID_PLAYER, 6, 13
-	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	removeobject LOCALID_ROUTE101_ZIGZAGOON
+	setobjectxy LOCALID_PLAYER, 6, 13
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
 	waitmovement 0
 	special ChooseStarter
 	waitstate
-	applymovement LOCALID_BIRCH, Route101_Movement_BirchApproachPlayer
+	applymovement LOCALID_ROUTE101_BIRCH, Route101_Movement_BirchApproachPlayer
 	waitmovement 0
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
 	special HealPlayerParty

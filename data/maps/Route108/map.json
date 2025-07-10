@@ -112,7 +112,7 @@
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_STAR_PIECE",
+      "trainer_sight_or_berry_tree_id": "ITEM_COVERT_CLOAK",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_108_STAR_PIECE"
     }
@@ -126,10 +126,6 @@
       "dest_warp_id": "0"
     }
   ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-
-  ]
+  "coord_events": [],
+  "bg_events": []
 }

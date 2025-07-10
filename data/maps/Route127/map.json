@@ -174,52 +174,12 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_RARE_CANDY",
+      "trainer_sight_or_berry_tree_id": "ITEM_GYARADOSITE",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_127_RARE_CANDY"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-    {
-      "type": "secret_base",
-      "x": 59,
-      "y": 67,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_RED_CAVE4_1"
-    },
-    {
-      "type": "secret_base",
-      "x": 59,
-      "y": 72,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE3_2"
-    },
-    {
-      "type": "secret_base",
-      "x": 67,
-      "y": 63,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE4_1"
-    },
-    {
-      "type": "secret_base",
-      "x": 61,
-      "y": 21,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE3_3"
-    },
-    {
-      "type": "secret_base",
-      "x": 45,
-      "y": 24,
-      "elevation": 0,
-      "secret_base_id": "SECRET_BASE_YELLOW_CAVE1_3"
-    }
-  ]
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
 }

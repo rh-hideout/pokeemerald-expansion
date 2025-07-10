@@ -22,9 +22,9 @@ struct FieldInput
     u8 dpadDirection;
 };
 
-void FieldClearPlayerInput(struct FieldInput *input);
-void FieldGetPlayerInput(struct FieldInput *input, u16 newKeys, u16 heldKeys);
-int ProcessPlayerFieldInput(struct FieldInput *input);
+void FieldClearPlayerInput(struct FieldInput *pStruct);
+void FieldGetPlayerInput(struct FieldInput *pStruct, u16 keys, u16 heldKeys);
+int ProcessPlayerFieldInput(struct FieldInput *pStruct);
 void RestartWildEncounterImmunitySteps(void);
 const u8 *GetObjectEventScriptPointerPlayerFacing(void);
 bool8 TryDoDiveWarp(struct MapPosition *position, u16 metatileBehavior);

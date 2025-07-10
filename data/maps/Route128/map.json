@@ -62,6 +62,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_ROUTE128_STEVEN",
       "graphics_id": "OBJ_EVENT_GFX_STEVEN",
       "x": 40,
       "y": 22,
@@ -75,6 +76,7 @@
       "flag": "FLAG_HIDE_ROUTE_128_STEVEN"
     },
     {
+      "local_id": "LOCALID_ROUTE128_ARCHIE",
       "graphics_id": "OBJ_EVENT_GFX_ARCHIE",
       "x": 37,
       "y": 22,
@@ -88,6 +90,7 @@
       "flag": "FLAG_HIDE_ROUTE_128_ARCHIE"
     },
     {
+      "local_id": "LOCALID_ROUTE128_MAXIE",
       "graphics_id": "OBJ_EVENT_GFX_MAXIE",
       "x": 38,
       "y": 21,
@@ -166,20 +169,7 @@
       "flag": "0"
     }
   ],
-  "warp_events": [
-
-  ],
-  "coord_events": [
-
-  ],
-  "bg_events": [
-    {
-      "type": "hidden_item",
-      "x": 57,
-      "y": 21,
-      "elevation": 3,
-      "item": "ITEM_HEART_SCALE",
-      "flag": "FLAG_HIDDEN_ITEM_ROUTE_128_HEART_SCALE_2"
-    }
-  ]
+  "warp_events": [],
+  "coord_events": [],
+  "bg_events": []
 }

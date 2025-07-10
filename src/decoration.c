@@ -95,6 +95,12 @@ struct DecorationPCContext
     u8 isPlayerRoom;
 };
 
+struct DecorItem
+{
+    const u32 *pic;
+    const u16 *pal;
+};
+
 enum Windows
 {
     WINDOW_MAIN_MENU,
@@ -180,7 +186,8 @@ static void CantPlaceDecorationPrompt(u8 taskId);
 static void InitializePuttingAwayCursorSprite(struct Sprite *sprite);
 static void InitializePuttingAwayCursorSprite2(struct Sprite *sprite);
 static u8 gpu_pal_decompress_alloc_tag_and_upload(struct PlaceDecorationGraphicsDataBuffer *data, u8 decor);
-static const u32 *GetDecorationIconPicOrPalette(u16 decor, u8 mode);
+static const u32 *GetDecorationIconPic(u16 decor);
+static const u16 *GetDecorationIconPalette(u16 decor);
 static bool8 HasDecorationsInUse(u8 taskId);
 static void Task_ContinuePuttingAwayDecorations(u8 taskId);
 static void ContinuePuttingAwayDecorations(u8 taskId);
@@ -2066,22 +2073,22 @@ static u8 gpu_pal_decompress_alloc_tag_and_upload(struct PlaceDecorationGraphics
 static u8 AddDecorationIconObjectFromIconTable(u16 tilesTag, u16 paletteTag, u8 decor)
 {
     struct SpriteSheet sheet;
-    struct CompressedSpritePalette palette;
+    struct SpritePalette palette;
     struct SpriteTemplate *template;
     u8 spriteId;
 
     if (!AllocItemIconTemporaryBuffers())
         return MAX_SPRITES;
 
-    LZDecompressWram(GetDecorationIconPicOrPalette(decor, 0), gItemIconDecompressionBuffer);
+    LZDecompressWram(GetDecorationIconPic(decor), gItemIconDecompressionBuffer);
     CopyItemIconPicTo4x4Buffer(gItemIconDecompressionBuffer, gItemIcon4x4Buffer);
     sheet.data = gItemIcon4x4Buffer;
     sheet.size = 0x200;
     sheet.tag = tilesTag;
     LoadSpriteSheet(&sheet);
-    palette.data = GetDecorationIconPicOrPalette(decor, 1);
+    palette.data = GetDecorationIconPalette(decor);
     palette.tag = paletteTag;
-    LoadCompressedSpritePalette(&palette);
+    LoadSpritePalette(&palette);
     template = Alloc(sizeof(struct SpriteTemplate));
     *template = gItemIconSpriteTemplate;
     template->tileTag = tilesTag;
@@ -2092,12 +2099,20 @@ static u8 AddDecorationIconObjectFromIconTable(u16 tilesTag, u16 paletteTag, u8 
     return spriteId;
 }
 
-static const u32 *GetDecorationIconPicOrPalette(u16 decor, u8 mode)
+static const u32 *GetDecorationIconPic(u16 decor)
 {
     if (decor > NUM_DECORATIONS)
         decor = DECOR_NONE;
 
-    return gDecorIconTable[decor][mode];
+    return gDecorIconTable[decor].pic;
+}
+
+static const u16 *GetDecorationIconPalette(u16 decor)
+{
+    if (decor > NUM_DECORATIONS)
+        decor = DECOR_NONE;
+
+    return gDecorIconTable[decor].pal;
 }
 
 static u8 AddDecorationIconObjectFromObjectEvent(u16 tilesTag, u16 paletteTag, u8 decor)
@@ -2131,7 +2146,7 @@ static u8 AddDecorationIconObjectFromObjectEvent(u16 tilesTag, u16 paletteTag, u
     }
     else
     {
-        spriteId = CreateObjectGraphicsSprite(sPlaceDecorationGraphicsDataBuffer.decoration->tiles[0], SpriteCallbackDummy, 0, 0, 1);
+        spriteId = CreateObjectGraphicsSpriteWithTag(sPlaceDecorationGraphicsDataBuffer.decoration->tiles[0], SpriteCallbackDummy, 0, 0, 1, paletteTag);
     }
     return spriteId;
 }
@@ -2149,7 +2164,7 @@ u8 AddDecorationIconObject(u8 decor, s16 x, s16 y, u8 priority, u16 tilesTag, u1
         gSprites[spriteId].x2 = x + 4;
         gSprites[spriteId].y2 = y + 4;
     }
-    else if (gDecorIconTable[decor][0] == NULL)
+    else if (gDecorIconTable[decor].pic == NULL)
     {
         spriteId = AddDecorationIconObjectFromObjectEvent(tilesTag, paletteTag, decor);
         if (spriteId == MAX_SPRITES)

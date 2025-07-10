@@ -43,28 +43,28 @@ RusturfTunnel_EventScript_BoyfriendApproachWanda::
 	applymovement OBJ_EVENT_ID_PLAYER, RusturfTunnel_Movement_PlayerWatchBoyfriend
 	applymovement LOCALID_WANDAS_BF, RusturfTunnel_Movement_BoyfriendApproachWanda
 	waitmovement 0
-	applymovement LOCALID_WANDA, Common_Movement_WalkInPlaceFasterDown
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDA, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
 	return
 
 RusturfTunnel_EventScript_WandasBoyfriendApproachPlayer::
 	closemessage
-	applymovement LOCALID_WANDAS_BF, RusturfTunnel_Movement_WandasBoyfriendApproachPlayer
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDAS_BF, RusturfTunnel_Movement_WandasBoyfriendApproachPlayer
 	waitmovement 0
 	return
 
 RusturfTunnel_EventScript_WandaAndBoyfriendExit::
-	applymovement OBJ_EVENT_ID_PLAYER, RusturfTunnel_Movement_PlayerWatchWandaExit
-	applymovement LOCALID_WANDA, RusturfTunnel_Movement_WandaExit
-	applymovement LOCALID_WANDAS_BF, RusturfTunnel_Movement_WandasBoyfriendExit
+	applymovement LOCALID_PLAYER, RusturfTunnel_Movement_PlayerWatchWandaExit
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDA, RusturfTunnel_Movement_WandaExit
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDAS_BF, RusturfTunnel_Movement_WandasBoyfriendExit
 	waitmovement 0
 	return
 
 RusturfTunnel_EventScript_WandasBoyfriendNotice::
 	playse SE_PIN
-	applymovement LOCALID_WANDAS_BF, Common_Movement_ExclamationMark
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDAS_BF, Common_Movement_ExclamationMark
 	waitmovement 0
-	applymovement LOCALID_WANDAS_BF, Common_Movement_Delay48
+	applymovement LOCALID_RUSTURF_TUNNEL_WANDAS_BF, Common_Movement_Delay48
 	waitmovement 0
 	return
 

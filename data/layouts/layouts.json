@@ -95,7 +95,7 @@
       "id": "LAYOUT_LITTLEROOT_TOWN",
       "name": "LittlerootTown_Layout",
       "width": 20,
-      "height": 22,
+      "height": 20,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/LittlerootTown/border.bin",
@@ -175,7 +175,7 @@
       "id": "LAYOUT_ROUTE102",
       "name": "Route102_Layout",
       "width": 50,
-      "height": 26,
+      "height": 20,
       "primary_tileset": "gTileset_General",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/Route102/border.bin",
@@ -854,8 +854,8 @@
     {
       "id": "LAYOUT_MAUVILLE_CITY_GAME_CORNER",
       "name": "MauvilleCity_GameCorner_Layout",
-      "width": 4,
-      "height": 7,
+      "width": 22,
+      "height": 11,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_MauvilleGameCorner",
       "border_filepath": "data/layouts/MauvilleCity_GameCorner/border.bin",
@@ -990,6 +990,26 @@
       "secondary_tileset": "gTileset_LilycoveMuseum",
       "border_filepath": "data/layouts/LilycoveCity_LilycoveMuseum_2F/border.bin",
       "blockdata_filepath": "data/layouts/LilycoveCity_LilycoveMuseum_2F/map.bin"
+    },
+    {
+      "id": "LAYOUT_LILYCOVE_CITY_CONTEST_LOBBY",
+      "name": "LilycoveCity_ContestLobby_Layout",
+      "width": 31,
+      "height": 12,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/LilycoveCity_ContestLobby/border.bin",
+      "blockdata_filepath": "data/layouts/LilycoveCity_ContestLobby/map.bin"
+    },
+    {
+      "id": "LAYOUT_LILYCOVE_CITY_CONTEST_HALL",
+      "name": "LilycoveCity_ContestHall_Layout",
+      "width": 51,
+      "height": 33,
+      "primary_tileset": "gTileset_Building",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/LilycoveCity_ContestHall/border.bin",
+      "blockdata_filepath": "data/layouts/LilycoveCity_ContestHall/map.bin"
     },
     {
       "id": "LAYOUT_LILYCOVE_CITY_POKEMON_TRAINER_FAN_CLUB",
@@ -1990,6 +2010,66 @@
       "secondary_tileset": "gTileset_CableClub",
       "border_filepath": "data/layouts/BattleColosseum_4P/border.bin",
       "blockdata_filepath": "data/layouts/BattleColosseum_4P/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL",
+      "name": "ContestHall_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHall/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHall/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL_BEAUTY",
+      "name": "ContestHallBeauty_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHallBeauty/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHallBeauty/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL_TOUGH",
+      "name": "ContestHallTough_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHallTough/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHallTough/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL_COOL",
+      "name": "ContestHallCool_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHallCool/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHallCool/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL_SMART",
+      "name": "ContestHallSmart_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHallSmart/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHallSmart/map.bin"
+    },
+    {
+      "id": "LAYOUT_CONTEST_HALL_CUTE",
+      "name": "ContestHallCute_Layout",
+      "width": 15,
+      "height": 11,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Contest",
+      "border_filepath": "data/layouts/ContestHallCute/border.bin",
+      "blockdata_filepath": "data/layouts/ContestHallCute/map.bin"
     },
     {
       "id": "LAYOUT_SAFARI_ZONE_NORTHWEST",
@@ -3970,16 +4050,6 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
-    },
-    {
-      "id": "LAYOUT_ROUTE104_POKE_CENTER",
-      "name": "Route104_PokeCenter_Layout",
-      "width": 14,
-      "height": 9,
-      "primary_tileset": "gTileset_Building",
-      "secondary_tileset": "gTileset_PokemonCenter",
-      "border_filepath": "data/layouts/Route104_PokeCenter/border.bin",
-      "blockdata_filepath": "data/layouts/Route104_PokeCenter/map.bin"
     }
   ]
 }

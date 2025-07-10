@@ -1,6 +1,3 @@
-.set LOCALID_BRINEY, 1
-.set LOCALID_PEEKO, 2
-
 Route104_MrBrineysHouse_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, Route104_MrBrineysHouse_OnTransition
 	.byte 0

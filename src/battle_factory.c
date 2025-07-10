@@ -817,7 +817,7 @@ u8 GetNumPastRentalsRank(u8 battleMode, u8 lvlMode)
     return ret;
 }
 
-u32 GetAiScriptsInBattleFactory(void)
+u64 GetAiScriptsInBattleFactory(void)
 {
     int lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
 

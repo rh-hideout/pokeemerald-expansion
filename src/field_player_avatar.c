@@ -9,12 +9,14 @@
 #include "field_screen_effect.h"
 #include "field_player_avatar.h"
 #include "fieldmap.h"
+#include "follower_npc.h"
 #include "menu.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "party_menu.h"
 #include "random.h"
 #include "rotating_gate.h"
+#include "rtc.h"
 #include "script.h"
 #include "sound.h"
 #include "sprite.h"
@@ -27,6 +29,7 @@
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
 #include "constants/items.h"
+#include "constants/metatile_behaviors.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/trainer_types.h"
@@ -34,9 +37,29 @@
 #define NUM_FORCED_MOVEMENTS 18
 #define NUM_ACRO_BIKE_COLLISIONS 5
 
+enum SpinDirection
+{
+    SPIN_DIRECTION_NONE,
+    SPIN_DIRECTION_CLOCKWISE,
+    SPIN_DIRECTION_COUNTER_CLOCKWISE,
+};
+
+struct SpinData
+{
+    u32 triggerEvo:1;
+    u32 spinDirection:2;
+    u32 spinTimeout:6;
+    u32 spinHistory0:3;
+    u32 spinHistory1:3;
+    u32 spinHistory2:3;
+    u32 spinHistory3:3;
+    u32 VBlanksSpinning:11; //34,1 seconds
+};
+
 static EWRAM_DATA u8 sSpinStartFacingDir = 0;
 EWRAM_DATA struct ObjectEvent gObjectEvents[OBJECT_EVENTS_COUNT] = {};
 EWRAM_DATA struct PlayerAvatar gPlayerAvatar = {};
+EWRAM_DATA struct SpinData gPlayerSpinData = {};
 
 // static declarations
 static u8 ObjectEventCB2_NoMovement2(void);
@@ -44,7 +67,6 @@ static bool8 TryInterruptObjectEventSpecialAnim(struct ObjectEvent *, u8);
 static void npc_clear_strange_bits(struct ObjectEvent *);
 static void MovePlayerAvatarUsingKeypadInput(u8, u16, u16);
 static void PlayerAllowForcedMovementIfMovingSameDirection(void);
-static bool8 TryDoMetatileBehaviorForcedMovement(void);
 static u8 GetForcedMovementByMetatileBehavior(void);
 
 static bool8 ForcedMovement_None(void);
@@ -421,7 +443,7 @@ static void PlayerAllowForcedMovementIfMovingSameDirection(void)
         gPlayerAvatar.flags &= ~PLAYER_AVATAR_FLAG_CONTROLLABLE;
 }
 
-static bool8 TryDoMetatileBehaviorForcedMovement(void)
+bool8 TryDoMetatileBehaviorForcedMovement(void)
 {
     return sForcedMovementFuncs[GetForcedMovementByMetatileBehavior()]();
 }
@@ -498,6 +520,10 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
     {
         playerAvatar->runningState = MOVING;
         moveFunc(direction);
+        if (PlayerHasFollowerNPC()
+         && gObjectEvents[GetFollowerNPCObjectId()].invisible == FALSE
+         && FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
+            CreateTask(Task_MoveNPCFollowerAfterForcedMovement, 3);
         return TRUE;
     }
 }
@@ -632,8 +658,128 @@ static void PlayerNotOnBikeNotMoving(u8 direction, u16 heldKeys)
     PlayerFaceDirection(GetPlayerFacingDirection());
 }
 
+void UpdateSpinData(void)
+{
+    if (gPlayerSpinData.spinTimeout != 0)
+    {
+        gPlayerSpinData.spinTimeout--;
+        if (gPlayerSpinData.VBlanksSpinning < 2048)
+            gPlayerSpinData.VBlanksSpinning++;
+        if (gPlayerSpinData.spinTimeout == 0 && gPlayerSpinData.spinDirection != SPIN_DIRECTION_NONE)
+            gPlayerSpinData.triggerEvo = TRUE;
+    }
+}
+
+void ResetSpinTimer(void)
+{
+    gPlayerSpinData.spinTimeout = 0;
+    gPlayerSpinData.VBlanksSpinning = 0;
+    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
+    gPlayerSpinData.spinHistory0 = DIR_NONE;
+    gPlayerSpinData.spinHistory1 = DIR_NONE;
+    gPlayerSpinData.spinHistory2 = DIR_NONE;
+    gPlayerSpinData.spinHistory3 = DIR_NONE;
+}
+
+static const u8 sClockwiseDirections[4][4] =
+{
+    { DIR_NORTH, DIR_EAST, DIR_SOUTH, DIR_WEST, },
+    { DIR_EAST, DIR_SOUTH, DIR_WEST, DIR_NORTH, },
+    { DIR_SOUTH, DIR_WEST, DIR_NORTH, DIR_EAST, },
+    { DIR_WEST, DIR_NORTH, DIR_EAST, DIR_SOUTH, },
+};
+
+static const u8 sCounterClockwiseDirections[4][4] =
+{
+    { DIR_NORTH, DIR_WEST, DIR_SOUTH, DIR_EAST, },
+    { DIR_WEST, DIR_SOUTH, DIR_EAST, DIR_NORTH, },
+    { DIR_SOUTH, DIR_EAST, DIR_NORTH, DIR_WEST, },
+    { DIR_EAST, DIR_NORTH, DIR_WEST, DIR_SOUTH, },
+};
+
+static void WindUpSpinTimer(u32 direction)
+{
+    gPlayerSpinData.spinTimeout = 60;
+    gPlayerSpinData.spinHistory0 = gPlayerSpinData.spinHistory1;
+    gPlayerSpinData.spinHistory1 = gPlayerSpinData.spinHistory2;
+    gPlayerSpinData.spinHistory2 = gPlayerSpinData.spinHistory3;
+    gPlayerSpinData.spinHistory3 = direction;
+
+    for (int i = 0; i < ARRAY_COUNT(sClockwiseDirections); i++)
+    {
+        if (gPlayerSpinData.spinHistory0 == sClockwiseDirections[i][0]
+            && gPlayerSpinData.spinHistory1 == sClockwiseDirections[i][1]
+            && gPlayerSpinData.spinHistory2 == sClockwiseDirections[i][2]
+            && gPlayerSpinData.spinHistory3 == sClockwiseDirections[i][3])
+        {
+            gPlayerSpinData.spinDirection = SPIN_DIRECTION_CLOCKWISE;
+            return;
+        }
+    }
+    for (int i = 0; i < ARRAY_COUNT(sCounterClockwiseDirections); i++)
+    {
+        if (gPlayerSpinData.spinHistory0 == sCounterClockwiseDirections[i][0]
+            && gPlayerSpinData.spinHistory1 == sCounterClockwiseDirections[i][1]
+            && gPlayerSpinData.spinHistory2 == sCounterClockwiseDirections[i][2]
+            && gPlayerSpinData.spinHistory3 == sCounterClockwiseDirections[i][3])
+        {
+            gPlayerSpinData.spinDirection = SPIN_DIRECTION_COUNTER_CLOCKWISE;
+            return;
+        }
+    }
+    gPlayerSpinData.spinDirection = SPIN_DIRECTION_NONE;
+}
+
+bool32 CanTriggerSpinEvolution()
+{
+    gSpecialVar_0x8000 = EVO_NONE;
+    bool32 canStopEvo = TRUE;
+    if (gPlayerSpinData.triggerEvo)
+    {
+        u32 seconds = gPlayerSpinData.VBlanksSpinning / 60;
+        u32 direction = gPlayerSpinData.spinDirection;
+        if (seconds >= 10)
+        {
+            gSpecialVar_0x8000 = SPIN_EITHER;
+        }
+
+        else if (seconds >= 5 && seconds < 10)
+        {
+            if (direction == SPIN_DIRECTION_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CW_LONG;
+            else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CCW_LONG;
+        }
+        else if (seconds < 5)
+        {
+            if (direction == SPIN_DIRECTION_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CW_SHORT;
+            else if (direction == SPIN_DIRECTION_COUNTER_CLOCKWISE)
+                gSpecialVar_0x8000 = SPIN_CCW_SHORT;
+        }
+        gSpecialVar_0x8001 = FALSE; //canStopEvo
+        canStopEvo = FALSE;
+        gSpecialVar_0x8002 = TRUE; //tryMultiple
+        gPlayerSpinData.triggerEvo = FALSE;
+    }
+    if (gSpecialVar_0x8000 != EVO_NONE)
+    {
+        for (u32 i = 0; i < PARTY_SIZE; i++)
+        {
+            u16 species = GetEvolutionTargetSpecies(&gPlayerParty[i], EVO_MODE_OVERWORLD_SPECIAL, 0, NULL, &canStopEvo, CHECK_EVO);
+            if (species != SPECIES_NONE)
+            {
+                return TRUE;
+            }
+        }
+    }
+
+    return FALSE;
+}
+
 static void PlayerNotOnBikeTurningInPlace(u8 direction, u16 heldKeys)
 {
+    WindUpSpinTimer(direction);
     PlayerTurnInPlace(direction);
 }
 
@@ -659,13 +805,32 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
         }
         else
         {
-            u8 adjustedCollision = collision - COLLISION_STOP_SURFING;
-            if (adjustedCollision > 3)
+            // Player collided with something. Certain collisions have special handling that precludes the normal collision effect.
+            // COLLISION_STOP_SURFING and COLLISION_PUSHED_BOULDER's effects are started by CheckForObjectEventCollision.
+            // COLLISION_LEDGE_JUMP's effect is handled further up in this function, so it will never reach this point.
+            // COLLISION_ROTATING_GATE is unusual however, this was probably included by mistake. When the player walks into a
+            // rotating gate that cannot rotate there is no additional handling, it's just a regular collision. Its exclusion here
+            // means that the player avatar won't update if they encounter this kind of collision. This has two noticeable effects:
+            // - Colliding with it head-on stops the player dead, rather than playing the walking animation and playing a bump sound effect
+            // - Colliding with it by changing direction won't turn the player avatar, their walking animation will just speed up.
+#ifdef BUGFIX
+            if (collision != COLLISION_STOP_SURFING
+             && collision != COLLISION_LEDGE_JUMP
+             && collision != COLLISION_PUSHED_BOULDER)
+#else
+            if (collision != COLLISION_STOP_SURFING
+             && collision != COLLISION_LEDGE_JUMP
+             && collision != COLLISION_PUSHED_BOULDER
+             && collision != COLLISION_ROTATING_GATE)
+#endif
+            {
                 PlayerNotOnBikeCollide(direction);
+            }
             return;
         }
     }
-    
+
+    ResetSpinTimer(); // Everything below will move the player a space, reset the timer.
     gPlayerAvatar.creeping = FALSE;
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
     {
@@ -683,7 +848,7 @@ static void PlayerNotOnBikeMoving(u8 direction, u16 heldKeys)
     }
 
     if (!(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_UNDERWATER) && (heldKeys & B_BUTTON) && FlagGet(FLAG_SYS_B_DASH)
-     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0)
+     && IsRunningDisallowed(gObjectEvents[gPlayerAvatar.objectEventId].currentMetatileBehavior) == 0 && !FollowerNPCComingThroughDoor())
     {
         if (ObjectMovingOnRockStairs(&gObjectEvents[gPlayerAvatar.objectEventId], direction))
             PlayerRunSlow(direction);
@@ -774,7 +939,9 @@ static bool8 CanStopSurfing(s16 x, s16 y, u8 direction)
 {
     if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_SURFING)
      && MapGridGetElevationAt(x, y) == 3
-     && GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT)
+     && (GetObjectEventIdByPosition(x, y, 3) == OBJECT_EVENTS_COUNT
+     || GetObjectEventIdByPosition(x, y, 3) == GetFollowerNPCObjectId()
+     ))
     {
         CreateStopSurfingTask(direction);
         return TRUE;
@@ -842,7 +1009,7 @@ bool8 IsPlayerCollidingWithFarawayIslandMew(u8 direction)
     playerY = object->currentCoords.y;
 
     MoveCoords(direction, &playerX, &playerY);
-    mewObjectId = GetObjectEventIdByLocalIdAndMap(1, MAP_NUM(FARAWAY_ISLAND_INTERIOR), MAP_GROUP(FARAWAY_ISLAND_INTERIOR));
+    mewObjectId = GetObjectEventIdByLocalIdAndMap(LOCALID_FARAWAY_ISLAND_MEW, MAP_NUM(MAP_FARAWAY_ISLAND_INTERIOR), MAP_GROUP(MAP_FARAWAY_ISLAND_INTERIOR));
     if (mewObjectId == OBJECT_EVENTS_COUNT)
         return FALSE;
 
@@ -1062,6 +1229,22 @@ void PlayerOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
     PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
+    // Edge case: If the player stops at the top of a mud slide, but the NPC follower is still on a mud slide tile,
+    // move the follower into the player and hide them.
+    if (PlayerHasFollowerNPC())
+    {
+        struct ObjectEvent *npcFollower = &gObjectEvents[GetFollowerNPCObjectId()];
+        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+        if (npcFollower->invisible == FALSE
+         && player->currentMetatileBehavior != MB_MUDDY_SLOPE
+         && npcFollower->currentMetatileBehavior == MB_MUDDY_SLOPE)
+        {
+            gPlayerAvatar.preventStep = TRUE;
+            ObjectEventSetHeldMovement(npcFollower, MOVEMENT_ACTION_WALK_FAST_UP);
+            CreateTask(Task_HideNPCFollowerAfterMovementFinish, 2);
+        }
+    }
 }
 
 void PlayerOnBikeCollideWithFarawayIslandMew(u8 direction)
@@ -1429,7 +1612,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     u8 objectEventId;
     struct ObjectEvent *objectEvent;
 
-    playerObjEventTemplate.localId = OBJ_EVENT_ID_PLAYER;
+    playerObjEventTemplate.localId = LOCALID_PLAYER;
     playerObjEventTemplate.graphicsId = GetPlayerAvatarGraphicsIdByStateIdAndGender(PLAYER_AVATAR_STATE_NORMAL, gender);
     playerObjEventTemplate.x = x - MAP_OFFSET;
     playerObjEventTemplate.y = y - MAP_OFFSET;
@@ -1453,6 +1636,7 @@ void InitPlayerAvatar(s16 x, s16 y, u8 direction, u8 gender)
     gPlayerAvatar.spriteId = objectEvent->spriteId;
     gPlayerAvatar.gender = gender;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_CONTROLLABLE | PLAYER_AVATAR_FLAG_ON_FOOT);
+    CreateFollowerNPCAvatar();
 }
 
 void SetPlayerInvisibility(bool8 invisible)
@@ -1702,6 +1886,7 @@ static void CreateStopSurfingTask(u8 direction)
     taskId = CreateTask(Task_StopSurfingInit, 0xFF);
     gTasks[taskId].data[0] = direction;
     Task_StopSurfingInit(taskId);
+    PrepareFollowerNPCDismountSurf();
 }
 
 static void Task_StopSurfingInit(u8 taskId)
@@ -2551,4 +2736,3 @@ bool8 ObjectMovingOnRockStairs(struct ObjectEvent *objectEvent, u8 direction)
         return FALSE;
     #endif
 }
-

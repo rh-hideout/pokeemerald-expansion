@@ -12,7 +12,7 @@ PetalburgCity_PokemonCenter_1F_OnTransition:
 	end
 
 PetalburgCity_PokemonCenter_1F_EventScript_Nurse::
-	setvar VAR_0x800B, LOCALID_NURSE
+	setvar VAR_0x800B, LOCALID_PETALBURG_NURSE
 	call Common_EventScript_PkmnCenterNurse
 	waitmessage
 	waitbuttonpress

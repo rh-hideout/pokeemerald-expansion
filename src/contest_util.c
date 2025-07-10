@@ -274,7 +274,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_Confetti =
 };
 
 
-static const struct CompressedSpritePalette sSpritePalette_Confetti =
+static const struct SpritePalette sSpritePalette_Confetti =
 {
     .data = gConfetti_Pal,
     .tag = TAG_CONFETTI
@@ -457,7 +457,7 @@ static void LoadContestResultsBgGfx(void)
     CopyToBgTilemapBuffer(2, gContestResults_Interface_Tilemap, 0, 0);
     CopyToBgTilemapBuffer(0, gContestResults_WinnerBanner_Tilemap, 0, 0);
     LoadContestResultsTitleBarTilemaps();
-    LoadCompressedPalette(gContestResults_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
+    LoadPalette(gContestResults_Pal, BG_PLTT_OFFSET, BG_PLTT_SIZE);
     LoadPalette(sResultsTextWindow_Pal, BG_PLTT_ID(15), sizeof(sResultsTextWindow_Pal));
 
     for (i = 0; i < CONTESTANT_COUNT; i++)
@@ -898,7 +898,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
                                 species,
                                 personality);
 
-        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
         SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_OPPONENT_LEFT);
         gMultiuseSpriteTemplate.paletteTag = species;
         spriteId = CreateSprite(&gMultiuseSpriteTemplate, DISPLAY_WIDTH + 32, DISPLAY_HEIGHT / 2, 10);
@@ -907,7 +907,7 @@ static void Task_ShowWinnerMonBanner(u8 taskId)
         gSprites[spriteId].callback = SpriteCB_WinnerMonSlideIn;
         sContestResults->data->winnerMonSpriteId = spriteId;
         LoadCompressedSpriteSheet(&sSpriteSheet_Confetti);
-        LoadCompressedSpritePalette(&sSpritePalette_Confetti);
+        LoadSpritePalette(&sSpritePalette_Confetti);
         CreateTask(Task_CreateConfetti, 10);
         gTasks[taskId].tState++;
         break;
@@ -2293,13 +2293,13 @@ void GetNpcContestantLocalId(void)
     switch (contestant)
     {
     case 0:
-        localId = 3;
+        localId = LOCALID_CONTESTANT_1;
         break;
     case 1:
-        localId = 4;
+        localId = LOCALID_CONTESTANT_2;
         break;
     case 2:
-        localId = 5;
+        localId = LOCALID_CONTESTANT_3;
         break;
     default: // Invalid
         localId = 100;
@@ -2499,7 +2499,12 @@ void LoadLinkContestPlayerPalettes(void)
     u8 objectEventId;
     int version;
     struct Sprite *sprite;
-    static const u8 sContestantLocalIds[CONTESTANT_COUNT] = { 3, 4, 5, 14 };
+    static const u8 sContestantLocalIds[CONTESTANT_COUNT] = {
+        LOCALID_CONTESTANT_1,
+        LOCALID_CONTESTANT_2,
+        LOCALID_CONTESTANT_3,
+        LOCALID_CONTESTANT_4,
+    };
 
     // gReservedSpritePaletteCount = 12;
     // TODO: Does dynamically allocating link player palettes break link contests?
@@ -2578,7 +2583,7 @@ void ShowContestEntryMonPic(void)
         gTasks[taskId].data[1] = species;
         HandleLoadSpecialPokePic(TRUE, gMonSpritesGfxPtr->spritesGfx[B_POSITION_OPPONENT_LEFT], species, personality);
 
-        LoadCompressedSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
+        LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
         SetMultiuseSpriteTemplateToPokemon(species, B_POSITION_OPPONENT_LEFT);
         gMultiuseSpriteTemplate.paletteTag = species;
         spriteId = CreateSprite(&gMultiuseSpriteTemplate, (left + 1) * 8 + 32, (top * 8) + 40, 0);

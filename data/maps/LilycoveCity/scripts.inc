@@ -1,6 +1,3 @@
-.set LOCALID_WOMAN_1, 19
-.set LOCALID_MAN_1, 20
-
 LilycoveCity_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, LilycoveCity_OnTransition
 	map_script MAP_SCRIPT_ON_LOAD, LilycoveCity_OnLoad
@@ -128,13 +125,13 @@ LilycoveCity_EventScript_FatMan::
 LilycoveCity_EventScript_Man1::
 	lockall
 	msgbox LilycoveCity_Text_JustArrivedAndSawRarePokemon, MSGBOX_NPC
-	applymovement LOCALID_MAN_1, Common_Movement_FaceOriginalDirection
+	applymovement LOCALID_LILYCOVE_MAN_1, Common_Movement_FaceOriginalDirection
 	end
 
 LilycoveCity_EventScript_Woman1::
 	lockall
 	msgbox LilycoveCity_Text_HoneymoonVowToSeeRarePokemon, MSGBOX_NPC
-	applymovement LOCALID_WOMAN_1, Common_Movement_FaceOriginalDirection
+	applymovement LOCALID_LILYCOVE_WOMAN_1, Common_Movement_FaceOriginalDirection
 	end
 
 LilycoveCity_EventScript_CitySign::
@@ -323,6 +320,10 @@ LilycoveCity_EventScript_DefeatedMay::
 	call_if_eq VAR_RESULT, TRUE, LilycoveCity_EventScript_MayPokemonLeague
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_RIVAL_BEDROOM
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_2F_PICHU_DOLL
+	giveitem ITEM_CHARIZARDITE_X
+	giveitem ITEM_CHARIZARDITE_Y
+	giveitem ITEM_BLASTOISINITE
+	giveitem ITEM_VENUSAURITE
 	goto LilycoveCity_EventScript_RivalFlyAway
 	end
 
@@ -355,6 +356,10 @@ LilycoveCity_EventScript_DefeatedBrendan::
 	call_if_eq VAR_RESULT, TRUE, LilycoveCity_EventScript_BrendanPokemonLeague
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
 	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_SWABLU_DOLL
+	giveitem ITEM_CHARIZARDITE_X
+	giveitem ITEM_CHARIZARDITE_Y
+	giveitem ITEM_BLASTOISINITE
+	giveitem ITEM_VENUSAURITE
 	goto LilycoveCity_EventScript_RivalFlyAway
 	end
 

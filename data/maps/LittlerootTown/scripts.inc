@@ -1,6 +1,3 @@
-.set LOCALID_MOM, 4
-.set LOCALID_PLAYER, 5
-
 LittlerootTown_MapScripts::
 	.byte 0
 
@@ -20,14 +17,17 @@ LittlerootTown_EventScript_Twin::
 	end
 
 LittlerootTown_EventScript_GiveRunningShoesTrigger1::
-	setobjectxy LOCALID_MOM, 11, 8
+	lockall
+	setvar VAR_0x8008, 0
+	setobjectxy LOCALID_LITTLEROOT_MOM, 11, 8
 	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
 
 LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	lockall
-	addobject LOCALID_MOM
+	setvar VAR_0x8008, 0
+	addobject LOCALID_LITTLEROOT_MOM
 	msgbox LittlerootTown_Text_WaitPlayer, MSGBOX_DEFAULT
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomApproachPlayer
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomApproachPlayer
 	waitmovement 0
 	applymovement OBJ_EVENT_ID_PLAYER, Common_Movement_WalkInPlaceFasterDown
 	call LittlerootTown_EventScript_GiveRunningShoes
@@ -35,7 +35,7 @@ LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	end
 
 LittlerootTown_EventScript_EndMomSpeech::
-	applymovement LOCALID_MOM, LittlerootTown_Movement_MomReturnHome
+	applymovement LOCALID_LITTLEROOT_MOM, LittlerootTown_Movement_MomReturnHome
 	waitmovement 0
 	goto LittlerootTown_EventScript_SetReceivedRunningShoes
 	releaseall
@@ -80,7 +80,7 @@ LittlerootTown_Movement_MomApproachPlayer:
 LittlerootTown_EventScript_SetReceivedRunningShoes::
 	setflag FLAG_SYS_B_DASH
 	setvar VAR_LITTLEROOT_TOWN_STATE, 2
-	removeobject LOCALID_MOM
+	removeobject LOCALID_LITTLEROOT_MOM
 	releaseall
 	end
 

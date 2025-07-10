@@ -38,7 +38,7 @@ struct BattleAnimBgData
 struct BattleAnimBackground
 {
     const u32 *image;
-    const u32 *palette;
+    const u16 *palette;
     const u32 *tilemap;
 };
 
@@ -239,7 +239,7 @@ u8 LaunchBallFadeMonTask(bool8 unfadeLater, u8 spritePalNum, u32 selectedPalette
 bool32 IsCriticalCapture(void);
 // battle_anim_utility_funcs.c
 void InitStatsChangeAnimation(u8 taskId);
-void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u32 *palette);
+void StartMonScrollingBgMask(u8 taskId, int UNUSED unused, u16 scrollSpeed, u8 battler, bool8 includePartner, u8 numFadeSteps, u8 fadeStepDelay, u8 duration, const u32 *gfx, const u32 *tilemap, const u16 *palette);
 
 // battle_anim_effects_1.c
 void AnimFalseSwipeSlice_Step3(struct Sprite *);
@@ -433,7 +433,7 @@ extern const struct OamData gOamData_AffineOff_ObjBlend_16x32;
 extern const struct OamData gOamData_AffineDouble_ObjBlend_32x8;
 
 extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
-extern const struct CompressedSpritePalette gBattleAnimPaletteTable[];
+extern const struct SpritePalette gBattleAnimPaletteTable[];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
 
@@ -554,6 +554,8 @@ void AnimDracoMeteorRock(struct Sprite *sprite);
 void CoreEnforcerLoadBeamTarget(struct Sprite *sprite);
 void SpriteCB_RandomCentredHits(struct Sprite *sprite);
 void InitSpritePosToAnimTargetsCentre(struct Sprite *sprite, bool32 respectMonPicOffsets);
+extern const union AffineAnimCmd *const gSpriteAffineAnimTable_PrimalSymbol[];
+extern const union AffineAnimCmd *const gSpriteAffineAnimTable_MegaSymbol[];
 
 // battle_anim_bug.c
 void AnimTranslateStinger(struct Sprite *sprite);

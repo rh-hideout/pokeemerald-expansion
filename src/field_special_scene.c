@@ -76,6 +76,7 @@ static s16 GetTruckCameraBobbingY(int time)
 // Box 1 has 30 added to the time so it jumps earlier, and
 // box 2 has the return value multiplied by less, so it doesn't
 // jump as high.
+/*
 static s16 GetTruckBoxYMovement(int time)
 {
     if (!((time + 120) % 180))
@@ -83,21 +84,21 @@ static s16 GetTruckBoxYMovement(int time)
 
     return 0;
 }
-
+*/
 #define tTimer data[0]
 
 static void Task_Truck1(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     s16 cameraXpan = 0, cameraYpan = 0;
-    s16 yBox1, yBox2, yBox3;
+    //s16 yBox1, yBox2, yBox3;
 
-    yBox1 = GetTruckBoxYMovement(tTimer + 30) * 4;
-    SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + yBox1);
-    yBox2 = GetTruckBoxYMovement(tTimer) * 2;
-    SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + yBox2);
-    yBox3 = GetTruckBoxYMovement(tTimer) * 4;
-    SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + yBox3);
+    //yBox1 = GetTruckBoxYMovement(tTimer + 30) * 4;
+    //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + yBox1);
+    //yBox2 = GetTruckBoxYMovement(tTimer) * 2;
+    //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + yBox2);
+    //yBox3 = GetTruckBoxYMovement(tTimer) * 4;
+    //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + yBox3);
 
     // Arbitrary timer limit that won't be reached
     if (++tTimer == 30000)
@@ -117,7 +118,7 @@ static void Task_Truck2(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
     s16 cameraYpan, cameraXpan;
-    s16 yBox1, yBox2, yBox3;
+    //s16 yBox1, yBox2, yBox3;
 
     tTimerHorizontal++;
     tTimerVertical++;
@@ -140,12 +141,12 @@ static void Task_Truck2(u8 taskId)
         cameraXpan = sTruckCamera_HorizontalTable[tMoveStep];
         cameraYpan = GetTruckCameraBobbingY(tTimerVertical);
         SetCameraPanning(cameraXpan, cameraYpan);
-        yBox1 = GetTruckBoxYMovement(tTimerVertical + 30) * 4;
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + yBox1);
-        yBox2 = GetTruckBoxYMovement(tTimerVertical) * 2;
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + yBox2);
-        yBox3 = GetTruckBoxYMovement(tTimerVertical) * 4;
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + yBox3);
+        //yBox1 = GetTruckBoxYMovement(tTimerVertical + 30) * 4;
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + yBox1);
+        //yBox2 = GetTruckBoxYMovement(tTimerVertical) * 2;
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + yBox2);
+        //yBox3 = GetTruckBoxYMovement(tTimerVertical) * 4;
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + yBox3);
     }
 }
 
@@ -171,9 +172,9 @@ static void Task_Truck3(u8 taskId)
        cameraXpan = sTruckCamera_HorizontalTable[tMoveStep];
        cameraYpan = 0;
        SetCameraPanning(cameraXpan, cameraYpan);
-       SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + cameraYpan);
-       SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + cameraYpan);
-       SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + cameraYpan);
+       //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET - cameraXpan, BOX1_Y_OFFSET + cameraYpan);
+       //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET - cameraXpan, BOX2_Y_OFFSET + cameraYpan);
+       //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET - cameraXpan, BOX3_Y_OFFSET + cameraYpan);
    }
 }
 
@@ -272,9 +273,9 @@ void EndTruckSequence(u8 taskId)
 {
     if (!FuncIsActiveTask(Task_HandleTruckSequence))
     {
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET, BOX1_Y_OFFSET);
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET, BOX2_Y_OFFSET);
-        SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET, BOX3_Y_OFFSET);
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_TOP,      gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX1_X_OFFSET, BOX1_Y_OFFSET);
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_L, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX2_X_OFFSET, BOX2_Y_OFFSET);
+        //SetObjectEventSpritePosByLocalIdAndMap(LOCALID_TRUCK_BOX_BOTTOM_R, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, BOX3_X_OFFSET, BOX3_Y_OFFSET);
     }
 }
 
@@ -312,7 +313,7 @@ void Task_HandlePorthole(u8 taskId)
     case IDLE_CHECK:
         if (JOY_NEW(A_BUTTON))
             data[1] = 1;
-        if (!ScriptMovement_IsObjectMovementFinished(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup))
+        if (!ScriptMovement_IsObjectMovementFinished(LOCALID_PLAYER, location->mapNum, location->mapGroup))
             return;
         if (CountSSTidalStep(1) == TRUE)
         {
@@ -334,12 +335,12 @@ void Task_HandlePorthole(u8 taskId)
 
         if (*cruiseState == SS_TIDAL_DEPART_SLATEPORT)
         {
-            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailEastMovementScript);
+            ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailEastMovementScript);
             data[0] = IDLE_CHECK;
         }
         else
         {
-            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailWestMovementScript);
+            ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailWestMovementScript);
             data[0] = IDLE_CHECK;
         }
         break;

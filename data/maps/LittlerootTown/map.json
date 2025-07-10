@@ -21,6 +21,7 @@
   ],
   "object_events": [
     {
+      "local_id": "LOCALID_LITTLEROOT_TWIN",
       "graphics_id": "OBJ_EVENT_GFX_TWIN",
       "x": 16,
       "y": 10,
@@ -60,6 +61,7 @@
       "flag": "0"
     },
     {
+      "local_id": "LOCALID_LITTLEROOT_MOM",
       "graphics_id": "OBJ_EVENT_GFX_MOM",
       "x": 10,
       "y": 8,
@@ -116,7 +118,5 @@
       "script": "LittlerootTown_EventScript_GiveRunningShoesTrigger1"
     }
   ],
-  "bg_events": [
-
-  ]
+  "bg_events": []
 }
