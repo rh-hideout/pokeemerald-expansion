@@ -1654,19 +1654,12 @@ void CreateEnemyEventMon(void)
     }
 }
 
-struct WordIn2
-{
-    u16 hWord1;
-    u16 hWord2;
-};
-
 static u16 CalculateBoxMonChecksum(struct BoxPokemon *boxMon)
 {
     u16 checksum = 0;
-    struct WordIn2 *raw = (struct WordIn2 *)boxMon->secure.raw;
 
-    for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++, raw++)
-        checksum += (raw->hWord1 + raw->hWord2);
+    for (u32 i = 0; i < ARRAY_COUNT(boxMon->secure.raw); i++)
+        checksum += boxMon->secure.raw[i] + (boxMon->secure.raw[i] >> 16);
 
     return checksum;
 }
