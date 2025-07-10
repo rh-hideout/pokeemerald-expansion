@@ -2321,17 +2321,14 @@ u32 GetMonData2(struct Pokemon *mon, s32 field)
     return GetMonData3(mon, field, NULL);
 }
 
-struct EvolutionTrackerBitfield
-{
-    u16 a: 5;
-    u16 b: 5;
-    u16 unused: 6;
-};
 
 union EvolutionTracker
 {
-    u16 value;
-    struct EvolutionTrackerBitfield asField;
+    u16 combinedValue:10;
+    struct {
+        u16 tracker1: 5;
+        u16 tracker2: 5;
+    };
 };
 
 static ALWAYS_INLINE struct PokemonSubstruct0 *GetSubstruct0(struct BoxPokemon *boxMon)
@@ -2738,11 +2735,10 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_EVOLUTION_TRACKER:
             {
                 struct PokemonSubstruct1 *substruct1 = GetSubstruct1(boxMon);
-                union EvolutionTracker evoTracker;
-                evoTracker.asField.a = substruct1->evolutionTracker1;
-                evoTracker.asField.b = substruct1->evolutionTracker2;
-                evoTracker.asField.unused = 0;
-                retVal = evoTracker.value;
+                retVal = (union EvolutionTracker) {
+                    .tracker1 = substruct1->evolutionTracker1,
+                    .tracker2 = substruct1->evolutionTracker2,
+                }.combinedValue;
             }
             break;
         default:
@@ -2769,13 +2765,13 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             retVal = boxMon->language;
             break;
         case MON_DATA_SANITY_IS_BAD_EGG:
-            retVal = IsBadEgg(boxMon);
+            retVal = boxMon->isBadEgg;
             break;
         case MON_DATA_SANITY_HAS_SPECIES:
             retVal = boxMon->hasSpecies;
             break;
         case MON_DATA_SANITY_IS_EGG:
-            retVal = IsEggOrBadEgg(boxMon);
+            retVal = boxMon->isEgg;
             break;
         case MON_DATA_OT_NAME:
         {
@@ -3145,11 +3141,9 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         {
             union EvolutionTracker evoTracker;
             struct PokemonSubstruct1 *substruct1 = GetSubstruct1(boxMon);
-            u32 evoTrackerValue;
-            SET32(evoTrackerValue);
-            evoTracker.value = evoTrackerValue;
-            substruct1->evolutionTracker1 = evoTracker.asField.a;
-            substruct1->evolutionTracker2 = evoTracker.asField.b;
+            SET32(evoTracker.combinedValue);
+            substruct1->evolutionTracker1 = evoTracker.tracker1;
+            substruct1->evolutionTracker2 = evoTracker.tracker2;
             break;
         }
         default:
