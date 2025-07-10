@@ -1668,9 +1668,9 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         if (data->modifyArrows.currValue)
         {
             if (IsBattlerAlive(BATTLE_OPPOSITE(data->battlerId)))
-                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_OPPOSITE(data->battlerId) + 1);
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_OPPOSITE(data->battlerId));
             else
-                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_PARTNER(BATTLE_OPPOSITE(data->battlerId)) + 1);
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_PARTNER(BATTLE_OPPOSITE(data->battlerId)));
         }
         else
         {
