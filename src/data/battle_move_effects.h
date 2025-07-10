@@ -992,6 +992,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 2,
     },
 
+    [EFFECT_STEAL_ITEM] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 3,
+    },
+
     [EFFECT_ENDEAVOR] =
     {
         .battleScript = BattleScript_EffectEndeavor,
