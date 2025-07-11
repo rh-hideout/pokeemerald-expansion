@@ -2194,64 +2194,21 @@ static void DecryptBoxMon(struct BoxPokemon *boxMon)
         boxMon->secure.raw[i] ^= boxMon->otId;
         boxMon->secure.raw[i] ^= boxMon->personality;
     }
-}
+}                                                           \
 
-#define SUBSTRUCT_CASE(n, v1, v2, v3, v4)                               \
-case n:                                                                 \
-    {                                                                   \
-                                                                        \
-        switch (substructType)                                          \
-        {                                                               \
-        case 0:                                                         \
-            substruct = &boxMon->secure.substructs[v1];                 \
-            break;                                                      \
-        case 1:                                                         \
-            substruct = &boxMon->secure.substructs[v2];                 \
-            break;                                                      \
-        case 2:                                                         \
-            substruct = &boxMon->secure.substructs[v3];                 \
-            break;                                                      \
-        case 3:                                                         \
-            substruct = &boxMon->secure.substructs[v4];                 \
-            break;                                                      \
-        }                                                               \
-        break;                                                          \
-    }                                                                   \
+static const u8 sSubstructOffsets[4][24] =
+{
+    [SUBSTRUCT_TYPE_0] = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3},
+    [SUBSTRUCT_TYPE_1] = {1, 1, 2, 2, 3, 3, 0, 0, 2, 2, 3, 3, 0, 0, 1, 1, 3, 3, 0, 0, 1, 1, 2, 2},
+    [SUBSTRUCT_TYPE_2] = {2, 3, 1, 3, 1, 2, 2, 3, 0, 3, 0, 2, 1, 3, 0, 3, 0, 1, 1, 2, 0, 2, 0, 1},
+    [SUBSTRUCT_TYPE_3] = {3, 2, 3, 1, 2, 1, 3, 2, 3, 0, 2, 0, 3, 1, 3, 0, 1, 0, 2, 1, 2, 0, 1, 0}
+};
 
+ARM_FUNC NOINLINE static u32 ConstantMod24(u32 a) { return a % 24; }
 
 static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 personality, enum SubstructType substructType)
 {
-    union PokemonSubstruct *substruct = NULL;
-
-    switch (personality % 24)
-    {
-        SUBSTRUCT_CASE( 0,0,1,2,3)
-        SUBSTRUCT_CASE( 1,0,1,3,2)
-        SUBSTRUCT_CASE( 2,0,2,1,3)
-        SUBSTRUCT_CASE( 3,0,3,1,2)
-        SUBSTRUCT_CASE( 4,0,2,3,1)
-        SUBSTRUCT_CASE( 5,0,3,2,1)
-        SUBSTRUCT_CASE( 6,1,0,2,3)
-        SUBSTRUCT_CASE( 7,1,0,3,2)
-        SUBSTRUCT_CASE( 8,2,0,1,3)
-        SUBSTRUCT_CASE( 9,3,0,1,2)
-        SUBSTRUCT_CASE(10,2,0,3,1)
-        SUBSTRUCT_CASE(11,3,0,2,1)
-        SUBSTRUCT_CASE(12,1,2,0,3)
-        SUBSTRUCT_CASE(13,1,3,0,2)
-        SUBSTRUCT_CASE(14,2,1,0,3)
-        SUBSTRUCT_CASE(15,3,1,0,2)
-        SUBSTRUCT_CASE(16,2,3,0,1)
-        SUBSTRUCT_CASE(17,3,2,0,1)
-        SUBSTRUCT_CASE(18,1,2,3,0)
-        SUBSTRUCT_CASE(19,1,3,2,0)
-        SUBSTRUCT_CASE(20,2,1,3,0)
-        SUBSTRUCT_CASE(21,3,1,2,0)
-        SUBSTRUCT_CASE(22,2,3,1,0)
-        SUBSTRUCT_CASE(23,3,2,1,0)
-    }
-
-    return substruct;
+    return &boxMon->secure.substructs[sSubstructOffsets[substructType][ConstantMod24(personality)]];
 }
 
 /* GameFreak called GetMonData with either 2 or 3 arguments, for type
