@@ -2225,6 +2225,7 @@ void SetToPartnerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *
         xCoordType = BATTLER_COORD_X_2;
         yCoordType = BATTLER_COORD_Y_PIC_OFFSET;
     }
+
     if (IsDoubleBattle() && !IsContest() && IsBattlerAlive(BATTLE_PARTNER(battler)))
     {
         returnX = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), xCoordType);
