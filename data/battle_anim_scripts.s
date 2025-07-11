@@ -11420,6 +11420,7 @@ gBattleAnimMove_BrutalSwing::
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 0x0, 0x6
 	waitforvisualfinish
 	restorebg
+	waitbgfadein
 	blendoff
 	clearmonbg ANIM_TARGET
 	end
