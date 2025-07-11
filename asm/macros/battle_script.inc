@@ -596,27 +596,15 @@
 	.byte \notChosenMove
 	.endm
 
-	.macro statusanimation battler:req
+	.macro statusanimation battler:req, status=0, isVolatile=FALSE
 	.byte 0x64
 	.byte \battler
-	.endm
-
-	.macro status2animation battler:req, status2:req
-	.byte 0x65
-	.byte \battler
-	.4byte \status2
-	.endm
-
-	.macro setmoveeffect effect:req
-	sethword sMOVE_EFFECT, \effect
-	sethword sSAVED_MOVE_EFFECT, \effect
-	.endm
-
-	.macro chosenstatusanimation battler:req, isStatus2:req, status:req
-	.byte 0x66
-	.byte \battler
-	.byte \isStatus2
 	.4byte \status
+	.byte \isVolatile
+	.endm
+
+	.macro volatileanimation battler:req, volatile:req
+	statusanimation \battler, \volatile, TRUE
 	.endm
 
 	.macro yesnobox
@@ -979,8 +967,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setforesight
+	.macro setvolatile battler:req, volatile:req, value=TRUE
 	.byte 0xb1
+	.byte \battler
+	.byte \volatile
+	.byte \value
 	.endm
 
 	.macro trysetperishsong failInstr:req
@@ -1039,10 +1030,6 @@
 
 	.macro rapidspinfree
 	.byte 0xbe
-	.endm
-
-	.macro setdefensecurlbit
-	.byte 0xbf
 	.endm
 
 	.macro recoverbasedonsunlight failInstr:req
@@ -2094,10 +2081,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setpowder battler:req
-	various \battler, VARIOUS_SET_POWDER
-	.endm
-
 	.macro bringdownairbornebattler battler:req
 	various \battler, VARIOUS_GRAVITY_ON_AIRBORNE_MONS
 	.endm
@@ -2353,12 +2336,9 @@
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
 	.endm
 
-	.macro chosenstatus1animation battler:req, status:req
-	chosenstatusanimation \battler, 0x0, \status
-	.endm
-
-	.macro chosenstatus2animation battler:req, status:req
-	chosenstatusanimation \battler, 0x1, \status
+	.macro setmoveeffect effect:req
+	sethword sMOVE_EFFECT, \effect
+	sethword sSAVED_MOVE_EFFECT, \effect
 	.endm
 
 	.macro sethword dst:req, value:req

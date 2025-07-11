@@ -69,14 +69,25 @@
 #define AI_CONSERVE_TERA_CHANCE_PER_MON                         10 // Chance for AI with smart tera flag to decide not to tera before considering defensive benefit is this*(X-1), where X is the number of alive pokemon that could tera
 #define AI_TERA_PREDICT_CHANCE                                  40 // Chance for AI with smart tera flag to tera in the situation where tera would save it from a KO, but could be punished by a KO from a different move. 
 
-// AI PP Stall detection chance per roll
-#define PP_STALL_DISREGARD_MOVE_PERCENTAGE                      50
-// Score reduction if any roll for PP stall detection passes
-#define PP_STALL_SCORE_REDUCTION                                20
+// AI_FLAG_PP_STALL_PREVENTION settings
+#define PP_STALL_DISREGARD_MOVE_PERCENTAGE                      50 // Detection chance per roll
+#define PP_STALL_SCORE_REDUCTION                                20 // Score reduction if any roll for PP stall detection passes
+
+// AI_FLAG_ASSUME_STAB settings
+#define ASSUME_STAB_SEES_ABILITY                                FALSE // Flag also gives omniscience for player's ability. Can use AI_FLAG_WEIGH_ABILITY_PREDICTION instead for smarter prediction without omniscience.
+
+// AI_FLAG_SMART_SWITCHING settings
+#define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
 
 // AI's acceptable number of hits to KO the partner via friendly fire in a double battle.
 #define FRIENDLY_FIRE_RISKY_THRESHOLD           2
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
 #define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD    4
+
+// AI's desired stat changes for Guard Split and Power Split, treated as %
+#define GUARD_SPLIT_ALLY_PERCENTAGE     200
+#define GUARD_SPLIT_ENEMY_PERCENTAGE    50
+#define POWER_SPLIT_ALLY_PERCENTAGE     150
+#define POWER_SPLIT_ENEMY_PERCENTAGE    50
 
 #endif // GUARD_CONFIG_AI_H
