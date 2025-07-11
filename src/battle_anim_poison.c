@@ -537,6 +537,7 @@ static void AnimSludgeProjectile(struct Sprite *sprite)
             else
                 targetPartner = 1;
         }
+
         if (IsBattlerAlive(gBattleAnimTarget) && !IsBattlerAlive(targetPartner))
         {
             sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
