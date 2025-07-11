@@ -520,7 +520,7 @@ void CompactItemsInBagPocket(enum Pocket pocketId)
 }
 
 // Opens the possibility of sorting by other means e.g. ghoulslash's advanced sorting
-static inline bool32 ItemIndexCompare(u16 itemA, u16 itemB, enum SortPocket sortPocket)
+static inline bool32 ItemOrderCompare(u16 itemA, u16 itemB, enum SortPocket sortPocket)
 {
     switch (sortPocket)
     {
@@ -528,6 +528,8 @@ static inline bool32 ItemIndexCompare(u16 itemA, u16 itemB, enum SortPocket sort
             return itemA > itemB;
         case SORT_POCKET_TM_HM:
             return GetItemTMHMIndex(itemA) > GetItemTMHMIndex(itemB);
+        case SORT_POCKET_BERRIES:
+            return GetBerryIndex(itemA) > GetBerryIndex(itemB);
         default:
             return FALSE;
     }
@@ -544,7 +546,7 @@ void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket)
         for (u32 j = i + 1; j < pocket->capacity; j++)
         {
             BagPocket_GetSlotData(pocket, j, &itemId_j, &quantity_j);
-            if (itemId_j && (!itemId_i || ItemIndexCompare(itemId_i, itemId_j, sortPocket)))
+            if (itemId_j && (!itemId_i || ItemOrderCompare(itemId_i, itemId_j, sortPocket)))
             {
                 BagPocket_SetSlotData(pocket, i, &itemId_j, &quantity_j);
                 BagPocket_SetSlotData(pocket, j, &itemId_i, &quantity_i);

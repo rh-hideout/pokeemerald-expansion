@@ -173,6 +173,7 @@ enum SortPocket
     SORT_NONE,
     SORT_POCKET_BY_ITEM_ID,
     SORT_POCKET_TM_HM,
+    SORT_POCKET_BERRIES,
 };
 
 void GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos, u16 *itemId, u16 *quantity);
