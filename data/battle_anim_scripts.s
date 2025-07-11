@@ -106,9 +106,9 @@ gBattleAnimMove_HammerArm::
 	loadspritegfx ANIM_TAG_BLACK_SMOKE @smoke
 	playsewithpan SE_M_DOUBLE_TEAM, SOUND_PAN_TARGET
 	createsprite gIceHammerPunchStompTemplate, ANIM_TARGET, 3, 0, -32, 15
-	delay 0x13
+	delay 19
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
-	createvisualtask AnimTask_SquishTarget, 0x2
+	createvisualtask AnimTask_SquishTarget, 2
 	waitforvisualfinish
 	blendoff
 	end
