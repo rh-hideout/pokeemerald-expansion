@@ -593,3 +593,4 @@ gSpecials::
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special SetVermilionTrashCans
 	def_special DoSSAnneDepartureCutscene
+	def_special StartMarowakBattle

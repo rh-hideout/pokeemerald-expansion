@@ -865,5 +865,9 @@ extern const u8 BattleScript_FickleBeamDoubled[];
 extern const u8 BattleScript_QuestionForfeitBattle[];
 extern const u8 BattleScript_ForfeitBattleGaveMoney[];
 extern const u8 BattleScript_AbilityPopUp[];
+extern const u8 BattleScript_GhostBallDodge[];
+extern const u8 BattleScript_GhostGetOutGetOut[];
+extern const u8 BattleScript_TooScaredToMove[];
+extern const u8 BattleScript_SilphScopeUnveiled[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

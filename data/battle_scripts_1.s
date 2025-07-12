@@ -9738,3 +9738,24 @@ BattleScript_ForfeitBattleGaveMoney::
 .endif
 	waitmessage B_WAIT_TIME_LONG
 	end2
+
+BattleScript_TooScaredToMove::
+	printstring STRINGID_MONTOOSCAREDTOMOVE
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_MON_SCARED
+	goto BattleScript_MoveEnd
+
+BattleScript_GhostGetOutGetOut::
+	printstring STRINGID_GHOSTGETOUTGETOUT
+	playanimation BS_ATTACKER, B_ANIM_GHOST_GET_OUT
+	goto BattleScript_MoveEnd
+
+BattleScript_SilphScopeUnveiled::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_SILPHSCOPEUNVEILED
+	waitstate
+	playanimation BS_OPPONENT1, B_ANIM_SILPH_SCOPED
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_GHOSTWASMAROWAK
+	waitmessage B_WAIT_TIME_LONG
+	end2

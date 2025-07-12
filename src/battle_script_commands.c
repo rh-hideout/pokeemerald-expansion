@@ -15458,7 +15458,13 @@ static void Cmd_handleballthrow(void)
 
     gBattlerTarget = GetCatchingBattler();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+    {
+        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_GHOST_DODGE);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_GhostBallDodge;
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
         MarkBattlerForControllerExec(gBattlerAttacker);

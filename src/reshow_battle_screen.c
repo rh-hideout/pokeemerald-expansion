@@ -270,7 +270,9 @@ static bool8 LoadBattlerSpriteGfx(u32 battler)
     {
         if (!IsOnPlayerSide(battler))
         {
-            if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
+            if (IsGhostBattleWithoutScope())
+                DecompressGhostFrontPic(battler);
+            else if (!gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
                 BattleLoadMonSpriteGfx(GetBattlerMon(battler), battler);
             else
                 BattleLoadSubstituteOrMonSpriteGfx(battler, FALSE);
@@ -295,7 +297,9 @@ void CreateBattlerSprite(u32 battler)
     {
         u8 posY;
 
-        if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
+        if (IsGhostBattleWithoutScope())
+            posY = GetGhostSpriteDefault_Y(battler);
+        else if (gBattleSpritesDataPtr->battlerData[battler].behindSubstitute)
             posY = GetSubstituteSpriteDefault_Y(battler);
         else
             posY = GetBattlerSpriteDefault_Y(battler);

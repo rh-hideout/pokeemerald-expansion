@@ -126,6 +126,7 @@ void GetBattleAnimBg1Data(struct BattleAnimBgData *out);
 void GetBattleAnimBgData(struct BattleAnimBgData *out, u32 bgId);
 u8 GetBattlerSpriteSubpriority(u8 battler);
 bool8 TranslateAnimHorizontalArc(struct Sprite *sprite);
+bool8 TranslateAnimVerticalArc(struct Sprite *sprite);
 void TranslateSpriteLinearByIdFixedPoint(struct Sprite *sprite);
 void ResetSpriteRotScale(u8 spriteId);
 void SetSpriteRotScale(u8 spriteId, s16 xScale, s16 yScale, u16 rotation);
@@ -168,6 +169,7 @@ void DestroySpriteAndFreeResources_(struct Sprite *sprite);
 void SetBattlerSpriteYOffsetFromOtherYScale(u8 spriteId, u8 otherSpriteId);
 void ConvertPosDataToTranslateLinearData(struct Sprite *sprite);
 void InitAnimFastLinearTranslationWithSpeedAndPos(struct Sprite *sprite);
+u8 GetGhostSpriteDefault_Y(u8 battlerId);
 
 enum
 {

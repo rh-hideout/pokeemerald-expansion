@@ -6200,7 +6200,7 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
         pan = 0;
         break;
     }
-    if (panModeAnimFlag & SKIP_FRONT_ANIM)
+    if (panModeAnimFlag & SKIP_FRONT_ANIM || IsGhostBattleWithoutScope())
     {
         // No animation, only check if cry needs to be played
         if (!noCry)

@@ -83,6 +83,8 @@ static const u8 sText_WildPkmnAppeared[] = _("You encountered a wild {B_OPPONENT
 static const u8 sText_LegendaryPkmnAppeared[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!\p");
 static const u8 sText_WildPkmnAppearedPause[] = _("You encountered a wild {B_OPPONENT_MON1_NAME}!{PAUSE 127}");
 static const u8 sText_TwoWildPkmnAppeared[] = _("Oh! A wild {B_OPPONENT_MON1_NAME} and {B_OPPONENT_MON2_NAME} appeared!\p");
+static const u8 sText_GhostAppearedCantId[] = _("The GHOST appeared!\pDarn!\nThe GHOST can't be ID'd!\p");
+static const u8 sText_TheGhostAppeared[] = _("The GHOST appeared!\p");
 static const u8 sText_Trainer1WantsToBattle[] = _("You are challenged by {B_TRAINER1_NAME_WITH_CLASS}!\p");
 static const u8 sText_LinkTrainerWantsToBattle[] = _("You are challenged by {B_LINK_OPPONENT1_NAME}!");
 static const u8 sText_TwoLinkTrainersWantToBattle[] = _("You are challenged by {B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME}!");
@@ -898,6 +900,10 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_POWERCONSTRUCTPRESENCEOFMANY]         = COMPOUND_STRING("You sense the presence of many!"),
     [STRINGID_POWERCONSTRUCTTRANSFORM]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} transformed into its Complete Forme!"),
     [STRINGID_ABILITYSHIELDPROTECTS]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s Ability is protected by the effects of its {B_LAST_ITEM}!"),
+    [STRINGID_MONTOOSCAREDTOMOVE]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is too scared to move!"),
+    [STRINGID_GHOSTGETOUTGETOUT]                    = COMPOUND_STRING("GHOST: Get out…… Get out……"),
+    [STRINGID_SILPHSCOPEUNVEILED]                   = COMPOUND_STRING("SILPH SCOPE unveiled the GHOST's\nidentity!"),
+    [STRINGID_GHOSTWASMAROWAK]                      = COMPOUND_STRING("The GHOST was MAROWAK!\p\n"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -2133,7 +2139,11 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         else
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
+            if (gBattleTypeFlags & BATTLE_TYPE_GHOST && IsGhostBattleWithoutScope())
+                stringPtr = sText_GhostAppearedCantId;
+            else if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+                stringPtr = sText_TheGhostAppeared;
+            else if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
                 stringPtr = sText_LegendaryPkmnAppeared;
             else if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))))
                 stringPtr = sText_TwoWildPkmnAppeared;

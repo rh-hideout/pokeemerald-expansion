@@ -14,6 +14,58 @@
 
 	.section script_data, "aw", %progbits
 
+gBattleAnimGeneral_MonScared::
+	createvisualtask AnimTask_SetAttackerTargetLeftPos, 2, 1
+	waitforvisualfinish
+	loadspritegfx ANIM_TAG_SWEAT_BEAD
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, 2, 0, 10, RGB(0, 23, 25)
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 2, 0, 10, 1
+	delay 20
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 0, 1
+	playsewithpan SE_M_SKETCH, SOUND_PAN_TARGET
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 1, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 5, 1
+	createvisualtask AnimTask_StretchTargetUp, 3
+	waitforvisualfinish
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, 2, 10, 0, RGB(0, 23, 25)
+	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_GhostGetOut::
+	createvisualtask AnimTask_SetAttackerTargetLeftPos, 2, 1
+	waitforvisualfinish
+	fadetobg BG_GHOST
+	waitbgfadeout
+	monbg_static ANIM_ATTACKER
+	createvisualtask AnimTask_GhostGetOut, 2
+	waitbgfadein
+	loopsewithpan SE_M_PSYBEAM, SOUND_PAN_TARGET, 20, 3
+	waitforvisualfinish
+	clearmonbg_static ANIM_ATTACKER
+	delay 1
+	loadspritegfx ANIM_TAG_SWEAT_BEAD
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, -1, 0, 6, RGB(21, 22, 26)
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 0, 1
+	createsprite gSprayWaterDropletSpriteTemplate, ANIM_TARGET, 5, 1, 1
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 4, 0, 5, 1
+	createvisualtask AnimTask_StretchTargetUp, 3
+	waitforvisualfinish
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_TARGET, -1, 6, 0, RGB(21, 22, 26)
+	waitforvisualfinish
+	restorebg
+	waitbgfadein
+	end
+
+gBattleAnimGeneral_SilphScoped::
+	monbg ANIM_ATTACKER
+	playsewithpan SE_M_TELEPORT, SOUND_PAN_ATTACKER
+	waitplaysewithpan SE_M_MINIMIZE, SOUND_PAN_ATTACKER, 48
+	createvisualtask AnimTask_TransformMon, 3, FALSE, FALSE, TRUE
+	waitsound
+	waitforvisualfinish
+	clearmonbg ANIM_ATTACKER
+	end
+
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 4 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_Roost::
 	loadspritegfx ANIM_TAG_WHITE_FEATHER

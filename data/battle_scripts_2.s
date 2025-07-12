@@ -288,3 +288,9 @@ BattleScript_TrainerBSlideMsgRet::
 BattleScript_TrainerBSlideMsgEnd2::
 	call BattleScript_TrainerBSlideMsgRet
 	end2
+
+BattleScript_GhostBallDodge::
+	waitmessage B_WAIT_TIME_LONG
+	printstring STRINGID_ITDODGEDBALL
+	waitmessage B_WAIT_TIME_LONG
+	finishaction

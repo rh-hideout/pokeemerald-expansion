@@ -3661,7 +3661,14 @@ static void DoBattleIntro(void)
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_GHOST && CheckBagHasItem(ITEM_SILPH_SCOPE, 1))
+            {
+                gBattleScripting.battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                BattleScriptExecute(BattleScript_SilphScopeUnveiled);
+            }
             gBattleStruct->introState++;
+        }
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
@@ -5530,7 +5537,8 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_SAFARI
                                   | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_WALLY_TUTORIAL
-                                  | BATTLE_TYPE_FRONTIER)))
+                                  | BATTLE_TYPE_FRONTIER))
+            && !(gBattleTypeFlags & BATTLE_TYPE_GHOST && IsGhostBattleWithoutScope()))
         {
             for (battler = 0; battler < gBattlersCount; battler++)
             {
