@@ -412,7 +412,7 @@ void HandleAction_UseMove(void)
         gHitMarker |= HITMARKER_NO_PPDEDUCT;
         gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(MOVE_STRUGGLE, NO_TARGET_OVERRIDE);
     }
-    else if (gBattleMons[gBattlerAttacker].status2 & STATUS2_MULTIPLETURNS || gBattleMons[gBattlerAttacker].status2 & STATUS2_RECHARGE)
+    else if (gBattleMons[gBattlerAttacker].volatiles.multipleTurns || gBattleMons[gBattlerAttacker].volatiles.recharge)
     {
         gCurrentMove = gChosenMove = gLockedMoves[gBattlerAttacker];
     }
@@ -1056,18 +1056,18 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     // If target was sky dropped in the middle of Outrage/Thrash/Petal Dance,
     // confuse them upon release and display "confused by fatigue" message & animation.
     // Don't do this if this CancelMultiTurnMoves is caused by falling asleep via Yawn.
-    if (gBattleMons[otherSkyDropper].status2 & STATUS2_LOCK_CONFUSE && skyDropState != SKY_DROP_STATUS_YAWN)
+    if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns && skyDropState != SKY_DROP_STATUS_YAWN)
     {
-        gBattleMons[otherSkyDropper].status2 &= ~(STATUS2_LOCK_CONFUSE);
+        gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns = 0;
 
         // If the target can be confused, confuse them.
         // Don't use CanBeConfused, can cause issues in edge cases.
-        if (!(gBattleMons[otherSkyDropper].status2 & STATUS2_CONFUSION
+        if (!(gBattleMons[otherSkyDropper].volatiles.confusionTurns > 0
             || IsAbilityAndRecord(otherSkyDropper, GetBattlerAbility(otherSkyDropper), ABILITY_OWN_TEMPO)
             || IsBattlerTerrainAffected(otherSkyDropper, STATUS_FIELD_MISTY_TERRAIN)))
         {
             // Set confused status
-            gBattleMons[otherSkyDropper].status2 |= STATUS2_CONFUSION_TURN(((Random()) % 4) + 2);
+            gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
 
             if (skyDropState == SKY_DROP_ATTACKCANCELLER_CHECK)
             {
@@ -1094,7 +1094,7 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     }
 
     // Clear skyDropTargets data, unless this CancelMultiTurnMoves is caused by Yawn, attackcanceler, or VARIOUS_GRAVITY_ON_AIRBORNE_MONS
-    if (!(gBattleMons[otherSkyDropper].status2 & STATUS2_LOCK_CONFUSE) && gBattleStruct->skyDropTargets[battler] < 4)
+    if (!(gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns) && gBattleStruct->skyDropTargets[battler] < 4)
     {
         gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
         gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
@@ -1106,18 +1106,18 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
 {
     const u8 *result = NULL;
-    gBattleMons[battler].status2 &= ~(STATUS2_UPROAR);
-    gBattleMons[battler].status2 &= ~(STATUS2_BIDE);
+    gBattleMons[battler].volatiles.uproarTurns = 0;
+    gBattleMons[battler].volatiles.bideTurns = 0;
 
     if (B_RAMPAGE_CANCELLING < GEN_5)
     {
-        gBattleMons[battler].status2 &= ~(STATUS2_MULTIPLETURNS);
-        gBattleMons[battler].status2 &= ~(STATUS2_LOCK_CONFUSE);
+        gBattleMons[battler].volatiles.multipleTurns = 0;
+        gBattleMons[battler].volatiles.lockConfusionTurns = 0;
     }
-    else if (!(gBattleMons[battler].status2 & STATUS2_LOCK_CONFUSE)
-     || ((gBattleMons[battler].status2 & STATUS2_LOCK_CONFUSE) > STATUS2_LOCK_CONFUSE_TURN(1)))
+    else if (!gBattleMons[battler].volatiles.lockConfusionTurns
+     || gBattleMons[battler].volatiles.lockConfusionTurns > 1)
     {
-        gBattleMons[battler].status2 &= ~(STATUS2_MULTIPLETURNS);
+        gBattleMons[battler].volatiles.multipleTurns = 0;
     }
 
     // Clear battler's semi-invulnerable bits if they are not held by Sky Drop.
@@ -1341,7 +1341,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].status2 & STATUS2_TORMENT))
+    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && move == gLastMoves[battler] && move != MOVE_STRUGGLE && (gBattleMons[battler].volatiles.torment == TRUE))
     {
         CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1588,7 +1588,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_DISABLED && move == gDisableStructs[battler].disabledMove)
             unusableMoves |= 1u << i;
         // Torment
-        else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].status2 & STATUS2_TORMENT)
+        else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].volatiles.torment == TRUE)
             unusableMoves |= 1u << i;
         // Taunt
         else if (check & MOVE_LIMITATION_TAUNT && gDisableStructs[battler].tauntTimer && IsBattleMoveStatus(move))
@@ -1849,8 +1849,8 @@ void TryClearRageAndFuryCutter(void)
     s32 i;
     for (i = 0; i < gBattlersCount; i++)
     {
-        if ((gBattleMons[i].status2 & STATUS2_RAGE) && gChosenMoveByBattler[i] != MOVE_RAGE)
-            gBattleMons[i].status2 &= ~STATUS2_RAGE;
+        if (gBattleMons[i].volatiles.rage && gChosenMoveByBattler[i] != MOVE_RAGE)
+            gBattleMons[i].volatiles.rage = FALSE;
         if (gDisableStructs[i].furyCutterCounter != 0 && gChosenMoveByBattler[i] != MOVE_FURY_CUTTER)
             gDisableStructs[i].furyCutterCounter = 0;
     }
@@ -1871,7 +1871,7 @@ static inline bool32 TryFormChangeBeforeMove(void)
 static inline bool32 TryActivatePowderStatus(u32 move)
 {
     u32 partnerMove = gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].moves[gBattleStruct->chosenMovePositions[BATTLE_PARTNER(gBattlerAttacker)]];
-    if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_POWDER))
+    if (!gBattleMons[gBattlerAttacker].volatiles.powder)
         return FALSE;
     if (GetBattleMoveType(move) == TYPE_FIRE && !gBattleStruct->pledgeMove)
         return TRUE;
@@ -1890,7 +1890,7 @@ void SetAtkCancellerForCalledMove(void)
 
 static enum MoveCanceller CancellerFlags(void)
 {
-    gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_DESTINY_BOND;
+    gBattleMons[gBattlerAttacker].volatiles.destinyBond = FALSE;
     gStatuses3[gBattlerAttacker] &= ~STATUS3_GRUDGE;
     gStatuses4[gBattlerAttacker] &= ~STATUS4_GLAIVE_RUSH;
     return MOVE_STEP_SUCCESS;
@@ -1917,9 +1917,9 @@ static enum MoveCanceller CancellerSkyDrop(void)
 
 static enum MoveCanceller CancellerRecharge(void)
 {
-    if (gBattleMons[gBattlerAttacker].status2 & STATUS2_RECHARGE)
+    if (gBattleMons[gBattlerAttacker].volatiles.recharge)
     {
-        gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_RECHARGE;
+        gBattleMons[gBattlerAttacker].volatiles.recharge = TRUE;
         gDisableStructs[gBattlerAttacker].rechargeTimer = 0;
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedMustRecharge;
@@ -1937,7 +1937,7 @@ static enum MoveCanceller CancellerAsleepOrFrozen(void)
         {
             TryDeactivateSleepClause(GetBattlerSide(gBattlerAttacker), gBattlerPartyIndexes[gBattlerAttacker]);
             gBattleMons[gBattlerAttacker].status1 &= ~STATUS1_SLEEP;
-            gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_NIGHTMARE;
+            gBattleMons[gBattlerAttacker].volatiles.nightmare = FALSE;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
             BattleScriptCall(BattleScript_MoveUsedWokeUp);
             return MOVE_STEP_REMOVES_STATUS;
@@ -1967,7 +1967,7 @@ static enum MoveCanceller CancellerAsleepOrFrozen(void)
             else
             {
                 TryDeactivateSleepClause(GetBattlerSide(gBattlerAttacker), gBattlerPartyIndexes[gBattlerAttacker]);
-                gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_NIGHTMARE;
+                gBattleMons[gBattlerAttacker].volatiles.nightmare = FALSE;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
                 BattleScriptCall(BattleScript_MoveUsedWokeUp);
                 return MOVE_STEP_REMOVES_STATUS;
@@ -2067,7 +2067,7 @@ static enum MoveCanceller CancellerTruant(void)
 
 static enum MoveCanceller CancellerFlinch(void)
 {
-    if (gBattleMons[gBattlerAttacker].status2 & STATUS2_FLINCHED)
+    if (gBattleMons[gBattlerAttacker].volatiles.flinched)
     {
         gProtectStructs[gBattlerAttacker].unableToUseMove = TRUE;
         CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
@@ -2154,11 +2154,11 @@ static enum MoveCanceller CancellerConfused(void)
     if (gBattleStruct->isAtkCancelerForCalledMove)
         return MOVE_STEP_SUCCESS;
 
-    if (gBattleMons[gBattlerAttacker].status2 & STATUS2_CONFUSION)
+    if (gBattleMons[gBattlerAttacker].volatiles.confusionTurns)
     {
         if (!(gStatuses4[gBattlerAttacker] & STATUS4_INFINITE_CONFUSION))
-            gBattleMons[gBattlerAttacker].status2 -= STATUS2_CONFUSION_TURN(1);
-        if (gBattleMons[gBattlerAttacker].status2 & STATUS2_CONFUSION)
+            gBattleMons[gBattlerAttacker].volatiles.confusionTurns--;
+        if (gBattleMons[gBattlerAttacker].volatiles.confusionTurns)
         {
              // confusion dmg
             if (RandomPercentage(RNG_CONFUSION, (GetGenConfig(GEN_CONFIG_CONFUSION_SELF_DMG_CHANCE) >= GEN_7 ? 33 : 50)))
@@ -2212,9 +2212,9 @@ static enum MoveCanceller CancellerParalysed(void)
 
 static enum MoveCanceller CancellerInfatuation(void)
 {
-    if (!gBattleStruct->isAtkCancelerForCalledMove && gBattleMons[gBattlerAttacker].status2 & STATUS2_INFATUATION)
+    if (!gBattleStruct->isAtkCancelerForCalledMove && gBattleMons[gBattlerAttacker].volatiles.infatuation)
     {
-        gBattleScripting.battler = CountTrailingZeroBits((gBattleMons[gBattlerAttacker].status2 & STATUS2_INFATUATION) >> 0x10);
+        gBattleScripting.battler = gBattleMons[gBattlerAttacker].volatiles.infatuation - 1;
         if (!RandomPercentage(RNG_INFATUATION, 50))
         {
             BattleScriptCall(BattleScript_MoveUsedIsInLove);
@@ -2234,17 +2234,16 @@ static enum MoveCanceller CancellerInfatuation(void)
 
 static enum MoveCanceller CancellerBide(void)
 {
-    if (gBattleMons[gBattlerAttacker].status2 & STATUS2_BIDE)
+    if (gBattleMons[gBattlerAttacker].volatiles.bideTurns)
     {
-        gBattleMons[gBattlerAttacker].status2 -= STATUS2_BIDE_TURN(1);
-        if (gBattleMons[gBattlerAttacker].status2 & STATUS2_BIDE)
+        if (--gBattleMons[gBattlerAttacker].volatiles.bideTurns)
         {
             gBattlescriptCurrInstr = BattleScript_BideStoringEnergy;
         }
         else
         {
             // This is removed in FRLG and Emerald for some reason
-            //gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_MULTIPLETURNS;
+            //gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
             if (gBideDmg[gBattlerAttacker])
             {
                 gCurrentMove = MOVE_BIDE;
@@ -2978,7 +2977,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
     case ABILITY_SOUNDPROOF:
         if (IsSoundMove(move) && !(GetBattlerMoveTargetType(battlerAtk, move) & MOVE_TARGET_USER))
         {
-            if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+            if (gBattleMons[battlerAtk].volatiles.multipleTurns)
                 gHitMarker |= HITMARKER_NO_PPDEDUCT;
             battleScriptBlocksMove = BattleScript_SoundproofProtected;
         }
@@ -2986,7 +2985,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
     case ABILITY_BULLETPROOF:
         if (IsBallisticMove(move))
         {
-            if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+            if (gBattleMons[battlerAtk].volatiles.multipleTurns)
                 gHitMarker |= HITMARKER_NO_PPDEDUCT;
             battleScriptBlocksMove = BattleScript_SoundproofProtected;
         }
@@ -2996,7 +2995,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
     case ABILITY_ARMOR_TAIL:
         if (atkPriority > 0 && !IsBattlerAlly(battlerAtk, battlerDef))
         {
-            if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+            if (gBattleMons[battlerAtk].volatiles.multipleTurns)
                 gHitMarker |= HITMARKER_NO_PPDEDUCT;
             battleScriptBlocksMove = BattleScript_DazzlingProtected;
         }
@@ -3041,7 +3040,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
             case ABILITY_DAZZLING:
             case ABILITY_QUEENLY_MAJESTY:
             case ABILITY_ARMOR_TAIL:
-                if (gBattleMons[battlerAtk].status2 & STATUS2_MULTIPLETURNS)
+                if (gBattleMons[battlerAtk].volatiles.multipleTurns)
                     gHitMarker |= HITMARKER_NO_PPDEDUCT;
                 battlerAbility = partnerDef;
                 battleScriptBlocksMove = BattleScript_DazzlingProtected;
@@ -3549,8 +3548,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (gDisableStructs[battler].isFirstTurn == 2
                     && !gDisableStructs[battler].overwrittenAbility
                     && IsBattlerAlive(diagonalBattler)
-                    && !(gBattleMons[diagonalBattler].status2 & (STATUS2_TRANSFORMED | STATUS2_SUBSTITUTE))
-                    && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+                    && !gBattleMons[diagonalBattler].volatiles.substitute
+                    && !gBattleMons[diagonalBattler].volatiles.transformed
+                    && !gBattleMons[battler].volatiles.transformed
                     && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
                     && !(gStatuses3[diagonalBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER))
                 {
@@ -4124,7 +4124,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_ICE_FACE:
             if (IsBattlerWeatherAffected(battler, B_WEATHER_HAIL | B_WEATHER_SNOW)
              && gBattleMons[battler].species == SPECIES_EISCUE_NOICE
-             && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+             && !(gBattleMons[battler].volatiles.transformed))
             {
                 // TODO: Convert this to a proper FORM_CHANGE type.
                 gBattleMons[battler].species = SPECIES_EISCUE_ICE;
@@ -4147,9 +4147,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
                 gBattleStruct->commanderActive[partner] = gBattleMons[battler].species;
                 gStatuses3[battler] |= STATUS3_COMMANDER;
-                if (gBattleMons[battler].status2 & STATUS2_CONFUSION
+                if (gBattleMons[battler].volatiles.confusionTurns > 0
                  && !(gStatuses4[battler] & STATUS4_INFINITE_CONFUSION))
-                    gBattleMons[battler].status2 -= STATUS2_CONFUSION_TURN(1);
+                    gBattleMons[battler].volatiles.confusionTurns--;
                 BtlController_EmitSpriteInvisibility(battler, B_COMM_TO_CONTROLLER, TRUE);
                 MarkBattlerForControllerExec(battler);
                 BattleScriptPushCursorAndCallback(BattleScript_CommanderActivates);
@@ -4245,7 +4245,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
 
                     gBattleMons[battler].status1 = 0;
-                    gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleScripting.battler = battler;
                     BattleScriptPushCursorAndCallback(BattleScript_ShedSkinActivates);
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
@@ -4363,7 +4363,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_HUNGER_SWITCH:
-                if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+                if (!gBattleMons[battler].volatiles.transformed
                  && GetActiveGimmick(battler) != GIMMICK_TERA
                  && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
                 {
@@ -4728,13 +4728,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerTarget)
              && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
-             && !(gBattleMons[gBattlerAttacker].status2 & STATUS2_INFATUATION)
+             && !(gBattleMons[gBattlerAttacker].volatiles.infatuation)
              && AreBattlersOfOppositeGender(gBattlerAttacker, gBattlerTarget)
              && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_OBLIVIOUS)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), move)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL))
             {
-                gBattleMons[gBattlerAttacker].status2 |= STATUS2_INFATUATED_WITH(gBattlerTarget);
+                gBattleMons[gBattlerAttacker].volatiles.infatuation = INFATUATED_WITH(gBattlerTarget);
                 BattleScriptCall(BattleScript_CuteCharmActivates);
                 effect++;
             }
@@ -5034,7 +5034,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_OWN_TEMPO:
-                if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+                if (gBattleMons[battler].volatiles.confusionTurns > 0)
                 {
                     StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
                     effect = 2;
@@ -5052,7 +5052,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (gBattleMons[battler].status1 & STATUS1_SLEEP)
                 {
                     TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
-                    gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
                     effect = 1;
                 }
@@ -5074,7 +5074,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_OBLIVIOUS:
-                if (gBattleMons[battler].status2 & STATUS2_INFATUATION)
+                if (gBattleMons[battler].volatiles.infatuation)
                     effect = 3;
                 else if (gDisableStructs[battler].tauntTimer != 0)
                     effect = 4;
@@ -5094,7 +5094,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     BattleScriptCall(BattleScript_AbilityCuredStatus);
                     break;
                 case 3: // get rid of infatuation
-                    gBattleMons[battler].status2 &= ~STATUS2_INFATUATION;
+                    gBattleMons[battler].volatiles.infatuation = 0;
                     BattleScriptCall(BattleScript_BattlerGotOverItsInfatuation);
                     break;
                 case 4: // get rid of taunt
@@ -5215,7 +5215,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!gDisableStructs[battler].weatherAbilityDone
              && battlerWeatherAffected
              && gBattleMons[battler].species == SPECIES_EISCUE_NOICE
-             && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+             && !(gBattleMons[battler].volatiles.transformed))
             {
                 // TODO: Convert this to a proper FORM_CHANGE type.
                 gBattleScripting.battler = battler;
@@ -5229,7 +5229,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_PROTOSYNTHESIS:
             if (!gDisableStructs[battler].weatherAbilityDone
              && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
-             && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+             && !gBattleMons[battler].volatiles.transformed
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
@@ -5258,7 +5258,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_QUARK_DRIVE:
             if (!gDisableStructs[battler].terrainAbilityDone
              && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN
-             && !(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+             && !gBattleMons[battler].volatiles.transformed
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].terrainAbilityDone = TRUE;
@@ -5358,7 +5358,7 @@ u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityS
     if (abilityCantBeSuppressed)
     {
         // Edge case: pokemon under the effect of gastro acid transforms into a pokemon with Comatose (Todo: verify how other unsuppressable abilities behave)
-        if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED
+        if (gBattleMons[battler].volatiles.transformed
             && gStatuses3[battler] & STATUS3_GASTRO_ACID
             && gBattleMons[battler].ability == ABILITY_COMATOSE)
                 return ABILITY_NONE;
@@ -5457,7 +5457,9 @@ bool32 CanBattlerEscape(u32 battler) // no ability check
         return TRUE;
     else if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return TRUE;
-    else if (gBattleMons[battler].status2 & (STATUS2_ESCAPE_PREVENTION | STATUS2_WRAPPED))
+    else if (gBattleMons[battler].volatiles.escapePrevention)
+        return FALSE;
+    else if (gBattleMons[battler].volatiles.wrapped)
         return FALSE;
     else if (gStatuses3[battler] & STATUS3_ROOTED)
         return FALSE;
@@ -5793,7 +5795,7 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum Func
 
 bool32 CanBeConfused(u32 battler)
 {
-    if (gBattleMons[battler].status2 & STATUS2_CONFUSION
+    if (gBattleMons[battler].volatiles.confusionTurns > 0
      || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
      || IsAbilityAndRecord(battler, GetBattlerAbility(battler),ABILITY_OWN_TEMPO))
         return FALSE;
@@ -6137,9 +6139,9 @@ static bool32 GetMentalHerbEffect(u32 battler)
     bool32 ret = FALSE;
 
     // Check infatuation
-    if (gBattleMons[battler].status2 & STATUS2_INFATUATION)
+    if (gBattleMons[battler].volatiles.infatuation)
     {
-        gBattleMons[battler].status2 &= ~STATUS2_INFATUATION;
+        gBattleMons[battler].volatiles.infatuation = 0;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_INFATUATION;  // STRINGID_TARGETGOTOVERINFATUATION
         StringCopy(gBattleTextBuff1, gStatusConditionString_LoveJpn);
         ret = TRUE;
@@ -6163,9 +6165,9 @@ static bool32 GetMentalHerbEffect(u32 battler)
             ret = TRUE;
         }
         // Check torment
-        if (gBattleMons[battler].status2 & STATUS2_TORMENT)
+        if (gBattleMons[battler].volatiles.torment == TRUE)
         {
-            gBattleMons[battler].status2 &= ~STATUS2_TORMENT;
+            gBattleMons[battler].volatiles.torment = FALSE;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_TORMENT;
             ret = TRUE;
         }
@@ -6209,7 +6211,7 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
 
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID)
 {
-    if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
         return ITEM_NO_EFFECT;
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
@@ -6368,14 +6370,14 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
         if (gBattleMons[battler].status1 & STATUS1_SLEEP && !UnnerveOn(battler, gLastUsedItem))
         {
             gBattleMons[battler].status1 &= ~STATUS1_SLEEP;
-            gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+            gBattleMons[battler].volatiles.nightmare = FALSE;
             BattleScriptCall(BattleScript_BerryCureSlpRet);
             effect = ITEM_STATUS_CHANGE;
             TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
         }
         break;
     case HOLD_EFFECT_CURE_CONFUSION:
-        if (gBattleMons[battler].status2 & STATUS2_CONFUSION && !UnnerveOn(battler, gLastUsedItem))
+        if (gBattleMons[battler].volatiles.confusionTurns > 0 && !UnnerveOn(battler, gLastUsedItem))
         {
             RemoveConfusionStatus(battler);
             BattleScriptCall(BattleScript_BerryCureConfusionRet);
@@ -6392,14 +6394,14 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
         }
         break;
     case HOLD_EFFECT_CURE_STATUS:
-        if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].status2 & STATUS2_CONFUSION) && !UnnerveOn(battler, gLastUsedItem))
+        if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0) && !UnnerveOn(battler, gLastUsedItem))
         {
             if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
                 StringCopy(gBattleTextBuff1, gStatusConditionString_PoisonJpn);
 
             if (gBattleMons[battler].status1 & STATUS1_SLEEP)
             {
-                gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                gBattleMons[battler].volatiles.nightmare = FALSE;
                 StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
                 TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
             }
@@ -6413,7 +6415,7 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
             if (gBattleMons[battler].status1 & STATUS1_FREEZE || gBattleMons[battler].status1 & STATUS1_FROSTBITE)
                 StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
 
-            if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+            if (gBattleMons[battler].volatiles.confusionTurns > 0)
                 StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
 
             gBattleMons[battler].status1 = 0;
@@ -6425,10 +6427,10 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
         break;
     case HOLD_EFFECT_CRITICAL_UP: // lansat berry
         if (B_BERRIES_INSTANT >= GEN_4
-            && !(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
+            && !(gBattleMons[battler].volatiles.dragonCheer || gBattleMons[battler].volatiles.focusEnergy)
             && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, gLastUsedItem), gLastUsedItem))
         {
-            gBattleMons[battler].status2 |= STATUS2_FOCUS_ENERGY;
+            gBattleMons[battler].volatiles.focusEnergy = TRUE;
             gBattleScripting.battler = battler;
             gPotentialItemEffectBattler = battler;
             BattleScriptCall(BattleScript_BerryFocusEnergyRet);
@@ -6453,7 +6455,7 @@ static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
     u32 effect = ITEM_NO_EFFECT;
     u32 string = 0;
 
-    if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].status2 & STATUS2_CONFUSION) && !UnnerveOn(battler, gLastUsedItem))
+    if ((gBattleMons[battler].status1 & STATUS1_ANY || gBattleMons[battler].volatiles.confusionTurns > 0) && !UnnerveOn(battler, gLastUsedItem))
     {
         if (gBattleMons[battler].status1 & STATUS1_PSN_ANY)
         {
@@ -6462,7 +6464,7 @@ static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
         }
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
         {
-            gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+            gBattleMons[battler].volatiles.nightmare = FALSE;
             StringCopy(gBattleTextBuff1, gStatusConditionString_SleepJpn);
             string++;
             TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
@@ -6482,7 +6484,7 @@ static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
             StringCopy(gBattleTextBuff1, gStatusConditionString_IceJpn);
             string++;
         }
-        if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+        if (gBattleMons[battler].volatiles.confusionTurns > 0)
         {
             StringCopy(gBattleTextBuff1, gStatusConditionString_ConfusionJpn);
             string++;
@@ -6585,10 +6587,10 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 break;
             case HOLD_EFFECT_CRITICAL_UP:
                 if (B_BERRIES_INSTANT >= GEN_4
-                    && !(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
+                    && !(gBattleMons[battler].volatiles.dragonCheer || gBattleMons[battler].volatiles.focusEnergy)
                     && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, gLastUsedItem), gLastUsedItem))
                 {
-                    gBattleMons[battler].status2 |= STATUS2_FOCUS_ENERGY;
+                    gBattleMons[battler].volatiles.focusEnergy = TRUE;
                     gBattleScripting.battler = battler;
                     BattleScriptExecute(BattleScript_BerryFocusEnergyEnd2);
                     effect = ITEM_EFFECT_OTHER;
@@ -6652,7 +6654,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                     && !UnnerveOn(battler, gLastUsedItem))
                 {
                     gBattleMons[battler].status1 &= ~STATUS1_SLEEP;
-                    gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     BattleScriptExecute(BattleScript_BerryCureSlpEnd2);
                     effect = ITEM_STATUS_CHANGE;
                     TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
@@ -6808,10 +6810,10 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 effect = StatRaiseBerry(battler, gLastUsedItem, STAT_SPDEF, caseID);
                 break;
             case HOLD_EFFECT_CRITICAL_UP:
-                if (!(gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY)
+                if (!(gBattleMons[battler].volatiles.dragonCheer || gBattleMons[battler].volatiles.focusEnergy)
                     && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, gLastUsedItem), gLastUsedItem))
                 {
-                    gBattleMons[battler].status2 |= STATUS2_FOCUS_ENERGY;
+                    gBattleMons[battler].volatiles.focusEnergy = TRUE;
                     gBattleScripting.battler = battler;
                     BattleScriptExecute(BattleScript_BerryFocusEnergyEnd2);
                     effect = ITEM_EFFECT_OTHER;
@@ -6862,14 +6864,14 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 if (gBattleMons[battler].status1 & STATUS1_SLEEP && !UnnerveOn(battler, gLastUsedItem))
                 {
                     gBattleMons[battler].status1 &= ~STATUS1_SLEEP;
-                    gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     BattleScriptExecute(BattleScript_BerryCureSlpEnd2);
                     effect = ITEM_STATUS_CHANGE;
                     TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
                 }
                 break;
             case HOLD_EFFECT_CURE_CONFUSION:
-                if (gBattleMons[battler].status2 & STATUS2_CONFUSION && !UnnerveOn(battler, gLastUsedItem))
+                if (gBattleMons[battler].volatiles.confusionTurns > 0 && !UnnerveOn(battler, gLastUsedItem))
                 {
                     RemoveConfusionStatus(battler);
                     BattleScriptExecute(BattleScript_BerryCureConfusionEnd2);
@@ -7270,7 +7272,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
 void ClearVariousBattlerFlags(u32 battler)
 {
     gDisableStructs[battler].furyCutterCounter = 0;
-    gBattleMons[battler].status2 &= ~STATUS2_DESTINY_BOND;
+    gBattleMons[battler].volatiles.destinyBond = FALSE;
     gStatuses3[battler] &= ~STATUS3_GRUDGE;
     gStatuses4[battler] &= ~ STATUS4_GLAIVE_RUSH;
 }
@@ -7459,7 +7461,7 @@ u8 GetAttackerObedienceForAction()
     // is not obedient
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     if (moveEffect == EFFECT_RAGE)
-        gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_RAGE;
+        gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
     if (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP && (moveEffect == EFFECT_SNORE || moveEffect == EFFECT_SLEEP_TALK))
         return DISOBEYS_WHILE_ASLEEP;
 
@@ -7485,7 +7487,7 @@ u8 GetAttackerObedienceForAction()
             // try putting asleep
             int i;
             for (i = 0; i < gBattlersCount; i++)
-                if (gBattleMons[i].status2 & STATUS2_UPROAR)
+                if (gBattleMons[i].volatiles.uproarTurns)
                     break;
             if (i == gBattlersCount)
                 return DISOBEYS_FALL_ASLEEP;
@@ -7895,7 +7897,7 @@ u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower, u32 rolloutTimer)
     u32 i;
     for (i = 1; i < (5 - rolloutTimer); i++)
         basePower *= 2;
-    if (gBattleMons[battlerAtk].status2 & STATUS2_DEFENSE_CURL)
+    if (gBattleMons[battlerAtk].volatiles.defenseCurl)
         basePower *= 2;
     return basePower;
 }
@@ -8431,7 +8433,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             u8 defHighestStat = GetHighestStatId(battlerDef);
             if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-             && !(gBattleMons[battlerDef].status2 & STATUS2_TRANSFORMED))
+             && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
         }
         break;
@@ -8440,7 +8442,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             u8 defHighestStat = GetHighestStatId(battlerDef);
             if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
-             && !(gBattleMons[battlerDef].status2 & STATUS2_TRANSFORMED))
+             && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
         }
         break;
@@ -8683,7 +8685,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_PROTOSYNTHESIS:
-        if (!(gBattleMons[battlerAtk].status2 & STATUS2_TRANSFORMED))
+        if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
             u32 atkHighestStat = GetHighestStatId(battlerAtk);
             if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivated)
@@ -8694,7 +8696,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         }
         break;
     case ABILITY_QUARK_DRIVE:
-        if (!(gBattleMons[battlerAtk].status2 & STATUS2_TRANSFORMED))
+        if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
             u32 atkHighestStat = GetHighestStatId(battlerAtk);
             if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
@@ -8919,7 +8921,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case HOLD_EFFECT_METAL_POWDER:
-        if (gBattleMons[battlerDef].species == SPECIES_DITTO && usesDefStat && !(gBattleMons[battlerDef].status2 & STATUS2_TRANSFORMED))
+        if (gBattleMons[battlerDef].species == SPECIES_DITTO && usesDefStat && !(gBattleMons[battlerDef].volatiles.transformed))
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case HOLD_EFFECT_EVIOLITE:
@@ -9521,7 +9523,7 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
         if (ctx->updateFlags)
             RecordItemEffectBattle(ctx->battlerDef, HOLD_EFFECT_RING_TARGET);
     }
-    else if ((ctx->moveType == TYPE_FIGHTING || ctx->moveType == TYPE_NORMAL) && defType == TYPE_GHOST && gBattleMons[ctx->battlerDef].status2 & STATUS2_FORESIGHT && mod == UQ_4_12(0.0))
+    else if ((ctx->moveType == TYPE_FIGHTING || ctx->moveType == TYPE_NORMAL) && defType == TYPE_GHOST && gBattleMons[ctx->battlerDef].volatiles.foresight && mod == UQ_4_12(0.0))
     {
         mod = UQ_4_12(1.0);
     }
@@ -9964,7 +9966,7 @@ void ActivateUltraBurst(u32 battler)
 bool32 IsBattlerMegaEvolved(u32 battler)
 {
     // While Transform does copy stats and visuals, it shouldn't be counted as true Mega Evolution.
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
     return (gSpeciesInfo[gBattleMons[battler].species].isMegaEvolution);
 }
@@ -9972,7 +9974,7 @@ bool32 IsBattlerMegaEvolved(u32 battler)
 bool32 IsBattlerPrimalReverted(u32 battler)
 {
     // While Transform does copy stats and visuals, it shouldn't be counted as true Primal Revesion.
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
     return (gSpeciesInfo[gBattleMons[battler].species].isPrimalReversion);
 }
@@ -9980,7 +9982,7 @@ bool32 IsBattlerPrimalReverted(u32 battler)
 bool32 IsBattlerUltraBursted(u32 battler)
 {
     // While Transform does copy stats and visuals, it shouldn't be counted as true Ultra Burst.
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
     return (gSpeciesInfo[gBattleMons[battler].species].isUltraBurst);
 }
@@ -9988,7 +9990,7 @@ bool32 IsBattlerUltraBursted(u32 battler)
 bool32 IsBattlerInTeraForm(u32 battler)
 {
     // While Transform does copy stats and visuals, it shouldn't be counted as a true Tera Form.
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
+    if (gBattleMons[battler].volatiles.transformed)
         return FALSE;
     return (gSpeciesInfo[gBattleMons[battler].species].isTeraForm);
 }
@@ -10106,7 +10108,7 @@ u16 GetBattleFormChangeTargetSpecies(u32 battler, enum FormChanges method)
 bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
 {
     // Can't change form if transformed.
-    if (gBattleMons[battler].status2 & STATUS2_TRANSFORMED
+    if (gBattleMons[battler].volatiles.transformed
         && B_TRANSFORM_FORM_CHANGES >= GEN_5)
         return FALSE;
     // Mega Evolved and Ultra Bursted Pokémon should always revert to normal upon fainting or ending the battle.
@@ -10856,7 +10858,7 @@ void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing)
 
 void RemoveConfusionStatus(u32 battler)
 {
-    gBattleMons[battler].status2 &= ~STATUS2_CONFUSION;
+    gBattleMons[battler].volatiles.confusionTurns = 0;
     gStatuses4[battler] &= ~STATUS4_INFINITE_CONFUSION;
 }
 
@@ -11415,7 +11417,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
     return FALSE;
 }
 
-#define UNPACK_VOLATILE_GETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
+#define UNPACK_VOLATILE_GETTERS(_enum, _fieldName, _typeMaxValue, ...) case _enum: return gBattleMons[battler].volatiles._fieldName;
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
@@ -11433,7 +11435,7 @@ u32 GetMonVolatile(u32 battler, enum Volatile _volatile)
     }
 }
 
-#define UNPACK_VOLATILE_SETTERS(_enum, _fieldName, _typeBitSize, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeBitSize), newValue); break;
+#define UNPACK_VOLATILE_SETTERS(_enum, _fieldName, _typeMaxValue, ...) case _enum: gBattleMons[battler].volatiles._fieldName = min(GET_VOLATILE_MAXIMUM(_typeMaxValue), newValue); break;
 
 // Sets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
@@ -11450,6 +11452,30 @@ void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue)
         default: // Invalid volatile status
             return;
     }
+}
+
+bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
+{
+    bool32 statusChanged = FALSE;
+    const u8 *effect = GetItemEffect(itemId);
+    if (effect[3] & ITEM3_STATUS_ALL)
+    {
+        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+        gBattleMons[battler].volatiles.infatuation = 0;
+        gBattleMons[battler].volatiles.confusionTurns = 0;
+    }
+    else if (effect[0] & ITEM0_INFATUATION)
+    {
+        statusChanged = !!gBattleMons[battler].volatiles.infatuation;
+        gBattleMons[battler].volatiles.infatuation = 0;
+    }
+    else if (effect[3] & ITEM3_CONFUSION)
+    {
+        statusChanged = gBattleMons[battler].volatiles.confusionTurns > 0;
+        gBattleMons[battler].volatiles.confusionTurns = 0;
+    }
+
+    return statusChanged;
 }
 
 // Hazards are added to a queue and applied based in order (FIFO)
@@ -11634,7 +11660,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, u32 atkAbility, u
     if (defAbility == ABILITY_UNAWARE)
         accStage = DEFAULT_STAT_STAGE;
 
-    if (gBattleMons[battlerDef].status2 & STATUS2_FORESIGHT || gStatuses3[battlerDef] & STATUS3_MIRACLE_EYED)
+    if (gBattleMons[battlerDef].volatiles.foresight || gStatuses3[battlerDef] & STATUS3_MIRACLE_EYED)
         buff = accStage;
     else
         buff = accStage + DEFAULT_STAT_STAGE - evasionStage;

@@ -1043,24 +1043,20 @@ void BtlController_EmitExpUpdate(u32 battler, u32 bufferId, u8 partyId, s32 expP
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 6);
 }
 
-void BtlController_EmitStatusIconUpdate(u32 battler, u32 bufferId, u32 status1, u32 status2)
+void BtlController_EmitStatusIconUpdate(u32 battler, u32 bufferId, u32 status)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_STATUSICONUPDATE;
-    gBattleResources->transferBuffer[1] = status1;
-    gBattleResources->transferBuffer[2] = (status1 & 0x0000FF00) >> 8;
-    gBattleResources->transferBuffer[3] = (status1 & 0x00FF0000) >> 16;
-    gBattleResources->transferBuffer[4] = (status1 & 0xFF000000) >> 24;
-    gBattleResources->transferBuffer[5] = status2;
-    gBattleResources->transferBuffer[6] = (status2 & 0x0000FF00) >> 8;
-    gBattleResources->transferBuffer[7] = (status2 & 0x00FF0000) >> 16;
-    gBattleResources->transferBuffer[8] = (status2 & 0xFF000000) >> 24;
-    PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 9);
+    gBattleResources->transferBuffer[1] = status;
+    gBattleResources->transferBuffer[2] = (status & 0x0000FF00) >> 8;
+    gBattleResources->transferBuffer[3] = (status & 0x00FF0000) >> 16;
+    gBattleResources->transferBuffer[4] = (status & 0xFF000000) >> 24;
+    PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 5);
 }
 
-void BtlController_EmitStatusAnimation(u32 battler, u32 bufferId, bool8 status2, u32 status)
+void BtlController_EmitStatusAnimation(u32 battler, u32 bufferId, bool8 isVolatile, u32 status)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_STATUSANIMATION;
-    gBattleResources->transferBuffer[1] = status2;
+    gBattleResources->transferBuffer[1] = isVolatile;
     gBattleResources->transferBuffer[2] = status;
     gBattleResources->transferBuffer[3] = (status & 0x0000FF00) >> 8;
     gBattleResources->transferBuffer[4] = (status & 0x00FF0000) >> 16;

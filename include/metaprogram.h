@@ -120,42 +120,51 @@
 #define DEFAULT_3(_default, ...) DEFAULT(_default __VA_OPT__(, THIRD(__VA_ARGS__)))
 #define DEFAULT_4(_default, ...) DEFAULT(_default __VA_OPT__(, FOURTH(__VA_ARGS__)))
 
+/* Simply a lists numbers 0-31, allows for word-spanning macros */
+#define BITS_32(F, ...) \
+    F(0, __VA_ARGS__) \
+    F(1, __VA_ARGS__) \
+    F(2, __VA_ARGS__) \
+    F(3, __VA_ARGS__) \
+    F(4, __VA_ARGS__) \
+    F(5, __VA_ARGS__) \
+    F(6, __VA_ARGS__) \
+    F(7, __VA_ARGS__) \
+    F(8, __VA_ARGS__) \
+    F(9, __VA_ARGS__) \
+    F(10, __VA_ARGS__) \
+    F(11, __VA_ARGS__) \
+    F(12, __VA_ARGS__) \
+    F(13, __VA_ARGS__) \
+    F(14, __VA_ARGS__) \
+    F(15, __VA_ARGS__) \
+    F(16, __VA_ARGS__) \
+    F(17, __VA_ARGS__) \
+    F(18, __VA_ARGS__) \
+    F(19, __VA_ARGS__) \
+    F(20, __VA_ARGS__) \
+    F(21, __VA_ARGS__) \
+    F(22, __VA_ARGS__) \
+    F(23, __VA_ARGS__) \
+    F(24, __VA_ARGS__) \
+    F(25, __VA_ARGS__) \
+    F(26, __VA_ARGS__) \
+    F(27, __VA_ARGS__) \
+    F(28, __VA_ARGS__) \
+    F(29, __VA_ARGS__) \
+    F(30, __VA_ARGS__) \
+    F(31, __VA_ARGS__)
+
+/* Compares _n to 1 shifted by _b by _operation (==, <, > etc) */
+#define OP_BIT_SHIFT(_b, _n, _operation) (_n) _operation (1 << _b) ? _b :
+
 /* (Credit to MGriffin) A rather monstrous way of finding the set bit in a word.
 Invalid input causes a compiler error. Sample: https://cexplore.karathan.at/z/x1hm7B */
-#define BIT_INDEX(n) \
-    (n) == (1 << 0) ? 0 : \
-    (n) == (1 << 1) ? 1 : \
-    (n) == (1 << 2) ? 2 : \
-    (n) == (1 << 3) ? 3 : \
-    (n) == (1 << 4) ? 4 : \
-    (n) == (1 << 5) ? 5 : \
-    (n) == (1 << 6) ? 6 : \
-    (n) == (1 << 7) ? 7 : \
-    (n) == (1 << 8) ? 8 : \
-    (n) == (1 << 9) ? 9 : \
-    (n) == (1 << 10) ? 10 : \
-    (n) == (1 << 11) ? 11 : \
-    (n) == (1 << 12) ? 12 : \
-    (n) == (1 << 13) ? 13 : \
-    (n) == (1 << 14) ? 14 : \
-    (n) == (1 << 15) ? 15 : \
-    (n) == (1 << 16) ? 16 : \
-    (n) == (1 << 17) ? 17 : \
-    (n) == (1 << 18) ? 18 : \
-    (n) == (1 << 19) ? 19 : \
-    (n) == (1 << 20) ? 20 : \
-    (n) == (1 << 21) ? 21 : \
-    (n) == (1 << 22) ? 22 : \
-    (n) == (1 << 23) ? 23 : \
-    (n) == (1 << 24) ? 24 : \
-    (n) == (1 << 25) ? 25 : \
-    (n) == (1 << 26) ? 26 : \
-    (n) == (1 << 27) ? 27 : \
-    (n) == (1 << 28) ? 28 : \
-    (n) == (1 << 29) ? 29 : \
-    (n) == (1 << 30) ? 30 : \
-    (n) == (1 << 31) ? 31 : \
-    *(u32 *)NULL
+#define BIT_INDEX(_n) BITS_32(OP_BIT_SHIFT, _n, ==) *(u32 *)NULL
+
+/* (Credit to MGriffin) A way to find the minimum required number of bits to
+store a number (max: 32). Sample: https://godbolt.org/z/xb4KdPMhT */
+#define BIT_SIZE(_n) (BITS_32(OP_BIT_SHIFT, _n, <) 32)
 
 #define COMPRESS_BITS_0 0, 1
 #define COMPRESS_BITS_1 1, 1
@@ -167,11 +176,10 @@ Invalid input causes a compiler error. Sample: https://cexplore.karathan.at/z/x1
 #define COMPRESS_BITS_7 7, 1
 
 /* Will try and compress a set bit (or up to three sequential bits) into a single byte
-Input must be of the form (upper << lower) where upper can be up to 3, lower up to 31 */
+Input must be of the form (upper << lower) where upper can be up to 7, lower up to 31 */
 #define COMPRESS_BITS(_val) COMPRESS_BITS_STEP_2 _val
-#define COMPRESS_BITS_STEP_2(_unpacked) COMPRESS_BITS_STEP_3(COMPRESS_BITS_## _unpacked)
-#define COMPRESS_BITS_STEP_3(...) COMPRESS_BITS_STEP_4(__VA_ARGS__)
-#define COMPRESS_BITS_STEP_4(upper, lower) (((upper % 8) << 5) + (BIT_INDEX(lower)))
+#define COMPRESS_BITS_STEP_2(_unpacked) INVOKE(COMPRESS_BITS_STEP_3, COMPRESS_BITS_## _unpacked)
+#define COMPRESS_BITS_STEP_3(upper, lower) (((upper % 8) << 5) + (BIT_INDEX(lower)))
 
 /* Will read a compressed bit stored by COMPRESS_BIT into a single byte */
 #define UNCOMPRESS_BITS(compressed) ((compressed >> 5) << (compressed & 0x1F))
