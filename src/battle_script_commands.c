@@ -1101,8 +1101,8 @@ static const u8 sTerrainToType[BATTLE_TERRAIN_COUNT] =
 
 s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
     // Don't reduce healing for Poison Heal or Toxic Boost
-    if (GetBattlerAbility(battlerDef) == ABILITY_POISON_HEAL ||
-        GetBattlerAbility(battlerDef) == ABILITY_TOXIC_BOOST){
+    if (GetBattlerAbility(battler) == ABILITY_POISON_HEAL ||
+        GetBattlerAbility(battler) == ABILITY_TOXIC_BOOST){
         return damage;
     }
     if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
@@ -15678,7 +15678,7 @@ static void Cmd_handleballthrow(void)
                 ballMultiplier = 10;
                 break;
             case BALL_CYRO:
-                if (B_WEATHER_SNOW || gBattlerAttacker, TYPE_ICE)
+                if (B_WEATHER_SNOW || IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_ICE))
                 ballMultiplier = 300;
             }
         }
