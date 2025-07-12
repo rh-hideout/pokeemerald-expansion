@@ -4360,3 +4360,28 @@ void GetCodeFeedback(void)
     else
         gSpecialVar_Result = 0;
 }
+
+void DaisyMassageServices(void)
+{
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_MASSAGE);
+    VarSet(VAR_MASSAGE_COOLDOWN_STEP_COUNTER, 0);
+}
+
+u8 GetLeadMonFriendship(void)
+{
+    struct Pokemon * pokemon = &gPlayerParty[GetLeadMonIndex()];
+    if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) == 255)
+        return 6;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 200)
+        return 5;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 150)
+        return 4;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 100)
+        return 3;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 50)
+        return 2;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) > 0)
+        return 1;
+    else
+        return 0;
+}
