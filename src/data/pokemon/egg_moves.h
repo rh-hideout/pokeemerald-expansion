@@ -6528,13 +6528,12 @@ static const u16 sSepultureEggMoveLearnset[] = {
 
 
 static const u16 sPhamothomEggMoveLearnset[] = {
-    MOVE_POWDER,
-    MOVE_LUNAR_DANCE,
-    MOVE_MOONLIGHT,
-    MOVE_MEAN_LOOK,
-    MOVE_SPITE,
-    MOVE_FELL_STINGER,
-    MOVE_POLLEN_PUFF,
+    MOVE_BABY_DOLL_EYES,
+    MOVE_CLANGING_SCALES,
+    MOVE_HEAT_WAVE,
+    MOVE_HURRICANE,
+    MOVE_MOONBLAST,
+    MOVE_RAZOR_WIND,
     MOVE_UNAVAILABLE,
 };
 
@@ -6699,6 +6698,15 @@ static const u16 sCofferuleEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 }; 
 
+static const u16 sClobberEggMoveLearnset[] = {
+    MOVE_METAL_CLAW,
+    MOVE_CLOSE_COMBAT,
+    MOVE_DRAGON_RAGE,
+    MOVE_ICE_HAMMER,
+    MOVE_FURY_CUTTER,
+    MOVE_AQUA_TAIL,
+    MOVE_UNAVAILABLE,
+}; 
 
 static const u16 sColomboltEggMoveLearnset[] = {
     MOVE_PARABOLIC_CHARGE,
