@@ -5174,7 +5174,7 @@ gBattleScripting.savedBattler = gBattlerAttacker;
                 effect++;
             }
             break;
-case ABILITY_HOSPITALITY:
+        case ABILITY_HOSPITALITY:
             partner = BATTLE_PARTNER(battler);
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
@@ -5186,6 +5186,7 @@ case ABILITY_HOSPITALITY:
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattleMoveDamage = (GetNonDynamaxMaxHP(partner) / 4) * -1;
+                gBattleMoveDamage = MaybeLowerHealingForPoison(partner, gBattleMoveDamage);
                 BattleScriptPushCursorAndCallback(BattleScript_HospitalityActivates);
                 effect++;
             }
