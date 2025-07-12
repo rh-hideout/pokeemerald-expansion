@@ -14182,6 +14182,8 @@ static void Cmd_recoverbasedonsunlight(void)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
