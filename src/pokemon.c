@@ -2222,7 +2222,7 @@ static void DecryptBoxMon(struct BoxPokemon *boxMon)
         boxMon->secure.raw[i] ^= boxMon->otId;
         boxMon->secure.raw[i] ^= boxMon->personality;
     }
-}                                                           \
+}
 
 static const u8 sSubstructOffsets[4][24] =
 {
@@ -6889,15 +6889,15 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality)
     u32 teraType = GetBoxMonData(boxMon, MON_DATA_TERA_TYPE, NULL);
 
     old = *boxMon;
-    old0 = &(GetSubstruct(&old, old.personality, 0)->type0);
-    old1 = &(GetSubstruct(&old, old.personality, 1)->type1);
-    old2 = &(GetSubstruct(&old, old.personality, 2)->type2);
-    old3 = &(GetSubstruct(&old, old.personality, 3)->type3);
+    old0 = GetSubstruct0(&old);
+    old1 = GetSubstruct1(&old);
+    old2 = GetSubstruct2(&old);
+    old3 = GetSubstruct3(&old);
 
-    new0 = &(GetSubstruct(boxMon, personality, 0)->type0);
-    new1 = &(GetSubstruct(boxMon, personality, 1)->type1);
-    new2 = &(GetSubstruct(boxMon, personality, 2)->type2);
-    new3 = &(GetSubstruct(boxMon, personality, 3)->type3);
+    new0 = GetSubstruct0(boxMon);
+    new1 = GetSubstruct1(boxMon);
+    new2 = GetSubstruct2(boxMon);
+    new3 = GetSubstruct3(boxMon);
 
     DecryptBoxMon(&old);
     boxMon->personality = personality;
@@ -6905,8 +6905,7 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality)
     *new1 = *old1;
     *new2 = *old2;
     *new3 = *old3;
-    boxMon->checksum = CalculateBoxMonChecksum(boxMon);
-    EncryptBoxMon(boxMon);
+    boxMon->checksum = CalculateBoxMonChecksumReencrypt(boxMon);
 
     SetBoxMonData(boxMon, MON_DATA_IS_SHINY, &isShiny);
     SetBoxMonData(boxMon, MON_DATA_HIDDEN_NATURE, &hiddenNature);
