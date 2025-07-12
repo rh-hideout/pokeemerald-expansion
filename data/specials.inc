@@ -578,3 +578,6 @@ gSpecials::
 	def_special CloseMuseumFossilPic
 	def_special CapeBrinkGetMoveToTeachLeadPokemon
 	def_special HasLearnedAllMovesFromCapeBrinkTutor
+	def_special SetSeenMon
+	def_special AnimateTeleporterHousing
+	def_special AnimateTeleporterCable

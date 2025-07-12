@@ -783,6 +783,14 @@ static const struct MenuAction sMultichoiceList_BikeShop[] = {
     { COMPOUND_STRING("NO THANKS") }
 };
 
+static const struct MenuAction sMultichoiceList_Eeveelutions[] = {
+    { COMPOUND_STRING("EEVEE") },
+    { COMPOUND_STRING("FLAREON") },
+    { COMPOUND_STRING("JOLTEON") },
+    { COMPOUND_STRING("VAPOREON") },
+    { COMPOUND_STRING("Quit looking.") }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -912,6 +920,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
     [MULTI_BERRY_PLOT]                 = MULTICHOICE(MultichoiceList_BerryPlot),
     [MULTICHOICE_BIKE_SHOP]            = MULTICHOICE(sMultichoiceList_BikeShop),
+    [MULTICHOICE_EEVEELUTIONS]         = MULTICHOICE(sMultichoiceList_Eeveelutions),
 };
 
 const u8 *const gStdStrings[] =

@@ -4552,3 +4552,133 @@ bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
         && (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
         && (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE);
 }
+
+void SetSeenMon(void)
+{
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(gSpecialVar_0x8004), 2);
+}
+
+#define tTimer data[0]
+#define tState data[1]
+#define tX     data[2]
+#define tY     data[3]
+
+static void Task_DrawTeleporterHousing(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    
+    if (tTimer == 0)
+    {
+        // Alternate the teleporter light / brightness of the teleporter door
+        if ((tState & 1) == 0)
+        {
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Yellow | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door_HalfGlowing | MAPGRID_COLLISION_MASK);
+        }
+        else
+        {
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Red | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door_FullGlowing | MAPGRID_COLLISION_MASK);
+        }
+        CurrentMapDrawMetatileAt(tX, tY);
+        CurrentMapDrawMetatileAt(tX, tY + 2);
+    }
+    
+    tTimer++;
+    if (tTimer != 16)
+        return;
+    
+    tTimer = 0;
+    tState++;
+    if (tState != 13)
+        return;
+    
+    MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Green | MAPGRID_COLLISION_MASK);
+    MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door | MAPGRID_COLLISION_MASK);
+    CurrentMapDrawMetatileAt(tX, tY);
+    CurrentMapDrawMetatileAt(tX, tY + 2);
+    DestroyTask(taskId);
+}
+
+void AnimateTeleporterHousing(void)
+{
+    u8 taskId;
+    s16 *data;
+    
+    taskId = CreateTask(Task_DrawTeleporterHousing, 0);
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tState = 0;
+    data = gTasks[taskId].data;
+    PlayerGetDestCoords(&tX, &tY);
+
+    // Set the coords of whichever teleporter is being animated
+    // 0 for the right teleporter, 1 for the left teleporter
+    if (gSpecialVar_0x8004 == 0)
+    {
+        gTasks[taskId].tX += 6;
+        gTasks[taskId].tY -= 5;
+    }
+    else
+    {
+        gTasks[taskId].tX -= 1;
+        gTasks[taskId].tY -= 5;
+    }    
+}
+
+static void Task_DrawTeleporterCable(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    
+    if (tTimer == 0)
+    {
+        if (tState != 0)
+        {
+            // Set default cable tiles to clear the ball
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Cable_Top | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 1, METATILE_SeaCottage_Teleporter_Cable_Bottom | MAPGRID_COLLISION_MASK);
+            CurrentMapDrawMetatileAt(tX, tY);
+            CurrentMapDrawMetatileAt(tX, tY + 1);
+
+            // End after drawing 4 times (length of the cable)
+            if (tState == 4)
+            {
+                DestroyTask(taskId);
+                return;
+            }
+            
+            tX--;
+        }
+
+        // Draw the cable ball
+        MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_CableBall_Top | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(tX, tY + 1, METATILE_SeaCottage_Teleporter_CableBall_Bottom | MAPGRID_COLLISION_MASK);
+        CurrentMapDrawMetatileAt(tX, tY);
+        CurrentMapDrawMetatileAt(tX, tY + 1);
+    }
+    
+    tTimer++;
+    if (tTimer == 4)
+    {
+        tTimer = 0;
+        tState++;
+    }
+}
+
+void AnimateTeleporterCable(void)
+{
+    u8 taskId;
+    s16 *data;
+    
+    taskId = CreateTask(Task_DrawTeleporterCable, 0);
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tState = 0;
+    data = gTasks[taskId].data;
+    PlayerGetDestCoords(&tX, &tY);
+    gTasks[taskId].tX += 4;
+    gTasks[taskId].tY -= 5;
+}
+
+#undef tTimer
+#undef tState
+#undef tX
+#undef tY
