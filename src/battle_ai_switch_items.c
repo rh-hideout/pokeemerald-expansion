@@ -692,7 +692,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 && gAiLogicData->abilities[opposingBattler] != ABILITY_KEEN_EYE
                 && gAiLogicData->abilities[opposingBattler] != ABILITY_MINDS_EYE
                 && (B_ILLUMINATE_EFFECT >= GEN_9 && gAiLogicData->abilities[opposingBattler] != ABILITY_ILLUMINATE)
-                && !(gBattleMons[battler].status2 & STATUS2_FORESIGHT)
+                && !gBattleMons[battler].volatiles.foresight
                 && !(gStatuses3[battler] & STATUS3_MIRACLE_EYED))
                 switchMon = FALSE;
 
@@ -713,12 +713,12 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
             //Cursed
-            if (gBattleMons[battler].status2 & STATUS2_CURSED
+            if (gBattleMons[battler].volatiles.cursed
                 && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_CURSED, GetSwitchChance(SHOULD_SWITCH_CURSED_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_CURSED, GetSwitchChance(SHOULD_SWITCH_CURSED))))
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
             //Nightmare
-            if (gBattleMons[battler].status2 & STATUS2_NIGHTMARE
+            if (gBattleMons[battler].volatiles.nightmare
                 && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, GetSwitchChance(SHOULD_SWITCH_NIGHTMARE_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_NIGHTMARE, GetSwitchChance(SHOULD_SWITCH_NIGHTMARE))))
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
@@ -729,7 +729,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
         }
 
         // Infatuation
-        if (gBattleMons[battler].status2 & STATUS2_INFATUATION
+        if (gBattleMons[battler].volatiles.infatuation
             && !AiExpectsToFaintPlayer(battler)
             && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE
             && RandomPercentage(RNG_AI_SWITCH_INFATUATION, GetSwitchChance(SHOULD_SWITCH_INFATUATION)))
@@ -1079,7 +1079,9 @@ bool32 ShouldSwitch(u32 battler)
     s32 i;
     s32 availableToSwitch;
 
-    if (gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_ESCAPE_PREVENTION))
+    if (gBattleMons[battler].volatiles.wrapped)
+        return FALSE;
+    if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
     if (gStatuses3[battler] & STATUS3_ROOTED)
         return FALSE;
@@ -1228,7 +1230,9 @@ void ModifySwitchAfterMoveScoring(u32 battler)
     s32 i;
     s32 availableToSwitch;
 
-    if (gBattleMons[battler].status2 & (STATUS2_WRAPPED | STATUS2_ESCAPE_PREVENTION))
+    if (gBattleMons[battler].volatiles.wrapped)
+        return;
+    if (gBattleMons[battler].volatiles.escapePrevention)
         return;
     if (gStatuses3[battler] & STATUS3_ROOTED)
         return;
@@ -2405,7 +2409,7 @@ static bool32 ShouldUseItem(u32 battler)
                 shouldUse = TRUE;
             if (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
                 shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].status2 & STATUS2_CONFUSION)
+            if (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0)
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_INCREASE_STAT:
@@ -2417,7 +2421,8 @@ static bool32 ShouldUseItem(u32 battler)
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
             if (!gDisableStructs[battler].isFirstTurn
-                || gBattleMons[battler].status2 & STATUS2_FOCUS_ENERGY_ANY
+                || gBattleMons[battler].volatiles.dragonCheer
+                || gBattleMons[battler].volatiles.focusEnergy
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
                 break;
             shouldUse = TRUE;

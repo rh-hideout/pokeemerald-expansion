@@ -142,23 +142,21 @@ enum VolatileFlags
     V_BATON_PASSABLE = (1 << 0),
 };
 
-// Volatile status ailments
-// These are removed after exiting the battle or switching
-/* Definitions with names e.g. "Confusion" are accessible in the debug menu
- * Enum, Type, (Field name, (optional)bitSize), Flags,      (optional)(Debug menu header, (optional)max. value)
- */
+/* Volatile status ailments
+ * These are removed after exiting the battle or switching
+ *  Enum,                                       Type                               Type, max value, flags */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 3), V_BATON_PASSABLE) \
+    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 6), V_BATON_PASSABLE) \
     F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
-    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 3)) \
+    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 5)) \
     F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
-    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 2)) \
-    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 2)) \
+    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 3)) \
+    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 3)) \
     F(VOLATILE_MULTIPLETURNS,                   multipleTurns,                     (u32, 1)) \
     F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
     F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
     F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
-    F(VOLATILE_INFATUATION,                     infatuation,                       (u32, 4)) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, MAX_BITS(4))) \
     F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
     F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
@@ -174,17 +172,21 @@ enum VolatileFlags
     F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE)
 
-/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeBitSize and debug parameters as input. */
-#define GET_VOLATILE_MAXIMUM(_typeBitSize, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeBitSize)
-#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(MAX_BITS(FIRST(__VA_ARGS__)),) MAX_BITS((sizeof(_type) * 8)))
+/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
+#define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
+#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(FIRST(__VA_ARGS__),) MAX_BITS((sizeof(_type) * 8)))
 
 #define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
 
 enum Volatile
 {
+    VOLATILE_NONE,
     VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
     /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
 };
+
+// Helper macros
+#define INFATUATED_WITH(battler) (battler + 1)
 
 // Old flags
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)

@@ -154,7 +154,6 @@ static void AnimDoubleTeam(struct Sprite *);
 static void AnimNightSlash(struct Sprite *);
 static void AnimRockPolishStreak(struct Sprite *);
 static void AnimRockPolishSparkle(struct Sprite *);
-static void AnimPoisonJabProjectile(struct Sprite *);
 static void AnimNightSlash(struct Sprite *);
 static void AnimPluck(struct Sprite *);
 static void AnimAcrobaticsSlashes(struct Sprite *);
@@ -5190,7 +5189,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
     {
         if (gBattleAnimArgs[0] == 0)
         {
-            if (IsDoubleBattle())
+            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimAttacker, TRUE, &a, &b);
             }
@@ -5202,7 +5201,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
         }
         else
         {
-            if (IsDoubleBattle())
+            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &a, &b);
             }
@@ -7450,7 +7449,7 @@ static void AnimRockPolishSparkle(struct Sprite *sprite)
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset
 // arg 2: duration
-static void AnimPoisonJabProjectile(struct Sprite *sprite)
+void AnimPoisonJabProjectile(struct Sprite *sprite)
 {
     s16 targetXPos;
     s16 targetYPos;
