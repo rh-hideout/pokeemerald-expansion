@@ -15678,8 +15678,10 @@ static void Cmd_handleballthrow(void)
                 ballMultiplier = 10;
                 break;
             case BALL_CYRO:
-                if (B_WEATHER_SNOW || IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_ICE))
-                ballMultiplier = 300;
+                if (B_WEATHER_SNOW || IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_ICE)) {
+                    ballMultiplier = 300;
+                }
+                break;
             }
         }
 
