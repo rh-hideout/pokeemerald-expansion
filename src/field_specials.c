@@ -5249,3 +5249,11 @@ static void Task_AnimateElevatorWindowView(u8 taskId)
     }
     data[1]++;
 }
+
+void ForcePlayerOntoBike(void)
+{
+    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_MACH_BIKE);
+    Overworld_SetSavedMusic(MUS_CYCLING);
+    Overworld_ChangeMusicTo(MUS_CYCLING);
+}

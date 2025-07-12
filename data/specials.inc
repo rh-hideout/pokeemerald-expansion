@@ -604,3 +604,4 @@ gSpecials::
 	def_special CloseElevatorCurrentFloorWindow
 	def_special DrawElevatorCurrentFloorWindow
 	def_special GetElevatorFloor
+	def_special ForcePlayerOntoBike
