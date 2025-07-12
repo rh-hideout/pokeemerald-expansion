@@ -2,22 +2,21 @@ FuchsiaCity_Mart_MapScripts::
 	.byte 0
 
 FuchsiaCity_Mart_EventScript_CooltrainerF::
-@	msgbox FuchsiaCity_Mart_Text_DidYouTryXSpeed, MSGBOX_NPC
+	msgbox FuchsiaCity_Mart_Text_DidYouTryXSpeed, MSGBOX_NPC
 	end
 
 FuchsiaCity_Mart_EventScript_Gentleman::
-@	msgbox FuchsiaCity_Mart_Text_DontTheyHaveSafariZonePennants, MSGBOX_NPC
+	msgbox FuchsiaCity_Mart_Text_DontTheyHaveSafariZonePennants, MSGBOX_NPC
 	end
 
 FuchsiaCity_Mart_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart FuchsiaCity_Mart_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart FuchsiaCity_Mart_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -29,7 +28,7 @@ FuchsiaCity_Mart_Items::
 	.2byte ITEM_FULL_HEAL
 	.2byte ITEM_MAX_REPEL
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 FuchsiaCity_Mart_Text_DontTheyHaveSafariZonePennants::
