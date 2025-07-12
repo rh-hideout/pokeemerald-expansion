@@ -11889,6 +11889,8 @@ static void Cmd_stockpiletohpheal(void)
                 gBattleMoveDamage = 1;
             gBattleMoveDamage *= -1;
 
+            gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+
             gBattlescriptCurrInstr = cmd->nextInstr;
             gBattlerTarget = gBattlerAttacker;
         }
