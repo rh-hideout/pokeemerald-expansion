@@ -141,6 +141,15 @@ bool32 IsAiBattlerAssumingStab()
     return FALSE;
 }
 
+bool32 IsAiBattlerAssumingPowerfulStatus()
+{
+    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_POWERFUL_STATUS
+     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_POWERFUL_STATUS)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
     if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_WEIGH_ABILITY_PREDICTION
@@ -247,6 +256,96 @@ void SaveBattlerData(u32 battlerId)
     // Save and restore types even for AI controlled battlers in case it gets changed during move evaluation process.
     gAiThinkingStruct->saved[battlerId].types[0] = gBattleMons[battlerId].types[0];
     gAiThinkingStruct->saved[battlerId].types[1] = gBattleMons[battlerId].types[1];
+}
+
+bool32 ShouldRecordStatusMove(u32 move)
+{
+    switch (GetMoveEffect(move))
+    {
+    // variable odds by additional effect
+    case EFFECT_NON_VOLATILE_STATUS:
+        if (GetMoveNonVolatileStatus(move) == MOVE_EFFECT_SLEEP && RandomPercentage(RNG_AI_ASSUME_POWERFUL_STATUS_SLEEP, ASSUME_POWERFUL_STATUS_HIGH_ODDS))
+            return TRUE;
+        else if (RandomPercentage(RNG_AI_ASSUME_POWERFUL_STATUS_NONVOLATILE, ASSUME_POWERFUL_STATUS_MEDIUM_ODDS))
+            return TRUE;
+        break;
+    // High odds
+    case EFFECT_AURORA_VEIL:
+    case EFFECT_CHILLY_RECEPTION:
+    case EFFECT_CONVERSION:
+    case EFFECT_FIRST_TURN_ONLY:
+    case EFFECT_FOLLOW_ME:
+    case EFFECT_INSTRUCT:
+    case EFFECT_JUNGLE_HEALING:
+    case EFFECT_REVIVAL_BLESSING:
+    case EFFECT_SHED_TAIL:
+    case EFFECT_STICKY_WEB:
+        return RandomPercentage(RNG_AI_ASSUME_POWERFUL_STATUS_HIGH_ODDS, ASSUME_POWERFUL_STATUS_HIGH_ODDS);
+    // Medium odds
+    case EFFECT_AFTER_YOU:
+    case EFFECT_DEFOG:
+    case EFFECT_ENCORE:
+    case EFFECT_HAZE:
+    case EFFECT_HEAL_BELL:
+    case EFFECT_HEALING_WISH:
+    case EFFECT_HELPING_HAND:
+    case EFFECT_LIFE_DEW:
+    case EFFECT_MEMENTO:
+    case EFFECT_MOONLIGHT:
+    case EFFECT_MORNING_SUN:
+    case EFFECT_PARTING_SHOT:
+    case EFFECT_PROTECT:
+    case EFFECT_REST:
+    case EFFECT_RESTORE_HP:
+    case EFFECT_ROAR:
+    case EFFECT_ROOST:
+    case EFFECT_SHORE_UP:
+    case EFFECT_SLEEP_TALK:
+    case EFFECT_SOFTBOILED:
+    case EFFECT_SYNTHESIS:
+    case EFFECT_TAUNT:
+    case EFFECT_TAILWIND:
+    case EFFECT_TELEPORT:
+    case EFFECT_TRICK:
+    // defoggables / screens and hazards
+    case EFFECT_LIGHT_SCREEN:
+    case EFFECT_REFLECT:
+    case EFFECT_SPIKES:
+    case EFFECT_STEALTH_ROCK:
+    case EFFECT_TOXIC_SPIKES:
+    // field status
+    case EFFECT_HAIL:
+    case EFFECT_RAIN_DANCE:
+    case EFFECT_SANDSTORM:
+    case EFFECT_SNOWSCAPE:
+    case EFFECT_SUNNY_DAY:
+    case EFFECT_TRICK_ROOM:
+    case EFFECT_ELECTRIC_TERRAIN:
+    case EFFECT_GRASSY_TERRAIN:
+    case EFFECT_MISTY_TERRAIN:
+    case EFFECT_PSYCHIC_TERRAIN:
+        return RandomPercentage(RNG_AI_ASSUME_POWERFUL_STATUS_MEDIUM_ODDS, ASSUME_POWERFUL_STATUS_MEDIUM_ODDS);
+    // Low odds
+    case EFFECT_COURT_CHANGE:
+    case EFFECT_DOODLE:
+    case EFFECT_ENTRAINMENT:
+    case EFFECT_FIXED_PERCENT_DAMAGE:
+    case EFFECT_GASTRO_ACID:
+    case EFFECT_GUARD_SPLIT:
+    case EFFECT_IMPRISON:
+    case EFFECT_PERISH_SONG:
+    case EFFECT_POWER_SPLIT:
+    case EFFECT_QUASH:
+    case EFFECT_ROLE_PLAY:
+    case EFFECT_SKILL_SWAP:
+    case EFFECT_SPEED_SWAP:
+    case EFFECT_WORRY_SEED:
+        return RandomPercentage(RNG_AI_ASSUME_POWERFUL_STATUS_LOW_ODDS, ASSUME_POWERFUL_STATUS_LOW_ODDS);
+    default:
+        break;
+    }
+
+    return FALSE;
 }
 
 static bool32 ShouldFailForIllusion(u32 illusionSpecies, u32 battlerId)

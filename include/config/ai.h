@@ -76,6 +76,11 @@
 // AI_FLAG_ASSUME_STAB settings
 #define ASSUME_STAB_SEES_ABILITY                                FALSE // Flag also gives omniscience for player's ability. Can use AI_FLAG_WEIGH_ABILITY_PREDICTION instead for smarter prediction without omniscience.
 
+// AI_FLAG_ASSUME_POWERFUL_STATUS settings
+#define ASSUME_POWERFUL_STATUS_HIGH_ODDS                        90 // Chance for AI to see extremely likely moves for a pokemon to have, like Spore
+#define ASSUME_POWERFUL_STATUS_MEDIUM_ODDS                      70 // Chance for AI to see moderately likely moves for a pokemon to have, like Protect
+#define ASSUME_POWERFUL_STATUS_LOW_ODDS                         40 // Chance for AI to see niche moves a pokemon may have but probably won't, like Trick Room or Speed Swap
+
 // AI_FLAG_SMART_SWITCHING settings
 #define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
 
