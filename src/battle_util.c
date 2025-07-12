@@ -5595,6 +5595,7 @@ gBattleScripting.savedBattler = gBattlerAttacker;
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                 }
                 break;
             case MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY:
