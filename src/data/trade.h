@@ -1128,6 +1128,26 @@ static const struct InGameTrade sIngameTrades[] =
         .sheen = 10,
         .requestedSpecies = SPECIES_SPEAROW
     },
+    [INGAME_TRADE_LICKITUNG] = 
+    {
+        .nickname = _("MARC"),
+        .species = SPECIES_LICKITUNG,
+        .ivs = {24, 19, 21, 15, 23, 21},
+        .abilityNum = 0,
+        .otId = 1239,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x451308ab,
+        .heldItem = ITEM_NONE,
+        .mailNum = MAIL_NONE,
+        .otName = _("HADEN"),
+        .otGender = MALE,
+        .sheen = 10,
+#if defined(FIRERED)
+        .requestedSpecies = SPECIES_GOLDUCK
+#else
+        .requestedSpecies = SPECIES_SLOWBRO
+#endif
+    }, 
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =

@@ -16,6 +16,7 @@ enum InGameTradeID
     INGAME_TRADE_JYNX,
     INGAME_TRADE_NIDORAN,
     INGAME_TRADE_FARFETCHD,
+    INGAME_TRADE_LICKITUNG,
 };
 
 // Return values for CanTradeSelectedMon and CanSpinTradeMon
