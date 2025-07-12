@@ -1,7 +1,7 @@
 {
   "id": "MAP_SIX_ISLAND_MART",
   "name": "SixIsland_Mart",
-  "layout": "LAYOUT_MART",
+  "layout": "LAYOUT_MART_FRLG",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_SIX_ISLAND",
   "requires_flash": false,

@@ -4963,8 +4963,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_Mart",
-      "border_filepath": "data/layouts/Mart/border.bin",
-      "blockdata_filepath": "data/layouts/Mart/map.bin",
+      "border_filepath": "data/layouts/Mart_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/Mart_Frlg/map.bin",
       "game_version": "firered"
     },
     {

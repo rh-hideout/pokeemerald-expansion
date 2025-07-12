@@ -1,7 +1,7 @@
 {
   "id": "MAP_CERULEAN_CITY_MART",
   "name": "CeruleanCity_Mart",
-  "layout": "LAYOUT_MART",
+  "layout": "LAYOUT_MART_FRLG",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_CERULEAN_CITY",
   "requires_flash": false,

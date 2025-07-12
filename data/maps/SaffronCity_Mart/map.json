@@ -1,7 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_MART",
   "name": "SaffronCity_Mart",
-  "layout": "LAYOUT_MART",
+  "layout": "LAYOUT_MART_FRLG",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
