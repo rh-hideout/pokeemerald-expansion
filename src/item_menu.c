@@ -230,7 +230,7 @@ static void SortBagItems(u8 taskId);
 static void Task_SortFinish(u8 taskId);
 static void SortItemsInBag(struct BagPocket *pocket, u8 type);
 static void MergeSort(struct BagPocket *pocket, u32 low, u32 high, s32 (*comparator)(struct BagPocket*, u32, u32));
-static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s8 (*comparator)(struct BagPocket*, u32, u32));
+static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s32 (*comparator)(struct BagPocket*, u32, u32));
 static s32 CompareItemsAlphabetically(struct BagPocket* pocket, u32 itemSlot1, u32 itemSlot2);
 static s32 CompareItemsByMost(struct BagPocket* pocket, u32 itemSlot1, u32 itemSlot2);
 static s32 CompareItemsByType(struct BagPocket* pocket, u32 itemSlot1, u32 itemSlot2);
@@ -3292,8 +3292,6 @@ static void SortBagItems(u8 taskId)
 
 static void Task_SortFinish(u8 taskId)
 {
-    s16* data = gTasks[taskId].data;
-
     if (gMain.newKeys & (A_BUTTON | B_BUTTON))
     {
         RemoveItemMessageWindow(4);
@@ -3330,7 +3328,7 @@ static void MergeSort(struct BagPocket *pocket, u32 low, u32 high, s32 (*compara
     Merge(pocket, low, mid, high, comparator); //Merge results.
 }
 
-static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s8 (*comparator)(struct BagPocket*, u32, u32))
+static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s32 (*comparator)(struct BagPocket*, u32, u32))
 {
     u32 i = low;
     u32 j = mid + 1;
