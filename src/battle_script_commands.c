@@ -7370,7 +7370,9 @@ static void Cmd_moveend(void)
             switch (moveEffect)
             {
             case EFFECT_ICE_SPINNER:
-                if (IsBattlerAlive(gBattlerAttacker) && IsBattlerTurnDamaged(gBattlerTarget))
+                if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
+                 && IsBattlerAlive(gBattlerAttacker)
+                 && IsBattlerTurnDamaged(gBattlerTarget))
                 {
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_RemoveTerrain;
