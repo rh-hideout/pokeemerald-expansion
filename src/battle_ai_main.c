@@ -5096,15 +5096,16 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
             if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE)
                 canSteal = TRUE;
+
             if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER || IsOnPlayerSide(battlerAtk))
                 canSteal = TRUE;
 
             if (canSteal && aiData->items[battlerAtk] == ITEM_NONE
-            && aiData->items[battlerDef] != ITEM_NONE
-            && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
-            && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
-            && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
-            && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
+             && aiData->items[battlerDef] != ITEM_NONE
+             && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
+             && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
+             && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
+             && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
             {
                 switch (aiData->holdEffects[battlerDef])
                 {
@@ -5447,8 +5448,8 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_CHILLY_RECEPTION:
     case EFFECT_GEOMANCY:
     case EFFECT_VICTORY_DANCE:
-    // case EFFECT_STEALTH_ROCK:
-    // case EFFECT_SPIKES:
+    case EFFECT_CEASELESS_EDGE:
+    case EFFECT_STONE_AXE:
         ADJUST_SCORE(DECENT_EFFECT);
         break;
     default:

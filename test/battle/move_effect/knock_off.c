@@ -102,8 +102,8 @@ SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute")
 SINGLE_BATTLE_TEST("Knock Off does not remove items through Substitute even if it breaks it")
 {
     GIVEN {
-        PLAYER(SPECIES_MEWTWO);
-        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(4); HP(4); Item(ITEM_LEFTOVERS); };
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_KNOCK_OFF); }
     } SCENE {

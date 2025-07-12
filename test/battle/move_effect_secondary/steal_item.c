@@ -7,7 +7,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_COVET == EFFECT_STEAL_ITEM));
 }
 
-SINGLE_BATTLE_TEST("SThief and Covet steal target's held item")
+SINGLE_BATTLE_TEST("Thief and Covet steal target's held item")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_THIEF; }

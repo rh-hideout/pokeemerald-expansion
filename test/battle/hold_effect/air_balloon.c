@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen with Magician")
     }
 }
 
-SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen with Thief or Covet")
+SINGLE_BATTLE_TEST("Air Balloon pops before it can be stolen by Thief")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
