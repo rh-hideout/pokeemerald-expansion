@@ -233,6 +233,14 @@
     textVar[4] = B_BUFF_EOS;                                    \
 }
 
+static inline void CopyStringToArray(u8 *dest, u32 *index, u32 stringId)
+{
+    dest[(*index)++] = B_BUFF_STRING;
+    dest[(*index)++] = stringId;
+    dest[(*index)++] = stringId >> 8;
+    dest[*index] = B_BUFF_EOS;
+}
+
 struct BattleMsgData
 {
     u16 currentMove;
@@ -333,6 +341,7 @@ extern const u8 gText_BattleRecordedOnPass[];
 extern const u8 gText_BattleTourney[];
 
 extern const u16 gMissStringIds[];
+extern const u16 gStatDownStringIds[];
 extern const u16 gStatUpStringIds[];
 
 #endif // GUARD_BATTLE_MESSAGE_H
