@@ -278,3 +278,64 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
         TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
+{
+    u32 move;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT;
+
+    PARAMETRIZE { move = MOVE_REST; }
+    PARAMETRIZE { move = MOVE_EXTREME_SPEED; }
+    PARAMETRIZE { move = MOVE_REST; aiFlags |= AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; }
+    PARAMETRIZE { move = MOVE_EXTREME_SPEED; aiFlags |= AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; }
+    GIVEN {
+        AI_FLAGS(aiFlags);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_SLEEP_TALK, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_WORRY_SEED, MOVE_HEADBUTT); }
+    } WHEN {
+        if (move == MOVE_REST)
+            TURN { MOVE(player, MOVE_HEADBUTT); EXPECT_MOVE(opponent, MOVE_WORRY_SEED); }
+        else
+            TURN { MOVE(player, MOVE_HEADBUTT); NOT_EXPECT_MOVE(opponent, MOVE_WORRY_SEED); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
+{
+    u32 ability, move;
+    PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
+    PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
+
+    GIVEN {
+        PLAYER(SPECIES_SERPERIOR) { Moves(move); Ability(ability); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        OPPONENT(SPECIES_SWOOBAT) { Moves(MOVE_GUST, MOVE_SIMPLE_BEAM); }
+    } WHEN {
+        if (ability == ABILITY_CONTRARY && move == MOVE_LEAF_STORM)
+            TURN { MOVE(player, move); EXPECT_MOVE(opponent, MOVE_SIMPLE_BEAM); }
+        else
+            TURN { MOVE(player, move); NOT_EXPECT_MOVE(opponent, MOVE_SIMPLE_BEAM); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Skill Swap against Poison Heal")
+{
+    u8 status;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT;
+    PARAMETRIZE { status = STATUS1_POISON; }
+    PARAMETRIZE { status = STATUS1_POISON; aiFlags |= AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; }
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON; aiFlags |= AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; }
+
+    GIVEN {
+        PLAYER(SPECIES_SHROOMISH) { Ability(ABILITY_POISON_HEAL); Status1(status); }
+        AI_FLAGS(aiFlags);
+        OPPONENT(SPECIES_SPINDA) { Moves(MOVE_SKILL_SWAP, MOVE_HEADBUTT); }
+    } WHEN {
+        if (status == STATUS1_TOXIC_POISON)
+            TURN { EXPECT_MOVE(opponent, MOVE_SKILL_SWAP); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, MOVE_SKILL_SWAP); }
+    }
+}
