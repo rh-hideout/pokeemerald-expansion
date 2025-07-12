@@ -4363,7 +4363,7 @@ static void DebugAction_Sound_MUS_SelectId(u8 taskId)
     X(MUS_RG_OAK_LAB) \
     X(MUS_RG_OAK) \
     X(MUS_RG_POKE_CENTER) \
-    X(MUS_SS_ANNE) \
+    X(MUS_RG_SS_ANNE) \
     X(MUS_RG_SURF) \
     X(MUS_RG_POKE_TOWER) \
     X(MUS_RG_SILPH) \
