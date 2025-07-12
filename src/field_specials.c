@@ -4413,3 +4413,120 @@ u8 GetLeadMonFriendship(void)
     else
         return 0;
 }
+
+u16 GetFirstPartnerMove(u16 species)
+{
+    switch(species)
+    {
+        case SPECIES_VENUSAUR:
+        case SPECIES_MEGANIUM:
+        case SPECIES_SCEPTILE:
+        case SPECIES_TORTERRA:
+        case SPECIES_SERPERIOR:
+        case SPECIES_CHESNAUGHT:
+        case SPECIES_DECIDUEYE:
+        case SPECIES_DECIDUEYE_HISUI:
+        case SPECIES_RILLABOOM:
+        case SPECIES_MEOWSCARADA:
+            return MOVE_FRENZY_PLANT;
+        case SPECIES_CHARIZARD:
+        case SPECIES_TYPHLOSION:
+        case SPECIES_TYPHLOSION_HISUI:
+        case SPECIES_BLAZIKEN:
+        case SPECIES_INFERNAPE:
+        case SPECIES_EMBOAR:
+        case SPECIES_DELPHOX:
+        case SPECIES_INCINEROAR:
+        case SPECIES_CINDERACE:
+        case SPECIES_SKELEDIRGE:
+            return MOVE_BLAST_BURN;
+        case SPECIES_BLASTOISE:
+        case SPECIES_FERALIGATR:
+        case SPECIES_SWAMPERT:
+        case SPECIES_EMPOLEON:
+        case SPECIES_SAMUROTT:
+        case SPECIES_SAMUROTT_HISUI:
+        case SPECIES_GRENINJA:
+        case SPECIES_GRENINJA_ASH:
+        case SPECIES_GRENINJA_BATTLE_BOND:
+        case SPECIES_PRIMARINA:
+        case SPECIES_INTELEON:
+        case SPECIES_QUAQUAVAL:
+            return MOVE_HYDRO_CANNON;
+        default:
+            return MOVE_NONE;
+    }
+}
+
+bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
+{
+    // Returns:
+    //   8005 = Move tutor index
+    //   8006 = Num moves known by lead mon
+    //   8007 = Index of lead mon
+    //   to specialvar = whether a move can be taught in the first place
+    u8 i, leadMonSlot, moveCount = 0;
+    u16 moveId, tutorFlag; 
+    struct Pokemon *leadMon;
+    
+    leadMonSlot = GetLeadMonIndex();
+    leadMon = &gPlayerParty[leadMonSlot];
+    
+    if (GetMonData(leadMon, MON_DATA_FRIENDSHIP) != 255)
+        return FALSE;
+
+    moveId = GetFirstPartnerMove(GetMonData(leadMon, MON_DATA_SPECIES_OR_EGG));
+    switch(moveId)
+    {
+        case MOVE_FRENZY_PLANT:
+            tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+            break;
+        case MOVE_BLAST_BURN:
+            tutorFlag = FLAG_TUTOR_BLAST_BURN;
+            break;
+        case MOVE_HYDRO_CANNON:
+            tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+            break;
+        default:
+            return FALSE;
+    }
+    
+    StringCopy(gStringVar2, gMovesInfo[moveId].name);
+    if (!I_REUSABLE_TMS && FlagGet(tutorFlag) == TRUE)
+        return FALSE;
+    
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moveCount += (GetMonData(leadMon, MON_DATA_MOVE1 + i) != MOVE_NONE);
+    
+    gSpecialVar_0x8005 = moveId;
+    gSpecialVar_0x8006 = moveCount;
+    gSpecialVar_0x8007 = leadMonSlot;
+
+    return TRUE;
+}
+
+bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
+{
+    // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
+    if (I_REUSABLE_TMS)
+    {
+        return FALSE;
+    }
+
+    switch (gSpecialVar_0x8005)
+    {
+        case MOVE_FRENZY_PLANT:
+            FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+            break;
+        case MOVE_BLAST_BURN:
+            FlagSet(FLAG_TUTOR_BLAST_BURN);
+            break;
+        case MOVE_HYDRO_CANNON:
+            FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+            break;
+    }
+
+    return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
+        && (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
+        && (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE);
+}

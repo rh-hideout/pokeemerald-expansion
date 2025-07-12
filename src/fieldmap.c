@@ -612,7 +612,8 @@ static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
     [MB_FRLG_JUMP_WEST] = MB_JUMP_WEST,
     [MB_FRLG_JUMP_EAST] = MB_JUMP_EAST,
     [MB_FRLG_CAVE_DOOR] = MB_NON_ANIMATED_DOOR,
-    [MB_FRLG_COUNTER] = MB_COUNTER
+    [MB_FRLG_COUNTER] = MB_COUNTER,
+    [MB_FRLG_LADDER] = MB_LADDER,
 };
 
 static u32 TranslateFrlgBehaviour(u32 behavior)

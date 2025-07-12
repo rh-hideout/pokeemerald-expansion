@@ -576,3 +576,5 @@ gSpecials::
 	def_special GetLeadMonFriendship
 	def_special OpenMuseumFossilPic
 	def_special CloseMuseumFossilPic
+	def_special CapeBrinkGetMoveToTeachLeadPokemon
+	def_special HasLearnedAllMovesFromCapeBrinkTutor
