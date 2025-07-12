@@ -1,5 +1,3 @@
-#include <math.h>
-
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -2291,7 +2289,7 @@ enum
 
 s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
     if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
-        return floor(damage * 0.5);
+        return damage / 2;
     }
     return damage;
 }
