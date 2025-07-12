@@ -1099,6 +1099,18 @@ static const u8 sTerrainToType[BATTLE_TERRAIN_COUNT] =
     [BATTLE_TERRAIN_PLAIN]            = (B_CAMOUFLAGE_TYPES >= GEN_4 ? TYPE_GROUND : TYPE_NORMAL),
 };
 
+s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
+    // Don't reduce healing for Poison Heal or Toxic Boost
+    if (GetBattlerAbility(battler) == ABILITY_POISON_HEAL ||
+        GetBattlerAbility(battler) == ABILITY_TOXIC_BOOST){
+        return damage;
+    }
+    if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
+        return damage / 2;
+    }
+    return damage;
+}
+
 static bool32 NoTargetPresent(u8 battler, u32 move)
 {
     if (!IsBattlerAlive(gBattlerTarget))
@@ -8531,6 +8543,7 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId)
         && !BATTLER_MAX_HP(battler))
     {
         gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 3;
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
@@ -9717,6 +9730,8 @@ static void Cmd_various(void)
                 gBattleMoveDamage = 1;
             gBattleMoveDamage *= -1;
 
+            gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
+
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
@@ -10837,6 +10852,8 @@ static void Cmd_various(void)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
+
         if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             gBattlescriptCurrInstr = cmd->failInstr;    // fail
         else
@@ -11489,6 +11506,7 @@ static void Cmd_tryhealhalfhealth(void)
         gBattleMoveDamage = 1;
     gBattleMoveDamage *= -1;
 
+    gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
         gBattlescriptCurrInstr = failInstr;
     else
@@ -11695,6 +11713,10 @@ static void Cmd_trysetrest(void)
     gBattlerTarget = gBattlerAttacker;
     gBattleMoveDamage = gBattleMons[gBattlerTarget].maxHP * (-1);
 
+    gBattleMoveDamage = MaybeLowerHealingForPoison(
+        gBattlerTarget,
+        gBattleMons[gBattlerTarget].maxHP - gBattleMons[gBattlerTarget].hp);
+
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
     {
         gBattlescriptCurrInstr = failInstr;
@@ -11878,6 +11900,8 @@ static void Cmd_stockpiletohpheal(void)
             if (gBattleMoveDamage == 0)
                 gBattleMoveDamage = 1;
             gBattleMoveDamage *= -1;
+
+            gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
 
             gBattlescriptCurrInstr = cmd->nextInstr;
             gBattlerTarget = gBattlerAttacker;
@@ -14164,9 +14188,13 @@ static void Cmd_recoverbasedonsunlight(void)
                 gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
         }
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
+
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
 
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -14717,6 +14745,8 @@ static void Cmd_trywish(void)
             gBattleMoveDamage = max(1, GetNonDynamaxMaxHP(gBattlerAttacker) / 2);
         }
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+
         gBattleMoveDamage *= -1;
         if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
             gBattlescriptCurrInstr = cmd->failInstr;
@@ -15073,6 +15103,7 @@ static void Cmd_switchoutabilities(void)
             break;
         case ABILITY_REGENERATOR:
             gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 3;
+            gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
             gBattleMoveDamage += gBattleMons[battler].hp;
             if (gBattleMoveDamage > gBattleMons[battler].maxHP)
                 gBattleMoveDamage = gBattleMons[battler].maxHP;
@@ -15647,8 +15678,10 @@ static void Cmd_handleballthrow(void)
                 ballMultiplier = 10;
                 break;
             case BALL_CYRO:
-                if (B_WEATHER_SNOW || gBattlerAttacker, TYPE_ICE)
-                ballMultiplier = 300;
+                if (B_WEATHER_SNOW || IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_ICE)) {
+                    ballMultiplier = 300;
+                }
+                break;
             }
         }
 
@@ -16650,6 +16683,8 @@ void BS_ItemRestoreHP(void)
         }
         if (hp + healAmount > maxHP)
             healAmount = maxHP - hp;
+        
+        healAmount = MaybeLowerHealingForPoison(battler, healAmount);
 
         gBattleScripting.battler = battler;
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
@@ -17217,8 +17252,10 @@ void BS_TryHealPulse(void)  //bulagHP sean this script is called for several mov
         else
             gBattleMoveDamage = -(GetNonDynamaxMaxHP(gBattlerTarget) / 2);
 
-        if (gBattleMoveDamage == 0)
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+        if (gBattleMoveDamage == 0) {
             gBattleMoveDamage = -1;
+        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
