@@ -144,6 +144,18 @@ enum SortPocket
     SORT_POCKET_TM_HM,
 };
 
+union TRANSPARENT PocketSetSlotArg
+{
+    int raw; // can accept just an int for clearing the slot with 0
+    u32 value;
+    u16 itemIdAndQuantity[2];
+    struct {
+        u16 itemId;
+        u16 quantity;
+    };
+    struct ItemSlot itemSlot;
+};
+
 struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
