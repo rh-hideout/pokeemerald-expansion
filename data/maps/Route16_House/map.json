@@ -1,7 +1,7 @@
 {
   "id": "MAP_ROUTE16_HOUSE",
   "name": "Route16_House",
-  "layout": "LAYOUT_HOUSE1",
+  "layout": "LAYOUT_HOUSE1_FRLG",
   "music": "MUS_RG_CELADON",
   "region_map_section": "MAPSEC_ROUTE_16",
   "requires_flash": false,

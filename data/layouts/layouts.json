@@ -4911,8 +4911,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_GenericBuilding1",
-      "border_filepath": "data/layouts/House1/border.bin",
-      "blockdata_filepath": "data/layouts/House1/map.bin",
+      "border_filepath": "data/layouts/House1_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/House1_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -4924,8 +4924,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_GenericBuilding2",
-      "border_filepath": "data/layouts/House2/border.bin",
-      "blockdata_filepath": "data/layouts/House2/map.bin",
+      "border_filepath": "data/layouts/House2_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/House2_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -4976,8 +4976,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_GenericBuilding2",
-      "border_filepath": "data/layouts/House3/border.bin",
-      "blockdata_filepath": "data/layouts/House3/map.bin",
+      "border_filepath": "data/layouts/House3_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/House3_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -5002,8 +5002,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_GenericBuilding2",
-      "border_filepath": "data/layouts/House4/border.bin",
-      "blockdata_filepath": "data/layouts/House4/map.bin",
+      "border_filepath": "data/layouts/House4_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/House4_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -5059,7 +5059,7 @@
       "game_version": "firered"
     },
     {
-      "id": "LAYOUT_HOUSE5",
+      "id": "LAYOUT_HOUSE5_FRLG",
       "name": "House5_Layout",
       "width": 11,
       "height": 9,

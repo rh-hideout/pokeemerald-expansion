@@ -1,7 +1,7 @@
 {
   "id": "MAP_ROUTE23_UNUSED_HOUSE",
   "name": "Route23_UnusedHouse",
-  "layout": "LAYOUT_HOUSE2",
+  "layout": "LAYOUT_HOUSE2_FRLG",
   "music": "MUS_VICTORY_ROAD",
   "region_map_section": "MAPSEC_ROUTE_23",
   "requires_flash": false,

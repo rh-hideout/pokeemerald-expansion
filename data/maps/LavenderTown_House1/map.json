@@ -1,7 +1,7 @@
 {
   "id": "MAP_LAVENDER_TOWN_HOUSE1",
   "name": "LavenderTown_House1",
-  "layout": "LAYOUT_HOUSE5",
+  "layout": "LAYOUT_HOUSE5_FRLG",
   "music": "MUS_RG_LAVENDER",
   "region_map_section": "MAPSEC_LAVENDER_TOWN",
   "requires_flash": false,
