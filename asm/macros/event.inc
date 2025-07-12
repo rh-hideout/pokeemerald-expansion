@@ -2684,3 +2684,9 @@
 	setvar VAR_0x8005, \index
 	special \function
 	.endm
+
+	@ Sets the 'defeated' flag for all trainers in the specified gym.
+	.macro set_gym_trainers_frlg gym:req
+	setvar VAR_0x8008, \gym
+	call Common_EventScript_SetGymTrainers_Frlg
+	.endm

@@ -60,7 +60,7 @@ CinnabarIsland_Gym_EventScript_DefeatedBlaine::
 @	setrespawn HEAL_LOCATION_CINNABAR_ISLAND
 @	setvar VAR_MAP_SCENE_CINNABAR_ISLAND, 1
 @	clearflag FLAG_HIDE_CINNABAR_BILL
-@	set_gym_trainers 7
+@	set_gym_trainers_frlg 7
 @	goto CinnabarIsland_Gym_EventScript_GiveTM38
 	end
 
