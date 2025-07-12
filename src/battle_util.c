@@ -1571,6 +1571,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
 
     gPotentialItemEffectBattler = battler;
 
+
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         move = gBattleMons[battler].moves[i];
