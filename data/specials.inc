@@ -574,3 +574,5 @@ gSpecials::
 	def_special StartOldManTutorialBattle
 	def_special DaisyMassageServices
 	def_special GetLeadMonFriendship
+	def_special OpenMuseumFossilPic
+	def_special CloseMuseumFossilPic
