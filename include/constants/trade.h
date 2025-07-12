@@ -14,6 +14,7 @@ enum InGameTradeID
     // FRLG
     INGAME_TRADE_MR_MIME,
     INGAME_TRADE_JYNX,
+    INGAME_TRADE_NIDORAN,
 };
 
 // Return values for CanTradeSelectedMon and CanSpinTradeMon

@@ -1079,7 +1079,39 @@ static const struct InGameTrade sIngameTrades[] =
         .otGender = MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_POLIWHIRL
-    }, 
+    },
+    [INGAME_TRADE_NIDORAN] = 
+    {
+#if defined(FIRERED)
+        .nickname = _("MS. NIDO"),
+        .species = SPECIES_NIDORAN_F,
+        .ivs = {22, 18, 25, 19, 15, 22},
+        .abilityNum = 0,
+        .otId = 63184,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x4c970b89,
+        .heldItem = ITEM_TINY_MUSHROOM,
+        .mailNum = MAIL_NONE,
+        .otName = _("SAIGE"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORAN_M
+#else
+        .nickname = _("MR. NIDO"),
+        .species = SPECIES_NIDORAN_M,
+        .ivs = {19, 25, 18, 22, 22, 15},
+        .abilityNum = 0,
+        .otId = 63184,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x4c970b9e,
+        .heldItem = ITEM_TINY_MUSHROOM,
+        .mailNum = MAIL_NONE,
+        .otName = _("SAIGE"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORAN_F
+#endif
+    },
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =

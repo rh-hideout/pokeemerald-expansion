@@ -1599,3 +1599,38 @@ static u8 ModifyBreedingScoreForOvalCharm(u8 score)
 
     return score;
 }
+
+// Route 5 Daycare
+
+void PutMonInRoute5Daycare(void)
+{
+    // u8 monIdx = GetCursorSelectionMonId();
+    // StorePokemonInDaycare(&gPlayerParty[monIdx], &gSaveBlock1Ptr->route5DayCareMon);
+}
+
+void GetCostToWithdrawRoute5DaycareMon(void)
+{
+    // u16 cost = GetDaycareCostForSelectedMon(&gSaveBlock1Ptr->route5DayCareMon);
+    u16 cost = 100;
+    gSpecialVar_0x8005 = cost;
+}
+
+bool8 IsThereMonInRoute5Daycare(void)
+{
+    // if (GetBoxMonData(&gSaveBlock1Ptr->route5DayCareMon.mon, MON_DATA_SPECIES) != SPECIES_NONE)
+    //     return TRUE;
+
+    return FALSE;
+}
+
+u8 GetNumLevelsGainedForRoute5DaycareMon(void)
+{
+    // return GetNumLevelsGainedForDaycareMon(&gSaveBlock1Ptr->route5DayCareMon);
+    return 0;
+}
+
+u16 TakePokemonFromRoute5Daycare(void)
+{
+    // return TakeSelectedPokemonFromDaycare(&gSaveBlock1Ptr->route5DayCareMon);
+    return SPECIES_NONE;
+}

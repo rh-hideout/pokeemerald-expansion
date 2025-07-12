@@ -1616,8 +1616,9 @@ EventScript_TryDarkenRuins::
 	.include "data/scripts/move_tutors_frlg.inc"
 	.include "data/scripts/cable_club_frlg.inc"
 	.include "data/scripts/trainer_card.inc"
-	.include "data/scripts/day_care_frlg.inc"
 	.include "data/scripts/mystery_event_club.inc"
+	.include "data/scripts/day_care_frlg.inc"
+	.include "data/text/day_care_frlg.inc"
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
