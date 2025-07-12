@@ -11705,6 +11705,10 @@ static void Cmd_trysetrest(void)
     gBattlerTarget = gBattlerAttacker;
     gBattleMoveDamage = gBattleMons[gBattlerTarget].maxHP * (-1);
 
+    gBattleMoveDamage = MaybeLowerHealingForPoison(
+        gBattlerTarget,
+        gBattleMons[gBattlerTarget].maxHP - gBattleMons[gBattlerTarget].hp);
+
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
     {
         gBattlescriptCurrInstr = failInstr;
