@@ -63,7 +63,7 @@ const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
 #undef UNPACK_TM_ITEM_ID
 #undef UNPACK_HM_ITEM_ID
 
-static struct ItemSlot (*const sBagPocket_GetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos) =
+const struct ItemSlot (*const gBagPocket_GetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos) =
 {
     [POCKET_ITEMS] = BagPocket_GetSlotDataGeneric,
     [POCKET_KEY_ITEMS] = BagPocket_GetSlotDataGeneric,
@@ -73,7 +73,7 @@ static struct ItemSlot (*const sBagPocket_GetSlotDataFuncs[])(struct BagPocket *
     [POCKET_DUMMY] = BagPocket_GetSlotDataPC,
 };
 
-static void (*const sBagPocket_SetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg) =
+const void (*const gBagPocket_SetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg) =
 {
     [POCKET_ITEMS] = BagPocket_SetSlotDataGeneric,
     [POCKET_KEY_ITEMS] = BagPocket_SetSlotDataGeneric,
@@ -108,22 +108,6 @@ static void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32 pocket
 {
     pocket->itemSlots[pocketPos].itemId = setSlotArg.itemId;
     pocket->itemSlots[pocketPos].quantity = setSlotArg.quantity;
-}
-
-static inline struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
-{
-    return sBagPocket_GetSlotDataFuncs[pocket->id](pocket, pocketPos);
-}
-
-#define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
-#define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataUnion(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
-
-static inline void NONNULL BagPocket_SetSlotDataUnion(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg)
-{
-    if (!(setSlotArg.itemId && setSlotArg.quantity)) // Sets to zero if quantity or itemId is zero
-        setSlotArg.value *= 0;
-
-    sBagPocket_SetSlotDataFuncs[pocket->id](pocket, pocketPos, setSlotArg);
 }
 
 struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)

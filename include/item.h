@@ -156,6 +156,25 @@ union TRANSPARENT PocketSetSlotArg
     struct ItemSlot itemSlot;
 };
 
+extern const struct ItemSlot (*const gBagPocket_GetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos);
+extern const void (*const gBagPocket_SetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg);
+
+static inline struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
+{
+    return gBagPocket_GetSlotDataFuncs[pocket->id](pocket, pocketPos);
+}
+
+#define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
+#define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataUnion(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
+
+static inline void NONNULL BagPocket_SetSlotDataUnion(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg)
+{
+    if (!(setSlotArg.itemId && setSlotArg.quantity)) // Sets to zero if quantity or itemId is zero
+        setSlotArg.value *= 0;
+
+    gBagPocket_SetSlotDataFuncs[pocket->id](pocket, pocketPos, setSlotArg);
+}
+
 struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
