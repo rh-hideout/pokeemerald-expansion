@@ -256,7 +256,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 212,
        .description = COMPOUND_STRING(
            "It hones its blade against the bark of \n"
-           "the edge is pristine and sharp, Hazelnaut\n"
+           "trees into pristine conditions, Hazelnaut\n"
            "can be seen quite frequently sparring with\n"
            "one another."),
        .pokemonScale = 356,
@@ -480,8 +480,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .description = COMPOUND_STRING(
            "A brutal-looking Pokémon, many fear the\n"
            "marks on Salezerker, but behind its armor\n"
-           "is a kind soul. Its tail cannot be lifted and\n"
-           "it uses this fact to guard those around it."),
+           "there is a kind soul. Its tail is unmovable by\n"
+           "others so it uses it to guard those in need."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -923,8 +923,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .description = COMPOUND_STRING(
            "Tired of running from the world,\n"
            "Whipscuffle will knit their web nets \n"
-           "and hide for days on end trying to \n"
-           "catch prey."),
+           "and hide for days on end in order to\n"
+           "catch its preys."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
@@ -978,7 +978,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .weight = 1718,
        .description = COMPOUND_STRING(
            "Whipsicuffs are quite docile species\n"
-           "unless provoked. They throws punches\n"
+           "unless provoked. They throw punches\n"
            "so fast they make a distinct cracking\n"
            "sound the species is named after."),
        .pokemonScale = 356,
@@ -1711,8 +1711,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .height = 6,
        .weight = 191,
        .description = COMPOUND_STRING(
-           "Monkite enjoy high treetops, climbing to\n"
-           "the very top and fluttering across the\n" 
+           "Monkite enjoy high trees, climbing to\n"
+           "their very top and fluttering across the\n" 
            "peaks. However they occasionally trip\n"
            "on branches and fall to the ground."),
        .pokemonScale = 356,
@@ -3395,10 +3395,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
    .height = 3,
    .weight = 2,
    .description = COMPOUND_STRING(
-       "A menace whenever encountered; gangs\n"
-       "of them mob lone trainers, looting whatever\n"
-       "they can before hopping away. They do\n"
-       "return pokeballs however."),
+       "A menace to those who cross its path, gangs\n"
+       "of them will mob lone trainers and loot\n"
+       "whatever they can before hopping away. They\n"
+       "do return pokéballs however."),
    .pokemonScale = 356,
    .pokemonOffset = 16,
    .trainerScale = 256,
@@ -3451,10 +3451,10 @@ const struct SpeciesInfo gSpeciesInfo[] =
    .height = 8,
    .weight = 150,
    .description = COMPOUND_STRING(
-       "Picantero prefer to work alone, despite\n"
-       "having the attention of many weaker\n"
-       "Pokémon; it gives would-be goons the evil\n"
-       "eye until they go away."),
+       "Despite having the attention of many\n"
+       "weaker Pokémon, Picantero prefer to\n"
+       "work alone. It gives would-be goons\n"
+       "the evil eye until they go away."),
    .pokemonScale = 356,
    .pokemonOffset = 16,
    .trainerScale = 256,
@@ -3508,8 +3508,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
    .weight = 1845,
     .description = COMPOUND_STRING(
        "Finally gave the stink-eye to someone\n"
-       "they oughtn't have; he's been given one\n"
-       "last chance to clean up his act.\n"
+       "it oughtn't have, it's been given one\n"
+       "last chance to clean up its act.\n"
        "Donning the lone star, Sherifuego rides."),
    .pokemonScale = 356,
    .pokemonOffset = 16,
@@ -10763,7 +10763,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .description = COMPOUND_STRING(
            "What the fuck is this? What would\n"
            "you even call this thing? A dish? A\n"
-           "ofuck? A fighter? A fucker? A fucker."),
+           "fuck? A fighter? A fucker? A fucker."),
        .pokemonScale = 356,
        .pokemonOffset = 16,
        .trainerScale = 256,
