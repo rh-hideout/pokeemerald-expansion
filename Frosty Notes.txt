@@ -1,0 +1,318 @@
+https://rh-hideout.github.io/pokeemerald-expansion/tutorials/
+plans for june patch
+
+POISON CHANGES
+Heal Pulse - 17203 battlescriptcommands.c
+BattleScript_EffectRestoreHp- 3382 battle_scripts_1.s
+Conditional healing 4510 battle_scripts_1.s
+Absorb - 6011 battle_script_commands.c
+Leech seed- 3938 battle_scripts_1.s
+Aqua ring - 2713 battle_scripts.1s
+Wish - 5168 battle_scripts_1.s
+
+Ingrain
+Pain Split?
+Dream Eater?
+Strength Sap
+Life Dew/Jungle healing
+Swallow
+Moonlight/Morning sun
+Rest
+Purify
+Roost
+Softboiled
+Cheek Pouch
+Hospitality
+Poison heal
+Regenerator
+Icebody/rain dish/etc
+Water Absorb/earth eater/volt absorb etc
+Pleasant dreams when finished
+Leftovers, big root, liquid ooze etc
+Healing items? (Full Restore, Hyper Potion, Max Potion, Potion, Super Potion, energy powder/root, Fine Remedy, Fresh water, Lemonade, Max Honey, Moomoo milk,
+Rage Candy Bar, Remedy, Sacred Ash, Soda Pop, Superb Remedy, Sweet Heart)
+Berries? (Aguav, Enigma, Figy, Gold, Iapapa, Mago, Oran, Sitrus, Wiki)
+Shell Bell
+Berry Juice
+Grassy Terrain
+Healing wish/Lunar Dance
+
+
+healing list
+https://pokemondb.net/pokebase/346278/what-are-all-of-the-healing-moves-up-to-gen-8
+
+
+
+
+Abilities	60
+Moves		183
+Items		26
+Mega Evolutions	42
+Primals		2?
+Regional forms? 6
+
+Major Mechanical changes
+Bug buff v Fairy
+Ice buff v Water
+Frostbite
+New moves/abilities/items
+Adjusted moves/abilities/items
+Toxic buff
+Poison buff (potentially) 
+Introduction of Steelspikes
+Added light, kick, and spin moves
+Stealth Rock nerf
+
+July Update!
+-update engine to current version
+-finish gen 7 balance
+-Change defeatest to 30% hp
+-Make steelspikes act like sticky web instead of doing damage and lower def
+-test poison halving all sources of healing
+-add battle background pallettes
+-Gen 8 balance
+-add first three extra challenge NPCs (https://github.com/pret/pokeemerald/wiki/Adding-a-New-Trainer-Class)
+
+-adjust hold hands to be reverse helping hand
+-Add abilities from discord
+-Vigilance- switching in this mon takes 2/3 damage on first turn in (does this count turn 1?)
+-finish uncompleted moves/abilities/items
+-finish balance changes in discord notes
+-potentially add backgrounds specifically for battle effects such as trick room, weather, terrain, etc
+-rebalance glacial tempest and snowsear storm compared to blizzard
+
+
+August Update
+-look into fishing mini game addition
+-add first gamba NPC (Rustboro after gym beat)
+
+Tripwire- sets a tripwire on the enemy side of field. Next mon that switches in takes 25% damage and consumes the hazard there
+Bottomfeeder- eats any hazards on side of field. if successful heal for 33% hp
+-work on pokeballs and finish the hard berries
+-rework sport, safari and lure/dive balls to be more interesting
+-look into adding new trainers into elite 4 and the randomization process
+
+September
+-look into editing items on maps so player can access and find mega stones in game
+-edit maps to add extra areas for players to explore with additional trainers or puzzles to find mega stones and other surprises
+-add challenging side bosses
+-edit gym trainers and ace trainer teams
+-look into gift npc's and potential trade npc changes
+-look into gacha npc for eggs
+
+October
+-add in new updated story with new encounters such as team up battles etc
+-update rich boy and rich girl class trainers, add more side content where needed
+-add dialogue etc to explain game mechanics and changes better
+-look into updating sprite sets or tilesets
+-look into comissioned set of megas and primals
+-add a story about primal lugia and primal ho oh
+
+December
+-early route trainers for gyms 0-3
+-rebalance changes
+-clean up messages and battle communication
+
+Jan
+-work on multiplayer support/battling (link battles)
+-look into showdown git and potentially port as much as you can into a new showdown
+-look into more clean up messages and trainers for gyms 3-5
+
+Feb
+-trainers for gyms 5-7
+
+-https://discord.com/channels/1284904139704369286/1306379270389501974/1359348953572839486
+
+
+
+make return a nearly normal exclusive move
+go through close combat coverage users and switch to superpower
+take close combat off of being a tm
+make zing zap more accessible amongst physical attackers
+remember knock off purge
+Corrosive gas buff to be a 20BP move
+Fire Lash to flareon, scovillain, 
+
+
+
+Sneasler- remove fake out from egg moves
+Ralts line- increase hp
+
+next update
+
+
+Adjustments
+Have flower veil proc on more mons or have a condition for all mons
+Have leaf guard apply to more mons appropriately (Grass types that can use it)
+Slow start on a trick room support with skill swapping
+Merciless on salazzle
+Corrosion on Mearnie
+Own tempo for a beserker gene synergy/outrage/petal dance etc mon
+Flare boost for special attacker
+Anger shell or similar on mamoswine (Mamoswine needs some boost to speed and atk)
+Pallosand with sand spit/ buff water compaction to be like well baked body
+Meganium grass pelt instead of triage?
+Give glalie more normal moves for mega
+
+Really try to find buffs or strats for...
+Hustle- mons with hone claws or perfect acc moves (Maybe seviper/furret)
+Light/Heavy Metal
+Stench
+Tangled feet
+Stalwart
+Rattled- maybe metagross or grumpig?
+Cute Charm
+Cud Chew
+Quick Feet
+Perhaps have anticipation reduce a supereffective attack by half the first time
+Sticky Hold prevents knock off damage
+Make Psycho Shift an attack that has regular effect
+Give mothim dust form when made
+Hold hands lowers targets damage that turn by half
+fix snatch maybe 2x the effects stolen
+fix grudge honestly just worse destiny bond
+Make nature power not consume item
+
+Moves
+Move that powers up during tailwind or rain
+Move that hits for more damage on flying targets
+tailwind only for grounded mons?
+parting shot for anti defenses
+chance to disable
+
+
+
+Start on next session
+riot shield
+HOENN SEACAKE
+
+Buff items
+soul lantern - Spiritomb
+
+Give purpose for 
+choice dumpling
+swap snack
+twice spiced radish
+Pokeshi doll
+Belue berry
+Bluk Berry
+Cornn Berry
+Durin Berry
+Hopo berry
+
+Readjust to be more interesting
+Sport Ball
+Safari Ball?
+Lure/Dive ball
+
+
+Update slicing moves to include:
+dire claw
+
+
+update kicking moves to include
+roundhouse
+
+
+update spinning moves to include
+
+
+Rework freeze shock to be like snow electro shot
+Glacial lance nerf to 100BP
+
+
+For weather and terrain setters make sure to have 1 or 2 or each
+1. Defensive mon that enables offensive
+2. Offensive mon that enables defensive
+
+
+New regionals for:
+Rapidash/Ponyta
+Carnivine
+Electrode- make a psychic master ball
+Noctowl
+
+
+Look into making megas for:
+Primal Lugia and Ho-Oh
+Lumineon
+
+
+
+
+
+Patch Ideas
+July- "Balance Update": final major move/item/ability update, do all the balance changes written in notes, 
+August- "Challenger Update:" add in new trainers, side content, randomization during Elite 4 and such. 
+September- "Expanded Hoenn Update": look into adding new maps or redesigning current maps, adding more side content and exploration, Gen 7 movesets
+October- "Plot Update": look into editing the story. Make a familiar yet parallel story featuring favorite characters Gen 8 Movesets
+December- "Polish Update": Major balance changes, many trainer team changes, Gen 9 movesets
+
+
+
+Balance checks 
+Keep an eye on:
+Lopunny- are stat opts good enough?
+Gengar- is shadow tag still too strong? (Only really matters in pvp)
+Audino- how the hell do we save this thing? better base stats?
+
+New Pokemon Passives TYPE
+Normal - (immune to infactuation)
+Fire - immune to burn/sun fire boost
+Grass - immune to spores, seeds, and powders
+Water- 
+Electric - immune to para
+Ground - "immune to para'
+Rock - buffed in sand/
+Flying - 
+Psychic- (immune to confusion)
+Dark - immune to prankster				Immunity
+Steel - "immune to poison"				Immunity
+Fighting
+Fairy							Immunity
+Dragon- (immune to phasing)
+Ice -immune to frostbite (check)/buffed in snow
+Bug - (immune to redirection)
+Poison - immune to poison
+Ghost - (immune to trapping)
+
+Top 30 type combos
+Fairy/fighting
+Steel/Fire
+Water/Psychic
+Steel/Flying
+Steel/Psychic
+Fire/Psychic
+Water/Fighting
+Steel/Water
+Water/Dark
+Electric/Flying
+Electric/Fighting
+Ghost/Fighting
+Ghost/Water
+Steel/Dragon
+Steel/Fighting
+Electric/Fairy
+Fire/Fairy
+Fire/Dark
+Dragon/Water
+Steel/Ghost
+
+Steel/Ground
+Ice/Ground
+Bug/Steel
+Poison/Dark
+Water/Ground
+Flying/Ground
+Water/Fairy
+Fairy/Ground?
+Normal/Ghost
+Fairy/Steel
+
+Number of mons negatively affected by type changes from above goes from 13/30, mons buffed by weather changes or type changes would be 2/30
+No type combos involve rock
+Bug/Steel would have to be looked at balance wise
+Ice/Ground aka Mamoswine would be stronger but honestly lines up with what i wanted anyways
+
+
+
