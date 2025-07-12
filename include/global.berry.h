@@ -25,6 +25,14 @@ struct Berry
     u8 sour;
     u8 smoothness;
     u8 drainRate;
+    u32 naturalGiftType:6;
+    u32 naturalGiftPower:8;
+    u32 berryCrushDifficulty:8; // The number of A presses required to crush it
+    u32 berryCrushPowder:10;
+    const u32 *berryPic;
+    const u16 *berryPal;
+    const struct SpriteFrameImage *berryTreePicTable;
+    const u8 *berryTreePaletteSlotTable;
 };
 
 // with no const fields

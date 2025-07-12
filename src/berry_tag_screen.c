@@ -185,7 +185,7 @@ static const u8 sText_ThreeMarks[] = _("???");
 void DoBerryTagScreen(void)
 {
     sBerryTag = AllocZeroed(sizeof(*sBerryTag));
-    sBerryTag->berryId = ItemIdToBerryType(gSpecialVar_ItemId);
+    sBerryTag->berryId = GetBerryIndex(gSpecialVar_ItemId);
     SetMainCallback2(CB2_InitBerryTagScreen);
 }
 
@@ -565,7 +565,7 @@ static void TryChangeDisplayedBerry(u8 taskId, s8 toMove)
     s16 *data = gTasks[taskId].data;
     s16 currPocketPosition = gBagPosition.scrollPosition[POCKET_BERRIES] + gBagPosition.cursorPosition[POCKET_BERRIES];
     u32 newPocketPosition = currPocketPosition + toMove;
-    if (newPocketPosition < ITEM_TO_BERRY(LAST_BERRY_INDEX) && GetBagItemId(POCKET_BERRIES, newPocketPosition) != ITEM_NONE)
+    if (newPocketPosition < NUM_BERRIES && GetBagItemId(POCKET_BERRIES, newPocketPosition) != ITEM_NONE)
     {
         if (toMove < 0)
             tBgOp = BG_COORD_SUB;
@@ -598,7 +598,7 @@ static void HandleBagCursorPositionChange(s8 toMove)
             *scrollPos += toMove;
     }
 
-    sBerryTag->berryId = ItemIdToBerryType(GetBagItemId(POCKET_BERRIES, *scrollPos + *cursorPos));
+    sBerryTag->berryId = GetBerryIndex(GetBagItemId(POCKET_BERRIES, *scrollPos + *cursorPos));
 }
 
 #define DISPLAY_SPEED 16

@@ -6,6 +6,7 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/tms_hms.h"
+#include "constants/berries.h"
 
 /* Expands to:
  * enum
@@ -137,11 +138,42 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
+#define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
+#define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
+
+static inline enum BerryIndex GetBerryIndex(enum BerryItemId berryItemId)
+{
+    switch (berryItemId)
+    {
+    FOREACH_BERRY(GET_BERRY_INDEX)
+    case ENUM_ITEM_ID_ENIGMA_BERRY_E_READER:
+        return INDEX_ENIGMA_BERRY_E_READER;
+    default:
+        return INDEX_BERRY_NONE;
+    }
+};
+
+static inline enum BerryItemId GetBerryItemId(enum BerryIndex berryIndex)
+{
+    switch (berryIndex)
+    {
+    FOREACH_BERRY(GET_BERRY_ITEM_ID)
+    case INDEX_ENIGMA_BERRY_E_READER:
+        return ENUM_ITEM_ID_ENIGMA_BERRY_E_READER;
+    default:
+        return ITEM_NONE;
+    }
+};
+
+#undef GET_BERRY_INDEX
+#undef GET_BERRY_ITEM_ID
+
 enum SortPocket
 {
     SORT_NONE,
     SORT_POCKET_BY_ITEM_ID,
     SORT_POCKET_TM_HM,
+    SORT_POCKET_BERRIES,
 };
 
 void GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos, u16 *itemId, u16 *quantity);

@@ -930,7 +930,7 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
         }
         break;
     case POCKET_BERRIES:
-        ConvertIntToDecimalStringN(gStringVar1, itemId - FIRST_BERRY_INDEX + 1, STR_CONV_MODE_LEADING_ZEROS, 2);
+        ConvertIntToDecimalStringN(gStringVar1, GetBerryIndex(itemId), STR_CONV_MODE_LEADING_ZEROS, 2);
         end = CopyItemName(itemId, gStringVar2);
         PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
         StringExpandPlaceholders(dest, gText_NumberItem_TMBerry);
@@ -1134,7 +1134,7 @@ void UpdatePocketItemList(u8 pocketId)
         SortPocket(pocketId, SORT_POCKET_TM_HM);
         break;
     case POCKET_BERRIES:
-        SortPocket(pocketId, SORT_POCKET_BY_ITEM_ID);
+        SortPocket(pocketId, SORT_POCKET_BERRIES);
         break;
     default:
         CompactItemsInBagPocket(pocketId);
