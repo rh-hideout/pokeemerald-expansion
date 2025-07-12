@@ -3300,7 +3300,7 @@ BattleScript_MirrorArmorReflectStickyWeb:
 
 BattleScript_MirrorArmorReflectShrapnel:
 	call BattleScript_AbilityPopUp
-	setattackertoshrapneluser
+	@@setattackertoshrapneluser
 	jumpifbyteequal gBattlerAttacker, gBattlerTarget, BattleScript_SteelSurgeInEnd   @ Sticky web user not on field -> no stat loss
 	call BattleScript_MirrorArmorReflectStatLoss
 	goto BattleScript_SteelSurgeInEnd
