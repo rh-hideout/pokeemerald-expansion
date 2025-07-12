@@ -839,10 +839,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_STEAL_ITEM:
-                if ((additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                    baseFromEffect += 3;
-                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
