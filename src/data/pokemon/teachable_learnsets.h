@@ -38340,7 +38340,7 @@ static const u16 sMaleentisTeachableLearnset[] = {
     MOVE_SLASH,
     MOVE_NIGHT_SLASH,
     MOVE_X_SCISSOR,
-    MOVE_THOUSAND_FOLDS, //Replace with Swordbreaker once added
+    MOVE_SWORDBREAKER, 
     MOVE_COACHING,
     MOVE_RETALIATE,
     MOVE_BODY_SLAM,

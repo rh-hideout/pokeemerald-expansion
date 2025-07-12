@@ -21878,23 +21878,26 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_PartingShot,
     },
 
-    [MOVE_THOUSAND_FOLDS] = // 1000 folds (this note is for search ease! please keep it here -rex)
+    [MOVE_SWORDBREAKER] = // 1000 folds (this note is for search ease! please keep it here -rex)
     {
-        .name = COMPOUND_STRING("Thousand Folds"),
+        .name = COMPOUND_STRING("Swordbreaker"),
         .description = COMPOUND_STRING(
             "A slice that tears through\n"
             "defenses. Neutral vs Steel."),
         .effect = EFFECT_NEUTRAL_EFFECTIVE_ON_ARG,
-        .power = 90,
+        .power = 110,
         .type = TYPE_STEEL,
         .accuracy = 100,
-        .pp = 10,
+        .pp = 5,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_ATK_MINUS_1,
+            .self = TRUE,
+        }),
         .makesContact = TRUE,
         .slicingMove = TRUE,
-        .ignoresProtect = TRUE,
         .argument = { .type = TYPE_STEEL },
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
@@ -23028,6 +23031,60 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_GROWTH},
         .battleAnimScript = gBattleAnimMove_GigaDrain,
+    },
+
+    [MOVE_BAD_EGGS] =
+    {
+        .name = COMPOUND_STRING("Bad Eggs"),
+        .description = COMPOUND_STRING(
+            "Lobs 3 rotten eggs with\n"
+            "poison and rising power."),
+        .effect = EFFECT_TRIPLE_KICK,
+        .power = 20,
+        .type = TYPE_DARK,
+        .accuracy = 90,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_TOXIC,
+            .chance = 20,
+        }),
+        .strikeCount = 3,
+        .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .battleAnimScript = gBattleAnimMove_EggBomb,
+        .validApprenticeMove = TRUE,
+    },
+
+    [MOVE_BLOCK_BUSTER] =
+    {
+        .name = COMPOUND_STRING("Block Buster"),
+        .description = COMPOUND_STRING(
+            "Destroys screens and may\n"
+            "lower the foe's defense."),
+        .effect = EFFECT_BRICK_BREAK,
+        .power = 85,
+        .type = TYPE_ROCK,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_DEF_MINUS_1,
+            .chance = 30,
+        }),
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON,
+        .contestCategory = CONTEST_CATEGORY_COOL,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
+        .battleAnimScript = gBattleAnimMove_Retaliate,
+        .validApprenticeMove = TRUE,
     },
 
     
