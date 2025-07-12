@@ -2236,4 +2236,16 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectSteelRoller,
         .battleTvScore = 0, // TODO: Assign points
     },
+
+    [EFFECT_STONE_AXE] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_CEASELESS_EDGE] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
 };

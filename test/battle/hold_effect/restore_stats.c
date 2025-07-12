@@ -140,15 +140,14 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if it is knocked off o
         TURN { MOVE(opponent, move); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        if (move == MOVE_THIEF) {
-            MESSAGE("The opposing Wobbuffet stole Slugma's White Herb!");
-        }
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Slugma's Weak Armor lowered its Defense!");
         MESSAGE("Slugma's Weak Armor raised its Speed!");
         if (move == MOVE_KNOCK_OFF) {
             MESSAGE("The opposing Wobbuffet knocked off Slugma's White Herb!");
+        } else if (move == MOVE_THIEF) {
+            MESSAGE("The opposing Wobbuffet stole Slugma's White Herb!");
         }
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);

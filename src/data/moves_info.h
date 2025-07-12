@@ -270,7 +270,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
-        .category = DAMAGE_CATEGORY_PHYSICAL,
+         .category = DAMAGE_CATEGORY_PHYSICAL,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PAYDAY,
         }),
@@ -19202,7 +19202,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "High critical hit ratio. Sets\n"
             "Splinters that hurt the foe."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_STONE_AXE,
         .power = 65,
         .type = TYPE_ROCK,
         .accuracy = 90,
@@ -19213,8 +19213,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .slicingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_STEALTH_ROCK,
-            .chance = 100,
+            .sheerForceBoost = SHEER_FORCE_BOOST,
         }),
         .battleAnimScript = gBattleAnimMove_StoneAxe,
     },
@@ -19528,7 +19527,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "High critical hit ratio. Sets\n"
             "Splinters that hurt the foe."),
-        .effect = EFFECT_HIT,
+        .effect = EFFECT_CEASELESS_EDGE,
         .power = 65,
         .type = TYPE_DARK,
         .accuracy = 90,
@@ -19539,8 +19538,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .slicingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_SPIKES,
-            .chance = 100,
+            .sheerForceBoost = SHEER_FORCE_BOOST,
         }),
         .battleAnimScript = gBattleAnimMove_CeaselessEdge,
     },

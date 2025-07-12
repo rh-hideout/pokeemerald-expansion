@@ -5142,6 +5142,16 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             break;
         }
         break;
+    case EFFECT_STONE_AXE:
+    case EFFECT_CEASELESS_EDGE:
+        if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
+        {
+            if (gDisableStructs[battlerAtk].isFirstTurn)
+                ADJUST_SCORE(BEST_EFFECT);
+            else
+                ADJUST_SCORE(DECENT_EFFECT);
+        }
+        break;
     default:
         break;
     } // move effect checks
@@ -5281,16 +5291,6 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
                     else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
                         ADJUST_SCORE(DECENT_EFFECT);
                     break;
-                case MOVE_EFFECT_STEALTH_ROCK:
-                case MOVE_EFFECT_SPIKES:
-                    if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
-                    {
-                        if (gDisableStructs[battlerAtk].isFirstTurn)
-                            ADJUST_SCORE(BEST_EFFECT);
-                        else
-                            ADJUST_SCORE(DECENT_EFFECT);
-                    }
-                    break;
                 case MOVE_EFFECT_FEINT:
                     if (GetMoveEffect(predictedMove) == EFFECT_PROTECT)
                         ADJUST_SCORE(GOOD_EFFECT);
@@ -5350,7 +5350,6 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 // Effects that are encouraged on the first turn of battle
 static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
-    u8 i;
     if (IS_TARGETING_PARTNER(battlerAtk, battlerDef)
       || gBattleResults.battleTurnCounter != 0)
         return score;
@@ -5448,27 +5447,10 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_CHILLY_RECEPTION:
     case EFFECT_GEOMANCY:
     case EFFECT_VICTORY_DANCE:
+    // case EFFECT_STEALTH_ROCK:
+    // case EFFECT_SPIKES:
         ADJUST_SCORE(DECENT_EFFECT);
         break;
-    case EFFECT_HIT:
-    {
-        // TEMPORARY - should applied to all moves regardless of EFFECT
-        // Consider move effects
-        u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
-        for (i = 0; i < additionalEffectCount; i++)
-        {
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-            switch (additionalEffect->moveEffect)
-            {
-                case MOVE_EFFECT_STEALTH_ROCK:
-                case MOVE_EFFECT_SPIKES:
-                    ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
     default:
         break;
     }
