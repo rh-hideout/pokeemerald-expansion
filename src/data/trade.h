@@ -1128,6 +1128,38 @@ static const struct InGameTrade sIngameTrades[] =
         .sheen = 10,
         .requestedSpecies = SPECIES_SPEAROW
     },
+    [INGAME_TRADE_NIDORINOA] = 
+    {
+#if defined(FIRERED)
+        .nickname = _("NINA"),
+        .species = SPECIES_NIDORINA,
+        .ivs = {22, 25, 18, 19, 22, 15},
+        .abilityNum = 0,
+        .otId = 13637,
+        .conditions = {5, 5, 30, 5, 5},
+        .personality = 0x00eeca15,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("TURNER"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORINO
+#else
+        .nickname = _("NINO"),
+        .species = SPECIES_NIDORINO,
+        .ivs = {19, 18, 25, 22, 15, 22},
+        .abilityNum = 0,
+        .otId = 13637,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x00eeca19,
+        .heldItem = ITEM_NONE,
+        .mailNum = MAIL_NONE,
+        .otName = _("TURNER"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_NIDORINA
+#endif
+    },
     [INGAME_TRADE_LICKITUNG] = 
     {
         .nickname = _("MARC"),
@@ -1147,7 +1179,7 @@ static const struct InGameTrade sIngameTrades[] =
 #else
         .requestedSpecies = SPECIES_SLOWBRO
 #endif
-    }, 
+    },
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
