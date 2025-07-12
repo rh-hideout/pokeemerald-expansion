@@ -637,3 +637,15 @@ void Script_RequestWriteVar_Internal(u32 varId)
         return;
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
 }
+
+// FRLG
+void DisableMsgBoxWalkaway(void)
+{
+    // sMsgBoxWalkawayDisabled = TRUE;
+}
+
+void SetWalkingIntoSignVars(void)
+{
+    // gWalkAwayFromSignInhibitTimer = 6;
+    // sMsgBoxIsCancelable = TRUE;
+}

@@ -563,3 +563,13 @@ gSpecials::
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special EnterCode
 	def_special GetCodeFeedback
+	def_special GetFrlgPokedexCount
+	def_special HasAllMons
+	def_special GetProfOaksRatingMessage
+	def_special UpdatePickStateFromSpecialVar8005
+	def_special SetFlavorTextFlagFromSpecialVars
+	def_special DisableMsgBoxWalkaway
+	def_special SetWalkingIntoSignVars
+	def_special StartOldManTutorialBattle
+	def_special DaisyMassageServices
+	def_special GetLeadMonFriendship
