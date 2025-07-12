@@ -1112,6 +1112,22 @@ static const struct InGameTrade sIngameTrades[] =
         .requestedSpecies = SPECIES_NIDORAN_F
 #endif
     },
+    [INGAME_TRADE_FARFETCHD] = 
+    {
+        .nickname = _("CH'DING"),
+        .species = SPECIES_FARFETCHD,
+        .ivs = {20, 25, 21, 24, 15, 20},
+        .abilityNum = 0,
+        .otId = 8810,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x151943d7,
+        .heldItem = ITEM_STICK,
+        .mailNum = MAIL_NONE,
+        .otName = _("ELYSSA"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_SPEAROW
+    },
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =

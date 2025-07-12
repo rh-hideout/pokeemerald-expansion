@@ -591,3 +591,4 @@ gSpecials::
 	def_special GetSeagallopNumber
 	def_special DoSeagallopFerryScene
 	def_special IsPlayerLeftOfVermilionSailor
+	def_special SetVermilionTrashCans
