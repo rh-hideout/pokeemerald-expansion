@@ -1615,6 +1615,9 @@ EventScript_TryDarkenRuins::
 	setweather WEATHER_SHADE
 	doweather
 	return
+	
+Text_MonFlewAway::
+	.string "The {STR_VAR_1} flew away!$"
 
 
 	.include "data/scripts/trainers_frlg.inc"
@@ -1629,6 +1632,7 @@ EventScript_TryDarkenRuins::
 	.include "data/scripts/day_care_frlg.inc"
 	.include "data/text/day_care_frlg.inc"
 	.include "data/scripts/seagallop.inc"
+	.include "data/scripts/static_pokemon.inc"
 	.include "data/scripts/aide.inc"
 
 	.include "data/scripts/pc_transfer.inc"

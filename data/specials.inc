@@ -594,3 +594,6 @@ gSpecials::
 	def_special SetVermilionTrashCans
 	def_special DoSSAnneDepartureCutscene
 	def_special StartMarowakBattle
+	def_special DoesPlayerPartyContainSpecies
+	def_special GetMagikarpSizeRecordInfo
+	def_special CompareMagikarpSize
