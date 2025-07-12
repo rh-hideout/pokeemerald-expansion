@@ -6490,6 +6490,16 @@ static const u16 sBungaloonEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sKaustikrokEggMoveLearnset[] = {
+    MOVE_ROCK_BLAST,
+    MOVE_BONEMERANG,
+    MOVE_BARRAGE,
+    MOVE_TOXIC_SPIKES,
+    MOVE_,
+    MOVE_,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sMaleentisEggMoveLearnset[] = {
     MOVE_NO_RETREAT,
     MOVE_HEAD_CHARGE,

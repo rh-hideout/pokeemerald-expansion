@@ -1025,6 +1025,7 @@ static const struct {
     { SPECIES_GHASTROPOD, ITEM_ROCK_GEM, MOVE_SHELL_SMASH },
     { SPECIES_COPOLAR, ITEM_METAL_COAT, MOVE_SHARPEN }, // REPLACE ITEM WITH WHETSTONE,
     { SPECIES_CLOBBER, ITEM_GRIP_CLAW, MOVE_CRUSH_GRIP }, 
+    { SPECIES_KAUSTIKROK, ITEM_, MOVE_ }, 
 };
 
 static void GiveMoveIfItem(struct Pokemon *mon, struct DayCare *daycare)
