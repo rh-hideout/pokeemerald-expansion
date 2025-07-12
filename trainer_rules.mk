@@ -2,13 +2,9 @@
 # matching the current trainer .h formatting
 
 AUTO_GEN_TARGETS += src/data/trainers.h
-src/data/trainers.h: src/data/trainers.party
-	$(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
-
 AUTO_GEN_TARGETS += src/data/battle_partners.h
-src/data/battle_partners.h: src/data/battle_partners.party
-	$(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
-
 AUTO_GEN_TARGETS += test/battle/trainer_control.h
-test/battle/trainer_control.h: test/battle/trainer_control.party
+AUTO_GEN_TARGETS += src/data/debug_trainers.h
+
+%.h: %.party
 	$(CPP) $(CPPFLAGS) -traditional-cpp - < $< | $(TRAINERPROC) -o $@ -i $< -
