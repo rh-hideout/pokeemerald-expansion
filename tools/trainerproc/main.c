@@ -149,6 +149,9 @@ struct Trainer
 
     struct String pool_prune;
     int pool_prune_line;
+
+    struct String macro;
+    int macro_line;
 };
 
 static bool is_empty_string(struct String s)
@@ -1280,14 +1283,21 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->pool_prune_line = value.location.line;
             trainer->pool_prune = token_string(&value);
         }
+        else if (is_literal_token(&key, "Macro"))
+        {
+            if (trainer->macro_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Macro'");
+            trainer->macro_line = value.location.line;
+            trainer->macro = token_string(&value);
+        }
         else
         {
             any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
         }
     }
-    if (!trainer->pic_line)
+    if (!trainer->pic_line && !trainer->macro_line)
         any_error = !set_show_parse_error(p, p->location, "expected 'Pic' before Pokemon");
-    if (!trainer->name_line)
+    if (!trainer->name_line && !trainer->macro_line)
         any_error = !set_show_parse_error(p, p->location, "expected 'Name' before Pokemon");
     if (!match_empty_line(p))
     {
@@ -1853,6 +1863,14 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, ",\n");
         }
 
+        if (trainer->macro_line)
+        {
+            fprintf(f, "#line %d\n", trainer->macro_line);
+            fprintf(f, "        ");
+            fprint_string(f, trainer->macro);
+            fprintf(f, "\n");
+        }
+
         if (trainer->party_size_line)
         {
             fprintf(f, "#line %d\n", trainer->party_size_line);
@@ -1867,6 +1885,7 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprintf(f, "        .party = (const struct TrainerMon[])\n");
             fprintf(f, "        {\n");
         }
+
         for (int j = 0; j < trainer->pokemon_n; j++)
         {
             struct Pokemon *pokemon = &trainer->pokemon[j];
