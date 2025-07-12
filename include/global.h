@@ -160,6 +160,16 @@ static inline u32 CycleCountEnd()
     return REG_TM2CNT_L | (REG_TM3CNT_L << 16u);
 }
 
+static inline u16 BytesToU16(const u8 *bytes)
+{
+    return bytes[0] + (bytes[1] << 8);
+}
+
+static inline u32 BytesToU32(const u8 *bytes)
+{
+    return bytes[0] + (bytes[1] << 8) + (bytes[2] << 16) + (bytes[3] << 24);
+}
+
 struct Coords8
 {
     s8 x;

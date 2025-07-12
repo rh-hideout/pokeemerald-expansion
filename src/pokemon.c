@@ -2800,27 +2800,21 @@ u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field)
     return GetBoxMonData3(boxMon, field, NULL);
 }
 
-#define SET8(lhs) (lhs) = *data
-#define SET16(lhs) (lhs) = data[0] + (data[1] << 8)
-#define SET32(lhs) (lhs) = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24)
-
-void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
+void SetMonData(struct Pokemon *mon, s32 field, union SetMonDataArg dataArg)
 {
-    const u8 *data = dataArg;
-
     switch (field)
     {
     case MON_DATA_STATUS:
-        SET32(mon->status);
+        mon->status = BytesToU32(dataArg.bytes);
         SetBoxMonData(&mon->box, MON_DATA_STATUS, dataArg);
         break;
     case MON_DATA_LEVEL:
-        SET8(mon->level);
+        mon->level = dataArg.bytes[0];
         break;
     case MON_DATA_HP:
     {
         u32 hpLost;
-        SET16(mon->hp);
+        mon->hp = BytesToU16(dataArg.bytes);
         hpLost = mon->maxHP - mon->hp;
         SetBoxMonData(&mon->box, MON_DATA_HP_LOST, &hpLost);
         break;
@@ -2828,44 +2822,42 @@ void SetMonData(struct Pokemon *mon, s32 field, const void *dataArg)
     case MON_DATA_HP_LOST:
     {
         u32 hpLost;
-        SET16(hpLost);
+        hpLost = BytesToU16(dataArg.bytes);
         mon->hp = mon->maxHP - hpLost;
         SetBoxMonData(&mon->box, MON_DATA_HP_LOST, &hpLost);
         break;
     }
     case MON_DATA_MAX_HP:
-        SET16(mon->maxHP);
+        mon->maxHP = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_ATK:
-        SET16(mon->attack);
+        mon->attack = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_DEF:
-        SET16(mon->defense);
+        mon->defense = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_SPEED:
-        SET16(mon->speed);
+        mon->speed = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_SPATK:
-        SET16(mon->spAttack);
+        mon->spAttack = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_SPDEF:
-        SET16(mon->spDefense);
+        mon->spDefense = BytesToU16(dataArg.bytes);
         break;
     case MON_DATA_MAIL:
-        SET8(mon->mail);
+        mon->mail = dataArg.bytes[0];
         break;
     case MON_DATA_SPECIES_OR_EGG:
         break;
     default:
-        SetBoxMonData(&mon->box, field, data);
+        SetBoxMonData(&mon->box, field, dataArg);
         break;
     }
 }
 
-void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
+void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, union SetMonDataArg dataArg)
 {
-    const u8 *data = dataArg;
-
     if (field > MON_DATA_ENCRYPT_SEPARATOR)
     {
         if (CalculateBoxMonChecksumDecrypt(boxMon) != boxMon->checksum)
@@ -2885,13 +2877,13 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             s32 i;
             struct PokemonSubstruct0 *substruct0 = GetSubstruct0(boxMon);
             for (i = 0; i < min(sizeof(boxMon->nickname), POKEMON_NAME_LENGTH); i++)
-                boxMon->nickname[i] = data[i];
+                boxMon->nickname[i] = dataArg.bytes[i];
             if (field != MON_DATA_NICKNAME10)
             {
                 if (POKEMON_NAME_LENGTH >= 11)
-                    substruct0->nickname11 = data[10];
+                    substruct0->nickname11 = dataArg.bytes[10];
                 if (POKEMON_NAME_LENGTH >= 12)
-                    substruct0->nickname12 = data[11];
+                    substruct0->nickname12 = dataArg.bytes[11];
             }
             else
             {
@@ -2903,7 +2895,7 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         case MON_DATA_SPECIES:
         {
             struct PokemonSubstruct0 *substruct0 = GetSubstruct0(boxMon);
-            SET16(substruct0->species);
+            substruct0->species = BytesToU16(dataArg.bytes);
             if (substruct0->species)
                 boxMon->hasSpecies = TRUE;
             else
@@ -2911,212 +2903,213 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
             break;
         }
         case MON_DATA_HELD_ITEM:
-            SET16(GetSubstruct0(boxMon)->heldItem);
+            GetSubstruct0(boxMon)->heldItem = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_EXP:
-            SET32(GetSubstruct0(boxMon)->experience);
+            GetSubstruct0(boxMon)->experience = BytesToU32(dataArg.bytes);
             break;
         case MON_DATA_PP_BONUSES:
-            SET8(GetSubstruct0(boxMon)->ppBonuses);
+            GetSubstruct0(boxMon)->ppBonuses = dataArg.bytes[0];
             break;
         case MON_DATA_FRIENDSHIP:
-            SET8(GetSubstruct0(boxMon)->friendship);
+            GetSubstruct0(boxMon)->friendship = dataArg.bytes[0];
             break;
         case MON_DATA_MOVE1:
-            SET16(GetSubstruct1(boxMon)->move1);
+            GetSubstruct1(boxMon)->move1 = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_MOVE2:
-            SET16(GetSubstruct1(boxMon)->move2);
+            GetSubstruct1(boxMon)->move2 = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_MOVE3:
-            SET16(GetSubstruct1(boxMon)->move3);
+            GetSubstruct1(boxMon)->move3 = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_MOVE4:
-            SET16(GetSubstruct1(boxMon)->move4);
+            GetSubstruct1(boxMon)->move4 = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_PP1:
-            SET8(GetSubstruct1(boxMon)->pp1);
+            GetSubstruct1(boxMon)->pp1 = dataArg.bytes[0];
             break;
         case MON_DATA_PP2:
-            SET8(GetSubstruct1(boxMon)->pp2);
+            GetSubstruct1(boxMon)->pp2 = dataArg.bytes[0];
             break;
         case MON_DATA_PP3:
-            SET8(GetSubstruct1(boxMon)->pp3);
+            GetSubstruct1(boxMon)->pp3 = dataArg.bytes[0];
             break;
         case MON_DATA_PP4:
-            SET8(GetSubstruct1(boxMon)->pp4);
+            GetSubstruct1(boxMon)->pp4 = dataArg.bytes[0];
             break;
         case MON_DATA_HP_EV:
-            SET8(GetSubstruct2(boxMon)->hpEV);
+            GetSubstruct2(boxMon)->hpEV = dataArg.bytes[0];
             break;
         case MON_DATA_ATK_EV:
-            SET8(GetSubstruct2(boxMon)->attackEV);
+            GetSubstruct2(boxMon)->attackEV = dataArg.bytes[0];
             break;
         case MON_DATA_DEF_EV:
-            SET8(GetSubstruct2(boxMon)->defenseEV);
+            GetSubstruct2(boxMon)->defenseEV = dataArg.bytes[0];
             break;
         case MON_DATA_SPEED_EV:
-            SET8(GetSubstruct2(boxMon)->speedEV);
+            GetSubstruct2(boxMon)->speedEV = dataArg.bytes[0];
             break;
         case MON_DATA_SPATK_EV:
-            SET8(GetSubstruct2(boxMon)->spAttackEV);
+            GetSubstruct2(boxMon)->spAttackEV = dataArg.bytes[0];
             break;
         case MON_DATA_SPDEF_EV:
-            SET8(GetSubstruct2(boxMon)->spDefenseEV);
+            GetSubstruct2(boxMon)->spDefenseEV = dataArg.bytes[0];
             break;
         case MON_DATA_COOL:
-            SET8(GetSubstruct2(boxMon)->cool);
+            GetSubstruct2(boxMon)->cool = dataArg.bytes[0];
             break;
         case MON_DATA_BEAUTY:
-            SET8(GetSubstruct2(boxMon)->beauty);
+            GetSubstruct2(boxMon)->beauty = dataArg.bytes[0];
             break;
         case MON_DATA_CUTE:
-            SET8(GetSubstruct2(boxMon)->cute);
+            GetSubstruct2(boxMon)->cute = dataArg.bytes[0];
             break;
         case MON_DATA_SMART:
-            SET8(GetSubstruct2(boxMon)->smart);
+            GetSubstruct2(boxMon)->smart = dataArg.bytes[0];
             break;
         case MON_DATA_TOUGH:
-            SET8(GetSubstruct2(boxMon)->tough);
+            GetSubstruct2(boxMon)->tough = dataArg.bytes[0];
             break;
         case MON_DATA_SHEEN:
-            SET8(GetSubstruct2(boxMon)->sheen);
+            GetSubstruct2(boxMon)->sheen = dataArg.bytes[0];
             break;
         case MON_DATA_POKERUS:
-            SET8(GetSubstruct3(boxMon)->pokerus);
+            GetSubstruct3(boxMon)->pokerus = dataArg.bytes[0];
             break;
         case MON_DATA_MET_LOCATION:
-            SET8(GetSubstruct3(boxMon)->metLocation);
+            GetSubstruct3(boxMon)->metLocation = dataArg.bytes[0];
             break;
         case MON_DATA_MET_LEVEL:
-            SET8(GetSubstruct3(boxMon)->metLevel);
+            GetSubstruct3(boxMon)->metLevel = dataArg.bytes[0];
             break;
         case MON_DATA_MET_GAME:
-            SET8(GetSubstruct3(boxMon)->metGame);
+            GetSubstruct3(boxMon)->metGame = dataArg.bytes[0];
             break;
         case MON_DATA_POKEBALL:
-            SET8(GetSubstruct0(boxMon)->pokeball);
+            GetSubstruct0(boxMon)->pokeball = dataArg.bytes[0];
             break;
         case MON_DATA_OT_GENDER:
-            SET8(GetSubstruct3(boxMon)->otGender);
+            GetSubstruct3(boxMon)->otGender = dataArg.bytes[0];
             break;
         case MON_DATA_HP_IV:
-            SET8(GetSubstruct3(boxMon)->hpIV);
+            GetSubstruct3(boxMon)->hpIV = dataArg.bytes[0];
             break;
         case MON_DATA_ATK_IV:
-            SET8(GetSubstruct3(boxMon)->attackIV);
+            GetSubstruct3(boxMon)->attackIV = dataArg.bytes[0];
             break;
         case MON_DATA_DEF_IV:
-            SET8(GetSubstruct3(boxMon)->defenseIV);
+            GetSubstruct3(boxMon)->defenseIV = dataArg.bytes[0];
             break;
         case MON_DATA_SPEED_IV:
-            SET8(GetSubstruct3(boxMon)->speedIV);
+            GetSubstruct3(boxMon)->speedIV = dataArg.bytes[0];
             break;
         case MON_DATA_SPATK_IV:
-            SET8(GetSubstruct3(boxMon)->spAttackIV);
+            GetSubstruct3(boxMon)->spAttackIV = dataArg.bytes[0];
             break;
         case MON_DATA_SPDEF_IV:
-            SET8(GetSubstruct3(boxMon)->spDefenseIV);
+            GetSubstruct3(boxMon)->spDefenseIV = dataArg.bytes[0];
             break;
         case MON_DATA_IS_EGG:
-            SET8(GetSubstruct3(boxMon)->isEgg);
-            SET8(boxMon->isEgg);
+            GetSubstruct3(boxMon)->isEgg = dataArg.bytes[0];
+            boxMon->isEgg = dataArg.bytes[0];
             break;
         case MON_DATA_ABILITY_NUM:
-            SET8(GetSubstruct3(boxMon)->abilityNum);
+            GetSubstruct3(boxMon)->abilityNum = dataArg.bytes[0];
             break;
         case MON_DATA_COOL_RIBBON:
-            SET8(GetSubstruct3(boxMon)->coolRibbon);
+            GetSubstruct3(boxMon)->coolRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_BEAUTY_RIBBON:
-            SET8(GetSubstruct3(boxMon)->beautyRibbon);
+            GetSubstruct3(boxMon)->beautyRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_CUTE_RIBBON:
-            SET8(GetSubstruct3(boxMon)->cuteRibbon);
+            GetSubstruct3(boxMon)->cuteRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_SMART_RIBBON:
-            SET8(GetSubstruct3(boxMon)->smartRibbon);
+            GetSubstruct3(boxMon)->smartRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_TOUGH_RIBBON:
-            SET8(GetSubstruct3(boxMon)->toughRibbon);
+            GetSubstruct3(boxMon)->toughRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_CHAMPION_RIBBON:
-            SET8(GetSubstruct3(boxMon)->championRibbon);
+            GetSubstruct3(boxMon)->championRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_WINNING_RIBBON:
-            SET8(GetSubstruct3(boxMon)->winningRibbon);
+            GetSubstruct3(boxMon)->winningRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_VICTORY_RIBBON:
-            SET8(GetSubstruct3(boxMon)->victoryRibbon);
+            GetSubstruct3(boxMon)->victoryRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_ARTIST_RIBBON:
-            SET8(GetSubstruct3(boxMon)->artistRibbon);
+            GetSubstruct3(boxMon)->artistRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_EFFORT_RIBBON:
-            SET8(GetSubstruct3(boxMon)->effortRibbon);
+            GetSubstruct3(boxMon)->effortRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_MARINE_RIBBON:
-            SET8(GetSubstruct3(boxMon)->marineRibbon);
+            GetSubstruct3(boxMon)->marineRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_LAND_RIBBON:
-            SET8(GetSubstruct3(boxMon)->landRibbon);
+            GetSubstruct3(boxMon)->landRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_SKY_RIBBON:
-            SET8(GetSubstruct3(boxMon)->skyRibbon);
+            GetSubstruct3(boxMon)->skyRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_COUNTRY_RIBBON:
-            SET8(GetSubstruct3(boxMon)->countryRibbon);
+            GetSubstruct3(boxMon)->countryRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_NATIONAL_RIBBON:
-            SET8(GetSubstruct3(boxMon)->nationalRibbon);
+            GetSubstruct3(boxMon)->nationalRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_EARTH_RIBBON:
-            SET8(GetSubstruct3(boxMon)->earthRibbon);
+            GetSubstruct3(boxMon)->earthRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_WORLD_RIBBON:
-            SET8(GetSubstruct3(boxMon)->worldRibbon);
+            GetSubstruct3(boxMon)->worldRibbon = dataArg.bytes[0];
             break;
         case MON_DATA_MODERN_FATEFUL_ENCOUNTER:
-            SET8(GetSubstruct3(boxMon)->modernFatefulEncounter);
+            GetSubstruct3(boxMon)->modernFatefulEncounter = dataArg.bytes[0];
             break;
         case MON_DATA_IVS:
-            SET32(GetSubstruct3(boxMon)->ivs);
+            GetSubstruct3(boxMon)->ivs = BytesToU32(dataArg.bytes);
             break;
         case MON_DATA_HYPER_TRAINED_HP:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedHP);
+            GetSubstruct1(boxMon)->hyperTrainedHP = dataArg.bytes[0];
             break;
         case MON_DATA_HYPER_TRAINED_ATK:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedAttack);
+            GetSubstruct1(boxMon)->hyperTrainedAttack = dataArg.bytes[0];
             break;
         case MON_DATA_HYPER_TRAINED_DEF:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedDefense);
+            GetSubstruct1(boxMon)->hyperTrainedDefense = dataArg.bytes[0];
             break;
         case MON_DATA_HYPER_TRAINED_SPEED:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedSpeed);
+            GetSubstruct1(boxMon)->hyperTrainedSpeed = dataArg.bytes[0];
             break;
         case MON_DATA_HYPER_TRAINED_SPATK:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedSpAttack);
+            GetSubstruct1(boxMon)->hyperTrainedSpAttack = dataArg.bytes[0];
             break;
         case MON_DATA_HYPER_TRAINED_SPDEF:
-            SET8(GetSubstruct1(boxMon)->hyperTrainedSpDefense);
+            GetSubstruct1(boxMon)->hyperTrainedSpDefense = dataArg.bytes[0];
             break;
         case MON_DATA_IS_SHADOW:
-            SET8(GetSubstruct3(boxMon)->isShadow);
+            GetSubstruct3(boxMon)->isShadow = dataArg.bytes[0];
             break;
         case MON_DATA_DYNAMAX_LEVEL:
-            SET8(GetSubstruct3(boxMon)->dynamaxLevel);
+            GetSubstruct3(boxMon)->dynamaxLevel = dataArg.bytes[0];
             break;
         case MON_DATA_GIGANTAMAX_FACTOR:
-            SET8(GetSubstruct3(boxMon)->gigantamaxFactor);
+            GetSubstruct3(boxMon)->gigantamaxFactor = dataArg.bytes[0];
             break;
         case MON_DATA_TERA_TYPE:
-            SET8(GetSubstruct0(boxMon)->teraType);
+            GetSubstruct0(boxMon)->teraType = dataArg.bytes[0];
             break;
         case MON_DATA_EVOLUTION_TRACKER:
         {
-            union EvolutionTracker evoTracker;
             struct PokemonSubstruct1 *substruct1 = GetSubstruct1(boxMon);
-            SET32(evoTracker.combinedValue);
+            union EvolutionTracker evoTracker = (union EvolutionTracker) {
+                .combinedValue = BytesToU32(dataArg.bytes),
+            };
             substruct1->evolutionTracker1 = evoTracker.tracker1;
             substruct1->evolutionTracker2 = evoTracker.tracker2;
             break;
@@ -3132,49 +3125,49 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         case MON_DATA_STATUS:
         {
             u32 status;
-            SET32(status);
+            status = BytesToU32(dataArg.bytes);
             boxMon->compressedStatus = CompressStatus(status);
             break;
         }
         case MON_DATA_HP_LOST:
-            SET16(boxMon->hpLost);
+            boxMon->hpLost = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_PERSONALITY:
-            SET32(boxMon->personality);
+            boxMon->personality = BytesToU32(dataArg.bytes);
             break;
         case MON_DATA_OT_ID:
-            SET32(boxMon->otId);
+            boxMon->otId = BytesToU32(dataArg.bytes);
             break;
         case MON_DATA_LANGUAGE:
-            SET8(boxMon->language);
+            boxMon->language = dataArg.bytes[0];
             break;
         case MON_DATA_SANITY_IS_BAD_EGG:
-            SET8(boxMon->isBadEgg);
+            boxMon->isBadEgg = dataArg.bytes[0];
             break;
         case MON_DATA_SANITY_HAS_SPECIES:
-            SET8(boxMon->hasSpecies);
+            boxMon->hasSpecies = dataArg.bytes[0];
             break;
         case MON_DATA_SANITY_IS_EGG:
-            SET8(boxMon->isEgg);
+            boxMon->isEgg = dataArg.bytes[0];
             break;
         case MON_DATA_OT_NAME:
         {
             s32 i;
             for (i = 0; i < PLAYER_NAME_LENGTH; i++)
-                boxMon->otName[i] = data[i];
+                boxMon->otName[i] = dataArg.bytes[i];
             break;
         }
         case MON_DATA_MARKINGS:
-            SET8(boxMon->markings);
+            boxMon->markings = dataArg.bytes[0];
             break;
         case MON_DATA_CHECKSUM:
-            SET16(boxMon->checksum);
+            boxMon->checksum = BytesToU16(dataArg.bytes);
             break;
         case MON_DATA_IS_SHINY:
         {
             u32 shinyValue = GET_SHINY_VALUE(boxMon->otId, boxMon->personality);
             bool32 isShiny;
-            SET8(isShiny);
+            isShiny = dataArg.bytes[0];
             boxMon->shinyModifier = (shinyValue < SHINY_ODDS) ^ isShiny;
             break;
         }
@@ -3182,12 +3175,12 @@ void SetBoxMonData(struct BoxPokemon *boxMon, s32 field, const void *dataArg)
         {
             u32 nature = GetNatureFromPersonality(boxMon->personality);
             u32 hiddenNature;
-            SET8(hiddenNature);
+            hiddenNature = dataArg.bytes[0];
             boxMon->hiddenNatureModifier = nature ^ hiddenNature;
             break;
         }
         case MON_DATA_DAYS_SINCE_FORM_CHANGE:
-            SET8(boxMon->daysSinceFormChange);
+            boxMon->daysSinceFormChange = dataArg.bytes[0];
             break;
         }
     }
