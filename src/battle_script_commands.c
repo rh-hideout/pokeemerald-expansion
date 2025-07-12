@@ -15101,6 +15101,7 @@ static void Cmd_switchoutabilities(void)
             break;
         case ABILITY_REGENERATOR:
             gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 3;
+            gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
             gBattleMoveDamage += gBattleMons[battler].hp;
             if (gBattleMoveDamage > gBattleMons[battler].maxHP)
                 gBattleMoveDamage = gBattleMons[battler].maxHP;
