@@ -1154,6 +1154,55 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
 }
 */
 
+SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - Singles (player to opponent)")
+{
+    u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j++) {
+        ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies);
+        PARAMETRIZE { move = tempMove; species = tempSpecies; }
+    }
+    GIVEN {
+        PLAYER(species) {
+            HP(9997); MaxHP(9999); Item(ITEM_ORAN_BERRY);
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(gMovesInfo[move].effect == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (gMovesInfo[move].effect != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent);
+    } SCENE {
+        if (!(gMovesInfo[move].effect == EFFECT_RECYCLE
+          || gMovesInfo[move].effect == EFFECT_BELCH
+          || gMovesInfo[move].effect == EFFECT_SPIT_UP
+          || gMovesInfo[move].effect == EFFECT_SWALLOW
+          || gMovesInfo[move].effect == EFFECT_TOPSY_TURVY)) // require a move that boosts stats before using this move
+        {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+            }
+        }
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
 //  Z-Moves
 #define Z_MOVE_PARAMETERS PARAMETRIZE { zmove = MOVE_BREAKNECK_BLITZ; species = SPECIES_WOBBUFFET; move = MOVE_TACKLE; item = ITEM_NORMALIUM_Z; } \
     PARAMETRIZE { zmove = MOVE_INFERNO_OVERDRIVE; species = SPECIES_WOBBUFFET; move = MOVE_EMBER; item = ITEM_FIRIUM_Z; } \
