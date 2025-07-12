@@ -2437,6 +2437,16 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
+    case SCROLL_MULTI_BADGES:
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 9;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 12;
+        task->tHeight = 8;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
     default:
         gSpecialVar_Result = MULTI_B_PRESSED;
         DestroyTask(taskId);
@@ -2597,7 +2607,19 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_Underpowered,
         gText_WhenInDanger,
         gText_Exit
-    }
+    },
+    [SCROLL_MULTI_BADGES] = 
+    {
+		COMPOUND_STRING("BOULDERBADGE"),
+		COMPOUND_STRING("CASCADEBADGE"),
+		COMPOUND_STRING("THUNDERBADGE"),
+		COMPOUND_STRING("RAINBOWBADGE"),
+		COMPOUND_STRING("SOULBADGE"),
+		COMPOUND_STRING("MARSHBADGE"),
+		COMPOUND_STRING("VOLCANOBADGE"),
+		COMPOUND_STRING("EARTHBADGE"),
+        gText_Exit,
+    },
 };
 
 static void Task_ShowScrollableMultichoice(u8 taskId)

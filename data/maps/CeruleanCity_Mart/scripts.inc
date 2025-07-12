@@ -2,22 +2,21 @@ CeruleanCity_Mart_MapScripts::
 	.byte 0
 
 CeruleanCity_Mart_EventScript_Youngster::
-@	msgbox CeruleanCity_Mart_Text_RepelWorksOnWeakMons, MSGBOX_NPC
+	msgbox CeruleanCity_Mart_Text_RepelWorksOnWeakMons, MSGBOX_NPC
 	end
 
 CeruleanCity_Mart_EventScript_Woman::
-@	msgbox CeruleanCity_Mart_Text_DoYouKnowAboutRareCandy, MSGBOX_NPC
+	msgbox CeruleanCity_Mart_Text_DoYouKnowAboutRareCandy, MSGBOX_NPC
 	end
 
 CeruleanCity_Mart_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart CeruleanCity_Mart_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart CeruleanCity_Mart_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -32,7 +31,7 @@ CeruleanCity_Mart_Items::
 	.2byte ITEM_ESCAPE_ROPE
 	.2byte ITEM_REPEL
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 CeruleanCity_Mart_Text_RepelWorksOnWeakMons::
