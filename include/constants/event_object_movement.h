@@ -262,6 +262,10 @@
 #define MOVEMENT_ACTION_SURF_STILL_UP                   0xAB
 #define MOVEMENT_ACTION_SURF_STILL_LEFT                 0xAC
 #define MOVEMENT_ACTION_SURF_STILL_RIGHT                0xAD
+#define MOVEMENT_ACTION_SPIN_DOWN                       0xAE
+#define MOVEMENT_ACTION_SPIN_UP                         0xAF
+#define MOVEMENT_ACTION_SPIN_LEFT                       0xB0
+#define MOVEMENT_ACTION_SPIN_RIGHT                      0xB1
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
@@ -287,6 +291,16 @@
 #define ANIM_STD_GO_FASTEST_WEST  18
 #define ANIM_STD_GO_FASTEST_EAST  19
 #define ANIM_STD_COUNT            20
+
+#define ANIM_RUN_SOUTH                   (ANIM_STD_COUNT + 0)
+#define ANIM_RUN_NORTH                   (ANIM_STD_COUNT + 1)
+#define ANIM_RUN_WEST                    (ANIM_STD_COUNT + 2)
+#define ANIM_RUN_EAST                    (ANIM_STD_COUNT + 3)
+#define ANIM_SPIN_SOUTH                  (ANIM_STD_COUNT + 4)
+#define ANIM_SPIN_NORTH                  (ANIM_STD_COUNT + 5)
+#define ANIM_SPIN_WEST                   (ANIM_STD_COUNT + 6)
+#define ANIM_SPIN_EAST                   (ANIM_STD_COUNT + 7)
+#define ANIM_SHAKE_HEAD_OR_WALK_IN_PLACE (ANIM_STD_COUNT + 8)
 
 #define ANIM_RUN_SOUTH (ANIM_STD_COUNT + 0)
 #define ANIM_RUN_NORTH (ANIM_STD_COUNT + 1)

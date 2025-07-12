@@ -164,5 +164,11 @@ bool8 MetatileBehavior_IsSidewaysStairsRightSideBottom(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSidewaysStairsLeftSideBottom(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSidewaysStairsRightSideAny(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSidewaysStairsLeftSideAny(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinRight(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinLeft(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinUp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinDown(u8 metatileBehavior);
+bool8 MetatileBehavior_IsStopSpinning(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinTile(u8 metatileBehavior);
 
 #endif // GUARD_METATILE_BEHAVIOR_H

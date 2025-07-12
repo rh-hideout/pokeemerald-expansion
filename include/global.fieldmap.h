@@ -393,6 +393,7 @@ struct PlayerAvatar
     // these two are timer history arrays which [0] is the active timer for acro bike. every element is backed up to the next element upon update.
     /*0x14*/ u8 dirTimerHistory[8];
     /*0x1C*/ u8 abStartSelectTimerHistory[8];
+    u16 lastSpinTile;
 };
 
 struct Camera

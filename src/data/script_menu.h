@@ -981,6 +981,13 @@ static const struct MenuAction sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemo
     { gText_Exit }
 };
 
+static const struct MenuAction sMultichoiceList_RocketHideoutElevator[] = {
+    { gText_B1F },
+    { gText_B2F },
+    { gText_B4F },
+    { gText_Exit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1136,6 +1143,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_THIRSTY_GIRL_FRESH_WATER_LEMONADE]          = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterLemonade),
     [MULTI_THIRSTY_GIRL_SODA_POP_LEMONADE]             = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPopLemonade),
     [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE] = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade),
+    [MULTI_ROCKET_HIDEOUT_ELEVATOR]                    = MULTICHOICE(sMultichoiceList_RocketHideoutElevator),
 };
 
 const u8 *const gStdStrings[] =
