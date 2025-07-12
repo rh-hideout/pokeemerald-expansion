@@ -1,7 +1,7 @@
 {
   "id": "MAP_SAFFRON_CITY_POKEMON_CENTER_2F",
   "name": "SaffronCity_PokemonCenter_2F",
-  "layout": "LAYOUT_POKEMON_CENTER_2F",
+  "layout": "LAYOUT_POKEMON_CENTER_2F_FRLG",
   "music": "MUS_POKE_CENTER",
   "region_map_section": "MAPSEC_SAFFRON_CITY",
   "requires_flash": false,
