@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "global.h"
 #include "battle.h"
 #include "battle_message.h"
@@ -1098,6 +1100,13 @@ static const u8 sTerrainToType[BATTLE_TERRAIN_COUNT] =
     [BATTLE_TERRAIN_MOUNTAIN]         = (B_CAMOUFLAGE_TYPES >= GEN_5 ? TYPE_GROUND : TYPE_ROCK),
     [BATTLE_TERRAIN_PLAIN]            = (B_CAMOUFLAGE_TYPES >= GEN_4 ? TYPE_GROUND : TYPE_NORMAL),
 };
+
+s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
+    if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
+        return floor(damage * 0.5);
+    }
+    return damage;
+}
 
 static bool32 NoTargetPresent(u8 battler, u32 move)
 {
@@ -11489,6 +11498,7 @@ static void Cmd_tryhealhalfhealth(void)
         gBattleMoveDamage = 1;
     gBattleMoveDamage *= -1;
 
+    gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
     if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
         gBattlescriptCurrInstr = failInstr;
     else
@@ -14164,6 +14174,8 @@ static void Cmd_recoverbasedonsunlight(void)
                 gBattleMoveDamage = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
         }
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
@@ -14716,6 +14728,8 @@ static void Cmd_trywish(void)
         {
             gBattleMoveDamage = max(1, GetNonDynamaxMaxHP(gBattlerAttacker) / 2);
         }
+
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
 
         gBattleMoveDamage *= -1;
         if (gBattleMons[gBattlerTarget].hp == gBattleMons[gBattlerTarget].maxHP)
@@ -17217,8 +17231,10 @@ void BS_TryHealPulse(void)  //bulagHP sean this script is called for several mov
         else
             gBattleMoveDamage = -(GetNonDynamaxMaxHP(gBattlerTarget) / 2);
 
-        if (gBattleMoveDamage == 0)
+        gBattleMoveDamage = MaybeLowerHealingForPoison(gBattlerAttacker, gBattleMoveDamage);
+        if (gBattleMoveDamage == 0) {
             gBattleMoveDamage = -1;
+        }
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

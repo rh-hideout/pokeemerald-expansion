@@ -1,3 +1,5 @@
+#include <math.h>
+
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
@@ -2287,6 +2289,13 @@ enum
     ENDTURN_BATTLER_COUNT
 };
 
+s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
+    if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
+        return floor(damage * 0.5);
+    }
+    return damage;
+}
+
 // Ingrain, Leech Seed, Strength Sap and Aqua Ring
 s32 GetDrainedBigRootHp(u32 battler, s32 hp)
 {
@@ -2294,6 +2303,8 @@ s32 GetDrainedBigRootHp(u32 battler, s32 hp)
         hp = (hp * 1300) / 1000;
     if (hp == 0)
         hp = 1;
+    
+    hp = MaybeLowerHealingForPoison(gBattlerAttacker, hp);
 
     return hp * -1;
 }
