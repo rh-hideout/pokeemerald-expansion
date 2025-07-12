@@ -6894,10 +6894,10 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality)
     old2 = GetSubstruct2(&old);
     old3 = GetSubstruct3(&old);
 
-    new0 = GetSubstruct0(boxMon);
-    new1 = GetSubstruct1(boxMon);
-    new2 = GetSubstruct2(boxMon);
-    new3 = GetSubstruct3(boxMon);
+    new0 = &(GetSubstruct(boxMon, personality, SUBSTRUCT_TYPE_0)->type0);
+    new1 = &(GetSubstruct(boxMon, personality, SUBSTRUCT_TYPE_1)->type1);
+    new2 = &(GetSubstruct(boxMon, personality, SUBSTRUCT_TYPE_2)->type2);
+    new3 = &(GetSubstruct(boxMon, personality, SUBSTRUCT_TYPE_3)->type3);
 
     DecryptBoxMon(&old);
     boxMon->personality = personality;
