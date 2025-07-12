@@ -1731,7 +1731,7 @@ bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move)
 
     if ((weather & B_WEATHER_RAIN) && MoveAlwaysHitsInRain(move))
         return TRUE;
-    if ((weather & (B_WEATHER_HAIL | B_WEATHER_SNOW)) && MoveAlwaysHitsInHailSnow(move))
+    if ((weather & B_WEATHER_ICY_ANY) && MoveAlwaysHitsInHailSnow(move))
         return TRUE;
     if (B_MINIMIZE_DMG_ACC >= GEN_6 && (gStatuses3[battlerDef] & STATUS3_MINIMIZED) && MoveIncreasesPowerToMinimizedTargets(move))
         return TRUE;
@@ -1773,109 +1773,350 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
     return FALSE;
 }
 
-bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
+bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather)
 {
-    if (IsWeatherActive(B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
-        return FALSE;
+    switch (ability)
+    {
+    case ABILITY_FORECAST:
+        return (weather & (B_WEATHER_RAIN | B_WEATHER_SUN | B_WEATHER_ICY_ANY));
+    case ABILITY_MAGIC_GUARD:
+    case ABILITY_OVERCOAT:
+        return (weather & B_WEATHER_DAMAGING_ANY);
+    case ABILITY_SAND_FORCE:
+    case ABILITY_SAND_RUSH:
+    case ABILITY_SAND_VEIL:
+        return (weather & B_WEATHER_SANDSTORM);
+    case ABILITY_ICE_BODY:
+    case ABILITY_ICE_FACE:
+    case ABILITY_SNOW_CLOAK:
+        return (weather & B_WEATHER_ICY_ANY);
+    case ABILITY_SLUSH_RUSH:
+        return (weather & B_WEATHER_SNOW);
+    case ABILITY_DRY_SKIN:
+    case ABILITY_HYDRATION:
+    case ABILITY_RAIN_DISH:
+    case ABILITY_SWIFT_SWIM:
+        return (weather & B_WEATHER_RAIN);
+    case ABILITY_CHLOROPHYLL:
+    case ABILITY_FLOWER_GIFT:
+    case ABILITY_HARVEST:
+    case ABILITY_LEAF_GUARD:
+    case ABILITY_ORICHALCUM_PULSE:
+    case ABILITY_PROTOSYNTHESIS:
+    case ABILITY_SOLAR_POWER:
+        return (weather & B_WEATHER_SUN);
+    }
+    return FALSE;
+}
 
-    if (ability == ABILITY_SAND_VEIL
-     || ability == ABILITY_SAND_RUSH
-     || ability == ABILITY_SAND_FORCE
-     || ability == ABILITY_OVERCOAT
-     || ability == ABILITY_MAGIC_GUARD
+static bool32 IsLightSensitiveMove(u32 move)
+{
+    switch (GetMoveEffect(move))
+    {
+    case EFFECT_SOLAR_BEAM:
+    case EFFECT_MORNING_SUN:
+    case EFFECT_SYNTHESIS:
+    case EFFECT_MOONLIGHT:
+    case EFFECT_GROWTH:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+static bool32 HasLightSensitiveMove(u32 battler)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[i]))
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
+static bool32 ShouldSetSun(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, bool32 checkPartner)
+{
+    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA 
+      && (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SUN)
+      || HasLightSensitiveMove(battler)
+      || HasDamagingMoveOfType(battler, TYPE_FIRE)))
+    {
+        return TRUE;
+    }
+
+    if (checkPartner)
+        return ShouldSetSun(BATTLE_PARTNER(battler), gAiLogicData->abilities[BATTLE_PARTNER(battler)], gAiLogicData->holdEffects[BATTLE_PARTNER(battler)], FALSE);
+
+    return FALSE;
+}
+
+static bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, bool32 checkPartner)
+{
+    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SANDSTORM)
      || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
      || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
-     || HasMoveWithEffect(battler, EFFECT_SHORE_UP)
-     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
+     || HasBattlerSideMoveWithEffect(battler, EFFECT_SHORE_UP))
     {
         return TRUE;
     }
+
+    if (checkPartner)
+        return ShouldSetSandstorm(BATTLE_PARTNER(battler), gAiLogicData->abilities[BATTLE_PARTNER(battler)], gAiLogicData->holdEffects[BATTLE_PARTNER(battler)], FALSE);
+
     return FALSE;
 }
 
-bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
+static bool32 ShouldSetHailOrSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, u32 weather, bool32 checkPartner)
 {
-    if (IsWeatherActive(B_WEATHER_HAIL | B_WEATHER_SNOW | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
-        return FALSE;
+    if ((weather & B_WEATHER_DAMAGING_ANY) && holdEffect == HOLD_EFFECT_SAFETY_GOGGLES)
+        return TRUE;
 
-    if (ability == ABILITY_SNOW_CLOAK
-     || ability == ABILITY_ICE_BODY
-     || ability == ABILITY_FORECAST
-     || ability == ABILITY_SLUSH_RUSH
-     || ability == ABILITY_MAGIC_GUARD
-     || ability == ABILITY_OVERCOAT
-     || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES
+    if (DoesAbilityBenefitFromWeather(ability, weather)
      || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
      || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
-     || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
-     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
+     || HasBattlerSideMoveWithEffect(battler, EFFECT_AURORA_VEIL))
     {
         return TRUE;
     }
+
+    if (checkPartner)
+        return ShouldSetHailOrSnow(BATTLE_PARTNER(battler), gAiLogicData->abilities[BATTLE_PARTNER(battler)], gAiLogicData->holdEffects[BATTLE_PARTNER(battler)], weather, FALSE);
+
     return FALSE;
 }
 
-bool32 ShouldSetRain(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
+static bool32 ShouldSetRain(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, bool32 checkPartner)
 {
-    if (IsWeatherActive(B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
-        return FALSE;
-
     if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
-     && (atkAbility == ABILITY_SWIFT_SWIM
-      || atkAbility == ABILITY_FORECAST
-      || atkAbility == ABILITY_HYDRATION
-      || atkAbility == ABILITY_RAIN_DISH
-      || atkAbility == ABILITY_DRY_SKIN
-      || HasMoveWithFlag(battlerAtk, MoveAlwaysHitsInRain)
-      || HasMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL)
-      || HasMoveWithType(battlerAtk, TYPE_WATER)))
+      && (DoesAbilityBenefitFromWeather(ability, B_WEATHER_RAIN)
+      || HasMoveWithFlag(battler, MoveAlwaysHitsInRain)
+      || HasDamagingMoveOfType(battler, TYPE_WATER)))
     {
         return TRUE;
+    }
+
+    if (checkPartner)
+        return ShouldSetRain(BATTLE_PARTNER(battler), gAiLogicData->abilities[BATTLE_PARTNER(battler)], gAiLogicData->holdEffects[BATTLE_PARTNER(battler)], FALSE);
+
+    return FALSE;
+}
+
+bool32 ShouldSetWeather(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, u32 weather)
+{
+    if (IsWeatherActive(weather | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
+        return FALSE;
+
+    bool32 checkPartner = FALSE;
+
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+        checkPartner = TRUE;
+
+    if (weather & B_WEATHER_RAIN)
+        return ShouldSetRain(battler, ability, holdEffect, checkPartner);
+    else if (weather & B_WEATHER_SUN)
+        return ShouldSetSun(battler, ability, holdEffect, checkPartner);
+    else if (weather & B_WEATHER_SANDSTORM)
+        return ShouldSetSandstorm(battler, ability, holdEffect, checkPartner);
+    else if (weather & B_WEATHER_ICY_ANY)
+        return ShouldSetHailOrSnow(battler, ability, holdEffect, weather, checkPartner);
+
+    return FALSE;
+}
+
+bool32 DoesAbilityBenefitFromFieldStatus(u32 ability, u32 fieldStatus)
+{
+    switch (ability)
+    {
+    case ABILITY_MIMICRY:
+        return (fieldStatus & STATUS_FIELD_TERRAIN_ANY);
+    case ABILITY_HADRON_ENGINE:
+    case ABILITY_QUARK_DRIVE:
+    case ABILITY_SURGE_SURFER:
+        return (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN);
+//        return (weather & STATUS_FIELD_PSYCHIC_TERRAIN);
+//        return (weather & STATUS_FIELD_MISTY_TERRAIN);
+    case ABILITY_GRASS_PELT:
+        return (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN);
+    default:
+        break;
     }
     return FALSE;
 }
 
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect)
+static bool32 ShouldSetElectricTerrain(u32 battler, bool32 checkPartner)
 {
-    if (IsWeatherActive(B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
-        return FALSE;
-
-    if (holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA
-     && (atkAbility == ABILITY_CHLOROPHYLL
-      || atkAbility == ABILITY_FLOWER_GIFT
-      || atkAbility == ABILITY_FORECAST
-      || atkAbility == ABILITY_LEAF_GUARD
-      || atkAbility == ABILITY_SOLAR_POWER
-      || atkAbility == ABILITY_HARVEST
-      || HasMoveWithEffect(battlerAtk, EFFECT_SOLAR_BEAM)
-      || HasMoveWithEffect(battlerAtk, EFFECT_MORNING_SUN)
-      || HasMoveWithEffect(battlerAtk, EFFECT_SYNTHESIS)
-      || HasMoveWithEffect(battlerAtk, EFFECT_MOONLIGHT)
-      || HasMoveWithEffect(battlerAtk, EFFECT_WEATHER_BALL)
-      || HasMoveWithEffect(battlerAtk, EFFECT_GROWTH)
-      || HasMoveWithType(battlerAtk, TYPE_FIRE)))
-    {
+    if (HasMoveWithEffect(battler, EFFECT_RISING_VOLTAGE))
         return TRUE;
-    }
+
+    if (HasMoveWithEffect(FOE(battler), EFFECT_REST) && IsBattlerGrounded(FOE(battler)))
+        return TRUE;
+
+    bool32 grounded = IsBattlerGrounded(battler);
+    if (grounded && HasBattlerSideUsedMoveWithAdditionalEffect(FOE(battler), MOVE_EFFECT_SLEEP))
+        return TRUE;
+
+    if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP) 
+    || (gStatuses3[battler] & STATUS3_YAWN) 
+    || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
+        return TRUE;
+
+    if (checkPartner)
+        return ShouldSetElectricTerrain(BATTLE_PARTNER(battler), FALSE);
+
     return FALSE;
 }
 
-bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
+static bool32 ShouldSetGrassyTerrain(u32 battler, bool32 checkPartner)
 {
-    if (IsWeatherActive(B_WEATHER_SNOW | B_WEATHER_HAIL | B_WEATHER_PRIMAL_ANY) != WEATHER_INACTIVE)
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_GRASSY_GLIDE))
+        return TRUE;
+    if (HasBattlerSideUsedMoveWithAdditionalEffect(battler, MOVE_EFFECT_FLORAL_HEALING))
+        return TRUE;
+
+    bool32 grounded = IsBattlerGrounded(battler);
+
+// Weaken spamming Earthquake, Magnitude, and Bulldoze.
+    if (grounded && (HasBattlerSideUsedMoveWithEffect(FOE(battler), EFFECT_EARTHQUAKE)
+    || HasBattlerSideUsedMoveWithEffect(FOE(battler), EFFECT_MAGNITUDE)))
+        return TRUE;
+
+    if (grounded && HasDamagingMoveOfType(battler, TYPE_GRASS))
+        return TRUE;
+
+    if (checkPartner)
+        return ShouldSetGrassyTerrain(BATTLE_PARTNER(battler), FALSE);
+
+    return FALSE;
+}
+
+static bool32 ShouldSetMistyTerrain(u32 battler, bool32 checkPartner)
+{
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_MISTY_EXPLOSION))
+        return TRUE;
+
+    bool32 grounded = IsBattlerGrounded(battler);
+    bool32 allyGrounded = FALSE;
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+        allyGrounded = IsBattlerGrounded(BATTLE_PARTNER(battler));
+
+    if (HasMoveWithEffect(FOE(battler), EFFECT_REST) && IsBattlerGrounded(FOE(battler)))
+        return TRUE;
+
+    // harass dragons
+    if ((grounded || allyGrounded) 
+        && (HasDamagingMoveOfType(FOE(battler), TYPE_DRAGON) || HasDamagingMoveOfType(BATTLE_PARTNER(FOE(battler)), TYPE_DRAGON)))
+        return TRUE;
+
+    if ((grounded || allyGrounded) && HasBattlerSideUsedMoveWithAdditionalEffect(FOE(battler), MOVE_EFFECT_SLEEP))
+        return TRUE;
+
+    if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP) 
+    || (gStatuses3[battler] & STATUS3_YAWN)))
+        return TRUE;
+
+    if (checkPartner)
+        return ShouldSetMistyTerrain(BATTLE_PARTNER(battler), FALSE);
+
+    return FALSE;
+}
+
+static bool32 ShouldSetPsychicTerrain(u32 battler, bool32 checkPartner)
+{
+    if (HasBattlerSideMoveWithEffect(battler, EFFECT_EXPANDING_FORCE))
+        return TRUE;
+
+    bool32 grounded = IsBattlerGrounded(battler);
+    bool32 allyGrounded = FALSE;
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+        allyGrounded = IsBattlerGrounded(BATTLE_PARTNER(battler));
+
+    // don't bother if we're not grounded
+    if (!(grounded || allyGrounded))
         return FALSE;
 
-    if (ability == ABILITY_SNOW_CLOAK
-     || ability == ABILITY_ICE_BODY
-     || ability == ABILITY_FORECAST
-     || ability == ABILITY_SLUSH_RUSH
-     || IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-     || HasMoveWithFlag(battler, MoveAlwaysHitsInHailSnow)
-     || HasMoveWithEffect(battler, EFFECT_AURORA_VEIL)
-     || HasMoveWithEffect(battler, EFFECT_WEATHER_BALL))
-    {
+    // harass priority
+    if (HasBattlerSideAbility(FOE(battler), ABILITY_GALE_WINGS, gAiLogicData) 
+     || HasBattlerSideAbility(FOE(battler), ABILITY_TRIAGE, gAiLogicData)
+     || HasBattlerSideAbility(FOE(battler), ABILITY_PRANKSTER, gAiLogicData))
         return TRUE;
+
+    if (grounded && (HasDamagingMoveOfType(battler, TYPE_PSYCHIC)))
+        return TRUE;
+
+    if (checkPartner)
+        return ShouldSetPsychicTerrain(BATTLE_PARTNER(battler), FALSE);
+
+    return FALSE;
+}
+
+// A FALSE means the desired state is for trick room to be not set.
+// Trick Room desires for both pokemon on the side to benefit from Trick Room, while the others only need one yes
+static bool32 ShouldSetTrickRoom(u32 battler, bool32 checkPartner)
+{
+    if (!IsDoubleBattle())
+    {
+        if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && GetBattlerSideSpeedAverage(battler) < GetBattlerSideSpeedAverage(FOE(battler)))
+            return TRUE;
+        else if ((gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && GetBattlerSideSpeedAverage(battler) >= GetBattlerSideSpeedAverage(FOE(battler)))
+            return FALSE;
     }
+    
+    // First checking if Trick Room impacts us at all.
+    if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+    {
+        u16* aiMoves = GetMovesArray(battler);
+        for (int i = 0; i < MAX_MON_MOVES; i++)
+        {
+            u16 move = aiMoves[i];
+            if (GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
+            {
+                if (checkPartner)
+                    return ShouldSetTrickRoom(BATTLE_PARTNER(battler), FALSE);
+                else
+                    return TRUE;
+            }
+        }
+    }
+
+    if ((gBattleMons[battler].speed >= gBattleMons[FOE(battler)].speed) || (gBattleMons[battler].speed >= gBattleMons[BATTLE_PARTNER(FOE(battler))].speed))
+        return FALSE;
+
+    if (checkPartner)
+        return ShouldSetTrickRoom(BATTLE_PARTNER(battler), FALSE);
+    return TRUE;
+}
+
+bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
+{
+    if (gFieldStatuses & fieldStatus && fieldStatus != STATUS_FIELD_TRICK_ROOM)
+        return FALSE;
+    if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[battler], fieldStatus))
+        return TRUE;
+
+    bool32 checkPartner = FALSE;
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    {
+        checkPartner = TRUE;
+        if (DoesAbilityBenefitFromFieldStatus(gAiLogicData->abilities[BATTLE_PARTNER(battler)], fieldStatus))
+            return TRUE;
+    }
+
+    if (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN)
+        return ShouldSetElectricTerrain(battler, checkPartner);
+    if (fieldStatus & STATUS_FIELD_GRASSY_TERRAIN)
+        return ShouldSetGrassyTerrain(battler, checkPartner);
+    if (fieldStatus & STATUS_FIELD_MISTY_TERRAIN)
+        return ShouldSetMistyTerrain(battler, checkPartner);
+    if (fieldStatus & STATUS_FIELD_PSYCHIC_TERRAIN)
+        return ShouldSetPsychicTerrain(battler, checkPartner);
+
+    if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
+        return ShouldSetTrickRoom(battler, checkPartner);
+
     return FALSE;
 }
 
@@ -3649,7 +3890,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     {
     case EFFECT_AURORA_VEIL:
         // Use only in Hail and only if AI doesn't already have Reflect, Light Screen or Aurora Veil itself active.
-        if ((AI_GetWeather() & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+        if ((AI_GetWeather() & (B_WEATHER_ICY_ANY))
             && !(gSideStatuses[atkSide] & (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)))
             return TRUE;
         break;
