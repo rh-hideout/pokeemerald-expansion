@@ -7172,6 +7172,7 @@ static u32 HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, enum ItemEffe
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
 
         if (GetBattlerAbility(battler) == ABILITY_RIPEN)
         {
@@ -7429,6 +7430,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum ItemEffect caseID, bool32 pe
         else
             gBattleMoveDamage = GetBattlerItemHoldEffectParam(battler, itemId) * -1;
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
         // check ripen
         if (ItemId_GetPocket(itemId) == POCKET_BERRIES && GetBattlerAbility(battler) == ABILITY_RIPEN)
             gBattleMoveDamage *= 2;
