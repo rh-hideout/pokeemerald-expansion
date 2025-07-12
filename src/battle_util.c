@@ -5323,6 +5323,7 @@ gBattleScripting.savedBattler = gBattlerAttacker;
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                     effect++;
                 }
             case ABILITY_HYDRATION:
