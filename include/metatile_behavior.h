@@ -123,6 +123,8 @@ bool8 MetatileBehavior_IsSurfableFishableWater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsMtPyreHole(u8 metatileBehavior);
 bool8 MetatileBehavior_IsCrackedFloorHole(u8 metatileBehavior);
 bool8 MetatileBehavior_IsCrackedFloor(u8 metatileBehavior);
+bool32 MetatileBehavior_IsCyclingRoadPullDownTile(u8 metatileBehavior);
+bool8 MetatileBehavior_IsCyclingRoadPullDownTileGrass(u8 metatileBehavior);
 bool8 MetatileBehavior_IsMuddySlope(u8 metatileBehavior);
 bool8 MetatileBehavior_IsBumpySlope(u8 metatileBehavior);
 bool8 MetatileBehavior_IsIsolatedVerticalRail(u8 metatileBehavior);

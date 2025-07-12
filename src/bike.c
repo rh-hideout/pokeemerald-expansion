@@ -25,6 +25,7 @@ static u8 AcroBikeHandleInputBunnyHop(u8 *, u16, u16);
 static u8 AcroBikeHandleInputWheelieMoving(u8 *, u16, u16);
 static u8 AcroBikeHandleInputSidewaysJump(u8 *, u16, u16);
 static u8 AcroBikeHandleInputTurnJump(u8 *, u16, u16);
+static u8 AcroBikeHandleInput_Slope(u8 *, u16, u16);
 static void AcroBikeTransition_FaceDirection(u8);
 static void AcroBikeTransition_TurnDirection(u8);
 static void AcroBikeTransition_Moving(u8);
@@ -38,6 +39,8 @@ static void AcroBikeTransition_TurnJump(u8);
 static void AcroBikeTransition_WheelieMoving(u8);
 static void AcroBikeTransition_WheelieRisingMoving(u8);
 static void AcroBikeTransition_WheelieLoweringMoving(u8);
+static void AcroBikeTransition_Downhill(u8);
+static void AcroBikeTransition_Uphill(u8);
 static void AcroBike_TryHistoryUpdate(u16, u16);
 static u8 AcroBike_GetJumpDirection(void);
 static void Bike_UpdateDirTimerHistory(u8);
@@ -80,30 +83,33 @@ static void (*const sMachBikeSpeedCallbacks[])(u8) =
 
 static void (*const sAcroBikeTransitions[])(u8) =
 {
-    AcroBikeTransition_FaceDirection,
-    AcroBikeTransition_TurnDirection,
-    AcroBikeTransition_Moving,
-    AcroBikeTransition_NormalToWheelie,
-    AcroBikeTransition_WheelieToNormal,
-    AcroBikeTransition_WheelieIdle,
-    AcroBikeTransition_WheelieHoppingStanding,
-    AcroBikeTransition_WheelieHoppingMoving,
-    AcroBikeTransition_SideJump,
-    AcroBikeTransition_TurnJump,
-    AcroBikeTransition_WheelieMoving,
-    AcroBikeTransition_WheelieRisingMoving,
-    AcroBikeTransition_WheelieLoweringMoving,
+    [ACRO_TRANS_FACE_DIRECTION]           = AcroBikeTransition_FaceDirection,
+    [ACRO_TRANS_TURN_DIRECTION]           = AcroBikeTransition_TurnDirection,
+    [ACRO_TRANS_MOVING]                   = AcroBikeTransition_Moving,
+    [ACRO_TRANS_NORMAL_TO_WHEELIE]        = AcroBikeTransition_NormalToWheelie,
+    [ACRO_TRANS_WHEELIE_TO_NORMAL]        = AcroBikeTransition_WheelieToNormal,
+    [ACRO_TRANS_WHEELIE_IDLE]             = AcroBikeTransition_WheelieIdle,
+    [ACRO_TRANS_WHEELIE_HOPPING_STANDING] = AcroBikeTransition_WheelieHoppingStanding,
+    [ACRO_TRANS_WHEELIE_HOPPING_MOVING]   = AcroBikeTransition_WheelieHoppingMoving,
+    [ACRO_TRANS_SIDE_JUMP]                = AcroBikeTransition_SideJump,
+    [ACRO_TRANS_TURN_JUMP]                = AcroBikeTransition_TurnJump,
+    [ACRO_TRANS_WHEELIE_MOVING]           = AcroBikeTransition_WheelieMoving,
+    [ACRO_TRANS_WHEELIE_RISING_MOVING]    = AcroBikeTransition_WheelieRisingMoving,
+    [ACRO_TRANS_WHEELIE_LOWERING_MOVING]  = AcroBikeTransition_WheelieLoweringMoving,
+    [ACRO_TRANS_DOWNHILL]                 = AcroBikeTransition_Downhill,
+    [ACRO_TRANS_UPHILL]                   = AcroBikeTransition_Uphill,
 };
 
 static u8 (*const sAcroBikeInputHandlers[])(u8 *, u16, u16) =
 {
-    AcroBikeHandleInputNormal,
-    AcroBikeHandleInputTurning,
-    AcroBikeHandleInputWheelieStanding,
-    AcroBikeHandleInputBunnyHop,
-    AcroBikeHandleInputWheelieMoving,
-    AcroBikeHandleInputSidewaysJump,
-    AcroBikeHandleInputTurnJump,
+    [ACRO_STATE_NORMAL]           = AcroBikeHandleInputNormal,
+    [ACRO_STATE_TURNING]          = AcroBikeHandleInputTurning,
+    [ACRO_STATE_WHEELIE_STANDING] = AcroBikeHandleInputWheelieStanding,
+    [ACRO_STATE_BUNNY_HOP]        = AcroBikeHandleInputBunnyHop,
+    [ACRO_STATE_WHEELIE_MOVING]   = AcroBikeHandleInputWheelieMoving,
+    [ACRO_STATE_SIDE_JUMP]        = AcroBikeHandleInputSidewaysJump,
+    [ACRO_STATE_TURN_JUMP]        = AcroBikeHandleInputTurnJump,
+    [ACRO_STATE_SLOPE]            = AcroBikeHandleInput_Slope,
 };
 
 // used with bikeFrameCounter from mach bike
@@ -300,9 +306,31 @@ static u8 CheckMovementInputAcroBike(u8 *newDirection, u16 newKeys, u16 heldKeys
 
 static u8 AcroBikeHandleInputNormal(u8 *newDirection, u16 newKeys, u16 heldKeys)
 {
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
     u8 direction = GetPlayerMovementDirection();
 
     gPlayerAvatar.bikeFrameCounter = 0;
+    if (MetatileBehavior_IsCyclingRoadPullDownTile(playerObjEvent->currentMetatileBehavior) == TRUE)
+    {
+        if (!JOY_HELD(B_BUTTON))
+        {
+            gPlayerAvatar.acroBikeState = ACRO_STATE_SLOPE;
+            gPlayerAvatar.runningState = MOVING;
+            if (*newDirection < DIR_NORTH)
+                return ACRO_TRANS_DOWNHILL;
+            else
+                return ACRO_TRANS_UPHILL;
+        }
+        else
+        {
+            if (*newDirection != DIR_NONE)
+            {
+                gPlayerAvatar.acroBikeState = ACRO_STATE_SLOPE;
+                gPlayerAvatar.runningState = MOVING;
+                return ACRO_TRANS_UPHILL;
+            }
+        }
+    }
     if (*newDirection == DIR_NONE)
     {
         if (newKeys & B_BUTTON)
@@ -543,6 +571,43 @@ static u8 AcroBikeHandleInputTurnJump(u8 *ptr, u16 newKeys, u16 heldKeys)
 {
     gPlayerAvatar.acroBikeState = ACRO_STATE_NORMAL;
     return CheckMovementInputAcroBike(ptr, newKeys, heldKeys);
+}
+
+static u8 AcroBikeHandleInput_Slope(u8 *direction_p, u16 newKeys, u16 heldKeys)
+{
+    u8 direction = GetPlayerMovementDirection();
+    u8 playerObjEventId = gPlayerAvatar.objectEventId;
+    if (MetatileBehavior_IsCyclingRoadPullDownTile(playerObjEventId[gObjectEvents].currentMetatileBehavior) == TRUE)
+    {
+        if (*direction_p != direction && gPlayerAvatar.runningState != MOVING)
+        {
+            gPlayerAvatar.acroBikeState = ACRO_STATE_TURNING;
+            gPlayerAvatar.newDirBackup = *direction_p;
+            gPlayerAvatar.runningState = NOT_MOVING;
+            return CheckMovementInputAcroBike(direction_p, newKeys, heldKeys);
+        }
+        else
+        {
+            gPlayerAvatar.runningState = MOVING;
+            gPlayerAvatar.acroBikeState = ACRO_STATE_SLOPE;
+            if (*direction_p < DIR_NORTH)
+                return ACRO_TRANS_DOWNHILL;
+            else
+                return ACRO_TRANS_UPHILL;
+        }
+    }
+    gPlayerAvatar.acroBikeState = ACRO_STATE_NORMAL;
+    if (*direction_p == DIR_NONE)
+    {
+        *direction_p = direction;
+        gPlayerAvatar.runningState = NOT_MOVING;
+        return ACRO_TRANS_FACE_DIRECTION;
+    }
+    else
+    {
+        gPlayerAvatar.runningState = MOVING;
+        return ACRO_TRANS_MOVING;
+    }
 }
 
 static void AcroBikeTransition_FaceDirection(u8 direction)
@@ -883,6 +948,22 @@ static u8 Bike_DPadToDirection(u16 heldKeys)
     if (heldKeys & DPAD_RIGHT)
         return DIR_EAST;
     return DIR_NONE;
+}
+
+static void AcroBikeTransition_Downhill(u8 v)
+{
+    u8 collision = GetBikeCollision(DIR_SOUTH);
+
+    if (collision == COLLISION_NONE)
+        PlayerWalkFaster(DIR_SOUTH);
+    else if (collision == COLLISION_LEDGE_JUMP)
+        PlayerJumpLedge(DIR_SOUTH);
+}
+
+static void AcroBikeTransition_Uphill(u8 direction)
+{
+    if (GetBikeCollision(direction) == COLLISION_NONE)
+        PlayerWalkNormal(direction);
 }
 
 static u8 GetBikeCollision(u8 direction)
