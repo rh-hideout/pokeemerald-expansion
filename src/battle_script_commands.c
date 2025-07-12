@@ -9730,6 +9730,8 @@ static void Cmd_various(void)
                 gBattleMoveDamage = 1;
             gBattleMoveDamage *= -1;
 
+            gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
+
             gBattlescriptCurrInstr = cmd->nextInstr;
         }
         return;
@@ -16679,6 +16681,8 @@ void BS_ItemRestoreHP(void)
         }
         if (hp + healAmount > maxHP)
             healAmount = maxHP - hp;
+        
+        healAmount = MaybeLowerHealingForPoison(battler, healAmount);
 
         gBattleScripting.battler = battler;
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, GetMonData(&party[gBattleStruct->itemPartyIndex[gBattlerAttacker]], MON_DATA_SPECIES));
