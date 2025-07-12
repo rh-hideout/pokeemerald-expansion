@@ -30,7 +30,7 @@ PalletTown_PlayersHouse_2F_EventScript_Sign::
 
 PalletTown_PlayersHouse_2F_EventScript_PC::
 	lockall
-	setvar VAR_0x8004, 1
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
 	special DoPCTurnOnEffect
 	playse SE_PC_ON
 	msgbox gText_PlayerHouseBootPC
@@ -40,7 +40,7 @@ PalletTown_PlayersHouse_2F_EventScript_PC::
 	end
 
 EventScript_PalletTown_PlayersHouse_2F_ShutDownPC::
-	setvar VAR_0x8004, 1
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
 	playse SE_PC_OFF
 	special DoPCTurnOffEffect
 	releaseall

@@ -160,7 +160,7 @@ TrainerTower_Lobby_EventScript_AskEnterChallenge::
 @	case 0, TrainerTower_Lobby_EventScript_ChooseChallenge
 @	case 1, TrainerTower_Lobby_EventScript_DeclineChallenge
 @	case 2, TrainerTower_Lobby_EventScript_ChallengeInfo
-@	case SCR_MENU_CANCEL, TrainerTower_Lobby_EventScript_DeclineChallenge
+@	case MULTI_B_PRESSED, TrainerTower_Lobby_EventScript_DeclineChallenge
 	end
 
 TrainerTower_Lobby_EventScript_ChallengeInfo::
@@ -176,7 +176,7 @@ TrainerTower_Lobby_EventScript_ChooseChallenge::
 @	case 2, TrainerTower_Lobby_EventScript_BeginChallenge
 @	case 3, TrainerTower_Lobby_EventScript_BeginChallenge
 @	case 4, TrainerTower_Lobby_EventScript_DeclineChallenge
-@	case SCR_MENU_CANCEL, TrainerTower_Lobby_EventScript_DeclineChallenge
+@	case MULTI_B_PRESSED, TrainerTower_Lobby_EventScript_DeclineChallenge
 	end
 
 TrainerTower_Lobby_EventScript_BeginChallenge::

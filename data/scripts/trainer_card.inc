@@ -117,7 +117,7 @@ FourIsland_House2_EventScript_ChooseBragHoF::
 @	switch VAR_RESULT
 @	case 0, FourIsland_House2_EventScript_BragHoF
 @	case 1, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragEggs::
@@ -125,7 +125,7 @@ FourIsland_House2_EventScript_ChooseBragEggs::
 @	switch VAR_RESULT
 @	case 0, FourIsland_House2_EventScript_BragEggs
 @	case 1, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragLinkWins::
@@ -133,7 +133,7 @@ FourIsland_House2_EventScript_ChooseBragLinkWins::
 @	switch VAR_RESULT
 @	case 0, FourIsland_House2_EventScript_BragLinkWins
 @	case 1, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragHoFEggs::
@@ -142,7 +142,7 @@ FourIsland_House2_EventScript_ChooseBragHoFEggs::
 @	case 0, FourIsland_House2_EventScript_BragHoF
 @	case 1, FourIsland_House2_EventScript_BragEggs
 @	case 2, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragHoFLinkWins::
@@ -151,7 +151,7 @@ FourIsland_House2_EventScript_ChooseBragHoFLinkWins::
 @	case 0, FourIsland_House2_EventScript_BragHoF
 @	case 1, FourIsland_House2_EventScript_BragLinkWins
 @	case 2, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragEggsLinkWins::
@@ -160,7 +160,7 @@ FourIsland_House2_EventScript_ChooseBragEggsLinkWins::
 @	case 0, FourIsland_House2_EventScript_BragEggs
 @	case 1, FourIsland_House2_EventScript_BragLinkWins
 @	case 2, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_ChooseBragHofEggsLinkWins::
@@ -170,7 +170,7 @@ FourIsland_House2_EventScript_ChooseBragHofEggsLinkWins::
 @	case 1, FourIsland_House2_EventScript_BragEggs
 @	case 2, FourIsland_House2_EventScript_BragLinkWins
 @	case 3, FourIsland_House2_EventScript_QuitBrag
-@	case SCR_MENU_CANCEL, FourIsland_House2_EventScript_QuitBrag
+@	case MULTI_B_PRESSED, FourIsland_House2_EventScript_QuitBrag
 	end
 
 FourIsland_House2_EventScript_StickerManNothingToBrag::

@@ -33,7 +33,7 @@ TrainerTower_Elevator_EventScript_ChooseFloor::
 @	case 0, TrainerTower_Elevator_EventScript_SelectRoof
 @	case 1, TrainerTower_Elevator_EventScript_SelectLobby
 @	case 2, TrainerTower_Elevator_EventScript_CloseFloorSelect
-@	case SCR_MENU_CANCEL, TrainerTower_Elevator_EventScript_CloseFloorSelect
+@	case MULTI_B_PRESSED, TrainerTower_Elevator_EventScript_CloseFloorSelect
 	end
 
 TrainerTower_Elevator_EventScript_SelectLobby::

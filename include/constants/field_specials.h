@@ -5,6 +5,7 @@
 #define PC_LOCATION_OTHER           0
 #define PC_LOCATION_BRENDANS_HOUSE  1
 #define PC_LOCATION_MAYS_HOUSE      2
+#define PC_LOCATION_PLAYER_HOUSE_FRLG 3
 
 // SS Tidal Locations
 #define SS_TIDAL_LOCATION_CURRENTS  0
