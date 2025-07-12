@@ -7,7 +7,7 @@ BirthIsland_Harbor_EventScript_Sailor_Frlg::
 @	message Text_WhereDoYouWantToSail
 @	waitmessage
 @	setvar VAR_0x8004, SEAGALLOP_BIRTH_ISLAND
-@	multichoice 20, 8, MULTICHOICE_SEAGALLOP_VERMILION, FALSE
+@	multichoice 20, 8, MULTI_SEAGALLOP_VERMILION, FALSE
 @	switch VAR_RESULT
 @	case 0, EventScript_SailToVermilionCity
 @	case 1, EventScript_CancelSail

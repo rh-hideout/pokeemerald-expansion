@@ -123,8 +123,21 @@
 #define MULTI_FALLARBOR_TENT_RULES         112
 #define MULTI_TAG_MATCH_TYPE               113
 #define MULTI_BERRY_PLOT                   114
-#define MULTICHOICE_BIKE_SHOP              115
-#define MULTICHOICE_EEVEELUTIONS           116
+#define MULTI_BIKE_SHOP                    115
+#define MULTI_EEVEELUTIONS                 116
+#define MULTI_ISLAND_23                    117
+#define MULTI_ISLAND_13                    118
+#define MULTI_ISLAND_12                    119
+#define MULTI_SEVII_NAVEL                  120
+#define MULTI_SEVII_BIRTH                  121
+#define MULTI_SEVII_NAVEL_BIRTH            122
+#define MULTI_SEAGALLOP_123                123
+#define MULTI_SEAGALLOP_V23                124
+#define MULTI_SEAGALLOP_V13                125
+#define MULTI_SEAGALLOP_V12                126
+#define MULTI_SEAGALLOP_VERMILION          127
+
+#define MULTI_NONE 255
 
 // Lilycove SS Tidal Multichoice Selections
 #define SSTIDAL_SELECTION_SLATEPORT        0

@@ -52,6 +52,7 @@
 #include "constants/rtc.h"
 #include "constants/roulette.h"
 #include "constants/script_menu.h"
+#include "constants/seagallop.h"
 #include "constants/secret_bases.h"
 #include "constants/siirtc.h"
 #include "constants/songs.h"
@@ -1525,6 +1526,14 @@ EventScript_SelectWithoutRegisteredItem::
 Common_EventScript_NopReturn::
 	return
 
+EventScript_SetResultTrue::
+	setvar VAR_RESULT, TRUE
+	return
+
+EventScript_SetResultFalse::
+	setvar VAR_RESULT, FALSE
+	return
+
 @ Unused
 EventScript_CableClub_SetVarResult1::
 	setvar VAR_RESULT, 1
@@ -1619,6 +1628,7 @@ EventScript_TryDarkenRuins::
 	.include "data/scripts/mystery_event_club.inc"
 	.include "data/scripts/day_care_frlg.inc"
 	.include "data/text/day_care_frlg.inc"
+	.include "data/scripts/seagallop.inc"
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"

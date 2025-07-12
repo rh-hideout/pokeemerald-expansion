@@ -9,7 +9,7 @@ CeruleanCity_BikeShop_EventScript_Clerk::
 	showmoneybox 0, 0
 	message CeruleanCity_BikeShop_Text_WelcomeToBikeShop
 	waitmessage
-	multichoice 11, 0, MULTICHOICE_BIKE_SHOP, FALSE
+	multichoice 11, 0, MULTI_BIKE_SHOP, FALSE
 	switch VAR_RESULT
 	case 0, CeruleanCity_BikeShop_EventScript_TryPurchaseBicycle
 	case 1, CeruleanCity_BikeShop_EventScript_ClerkGoodbye

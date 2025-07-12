@@ -232,7 +232,7 @@ Route25_SeaCottage_EventScript_OpenBillsMonList::
 Route25_SeaCottage_EventScript_BillsMonList::
 	message Route25_SeaCottage_Text_SeeWhichMon
 	waitmessage
-	multichoice 0, 0, MULTICHOICE_EEVEELUTIONS, FALSE
+	multichoice 0, 0, MULTI_EEVEELUTIONS, FALSE
 	switch VAR_RESULT
 	case 0, Route25_SeaCottage_EventScript_ViewEevee
 	case 1, Route25_SeaCottage_EventScript_ViewFlareon

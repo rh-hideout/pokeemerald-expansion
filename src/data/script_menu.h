@@ -791,6 +791,86 @@ static const struct MenuAction sMultichoiceList_Eeveelutions[] = {
     { COMPOUND_STRING("Quit looking.") }
 };
 
+static const u8 gText_SeviiIslands[] = _("SEVII ISLANDS");
+static const u8 gText_OneIsland[] = _("ONE ISLAND");
+static const u8 gText_TwoIsland[] = _("TWO ISLAND");
+static const u8 gText_ThreeIsland[] = _("THREE ISLAND");
+static const u8 gText_FourIsland[] = _("FOUR ISLAND");
+static const u8 gText_FiveIsland[] = _("FIVE ISLAND");
+static const u8 gText_SixIsland[] = _("SIX ISLAND");
+static const u8 gText_SevenIsland[] = _("SEVEN ISLAND");
+static const u8 gText_Vermilion[] = _("VERMILION");
+
+static const struct MenuAction sMultichoiceList_Island23[] = {
+    { gText_TwoIsland },
+    { gText_ThreeIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_Island13[] = {
+    { gText_OneIsland },
+    { gText_ThreeIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_Island12[] = {
+    { gText_OneIsland },
+    { gText_TwoIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeviiNavel[] = {
+    { gText_SeviiIslands },
+    { gText_NavelRock },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeviiBirth[] = {
+    { gText_SeviiIslands },
+    { gText_BirthIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeviiNavelBirth[] = {
+    { gText_SeviiIslands },
+    { gText_NavelRock },
+    { gText_BirthIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_Seagallop123[] = {
+    { gText_OneIsland },
+    { gText_TwoIsland },
+    { gText_ThreeIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeagallopV23[] = {
+    { gText_Vermilion },
+    { gText_TwoIsland },
+    { gText_ThreeIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeagallopV13[] = {
+    { gText_Vermilion },
+    { gText_OneIsland },
+    { gText_ThreeIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeagallopV12[] = {
+    { gText_Vermilion },
+    { gText_OneIsland },
+    { gText_TwoIsland },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_SeagallopVermilion[] = {
+    { gText_Vermilion },
+    { gText_Exit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -919,8 +999,19 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_FALLARBOR_TENT_RULES]       = MULTICHOICE(MultichoiceList_FallarborTentRules),
     [MULTI_TAG_MATCH_TYPE]             = MULTICHOICE(MultichoiceList_TagMatchType),
     [MULTI_BERRY_PLOT]                 = MULTICHOICE(MultichoiceList_BerryPlot),
-    [MULTICHOICE_BIKE_SHOP]            = MULTICHOICE(sMultichoiceList_BikeShop),
-    [MULTICHOICE_EEVEELUTIONS]         = MULTICHOICE(sMultichoiceList_Eeveelutions),
+    [MULTI_BIKE_SHOP]                  = MULTICHOICE(sMultichoiceList_BikeShop),
+    [MULTI_EEVEELUTIONS]               = MULTICHOICE(sMultichoiceList_Eeveelutions),
+    [MULTI_ISLAND_23]                  = MULTICHOICE(sMultichoiceList_Island23),
+    [MULTI_ISLAND_13]                  = MULTICHOICE(sMultichoiceList_Island13),
+    [MULTI_ISLAND_12]                  = MULTICHOICE(sMultichoiceList_Island12),
+    [MULTI_SEVII_NAVEL]                = MULTICHOICE(sMultichoiceList_SeviiNavel),
+    [MULTI_SEVII_BIRTH]                = MULTICHOICE(sMultichoiceList_SeviiBirth),
+    [MULTI_SEVII_NAVEL_BIRTH]          = MULTICHOICE(sMultichoiceList_SeviiNavelBirth),
+    [MULTI_SEAGALLOP_123]              = MULTICHOICE(sMultichoiceList_Seagallop123),
+    [MULTI_SEAGALLOP_V23]              = MULTICHOICE(sMultichoiceList_SeagallopV23),
+    [MULTI_SEAGALLOP_V13]              = MULTICHOICE(sMultichoiceList_SeagallopV13),
+    [MULTI_SEAGALLOP_V12]              = MULTICHOICE(sMultichoiceList_SeagallopV12),
+    [MULTI_SEAGALLOP_VERMILION]        = MULTICHOICE(sMultichoiceList_SeagallopVermilion),
 };
 
 const u8 *const gStdStrings[] =
@@ -1026,4 +1117,16 @@ static const u8 *const sWirelessOptions_NoRecordMixBerryCrush[] =
     CableClub_Text_YouMayTradeHere,
     CableClub_Text_YouMayBattleHere,
     CableClub_Text_CancelSelectedItem,
+};
+
+
+static const u8 *const sSeagallopDestStrings[] = {
+    [SEAGALLOP_VERMILION_CITY] = gText_Vermilion,
+    [SEAGALLOP_ONE_ISLAND]     = gText_OneIsland,
+    [SEAGALLOP_TWO_ISLAND]     = gText_TwoIsland,
+    [SEAGALLOP_THREE_ISLAND]   = gText_ThreeIsland,
+    [SEAGALLOP_FOUR_ISLAND]    = gText_FourIsland,
+    [SEAGALLOP_FIVE_ISLAND]    = gText_FiveIsland,
+    [SEAGALLOP_SIX_ISLAND]     = gText_SixIsland,
+    [SEAGALLOP_SEVEN_ISLAND]   = gText_SevenIsland,
 };

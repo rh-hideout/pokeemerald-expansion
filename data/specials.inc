@@ -586,3 +586,8 @@ gSpecials::
 	def_special GetNumLevelsGainedForRoute5DaycareMon
 	def_special TakePokemonFromRoute5Daycare
 	def_special GetCostToWithdrawRoute5DaycareMon
+	def_special DrawSeagallopDestinationMenu
+	def_special GetSelectedSeagallopDestination
+	def_special GetSeagallopNumber
+	def_special DoSeagallopFerryScene
+	def_special IsPlayerLeftOfVermilionSailor
