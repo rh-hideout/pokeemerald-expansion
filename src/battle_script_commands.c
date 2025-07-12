@@ -17200,7 +17200,7 @@ void BS_TryTrainerSlideDynamaxMsg(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_TryHealPulse(void)
+void BS_TryHealPulse(void)  //bulagHP sean this script is called for several move types like pollen puff, heal pulse ("EFFECT_")
 {
     NATIVE_ARGS(const u8 *failInstr);
 
