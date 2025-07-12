@@ -2287,13 +2287,6 @@ enum
     ENDTURN_BATTLER_COUNT
 };
 
-s32 MaybeLowerHealingForPoison(u8 battler, s32 damage) {
-    if (gBattleMons[battler].status1 & STATUS1_PSN_ANY) {
-        return damage / 2;
-    }
-    return damage;
-}
-
 // Ingrain, Leech Seed, Strength Sap and Aqua Ring
 s32 GetDrainedBigRootHp(u32 battler, s32 hp)
 {
