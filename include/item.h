@@ -144,7 +144,7 @@ enum SortPocket
     SORT_POCKET_TM_HM,
 };
 
-void GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos, u16 *itemId, u16 *quantity);
+struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
 u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);

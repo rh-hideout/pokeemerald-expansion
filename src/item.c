@@ -109,9 +109,11 @@ static inline void NONNULL BagPocket_SetSlotData(struct BagPocket *pocket, u32 p
     sBagPocket_GetSetSlotDataFuncs[pocket->id](pocket, pocketPos, itemId, quantity, TRUE);
 }
 
-void GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos, u16 *itemId, u16 *quantity)
+struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
 {
-    BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos, itemId, quantity);
+    struct ItemSlot itemSlot = {0};
+    BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos, &itemSlot.itemId, &itemSlot.quantity);
+    return itemSlot;
 }
 
 u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
