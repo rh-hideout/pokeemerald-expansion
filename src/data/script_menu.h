@@ -871,6 +871,116 @@ static const struct MenuAction sMultichoiceList_SeagallopVermilion[] = {
     { gText_Exit }
 };
 
+const u8 sText_NoThanks[] = _("NO THANKS");
+
+static const struct MenuAction sMultichoiceList_GameCornerPokemonPrizes[] = {
+#if defined(FIRERED)
+    { COMPOUND_STRING("ABRA{CLEAR_TO 0x55}{FONT_SMALL} 180 COINS") },
+    { COMPOUND_STRING("CLEFAIRY{CLEAR_TO 0x55}{FONT_SMALL} 500 COINS") },
+    { COMPOUND_STRING("DRATINI{CLEAR_TO 0x4B}{FONT_SMALL} 2,800 COINS") },
+    { COMPOUND_STRING("SCYTHER{CLEAR_TO 0x4B}{FONT_SMALL} 5,500 COINS") },
+    { COMPOUND_STRING("PORYGON{CLEAR_TO 0x4B}{FONT_SMALL} 9,999 COINS") },
+#else
+    { COMPOUND_STRING("ABRA{CLEAR_TO 0x55}{FONT_SMALL} 120 COINS") },
+    { COMPOUND_STRING("CLEFAIRY{CLEAR_TO 0x55}{FONT_SMALL} 750 COINS") },
+    { COMPOUND_STRING("PINSIR{CLEAR_TO 0x4B}{FONT_SMALL} 2,500 COINS") },
+    { COMPOUND_STRING("DRATINI{CLEAR_TO 0x4B}{FONT_SMALL} 4,600 COINS") },
+    { COMPOUND_STRING("PORYGON{CLEAR_TO 0x4B}{FONT_SMALL} 6,500 COINS") },
+#endif
+    { sText_NoThanks }
+};
+
+static const struct MenuAction sMultichoiceList_GameCornerTMPrizes[] = {
+    { COMPOUND_STRING("TM13{CLEAR_TO 0x48}{FONT_SMALL}4,000 COINS") },
+    { COMPOUND_STRING("TM23{CLEAR_TO 0x48}{FONT_SMALL}3,500 COINS") },
+    { COMPOUND_STRING("TM24{CLEAR_TO 0x48}{FONT_SMALL}4,000 COINS") },
+    { COMPOUND_STRING("TM30{CLEAR_TO 0x48}{FONT_SMALL}4,500 COINS") },
+    { COMPOUND_STRING("TM35{CLEAR_TO 0x48}{FONT_SMALL}4,000 COINS") },
+    { sText_NoThanks }
+};
+
+static const struct MenuAction sMultichoiceList_GameCornerBattleItemPrizes[] = {
+    { COMPOUND_STRING("SMOKE BALL{CLEAR_TO 0x5A}{FONT_SMALL}800 COINS") },
+    { COMPOUND_STRING("MIRACLE SEED{CLEAR_TO 0x50}{FONT_SMALL}1,000 COINS") },
+    { COMPOUND_STRING("CHARCOAL{CLEAR_TO 0x50}{FONT_SMALL}1,000 COINS") },
+    { COMPOUND_STRING("MYSTIC WATER{CLEAR_TO 0x50}{FONT_SMALL}1,000 COINS") },
+    { COMPOUND_STRING("YELLOW FLUTE{CLEAR_TO 0x50}{FONT_SMALL}1,600 COINS") },
+    { sText_NoThanks }
+};
+
+static const struct MenuAction sMultichoiceList_DeptStoreElevator[] = {
+    { COMPOUND_STRING("5F") },
+    { COMPOUND_STRING("4F") },
+    { COMPOUND_STRING("3F") },
+    { COMPOUND_STRING("2F") },
+    { COMPOUND_STRING("1F") },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_GameCornerCoinPurchaseCounter[] = {
+    { COMPOUND_STRING("{FONT_SMALL} 50 COINS{CLEAR_TO 0x45}¥1,000") },
+    { COMPOUND_STRING("{FONT_SMALL}500 COINS{CLEAR_TO 0x40}¥10,000") },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_LinkedDirectUnion[] = {
+    { COMPOUND_STRING("LINKED GAME PLAY") },
+    { COMPOUND_STRING("DIRECT CORNER") },
+    { COMPOUND_STRING("UNION ROOM") },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_CeladonVendingMachine[] = {
+    { COMPOUND_STRING("FRESH WATER{CLEAR_TO 0x57}{FONT_SMALL}¥200") },
+    { COMPOUND_STRING("SODA POP{CLEAR_TO 0x57}{FONT_SMALL}¥300") },
+    { COMPOUND_STRING("LEMONADE{CLEAR_TO 0x57}{FONT_SMALL}¥350") },
+    { gText_Exit }
+};
+
+const u8 sText_FreshWater[] = _("FRESH WATER");
+const u8 sText_SodaPop[] = _("SODA POP");
+const u8 sText_Lemonade[] = _("LEMONADE");
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlFreshWater[] = {
+    { sText_FreshWater },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlSodaPop[] = {
+    { sText_SodaPop },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlFreshWaterSodaPop[] = {
+    { sText_FreshWater },
+    { sText_SodaPop },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlLemonade[] = {
+    { sText_Lemonade },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlFreshWaterLemonade[] = {
+    { sText_FreshWater },
+    { sText_Lemonade },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlSodaPopLemonade[] = {
+    { sText_SodaPop },
+    { sText_Lemonade },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade[] = {
+    { sText_FreshWater },
+    { sText_SodaPop },
+    { sText_Lemonade },
+    { gText_Exit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1012,6 +1122,20 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_SEAGALLOP_V13]              = MULTICHOICE(sMultichoiceList_SeagallopV13),
     [MULTI_SEAGALLOP_V12]              = MULTICHOICE(sMultichoiceList_SeagallopV12),
     [MULTI_SEAGALLOP_VERMILION]        = MULTICHOICE(sMultichoiceList_SeagallopVermilion),
+    [MULTI_GAME_CORNER_POKEMON_PRIZES] = MULTICHOICE(sMultichoiceList_GameCornerPokemonPrizes),
+    [MULTI_GAME_CORNER_TMPRIZES]           = MULTICHOICE(sMultichoiceList_GameCornerTMPrizes),
+    [MULTI_GAME_CORNER_BATTLE_ITEM_PRIZES] = MULTICHOICE(sMultichoiceList_GameCornerBattleItemPrizes),
+    [MULTI_DEPT_STORE_ELEVATOR]            = MULTICHOICE(sMultichoiceList_DeptStoreElevator),
+    [MULTI_GAME_CORNER_COIN_PURCHASE_COUNTER] = MULTICHOICE(sMultichoiceList_GameCornerCoinPurchaseCounter),
+    [MULTI_LINKED_DIRECT_UNION]         = MULTICHOICE(sMultichoiceList_LinkedDirectUnion),
+    [MULTI_CELADON_VENDING_MACHINE]           = MULTICHOICE(sMultichoiceList_CeladonVendingMachine),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER]                   = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWater),
+    [MULTI_THIRSTY_GIRL_SODA_POP]                      = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPop),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP]          = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPop),
+    [MULTI_THIRSTY_GIRL_LEMONADE]                      = MULTICHOICE(sMultichoiceList_ThirstyGirlLemonade),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_LEMONADE]          = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterLemonade),
+    [MULTI_THIRSTY_GIRL_SODA_POP_LEMONADE]             = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPopLemonade),
+    [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE] = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade),
 };
 
 const u8 *const gStdStrings[] =

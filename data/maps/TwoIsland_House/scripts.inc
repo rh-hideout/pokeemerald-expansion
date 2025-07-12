@@ -86,7 +86,7 @@ TwoIsland_House_EventScript_GiveTinyMushrooms::
 TwoIsland_House_EventScript_ChooseMushroom::
 @	message TwoIsland_House_Text_IllNeedMushroomOrTwo
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_MUSHROOMS, TRUE
+@	multichoice 0, 0, MULTI_MUSHROOMS, TRUE
 @	switch VAR_RESULT
 @	case 0, TwoIsland_House_EventScript_GiveTinyMushrooms
 @	case 1, TwoIsland_House_EventScript_GiveBigMushroom

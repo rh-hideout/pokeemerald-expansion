@@ -46,6 +46,7 @@
 #include "strings.h"
 #include "task.h"
 #include "text.h"
+#include "text_window.h"
 #include "tilesets.h"
 #include "tv.h"
 #include "wallclock.h"
@@ -102,6 +103,10 @@ static EWRAM_DATA u32 sBattleTowerMultiBattleTypeFlags = 0;
 COMMON_DATA struct ListMenuTemplate gScrollableMultichoice_ListMenuTemplate = {0};
 EWRAM_DATA u16 gScrollableMultichoice_ScrollOffset = 0;
 
+static EWRAM_DATA u8 sElevatorCurrentFloorWindowId = 0;
+static EWRAM_DATA u16 sElevatorScroll = 0;
+static EWRAM_DATA u16 sElevatorCursorPos = 0;
+
 void TryLoseFansFromPlayTime(void);
 void SetPlayerGotFirstFans(void);
 u16 GetNumFansOfPlayerInTrainerFanClub(void);
@@ -149,6 +154,9 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
 static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer);
 #endif //FREE_LINK_BATTLE_RECORDS
+static void Task_ElevatorShake(u8 taskId);
+static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
+static void Task_AnimateElevatorWindowView(u8 taskId);
 
 static const u8 sText_BigGuy[] = _("Big guy");
 static const u8 sText_BigGirl[] = _("Big girl");
@@ -4793,4 +4801,451 @@ bool8 DoesPlayerPartyContainSpecies(void)
             return TRUE;
     }
     return FALSE;
+}
+
+static const u8 sSlotMachineIndices[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    4,
+    4,
+    5
+};
+
+u8 GetRandomSlotMachineId(void)
+{
+    u16 rval = Random() % NELEMS(sSlotMachineIndices);
+    return sSlotMachineIndices[rval];
+}
+
+static const struct WindowTemplate sElevatorCurrentFloorWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 22,
+    .tilemapTop = 1,
+    .width = 7,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 0x008
+};
+
+static const u8 *const sFloorNamePointers[] = {
+    gText_B4F,
+    gText_B3F,
+    gText_B2F,
+    gText_B1F,
+    gText_1F,
+    gText_2F,
+    gText_3F,
+    gText_4F,
+    gText_5F,
+    gText_6F,
+    gText_7F,
+    gText_8F,
+    gText_9F,
+    gText_10F,
+    gText_11F,
+    gText_Rooftop
+};
+
+static const u16 sElevatorWindowMetatilesGoingUp[][3] = {
+    {
+        METATILE_SilphCo_ElevatorWindow_Top0, 
+        METATILE_SilphCo_ElevatorWindow_Top1, 
+        METATILE_SilphCo_ElevatorWindow_Top2
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Mid0, 
+        METATILE_SilphCo_ElevatorWindow_Mid1, 
+        METATILE_SilphCo_ElevatorWindow_Mid2
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Bottom0, 
+        METATILE_SilphCo_ElevatorWindow_Bottom1, 
+        METATILE_SilphCo_ElevatorWindow_Bottom2
+    }
+};
+
+static const u16 sElevatorWindowMetatilesGoingDown[][3] = {
+    {
+        METATILE_SilphCo_ElevatorWindow_Top0, 
+        METATILE_SilphCo_ElevatorWindow_Top2, 
+        METATILE_SilphCo_ElevatorWindow_Top1
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Mid0, 
+        METATILE_SilphCo_ElevatorWindow_Mid2, 
+        METATILE_SilphCo_ElevatorWindow_Mid1
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Bottom0, 
+        METATILE_SilphCo_ElevatorWindow_Bottom2, 
+        METATILE_SilphCo_ElevatorWindow_Bottom1
+    }
+};
+
+static const u8 sElevatorAnimationDuration[] = {
+    8,
+    16,
+    24,
+    32,
+    38,
+    46,
+    53,
+    56,
+    57
+};
+
+static const u8 sElevatorWindowAnimDuration[] = {
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27
+};
+
+void GetElevatorFloor(void)
+{
+    u16 floor = 4;
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_ROCKET_HIDEOUT_B1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_SILPH_CO_1F):
+            floor = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_2F):
+            floor = 5;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_3F):
+            floor = 6;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_4F):
+            floor = 7;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_5F):
+            floor = 8;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_6F):
+            floor = 9;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_7F):
+            floor = 10;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_8F):
+            floor = 11;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_9F):
+            floor = 12;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_10F):
+            floor = 13;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_11F):
+            floor = 14;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B1F):
+            floor = 3;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B2F):
+            floor = 2;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B4F):
+            floor = 0;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_CELADON_CITY_DEPARTMENT_STORE_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_1F):
+            floor = 4;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_2F):
+            floor = 5;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_3F):
+            floor = 6;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_4F):
+            floor = 7;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_5F):
+            floor = 8;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_TRAINER_TOWER_1F):
+        case MAP_NUM(MAP_TRAINER_TOWER_2F):
+        case MAP_NUM(MAP_TRAINER_TOWER_3F):
+        case MAP_NUM(MAP_TRAINER_TOWER_4F):
+        case MAP_NUM(MAP_TRAINER_TOWER_5F):
+        case MAP_NUM(MAP_TRAINER_TOWER_6F):
+        case MAP_NUM(MAP_TRAINER_TOWER_7F):
+        case MAP_NUM(MAP_TRAINER_TOWER_8F):
+        case MAP_NUM(MAP_TRAINER_TOWER_ROOF):
+            floor = 15;
+            break;
+        case MAP_NUM(MAP_TRAINER_TOWER_LOBBY):
+            floor = 3;
+            break;
+        }
+    }
+    VarSet(VAR_ELEVATOR_FLOOR, floor);
+}
+
+u16 InitElevatorFloorSelectMenuPos(void)
+{
+    sElevatorScroll = 0;
+    sElevatorCursorPos = 0;
+
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_ROCKET_HIDEOUT_B1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_SILPH_CO_11F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_10F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_9F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_8F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 3;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_7F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_6F):
+            sElevatorScroll = 1;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_5F):
+            sElevatorScroll = 2;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_4F):
+            sElevatorScroll = 3;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_3F):
+            sElevatorScroll = 4;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_2F):
+            sElevatorScroll = 5;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_1F):
+            sElevatorScroll = 5;
+            sElevatorCursorPos = 5;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B1F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B2F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B4F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_CELADON_CITY_DEPARTMENT_STORE_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_5F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_4F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_3F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_2F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 3;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_1F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 4;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_TRAINER_TOWER_1F):
+        case MAP_NUM(MAP_TRAINER_TOWER_2F):
+        case MAP_NUM(MAP_TRAINER_TOWER_3F):
+        case MAP_NUM(MAP_TRAINER_TOWER_4F):
+        case MAP_NUM(MAP_TRAINER_TOWER_5F):
+        case MAP_NUM(MAP_TRAINER_TOWER_6F):
+        case MAP_NUM(MAP_TRAINER_TOWER_7F):
+        case MAP_NUM(MAP_TRAINER_TOWER_8F):
+        case MAP_NUM(MAP_TRAINER_TOWER_ROOF):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_TRAINER_TOWER_LOBBY):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        }
+    }
+    return sElevatorCursorPos;
+}
+
+void AnimateElevator(void)
+{
+    u16 nfloors;
+    s16 *data = gTasks[CreateTask(Task_ElevatorShake, 9)].data;
+    data[1] = 0;
+    data[2] = 0;
+    data[4] = 1;
+    if (gSpecialVar_0x8005 > gSpecialVar_0x8006)
+    {
+        nfloors = gSpecialVar_0x8005 - gSpecialVar_0x8006;
+        data[6] = 1;
+    }
+    else
+    {
+        nfloors = gSpecialVar_0x8006 - gSpecialVar_0x8005;
+        data[6] = 0;
+    }
+    if (nfloors > 8)
+        nfloors = 8;
+    data[5] = sElevatorAnimationDuration[nfloors];
+    SetCameraPanningCallback(NULL);
+    AnimateElevatorWindowView(nfloors, data[6]);
+    PlaySE(SE_ELEVATOR);
+}
+
+static void Task_ElevatorShake(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    data[1]++;
+    if ((data[1] % 3) == 0)
+    {
+        data[1] = 0;
+        data[2]++;
+        data[4] = -data[4];
+        SetCameraPanning(0, data[4]);
+        if (data[2] == data[5])
+        {
+            PlaySE(SE_DING_DONG);
+            DestroyTask(taskId);
+            ScriptContext_Enable();
+            InstallCameraPanAheadCallback();
+        }
+    }
+}
+
+static const u8 sText_NowOn[] = _("Now on:");
+
+void DrawElevatorCurrentFloorWindow(void)
+{
+    const u8 *floorname;
+    u32 strwidth;
+
+    sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
+    LoadUserWindowBorderGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13));
+    DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 13);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, sText_NowOn, 0, 2, 0xFF, NULL);
+    floorname = sFloorNamePointers[gSpecialVar_0x8005];
+    strwidth = GetStringWidth(FONT_NORMAL, floorname, 0);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
+    PutWindowTilemap(sElevatorCurrentFloorWindowId);
+    CopyWindowToVram(sElevatorCurrentFloorWindowId, COPYWIN_FULL);
+}
+
+void CloseElevatorCurrentFloorWindow(void)
+{
+    ClearStdWindowAndFrameToTransparent(sElevatorCurrentFloorWindowId, TRUE);
+    RemoveWindow(sElevatorCurrentFloorWindowId);
+}
+
+static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
+{
+    u8 taskId;
+    if (FuncIsActiveTask(Task_AnimateElevatorWindowView) != TRUE)
+    {
+        taskId = CreateTask(Task_AnimateElevatorWindowView, 8);
+        gTasks[taskId].data[0] = 0;
+        gTasks[taskId].data[1] = 0;
+        gTasks[taskId].data[2] = direction;
+        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[nfloors];
+    }
+}
+
+static void Task_AnimateElevatorWindowView(u8 taskId)
+{
+    u8 i;
+    u8 j;
+    s16 *data = gTasks[taskId].data;
+    if (data[1] == 6)
+    {
+        data[0]++;
+        if (data[2] == 0)
+        {
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                    MapGridSetMetatileIdAt(j + 1 + MAP_OFFSET, i + MAP_OFFSET, sElevatorWindowMetatilesGoingUp[i][data[0] % 3] | MAPGRID_COLLISION_MASK);
+            }
+        }
+        else
+        {
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                    MapGridSetMetatileIdAt(j + 1 + MAP_OFFSET, i + MAP_OFFSET, sElevatorWindowMetatilesGoingDown[i][data[0] % 3] | MAPGRID_COLLISION_MASK);
+            }
+        }
+        DrawWholeMapView();
+        data[1] = 0;
+        if (data[0] == data[3])
+            DestroyTask(taskId);
+    }
+    data[1]++;
 }

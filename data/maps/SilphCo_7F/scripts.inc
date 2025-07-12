@@ -121,7 +121,7 @@ SilphCo_7F_EventScript_LaprasGuy::
 @	givemon SPECIES_LAPRAS, 25
 @	goto_if_eq VAR_RESULT, 0, SilphCo_7F_EventScript_ReceiveLaprasParty
 @	goto_if_eq VAR_RESULT, 1, SilphCo_7F_EventScript_ReceiveLaprasPC
-@	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+@	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 @	release
 	end
 
@@ -148,7 +148,7 @@ SilphCo_7F_EventScript_ReceiveLaprasPC::
 @	bufferspeciesname STR_VAR_1, SPECIES_LAPRAS
 @	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, SilphCo_7F_EventScript_LaprasTransferredToPC
-@	call EventScript_NameReceivedBoxMon
+@	call Common_EventScript_NameReceivedBoxMon
 @	goto SilphCo_7F_EventScript_LaprasTransferredToPC
 	end
 

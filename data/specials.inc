@@ -597,3 +597,10 @@ gSpecials::
 	def_special DoesPlayerPartyContainSpecies
 	def_special GetMagikarpSizeRecordInfo
 	def_special CompareMagikarpSize
+	def_special GetRandomSlotMachineId
+	def_special HasAllKantoMons
+	def_special AnimateElevator
+	def_special InitElevatorFloorSelectMenuPos
+	def_special CloseElevatorCurrentFloorWindow
+	def_special DrawElevatorCurrentFloorWindow
+	def_special GetElevatorFloor

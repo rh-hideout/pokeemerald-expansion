@@ -8,7 +8,7 @@ RocketHideout_Elevator_EventScript_FloorSelect::
 @	call_if_unset FLAG_TEMP_2, EventScript_GetElevatorFloor
 @	copyvar VAR_0x8005, VAR_ELEVATOR_FLOOR
 @	special DrawElevatorCurrentFloorWindow
-@	message Text_WantWhichFloor
+@	message gText_WantWhichFloor
 @	waitmessage
 @	setvar VAR_0x8004, 2
 @	specialvar VAR_RESULT, InitElevatorFloorSelectMenuPos
@@ -19,17 +19,17 @@ RocketHideout_Elevator_EventScript_FloorSelect::
 	end
 
 RocketHideout_Elevator_EventScript_FloorSelectFromB1F::
-@	multichoicedefault 0, 0, MULTICHOICE_ROCKET_HIDEOUT_ELEVATOR, 0, FALSE
+@	multichoicedefault 0, 0, MULTI_ROCKET_HIDEOUT_ELEVATOR, 0, FALSE
 @	goto RocketHideout_Elevator_EventScript_ChooseFloor
 	end
 
 RocketHideout_Elevator_EventScript_FloorSelectFromB2F::
-@	multichoicedefault 0, 0, MULTICHOICE_ROCKET_HIDEOUT_ELEVATOR, 1, FALSE
+@	multichoicedefault 0, 0, MULTI_ROCKET_HIDEOUT_ELEVATOR, 1, FALSE
 @	goto RocketHideout_Elevator_EventScript_ChooseFloor
 	end
 
 RocketHideout_Elevator_EventScript_FloorSelectFromB4F::
-@	multichoicedefault 0, 0, MULTICHOICE_ROCKET_HIDEOUT_ELEVATOR, 2, FALSE
+@	multichoicedefault 0, 0, MULTI_ROCKET_HIDEOUT_ELEVATOR, 2, FALSE
 @	goto RocketHideout_Elevator_EventScript_ChooseFloor
 	end
 

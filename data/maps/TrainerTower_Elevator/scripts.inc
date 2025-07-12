@@ -9,7 +9,7 @@ TrainerTower_Elevator_EventScript_FloorSelect::
 @	call_if_unset FLAG_TEMP_2, EventScript_GetElevatorFloor
 @	copyvar VAR_0x8005, VAR_ELEVATOR_FLOOR
 @	special DrawElevatorCurrentFloorWindow
-@	message Text_WantWhichFloor
+@	message gText_WantWhichFloor
 @	waitmessage
 @	setvar VAR_0x8004, 6
 @	specialvar VAR_RESULT, InitElevatorFloorSelectMenuPos
@@ -19,12 +19,12 @@ TrainerTower_Elevator_EventScript_FloorSelect::
 	end
 
 TrainerTower_Elevator_EventScript_FloorSelectFromRoof::
-@	multichoicedefault 0, 0, MULTICHOICE_ROOFTOP_B1F, 0, FALSE
+@	multichoicedefault 0, 0, MULTI_ROOFTOP_B1F, 0, FALSE
 @	goto TrainerTower_Elevator_EventScript_ChooseFloor
 	end
 
 TrainerTower_Elevator_EventScript_FloorSelectFromLobby::
-@	multichoicedefault 0, 0, MULTICHOICE_ROOFTOP_B1F, 1, FALSE
+@	multichoicedefault 0, 0, MULTI_ROOFTOP_B1F, 1, FALSE
 @	goto TrainerTower_Elevator_EventScript_ChooseFloor
 	end
 

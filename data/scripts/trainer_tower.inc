@@ -287,8 +287,8 @@ TrainerTower_Roof_EventScript_ReceivePrize:
 @	message gText_ObtainedTheItem
 @	waitfanfare
 @	waitmessage
-@	bufferstdstring STR_VAR_3, STDSTRING_ITEMS_POCKET
-@	msgbox Text_PutItemAway
+@	bufferstdstring STR_VAR_3, STDSTRING_ITEMS
+@	msgbox gText_PutItemInPocket
 @	call EventScript_RestorePrevTextColor
 @	goto TrainerTower_Roof_EventScript_CheckFinalTime
 

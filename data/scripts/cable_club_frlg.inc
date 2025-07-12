@@ -212,7 +212,7 @@ CableClub_EventScript_UnusedWelcomeToCableClub_FRLG::
 
 CableClub_EventScript_SelectCableClubRoom_FRLG::
 @	setvar VAR_0x8004, 0
-@	multichoice 0, 0, MULTICHOICE_TRADE_CENTER_COLOSSEUM, FALSE
+@	multichoice 0, 0, MULTI_TRADE_CENTER_COLOSSEUM, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_TradeCenter
 @	case 1, CableClub_EventScript_Colosseum
@@ -228,7 +228,7 @@ CableClub_EventScript_Colosseum_FRLG::
 CableClub_EventScript_SelectBattleMode_FRLG::
 @	message CableClub_Text_PlayWhichBattleMode
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
+@	multichoice 0, 0, MULTI_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_SingleBattleMode
 @	case 1, CableClub_EventScript_DoubleBattleMode
@@ -752,7 +752,7 @@ CableClub_EventScript_UnionRoomAttendant_FRLG::
 	end
 
 CableClub_EventScript_AskEnterUnionRoom_FRLG::
-@	multichoice 18, 6, MULTICHOICE_YES_NO_INFO, FALSE
+@	multichoice 18, 6, MULTI_YES_NO_INFO, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_EnterUnionRoom
 @	case 1, CableClub_EventScript_AbortLink
@@ -856,7 +856,7 @@ CableClub_EventScript_DirectCornerAttendant_FRLG::
 
 CableClub_EventScript_DirectCornerSelectService_FRLG::
 @	goto_if_unset FLAG_GOT_POWDER_JAR, CableClub_EventScript_DirectCornerNoBerry
-@	multichoice 0, 0, MULTICHOICE_TRADE_COLOSSEUM_CRUSH, FALSE
+@	multichoice 0, 0, MULTI_TRADE_COLOSSEUM_CRUSH, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_WirelessTrade
 @	case 1, CableClub_EventScript_WirelessBattleSelect
@@ -866,7 +866,7 @@ CableClub_EventScript_DirectCornerSelectService_FRLG::
 	end
 
 CableClub_EventScript_DirectCornerNoBerry_FRLG::
-@	multichoice 0, 0, MULTICHOICE_TRADE_COLOSSEUM_2, FALSE
+@	multichoice 0, 0, MULTI_TRADE_COLOSSEUM_2, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_WirelessTrade
 @	case 1, CableClub_EventScript_WirelessBattleSelect
@@ -886,7 +886,7 @@ CableClub_EventScript_WirelessTrade_FRLG::
 CableClub_EventScript_WirelessBattleSelect_FRLG::
 @	message CableClub_Text_PlayWhichBattleMode
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
+@	multichoice 0, 0, MULTI_SINGLE_DOUBLE_MULTI_INFO_EXIT, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_WirelessSingleBattle
 @	case 1, CableClub_EventScript_WirelessDoubleBattle
@@ -953,7 +953,7 @@ CableClub_EventScript_ChooseLinkLeaderFrom2_FRLG::
 @	message CableClub_Text_ChooseGroupLeaderOfTwo
 @	waitmessage
 @	call EventScript_RestorePrevTextColor
-@	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+@	multichoice 13, 6, MULTI_JOIN_OR_LEAD, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_TryJoinGroup2Players
 @	case 1, CableClub_EventScript_TryLeadGroup2Players
@@ -982,7 +982,7 @@ CableClub_EventScript_ChooseLinkLeaderFrom4_FRLG::
 @	message CableClub_Text_ChooseGroupLeaderOfFour
 @	waitmessage
 @	call EventScript_RestorePrevTextColor
-@	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+@	multichoice 13, 6, MULTI_JOIN_OR_LEAD, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_TryJoinGroup4Players
 @	case 1, CableClub_EventScript_TryLeadGroup4Players
@@ -1011,7 +1011,7 @@ CableClub_EventScript_ChooseLinkLeader_FRLG::
 @	message CableClub_Text_ChooseGroupLeader
 @	waitmessage
 @	call EventScript_RestorePrevTextColor
-@	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+@	multichoice 13, 6, MULTI_JOIN_OR_LEAD, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_TryJoinGroupXPlayers
 @	case 1, CableClub_EventScript_TryLeadGroupXPlayers
@@ -1128,7 +1128,7 @@ JoyfulGameCorner_EventScript_InfoMan2_FRLG::
 @	faceplayer
 @	message Text_DescribeWhichGame
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_POKEJUMP_DODRIO, FALSE
+@	multichoice 0, 0, MULTI_POKEJUMP_DODRIO, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_PokemonJumpInfo
 @	case 1, CableClub_EventScript_DodrioBerryPickingInfo
@@ -1164,7 +1164,7 @@ JoyfulGameCorner_EventScript_MinigameAttendant_FRLG::
 @	special HelpSystem_Disable
 @	message Text_PlayWhichGame
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_POKEJUMP_DODRIO, FALSE
+@	multichoice 0, 0, MULTI_POKEJUMP_DODRIO, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_PlayPokemonJump
 @	case 1, CableClub_EventScript_PlayDodrioBerryPicking
@@ -1207,7 +1207,7 @@ CableClub_EventScript_ChooseLinkLeaderMinigame_FRLG::
 @	message CableClub_Text_ChooseGroupLeader
 @	waitmessage
 @	call EventScript_RestorePrevTextColor
-@	multichoice 13, 6, MULTICHOICE_JOIN_OR_LEAD, FALSE
+@	multichoice 13, 6, MULTI_JOIN_OR_LEAD, FALSE
 @	switch VAR_RESULT
 @	case 0, CableClub_EventScript_TryJoinMinigameLinkGroup
 @	case 1, CableClub_EventScript_TryBecomeMinigameLinkLeader

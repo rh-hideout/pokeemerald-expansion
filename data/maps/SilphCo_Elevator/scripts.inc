@@ -7,7 +7,7 @@ SilphCo_Elevator_EventScript_FloorSelect::
 @	call_if_unset FLAG_TEMP_2, EventScript_GetElevatorFloor
 @	copyvar VAR_0x8005, VAR_ELEVATOR_FLOOR
 @	special DrawElevatorCurrentFloorWindow
-@	message Text_WantWhichFloor
+@	message gText_WantWhichFloor
 @	waitmessage
 @	setvar VAR_0x8004, LISTMENU_SILPHCO_FLOORS
 @	specialvar VAR_RESULT, InitElevatorFloorSelectMenuPos

@@ -2,26 +2,25 @@ CeladonCity_DepartmentStore_4F_MapScripts::
 	.byte 0
 
 CeladonCity_DepartmentStore_4F_EventScript_Man::
-@	msgbox CeladonCity_DepartmentStore_4F_Text_GettingPokeDollAsPresent, MSGBOX_NPC
+	msgbox CeladonCity_DepartmentStore_4F_Text_GettingPokeDollAsPresent, MSGBOX_NPC
 	end
 
 CeladonCity_DepartmentStore_4F_EventScript_Youngster::
-@	msgbox CeladonCity_DepartmentStore_4F_Text_CanRunAwayWithPokeDoll, MSGBOX_NPC
+	msgbox CeladonCity_DepartmentStore_4F_Text_CanRunAwayWithPokeDoll, MSGBOX_NPC
 	end
 
 CeladonCity_DepartmentStore_4F_EventScript_FloorSign::
-@	msgbox CeladonCity_DepartmentStore_4F_Text_FloorSign, MSGBOX_SIGN
+	msgbox CeladonCity_DepartmentStore_4F_Text_FloorSign, MSGBOX_SIGN
 	end
 
 CeladonCity_DepartmentStore_4F_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart CeladonCity_DepartmentStore_4F_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart CeladonCity_DepartmentStore_4F_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -33,7 +32,7 @@ CeladonCity_DepartmentStore_4F_Items::
 	.2byte ITEM_WATER_STONE
 	.2byte ITEM_LEAF_STONE
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 CeladonCity_DepartmentStore_4F_Text_GettingPokeDollAsPresent::

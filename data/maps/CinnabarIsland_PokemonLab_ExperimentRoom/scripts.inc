@@ -89,7 +89,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilHelix::
 @	waitmessage
 @	call CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_CheckAddOldAmberToList
 @	goto_if_eq VAR_RESULT, TRUE, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilHelixAmber
-@	multichoice 0, 0, MULTICHOICE_HELIX, FALSE
+@	multichoice 0, 0, MULTI_HELIX, FALSE
 @	switch VAR_RESULT
 @	case 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowHelixFossil
 @	case 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_DontShowFossil
@@ -101,7 +101,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilDome::
 @	waitmessage
 @	call CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_CheckAddOldAmberToList
 @	goto_if_eq VAR_RESULT, TRUE, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilDomeAmber
-@	multichoice 0, 0, MULTICHOICE_DOME, FALSE
+@	multichoice 0, 0, MULTI_DOME, FALSE
 @	switch VAR_RESULT
 @	case 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowDomeFossil
 @	case 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_DontShowFossil
@@ -111,7 +111,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilDome::
 CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilAmber::
 @	message CinnabarIsland_PokemonLab_ExperimentRoom_Text_HaveYouAFossilForMe
 @	waitmessage
-@	multichoice 0, 0, MULTICHOICE_AMBER, FALSE
+@	multichoice 0, 0, MULTI_AMBER, FALSE
 @	switch VAR_RESULT
 @	case 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowOldAmber
 @	case 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_DontShowFossil
@@ -119,7 +119,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilAmber::
 	end
 
 CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilHelixAmber::
-@	multichoice 0, 0, MULTICHOICE_HELIX_AMBER, FALSE
+@	multichoice 0, 0, MULTI_HELIX_AMBER, FALSE
 @	switch VAR_RESULT
 @	case 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowHelixFossil
 @	case 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowOldAmber
@@ -128,7 +128,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilHelixAmber::
 	end
 
 CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ChooseFossilDomeAmber::
-@	multichoice 0, 0, MULTICHOICE_DOME_AMBER, FALSE
+@	multichoice 0, 0, MULTI_DOME_AMBER, FALSE
 @	switch VAR_RESULT
 @	case 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowDomeFossil
 @	case 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_ShowOldAmber
@@ -199,7 +199,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_GiveOmanyte::
 @	bufferspeciesname STR_VAR_1, SPECIES_OMANYTE
 @	msgbox CinnabarIsland_PokemonLab_ExperimentRoom_Text_FossilMonBackToLife
 @	givemon SPECIES_OMANYTE, 5
-@	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+@	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 @	setflag FLAG_REVIVED_HELIX
 @	goto_if_eq VAR_RESULT, 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonParty
 @	goto_if_eq VAR_RESULT, 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonPC
@@ -210,7 +210,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_GiveKabuto::
 @	bufferspeciesname STR_VAR_1, SPECIES_KABUTO
 @	msgbox CinnabarIsland_PokemonLab_ExperimentRoom_Text_FossilMonBackToLife
 @	givemon SPECIES_KABUTO, 5
-@	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+@	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 @	setflag FLAG_REVIVED_DOME
 @	goto_if_eq VAR_RESULT, 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonParty
 @	goto_if_eq VAR_RESULT, 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonPC
@@ -221,7 +221,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_GiveAerodactyl::
 @	bufferspeciesname STR_VAR_1, SPECIES_AERODACTYL
 @	msgbox CinnabarIsland_PokemonLab_ExperimentRoom_Text_FossilMonBackToLife
 @	givemon SPECIES_AERODACTYL, 5
-@	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+@	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 @	setflag FLAG_REVIVED_AMBER
 @	goto_if_eq VAR_RESULT, 0, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonParty
 @	goto_if_eq VAR_RESULT, 1, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonPC
@@ -250,7 +250,7 @@ CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_NicknameMonPC::
 @	setvar VAR_MAP_SCENE_CINNABAR_ISLAND_POKEMON_LAB_EXPERIMENT_ROOM_REVIVE_STATE, 0
 @	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_MonSentToPC
-@	call EventScript_NameReceivedBoxMon
+@	call Common_EventScript_NameReceivedBoxMon
 @	goto CinnabarIsland_PokemonLab_ExperimentRoom_EventScript_MonSentToPC
 	end
 

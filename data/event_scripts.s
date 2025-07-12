@@ -112,6 +112,7 @@ gStdScripts::
 	.4byte Std_RegisteredInMatchCall   @ STD_REGISTER_MATCH_CALL
 	.4byte Std_MsgboxGetPoints         @ MSGBOX_GETPOINTS
 	.4byte Std_MsgboxPokenav           @ MSGBOX_POKENAV
+	.4byte Std_PutItemAway             @ STD_PUT_ITEM_AWAY
 gStdScripts_End::
 
 	.include "data/maps/PetalburgCity/scripts.inc"
@@ -1483,6 +1484,9 @@ gText_Sudowoodo_Attacked::
 gText_LegendaryFlewAway::
 	.string "The {STR_VAR_1} flew away!$"
 
+gText_WantWhichFloor::
+	.string "Which floor do you want?$"
+
 	.include "data/text/pc_transfer.inc"
 	.include "data/text/questionnaire.inc"
 	.include "data/text/abnormal_weather.inc"
@@ -1532,6 +1536,10 @@ EventScript_SetResultTrue::
 
 EventScript_SetResultFalse::
 	setvar VAR_RESULT, FALSE
+	return
+
+EventScript_GetElevatorFloor::
+	special GetElevatorFloor
 	return
 
 @ Unused

@@ -59,7 +59,7 @@ SaffronCity_Dojo_EventScript_GiveHitmon::
 @	givemon VAR_TEMP_1, 25
 @	goto_if_eq VAR_RESULT, 0, SaffronCity_Dojo_EventScript_ReceivedHitmonParty
 @	goto_if_eq VAR_RESULT, 1, SaffronCity_Dojo_EventScript_ReceivedHitmonPC
-@	goto_if_eq VAR_RESULT, 2, EventScript_NoMoreRoomForPokemon
+@	goto_if_eq VAR_RESULT, 2, Common_EventScript_NoMoreRoomForPokemon
 @	release
 	end
 
@@ -88,7 +88,7 @@ SaffronCity_Dojo_EventScript_ReceivedHitmonPC::
 @	setflag FLAG_GOT_HITMON_FROM_DOJO
 @	msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, SaffronCity_Dojo_EventScript_TransferredHitmonToPC
-@	call EventScript_NameReceivedBoxMon
+@	call Common_EventScript_NameReceivedBoxMon
 @	goto SaffronCity_Dojo_EventScript_TransferredHitmonToPC
 	end
 
