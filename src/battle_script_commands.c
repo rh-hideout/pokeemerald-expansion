@@ -8538,6 +8538,7 @@ static bool32 TryCheekPouch(u32 battler, u32 itemId)
         && !BATTLER_MAX_HP(battler))
     {
         gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 3;
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
