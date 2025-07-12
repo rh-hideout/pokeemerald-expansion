@@ -10844,6 +10844,8 @@ static void Cmd_various(void)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
+
         if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             gBattlescriptCurrInstr = cmd->failInstr;    // fail
         else
