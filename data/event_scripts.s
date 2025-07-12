@@ -1645,6 +1645,7 @@ EventScript_TryDarkenRuins::
 	.include "data/scripts/berry_blender.inc"
 	.include "data/text/mauville_man.inc"
 	.include "data/text/trainers.inc"
+	.include "data/text/trainers_frlg.inc"
 	.include "data/scripts/repel.inc"
 	.include "data/scripts/safari_zone.inc"
 	.include "data/scripts/roulette.inc"
