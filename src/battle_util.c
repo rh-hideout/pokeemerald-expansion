@@ -2359,6 +2359,7 @@ u8 DoBattlerEndTurnEffects(void)
             {
                 gBattleScripting.battler = battler;
                 gBattleMoveDamage = -1 * max(1, GetNonDynamaxMaxHP(battler) / 16);
+                gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                 BattleScriptExecute(BattleScript_IceBodyHeal);
                 effect++;
             }
