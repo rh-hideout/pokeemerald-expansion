@@ -233,7 +233,7 @@ CeladonCity_GameCorner_PrizeRoom_EventScript_ReceivedMonPC::
 	end
 
 CeladonCity_GameCorner_PrizeRoom_EventScript_TransferredToPC::
-@	call EventScript_TransferredToPC
+@	call Common_EventScript_TransferredToPC
 @	goto CeladonCity_GameCorner_PrizeRoom_EventScript_EndPrizeExchange
 	end
 
