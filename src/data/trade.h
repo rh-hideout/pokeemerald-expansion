@@ -1063,6 +1063,22 @@ static const struct InGameTrade sIngameTrades[] =
         .otGender = MALE,
         .sheen = 10,
         .requestedSpecies = SPECIES_ABRA
+    },
+    [INGAME_TRADE_JYNX] = 
+    {
+        .nickname = _("ZYNX"),
+        .species = SPECIES_JYNX,
+        .ivs = {18, 17, 18, 22, 25, 21},
+        .abilityNum = 0,
+        .otId = 36728,
+        .conditions = {5, 30, 5, 5, 5},
+        .personality = 0x498a2e1d,
+        .heldItem = ITEM_FAB_MAIL,
+        .mailNum = 3,
+        .otName = _("DONTAE"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_POLIWHIRL
     }, 
 };
 
@@ -1098,6 +1114,17 @@ static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =
         EC_WORD_A,
         EC_WORD_CUTE,
         EC_WORD_WAY
+    },
+    {
+        EC_WORD_THAT_S,
+        EC_WORD_A,
+        EC_WORD_HEALTHY,
+        EC_POKEMON(JYNX),
+        EC_WORD_EXCL,
+        EC_WORD_BE,
+        EC_WORD_KIND,
+        EC_WORD_TO,
+        EC_WORD_IT
     }
 };
 

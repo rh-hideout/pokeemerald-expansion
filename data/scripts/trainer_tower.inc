@@ -294,7 +294,7 @@ TrainerTower_Roof_EventScript_ReceivePrize:
 
 TrainerTower_Roof_EventScript_NoRoomForPrize::
 @	msgbox TrainerTower_Roof_Text_ThisIsForYou
-@	msgbox Text_BagIsFull
+@	msgbox gText_TheBagIsFull
 @	goto TrainerTower_Roof_EventScript_CheckFinalTime
 
 TrainerTower_Roof_EventScript_CheckFinalTime::

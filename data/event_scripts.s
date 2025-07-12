@@ -45,6 +45,7 @@
 #include "constants/mauville_old_man.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"
+#include "constants/mystery_gift.h"
 #include "constants/party_menu.h"
 #include "constants/pokedex.h"
 #include "constants/pokemon.h"
