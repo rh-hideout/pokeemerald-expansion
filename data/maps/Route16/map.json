@@ -113,7 +113,7 @@
     {
       "local_id": "LOCALID_ROUTE16_CUT_TREE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 41,
       "y": 11,
       "elevation": 3,

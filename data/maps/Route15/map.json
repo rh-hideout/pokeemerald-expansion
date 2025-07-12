@@ -210,7 +210,7 @@
     },
     {
       "type": "clone",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 73,
       "y": 7,
       "target_local_id": "LOCALID_ROUTE14_BORDER_TREE",

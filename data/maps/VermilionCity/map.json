@@ -113,7 +113,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 19,
       "y": 24,
       "elevation": 3,

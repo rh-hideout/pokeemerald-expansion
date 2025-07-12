@@ -592,3 +592,4 @@ gSpecials::
 	def_special DoSeagallopFerryScene
 	def_special IsPlayerLeftOfVermilionSailor
 	def_special SetVermilionTrashCans
+	def_special DoSSAnneDepartureCutscene

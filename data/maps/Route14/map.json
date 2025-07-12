@@ -168,7 +168,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 7,
       "y": 26,
       "elevation": 3,
@@ -182,7 +182,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 12,
       "y": 35,
       "elevation": 3,
@@ -197,7 +197,7 @@
     {
       "local_id": "LOCALID_ROUTE14_BORDER_TREE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 1,
       "y": 47,
       "elevation": 3,

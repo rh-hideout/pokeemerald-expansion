@@ -155,7 +155,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 26,
       "y": 32,
       "elevation": 3,
@@ -169,7 +169,7 @@
     },
     {
       "type": "clone",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 50,
       "y": 18,
       "target_local_id": "LOCALID_ROUTE9_CUT_TREE",

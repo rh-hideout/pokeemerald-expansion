@@ -157,7 +157,7 @@
     {
       "local_id": "LOCALID_CELADON_BORDER_TREE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 52,
       "y": 22,
       "elevation": 3,
@@ -171,7 +171,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 40,
       "y": 35,
       "elevation": 0,
@@ -199,7 +199,7 @@
     },
     {
       "type": "clone",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": -7,
       "y": 21,
       "target_local_id": "LOCALID_ROUTE16_CUT_TREE",

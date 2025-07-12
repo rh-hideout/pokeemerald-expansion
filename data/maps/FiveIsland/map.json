@@ -56,7 +56,7 @@
     },
     {
       "type": "clone",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": 32,
       "y": 9,
       "target_local_id": "LOCALID_FIVE_ISLAND_MEADOW_BORDER_TREE",

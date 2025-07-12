@@ -27,7 +27,7 @@ SevenIsland_SevaultCanyon_House_EventScript_ChanseyDanceMan::
 @	waitmovement 0
 @	fadedefaultbgm
 @	delay 30
-@	call EventScript_OutOfCenterPartyHeal
+@	call Common_EventScript_OutOfCenterPartyHeal
 @	msgbox SevenIsland_SevaultCanyon_House_Text_YoureAllChipperNow
 @	setflag DID_CHANSEY_DANCE
 @	release

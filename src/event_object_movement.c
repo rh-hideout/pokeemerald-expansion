@@ -1427,7 +1427,7 @@ static void SetHideObstacleFlag(const struct ObjectEventTemplate *template)
 
 static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *template, s16 x, s16 y)
 {
-    if (template->graphicsId == OBJ_EVENT_GFX_CUT_TREE || template->graphicsId == OBJ_EVENT_GFX_ROCK_SMASH_ROCK)
+    if (template->graphicsId == OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG || template->graphicsId == OBJ_EVENT_GFX_ROCK_SMASH_ROCK)
     {
         if (gSaveBlock1Ptr->pos.x < x)
         {
@@ -1455,7 +1455,7 @@ static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(const struct ObjectEv
         s32 width = gBackupMapLayout.width - MAP_OFFSET_W - 1;
         s32 height = gBackupMapLayout.height - MAP_OFFSET_H - 1;
 
-        if (template->graphicsId == OBJ_EVENT_GFX_CUT_TREE || template->graphicsId == OBJ_EVENT_GFX_ROCK_SMASH_ROCK)
+        if (template->graphicsId == OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG || template->graphicsId == OBJ_EVENT_GFX_ROCK_SMASH_ROCK)
         {
             if (gSaveBlock1Ptr->pos.x == 0 && template->x <= (MAP_OFFSET + 1))
             {

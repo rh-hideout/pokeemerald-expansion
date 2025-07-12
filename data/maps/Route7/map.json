@@ -28,7 +28,7 @@
   "object_events": [
     {
       "type": "clone",
-      "graphics_id": "OBJ_EVENT_GFX_CUT_TREE",
+      "graphics_id": "OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG",
       "x": -8,
       "y": 12,
       "target_local_id": "LOCALID_CELADON_BORDER_TREE",
