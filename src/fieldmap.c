@@ -596,6 +596,7 @@ void MapGridSetMetatileEntryAt(int x, int y, u16 metatile)
 
 static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
 {
+    [MB_FRLG_CAVE] = MB_CAVE,
     [MB_FRLG_UP_RIGHT_STAIR_WARP] = MB_UP_RIGHT_STAIR_WARP,
     [MB_FRLG_UP_LEFT_STAIR_WARP] = MB_UP_LEFT_STAIR_WARP,
     [MB_FRLG_DOWN_RIGHT_STAIR_WARP] = MB_DOWN_RIGHT_STAIR_WARP,

@@ -1629,6 +1629,7 @@ EventScript_TryDarkenRuins::
 	.include "data/scripts/day_care_frlg.inc"
 	.include "data/text/day_care_frlg.inc"
 	.include "data/scripts/seagallop.inc"
+	.include "data/scripts/aide.inc"
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
