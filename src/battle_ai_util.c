@@ -1234,7 +1234,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 moveConsidered)
     return AI_IS_SLOWER;
 }
 
-static bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
+bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (!AI_BattlerAtMaxHp(battlerTarget) || effect == EFFECT_MULTI_HIT)
@@ -2114,18 +2114,6 @@ bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 moveIndex, en
         dmg = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].maximum; // Attacking partner, be careful
     else
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData);
-
-    if (gBattleMons[battlerDef].hp <= dmg && !CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]))
-        return TRUE;
-    return FALSE;
-}
-
-bool32 CanIndexMoveGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u32 moveIndex)
-{
-    s32 dmg;
-    u16 *moves = gBattleMons[battlerAtk].moves;
-
-    dmg = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveIndex].minimum; // Explictly care about guaranteed KOs universally
 
     if (gBattleMons[battlerDef].hp <= dmg && !CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]))
         return TRUE;

@@ -2939,18 +2939,18 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING)
         && effect != EFFECT_EXPLOSION && effect != EFFECT_MISTY_EXPLOSION)
     {
-        if (CanIndexMoveGuaranteeFaintTarget(battlerAtk, battlerDef, movesetIndex))
-            ADJUST_SCORE(1); // Bonus point if the KO is guaranteed
         if (AI_IsFaster(battlerAtk, battlerDef, move))
             ADJUST_SCORE(FAST_KILL);
         else
             ADJUST_SCORE(SLOW_KILL);
     }
     else if (CanTargetFaintAi(battlerDef, battlerAtk)
-            && GetWhichBattlerFasterOrTies(battlerAtk, battlerDef, TRUE) != AI_IS_FASTER
-            && GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], move) > 0)
+        && GetWhichBattlerFasterOrTies(battlerAtk, battlerDef, TRUE) != AI_IS_FASTER
+        && GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], move) > 0)
     {
-        ADJUST_SCORE(LAST_CHANCE);
+        if (RandomPercentage(RNG_AI_PRIORITIZE_LAST_CHANCE, PRIORITIZE_LAST_CHANCE_CHANCE))
+            ADJUST_SCORE(SLOW_KILL + 2); // Don't outscore Fast Kill (which gets a bonus point in AI_CompareDamagingMoves), but do outscore Slow Kill getting the same
+        else ADJUST_SCORE(LAST_CHANCE);
     }
 
     return score;
@@ -3692,6 +3692,24 @@ static s32 CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move
     return 0;
 }
 
+static s32 CompareGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u16 moveSlot1, u16 moveSlot2, u16 *moves)
+{
+    s32 dmg1, dmg2;
+    bool32 guarantee1, guarantee2;
+
+    // Explictly care about guaranteed KOs universally
+    dmg1 = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveSlot1].minimum;
+    guarantee1 = (gBattleMons[battlerDef].hp <= dmg1 && !CanEndureHit(battlerAtk, battlerDef, moves[moveSlot1]));
+    dmg2 = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveSlot2].minimum;
+    guarantee2 = (gBattleMons[battlerDef].hp <= dmg2 && !CanEndureHit(battlerAtk, battlerDef, moves[moveSlot2]));
+
+    if (guarantee1 && !guarantee2)
+        return 1;
+    if (guarantee2 && !guarantee1)
+        return -1;
+    return 0;
+}
+
 static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
@@ -3763,10 +3781,11 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 
         // Priority list:
         // 1. Less no of hits to ko
-        // 2. Priority
+        // 2. Priority if outsped and a OHKO
         // 3. Not charging
         // 4. More accuracy
-        // 5. Better effect
+        // 5. Guaranteed KO
+        // 6. Better effect
 
         // Current move requires the least hits to KO. Compare with other moves.
         if (leastHits == noOfHits[currId])
@@ -3784,9 +3803,10 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
 
-                    // Use priority to get fast KO if outsped
+                    // Comparing KOs
                     if (noOfHits[currId] == 1)
                     {
+                        // Use priority to get fast KO if outsped
                         switch (CompareMoveSpeeds(battlerAtk, battlerDef, moves[currId], moves[i]))
                         {
                         case 1:
@@ -3794,6 +3814,16 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                             break;
                         case -1:
                             tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
+                            break;
+                        }
+                        // Min roll KOs
+                        switch (CompareGuaranteeFaintTarget(battlerAtk, battlerDef, currId, i, moves))
+                        {
+                        case 1:
+                            tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_GUARANTEE);
+                            break;
+                        case -1:
+                            tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_GUARANTEE);
                             break;
                         }
                     }

@@ -28,6 +28,7 @@ enum DamageCalcContext
 enum AiCompareMovesPriority
 {
     PRIORITY_EFFECT,
+    PRIORITY_GUARANTEE,
     PRIORITY_ACCURACY,
     PRIORITY_NOT_CHARGING,
     PRIORITY_SPEED,
@@ -104,7 +105,6 @@ u32 AI_GetWeather(void);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
-bool32 CanIndexMoveGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index);
 bool32 HasDamagingMove(u32 battlerId);
 bool32 HasDamagingMoveOfType(u32 battlerId, u32 type);
 u32 GetBattlerSecondaryDamage(u32 battlerId);
@@ -128,6 +128,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
+bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
