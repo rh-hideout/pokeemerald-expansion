@@ -261,7 +261,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH)
         {
             damageTaken = AI_GetDamage(opposingBattler, battler, i, AI_DEFENDING, gAiLogicData);
-            if (damageTaken > maxDamageTaken && !AI_DoesChoiceItemBlockMove(opposingBattler, playerMove))
+            if (damageTaken > maxDamageTaken && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
             {
                 maxDamageTaken = damageTaken;
             }
