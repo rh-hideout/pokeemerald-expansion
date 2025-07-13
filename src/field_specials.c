@@ -2455,6 +2455,18 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
+    case SCROLL_MULTI_SILPHCO_FLOORS:
+        task->tMaxItemsOnScreen = 7;
+        task->tNumItems = 12;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = 0;
+        task->tTaskId = taskId;
+        task->tScrollOffset = sElevatorScroll;
+        task->tSelectedRow = sElevatorCursorPos;
+        break;
     default:
         gSpecialVar_Result = MULTI_B_PRESSED;
         DestroyTask(taskId);
@@ -2628,6 +2640,21 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
 		COMPOUND_STRING("EARTHBADGE"),
         gText_Exit,
     },
+    [SCROLL_MULTI_SILPHCO_FLOORS] =
+    {
+        gText_11F,
+        gText_10F,
+        gText_9F,
+        gText_8F,
+        gText_7F,
+        gText_6F,
+        gText_5F,
+        gText_4F,
+        gText_3F,
+        gText_2F,
+        gText_1F,
+        gText_Exit,
+    }
 };
 
 static void Task_ShowScrollableMultichoice(u8 taskId)
