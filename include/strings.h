@@ -2427,5 +2427,14 @@ extern const u8 gText_Rename[]; // change nickname from summary screen
 extern const u8 gText_CannotSendMonToBoxHM[];
 
 extern const u8 gText_Ghost[];
+extern const u8 gText_Boulderbadge[];
+extern const u8 gText_Cascadebadge[];
+extern const u8 gText_Thunderbadge[];
+extern const u8 gText_Rainbowbadge[];
+extern const u8 gText_Soulbadge[];
+extern const u8 gText_Marshbadge[];
+extern const u8 gText_Volcanobadge[];
+extern const u8 gText_Earthbadge[];
+
 
 #endif // GUARD_STRINGS_H

@@ -1220,6 +1220,14 @@ const u8 *const gStdStrings[] =
     [STDSTRING_BATTLE_ARENA] = gText_BattleArena,
     [STDSTRING_BATTLE_PIKE] = gText_BattlePike,
     [STDSTRING_BATTLE_PYRAMID] = gText_BattlePyramid,
+    [STDSTRING_BOULDER_BADGE]    = gText_Boulderbadge,
+    [STDSTRING_CASCADE_BADGE]    = gText_Cascadebadge,
+    [STDSTRING_THUNDER_BADGE]    = gText_Thunderbadge,
+    [STDSTRING_RAINBOW_BADGE]    = gText_Rainbowbadge,
+    [STDSTRING_SOUL_BADGE]       = gText_Soulbadge,
+    [STDSTRING_MARSH_BADGE]      = gText_Marshbadge,
+    [STDSTRING_VOLCANO_BADGE]    = gText_Volcanobadge,
+    [STDSTRING_EARTH_BADGE]      = gText_Earthbadge,
 };
 
 static const u8 sLinkServicesMultichoiceIds[] =

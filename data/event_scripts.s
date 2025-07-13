@@ -1655,6 +1655,7 @@ EventScript_BrailleCursorWaitButton::
 	.include "data/scripts/static_pokemon.inc"
 	.include "data/scripts/aide.inc"
 	.include "data/scripts/pokemon_mansion.inc"
+	.include "data/scripts/route23.inc"
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
