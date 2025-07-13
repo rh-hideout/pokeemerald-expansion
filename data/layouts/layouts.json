@@ -6302,8 +6302,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_FuchsiaCity",
-      "border_filepath": "data/layouts/SafariZone_North/border.bin",
-      "blockdata_filepath": "data/layouts/SafariZone_North/map.bin",
+      "border_filepath": "data/layouts/SafariZone_North_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/SafariZone_North_Frlg/map.bin",
       "game_version": "firered"
     },
     {

@@ -134,6 +134,8 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_SIDEWAYS_STAIRS_LEFT_SIDE_BOTTOM]   = TILE_FLAG_UNUSED,
     [MB_ROCK_STAIRS]                        = TILE_FLAG_UNUSED,
     [MB_CYCLING_ROAD_PULL_DOWN_GRASS]       = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_FAST_WATER]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
+    [MB_CYCLING_ROAD_WATER]                 = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
 };
 
 bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
@@ -1184,6 +1186,15 @@ bool8 MetatileBehavior_IsSurfableFishableWater(u8 metatileBehavior)
       || metatileBehavior == MB_WESTWARD_CURRENT
       || metatileBehavior == MB_NORTHWARD_CURRENT
       || metatileBehavior == MB_SOUTHWARD_CURRENT))
+        return TRUE;
+    else
+        return FALSE;
+}
+
+// Water that's too fast to surf on
+bool8 MetatileBehavior_IsFastWater(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_FAST_WATER)
         return TRUE;
     else
         return FALSE;
