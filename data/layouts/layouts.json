@@ -8447,8 +8447,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_IslandHarbor_Frlg",
-      "border_filepath": "data/layouts/Island_Harbor/border.bin",
-      "blockdata_filepath": "data/layouts/Island_Harbor/map.bin",
+      "border_filepath": "data/layouts/Island_Harbor_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/Island_Harbor_Frlg/map.bin",
       "game_version": "firered"
     },
     {

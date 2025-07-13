@@ -1,7 +1,7 @@
 {
   "id": "MAP_THREE_ISLAND_HARBOR",
   "name": "ThreeIsland_Harbor",
-  "layout": "LAYOUT_ISLAND_HARBOR",
+  "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_123",
   "region_map_section": "MAPSEC_THREE_ISLE_PORT",
   "requires_flash": false,
