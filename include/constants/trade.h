@@ -18,6 +18,9 @@ enum InGameTradeID
     INGAME_TRADE_FARFETCHD,
     INGAME_TRADE_NIDORINOA,
     INGAME_TRADE_LICKITUNG,
+    INGAME_TRADE_ELECTRODE,
+    INGAME_TRADE_TANGELA,
+    INGAME_TRADE_SEEL,
 };
 
 // Return values for CanTradeSelectedMon and CanSpinTradeMon

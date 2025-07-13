@@ -151,6 +151,11 @@
 #define MULTI_THIRSTY_GIRL_SODA_POP_LEMONADE             140
 #define MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE 141
 #define MULTI_ROCKET_HIDEOUT_ELEVATOR                    142
+#define MULTI_HELIX                                      143
+#define MULTI_DOME                                       144
+#define MULTI_AMBER                                      145
+#define MULTI_HELIX_AMBER                                146
+#define MULTI_DOME_AMBER                                 147
 
 #define MULTI_NONE 255
 

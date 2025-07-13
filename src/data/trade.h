@@ -1180,6 +1180,54 @@ static const struct InGameTrade sIngameTrades[] =
         .requestedSpecies = SPECIES_SLOWBRO
 #endif
     },
+    [INGAME_TRADE_ELECTRODE] = 
+    {
+        .nickname = _("ESPHERE"),
+        .species = SPECIES_ELECTRODE,
+        .ivs = {19, 16, 18, 25, 25, 19},
+        .abilityNum = 1,
+        .otId = 50298,
+        .conditions = {30, 5, 5, 5, 5},
+        .personality = 0x06341016,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("CLIFTON"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_RAICHU
+    },
+    [INGAME_TRADE_TANGELA] = 
+    {
+        .nickname = _("TANGENY"),
+        .species = SPECIES_TANGELA,
+        .ivs = {22, 17, 25, 16, 23, 20},
+        .abilityNum = 0,
+        .otId = 60042,
+        .conditions = {5, 5, 30, 5, 5},
+        .personality = 0x5c77ecfa,
+        .heldItem = ITEM_STARDUST,
+        .mailNum = 255,
+        .otName = _("NORMA"),
+        .otGender = FEMALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_VENONAT
+    },
+    [INGAME_TRADE_SEEL] = 
+    {
+        .nickname = _("SEELOR"),
+        .species = SPECIES_SEEL,
+        .ivs = {24, 15, 22, 16, 23, 22},
+        .abilityNum = 0,
+        .otId = 9853,
+        .conditions = {5, 5, 5, 5, 30},
+        .personality = 0x482cac89,
+        .heldItem = ITEM_NONE,
+        .mailNum = 255,
+        .otName = _("GARETT"),
+        .otGender = MALE,
+        .sheen = 10,
+        .requestedSpecies = SPECIES_PONYTA
+    }
 };
 
 static const u16 sIngameTradeMail[][MAIL_WORDS_COUNT + 1] =

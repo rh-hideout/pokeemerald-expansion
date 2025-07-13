@@ -988,6 +988,37 @@ static const struct MenuAction sMultichoiceList_RocketHideoutElevator[] = {
     { gText_Exit }
 };
 
+static const u8 sText_HelixFossil[] = _("HELIX FOSSIL");
+static const u8 sText_DomeFossil[] = _("DOME FOSSIL");
+static const u8 sText_OldAmber[] = _("OLD AMBER");
+
+static const struct MenuAction sMultichoiceList_Helix[] = {
+    { sText_HelixFossil },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_Dome[] = {
+    { sText_DomeFossil },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_Amber[] = {
+    { sText_OldAmber },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_HelixAmber[] = {
+    { sText_HelixFossil },
+    { sText_OldAmber },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_DomeAmber[] = {
+    { sText_DomeFossil },
+    { sText_OldAmber },
+    { gText_Exit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1144,6 +1175,11 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_THIRSTY_GIRL_SODA_POP_LEMONADE]             = MULTICHOICE(sMultichoiceList_ThirstyGirlSodaPopLemonade),
     [MULTI_THIRSTY_GIRL_FRESH_WATER_SODA_POP_LEMONADE] = MULTICHOICE(sMultichoiceList_ThirstyGirlFreshWaterSodaPopLemonade),
     [MULTI_ROCKET_HIDEOUT_ELEVATOR]                    = MULTICHOICE(sMultichoiceList_RocketHideoutElevator),
+    [MULTI_HELIX]                                      = MULTICHOICE(sMultichoiceList_Helix),
+    [MULTI_DOME]                                       = MULTICHOICE(sMultichoiceList_Dome),
+    [MULTI_AMBER]                                      = MULTICHOICE(sMultichoiceList_Amber),
+    [MULTI_HELIX_AMBER]                                = MULTICHOICE(sMultichoiceList_HelixAmber),
+    [MULTI_DOME_AMBER]                                 = MULTICHOICE(sMultichoiceList_DomeAmber),
 };
 
 const u8 *const gStdStrings[] =
