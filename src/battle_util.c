@@ -10185,7 +10185,7 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_DEFEATIST:
-        if (gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 2))
+        if (gBattleMons[battlerAtk].hp <= (gBattleMons[battlerAtk].maxHP / 3))  //used to be 50%
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
         break;
     case ABILITY_FLASH_FIRE:

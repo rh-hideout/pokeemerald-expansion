@@ -33,6 +33,7 @@ LavaridgeTown_Mart_Pokemart:
 	.2byte ITEM_LIGHT_BALL
 	.2byte ITEM_LIGHT_CLAY
 	.2byte ITEM_MISTY_SEED
+	.2byte ITEM_EEVEEITE
 	.2byte ITEM_NONE
 	pokemartlistend
 
