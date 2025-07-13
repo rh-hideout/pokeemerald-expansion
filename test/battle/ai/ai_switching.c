@@ -1281,4 +1281,15 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch out due to bad o
     }
 }
 
-TO_DO_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider player's priority when evaluating switchin candidates");
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider player's priority when evaluating switchin candidates")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); HP(1); Moves(MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_ANNIHILAPE) { Speed(5); Moves(MOVE_DRAIN_PUNCH); }
+        OPPONENT(SPECIES_GENGAR) { Speed(10); Moves(MOVE_FOCUS_BLAST); }
+        PLAYER(SPECIES_KINGAMBIT) { Speed(2); Moves(MOVE_SUCKER_PUNCH, MOVE_KNOCK_OFF); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); EXPECT_MOVE(opponent, MOVE_HEADBUTT); EXPECT_SEND_OUT(opponent, 1); }
+    }
+}

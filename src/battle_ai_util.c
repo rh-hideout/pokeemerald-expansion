@@ -3946,6 +3946,27 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
     return dmg.median;
 }
 
+u32 AI_IsSwitchinFirstPriority(bool32 isSwitchinFirst, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 moveConsidered, u32 bestPlayerPriority)
+{
+    struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
+    gBattleMons[battlerAtk] = switchinCandidate;
+
+    SetBattlerAiData(battlerAtk, gAiLogicData);
+
+    s8 aiPriority = GetBattleMovePriority(battlerAtk, GetBattlerAbility(battlerAtk), moveConsidered);
+
+    FreeRestoreBattleMons(savedBattleMons);
+    SetBattlerAiData(battlerAtk, gAiLogicData);
+
+    if (aiPriority > bestPlayerPriority)
+        return TRUE;
+    else if (aiPriority < bestPlayerPriority)
+        return FALSE;
+
+    // Return what we started with if priority is irrelevant
+    return isSwitchinFirst;
+}
+
 u32 AI_WhoStrikesFirstPartyMon(u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 moveConsidered)
 {
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
