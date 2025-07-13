@@ -979,7 +979,9 @@ static inline bool8 IsMultibattleTest(void)
             return FALSE;
     }
     else
+    {
         return FALSE;
+    }
 }
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.

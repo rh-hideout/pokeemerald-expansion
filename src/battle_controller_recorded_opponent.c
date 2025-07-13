@@ -308,7 +308,9 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
         }
         else
+        {
             trainerPicId = PlayerGenderToFrontTrainerPicId(GetBattlerLinkPlayerGender(battler));
+        }
     }
     else
     {
