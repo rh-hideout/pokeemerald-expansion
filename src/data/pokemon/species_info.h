@@ -1678,7 +1678,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Konekoth,
        .shinyPalette = gMonShinyPalette_Konekoth,
        .iconSprite = gMonIcon_Konekoth,
-       .iconPalIndex = 2,
+       .iconPalIndex = 1,
        FOOTPRINT(Konekoth)
        .levelUpLearnset = sKonekothLevelUpLearnset,
     },
@@ -5334,7 +5334,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .palette = gMonPalette_Ghastropod,
        .shinyPalette = gMonShinyPalette_Ghastropod,
        .iconSprite = gMonIcon_Ghastropod,
-       .iconPalIndex = 0,
+       .iconPalIndex = 2,
        FOOTPRINT(Ghastropod)
        .levelUpLearnset = sGhastropodLevelUpLearnset,
        .teachableLearnset = sGhastropodTeachableLearnset,

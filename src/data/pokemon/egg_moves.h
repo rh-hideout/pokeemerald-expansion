@@ -6500,13 +6500,13 @@ static const u16 sEccosmicEggMoveLearnset[] = {
 };
 
 static const u16 sGhastropodEggMoveLearnset[] = {
-    MOVE_BARRAGE,
-    MOVE_EERIE_IMPULSE,
-    MOVE_FOLLOW_ME,
-    MOVE_TOXIC_SPIKES,
-    MOVE_WIDE_GUARD,
-    MOVE_IRON_DEFENSE,
-    MOVE_FINAL_GAMBIT,
+    MOVE_ASTONISH,
+    MOVE_SPOOK_OUT,
+    MOVE_RAZOR_SHELL,
+    MOVE_HEAD_SMASH,
+    MOVE_BIND,
+    MOVE_DESTINY_BOND,
+    MOVE_MUDDY_WATER,
     MOVE_UNAVAILABLE,
 };
 
@@ -6535,8 +6535,8 @@ static const u16 sKaustikrokEggMoveLearnset[] = {
     MOVE_BONEMERANG,
     MOVE_BARRAGE,
     MOVE_TOXIC_SPIKES,
-    MOVE_,
-    MOVE_,
+    //MOVE_,
+    //MOVE_,
     MOVE_UNAVAILABLE,
 };
 
