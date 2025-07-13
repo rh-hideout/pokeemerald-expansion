@@ -5990,8 +5990,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_Cave_Frlg",
-      "border_filepath": "data/layouts/VictoryRoad_1F/border.bin",
-      "blockdata_filepath": "data/layouts/VictoryRoad_1F/map.bin",
+      "border_filepath": "data/layouts/VictoryRoad_1F_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/VictoryRoad_1F_Frlg/map.bin",
       "game_version": "firered"
     },
     {
