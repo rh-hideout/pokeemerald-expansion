@@ -616,4 +616,7 @@ gSpecials::
 	def_special IsNationalPokedexEnabled
 	def_special SetPostgameFlags
 	def_special BrailleCursorToggle
+	def_special EnterHallOfFame
 	def_special DoCredits
+	def_special DoPokemonLeagueLightingEffect
+	def_special GetStarterPokemon

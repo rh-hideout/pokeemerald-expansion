@@ -1016,6 +1016,7 @@ gStdScripts_End::
 	.include "data/scripts/trainer_battle.inc"
 	.include "data/scripts/new_game.inc"
 	.include "data/scripts/hall_of_fame.inc"
+	.include "data/scripts/hall_of_fame_frlg.inc"
 
 	.include "data/scripts/config.inc"
 	.include "data/scripts/debug.inc"
@@ -1655,6 +1656,7 @@ EventScript_BrailleCursorWaitButton::
 	.include "data/scripts/static_pokemon.inc"
 	.include "data/scripts/aide.inc"
 	.include "data/scripts/pokemon_mansion.inc"
+	.include "data/scripts/pokemon_league.inc"
 	.include "data/scripts/route23.inc"
 
 	.include "data/scripts/pc_transfer.inc"
