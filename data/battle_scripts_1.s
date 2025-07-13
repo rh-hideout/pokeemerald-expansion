@@ -3299,11 +3299,12 @@ BattleScript_MirrorArmorReflectStickyWeb:
 	goto BattleScript_StickyWebOnSwitchInEnd
 
 BattleScript_MirrorArmorReflectShrapnel:
-	call BattleScript_AbilityPopUp
-	setattackertoshrapneluser
-	jumpifbyteequal gBattlerAttacker, gBattlerTarget, BattleScript_SteelSurgeInEnd   @ Sticky web user not on field -> no stat loss
-	call BattleScript_MirrorArmorReflectStatLoss
-	goto BattleScript_SteelSurgeInEnd
+	return
+	@@call BattleScript_AbilityPopUp
+	@@setattackertoshrapneluser
+	@@jumpifbyteequal gBattlerAttacker, gBattlerTarget, BattleScript_SteelSurgeInEnd   @ Sticky web user not on field -> no stat loss
+	@@call BattleScript_MirrorArmorReflectStatLoss
+	@@goto BattleScript_SteelSurgeInEnd
 
 BattleScript_StatDown::
 	playanimation BS_EFFECT_BATTLER, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1

@@ -321,4 +321,6 @@ bool8 IsMonBannedFromSkyBattles(u16 species);
 void RemoveBattlerType(u32 battler, u8 type);
 u32 GetMoveType(u32 move);
 
+s32 MaybeLowerHealingForPoison(u8 battler, s32 damage);
+
 #endif // GUARD_BATTLE_UTIL_H

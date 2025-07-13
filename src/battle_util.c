@@ -2294,6 +2294,8 @@ s32 GetDrainedBigRootHp(u32 battler, s32 hp)
         hp = (hp * 1300) / 1000;
     if (hp == 0)
         hp = 1;
+    
+    hp = MaybeLowerHealingForPoison(gBattlerAttacker, hp);
 
     return hp * -1;
 }
@@ -2357,6 +2359,7 @@ u8 DoBattlerEndTurnEffects(void)
             {
                 gBattleScripting.battler = battler;
                 gBattleMoveDamage = -1 * max(1, GetNonDynamaxMaxHP(battler) / 16);
+                gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                 BattleScriptExecute(BattleScript_IceBodyHeal);
                 effect++;
             }
@@ -5172,7 +5175,7 @@ gBattleScripting.savedBattler = gBattlerAttacker;
                 effect++;
             }
             break;
-case ABILITY_HOSPITALITY:
+        case ABILITY_HOSPITALITY:
             partner = BATTLE_PARTNER(battler);
 
             if (!gSpecialStatuses[battler].switchInAbilityDone
@@ -5184,6 +5187,7 @@ case ABILITY_HOSPITALITY:
                 gBattlerAttacker = battler;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattleMoveDamage = (GetNonDynamaxMaxHP(partner) / 4) * -1;
+                gBattleMoveDamage = MaybeLowerHealingForPoison(partner, gBattleMoveDamage);
                 BattleScriptPushCursorAndCallback(BattleScript_HospitalityActivates);
                 effect++;
             }
@@ -5305,6 +5309,7 @@ case ABILITY_HOSPITALITY:
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                     effect++;
                 }
                 break;
@@ -5318,6 +5323,7 @@ case ABILITY_HOSPITALITY:
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                     effect++;
                 }
             case ABILITY_HYDRATION:
@@ -5589,6 +5595,7 @@ case ABILITY_HOSPITALITY:
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                 }
                 break;
             case MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY:
@@ -7165,6 +7172,7 @@ static u32 HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, enum ItemEffe
         if (gBattleMoveDamage == 0)
             gBattleMoveDamage = 1;
         gBattleMoveDamage *= -1;
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
 
         if (GetBattlerAbility(battler) == ABILITY_RIPEN)
         {
@@ -7422,6 +7430,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum ItemEffect caseID, bool32 pe
         else
             gBattleMoveDamage = GetBattlerItemHoldEffectParam(battler, itemId) * -1;
 
+        gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
         // check ripen
         if (ItemId_GetPocket(itemId) == POCKET_BERRIES && GetBattlerAbility(battler) == ABILITY_RIPEN)
             gBattleMoveDamage *= 2;
@@ -8178,6 +8187,7 @@ u32 ItemBattleEffects(enum ItemEffect caseID, u32 battler, bool32 moveTurn)
                     if (gBattleMoveDamage == 0)
                         gBattleMoveDamage = 1;
                     gBattleMoveDamage *= -1;
+                    gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                     BattleScriptExecute(BattleScript_ItemHealHP_End2);
                     effect = ITEM_HP_CHANGE;
                     RecordItemEffectBattle(battler, battlerHoldEffect);
@@ -8433,6 +8443,7 @@ u32 ItemBattleEffects(enum ItemEffect caseID, u32 battler, bool32 moveTurn)
                 gBattleMoveDamage = (gSpecialStatuses[gBattlerTarget].shellBellDmg / atkHoldEffectParam) * -1;
                 if (gBattleMoveDamage == 0)
                     gBattleMoveDamage = -1;
+                gBattleMoveDamage = MaybeLowerHealingForPoison(battler, gBattleMoveDamage);
                 gSpecialStatuses[gBattlerTarget].shellBellDmg = 0;
                 BattleScriptPushCursor();
                 gBattlescriptCurrInstr = BattleScript_ItemHealHP_Ret;
