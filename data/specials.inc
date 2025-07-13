@@ -613,3 +613,5 @@ gSpecials::
 	def_special Script_SetPlayerGotFirstFans
 	def_special Script_UpdateTrainerFanClubGameClear
 	def_special Script_TryGainNewFanFromCounterFrlg
+	def_special IsNationalPokedexEnabled
+	def_special SetPostgameFlags
