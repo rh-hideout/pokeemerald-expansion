@@ -616,3 +616,4 @@ gSpecials::
 	def_special IsNationalPokedexEnabled
 	def_special SetPostgameFlags
 	def_special BrailleCursorToggle
+	def_special DoCredits

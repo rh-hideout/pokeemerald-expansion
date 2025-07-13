@@ -5,6 +5,7 @@
 #include "berry.h"
 #include "bg.h"
 #include "cable_club.h"
+#include "credits_frlg.h"
 #include "clock.h"
 #include "dexnav.h"
 #include "event_data.h"
@@ -73,6 +74,7 @@
 #include "constants/event_objects.h"
 #include "constants/layouts.h"
 #include "constants/region_map_sections.h"
+#include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
@@ -182,6 +184,11 @@ static void TransitionMapMusic(void);
 static u8 GetAdjustedInitialTransitionFlags(struct InitialPlayerAvatarState *playerStruct, u16 metatileBehavior, enum MapType mapType);
 static u8 GetAdjustedInitialDirection(struct InitialPlayerAvatarState *playerStruct, u8 transitionFlags, u16 metatileBehavior, enum MapType mapType);
 static u16 GetCenterScreenMetatileBehavior(void);
+static bool32 SetUpScrollSceneForCredits(u8 *state, u8 unused);
+static bool8 MapLdr_Credits(void);
+static void CameraCB_CreditsPan(struct CameraObject * camera);
+static void Task_OvwldCredits_FadeOut(u8 taskId);
+static void Task_OvwldCredits_WaitFade(u8 taskId);
 
 static void *sUnusedOverworldCallback;
 static u8 sPlayerLinkStates[MAX_LINK_PLAYERS];
@@ -218,6 +225,10 @@ EWRAM_DATA static bool8 sIsAmbientCryWaterMon = FALSE;
 EWRAM_DATA static u8 sHoursOverride = 0; // used to override apparent time of day hours
 EWRAM_DATA struct LinkPlayerObjectEvent gLinkPlayerObjectEvents[4] = {0};
 EWRAM_DATA bool8 gExitStairsMovementDisabled = FALSE;
+EWRAM_DATA bool8 gDisableMapMusicChangeOnMapLoad = MUSIC_DISABLE_OFF;
+static EWRAM_DATA const struct CreditsOverworldCmd *sCreditsOverworld_Script = NULL;
+static EWRAM_DATA s16 sCreditsOverworld_CmdLength = 0;
+static EWRAM_DATA s16 sCreditsOverworld_CmdIndex = 0;
 
 static const struct WarpData sDummyWarpData =
 {
@@ -1514,6 +1525,24 @@ static void InitOverworldBgs(void)
     SetBgTilemapBuffer(2, gOverworldTilemapBuffer_Bg2);
     SetBgTilemapBuffer(3, gOverworldTilemapBuffer_Bg3);
     InitStandardTextBoxWindows();
+}
+
+static void InitOverworldBgs_NoResetHeap(void)
+{
+    ResetBgsAndClearDma3BusyFlags(FALSE);
+    InitBgsFromTemplates(0, sOverworldBgTemplates, NELEMS(sOverworldBgTemplates));
+    SetBgAttribute(1, BG_ATTR_MOSAIC, TRUE);
+    SetBgAttribute(2, BG_ATTR_MOSAIC, TRUE);
+    SetBgAttribute(3, BG_ATTR_MOSAIC, TRUE);
+    gOverworldTilemapBuffer_Bg1 = AllocZeroed(BG_SCREEN_SIZE);
+    gOverworldTilemapBuffer_Bg2 = AllocZeroed(BG_SCREEN_SIZE);
+    gOverworldTilemapBuffer_Bg3 = AllocZeroed(BG_SCREEN_SIZE);
+    SetBgTilemapBuffer(1, gOverworldTilemapBuffer_Bg1);
+    SetBgTilemapBuffer(2, gOverworldTilemapBuffer_Bg2);
+    SetBgTilemapBuffer(3, gOverworldTilemapBuffer_Bg3);
+    InitStandardTextBoxWindows();
+    InitTextBoxGfxAndPrinters();
+    InitFieldMessageBox();
 }
 
 void CleanupOverworldWindowsAndTilemaps(void)
@@ -3729,4 +3758,201 @@ bool8 ScrFunc_settimeofday(struct ScriptContext *ctx)
 {
     SetTimeOfDay(ScriptReadByte(ctx));
     return FALSE;
+}
+
+// Credits
+
+void Overworld_CreditsMainCB(void)
+{
+    bool8 fading = !!gPaletteFade.active;
+    if (fading)
+        SetVBlankCallback(NULL);
+    RunTasks();
+    AnimateSprites();
+    CameraUpdateNoObjectRefresh();
+    UpdateCameraPanning();
+    BuildOamBuffer();
+    UpdatePaletteFade();
+    UpdateTilesetAnimations();
+    DoScheduledBgTilemapCopiesToVram();
+    if (fading)
+        SetFieldVBlankCallback();
+}
+
+static bool8 FieldCB2_Credits_WaitFade(void)
+{
+    if (gPaletteFade.active)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool32 Overworld_DoScrollSceneForCredits(u8 *state_p, const struct CreditsOverworldCmd * script)
+{
+    sCreditsOverworld_Script = script;
+    return SetUpScrollSceneForCredits(state_p, 0);
+}
+
+static bool32 SetUpScrollSceneForCredits(u8 *state, u8 unused)
+{
+    struct WarpData warp;
+    switch (*state)
+    {
+    case 0:
+        sCreditsOverworld_CmdIndex = 0;
+        sCreditsOverworld_CmdLength = 0;
+        (*state)++;
+        return FALSE;
+    case 1:
+        warp.mapGroup = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_2;
+        warp.mapNum = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_4;
+        warp.warpId = -1;
+        sCreditsOverworld_CmdIndex++;
+        warp.x = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_0;
+        warp.y = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_2;
+        sWarpDestination = warp;
+        sCreditsOverworld_CmdLength = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_4;
+        WarpIntoMap();
+        gPaletteFade.bufferTransferDisabled = TRUE;
+        ScriptContext_Init();
+        UnlockPlayerFieldControls();
+        SetMainCallback1(NULL);
+        gFieldCallback2 = FieldCB2_Credits_WaitFade;
+        gMain.state = 0;
+        (*state)++;
+        return FALSE;
+    case 2:
+        if (MapLdr_Credits())
+        {
+            (*state)++;
+            return FALSE;
+        }
+        break;
+    case 3:
+        gFieldCamera.callback = CameraCB_CreditsPan;
+        SetFieldVBlankCallback();
+        *state = 0;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static bool8 MapLdr_Credits(void)
+{
+    u8 *state = &gMain.state;
+    switch (*state)
+    {
+    case 0:
+        InitOverworldBgs_NoResetHeap();
+        LoadMapFromWarp(FALSE);
+        (*state)++;
+        break;
+    case 1:
+        ScanlineEffect_Clear();
+        ResetAllPicSprites();
+        ResetCameraUpdateInfo();
+        InstallCameraPanAheadCallback();
+        FieldEffectActiveListClear();
+        StartWeather();
+        ResumePausedWeather();
+        SetUpFieldTasks();
+        RunOnResumeMapScript();
+        (*state)++;
+        break;
+    case 2:
+        InitCurrentFlashLevelScanlineEffect();
+        InitOverworldGraphicsRegisters();
+        (*state)++;
+        break;
+    case 3:
+        ResetFieldCamera();
+        (*state)++;
+        break;
+    case 4:
+        CopyPrimaryTilesetToVram(gMapHeader.mapLayout);
+        (*state)++;
+        break;
+    case 5:
+        CopySecondaryTilesetToVram(gMapHeader.mapLayout);
+        (*state)++;
+        break;
+    case 6:
+        if (FreeTempTileDataBuffersIfPossible() != TRUE)
+        {
+            LoadMapTilesetPalettes(gMapHeader.mapLayout);
+            (*state)++;
+        }
+        break;
+    case 7:
+        DrawWholeMapView();
+        (*state)++;
+        break;
+    case 8:
+        InitTilesetAnimations();
+        gPaletteFade.bufferTransferDisabled = FALSE;
+        FadeSelectedPals(FADE_FROM_BLACK, 0, 0x3FFFFFFF);
+        (*state)++;
+        break;
+    default:
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static void CameraCB_CreditsPan(struct CameraObject * camera)
+{
+    if (sCreditsOverworld_CmdLength == 0)
+    {
+        sCreditsOverworld_CmdIndex++;
+        switch (sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_0)
+        {
+        case CREDITSOVWLDCMD_FC:
+        case CREDITSOVWLDCMD_LOADMAP:
+            return;
+        case CREDITSOVWLDCMD_FF:
+            camera->movementSpeedX = 0;
+            camera->movementSpeedY = 0;
+            camera->callback = NULL;
+            CreateTask(Task_OvwldCredits_FadeOut, 0);
+            return;
+        case CREDITSOVWLDCMD_FB:
+            camera->movementSpeedX = 0;
+            camera->movementSpeedY = 0;
+            camera->callback = NULL;
+            break;
+        case CREDITSOVWLDCMD_END:
+            camera->movementSpeedX = 0;
+            camera->movementSpeedY = 0;
+            camera->callback = NULL;
+            return;
+        default:
+            sCreditsOverworld_CmdLength = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_4;
+            camera->movementSpeedX = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_0;
+            camera->movementSpeedY = sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_2;
+            break;
+        }
+    }
+    if (sCreditsOverworld_Script[sCreditsOverworld_CmdIndex].unk_0 == 0xFF)
+    {
+        camera->movementSpeedX = 0;
+        camera->movementSpeedY = 0;
+    }
+    else
+        sCreditsOverworld_CmdLength--;
+}
+
+static void Task_OvwldCredits_FadeOut(u8 taskId)
+{
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+    gTasks[taskId].func = Task_OvwldCredits_WaitFade;
+}
+
+static void Task_OvwldCredits_WaitFade(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        SetMainCallback2(CB2_LoadMap);
+        DestroyTask(taskId);
+    }
 }
