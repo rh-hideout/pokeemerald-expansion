@@ -37,7 +37,7 @@ enum {
     MB_ICE,
     MB_SAND,
     MB_SEAWEED,
-    MB_UNUSED_23,
+    MB_STRENGTH_BUTTON,
     MB_ASHGRASS,
     MB_FOOTPRINTS,
     MB_THIN_ICE,
