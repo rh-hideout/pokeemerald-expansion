@@ -82,6 +82,7 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_CaveDust                  @ FLDEFF_CAVE_DUST
 	.4byte gFieldEffectScript_Defog                     @ FLDEFF_DEFOG
 	.4byte gFldEffScript_SmileyFaceIcon    		        @ FLDEFF_SMILEY_FACE_ICON
+	.4byte gFieldEffectScript_HallOfFameRecordFrlg      @ FLDEFF_HALL_OF_FAME_RECORD_FRLG
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -388,4 +389,9 @@ gFieldEffectScript_Defog::
 
 gFldEffScript_SmileyFaceIcon::
 	field_eff_callnative FldEff_SmileyFaceIcon
+	field_eff_end
+
+gFieldEffectScript_HallOfFameRecordFrlg::
+	field_eff_loadfadedpal gSpritePalette_PokeballGlow
+	field_eff_loadfadedpal_callnative gSpritePalette_HofMonitor_Frlg, FldEff_HallOfFameRecord
 	field_eff_end

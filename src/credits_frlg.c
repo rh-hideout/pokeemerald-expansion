@@ -22,7 +22,7 @@
 
 #if defined(FIRERED)
 #define TITLE_TEXT gString_PokemonFireRed_Staff
-#elif defined(LEAFGREEN)
+#else
 #define TITLE_TEXT gString_PokemonLeafGreen_Staff
 #endif
 

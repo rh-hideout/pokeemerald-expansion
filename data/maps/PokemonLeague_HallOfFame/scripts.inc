@@ -30,8 +30,8 @@ PokemonLeague_HallOfFame_EventScript_EnterRoom::
 	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	delay 20
-	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD
-	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD
+	dofieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
+	waitfieldeffect FLDEFF_HALL_OF_FAME_RECORD_FRLG
 	delay 40
 	setvar VAR_TEMP_1, 1
 	call EventScript_SetDefeatedEliteFourFlagsVars

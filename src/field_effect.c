@@ -60,7 +60,9 @@ static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *);
 static void HallOfFameRecordEffect_WaitForBallFlashing(struct Task *);
 static void HallOfFameRecordEffect_WaitForSoundAndEnd(struct Task *);
 static void CreateHofMonitorSprite(s16, s16, s16, bool8);
+static void CreateHofMonitorSpriteFrlg(s32 x, s32 y);
 static void SpriteCB_HallOfFameMonitor(struct Sprite *);
+static void SpriteCB_HallOfFameMonitorFrlg(struct Sprite *sprite);
 
 static u8 CreateGlowingPokeballsEffect(s16, s16, s16, bool16);
 static void SpriteCB_PokeballGlowEffect(struct Sprite *);
@@ -264,6 +266,8 @@ static const u32 sPokecenterMonitor1_Gfx[] = INCBIN_U32("graphics/field_effects/
 static const u32 sHofMonitorBig_Gfx[] = INCBIN_U32("graphics/field_effects/pics/hof_monitor_big.4bpp");
 static const u8 sHofMonitorSmall_Gfx[] = INCBIN_U8("graphics/field_effects/pics/hof_monitor_small.4bpp");
 static const u16 sHofMonitor_Pal[16] = INCBIN_U16("graphics/field_effects/palettes/hof_monitor.gbapal");
+static const u16 sHofMonitor_Gfx_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.4bpp");
+static const u16 sHofMonitor_Pal_Frlg[] = INCBIN_U16("graphics/field_effects/pics/hof_monitor_frlg.gbapal");
 
 // Graphics for the lights streaking past your Pokémon when it uses a field move.
 static const u32 sFieldMoveStreaksOutdoors_Gfx[] = INCBIN_U32("graphics/field_effects/pics/field_move_streaks.4bpp");
@@ -381,6 +385,12 @@ const struct SpritePalette gSpritePalette_HofMonitor =
     .tag = FLDEFF_PAL_TAG_HOF_MONITOR
 };
 
+const struct SpritePalette gSpritePalette_HofMonitor_Frlg =
+{
+    .data = sHofMonitor_Pal_Frlg,
+    .tag = FLDEFF_PAL_TAG_HOF_MONITOR
+};
+
 static const struct OamData sOam_32x16 =
 {
     .y = 0,
@@ -414,6 +424,13 @@ static const struct SpriteFrameImage sPicTable_HofMonitorBig[] =
 static const struct SpriteFrameImage sPicTable_HofMonitorSmall[] =
 {
     {.data = sHofMonitorSmall_Gfx, .size = 0x200} // the macro breaks down here
+};
+
+static const struct SpriteFrameImage sPicTable_HofMonitor_Frlg[] = {
+    {sHofMonitor_Gfx_Frlg + 0x00, 0x80},
+    {sHofMonitor_Gfx_Frlg + 0x40, 0x80},
+    {sHofMonitor_Gfx_Frlg + 0x80, 0x80},
+    {sHofMonitor_Gfx_Frlg + 0xC0, 0x80}
 };
 
 /*
@@ -533,6 +550,23 @@ static const union AnimCmd *const sAnims_HofMonitor[] =
     sAnim_Static
 };
 
+static const union AnimCmd sAnim_HofMonitorFrlg[] = {
+    ANIMCMD_FRAME(3, 8),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(2, 8),
+    ANIMCMD_LOOP(2),
+    ANIMCMD_FRAME(1, 8),
+    ANIMCMD_FRAME(0, 8),
+    ANIMCMD_END
+};
+
+static const union AnimCmd *const sAnims_HofMonitorFrlg[] = {
+    sAnim_HofMonitorFrlg
+};
+
 static const struct SpriteTemplate sSpriteTemplate_PokeballGlow =
 {
     .tileTag = TAG_NONE,
@@ -575,6 +609,16 @@ static const struct SpriteTemplate sSpriteTemplate_HofMonitorSmall =
     .images = sPicTable_HofMonitorSmall,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HallOfFameMonitor
+};
+
+static const struct SpriteTemplate sSpriteTemplate_HofMonitor = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_HOF_MONITOR,
+    .oam = &sOam_16x16,
+    .anims = sAnims_HofMonitorFrlg,
+    .images = sPicTable_HofMonitor_Frlg,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_HallOfFameMonitorFrlg
 };
 
 static void (*const sPokecenterHealEffectFuncs[])(struct Task *) =
@@ -1100,7 +1144,7 @@ bool8 FldEff_HallOfFameRecord(void)
     task = &gTasks[CreateTask(Task_HallOfFameRecord, 0xff)];
     task->tNumMons = nPokemon;
     task->tFirstBallX = 117;
-    task->tFirstBallY = 52;
+    task->tFirstBallY = IS_FRLG ? 60 : 52;
     return FALSE;
 }
 
@@ -1116,18 +1160,23 @@ static void HallOfFameRecordEffect_Init(struct Task *task)
     u8 taskId;
     task->tState++;
     task->tBallSpriteId = CreateGlowingPokeballsEffect(task->tNumMons, task->tFirstBallX, task->tFirstBallY, FALSE);
-    taskId = FindTaskIdByFunc(Task_HallOfFameRecord);
-    CreateHofMonitorSprite(taskId, 120, 24, FALSE);
-    CreateHofMonitorSprite(taskId, 40, 8, TRUE);
-    CreateHofMonitorSprite(taskId, 72, 8, TRUE);
-    CreateHofMonitorSprite(taskId, 168, 8, TRUE);
-    CreateHofMonitorSprite(taskId, 200, 8, TRUE);
+    if (!IS_FRLG)
+    {
+        taskId = FindTaskIdByFunc(Task_HallOfFameRecord);
+        CreateHofMonitorSprite(taskId, 120, 24, FALSE);
+        CreateHofMonitorSprite(taskId, 40, 8, TRUE);
+        CreateHofMonitorSprite(taskId, 72, 8, TRUE);
+        CreateHofMonitorSprite(taskId, 168, 8, TRUE);
+        CreateHofMonitorSprite(taskId, 200, 8, TRUE);
+    }
 }
 
 static void HallOfFameRecordEffect_WaitForBallPlacement(struct Task *task)
 {
     if (gSprites[task->tBallSpriteId].sState > 1)
     {
+        if (IS_FRLG)
+            CreateHofMonitorSpriteFrlg(120, 25);
         task->tStartHofFlash++;
         task->tState++;
     }
@@ -1146,7 +1195,10 @@ static void HallOfFameRecordEffect_WaitForSoundAndEnd(struct Task *task)
     if (gSprites[task->tBallSpriteId].sState > 6)
     {
         DestroySprite(&gSprites[task->tBallSpriteId]);
-        FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD);
+        if (IS_FRLG)
+            FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD_FRLG);
+        else
+            FieldEffectActiveListRemove(FLDEFF_HALL_OF_FAME_RECORD);
         DestroyTask(FindTaskIdByFunc(Task_HallOfFameRecord));
     }
 }
@@ -1330,6 +1382,11 @@ static void CreateHofMonitorSprite(s16 taskId, s16 x, s16 y, bool8 isSmallMonito
     gSprites[spriteId].data[0] = taskId;
 }
 
+static void CreateHofMonitorSpriteFrlg(s32 x, s32 y)
+{
+    CreateSpriteAtEnd(&sSpriteTemplate_HofMonitor, x, y, 0);
+}
+
 static void SpriteCB_HallOfFameMonitor(struct Sprite *sprite)
 {
     if (gTasks[sprite->data[0]].tStartHofFlash)
@@ -1345,6 +1402,12 @@ static void SpriteCB_HallOfFameMonitor(struct Sprite *sprite)
     {
         FieldEffectFreeGraphicsResources(sprite);
     }
+}
+
+static void SpriteCB_HallOfFameMonitorFrlg(struct Sprite *sprite)
+{
+    if (sprite->animEnded)
+        FieldEffectFreeGraphicsResources(sprite);
 }
 
 #undef tState

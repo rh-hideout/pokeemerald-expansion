@@ -78,6 +78,7 @@
 #define FLDEFF_CAVE_DUST                 73
 #define FLDEFF_DEFOG                     74
 #define FLDEFF_SMILEY_FACE_ICON          75
+#define FLDEFF_HALL_OF_FAME_RECORD_FRLG  76
 
 #define FLDEFFOBJ_SHADOW_S              0
 #define FLDEFFOBJ_SHADOW_M              1
