@@ -79,8 +79,8 @@ OneIsland_PokemonCenter_1F_EventScript_MeetCelioScene::
 @	waitmovement 0
 @	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterRight
 @	waitmovement 0
-@	call_if_set FLAG_SYS_GAME_CLEAR, OneIsland_PokemonCenter_1F_EventScript_IntroducePlayerChamp
-@	call_if_unset FLAG_SYS_GAME_CLEAR, OneIsland_PokemonCenter_1F_EventScript_IntroducePlayerNotChamp
+@	call_if_set FLAG_SYS_GAME_CLEAR_FRLG, OneIsland_PokemonCenter_1F_EventScript_IntroducePlayerChamp
+@	call_if_unset FLAG_SYS_GAME_CLEAR_FRLG, OneIsland_PokemonCenter_1F_EventScript_IntroducePlayerNotChamp
 @	applymovement LOCALID_CELIO, Common_Movement_WalkInPlaceFasterDown
 @	waitmovement 0
 @	msgbox OneIsland_PokemonCenter_1F_Text_CelioThatsReallyImpressive

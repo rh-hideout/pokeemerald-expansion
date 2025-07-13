@@ -50,8 +50,8 @@ PokemonLeague_AgathasRoom_EventScript_Agatha::
 @	famechecker FAMECHECKER_AGATHA, 0
 @	famechecker FAMECHECKER_AGATHA, 4
 @	famechecker FAMECHECKER_OAK, 4
-@	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_Intro
-@	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_AgathasRoom_EventScript_RematchIntro
+@	call_if_unset FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_AgathasRoom_EventScript_Intro
+@	call_if_set FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_AgathasRoom_EventScript_RematchIntro
 @	setflag FLAG_TEMP_3
 @	setflag FLAG_TEMP_5
 @	call_if_unset FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_AgathasRoom_EventScript_Battle

@@ -49,8 +49,8 @@ PokemonLeague_BrunosRoom_EventScript_Bruno::
 @	goto_if_set FLAG_DEFEATED_BRUNO, PokemonLeague_BrunosRoom_EventScript_PostBattle
 @	famechecker FAMECHECKER_BRUNO, 0
 @	famechecker FAMECHECKER_BRUNO, 1
-@	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_BrunosRoom_EventScript_Intro
-@	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_BrunosRoom_EventScript_RematchIntro
+@	call_if_unset FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_BrunosRoom_EventScript_Intro
+@	call_if_set FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_BrunosRoom_EventScript_RematchIntro
 @	setflag FLAG_TEMP_3
 @	setflag FLAG_TEMP_5
 @	call_if_unset FLAG_SYS_CAN_LINK_WITH_RS, PokemonLeague_BrunosRoom_EventScript_Battle

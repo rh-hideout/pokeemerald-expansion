@@ -50,8 +50,8 @@ PokemonLeague_ChampionsRoom_EventScript_EnterRoom::
 @	applymovement LOCALID_PLAYER, PokemonLeague_ChampionsRoom_Movement_PlayerEnter
 @	waitmovement 0
 @	delay 20
-@	call_if_unset FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_Intro
-@	call_if_set FLAG_SYS_GAME_CLEAR, PokemonLeague_ChampionsRoom_EventScript_RematchIntro
+@	call_if_unset FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_ChampionsRoom_EventScript_Intro
+@	call_if_set FLAG_SYS_GAME_CLEAR_FRLG, PokemonLeague_ChampionsRoom_EventScript_RematchIntro
 @	goto_if_questlog PokemonLeague_ChampionsRoom_EventScript_QuestLogEnd
 @	setflag FLAG_TEMP_3
 @	setflag FLAG_TEMP_5
