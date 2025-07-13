@@ -29,7 +29,8 @@ enum AiCompareMovesPriority
 {
     PRIORITY_EFFECT,
     PRIORITY_ACCURACY,
-    PRIORITY_NOT_CHARGING
+    PRIORITY_NOT_CHARGING,
+    PRIORITY_SPEED,
 };
 
 enum AIPivot

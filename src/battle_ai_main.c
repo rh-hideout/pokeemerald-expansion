@@ -3680,6 +3680,18 @@ static s32 CompareMoveAccuracies(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, 
     return 0;
 }
 
+static s32 CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
+{
+    u32 speed1 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move1);
+    u32 speed2 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move2);
+
+    if (speed1 == AI_IS_FASTER && speed2 == AI_IS_SLOWER)
+        return 1;
+    if (speed2 == AI_IS_FASTER && speed1 == AI_IS_SLOWER)
+        return -1;
+    return 0;
+}
+
 static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
@@ -3751,9 +3763,10 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 
         // Priority list:
         // 1. Less no of hits to ko
-        // 2. Not charging
-        // 3. More accuracy
-        // 4. Better effect
+        // 2. Priority
+        // 3. Not charging
+        // 4. More accuracy
+        // 5. Better effect
 
         // Current move requires the least hits to KO. Compare with other moves.
         if (leastHits == noOfHits[currId])
@@ -3771,6 +3784,19 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     else if (!isTwoTurnNotSemiInvulnerableMove[i] && isTwoTurnNotSemiInvulnerableMove[currId])
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_NOT_CHARGING);
 
+                    // Use priority to get fast KO if outsped
+                    if (noOfHits[currId] == 1)
+                    {
+                        switch (CompareMoveSpeeds(battlerAtk, battlerDef, moves[currId], moves[i]))
+                        {
+                        case 1:
+                            tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
+                            break;
+                        case -1:
+                            tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
+                            break;
+                        }
+                    }
                     switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
                     {
                     case 1:
