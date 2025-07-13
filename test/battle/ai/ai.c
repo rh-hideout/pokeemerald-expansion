@@ -909,5 +909,3 @@ AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage
         TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AQUA_JET); }
     }
 }
-
-TO_DO_BATTLE_TEST("AI will prioritize guarantee KOs over non-guaranteed KOs");
