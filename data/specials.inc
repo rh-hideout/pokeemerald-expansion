@@ -615,3 +615,4 @@ gSpecials::
 	def_special Script_TryGainNewFanFromCounterFrlg
 	def_special IsNationalPokedexEnabled
 	def_special SetPostgameFlags
+	def_special BrailleCursorToggle

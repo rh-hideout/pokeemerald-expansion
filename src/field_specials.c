@@ -106,6 +106,7 @@ EWRAM_DATA u16 gScrollableMultichoice_ScrollOffset = 0;
 static EWRAM_DATA u8 sElevatorCurrentFloorWindowId = 0;
 static EWRAM_DATA u16 sElevatorScroll = 0;
 static EWRAM_DATA u16 sElevatorCursorPos = 0;
+static EWRAM_DATA u8 sBrailleTextCursorSpriteID = 0;
 
 void TryLoseFansFromPlayTime(void);
 void SetPlayerGotFirstFans(void);
@@ -5283,4 +5284,17 @@ void ForcePlayerOntoBike(void)
         SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE);
     Overworld_SetSavedMusic(MUS_CYCLING);
     Overworld_ChangeMusicTo(MUS_CYCLING);
+}
+
+void BrailleCursorToggle(void)
+{
+    // 8004 = x - 27
+    // 8005 = y
+    // 8006 = action (0 = create, 1 = delete)
+    u16 x = gSpecialVar_0x8004 + 27;
+
+    if (gSpecialVar_0x8006 == 0)
+        sBrailleTextCursorSpriteID = CreateTextCursorSprite(0, x, gSpecialVar_0x8005, 0, 0);
+    else
+        DestroyTextCursorSprite(sBrailleTextCursorSpriteID);
 }

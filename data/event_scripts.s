@@ -1626,6 +1626,18 @@ EventScript_TryDarkenRuins::
 	
 Text_MonFlewAway::
 	.string "The {STR_VAR_1} flew away!$"
+	
+@ Call for legendary bird trio
+Text_Gyaoo::
+	.string "Gyaoo!$"
+
+EventScript_BrailleCursorWaitButton::
+	special BrailleCursorToggle
+	waitbuttonpress
+	playse SE_SELECT
+	setvar VAR_0x8006, 1
+	special BrailleCursorToggle
+	return
 
 
 	.include "data/scripts/trainers_frlg.inc"

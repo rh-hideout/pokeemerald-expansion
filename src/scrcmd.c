@@ -3271,3 +3271,16 @@ bool8 ScrCmd_setworldmapflag(struct ScriptContext * ctx)
     MapPreview_SetFlag(value);
     return FALSE;
 }
+
+bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
+{
+    u8 *msg = (u8 *)ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1);
+
+    if (msg == NULL)
+        msg = (u8 *)ctx->data[0];
+
+    gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
+    return FALSE;
+}

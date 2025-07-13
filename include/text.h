@@ -178,4 +178,7 @@ u32 GetFontIdToFit(const u8 *string, u32 widestFontId, u32 letterSpacing, u32 wi
 u8 *PrependFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 
+u8 CreateTextCursorSprite(u8 sheetId, u16 x, u16 y, u8 priority, u8 subpriority);
+void DestroyTextCursorSprite(u8 spriteId);
+
 #endif // GUARD_TEXT_H

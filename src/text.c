@@ -46,6 +46,7 @@ static u32 GetGlyphWidth_Narrower(u16, bool32);
 static u32 GetGlyphWidth_SmallNarrower(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrow(u16, bool32);
 static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
+static void SpriteCB_TextCursor(struct Sprite *sprite);
 
 static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
 static EWRAM_DATA struct TextPrinter sTextPrinters[WINDOWS_MAX] = {0};
@@ -2304,3 +2305,90 @@ u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width)
         return end;
     }
 }
+
+// FRLG
+
+#define TAG_CURSOR 0x8000
+
+extern const struct OamData gOamData_AffineOff_ObjNormal_16x16;
+
+static const u8 sDoubleArrowTiles1[]       = INCBIN_U8("graphics/fonts/down_arrow_3.4bpp");
+static const u8 sDoubleArrowTiles2[]       = INCBIN_U8("graphics/fonts/down_arrow_4.4bpp");
+
+static const struct SpriteSheet sSpriteSheets_TextCursor[] =
+{
+    {sDoubleArrowTiles1, sizeof(sDoubleArrowTiles1), TAG_CURSOR},
+    {sDoubleArrowTiles2, sizeof(sDoubleArrowTiles2), TAG_CURSOR},
+    {NULL}
+};
+
+static const struct SpritePalette sSpritePalettes_TextCursor[] =
+{
+    {gStandardMenuPalette, TAG_CURSOR},
+    {NULL}
+};
+
+static const struct SpriteTemplate sSpriteTemplate_TextCursor =
+{
+    .tileTag = TAG_CURSOR,
+    .paletteTag = TAG_CURSOR,
+    .oam = &gOamData_AffineOff_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_TextCursor,
+};
+
+#define sDelay data[0]
+#define sState data[1]
+
+static void SpriteCB_TextCursor(struct Sprite *sprite)
+{
+    if (sprite->sDelay)
+    {
+        sprite->sDelay--;
+    }
+    else
+    {
+        sprite->sDelay = 8;
+        switch(sprite->sState)
+        {
+        case 0:
+            sprite->y2 = 0;
+            break;
+        case 1:
+            sprite->y2 = 1;
+            break;
+        case 2:
+            sprite->y2 = 2;
+            break;
+        case 3:
+            sprite->y2 = 1;
+            sprite->sState = 0;
+            return;
+        }
+        sprite->sState++;
+    }
+}
+
+u8 CreateTextCursorSprite(u8 sheetId, u16 x, u16 y, u8 priority, u8 subpriority)
+{
+    u8 spriteId;
+    LoadSpriteSheet(&sSpriteSheets_TextCursor[sheetId & 1]);
+    LoadSpritePalette(&sSpritePalettes_TextCursor[0]);
+    spriteId = CreateSprite(&sSpriteTemplate_TextCursor, x + 3, y + 4, subpriority);
+    gSprites[spriteId].oam.priority = (priority & 3);
+    gSprites[spriteId].oam.matrixNum = 0;
+    gSprites[spriteId].sDelay = 8;
+    return spriteId;
+}
+
+void DestroyTextCursorSprite(u8 spriteId)
+{
+    DestroySprite(&gSprites[spriteId]);
+    FreeSpriteTilesByTag(TAG_CURSOR);
+    FreeSpritePaletteByTag(TAG_CURSOR);
+}
+
+#undef sDelay
+#undef sState

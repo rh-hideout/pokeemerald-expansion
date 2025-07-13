@@ -1892,6 +1892,12 @@
 	.2byte \id
 	.endm
 
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
+
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
@@ -2697,4 +2703,12 @@
 	.macro set_gym_trainers_frlg gym:req
 	setvar VAR_0x8008, \gym
 	call Common_EventScript_SetGymTrainers_Frlg
+	.endm
+
+	@ Prints a braille message, then waits for users input.
+	.macro braillemessage_wait text:req
+	setvar VAR_0x8006, 0
+	braillemessage \text
+	getbraillestringwidth \text
+	call EventScript_BrailleCursorWaitButton
 	.endm
