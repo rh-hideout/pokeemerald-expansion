@@ -280,7 +280,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
                 // Get maximum damage mon can deal
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData);
-                if (!canBattlerWin1v1 && !AI_DoesChoiceEffectBlockMove(battler, aiMove)) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the 1v1 move
+                if (!canBattlerWin1v1 && !AI_DoesChoiceEffectBlockMove(battler, aiMove)) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
                 {
                     canBattlerWin1v1 = CanBattlerWin1v1(hitsToKoAI, GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler), AI_WhoStrikesFirst(battler, opposingBattler, aiMove));
                 }
