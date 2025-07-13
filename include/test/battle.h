@@ -965,15 +965,15 @@ static inline bool8 IsMultibattleTest(void)
     u32 isMulti = gBattleTypeFlags & BATTLE_TYPE_MULTI;
     u32 isTwoOpponents = gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS;
 
-    if(TESTING)
+    if (TESTING)
     {
-        if(isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
+        if (isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
             return TRUE;
-        else if(isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti)
+        else if (isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti)
             return TRUE;
-        else if(isMaster && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
+        else if (isMaster && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
             return TRUE;
-        else if(isMaster && isTrainer && isIngamePartner && isMulti)
+        else if (isMaster && isTrainer && isIngamePartner && isMulti)
             return TRUE;
         else
             return FALSE;

@@ -226,7 +226,7 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_2]] = SetControllerToPlayer;
 
             // Opponent 2
-            if(IsMultibattleTest() && isRecordedLink)
+            if (IsMultibattleTest() && isRecordedLink)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToRecordedOpponent;
             else if (isInGamePartner || !isRecorded || isMulti || !isRecordedLink)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_3]] = SetControllerToOpponent;

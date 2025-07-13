@@ -2093,29 +2093,45 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 {
                     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
                     {
-                        if(TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
+                        if (TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
                         {
-                            if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                            {
                                 stringPtr = sText_Trainer1WantsToBattle;
+                            }
                             else
+                            {
                                 stringPtr = sText_TwoTrainersWantToBattle;
+                            }
                         }
-                        else if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                        else if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                        {
                             stringPtr = sText_LinkTrainerWantsToBattlePause;
+                        }
                         else
+                        {
                             stringPtr = sText_TwoLinkTrainersWantToBattlePause;
+                        }
                     }
                     else
+                    {
                         stringPtr = sText_TwoLinkTrainersWantToBattle;
+                    }
                 }
                 else
                 {
                     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
+                    {
                         stringPtr = sText_Trainer1WantsToBattle;
+                    }
                     else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
+                    {
                         stringPtr = sText_LinkTrainerWantsToBattlePause;
+                    }
                     else
+                    {
                         stringPtr = sText_LinkTrainerWantsToBattle;
+                    }
                 }
             }
             else

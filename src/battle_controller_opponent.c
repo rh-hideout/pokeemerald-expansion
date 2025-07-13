@@ -378,13 +378,17 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
-        if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
-            if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+            {
                 xPos = 176;
+            }
             else
+            {
                 xPos = 200;
+            }
         }
         else
         {
@@ -399,12 +403,18 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+            {
                 xPos = 152;
-            else // first mon
+            }
+           else // first mon
+            {
                 xPos = 200;
+            }
         }
         else
+        {
             xPos = 176;
+        }
     }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);

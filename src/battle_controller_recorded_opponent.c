@@ -279,13 +279,17 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
-        if(GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
         {
             trainerPicId = TRAINER_PIC_LEAF;
-            if(!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+            {
                 xPos = 176;
+            }
             else
+            {
                 xPos = 200;
+            }
         }
         else
         {
@@ -296,27 +300,41 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+        {
             xPos = 152;
+        }
         else // first mon
+        {
             xPos = 200;
+        }
 
         if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         {
             if (battler == B_POSITION_OPPONENT_LEFT)
+            {
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
+            }
             else
+            {
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
+            }
         }
         else
+        {
             trainerPicId = PlayerGenderToFrontTrainerPicId(GetBattlerLinkPlayerGender(battler));
+        }
     }
     else
     {
         xPos = 176;
         if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
+        {
             trainerPicId = GetUnionRoomTrainerPic();
+        }
         else
+        {
             trainerPicId = PlayerGenderToFrontTrainerPicId(gLinkPlayers[gRecordedBattleMultiplayerId ^ BIT_SIDE].gender);
+        }
     }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);
