@@ -1904,7 +1904,9 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
         isFrontPic = TRUE;
     }
     else // Use back pic in all the other usual circumstances.
+    {
         isFrontPic = FALSE;
+    }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, isFrontPic, xPos, yPos, -1);
 }

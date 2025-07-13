@@ -3561,10 +3561,9 @@ void TrySetLinkBattleTowerEnemyPartyLevel(void)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
-            s32 i;
             u8 enemyLevel = SetFacilityPtrsGetLevel();
 
-            for (i = 0; i < PARTY_SIZE; i++)
+            for (s32 i = 0; i < PARTY_SIZE; i++)
             {
                 u32 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
                 if (species)
