@@ -29,7 +29,7 @@ ThreeIsland_BerryForest_EventScript_Lostelle::
 @	msgbox ThreeIsland_BerryForest_Text_ThankYouHaveThis
 @	giveitem ITEM_IAPAPA_BERRY
 @	call_if_eq VAR_RESULT, FALSE, ThreeIsland_BerryForest_EventScript_NoRoomForBerry
-@	special BufferBigGuyOrBigGirlString
+@	special GetPlayerBigGuyGirlString
 @	msgbox ThreeIsland_BerryForest_Text_LetsGoHome
 @	closemessage
 @	setflag FLAG_RESCUED_LOSTELLE

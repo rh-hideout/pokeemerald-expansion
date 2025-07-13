@@ -1019,6 +1019,11 @@ static const struct MenuAction sMultichoiceList_DomeAmber[] = {
     { gText_Exit }
 };
 
+static const struct MenuAction sMultichoiceList_Mushrooms[] = {
+    { COMPOUND_STRING("2 TINYMUSHROOMS") },
+    { COMPOUND_STRING("1 BIG MUSHROOM") }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1180,6 +1185,7 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_AMBER]                                      = MULTICHOICE(sMultichoiceList_Amber),
     [MULTI_HELIX_AMBER]                                = MULTICHOICE(sMultichoiceList_HelixAmber),
     [MULTI_DOME_AMBER]                                 = MULTICHOICE(sMultichoiceList_DomeAmber),
+    [MULTI_MUSHROOMS]                                  = MULTICHOICE(sMultichoiceList_Mushrooms),
 };
 
 const u8 *const gStdStrings[] =

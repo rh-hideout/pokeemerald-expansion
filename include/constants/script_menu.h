@@ -156,6 +156,7 @@
 #define MULTI_AMBER                                      145
 #define MULTI_HELIX_AMBER                                146
 #define MULTI_DOME_AMBER                                 147
+#define MULTI_MUSHROOMS                                  148
 
 #define MULTI_NONE 255
 

@@ -4,7 +4,7 @@ ThreeIsland_House1_MapScripts::
 ThreeIsland_House1_EventScript_Lostelle::
 @	lock
 @	faceplayer
-@	special BufferBigGuyOrBigGirlString
+@	special GetPlayerBigGuyGirlString
 @	msgbox ThreeIsland_House1_Text_YoureAlwaysSoCool
 @	release
 	end

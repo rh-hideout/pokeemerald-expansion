@@ -93,7 +93,7 @@ SevenIsland_House_Room1_EventScript_TrainerVisiting::
 @	msgbox SevenIsland_House_Room1_Text_SaveProgressBeforeBattle, MSGBOX_YESNO
 @	goto_if_eq VAR_RESULT, NO, SevenIsland_House_Room1_EventScript_DeclineBattle
 @	special LoadPlayerParty
-@	call EventScript_AskSaveGame
+@	call CableClubSaveGame
 @	goto_if_eq VAR_RESULT, 0, SevenIsland_House_Room1_EventScript_DeclineBattle
 @	special SavePlayerParty
 @	special ReducePlayerPartyToSelectedMons
