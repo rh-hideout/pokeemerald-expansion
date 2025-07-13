@@ -3697,6 +3697,9 @@ static s32 CompareGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u16 moveS
     s32 dmg1, dmg2;
     bool32 guarantee1, guarantee2;
 
+    if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT))
+        return 0;
+
     // Explictly care about guaranteed KOs universally
     dmg1 = gAiLogicData->simulatedDmg[battlerAtk][battlerDef][moveSlot1].minimum;
     guarantee1 = (gBattleMons[battlerDef].hp <= dmg1 && !CanEndureHit(battlerAtk, battlerDef, moves[moveSlot1]));
