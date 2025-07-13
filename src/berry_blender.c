@@ -1205,7 +1205,7 @@ static void CreateBerrySprite(u32 itemId, u32 playerId)
 
 static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, u16 itemId)
 {
-    const struct Berry *berryInfo = GetBerryInfo(GetBerryIndex(itemId));
+    const struct BerryInfo *berryInfo = GetBerryInfo(GetBerryIndex(itemId));
 
     berry->itemId = itemId;
     StringCopy(berry->name, berryInfo->name);

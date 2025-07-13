@@ -51,7 +51,7 @@ static void AddTreeBonus(struct BerryTree *tree, u8 bonus);
 #define GROWTH_DURATION(g3, g4, g5, xy, oras, g7) OW_BERRY_GROWTH_RATE == GEN_3 ? g3 : OW_BERRY_GROWTH_RATE == GEN_4 ? g4 : OW_BERRY_GROWTH_RATE == GEN_5 ? g5 : OW_BERRY_GROWTH_RATE == GEN_6_XY ? xy : OW_BERRY_GROWTH_RATE == GEN_6_ORAS ? oras : g7
 #define YIELD_RATE(g3, g4, xy, oras) OW_BERRY_YIELD_RATE == GEN_3 ? g3 : OW_BERRY_YIELD_RATE == GEN_4 ? g4 : OW_BERRY_YIELD_RATE == GEN_6_XY ? xy : oras
 
-const struct Berry gBerries[NUM_BERRIES + 1] =
+const struct BerryInfo gBerriesInfo[NUM_BERRIES + 1] =
 {
     [INDEX_BERRY_NONE] = {
         .name = _("?????"),
@@ -2213,21 +2213,21 @@ bool32 IsEnigmaBerryValid(void)
 #endif //FREE_ENIGMA_BERRY
 }
 
-const struct Berry *GetBerryInfo(enum BerryIndex berry)
+const struct BerryInfo *GetBerryInfo(enum BerryIndex berry)
 {
     if (berry == INDEX_ENIGMA_BERRY_E_READER && IsEnigmaBerryValid())
     {
     #if FREE_ENIGMA_BERRY == FALSE
-        return (struct Berry *)(&gSaveBlock1Ptr->enigmaBerry.berry);
+        return (struct BerryInfo *)(&gSaveBlock1Ptr->enigmaBerry.berry);
     #else
-        return &gBerries[0];    //never reached, but will appease the compiler gods
+        return &gBerriesInfo[0];    //never reached, but will appease the compiler gods
     #endif //FREE_ENIGMA_BERRY
     }
     else
     {
         if (berry == BERRY_NONE || berry > NUM_BERRIES)
             berry = 1;
-        return &gBerries[berry];
+        return &gBerriesInfo[berry];
     }
 }
 
@@ -2538,14 +2538,14 @@ static u8 CalcBerryYieldInternal(u16 max, u16 min, u8 water)
 
 static u8 CalcBerryYield(struct BerryTree *tree)
 {
-    const struct Berry *berry = GetBerryInfo(tree->berry);
+    const struct BerryInfo *berryInfo = GetBerryInfo(tree->berry);
     u8 min = tree->berryYield;
-    u8 max = berry->maxYield;
+    u8 max = berryInfo->maxYield;
     u8 result;
     if (OW_BERRY_MULCH_USAGE && (tree->mulch == ITEM_TO_MULCH(ITEM_RICH_MULCH) || tree->mulch == ITEM_TO_MULCH(ITEM_AMAZE_MULCH)))
         min += 2;
     if (!(OW_BERRY_MOISTURE && OW_BERRY_ALWAYS_WATERABLE))
-        min += berry->minYield;
+        min += berryInfo->minYield;
     if (min >= max)
         result = max;
     else
@@ -2897,8 +2897,8 @@ static void SetTreeMutations(u8 id, u8 berry)
 static u16 GetBerryPestSpecies(u8 berryId)
 {
 #if OW_BERRY_PESTS == TRUE
-    const struct Berry *berry = GetBerryInfo(berryId);
-    switch(berry->color)
+    const struct BerryInfo *berryInfo = GetBerryInfo(berryId);
+    switch(berryInfo->color)
     {
         case BERRY_COLOR_RED:
             return P_FAMILY_LEDYBA ? SPECIES_LEDYBA : SPECIES_NONE;

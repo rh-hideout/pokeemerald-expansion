@@ -81,7 +81,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type")
     PARAMETRIZE { ability = ABILITY_PIXILATE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
-        ASSUME(gBerries[GetBerryIndex(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
+        ASSUME(gBerriesInfo[GetBerryIndex(ITEM_ORAN_BERRY)].naturalGiftType == TYPE_POISON);
         ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_SYLVEON) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);

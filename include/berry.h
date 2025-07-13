@@ -3,7 +3,7 @@
 
 void SetEnigmaBerry(u8 *src);
 bool32 IsEnigmaBerryValid(void);
-const struct Berry *GetBerryInfo(enum BerryIndex berry);
+const struct BerryInfo *GetBerryInfo(enum BerryIndex berry);
 struct BerryTree *GetBerryTreeInfo(u8 id);
 bool32 ObjectEventInteractionWaterBerryTree(void);
 bool8 IsPlayerFacingEmptyBerryTreePatch(void);
@@ -254,6 +254,6 @@ extern const u16 gBerryPalette_Rowap[];
 extern const u16 gBerryPalette_Kee[];
 extern const u16 gBerryPalette_Maranga[];
 
-extern const struct Berry gBerries[];
+extern const struct BerryInfo gBerriesInfo[];
 
 #endif // GUARD_BERRY_H
