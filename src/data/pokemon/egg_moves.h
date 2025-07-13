@@ -6448,6 +6448,36 @@ static const u16 sFoxcetEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sWeatherbaneEggMoveLearnset[] = {
+    MOVE_AURORA_VEIL,
+    MOVE_BOOMBURST,
+    MOVE_MIST_BALL,
+    MOVE_SKY_ATTACK,
+    MOVE_TRI_ATTACK,
+    MOVE_TWISTER,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sCyclonianEggMoveLearnset[] = {
+    MOVE_AURORA_VEIL,
+    MOVE_ETERNABEAM,
+    MOVE_ENCORE,
+    MOVE_PRISMATIC_LASER,
+    MOVE_METEOR_MASH,
+    MOVE_COMET_PUNCH,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sBraxitytanEggMoveLearnset[] = {
+    MOVE_ANCIENT_POWER,
+    MOVE_BULLET_PUNCH,
+    MOVE_COSMIC_POWER,
+    MOVE_DISABLE,
+    MOVE_SHADOW_PUNCH,
+    MOVE_WOOD_HAMMER,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_BARRAGE,
     MOVE_EERIE_IMPULSE,
@@ -6456,6 +6486,16 @@ static const u16 sYardsteinEggMoveLearnset[] = {
     MOVE_WIDE_GUARD,
     MOVE_IRON_DEFENSE,
     MOVE_FINAL_GAMBIT,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sEccosmicEggMoveLearnset[] = {
+    MOVE_BOUNCE,
+    MOVE_DAZZLING_GLEAM,
+    MOVE_EXTRASENSORY,
+    MOVE_PSYCHO_BOOST,
+    MOVE_HYPERSPACE_HOLE,
+    MOVE_MOONBLAST,
     MOVE_UNAVAILABLE,
 };
 
@@ -6531,8 +6571,13 @@ static const u16 sKorokamiEggMoveLearnset[] = {
 };
 
 static const u16 sSepultureEggMoveLearnset[] = {
-    MOVE_SKY_ATTACK,
-///////////////////////////////
+    MOVE_BELCH,
+    MOVE_GRUDGE,
+    MOVE_HURRICANE,
+    MOVE_LEECH_LIFE,
+    MOVE_METAL_SOUND,
+    MOVE_TOXIC_SPIKES,
+    MOVE_UNAVAILABLE,
     MOVE_UNAVAILABLE,
 };
 

@@ -21460,7 +21460,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Super effective on Steel-\n"
             "types. May inflict a burn."),
         .effect = EFFECT_SUPER_EFFECTIVE_ON_ARG,
-        .power = 60,
+        .power = 70,
         .type = TYPE_STEEL,
         .accuracy = 100,
         .pp = 20,

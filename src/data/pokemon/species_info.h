@@ -5451,6 +5451,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Cyclonian)
        .levelUpLearnset = sCyclonianLevelUpLearnset,
+       .teachableLearnset = sCyclonianTeachableLearnset,
+       .eggMoveLearnset = sCyclonianEggMoveLearnset,
     },
 
         [SPECIES_MEATIER] =
@@ -5618,6 +5620,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Braxitytan)
        .levelUpLearnset = sBraxitytanLevelUpLearnset,
+       .teachableLearnset = sBraxitytanTeachableLearnset,
+       .eggMoveLearnset = sBraxitytanEggMoveLearnset,
     },
 
         [SPECIES_DOOMTER] =
@@ -8962,11 +8966,11 @@ const struct SpeciesInfo gSpeciesInfo[] =
     },
         [SPECIES_FLOCKARRION] =
     { 
-       .baseHP        = 47,
-       .baseAttack    = 60,
+       .baseHP        = 54,
+       .baseAttack    = 68,
        .baseDefense   = 90,
        .baseSpeed     = 30,
-       .baseSpAttack  = 65,
+       .baseSpAttack  = 70,
        .baseSpDefense = 78,
        .types = { TYPE_GHOST, TYPE_FLYING },
        .catchRate = 127,
@@ -11020,6 +11024,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_ANDROMEDA}),
     },
@@ -11076,6 +11082,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_MAGELLANIC}),
     },
@@ -11132,6 +11140,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_SOL}),
     },
@@ -11188,6 +11198,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_STARBURST}),
     },
@@ -11244,6 +11256,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_QUASAR}),
     },
@@ -11300,6 +11314,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_NEBULA}),
     },
@@ -11356,6 +11372,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Nebulite)
        .levelUpLearnset = sNebuliteLevelUpLearnset,
+       .teachableLearnset = sNebuliteTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sNebuliteFormSpeciesIdTable,
        .evolutions = EVOLUTION({EVO_LEVEL, 31, SPECIES_ECCOSMIC_MILKY}),
     },
@@ -11412,6 +11430,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
         [SPECIES_ECCOSMIC_MAGELLANIC] =
@@ -11467,6 +11487,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
@@ -11523,6 +11545,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
@@ -11579,6 +11603,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
@@ -11635,6 +11661,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
@@ -11691,6 +11719,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
@@ -11747,6 +11777,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Eccosmic)
        .levelUpLearnset = sEccosmicLevelUpLearnset,
+       .teachableLearnset = sEccosmicTeachableLearnset,
+       .eggMoveLearnset = sEccosmicEggMoveLearnset,
        .formSpeciesIdTable = sEccosmicFormSpeciesIdTable,
     },
 
