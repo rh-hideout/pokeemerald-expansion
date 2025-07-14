@@ -198,7 +198,6 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(opponent, MOVE_NUZZLE); }
@@ -250,7 +249,6 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making cont
 SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are already statused")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
