@@ -38141,6 +38141,7 @@ static const u16 sDubsnakeTeachableLearnset[] = {
     MOVE_PAIN_SPLIT,
     MOVE_STICKY_TONGUE,
     MOVE_POWER_WHIP,
+    MOVE_DARK_PULSE,
     MOVE_UNAVAILABLE,
 };
 
@@ -38228,6 +38229,7 @@ static const u16 sHydroilTeachableLearnset[] = {
     MOVE_WATERFALL,
     MOVE_STRENGTH,
     MOVE_RETURN,
+    MOVE_DARK_PULSE,
     MOVE_UNAVAILABLE,
 };
 
