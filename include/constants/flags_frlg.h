@@ -1360,8 +1360,8 @@
 #define FLAG_SYS_SAW_HELP_SYSTEM_INTRO                              (SYS_FLAGS_FRLG + 0x3C)
 #define FLAG_0x83D                                                  (SYS_FLAGS_FRLG + 0x3D)
 #define FLAG_OPENED_START_MENU                                      (SYS_FLAGS_FRLG + 0x3E)
-#define FLAG_SYS_CLOCK_SET_FRLG                                          (SYS_FLAGS_FRLG + 0x3F) // FLAG_0x83F
-#define FLAG_SYS_NATIONAL_DEX_FRLG                                       (SYS_FLAGS_FRLG + 0x40)
+#define FLAG_SYS_CLOCK_SET_FRLG                                     (SYS_FLAGS_FRLG + 0x3F) // FLAG_0x83F
+#define FLAG_SYS_NATIONAL_DEX_FRLG                                  (SYS_FLAGS_FRLG + 0x40)
 #define FLAG_SYS_PC_STORAGE_DISABLED                                (SYS_FLAGS_FRLG + 0x41)
 #define FLAG_SYS_INFORMED_OF_LOCAL_WIRELESS_PLAYER                  (SYS_FLAGS_FRLG + 0x42)
 #define FLAG_SHOWN_BOX_WAS_FULL_MESSAGE_FRLG                        (SYS_FLAGS_FRLG + 0x43)
@@ -1369,10 +1369,10 @@
 #define FLAG_SYS_SEVII_MAP_123                                      (SYS_FLAGS_FRLG + 0x45)
 #define FLAG_SYS_SEVII_MAP_4567                                     (SYS_FLAGS_FRLG + 0x46)
 #define FLAG_SYS_GOT_BERRY_POUCH                                    (SYS_FLAGS_FRLG + 0x47)
-#define FLAG_SYS_DEOXYS_AWAKENED                                    (SYS_FLAGS_FRLG + 0x48)
+#define FLAG_DEOXYS_ROCK_COMPLETE_FRLG                              (SYS_FLAGS_FRLG + 0x48)
 #define FLAG_SYS_UNLOCKED_TANOBY_RUINS                              (SYS_FLAGS_FRLG + 0x49)
-#define FLAG_ENABLE_SHIP_NAVEL_ROCK_FRLG                                 (SYS_FLAGS_FRLG + 0x4A)
-#define FLAG_ENABLE_SHIP_BIRTH_ISLAND_FRLG                               (SYS_FLAGS_FRLG + 0x4B)
+#define FLAG_ENABLE_SHIP_NAVEL_ROCK_FRLG                            (SYS_FLAGS_FRLG + 0x4A)
+#define FLAG_ENABLE_SHIP_BIRTH_ISLAND_FRLG                          (SYS_FLAGS_FRLG + 0x4B)
 
 // World Map Flags
 #define FLAG_WORLD_MAP_PALLET_TOWN                                  (SYS_FLAGS_FRLG + 0x90)

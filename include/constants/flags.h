@@ -155,7 +155,7 @@
 #define FLAG_RECEIVED_DOLL_LANETTE           0x83
 #define FLAG_RECEIVED_POTION_OLDALE          0x84
 #define FLAG_RECEIVED_AMULET_COIN            0x85
-#define FLAG_PENDING_DAYCARE_EGG             0x86
+#define FLAG_PENDING_DAYCARE_EGG_EMERALD     0x86
 #define FLAG_THANKED_FOR_PLAYING_WITH_WALLY  0x87
 #define FLAG_ENABLE_FIRST_WALLY_POKENAV_CALL 0x88 // Set after defeating Wally outside Mauville Gym. Will activate a call later to register Wally.
 #define FLAG_RECEIVED_HM_CUT                 0x89
@@ -1342,18 +1342,18 @@
 // Trainer flags occupy 0x500 - 0x85F, the last 9 of which are unused
 // See constants/opponents.h. The values there + FLAG_TRAINER_FLAG_START are the flag IDs
 
-#define TRAINER_FLAGS_START                                         0x500
-#define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START + MAX_TRAINERS_COUNT - 1) // 0x85F
+#define TRAINER_FLAGS_START_EMERALD                                         0x500
+#define TRAINER_FLAGS_END                                           (TRAINER_FLAGS_START_EMERALD + MAX_TRAINERS_COUNT - 1) // 0x85F
 
 // System Flags
 
 #define SYSTEM_FLAGS                                   (TRAINER_FLAGS_END + 1) // 0x860
 
-#define FLAG_SYS_POKEMON_GET                         (SYSTEM_FLAGS + 0x0) // FLAG_0x860
-#define FLAG_SYS_POKEDEX_GET                         (SYSTEM_FLAGS + 0x1)
+#define FLAG_SYS_POKEMON_GET_EMERALD                 (SYSTEM_FLAGS + 0x0) // FLAG_0x860
+#define FLAG_SYS_POKEDEX_GET_EMERALD                 (SYSTEM_FLAGS + 0x1)
 #define FLAG_SYS_POKENAV_GET                         (SYSTEM_FLAGS + 0x2)
 #define FLAG_UNUSED_0x863                            (SYSTEM_FLAGS + 0x3) // Unused Flag
-#define FLAG_SYS_GAME_CLEAR                          (SYSTEM_FLAGS + 0x4)
+#define FLAG_SYS_GAME_CLEAR_EMERALD                  (SYSTEM_FLAGS + 0x4)
 #define FLAG_SYS_CHAT_USED                           (SYSTEM_FLAGS + 0x5)
 #define FLAG_UNLOCKED_TRENDY_SAYINGS                 (SYSTEM_FLAGS + 0x6)
 
@@ -1412,7 +1412,7 @@
 #define FLAG_SYS_TV_START                           (SYSTEM_FLAGS + 0x32)
 #define FLAG_SYS_CHANGED_DEWFORD_TREND              (SYSTEM_FLAGS + 0x33)
 #define FLAG_SYS_MIX_RECORD                         (SYSTEM_FLAGS + 0x34)
-#define FLAG_SYS_CLOCK_SET                          (SYSTEM_FLAGS + 0x35)
+#define FLAG_SYS_CLOCK_SET_EMERALD                  (SYSTEM_FLAGS + 0x35)
 #define FLAG_SYS_NATIONAL_DEX                       (SYSTEM_FLAGS + 0x36)
 #define FLAG_SYS_CAVE_SHIP                          (SYSTEM_FLAGS + 0x37) // Unused Flag, leftover from R/S debug, presumably used by Emerald's debug too
 #define FLAG_SYS_CAVE_WONDER                        (SYSTEM_FLAGS + 0x38) // Unused Flag, same as above
@@ -1463,7 +1463,7 @@
 #define FLAG_SYS_SHOAL_ITEM                         (SYSTEM_FLAGS + 0x5F)
 #define FLAG_SYS_B_DASH                             (SYSTEM_FLAGS + 0x60) // RECEIVED Running Shoes
 #define FLAG_SYS_CTRL_OBJ_DELETE                    (SYSTEM_FLAGS + 0x61)
-#define FLAG_SYS_RESET_RTC_ENABLE                   (SYSTEM_FLAGS + 0x62)
+#define FLAG_SYS_RESET_RTC_ENABLE_EMERALD           (SYSTEM_FLAGS + 0x62)
 
 #define FLAG_LANDMARK_BERRY_MASTERS_HOUSE           (SYSTEM_FLAGS + 0x63)
 
@@ -1484,7 +1484,7 @@
 #define FLAG_SYS_FRONTIER_PASS                      (SYSTEM_FLAGS + 0x72)
 
 #define FLAG_MAP_SCRIPT_CHECKED_DEOXYS              (SYSTEM_FLAGS + 0x73)
-#define FLAG_DEOXYS_ROCK_COMPLETE                   (SYSTEM_FLAGS + 0x74)
+#define FLAG_DEOXYS_ROCK_COMPLETE_EMERALD           (SYSTEM_FLAGS + 0x74)
 #define FLAG_ENABLE_SHIP_BIRTH_ISLAND               (SYSTEM_FLAGS + 0x75)
 #define FLAG_ENABLE_SHIP_FARAWAY_ISLAND             (SYSTEM_FLAGS + 0x76)
 
@@ -1674,7 +1674,28 @@
 #define TESTING_FLAG_UNUSED_7                   (TESTING_FLAGS_START + 0x7)
 #endif // TESTING
 
-// FRLG flags
-#define FLAG_BEAT_RIVAL_IN_OAKS_LAB                      0x258
+// shared flags
+#if IS_FRLG
+    #define FLAG_SYS_GAME_CLEAR         FLAG_SYS_GAME_CLEAR_FRLG
+    #define FLAG_SYS_RESET_RTC_ENABLE   FLAG_SYS_RESET_RTC_ENABLE_FRLG
+    #define FLAG_SYS_CLOCK_SET          FLAG_SYS_CLOCK_SET_FRLG
+    #define FLAG_PENDING_DAYCARE_EGG    FLAG_PENDING_DAYCARE_EGG_FRLG
+    #define FLAG_SYS_POKEMON_GET        FLAG_SYS_POKEMON_GET_FRLG
+    #define FLAG_SYS_POKEDEX_GET        FLAG_SYS_POKEDEX_GET_FRLG
+    #define FLAG_DEOXYS_ROCK_COMPLETE   FLAG_DEOXYS_ROCK_COMPLETE_FRLG
+
+    #define TRAINER_FLAGS_START         TRAINER_FLAGS_START_FRLG
+#else
+    #define FLAG_SYS_GAME_CLEAR         FLAG_SYS_GAME_CLEAR_EMERALD
+    #define FLAG_SYS_RESET_RTC_ENABLE   FLAG_SYS_RESET_RTC_ENABLE_EMERALD
+    #define FLAG_SYS_CLOCK_SET          FLAG_SYS_CLOCK_SET_EMERALD
+    #define FLAG_PENDING_DAYCARE_EGG    FLAG_PENDING_DAYCARE_EGG_EMERALD
+    #define FLAG_SYS_POKEMON_GET        FLAG_SYS_POKEMON_GET_EMERALD
+    #define FLAG_SYS_POKEDEX_GET        FLAG_SYS_POKEDEX_GET_EMERALD
+    #define FLAG_DEOXYS_ROCK_COMPLETE   FLAG_DEOXYS_ROCK_COMPLETE_EMERALD
+
+    #define TRAINER_FLAGS_START         TRAINER_FLAGS_START_EMERALD
+#endif
+
 
 #endif // GUARD_CONSTANTS_FLAGS_H
