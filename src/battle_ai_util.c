@@ -3957,7 +3957,7 @@ u32 AI_IsSwitchinFirstPriority(bool32 isSwitchinFirst, u32 battlerAtk, u32 battl
 
     SetBattlerAiData(battlerAtk, gAiLogicData);
 
-    s8 aiPriority = GetBattleMovePriority(battlerAtk, GetBattlerAbility(battlerAtk), moveConsidered);
+    s8 aiPriority = GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], moveConsidered);
 
     FreeRestoreBattleMons(savedBattleMons);
     SetBattlerAiData(battlerAtk, gAiLogicData);
@@ -3973,8 +3973,8 @@ u32 AI_IsSwitchinFirstPriority(bool32 isSwitchinFirst, u32 battlerAtk, u32 battl
 
 u32 AI_IsBattlerFirstPriority(u32 battlerAtk, u32 battlerDef, u32 battlerMove, u32 opposingMove)
 {
-    s8 aiPriority = GetBattleMovePriority(battlerAtk, GetBattlerAbility(battlerAtk), battlerMove);
-    s8 playerPriority = GetBattleMovePriority(battlerDef, GetBattlerAbility(battlerDef), opposingMove);
+    s8 aiPriority = GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], battlerMove);
+    s8 playerPriority = GetBattleMovePriority(battlerDef, gAiLogicData->abilities[battlerDef], opposingMove);
 
     if (aiPriority > playerPriority)
         return TRUE;
