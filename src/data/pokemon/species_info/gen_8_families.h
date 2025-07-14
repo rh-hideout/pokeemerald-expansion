@@ -2041,11 +2041,11 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_DUBWOOL] =
     {
-        .baseHP        = 72,
-        .baseAttack    = 80,
-        .baseDefense   = 100,
+        .baseHP        = 77,    //+5
+        .baseAttack    = 95,    //+15
+        .baseDefense   = 120,   //+20
         .baseSpeed     = 88,
-        .baseSpAttack  = 60,
+        .baseSpAttack  = 50,    //-10
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_NORMAL),
         .catchRate = 127,
@@ -2056,7 +2056,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_FLUFFY, ABILITY_STEADFAST, ABILITY_BULLETPROOF },
+        .abilities = { ABILITY_FLUFFY, ABILITY_CUD_CHEW, ABILITY_BULLETPROOF },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Dubwool"),
         .cryId = CRY_DUBWOOL,
@@ -2167,8 +2167,8 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_DREDNAW] =
     {
         .baseHP        = 90,
-        .baseAttack    = 115,
-        .baseDefense   = 90,
+        .baseAttack    = 120,   //+5
+        .baseDefense   = 100,   //+10
         .baseSpeed     = 74,
         .baseSpAttack  = 48,
         .baseSpDefense = 68,
@@ -2231,8 +2231,8 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_DREDNAW_MEGA] =
     {
         .baseHP        = 90,
-        .baseAttack    = 155,   //+40
-        .baseDefense   = 150,   //+60
+        .baseAttack    = 160,   //+40
+        .baseDefense   = 160,   //+60
         .baseSpeed     = 39,    //-35
         .baseSpAttack  = 38,    //-10
         .baseSpDefense = 108,   //+40
@@ -2598,10 +2598,10 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_COALOSSAL] =
     {
         .baseHP        = 110,
-        .baseAttack    = 80,
+        .baseAttack    = 90,    //+10
         .baseDefense   = 120,
         .baseSpeed     = 30,
-        .baseSpAttack  = 80,
+        .baseSpAttack  = 90,    //+10
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_ROCK, TYPE_FIRE),
         .catchRate = 45,
@@ -2663,10 +2663,10 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     [SPECIES_COALOSSAL_MEGA] =
     {
         .baseHP        = 110,
-        .baseAttack    = 90,    //+10
+        .baseAttack    = 100,   //+10
         .baseDefense   = 180,   //+60
         .baseSpeed     = 30,
-        .baseSpAttack  = 90,    //+10
+        .baseSpAttack  = 100,   //+10
         .baseSpDefense = 110,   //+20
         .types = MON_TYPES(TYPE_ROCK, TYPE_FIRE),
         .catchRate = 45,
@@ -2849,8 +2849,8 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .baseHP        = 70,
         .baseAttack    = 110,
         .baseDefense   = 80,
-        .baseSpeed     = 70,
-        .baseSpAttack  = 95,
+        .baseSpeed     = 90,    //+20
+        .baseSpAttack  = 110,   //+15
         .baseSpDefense = 60,
         .types = MON_TYPES(TYPE_GRASS, TYPE_DRAGON),
         .catchRate = 45,
@@ -2861,7 +2861,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_ERRATIC,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS, EGG_GROUP_DRAGON),
-        .abilities = { ABILITY_RIPEN, ABILITY_GLUTTONY, ABILITY_PETAL_RIDER },
+        .abilities = { ABILITY_RIPEN, ABILITY_SUPERSWEET_SYRUP, ABILITY_PETAL_RIDER },
         .bodyColor = BODY_COLOR_GREEN,
         .speciesName = _("Flapple"),
         .cryId = CRY_FLAPPLE,
@@ -2967,12 +2967,12 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_APPLETUN] =
     {
-        .baseHP        = 110,
+        .baseHP        = 130,   //+20
         .baseAttack    = 85,
-        .baseDefense   = 80,
+        .baseDefense   = 85,    //+5
         .baseSpeed     = 30,
-        .baseSpAttack  = 100,
-        .baseSpDefense = 80,
+        .baseSpAttack  = 105,   //+5
+        .baseSpDefense = 85,    //+5
         .types = MON_TYPES(TYPE_GRASS, TYPE_DRAGON),
         .catchRate = 45,
         .expYield = 170,
@@ -3149,11 +3149,11 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 
     [SPECIES_HYDRAPPLE] =
     {
-        .baseHP        = 106,
-        .baseAttack    = 80,
+        .baseHP        = 116,   //+10
+        .baseAttack    = 75,    //-5
         .baseDefense   = 110,
-        .baseSpeed     = 44,
-        .baseSpAttack  = 120,
+        .baseSpeed     = 34,    //-10
+        .baseSpAttack  = 125,   //+5
         .baseSpDefense = 80,
         .types = MON_TYPES(TYPE_GRASS, TYPE_DRAGON),
         .catchRate = 10,
@@ -5189,7 +5189,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_HUMAN_LIKE),
-        .abilities = { ABILITY_PRANKSTER, ABILITY_FRISK, ABILITY_PICKPOCKET },
+        .abilities = { ABILITY_PRANKSTER, ABILITY_TANGLING_HAIR, ABILITY_PICKPOCKET },
         .bodyColor = BODY_COLOR_PURPLE,
         .speciesName = _("Grimmsnarl"),
         .cryId = CRY_GRIMMSNARL,
@@ -5424,9 +5424,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
                                 {EVO_LEVEL, 0, SPECIES_ALCREMIE_STRAWBERRY_CARAMEL_SWIRL},
                                 {EVO_LEVEL, 0, SPECIES_ALCREMIE_STRAWBERRY_RAINBOW_SWIRL}),
     },
-
+//+5 HP
 #define ALCREMIE_MISC_INFO(color)                                               \
-        .baseHP        = 65,                                                    \
+        .baseHP        = 70,                                                    \
         .baseAttack    = 60,                                                    \
         .baseDefense   = 75,                                                    \
         .baseSpeed     = 64,                                                    \
@@ -5555,7 +5555,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if FROSTY_MEGAS >= SPECIES_ALCREMIE
      [SPECIES_ALCREMIE_MEGA] =
     {
-        .baseHP        = 65,                                                    
+        .baseHP        = 70,                                                    
         .baseAttack    = 60,                                                    
         .baseDefense   = 105,   //+30                                                  
         .baseSpeed     = 74,    //+10                                                    
@@ -5657,9 +5657,9 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_FALINKS
     [SPECIES_FALINKS] =
     {
-        .baseHP        = 65,
-        .baseAttack    = 100,
-        .baseDefense   = 100,
+        .baseHP        = 70,    //+5
+        .baseAttack    = 105,   //+5
+        .baseDefense   = 105,   //+5
         .baseSpeed     = 75,
         .baseSpAttack  = 70,
         .baseSpDefense = 60,
@@ -6410,7 +6410,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     {
         .baseHP        = 122,
         .baseAttack    = 130,
-        .baseDefense   = 69,
+        .baseDefense   = 74,    //+5
         .baseSpeed     = 30,
         .baseSpAttack  = 80,
         .baseSpDefense = 69,
@@ -6475,7 +6475,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
     {
         .baseHP        = 122,
         .baseAttack    = 175,   //+45
-        .baseDefense   = 109,   //+45
+        .baseDefense   = 114,   //+45
         .baseSpeed     = 20,    //-10
         .baseSpAttack  = 70,    //-10
         .baseSpDefense = 99,    //+30
@@ -6859,7 +6859,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL, EGG_GROUP_DRAGON),
-        .abilities = { ABILITY_LIGHT_METAL, ABILITY_HEAVY_METAL, ABILITY_STALWART },
+        .abilities = { ABILITY_LIGHT_METAL, ABILITY_LIGHTNING_ROD, ABILITY_STALWART },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Duraludon"),
         .cryId = CRY_DURALUDON,
@@ -6925,7 +6925,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MINERAL, EGG_GROUP_DRAGON),
-        .abilities = { ABILITY_FILTER, ABILITY_FILTER, ABILITY_FILTER },
+        .abilities = { ABILITY_LIGHTNING_ROD, ABILITY_NONE, ABILITY_NONE },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Duraludon"),
         .cryId = CRY_DURALUDON,
@@ -7152,7 +7152,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sDreepyLevelUpLearnset,
         .teachableLearnset = sDreepyTeachableLearnset,
         .eggMoveLearnset = sDreepyEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_DRAKLOAK}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 46, SPECIES_DRAKLOAK}), //50
     },
 
     [SPECIES_DRAKLOAK] =
@@ -7214,7 +7214,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         )
         .levelUpLearnset = sDrakloakLevelUpLearnset,
         .teachableLearnset = sDrakloakTeachableLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 60, SPECIES_DRAGAPULT}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 55, SPECIES_DRAGAPULT}),    //60
     },
 
     [SPECIES_DRAGAPULT] =

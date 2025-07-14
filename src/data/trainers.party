@@ -4641,36 +4641,24 @@ AI: Check Bad Move / Try To Faint / Check Viability / Force Setup First Turn
 Mugshot: Purple
 
 Weavile @ Focus Sash  
-Ability: Pressure  
+Ability: Adaptability 
 Level: 56   
 EVs: 252 Atk / 4 Def / 252 Spe  
 Jolly Nature  
-- Triple Axel  
-- Knock Off  
+- Frost Blade 
+- Night Slash 
 - Ice Shard  
 - Swords Dance  
 
-Grimmsnarl @ Light Clay  
+Grimmsnarl @ Grimmsnarlite 
 Ability: Prankster  
 Level: 57  
-Tera Type: Dark  
 EVs: 252 HP / 244 Def / 12 SpD  
 Impish Nature  
 - Spirit Break  
 - Reflect  
 - Light Screen  
 - Taunt  
-
-Kingambit @ Black Glasses  
-Ability: Supreme Overlord  
-Level: 58  
-Tera Type: Fairy  
-EVs: 252 HP / 252 Atk / 4 SpD  
-Adamant Nature  
-- Iron Head  
-- Kowtow Cleave  
-- Swords Dance  
-- Sucker Punch  
 
 Muk-Alola @ Assault Vest  
 Ability: Poison Touch  
@@ -4698,11 +4686,20 @@ Level: 58
 EVs: 252 Atk / 4 SpD / 252 Spe  
 Adamant Nature  
 - Dragon Dance  
-- Knock Off  
+- Final Might  
 - Acrobatics  
-- Earthquake  
+- Earthquake
 
-
+Kingambit @ Black Glasses  
+Ability: Supreme Overlord  
+Level: 58
+Tera Type: Fairy
+EVs: 252 HP / 252 Atk / 4 SpD  
+Adamant Nature  
+- Iron Head  
+- Kowtow Cleave  
+- Swords Dance  
+- Sucker Punch 
 
 === TRAINER_PHOEBE ===
 Name: PHOEBE
@@ -4715,16 +4712,25 @@ Double Battle: Yes
 AI: Check Bad Move / Try To Faint / Check Viability
 Mugshot: Green
 
-Dusclops @ Eviolite
-Level: 58
+Dusknoir @ Dusknoirite
+Level: 60
 Ability: Pressure  
 Shiny: Yes  
 EVs: 244 HP / 8 Def / 252 SpD
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
-- Depletion Ray
-- Will o Wisp
-- Destiny Bond
+- Sinister Slam
+- Confuse Ray
+- Drain Punch
 - Protect
+
+Banette @ Bright Powder
+Level: 60
+EVs: 252 HP / 252 Atk / 4 SpD  
+IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
+- Spectral Thief
+- Double Team
+- Banshee Scream
+- Knock Off
 
 Gengar @ Lum Berry  
 Level: 60
@@ -4747,15 +4753,6 @@ IVs: 0 Atk
 - Make It Rain  
 - Recover  
 - Shadow Ball
-
-Banette @ Bright Powder
-Level: 60
-EVs: 252 HP / 252 Atk / 4 SpD  
-IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
-- Spectral Thief
-- Double Team
-- Banshee Scream
-- Knock Off
 
 Basculegion @ Life Orb
 Ability: Adaptability
@@ -4813,15 +4810,15 @@ Impish Nature
 - Earthquake
 - Snowscape
 
-Glalie @ Focus Sash
+Glalie @ Glalitite
 Level: 60
 Ability: Inner Focus
 EVs: 4 Atk / 252 SpA / 252 Spe
 Naive Nature
 - Spikes
-- Taunt
-- Freeze-Dry
-- Explosion
+- Glare
+- Rock Slide
+- Glacial Lance
 
 Frosmoth @ Heavy-Duty Boots
 Level: 61
@@ -4912,16 +4909,16 @@ IVs: 30 HP / 0 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Sludge Bomb
 - Rain Dance
 
-Salamence @ Heavy-Duty Boots
+Salamence @ Salamencite
 Level: 62
 Ability: Intimidate
 EVs: 160 HP / 252 SpA / 96 Spe
 IVs: 30 HP / 0 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 Modest Nature
-- Draco Meteor
-- Hurricane
-- Hydro Pump
-- Roost
+- Dragon Claw
+- Double Edge
+- Brick Break
+- Dragon Dance
 
 Kingdra @ Life Orb
 Level: 61
@@ -5004,7 +5001,6 @@ IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 Pawmot @ Fighting Gem
 Level: 19
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-Tera Type: Flying
 - Arm Thrust
 - Nuzzle
 - Dig
@@ -5013,8 +5009,9 @@ Tera Type: Flying
 Makuhita @ Sitrus Berry
 Level: 20
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
+Tera Type: Steel
 - Arm Thrust
-- Vital Throw
+- Knock Off
 - Reversal
 - Bulk Up
 
@@ -5034,7 +5031,7 @@ Level: 25
 Ability: Lightning Rod
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Thunder Wave
-- Discharge
+- Spark
 - Flame Charge
 - Eerie Impulse
 
@@ -5042,9 +5039,9 @@ Pincurchin @ Eject Button
 Level: 25
 Ability: Electric Surge
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
-- Water Gun
+- Bubblebeam
 - Spark
-- Fury Attack
+- Pin Missile
 - Charge
 
 Magneton @ Eviolite
@@ -5063,7 +5060,7 @@ Ability: Lightning Rod
 Tera Type: Flying
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Discharge
-- Thunder Wave
+- Roar
 - Swift
 - Ice Fang
 
@@ -5090,28 +5087,28 @@ Arcanine-Hisui @ Sitrus Berry
 Adamant Nature
 Level: 34
 Ability: Intimidate
+Tera Type: Grass
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Howl
 - Fire Fang
 - Morning Sun
 - Thunder Fang
 
-Camerupt @ Heat Rock
+Camerupt @ Cameruptite
 Level: 34
 Ability: Magma Armor
-Tera Type: Grass
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Overheat
 - Rock Slide
-- Sunny Day
+- Yawn
 - Earth Power
 
 Ninetales @ Leftovers
 Level: 32
-Ability: Cursed Body
+Ability: Drought
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Overheat
-- Will o Wisp
+- Fire Spin
 - Attract
 - Shadow Ball
 
@@ -5149,8 +5146,8 @@ Modest Nature
 Level: 36
 Ability: Gale Wings
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Quick Attack
-- Twister
+- Roost
+- Swift
 - Tailwind
 - Razor Wind
 
@@ -5173,7 +5170,7 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Icy Wind
 - Take Down
 
-Slaking @ Sitrus Berry
+Slaking @ Slakite
 Adamant Nature
 Level: 37
 Tera Type: Ghost
@@ -5181,7 +5178,7 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Counter
 - Yawn
 - Facade
-- Feint Attack
+- Play Rough
 
 === TRAINER_WINONA_1 ===
 Name: WINONA
@@ -5190,7 +5187,7 @@ Pic: Leader Winona
 Gender: Female
 Music: Female
 Items: Hyper Potion / Hyper Potion
-Double Battle: Yes
+Double Battle: No
 AI: Check Bad Move / Try To Faint / Check Viability / Risky
 
 Kilowattrel @ Magnet
@@ -5208,8 +5205,8 @@ Ability: Magic Bounce
 IVs: 25 HP / 25 Atk / 25 Def / 25 SpA / 25 SpD / 25 Spe
 - Confuse Ray
 - Air Slash
-- Calm Mind
-- Expanding Force
+- Roost
+- Esper Wing
 
 Mandibuzz @ Leftovers
 Level: 40
@@ -5223,6 +5220,7 @@ IVs: 25 HP / 25 Atk / 25 Def / 25 SpA / 25 SpD / 25 Spe
 Archeops @ Sitrus Berry
 Level: 41
 IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
+Tera Type: Ground
 - Crunch
 - Dual Wingbeat
 - Rock Slide
@@ -5233,16 +5231,15 @@ Relaxed Nature
 Level: 40
 Ability: Serene Grace
 IVs: 26 HP / 26 Atk / 26 Def / 26 SpA / 26 SpD / 26 Spe
-- Life Dew
+- Cyclone
 - Extrasensory
 - Ancient Power
 - Yawn
 
-Altaria @ White Herb
+Altaria @ Altarianite
 Adamant Nature
 Level: 41
 Ability: Cloud Nine
-Tera Type: Ground
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Earthquake
 - Dragon Dash
@@ -5295,13 +5292,14 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Morning Sun
 - Yawn
 
-Musharna @ Leftovers
-Level: 46
+Hatterene @ Hatterite
+Level: 47
+Ability: Magic Bounce
 IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
-- Yawn
-- Dream Eater
-- Shadow Ball
-- Reflect
+- Dazzling Gleam
+- Expanding Force
+- Calm Mind
+- Life Dew
 
 Claydol @ Sitrus Berry
 Level: 48
@@ -5325,11 +5323,12 @@ AI: Check Bad Move / Try To Faint / Check Viability
 Tentacruel @ Black Sludge
 Level: 50
 Ability: Rain Dish
+Tera Type: Poison
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Surf
 - Mortal Spin
 - Acid Armor
-- Confuse Ray
+- Rain Dance
 
 Basculegion M @ Sitrus Berry
 Level: 52
@@ -5340,15 +5339,14 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Aqua Jet
 - Phantom Force
 
-Lapras @ Leftovers
+Milotic @ Milotite
 Level: 51
-Ability: Water Absorb
-Tera Type: Water
+Ability: Marvel Scale
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Life Dew
-- Confuse Ray
-- Freeze Dry
-- Muddy Water
+- Adrenaline
+- Scald
+- Alluring Voice
+- Recover
 
 Primarina @ Air Balloon
 Level: 51
@@ -5362,7 +5360,7 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 Swampert @ Wide Lens
 Level: 51
 IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Muddy Water
+- Rain Dance
 - Rock Slide
 - Earthquake
 - Flip Turn
@@ -6566,7 +6564,7 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Amnesia
 - Hyper Beam
 
-Gyarados @ Wacan Berry
+Gyarados @ Gyaradosite
 Adamant Nature
 Level: 64
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
@@ -6579,6 +6577,7 @@ Milotic @ Flame Orb
 Calm Nature
 Level: 64
 Ability: Marvel Scale
+Tera Type: Water
 IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Recover
 - Surf
