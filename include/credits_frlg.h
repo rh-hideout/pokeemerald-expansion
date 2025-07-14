@@ -1,5 +1,5 @@
-#ifndef GUARD_CREDITS_H
-#define GUARD_CREDITS_H
+#ifndef GUARD_CREDITS_FRLG_H
+#define GUARD_CREDITS_FRLG_H
 
 extern bool8 gHasHallOfFameRecords;
 
@@ -22,4 +22,4 @@ extern bool8 gHasHallOfFameRecords;
     
 void DoCredits(void);
 
-#endif //GUARD_CREDITS_H
+#endif //GUARD_CREDITS_FRLG_H

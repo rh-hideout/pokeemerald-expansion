@@ -1257,6 +1257,14 @@ void Overworld_PlaySpecialMapMusic(void)
 {
     u16 music = GetCurrLocationDefaultMusic();
 
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_STOP)
+    {
+        StopMapMusic();
+        return;
+    }
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
+        return;
+
     if (music != MUS_ABNORMAL_WEATHER && music != MUS_NONE)
     {
         if (gSaveBlock1Ptr->savedMusic)
@@ -1283,6 +1291,14 @@ void Overworld_ClearSavedMusic(void)
 
 static void TransitionMapMusic(void)
 {
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_STOP)
+    {
+        StopMapMusic();
+        return;
+    }
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
+        return;
+
     if (FlagGet(FLAG_DONT_TRANSITION_MUSIC) != TRUE)
     {
         u16 newMusic = GetWarpDestinationMusic();
@@ -1368,6 +1384,15 @@ static void PlayAmbientCry(void)
         return;
     pan = (Random() % 88) + 212;
     volume = (Random() % 30) + 50;
+
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_STOP)
+    {
+        StopMapMusic();
+        return;
+    }
+    if (gDisableMapMusicChangeOnMapLoad == MUSIC_DISABLE_KEEP)
+        return;
+
     PlayCry_NormalNoDucking(sAmbientCrySpecies, pan, volume, CRY_PRIORITY_AMBIENT);
 }
 
@@ -2441,6 +2466,38 @@ static void InitOverworldGraphicsRegisters(void)
     ShowBg(2);
     ShowBg(3);
     InitFieldMessageBox();
+}
+
+static void InitOverworldGraphicsRegistersCreditsFrlg(void)
+{
+    ClearScheduledBgCopiesToVram();
+    ResetTempTileDataBuffers();
+    SetGpuReg(REG_OFFSET_MOSAIC, 0);
+    SetGpuReg(REG_OFFSET_WININ, WININ_WIN0_BG_ALL | WININ_WIN0_OBJ | WININ_WIN1_BG_ALL | WININ_WIN1_OBJ);
+    SetGpuReg(REG_OFFSET_WINOUT, WINOUT_WIN01_BG0 | WINOUT_WINOBJ_BG0);
+    SetGpuReg(REG_OFFSET_WIN0H, WIN_RANGE(0, 255));
+    SetGpuReg(REG_OFFSET_WIN0V, WIN_RANGE(0, 255));
+    SetGpuReg(REG_OFFSET_WIN1H, WIN_RANGE(255, 255));
+    SetGpuReg(REG_OFFSET_WIN1V, WIN_RANGE(255, 255));
+    SetGpuReg(REG_OFFSET_BLDCNT, gOverworldBackgroundLayerFlags[1] | gOverworldBackgroundLayerFlags[2] | gOverworldBackgroundLayerFlags[3]
+                                 | BLDCNT_TGT2_OBJ | BLDCNT_EFFECT_BLEND);
+    SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(13, 7));
+    ScheduleBgCopyTilemapToVram(1);
+    ScheduleBgCopyTilemapToVram(2);
+    ScheduleBgCopyTilemapToVram(3);
+    SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_MODE_0 | DISPCNT_OBJ_1D_MAP | 0x20 | DISPCNT_OBJ_ON | DISPCNT_WIN0_ON | DISPCNT_WIN1_ON);
+    ShowBg(0);
+    ShowBg(1);
+    ShowBg(2);
+    ShowBg(3);
+    ChangeBgX(0, 0, 0);
+    ChangeBgY(0, 0, 0);
+    ChangeBgX(1, 0, 0);
+    ChangeBgY(1, 0, 0);
+    ChangeBgX(2, 0, 0);
+    ChangeBgY(2, 0, 0);
+    ChangeBgX(3, 0, 0);
+    ChangeBgY(3, 0, 0);
 }
 
 static void ResumeMap(bool32 a1)
@@ -3861,7 +3918,7 @@ static bool8 MapLdr_Credits(void)
         break;
     case 2:
         InitCurrentFlashLevelScanlineEffect();
-        InitOverworldGraphicsRegisters();
+        InitOverworldGraphicsRegistersCreditsFrlg();
         (*state)++;
         break;
     case 3:

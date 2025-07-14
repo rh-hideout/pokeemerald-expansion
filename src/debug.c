@@ -14,6 +14,7 @@
 #include "clock.h"
 #include "coins.h"
 #include "credits.h"
+#include "credits_frlg.h"
 #include "data.h"
 #include "daycare.h"
 #include "debug.h"
@@ -1511,7 +1512,10 @@ static void DebugAction_Util_Weather_SelectId(u8 taskId)
 static void DebugAction_Util_WatchCredits(u8 taskId)
 {
     Debug_DestroyMenu_Full(taskId);
-    SetMainCallback2(CB2_StartCreditsSequence);
+    if (IS_FRLG)
+        SetMainCallback2(DoCredits);
+    else
+        SetMainCallback2(CB2_StartCreditsSequence);
 }
 
 static void DebugAction_Player_Name(u8 taskId)
