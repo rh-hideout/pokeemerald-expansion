@@ -25,6 +25,11 @@ struct BerryInfo
     u8 sour;
     u8 smoothness;
     u8 drainRate;
+};
+
+struct Berry
+{
+    struct BerryInfo info;
     u32 naturalGiftType:6;
     u32 naturalGiftPower:8;
     u32 berryCrushDifficulty:8; // The number of A presses required to crush it

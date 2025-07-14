@@ -254,6 +254,6 @@ extern const u16 gBerryPalette_Rowap[];
 extern const u16 gBerryPalette_Kee[];
 extern const u16 gBerryPalette_Maranga[];
 
-extern const struct BerryInfo gBerriesInfo[];
+extern const struct Berry gBerries[];
 
 #endif // GUARD_BERRY_H

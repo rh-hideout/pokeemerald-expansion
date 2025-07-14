@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Gale Wings doesn't increase priority of Flying-type Natural 
         ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_SKY_PLATE].secondaryId == TYPE_FLYING);
-        ASSUME(gBerriesInfo[GetBerryIndex(ITEM_LUM_BERRY)].naturalGiftType == TYPE_FLYING);
+        ASSUME(gBerries[GetBerryIndex(ITEM_LUM_BERRY)].naturalGiftType == TYPE_FLYING);
         OPPONENT(SPECIES_TALONFLAME) { Ability(ABILITY_GALE_WINGS); Speed(1); Item(heldItem); HPIV(31); AttackIV(3); DefenseIV(31); SpAttackIV(30); SpDefenseIV(30); SpeedIV(30); TeraType(TYPE_FLYING); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); };
     } WHEN {

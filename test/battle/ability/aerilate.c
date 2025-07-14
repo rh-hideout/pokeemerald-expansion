@@ -111,7 +111,7 @@ SINGLE_BATTLE_TEST("Aerilate doesn't affect Natural Gift's type")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(GetMoveEffect(MOVE_SKILL_SWAP) == EFFECT_SKILL_SWAP);
-        ASSUME(gBerriesInfo[GetBerryIndex(ITEM_PERSIM_BERRY)].naturalGiftType == TYPE_GROUND);
+        ASSUME(gBerries[GetBerryIndex(ITEM_PERSIM_BERRY)].naturalGiftType == TYPE_GROUND);
         ASSUME(GetSpeciesType(SPECIES_SALAMENCE_MEGA, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_SALAMENCE_MEGA, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PERSIM_BERRY); }
         OPPONENT(SPECIES_SALAMENCE) { Item(ITEM_SALAMENCITE); }

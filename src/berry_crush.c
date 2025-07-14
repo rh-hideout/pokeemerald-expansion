@@ -1649,7 +1649,7 @@ static void PrintResultsText(struct BerryCrushGame *game, u8 page, u8 sp14, u8 b
             j = game->players[i].berryId;
             if (j > NUM_BERRIES)
                 j = 1;
-            StringCopy(gStringVar1, gBerriesInfo[j].name);
+            StringCopy(gStringVar1, GetBerryInfo(j)->name);
             StringExpandPlaceholders(gStringVar4, sResultsTexts[page]);
             break;
         }
@@ -2395,8 +2395,8 @@ static u32 Cmd_WaitForOthersToPickBerries(struct BerryCrushGame *game, u8 *args)
             game->players[i].berryId = gBlockRecvBuffer[i][0];
             if (game->players[i].berryId > NUM_BERRIES)
                 game->players[i].berryId = 1;
-            game->targetAPresses += gBerriesInfo[game->players[i].berryId].berryCrushDifficulty;
-            game->powder += gBerriesInfo[game->players[i].berryId].berryCrushPowder;
+            game->targetAPresses += gBerries[game->players[i].berryId].berryCrushDifficulty;
+            game->powder += gBerries[game->players[i].berryId].berryCrushPowder;
         }
         game->cmdTimer = 0;
         ResetBlockReceivedFlags();

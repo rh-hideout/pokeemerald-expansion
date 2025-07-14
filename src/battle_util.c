@@ -7950,7 +7950,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_NATURAL_GIFT:
-        basePower = gBerriesInfo[GetBerryIndex(gBattleMons[battlerAtk].item)].naturalGiftPower;
+        basePower = gBerries[GetBerryIndex(gBattleMons[battlerAtk].item)].naturalGiftPower;
         break;
     case EFFECT_DOUBLE_POWER_ON_ARG_STATUS:
         // Comatose targets treated as if asleep
