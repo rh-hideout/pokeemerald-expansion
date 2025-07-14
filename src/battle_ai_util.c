@@ -1443,6 +1443,25 @@ bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits)
     return FALSE;
 }
 
+bool32 CanAIKOTargetIfSturdyIgnored(u32 battlerAtk, u32 battlerDef)
+{
+    struct AiLogicData *aiData = gAiLogicData;
+    s32 moveIndex, dmg;
+    u16 *moves = GetMovesArray(battlerAtk);
+    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
+
+    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations))
+            continue;
+        dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, aiData);
+
+        if (gBattleMons[battlerDef].hp <= dmg && CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 CanTargetMoveFaintAi(u32 move, u32 battlerDef, u32 battlerAtk, u32 nHits)
 {
     u32 indexSlot = GetMoveSlot(GetMovesArray(battlerDef), move);
@@ -4220,6 +4239,36 @@ bool32 IsRecycleEncouragedItem(u32 item)
     return FALSE;
 }
 
+bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, u32 aiIsFaster)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battlerId);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE)
+        {
+            if (noOfHitsToFaint <= 2)
+            {
+                if (GetMovePriority(moves[i]) > 0)
+                    return TRUE;
+
+                switch (gMovesInfo[moves[i]].additionalEffects[i].moveEffect)
+                {
+                    case MOVE_EFFECT_SPD_MINUS_1:
+                    case MOVE_EFFECT_SPD_MINUS_2:
+                    {
+                        if(aiIsFaster)
+                            return TRUE;
+                    }
+                }
+            }
+        }
+    }
+
+    return FALSE;
+}
+
 static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, enum StatChange statId, bool32 considerContrary)
 {
     enum AIScore tempScore = NO_INCREASE;
@@ -4266,6 +4315,14 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5 && (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_HAZE)
         || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
         || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE)))
+        return NO_INCREASE;
+
+    // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
+    if (CanAIKOTargetIfSturdyIgnored(battlerAtk, battlerDef))
+        return NO_INCREASE;
+
+    // Don't increase stats if player has a move that can change the KO threshold
+    if (HasMoveThatChangesKOThreshold(battlerDef, noOfHitsToFaint, aiIsFaster))
         return NO_INCREASE;
 
     // Predicting switch
