@@ -313,18 +313,11 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if current mon can 1v1 in spite of bad matchup, and don't switch out if it can
     if (canBattlerWin1v1)
-    {
-        DebugPrintf("Winning 1v1");
         return FALSE;
-    }
 
     // If we don't have any other viable options, don't switch out
     if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
-    {
-        DebugPrintf("No good switchins");
         return FALSE;
-    }
-
 
     // Start assessing whether or not mon has bad odds
     // Jump straight to switching out in cases where mon gets OHKO'd
