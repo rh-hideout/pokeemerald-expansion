@@ -7015,6 +7015,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Envile)
        .levelUpLearnset = sEnvileLevelUpLearnset,
+       .teachableLearnset = sEnvileTeachableLearnset,
+       .eggMoveLearnset = sKaustikrokEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 33, SPECIES_KAUSTIKROK}),
     },
 
@@ -7071,6 +7073,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Kaustikrok)
        .levelUpLearnset = sKaustikrokLevelUpLearnset,
+       .teachableLearnset = sKaustikrokTeachableLearnset,
+       .eggMoveLearnset = sKaustikrokEggMoveLearnset,
     },
 
 
@@ -10126,6 +10130,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Leopawn)
        .levelUpLearnset = sLeopawnLevelUpLearnset,
+       .teachableLearnset = sLeopawnTeachableLearnset,
+       .eggMoveLearnset = sLeopawnEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_ITEM, ITEM_DAWN_STONE, SPECIES_DEVANTE},
         {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_VERGILION})
     },
@@ -10182,6 +10188,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Devante)
        .levelUpLearnset = sDevanteLevelUpLearnset,
+       .teachableLearnset = sDevanteTeachableLearnset,
+       .eggMoveLearnset = sLeopawnEggMoveLearnset,
     },
         [SPECIES_VERGILION] =
     { 
@@ -10236,6 +10244,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Vergilion)
        .levelUpLearnset = sVergilionLevelUpLearnset,
+       .teachableLearnset = sVergilionTeachableLearnset,
+       .eggMoveLearnset = sLeopawnEggMoveLearnset,
     },
         [SPECIES_LARVATRICE] =
     { 
@@ -15561,6 +15571,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },
@@ -15618,6 +15630,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },
@@ -15675,6 +15689,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },
@@ -15732,6 +15748,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },
@@ -15789,6 +15807,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },
@@ -15846,6 +15866,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Polybrawn)
        .levelUpLearnset = sPolybrawnLevelUpLearnset,
+       .teachableLearnset = sPolybrawnTeachableLearnset,
+       .eggMoveLearnset = sPolybrawnEggMoveLearnset,
        .formSpeciesIdTable = sPolybrawnFormSpeciesIdTable,
        .formChangeTable = sPolybrawnFormChangeTable,
     },

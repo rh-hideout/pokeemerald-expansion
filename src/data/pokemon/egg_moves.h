@@ -6499,6 +6499,16 @@ static const u16 sDubsnakeEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sPolybrawnEggMoveLearnset[] = {
+    MOVE_AUTOTOMIZE,
+    MOVE_BATON_PASS,
+    MOVE_SPIKE_CANNON,
+    MOVE_RAPID_SPIN,
+    MOVE_ELECTRO_BALL,
+    MOVE_IMPRISON,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sEccosmicEggMoveLearnset[] = {
     MOVE_BOUNCE,
     MOVE_DAZZLING_GLEAM,
@@ -6629,6 +6639,16 @@ static const u16 sCristaniumEggMoveLearnset[] = {
     MOVE_REVERSAL,
     MOVE_FLYING_PRESS,
     MOVE_WATER_SHURIKEN,
+    MOVE_UNAVAILABLE,
+};
+
+static const u16 sLeopawnEggMoveLearnset[] = {
+    MOVE_CHARM,
+    MOVE_REVENGE,
+    MOVE_REVERSAL,
+    MOVE_POWER_TRIP,
+    MOVE_QUICK_GUARD,
+    MOVE_TEETER_DANCE,
     MOVE_UNAVAILABLE,
 };
 
