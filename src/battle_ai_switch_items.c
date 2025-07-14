@@ -205,12 +205,12 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 {
     //Variable initialization
     u8 opposingPosition, atkType1, atkType2, defType1, defType2;
-    s32 i, damageDealt = 0, maxDamageDealt = 0, damageTaken = 0, maxDamageTaken = 0;
-    u32 aiMove, playerMove, aiAbility = gAiLogicData->abilities[battler], opposingBattler;
+    s32 i, damageDealt = 0, maxDamageDealt = 0, damageTaken = 0, maxDamageTaken = 0, maxDamageTakenPriority = 0;
+    u32 aiMove, playerMove, bestPlayerPriorityMove = MOVE_NONE, aiAbility = gAiLogicData->abilities[battler], opposingBattler;
     bool32 getsOneShot = FALSE, hasStatusMove = FALSE, hasSuperEffectiveMove = FALSE;
     u16 typeEffectiveness = UQ_4_12(1.0); //baseline typing damage
     enum BattleMoveEffects aiMoveEffect;
-    u32 hitsToKoAI = 0;
+    u32 hitsToKoAI = 0, hitsToKoAIPriority = 0, hitsToKoPlayer = 0;
     bool32 canBattlerWin1v1 = FALSE;
 
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer
@@ -242,10 +242,16 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             {
                 maxDamageTaken = damageTaken;
             }
+            if (GetMovePriority(playerMove) > 0 && damageTaken > maxDamageTakenPriority && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
+            {
+                maxDamageTakenPriority = damageTaken;
+                bestPlayerPriorityMove = playerMove;
+            }
         }
     }
 
     hitsToKoAI = GetNoOfHitsToKOBattlerDmg(maxDamageTaken, battler);
+    hitsToKoAIPriority = GetNoOfHitsToKOBattlerDmg(maxDamageTakenPriority, battler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -280,7 +286,8 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData);
                 if (!canBattlerWin1v1 && !AI_DoesChoiceEffectBlockMove(battler, aiMove)) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
                 {
-                    canBattlerWin1v1 = CanBattlerWin1v1(hitsToKoAI, GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler), AI_WhoStrikesFirst(battler, opposingBattler, aiMove));
+                    hitsToKoPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
+                    canBattlerWin1v1 = CanBattlerWin1v1(hitsToKoAI, hitsToKoPlayer, AI_WhoStrikesFirst(battler, opposingBattler, aiMove)) && CanBattlerWin1v1(hitsToKoAIPriority, hitsToKoPlayer, AI_IsBattlerFirstPriority(battler, opposingBattler, aiMove, bestPlayerPriorityMove));
                 }
             }
         }
@@ -306,11 +313,18 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
 
     // Check if current mon can 1v1 in spite of bad matchup, and don't switch out if it can
     if (canBattlerWin1v1)
+    {
+        DebugPrintf("Winning 1v1");
         return FALSE;
+    }
 
     // If we don't have any other viable options, don't switch out
     if (gAiLogicData->mostSuitableMonId[battler] == PARTY_SIZE)
+    {
+        DebugPrintf("No good switchins");
         return FALSE;
+    }
+
 
     // Start assessing whether or not mon has bad odds
     // Jump straight to switching out in cases where mon gets OHKO'd

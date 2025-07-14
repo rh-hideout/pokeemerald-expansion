@@ -3971,6 +3971,23 @@ u32 AI_IsSwitchinFirstPriority(bool32 isSwitchinFirst, u32 battlerAtk, u32 battl
     return isSwitchinFirst;
 }
 
+u32 AI_IsBattlerFirstPriority(u32 battlerAtk, u32 battlerDef, u32 battlerMove, u32 opposingMove)
+{
+    s8 aiPriority = GetBattleMovePriority(battlerAtk, GetBattlerAbility(battlerAtk), battlerMove);
+    s8 playerPriority = GetBattleMovePriority(battlerDef, GetBattlerAbility(battlerDef), opposingMove);
+
+    if (aiPriority > playerPriority)
+        return TRUE;
+    else if (aiPriority < playerPriority)
+        return FALSE;
+
+    u32 aiMonFaster = AI_IsFaster(battlerAtk, battlerDef, battlerMove);
+    if (aiMonFaster == AI_IS_FASTER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 u32 AI_WhoStrikesFirstPartyMon(u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 moveConsidered)
 {
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
