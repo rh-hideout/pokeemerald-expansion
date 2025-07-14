@@ -976,3 +976,15 @@ u32 GetItemSellPrice(u32 itemId)
 {
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
 }
+
+#if TESTING
+#include "test/test.h"
+TEST("Systems: Bag pocket getter functions are defined for all user pockets")
+{
+    for (enum Pocket pocket = 0; pocket <= POCKETS_COUNT; pocket++)
+    {
+        if (sBagPocket_GetSetSlotDataFuncs[pocket] == 0)
+            Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Pocket %d is missing array member in sBagPocket_GetSetSlotDataFuncs", gTestRunnerState.test->filename, __LINE__, pocket);
+    }
+}
+#endif

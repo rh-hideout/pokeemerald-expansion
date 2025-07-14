@@ -137,6 +137,7 @@ SECTIONS {
         __start_tests = .;
         test/test_test_runner.o(.tests); /* Sanity checks first. */
         test/*.o(.tests);
+        src/*.o(.tests);
         __stop_tests = .;
         test/*.o(.text);
         test/*.o(.rodata*);
