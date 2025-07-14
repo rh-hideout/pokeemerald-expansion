@@ -99,7 +99,7 @@
 #define OW_ENABLE_DNS                   TRUE    // If set to TRUE, the overworld will be tinted depending on time of day.
 
 // Object Event Shadows
-#define OW_OBJECT_VANILLA_SHADOWS      FALSE    // In vanilla shadows in the overworld are only shown when jumping.
+#define OW_OBJECT_VANILLA_SHADOWS      FALSE    // When FALSE, every object in the overworld has a shadow. WARNING: This means every object will take up two sprites instead of one. When TRUE, an object's shadow is only shown when jumping.
 
 // Overworld flags
 // To use the following features in scripting, replace the 0s with the flag ID you're assigning it to.
@@ -114,7 +114,9 @@
 
 // Map pop-up config
 #define OW_POPUP_GENERATION        GEN_3    // Different generations display location names in overworld pop-ups differently.
-                                            // Only choices are currently GEN_3 and GEN_5, all others will default to Gen3 pop-ups.
+                                            // Only choices are GEN_3 and GEN_5, all others will default to Gen3 pop-ups.
+                                            // Due to changes in project scope, as detailed in docs/team_procedures/scope.md,
+                                            // no other overworld popups will be implemented in expansion.
 
 // Gen5 map pop-up config
 // Constants
@@ -129,6 +131,7 @@
 #define OW_POPUP_BW_COLOR          OW_POPUP_BW_COLOR_BLACK  // B2W2 use different colors for their map pop-ups.
 #define OW_POPUP_BW_TIME_MODE      OW_POPUP_BW_TIME_NONE    // Determines what type of time is shown.
 #define OW_POPUP_BW_ALPHA_BLEND    FALSE                    // Enables alpha blending/transparency for the pop-ups. Mainly intended to be used with the black color option.
+                                                            // Setting this to TRUE will cause graphical errors with the Day Night System enabled.
 
 // Pokémon Center
 #define OW_IGNORE_EGGS_ON_HEAL           GEN_LATEST         // In Gen 4+, the nurse in the Pokémon Center does not heal Eggs on healing machine.

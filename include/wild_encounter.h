@@ -40,12 +40,7 @@ struct WildPokemonHeader
 {
     u8 mapGroup;
     u8 mapNum;
-
-#if OW_TIME_OF_DAY_ENCOUNTERS
     const struct WildEncounterTypes encounterTypes[TIMES_OF_DAY_COUNT];
-#else
-    const struct WildEncounterTypes encounterTypes[1];
-#endif
 };
 
 
@@ -56,7 +51,7 @@ extern u8 gChainFishingDexNavStreak;
 
 void DisableWildEncounters(bool8 disabled);
 u8 PickWildMonNature(void);
-bool8 StandardWildEncounter(u16 currMetaTileBehavior, u16 previousMetaTileBehavior);
+bool8 StandardWildEncounter(u16 curMetatileBehavior, u16 prevMetatileBehavior);
 bool8 SweetScentWildEncounter(void);
 bool8 DoesCurrentMapHaveFishingMons(void);
 void FishingWildEncounter(u8 rod);
@@ -68,9 +63,10 @@ bool8 StandardWildEncounter_Debug(void);
 u32 CalculateChainFishingShinyRolls(void);
 void CreateWildMon(u16 species, u8 level);
 u16 GetCurrentMapWildMonHeaderId(void);
-u8 ChooseWildMonIndex_Land(void);
-u8 ChooseWildMonIndex_WaterRock(void);
-u8 ChooseHiddenMonIndex(void);
+u32 ChooseWildMonIndex_Land(void);
+u32 ChooseWildMonIndex_Water(void);
+u32 ChooseWildMonIndex_Rocks(void);
+u32 ChooseHiddenMonIndex(void);
 bool32 MapHasNoEncounterData(void);
 enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area);
 

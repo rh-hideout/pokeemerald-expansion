@@ -45,7 +45,6 @@
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/songs.h"
-#include "constants/map_types.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -127,7 +126,7 @@ static void SetUpItemUseCallback(u8 taskId)
     if (gSpecialVar_ItemId == ITEM_ENIGMA_BERRY_E_READER)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else
-        type = ItemId_GetType(gSpecialVar_ItemId) - 1;
+        type = GetItemType(gSpecialVar_ItemId) - 1;
     if (!InBattlePyramid())
     {
         gBagMenu->newScreenCallback = sItemUseCallbacks[type];
@@ -201,9 +200,9 @@ static void Task_CloseCantUseKeyItemMessage(u8 taskId)
 
 u8 CheckIfItemIsTMHMOrEvolutionStone(u16 itemId)
 {
-    if (ItemId_GetFieldFunc(itemId) == ItemUseOutOfBattle_TMHM)
+    if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_TMHM)
         return 1;
-    else if (ItemId_GetFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
+    else if (GetItemFieldFunc(itemId) == ItemUseOutOfBattle_EvolutionStone)
         return 2;
     else
         return 0;
@@ -278,11 +277,11 @@ void ItemUseOutOfBattle_Bike(u8 taskId)
 
 static void ItemUseOnFieldCB_Bike(u8 taskId)
 {
-    if (ItemId_GetSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
+    if (GetItemSecondaryId(gSpecialVar_ItemId) == MACH_BIKE)
         GetOnOffBike(PLAYER_AVATAR_FLAG_MACH_BIKE);
     else // ACRO_BIKE
         GetOnOffBike(PLAYER_AVATAR_FLAG_ACRO_BIKE);
-    
+
     FollowerNPC_HandleBike();
     ScriptUnfreezeObjectEvents();
     UnlockPlayerFieldControls();
@@ -334,7 +333,7 @@ void ItemUseOutOfBattle_Rod(u8 taskId)
 
 static void ItemUseOnFieldCB_Rod(u8 taskId)
 {
-    StartFishing(ItemId_GetSecondaryId(gSpecialVar_ItemId));
+    StartFishing(GetItemSecondaryId(gSpecialVar_ItemId));
     DestroyTask(taskId);
 }
 
@@ -634,15 +633,15 @@ static u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
 
 static void PlayerFaceHiddenItem(u8 direction)
 {
-    ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_PLAYER, 0, 0)]);
-    ObjectEventClearHeldMovement(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_PLAYER, 0, 0)]);
-    UnfreezeObjectEvent(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_PLAYER, 0, 0)]);
+    ObjectEventClearHeldMovementIfFinished(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
+    ObjectEventClearHeldMovement(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
+    UnfreezeObjectEvent(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]);
     PlayerTurnInPlace(direction);
 }
 
 static void Task_HiddenItemNearby(u8 taskId)
 {
-    if (ObjectEventCheckHeldMovementStatus(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_PLAYER, 0, 0)]) == TRUE)
+    if (ObjectEventCheckHeldMovementStatus(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]) == TRUE)
         DisplayItemMessageOnField(taskId, sText_ItemFinderNearby, Task_CloseItemfinderMessage);
 }
 
@@ -650,7 +649,7 @@ static void Task_StandingOnHiddenItem(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
 
-    if (ObjectEventCheckHeldMovementStatus(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(OBJ_EVENT_ID_PLAYER, 0, 0)]) == TRUE
+    if (ObjectEventCheckHeldMovementStatus(&gObjectEvents[GetObjectEventIdByLocalIdAndMap(LOCALID_PLAYER, 0, 0)]) == TRUE
     || tItemFound == FALSE)
     {
         // Spin player around on item
@@ -759,7 +758,7 @@ void ItemUseOutOfBattle_Berry(u8 taskId)
     }
     else
     {
-        ItemId_GetFieldFunc(gSpecialVar_ItemId)(taskId);
+        GetItemFieldFunc(gSpecialVar_ItemId)(taskId);
     }
 }
 
@@ -885,7 +884,7 @@ void ItemUseOutOfBattle_DynamaxCandy(u8 taskId)
 
 void ItemUseOutOfBattle_TMHM(u8 taskId)
 {
-    if (gSpecialVar_ItemId >= ITEM_HM01)
+    if (GetItemTMHMIndex(gSpecialVar_ItemId) > NUM_TECHNICAL_MACHINES)
         DisplayItemMessage(taskId, FONT_NORMAL, sText_BootedUpHM, BootUpSoundTMHM); // HM
     else
         DisplayItemMessage(taskId, FONT_NORMAL, sText_BootedUpTM, BootUpSoundTMHM); // TM
@@ -925,8 +924,8 @@ static void RemoveUsedItem(void)
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
     if (!InBattlePyramid())
     {
-        UpdatePocketItemList(ItemId_GetPocket(gSpecialVar_ItemId));
-        UpdatePocketListPosition(ItemId_GetPocket(gSpecialVar_ItemId));
+        UpdatePocketItemList(GetItemPocket(gSpecialVar_ItemId));
+        UpdatePocketListPosition(GetItemPocket(gSpecialVar_ItemId));
     }
     else
     {
@@ -961,7 +960,7 @@ static void Task_UseRepel(u8 taskId)
 {
     if (!IsSEPlaying())
     {
-        VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(gSpecialVar_ItemId));
+        VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_ItemId));
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
@@ -975,7 +974,7 @@ static void Task_UseRepel(u8 taskId)
 void HandleUseExpiredRepel(struct ScriptContext *ctx)
 {
 #if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)));
+    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)));
 #endif
 }
 
@@ -1005,7 +1004,7 @@ static void Task_UseLure(u8 taskId)
 {
     if (!IsSEPlaying())
     {
-        VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(gSpecialVar_ItemId) | REPEL_LURE_MASK);
+        VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(gSpecialVar_ItemId) | REPEL_LURE_MASK);
     #if VAR_LAST_REPEL_LURE_USED != 0
         VarSet(VAR_LAST_REPEL_LURE_USED, gSpecialVar_ItemId);
     #endif
@@ -1020,7 +1019,7 @@ static void Task_UseLure(u8 taskId)
 void HandleUseExpiredLure(struct ScriptContext *ctx)
 {
 #if VAR_LAST_REPEL_LURE_USED != 0
-    VarSet(VAR_REPEL_STEP_COUNT, ItemId_GetHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)) | REPEL_LURE_MASK);
+    VarSet(VAR_REPEL_STEP_COUNT, GetItemHoldEffectParam(VarGet(VAR_LAST_REPEL_LURE_USED)) | REPEL_LURE_MASK);
 #endif
 }
 
@@ -1192,19 +1191,32 @@ void ItemUseInBattle_PartyMenuChooseMove(u8 taskId)
     ItemUseInBattle_ShowPartyMenu(taskId);
 }
 
-static bool32 SelectedMonHasStatus2(u16 itemId)
+static bool32 IteamHealsMonVolatile(u32 battler, u16 itemId)
+{
+    const u8 *effect = GetItemEffect(itemId);
+    if (effect[3] & ITEM3_STATUS_ALL)
+        return (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+    else if (effect[0] & ITEM0_INFATUATION)
+        return gBattleMons[battler].volatiles.infatuation;
+    else if (effect[3] & ITEM3_CONFUSION)
+        return gBattleMons[battler].volatiles.confusionTurns > 0;
+
+    return FALSE;
+}
+
+static bool32 SelectedMonHasVolatile(u16 itemId)
 {
     if (gPartyMenu.slotId == 0)
-        return gBattleMons[0].status2 & GetItemStatus2Mask(itemId);
+        return IteamHealsMonVolatile(0, itemId);
     else if (gBattleTypeFlags & (BATTLE_TYPE_DOUBLE | BATTLE_TYPE_MULTI) && gPartyMenu.slotId == 1)
-        return gBattleMons[2].status2 & GetItemStatus2Mask(itemId);
+        return IteamHealsMonVolatile(2, itemId);
     return FALSE;
 }
 
 // Returns whether an item can be used in battle and sets the fail text.
 bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
 {
-    u16 battleUsage = ItemId_GetBattleUsage(itemId);
+    u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
     u32 i;
@@ -1221,11 +1233,11 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     switch (battleUsage)
     {
     case EFFECT_ITEM_INCREASE_STAT:
-        if (gBattleMons[gBattlerInMenuId].statStages[ItemId_GetEffect(itemId)[1]] == MAX_STAT_STAGE)
+        if (gBattleMons[gBattlerInMenuId].statStages[GetItemEffect(itemId)[1]] == MAX_STAT_STAGE)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (gBattleMons[gBattlerInMenuId].status2 & STATUS2_FOCUS_ENERGY_ANY)
+        if (gBattleMons[gBattlerInMenuId].volatiles.dragonCheer || gBattleMons[gBattlerInMenuId].volatiles.focusEnergy)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:
@@ -1273,13 +1285,13 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
         break;
     case EFFECT_ITEM_CURE_STATUS:
         if (!((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
-            || SelectedMonHasStatus2(itemId)))
+            || SelectedMonHasVolatile(itemId)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
         if ((hp == 0 || hp == GetMonData(mon, MON_DATA_MAX_HP))
             && !((GetMonData(mon, MON_DATA_STATUS) & GetItemStatus1Mask(itemId))
-            || SelectedMonHasStatus2(itemId)))
+            || SelectedMonHasVolatile(itemId)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_REVIVE:
@@ -1287,7 +1299,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_RESTORE_PP:
-        if (ItemId_GetEffect(itemId)[4] == ITEM4_HEAL_PP)
+        if (GetItemEffect(itemId)[4] == ITEM4_HEAL_PP)
         {
             for (i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -1324,7 +1336,7 @@ void ItemUseInBattle_BagMenu(u8 taskId)
     else
     {
         PlaySE(SE_SELECT);
-        if (!ItemId_GetImportance(gSpecialVar_ItemId) && !(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (ItemId_GetBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
+        if (!GetItemImportance(gSpecialVar_ItemId) && !(B_TRY_CATCH_TRAINER_BALL >= GEN_4 && (GetItemBattleUsage(gSpecialVar_ItemId) == EFFECT_ITEM_THROW_BALL) && (gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
             RemoveUsedItem();
         ScheduleBgCopyTilemapToVram(2);
         if (!InBattlePyramid())
@@ -1487,7 +1499,7 @@ static bool32 IsValidLocationForVsSeeker(void)
 {
     u16 mapGroup = gSaveBlock1Ptr->location.mapGroup;
     u16 mapNum = gSaveBlock1Ptr->location.mapNum;
-    u16 mapType = gMapHeader.mapType;
+    enum MapType mapType = gMapHeader.mapType;
 
     typedef struct {
         u16 mapGroup;
@@ -1497,26 +1509,26 @@ static bool32 IsValidLocationForVsSeeker(void)
     u32 i;
     Location validIndoorLocations[] =
     {
-        { MAP_GROUP(MT_PYRE_SUMMIT),           MAP_NUM(MT_PYRE_SUMMIT) },
-        { MAP_GROUP(SAFARI_ZONE_NORTH),        MAP_NUM(SAFARI_ZONE_NORTH) },
-        { MAP_GROUP(SAFARI_ZONE_NORTHEAST),    MAP_NUM(SAFARI_ZONE_NORTHEAST) },
-        { MAP_GROUP(SAFARI_ZONE_NORTHWEST),    MAP_NUM(SAFARI_ZONE_NORTHWEST) },
-        { MAP_GROUP(SAFARI_ZONE_SOUTH),        MAP_NUM(SAFARI_ZONE_SOUTH) },
-        { MAP_GROUP(SAFARI_ZONE_SOUTHEAST),    MAP_NUM(SAFARI_ZONE_SOUTHEAST) },
-        { MAP_GROUP(SAFARI_ZONE_SOUTHWEST),    MAP_NUM(SAFARI_ZONE_SOUTHWEST) },
-        { MAP_GROUP(SKY_PILLAR_TOP),           MAP_NUM(SKY_PILLAR_TOP) },
-        { MAP_GROUP(SOUTHERN_ISLAND_EXTERIOR), MAP_NUM(SOUTHERN_ISLAND_EXTERIOR) },
-        { MAP_GROUP(SOUTHERN_ISLAND_INTERIOR), MAP_NUM(SOUTHERN_ISLAND_INTERIOR) },
-        { MAP_GROUP(RUSTBORO_CITY_GYM),        MAP_NUM(RUSTBORO_CITY_GYM) },
-        { MAP_GROUP(DEWFORD_TOWN_GYM),         MAP_NUM(DEWFORD_TOWN_GYM) },
-        { MAP_GROUP(MAUVILLE_CITY_GYM),        MAP_NUM(MAUVILLE_CITY_GYM) },
-        { MAP_GROUP(LAVARIDGE_TOWN_GYM_1F),    MAP_NUM(LAVARIDGE_TOWN_GYM_1F) },
-        { MAP_GROUP(LAVARIDGE_TOWN_GYM_B1F),   MAP_NUM(LAVARIDGE_TOWN_GYM_B1F) },
-        { MAP_GROUP(PETALBURG_CITY_GYM),       MAP_NUM(PETALBURG_CITY_GYM) },
-        { MAP_GROUP(FORTREE_CITY_GYM),         MAP_NUM(FORTREE_CITY_GYM) },
-        { MAP_GROUP(MOSSDEEP_CITY_GYM),        MAP_NUM(MOSSDEEP_CITY_GYM) },
-        { MAP_GROUP(SOOTOPOLIS_CITY_GYM_1F),   MAP_NUM(SOOTOPOLIS_CITY_GYM_1F) },
-        { MAP_GROUP(SOOTOPOLIS_CITY_GYM_B1F),  MAP_NUM(SOOTOPOLIS_CITY_GYM_B1F) },
+        { MAP_GROUP(MAP_MT_PYRE_SUMMIT),           MAP_NUM(MAP_MT_PYRE_SUMMIT) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_NORTH),        MAP_NUM(MAP_SAFARI_ZONE_NORTH) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_NORTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHEAST) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_NORTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_NORTHWEST) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTH),        MAP_NUM(MAP_SAFARI_ZONE_SOUTH) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHEAST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHEAST) },
+        { MAP_GROUP(MAP_SAFARI_ZONE_SOUTHWEST),    MAP_NUM(MAP_SAFARI_ZONE_SOUTHWEST) },
+        { MAP_GROUP(MAP_SKY_PILLAR_TOP),           MAP_NUM(MAP_SKY_PILLAR_TOP) },
+        { MAP_GROUP(MAP_SOUTHERN_ISLAND_EXTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_EXTERIOR) },
+        { MAP_GROUP(MAP_SOUTHERN_ISLAND_INTERIOR), MAP_NUM(MAP_SOUTHERN_ISLAND_INTERIOR) },
+        { MAP_GROUP(MAP_RUSTBORO_CITY_GYM),        MAP_NUM(MAP_RUSTBORO_CITY_GYM) },
+        { MAP_GROUP(MAP_DEWFORD_TOWN_GYM),         MAP_NUM(MAP_DEWFORD_TOWN_GYM) },
+        { MAP_GROUP(MAP_MAUVILLE_CITY_GYM),        MAP_NUM(MAP_MAUVILLE_CITY_GYM) },
+        { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_1F),    MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_1F) },
+        { MAP_GROUP(MAP_LAVARIDGE_TOWN_GYM_B1F),   MAP_NUM(MAP_LAVARIDGE_TOWN_GYM_B1F) },
+        { MAP_GROUP(MAP_PETALBURG_CITY_GYM),       MAP_NUM(MAP_PETALBURG_CITY_GYM) },
+        { MAP_GROUP(MAP_FORTREE_CITY_GYM),         MAP_NUM(MAP_FORTREE_CITY_GYM) },
+        { MAP_GROUP(MAP_MOSSDEEP_CITY_GYM),        MAP_NUM(MAP_MOSSDEEP_CITY_GYM) },
+        { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_1F),   MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_1F) },
+        { MAP_GROUP(MAP_SOOTOPOLIS_CITY_GYM_B1F),  MAP_NUM(MAP_SOOTOPOLIS_CITY_GYM_B1F) },
     };
 
     if (IsMapTypeOutdoors(mapType))

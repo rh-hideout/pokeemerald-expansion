@@ -314,7 +314,7 @@ u32 IndexOfSpritePaletteTag(u16 tag);
 u16 GetSpritePaletteTagByPaletteNum(u8 paletteNum);
 void FreeSpritePaletteByTag(u16 tag);
 void SetSubspriteTables(struct Sprite *sprite, const struct SubspriteTable *subspriteTables);
-bool8 AddSpriteToOamBuffer(struct Sprite *object, u8 *oamIndex);
+bool8 AddSpriteToOamBuffer(struct Sprite *sprite, u8 *oamIndex);
 bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u8 *oamIndex);
 void CopyToSprites(u8 *src);
 void CopyFromSprites(u8 *dest);
@@ -324,5 +324,6 @@ void ResetAffineAnimData(void);
 u32 GetSpanPerImage(u32 shape, u32 size);
 void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFrameImage *images);
 void SetSpriteOamFlipBits(struct Sprite *sprite, u8 hFlip, u8 vFlip);
+u8 IndexOfSpriteTileTag(u16 tag);
 
 #endif //GUARD_SPRITE_H

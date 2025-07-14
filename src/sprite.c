@@ -85,7 +85,6 @@ static void ApplyAffineAnimFrameRelativeAndUpdateMatrix(u8 matrixNum, struct Aff
 static s16 ConvertScaleParam(s16 scale);
 static void GetAffineAnimFrame(u8 matrixNum, struct Sprite *sprite, struct AffineAnimFrameCmd *frameCmd);
 static void ApplyAffineAnimFrame(u8 matrixNum, struct AffineAnimFrameCmd *frameCmd);
-static u8 IndexOfSpriteTileTag(u16 tag);
 static void AllocSpriteTileRange(u16 tag, u16 start, u16 count);
 static void DoLoadSpritePalette(const u16 *src, u16 paletteOffset);
 static void UpdateSpriteMatrixAnchorPos(struct Sprite *, s32, s32);
@@ -115,8 +114,8 @@ typedef void (*AffineAnimCmdFunc)(u8 matrixNum, struct Sprite *);
 #define AFFINE_ANIM_END 0x7FFF
 
 // forward declarations
-const union AnimCmd * const gDummySpriteAnimTable[];
-const union AffineAnimCmd * const gDummySpriteAffineAnimTable[];
+const union AnimCmd *const gDummySpriteAnimTable[];
+const union AffineAnimCmd *const gDummySpriteAffineAnimTable[];
 const struct SpriteTemplate gDummySpriteTemplate;
 
 static const u8 sCenterToCornerVecTable[3][4][2] =
@@ -157,11 +156,11 @@ const struct OamData gDummyOamData = DUMMY_OAM_DATA;
 
 static const union AnimCmd sDummyAnim = { ANIM_END };
 
-const union AnimCmd * const gDummySpriteAnimTable[] = { &sDummyAnim };
+const union AnimCmd *const gDummySpriteAnimTable[] = { &sDummyAnim };
 
 static const union AffineAnimCmd sDummyAffineAnim = { AFFINE_ANIM_END };
 
-const union AffineAnimCmd * const gDummySpriteAffineAnimTable[] = { &sDummyAffineAnim };
+const union AffineAnimCmd *const gDummySpriteAffineAnimTable[] = { &sDummyAffineAnim };
 
 const struct SpriteTemplate gDummySpriteTemplate =
 {
@@ -878,8 +877,11 @@ void BeginAnim(struct Sprite *sprite)
 
         if (sprite->usingSheet)
         {
+            //  Inject OW decompression here
             if (OW_GFX_COMPRESS && sprite->sheetSpan)
+            {
                 imageValue = (imageValue + 1) << sprite->sheetSpan;
+            }
             sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
         }
         else
@@ -937,7 +939,10 @@ void AnimCmd_frame(struct Sprite *sprite)
     if (sprite->usingSheet)
     {
         if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        {
+            //  Inject OW frame switcher here
             imageValue = (imageValue + 1) << sprite->sheetSpan;
+        }
         sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
     }
     else

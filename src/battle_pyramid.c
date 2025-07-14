@@ -791,7 +791,7 @@ static const u8 sHintTextTypes[] =
     HINT_EXIT_SHORT_REMAINING_ITEMS,
 };
 
-static void (* const sBattlePyramidFunctions[])(void) =
+static void (*const sBattlePyramidFunctions[])(void) =
 {
     [BATTLE_PYRAMID_FUNC_INIT]              = InitPyramidChallenge,
     [BATTLE_PYRAMID_FUNC_GET_DATA]          = GetBattlePyramidData,
@@ -1037,7 +1037,7 @@ static void HidePyramidItem(void)
             break;
         }
         i++;
-        if (events[i].localId == 0)
+        if (events[i].localId == LOCALID_NONE)
             break;
     }
 }
@@ -1221,19 +1221,19 @@ static void RestorePyramidPlayerParty(void)
         int partyIndex = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         for (j = 0; j < FRONTIER_PARTY_SIZE; j++)
         {
-            if (GetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
+            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     for (l = 0; l < MAX_MON_MOVES; l++)
                     {
-                        if (GetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
+                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
                             break;
                     }
                     if (l == MAX_MON_MOVES)
                         SetMonMoveSlot(&gPlayerParty[j], MOVE_SKETCH, k);
                 }
-                gSaveBlock1Ptr->playerParty[partyIndex] = gPlayerParty[j];
+                SavePlayerPartyMon(partyIndex, &gPlayerParty[j]);
                 gSelectedOrderFromParty[j] = partyIndex + 1;
                 break;
             }
@@ -1426,7 +1426,7 @@ void GenerateBattlePyramidWildMon(void)
             continue;
 
         // check type
-        if (reqs->type != TYPE_MYSTERY && gSpeciesInfo[species].types[0] != reqs->type && gSpeciesInfo[species].types[1] != reqs->type)
+        if (reqs->type != TYPE_MYSTERY && GetSpeciesType(species, 0) != reqs->type && GetSpeciesType(species, 1) != reqs->type)
             continue;
 
         // check base stat total
@@ -1459,7 +1459,7 @@ void GenerateBattlePyramidWildMon(void)
             {
                 for (j = 0; j < NUM_ABILITY_SLOTS; j++)
                 {
-                    if (gSpeciesInfo[species].abilities[j] == reqs->abilities[i])
+                    if (GetSpeciesAbility(species, j) == reqs->abilities[i])
                     {
                         abilities[abilityCount] = reqs->abilities[i];
                         abilityCount++;
@@ -1520,7 +1520,7 @@ void GenerateBattlePyramidWildMon(void)
     }
 
     // Initialize a random ability num
-    if (gSpeciesInfo[species].abilities[1])
+    if (GetSpeciesAbility(species, 1))
     {
         i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
         SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
@@ -1540,7 +1540,7 @@ void GenerateBattlePyramidWildMon(void)
             id = abilities[Random() % abilityCount];
             for (j = 0; j < NUM_ABILITY_SLOTS; j++)
             {
-                if (id == gSpeciesInfo[species].abilities[j])
+                if (id == GetSpeciesAbility(species, j))
                 {
                     // Set this ability num
                     SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &id);
@@ -1606,7 +1606,7 @@ void GenerateBattlePyramidWildMon(void)
         break;
     case ABILITY_RANDOM:
     default:
-        if (gSpeciesInfo[wildMons[id].species].abilities[1])
+        if (GetSpeciesAbility(wildMons[id].species, 1))
         {
             i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
             SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
@@ -2081,7 +2081,7 @@ static bool8 TrySetPyramidObjectEventPositionAtCoords(u8 objType, u8 x, u8 y, u8
     const struct MapHeader *mapHeader;
     struct ObjectEventTemplate *floorEvents = gSaveBlock1Ptr->objectEventTemplates;
 
-    mapHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(BATTLE_PYRAMID_SQUARE01), floorLayoutOffsets[squareId] + MAP_NUM(BATTLE_PYRAMID_SQUARE01));
+    mapHeader = Overworld_GetMapHeaderByGroupAndId(MAP_GROUP(MAP_BATTLE_PYRAMID_SQUARE01), floorLayoutOffsets[squareId] + MAP_NUM(MAP_BATTLE_PYRAMID_SQUARE01));
     for (i = 0; i < mapHeader->events->objectEventCount; i++)
     {
         if (mapHeader->events->objectEvents[i].x != x || mapHeader->events->objectEvents[i].y != y)
@@ -2158,7 +2158,7 @@ u8 GetNumBattlePyramidObjectEvents(void)
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        if (events[i].localId == 0)
+        if (events[i].localId == LOCALID_NONE)
             break;
     }
 

@@ -60,6 +60,7 @@ enum FirstTurnEventsStates
     FIRST_TURN_EVENTS_OPPORTUNIST_1,
     FIRST_TURN_EVENTS_ITEM_EFFECTS,
     FIRST_TURN_EVENTS_OPPORTUNIST_2,
+    FIRST_TURN_EVENTS_EJECT_PACK,
     FIRST_TURN_EVENTS_END,
 };
 
@@ -71,7 +72,7 @@ void SpriteCB_VsLetterDummy(struct Sprite *sprite);
 void SpriteCB_VsLetterInit(struct Sprite *sprite);
 void CB2_InitEndLinkBattle(void);
 u32 GetBattleBgTemplateData(u8 arrayId, u8 caseId);
-u32 GetBattleWindowTemplatePixelWidth(u32 setId, u32 tableId);
+u32 GetBattleWindowTemplatePixelWidth(u32 windowsType, u32 tableId);
 void SpriteCB_WildMon(struct Sprite *sprite);
 void SpriteCallbackDummy_2(struct Sprite *sprite);
 void SpriteCB_FaintOpponentMon(struct Sprite *sprite);
@@ -88,7 +89,7 @@ void SpriteCB_TrainerThrowObject(struct Sprite *sprite);
 void AnimSetCenterToCornerVecX(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);
 void BeginBattleIntro(void);
-void SwitchInClearSetData(u32 battler);
+void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy);
 const u8* FaintClearSetData(u32 battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(u32 battler);
@@ -106,7 +107,7 @@ s32 GetWhichBattlerFaster(u32 battler1, u32 battler2, bool32 ignoreChosenMoves);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
 void SpecialStatusesClear(void);
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, u8 *ateBoost);
+u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
@@ -115,6 +116,7 @@ u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
+void BattleDebug_WonBattle(void);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
 

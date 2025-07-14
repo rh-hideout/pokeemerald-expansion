@@ -22,10 +22,7 @@ enum {
     CURRENT_TEST_STATE_RUN,
 };
 
-__attribute__((section(".persistent"))) static struct {
-    u32 address:28;
-    u32 state:1;
-} sCurrentTest = {0};
+__attribute__((section(".persistent"))) struct PersistentTestRunnerState gPersistentTestRunnerState = {0};
 
 void TestRunner_Battle(const struct Test *);
 
@@ -184,15 +181,16 @@ top:
         gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
 
         // The current test restarted the ROM (e.g. by jumping to NULL).
-        if (sCurrentTest.address != 0)
+        if (gPersistentTestRunnerState.address != 0)
         {
             gTestRunnerState.test = __start_tests;
-            while ((uintptr_t)gTestRunnerState.test != sCurrentTest.address)
+            while ((uintptr_t)gTestRunnerState.test != gPersistentTestRunnerState.address)
             {
                 AssignCostToRunner();
                 gTestRunnerState.test++;
             }
-            if (sCurrentTest.state == CURRENT_TEST_STATE_ESTIMATE)
+
+            if (gPersistentTestRunnerState.state == CURRENT_TEST_STATE_ESTIMATE)
             {
                 u32 runner = MinCostProcess();
                 gTestRunnerState.processCosts[runner] += 1;
@@ -211,6 +209,9 @@ top:
                 gTestRunnerState.state = STATE_REPORT_RESULT;
                 gTestRunnerState.result = TEST_RESULT_CRASH;
             }
+
+            if (gPersistentTestRunnerState.expectCrash)
+                gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
         }
         else
         {
@@ -252,8 +253,8 @@ top:
         REG_TM2CNT_L = UINT16_MAX - (274 * 60); // Approx. 1 second.
         REG_TM2CNT_H = TIMER_ENABLE | TIMER_INTR_ENABLE | TIMER_1024CLK;
 
-        sCurrentTest.address = (uintptr_t)gTestRunnerState.test;
-        sCurrentTest.state = CURRENT_TEST_STATE_ESTIMATE;
+        gPersistentTestRunnerState.address = (uintptr_t)gTestRunnerState.test;
+        gPersistentTestRunnerState.state = CURRENT_TEST_STATE_ESTIMATE;
 
         // If AssignCostToRunner fails, we want to report the failure.
         gTestRunnerState.state = STATE_REPORT_RESULT;
@@ -266,7 +267,8 @@ top:
 
     case STATE_RUN_TEST:
         gTestRunnerState.state = STATE_REPORT_RESULT;
-        sCurrentTest.state = CURRENT_TEST_STATE_RUN;
+        gPersistentTestRunnerState.state = CURRENT_TEST_STATE_RUN;
+        gPersistentTestRunnerState.expectCrash = FALSE;
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
@@ -312,7 +314,9 @@ top:
             const char *color;
             const char *result;
 
-            if (gTestRunnerState.result == gTestRunnerState.expectedResult)
+            if (gTestRunnerState.result == gTestRunnerState.expectedResult
+             || (gTestRunnerState.result == TEST_RESULT_FAIL
+              && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
             {
                 color = "\e[32m";
                 Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
@@ -330,7 +334,7 @@ top:
             switch (gTestRunnerState.result)
             {
             case TEST_RESULT_FAIL:
-                if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL)
+                if (gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL)
                 {
                     result = "KNOWN_FAILING";
                     color = "\e[33m";
@@ -387,7 +391,9 @@ top:
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
-            else if (gTestRunnerState.expectedResult == gTestRunnerState.result)
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 || (gTestRunnerState.result == TEST_RESULT_FAIL
+                  && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
                 Test_MgbaPrintf(":K%s%s\e[0m", color, result);
             else
                 Test_MgbaPrintf(":F%s%s\e[0m", color, result);
@@ -417,6 +423,13 @@ void Test_ExpectedResult(enum TestResult result)
 void Test_ExpectLeaks(bool32 expectLeaks)
 {
     gTestRunnerState.expectLeaks = expectLeaks;
+}
+
+void Test_ExpectCrash(bool32 expectCrash)
+{
+    gPersistentTestRunnerState.expectCrash = expectCrash;
+    if (expectCrash)
+        Test_ExpectedResult(TEST_RESULT_CRASH);
 }
 
 static void FunctionTest_SetUp(void *data)
@@ -684,12 +697,22 @@ static s32 MgbaVPrintf_(const char *fmt, va_list va)
                 break;
             case 'S':
                 pokeS = va_arg(va, const u8 *);
-                while ((c = *pokeS++) != EOS)
+                if (pokeS == NULL)
                 {
-                    if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
-                        i = MgbaPutchar_(i, c);
-                    else
-                        i = MgbaPutchar_(i, '?');
+                    i = MgbaPutchar_(i, 'N');
+                    i = MgbaPutchar_(i, 'U');
+                    i = MgbaPutchar_(i, 'L');
+                    i = MgbaPutchar_(i, 'L');
+                }
+                else
+                {
+                    while ((c = *pokeS++) != EOS)
+                    {
+                        if ((c = gWireless_RSEtoASCIITable[c]) != '\0')
+                            i = MgbaPutchar_(i, c);
+                        else
+                            i = MgbaPutchar_(i, '?');
+                    }
                 }
                 break;
             }

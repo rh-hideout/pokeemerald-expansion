@@ -16,10 +16,10 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_SLEEP] =
+    [EFFECT_NON_VOLATILE_STATUS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 1,
+        .battleTvScore = 0, // Handled within the battle TV functions
     },
 
     [EFFECT_ABSORB] =
@@ -29,6 +29,12 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     },
 
     [EFFECT_EXPLOSION] =
+    {
+        .battleScript = BattleScript_EffectExplosion,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_MISTY_EXPLOSION] =
     {
         .battleScript = BattleScript_EffectExplosion,
         .battleTvScore = 0, // TODO: Assign points
@@ -183,13 +189,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_TOXIC] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 5,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_LIGHT_SCREEN] =
     {
         .battleScript = BattleScript_EffectLightScreen,
@@ -210,20 +209,26 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 7,
     },
 
+    [EFFECT_SHEER_COLD] =
+    {
+        .battleScript = BattleScript_EffectOHKO,
+        .battleTvScore = 7,
+    },
+
     [EFFECT_FUSION_COMBO] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_SUPER_FANG] =
+    [EFFECT_FIXED_PERCENT_DAMAGE] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_FIXED_DAMAGE_ARG] =
+    [EFFECT_FIXED_HP_DAMAGE] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
@@ -363,20 +368,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectReflect,
         .battleTvScore = 7,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_POISON] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 4,
-        .encourageEncore = TRUE,
-    },
-
-    [EFFECT_PARALYZE] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 4,
         .encourageEncore = TRUE,
     },
 
@@ -887,13 +878,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 7,
     },
 
-    [EFFECT_WILL_O_WISP] =
-    {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
-        .battleTvScore = 5,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_MEMENTO] =
     {
         .battleScript = BattleScript_EffectMemento,
@@ -1271,7 +1255,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MIRACLE_EYE] =
     {
-        .battleScript = BattleScript_EffectMircleEye,
+        .battleScript = BattleScript_EffectMiracleEye,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
@@ -1592,7 +1576,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FINAL_GAMBIT] =
     {
-        .battleScript = BattleScript_EffectFinalGambit,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -1814,12 +1798,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_RELIC_SONG] =
-    {
-        .battleScript = BattleScript_EffectRelicSong,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
     [EFFECT_BODY_PRESS] =
     {
         .battleScript = BattleScript_EffectHit,
@@ -1988,7 +1966,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_MIND_BLOWN] =
+    [EFFECT_CHLOROBLAST] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
@@ -2000,9 +1978,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HIT_SET_REMOVE_TERRAIN] =
+    [EFFECT_HIT_SET_TERRAIN] =
     {
-        .battleScript = BattleScript_EffectHitSetRemoveTerrain,
+        .battleScript = BattleScript_EffectHitSetTerrain,
         .battleTvScore = 0, // TODO: Assign points
     },
 
@@ -2199,12 +2177,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_GUARDIAN_OF_ALOLA] =
-    {
-        .battleScript = BattleScript_DamageToQuarterTargetHP,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
     [EFFECT_SHELL_SIDE_ARM] =
     {
         .battleScript = BattleScript_EffectHit,
@@ -2238,6 +2210,24 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_SMACK_DOWN] =
     {
         .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_LIFE_DEW] =
+    {
+        .battleScript = BattleScript_EffectLifeDew,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_ICE_SPINNER] =
+    {
+        .battleScript = BattleScript_EffectHit,
+        .battleTvScore = 0, // TODO: Assign points
+    },
+
+    [EFFECT_STEEL_ROLLER] =
+    {
+        .battleScript = BattleScript_EffectSteelRoller,
         .battleTvScore = 0, // TODO: Assign points
     },
 };

@@ -599,7 +599,8 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
         tvPtr->side[atkSide].wishMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].wishMoveSlot = moveSlot;
     }
-    if (GetMoveEffect(move) == EFFECT_EXPLOSION)
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_EXPLOSION || effect == EFFECT_MISTY_EXPLOSION)
     {
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide ^ BIT_SIDE].explosionMoveSlot = moveSlot;
@@ -760,8 +761,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         // Changes depending on the effect
         switch (effect)
         {
-        case EFFECT_FIXED_DAMAGE_ARG:
-            baseFromEffect *= (GetMoveFixedDamage(move) / 20);
+        case EFFECT_FIXED_HP_DAMAGE:
+            baseFromEffect *= (GetMoveFixedHPDamage(move) / 20);
             break;
         case EFFECT_TWO_TURNS_ATTACK:
             for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
@@ -807,6 +808,22 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 baseFromEffect += 2;
             break;
         default:
+            break;
+        }
+        switch(GetMoveNonVolatileStatus(arg2))
+        {
+        case MOVE_EFFECT_SLEEP:
+            baseFromEffect++;
+            break;
+        case MOVE_EFFECT_PARALYSIS:
+            baseFromEffect += 3;
+            break;
+        case MOVE_EFFECT_BURN:
+        case MOVE_EFFECT_POISON:
+            baseFromEffect += 4;
+            break;
+        case MOVE_EFFECT_TOXIC:
+            baseFromEffect += 5;
             break;
         }
 
@@ -1244,15 +1261,16 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageCalculationData damageCalcData;
-            damageCalcData.battlerAtk = gBattlerAttacker;
-            damageCalcData.battlerDef = gBattlerTarget;
-            damageCalcData.move = gCurrentMove;
-            damageCalcData.moveType = GetMoveType(gCurrentMove);
-            damageCalcData.isCrit = FALSE;
-            damageCalcData.randomFactor = FALSE;
-            damageCalcData.updateFlags = FALSE;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&damageCalcData, powerOverride);
+            struct DamageContext ctx;
+            ctx.battlerAtk = gBattlerAttacker;
+            ctx.battlerDef = gBattlerTarget;
+            ctx.move = gCurrentMove;
+            ctx.moveType = GetMoveType(gCurrentMove);
+            ctx.isCrit = FALSE;
+            ctx.randomFactor = FALSE;
+            ctx.updateFlags = FALSE;
+            ctx.fixedBasePower = powerOverride;
+            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
             dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;
