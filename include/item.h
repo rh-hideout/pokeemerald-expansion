@@ -144,40 +144,27 @@ enum SortPocket
     SORT_POCKET_TM_HM,
 };
 
-union TRANSPARENT PocketSetSlotArg
-{
-    int raw; // can accept just an int for clearing the slot with 0
-    u32 value;
-    u16 itemIdAndQuantity[2];
-    struct {
-        u16 itemId;
-        u16 quantity;
-    };
-    struct ItemSlot itemSlot;
-};
-
-extern const struct ItemSlot (*const gBagPocket_GetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos);
-extern const void (*const gBagPocket_SetSlotDataFuncs[])(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg);
-
-static inline struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
-{
-    return gBagPocket_GetSlotDataFuncs[pocket->id](pocket, pocketPos);
-}
-
 #define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
-#define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataUnion(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
+#define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataArg(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
 
-static inline void NONNULL BagPocket_SetSlotDataUnion(struct BagPocket *pocket, u32 pocketPos, union PocketSetSlotArg setSlotArg)
+void BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
+struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
+
+static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
 {
-    if (!(setSlotArg.itemId && setSlotArg.quantity)) // Sets to zero if quantity or itemId is zero
-        setSlotArg.value *= 0;
-
-    gBagPocket_SetSlotDataFuncs[pocket->id](pocket, pocketPos, setSlotArg);
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
 }
 
-struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos);
-u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos);
-u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos);
+static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).itemId;
+}
+
+static inline u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).quantity;
+}
+
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
 void SetBagItemsPointers(void);
 u8 *CopyItemName(u16 itemId, u8 *dst);
