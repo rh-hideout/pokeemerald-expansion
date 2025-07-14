@@ -276,15 +276,15 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             }
 
             // Only check damage if it's a damaging move
-            if (!IsBattleMoveStatus(aiMove))
+            if (!IsBattleMoveStatus(aiMove) && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
             {
                 // Check if mon has a super effective move
-                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0) && !AI_DoesChoiceEffectBlockMove(battler, aiMove))
+                if (AI_GetMoveEffectiveness(aiMove, battler, opposingBattler) >= UQ_4_12(2.0))
                     hasSuperEffectiveMove = TRUE;
 
                 // Get maximum damage mon can deal
                 damageDealt = AI_GetDamage(battler, opposingBattler, i, AI_ATTACKING, gAiLogicData);
-                if (!canBattlerWin1v1 && !AI_DoesChoiceEffectBlockMove(battler, aiMove)) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
+                if (!canBattlerWin1v1 ) // Once we can win a 1v1 we don't need to track this, but want to run the rest of the function to keep the runtime the same regardless of when we find the winning move
                 {
                     hitsToKoPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
                     canBattlerWin1v1 = CanBattlerWin1v1(hitsToKoAI, hitsToKoPlayer, AI_WhoStrikesFirst(battler, opposingBattler, aiMove)) && CanBattlerWin1v1(hitsToKoAIPriority, hitsToKoPlayer, AI_IsBattlerFirstPriority(battler, opposingBattler, aiMove, bestPlayerPriorityMove));
