@@ -3274,7 +3274,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
         u32 side = GetBattlerSide(battler);
         u32 partyIndex = gBattlerPartyIndexes[battler];
         if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-            gBattleMons[i].ability = gDisableStructs[i].overwrittenAbility = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+            gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
     }
     #endif // TESTING
 
@@ -3485,7 +3485,7 @@ static void DoBattleIntro(void)
                     u32 side = GetBattlerSide(battler);
                     u32 partyIndex = gBattlerPartyIndexes[battler];
                     if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                        gBattleMons[battler].ability = gDisableStructs[battler].overwrittenAbility = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                        gBattleMons[battler].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
                 }
                 #endif
             }
@@ -3788,7 +3788,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 u32 side = GetBattlerSide(i);
                 u32 partyIndex = gBattlerPartyIndexes[i];
                 if (TestRunner_Battle_GetForcedAbility(side, partyIndex))
-                    gBattleMons[i].ability = gDisableStructs[i].overwrittenAbility = TestRunner_Battle_GetForcedAbility(side, partyIndex);
+                    gBattleMons[i].ability = TestRunner_Battle_GetForcedAbility(side, partyIndex);
             }
         }
         #endif // TESTING
@@ -6149,4 +6149,11 @@ bool32 DidPlayerForfeitNormalTrainerBattle(void)
         return FALSE;
 
     return (gBattleOutcome == B_OUTCOME_FORFEITED);
+}
+
+// Wins the battle instantly. Used in the battle debug with LIST_ITEM_INSTANT_WIN
+void BattleDebug_WonBattle(void)
+{
+    gBattleOutcome |= B_OUTCOME_WON;
+    gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
 }

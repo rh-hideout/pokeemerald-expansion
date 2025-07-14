@@ -2725,13 +2725,7 @@ BattleScript_EffectNaturalGift::
 	jumpifability BS_ATTACKER, ABILITY_KLUTZ, BattleScript_ButItFailed
 	jumpifstatus3 BS_ATTACKER, STATUS3_EMBARGO, BattleScript_ButItFailed
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	call BattleScript_EffectHit_RetFromCritCalc
-	jumpifmovehadnoeffect BattleScript_EffectNaturalGiftEnd
-	checkparentalbondcounter 2, BattleScript_EffectNaturalGiftEnd
-	removeitem BS_ATTACKER
-BattleScript_EffectNaturalGiftEnd:
-	tryfaintmon BS_TARGET
-	goto BattleScript_MoveEnd
+	call BattleScript_HitFromCritCalc
 
 BattleScript_MakeMoveMissed::
 	setmoveresultflags MOVE_RESULT_MISSED
@@ -6684,7 +6678,7 @@ BattleScript_CottonDownActivates::
 	swapattackerwithtarget
 	setbyte gBattlerTarget, 0
 BattleScript_CottonDownLoop:
-	jumpiffainted BS_TARGET, TRUE, BattleScript_CottonDownLoopIncrement
+	jumpifabsent BS_TARGET, BattleScript_CottonDownLoopIncrement
 	setstatchanger STAT_SPEED, 1, TRUE
 	jumpifbyteequal gBattlerTarget, gEffectBattler, BattleScript_CottonDownLoopIncrement
 	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_CottonDownLoopIncrement

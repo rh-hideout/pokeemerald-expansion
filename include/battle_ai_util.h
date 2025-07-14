@@ -23,6 +23,15 @@ enum DamageCalcContext
     AI_ATTACKING,
 };
 
+// Higher priority at the bottom; note that these are used in the formula MAX_MON_MOVES ^ AiCompareMovesPriority, which must fit within a u32.
+// In expansion where MAX_MON_MOVES is 4, this means that AiCompareMovesPriority can range from 0 - 15 inclusive.
+enum AiCompareMovesPriority
+{
+    PRIORITY_EFFECT,
+    PRIORITY_ACCURACY,
+    PRIORITY_NOT_CHARGING
+};
+
 enum AIPivot
 {
     DONT_PIVOT,
