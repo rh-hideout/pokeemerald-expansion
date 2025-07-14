@@ -377,6 +377,11 @@
 	.byte 0x3f
 	.endm
 
+	.macro animatewildpokemonafterfailedpokeball battler:req
+	.byte 0x40
+	.byte \battler
+	.endm
+
 	.macro call instr:req
 	.byte 0x41
 	.4byte \instr

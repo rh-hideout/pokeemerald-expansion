@@ -669,7 +669,7 @@ void (* const gBattleScriptingCommandsTable[])(void) =
     Cmd_end,                                     //0x3D
     Cmd_end2,                                    //0x3E
     Cmd_end3,                                    //0x3F
-    animatewildpokemonafterfailedpokeball,       //0x40
+    Cmd_animatewildpokemonafterfailedpokeball,   //0x40
     Cmd_call,                                    //0x41
     Cmd_setroost,                                //0x42
     Cmd_jumpifabilitypresent,                    //0x43
