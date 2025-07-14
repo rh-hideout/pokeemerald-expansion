@@ -4246,21 +4246,20 @@ bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, u32 aiI
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE)
+        if (moves[i] == MOVE_NONE || moves[i] == MOVE_UNAVAILABLE)
+            continue;
+        if (noOfHitsToFaint <= 2)
         {
-            if (noOfHitsToFaint <= 2)
-            {
-                if (GetMovePriority(moves[i]) > 0)
-                    return TRUE;
+            if (GetMovePriority(moves[i]) > 0)
+                return TRUE;
 
-                switch (gMovesInfo[moves[i]].additionalEffects[i].moveEffect)
+            switch (gMovesInfo[moves[i]].additionalEffects[i].moveEffect)
+            {
+                case MOVE_EFFECT_SPD_MINUS_1:
+                case MOVE_EFFECT_SPD_MINUS_2:
                 {
-                    case MOVE_EFFECT_SPD_MINUS_1:
-                    case MOVE_EFFECT_SPD_MINUS_2:
-                    {
-                        if(aiIsFaster)
-                            return TRUE;
-                    }
+                    if(aiIsFaster)
+                        return TRUE;
                 }
             }
         }
