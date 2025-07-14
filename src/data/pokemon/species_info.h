@@ -15113,6 +15113,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Dubsnake)
        .levelUpLearnset = sDubsnakeLevelUpLearnset,
+       .teachableLearnset = sDubsnakeTeachableLearnset,
+       .eggMoveLearnset = sDubsnakeEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_MOVE, MOVE_FLAME_BURST, SPECIES_HYDROIL},
                                {EVO_ITEM, ITEM_FIRE_STONE, SPECIES_COILSPILL}),
     },
@@ -15170,6 +15172,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 0,
        FOOTPRINT(Hydroil)
        .levelUpLearnset = sHydroilLevelUpLearnset,
+       .teachableLearnset = sHydroilTeachableLearnset,
+       .eggMoveLearnset = sDubsnakeEggMoveLearnset,
     },
         [SPECIES_COILSPILL] =
     { 
@@ -15225,6 +15229,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Coilspill)
        .levelUpLearnset = sCoilspillLevelUpLearnset,
+       .teachableLearnset = sCoilspillTeachableLearnset,
+       .eggMoveLearnset = sDubsnakeEggMoveLearnset,
     },
         [SPECIES_KRAMBERRY] =
     { 
