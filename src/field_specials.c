@@ -160,6 +160,8 @@ static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
 static void Task_AnimateElevatorWindowView(u8 taskId);
 static void Task_RunPokemonLeagueLightingEffect(u8 taskId);
 static void Task_CancelPokemonLeagueLightingEffect(u8 taskId);
+static u16 SampleResortGorgeousMon(void);
+static u16 SampleResortGorgeousReward(void);
 
 static const u8 sText_BigGuy[] = _("Big guy");
 static const u8 sText_BigGirl[] = _("Big girl");
@@ -5456,4 +5458,67 @@ void UpdateLoreleiDollCollection(void)
         if (numHofClears >= 200)
             FlagClear(FLAG_HIDE_LORELEIS_HOUSE_LAPRAS_DOLL);
     }
+}
+
+void SampleResortGorgeousMonAndReward(void)
+{
+    u16 requestedSpecies = VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON);
+    if (requestedSpecies == SPECIES_NONE || requestedSpecies == 0xFFFF)
+    {
+        VarSet(VAR_RESORT_GORGEOUS_REQUESTED_MON, SampleResortGorgeousMon());
+        VarSet(VAR_RESORT_GORGEOUS_REWARD, SampleResortGorgeousReward());
+        VarSet(VAR_RESORT_GOREGEOUS_STEP_COUNTER, 0);
+    }
+    StringCopy(gStringVar1, gSpeciesInfo[VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON)].speciesName);
+}
+
+static u16 SampleResortGorgeousMon(void)
+{
+    u16 i;
+    u16 species;
+    for (i = 0; i < 100; i++)
+    {
+        species = (Random() % (NUM_SPECIES - 1)) + 1;
+        if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), 0) == TRUE)
+            return species;
+    }
+    while (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), 0) != TRUE)
+    {
+        if (species == SPECIES_BULBASAUR)
+            species = NUM_SPECIES - 1;
+        else
+            species--;
+    }
+    return species;
+}
+
+static const u16 sResortGorgeousDeluxeRewards[] = {
+    ITEM_BIG_PEARL,
+    ITEM_PEARL,
+    ITEM_STARDUST,
+    ITEM_STAR_PIECE,
+    ITEM_NUGGET,
+    ITEM_RARE_CANDY
+};
+
+static u16 SampleResortGorgeousReward(void)
+{
+    if ((Random() % 100) >= 30)
+        return ITEM_LUXURY_BALL;
+    else
+        return sResortGorgeousDeluxeRewards[Random() % NELEMS(sResortGorgeousDeluxeRewards)];
+}
+
+bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
+{
+    // 8004 = species
+    u8 playerCount = CalculatePlayerPartyCount();
+    u8 i;
+    for (i = 0; i < playerCount; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004 
+            && GetPlayerIDAsU32() == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
+            return TRUE;
+    }
+    return FALSE;
 }

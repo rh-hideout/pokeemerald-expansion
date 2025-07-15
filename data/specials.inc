@@ -622,3 +622,5 @@ gSpecials::
 	def_special GetStarterPokemon
 	def_special SetIcefallCaveCrackedIceMetatiles
 	def_special UpdateLoreleiDollCollection
+	def_special SampleResortGorgeousMonAndReward
+	def_special PlayerPartyContainsSpeciesWithPlayerID
