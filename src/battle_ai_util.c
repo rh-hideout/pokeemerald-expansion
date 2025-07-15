@@ -4297,7 +4297,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         }
         break;
     case STAT_CHANGE_ACC:
-        if (gBattleMons[battlerAtk].statStages[GetStatBeingChanged(STAT_CHANGE_ACC)] <= 3) // Increase only if necessary
+        if (gBattleMons[battlerAtk].statStages[statId] <= 3) // Increase only if necessary
             tempScore += DECENT_EFFECT;
         break;
     case STAT_CHANGE_EVASION:
