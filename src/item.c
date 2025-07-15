@@ -1,6 +1,7 @@
 #include "global.h"
 #include "item.h"
 #include "berry.h"
+#include "move.h"
 #include "pokeball.h"
 #include "string_util.h"
 #include "text.h"
