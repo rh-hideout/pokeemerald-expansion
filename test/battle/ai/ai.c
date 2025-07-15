@@ -913,6 +913,17 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and outspeeds")
 {
     PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);

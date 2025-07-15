@@ -141,6 +141,15 @@ bool32 IsAiBattlerAssumingStab()
     return FALSE;
 }
 
+bool32 IsAiBattlerAssumingStatusMoves()
+{
+    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STATUS_MOVES
+     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STATUS_MOVES)
+        return TRUE;
+
+    return FALSE;
+}
+
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
     if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_WEIGH_ABILITY_PREDICTION
@@ -247,6 +256,66 @@ void SaveBattlerData(u32 battlerId)
     // Save and restore types even for AI controlled battlers in case it gets changed during move evaluation process.
     gAiThinkingStruct->saved[battlerId].types[0] = gBattleMons[battlerId].types[0];
     gAiThinkingStruct->saved[battlerId].types[1] = gBattleMons[battlerId].types[1];
+}
+
+bool32 ShouldRecordStatusMove(u32 move)
+{
+    if (ASSUME_STATUS_MOVES_HAS_TUNING)
+    {
+        switch (GetMoveEffect(move))
+        {
+        // variable odds by additional effect
+        case EFFECT_NON_VOLATILE_STATUS:
+            if (GetMoveNonVolatileStatus(move) == MOVE_EFFECT_SLEEP && RandomPercentage(RNG_AI_ASSUME_STATUS_SLEEP, ASSUME_STATUS_HIGH_ODDS))
+                return TRUE;
+            else if (RandomPercentage(RNG_AI_ASSUME_STATUS_NONVOLATILE, ASSUME_STATUS_MEDIUM_ODDS))
+                return TRUE;
+            break;
+        // High odds
+        case EFFECT_AURORA_VEIL:
+        case EFFECT_CHILLY_RECEPTION:
+        case EFFECT_FIRST_TURN_ONLY:
+        case EFFECT_FOLLOW_ME:
+        case EFFECT_INSTRUCT:
+        case EFFECT_JUNGLE_HEALING:
+        case EFFECT_SHED_TAIL:
+            return RandomPercentage(RNG_AI_ASSUME_STATUS_HIGH_ODDS, ASSUME_STATUS_HIGH_ODDS);
+        // Medium odds
+        case EFFECT_AFTER_YOU:
+        case EFFECT_DOODLE:
+        case EFFECT_ENCORE:
+        case EFFECT_HAZE:
+        case EFFECT_PARTING_SHOT:
+        case EFFECT_PROTECT:
+        case EFFECT_REST:
+        case EFFECT_ROAR:
+        case EFFECT_ROOST:
+        case EFFECT_SLEEP_TALK:
+        case EFFECT_TAUNT:
+        case EFFECT_TAILWIND:
+        case EFFECT_TRICK:
+        case EFFECT_TRICK_ROOM:
+        // defoggables / screens and hazards
+        case EFFECT_LIGHT_SCREEN:
+        case EFFECT_REFLECT:
+        case EFFECT_SPIKES:
+        case EFFECT_STEALTH_ROCK:
+        case EFFECT_STICKY_WEB:
+        case EFFECT_TOXIC_SPIKES:
+            return RandomPercentage(RNG_AI_ASSUME_STATUS_MEDIUM_ODDS, ASSUME_STATUS_MEDIUM_ODDS);
+        // Low odds
+        case EFFECT_ENTRAINMENT:
+        case EFFECT_FIXED_PERCENT_DAMAGE:
+        case EFFECT_GASTRO_ACID:
+        case EFFECT_IMPRISON:
+        case EFFECT_TELEPORT:
+            return RandomPercentage(RNG_AI_ASSUME_STATUS_LOW_ODDS, ASSUME_STATUS_LOW_ODDS);
+        default:
+            break;
+        }
+    }
+
+    return RandomPercentage(RNG_AI_ASSUME_ALL_STATUS, ASSUME_ALL_STATUS_ODDS) && IsBattleMoveStatus(move);
 }
 
 static bool32 ShouldFailForIllusion(u32 illusionSpecies, u32 battlerId)
