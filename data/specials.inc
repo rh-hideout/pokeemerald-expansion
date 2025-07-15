@@ -620,3 +620,5 @@ gSpecials::
 	def_special DoCredits
 	def_special DoPokemonLeagueLightingEffect
 	def_special GetStarterPokemon
+	def_special SetIcefallCaveCrackedIceMetatiles
+	def_special UpdateLoreleiDollCollection

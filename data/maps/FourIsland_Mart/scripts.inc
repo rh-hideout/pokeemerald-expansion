@@ -2,14 +2,13 @@ FourIsland_Mart_MapScripts::
 	.byte 0
 
 FourIsland_Mart_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart FourIsland_Mart_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart FourIsland_Mart_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -23,11 +22,11 @@ FourIsland_Mart_Items::
 	.2byte ITEM_ESCAPE_ROPE
 	.2byte ITEM_MAX_REPEL
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 FourIsland_Mart_EventScript_Camper::
-@	msgbox FourIsland_Mart_Text_IcefallCaveIsFrigid, MSGBOX_NPC
+	msgbox FourIsland_Mart_Text_IcefallCaveIsFrigid, MSGBOX_NPC
 	end
 
 FourIsland_Mart_Text_LoreleiGrewUpOnThisIsland::
