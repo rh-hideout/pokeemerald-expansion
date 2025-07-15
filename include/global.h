@@ -657,18 +657,16 @@ struct ItemSlot
 union ExpandedItemSlot
 {
     struct {
-        u32 itemId:10;
+        u32 itemId:11;
         u32 expansionBit:1; // Used to determine whether or not additional slots are filled
-        u32 extraItemId:5;
+        u32 extraSlot1:4;
         u32 quantity:10;
-        u32 extraItemQuantity:5;
-        // u32 unusedBit:1;
+        u32 extraSlot2:6;
     };
     struct {
-        u32 padding:11; // matches itemId, expansionBit above
+        u32 padding:12; // matches itemId, expansionBit above
         u32 keyItemSlot2:10;
         u32 keyItemSlot3:10; // Can be ID or quantity, depending on pocket
-        // u32 unusedBit:1;
     };
 };
 
