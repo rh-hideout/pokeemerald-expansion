@@ -117,8 +117,8 @@ struct ListBuffer2 {
 };
 
 struct TempWallyBag {
-    struct ItemSlot bagPocket_Items[BAG_ITEMS_COUNT];
-    struct ItemSlot bagPocket_PokeBalls[BAG_POKEBALLS_COUNT];
+    struct ItemSlot bagPocket_Items[2]; // Potion + cancel
+    struct ItemSlot bagPocket_PokeBalls[2]; // Monster Ball + cancel
     u16 cursorPosition[POCKETS_COUNT];
     u16 scrollPosition[POCKETS_COUNT];
     u16 unused;

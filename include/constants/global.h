@@ -62,7 +62,6 @@
 #define MAIL_COUNT (10 + PARTY_SIZE)
 #define SECRET_BASES_COUNT 20
 #define POKE_NEWS_COUNT 16
-#define PC_ITEMS_COUNT 50
 #define OBJECT_EVENT_TEMPLATES_COUNT 64
 #define DECOR_MAX_SECRET_BASE 16
 #define DECOR_MAX_PLAYERS_HOUSE 12
@@ -77,11 +76,25 @@
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
 
 // Bag constants
-#define BAG_ITEMS_COUNT 30
-#define BAG_KEYITEMS_COUNT 30
-#define BAG_POKEBALLS_COUNT 16
-#define BAG_TMHM_COUNT 64
-#define BAG_BERRIES_COUNT 46
+#define BAG_ITEMS_BASE_COUNT 30
+#define BAG_KEYITEMS_BASE_COUNT 30
+#define BAG_POKEBALLS_BASE_COUNT 16
+#define BAG_TMHM_BASE_COUNT 64
+#define BAG_BERRIES_BASE_COUNT 46
+
+// PC storage
+#define PC_ITEMS_COUNT 50
+
+// Whether or not to mix up pockets and PC slots to increase storage
+#define KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS     12
+#define USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET     TRUE
+
+// Expanded capacities
+#define BAG_ITEMS_COUNT ((BAG_ITEMS_BASE_COUNT * 3 / 2) + (USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET ? (PC_ITEMS_COUNT / 2) : 0))
+#define BAG_KEYITEMS_COUNT ((BAG_KEYITEMS_BASE_COUNT * 3) - 2 * KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS)
+#define BAG_POKEBALLS_COUNT (BAG_POKEBALLS_BASE_COUNT * 3 / 2)
+#define BAG_TMHM_COUNT ((BAG_TMHM_BASE_COUNT * 3 / 2) + KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS)
+#define BAG_BERRIES_COUNT (BAG_BERRIES_BASE_COUNT * 3 / 2)
 
 // Number of facilities for Ranking Hall.
 // 7 facilities for single mode + tower double mode + tower multi mode.
