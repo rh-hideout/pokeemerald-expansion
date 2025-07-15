@@ -2,14 +2,13 @@ SevenIsland_Mart_MapScripts::
 	.byte 0
 
 SevenIsland_Mart_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart SevenIsland_Mart_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart SevenIsland_Mart_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -24,19 +23,19 @@ SevenIsland_Mart_Items::
 	.2byte ITEM_ESCAPE_ROPE
 	.2byte ITEM_MAX_REPEL
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 SevenIsland_Mart_EventScript_Lass::
-@	msgbox SevenIsland_Mart_Text_MonHavePersonalitiesOfTheirOwn, MSGBOX_NPC
+	msgbox SevenIsland_Mart_Text_MonHavePersonalitiesOfTheirOwn, MSGBOX_NPC
 	end
 
 SevenIsland_Mart_EventScript_Hiker::
-@	msgbox SevenIsland_Mart_Text_PreparationsCompleteForRuins, MSGBOX_NPC
+	msgbox SevenIsland_Mart_Text_PreparationsCompleteForRuins, MSGBOX_NPC
 	end
 
 SevenIsland_Mart_EventScript_Fisher::
-@	msgbox SevenIsland_Mart_Text_NeedToFishOnSevenIsland, MSGBOX_NPC
+	msgbox SevenIsland_Mart_Text_NeedToFishOnSevenIsland, MSGBOX_NPC
 	end
 
 SevenIsland_Mart_Text_MonHavePersonalitiesOfTheirOwn::
