@@ -650,8 +650,22 @@ struct WarpData
 
 struct ItemSlot
 {
-    u16 itemId;
-    u16 quantity;
+    union {
+        struct {
+            u32 itemId:10;
+            u32 expansionBit:1; // Used to determine whether or not additional slots are filled
+            u32 extraItemId:5;
+            u32 quantity:10;
+            u32 extraItemQuantity:5;
+            // u32 unusedBit:1;
+        };
+        struct {
+            u32 padding:11; // matches itemId, expansionBit above
+            u32 keyItemSlot2:10;
+            u32 keyItemSlot3:10; // Can be ID or quantity, depending on pocket
+            // u32 unusedBit:1;
+        };
+    };
 };
 
 struct Pokeblock
@@ -1046,11 +1060,11 @@ struct ExternalEventFlags
 
 struct Bag
 {
-    struct ItemSlot items[BAG_ITEMS_COUNT];
-    struct ItemSlot keyItems[BAG_KEYITEMS_COUNT];
-    struct ItemSlot pokeBalls[BAG_POKEBALLS_COUNT];
-    struct ItemSlot TMsHMs[BAG_TMHM_COUNT];
-    struct ItemSlot berries[BAG_BERRIES_COUNT];
+    struct ItemSlot items[BAG_ITEMS_BASE_COUNT];
+    struct ItemSlot keyItems[BAG_KEYITEMS_BASE_COUNT];
+    struct ItemSlot pokeBalls[BAG_POKEBALLS_BASE_COUNT];
+    struct ItemSlot TMsHMs[BAG_TMHM_BASE_COUNT];
+    struct ItemSlot berries[BAG_BERRIES_BASE_COUNT];
 };
 
 struct SaveBlock1
