@@ -3112,31 +3112,25 @@ static inline void GenerateAndBufferStatChangeString(u8 *textBuffer, s32 statVal
 
 static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
 {
-    // If we should record the battler ability (regardless of whether or not it blocks the move effect)
     if (result->recordBattlerAbility)
         RecordAbilityBattle(result->effectBattler, result->battlerAbility);
 
-    // If blocked by ability, set appropriate flags
     if (result->blockedByAbility && result->lastUsedAbility)
     {
         gLastUsedAbility = result->lastUsedAbility;
         gBattlerAbility = result->blockedByAbility - 1;
         RecordAbilityBattle(gBattlerAbility, gLastUsedAbility);
 
-        // If Mirror Armor, need to set statchanger
         if (result->lastUsedAbility == ABILITY_MIRROR_ARMOR)
             gBattleScripting.statChanger = result->statChanger;
     }
 
-    // If blocked by item, set appropriate flags
     if (result->blockedByItem)
         gLastUsedItem = result->lastUsedItem;
 
-    // Sets the statLowered special status - prevents something like Mist activating several times
     if (result->statLowered)
         gSpecialStatuses[result->effectBattler].statLowered = TRUE;
 
-    // Set result variables
     if (result->statChangerKey.allStats)
     {
         gBattleScripting.statChanger = result->statChanger;
@@ -3145,14 +3139,11 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
     gBattleCommunication[MULTISTRING_CHOOSER] = result->multistring;
     gEffectBattler = result->effectBattler;
 
-    // Sets scripting battler
     if (result->scriptingBattler)
         gBattleScripting.battler = result->scriptingBattler - 1;
 
-    // Push and set next instruction
     if (result->nextInstr)
     {
-        // Try push and go to next instruction
         if (result->battlescriptPush && result->pushInstr != NULL)
             BattleScriptPush(result->pushInstr);
         gBattlescriptCurrInstr = result->nextInstr;
@@ -11950,8 +11941,6 @@ static u16 ReverseStatChangeMoveEffect(u16 moveEffect)
         return MOVE_EFFECT_ACC_PLUS_2;
     case MOVE_EFFECT_EVS_MINUS_2:
         return MOVE_EFFECT_EVS_PLUS_2;
-
-    // etc
     case MOVE_EFFECT_RAISE_STATS:
         return MOVE_EFFECT_LOWER_STATS;
     case MOVE_EFFECT_LOWER_STATS:
@@ -11982,7 +11971,9 @@ static void TryPlayStatChangeAnimation(u32 battler, union StatChanger statChange
             GetStatAnimArgFromStatChanger(statChanger, singleStatOnly ? statChanger.backwardsCompatibleStatId : 0)); // To do - get this work with Defiant
     }
     else // final stat that can be changed
+    {
         gBattleScripting.statAnimPlayed = FALSE;
+    }
 }
 
 static inline bool32 MoveEffectBlockedMisc(struct MoveEffectResult *result, bool32 failCondition, const u8 *failPtr)
