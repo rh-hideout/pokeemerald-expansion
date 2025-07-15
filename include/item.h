@@ -142,6 +142,7 @@ enum SortPocket
     SORT_NONE,
     SORT_POCKET_BY_ITEM_ID,
     SORT_POCKET_TM_HM,
+    SORT_POCKET_ALPHABETICALLY,
 };
 
 #define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
@@ -184,7 +185,7 @@ void RemovePCItem(u8 index, u16 count);
 void CompactPCItems(void);
 void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(enum Pocket pocketId);
-void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket);
+void BagPocket_SortItems(struct BagPocket *pocket, enum SortPocket sortPocket);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(union ExpandedItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);

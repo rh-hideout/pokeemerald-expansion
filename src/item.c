@@ -1,6 +1,7 @@
 #include "global.h"
 #include "item.h"
 #include "berry.h"
+#include "move.h"
 #include "pokeball.h"
 #include "string_util.h"
 #include "text.h"
@@ -552,22 +553,51 @@ void CompactItemsInBagPocket(enum Pocket pocketId)
 }
 
 // Opens the possibility of sorting by other means e.g. ghoulslash's advanced sorting
-static inline bool32 ItemIndexCompare(u16 itemA, u16 itemB, enum SortPocket sortPocket)
+static inline bool32 CompareItems(struct BagPocket *pocket, struct ItemSlot itemA, struct ItemSlot itemB, enum SortPocket sortPocket)
 {
     switch (sortPocket)
     {
         case SORT_POCKET_BY_ITEM_ID:
-            return itemA > itemB;
+            return itemA.itemId > itemB.itemId;
         case SORT_POCKET_TM_HM:
-            return GetItemTMHMIndex(itemA) > GetItemTMHMIndex(itemB);
+            return GetItemTMHMIndex(itemA.itemId) > GetItemTMHMIndex(itemB.itemId);
+        case SORT_POCKET_ALPHABETICALLY:
+            if (itemA.itemId != itemB.itemId)
+            {
+                const u8 *nameA, *nameB;
+                if (pocket->id == POCKET_TM_HM)
+                {
+                    nameA = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(itemA.itemId))].name;
+                    nameB = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(itemB.itemId))].name;
+                }
+                else
+                {
+                    nameA = GetItemName(itemA.itemId);
+                    nameB = GetItemName(itemB.itemId);
+                }
+
+                for (u32 i = 0; ; ++i)
+                {
+                    if (nameA[i] == EOS && nameB[i] != EOS)
+                        return FALSE;
+                    else if (nameA[i] != EOS && nameB[i] == EOS)
+                        return TRUE;
+                    else if (nameA[i] == EOS && nameB[i] == EOS)
+                        return FALSE;
+
+                    if (nameA[i] < nameB[i])
+                        return FALSE;
+                    else if (nameA[i] > nameB[i])
+                        return TRUE;
+                }
+            }
         default:
             return FALSE;
     }
 }
 
-void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket)
+void BagPocket_SortItems(struct BagPocket *pocket, enum SortPocket sortPocket)
 {
-    struct BagPocket *pocket = &gBagPockets[pocketId];
     struct ItemSlot tempItem_i, tempItem_j;
 
     for (u32 i = 0; i < pocket->capacity - 1; i++)
@@ -576,7 +606,7 @@ void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket)
         for (u32 j = i + 1; j < pocket->capacity; j++)
         {
             tempItem_j = BagPocket_GetSlotData(pocket, j);
-            if (tempItem_j.itemId && (!tempItem_i.itemId || ItemIndexCompare(tempItem_i.itemId, tempItem_j.itemId, sortPocket)))
+            if (tempItem_j.itemId && (!tempItem_i.itemId || CompareItems(pocket, tempItem_i, tempItem_j, sortPocket)))
             {
                 BagPocket_SetSlotData(pocket, i, tempItem_j);
                 BagPocket_SetSlotData(pocket, j, tempItem_i);

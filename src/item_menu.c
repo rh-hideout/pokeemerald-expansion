@@ -1150,16 +1150,19 @@ static void Task_CloseBagMenu(u8 taskId)
     }
 }
 
-void UpdatePocketItemList(u8 pocketId)
+void UpdatePocketItemList(enum Pocket pocketId)
 {
-    u16 i;
+    if (pocketId >= POCKETS_COUNT)
+        return; // shouldn't even get here
+
+    struct BagPocket *pocket = &gBagPockets[pocketId];
     switch (pocketId)
     {
     case POCKET_TM_HM:
-        SortPocket(pocketId, SORT_POCKET_TM_HM);
+        BagPocket_SortItems(pocket, SORT_POCKET_TM_HM);
         break;
     case POCKET_BERRIES:
-        SortPocket(pocketId, SORT_POCKET_BY_ITEM_ID);
+        BagPocket_SortItems(pocket, SORT_POCKET_BY_ITEM_ID);
         break;
     default:
         CompactItemsInBagPocket(pocketId);
@@ -1168,7 +1171,7 @@ void UpdatePocketItemList(u8 pocketId)
 
     gBagMenu->numItemStacks[pocketId] = 0;
 
-    for (i = 0; i < gBagPockets[pocketId].capacity && GetBagItemId(pocketId, i); i++)
+    for (u32 i = 0; i < pocket->capacity && BagPocket_GetSlotData(pocket, i).itemId; i++)
         gBagMenu->numItemStacks[pocketId]++;
 
     if (!gBagMenu->hideCloseBagText)
@@ -3325,7 +3328,8 @@ static void SortItemsInBag(struct BagPocket *pocket, u8 type)
     switch (type)
     {
     case SORT_ALPHABETICALLY:
-        MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsAlphabetically);
+        BagPocket_SortItems(pocket, SORT_POCKET_ALPHABETICALLY);
+        // MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsAlphabetically);
         break;
     case SORT_BY_AMOUNT:
         MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsByMost);
