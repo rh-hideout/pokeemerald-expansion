@@ -866,17 +866,49 @@ AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI won't use stat boosting moves if the player has used Haze")
+AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
 {
-    PASSES_RANDOMLY(BOOST_INTO_HAZE_CHANCE, 100, RNG_AI_BOOST_INTO_HAZE);
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_HAZE) == EFFECT_HAZE);
-        ASSUME(GetMoveEffect(MOVE_DRAGON_DANCE) == EFFECT_DRAGON_DANCE);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_HAZE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, MOVE_DRAGON_DANCE); }
+        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
+        ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WAILORD) { Level(50); }
+        OPPONENT(SPECIES_WAILORD) { Moves(MOVE_THUNDER, MOVE_WATER_SPOUT, MOVE_WATER_GUN, MOVE_SURF); }
     } WHEN {
-        TURN { MOVE(player, MOVE_HAZE); EXPECT_MOVE(opponent, MOVE_DRAGON_DANCE); }
-        TURN { MOVE(player, MOVE_HAZE); EXPECT_MOVE(opponent, MOVE_DRAGON_DANCE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_WATER_SPOUT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
+        ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WAILORD) { Level(50); }
+        OPPONENT(SPECIES_WAILORD) { Moves(MOVE_THUNDER, MOVE_WATER_SPOUT, MOVE_WATER_GUN, MOVE_SURF); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_WATER_SPOUT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MAGNITUDE) == EFFECT_MAGNITUDE);
+        ASSUME(GetMoveType(MOVE_MAGNITUDE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GEODUDE) { Level(15); Moves(MOVE_DEFENSE_CURL, MOVE_MAGNITUDE); }
+        OPPONENT(SPECIES_TYRUNT) { Level(13); Moves(MOVE_BITE, MOVE_THUNDER_FANG, MOVE_ROCK_TOMB); }
+        OPPONENT(SPECIES_ZUBAT) { Level(14); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MAGNITUDE); EXPECT_SWITCH(opponent, 1); }
     }
 }
