@@ -68,7 +68,7 @@ struct Item
 
 struct ALIGNED(2) BagPocket
 {
-    struct ItemSlot *itemSlots;
+    union ExpandedItemSlot *itemSlots;
     u16 capacity:10;
     enum Pocket id:6;
 };
@@ -186,7 +186,7 @@ void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(enum Pocket pocketId);
 void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
-void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
+void MoveItemSlotInPC(union ExpandedItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
 u16 CountTotalItemQuantityInBag(u16 itemId);
 bool32 AddPyramidBagItem(u16 itemId, u16 count);
