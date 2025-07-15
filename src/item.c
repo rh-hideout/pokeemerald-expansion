@@ -59,7 +59,7 @@ const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
 #undef UNPACK_TM_ITEM_ID
 #undef UNPACK_HM_ITEM_ID
 
-static inline struct ItemSlot NONNULL ItemSlot_GetExpandedData(struct ItemSlot *itemSlots, u32 pocketPos)
+static inline struct ItemSlot NONNULL ItemSlot_GetExpandedData(union ExpandedItemSlot *itemSlots, u32 pocketPos)
 {
     return itemSlots[pocketPos].expansionBit ?
         (struct ItemSlot) {
@@ -82,7 +82,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataItems(struct BagPocke
     if (pocketPos < BAG_ITEMS_BASE_COUNT)
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
     else if (pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
-        return ItemSlot_GetExpandedData(pocket, (pocketPos - BAG_ITEMS_BASE_COUNT) / 2);
+        return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) / 2);
     else if (USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         return ItemSlot_GetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) / 2);
 }
@@ -95,7 +95,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *
     };
 }
 
-static inline void NONNULL ItemSlot_SetExpandedData(struct ItemSlot *itemSlots, u32 pocketPos, struct ItemSlot newSlot)
+static inline void NONNULL ItemSlot_SetExpandedData(union ExpandedItemSlot *itemSlots, u32 pocketPos, struct ItemSlot newSlot)
 {
     itemSlots[pocketPos].expansionBit = TRUE;
     itemSlots[pocketPos].extraItemId = newSlot.itemId;
@@ -115,7 +115,7 @@ static inline void NONNULL BagPocket_SetSlotDataItems(struct BagPocket *pocket, 
     if (pocketPos < BAG_ITEMS_BASE_COUNT)
         return BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
     else if (pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
-        return ItemSlot_SetExpandedData(pocket, (pocketPos - BAG_ITEMS_BASE_COUNT) / 2, newSlot);
+        return ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) / 2, newSlot);
     else if (USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         return ItemSlot_SetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) / 2, newSlot);
 }
@@ -176,7 +176,10 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
         for (item = 0; item < gBagPockets[pocketId].capacity; item++)
-            ApplyNewEncryptionKeyToHword(&(gBagPockets[pocketId].itemSlots[item].quantity), newKey);
+        {
+            gBagPockets[pocketId].itemSlots[item].quantity ^= gSaveBlock2Ptr->encryptionKey;
+            gBagPockets[pocketId].itemSlots[item].quantity ^= newKey;
+        }
     }
 }
 
@@ -576,7 +579,7 @@ void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to)
     BagPocket_MoveItemSlot(&gBagPockets[pocketId], from, to);
 }
 
-void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to)
+void MoveItemSlotInPC(union ExpandedItemSlot *itemSlots, u32 from, u32 to)
 {
     struct BagPocket dummyPocket = DUMMY_PC_BAG_POCKET;
     return BagPocket_MoveItemSlot(&dummyPocket, from, to);
