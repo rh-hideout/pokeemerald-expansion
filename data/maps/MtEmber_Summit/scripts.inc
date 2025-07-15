@@ -4,7 +4,7 @@ MtEmber_Summit_MapScripts::
 	.byte 0
 
 MtEmber_Summit_OnResume::
-	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, MtEmber_Summit_EventScript_TryRemoveMoltres
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, MtEmber_Summit_EventScript_TryRemoveMoltres
 	end
 
 MtEmber_Summit_EventScript_TryRemoveMoltres::
@@ -33,10 +33,10 @@ MtEmber_Summit_EventScript_Moltres::
 	delay 10
 	playbgm MUS_RG_ENCOUNTER_GYM_LEADER, 0
 	waitbuttonpress
-	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	special BattleSetup_StartLegendaryBattle
 	waitstate
-	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, MtEmber_Summit_EventScript_DefeatedMoltres
 	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, MtEmber_Summit_EventScript_RanFromMoltres

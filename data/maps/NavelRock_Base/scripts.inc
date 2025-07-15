@@ -18,7 +18,7 @@ NavelRock_Base_EventScript_TryShowLugia::
 @	return
 
 NavelRock_Base_OnResume::
-@	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, NavelRock_Base_EventScript_TryRemoveLugia
+@	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, NavelRock_Base_EventScript_TryRemoveLugia
 	end
 
 NavelRock_Base_EventScript_TryRemoveLugia::
@@ -54,10 +54,10 @@ NavelRock_Base_EventScript_Lugia::
 @	waitmoncry
 @	delay 20
 @	seteventmon SPECIES_LUGIA, 70
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special BattleSetup_StartLegendaryBattle
 @	waitstate
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, NavelRock_Base_EventScript_DefeatedLugia
 @	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, NavelRock_Base_EventScript_RanFromLugia

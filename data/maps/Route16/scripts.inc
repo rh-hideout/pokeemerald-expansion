@@ -5,7 +5,7 @@ Route16_MapScripts::
 	.byte 0
 
 Route16_OnResume::
-	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, Route16_EventScript_RemoveSnorlax
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, Route16_EventScript_RemoveSnorlax
 	end
 
 Route16_EventScript_RemoveSnorlax::
@@ -41,9 +41,9 @@ Route16_EventScript_Snorlax::
 	delay 40
 	waitmoncry
 	setflag FLAG_HIDE_ROUTE_16_SNORLAX
-	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	dowildbattle
-	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route16_EventScript_FoughtSnorlax
 	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, Route16_EventScript_FoughtSnorlax

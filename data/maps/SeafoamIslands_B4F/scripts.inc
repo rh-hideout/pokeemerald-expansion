@@ -9,7 +9,7 @@ SeafoamIslands_B4F_MapScripts::
 	.byte 0
 
 SeafoamIslands_B4F_OnResume::
-@	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, SeafoamIslands_B4F_EventScript_TryRemoveArticuno
+@	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, SeafoamIslands_B4F_EventScript_TryRemoveArticuno
 	end
 
 SeafoamIslands_B4F_EventScript_TryRemoveArticuno::
@@ -165,10 +165,10 @@ SeafoamIslands_B4F_EventScript_Articuno::
 @	delay 10
 @	playbgm MUS_RG_ENCOUNTER_GYM_LEADER, 0
 @	waitbuttonpress
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special BattleSetup_StartLegendaryBattle
 @	waitstate
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, SeafoamIslands_B4F_EventScript_DefeatedArticuno
 @	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, SeafoamIslands_B4F_EventScript_RanFromArticuno

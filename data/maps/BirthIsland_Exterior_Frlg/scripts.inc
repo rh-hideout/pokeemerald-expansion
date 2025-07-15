@@ -29,7 +29,7 @@ BirthIsland_Exterior_EventScript_TryShowDeoxysPuzzle_Frlg::
 @	return
 
 BirthIsland_Exterior_Frlg_OnResume::
-@	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, BirthIsland_Exterior_EventScript_TryRemoveDeoxys
+@	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, BirthIsland_Exterior_EventScript_TryRemoveDeoxys
 	end
 
 BirthIsland_Exterior_EventScript_TryRemoveDeoxys_Frlg::
@@ -81,10 +81,10 @@ BirthIsland_Exterior_EventScript_Deoxys_Frlg::
 @	waitmoncry
 @	setvar VAR_LAST_TALKED, LOCALID_BIRTH_ISLAND_DEOXYS
 @	seteventmon SPECIES_DEOXYS, 30
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special BattleSetup_StartLegendaryBattle
 @	waitstate
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, BirthIsland_Exterior_EventScript_DefeatedDeoxys
 @	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, BirthIsland_Exterior_EventScript_RanFromDeoxys

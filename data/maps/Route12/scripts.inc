@@ -3,7 +3,7 @@ Route12_MapScripts::
 	.byte 0
 
 Route12_OnResume::
-	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, Route12_EventScript_TryRemoveSnorlax
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, Route12_EventScript_TryRemoveSnorlax
 	end
 
 Route12_EventScript_TryRemoveSnorlax::
@@ -23,10 +23,10 @@ Route12_EventScript_Snorlax::
 	delay 40
 	waitmoncry
 	setflag FLAG_HIDE_ROUTE_12_SNORLAX
-	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	setflag FLAG_SYS_CTRL_OBJ_DELETE
 	setflag FLAG_WOKE_UP_ROUTE_12_SNORLAX
 	dowildbattle
-	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_eq VAR_RESULT, B_OUTCOME_WON, Route12_EventScript_FoughtSnorlax
 	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, Route12_EventScript_FoughtSnorlax

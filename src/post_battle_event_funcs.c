@@ -99,14 +99,14 @@ bool8 EnterHallOfFame(void)
     int i;
     bool8 gaveAtLeastOneRibbon;
     HealPlayerParty();
-    if (FlagGet(FLAG_SYS_GAME_CLEAR_FRLG) == TRUE)
+    if (FlagGet(FLAG_SYS_GAME_CLEAR) == TRUE)
     {
         gHasHallOfFameRecords = TRUE;
     }
     else
     {
         gHasHallOfFameRecords = FALSE;
-        FlagSet(FLAG_SYS_GAME_CLEAR_FRLG);
+        FlagSet(FLAG_SYS_GAME_CLEAR);
     }
     if (GetGameStat(GAME_STAT_FIRST_HOF_PLAY_TIME) == 0)
     {

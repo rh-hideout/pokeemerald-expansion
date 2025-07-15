@@ -1,29 +1,29 @@
 SafariZone_EventScript_OutOfBallsMidBattle::
 	setvar VAR_SAFARI_ZONE_STATE, 1
 	special ExitSafariMode
-.ifdef FIRERED
+#ifdef FIRERED
 	setwarp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
-.else
-.ifdef LEAFGREEN
+#else
+#ifdef LEAFGREEN
 	setwarp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
-.else
+#else
 	setwarp MAP_ROUTE121_SAFARI_ZONE_ENTRANCE, 2, 5
-.endif
-.endif
+#endif
+#endif
 	end
 
 SafariZone_EventScript_Exit::
 	setvar VAR_SAFARI_ZONE_STATE, 1
 	special ExitSafariMode
-.ifdef FIRERED
+#ifdef FIRERED
 	warp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
-.else
-.ifdef LEAFGREEN
+#else
+#ifdef LEAFGREEN
 	warp MAP_FUCHSIA_CITY_SAFARI_ZONE_ENTRANCE, 4, 1
-.else
+#else
 	warp MAP_ROUTE121_SAFARI_ZONE_ENTRANCE, 2, 5
-.endif
-.endif
+#endif
+#endif
 	waitstate
 	end
 

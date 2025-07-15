@@ -4,7 +4,7 @@ PowerPlant_MapScripts::
 	.byte 0
 
 PowerPlant_OnResume::
-@	call_if_set FLAG_SYS_SPECIAL_WILD_BATTLE, PowerPlant_EventScript_TryRemoveStaticMon
+@	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, PowerPlant_EventScript_TryRemoveStaticMon
 	end
 
 PowerPlant_EventScript_TryRemoveStaticMon::
@@ -46,10 +46,10 @@ PowerPlant_EventScript_Zapdos::
 @	delay 10
 @	playbgm MUS_RG_ENCOUNTER_GYM_LEADER, 0
 @	waitbuttonpress
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special BattleSetup_StartLegendaryBattle
 @	waitstate
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, PowerPlant_EventScript_DefeatedZapdos
 @	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, PowerPlant_EventScript_RanFromZapdos
@@ -77,9 +77,9 @@ PowerPlant_EventScript_Electrode1::
 @	playmoncry SPECIES_ELECTRODE, CRY_MODE_ENCOUNTER
 @	delay 40
 @	waitmoncry
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	dowildbattle
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special QuestLog_CutRecording
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, PowerPlant_EventScript_FoughtElectrode1
@@ -103,9 +103,9 @@ PowerPlant_EventScript_Electrode2::
 @	playmoncry SPECIES_ELECTRODE, CRY_MODE_ENCOUNTER
 @	delay 40
 @	waitmoncry
-@	setflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	setflag FLAG_SYS_CTRL_OBJ_DELETE
 @	dowildbattle
-@	clearflag FLAG_SYS_SPECIAL_WILD_BATTLE
+@	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 @	special QuestLog_CutRecording
 @	specialvar VAR_RESULT, GetBattleOutcome
 @	goto_if_eq VAR_RESULT, B_OUTCOME_WON, PowerPlant_EventScript_FoughtElectrode2
