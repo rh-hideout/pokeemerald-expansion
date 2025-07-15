@@ -104,7 +104,7 @@
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_MAX_ETHER",
+      "trainer_sight_or_berry_tree_id": "ITEM_RAICHITE",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_ROUTE_113_MAX_ETHER"
     },
