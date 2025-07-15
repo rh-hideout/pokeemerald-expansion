@@ -1048,6 +1048,9 @@ static void Task_BattleTransition(u8 taskId)
 static bool8 Transition_StartIntro(struct Task *task)
 {
     SetWeatherScreenFadeOut();
+    // cause all shadow sprites to destroy themselves,
+    // freeing up sprite slots for the transition
+    gWeatherPtr->noShadows = TRUE;
     CpuCopy32(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
     if (sTasks_Intro[task->tTransitionId] != NULL)
     {
