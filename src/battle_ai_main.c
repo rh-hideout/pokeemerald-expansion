@@ -3660,32 +3660,32 @@ static bool32 IsPinchBerryItemEffect(enum ItemHoldEffect holdEffect)
     }
 }
 
-static s32 CompareMoveAccuracies(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, u32 moveSlot2)
+static enum MoveComparisonResult CompareMoveAccuracies(u32 battlerAtk, u32 battlerDef, u32 moveSlot1, u32 moveSlot2)
 {
     u32 acc1 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot1];
     u32 acc2 = gAiLogicData->moveAccuracy[battlerAtk][battlerDef][moveSlot2];
 
     if (acc1 > acc2)
-        return 1;
+        return MOVE_WON_COMPARISON;
     else if (acc2 > acc1)
-        return -1;
-    return 0;
+        return MOVE_LOST_COMPARISON;
+    return MOVE_NEUTRAL_COMPARISON;
 }
 
-static s32 CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
+static enum MoveComparisonResult CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
 {
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     u32 speed1 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move1, predictedMove, CONSIDER_PRIORITY);
     u32 speed2 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move2, predictedMove, CONSIDER_PRIORITY);
 
     if (speed1 == AI_IS_FASTER && speed2 == AI_IS_SLOWER)
-        return 1;
+        return MOVE_WON_COMPARISON;
     if (speed2 == AI_IS_FASTER && speed1 == AI_IS_SLOWER)
-        return -1;
-    return 0;
+        return MOVE_LOST_COMPARISON;
+    return MOVE_NEUTRAL_COMPARISON;
 }
 
-static s32 CompareGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u16 moveSlot1, u16 moveSlot2, u16 *moves)
+static enum MoveComparisonResult CompareGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u16 moveSlot1, u16 moveSlot2, u16 *moves)
 {
     s32 dmg1, dmg2;
     bool32 guarantee1, guarantee2;
@@ -3700,10 +3700,10 @@ static s32 CompareGuaranteeFaintTarget(u32 battlerAtk, u32 battlerDef, u16 moveS
     guarantee2 = (gBattleMons[battlerDef].hp <= dmg2 && !CanEndureHit(battlerAtk, battlerDef, moves[moveSlot2]));
 
     if (guarantee1 && !guarantee2)
-        return 1;
+        return MOVE_WON_COMPARISON;
     if (guarantee2 && !guarantee1)
-        return -1;
-    return 0;
+        return MOVE_LOST_COMPARISON;
+    return MOVE_NEUTRAL_COMPARISON;
 }
 
 static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
@@ -3805,41 +3805,49 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                         // Use priority to get fast KO if outsped
                         switch (CompareMoveSpeeds(battlerAtk, battlerDef, moves[currId], moves[i]))
                         {
-                        case 1:
+                        case MOVE_WON_COMPARISON:
                             tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
                             break;
-                        case -1:
+                        case MOVE_LOST_COMPARISON:
                             tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
+                            break;
+                        case MOVE_NEUTRAL_COMPARISON:
                             break;
                         }
                         // Min roll KOs
                         switch (CompareGuaranteeFaintTarget(battlerAtk, battlerDef, currId, i, moves))
                         {
-                        case 1:
+                        case MOVE_WON_COMPARISON:
                             tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_GUARANTEE);
                             break;
-                        case -1:
+                        case MOVE_LOST_COMPARISON:
                             tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_GUARANTEE);
+                            break;
+                        case MOVE_NEUTRAL_COMPARISON:
                             break;
                         }
                     }
                     switch (CompareMoveAccuracies(battlerAtk, battlerDef, currId, i))
                     {
-                    case 1:
+                    case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                         break;
-                    case -1:
+                    case MOVE_LOST_COMPARISON:
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                         break;
+                    case MOVE_NEUTRAL_COMPARISON:
+                            break;
                     }
                     switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                     {
-                    case 1:
+                    case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                         break;
-                    case -1:
+                    case MOVE_LOST_COMPARISON:
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                         break;
+                    case MOVE_NEUTRAL_COMPARISON:
+                            break;
                     }
                 }
             }

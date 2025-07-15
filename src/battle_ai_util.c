@@ -1167,7 +1167,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
 }
 
 // Checks if one of the moves has side effects or perks, assuming equal dmg or equal no of hits to KO
-s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo)
+enum MoveComparisonResult AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo)
 {
     bool32 effect1, effect2;
     u32 defAbility = gAiLogicData->abilities[battlerDef];
@@ -1181,27 +1181,27 @@ s32 AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32
         bool32 moveContact1 = MoveMakesContact(move1);
         bool32 moveContact2 = MoveMakesContact(move2);
         if (moveContact1 && !moveContact2)
-            return -1;
+            return MOVE_LOST_COMPARISON;
         if (moveContact2 && !moveContact1)
-            return 1;
+            return MOVE_WON_COMPARISON;
     }
 
     // Check additional effects.
     effect1 = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move1, noOfHitsToKo);
     effect2 = AI_IsMoveEffectInMinus(battlerAtk, battlerDef, move2, noOfHitsToKo);
     if (effect2 && !effect1)
-        return 1;
+        return MOVE_WON_COMPARISON;
     if (effect1 && !effect2)
-        return -1;
+        return MOVE_LOST_COMPARISON;
 
     effect1 = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move1, noOfHitsToKo);
     effect2 = AI_IsMoveEffectInPlus(battlerAtk, battlerDef, move2, noOfHitsToKo);
     if (effect2 && !effect1)
-        return -1;
+        return MOVE_LOST_COMPARISON;
     if (effect1 && !effect2)
-        return 1;
+        return MOVE_WON_COMPARISON;
 
-    return 0;
+    return MOVE_NEUTRAL_COMPARISON;
 }
 
 u32 GetNoOfHitsToKO(u32 dmg, s32 hp)
