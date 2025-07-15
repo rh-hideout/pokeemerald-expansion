@@ -6499,6 +6499,16 @@ static const u16 sDubsnakeEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sAdentityEggMoveLearnset[] = {
+    MOVE_ENCORE,
+    MOVE_MOONLIGHT,
+    MOVE_FLAME_BURST,
+    MOVE_SPIRIT_SHACKLE,
+    MOVE_JAW_LOCK,
+    MOVE_ELECTROWEB,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sPolybrawnEggMoveLearnset[] = {
     MOVE_AUTOTOMIZE,
     MOVE_BATON_PASS,
