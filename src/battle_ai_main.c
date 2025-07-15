@@ -1118,30 +1118,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     }
 
     if (effectiveness == UQ_4_12(0.0))
-    {
         RETURN_SCORE_MINUS(20);
-    }
-    else if (effectiveness < UQ_4_12(0.5))
-    {
-        switch (moveEffect)
-        {
-        case EFFECT_FIXED_HP_DAMAGE:
-        case EFFECT_LEVEL_DAMAGE:
-        case EFFECT_PSYWAVE:
-        case EFFECT_OHKO:
-        case EFFECT_SHEER_COLD:
-        case EFFECT_BIDE:
-        case EFFECT_FIXED_PERCENT_DAMAGE:
-        case EFFECT_ENDEAVOR:
-        case EFFECT_COUNTER:
-        case EFFECT_MIRROR_COAT:
-        case EFFECT_METAL_BURST:
-        case EFFECT_FINAL_GAMBIT:
-            break;
-        default:
-            RETURN_SCORE_MINUS(10);
-        }
-    }
 
     if (DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
         abilityDef = ABILITY_NONE;

@@ -913,6 +913,17 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage over slow KO")
 {
     PASSES_RANDOMLY(PRIORITIZE_LAST_CHANCE_CHANCE, 100, RNG_AI_PRIORITIZE_LAST_CHANCE);
