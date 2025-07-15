@@ -6552,11 +6552,11 @@ static const u16 sBungaloonEggMoveLearnset[] = {
 
 static const u16 sKaustikrokEggMoveLearnset[] = {
     MOVE_ROCK_BLAST,
-    MOVE_BONEMERANG,
+    MOVE_SHADOW_BONE,
     MOVE_BARRAGE,
-    MOVE_TOXIC_SPIKES,
-    //MOVE_,
-    //MOVE_,
+    MOVE_AQUA_TAIL,
+    MOVE_BONEMERANG,
+    MOVE_FIRE_SPIN,
     MOVE_UNAVAILABLE,
 };
 
