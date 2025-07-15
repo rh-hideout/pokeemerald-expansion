@@ -2,14 +2,13 @@ SixIsland_Mart_MapScripts::
 	.byte 0
 
 SixIsland_Mart_EventScript_Clerk::
-@	goto_if_questlog EventScript_ReleaseEnd
-@	lock
-@	faceplayer
-@	message gText_HowMayIServeYou
-@	waitmessage
-@	pokemart SixIsland_Mart_Items
-@	msgbox gText_PleaseComeAgain
-@	release
+	lock
+	faceplayer
+	message gText_HowMayIServeYou
+	waitmessage
+	pokemart SixIsland_Mart_Items
+	msgbox gText_PleaseComeAgain
+	release
 	end
 
 	.align 2
@@ -23,11 +22,11 @@ SixIsland_Mart_Items::
 	.2byte ITEM_MAX_REPEL
 	.2byte ITEM_DREAM_MAIL
 	.2byte ITEM_NONE
-@	release
+	release
 	end
 
 SixIsland_Mart_EventScript_Picnicker::
-@	msgbox SixIsland_Mart_Text_ShouldBuyMailAndWriteLetter, MSGBOX_NPC
+	msgbox SixIsland_Mart_Text_ShouldBuyMailAndWriteLetter, MSGBOX_NPC
 	end
 
 SixIsland_Mart_Text_AgathaOldestEverEliteFourMember::

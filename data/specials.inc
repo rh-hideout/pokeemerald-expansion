@@ -597,6 +597,8 @@ gSpecials::
 	def_special DoesPlayerPartyContainSpecies
 	def_special GetMagikarpSizeRecordInfo
 	def_special CompareMagikarpSize
+	def_special GetHeracrossSizeRecordInfo
+	def_special CompareHeracrossSize
 	def_special GetRandomSlotMachineId
 	def_special HasAllKantoMons
 	def_special AnimateElevator
@@ -624,3 +626,4 @@ gSpecials::
 	def_special UpdateLoreleiDollCollection
 	def_special SampleResortGorgeousMonAndReward
 	def_special PlayerPartyContainsSpeciesWithPlayerID
+	def_special ShakeScreen

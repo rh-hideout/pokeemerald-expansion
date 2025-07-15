@@ -162,6 +162,8 @@ static void Task_RunPokemonLeagueLightingEffect(u8 taskId);
 static void Task_CancelPokemonLeagueLightingEffect(u8 taskId);
 static u16 SampleResortGorgeousMon(void);
 static u16 SampleResortGorgeousReward(void);
+static void Task_ShakeScreen(u8 taskId);
+static void Task_EndScreenShake(u8 taskId);
 
 static const u8 sText_BigGuy[] = _("Big guy");
 static const u8 sText_BigGirl[] = _("Big girl");
@@ -5522,3 +5524,58 @@ bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
     }
     return FALSE;
 }
+
+#define tXtrans   data[0]
+#define tTimer    data[1]
+#define tNremain  data[2]
+#define tDuration data[3]
+#define tYtrans   data[4]
+
+void ShakeScreen(void)
+{
+    /*
+     * 0x8004 = x translation
+     * 0x8005 = y translation
+     * 0x8006 = num interations
+     * 0x8007 = duration of an iteration
+     */
+    u8 taskId = CreateTask(Task_ShakeScreen, 9);
+    gTasks[taskId].tXtrans = gSpecialVar_0x8005;
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tNremain = gSpecialVar_0x8006;
+    gTasks[taskId].tDuration = gSpecialVar_0x8007;
+    gTasks[taskId].tYtrans = gSpecialVar_0x8004;
+    SetCameraPanningCallback(NULL);
+    PlaySE(SE_M_STRENGTH);
+}
+
+static void Task_ShakeScreen(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    tTimer++;
+    if (tTimer % tDuration == 0)
+    {
+        tTimer = 0;
+        tNremain--;
+        tXtrans = -tXtrans;
+        tYtrans = -tYtrans;
+        SetCameraPanning(tXtrans, tYtrans);
+        if (tNremain == 0)
+        {
+            Task_EndScreenShake(taskId);
+            InstallCameraPanAheadCallback();
+        }
+    }
+}
+
+static void Task_EndScreenShake(u8 taskId)
+{
+    DestroyTask(taskId);
+    ScriptContext_Enable();
+}
+
+#undef tYtrans
+#undef tDuration
+#undef tNremain
+#undef tTimer
+#undef tXtrans
