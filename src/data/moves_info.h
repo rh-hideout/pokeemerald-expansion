@@ -23088,8 +23088,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .contestCategory = CONTEST_CATEGORY_COOL,
         .contestComboStarterId = 0,
         .contestComboMoves = {COMBO_STARTER_FOCUS_ENERGY},
-        .battleAnimScript = gBattleAnimMove_Retaliate,
-        .validApprenticeMove = TRUE,
+        .battleAnimScript = Move_BLOCK_BUSTER, // probably make the base animation for this NOT just brick break. works for now ig
+        .validApprenticeMove = TRUE, 
     },
 
     

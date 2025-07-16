@@ -22042,6 +22042,87 @@ BrickBreakShatteredWall:
 	clearmonbg ANIM_TARGET
 	end
 
+Move_BLOCK_BUSTER::
+	loadspritegfx ANIM_TAG_BLUE_LIGHT_WALL
+	loadspritegfx ANIM_TAG_IMPACT
+	loadspritegfx ANIM_TAG_HANDS_AND_FEET
+	loadspritegfx ANIM_TAG_TORN_METAL
+	choosetwoturnanim BlockBusterNormal, BlockBusterShatteredWall
+BlockBusterNormal:
+	monbg ANIM_TARGET
+	setalpha 12, 8
+	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 3, 8
+	delay 4
+	delay 1
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, -18, -18, ANIM_TARGET, 1
+	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_TARGET
+	delay 20
+	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 3, 8
+	delay 5
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, 18, 18, ANIM_TARGET, 1
+	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_TARGET
+	delay 20
+	createvisualtask AnimTask_WindUpLunge, 2, ANIM_ATTACKER, -24, 0, 24, 10, 24, 3
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 2, 0, 6, RGB_BLACK
+	delay 37
+	fadetobg BG_FISSURE
+	waitbgfadeout
+	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_PLAYER_RIGHT, 5, 25
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_PLAYER_LEFT, 5, 25
+	createvisualtask AnimTask_HorizontalShake, 3, ANIM_DEF_PARTNER, 10, 25
+	createvisualtask AnimTask_HorizontalShake, 3, ANIM_TARGET, 10, 25
+	playsewithpan SE_M_EARTHQUAKE, SOUND_PAN_TARGET
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, ANIM_TARGET, 1
+	createsprite gFistFootSpriteTemplate, ANIM_ATTACKER, 4, 0, 0, 10, 1, 0
+	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
+	waitforvisualfinish
+	call UnsetPsychicBg
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_BG, 0, 0, 0, RGB_BLACK
+	waitforvisualfinish
+	clearmonbg ANIM_TARGET
+	end
+BlockBusterShatteredWall:
+	monbg ANIM_TARGET
+	setalpha 12, 8
+	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 3, 8
+	delay 4
+	createsprite gBrickBreakWallSpriteTemplate, ANIM_ATTACKER, 3, ANIM_TARGET, 0, 0, 100, 10
+	delay 1
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, -18, -18, ANIM_TARGET, 1
+	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_TARGET
+	delay 20
+	createsprite gHorizontalLungeSpriteTemplate, ANIM_ATTACKER, 2, 3, 8
+	delay 5
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, 18, 18, ANIM_TARGET, 1
+	playsewithpan SE_M_VITAL_THROW, SOUND_PAN_TARGET
+	delay 20
+	createvisualtask AnimTask_WindUpLunge, 2, ANIM_ATTACKER, -24, 0, 24, 10, 24, 3
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_BG, 2, 0, 6, RGB_BLACK
+	delay 37
+	fadetobg BG_FISSURE
+	waitbgfadeout
+	createvisualtask AnimTask_PositionFissureBgOnBattler, 5, ANIM_TARGET, 5, -1
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_PLAYER_RIGHT, 5, 25
+	createvisualtask AnimTask_HorizontalShake, 5, ANIM_PLAYER_LEFT, 5, 25
+	createvisualtask AnimTask_HorizontalShake, 3, ANIM_DEF_PARTNER, 10, 25
+	createvisualtask AnimTask_HorizontalShake, 3, ANIM_TARGET, 10, 25
+	playsewithpan SE_M_EARTHQUAKE, SOUND_PAN_TARGET
+	createsprite gBasicHitSplatSpriteTemplate, ANIM_ATTACKER, 3, 0, 0, ANIM_TARGET, 1
+	createsprite gFistFootSpriteTemplate, ANIM_ATTACKER, 4, 0, 0, 10, 1, 0
+	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0, -8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 1, 8, -12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 2, -8, 12
+	createsprite gBrickBreakWallShardSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 3, 8, 12
+	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_TARGET
+	waitforvisualfinish
+	call UnsetPsychicBg
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 0, F_PAL_BG, 0, 0, 0, RGB_BLACK
+	waitforvisualfinish
+	clearmonbg ANIM_TARGET
+	end
+
 gBattleAnimMove_Yawn::
 	loadspritegfx ANIM_TAG_PINK_CLOUD
 	createvisualtask AnimTask_DeepInhale, 2, ANIM_ATTACKER
@@ -30123,7 +30204,6 @@ TectonicRageExplosion:
 	createsprite gTectonicRageExplosionSpriteTemplate, ANIM_TARGET, 3, 0x10, 0x10, ANIM_TARGET, 0x1
 	delay 0x6
 	return
-
 
 gBattleAnimMove_ContinentalCrush::
 	loadspritegfx ANIM_TAG_ROUND_SHADOW	@ fly
