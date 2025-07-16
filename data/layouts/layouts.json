@@ -4870,6 +4870,8 @@
       "name": "PalletTown_PlayersHouse_2F_FRLG_Layout",
       "width": 12,
       "height": 9,
+      "border_width": 2,
+      "border_height": 2,
       "primary_tileset": "gTileset_Building_Frlg",
       "secondary_tileset": "gTileset_GenericBuilding1",
       "border_filepath": "data/layouts/PalletTown_PlayersHouse_2F_FRLG/border.bin",

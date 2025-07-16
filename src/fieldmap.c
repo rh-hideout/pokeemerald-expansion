@@ -50,6 +50,24 @@ static bool8 IsCoordInIncomingConnectingMap(int coord, int srcMax, int destMax, 
 
 static inline u16 GetBorderBlockAt(int x, int y)
 {
+    const struct MapLayout *mapLayout = gMapHeader.mapLayout;
+
+    if (mapLayout->isFrlg)
+    {
+        s32 xprime;
+        s32 yprime;
+
+        xprime = x - MAP_OFFSET;
+        xprime += 8 * mapLayout->borderWidth;
+        xprime %= mapLayout->borderWidth;
+
+        yprime = y - MAP_OFFSET;
+        yprime += 8 * mapLayout->borderHeight;
+        yprime %= mapLayout->borderHeight;
+
+        return mapLayout->border[xprime + yprime * mapLayout->borderWidth] | MAPGRID_COLLISION_MASK;
+    }
+
     int i = (x + 1) & 1;
     i += ((y + 1) & 1) * 2;
     return gMapHeader.mapLayout->border[i] | MAPGRID_COLLISION_MASK;
