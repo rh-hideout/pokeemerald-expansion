@@ -8325,7 +8325,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         {
             gSideStatuses[GetBattlerSide(battler)] &= ~SIDE_STATUS_TOXIC_SPIKES;
             gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount = 0;
-            gBattleScripting.battler = battler;
+            gEffectBattler = battler;
             BattleScriptPushCursor();
             gBattlescriptCurrInstr = BattleScript_ToxicSpikesAbsorbed;
         }
@@ -13248,11 +13248,11 @@ static void Cmd_transformdataexecution(void)
 
     gChosenMove = MOVE_UNAVAILABLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (gBattleMons[gBattlerTarget].status2 & STATUS2_TRANSFORMED
-        || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON
-        || gStatuses3[gBattlerTarget] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
+    if (gBattleMons[gEffectBattler].status2 & STATUS2_TRANSFORMED
+        || gBattleStruct->illusion[gEffectBattler].state == ILLUSION_ON
+        || gStatuses3[gEffectBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
     {
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
+        gBattleStruct->moveResultFlags[gEffectBattler] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORM_FAILED;
     }
     else
@@ -13261,41 +13261,41 @@ static void Cmd_transformdataexecution(void)
         u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
 
-        gBattleMons[gBattlerAttacker].status2 |= STATUS2_TRANSFORMED;
-        gDisableStructs[gBattlerAttacker].disabledMove = MOVE_NONE;
-        gDisableStructs[gBattlerAttacker].disableTimer = 0;
-        gDisableStructs[gBattlerAttacker].transformedMonPersonality = gBattleMons[gBattlerTarget].personality;
-        gDisableStructs[gBattlerAttacker].transformedMonShininess = gBattleMons[gBattlerTarget].isShiny;
-        gDisableStructs[gBattlerAttacker].mimickedMoves = 0;
-        gDisableStructs[gBattlerAttacker].usedMoves = 0;
+        gBattleMons[gBattlerAbility].status2 |= STATUS2_TRANSFORMED;
+        gDisableStructs[gBattlerAbility].disabledMove = MOVE_NONE;
+        gDisableStructs[gBattlerAbility].disableTimer = 0;
+        gDisableStructs[gBattlerAbility].transformedMonPersonality = gBattleMons[gEffectBattler].personality;
+        gDisableStructs[gBattlerAbility].transformedMonShininess = gBattleMons[gEffectBattler].isShiny;
+        gDisableStructs[gBattlerAbility].mimickedMoves = 0;
+        gDisableStructs[gBattlerAbility].usedMoves = 0;
 
-        timesGotHit = gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]];
-        gBattleStruct->timesGotHit[GetBattlerSide(gBattlerAttacker)][gBattlerPartyIndexes[gBattlerAttacker]] = timesGotHit;
+        timesGotHit = gBattleStruct->timesGotHit[GetBattlerSide(gEffectBattler)][gBattlerPartyIndexes[gEffectBattler]];
+        gBattleStruct->timesGotHit[GetBattlerSide(gBattlerAbility)][gBattlerPartyIndexes[gBattlerAbility]] = timesGotHit;
 
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
+        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gEffectBattler].species)
 
-        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAttacker]);
-        battleMonTarget = (u8 *)(&gBattleMons[gBattlerTarget]);
+        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAbility]);
+        battleMonTarget = (u8 *)(&gBattleMons[gEffectBattler]);
 
         for (i = 0; i < offsetof(struct BattlePokemon, pp); i++)
             battleMonAttacker[i] = battleMonTarget[i];
 
-        gDisableStructs[gBattlerAttacker].overwrittenAbility = GetBattlerAbility(gBattlerTarget);
+        gDisableStructs[gBattlerAbility].overwrittenAbility = GetBattlerAbility(gEffectBattler);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            u32 pp = GetMovePP(gBattleMons[gBattlerAttacker].moves[i]);
+            u32 pp = GetMovePP(gBattleMons[gBattlerAbility].moves[i]);
             if (pp < 5)
-                gBattleMons[gBattlerAttacker].pp[i] = pp;
+                gBattleMons[gBattlerAbility].pp[i] = pp;
             else
-                gBattleMons[gBattlerAttacker].pp[i] = 5;
+                gBattleMons[gBattlerAbility].pp[i] = 5;
         }
 
         // update AI knowledge
-        RecordAllMoves(gBattlerAttacker);
-        RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
+        RecordAllMoves(gBattlerAbility);
+        RecordAbilityBattle(gBattlerAbility, gBattleMons[gBattlerAbility].ability);
 
-        BtlController_EmitResetActionMoveSelection(gBattlerAttacker, B_COMM_TO_CONTROLLER, RESET_MOVE_SELECTION);
-        MarkBattlerForControllerExec(gBattlerAttacker);
+        BtlController_EmitResetActionMoveSelection(gBattlerAbility, B_COMM_TO_CONTROLLER, RESET_MOVE_SELECTION);
+        MarkBattlerForControllerExec(gBattlerAbility);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORMED;
     }
 }
@@ -17877,9 +17877,14 @@ void BS_TryGulpMissile(void)
      && (gCurrentMove == MOVE_DIVE)
      && (GetBattlerAbility(gBattlerAttacker) == ABILITY_GULP_MISSILE)
      && TryBattleFormChange(gBattlerAttacker, FORM_CHANGE_BATTLE_HP_PERCENT))
+    {
+        gBattleScripting.battler = gBattlerAttacker;
         gBattlescriptCurrInstr = BattleScript_GulpMissileFormChange;
+    }
     else
+    {
         gBattlescriptCurrInstr = cmd->nextInstr;
+    }
 }
 
 void BS_TryActivateGulpMissile(void)
