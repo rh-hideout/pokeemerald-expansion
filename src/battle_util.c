@@ -3516,7 +3516,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && gBattleStruct->illusion[diagonalBattler].state != ILLUSION_ON
                     && !(gStatuses3[diagonalBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER))
                 {
-                    gEffectBattler = diagonalBattler;
+                    SaveBattlerAttacker(gBattlerAttacker);
+                    SaveBattlerTarget(gBattlerTarget);
+                    gBattlerAttacker = battler;
+                    gBattlerTarget = diagonalBattler;
                     BattleScriptPushCursorAndCallback(BattleScript_ImposterActivates);
                     effect++;
                 }

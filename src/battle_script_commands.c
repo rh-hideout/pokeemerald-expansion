@@ -13248,11 +13248,11 @@ static void Cmd_transformdataexecution(void)
 
     gChosenMove = MOVE_UNAVAILABLE;
     gBattlescriptCurrInstr = cmd->nextInstr;
-    if (gBattleMons[gEffectBattler].status2 & STATUS2_TRANSFORMED
-        || gBattleStruct->illusion[gEffectBattler].state == ILLUSION_ON
-        || gStatuses3[gEffectBattler] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
+    if (gBattleMons[gBattlerTarget].status2 & STATUS2_TRANSFORMED
+        || gBattleStruct->illusion[gBattlerTarget].state == ILLUSION_ON
+        || gStatuses3[gBattlerTarget] & STATUS3_SEMI_INVULNERABLE_NO_COMMANDER)
     {
-        gBattleStruct->moveResultFlags[gEffectBattler] |= MOVE_RESULT_FAILED;
+        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FAILED;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORM_FAILED;
     }
     else
@@ -13261,41 +13261,41 @@ static void Cmd_transformdataexecution(void)
         u8 *battleMonAttacker, *battleMonTarget;
         u8 timesGotHit;
 
-        gBattleMons[gBattlerAbility].status2 |= STATUS2_TRANSFORMED;
-        gDisableStructs[gBattlerAbility].disabledMove = MOVE_NONE;
-        gDisableStructs[gBattlerAbility].disableTimer = 0;
-        gDisableStructs[gBattlerAbility].transformedMonPersonality = gBattleMons[gEffectBattler].personality;
-        gDisableStructs[gBattlerAbility].transformedMonShininess = gBattleMons[gEffectBattler].isShiny;
-        gDisableStructs[gBattlerAbility].mimickedMoves = 0;
-        gDisableStructs[gBattlerAbility].usedMoves = 0;
+        gBattleMons[gBattlerAttacker].status2 |= STATUS2_TRANSFORMED;
+        gDisableStructs[gBattlerAttacker].disabledMove = MOVE_NONE;
+        gDisableStructs[gBattlerAttacker].disableTimer = 0;
+        gDisableStructs[gBattlerAttacker].transformedMonPersonality = gBattleMons[gBattlerTarget].personality;
+        gDisableStructs[gBattlerAttacker].transformedMonShininess = gBattleMons[gBattlerTarget].isShiny;
+        gDisableStructs[gBattlerAttacker].mimickedMoves = 0;
+        gDisableStructs[gBattlerAttacker].usedMoves = 0;
 
-        timesGotHit = gBattleStruct->timesGotHit[GetBattlerSide(gEffectBattler)][gBattlerPartyIndexes[gEffectBattler]];
-        gBattleStruct->timesGotHit[GetBattlerSide(gBattlerAbility)][gBattlerPartyIndexes[gBattlerAbility]] = timesGotHit;
+        timesGotHit = gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]];
+        gBattleStruct->timesGotHit[GetBattlerSide(gBattlerAttacker)][gBattlerPartyIndexes[gBattlerAttacker]] = timesGotHit;
 
-        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gEffectBattler].species)
+        PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
 
-        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAbility]);
-        battleMonTarget = (u8 *)(&gBattleMons[gEffectBattler]);
+        battleMonAttacker = (u8 *)(&gBattleMons[gBattlerAttacker]);
+        battleMonTarget = (u8 *)(&gBattleMons[gBattlerTarget]);
 
         for (i = 0; i < offsetof(struct BattlePokemon, pp); i++)
             battleMonAttacker[i] = battleMonTarget[i];
 
-        gDisableStructs[gBattlerAbility].overwrittenAbility = GetBattlerAbility(gEffectBattler);
+        gDisableStructs[gBattlerAttacker].overwrittenAbility = GetBattlerAbility(gBattlerTarget);
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
-            u32 pp = GetMovePP(gBattleMons[gBattlerAbility].moves[i]);
+            u32 pp = GetMovePP(gBattleMons[gBattlerAttacker].moves[i]);
             if (pp < 5)
-                gBattleMons[gBattlerAbility].pp[i] = pp;
+                gBattleMons[gBattlerAttacker].pp[i] = pp;
             else
-                gBattleMons[gBattlerAbility].pp[i] = 5;
+                gBattleMons[gBattlerAttacker].pp[i] = 5;
         }
 
         // update AI knowledge
-        RecordAllMoves(gBattlerAbility);
-        RecordAbilityBattle(gBattlerAbility, gBattleMons[gBattlerAbility].ability);
+        RecordAllMoves(gBattlerAttacker);
+        RecordAbilityBattle(gBattlerAttacker, gBattleMons[gBattlerAttacker].ability);
 
-        BtlController_EmitResetActionMoveSelection(gBattlerAbility, B_COMM_TO_CONTROLLER, RESET_MOVE_SELECTION);
-        MarkBattlerForControllerExec(gBattlerAbility);
+        BtlController_EmitResetActionMoveSelection(gBattlerAttacker, B_COMM_TO_CONTROLLER, RESET_MOVE_SELECTION);
+        MarkBattlerForControllerExec(gBattlerAttacker);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRANSFORMED;
     }
 }

@@ -8367,6 +8367,8 @@ BattleScript_ImposterActivates::
 	waitanimation
 	printstring STRINGID_IMPOSTERTRANSFORM
 	waitmessage B_WAIT_TIME_LONG
+	restoreattacker
+	restoretarget
 	end3
 
 BattleScript_HurtAttacker:
