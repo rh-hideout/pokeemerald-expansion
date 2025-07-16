@@ -95,13 +95,35 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataKeyItems(struct BagPo
     u16 itemId = ITEM_NONE;
     if (pocketPos < BAG_KEYITEMS_BASE_COUNT)
         itemId = pocket->itemSlots[pocketPos].itemId;
-    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2)
+    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2
+      && pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].expansionBit)
         itemId = pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].keyItemSlot2;
-    else if (pocketPos < BAG_KEYITEMS_COUNT)
+    else if (pocketPos < BAG_KEYITEMS_COUNT && pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].expansionBit)
         itemId = pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].keyItemSlot3;
 
     // Key item quantity always limited to 1
     return (struct ItemSlot) {itemId, !!itemId};
+}
+
+static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPocket *pocket, u32 pocketPos)
+{
+    if (pocketPos < BAG_TMHM_BASE_COUNT)
+    {
+        return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
+    }
+    else if (pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
+    {
+        return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2);
+    }
+    else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    {
+        pocket = &gBagPockets[POCKET_KEY_ITEMS];
+        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2));
+        if (pocket->itemSlots[pocketPos].expansionBit)
+            return (struct ItemSlot) {pocket->itemSlots[pocketPos].keyItemSlot2, pocket->itemSlots[pocketPos].keyItemSlot3};
+    }
+
+    return (struct ItemSlot) {0}; // failsafe
 }
 
 static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *pocket, u32 pocketPos)
@@ -114,7 +136,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *
 
 static inline void NONNULL ItemSlot_SetExpandedData(union ExpandedItemSlot *itemSlots, u32 pocketPos, struct ItemSlot newSlot)
 {
-    itemSlots[pocketPos].expansionBit = !!newSlot.itemId;
+    itemSlots[pocketPos].expansionBit = TRUE;
     itemSlots[pocketPos].extraSlot1 = newSlot.itemId;
     itemSlots[pocketPos].extraSlot2 = newSlot.itemId >> 4;
     itemSlots[pocketPos + 1].extraSlot1  = newSlot.quantity;
@@ -139,13 +161,39 @@ static inline void NONNULL BagPocket_SetSlotDataItems(struct BagPocket *pocket, 
 
 static inline void NONNULL BagPocket_SetSlotDataKeyItems(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
-    u16 itemId = ITEM_NONE;
     if (pocketPos < BAG_KEYITEMS_BASE_COUNT)
+    {
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
+    }
     else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2)
+    {
+        pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].expansionBit = TRUE;
         pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].keyItemSlot2 = newSlot.itemId;
-    else if (pocketPos < BAG_KEYITEMS_COUNT)
+    }
+    else if (pocketPos < BAG_KEYITEMS_COUNT && pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].expansionBit)
+    {
         pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].keyItemSlot3 = newSlot.itemId;
+    }
+}
+
+static inline void NONNULL BagPocket_SetSlotDataTMsHMs(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+{
+    if (pocketPos < BAG_TMHM_BASE_COUNT)
+    {
+        BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
+    }
+    else if (pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
+    {
+        ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2, newSlot);
+    }
+    else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    {
+        pocket = &gBagPockets[POCKET_KEY_ITEMS];
+        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2));
+        pocket->itemSlots[pocketPos].expansionBit = TRUE;
+        pocket->itemSlots[pocketPos].keyItemSlot2 = newSlot.itemId;
+        pocket->itemSlots[pocketPos].keyItemSlot3 = newSlot.quantity;
+    }
 }
 
 static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
@@ -162,8 +210,9 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
         return BagPocket_GetSlotDataItems(pocket, pocketPos);
     case POCKET_KEY_ITEMS:
         return BagPocket_GetSlotDataKeyItems(pocket, pocketPos);
-    case POCKET_POKE_BALLS:
     case POCKET_TM_HM:
+        return BagPocket_GetSlotDataTMsHMs(pocket, pocketPos);
+    case POCKET_POKE_BALLS:
     case POCKET_BERRIES:
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
     case POCKET_DUMMY:
@@ -189,8 +238,10 @@ void NONNULL BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, s
     case POCKET_KEY_ITEMS:
         BagPocket_SetSlotDataKeyItems(pocket, pocketPos, newSlot);
         break;
-    case POCKET_POKE_BALLS:
     case POCKET_TM_HM:
+        BagPocket_SetSlotDataTMsHMs(pocket, pocketPos, newSlot);
+        break;
+    case POCKET_POKE_BALLS:
     case POCKET_BERRIES:
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
         break;
