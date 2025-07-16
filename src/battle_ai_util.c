@@ -1443,7 +1443,8 @@ bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits)
     return FALSE;
 }
 
-bool32 CanAIKOTargetIfSturdyIgnored(u32 battlerAtk, u32 battlerDef)
+// Can battler KO the target ignoring any Endure effects (Sturdy, Focus Sash, etc.)
+bool32 CanBattlerKOTargetIgnoringSturdy(u32 battlerAtk, u32 battlerDef)
 {
     struct AiLogicData *aiData = gAiLogicData;
     s32 moveIndex, dmg;
@@ -4317,7 +4318,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         return NO_INCREASE;
 
     // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
-    if (CanAIKOTargetIfSturdyIgnored(battlerAtk, battlerDef))
+    if (CanBattlerKOTargetIgnoringSturdy(battlerAtk, battlerDef))
         return NO_INCREASE;
 
     // Don't increase stats if player has a move that can change the KO threshold
