@@ -90,19 +90,20 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataItems(struct BagPocke
     return (struct ItemSlot) {0}; // failsafe
 }
 
+#define KEY_ITEMS_POCKETPOS_3 (pocketPos - BAG_KEYITEMS_BASE_COUNT - ((BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2))
+
 static inline struct ItemSlot NONNULL BagPocket_GetSlotDataKeyItems(struct BagPocket *pocket, u32 pocketPos)
 {
     u16 itemId = ITEM_NONE;
     if (pocketPos < BAG_KEYITEMS_BASE_COUNT)
         itemId = pocket->itemSlots[pocketPos].itemId;
-    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2
-      && pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].expansionBit)
-        itemId = pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].keyItemSlot2;
-    else if (pocketPos < BAG_KEYITEMS_COUNT && pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].expansionBit)
-        itemId = pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].keyItemSlot3;
+    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2)
+        itemId = pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].expansionBit ? pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].keyItemSlot2 : ITEM_NONE;
+    else if (pocketPos < BAG_KEYITEMS_COUNT)
+        itemId = pocket->itemSlots[KEY_ITEMS_POCKETPOS_3].expansionBit2 ? pocket->itemSlots[KEY_ITEMS_POCKETPOS_3].keyItemSlot3 : ITEM_NONE;
 
     // Key item quantity always limited to 1
-    return (struct ItemSlot) {itemId, !!itemId};
+    return (struct ItemSlot) {itemId, itemId ? 1 : 0};
 }
 
 static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPocket *pocket, u32 pocketPos)
@@ -165,14 +166,15 @@ static inline void NONNULL BagPocket_SetSlotDataKeyItems(struct BagPocket *pocke
     {
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
     }
-    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + (BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2)
+    else if (pocketPos < BAG_KEYITEMS_BASE_COUNT + ((BAG_KEYITEMS_COUNT - BAG_KEYITEMS_BASE_COUNT) / 2))
     {
         pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].expansionBit = TRUE;
         pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT].keyItemSlot2 = newSlot.itemId;
     }
-    else if (pocketPos < BAG_KEYITEMS_COUNT && pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].expansionBit)
+    else if (pocketPos < BAG_KEYITEMS_COUNT)
     {
-        pocket->itemSlots[(pocketPos - BAG_KEYITEMS_BASE_COUNT) / 2].keyItemSlot3 = newSlot.itemId;
+        pocket->itemSlots[KEY_ITEMS_POCKETPOS_3].expansionBit2 = TRUE;
+        pocket->itemSlots[KEY_ITEMS_POCKETPOS_3].keyItemSlot3 = newSlot.itemId;
     }
 }
 
@@ -257,6 +259,10 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
     u32 item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
+        // Do not encrypt key items
+        if (pocketId == POCKET_KEY_ITEMS)
+            continue;
+
         for (item = 0; item < gBagPockets[pocketId].capacity; item++)
         {
             gBagPockets[pocketId].itemSlots[item].quantity ^= gSaveBlock2Ptr->encryptionKey;
