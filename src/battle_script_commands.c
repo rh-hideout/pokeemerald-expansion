@@ -3016,6 +3016,7 @@ static inline void GenerateAndBufferStatChangeString(u8 *textBuffer, s32 statVal
 
 static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
 {
+    // Record any ability that triggers during a stat change activation
     if (result->recordBattlerAbility)
         RecordAbilityBattle(result->effectBattler, result->battlerAbility);
 
