@@ -8842,16 +8842,16 @@
       "game_version": "firered"
     },
     {
-      "id": "LAYOUT_NAVEL_ROCK_BASE",
-      "name": "NavelRock_Base_Layout",
+      "id": "LAYOUT_NAVEL_ROCK_BOTTOM_FRLG",
+      "name": "NavelRock_Bottom_Frlg_Layout",
       "width": 21,
       "height": 23,
       "border_width": 2,
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_NavelRock_Frlg",
-      "border_filepath": "data/layouts/NavelRock_Base/border.bin",
-      "blockdata_filepath": "data/layouts/NavelRock_Base/map.bin",
+      "border_filepath": "data/layouts/NavelRock_Bottom_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/NavelRock_Bottom_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -9084,8 +9084,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_NavelRock_Frlg",
-      "border_filepath": "data/layouts/NavelRock_B1F/border.bin",
-      "blockdata_filepath": "data/layouts/NavelRock_B1F/map.bin",
+      "border_filepath": "data/layouts/NavelRock_B1F_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/NavelRock_B1F_Frlg/map.bin",
       "game_version": "firered"
     },
     {
@@ -9097,8 +9097,8 @@
       "border_height": 2,
       "primary_tileset": "gTileset_General_Frlg",
       "secondary_tileset": "gTileset_NavelRock_Frlg",
-      "border_filepath": "data/layouts/NavelRock_Fork/border.bin",
-      "blockdata_filepath": "data/layouts/NavelRock_Fork/map.bin",
+      "border_filepath": "data/layouts/NavelRock_Fork_Frlg/border.bin",
+      "blockdata_filepath": "data/layouts/NavelRock_Fork_Frlg/map.bin",
       "game_version": "firered"
     },
     {

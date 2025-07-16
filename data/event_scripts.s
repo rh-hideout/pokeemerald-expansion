@@ -754,7 +754,7 @@ gStdScripts_End::
 	.include "data/maps/SevenIsland_SevaultCanyon_TanobyKey/scripts.inc"
 	.include "data/maps/NavelRock_1F/scripts.inc"
 	.include "data/maps/NavelRock_Summit/scripts.inc"
-	.include "data/maps/NavelRock_Base/scripts.inc"
+	.include "data/maps/NavelRock_Bottom_Frlg/scripts.inc"
 	.include "data/maps/NavelRock_SummitPath_2F/scripts.inc"
 	.include "data/maps/NavelRock_SummitPath_3F/scripts.inc"
 	.include "data/maps/NavelRock_SummitPath_4F/scripts.inc"

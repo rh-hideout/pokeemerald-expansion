@@ -1,7 +1,7 @@
 NavelRock_Harbor_Frlg_MapScripts::
 	.byte 0
 
-NavelRock_Harbor_EventScript_Sailor_Frlg::
+NavelRock_Harbor_Frlg_EventScript_Sailor::
 	lock
 	faceplayer
 	message Text_WhereDoYouWantToSail

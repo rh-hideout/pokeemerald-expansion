@@ -126,6 +126,8 @@
 #define FLAG_HIDE_FOUR_ISLAND_RIVAL                        0x097
 #define FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL              0x098
 #define FLAG_HIDE_BIRTH_ISLAND_METEORITE                   0x09A
+#define FLAG_HIDE_LUGIA                                    0x09B
+#define FLAG_HIDE_HO_OH                                    0x09C
 #define FLAG_HIDE_POSTGAME_GOSSIPERS                       0x09D
 #define FLAG_HIDE_FAME_CHECKER_ERIKA_JOURNALS              0x09E
 #define FLAG_HIDE_FAME_CHECKER_KOGA_JOURNAL                0x09F
@@ -2098,8 +2100,6 @@
 #define FLAG_HIDE_ROUTE_118_GABBY_AND_TY_1                          0
 #define FLAG_HIDE_ROUTE_120_GABBY_AND_TY_1                          0
 #define FLAG_HIDE_ROUTE_111_GABBY_AND_TY_2                          0
-#define FLAG_HIDE_LUGIA                                             0
-#define FLAG_HIDE_HO_OH                                             0
 #define FLAG_HIDE_LILYCOVE_CONTEST_HALL_REPORTER                    0
 #define FLAG_HIDE_SLATEPORT_CITY_CONTEST_REPORTER                   0
 #define FLAG_HIDE_MAUVILLE_CITY_WALLY                               0

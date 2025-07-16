@@ -29,7 +29,7 @@
       "x": 4,
       "y": 4,
       "elevation": 3,
-      "dest_map": "MAP_NAVEL_ROCK_BASE",
+      "dest_map": "MAP_NAVEL_ROCK_BOTTOM_FRLG",
       "dest_warp_id": "0"
     }
   ],
