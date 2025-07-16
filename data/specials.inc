@@ -627,3 +627,4 @@ gSpecials::
 	def_special SampleResortGorgeousMonAndReward
 	def_special PlayerPartyContainsSpeciesWithPlayerID
 	def_special ShakeScreen
+	def_special CallTrainerTowerFunc

@@ -83,6 +83,7 @@ enum BattlerId
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
+#define BATTLE_TYPE_TRAINER_TOWER      BATTLE_TYPE_TRAINER_HILL
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
 #define BATTLE_TYPE_GHOST              (1 << 28)
 #define BATTLE_TYPE_29                 (1 << 29)

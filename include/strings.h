@@ -61,6 +61,8 @@ extern const u8 gText_MultiLink[];
 
 extern const u8 gText_Single[];
 extern const u8 gText_Double[];
+extern const u8 gText_Knockout[];
+extern const u8 gText_Mixed[];
 
 extern const u8 gText_Spicy2[];
 extern const u8 gText_Dry2[];

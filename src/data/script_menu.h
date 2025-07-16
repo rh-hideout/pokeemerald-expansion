@@ -1024,6 +1024,20 @@ static const struct MenuAction sMultichoiceList_Mushrooms[] = {
     { COMPOUND_STRING("1 BIG MUSHROOM") }
 };
 
+static const struct MenuAction sMultichoiceList_RooftopB1F[] = {
+    { gText_Rooftop },
+    { gText_B1F },
+    { gText_Exit }
+};
+
+static const struct MenuAction sMultichoiceList_TrainerTowerMode[] = {
+    { gText_Single },
+    { gText_Double },
+    { gText_Knockout },
+    { gText_Mixed },
+    { gText_Exit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1186,6 +1200,8 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_HELIX_AMBER]                                = MULTICHOICE(sMultichoiceList_HelixAmber),
     [MULTI_DOME_AMBER]                                 = MULTICHOICE(sMultichoiceList_DomeAmber),
     [MULTI_MUSHROOMS]                                  = MULTICHOICE(sMultichoiceList_Mushrooms),
+    [MULTI_ROOFTOP_B1F]                                = MULTICHOICE(sMultichoiceList_RooftopB1F),
+    [MULTI_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
 };
 
 const u8 *const gStdStrings[] =
