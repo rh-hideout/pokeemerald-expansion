@@ -4302,3 +4302,21 @@ static void UseVsSeeker_CleanUpFieldEffect(struct Task *task)
     FieldEffectActiveListRemove(FLDEFF_USE_VS_SEEKER);
     DestroyTask(FindTaskIdByFunc(Task_FldEffUseVsSeeker));
 }
+
+static void Task_PhotoFlash(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        FieldEffectActiveListRemove(FLDEFF_PHOTO_FLASH);
+        DestroyTask(taskId);
+    }
+}
+
+u32 FldEff_PhotoFlash(void)
+{
+    BlendPalettes(PALETTES_ALL, 0x10, RGB_WHITE);
+    BeginNormalPaletteFade(PALETTES_ALL, -1, 0x0F, 0x00, RGB_WHITE);
+    CreateTask(Task_PhotoFlash, 90);
+
+    return 0;
+}

@@ -1038,6 +1038,56 @@ static const struct MenuAction sMultichoiceList_TrainerTowerMode[] = {
     { gText_Exit }
 };
 
+static const struct MenuAction sMultichoiceList_TrainerCardIconTint[] = {
+    { gText_Normal },
+    { gText_DexSearchColorBlack },
+    { gText_DexSearchColorPink },
+    { COMPOUND_STRING("SEPIA") }
+};
+
+static const u8 sText_Eggs[] = _("EGGS");
+static const u8 sText_Victories[] = _("VICTORIES");
+
+static const struct MenuAction sMultichoiceList_HOF_Quit[] = {
+    { gText_HallOfFame },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_Eggs_Quit[] = {
+    { sText_Eggs },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_Victories_Quit[] = {
+    { sText_Victories },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_HOF_Eggs_Quit[] = {
+    { gText_HallOfFame },
+    { sText_Eggs },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_HOF_Victories_Quit[] = {
+    { gText_HallOfFame },
+    { sText_Victories },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_Eggs_Victories_Quit[] = {
+    { sText_Eggs },
+    { sText_Victories },
+    { gText_ShopQuit }
+};
+
+static const struct MenuAction sMultichoiceList_HOF_Eggs_Victories_Quit[] = {
+    { gText_HallOfFame },
+    { sText_Eggs },
+    { sText_Victories },
+    { gText_ShopQuit }
+};
+
 static const struct MenuAction MultichoiceList_Exit[] =
 {
     {gText_Exit},
@@ -1202,6 +1252,14 @@ static const struct MultichoiceListStruct sMultichoiceLists[] =
     [MULTI_MUSHROOMS]                                  = MULTICHOICE(sMultichoiceList_Mushrooms),
     [MULTI_ROOFTOP_B1F]                                = MULTICHOICE(sMultichoiceList_RooftopB1F),
     [MULTI_TRAINER_TOWER_MODE]                         = MULTICHOICE(sMultichoiceList_TrainerTowerMode),
+    [MULTI_TRAINER_CARD_ICON_TINT]                     = MULTICHOICE(sMultichoiceList_TrainerCardIconTint),
+    [MULTI_HOF_QUIT]                                   = MULTICHOICE(sMultichoiceList_HOF_Quit),
+    [MULTI_EGGS_QUIT]                                  = MULTICHOICE(sMultichoiceList_Eggs_Quit),
+    [MULTI_VICTORIES_QUIT]                             = MULTICHOICE(sMultichoiceList_Victories_Quit),
+    [MULTI_HOF_EGGS_QUIT]                              = MULTICHOICE(sMultichoiceList_HOF_Eggs_Quit),
+    [MULTI_HOF_VICTORIES_QUIT]                         = MULTICHOICE(sMultichoiceList_HOF_Victories_Quit),
+    [MULTI_EGGS_VICTORIES_QUIT]                        = MULTICHOICE(sMultichoiceList_Eggs_Victories_Quit),
+    [MULTI_HOF_EGGS_VICTORIES_QUIT]                    = MULTICHOICE(sMultichoiceList_HOF_Eggs_Victories_Quit),
 };
 
 const u8 *const gStdStrings[] =

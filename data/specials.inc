@@ -630,3 +630,5 @@ gSpecials::
 	def_special CallTrainerTowerFunc
 	def_special ForcePlayerToStartSurfing
 	def_special SeafoamIslandsB4F_CurrentDumpsPlayerOnLand
+	def_special UpdateTrainerCardPhotoIcons
+	def_special StickerManGetBragFlags

@@ -1,23 +1,7 @@
 #ifndef GUARD_TRAINER_CARD_H
 #define GUARD_TRAINER_CARD_H
 
-#define TRAINER_CARD_PROFILE_LENGTH  4
-#define TRAINER_CARD_STICKER_TYPES   3
-
-enum
-{
-    CARD_TYPE_FRLG,
-    CARD_TYPE_RS,
-    CARD_TYPE_EMERALD,
-};
-
-enum
-{
-    MON_ICON_TINT_NORMAL,
-    MON_ICON_TINT_BLACK,
-    MON_ICON_TINT_PINK,
-    MON_ICON_TINT_SEPIA,
-};
+#include "constants/trainer_card.h"
 
 struct TrainerCard
 {

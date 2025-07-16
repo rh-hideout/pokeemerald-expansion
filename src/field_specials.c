@@ -24,6 +24,7 @@
 #include "link.h"
 #include "load_save.h"
 #include "list_menu.h"
+#include "mail.h"
 #include "main.h"
 #include "mystery_gift.h"
 #include "match_call.h"
@@ -5606,4 +5607,47 @@ void CutMoveOpenDottedHoleDoor(void)
 void ForcePlayerToStartSurfing(void)
 {
     SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+}
+
+void UpdateTrainerCardPhotoIcons(void)
+{
+    u16 species[PARTY_SIZE];
+    u32 personality[PARTY_SIZE];
+    u8 i;
+    u8 partyCount;
+    for (i = 0; i < PARTY_SIZE; i++)
+        species[i] = SPECIES_NONE;
+    partyCount = CalculatePlayerPartyCount();
+    for (i = 0; i < partyCount; i++)
+    {
+        species[i] = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL);
+        personality[i] = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, NULL);
+    }
+    VarSet(VAR_TRAINER_CARD_MON_ICON_1, SpeciesToMailSpecies(species[0], personality[0]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_2, SpeciesToMailSpecies(species[1], personality[1]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_3, SpeciesToMailSpecies(species[2], personality[2]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_4, SpeciesToMailSpecies(species[3], personality[3]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_5, SpeciesToMailSpecies(species[4], personality[4]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_6, SpeciesToMailSpecies(species[5], personality[5]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_TINT_IDX, gSpecialVar_0x8004);
+}
+
+u16 StickerManGetBragFlags(void)
+{
+    u16 result = 0;
+    u32 numEggs;
+    gSpecialVar_0x8004 = GetGameStat(GAME_STAT_ENTERED_HOF);
+    numEggs = GetGameStat(GAME_STAT_HATCHED_EGGS);
+    gSpecialVar_0x8006 = GetGameStat(GAME_STAT_LINK_BATTLE_WINS);
+    if (numEggs > 0xFFFF)
+        gSpecialVar_0x8005 = 0xFFFF;
+    else
+        gSpecialVar_0x8005 = numEggs;
+    if (gSpecialVar_0x8004 != 0)
+        result |= 1 << 0;
+    if (gSpecialVar_0x8005 != 0)
+        result |= 1 << 1;
+    if (gSpecialVar_0x8006 != 0)
+        result |= 1 << 2;
+    return result;
 }

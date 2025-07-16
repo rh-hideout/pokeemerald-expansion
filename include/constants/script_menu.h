@@ -159,6 +159,14 @@
 #define MULTI_MUSHROOMS                                  148
 #define MULTI_ROOFTOP_B1F                                149
 #define MULTI_TRAINER_TOWER_MODE                         150
+#define MULTI_TRAINER_CARD_ICON_TINT                     151
+#define MULTI_HOF_QUIT                                   152
+#define MULTI_EGGS_QUIT                                  153
+#define MULTI_VICTORIES_QUIT                             154
+#define MULTI_HOF_EGGS_QUIT                              155
+#define MULTI_HOF_VICTORIES_QUIT                         156
+#define MULTI_EGGS_VICTORIES_QUIT                        157
+#define MULTI_HOF_EGGS_VICTORIES_QUIT                    158
 
 #define MULTI_NONE 255
 
