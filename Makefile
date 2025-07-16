@@ -1,5 +1,12 @@
 GAME_VERSION ?= EMERALD
 
+ifeq (firered,$(MAKECMDGOALS))
+  GAME_VERSION := FIRERED
+endif
+ifeq (leafgreen,$(MAKECMDGOALS))
+  GAME_VERSION := LEAFGREEN
+endif
+
 # GBA rom header
 ifeq ($(GAME_VERSION),FIRERED)
 TITLE       := POKEMON FIRE
@@ -525,6 +532,8 @@ $(ROM): $(ELF)
 	$(OBJCOPY) -O binary $< $@
 	$(FIX) $@ -p --silent
 
+firered: all
+leafgreen: all
 # Symbol file (`make syms`)
 $(SYM): $(ELF)
 	$(OBJDUMP) -t $< | sort -u | grep -E "^0[2389]" | $(PERL) -p -e 's/^(\w{8}) (\w).{6} \S+\t(\w{8}) (\S+)$$/\1 \2 \3 \4/g' > $@
