@@ -9691,6 +9691,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Tokoyaki)
        .levelUpLearnset = sTokoyakiLevelUpLearnset,
+       .teachableLearnset = sTokoyakiTeachableLearnset,
+       .eggMoveLearnset = sOnsenpuraEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_ONSENPURA}),
     },
         [SPECIES_ONSENPURA] =
@@ -9746,6 +9748,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Onsenpura)
        .levelUpLearnset = sOnsenpuraLevelUpLearnset,
+       .teachableLearnset = sOnsenpuraTeachableLearnset,
+       .eggMoveLearnset = sOnsenpuraEggMoveLearnset,
     },
         [SPECIES_PEASOL] =
     { 

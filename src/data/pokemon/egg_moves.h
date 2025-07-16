@@ -6672,6 +6672,16 @@ static const u16 sBambuyaEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sOnsenpuraEggMoveLearnset[] = {
+    MOVE_FIRE_LASH,
+    MOVE_LAVA_PLUME,
+    MOVE_SNIPE_SHOT,
+    MOVE_ACID_SPRAY,
+    MOVE_SOAK,
+    MOVE_WRAP,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sVirtuitaEggMoveLearnset[] = {
     MOVE_FIRE_SPIN,
     MOVE_GRASS_WHISTLE,
