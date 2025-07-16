@@ -144,11 +144,6 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 void BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
-static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
-{
-    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
-}
-
 static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 {
     return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).itemId;
@@ -157,6 +152,11 @@ static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 static inline u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
 {
     return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).quantity;
+}
+
+static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
 }
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
