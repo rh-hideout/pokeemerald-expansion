@@ -137,14 +137,6 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
-enum SortPocket
-{
-    SORT_NONE,
-    SORT_POCKET_BY_ITEM_ID,
-    SORT_POCKET_TM_HM,
-    SORT_POCKET_ALPHABETICALLY,
-};
-
 #define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
 #define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataArg(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
 
@@ -185,7 +177,6 @@ void RemovePCItem(u8 index, u16 count);
 void CompactPCItems(void);
 void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(enum Pocket pocketId);
-void BagPocket_SortItems(struct BagPocket *pocket, enum SortPocket sortPocket);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(union ExpandedItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
