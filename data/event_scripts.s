@@ -1645,6 +1645,7 @@ EventScript_BrailleCursorWaitButton::
 	.include "data/scripts/trainers_frlg.inc"
 	.include "data/scripts/trainer_tower.inc"
 	.include "data/scripts/fame_checker.inc"
+	.include "data/text/fame_checker.inc"
 	.include "data/scripts/item_ball_scripts_frlg.inc"
 	.include "data/scripts/silphco_doors.inc"
 	.include "data/scripts/move_tutors_frlg.inc"
