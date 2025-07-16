@@ -125,6 +125,7 @@
 #define FLAG_HIDE_SELPHYS_BUTLER                           0x096
 #define FLAG_HIDE_FOUR_ISLAND_RIVAL                        0x097
 #define FLAG_HIDE_SIX_ISLAND_POKECENTER_RIVAL              0x098
+#define FLAG_HIDE_DEOXYS                                   0x099
 #define FLAG_HIDE_BIRTH_ISLAND_METEORITE                   0x09A
 #define FLAG_HIDE_LUGIA                                    0x09B
 #define FLAG_HIDE_HO_OH                                    0x09C
@@ -2063,7 +2064,6 @@
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM      0
 #define FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_TRUCK              0
 #define FLAG_HIDE_LITTLEROOT_TOWN_MAYS_HOUSE_TRUCK                  0
-#define FLAG_HIDE_DEOXYS                                            0
 #define FLAG_HIDE_BIRTH_ISLAND_DEOXYS_TRIANGLE                      0
 #define FLAG_HIDE_MAUVILLE_CITY_SCOTT                               0
 #define FLAG_HIDE_VERDANTURF_TOWN_SCOTT                             0
