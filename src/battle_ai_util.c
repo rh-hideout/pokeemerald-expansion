@@ -1456,7 +1456,7 @@ bool32 CanAIKOTargetIfSturdyIgnored(u32 battlerAtk, u32 battlerDef)
             continue;
         dmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, aiData);
 
-        if (gBattleMons[battlerDef].hp <= dmg)
+        if (gBattleMons[battlerDef].hp <= dmg && CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]))
             return TRUE;
     }
     return FALSE;
