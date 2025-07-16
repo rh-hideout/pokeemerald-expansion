@@ -37825,6 +37825,7 @@ static const u16 sCyclonianTeachableLearnset[] = {
     MOVE_CHARGE_BEAM,
     MOVE_FLY,
     MOVE_MIRAGE_VEIL,
+    MOVE_PRESENT,
     MOVE_UNAVAILABLE,
 };
 static const u16 sBraxitytanTeachableLearnset[] = {
@@ -38142,6 +38143,7 @@ static const u16 sDubsnakeTeachableLearnset[] = {
     MOVE_STICKY_TONGUE,
     MOVE_POWER_WHIP,
     MOVE_DARK_PULSE,
+    MOVE_PRESENT,
     MOVE_UNAVAILABLE,
 };
 
@@ -38230,6 +38232,7 @@ static const u16 sHydroilTeachableLearnset[] = {
     MOVE_STRENGTH,
     MOVE_RETURN,
     MOVE_DARK_PULSE,
+    MOVE_PRESENT,
     MOVE_UNAVAILABLE,
 };
 
@@ -38318,6 +38321,7 @@ static const u16 sCoilspillTeachableLearnset[] = {
     MOVE_STRENGTH,
     MOVE_SURF,
     MOVE_POWER_WHIP,
+    MOVE_PRESENT,
     MOVE_UNAVAILABLE,
 };
 
@@ -41199,7 +41203,7 @@ static const u16 sVergilionTeachableLearnset[] = {
     MOVE_RECYCLE,
     MOVE_LASH_OUT, 
     MOVE_SWIFT,
-    MOVE_CURSE
+    MOVE_CURSE,
     MOVE_CUT,
     MOVE_ROCK_CLIMB,
     MOVE_STRENGTH,
@@ -41284,7 +41288,7 @@ static const u16 sDevanteTeachableLearnset[] = {
     MOVE_RECYCLE,
     MOVE_PLAY_ROUGH, 
     MOVE_SWIFT,
-    MOVE_CURSE
+    MOVE_CURSE,
     MOVE_CUT,
     MOVE_ROCK_CLIMB,
     MOVE_STRENGTH,
