@@ -127,6 +127,16 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPock
     return (struct ItemSlot) {0}; // failsafe
 }
 
+static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPokeballsBerries(struct BagPocket *pocket, u32 pocketPos)
+{
+    if (pocketPos < pocket->baseCapacity)
+        return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
+    else if (pocketPos < pocket->capacity)
+        return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - pocket->baseCapacity) * 2);
+
+    return (struct ItemSlot) {0}; // failsafe
+}
+
 static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPC(struct BagPocket *pocket, u32 pocketPos)
 {
     return (struct ItemSlot) {
@@ -198,6 +208,14 @@ static inline void NONNULL BagPocket_SetSlotDataTMsHMs(struct BagPocket *pocket,
     }
 }
 
+static inline void NONNULL BagPocket_SetSlotDataPokeballsBerries(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+{
+    if (pocketPos < pocket->baseCapacity)
+        BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
+    else if (pocketPos < pocket->capacity)
+        ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - pocket->baseCapacity) * 2, newSlot);
+}
+
 static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     pocket->itemSlots[pocketPos].itemId = newSlot.itemId;
@@ -216,7 +234,7 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
         return BagPocket_GetSlotDataTMsHMs(pocket, pocketPos);
     case POCKET_POKE_BALLS:
     case POCKET_BERRIES:
-        return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
+        return BagPocket_GetSlotDataPokeballsBerries(pocket, pocketPos);
     case POCKET_DUMMY:
         return BagPocket_GetSlotDataPC(pocket, pocketPos);
     }
@@ -245,7 +263,7 @@ void NONNULL BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, s
         break;
     case POCKET_POKE_BALLS:
     case POCKET_BERRIES:
-        BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
+        BagPocket_SetSlotDataPokeballsBerries(pocket, pocketPos, newSlot);
         break;
     case POCKET_DUMMY:
         BagPocket_SetSlotDataPC(pocket, pocketPos, newSlot);
@@ -275,22 +293,27 @@ void SetBagItemsPointers(void)
 {
     gBagPockets[POCKET_ITEMS].itemSlots = gSaveBlock1Ptr->bag.items;
     gBagPockets[POCKET_ITEMS].capacity = BAG_ITEMS_COUNT;
+    gBagPockets[POCKET_ITEMS].baseCapacity = BAG_ITEMS_BASE_COUNT;
     gBagPockets[POCKET_ITEMS].id = POCKET_ITEMS;
 
     gBagPockets[POCKET_KEY_ITEMS].itemSlots = gSaveBlock1Ptr->bag.keyItems;
     gBagPockets[POCKET_KEY_ITEMS].capacity = BAG_KEYITEMS_COUNT;
+    gBagPockets[POCKET_KEY_ITEMS].baseCapacity = BAG_KEYITEMS_BASE_COUNT;
     gBagPockets[POCKET_KEY_ITEMS].id = POCKET_KEY_ITEMS;
 
     gBagPockets[POCKET_POKE_BALLS].itemSlots = gSaveBlock1Ptr->bag.pokeBalls;
     gBagPockets[POCKET_POKE_BALLS].capacity = BAG_POKEBALLS_COUNT;
+    gBagPockets[POCKET_POKE_BALLS].baseCapacity = BAG_POKEBALLS_BASE_COUNT;
     gBagPockets[POCKET_POKE_BALLS].id = POCKET_POKE_BALLS;
 
     gBagPockets[POCKET_TM_HM].itemSlots = gSaveBlock1Ptr->bag.TMsHMs;
     gBagPockets[POCKET_TM_HM].capacity = BAG_TMHM_COUNT;
+    gBagPockets[POCKET_TM_HM].baseCapacity = BAG_TMHM_BASE_COUNT;
     gBagPockets[POCKET_TM_HM].id = POCKET_TM_HM;
 
     gBagPockets[POCKET_BERRIES].itemSlots = gSaveBlock1Ptr->bag.berries;
     gBagPockets[POCKET_BERRIES].capacity = BAG_BERRIES_COUNT;
+    gBagPockets[POCKET_BERRIES].baseCapacity = BAG_BERRIES_BASE_COUNT;
     gBagPockets[POCKET_BERRIES].id = POCKET_BERRIES;
 }
 

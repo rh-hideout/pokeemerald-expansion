@@ -109,8 +109,9 @@ struct Item
 struct ALIGNED(2) BagPocket
 {
     union ExpandedItemSlot *itemSlots;
-    u16 capacity:10;
-    enum Pocket id:6;
+    u16 capacity;
+    u8 baseCapacity;
+    enum Pocket id:8;
 };
 
 struct TmHmIndexKey
