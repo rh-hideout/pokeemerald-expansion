@@ -27,7 +27,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "BirthIsland_Exterior_EventScript_Triangle",
+      "script": "BirthIsland_Exterior_Frlg_EventScript_Triangle",
       "flag": "FLAG_HIDE_BIRTH_ISLAND_METEORITE"
     },
     {
@@ -51,7 +51,7 @@
       "x": 15,
       "y": 24,
       "elevation": 3,
-      "dest_map": "MAP_BIRTH_ISLAND_HARBOR",
+      "dest_map": "MAP_BIRTH_ISLAND_HARBOR_FRLG",
       "dest_warp_id": "0"
     }
   ],

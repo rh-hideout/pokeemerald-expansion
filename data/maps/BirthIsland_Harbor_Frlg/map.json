@@ -40,7 +40,7 @@
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "BirthIsland_Harbor_EventScript_Sailor",
+      "script": "BirthIsland_Harbor_EventScript_Sailor_Frlg",
       "flag": "0"
     }
   ],
@@ -49,7 +49,7 @@
       "x": 8,
       "y": 2,
       "elevation": 3,
-      "dest_map": "MAP_BIRTH_ISLAND_EXTERIOR",
+      "dest_map": "MAP_BIRTH_ISLAND_EXTERIOR_FRLG",
       "dest_warp_id": "0"
     }
   ],

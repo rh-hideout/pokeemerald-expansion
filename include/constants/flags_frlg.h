@@ -1368,6 +1368,8 @@
 #define FLAG_SYS_GOT_BERRY_POUCH                                    (SYS_FLAGS + 0x47)
 #define FLAG_DEOXYS_ROCK_COMPLETE                                   (SYS_FLAGS + 0x48)
 #define FLAG_SYS_UNLOCKED_TANOBY_RUINS                              (SYS_FLAGS + 0x49)
+#define FLAG_ENABLE_SHIP_NAVEL_ROCK                                 (SYS_FLAGS + 0x4A)
+#define FLAG_ENABLE_SHIP_BIRTH_ISLAND                               (SYS_FLAGS + 0x4B)
 
 // World Map Flags
 #define FLAG_WORLD_MAP_PALLET_TOWN                                  (SYS_FLAGS + 0x90)
@@ -2575,7 +2577,6 @@
 #define FLAG_SYS_PYRAMID_GOLD                       0
 #define FLAG_SYS_FRONTIER_PASS                      0
 #define FLAG_MAP_SCRIPT_CHECKED_DEOXYS              0
-#define FLAG_ENABLE_SHIP_BIRTH_ISLAND               0
 #define FLAG_ENABLE_SHIP_FARAWAY_ISLAND             0
 #define FLAG_ARRIVED_ON_FARAWAY_ISLAND              0
 #define FLAG_ARRIVED_AT_MARINE_CAVE_EMERGE_SPOT     0
@@ -2584,7 +2585,6 @@
 #define FLAG_LANDMARK_ALTERING_CAVE                 0
 #define FLAG_LANDMARK_DESERT_UNDERPASS              0
 #define FLAG_LANDMARK_ARTISAN_CAVE                  0
-#define FLAG_ENABLE_SHIP_NAVEL_ROCK                 0
 #define FLAG_ARRIVED_AT_NAVEL_ROCK                  0
 #define FLAG_LANDMARK_TRAINER_HILL                  0
 #define FLAG_UNUSED_0x8E3                           0 // Unused Flag
