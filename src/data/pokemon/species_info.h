@@ -7463,6 +7463,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Flubunny)
        .levelUpLearnset = sFlubunnyLevelUpLearnset,
+       .teachableLearnset = sFlubbunyTeachableLearnset,
+       .eggMoveLearnset = sLunabbitEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_LEPOOZE}),
     },
         [SPECIES_LEPOOZE] =
@@ -7517,6 +7519,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Lepooze)
        .levelUpLearnset = sLepoozeLevelUpLearnset,
+       .teachableLearnset = sLepoozeTeachableLearnset,
+       .eggMoveLearnset = sLunabbitEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 36, SPECIES_LUNABBIT}),
     },
         [SPECIES_LUNABBIT] =
@@ -7571,6 +7575,8 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 1,
        FOOTPRINT(Lunabbit)
        .levelUpLearnset = sLunabbitLevelUpLearnset,
+       .teachableLearnset = sLunabbitTeachableLearnset,
+       .eggMoveLearnset = sLunabbitEggMoveLearnset,
     },
         [SPECIES_HELMATA] =
     { 

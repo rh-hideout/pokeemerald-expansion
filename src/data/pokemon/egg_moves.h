@@ -6580,6 +6580,16 @@ static const u16 sMaleentisEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+static const u16 sLunabbitEggMoveLearnset[] = {
+    MOVE_,
+    MOVE_,
+    MOVE_,
+    MOVE_,
+    MOVE_,
+    MOVE_,
+    MOVE_UNAVAILABLE,
+};
+
 static const u16 sChameleeEggMoveLearnset[] = {
     MOVE_EGG_BOMB,
     MOVE_AQUA_TAIL,
