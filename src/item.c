@@ -119,7 +119,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPock
     else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
     {
         pocket = &gBagPockets[POCKET_KEY_ITEMS];
-        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2));
+        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1;
         if (pocket->itemSlots[pocketPos].expansionBit)
             return (struct ItemSlot) {pocket->itemSlots[pocketPos].keyItemSlot2, pocket->itemSlots[pocketPos].keyItemSlot3};
     }
@@ -201,7 +201,7 @@ static inline void NONNULL BagPocket_SetSlotDataTMsHMs(struct BagPocket *pocket,
     else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
     {
         pocket = &gBagPockets[POCKET_KEY_ITEMS];
-        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2));
+        pocketPos = BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1;
         pocket->itemSlots[pocketPos].expansionBit = TRUE;
         pocket->itemSlots[pocketPos].keyItemSlot2 = newSlot.itemId;
         pocket->itemSlots[pocketPos].keyItemSlot3 = newSlot.quantity;
@@ -281,7 +281,7 @@ void ApplyNewEncryptionKeyToBagItems(u32 newKey)
         if (pocketId == POCKET_KEY_ITEMS)
             continue;
 
-        for (item = 0; item < gBagPockets[pocketId].capacity; item++)
+        for (item = 0; item < gBagPockets[pocketId].baseCapacity; item++)
         {
             gBagPockets[pocketId].itemSlots[item].quantity ^= gSaveBlock2Ptr->encryptionKey;
             gBagPockets[pocketId].itemSlots[item].quantity ^= newKey;
