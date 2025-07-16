@@ -924,6 +924,28 @@ AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI won't setup if it can KO through Sturdy effect")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SKARMORY) { Ability(ABILITY_STURDY); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_MOLTRES) { Moves(MOVE_FIRE_BLAST, MOVE_AGILITY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_FIRE_BLAST); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't setup if otherwise good scenario is changed by the presence of priority")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_FLOATZEL) { Speed(2); Moves(MOVE_AQUA_JET, MOVE_SURF); }
+        OPPONENT(SPECIES_DONPHAN) { Speed(5); Moves(MOVE_BULK_UP, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SURF); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage over slow KO")
 {
     PASSES_RANDOMLY(PRIORITIZE_LAST_CHANCE_CHANCE, 100, RNG_AI_PRIORITIZE_LAST_CHANCE);
