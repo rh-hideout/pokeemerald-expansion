@@ -80,7 +80,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     BattleAI_SetupItems();
     BattleAI_SetupFlags();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (!IS_FRLG && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
         ZeroEnemyPartyMons();
         CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
@@ -191,6 +191,8 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToSafari;
             else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally;
+            else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToOakOrOldMan;
             else if (isAIvsAI)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToPlayerPartner;
             else
@@ -2068,7 +2070,16 @@ void Controller_WaitForHealthBar(u32 battler)
     {
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
-        BtlController_Complete(battler);
+            
+        if (GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+        {
+            BtlCtrl_OakOldMan_SetState2Flag(1);
+            gBattlerControllerFuncs[battler] = PrintOakText_InflictingDamageIsKey;
+        }
+        else
+        {
+            BtlController_Complete(battler);
+        }
     }
 }
 
@@ -2520,7 +2531,25 @@ void BtlController_HandlePrintString(u32 battler)
         }
     }
 
-    BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
+
+    // if (BattleStringShouldBeColored(*stringId))
+    //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
+    // else
+        BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
+        
+    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    {
+        switch (*stringId)
+        {
+        case STRINGID_TRAINER1WINTEXT:        
+            gBattlerControllerFuncs[battler] = PrintOakText_HowDisappointing;
+            return;
+        case STRINGID_DONTLEAVEBIRCH:
+            gBattlerControllerFuncs[battler] = PrintOakText_OakNoRunningFromATrainer;
+            return;
+        }
+    }
+
     gBattlerControllerFuncs[battler] = Controller_WaitForString;
     if (ShouldUpdateTvData(battler))
         BattleTv_SetDataBasedOnString(*stringId);

@@ -2437,6 +2437,8 @@ extern const u8 gText_Soulbadge[];
 extern const u8 gText_Marshbadge[];
 extern const u8 gText_Volcanobadge[];
 extern const u8 gText_Earthbadge[];
+extern const u8 gText_OakImportantToGetToKnowPokemonThroughly[];
+extern const u8 gText_OakThisIsListOfPokemon[];
 
 
 #endif // GUARD_STRINGS_H

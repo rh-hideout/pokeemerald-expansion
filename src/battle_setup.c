@@ -1131,6 +1131,9 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
         TRAINER_BATTLE_PARAM.opponentA = GetRematchTrainerId(TRAINER_BATTLE_PARAM.opponentA);
         return EventScript_TryDoRematchBattle;
 #endif //FREE_MATCH_CALL
+    case TRAINER_BATTLE_EARLY_RIVAL:
+        SetMapVarsToTrainerA();
+        return EventScript_DoNoIntroTrainerBattle;
     case TRAINER_BATTLE_PYRAMID:
         if (gApproachingTrainerId == 0)
         {
@@ -1219,6 +1222,11 @@ u8 GetTrainerBattleMode(void)
     return TRAINER_BATTLE_PARAM.mode;
 }
 
+u8 GetRivalBattleFlags(void)
+{
+    return TRAINER_BATTLE_PARAM.rivalBattleFlags;
+}
+
 bool8 GetTrainerFlag(void)
 {
     if (InBattlePyramid())
@@ -1277,6 +1285,9 @@ void BattleSetup_StartTrainerBattle(void)
             gBattleTypeFlags = (BATTLE_TYPE_TRAINER);
         }
     }
+        
+    if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL && GetRivalBattleFlags() & RIVAL_BATTLE_TUTORIAL)
+        gBattleTypeFlags |= BATTLE_TYPE_FIRST_BATTLE;
 
     if (InBattlePyramid())
     {
@@ -1375,7 +1386,30 @@ static void CB2_EndTrainerBattle(void)
             HealPlayerParty();
     }
 
-    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
+    if (GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
+    {
+        if (IsPlayerDefeated(gBattleOutcome) == TRUE)
+        {
+            gSpecialVar_Result = TRUE;
+            if (GetRivalBattleFlags() & RIVAL_BATTLE_HEAL_AFTER)
+            {
+                HealPlayerParty();
+            }
+            else
+            {
+                SetMainCallback2(CB2_WhiteOut);
+                return;
+            }
+        }
+        else
+        {
+            gSpecialVar_Result = FALSE;
+        }
+        DowngradeBadPoison();
+        SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+        SetBattledTrainerFlag();
+    } 
+    else if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_SECRET_BASE)
     {
         DowngradeBadPoison();
         SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
