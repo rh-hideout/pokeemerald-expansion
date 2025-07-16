@@ -1806,125 +1806,8 @@
 	.4byte \jumpInstr
 	.endm
 
-@ various command changed to more readable macros
-	.macro cancelmultiturnmoves battler:req
-	various \battler, VARIOUS_CANCEL_MULTI_TURN_MOVES
-	.endm
-
-	.macro getifcantrunfrombattle battler:req
-	various \battler, VARIOUS_IS_RUNNING_IMPOSSIBLE
-	.endm
-
-	.macro getmovetarget battler:req
-	various \battler, VARIOUS_GET_MOVE_TARGET
-	.endm
-
-	.macro getbattlerfainted battler:req
-	various \battler, VARIOUS_GET_BATTLER_FAINTED
-	.endm
-
-	.macro resetswitchinabilitybits battler:req
-	various \battler, VARIOUS_RESET_SWITCH_IN_ABILITY_BITS
-	.endm
-
-	.macro updatechoicemoveonlvlup battler:req
-	various \battler, VARIOUS_UPDATE_CHOICE_MOVE_ON_LVL_UP
-	.endm
-
-	.macro resetplayerfainted
-	various BS_ATTACKER, VARIOUS_RESET_PLAYER_FAINTED
-	.endm
-
-	.macro palaceflavortext battler:req
-	various \battler, VARIOUS_PALACE_FLAVOR_TEXT
-	.endm
-
-	.macro arenajudgmentwindow
-	various BS_ATTACKER, VARIOUS_ARENA_JUDGMENT_WINDOW
-	.endm
-
-	.macro arenaopponentmonlost
-	various BS_ATTACKER, VARIOUS_ARENA_OPPONENT_MON_LOST
-	.endm
-
-	.macro arenaplayermonlost
-	various BS_ATTACKER, VARIOUS_ARENA_PLAYER_MON_LOST
-	.endm
-
 	.macro arenabothmonlost
 	various BS_ATTACKER, VARIOUS_ARENA_BOTH_MONS_LOST
-	.endm
-
-	.macro forfeityesnobox battler:req
-	various \battler, VARIOUS_EMIT_YESNOBOX
-	.endm
-
-	.macro arenadrawreftextbox
-	various BS_ATTACKER, VARIOUS_DRAW_ARENA_REF_TEXT_BOX
-	.endm
-
-	.macro arenaerasereftextbox
-	various BS_ATTACKER, VARIOUS_ERASE_ARENA_REF_TEXT_BOX
-	.endm
-
-	.macro arenajudgmentstring id:req
-	various \id, VARIOUS_ARENA_JUDGMENT_STRING
-	.endm
-
-	.macro arenawaitmessage id:req
-	various \id, VARIOUS_ARENA_WAIT_STRING
-	.endm
-
-	.macro waitcry battler:req
-	various \battler, VARIOUS_WAIT_CRY
-	.endm
-
-	.macro returnopponentmon1toball battler:req
-	various \battler, VARIOUS_RETURN_OPPONENT_MON1
-	.endm
-
-	.macro returnopponentmon2toball battler:req
-	various \battler, VARIOUS_RETURN_OPPONENT_MON2
-	.endm
-
-	.macro volumedown
-	various BS_ATTACKER, VARIOUS_VOLUME_DOWN
-	.endm
-
-	.macro volumeup
-	various BS_ATTACKER, VARIOUS_VOLUME_UP
-	.endm
-
-	.macro setalreadystatusedmoveattempt battler:req
-	various \battler, VARIOUS_SET_ALREADY_STATUS_MOVE_ATTEMPT
-	.endm
-
-	.macro palacetryescapestatus battler:req
-	various \battler, VARIOUS_PALACE_TRY_ESCAPE_STATUS
-	.endm
-
-	.macro setoutcomeonteleport battler:req
-	various \battler, VARIOUS_SET_TELEPORT_OUTCOME
-	.endm
-
-	.macro playtrainerdefeatbgm battler:req
-	various \battler, VARIOUS_PLAY_TRAINER_DEFEATED_MUSIC
-	.endm
-
-	.macro stattextbuffer battler:req
-	various \battler, VARIOUS_STAT_TEXT_BUFFER
-	.endm
-
-	.macro switchinabilities battler:req
-	various \battler, VARIOUS_SWITCHIN_ABILITIES
-	.endm
-
-	.macro instanthpdrop battler:req
-	various \battler, VARIOUS_INSTANT_HP_DROP
-	.endm
-
-	.macro clearstatus battler:req
-	various \battler, VARIOUS_CLEAR_STATUS
 	.endm
 
 	.macro restorepp battler:req
@@ -2076,109 +1959,14 @@
 	.4byte \failInstr
 	.endm
 
-	.macro tryaccupressure battler:req, failInstr:req
-	various \battler, VARIOUS_ACUPRESSURE
-	.4byte \failInstr
-	.endm
-
-	.macro bringdownairbornebattler battler:req
-	various \battler, VARIOUS_GRAVITY_ON_AIRBORNE_MONS
-	.endm
-
-	.macro checkgrassyterrainheal battler:req, failInstr:req
-	various \battler, VARIOUS_CHECK_IF_GRASSY_TERRAIN_HEALS
-	.4byte \failInstr
-	.endm
-
-	.macro jumpifnotberry battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_NOT_BERRY
-	.4byte \jumpInstr
-	.endm
-
-	.macro jumpifroarfails jumpInstr:req
-	various BS_ATTACKER, VARIOUS_JUMP_IF_ROAR_FAILS
-	.4byte \jumpInstr
-	.endm
-
 	.macro tryinstruct failInstr:req
 	various BS_ATTACKER, VARIOUS_TRY_INSTRUCT
 	.4byte \failInstr
 	.endm
 
-	.macro settracedability battler:req
-	various \battler, VARIOUS_TRACE_ABILITY
-	.endm
-
-	.macro updatenick battler:req
-	various \battler, VARIOUS_UPDATE_NICK
-	.endm
-
-	.macro tryillusionoff battler:req
-	various \battler, VARIOUS_TRY_ILLUSION_OFF
-	.endm
-
-	.macro spriteignore0hp value:req
-	various BS_ATTACKER, VARIOUS_SET_SPRITEIGNORE0HP
-	.byte \value
-	.endm
-
-	.macro getstatvalue battler:req, stat:req
-	various \battler, VARIOUS_GET_STAT_VALUE
-	.byte \stat
-	.endm
-
-	.macro jumpiffullhp battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_FULL_HP
-	.4byte \jumpInstr
-	.endm
-
 	.macro losetype battler:req, type:req
 	various \battler, VARIOUS_LOSE_TYPE
 	.byte \type
-	.endm
-
-	.macro tryfriskmsg battler:req
-	various \battler, VARIOUS_TRY_FRISK
-	.endm
-
-	.macro jumpifshieldsdown battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_SHIELDS_DOWN_PROTECTED
-	.4byte \jumpInstr
-	.endm
-
-	.macro trysetfairylock failInstr:req
-	various BS_ATTACKER, VARIOUS_TRY_FAIRY_LOCK
-	.4byte \failInstr
-	.endm
-
-	.macro jumpifnoally battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_NO_ALLY
-	.4byte \jumpInstr
-	.endm
-
-	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal=TRUE
-	various \battler, VARIOUS_JUMP_IF_HOLD_EFFECT
-	.byte \holdEffect
-	.4byte \jumpInstr
-	.byte \equal
-	.endm
-
-	.macro jumpifnoholdeffect battler:req, holdEffect:req, jumpInstr:req
-	jumpifholdeffect \battler, \holdEffect, \jumpInstr, FALSE
-	.endm
-
-	.macro infatuatewithbattler battler:req, infatuateWith:req
-	various \battler, VARIOUS_INFATUATE_WITH_BATTLER
-	.byte \infatuateWith
-	.endm
-
-	.macro setlastuseditem battler:req
-	various \battler, VARIOUS_SET_LAST_USED_ITEM
-	.endm
-
-	.macro jumpifabsent battler:req, jumpInstr:req
-	various \battler, VARIOUS_JUMP_IF_ABSENT
-	.4byte \jumpInstr
 	.endm
 
 	.macro destroyabilitypopup
@@ -2446,6 +2234,231 @@
 	.4byte \jumpInstr
 	.endm
 
+	.macro jumpifroarfails jumpInstr:req
+	callnative BS_JumpIfRoarFails
+	.4byte \jumpInstr
+	.endm
+
+	.macro jumpifabsent battler:req, jumpInstr:req
+	callnative BS_JumpIfAbsent
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro jumpifnoholdeffect battler:req, holdEffect:req, jumpInstr:req
+	jumpifholdeffect \battler, \holdEffect, \jumpInstr, FALSE
+	.endm
+
+	.macro jumpifholdeffect battler:req, holdEffect:req, jumpInstr:req, equal:req
+	callnative BS_JumpIfHoldEffect
+	.byte \battler
+	.byte \holdEffect
+	.4byte \jumpInstr
+	.byte \equal
+	.endm
+
+	.macro jumpifnoally battler:req, jumpInstr:req
+	callnative BS_JumpIfNoAlly
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro infatuatewithbattler battler:req, infatuateWith:req
+	callnative BS_InfatuateWithBattler
+	.byte \battler
+	.byte \infatuateWith
+	.endm
+
+	.macro setlastuseditem battler:req
+	callnative BS_SetLastUsedItem
+	.byte \battler
+	.endm
+
+	.macro trysetfairylock failInstr:req
+	callnative BS_TrySetFairyLock
+	.4byte \failInstr
+	.endm
+
+	.macro getstatvalue stat:req
+	callnative BS_GetStatValue
+	.byte \stat
+	.endm
+
+	.macro jumpiffullhp battler:req, jumpInstr:req
+	callnative BS_JumpIfFullHp
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro tryfriskmessage
+	callnative BS_TryFriskMessage
+	.endm
+
+	.macro settracedability battler:req
+	callnative BS_SetTracedAbility
+	.byte \battler
+	.endm
+
+	.macro tryillusionoff battler:req
+	callnative BS_TryIllusionOff
+	.byte \battler
+	.endm
+
+	.macro setspriteignore0hp ignore0HP:req
+	callnative BS_SetSpriteIgnore0Hp
+	.byte \ignore0HP
+	.endm
+
+	.macro updatenick
+	callnative BS_UpdateNick
+	.endm
+
+	.macro jumpifnotberry battler:req, jumpInstr:req
+	callnative BS_JumpIfNotBerry
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro gravityonairbornemons
+	callnative BS_GravityOnAirborneMons
+	.endm
+
+	.macro tryacupressure failInstr:req
+	callnative BS_TryAcupressure
+	.4byte \failInstr
+	.endm
+
+	.macro cancelmultiturnmoves
+	callnative BS_CancelMultiTurnMoves
+	.endm
+
+	.macro isrunningimpossible
+	callnative BS_IsRunningImpossible
+	.endm
+
+	.macro getmovetarget
+	callnative BS_GetMoveTarget
+	.endm
+
+	@ Will jump to script pointer if the specified battler has or has not fainted.
+	.macro jumpiffainted battler:req, value:req, ptr:req
+	getbattlerfainted \battler
+	jumpifbyte CMP_EQUAL, gBattleCommunication, \value, \ptr
+	.endm
+
+	.macro getbattlerfainted battler:req
+	callnative BS_GetBattlerFainted
+	.byte \battler
+	.endm
+
+	.macro resetswitchinabilitybits
+	callnative BS_ResetSwitchInAbilityBits
+	.endm
+
+	.macro updatechoicemoveonlvlup
+	callnative BS_UpdateChoiceMoveOnLvlUp
+	.endm
+
+	.macro resetplayerfainted
+	callnative BS_ResetPlayerFainted
+	.endm
+
+	.macro palaceflavortext
+	callnative BS_PalaceFlavorText
+	.endm
+
+	.macro arenajudgmentwindow
+	callnative BS_ArenaJudgmentWindow
+	.endm
+
+	.macro arenaopponentmonlost
+	callnative BS_ArenaOpponentMonLost
+	.endm
+
+	.macro arenaplayermonlost
+	callnative BS_ArenaPlayerMonLost
+	.endm
+
+	.macro arenabothmonslost
+	callnative BS_ArenaBothMonsLost
+	.endm
+
+	.macro forfeityesnobox
+	callnative BS_ForfeitYesNoBox
+	.endm
+
+	.macro drawarenareftextbox
+	callnative BS_DrawArenaRefTextBox
+	.endm
+
+	.macro erasearenareftextbox
+	callnative BS_EraseArenaRefTextBox
+	.endm
+
+	.macro arenajudgmentstring id:req
+	callnative BS_ArenaJudgmentString
+	.byte \id
+	.endm
+
+	.macro arenawaitmessage id:req
+	callnative BS_ArenaWaitMessage
+	.byte \id
+	.endm
+
+	.macro waitcry
+	callnative BS_WaitCry
+	.endm
+
+	.macro returnopponentmon1toball
+	callnative BS_ReturnOpponentMon1ToBall
+	.endm
+
+	.macro returnopponentmon2toball
+	callnative BS_ReturnOpponentMon2ToBall
+	.endm
+
+	.macro volumedown
+	callnative BS_VolumeDown
+	.endm
+
+	.macro volumeup
+	callnative BS_VolumeUp
+	.endm
+
+	.macro setalreadystatusedmoveattempt
+	callnative BS_SetAlreadyStatusedMoveAttempt
+	.endm
+
+	.macro palacetryescapestatus
+	callnative BS_PalaceTryEscapeStatus
+	.endm
+
+	.macro setteleportoutcome battler:req
+	callnative BS_SetTeleportOutcome
+	.byte \battler
+	.endm
+
+	.macro playtrainerdefeatedmusic
+	callnative BS_PlayTrainerDefeatedMusic
+	.endm
+
+	.macro stattextbuffer
+	callnative BS_StatTextBuffer
+	.endm
+
+	.macro switchinabilities battler:req
+	callnative BS_SwitchinAbilities
+	.byte \battler
+	.endm
+
+	.macro instanthpdrop
+	callnative BS_InstantHpDrop
+	.endm
+
+	.macro clearstatus
+	callnative BS_ClearStatus
+	.endm
+
 	.macro setallytonexttarget jumpInstr:req
 	jumpifbyte CMP_GREATER_THAN, gBattlerTarget, 0x1, 1f
 	addbyte gBattlerTarget, 0x2
@@ -2526,12 +2539,6 @@
 		.endif
 	.endif
 	waitmessage B_WAIT_TIME_LONG
-	.endm
-
-	@ Will jump to script pointer if the specified battler has or has not fainted.
-	.macro jumpiffainted battler:req, value:req, ptr:req
-	getbattlerfainted \battler
-	jumpifbyte CMP_EQUAL, gBattleCommunication, \value, \ptr
 	.endm
 
 	.macro flushtextbox
