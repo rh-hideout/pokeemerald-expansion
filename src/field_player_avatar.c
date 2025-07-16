@@ -1963,6 +1963,11 @@ static bool8 PlayerAvatar_SecretBaseMatSpinStep3(struct Task *task, struct Objec
     return FALSE;
 }
 
+void SeafoamIslandsB4F_CurrentDumpsPlayerOnLand(void)
+{
+    CreateStopSurfingTask(DIR_NORTH);
+}
+
 static void CreateStopSurfingTask(u8 direction)
 {
     u8 taskId;

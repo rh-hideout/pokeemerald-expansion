@@ -646,6 +646,8 @@ static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
     [MB_FRLG_ICE] = MB_ICE,
     [MB_FRLG_THIN_ICE] = MB_THIN_ICE,
     [MB_FRLG_CRACKED_ICE] = MB_CRACKED_ICE,
+    [MB_FRLG_ROCK_STAIRS] = MB_ROCK_STAIRS,
+    [MB_FRLG_SHALLOW_WATER] = MB_SHALLOW_WATER,
  };
 
 static u32 TranslateFrlgBehaviour(u32 behavior)

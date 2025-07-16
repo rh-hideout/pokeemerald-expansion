@@ -5602,3 +5602,8 @@ void CutMoveOpenDottedHoleDoor(void)
     FlagSet(FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE);
     UnlockPlayerFieldControls();
 }
+
+void ForcePlayerToStartSurfing(void)
+{
+    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+}

@@ -1690,11 +1690,18 @@ static bool8 FallWarpEffect_CameraShake(struct Task *task)
 
 static bool8 FallWarpEffect_End(struct Task *task)
 {
+    s16 x, y;
     gPlayerAvatar.preventStep = FALSE;
     UnlockPlayerFieldControls();
     CameraObjectReset();
     UnfreezeObjectEvents();
     InstallCameraPanAheadCallback();
+    PlayerGetDestCoords(&x, &y);
+    if (MetatileBehavior_IsSurfableInSeafoamIslands(MapGridGetMetatileBehaviorAt(x, y)) == TRUE)
+    {
+        VarSet(VAR_TEMP_1, 1);
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+    }
     DestroyTask(FindTaskIdByFunc(Task_FallWarpFieldEffect));
     FollowerNPC_WarpSetEnd();
 

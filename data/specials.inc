@@ -628,3 +628,5 @@ gSpecials::
 	def_special PlayerPartyContainsSpeciesWithPlayerID
 	def_special ShakeScreen
 	def_special CallTrainerTowerFunc
+	def_special ForcePlayerToStartSurfing
+	def_special SeafoamIslandsB4F_CurrentDumpsPlayerOnLand
