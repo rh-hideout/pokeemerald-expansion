@@ -82,7 +82,7 @@ Route11_EastEntrance_2F_EventScript_AlreadyGotItemfinder::
 Route11_EastEntrance_2F_EventScript_GetAideRequestInfo::
 	buffernumberstring STR_VAR_1, REQUIRED_CAUGHT_MONS
 	bufferitemname STR_VAR_2, ITEM_ITEMFINDER
-@	return
+	return
 
 Route11_EastEntrance_2F_Text_GiveItemfinderIfCaught30::
     .string "Hi! Remember me?\n"
