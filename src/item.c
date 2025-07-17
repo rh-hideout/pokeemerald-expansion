@@ -107,7 +107,10 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
 void NONNULL BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     if (!newSlot.itemId || !newSlot.quantity) // Sets to zero if quantity or itemId is zero
-        newSlot.itemId = newSlot.quantity = 0;
+    {
+        newSlot.itemId = ITEM_NONE;
+        newSlot.quantity = 0;
+    }
 
     switch (pocket->id)
     {
