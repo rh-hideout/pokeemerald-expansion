@@ -3913,6 +3913,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_BIG_ROOT)
                 ADJUST_SCORE(WEAK_EFFECT);
         }
+        break;
     case EFFECT_EXPLOSION:
     case EFFECT_MISTY_EXPLOSION:
     case EFFECT_MEMENTO:
