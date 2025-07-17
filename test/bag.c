@@ -19,6 +19,11 @@ TEST("TMs and HMs are sorted correctly in the bag")
     ASSUME(GetItemPocket(ITEM_TM01) == POCKET_TM_HM);
     ASSUME(GetItemPocket(ITEM_HM02) == POCKET_TM_HM);
 
+    /*
+     * Note: I would add a test to make sure that TMs are sorted correctly by move name,
+     * but downstream users are likely to rearrange TMs so this would just be a nuisance.
+     */
+
     RUN_OVERWORLD_SCRIPT(
         additem ITEM_HM07;
         additem ITEM_TM25;
@@ -92,7 +97,7 @@ TEST("Berries are sorted correctly in the bag")
     EXPECT_EQ(pocket->itemSlots[8].itemId, ITEM_NONE);
 }
 
-TEST("Items are correctly compacted in the bag")
+TEST("Items are correctly sorted and compacted in the bag")
 {
     struct BagPocket *pocket = &gBagPockets[POCKET_ITEMS];
     memset(pocket->itemSlots, 0, sizeof(gSaveBlock1Ptr->bag.items));
@@ -127,21 +132,31 @@ TEST("Items are correctly compacted in the bag")
     EXPECT_EQ(pocket->itemSlots[5].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_NONE);
 
-    // Try removing the small items, check that everything is compacted correctly
+    SortItemsInBag(&gBagPockets[POCKET_ITEMS], SORT_ALPHABETICALLY);
+
+    EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_BIG_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_BIG_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_BIG_PEARL);
+    EXPECT_EQ(pocket->itemSlots[3].itemId, ITEM_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[4].itemId, ITEM_PEARL);
+    EXPECT_EQ(pocket->itemSlots[5].itemId, ITEM_TINY_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_NONE);
+
+    // Try removing the big items, check that everything is compacted correctly
 
     RUN_OVERWORLD_SCRIPT(
-        removeitem ITEM_NUGGET;
-        removeitem ITEM_TINY_MUSHROOM;
-        removeitem ITEM_PEARL;
+        removeitem ITEM_BIG_NUGGET;
+        removeitem ITEM_BIG_MUSHROOM;
+        removeitem ITEM_BIG_PEARL;
     );
 
     CompactItemsInBagPocket(POCKET_ITEMS);
 
-    EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_BIG_NUGGET);
+    EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_NUGGET);
     EXPECT_EQ(pocket->itemSlots[0].quantity, 1);
-    EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_BIG_MUSHROOM);
+    EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_PEARL);
     EXPECT_EQ(pocket->itemSlots[1].quantity, 1);
-    EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_BIG_PEARL);
+    EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_TINY_MUSHROOM);
     EXPECT_EQ(pocket->itemSlots[2].quantity, 1);
     EXPECT_EQ(pocket->itemSlots[3].itemId, ITEM_NONE);
     EXPECT_EQ(pocket->itemSlots[4].itemId, ITEM_NONE);
