@@ -201,4 +201,7 @@ Input must be of the form (upper << lower) where upper can be up to 7, lower up 
 /* Useful for counting arguments */
 #define PLUS_ONE(...) + 1
 
+/* Converts n into a flag of offset n */
+#define TO_BIT(_n) (1 << (_n))
+
 #endif
