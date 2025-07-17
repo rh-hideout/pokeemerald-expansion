@@ -842,8 +842,8 @@ struct MoveEffectResult
     // Should be populated at initialisation
     const u8 *pushInstr; // Instruction that will be pushed if battlescriptPush is set
     const u16 move; // gCurrentMove
-    const u16 battlerItem; // gEffectBattler held item
-    u16 battlerAbility; // gEffectBattler ability
+    const u16 heldItem; // gEffectBattler held item
+    u16 ability; // gEffectBattler ability
     enum MoveEffects moveEffect:8; // Current move effect
     enum ItemHoldEffect holdEffect:8; // gEffectBattler's item hold effect
     union StatChanger statChanger;
@@ -1320,7 +1320,10 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 
 static inline u32 MaxRaiseOrLowerStatAmount(u32 battler, u32 stat, bool32 lowering)
 {
-    return lowering ? (gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE) : (MAX_STAT_STAGE - gBattleMons[battler].statStages[stat]);
+    if (lowering)
+        return gBattleMons[battler].statStages[stat] - MIN_STAT_STAGE;
+    else
+        return MAX_STAT_STAGE - gBattleMons[battler].statStages[stat];
 }
 
 static inline union StatChanger PrepareStatChangerAny(union StatFlags stats, s32 stage, u32 backwardsCompatibleStat)

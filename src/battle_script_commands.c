@@ -3018,7 +3018,7 @@ static void SetMoveEffectTriggerResult(struct MoveEffectResult *result)
 {
     // Record any ability that triggers during a stat change activation
     if (result->recordBattlerAbility)
-        RecordAbilityBattle(result->effectBattler, result->battlerAbility);
+        RecordAbilityBattle(result->effectBattler, result->ability);
 
     if (result->blockedByAbility && result->lastUsedAbility)
     {
@@ -11896,7 +11896,7 @@ static bool32 MoveEffectBlockedByProtect(struct MoveEffectResult *result, const 
 
 static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveEffectResult *result, const u8 *itemFailPtr, const u8 *abilityFailPtr)
 {
-    if ((result->holdEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->battlerAbility)) &&
+    if ((result->holdEffect == HOLD_EFFECT_CLEAR_AMULET || CanAbilityPreventStatLoss(result->ability)) &&
         (result->statDropPrevention || result->battlerAtk != result->battlerDef || result->mirrorArmored) && !result->certain && gMovesInfo[result->move].effect != EFFECT_CURSE)
     {
         if (gSpecialStatuses[result->effectBattler].statLowered)
@@ -11918,7 +11918,7 @@ static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveE
                 result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
                 result->battlescriptPush = TRUE;
                 result->nextInstr = abilityFailPtr;
-                result->lastUsedAbility = result->battlerAbility;
+                result->lastUsedAbility = result->ability;
             }
             result->statLowered = TRUE;
         }
@@ -11930,11 +11930,11 @@ static bool32 MoveEffectBlockedByItemOrAbilityPreventingAnyStatDrop(struct MoveE
 static bool32 MoveEffectBlockedByAbilityPreventingSpecificStatDrop(struct MoveEffectResult *result, const u8 *failPtr)
 {
     // To do - update this to handle cases where we're checking multiple stats at once
-    if (!result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, result->statChanger.backwardsCompatibleStatId))
+    if (!result->certain && AbilityPreventsSpecificStatDrop(result->ability, result->statChanger.backwardsCompatibleStatId))
     {
         SetStatChangerStatValue(&result->statChanger, result->statChanger.backwardsCompatibleStatId, 0);
         result->battlescriptPush = TRUE;
-        result->lastUsedAbility = result->battlerAbility;
+        result->lastUsedAbility = result->ability;
         result->blockedByAbility = result->effectBattler + 1; // Sets gBattlerAbility
         result->scriptingBattler = result->effectBattler + 1; // required for BattleScript_AbilityNoSpecificStatLoss
         result->nextInstr = failPtr;
@@ -11968,7 +11968,7 @@ static bool32 MoveEffectBlockedByFlowerVeil(struct MoveEffectResult *result, con
 
 static bool32 MoveEffectBlockedByMirrorArmor(struct MoveEffectResult *result, const u8 *failPtr)
 {
-    if (result->battlerAbility == ABILITY_MIRROR_ARMOR && !result->mirrorArmored && result->battlerAtk != result->battlerDef && result->effectBattler == result->battlerDef)
+    if (result->ability == ABILITY_MIRROR_ARMOR && !result->mirrorArmored && result->battlerAtk != result->battlerDef && result->effectBattler == result->battlerDef)
     {
         result->battlescriptPush = TRUE;
         result->scriptingBattler = result->effectBattler + 1;
@@ -12057,7 +12057,7 @@ static bool32 CheckStatChangerForAllStats(struct MoveEffectResult *result)
             // Set the bit to print a string (whether or not it fails)
             result->statChangerKey.value |= TO_BIT(statId);
 
-            if ((stage < 0 && !result->certain && AbilityPreventsSpecificStatDrop(result->battlerAbility, statId))
+            if ((stage < 0 && !result->certain && AbilityPreventsSpecificStatDrop(result->ability, statId))
                 || (stage = min(abs(stage), MaxRaiseOrLowerStatAmount(result->effectBattler, statId, result->statChanger.isNegative))) == 0)
             {
                 // Update stat changer to zero for this stat - we cannot change it
@@ -12156,17 +12156,17 @@ static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatC
 
 static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
 {
-    result->battlerAbility = GetBattlerAbility(result->effectBattler);
+    result->ability = GetBattlerAbility(result->effectBattler);
     result->holdEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
 
-    if (result->battlerAbility == ABILITY_CONTRARY)
+    if (result->ability == ABILITY_CONTRARY)
     {
         result->statChanger.isNegative ^= TRUE;
         result->recordBattlerAbility = TRUE;
         if (flags.updateMoveEffect)
             result->moveEffect = ReverseStatChangeMoveEffect(result->moveEffect);
     }
-    else if (result->battlerAbility == ABILITY_SIMPLE)
+    else if (result->ability == ABILITY_SIMPLE)
     {
         // Double all stats but make sure we don't overflow
         result->statChanger.attack = min(MAX_STAT_STAGE, result->statChanger.attack * 2);
