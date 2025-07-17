@@ -137,23 +137,11 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
-enum SortPocket
-{
-    SORT_NONE,
-    SORT_POCKET_BY_ITEM_ID,
-    SORT_POCKET_TM_HM,
-};
-
 #define SET_ITEM_SLOT(_itemId, _quantity, ...) (struct ItemSlot) {_itemId, _quantity}
 #define BagPocket_SetSlotData(_pocket, _pocketPos, _arg, ...) BagPocket_SetSlotDataArg(_pocket, _pocketPos, FIRST(__VA_OPT__(SET_ITEM_SLOT(_arg, __VA_ARGS__),) _arg))
 
 void BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
-
-static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
-{
-    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
-}
 
 static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 {
@@ -163,6 +151,11 @@ static inline u16 GetBagItemId(enum Pocket pocketId, u32 pocketPos)
 static inline u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
 {
     return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos).quantity;
+}
+
+static inline struct ItemSlot GetBagItemIdAndQuantity(enum Pocket pocketId, u32 pocketPos)
+{
+    return BagPocket_GetSlotData(&gBagPockets[pocketId], pocketPos);
 }
 
 void ApplyNewEncryptionKeyToBagItems(u32 newKey);
@@ -184,7 +177,6 @@ void RemovePCItem(u8 index, u16 count);
 void CompactPCItems(void);
 void SwapRegisteredBike(void);
 void CompactItemsInBagPocket(enum Pocket pocketId);
-void SortPocket(enum Pocket pocketId, enum SortPocket sortPocket);
 void MoveItemSlotInPocket(enum Pocket pocketId, u32 from, u32 to);
 void MoveItemSlotInPC(struct ItemSlot *itemSlots, u32 from, u32 to);
 void ClearBag(void);
