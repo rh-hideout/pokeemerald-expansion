@@ -222,14 +222,6 @@ static const u8 sText_DepositedVar2Var1s[] = _("Deposited {STR_VAR_2}\n{STR_VAR_
 static const u8 sText_NoRoomForItems[] = _("There's no room to\nstore items.");
 static const u8 sText_CantStoreImportantItems[] = _("Important items\ncan't be stored in\nthe PC!");
 
-//bag sort
-enum BagSortOptions
-{
-    SORT_ALPHABETICALLY,
-    SORT_BY_TYPE,
-    SORT_BY_AMOUNT, //greatest->least
-    SORT_BY_INDEX,
-};
 static void Task_LoadBagSortOptions(u8 taskId);
 static void ItemMenu_SortByName(u8 taskId);
 static void ItemMenu_SortByType(u8 taskId);
@@ -237,7 +229,6 @@ static void ItemMenu_SortByAmount(u8 taskId);
 static void ItemMenu_SortByIndex(u8 taskId);
 static void SortBagItems(u8 taskId);
 static void Task_SortFinish(u8 taskId);
-static void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type);
 static void MergeSort(struct BagPocket *pocket, u32 low, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
 static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
 static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
@@ -3320,7 +3311,7 @@ static void Task_SortFinish(u8 taskId)
     }
 }
 
-static void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type)
+void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type)
 {
     switch (type)
     {

@@ -36,6 +36,15 @@ enum {
     ITEMWIN_COUNT
 };
 
+//bag sort
+enum BagSortOptions
+{
+    SORT_ALPHABETICALLY,
+    SORT_BY_TYPE,
+    SORT_BY_AMOUNT, //greatest->least
+    SORT_BY_INDEX,
+};
+
 #define ITEMMENU_SWAP_LINE_LENGTH 8  // Swap line is 8 sprites long
 enum {
     ITEMMENUSPRITE_BAG,
@@ -110,5 +119,6 @@ void DisplayItemMessage(u8 taskId, u8 fontId, const u8 *str, void (*callback)(u8
 void DisplayItemMessageOnField(u8 taskId, const u8 *string, TaskFunc callback);
 void CloseItemMessage(u8 taskId);
 void ItemMenu_RotomCatalog(u8 taskId);
+void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type);
 
 #endif //GUARD_ITEM_MENU_H

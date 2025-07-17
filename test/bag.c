@@ -1,7 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "event_data.h"
-#include "item.h"
+#include "item_menu.h"
 #include "pokemon.h"
 #include "test/overworld_script.h"
 #include "test/test.h"
@@ -30,7 +30,7 @@ TEST("TMs and HMs are sorted correctly in the bag")
         additem ITEM_HM02;
     );
 
-    SortPocket(POCKET_TM_HM, SORT_POCKET_TM_HM);
+    SortItemsInBag(&gBagPockets[POCKET_TM_HM], SORT_BY_INDEX);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_TM01);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_TM05);
@@ -67,7 +67,7 @@ TEST("Berries are sorted correctly in the bag")
         additem ITEM_CHERI_BERRY;
     );
 
-    SortPocket(POCKET_BERRIES, SORT_POCKET_BY_ITEM_ID);
+    SortItemsInBag(&gBagPockets[POCKET_BERRIES], SORT_BY_INDEX);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_CHERI_BERRY);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_ORAN_BERRY);
@@ -77,6 +77,18 @@ TEST("Berries are sorted correctly in the bag")
     EXPECT_EQ(pocket->itemSlots[5].itemId, ITEM_CHARTI_BERRY);
     EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_GANLON_BERRY);
     EXPECT_EQ(pocket->itemSlots[7].itemId, ITEM_MICLE_BERRY);
+    EXPECT_EQ(pocket->itemSlots[8].itemId, ITEM_NONE);
+
+    SortItemsInBag(&gBagPockets[POCKET_BERRIES], SORT_ALPHABETICALLY);
+
+    EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_CHARTI_BERRY);
+    EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_CHERI_BERRY);
+    EXPECT_EQ(pocket->itemSlots[2].itemId, ITEM_GANLON_BERRY);
+    EXPECT_EQ(pocket->itemSlots[3].itemId, ITEM_KELPSY_BERRY);
+    EXPECT_EQ(pocket->itemSlots[4].itemId, ITEM_MAGOST_BERRY);
+    EXPECT_EQ(pocket->itemSlots[5].itemId, ITEM_MICLE_BERRY);
+    EXPECT_EQ(pocket->itemSlots[6].itemId, ITEM_ORAN_BERRY);
+    EXPECT_EQ(pocket->itemSlots[7].itemId, ITEM_POMEG_BERRY);
     EXPECT_EQ(pocket->itemSlots[8].itemId, ITEM_NONE);
 }
 
