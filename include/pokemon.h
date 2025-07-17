@@ -310,8 +310,8 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeBitSize, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeBitSize));
-#define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:FIRST(__VA_ARGS__),) _fieldName)
+#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
+#define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
 struct Volatiles
 {
@@ -824,7 +824,8 @@ void CreateTask_PlayMapChosenOrBattleBGM(u16 songId);
 const u16 *GetMonFrontSpritePal(struct Pokemon *mon);
 const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
 const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
-bool8 IsMoveHM(u16 move);
+bool32 IsMoveHM(u16 move);
+bool32 CannotForgetMove(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor);
 s8 GetFlavorRelationByPersonality(u32 personality, u8 flavor);
@@ -880,5 +881,6 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
+u32 IsSpeciesOfType(u32 species, u32 type);
 
 #endif // GUARD_POKEMON_H

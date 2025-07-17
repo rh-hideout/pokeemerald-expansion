@@ -84,3 +84,12 @@ s32 MathUtil_Inv32(s32 y)
     x = 0x10000;
     return x / y;
 }
+
+u32 MathUtil_Exponent(u32 x, u32 y)
+{
+    u32 result = 1;
+    for (u32 index = 0; index < y; index++)
+        result *= x;
+
+    return result;
+}

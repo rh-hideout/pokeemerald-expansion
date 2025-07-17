@@ -596,27 +596,15 @@
 	.byte \notChosenMove
 	.endm
 
-	.macro statusanimation battler:req
+	.macro statusanimation battler:req, status=0, isVolatile=FALSE
 	.byte 0x64
 	.byte \battler
-	.endm
-
-	.macro status2animation battler:req, status2:req
-	.byte 0x65
-	.byte \battler
-	.4byte \status2
-	.endm
-
-	.macro setmoveeffect effect:req
-	sethword sMOVE_EFFECT, \effect
-	sethword sSAVED_MOVE_EFFECT, \effect
-	.endm
-
-	.macro chosenstatusanimation battler:req, isStatus2:req, status:req
-	.byte 0x66
-	.byte \battler
-	.byte \isStatus2
 	.4byte \status
+	.byte \isVolatile
+	.endm
+
+	.macro volatileanimation battler:req, volatile:req
+	statusanimation \battler, \volatile, TRUE
 	.endm
 
 	.macro yesnobox
@@ -844,8 +832,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setstatuswithability
+	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
 	.byte 0x94
+	.2byte \nonVolatile
+	.4byte \failInstr
 	.endm
 
 	.macro copybidedmg
@@ -977,8 +967,11 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setforesight
+	.macro setvolatile battler:req, volatile:req, value=TRUE
 	.byte 0xb1
+	.byte \battler
+	.byte \volatile
+	.byte \value
 	.endm
 
 	.macro trysetperishsong failInstr:req
@@ -1031,17 +1024,12 @@
 	.4byte \failInstr
 	.endm
 
-	.macro copyfoestats unused:req
+	.macro copyfoestats
 	.byte 0xbd
-	.4byte \unused
 	.endm
 
 	.macro rapidspinfree
 	.byte 0xbe
-	.endm
-
-	.macro setdefensecurlbit
-	.byte 0xbf
 	.endm
 
 	.macro recoverbasedonsunlight failInstr:req
@@ -1401,10 +1389,6 @@
 	.byte \battler
 	.endm
 
-	.macro tryintimidateejectpack
-	callnative BS_TryIntimidateEjectPack
-	.endm
-
 	.macro allyswitchswapbattlers
 	callnative BS_AllySwitchSwapBattler
 	.endm
@@ -1534,14 +1518,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifmovepropertyargument argument:req, jumpInstr:req
-	callnative BS_JumpIfMovePropertyArgument
-	.byte \argument
-	.4byte \jumpInstr
-	.endm
-
-	.macro setremoveterrain failInstr:req
-	callnative BS_SetRemoveTerrain
+	.macro setterrain failInstr:req
+	callnative BS_SetTerrain
 	.4byte \failInstr
 	.endm
 
@@ -2103,10 +2081,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setpowder battler:req
-	various \battler, VARIOUS_SET_POWDER
-	.endm
-
 	.macro bringdownairbornebattler battler:req
 	various \battler, VARIOUS_GRAVITY_ON_AIRBORNE_MONS
 	.endm
@@ -2362,12 +2336,9 @@
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7
 	.endm
 
-	.macro chosenstatus1animation battler:req, status:req
-	chosenstatusanimation \battler, 0x0, \status
-	.endm
-
-	.macro chosenstatus2animation battler:req, status:req
-	chosenstatusanimation \battler, 0x1, \status
+	.macro setmoveeffect effect:req
+	sethword sMOVE_EFFECT, \effect
+	sethword sSAVED_MOVE_EFFECT, \effect
 	.endm
 
 	.macro sethword dst:req, value:req
@@ -2457,6 +2428,22 @@
 	jumpifnottype BS_ATTACKER, TYPE_GRASS, 1f
 	jumpifability BS_ATTACKER_SIDE, ABILITY_FLOWER_VEIL, \jumpInstr
 	1:
+	.endm
+
+	.macro jumpifabilitycantbesuppressed battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityCantBeSuppressed
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
+	.macro tryactivateabilityshield battler:req
+	callnative BS_TryActivateAbilityShield
+	.byte \battler
+	.endm
+
+	.macro trysynchronoise jumpInstr:req
+	callnative BS_TrySynchronoise
+	.4byte \jumpInstr
 	.endm
 
 	.macro setallytonexttarget jumpInstr:req
@@ -2555,4 +2542,9 @@
 	.macro jumpifnowhiteout jumpInstr:req
 	callnative BS_JumpIfNoWhiteOut
 	.4byte \jumpInstr
+	.endm
+
+	.macro tryboosterenergy onFieldStatus:req
+	callnative BS_TryBoosterEnergy
+	.byte \onFieldStatus
 	.endm

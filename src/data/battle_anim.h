@@ -1468,6 +1468,10 @@ const struct CompressedSpriteSheet gBattleAnimPicTable[] =
     {gBattleAnimSpriteGfx_PinkVioletOrb, 0x0080, ANIM_TAG_PINKVIO_ORB},
     {gBattleAnimSpriteGfx_TeraStarstormBeam, 0x200, ANIM_TAG_STARSTORM},
     {gBattleAnimSpriteGfx_SaltParticle, 0x400, ANIM_TAG_SALT_PARTICLE},
+    {gBattleAnimSpriteGfx_TeraSymbol, 0x0200, ANIM_TAG_TERA_SYMBOL},
+    {gBattleAnimSpriteGfx_TatsugiriCurly, 0x200, ANIM_TAG_TATSUGIRI_CURLY},
+    {gBattleAnimSpriteGfx_TatsugiriDroopy, 0x200, ANIM_TAG_TATSUGIRI_DROOPY},
+    {gBattleAnimSpriteGfx_TatsugiriStretchy, 0x200, ANIM_TAG_TATSUGIRI_STRETCHY},
 };
 
 const struct SpritePalette gBattleAnimPaletteTable[] =
@@ -1937,6 +1941,10 @@ const struct SpritePalette gBattleAnimPaletteTable[] =
     {gBattleAnimSpritePal_PinkVioletOrb, ANIM_TAG_PINKVIO_ORB},
     {gBattleAnimSpritePal_TeraStarstormBeam, ANIM_TAG_STARSTORM},
     {gBattleAnimSpritePal_SaltParticle, ANIM_TAG_SALT_PARTICLE},
+    {gBattleAnimSpritePal_TeraSymbol, ANIM_TAG_TERA_SYMBOL},
+    {gBattleAnimSpritePal_TatsugiriCurly, ANIM_TAG_TATSUGIRI_CURLY},
+    {gBattleAnimSpritePal_TatsugiriDroopy, ANIM_TAG_TATSUGIRI_DROOPY},
+    {gBattleAnimSpritePal_TatsugiriStretchy, ANIM_TAG_TATSUGIRI_STRETCHY},
 };
 
 const struct BattleAnimBackground gBattleAnimBackgroundTable[] =

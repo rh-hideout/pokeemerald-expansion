@@ -23,6 +23,7 @@
 #include "data.h"
 #include "palette.h"
 #include "contest.h"
+#include "trainer_pokemon_sprites.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
 #include "constants/battle_palace.h"
@@ -458,10 +459,10 @@ static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite)
 
 #undef sSpeedX
 
-void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isStatus2, u32 status)
+void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isVolatile, u32 status)
 {
     gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 1;
-    if (!isStatus2)
+    if (!isVolatile)
     {
         if (status == STATUS1_FREEZE || status == STATUS1_FROSTBITE)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_FRZ);
@@ -478,13 +479,13 @@ void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isStatus2, u32 statu
     }
     else
     {
-        if (status & STATUS2_INFATUATION)
+        if (status == VOLATILE_INFATUATION)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_INFATUATION);
-        else if (status & STATUS2_CONFUSION)
+        else if (status == VOLATILE_CONFUSION)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_CONFUSION);
-        else if (status & STATUS2_CURSED)
+        else if (status == VOLATILE_CURSED)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_CURSED);
-        else if (status & STATUS2_NIGHTMARE)
+        else if (status == VOLATILE_NIGHTMARE)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_NIGHTMARE);
         else // no animation
             gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 0;
@@ -697,8 +698,7 @@ void DecompressTrainerFrontPic(u16 frontPicId, u8 battler)
 void DecompressTrainerBackPic(u16 backPicId, u8 battler)
 {
     u8 position = GetBattlerPosition(battler);
-    DecompressPicFromTable(&gTrainerBacksprites[backPicId].backPic,
-                           gMonSpritesGfxPtr->spritesGfx[position]);
+    CopyTrainerBackspriteFramesToDest(backPicId, gMonSpritesGfxPtr->spritesGfx[position]);
     LoadPalette(gTrainerBacksprites[backPicId].palette.data,
                           OBJ_PLTT_ID(battler), PLTT_SIZE_4BPP);
 }

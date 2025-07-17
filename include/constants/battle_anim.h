@@ -419,6 +419,10 @@
 #define ANIM_TAG_PINKVIO_ORB                (ANIM_SPRITES_START + 405)
 #define ANIM_TAG_STARSTORM                  (ANIM_SPRITES_START + 406)
 #define ANIM_TAG_SALT_PARTICLE              (ANIM_SPRITES_START + 407)
+#define ANIM_TAG_TERA_SYMBOL                (ANIM_SPRITES_START + 408)
+#define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
+#define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
+#define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -656,6 +660,12 @@
 #define ANIM_SURF_PAL_SURF           0
 #define ANIM_SURF_PAL_MUDDY_WATER    1
 #define ANIM_SURF_PAL_SLUDGE_WAVE    2
+
+// Order Up palettes for Commander
+#define ANIM_ORDER_UP_NONE           0
+#define ANIM_ORDER_UP_CURLY          1
+#define ANIM_ORDER_UP_DROOPY         2
+#define ANIM_ORDER_UP_STRETCHY       3
 
 // Flags given to various functions to indicate which palettes to consider.
 // Handled by UnpackSelectedBattlePalettes

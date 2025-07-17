@@ -149,7 +149,6 @@ enum CmdVarious
     VARIOUS_SET_AURORA_VEIL,
     VARIOUS_TRY_THIRD_TYPE,
     VARIOUS_ACUPRESSURE,
-    VARIOUS_SET_POWDER,
     VARIOUS_GRAVITY_ON_AIRBORNE_MONS,
     VARIOUS_CHECK_IF_GRASSY_TERRAIN_HEALS,
     VARIOUS_JUMP_IF_ROAR_FAILS,
@@ -239,7 +238,7 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-// cases for Cmd_moveend
+// cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
@@ -281,6 +280,7 @@ enum MoveEndEffects
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
     MOVEEND_WHITE_HERB,
+    MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
     MOVEEND_CLEAR_BITS,
@@ -294,16 +294,18 @@ enum MoveEndEffects
 #define B_SWITCH_HIT        1   // dragon tail, circle throw
 #define B_SWITCH_RED_CARD   2
 
-// Argument labels for EFFECT_HIT_SET_REMOVE_TERRAIN
-#define ARG_SET_PSYCHIC_TERRAIN        0
-#define ARG_TRY_REMOVE_TERRAIN_HIT     1
-#define ARG_TRY_REMOVE_TERRAIN_FAIL    2
-
 enum StatusTrigger
 {
     TRIGGER_ON_MOVE,
     TRIGGER_ON_ABILITY,
     TRIGGER_ON_PROTECT,
+};
+
+enum TriggerOnFieldStatus
+{
+    ON_ANY,
+    ON_TERRAIN,
+    ON_WEATHER,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
