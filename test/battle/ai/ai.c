@@ -946,6 +946,45 @@ AI_SINGLE_BATTLE_TEST("AI won't setup if otherwise good scenario is changed by t
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and outspeeds")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HEADBUTT); EXPECT_MOVE(opponent, MOVE_RECOVER); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if it outheals your damage and is outsped")
+{
+    u32 aiMove = MOVE_NONE;
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    PARAMETRIZE{ aiMove = MOVE_RECOVER; }
+    PARAMETRIZE{ aiMove = MOVE_STRENGTH_SAP; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(5); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(2); Moves(MOVE_SCALD, aiMove); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, aiMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if is in no immediate danger beneath an HP threshold")
+{
+    PASSES_RANDOMLY(SHOULD_RECOVER_CHANCE, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_RECOVER); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage over slow KO")
 {
     PASSES_RANDOMLY(PRIORITIZE_LAST_CHANCE_CHANCE, 100, RNG_AI_PRIORITIZE_LAST_CHANCE);
