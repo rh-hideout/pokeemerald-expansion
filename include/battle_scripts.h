@@ -923,5 +923,7 @@ extern const u8 BattleScript_EffectMop[];
 extern const u8 BattleScript_EffectBlackBomb[];
 extern const u8 BattleScript_EffectTempTrap[];
 extern const u8 BattleScript_EffectDrumroll[];
+extern const u8 BattleScript_EffectSuperpower[];
+extern const u8 BattleScript_EffectLunarImpact[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

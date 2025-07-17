@@ -1792,6 +1792,14 @@
 	callnative BS_SetAtkHPToOne
 	.endm
 
+	.macro handlesuperpower
+	callnative BS_HandleSuperpower
+	.endm
+
+	.macro handlelunarimpact
+	callnative BS_HandleLunarImpact
+	.endm
+
 	.macro tryhitswitchtarget failInstr:req
 	callnative BS_TryHitSwitchTarget
 	.4byte \failInstr

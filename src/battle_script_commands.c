@@ -11744,6 +11744,8 @@ static void Cmd_various(void)
         gBattleMons[gBattlerTarget].status2 &= ~(STATUS2_BIDE);
         gDisableStructs[gBattlerTarget].rolloutTimer = 0;
         gDisableStructs[gBattlerTarget].furyCutterCounter = 0;
+        gDisableStructs[gBattlerTarget].superpowerCounter = 0;
+        gDisableStructs[gBattlerTarget].lunarImpactCounter = 0;
 
         // End any Follow Me/Rage Powder effects caused by the target
         if (gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer != 0 && gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget == gBattlerTarget)
@@ -14783,6 +14785,48 @@ static void Cmd_handlefurycutter(void)
             && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_2ND_HIT // Don't increment counter on second hit
             && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_3RD_HIT) // Don't increment counter on third hit
             gDisableStructs[gBattlerAttacker].furyCutterCounter++;
+
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_HandleSuperpower(void)
+{
+    NATIVE_ARGS();
+
+    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+    {
+        gDisableStructs[gBattlerAttacker].superpowerCounter = 0;
+        gBattlescriptCurrInstr = BattleScript_MoveMissedPause;
+    }
+    else
+    {
+        u32 max;
+        max = 3;
+
+        if (gDisableStructs[gBattlerAttacker].superpowerCounter< max)
+            gDisableStructs[gBattlerAttacker].superpowerCounter++;
+
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+}
+
+void BS_HandleLunarImpact(void)
+{
+    NATIVE_ARGS();
+
+    if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
+    {
+        gDisableStructs[gBattlerAttacker].lunarImpactCounter = 0;
+        gBattlescriptCurrInstr = BattleScript_MoveMissedPause;
+    }
+    else
+    {
+        u32 max;
+        max = 3;
+
+        if (gDisableStructs[gBattlerAttacker].lunarImpactCounter< max)
+            gDisableStructs[gBattlerAttacker].lunarImpactCounter++;
 
         gBattlescriptCurrInstr = cmd->nextInstr;
     }

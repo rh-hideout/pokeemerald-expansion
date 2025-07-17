@@ -7254,9 +7254,9 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Superpower"),
         .description = COMPOUND_STRING(
-            "Boosts strength sharply,\n"
-            "but lowers abilities."),
-        .effect = EFFECT_HIT,
+            "Unleashes power, but\n"
+            "weakens with repeated use."),
+        .effect = EFFECT_SUPERPOWER,
         .power = 120,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
@@ -7265,10 +7265,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
-        .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_ATK_DEF_DOWN,
-            .self = TRUE,
-        }),
+        // .additionalEffects = ADDITIONAL_EFFECTS({ 
+        //     .moveEffect = MOVE_EFFECT_ATK_DEF_DOWN, // Legacy effect
+        //     .self = TRUE,
+        // }),
         .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = 0,
@@ -23092,6 +23092,28 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .validApprenticeMove = TRUE, 
     },
 
+    [MOVE_LUNAR_IMPACT] =
+    {
+        .name = COMPOUND_STRING("Lunar Impact"),
+        .description = COMPOUND_STRING(
+            "Unleashes power, but\n"
+            "weakens with repeated use."),
+        .effect = EFFECT_LUNAR_IMPACT,
+        .power = 120,
+        .type = TYPE_FAIRY,
+        .accuracy = 100,
+        .pp = 5,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .contestEffect = CONTEST_EFFECT_USER_MORE_EASILY_STARTLED,
+        .contestCategory = CONTEST_CATEGORY_TOUGH,
+        .contestComboStarterId = 0,
+        .contestComboMoves = {COMBO_STARTER_LOCK_ON, COMBO_STARTER_MIND_READER},
+        .battleAnimScript = gBattleAnimMove_Superpower,
+        .validApprenticeMove = TRUE,
+    },
     
     // END OF CAPRICCIO MOVES
 

@@ -1075,6 +1075,8 @@ const u8* CancelMultiTurnMoves(u32 battler)
 
     gDisableStructs[battler].rolloutTimer = 0;
     gDisableStructs[battler].furyCutterCounter = 0;
+    gDisableStructs[battler].superpowerCounter = 0;
+    gDisableStructs[battler].lunarImpactCounter = 0;
 
     return result;
 }
@@ -3210,6 +3212,10 @@ void TryClearRageAndFuryCutter(void)
             gBattleMons[i].status2 &= ~STATUS2_RAGE;
         if (gDisableStructs[i].furyCutterCounter != 0 && gChosenMoveByBattler[i] != MOVE_FURY_CUTTER)
             gDisableStructs[i].furyCutterCounter = 0;
+        if (gDisableStructs[i].superpowerCounter != 0 && gChosenMoveByBattler[i] != MOVE_SUPERPOWER)
+            gDisableStructs[i].superpowerCounter = 0;
+        if (gDisableStructs[i].lunarImpactCounter != 0 && gChosenMoveByBattler[i] != MOVE_LUNAR_IMPACT)
+            gDisableStructs[i].lunarImpactCounter = 0;
     }
 }
 
@@ -9208,6 +9214,8 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
 void ClearVariousBattlerFlags(u32 battler)
 {
     gDisableStructs[battler].furyCutterCounter = 0;
+    gDisableStructs[battler].superpowerCounter = 0;
+    gDisableStructs[battler].lunarImpactCounter = 0;
     gBattleMons[battler].status2 &= ~STATUS2_DESTINY_BOND;
     gStatuses3[battler] &= ~STATUS3_GRUDGE;
     gStatuses4[battler] &= ~ STATUS4_GLAIVE_RUSH;
@@ -9803,6 +9811,14 @@ u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter)
     return basePower;
 }
 
+u32 CalcSuperpowerBasePower(u32 basePower, u32 superpowerCounter)
+{
+    u32 i;
+    for (i = 1; i < superpowerCounter; i++)
+        basePower /= 2;
+    return basePower;
+}
+
 static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData, u32 abilityDef, u32 weather)
 {
     u32 battlerAtk = damageCalcData->battlerAtk;
@@ -9861,6 +9877,10 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
     case EFFECT_FURY_CUTTER:
         basePower = CalcFuryCutterBasePower(basePower, gDisableStructs[battlerAtk].furyCutterCounter);
         break;
+    case EFFECT_SUPERPOWER:
+        basePower = CalcSuperpowerBasePower(basePower, gDisableStructs[battlerAtk].superpowerCounter);
+    case EFFECT_LUNAR_IMPACT:
+        basePower = CalcSuperpowerBasePower(basePower, gDisableStructs[battlerAtk].lunarImpactCounter);
     case EFFECT_ROLLOUT:
         basePower = CalcRolloutBasePower(battlerAtk, basePower, gDisableStructs[battlerAtk].rolloutTimer);
         break;

@@ -4694,6 +4694,32 @@ BattleScript_FuryCutterHit:
 	adjustdamage
 	goto BattleScript_HitFromAtkAnimation
 
+BattleScript_EffectSuperpower::
+	attackcanceler
+	attackstring
+	ppreduce
+	accuracycheck BattleScript_SuperpowerHit, ACC_CURR_MOVE
+BattleScript_SuperpowerHit:
+	handlesuperpower
+	critcalc
+	damagecalc
+	jumpifmovehadnoeffect BattleScript_SuperpowerHit
+	adjustdamage
+	goto BattleScript_HitFromAtkAnimation
+
+BattleScript_EffectLunarImpact::
+	attackcanceler
+	attackstring
+	ppreduce
+	accuracycheck BattleScript_LunarImpactHit, ACC_CURR_MOVE
+BattleScript_LunarImpactHit:
+	handlelunarimpact
+	critcalc
+	damagecalc
+	jumpifmovehadnoeffect BattleScript_LunarImpactHit
+	adjustdamage
+	goto BattleScript_HitFromAtkAnimation
+
 BattleScript_TryDestinyKnotTarget:
 	jumpifnoholdeffect BS_ATTACKER, HOLD_EFFECT_DESTINY_KNOT, BattleScript_TryDestinyKnotTargetRet
 	infatuatewithbattler BS_TARGET, BS_ATTACKER

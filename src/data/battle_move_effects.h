@@ -2435,11 +2435,23 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
         .encourageEncore = TRUE,
     },
+
     [EFFECT_BRUTAL_PUNISHMENT] =
     {
         .battleScript = BattleScript_EffectBrutalPunishment,
         .battleTvScore = 1,
     },
 
-    
+    [EFFECT_SUPERPOWER] =
+    {
+        .battleScript = BattleScript_EffectSuperpower,
+        .battleTvScore = 1,
+    },
+
+    [EFFECT_LUNAR_IMPACT] =
+    {
+        .battleScript = BattleScript_EffectLunarImpact,
+        .battleTvScore = 1,
+    },
+
 };

@@ -7463,7 +7463,7 @@ const struct SpeciesInfo gSpeciesInfo[] =
        .iconPalIndex = 2,
        FOOTPRINT(Flubunny)
        .levelUpLearnset = sFlubunnyLevelUpLearnset,
-       .teachableLearnset = sFlubbunyTeachableLearnset,
+       .teachableLearnset = sFlubunnyTeachableLearnset,
        .eggMoveLearnset = sLunabbitEggMoveLearnset,
        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_LEPOOZE}),
     },

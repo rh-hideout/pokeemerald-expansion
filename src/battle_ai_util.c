@@ -517,6 +517,12 @@ static inline s32 SetFixedMoveBasePower(u32 battlerAtk, u32 move)
     case EFFECT_FURY_CUTTER:
         fixedBasePower = CalcFuryCutterBasePower(GetMovePower(move), min(gDisableStructs[battlerAtk].furyCutterCounter + 1, 5));
         break;
+    case EFFECT_SUPERPOWER: // R: test if this shit works
+        fixedBasePower = CalcSuperpowerBasePower(GetMovePower(move), min(gDisableStructs[battlerAtk].superpowerCounter + 1, 5));
+        break;
+    case EFFECT_LUNAR_IMPACT:
+        fixedBasePower = CalcSuperpowerBasePower(GetMovePower(move), min(gDisableStructs[battlerAtk].lunarImpactCounter + 1, 5));
+        break;
     default:
         fixedBasePower = 0;
         break;
