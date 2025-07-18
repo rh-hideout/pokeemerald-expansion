@@ -834,7 +834,7 @@ u32 GetItemPrice(u16 itemId)
 
 static bool32 DoesItemHavePluralName(u16 itemId)
 {
-    return (gItemsInfo[SanitizeItemId(itemId)].pluralName[0] != '\0');
+    return gItemsInfo[SanitizeItemId(itemId)].pluralName != NULL;
 }
 
 static const u8 *GetItemPluralName(u16 itemId)
