@@ -14038,6 +14038,5 @@ const struct Item gItemsInfo[] =
     },
 };
 
-#undef ITEM_NAME_
 #undef ITEM_NAME
 #undef ITEM_PLURAL_NAME
