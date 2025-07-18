@@ -2016,9 +2016,9 @@ void CloseTurn(u32 sourceLine)
     {
         if (!(DATA.actionBattlers & (1 << i)))
         {
-             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
+            if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
-             else
+            else
                 Move(sourceLine, &gBattleMons[i], (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
         }
     }
