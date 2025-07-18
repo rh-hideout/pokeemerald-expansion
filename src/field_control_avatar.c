@@ -222,6 +222,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
         return TRUE;
     if (input->pressedStartButton)
     {
+        FlagSet(FLAG_OPENED_START_MENU);
         PlaySE(SE_WIN_OPEN);
         ShowStartMenu();
         return TRUE;
