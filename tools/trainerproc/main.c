@@ -1331,6 +1331,12 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
         }
         trainer->pokemon_n++;
 
+        if (!is_empty_string(trainer->copy_pool))
+        {
+            set_show_parse_error(p, p->location, "trainer is set to copy mons from other trainer, but defines their own party");
+        }
+
+
         pokemon->nickname = token_string(&nickname);
         pokemon->species = token_string(&species);
         if (is_empty_token(&gender))
