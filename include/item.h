@@ -79,6 +79,7 @@ struct TmHmIndexKey
     u16 moveId;
 };
 
+extern const u8 gQuestionMarksItemName[];
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];

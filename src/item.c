@@ -824,7 +824,9 @@ static u16 SanitizeItemId(u16 itemId)
 
 const u8 *GetItemName(u16 itemId)
 {
-    return gItemsInfo[SanitizeItemId(itemId)].name;
+    const u8 *name = gItemsInfo[SanitizeItemId(itemId)].name;
+
+    return name == NULL ? gQuestionMarksItemName : name;
 }
 
 u32 GetItemPrice(u16 itemId)
