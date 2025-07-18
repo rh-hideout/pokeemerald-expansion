@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_BATTLE_MOVE_EFFECTS_H
 #define GUARD_CONSTANTS_BATTLE_MOVE_EFFECTS_H
 
-enum BattleMoveEffects
+enum __attribute__((packed)) BattleMoveEffects
 {
     EFFECT_PLACEHOLDER,
     EFFECT_HIT,
