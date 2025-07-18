@@ -842,8 +842,9 @@
 	.byte 0x95
 	.endm
 
-	.macro unused_96
+	.macro animatewildpokemonafterfailedpokeball battler:req
 	.byte 0x96
+	.byte \battler
 	.endm
 
 	.macro tryinfatuating failInstr:req
