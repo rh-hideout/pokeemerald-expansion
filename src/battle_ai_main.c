@@ -290,7 +290,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     {
         if (moveLimitations & (1u << moveIndex))
             SET_SCORE(battler, moveIndex, 0);
-        if (defaultScoreMoves & 1)
+        else if (defaultScoreMoves & 1)
             SET_SCORE(battler, moveIndex, AI_SCORE_DEFAULT);
         else
             SET_SCORE(battler, moveIndex, 0);
