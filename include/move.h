@@ -36,7 +36,7 @@ struct AdditionalEffect
     u8 onChargeTurnOnly:1;
     u8 sheerForceBoost:2; // Handles edge cases for Sheer Force
     u8 padding:3;
-    u8 chance:8; // 0% = effect certain, primary effect
+    u8 chance; // 0% = effect certain, primary effect
 };
 
 enum ProtectType
