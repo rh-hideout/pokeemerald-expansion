@@ -363,7 +363,6 @@ enum MoveEffects
     MOVE_EFFECT_REMOVE_ARG_TYPE,
     MOVE_EFFECT_RECHARGE,
     MOVE_EFFECT_RAGE,
-    MOVE_EFFECT_STEAL_ITEM,
     MOVE_EFFECT_PREVENT_ESCAPE,
     MOVE_EFFECT_NIGHTMARE,
     MOVE_EFFECT_ALL_STATS_UP,
@@ -399,8 +398,6 @@ enum MoveEffects
     MOVE_EFFECT_TRAP_BOTH,
     MOVE_EFFECT_ROUND,
     MOVE_EFFECT_DIRE_CLAW,
-    MOVE_EFFECT_STEALTH_ROCK,
-    MOVE_EFFECT_SPIKES,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_FLORAL_HEALING,
     MOVE_EFFECT_SECRET_POWER,
@@ -414,6 +411,11 @@ enum MoveEffects
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+
+    // Max move effects happen earlier in the execution chain.
+    // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
+    // Stone Axe can also fail to set up rocks if user faints where as Stonesurge will always go up.
+    // This means we need to be careful if we want to re-use those effects for (new) vanilla moves
     MOVE_EFFECT_RAISE_TEAM_ATTACK,
     MOVE_EFFECT_RAISE_TEAM_DEFENSE,
     MOVE_EFFECT_RAISE_TEAM_SPEED,
@@ -455,11 +457,14 @@ enum MoveEffects
     MOVE_EFFECT_LOWER_EVASIVENESS_SIDE,
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_CONFUSE_SIDE,
-    MOVE_EFFECT_STEELSURGE,
+    MOVE_EFFECT_STEELSURGE, // Steel type rocks
+    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused for rocks set up from Ceasless Edge (same but differ in execution order)
     MOVE_EFFECT_TORMENT_SIDE,
     MOVE_EFFECT_LOWER_SPEED_2_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
     MOVE_EFFECT_FIXED_POWER,
+    // Max move effects end. They can be used for (custom) normal moves.
+
     NUM_MOVE_EFFECTS
 };
 

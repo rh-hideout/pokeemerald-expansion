@@ -490,10 +490,16 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler) && IsBattlerGrounded(battler))
+        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN
+         && IsBattlerAlive(battler)
+         && !IsBattlerAtMaxHp(battler)
+         && !(gStatuses3[battler] & (STATUS3_SEMI_INVULNERABLE | STATUS3_HEAL_BLOCK))
+         && IsBattlerGrounded(battler))
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
+            if (gBattleStruct->moveDamage[battler] == 0)
+                gBattleStruct->moveDamage[battler] = -1;
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
             effect = TRUE;
         }
