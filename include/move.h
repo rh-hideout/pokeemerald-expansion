@@ -30,13 +30,13 @@ enum SheerForceBoost
 
 struct AdditionalEffect
 {
-    u16 moveEffect;
+    enum MoveEffects moveEffect:16;
     u8 self:1;
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
     u8 sheerForceBoost:2; // Handles edge cases for Sheer Force
     u8 padding:3;
-    u8 chance; // 0% = effect certain, primary effect
+    u8 chance:8; // 0% = effect certain, primary effect
 };
 
 enum ProtectType
@@ -67,7 +67,7 @@ struct MoveInfo
 {
     const u8 *name;
     const u8 *description;
-    u16 effect;
+    enum BattleMoveEffects effect:16;
     u16 type:5;     // Up to 32
     enum DamageCategory category:2;
     u16 power:9;    // up to 511

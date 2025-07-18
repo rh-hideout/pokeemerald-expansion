@@ -1021,6 +1021,8 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                             return TRUE;
                     }
                     break;
+                default:
+                    break;
             }
         }
         else // consider move effects that hinder the target
@@ -1071,6 +1073,8 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_EVS_MINUS_2:
                     if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
                         return TRUE;
+                    break;
+                default:
                     break;
             }
         }
@@ -1147,6 +1151,8 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
                     if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
                         || (noOfHitsToKo != 1 && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
                         return TRUE;
+                    break;
+                default:
                     break;
             }
         }
@@ -1713,6 +1719,8 @@ bool32 IsHazardMove(u32 move)
         {
         case MOVE_EFFECT_STEELSURGE:
             return TRUE;
+        default:
+            break;
         }
     }
     return FALSE;
@@ -1741,6 +1749,8 @@ bool32 IsHazardClearingMove(u32 move)
         {
         case MOVE_EFFECT_DEFOG:
             return TRUE;
+        default:
+            break;
         }
     }
 
@@ -2845,6 +2855,8 @@ static inline bool32 IsMoveSleepClauseTrigger(u32 move)
         case MOVE_EFFECT_EFFECT_SPORE_SIDE:
         case MOVE_EFFECT_YAWN_FOE:
             return TRUE;
+        default:
+            break;
         }
     }
     return FALSE;
@@ -4291,12 +4303,14 @@ bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, u32 aiI
 
             switch (gMovesInfo[moves[i]].additionalEffects[i].moveEffect)
             {
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                {
-                    if(aiIsFaster)
-                        return TRUE;
-                }
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_2:
+            {
+                if(aiIsFaster)
+                    return TRUE;
+            }
+            default:
+                break;
             }
         }
     }

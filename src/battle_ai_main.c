@@ -5164,6 +5164,8 @@ case EFFECT_GUARD_SPLIT:
                 case MOVE_EFFECT_EVS_PLUS_2:
                     ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_EVASION));
                     break;
+                default:
+                    break;
                 }
             }
             else
@@ -5207,6 +5209,8 @@ case EFFECT_GUARD_SPLIT:
                     ADJUST_SCORE(IncreaseStatUpScoreContrary(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
                     ADJUST_SCORE(IncreaseStatUpScoreContrary(battlerAtk, battlerDef, STAT_CHANGE_SPDEF));
                     break;
+                default:
+                    break;
                 }
             }
         }
@@ -5214,133 +5218,134 @@ case EFFECT_GUARD_SPLIT:
         {
             switch (additionalEffect->moveEffect)
             {
-                case MOVE_EFFECT_FLINCH:
-                    score += ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move);
+            case MOVE_EFFECT_FLINCH:
+                score += ShouldTryToFlinch(battlerAtk, battlerDef, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], move);
+                break;
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_2:
+                ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_SPEED));
+                break;
+            case MOVE_EFFECT_ATK_MINUS_1:
+            case MOVE_EFFECT_DEF_MINUS_1:
+            case MOVE_EFFECT_SP_ATK_MINUS_1:
+            case MOVE_EFFECT_SP_DEF_MINUS_1:
+            case MOVE_EFFECT_ACC_MINUS_1:
+            case MOVE_EFFECT_EVS_MINUS_1:
+                if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            case MOVE_EFFECT_ATK_MINUS_2:
+            case MOVE_EFFECT_DEF_MINUS_2:
+            case MOVE_EFFECT_SP_ATK_MINUS_2:
+            case MOVE_EFFECT_SP_DEF_MINUS_2:
+            case MOVE_EFFECT_ACC_MINUS_2:
+            case MOVE_EFFECT_EVS_MINUS_2:
+                if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            case MOVE_EFFECT_POISON:
+                IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
+                break;
+            case MOVE_EFFECT_CLEAR_SMOG:
+                score += AI_TryToClearStats(battlerAtk, battlerDef, FALSE);
+                break;
+            case MOVE_EFFECT_BUG_BITE:   // And pluck
+                if (gBattleMons[battlerDef].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                     break;
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_SPEED));
+                else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            case MOVE_EFFECT_INCINERATE:
+                if (gBattleMons[battlerDef].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                     break;
-                case MOVE_EFFECT_ATK_MINUS_1:
-                case MOVE_EFFECT_DEF_MINUS_1:
-                case MOVE_EFFECT_SP_ATK_MINUS_1:
-                case MOVE_EFFECT_SP_DEF_MINUS_1:
-                case MOVE_EFFECT_ACC_MINUS_1:
-                case MOVE_EFFECT_EVS_MINUS_1:
-                    if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case MOVE_EFFECT_ATK_MINUS_2:
-                case MOVE_EFFECT_DEF_MINUS_2:
-                case MOVE_EFFECT_SP_ATK_MINUS_2:
-                case MOVE_EFFECT_SP_DEF_MINUS_2:
-                case MOVE_EFFECT_ACC_MINUS_2:
-                case MOVE_EFFECT_EVS_MINUS_2:
-                    if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case MOVE_EFFECT_POISON:
-                    IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
-                    break;
-                case MOVE_EFFECT_CLEAR_SMOG:
-                    score += AI_TryToClearStats(battlerAtk, battlerDef, FALSE);
-                    break;
-                case MOVE_EFFECT_BUG_BITE:   // And pluck
-                    if (gBattleMons[battlerDef].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
-                        break;
-                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES)
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case MOVE_EFFECT_INCINERATE:
-                    if (gBattleMons[battlerDef].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
-                        break;
-                    else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
-                        ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-                case MOVE_EFFECT_STEAL_ITEM:
+                else if (GetItemPocket(aiData->items[battlerDef]) == POCKET_BERRIES || aiData->holdEffects[battlerDef] == HOLD_EFFECT_GEMS)
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            case MOVE_EFFECT_STEAL_ITEM:
+                {
+                    bool32 canSteal = FALSE;
+
+                    if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE)
+                        canSteal = TRUE;
+                    if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER || IsOnPlayerSide(battlerAtk))
+                        canSteal = TRUE;
+
+                    if (canSteal && aiData->items[battlerAtk] == ITEM_NONE
+                    && aiData->items[battlerDef] != ITEM_NONE
+                    && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
+                    && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
+                    && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
+                    && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
                     {
-                        bool32 canSteal = FALSE;
-
-                        if (B_TRAINERS_KNOCK_OFF_ITEMS == TRUE)
-                            canSteal = TRUE;
-                        if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER || IsOnPlayerSide(battlerAtk))
-                            canSteal = TRUE;
-
-                        if (canSteal && aiData->items[battlerAtk] == ITEM_NONE
-                        && aiData->items[battlerDef] != ITEM_NONE
-                        && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
-                        && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
-                        && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
-                        && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
+                        switch (aiData->holdEffects[battlerDef])
                         {
-                            switch (aiData->holdEffects[battlerDef])
-                            {
-                            case HOLD_EFFECT_NONE:
-                                break;
-                            case HOLD_EFFECT_CHOICE_BAND:
-                            case HOLD_EFFECT_CHOICE_SCARF:
-                            case HOLD_EFFECT_CHOICE_SPECS:
+                        case HOLD_EFFECT_NONE:
+                            break;
+                        case HOLD_EFFECT_CHOICE_BAND:
+                        case HOLD_EFFECT_CHOICE_SCARF:
+                        case HOLD_EFFECT_CHOICE_SPECS:
+                            ADJUST_SCORE(DECENT_EFFECT);
+                            break;
+                        case HOLD_EFFECT_TOXIC_ORB:
+                            if (ShouldPoison(battlerAtk, battlerAtk))
                                 ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_TOXIC_ORB:
-                                if (ShouldPoison(battlerAtk, battlerAtk))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_FLAME_ORB:
-                                if (ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk]))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_BLACK_SLUDGE:
-                                if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_IRON_BALL:
-                                if (HasMoveWithEffect(battlerAtk, EFFECT_FLING))
-                                    ADJUST_SCORE(DECENT_EFFECT);
-                                break;
-                            case HOLD_EFFECT_LAGGING_TAIL:
-                            case HOLD_EFFECT_STICKY_BARB:
-                                break;
-                            default:
-                                ADJUST_SCORE(WEAK_EFFECT);
-                                break;
-                            }
+                            break;
+                        case HOLD_EFFECT_FLAME_ORB:
+                            if (ShouldBurn(battlerAtk, battlerAtk, aiData->abilities[battlerAtk]))
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            break;
+                        case HOLD_EFFECT_BLACK_SLUDGE:
+                            if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            break;
+                        case HOLD_EFFECT_IRON_BALL:
+                            if (HasMoveWithEffect(battlerAtk, EFFECT_FLING))
+                                ADJUST_SCORE(DECENT_EFFECT);
+                            break;
+                        case HOLD_EFFECT_LAGGING_TAIL:
+                        case HOLD_EFFECT_STICKY_BARB:
+                            break;
+                        default:
+                            ADJUST_SCORE(WEAK_EFFECT);
+                            break;
                         }
-                        break;
                     }
                     break;
-                case MOVE_EFFECT_STEALTH_ROCK:
-                case MOVE_EFFECT_SPIKES:
-                    if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
-                    {
-                        if (gDisableStructs[battlerAtk].isFirstTurn)
-                            ADJUST_SCORE(BEST_EFFECT);
-                        else
-                            ADJUST_SCORE(DECENT_EFFECT);
-                    }
-                    break;
-                case MOVE_EFFECT_FEINT:
-                    if (GetMoveEffect(predictedMove) == EFFECT_PROTECT)
-                        ADJUST_SCORE(GOOD_EFFECT);
-                    break;
-                case MOVE_EFFECT_THROAT_CHOP:
-                    if (IsSoundMove(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)))
-                    {
-                        if (AI_IsFaster(battlerAtk, battlerDef, move))
-                            ADJUST_SCORE(GOOD_EFFECT);
-                        else
-                            ADJUST_SCORE(DECENT_EFFECT);
-                    }
-                    break;
-                case MOVE_EFFECT_WRAP:
-                    if (!HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
+                }
+                break;
+            case MOVE_EFFECT_STEALTH_ROCK:
+            case MOVE_EFFECT_SPIKES:
+                if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, aiData));
+                {
+                    if (gDisableStructs[battlerAtk].isFirstTurn)
                         ADJUST_SCORE(BEST_EFFECT);
-                    break;
-                case MOVE_EFFECT_SALT_CURE:
-                    if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_WATER) || IS_BATTLER_OF_TYPE(battlerDef, TYPE_STEEL))
+                    else
                         ADJUST_SCORE(DECENT_EFFECT);
-                    break;
-
+                }
+                break;
+            case MOVE_EFFECT_FEINT:
+                if (GetMoveEffect(predictedMove) == EFFECT_PROTECT)
+                    ADJUST_SCORE(GOOD_EFFECT);
+                break;
+            case MOVE_EFFECT_THROAT_CHOP:
+                if (IsSoundMove(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)))
+                {
+                    if (AI_IsFaster(battlerAtk, battlerDef, move))
+                        ADJUST_SCORE(GOOD_EFFECT);
+                    else
+                        ADJUST_SCORE(DECENT_EFFECT);
+                }
+                break;
+            case MOVE_EFFECT_WRAP:
+                if (!HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN) && ShouldTrap(battlerAtk, battlerDef, move))
+                    ADJUST_SCORE(BEST_EFFECT);
+                break;
+            case MOVE_EFFECT_SALT_CURE:
+                if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_WATER) || IS_BATTLER_OF_TYPE(battlerDef, TYPE_STEEL))
+                    ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            default:
+                break;
             }
         }
     }
@@ -6092,12 +6097,14 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
         switch (GetMoveAdditionalEffectById(move, i)->moveEffect)
         {
-            case MOVE_EFFECT_WRAP:
-                ADJUST_SCORE(AWFUL_EFFECT);
-                break;
-            case MOVE_EFFECT_FEINT:
-                ADJUST_SCORE(WORST_EFFECT);
-                break;
+        case MOVE_EFFECT_WRAP:
+            ADJUST_SCORE(AWFUL_EFFECT);
+            break;
+        case MOVE_EFFECT_FEINT:
+            ADJUST_SCORE(WORST_EFFECT);
+            break;
+        default:
+            break;
         }
     }
 

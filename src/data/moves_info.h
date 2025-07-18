@@ -298,7 +298,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .makesContact = TRUE,
         .punchingMove = TRUE,
         .additionalEffects = ADDITIONAL_EFFECTS({
-            .moveEffect = MOVE_EFFECT_BURN,
+            .moveEffect = EFFECT_CURSE,
             .chance = 10,
         }),
         .contestEffect = CONTEST_EFFECT_HIGHLY_APPEALING,
