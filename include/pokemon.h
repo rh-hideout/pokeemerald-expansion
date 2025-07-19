@@ -16,7 +16,7 @@
 #define FORM_SPECIES_END (0xffff)
 
 // Property labels for Get(Box)MonData / Set(Box)MonData
-enum {
+enum MonData {
     MON_DATA_PERSONALITY,
     MON_DATA_STATUS,
     MON_DATA_OT_ID,
@@ -231,6 +231,14 @@ struct PokemonSubstruct3
                              max(sizeof(struct PokemonSubstruct1),     \
                              max(sizeof(struct PokemonSubstruct2),     \
                                  sizeof(struct PokemonSubstruct3)))))
+
+enum SubstructType
+{
+    SUBSTRUCT_TYPE_0,
+    SUBSTRUCT_TYPE_1,
+    SUBSTRUCT_TYPE_2,
+    SUBSTRUCT_TYPE_3,
+};
 
 union PokemonSubstruct
 {
