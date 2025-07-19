@@ -9792,7 +9792,7 @@ uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, u16 a
 
         if (moveType == TYPE_GROUND && abilityDef == ABILITY_LEVITATE && !(gFieldStatuses & STATUS_FIELD_GRAVITY))
             modifier = UQ_4_12(0.0);
-        if (moveType == TYPE_WATER && abilityDef == ABILITY_MAGMA_ARMOR && !(gFieldStatuses & WEATHER_RAIN) && !(gFieldStatuses & WEATHER_DOWNPOUR))
+        if (moveType == TYPE_WATER && abilityDef == ABILITY_MAGMA_ARMOR && (gFieldStatuses & B_WEATHER_SUN))
             modifier = UQ_4_12(0.0);
         if (abilityDef == ABILITY_WONDER_GUARD && modifier <= UQ_4_12(1.0) && GetMovePower(move) != 0)
             modifier = UQ_4_12(0.0);

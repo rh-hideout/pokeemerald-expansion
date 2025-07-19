@@ -5,7 +5,7 @@
   "music": "MUS_VICTORY_ROAD",
   "region_map_section": "MAPSEC_VICTORY_ROAD",
   "requires_flash": false,
-  "weather": "WEATHER_NONE",
+  "weather": "WEATHER_SANDSTORM",
   "map_type": "MAP_TYPE_UNDERGROUND",
   "allow_cycling": true,
   "allow_escaping": true,

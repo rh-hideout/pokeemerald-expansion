@@ -11935,40 +11935,63 @@ Items: Full Restore / Full Restore
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Altaria
-Level: 44
-- Aerial Ace
-- Safeguard
-- Dragon Breath
-- Dragon Dance
-
-Delcatty
-Level: 43
-- Sing
-- Assist
-- Charm
-- Feint Attack
-
-Roselia
-Level: 44
-- Magical Leaf
-- Leech Seed
-- Giga Drain
-- Toxic
-
-Magneton
-Level: 41
-- Supersonic
-- Thunderbolt
-- Tri Attack
-- Screech
-
-Gardevoir
-Level: 45
-- Double Team
+Arceus-Steel @ Iron Plate
+Level: 93
+Nature: Modest
+EVs: 100 HP / 100 Spe
+- Judgment
+- Earth Power
+- Recover
 - Calm Mind
-- Psychic
-- Future Sight
+
+Hippowdon @ Assault Vest
+Level: 93
+Nature: Adamant
+Ability: Sand Force
+EVs: 100 HP / 100 Atk
+- Earthquake
+- Stone Edge
+- Fire Fang
+- Heavy Slam
+
+Palossand @ Leftovers
+Level: 93
+Nature: Bold
+Ability: Water Compaction
+EVs: 100 HP / 100 Def
+- Shore Up
+- Scorching Sands
+- Will o Wisp
+- Shadow Ball
+
+Rhyperior @ Choice Band
+Level: 93
+Nature: Adamant
+Ability: Reckless
+EVs: 100 Atk / 100 Spe
+- Head Smash
+- Double Edge
+- Earthquake
+- Submission
+
+Nihilego @ Assault Vest
+Level: 93
+Nature: Calm
+EVs: 100 HP / 100 SpA
+- Power Gem
+- Sludge Bomb
+- Acid Spray
+- Psyshock
+
+Aerodactyl @ Aerodactylite
+Level: 93
+Nature: Adamant
+EVs: 100 Atk / 100 Spe
+Ability: Pressure
+- Aqua Tail
+- Dual Wingbeat
+- Crunch
+- Head Smash
 
 === TRAINER_BRENDAN_ROUTE_103_MUDKIP ===
 Name: BRENDAN
@@ -12031,14 +12054,58 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Slugma
-Level: 29
+Dragapult @ Life Orb
+Level: 64
+Ability: Infiltrator
+Nature: Timid
+- Thunder Wave
+- Draco Meteor
+- Flamethrower
+- Shadow Ball
 
-Pelipper
-Level: 29
+Ferrothorn @ Leftovers
+Level: 64
+Ability: Iron Barbs
+Nature: Impish
+- Stealth Rock
+- Leech Seed
+- Protect
+- Gyro Ball
 
-Grovyle
-Level: 31
+Granbull @ Assault Vest
+Level: 64
+Ability: Intimidate
+Nature: Adamant
+- Play Rough
+- Close Combat
+- Crunch
+- Ice Fang
+
+Arcanine @ Choice Band
+Level: 64
+Ability: Intimidate
+Nature: Adamant
+- Flare Blitz
+- Wild Charge
+- Extreme Speed
+- Earthquake
+
+Archeops @ Iapapa Berry
+Level: 64
+Nature: Adamant
+- Stone Edge
+- Earthquake
+- Brave Bird
+- U-turn
+
+Sceptile @ Sceptilite
+Level: 64
+Nature: Hardy
+- Leaf Blade
+- Drain Punch
+- Draco Meteor
+- Dragon Dance
+
 
 === TRAINER_BRENDAN_ROUTE_103_TREECKO ===
 Name: BRENDAN
@@ -12105,14 +12172,58 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Pelipper
-Level: 34
+Hydreigon @ Choice Scarf
+Level: 64
+Nature: Modest
+Ability: Levitate
+- Draco Meteor
+- Flamethrower
+- U-Turn
+- Dark Pulse
 
-Lombre
-Level: 34
+Magnezone @ Choice Specs
+Level: 64
+Ability: Magnet Pull
+Nature: Modest
+- Thunderbolt
+- Flash Cannon
+- Volt Switch
+- Body Press
 
-Combusken
-Level: 34
+Hatterene @ Assault Vest
+Level: 64
+Ability: Magic Bounce
+Nature: Modest
+- Psyshock
+- Dazzling Gleam
+- Nuzzle
+- Mystical Fire
+
+Garganacl @ Leftovers
+Level: 64
+Nature: Impish
+- Salt Cure
+- Recover
+- Body Press
+- Protect
+
+Hawlucha @ Sitrus Berry
+Level: 64
+Ability: Unburden
+Nature: Adamant
+- Acrobatics
+- Drain Punch
+- Swords Dance
+- Taunt
+
+Blaziken @ Blazikenite
+Level: 64
+Ability: Speed Boost
+Nature: Adamant
+- Flare Blitz
+- High Jump Kick
+- Swords Dance
+- Protect
 
 === TRAINER_BRENDAN_ROUTE_103_TORCHIC ===
 Name: BRENDAN
@@ -12183,14 +12294,58 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Lombre
-Level: 29
+Garchomp @ Rocky Helmet
+Level: 64 
+Nature: Impish
+Ability: Rough Skin
+- Stealth Rock
+- Earthquake
+- Dragon Tail
+- Rest
 
-Slugma
-Level: 29
+Metagross @ Assault Vest 
+Level: 64 
+Nature: Adamant 
+Ability: Clear Body
+- Meteor Mash
+- Psychic Fangs
+- Ice Punch
+- Stomping Tantrum
 
-Marshtomp
-Level: 31
+Sylveon @ Life Orb 
+Level: 64 
+Nature: Modest 
+Ability: Pixilate
+- Hyper Voice
+- Mystical Fire
+- Hyper Beam
+- Psyshock
+
+Chandelure @ Choice Scarf
+Level: 64
+Nature: Modest
+Ability: Flash Fire
+- Shadow Ball
+- Flamethrower
+- Energy Ball
+- Trick
+
+Mandibuzz @ Heavy-Duty Boots
+Level: 64 
+Nature: Impish 
+Ability: Overcoat
+- Foul Play
+- Roost
+- U-turn
+- Defog
+
+Swampert @ Swampertite 
+Level: 64 
+Nature: Adamant 
+- Earthquake
+- Ice Punch
+- Waterfall
+- Rain Dance
 
 === TRAINER_MAY_ROUTE_103_MUDKIP ===
 Name: MAY
@@ -12259,14 +12414,58 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Slugma
-Level: 29
+Aggron @ Leftovers
+Level: 59
+Ability: Rock Head
+Nature: Relaxed
+- Stealth Rock
+- Head Smash
+- Metal Burst
+- Thunder Wave
 
-Lombre
-Level: 29
+Togekiss @ Float Stone
+Level: 59
+Ability: Serene Grace
+Nature: Timid
+- Air Slash
+- Aura Sphere
+- Tailwind
+- Ancient Power
 
-Grovyle
-Level: 31
+Dragonite @ Leftovers
+Level: 59
+Ability: Multiscale
+Nature: Adamant
+- Extreme Speed
+- Fire Punch
+- Dragon Claw
+- Roost
+
+Rillaboom @ Terrain Extender
+Level: 59
+Ability: Grassy Surge
+Nature: Adamant
+- Grassy Glide
+- U-Turn
+- Knock Off
+- Drain Punch
+
+Ampharos @ Leftovers
+Level: 59
+Ability: Static
+Nature: Modest
+- Tail Glow
+- Cotton Guard
+- Discharge
+- Dazzling Gleam
+
+Sceptile @ Sceptilite
+Level: 59
+Nature: Modest
+- Shed Tail
+- Giga Drain
+- Draco Meteor
+- Synthesis
 
 === TRAINER_MAY_ROUTE_103_TREECKO ===
 Name: MAY
@@ -12335,14 +12534,58 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Pelipper
-Level: 29
+Diancie @ Light Clay
+Level: 59
+Ability: Solid Rock
+Nature: Lax
+- Light Screen
+- Reflect
+- Diamond Storm
+- Stealth Rock
 
-Lombre
-Level: 29
+Corviknight @ Leftovers
+Level: 59
+Ability: Mirror Armor
+Nature: Lax
+- Bulk Up
+- Body Press
+- Power Trip
+- Roost
 
-Combusken
-Level: 31
+Lucario @ Float Stone
+Level: 59
+Ability: Justified
+Nature: Adamant
+- Bullet Punch
+- Extreme Speed
+- Swords Dance
+- Close Combat
+
+Porygon Z @ Wise Glasses
+Level: 59
+Ability: Adaptability
+Nature: Modest
+- Tri Attack
+- Hyper Beam
+- Ice Beam
+- Thunderbolt 
+
+Aerodactyl @ Choice Band
+Level: 59
+Ability: Rock Head
+Nature: Jolly
+- Stone Edge
+- Earthquake
+- Brave Bird
+- Double Edge
+
+Blaziken @ Blazikenite
+Level: 59
+Nature: Jolly
+- Substitute
+- Blaze Kick
+- High Jump Kick
+- Swords Dance
 
 === TRAINER_MAY_ROUTE_103_TORCHIC ===
 Name: MAY
@@ -12410,14 +12653,58 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Lombre
-Level: 29
+Tyrantrum @ Zoom Lens
+Level: 59
+Ability: Rock Head
+Nature: Brave
+- Stealth Rock
+- Head Smash
+- Dragon Rush
+- Iron Tail
 
-Slugma
-Level: 29
+Steelix @ Leftovers
+Level: 59
+Ability: Sheer Force
+Nature: Adamant
+- Roar
+- Spikes
+- Iron Tail
+- Fire Fang
 
-Marshtomp
-Level: 31
+Granbull @ Heavy-Duty Boots
+Level: 59
+Ability: Intimidate
+Nature: Jolly
+- Play Rough
+- Close Combat
+- Trailblaze
+- U-Turn
+
+Cyclizar @ Heavy-Duty Boots
+Level: 59
+Ability: Regenerator
+Nature: Modest
+- Draco Meteor
+- Rapid Spin
+- Shed Tail
+- U-Turn
+
+Wigglytuff @ Leftovers
+Level: 59
+Ability: Competitive
+Nature: Relaxed
+- Wish
+- Protect
+- Baton Pass
+- Alluring Voice
+
+Swampert @ Swampertite
+Level: 59
+Nature: Adamant
+- Rain Dance
+- Earthquake
+- Liquidation
+- Poison Jab
 
 === TRAINER_ISAAC_1 ===
 Name: ISAAC
@@ -15384,17 +15671,55 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Altaria @ Altarianite
+Level: 80
+Nature: Modest
+- Double Edge
+- Draco Meteor
+- Brave Bird
+- Dragon Dance
 
-Slugma
-Level: 32
+Melmetal @ Choice Band
+Level: 80
+Nature: Adamant
+- Double Iron Bash
+- Earthquake
+- Drain Punch
+- Thunder Punch
 
-Pelipper
-Level: 32
+Haxorus @ Loaded Dice
+Level: 80
+Nature: Adamant
+Ability: Mold Breaker
+- Swords Dance
+- Scale Shot
+- Close Combat
+- Earthquake
 
-Grovyle
-Level: 34
+Iron Moth @ Booster Energy
+Level: 80
+Nature: Calm
+- Fiery Dance
+- Sludge Wave
+- Discharge
+- Bug Buzz
+
+Nihilego @ Assault Vest
+Level: 80
+Nature: Modest
+- Power Gem
+- Sludge Bomb
+- Venoshock
+- Psyshock
+
+Sceptile @ White Herb
+Level: 80
+Nature: Modest
+Ability: Unburden
+- Leaf Storm
+- Draco Meteor
+- Focus Blast
+- Shed Tail
 
 === TRAINER_BRENDAN_LILYCOVE_TREECKO ===
 Name: BRENDAN
@@ -15405,17 +15730,57 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Enamorus @ Float Stone
+Level: 80
+Nature: Timid
+Ability: Contrary
+- Mystical Fire
+- Moonblast
+- Superpower
+- Grass Knot
 
-Pelipper
-Level: 32
+Raging Bolt @ Booster Energy
+Level: 80
+Nature: Modest 
+- Thunderclap
+- Volt Switch
+- Draco Meteor
+- Snarl
 
-Ludicolo
-Level: 32
+Iron Crown @ Assault Vest
+Level: 80
+Nature: Modest
+- Tachyon Cutter
+- Psychic Noise
+- Future Sight
+- Volt Switch
 
-Combusken
-Level: 34
+Alakazam @ Alakazite
+Level: 80
+Nature: Modest
+Ability: Magic Guard
+- Psychic
+- Charge Beam
+- Dazzling Gleam
+- Grass Knot
+
+Garchomp @ Rocky Helmet
+Level: 80
+Nature: Impish
+Ability: Rough Skin
+- Earthquake
+- Dragon Tail
+- Stealth Rock
+- Stone Edge
+
+Blaziken @ Focus Sash
+Level: 80
+Nature: Adamant
+Ability: Speed Boost
+- Blaze Kick
+- Drain Punch
+- Swords Dance
+- Acrobatics
 
 === TRAINER_BRENDAN_LILYCOVE_TORCHIC ===
 Name: BRENDAN
@@ -15426,17 +15791,55 @@ Music: Male
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Druddigon @ Rocky Helmet
+Level: 80
+Nature: Impish
+Ability: Rough Skin
+- Stealth Rock
+- Dragon Tail
+- Stomping Tantrum
+- Iron Head
 
-Ludicolo
-Level: 32
+Metagross @ Metagrossite
+Level: 80
+Nature: Adamant
+- Bullet Punch
+- Meteor Mash
+- Zen Headbutt
+- Knock Off
 
-Slugma
-Level: 32
+Iron Valiant @ Booster Energy
+Level: 80
+Nature: Hardy
+- Moonblast
+- Close Combat
+- Encore
+- Fire Punch
 
-Marshtomp
-Level: 34
+Xurkitree @ Salac Berry
+Level: 80
+Nature: Modest
+- Tail Glow
+- Thunderbolt
+- Energy Ball
+- Substitute
+
+Dragapult @ Heavy-Duty Boots
+Level: 80
+Nature: Bashful
+Ability: Infiltrator
+- Will o Wisp
+- Hex
+- Substitute
+- Dragon Darts
+
+Swampert @ Assault Vest
+Level: 80
+Nature: Impish
+- Earthquake
+- Waterfall
+- Stone Edge
+- Knock Off
 
 === TRAINER_MAY_LILYCOVE_MUDKIP ===
 Name: MAY
@@ -15447,17 +15850,56 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Glimmora @ Focus Sash
+Level: 77
+Ability: Toxic Debris
+Nature: Timid
+- Stealth Rock
+- Spikes
+- Power Gem
+- Sludge Bomb
 
-Slugma
-Level: 32
+Iron Jugulis @ Life Orb
+Level: 77
+Nature: Timid
+- Air Slash
+- Dark Pulse
+- Dragon Pulse
+- Flamethrower
 
-Pelipper
-Level: 32
+Kommo-O @ Sitrus Berry
+Level: 77
+Ability: Overcoat
+Nature: Hardy
+- Clanging Scales
+- Clangorous Soul
+- Close Combat
+- Poison Jab
 
-Grovyle
-Level: 34
+Tinkaton @ Air Balloon
+Level: 77
+Ability: Pickpocket
+Nature: Calm
+- Gigaton Hammer
+- Encore
+- Thunder Wave
+- Knock Off
+
+Gholdengo @ Heavy-Duty Boots
+Level: 77
+Nature: Bold
+- Recover
+- Make it Rain
+- Nasty Plot
+- Shadow Ball
+
+Sceptile @ Sceptilite
+Level: 77
+Nature: Modest
+- Energy Ball
+- Dragon Pulse
+- Focus Blast
+- Giga Drain
 
 === TRAINER_MAY_LILYCOVE_TREECKO ===
 Name: MAY
@@ -15468,17 +15910,56 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Clodsire @ Mental Herb
+Level: 77
+Ability: Water Absorb
+Nature: Calm
+- Stealth Rock
+- Spikes
+- Earthquake
+- Poison Jab
 
-Pelipper
-Level: 32
+Brute Bonnet @ Choice Band
+Level: 77
+Nature: Adamant
+- Sucker Punch
+- Seed Bomb
+- Zen Headbutt
+- Stomping Tantrum
 
-Ludicolo
-Level: 32
+Salamence @ Life Orb
+Level: 77
+Ability: Intimidate
+Nature: Jolly
+- Dragon Claw
+- Double Edge
+- Fly
+- Dragon Dance
 
-Combusken
-Level: 34
+Rapidash Galar @ Life Orb
+Level: 77
+Ability: Speed Boost
+Nature: Adamant
+- Play Rough
+- Zen Headbutt
+- Throat Chop
+- Wild Charge
+
+Gholdengo @ Heavy-Duty Boots
+Level: 77
+Nature: Bold
+- Recover
+- Make it Rain
+- Nasty Plot
+- Shadow Ball
+
+Blaziken @ Blazikenite
+Level: 77
+Nature: Adamant
+- Flare Blitz
+- Protect
+- Close Combat
+- Swords Dance
 
 === TRAINER_MAY_LILYCOVE_TORCHIC ===
 Name: MAY
@@ -15489,17 +15970,55 @@ Music: Female
 Double Battle: No
 AI: Omniscient / Try To Faint / Smart Mon Choices / Hp Aware / Check Viability / Smart Switching
 
-Tropius
-Level: 31
+Deoxys Defense @ Leftovers
+Level: 77
+Ability: Pressure
+Nature: Calm
+- Stealth Rock
+- Spikes
+- Toxic
+- Cosmic Power
 
-Ludicolo
-Level: 32
+Slither Wing @ Choice Band
+Level: 77
+Nature: Adamant
+- First Impression
+- U-Turn
+- Close Combat
+- Earthquake
 
-Slugma
-Level: 32
+Hydreigon @ Life Orb
+Level: 77
+Nature: Modest
+- Draco Meteor
+- Dark Pulse
+- Hyper Beam
+- Flamethrower
 
-Marshtomp
-Level: 34
+Togekiss @ Kings Rock
+Level: 77
+Nature: Timid
+Ability: Serene Grace
+- Air Slash
+- Aura Sphere
+- Tri Attack
+- Roost
+
+Gholdengo @ Heavy-Duty Boots
+Level: 77
+Nature: Bold
+- Recover
+- Make it Rain
+- Nasty Plot
+- Shadow Ball
+
+Swampert @ Swampertite
+Level: 77
+Nature: Jolly
+- Earthquake
+- Rain Dance
+- Liquidation
+- Stone Edge
 
 === TRAINER_JONAH ===
 Name: JONAH

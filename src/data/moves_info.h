@@ -1815,7 +1815,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "A reckless body slam that\n"
             "also hurts the user."),
         .effect = EFFECT_RECOIL,
-        .power = 80,
+        .power = 90,
         .type = TYPE_FIGHTING,
         .accuracy = 80,
         .pp = B_UPDATED_MOVE_DATA >= GEN_6 ? 20 : 25,
@@ -19127,7 +19127,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "High critical hit chance. 50%\n"
             "chance to poison the foe."),
         .effect = EFFECT_HIT,
-        .power = B_UPDATED_MOVE_DATA >= GEN_9 ? 80 : 60,
+        .power = 70,
         .type = TYPE_POISON,
         .criticalHitStage = 1,
         .accuracy = 100,
