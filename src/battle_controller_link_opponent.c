@@ -250,7 +250,7 @@ static void Intro_TryShinyAnimShowHealthbox(u32 battler)
 
 
             DestroySprite(&gSprites[gBattleControllerData[battler]]);
-            SetBattlerShadowSpriteCallback(battler, GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES));
+            SetBattlerShadowSpriteCallback(battler, GetBattlerVisualSpecies(battler));
 
             gBattleSpritesDataPtr->animationData->introAnimActive = FALSE;
             gBattleSpritesDataPtr->healthBoxesData[battler].bgmRestored = FALSE;

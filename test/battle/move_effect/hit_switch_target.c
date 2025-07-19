@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Dragon Tail switches the target with a random non-battler, n
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail does not fail if no replacements")
+SINGLE_BATTLE_TEST("Dragon Tail fails if no replacements")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Dragon Tail does not fail if no replacements")
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail does not fail if replacements fainted")
+SINGLE_BATTLE_TEST("Dragon Tail fails if replacements fainted")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
