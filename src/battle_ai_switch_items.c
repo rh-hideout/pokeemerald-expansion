@@ -1902,6 +1902,7 @@ static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struc
         typeEffectiveness1 = uq4_12_multiply(typeEffectiveness1, (GetTypeModifier(atkType1, defType2)));
     if (typeEffectiveness1 == 0) // Immunity
         typeEffectiveness1 = UQ_4_12(0.1);
+        
     if (atkType2 != atkType1)
     {
         typeEffectiveness2 = uq4_12_multiply(typeEffectiveness2, (GetTypeModifier(atkType2, defType1)));
