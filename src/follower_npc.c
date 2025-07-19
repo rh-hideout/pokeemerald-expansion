@@ -83,6 +83,9 @@ void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value)
     case FNPC_DATA_COME_OUT_DOOR:
         gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs = value;
         break;
+    case FNPC_DATA_FORCED_MOVEMENT:
+        gSaveBlock3Ptr->NPCfollower.forcedMovement = value;
+        break;
     case FNPC_DATA_OBJ_ID:
         gSaveBlock3Ptr->NPCfollower.objId = value;
         break;
@@ -155,6 +158,8 @@ u32 GetFollowerNPCData(enum FollowerNPCDataTypes type)
         return gSaveBlock3Ptr->NPCfollower.createSurfBlob;
     case FNPC_DATA_COME_OUT_DOOR:
         return gSaveBlock3Ptr->NPCfollower.comeOutDoorStairs;
+    case FNPC_DATA_FORCED_MOVEMENT:
+        return gSaveBlock3Ptr->NPCfollower.forcedMovement;
     case FNPC_DATA_OBJ_ID:
         return gSaveBlock3Ptr->NPCfollower.objId;
     case FNPC_DATA_CURRENT_SPRITE:
@@ -720,9 +725,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
 
     MoveCoords(direction, &followerX, &followerY);
     nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
-
-    if (FindTaskIdByFunc(Task_MoveNPCFollowerAfterForcedMovement) == TASK_NONE)
-        follower->facingDirectionLocked = FALSE;
+    follower->facingDirectionLocked = FALSE;
 
     // Follower won't do delayed movement until player does a movement.
     if (!IsStateMovement(state) && delayedState)
@@ -777,10 +780,6 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
     case MOVEMENT_ACTION_WALK_FAST_DOWN ... MOVEMENT_ACTION_WALK_FAST_RIGHT:
-        // Handle player on waterfall.
-        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && (state == MOVEMENT_ACTION_WALK_FAST_UP))
-            return MOVEMENT_INVALID;
-
         // Handle ice tile (some walking animation).
         if (MetatileBehavior_IsIce(follower->currentMetatileBehavior) || MetatileBehavior_IsTrickHouseSlipperyFloor(follower->currentMetatileBehavior))
             follower->disableAnim = TRUE;
@@ -788,6 +787,9 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         // Handle surfing.
         if (GetFollowerNPCData(FNPC_DATA_CURRENT_SPRITE) == FOLLOWER_NPC_SPRITE_INDEX_SURF && GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID))
             RETURN_STATE(MOVEMENT_ACTION_SURF_STILL_DOWN, direction);
+
+        if (MetatileBehavior_IsMuddySlope(follower->currentMetatileBehavior))
+            follower->facingDirectionLocked = TRUE;
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_FAST_DOWN, direction);
 
@@ -798,10 +800,6 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         RETURN_STATE(MOVEMENT_ACTION_WALK_FASTER_DOWN, direction);
 
     case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN ... MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
-        // Handle player on waterfall.
-        if (PlayerIsUnderWaterfall(&gObjectEvents[gPlayerAvatar.objectEventId]) && IsPlayerSurfingNorth())
-            return MOVEMENT_INVALID;
-
         RETURN_STATE(MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN, direction);
 
     // Acro bike.
@@ -1544,37 +1542,20 @@ void FollowerNPC_TryRemoveFollowerOnWhiteOut(void)
 #undef tDoorY
 
 // Task data
-#define PREVENT_PLAYER_STEP     0
-#define DO_ALL_FORCED_MOVEMENTS 1
-#define NPC_INTO_PLAYER         2
-#define ENABLE_PLAYER_STEP      3
+#define NPC_INTO_PLAYER         0
+#define ENABLE_PLAYER_STEP      1
 
 void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
 {
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    // Prevent player input until all forced mmovements are done and the follower is hidden.
-    if (gTasks[taskId].tState == PREVENT_PLAYER_STEP)
+    // The NPC will take an extra step and be on the same tile as the player.
+    if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
     {
-        gPlayerAvatar.preventStep = TRUE;
-        gTasks[taskId].tState = DO_ALL_FORCED_MOVEMENTS;
-    }
-    // The player will keep doing forced movments until they land on a non-forced-move metatile or hit collision.
-    else if (gTasks[taskId].tState == DO_ALL_FORCED_MOVEMENTS && ObjectEventClearHeldMovementIfFinished(player) != 0)
-    {
-        // Lock follower facing direction for muddy slope.
         if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
             follower->facingDirectionLocked = TRUE;
 
-        if (TryDoMetatileBehaviorForcedMovement() == 0)
-            gTasks[taskId].tState = NPC_INTO_PLAYER;
-
-        return;
-    }
-    // The NPC will take an extra step and be on the same tile as the player.
-    else if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
-    {
         ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
         gTasks[taskId].tState = ENABLE_PLAYER_STEP;
         return;
@@ -1585,14 +1566,13 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
         follower->facingDirectionLocked = FALSE;
         HideNPCFollower();
         SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+        SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FALSE);
         gPlayerAvatar.preventStep = FALSE;
         DestroyTask(taskId);
     }
 }
 
 #undef tState
-#undef PREVENT_PLAYER_STEP
-#undef DO_ALL_FORCED_MOVEMENTS
 #undef NPC_INTO_PLAYER
 #undef ENABLE_PLAYER_STEP
 
@@ -1628,7 +1608,6 @@ void ScriptDestroyFollowerNPC(struct ScriptContext *ctx)
         return;
 
     RemoveObjectEvent(&gObjectEvents[GetFollowerNPCData(FNPC_DATA_OBJ_ID)]);
-    FlagSet(GetFollowerNPCData(FNPC_DATA_EVENT_FLAG));
     ClearFollowerNPCData();
     UpdateFollowingPokemon();
 }
