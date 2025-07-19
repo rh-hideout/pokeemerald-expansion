@@ -1912,7 +1912,9 @@ static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struc
             typeEffectiveness2 = UQ_4_12(0.1);
     }
     else
+    {
         typeEffectiveness2 = typeEffectiveness1;
+    }
 
     return typeEffectiveness1 + typeEffectiveness2;
 }
