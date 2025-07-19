@@ -18,4 +18,12 @@ enum Region
     REGIONS_COUNT,
 };
 
+enum KantoSubRegion
+{
+    KANTO_SUB_KANTO,
+    KANTO_SUB_SEVII123,
+    KANTO_SUB_SEVII45,
+    KANTO_SUB_SEVII67
+};
+
 #endif  // GUARD_CONSTANTS_REGIONS_H

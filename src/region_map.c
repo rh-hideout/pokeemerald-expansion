@@ -19,6 +19,7 @@
 #include "field_effect.h"
 #include "field_specials.h"
 #include "fldeff.h"
+#include "regions.h"
 #include "region_map.h"
 #include "decompress.h"
 #include "constants/region_map_sections.h"
@@ -970,6 +971,8 @@ static u16 GetMapSecIdAt(u16 x, u16 y)
     }
     y -= MAPCURSOR_Y_MIN;
     x -= MAPCURSOR_X_MIN;
+    if (GetCurrentRegion() == REGION_KANTO)
+        return sRegionMapSections_Kanto[y][x];
     return sRegionMap_MapSectionLayout[y][x];
 }
 

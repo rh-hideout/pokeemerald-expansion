@@ -12,6 +12,7 @@
 #include "palette.h"
 #include "pokedex.h"
 #include "pokedex_area_screen.h"
+#include "regions.h"
 #include "region_map.h"
 #include "roamer.h"
 #include "rtc.h"
@@ -299,6 +300,7 @@ static bool8 DrawAreaGlow(void)
 
 static void FindMapsWithMon(u16 species)
 {
+    enum Region currentRegion;
     u16 i;
     struct Roamer *roamer;
 
@@ -339,9 +341,15 @@ static void FindMapsWithMon(u16 species)
         }
     }
 
+    currentRegion = GetCurrentRegion();
     // Add regular species to the area map
     for (i = 0; gWildMonHeaders[i].mapGroup != MAP_GROUP(MAP_UNDEFINED); i++)
     {
+        u32 headerSectionId = Overworld_GetMapHeaderByGroupAndId(gWildMonHeaders[i].mapGroup, gWildMonHeaders[i].mapNum)->regionMapSectionId;
+
+        if (GetRegionForSectionId(headerSectionId) != currentRegion)
+            continue;
+
         if (MapHasSpecies(&gWildMonHeaders[i].encounterTypes[gAreaTimeOfDay], species))
         {
             switch (gWildMonHeaders[i].mapGroup)
