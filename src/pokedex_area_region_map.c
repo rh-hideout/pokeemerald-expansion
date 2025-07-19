@@ -29,7 +29,6 @@ static const u32 *GetDexAreaMapTilemap()
             switch (GetKantoSubmap(gMapHeader.regionMapSectionId))
             {
             case KANTO_SUB_SEVII123:
-                DebugPrintfLevel(MGBA_LOG_ERROR, "sevii123");
                 return sPokedexAreaMapSevii123_Tilemap;
             case KANTO_SUB_SEVII45:
             case KANTO_SUB_SEVII67:

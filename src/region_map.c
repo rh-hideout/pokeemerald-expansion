@@ -971,9 +971,25 @@ static u16 GetMapSecIdAt(u16 x, u16 y)
     }
     y -= MAPCURSOR_Y_MIN;
     x -= MAPCURSOR_X_MIN;
-    if (GetCurrentRegion() == REGION_KANTO)
-        return sRegionMapSections_Kanto[y][x];
-    return sRegionMap_MapSectionLayout[y][x];
+
+    switch (GetCurrentRegion())
+    {
+        case REGION_KANTO:
+            switch (GetKantoSubmap(gMapHeader.regionMapSectionId))
+            {
+                case KANTO_SUB_SEVII123:
+                    return sRegionMapSections_Sevii123[y][x];
+                case KANTO_SUB_SEVII45:
+                    return sRegionMapSections_Sevii45[y][x];
+                case KANTO_SUB_SEVII67:
+                    return sRegionMapSections_Sevii67[y][x];
+                case KANTO_SUB_KANTO:
+                    return sRegionMapSections_Kanto[y][x];
+            }
+        case REGION_HOENN:
+        default:
+            return sRegionMap_MapSectionLayout[y][x];
+    }
 }
 
 static void InitMapBasedOnPlayerLocation(void)
