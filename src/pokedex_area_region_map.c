@@ -20,6 +20,12 @@ static const u32 sPokedexAreaMapKanto_Tilemap[] = INCBIN_U32("graphics/pokedex/r
 static const u16 ALIGNED(4) sPokedexAreaMapSevii123_Pal[] = INCBIN_U16("graphics/pokedex/region_map_sevii123.gbapal");
 static const u32 sPokedexAreaMapSevii123_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_sevii123.8bpp.smol");
 static const u32 sPokedexAreaMapSevii123_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_sevii123.bin.smolTM");
+static const u16 ALIGNED(4) sPokedexAreaMapSevii45_Pal[] = INCBIN_U16("graphics/pokedex/region_map_sevii45.gbapal");
+static const u32 sPokedexAreaMapSevii45_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_sevii45.8bpp.smol");
+static const u32 sPokedexAreaMapSevii45_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_sevii45.bin.smolTM");
+static const u16 ALIGNED(4) sPokedexAreaMapSevii67_Pal[] = INCBIN_U16("graphics/pokedex/region_map_sevii67.gbapal");
+static const u32 sPokedexAreaMapSevii67_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_sevii67.8bpp.smol");
+static const u32 sPokedexAreaMapSevii67_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_sevii67.bin.smolTM");
 
 static const u32 *GetDexAreaMapTilemap()
 {
@@ -31,7 +37,9 @@ static const u32 *GetDexAreaMapTilemap()
             case KANTO_SUB_SEVII123:
                 return sPokedexAreaMapSevii123_Tilemap;
             case KANTO_SUB_SEVII45:
+                return sPokedexAreaMapSevii45_Tilemap;
             case KANTO_SUB_SEVII67:
+                return sPokedexAreaMapSevii67_Tilemap;
             case KANTO_SUB_KANTO:
             default:
                 return sPokedexAreaMapKanto_Tilemap;
@@ -52,7 +60,9 @@ static const u32 *GetDexAreaMapGfx()
             case KANTO_SUB_SEVII123:
                 return sPokedexAreaMapSevii123_Gfx;
             case KANTO_SUB_SEVII45:
+                return sPokedexAreaMapSevii45_Gfx;
             case KANTO_SUB_SEVII67:
+                return sPokedexAreaMapSevii67_Gfx;
             case KANTO_SUB_KANTO:
             default:
                 return sPokedexAreaMapKanto_Gfx;
@@ -73,7 +83,9 @@ static const u16 *GetDexAreaMapPalette()
             case KANTO_SUB_SEVII123:
                 return sPokedexAreaMapSevii123_Pal;
             case KANTO_SUB_SEVII45:
+                return sPokedexAreaMapSevii45_Pal;
             case KANTO_SUB_SEVII67:
+                return sPokedexAreaMapSevii67_Pal;
             case KANTO_SUB_KANTO:
             default:
                 return sPokedexAreaMapKanto_Pal;
@@ -94,7 +106,9 @@ static u32 GetDexAreaMapPaletteSize()
             case KANTO_SUB_SEVII123:
                 return sizeof(sPokedexAreaMapSevii123_Pal);
             case KANTO_SUB_SEVII45:
+                return sizeof(sPokedexAreaMapSevii45_Pal);
             case KANTO_SUB_SEVII67:
+                return sizeof(sPokedexAreaMapSevii67_Pal);
             case KANTO_SUB_KANTO:
             default:
                 return sizeof(sPokedexAreaMapKanto_Pal);
