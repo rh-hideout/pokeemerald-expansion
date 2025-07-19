@@ -3871,6 +3871,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 BattleScriptPushCursorAndCallback(BattleScript_ActivateTeraformZero);
                 effect++;
             }
+            break;
         case ABILITY_SCHOOLING:
             if (gBattleMons[battler].level < 20)
                 break;
