@@ -200,7 +200,7 @@ extern const struct FollowerMsgInfo gFollowerPoisonedMessages[];
 
 static inline u16 SanitizeTrainerId(u16 trainerId)
 {
-    if (trainerId >= TRAINERS_COUNT)
+    if (trainerId >= TRAINERS_COUNT && !(trainerId >= MAX_TRAINERS_COUNT && trainerId < (MAX_TRAINERS_COUNT + PARTNER_COUNT)))
         return TRAINER_NONE;
     return trainerId;
 }
@@ -212,7 +212,10 @@ static inline const struct Trainer *GetTrainerStructFromId(u16 trainerId)
     sanitizedTrainerId = SanitizeTrainerId(trainerId);
     enum DifficultyLevel difficulty = GetTrainerDifficultyLevel(sanitizedTrainerId);
 
-    return &gTrainers[difficulty][sanitizedTrainerId];
+    if ((trainerId >= MAX_TRAINERS_COUNT) && (trainerId < (MAX_TRAINERS_COUNT + PARTNER_COUNT)))
+        return &gBattlePartners[difficulty][sanitizedTrainerId - TRAINER_PARTNER(PARTNER_NONE)];
+    else
+        return &gTrainers[difficulty][sanitizedTrainerId];
 }
 
 static inline const enum TrainerClassID GetTrainerClassFromId(u16 trainerId)
