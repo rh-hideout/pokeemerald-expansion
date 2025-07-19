@@ -1021,6 +1021,8 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                             return TRUE;
                     }
                     break;
+                default:
+                    break;
             }
         }
         else // consider move effects that hinder the target
@@ -1071,6 +1073,8 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_EVS_MINUS_2:
                     if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
                         return TRUE;
+                    break;
+                default:
                     break;
             }
         }
@@ -1147,6 +1151,8 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
                     if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
                         || (noOfHitsToKo != 1 && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
                         return TRUE;
+                    break;
+                default:
                     break;
             }
         }
@@ -1638,6 +1644,33 @@ u32 AI_GetWeather(void)
     return gBattleWeather;
 }
 
+u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
+{
+    u32 ability = battleMon.ability;
+    // Forced weather behaviour
+    if (!AI_WeatherHasEffect())
+        return B_WEATHER_NONE;
+    if (ability == ABILITY_CLOUD_NINE || ability == ABILITY_AIR_LOCK)
+        return B_WEATHER_NONE;
+    if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
+        return gBattleWeather;
+        
+    // Switchin will introduce new weather
+    switch(ability)
+    {
+    case ABILITY_DRIZZLE:
+        return B_WEATHER_RAIN_NORMAL;
+    case ABILITY_DROUGHT:
+        return B_WEATHER_SUN_NORMAL;
+    case ABILITY_SAND_STREAM:
+        return B_WEATHER_SANDSTORM;
+    case ABILITY_SNOW_WARNING:
+        return B_SNOW_WARNING >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+    default:
+        return gBattleWeather;
+    }    
+}
+
 enum WeatherState IsWeatherActive(u32 flags)
 {
     enum WeatherState state = WEATHER_INACTIVE;
@@ -1713,6 +1746,8 @@ bool32 IsHazardMove(u32 move)
         {
         case MOVE_EFFECT_STEELSURGE:
             return TRUE;
+        default:
+            break;
         }
     }
     return FALSE;
@@ -1741,6 +1776,8 @@ bool32 IsHazardClearingMove(u32 move)
         {
         case MOVE_EFFECT_DEFOG:
             return TRUE;
+        default:
+            break;
         }
     }
 
@@ -2717,7 +2754,7 @@ bool32 IsStatLoweringEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsSelfStatLoweringEffect(enum BattleMoveEffects effect)
+bool32 IsSelfStatLoweringEffect(enum MoveEffects effect)
 {
     // Self stat lowering moves like Overheart, Superpower etc.
     switch (effect)
@@ -2745,7 +2782,7 @@ bool32 IsSelfStatLoweringEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsSelfStatRaisingEffect(enum BattleMoveEffects effect)
+bool32 IsSelfStatRaisingEffect(enum MoveEffects effect)
 {
     // Self stat lowering moves like Power Up Punch or Charge Beam
     switch (effect)
@@ -2845,6 +2882,8 @@ static inline bool32 IsMoveSleepClauseTrigger(u32 move)
         case MOVE_EFFECT_EFFECT_SPORE_SIDE:
         case MOVE_EFFECT_YAWN_FOE:
             return TRUE;
+        default:
+            break;
         }
     }
     return FALSE;
@@ -4057,7 +4096,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
 
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate));
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
@@ -4291,12 +4330,14 @@ bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, u32 aiI
 
             switch (gMovesInfo[moves[i]].additionalEffects[i].moveEffect)
             {
-                case MOVE_EFFECT_SPD_MINUS_1:
-                case MOVE_EFFECT_SPD_MINUS_2:
-                {
-                    if(aiIsFaster)
-                        return TRUE;
-                }
+            case MOVE_EFFECT_SPD_MINUS_1:
+            case MOVE_EFFECT_SPD_MINUS_2:
+            {
+                if(aiIsFaster)
+                    return TRUE;
+            }
+            default:
+                break;
             }
         }
     }
