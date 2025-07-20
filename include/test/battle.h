@@ -675,7 +675,7 @@ struct BattleTestData
 
     u8 playerPartySize;
     u8 opponentPartySize;
-    u8 explicitMoves[NUM_BATTLE_SIDES];
+    u8 explicitMoves[MAX_BATTLERS_COUNT];
     bool8 hasExplicitSpeeds;
     u8 explicitSpeeds[MAX_BATTLERS_COUNT];
     u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
