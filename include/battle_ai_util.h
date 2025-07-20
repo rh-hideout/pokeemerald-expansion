@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_AI_UTIL_H
 
 #include "battle_ai_main.h"
+#include "battle_ai_field_statuses.h"
 
 #define FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
 
@@ -21,6 +22,15 @@ enum DamageCalcContext
 {
     AI_DEFENDING,
     AI_ATTACKING,
+};
+
+// Higher priority at the bottom; note that these are used in the formula MAX_MON_MOVES ^ AiCompareMovesPriority, which must fit within a u32.
+// In expansion where MAX_MON_MOVES is 4, this means that AiCompareMovesPriority can range from 0 - 15 inclusive.
+enum AiCompareMovesPriority
+{
+    PRIORITY_EFFECT,
+    PRIORITY_ACCURACY,
+    PRIORITY_NOT_CHARGING
 };
 
 enum AIPivot
@@ -60,6 +70,9 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 bool32 IsAiVsAiBattle(void);
 bool32 BattlerHasAi(u32 battlerId);
 bool32 IsAiBattlerAware(u32 battlerId);
+bool32 IsAiBattlerAssumingStab(void);
+bool32 IsAiBattlerAssumingStatusMoves(void);
+bool32 ShouldRecordStatusMove(u32 move);
 void ClearBattlerMoveHistory(u32 battlerId);
 void RecordLastUsedMoveBy(u32 battlerId, u32 move);
 void RecordAllMoves(u32 battler);
@@ -81,7 +94,7 @@ bool32 AI_CanBattlerEscape(u32 battler);
 bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef);
 s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler2, u32 moveConsidered);
 bool32 CanTargetFaintAi(u32 battlerDef, u32 battlerAtk);
-u32 NoOfHitsForTargetToFaintAI(u32 battlerDef, u32 battlerAtk);
+u32 NoOfHitsForTargetToFaintBattler(u32 battlerDef, u32 battlerAtk);
 u32 GetBestDmgMoveFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 u32 GetBestDmgFromBattler(u32 battler, u32 battlerTarget, enum DamageCalcContext calcContext);
 bool32 CanTargetMoveFaintAi(u32 move, u32 battlerDef, u32 battlerAtk, u32 nHits);
@@ -90,6 +103,7 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId);
 enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, u32 atkAbility, u32 move);
 u32 AI_GetWeather(void);
+u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
@@ -103,7 +117,7 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
 bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex);
 u32 GetBattlerSideSpeedAverage(u32 battler);
 bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage);
-bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent, enum DamageCalcContext calcContext);
+bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent);
 bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect);
 enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 move, u32 moveIndex);
 bool32 IsRecycleEncouragedItem(u32 item);
@@ -146,9 +160,12 @@ bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
 bool32 HasMoveWithType(u32 battler, u32 type);
 bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
 bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
+bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
 bool32 HasMoveWithAdditionalEffect(u32 battlerId, u32 moveEffect);
+bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
+bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
 bool32 HasMoveWithMoveEffectExcept(u32 battlerId, u32 moveEffect, enum BattleMoveEffects exception);
 bool32 HasMoveThatLowersOwnStats(u32 battlerId);
@@ -162,11 +179,10 @@ bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 bool32 IsBattlerDamagedByStatus(u32 battler);
 s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
-bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetRain(u32 battlerAtk, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetWeather(u32 battler, u32 weather);
+bool32 ShouldClearWeather(u32 battler, u32 weather);
+bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus);
+bool32 ShouldClearFieldStatus(u32 battler, u32 fieldStatus);
 bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef);
 bool32 IsHealingMove(u32 move);
 bool32 HasHealingEffect(u32 battler);
@@ -176,7 +192,8 @@ bool32 ShouldFakeOut(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HasThawingMove(u32 battler);
 bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);
-bool32 IsSelfStatLoweringEffect(enum BattleMoveEffects effect);
+bool32 IsSelfStatLoweringEffect(enum MoveEffects effect);
+bool32 IsSelfStatRaisingEffect(enum MoveEffects effect);
 bool32 IsSwitchOutEffect(enum BattleMoveEffects effect);
 bool32 IsChaseEffect(enum BattleMoveEffects effect);
 bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);
@@ -208,10 +225,14 @@ bool32 AI_IsBattlerAsleepOrComatose(u32 battlerId);
 
 // ability logic
 bool32 IsMoxieTypeAbility(u32 ability);
-bool32 ShouldTriggerAbility(u32 battler, u32 ability);
+bool32 DoesAbilityRaiseStatsWhenLowered(u32 ability);
+bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, u32 ability);
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct AiLogicData *aiData);
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, struct AiLogicData *aiData);
+s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData *aiData);
 
 // partner logic
-#define IS_TARGETING_PARTNER(battlerAtk, battlerDef)((battlerAtk) == (battlerDef ^ BIT_FLANK))
+bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 u32 GetAllyChosenMove(u32 battlerId);
 bool32 IsValidDoubleBattle(u32 battlerAtk);
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
