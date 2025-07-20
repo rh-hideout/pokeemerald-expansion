@@ -1014,8 +1014,8 @@
     {
       "id": "MAPSEC_VIRIDIAN_FOREST",
       "name": "VIRIDIAN FOREST",
-      "x": 0,
-      "y": 0,
+      "x": 4,
+      "y": 6,
       "width": 1,
       "height": 1
     },
@@ -1030,16 +1030,16 @@
     {
       "id": "MAPSEC_S_S_ANNE",
       "name": "S.S. ANNE",
-      "x": 0,
-      "y": 0,
+      "x": 14,
+      "y": 9,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_UNDERGROUND_PATH",
       "name": "UNDERGROUND PATH",
-      "x": 0,
-      "y": 0,
+      "x": 14,
+      "y": 7,
       "width": 1,
       "height": 1
     },
@@ -1047,8 +1047,8 @@
       "id": "MAPSEC_UNDERGROUND_PATH_2",
       "name": "UNDERGROUND PATH",
       "name_clone": true,
-      "x": 0,
-      "y": 0,
+      "x": 12,
+      "y": 6,
       "width": 1,
       "height": 1
     },
@@ -1071,40 +1071,40 @@
     {
       "id": "MAPSEC_ROCKET_HIDEOUT",
       "name": "ROCKET HIDEOUT",
-      "x": 0,
-      "y": 0,
+      "x": 11,
+      "y": 6,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_SILPH_CO",
       "name": "SILPH CO.",
-      "x": 0,
-      "y": 0,
+      "x": 14,
+      "y": 6,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_POKEMON_MANSION",
       "name": "POKéMON MANSION",
-      "x": 0,
-      "y": 0,
+      "x": 4,
+      "y": 14,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_KANTO_SAFARI_ZONE",
       "name": "SAFARI ZONE",
-      "x": 0,
-      "y": 0,
+      "x": 12,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_POKEMON_LEAGUE",
       "name": "POKéMON LEAGUE",
-      "x": 0,
-      "y": 0,
+      "x": 2,
+      "y": 3,
       "width": 1,
       "height": 1
     },
@@ -1127,8 +1127,8 @@
     {
       "id": "MAPSEC_POKEMON_TOWER",
       "name": "POKéMON TOWER",
-      "x": 0,
-      "y": 0,
+      "x": 18,
+      "y": 6,
       "width": 1,
       "height": 1
     },
@@ -1143,8 +1143,8 @@
     {
       "id": "MAPSEC_POWER_PLANT",
       "name": "POWER PLANT",
-      "x": 0,
-      "y": 0,
+      "x": 18,
+      "y": 4,
       "width": 1,
       "height": 1
     },
@@ -1407,16 +1407,16 @@
     {
       "id": "MAPSEC_MT_EMBER",
       "name": "MT. EMBER",
-      "x": 0,
-      "y": 0,
+      "x": 2,
+      "y": 3,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_BERRY_FOREST",
       "name": "BERRY FOREST",
-      "x": 0,
-      "y": 0,
+      "x": 14,
+      "y": 12,
       "width": 1,
       "height": 1
     },
@@ -1431,8 +1431,8 @@
     {
       "id": "MAPSEC_ROCKET_WAREHOUSE",
       "name": "ROCKET WAREHOUSE",
-      "x": 0,
-      "y": 0,
+      "x": 17,
+      "y": 11,
       "width": 1,
       "height": 1
     },
@@ -1440,16 +1440,16 @@
       "id": "MAPSEC_TRAINER_TOWER_2",
       "name": "TRAINER TOWER",
       "name_clone": true,
-      "x": 0,
-      "y": 0,
+      "x": 5,
+      "y": 6,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_DOTTED_HOLE",
       "name": "DOTTED HOLE",
-      "x": 0,
-      "y": 0,
+      "x": 16,
+      "y": 8,
       "width": 1,
       "height": 1
     },
@@ -1464,8 +1464,8 @@
     {
       "id": "MAPSEC_PATTERN_BUSH",
       "name": "PATTERN BUSH",
-      "x": 0,
-      "y": 0,
+      "x": 17,
+      "y": 3,
       "width": 1,
       "height": 1
     },
@@ -1480,8 +1480,8 @@
     {
       "id": "MAPSEC_TANOBY_CHAMBERS",
       "name": "TANOBY CHAMBERS",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
@@ -1512,56 +1512,56 @@
     {
       "id": "MAPSEC_MONEAN_CHAMBER",
       "name": "MONEAN CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_LIPTOO_CHAMBER",
       "name": "LIPTOO CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_WEEPTH_CHAMBER",
       "name": "WEEPTH CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_DILFORD_CHAMBER",
       "name": "DILFORD CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_SCUFIB_CHAMBER",
       "name": "SCUFIB CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_RIXY_CHAMBER",
       "name": "RIXY CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_VIAPOIS_CHAMBER",
       "name": "VIAPOIS CHAMBER",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 12,
       "width": 1,
       "height": 1
     },
