@@ -1166,7 +1166,7 @@ enum RegionMapType GetRegionMapType(u32 mapSecId)
     switch (GetCurrentRegion())
     {
         case REGION_KANTO:
-            switch (GetKantoSubregion(gMapHeader.regionMapSectionId))
+            switch (GetKantoSubregion(mapSecId))
             {
                 case KANTO_SUBREGION_SEVII123:
                     return REGION_MAP_SEVII123;
