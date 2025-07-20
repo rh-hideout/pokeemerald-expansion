@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_AI_UTIL_H
 
 #include "battle_ai_main.h"
+#include "battle_ai_field_statuses.h"
 
 #define FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
 
@@ -169,9 +170,12 @@ bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
 bool32 HasMoveWithType(u32 battler, u32 type);
 bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
 bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
+bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
 bool32 HasMoveWithAdditionalEffect(u32 battlerId, u32 moveEffect);
+bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
+bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
 bool32 HasMoveWithMoveEffectExcept(u32 battlerId, u32 moveEffect, enum BattleMoveEffects exception);
 bool32 HasMoveThatLowersOwnStats(u32 battlerId);
@@ -185,11 +189,10 @@ bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 bool32 IsBattlerDamagedByStatus(u32 battler);
 s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
-bool32 ShouldSetSandstorm(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetHail(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetSnow(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetRain(u32 battlerAtk, u32 ability, enum ItemHoldEffect holdEffect);
-bool32 ShouldSetSun(u32 battlerAtk, u32 atkAbility, enum ItemHoldEffect holdEffect);
+bool32 ShouldSetWeather(u32 battler, u32 weather);
+bool32 ShouldClearWeather(u32 battler, u32 weather);
+bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus);
+bool32 ShouldClearFieldStatus(u32 battler, u32 fieldStatus);
 bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef);
 bool32 IsHealingMove(u32 move);
 bool32 HasHealingEffect(u32 battler);
