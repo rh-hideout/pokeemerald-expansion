@@ -2,15 +2,12 @@
 #include "regions.h"
 
 
-
-
-
-static const u8 sSeviiMapsecs[4][30] = {
-    [KANTO_SUB_KANTO] = 
+static const u16 sKantoSubregionMapsecs[KANTO_SUBREGION_SEVII67 + 1][30] = {
+    [KANTO_SUBREGION_KANTO] = 
     {
         MAPSEC_NONE
     },
-    [KANTO_SUB_SEVII123] =
+    [KANTO_SUBREGION_SEVII123] =
     {
         MAPSEC_ONE_ISLAND,
         MAPSEC_TWO_ISLAND,
@@ -26,7 +23,7 @@ static const u8 sSeviiMapsecs[4][30] = {
         MAPSEC_EMBER_SPA,
         MAPSEC_NONE
     },
-    [KANTO_SUB_SEVII45] =
+    [KANTO_SUBREGION_SEVII45] =
     {
         MAPSEC_FOUR_ISLAND,
         MAPSEC_FIVE_ISLAND,
@@ -44,7 +41,7 @@ static const u8 sSeviiMapsecs[4][30] = {
         MAPSEC_LOST_CAVE,
         MAPSEC_NONE
     },
-    [KANTO_SUB_SEVII67] =
+    [KANTO_SUBREGION_SEVII67] =
     {
         MAPSEC_SEVEN_ISLAND,
         MAPSEC_SIX_ISLAND,
@@ -77,15 +74,15 @@ static const u8 sSeviiMapsecs[4][30] = {
     }
 };
 
-enum KantoSubRegion GetKantoSubmap(u32 mapSecId)
+enum KantoSubRegion GetKantoSubregion(u32 mapSecId)
 {
-    for (u32 i = KANTO_SUB_KANTO; i <= KANTO_SUB_SEVII67; i++)
+    for (u32 i = KANTO_SUBREGION_KANTO; i <= KANTO_SUBREGION_SEVII67; i++)
     {
-        for (u32 j = 0; sSeviiMapsecs[i][j] != MAPSEC_NONE; j++)
+        for (u32 j = 0; sKantoSubregionMapsecs[i][j] != MAPSEC_NONE; j++)
         {
-            if (mapSecId == sSeviiMapsecs[i][j])
+            if (mapSecId == sKantoSubregionMapsecs[i][j])
                 return i;
         }
     }
-    return KANTO_SUB_KANTO;
+    return KANTO_SUBREGION_KANTO;
 }

@@ -4,7 +4,7 @@
 #include "global.h"
 #include "constants/regions.h"
 
-enum KantoSubRegion GetKantoSubmap(u32 mapSecId);
+enum KantoSubRegion GetKantoSubregion(u32 mapSecId);
 
 static inline enum Region GetRegionForSectionId(u32 sectionId)
 {
