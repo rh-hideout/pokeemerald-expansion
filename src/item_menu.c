@@ -229,8 +229,7 @@ static void ItemMenu_SortByAmount(u8 taskId);
 static void ItemMenu_SortByIndex(u8 taskId);
 static void SortBagItems(u8 taskId);
 static void Task_SortFinish(u8 taskId);
-static void MergeSort(struct BagPocket *pocket, u32 low, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
-static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
+static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot));
 static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
 static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
 static s32 CompareItemsByType(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2);
@@ -2848,52 +2847,49 @@ void SortItemsInBag(struct BagPocket *pocket, enum BagSortOptions type)
     switch (type)
     {
     case SORT_ALPHABETICALLY:
-        MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsAlphabetically);
+        MergeSort(pocket, CompareItemsAlphabetically);
         break;
     case SORT_BY_AMOUNT:
-        MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsByMost);
+        MergeSort(pocket, CompareItemsByMost);
         break;
     case SORT_BY_INDEX:
-        MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsByIndex);
+        MergeSort(pocket, CompareItemsByIndex);
         break;
     default:
-        MergeSort(pocket, 0, pocket->capacity - 1, CompareItemsByType);
+        MergeSort(pocket, CompareItemsByType);
         break;
     }
 }
 
-static void MergeSort(struct BagPocket *pocket, u32 low, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
+static inline __attribute__((always_inline)) void Merge(struct BagPocket *pocket, u32 iLeft, u32 iRight, u32 iEnd, struct ItemSlot *dummySlots, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
 {
-    u32 mid;
-
-    if (high <= low)
-        return;
-
-    mid = low + (high - low) / 2;
-    MergeSort(pocket, low, mid, comparator); //Sort left half.
-    MergeSort(pocket, mid + 1, high, comparator); //Sort right half.
-    Merge(pocket, low, mid, high, comparator); //Merge results.
+    struct ItemSlot item_i, item_j;
+    u32 i = iLeft, j = iRight;
+    for (u32 k = iLeft; k < iEnd; k++) {
+        item_i = BagPocket_GetSlotData(pocket, i);
+        item_j = BagPocket_GetSlotData(pocket, j);
+        if (i < iRight && (j >= iEnd || comparator(pocket->id, item_i, item_j) < 0)) {
+            dummySlots[k] = item_i;
+            i++;
+        } else {
+            dummySlots[k] = item_j;
+            j++;
+        }
+    }
 }
 
-static void Merge(struct BagPocket *pocket, u32 low, u32 mid, u32 high, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
+// Source: https://en.wikipedia.org/wiki/Merge_sort#Bottom-up_implementation
+static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, struct ItemSlot, struct ItemSlot))
 {
-    u32 loPass = low;
-    u32 hiPass = mid + 1;
-    struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * (high - low + 1));
+    struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * pocket->capacity);
 
-    for (u32 k = low; k <= high; ++k)
-        dummySlots[k - low] = BagPocket_GetSlotData(pocket, k);
+    for (u32 width = 1; width < pocket->capacity; width *= 2)
+    {
+        for (u32 i = 0; i < pocket->capacity; i += 2 * width)
+            Merge(pocket, i, min(i + width, pocket->capacity), min(i + 2 * width, pocket->capacity), dummySlots, comparator);
 
-    for (u32 k = low; k <= high; ++k)
-    { //Merge back to a[low..high]
-        if (loPass > mid)
-            BagPocket_SetSlotData(pocket, k, dummySlots[hiPass++ - low]);
-        else if (hiPass > high)
-            BagPocket_SetSlotData(pocket, k, dummySlots[loPass++ - low]);
-        else if (comparator(pocket->id, dummySlots[hiPass - low], dummySlots[loPass - low]) < 0)
-            BagPocket_SetSlotData(pocket, k, dummySlots[hiPass++ - low]);
-        else
-            BagPocket_SetSlotData(pocket, k, dummySlots[loPass++ - low]);
+        for (u32 j = 0; j < pocket->capacity; j++)
+            BagPocket_SetSlotData(pocket, j, dummySlots[j]);
     }
 
     Free(dummySlots);
