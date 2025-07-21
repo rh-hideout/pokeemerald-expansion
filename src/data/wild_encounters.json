@@ -14868,7 +14868,7 @@
           }
         },
         {
-          "map": "MAP_SAFARI_ZONE_NORTH",
+          "map": "MAP_SAFARI_ZONE_NORTH_FRLG",
           "base_label": "sSafariZoneNorth_FireRed",
           "land_mons": {
             "encounter_rate": 21,
@@ -15022,7 +15022,7 @@
           }
         },
         {
-          "map": "MAP_SAFARI_ZONE_NORTH",
+          "map": "MAP_SAFARI_ZONE_NORTH_FRLG",
           "base_label": "sSafariZoneNorth_LeafGreen",
           "land_mons": {
             "encounter_rate": 21,

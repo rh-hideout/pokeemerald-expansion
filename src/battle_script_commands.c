@@ -14803,7 +14803,7 @@ static bool32 CriticalCapture(u32 odds)
         return FALSE;
 
     if (B_CRITICAL_CAPTURE_LOCAL_DEX == TRUE)
-        totalDexCount = HOENN_DEX_COUNT;
+        totalDexCount = REGIONAL_DEX_COUNT;
     else
         totalDexCount = NATIONAL_DEX_COUNT;
 
