@@ -106,7 +106,7 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
 
 void NONNULL BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
-    if (!newSlot.itemId || !newSlot.quantity) // Sets to zero if quantity or itemId is zero
+    if (newSlot.itemId == ITEM_NONE || newSlot.quantity == 0) // Sets to zero if quantity or itemId is zero
     {
         newSlot.itemId = ITEM_NONE;
         newSlot.quantity = 0;
@@ -283,7 +283,7 @@ static inline bool32 NONNULL CheckSlotAndUpdateCount(struct BagPocket *pocket, u
     if (tempItem.itemId == ITEM_NONE || tempItem.itemId == itemId)
     {
         // The quantity already at the slot - zero if an empty slot
-        if (!tempItem.itemId)
+        if (tempItem.itemId == ITEM_NONE)
             tempItem.quantity = 0;
 
         // Record slot quantity in tempPocketSlotQuantities, adjust count
@@ -413,7 +413,7 @@ static u8 NONNULL BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
 
     for (u32 i = 0; i < pocket->capacity; i++)
     {
-        if (BagPocket_GetSlotData(pocket, i).itemId)
+        if (BagPocket_GetSlotData(pocket, i).itemId != ITEM_NONE)
             usedSlots++;
     }
     return usedSlots;
