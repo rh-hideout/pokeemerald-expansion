@@ -2865,13 +2865,17 @@ static inline __attribute__((always_inline)) void Merge(struct BagPocket *pocket
 {
     struct ItemSlot item_i, item_j;
     u32 i = iLeft, j = iRight;
-    for (u32 k = iLeft; k < iEnd; k++) {
+    for (u32 k = iLeft; k < iEnd; k++)
+    {
         item_i = BagPocket_GetSlotData(pocket, i);
         item_j = BagPocket_GetSlotData(pocket, j);
-        if (i < iRight && (j >= iEnd || comparator(pocket->id, item_i, item_j) < 0)) {
+        if (i < iRight && (j >= iEnd || comparator(pocket->id, item_i, item_j) < 0))
+        {
             dummySlots[k] = item_i;
             i++;
-        } else {
+        }
+        else
+        {
             dummySlots[k] = item_j;
             j++;
         }
