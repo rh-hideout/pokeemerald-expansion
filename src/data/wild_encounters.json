@@ -13286,7 +13286,7 @@
           }
         },
         {
-          "map": "MAP_VICTORY_ROAD_1F",
+          "map": "MAP_VICTORY_ROAD_1F_FRLG",
           "base_label": "sVictoryRoad1F_FireRed",
           "land_mons": {
             "encounter_rate": 7,
@@ -13355,7 +13355,7 @@
           }
         },
         {
-          "map": "MAP_VICTORY_ROAD_1F",
+          "map": "MAP_VICTORY_ROAD_1F_FRLG",
           "base_label": "sVictoryRoad1F_LeafGreen",
           "land_mons": {
             "encounter_rate": 7,

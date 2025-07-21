@@ -1163,7 +1163,7 @@ void PokedexAreaScreen_UpdateRegionMapVariablesAndVideoRegs(s16 x, s16 y)
 
 enum RegionMapType GetRegionMapType(u32 mapSecId)
 {
-    switch (GetCurrentRegion())
+    switch (GetRegionForSectionId(mapSecId))
     {
         case REGION_KANTO:
             switch (GetKantoSubregion(mapSecId))

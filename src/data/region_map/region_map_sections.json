@@ -1022,8 +1022,8 @@
     {
       "id": "MAPSEC_MT_MOON",
       "name": "MT. MOON",
-      "x": 0,
-      "y": 0,
+      "x": 9,
+      "y": 3,
       "width": 1,
       "height": 1
     },
@@ -1055,16 +1055,16 @@
     {
       "id": "MAPSEC_DIGLETTS_CAVE",
       "name": "DIGLETT'S CAVE",
-      "x": 0,
-      "y": 0,
+      "x": 15,
+      "y": 9,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_KANTO_VICTORY_ROAD",
       "name": "VICTORY ROAD",
-      "x": 0,
-      "y": 0,
+      "x": 2,
+      "y": 4,
       "width": 1,
       "height": 1
     },
@@ -1111,16 +1111,16 @@
     {
       "id": "MAPSEC_ROCK_TUNNEL",
       "name": "ROCK TUNNEL",
-      "x": 0,
-      "y": 0,
+      "x": 18,
+      "y": 5,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_SEAFOAM_ISLANDS",
       "name": "SEAFOAM ISLANDS",
-      "x": 0,
-      "y": 0,
+      "x": 8,
+      "y": 14,
       "width": 1,
       "height": 1
     },
@@ -1135,8 +1135,8 @@
     {
       "id": "MAPSEC_CERULEAN_CAVE",
       "name": "CERULEAN CAVE",
-      "x": 0,
-      "y": 0,
+      "x": 13,
+      "y": 3,
       "width": 1,
       "height": 1
     },
@@ -1423,8 +1423,8 @@
     {
       "id": "MAPSEC_ICEFALL_CAVE",
       "name": "ICEFALL CAVE",
-      "x": 0,
-      "y": 0,
+      "x": 3,
+      "y": 4,
       "width": 1,
       "height": 1
     },
@@ -1456,8 +1456,8 @@
     {
       "id": "MAPSEC_LOST_CAVE",
       "name": "LOST CAVE",
-      "x": 0,
-      "y": 0,
+      "x": 18,
+      "y": 9,
       "width": 1,
       "height": 1
     },
@@ -1472,7 +1472,7 @@
     {
       "id": "MAPSEC_ALTERING_CAVE_FRLG",
       "name": "ALTERING CAVE",
-      "x": 0,
+      "x": 15,
       "y": 0,
       "width": 1,
       "height": 1
@@ -1488,16 +1488,16 @@
     {
       "id": "MAPSEC_THREE_ISLE_PATH",
       "name": "THREE ISLE PATH",
-      "x": 0,
-      "y": 0,
+      "x": 18,
+      "y": 13,
       "width": 1,
       "height": 1
     },
     {
       "id": "MAPSEC_TANOBY_KEY",
       "name": "TANOBY KEY",
-      "x": 0,
-      "y": 0,
+      "x": 6,
+      "y": 9,
       "width": 1,
       "height": 1
     },
