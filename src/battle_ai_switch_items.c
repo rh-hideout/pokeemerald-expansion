@@ -237,7 +237,7 @@ static bool32 ShouldSwitchIfHasBadOdds(u32 battler)
             {
                 maxDamageTaken = damageTaken;
             }
-            if (GetBattleMovePriority(opposingBattler, gBattleMons[opposingBattler].ability, playerMove) > 0 && damageTaken > maxDamageTakenPriority && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
+            if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[battler], playerMove) > 0 && damageTaken > maxDamageTakenPriority && !AI_DoesChoiceEffectBlockMove(opposingBattler, playerMove))
             {
                 maxDamageTakenPriority = damageTaken;
                 bestPlayerPriorityMove = playerMove;
