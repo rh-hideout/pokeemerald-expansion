@@ -26,6 +26,7 @@
 {                                           \
     .id = POCKET_DUMMY,                     \
     .capacity = PC_ITEMS_COUNT,             \
+    .baseCapacity = PC_ITEMS_COUNT,         \
     .itemSlots = gSaveBlock1Ptr->pcItems,   \
 }
 
@@ -91,9 +92,9 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataItems(struct BagPocke
 {
     if (pocketPos < BAG_ITEMS_BASE_COUNT)
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
-    else if (pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
+    else if (I_EXPANDED_BAG && pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
         return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) * 2);
-    else if (USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
+    else if (I_EXPANDED_BAG && USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         return ItemSlot_GetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) * 2);
 
     return (struct ItemSlot) {0}; // failsafe
@@ -104,7 +105,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataKeyItems(struct BagPo
     u16 itemId = ITEM_NONE;
     if (pocketPos < BAG_KEYITEMS_BASE_COUNT)
         itemId = pocket->itemSlots[pocketPos].itemId;
-    else if (pocketPos < BAG_KEYITEMS_COUNT)
+    else if (I_EXPANDED_BAG && pocketPos < BAG_KEYITEMS_COUNT)
         return ItemSlot_GetExpandedKeyItemData(&pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT]);
 
     // Key item quantity always limited to 1
@@ -115,9 +116,9 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPock
 {
     if (pocketPos < BAG_TMHM_BASE_COUNT)
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
-    else if (pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
+    else if (I_EXPANDED_BAG && pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
         return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2);
-    else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    else if (I_EXPANDED_BAG && KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
         return ItemSlot_GetExpandedKeyItemData(&gBagPockets[POCKET_KEY_ITEMS].itemSlots[BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1]);
 
     return (struct ItemSlot) {0}; // failsafe
@@ -127,7 +128,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataPokeballsBerries(stru
 {
     if (pocketPos < pocket->baseCapacity)
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
-    else if (pocketPos < pocket->capacity)
+    else if (I_EXPANDED_BAG && pocketPos < pocket->capacity)
         return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - pocket->baseCapacity) * 2);
 
     return (struct ItemSlot) {0}; // failsafe
@@ -167,9 +168,9 @@ static inline void NONNULL BagPocket_SetSlotDataItems(struct BagPocket *pocket, 
 {
     if (pocketPos < BAG_ITEMS_BASE_COUNT)
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
-    else if (pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
+    else if (I_EXPANDED_BAG && pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
         ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) * 2, newSlot);
-    else if (USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
+    else if (I_EXPANDED_BAG && USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         ItemSlot_SetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) * 2, newSlot);
 }
 
@@ -177,7 +178,7 @@ static inline void NONNULL BagPocket_SetSlotDataKeyItems(struct BagPocket *pocke
 {
     if (pocketPos < BAG_KEYITEMS_BASE_COUNT)
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
-    else if (pocketPos < BAG_KEYITEMS_COUNT)
+    else if (I_EXPANDED_BAG && pocketPos < BAG_KEYITEMS_COUNT)
         ItemSlot_SetExpandedKeyItemData(&pocket->itemSlots[pocketPos - BAG_KEYITEMS_BASE_COUNT], newSlot);
 }
 
@@ -185,9 +186,9 @@ static inline void NONNULL BagPocket_SetSlotDataTMsHMs(struct BagPocket *pocket,
 {
     if (pocketPos < BAG_TMHM_BASE_COUNT)
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
-    else if (pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
+    else if (I_EXPANDED_BAG && pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
         ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2, newSlot);
-    else if (KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    else if (I_EXPANDED_BAG && KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
         ItemSlot_SetExpandedKeyItemData(&gBagPockets[POCKET_KEY_ITEMS].itemSlots[BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1], newSlot);
 }
 
@@ -195,7 +196,7 @@ static inline void NONNULL BagPocket_SetSlotDataPokeballsBerries(struct BagPocke
 {
     if (pocketPos < pocket->baseCapacity)
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
-    else if (pocketPos < pocket->capacity)
+    else if (I_EXPANDED_BAG && pocketPos < pocket->capacity)
         ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - pocket->baseCapacity) * 2, newSlot);
 }
 

@@ -47,4 +47,17 @@
 #define I_FISHING_CHAIN            FALSE      // Introduced in XY, hooking the same Pokémon repeatedly will increase the odds of that mon being shiny. NOTE: This implementation is an approximation of the actual feature, as XY have not been throughoutly documented or datamined.
 #define I_FISHING_PROXIMITY        FALSE      // Introduced in XY, fishing away from other people in enclosed areas will increase the chances of a Pokémon being hooked. NOTE: This implementation is an approximation of the actual feature, as XY have not been throughoutly documented or datamined.
 
+/* Expanded bag
+ * If enabled, expands the vanilla bag in a save-compatible fashion. Pocket sizes become:
+ * 
+ * Items: 70
+ * Key Items: 48
+ * Pokeballs: 24
+ * TMsHMs: 108
+ * Berries: 69
+ * 
+ * Note: this is with KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS set to 12 and USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET set to true (see global.h)
+ */
+#define I_EXPANDED_BAG              FALSE   // If enabled, expands vanilla bag in a save-compatible fashion. Pocket sizes become: Items (70), Key Items (48), Pokeballs (24), 
+
 #endif // GUARD_CONFIG_ITEM_H
