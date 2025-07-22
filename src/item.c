@@ -94,7 +94,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataItems(struct BagPocke
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
     else if (I_EXPANDED_BAG && pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
         return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) * 2);
-    else if (I_EXPANDED_BAG && USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
+    else if (I_EXPANDED_BAG && I_USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         return ItemSlot_GetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) * 2);
 
     return (struct ItemSlot) {0}; // failsafe
@@ -118,7 +118,7 @@ static inline struct ItemSlot NONNULL BagPocket_GetSlotDataTMsHMs(struct BagPock
         return BagPocket_GetSlotDataGeneric(pocket, pocketPos);
     else if (I_EXPANDED_BAG && pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
         return ItemSlot_GetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2);
-    else if (I_EXPANDED_BAG && KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    else if (I_EXPANDED_BAG && I_KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
         return ItemSlot_GetExpandedKeyItemData(&gBagPockets[POCKET_KEY_ITEMS].itemSlots[BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1]);
 
     return (struct ItemSlot) {0}; // failsafe
@@ -170,7 +170,7 @@ static inline void NONNULL BagPocket_SetSlotDataItems(struct BagPocket *pocket, 
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
     else if (I_EXPANDED_BAG && pocketPos < (BAG_ITEMS_BASE_COUNT * 3 / 2))
         ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_ITEMS_BASE_COUNT) * 2, newSlot);
-    else if (I_EXPANDED_BAG && USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
+    else if (I_EXPANDED_BAG && I_USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
         ItemSlot_SetExpandedData(gSaveBlock1Ptr->pcItems, (pocketPos - (BAG_ITEMS_BASE_COUNT * 3 / 2)) * 2, newSlot);
 }
 
@@ -188,7 +188,7 @@ static inline void NONNULL BagPocket_SetSlotDataTMsHMs(struct BagPocket *pocket,
         BagPocket_SetSlotDataGeneric(pocket, pocketPos, newSlot);
     else if (I_EXPANDED_BAG && pocketPos < (BAG_TMHM_BASE_COUNT * 3 / 2))
         ItemSlot_SetExpandedData(pocket->itemSlots, (pocketPos - BAG_TMHM_BASE_COUNT) * 2, newSlot);
-    else if (I_EXPANDED_BAG && KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
+    else if (I_EXPANDED_BAG && I_KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS > 0)
         ItemSlot_SetExpandedKeyItemData(&gBagPockets[POCKET_KEY_ITEMS].itemSlots[BAG_KEYITEMS_BASE_COUNT - (pocketPos - (BAG_TMHM_BASE_COUNT * 3 / 2)) - 1], newSlot);
 }
 

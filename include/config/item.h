@@ -50,14 +50,16 @@
 /* Expanded bag
  * If enabled, expands the vanilla bag in a save-compatible fashion. Pocket sizes become:
  * 
- * Items: 70
+ * Items: 70 (45 without I_USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET)
  * Key Items: 48
  * Pokeballs: 24
- * TMsHMs: 108
+ * TMsHMs: 108 (96 with I_KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS == 0)
  * Berries: 69
  * 
- * Note: this is with KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS set to 12 and USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET set to true (see global.h)
+ * Note: this is with I_KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS set to 12 and I_USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET set to TRUE
  */
-#define I_EXPANDED_BAG              FALSE   // If enabled, expands vanilla bag in a save-compatible fashion. Pocket sizes become: Items (70), Key Items (48), Pokeballs (24), 
+#define I_EXPANDED_BAG                          FALSE   // If enabled, expands vanilla bag in a save-compatible fashion. Pocket sizes become: Items (70), Key Items (48), Pokeballs (24), 
+#define I_KEY_ITEM_SLOTS_SIPHONED_FOR_TMS_HMS   12      // If enabled, siphons off key item slots to create additional slots in the TMs pocket (default is 12 to bring total up to 108)
+#define I_USE_PC_SLOTS_TO_EXPAND_ITEMS_POCKET   TRUE    // If enabled, uses spare space in SaveBlock1.pcItems to store 25 additional items
 
 #endif // GUARD_CONFIG_ITEM_H
