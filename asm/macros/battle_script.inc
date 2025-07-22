@@ -878,7 +878,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro metronome
+	.macro setcalledmove
 	.byte 0x9e
 	.endm
 
@@ -1452,11 +1452,6 @@
 	callnative BS_SetPledgeStatus
 	.byte \battler
 	.4byte \sidestatus
-	.endm
-
-	.macro trycopycat failInstr:req
-	callnative BS_TryCopycat
-	.4byte \failInstr
 	.endm
 
 	.macro setzeffect
@@ -2210,11 +2205,6 @@
 
 	.macro invertstatstages
 	callnative BS_InvertStatStages
-	.endm
-
-	.macro trymefirst failInstr:req
-	callnative BS_TryMeFirst
-	.4byte \failInstr
 	.endm
 
 	.macro tryelectrify failInstr:req
