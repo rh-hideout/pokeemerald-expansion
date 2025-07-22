@@ -581,7 +581,8 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 padding:17;
+    u32 itemCanBeKnockedOff:1;
+    u32 padding:16;
     // End of Word
 };
 
