@@ -82,7 +82,7 @@ Route104_PrettyPetalFlowerShop_EventScript_RandomBerryGirl::
 	dotimebasedevents
 	goto_if_set FLAG_DAILY_FLOWER_SHOP_RECEIVED_BERRY, Route104_PrettyPetalFlowerShop_EventScript_AlreadyReceivedBerry
 	msgbox Route104_PrettyPetalFlowerShop_Text_ImGrowingFlowers, MSGBOX_DEFAULT
-	giverandomberry INDEX_SITRUS_BERRY, INDEX_PERSIM_BERRY
+	giverandomberry INDEX_CHERI_BERRY, INDEX_PERSIM_BERRY
 	goto_if_eq VAR_RESULT, 0, Common_EventScript_ShowBagIsFull
 	setflag FLAG_DAILY_FLOWER_SHOP_RECEIVED_BERRY
 	msgbox Route104_PrettyPetalFlowerShop_Text_MachineMixesBerries, MSGBOX_DEFAULT
