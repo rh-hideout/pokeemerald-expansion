@@ -4104,7 +4104,7 @@ static void Cmd_setadditionaleffects(void)
                 if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
                 {
                     gBattleScripting.moveEffect = additionalEffect->moveEffect;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = additionalEffect->multistring;
+                    gBattleCommunication[MULTISTRING_CHOOSER] = additionalEffect->multistring.value;
 
                     SetMoveEffect(
                         gBattlerAttacker,

@@ -4,6 +4,7 @@
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_move_effects.h"
+#include "constants/battle_string_ids.h"
 #include "constants/moves.h"
 
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
@@ -28,8 +29,11 @@ struct AdditionalEffect
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
     u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
-    u8 multistring:4;
-    u8 padding;
+    u8 padding:4;
+    union PACKED {
+        enum WrappedStringID wrapped;
+        u8 value; // NEVER USE THIS! Use the appropriate enum field instead.
+    } multistring;
     u8 chance; // 0% = effect certain, primary effect
 };
 
