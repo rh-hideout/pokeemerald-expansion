@@ -3,7 +3,7 @@
 
 // National Pokédex order
 // These constants are NOT disabled by P_GEN_X_POKEMON to keep pokedex_orders.h clean.
-enum NationalDexOrder
+enum __attribute__((packed)) NationalDexOrder
 {
     NATIONAL_DEX_NONE,
     // Kanto

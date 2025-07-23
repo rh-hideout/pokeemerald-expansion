@@ -24,7 +24,7 @@ struct MultiPartnerMenuPokemon
 #define BOUNCE_MON          0x0
 #define BOUNCE_HEALTHBOX    0x1
 
-enum BattleIntroStates
+enum __attribute__((packed)) BattleIntroStates
 {
     BATTLE_INTRO_STATE_GET_MON_DATA,
     BATTLE_INTRO_STATE_LOOP_BATTLER_DATA,
