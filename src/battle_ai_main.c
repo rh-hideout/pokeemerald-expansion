@@ -6121,7 +6121,6 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
         switch (GetMoveAdditionalEffectById(move, i)->moveEffect)
         {
-<<<<<<< HEAD
         case MOVE_EFFECT_WRAP:
             ADJUST_SCORE(AWFUL_EFFECT);
             break;
@@ -6130,16 +6129,6 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         default:
             break;
-=======
-            case MOVE_EFFECT_WRAP:
-                ADJUST_SCORE(AWFUL_EFFECT);
-                break;
-            case MOVE_EFFECT_FEINT:
-                ADJUST_SCORE(WORST_EFFECT);
-                break;
-            default:
-                break;
->>>>>>> e6434b206a (Updated AdditionalEffect structure, added multistring and enum MoveEffect fields)
         }
     }
 
