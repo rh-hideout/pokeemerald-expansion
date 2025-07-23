@@ -37,7 +37,6 @@
     F(WATMEL) \
     F(DURIN) \
     F(BELUE) \
-    F(CHILAN) \
     F(OCCA) \
     F(PASSHO) \
     F(WACAN) \
@@ -54,7 +53,7 @@
     F(HABAN) \
     F(COLBUR) \
     F(BABIRI) \
-    F(ROSELI) \
+    F(CHILAN) \
     F(LIECHI) \
     F(GANLON) \
     F(SALAC) \
@@ -67,6 +66,7 @@
     F(CUSTAP) \
     F(JABOCA) \
     F(ROWAP) \
+    F(ROSELI) \
     F(KEE) \
     F(MARANGA)
 
