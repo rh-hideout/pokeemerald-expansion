@@ -2,28 +2,31 @@
 #define GUARD_CONSTANTS_POKEMON_H
 
 // Pokémon types
-#define TYPE_NONE             0
-#define TYPE_NORMAL           1
-#define TYPE_FIGHTING         2
-#define TYPE_FLYING           3
-#define TYPE_POISON           4
-#define TYPE_GROUND           5
-#define TYPE_ROCK             6
-#define TYPE_BUG              7
-#define TYPE_GHOST            8
-#define TYPE_STEEL            9
-#define TYPE_MYSTERY          10
-#define TYPE_FIRE             11
-#define TYPE_WATER            12
-#define TYPE_GRASS            13
-#define TYPE_ELECTRIC         14
-#define TYPE_PSYCHIC          15
-#define TYPE_ICE              16
-#define TYPE_DRAGON           17
-#define TYPE_DARK             18
-#define TYPE_FAIRY            19
-#define TYPE_STELLAR          20
-#define NUMBER_OF_MON_TYPES   21
+enum __attribute__((packed)) PokemonType
+{
+    TYPE_NONE,
+    TYPE_NORMAL,
+    TYPE_FIGHTING,
+    TYPE_FLYING,
+    TYPE_POISON,
+    TYPE_GROUND,
+    TYPE_ROCK,
+    TYPE_BUG,
+    TYPE_GHOST,
+    TYPE_STEEL,
+    TYPE_MYSTERY,
+    TYPE_FIRE,
+    TYPE_WATER,
+    TYPE_GRASS,
+    TYPE_ELECTRIC,
+    TYPE_PSYCHIC,
+    TYPE_ICE,
+    TYPE_DRAGON,
+    TYPE_DARK,
+    TYPE_FAIRY,
+    TYPE_STELLAR,
+    NUMBER_OF_MON_TYPES,
+};
 
 // Pokémon egg groups
 #define EGG_GROUP_NONE                0
@@ -218,7 +221,7 @@
 #define EV_ITEM_RAISE_LIMIT ((I_VITAMIN_EV_CAP >= GEN_8) ? MAX_PER_STAT_EVS : 100)
 
 // Move category defines.
-enum DamageCategory
+enum __attribute__((packed)) DamageCategory
 {
     DAMAGE_CATEGORY_PHYSICAL,
     DAMAGE_CATEGORY_SPECIAL,
@@ -226,7 +229,7 @@ enum DamageCategory
 };
 
 // Growth rates
-enum GrowthRate
+enum __attribute__((packed)) GrowthRate
 {
     GROWTH_MEDIUM_FAST,
     GROWTH_ERRATIC,
@@ -237,7 +240,7 @@ enum GrowthRate
 };
 
 // Body colors for Pokédex search
-enum BodyColor
+enum __attribute__((packed)) BodyColor
 {
     BODY_COLOR_RED,
     BODY_COLOR_BLUE,

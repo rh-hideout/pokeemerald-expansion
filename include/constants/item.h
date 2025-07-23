@@ -1,7 +1,7 @@
 #ifndef GUARD_ITEM_CONSTANTS_H
 #define GUARD_ITEM_CONSTANTS_H
 
-enum Pocket
+enum __attribute__((packed)) Pocket
 {
     POCKET_ITEMS,
     POCKET_POKE_BALLS,

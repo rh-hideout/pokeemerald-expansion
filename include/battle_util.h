@@ -3,6 +3,7 @@
 
 #include "move.h"
 #include "constants/battle_string_ids.h"
+#include "constants/hold_effects.h"
 
 #define MOVE_LIMITATION_ZEROMOVE                (1 << 0)
 #define MOVE_LIMITATION_PP                      (1 << 1)
@@ -171,8 +172,8 @@ struct DamageContext
     uq4_12_t typeEffectivenessModifier;
     u32 abilityAtk:16;
     u32 abilityDef:16;
-    enum ItemHoldEffect holdEffectAtk:16;
-    enum ItemHoldEffect holdEffectDef:16;
+    enum ItemHoldEffect holdEffectAtk;
+    enum ItemHoldEffect holdEffectDef;
 };
 
 enum SleepClauseBlock

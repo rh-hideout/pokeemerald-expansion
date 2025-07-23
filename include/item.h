@@ -1,6 +1,7 @@
 #ifndef GUARD_ITEM_H
 #define GUARD_ITEM_H
 
+#include "constants/hold_effects.h"
 #include "constants/item.h"
 #include "constants/item_effects.h"
 #include "constants/items.h"
@@ -20,7 +21,7 @@
 #define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
 #define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
 #define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum TMHMItemId
+enum __attribute__((packed)) TMHMItemId
 {
     RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
     RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
@@ -90,34 +91,35 @@ struct Item
 {
     u32 price;
     u16 secondaryId;
+    u16 importance:2;
+    u16 notConsumed:1;
+    // u16 padding:13;
     ItemUseFunc fieldUseFunc;
     const u8 *description;
     const u8 *effect;
     u8 name[ITEM_NAME_LENGTH];
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH];
-    u8 holdEffect;
+    enum ItemHoldEffect holdEffect;
     u8 holdEffectParam;
-    u8 importance:2;
-    u8 notConsumed:1;
-    enum Pocket pocket:5;
+    enum Pocket pocket;
     enum ItemSortType sortType;
-    u8 type;
-    u8 battleUsage;
+    enum ItemUseType type;
+    enum ItemBattleUsageEffect battleUsage;
     u8 flingPower;
     const u32 *iconPic;
     const u16 *iconPalette;
 };
 
-struct ALIGNED(2) BagPocket
+struct BagPocket
 {
     struct ItemSlot *itemSlots;
-    u16 capacity:10;
-    enum Pocket id:6;
+    u16 capacity;
+    enum Pocket id;
 };
 
 struct TmHmIndexKey
 {
-    enum TMHMItemId itemId:16;
+    enum TMHMItemId itemId;
     u16 moveId;
 };
 

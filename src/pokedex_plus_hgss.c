@@ -354,7 +354,7 @@ struct PokemonStats
     u8  evYield_Defense;
     u8  evYield_SpDefense;
     u8  catchRate;
-    enum GrowthRate growthRate:8;
+    enum GrowthRate growthRate;
     u8  eggGroup1;
     u8  eggGroup2;
     u8  eggCycles;

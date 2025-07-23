@@ -416,9 +416,9 @@ struct SpeciesInfo /*0xC4*/
     u8 baseSpeed;
     u8 baseSpAttack;
     u8 baseSpDefense;
-    u8 types[2];
+    enum PokemonType types[2];
     u8 catchRate;
-    u8 forceTeraType;
+    enum PokemonType forceTeraType;
     u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
     u16 evYield_HP:2;
     u16 evYield_Attack:2;
@@ -440,8 +440,8 @@ struct SpeciesInfo /*0xC4*/
     // Pokédex data
     u8 categoryName[13];
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
-    enum PokemonCry cryId:16;
-    enum NationalDexOrder natDexNum:16;
+    enum PokemonCry cryId;
+    enum NationalDexOrder natDexNum;
     u16 height; //in decimeters
     u16 weight; //in hectograms
     u16 pokemonScale;
@@ -449,10 +449,10 @@ struct SpeciesInfo /*0xC4*/
     u16 trainerScale;
     u16 trainerOffset;
     const u8 *description;
-    enum BodyColor bodyColor:7;
+    enum BodyColor bodyColor;
     // Graphical Data
     u8 noFlip:1;
-    u8 frontAnimDelay;
+    u8 frontAnimDelay:7;
     u8 frontAnimId;
     u8 backAnimId;
     const union AnimCmd *const *frontAnimFrames;

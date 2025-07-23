@@ -1,7 +1,7 @@
 #ifndef GUARD_CONSTANTS_CRIES_H
 #define GUARD_CONSTANTS_CRIES_H
 
-enum PokemonCry
+enum __attribute__((packed)) PokemonCry
 {
     CRY_NONE,
 #if P_FAMILY_BULBASAUR
