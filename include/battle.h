@@ -581,7 +581,8 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 padding:17;
+    u32 itemCanBeKnockedOff:1;
+    u32 padding:16;
     // End of Word
 };
 
@@ -658,7 +659,8 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 multipleSwitchInState:2;
     u8 multipleSwitchInCursor:3;
-    u8 padding1:2;
+    u8 sleepClauseNotBlocked:1;
+    u8 padding1:1;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle

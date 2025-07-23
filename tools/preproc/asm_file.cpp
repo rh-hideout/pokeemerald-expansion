@@ -517,8 +517,53 @@ bool AsmFile::ParseEnum()
 
     long fallbackPosition = m_pos;
     std::string headerFilename = "";
-    long currentHeaderLine = SkipWhitespaceAndEol();
-    std::string enumName = ReadIdentifier();
+    long currentHeaderLine = 0;
+    std::string enumName;
+    while (true)
+    {
+        currentHeaderLine += SkipWhitespaceAndEol();
+        std::string identifier = ReadIdentifier();
+        if (identifier == "__attribute__")
+        {
+            if (m_pos + 1 >= m_size
+             || m_buffer[m_pos] != '('
+             || m_buffer[m_pos + 1] != '(')
+            {
+                m_pos = fallbackPosition - 4;
+                return false;
+            }
+
+            m_pos += 2;
+            int parens = 2;
+            while (true)
+            {
+                char c = m_buffer[m_pos++];
+                if (c == '\n')
+                    currentHeaderLine++;
+
+                if (c == '(')
+                {
+                    parens++;
+                }
+                else if (c == ')')
+                {
+                    parens--;
+                    if (parens == 0)
+                        break;
+                }
+                else if (parens < 2 || m_pos == m_size)
+                {
+                    m_pos = fallbackPosition - 4;
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            enumName = identifier;
+            break;
+        }
+    }
     currentHeaderLine += SkipWhitespaceAndEol();
     std::string enumBase = "0";
     long enumCounter = 0;

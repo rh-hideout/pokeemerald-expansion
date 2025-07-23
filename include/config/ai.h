@@ -56,6 +56,10 @@
 // AI move scoring
 #define STATUS_MOVE_FOCUS_PUNCH_CHANCE                          50 // Chance the AI will use a status move if the player's best move is Focus Punch
 #define BOOST_INTO_HAZE_CHANCE                                  0 // Chance the AI will use a stat boosting move if the player has used Haze
+#define SHOULD_RECOVER_CHANCE                                   50 // Chance the AI will give recovery moves score increase if less than ENABLE_RECOVERY_THRESHOLD and in no immediate danger
+#define ENABLE_RECOVERY_THRESHOLD                               60 // HP percentage beneath which SHOULD_RECOVER_CHANCE is active
+#define SUCKER_PUNCH_CHANCE                                     50 // Chance for the AI to not use Sucker Punch if the player has a status move
+#define SUCKER_PUNCH_PREDICTION_CHANCE                          50 // Additional chance for the AI to not use Sucker Punch if actively predicting a status move if SUCKER_PUNCH_CHANCE fails
 
 // AI damage calc considerations
 #define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit
@@ -87,10 +91,13 @@
 // AI_FLAG_SMART_SWITCHING settings
 #define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
 
-// AI's acceptable number of hits to KO the partner via friendly fire in a double battle.
-#define FRIENDLY_FIRE_RISKY_THRESHOLD           2
-#define FRIENDLY_FIRE_NORMAL_THRESHOLD          3
-#define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD    4
+// Configurations specifically for AI_FLAG_DOUBLE_BATTLE.
+#define FRIENDLY_FIRE_RISKY_THRESHOLD             2 // AI_FLAG_RISKY acceptable number of hits to KO the partner via friendly fire
+#define FRIENDLY_FIRE_NORMAL_THRESHOLD            3 // typical acceptable number of hits to KO the partner via friendly fire
+#define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD      4 // AI_FLAG_CONSERVATIVE acceptable number of hits to KO the partner via friendly fire
+// Counterplay on the assumption of opponents Protecting.
+#define DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE    35 // both pokemon use Trick Room on turn Trick Room expires in the hopes both opponents used Protect to stall, getting a free refresh on the timer
+#define TAILWIND_IN_TRICK_ROOM_CHANCE            35 // use Tailwind on turn Trick Room expires in the hopes both opponents used Protect to stall
 
 // AI's desired stat changes for Guard Split and Power Split, treated as %
 #define GUARD_SPLIT_ALLY_PERCENTAGE     200

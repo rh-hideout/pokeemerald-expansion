@@ -675,6 +675,19 @@ AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a move of the sam
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a status move a percentage of the time")
+{
+    PASSES_RANDOMLY(SUCKER_PUNCH_CHANCE, 100, RNG_AI_SUCKER_PUNCH);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_SUCKER_PUNCH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_GROWL, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SUCKER_PUNCH, MOVE_SCRATCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SUCKER_PUNCH); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it is super effective or it has no other options")
 {
     u32 aiFlags = 0; u32 status = 0; u32 aiMove = 0;
@@ -882,6 +895,19 @@ AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to be
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI will stop setting up at +4")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE, MOVE_IRON_DEFENSE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
 {
     GIVEN {
@@ -910,5 +936,77 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
         OPPONENT(SPECIES_ZUBAT) { Level(14); Moves(MOVE_TACKLE); }
     } WHEN {
         TURN { MOVE(player, MOVE_MAGNITUDE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't setup if it can KO through Sturdy effect")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SKARMORY) { Ability(ABILITY_STURDY); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_MOLTRES) { Moves(MOVE_FIRE_BLAST, MOVE_AGILITY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_FIRE_BLAST); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't setup if otherwise good scenario is changed by the presence of priority")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_FLOATZEL) { Speed(2); Moves(MOVE_AQUA_JET, MOVE_SURF); }
+        OPPONENT(SPECIES_DONPHAN) { Speed(5); Moves(MOVE_BULK_UP, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SURF); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and outspeeds")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HEADBUTT); EXPECT_MOVE(opponent, MOVE_RECOVER); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if it outheals your damage and is outsped")
+{
+    u32 aiMove = MOVE_NONE;
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    PARAMETRIZE{ aiMove = MOVE_RECOVER; }
+    PARAMETRIZE{ aiMove = MOVE_STRENGTH_SAP; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(5); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(2); Moves(MOVE_SCALD, aiMove); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, aiMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if is in no immediate danger beneath an HP threshold")
+{
+    PASSES_RANDOMLY(SHOULD_RECOVER_CHANCE, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_RECOVER); }
     }
 }
