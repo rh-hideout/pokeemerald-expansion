@@ -813,11 +813,16 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
         u32 switchMon = GetMonData(&gEnemyParty[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
-
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Switching to "), 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, gSpeciesInfo[switchMon].speciesName, 74 + 68, 64, 0, NULL);
     }
-
+    else
+    {
+        u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Chosen move: "), 74, 64, 0, NULL);
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, GetMoveName(gBattleMons[data->aiBattlerId].moves[chosenMoveIndex]), 74 + 68, 64, 0, NULL);
+    }
+    
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);
     Free(text);
 }
