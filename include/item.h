@@ -21,7 +21,7 @@
 #define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
 #define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
 #define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum TMHMItemId
+enum ItemId
 {
     RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
     RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
@@ -34,16 +34,16 @@ enum TMHMItemId
 /* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
  * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
  */
-#define UNPACK_TM_HM_ENUM(_tmHm) CAT(ENUM_TM_HM_, _tmHm),
+#define UNPACK_TM_HM_INDEX(_tmHm) CAT(TM_HM_INDEX_, _tmHm),
 enum TMHMIndex
 {
-    FOREACH_TMHM(UNPACK_TM_HM_ENUM)
+    FOREACH_TMHM(UNPACK_TM_HM_INDEX)
     NUM_ALL_MACHINES,
     NUM_TECHNICAL_MACHINES = (0 FOREACH_TM(PLUS_ONE)),
     NUM_HIDDEN_MACHINES = (0 FOREACH_HM(PLUS_ONE)),
 };
 
-#undef UNPACK_TM_HM_ENUM
+#undef UNPACK_TM_HM_INDEX
 
 typedef void (*ItemUseFunc)(u8);
 
@@ -76,20 +76,18 @@ struct ALIGNED(2) BagPocket
     enum Pocket id:6;
 };
 
-struct TmHmIndexKey
-{
-    enum TMHMItemId itemId:16;
-    u16 moveId;
-};
-
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
 extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
-#define UNPACK_ITEM_TO_TM_INDEX(_tm) case CAT(ITEM_TM_, _tm): return CAT(ENUM_TM_HM_, _tm) + 1;
-#define UNPACK_ITEM_TO_HM_INDEX(_hm) case CAT(ITEM_HM_, _hm): return CAT(ENUM_TM_HM_, _hm) + 1;
+#define UNPACK_ITEM_TO_TM_INDEX(_tm) case CAT(ITEM_TM_, _tm): return CAT(TM_HM_INDEX_, _tm) + 1;
+#define UNPACK_ITEM_TO_HM_INDEX(_hm) case CAT(ITEM_HM_, _hm): return CAT(TM_HM_INDEX_, _hm) + 1;
 #define UNPACK_ITEM_TO_TM_MOVE_ID(_tm) case CAT(ITEM_TM_, _tm): return CAT(MOVE_, _tm);
 #define UNPACK_ITEM_TO_HM_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
+#define UNPACK_TM_TO_ITEM_ID(_tm) case CAT(TM_HM_INDEX_, _tm): return CAT(ITEM_TM_, _tm);
+#define UNPACK_HM_TO_ITEM_ID(_hm) case CAT(TM_HM_INDEX_, _hm): return CAT(ITEM_HM_, _hm);
+#define UNPACK_TM_TO_MOVE_ID(_tm) case CAT(ITEM_TM_, _tm): return CAT(MOVE_, _tm);
+#define UNPACK_HM_TO_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
 
 static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
 {
@@ -125,20 +123,48 @@ static inline u16 GetItemTMHMMoveId(u16 item)
     }
 }
 
-#undef UNPACK_ITEM_TO_TM_INDEX
-#undef UNPACK_ITEM_TO_HM_INDEX
-#undef UNPACK_ITEM_TO_TM_MOVE_ID
-#undef UNPACK_ITEM_TO_HM_MOVE_ID
-
-static inline enum TMHMItemId GetTMHMItemId(enum TMHMIndex index)
+static inline enum ItemId GetTMHMItemId(enum TMHMIndex index)
 {
-    return gTMHMItemMoveIds[index].itemId;
+    switch (index)
+    {
+        /* Expands to:
+         * case TM_HM_INDEX_FOCUS_PUNCH:
+         *     return ITEM_TM_FOCUS_PUNCH;
+         * case TM_HM_INDEX_DRAGON_CLAW:
+         *      return ITEM_TM_DRAGON_CLAW;
+         * etc */
+        FOREACH_TM(UNPACK_TM_TO_ITEM_ID)
+        FOREACH_HM(UNPACK_HM_TO_ITEM_ID)
+        default:
+            return ITEM_NONE;
+    }
 }
 
 static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 {
-    return gTMHMItemMoveIds[index].moveId;
+    switch (index)
+    {
+        /* Expands to:
+         * case TM_HM_INDEX_FOCUS_PUNCH:
+         *     return MOVE_FOCUS_PUNCH;
+         * case TM_HM_INDEX_DRAGON_CLAW:
+         *      return MOVE_DRAGON_CLAW;
+         * etc */
+        FOREACH_TM(UNPACK_TM_TO_MOVE_ID)
+        FOREACH_HM(UNPACK_HM_TO_MOVE_ID)
+        default:
+            return MOVE_NONE;
+    }
 }
+
+#undef UNPACK_ITEM_TO_TM_INDEX
+#undef UNPACK_ITEM_TO_HM_INDEX
+#undef UNPACK_ITEM_TO_TM_MOVE_ID
+#undef UNPACK_ITEM_TO_HM_MOVE_ID
+#undef UNPACK_TM_TO_ITEM_ID
+#undef UNPACK_HM_TO_ITEM_ID
+#undef UNPACK_TM_TO_MOVE_ID
+#undef UNPACK_HM_TO_MOVE_ID
 
 #define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
 #define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
