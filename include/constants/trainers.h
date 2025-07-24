@@ -259,6 +259,9 @@
 // #define TRAINER_PIC_LADY                  TRAINER_PIC_BUG_MANIAC
 #define TRAINER_PIC_PAINTER               TRAINER_PIC_BUG_MANIAC
 
+#define TRAINER_BACK_PIC_PLAYER_MALE (IS_FRLG ? TRAINER_BACK_PIC_RED : TRAINER_BACK_PIC_BRENDAN)
+#define TRAINER_BACK_PIC_PLAYER_FEMALE (IS_FRLG ? TRAINER_BACK_PIC_LEAF : TRAINER_BACK_PIC_MAY)
+
 // The player back pics are assumed to alternate according to the gender values (MALE/FEMALE)
 #define TRAINER_BACK_PIC_BRENDAN                0
 #define TRAINER_BACK_PIC_MAY                    1
