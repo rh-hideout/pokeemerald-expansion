@@ -161,8 +161,8 @@ static void ItemStorage_HandleRemoveItem(u8);
 static void ItemStorage_HandleErrorMessageInput(u8);
 static void ItemStorage_ReturnToListInput(u8);
 
-static const u8 *ItemStorage_GetMessage(u16);
-static void CopyItemName_PlayerPC(u8 *, u16);
+static const u8 *ItemStorage_GetMessage(u32);
+static void CopyItemName_PlayerPC(u8 *, enum ItemId);
 
 static void ItemStorage_Init(void);
 static void ItemStorage_DrawSwapArrow(u8, u8, u8);
@@ -170,7 +170,7 @@ static void ItemStorage_RemoveWindow(u8);
 static void ItemStorage_UpdateSwapLinePos(u8);
 static void ItemStorage_ProcessItemSwapInput(u8);
 static void ItemStorage_EraseItemIcon(void);
-static void ItemStorage_DrawItemIcon(u16);
+static void ItemStorage_DrawItemIcon(enum ItemId);
 static void ItemStorage_PrintDescription(s32);
 static void ItemStorage_EraseMainMenu(u8);
 static void ItemStorage_MoveCursor(s32, bool8, struct ListMenu *);
@@ -1018,7 +1018,7 @@ void ItemStorage_RefreshListMenu(void)
     gMultiuseListMenuTemplate.maxShowed = gPlayerPCItemPageInfo.pageItems;
 }
 
-void CopyItemName_PlayerPC(u8 *string, u16 itemId)
+void CopyItemName_PlayerPC(u8 *string, enum ItemId itemId)
 {
     CopyItemName(itemId, string);
 }
@@ -1103,7 +1103,7 @@ static void ItemStorage_DrawSwapArrow(u8 y, u8 b, u8 speed)
         AddTextPrinterParameterized4(windowId, FONT_NORMAL, 0, y, 0, 0, sSwapArrowTextColors, speed, gText_SelectorArrow2);
 }
 
-static void ItemStorage_DrawItemIcon(u16 itemId)
+static void ItemStorage_DrawItemIcon(enum ItemId itemId)
 {
     u8 spriteId;
     u8 *spriteIdLoc = &sItemStorageMenu->spriteId;
@@ -1172,7 +1172,7 @@ static void ItemStorage_CreateListMenu(u8 taskId)
     gTasks[taskId].func = ItemStorage_ProcessInput;
 }
 
-static const u8 *ItemStorage_GetMessage(u16 itemId)
+static const u8 *ItemStorage_GetMessage(u32 itemId)
 {
     const u8 *string;
 

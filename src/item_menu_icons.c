@@ -477,7 +477,7 @@ static void SpriteCB_SwitchPocketRotatingBallContinue(struct Sprite *sprite)
         RemoveBagSprite(ITEMMENUSPRITE_BALL);
 }
 
-void AddBagItemIconSprite(u16 itemId, u8 id)
+void AddBagItemIconSprite(enum ItemId itemId, u8 id)
 {
     u8 *spriteId = &gBagMenu->spriteIds[id + ITEMMENUSPRITE_ITEM];
     if (*spriteId == SPRITE_NONE)

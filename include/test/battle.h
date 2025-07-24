@@ -994,7 +994,7 @@ struct MoveContext
 
 struct ItemContext
 {
-    u16 itemId;
+    enum ItemId itemId;
     u16 explicitItemId:1;
     u16 partyIndex;
     u16 explicitPartyIndex:1;

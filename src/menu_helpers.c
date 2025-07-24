@@ -275,7 +275,7 @@ u8 GetLRKeysPressedAndHeld(void)
     return 0;
 }
 
-bool8 IsHoldingItemAllowed(u16 itemId)
+bool8 IsHoldingItemAllowed(enum ItemId itemId)
 {
     // e-Reader Enigma Berry can't be held in link areas
     if (itemId == ITEM_ENIGMA_BERRY_E_READER
@@ -287,7 +287,7 @@ bool8 IsHoldingItemAllowed(u16 itemId)
         return TRUE;
 }
 
-bool8 IsWritingMailAllowed(u16 itemId)
+bool8 IsWritingMailAllowed(enum ItemId itemId)
 {
     if ((IsOverworldLinkActive() == TRUE || InUnionRoom() == TRUE) && ItemIsMail(itemId) == TRUE)
         return FALSE;

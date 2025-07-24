@@ -8659,7 +8659,7 @@ static void Cmd_removeitem(void)
     CMD_ARGS(u8 battler);
 
     u32 battler;
-    u16 itemId = 0;
+    enum ItemId itemId = 0;
 
     if (gBattleScripting.overrideBerryRequirements)
     {

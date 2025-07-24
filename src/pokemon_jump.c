@@ -352,9 +352,9 @@ static void SetUpPokeJumpGfxFuncById(int);
 static bool32 IsPokeJumpGfxFuncFinished(void);
 static void SetUpResetVineGfx(void);
 static bool32 ResetVineGfx(void);
-static void PrintPrizeMessage(u16, u16);
-static void PrintPrizeFilledBagMessage(u16);
-static void PrintNoRoomForPrizeMessage(u16);
+static void PrintPrizeMessage(enum ItemId, u16);
+static void PrintPrizeFilledBagMessage(enum ItemId);
+static void PrintNoRoomForPrizeMessage(enum ItemId);
 static bool32 DoPrizeMessageAndFanfare(void);
 static void ClearMessageWindow(void);
 static void SetMonSpriteY(u32, s16);
@@ -2153,7 +2153,7 @@ static bool32 HasEnoughScoreForPrize(void)
 
 static u16 GetPrizeData(void)
 {
-    u16 itemId = GetPrizeItemId();
+    enum ItemId itemId = GetPrizeItemId();
     u16 quantity = GetPrizeQuantity();
     return (quantity << 12) | (itemId & 0xFFF);
 }
@@ -3350,7 +3350,7 @@ static bool32 ResetVineGfx(void)
     return TRUE;
 }
 
-static void PrintPrizeMessage(u16 itemId, u16 quantity)
+static void PrintPrizeMessage(enum ItemId itemId, u16 quantity)
 {
     CopyItemNameHandlePlural(itemId, sPokemonJumpGfx->itemName, quantity);
     ConvertIntToDecimalStringN(sPokemonJumpGfx->itemQuantityStr, quantity, STR_CONV_MODE_LEFT_ALIGN, 1);
@@ -3365,7 +3365,7 @@ static void PrintPrizeMessage(u16 itemId, u16 quantity)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintPrizeFilledBagMessage(u16 itemId)
+static void PrintPrizeFilledBagMessage(enum ItemId itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();
@@ -3378,7 +3378,7 @@ static void PrintPrizeFilledBagMessage(u16 itemId)
     sPokemonJumpGfx->msgWindowState = 0;
 }
 
-static void PrintNoRoomForPrizeMessage(u16 itemId)
+static void PrintNoRoomForPrizeMessage(enum ItemId itemId)
 {
     CopyItemName(itemId, sPokemonJumpGfx->itemName);
     DynamicPlaceholderTextUtil_Reset();

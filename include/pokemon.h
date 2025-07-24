@@ -631,7 +631,7 @@ struct FormChange
 struct Fusion
 {
     u16 fusionStorageIndex;
-    u16 itemId;
+    enum ItemId itemId;
     u16 targetSpecies1;
     u16 targetSpecies2;
     u16 fusingIntoMon;
@@ -782,8 +782,8 @@ void CopyPartyMonToBattleData(u32 battler, u32 partyIndex);
 bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex);
 bool8 PokemonUseItemEffects(struct Pokemon *mon, u16 item, u8 partyIndex, u8 moveIndex, u8 usedByAI);
 bool8 HealStatusConditions(struct Pokemon *mon, u32 healMask, u8 battler);
-u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit);
-u8 *UseStatIncreaseItem(u16 itemId);
+u8 GetItemEffectParamOffset(u32 battler, enum ItemId itemId, u8 effectByte, u8 effectBit);
+u8 *UseStatIncreaseItem(enum ItemId itemId);
 u8 GetNature(struct Pokemon *mon);
 u8 GetNatureFromPersonality(u32 personality);
 u32 GetGMaxTargetSpecies(u32 species);

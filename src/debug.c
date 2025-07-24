@@ -3129,7 +3129,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PCItemStorage(u8 taskId)
 {
-    u16 itemId;
+    enum ItemId itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
@@ -3140,7 +3140,7 @@ static void DebugAction_PCBag_Fill_PCItemStorage(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketItems(u8 taskId)
 {
-    u16 itemId;
+    enum ItemId itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {
@@ -3174,7 +3174,7 @@ static void DebugAction_PCBag_Fill_PocketTMHM(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 {
-    u16 itemId;
+    enum ItemId itemId;
 
     for (enum BerryIndex berryIndex = 1; berryIndex < NUM_BERRIES; berryIndex++)
     {
@@ -3186,7 +3186,7 @@ static void DebugAction_PCBag_Fill_PocketBerries(u8 taskId)
 
 static void DebugAction_PCBag_Fill_PocketKeyItems(u8 taskId)
 {
-    u16 itemId;
+    enum ItemId itemId;
 
     for (itemId = 1; itemId < ITEMS_COUNT; itemId++)
     {

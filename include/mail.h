@@ -21,13 +21,13 @@ void ReadMail(struct Mail *mail, void (*exitCallback)(void), bool8 hasText);
 void ClearAllMail(void);
 void ClearMail(struct Mail *mail);
 bool8 MonHasMail(struct Pokemon *mon);
-u8 GiveMailToMonByItemId(struct Pokemon *mon, u16 itemId);
+u8 GiveMailToMonByItemId(struct Pokemon *mon, enum ItemId itemId);
 u16 SpeciesToMailSpecies(u16 species, u32 personality);
 u16 MailSpeciesToSpecies(u16 mailSpecies, u16 *buffer);
 u8 GiveMailToMon(struct Pokemon *mon, struct Mail *mail);
 void TakeMailFromMon(struct Pokemon *mon);
 void ClearMailItemId(u8 mailId);
 u8 TakeMailFromMonAndSave(struct Pokemon *mon);
-bool8 ItemIsMail(u16 itemId);
+bool8 ItemIsMail(enum ItemId itemId);
 
 #endif // GUARD_MAIL_H

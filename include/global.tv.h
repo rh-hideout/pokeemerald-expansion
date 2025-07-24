@@ -224,7 +224,7 @@ typedef union // size = 0x24
         /*0x02*/ u8 priceReduced;
         /*0x03*/ u8 language;
         /*0x04*/ u8 filler_04[2];
-        /*0x06*/ u16 itemIds[SMARTSHOPPER_NUM_ITEMS];
+        /*0x06*/ enum ItemId itemIds[SMARTSHOPPER_NUM_ITEMS];
         /*0x0C*/ u16 itemAmounts[SMARTSHOPPER_NUM_ITEMS];
         /*0x12*/ u8 shopLocation;
         /*0x13*/ u8 playerName[PLAYER_NAME_LENGTH + 1];

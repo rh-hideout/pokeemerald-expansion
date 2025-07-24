@@ -18,7 +18,7 @@ struct StatFractions
 
 struct PickupItem
 {
-    u16 itemId;
+    enum ItemId itemId;
     u8 percentage[10];
 };
 

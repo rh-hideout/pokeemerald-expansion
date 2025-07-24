@@ -115,7 +115,7 @@ enum {
 
 struct BlenderBerry
 {
-    u16 itemId;
+    enum ItemId itemId;
     u8 name[BERRY_NAME_LENGTH + 1];
     u8 flavors[FLAVOR_COUNT + 1]; // 5 flavors, + 1 for feel
 };
@@ -218,7 +218,7 @@ static bool8 UpdateBlenderLandScreenShake(void);
 static void SetPlayerIdMaps(void);
 static void PrintPlayerNames(void);
 static void InitBlenderBgs(void);
-static void SetPlayerBerryData(u8, u16);
+static void SetPlayerBerryData(u8, enum ItemId);
 static void Blender_AddTextPrinter(u8, const u8 *, u8, u8, s32, s32);
 static void ResetLinkCmds(void);
 static void CreateParticleSprites(void);
@@ -1203,7 +1203,7 @@ static void CreateBerrySprite(u32 itemId, u32 playerId)
                         berryId);
 }
 
-static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, u16 itemId)
+static void ConvertItemToBlenderBerry(struct BlenderBerry *berry, enum ItemId itemId)
 {
     const struct BerryInfo *berryInfo = GetBerryInfo(GetBerryIndex(itemId));
 
@@ -3201,7 +3201,7 @@ static void SpriteCB_ScoreSymbolBest(struct Sprite *sprite)
         DestroySprite(sprite);
 }
 
-static void SetPlayerBerryData(u8 playerId, u16 itemId)
+static void SetPlayerBerryData(u8 playerId, enum ItemId itemId)
 {
     sBerryBlender->chosenItemId[playerId] = itemId;
     ConvertItemToBlenderBerry(&sBerryBlender->blendedBerries[playerId], itemId);
