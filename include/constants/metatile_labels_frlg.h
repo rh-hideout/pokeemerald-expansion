@@ -1,9 +1,9 @@
 #ifndef GUARD_METATILE_LABELS_FRLG_H
 #define GUARD_METATILE_LABELS_FRLG_H
 
-// gTileset_Building
-#define METATILE_Building_PCOff  0x062
-#define METATILE_Building_PCOn   0x063
+// gTileset_BuildingFrlg
+#define METATILE_BuildingFrlg_PCOff  0x062
+#define METATILE_BuildingFrlg_PCOn   0x063
 
 // gTileset_Cave
 #define METATILE_Cave_Floor_Ledge_Bottom  0x2E1
