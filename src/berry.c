@@ -2358,12 +2358,12 @@ const struct BerryInfo *GetBerryInfo(enum BerryIndex berry)
     #if FREE_ENIGMA_BERRY == FALSE
         return (struct BerryInfo *)(&gSaveBlock1Ptr->enigmaBerry.berry);
     #else
-        return &gBerries[0];    //never reached, but will appease the compiler gods
+        return &gBerries[INDEX_BERRY_NONE].info;    //never reached, but will appease the compiler gods
     #endif //FREE_ENIGMA_BERRY
     }
     else
     {
-        if (berry == BERRY_NONE || berry > NUM_BERRIES)
+        if (berry == INDEX_BERRY_NONE || berry > NUM_BERRIES)
             berry = 1;
         return &gBerries[berry].info;
     }
