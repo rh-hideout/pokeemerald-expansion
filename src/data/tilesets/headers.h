@@ -832,7 +832,7 @@ const struct Tileset gTileset_UnionRoom =
 };
 
 // FRLG tilesets
-const struct Tileset gTileset_Building_Frlg =
+const struct Tileset gTileset_BuildingFrlg =
 {
     .isCompressed = TRUE,
     .isSecondary = FALSE,
@@ -986,7 +986,7 @@ const struct Tileset gTileset_Mart =
     .callback = NULL,
 };
 
-const struct Tileset gTileset_PokemonCenter_Frlg =
+const struct Tileset gTileset_PokemonCenterFrlg =
 {
     .isCompressed = TRUE,
     .isSecondary = TRUE,

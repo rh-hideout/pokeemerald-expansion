@@ -1062,19 +1062,19 @@ CableClub_EventScript_AdapterNotConnected_Frlg::
 	end
 
 CableClub_EventScript_OpenUnionRoomBarrier_Frlg::
-	setmetatile 5, 3, METATILE_PokemonCenter_Floor_ShadeLeft, 0
+	setmetatile 5, 3, METATILE_PokemonCenterFrlg_Floor_ShadeLeft, 0
 	return
 
 CableClub_EventScript_CloseUnionRoomBarrier_Frlg::
-	setmetatile 5, 3, METATILE_PokemonCenter_CounterBarrierFrlg, 1
+	setmetatile 5, 3, METATILE_PokemonCenterFrlg_CounterBarrier, 1
 	return
 
 CableClub_EventScript_OpenDirectCornerBarrier_Frlg::
-	setmetatile 9, 3, METATILE_PokemonCenter_Floor_ShadeLeft, 0
+	setmetatile 9, 3, METATILE_PokemonCenterFrlg_Floor_ShadeLeft, 0
 	return
 
 CableClub_EventScript_CloseDirectCornerBarrier_Frlg::
-	setmetatile 9, 3, METATILE_PokemonCenter_CounterBarrierFrlg, 1
+	setmetatile 9, 3, METATILE_PokemonCenterFrlg_CounterBarrier, 1
 	return
 
 CableClub_EventScript_OpenGameCornerBarrier_Frlg::

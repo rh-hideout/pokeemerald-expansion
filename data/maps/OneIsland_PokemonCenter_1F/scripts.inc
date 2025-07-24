@@ -11,17 +11,17 @@ OneIsland_PokemonCenter_1F_OnLoad::
 	end
 
 OneIsland_PokemonCenter_1F_EventScript_SetRubyMetatile::
-	setmetatile 13, 4, METATILE_PokemonCenter_NetworkMachine_Ruby, 1
+	setmetatile 13, 4, METATILE_PokemonCenterFrlg_NetworkMachine_Ruby, 1
 	return
 
 OneIsland_PokemonCenter_1F_EventScript_SetSapphireMetatile::
-	setmetatile 16, 4, METATILE_PokemonCenter_NetworkMachine_Sapphire, 1
+	setmetatile 16, 4, METATILE_PokemonCenterFrlg_NetworkMachine_Sapphire, 1
 	return
 
 OneIsland_PokemonCenter_1F_EventScript_SetNetworkMachineOn::
 	call OneIsland_PokemonCenter_1F_EventScript_SetSapphireMetatile
-	setmetatile 14, 4, METATILE_PokemonCenter_NetworkMachine_ScreenLeft_On, 1
-	setmetatile 15, 4, METATILE_PokemonCenter_NetworkMachine_ScreenRight_On, 1
+	setmetatile 14, 4, METATILE_PokemonCenterFrlg_NetworkMachine_ScreenLeft_On, 1
+	setmetatile 15, 4, METATILE_PokemonCenterFrlg_NetworkMachine_ScreenRight_On, 1
 	return
 
 OneIsland_PokemonCenter_1F_OnTransition::

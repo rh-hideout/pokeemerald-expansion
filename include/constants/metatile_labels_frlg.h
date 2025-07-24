@@ -59,16 +59,16 @@
 // gTileset_General
 #define METATILE_GeneralFrlg_CalmWater           0x12B
 #define METATILE_GeneralFrlg_Door                0x03D
-#define METATILE_General_Plain_Grass             0x00D
-#define METATILE_General_Plain_Mowed             0x001
-#define METATILE_General_SlidingDoubleDoor       0x15B
-#define METATILE_General_SlidingSingleDoor       0x062
-#define METATILE_General_ThinTreeTop_Grass       0x00A
-#define METATILE_General_ThinTreeTop_Mowed       0x013
-#define METATILE_General_WideTreeTopLeft_Grass   0x00B
-#define METATILE_General_WideTreeTopLeft_Mowed   0x00E
-#define METATILE_General_WideTreeTopRight_Grass  0x00C
-#define METATILE_General_WideTreeTopRight_Mowed  0x00F
+#define METATILE_GeneralFrlg_Plain_Grass             0x00D
+#define METATILE_GeneralFrlg_Plain_Mowed             0x001
+#define METATILE_GeneralFrlg_SlidingDoubleDoor       0x15B
+#define METATILE_GeneralFrlg_SlidingSingleDoor       0x062
+#define METATILE_GeneralFrlg_ThinTreeTop_Grass       0x00A
+#define METATILE_GeneralFrlg_ThinTreeTop_Mowed       0x013
+#define METATILE_GeneralFrlg_WideTreeTopLeft_Grass   0x00B
+#define METATILE_GeneralFrlg_WideTreeTopLeft_Mowed   0x00E
+#define METATILE_GeneralFrlg_WideTreeTopRight_Grass  0x00C
+#define METATILE_GeneralFrlg_WideTreeTopRight_Mowed  0x00F
 
 // gTileset_GenericBuilding1
 #define METATILE_GenericBuilding1_PlayersPCOff  0x28F
@@ -91,35 +91,35 @@
 // gTileset_PewterCity
 #define METATILE_PewterCity_Door  0x2CE
 
-// gTileset_PokemonCenter
-#define METATILE_PokemonCenter_CableClubDoor                         0x2DE
-#define METATILE_PokemonCenter_CounterBarrierFrlg                    0x2F9
-#define METATILE_PokemonCenter_Escalator_BottomNextRail_Normal       0x2D0
-#define METATILE_PokemonCenter_Escalator_BottomNextRail_Transition1  0x30A
-#define METATILE_PokemonCenter_Escalator_BottomNextRail_Transition2  0x308
-#define METATILE_PokemonCenter_Escalator_BottomNext_Normal           0x2D8
-#define METATILE_PokemonCenter_Escalator_BottomNext_Transition1      0x312
-#define METATILE_PokemonCenter_Escalator_BottomNext_Transition2      0x310
-#define METATILE_PokemonCenter_Escalator_BottomRail_Normal           0x2D1
-#define METATILE_PokemonCenter_Escalator_BottomRail_Transition1      0x30B
-#define METATILE_PokemonCenter_Escalator_BottomRail_Transition2      0x309
-#define METATILE_PokemonCenter_Escalator_Bottom_Normal               0x2D9
-#define METATILE_PokemonCenter_Escalator_Bottom_Transition1          0x313
-#define METATILE_PokemonCenter_Escalator_Bottom_Transition2          0x311
-#define METATILE_PokemonCenter_Escalator_TopNextRail_Normal          0x2EB
-#define METATILE_PokemonCenter_Escalator_TopNextRail_Transition1     0x31E
-#define METATILE_PokemonCenter_Escalator_TopNextRail_Transition2     0x31C
-#define METATILE_PokemonCenter_Escalator_TopNext_Normal              0x2E3
-#define METATILE_PokemonCenter_Escalator_TopNext_Transition1         0x316
-#define METATILE_PokemonCenter_Escalator_TopNext_Transition2         0x314
-#define METATILE_PokemonCenter_Escalator_Top_Normal                  0x2E4
-#define METATILE_PokemonCenter_Escalator_Top_Transition1             0x317
-#define METATILE_PokemonCenter_Escalator_Top_Transition2             0x315
-#define METATILE_PokemonCenter_Floor_ShadeLeft                       0x2C5
-#define METATILE_PokemonCenter_NetworkMachine_Ruby                   0x35D
-#define METATILE_PokemonCenter_NetworkMachine_Sapphire               0x35F
-#define METATILE_PokemonCenter_NetworkMachine_ScreenLeft_On          0x35A
-#define METATILE_PokemonCenter_NetworkMachine_ScreenRight_On         0x35B
+// gTileset_PokemonCenterFrlg
+#define METATILE_PokemonCenterFrlg_CableClubDoor                         0x2DE
+#define METATILE_PokemonCenterFrlg_CounterBarrier                        0x2F9
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNextRail_Normal       0x2D0
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNextRail_Transition1  0x30A
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNextRail_Transition2  0x308
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNext_Normal           0x2D8
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNext_Transition1      0x312
+#define METATILE_PokemonCenterFrlg_Escalator_BottomNext_Transition2      0x310
+#define METATILE_PokemonCenterFrlg_Escalator_BottomRail_Normal           0x2D1
+#define METATILE_PokemonCenterFrlg_Escalator_BottomRail_Transition1      0x30B
+#define METATILE_PokemonCenterFrlg_Escalator_BottomRail_Transition2      0x309
+#define METATILE_PokemonCenterFrlg_Escalator_Bottom_Normal               0x2D9
+#define METATILE_PokemonCenterFrlg_Escalator_Bottom_Transition1          0x313
+#define METATILE_PokemonCenterFrlg_Escalator_Bottom_Transition2          0x311
+#define METATILE_PokemonCenterFrlg_Escalator_TopNextRail_Normal          0x2EB
+#define METATILE_PokemonCenterFrlg_Escalator_TopNextRail_Transition1     0x31E
+#define METATILE_PokemonCenterFrlg_Escalator_TopNextRail_Transition2     0x31C
+#define METATILE_PokemonCenterFrlg_Escalator_TopNext_Normal              0x2E3
+#define METATILE_PokemonCenterFrlg_Escalator_TopNext_Transition1         0x316
+#define METATILE_PokemonCenterFrlg_Escalator_TopNext_Transition2         0x314
+#define METATILE_PokemonCenterFrlg_Escalator_Top_Normal                  0x2E4
+#define METATILE_PokemonCenterFrlg_Escalator_Top_Transition1             0x317
+#define METATILE_PokemonCenterFrlg_Escalator_Top_Transition2             0x315
+#define METATILE_PokemonCenterFrlg_Floor_ShadeLeft                       0x2C5
+#define METATILE_PokemonCenterFrlg_NetworkMachine_Ruby                   0x35D
+#define METATILE_PokemonCenterFrlg_NetworkMachine_Sapphire               0x35F
+#define METATILE_PokemonCenterFrlg_NetworkMachine_ScreenLeft_On          0x35A
+#define METATILE_PokemonCenterFrlg_NetworkMachine_ScreenRight_On         0x35B
 
 // gTileset_PokemonLeague
 #define METATILE_PokemonLeague_Door_Mid_Open             0x296
