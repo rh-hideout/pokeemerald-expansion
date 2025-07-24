@@ -32,7 +32,6 @@ struct AdditionalEffect
     u8 padding:4;
     union PACKED {
         enum WrappedStringID wrapped;
-        u8 value; // NEVER USE THIS! Use the appropriate enum field instead.
     } multistring;
     u8 chance; // 0% = effect certain, primary effect
 };
