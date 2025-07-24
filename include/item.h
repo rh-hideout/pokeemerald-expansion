@@ -141,25 +141,25 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
 #define GET_BERRY_INDEX(_berry) case ITEM_##_berry##_BERRY: return INDEX_##_berry##_BERRY;
 #define GET_BERRY_ITEM_ID(_berry) case INDEX_##_berry##_BERRY: return ITEM_##_berry##_BERRY;
 
-static inline enum BerryIndex GetBerryIndex(enum BerryItemId berryItemId)
+static inline enum BerryIndex GetBerryIndex(u32 itemId)
 {
-    switch (berryItemId)
+    switch (itemId)
     {
     FOREACH_BERRY(GET_BERRY_INDEX)
-    case ENUM_ITEM_ID_ENIGMA_BERRY_E_READER:
+    case ITEM_ENIGMA_BERRY_E_READER:
         return INDEX_ENIGMA_BERRY_E_READER;
     default:
         return INDEX_BERRY_NONE;
     }
 };
 
-static inline enum BerryItemId GetBerryItemId(enum BerryIndex berryIndex)
+static inline u32 GetBerryItemId(enum BerryIndex berryIndex)
 {
     switch (berryIndex)
     {
     FOREACH_BERRY(GET_BERRY_ITEM_ID)
     case INDEX_ENIGMA_BERRY_E_READER:
-        return ENUM_ITEM_ID_ENIGMA_BERRY_E_READER;
+        return ITEM_ENIGMA_BERRY_E_READER;
     default:
         return ITEM_NONE;
     }

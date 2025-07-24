@@ -1004,7 +1004,6 @@
 #define ITEM_LIST_END 0xFFFF
 
 #define UNPACK_BERRY_INDEX(_berry) INDEX_##_berry##_BERRY,
-#define UNPACK_BERRY_ITEM_ID(_berry) ENUM_ITEM_ID_##_berry##_BERRY = ITEM_##_berry##_BERRY,
 
 enum BerryIndex
 {
@@ -1014,15 +1013,7 @@ enum BerryIndex
     NUM_BERRIES = INDEX_ENIGMA_BERRY_E_READER,
 };
 
-enum BerryItemId
-{
-    ENUM_ITEM_ID_BERRY_NONE = ITEM_NONE,
-    FOREACH_BERRY(UNPACK_BERRY_ITEM_ID)
-    ENUM_ITEM_ID_ENIGMA_BERRY_E_READER = ITEM_ENIGMA_BERRY_E_READER,
-};
-
 #undef UNPACK_BERRY_INDEX
-#undef UNPACK_BERRY_ITEM_ID
 
 #define ITEM_TO_MAIL(itemId) ((itemId) - FIRST_MAIL_INDEX)
 #define MAIL_NONE 0xFF
