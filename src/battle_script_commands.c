@@ -2177,7 +2177,7 @@ static void Cmd_adjustdamage(void)
     u8 param;
     u32 battlerDef;
     u32 rand = Random() % 100;
-    u32 affectionScore = GetBattlerAffectionHearts(gBattlerTarget);
+    u32 affectionScore;
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
@@ -2221,7 +2221,8 @@ static void Cmd_adjustdamage(void)
 
         holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
         param = GetBattlerHoldEffectParam(battlerDef);
-
+        affectionScore = GetBattlerAffectionHearts(battlerDef);
+        
         gPotentialItemEffectBattler = battlerDef;
 
         if (moveEffect == EFFECT_FALSE_SWIPE)
