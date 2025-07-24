@@ -988,7 +988,7 @@ enum __attribute__((packed)) ItemId
 // HOPO BERRY
 // LEGEND PLATE
 
-    ITEMS_COUNT = 829,
+    ITEMS_COUNT,
     ITEM_FIELD_ARROW = ITEMS_COUNT,
 };
 
