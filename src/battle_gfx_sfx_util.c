@@ -940,7 +940,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
         {
             // Get base form if its currently Gigantamax
             if (IsGigantamaxed(battlerDef))
-                targetSpecies = gBattleStruct->changedSpecies[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]];
+                targetSpecies = GetBattlerPartyState(battlerDef)->changedSpecies;
             else if (gBattleStruct->illusion[battlerDef].state == ILLUSION_ON)
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else

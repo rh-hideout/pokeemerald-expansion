@@ -596,7 +596,8 @@ struct PartyState
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
     u32 timesGotHit:8;
-    u32 padding:18;
+    u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
+    u32 padding:7;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -718,7 +719,6 @@ struct BattleStruct
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 sameMoveTurns[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
-    u16 changedSpecies[NUM_BATTLE_SIDES][PARTY_SIZE]; // For forms when multiple mons can change into the same pokemon.
     u8 quickClawBattlerId;
     struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate

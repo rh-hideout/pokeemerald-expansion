@@ -3291,7 +3291,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
     u32 side = 0;
     u32 i = 0, j = 0;
     u32 partner = 0;
-    struct Pokemon *mon;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return 0;
@@ -10161,7 +10160,6 @@ bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
 bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
 {
     u32 monId = gBattlerPartyIndexes[battler];
-    u32 side = GetBattlerSide(battler);
     struct Pokemon *party = GetBattlerParty(battler);
     u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
     u32 targetSpecies;
@@ -10175,8 +10173,9 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
     if (targetSpecies != currentSpecies)
     {
         // Saves the original species on the first form change.
-        if (gBattleStruct->changedSpecies[side][monId] == SPECIES_NONE)
-            gBattleStruct->changedSpecies[side][monId] = gBattleMons[battler].species;
+
+        if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
+            GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
 
         TryToSetBattleFormChangeMoves(&party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
@@ -10184,7 +10183,7 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
         RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
         return TRUE;
     }
-    else if (gBattleStruct->changedSpecies[side][monId] != SPECIES_NONE)
+    else if (GetBattlerPartyState(battler)->changedSpecies != SPECIES_NONE)
     {
         bool32 restoreSpecies = FALSE;
 
@@ -10205,7 +10204,8 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
             u32 abilityForm = gBattleMons[battler].ability;
             // Reverts the original species
             TryToSetBattleFormChangeMoves(&party[monId], method);
-            SetMonData(&party[monId], MON_DATA_SPECIES, &gBattleStruct->changedSpecies[side][monId]);
+            u32 changedSpecies = GetBattlerPartyState(battler)->changedSpecies;
+            SetMonData(&party[monId], MON_DATA_SPECIES, &changedSpecies);
             RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
             // Battler data is not updated with regular form's ability, not doing so could cause wrong ability activation.
             if (method == FORM_CHANGE_FAINT)

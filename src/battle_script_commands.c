@@ -2361,10 +2361,9 @@ static void Cmd_datahpupdate(void)
         else if (DoesDisguiseBlockMove(battler, gCurrentMove))
         {
             // TODO: Convert this to a proper FORM_CHANGE type.
-            u32 side = GetBattlerSide(battler);
             gBattleScripting.battler = battler;
-            if (gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[battler]] == SPECIES_NONE)
-                gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[battler]] = gBattleMons[battler].species;
+            if (GetBattlerPartyState(battler)->changedSpecies == SPECIES_NONE)
+                GetBattlerPartyState(battler)->changedSpecies = gBattleMons[battler].species;
             if (gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED)
                 gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
             else
@@ -2574,9 +2573,8 @@ static void Cmd_resultmessage(void)
     if (gDisableStructs[gBattlerTarget].iceFaceActivationPrevention)
     {
         gDisableStructs[gBattlerTarget].iceFaceActivationPrevention = FALSE;
-        u32 side = GetBattlerSide(gBattlerTarget);
-        if (gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[gBattlerTarget]] == SPECIES_NONE)
-            gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[gBattlerTarget]] = gBattleMons[gBattlerTarget].species;
+        if (GetBattlerPartyState(gBattlerTarget)->changedSpecies == SPECIES_NONE)
+            GetBattlerPartyState(gBattlerTarget)->changedSpecies = gBattleMons[gBattlerTarget].species;
         gBattleMons[gBattlerTarget].species = SPECIES_EISCUE_NOICE;
         gBattleScripting.battler = gBattlerTarget; // For STRINGID_PKMNTRANSFORMED
         BattleScriptCall(BattleScript_IceFaceNullsDamage);
@@ -5664,8 +5662,6 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
              || NumFaintedBattlersByAttacker(battlerAtk) == 0)
                 break;
 
-            u32 side = GetBattlerSide(battlerAtk);
-
             if (GetBattlerPartyState(battlerAtk)->battleBondBoost)
                 break;
 
@@ -5675,7 +5671,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
                 gLastUsedAbility = abilityAtk;
                 GetBattlerPartyState(battlerAtk)->battleBondBoost = TRUE;
                 PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[battlerAtk].species);
-                gBattleStruct->changedSpecies[side][gBattlerPartyIndexes[battlerAtk]] = gBattleMons[battlerAtk].species;
+                GetBattlerPartyState(battlerAtk)->changedSpecies = gBattleMons[battlerAtk].species;
                 gBattleMons[battlerAtk].species = SPECIES_GRENINJA_ASH;
                 BattleScriptCall(BattleScript_BattleBondActivatesOnMoveEndAttacker);
                 effect = TRUE;
