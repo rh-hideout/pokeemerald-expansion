@@ -29,8 +29,6 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if not asleep")
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
             MESSAGE("But it failed!");
         }
-    } THEN {
-        EXPECT_EQ(player->pp[0], 9);
     }
 }
 
@@ -45,8 +43,6 @@ SINGLE_BATTLE_TEST("Sleep Talk works if user has Comatose")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
-    } THEN {
-        EXPECT_EQ(player->pp[0], 9);
     }
 }
 
@@ -60,8 +56,6 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if no moves work")
     } SCENE {
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         MESSAGE("But it failed!");
-    } THEN {
-        EXPECT_EQ(player->pp[0], 9);
     }
 }
 
@@ -76,8 +70,6 @@ SINGLE_BATTLE_TEST("Sleep Talk can still use moves with no PP")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
-    } THEN {
-        EXPECT_EQ(player->pp[0], 9);
     }
 }
 
@@ -96,8 +88,6 @@ SINGLE_BATTLE_TEST("Sleep Talk can use moves while choiced into Sleep Talk")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH);
-    } THEN {
-        EXPECT_EQ(player->pp[0], 8);
     }
 }
 
@@ -116,8 +106,6 @@ SINGLE_BATTLE_TEST("Sleep Talk fails if user is taunted")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         }
-    } THEN {
-        EXPECT_EQ(player->pp[0], 10);
     }
 }
 

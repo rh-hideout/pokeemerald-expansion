@@ -5650,7 +5650,7 @@ BattleScript_SelectingMoveWithNoPP::
 	endselectionscript
 
 BattleScript_NoPPForMove::
-	attackstring2
+	printattackstring
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BUTNOPPLEFT
 	waitmessage B_WAIT_TIME_LONG

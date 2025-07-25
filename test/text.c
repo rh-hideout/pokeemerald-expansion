@@ -812,7 +812,7 @@ TEST("Battle strings fit on the battle message window")
     }
     EXPECT(gBattleStringsTable[battleStringId] != NULL);
     BattleStringExpandPlaceholders(gBattleStringsTable[battleStringId], battleString, BATTLE_STRING_BUFFER_SIZE);
-    // DebugPrintf("Battle String ID %d: %S", battleStringId, battleString);
+    DebugPrintf("Battle String ID %d: %S", battleStringId, battleString);
     for (j = 1;; j++)
     {
         strWidth = GetStringLineWidth(fontId, battleString, 0, j, BATTLE_STRING_BUFFER_SIZE);

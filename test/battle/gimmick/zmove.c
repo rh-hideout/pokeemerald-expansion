@@ -3,7 +3,7 @@
 #include "constants/battle_z_move_effects.h"
 
 // Basic Functionality
-SINGLE_BATTLE_TEST("Z-Move: Z-Moves do not retain priority")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Moves do not retain priority")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Moves are not affected by -ate abilities")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Moves are not affected by -ate abilities")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Moves are affected by Ion Deluge")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are affected by Ion Deluge")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Moves are affected by Ion Deluge")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Moves deal 1/4 damage through protect", s16 damage)
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves deal 1/4 damage through protect", s16 damage)
 {
     bool32 protected;
     PARAMETRIZE { protected = TRUE; }
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Moves deal 1/4 damage through protect", s16 damage
 }
 
 // Status Z-Effects
-SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_RESET_STATS clears a battler's negative stat stages")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_RESET_STATS clears a battler's negative stat stages")
 {
     GIVEN {
         ASSUME(GetMoveZEffect(MOVE_LEECH_SEED) == Z_EFFECT_RESET_STATS);
@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_RESET_STATS clears a battler's negative sta
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_ALL_STATS_UP raises all of a battler's stat stages by one")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_ALL_STATS_UP raises all of a battler's stat stages by one")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_CELEBRATE) == TYPE_NORMAL);
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_ALL_STATS_UP raises all of a battler's stat
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio")
 {
     PASSES_RANDOMLY(1, 2, RNG_CRITICAL_HIT);
     GIVEN {
@@ -133,7 +133,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_BOOST_CRITS raises a battler's critical hit
     }
 }
 
-DOUBLE_BATTLE_TEST("Z-Move: Z_EFFECT_FOLLOW_ME redirects attacks to the user")
+DOUBLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_FOLLOW_ME redirects attacks to the user")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_DESTINY_BOND) == TYPE_GHOST);
@@ -154,7 +154,7 @@ DOUBLE_BATTLE_TEST("Z-Move: Z_EFFECT_FOLLOW_ME redirects attacks to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_RESTORE_REPLACEMENT_HP fully heals the replacement battler's HP")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_RESTORE_REPLACEMENT_HP fully heals the replacement battler's HP")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_PARTING_SHOT) == TYPE_DARK);
@@ -175,7 +175,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_RESTORE_REPLACEMENT_HP fully heals the repl
 }
 
 // This tests the functionality of Z_EFFECT_RECOVER_HP and Z_EFFECT_ATK_UP_1 (and thus by extension all stat-up Z-effects)
-SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_EFFECT_ATK_UP_1 depending on the type of the battler")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_EFFECT_ATK_UP_1 depending on the type of the battler")
 {
     u32 species;
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
@@ -215,7 +215,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_EF
 }
 
 // Specific Z-Move Interactions
-SINGLE_BATTLE_TEST("Z-Move: Z-Mirror Move raises the user's attack by two stages and copies the last used non-status move as a Z-Move")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stages and copies the last used non-status move as a Z-Move")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_FLYING);
@@ -237,7 +237,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Mirror Move raises the user's attack by two stages
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Mirror Move raises the user's attack by two stages and copies the last used status move regularly")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stages and copies the last used status move regularly")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_FLYING);
@@ -256,7 +256,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Mirror Move raises the user's attack by two stages
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Copycat raises the user's accuracy by one stage and copies the last used non-status move as a Z-Move")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Copycat raises the user's accuracy by one stage and copies the last used non-status move as a Z-Move")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_COPYCAT) == TYPE_NORMAL);
@@ -275,7 +275,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Copycat raises the user's accuracy by one stage an
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Me First raises the user's speed by two stages and copies the last used non-status move as a Z-Move with boosted damage", s16 damage)
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Me First raises the user's speed by two stages and copies the last used non-status move as a Z-Move with boosted damage", s16 damage)
 {
     u32 meFirst;
     PARAMETRIZE { meFirst = TRUE; }
@@ -304,7 +304,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Me First raises the user's speed by two stages and
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Nature Power transforms into different Z-Moves based on the current terrain")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Nature Power transforms into different Z-Moves based on the current terrain")
 {
     u32 terrainMove = MOVE_NONE;
     u32 zMove = MOVE_NONE;
@@ -326,7 +326,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Nature Power transforms into different Z-Moves bas
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Hidden Power always transforms into Breakneck Blitz")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Hidden Power always transforms into Breakneck Blitz")
 {
     u8 iv;
     PARAMETRIZE { iv = 0; } // test different Hidden Power types
@@ -345,7 +345,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Hidden Power always transforms into Breakneck Blit
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Weather Ball transforms into different Z-Moves based on current weather")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Weather Ball transforms into different Z-Moves based on current weather")
 {
     u32 weatherMove = MOVE_NONE;
     u32 zMove = MOVE_NONE;
@@ -367,7 +367,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Weather Ball transforms into different Z-Moves bas
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Sleep Talk transforms a used non-status move into a Z-Move")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Sleep Talk transforms a used non-status move into a Z-Move")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NORMAL);
@@ -382,7 +382,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Sleep Talk transforms a used non-status move into 
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Sleep Talk turns Weather Ball into Breakneck Blitz even under rain")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Sleep Talk turns Weather Ball into Breakneck Blitz even under rain")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NORMAL);
@@ -397,7 +397,7 @@ SINGLE_BATTLE_TEST("Z-Move: Z-Sleep Talk turns Weather Ball into Breakneck Blitz
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves and deals 25% of maximum HP to the user")
+SINGLE_BATTLE_TEST("(Z-MOVE) Powder blocks Fire type Z-Moves and deals 25% of maximum HP to the user")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
@@ -414,7 +414,7 @@ SINGLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves and deals 25% of max
     }
 }
 
-DOUBLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves (from Z-Mirror Move)")
+DOUBLE_BATTLE_TEST("(Z-MOVE) Powder blocks Fire type Z-Moves (from Z-Mirror Move)")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
@@ -433,7 +433,7 @@ DOUBLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves (from Z-Mirror Move)
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves but not boosts granted")
+SINGLE_BATTLE_TEST("(Z-MOVE) Powder blocks Fire type Z-Moves but not boosts granted")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WILL_O_WISP) == TYPE_FIRE);
@@ -452,7 +452,7 @@ SINGLE_BATTLE_TEST("Z-Move: Powder blocks Fire type Z-Moves but not boosts grant
 }
 
 // Miscellaneous Interactions
-DOUBLE_BATTLE_TEST("Z-Move: Instruct fails if the target last used a Z-Move")
+DOUBLE_BATTLE_TEST("(Z-MOVE) Instruct fails if the target last used a Z-Move")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -471,7 +471,7 @@ DOUBLE_BATTLE_TEST("Z-Move: Instruct fails if the target last used a Z-Move")
     }
 }
 
-DOUBLE_BATTLE_TEST("Z-Move: Dancer does not use a Z-Move if the battler has used a Z-Move the same turn")
+DOUBLE_BATTLE_TEST("(Z-MOVE) Dancer does not use a Z-Move if the battler has used a Z-Move the same turn")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
@@ -492,7 +492,7 @@ DOUBLE_BATTLE_TEST("Z-Move: Dancer does not use a Z-Move if the battler has used
 }
 
 // Signature Z-Moves
-SINGLE_BATTLE_TEST("Z-Move: Light That Burns the Sky uses the battler's highest attacking stat", s16 damage)
+SINGLE_BATTLE_TEST("(Z-MOVE) Light That Burns the Sky uses the battler's highest attacking stat", s16 damage)
 {
     bool32 useSwordsDance;
     PARAMETRIZE { useSwordsDance = FALSE; }
@@ -516,7 +516,7 @@ SINGLE_BATTLE_TEST("Z-Move: Light That Burns the Sky uses the battler's highest 
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: 10,000,000 Volt Thunderbolt has an increased critical hit ratio")
+SINGLE_BATTLE_TEST("(Z-MOVE) 10,000,000 Volt Thunderbolt has an increased critical hit ratio")
 {
     u32 genConfig, chance;
     PARAMETRIZE { genConfig = GEN_1; chance = 1; }
@@ -540,7 +540,7 @@ SINGLE_BATTLE_TEST("Z-Move: 10,000,000 Volt Thunderbolt has an increased critica
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Stoked Sparksurfer paralyzes the target")
+SINGLE_BATTLE_TEST("(Z-MOVE) Stoked Sparksurfer paralyzes the target")
 {
     GIVEN {
         ASSUME(GetMoveAdditionalEffectById(MOVE_STOKED_SPARKSURFER, 0)->moveEffect == MOVE_EFFECT_PARALYSIS);
@@ -555,7 +555,7 @@ SINGLE_BATTLE_TEST("Z-Move: Stoked Sparksurfer paralyzes the target")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Extreme Evoboost boosts all the user's stats by two stages")
+SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two stages")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_EXTREME_EVOBOOST) == EFFECT_EXTREME_EVOBOOST);
@@ -575,7 +575,7 @@ SINGLE_BATTLE_TEST("Z-Move: Extreme Evoboost boosts all the user's stats by two 
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Genesis Supernova sets up psychic terrain")
+SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_TERRAIN);
@@ -592,7 +592,7 @@ SINGLE_BATTLE_TEST("Z-Move: Genesis Supernova sets up psychic terrain")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Splintered Stormshards removes terrain")
+SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_ICE_SPINNER);
@@ -610,7 +610,7 @@ SINGLE_BATTLE_TEST("Z-Move: Splintered Stormshards removes terrain")
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Clangorous Soulblaze boosts all the user's stats by one stage")
+SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by one stage")
 {
     GIVEN {
         ASSUME(GetMoveAdditionalEffectById(MOVE_CLANGOROUS_SOULBLAZE, 0)->moveEffect == MOVE_EFFECT_ALL_STATS_UP);
@@ -630,7 +630,7 @@ SINGLE_BATTLE_TEST("Z-Move: Clangorous Soulblaze boosts all the user's stats by 
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Guardian of Alola deals 75% of the target's current HP")
+SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75% of the target's current HP")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_FIXED_PERCENT_DAMAGE);
@@ -646,7 +646,7 @@ SINGLE_BATTLE_TEST("Z-Move: Guardian of Alola deals 75% of the target's current 
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Searing Sunraze Smash ignores the target's abilities")
+SINGLE_BATTLE_TEST("(Z-MOVE) Searing Sunraze Smash ignores the target's abilities")
 {
     GIVEN {
         PLAYER(SPECIES_SOLGALEO) { Item(ITEM_SOLGANIUM_Z); }
@@ -661,7 +661,7 @@ SINGLE_BATTLE_TEST("Z-Move: Searing Sunraze Smash ignores the target's abilities
     }
 }
 
-SINGLE_BATTLE_TEST("Z-Move: Z-Revelation Dance always transforms into Breakneck Blitz")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck Blitz")
 {
     u16 species;
     PARAMETRIZE { species = SPECIES_ORICORIO_BAILE; }

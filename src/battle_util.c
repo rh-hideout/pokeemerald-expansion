@@ -11971,19 +11971,6 @@ static u32 GetMirrorMoveMove(void)
     return move;
 }
 
-static const u32 sMetronomeMoves[] =
-{
-    [GEN_9] = MOVES_COUNT_GEN9,
-    [GEN_8] = MOVES_COUNT_GEN8,
-    [GEN_7] = MOVES_COUNT_GEN7,
-    [GEN_6] = MOVES_COUNT_GEN6,
-    [GEN_5] = MOVES_COUNT_GEN5,
-    [GEN_4] = MOVES_COUNT_GEN4,
-    [GEN_3] = MOVES_COUNT_GEN3,
-    [GEN_2] = MOVES_COUNT_GEN2,
-    [GEN_1] = MOVES_COUNT_GEN1,
-};
-
 static bool32 InvalidMetronomeMove(u32 move)
 {
     return GetMoveEffect(move) == EFFECT_PLACEHOLDER
@@ -11992,8 +11979,29 @@ static bool32 InvalidMetronomeMove(u32 move)
 
 static u32 GetMetronomeMove(void)
 {
+
     u32 move = MOVE_NONE;
-    u32 moveCount = sMetronomeMoves[B_METRONOME_MOVES];
+
+#if B_METRONOME_MOVES >= GEN_9
+    u32 moveCount = MOVES_COUNT_GEN9;
+#elif B_METRONOME_MOVES >= GEN_8
+    u32 moveCount = MOVES_COUNT_GEN8;
+#elif B_METRONOME_MOVES >= GEN_7
+    u32 moveCount = MOVES_COUNT_GEN7;
+#elif B_METRONOME_MOVES >= GEN_6
+    u32 moveCount = MOVES_COUNT_GEN6;
+#elif B_METRONOME_MOVES >= GEN_5
+    u32 moveCount = MOVES_COUNT_GEN5;
+#elif B_METRONOME_MOVES >= GEN_4
+    u32 moveCount = MOVES_COUNT_GEN4;
+#elif B_METRONOME_MOVES >= GEN_3
+    u32 moveCount = MOVES_COUNT_GEN3;
+#elif B_METRONOME_MOVES >= GEN_2
+    u32 moveCount = MOVES_COUNT_GEN2;
+#else
+    u32 moveCount = MOVES_COUNT_GEN1;
+#endif
+
     move = RandomUniformExcept(RNG_METRONOME, 1, moveCount - 1, InvalidMetronomeMove);
     return move;
 }

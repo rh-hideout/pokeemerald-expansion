@@ -9,7 +9,7 @@
 	.2byte \move
 	.endm
 
-	.macro attackstring
+	.macro printattackstring
 	.byte 0x2
 	.endm
 
