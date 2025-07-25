@@ -89,7 +89,7 @@ void HasEnoughMonsForDoubleBattle(void)
     }
 }
 
-static bool8 CheckPartyMonHasHeldItem(u16 item)
+static bool8 CheckPartyMonHasHeldItem(enum ItemId item)
 {
     int i;
 
@@ -111,7 +111,7 @@ bool8 DoesPartyHaveEnigmaBerry(void)
     return hasItem;
 }
 
-void CreateScriptedWildMon(u16 species, u8 level, u16 item)
+void CreateScriptedWildMon(u16 species, u8 level, enum ItemId item)
 {
     u8 heldItem[2];
 
@@ -332,7 +332,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, bool8 isShiny, bool8 gmaxFactor, u8 teraType, u8 dmaxLevel)
+static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, enum ItemId item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, bool8 isShiny, bool8 gmaxFactor, u8 teraType, u8 dmaxLevel)
 {
     enum NationalDexOrder nationalDexNum;
     int sentToPc;
@@ -472,7 +472,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     return sentToPc;
 }
 
-u32 ScriptGiveMon(u16 species, u8 level, u16 item)
+u32 ScriptGiveMon(u16 species, u8 level, enum ItemId item)
 {
     u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
     u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
@@ -494,7 +494,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 level          = VarGet(ScriptReadHalfword(ctx));
 
     u32 flags         = ScriptReadWord(ctx);
-    u16 item          = PARSE_FLAG(0, ITEM_NONE);
+    enum ItemId item          = PARSE_FLAG(0, ITEM_NONE);
     u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
     u8 nature         = PARSE_FLAG(2, NUM_NATURES);
     u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);

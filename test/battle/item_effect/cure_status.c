@@ -367,7 +367,7 @@ SINGLE_BATTLE_TEST("Jubilife Muffin heals a battler from any primary status")
 
 SINGLE_BATTLE_TEST("Full Heal, Heal Powder and Local Specialties heal a battler from being confused")
 {
-    u16 item;
+    enum ItemId item;
     PARAMETRIZE { item = ITEM_FULL_HEAL; }
     PARAMETRIZE { item = ITEM_HEAL_POWDER; }
     PARAMETRIZE { item = ITEM_PEWTER_CRUNCHIES; }

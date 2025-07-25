@@ -339,7 +339,7 @@ static u16 GetPrizeData(void);
 static void UnpackPrizeData(u16, u16 *, u16 *);
 static u16 GetPrizeItemId(void);
 static u16 GetPrizeQuantity(void);
-static u16 GetQuantityLimitedByBag(u16, u16);
+static u16 GetQuantityLimitedByBag(enum ItemId, u16);
 static void SpriteCB_Star(struct Sprite *);
 static void SpriteCB_MonHitShake(struct Sprite *);
 static void SpriteCB_MonHitFlash(struct Sprite *);
@@ -2186,7 +2186,7 @@ static u16 GetPrizeQuantity(void)
     return quantity;
 }
 
-static u16 GetQuantityLimitedByBag(u16 item, u16 quantity)
+static u16 GetQuantityLimitedByBag(enum ItemId item, u16 quantity)
 {
     while (quantity && !CheckBagHasSpace(item, quantity))
         quantity--;

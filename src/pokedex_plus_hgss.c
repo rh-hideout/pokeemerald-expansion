@@ -5192,7 +5192,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     u8 moves_x = 5;
     u8 moves_y = 3;
     u16 move;
-    u16 item;
+    enum ItemId item;
 
     u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
 

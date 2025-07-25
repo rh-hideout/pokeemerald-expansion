@@ -565,7 +565,7 @@ SINGLE_BATTLE_TEST("Dynamax: Pokemon with Gigantamax forms revert upon switching
 
 SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Choice items", s16 damage)
 {
-    u16 item;
+    enum ItemId item;
     PARAMETRIZE { item = ITEM_CHOICE_BAND; }
     PARAMETRIZE { item = ITEM_NONE; }
     GIVEN {

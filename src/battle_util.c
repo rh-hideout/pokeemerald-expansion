@@ -10449,7 +10449,7 @@ static u32 GetFlingPowerFromItemId(u32 itemId)
 
 bool32 CanFling(u32 battler)
 {
-    u16 item = gBattleMons[battler].item;
+    enum ItemId item = gBattleMons[battler].item;
 
     if (item == ITEM_NONE
       || (B_KLUTZ_FLING_INTERACTION >= GEN_5 && GetBattlerAbility(battler) == ABILITY_KLUTZ)
@@ -10525,7 +10525,7 @@ void TryRestoreHeldItems(void)
     }
 }
 
-bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
+bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, enum ItemId item)
 {
     u8 stealerSide = GetBattlerSide(battlerStealing);
 

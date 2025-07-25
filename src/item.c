@@ -879,7 +879,7 @@ ItemUseFunc GetItemFieldFunc(enum ItemId itemId)
 // Returns an item's battle effect script ID.
 u8 GetItemBattleUsage(enum ItemId itemId)
 {
-    u16 item = SanitizeItemId(itemId);
+    enum ItemId item = SanitizeItemId(itemId);
     // Handle E-Reader berries.
     if (item == ITEM_ENIGMA_BERRY_E_READER)
     {

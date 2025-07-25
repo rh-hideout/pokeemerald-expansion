@@ -8,7 +8,7 @@
 struct SignatureZMove
 {
     u16 species;
-    u16 item;
+    enum ItemId item;
     u16 move;
     u16 zmove;
 };

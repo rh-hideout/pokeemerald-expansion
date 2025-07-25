@@ -14865,7 +14865,7 @@ void BS_JumpIfCantLoseItem(void)
 {
     NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
     u8 battler = GetBattlerForBattleScript(cmd->battler);
-    u16 item = gBattleMons[battler].item;
+    enum ItemId item = gBattleMons[battler].item;
 
     if (item == ITEM_NONE || !CanBattlerGetOrLoseItem(battler, item))
         gBattlescriptCurrInstr = cmd->jumpInstr;
@@ -17894,7 +17894,7 @@ void BS_TryTerrainSeed(void)
     if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_SEEDS)
     {
         enum ItemEffect effect = ITEM_NO_EFFECT;
-        u16 item = gBattleMons[battler].item;
+        enum ItemId item = gBattleMons[battler].item;
         switch (GetBattlerHoldEffectParam(battler))
         {
         case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:

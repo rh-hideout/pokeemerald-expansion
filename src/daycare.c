@@ -87,7 +87,7 @@ static const struct ListMenuTemplate sDaycareListMenuLevelTemplate =
 
 static const struct {
   u16 currSpecies;
-  u16 item;
+  enum ItemId item;
   u16 babySpecies;
 } sIncenseBabyTable[] =
 {
@@ -965,7 +965,7 @@ static void AlterEggSpeciesWithIncenseItem(u16 *species, struct DayCare *daycare
 
 static const struct {
   u16 offspring;
-  u16 item;
+  enum ItemId item;
   u16 move;
 } sBreedingSpecialMoveItemTable[] =
 {

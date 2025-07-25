@@ -67,7 +67,7 @@ extern struct BagPocket gBagPockets[];
 #define UNPACK_TM_TO_MOVE_ID(_tm) case CAT(TM_HM_INDEX_, _tm): return CAT(MOVE_, _tm);
 #define UNPACK_HM_TO_MOVE_ID(_hm) case CAT(TM_HM_INDEX_, _hm): return CAT(MOVE_, _hm);
 
-static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
+static inline enum TMHMIndex GetItemTMHMIndex(enum ItemId item)
 {
     switch (item)
     {
@@ -84,7 +84,7 @@ static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
     }
 }
 
-static inline u16 GetItemTMHMMoveId(u16 item)
+static inline u16 GetItemTMHMMoveId(enum ItemId item)
 {
     switch (item)
     {

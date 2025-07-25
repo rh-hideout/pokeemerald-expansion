@@ -2389,7 +2389,7 @@ static bool32 ShouldUseItem(u32 battler)
 
     for (i = 0; i < MAX_TRAINER_ITEMS; i++)
     {
-        u16 item;
+        enum ItemId item;
         const u8 *itemEffects;
         u8 battlerSide;
 

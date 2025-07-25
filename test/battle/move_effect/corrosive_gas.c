@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Corrosive Gas destroys the target's item or fails if the target has no item")
 {
-    u16 item;
+    enum ItemId item;
 
     PARAMETRIZE {item = ITEM_NONE; }
     PARAMETRIZE {item = ITEM_POTION; }

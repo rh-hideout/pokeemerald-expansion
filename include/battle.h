@@ -274,7 +274,7 @@ struct AI_SavedBattleMon
 struct AiPartyMon
 {
     u16 species;
-    u16 item;
+    enum ItemId item;
     u16 heldEffect;
     u16 ability;
     u16 level;

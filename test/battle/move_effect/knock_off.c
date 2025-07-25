@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to
 
 SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
 {
-    u16 item = 0;
+    enum ItemId item = 0;
 
     PARAMETRIZE { item = ITEM_WEAKNESS_POLICY; }
     PARAMETRIZE { item = ITEM_ROCKY_HELMET; }
@@ -58,7 +58,7 @@ SINGLE_BATTLE_TEST("Knock Off activates after Rocky Helmet and Weakness Policy")
 
 SINGLE_BATTLE_TEST("Knock Off deals additional damage to opponents holding an item in Gen 6+", s16 damage)
 {
-    u16 item = 0;
+    enum ItemId item = 0;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_LEFTOVERS; }
