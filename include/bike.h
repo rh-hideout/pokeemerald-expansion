@@ -24,6 +24,20 @@ enum
     PLAYER_SPEED_FASTEST,
 };
 
+enum {
+    BIKE_TRANS_FACE_DIRECTION,
+    BIKE_TRANS_TURNING,
+    BIKE_TRANS_MOVE,
+    BIKE_TRANS_DOWNHILL,
+    BIKE_TRANS_UPHILL
+};
+
+enum {
+    BIKE_STATE_NORMAL,
+    BIKE_STATE_TURNING,
+    BIKE_STATE_SLOPE
+};
+
 // mach bike transitions enum
 enum
 {

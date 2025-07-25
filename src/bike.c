@@ -53,6 +53,16 @@ static void Bike_TryAdvanceCyclingRoadCollisions();
 static u8 CanBikeFaceDirOnMetatile(u8, u8);
 static bool8 WillPlayerCollideWithCollision(u8, u8);
 static void Bike_SetBikeStill(void);
+static void MovePlayerOnStandardBike(u8 direction, u16 newKeys, u16 heldKeys);
+static void StandardBikeTransition_FaceDirection(u8);
+static void StandardBikeTransition_TurnDirection(u8);
+static void StandardBikeTransition_MoveDirection(u8);
+static void StandardBikeTransition_Downhill(u8);
+static void StandardBikeTransition_Uphill(u8);
+static u8 GetStandardBikeTransitionId(u8 *, u16, u16);
+static u8 StandardBikeInputHandler_Normal(u8 *, u16, u16);
+static u8 StandardBikeInputHandler_Turning(u8 *, u16, u16);
+static u8 StandardBikeInputHandler_Slope(u8 *, u16, u16);
 
 // const rom data
 
@@ -64,6 +74,23 @@ static void Bike_SetBikeStill(void);
     bike does not. This is because the Acro needs to know the button inputs
     for its complex tricks and actions.
 */
+
+
+static void (*const sStandardBikeTransitions[])(u8) =
+{
+    [BIKE_TRANS_FACE_DIRECTION] = StandardBikeTransition_FaceDirection,
+    [BIKE_TRANS_TURNING]        = StandardBikeTransition_TurnDirection,
+    [BIKE_TRANS_MOVE]           = StandardBikeTransition_MoveDirection,
+    [BIKE_TRANS_DOWNHILL]       = StandardBikeTransition_Downhill,
+    [BIKE_TRANS_UPHILL]         = StandardBikeTransition_Uphill,
+};
+
+static u8 (*const sStandardBikeInputHandlers[])(u8 *, u16, u16) =
+{
+    [BIKE_STATE_NORMAL]  = StandardBikeInputHandler_Normal,
+    [BIKE_STATE_TURNING] = StandardBikeInputHandler_Turning,
+    [BIKE_STATE_SLOPE]   = StandardBikeInputHandler_Slope,
+};
 
 static void (*const sMachBikeTransitions[])(u8) =
 {
@@ -131,10 +158,190 @@ static const struct BikeHistoryInputInfo sAcroBikeTricksList[] =
 // code
 void MovePlayerOnBike(u8 direction, u16 newKeys, u16 heldKeys)
 {
+    if ((gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE) && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE))
+        MovePlayerOnStandardBike(direction, newKeys, heldKeys);
     if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
         MovePlayerOnMachBike(direction, newKeys, heldKeys);
     else
         MovePlayerOnAcroBike(direction, newKeys, heldKeys);
+}
+
+static void MovePlayerOnStandardBike(u8 direction, u16 newKeys, u16 heldKeys)
+{
+    sStandardBikeTransitions[GetStandardBikeTransitionId(&direction, newKeys, heldKeys)](direction);
+}
+
+static u8 GetStandardBikeTransitionId(u8 *direction, u16 newKeys, u16 heldKeys)
+{
+    return sStandardBikeInputHandlers[gPlayerAvatar.acroBikeState](direction, newKeys, heldKeys);
+}
+
+static u8 StandardBikeInputHandler_Normal(u8 *direction_p, u16 newKeys, u16 heldKeys)
+{
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u8 direction = GetPlayerMovementDirection();
+
+    // fix direction when moving on sideways stairs
+    switch (direction)
+    {
+    case DIR_SOUTHWEST:
+    case DIR_NORTHWEST:
+        direction = DIR_WEST;
+        break;
+    case DIR_SOUTHEAST:
+    case DIR_NORTHEAST:
+        direction = DIR_EAST;
+        break;
+    }
+
+    gPlayerAvatar.bikeFrameCounter = 0;
+    if (MetatileBehavior_IsCyclingRoadPullDownTile(playerObjEvent->currentMetatileBehavior) == TRUE)
+    {
+        if (!JOY_HELD(B_BUTTON))
+        {
+            gPlayerAvatar.acroBikeState = BIKE_STATE_SLOPE;
+            gPlayerAvatar.runningState = MOVING;
+            if (*direction_p < DIR_NORTH)
+                return BIKE_TRANS_DOWNHILL;
+            else
+                return BIKE_TRANS_UPHILL;
+        }
+        else
+        {
+            if (*direction_p != DIR_NONE)
+            {
+                gPlayerAvatar.acroBikeState = BIKE_STATE_SLOPE;
+                gPlayerAvatar.runningState = MOVING;
+                return BIKE_TRANS_UPHILL;
+            }
+        }
+    }
+    if (*direction_p == DIR_NONE)
+    {
+        *direction_p = direction;
+        gPlayerAvatar.runningState = NOT_MOVING;
+        return BIKE_TRANS_FACE_DIRECTION;
+    }
+    else
+    {
+        if (*direction_p != direction && gPlayerAvatar.runningState != MOVING)
+        {
+            gPlayerAvatar.acroBikeState = BIKE_STATE_TURNING;
+            gPlayerAvatar.newDirBackup = *direction_p;
+            gPlayerAvatar.runningState = NOT_MOVING;
+            return GetStandardBikeTransitionId(direction_p, newKeys, heldKeys);
+        }
+        else
+        {
+            gPlayerAvatar.runningState = MOVING;
+            return BIKE_TRANS_MOVE;
+        }
+    }
+}
+
+static u8 StandardBikeInputHandler_Turning(u8 *direction_p, u16 newKeys, u16 heldKeys)
+{
+    *direction_p = gPlayerAvatar.newDirBackup;
+    gPlayerAvatar.runningState = TURN_DIRECTION;
+    gPlayerAvatar.acroBikeState = BIKE_STATE_NORMAL;
+    Bike_SetBikeStill();
+    return BIKE_TRANS_TURNING;
+}
+
+static u8 StandardBikeInputHandler_Slope(u8 *direction_p, u16 newKeys, u16 heldKeys)
+{
+    u8 direction = GetPlayerMovementDirection();
+    u8 playerObjEventId = gPlayerAvatar.objectEventId;
+    if (MetatileBehavior_IsCyclingRoadPullDownTile(playerObjEventId[gObjectEvents].currentMetatileBehavior) == TRUE)
+    {
+        if (*direction_p != direction)
+        {
+            gPlayerAvatar.acroBikeState = BIKE_STATE_TURNING;
+            gPlayerAvatar.newDirBackup = *direction_p;
+            gPlayerAvatar.runningState = NOT_MOVING;
+            return GetStandardBikeTransitionId(direction_p, newKeys, heldKeys);
+        }
+        else
+        {
+            gPlayerAvatar.runningState = MOVING;
+            gPlayerAvatar.acroBikeState = BIKE_STATE_SLOPE;
+            if (*direction_p < DIR_NORTH)
+                return BIKE_TRANS_DOWNHILL;
+            else
+                return BIKE_TRANS_UPHILL;
+        }
+    }
+    gPlayerAvatar.acroBikeState = BIKE_STATE_NORMAL;
+    if (*direction_p == DIR_NONE)
+    {
+        *direction_p = direction;
+        gPlayerAvatar.runningState = NOT_MOVING;
+        return BIKE_TRANS_FACE_DIRECTION;
+    }
+    else
+    {
+        gPlayerAvatar.runningState = MOVING;
+        return BIKE_TRANS_MOVE;
+    }
+}
+
+static void StandardBikeTransition_FaceDirection(u8 direction)
+{
+    PlayerFaceDirection(direction);
+}
+
+static void StandardBikeTransition_TurnDirection(u8 direction)
+{
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (!CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior))
+        direction = playerObjEvent->movementDirection;
+    PlayerFaceDirection(direction);
+}
+
+static void StandardBikeTransition_MoveDirection(u8 direction)
+{
+    u8 collision;
+    struct ObjectEvent *playerObjEvent = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (CanBikeFaceDirOnMetatile(direction, playerObjEvent->currentMetatileBehavior) == 0)
+    {
+        AcroBikeTransition_FaceDirection(playerObjEvent->movementDirection);
+        return;
+    }
+    collision = GetBikeCollision(direction);
+    if (collision > 0 && collision < COLLISION_VERTICAL_RAIL)
+    {
+        if (collision == COLLISION_LEDGE_JUMP)
+            PlayerJumpLedge(direction);
+        else if (collision == COLLISION_OBJECT_EVENT && IsPlayerCollidingWithFarawayIslandMew(direction))
+            PlayerOnBikeCollideWithFarawayIslandMew(direction);
+        else if (collision < COLLISION_STOP_SURFING || collision > COLLISION_ROTATING_GATE)
+            PlayerOnBikeCollide(direction);
+    }
+    else
+    {
+        if (ObjectMovingOnRockStairs(playerObjEvent, direction))
+            PlayerWalkFast(direction);
+        else
+            PlayerRideWaterCurrent(direction);
+    }
+}
+
+static void StandardBikeTransition_Downhill(u8 v)
+{
+    u8 collision = GetBikeCollision(DIR_SOUTH);
+
+    if (collision == COLLISION_NONE)
+        PlayerWalkFaster(DIR_SOUTH);
+    else if (collision == COLLISION_LEDGE_JUMP)
+        PlayerJumpLedge(DIR_SOUTH);
+}
+
+static void StandardBikeTransition_Uphill(u8 direction)
+{
+    if (GetBikeCollision(direction) == COLLISION_NONE)
+        PlayerWalkNormal(direction);
 }
 
 static void MovePlayerOnMachBike(u8 direction, u16 newKeys, u16 heldKeys)

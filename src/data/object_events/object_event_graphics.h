@@ -462,3 +462,21 @@ const u16 gObjectEventPal_StrangeBall[] = INCBIN_U16("graphics/object_events/pic
 
 const u32 gFieldEffectObjectPic_CaveDust[] = INCBIN_U32("graphics/field_effects/pics/cave_dust.4bpp");
 const u16 gFieldEffectObjectPalette_CaveDust[] = INCBIN_U16("graphics/field_effects/palettes/cave_dust.gbapal");
+
+const u16 gObjectEventPic_RedNormal[] = INCBIN_U16("graphics/object_events/pics/people/red/red_normal.4bpp");
+const u16 gObjectEventPic_RedBike[] = INCBIN_U16("graphics/object_events/pics/people/red/red_bike.4bpp");
+const u16 gObjectEventPic_RedSurf[] = INCBIN_U16("graphics/object_events/pics/people/red/red_surf.4bpp");
+const u16 gObjectEventPic_RedSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/red/red_surf_run.4bpp");
+const u16 gObjectEventPic_RedFish[] = INCBIN_U16("graphics/object_events/pics/people/red/red_fish.4bpp");
+const u16 gObjectEventPic_RedItem[] = INCBIN_U16("graphics/object_events/pics/people/red/red_item.4bpp");
+const u16 gObjectEventPic_RedVSSeekerBike[] = INCBIN_U16("graphics/object_events/pics/people/red/red_vs_seeker_bike.4bpp");
+const u16 gObjectEventPic_GreenNormal[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_normal.4bpp");
+const u16 gObjectEventPic_GreenBike[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_bike.4bpp");
+const u16 gObjectEventPic_GreenSurf[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_surf.4bpp");
+const u16 gObjectEventPic_GreenSurfRun[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_surf_run.4bpp");
+const u16 gObjectEventPic_GreenFish[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_fish.4bpp");
+const u16 gObjectEventPic_GreenItem[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_item.4bpp");
+const u16 gObjectEventPic_GreenVSSeekerBike[] = INCBIN_U16("graphics/object_events/pics/people/leaf/green_vs_seeker_bike.4bpp");
+
+const u16 gObjectEventPal_PlayerFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_frlg.gbapal");
+const u16 gObjectEventPal_PlayerReflectionFrlg[] = INCBIN_U16("graphics/object_events/palettes/player_reflection_frlg.gbapal");
