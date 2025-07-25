@@ -65,6 +65,8 @@ SINGLE_BATTLE_TEST("Me First: If a Consecutively Executed Move is copied, the bo
         HP_BAR(opponent, captureDamage: &dmg[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_OUTRAGE, player);
         HP_BAR(opponent, captureDamage: &dmg[1]);
+    } THEN {
+        EXPECT_MUL_EQ(dmg[1], Q_4_12(1.5), dmg[0]);
     }
 }
 

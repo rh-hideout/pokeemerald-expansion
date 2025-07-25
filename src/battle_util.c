@@ -11979,7 +11979,6 @@ static bool32 InvalidMetronomeMove(u32 move)
 
 static u32 GetMetronomeMove(void)
 {
-
     u32 move = MOVE_NONE;
 
 #if B_METRONOME_MOVES >= GEN_9

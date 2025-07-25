@@ -353,7 +353,7 @@ static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd);
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
 static void Cmd_printattackstring(void);
-static void Cmd_ppreduce(void);
+static void Cmd_unused0x3(void);
 static void Cmd_critcalc(void);
 static void Cmd_damagecalc(void);
 static void Cmd_typecalc(void);
@@ -612,7 +612,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_attackcanceler,                          //0x0
     Cmd_accuracycheck,                           //0x1
     Cmd_printattackstring,                       //0x2
-    Cmd_ppreduce,                                //0x3
+    Cmd_unused0x3,                               //0x3
     Cmd_critcalc,                                //0x4
     Cmd_damagecalc,                              //0x5
     Cmd_typecalc,                                //0x6
@@ -1500,56 +1500,8 @@ static void Cmd_printattackstring(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_ppreduce(void)
+static void Cmd_unused0x3(void)
 {
-    CMD_ARGS();
-
-    s32 i, ppToDeduct = 1;
-    u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
-
-    if (gBattleControllerExecFlags)
-        return;
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
-    return;
-
-    if (moveTarget == MOVE_TARGET_BOTH
-        || moveTarget == MOVE_TARGET_FOES_AND_ALLY
-        || moveTarget == MOVE_TARGET_ALL_BATTLERS
-        || MoveForcesPressure(gCurrentMove))
-    {
-        for (i = 0; i < gBattlersCount; i++)
-        {
-            if (!IsBattlerAlly(i, gBattlerAttacker) && IsBattlerAlive(i))
-                ppToDeduct += (GetBattlerAbility(i) == ABILITY_PRESSURE);
-        }
-    }
-    else if (moveTarget != MOVE_TARGET_OPPONENTS_FIELD)
-    {
-        if (gBattlerAttacker != gBattlerTarget && GetBattlerAbility(gBattlerTarget) == ABILITY_PRESSURE)
-             ppToDeduct++;
-    }
-
-    gProtectStructs[gBattlerAttacker].notFirstStrike = TRUE;
-
-    // For item Metronome, echoed voice
-    if (gCurrentMove != gLastResultingMoves[gBattlerAttacker] || WasUnableToUseMove(gBattlerAttacker))
-        gBattleStruct->sameMoveTurns[gBattlerAttacker] = 0;
-
-    if (gBattleMons[gBattlerAttacker].pp[gCurrMovePos] > ppToDeduct)
-        gBattleMons[gBattlerAttacker].pp[gCurrMovePos] -= ppToDeduct;
-    else
-        gBattleMons[gBattlerAttacker].pp[gCurrMovePos] = 0;
-
-    if (MOVE_IS_PERMANENT(gBattlerAttacker, gCurrMovePos))
-    {
-        BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_PPMOVE1_BATTLE + gCurrMovePos, 0,
-                                     sizeof(gBattleMons[gBattlerAttacker].pp[gCurrMovePos]),
-                                     &gBattleMons[gBattlerAttacker].pp[gCurrMovePos]);
-        MarkBattlerForControllerExec(gBattlerAttacker);
-    }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 // The chance is 1/N for each stage.

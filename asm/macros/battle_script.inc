@@ -13,7 +13,7 @@
 	.byte 0x2
 	.endm
 
-	.macro ppreduce
+	.macro unused0x3
 	.byte 0x3
 	.endm
 
