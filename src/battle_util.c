@@ -4158,7 +4158,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && IsBattlerAlive(partner)
              && IsBattlerAlive(battler)
-             && gBattleStruct->commanderActive[partner] == SPECIES_NONE
+             && gBattleStruct->battlerState[partner].commanderSpecies == SPECIES_NONE
              && gBattleMons[partner].species == SPECIES_DONDOZO
              && GET_BASE_SPECIES_ID(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)) == SPECIES_TATSUGIRI)
             {
@@ -4166,7 +4166,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 gBattlerAttacker = partner;
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
-                gBattleStruct->commanderActive[partner] = gBattleMons[battler].species;
+                gBattleStruct->battlerState[partner].commanderSpecies = gBattleMons[battler].species;
                 gStatuses3[battler] |= STATUS3_COMMANDER;
                 if (gBattleMons[battler].volatiles.confusionTurns > 0
                  && !(gStatuses4[battler] & STATUS4_INFINITE_CONFUSION))
@@ -5490,7 +5490,7 @@ u32 IsAbilityPreventingEscape(u32 battler)
 
 bool32 CanBattlerEscape(u32 battler) // no ability check
 {
-    if (gBattleStruct->commanderActive[battler] != SPECIES_NONE)
+    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
         return FALSE;
     else if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_SHED_SHELL)
         return TRUE;

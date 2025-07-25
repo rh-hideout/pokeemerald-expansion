@@ -3367,7 +3367,7 @@ const u8* FaintClearSetData(u32 battler)
 
     ClearPursuitValuesIfSet(battler);
 
-    if (gBattleStruct->commanderActive[battler] != SPECIES_NONE)
+    if (gBattleStruct->battlerState[battler].commanderSpecies != SPECIES_NONE)
     {
         u32 partner = BATTLE_PARTNER(battler);
         if (IsBattlerAlive(partner))

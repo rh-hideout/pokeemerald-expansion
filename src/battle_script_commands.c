@@ -3014,7 +3014,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
     else if (!(gHitMarker & HITMARKER_STATUS_ABILITY_EFFECT)
           && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
-          && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->commanderActive[gBattlerAttacker])
+          && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE)
           && !primary)
         gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
     else if (!IsBattlerAlive(gEffectBattler) && !activateAfterFaint)
@@ -3600,7 +3600,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         {
             u32 stat = 0;
             bool32 commanderAffected = TRUE;
-            switch (gBattleStruct->commanderActive[gEffectBattler])
+            switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
             {
             case SPECIES_TATSUGIRI_CURLY:
                 stat = STAT_ATK;
@@ -6554,7 +6554,7 @@ static void Cmd_moveend(void)
                             gBattleScripting.battler = battler;
                             gEffectBattler = gBattlerAttacker;
                             BattleScriptPushCursor();
-                            if (gBattleStruct->commanderActive[gBattlerAttacker] != SPECIES_NONE
+                            if (gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE
                              || GetBattlerAbility(gBattlerAttacker) == ABILITY_GUARD_DOG
                              || GetActiveGimmick(gBattlerAttacker) == GIMMICK_DYNAMAX)
                                 gBattlescriptCurrInstr = BattleScript_RedCardActivationNoSwitch;
@@ -6939,10 +6939,10 @@ static void Cmd_moveend(void)
                 gBattleStruct->battlerState[gBattlerAttacker].targetsDone[i] = FALSE;
                 gProtectStructs[i].tryEjectPack = FALSE;
 
-                if (gBattleStruct->commanderActive[i] != SPECIES_NONE && !IsBattlerAlive(i))
+                if (gBattleStruct->battlerState[i].commanderSpecies != SPECIES_NONE && !IsBattlerAlive(i))
                 {
                     u32 partner = BATTLE_PARTNER(i);
-                    gBattleStruct->commanderActive[i] = SPECIES_NONE;
+                    gBattleStruct->battlerState[i].commanderSpecies = SPECIES_NONE;
                     if (IsBattlerAlive(partner))
                         gStatuses3[partner] &= ~STATUS3_COMMANDER;
                 }
@@ -16117,7 +16117,7 @@ void BS_JumpIfCommanderActive(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
 
-    if (gBattleStruct->commanderActive[gBattlerTarget] != SPECIES_NONE)
+    if (gBattleStruct->battlerState[gBattlerTarget].commanderSpecies != SPECIES_NONE)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else if (gStatuses3[gBattlerTarget] & STATUS3_COMMANDER)
         gBattlescriptCurrInstr = cmd->jumpInstr;

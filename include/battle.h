@@ -583,7 +583,8 @@ struct BattlerState
     u32 canPickupItem:1;
     u32 itemCanBeKnockedOff:1;
     u32 ateBoost:1;
-    u32 padding:15;
+    u32 commanderSpecies:11;
+    u32 padding:4;
     // End of Word
 };
 
@@ -751,7 +752,6 @@ struct BattleStruct
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
     enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
-    u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
     u16 opponentMonCanTera:6;
