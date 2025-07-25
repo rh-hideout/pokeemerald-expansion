@@ -8189,6 +8189,8 @@ BattleScript_MummyActivates::
 	return
 
 BattleScript_WanderingSpiritActivates::
+	saveattacker
+	savetarget
 .if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerTarget
 	sethword sABILITY_OVERWRITE, ABILITY_WANDERING_SPIRIT
@@ -8205,6 +8207,8 @@ BattleScript_WanderingSpiritActivates::
 	jumpiffainted BS_TARGET, TRUE, BattleScript_WanderingSpiritActivatesRet
 	switchinabilities BS_TARGET
 BattleScript_WanderingSpiritActivatesRet:
+	restoreattacker
+	restoretarget
 	return
 
 BattleScript_TargetsStatWasMaxedOut::
