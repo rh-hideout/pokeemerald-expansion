@@ -3763,6 +3763,26 @@ bool32 IsValidDoubleBattle(u32 battlerAtk)
     return FALSE;
 }
 
+bool32 HasTwoOpponents(u32 battlerAtk)
+{
+    if (IsDoubleBattle()
+      && IsBattlerAlive(BATTLE_OPPOSITE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtk))))
+        return TRUE;
+    return FALSE;
+}
+
+bool32 HasPartner(u32 battlerAtk)
+{
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    {
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+            return FALSE;
+        else
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
 {
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)

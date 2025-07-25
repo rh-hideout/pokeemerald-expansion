@@ -57,7 +57,7 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
     u32 i;
     u32 battlersOnSide = 1;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES))
+    if (HasPartner(battler))
         battlersOnSide = 2;
 
     for (i = 0; i < battlersOnSide; i++)
@@ -92,7 +92,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 
     u32 battlersOnSide = 1;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES))
+    if (HasPartner(battler))
         battlersOnSide = 2;
 
     for (i = 0; i < battlersOnSide; i++)
@@ -360,7 +360,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
 
     bool32 grounded = IsBattlerGrounded(battler);
     bool32 allyGrounded = FALSE;
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (HasPartner(battler))
         allyGrounded = IsBattlerGrounded(BATTLE_PARTNER(battler));
 
     if (HasMoveWithEffect(FOE(battler), EFFECT_REST) && IsBattlerGrounded(FOE(battler)))
@@ -392,7 +392,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
 
     bool32 grounded = IsBattlerGrounded(battler);
     bool32 allyGrounded = FALSE;
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (HasPartner(battler))
         allyGrounded = IsBattlerGrounded(BATTLE_PARTNER(battler));
 
     // don't bother if we're not grounded
@@ -429,7 +429,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
         else
             return FIELD_EFFECT_NEGATIVE;
     }
-    
+
     // First checking if we have enough priority for one pokemon to disregard Trick Room entirely.
     if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
     {
