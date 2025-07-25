@@ -410,7 +410,7 @@ void BufferMatchCallNameAndDesc(struct PokenavMatchCallEntry *matchCallEntry, u8
     {
         int index = GetTrainerIdxByRematchIdx(matchCallEntry->headerId);
         const struct Trainer *trainer = GetTrainerStructFromId(index);
-        int class = trainer->trainerClass;
+        enum TrainerClassID class = trainer->trainerClass;
         className = gTrainerClasses[class].name;
         trainerName = trainer->trainerName;
     }

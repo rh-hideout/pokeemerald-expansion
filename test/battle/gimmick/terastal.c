@@ -385,7 +385,7 @@ SINGLE_BATTLE_TEST("(TERA) Synchronoise uses a Terastallized Pokemon's Tera Type
     } SCENE {
         // turn 1
         MESSAGE("The opposing Wobbuffet used Synchronoise!");
-        MESSAGE("It won't have any effect on Wobbuffet!");
+        MESSAGE("It doesn't affect Wobbuffet…");
         // turn 2
         MESSAGE("The opposing Wobbuffet used Synchronoise!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SYNCHRONOISE, opponent);
@@ -448,28 +448,6 @@ SINGLE_BATTLE_TEST("(TERA) Double Shock does not remove the user's Electric type
         EXPECT_EQ(damage[0], damage[1]);
         EXPECT_MUL_EQ(damage[0], Q_4_12(1.333), damage[2]);
         EXPECT_EQ(damage[2], damage[3]);
-    }
-}
-
-SINGLE_BATTLE_TEST("(TERA) Transform does not copy the target's Tera Type, and if the user is Terastallized it keeps its own Tera Type")
-{
-    KNOWN_FAILING; // Transform seems to be bugged in tests.
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, MOVE_EARTHQUAKE); TeraType(TYPE_GHOST); }
-        OPPONENT(SPECIES_DITTO) { TeraType(TYPE_FLYING); }
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_TRANSFORM); }
-        TURN { MOVE(player, MOVE_EARTHQUAKE); }
-        // TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH, target: player, gimmick: GIMMICK_TERA); }
-    } SCENE {
-        // turn 2
-        MESSAGE("Wobbuffet used Earthquake!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_EARTHQUAKE, player);
-        HP_BAR(opponent);
-        // turn 3
-        MESSAGE("Wobbuffet used Scratch!");
-        MESSAGE("It doesn't affect Ditto…");
-        NOT { HP_BAR(opponent); }
     }
 }
 

@@ -667,7 +667,7 @@ bool8 ScrCmd_checkitemtype(struct ScriptContext *ctx)
 
     Script_RequestEffects(SCREFF_V1);
 
-    gSpecialVar_Result = GetPocketByItemId(itemId);
+    gSpecialVar_Result = GetItemPocket(itemId);
     return FALSE;
 }
 
@@ -840,6 +840,8 @@ bool8 ScrCmd_fadescreenswapbuffers(struct ScriptContext *ctx)
     switch (mode)
     {
     case FADE_FROM_BLACK:
+        SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(0, 0));
+        break;
     case FADE_FROM_WHITE:
         // Restore last weather blend before fading in,
         // since BLDALPHA was modified by fade-out
@@ -3003,7 +3005,7 @@ static void CloseBrailleWindow(void)
 bool8 ScrCmd_buffertrainerclassname(struct ScriptContext *ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 trainerClassId = VarGet(ScriptReadHalfword(ctx));
+    enum TrainerClassID trainerClassId = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -3014,7 +3016,7 @@ bool8 ScrCmd_buffertrainerclassname(struct ScriptContext *ctx)
 bool8 ScrCmd_buffertrainername(struct ScriptContext *ctx)
 {
     u8 stringVarIndex = ScriptReadByte(ctx);
-    u16 trainerClassId = VarGet(ScriptReadHalfword(ctx));
+    enum TrainerClassID trainerClassId = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1);
 
@@ -3099,7 +3101,7 @@ bool8 ScrCmd_checkobjectat(struct ScriptContext *ctx)
 
 bool8 Scrcmd_getsetpokedexflag(struct ScriptContext *ctx)
 {
-    u32 speciesId = SpeciesToNationalPokedexNum(VarGet(ScriptReadHalfword(ctx)));
+    enum NationalDexOrder speciesId = SpeciesToNationalPokedexNum(VarGet(ScriptReadHalfword(ctx)));
     u32 desiredFlag = VarGet(ScriptReadHalfword(ctx));
 
     if (desiredFlag == FLAG_SET_CAUGHT || desiredFlag == FLAG_SET_SEEN)

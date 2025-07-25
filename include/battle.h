@@ -44,7 +44,7 @@
 
 // Used to exclude moves learned temporarily by Transform or Mimic
 #define MOVE_IS_PERMANENT(battler, moveSlot)                        \
-   (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)           \
+   (!(gBattleMons[battler].volatiles.transformed)           \
  && !(gDisableStructs[battler].mimickedMoves & (1u << moveSlot)))
 
 // Battle Actions
@@ -64,6 +64,7 @@
 #define B_ACTION_FINISHED               12
 #define B_ACTION_CANCEL_PARTNER         12 // when choosing an action
 #define B_ACTION_NOTHING_FAINTED        13 // when choosing an action
+#define B_ACTION_UNK_14                 14
 #define B_ACTION_DEBUG                  20
 #define B_ACTION_THROW_BALL             21 // R to throw last used ball
 #define B_ACTION_NONE                   0xFF
@@ -116,24 +117,20 @@ struct DisableStruct
     u8 tarShot:1;
     u8 octolock:1;
     u8 cudChew:1;
-    u8 spikesDone:1;
-    u8 toxicSpikesDone:1;
-    u8 stickyWebDone:1;
-    u8 stealthRockDone:1;
     u8 weatherAbilityDone:1;
     u8 terrainAbilityDone:1;
     u8 syrupBombIsShiny:1;
-    u8 steelSurgeDone:1;
     u8 usedProteanLibero:1;
     u8 flashFireBoosted:1;
+    u8 boosterEnergyActivated:1;
     u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
-    u8 boosterEnergyActivates:1;
     u8 roostActive:1;
     u8 unburdenActive:1;
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
-    u8 padding:3;
+    u8 hazardsDone:1;
+    u8 padding:1;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -159,7 +156,7 @@ struct ProtectStruct
     u32 unused:8;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
-    u16 statFell:1;
+    u16 tryEjectPack:1;
     u16 pranksterElevated:1;
     u16 quickDraw:1;
     u16 beakBlastCharge:1;
@@ -221,21 +218,18 @@ struct SideTimer
     u16 lightscreenTimer;
     u16 mistTimer;
     u16 safeguardTimer;
-    u16 spikesAmount; // debug menu complains. might be better to solve there instead if possible
-    u16 toxicSpikesAmount;
-    u16 stealthRockAmount;
-    u16 stickyWebAmount;
+    u8 spikesAmount:4;
+    u8 toxicSpikesAmount:4;
     u8 stickyWebBattlerId;
     u8 stickyWebBattlerSide; // Used for Court Change
     u16 auroraVeilTimer;
     u16 tailwindTimer;
     u16 luckyChantTimer;
-    u16 steelsurgeAmount;
     // Timers below this point are not swapped by Court Change
-    u16 followmeTimer;
+    u8 followmeTimer:4;
     u8 followmeTarget:3;
     u8 followmePowder:1; // Rage powder, does not affect grass type pokemon.
-    u16 retaliateTimer;
+    u8 retaliateTimer;
     u16 damageNonTypesTimer;
     u8 damageNonTypesType;
     u16 rainbowTimer;
@@ -574,7 +568,6 @@ struct BattlerState
     u8 targetsDone[MAX_BATTLERS_COUNT];
 
     u32 commandingDondozo:1;
-    u32 absent:1;
     u32 focusPunchBattlers:1;
     u32 multipleSwitchInBattlers:1;
     u32 alreadyStatusedMoveAttempt:1; // For example when using Thunder Wave on an already paralyzed Pokémon.
@@ -588,6 +581,7 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
+    u32 itemCanBeKnockedOff:1;
     u32 padding:16;
     // End of Word
 };
@@ -665,7 +659,8 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 multipleSwitchInState:2;
     u8 multipleSwitchInCursor:3;
-    u8 padding1:2;
+    u8 sleepClauseNotBlocked:1;
+    u8 padding1:1;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
@@ -755,14 +750,13 @@ struct BattleStruct
     u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.
-    u8 categoryOverride; // for Z-Moves and Max Moves
+    enum DamageCategory categoryOverride:8; // for Z-Moves and Max Moves
     u16 commanderActive[MAX_BATTLERS_COUNT];
     u32 stellarBoostFlags[NUM_BATTLE_SIDES]; // stored as a bitfield of flags for all types for each side
     u8 monCausingSleepClause[NUM_BATTLE_SIDES]; // Stores which pokemon on a given side is causing Sleep Clause to be active as the mon's index in the party
-    u8 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
-    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
-    u8 cheekPouchActivated:1;
-    u8 padding2:3;
+    u16 opponentMonCanTera:6;
+    u16 opponentMonCanDynamax:6;
+    u16 additionalEffectsCounter:4; // A counter for the additionalEffects applied by the current move in Cmd_setadditionaleffects
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
@@ -776,13 +770,15 @@ struct BattleStruct
     u8 calculatedSpreadMoveAccuracy:1;
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
-    u8 bypassMoldBreakerChecks:1; // for ABILITYEFFECT_IMMUNITY
     u8 noTargetPresent:1;
+    u8 cheekPouchActivated:1;
+    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
-    u16 opponentMonCanTera:6;
-    u16 opponentMonCanDynamax:6;
-    u16 padding:4;
+    u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
+    u8 numHazards[NUM_BATTLE_SIDES];
+    u8 hazardsCounter:4; // Counter for applying hazard on switch in
+    u8 padding2:4;
 };
 
 struct AiBattleData
@@ -852,11 +848,11 @@ static inline bool32 IsBattleMoveStatus(u32 move)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;    \
 }
 
-#define RESTORE_BATTLER_TYPE(battler)                                                      \
-{                                                                                          \
-    gBattleMons[battler].types[0] = gSpeciesInfo[gBattleMons[battler].species].types[0];   \
-    gBattleMons[battler].types[1] = gSpeciesInfo[gBattleMons[battler].species].types[1];   \
-    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                          \
+#define RESTORE_BATTLER_TYPE(battler)                                                \
+{                                                                                    \
+    gBattleMons[battler].types[0] = GetSpeciesType(gBattleMons[battler].species, 0); \
+    gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1); \
+    gBattleMons[battler].types[2] = TYPE_MYSTERY;                                    \
 }
 
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
