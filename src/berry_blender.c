@@ -1190,7 +1190,7 @@ static void SetBerrySpriteData(struct Sprite *sprite, s32 x, s32 y, s32 bounceSp
     sprite->callback = SpriteCB_Berry;
 }
 
-static void CreateBerrySprite(u32 itemId, u32 playerId)
+static void CreateBerrySprite(enum ItemId itemId, u32 playerId)
 {
     enum BerryIndex berryId = GetBerryIndex(itemId);
     u32 spriteId = CreateSpinningBerrySprite(berryId, 0, 80, playerId & 1);

@@ -824,7 +824,7 @@ static const u8 *GetItemPluralName(enum ItemId itemId)
     return gItemsInfo[SanitizeItemId(itemId)].pluralName;
 }
 
-const u8 *GetItemEffect(u32 itemId)
+const u8 *GetItemEffect(enum ItemId itemId)
 {
     if (itemId == ITEM_ENIGMA_BERRY_E_READER)
     #if FREE_ENIGMA_BERRY == FALSE
@@ -836,12 +836,12 @@ const u8 *GetItemEffect(u32 itemId)
         return gItemsInfo[SanitizeItemId(itemId)].effect;
 }
 
-u32 GetItemHoldEffect(u32 itemId)
+u32 GetItemHoldEffect(enum ItemId itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
 }
 
-u32 GetItemHoldEffectParam(u32 itemId)
+u32 GetItemHoldEffectParam(enum ItemId itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].holdEffectParam;
 }
@@ -908,12 +908,12 @@ u8 GetItemBattleUsage(enum ItemId itemId)
         return gItemsInfo[item].battleUsage;
 }
 
-u32 GetItemSecondaryId(u32 itemId)
+u32 GetItemSecondaryId(enum ItemId itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].secondaryId;
 }
 
-u32 GetItemFlingPower(u32 itemId)
+u32 GetItemFlingPower(enum ItemId itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].flingPower;
 }
@@ -954,7 +954,7 @@ bool32 ItemHasVolatileFlag(enum ItemId itemId, enum Volatile _volatile)
     }
 }
 
-u32 GetItemSellPrice(u32 itemId)
+u32 GetItemSellPrice(enum ItemId itemId)
 {
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
 }
