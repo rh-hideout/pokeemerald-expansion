@@ -3671,7 +3671,6 @@ BattleScript_EffectMagnitude::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_MAGNITUDESTRENGTH
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_EffectMagnitudeTarget:
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	goto BattleScript_HitFromCritCalc
 

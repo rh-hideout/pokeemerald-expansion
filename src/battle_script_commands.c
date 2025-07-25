@@ -6363,9 +6363,11 @@ static void Cmd_moveend(void)
                     MoveValuesCleanUp();
                     gBattleScripting.moveEffect = gBattleScripting.savedMoveEffect;
 
-                    if (moveEffect == EFFECT_EXPLOSION || moveEffect == EFFECT_MISTY_EXPLOSION // Edge case for Explosion not changing targets
+                    // Edge cases for moves that shouldn't repeat their own script
+                    if (moveEffect == EFFECT_EXPLOSION
+                     || moveEffect == EFFECT_MISTY_EXPLOSION
                      || moveEffect == EFFECT_MAGNITUDE
-                     || moveEffect == EFFECT_SYNCHRONOISE) // So we don't go back to the Synchronoise script
+                     || moveEffect == EFFECT_SYNCHRONOISE)
                         BattleScriptPush(gBattleMoveEffects[EFFECT_HIT].battleScript);
                     else
                         BattleScriptPush(GetMoveBattleScript(gCurrentMove));
