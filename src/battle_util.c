@@ -4708,6 +4708,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_POISON_POINT, 30) : RandomChance(RNG_POISON_POINT, 1, 3))
             {
             POISON_POINT:
+            {
                 u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
                 if (IsBattlerAlive(gBattlerAttacker)
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
@@ -4723,11 +4724,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     effect++;
                 }
             }
+            }
             break;
         case ABILITY_STATIC:
             if (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_STATIC, 30) : RandomChance(RNG_STATIC, 1, 3))
             {
             STATIC:
+            {
                 u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
                 if (IsBattlerAlive(gBattlerAttacker)
                 && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
@@ -4742,6 +4745,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     BattleScriptCall(BattleScript_AbilityStatusEffect);
                     effect++;
                 }
+            }
             }
             break;
         case ABILITY_FLAME_BODY:
@@ -8382,23 +8386,23 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_PIXILATE:
-        if (moveType == TYPE_FAIRY && gBattleStruct->ateBoost[battlerAtk])
+        if (moveType == TYPE_FAIRY && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_GALVANIZE:
-        if (moveType == TYPE_ELECTRIC && gBattleStruct->ateBoost[battlerAtk])
+        if (moveType == TYPE_ELECTRIC && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_REFRIGERATE:
-        if (moveType == TYPE_ICE && gBattleStruct->ateBoost[battlerAtk])
+        if (moveType == TYPE_ICE && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_AERILATE:
-        if (moveType == TYPE_FLYING && gBattleStruct->ateBoost[battlerAtk])
+        if (moveType == TYPE_FLYING && gBattleStruct->battlerState[battlerAtk].ateBoost)
             modifier = uq4_12_multiply(modifier, UQ_4_12(GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7 ? 1.2 : 1.3));
         break;
     case ABILITY_NORMALIZE:
-        if (moveType == TYPE_NORMAL && gBattleStruct->ateBoost[battlerAtk] && GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7)
+        if (moveType == TYPE_NORMAL && gBattleStruct->battlerState[battlerAtk].ateBoost && GetGenConfig(GEN_CONFIG_ATE_MULTIPLIER) >= GEN_7)
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.2));
         break;
     case ABILITY_PUNK_ROCK:

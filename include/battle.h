@@ -582,7 +582,8 @@ struct BattlerState
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
     u32 itemCanBeKnockedOff:1;
-    u32 padding:16;
+    u32 ateBoost:1;
+    u32 padding:15;
     // End of Word
 };
 
@@ -702,7 +703,6 @@ struct BattleStruct
     u8 savedBattlerAttacker[5];
     u8 savedTargetCount:4;
     u8 savedAttackerCount:4;
-    bool8 ateBoost[MAX_BATTLERS_COUNT];
     u8 abilityPopUpSpriteIds[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];    // two per battler
     struct ZMoveData zmove;
     struct DynamaxData dynamax;

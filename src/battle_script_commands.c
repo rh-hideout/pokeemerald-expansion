@@ -6911,7 +6911,7 @@ static void Cmd_moveend(void)
                 // #endif
             }
             gProtectStructs[gBattlerAttacker].shellTrap = FALSE;
-            gBattleStruct->ateBoost[gBattlerAttacker] = FALSE;
+            gBattleStruct->battlerState[gBattlerAttacker].ateBoost = FALSE;
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;
             gSpecialStatuses[gBattlerTarget].berryReduced = FALSE;
             gSpecialStatuses[gBattlerTarget].distortedTypeMatchups = FALSE;
