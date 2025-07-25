@@ -635,7 +635,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
     {
         if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch)
             switchType = SWITCH_MID_BATTLE;
-        chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
+        chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE)
         {
             s32 battler1, battler2, firstId, lastId;
