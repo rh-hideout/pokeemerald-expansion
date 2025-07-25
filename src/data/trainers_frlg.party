@@ -430,27 +430,6 @@ Butterfree
 Level: 20
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_BUG_CATCHER_2 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Metapod
-Level: 18
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Caterpie
-Level: 18
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Venonat
-Level: 18
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
 === TRAINER_BUG_CATCHER_BRENT ===
 Name: BRENT
 Class: Bug Catcher
@@ -623,23 +602,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 Bellsprout
 Level: 12
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_LASS_2 ===
-Name: PH
-Class: Lass
-Pic: Lass
-Gender: Male
-Music: Female
-Double Battle: No
-AI: Check Bad Move
-
-Nidoran M
-Level: 15
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Nidoran F
-Level: 15
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_LASS_HALEY ===
@@ -1031,19 +993,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 Raticate
 Level: 16
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CAMPER_2 ===
-Name: PH
-Class: Camper
-Pic: Camper
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_CAMPER_CHRIS ===
@@ -1551,69 +1500,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 - Smokescreen
 - Smog
 - Self Destruct
-
-=== TRAINER_SUPER_NERD_1 ===
-Name: PH
-Class: Super Nerd
-Pic: Super Nerd
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Koffing
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Magnemite
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Weezing
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_SUPER_NERD_2 ===
-Name: PH
-Class: Super Nerd
-Pic: Super Nerd
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Magnemite
-Level: 20
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Magnemite
-Level: 20
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Koffing
-Level: 20
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Magnemite
-Level: 20
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_SUPER_NERD_3 ===
-Name: PH
-Class: Super Nerd
-Pic: Super Nerd
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Magnemite
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Voltorb
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_SUPER_NERD_ERIK ===
 Name: ERIK
@@ -2158,19 +2044,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 - Smog
 - Tackle
 
-=== TRAINER_BIKER_1 ===
-Name: PH
-Class: Biker
-Pic: Biker
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
 === TRAINER_BIKER_HIDEO ===
 Name: HIDEO
 Class: Biker
@@ -2428,57 +2301,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 - Sludge
 - Disable
 
-=== TRAINER_BURGLAR_1 ===
-Name: PH
-Class: Burglar
-Pic: Burglar
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Growlithe
-Level: 29
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Vulpix
-Level: 29
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BURGLAR_2 ===
-Name: PH
-Class: Burglar
-Pic: Burglar
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Growlithe
-Level: 33
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BURGLAR_3 ===
-Name: PH
-Class: Burglar
-Pic: Burglar
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Vulpix
-Level: 28
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Charmander
-Level: 28
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Ponyta
-Level: 28
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
 === TRAINER_BURGLAR_QUINN ===
 Name: QUINN
 Class: Burglar
@@ -2532,23 +2354,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_BURGLAR_ARNIE ===
 Name: ARNIE
-Class: Burglar
-Pic: Burglar
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Charmander
-Level: 34
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Charmeleon
-Level: 34
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BURGLAR_4 ===
-Name: PH
 Class: Burglar
 Pic: Burglar
 Gender: Male
@@ -3411,19 +3216,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 Poliwhirl
 Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_GAMER_1 ===
-Name: PH
-Class: Gamer
-Pic: Gamer
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_GAMER_RICH ===
@@ -8339,118 +8131,6 @@ Gastly
 Level: 24
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_CHANNELER_1 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Haunter
-Level: 23
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_2 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_3 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_4 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_5 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Haunter
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_6 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Gastly
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-Gastly
-Level: 22
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_7 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_CHANNELER_8 ===
-Name: PH
-Class: Channeler
-Pic: Channeler
-Gender: Male
-Music: Suspicious
-Double Battle: No
-AI: Check Bad Move
-
-Gastly
-Level: 24
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
 === TRAINER_CHANNELER_AMANDA ===
 Name: AMANDA
 Class: Channeler
@@ -9023,84 +8703,6 @@ IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 Starmie
 Level: 33
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_3 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_4 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_5 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_6 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_7 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BUG_CATCHER_8 ===
-Name: PH
-Class: Bug Catcher
-Pic: Bug Catcher
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_YOUNGSTER_BEN_3 ===
@@ -9688,19 +9290,6 @@ AI: Check Bad Move
 
 Grimer
 Level: 38
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
-
-=== TRAINER_BIKER_2 ===
-Name: PH
-Class: Biker
-Pic: Biker
-Gender: Male
-Music: Male
-Double Battle: No
-AI: Check Bad Move
-
-Ekans
-Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_BUG_CATCHER_ANTHONY ===
