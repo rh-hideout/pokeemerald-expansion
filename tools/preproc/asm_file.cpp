@@ -591,6 +591,7 @@ bool AsmFile::ParseEnum()
     for (;;)
     {
         currentHeaderLine += SkipWhitespaceAndEol();
+        READ_ENUM:
         std::string currentIdentName = ReadIdentifier();
         if (!currentIdentName.empty())
         {
@@ -637,7 +638,13 @@ bool AsmFile::ParseEnum()
                 ExpectEmptyRestOfLine();
                 break;
             }
-            else
+            else if (m_buffer[m_pos] == ' ')
+            {
+                m_pos++;
+                enumCounter++;
+                goto READ_ENUM;
+            }
+            else if (m_buffer[m_pos] == 0)
             {
                 RaiseError("unterminated enum from included file %s:%ld", headerFilename.c_str(), currentHeaderLine);
             }

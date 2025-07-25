@@ -3976,7 +3976,7 @@ static bool32 IsDomeLuckyMove(u32 move)
 
 static bool32 IsDomePopularMove(u32 move)
 {
-    u8 i;
+    enum TMHMIndex i;
     for (i = 0; i < NUM_ALL_MACHINES; i++)
     {
         if (GetTMHMMoveId(i + 1) == move)

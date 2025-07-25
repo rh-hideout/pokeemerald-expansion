@@ -10,29 +10,8 @@
 #include "constants/item_effects.h"
 #include "constants/hold_effects.h"
 
-/* Expands to:
- * enum
- * {
- *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
- *   ...
- *   ITEM_HM_CUT = ITM_HM01,
- *   ...
- * }; */
-#define ENUM_TM(n, id) CAT(ITEM_TM_, id) = CAT(ITEM_TM, n),
-#define ENUM_HM(n, id) CAT(ITEM_HM_, id) = CAT(ITEM_HM, n),
-#define TO_TMHM_NUMS(a, ...) (__VA_ARGS__)
-enum ItemId
-{
-    RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
-    RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
-};
-
-#undef ENUM_TM
-#undef ENUM_HM
-#undef TO_TMHM_NUMS
-
-/* Each of these TM_HM enums corresponds an index in the list of TMs + HMs item ids in
- * gTMHMItemMoveIds. The index for an item can be retrieved with GetItemTMHMIndex below.
+/* Each of these TM_HM enums corresponds an index in the list of TMs + HMs.
+ * The index for an item can be retrieved with GetItemTMHMIndex below.
  */
 #define UNPACK_TM_HM_INDEX(_tmHm) CAT(TM_HM_INDEX_, _tmHm),
 enum TMHMIndex
@@ -78,7 +57,6 @@ struct ALIGNED(2) BagPocket
 
 extern const struct Item gItemsInfo[];
 extern struct BagPocket gBagPockets[];
-extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 
 #define UNPACK_ITEM_TO_TM_INDEX(_tm) case CAT(ITEM_TM_, _tm): return CAT(TM_HM_INDEX_, _tm) + 1;
 #define UNPACK_ITEM_TO_HM_INDEX(_hm) case CAT(ITEM_HM_, _hm): return CAT(TM_HM_INDEX_, _hm) + 1;
@@ -86,8 +64,8 @@ extern const struct TmHmIndexKey gTMHMItemMoveIds[];
 #define UNPACK_ITEM_TO_HM_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
 #define UNPACK_TM_TO_ITEM_ID(_tm) case CAT(TM_HM_INDEX_, _tm): return CAT(ITEM_TM_, _tm);
 #define UNPACK_HM_TO_ITEM_ID(_hm) case CAT(TM_HM_INDEX_, _hm): return CAT(ITEM_HM_, _hm);
-#define UNPACK_TM_TO_MOVE_ID(_tm) case CAT(ITEM_TM_, _tm): return CAT(MOVE_, _tm);
-#define UNPACK_HM_TO_MOVE_ID(_hm) case CAT(ITEM_HM_, _hm): return CAT(MOVE_, _hm);
+#define UNPACK_TM_TO_MOVE_ID(_tm) case CAT(TM_HM_INDEX_, _tm): return CAT(MOVE_, _tm);
+#define UNPACK_HM_TO_MOVE_ID(_hm) case CAT(TM_HM_INDEX_, _hm): return CAT(MOVE_, _hm);
 
 static inline enum TMHMIndex GetItemTMHMIndex(u16 item)
 {

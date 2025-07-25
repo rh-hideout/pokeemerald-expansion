@@ -311,7 +311,7 @@ static void SetRandomQuestionData(void)
 static u16 GetRandomAlternateMove(u8 monId)
 {
     u8 i, j;
-    u8 id;
+    enum TMHMIndex id;
     u8 numLearnsetMoves;
     u16 species;
     const struct LevelUpMove *learnset;
