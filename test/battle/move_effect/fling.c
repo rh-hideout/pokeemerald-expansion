@@ -203,7 +203,7 @@ SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/p
 
 SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
 {
-    enum ItemId item;
+    u32 item;
 
     PARAMETRIZE {item = ITEM_FLAME_ORB; }
     PARAMETRIZE {item = ITEM_LIGHT_BALL; }
@@ -259,7 +259,7 @@ SINGLE_BATTLE_TEST("Fling applies special effects when throwing specific Items")
 
 SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 {
-    enum ItemId item;
+    u32 item;
 
     PARAMETRIZE {item = ITEM_FLAME_ORB; }
     PARAMETRIZE {item = ITEM_LIGHT_BALL; }
@@ -338,7 +338,8 @@ SINGLE_BATTLE_TEST("Fling's secondary effects are blocked by Shield Dust")
 
 SINGLE_BATTLE_TEST("Fling - thrown berry's effect activates for the target even if the trigger conditions are not met")
 {
-    enum ItemId item, effect;
+    enum ItemId item;
+    enum ItemHoldEffect effect;
     u8 statId = 0;
     u32 status1 = STATUS1_NONE;
 
