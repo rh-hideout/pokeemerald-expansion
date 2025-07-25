@@ -593,40 +593,40 @@ ALIGNED(4)
 static const u8 sPrizeBerryIds[][10] =
 {
     { // Possible prizes with 3 players
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PINAP_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WEPEAR_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NANAB_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BLUK_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RAZZ_BERRY) - 1
+        INDEX_RAZZ_BERRY,
+        INDEX_BLUK_BERRY,
+        INDEX_NANAB_BERRY,
+        INDEX_WEPEAR_BERRY,
+        INDEX_PINAP_BERRY,
+        INDEX_PINAP_BERRY,
+        INDEX_WEPEAR_BERRY,
+        INDEX_NANAB_BERRY,
+        INDEX_BLUK_BERRY,
+        INDEX_RAZZ_BERRY
     },
     { // Possible prizes with 4 players
-        ITEM_TO_BERRY(ITEM_POMEG_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_KELPSY_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_QUALOT_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_HONDEW_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_GREPA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_TAMATO_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_CORNN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_MAGOST_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_RABUTA_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_NOMEL_BERRY) - 1
+        INDEX_POMEG_BERRY,
+        INDEX_KELPSY_BERRY,
+        INDEX_QUALOT_BERRY,
+        INDEX_HONDEW_BERRY,
+        INDEX_GREPA_BERRY,
+        INDEX_TAMATO_BERRY,
+        INDEX_CORNN_BERRY,
+        INDEX_MAGOST_BERRY,
+        INDEX_RABUTA_BERRY,
+        INDEX_NOMEL_BERRY
     },
     { // Possible prizes with 5 players
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_BELUE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_DURIN_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_WATMEL_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_PAMTRE_BERRY) - 1,
-        ITEM_TO_BERRY(ITEM_SPELON_BERRY) - 1
+        INDEX_SPELON_BERRY,
+        INDEX_PAMTRE_BERRY,
+        INDEX_WATMEL_BERRY,
+        INDEX_DURIN_BERRY,
+        INDEX_BELUE_BERRY,
+        INDEX_BELUE_BERRY,
+        INDEX_DURIN_BERRY,
+        INDEX_WATMEL_BERRY,
+        INDEX_PAMTRE_BERRY,
+        INDEX_SPELON_BERRY
     },
 };
 
@@ -2696,7 +2696,7 @@ static void ResetPickState(void)
 
 static u16 GetPrizeItemId(void)
 {
-    return sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE] + FIRST_BERRY_INDEX;
+    return GetBerryItemId(sGame->berryResults[sGame->multiplayerId][BERRY_PRIZE]);
 }
 
 static u8 GetNumPlayers(void)

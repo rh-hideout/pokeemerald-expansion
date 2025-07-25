@@ -67,7 +67,7 @@ TEST("Berries are sorted correctly in the bag")
         additem ITEM_CHERI_BERRY;
     );
 
-    SortPocket(POCKET_BERRIES, SORT_POCKET_BY_ITEM_ID);
+    SortPocket(POCKET_BERRIES, SORT_POCKET_BERRIES);
 
     EXPECT_EQ(pocket->itemSlots[0].itemId, ITEM_CHERI_BERRY);
     EXPECT_EQ(pocket->itemSlots[1].itemId, ITEM_ORAN_BERRY);
