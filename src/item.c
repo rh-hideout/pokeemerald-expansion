@@ -50,7 +50,7 @@ const struct TmHmIndexKey gTMHMItemMoveIds[NUM_ALL_MACHINES + 1] =
     FOREACH_HM(UNPACK_HM_ITEM_ID)
     /*
      * Expands to the following:
-     * 
+     *
      * [1] = { ITEM_TM_FOCUS_PUNCH, MOVE_FOCUS_PUNCH },
      * [2] = { ITEM_TM_DRAGON_CLAW, MOVE_DRAGON_CLAW },
      * [3] = { ITEM_TM_WATER_PULSE, MOVE_WATER_PULSE },
@@ -975,4 +975,11 @@ bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile _volatile)
 u32 GetItemSellPrice(u32 itemId)
 {
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
+}
+
+bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect)
+{
+    return holdEffect == HOLD_EFFECT_CHOICE_BAND
+        || holdEffect == HOLD_EFFECT_CHOICE_SCARF
+        || holdEffect == HOLD_EFFECT_CHOICE_SPECS;
 }
