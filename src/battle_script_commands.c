@@ -3532,11 +3532,11 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_SYRUP_BOMB:
-        if (!(gStatuses4[gEffectBattler] & STATUS4_SYRUP_BOMB))
+        if (!gBattleMons[gEffectBattler].volatiles.syrupBomb)
         {
             struct Pokemon *mon = GetBattlerMon(gBattlerAttacker);
 
-            gStatuses4[gEffectBattler] |= STATUS4_SYRUP_BOMB;
+            gBattleMons[gEffectBattler].volatiles.syrupBomb = TRUE;
             gDisableStructs[gEffectBattler].syrupBombTimer = 3;
             gDisableStructs[gEffectBattler].syrupBombIsShiny = IsMonShiny(mon);
             gBattleStruct->stickySyrupdBy[gEffectBattler] = gBattlerAttacker;
@@ -3674,9 +3674,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         break;
     case MOVE_EFFECT_SALT_CURE:
-        if (!(gStatuses4[gBattlerTarget] & STATUS4_SALT_CURE))
+        if (!gBattleMons[gBattlerTarget].volatiles.saltCure)
         {
-            gStatuses4[gBattlerTarget] |= STATUS4_SALT_CURE;
+            gBattleMons[gBattlerTarget].volatiles.saltCure = TRUE;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_MoveEffectSaltCure;
         }
@@ -15106,7 +15106,7 @@ void BS_ItemCureStatus(void)
         if (GetItemStatus1Mask(gLastUsedItem) & STATUS1_SLEEP)
             gBattleMons[battler].volatiles.nightmare = FALSE;
         if (ItemHasVolatileFlag(gLastUsedItem, VOLATILE_CONFUSION))
-            gStatuses4[battler] &= ~STATUS4_INFINITE_CONFUSION;
+            gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
     }
 
     if (statusChanged)
@@ -15246,15 +15246,6 @@ void BS_JumpIfElectricAbilityAffected(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_ApplySaltCure(void)
-{
-    NATIVE_ARGS(u8 battler);
-
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    gStatuses4[battler] |= STATUS4_SALT_CURE;
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_SetTerrain(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
@@ -15374,7 +15365,7 @@ void BS_TrySetOctolock(void)
 void BS_SetGlaiveRush(void)
 {
     NATIVE_ARGS();
-    gStatuses4[gBattlerAttacker] |= STATUS4_GLAIVE_RUSH;
+    gBattleMons[gBattlerAttacker].volatiles.glaiveRush = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -17472,7 +17463,7 @@ void BS_TryElectrify(void)
     }
     else
     {
-        gStatuses4[gBattlerTarget] |= STATUS4_ELECTRIFIED;
+        gBattleMons[gBattlerTarget].volatiles.electrified = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

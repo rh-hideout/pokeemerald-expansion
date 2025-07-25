@@ -3174,7 +3174,6 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
         gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
                                        | STATUS3_GASTRO_ACID | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
                                        | STATUS3_AQUA_RING | STATUS3_POWER_TRICK);
-        gStatuses4[battler] &= STATUS4_INFINITE_CONFUSION;
         for (i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(battler, i)
@@ -3200,8 +3199,8 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
             gBattleMons[i].volatiles.infatuation = 0;
         if (gBattleMons[i].volatiles.wrapped && gBattleStruct->wrappedBy[i] == battler)
             gBattleMons[i].volatiles.wrapped = FALSE;
-        if ((gStatuses4[i] & STATUS4_SYRUP_BOMB) && gBattleStruct->stickySyrupdBy[i] == battler)
-            gStatuses4[i] &= ~STATUS4_SYRUP_BOMB;
+        if (gBattleMons[i].volatiles.syrupBomb && gBattleStruct->stickySyrupdBy[i] == battler)
+            gBattleMons[i].volatiles.syrupBomb = FALSE;
     }
 
     gActionSelectionCursor[battler] = 0;
@@ -3318,8 +3317,8 @@ const u8* FaintClearSetData(u32 battler)
             gBattleMons[i].volatiles.infatuation = 0;
         if (gBattleMons[i].volatiles.wrapped && gBattleStruct->wrappedBy[i] == battler)
             gBattleMons[i].volatiles.wrapped = FALSE;
-        if ((gStatuses4[i] & STATUS4_SYRUP_BOMB) && gBattleStruct->stickySyrupdBy[i] == battler)
-            gStatuses4[i] &= ~STATUS4_SYRUP_BOMB;
+        if (gBattleMons[i].volatiles.syrupBomb && gBattleStruct->stickySyrupdBy[i] == battler)
+            gBattleMons[i].volatiles.syrupBomb = FALSE;
     }
 
     gActionSelectionCursor[battler] = 0;
@@ -4019,7 +4018,7 @@ void BattleTurnPassed(void)
         gChosenActionByBattler[i] = B_ACTION_NONE;
         gChosenMoveByBattler[i] = MOVE_NONE;
         gBattleStruct->monToSwitchIntoId[i] = PARTY_SIZE;
-        gStatuses4[i] &= ~STATUS4_ELECTRIFIED;
+        gBattleMons[i].volatiles.electrified = FALSE;
         gBattleMons[i].volatiles.flinched = FALSE;
         gBattleMons[i].volatiles.powder = FALSE;
 
@@ -6083,7 +6082,8 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
         gBattleStruct->dynamicMoveType = moveType | F_DYNAMIC_TYPE_SET;
 
     moveType = GetBattleMoveType(move);
-    if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL) || gStatuses4[battler] & STATUS4_ELECTRIFIED)
+    if ((gFieldStatuses & STATUS_FIELD_ION_DELUGE && moveType == TYPE_NORMAL)
+     || gBattleMons[battler].volatiles.electrified)
         gBattleStruct->dynamicMoveType = TYPE_ELECTRIC | F_DYNAMIC_TYPE_SET;
 
     // Check if a gem should activate.

@@ -1956,8 +1956,8 @@ bool32 IsBattlerDamagedByStatus(u32 battler)
         || gBattleMons[battler].volatiles.wrapped
         || gBattleMons[battler].volatiles.nightmare
         || gBattleMons[battler].volatiles.cursed
+        || gBattleMons[battler].volatiles.saltCure
         || gStatuses3[battler] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED)
-        || gStatuses4[battler] & (STATUS4_SALT_CURE)
         || gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_DAMAGE_NON_TYPES);
 }
 

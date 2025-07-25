@@ -795,7 +795,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses4[battler] & STATUS4_SALT_CURE
+    if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
@@ -836,10 +836,10 @@ static bool32 HandleEndTurnSyrupBomb(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if ((gStatuses4[battler] & STATUS4_SYRUP_BOMB) && (IsBattlerAlive(battler)))
+    if (gBattleMons[battler].volatiles.syrupBomb && (IsBattlerAlive(battler)))
     {
         if (gDisableStructs[battler].syrupBombTimer > 0 && --gDisableStructs[battler].syrupBombTimer == 0)
-            gStatuses4[battler] &= ~STATUS4_SYRUP_BOMB;
+            gBattleMons[battler].volatiles.syrupBomb = FALSE;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SYRUP_BOMB);
         gBattlescriptCurrInstr = BattleScript_SyrupBombEndTurn;
         BattleScriptExecute(gBattlescriptCurrInstr);

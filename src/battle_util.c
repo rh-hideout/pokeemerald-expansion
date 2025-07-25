@@ -1893,7 +1893,7 @@ static enum MoveCanceller CancellerFlags(void)
 {
     gBattleMons[gBattlerAttacker].volatiles.destinyBond = FALSE;
     gStatuses3[gBattlerAttacker] &= ~STATUS3_GRUDGE;
-    gStatuses4[gBattlerAttacker] &= ~STATUS4_GLAIVE_RUSH;
+    gBattleMons[gBattlerAttacker].volatiles.glaiveRush = FALSE;
     return MOVE_STEP_SUCCESS;
 }
 
@@ -2157,7 +2157,7 @@ static enum MoveCanceller CancellerConfused(void)
 
     if (gBattleMons[gBattlerAttacker].volatiles.confusionTurns)
     {
-        if (!(gStatuses4[gBattlerAttacker] & STATUS4_INFINITE_CONFUSION))
+        if (!gBattleMons[gBattlerAttacker].volatiles.infiniteConfusion)
             gBattleMons[gBattlerAttacker].volatiles.confusionTurns--;
         if (gBattleMons[gBattlerAttacker].volatiles.confusionTurns)
         {
@@ -4168,8 +4168,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattleStruct->battlerState[battler].commandingDondozo = TRUE;
                 gBattleStruct->battlerState[partner].commanderSpecies = gBattleMons[battler].species;
                 gStatuses3[battler] |= STATUS3_COMMANDER;
-                if (gBattleMons[battler].volatiles.confusionTurns > 0
-                 && !(gStatuses4[battler] & STATUS4_INFINITE_CONFUSION))
+                if (gBattleMons[battler].volatiles.confusionTurns > 0 && !gBattleMons[battler].volatiles.infiniteConfusion)
                     gBattleMons[battler].volatiles.confusionTurns--;
                 BtlController_EmitSpriteInvisibility(battler, B_COMM_TO_CONTROLLER, TRUE);
                 MarkBattlerForControllerExec(battler);
@@ -6064,7 +6063,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
 static enum ItemEffect ConsumeBerserkGene(u32 battler, enum ItemCaseId caseID)
 {
     if (CanBeInfinitelyConfused(battler))
-        gStatuses4[battler] |= STATUS4_INFINITE_CONFUSION;
+        gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
 
     BufferStatChange(battler, STAT_ATK, STRINGID_STATROSE);
     gBattlerAttacker = gEffectBattler = battler;
@@ -7298,8 +7297,8 @@ void ClearVariousBattlerFlags(u32 battler)
 {
     gDisableStructs[battler].furyCutterCounter = 0;
     gBattleMons[battler].volatiles.destinyBond = FALSE;
+    gBattleMons[battler].volatiles.glaiveRush = FALSE;
     gStatuses3[battler] &= ~STATUS3_GRUDGE;
-    gStatuses4[battler] &= ~ STATUS4_GLAIVE_RUSH;
 }
 
 void HandleAction_RunBattleScript(void) // identical to RunBattleScriptCommands
@@ -9075,7 +9074,7 @@ static inline uq4_12_t GetCriticalModifier(bool32 isCrit)
 
 static inline uq4_12_t GetGlaiveRushModifier(u32 battlerDef)
 {
-    if (gStatuses4[battlerDef] & STATUS4_GLAIVE_RUSH)
+    if (gBattleMons[battlerDef].volatiles.glaiveRush)
         return UQ_4_12(2.0);
     return UQ_4_12(1.0);
 }
@@ -10913,7 +10912,7 @@ void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing)
 void RemoveConfusionStatus(u32 battler)
 {
     gBattleMons[battler].volatiles.confusionTurns = 0;
-    gStatuses4[battler] &= ~STATUS4_INFINITE_CONFUSION;
+    gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
 }
 
 static bool32 CanBeInfinitelyConfused(u32 battler)
@@ -11617,7 +11616,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
 
     if ((gStatuses3[battlerDef] & STATUS3_ALWAYS_HITS && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
      || (B_TOXIC_NEVER_MISS >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
-     || gStatuses4[battlerDef] & STATUS4_GLAIVE_RUSH)
+     || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
         effect = TRUE;
     }

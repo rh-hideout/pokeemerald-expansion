@@ -170,14 +170,6 @@ enum
 
 enum
 {
-    LIST_STATUS4_ELECTRIFIED,
-    LIST_STATUS4_SALT_CURE,
-    LIST_STATUS4_SYRUP_BOMB,
-    LIST_STATUS4_GLAIVE_RUSH,
-};
-
-enum
-{
     LIST_SIDE_STICKY_WEB,
     LIST_SIDE_SPIKES,
     LIST_SIDE_TOXIC_SPIKES,
@@ -405,21 +397,26 @@ static const struct ListMenuItem sStatus1ListItems[] =
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    {COMPOUND_STRING("Confusion"),        VOLATILE_CONFUSION},
-    {COMPOUND_STRING("Flinched"),         VOLATILE_FLINCHED},
-    {COMPOUND_STRING("Torment"),          VOLATILE_TORMENT},
-    {COMPOUND_STRING("Powder"),           VOLATILE_POWDER},
-    {COMPOUND_STRING("DefenseCurl"),      VOLATILE_DEFENSE_CURL},
-    {COMPOUND_STRING("Recharge"),         VOLATILE_RECHARGE},
-    {COMPOUND_STRING("Rage"),             VOLATILE_RAGE},
-    {COMPOUND_STRING("DestinyBond"),      VOLATILE_DESTINY_BOND},
-    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
-    {COMPOUND_STRING("Cursed"),           VOLATILE_CURSED},
-    {COMPOUND_STRING("Foresight"),        VOLATILE_FORESIGHT},
-    {COMPOUND_STRING("DragonCheer"),      VOLATILE_DRAGON_CHEER},
-    {COMPOUND_STRING("FocusEnergy"),      VOLATILE_FOCUS_ENERGY},
-    {COMPOUND_STRING("MudSport"),         VOLATILE_MUD_SPORT},
-    {COMPOUND_STRING("WaterSport"),       VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Confusion"),          VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"),           VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"),            VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"),             VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"),        VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"),           VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"),               VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"),        VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"),             VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"),          VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"),        VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"),        VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
+    {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
+    {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
+    {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
+    {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
+    {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -447,14 +444,6 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {COMPOUND_STRING("Aqua Ring"),         LIST_STATUS3_AQUA_RING},
     {COMPOUND_STRING("Laser Focus"),       LIST_STATUS3_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),       LIST_STATUS3_POWER_TRICK},
-};
-
-static const struct ListMenuItem sStatus4ListItems[] =
-{
-    {COMPOUND_STRING("Electrified"), LIST_STATUS4_ELECTRIFIED},
-    {COMPOUND_STRING("Salt Cure"),   LIST_STATUS4_SALT_CURE},
-    {COMPOUND_STRING("Syrup Bomb"),  LIST_STATUS4_SYRUP_BOMB},
-    {COMPOUND_STRING("Glaive Rush"), LIST_STATUS4_GLAIVE_RUSH},
 };
 
 static const struct ListMenuItem sHazardsListItems[] =
@@ -822,7 +811,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Chosen move: "), 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, GetMoveName(gBattleMons[data->aiBattlerId].moves[chosenMoveIndex]), 74 + 68, 64, 0, NULL);
     }
-    
+
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);
     Free(text);
 }
@@ -1436,11 +1425,6 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sStatus3ListItems;
         itemsCount = ARRAY_COUNT(sStatus3ListItems);
         data->bitfield = sStatus3Bitfield;
-        break;
-    case LIST_ITEM_STATUS4:
-        listTemplate.items = sStatus4ListItems;
-        itemsCount = ARRAY_COUNT(sStatus4ListItems);
-        data->bitfield = sStatus4Bitfield;
         break;
     case LIST_ITEM_AI:
         listTemplate.items = sAIListItems;
