@@ -595,7 +595,8 @@ struct PartyState
     u32 battleBondBoost:1;
     u32 transformZeroToHero:1;
     u32 supersweetSyrup:1;
-    u32 padding:26;
+    u32 timesGotHit:8;
+    u32 padding:18;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -745,7 +746,6 @@ struct BattleStruct
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
-    u8 timesGotHit[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 stickySyrupdBy[MAX_BATTLERS_COUNT];
     u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
@@ -1216,6 +1216,11 @@ static inline struct Pokemon *GetSideParty(u32 side)
 static inline struct Pokemon *GetBattlerParty(u32 battler)
 {
     return GetSideParty(GetBattlerSide(battler));
+}
+
+static inline struct PartyState *GetBattlerPartyState(u32 battler)
+{
+    return &gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]];
 }
 
 static inline bool32 IsDoubleBattle(void)

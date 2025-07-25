@@ -8217,7 +8217,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         basePower = GetMaxMovePower(gBattleMons[battlerAtk].moves[gBattleStruct->chosenMovePositions[battlerAtk]]);
         break;
     case EFFECT_RAGE_FIST:
-        basePower += 50 * gBattleStruct->timesGotHit[GetBattlerSide(battlerAtk)][gBattlerPartyIndexes[battlerAtk]];
+        basePower += 50 * GetBattlerPartyState(battlerAtk)->timesGotHit;
         basePower = (basePower > 350) ? 350 : basePower;
         break;
     case EFFECT_FICKLE_BEAM:

@@ -2445,7 +2445,7 @@ static void Cmd_datahpupdate(void)
         if (gBattlerAttacker != gBattlerTarget
          && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
          && IsBattlerTurnDamaged(gBattlerTarget))
-            gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]]++;
+            GetBattlerPartyState(gBattlerTarget)->timesGotHit++;
 
         if (GetMoveEffect(gCurrentMove) == EFFECT_KNOCK_OFF
          && IsBattlerTurnDamaged(gBattlerTarget)
@@ -11186,8 +11186,8 @@ static void Cmd_transformdataexecution(void)
         gDisableStructs[gBattlerAttacker].mimickedMoves = 0;
         gDisableStructs[gBattlerAttacker].usedMoves = 0;
 
-        timesGotHit = gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]];
-        gBattleStruct->timesGotHit[GetBattlerSide(gBattlerAttacker)][gBattlerPartyIndexes[gBattlerAttacker]] = timesGotHit;
+        timesGotHit = GetBattlerPartyState(gBattlerTarget)->timesGotHit;
+        GetBattlerPartyState(gBattlerAttacker)->timesGotHit = timesGotHit;
 
         PREPARE_SPECIES_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerTarget].species)
 
