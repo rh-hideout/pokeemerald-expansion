@@ -7,6 +7,8 @@
 #include "constants/moves.h"
 #include "constants/tms_hms.h"
 #include "constants/berries.h"
+#include "constants/item_effects.h"
+#include "constants/hold_effects.h"
 
 /* Expands to:
  * enum
@@ -222,5 +224,6 @@ u32 GetItemFlingPower(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
 u32 GetItemSellPrice(u32 itemId);
+bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect);
 
 #endif // GUARD_ITEM_H

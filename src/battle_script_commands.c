@@ -5939,7 +5939,6 @@ static void Cmd_moveend(void)
     s32 i;
     bool32 effect = FALSE;
     u32 moveType = 0;
-    enum ItemHoldEffect holdEffectAtk = HOLD_EFFECT_NONE;
     u32 endMode, endState;
     u32 originallyUsedMove;
 
@@ -5951,7 +5950,6 @@ static void Cmd_moveend(void)
     endMode = cmd->endMode;
     endState = cmd->endState;
 
-    holdEffectAtk = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
     moveType = GetBattleMoveType(gCurrentMove);
 
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
@@ -6149,35 +6147,6 @@ static void Cmd_moveend(void)
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
-        case MOVEEND_CHOICE_MOVE: // update choice band move
-            {
-                u16 *choicedMoveAtk = &gBattleStruct->choicedMove[gBattlerAttacker];
-                if (gHitMarker & HITMARKER_OBEYS
-                 && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-                 && gChosenMove != MOVE_STRUGGLE
-                 && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVE_UNAVAILABLE)
-                 && (HOLD_EFFECT_CHOICE(holdEffectAtk) || GetBattlerAbility(gBattlerAttacker) == ABILITY_GORILLA_TACTICS))
-                {
-                    if ((moveEffect == EFFECT_BATON_PASS || moveEffect == EFFECT_HEALING_WISH)
-                     && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED))
-                    {
-                        gBattleScripting.moveendState++;
-                        break;
-                    }
-                    *choicedMoveAtk = gChosenMove;
-                }
-                for (i = 0; i < MAX_MON_MOVES; i++)
-                {
-                    if (gBattleMons[gBattlerAttacker].moves[i] == *choicedMoveAtk)
-                        break;
-                }
-                if (i == MAX_MON_MOVES)
-                {
-                    *choicedMoveAtk = MOVE_NONE;
-                }
-                gBattleScripting.moveendState++;
-                break;
-            }
         case MOVEEND_ITEM_EFFECTS_TARGET:
             if (ItemBattleEffects(ITEMEFFECT_TARGET, gBattlerTarget))
                 effect = TRUE;

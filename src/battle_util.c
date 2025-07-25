@@ -1481,7 +1481,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     }
 
     gPotentialItemEffectBattler = battler;
-    if (DYNAMAX_BYPASS_CHECK && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+    if (DYNAMAX_BYPASS_CHECK && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
     {
         gCurrentMove = *choicedMove;
         gLastUsedItem = gBattleMons[battler].item;
@@ -1600,7 +1600,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_ENCORE && gDisableStructs[battler].encoreTimer && gDisableStructs[battler].encoredMove != move)
             unusableMoves |= 1u << i;
         // Choice Items
-        else if (check & MOVE_LIMITATION_CHOICE_ITEM && HOLD_EFFECT_CHOICE(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
+        else if (check & MOVE_LIMITATION_CHOICE_ITEM && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
             unusableMoves |= 1u << i;
         // Assault Vest
         else if (check & MOVE_LIMITATION_ASSAULT_VEST && holdEffect == HOLD_EFFECT_ASSAULT_VEST && IsBattleMoveStatus(move) && moveEffect != EFFECT_ME_FIRST)
@@ -2295,6 +2295,29 @@ static enum MoveCanceller CancellerStanceChangeTwo(void)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceller CancellerChoiceLock(void)
+{
+    u16 *choicedMoveAtk = &gBattleStruct->choicedMove[gBattlerAttacker];
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+
+    if (gChosenMove != MOVE_STRUGGLE
+     && (*choicedMoveAtk == MOVE_NONE || *choicedMoveAtk == MOVE_UNAVAILABLE)
+     && (IsHoldEffectChoice(holdEffect) || GetBattlerAbility(gBattlerAttacker) == ABILITY_GORILLA_TACTICS))
+        *choicedMoveAtk = gChosenMove;
+
+    u32 moveIndex;
+    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    {
+        if (gBattleMons[gBattlerAttacker].moves[moveIndex] == *choicedMoveAtk)
+            break;
+    }
+
+    if (moveIndex == MAX_MON_MOVES)
+        *choicedMoveAtk = MOVE_NONE;
+
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceller CancellerWeatherPrimal(void)
 {
     enum MoveCanceller effect = MOVE_STEP_SUCCESS;
@@ -2564,6 +2587,7 @@ static enum MoveCanceller (*const sMoveSuccessOrderCancellers[])(void) =
     [CANCELLER_BIDE] = CancellerBide,
     [CANCELLER_THAW] = CancellerThaw,
     [CANCELLER_STANCE_CHANGE_2] = CancellerStanceChangeTwo,
+    [CANCELLER_CHOICE_LOCK] = CancellerChoiceLock,
     [CANCELLER_WEATHER_PRIMAL] = CancellerWeatherPrimal,
     [CANCELLER_DYNAMAX_BLOCKED] = CancellerDynamaxBlocked,
     [CANCELLER_POWDER_STATUS] = CancellerPowderStatus,
@@ -6037,29 +6061,6 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
-{
-    if (gProtectStructs[battler].tryEjectPack
-     && !gProtectStructs[battler].disableEjectPack
-     && CountUsablePartyMons(battler) > 0
-     && !(GetMoveEffect(gCurrentMove) == EFFECT_PARTING_SHOT && CanBattlerSwitch(gBattlerAttacker))) // Does not activate if attacker used Parting Shot and can switch out
-    {
-        gProtectStructs[battler].tryEjectPack = FALSE;
-        gBattleScripting.battler = battler;
-        gAiLogicData->ejectPackSwitch = TRUE;
-        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
-        {
-            BattleScriptExecute(BattleScript_EjectPackActivate_End2);
-        }
-        else
-        {
-            BattleScriptCall(BattleScript_EjectPackActivate_Ret);
-        }
-        return ITEM_STATS_CHANGE;
-    }
-    return ITEM_NO_EFFECT;
-}
-
 static enum ItemEffect ConsumeBerserkGene(u32 battler, enum ItemCaseId caseID)
 {
     if (CanBeInfinitelyConfused(battler))
@@ -6722,9 +6723,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                     effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, gLastUsedItem, caseID);
                     break;
                 }
-                break;
-            case HOLD_EFFECT_EJECT_PACK:
-                effect = TryEjectPack(battler, caseID);
                 break;
             case HOLD_EFFECT_BERSERK_GENE:
                 effect = ConsumeBerserkGene(battler, caseID);
