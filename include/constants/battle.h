@@ -700,4 +700,11 @@ enum MonState
     MON_OUTSIDE_BATTLE,
 };
 
+enum CalcDamageState
+{
+    MOVE_CAN_DAMAGE,
+    MOVE_WILL_FAIL,
+    MOVE_CHECK_ACCURACY,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_H

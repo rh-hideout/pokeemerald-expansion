@@ -2541,18 +2541,18 @@ static enum MoveCanceller CancellerMultiTargetMoves(void)
              || IsBattlerProtected(gBattlerAttacker, battlerDef, gCurrentMove)) // Missing Invulnerable check
             {
                 gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
-                gBattleStruct->noResultString[battlerDef] = TRUE;
+                gBattleStruct->noResultString[battlerDef] = MOVE_WILL_FAIL;
             }
             else if (CanAbilityBlockMove(gBattlerAttacker, battlerDef, abilityAtk, abilityDef, gCurrentMove, CHECK_TRIGGER)
                   || (IsBattlerTerrainAffected(gBattlerAttacker, STATUS_FIELD_PSYCHIC_TERRAIN) && GetBattleMovePriority(gBattlerAttacker, abilityAtk, gCurrentMove) > 0))
             {
                 gBattleStruct->moveResultFlags[battlerDef] = 0;
-                gBattleStruct->noResultString[battlerDef] = TRUE;
+                gBattleStruct->noResultString[battlerDef] = MOVE_WILL_FAIL;
             }
             else if (CanAbilityAbsorbMove(gBattlerAttacker, battlerDef, abilityDef, gCurrentMove, GetBattleMoveType(gCurrentMove), CHECK_TRIGGER))
             {
                 gBattleStruct->moveResultFlags[battlerDef] = 0;
-                gBattleStruct->noResultString[battlerDef] = DO_ACCURACY_CHECK;
+                gBattleStruct->noResultString[battlerDef] = MOVE_CHECK_ACCURACY;
             }
             else
             {
@@ -11287,7 +11287,7 @@ void ClearDamageCalcResults(void)
     {
         gBattleStruct->moveDamage[battler] = 0;
         gBattleStruct->critChance[battler] = 0;
-        gBattleStruct->moveResultFlags[battler] = 0;
+        gBattleStruct->moveResultFlags[battler] = MOVE_CAN_DAMAGE;
         gBattleStruct->noResultString[battler] = 0;
         gBattleStruct->missStringId[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;

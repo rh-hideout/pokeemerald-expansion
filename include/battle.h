@@ -865,8 +865,6 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 #define SET_STATCHANGER(statId, stage, goesDown) (gBattleScripting.statChanger = (statId) + ((stage) << 3) + (goesDown << 7))
 #define SET_STATCHANGER2(dst, statId, stage, goesDown)(dst = (statId) + ((stage) << 3) + (goesDown << 7))
 
-#define DO_ACCURACY_CHECK 2 // Don't skip the accuracy check before the move might be absorbed
-
 // NOTE: The members of this struct have hard-coded offsets
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
