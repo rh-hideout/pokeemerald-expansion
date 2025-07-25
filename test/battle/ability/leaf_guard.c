@@ -35,7 +35,7 @@ TO_DO_BATTLE_TEST("Leaf Guard doesn't prevent non-volatile status conditions if 
 
 SINGLE_BATTLE_TEST("Leaf Guard prevents status conditions from Flame Orb and Toxic Orb")
 {
-    u32 item;
+    enum ItemId item;
     PARAMETRIZE { item = ITEM_FLAME_ORB; }
     PARAMETRIZE { item = ITEM_TOXIC_ORB; }
     GIVEN {

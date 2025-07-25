@@ -143,7 +143,7 @@ bool32 CanUseZMove(u32 battler)
 
 u32 GetUsableZMove(u32 battler, u32 move)
 {
-    u32 item = gBattleMons[battler].item;
+    enum ItemId item = gBattleMons[battler].item;
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
@@ -167,7 +167,7 @@ void ActivateZMove(u32 battler)
 
 bool32 IsViableZMove(u32 battler, u32 move)
 {
-    u32 item;
+    enum ItemId item;
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
     int moveSlotIndex;
 
@@ -228,7 +228,7 @@ bool32 TryChangeZTrigger(u32 battler, u32 moveIndex)
     return viableZMove;
 }
 
-u32 GetSignatureZMove(u32 move, u32 species, u32 item)
+u32 GetSignatureZMove(u32 move, u32 species, enum ItemId item)
 {
     u32 i;
 

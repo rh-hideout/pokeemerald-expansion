@@ -49,7 +49,7 @@ WILD_BATTLE_TEST("Higher leveled Pokemon give more exp", s32 exp)
 
 WILD_BATTLE_TEST("Lucky Egg boosts gained exp points by 50%", s32 exp)
 {
-    u32 item = 0;
+    enum ItemId item = 0;
 
     PARAMETRIZE { item = ITEM_LUCKY_EGG; }
     PARAMETRIZE { item = ITEM_NONE; }
@@ -123,7 +123,7 @@ WILD_BATTLE_TEST("Large exp gains are supported", s32 exp) // #1455
 
 WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not participate in battle")
 {
-    u32 item = 0;
+    enum ItemId item = 0;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_EXP_SHARE; }

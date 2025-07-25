@@ -143,7 +143,7 @@ SINGLE_BATTLE_TEST("Strength Sap fails if target is at -6 Atk")
 
 SINGLE_BATTLE_TEST("Strength Sap restores more HP if Big Root is held", s16 hp)
 {
-    u32 item;
+    enum ItemId item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_BIG_ROOT; }

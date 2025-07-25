@@ -998,13 +998,11 @@ enum __attribute__((packed)) ItemId
     ITEM_FIELD_ARROW = ITEMS_COUNT,
 
     /* Expands to:
-    * enum
-    * {
     *   ITEM_TM_FOCUS_PUNCH = ITEM_TM01,
     *   ...
-    *   ITEM_HM_CUT = ITM_HM01,
+    *   ITEM_HM_CUT = ITEM_HM01,
     *   ...
-    * }; */
+    */
     RECURSIVELY(R_ZIP(ENUM_TM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_TM(APPEND_COMMA))))
     RECURSIVELY(R_ZIP(ENUM_HM, TO_TMHM_NUMS NUMBERS_256, (FOREACH_HM(APPEND_COMMA))))
 };
@@ -1013,7 +1011,7 @@ enum __attribute__((packed)) ItemId
 #undef ENUM_HM
 #undef TO_TMHM_NUMS
 
-// Confuision Berry HP restore fraction
+// HP fraction restored by confusion-inducing berries
 #if B_CONFUSE_BERRIES_HEAL >= GEN_8
     #define CONFUSE_BERRY_HEAL_FRACTION 3
 #elif B_CONFUSE_BERRIES_HEAL == GEN_7

@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
 {
     u32 species;
     u32 ability;
-    u32 item;
+    enum ItemId item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }
@@ -160,7 +160,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the
 {
     u32 species;
     u32 ability;
-    u32 item;
+    enum ItemId item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_BOOSTER_ENERGY; }

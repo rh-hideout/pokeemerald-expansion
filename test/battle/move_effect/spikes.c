@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
 SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
 {
     u32 species = SPECIES_WOBBUFFET;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     u32 move1 = MOVE_CELEBRATE;
     u32 move2 = MOVE_CELEBRATE;
     bool32 airborne;

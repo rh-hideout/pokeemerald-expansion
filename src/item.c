@@ -110,7 +110,7 @@ u16 GetBagItemQuantity(enum Pocket pocketId, u32 pocketPos)
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
     enum Pocket pocketId;
-    u32 item;
+    enum ItemId item;
     for (pocketId = 0; pocketId < POCKETS_COUNT; pocketId++)
     {
         for (item = 0; item < gBagPockets[pocketId].capacity; item++)

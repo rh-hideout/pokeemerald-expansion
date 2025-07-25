@@ -11,7 +11,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Future Sight uses Sp. Atk stat of the original user without modifiers")
 {
-    u32 item;
+    enum ItemId item;
     s16 seedFlareDmg;
     s16 futureSightDmg;
 

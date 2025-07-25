@@ -105,7 +105,7 @@ TEST("Item names fit on Bag Screen (list)")
     u32 i;
     const u32 fontId = FONT_NARROWER;
     const u32 tmHmBerryWidthPx = 61, restWidthPx = 88;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -122,7 +122,7 @@ TEST("Item plural names fit on Bag Screen (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 101 - 6;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -136,7 +136,7 @@ TEST("Item names fit on PC Storage (list)")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 73;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -149,7 +149,7 @@ TEST("Item plural names fit on PC storage (left box)")
     u32 i;
     // -6 for the question mark in FONT_NORMAL.
     const u32 fontId = FONT_NARROWER, widthPx = 104 - 6;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     u8 pluralName[ITEM_NAME_PLURAL_LENGTH + 1];
     for (i = 1; i < ITEMS_COUNT; i++)
     {
@@ -163,7 +163,7 @@ TEST("Item names fit on Pokemon Storage System")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 66;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -190,7 +190,7 @@ TEST("Item names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 72;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         if (gItemsInfo[i].importance) continue;
@@ -212,7 +212,7 @@ TEST("Item names fit on Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 84;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].name) { item = i; }
@@ -224,7 +224,7 @@ TEST("Item descriptions fit on Bag and Shop Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 102;
-    u32 item = ITEM_NONE;
+    enum ItemId item = ITEM_NONE;
     for (i = 1; i < ITEMS_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gItemsInfo[i].description) { item = i; }

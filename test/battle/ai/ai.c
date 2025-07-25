@@ -584,7 +584,7 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
 
 AI_SINGLE_BATTLE_TEST("AI avoids contact moves against rocky helmet")
 {
-    u32 item;
+    enum ItemId item;
 
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_ROCKY_HELMET; }

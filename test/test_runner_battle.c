@@ -1769,7 +1769,7 @@ void SpeedIV_(u32 sourceLine, u32 speedIV)
     SetMonData(DATA.currentMon, MON_DATA_SPEED_IV, &speedIV);
 }
 
-void Item_(u32 sourceLine, u32 item)
+void Item_(u32 sourceLine, enum ItemId item)
 {
     INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/OPPONENT");
     INVALID_IF(item >= ITEMS_COUNT, "Illegal item: %d", item);
@@ -2126,7 +2126,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
 
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
-        u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
+        enum ItemId item = GetMonData(mon, MON_DATA_HELD_ITEM);
         enum ItemHoldEffect holdEffect = GetItemHoldEffect(item);
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 side = battlerId & BIT_SIDE;
