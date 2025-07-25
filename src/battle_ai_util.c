@@ -3763,9 +3763,10 @@ bool32 IsValidDoubleBattle(u32 battlerAtk)
     return FALSE;
 }
 
-// TODO: Handling for when the 'partner' is not actually a partner, a la Battle Royale or B_WILD_NATURAL_ENEMIES
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
 {
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+        return FALSE;
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
@@ -5523,4 +5524,29 @@ u32 GetThinkingBattler(u32 battler)
     if (gAiLogicData->aiPredictionInProgress)
         return gAiLogicData->battlerDoingPrediction;
     return battler;
+}
+
+bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
+{
+    if (B_WILD_NATURAL_ENEMIES != TRUE)
+        return FALSE;
+
+    switch (speciesAttacker)
+    {
+    case SPECIES_ZANGOOSE:
+        return (speciesTarget == SPECIES_SEVIPER);
+    case SPECIES_SEVIPER:
+        return (speciesTarget == SPECIES_ZANGOOSE);
+    case SPECIES_HEATMOR:
+        return (speciesTarget == SPECIES_DURANT);
+    case SPECIES_DURANT:
+        return (speciesTarget == SPECIES_HEATMOR);
+    case SPECIES_SABLEYE:
+        return (speciesTarget == SPECIES_CARBINK);
+    case SPECIES_MAREANIE:
+        return (speciesTarget == SPECIES_CORSOLA);
+    default:
+        return FALSE;
+    }
+    return FALSE;
 }

@@ -57,7 +57,7 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
     u32 i;
     u32 battlersOnSide = 1;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES))
         battlersOnSide = 2;
 
     for (i = 0; i < battlersOnSide; i++)
@@ -92,7 +92,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 
     u32 battlersOnSide = 1;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && !(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES))
         battlersOnSide = 2;
 
     for (i = 0; i < battlersOnSide; i++)

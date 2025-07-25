@@ -51,6 +51,7 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
+static s32 AI_Enemies(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
 static s32 AI_Roaming(u32 battlerAtk, u32 battlerDef, u32 move, s32 score);
@@ -91,10 +92,10 @@ static s32 (*const sBattleAiFuncTable[])(u32, u32, u32, s32) =
     [24] = NULL,                     // AI_FLAG_PREDICT_INCOMING_MON
     [25] = AI_CheckPpStall,          // AI_FLAG_PP_STALL_PREVENTION
     [26] = NULL,                     // AI_FLAG_PREDICT_MOVE
-    [27] = NULL,                     // Unused
-    [28] = NULL,                     // Unused
-    [29] = NULL,                     // Unused
-    [30] = NULL,                     // Unused
+    [27] = NULL,                     // AI_FLAG_SMART_TERA
+    [28] = NULL,                     // AI_FLAG_ASSUME_STAB
+    [29] = NULL,                     // AI_FLAG_ASSUME_STATUS_MOVES
+    [30] = AI_Enemies,               // AI_FLAG_ENEMIES
     [31] = NULL,                     // Unused
     [32] = NULL,                     // Unused
     [33] = NULL,                     // Unused
@@ -247,6 +248,17 @@ void BattleAI_SetupFlags(void)
         // smart wild AI
         gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] = GetAiFlags(0xFFFF);
         gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = GetAiFlags(0xFFFF);
+
+        if (B_WILD_NATURAL_ENEMIES == TRUE && IsDoubleBattle())
+        {
+            u32 speciesLeft = GetMonData(&gEnemyParty[0], MON_DATA_SPECIES);
+            u32 speciesRight = GetMonData(&gEnemyParty[1], MON_DATA_SPECIES);
+            if (IsNaturalEnemy(speciesLeft, speciesRight))
+                gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] |= AI_FLAG_ENEMIES;
+            if (IsNaturalEnemy(speciesRight, speciesLeft))
+                gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] |= AI_FLAG_ENEMIES;
+        }
+
     }
     else
     {
@@ -2961,14 +2973,21 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
+    bool32 isPartnerEnemy = (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
     bool32 wouldPartnerFaint = CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING)
         && !partnerProtecting && IsBattlerAlive(battlerAtkPartner);
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
 
+    if (isPartnerEnemy)
+        isFriendlyFireOK = TRUE;
+
+    if (wouldPartnerFaint && isPartnerEnemy)
+        RETURN_SCORE_PLUS(BEST_EFFECT);
+
     // check what effect partner is using
-    if (aiData->partnerMove != 0)
+    if (aiData->partnerMove != 0 && !isPartnerEnemy)
     {
         switch (partnerEffect)
         {
@@ -5621,6 +5640,23 @@ static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     else if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) == 2)
         ADJUST_SCORE(DECENT_EFFECT);
 
+    return score;
+}
+
+// Adds score bonus to targeting "partner"
+static s32 AI_Enemies(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
+{
+    if (battlerDef == BATTLE_PARTNER(battlerAtk))
+    {
+        u32 movesetIndex = gAiThinkingStruct->movesetIndex;
+
+        if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING))
+            ADJUST_SCORE(GOOD_EFFECT);
+
+        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
+        if (hitsToKO > 0)
+            ADJUST_SCORE(DECENT_EFFECT);
+    }
     return score;
 }
 
