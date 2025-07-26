@@ -6975,7 +6975,10 @@ static void Cmd_moveend(void)
                     MoveValuesCleanUp();
                     gBattleScripting.moveEffect = gBattleScripting.savedMoveEffect;
 
-                    if (moveEffect == EFFECT_EXPLOSION)
+                    if (moveEffect == EFFECT_EXPLOSION
+                     || moveEffect == EFFECT_TWO_TURNS_ATTACK
+                     || moveEffect == EFFECT_SOLAR_BEAM
+                     || moveEffect == EFFECT_SEMI_INVULNERABLE)
                         BattleScriptPush(gBattleMoveEffects[EFFECT_HIT].battleScript); // Edge case for Explosion not changing targets
                     else
                         BattleScriptPush(GetMoveBattleScript(gCurrentMove));
