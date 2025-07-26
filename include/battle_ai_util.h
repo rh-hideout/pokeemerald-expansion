@@ -197,7 +197,6 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect);
 bool32 IsChaseEffect(enum BattleMoveEffects effect);
 bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect);
 bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
-bool32 IsSemiInvulnerable(u32 battlerDef, u32 move);
 bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);

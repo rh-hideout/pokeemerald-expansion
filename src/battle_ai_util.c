@@ -447,7 +447,9 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.escapePrevention)
         return TRUE;
-    if (gStatuses3[battlerDef] & (STATUS3_ROOTED | STATUS3_SKY_DROPPED))
+    if (gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP)
+        return TRUE;
+    if (gStatuses3[battlerDef] & STATUS3_ROOTED)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         return TRUE;
@@ -1844,22 +1846,6 @@ bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility)
     return FALSE;
 }
 
-bool32 IsSemiInvulnerable(u32 battlerDef, u32 move)
-{
-    if (gStatuses3[battlerDef] & STATUS3_PHANTOM_FORCE)
-        return TRUE;
-    else if (gBattleStruct->battlerState[battlerDef].commandingDondozo)
-        return TRUE;
-    else if (!MoveDamagesAirborne(move) && gStatuses3[battlerDef] & STATUS3_ON_AIR)
-        return TRUE;
-    else if (!MoveDamagesUnderWater(move) && gStatuses3[battlerDef] & STATUS3_UNDERWATER)
-        return TRUE;
-    else if (!MoveDamagesUnderground(move) && gStatuses3[battlerDef] & STATUS3_UNDERGROUND)
-        return TRUE;
-    else
-        return FALSE;
-}
-
 bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbility, u32 move)
 {
     enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battlerDef];
@@ -2938,7 +2924,8 @@ static u32 GetWeatherDamage(u32 battlerId)
     if (weather & B_WEATHER_SANDSTORM)
     {
         if (BattlerAffectedBySandstorm(battlerId, ability)
-          && !(gStatuses3[battlerId] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
+          && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERGROUND
+          && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERWATER
           && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES)
         {
             damage = GetNonDynamaxMaxHP(battlerId) / 16;
@@ -2949,7 +2936,8 @@ static u32 GetWeatherDamage(u32 battlerId)
     if ((weather & B_WEATHER_HAIL) && ability != ABILITY_ICE_BODY)
     {
         if (BattlerAffectedByHail(battlerId, ability)
-          && !(gStatuses3[battlerId] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
+          && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERGROUND
+          && gBattleMons[battlerId].volatiles.semiInvulnerable != STATE_UNDERWATER
           && holdEffect != HOLD_EFFECT_SAFETY_GOGGLES)
         {
             damage = GetNonDynamaxMaxHP(battlerId) / 16;

@@ -3405,10 +3405,10 @@ const u8* FaintClearSetData(u32 battler)
         gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
 
         // If the other Pokemon involved in this Sky Drop was the target, not the attacker
-        if (gStatuses3[otherSkyDropper] & STATUS3_SKY_DROPPED)
+        if (gBattleMons[otherSkyDropper].volatiles.semiInvulnerable == STATE_SKY_DROP)
         {
             // Release the target and take them out of the semi-invulnerable state
-            gStatuses3[otherSkyDropper] &= ~(STATUS3_SKY_DROPPED | STATUS3_ON_AIR);
+            gBattleMons[otherSkyDropper].volatiles.semiInvulnerable = STATE_NONE;
 
             // Make the target's sprite visible
             gSprites[gBattlerSpriteIds[otherSkyDropper]].invisible = FALSE;
@@ -4303,7 +4303,7 @@ static void HandleTurnActionSelectionState(void)
                                             | BATTLE_TYPE_RECORDED_LINK))
                                             && !gTestRunnerEnabled)
                                             // Or if currently held by Sky Drop
-                                            || gStatuses3[battler] & STATUS3_SKY_DROPPED)
+                                            || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
                     {
                         RecordedBattle_ClearBattlerAction(battler, 1);
                         gSelectionBattleScripts[battler] = BattleScript_ActionSelectionItemsCantBeUsed;
@@ -5128,7 +5128,7 @@ static void TurnValuesCleanUp(bool8 var0)
         if (gDisableStructs[i].substituteHP == 0)
             gBattleMons[i].volatiles.substitute = FALSE;
 
-        if (!(gStatuses3[i] & STATUS3_COMMANDER))
+        if (gBattleMons[i].volatiles.semiInvulnerable != STATE_COMMANDER)
             gBattleStruct->battlerState[i].commandingDondozo = FALSE;
 
         gSpecialStatuses[i].parentalBondState = PARENTAL_BOND_OFF;

@@ -169,6 +169,7 @@ enum VolatileFlags
     F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_SEMI_INVULNERABLE,               semiInvulnerable,                  (u32, 5)) \
     F(VOLATILE_ELECTRIFIED,                     electrified,                       (u32, 1)) \
     F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE) \
@@ -198,8 +199,8 @@ enum Volatile
 #define STATUS3_ALWAYS_HITS             (1 << 3 | 1 << 4)
 #define STATUS3_ALWAYS_HITS_TURN(num)   (((num) << 3) & STATUS3_ALWAYS_HITS) // "Always Hits" is set as a 2 turn timer, i.e. next turn is the last turn when it's active
 #define STATUS3_PERISH_SONG             (1 << 5)
-#define STATUS3_ON_AIR                  (1 << 6)
-#define STATUS3_UNDERGROUND             (1 << 7)
+#define STATUS3_UNUSED_6                  (1 << 6)
+#define STATUS3_UNUSED_7                (1 << 7)
 #define STATUS3_MINIMIZED               (1 << 8)
 #define STATUS3_CHARGED_UP              (1 << 9)
 #define STATUS3_ROOTED                  (1 << 10)
@@ -207,25 +208,39 @@ enum Volatile
 #define STATUS3_YAWN_TURN(num)          (((num) << 11) & STATUS3_YAWN)
 #define STATUS3_IMPRISONED_OTHERS       (1 << 13)
 #define STATUS3_GRUDGE                  (1 << 14)
-#define STATUS3_COMMANDER               (1 << 15)
+#define STATUS3_UNUSED_15               (1 << 15)
 #define STATUS3_GASTRO_ACID             (1 << 16)
 #define STATUS3_EMBARGO                 (1 << 17)
-#define STATUS3_UNDERWATER              (1 << 18)
+#define STATUS3_UNUSED_18               (1 << 18)
 #define STATUS3_UNUSED_19               (1 << 19)
 #define STATUS3_UNUSED_20               (1 << 20)
 #define STATUS3_SMACKED_DOWN            (1 << 21)
 #define STATUS3_UNUSED_22               (1 << 22)
 #define STATUS3_TELEKINESIS             (1 << 23)
-#define STATUS3_PHANTOM_FORCE           (1 << 24)
+#define STATUS3_UNUSED_24               (1 << 24)
 #define STATUS3_MIRACLE_EYED            (1 << 25)
 #define STATUS3_MAGNET_RISE             (1 << 26)
 #define STATUS3_HEAL_BLOCK              (1 << 27)
 #define STATUS3_AQUA_RING               (1 << 28)
 #define STATUS3_LASER_FOCUS             (1 << 29)
 #define STATUS3_POWER_TRICK             (1 << 30)
-#define STATUS3_SKY_DROPPED             (1 << 31) // Target of Sky Drop
-#define STATUS3_SEMI_INVULNERABLE_NO_COMMANDER  (STATUS3_UNDERGROUND | STATUS3_ON_AIR | STATUS3_UNDERWATER | STATUS3_PHANTOM_FORCE) // Exception for Transform / Imposter
-#define STATUS3_SEMI_INVULNERABLE       (STATUS3_SEMI_INVULNERABLE_NO_COMMANDER | STATUS3_COMMANDER)
+
+enum SemiInvulnerableState
+{
+    STATE_NONE,
+    STATE_UNDERGROUND,
+    STATE_UNDERWATER,
+    STATE_ON_AIR,
+    STATE_PHANTOM_FORCE,
+    STATE_SKY_DROP,
+    STATE_COMMANDER,
+};
+
+enum SemiInvulnerableExclusion
+{
+    CHECK_ALL,
+    EXCLUDE_COMMANDER,
+};
 
 #define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
