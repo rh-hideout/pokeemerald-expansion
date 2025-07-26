@@ -6829,8 +6829,8 @@ bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method)
     u32 currentSpecies = GetMonData(&party[monId], MON_DATA_SPECIES);
     u32 targetSpecies = GetFormChangeTargetSpecies(&party[monId], method, 0);
 
-    if (targetSpecies == currentSpecies && gBattleStruct != NULL && gBattleStruct->changedSpecies[side][monId] != SPECIES_NONE)
-        targetSpecies = gBattleStruct->changedSpecies[side][monId];
+    if (targetSpecies == currentSpecies && gBattleStruct != NULL && gBattleStruct->partyState[side][monId].changedSpecies != SPECIES_NONE)
+        targetSpecies = gBattleStruct->partyState[side][monId].changedSpecies;
 
     if (targetSpecies != currentSpecies)
     {
