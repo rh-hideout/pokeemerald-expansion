@@ -271,8 +271,61 @@
 #define FACILITY_CLASS_LEAF                  0x4f
 #define FACILITY_CLASS_RS_BRENDAN            0x50
 #define FACILITY_CLASS_RS_MAY                0x51
+#define FACILITY_CLASS_YOUNGSTER_FRLG        0x52              
+#define FACILITY_CLASS_BURGLAR_FRLG          0x53          
+#define FACILITY_CLASS_PSYCHIC_F_FRLG        0x54              
+#define FACILITY_CLASS_COOL_COUPLE_FRLG      0x55              
+#define FACILITY_CLASS_YOUNG_COUPLE_FRLG     0x56                  
+#define FACILITY_CLASS_CRUSH_KIN_FRLG        0x57              
+#define FACILITY_CLASS_BIKER_FRLG            0x58          
+#define FACILITY_CLASS_CUE_BALL_FRLG         0x59              
+#define FACILITY_CLASS_HIKER_FRLG            0x5A          
+#define FACILITY_CLASS_CRUSH_GIRL_FRLG       0x5B              
+#define FACILITY_CLASS_BLACK_BELT_FRLG       0x5C              
+#define FACILITY_CLASS_CAMPER_FRLG           0x5D          
+#define FACILITY_CLASS_PKMN_BREEDER_FRLG     0x5E                  
+#define FACILITY_CLASS_BUG_CATCHER_FRLG      0x5F              
+#define FACILITY_CLASS_TWINS_FRLG            0x60          
+#define FACILITY_CLASS_PKMN_RANGER_F_FRLG    0x61                  
+#define FACILITY_CLASS_PKMN_RANGER_M_FRLG    0x62                  
+#define FACILITY_CLASS_COOLTRAINER_M_FRLG    0x63                  
+#define FACILITY_CLASS_PICNICKER_FRLG        0x64              
+#define FACILITY_CLASS_AROMA_LADY_FRLG       0x65              
+#define FACILITY_CLASS_COOLTRAINER_F_FRLG    0x66                  
+#define FACILITY_CLASS_SWIMMER_M_FRLG        0x67              
+#define FACILITY_CLASS_SAILOR_FRLG           0x68          
+#define FACILITY_CLASS_SIS_AND_BRO_FRLG      0x69              
+#define FACILITY_CLASS_TUBER_FRLG            0x6A          
+#define FACILITY_CLASS_LADY_FRLG             0x6B          
+#define FACILITY_CLASS_SWIMMER_F_FRLG        0x6C              
+#define FACILITY_CLASS_FISHERMAN_FRLG        0x6D              
+#define FACILITY_CLASS_GENTLEMAN_FRLG        0x6E              
+#define FACILITY_CLASS_JUGGLER_FRLG          0x6F          
+#define FACILITY_CLASS_SUPER_NERD_FRLG       0x70              
+#define FACILITY_CLASS_PSYCHIC_M_FRLG        0x71              
+#define FACILITY_CLASS_ROCKER_FRLG           0x72          
+#define FACILITY_CLASS_ENGINEER_FRLG         0x73              
+#define FACILITY_CLASS_SCIENTIST_FRLG        0x74              
+#define FACILITY_CLASS_BEAUTY_FRLG           0x75          
+#define FACILITY_CLASS_LASS_FRLG             0x76          
 
-#define FACILITY_CLASSES_COUNT               0x52
+#define FACILITY_CLASSES_COUNT               0x77
+
+
+
+#define FACILITY_CLASS_SUPER_NERD               FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_BIKER                    FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_BURGLAR                  FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_ENGINEER                 FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_CUE_BALL                 FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_ROCKER                   FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_JUGGLER                  FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_SCIENTIST                FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_CRUSH_GIRL               FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_TUBER                    FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_PKMN_BREEDER             FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_COOL_COUPLE              FACILITY_CLASS_HIKER
+#define FACILITY_CLASS_CRUSH_KIN                FACILITY_CLASS_HIKER
 
 #define RS_FACILITY_CLASS_AQUA_LEADER_ARCHIE    0x0
 #define RS_FACILITY_CLASS_AQUA_GRUNT_M          0x1
@@ -476,20 +529,6 @@ enum TrainerClassID
 
     TRAINER_CLASS_COUNT,
 };
-
-#define FACILITY_CLASS_SUPER_NERD               FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_BIKER                    FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_BURGLAR                  FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_ENGINEER                 FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_CUE_BALL                 FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_ROCKER                   FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_JUGGLER                  FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_SCIENTIST                FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_CRUSH_GIRL               FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_TUBER                    FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_PKMN_BREEDER             FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_COOL_COUPLE              FACILITY_CLASS_HIKER
-#define FACILITY_CLASS_CRUSH_KIN                FACILITY_CLASS_HIKER
 
 #define TRAINER_ENCOUNTER_MUSIC_MALE         0 // standard male encounter music
 #define TRAINER_ENCOUNTER_MUSIC_FEMALE       1 // standard female encounter music
