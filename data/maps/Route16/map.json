@@ -127,7 +127,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
+      "graphics_id": "OBJ_EVENT_GFX_BEAUTY_FRLG",
       "x": 30,
       "y": 5,
       "elevation": 3,

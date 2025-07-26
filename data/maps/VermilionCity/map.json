@@ -28,7 +28,7 @@
   "object_events": [
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
       "x": 22,
       "y": 11,
       "elevation": 3,
@@ -84,7 +84,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+      "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
       "x": 31,
       "y": 30,
       "elevation": 3,
@@ -99,7 +99,7 @@
     {
       "local_id": "LOCALID_VERMILION_FERRY_SAILOR",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+      "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
       "x": 24,
       "y": 33,
       "elevation": 3,

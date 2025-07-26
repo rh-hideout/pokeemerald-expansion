@@ -43,7 +43,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN",
+      "graphics_id": "OBJ_EVENT_GFX_OLD_WOMAN_FRLG",
       "x": 9,
       "y": 7,
       "elevation": 3,

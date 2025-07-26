@@ -18,7 +18,7 @@
     {
       "local_id": "LOCALID_RUBY",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG",
       "x": 10,
       "y": 4,
       "elevation": 3,
@@ -32,7 +32,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG",
       "x": 26,
       "y": 12,
       "elevation": 3,
@@ -46,7 +46,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG",
       "x": 28,
       "y": 8,
       "elevation": 3,
@@ -60,7 +60,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 7,
       "y": 2,
       "elevation": 3,
@@ -74,7 +74,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 4,
       "y": 3,
       "elevation": 3,
@@ -88,7 +88,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 6,
       "y": 6,
       "elevation": 3,
@@ -102,7 +102,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 7,
       "y": 6,
       "elevation": 3,
@@ -116,7 +116,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 4,
       "y": 5,
       "elevation": 3,
@@ -130,7 +130,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_ROCK_SMASH_ROCK",
+      "graphics_id": "OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG",
       "x": 5,
       "y": 2,
       "elevation": 3,
@@ -144,7 +144,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER",
+      "graphics_id": "OBJ_EVENT_GFX_PUSHABLE_BOULDER_FRLG",
       "x": 15,
       "y": 13,
       "elevation": 3,

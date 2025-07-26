@@ -68,7 +68,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY_FRLG",
       "x": 16,
       "y": 21,
       "elevation": 3,
@@ -112,7 +112,7 @@
     {
       "local_id": "LOCALID_CERULEAN_LASS",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_LASS",
+      "graphics_id": "OBJ_EVENT_GFX_LASS_FRLG",
       "x": 33,
       "y": 29,
       "elevation": 3,
@@ -126,7 +126,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 34,
       "y": 22,
       "elevation": 3,
@@ -178,7 +178,7 @@
     {
       "local_id": "LOCALID_CERULEAN_WOMAN",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1_FRLG",
       "x": 12,
       "y": 30,
       "elevation": 3,

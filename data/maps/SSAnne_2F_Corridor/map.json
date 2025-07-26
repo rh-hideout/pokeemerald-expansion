@@ -32,7 +32,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_SAILOR",
+      "graphics_id": "OBJ_EVENT_GFX_SAILOR_FRLG",
       "x": 2,
       "y": 7,
       "elevation": 3,

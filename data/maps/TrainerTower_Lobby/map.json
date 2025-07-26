@@ -18,7 +18,7 @@
     {
       "local_id": "LOCALID_TOWER_NURSE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
       "x": 4,
       "y": 9,
       "elevation": 3,
