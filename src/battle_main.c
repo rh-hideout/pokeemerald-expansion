@@ -194,7 +194,6 @@ EWRAM_DATA u8 gBideTarget[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u32 gSideStatuses[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA struct SideTimer gSideTimers[NUM_BATTLE_SIDES] = {0};
 EWRAM_DATA u32 gStatuses3[MAX_BATTLERS_COUNT] = {0};
-EWRAM_DATA u32 gStatuses4[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA u16 gPauseCounterBattle = 0;
 EWRAM_DATA u16 gPaydayMoney = 0;
@@ -3028,7 +3027,6 @@ static void BattleStartClearSetData(void)
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
         gStatuses3[i] = 0;
-        gStatuses4[i] = 0;
         gDisableStructs[i].isFirstTurn = 2;
         gLastMoves[i] = MOVE_NONE;
         gLastLandedMoves[i] = MOVE_NONE;
@@ -3190,7 +3188,6 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     else
     {
         gStatuses3[battler] = 0;
-        gStatuses4[battler] = 0;
     }
 
     for (i = 0; i < gBattlersCount; i++)
@@ -3307,7 +3304,6 @@ const u8* FaintClearSetData(u32 battler)
 
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
     gStatuses3[battler] &= STATUS3_GASTRO_ACID; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
-    gStatuses4[battler] = 0;
 
     for (i = 0; i < gBattlersCount; i++)
     {

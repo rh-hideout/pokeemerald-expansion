@@ -6871,7 +6871,7 @@ static void SwapBattlerMoveData(u32 battler1, u32 battler2)
     SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
     SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
-    
+
     // update last moves
     SWAP(gLastPrintedMoves[battler1],   gLastPrintedMoves[battler2], temp);
     SWAP(gLastMoves[battler1],          gLastMoves[battler2], temp);
@@ -6907,10 +6907,9 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
     SWAP(gStatuses3[battlerAtk], gStatuses3[battlerPartner], temp);
-    SWAP(gStatuses4[battlerAtk], gStatuses4[battlerPartner], temp);
-    
+
     SwapBattlerMoveData(battlerAtk, battlerPartner);
-    
+
     // Swap turn order, so that all the battlers take action
     SWAP(gChosenActionByBattler[battlerAtk], gChosenActionByBattler[battlerPartner], temp);
     for (i = 0; i < gBattlersCount; i++)

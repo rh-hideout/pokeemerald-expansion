@@ -106,7 +106,6 @@ enum
     LIST_ITEM_STATUS1,
     LIST_ITEM_VOLATILE,
     LIST_ITEM_STATUS3,
-    LIST_ITEM_STATUS4,
     LIST_ITEM_HAZARDS,
     LIST_ITEM_SIDE_STATUS,
     LIST_ITEM_AI,
@@ -306,16 +305,6 @@ static const struct BitfieldInfo sStatus3Bitfield[] =
     {/*Power Trick*/ 1, 30},
 };
 
-static const struct BitfieldInfo sStatus4Bitfield[] =
-{
-    {/*Electrified*/ 1, 0},
-    {/*Mud Sport*/ 1, 1},
-    {/*Water Sport*/ 1, 2},
-    {/*Salt Cure*/ 1, 4},
-    {/*Syrup Bomb*/ 1, 5},
-    {/*Glaive Rush*/ 1, 6},
-};
-
 static const struct BitfieldInfo sAIBitfield[] =
 {
     {/*Check Bad Move*/ 1, 0},
@@ -361,7 +350,6 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("Status1"),      LIST_ITEM_STATUS1},
     {COMPOUND_STRING("Volatiles"),    LIST_ITEM_VOLATILE},
     {COMPOUND_STRING("Status3"),      LIST_ITEM_STATUS3},
-    {COMPOUND_STRING("Status4"),      LIST_ITEM_STATUS4},
     {COMPOUND_STRING("Hazards"),      LIST_ITEM_HAZARDS},
     {COMPOUND_STRING("Side Status"),  LIST_ITEM_SIDE_STATUS},
     {COMPOUND_STRING("AI"),           LIST_ITEM_AI},
@@ -2066,11 +2054,6 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     case LIST_ITEM_STATUS3:
         data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
-    case LIST_ITEM_STATUS4:
-        data->modifyArrows.modifiedValPtr = &gStatuses4[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gStatuses4[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     case LIST_ITEM_AI:

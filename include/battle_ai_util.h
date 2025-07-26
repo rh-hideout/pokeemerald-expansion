@@ -174,7 +174,6 @@ bool32 HasAnyKnownMove(u32 battlerId);
 bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect);
 bool32 IsNonVolatileStatusMove(u32 moveEffect);
 bool32 IsMoveRedirectionPrevented(u32 battlerAtk, u32 move, u32 atkAbility);
-bool32 IsMoveEncouragedToHit(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 bool32 IsBattlerDamagedByStatus(u32 battler);

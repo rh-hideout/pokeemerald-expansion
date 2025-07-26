@@ -193,37 +193,6 @@ enum Volatile
 // Helper macros
 #define INFATUATED_WITH(battler) (battler + 1)
 
-// Old flags
-#define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
-#define STATUS2_CONFUSION_TURN(num)   ((num) << 0)
-#define STATUS2_FLINCHED              (1 << 3)
-#define STATUS2_UPROAR                (1 << 4 | 1 << 5 | 1 << 6)
-#define STATUS2_UPROAR_TURN(num)      ((num) << 4)
-#define STATUS2_TORMENT               (1 << 7)
-#define STATUS2_BIDE                  (1 << 8 | 1 << 9)
-#define STATUS2_BIDE_TURN(num)        (((num) << 8) & STATUS2_BIDE)
-#define STATUS2_LOCK_CONFUSE          (1 << 10 | 1 << 11) // e.g. Thrash
-#define STATUS2_LOCK_CONFUSE_TURN(num)((num) << 10)
-#define STATUS2_MULTIPLETURNS         (1 << 12)
-#define STATUS2_WRAPPED               (1 << 13)
-#define STATUS2_POWDER                (1 << 14)
-//#define STATUS2_UNUSED                (1 << 15)
-#define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
-#define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
-#define STATUS2_DEFENSE_CURL          (1 << 20)
-#define STATUS2_TRANSFORMED           (1 << 21)
-#define STATUS2_RECHARGE              (1 << 22)
-#define STATUS2_RAGE                  (1 << 23)
-#define STATUS2_SUBSTITUTE            (1 << 24)
-#define STATUS2_DESTINY_BOND          (1 << 25)
-#define STATUS2_ESCAPE_PREVENTION     (1 << 26)
-#define STATUS2_NIGHTMARE             (1 << 27)
-#define STATUS2_CURSED                (1 << 28)
-#define STATUS2_FORESIGHT             (1 << 29)
-#define STATUS2_DRAGON_CHEER          (1 << 30)
-#define STATUS2_FOCUS_ENERGY          (1 << 31)
-#define STATUS2_FOCUS_ENERGY_ANY      (STATUS2_DRAGON_CHEER | STATUS2_FOCUS_ENERGY)
-
 #define STATUS3_LEECHSEED_BATTLER       (1 << 0 | 1 << 1) // The battler to receive HP from Leech Seed
 #define STATUS3_LEECHSEED               (1 << 2)
 #define STATUS3_ALWAYS_HITS             (1 << 3 | 1 << 4)
@@ -257,14 +226,6 @@ enum Volatile
 #define STATUS3_SKY_DROPPED             (1 << 31) // Target of Sky Drop
 #define STATUS3_SEMI_INVULNERABLE_NO_COMMANDER  (STATUS3_UNDERGROUND | STATUS3_ON_AIR | STATUS3_UNDERWATER | STATUS3_PHANTOM_FORCE) // Exception for Transform / Imposter
 #define STATUS3_SEMI_INVULNERABLE       (STATUS3_SEMI_INVULNERABLE_NO_COMMANDER | STATUS3_COMMANDER)
-
-#define STATUS4_ELECTRIFIED             (1 << 0)
-#define STATUS4_MUD_SPORT               (1 << 1)    // Only used if B_SPORT_TURNS < GEN_6
-#define STATUS4_WATER_SPORT             (1 << 2)    // Only used if B_SPORT_TURNS < GEN_6
-#define STATUS4_INFINITE_CONFUSION      (1 << 3)    // Used for Berserk Gene
-#define STATUS4_SALT_CURE               (1 << 4)
-#define STATUS4_SYRUP_BOMB              (1 << 5)
-#define STATUS4_GLAIVE_RUSH             (1 << 6)
 
 #define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
