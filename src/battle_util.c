@@ -205,7 +205,7 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
 
 // Helper function for actual dmg calcs during battle. For simulated AI dmg, CalcTypeEffectivenessMultiplier should be used directly
 // This should stay a static function. Ideally everything else is handled through CalcTypeEffectivenessMultiplier just like AI
-static uq4_12_t CalcTypeEffectivenessMultiplierHelper(u32 move, u32 moveType, u32 battlerAtk, u32 battlerDef, u32 defAbility, bool32 recordAbilities)
+static uq4_12_t CalcTypeEffectivenessMultiplierHelper(u32 move, u32 moveType, u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef, bool32 recordAbilities)
 {
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
@@ -213,8 +213,8 @@ static uq4_12_t CalcTypeEffectivenessMultiplierHelper(u32 move, u32 moveType, u3
     ctx.move = move;
     ctx.moveType = moveType;
     ctx.updateFlags = recordAbilities;
-    ctx.abilityAtk = GetBattlerAbility(battlerAtk);
-    ctx.abilityDef = defAbility;
+    ctx.abilityAtk = abilityAtk;
+    ctx.abilityDef = abilityDef;
     ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
     ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef, TRUE);
 
@@ -2556,7 +2556,8 @@ static enum MoveCanceller CancellerMultiTargetMoves(void)
             }
             else
             {
-                CalcTypeEffectivenessMultiplierHelper(gCurrentMove, GetBattleMoveType(gCurrentMove), gBattlerAttacker, battlerDef, GetBattlerAbility(battlerDef), TRUE);
+                CalcTypeEffectivenessMultiplierHelper(gCurrentMove, GetBattleMoveType(gCurrentMove), gBattlerAttacker, battlerDef, abilityAtk, abilityDef, TRUE); // Sets moveResultFlags
+                gBattleStruct->noResultString[battlerDef] = MOVE_CAN_DAMAGE;
             }
         }
         if (moveTarget == MOVE_TARGET_BOTH)
@@ -5668,7 +5669,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
             battleScript = BattleScript_NotAffected;
         }
         else if (option == RUN_SCRIPT // Check only important during battle execution for moves
-              && CalcTypeEffectivenessMultiplierHelper(gCurrentMove, GetBattleMoveType(gCurrentMove), battlerAtk, battlerDef, abilityDef, TRUE)
+              && CalcTypeEffectivenessMultiplierHelper(gCurrentMove, GetBattleMoveType(gCurrentMove), battlerAtk, battlerDef, abilityAtk, abilityDef, TRUE)
               && gBattleStruct->moveResultFlags[battlerDef] & MOVE_RESULT_NO_EFFECT)
         {
             battleScript = BattleScript_ButItFailed;
@@ -11226,7 +11227,7 @@ static inline bool32 DoesBattlerHaveAbilityImmunity(u32 battlerAtk, u32 battlerD
 bool32 TargetFullyImmuneToCurrMove(u32 battlerAtk, u32 battlerDef)
 {
     u32 moveType = GetBattleMoveType(gCurrentMove);
-    return ((CalcTypeEffectivenessMultiplierHelper(gCurrentMove, moveType, battlerAtk, battlerDef, GetBattlerAbility(battlerDef), FALSE) == UQ_4_12(0.0))
+    return ((CalcTypeEffectivenessMultiplierHelper(gCurrentMove, moveType, battlerAtk, battlerDef, GetBattlerAbility(battlerAtk), GetBattlerAbility(battlerDef), FALSE) == UQ_4_12(0.0))
          || IsBattlerProtected(battlerAtk, battlerDef, gCurrentMove)
          || IsSemiInvulnerable(battlerDef, gCurrentMove)
          || DoesBattlerHaveAbilityImmunity(battlerAtk, battlerDef, moveType));
