@@ -247,6 +247,7 @@ u32 GetAllyChosenMove(u32 battlerId);
 bool32 IsDoubleBattle1v1();
 bool32 HasTwoOpponents(u32 battlerAtk);
 bool32 HasPartner(u32 battlerAtk);
+bool32 HasPartnerIgnoreFlags(u32 battler);
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
 bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, u32 partnerMove);

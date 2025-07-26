@@ -2272,7 +2272,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
 {
     if (HasMoveWithEffect(battler, effect))
         return TRUE;
-    if (HasPartner(battler) && HasMoveWithEffect(BATTLE_PARTNER(battler), effect))
+    if (HasPartnerIgnoreFlags(battler) && HasMoveWithEffect(BATTLE_PARTNER(battler), effect))
         return TRUE;
     return FALSE;
 }
@@ -2287,7 +2287,7 @@ bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
     {
         if (GetMoveEffect(gBattleHistory->usedMoves[battler][i]) == effect)
             return TRUE;
-        if (HasPartner(battler) && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
+        if (HasPartnerIgnoreFlags(battler) && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
             return TRUE;
     }
     return FALSE;
@@ -2342,7 +2342,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
 {
     if (HasMoveWithAdditionalEffect(battler, moveEffect))
         return TRUE;
-    if (HasPartner(battler) && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
+    if (HasPartnerIgnoreFlags(battler) && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
         return TRUE;
     return FALSE;
 }
@@ -2357,7 +2357,7 @@ bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     {
         if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
             return TRUE;
-        if (HasPartner(battler) && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
+        if (HasPartnerIgnoreFlags(battler) && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
             return TRUE;
     }
     return FALSE;
@@ -3766,7 +3766,7 @@ bool32 IsDoubleBattle1v1()
 bool32 HasTwoOpponents(u32 battlerAtk)
 {
     if (IsDoubleBattle()
-      && IsBattlerAlive(BATTLE_OPPOSITE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtk))))
+      && IsBattlerAlive(FOE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(FOE(battlerAtk))))
         return TRUE;
     return FALSE;
 }
@@ -3779,6 +3779,15 @@ bool32 HasPartner(u32 battlerAtk)
             return FALSE;
         else
             return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 HasPartnerIgnoreFlags(u32 battler)
+{
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    {
+        return TRUE;
     }
     return FALSE;
 }
@@ -4153,7 +4162,7 @@ bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
 
 bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category)
 {
-    if (HasPartner(battlerId))
+    if (HasPartnerIgnoreFlags(battlerId))
     {
         if (HasMoveWithCategory(battlerId, category) || HasMoveWithCategory(BATTLE_PARTNER(battlerId), category))
             return TRUE;
@@ -5097,7 +5106,7 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
 {
     if (aiData->abilities[battler] == ability)
         return TRUE;
-    if (HasPartner(battler) && gAiLogicData->abilities[BATTLE_PARTNER(battler)] == ability)
+    if (HasPartnerIgnoreFlags(battler) && gAiLogicData->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
 }
@@ -5108,6 +5117,8 @@ u32 GetFriendlyFireKOThreshold(u32 battler)
         return FRIENDLY_FIRE_RISKY_THRESHOLD;
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSERVATIVE)
         return FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD;
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES)
+        return 0;
 
     return FRIENDLY_FIRE_NORMAL_THRESHOLD;
 }
@@ -5259,7 +5270,7 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
             return FALSE;
 
-        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)) )
+        if (HasPartnerIgnoreFlags(battlerAtk))
         {
             u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
             if (gAbilitiesInfo[partnerAbility].cantBeSuppressed)
