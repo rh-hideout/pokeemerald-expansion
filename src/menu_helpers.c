@@ -322,13 +322,12 @@ bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
 void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
 {
     u16 i;
-    struct ItemSlot *slots_ = slots;
 
     // Count the number of non-empty item slots
     *totalItems = 0;
     for (i = 0; i < slotsCount; i++)
     {
-        if (slots_[i].itemId != ITEM_NONE)
+        if (slots[i].itemId != ITEM_NONE)
             (*totalItems)++;
     }
     (*totalItems)++; // + 1 for 'Cancel'
