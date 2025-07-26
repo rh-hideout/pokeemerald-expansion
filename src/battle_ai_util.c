@@ -1994,7 +1994,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove)
     }
     else
     {
-        if (IsValidDoubleBattle(battlerAtk))
+        if (!IsDoubleBattle1v1())
             score -= (2 * min(uses, 3));
         else
             score -= (min(uses, 3));
@@ -2342,7 +2342,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
 {
     if (HasMoveWithAdditionalEffect(battler, moveEffect))
         return TRUE;
-    if (IsDoubleBattle() && HasMoveWithAdditionalEffect(BATTLE_OPPOSITE(battler), moveEffect))
+    if (HasPartner(battler) && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
         return TRUE;
     return FALSE;
 }
@@ -2357,7 +2357,7 @@ bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     {
         if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
             return TRUE;
-        if (IsDoubleBattle() && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_OPPOSITE(battler)][i], moveEffect))
+        if (HasPartner(battler) && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
             return TRUE;
     }
     return FALSE;
@@ -3118,7 +3118,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
-    if (!IsDoubleBattle())
+    if (IsDoubleBattle1v1())
     {
         if (CountUsablePartyMons(battlerAtk) == 0)
             return CAN_TRY_PIVOT; // can't switch, but attack might still be useful
@@ -3588,7 +3588,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
 
     party = GetBattlerParty(battlerId);
 
-    if (IsDoubleBattle())
+    if (HasPartner(battlerId))
     {
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
@@ -3640,7 +3640,7 @@ u32 GetBattlerSideSpeedAverage(u32 battler)
         numBattlersAlive++;
     }
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (HasPartner(battler))
     {
         speed2 = gAiLogicData->speedStats[BATTLE_PARTNER(battler)];
         numBattlersAlive++;
@@ -3754,12 +3754,13 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
 }
 
 // Partner Logic
-bool32 IsValidDoubleBattle(u32 battlerAtk)
+bool32 IsDoubleBattle1v1()
 {
     if (IsDoubleBattle()
-      && ((IsBattlerAlive(BATTLE_OPPOSITE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtk)))) || IsBattlerAlive(BATTLE_PARTNER(battlerAtk))))
-        return TRUE;
-    return FALSE;
+      && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT)) 
+      || (IsBattlerAlive(B_POSITION_OPPONENT_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_RIGHT))))
+        return FALSE;
+    return TRUE;
 }
 
 bool32 HasTwoOpponents(u32 battlerAtk)
@@ -3925,7 +3926,7 @@ bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMov
 
 bool32 PartnerMoveActivatesSleepClause(u32 partnerMove)
 {
-    if (!IsDoubleBattle() || !IsSleepClauseEnabled())
+    if (IsDoubleBattle1v1() || !IsSleepClauseEnabled())
         return FALSE;
     return IsMoveSleepClauseTrigger(partnerMove);
 }
@@ -3960,7 +3961,7 @@ bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move)
         }
     }
 
-    if (!IsValidDoubleBattle(battlerAtk))
+    if (IsDoubleBattle1v1())
     {
         switch (GetMoveEffect(move))
         {
@@ -4678,7 +4679,7 @@ void DecideTerastal(u32 battler)
         return;
 
     // TODO: Currently only single battles are considered.
-    if (IsValidDoubleBattle(battler))
+    if (!IsDoubleBattle1v1())
         return;
 
     // TODO: A lot of these checks are most effective for an omnicient ai.
