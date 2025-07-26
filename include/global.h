@@ -654,6 +654,21 @@ struct ItemSlot
     u16 quantity;
 };
 
+union ExpandedItemSlot
+{
+    struct {
+        u32 itemId:11;
+        u32 extraSlotQuantity:5;
+        u32 quantity:10;
+        u32 extraSlotItemId:6;
+    };
+    struct {
+        u32 padding:11; // matches itemId
+        u32 keyItemSlot2ItemId:11;
+        u32 keyItemSlot2Quantity:10;
+    };
+};
+
 struct Pokeblock
 {
     u8 color;
@@ -1046,11 +1061,11 @@ struct ExternalEventFlags
 
 struct Bag
 {
-    struct ItemSlot items[BAG_ITEMS_COUNT];
-    struct ItemSlot keyItems[BAG_KEYITEMS_COUNT];
-    struct ItemSlot pokeBalls[BAG_POKEBALLS_COUNT];
-    struct ItemSlot TMsHMs[BAG_TMHM_COUNT];
-    struct ItemSlot berries[BAG_BERRIES_COUNT];
+    union ExpandedItemSlot items[BAG_ITEMS_BASE_COUNT];
+    union ExpandedItemSlot keyItems[BAG_KEYITEMS_BASE_COUNT];
+    union ExpandedItemSlot pokeBalls[BAG_POKEBALLS_BASE_COUNT];
+    union ExpandedItemSlot TMsHMs[BAG_TMHM_BASE_COUNT];
+    union ExpandedItemSlot berries[BAG_BERRIES_BASE_COUNT];
 };
 
 struct SaveBlock1
@@ -1074,7 +1089,7 @@ struct SaveBlock1
     /*0x490*/ u32 money;
     /*0x494*/ u16 coins;
     /*0x496*/ u16 registeredItem; // registered for use with SELECT button
-    /*0x498*/ struct ItemSlot pcItems[PC_ITEMS_COUNT];
+    /*0x498*/ union ExpandedItemSlot pcItems[PC_ITEMS_COUNT];
     /*0x560 -> 0x848 is bag storage*/
     /*0x560*/ struct Bag bag;
     /*0x848*/ struct Pokeblock pokeblocks[POKEBLOCKS_COUNT];
