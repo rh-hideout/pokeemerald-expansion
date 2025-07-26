@@ -18,7 +18,7 @@
     {
       "local_id": "LOCALID_ROUTE4_NURSE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
       "x": 7,
       "y": 2,
       "elevation": 0,
@@ -46,7 +46,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_FRLG",
       "x": 12,
       "y": 5,
       "elevation": 3,
@@ -74,7 +74,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 14,
       "y": 4,
       "elevation": 3,

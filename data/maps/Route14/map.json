@@ -211,7 +211,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
       "x": 13,
       "y": 51,
       "elevation": 3,
@@ -225,7 +225,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
       "x": 12,
       "y": 51,
       "elevation": 3,

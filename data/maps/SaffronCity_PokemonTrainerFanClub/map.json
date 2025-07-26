@@ -33,7 +33,7 @@
     {
       "local_id": "LOCALID_SAFFRON_CITY_TRAINER_FAN_CLUB_LITTLE_GIRL",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL",
+      "graphics_id": "OBJ_EVENT_GFX_LITTLE_GIRL_FRLG",
       "x": 6,
       "y": 11,
       "elevation": 3,
@@ -48,7 +48,7 @@
     {
       "local_id": "LOCALID_TRAINER_FAN_CLUB_YOUNGSTER",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 3,
       "y": 13,
       "elevation": 3,
@@ -63,7 +63,7 @@
     {
       "local_id": "LOCALID_TRAINER_FAN_CLUB_GENTLEMAN",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN",
+      "graphics_id": "OBJ_EVENT_GFX_GENTLEMAN_FRLG",
       "x": 3,
       "y": 12,
       "elevation": 3,
@@ -78,7 +78,7 @@
     {
       "local_id": "LOCALID_SAFFRON_CITY_TRAINER_FAN_CLUB_WOMAN",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_FRLG",
       "x": 9,
       "y": 11,
       "elevation": 3,
@@ -108,7 +108,7 @@
     {
       "local_id": "LOCALID_TRAINER_FAN_CLUB_BEAUTY",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_BEAUTY",
+      "graphics_id": "OBJ_EVENT_GFX_BEAUTY_FRLG",
       "x": 9,
       "y": 12,
       "elevation": 3,

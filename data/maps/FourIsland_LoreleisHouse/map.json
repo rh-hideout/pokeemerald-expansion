@@ -59,7 +59,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_PIKACHU",
+      "graphics_id": "OBJ_EVENT_GFX_PIKACHU_FRLG",
       "x": 9,
       "y": 3,
       "elevation": 0,

@@ -33,7 +33,7 @@
   "object_events": [
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
+      "graphics_id": "OBJ_EVENT_GFX_FAT_MAN_FRLG",
       "x": 8,
       "y": 26,
       "elevation": 3,
@@ -92,7 +92,7 @@
     {
       "local_id": "LOCALID_VIRIDIAN_WOMAN",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_3_FRLG",
       "x": 20,
       "y": 12,
       "elevation": 3,
@@ -106,7 +106,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
+      "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER_FRLG",
       "x": 33,
       "y": 26,
       "elevation": 3,

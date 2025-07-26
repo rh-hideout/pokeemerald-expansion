@@ -18,7 +18,7 @@
     {
       "local_id": "LOCALID_SIX_ISLAND_NURSE",
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_NURSE",
+      "graphics_id": "OBJ_EVENT_GFX_NURSE_FRLG",
       "x": 7,
       "y": 2,
       "elevation": 3,
@@ -47,7 +47,7 @@
     },
     {
       "type": "object",
-      "graphics_id": "OBJ_EVENT_GFX_HIKER",
+      "graphics_id": "OBJ_EVENT_GFX_HIKER_FRLG",
       "x": 13,
       "y": 3,
       "elevation": 3,
