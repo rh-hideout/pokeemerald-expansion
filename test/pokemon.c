@@ -450,3 +450,28 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
     EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
     EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }
+
+TEST("Optimised GetMonData")
+{
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp);
+    struct Benchmark optimised,
+        vanilla = (struct Benchmark) { .ticks = 137 }; // From prior testing
+    u32 expGet = 0;
+    BENCHMARK(&optimised) { expGet = GetMonData(&gPlayerParty[0], MON_DATA_EXP); }
+    EXPECT_EQ(exp, expGet);
+    EXPECT_FASTER(optimised, vanilla);
+}
+
+TEST("Optimised SetMonData")
+{
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    struct Benchmark optimised,
+        vanilla = (struct Benchmark) { .ticks = 205 }; // From prior testing
+    BENCHMARK(&optimised) { SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp); }
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_BAD_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EXP), exp);
+    EXPECT_FASTER(optimised, vanilla);
+}
