@@ -2524,7 +2524,15 @@ static const u8 *BattleStringGetOpponentNameByTrainerId(u16 trainerId, u8 *text,
     }
     else
     {
-        toCpy = GetTrainerNameFromId(trainerId);
+        u32 trainerClass = GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA);
+        if (trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG || trainerClass == TRAINER_CLASS_RIVAL_EARLY_FRLG || trainerClass == TRAINER_CLASS_CHAMPION_FRLG)
+        {
+            toCpy = GetExpandedPlaceholder(PLACEHOLDER_ID_RIVAL);
+        }
+        else
+        {
+            toCpy = GetTrainerNameFromId(trainerId);
+        }
     }
 
     return toCpy;
