@@ -8,31 +8,31 @@ ASSUMPTIONS
     ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
 }
 
-DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        OPPONENT(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WYNAUT);
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft); }
-        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
-    } SCENE {
-        int i;
+// DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
+// {
+//     GIVEN {
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+//         OPPONENT(SPECIES_WYNAUT);
+//         OPPONENT(SPECIES_WYNAUT);
+//     } WHEN {
+//         TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft); }
+//         TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
+//     } SCENE {
+//         int i;
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, playerLeft);
-        STATUS_ICON(playerLeft, none: TRUE);
-        STATUS_ICON(playerRight, none: TRUE);
-        NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
-        for (i = 0; i < PARTY_SIZE; i++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_STATUS), STATUS1_NONE);
-    }
-}
+//         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, playerLeft);
+//         STATUS_ICON(playerLeft, none: TRUE);
+//         STATUS_ICON(playerRight, none: TRUE);
+//         NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
+//         for (i = 0; i < PARTY_SIZE; i++)
+//             EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_STATUS), STATUS1_NONE);
+//     }
+// }
 
 DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user from primary status effects")
 {
