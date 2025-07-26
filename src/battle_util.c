@@ -4627,9 +4627,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_EFFECT_SPORE:
         {
-            u32 ability = GetBattlerAbility(gBattlerAttacker);
+            u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
             if ((!IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GRASS) || B_POWDER_GRASS < GEN_6)
-             && ability != ABILITY_OVERCOAT
+             && abilityAtk != ABILITY_OVERCOAT
              && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES)
             {
                 u32 poison, paralysis, sleep;
@@ -4657,7 +4657,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && IsBattlerAlive(gBattlerAttacker)
                  && !gProtectStructs[gBattlerAttacker].confusionSelfDmg
                  && IsBattlerTurnDamaged(gBattlerTarget)
-                 && CanBeSlept(gBattlerAttacker, gBattlerTarget, ability, NOT_BLOCKED_BY_SLEEP_CLAUSE)
+                 && CanBeSlept(gBattlerTarget, gBattlerAttacker, abilityAtk, NOT_BLOCKED_BY_SLEEP_CLAUSE)
                  && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker, TRUE), move))
                 {
                     if (IsSleepClauseEnabled())
@@ -5553,17 +5553,23 @@ bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag)
 
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause)
 {
-    if (IsSleepClauseActiveForSide(GetBattlerSide(battlerDef)) && isBlockedBySleepClause)
+    if (IsSleepClauseActiveForSide(GetBattlerSide(battlerDef)) && isBlockedBySleepClause != NOT_BLOCKED_BY_SLEEP_CLAUSE)
         return FALSE;
 
+    if (isBlockedBySleepClause == NOT_BLOCKED_BY_SLEEP_CLAUSE)
+        gBattleStruct->sleepClauseNotBlocked = TRUE;
+
+    bool32 effect = FALSE;
     if (CanSetNonVolatileStatus(battlerAtk,
                                 battlerDef,
                                 ABILITY_NONE, // attacker ability does not matter
                                 abilityDef,
                                 MOVE_EFFECT_SLEEP, // also covers yawn
                                 STATUS_CHECK_TRIGGER))
-        return TRUE;
-    return FALSE;
+        effect = TRUE;
+
+    gBattleStruct->sleepClauseNotBlocked = FALSE;
+    return effect;
 }
 
 bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 abilityDef)
@@ -5714,7 +5720,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         {
             battleScript = BattleScript_CantMakeAsleep;
         }
-        else if (CanSleepDueToSleepClause(battlerAtk, battlerDef, option))
+        else if (!gBattleStruct->sleepClauseNotBlocked && CanSleepDueToSleepClause(battlerAtk, battlerDef, option))
         {
             battleScript = BattleScript_SleepClauseBlocked;
         }
