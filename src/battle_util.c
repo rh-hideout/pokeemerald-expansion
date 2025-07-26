@@ -8219,7 +8219,7 @@ static inline u32 CalcMoveBasePower(struct DamageCalculationData *damageCalcData
         }
     case EFFECT_ECHOED_VOICE:
         // gBattleStruct->sameMoveTurns incremented in ppreduce
-        if (gBattleStruct->sameMoveTurns[battlerAtk] != 0)
+        if (gBattleStruct->sameMoveTurns[battlerAtk] != 0 && GetMoveEffect(gLastResultingMoves[battlerAtk]) == EFFECT_ECHOED_VOICE)
         {
             basePower += (basePower * gBattleStruct->sameMoveTurns[battlerAtk]);
             if (basePower > 200)
