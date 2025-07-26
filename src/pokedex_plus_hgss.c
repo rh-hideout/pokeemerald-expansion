@@ -291,8 +291,8 @@ static EWRAM_DATA u8 sPokeBallRotation = 0;
 static EWRAM_DATA struct PokedexListItem *sPokedexListItem = NULL;
 //Pokedex Plus HGSS_Ui
 #define MOVES_COUNT_TOTAL (EGG_MOVES_ARRAY_COUNT + MAX_LEVEL_UP_MOVES + NUM_ALL_MACHINES)
-EWRAM_DATA static u16 sStatsMoves[MOVES_COUNT_TOTAL] = {0};
-EWRAM_DATA static u16 sStatsMovesTMHM_ID[NUM_ALL_MACHINES] = {0};
+EWRAM_DATA static u16 *sStatsMoves = NULL;
+EWRAM_DATA static u16 *sStatsMovesTMHM_ID = NULL;
 
 
 struct SearchOptionText
@@ -2323,6 +2323,8 @@ static void Task_ClosePokedex(u8 taskId)
         DestroyTask(taskId);
         SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 0x100);
+        FREE_AND_SET_NULL(sStatsMoves);
+        FREE_AND_SET_NULL(sStatsMovesTMHM_ID);
         Free(sPokedexView);
     }
 }
@@ -4865,6 +4867,8 @@ static void Task_LoadStatsScreen(u8 taskId)
         sPokedexView->numEggMoves = 0;
         sPokedexView->numLevelUpMoves = 0;
         sPokedexView->numTMHMMoves = 0;
+        sStatsMoves = AllocZeroed(sizeof(u16) * MOVES_COUNT_TOTAL);
+        sStatsMovesTMHM_ID = AllocZeroed(sizeof(u16) * NUM_ALL_MACHINES);
         if (CalculateMoves())
             gMain.state++;
         break;
