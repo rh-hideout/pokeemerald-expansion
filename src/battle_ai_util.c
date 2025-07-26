@@ -1330,7 +1330,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (!AI_BattlerAtMaxHp(battlerTarget) || effect == EFFECT_MULTI_HIT)
         return FALSE;
-    if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && IsValidDoubleBattle(battlerTarget)))
+    if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && !HasTwoOpponents(battler)))
         return FALSE;
     if (gAiLogicData->holdEffects[battlerTarget] == HOLD_EFFECT_FOCUS_SASH)
         return TRUE;
@@ -1994,7 +1994,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove)
     }
     else
     {
-        if (IsDoubleBattle())
+        if (!IsDoubleBattle1v1())
             score -= (2 * min(uses, 3));
         else
             score -= (min(uses, 3));
@@ -2272,7 +2272,7 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
 {
     if (HasMoveWithEffect(battler, effect))
         return TRUE;
-    if (IsDoubleBattle() && HasMoveWithEffect(BATTLE_OPPOSITE(battler), effect))
+    if (HasPartnerIgnoreFlags(battler) && HasMoveWithEffect(BATTLE_PARTNER(battler), effect))
         return TRUE;
     return FALSE;
 }
@@ -2287,7 +2287,7 @@ bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
     {
         if (GetMoveEffect(gBattleHistory->usedMoves[battler][i]) == effect)
             return TRUE;
-        if (IsDoubleBattle() && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_OPPOSITE(battler)][i]) == effect)
+        if (HasPartnerIgnoreFlags(battler) && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
             return TRUE;
     }
     return FALSE;
@@ -2342,7 +2342,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
 {
     if (HasMoveWithAdditionalEffect(battler, moveEffect))
         return TRUE;
-    if (IsDoubleBattle() && HasMoveWithAdditionalEffect(BATTLE_OPPOSITE(battler), moveEffect))
+    if (HasPartnerIgnoreFlags(battler) && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
         return TRUE;
     return FALSE;
 }
@@ -2357,7 +2357,7 @@ bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
     {
         if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
             return TRUE;
-        if (IsDoubleBattle() && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_OPPOSITE(battler)][i], moveEffect))
+        if (HasPartnerIgnoreFlags(battler) && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
             return TRUE;
     }
     return FALSE;
@@ -3118,7 +3118,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
-    if (!IsDoubleBattle())
+    if (IsDoubleBattle1v1())
     {
         if (CountUsablePartyMons(battlerAtk) == 0)
             return CAN_TRY_PIVOT; // can't switch, but attack might still be useful
@@ -3588,7 +3588,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
 
     party = GetBattlerParty(battlerId);
 
-    if (IsDoubleBattle())
+    if (HasPartner(battlerId))
     {
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
@@ -3640,7 +3640,7 @@ u32 GetBattlerSideSpeedAverage(u32 battler)
         numBattlersAlive++;
     }
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    if (HasPartner(battler))
     {
         speed2 = gAiLogicData->speedStats[BATTLE_PARTNER(battler)];
         numBattlersAlive++;
@@ -3754,17 +3754,48 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
 }
 
 // Partner Logic
-bool32 IsValidDoubleBattle(u32 battlerAtk)
+bool32 IsDoubleBattle1v1()
 {
     if (IsDoubleBattle()
-      && ((IsBattlerAlive(BATTLE_OPPOSITE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(BATTLE_OPPOSITE(battlerAtk)))) || IsBattlerAlive(BATTLE_PARTNER(battlerAtk))))
+      && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT)) 
+      || (IsBattlerAlive(B_POSITION_OPPONENT_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_RIGHT))))
+        return FALSE;
+    return TRUE;
+}
+
+bool32 HasTwoOpponents(u32 battlerAtk)
+{
+    if (IsDoubleBattle()
+      && IsBattlerAlive(FOE(battlerAtk)) && IsBattlerAlive(BATTLE_PARTNER(FOE(battlerAtk))))
         return TRUE;
     return FALSE;
 }
 
-// TODO: Handling for when the 'partner' is not actually a partner, a la Battle Royale or B_WILD_NATURAL_ENEMIES
+bool32 HasPartner(u32 battlerAtk)
+{
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    {
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+            return FALSE;
+        else
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 HasPartnerIgnoreFlags(u32 battler)
+{
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
 {
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+        return FALSE;
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
 
@@ -3783,7 +3814,7 @@ u32 GetAllyChosenMove(u32 battlerId)
 //PARTNER_MOVE_EFFECT_IS_SAME
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
@@ -3798,7 +3829,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
 //PARTNER_MOVE_EFFECT_IS_SAME_NO_TARGET
 bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
@@ -3810,7 +3841,7 @@ bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u3
 //PARTNER_MOVE_EFFECT_IS_STATUS_SAME_TARGET
 bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
@@ -3844,7 +3875,7 @@ bool32 IsMoveEffectWeather(u32 move)
 //PARTNER_MOVE_EFFECT_IS_TERRAIN
 bool32 PartnerMoveEffectIsTerrain(u32 battlerAtkPartner, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
@@ -3861,7 +3892,7 @@ bool32 PartnerMoveEffectIsTerrain(u32 battlerAtkPartner, u32 partnerMove)
 //PARTNER_MOVE_EFFECT_IS
 bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, u32 partnerMove, enum BattleMoveEffects effectCheck)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && GetMoveEffect(partnerMove) == effectCheck)
@@ -3873,7 +3904,7 @@ bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, u32 partnerMove, enum BattleMo
 //PARTNER_MOVE_IS_TAILWIND_TRICKROOM
 bool32 PartnerMoveIs(u32 battlerAtkPartner, u32 partnerMove, u32 moveCheck)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && partnerMove == moveCheck)
@@ -3884,7 +3915,7 @@ bool32 PartnerMoveIs(u32 battlerAtkPartner, u32 partnerMove, u32 moveCheck)
 //PARTNER_MOVE_IS_SAME
 bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
     if (partnerMove != MOVE_NONE && move == partnerMove && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
@@ -3895,7 +3926,7 @@ bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, u32 mo
 //PARTNER_MOVE_IS_SAME_NO_TARGET
 bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (!IsDoubleBattle())
+    if (!HasPartner(battlerAtkPartner))
         return FALSE;
     if (partnerMove != MOVE_NONE && move == partnerMove)
         return TRUE;
@@ -3904,7 +3935,7 @@ bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMov
 
 bool32 PartnerMoveActivatesSleepClause(u32 partnerMove)
 {
-    if (!IsDoubleBattle() || !IsSleepClauseEnabled())
+    if (IsDoubleBattle1v1() || !IsSleepClauseEnabled())
         return FALSE;
     return IsMoveSleepClauseTrigger(partnerMove);
 }
@@ -3939,7 +3970,7 @@ bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move)
         }
     }
 
-    if (!IsDoubleBattle())
+    if (IsDoubleBattle1v1())
     {
         switch (GetMoveEffect(move))
         {
@@ -4131,7 +4162,7 @@ bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category)
 
 bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category)
 {
-    if (IsDoubleBattle())
+    if (HasPartnerIgnoreFlags(battlerId))
     {
         if (HasMoveWithCategory(battlerId, category) || HasMoveWithCategory(BATTLE_PARTNER(battlerId), category))
             return TRUE;
@@ -4657,7 +4688,7 @@ void DecideTerastal(u32 battler)
         return;
 
     // TODO: Currently only single battles are considered.
-    if (IsDoubleBattle())
+    if (!IsDoubleBattle1v1())
         return;
 
     // TODO: A lot of these checks are most effective for an omnicient ai.
@@ -5075,7 +5106,7 @@ bool32 HasBattlerSideAbility(u32 battler, u32 ability, struct AiLogicData *aiDat
 {
     if (aiData->abilities[battler] == ability)
         return TRUE;
-    if (IsDoubleBattle() && gAiLogicData->abilities[BATTLE_PARTNER(battler)] == ability)
+    if (HasPartnerIgnoreFlags(battler) && gAiLogicData->abilities[BATTLE_PARTNER(battler)] == ability)
         return TRUE;
     return FALSE;
 }
@@ -5086,6 +5117,8 @@ u32 GetFriendlyFireKOThreshold(u32 battler)
         return FRIENDLY_FIRE_RISKY_THRESHOLD;
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSERVATIVE)
         return FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD;
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES)
+        return 0;
 
     return FRIENDLY_FIRE_NORMAL_THRESHOLD;
 }
@@ -5237,7 +5270,7 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         if (hasSameAbility || gAbilitiesInfo[atkAbility].cantBeSuppressed || gAbilitiesInfo[defAbility].cantBeCopied)
             return FALSE;
 
-        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+        if (HasPartnerIgnoreFlags(battlerAtk))
         {
             u32 partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
             if (gAbilitiesInfo[partnerAbility].cantBeSuppressed)
@@ -5338,7 +5371,7 @@ void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, 
     bool32 attackerHasBadAbility = (gAbilitiesInfo[abilityAtk].aiRating < 0);
     s32 currentAbilityScore, transferredAbilityScore = 0;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
+    if (HasPartner(battlerAtk))
     {
         partnerAbility = aiData->abilities[BATTLE_PARTNER(battlerAtk)];
         if (!(gAbilitiesInfo[partnerAbility].cantBeSuppressed) && (gAbilitiesInfo[partnerAbility].aiRating < 0))
@@ -5432,7 +5465,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
     case ABILITY_FRIEND_GUARD:
     case ABILITY_POWER_SPOT:
     case ABILITY_VICTORY_STAR:
-        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)) && aiData->abilities[BATTLE_PARTNER(battler)] != ability)
+        if (HasPartner(battler) && aiData->abilities[BATTLE_PARTNER(battler)] != ability)
             return BEST_EFFECT;
         break;
     case ABILITY_GUTS:
@@ -5459,7 +5492,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         }
         else
         {
-            if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(FOE(battler))))
+            if (HasTwoOpponents(battler))
             {
                 abilityDef = aiData->abilities[BATTLE_PARTNER(FOE(battler))];
                 if (DoesIntimidateRaiseStats(abilityDef))
@@ -5502,7 +5535,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
     case ABILITY_SWORD_OF_RUIN:
     case ABILITY_TABLETS_OF_RUIN:
     case ABILITY_VESSEL_OF_RUIN:
-        if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+        if (HasPartner(battler))
         {
             if (aiData->abilities[BATTLE_PARTNER(battler)] != ability)
                 return GOOD_EFFECT;
@@ -5524,4 +5557,29 @@ u32 GetThinkingBattler(u32 battler)
     if (gAiLogicData->aiPredictionInProgress)
         return gAiLogicData->battlerDoingPrediction;
     return battler;
+}
+
+bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
+{
+    if (B_WILD_NATURAL_ENEMIES != TRUE)
+        return FALSE;
+
+    switch (speciesAttacker)
+    {
+    case SPECIES_ZANGOOSE:
+        return (speciesTarget == SPECIES_SEVIPER);
+    case SPECIES_SEVIPER:
+        return (speciesTarget == SPECIES_ZANGOOSE);
+    case SPECIES_HEATMOR:
+        return (speciesTarget == SPECIES_DURANT);
+    case SPECIES_DURANT:
+        return (speciesTarget == SPECIES_HEATMOR);
+    case SPECIES_SABLEYE:
+        return (speciesTarget == SPECIES_CARBINK);
+    case SPECIES_MAREANIE:
+        return (speciesTarget == SPECIES_CORSOLA);
+    default:
+        return FALSE;
+    }
+    return FALSE;
 }
