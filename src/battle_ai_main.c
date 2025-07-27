@@ -1913,23 +1913,23 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_SANDSTORM:
             if (weather & (B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY)
-             || IsMoveEffectWeather(aiData->partnerMove))
+             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_SUNNY_DAY:
             if (weather & (B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY)
-             || IsMoveEffectWeather(aiData->partnerMove))
+             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_RAIN_DANCE:
             if (weather & (B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY)
-             || IsMoveEffectWeather(aiData->partnerMove))
+             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_HAIL:
         case EFFECT_SNOWSCAPE:
             if (weather & (B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY)
-             || IsMoveEffectWeather(aiData->partnerMove))
+             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_ATTRACT:
