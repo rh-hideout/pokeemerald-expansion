@@ -913,33 +913,16 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         }
         else
         {
-            u32 damage;
+            u32 damage = CalculateMoveDamageVars(&ctx);
 
-            if (moveEffect == EFFECT_LEVEL_DAMAGE || moveEffect == EFFECT_PSYWAVE || moveEffect == EFFECT_FIXED_HP_DAMAGE 
-                || moveEffect == EFFECT_FIXED_PERCENT_DAMAGE || moveEffect == EFFECT_FINAL_GAMBIT)
-            {
-                if (ctx.typeEffectivenessModifier == UQ_4_12(0.0))
-                    damage = 0;
-                else
-                    damage = CalculateMoveDamageVars(&ctx);
+            simDamage.minimum = GetDamageByRollType(damage, DMG_ROLL_LOWEST);
+            simDamage.minimum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.minimum);
 
-                simDamage.minimum = damage;
-                simDamage.median = damage;
-                simDamage.maximum = damage;
-            }
-            else
-            {
-                damage = CalculateMoveDamageVars(&ctx);
+            simDamage.median = GetDamageByRollType(damage, DMG_ROLL_DEFAULT);
+            simDamage.median = ApplyModifiersAfterDmgRoll(&ctx, simDamage.median);
 
-                simDamage.minimum = GetDamageByRollType(damage, DMG_ROLL_LOWEST);
-                simDamage.minimum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.minimum);
-
-                simDamage.median = GetDamageByRollType(damage, DMG_ROLL_DEFAULT);
-                simDamage.median = ApplyModifiersAfterDmgRoll(&ctx, simDamage.median);
-
-                simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
-                simDamage.maximum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.maximum);
-            }
+            simDamage.maximum = GetDamageByRollType(damage, DMG_ROLL_HIGHEST);
+            simDamage.maximum = ApplyModifiersAfterDmgRoll(&ctx, simDamage.maximum);
         }
 
         if (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE)
