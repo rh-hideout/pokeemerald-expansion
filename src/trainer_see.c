@@ -359,7 +359,7 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
 // code
 bool8 CheckForTrainersWantingBattle(void)
 {
-    u8 i, k;
+    u8 i;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -369,26 +369,14 @@ bool8 CheckForTrainersWantingBattle(void)
 
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        for (u8 j = 0; j < OBJECT_EVENTS_COUNT; j++)
-        {
-            k = 0;
-            if (gObjectEvents[j].localId == i)
-            {
-                k = j;
-                break;
-            }
-            else
-            {
-                continue;
-            }
-        }       
         u8 numTrainers;
-        if (!gObjectEvents[k].active)
+
+        if (!gObjectEvents[i].active)
             continue;
-        if (gObjectEvents[k].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[k].trainerType != TRAINER_TYPE_BURIED)
+        if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
 
-        numTrainers = CheckTrainer(k);
+        numTrainers = CheckTrainer(i);
         if (numTrainers == 0xFF) // non-trainerbatle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
