@@ -932,7 +932,10 @@ u8 HofPCTopBar_AddWindow(u8 bg, u8 xPos, u8 yPos, u8 palette, u16 baseTile)
     else
         palette = BG_PLTT_ID(palette);
 
-    LoadPalette(sHofPC_TopBar_Pal, palette, sizeof(sHofPC_TopBar_Pal));
+    if (IS_FRLG)
+        LoadPalette(GetTextWindowPalette(2), palette, PLTT_SIZE_4BPP);
+    else
+        LoadPalette(sHofPC_TopBar_Pal, palette, sizeof(sHofPC_TopBar_Pal));
     return sHofPCTopBarWindowId;
 }
 
@@ -1004,7 +1007,7 @@ static void UNUSED HofPCTopBar_CopyToVram(void)
         CopyWindowToVram(sHofPCTopBarWindowId, COPYWIN_FULL);
 }
 
-static void UNUSED HofPCTopBar_Clear(void)
+void HofPCTopBar_Clear(void)
 {
     if (sHofPCTopBarWindowId != WINDOW_NONE)
     {
@@ -1303,7 +1306,7 @@ u16 AddWindowParameterized(u8 bg, u8 left, u8 top, u8 width, u8 height, u8 palet
 }
 
 // As opposed to CreateYesNoMenu, which has a hard-coded position.
-static void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos)
+void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId, u8 left, u8 top, u16 baseTileNum, u8 paletteNum, u8 initialCursorPos)
 {
     struct TextPrinterTemplate printer;
 
@@ -1313,7 +1316,7 @@ static void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId,
     printer.currentChar = gText_YesNo;
     printer.windowId = sYesNoWindowId;
     printer.fontId = fontId;
-    printer.x = GetFontAttribute(fontId, FONTATTR_MAX_LETTER_WIDTH) + left;
+    printer.x = GetMenuCursorDimensionByFont(fontId, 0) + left;
     printer.y = top;
     printer.currentX = printer.x;
     printer.currentY = printer.y;

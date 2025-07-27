@@ -39,6 +39,7 @@
 #include "pokemon_jump.h"
 #include "decoration_inventory.h"
 #include "secret_base.h"
+#include "string_util.h"
 #include "player_pc.h"
 #include "field_specials.h"
 #include "berry_powder.h"
@@ -157,9 +158,12 @@ void ResetMenuAndMonGlobals(void)
 
 void NewGameInitData(void)
 {
+    u8 rivalName[PLAYER_NAME_LENGTH + 1];
     if (gSaveFileStatus == SAVE_STATUS_EMPTY || gSaveFileStatus == SAVE_STATUS_CORRUPT)
         RtcReset();
-
+    
+    if (IS_FRLG)
+        StringCopy(rivalName, gSaveBlock1Ptr->rivalName);
     gDifferentSaveFile = TRUE;
     gSaveBlock2Ptr->encryptionKey = 0;
     ZeroPlayerPartyMons();
@@ -203,9 +207,14 @@ void NewGameInitData(void)
     ResetLotteryCorner();
     WarpToTruck();
     if (IS_FRLG)
+    {
         RunScriptImmediately(EventScript_ResetAllMapFlagsFrlg);
+        StringCopy(gSaveBlock1Ptr->rivalName, rivalName);
+    }
     else
+    {
         RunScriptImmediately(EventScript_ResetAllMapFlags);
+    }
     ResetMiniGamesRecords();
     InitUnionRoomChatRegisteredTexts();
     InitLilycoveLady();

@@ -1572,7 +1572,10 @@ void StopPlayerAvatar(void)
 
 u16 GetRivalAvatarGraphicsIdByStateIdAndGender(u8 state, u8 gender)
 {
-    return sRivalAvatarGfxIds[state][gender];
+    if (IS_FRLG)
+        return GetPlayerAvatarGraphicsIdByStateIdAndGender(state, gender);
+    else
+        return sRivalAvatarGfxIds[state][gender];
 }
 
 u16 GetPlayerAvatarGraphicsIdByStateIdAndGender(u8 state, u8 gender)

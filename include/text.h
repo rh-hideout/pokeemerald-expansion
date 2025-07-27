@@ -24,6 +24,9 @@ enum {
     FONT_SHORT_NARROWER,
 };
 
+#define FONT_MALE FONT_NORMAL
+#define FONT_FEMALE FONT_NORMAL
+
 // Return values for font functions
 enum {
     RENDER_PRINT,

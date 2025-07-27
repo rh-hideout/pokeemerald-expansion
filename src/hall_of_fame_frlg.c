@@ -625,7 +625,7 @@ static void Task_Hof_SpawnPlayerPic(u8 taskId)
     ShowBg(3);
     gTasks[taskId].data[4] = CreateTrainerPicSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), TRUE, 0x78, 0x48, 6, 0xFFFF);
     AddWindow(&sWindowTemplate);
-    LoadUserWindowBorderGfx_(1, 0x21D, BG_PLTT_ID(13));
+    LoadStdWindowGfx(1, 0x21D, BG_PLTT_ID(13));
     gTasks[taskId].data[3] = 120;
     gTasks[taskId].func = Task_Hof_WaitAndPrintPlayerInfo;
 }
@@ -789,7 +789,7 @@ static void Task_HofPC_CopySaveData(u8 taskId)
 
 static void Task_HofPC_DrawSpritesPrintText(u8 taskId)
 {
-    struct HallofFameTeam *savedTeams = sHofMonPtr;
+    struct HallofFameTeam *savedTeams = gHoFSaveBuffer;
     struct HallofFameMon *currMon;
     u16 i;
 
@@ -852,7 +852,7 @@ static void Task_HofPC_DrawSpritesPrintText(u8 taskId)
 
 static void Task_HofPC_PrintMonInfo(u8 taskId)
 {
-    struct HallofFameTeam* savedTeams = sHofMonPtr;
+    struct HallofFameTeam *savedTeams = gHoFSaveBuffer;
     struct HallofFameMon* currMon;
     u16 i;
     u16 currMonId;
