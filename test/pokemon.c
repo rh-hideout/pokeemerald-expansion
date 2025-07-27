@@ -450,3 +450,227 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
     EXPECT_LT(count, MAX_LEVEL_UP_MOVES);
     EXPECT_LT(count, MAX_RELEARNER_MOVES - 1); // - 1 because at least one move is already known
 }
+
+struct SubstructOffsets { const u8 offset0, offset1, offset2, offset3; };
+
+__attribute__((const)) const struct SubstructOffsets *GetSubstructOffsets(u32 personality);
+
+__attribute__((const)) union PokemonSubstruct *GetSubstruct0(struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (union PokemonSubstruct *)((uintptr_t)box + offsets->offset0);
+}
+
+__attribute__((const)) union PokemonSubstruct *GetSubstruct1(struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (union PokemonSubstruct *)((uintptr_t)box + offsets->offset1);
+}
+
+__attribute__((const)) union PokemonSubstruct *GetSubstruct2(struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (union PokemonSubstruct *)((uintptr_t)box + offsets->offset2);
+}
+
+__attribute__((const)) union PokemonSubstruct *GetSubstruct3(struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (union PokemonSubstruct *)((uintptr_t)box + offsets->offset3);
+}
+
+__attribute__((const)) const union PokemonSubstruct *GetConstSubstruct0(const struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (const union PokemonSubstruct *)((uintptr_t)box + offsets->offset0);
+}
+
+__attribute__((const)) const union PokemonSubstruct *GetConstSubstruct1(const struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (const union PokemonSubstruct *)((uintptr_t)box + offsets->offset1);
+}
+
+__attribute__((const)) const union PokemonSubstruct *GetConstSubstruct2(const struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (const union PokemonSubstruct *)((uintptr_t)box + offsets->offset2);
+}
+
+__attribute__((const)) const union PokemonSubstruct *GetConstSubstruct3(const struct BoxPokemon *box, const struct SubstructOffsets *offsets)
+{
+    return (const union PokemonSubstruct *)((uintptr_t)box + offsets->offset3);
+}
+
+asm(".thumb\n"
+    ".balign 4\n"
+    ".2byte 0\n"
+"GetSubstructOffsets:\n"
+    "ldr r3, =0xaaaaaaab\n"
+    "bx pc\n"
+    ".arm\n"
+    "umull r2, r3, r0, r3\n"
+    "lsr r3, #4\n"
+    "add r3, r3, r3, lsl #1\n"
+    "sub r0, r0, r3, lsl #3\n"
+    "add r0, pc, r0, lsl #2\n"
+    "bx lr\n"
+    // offsetof(struct BoxPokemon, secure) == 32
+    // sizeof(union PokemonSubstruct) == 12
+    ".byte 32 + 0*12, 32 + 1*12, 32 + 2*12, 32 + 3*12\n"
+    ".byte 32 + 0*12, 32 + 1*12, 32 + 3*12, 32 + 2*12\n"
+    ".byte 32 + 0*12, 32 + 2*12, 32 + 1*12, 32 + 3*12\n"
+    ".byte 32 + 0*12, 32 + 3*12, 32 + 1*12, 32 + 2*12\n"
+    ".byte 32 + 0*12, 32 + 2*12, 32 + 3*12, 32 + 1*12\n"
+    ".byte 32 + 0*12, 32 + 3*12, 32 + 2*12, 32 + 1*12\n"
+    ".byte 32 + 1*12, 32 + 0*12, 32 + 2*12, 32 + 3*12\n"
+    ".byte 32 + 1*12, 32 + 0*12, 32 + 3*12, 32 + 2*12\n"
+    ".byte 32 + 2*12, 32 + 0*12, 32 + 1*12, 32 + 3*12\n"
+    ".byte 32 + 3*12, 32 + 0*12, 32 + 1*12, 32 + 2*12\n"
+    ".byte 32 + 2*12, 32 + 0*12, 32 + 3*12, 32 + 1*12\n"
+    ".byte 32 + 3*12, 32 + 0*12, 32 + 2*12, 32 + 1*12\n"
+    ".byte 32 + 1*12, 32 + 2*12, 32 + 0*12, 32 + 3*12\n"
+    ".byte 32 + 1*12, 32 + 3*12, 32 + 0*12, 32 + 2*12\n"
+    ".byte 32 + 2*12, 32 + 1*12, 32 + 0*12, 32 + 3*12\n"
+    ".byte 32 + 3*12, 32 + 1*12, 32 + 0*12, 32 + 2*12\n"
+    ".byte 32 + 2*12, 32 + 3*12, 32 + 0*12, 32 + 1*12\n"
+    ".byte 32 + 3*12, 32 + 2*12, 32 + 0*12, 32 + 1*12\n"
+    ".byte 32 + 1*12, 32 + 2*12, 32 + 3*12, 32 + 0*12\n"
+    ".byte 32 + 1*12, 32 + 3*12, 32 + 2*12, 32 + 0*12\n"
+    ".byte 32 + 2*12, 32 + 1*12, 32 + 3*12, 32 + 0*12\n"
+    ".byte 32 + 3*12, 32 + 1*12, 32 + 2*12, 32 + 0*12\n"
+    ".byte 32 + 2*12, 32 + 3*12, 32 + 1*12, 32 + 0*12\n"
+    ".byte 32 + 3*12, 32 + 2*12, 32 + 1*12, 32 + 0*12\n"
+    ".pool\n"
+    ".thumb\n");
+
+#undef GetMonData
+#undef SetMonData
+
+#define GetMonData(mon, data, ...) __builtin_choose_expr(__builtin_constant_p(data), GetKnownMonData, GetUnknownMonData)(mon, data, DEFAULT(NULL, __VA_ARGS__))
+
+#define SetMonData(mon, data, in) __builtin_choose_expr(__builtin_constant_p(data), __builtin_choose_expr(__builtin_classify_type(in) == 5, SetKnownMonData, SetKnownMonDataImm), __builtin_choose_expr(__builtin_classify_type(in) == 5, SetUnknownMonData, SetUnknownMonDataImm))(mon, data, in)
+
+u32 GetUnknownMonData(struct Pokemon *, enum MonData, void *);
+void SetUnknownMonData(struct Pokemon *, enum MonData, const void *);
+
+__attribute__((always_inline)) static inline u32 GetKnownBoxMonData(const struct BoxPokemon *boxMon, enum MonData data, void *out)
+{
+    const struct SubstructOffsets *offsets = GetSubstructOffsets(boxMon->personality);
+    const union PokemonSubstruct *substruct0 = GetConstSubstruct0(boxMon, offsets);
+    //const union PokemonSubstruct *substruct1 = GetConstSubstruct1(boxMon, offsets);
+    //const union PokemonSubstruct *substruct2 = GetConstSubstruct2(boxMon, offsets);
+    //const union PokemonSubstruct *substruct3 = GetConstSubstruct3(boxMon, offsets);
+    u32 key = boxMon->personality ^ boxMon->otId;
+
+    switch (data)
+    {
+    case MON_DATA_SPECIES:
+        return (substruct0->raw32[0] ^ key) & 0x000007FF;
+
+    case MON_DATA_EXP:
+        return (substruct0->raw32[1] ^ key) & 0x001FFFFF;
+
+    default:
+        return GetBoxMonData3((struct BoxPokemon *)boxMon, data, out);
+    }
+}
+
+__attribute__((always_inline)) static inline void SetKnownBoxMonData(struct BoxPokemon *boxMon, enum MonData data, const void *in)
+{
+    const u8 *in8 = in;
+    const struct SubstructOffsets *offsets = GetSubstructOffsets(boxMon->personality);
+    union PokemonSubstruct *substruct0 = GetSubstruct0(boxMon, offsets);
+    //union PokemonSubstruct *substruct1 = GetSubstruct1(boxMon, offsets);
+    //union PokemonSubstruct *substruct2 = GetSubstruct2(boxMon, offsets);
+    //union PokemonSubstruct *substruct3 = GetSubstruct3(boxMon, offsets);
+    u32 key = boxMon->personality ^ boxMon->otId;
+    u32 old, new;
+
+    switch (data)
+    {
+    case MON_DATA_SPECIES:
+        old = substruct0->raw32[0] ^ key;
+        new = (old & ~0x000007FF) | T2_READ_32(in8);
+        substruct0->raw32[0] = new ^ key;
+        boxMon->checksum += new - old;
+        return;
+
+    case MON_DATA_EXP:
+        old = substruct0->raw32[1] ^ key;
+        new = (old & ~0x001FFFFF) | T2_READ_32(in8);
+        substruct0->raw32[1] = new ^ key;
+        boxMon->checksum += (new - old) + ((new - old) >> 16);
+        return;
+
+    default:
+        return SetBoxMonData(boxMon, data, in);
+    }
+}
+
+__attribute__((always_inline)) static inline u32 GetKnownMonData(const struct Pokemon *mon, enum MonData data, void *out)
+{
+    switch (data)
+    {
+    case MON_DATA_SPECIES:
+    case MON_DATA_EXP:
+        return GetKnownBoxMonData(&mon->box, data, out);
+
+    default:
+        return GetMonData3((struct Pokemon *)mon, data, out);
+    }
+}
+
+__attribute__((always_inline)) static inline void SetKnownMonData(struct Pokemon *mon, enum MonData data, const void *in)
+{
+    switch (data)
+    {
+    case MON_DATA_SPECIES:
+    case MON_DATA_EXP:
+        SetKnownBoxMonData(&mon->box, data, in);
+        return;
+
+    default:
+        (SetMonData)(mon, data, in);
+        return;
+    }
+}
+
+__attribute__((always_inline)) static inline void SetKnownMonDataImm(struct Pokemon *mon, enum MonData data, u32 in)
+{
+    SetKnownMonData(mon, data, &in);
+}
+
+__attribute__((always_inline)) static inline void SetUnknownMonDataImm(struct Pokemon *mon, enum MonData data, u32 in)
+{
+    SetUnknownMonData(mon, data, &in);
+}
+
+u32 GetUnknownMonData(struct Pokemon *mon, enum MonData data, void *out)
+{
+    return GetKnownMonData(mon, data, out);
+}
+
+void SetUnknownMonData(struct Pokemon *mon, enum MonData data, const void *in)
+{
+    return SetKnownMonData(mon, data, in);
+}
+
+TEST("Direct GetMonData")
+{
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp);
+    struct Benchmark direct, vanilla;
+    u32 exp1 = 0, exp2 = 0, species = 0;
+    BENCHMARK(&direct) { exp1 = GetMonData(&gPlayerParty[0], MON_DATA_EXP); species = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES); }
+    BENCHMARK(&vanilla) { exp2 = GetMonData2(&gPlayerParty[0], MON_DATA_EXP); }
+    EXPECT_EQ(exp1, exp2);
+    EXPECT_EQ(species, SPECIES_WOBBUFFET);
+    EXPECT_FASTER(direct, vanilla);
+}
+
+TEST("Direct SetMonData")
+{
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, 0, FALSE, 0, OT_ID_PRESET, 0x12345678);
+    u32 exp = 0x123456;
+    struct Benchmark direct, vanilla;
+    BENCHMARK(&direct) { SetMonData(&gPlayerParty[0], MON_DATA_EXP, exp); }
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_BAD_EGG), FALSE);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_EXP), exp);
+    BENCHMARK(&vanilla) { (SetMonData)(&gPlayerParty[0], MON_DATA_EXP, &exp); }
+    EXPECT_FASTER(direct, vanilla);
+}
