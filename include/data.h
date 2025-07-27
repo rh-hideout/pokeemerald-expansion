@@ -106,6 +106,7 @@ struct Trainer
     /*0x23*/ u8 poolPickIndex;
     /*0x24*/ u8 poolPruneIndex;
     /*0x25*/ u16 overrideTrainer;
+    /*0x26*/ u8 trainerBackPic;
 };
 
 struct TrainerClass
@@ -259,6 +260,16 @@ static inline const u8 GetTrainerPicFromId(u16 trainerId)
         return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
 
     return GetTrainerStructFromId(trainerId)->trainerPic;
+}
+
+static inline const u8 GetTrainerBackPicFromId(u16 trainerId)
+{
+    enum DifficultyLevel partnerDifficulty = GetBattlePartnerDifficultyLevel(trainerId);
+
+    if (trainerId > TRAINER_PARTNER(PARTNER_NONE))
+        return gBattlePartners[partnerDifficulty][trainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
+
+    return GetTrainerStructFromId(trainerId)->trainerBackPic;
 }
 
 static inline const u8 GetTrainerStartingStatusFromId(u16 trainerId)
