@@ -932,7 +932,10 @@ u8 HofPCTopBar_AddWindow(u8 bg, u8 xPos, u8 yPos, u8 palette, u16 baseTile)
     else
         palette = BG_PLTT_ID(palette);
 
-    LoadPalette(sHofPC_TopBar_Pal, palette, sizeof(sHofPC_TopBar_Pal));
+    if (IS_FRLG)
+        LoadPalette(GetTextWindowPalette(2), palette, PLTT_SIZE_4BPP);
+    else
+        LoadPalette(sHofPC_TopBar_Pal, palette, sizeof(sHofPC_TopBar_Pal));
     return sHofPCTopBarWindowId;
 }
 
