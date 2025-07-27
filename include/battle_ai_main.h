@@ -45,6 +45,13 @@ enum AIScore
     WORST_EFFECT = -10
 };
 
+enum MoveComparisonResult
+{
+    MOVE_NEUTRAL_COMPARISON,
+    MOVE_WON_COMPARISON,
+    MOVE_LOST_COMPARISON,
+};
+
 // AI_TryToFaint
 #define FAST_KILL      6 // AI is faster and faints target
 #define SLOW_KILL      4 // AI is slower and faints target
