@@ -384,7 +384,7 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
     if (!OW_TIME_OF_DAY_ENCOUNTERS)
         return TIME_OF_DAY_DEFAULT;
 
-    if (InBattlePike() || InBattlePyramid())
+    if (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         return OW_TIME_OF_DAY_FALLBACK;
     }
@@ -411,7 +411,7 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
         }
     }
 
-    if (wildMonInfo == NULL && !OW_TIME_OF_DAY_DISABLE_FALLBACK) 
+    if (wildMonInfo == NULL && !OW_TIME_OF_DAY_DISABLE_FALLBACK)
         return OW_TIME_OF_DAY_FALLBACK;
     else
         return timeOfDay;
@@ -1044,7 +1044,7 @@ bool8 UpdateRepelCounter(void)
     u16 steps = REPEL_LURE_STEPS(repelLureVar);
     bool32 isLure = IS_LAST_USED_LURE(repelLureVar);
 
-    if (InBattlePike() || InBattlePyramid())
+    if (InBattlePike() || CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
         return FALSE;
     if (InUnionRoom() == TRUE)
         return FALSE;

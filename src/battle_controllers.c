@@ -294,7 +294,7 @@ static void InitSinglePlayerBtlControllers(void)
             {
                 u8 multiplayerId;
 
-                for (multiplayerId = gRecordedBattleMultiplayerId, i = 0; i < MAX_BATTLERS_COUNT; i++)
+                for (multiplayerId = gRecordedBattleMultiplayerId, i = 0; i < MAX_LINK_PLAYERS; i++)
                 {
                     switch (gLinkPlayers[i].id)
                     {
@@ -536,7 +536,7 @@ static void InitLinkBtlControllers(void)
         if (gBattleTypeFlags & BATTLE_TYPE_IS_MASTER)
             gBattleMainFunc = BeginBattleIntro;
 
-        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        for (i = 0; i < MAX_LINK_PLAYERS; i++)
         {
             switch (gLinkPlayers[i].id)
             {
