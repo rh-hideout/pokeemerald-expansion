@@ -22,6 +22,8 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 
+#if IS_FRLG
+
 #define INTRO_SPECIES SPECIES_NIDORAN_F
 
 enum
@@ -2187,3 +2189,5 @@ static void GetDefaultName(u8 hasPlayerBeenNamed, u8 nameChoice)
 #undef tBlendTarget2
 #undef tUnusedState
 #undef tFadeTimer
+
+#endif // IS_FRLG

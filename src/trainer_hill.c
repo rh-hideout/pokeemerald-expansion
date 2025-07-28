@@ -298,7 +298,7 @@ void ResetTrainerHillResults(void)
     gSaveBlock2Ptr->frontier.savedGame = 0;
     gSaveBlock2Ptr->frontier.unk_EF9 = 0;
 #if FREE_TRAINER_HILL == FALSE
-    gSaveBlock1Ptr->trainerHill[0].bestTime = 0;
+    gSaveBlock1Ptr->trainerHill.bestTime = 0;
     for (i = 0; i < NUM_TRAINER_HILL_MODES; i++)
         SetTimerValue(&gSaveBlock1Ptr->trainerHillTimes[i], HILL_MAX_TIME);
 #endif //FREE_TRAINER_HILL
@@ -352,7 +352,7 @@ void InitTrainerHillBattleStruct(void)
         sFloorTrainers->facilityClass[i] = sHillData->floors[sHillData->floorId].trainers[i].facilityClass;
     }
 #if FREE_TRAINER_HILL == FALSE
-    SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill[0].timer);
+    SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill.timer);
 #endif //FREE_TRAINER_HILL
     FreeDataStruct();
 }
@@ -370,8 +370,8 @@ static void SetUpDataStruct(void)
     sHillData = AllocZeroed(sizeof(*sHillData));
     sHillData->floorId = gMapHeader.mapLayoutId - LAYOUT_TRAINER_HILL_1F;
 
-    CpuCopy32(sChallengeData[gSaveBlock1Ptr->trainerHillMode], &sHillData->challenge, sizeof(sHillData->challenge));
-    CpuCopy32(sFloorData[gSaveBlock1Ptr->trainerHillMode], &sHillData->floors, sizeof(sHillData->floors));
+    CpuCopy32(sChallengeData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->challenge, sizeof(sHillData->challenge));
+    CpuCopy32(sFloorData[gSaveBlock1Ptr->trainerHill.mode], &sHillData->floors, sizeof(sHillData->floors));
 #endif // FREE_TRAINER_HILL
 }
 
@@ -412,19 +412,19 @@ static void TrainerHillStartChallenge(void)
     TrainerHillDummy();
 #if FREE_TRAINER_HILL == FALSE
     if (!ReadTrainerHillAndValidate())
-        gSaveBlock1Ptr->trainerHill[0].field_3D6E_0f = 1;
+        gSaveBlock1Ptr->trainerHill.field_3D6E_0f = 1;
     else
-        gSaveBlock1Ptr->trainerHill[0].field_3D6E_0f = 0;
+        gSaveBlock1Ptr->trainerHill.field_3D6E_0f = 0;
 
-    gSaveBlock1Ptr->trainerHill[0].floorsCleared = 0;
-    SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill[0].timer);
-    gSaveBlock1Ptr->trainerHill[0].timer = 0;
-    gSaveBlock1Ptr->trainerHill[0].spokeToOwner = 0;
-    gSaveBlock1Ptr->trainerHill[0].checkedFinalTime = 0;
-    gSaveBlock1Ptr->trainerHill[0].maybeECardScanDuringChallenge = 0;
+    gSaveBlock1Ptr->trainerHill.unk_3D6C = 0;
+    SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill.timer);
+    gSaveBlock1Ptr->trainerHill.timer = 0;
+    gSaveBlock1Ptr->trainerHill.spokeToOwner = 0;
+    gSaveBlock1Ptr->trainerHill.checkedFinalTime = 0;
+    gSaveBlock1Ptr->trainerHill.maybeECardScanDuringChallenge = 0;
     gSaveBlock2Ptr->frontier.trainerFlags = 0;
     gBattleOutcome = 0;
-    gSaveBlock1Ptr->trainerHill[0].receivedPrize = 0;
+    gSaveBlock1Ptr->trainerHill.receivedPrize = 0;
 #endif //FREE_TRAINER_HILL
 }
 
@@ -433,12 +433,12 @@ static void GetOwnerState(void)
 #if FREE_TRAINER_HILL == FALSE
     ClearTrainerHillVBlankCounter();
     gSpecialVar_Result = 0;
-    if (gSaveBlock1Ptr->trainerHill[0].spokeToOwner)
+    if (gSaveBlock1Ptr->trainerHill.spokeToOwner)
         gSpecialVar_Result++;
-    if (gSaveBlock1Ptr->trainerHill[0].receivedPrize && gSaveBlock1Ptr->trainerHill[0].checkedFinalTime)
+    if (gSaveBlock1Ptr->trainerHill.receivedPrize && gSaveBlock1Ptr->trainerHill.checkedFinalTime)
         gSpecialVar_Result++;
 
-    gSaveBlock1Ptr->trainerHill[0].spokeToOwner = TRUE;
+    gSaveBlock1Ptr->trainerHill.spokeToOwner = TRUE;
 #endif //FREE_TRAINER_HILL
 }
 
@@ -447,14 +447,14 @@ static void GiveChallengePrize(void)
 #if FREE_TRAINER_HILL == FALSE
     u16 itemId = GetPrizeItemId();
 
-    if (sHillData->challenge.numFloors != NUM_TRAINER_HILL_FLOORS || gSaveBlock1Ptr->trainerHill[0].receivedPrize)
+    if (sHillData->challenge.numFloors != NUM_TRAINER_HILL_FLOORS || gSaveBlock1Ptr->trainerHill.receivedPrize)
     {
         gSpecialVar_Result = 2;
     }
     else if (AddBagItem(itemId, 1) == TRUE)
     {
         CopyItemName(itemId, gStringVar2);
-        gSaveBlock1Ptr->trainerHill[0].receivedPrize = TRUE;
+        gSaveBlock1Ptr->trainerHill.receivedPrize = TRUE;
         gSaveBlock2Ptr->frontier.unk_EF9 = 0;
         gSpecialVar_Result = 0;
     }
@@ -470,14 +470,14 @@ static void GiveChallengePrize(void)
 static void CheckFinalTime(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (gSaveBlock1Ptr->trainerHill[0].checkedFinalTime)
+    if (gSaveBlock1Ptr->trainerHill.checkedFinalTime)
     {
         gSpecialVar_Result = 2;
     }
-    else if (GetTimerValue(&gSaveBlock1Ptr->trainerHill[0].bestTime) > gSaveBlock1Ptr->trainerHill[0].timer)
+    else if (GetTimerValue(&gSaveBlock1Ptr->trainerHill.bestTime) > gSaveBlock1Ptr->trainerHill.timer)
     {
-        SetTimerValue(&gSaveBlock1Ptr->trainerHill[0].bestTime, gSaveBlock1Ptr->trainerHill[0].timer);
-        gSaveBlock1Ptr->trainerHillTimes[gSaveBlock1Ptr->trainerHillMode] = gSaveBlock1Ptr->trainerHill[0].bestTime;
+        SetTimerValue(&gSaveBlock1Ptr->trainerHill.bestTime, gSaveBlock1Ptr->trainerHill.timer);
+        gSaveBlock1Ptr->trainerHillTimes[gSaveBlock1Ptr->trainerHill.mode] = gSaveBlock1Ptr->trainerHill.bestTime;
         gSpecialVar_Result = 0;
     }
     else
@@ -485,19 +485,19 @@ static void CheckFinalTime(void)
         gSpecialVar_Result = 1;
     }
 
-    gSaveBlock1Ptr->trainerHill[0].checkedFinalTime = TRUE;
+    gSaveBlock1Ptr->trainerHill.checkedFinalTime = TRUE;
 #endif //FREE_TRAINER_HILL
 }
 
 static void TrainerHillResumeTimer(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (!gSaveBlock1Ptr->trainerHill[0].spokeToOwner)
+    if (!gSaveBlock1Ptr->trainerHill.spokeToOwner)
     {
-        if (gSaveBlock1Ptr->trainerHill[0].timer >= HILL_MAX_TIME)
-            gSaveBlock1Ptr->trainerHill[0].timer = HILL_MAX_TIME;
+        if (gSaveBlock1Ptr->trainerHill.timer >= HILL_MAX_TIME)
+            gSaveBlock1Ptr->trainerHill.timer = HILL_MAX_TIME;
         else
-            SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill[0].timer);
+            SetTrainerHillVBlankCounter(&gSaveBlock1Ptr->trainerHill.timer);
     }
 #endif //FREE_TRAINER_HILL
 }
@@ -505,23 +505,23 @@ static void TrainerHillResumeTimer(void)
 static void TrainerHillSetPlayerLost(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    gSaveBlock1Ptr->trainerHill[0].hasLost = TRUE;
+    gSaveBlock1Ptr->trainerHill.hasLost = TRUE;
 #endif //FREE_TRAINER_HILL
 }
 
 static void TrainerHillGetChallengeStatus(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (gSaveBlock1Ptr->trainerHill[0].hasLost)
+    if (gSaveBlock1Ptr->trainerHill.hasLost)
     {
         // The player lost their last match.
-        gSaveBlock1Ptr->trainerHill[0].hasLost = FALSE;
+        gSaveBlock1Ptr->trainerHill.hasLost = FALSE;
         gSpecialVar_Result = TRAINER_HILL_PLAYER_STATUS_LOST;
     }
-    else if (gSaveBlock1Ptr->trainerHill[0].maybeECardScanDuringChallenge)
+    else if (gSaveBlock1Ptr->trainerHill.maybeECardScanDuringChallenge)
     {
         // Unreachable code. Something relating to eCards?
-        gSaveBlock1Ptr->trainerHill[0].maybeECardScanDuringChallenge = 0;
+        gSaveBlock1Ptr->trainerHill.maybeECardScanDuringChallenge = 0;
         gSpecialVar_Result = TRAINER_HILL_PLAYER_STATUS_ECARD_SCANNED;
     }
     else
@@ -537,7 +537,7 @@ static void BufferChallengeTime(void)
 #if FREE_TRAINER_HILL == FALSE
     s32 total, minutes, secondsWhole, secondsFraction;
 
-    total = gSaveBlock1Ptr->trainerHill[0].timer;
+    total = gSaveBlock1Ptr->trainerHill.timer;
     if (total >= HILL_MAX_TIME)
         total = HILL_MAX_TIME;
 
@@ -586,7 +586,7 @@ bool8 InTrainerHillChallenge(void)
 #if FREE_TRAINER_HILL == FALSE
     if (VarGet(VAR_TRAINER_HILL_IS_ACTIVE) == 0)
         return FALSE;
-    else if (gSaveBlock1Ptr->trainerHill[0].spokeToOwner)
+    else if (gSaveBlock1Ptr->trainerHill.spokeToOwner)
         return FALSE;
     else if (GetCurrentTrainerHillMapId() != 0)
         return TRUE;
@@ -1023,7 +1023,7 @@ bool32 OnTrainerHillEReaderChallengeFloor(void)
 static void GetChallengeWon(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    if (gSaveBlock1Ptr->trainerHill[0].hasLost)
+    if (gSaveBlock1Ptr->trainerHill.hasLost)
         gSpecialVar_Result = FALSE;
     else
         gSpecialVar_Result = TRUE;
@@ -1033,8 +1033,8 @@ static void GetChallengeWon(void)
 static void TrainerHillSetMode(void)
 {
 #if FREE_TRAINER_HILL == FALSE
-    gSaveBlock1Ptr->trainerHillMode = gSpecialVar_0x8005;
-    gSaveBlock1Ptr->trainerHill[0].bestTime = gSaveBlock1Ptr->trainerHillTimes[gSpecialVar_0x8005];
+    gSaveBlock1Ptr->trainerHill.mode = gSpecialVar_0x8005;
+    gSaveBlock1Ptr->trainerHill.bestTime = gSaveBlock1Ptr->trainerHillTimes[gSpecialVar_0x8005];
 #endif //FREE_TRAINER_HILL
 }
 
@@ -1095,7 +1095,7 @@ static u16 GetPrizeItemId(void)
         i = GetPrizeListId(FALSE);
 
     // 1 is added to Expert mode's prize list selection because otherwise it has the same prizes as Variety
-    if (gSaveBlock1Ptr->trainerHillMode == HILL_MODE_EXPERT)
+    if (gSaveBlock1Ptr->trainerHill.mode == HILL_MODE_EXPERT)
         i = (i + 1) % NUM_TRAINER_HILL_PRIZE_LISTS;
 
     // After the above (non-random) calculations, the following are the possible prize list selections:
@@ -1115,7 +1115,7 @@ static u16 GetPrizeItemId(void)
     // As an additional note, if players were allowed to enter a Trainer Hill challenge before
     // entering the Hall of Fame, there would be 1 additional prize possibility (ITEM_MAX_ETHER)
     // as Normal / Unique modes would use sPrizeListSets[0][3] / sPrizeListSets[1][3] respectively.
-    minutes = (signed)(gSaveBlock1Ptr->trainerHill[0].timer) / (60 * 60);
+    minutes = (signed)(gSaveBlock1Ptr->trainerHill.timer) / (60 * 60);
     if (minutes < 12)
         id = 0; // Depends on list
     else if (minutes < 13)

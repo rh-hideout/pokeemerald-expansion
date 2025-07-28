@@ -18,6 +18,7 @@
 #include "constants/pokemon.h"
 #include "constants/easy_chat.h"
 #include "constants/trainer_hill.h"
+#include "constants/trainer_tower.h"
 #include "constants/items.h"
 #include "config/save.h"
 
@@ -925,21 +926,34 @@ struct TrainerNameRecord
     u8 ALIGNED(2) trainerName[PLAYER_NAME_LENGTH + 1];
 };
 
-struct TrainerTowerHillSave
-{    
-/*0x3D64*/ u32 timer;
-/*0x3D68*/ u32 bestTime;
-/*0x3D6C*/ u8 floorsCleared;
-/*0x3D6D*/ u8 unused;
-/*0x3D6E*/ u16 receivedPrize:1;
-            u16 checkedFinalTime:1;
-            u16 spokeToOwner:1;
-            u16 hasLost:1;
-            u16 maybeECardScanDuringChallenge:1;
-            u16 field_3D6E_0f:1;
-            bool16 unkA_4:1;
-            bool16 validated:1;
-            //u16 padding:6;<<
+struct TrainerHillSave
+{
+    /*0x3D64*/ u32 timer;
+    /*0x3D68*/ u32 bestTime;
+    /*0x3D6C*/ u8 unk_3D6C;
+    /*0x3D6D*/ u8 unused;
+    /*0x3D6E*/ u16 receivedPrize:1;
+               u16 checkedFinalTime:1;
+               u16 spokeToOwner:1;
+               u16 hasLost:1;
+               u16 maybeECardScanDuringChallenge:1;
+               u16 field_3D6E_0f:1;
+               u16 mode:2; // HILL_MODE_*
+               //u16 padding:8;
+};
+
+struct TrainerTower
+{
+    u32 timer;
+    u32 bestTime;
+    u8 floorsCleared;
+    u8 unk9;
+    bool8 receivedPrize:1;
+    bool8 checkedFinalTime:1;
+    bool8 spokeToOwner:1;
+    bool8 hasLost:1;
+    bool8 unkA_4:1;
+    bool8 validated:1;
 };
 
 struct WonderNewsMetadata
@@ -1159,11 +1173,16 @@ struct SaveBlock1
     /*0x3???*/ u8 registeredTexts[UNION_ROOM_KB_ROW_COUNT][21];
 #endif //FREE_UNION_ROOM_CHAT
 #if FREE_TRAINER_HILL == FALSE
-    u8 trainerHillMode;
-    /*0x3???*/ struct TrainerTowerHillSave trainerHill[NUM_TRAINER_HILL_MODES];
+    /*0x3???*/ struct TrainerHillSave trainerHill;
 #endif //FREE_TRAINER_HILL
     /*0x3???*/ struct WaldaPhrase waldaPhrase;
-    /*0x3A4C*/ u8 rivalName[PLAYER_NAME_LENGTH + 1];
+#if IS_FRLG
+    u8 rivalName[PLAYER_NAME_LENGTH + 1];
+#endif
+#if FREE_TRAINER_TOWER == FALSE && IS_FRLG
+    u32 towerChallengeId;
+    struct TrainerTower trainerTower[NUM_TOWER_CHALLENGE_TYPES];
+#endif //FREE_TRAINER_TOWER
     // sizeof: 0x3???
 };
 
