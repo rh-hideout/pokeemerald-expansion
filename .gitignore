@@ -47,6 +47,7 @@ include/constants/heal_locations.h
 tools/trainerproc/trainerproc
 src/data/battle_partners.h
 src/data/trainers.h
+src/data/trainers_frlg.h
 src/data/debug_trainers.h
 test/battle/trainer_control.h
 tools/compresSmol/compresSmol
