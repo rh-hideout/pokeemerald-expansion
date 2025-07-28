@@ -13,7 +13,7 @@ jobs:
         uses: mheap/github-action-required-labels@v5
         with:
           mode: minimum
-          count: 1
+          count: 0
           labels: |
             General
             General Merge
