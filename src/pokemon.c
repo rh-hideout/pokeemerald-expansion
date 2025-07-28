@@ -2681,22 +2681,22 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
             {
                 struct PokemonSubstruct3 *substruct3 = GetSubstruct3(boxMon);
                 retVal = substruct3->championRibbon
-                       | (substruct3->coolRibbon << 1)
-                       | (substruct3->beautyRibbon << 4)
-                       | (substruct3->cuteRibbon << 7)
-                       | (substruct3->smartRibbon << 10)
-                       | (substruct3->toughRibbon << 13)
-                       | (substruct3->winningRibbon << 16)
-                       | (substruct3->victoryRibbon << 17)
-                       | (substruct3->artistRibbon << 18)
-                       | (substruct3->effortRibbon << 19)
-                       | (substruct3->marineRibbon << 20)
-                       | (substruct3->landRibbon << 21)
-                       | (substruct3->skyRibbon << 22)
-                       | (substruct3->countryRibbon << 23)
-                       | (substruct3->nationalRibbon << 24)
-                       | (substruct3->earthRibbon << 25)
-                       | (substruct3->worldRibbon << 26);
+                        | (substruct3->coolRibbon << 1)
+                        | (substruct3->beautyRibbon << 4)
+                        | (substruct3->cuteRibbon << 7)
+                        | (substruct3->smartRibbon << 10)
+                        | (substruct3->toughRibbon << 13)
+                        | (substruct3->winningRibbon << 16)
+                        | (substruct3->victoryRibbon << 17)
+                        | (substruct3->artistRibbon << 18)
+                        | (substruct3->effortRibbon << 19)
+                        | (substruct3->marineRibbon << 20)
+                        | (substruct3->landRibbon << 21)
+                        | (substruct3->skyRibbon << 22)
+                        | (substruct3->countryRibbon << 23)
+                        | (substruct3->nationalRibbon << 24)
+                        | (substruct3->earthRibbon << 25)
+                        | (substruct3->worldRibbon << 26);
             }
             break;
         case MON_DATA_HYPER_TRAINED_HP:
