@@ -59,6 +59,7 @@
 	STD_OBTAIN_DECORATION = 7
 	STD_REGISTER_MATCH_CALL = 8
 	STD_PUT_ITEM_AWAY = 11
+	STD_RECEIVED_ITEM = 12
 
 	@ Calls the script in gStdScripts at index function.
 	.macro callstd function:req
@@ -2684,7 +2685,7 @@
 	setorcopyvar VAR_0x8000, \item
 	setorcopyvar VAR_0x8001, \amount
 	setorcopyvar VAR_0x8002, \fanfare
-	callstd STD_OBTAIN_ITEM  @ callstd STD_RECEIVED_ITEM
+	callstd STD_RECEIVED_ITEM
 	.endm
 
 	@ Adds the specified item to the bag, then prints a message with fanfare. See description of msgreceiveditem.

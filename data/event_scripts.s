@@ -115,6 +115,7 @@ gStdScripts::
 	.4byte Std_MsgboxGetPoints         @ MSGBOX_GETPOINTS
 	.4byte Std_MsgboxPokenav           @ MSGBOX_POKENAV
 	.4byte Std_PutItemAway             @ STD_PUT_ITEM_AWAY
+	.4byte Std_ReceivedItem            @ STD_RECEIVED_ITEM
 gStdScripts_End::
 
 	.include "data/maps/PetalburgCity/scripts.inc"
