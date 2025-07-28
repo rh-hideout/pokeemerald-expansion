@@ -820,10 +820,10 @@ static const u8 sJumpSpecialDirectionAnimNums[] = { // used for jumping onto sur
     [DIR_NORTH] = ANIM_GET_ON_OFF_POKEMON_NORTH,
     [DIR_WEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
     [DIR_EAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
-    [DIR_SOUTHWEST] = ANIM_GET_ON_OFF_POKEMON_SOUTH,
-    [DIR_SOUTHEAST] = ANIM_GET_ON_OFF_POKEMON_SOUTH,
-    [DIR_NORTHWEST] = ANIM_GET_ON_OFF_POKEMON_NORTH,
-    [DIR_NORTHEAST] = ANIM_GET_ON_OFF_POKEMON_NORTH,
+    [DIR_SOUTHWEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
+    [DIR_SOUTHEAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
+    [DIR_NORTHWEST] = ANIM_GET_ON_OFF_POKEMON_WEST,
+    [DIR_NORTHEAST] = ANIM_GET_ON_OFF_POKEMON_EAST,
 };
 static const u8 sAcroWheelieDirectionAnimNums[] = {
     [DIR_NONE] = ANIM_BUNNY_HOP_BACK_WHEEL_SOUTH,
@@ -1066,6 +1066,10 @@ const u8 gJumpSpecialMovementActions[] = {
     MOVEMENT_ACTION_JUMP_SPECIAL_DOWN,
     MOVEMENT_ACTION_JUMP_SPECIAL_DOWN,
     MOVEMENT_ACTION_JUMP_SPECIAL_UP,
+    MOVEMENT_ACTION_JUMP_SPECIAL_LEFT,
+    MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT,
+    MOVEMENT_ACTION_JUMP_SPECIAL_LEFT,
+    MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT,
     MOVEMENT_ACTION_JUMP_SPECIAL_LEFT,
     MOVEMENT_ACTION_JUMP_SPECIAL_RIGHT,
 };
@@ -11346,6 +11350,41 @@ bool8 MovementAction_WalkSlowStairsUp_Step0(struct ObjectEvent *objectEvent, str
 bool8 MovementAction_WalkSlowStairsUp_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     if (UpdateWalkSlowStairs(objectEvent, sprite))
+    {
+        sprite->data[2] = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+// fast diagonal
+bool8 MovementAction_WalkFastDiagonalUpLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitMovementNormal(objectEvent, sprite, DIR_NORTHWEST, 1);
+    return MovementAction_WalkFastDiagonal_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_WalkFastDiagonalUpRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitMovementNormal(objectEvent, sprite, DIR_NORTHEAST, 1);
+    return MovementAction_WalkFastDiagonal_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_WalkFastDiagonalDownLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitMovementNormal(objectEvent, sprite, DIR_SOUTHWEST, 1);
+    return MovementAction_WalkFastDiagonal_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_WalkFastDiagonalDownRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitMovementNormal(objectEvent, sprite, DIR_SOUTHEAST, 1);
+    return MovementAction_WalkFastDiagonal_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_WalkFastDiagonal_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateMovementNormal(objectEvent, sprite))
     {
         sprite->data[2] = 2;
         return TRUE;

@@ -182,5 +182,6 @@
 #if TESTING
 #include "config/test.h"
 #endif
+#define FOLLOW_ME_IMPLEMENTED       FALSE
 
 #endif // GUARD_CONSTANTS_GLOBAL_H
