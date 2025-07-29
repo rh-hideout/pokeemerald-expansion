@@ -80,7 +80,7 @@ void SetUpBattleVarsAndBirchZigzagoon(void)
     BattleAI_SetupItems();
     BattleAI_SetupFlags();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+    if (!IS_FRLG && gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
     {
         ZeroEnemyPartyMons();
         CreateMon(&gEnemyParty[0], SPECIES_ZIGZAGOON, 2, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
@@ -189,8 +189,10 @@ static void InitBtlControllersInternal(void)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToRecordedPlayer;
             else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToSafari;
-            else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
-                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToWally;
+            else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = IS_FRLG ? SetControllerToOakOrOldMan : SetControllerToWally;
+            else if (IS_FRLG && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+                gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToOakOrOldMan;
             else if (isAIvsAI)
                 gBattlerControllerFuncs[gBattlerPositions[B_BATTLER_0]] = SetControllerToPlayerPartner;
             else
@@ -328,6 +330,11 @@ static inline bool32 IsControllerPlayerPartner(u32 battler)
 static inline bool32 IsControllerWally(u32 battler)
 {
     return (gBattlerControllerEndFuncs[battler] == WallyBufferExecCompleted);
+}
+
+static inline bool32 IsControllerOakOldMan(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == OakOldManBufferExecCompleted);
 }
 
 static inline bool32 IsControllerRecordedOpponent(u32 battler)
@@ -1870,7 +1877,7 @@ static bool8 ShouldDoSlideInAnim(u32 battler)
 
     if (gBattleTypeFlags & (
         BATTLE_TYPE_LINK | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_FRONTIER | BATTLE_TYPE_FIRST_BATTLE |
-        BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
+        BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_TWO_OPPONENTS |
         BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL)
     )
         return FALSE;
@@ -2061,7 +2068,16 @@ void Controller_WaitForHealthBar(u32 battler)
     {
         if (IsOnPlayerSide(battler))
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
-        BtlController_Complete(battler);
+            
+        if (GetBattlerSide(battler) == B_SIDE_OPPONENT && !BtlCtrl_OakOldMan_TestState2Flag(1) && (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE))
+        {
+            BtlCtrl_OakOldMan_SetState2Flag(1);
+            gBattlerControllerFuncs[battler] = PrintOakText_InflictingDamageIsKey;
+        }
+        else
+        {
+            BtlController_Complete(battler);
+        }
     }
 }
 
@@ -2216,15 +2232,27 @@ void BtlController_HandleSetRawMonData(u32 battler)
 
 void BtlController_HandleLoadMonSprite(u32 battler)
 {
+    u32 y;
     struct Pokemon *mon = GetBattlerMon(battler);
     u16 species = GetBattlerVisualSpecies(battler);
 
-    BattleLoadMonSpriteGfx(mon, battler);
+    if (gBattleTypeFlags & BATTLE_TYPE_GHOST && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    {
+        DecompressGhostFrontPic(battler);
+        y = GetGhostSpriteDefault_Y(battler);
+        gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim = TRUE;
+        gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = TRUE;
+    }
+    else
+    {
+        BattleLoadMonSpriteGfx(mon, battler);
+        y = GetBattlerSpriteDefault_Y(battler);
+    }
     SetMultiuseSpriteTemplateToPokemon(species, GetBattlerPosition(battler));
 
     gBattlerSpriteIds[battler] = CreateSprite(&gMultiuseSpriteTemplate,
                                                GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2),
-                                               GetBattlerSpriteDefault_Y(battler),
+                                               y,
                                                GetBattlerSpriteSubpriority(battler));
 
     gSprites[gBattlerSpriteIds[battler]].x2 = -DISPLAY_WIDTH;
@@ -2233,7 +2261,8 @@ void BtlController_HandleLoadMonSprite(u32 battler)
     gSprites[gBattlerSpriteIds[battler]].oam.paletteNum = battler;
     StartSpriteAnim(&gSprites[gBattlerSpriteIds[battler]], 0);
 
-    SetBattlerShadowSpriteCallback(battler, species);
+    if (!(gBattleTypeFlags & BATTLE_TYPE_GHOST))
+        SetBattlerShadowSpriteCallback(battler, species);
 
     if (IsControllerOpponent(battler) || IsControllerLinkOpponent(battler) || IsControllerRecordedOpponent(battler))
         gBattlerControllerFuncs[battler] = TryShinyAnimAfterMonAnim;
@@ -2500,7 +2529,25 @@ void BtlController_HandlePrintString(u32 battler)
         }
     }
 
-    BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
+
+    // if (BattleStringShouldBeColored(*stringId))
+    //     BattlePutTextOnWindow(gDisplayedStringBattle, (B_WIN_MSG | B_TEXT_FLAG_NPC_CONTEXT_FONT));
+    // else
+        BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MSG);
+        
+    if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && GetBattlerSide(battler) == B_SIDE_OPPONENT)
+    {
+        switch (*stringId)
+        {
+        case STRINGID_TRAINER1WINTEXT:        
+            gBattlerControllerFuncs[battler] = PrintOakText_HowDisappointing;
+            return;
+        case STRINGID_DONTLEAVEBIRCH:
+            gBattlerControllerFuncs[battler] = PrintOakText_OakNoRunningFromATrainer;
+            return;
+        }
+    }
+
     gBattlerControllerFuncs[battler] = Controller_WaitForString;
     if (ShouldUpdateTvData(battler))
         BattleTv_SetDataBasedOnString(*stringId);
@@ -2538,6 +2585,7 @@ void BtlController_HandleHealthBarUpdate(u32 battler)
         SetBattleBarStruct(battler, gHealthboxSpriteIds[battler], maxHP, 0, hpVal);
         if (IsControllerPlayer(battler)
          || IsControllerRecordedPlayer(battler)
+         || IsControllerOakOldMan(battler)
          || IsControllerWally(battler))
             UpdateHpTextInHealthbox(gHealthboxSpriteIds[battler], HP_CURRENT, 0, maxHP);
         TestRunner_Battle_RecordHP(battler, curHP, 0);
@@ -2842,7 +2890,8 @@ void BtlController_HandleHidePartyStatusSummary(u32 battler)
 
 void BtlController_HandleBattleAnimation(u32 battler)
 {
-    if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_WALLY_TUTORIAL))
+    if ((gBattleTypeFlags & (BATTLE_TYPE_SAFARI | BATTLE_TYPE_CATCH_TUTORIAL))
+        || IsControllerOakOldMan(battler)
         || !IsBattleSEPlaying(battler))
     {
         u8 animationId = gBattleResources->bufferA[battler][1];
