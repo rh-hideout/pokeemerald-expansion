@@ -6170,12 +6170,12 @@ static const struct LevelUpMove sWooperPaldeaLevelUpLearnset[] = {
     LEVEL_UP_MOVE(37, MOVE_TOXIC),
     LEVEL_UP_MOVE(40, MOVE_BLIGHT),
     LEVEL_UP_MOVE(44, MOVE_EARTHQUAKE),
+    LEVEL_UP_MOVE(48, MOVE_PESTILENCE),
     LEVEL_UP_END
 };
 
 static const struct LevelUpMove sClodsireLevelUpLearnset[] = {
     LEVEL_UP_MOVE( 0, MOVE_AMNESIA),
-    LEVEL_UP_MOVE( 0, MOVE_PESTILENCE),
     LEVEL_UP_MOVE( 1, MOVE_TAIL_WHIP),
     LEVEL_UP_MOVE( 1, MOVE_POISON_STING),
     LEVEL_UP_MOVE( 4, MOVE_DOUBLE_KICK),
@@ -6191,6 +6191,7 @@ static const struct LevelUpMove sClodsireLevelUpLearnset[] = {
     LEVEL_UP_MOVE(40, MOVE_TOXIC),
     LEVEL_UP_MOVE(43, MOVE_BLIGHT),
     LEVEL_UP_MOVE(47, MOVE_EARTHQUAKE),
+    LEVEL_UP_MOVE(51, MOVE_PESTILENCE),
     LEVEL_UP_END
 };
 #endif //P_PALDEAN_FORMS

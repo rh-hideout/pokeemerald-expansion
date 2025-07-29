@@ -13062,7 +13062,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sKoffingLevelUpLearnset,
         .teachableLearnset = sKoffingTeachableLearnset,
         .eggMoveLearnset = sKoffingEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 35, SPECIES_WEEZING},
+        .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_WEEZING},   //35
                                 {EVO_NONE, 0, SPECIES_WEEZING_GALAR}),
     },
 

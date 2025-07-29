@@ -907,8 +907,8 @@
 #define MOVE_PSYCHIC_NOISE 845
 #define MOVE_UPPER_HAND 846
 #define MOVE_MALIGNANT_CHAIN 847
-//Custom Moves
-#define MOVE_EXO_BASH 848
+//Custom Moves marked TM means contemplate for tm list 27 potential
+#define MOVE_EXO_BASH 848   //TM
 #define MOVE_FROST_SPORE 849 
 #define MOVE_CHILI_POWDER 850 
 #define MOVE_STONE_STORM 851 
@@ -919,7 +919,7 @@
 #define MOVE_LUMINATION 856
 #define MOVE_MINDSTORM 857
 #define MOVE_BEWITCH 858
-#define MOVE_VOLT_CRASH 859
+#define MOVE_VOLT_CRASH 859 //TM
 #define MOVE_GOLD_RUSH 860
 #define MOVE_MAGNESURGE 861
 #define MOVE_FOAM_BURST 862
@@ -930,15 +930,15 @@
 #define MOVE_QUICK_STING 867
 #define MOVE_COMPOST_BLAST 868
 #define MOVE_PSI_PUNCH 869        
-#define MOVE_DAZZLE_DASH 870
+#define MOVE_DAZZLE_DASH 870    //TM
 #define MOVE_SMITE 871
 #define MOVE_DEPLETION_RAY 872
-#define MOVE_MUDSLIDE 873
+#define MOVE_MUDSLIDE 873       //TM
 #define MOVE_TREMOR_RUSH 874
 #define MOVE_SAND_BLAST 875
-#define MOVE_POWER_CHORD 876
+#define MOVE_POWER_CHORD 876    //TM
 #define MOVE_CANNONBALL 877
-#define MOVE_BOULDER_BASH 878
+#define MOVE_BOULDER_BASH 878   //TM
 #define MOVE_CENTIFERNO 879
 #define MOVE_JET_FLARE 880
 #define MOVE_LINK_PULSE 881
@@ -947,48 +947,48 @@
 #define MOVE_DRAGON_DASH 884
 #define MOVE_BLIGHT 885
 #define MOVE_CYRO_FLARE 886 
-#define MOVE_BATTLE_CRY 887
+#define MOVE_BATTLE_CRY 887     //TM
 #define MOVE_ROUNDHOUSE 888
 #define MOVE_ECHO_BURN 889
-#define MOVE_ADRENALINE 890 //TEST
-#define MOVE_TRI_STRIKE 891
+#define MOVE_ADRENALINE 890     //TM
+#define MOVE_TRI_STRIKE 891     //TM
 #define MOVE_COLD_SNAP 892
 #define MOVE_RAIN_CALL 893
 #define MOVE_SOLAR_FLARE 894
 #define MOVE_ARC_STRIKE 895 
 #define MOVE_PUZZLE_PULSE 896
-#define MOVE_RIPOSTE 897 
+#define MOVE_RIPOSTE 897        //TM
 #define MOVE_ACID_RAIN 898
 #define MOVE_TORRENT_WEB 899 
 #define MOVE_FIRESTORM 900
 #define MOVE_BLAZE_O_FURY 901
-#define MOVE_BELLY_FLOP 902
+#define MOVE_BELLY_FLOP 902     //TM
 #define MOVE_BANSHEE_SCREAM 903
 //Stage 2
 #define MOVE_AURORA_STREAM 904
 #define MOVE_ROCKET_JUMP 905
 #define MOVE_FAIRY_SLAP 906
-#define MOVE_MYTHIC_BLOW 907
+#define MOVE_MYTHIC_BLOW 907        //TM
 #define MOVE_SPARKLESTRIKE 908
 #define MOVE_DARK_DART 909
 #define MOVE_DOOM_DUST 910
 #define MOVE_AFTERSHOCK 911
 #define MOVE_FIRE_DRIFT 912
 #define MOVE_COMBUSTION 913
-#define MOVE_DARK_SURGE 914
-#define MOVE_FINAL_MIGHT 915
+#define MOVE_DARK_SURGE 914         //TM
+#define MOVE_FINAL_MIGHT 915        //TM
 #define MOVE_MERCURY_BEAM 916
 #define MOVE_TITANIUM_BLOW 917
-#define MOVE_TALON_STRIKE 918
+#define MOVE_TALON_STRIKE 918       //TM
 #define MOVE_AURA_BARRAGE 919
 #define MOVE_AURA_REND 920
 #define MOVE_STEELSURGE 921
-#define MOVE_SHRAPNEL 922
+#define MOVE_SHRAPNEL 922           //TM
 #define MOVE_FROST_BLADE 923
 #define MOVE_HONEY_BOMB 924
 #define MOVE_ANTENNAE_WHIP 925
 #define MOVE_LOCUST_SWARM 926
-#define MOVE_ASTRAL_WAVE 927
+#define MOVE_ASTRAL_WAVE 927        //TM
 #define MOVE_CHLOROSTRIKE 928
 #define MOVE_BRUTAL_BUZZ 929
 #define MOVE_SHADOW_STARE 930
@@ -1015,7 +1015,7 @@
 #define MOVE_SEASONED_STRIKE 950    //TEST
 #define MOVE_CHEMBOOST 951                  
 #define MOVE_STEEL_ROT 952          //TEST
-#define MOVE_TOXIC_TUMBLE 953   //D
+#define MOVE_TOXIC_TUMBLE 953   //D                                                 TM
 #define MOVE_IONIC_PULSE 954                //WIP ignores ground immunity
 #define MOVE_CONDUIT_BOMB 955       //TEST
 #define MOVE_LUMINSPHERE 956        //TEST
@@ -1029,13 +1029,13 @@
 #define MOVE_RESONANT_CRY 964               //WIP lapras
 #define MOVE_FLURRY_STORM 965       //TEST
 #define MOVE_CHLORO_DIVE 966    //D
-#define MOVE_PRESSURE_POINT 967 //D       
+#define MOVE_PRESSURE_POINT 967 //D                                                 TM
 #define MOVE_ELUDE 968              //TEST TO SEE IF HAS OUT OF BATTLE EFFECT
 #define MOVE_BARRICADE 969          //TEST
 #define MOVE_CHAMELEE 970           //TEST
 #define MOVE_SONAR_WALL 971         //TEST
 #define MOVE_HYDROSHOT_FLURRY 972
-#define MOVE_POLLEN_BREEZE 973      //TEST
+#define MOVE_POLLEN_BREEZE 973      //TEST                                          TM
 #define MOVE_DRACONIC_BARRAGE 974   //TEST
 #define MOVE_DRACO_STREAM 975       //TEST
 #define MOVE_SPARKLY_SPRITZ 976     //TEST
@@ -1046,7 +1046,7 @@
 #define MOVE_SPLINTER_FIST 981 
 #define MOVE_CRIMSON_STORM 982      
 #define MOVE_MIST_SLASH 983         
-#define MOVE_THUNDER_SPEAR 984      
+#define MOVE_THUNDER_SPEAR 984                                                      //TM
 #define MOVE_POISON_HORN 985        
 #define MOVE_WATER_ARROW 986        
 #define MOVE_GIANT_BLOOM 987        
@@ -1056,10 +1056,10 @@
 #define MOVE_TANGLE_ARROW 991       
 #define MOVE_WINDCHILL 992 
 #define MOVE_BUZZ_BURST 993 
-#define MOVE_CYCLONE 994 
+#define MOVE_CYCLONE 994                                                            //TM
 //Stage 4
 #define MOVE_VENGEANCE 995
-#define MOVE_SINISTER_SLAM 996
+#define MOVE_SINISTER_SLAM 996                                                      //TM
 #define MOVE_DUAL_SHACKLE 997
 #define MOVE_FLURRY_STRIKES 998
 #define MOVE_CALMING_AROMA 999
@@ -1072,7 +1072,7 @@
 #define MOVE_NOSEDIVE 1006
 #define MOVE_FLURRY_O_BLOWS 1007
 #define MOVE_TRIPLE_SPIKE 1008        //dugtrio ground type triple dive or triple axel
-#define MOVE_FRIGID_PUNCH 1009       //ice sucker punch
+#define MOVE_FRIGID_PUNCH 1009       //ice sucker punch                             //TM
 #define MOVE_ANCIENT_WING 1010
 #define MOVE_SHELL_SLASH 1011
 #define MOVE_SHELL_BURST 1012
@@ -1091,9 +1091,9 @@
 #define MOVE_AROMATIC_GALE 1025     //bug type clear smog
 #define MOVE_UMBRAL_STRIKE 1026     //dark chance to lower enemy atk
 #define MOVE_SNEAKY_SCAM 1027       //dark special prio move
-#define MOVE_GLACIAL_TEMPEST 1028   //electro shot but snow
-#define MOVE_DESERT_STORM 1029      //sand electro shot
-#define MOVE_TREMOR_BARGE 1030      //sand electro shot physical
+#define MOVE_GLACIAL_TEMPEST 1028   //electro shot but snow                                //TM
+#define MOVE_DESERT_STORM 1029      //sand electro shot                                     //TM
+#define MOVE_TREMOR_BARGE 1030      //sand electro shot physical                            //TM
 
 
 //do defensive growth in sand

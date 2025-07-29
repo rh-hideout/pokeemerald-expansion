@@ -69,20 +69,6 @@ Route102_Text_TianaPostBattle:
 	.string "To keep winning my way up, I see that\n"
 	.string "I have to catch more POKéMON.$"
 
-Route102_Text_TestArchieIntro:
-	.string "There's always money in the banana\n"
-	.string "stand. Chi! Chi!$"
-
-Route102_Text_TestArchieDefeated:
-	.string "How much is a banana worth? Twenty\n"
-	.string "dollars?$"
-
-Route102_Text_TestArchiePostBattle:
-	.string "Yeah the guy in the ten thousand\n"
-	.string "dol- ten thousan- ha - ten\p"
-	.string "thousand dollar suit is just a\n"
-	.string "test battle! Come on!$"
-
 Route103_Text_DaisyIntro:
 	.string "Did you feel the tug of our\n"
 	.string "soul-soothing fragrance?$"
