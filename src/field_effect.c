@@ -4240,8 +4240,7 @@ static bool8 RockClimb_Init(struct Task *task, struct ObjectEvent *objectEvent)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     // Put follower into pokeball before using Rock Climb
-    HideFollowerForFieldEffect();
-    objectEvent->noShadow = TRUE; // hide shadow 
+    HideFollowerForFieldEffect(); 
     gPlayerAvatar.preventStep = TRUE;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
@@ -4277,6 +4276,7 @@ static bool8 RockClimb_JumpOnRockClimbBlob(struct Task *task, struct ObjectEvent
 {
     if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
     {
+        objectEvent->noShadow = TRUE; // hide shadow 
         ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
         ObjectEventClearHeldMovementIfFinished(objectEvent);
         ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
