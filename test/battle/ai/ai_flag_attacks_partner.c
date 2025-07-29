@@ -11,9 +11,9 @@ AI_DOUBLE_BATTLE_TEST("AI_FLAG_ATTACKS_PARTNER is willing to kill either the par
     PARAMETRIZE { move = MOVE_BRUTAL_SWING; level = 1; }
     PARAMETRIZE { move = MOVE_MIGHTY_CLEAVE; level = 1; }
     PARAMETRIZE { move = MOVE_BRUTAL_SWING; level = 100; }
-    PARAMETRIZE { move = MOVE_FLAMETHROWER; level = 100; }
+    PARAMETRIZE { move = MOVE_MIGHTY_CLEAVE; level = 100; }
     PARAMETRIZE { move = MOVE_BRUTAL_SWING; level = 50; }
-    PARAMETRIZE { move = MOVE_FLAMETHROWER; level = 50; }
+    PARAMETRIZE { move = MOVE_MIGHTY_CLEAVE; level = 50; }
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_OVERDRIVE) == 80);
@@ -27,12 +27,12 @@ AI_DOUBLE_BATTLE_TEST("AI_FLAG_ATTACKS_PARTNER is willing to kill either the par
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_ATTACKS_PARTNER);
         PLAYER(SPECIES_ZIGZAGOON) { Level(50); }
         PLAYER(SPECIES_ZIGZAGOON) { Level(16); } 
-        OPPONENT(SPECIES_ZIGZAGOON) { Level(50); Moves(move, MOVE_OVERDRIVE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(50); Moves(move, MOVE_OVERDRIVE, MOVE_TACKLE); }
         OPPONENT(SPECIES_ZIGZAGOON) { Level(level); Moves(MOVE_CELEBRATE); }
     } WHEN {
         TURN
         { 
-            if (move == MOVE_FLAMETHROWER)
+            if (move == MOVE_MIGHTY_CLEAVE)
             {
                 if (level == 1)
                     EXPECT_MOVE(opponentLeft, move, target: opponentRight);
