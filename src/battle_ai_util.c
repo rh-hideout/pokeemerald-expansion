@@ -3780,7 +3780,7 @@ bool32 HasPartner(u32 battlerAtk)
 {
     if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(battlerAtk)))
     {
-        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+        if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ATTACKS_PARTNER)
             return FALSE;
         else
             return TRUE;
@@ -3799,7 +3799,7 @@ bool32 HasPartnerIgnoreFlags(u32 battler)
 
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef)
 {
-    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ENEMIES)
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_ATTACKS_PARTNER)
         return FALSE;
     return ((battlerAtk) == (battlerDef ^ BIT_FLANK));
 }
@@ -5122,7 +5122,7 @@ u32 GetFriendlyFireKOThreshold(u32 battler)
         return FRIENDLY_FIRE_RISKY_THRESHOLD;
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CONSERVATIVE)
         return FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD;
-    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ENEMIES)
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ATTACKS_PARTNER)
         return 0;
 
     return FRIENDLY_FIRE_NORMAL_THRESHOLD;

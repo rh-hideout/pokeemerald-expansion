@@ -54,7 +54,7 @@ This flag is divided into two components to calculate the best available move fo
 
 This is different to `AI_FLAG_CHECK_BAD_MOVE` as it calculates how poor a move is and not whether it will fail or not.
 
-## `AI_FLAG_ENEMIES`
+## `AI_FLAG_ATTACKS_PARTNER`
 This flag is meant for double battles where both of the opponents hate each other.  They prioritize damage to their 'partner' over the player.
 
 ## `AI_FLAG_FORCE_SETUP_FIRST_TURN`
