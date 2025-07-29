@@ -104,7 +104,7 @@ struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pock
     return (struct ItemSlot) {0}; // Because compiler complains
 }
 
-void NONNULL BagPocket_SetSlotDataArg(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
+void NONNULL BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot)
 {
     if (newSlot.itemId == ITEM_NONE || newSlot.quantity == 0) // Sets to zero if quantity or itemId is zero
     {
@@ -334,7 +334,7 @@ static bool32 NONNULL BagPocket_AddItem(struct BagPocket *pocket, u16 itemId, u1
         for (--itemAddIndex; itemAddIndex < itemLookupIndex; itemAddIndex++)
         {
             if (tempPocketSlotQuantities[itemAddIndex] > 0)
-                BagPocket_SetSlotData(pocket, itemAddIndex, itemId, tempPocketSlotQuantities[itemAddIndex]);
+                BagPocket_SetSlotItemIdAndCount(pocket, itemAddIndex, itemId, tempPocketSlotQuantities[itemAddIndex]);
         }
     }
 
@@ -387,7 +387,7 @@ static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, u16 itemId,
         for (--itemRemoveIndex; itemRemoveIndex < itemLookupIndex; itemRemoveIndex++)
         {
             if (tempPocketSlotQuantities[itemRemoveIndex] > 0)
-                BagPocket_SetSlotData(pocket, itemRemoveIndex, itemId, tempPocketSlotQuantities[itemRemoveIndex] - 1);
+                BagPocket_SetSlotItemIdAndCount(pocket, itemRemoveIndex, itemId, tempPocketSlotQuantities[itemRemoveIndex] - 1);
         }
     }
 
@@ -465,7 +465,7 @@ static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket)
         else if (slotCursor > 0)
         {
             BagPocket_SetSlotData(pocket, slotCursor++ - 1, tempItem);
-            BagPocket_SetSlotData(pocket, i, ITEM_NONE, 0);
+            BagPocket_SetSlotItemIdAndCount(pocket, i, ITEM_NONE, 0);
         }
     }
 }
@@ -478,7 +478,7 @@ void RemovePCItem(u8 index, u16 count)
     struct ItemSlot tempItem = BagPocket_GetSlotData(&dummyPocket, index);
 
     // Remove quantity
-    BagPocket_SetSlotData(&dummyPocket, index, tempItem.itemId, tempItem.quantity - count);
+    BagPocket_SetSlotItemIdAndCount(&dummyPocket, index, tempItem.itemId, tempItem.quantity - count);
 
     // Compact if necessary
     if (tempItem.quantity == 0)
