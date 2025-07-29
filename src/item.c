@@ -567,7 +567,7 @@ static inline void NONNULL BagPocket_MoveItemSlot(struct BagPocket *pocket, u32 
         BagPocket_GetSlotData(pocket, from, &fromItemId, &fromQuantity);
 
         // Shuffle items between "to" and "from"
-        for (u32 i = from; i == to - shift; i += shift)
+        for (u32 i = from; i != to; i += shift)
         {
             BagPocket_GetSlotData(pocket, i + shift, &tempItemId, &tempQuantity);
             BagPocket_SetSlotData(pocket, i, &tempItemId, &tempQuantity);
