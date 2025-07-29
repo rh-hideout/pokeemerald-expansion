@@ -1999,7 +1999,7 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove)
     }
     else
     {
-        if (!IsDoubleBattle1v1())
+        if (IsDoubleBattleNot1v1())
             score -= (2 * min(uses, 3));
         else
             score -= (min(uses, 3));
@@ -3123,7 +3123,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
-    if (IsDoubleBattle1v1())
+    if (!IsDoubleBattleNot1v1())
     {
         if (CountUsablePartyMons(battlerAtk) == 0)
             return CAN_TRY_PIVOT; // can't switch, but attack might still be useful
@@ -3759,13 +3759,13 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
 }
 
 // Partner Logic
-bool32 IsDoubleBattle1v1()
+bool32 IsDoubleBattleNot1v1()
 {
     if (IsDoubleBattle()
       && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT)) 
       || (IsBattlerAlive(B_POSITION_OPPONENT_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_RIGHT))))
-        return FALSE;
-    return TRUE;
+        return TRUE;
+    return FALSE;
 }
 
 bool32 HasTwoOpponents(u32 battlerAtk)
@@ -3940,7 +3940,7 @@ bool32 PartnerMoveIsSameNoTarget(u32 battlerAtkPartner, u32 move, u32 partnerMov
 
 bool32 PartnerMoveActivatesSleepClause(u32 partnerMove)
 {
-    if (IsDoubleBattle1v1() || !IsSleepClauseEnabled())
+    if (!IsDoubleBattleNot1v1() || !IsSleepClauseEnabled())
         return FALSE;
     return IsMoveSleepClauseTrigger(partnerMove);
 }
@@ -3975,7 +3975,7 @@ bool32 ShouldUseWishAromatherapy(u32 battlerAtk, u32 battlerDef, u32 move)
         }
     }
 
-    if (IsDoubleBattle1v1())
+    if (!IsDoubleBattleNot1v1())
     {
         switch (GetMoveEffect(move))
         {
@@ -4693,7 +4693,7 @@ void DecideTerastal(u32 battler)
         return;
 
     // TODO: Currently only single battles are considered.
-    if (!IsDoubleBattle1v1())
+    if (IsDoubleBattleNot1v1())
         return;
 
     // TODO: A lot of these checks are most effective for an omnicient ai.

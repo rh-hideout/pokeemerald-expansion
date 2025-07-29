@@ -244,7 +244,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
 // partner logic
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 u32 GetAllyChosenMove(u32 battlerId);
-bool32 IsDoubleBattle1v1();
+bool32 IsDoubleBattleNot1v1();
 bool32 HasTwoOpponents(u32 battlerAtk);
 bool32 HasPartner(u32 battlerAtk);
 bool32 HasPartnerIgnoreFlags(u32 battler);
