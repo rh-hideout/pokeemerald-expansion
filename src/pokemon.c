@@ -2226,10 +2226,10 @@ static void DecryptBoxMon(struct BoxPokemon *boxMon)
 
 static const u8 sSubstructOffsets[4][24] =
 {
-    [SUBSTRUCT_TYPE_0] = {0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3},
-    [SUBSTRUCT_TYPE_1] = {1, 1, 2, 2, 3, 3, 0, 0, 2, 2, 3, 3, 0, 0, 1, 1, 3, 3, 0, 0, 1, 1, 2, 2},
-    [SUBSTRUCT_TYPE_2] = {2, 3, 1, 3, 1, 2, 2, 3, 0, 3, 0, 2, 1, 3, 0, 3, 0, 1, 1, 2, 0, 2, 0, 1},
-    [SUBSTRUCT_TYPE_3] = {3, 2, 3, 1, 2, 1, 3, 2, 3, 0, 2, 0, 3, 1, 3, 0, 1, 0, 2, 1, 2, 0, 1, 0}
+    [SUBSTRUCT_TYPE_0] = {0, 0, 0, 0, 0, 0, 1, 1, 2, 3, 2, 3, 1, 1, 2, 3, 2, 3, 1, 1, 2, 3, 2, 3},
+    [SUBSTRUCT_TYPE_1] = {1, 1, 2, 3, 2, 3, 0, 0, 0, 0, 0, 0, 2, 3, 1, 1, 3, 2, 2, 3, 1, 1, 3, 2},
+    [SUBSTRUCT_TYPE_2] = {2, 3, 1, 1, 3, 2, 2, 3, 1, 1, 3, 2, 0, 0, 0, 0, 0, 0, 3, 2, 3, 2, 1, 1},
+    [SUBSTRUCT_TYPE_3] = {3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 3, 2, 3, 2, 1, 1, 0, 0, 0, 0, 0, 0},
 };
 
 ARM_FUNC NOINLINE static u32 ConstantMod24(u32 a) { return a % 24; }
