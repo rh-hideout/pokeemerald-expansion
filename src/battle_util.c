@@ -11044,7 +11044,7 @@ bool32 MoveIsAffectedBySheerForce(u32 move)
     for (i = 0; i < numAdditionalEffects; i++)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-        if ((additionalEffect->chance > 0) ^ additionalEffect->sheerForceOverride)
+        if ((additionalEffect->chance > 0) != additionalEffect->sheerForceOverride)
             return TRUE;
     }
     return FALSE;
