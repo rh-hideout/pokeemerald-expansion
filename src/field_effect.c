@@ -259,10 +259,6 @@ static bool8 RockClimb_WaitStopRockClimb(struct Task *task, struct ObjectEvent *
 static bool8 RockClimb_StopRockClimbInit(struct Task *task, struct ObjectEvent *objectEvent);
 // Static RAM declarations
 
-#if FOLLOW_ME_IMPLEMENTED
-static void TryAttachFollowerToPlayer(void);
-#endif
-
 static u8 sActiveList[32];
 
 // External declarations
@@ -2004,10 +2000,6 @@ static bool8 WaterfallFieldEffect_ContinueRideOrEnd(struct Task *task, struct Ob
     if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
         return FALSE;
     
-    #if FOLLOW_ME_IMPLEMENTED
-        TryAttachFollowerToPlayer();
-    #endif
-
     if (MetatileBehavior_IsWaterfall(objectEvent->currentMetatileBehavior))
     {
         // Still ascending waterfall, back to WaterfallFieldEffect_RideUp
@@ -4370,10 +4362,6 @@ static bool8 RockClimb_ContinueRideOrEnd(struct Task *task, struct ObjectEvent *
     if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
         return FALSE;
     
-    #if FOLLOW_ME_IMPLEMENTED
-        TryAttachFollowerToPlayer();
-    #endif
-    
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
     MoveCoords(objectEvent->movementDirection, &task->tDestX, &task->tDestY);
     if (MetatileBehavior_IsRockClimbable(MapGridGetMetatileBehaviorAt(task->tDestX, task->tDestY)))
@@ -4429,20 +4417,6 @@ bool8 IsRockClimbActive(void)
     else
         return FALSE;
 }
-
-
-#if FOLLOW_ME_IMPLEMENTED
-static void TryAttachFollowerToPlayer(void)
-{
-    if (PlayerHasFollower())
-    {
-        //Keep the follow close by while its hidden to prevent it from going too far out of view
-        struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
-        struct ObjectEvent* follower = &gObjectEvents[GetFollowerMapObjId()];
-        MoveObjectEventToMapCoords(follower, player->currentCoords.x, player->currentCoords.y);
-    }
-}
-#endif
 
 #undef tState
 #undef tSpriteId
