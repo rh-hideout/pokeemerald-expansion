@@ -893,7 +893,12 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         AI_StoreBattlerTypes(battlerAtk, types);
         ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, ctx.moveType);
 
-        if (moveEffect == EFFECT_TRIPLE_KICK)
+        s32 fixedDamage = DoFixedDamageMoveCalc(&ctx);
+        if (fixedDamage != INT32_MAX)
+        {
+            simDamage.minimum = simDamage.median = simDamage.maximum = fixedDamage;
+        }
+        else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
             for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
