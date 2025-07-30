@@ -88,7 +88,7 @@
  *   {
  *       GIVEN {
  *           ASSUME(IsPowderMove(MOVE_STUN_SPORE));
- *           ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
+ *           ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
  *           PLAYER(SPECIES_ODDISH); // 1.
  *           OPPONENT(SPECIES_ODDISH); // 2.
  *       } WHEN {
@@ -218,6 +218,17 @@
  *     SINGLE_BATTLE_TEST("Jump Kick has no recoil if no target")
  *     {
  *         KNOWN_FAILING; // #2596.
+ *
+ * KNOWN_CRASHING
+ * Marks a test as crashing due to a bug. If there is an issue number
+ * associated with the bug it should be included in a comment. If the
+ * test passes the developer will be notified to remove KNOWN_CRASHING.
+ * For example:
+ *     TEST("Crashes")
+ *     {
+ *         KNOWN_CRASHING; // #7255
+ *         void (*f)(void) = NULL;
+ *         f(); // Crashes!
  *
  * PARAMETRIZE
  * Runs a test multiple times. i will be set to which parameter is

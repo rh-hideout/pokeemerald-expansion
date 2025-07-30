@@ -39,7 +39,6 @@
 #include "constants/event_objects.h"
 #include "constants/field_specials.h"
 #include "constants/items.h"
-#include "constants/map_types.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/metatile_labels.h"
 #include "constants/moves.h"

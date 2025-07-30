@@ -35,7 +35,7 @@ void BS_TrySetOctolock(void)
     else
     {
         gDisableStructs[battler].octolock = TRUE;
-        gBattleMons[battler].status2 |= STATUS2_ESCAPE_PREVENTION;
+        gBattleMons[battler].volatiles.escapePrevention = TRUE;
         gDisableStructs[battler].battlerPreventingEscape = gBattlerAttacker;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }

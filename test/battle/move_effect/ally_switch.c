@@ -311,5 +311,27 @@ DOUBLE_BATTLE_TEST("Ally Switch swaps Illusion data")
     }
 }
 
+DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
+{
+    GIVEN {
+        PLAYER(SPECIES_XATU)     { Speed(100); }
+        PLAYER(SPECIES_RIOLU)    { Speed(150); }
+        OPPONENT(SPECIES_FEAROW) { Speed(20); }
+        OPPONENT(SPECIES_ARON)   { Speed(30); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_FAKE_OUT, target: opponentRight); MOVE(playerLeft, MOVE_ALLY_SWITCH); 
+               MOVE(opponentLeft, MOVE_MIMIC, target: playerLeft);
+             }
+    } SCENE {
+        MESSAGE("Riolu used Fake Out!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, playerRight);
+        MESSAGE("Xatu used Ally Switch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft);
+        MESSAGE("Xatu and Riolu switched places!");
+        MESSAGE("The opposing Fearow used Mimic!");
+        MESSAGE("The opposing Fearow learned Fake Out!");
+    }
+}
+
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Ally Switch fails if the user is in the middle of the field in a Triple Battle");

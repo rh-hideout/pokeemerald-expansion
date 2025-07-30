@@ -573,7 +573,7 @@ static bool8 LoadPyramidBagGfx(void)
     case 1:
         if (FreeTempTileDataBuffersIfPossible() != TRUE)
         {
-            LZDecompressWram(gBattlePyramidBagTilemap, gPyramidBagMenu->tilemapBuffer);
+            DecompressDataWithHeaderWram(gBattlePyramidBagTilemap, gPyramidBagMenu->tilemapBuffer);
             gPyramidBagMenu->state++;
         }
         break;

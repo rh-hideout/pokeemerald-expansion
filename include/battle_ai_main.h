@@ -38,7 +38,18 @@ enum AIScore
     WEAK_EFFECT = 1,
     DECENT_EFFECT = 2,
     GOOD_EFFECT = 3,
-    BEST_EFFECT = 4
+    BEST_EFFECT = 4,
+    PERFECT_EFFECT = 10,
+    BAD_EFFECT = -1,
+    AWFUL_EFFECT = -3,
+    WORST_EFFECT = -10
+};
+
+enum MoveComparisonResult
+{
+    MOVE_NEUTRAL_COMPARISON,
+    MOVE_WON_COMPARISON,
+    MOVE_LOST_COMPARISON,
 };
 
 // AI_TryToFaint

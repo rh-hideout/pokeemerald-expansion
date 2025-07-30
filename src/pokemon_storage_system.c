@@ -924,10 +924,10 @@ static const u8 sText_OutOf30[] = _("/30");
 static const u16 sChooseBoxMenu_Pal[]        = INCBIN_U16("graphics/pokemon_storage/box_selection_popup.gbapal");
 static const u8 sChooseBoxMenuCenter_Gfx[]   = INCBIN_U8("graphics/pokemon_storage/box_selection_popup_center.4bpp");
 static const u8 sChooseBoxMenuSides_Gfx[]    = INCBIN_U8("graphics/pokemon_storage/box_selection_popup_sides.4bpp");
-static const u32 sScrollingBg_Gfx[]          = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.4bpp.lz");
-static const u32 sScrollingBg_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.bin.lz");
+static const u32 sScrollingBg_Gfx[]          = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.4bpp.smol");
+static const u32 sScrollingBg_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/scrolling_bg.bin.smolTM");
 static const u16 sDisplayMenu_Pal[]          = INCBIN_U16("graphics/pokemon_storage/display_menu.gbapal"); // Unused
-static const u32 sDisplayMenu_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/display_menu.bin.lz");
+static const u32 sDisplayMenu_Tilemap[]      = INCBIN_U32("graphics/pokemon_storage/display_menu.bin.smolTM");
 static const u16 sPkmnData_Tilemap[]         = INCBIN_U16("graphics/pokemon_storage/pkmn_data.bin");
 // sInterface_Pal - parts of the display frame, "PkmnData"'s normal color, Close Box
 static const u16 sInterface_Pal[]            = INCBIN_U16("graphics/pokemon_storage/interface.gbapal");
@@ -3809,7 +3809,7 @@ static void SetScrollingBackground(void)
 {
     SetGpuReg(REG_OFFSET_BG3CNT, BGCNT_PRIORITY(3) | BGCNT_CHARBASE(3) | BGCNT_16COLOR | BGCNT_SCREENBASE(31));
     DecompressAndLoadBgGfxUsingHeap(3, sScrollingBg_Gfx, 0, 0, 0);
-    LZ77UnCompVram(sScrollingBg_Tilemap, (void *)BG_SCREEN_ADDR(31));
+    DecompressDataWithHeaderVram(sScrollingBg_Tilemap, (void *)BG_SCREEN_ADDR(31));
 }
 
 static void ScrollBackground(void)
@@ -3822,7 +3822,7 @@ static void LoadPokeStorageMenuGfx(void)
 {
     InitBgsFromTemplates(0, sBgTemplates, ARRAY_COUNT(sBgTemplates));
     DecompressAndLoadBgGfxUsingHeap(1, gStorageSystemMenu_Gfx, 0, 0, 0);
-    LZ77UnCompWram(sDisplayMenu_Tilemap, sStorage->displayMenuTilemapBuffer);
+    DecompressDataWithHeaderWram(sDisplayMenu_Tilemap, sStorage->displayMenuTilemapBuffer);
     SetBgTilemapBuffer(1, sStorage->displayMenuTilemapBuffer);
     ShowBg(1);
     ScheduleBgCopyTilemapToVram(1);
@@ -4040,7 +4040,7 @@ static void UpdateWaveformAnimation(void)
 
 static void InitSupplementalTilemaps(void)
 {
-    LZ77UnCompWram(gStorageSystemPartyMenu_Tilemap, sStorage->partyMenuTilemapBuffer);
+    DecompressDataWithHeaderWram(gStorageSystemPartyMenu_Tilemap, sStorage->partyMenuTilemapBuffer);
     LoadPalette(gStorageSystemPartyMenu_Pal, BG_PLTT_ID(1), PLTT_SIZE_4BPP);
     TilemapUtil_SetMap(TILEMAPID_PARTY_MENU, 1, sStorage->partyMenuTilemapBuffer, 12, 22);
     TilemapUtil_SetMap(TILEMAPID_CLOSE_BUTTON, 1, sCloseBoxButton_Tilemap, 9, 4);
@@ -5387,7 +5387,7 @@ static void LoadWallpaperGfx(u8 boxId, s8 direction)
     if (wallpaperId != WALLPAPER_FRIENDS)
     {
         wallpaper = &sWallpapers[wallpaperId];
-        LZ77UnCompWram(wallpaper->tilemap, sStorage->wallpaperTilemap);
+        DecompressDataWithHeaderWram(wallpaper->tilemap, sStorage->wallpaperTilemap);
         DrawWallpaper(sStorage->wallpaperTilemap, sStorage->wallpaperLoadDir, sStorage->wallpaperOffset);
 
         if (sStorage->wallpaperLoadDir != 0)
@@ -5401,7 +5401,7 @@ static void LoadWallpaperGfx(u8 boxId, s8 direction)
     else
     {
         wallpaper = &sWaldaWallpapers[GetWaldaWallpaperPatternId()];
-        LZ77UnCompWram(wallpaper->tilemap, sStorage->wallpaperTilemap);
+        DecompressDataWithHeaderWram(wallpaper->tilemap, sStorage->wallpaperTilemap);
         DrawWallpaper(sStorage->wallpaperTilemap, sStorage->wallpaperLoadDir, sStorage->wallpaperOffset);
 
         CpuCopy16(wallpaper->palettes, sStorage->wallpaperTilemap, 0x40);
@@ -9180,7 +9180,7 @@ static void LoadItemIconGfx(u8 id, const u32 *itemTiles, const u16 *itemPal)
         return;
 
     CpuFastFill(0, sStorage->itemIconBuffer, 0x200);
-    LZ77UnCompWram(itemTiles, sStorage->tileBuffer);
+    DecompressDataWithHeaderWram(itemTiles, sStorage->tileBuffer);
     for (i = 0; i < 3; i++)
         CpuFastCopy(&sStorage->tileBuffer[i * 0x60], &sStorage->itemIconBuffer[i * 0x80], 0x60);
 

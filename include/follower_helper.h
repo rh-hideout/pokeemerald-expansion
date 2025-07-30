@@ -70,7 +70,8 @@ enum MessageCondition
 #define MATCH_U16(type, value1, value2) {type, {.split = {.hw = value1, .b = value2}}}
 #define MATCH_U8(type, v1, v2, v3) {type, {.bytes = {v1, v2, v3}}}
 
-#define MATCH_SPECIES(species) MATCH_U24(MSG_COND_SPECIES, species)
+#define MATCH_SPECIES(species) MATCH_U16(MSG_COND_SPECIES, species, 0)
+#define MATCH_NOT_SPECIES(species) MATCH_U16(MSG_COND_SPECIES, species, 1)
 #define MATCH_TYPES(type1, type2) MATCH_U8(MSG_COND_TYPE, type1, type2, 0)
 // Checks that follower has *neither* of the two types
 #define MATCH_NOT_TYPES(type1, type2) MATCH_U8(MSG_COND_TYPE, type1, type2, TYPE_NONE | 1)
@@ -118,6 +119,7 @@ enum ConditionalMessage
     COND_MSG_BURN,
     COND_MSG_DAY,
     COND_MSG_NIGHT,
+    COND_MSG_ABNORMAL_WEATHER,
     COND_MSG_COUNT,
 };
 

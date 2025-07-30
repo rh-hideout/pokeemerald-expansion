@@ -43,7 +43,7 @@ DOUBLE_BATTLE_TEST("Dragon Tail switches the target with a random non-battler, n
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail does not fail if no replacements")
+SINGLE_BATTLE_TEST("Dragon Tail fails if no replacements")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -56,7 +56,7 @@ SINGLE_BATTLE_TEST("Dragon Tail does not fail if no replacements")
     }
 }
 
-SINGLE_BATTLE_TEST("Dragon Tail does not fail if replacements fainted")
+SINGLE_BATTLE_TEST("Dragon Tail fails if replacements fainted")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
-        ASSUME(gSpeciesInfo[SPECIES_WEEZING].types[0] == TYPE_POISON || gSpeciesInfo[SPECIES_WEEZING].types[1] == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_WEEZING, 0) == TYPE_POISON || GetSpeciesType(SPECIES_WEEZING, 1) == TYPE_POISON);
         PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_MOLD_BREAKER); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }
@@ -159,8 +159,8 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, player);
         HP_BAR(opponent);
         MESSAGE("The opposing Weezing was dragged out!");
-        HP_BAR(opponent);
-        NOT STATUS_ICON(opponent, poison: TRUE);
         MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+        NOT STATUS_ICON(opponent, poison: TRUE);
+        HP_BAR(opponent);
     }
 }

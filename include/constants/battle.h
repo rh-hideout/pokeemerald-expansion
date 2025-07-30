@@ -132,10 +132,63 @@ enum BattlerId
 #define STATUS1_PSN_ANY          (STATUS1_POISON | STATUS1_TOXIC_POISON)
 #define STATUS1_ANY              (STATUS1_SLEEP | STATUS1_POISON | STATUS1_BURN | STATUS1_FREEZE | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
 
-#define STATUS1_REFRESH          (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
+#define STATUS1_CAN_MOVE         (STATUS1_POISON | STATUS1_BURN | STATUS1_PARALYSIS | STATUS1_TOXIC_POISON | STATUS1_FROSTBITE)
+#define STATUS1_INCAPACITATED    (STATUS1_SLEEP | STATUS1_FREEZE)
+#define STATUS1_ICY_ANY          (STATUS1_FREEZE | STATUS1_FROSTBITE)
+#define STATUS1_DAMAGING         (STATUS1_PSN_ANY | STATUS1_BURN | STATUS1_FROSTBITE)
 
-// Volatile status ailments
-// These are removed after exiting the battle or switching out
+enum VolatileFlags
+{
+    V_BATON_PASSABLE = (1 << 0),
+};
+
+/* Volatile status ailments
+ * These are removed after exiting the battle or switching
+ *  Enum,                                       Type                               Type, max value, flags */
+#define VOLATILE_DEFINITIONS(F) \
+    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 6), V_BATON_PASSABLE) \
+    F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
+    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 5)) \
+    F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
+    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 3)) \
+    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 3)) \
+    F(VOLATILE_MULTIPLETURNS,                   multipleTurns,                     (u32, 1)) \
+    F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
+    F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
+    F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
+    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, MAX_BITS(4))) \
+    F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
+    F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
+    F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
+    F(VOLATILE_RAGE,                            rage,                              (u32, 1)) \
+    F(VOLATILE_SUBSTITUTE,                      substitute,                        (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND,                    destinyBond,                       (u32, 1)) \
+    F(VOLATILE_ESCAPE_PREVENTION,               escapePrevention,                  (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_NIGHTMARE,                       nightmare,                         (u32, 1)) \
+    F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
+    F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE)
+
+/* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
+#define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
+#define GET_VOLATILE_MAXIMUM_(_type, ...) FIRST(__VA_OPT__(FIRST(__VA_ARGS__),) MAX_BITS((sizeof(_type) * 8)))
+
+#define UNPACK_VOLATILE_ENUMS(_enum, ...) _enum,
+
+enum Volatile
+{
+    VOLATILE_NONE,
+    VOLATILE_DEFINITIONS(UNPACK_VOLATILE_ENUMS)
+    /* Expands to VOLATILE_CONFUSION, VOLATILE_FLINCHED, etc. */
+};
+
+// Helper macros
+#define INFATUATED_WITH(battler) (battler + 1)
+
+// Old flags
 #define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
 #define STATUS2_CONFUSION_TURN(num)   ((num) << 0)
 #define STATUS2_FLINCHED              (1 << 3)
@@ -149,6 +202,7 @@ enum BattlerId
 #define STATUS2_MULTIPLETURNS         (1 << 12)
 #define STATUS2_WRAPPED               (1 << 13)
 #define STATUS2_POWDER                (1 << 14)
+//#define STATUS2_UNUSED                (1 << 15)
 #define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
 #define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
 #define STATUS2_DEFENSE_CURL          (1 << 20)
@@ -207,7 +261,7 @@ enum BattlerId
 #define STATUS4_SYRUP_BOMB              (1 << 5)
 #define STATUS4_GLAIVE_RUSH             (1 << 6)
 
-#define HITMARKER_UNUSED_1              (1 << 4)
+#define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
@@ -215,50 +269,55 @@ enum BattlerId
 #define HITMARKER_NO_ATTACKSTRING       (1 << 9)
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
 #define HITMARKER_NO_PPDEDUCT           (1 << 11)
-#define HITMARKER_UNUSED_2              (1 << 12)
+#define HITMARKER_UNUSED_12             (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
-#define HITMARKER_SYNCHRONIZE_EFFECT    (1 << 14)
+#define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_IGNORE_DISGUISE       (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
-#define HITMARKER_UNUSED_3              (1 << 18)
+#define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
 #define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
-#define HITMARKER_UNUSED_4              (1 << 21)
+#define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
 #define HITMARKER_GRUDGE                (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
-#define HITMARKER_UNUSED_5              (1 << 26)
-#define HITMARKER_CHARGING              (1 << 27)
+#define HITMARKER_UNUSED_26             (1 << 26)
+#define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
 #define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
-#define HITMARKER_STRING_PRINTED        (1 << 29)
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
 #define SIDE_STATUS_LIGHTSCREEN             (1 << 1)
-#define SIDE_STATUS_STICKY_WEB              (1 << 2)
-#define SIDE_STATUS_SPIKES                  (1 << 4)
-#define SIDE_STATUS_SAFEGUARD               (1 << 5)
-#define SIDE_STATUS_FUTUREATTACK            (1 << 6)
-#define SIDE_STATUS_MIST                    (1 << 8)
-// (1 << 9) previously was SIDE_STATUS_SPIKES_DAMAGED
-#define SIDE_STATUS_TAILWIND                (1 << 10)
-#define SIDE_STATUS_AURORA_VEIL             (1 << 11)
-#define SIDE_STATUS_LUCKY_CHANT             (1 << 12)
-#define SIDE_STATUS_TOXIC_SPIKES            (1 << 13)
-#define SIDE_STATUS_STEALTH_ROCK            (1 << 14)
-// Missing flags previously were SIDE_STATUS_TOXIC_SPIKES_DAMAGED, SIDE_STATUS_STEALTH_ROCK_DAMAGED, SIDE_STATUS_STICKY_WEB_DAMAGED
-#define SIDE_STATUS_STEELSURGE              (1 << 18)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 19)
-#define SIDE_STATUS_RAINBOW                 (1 << 20)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 21)
-#define SIDE_STATUS_SWAMP                   (1 << 22)
+#define SIDE_STATUS_SAFEGUARD               (1 << 2)
+#define SIDE_STATUS_FUTUREATTACK            (1 << 3)
+#define SIDE_STATUS_MIST                    (1 << 4)
+#define SIDE_STATUS_TAILWIND                (1 << 5)
+#define SIDE_STATUS_AURORA_VEIL             (1 << 6)
+#define SIDE_STATUS_LUCKY_CHANT             (1 << 7)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 8)
+#define SIDE_STATUS_RAINBOW                 (1 << 9)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 10)
+#define SIDE_STATUS_SWAMP                   (1 << 11)
 
-#define SIDE_STATUS_HAZARDS_ANY    (SIDE_STATUS_SPIKES | SIDE_STATUS_STICKY_WEB | SIDE_STATUS_TOXIC_SPIKES | SIDE_STATUS_STEALTH_ROCK | SIDE_STATUS_STEELSURGE)
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
 #define SIDE_STATUS_PLEDGE_ANY     (SIDE_STATUS_RAINBOW | SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_SWAMP)
+#define SIDE_STATUS_GOOD_FOG       (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)
+#define SIDE_STATUS_GOOD_COURT     (SIDE_STATUS_GOOD_FOG | SIDE_STATUS_TAILWIND | SIDE_STATUS_LUCKY_CHANT | SIDE_STATUS_RAINBOW)
+#define SIDE_STATUS_BAD_COURT      (SIDE_STATUS_DAMAGE_NON_TYPES | SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_SWAMP)
+
+enum Hazards
+{
+    HAZARDS_NONE,
+    HAZARDS_SPIKES,
+    HAZARDS_STICKY_WEB,
+    HAZARDS_TOXIC_SPIKES,
+    HAZARDS_STEALTH_ROCK,
+    HAZARDS_STEELSURGE,
+    HAZARDS_MAX_COUNT,
+};
 
 // Used for damaging entry hazards based on type
 enum TypeSideHazard
@@ -294,6 +353,7 @@ enum TypeSideHazard
 #define MOVE_RESULT_FOE_HUNG_ON           (1 << 7)
 #define MOVE_RESULT_STURDIED              (1 << 8)
 #define MOVE_RESULT_FOE_ENDURED_AFFECTION (1 << 9)
+#define MOVE_RESULT_SYNCHRONOISE_AFFECTED (1 << 10)
 #define MOVE_RESULT_NO_EFFECT             (MOVE_RESULT_MISSED | MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_FAILED)
 
 enum BattleWeather
@@ -327,9 +387,12 @@ enum BattleWeather
 #define B_WEATHER_STRONG_WINDS  (1 << BATTLE_WEATHER_STRONG_WINDS)
 
 #define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_HAIL | B_WEATHER_STRONG_WINDS | B_WEATHER_SNOW | B_WEATHER_FOG)
+#define B_WEATHER_DAMAGING_ANY  (B_WEATHER_HAIL | B_WEATHER_SANDSTORM)
+#define B_WEATHER_ICY_ANY       (B_WEATHER_HAIL | B_WEATHER_SNOW)
+#define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
-enum MoveEffects
+enum __attribute__((packed)) MoveEffects
 {
     MOVE_EFFECT_NONE,
     MOVE_EFFECT_SLEEP,
@@ -344,7 +407,6 @@ enum MoveEffects
     MOVE_EFFECT_TRI_ATTACK,
     MOVE_EFFECT_UPROAR,
     MOVE_EFFECT_PAYDAY,
-    MOVE_EFFECT_CHARGING,
     MOVE_EFFECT_WRAP,
     MOVE_EFFECT_ATK_PLUS_1,
     MOVE_EFFECT_DEF_PLUS_1,
@@ -363,7 +425,6 @@ enum MoveEffects
     MOVE_EFFECT_REMOVE_ARG_TYPE,
     MOVE_EFFECT_RECHARGE,
     MOVE_EFFECT_RAGE,
-    MOVE_EFFECT_STEAL_ITEM,
     MOVE_EFFECT_PREVENT_ESCAPE,
     MOVE_EFFECT_NIGHTMARE,
     MOVE_EFFECT_ALL_STATS_UP,
@@ -399,8 +460,6 @@ enum MoveEffects
     MOVE_EFFECT_TRAP_BOTH,
     MOVE_EFFECT_ROUND,
     MOVE_EFFECT_DIRE_CLAW,
-    MOVE_EFFECT_STEALTH_ROCK,
-    MOVE_EFFECT_SPIKES,
     MOVE_EFFECT_SYRUP_BOMB,
     MOVE_EFFECT_FLORAL_HEALING,
     MOVE_EFFECT_SECRET_POWER,
@@ -414,6 +473,11 @@ enum MoveEffects
     MOVE_EFFECT_LIGHT_SCREEN,
     MOVE_EFFECT_SALT_CURE,
     MOVE_EFFECT_EERIE_SPELL,
+
+    // Max move effects happen earlier in the execution chain.
+    // For example stealth rock from G-Max Stonesurge is set up before abilities but from Stone Axe after.
+    // Stone Axe can also fail to set up rocks if user faints where as Stonesurge will always go up.
+    // This means we need to be careful if we want to re-use those effects for (new) vanilla moves
     MOVE_EFFECT_RAISE_TEAM_ATTACK,
     MOVE_EFFECT_RAISE_TEAM_DEFENSE,
     MOVE_EFFECT_RAISE_TEAM_SPEED,
@@ -455,51 +519,66 @@ enum MoveEffects
     MOVE_EFFECT_LOWER_EVASIVENESS_SIDE,
     MOVE_EFFECT_AROMATHERAPY,
     MOVE_EFFECT_CONFUSE_SIDE,
-    MOVE_EFFECT_STEELSURGE,
+    MOVE_EFFECT_STEELSURGE, // Steel type rocks
+    MOVE_EFFECT_STEALTH_ROCK, // Max Move rocks, not to be confused for rocks set up from Ceasless Edge (same but differ in execution order)
     MOVE_EFFECT_TORMENT_SIDE,
     MOVE_EFFECT_LOWER_SPEED_2_SIDE,
     MOVE_EFFECT_FIRE_SPIN_SIDE,
     MOVE_EFFECT_FIXED_POWER,
+    // Max move effects end. They can be used for (custom) normal moves.
+
     NUM_MOVE_EFFECTS
 };
 
-#define PRIMARY_STATUS_MOVE_EFFECT      MOVE_EFFECT_FROSTBITE // All above move effects apply primary status
 #if B_USE_FROSTBITE == TRUE
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FROSTBITE
 #else
 #define MOVE_EFFECT_FREEZE_OR_FROSTBITE MOVE_EFFECT_FREEZE
 #endif
 
-#define MOVE_EFFECT_AFFECTS_USER        0x2000
-#define MOVE_EFFECT_CERTAIN             0x4000
 #define MOVE_EFFECT_CONTINUE            0x8000
 
 // Battle environment defines for gBattleEnvironment.
-#define BATTLE_ENVIRONMENT_GRASS            0
-#define BATTLE_ENVIRONMENT_LONG_GRASS       1
-#define BATTLE_ENVIRONMENT_SAND             2
-#define BATTLE_ENVIRONMENT_UNDERWATER       3
-#define BATTLE_ENVIRONMENT_WATER            4
-#define BATTLE_ENVIRONMENT_POND             5
-#define BATTLE_ENVIRONMENT_MOUNTAIN         6
-#define BATTLE_ENVIRONMENT_CAVE             7
-#define BATTLE_ENVIRONMENT_BUILDING         8
-#define BATTLE_ENVIRONMENT_PLAIN            9
-// New battle environments are used for Secret Power but not fully implemented.
-#define BATTLE_ENVIRONMENT_SOARING          10
-#define BATTLE_ENVIRONMENT_SKY_PILLAR       11
-#define BATTLE_ENVIRONMENT_BURIAL_GROUND    12
-#define BATTLE_ENVIRONMENT_PUDDLE           13
-#define BATTLE_ENVIRONMENT_MARSH            14
-#define BATTLE_ENVIRONMENT_SWAMP            15
-#define BATTLE_ENVIRONMENT_SNOW             16
-#define BATTLE_ENVIRONMENT_ICE              17
-#define BATTLE_ENVIRONMENT_VOLCANO          18
-#define BATTLE_ENVIRONMENT_DISTORTION_WORLD 19
-#define BATTLE_ENVIRONMENT_SPACE            20
-#define BATTLE_ENVIRONMENT_ULTRA_SPACE      21
-
-#define BATTLE_ENVIRONMENT_COUNT            22
+enum BattleEnvironments
+{
+    BATTLE_ENVIRONMENT_GRASS,
+    BATTLE_ENVIRONMENT_LONG_GRASS,
+    BATTLE_ENVIRONMENT_SAND,
+    BATTLE_ENVIRONMENT_UNDERWATER,
+    BATTLE_ENVIRONMENT_WATER,
+    BATTLE_ENVIRONMENT_POND,
+    BATTLE_ENVIRONMENT_MOUNTAIN,
+    BATTLE_ENVIRONMENT_CAVE,
+    BATTLE_ENVIRONMENT_BUILDING,
+    BATTLE_ENVIRONMENT_PLAIN,
+    BATTLE_ENVIRONMENT_FRONTIER,
+    BATTLE_ENVIRONMENT_GYM,
+    BATTLE_ENVIRONMENT_LEADER,
+    BATTLE_ENVIRONMENT_MAGMA,
+    BATTLE_ENVIRONMENT_AQUA,
+    BATTLE_ENVIRONMENT_SIDNEY,
+    BATTLE_ENVIRONMENT_PHOEBE,
+    BATTLE_ENVIRONMENT_GLACIA,
+    BATTLE_ENVIRONMENT_DRAKE,
+    BATTLE_ENVIRONMENT_CHAMPION,
+    BATTLE_ENVIRONMENT_GROUDON,
+    BATTLE_ENVIRONMENT_KYOGRE,
+    BATTLE_ENVIRONMENT_RAYQUAZA,
+    // New battle environments are used for Secret Power but not fully implemented.
+    BATTLE_ENVIRONMENT_SOARING,
+    BATTLE_ENVIRONMENT_SKY_PILLAR,
+    BATTLE_ENVIRONMENT_BURIAL_GROUND,
+    BATTLE_ENVIRONMENT_PUDDLE,
+    BATTLE_ENVIRONMENT_MARSH,
+    BATTLE_ENVIRONMENT_SWAMP,
+    BATTLE_ENVIRONMENT_SNOW,
+    BATTLE_ENVIRONMENT_ICE,
+    BATTLE_ENVIRONMENT_VOLCANO,
+    BATTLE_ENVIRONMENT_DISTORTION_WORLD,
+    BATTLE_ENVIRONMENT_SPACE,
+    BATTLE_ENVIRONMENT_ULTRA_SPACE,
+    BATTLE_ENVIRONMENT_COUNT,
+};
 
 #define B_WAIT_TIME_LONG        (B_WAIT_TIME_MULTIPLIER * 4)
 #define B_WAIT_TIME_MED         (B_WAIT_TIME_MULTIPLIER * 3)

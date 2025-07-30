@@ -4590,9 +4590,11 @@ static const struct SpriteFrameImage sPicTable_Frogadier[] = {
 static const struct SpriteFrameImage sPicTable_Greninja[] = {
     overworld_ascending_frames(gObjectEventPic_Greninja, 4, 4),
 };
-/*static const struct SpriteFrameImage sPicTable_GreninjaAsh[] = {
+#if OW_BATTLE_ONLY_FORMS
+static const struct SpriteFrameImage sPicTable_GreninjaAsh[] = {
     overworld_ascending_frames(gObjectEventPic_GreninjaAsh, 4, 4),
-};*/
+};
+#endif //OW_BATTLE_ONLY_FORMS
 #endif //P_FAMILY_FROAKIE
 
 #if P_FAMILY_BUNNELBY

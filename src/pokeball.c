@@ -1080,8 +1080,11 @@ static void HandleBallAnimEnd(struct Sprite *sprite)
         AnimateSprite(&gSprites[gBattlerSpriteIds[battler]]);
         gSprites[gBattlerSpriteIds[battler]].data[1] = 0x1000;
     }
+    else
+    {
+        gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
+    }
 
-    gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
     if (sprite->animEnded)
         sprite->invisible = TRUE;
     if (gSprites[gBattlerSpriteIds[battler]].affineAnimEnded)
@@ -1567,7 +1570,7 @@ void LoadBallGfx(u8 ballId)
     case BALL_REPEAT:
     case BALL_SAFARI:
         var = GetSpriteTileStartByTag(gBallSpriteSheets[ballId].tag);
-        LZDecompressVram(gOpenPokeballGfx, (void *)(OBJ_VRAM0 + 0x100 + var * 32));
+        DecompressDataWithHeaderVram(gOpenPokeballGfx, (void *)(OBJ_VRAM0 + 0x100 + var * 32));
         break;
     }
 }

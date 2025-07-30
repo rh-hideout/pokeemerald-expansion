@@ -1,5 +1,6 @@
 #include "global.h"
 #include "bg.h"
+#include "decompress.h"
 #include "event_data.h"
 #include "gpu_regs.h"
 #include "graphics.h"
@@ -136,9 +137,9 @@ static void ClearAreaWindowLabel(enum PokedexAreaLabels labelId);
 bool32 ShouldShowAreaUnknownLabel(void);
 
 static const u32 sAreaGlow_Pal[] = INCBIN_U32("graphics/pokedex/area_glow.gbapal");
-static const u32 sAreaGlow_Gfx[] = INCBIN_U32("graphics/pokedex/area_glow.4bpp.lz");
+static const u32 sAreaGlow_Gfx[] = INCBIN_U32("graphics/pokedex/area_glow.4bpp.smol");
 
-static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.lz");
+static const u32 sPokedexPlusHGSS_ScreenSelectBarSubmenu_Tilemap[] = INCBIN_U32("graphics/pokedex/hgss/SelectBar.bin.smolTM");
 static void LoadHGSSScreenSelectBarSubmenu(void);
 
 static const u16 sSpeciesHiddenFromAreaScreen[] = { SPECIES_WYNAUT };
@@ -1000,7 +1001,7 @@ static void LoadAreaUnknownGraphics(void)
         .size = sizeof(sPokedexAreaScreen->areaUnknownGraphicsBuffer),
         .tag = TAG_AREA_UNKNOWN,
     };
-    LZ77UnCompWram(gPokedexAreaScreenAreaUnknown_Gfx, sPokedexAreaScreen->areaUnknownGraphicsBuffer);
+    DecompressDataWithHeaderWram(gPokedexAreaScreenAreaUnknown_Gfx, sPokedexAreaScreen->areaUnknownGraphicsBuffer);
     LoadSpriteSheet(&spriteSheet);
     LoadSpritePalette(&sAreaUnknownSpritePalette);
 }

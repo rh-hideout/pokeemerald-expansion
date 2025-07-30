@@ -45,9 +45,9 @@ static bool8 CirclesSymmetricSpiralInSeq_End(struct Task *task);
 
 #define PALTAG_LOGO_CIRCLES 0x2E90
 
-static const u32 sLogoCenter_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.4bpp.lz");
-static const u32 sLogoCenter_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.bin.lz");
-static const u32 sLogoCircles_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_circles.4bpp.lz");
+static const u32 sLogoCenter_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.4bpp.smol");
+static const u32 sLogoCenter_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_center.bin.smolTM");
+static const u32 sLogoCircles_Gfx[] = INCBIN_U32("graphics/battle_transitions/frontier_logo_circles.4bpp.smol");
 static const u16 sLogo_Pal[] = INCBIN_U16("graphics/battle_transitions/frontier_logo_circles.gbapal");
 
 static const struct OamData sOamData_LogoCircles =
@@ -221,8 +221,8 @@ static void LoadLogoGfx(void)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sLogoCenter_Gfx, tileset);
-    LZ77UnCompVram(sLogoCenter_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sLogoCenter_Gfx, tileset);
+    DecompressDataWithHeaderVram(sLogoCenter_Tilemap, tilemap);
     LoadPalette(sLogo_Pal, BG_PLTT_ID(15), sizeof(sLogo_Pal));
     LoadCompressedSpriteSheet(&sSpriteSheet_LogoCircles);
     LoadSpritePalette(&sSpritePalette_LogoCircles);
