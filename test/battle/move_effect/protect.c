@@ -200,11 +200,11 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_NUZZLE); }
+        TURN { MOVE(opponent, MOVE_TOXIC); }
         TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, MOVE_SCRATCH); }
         TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
