@@ -9392,7 +9392,7 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     return dmg;
 }
 
-static inline s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
+s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
 {
     s32 dmg = 0;
     s32 randDamage;
