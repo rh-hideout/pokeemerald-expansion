@@ -1734,7 +1734,6 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
     fprintf(f, "// DO NOT MODIFY THIS FILE! It is auto-generated from %s\n", parsed->source->path);
     fprintf(f, "//\n");
     fprintf(f, "// If you want to modify this file see expansion PR #7154\n");
-    fprintf(f, "// Use sed -i '/^#line/d' '%s' to remove #line markers.\n", output_path);
     fprintf(f, "//\n");
     fprintf(f, "\n");
 
