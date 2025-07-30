@@ -514,10 +514,6 @@ static void WindowFunc_DrawDialogueFrameWithPlate(u8 bg, u8 L, u8 T, u8 w, u8 h,
     FillBgTilemapBufferRect(bg, BG_TILE_V_FLIP(DLG_WINDOW_BASE_TILE_NUM +  4), L + w,     T + h, 1,     1, DLG_WINDOW_PALETTE_NUM);
 }
 
-int GetDialogFramePlateWidth()
-{
-    return DLW_WIN_PLATE_SIZE * 8;
-}
 void FillDialogFramePlate()
 {
     u32 TOP_BLOCK_FILL = 20;
