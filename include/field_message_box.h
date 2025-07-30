@@ -1,6 +1,8 @@
 #ifndef GUARD_FIELD_MESSAGE_BOX_H
 #define GUARD_FIELD_MESSAGE_BOX_H
 
+#define FIELD_MESSAGE_PRIORITY 80
+
 enum
 {
     FIELD_MESSAGE_BOX_HIDDEN,
@@ -8,8 +10,6 @@ enum
     FIELD_MESSAGE_BOX_NORMAL,
     FIELD_MESSAGE_BOX_AUTO_SCROLL,
 };
-
-extern const u8* gSpeakerName;
 
 bool8 ShowFieldMessage(const u8 *str);
 bool8 ShowPokenavFieldMessage(const u8 *str);
@@ -21,7 +21,9 @@ u8 GetFieldMessageBoxMode(void);
 void StopFieldMessage(void);
 void InitFieldMessageBox(void);
 void SetSpeakerName(const u8* name);
+void FillDialogFramePlate(void);
 
 extern u8 gWalkAwayFromSignpostTimer;
+extern const u8* gSpeakerName;
 
 #endif // GUARD_FIELD_MESSAGE_BOX_H
