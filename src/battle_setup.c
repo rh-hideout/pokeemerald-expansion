@@ -959,6 +959,26 @@ static void InitTrainerBattleVariables(void)
     sTrainerBattleEndScript = NULL;
 }
 
+static inline void SetU8(void *ptr, u8 value)
+{
+    *(u8 *)(ptr) = value;
+}
+
+static inline void SetU16(void *ptr, u16 value)
+{
+    *(u16 *)(ptr) = value;
+}
+
+static inline void SetU32(void *ptr, u32 value)
+{
+    *(u32 *)(ptr) = value;
+}
+
+static inline void SetPtr(const void *ptr, const void *value)
+{
+    *(const void **)(ptr) = value;
+}
+
 void TrainerBattleLoadArgs(const u8 *data)
 {
     InitTrainerBattleVariables();
@@ -1488,10 +1508,16 @@ static const u8 *ReturnEmptyStringIfNull(const u8 *string)
 
 static const u8 *GetIntroSpeechOfApproachingTrainer(void)
 {
-    if (gApproachingTrainerId == 0)
+    if (gApproachingTrainerId == 0) 
+    {
+        gSpeakerName = GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA);
         return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.introTextA);
-    else
+    }
+    else 
+    {
+        gSpeakerName = GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentB);
         return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.introTextB);
+    }
 }
 
 const u8 *GetTrainerALoseText(void)
