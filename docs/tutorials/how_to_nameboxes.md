@@ -8,7 +8,7 @@ This feature branch implements a name box in the style of the one in @tustin2121
 	- Examples in `examples/nameboxes`
 	- Setting the speaker name to `NULL` hides the name plate.
 	- Speaker name is automatically set to `NULL` in the `closemessage` command.
-- Assign a flag from `include/constants/flags.h` to `OW_FLAG_SUPPRESS_SPEAKER_NAME` to dynamically disable/enable the nameplates
+- Assign a flag from `include/constants/flags.h` to `OW_FLAG_SUPPRESS_SPEAKER_NAME` to dynamically disable/enable the nameplates.
 	- ie: 
 	```C
 	#define OW_FLAG_SUPPRESS_SPEAKER_NAME			FLAG_UNUSED_0x881
