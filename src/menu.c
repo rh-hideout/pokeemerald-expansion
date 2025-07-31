@@ -362,11 +362,9 @@ void DrawDialogueFrameWithNameplate(u8 windowId, bool8 copyToVram)
     CallWindowFunction(windowId, WindowFunc_DrawDialogueFrameWithPlate);
     FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
     PutWindowTilemap(windowId);
-    if (copyToVram == TRUE) {
+    if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
-    }
 }
-
 
 void DrawStdWindowFrame(u8 windowId, bool8 copyToVram)
 {
