@@ -31,8 +31,6 @@
 #define STD_WINDOW_PALETTE_SIZE PLTT_SIZEOF(10)
 #define STD_WINDOW_BASE_TILE_NUM 0x214
 
-#define DLW_WIN_PLATE_SIZE  8
-
 struct MenuInfoIcon
 {
     u8 width;
@@ -516,14 +514,11 @@ static void WindowFunc_DrawDialogueFrameWithPlate(u8 bg, u8 L, u8 T, u8 w, u8 h,
 
 void FillDialogFramePlate()
 {
-    u32 TOP_BLOCK_FILL = 20;
-    u32 BOT_BLOCK_FILL = 48;
-    
     int i;
     for (i = 0; i < DLW_WIN_PLATE_SIZE; i++) 
     {
-        CopyToWindowPixelBuffer(1, &gMessageBox_Gfx[DLW_WIN_PLATE_SIZE * TOP_BLOCK_FILL], TILE_SIZE_4BPP, i);
-        CopyToWindowPixelBuffer(1, &gMessageBox_Gfx[DLW_WIN_PLATE_SIZE * BOT_BLOCK_FILL], TILE_SIZE_4BPP, i+DLW_WIN_PLATE_SIZE);
+        CopyToWindowPixelBuffer(1, &gMessageBox_Gfx[DLW_WIN_PLATE_SIZE * DLW_TOP_BLOCK_FILL], TILE_SIZE_4BPP, i);
+        CopyToWindowPixelBuffer(1, &gMessageBox_Gfx[DLW_WIN_PLATE_SIZE * DLW_BOT_BLOCK_FILL], TILE_SIZE_4BPP, i+DLW_WIN_PLATE_SIZE);
     }
 }
 

@@ -26,37 +26,38 @@ void InitFieldMessageBox(void)
 }
 
 #define tState data[0]
-
 static void Task_DrawFieldMessage(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
     switch (task->tState)
     {
-        case 0:
-            if (gMsgIsSignPost)
-                LoadSignPostWindowFrameGfx();
-            else
-                LoadMessageBoxAndBorderGfx();
-            task->tState++;
-            break;
-        case 1:
-           if (gSpeakerName != NULL && !FlagGet(OW_FLAG_SUPPRESS_SPEAKER_NAME)) {
-                DrawDialogueFrameWithNameplate(0, TRUE);
-                PutWindowTilemap(1);
-                CopyWindowToVram(1, COPYWIN_FULL);
-            }
-            else {
-                DrawDialogueFrame(0, TRUE);
-            } 
-            task->tState++;
-           break;
-        case 2:
-            if (RunTextPrintersAndIsPrinter0Active() != TRUE)
-            {
-                sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
-                DestroyTask(taskId);
-            }
+    case 0:
+        if (gMsgIsSignPost)
+            LoadSignPostWindowFrameGfx();
+        else
+            LoadMessageBoxAndBorderGfx();
+        task->tState++;
+        break;
+    case 1:
+        if (gSpeakerName != NULL && !FlagGet(OW_FLAG_SUPPRESS_SPEAKER_NAME)) 
+        {
+            DrawDialogueFrameWithNameplate(0, TRUE);
+            PutWindowTilemap(1);
+            CopyWindowToVram(1, COPYWIN_FULL);
+        }
+        else 
+        {
+            DrawDialogueFrame(0, TRUE);
+        } 
+        task->tState++;
+        break;
+    case 2:
+        if (RunTextPrintersAndIsPrinter0Active() != TRUE)
+        {
+            sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+            DestroyTask(taskId);
+        }
     }
 }
 
@@ -64,7 +65,7 @@ static void Task_DrawFieldMessage(u8 taskId)
 
 static void CreateTask_DrawFieldMessage(void)
 {
-    CreateTask(Task_DrawFieldMessage, 0x50);
+    CreateTask(Task_DrawFieldMessage, FIELD_MESSAGE_PRIORITY);
 }
 
 static void DestroyTask_DrawFieldMessage(void)
@@ -134,7 +135,6 @@ static void ExpandStringAndStartDrawFieldMessage(const u8 *str, bool32 allowSkip
 {
     if (gSpeakerName != NULL && !FlagGet(OW_FLAG_SUPPRESS_SPEAKER_NAME)) 
     {
-        int DLW_WIN_PLATE_SIZE = 8;
         int strLen = GetStringWidth(FONT_SMALL, gSpeakerName, -1);
         if (strLen > 0) {
             strLen = (DLW_WIN_PLATE_SIZE * 8) / 2 - (strLen / 2);

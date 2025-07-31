@@ -28,6 +28,11 @@
 #define MENU_INFO_ICON_BALL_RED  (NUMBER_OF_MON_TYPES + 6)
 #define MENU_INFO_ICON_BALL_BLUE (NUMBER_OF_MON_TYPES + 7)
 
+#define DLW_WIN_PLATE_SIZE      8
+#define DLW_TOP_BLOCK_FILL      20
+#define DLW_BOT_BLOCK_FILL      48
+#define 
+
 enum
 {
     SAVE_MENU_NAME,

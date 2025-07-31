@@ -19,14 +19,3 @@ Features:
 ![](nameboxes/nameboxes-1.png)
 ![](nameboxes/nameboxes-2.png)
 ![](nameboxes/nameboxes-3.png)
-
-----
-
-To use this feature branch, [click here](https://github.com/tustin2121/pokeemerald/tree/pick-feature/namebox), then click on the latest commit and manually recreate the changes in your project.
-
-Alternatively, run the following commands to cherry-pick the commit into your repo:
-
-```shell
-git fetch https://github.com/tustin2121/pokeemerald.git pick-feature/namebox --no-tags
-git cherry-pick FETCH_HEAD
-```
