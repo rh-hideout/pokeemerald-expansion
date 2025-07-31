@@ -1,9 +1,8 @@
-# Pokémon Emerald
-### Tutorial: Name Box
+# Tutorial: Name Box
 
 This feature branch implements a name box in the style of the one in @tustin2121's [Trick-or-Treat House](https://www.pokecommunity.com/showthread.php?p=10566982) hack.
 
-Features: 
+## Features: 
 - Implementation of a name plate attached to the dialog box.
 - New command `speakername [textPointer]` to set the name of the speaker to display in the box.
 	- Examples in `examples/nameboxes`
@@ -16,10 +15,10 @@ Features:
 	```
 - All trainers capable of trainer sight battles automatically have their trainer name as the speaker name when talking to them or being seen by them.
 
-
 ![](nameboxes/nameboxes-1.png)
 ![](nameboxes/nameboxes-2.png)
 ![](nameboxes/nameboxes-3.png)
+
 
 > [!NOTE]
 > Feature created by @tustin2121, and ported to expansion by @surskitty and @khbsd.
