@@ -44,12 +44,12 @@
 #define EXCEPT_3(a, ...) __VA_OPT__(EXCEPT_2(__VA_ARGS__))
 #define EXCEPT_4(a, ...) __VA_OPT__(EXCEPT_3(__VA_ARGS__))
 
-/* 'UNPACK (x, y, z)' expands to 'x, y, z'.
+/* 'UNPACK_META (x, y, z)' expands to 'x, y, z'.
  * Useful for passing arguments which may contain commas into a macro. */
-#define UNPACK(...) __VA_ARGS__
+#define UNPACK_META(...) __VA_ARGS__
 
 /* Expands to 'macro(...args, ...)'. */
-#define INVOKE_WITH(macro, args, ...) INVOKE_WITH_(macro, UNPACK args __VA_OPT__(, __VA_ARGS__))
+#define INVOKE_WITH(macro, args, ...) INVOKE_WITH_(macro, UNPACK_META args __VA_OPT__(, __VA_ARGS__))
 #define INVOKE_WITH_(macro, ...) macro(__VA_ARGS__)
 
 /* Recursive macros.

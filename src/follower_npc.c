@@ -1172,18 +1172,14 @@ void CreateFollowerNPCAvatar(void)
 
 void FollowerNPC_HandleSprite(void)
 {
-    if (CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
+    if (TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_BIKE) && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_BIKE))
     {
         if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_MACH_BIKE);
         else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ACRO_BIKE)
             SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_ACRO_BIKE);
     }
-    else if (gMapHeader.mapType == MAP_TYPE_UNDERWATER)
-    {
-        TryUpdateFollowerNPCSpriteUnderwater();
-    }
-    else
+    else if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
     {
         SetFollowerNPCSprite(FOLLOWER_NPC_SPRITE_INDEX_NORMAL);
     }

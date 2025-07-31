@@ -243,7 +243,7 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
-// cases for Cmd_moveend
+// cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
@@ -260,7 +260,6 @@ enum MoveEndEffects
     MOVEEND_ATTACKER_VISIBLE,
     MOVEEND_TARGET_VISIBLE,
     MOVEEND_ITEM_EFFECTS_TARGET,
-    MOVEEND_FIRST_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ALL,
     MOVEEND_SYMBIOSIS,
     MOVEEND_KINGSROCK, // These item effects will occur each strike of a multi-hit move
@@ -271,7 +270,7 @@ enum MoveEndEffects
     MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
     MOVEEND_MULTIHIT_MOVE,
-    MOVEEND_SECOND_MOVE_BLOCK,
+    MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
     MOVEEND_ABILITY_BLOCK,
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Opportunist
@@ -284,6 +283,7 @@ enum MoveEndEffects
     MOVEEND_OPPORTUNIST, // Occurs after other stat change items/abilities to try and copy the boosts
     MOVEEND_PICKPOCKET,
     MOVEEND_WHITE_HERB,
+    MOVEEND_THIRD_MOVE_BLOCK,
     MOVEEND_CHANGED_ITEMS,
     MOVEEND_SAME_MOVE_TURNS,
     MOVEEND_CLEAR_BITS,
@@ -296,10 +296,5 @@ enum MoveEndEffects
 #define B_SWITCH_NORMAL     0
 #define B_SWITCH_HIT        1   // dragon tail, circle throw
 #define B_SWITCH_RED_CARD   2
-
-// Argument labels for EFFECT_HIT_SET_REMOVE_TERRAIN
-#define ARG_SET_PSYCHIC_TERRAIN        0
-#define ARG_TRY_REMOVE_TERRAIN_HIT     1
-#define ARG_TRY_REMOVE_TERRAIN_FAIL    2
 
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H

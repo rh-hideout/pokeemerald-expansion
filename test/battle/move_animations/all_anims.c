@@ -152,7 +152,7 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Has to be hailing
         TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_HIT_SET_REMOVE_TERRAIN && gMovesInfo[move].argument.moveProperty == ARG_TRY_REMOVE_TERRAIN_FAIL)
+    else if (gMovesInfo[move].effect == EFFECT_STEEL_ROLLER)
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
@@ -281,7 +281,7 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Has to be hailing
         TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_HIT_SET_REMOVE_TERRAIN && gMovesInfo[move].argument.moveProperty == ARG_TRY_REMOVE_TERRAIN_FAIL)
+    else if (gMovesInfo[move].effect == EFFECT_STEEL_ROLLER)
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }

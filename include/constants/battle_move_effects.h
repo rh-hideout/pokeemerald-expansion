@@ -155,6 +155,7 @@ enum BattleMoveEffects
     EFFECT_BRICK_BREAK,
     EFFECT_YAWN,
     EFFECT_KNOCK_OFF,
+    EFFECT_STEAL_ITEM,
     EFFECT_ENDEAVOR,
     EFFECT_POWER_BASED_ON_USER_HP,
     EFFECT_SKILL_SWAP,
@@ -308,8 +309,9 @@ enum BattleMoveEffects
     EFFECT_COURT_CHANGE,
     EFFECT_MAX_HP_50_RECOIL,
     EFFECT_MIND_BLOWN, // Same as EFFECT_MAX_HP_50_RECOIL but is cancelled by Damp
+    EFFECT_CHLOROBLAST, // Same effect as EFFECT_MAX_HP_50_RECOIL but follows the same rules as EFFECT_RECOIL
     EFFECT_EXTREME_EVOBOOST,
-    EFFECT_HIT_SET_REMOVE_TERRAIN,
+    EFFECT_HIT_SET_TERRAIN,
     EFFECT_DARK_VOID,
     EFFECT_VICTORY_DANCE,
     EFFECT_TEATIME,
@@ -348,6 +350,10 @@ enum BattleMoveEffects
     EFFECT_SPECTRAL_THIEF,
     EFFECT_RECOIL,
     EFFECT_SMACK_DOWN,
+    EFFECT_ICE_SPINNER, // Removes terrain unless attacker is removed from field either by fainting or ejected out
+    EFFECT_STEEL_ROLLER, // Will fail if there is no terrain up but removes it regardless if attacker is removed from field or not
+    EFFECT_STONE_AXE, // Not to be confused with MOVE_EFFECT_STEALTH_ROCK. They have two different activation timings.
+    EFFECT_CEASELESS_EDGE, // Same applies to spikes
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

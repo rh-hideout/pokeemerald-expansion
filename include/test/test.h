@@ -15,6 +15,7 @@ enum TestResult
     TEST_RESULT_TIMEOUT,
     TEST_RESULT_CRASH,
     TEST_RESULT_TODO,
+    TEST_RESULT_KNOWN_FAIL,
 };
 
 struct TestRunner
@@ -53,6 +54,14 @@ struct TestRunnerState
     u32 timeoutSeconds;
 };
 
+struct PersistentTestRunnerState
+{
+    u32 address:28;
+    u32 state:1;
+    u32 expectCrash:1;
+    u32 unused_30:2;
+};
+
 extern const u8 gTestRunnerN;
 extern const u8 gTestRunnerI;
 extern const char gTestRunnerArgv[256];
@@ -70,11 +79,13 @@ extern const struct TestRunner gFunctionTestRunner;
 extern struct FunctionTestRunnerState *gFunctionTestRunnerState;
 
 extern struct TestRunnerState gTestRunnerState;
+extern struct PersistentTestRunnerState gPersistentTestRunnerState;
 
 void CB2_TestRunner(void);
 
 void Test_ExpectedResult(enum TestResult);
 void Test_ExpectLeaks(bool32);
+void Test_ExpectCrash(bool32);
 void Test_ExitWithResult(enum TestResult, u32 stopLine, const char *fmt, ...);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
@@ -214,10 +225,13 @@ static inline struct Benchmark BenchmarkStop(void)
     } while (0)
 
 #define KNOWN_FAILING \
-    Test_ExpectedResult(TEST_RESULT_FAIL)
+    Test_ExpectedResult(TEST_RESULT_KNOWN_FAIL)
 
 #define KNOWN_LEAKING \
     Test_ExpectLeaks(TRUE)
+
+#define KNOWN_CRASHING \
+    Test_ExpectCrash(TRUE)
 
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 
