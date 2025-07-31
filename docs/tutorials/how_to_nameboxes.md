@@ -15,9 +15,9 @@ This feature branch implements a name box in the style of the one in @tustin2121
 	```
 - All trainers capable of trainer sight battles automatically have their trainer name as the speaker name when talking to them or being seen by them.
 
-![](nameboxes/nameboxes-1.png)
-![](nameboxes/nameboxes-2.png)
-![](nameboxes/nameboxes-3.png)
+![](img/nameboxes/nameboxes-1.png)
+![](img/nameboxes/nameboxes-2.png)
+![](img/nameboxes/nameboxes-3.png)
 
 
 > [!NOTE]
