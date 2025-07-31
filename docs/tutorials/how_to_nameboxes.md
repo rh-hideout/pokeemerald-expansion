@@ -5,14 +5,15 @@ This feature branch implements a name box in the style of the one in @tustin2121
 
 Features: 
 - Implementation of a name plate attached to the dialog box.
-- New command `speakername [textPoionter]` to set the name of the speaker to display in the box.
+- New command `speakername [textPointer]` to set the name of the speaker to display in the box.
 	- Examples in `examples/nameboxes`
 	- Setting the speaker name to `NULL` hides the name plate.
 	- Speaker name is automatically set to `NULL` in the `closemessage` command.
 - Assign a flag to `OW_FLAG_SUPPRESS_SPEAKER_NAME` to dynamically disable/enable the nameplates
-	- ie: ```c
-			#define OW_FLAG_SUPPRESS_SPEAKER_NAME FLAG_UNUSED_0x881
-		  ```
+	- ie: 
+	```C
+		#define OW_FLAG_SUPPRESS_SPEAKER_NAME FLAG_UNUSED_0x881
+	```
 - All trainers capable of trainer sight battles automatically have their trainer name as the speaker name when talking to them or being seen by them.
 
 
