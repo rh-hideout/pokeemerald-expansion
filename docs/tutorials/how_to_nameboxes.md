@@ -21,4 +21,4 @@ Features:
 ![](nameboxes/nameboxes-3.png)
 
 > [!NOTE]
-> feature created by @tustin2121, and ported by @surskitty and @khbsd
+> Feature created by @tustin2121, and ported by @surskitty and @khbsd.
