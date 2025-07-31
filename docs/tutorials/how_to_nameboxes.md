@@ -9,10 +9,10 @@ Features:
 	- Examples in `examples/nameboxes`
 	- Setting the speaker name to `NULL` hides the name plate.
 	- Speaker name is automatically set to `NULL` in the `closemessage` command.
-- Assign a flag to `OW_FLAG_SUPPRESS_SPEAKER_NAME` to dynamically disable/enable the nameplates
+- Assign a flag from `include/constants/flags.h` to `OW_FLAG_SUPPRESS_SPEAKER_NAME` to dynamically disable/enable the nameplates
 	- ie: 
 	```C
-		#define OW_FLAG_SUPPRESS_SPEAKER_NAME FLAG_UNUSED_0x881
+	#define OW_FLAG_SUPPRESS_SPEAKER_NAME			FLAG_UNUSED_0x881
 	```
 - All trainers capable of trainer sight battles automatically have their trainer name as the speaker name when talking to them or being seen by them.
 
@@ -22,4 +22,4 @@ Features:
 ![](nameboxes/nameboxes-3.png)
 
 > [!NOTE]
-> Feature created by @tustin2121, and ported by @surskitty and @khbsd.
+> Feature created by @tustin2121, and ported to expansion by @surskitty and @khbsd.
