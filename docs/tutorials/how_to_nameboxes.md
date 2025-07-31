@@ -20,4 +20,5 @@ Features:
 ![](nameboxes/nameboxes-2.png)
 ![](nameboxes/nameboxes-3.png)
 
-<sub>feature created by @tustin2121, and ported by @surskitty and @khbsd</sub>
+> [!NOTE]
+> feature created by @tustin2121, and ported by @surskitty and @khbsd
