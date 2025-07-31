@@ -20,4 +20,4 @@ Features:
 ![](nameboxes/nameboxes-2.png)
 ![](nameboxes/nameboxes-3.png)
 
-[^1]: feature created by @tustin2121, and ported by @surskitty and @khbsd
+<sub>feature created by @tustin2121, and ported by @surskitty and @khbsd</sub>
