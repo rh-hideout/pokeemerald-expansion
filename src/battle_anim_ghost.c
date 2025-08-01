@@ -596,19 +596,19 @@ void AnimTask_NightmareClone(u8 taskId)
     task->data[4] = 0;
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));
     SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(task->data[2], task->data[3]));
-    gSprites[task->data[0]].data[0] = 80;
+    gSprites[task->data[0]].sDuration_ltf = 80;
     if (IsOnPlayerSide(gBattleAnimTarget))
     {
-        gSprites[task->data[0]].data[1] = -144;
-        gSprites[task->data[0]].data[2] = 112;
+        gSprites[task->data[0]].sXIncrement_ltf = Q_8_8(-0.5625);
+        gSprites[task->data[0]].sYIncrement_ltf = Q_8_8(0.4375);
     }
     else
     {
-        gSprites[task->data[0]].data[1] = 144;
-        gSprites[task->data[0]].data[2] = -112;
+        gSprites[task->data[0]].sXIncrement_ltf = Q_8_8(0.5625);
+        gSprites[task->data[0]].sYIncrement_ltf = Q_8_8(-0.4375);
     }
-    gSprites[task->data[0]].data[3] = 0;
-    gSprites[task->data[0]].data[4] = 0;
+    gSprites[task->data[0]].sCurXOffsetFixedPoint_ltf = 0;
+    gSprites[task->data[0]].sCurYOffsetFixedPoint_ltf = 0;
     StoreSpriteCallbackInData6(&gSprites[task->data[0]], SpriteCallbackDummy);
     gSprites[task->data[0]].callback = TranslateSpriteLinearFixedPoint;
     task->func = AnimTask_NightmareClone_Step;
