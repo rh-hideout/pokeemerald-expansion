@@ -1650,7 +1650,7 @@ static bool8 FallWarpEffect_End(struct Task *task)
 #define tState   data[0]
 #define tGoingUp data[1]
 
-static void HideFollowerForFieldEffect(void)
+void HideFollowerForFieldEffect(void)
 {
     struct ObjectEvent *followerObj = GetFollowerObject();
     if (!followerObj || followerObj->invisible)
