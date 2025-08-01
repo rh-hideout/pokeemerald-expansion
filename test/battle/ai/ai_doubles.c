@@ -510,7 +510,7 @@ AI_DOUBLE_BATTLE_TEST("AI sets up weather for its ally")
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TORNADUS) { Item(ITEM_SAFETY_GOGGLES); Ability(ABILITY_PRANKSTER); Moves(goodWeather, badWeather, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(weatherTrigger, MOVE_EARTH_POWER);  }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SAFETY_GOGGLES); Moves(weatherTrigger, MOVE_EARTH_POWER); }
     } WHEN {
         TURN { EXPECT_MOVE(opponentLeft, goodWeather); }
     }
