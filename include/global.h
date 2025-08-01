@@ -219,7 +219,8 @@ struct NPCFollower
     u8 inProgress:1;
     u8 warpEnd:1;
     u8 createSurfBlob:3;
-    u8 comeOutDoorStairs:3;
+    u8 comeOutDoorStairs:2;
+    u8 forcedMovement:1;
     u8 objId;
     u8 currentSprite;
     u8 delayedState;
