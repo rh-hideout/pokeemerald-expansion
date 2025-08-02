@@ -2,6 +2,7 @@
 #include "menu.h"
 #include "string_util.h"
 #include "task.h"
+#include "event_data.h"
 #include "text.h"
 #include "match_call.h"
 #include "field_message_box.h"
@@ -10,6 +11,7 @@
 
 static EWRAM_DATA u8 sFieldMessageBoxMode = 0;
 EWRAM_DATA u8 gWalkAwayFromSignpostTimer = 0;
+EWRAM_DATA const u8* gSpeakerName = NULL;
 
 static void ExpandStringAndStartDrawFieldMessage(const u8 *, bool32);
 static void StartDrawFieldMessage(void);
@@ -24,30 +26,38 @@ void InitFieldMessageBox(void)
 }
 
 #define tState data[0]
-
 static void Task_DrawFieldMessage(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
     switch (task->tState)
     {
-        case 0:
-            if (gMsgIsSignPost)
-                LoadSignPostWindowFrameGfx();
-            else
-                LoadMessageBoxAndBorderGfx();
-            task->tState++;
-            break;
-        case 1:
-           DrawDialogueFrame(0, TRUE);
-           task->tState++;
-           break;
-        case 2:
-            if (RunTextPrintersAndIsPrinter0Active() != TRUE)
-            {
-                sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
-                DestroyTask(taskId);
-            }
+    case 0:
+        if (gMsgIsSignPost)
+            LoadSignPostWindowFrameGfx();
+        else
+            LoadMessageBoxAndBorderGfx();
+        task->tState++;
+        break;
+    case 1:
+        if (gSpeakerName != NULL && !FlagGet(OW_FLAG_SUPPRESS_SPEAKER_NAME)) 
+        {
+            DrawDialogueFrameWithNameplate(0, TRUE);
+            PutWindowTilemap(1);
+            CopyWindowToVram(1, COPYWIN_FULL);
+        }
+        else 
+        {
+            DrawDialogueFrame(0, TRUE);
+        } 
+        task->tState++;
+        break;
+    case 2:
+        if (RunTextPrintersAndIsPrinter0Active() != TRUE)
+        {
+            sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+            DestroyTask(taskId);
+        }
     }
 }
 
@@ -55,7 +65,7 @@ static void Task_DrawFieldMessage(u8 taskId)
 
 static void CreateTask_DrawFieldMessage(void)
 {
-    CreateTask(Task_DrawFieldMessage, 0x50);
+    CreateTask(Task_DrawFieldMessage, FIELD_MESSAGE_PRIORITY);
 }
 
 static void DestroyTask_DrawFieldMessage(void)
@@ -123,6 +133,27 @@ bool8 ShowFieldMessageFromBuffer(void)
 
 static void ExpandStringAndStartDrawFieldMessage(const u8 *str, bool32 allowSkippingDelayWithButtonPress)
 {
+    if (gSpeakerName != NULL && !FlagGet(OW_FLAG_SUPPRESS_SPEAKER_NAME)) 
+    {
+        int strLen = GetStringWidth(FONT_SMALL, gSpeakerName, -1);
+        if (strLen > 0) {
+            strLen = (DLW_WIN_PLATE_SIZE * 8) / 2 - (strLen / 2);
+            gNamePlateBuffer[0] = EXT_CTRL_CODE_BEGIN;
+            gNamePlateBuffer[1] = EXT_CTRL_CODE_CLEAR_TO;
+            gNamePlateBuffer[2] = strLen;
+            StringExpandPlaceholders(&gNamePlateBuffer[3], gSpeakerName);
+        } 
+        else 
+        {
+            StringExpandPlaceholders(&gNamePlateBuffer[0], gSpeakerName);
+        }
+
+        FillDialogFramePlate();
+        AddTextPrinterParameterized2(1, FONT_SMALL, gNamePlateBuffer, 0, NULL, 1, 0, 2);
+        PutWindowTilemap(1);
+        CopyWindowToVram(1, COPYWIN_FULL);
+    }
+
     StringExpandPlaceholders(gStringVar4, str);
     AddTextPrinterForMessage(allowSkippingDelayWithButtonPress);
     CreateTask_DrawFieldMessage();
@@ -139,6 +170,7 @@ void HideFieldMessageBox(void)
     DestroyTask_DrawFieldMessage();
     ClearDialogWindowAndFrame(0, TRUE);
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+    gSpeakerName = NULL;
 }
 
 u8 GetFieldMessageBoxMode(void)
@@ -164,4 +196,9 @@ void StopFieldMessage(void)
 {
     DestroyTask_DrawFieldMessage();
     sFieldMessageBoxMode = FIELD_MESSAGE_BOX_HIDDEN;
+}
+
+void SetSpeakerName(const u8* name)
+{
+    gSpeakerName = name;
 }
