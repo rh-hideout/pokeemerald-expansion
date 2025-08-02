@@ -200,11 +200,11 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_NUZZLE); }
+        TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
         TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, MOVE_SCRATCH); }
-        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
+        STATUS_ICON(player, STATUS1_BURN);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
@@ -252,11 +252,11 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are alre
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponent, MOVE_NUZZLE); }
+        TURN { MOVE(opponent, MOVE_TOXIC); }
         TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
-        TURN {}
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
+        STATUS_ICON(player, STATUS1_TOXIC_POISON);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, opponent);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);

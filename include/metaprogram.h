@@ -45,26 +45,26 @@
 #define EXCEPT_3(a, ...) __VA_OPT__(EXCEPT_2(__VA_ARGS__))
 #define EXCEPT_4(a, ...) __VA_OPT__(EXCEPT_3(__VA_ARGS__))
 
-/* 'UNPACK (x, y, z)' expands to 'x, y, z'.
+/* 'UNPACK_META (x, y, z)' expands to 'x, y, z'.
  * Useful for passing arguments which may contain commas into a macro. */
-#define UNPACK(...) __VA_ARGS__
+#define UNPACK_META(...) __VA_ARGS__
 
-/* Updated version that can extract arguments from brackets as well. 
+/* Updated version that can extract arguments from brackets as well.
  * Examples:
- * 
+ *
  * UNPACK_B(a, b) => a, b
  * UNPACK_B((a, b)) => a, b
  * UNPACK_B((a)) => a
- * 
+ *
  * The simple UNPACK is used for extracting non-bracketed arguments.
  * */
 #define UNPACK_EXTRA(...) IF_YOU_SEE_ME_SOMETHING_IS_WRONG, __VA_ARGS__
-#define UNPACK_B(a) INVOKE(UNPACK_B_, a, UNPACK_EXTRA a)
-#define UNPACK_B_(a, b, ...) __VA_OPT__(UNPACK)a
+#define UNPACK_B(a) INVOKE_WITH_(UNPACK_B_, a, UNPACK_EXTRA a)
+#define UNPACK_B_(a, b, ...) __VA_OPT__(UNPACK_META)a
 
 /* Expands to 'macro(...args, ...)'. */
-#define INVOKE_WITH(macro, args, ...) INVOKE(macro, UNPACK args __VA_OPT__(, __VA_ARGS__))
-#define INVOKE(macro, ...) macro(__VA_ARGS__)
+#define INVOKE_WITH(macro, args, ...) INVOKE_WITH_(macro, UNPACK_META args __VA_OPT__(, __VA_ARGS__))
+#define INVOKE_WITH_(macro, ...) macro(__VA_ARGS__)
 
 /* Same as INVOKE_WITH but uses UNPACK_B to unpack arguments and only applies macro to args if there are any. */
 #define INVOKE_WITH_B(macro, args, ...) INVOKE_B(macro, UNPACK_B(args) __VA_OPT__(, __VA_ARGS__))
@@ -178,7 +178,7 @@ store a number (max: 32). Sample: https://godbolt.org/z/xb4KdPMhT */
 /* Will try and compress a set bit (or up to three sequential bits) into a single byte
 Input must be of the form (upper << lower) where upper can be up to 7, lower up to 31 */
 #define COMPRESS_BITS(_val) COMPRESS_BITS_STEP_2 _val
-#define COMPRESS_BITS_STEP_2(_unpacked) INVOKE(COMPRESS_BITS_STEP_3, COMPRESS_BITS_## _unpacked)
+#define COMPRESS_BITS_STEP_2(_unpacked) INVOKE_WITH_(COMPRESS_BITS_STEP_3, COMPRESS_BITS_## _unpacked)
 #define COMPRESS_BITS_STEP_3(upper, lower) (((upper % 8) << 5) + (BIT_INDEX(lower)))
 
 /* Will read a compressed bit stored by COMPRESS_BIT into a single byte */
