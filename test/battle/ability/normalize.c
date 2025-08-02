@@ -156,53 +156,29 @@ SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s1
     }
 }
 
-SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrify's effect", s16 damage)
+SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Electrify's effect")
 {
-    u32 ability, genConfig;
-    PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
-    PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_6; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, genConfig);
-        PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); }
+        OPPONENT(SPECIES_ROOKIDEE) { Item(ITEM_WACAN_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ELECTRIFY); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        if (genConfig >= GEN_7)
-            EXPECT_EQ(results[0].damage, results[2].damage);
-        else
-            EXPECT_EQ(results[1].damage, results[3].damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }
 
-SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Deluge's effect", s16 damage)
+SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Deluge's effect")
 {
-    u32 ability, genConfig;
-    PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
-    PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_7; }
-    PARAMETRIZE { ability = ABILITY_NORMALIZE;      genConfig = GEN_6; }
-
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, genConfig);
-        PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_SKITTY) { Ability(ABILITY_NORMALIZE); Moves(MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_ROOKIDEE) { Item(ITEM_WACAN_BERRY); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ION_DELUGE); MOVE(player, MOVE_WATER_GUN); }
     } SCENE {
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        if (genConfig >= GEN_7)
-            EXPECT_EQ(results[0].damage, results[2].damage);
-        else
-            EXPECT_EQ(results[1].damage, results[3].damage);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }
 
