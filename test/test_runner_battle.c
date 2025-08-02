@@ -1344,13 +1344,8 @@ static void TearDownBattle(void)
     // Zero out the parties, data in them could potentially carry over
     for (u32 i = 0; i < 6; i++)
     {
-        u32 *playerPtr = (u32 *)(&gPlayerParty[i]);
-        u32 *opponentPtr = (u32 *)(&gEnemyParty[i]);
-        for (u32 j = 0; j < sizeof(struct Pokemon)/4; j++)
-        {
-            playerPtr[j] = 0;
-            opponentPtr[j] = 0;
-        }
+        ZeroPlayerPartyMons();
+        ZeroEnemyPartyMons();
     }
 
     FreeMonSpritesGfx();
