@@ -441,6 +441,7 @@ EventScript_UseDefog::
 	waitstate
 	releaseall
 	end
+
 EventScript_UseRockClimb::
 	lockall
 	checkfieldmove FIELD_MOVE_ROCK_CLIMB
