@@ -416,8 +416,11 @@
 	.4byte \argPtr
 	.endm
 
-	.macro unused_0x47
+	.macro jumpfifsemiinvulnerable battler:req, state:req, jumpInstr:req
 	.byte 0x47
+	.byte \battler
+	.byte \state
+	.4byte \jumpInstr
 	.endm
 
 	.macro unused_0x48
