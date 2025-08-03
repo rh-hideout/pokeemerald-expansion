@@ -3,70 +3,60 @@ MtEmber_RubyPath_B4F_MapScripts::
 
 MtEmber_RubyPath_B4F_EventScript_BrailleABC::
 	lockall
-	braillemessage Braille_Text_ABC
-	waitbuttonpress
+	braillemsgbox Braille_Text_ABC
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleGHI::
 	lockall
-	braillemessage Braille_Text_GHI
-	waitbuttonpress
+	braillemsgbox Braille_Text_GHI
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleMNO::
 	lockall
-	braillemessage Braille_Text_MNO
-	waitbuttonpress
+	braillemsgbox Braille_Text_MNO
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleTUV::
 	lockall
-	braillemessage Braille_Text_TUV
-	waitbuttonpress
+	braillemsgbox Braille_Text_TUV
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleDEF::
 	lockall
-	braillemessage Braille_Text_DEF
-	waitbuttonpress
+	braillemsgbox Braille_Text_DEF
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleJKL::
 	lockall
-	braillemessage Braille_Text_JKL
-	waitbuttonpress
+	braillemsgbox Braille_Text_JKL
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BraillePQRS::
 	lockall
-	braillemessage Braille_Text_PQRS
-	waitbuttonpress
+	braillemsgbox Braille_Text_PQRS
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleWXYZ::
 	lockall
-	braillemessage Braille_Text_WXYZ
-	waitbuttonpress
+	braillemsgbox Braille_Text_WXYZ
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BraillePeriod::
 	lockall
-	braillemessage Braille_Text_Period
-	waitbuttonpress
+	braillemsgbox Braille_Text_Period
 	releaseall
 	end
 
 MtEmber_RubyPath_B4F_EventScript_BrailleComma::
 	lockall
-	braillemessage Braille_Text_Comma
-	waitbuttonpress
+	braillemsgbox Braille_Text_Comma
 	releaseall
 	end

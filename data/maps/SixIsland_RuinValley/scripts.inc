@@ -27,8 +27,7 @@ SixIsland_RuinValley_EventScript_DottedHoleDoor::
 	msgbox SixIsland_RuinValley_Text_CheckDoorMoreThoroughly, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, SixIsland_RuinValley_EventScript_IgnoreDottedHoleDoor
 	msgbox SixIsland_RuinValley_Text_SeveralDotsOnTheDoor
-	braillemessage Braille_Text_Cut
-	waitbuttonpress
+	braillemsgbox Braille_Text_Cut
 	releaseall
 	end
 

@@ -1638,6 +1638,7 @@ Text_Gyaoo::
 EventScript_BrailleCursorWaitButton::
 	special BrailleCursorToggle
 	waitbuttonpress
+	closebraillemessage
 	playse SE_SELECT
 	setvar VAR_0x8006, 1
 	special BrailleCursorToggle

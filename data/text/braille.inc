@@ -118,119 +118,158 @@ AncientTomb_Braille_ShineInTheMiddle:
 
 @ FRLG
 Braille_Text_Up::
-	.braille "UP$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "UP$"
 
 Braille_Text_Down::
-	.braille "DOWN$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "DOWN$"
 
 Braille_Text_Right::
-	.braille "RIGHT$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "RIGHT$"
 
 Braille_Text_Left::
-	.braille "LEFT$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "LEFT$"
 
 Braille_Text_Cut::
-	.braille "CUT$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "CUT$"
 
 Braille_Text_ABC::
-	.braille "ABC$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "ABC$"
 
 Braille_Text_GHI::
-	.braille "GHI$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "GHI$"
 
 Braille_Text_MNO::
-	.braille "MNO$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "MNO$"
 
 Braille_Text_TUV::
-	.braille "TUV$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "TUV$"
 
 Braille_Text_DEF::
-	.braille "DEF$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "DEF$"
 
 Braille_Text_JKL::
-	.braille "JKL$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "JKL$"
 
 Braille_Text_PQRS::
-	.braille "PQRS$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "PQRS$"
 
 Braille_Text_WXYZ::
-	.braille "WXYZ$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "WXYZ$"
 
 Braille_Text_Period::
-	.braille ".$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille ".$"
 
 Braille_Text_Comma::
-	.braille ",$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille ",$"
 
 Braille_Text_Everything::
-	.braille "EVERYTHING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "EVERYTHING$"
 
 Braille_Text_HasMeaning1::
-	.braille "HAS MEANING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "HAS MEANING$"
 
 Braille_Text_Existence::
-	.braille "EXISTENCE$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "EXISTENCE$"
 
 Braille_Text_HasMeaning2::
-	.braille "HAS MEANING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "HAS MEANING$"
 
 Braille_Text_BeingAlive::
-	.braille "BEING ALIVE$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "BEING ALIVE$"
 
 Braille_Text_HasMeaning3::
-	.braille "HAS MEANING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "HAS MEANING$"
 
 Braille_Text_HaveDreams::
-	.braille "HAVE DREAMS$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "HAVE DREAMS$"
 
 Braille_Text_UsePower::
-	.braille "USE POWER.$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "USE POWER.$"
 
 Braille_Text_LetTheTwo::
-	.braille "LET THE TWO$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "LET THE TWO$"
 
 Braille_Text_Glittering::
-	.braille "GLITTERING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "GLITTERING$"
 
 Braille_Text_Stones::
-	.braille "STONES$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "STONES$"
 
 Braille_Text_OneInRed::
-	.braille "ONE IN RED$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "ONE IN RED$"
 
 Braille_Text_OneInBlue::
-	.braille "ONE IN BLUE$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "ONE IN BLUE$"
 
 Braille_Text_ConnectThe::
-	.braille "CONNECT THE$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "CONNECT THE$"
 
 Braille_Text_Past::
-	.braille "PAST.$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "PAST.$"
 
 Braille_Text_TwoFriends::
-	.braille "TWO FRIENDS$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "TWO FRIENDS$"
 
 Braille_Text_Sharing::
-	.braille "SHARING$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "SHARING$"
 
 Braille_Text_PowerOpen::
-	.braille "POWER OPEN$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "POWER OPEN$"
 
 Braille_Text_AWindowTo::
-	.braille "A WINDOW TO$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "A WINDOW TO$"
 
 Braille_Text_ANewWorld::
-	.braille "A NEW WORLD$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "A NEW WORLD$"
 
 Braille_Text_ThatGlows::
-	.braille "THAT GLOWS.$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "THAT GLOWS.$"
 
 Braille_Text_TheNext::
-	.braille "THE NEXT$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "THE NEXT$"
 
 Braille_Text_WorldWaits::
-	.braille "WORLD WAITS$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "WORLD WAITS$"
 
 Braille_Text_ForYou::
-	.braille "FOR YOU.$"
+	brailleformat 3, 0, 25, 19, 6, 3
+    .braille "FOR YOU.$"
 
