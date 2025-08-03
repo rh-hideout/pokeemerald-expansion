@@ -376,8 +376,7 @@ bool8 CheckForTrainersWantingBattle(void)
             continue;
         if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
-        canSeeTrainer[arrayPos] = i;
-        arrayPos = arrayPos + 1;
+        canSeeTrainer[arrayPos++] = i;
     }
 
     // Sorts array by localId
