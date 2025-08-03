@@ -356,10 +356,29 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .callback = SpriteCB_TrainerIcons
 };
 
+/*
+static int SortApproachingTrainerArrayByLocalId(struct ObjectEvent canSeeTrainer)
+{
+    for (u32 i = 1; i < ARRAY_COUNT(canSeeTrainer); i++)
+    {
+        u32 x = canSeeTrainer[i];
+        u32 j = i;
+        while (j > 0 && gObjectEvents[canSeeTrainer[j-1]].localId > gObjectEvents[x].localId)
+        {
+            canSeeTrainer[j] = canSeeTrainer[j-1];
+            j--;
+        }
+        canSeeTrainer[j] = x;
+    }
+}
+*/
+
 // code
 bool8 CheckForTrainersWantingBattle(void)
 {
-    u8 i, k;
+    u8 i;
+    u8 canSeeTrainer[4];
+    u8 arrayPos = 0;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -367,29 +386,35 @@ bool8 CheckForTrainersWantingBattle(void)
     gNoOfApproachingTrainers = 0;
     gApproachingTrainerId = 0;
 
+    // Adds trainers wanting to battle to array
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        for (u8 j = 0; j < OBJECT_EVENTS_COUNT; j++)
-        {
-            k = 0;
-            if (gObjectEvents[j].localId == i)
-            {
-                k = j;
-                break;
-            }
-            else
-            {
-                continue;
-            }
-        }       
-        u8 numTrainers;
-        if (!gObjectEvents[k].active)
+    {     
+        if (!gObjectEvents[i].active)
             continue;
-        if (gObjectEvents[k].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[k].trainerType != TRAINER_TYPE_BURIED)
+        if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
+        canSeeTrainer[arrayPos] = i;
+        arrayPos = arrayPos + 1;
+    }
 
-        numTrainers = CheckTrainer(k);
-        if (numTrainers == 0xFF) // non-trainerbatle script
+    // Sorts array by localId
+    for (i = 1; i < ARRAY_COUNT(canSeeTrainer); i++)
+    {
+        u8 x = canSeeTrainer[i];
+        u8 j = i;
+        while (j > 0 && gObjectEvents[canSeeTrainer[j-1]].localId > gObjectEvents[x].localId)
+        {
+            canSeeTrainer[j] = canSeeTrainer[j-1];
+            j--;
+        }
+        canSeeTrainer[j] = x;
+    }
+
+    for (i = 0; i < ARRAY_COUNT(canSeeTrainer); i++)
+    {
+        u8 numTrainers;
+        numTrainers = CheckTrainer(canSeeTrainer[i]);
+        if (numTrainers == 0xFF) // non-trainerbattle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
             gSelectedObjectEvent = objectEventId;
