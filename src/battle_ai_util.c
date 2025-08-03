@@ -893,7 +893,12 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
         AI_StoreBattlerTypes(battlerAtk, types);
         ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, ctx.moveType);
 
-        if (moveEffect == EFFECT_TRIPLE_KICK)
+        s32 fixedDamage = DoFixedDamageMoveCalc(&ctx);
+        if (fixedDamage != INT32_MAX)
+        {
+            simDamage.minimum = simDamage.median = simDamage.maximum = fixedDamage;
+        }
+        else if (moveEffect == EFFECT_TRIPLE_KICK)
         {
             for (gMultiHitCounter = GetMoveStrikeCount(move); gMultiHitCounter > 0; gMultiHitCounter--) // The global is used to simulate actual damage done
             {
@@ -2668,7 +2673,7 @@ bool32 IsStatLoweringEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsSelfStatLoweringEffect(enum MoveEffects effect)
+bool32 IsSelfStatLoweringEffect(enum MoveEffect effect)
 {
     // Self stat lowering moves like Overheart, Superpower etc.
     switch (effect)
@@ -2696,7 +2701,7 @@ bool32 IsSelfStatLoweringEffect(enum MoveEffects effect)
     }
 }
 
-bool32 IsSelfStatRaisingEffect(enum MoveEffects effect)
+bool32 IsSelfStatRaisingEffect(enum MoveEffect effect)
 {
     // Self stat lowering moves like Power Up Punch or Charge Beam
     switch (effect)

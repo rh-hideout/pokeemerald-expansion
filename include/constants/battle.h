@@ -396,7 +396,7 @@ enum BattleWeather
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
-enum __attribute__((packed)) MoveEffects
+enum __attribute__((packed)) MoveEffect
 {
     MOVE_EFFECT_NONE,
     MOVE_EFFECT_SLEEP,
@@ -703,6 +703,13 @@ enum MonState
 {
     MON_IN_BATTLE,
     MON_OUTSIDE_BATTLE,
+};
+
+enum __attribute__((packed)) CalcDamageState
+{
+    CAN_DAMAGE,
+    WILL_FAIL,
+    CHECK_ACCURACY,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H

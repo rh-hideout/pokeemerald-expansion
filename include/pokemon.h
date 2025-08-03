@@ -16,7 +16,7 @@
 #define FORM_SPECIES_END (0xffff)
 
 // Property labels for Get(Box)MonData / Set(Box)MonData
-enum {
+enum MonData {
     MON_DATA_PERSONALITY,
     MON_DATA_STATUS,
     MON_DATA_OT_ID,
@@ -232,6 +232,14 @@ struct PokemonSubstruct3
                              max(sizeof(struct PokemonSubstruct2),     \
                                  sizeof(struct PokemonSubstruct3)))))
 
+enum SubstructType
+{
+    SUBSTRUCT_TYPE_0,
+    SUBSTRUCT_TYPE_1,
+    SUBSTRUCT_TYPE_2,
+    SUBSTRUCT_TYPE_3,
+};
+
 union PokemonSubstruct
 {
     struct PokemonSubstruct0 type0;
@@ -310,7 +318,7 @@ enum {
     MON_SPR_GFX_MANAGERS_COUNT
 };
 
-#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
+#define UNPACK_VOLATILE_STRUCT(_enum, _fieldName, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_VOLATILE_STRUCT_, _fieldName, UNPACK_B(_typeMaxValue));
 #define UNPACK_VOLATILE_STRUCT_(_fieldName, _type, ...) _type FIRST(__VA_OPT__(_fieldName:BIT_SIZE(FIRST(__VA_ARGS__)),) _fieldName)
 
 struct Volatiles

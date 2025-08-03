@@ -1720,7 +1720,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (gBattleMons[battlerAtk].volatiles.dragonCheer || gBattleMons[battlerAtk].volatiles.focusEnergy)
                 ADJUST_SCORE(-10);
             break;
+        case EFFECT_NON_VOLATILE_STATUS:
+            if (GetBattlerMoveTargetType(battlerAtk, move) & MOVE_TARGET_FOES_AND_ALLY
+              && PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            break;
         case EFFECT_CONFUSE:
+            if (GetBattlerMoveTargetType(battlerAtk, move) & MOVE_TARGET_FOES_AND_ALLY
+              && PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
         case EFFECT_SWAGGER:
         case EFFECT_FLATTER:
             if (!AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -1853,7 +1863,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_STICKY_WEB:
             if (IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STICKY_WEB))
                 ADJUST_SCORE(-10);
-            else if (PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove) && IsHazardOnSide(GetBattlerSide(battlerDef), HAZARDS_STICKY_WEB))
+            if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10); // only one mon needs to set up Sticky Web
             break;
         case EFFECT_FORESIGHT:
@@ -1881,7 +1891,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 {
                     ADJUST_SCORE(-10); //Both enemies are perish songed
                 }
-                else if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                else if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 {
                     ADJUST_SCORE(-10);
                 }
@@ -2547,7 +2557,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 // This only happens if the ally already rolled on double trick room on final turn.
                 // Both Pokemon use Trick Room on the final turn of Trick Room to anticipate both opponents Protecting to stall out.
-                if (gFieldTimers.trickRoomTimer == gBattleTurnCounter)
+                if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == gBattleTurnCounter)
                     ADJUST_SCORE(PERFECT_EFFECT);
                 else
                     ADJUST_SCORE(-10);
@@ -2853,6 +2863,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                  || defPrio > 3) // Opponent going first or not using priority move
                     ADJUST_SCORE(-10);
             }
+            break;
+        case EFFECT_COURT_CHANGE:
+        case EFFECT_TEATIME:
+            if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
             break;
         case EFFECT_PLACEHOLDER:
             return 0;   // cannot even select

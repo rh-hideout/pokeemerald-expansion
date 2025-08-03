@@ -175,13 +175,13 @@ static void Task_DrawEscalator(u8 taskId)
             SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomRail : sEscalatorMetatiles_1F_1, 0);
             break;
         case 2:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNext : sEscalatorMetatiles_1F_2, MAPGRID_COLLISION_MASK);
+            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_BottomNext : sEscalatorMetatiles_1F_2, MAPGRID_IMPASSABLE);
             break;
         case 3:
             SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Bottom : sEscalatorMetatiles_1F_3, 0);
             break;
         case 4:
-            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNext : sEscalatorMetatiles_2F_0, MAPGRID_COLLISION_MASK);
+            SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_TopNext : sEscalatorMetatiles_2F_0, MAPGRID_IMPASSABLE);
             break;
         case 5:
             SetEscalatorMetatile(taskId, gMapHeader.mapLayout->isFrlg ? sEscalatorMetatilesFrlg_Top : sEscalatorMetatiles_2F_1, 0);
