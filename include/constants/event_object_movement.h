@@ -262,10 +262,15 @@
 #define MOVEMENT_ACTION_SURF_STILL_UP                   0xAB
 #define MOVEMENT_ACTION_SURF_STILL_LEFT                 0xAC
 #define MOVEMENT_ACTION_SURF_STILL_RIGHT                0xAD
-#define MOVEMENT_ACTION_SPIN_DOWN                       0xAE
-#define MOVEMENT_ACTION_SPIN_UP                         0xAF
-#define MOVEMENT_ACTION_SPIN_LEFT                       0xB0
-#define MOVEMENT_ACTION_SPIN_RIGHT                      0xB1
+//fast diagonal movement
+#define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_UP_LEFT      0xAE
+#define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_UP_RIGHT     0xAF
+#define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_DOWN_LEFT    0xB0
+#define MOVEMENT_ACTION_WALK_FAST_DIAGONAL_DOWN_RIGHT   0xB1
+#define MOVEMENT_ACTION_SPIN_DOWN                       0xB2
+#define MOVEMENT_ACTION_SPIN_UP                         0xB3
+#define MOVEMENT_ACTION_SPIN_LEFT                       0xB4
+#define MOVEMENT_ACTION_SPIN_RIGHT                      0xB5
 
 #define MOVEMENT_ACTION_STEP_END 0xFE
 #define MOVEMENT_ACTION_NONE     0xFF
