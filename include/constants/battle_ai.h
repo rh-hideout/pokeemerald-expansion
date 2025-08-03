@@ -33,8 +33,8 @@
 #define AI_FLAG_PP_STALL_PREVENTION         (1 << 25)  // AI keeps track of the player's switches where the incoming mon is immune to the chosen move
 #define AI_FLAG_PREDICT_MOVE                (1 << 26)  // AI will predict the player's move based on what move it would use in the same situation. Recommend using AI_FLAG_OMNISCIENT
 
-// Flags at and after 32 need different formatting, as in
-// #define AI_FLAG_PLACEHOLDER      ((u64)1 << 32)
+// Flags at and after 31 need different formatting, as in
+// #define AI_FLAG_PLACEHOLDER      ((u64)1 << 31)
 
 
 #define AI_FLAG_COUNT                       27
