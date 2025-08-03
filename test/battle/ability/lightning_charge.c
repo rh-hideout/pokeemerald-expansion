@@ -1,0 +1,19 @@
+#include "global.h"
+#include "test/battle.h"
+
+SINGLE_BATTLE_TEST("Lightning Charge doubles speed when using a piercing move")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_MEGAHORN].piercingMove);
+        PLAYER(SPECIES_ESCAVALIER) { Ability(ABILITY_LIGHTNING_CHARGE);  Speed(25);}
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40);};
+    } WHEN {
+        TURN { MOVE(player, MOVE_MEGAHORN); }
+    } SCENE {
+         {
+            MESSAGE("Escavalier used Megahorn!");
+            MESSAGE("Foe Wobbuffet used Celebrate!");
+        }
+
+    }
+}
