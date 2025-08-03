@@ -356,23 +356,6 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .callback = SpriteCB_TrainerIcons
 };
 
-/*
-static int SortApproachingTrainerArrayByLocalId(struct ObjectEvent canSeeTrainer)
-{
-    for (u32 i = 1; i < ARRAY_COUNT(canSeeTrainer); i++)
-    {
-        u32 x = canSeeTrainer[i];
-        u32 j = i;
-        while (j > 0 && gObjectEvents[canSeeTrainer[j-1]].localId > gObjectEvents[x].localId)
-        {
-            canSeeTrainer[j] = canSeeTrainer[j-1];
-            j--;
-        }
-        canSeeTrainer[j] = x;
-    }
-}
-*/
-
 // code
 bool8 CheckForTrainersWantingBattle(void)
 {
