@@ -243,11 +243,16 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
 
 // partner logic
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
+// IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
 u32 GetAllyChosenMove(u32 battlerId);
-bool32 IsDoubleBattleNot1v1();
-bool32 HasTwoOpponents(u32 battlerAtk);
-bool32 HasPartner(u32 battlerAtk);
+bool32 IsBattle1v1();
+// IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
+// Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle
+bool32 HasTwoOpponents(u32 battler);
+// HasTwoOpponents checks if the opposing side has two pokemon. Partner state is irrelevant. e.g., Dragon Darts hits one time with two opponents and twice with one opponent.
+bool32 HasPartner(u32 battler);
 bool32 HasPartnerIgnoreFlags(u32 battler);
+// HasPartner respects the Attacks Partner AI flag; HasPartnerIgnoreFlags checks only if a live pokemon is adjacent.
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
 bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, u32 partnerMove);
