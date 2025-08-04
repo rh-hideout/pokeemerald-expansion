@@ -3,7 +3,7 @@
 
 // AI Flags. Most run specific functions to update score, new flags are used for internal logic in other scripts
 // See docs/ai_flags.md for more details.
-#define AI_FLAG(x) ((u64)1 << x))
+#define AI_FLAG(x) ((u64)1 << x)
 
 #define AI_FLAG_CHECK_BAD_MOVE              AI_FLAG(0)  // AI will avoid using moves that are likely to fail or be ineffective in the current situation.
 #define AI_FLAG_TRY_TO_FAINT                AI_FLAG(1)  // AI will prioritize KOing the player's mon if able.
