@@ -6833,6 +6833,7 @@ static void Cmd_moveend(void)
                 UpdateStallMons();
             if ((gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
              || (gBattleMons[gBattlerAttacker].status2 & (STATUS2_FLINCHED))
+             || gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
              || gProtectStructs[gBattlerAttacker].nonVolatileStatusImmobility)
                 gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
 
@@ -12198,7 +12199,7 @@ void BS_RemoveStockpileCounters(void)
 {
     NATIVE_ARGS();
 
-    if (GetMoveEffect(gCurrentMove) == EFFECT_SWALLOW
+    if (GetMoveEffect(gCurrentMove) == EFFECT_SPIT_UP
      && gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_1ST_HIT
      && IsBattlerAlive(gBattlerTarget))
     {
@@ -16999,7 +17000,7 @@ static void TryUpdateRoundTurnOrder(void)
         }
 
         // update turn order for round users
-        for (i = 0; roundUsers[i] != 0xFF && i < 3; i++)
+        for (i = 0; i < 3 && roundUsers[i] != 0xFF; i++)
         {
             gBattlerByTurnOrder[currRounder] = roundUsers[i];
             gProtectStructs[roundUsers[i]].quash = TRUE; // Make it so their turn order can't be changed again
@@ -17007,7 +17008,7 @@ static void TryUpdateRoundTurnOrder(void)
         }
 
         // Update turn order for non-round users
-        for (i = 0; nonRoundUsers[i] != 0xFF && i < 3; i++)
+        for (i = 0; i < 3 && nonRoundUsers[i] != 0xFF; i++)
         {
             gBattlerByTurnOrder[currRounder] = nonRoundUsers[i];
             currRounder++;
