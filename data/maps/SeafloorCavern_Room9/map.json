@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "local_id": "LOCALID_SEAFLOOR_CAVERN_KYOGRE",
@@ -132,5 +132,7 @@
       "script": "SeafloorCavern_Room9_EventScript_ArchieAwakenKyogre"
     }
   ],
-  "bg_events": []
+  "bg_events": [
+
+  ]
 }

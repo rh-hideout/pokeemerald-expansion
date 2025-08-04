@@ -1,0 +1,54 @@
+raw `
+ScorchedSlab_MapScripts::
+    map_script MAP_SCRIPT_ON_RESUME, ScorchedSlab_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, ScorchedSlab_OnTransition
+	.byte 0
+
+ScorchedSlab_OnResume:
+    call_if_set FLAG_SYS_CTRL_OBJ_DELETE, ScorchedSlab_EventScript_TryRemoveVictini
+    end
+
+ScorchedSlab_EventScript_TryRemoveVictini::
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+    removeobject VAR_LAST_TALKED
+    return
+
+ScorchedSlab_OnTransition:
+	setflag FLAG_LANDMARK_SCORCHED_SLAB
+	end
+
+ScorchedSlab_EventScript_Victini::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_VICTINI, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_VICTINI, 30
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, ScorchedSlab_EventScript_DefeatedVictini
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, ScorchedSlab_EventScript_RanFromVictini
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, ScorchedSlab_EventScript_RanFromVictini
+    setflag FLAG_DEFEATED_VICTINI
+    release
+    end
+
+
+ScorchedSlab_EventScript_DefeatedVictini::
+    setflag FLAG_DEFEATED_VICTINI
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+
+ScorchedSlab_EventScript_RanFromVictini::
+    setvar VAR_0x8004, SPECIES_VICTINI
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+
+`

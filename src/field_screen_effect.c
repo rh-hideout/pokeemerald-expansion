@@ -441,7 +441,7 @@ static void Task_ExitNonDoor(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 1:
-        if (WaitForWeatherFadeIn())
+        if (WaitForWeatherFadeIn()  && !gSysPcFromPokenav)
         {
             UnfreezeObjectEvents();
             UnlockPlayerFieldControls();
@@ -456,7 +456,10 @@ static void Task_WaitForFadeShowStartMenu(u8 taskId)
     if (WaitForWeatherFadeIn() == TRUE)
     {
         DestroyTask(taskId);
-        CreateTask(Task_ShowStartMenu, 80);
+        if (GetSafariZoneFlag() || InBattlePyramid() || InBattlePike() || InUnionRoom() || InMultiPartnerRoom())
+            CreateTask(Task_ShowStartMenu, 80);
+        else        
+            CreateTask(Task_OpenStartMenuFullScreen, 80);
     }
 }
 

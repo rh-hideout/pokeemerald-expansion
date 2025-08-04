@@ -2005,7 +2005,7 @@ static void CreateGroudonRockSprites(u8 taskId)
 
     for (i = 0; i < (int)ARRAY_COUNT(sGroudonRockData); i++)
     {
-        spriteId = CreateSprite(&gAncientPowerRockSpriteTemplate, sGroudonRockData[i][0], DISPLAY_HEIGHT, i);
+        spriteId = CreateSprite(gAncientPowerRockSpriteTemplate, sGroudonRockData[i][0], DISPLAY_HEIGHT, i);
         gSprites[spriteId].callback = SpriteCB_GroudonRocks;
         gSprites[spriteId].oam.priority = 0;
         gSprites[spriteId].sRockId = i;

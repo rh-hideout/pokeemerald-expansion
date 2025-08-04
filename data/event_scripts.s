@@ -67,7 +67,6 @@
 
 	.section script_data, "aw", %progbits
 
-	.set ALLOCATE_SCRIPT_CMD_TABLE, 1
 	.include "data/script_cmd_table.inc"
 
 gSpecialVars::
@@ -710,6 +709,13 @@ Common_ShowEasyChatScreen::
 	fadescreen FADE_FROM_BLACK
 	return
 
+Common_OpenBag::
+	fadescreen FADE_TO_BLACK
+	closemessage
+	special Bag_ChooseFossil
+	waitstate
+	return
+
 Common_EventScript_ReadyPetalburgGymForBattle::
 	clearflag FLAG_HIDE_PETALBURG_GYM_GREETER
 	setflag FLAG_PETALBURG_MART_EXPANDED_ITEMS
@@ -1100,6 +1106,17 @@ EventScript_VsSeekerChargingDone::
 	waitstate
 	special VsSeekerResetObjectMovementAfterChargeComplete
 	releaseall
+EventScript_DoWonderTrade::
+	getpartysize
+	goto_if_eq VAR_RESULT, 0, EventScript_End
+	special ChoosePartyMon
+	waitstate
+	goto_if_ge VAR_0x8004, PARTY_SIZE, EventScript_End
+	copyvar VAR_0x8005, VAR_0x8004
+	special CreateWonderTradePokemon
+	special DoInGameTradeScene
+	waitstate
+EventScript_End:
 	end
 
 	.include "data/scripts/pc_transfer.inc"

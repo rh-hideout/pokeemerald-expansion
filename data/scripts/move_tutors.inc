@@ -10,8 +10,6 @@ SlateportCity_PokemonFanClub_EventScript_SwaggerTutor::
 	setvar VAR_0x8005, MOVE_SWAGGER
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_SwaggerDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_SWAGGER
-	goto MoveTutor_EventScript_SwaggerTaught
 	end
 
 MoveTutor_EventScript_SwaggerDeclined::
@@ -36,8 +34,6 @@ MauvilleCity_EventScript_RolloutTutor::
 	setvar VAR_0x8005, MOVE_ROLLOUT
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_RolloutDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_ROLLOUT
-	goto MoveTutor_EventScript_RolloutTaught
 	end
 
 MoveTutor_EventScript_RolloutDeclined::
@@ -62,8 +58,6 @@ VerdanturfTown_PokemonCenter_1F_EventScript_FuryCutterTutor::
 	setvar VAR_0x8005, MOVE_FURY_CUTTER
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_FuryCutterDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_FURY_CUTTER
-	goto MoveTutor_EventScript_FuryCutterTaught
 	end
 
 MoveTutor_EventScript_FuryCutterDeclined::
@@ -88,8 +82,6 @@ LavaridgeTown_House_EventScript_MimicTutor::
 	setvar VAR_0x8005, MOVE_MIMIC
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_MimicDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_MIMIC
-	goto MoveTutor_EventScript_MimicTaught
 	end
 
 MoveTutor_EventScript_MimicDeclined::
@@ -114,8 +106,6 @@ FallarborTown_Mart_EventScript_MetronomeTutor::
 	setvar VAR_0x8005, MOVE_METRONOME
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_MetronomeDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_METRONOME
-	goto MoveTutor_EventScript_MetronomeTaught
 	end
 
 MoveTutor_EventScript_MetronomeDeclined::
@@ -140,8 +130,6 @@ FortreeCity_House2_EventScript_SleepTalkTutor::
 	setvar VAR_0x8005, MOVE_SLEEP_TALK
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_SleepTalkDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_SLEEP_TALK
-	goto MoveTutor_EventScript_SleepTalkTaught
 	end
 
 MoveTutor_EventScript_SleepTalkDeclined::
@@ -166,8 +154,6 @@ LilycoveCity_DepartmentStoreRooftop_EventScript_SubstituteTutor::
 	setvar VAR_0x8005, MOVE_SUBSTITUTE
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_SubstituteDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_SUBSTITUTE
-	goto MoveTutor_EventScript_SubstituteTaught
 	end
 
 MoveTutor_EventScript_SubstituteDeclined::
@@ -192,8 +178,6 @@ MossdeepCity_EventScript_DynamicPunchTutor::
 	setvar VAR_0x8005, MOVE_DYNAMIC_PUNCH
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_DynamicPunchDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_DYNAMICPUNCH
-	goto MoveTutor_EventScript_DynamicPunchTaught
 	end
 
 MoveTutor_EventScript_DynamicPunchDeclined::
@@ -218,8 +202,6 @@ SootopolisCity_PokemonCenter_1F_EventScript_DoubleEdgeTutor::
 	setvar VAR_0x8005, MOVE_DOUBLE_EDGE
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_DoubleEdgeDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_DOUBLE_EDGE
-	goto MoveTutor_EventScript_DoubleEdgeTaught
 	end
 
 MoveTutor_EventScript_DoubleEdgeDeclined::
@@ -244,8 +226,6 @@ PacifidlogTown_PokemonCenter_1F_EventScript_ExplosionTutor::
 	setvar VAR_0x8005, MOVE_EXPLOSION
 	call MoveTutor_EventScript_OpenPartyMenu
 	goto_if_eq VAR_RESULT, 0, MoveTutor_EventScript_ExplosionDeclined
-	setflag FLAG_MOVE_TUTOR_TAUGHT_EXPLOSION
-	goto MoveTutor_EventScript_ExplosionTaught
 	end
 
 MoveTutor_EventScript_ExplosionDeclined::

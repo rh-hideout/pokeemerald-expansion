@@ -196,3 +196,4 @@ DOUBLE_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect")
 
 // Marked in Bulbapedia as need of research
 //TO_DO_BATTLE_TEST("Aroma Veil prevents G-Max Meltdown's effect");
+//TO_DO_BATTLE_TEST("Aroma Veil prevents Psychic Noise's effect");

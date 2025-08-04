@@ -1,0 +1,36 @@
+mapscripts UnownCavernB1F_MapScripts {
+}
+raw `
+
+EventScript_NavelRGift::
+    lock
+    faceplayer
+    message gText_NAVELRtext
+    waitmessage
+    checkitem ITEM_MYSTIC_TICKET, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_haveticket
+    waitmessage
+    message gText_Hereisticket
+    giveitem ITEM_MYSTIC_TICKET
+    playfanfare MUS_OBTAIN_ITEM
+    setflag FLAG_ENABLE_SHIP_NAVEL_ROCK
+    release
+    end
+
+Script_haveticket::
+    msgbox gText_haveticket
+    release
+    end
+
+gText_NAVELRtext::
+    .string "You seem like the right person...\p $"
+
+gText_haveticket::
+    .string "Oh Wait! How did it go?$"
+
+gText_Hereisticket::
+    .string "Here you go! I hope your confident!$"
+
+
+`

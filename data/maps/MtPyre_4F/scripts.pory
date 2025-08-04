@@ -1,0 +1,65 @@
+raw `
+MtPyre_4F_MapScripts::
+    map_script MAP_SCRIPT_ON_RESUME, MtPyre_4f_OnResume
+	.byte 0
+
+@ Seems like the scripts for the 4F and 5F were swapped
+
+MtPyre_5F_EventScript_Atsushi::
+	trainerbattle_single TRAINER_ATSUSHI, MtPyre_5F_Text_AtsushiIntro, MtPyre_5F_Text_AtsushiDefeat
+	msgbox MtPyre_5F_Text_AtsushiPostBattle, MSGBOX_AUTOCLOSE
+	end
+
+MtPyre_5F_Text_AtsushiIntro:
+	.string "Teacher…\n"
+	.string "Please watch over my progress!$"
+
+MtPyre_5F_Text_AtsushiDefeat:
+	.string "Teacher…\n"
+	.string "Please forgive me!$"
+
+MtPyre_5F_Text_AtsushiPostBattle:
+	.string "Until I improve, my teacher, who rests\n"
+	.string "here, will never find true peace…$"
+
+MtPyre_4f_OnResume:
+    call_if_set FLAG_SYS_CTRL_OBJ_DELETE, MtPyre_4f_EventScript_TryRemovePalkia
+    end
+
+MtPyre_4f_EventScript_TryRemovePalkia::
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
+    removeobject VAR_LAST_TALKED
+    return
+
+MtPyre_4f_EventScript_Palkia::
+    lock
+    faceplayer
+    waitse
+    playmoncry SPECIES_PALKIA, CRY_MODE_ENCOUNTER
+    delay 40
+    waitmoncry
+    setwildbattle SPECIES_PALKIA, 50
+    setflag FLAG_SYS_CTRL_OBJ_DELETE
+    special BattleSetup_StartLegendaryBattle
+    waitstate
+    clearflag FLAG_SYS_CTRL_OBJ_DELETE
+    specialvar VAR_RESULT, GetBattleOutcome
+    goto_if_eq VAR_RESULT, B_OUTCOME_WON, MtPyre_4f_EventScript_DefeatedPalkia
+    goto_if_eq VAR_RESULT, B_OUTCOME_RAN, MtPyre_4f_EventScript_RanFromPalkia
+    goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, MtPyre_4f_EventScript_RanFromPalkia
+    setflag FLAG_DEFEATED_PALKIA
+    release
+    end
+
+MtPyre_4f_EventScript_DefeatedPalkia::
+    setflag FLAG_DEFEATED_PALKIA
+    goto Common_EventScript_RemoveStaticPokemon
+    end
+
+MtPyre_4f_EventScript_RanFromPalkia::
+    setvar VAR_0x8004, SPECIES_PALKIA
+    goto Common_EventScript_LegendaryFlewAway
+    end
+
+`

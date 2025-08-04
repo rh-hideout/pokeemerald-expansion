@@ -76,7 +76,6 @@ static bool32 WaitForCallingDotsText(struct Pokenav_MatchCallGfx *);
 static void PrintMatchCallMessage(struct Pokenav_MatchCallGfx *);
 static bool32 WaitForMatchCallMessageText(struct Pokenav_MatchCallGfx *);
 static void DrawMsgBoxForCloseByMsg(struct Pokenav_MatchCallGfx *);
-static void PrintTrainerIsCloseBy(struct Pokenav_MatchCallGfx *);
 static bool32 WaitForTrainerIsCloseByText(struct Pokenav_MatchCallGfx *);
 static void EraseCallMessageBox(struct Pokenav_MatchCallGfx *);
 static bool32 WaitForCallMessageBoxErase(struct Pokenav_MatchCallGfx *);
@@ -124,10 +123,6 @@ static const u16 sListWindow_Pal[] = INCBIN_U16("graphics/pokenav/match_call/lis
 static const u16 sPokeball_Pal[] = INCBIN_U16("graphics/pokenav/match_call/pokeball.gbapal");
 static const u32 sPokeball_Gfx[] = INCBIN_U32("graphics/pokenav/match_call/pokeball.4bpp.lz");
 
-static const u8 gText_NumberRegistered[] = _("No. registered");
-static const u8 gText_NumberOfBattles[] = _("No. of battles");
-static const u8 gText_TrainerCloseBy[] = _("That TRAINER is close by.\nTalk to the TRAINER in person!");
-static const u8 gText_Unknown[] = _("UNKNOWN");
 
 static const struct BgTemplate sMatchCallBgTemplates[3] =
 {
@@ -642,9 +637,6 @@ static u32 DoTrainerCloseByMessage(s32 state)
     case 1:
         if (IsDma3ManagerBusyWithBgCopy2(gfx))
             return LT_PAUSE;
-
-        PrintTrainerIsCloseBy(gfx);
-        return LT_INC_AND_PAUSE;
     case 2:
         if (WaitForTrainerIsCloseByText(gfx))
             return LT_PAUSE;
@@ -1030,8 +1022,6 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     int mapSec = GetMatchCallMapSec(index);
     if (mapSec != MAPSEC_NONE)
         GetMapName(mapName, mapSec, 0);
-    else
-        StringCopy(mapName, gText_Unknown);
 
     x = GetStringCenterAlignXOffset(FONT_NARROW, mapName, 88);
     FillWindowPixelBuffer(gfx->locWindowId, PIXEL_FILL(1));
@@ -1130,10 +1120,6 @@ static bool32 WaitForCallingDotsText(struct Pokenav_MatchCallGfx *gfx)
     return IsTextPrinterActive(gfx->msgBoxWindowId);
 }
 
-static void PrintTrainerIsCloseBy(struct Pokenav_MatchCallGfx *gfx)
-{
-    AddTextPrinterParameterized(gfx->msgBoxWindowId, FONT_NORMAL, gText_TrainerCloseBy, 0, 1, 1, NULL);
-}
 
 static bool32 WaitForTrainerIsCloseByText(struct Pokenav_MatchCallGfx *gfx)
 {

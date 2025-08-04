@@ -660,6 +660,8 @@ static void ListMenuDrawCursor(struct ListMenu *list)
     }
 }
 
+#undef TASK_NONE
+
 static u8 ListMenuAddCursorObject(struct ListMenu *list, u32 cursorObjId)
 {
     struct CursorStruct cursor;

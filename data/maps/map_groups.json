@@ -99,7 +99,8 @@
     "LittlerootTown_BrendansHouse_2F",
     "LittlerootTown_MaysHouse_1F",
     "LittlerootTown_MaysHouse_2F",
-    "LittlerootTown_ProfessorBirchsLab"
+    "LittlerootTown_ProfessorBirchsLab",
+    "Megahouse"
   ],
   "gMapGroup_IndoorOldale": [
     "OldaleTown_House1",
@@ -114,7 +115,8 @@
     "DewfordTown_PokemonCenter_2F",
     "DewfordTown_Gym",
     "DewfordTown_Hall",
-    "DewfordTown_House2"
+    "DewfordTown_House2",
+    "Black_Market"
   ],
   "gMapGroup_IndoorLavaridge": [
     "LavaridgeTown_HerbShop",
@@ -219,7 +221,8 @@
     "FortreeCity_House3",
     "FortreeCity_House4",
     "FortreeCity_House5",
-    "FortreeCity_DecorationShop"
+    "FortreeCity_DecorationShop",
+    "ZHouse"
   ],
   "gMapGroup_IndoorLilycove": [
     "LilycoveCity_CoveLilyMotel_1F",
@@ -429,7 +432,21 @@
     "TerraCave_Entrance",
     "TerraCave_End",
     "AlteringCave",
-    "MeteorFalls_StevensCave"
+    "MeteorFalls_StevensCave",
+    "UnownCavern1F",
+    "UnownCavern2F",
+    "UnownCavernB1F",
+    "LittlerootCave",
+    "RusturfCavern",
+    "MeteorCave",
+    "PetalburgCave",
+    "DewfordCave",
+    "SlatecoveCave",
+    "MtPyreCatacomb",
+    "GalarianCave",
+    "Victory_Road_Past",
+    "Victory_Road_Future",
+    "Victory_Road_Beasts"
   ],
   "gMapGroup_IndoorDynamic": [
     "SecretBase_RedCave1",

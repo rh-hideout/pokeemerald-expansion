@@ -6029,6 +6029,14 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
             gBattleStruct->ateBoost[battler] = TRUE;
         return TYPE_NORMAL;
     }
+    else if (gMovesInfo[move].soundMove && ability == ABILITY_LIQUID_VOICE)
+    {
+        return TYPE_WATER;
+    }
+    else if (moveEffect == EFFECT_AURA_WHEEL && species == SPECIES_MORPEKO_HANGRY)
+    {
+        return TYPE_DARK;
+    }
 
     return TYPE_NONE;
 }

@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
@@ -26,6 +26,19 @@
       "trainer_sight_or_berry_tree_id": "ITEM_TM_DRAGON_CLAW",
       "script": "Common_EventScript_FindItem",
       "flag": "FLAG_ITEM_METEOR_FALLS_B1F_2R_TM_DRAGON_CLAW"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 3,
+      "y": 3,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "MeteorFalls_B1F_2R_EventScript_Hoopa",
+      "flag": "FLAG_HIDE_HOOPA"
     }
   ],
   "warp_events": [
@@ -37,6 +50,10 @@
       "dest_warp_id": "3"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

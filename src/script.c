@@ -8,6 +8,7 @@
 #include "constants/event_objects.h"
 #include "constants/flags.h"
 #include "constants/map_scripts.h"
+#include "trainer_see.h"
 #include "field_message_box.h"
 
 #define RAM_SCRIPT_MAGIC 51

@@ -36,8 +36,6 @@ static u32 CB2_HandleCallExitInput(struct Pokenav_MatchCallMenu *);
 static u32 LoopedTask_BuildMatchCallList(s32);
 static bool32 ShouldDoNearbyMessage(void);
 
-static const u8 gText_CallCantBeMadeHere[] = _("A call can't be made from here.");
-
 #include "data/text/match_call_messages.h"
 
 static const u8 sMatchCallOptionsNoCheckPage[] =
@@ -358,8 +356,6 @@ const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest)
 {
     struct Pokenav_MatchCallMenu *state = GetSubstructPtr(POKENAV_SUBSTRUCT_MATCH_CALL_MAIN);
     *newRematchRequest = FALSE;
-    if (!Overworld_MapTypeAllowsTeleportAndFly(gMapHeader.mapType))
-        return gText_CallCantBeMadeHere;
 
     if (!state->matchCallEntries[index].isSpecialTrainer)
         *newRematchRequest = SelectMatchCallMessage(GetTrainerIdxByRematchIdx(state->matchCallEntries[index].headerId), gStringVar4);

@@ -866,6 +866,7 @@ extern const u8 gText_NormalTagMatch[];
 extern const u8 gText_VarietyTagMatch[];
 extern const u8 gText_UniqueTagMatch[];
 extern const u8 gText_ExpertTagMatch[];
+extern const u8 gText_UseWonder[];
 extern const u8 gText_TimeBoard[];
 extern const u8 gText_TimeCleared[];
 extern const u8 gText_XMinYDotZSec[];
@@ -2357,6 +2358,39 @@ extern const u8 gText_BeautyContest[];
 extern const u8 gText_CutenessContest[];
 extern const u8 gText_SmartnessContest[];
 extern const u8 gText_ToughnessContest[];
+
+// PokéNav Match Call
+extern const u8 gText_CallCantBeMadeHere[];
+extern const u8 gText_NumberRegistered[];
+extern const u8 gText_NumberOfBattles[];
+extern const u8 gText_Unknown[];
+extern const u8 gText_TrainerCloseBy[];
+extern const u8 gText_Call[];
+extern const u8 gText_Check[];
+extern const u8 gText_Cancel6[];
+
+// PokéNav Menu Handler
+extern const u8 gText_CheckMapOfHoenn[];
+extern const u8 gText_CheckPokemonInDetail[];
+extern const u8 gText_CallRegisteredTrainer[];
+extern const u8 gText_Pokenav_Access_PC[];
+extern const u8 gText_CheckObtainedRibbons[];
+extern const u8 gText_PutAwayPokenav[];
+extern const u8 gText_CheckPartyPokemonInDetail[];
+extern const u8 gText_CheckAllPokemonInDetail[];
+extern const u8 gText_ReturnToPokenavMenu[];
+extern const u8 gText_FindCoolPokemon[];
+extern const u8 gText_FindBeautifulPokemon[];
+extern const u8 gText_FindCutePokemon[];
+extern const u8 gText_FindSmartPokemon[];
+extern const u8 gText_FindToughPokemon[];
+extern const u8 gText_ReturnToConditionMenu[];
+extern const u8 gText_Pokenav_Cannot_Access_PC[];
+extern const u8 gText_NoRibbonWinners[];
+
+// PokéNav
+extern const u8 gText_NumberIndex[];
+extern const u8 gText_RibbonsF700[];
 
 // use_pokeblock
 extern const u8 gText_Coolness[];

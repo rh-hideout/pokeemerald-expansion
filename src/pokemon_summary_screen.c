@@ -316,6 +316,7 @@ static void DestroyMoveSelectorSprites(u8);
 static void SetMainMoveSelectorColor(u8);
 static void KeepMoveSelectorVisible(u8);
 static void SummaryScreen_DestroyAnimDelayTask(void);
+static void BufferIvOrEvStats(u8 mode);
 static bool32 ShouldShowMoveRelearner(void);
 static bool32 ShouldShowRename(void);
 static bool32 ShouldShowIvEvPrompt(void);
@@ -1684,11 +1685,13 @@ static void ClearStatLabel(u32 length, u32 statsCoordX, u32 statsCoordY)
         FillBgTilemapBufferRect(1, blankStatsBlock, statsCoordX + blankOffset + i, statsCoordY, 1, 1, 2);
 }
 
-static void Task_HandleInput(u8 taskId)
-{
-    if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
-    {
-        if (JOY_NEW(DPAD_UP))
+ static void Task_HandleInput(u8 taskId)
+ {
+    s16 *taskData = gTasks[taskId].data;
+
+     if (MenuHelpers_ShouldWaitForLinkRecv() != TRUE && !gPaletteFade.active)
+     {
+         if (JOY_NEW(DPAD_UP))
         {
             ChangeSummaryPokemon(taskId, -1);
         }
@@ -1706,9 +1709,15 @@ static void Task_HandleInput(u8 taskId)
         }
         else if (JOY_NEW(A_BUTTON))
         {
-            if (sMonSummaryScreen->currPageIndex != PSS_PAGE_SKILLS)
+            if (sMonSummaryScreen->currPageIndex == PSS_PAGE_SKILLS)
             {
-                if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
+                 // Cycle through IVs/EVs/stats on pressing A
+                StopPokemonAnimations();
+                PlaySE(SE_SELECT);
+                ChangeSummaryState(taskData, taskId);
+                BufferIvOrEvStats(currentStat);
+            }
+                else if (sMonSummaryScreen->currPageIndex == PSS_PAGE_INFO)
                 {
                     if (ShouldShowRename())
                     {
@@ -3234,14 +3243,17 @@ static void PrintPageNamesAndStats(void)
     PrintTextOnWindowWithFont(PSS_LABEL_WINDOW_PROMPT_RELEARN, gText_Relearn, 0, 4, 0, 0, FONT_SMALL);
 }
 
-static void PutPageWindowTilemaps(u8 page)
-{
-    u8 i;
+ static void PutPageWindowTilemaps(u8 page)
+ {
+     u8 i;
 
-    ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
-    ClearWindowTilemap(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE);
+    LZDecompressWram(gSummaryPage_Skills_Tilemap, sMonSummaryScreen->bgTilemapBuffers[PSS_PAGE_SKILLS][1]);
+    CopyBgTilemapBufferToVram(1);
+
+     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_INFO_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_POKEMON_SKILLS_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_BATTLE_MOVES_TITLE);
+     ClearWindowTilemap(PSS_LABEL_WINDOW_CONTEST_MOVES_TITLE);
 
     switch (page)
     {
@@ -3296,9 +3308,9 @@ static void PutPageWindowTilemaps(u8 page)
     ScheduleBgCopyTilemapToVram(0);
 }
 
-static void ClearPageWindowTilemaps(u8 page)
-{
-    u8 i;
+ static void ClearPageWindowTilemaps(u8 page)
+ {
+     u8 i;
 
     switch (page)
     {

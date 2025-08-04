@@ -7,7 +7,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax increases HP and max HP by 1.5x", u16 hp)
     u32 dynamax;
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
-    GIVEN {
+    GIVEN { // TODO: Dynamax level
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -104,8 +104,8 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax expires after three turns", u16 hp)
         TURN { MOVE(player, MOVE_SCRATCH); }                     // 2nd max move
         TURN { MOVE(player, MOVE_SCRATCH); }                     // 3rd max move
     } SCENE {
-        int j;
-        for (j = 0; j < DYNAMAX_TURNS_COUNT; ++j) {
+        int i;
+        for (i = 0; i < DYNAMAX_TURNS_COUNT; ++i) {
             if (dynamax)
                 MESSAGE("Wobbuffet used Max Strike!");
             else

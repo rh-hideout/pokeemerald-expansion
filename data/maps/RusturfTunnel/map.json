@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "local_id": "LOCALID_RUSTURF_TUNNEL_WANDAS_BF",
@@ -171,6 +171,13 @@
       "elevation": 3,
       "dest_map": "MAP_ROUTE116",
       "dest_warp_id": "2"
+    },
+    {
+      "x": 24,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_RUSTURF_CAVERN",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [
@@ -220,5 +227,7 @@
       "script": "RusturfTunnel_EventScript_TunnelBlockagePos3"
     }
   ],
-  "bg_events": []
+  "bg_events": [
+
+  ]
 }

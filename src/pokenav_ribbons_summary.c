@@ -40,7 +40,6 @@ enum
 #define MON_SPRITE_X_OFF -32
 #define MON_SPRITE_Y     104
 
-static const u8 gText_RibbonsF700[] = _("RIBBONS {DYNAMIC 0}");
 
 struct Pokenav_RibbonsSummaryList
 {
@@ -810,7 +809,6 @@ static void PrintCurrentMonRibbonCount(struct Pokenav_RibbonsSummaryMenu *menu)
     ConvertIntToDecimalStringN(gStringVar1, GetCurrMonRibbonCount(), STR_CONV_MODE_LEFT_ALIGN, 2);
     DynamicPlaceholderTextUtil_Reset();
     DynamicPlaceholderTextUtil_SetPlaceholderPtr(0, gStringVar1);
-    DynamicPlaceholderTextUtil_ExpandPlaceholders(gStringVar4, gText_RibbonsF700);
     FillWindowPixelBuffer(menu->ribbonCountWindowId, PIXEL_FILL(4));
     AddTextPrinterParameterized3(menu->ribbonCountWindowId, FONT_NORMAL, 0, 1, color, TEXT_SKIP_DRAW, gStringVar4);
     CopyWindowToVram(menu->ribbonCountWindowId, COPYWIN_GFX);

@@ -4461,7 +4461,7 @@ u8 GetNatureFromPersonality(u32 personality)
     return personality % NUM_NATURES;
 }
 
-u32 GetGMaxTargetSpecies(u32 species)
+static u32 GetGMaxTargetSpecies(u32 species)
 {
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
     u32 i;
@@ -4470,7 +4470,7 @@ u32 GetGMaxTargetSpecies(u32 species)
         if (formChanges[i].method == FORM_CHANGE_BATTLE_GIGANTAMAX)
             return formChanges[i].targetSpecies;
     }
-    return species;
+    return SPECIES_NONE;
 }
 
 bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct EvolutionParam *params, struct Pokemon *tradePartner, u32 partyId, bool32 *canStopEvo, enum EvoState evoState)
@@ -4965,8 +4965,8 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
     // Gigantamax Factor. We assume that is because their evolutions
     // do not have a Gigantamax Form.
     if (GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR, NULL)
-     && GetGMaxTargetSpecies(species) != species
-     && GetGMaxTargetSpecies(targetSpecies) == targetSpecies)
+     && GetGMaxTargetSpecies(species) != SPECIES_NONE
+     && GetGMaxTargetSpecies(targetSpecies) == SPECIES_NONE)
     {
         return SPECIES_NONE;
     }

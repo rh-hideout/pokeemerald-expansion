@@ -1,7 +1,11 @@
 MirageTower_4F_MapScripts::
+# 6 "data/maps/MirageTower_4F/scripts.pory"
 	.byte 0
+# 7 "data/maps/MirageTower_4F/scripts.pory"
 
-MirageTower_4F_EventScript_RootFossil::
+# 8 "data/maps/MirageTower_4F/scripts.pory"
+MirageTower_4F_EventScript_Fossil::
+# 9 "data/maps/MirageTower_4F/scripts.pory"
 	lock
 	faceplayer
 	msgbox MirageTower_4F_Text_TakeRootFossil, MSGBOX_YESNO
@@ -13,8 +17,11 @@ MirageTower_4F_EventScript_RootFossil::
 	setflag FLAG_HIDE_MIRAGE_TOWER_CLAW_FOSSIL
 	removeobject LOCALID_MIRAGE_ROOT_FOSSIL
 	delay 30
-	setflag FLAG_CHOSE_ROOT_FOSSIL
-	goto MirageTower_4F_EventScript_CollapseMirageTower
+# 16 "data/maps/MirageTower_4F/scripts.pory"
+	setflag FLAG_DAILY_FOSSIL_RECEIVED
+# 17 "data/maps/MirageTower_4F/scripts.pory"
+    clearflag FLAG_HIDE_DESERT_UNDERPASS_FOSSIL
+# 18 "data/maps/MirageTower_4F/scripts.pory"
 	end
 
 MirageTower_4F_EventScript_LeaveRootFossil::

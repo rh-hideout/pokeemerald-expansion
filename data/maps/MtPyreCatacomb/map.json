@@ -1,0 +1,41 @@
+{
+  "id": "MAP_MT_PYRE_CATACOMB",
+  "name": "MtPyreCatacomb",
+  "layout": "LAYOUT_MT_PYRE_CATACOMB",
+  "music": "MUS_RG_LAVENDER",
+  "region_map_section": "MAPSEC_MT_PYRE_CATACOMB",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_UNDERGROUND",
+  "allow_cycling": true,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": 0,
+  "object_events": [
+
+  ],
+  "warp_events": [
+    {
+      "x": 16,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE122",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 17,
+      "y": 29,
+      "elevation": 0,
+      "dest_map": "MAP_ROUTE122",
+      "dest_warp_id": "1"
+    }
+  ],
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
+}

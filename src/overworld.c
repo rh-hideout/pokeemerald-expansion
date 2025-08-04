@@ -1,6 +1,8 @@
 #include "global.h"
 #include "overworld.h"
 #include "battle_pyramid.h"
+#include "battle_pike.h"
+#include "battle_pyramid_bag.h"
 #include "battle_setup.h"
 #include "berry.h"
 #include "bg.h"
@@ -77,6 +79,7 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "ui_startmenu_full.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -3488,6 +3491,18 @@ static void SpriteCB_LinkPlayer(struct Sprite *sprite)
     }
 }
 
+void CB2_ReturnToFullScreenStartMenu(void)
+{
+    FieldClearVBlankHBlankCallbacks();
+
+    if (GetSafariZoneFlag() || InBattlePyramid() || InBattlePike() || InUnionRoom() || InMultiPartnerRoom())
+    {
+        SetMainCallback2(CB2_ReturnToFieldWithOpenMenu);
+        return;
+    }
+
+	StartMenuFull_Init(CB2_ReturnToField);
+}
 // ----------------
 // Item Header Descriptions
 // Item Description Header

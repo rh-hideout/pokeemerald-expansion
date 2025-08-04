@@ -616,28 +616,25 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
     if (GetMonData(mon, MON_DATA_IS_EGG) || GetMonData(mon, MON_DATA_SPECIES) == SPECIES_NONE) // Don't load GFX of egg pokemon.
         return;
 
+    monsPersonality = GetMonData(mon, MON_DATA_PERSONALITY);
     isShiny = GetMonData(mon, MON_DATA_IS_SHINY);
 
     if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
     {
         species = GetMonData(mon, MON_DATA_SPECIES);
-        personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
+        currentPersonality = monsPersonality;
     }
     else
     {
         species = gBattleSpritesDataPtr->battlerData[battler].transformSpecies;
-        // If battler has Gigantamax factor, try convert gfx to G-Max version
-        if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
-            gBattleSpritesDataPtr->battlerData[battler].transformSpecies = species = GetGMaxTargetSpecies(species);
-
         if (B_TRANSFORM_SHINY >= GEN_4)
         {
-            personalityValue = gTransformedPersonalities[battler];
+            currentPersonality = gTransformedPersonalities[battler];
             isShiny = gTransformedShininess[battler];
         }
         else
         {
-            personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
+            currentPersonality = monsPersonality;
         }
     }
 
@@ -957,18 +954,16 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
         }
         else
         {
-            targetSpecies = gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies;
             if (B_TRANSFORM_SHINY >= GEN_4 && trackEnemyPersonality && !megaEvo)
             {
-                personalityValue = GetMonData(monDef, MON_DATA_PERSONALITY);
-                isShiny = GetMonData(monDef, MON_DATA_IS_SHINY);
+                personalityValue = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerDef]], MON_DATA_PERSONALITY);
+                isShiny = GetMonData(&gPlayerParty[gBattlerPartyIndexes[battlerDef]], MON_DATA_IS_SHINY);
             }
             else
             {
-                personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
-                isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
+                personalityValue = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_PERSONALITY);
+                isShiny = GetMonData(&gEnemyParty[gBattlerPartyIndexes[battlerAtk]], MON_DATA_IS_SHINY);
             }
-        }
 
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
@@ -990,24 +985,6 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
         {
             gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
         }
-    }
-
-    // dynamax tint
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_DYNAMAX)
-    {
-        // Calyrex and its forms have a blue dynamax aura instead of red.
-        if (GET_BASE_SPECIES_ID(targetSpecies) == SPECIES_CALYREX)
-            BlendPalette(paletteOffset, 16, 4, RGB(12, 0, 31));
-        else
-            BlendPalette(paletteOffset, 16, 4, RGB(31, 0, 12));
-        CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
-    }
-
-    // Terastallization's tint
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
-    {
-        BlendPalette(paletteOffset, 16, 8, GetTeraTypeRGB(GetBattlerTeraType(battlerAtk)));
-        CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
     }
 
     gSprites[gBattlerSpriteIds[battlerAtk]].y = GetBattlerSpriteDefault_Y(battlerAtk);
@@ -1390,10 +1367,9 @@ void FillAroundBattleWindows(void)
     }
 }
 
-void ClearTemporarySpeciesSpriteData(u32 battler, bool32 dontClearTransform, bool32 dontClearSubstitute)
+void ClearTemporarySpeciesSpriteData(u8 battler, bool8 dontClearSubstitute)
 {
-    if (!dontClearTransform)
-        gBattleSpritesDataPtr->battlerData[battler].transformSpecies = SPECIES_NONE;
+    gBattleSpritesDataPtr->battlerData[battler].transformSpecies = SPECIES_NONE;
     if (!dontClearSubstitute)
         ClearBehindSubstituteBit(battler);
 }

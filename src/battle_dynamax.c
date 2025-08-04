@@ -130,15 +130,15 @@ bool32 IsGigantamaxed(u32 battler)
 }
 
 // Applies the HP Multiplier for Dynamaxed Pokemon and Raid Bosses.
-void ApplyDynamaxHPMultiplier(struct Pokemon* mon)
+void ApplyDynamaxHPMultiplier(u32 battler, struct Pokemon* mon)
 {
     if (GetMonData(mon, MON_DATA_SPECIES) == SPECIES_SHEDINJA)
         return;
     else
     {
-        uq4_12_t multiplier = GetDynamaxLevelHPMultiplier(GetMonData(mon, MON_DATA_DYNAMAX_LEVEL), FALSE);
-        u32 hp = UQ_4_12_TO_INT((GetMonData(mon, MON_DATA_HP) * multiplier) + UQ_4_12_ROUND);
-        u32 maxHP = UQ_4_12_TO_INT((GetMonData(mon, MON_DATA_MAX_HP) * multiplier) + UQ_4_12_ROUND);
+        u32 scale = 150 + 5 * GetMonData(mon, MON_DATA_DYNAMAX_LEVEL);
+        u32 hp = (GetMonData(mon, MON_DATA_HP) * scale + 99) / 100;
+        u32 maxHP = (GetMonData(mon, MON_DATA_MAX_HP) * scale + 99) / 100;
         SetMonData(mon, MON_DATA_HP, &hp);
         SetMonData(mon, MON_DATA_MAX_HP, &maxHP);
     }
@@ -479,7 +479,7 @@ void BS_UpdateDynamax(void)
     struct Pokemon *mon = GetBattlerMon(battler);
 
     if (!IsGigantamaxed(battler)) // RecalcBattlerStats will get called on form change.
-        RecalcBattlerStats(battler, mon, GetActiveGimmick(battler) == GIMMICK_DYNAMAX);
+        RecalcBattlerStats(battler, mon);
 
     UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], mon, HEALTHBOX_ALL);
     gBattlescriptCurrInstr = cmd->nextInstr;

@@ -1,0 +1,725 @@
+mapscripts Black_Market_MapScripts {
+}
+
+script Black_Market_EventScript_Sign {
+    lockall
+    msgbox(format("EMPLOYEES ONLY!!!!\p"
+    "KEEP OUT WE MEAN IT!!!!!!\p"))
+    releaseall
+}
+
+
+raw `
+
+Script_Black_Market_SHARD_ITEM_EMPLOYEE::
+    lock
+    faceplayer
+    message Text_BMSHARD
+    waitmessage
+    pokemart BM_SHARD_ITEMS
+    msgbox Text_BMSHARDEND
+    release
+    end
+
+Script_Black_Market_BALL_ITEM_EMPLOYEE::
+    lock
+    faceplayer
+    message Text_BMBALL
+    waitmessage
+    pokemart BM_BALL_ITEMS
+    msgbox Text_BMBALLEND
+    release
+    end
+
+Script_Black_Market_BERRY_BOY::
+    lock
+    faceplayer
+    message Text_BMBERRYBOY
+    waitmessage
+    pokemart BM_BERRIES_ITEMS
+    msgbox Text_BMBERRYEND
+    release
+    end
+
+Script_Black_Market_PLATE_PERSON::
+    lock
+    faceplayer
+    message Text_BMPLATEP
+    waitmessage
+    pokemart BM_PLATE_ITEMS
+    msgbox Text_BMPLATEEND
+    release
+    end
+
+.align 2
+BM_SHARD_ITEMS:
+    .2byte ITEM_RED_SHARD
+    .2byte ITEM_BLUE_SHARD
+    .2byte ITEM_YELLOW_SHARD
+    .2byte ITEM_GREEN_SHARD
+    .2byte ITEM_STRAWBERRY_SWEET
+    .2byte ITEM_LOVE_SWEET
+    .2byte ITEM_BERRY_SWEET
+    .2byte ITEM_CLOVER_SWEET
+    .2byte ITEM_FLOWER_SWEET
+    .2byte ITEM_STAR_SWEET
+    .2byte ITEM_RIBBON_SWEET
+    .2byte ITEM_RED_NECTAR
+    .2byte ITEM_YELLOW_NECTAR
+    .2byte ITEM_PINK_NECTAR
+    .2byte ITEM_PURPLE_NECTAR
+    .2byte ITEM_LIGHT_BALL
+    .2byte ITEM_LEEK
+    .2byte ITEM_THICK_CLUB
+    .2byte ITEM_LUCKY_PUNCH
+    .2byte ITEM_METAL_POWDER
+    .2byte ITEM_QUICK_POWDER
+    .2byte ITEM_BRIGHT_POWDER
+    .2byte ITEM_ADAMANT_ORB
+    .2byte ITEM_LUSTROUS_ORB
+    .2byte ITEM_GRISEOUS_ORB
+    .2byte ITEM_ROCKY_HELMET
+    .2byte ITEM_AIR_BALLOON
+    .2byte ITEM_WEAKNESS_POLICY
+    .2byte ITEM_BLUNDER_POLICY
+    .2byte ITEM_EXPERT_BELT
+    .2byte ITEM_WISE_GLASSES
+    .2byte ITEM_MUSCLE_BAND
+    .2byte ITEM_SHELL_BELL
+    .2byte ITEM_WIDE_LENS
+    .2byte ITEM_ZOOM_LENS
+    .2byte ITEM_SCOPE_LENS
+    .2byte ITEM_QUICK_CLAW
+    .2byte ITEM_ASSAULT_VEST
+    .2byte ITEM_SAFETY_GOGGLES
+    .2byte ITEM_TERRAIN_EXTENDER
+    .2byte ITEM_PROTECTIVE_PADS
+    .2byte ITEM_THROAT_SPRAY
+    .2byte ITEM_HEAVY_DUTY_BOOTS
+    .2byte ITEM_ROOM_SERVICE
+    .2byte ITEM_METRONOME
+    .2byte ITEM_UTILITY_UMBRELLA
+    .2byte ITEM_COVERT_CLOAK
+    .2byte ITEM_LOADED_DICE
+    .2byte ITEM_RING_TARGET
+    .2byte ITEM_RED_CARD
+    .2byte ITEM_MIRROR_HERB
+    .2byte ITEM_BINDING_BAND
+    .2byte ITEM_ADAMANT_CRYSTAL
+    .2byte ITEM_GRISEOUS_CORE
+    .2byte ITEM_LUSTROUS_GLOBE
+    .2byte ITEM_NONE
+    release
+    end
+
+.align 2
+BM_BALL_ITEMS:
+    .2byte ITEM_MASTER_BALL
+    .2byte ITEM_SAFARI_BALL
+    .2byte ITEM_CHERISH_BALL
+    .2byte ITEM_LUXURY_BALL
+    .2byte ITEM_ABILITY_CAPSULE
+    .2byte ITEM_ABILITY_PATCH
+    .2byte ITEM_LURE
+    .2byte ITEM_SUPER_LURE
+    .2byte ITEM_MAX_LURE
+    .2byte ITEM_PP_MAX
+    .2byte ITEM_MAX_ELIXIR
+    .2byte ITEM_BERRY_JUICE
+    .2byte ITEM_HEART_SCALE
+    .2byte ITEM_EVERSTONE
+    .2byte ITEM_DOUSE_DRIVE
+    .2byte ITEM_SHOCK_DRIVE
+    .2byte ITEM_BURN_DRIVE
+    .2byte ITEM_CHILL_DRIVE
+    .2byte ITEM_WELLSPRING_MASK
+    .2byte ITEM_CORNERSTONE_MASK
+    .2byte ITEM_HEARTHFLAME_MASK
+    .2byte ITEM_RUSTED_SWORD
+    .2byte ITEM_RUSTED_SHIELD
+    .2byte ITEM_CHOICE_BAND
+    .2byte ITEM_CHOICE_SPECS
+    .2byte ITEM_CHOICE_SCARF
+    .2byte ITEM_STICKY_BARB
+    .2byte ITEM_LEFTOVERS
+    .2byte ITEM_KINGS_ROCK
+    .2byte ITEM_CLEANSE_TAG
+    .2byte ITEM_SOOTHE_BELL
+    .2byte ITEM_FLAME_ORB
+    .2byte ITEM_TOXIC_ORB
+    .2byte ITEM_LIFE_ORB
+    .2byte ITEM_SMOKE_BALL
+    .2byte ITEM_DAMP_ROCK
+    .2byte ITEM_HEAT_ROCK
+    .2byte ITEM_SMOOTH_ROCK
+    .2byte ITEM_BLACK_SLUDGE
+    .2byte ITEM_CLEAR_AMULET
+    .2byte ITEM_GRIP_CLAW
+    .2byte ITEM_PUNCHING_GLOVE
+    .2byte ITEM_EXP_SHARE
+    .2byte ITEM_AMULET_COIN
+    .2byte ITEM_MACHO_BRACE
+    .2byte ITEM_LUCKY_EGG
+    .2byte ITEM_DESTINY_KNOT
+    .2byte ITEM_FOCUS_BAND
+    .2byte ITEM_FOCUS_SASH
+    .2byte ITEM_EVIOLITE
+    .2byte ITEM_BERSERK_GENE
+    .2byte ITEM_BOOSTER_ENERGY
+    .2byte ITEM_NONE
+    release
+    end
+
+.align 2
+BM_BERRIES_ITEMS:
+    .2byte ITEM_CHERI_BERRY
+    .2byte ITEM_CHESTO_BERRY
+    .2byte ITEM_PECHA_BERRY
+    .2byte ITEM_RAWST_BERRY
+    .2byte ITEM_ASPEAR_BERRY
+    .2byte ITEM_LEPPA_BERRY
+    .2byte ITEM_ORAN_BERRY
+    .2byte ITEM_PERSIM_BERRY
+    .2byte ITEM_LUM_BERRY
+    .2byte ITEM_SITRUS_BERRY
+    .2byte ITEM_FIGY_BERRY
+    .2byte ITEM_WIKI_BERRY
+    .2byte ITEM_MAGO_BERRY
+    .2byte ITEM_AGUAV_BERRY
+    .2byte ITEM_IAPAPA_BERRY
+    .2byte ITEM_RAZZ_BERRY
+    .2byte ITEM_BLUK_BERRY
+    .2byte ITEM_NANAB_BERRY
+    .2byte ITEM_WEPEAR_BERRY
+    .2byte ITEM_PINAP_BERRY
+    .2byte ITEM_POMEG_BERRY
+    .2byte ITEM_KELPSY_BERRY
+    .2byte ITEM_QUALOT_BERRY
+    .2byte ITEM_HONDEW_BERRY
+    .2byte ITEM_GREPA_BERRY
+    .2byte ITEM_TAMATO_BERRY
+    .2byte ITEM_CORNN_BERRY
+    .2byte ITEM_MAGOST_BERRY
+    .2byte ITEM_RABUTA_BERRY
+    .2byte ITEM_NOMEL_BERRY
+    .2byte ITEM_SPELON_BERRY
+    .2byte ITEM_PAMTRE_BERRY
+    .2byte ITEM_WATMEL_BERRY
+    .2byte ITEM_DURIN_BERRY
+    .2byte ITEM_BELUE_BERRY
+    .2byte ITEM_CHILAN_BERRY
+    .2byte ITEM_OCCA_BERRY
+    .2byte ITEM_PASSHO_BERRY
+    .2byte ITEM_WACAN_BERRY
+    .2byte ITEM_RINDO_BERRY
+    .2byte ITEM_YACHE_BERRY
+    .2byte ITEM_CHOPLE_BERRY
+    .2byte ITEM_KEBIA_BERRY
+    .2byte ITEM_SHUCA_BERRY
+    .2byte ITEM_COBA_BERRY
+    .2byte ITEM_PAYAPA_BERRY
+    .2byte ITEM_TANGA_BERRY
+    .2byte ITEM_CHARTI_BERRY
+    .2byte ITEM_KASIB_BERRY
+    .2byte ITEM_HABAN_BERRY
+    .2byte ITEM_COLBUR_BERRY
+    .2byte ITEM_BABIRI_BERRY
+    .2byte ITEM_ROSELI_BERRY
+    .2byte ITEM_LIECHI_BERRY
+    .2byte ITEM_GANLON_BERRY
+    .2byte ITEM_SALAC_BERRY
+    .2byte ITEM_PETAYA_BERRY
+    .2byte ITEM_APICOT_BERRY
+    .2byte ITEM_LANSAT_BERRY
+    .2byte ITEM_STARF_BERRY
+    .2byte ITEM_ENIGMA_BERRY
+    .2byte ITEM_MICLE_BERRY
+    .2byte ITEM_CUSTAP_BERRY
+    .2byte ITEM_JABOCA_BERRY
+    .2byte ITEM_ROWAP_BERRY
+    .2byte ITEM_KEE_BERRY
+    .2byte ITEM_MARANGA_BERRY
+    .2byte ITEM_NONE
+    release
+    end
+
+.align 2
+BM_PLATE_ITEMS:
+    .2byte ITEM_FLAME_PLATE
+    .2byte ITEM_SPLASH_PLATE
+    .2byte ITEM_ZAP_PLATE
+    .2byte ITEM_MEADOW_PLATE
+    .2byte ITEM_ICICLE_PLATE
+    .2byte ITEM_FIST_PLATE
+    .2byte ITEM_TOXIC_PLATE
+    .2byte ITEM_EARTH_PLATE
+    .2byte ITEM_SKY_PLATE
+    .2byte ITEM_MIND_PLATE
+    .2byte ITEM_INSECT_PLATE
+    .2byte ITEM_STONE_PLATE
+    .2byte ITEM_SPOOKY_PLATE
+    .2byte ITEM_DRACO_PLATE
+    .2byte ITEM_DREAD_PLATE
+    .2byte ITEM_IRON_PLATE
+    .2byte ITEM_PIXIE_PLATE
+    .2byte ITEM_DOUSE_DRIVE
+    .2byte ITEM_SHOCK_DRIVE
+    .2byte ITEM_BURN_DRIVE
+    .2byte ITEM_CHILL_DRIVE
+    .2byte ITEM_FIRE_MEMORY
+    .2byte ITEM_WATER_MEMORY
+    .2byte ITEM_ELECTRIC_MEMORY
+    .2byte ITEM_GRASS_MEMORY
+    .2byte ITEM_ICE_MEMORY
+    .2byte ITEM_FIGHTING_MEMORY
+    .2byte ITEM_POISON_MEMORY
+    .2byte ITEM_GROUND_MEMORY
+    .2byte ITEM_FLYING_MEMORY
+    .2byte ITEM_PSYCHIC_MEMORY
+    .2byte ITEM_BUG_MEMORY
+    .2byte ITEM_ROCK_MEMORY
+    .2byte ITEM_GHOST_MEMORY
+    .2byte ITEM_DRAGON_MEMORY
+    .2byte ITEM_DARK_MEMORY
+    .2byte ITEM_STEEL_MEMORY
+    .2byte ITEM_FAIRY_MEMORY
+    .2byte ITEM_NORMAL_GEM
+    .2byte ITEM_FIRE_GEM
+    .2byte ITEM_WATER_GEM
+    .2byte ITEM_ELECTRIC_GEM
+    .2byte ITEM_GRASS_GEM
+    .2byte ITEM_ICE_GEM
+    .2byte ITEM_FIGHTING_GEM
+    .2byte ITEM_POISON_GEM
+    .2byte ITEM_GROUND_GEM
+    .2byte ITEM_FLYING_GEM
+    .2byte ITEM_PSYCHIC_GEM
+    .2byte ITEM_BUG_GEM
+    .2byte ITEM_ROCK_GEM
+    .2byte ITEM_GHOST_GEM
+    .2byte ITEM_DRAGON_GEM
+    .2byte ITEM_DARK_GEM
+    .2byte ITEM_STEEL_GEM
+    .2byte ITEM_FAIRY_GEM
+    .2byte ITEM_NONE
+    release
+    end
+
+Text_BMBALL:
+    .string "I got some nice stuff from a Warehouse.\p"
+    .string "How can I help you?$"
+
+Text_BMSHARD:
+    .string "I got some nice stuff from a Ship.\p"
+    .string "How can I help you?$"
+
+Text_BMSHARDEND:
+    .string "Please come again!$"
+
+Text_BMBALLEND:
+    .string "Please come again!$"
+
+Text_BMBERRYBOY:
+    .string "I am the Berry Masters Son. \p"
+    .string "Please don't tell my dad. \p"
+    .string "How can I help you?$"
+
+Text_BMBERRYEND:
+    .string "Please come again!$"
+
+Text_BMPLATEP:
+    .string "I got some museum quality stuff.\p"
+    .string "How can I help you?$"
+
+Text_BMPLATEEND:
+    .string "Please come again!$"
+
+GatchaBegg_EventScript_EggWoman::
+    lock
+    faceplayer
+    showmoneybox 0, 0
+    msgbox GatchaBegg_Text_EggsJust5000, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, GatchaBegg_EventScript_DeclineEgg
+    checkmoney 5000
+    goto_if_eq VAR_RESULT, FALSE, GatchaBegg_EventScript_NotEnoughMoney
+    msgbox GatchaBegg_Text_ThankYouDear, MSGBOX_DEFAULT
+    getpartysize
+    goto_if_eq VAR_RESULT, PARTY_SIZE, GatchaBegg_EventScript_NoRoomForEgg
+    removemoney 5000
+    updatemoneybox
+    playfanfare MUS_OBTAIN_ITEM
+    message GatchaBegg_Text_ReceivedTheEgg
+    waitfanfare
+    specialvar VAR_RESULT, ChooseRandomEggSpeciesIII
+    giveegg VAR_RESULT
+    hidemoneybox
+    release
+    end
+
+GatchaBegg_Text_EggsJust5000:
+    .string "Pokémon eggs that were locally taken.\n"
+    .string "These ones were hand picked.\p"
+    .string "Buy a hot one. It's just ¥5000.$"
+
+
+GatchaBegg_EventScript_DeclineEgg::
+    msgbox GatchaBegg_Text_OhFineThen, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+GatchaBegg_Text_OhFineThen:
+    .string "Oh, fine then. Scram!$"
+
+
+GatchaBegg_EventScript_NotEnoughMoney::
+    msgbox GatchaBegg_Text_YouveNotGotTheMoney, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+GatchaBegg_Text_YouveNotGotTheMoney:
+    .string "You know… You can't buy a thing if\n"
+    .string "you've not got the money!$"
+
+GatchaBegg_Text_ThankYouDear:
+    .string "Thank you, dearie! Come Again!$"
+
+GatchaBegg_EventScript_NoRoomForEgg::
+    msgbox GatchaBegg_Text_NoRoomForThisEgg, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+GatchaBegg_Text_NoRoomForThisEgg:
+    .string "Oh? You've too many POKéMON.\n"
+    .string "There's no room for this EGG…$"
+
+GatchaBegg_Text_ReceivedTheEgg:
+    .string "{PLAYER} received the EGG.$"
+
+BlackMarket_EventScript_CandyMan::
+    lock
+    faceplayer
+    showmoneybox 0, 0
+    msgbox BlackMarket_Text_CandyJust5000, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_DeclineCandy
+    checkmoney 5000
+    goto_if_eq VAR_RESULT, FALSE, BlackMarket_EventScript_NotEnoughMonies
+    msgbox BlackMarket_Text_ThankYouDear, MSGBOX_DEFAULT
+    checkitemspace ITEM_RARE_CANDY
+    call_if_eq VAR_RESULT, TRUE, BlackMarket_EventScript_RemoveMonies
+    giveitem ITEM_RARE_CANDY
+    goto_if_eq VAR_RESULT, FALSE, BlackMarket_EventScript_BagIsFull
+    hidemoneybox
+    release
+    end
+
+EventScript_BirthIslandGift::
+    lock
+    faceplayer
+    message gText_BIRTHIStext
+    waitmessage
+    checkitem ITEM_AURORA_TICKET, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havebirthticket
+    waitmessage
+    message gText_Hereisbirthticket
+    giveitem ITEM_AURORA_TICKET
+    playfanfare MUS_OBTAIN_ITEM
+    setflag FLAG_ENABLE_SHIP_BIRTH_ISLAND
+    release
+    end
+
+Script_havebirthticket::
+    msgbox gText_havebirthticket
+    release
+    end
+
+gText_BIRTHIStext::
+    .string "Did you know there is aliens...\p $"
+
+gText_havebirthticket::
+    .string "Oh Wait! Did you find any?$"
+
+gText_Hereisbirthticket::
+    .string "Here you go! I hope you find some!$"
+
+
+BlackMarket_EventScript_BagIsFull::
+    msgbox gText_TooBadBagIsFull, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+
+BlackMarket_EventScript_RemoveMonies::
+    removemoney 5000
+    updatemoneybox
+    return
+
+
+BlackMarket_EventScript_DeclineCandy::
+    msgbox BlackMarket_Text_OhFineThen, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+
+BlackMarket_EventScript_NotEnoughMonies::
+    msgbox BlackMarket_Text_YouveNotGotTheMonies, MSGBOX_DEFAULT
+    hidemoneybox
+    release
+    end
+
+BlackMarket_Text_CandyJust5000:
+    .string "Want some Candy? It is a\n"
+    .string "local specialty.\p"
+    .string "Try one. It's just ¥5000.$"
+
+
+BlackMarket_Text_ThankYouDear:
+    .string "Thank you, dearie!$"
+
+
+BlackMarket_Text_YouveNotGotTheMonies:
+    .string "You know… You can't buy a thing if\n"
+    .string "you've not got the money!$"
+
+
+BlackMarket_Text_OhFineThen:
+    .string "Oh, fine then. Scram!$"
+
+EventScript_SHINYCHARMGift::
+    lock
+    faceplayer
+    message gText_Charmtext
+    waitmessage
+    checkitem ITEM_SHINY_CHARM, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_Hereischarm
+    giveitem ITEM_SHINY_CHARM
+    release
+    end
+
+
+Script_havecharm::
+    msgbox gText_havecharm
+    release
+    end
+
+
+gText_Charmtext::
+    .string "Hey I have a gift from Team Aqua!\p $"
+
+
+gText_havecharm::
+    .string "Have I threatened you before?$"
+
+
+gText_Hereischarm::
+    .string "Here! You better join our team!$"
+
+EventScript_EXPCHARMGift::
+    lock
+    faceplayer
+    message gText_CharmEtext
+    waitmessage
+    checkitem ITEM_EXP_CHARM, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_Hereischarm
+    giveitem ITEM_EXP_CHARM
+    release
+    end
+
+    gText_CharmEtext::
+    .string "Hey I have a gift from Team Magma!\p $"
+
+EventScript_EGGCHARMGift::
+    lock
+    faceplayer
+    message gText_CharmEggtext
+    waitmessage
+    checkitem ITEM_OVAL_CHARM, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_HereisEggcharm
+    giveitem ITEM_OVAL_CHARM
+    release
+    end
+
+    gText_CharmEggtext::
+    .string "Do I have an amazing gift for you!\p $"
+
+    gText_HereisEggcharm::
+    .string "Hope you use this charm wisely....\p $"
+
+EventScript_CATCHCHARMGift::
+    lock
+    faceplayer
+    message gText_CharmCatchtext
+    waitmessage
+    checkitem ITEM_CATCHING_CHARM, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_HereisCatchcharm
+    giveitem ITEM_CATCHING_CHARM
+    release
+    end
+
+    gText_CharmCatchtext::
+    .string "Do I have an amazing gift for you!\p $"
+
+    gText_HereisCatchcharm::
+    .string "Hope you use this charm a lot....\p $"
+
+EventScript_DBANDGift::
+    lock
+    faceplayer
+    message gText_DBANDtext
+    waitmessage
+    checkitem ITEM_DYNAMAX_BAND, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_DBANDcharm
+    giveitem ITEM_DYNAMAX_BAND
+    setflag FLAG_DYNAMAX_BATTLE
+    release
+    end
+
+gText_DBANDtext::
+    .string "First timers get a free gift!\p $"
+
+    gText_DBANDcharm::
+    .string "Hope you use this band wisely....\p $"
+
+BlackMarket_EventScript_ReceiveMarshadow::
+    lock
+    faceplayer
+    msgbox BlackMarket_Text_ThanksPleaseTakePokemon, MSGBOX_DEFAULT
+    setflag FLAG_FORCE_POKERUS
+    setvar VAR_TEMP_TRANSFERRED_SPECIES, SPECIES_MARSHADOW
+    givemon SPECIES_MARSHADOW, 20, item=ITEM_MARSHADIUM_Z, ball=ITEM_DUSK_BALL, nature=NATURE_JOLLY; 
+    goto_if_eq VAR_RESULT, MON_GIVEN_TO_PARTY, BlackMarket_EventScript_ReceiveMarshadowParty
+    goto_if_eq VAR_RESULT, MON_GIVEN_TO_PC, BlackMarket_EventScript_ReceiveMarshadowPC
+    goto Common_EventScript_NoMoreRoomForPokemon
+    clearflag FLAG_FORCE_POKERUS
+    end
+
+BlackMarket_EventScript_ReceiveMarshadowParty::
+    call BlackMarket_EventScript_ReceivedMarshadowFanfare
+    msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_ExplainMarshadow
+    call Common_EventScript_GetGiftMonPartySlot
+    call Common_EventScript_NameReceivedPartyMon
+    goto BlackMarket_EventScript_ExplainMarshadow
+    clearflag FLAG_FORCE_POKERUS
+    end
+
+BlackMarket_EventScript_ReceiveMarshadowPC::
+    call BlackMarket_EventScript_ReceivedMarshadowFanfare
+    msgbox gText_NicknameThisPokemon, MSGBOX_YESNO
+    goto_if_eq VAR_RESULT, NO, BlackMarket_EventScript_SendMarshadowToPC
+    call Common_EventScript_NameReceivedBoxMon
+    goto BlackMarket_EventScript_SendMarshadowToPC
+    clearflag FLAG_FORCE_POKERUS
+    end
+
+BlackMarket_EventScript_SendMarshadowToPC::
+    call Common_EventScript_TransferredToPC
+    goto BlackMarket_EventScript_ExplainMarshadow
+    clearflag FLAG_FORCE_POKERUS
+    end
+
+BlackMarket_EventScript_ReceivedMarshadowFanfare::
+    playfanfare MUS_OBTAIN_ITEM
+    message BlackMarket_Text_PlayerReceivedMarshadow
+    waitmessage
+    waitfanfare
+    bufferspeciesname STR_VAR_1, SPECIES_MARSHADOW
+    clearflag FLAG_FORCE_POKERUS
+    return
+
+BlackMarket_EventScript_ExplainMarshadow::
+    msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
+    setflag FLAG_RECEIVED_MARSHADOW
+    clearflag FLAG_FORCE_POKERUS
+    release
+    end
+
+BlackMarket_EventScript_HaveMarshadow::
+    msgbox BlackMarket_Text_PokemonChanges, MSGBOX_DEFAULT
+    clearflag FLAG_FORCE_POKERUS
+    release
+    end
+
+BlackMarket_EventScript_HEXMANIAC::
+    lock
+    faceplayer
+    setflag FLAG_FORCE_POKERUS
+    goto_if_set FLAG_RECEIVED_MARSHADOW, BlackMarket_EventScript_HaveMarshadow
+    goto BlackMarket_EventScript_ReceiveMarshadow
+    clearflag FLAG_FORCE_POKERUS
+    end
+
+BlackMarket_Text_PlayerReceivedMarshadow:
+    .string "{PLAYER} received MARSHADOW!$"
+
+BlackMarket_Text_ThanksPleaseTakePokemon:
+    .string "Thanks for not snitching!\n"
+    .string "Thanks to you, we're safe!\p"
+    .string "It might be an odd way of welcoming you,\n"
+    .string "but take this POKéMON.$"
+
+BlackMarket_Text_PokemonChanges:
+    .string "That POKéMON hides according\n"
+    .string "to the area conditions.\p"
+    .string "There're plenty of them in the…\n"
+    .string "nevermind--go ahead and take it.$"
+
+EventScript_PanicingGuyGift::
+    lock
+    faceplayer
+    message gText_Panicingtext
+    waitmessage
+    checkitem ITEM_ROTOM_CATALOG, 1
+    checkitem ITEM_GRACIDEA, 1
+    checkitem ITEM_REVEAL_GLASS, 1
+    checkitem ITEM_DNA_SPLICERS, 1
+    checkitem ITEM_ZYGARDE_CUBE, 1
+    checkitem ITEM_PRISON_BOTTLE, 1
+    checkitem ITEM_N_SOLARIZER, 1
+    checkitem ITEM_N_LUNARIZER, 1
+    checkitem ITEM_REINS_OF_UNITY, 1
+    checkitem ITEM_TERA_ORB, 1
+    compare VAR_RESULT, 1
+    goto_if_eq Script_havecharm
+    waitmessage
+    message gText_Hereiseverythings
+    giveitem ITEM_ROTOM_CATALOG
+    giveitem ITEM_GRACIDEA
+    giveitem ITEM_REVEAL_GLASS
+    giveitem ITEM_DNA_SPLICERS
+    giveitem ITEM_ZYGARDE_CUBE
+    giveitem ITEM_PRISON_BOTTLE
+    giveitem ITEM_N_LUNARIZER
+    giveitem ITEM_N_SOLARIZER
+    giveitem ITEM_REINS_OF_UNITY
+    giveitem ITEM_TERA_ORB
+    release
+    end
+
+    gText_Panicingtext::
+    .string "I have very hot gifts for you!\p $"
+
+    gText_Hereiseverythings::
+    .string "Hope you can keep the heat off..\p $"
+
+`

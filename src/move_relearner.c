@@ -160,6 +160,8 @@ enum {
 #define GFXTAG_UI       5525
 #define PALTAG_UI       5526
 
+#define MAX_RELEARNER_MOVES max(MAX_LEVEL_UP_MOVES, 25)
+
 static EWRAM_DATA struct
 {
     u8 state;
@@ -1005,6 +1007,7 @@ void MoveRelearnerShowHideCategoryIcon(s32 moveId)
             DestroySprite(&gSprites[sMoveRelearnerStruct->categoryIconSpriteId]);
 
         sMoveRelearnerStruct->categoryIconSpriteId = 0xFF;
+        gSprites[sMoveRelearnerStruct->categoryIconSpriteId].invisible = TRUE;
     }
     else
     {

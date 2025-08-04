@@ -268,7 +268,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .catchRate = 45,
         .expYield = 62,
         .evYield_Speed = 1,
-        .genderRatio = PERCENT_FEMALE(12.5),
+        .genderRatio = PERCENT_FEMALE(75),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
@@ -333,7 +333,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .catchRate = 45,
         .expYield = 147,
         .evYield_Speed = 2,
-        .genderRatio = PERCENT_FEMALE(12.5),
+        .genderRatio = PERCENT_FEMALE(75),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
@@ -396,7 +396,7 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .catchRate = 45,
         .expYield = 265,
         .evYield_Speed = 3,
-        .genderRatio = PERCENT_FEMALE(12.5),
+        .genderRatio = PERCENT_FEMALE(75),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
@@ -8127,7 +8127,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sEnamorusLevelUpLearnset,
         .teachableLearnset = sEnamorusTeachableLearnset,
         .formSpeciesIdTable = sEnamorusFormSpeciesIdTable,
-        .formChangeTable = sEnamorusFormChangeTable,
     },
 
     [SPECIES_ENAMORUS_THERIAN] =
@@ -8194,7 +8193,6 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sEnamorusLevelUpLearnset,
         .teachableLearnset = sEnamorusTeachableLearnset,
         .formSpeciesIdTable = sEnamorusFormSpeciesIdTable,
-        .formChangeTable = sEnamorusFormChangeTable,
     },
 #endif //P_FAMILY_ENAMORUS
 

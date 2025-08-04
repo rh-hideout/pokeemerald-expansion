@@ -5541,6 +5541,16 @@ void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
     gBattleMainFunc = RunBattleScriptCommands;
 }
 
+enum
+{
+    ITEM_NO_EFFECT,
+    ITEM_STATUS_CHANGE,
+    ITEM_EFFECT_OTHER,
+    ITEM_PP_CHANGE,
+    ITEM_HP_CHANGE,
+    ITEM_STATS_CHANGE,
+};
+
 bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag)
 {
     if (!(gFieldStatuses & terrainFlag))
@@ -5882,7 +5892,7 @@ bool32 HasEnoughHpToEatBerry(u32 battler, u32 hpFraction, u32 itemId)
     return FALSE;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, enum ItemCaseId caseID)
+static u32 HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, enum ItemEffect caseID)
 {
     if (HasEnoughHpToEatBerry(battler, (B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2), itemId)
      && (B_HEAL_BLOCKING < GEN_5 || !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)))
@@ -5918,10 +5928,10 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, e
 
         return ITEM_HP_CHANGE;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum ItemCaseId caseID)
+static u32 StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum ItemEffect caseID)
 {
     if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN) && HasEnoughHpToEatBerry(battler, GetBattlerItemHoldEffectParam(battler, itemId), itemId))
     {
@@ -5949,7 +5959,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, enum 
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCaseId caseID)
+static u32 RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemEffect caseID)
 {
     s32 stat;
     enum StringID stringId;
@@ -5998,10 +6008,10 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, enum ItemCa
 
         return ITEM_STATS_CHANGE;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
-static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, enum ItemCaseId caseID)
+static u32 TrySetMicleBerry(u32 battler, u32 itemId, enum ItemEffect caseID)
 {
     if (HasEnoughHpToEatBerry(battler, 4, itemId))
     {
@@ -6017,10 +6027,10 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, enum ItemCaseId
         }
         return ITEM_EFFECT_OTHER;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
-static enum ItemEffect TrySetEnigmaBerry(u32 battler)
+static u8 TrySetEnigmaBerry(u32 battler)
 {
     if (IsBattlerAlive(battler)
      && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
@@ -6037,10 +6047,10 @@ static enum ItemEffect TrySetEnigmaBerry(u32 battler)
         gBattlescriptCurrInstr = BattleScript_ItemHealHP_RemoveItemRet;
         return ITEM_HP_CHANGE;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
-static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, u8 category)
+static u8 DamagedStatBoostBerryEffect(u32 battler, u8 statId, u8 category)
 {
     if (IsBattlerAlive(battler)
      && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN)
@@ -6066,10 +6076,10 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battler, u8 statId, u8 ca
         gBattlescriptCurrInstr = BattleScript_ConsumableStatRaiseRet;
         return ITEM_STATS_CHANGE;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 itemId, enum ItemCaseId caseID)
+u32 TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 itemId, enum ItemEffect caseID)
 {
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
@@ -6079,7 +6089,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
         SET_STATCHANGER(statId, 1, FALSE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
         gBattleScripting.animArg2 = 0;
-        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN)
+        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
         {
             BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
         }
@@ -6090,7 +6100,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
         }
         return ITEM_STATS_CHANGE;
     }
-    return ITEM_NO_EFFECT;
+    return 0;
 }
 
 static enum ItemEffect TryEjectPack(u32 battler, enum ItemCaseId caseID)
@@ -6185,7 +6195,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, enum ItemCaseId caseID)
     return 0;
 }
 
-static u32 ItemHealHp(u32 battler, u32 itemId, enum ItemCaseId caseID, bool32 percentHeal)
+static u32 ItemHealHp(u32 battler, u32 itemId, enum ItemEffect caseID, bool32 percentHeal)
 {
     if (!(gBattleScripting.overrideBerryRequirements && gBattleMons[battler].hp == gBattleMons[battler].maxHP)
         && (B_HEAL_BLOCKING < GEN_5 || !(gStatuses3[battler] & STATUS3_HEAL_BLOCK))
@@ -6282,7 +6292,7 @@ static bool32 GetMentalHerbEffect(u32 battler)
     return ret;
 }
 
-static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
+static u32 TryConsumeMirrorHerb(u32 battler, enum ItemEffect caseID)
 {
     u32 effect = 0;
 
@@ -6307,7 +6317,7 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
     return effect;
 }
 
-static inline u32 TryBoosterEnergy(u32 battler, enum ItemCaseId caseID)
+static inline u32 TryBoosterEnergy(u32 battler, enum ItemEffect caseID)
 {
     if (gDisableStructs[battler].boosterEnergyActivates || gBattleMons[battler].status2 & STATUS2_TRANSFORMED)
         return ITEM_NO_EFFECT;
@@ -6561,7 +6571,7 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
     return effect;
 }
 
-static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
+static inline bool32 TryCureStatus(u32 battler, enum ItemEffect caseId)
 {
     u32 effect = ITEM_NO_EFFECT;
     u32 string = 0;
@@ -6621,7 +6631,7 @@ static inline bool32 TryCureStatus(u32 battler, enum ItemCaseId caseId)
     return effect;
 }
 
-u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
+u32 ItemBattleEffects(enum ItemEffect caseID, u32 battler, bool32 moveTurn)
 {
     u32 moveType = 0;
     enum ItemEffect effect = ITEM_NO_EFFECT;
@@ -6837,10 +6847,11 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
             {
                 gSpecialStatuses[battler].switchInItemDone = TRUE;
                 gBattlerAttacker = gPotentialItemEffectBattler = gBattleScripting.battler = battler;
-                if (effect == ITEM_STATUS_CHANGE)
+                switch (effect)
                 {
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                     MarkBattlerForControllerExec(battler);
+                    break;
                 }
             }
         }
@@ -7040,10 +7051,11 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler, bool32 moveTurn)
             if (effect != 0)
             {
                 gBattlerAttacker = gPotentialItemEffectBattler = gBattleScripting.battler = battler;
-                if (effect == ITEM_STATUS_CHANGE)
+                switch (effect)
                 {
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                     MarkBattlerForControllerExec(battler);
+                    break;
                 }
             }
         }
@@ -7485,8 +7497,6 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
         }
         else
         {
-            u32 battlerAbilityOnField = 0;
-
             targetBattler = SetRandomTarget(gBattlerAttacker);
             if (moveType == TYPE_ELECTRIC && GetBattlerAbility(targetBattler) != ABILITY_LIGHTNING_ROD)
             {
@@ -8358,7 +8368,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
     u32 atkSide = GetBattlerSide(battlerAtk);
 
     // move effect
-    switch (moveEffect)
+    switch (gMovesInfo[move].effect)
     {
     case EFFECT_FACADE:
         if (gBattleMons[battlerAtk].status1 & (STATUS1_BURN | STATUS1_PSN_ANY | STATUS1_PARALYSIS | STATUS1_FROSTBITE))
@@ -10266,7 +10276,7 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
         TryToSetBattleFormChangeMoves(&party[monId], method);
         SetMonData(&party[monId], MON_DATA_SPECIES, &targetSpecies);
         gBattleMons[battler].species = targetSpecies;
-        RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
+        RecalcBattlerStats(battler, &party[monId]);
         return TRUE;
     }
     else if (gBattleStruct->changedSpecies[side][monId] != SPECIES_NONE)
@@ -10291,7 +10301,7 @@ bool32 TryBattleFormChange(u32 battler, enum FormChanges method)
             // Reverts the original species
             TryToSetBattleFormChangeMoves(&party[monId], method);
             SetMonData(&party[monId], MON_DATA_SPECIES, &gBattleStruct->changedSpecies[side][monId]);
-            RecalcBattlerStats(battler, &party[monId], method == FORM_CHANGE_BATTLE_GIGANTAMAX);
+            RecalcBattlerStats(battler, &party[monId]);
             // Battler data is not updated with regular form's ability, not doing so could cause wrong ability activation.
             if (method == FORM_CHANGE_FAINT)
                 gBattleMons[battler].ability = abilityForm;
@@ -10978,28 +10988,11 @@ void CopyMonAbilityAndTypesToBattleMon(u32 battler, struct Pokemon *mon)
     gBattleMons[battler].types[2] = TYPE_MYSTERY;
 }
 
-void RecalcBattlerStats(u32 battler, struct Pokemon *mon, bool32 isDynamaxing)
+void RecalcBattlerStats(u32 battler, struct Pokemon *mon)
 {
-    u32 hp = GetMonData(mon, MON_DATA_HP);
-    u32 oldMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
     CalculateMonStats(mon);
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gChosenActionByBattler[battler] != B_ACTION_SWITCH)
-    {
-        ApplyDynamaxHPMultiplier(mon);
-        u32 newMaxHp = GetMonData(mon, MON_DATA_MAX_HP);
-        if (!isDynamaxing)
-        {
-            if (newMaxHp > oldMaxHp) // restore hp gained from changing form, without this, dynamaxed form changes are calculated incorrectly
-            {
-                hp += (newMaxHp - oldMaxHp);
-                SetMonData(mon, MON_DATA_HP, &hp);
-            }
-            else
-            {
-                SetMonData(mon, MON_DATA_HP, &hp);
-            }
-        }
-    }
+        ApplyDynamaxHPMultiplier(battler, mon);
     CopyMonLevelAndBaseStatsToBattleMon(battler, mon);
     CopyMonAbilityAndTypesToBattleMon(battler, mon);
 }

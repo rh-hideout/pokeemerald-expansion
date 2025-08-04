@@ -63,6 +63,7 @@ gSpecials::
 	def_special ObjectEventInteractionGetBerryName
 	def_special ObjectEventInteractionGetBerryCountString
 	def_special Bag_ChooseBerry
+	def_special Bag_ChooseFossil
 	def_special ObjectEventInteractionPlantBerryTree
 	def_special ObjectEventInteractionPickBerryTree
 	def_special ObjectEventInteractionRemoveBerryTree
@@ -560,6 +561,10 @@ gSpecials::
 	def_special Script_GetChosenMonDefensiveEVs
 	def_special Script_GetChosenMonOffensiveIVs
 	def_special Script_GetChosenMonDefensiveIVs
+	def_special CreateWonderTradePokemon
+	def_special ChooseRandomEggSpecies
+	def_special ChooseRandomEggSpeciesII
+	def_special ChooseRandomEggSpeciesIII
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special EnterCode
 	def_special GetCodeFeedback

@@ -29,7 +29,7 @@ static void AnimArmThrustHit_Step(struct Sprite *sprite);
 static void AnimFocusPunchFist(struct Sprite *);
 static void AnimForcePalm(struct Sprite *sprite);
 
-extern const struct SpriteTemplate gBasicHitSplatSpriteTemplate;
+extern struct SpriteTemplate gBasicHitSplatSpriteTemplate;
 
 // Unused
 static const struct SpriteTemplate sUnusedHumanoidFootSpriteTemplate =

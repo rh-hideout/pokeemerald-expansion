@@ -3679,6 +3679,10 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     gBattlescriptCurrInstr = BattleScript_AllStatsUp;
                 }
                 break;
+            case MOVE_EFFECT_RAPID_SPIN:
+                BattleScriptPush(gBattlescriptCurrInstr + 1);
+                gBattlescriptCurrInstr = BattleScript_RapidSpinAway;
+                break;
             case MOVE_EFFECT_ATK_DEF_DOWN: // SuperPower
                 if (!NoAliveMonsForEitherParty())
                 {
@@ -7748,7 +7752,7 @@ static void Cmd_switchinanim(void)
 {
     u32 battler;
 
-    CMD_ARGS(u8 battler, bool8 dontClearTransform, bool8 dontClearSubstitute);
+    CMD_ARGS(u8 battler, bool8 dontClearSubstitute);
 
     if (gBattleControllerExecFlags)
         return;
@@ -10891,7 +10895,7 @@ static void Cmd_various(void)
         // Change stats.
         else if (cmd->case_ == 1)
         {
-            RecalcBattlerStats(battler, mon, FALSE);
+            RecalcBattlerStats(battler, mon);
         }
         // Update healthbox.
         else
@@ -11253,7 +11257,7 @@ static void Cmd_various(void)
         VARIOUS_ARGS(const u8 *failInstr);
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_SEEDS)
         {
-            enum ItemEffect effect = ITEM_NO_EFFECT;
+            u8 effect = 0;
             u16 item = gBattleMons[battler].item;
             switch (GetBattlerHoldEffectParam(battler))
             {
@@ -11271,7 +11275,7 @@ static void Cmd_various(void)
                 break;
             }
 
-            if (effect != ITEM_NO_EFFECT)
+            if (effect)
                 return;
         }
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14762,6 +14766,7 @@ static void Cmd_setcharge(void)
         gDisableStructs[battler].chargeTimer = 2;
     else
         gDisableStructs[battler].chargeTimer = 0;
+    gBattlescriptCurrInstr++;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -16944,16 +16949,14 @@ void BS_GetBattlerSide(void)
 
 void BS_TrySymbiosis(void)
 {
-    NATIVE_ARGS(u8 battler);
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    NATIVE_ARGS();
     //called by Bestow, Fling, and Bug Bite, which don't work with Cmd_removeitem.
     u32 partner = BATTLE_PARTNER(battler);
     if (TryTriggerSymbiosis(battler, partner))
     {
-        BestowItem(partner, battler);
+        BestowItem(partner, gBattlerAttacker);
         gLastUsedAbility = gBattleMons[partner].ability;
         gBattleScripting.battler = gBattlerAbility = partner;
-        gEffectBattler = battler;
         BattleScriptPushCursor();
         gBattlescriptCurrInstr = BattleScript_SymbiosisActivates;
         return;

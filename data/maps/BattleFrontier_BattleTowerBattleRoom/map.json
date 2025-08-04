@@ -12,7 +12,7 @@
   "allow_running": false,
   "show_map_name": false,
   "battle_scene": "MAP_BATTLE_SCENE_FRONTIER",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "local_id": "LOCALID_TOWER_BATTLE_OPPONENT",
@@ -73,6 +73,10 @@
       "dest_warp_id": "2"
     }
   ],
-  "coord_events": [],
-  "bg_events": []
+  "coord_events": [
+
+  ],
+  "bg_events": [
+
+  ]
 }

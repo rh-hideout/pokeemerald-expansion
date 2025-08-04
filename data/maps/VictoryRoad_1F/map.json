@@ -12,7 +12,7 @@
   "allow_running": true,
   "show_map_name": true,
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
-  "connections": null,
+  "connections": 0,
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_MAN_3",
@@ -131,6 +131,32 @@
       "trainer_sight_or_berry_tree_id": "2",
       "script": "VictoryRoad_1F_EventScript_Quincy",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 41,
+      "y": 29,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "VictoryRoad_1F_EventScript_Moltres_Galarian",
+      "flag": "FLAG_HIDE_MOLTRES_GALARIAN"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TRICK_HOUSE_STATUE",
+      "x": 39,
+      "y": 29,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "VictoryRoad_1F_EventScript_Moltres",
+      "flag": "FLAG_HIDE_MOLTRES"
     }
   ],
   "warp_events": [
@@ -168,6 +194,27 @@
       "elevation": 4,
       "dest_map": "MAP_VICTORY_ROAD_B1F",
       "dest_warp_id": "4"
+    },
+    {
+      "x": 10,
+      "y": 20,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_PAST",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 39,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_FUTURE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 13,
+      "y": 13,
+      "elevation": 0,
+      "dest_map": "MAP_VICTORY_ROAD_BEASTS",
+      "dest_warp_id": "0"
     }
   ],
   "coord_events": [

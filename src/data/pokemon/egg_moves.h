@@ -6308,3 +6308,75 @@ static const u16 sFrigibaxEggMoveLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_FRIGIBAX
+
+#if P_FAMILY_ALT_ABSOL
+static const u16 sAltAbsolEggMoveLearnset[] = {
+        MOVE_BATON_PASS,
+        MOVE_FEINT_ATTACK,
+        MOVE_DOUBLE_EDGE,
+        MOVE_MAGIC_COAT,
+        MOVE_CURSE,
+        MOVE_MEAN_LOOK,
+        MOVE_ZEN_HEADBUTT,
+        MOVE_PUNISHMENT,
+	    MOVE_DRAGON_TAIL,
+        MOVE_SUCKER_PUNCH,
+        MOVE_ASSURANCE,
+        MOVE_FIRE_FANG,
+        MOVE_THUNDER_FANG,
+        MOVE_ICE_FANG,
+        MOVE_DOUBLE_HIT,
+        MOVE_ASTONISH,
+        MOVE_EARTH_POWER,
+        MOVE_SCREECH,
+        MOVE_HEAD_SMASH,
+        MOVE_ASSURANCE,
+        MOVE_DARK_PULSE,
+        MOVE_ME_FIRST,
+        MOVE_MEGAHORN,
+        MOVE_HEX,
+        MOVE_PERISH_SONG,
+        MOVE_PLAY_ROUGH,
+        MOVE_UNAVAILABLE,
+};
+#endif //P_FAMILY_ALT_ABSOL
+
+#if P_FAMILY_ALT_LAPRAS
+static const u16 sAltLaprasEggMoveLearnset[] = {
+        MOVE_AFTER_YOU,
+        MOVE_ANCIENTPOWER,
+        MOVE_COUNTER,
+        MOVE_CURSE,
+        MOVE_DOUBLE_KICK,
+        MOVE_FREEZE_DRY,
+        MOVE_FISSURE,
+        MOVE_HORN_DRILL,
+        MOVE_SPARKLING_ARIA,
+        MOVE_UNAVAILABLE,
+};
+#endif //P_FAMILY_ALT_LAPRAS
+
+#if P_FAMILY_ALT_RALTS
+static const u16 sAltRaltsEggMoveLearnset[] = {
+        MOVE_DISABLE,
+        MOVE_CONFUSE_RAY,
+        MOVE_MEAN_LOOK,
+        MOVE_DESTINY_BOND,
+        MOVE_KNOCK_OFF,
+        MOVE_SHADOW_SNEAK,
+	    MOVE_SPITE,
+        MOVE_CONFUSE_RAY,
+        MOVE_FAKE_OUT,
+	    MOVE_ICICLE_CRASH,
+	    MOVE_NIGHT_SLASH,
+	    MOVE_SWITCHEROO,
+        MOVE_SYNCHRONOISE,
+	    MOVE_FIRE_SPIN,
+	    MOVE_OVERHEAT,
+        MOVE_SKILL_SWAP,
+        MOVE_MISTY_TERRAIN,
+	    MOVE_EXTRASENSORY,
+        MOVE_ALLY_SWITCH,
+        MOVE_UNAVAILABLE,
+    };
+#endif //P_FAMILY_ALT_RALTS
