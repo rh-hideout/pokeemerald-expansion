@@ -68,15 +68,16 @@ struct MoveInfo
     enum BattleMoveEffects effect;
     enum PokemonType type;
     enum DamageCategory category;
+    // end of word
+    u16 power;
+    u8 accuracy;
+    u8 pp;
+    // end of word
+    u16 target;
     union PACKED {
         enum ZMoveEffect effect;
-        u8 powerOverride;
+        u16 powerOverride;
     } zMove;
-    // end of word
-    u16 power:9;    // up to 511
-    u16 accuracy:7;
-    u16 pp:7;
-    u16 target:9;
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
