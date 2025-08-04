@@ -360,8 +360,8 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
 bool8 CheckForTrainersWantingBattle(void)
 {
     u8 i;
-    u8 canSeeTrainer[4];
-    u8 arrayPos = 0;
+    u8 trainerObjects[OBJECT_EVENTS_COUNT];
+    u8 trainerObjectsCount = 0;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -376,26 +376,26 @@ bool8 CheckForTrainersWantingBattle(void)
             continue;
         if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
-        canSeeTrainer[arrayPos++] = i;
+        trainerObjects[trainerObjectsCount++] = i;
     }
 
     // Sorts array by localId
-    for (i = 1; i < ARRAY_COUNT(canSeeTrainer); i++)
+    for (i = 1; i <= trainerObjectsCount; i++)
     {
-        u8 x = canSeeTrainer[i];
+        u8 x = trainerObjects[i];
         u8 j = i;
-        while (j > 0 && gObjectEvents[canSeeTrainer[j-1]].localId > gObjectEvents[x].localId)
+        while (j > 0 && gObjectEvents[trainerObjects[j-1]].localId > gObjectEvents[x].localId)
         {
-            canSeeTrainer[j] = canSeeTrainer[j-1];
+            trainerObjects[j] = trainerObjects[j-1];
             j--;
         }
-        canSeeTrainer[j] = x;
+        trainerObjects[j] = x;
     }
 
-    for (i = 0; i < ARRAY_COUNT(canSeeTrainer); i++)
+    for (i = 1; i <= trainerObjectsCount; i++)
     {
         u8 numTrainers;
-        numTrainers = CheckTrainer(canSeeTrainer[i]);
+        numTrainers = CheckTrainer(trainerObjects[i]);
         if (numTrainers == 0xFF) // non-trainerbattle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
