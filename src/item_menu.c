@@ -2954,13 +2954,18 @@ static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struc
 
 static s32 CompareItemsByType(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2)
 {
+    if (item1.itemId == ITEM_NONE)
+        return 1;
+    else if (item2.itemId == ITEM_NONE)
+        return -1;
+
     enum ItemSortType type1 = gItemsInfo[item1.itemId].sortType;
     enum ItemSortType type2 = gItemsInfo[item2.itemId].sortType;
 
-    // Null and uncategorized items go last
-    if (type1 && !type2)
+    // Uncategorized items go last.
+    if (type1 != ITEM_TYPE_UNCATEGORIZED && type2 == ITEM_TYPE_UNCATEGORIZED)
         return -1;
-    else if (type2 && !type1)
+    else if (type2 != ITEM_TYPE_UNCATEGORIZED && type1 == ITEM_TYPE_UNCATEGORIZED)
         return 1;
     else if (type1 < type2)
         return -1;
