@@ -5,7 +5,7 @@ SINGLE_BATTLE_TEST("Lightning Charge doubles speed when using a piercing move")
 {
     GIVEN {
         ASSUME(gMovesInfo[MOVE_MEGAHORN].piercingMove);
-        PLAYER(SPECIES_ESCAVALIER) { Ability(ABILITY_LIGHTNING_CHARGE);  Speed(25);}
+        PLAYER(SPECIES_ESCAVALIER) { Ability(ABILITY_LIGHTNING_CHARGE);  Speed(45);}
         OPPONENT(SPECIES_WOBBUFFET) { Speed(40);};
     } WHEN {
         TURN { MOVE(player, MOVE_MEGAHORN); }
