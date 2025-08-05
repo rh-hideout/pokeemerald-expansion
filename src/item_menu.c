@@ -2926,22 +2926,7 @@ static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item
         name2 = GetItemName(item2.itemId);
     }
 
-    for (u32 i = 0; ; ++i)
-    {
-        if (name1[i] == EOS && name2[i] != EOS)
-            return -1;
-        else if (name1[i] != EOS && name2[i] == EOS)
-            return 1;
-        else if (name1[i] == EOS && name2[i] == EOS)
-            return 0;
-
-        if (name1[i] < name2[i])
-            return -1;
-        else if (name1[i] > name2[i])
-            return 1;
-    }
-
-    return 0; // Will never be reached
+    return StringCompare(name1, name2);
 }
 
 static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2)
