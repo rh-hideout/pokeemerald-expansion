@@ -199,7 +199,7 @@ enum Volatile
 #define STATUS3_ALWAYS_HITS             (1 << 3 | 1 << 4)
 #define STATUS3_ALWAYS_HITS_TURN(num)   (((num) << 3) & STATUS3_ALWAYS_HITS) // "Always Hits" is set as a 2 turn timer, i.e. next turn is the last turn when it's active
 #define STATUS3_PERISH_SONG             (1 << 5)
-#define STATUS3_UNUSED_6                  (1 << 6)
+#define STATUS3_UNUSED_6                (1 << 6)
 #define STATUS3_UNUSED_7                (1 << 7)
 #define STATUS3_MINIMIZED               (1 << 8)
 #define STATUS3_CHARGED_UP              (1 << 9)
