@@ -2887,12 +2887,19 @@ static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, s
 {
     struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * pocket->capacity);
 
-    for (u32 width = 1; width < pocket->capacity; width *= 2)
+    u32 usedCapacity;
+    for (usedCapacity = 0; usedCapacity < pocket->capacity; usedCapacity++)
     {
-        for (u32 i = 0; i < pocket->capacity; i += 2 * width)
-            Merge(pocket, i, min(i + width, pocket->capacity), min(i + 2 * width, pocket->capacity), dummySlots, comparator);
+        if (BagPocket_GetSlotData(pocket, usedCapacity).itemId == ITEM_NONE)
+            break;
+    }
 
-        for (u32 j = 0; j < pocket->capacity; j++)
+    for (u32 width = 1; width < usedCapacity; width *= 2)
+    {
+        for (u32 i = 0; i < usedCapacity; i += 2 * width)
+            Merge(pocket, i, min(i + width, usedCapacity), min(i + 2 * width, usedCapacity), dummySlots, comparator);
+
+        for (u32 j = 0; j < usedCapacity; j++)
             BagPocket_SetSlotData(pocket, j, dummySlots[j]);
     }
 
