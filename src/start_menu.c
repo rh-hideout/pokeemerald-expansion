@@ -1210,6 +1210,7 @@ static u8 SaveOverwriteInputCallback(void)
 
 static u8 SaveSavingMessageCallback(void)
 {
+    ShowThrobber();
     ShowSaveMessage(gText_SavingDontTurnOff, SaveDoSaveCallback);
     return SAVE_IN_PROGRESS;
 }
@@ -1235,7 +1236,8 @@ static u8 SaveDoSaveCallback(void)
         ShowSaveMessage(gText_PlayerSavedGame, SaveSuccessCallback);
     else
         ShowSaveMessage(gText_SaveError, SaveErrorCallback);
-
+    
+    DestroySprite(&gSprites[spriteId]);
     SaveStartTimer();
     return SAVE_IN_PROGRESS;
 }
