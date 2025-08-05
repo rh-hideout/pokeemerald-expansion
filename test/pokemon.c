@@ -481,6 +481,7 @@ TEST("BoxPokemon encryption works")
     struct Pokemon mon;
     BoxMonToMon((struct BoxPokemon *)&raw, &mon);
 
+    EXPECT_EQ(GetMonData(&mon, MON_DATA_SANITY_IS_BAD_EGG), 0);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_SPECIES), SPECIES_TORCHIC);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_MARKINGS), 3);
     const u8 *actualNickname = COMPOUND_STRING("Testing mon");
