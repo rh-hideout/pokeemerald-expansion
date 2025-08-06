@@ -1999,6 +1999,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_FIRST_TURN_ONLY:
             if (!gDisableStructs[battlerAtk].isFirstTurn)
                 ADJUST_SCORE(-10);
+            if (hasTwoOpponents && MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100) 
+             && !ShouldFakeOut(battlerAtk, battlerDef, move) && ShouldFakeOut(battlerAtk, BATTLE_PARTNER(battlerDef), move)
+             && aiData->effectiveness[battlerAtk][BATTLE_PARTNER(battlerDef)][gAiThinkingStruct->movesetIndex] != UQ_4_12(0.0))
+                ADJUST_SCORE(-5);
             break;
         case EFFECT_STOCKPILE:
             if (gDisableStructs[battlerAtk].stockpileCounter >= 3)
