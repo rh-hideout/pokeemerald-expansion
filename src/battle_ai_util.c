@@ -3502,18 +3502,57 @@ bool32 ShouldTrap(u32 battlerAtk, u32 battlerDef, u32 move)
     return FALSE;
 }
 
-bool32 ShouldFakeOut(u32 battlerAtk, u32 battlerDef, u32 move)
+bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, u32 move)
 {
-    if ((!gDisableStructs[battlerAtk].isFirstTurn && MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100))
-    || gAiLogicData->abilities[battlerAtk] == ABILITY_GORILLA_TACTICS
-    || gAiLogicData->holdEffects[battlerAtk] == HOLD_EFFECT_CHOICE_BAND
-    || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
-    || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
-    || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk])
-    && (gAiLogicData->abilities[battlerDef] == ABILITY_SHIELD_DUST || gAiLogicData->abilities[battlerDef] == ABILITY_INNER_FOCUS)))
+    if (!MoveHasAdditionalEffect(move, MOVE_EFFECT_FLINCH))
         return FALSE;
 
-    return TRUE;
+    if (AI_IsSlower(battlerAtk, battlerDef, move, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), CONSIDER_PRIORITY))
+        return FALSE;
+
+    u32 i;
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    // check move additional effects that are likely to happen
+    for (i = 0; i < additionalEffectCount; i++)
+    {
+        const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
+        // Only consider effects with a guaranteed chance to happen
+        if (!MoveEffectIsGuaranteed(battlerAtk, gAiLogicData->abilities[battlerAtk], additionalEffect))
+            continue;
+
+        if (additionalEffect->moveEffect == MOVE_EFFECT_FLINCH)
+        {
+            if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK
+            || DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
+            || (!IsMoldBreakerTypeAbility(battlerAtk, gAiLogicData->abilities[battlerAtk])
+            && (gAiLogicData->abilities[battlerDef] == ABILITY_SHIELD_DUST || gAiLogicData->abilities[battlerDef] == ABILITY_INNER_FOCUS)))
+                return FALSE;
+            else
+                return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+bool32 HasChoiceEffect(u32 battler)
+{
+    u32 ability = gAiLogicData->abilities[battler];
+    if (ability == ABILITY_GORILLA_TACTICS)
+        return TRUE;
+
+    if (ability == ABILITY_KLUTZ)
+        return FALSE;
+    
+    enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battler];
+    switch (holdEffect)
+    {
+    case HOLD_EFFECT_CHOICE_BAND:
+    case HOLD_EFFECT_CHOICE_SCARF:
+    case HOLD_EFFECT_CHOICE_SPECS:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
 static u32 FindMoveUsedXTurnsAgo(u32 battlerId, u32 x)
