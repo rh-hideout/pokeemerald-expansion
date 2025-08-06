@@ -169,8 +169,14 @@ enum VolatileFlags
     F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_SEMI_INVULNERABLE,               semiInvulnerable,                  (u32, 5)) \
+    F(VOLATILE_ELECTRIFIED,                     electrified,                       (u32, 1)) \
     F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE)
+    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_INFINITE_CONFUSION,              infiniteConfusion,                 (u32, 1)) \
+    F(VOLATILE_SALT_CURE,                       saltCure,                          (u32, 1)) \
+    F(VOLATILE_SYRUP_BOMB,                      syrupBomb,                         (u32, 1)) \
+    F(VOLATILE_GLAIVE_RUSH,                     glaiveRush,                        (u32, 1))
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
 #define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
@@ -188,44 +194,13 @@ enum Volatile
 // Helper macros
 #define INFATUATED_WITH(battler) (battler + 1)
 
-// Old flags
-#define STATUS2_CONFUSION             (1 << 0 | 1 << 1 | 1 << 2)
-#define STATUS2_CONFUSION_TURN(num)   ((num) << 0)
-#define STATUS2_FLINCHED              (1 << 3)
-#define STATUS2_UPROAR                (1 << 4 | 1 << 5 | 1 << 6)
-#define STATUS2_UPROAR_TURN(num)      ((num) << 4)
-#define STATUS2_TORMENT               (1 << 7)
-#define STATUS2_BIDE                  (1 << 8 | 1 << 9)
-#define STATUS2_BIDE_TURN(num)        (((num) << 8) & STATUS2_BIDE)
-#define STATUS2_LOCK_CONFUSE          (1 << 10 | 1 << 11) // e.g. Thrash
-#define STATUS2_LOCK_CONFUSE_TURN(num)((num) << 10)
-#define STATUS2_MULTIPLETURNS         (1 << 12)
-#define STATUS2_WRAPPED               (1 << 13)
-#define STATUS2_POWDER                (1 << 14)
-//#define STATUS2_UNUSED                (1 << 15)
-#define STATUS2_INFATUATION           (1 << 16 | 1 << 17 | 1 << 18 | 1 << 19)  // 4 bits, one for every battler
-#define STATUS2_INFATUATED_WITH(battler) (1u << (battler + 16))
-#define STATUS2_DEFENSE_CURL          (1 << 20)
-#define STATUS2_TRANSFORMED           (1 << 21)
-#define STATUS2_RECHARGE              (1 << 22)
-#define STATUS2_RAGE                  (1 << 23)
-#define STATUS2_SUBSTITUTE            (1 << 24)
-#define STATUS2_DESTINY_BOND          (1 << 25)
-#define STATUS2_ESCAPE_PREVENTION     (1 << 26)
-#define STATUS2_NIGHTMARE             (1 << 27)
-#define STATUS2_CURSED                (1 << 28)
-#define STATUS2_FORESIGHT             (1 << 29)
-#define STATUS2_DRAGON_CHEER          (1 << 30)
-#define STATUS2_FOCUS_ENERGY          (1 << 31)
-#define STATUS2_FOCUS_ENERGY_ANY      (STATUS2_DRAGON_CHEER | STATUS2_FOCUS_ENERGY)
-
 #define STATUS3_LEECHSEED_BATTLER       (1 << 0 | 1 << 1) // The battler to receive HP from Leech Seed
 #define STATUS3_LEECHSEED               (1 << 2)
 #define STATUS3_ALWAYS_HITS             (1 << 3 | 1 << 4)
 #define STATUS3_ALWAYS_HITS_TURN(num)   (((num) << 3) & STATUS3_ALWAYS_HITS) // "Always Hits" is set as a 2 turn timer, i.e. next turn is the last turn when it's active
 #define STATUS3_PERISH_SONG             (1 << 5)
-#define STATUS3_ON_AIR                  (1 << 6)
-#define STATUS3_UNDERGROUND             (1 << 7)
+#define STATUS3_UNUSED_6                (1 << 6)
+#define STATUS3_UNUSED_7                (1 << 7)
 #define STATUS3_MINIMIZED               (1 << 8)
 #define STATUS3_CHARGED_UP              (1 << 9)
 #define STATUS3_ROOTED                  (1 << 10)
@@ -233,33 +208,39 @@ enum Volatile
 #define STATUS3_YAWN_TURN(num)          (((num) << 11) & STATUS3_YAWN)
 #define STATUS3_IMPRISONED_OTHERS       (1 << 13)
 #define STATUS3_GRUDGE                  (1 << 14)
-#define STATUS3_COMMANDER               (1 << 15)
+#define STATUS3_UNUSED_15               (1 << 15)
 #define STATUS3_GASTRO_ACID             (1 << 16)
 #define STATUS3_EMBARGO                 (1 << 17)
-#define STATUS3_UNDERWATER              (1 << 18)
+#define STATUS3_UNUSED_18               (1 << 18)
 #define STATUS3_UNUSED_19               (1 << 19)
 #define STATUS3_UNUSED_20               (1 << 20)
 #define STATUS3_SMACKED_DOWN            (1 << 21)
 #define STATUS3_UNUSED_22               (1 << 22)
 #define STATUS3_TELEKINESIS             (1 << 23)
-#define STATUS3_PHANTOM_FORCE           (1 << 24)
+#define STATUS3_UNUSED_24               (1 << 24)
 #define STATUS3_MIRACLE_EYED            (1 << 25)
 #define STATUS3_MAGNET_RISE             (1 << 26)
 #define STATUS3_HEAL_BLOCK              (1 << 27)
 #define STATUS3_AQUA_RING               (1 << 28)
 #define STATUS3_LASER_FOCUS             (1 << 29)
 #define STATUS3_POWER_TRICK             (1 << 30)
-#define STATUS3_SKY_DROPPED             (1 << 31) // Target of Sky Drop
-#define STATUS3_SEMI_INVULNERABLE_NO_COMMANDER  (STATUS3_UNDERGROUND | STATUS3_ON_AIR | STATUS3_UNDERWATER | STATUS3_PHANTOM_FORCE) // Exception for Transform / Imposter
-#define STATUS3_SEMI_INVULNERABLE       (STATUS3_SEMI_INVULNERABLE_NO_COMMANDER | STATUS3_COMMANDER)
 
-#define STATUS4_ELECTRIFIED             (1 << 0)
-#define STATUS4_MUD_SPORT               (1 << 1)    // Only used if B_SPORT_TURNS < GEN_6
-#define STATUS4_WATER_SPORT             (1 << 2)    // Only used if B_SPORT_TURNS < GEN_6
-#define STATUS4_INFINITE_CONFUSION      (1 << 3)    // Used for Berserk Gene
-#define STATUS4_SALT_CURE               (1 << 4)
-#define STATUS4_SYRUP_BOMB              (1 << 5)
-#define STATUS4_GLAIVE_RUSH             (1 << 6)
+enum SemiInvulnerableState
+{
+    STATE_NONE,
+    STATE_UNDERGROUND,
+    STATE_UNDERWATER,
+    STATE_ON_AIR,
+    STATE_PHANTOM_FORCE,
+    STATE_SKY_DROP,
+    STATE_COMMANDER,
+};
+
+enum SemiInvulnerableExclusion
+{
+    CHECK_ALL,
+    EXCLUDE_COMMANDER,
+};
 
 #define HITMARKER_STRING_PRINTED        (1 << 4)
 #define HITMARKER_IGNORE_BIDE           (1 << 5)

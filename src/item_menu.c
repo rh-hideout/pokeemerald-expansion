@@ -2887,12 +2887,19 @@ static void MergeSort(struct BagPocket *pocket, s32 (*comparator)(enum Pocket, s
 {
     struct ItemSlot *dummySlots = AllocZeroed(sizeof(struct ItemSlot) * pocket->capacity);
 
-    for (u32 width = 1; width < pocket->capacity; width *= 2)
+    u32 usedCapacity;
+    for (usedCapacity = 0; usedCapacity < pocket->capacity; usedCapacity++)
     {
-        for (u32 i = 0; i < pocket->capacity; i += 2 * width)
-            Merge(pocket, i, min(i + width, pocket->capacity), min(i + 2 * width, pocket->capacity), dummySlots, comparator);
+        if (BagPocket_GetSlotData(pocket, usedCapacity).itemId == ITEM_NONE)
+            break;
+    }
 
-        for (u32 j = 0; j < pocket->capacity; j++)
+    for (u32 width = 1; width < usedCapacity; width *= 2)
+    {
+        for (u32 i = 0; i < usedCapacity; i += 2 * width)
+            Merge(pocket, i, min(i + width, usedCapacity), min(i + 2 * width, usedCapacity), dummySlots, comparator);
+
+        for (u32 j = 0; j < usedCapacity; j++)
             BagPocket_SetSlotData(pocket, j, dummySlots[j]);
     }
 
@@ -2919,22 +2926,7 @@ static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item
         name2 = GetItemName(item2.itemId);
     }
 
-    for (u32 i = 0; ; ++i)
-    {
-        if (name1[i] == EOS && name2[i] != EOS)
-            return -1;
-        else if (name1[i] != EOS && name2[i] == EOS)
-            return 1;
-        else if (name1[i] == EOS && name2[i] == EOS)
-            return 0;
-
-        if (name1[i] < name2[i])
-            return -1;
-        else if (name1[i] > name2[i])
-            return 1;
-    }
-
-    return 0; // Will never be reached
+    return StringCompare(name1, name2);
 }
 
 static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2)
@@ -2954,13 +2946,18 @@ static s32 CompareItemsByMost(enum Pocket pocketId, struct ItemSlot item1, struc
 
 static s32 CompareItemsByType(enum Pocket pocketId, struct ItemSlot item1, struct ItemSlot item2)
 {
+    if (item1.itemId == ITEM_NONE)
+        return 1;
+    else if (item2.itemId == ITEM_NONE)
+        return -1;
+
     enum ItemSortType type1 = gItemsInfo[item1.itemId].sortType;
     enum ItemSortType type2 = gItemsInfo[item2.itemId].sortType;
 
-    // Null and uncategorized items go last
-    if (type1 && !type2)
+    // Uncategorized items go last.
+    if (type1 != ITEM_TYPE_UNCATEGORIZED && type2 == ITEM_TYPE_UNCATEGORIZED)
         return -1;
-    else if (type2 && !type1)
+    else if (type2 != ITEM_TYPE_UNCATEGORIZED && type1 == ITEM_TYPE_UNCATEGORIZED)
         return 1;
     else if (type1 < type2)
         return -1;

@@ -213,7 +213,7 @@ SINGLE_BATTLE_TEST("Berserk Gene causes infinite confusion") // check if bit is 
         TURN {}
     } SCENE {
     } THEN {
-        EXPECT(gStatuses4[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] & STATUS4_INFINITE_CONFUSION);
+        EXPECT(gBattleMons[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)].volatiles.infiniteConfusion);
     }
 }
 
