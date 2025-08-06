@@ -2311,7 +2311,7 @@ static void CancellerProtean(u32 *effect)
     u32 moveType = GetBattleMoveType(gCurrentMove);
     if (ProteanTryChangeType(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), gCurrentMove, moveType))
     {
-        if (B_PROTEAN_LIBERO == GEN_9)
+        if (GetGenConfig(GEN_PROTEAN_LIBERO) >= GEN_9)
             gDisableStructs[gBattlerAttacker].usedProteanLibero = TRUE;
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
         gBattlerAbility = gBattlerAttacker;
@@ -3785,12 +3785,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_SNOW_WARNING:
-            if (B_SNOW_WARNING >= GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_SNOW, TRUE))
+            if (GetGenConfig(GEN_SNOW_WARNING) >= GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_SNOW, TRUE))
             {
                 BattleScriptPushCursorAndCallback(BattleScript_SnowWarningActivatesSnow);
                 effect++;
             }
-            else if (B_SNOW_WARNING < GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_HAIL, TRUE))
+            else if (GetGenConfig(GEN_SNOW_WARNING) < GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_HAIL, TRUE))
             {
                 BattleScriptPushCursorAndCallback(BattleScript_SnowWarningActivatesHail);
                 effect++;
@@ -3890,7 +3890,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
-                if (B_INTREPID_SWORD == GEN_9)
+                if (GetGenConfig(GEN_INTREPID_SWORD) >= GEN_9)
                     gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].intrepidSwordBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_ATK, 1, FALSE);
@@ -3904,7 +3904,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             {
                 gBattleScripting.savedBattler = gBattlerAttacker;
                 gBattlerAttacker = battler;
-                if (B_DAUNTLESS_SHIELD == GEN_9)
+                if (GetGenConfig(GEN_DAUNTLESS_SHIELD) >= GEN_9)
                     gBattleStruct->partyState[GetBattlerSide(battler)][gBattlerPartyIndexes[battler]].dauntlessShieldBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 SET_STATCHANGER(STAT_DEF, 1, FALSE);
@@ -10889,7 +10889,7 @@ u16 GetUsedHeldItem(u32 battler)
 bool32 CantPickupItem(u32 battler)
 {
     // Used by RandomUniformExcept() for RNG_PICKUP
-    if (battler == gBattlerAttacker && (B_PICKUP_WILD < GEN_9 || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
+    if (battler == gBattlerAttacker && (GetGenConfig(GEN_PICKUP_WILD) < GEN_9 || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
         return TRUE;
     return !(IsBattlerAlive(battler) && GetUsedHeldItem(battler) && gBattleStruct->battlerState[battler].canPickupItem);
 }

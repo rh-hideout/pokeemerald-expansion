@@ -52,6 +52,7 @@ SINGLE_BATTLE_TEST("Refrigerate doesn't affect Weather Ball's type", s16 damage)
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_REFRIGERATE; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_REFRIGERATE; }
     GIVEN {
+        WITH_CONFIG(GEN_SNOW_WARNING, GEN_9); //To prevent capturing hail damage
         ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         ASSUME(gSpeciesInfo[SPECIES_PINSIR].types[0] == TYPE_BUG);
         PLAYER(SPECIES_AMAURA) { Ability(ability); }
