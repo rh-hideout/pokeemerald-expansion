@@ -2680,10 +2680,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_TEATIME:
-            if (!(GetItemPocket(aiData->items[battlerAtk]) == POCKET_BERRIES 
-            || (hasPartner && GetItemPocket(aiData->items[BATTLE_PARTNER(battlerAtk)]) == POCKET_BERRIES)))
-                ADJUST_SCORE(-10);
-            if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+            if (GetItemPocket(aiData->items[battlerAtk]) != POCKET_BERRIES 
+            || (hasPartner && GetItemPocket(aiData->items[BATTLE_PARTNER(battlerAtk)]) != POCKET_BERRIES)
+            || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_EMBARGO:
@@ -4847,6 +4846,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_TEATIME:
     {
+        ADJUST_SCORE(DECENT_EFFECT);
         u32 item = aiData->items[battlerAtk];
         if (IsStatBoostingBerry(item))
             ADJUST_SCORE(DECENT_EFFECT);
@@ -4854,7 +4854,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
         if (hasPartner)
         {
-            u32 item = aiData->items[BATTLE_PARTNER(battlerAtk)];
+            item = aiData->items[BATTLE_PARTNER(battlerAtk)];
             if (IsStatBoostingBerry(item))
                 ADJUST_SCORE(DECENT_EFFECT);
             if (ShouldRestoreHpBerry(BATTLE_PARTNER(battlerAtk), item))

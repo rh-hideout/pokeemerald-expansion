@@ -269,3 +269,19 @@ SINGLE_BATTLE_TEST("Teatime triggers Motor Drive if it has been affected by Elec
         MESSAGE("Using Liechi Berry, the Attack of the opposing Wobbuffet rose!");
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI uses Teatime")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TEATIME) == EFFECT_TEATIME);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); Moves(MOVE_HEADBUTT, MOVE_TEATIME); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); Moves(MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_TEATIME); }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_TEATIME); }
+    }
+}
