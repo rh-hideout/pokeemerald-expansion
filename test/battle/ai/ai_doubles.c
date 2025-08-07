@@ -52,7 +52,6 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_ALLY_SWITCH:
         case EFFECT_MAT_BLOCK:
         case EFFECT_POWDER:
-        case EFFECT_PURIFY:
         case EFFECT_INSTRUCT:
         case EFFECT_TEATIME:
         case EFFECT_JUNGLE_HEALING:
@@ -127,6 +126,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_MISTY_TERRAIN:
         case EFFECT_POWER_SPLIT:
         case EFFECT_PSYCHIC_TERRAIN:
+        case EFFECT_PURIFY:
         case EFFECT_ROLE_PLAY:
         case EFFECT_ROTOTILLER:
         case EFFECT_SIMPLE_BEAM:

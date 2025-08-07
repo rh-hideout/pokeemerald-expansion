@@ -3555,7 +3555,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_PURIFY:
                 if (gBattleMons[battlerAtkPartner].status1 & STATUS1_ANY)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (!(gBattleMons[battlerAtkPartner].status1 & STATUS1_CAN_MOVE))
+                        RETURN_SCORE_PLUS(BEST_EFFECT);
+                    RETURN_SCORE_PLUS(DECENT_EFFECT);
                 }
                 break;
             case EFFECT_SWAGGER:
