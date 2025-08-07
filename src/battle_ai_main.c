@@ -2337,8 +2337,27 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-9);
             break;
+        case EFFECT_COURT_CHANGE:
+            if (gSideStatuses[GetBattlerSide(FOE(battlerAtk))] & SIDE_STATUS_BAD_COURT)
+                ADJUST_SCORE(BAD_EFFECT);
+            if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_GOOD_COURT)
+                ADJUST_SCORE(BAD_EFFECT);
+            if (AreAnyHazardsOnSide(GetBattlerSide(FOE(battlerAtk))) && CountUsablePartyMons(battlerAtk) != 0)
+                ADJUST_SCORE(WORST_EFFECT);
+
+
+            if (hasPartner)
+            {
+                if (IsHazardMove(aiData->partnerMove) // partner is going to set up hazards
+                  && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // partner is going to set up before the Court Change
+                {
+                    ADJUST_SCORE(-10);
+                    break; // Don't use Defog if partner is going to set up hazards
+                }
+            }
+            break;
         case EFFECT_DEFOG:
-            if (gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)
+            if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_FOG
              || AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)))
             {
                 if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -2643,6 +2662,13 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }*/
             }
             break;
+        case EFFECT_TEATIME:
+            if (!(GetItemPocket(aiData->items[battlerAtk]) == POCKET_BERRIES 
+            || (hasPartner && GetItemPocket(aiData->items[BATTLE_PARTNER(battlerAtk)]) == POCKET_BERRIES)))
+                ADJUST_SCORE(-10);
+            if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            break;
         case EFFECT_EMBARGO:
             if (!IsBattlerItemEnabled(battlerAtk)
              || gStatuses3[battlerDef] & STATUS3_EMBARGO
@@ -2842,11 +2868,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ||  GetBattlerWeight(battlerDef) >= 2000) //200.0 kg
                 ADJUST_SCORE(-10);
             break;
-        /*case EFFECT_NO_RETREAT:
-            if (TrappedByNoRetreat(battlerAtk))
+        case EFFECT_NO_RETREAT:
+            if (gDisableStructs[battlerAtk].noRetreat)
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_EXTREME_EVOBOOST:
+        /*case EFFECT_EXTREME_EVOBOOST:
             if (MainStatsMaxed(battlerAtk))
                 ADJUST_SCORE(-10);
             break;
@@ -2896,11 +2922,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                  || defPrio > 3) // Opponent going first or not using priority move
                     ADJUST_SCORE(-10);
             }
-            break;
-        case EFFECT_COURT_CHANGE:
-        case EFFECT_TEATIME:
-            if (PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
             break;
         case EFFECT_PLACEHOLDER:
             return 0;   // cannot even select
@@ -4717,6 +4738,27 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         //if (CountUsablePartyMons(battlerDef) != 0)
             //ADJUST_SCORE(8);
         break;
+    case EFFECT_COURT_CHANGE:
+        if (gSideStatuses[GetBattlerSide(FOE(battlerAtk))] & SIDE_STATUS_GOOD_COURT)
+            ADJUST_SCORE(WEAK_EFFECT);
+        if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_BAD_COURT)
+            ADJUST_SCORE(WEAK_EFFECT);
+
+        if (AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
+        {
+            ADJUST_SCORE(DECENT_EFFECT);
+        }
+
+        if (hasPartner)
+        {
+            if (IsHazardMove(aiData->partnerMove) // partner is going to set up hazards
+              && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // partner is going to set up before the Court Change
+            {
+                ADJUST_SCORE(-10);
+                break;
+            }
+        }
+        break;
     case EFFECT_DEFOG:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
             || (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_FOG))
@@ -4760,6 +4802,23 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         else if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_STATUS))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
+    case EFFECT_TEATIME:
+    {
+        u32 item = aiData->items[battlerAtk];
+        if (IsStatBoostingBerry(item))
+            ADJUST_SCORE(DECENT_EFFECT);
+        if (ShouldRestoreHpBerry(battlerAtk, item))
+            ADJUST_SCORE(DECENT_EFFECT);
+        if (hasPartner)
+        {
+            u32 item = aiData->items[BATTLE_PARTNER(battlerAtk)];
+            if (IsStatBoostingBerry(item))
+                ADJUST_SCORE(DECENT_EFFECT);
+            if (ShouldRestoreHpBerry(BATTLE_PARTNER(battlerAtk), item))
+                ADJUST_SCORE(DECENT_EFFECT);
+        } 
+        break;
+    }
     case EFFECT_TRICK:
     case EFFECT_BESTOW:
         switch (aiData->holdEffects[battlerAtk])
@@ -5329,8 +5388,10 @@ case EFFECT_GUARD_SPLIT:
         //break;
     //case EFFECT_CLANGOROUS_SOUL:  // TODO
         //break;
-    //case EFFECT_NO_RETREAT:       // TODO
-        //break;
+    case EFFECT_NO_RETREAT:
+        if (!(gDisableStructs[battlerAtk].noRetreat) && aiData->hpPercents[battlerAtk] >= 90)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
     //case EFFECT_SKY_DROP
         //break;
     case EFFECT_JUNGLE_HEALING:
