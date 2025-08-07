@@ -157,6 +157,10 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
+    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    {
+        TURN { MOVE(attacker, move); }
+    }
     // Effective turn
     TURN {
         if (TargetHasToMove(move))
@@ -197,6 +201,11 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         else if (gMovesInfo[move].effect == EFFECT_ACUPRESSURE)
         {
             MOVE(attacker, move, target: attacker);
+        }
+        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        {
+            MOVE(defender, MOVE_HELPING_HAND);
+            SKIP_TURN(attacker);
         }
         else
         { // All other moves
