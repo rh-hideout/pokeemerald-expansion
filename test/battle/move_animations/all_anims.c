@@ -213,6 +213,11 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move);
         }
     }
+    if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    {
+        TURN {};
+        TURN {};
+    }
 }
 
 static void SceneSingles(u32 move, struct BattlePokemon *mon)
@@ -359,6 +364,11 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(ignore1, MOVE_CELEBRATE);
             MOVE(ignore2, MOVE_CELEBRATE);
         }
+    }
+    if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    {
+        TURN {};
+        TURN {};
     }
 }
 
