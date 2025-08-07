@@ -2049,12 +2049,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (gBattleMons[battlerDef].statStages[STAT_ATK] == MIN_STAT_STAGE && gBattleMons[battlerDef].statStages[STAT_SPATK] == MIN_STAT_STAGE)
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_FOLLOW_ME:
+        case EFFECT_AROMATIC_MIST:
         case EFFECT_HELPING_HAND:
+            if (gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
+                ADJUST_SCORE(-10);
+            // falls through
+        case EFFECT_FOLLOW_ME:
+        case EFFECT_COACHING:
             if (!hasPartner
               || PartnerHasSameMoveEffectWithoutTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove)
-              || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
-              || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
+              || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_TRICK:
@@ -2131,10 +2135,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_FLOWER_SHIELD:
             if (!IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GRASS)
               && !(hasPartner && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(battlerAtk), TYPE_GRASS)))
-                ADJUST_SCORE(-10);
-            break;
-        case EFFECT_AROMATIC_MIST:
-            if (!hasPartner || !BattlerStatCanRise(BATTLE_PARTNER(battlerAtk), aiData->abilities[BATTLE_PARTNER(battlerAtk)], STAT_SPDEF))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_BIDE:
@@ -3113,7 +3113,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_AROMATIC_MIST:
         if (hasPartner)
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, battlerDef, STAT_CHANGE_SPDEF));
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, FOE(battlerAtk), STAT_CHANGE_SPDEF));
+        break;
+    case EFFECT_COACHING:
+        if (hasPartner)
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), FOE(battlerAtk), STAT_CHANGE_ATK));
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), FOE(battlerAtk), STAT_CHANGE_DEF));
+        }
         break;
     case EFFECT_HELPING_HAND:
         if (!hasPartner || !HasDamagingMove(battlerAtkPartner))
@@ -3525,6 +3532,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
             switch (effect)
             {
+            case EFFECT_ACUPRESSURE:
+                if (atkPartnerAbility == ABILITY_CONTRARY)
+                    ADJUST_SCORE(AWFUL_EFFECT);
+                else if (atkPartnerAbility == ABILITY_SIMPLE)
+                    ADJUST_SCORE(GOOD_EFFECT);
+                else
+                    ADJUST_SCORE(WEAK_EFFECT);
+                break;
             case EFFECT_DOODLE:
             case EFFECT_ENTRAINMENT:
             case EFFECT_GASTRO_ACID:
@@ -4158,7 +4173,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(-2); // Should be either removed or turned into increasing score
     case EFFECT_ACUPRESSURE:
     {
-        u32 ability = aiData->abilities[battlerDef];
+        u32 ability = aiData->abilities[battlerAtk];
         if (ability == ABILITY_CONTRARY)
             ADJUST_SCORE(AWFUL_EFFECT);
         else if (ability == ABILITY_SIMPLE)
