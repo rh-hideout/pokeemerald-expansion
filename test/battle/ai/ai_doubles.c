@@ -131,6 +131,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_ROTOTILLER:
         case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
+        case EFFECT_STUFF_CHEEKS:
         case EFFECT_WORRY_SEED:
 
         // Skipped on purpose.
