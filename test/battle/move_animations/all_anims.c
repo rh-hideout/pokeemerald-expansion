@@ -113,7 +113,8 @@ static u32 GetVariationsNumber(u32 move)
 {
     u32 variationsNumber;
 
-    if (gMovesInfo[move].effect == EFFECT_CURSE)
+    if (gMovesInfo[move].effect == EFFECT_CURSE
+        || gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         variationsNumber = 2;
     else
         variationsNumber = 1;
@@ -221,6 +222,13 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         {
             MOVE(defender, MOVE_HELPING_HAND);
             SKIP_TURN(attacker);
+        }
+        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
         }
         else
         { // All other moves
@@ -367,6 +375,13 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
         {
             MOVE(target, MOVE_LAST_RESORT, target: attacker);
             SKIP_TURN(attacker);
+        }
+        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
         }
         else
         { // All other moves
