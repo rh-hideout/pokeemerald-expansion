@@ -2637,12 +2637,14 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_MINIMIZE:
     case EFFECT_CALM_MIND:
     case EFFECT_COSMIC_POWER:
+    case EFFECT_MAGNETIC_FLUX:
     case EFFECT_DRAGON_DANCE:
     case EFFECT_ACUPRESSURE:
     case EFFECT_SHELL_SMASH:
     case EFFECT_SHIFT_GEAR:
     case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_ATTACK_SPATK_UP:
+    case EFFECT_GEAR_UP:
     case EFFECT_GROWTH:
     case EFFECT_COIL:
     case EFFECT_QUIVER_DANCE:
