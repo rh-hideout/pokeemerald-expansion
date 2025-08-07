@@ -2536,12 +2536,13 @@ bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_ATTACK_UP_USER_ALLY:
     case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_COIL:
     case EFFECT_BELLY_DRUM:
     case EFFECT_BULK_UP:
-    case EFFECT_GROWTH:
+    case EFFECT_DRAGON_DANCE:
+    case EFFECT_CLANGOROUS_SOUL:
+    case EFFECT_COIL:
     case EFFECT_FILLET_AWAY:
+    case EFFECT_GROWTH:
         return TRUE;
     default:
         return FALSE;
@@ -2574,24 +2575,27 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_EVASION_UP:
     case EFFECT_EVASION_UP_2:
     case EFFECT_MINIMIZE:
-    case EFFECT_CALM_MIND:
-    case EFFECT_COSMIC_POWER:
-    case EFFECT_MAGNETIC_FLUX:
-    case EFFECT_DRAGON_DANCE:
-    case EFFECT_ACUPRESSURE:
-    case EFFECT_SHELL_SMASH:
-    case EFFECT_SHIFT_GEAR:
     case EFFECT_ATTACK_ACCURACY_UP:
     case EFFECT_ATTACK_SPATK_UP:
-    case EFFECT_GEAR_UP:
-    case EFFECT_GROWTH:
-    case EFFECT_COIL:
-    case EFFECT_QUIVER_DANCE:
+    case EFFECT_ACUPRESSURE:
+    case EFFECT_BELLY_DRUM:
     case EFFECT_BULK_UP:
+    case EFFECT_CALM_MIND:
+    case EFFECT_CLANGOROUS_SOUL:
+    case EFFECT_COIL:
+    case EFFECT_COSMIC_POWER:
+    case EFFECT_DRAGON_DANCE:
+    case EFFECT_FILLET_AWAY:
+    case EFFECT_GEAR_UP:
     case EFFECT_GEOMANCY:
+    case EFFECT_GROWTH:
+    case EFFECT_MAGNETIC_FLUX:
+    case EFFECT_NO_RETREAT:
+    case EFFECT_QUIVER_DANCE:
+    case EFFECT_SHELL_SMASH:
+    case EFFECT_SHIFT_GEAR:
     case EFFECT_STOCKPILE:
     case EFFECT_VICTORY_DANCE:
-    case EFFECT_NO_RETREAT:
         return TRUE;
     case EFFECT_CHARGE:
         return B_CHARGE_SPDEF_RAISE >= GEN_5;

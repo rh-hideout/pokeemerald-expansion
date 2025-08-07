@@ -1988,6 +1988,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_BELLY_DRUM:
+        case EFFECT_CLANGOROUS_SOUL:
         case EFFECT_FILLET_AWAY:
             if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, aiData))
                 ADJUST_SCORE(-10);
@@ -4666,6 +4667,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
             ADJUST_SCORE(BEST_EFFECT);
         break;
+    case EFFECT_CLANGOROUS_SOUL:
+        if (!CanTargetFaintAi(battlerDef, battlerAtk) && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
     case EFFECT_PSYCH_UP:
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
         break;
@@ -5386,8 +5391,6 @@ case EFFECT_GUARD_SPLIT:
         break;
     //case EFFECT_EXTREME_EVOBOOST: // TODO
         //break;
-    //case EFFECT_CLANGOROUS_SOUL:  // TODO
-        //break;
     case EFFECT_NO_RETREAT:
         if (!(gDisableStructs[battlerAtk].noRetreat) && aiData->hpPercents[battlerAtk] >= 90)
             ADJUST_SCORE(BEST_EFFECT);
@@ -5849,6 +5852,8 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_BELLY_DRUM:
+    case EFFECT_CLANGOROUS_SOUL:
+    case EFFECT_FILLET_AWAY:
         if (aiData->hpPercents[battlerAtk] >= 90)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
