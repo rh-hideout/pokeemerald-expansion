@@ -63,73 +63,75 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
 
         // These all should be usable under circumstances unrelated to this test.
         // If there is not an AI test to see if it works, make one yourself!
-        case EFFECT_COURT_CHANGE:
-        case EFFECT_LIFE_DEW:
-        case EFFECT_FAIRY_LOCK:
-        case EFFECT_ELECTRIFY:
-        case EFFECT_NON_VOLATILE_STATUS:
-        case EFFECT_TOPSY_TURVY:
-        case EFFECT_ION_DELUGE:
-        case EFFECT_LASER_FOCUS:
-        case EFFECT_HEAL_PULSE:
-        case EFFECT_BESTOW:
         case EFFECT_AFTER_YOU:
-        case EFFECT_SHORE_UP:
-        case EFFECT_TRICK_ROOM:
-        case EFFECT_HEART_SWAP:
-        case EFFECT_POWER_SWAP:
-        case EFFECT_GUARD_SWAP:
-        case EFFECT_POWER_TRICK:
-        case EFFECT_GRAVITY:
-        case EFFECT_CAMOUFLAGE:
-        case EFFECT_SNATCH:
-        case EFFECT_IMPRISON:
-        case EFFECT_GRUDGE:
-        case EFFECT_RECYCLE:
-        case EFFECT_MAGIC_COAT:
-        case EFFECT_INGRAIN:
         case EFFECT_BATON_PASS:
-        case EFFECT_ENCORE:
-        case EFFECT_SWALLOW:
-        case EFFECT_PERISH_SONG:
-        case EFFECT_DESTINY_BOND:
-        case EFFECT_SLEEP_TALK:
-        case EFFECT_CURSE:
-        case EFFECT_ENDURE:
-        case EFFECT_SPITE:
-        case EFFECT_SUBSTITUTE:
-        case EFFECT_SHED_TAIL:
-        case EFFECT_HAZE:
-        case EFFECT_RESTORE_HP:
-        case EFFECT_SOFTBOILED:
-        case EFFECT_ROOST:
-        case EFFECT_MORNING_SUN:
-        case EFFECT_SYNTHESIS:
-        case EFFECT_MOONLIGHT:
-        case EFFECT_REST:
+        case EFFECT_BESTOW:
+        case EFFECT_CAMOUFLAGE:
         case EFFECT_CONVERSION:
         case EFFECT_CONVERSION_2:
-        case EFFECT_MIMIC:
+        case EFFECT_CURSE:
+        case EFFECT_DESTINY_BOND:
         case EFFECT_DISABLE:
-        case EFFECT_HELPING_HAND:
+        case EFFECT_ELECTRIFY:
+        case EFFECT_ENCORE:
+        case EFFECT_ENDURE:
+        case EFFECT_FAIRY_LOCK:
         case EFFECT_FOCUS_ENERGY:
+        case EFFECT_GRAVITY:
+        case EFFECT_GRUDGE:
+        case EFFECT_GUARD_SWAP:
+        case EFFECT_HAZE:
+        case EFFECT_HEAL_PULSE:
+        case EFFECT_HEART_SWAP:
+        case EFFECT_HELPING_HAND:
+        case EFFECT_IMPRISON:
+        case EFFECT_INGRAIN:
+        case EFFECT_ION_DELUGE:
+        case EFFECT_LASER_FOCUS:
+        case EFFECT_LIFE_DEW:
+        case EFFECT_MAGIC_COAT:
+        case EFFECT_MIMIC:
         case EFFECT_MIRROR_MOVE:
+        case EFFECT_MOONLIGHT:
+        case EFFECT_MORNING_SUN:
+        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_PERISH_SONG:
+        case EFFECT_POWER_SWAP:
+        case EFFECT_POWER_TRICK:
+        case EFFECT_RECYCLE:
+        case EFFECT_REST:
+        case EFFECT_RESTORE_HP:
+        case EFFECT_ROOST:
+        case EFFECT_SHED_TAIL:
+        case EFFECT_SHORE_UP:
+        case EFFECT_SLEEP_TALK:
+        case EFFECT_SNATCH:
+        case EFFECT_SOFTBOILED:
+        case EFFECT_SPITE:
+        case EFFECT_SUBSTITUTE:
+        case EFFECT_SWALLOW:
+        case EFFECT_SYNTHESIS:
+        case EFFECT_TOPSY_TURVY:
+        case EFFECT_TRICK_ROOM:
 
-        // These moves are confirmed to have AI tests.
+        // These contextual moves are confirmed to have AI tests.
+        // In this file: ability-altering moves, terrains
+        // The rest are in their move_effect files
+        case EFFECT_COURT_CHANGE:
         case EFFECT_DRAGON_CHEER:
-        case EFFECT_GRASSY_TERRAIN:
-        case EFFECT_MISTY_TERRAIN:
-        case EFFECT_ELECTRIC_TERRAIN:
-        case EFFECT_PSYCHIC_TERRAIN:
         case EFFECT_DOODLE:
         case EFFECT_ENTRAINMENT:
+        case EFFECT_ELECTRIC_TERRAIN:
+        case EFFECT_GRASSY_TERRAIN:
+        case EFFECT_GUARD_SPLIT:
+        case EFFECT_MISTY_TERRAIN:
+        case EFFECT_POWER_SPLIT:
+        case EFFECT_PSYCHIC_TERRAIN:
         case EFFECT_ROLE_PLAY:
+        case EFFECT_ROTOTILLER:
         case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
         case EFFECT_WORRY_SEED:
-        case EFFECT_POWER_SPLIT:
-        case EFFECT_GUARD_SPLIT:
-        case EFFECT_ROTOTILLER:
 
         // Skipped on purpose.
         case EFFECT_DO_NOTHING:
