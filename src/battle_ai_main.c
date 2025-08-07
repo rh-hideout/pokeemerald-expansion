@@ -2662,6 +2662,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
+        case EFFECT_DARK_VOID:
+            if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[battlerAtk].species != SPECIES_DARKRAI)
+                ADJUST_SCORE(-10);
+            if (!AI_CanPutToSleep(battlerAtk, battlerDef, abilityDef, move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            break;
+        case EFFECT_HYPERSPACE_FURY:
+            if (gBattleMons[battlerAtk].species != SPECIES_HOOPA_UNBOUND)
+                ADJUST_SCORE(-10);
+            break;
         case EFFECT_HEAL_BLOCK:
             if (gStatuses3[battlerDef] & STATUS3_HEAL_BLOCK
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
@@ -5177,6 +5187,9 @@ case EFFECT_GUARD_SPLIT:
         if (HasMoveWithLowAccuracy(battlerAtk, battlerDef, 90, FALSE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk], aiData->holdEffects[battlerDef])
           || !IsBattlerGrounded(battlerDef))
             ADJUST_SCORE(DECENT_EFFECT);
+        break;
+    case EFFECT_DARK_VOID:
+        IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_HEAL_BLOCK:
         if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && predictedMove != MOVE_NONE && IsHealingMove(predictedMove))
