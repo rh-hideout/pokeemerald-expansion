@@ -2924,9 +2924,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_SPICY_EXTRACT:
             if (battlerAtk != BATTLE_PARTNER(battlerDef)
              && (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
-              || aiData->abilities[battlerDef] == ABILITY_CLEAR_BODY
-              || aiData->abilities[battlerDef] == ABILITY_GOOD_AS_GOLD
-              || aiData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET))
+              || !CanLowerStat(battlerAtk, battlerDef, aiData->abilities[battlerDef], STAT_DEF)))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_UPPER_HAND:
@@ -4166,7 +4164,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_EVASION));
         break;
     case EFFECT_SPICY_EXTRACT:
-        // TODO: Make IncreaseStatDownScore function, just like IncreaseStatUpScore
+        if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY)
+         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
+            ADJUST_SCORE(WEAK_EFFECT);
+        ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_DEF));
         break;
     case EFFECT_BIDE:
         if (aiData->hpPercents[battlerAtk] < 90)

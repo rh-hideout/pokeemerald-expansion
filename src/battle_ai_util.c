@@ -2543,6 +2543,7 @@ bool32 IsAttackBoostMoveEffect(enum BattleMoveEffects effect)
     case EFFECT_COIL:
     case EFFECT_FILLET_AWAY:
     case EFFECT_GROWTH:
+    case EFFECT_TIDY_UP:
         return TRUE;
     default:
         return FALSE;
@@ -2595,6 +2596,7 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_SHELL_SMASH:
     case EFFECT_SHIFT_GEAR:
     case EFFECT_STOCKPILE:
+    case EFFECT_TIDY_UP:
     case EFFECT_VICTORY_DANCE:
         return TRUE;
     case EFFECT_CHARGE:
