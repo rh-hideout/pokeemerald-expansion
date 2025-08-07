@@ -254,6 +254,14 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         TURN {};
         TURN {};
     }
+    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    {
+        TURN {MOVE(attacker, move);};
+        TURN {MOVE(attacker, move);};
+        TURN {MOVE(attacker, move);};
+        TURN {MOVE(attacker, move);};
+        TURN {MOVE(attacker, MOVE_HELPING_HAND);};
+    }
 }
 
 static void SceneSingles(u32 move, struct BattlePokemon *mon)
@@ -422,6 +430,14 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     {
         TURN {};
         TURN {};
+    }
+    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    {
+        TURN {MOVE(attacker, move, target: target);};
+        TURN {MOVE(attacker, move, target: target);};
+        TURN {MOVE(attacker, move, target: target);};
+        TURN {MOVE(attacker, move, target: target);};
+        TURN {MOVE(attacker, MOVE_LAST_RESORT, target: attacker);};
     }
 }
 
