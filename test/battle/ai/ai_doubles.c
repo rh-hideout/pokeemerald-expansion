@@ -109,11 +109,10 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_SWALLOW:
         case EFFECT_SYNTHESIS:
         case EFFECT_TOPSY_TURVY:
-        case EFFECT_TRICK_ROOM:
 
         // These contextual moves are confirmed to have AI tests.
-        // In this file: ability-altering moves, terrains
-        // Status-healing moves in ai_check_viability
+        // In this file: ability-altering moves, field statuses
+        // Heal Bell and Refresh are in ai_check_viability
         // The rest are in their move_effect files
         case EFFECT_COURT_CHANGE:
         case EFFECT_DRAGON_CHEER:
@@ -132,6 +131,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
         case EFFECT_STUFF_CHEEKS:
+        case EFFECT_TRICK_ROOM:
         case EFFECT_WORRY_SEED:
 
         // Skipped on purpose.
