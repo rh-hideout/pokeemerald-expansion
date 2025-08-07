@@ -33,8 +33,6 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_AURORA_VEIL:
         case EFFECT_SKETCH:
         case EFFECT_PROTECT:
-        case EFFECT_HEAL_BELL:
-        case EFFECT_REFRESH:
         case EFFECT_SAFEGUARD:
         case EFFECT_FOLLOW_ME:
         case EFFECT_WISH:
@@ -116,6 +114,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
 
         // These contextual moves are confirmed to have AI tests.
         // In this file: ability-altering moves, terrains
+        // Status-healing moves in ai_check_viability
         // The rest are in their move_effect files
         case EFFECT_COURT_CHANGE:
         case EFFECT_DRAGON_CHEER:
@@ -124,6 +123,7 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_ELECTRIC_TERRAIN:
         case EFFECT_GRASSY_TERRAIN:
         case EFFECT_GUARD_SPLIT:
+        case EFFECT_HEAL_BELL:
         case EFFECT_MISTY_TERRAIN:
         case EFFECT_POWER_SPLIT:
         case EFFECT_PSYCHIC_TERRAIN:
