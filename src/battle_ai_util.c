@@ -1079,7 +1079,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_1:
                 case MOVE_EFFECT_ACC_MINUS_1:
                 case MOVE_EFFECT_EVS_MINUS_1:
-                    if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo != 1)
                         return TRUE;
                     break;
                 case MOVE_EFFECT_ATK_MINUS_2:
@@ -1089,7 +1089,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_2:
                 case MOVE_EFFECT_ACC_MINUS_2:
                 case MOVE_EFFECT_EVS_MINUS_2:
-                    if (CanLowerStat(battlerAtk, battlerDef, abilityDef, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
                         return TRUE;
                     break;
                 default:
@@ -1967,49 +1967,59 @@ s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove)
 }
 
 // stat stages
-bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat)
+bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, u32 stat)
 {
     if (gBattleMons[battlerDef].statStages[stat] == MIN_STAT_STAGE)
         return FALSE;
 
-    if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET)
+    if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET)
         return FALSE;
 
-    switch (abilityDef)
-    {
-    case ABILITY_SPEED_BOOST:
-        if (stat == STAT_SPEED)
-            return FALSE;
-    case ABILITY_HYPER_CUTTER:
-        if (stat == STAT_ATK)
-            return FALSE;
-    case ABILITY_BIG_PECKS:
-        if (stat == STAT_DEF)
-            return FALSE;
-    case ABILITY_ILLUMINATE:
-        if (B_ILLUMINATE_EFFECT < GEN_9)
-            break;
-    case ABILITY_KEEN_EYE:
-    case ABILITY_MINDS_EYE:
-        if (stat == STAT_ACC)
-            return FALSE;
-    case ABILITY_FLOWER_VEIL:
-        if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS))
-            return FALSE;
-        break;
-    case ABILITY_CONTRARY:
-    case ABILITY_CLEAR_BODY:
-    case ABILITY_WHITE_SMOKE:
-    case ABILITY_FULL_METAL_BODY:
+    u32 move = gAiThinkingStruct->moveConsidered;
+    u32 abilityAtk = aiData->abilities[battlerAtk];
+
+    if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_MIST && abilityAtk != ABILITY_INFILTRATOR)
         return FALSE;
+
+    if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))
+    {
+        if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS) && AI_IsAbilityOnSide(battlerDef, ABILITY_FLOWER_VEIL))
+            return FALSE;
+
+        switch (aiData->abilities[battlerDef])
+        {
+        case ABILITY_SPEED_BOOST:
+            if (stat == STAT_SPEED)
+                return FALSE;
+        case ABILITY_HYPER_CUTTER:
+            if (stat == STAT_ATK)
+                return FALSE;
+        case ABILITY_BIG_PECKS:
+            if (stat == STAT_DEF)
+                return FALSE;
+        case ABILITY_ILLUMINATE:
+            if (B_ILLUMINATE_EFFECT < GEN_9)
+                break;
+        case ABILITY_KEEN_EYE:
+        case ABILITY_MINDS_EYE:
+            if (stat == STAT_ACC)
+                return FALSE;
+        case ABILITY_CONTRARY:
+        case ABILITY_CLEAR_BODY:
+        case ABILITY_WHITE_SMOKE:
+        case ABILITY_FULL_METAL_BODY:
+            return FALSE;
+        default:
+            break;
+        }
     }
 
     if (stat == STAT_SPEED)
     {
         // If AI is faster and doesn't have any mons left, lowering speed doesn't give any
-        return !(AI_IsFaster(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), DONT_CONSIDER_PRIORITY)
+        return !(AI_IsFaster(battlerAtk, battlerDef, move, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), DONT_CONSIDER_PRIORITY)
             && CountUsablePartyMons(battlerAtk) == 0
-            && !HasMoveWithEffect(battlerAtk, EFFECT_ELECTRO_BALL));
+            && !HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_ELECTRO_BALL));
     }
 
     return TRUE;
@@ -2027,7 +2037,7 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
     if (GetBattlerSecondaryDamage(battlerDef) >= gBattleMons[battlerDef].hp)
         return NO_INCREASE;
 
-    // Don't decrese stat if opposing battler has Encore
+    // Don't decrease stat if opposing battler has Encore
     if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 

@@ -144,7 +144,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
-bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 stat);
+bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, u32 stat);
 bool32 BattlerStatCanRise(u32 battler, u32 battlerAbility, u32 stat);
 bool32 AreBattlersStatsMaxed(u32 battler);
 u32 CountPositiveStatStages(u32 battlerId);
