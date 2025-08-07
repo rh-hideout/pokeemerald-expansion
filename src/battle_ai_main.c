@@ -2982,6 +2982,10 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 // double battle logic
 static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
+    // no other flags apply; the battler is not supposed to have AI at all
+    if (gAiThinkingStruct->aiFlags[battlerAtk] == AI_FLAG_DOUBLE_BATTLE)
+        return score;
+
     // move data
     u32 moveType = GetMoveType(move);
     enum BattleMoveEffects effect = GetMoveEffect(move);
@@ -3069,7 +3073,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
 )
         {
-            ADJUST_SCORE(-20);
+            ADJUST_SCORE(WORST_EFFECT);
         }
         else
         {
