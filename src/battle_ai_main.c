@@ -3088,6 +3088,10 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // consider our move effect relative to partner state
     switch (effect)
     {
+    case EFFECT_AROMATIC_MIST:
+        if (hasPartner)
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, battlerDef, STAT_CHANGE_SPDEF));
+        break;
     case EFFECT_HELPING_HAND:
         if (!hasPartner || !HasDamagingMove(battlerAtkPartner))
             ADJUST_SCORE(-20);
