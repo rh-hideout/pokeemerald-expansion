@@ -1993,7 +1993,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(GOOD_EFFECT);
             break;
         case EFFECT_TELEPORT:
-            ADJUST_SCORE(-10);
+            if (B_TELEPORT_BEHAVIOR < GEN_8)
+                ADJUST_SCORE(-10);
             break;
         case EFFECT_FIRST_TURN_ONLY:
             if (!gDisableStructs[battlerAtk].isFirstTurn)
@@ -4332,7 +4333,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         //todo - check z splash, z celebrate, z happy hour (lol)
         break;
     case EFFECT_TELEPORT: // Either remove or add better logic
-        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || !IsOnPlayerSide(battlerAtk))
+        if (B_TELEPORT_BEHAVIOR < GEN_8)
             break;
         //fallthrough
     case EFFECT_HIT_ESCAPE:
