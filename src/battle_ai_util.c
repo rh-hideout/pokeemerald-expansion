@@ -2618,10 +2618,12 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_ATTACK_UP_2:
     case EFFECT_ATTACK_UP_USER_ALLY:
     case EFFECT_DEFENSE_UP:
+    case EFFECT_DEFENSE_CURL:
     case EFFECT_DEFENSE_UP_2:
     case EFFECT_DEFENSE_UP_3:
     case EFFECT_SPEED_UP:
     case EFFECT_SPEED_UP_2:
+    case EFFECT_AUTOTOMIZE:
     case EFFECT_SPECIAL_ATTACK_UP:
     case EFFECT_SPECIAL_ATTACK_UP_2:
     case EFFECT_SPECIAL_ATTACK_UP_3:
@@ -2632,7 +2634,6 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_EVASION_UP:
     case EFFECT_EVASION_UP_2:
     case EFFECT_MINIMIZE:
-    case EFFECT_DEFENSE_CURL:
     case EFFECT_CALM_MIND:
     case EFFECT_COSMIC_POWER:
     case EFFECT_DRAGON_DANCE:
