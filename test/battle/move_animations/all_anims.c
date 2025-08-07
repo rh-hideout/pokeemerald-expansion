@@ -295,6 +295,10 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
+    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    {
+        TURN { MOVE(attacker, move, target: target); }
+    }
     // Effective turn
     TURN {
         if (TargetHasToMove(move))
@@ -338,6 +342,11 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
         { // Opponent needs to choose priority move
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_QUICK_ATTACK, target: attacker);
+        }
+        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        {
+            MOVE(target, MOVE_LAST_RESORT, target: attacker);
+            SKIP_TURN(attacker);
         }
         else
         { // All other moves
