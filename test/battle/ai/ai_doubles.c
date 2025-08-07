@@ -13,9 +13,6 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         // Damaging moves are universally usable.
         if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS)
             continue;
-        if (IsMoveEffectWeather(j))
-            continue;
-
         moveEffect = GetMoveEffect(j);
 
         if (IsStatRaisingEffect(moveEffect))
@@ -111,9 +108,10 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_TOPSY_TURVY:
 
         // These contextual moves are confirmed to have AI tests.
-        // In this file: ability-altering moves, field statuses
+        // In this file: ability-altering moves, field statuses, weather
         // Heal Bell and Refresh are in ai_check_viability
         // The rest are in their move_effect files
+        case EFFECT_CHILLY_RECEPTION:
         case EFFECT_COURT_CHANGE:
         case EFFECT_DRAGON_CHEER:
         case EFFECT_DOODLE:
@@ -121,16 +119,22 @@ AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects
         case EFFECT_ELECTRIC_TERRAIN:
         case EFFECT_GRASSY_TERRAIN:
         case EFFECT_GUARD_SPLIT:
+        case EFFECT_HAIL:
         case EFFECT_HEAL_BELL:
         case EFFECT_MISTY_TERRAIN:
         case EFFECT_POWER_SPLIT:
         case EFFECT_PSYCHIC_TERRAIN:
         case EFFECT_PURIFY:
+        case EFFECT_RAIN_DANCE:
+        case EFFECT_REFRESH:
         case EFFECT_ROLE_PLAY:
         case EFFECT_ROTOTILLER:
+        case EFFECT_SANDSTORM:
         case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
+        case EFFECT_SNOWSCAPE:
         case EFFECT_STUFF_CHEEKS:
+        case EFFECT_SUNNY_DAY:
         case EFFECT_TRICK_ROOM:
         case EFFECT_WORRY_SEED:
 
