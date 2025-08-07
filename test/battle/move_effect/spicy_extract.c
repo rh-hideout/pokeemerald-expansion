@@ -163,7 +163,7 @@ SINGLE_BATTLE_TEST("Spicy Extract against Clear Amulet and Contrary raises Defen
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amulet and a physical move")
+AI_DOUBLE_BATTLE_TEST("AI uses Spicy Extract if partner holds Clear Amulet and a physical move")
 {
     u32 move;
 
@@ -186,7 +186,7 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amu
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does not benefit partner")
+AI_DOUBLE_BATTLE_TEST("AI will not use Spicy Extract if it does not benefit partner")
 {
     u32 species;
     u32 ability;

@@ -96,3 +96,19 @@ SINGLE_BATTLE_TEST("Rototiller fails if the only valid target is semi-invulnerab
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI uses Rototiller")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_TANGELA) { Moves(MOVE_ROTOTILLER, MOVE_POUND); }
+        OPPONENT(SPECIES_TANGELA);
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_ROTOTILLER); }
+    }
+}
