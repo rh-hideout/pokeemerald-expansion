@@ -1832,6 +1832,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (IsWakeupTurn(battlerAtk) || !AI_IsBattlerAsleepOrComatose(battlerAtk))
                 ADJUST_SCORE(-10);    // if mon will wake up, is not asleep, or is not comatose
             break;
+        case EFFECT_FAIRY_LOCK:
+            if ((gFieldStatuses & STATUS_FIELD_FAIRY_LOCK) || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            // fall through
         case EFFECT_MEAN_LOOK:
             if (AI_CanBattlerEscape(battlerDef)
                 || IsBattlerTrapped(battlerAtk, battlerDef)
@@ -2715,10 +2719,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 else if (targetNegativeStages < targetPositiveStages)
                     ADJUST_SCORE(-5); //More stages would be made positive than negative
             }
-            break;
-        case EFFECT_FAIRY_LOCK:
-            if ((gFieldStatuses & STATUS_FIELD_FAIRY_LOCK) || PartnerMoveIsSameNoTarget(BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
             break;
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -4260,6 +4260,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         else if (gStatuses3[battlerAtk] & STATUS3_ALWAYS_HITS)
             ADJUST_SCORE(BEST_EFFECT);
         break;
+    case EFFECT_FAIRY_LOCK:
     case EFFECT_MEAN_LOOK:
         if (ShouldTrap(battlerAtk, battlerDef, move))
             ADJUST_SCORE(GOOD_EFFECT);
@@ -5202,10 +5203,6 @@ case EFFECT_GUARD_SPLIT:
     case EFFECT_TOPSY_TURVY:
         if (CountPositiveStatStages(battlerDef) > CountNegativeStatStages(battlerDef))
             ADJUST_SCORE(DECENT_EFFECT);
-        break;
-    case EFFECT_FAIRY_LOCK:
-        if (ShouldTrap(battlerAtk, battlerDef, move))
-            ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_QUASH:
         if (hasPartner && AI_IsSlower(BATTLE_PARTNER(battlerAtk), battlerDef, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY))
@@ -6302,6 +6299,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_TAUNT:
     case EFFECT_INGRAIN:
     case EFFECT_NO_RETREAT:
+    case EFFECT_FAIRY_LOCK:
     case EFFECT_MEAN_LOOK:
         ADJUST_SCORE(AWFUL_EFFECT);
         break;
