@@ -3852,37 +3852,6 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
     return FALSE;
 }
 
-bool32 IsMoveEffectWeather(u32 move)
-{
-    enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (move != MOVE_NONE
-     && (effect == EFFECT_SUNNY_DAY
-      || effect == EFFECT_RAIN_DANCE
-      || effect == EFFECT_SANDSTORM
-      || effect == EFFECT_HAIL
-      || effect == EFFECT_SNOWSCAPE
-      || effect == EFFECT_CHILLY_RECEPTION))
-        return TRUE;
-    return FALSE;
-}
-
-//PARTNER_MOVE_EFFECT_IS_TERRAIN
-bool32 PartnerMoveEffectIsTerrain(u32 battlerAtkPartner, u32 partnerMove)
-{
-    if (!HasPartner(battlerAtkPartner))
-        return FALSE;
-
-    enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
-    if (partnerMove != MOVE_NONE
-     && (partnerEffect == EFFECT_GRASSY_TERRAIN
-      || partnerEffect == EFFECT_MISTY_TERRAIN
-      || partnerEffect == EFFECT_ELECTRIC_TERRAIN
-      || partnerEffect == EFFECT_PSYCHIC_TERRAIN))
-        return TRUE;
-
-    return FALSE;
-}
-
 //PARTNER_MOVE_EFFECT_IS
 bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, u32 partnerMove, enum BattleMoveEffects effectCheck)
 {
