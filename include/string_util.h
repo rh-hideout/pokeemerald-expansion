@@ -5,6 +5,7 @@ extern u8 gStringVar1[0x100];
 extern u8 gStringVar2[0x100];
 extern u8 gStringVar3[0x100];
 extern u8 gStringVar4[0x3E8];
+extern u8 gNamePlateBuffer[0x20];
 
 enum StringConvertMode
 {
