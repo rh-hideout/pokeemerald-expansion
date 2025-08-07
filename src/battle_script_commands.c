@@ -11904,7 +11904,7 @@ static void Cmd_magnitudedamagecalculation(void)
 {
     CMD_ARGS();
 
-    u32 magnitude = Random() % 100;
+    u32 magnitude = RandomUniform(RNG_MAGNITUDE, 0, 99);
 
     if (magnitude < 5)
     {
