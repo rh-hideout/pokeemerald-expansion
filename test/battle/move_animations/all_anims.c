@@ -113,7 +113,10 @@ static u32 GetVariationsNumber(u32 move)
 {
     u32 variationsNumber;
 
-    if (gMovesInfo[move].effect == EFFECT_CURSE
+    if (gMovesInfo[move].effect == EFFECT_SPIT_UP)
+        variationsNumber = 3;
+    else if (gMovesInfo[move].effect == EFFECT_CURSE
+        || gMovesInfo[move].effect == EFFECT_PRESENT
         || gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         variationsNumber = 2;
     else
@@ -131,7 +134,10 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
           || gMovesInfo[move].effect == EFFECT_SWALLOW)
     { // attacker needs to have used Stockpile
-        TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        for (u32 i = 0; i <= variation; i++)
+        {
+            TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        }
     }
     else if ((gMovesInfo[move].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && gMovesInfo[move].argument.status == STATUS1_PARALYSIS))
     { // defender needs to be paralyzed
@@ -223,6 +229,13 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(defender, MOVE_HELPING_HAND);
             SKIP_TURN(attacker);
         }
+        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 1));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 254));
+        }
         else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         {
             if (variation == 0)
@@ -281,7 +294,10 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
             || gMovesInfo[move].effect == EFFECT_SWALLOW)
     { // Player needs to have used Stockpile
-        TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        for (u32 i = 0; i <= variation; i++)
+        {
+            TURN { MOVE(attacker, MOVE_STOCKPILE); }
+        }
     }
     else if ((gMovesInfo[move].effect == EFFECT_DOUBLE_POWER_ON_ARG_STATUS && gMovesInfo[move].argument.status == STATUS1_PARALYSIS))
     { // Opponent needs to be paralyzed
@@ -375,6 +391,13 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
         {
             MOVE(target, MOVE_LAST_RESORT, target: attacker);
             SKIP_TURN(attacker);
+        }
+        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 1));
+            else if (variation == 1)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 254));
         }
         else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         {
