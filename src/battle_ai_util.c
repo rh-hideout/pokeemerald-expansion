@@ -2818,8 +2818,8 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move)
 static u32 GetLeechSeedDamage(u32 battler)
 {
     u32 damage = 0;
-    if (gBattleMons[battler].volatiles.leechSeed
-     && gBattleMons[LEECHSEEDED_BY(gBattleMons[battler].volatiles.leechSeed)].hp != 0)
+    u32 leechSeeder = gBattleMons[battler].volatiles.leechSeed;
+    if (leechSeeder && gBattleMons[leechSeeder - 1].hp != 0)
      {
         damage = GetNonDynamaxMaxHP(battler) / 8;
         if (damage == 0)

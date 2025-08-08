@@ -163,7 +163,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gBattleMons[i].volatiles.lockOn)
+        if (gBattleMons[i].volatiles.lockOn > 0)
             gBattleMons[i].volatiles.lockOn--;
 
         if (gDisableStructs[i].chargeTimer && --gDisableStructs[i].chargeTimer == 0)
@@ -577,16 +577,15 @@ static bool32 HandleEndTurnIngrain(u32 battler)
 static bool32 HandleEndTurnLeechSeed(u32 battler)
 {
     bool32 effect = FALSE;
-    u32 leechSeedReceiver = LEECHSEEDED_BY(gBattleMons[battler].volatiles.leechSeed);
 
     gBattleStruct->turnEffectsBattlerId++;
 
     if (gBattleMons[battler].volatiles.leechSeed
-     && IsBattlerAlive(leechSeedReceiver)
+     && IsBattlerAlive(gBattleMons[battler].volatiles.leechSeed - 1)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattlerTarget = leechSeedReceiver;
+        gBattlerTarget = gBattleMons[battler].volatiles.leechSeed - 1; // leech seed receiver
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
@@ -1015,7 +1014,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gBattleMons[battler].volatiles.yawn)
+    if (gBattleMons[battler].volatiles.yawn > 0)
     {
         gBattleMons[battler].volatiles.yawn--;
         if (!gBattleMons[battler].volatiles.yawn

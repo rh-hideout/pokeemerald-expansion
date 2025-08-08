@@ -3634,7 +3634,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
     case MOVE_EFFECT_LEECH_SEED:
         if (!IS_BATTLER_OF_TYPE(gBattlerTarget, TYPE_GRASS) && !gBattleMons[gBattlerTarget].volatiles.leechSeed)
         {
-            gBattleMons[gBattlerTarget].volatiles.leechSeed = gBattlerAttacker + 1;
+            gBattleMons[gBattlerTarget].volatiles.leechSeed = LEECHSEEDED_BY(gBattlerAttacker);
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_MoveEffectLeechSeed;
         }
@@ -9753,7 +9753,7 @@ static void Cmd_setseeded(void)
     }
     else
     {
-        gBattleMons[gBattlerTarget].volatiles.leechSeed = gBattlerAttacker + 1;
+        gBattleMons[gBattlerTarget].volatiles.leechSeed = LEECHSEEDED_BY(gBattlerAttacker);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_SET;
     }
 

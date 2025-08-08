@@ -213,7 +213,7 @@ enum Volatile
 
 // Helper macros
 #define INFATUATED_WITH(battler) (battler + 1)
-#define LEECHSEEDED_BY(battler) (battler - 1)
+#define LEECHSEEDED_BY(battler) (battler + 1)
 
 enum SemiInvulnerableState
 {
