@@ -203,6 +203,7 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
     u32 variationsNumber;
 
     if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL
+        || gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE
         || move == MOVE_TECHNO_BLAST)
         variationsNumber = 5;
     else if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
@@ -294,6 +295,17 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             TURN { MOVE(attacker, MOVE_SANDSTORM); }
         else
             TURN { MOVE(attacker, MOVE_HAIL); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_GRASSY_TERRAIN); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_PSYCHIC_TERRAIN); }
+        else if (variation == 4)
+            TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
     else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
     {
@@ -487,6 +499,17 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             TURN { MOVE(attacker, MOVE_SANDSTORM); }
         else
             TURN { MOVE(attacker, MOVE_HAIL); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_GRASSY_TERRAIN); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_PSYCHIC_TERRAIN); }
+        else if (variation == 4)
+            TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
     else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
     {
