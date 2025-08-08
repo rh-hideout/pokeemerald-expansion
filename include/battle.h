@@ -1073,7 +1073,6 @@ extern u32 gHitMarker;
 extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
 extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
-extern u32 gStatuses3[MAX_BATTLERS_COUNT];
 extern struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT];
 extern u16 gPauseCounterBattle;
 extern u16 gPaydayMoney;

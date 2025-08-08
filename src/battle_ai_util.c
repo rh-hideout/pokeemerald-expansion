@@ -459,7 +459,7 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
         return TRUE;
     if (gBattleMons[battlerDef].volatiles.semiInvulnerable == STATE_SKY_DROP)
         return TRUE;
-    if (gStatuses3[battlerDef] & STATUS3_ROOTED)
+    if (gBattleMons[battlerDef].volatiles.root)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         return TRUE;
@@ -1624,11 +1624,11 @@ enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
     if (gAiThinkingStruct->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
 
-    if (gStatuses3[battlerId] & STATUS3_EMBARGO)
+    if (gBattleMons[battlerId].volatiles.embargo)
         return HOLD_EFFECT_NONE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return HOLD_EFFECT_NONE;
-    if (gAiLogicData->abilities[battlerId] == ABILITY_KLUTZ && !(gStatuses3[battlerId] & STATUS3_GASTRO_ACID))
+    if (gAiLogicData->abilities[battlerId] == ABILITY_KLUTZ && !gBattleMons[battlerId].volatiles.gastroAcid)
         return HOLD_EFFECT_NONE;
 
     return holdEffect;
@@ -1882,7 +1882,7 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
     if (!DoesBattlerIgnoreAbilityChecks(battlerAtk, atkAbility, move) && defAbility == ABILITY_STURDY)
         return FALSE;
 
-    if ((((gStatuses3[battlerDef] & STATUS3_ALWAYS_HITS)
+    if (((gBattleMons[battlerDef].volatiles.lockOn
         && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
         || atkAbility == ABILITY_NO_GUARD || defAbility == ABILITY_NO_GUARD)
         && gBattleMons[battlerAtk].level >= gBattleMons[battlerDef].level)
@@ -1927,7 +1927,8 @@ bool32 IsBattlerDamagedByStatus(u32 battler)
         || gBattleMons[battler].volatiles.nightmare
         || gBattleMons[battler].volatiles.cursed
         || gBattleMons[battler].volatiles.saltCure
-        || gStatuses3[battler] & (STATUS3_PERISH_SONG | STATUS3_LEECHSEED)
+        || gBattleMons[battler].volatiles.leechSeed
+        || gBattleMons[battler].volatiles.perishSong
         || gSideStatuses[GetBattlerSide(battler)] & (SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_DAMAGE_NON_TYPES);
 }
 
@@ -2079,9 +2080,9 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
     case STAT_ACC:
         if (gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
             tempScore += WEAK_EFFECT;
-        if (gStatuses3[battlerDef] & STATUS3_LEECHSEED)
+        if (gBattleMons[battlerDef].volatiles.leechSeed)
             tempScore += WEAK_EFFECT;
-        if (gStatuses3[battlerDef] & STATUS3_ROOTED)
+        if (gBattleMons[battlerDef].volatiles.root)
             tempScore += WEAK_EFFECT;
         if (gBattleMons[battlerDef].volatiles.cursed)
             tempScore += WEAK_EFFECT;
@@ -2089,9 +2090,9 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
     case STAT_EVASION:
         if (gBattleMons[battlerDef].status1 & STATUS1_PSN_ANY)
             tempScore += WEAK_EFFECT;
-        if (gStatuses3[battlerDef] & STATUS3_LEECHSEED)
+        if (gBattleMons[battlerDef].volatiles.leechSeed)
             tempScore += WEAK_EFFECT;
-        if (gStatuses3[battlerDef] & STATUS3_ROOTED)
+        if (gBattleMons[battlerDef].volatiles.root)
             tempScore += WEAK_EFFECT;
         if (gBattleMons[battlerDef].volatiles.cursed)
             tempScore += WEAK_EFFECT;
@@ -2830,13 +2831,13 @@ bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move)
     }
 }
 
-static u32 GetLeechSeedDamage(u32 battlerId)
+static u32 GetLeechSeedDamage(u32 battler)
 {
     u32 damage = 0;
-    if ((gStatuses3[battlerId] & STATUS3_LEECHSEED)
-     && gBattleMons[gStatuses3[battlerId] & STATUS3_LEECHSEED_BATTLER].hp != 0)
+    u32 leechSeeder = gBattleMons[battler].volatiles.leechSeed;
+    if (leechSeeder && gBattleMons[leechSeeder - 1].hp != 0)
      {
-        damage = GetNonDynamaxMaxHP(battlerId) / 8;
+        damage = GetNonDynamaxMaxHP(battler) / 8;
         if (damage == 0)
             damage = 1;
      }
@@ -3680,7 +3681,7 @@ bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage)
         // using item or user goes first
         s32 healDmg = (GetMoveAbsorbPercentage(move) * damage) / 100;
 
-        if (gStatuses3[battlerAtk] & STATUS3_HEAL_BLOCK)
+        if (gBattleMons[battlerAtk].volatiles.healBlock)
             healDmg = 0;
 
         if (CanTargetFaintAi(battlerDef, battlerAtk)
@@ -3705,7 +3706,7 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
     u32 healAmount = (healPercent * maxHP) / 100;
     if (healAmount > maxHP)
         healAmount = maxHP;
-    if (gStatuses3[battlerAtk] & STATUS3_HEAL_BLOCK)
+    if (gBattleMons[battlerAtk].volatiles.healBlock)
         healAmount = 0;
     if (AI_IsFaster(battlerAtk, battlerDef, move, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), CONSIDER_PRIORITY))
     {
@@ -3767,7 +3768,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
 bool32 IsBattle1v1()
 {
     if (IsDoubleBattle()
-      && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT)) 
+      && ((IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_PLAYER_RIGHT))
       || (IsBattlerAlive(B_POSITION_OPPONENT_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_RIGHT))))
         return FALSE;
     return TRUE;
@@ -5014,9 +5015,9 @@ void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     if (gBattleMons[battlerDef].volatiles.substitute)
         ADJUST_SCORE_PTR(GOOD_EFFECT);
 
-    if (gStatuses3[battlerAtk] & STATUS3_LEECHSEED)
+    if (gBattleMons[battlerAtk].volatiles.leechSeed)
         ADJUST_SCORE_PTR(DECENT_EFFECT);
-    if (gStatuses3[battlerDef] & STATUS3_LEECHSEED)
+    if (gBattleMons[battlerDef].volatiles.leechSeed)
         ADJUST_SCORE_PTR(-2);
 }
 
@@ -5079,7 +5080,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
             scoreIncrease += BEST_EFFECT;
     }
 
-    if (gStatuses3[battlerDef] & STATUS3_PERISH_SONG)
+    if (gBattleMons[battlerDef].volatiles.perishSong)
         scoreIncrease += GOOD_EFFECT;
 
     if (gBattleMons[battlerDef].status1 & STATUS1_SLEEP)
@@ -5120,9 +5121,9 @@ bool32 IsBattlerItemEnabled(u32 battler)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM)
         return FALSE;
-    if (gStatuses3[battler] & STATUS3_EMBARGO)
+    if (gBattleMons[battler].volatiles.embargo)
         return FALSE;
-    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !(gStatuses3[battler] & STATUS3_GASTRO_ACID))
+    if (gBattleMons[battler].ability == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
     return TRUE;
 }
@@ -5263,7 +5264,7 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         }
     }
 
-    if (gStatuses3[battlerDef] & STATUS3_GASTRO_ACID)
+    if (gBattleMons[battlerDef].volatiles.gastroAcid)
         return FALSE;
 
     u32 atkAbility = aiData->abilities[battlerAtk];

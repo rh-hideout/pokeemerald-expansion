@@ -675,7 +675,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     bool32 hasStatRaised = AnyStatIsRaised(battler);
 
     //Perish Song
-    if (gStatuses3[battler] & STATUS3_PERISH_SONG
+    if (gBattleMons[battler].volatiles.perishSong
         && gDisableStructs[battler].perishSongTimer == 0
         && monAbility != ABILITY_SOUNDPROOF
         && RandomPercentage(RNG_AI_SWITCH_PERISH_SONG, GetSwitchChance(SHOULD_SWITCH_PERISH_SONG)))
@@ -684,7 +684,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     if (gAiThinkingStruct->aiFlags[GetThinkingBattler(battler)] & AI_FLAG_SMART_SWITCHING)
     {
         //Yawn
-        if (gStatuses3[battler] & STATUS3_YAWN
+        if (gBattleMons[battler].volatiles.yawn
             && CanBeSlept(battler, battler, monAbility, BLOCKED_BY_SLEEP_CLAUSE) // TODO: ask for help from pawwkie
             && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3
             && RandomPercentage(RNG_AI_SWITCH_YAWN, GetSwitchChance(SHOULD_SWITCH_YAWN)))
@@ -719,7 +719,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 && gAiLogicData->abilities[opposingBattler] != ABILITY_MINDS_EYE
                 && (B_ILLUMINATE_EFFECT >= GEN_9 && gAiLogicData->abilities[opposingBattler] != ABILITY_ILLUMINATE)
                 && !gBattleMons[battler].volatiles.foresight
-                && !(gStatuses3[battler] & STATUS3_MIRACLE_EYED))
+                && !gBattleMons[battler].volatiles.miracleEye)
                 switchMon = FALSE;
 
             if (switchMon)
@@ -749,7 +749,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 
             //Leech Seed
-            if (gStatuses3[battler] & STATUS3_LEECHSEED
+            if (gBattleMons[battler].volatiles.leechSeed
                 && (hasStatRaised ? RandomPercentage(RNG_AI_SWITCH_SEEDED, GetSwitchChance(SHOULD_SWITCH_SEEDED_STATS_RAISED)) : RandomPercentage(RNG_AI_SWITCH_SEEDED, GetSwitchChance(SHOULD_SWITCH_SEEDED))))
                 return SetSwitchinAndSwitch(battler, PARTY_SIZE);
         }
@@ -770,7 +770,7 @@ static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
     bool32 hasStatRaised = AnyStatIsRaised(battler);
 
     //Check if ability is blocked
-    if (gStatuses3[battler] & STATUS3_GASTRO_ACID
+    if (gBattleMons[battler].volatiles.gastroAcid
         || IsNeutralizingGasOnField())
         return FALSE;
 
@@ -1109,7 +1109,7 @@ bool32 ShouldSwitch(u32 battler)
         return FALSE;
     if (gBattleMons[battler].volatiles.escapePrevention)
         return FALSE;
-    if (gStatuses3[battler] & STATUS3_ROOTED)
+    if (gBattleMons[battler].volatiles.root)
         return FALSE;
     if (IsAbilityPreventingEscape(battler))
         return FALSE;
@@ -1260,7 +1260,7 @@ void ModifySwitchAfterMoveScoring(u32 battler)
         return;
     if (gBattleMons[battler].volatiles.escapePrevention)
         return;
-    if (gStatuses3[battler] & STATUS3_ROOTED)
+    if (gBattleMons[battler].volatiles.root)
         return;
     if (IsAbilityPreventingEscape(battler))
         return;
@@ -2425,7 +2425,7 @@ static bool32 ShouldUseItem(u32 battler)
        || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
         return FALSE;
 
-    if (gStatuses3[battler] & STATUS3_EMBARGO)
+    if (gBattleMons[battler].volatiles.embargo)
         return FALSE;
 
     if (AiExpectsToFaintPlayer(battler))
