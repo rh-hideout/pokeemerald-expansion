@@ -4014,10 +4014,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
     {
         if (gMovesInfo[move].target == MOVE_TARGET_SELECTED && gMovesInfo[partnerMove].target == MOVE_TARGET_SELECTED)
         {
-            if (gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
-                return TRUE;
-            else
-                return FALSE;
+            return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef);
         }
         return TRUE;
     }
