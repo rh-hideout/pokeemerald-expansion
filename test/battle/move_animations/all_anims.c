@@ -189,6 +189,7 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
         || gMovesInfo[move].effect == EFFECT_PRESENT
         || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
         || move == MOVE_SYRUP_BOMB
+        || gMovesInfo[move].effect == EFFECT_FICKLE_BEAM
         || gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         variationsNumber = 2;
     else
@@ -325,6 +326,13 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
         }
         else
         { // All other moves
@@ -496,6 +504,13 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
+        }
+        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        {
+            if (variation == 0)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
+            else if (variation == 1)
+                MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
         }
         else
         { // All other moves
