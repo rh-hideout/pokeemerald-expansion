@@ -469,6 +469,17 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
+    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_RAIN_DANCE); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_SANDSTORM); }
+        else
+            TURN { MOVE(attacker, MOVE_HAIL); }
+    }
     else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
     {
         TURN { MOVE(attacker, move, target: target); }
