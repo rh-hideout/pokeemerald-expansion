@@ -2227,30 +2227,6 @@ bool32 HasMoveWithType(u32 battler, u32 type)
 
 bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
 {
-    u32 aiEffect = GetAIEffectGroup(effect);
-    s32 i;
-    u16 *moves = GetMovesArray(battler);
-
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE)
-        {
-            if (GetMoveEffect(moves[i]) == effect)
-                return TRUE;
-
-            if (aiEffect != AI_EFFECT_NONE)
-            {
-                if (GetAIEffectGroupFromMove(battler, moves[i]) & aiEffect)
-                    return TRUE;
-            }
-        }
-    }
-
-    return FALSE;
-}
-
-bool32 HasMoveWithExactEffect(u32 battler, enum BattleMoveEffects effect)
-{
     s32 i;
     u16 *moves = GetMovesArray(battler);
 
@@ -2258,6 +2234,23 @@ bool32 HasMoveWithExactEffect(u32 battler, enum BattleMoveEffects effect)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && GetMoveEffect(moves[i]) == effect)
             return TRUE;
+    }
+
+    return FALSE;
+}
+
+bool32 HasMoveWithAIEffect(u32 battler, u32 aiEffect)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE)
+        {
+            if (GetAIEffectGroupFromMove(battler, moves[i]) & aiEffect)
+                return TRUE;
+        }
     }
 
     return FALSE;
@@ -2272,9 +2265,18 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
+bool32 HasBattlerSideMoveWithAIEffect(u32 battler, u32 aiEffect)
+{
+    if (HasMoveWithAIEffect(battler, aiEffect))
+        return TRUE;
+    if (HasPartnerIgnoreFlags(battler) && HasMoveWithAIEffect(BATTLE_PARTNER(battler), aiEffect))
+        return TRUE;
+    return FALSE;
+}
+
 // HasBattlerSideMoveWithEffect checks if the AI knows a side has a move effect,
-// while HasBattlerSideUsedMoveWithEffect checks if the side has ever used a move effect.
-// The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
+// while HasBattlerSideUsedMoveWithEffect checks if the side has actively USED the move effect.
+// It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
 {
     u32 aiEffect = GetAIEffectGroup(effect);
@@ -3759,7 +3761,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     u32 atkSide = GetBattlerSide(battlerAtk);
 
     // Don't waste a turn if screens will be broken
-    if (HasMoveWithEffect(battlerDef, EFFECT_BRICK_BREAK))
+    if (HasMoveWithAIEffect(battlerDef, AI_EFFECT_BREAK_SCREENS))
         return FALSE;
 
     switch (moveEffect)
@@ -3773,13 +3775,13 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     case EFFECT_REFLECT:
         // Use only if the player has a physical move and AI doesn't already have Reflect itself active.
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
-            && !(gSideStatuses[atkSide] & SIDE_STATUS_REFLECT))
+            && !(gSideStatuses[atkSide] & (SIDE_STATUS_REFLECT | SIDE_STATUS_AURORA_VEIL)))
             return TRUE;
         break;
     case EFFECT_LIGHT_SCREEN:
         // Use only if the player has a special move and AI doesn't already have Light Screen itself active.
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL)
-            && !(gSideStatuses[atkSide] & SIDE_STATUS_LIGHTSCREEN))
+            && !(gSideStatuses[atkSide] & (SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)))
             return TRUE;
         break;
     default:
@@ -4001,7 +4003,7 @@ static u32 GetAIEffectGroupFromMove(u32 battler, u32 move)
     return aiEffect;
 }
 
-//PARTNER_MOVE_EFFECT_IS_SAME
+// It matches both on move effect and on AI move effect; eg, EFFECT_HAZE will also bring up Freezy Frost or Clear Smog, anything with AI_EFFECT_RESET_STATS.
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove)
 {
     if (!HasPartner(battlerAtkPartner))
@@ -4506,14 +4508,14 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
-    // Don't increase stats if opposing battler has used Haze effect
+    // Don't increase stats if opposing battler has used Haze effect or AI effect
     if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
       && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
         return NO_INCREASE;
 
     // Don't increase if AI is at +1 and opponent has Haze effect
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5
-      && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_HAZE))
+      && HasBattlerSideMoveWithAIEffect(battlerDef, AI_EFFECT_RESET_STATS))
         return NO_INCREASE;
 
     // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
@@ -5116,7 +5118,7 @@ bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef)
 bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
     if (CountUsablePartyMons(battlerDef) == 0
-     || HasBattlerSideMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN))
+     || HasBattlerSideMoveWithAIEffect(battlerDef, AI_EFFECT_CLEAR_HAZARDS))
         return FALSE;
 
     if (IsBattleMoveStatus(move))
@@ -5159,27 +5161,17 @@ void IncreaseTidyUpScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 bool32 AI_ShouldSpicyExtract(u32 battlerAtk, u32 battlerAtkPartner, u32 move, struct AiLogicData *aiData)
 {
     u32 preventsStatLoss;
-    u32 partnerAbility;
-    u32 partnerHoldEffect = aiData->holdEffects[battlerAtkPartner];
+    u32 partnerAbility = aiData->abilities[battlerAtkPartner];
     u32 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battlerAtk));
     u32 opposingBattler = GetBattlerAtPosition(opposingPosition);
-
-    if (DoesBattlerIgnoreAbilityChecks(battlerAtk, aiData->abilities[battlerAtk], move))
-        partnerAbility = ABILITY_NONE;
-    else
-        partnerAbility = aiData->abilities[battlerAtkPartner];
 
     if (gBattleMons[battlerAtkPartner].statStages[STAT_ATK] == MAX_STAT_STAGE
      || partnerAbility == ABILITY_CONTRARY
      || partnerAbility == ABILITY_GOOD_AS_GOLD
-     || HasMoveWithEffect(BATTLE_OPPOSITE(battlerAtk), EFFECT_FOUL_PLAY)
-     || HasMoveWithEffect(BATTLE_OPPOSITE(battlerAtkPartner), EFFECT_FOUL_PLAY))
+     || HasBattlerSideMoveWithEffect(FOE(battlerAtk), EFFECT_FOUL_PLAY))
         return FALSE;
 
-    preventsStatLoss = (partnerAbility == ABILITY_CLEAR_BODY
-                     || partnerAbility == ABILITY_FULL_METAL_BODY
-                     || partnerAbility == ABILITY_WHITE_SMOKE
-                     || partnerHoldEffect == HOLD_EFFECT_CLEAR_AMULET);
+    preventsStatLoss = !CanLowerStat(battlerAtk, battlerAtkPartner, aiData, STAT_DEF);
 
     switch (GetMoveEffect(aiData->partnerMove))
     {

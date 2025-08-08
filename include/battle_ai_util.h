@@ -169,8 +169,9 @@ bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, boo
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
 bool32 HasMoveWithType(u32 battler, u32 type);
 bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects moveEffect);
-bool32 HasMoveWithExactEffect(u32 battler, enum BattleMoveEffects moveEffect);
+bool32 HasMoveWithAIEffect(u32 battler, u32 aiEffect);
 bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
+bool32 HasBattlerSideMoveWithAIEffect(u32 battler, u32 effect);
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
