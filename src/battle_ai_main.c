@@ -3069,9 +3069,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     switch (effect)
     {
     case EFFECT_HELPING_HAND:
-        if (!hasPartner || !HasDamagingMove(battlerAtkPartner)
-        || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
-)
+        if (!hasPartner 
+         || !HasDamagingMove(battlerAtkPartner)
+         || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
         {
             ADJUST_SCORE(WORST_EFFECT);
         }
@@ -3086,8 +3086,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 // Might be about to die
                 if (CanTargetFaintAi(FOE(battlerAtk), battlerAtk) && CanTargetFaintAi(FOE(battlerAtkPartner), battlerAtk) 
-                && AI_IsSlower(battlerAtk, FOE(battlerAtk), move, predictedMove, DONT_CONSIDER_PRIORITY)
-                && AI_IsSlower(battlerAtk, FOE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtk), move, predictedMove, DONT_CONSIDER_PRIORITY)
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
 
                 if (ownHitsToKOFoe1 > partnerHitsToKOFoe1 && partnerHitsToKOFoe1 > 1
