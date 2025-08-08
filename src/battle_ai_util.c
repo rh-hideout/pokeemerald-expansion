@@ -24,6 +24,9 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 
+static u32 GetAIEffectGroup(enum BattleMoveEffects effect);
+static u32 GetAIEffectGroupFromMove(u32 battler, u32 move);
+
 // Functions
 static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
 {
@@ -2206,15 +2209,38 @@ bool32 HasMoveWithType(u32 battler, u32 type)
     return FALSE;
 }
 
-bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects effect)
+bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
 {
+    u32 aiEffect = GetAIEffectGroup(effect);
     s32 i;
-    u16 *moves = GetMovesArray(battlerId);
+    u16 *moves = GetMovesArray(battler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-            && GetMoveEffect(moves[i]) == effect)
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE)
+        {
+            if (GetMoveEffect(moves[i]) == effect)
+                return TRUE;
+
+            if (aiEffect != AI_EFFECT_NONE)
+            {
+                if (GetAIEffectGroupFromMove(battler, moves[i]) & aiEffect)
+                    return TRUE;
+            }
+        }
+    }
+
+    return FALSE;
+}
+
+bool32 HasMoveWithExactEffect(u32 battler, enum BattleMoveEffects effect)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && GetMoveEffect(moves[i]) == effect)
             return TRUE;
     }
 
@@ -2235,13 +2261,30 @@ bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect)
 // The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
 {
+    u32 aiEffect = GetAIEffectGroup(effect);
     u32 i;
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (GetMoveEffect(gBattleHistory->usedMoves[battler][i]) == effect)
             return TRUE;
-        if (HasPartnerIgnoreFlags(battler) && GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
-            return TRUE;
+
+        if (aiEffect != AI_EFFECT_NONE)
+        {
+            if (GetAIEffectGroupFromMove(battler, gBattleHistory->usedMoves[battler][i]) & aiEffect)
+                return TRUE;
+        }
+
+        if (HasPartnerIgnoreFlags(battler))
+        {
+            if (GetMoveEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) == effect)
+                return TRUE;
+
+            if (aiEffect != AI_EFFECT_NONE)
+            {
+                if (GetAIEffectGroupFromMove(battler, gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i]) & aiEffect)
+                    return TRUE;
+            }
+        }
     }
     return FALSE;
 }
@@ -2297,22 +2340,6 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
         return TRUE;
     if (HasPartnerIgnoreFlags(battler) && HasMoveWithAdditionalEffect(BATTLE_PARTNER(battler), moveEffect))
         return TRUE;
-    return FALSE;
-}
-
-// HasBattlerSideMoveWithAdditionalEffect checks if the AI knows a side has a move effect,
-// while HasBattlerSideUsedMoveWithAdditionalEffect checks if the side has ever used a move effect.
-// The former acts the same way as the latter if AI_FLAG_OMNISCIENT isn't used.
-bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect)
-{
-    u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (MoveHasAdditionalEffect(gBattleHistory->usedMoves[battler][i], moveEffect))
-            return TRUE;
-        if (HasPartnerIgnoreFlags(battler) && MoveHasAdditionalEffect(gBattleHistory->usedMoves[BATTLE_PARTNER(battler)][i], moveEffect))
-            return TRUE;
-    }
     return FALSE;
 }
 
@@ -3716,8 +3743,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     u32 atkSide = GetBattlerSide(battlerAtk);
 
     // Don't waste a turn if screens will be broken
-    if (HasMoveWithEffect(battlerDef, EFFECT_BRICK_BREAK)
-     || HasMoveWithEffect(battlerDef, EFFECT_RAGING_BULL))
+    if (HasMoveWithEffect(battlerDef, EFFECT_BRICK_BREAK))
         return FALSE;
 
     switch (moveEffect)
@@ -3805,6 +3831,151 @@ u32 GetAllyChosenMove(u32 battlerId)
         return gBattleMons[partnerBattler].moves[gBattleStruct->chosenMovePositions[partnerBattler]];
 }
 
+bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 partnerMove)
+{
+    if (!IsBattlerAlive(battlerAtkPartner) || partnerMove == MOVE_NONE)
+        return FALSE;
+
+    u32 battlerDef = gBattleStruct->moveTarget[battlerAtk];
+    
+    // We don't care the effect is basically the same; we would use this move anyway.
+    if (GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == move)
+        return FALSE;
+
+    u32 atkEffect = GetAIEffectGroupFromMove(battlerAtk, move);
+    u32 partnerEffect = GetAIEffectGroupFromMove(battlerAtkPartner, partnerMove);
+
+    // shared bits indicate they're meaningfully the same in some way
+    if (atkEffect & partnerEffect)
+    {
+        if (gMovesInfo[move].target == MOVE_TARGET_SELECTED && gMovesInfo[partnerMove].target == MOVE_TARGET_SELECTED)
+        {
+            if (battlerDef == gBattleStruct->moveTarget[battlerAtkPartner])
+                return TRUE;
+            else
+                return FALSE;
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
+{
+    u32 aiEffect = AI_EFFECT_NONE;
+
+    switch (effect)
+    {
+    case EFFECT_SUNNY_DAY:
+    case EFFECT_RAIN_DANCE:
+    case EFFECT_SANDSTORM:
+    case EFFECT_HAIL:
+    case EFFECT_SNOWSCAPE:
+    case EFFECT_CHILLY_RECEPTION:
+        aiEffect |= AI_EFFECT_WEATHER;
+        break;
+    case EFFECT_ELECTRIC_TERRAIN:
+    case EFFECT_GRASSY_TERRAIN:
+    case EFFECT_MISTY_TERRAIN:
+    case EFFECT_PSYCHIC_TERRAIN:
+    case EFFECT_STEEL_ROLLER:
+    case EFFECT_ICE_SPINNER:
+        aiEffect |= AI_EFFECT_TERRAIN;
+        break;
+    case EFFECT_COURT_CHANGE:
+        aiEffect |= AI_EFFECT_CLEAR_HAZARDS | AI_EFFECT_AURORA_VEIL | AI_EFFECT_BREAK_SCREENS;
+        break;
+    case EFFECT_DEFOG:
+        aiEffect |= AI_EFFECT_CLEAR_HAZARDS | AI_EFFECT_BREAK_SCREENS;
+        break;
+    case EFFECT_RAPID_SPIN:
+    case EFFECT_TIDY_UP:
+        aiEffect |= AI_EFFECT_CLEAR_HAZARDS;
+        break;
+    case EFFECT_BRICK_BREAK:
+    case EFFECT_RAGING_BULL:
+        aiEffect |= AI_EFFECT_BREAK_SCREENS;
+        break;
+    case EFFECT_HAZE:
+        aiEffect |= AI_EFFECT_RESET_STATS;
+        break;
+    case EFFECT_HIT_SWITCH_TARGET:
+    case EFFECT_ROAR:
+        aiEffect |= AI_EFFECT_FORCE_SWITCH;
+        break;
+    case EFFECT_TORMENT:
+        aiEffect |= AI_EFFECT_TORMENT;
+        break;
+    case EFFECT_AURORA_VEIL:
+        aiEffect |= AI_EFFECT_AURORA_VEIL;
+        break;
+    case EFFECT_LIGHT_SCREEN:
+        aiEffect |= AI_EFFECT_LIGHT_SCREEN;
+        break;
+    case EFFECT_REFLECT:
+        aiEffect |= AI_EFFECT_REFLECT;
+        break;
+    case EFFECT_GRAVITY:
+        aiEffect |= AI_EFFECT_GRAVITY;
+        break;
+    default:
+        break;
+    }
+    return aiEffect;
+}
+
+static u32 GetAIEffectGroupFromMove(u32 battler, u32 move)
+{
+    u32 aiEffect = GetAIEffectGroup(GetMoveEffect(move));
+
+    u32 i;
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    for (i = 0; i < additionalEffectCount; i++)
+    {
+        switch (GetMoveAdditionalEffectById(move, i)->moveEffect)
+        {
+        case MOVE_EFFECT_SUN:
+        case MOVE_EFFECT_RAIN:
+        case MOVE_EFFECT_SANDSTORM:
+        case MOVE_EFFECT_HAIL:
+            aiEffect |= AI_EFFECT_WEATHER;
+            break;
+        case MOVE_EFFECT_ELECTRIC_TERRAIN:
+        case MOVE_EFFECT_GRASSY_TERRAIN:
+        case MOVE_EFFECT_MISTY_TERRAIN:
+        case MOVE_EFFECT_PSYCHIC_TERRAIN:
+            aiEffect |= AI_EFFECT_TERRAIN;
+            break;
+        case MOVE_EFFECT_DEFOG:
+            aiEffect |= AI_EFFECT_CLEAR_HAZARDS | AI_EFFECT_BREAK_SCREENS;
+            break;
+        case MOVE_EFFECT_CLEAR_SMOG:
+        case MOVE_EFFECT_HAZE:
+            aiEffect |= AI_EFFECT_RESET_STATS;
+            break;
+        case MOVE_EFFECT_TORMENT_SIDE:
+            aiEffect |= AI_EFFECT_TORMENT;
+            break;
+        case MOVE_EFFECT_LIGHT_SCREEN:
+            aiEffect |= AI_EFFECT_LIGHT_SCREEN;
+            break;
+        case MOVE_EFFECT_REFLECT:
+            aiEffect |= AI_EFFECT_REFLECT;
+            break;
+        case MOVE_EFFECT_AURORA_VEIL:
+            aiEffect |= AI_EFFECT_AURORA_VEIL;
+            break;
+        case MOVE_EFFECT_GRAVITY:
+            aiEffect |= AI_EFFECT_GRAVITY;
+            break;
+        default:
+            break;
+        }
+    }
+
+    return aiEffect;
+}
+
 //PARTNER_MOVE_EFFECT_IS_SAME
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove)
 {
@@ -3812,23 +3983,17 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
         return FALSE;
 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
-      && partnerMove != MOVE_NONE
-      && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
+      && partnerMove != MOVE_NONE)
     {
+        if (gMovesInfo[move].target == MOVE_TARGET_SELECTED && gMovesInfo[partnerMove].target == MOVE_TARGET_SELECTED)
+        {
+            if (gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef)
+                return TRUE;
+            else
+                return FALSE;
+        }
         return TRUE;
     }
-    return FALSE;
-}
-
-//PARTNER_MOVE_EFFECT_IS_SAME_NO_TARGET
-bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove)
-{
-    if (!HasPartner(battlerAtkPartner))
-        return FALSE;
-
-    if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
-      && partnerMove != MOVE_NONE)
-        return TRUE;
     return FALSE;
 }
 
@@ -3849,37 +4014,6 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
        || nonVolatileStatus == MOVE_EFFECT_BURN
        || partnerEffect == EFFECT_YAWN))
         return TRUE;
-    return FALSE;
-}
-
-bool32 IsMoveEffectWeather(u32 move)
-{
-    enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (move != MOVE_NONE
-     && (effect == EFFECT_SUNNY_DAY
-      || effect == EFFECT_RAIN_DANCE
-      || effect == EFFECT_SANDSTORM
-      || effect == EFFECT_HAIL
-      || effect == EFFECT_SNOWSCAPE
-      || effect == EFFECT_CHILLY_RECEPTION))
-        return TRUE;
-    return FALSE;
-}
-
-//PARTNER_MOVE_EFFECT_IS_TERRAIN
-bool32 PartnerMoveEffectIsTerrain(u32 battlerAtkPartner, u32 partnerMove)
-{
-    if (!HasPartner(battlerAtkPartner))
-        return FALSE;
-
-    enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
-    if (partnerMove != MOVE_NONE
-     && (partnerEffect == EFFECT_GRASSY_TERRAIN
-      || partnerEffect == EFFECT_MISTY_TERRAIN
-      || partnerEffect == EFFECT_ELECTRIC_TERRAIN
-      || partnerEffect == EFFECT_PSYCHIC_TERRAIN))
-        return TRUE;
-
     return FALSE;
 }
 
@@ -4348,16 +4482,13 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         return NO_INCREASE;
 
     // Don't increase stats if opposing battler has used Haze effect
-    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE) &&
-        (HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE)
-        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
-        || HasBattlerSideUsedMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE)))
+    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
+      && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
         return NO_INCREASE;
 
     // Don't increase if AI is at +1 and opponent has Haze effect
-    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5 && (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_HAZE)
-        || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_CLEAR_SMOG)
-        || HasBattlerSideMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_HAZE)))
+    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5
+      && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_HAZE))
         return NO_INCREASE;
 
     // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
@@ -4962,9 +5093,6 @@ bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, struct AiLogicData 
     if (aiData->abilities[battlerDef] == ABILITY_MAGIC_BOUNCE
      || CountUsablePartyMons(battlerDef) == 0
      || HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN)
-     || HasMoveWithEffect(battlerDef, EFFECT_TIDY_UP)
-     || HasMoveWithEffect(battlerDef, EFFECT_DEFOG)
-     || HasMoveWithAdditionalEffect(battlerDef, MOVE_EFFECT_DEFOG)
      || HasMoveWithEffect(battlerDef, EFFECT_MAGIC_COAT))
         return FALSE;
 

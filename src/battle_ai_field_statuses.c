@@ -378,7 +378,8 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
         && (HasDamagingMoveOfType(FOE(battler), TYPE_DRAGON) || HasDamagingMoveOfType(BATTLE_PARTNER(FOE(battler)), TYPE_DRAGON)))
         return FIELD_EFFECT_POSITIVE;
 
-    if ((grounded || allyGrounded) && HasBattlerSideUsedMoveWithAdditionalEffect(FOE(battler), MOVE_EFFECT_SLEEP))
+    if ((grounded || allyGrounded) 
+    && (HasNonVolatileMoveEffect(FOE(battler), MOVE_EFFECT_SLEEP) || HasNonVolatileMoveEffect(BATTLE_PARTNER(FOE(battler)), MOVE_EFFECT_SLEEP)))
         return FIELD_EFFECT_POSITIVE;
 
     if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP) 
