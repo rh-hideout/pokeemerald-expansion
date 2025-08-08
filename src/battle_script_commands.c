@@ -8705,7 +8705,10 @@ static void Cmd_yesnoboxlearnmove(void)
             u8 movePosition = GetMoveSlotToReplace();
             if (movePosition == MAX_MON_MOVES)
             {
-                gBattleScripting.learnMoveState = 5;
+                //Same as saying "No", but without changing "learnMoveState" to 5
+                HandleBattleWindow(YESNOBOX_X_Y, WINDOW_CLEAR);
+                gBattlescriptCurrInstr = cmd->nextInstr;
+                break;
             }
             else
             {
@@ -8786,7 +8789,10 @@ static void Cmd_yesnoboxstoplearningmove(void)
             PlaySE(SE_SELECT);
 
             if (gBattleCommunication[1] != 0)
+	    {
+                gBattleScripting.learnMoveState++; //This is for yesnoboxlearnmove, so it jumps straight to the moveselect
                 gBattlescriptCurrInstr = cmd->noInstr;
+	    }
             else
                 gBattlescriptCurrInstr = cmd->nextInstr;
 
@@ -8795,7 +8801,7 @@ static void Cmd_yesnoboxstoplearningmove(void)
         else if (JOY_NEW(B_BUTTON))
         {
             PlaySE(SE_SELECT);
-            gBattlescriptCurrInstr = cmd->noInstr;
+            gBattlescriptCurrInstr = cmd->nextInstr;
             HandleBattleWindow(YESNOBOX_X_Y, WINDOW_CLEAR);
         }
         break;

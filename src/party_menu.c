@@ -437,6 +437,7 @@ static void DisplayPartyMenuForgotMoveMessage(u8);
 static void Task_PartyMenuReplaceMove(u8);
 static void Task_StopLearningMoveYesNo(u8);
 static void Task_HandleStopLearningMoveYesNoInput(u8);
+static void Task_DidNotLearnMove(u8);
 static void Task_TryLearningNextMoveAfterText(u8);
 static void BufferMonStatsToTaskData(struct Pokemon *, s16 *);
 static void UpdateMonDisplayInfoAfterRareCandy(u8, struct Pokemon *);
@@ -5484,8 +5485,8 @@ void ItemUseCB_TMHM(u8 taskId, TaskFunc task)
     }
     else
     {
-        DisplayLearnMoveMessage(gText_PkmnNeedsToReplaceMove);
-        gTasks[taskId].func = Task_ReplaceMoveYesNo;
+        DisplayPartyMenuMessage(gText_WhichMoveToForget, TRUE); //Jumps straight to move-replacing
+        gTasks[taskId].func = Task_ShowSummaryScreenToForgetMove;
     }
 }
 
@@ -5556,7 +5557,7 @@ static void Task_HandleReplaceMoveYesNoInput(u8 taskId)
         PlaySE(SE_SELECT);
         // fallthrough
     case 1:
-        StopLearningMovePrompt(taskId);
+        Task_DidNotLearnMove(taskId);
         break;
     }
 }
@@ -5642,37 +5643,43 @@ static void Task_StopLearningMoveYesNo(u8 taskId)
 
 static void Task_HandleStopLearningMoveYesNoInput(u8 taskId)
 {
-    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
-
     switch (Menu_ProcessInputNoWrapClearOnChoose())
     {
-    case 0:
-        GetMonNickname(mon, gStringVar1);
-        StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
-        StringExpandPlaceholders(gStringVar4, gText_MoveNotLearned);
-        DisplayPartyMenuMessage(gStringVar4, TRUE);
-        if (gPartyMenu.learnMoveState == 1)
-        {
-            gTasks[taskId].func = Task_TryLearningNextMoveAfterText;
-        }
-        else
-        {
-            if (gPartyMenu.learnMoveState == 2) // never occurs
-                gSpecialVar_Result = FALSE;
-            gTasks[taskId].func = Task_ClosePartyMenuAfterText;
-        }
-        break;
     case MENU_B_PRESSED:
         PlaySE(SE_SELECT);
         // fallthrough
-    case 1:
-        GetMonNickname(mon, gStringVar1);
-        StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
-        DisplayLearnMoveMessage(gText_PkmnNeedsToReplaceMove);
-        gTasks[taskId].func = Task_ReplaceMoveYesNo;
+    case 0:
+        gTasks[taskId].func = Task_DidNotLearnMove;
         break;
+    case 1:
+        gTasks[taskId].func = Task_ShowSummaryScreenToForgetMove;
+	break;
     }
 }
+
+static void Task_DidNotLearnMove(u8 taskId)
+{
+    struct Pokemon *mon = &gPlayerParty[gPartyMenu.slotId];
+
+    GetMonNickname(mon, gStringVar1);
+    StringCopy(gStringVar2, GetMoveName(gPartyMenu.data1));
+    if(CheckIfItemIsTMHMOrEvolutionStone(gSpecialVar_ItemId) || gPartyMenu.action == PARTY_ACTION_MOVE_TUTOR)
+        StringExpandPlaceholders(gStringVar4, gText_MoveNotLearned);
+    else
+        StringExpandPlaceholders(gStringVar4, gText_MoveCanBeRelearned);
+    DisplayPartyMenuMessage(gStringVar4, TRUE);
+    if (gPartyMenu.learnMoveState == 1)
+    {
+        gTasks[taskId].func = Task_TryLearningNextMoveAfterText;
+    }
+    else
+    {
+        if (gPartyMenu.learnMoveState == 2) // never occurs
+            gSpecialVar_Result = FALSE;
+        gTasks[taskId].func = Task_ClosePartyMenuAfterText;
+    }
+}
+
 
 static void Task_TryLearningNextMoveAfterText(u8 taskId)
 {
