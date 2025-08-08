@@ -63,6 +63,24 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
     }
 }
 
+static u32 ParametrizeFriendship(u32 move, u32 variation)
+{
+    if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
+        || gMovesInfo[move].effect == EFFECT_RETURN
+        )
+    {
+        if (variation == 0)
+           return 1;
+        else if (variation == 1)
+            return 61;
+        else if (variation == 2)
+            return 101;
+        else if (variation == 3)
+            return 201;
+    }
+    return 0;
+}
+
 static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player first
 {
     if (gMovesInfo[move].effect == EFFECT_COUNTER
@@ -113,7 +131,10 @@ static u32 GetVariationsNumber(u32 move)
 {
     u32 variationsNumber;
 
-    if (gMovesInfo[move].effect == EFFECT_SPIT_UP)
+    if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
+        || gMovesInfo[move].effect == EFFECT_RETURN)
+        variationsNumber = 4;
+    else if (gMovesInfo[move].effect == EFFECT_SPIT_UP)
         variationsNumber = 3;
     else if (gMovesInfo[move].effect == EFFECT_CURSE
         || gMovesInfo[move].effect == EFFECT_PRESENT
@@ -470,13 +491,15 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -485,6 +508,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
             if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
             if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
             if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
         }
         PLAYER(SPECIES_WOBBUFFET)   {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
@@ -512,13 +536,15 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -527,6 +553,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
             if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
             if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
             if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
         }
         OPPONENT(SPECIES_WOBBUFFET)   {
             Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
@@ -554,6 +581,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerLeft;
@@ -564,7 +592,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -574,6 +603,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(species) {
@@ -583,6 +613,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
@@ -616,6 +647,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentLeft;
@@ -626,7 +658,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -636,6 +669,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(species) {
@@ -644,6 +678,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
@@ -679,6 +714,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerLeft;
@@ -689,7 +725,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -699,6 +736,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(species) {
@@ -707,6 +745,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
@@ -742,6 +781,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentRight;
@@ -752,7 +792,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -762,6 +803,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(species) {
@@ -770,6 +812,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
@@ -805,6 +848,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerRight;
@@ -815,7 +859,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -825,6 +870,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(species) {
@@ -833,6 +879,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
@@ -868,6 +915,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentLeft;
@@ -878,7 +926,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -888,6 +937,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(species) {
@@ -896,6 +946,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
@@ -931,6 +982,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = playerRight;
@@ -941,7 +993,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -951,6 +1004,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(species) {
@@ -959,6 +1013,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         PLAYER(SPECIES_WOBBUFFET) {
@@ -994,6 +1049,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
 {
     u32 j = ANIM_TEST_START_MOVE, move = 0, species = 0;
     u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     struct BattlePokemon *attacker = opponentRight;
@@ -1004,7 +1060,8 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         variationsNumber = GetVariationsNumber(j);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
-            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k;}
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
         }
     }
     GIVEN {
@@ -1014,6 +1071,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(species) {
@@ -1022,6 +1080,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
                 if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
                 if (gMovesInfo[move].effect == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
                 if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+                if (friendship) Friendship(friendship);
             }
         }
         OPPONENT(SPECIES_WOBBUFFET) {
