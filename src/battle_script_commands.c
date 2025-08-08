@@ -3938,11 +3938,11 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
     }
     case MOVE_EFFECT_YAWN_FOE:
     {
-        if (!gBattleMons[gBattlerTarget].volatiles.yawn
+        if (gBattleMons[gBattlerTarget].volatiles.yawn == 0
             && CanBeSlept(gBattlerTarget, gBattlerTarget, GetBattlerAbility(gBattlerTarget), BLOCKED_BY_SLEEP_CLAUSE)
             && RandomPercentage(RNG_G_MAX_SNOOZE, 50))
         {
-            gBattleMons[gBattlerTarget].volatiles.yawn--;
+            gBattleMons[gBattlerTarget].volatiles.yawn = 2;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectYawnSuccess;
         }
