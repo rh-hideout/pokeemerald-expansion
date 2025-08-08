@@ -461,4 +461,77 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     return FIELD_EFFECT_POSITIVE;
 }
 
+bool32 IsBattlerMoveWeather(u32 battler, u32 move)
+{
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
+        move = GetMaxMove(battler, move);
+
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    switch (effect)
+    {
+    case EFFECT_SUNNY_DAY:
+    case EFFECT_RAIN_DANCE:
+    case EFFECT_SANDSTORM:
+    case EFFECT_HAIL:
+    case EFFECT_SNOWSCAPE:
+    case EFFECT_CHILLY_RECEPTION:
+        return TRUE;
+    default:
+        break;
+    }
+
+    u32 i;
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    for (i = 0; i < additionalEffectCount; i++)
+    {
+        switch (GetMoveAdditionalEffectById(move, i)->moveEffect)
+        {
+        case MOVE_EFFECT_SUN:
+        case MOVE_EFFECT_RAIN:
+        case MOVE_EFFECT_SANDSTORM:
+        case MOVE_EFFECT_HAIL:
+            return TRUE;
+        default:
+            break;
+        }
+    }
+
+    return FALSE;
+}
+
+bool32 IsBattlerMoveTerrain(u32 battler, u32 move)
+{
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX)
+        move = GetMaxMove(battler, move);
+
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    switch (effect)
+    {
+    case EFFECT_ELECTRIC_TERRAIN:
+    case EFFECT_GRASSY_TERRAIN:
+    case EFFECT_MISTY_TERRAIN:
+    case EFFECT_PSYCHIC_TERRAIN:
+        return TRUE;
+    default:
+        break;
+    }
+
+    u32 i;
+    u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+    for (i = 0; i < additionalEffectCount; i++)
+    {
+        switch (GetMoveAdditionalEffectById(move, i)->moveEffect)
+        {
+        case MOVE_EFFECT_ELECTRIC_TERRAIN:
+        case MOVE_EFFECT_GRASSY_TERRAIN:
+        case MOVE_EFFECT_MISTY_TERRAIN:
+        case MOVE_EFFECT_PSYCHIC_TERRAIN:
+            return TRUE;
+        default:
+            break;
+        }
+    }
+
+    return FALSE;
+}
 

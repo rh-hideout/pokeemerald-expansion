@@ -1929,23 +1929,23 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_SANDSTORM:
             if (weather & (B_WEATHER_SANDSTORM | B_WEATHER_PRIMAL_ANY)
-             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
+             || (HasPartner(battlerAtk) && IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_SUNNY_DAY:
             if (weather & (B_WEATHER_SUN | B_WEATHER_PRIMAL_ANY)
-             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
+             || (HasPartner(battlerAtk) && IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_RAIN_DANCE:
             if (weather & (B_WEATHER_RAIN | B_WEATHER_PRIMAL_ANY)
-             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
+             || (HasPartner(battlerAtk) && IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_HAIL:
         case EFFECT_SNOWSCAPE:
             if (weather & (B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY)
-             || (HasPartner(battlerAtk) && IsMoveEffectWeather(aiData->partnerMove)))
+             || (HasPartner(battlerAtk) && IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), aiData->partnerMove)))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_ATTRACT:
@@ -1980,7 +1980,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_CHILLY_RECEPTION:
             if (CountUsablePartyMons(battlerAtk) == 0)
                 ADJUST_SCORE(-10);
-            else if (weather & (B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY) || IsMoveEffectWeather(aiData->partnerMove))
+            else if (weather & (B_WEATHER_ICY_ANY | B_WEATHER_PRIMAL_ANY) || IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), aiData->partnerMove))
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_BELLY_DRUM:
@@ -2542,19 +2542,19 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_GRASSY_TERRAIN:
-            if (PartnerMoveEffectIsTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
+            if (IsBattlerMoveTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_ELECTRIC_TERRAIN:
-            if (PartnerMoveEffectIsTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+            if (IsBattlerMoveTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_PSYCHIC_TERRAIN:
-            if (PartnerMoveEffectIsTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+            if (IsBattlerMoveTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_MISTY_TERRAIN:
-            if (PartnerMoveEffectIsTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+            if (IsBattlerMoveTerrain(BATTLE_PARTNER(battlerAtk), aiData->partnerMove) || gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_STEEL_ROLLER:
@@ -3029,7 +3029,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_RAIN_DANCE:
         case EFFECT_SANDSTORM:
         case EFFECT_CHILLY_RECEPTION:
-            if (IsMoveEffectWeather(move))
+            if (IsBattlerMoveWeather(BATTLE_PARTNER(battlerAtk), move))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_AFTER_YOU:
