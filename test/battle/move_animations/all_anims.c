@@ -66,6 +66,11 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
         *pMove = j;
         *pSpecies = SPECIES_DRAGAPULT;
     }
+    else if (gMovesInfo[j].effect == EFFECT_TERA_STARSTORM && variation == 1)
+    {
+        *pMove = j;
+        *pSpecies = SPECIES_TERAPAGOS_STELLAR;
+    }
     else if (gMovesInfo[j].effect == EFFECT_PLACEHOLDER) // Ignore placeholder *pMoves
     {
         *pMove = MOVE_POUND;
@@ -142,7 +147,7 @@ static bool32 UserHasToGoFirst(u32 move) // Player needs to go first
     return FALSE;
 }
 
-static u32 GetVariationsNumber(u32 move)
+static u32 GetVariationsNumber(u32 move, bool8 isDouble)
 {
     u32 variationsNumber;
 
@@ -155,6 +160,7 @@ static u32 GetVariationsNumber(u32 move)
         variationsNumber = 3;
     else if (gMovesInfo[move].effect == EFFECT_CURSE
         || gMovesInfo[move].effect == EFFECT_PRESENT
+        || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
         || gMovesInfo[move].effect == EFFECT_MAGNITUDE)
         variationsNumber = 2;
     else
@@ -512,7 +518,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, FALSE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -558,7 +564,7 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
     u32 tempMove, tempSpecies;
     FORCE_MOVE_ANIM(TRUE);
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, FALSE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -608,7 +614,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     struct BattlePokemon *ignore1 = playerRight;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -676,7 +682,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
     struct BattlePokemon *ignore1 = opponentRight;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -745,7 +751,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
     struct BattlePokemon *ignore1 = playerRight;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -814,7 +820,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     struct BattlePokemon *ignore1 = opponentLeft;
     struct BattlePokemon *ignore2 = playerRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -883,7 +889,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -952,7 +958,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentRight;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -1021,7 +1027,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
@@ -1090,7 +1096,7 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
     struct BattlePokemon *ignore1 = playerLeft;
     struct BattlePokemon *ignore2 = opponentLeft;
     for (; j <= ANIM_TEST_END_MOVE; j++) {
-        variationsNumber = GetVariationsNumber(j);
+        variationsNumber = GetVariationsNumber(j, TRUE);
         for (k = 0; k < variationsNumber; k++) {
             ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
             tempFriendship = ParametrizeFriendship(j, k);
