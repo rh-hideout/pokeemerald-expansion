@@ -5594,21 +5594,21 @@ BattleScript_TryLearnMoveLoop::
 BattleScript_AskToLearnMove::
 	buffermovetolearn
 	printstring STRINGID_TRYTOLEARNMOVE1
-	printstring STRINGID_TRYTOLEARNMOVE2
 	printstring STRINGID_TRYTOLEARNMOVE3
 	waitstate
 	setbyte sLEARNMOVE_STATE, 0
+BattleScript_SelectMove::
 	yesnoboxlearnmove BattleScript_ForgotAndLearnedNewMove
+ 	jumpifbyte CMP_EQUAL, sLEARNMOVE_STATE, 5, BattleScript_DidNotLearnMove
 	printstring STRINGID_STOPLEARNINGMOVE
 	waitstate
 	setbyte sLEARNMOVE_STATE, 0
 	yesnoboxstoplearningmove BattleScript_AskToLearnMove
+BattleScript_DidNotLearnMove::
 	printstring STRINGID_DIDNOTLEARNMOVE
 	goto BattleScript_TryLearnMoveLoop
 BattleScript_ForgotAndLearnedNewMove::
-	printstring STRINGID_123POOF
 	printstring STRINGID_PKMNFORGOTMOVE
-	printstring STRINGID_ANDELLIPSIS
 BattleScript_LearnedNewMove::
 	buffermovetolearn
 	fanfare MUS_LEVEL_UP
