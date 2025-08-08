@@ -168,14 +168,15 @@ bool32 HasMove(u32 battlerId, u32 move);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
 bool32 HasMoveWithType(u32 battler, u32 type);
-bool32 HasMoveWithEffect(u32 battlerId, enum BattleMoveEffects moveEffect);
+bool32 HasMoveWithEffect(u32 battler, enum BattleMoveEffects moveEffect);
+bool32 HasMoveWithAIEffect(u32 battler, u32 aiEffect);
 bool32 HasBattlerSideMoveWithEffect(u32 battler, u32 effect);
+bool32 HasBattlerSideMoveWithAIEffect(u32 battler, u32 effect);
 bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect);
 bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect);
 bool32 IsPowerBasedOnStatus(u32 battlerId, enum BattleMoveEffects effect, u32 argument);
 bool32 HasMoveWithAdditionalEffect(u32 battlerId, u32 moveEffect);
 bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
-bool32 HasBattlerSideUsedMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
 bool32 HasMoveWithMoveEffectExcept(u32 battlerId, u32 moveEffect, enum BattleMoveEffects exception);
 bool32 HasMoveThatLowersOwnStats(u32 battlerId);
@@ -252,11 +253,9 @@ bool32 HasTwoOpponents(u32 battler);
 bool32 HasPartner(u32 battler);
 bool32 HasPartnerIgnoreFlags(u32 battler);
 // HasPartner respects the Attacks Partner AI flag; HasPartnerIgnoreFlags checks only if a live pokemon is adjacent.
+bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
-bool32 PartnerHasSameMoveEffectWithoutTarget(u32 battlerAtkPartner, u32 move, u32 partnerMove);
 bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef, u32 partnerMove);
-bool32 IsMoveEffectWeather(u32 move);
-bool32 PartnerMoveEffectIsTerrain(u32 battlerAtkPartner, u32 partnerMove);
 bool32 PartnerMoveEffectIs(u32 battlerAtkPartner, u32 partnerMove, enum BattleMoveEffects effectCheck);
 bool32 PartnerMoveIs(u32 battlerAtkPartner, u32 partnerMove, u32 moveCheck);
 bool32 PartnerMoveIsSameAsAttacker(u32 battlerAtkPartner, u32 battlerDef, u32 move, u32 partnerMove);
@@ -300,5 +299,23 @@ bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
 u32 GetThinkingBattler(u32 battler);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
+
+// These are for the purpose of not doubling up on moves during double battles.
+// Used in GetAIEffectGroup for move effects and GetAIEffectGroupFromMove for additional effects
+#define AI_EFFECT_NONE                        0
+#define AI_EFFECT_WEATHER              (1 <<  0)
+#define AI_EFFECT_TERRAIN              (1 <<  1)
+#define AI_EFFECT_CLEAR_HAZARDS        (1 <<  2)
+#define AI_EFFECT_BREAK_SCREENS        (1 <<  3)
+#define AI_EFFECT_RESET_STATS          (1 <<  4) 
+#define AI_EFFECT_FORCE_SWITCH         (1 <<  5)
+#define AI_EFFECT_TORMENT              (1 <<  6)
+#define AI_EFFECT_LIGHT_SCREEN         (1 <<  7)
+#define AI_EFFECT_REFLECT              (1 <<  8)
+#define AI_EFFECT_GRAVITY              (1 <<  9)
+#define AI_EFFECT_CHANGE_ABILITY       (1 << 10)
+
+// As Aurora Veil should almost never be used alongside the other screens, we save the bit.
+#define AI_EFFECT_AURORA_VEIL          (AI_EFFECT_LIGHT_SCREEN | AI_EFFECT_REFLECT)
 
 #endif //GUARD_BATTLE_AI_UTIL_H

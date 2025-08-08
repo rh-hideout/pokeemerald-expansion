@@ -251,7 +251,7 @@ TO_DO_BATTLE_TEST("AI uses Instruct")
 TO_DO_BATTLE_TEST("AI uses Quick Guard")
 TO_DO_BATTLE_TEST("AI uses Wide Guard")
 
-AI_DOUBLE_BATTLE_TEST("AI will not use the same nondamaging move as its partner for no reason")
+AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for no reason")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
