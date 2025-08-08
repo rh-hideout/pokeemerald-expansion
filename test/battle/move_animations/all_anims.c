@@ -183,6 +183,7 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
         )
         variationsNumber = 4;
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
+        || gMovesInfo[move].effect == EFFECT_SWALLOW
         || gMovesInfo[move].effect == EFFECT_DRAGON_DARTS)
         variationsNumber = 3;
     else if (gMovesInfo[move].effect == EFFECT_CURSE
