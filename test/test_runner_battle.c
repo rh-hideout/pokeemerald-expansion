@@ -1574,6 +1574,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
+    DATA.isShiny = FALSE;
     (*partySize)++;
 
     CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
@@ -1628,9 +1629,9 @@ void ClosePokemon(u32 sourceLine)
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
         }
     }
-    data = FALSE;
-    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     UpdateMonPersonality(&DATA.currentMon->box, GenerateNature(DATA.nature, DATA.gender % NUM_NATURES) | DATA.gender);
+    data = DATA.isShiny;
+    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     DATA.currentMon = NULL;
 }
 
@@ -1893,6 +1894,12 @@ void Shadow_(u32 sourceLine, bool32 isShadow)
 {
     INVALID_IF(!DATA.currentMon, "Shadow outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_IS_SHADOW, &isShadow);
+}
+
+void Shiny_(u32 sourceLine, bool32 isShiny)
+{
+    INVALID_IF(!DATA.currentMon, "Shiny outside of PLAYER/OPPONENT");
+    DATA.isShiny = isShiny;
 }
 
 static const char *const sBattlerIdentifiersSingles[] =
