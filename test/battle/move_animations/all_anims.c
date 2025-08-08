@@ -51,6 +51,16 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
         *pMove = j;
         *pSpecies = SPECIES_KLINKLANG;
     }
+    else if (gMovesInfo[j].effect == EFFECT_IVY_CUDGEL && variation > 0)
+    {
+        *pMove = j;
+        if (variation == 1)
+            *pSpecies = SPECIES_OGERPON_WELLSPRING;
+        else if (variation == 2)
+            *pSpecies = SPECIES_OGERPON_HEARTHFLAME;
+        else
+            *pSpecies = SPECIES_OGERPON_CORNERSTONE;
+    }
     else if (gMovesInfo[j].effect == EFFECT_PLACEHOLDER) // Ignore placeholder *pMoves
     {
         *pMove = MOVE_POUND;
@@ -132,7 +142,8 @@ static u32 GetVariationsNumber(u32 move)
     u32 variationsNumber;
 
     if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
-        || gMovesInfo[move].effect == EFFECT_RETURN)
+        || gMovesInfo[move].effect == EFFECT_RETURN
+        || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL)
         variationsNumber = 4;
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP)
         variationsNumber = 3;
