@@ -1570,14 +1570,14 @@ static void Task_ExitStairs(u8 taskId)
         if (!WaitStairExitMovementFinished(&tSpeedX, &tSpeedY, &tOffsetX, &tOffsetY, &tTimer))
             tState++;
         break;
-    }    
+    }
     gObjectEvents[gPlayerAvatar.objectEventId].noShadow = FALSE;
 }
 
 static void ForceStairsMovement(u32 metatileBehavior, s16 *speedX, s16 *speedY)
 {
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
-    GetStairsMovementDirection(metatileBehavior, speedX, speedY);    
+    GetStairsMovementDirection(metatileBehavior, speedX, speedY);
     gObjectEvents[gPlayerAvatar.objectEventId].noShadow = TRUE;
 }
 #undef tSpeedX
@@ -1621,7 +1621,7 @@ static void Task_StairWarp(u8 taskId)
     case 0:
         LockPlayerFieldControls();
         FreezeObjectEvents();
-        CameraObjectFreeze();        
+        CameraObjectFreeze();
         HideFollowerForFieldEffect();
         tState++;
         break;
