@@ -738,9 +738,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setmiracleeye failInstr:req
+	.macro unused_0x83
 	.byte 0x83
-	.4byte \failInstr
 	.endm
 
 	.macro jumpifuproarwakes jumpInstr:req
@@ -1085,7 +1084,7 @@
 	tryfiretwoturnmovenowbyeffect \battler, FALSE, \jumpInstr
 	.endm
 
-	.macro setminimize
+	.macro unused_0xC7
 	.byte 0xc7
 	.endm
 
@@ -1191,9 +1190,10 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setuserstatus3 flags:req, failInstr:req
+	.macro trysetvolatile battler:req, _volatile:req, failInstr:req
 	.byte 0xdd
-	.4byte \flags
+	.byte \battler
+	.byte \_volatile
 	.4byte \failInstr
 	.endm
 

@@ -3149,9 +3149,9 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
         {
             if (gBattleMons[i].volatiles.escapePrevention && gDisableStructs[i].battlerPreventingEscape == battler)
                 gBattleMons[i].volatiles.escapePrevention = FALSE;
-            if ((gStatuses3[i] & STATUS3_ALWAYS_HITS) && gDisableStructs[i].battlerWithSureHit == battler)
+            if (gBattleMons[i].volatiles.lockOn && gDisableStructs[i].battlerWithSureHit == battler)
             {
-                gStatuses3[i] &= ~STATUS3_ALWAYS_HITS;
+                gBattleMons[i].volatiles.lockOn = 0;
                 gDisableStructs[i].battlerWithSureHit = 0;
             }
         }
@@ -3169,25 +3169,18 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
          * gBattleMons[battler].volatiles.escapePrevention = volatilesCopy->escapePrevention;
          * ...etc
          */
-        gStatuses3[battler] &= (STATUS3_LEECHSEED_BATTLER | STATUS3_LEECHSEED | STATUS3_ALWAYS_HITS | STATUS3_PERISH_SONG | STATUS3_ROOTED
-                                       | STATUS3_GASTRO_ACID | STATUS3_EMBARGO | STATUS3_TELEKINESIS | STATUS3_MAGNET_RISE | STATUS3_HEAL_BLOCK
-                                       | STATUS3_AQUA_RING | STATUS3_POWER_TRICK);
+
         for (i = 0; i < gBattlersCount; i++)
         {
             if (!IsBattlerAlly(battler, i)
-             && (gStatuses3[i] & STATUS3_ALWAYS_HITS) != 0
+             && gBattleMons[i].volatiles.lockOn != 0
              && (gDisableStructs[i].battlerWithSureHit == battler))
             {
-                gStatuses3[i] &= ~STATUS3_ALWAYS_HITS;
-                gStatuses3[i] |= STATUS3_ALWAYS_HITS_TURN(2);
+                gBattleMons[i].volatiles.lockOn = 0;
             }
         }
-        if (gStatuses3[battler] & STATUS3_POWER_TRICK)
+        if (gBattleMons[battler].volatiles.powerTrick)
             SWAP(gBattleMons[battler].attack, gBattleMons[battler].defense, i);
-    }
-    else
-    {
-        gStatuses3[battler] = 0;
     }
 
     for (i = 0; i < gBattlersCount; i++)
@@ -3303,7 +3296,7 @@ const u8* FaintClearSetData(u32 battler)
         gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
 
     memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
-    gStatuses3[battler] &= STATUS3_GASTRO_ACID; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
+    gBattleMons[battler].volatiles.gastroAcid = TRUE; // Edge case: Keep Gastro Acid if pokemon's ability can have effect after fainting, for example Innards Out.
 
     for (i = 0; i < gBattlersCount; i++)
     {
