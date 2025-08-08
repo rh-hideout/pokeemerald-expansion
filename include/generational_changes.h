@@ -20,6 +20,14 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
     [GEN_CONFIG_BATTLE_BOND]               = B_BATTLE_BOND,
     [GEN_CONFIG_FELL_STINGER_STAT_RAISE]   = B_FELL_STINGER_STAT_RAISE,
     [GEN_CONFIG_ATE_MULTIPLIER]            = B_ATE_MULTIPLIER,
+    [GEN_PICKUP_WILD]                      = B_PICKUP_WILD,
+    [GEN_PROTEAN_LIBERO]                   = B_PROTEAN_LIBERO,
+    [GEN_INTREPID_SWORD]                   = B_INTREPID_SWORD,
+    [GEN_DAUNTLESS_SHIELD]                 = B_DAUNTLESS_SHIELD,
+    [GEN_ILLUMINATE_EFFECT]                = B_ILLUMINATE_EFFECT,
+    [GEN_STEAL_WILD_ITEMS]                 = B_STEAL_WILD_ITEMS,
+    [GEN_SNOW_WARNING]                     = B_SNOW_WARNING,
+    [GEN_ALLY_SWITCH_FAIL_CHANCE]          = B_ALLY_SWITCH_FAIL_CHANCE,
 };
 
 #if TESTING
