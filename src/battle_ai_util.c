@@ -3918,6 +3918,15 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_GRAVITY:
         aiEffect |= AI_EFFECT_GRAVITY;
         break;
+    case EFFECT_DOODLE:
+    case EFFECT_ENTRAINMENT:
+    case EFFECT_GASTRO_ACID:
+    case EFFECT_ROLE_PLAY:
+    case EFFECT_SIMPLE_BEAM:
+    case EFFECT_SKILL_SWAP:
+    case EFFECT_WORRY_SEED:
+        aiEffect |= AI_EFFECT_CHANGE_ABILITY;
+        break;
     default:
         break;
     }

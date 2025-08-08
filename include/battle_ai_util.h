@@ -299,33 +299,22 @@ bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *ai
 u32 GetThinkingBattler(u32 battler);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 
-enum BattleAIMoveEffects
-{
-    BATTLE_AI_WEATHER,
-    BATTLE_AI_TERRAIN,
-    BATTLE_AI_CLEAR_HAZARDS,
-    BATTLE_AI_BREAK_SCREENS,
-    BATTLE_AI_RESET_STATS,
-    BATTLE_AI_FORCE_SWITCH,
-    BATTLE_AI_TORMENT,
-    BATTLE_AI_LIGHT_SCREEN,
-    BATTLE_AI_REFLECT,
-    BATTLE_AI_GRAVITY,
-};
 // These are for the purpose of not doubling up on moves during double battles.
-// As Aurora Veil effectively is not used alongside Reflect and Light Screen, we are saving the bit.
+// Used in GetAIEffectGroup for move effects and GetAIEffectGroupFromMove for additional effects
+#define AI_EFFECT_NONE                        0
+#define AI_EFFECT_WEATHER              (1 <<  0)
+#define AI_EFFECT_TERRAIN              (1 <<  1)
+#define AI_EFFECT_CLEAR_HAZARDS        (1 <<  2)
+#define AI_EFFECT_BREAK_SCREENS        (1 <<  3)
+#define AI_EFFECT_RESET_STATS          (1 <<  4) 
+#define AI_EFFECT_FORCE_SWITCH         (1 <<  5)
+#define AI_EFFECT_TORMENT              (1 <<  6)
+#define AI_EFFECT_LIGHT_SCREEN         (1 <<  7)
+#define AI_EFFECT_REFLECT              (1 <<  8)
+#define AI_EFFECT_GRAVITY              (1 <<  9)
+#define AI_EFFECT_CHANGE_ABILITY       (1 << 10)
 
-#define AI_EFFECT_NONE                  0
-#define AI_EFFECT_WEATHER              (1 << BATTLE_AI_WEATHER)
-#define AI_EFFECT_TERRAIN              (1 << BATTLE_AI_TERRAIN)
-#define AI_EFFECT_CLEAR_HAZARDS        (1 << BATTLE_AI_CLEAR_HAZARDS)
-#define AI_EFFECT_BREAK_SCREENS        (1 << BATTLE_AI_BREAK_SCREENS)
-#define AI_EFFECT_RESET_STATS          (1 << BATTLE_AI_RESET_STATS) 
-#define AI_EFFECT_FORCE_SWITCH         (1 << BATTLE_AI_FORCE_SWITCH)
-#define AI_EFFECT_TORMENT              (1 << BATTLE_AI_TORMENT)
-#define AI_EFFECT_LIGHT_SCREEN         (1 << BATTLE_AI_REFLECT)
-#define AI_EFFECT_REFLECT              (1 << BATTLE_AI_REFLECT)
+// As Aurora Veil should almost never be used alongside the other screens, we save the bit.
 #define AI_EFFECT_AURORA_VEIL          (AI_EFFECT_LIGHT_SCREEN | AI_EFFECT_REFLECT)
-#define AI_EFFECT_GRAVITY              (1 << BATTLE_AI_GRAVITY)
 
 #endif //GUARD_BATTLE_AI_UTIL_H
