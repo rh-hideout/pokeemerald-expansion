@@ -151,7 +151,9 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
 {
     u32 variationsNumber;
 
-    if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
+    if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL)
+        variationsNumber = 5;
+    else if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
         || gMovesInfo[move].effect == EFFECT_RETURN
         || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL)
         variationsNumber = 4;
@@ -222,6 +224,17 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     else if (gMovesInfo[move].effect == EFFECT_STEEL_ROLLER)
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
+    }
+    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    {
+        if (variation == 1)
+            TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
+        else if (variation == 2)
+            TURN { MOVE(attacker, MOVE_RAIN_DANCE); }
+        else if (variation == 3)
+            TURN { MOVE(attacker, MOVE_SANDSTORM); }
+        else
+            TURN { MOVE(attacker, MOVE_HAIL); }
     }
     else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
     {
