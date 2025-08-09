@@ -8,11 +8,11 @@ SINGLE_BATTLE_TEST("Lightning Charge doubles speed when using a piercing move")
         PLAYER(SPECIES_ESCAVALIER) { Ability(ABILITY_LIGHTNING_CHARGE);  Speed(45);}
         OPPONENT(SPECIES_WOBBUFFET) { Speed(40);};
     } WHEN {
-        TURN { MOVE(player, MOVE_MEGAHORN); }
+        TURN { MOVE(player, MOVE_MEGAHORN); MOVE(opponent, MOVE_CELEBRATE);}
     } SCENE {
          {
-            MESSAGE("Escavalier used Megahorn!");
-            MESSAGE("Foe Wobbuffet used Celebrate!");
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_MEGAHORN, player);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         }
 
     }
