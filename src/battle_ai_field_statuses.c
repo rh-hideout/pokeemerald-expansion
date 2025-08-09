@@ -430,7 +430,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
 static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
 {
     // If we're in singles, we literally only care about speed.
-    if (!IsDoubleBattle())
+    if (IsBattle1v1())
     {
         if (GetBattlerSideSpeedAverage(battler) < GetBattlerSideSpeedAverage(FOE(battler)))
             return FIELD_EFFECT_POSITIVE;
