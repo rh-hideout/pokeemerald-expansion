@@ -1386,7 +1386,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Rayquaza = {
 static const struct SpritePalette sSpritePalette_Unused = {gObjectEventPal_Npc3, FLDEFF_PAL_TAG_UNKNOWN};
 
 // cave dust
-static const struct SpriteFrameImage sPicTable_CaveDust[] = 
+static const struct SpriteFrameImage sPicTable_CaveDust[] =
 {
     overworld_frame(gFieldEffectObjectPic_CaveDust, 2, 2, 0),
     overworld_frame(gFieldEffectObjectPic_CaveDust, 2, 2, 1),

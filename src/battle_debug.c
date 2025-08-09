@@ -106,7 +106,6 @@ enum
     LIST_ITEM_STATUS1,
     LIST_ITEM_VOLATILE,
     LIST_ITEM_STATUS3,
-    LIST_ITEM_STATUS4,
     LIST_ITEM_HAZARDS,
     LIST_ITEM_SIDE_STATUS,
     LIST_ITEM_AI,
@@ -147,8 +146,6 @@ enum
     LIST_STATUS3_LEECH_SEEDED,
     LIST_STATUS3_ALWAYS_HITS,
     LIST_STATUS3_PERISH_SONG,
-    LIST_STATUS3_ON_AIR,
-    LIST_STATUS3_UNDERGROUND,
     LIST_STATUS3_MINIMIZED,
     LIST_STATUS3_CHARGED_UP,
     LIST_STATUS3_ROOTED,
@@ -157,7 +154,6 @@ enum
     LIST_STATUS3_GRUDGE,
     LIST_STATUS3_GASTRO_ACID,
     LIST_STATUS3_EMBARGO,
-    LIST_STATUS3_UNDERWATER,
     LIST_STATUS3_SMACKED_DOWN,
     LIST_STATUS3_TELEKINESIS,
     LIST_STATUS3_MIRACLE_EYED,
@@ -166,14 +162,6 @@ enum
     LIST_STATUS3_AQUA_RING,
     LIST_STATUS3_LASER_FOCUS,
     LIST_STATUS3_POWER_TRICK,
-};
-
-enum
-{
-    LIST_STATUS4_ELECTRIFIED,
-    LIST_STATUS4_SALT_CURE,
-    LIST_STATUS4_SYRUP_BOMB,
-    LIST_STATUS4_GLAIVE_RUSH,
 };
 
 enum
@@ -314,16 +302,6 @@ static const struct BitfieldInfo sStatus3Bitfield[] =
     {/*Power Trick*/ 1, 30},
 };
 
-static const struct BitfieldInfo sStatus4Bitfield[] =
-{
-    {/*Electrified*/ 1, 0},
-    {/*Mud Sport*/ 1, 1},
-    {/*Water Sport*/ 1, 2},
-    {/*Salt Cure*/ 1, 4},
-    {/*Syrup Bomb*/ 1, 5},
-    {/*Glaive Rush*/ 1, 6},
-};
-
 static const struct BitfieldInfo sAIBitfield[] =
 {
     {/*Check Bad Move*/ 1, 0},
@@ -369,7 +347,6 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("Status1"),      LIST_ITEM_STATUS1},
     {COMPOUND_STRING("Volatiles"),    LIST_ITEM_VOLATILE},
     {COMPOUND_STRING("Status3"),      LIST_ITEM_STATUS3},
-    {COMPOUND_STRING("Status4"),      LIST_ITEM_STATUS4},
     {COMPOUND_STRING("Hazards"),      LIST_ITEM_HAZARDS},
     {COMPOUND_STRING("Side Status"),  LIST_ITEM_SIDE_STATUS},
     {COMPOUND_STRING("AI"),           LIST_ITEM_AI},
@@ -405,21 +382,26 @@ static const struct ListMenuItem sStatus1ListItems[] =
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    {COMPOUND_STRING("Confusion"),        VOLATILE_CONFUSION},
-    {COMPOUND_STRING("Flinched"),         VOLATILE_FLINCHED},
-    {COMPOUND_STRING("Torment"),          VOLATILE_TORMENT},
-    {COMPOUND_STRING("Powder"),           VOLATILE_POWDER},
-    {COMPOUND_STRING("DefenseCurl"),      VOLATILE_DEFENSE_CURL},
-    {COMPOUND_STRING("Recharge"),         VOLATILE_RECHARGE},
-    {COMPOUND_STRING("Rage"),             VOLATILE_RAGE},
-    {COMPOUND_STRING("DestinyBond"),      VOLATILE_DESTINY_BOND},
-    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
-    {COMPOUND_STRING("Cursed"),           VOLATILE_CURSED},
-    {COMPOUND_STRING("Foresight"),        VOLATILE_FORESIGHT},
-    {COMPOUND_STRING("DragonCheer"),      VOLATILE_DRAGON_CHEER},
-    {COMPOUND_STRING("FocusEnergy"),      VOLATILE_FOCUS_ENERGY},
-    {COMPOUND_STRING("MudSport"),         VOLATILE_MUD_SPORT},
-    {COMPOUND_STRING("WaterSport"),       VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Confusion"),          VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"),           VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"),            VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"),             VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"),        VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"),           VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"),               VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"),        VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"),             VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"),          VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"),        VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"),        VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
+    {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
+    {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
+    {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
+    {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
+    {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
 };
 
 static const struct ListMenuItem sStatus3ListItems[] =
@@ -428,8 +410,6 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {COMPOUND_STRING("Leech Seeded"),      LIST_STATUS3_LEECH_SEEDED},
     {COMPOUND_STRING("Always Hits"),       LIST_STATUS3_ALWAYS_HITS},
     {COMPOUND_STRING("Perish Song"),       LIST_STATUS3_PERISH_SONG},
-    {COMPOUND_STRING("On Air"),            LIST_STATUS3_ON_AIR},
-    {COMPOUND_STRING("Underground"),       LIST_STATUS3_UNDERGROUND},
     {COMPOUND_STRING("Minimized"),         LIST_STATUS3_MINIMIZED},
     {COMPOUND_STRING("Charged Up"),        LIST_STATUS3_CHARGED_UP},
     {COMPOUND_STRING("Rooted"),            LIST_STATUS3_ROOTED},
@@ -438,7 +418,6 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {COMPOUND_STRING("Grudge"),            LIST_STATUS3_GRUDGE},
     {COMPOUND_STRING("Gastro Acid"),       LIST_STATUS3_GASTRO_ACID},
     {COMPOUND_STRING("Embargo"),           LIST_STATUS3_EMBARGO},
-    {COMPOUND_STRING("Underwater"),        LIST_STATUS3_UNDERWATER},
     {COMPOUND_STRING("Smacked Down"),      LIST_STATUS3_SMACKED_DOWN},
     {COMPOUND_STRING("Telekinesis"),       LIST_STATUS3_TELEKINESIS},
     {COMPOUND_STRING("Miracle Eyed"),      LIST_STATUS3_MIRACLE_EYED},
@@ -447,14 +426,6 @@ static const struct ListMenuItem sStatus3ListItems[] =
     {COMPOUND_STRING("Aqua Ring"),         LIST_STATUS3_AQUA_RING},
     {COMPOUND_STRING("Laser Focus"),       LIST_STATUS3_LASER_FOCUS},
     {COMPOUND_STRING("Power Trick"),       LIST_STATUS3_POWER_TRICK},
-};
-
-static const struct ListMenuItem sStatus4ListItems[] =
-{
-    {COMPOUND_STRING("Electrified"), LIST_STATUS4_ELECTRIFIED},
-    {COMPOUND_STRING("Salt Cure"),   LIST_STATUS4_SALT_CURE},
-    {COMPOUND_STRING("Syrup Bomb"),  LIST_STATUS4_SYRUP_BOMB},
-    {COMPOUND_STRING("Glaive Rush"), LIST_STATUS4_GLAIVE_RUSH},
 };
 
 static const struct ListMenuItem sHazardsListItems[] =
@@ -822,7 +793,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Chosen move: "), 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, GetMoveName(gBattleMons[data->aiBattlerId].moves[chosenMoveIndex]), 74 + 68, 64, 0, NULL);
     }
-    
+
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);
     Free(text);
 }
@@ -1436,11 +1407,6 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sStatus3ListItems;
         itemsCount = ARRAY_COUNT(sStatus3ListItems);
         data->bitfield = sStatus3Bitfield;
-        break;
-    case LIST_ITEM_STATUS4:
-        listTemplate.items = sStatus4ListItems;
-        itemsCount = ARRAY_COUNT(sStatus4ListItems);
-        data->bitfield = sStatus4Bitfield;
         break;
     case LIST_ITEM_AI:
         listTemplate.items = sAIListItems;
@@ -2082,11 +2048,6 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
     case LIST_ITEM_STATUS3:
         data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
-    case LIST_ITEM_STATUS4:
-        data->modifyArrows.modifiedValPtr = &gStatuses4[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gStatuses4[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     case LIST_ITEM_AI:

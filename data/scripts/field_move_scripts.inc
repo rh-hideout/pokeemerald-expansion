@@ -456,21 +456,21 @@ EventScript_UseRockClimb::
 	waitstate
 	goto EventScript_EndRockClimb
 	end
-	
+
 EventScript_CantRockClimb::
 	msgbox Text_CantRockClimb, MSGBOX_DEFAULT
-	
+
 EventScript_EndRockClimb::
 	releaseall
 	end
-	
+
 Text_WantToRockClimb:
     .string "The cliff is steep.\n"
     .string "Would you like to use Rock Climb?$"
-    
+
 Text_MonUsedRockClimb:
     .string "{STR_VAR_1} used Rock Climb!$"
-    
+
 Text_CantRockClimb:
     .string "The cliff is steep.\n"
     .string "A Pokémon may be able to climb it.$"

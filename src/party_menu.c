@@ -4217,7 +4217,7 @@ bool32 SetUpFieldMove_RockClimb(void)
         gPostMenuFieldCallback = FieldCallback_RockClimb;
         return TRUE;
     }
-    
+
     return FALSE;
 }
 

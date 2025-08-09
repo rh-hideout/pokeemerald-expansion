@@ -101,6 +101,9 @@
 #define DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE    35 // both pokemon use Trick Room on turn Trick Room expires in the hopes both opponents used Protect to stall, getting a free refresh on the timer
 #define TAILWIND_IN_TRICK_ROOM_CHANCE            35 // use Tailwind on turn Trick Room expires in the hopes both opponents used Protect to stall
 
+#define AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER  FALSE  // if TRUE, AI_FLAG_ATTACKS_PARTNER prefers attacking the partner over the ally.
+                                                        // This is treated as true regardless during wild battles with AI.
+
 // AI's desired stat changes for Guard Split and Power Split, treated as %
 #define GUARD_SPLIT_ALLY_PERCENTAGE     200
 #define GUARD_SPLIT_ENEMY_PERCENTAGE    50

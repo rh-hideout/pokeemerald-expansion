@@ -2069,7 +2069,7 @@ static bool8 WaterfallFieldEffect_ContinueRideOrEnd(struct Task *task, struct Ob
 {
     if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
         return FALSE;
-    
+
     if (MetatileBehavior_IsWaterfall(objectEvent->currentMetatileBehavior))
     {
         // Still ascending waterfall, back to WaterfallFieldEffect_RideUp
@@ -4261,7 +4261,7 @@ static u8 CreateRockClimbBlob(void)
 {
     u8 spriteId;
     struct Sprite *sprite;
-    
+
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 8);
     spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_ROCK_CLIMB_BLOB], gFieldEffectArguments[0], gFieldEffectArguments[1], 0x96);
     if (spriteId != MAX_SPRITES)
@@ -4274,7 +4274,7 @@ static u8 CreateRockClimbBlob(void)
         sprite->data[6] = -1;
         sprite->data[7] = -1;
     }
-    
+
     return spriteId;
 }
 
@@ -4310,7 +4310,7 @@ static bool8 RockClimb_Init(struct Task *task, struct ObjectEvent *objectEvent)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     // Put follower into pokeball before using Rock Climb
-    HideFollowerForFieldEffect(); 
+    HideFollowerForFieldEffect();
     gPlayerAvatar.preventStep = TRUE;
     SetPlayerAvatarStateMask(PLAYER_AVATAR_FLAG_SURFING);
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
@@ -4346,7 +4346,7 @@ static bool8 RockClimb_JumpOnRockClimbBlob(struct Task *task, struct ObjectEvent
 {
     if (!FieldEffectActiveListContains(FLDEFF_FIELD_MOVE_SHOW_MON))
     {
-        objectEvent->noShadow = TRUE; // hide shadow 
+        objectEvent->noShadow = TRUE; // hide shadow
         ObjectEventSetGraphicsId(objectEvent, GetPlayerAvatarGraphicsIdByStateId(PLAYER_AVATAR_STATE_SURFING));
         ObjectEventClearHeldMovementIfFinished(objectEvent);
         ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(objectEvent->movementDirection));
@@ -4356,7 +4356,7 @@ static bool8 RockClimb_JumpOnRockClimbBlob(struct Task *task, struct ObjectEvent
         objectEvent->fieldEffectSpriteId = CreateRockClimbBlob();
         task->tState++;
     }
-    
+
     return FALSE;
 }
 
@@ -4382,10 +4382,10 @@ static bool8 RockClimb_WaitJumpOnRockClimbBlob(struct Task *task, struct ObjectE
                 objectEvent->movementDirection = DIR_SOUTHWEST;
             break;
         }
-        
+
         task->tState = STATE_ROCK_CLIMB_CONTINUE_RIDE;
     }
-    
+
     return FALSE;
 }
 
@@ -4396,7 +4396,7 @@ struct RockClimbRide
     s8 dy;
     u8 jumpDir;
 };
-static const struct RockClimbRide sRockClimbMovement[] = 
+static const struct RockClimbRide sRockClimbMovement[] =
 {
     [DIR_NONE] = {MOVEMENT_ACTION_WALK_FAST_DOWN, 0, 0, DIR_NONE},
     [DIR_SOUTH] = {MOVEMENT_ACTION_WALK_FAST_DOWN, 0, -1, DIR_SOUTH},
@@ -4413,7 +4413,7 @@ static void RockClimbDust(struct ObjectEvent *objectEvent, u8 direction)
 {
     s8 dx = sRockClimbMovement[direction].dx;
     s8 dy = sRockClimbMovement[direction].dy;
-    
+
     gFieldEffectArguments[0] = objectEvent->currentCoords.x + dx;
     gFieldEffectArguments[1] = objectEvent->currentCoords.y + dy;
     gFieldEffectArguments[2] = objectEvent->previousElevation;
@@ -4422,7 +4422,7 @@ static void RockClimbDust(struct ObjectEvent *objectEvent, u8 direction)
 }
 
 static bool8 RockClimb_Ride(struct Task *task, struct ObjectEvent *objectEvent)
-{    
+{
     ObjectEventSetHeldMovement(objectEvent, sRockClimbMovement[objectEvent->movementDirection].action);
     PlaySE(SE_M_ROCK_THROW);
     RockClimbDust(objectEvent, objectEvent->movementDirection);
@@ -4434,11 +4434,11 @@ static bool8 RockClimb_ContinueRideOrEnd(struct Task *task, struct ObjectEvent *
 {
     if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
         return FALSE;
-    
+
     PlayerGetDestCoords(&task->tDestX, &task->tDestY);
     MoveCoords(objectEvent->movementDirection, &task->tDestX, &task->tDestY);
     if (MetatileBehavior_IsRockClimbable(MapGridGetMetatileBehaviorAt(task->tDestX, task->tDestY)))
-    {        
+    {
         task->tState = STATE_ROCK_CLIMB_RIDE;
         return TRUE;
     }
@@ -4457,7 +4457,7 @@ static bool8 RockClimb_StopRockClimbInit(struct Task *task, struct ObjectEvent *
         if (!ObjectEventClearHeldMovementIfFinished(objectEvent))
             return FALSE;
     }
-    
+
     RockClimbDust(objectEvent, DIR_NONE);   //dust on final spot
     ObjectEventSetHeldMovement(objectEvent, GetJumpSpecialMovementAction(sRockClimbMovement[objectEvent->movementDirection].jumpDir));
     SetSurfBlob_BobState(objectEvent->fieldEffectSpriteId, BOB_NONE);
@@ -4475,7 +4475,7 @@ static bool8 RockClimb_WaitStopRockClimb(struct Task *task, struct ObjectEvent *
         gPlayerAvatar.preventStep = FALSE;
         if (followerObject)
             ObjectEventClearHeldMovementIfFinished(followerObject); // restore follower to normal
-        objectEvent->noShadow = FALSE; // restore shadow 
+        objectEvent->noShadow = FALSE; // restore shadow
         UnfreezeObjectEvents();
         UnlockPlayerFieldControls();
         DestroySprite(&gSprites[objectEvent->fieldEffectSpriteId]);
@@ -4483,7 +4483,7 @@ static bool8 RockClimb_WaitStopRockClimb(struct Task *task, struct ObjectEvent *
         objectEvent->triggerGroundEffectsOnMove = TRUE; // e.g. if dismount on grass
         DestroyTask(FindTaskIdByFunc(Task_UseRockClimb));
     }
-    
+
     return FALSE;
 }
 

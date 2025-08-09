@@ -1316,6 +1316,21 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immu
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will properly consider immunities when determining switchin type matchup (Doubles)")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_POLIWRATH) { Moves(MOVE_WATER_GUN, MOVE_KARATE_CHOP); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(1); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_CERULEDGE) { Moves(MOVE_SPARK); }
+        OPPONENT(SPECIES_WHIMSICOTT) { Moves(MOVE_MEGA_DRAIN); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_KARATE_CHOP, target:opponentLeft); MOVE(playerRight, MOVE_CELEBRATE); EXPECT_MOVE(opponentLeft, MOVE_CELEBRATE); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(opponentLeft, 3); }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI won't switch out due to bad odds if it can OHKO with a priority move")
 {
     PASSES_RANDOMLY(100, 100, RNG_AI_SWITCH_HASBADODDS);

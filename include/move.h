@@ -489,7 +489,7 @@ static inline u32 GetMoveTwoTurnAttackStringId(u32 moveId)
 
 static inline u32 GetMoveTwoTurnAttackStatus(u32 moveId)
 {
-    return UNCOMPRESS_BITS(gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status);
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
 static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)

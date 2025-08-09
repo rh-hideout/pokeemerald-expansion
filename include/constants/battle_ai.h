@@ -34,9 +34,10 @@
 #define AI_FLAG_PREDICT_MOVE                (1 << 26)  // AI will predict the player's move based on what move it would use in the same situation. Recommend using AI_FLAG_OMNISCIENT
 #define AI_FLAG_SMART_TERA                  (1 << 27)  // AI will make smarter decisions when choosing whether to terrastalize (default is to always tera whenever available).
 #define AI_FLAG_ASSUME_STAB                 (1 << 28)  // AI knows player's STAB moves, but nothing else. Restricted version of AI_FLAG_OMNISCIENT.
-#define AI_FLAG_ASSUME_STATUS_MOVES      (1 << 29)  // AI has a chance to know certain non-damaging moves, and also Fake Out and Super Fang. Restricted version of AI_FLAG_OMNISCIENT.
+#define AI_FLAG_ASSUME_STATUS_MOVES         (1 << 29)  // AI has a chance to know certain non-damaging moves, and also Fake Out and Super Fang. Restricted version of AI_FLAG_OMNISCIENT.
+#define AI_FLAG_ATTACKS_PARTNER             (1 << 30)  // AI specific to double battles; AI can deliberately attack its 'partner.'
 
-#define AI_FLAG_COUNT                       30
+#define AI_FLAG_COUNT                       31
 
 // Flags at and after 32 need different formatting, as in
 // #define AI_FLAG_PLACEHOLDER      ((u64)1 << 32)
