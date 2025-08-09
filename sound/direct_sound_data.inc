@@ -6172,6 +6172,64 @@ DirectSoundWaveData_sc88pro_nylon_str_guitar::
 DirectSoundWaveData_sd90_special_scream_drive::
 	.incbin "sound/direct_sound_samples/sd90_special_scream_drive.bin"
 
+
+.if PHONEMES_SHARED == TRUE
+	.align 2
+DirectSoundWaveData_Phoneme_1::
+DirectSoundWaveData_Phoneme_2::
+DirectSoundWaveData_Phoneme_3::
+DirectSoundWaveData_Phoneme_4::
+DirectSoundWaveData_Phoneme_5::
+DirectSoundWaveData_Phoneme_6::
+DirectSoundWaveData_Phoneme_7::
+DirectSoundWaveData_Phoneme_8::
+DirectSoundWaveData_Phoneme_9::
+DirectSoundWaveData_Phoneme_10::
+DirectSoundWaveData_Phoneme_11::
+DirectSoundWaveData_Phoneme_12::
+DirectSoundWaveData_Phoneme_13::
+DirectSoundWaveData_Phoneme_14::
+DirectSoundWaveData_Phoneme_15::
+DirectSoundWaveData_Phoneme_16::
+DirectSoundWaveData_Phoneme_17::
+DirectSoundWaveData_Phoneme_18::
+DirectSoundWaveData_Phoneme_19::
+DirectSoundWaveData_Phoneme_20::
+DirectSoundWaveData_Phoneme_21::
+DirectSoundWaveData_Phoneme_22::
+DirectSoundWaveData_Phoneme_23::
+DirectSoundWaveData_Phoneme_24::
+DirectSoundWaveData_Phoneme_25::
+DirectSoundWaveData_Phoneme_26::
+DirectSoundWaveData_Phoneme_27::
+DirectSoundWaveData_Phoneme_28::
+DirectSoundWaveData_Phoneme_29::
+DirectSoundWaveData_Phoneme_30::
+DirectSoundWaveData_Phoneme_31::
+DirectSoundWaveData_Phoneme_32::
+DirectSoundWaveData_Phoneme_33::
+DirectSoundWaveData_Phoneme_34::
+DirectSoundWaveData_Phoneme_35::
+DirectSoundWaveData_Phoneme_36::
+DirectSoundWaveData_Phoneme_37::
+DirectSoundWaveData_Phoneme_38::
+DirectSoundWaveData_Phoneme_39::
+DirectSoundWaveData_Phoneme_40::
+DirectSoundWaveData_Phoneme_41::
+DirectSoundWaveData_Phoneme_42::
+DirectSoundWaveData_Phoneme_43::
+DirectSoundWaveData_Phoneme_44::
+DirectSoundWaveData_Phoneme_45::
+DirectSoundWaveData_Phoneme_46::
+DirectSoundWaveData_Phoneme_47::
+DirectSoundWaveData_Phoneme_48::
+DirectSoundWaveData_Phoneme_49::
+DirectSoundWaveData_Phoneme_50::
+DirectSoundWaveData_Phoneme_51::
+	.incbin "sound/direct_sound_samples/phonemes/shared.bin"
+
+.else @ PHONEMES_SHARED
+
 	.align 2
 DirectSoundWaveData_Phoneme_1::
 	.incbin "sound/direct_sound_samples/phonemes/01.bin"
@@ -6375,6 +6433,8 @@ DirectSoundWaveData_Phoneme_50::
 	.align 2
 DirectSoundWaveData_Phoneme_51::
 	.incbin "sound/direct_sound_samples/phonemes/51.bin"
+
+.endif @ PHONEMES_SHARED
 
 	.align 2
 DirectSoundWaveData_sc88pro_accordion_duplicate::

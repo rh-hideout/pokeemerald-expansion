@@ -33,16 +33,20 @@
 #define AI_FLAG_PP_STALL_PREVENTION         (1 << 25)  // AI keeps track of the player's switches where the incoming mon is immune to the chosen move
 #define AI_FLAG_PREDICT_MOVE                (1 << 26)  // AI will predict the player's move based on what move it would use in the same situation. Recommend using AI_FLAG_OMNISCIENT
 #define AI_FLAG_SMART_TERA                  (1 << 27)  // AI will make smarter decisions when choosing whether to terrastalize (default is to always tera whenever available).
+#define AI_FLAG_ASSUME_STAB                 (1 << 28)  // AI knows player's STAB moves, but nothing else. Restricted version of AI_FLAG_OMNISCIENT.
+#define AI_FLAG_ASSUME_STATUS_MOVES         (1 << 29)  // AI has a chance to know certain non-damaging moves, and also Fake Out and Super Fang. Restricted version of AI_FLAG_OMNISCIENT.
+#define AI_FLAG_ATTACKS_PARTNER             (1 << 30)  // AI specific to double battles; AI can deliberately attack its 'partner.'
 
-#define AI_FLAG_COUNT                       28
+#define AI_FLAG_COUNT                       31
 
 // Flags at and after 32 need different formatting, as in
 // #define AI_FLAG_PLACEHOLDER      ((u64)1 << 32)
 
 // The following options are enough to have a basic/smart trainer. Any other addtion could make the trainer worse/better depending on the flag
 #define AI_FLAG_BASIC_TRAINER         (AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY)
-#define AI_FLAG_SMART_TRAINER         (AI_FLAG_BASIC_TRAINER | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_WEIGH_ABILITY_PREDICTION | AI_FLAG_SMART_TERA)
+#define AI_FLAG_SMART_TRAINER         (AI_FLAG_BASIC_TRAINER | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION | AI_FLAG_SMART_TERA)
 #define AI_FLAG_PREDICTION            (AI_FLAG_PREDICT_SWITCH | AI_FLAG_PREDICT_INCOMING_MON | AI_FLAG_PREDICT_MOVE)
+#define AI_FLAG_ASSUMPTIONS           (AI_FLAG_ASSUME_STAB | AI_FLAG_ASSUME_STATUS_MOVES | AI_FLAG_WEIGH_ABILITY_PREDICTION)
 
 // 'other' ai logic flags
 #define AI_FLAG_DYNAMIC_FUNC          ((u64)1 << 60)  // Create custom AI functions for specific battles via "setdynamicaifunc" cmd

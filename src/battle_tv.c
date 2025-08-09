@@ -768,7 +768,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
             {
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-                switch ((enum MoveEffects)additionalEffect->moveEffect)
+                switch ((enum MoveEffect)additionalEffect->moveEffect)
                 {
                 case MOVE_EFFECT_ATK_PLUS_1:
                 case MOVE_EFFECT_DEF_PLUS_1:
@@ -840,10 +840,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_STEAL_ITEM:
-                if ((additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                    baseFromEffect += 3;
-                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
@@ -866,6 +862,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             case MOVE_EFFECT_EVS_MINUS_2:
                 if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
                     baseFromEffect += 2;
+                break;
+            default:
                 break;
             }
         }
@@ -1261,15 +1259,16 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageCalculationData damageCalcData;
-            damageCalcData.battlerAtk = gBattlerAttacker;
-            damageCalcData.battlerDef = gBattlerTarget;
-            damageCalcData.move = gCurrentMove;
-            damageCalcData.moveType = GetMoveType(gCurrentMove);
-            damageCalcData.isCrit = FALSE;
-            damageCalcData.randomFactor = FALSE;
-            damageCalcData.updateFlags = FALSE;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&damageCalcData, powerOverride);
+            struct DamageContext ctx;
+            ctx.battlerAtk = gBattlerAttacker;
+            ctx.battlerDef = gBattlerTarget;
+            ctx.move = gCurrentMove;
+            ctx.moveType = GetMoveType(gCurrentMove);
+            ctx.isCrit = FALSE;
+            ctx.randomFactor = FALSE;
+            ctx.updateFlags = FALSE;
+            ctx.fixedBasePower = powerOverride;
+            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
             dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;
