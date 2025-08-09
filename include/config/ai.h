@@ -110,4 +110,8 @@
 #define POWER_SPLIT_ALLY_PERCENTAGE     150
 #define POWER_SPLIT_ENEMY_PERCENTAGE    50
 
+// HP threshold to use Z-Destiny Bond or Z-Grudge in a double battle.
+#define Z_EFFECT_FOLLOW_ME_THRESHOLD    50
+// HP threshold to use Z-Belly Drum or Z-Curse (ghost version)
+#define Z_EFFECT_RESTORE_HP_THRESHOLD   33   
 #endif // GUARD_CONFIG_AI_H

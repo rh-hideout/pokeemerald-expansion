@@ -4768,10 +4768,9 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
     return FALSE;
 }
 
-//TODO - this could use some more sophisticated logic
+//TODO - almost all logic is exclusively for damaging z-moves as finishing blows.
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
-    // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
     if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk))
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
@@ -4779,30 +4778,69 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
     if (IsViableZMove(battlerAtk, chosenMove))
     {
-        uq4_12_t effectiveness;
         u32 zMove = GetUsableZMove(battlerAtk, chosenMove);
-        struct SimulatedDamage dmg;
 
-        if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
-            && !MoveIgnoresTargetAbility(zMove)
-            && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
-            return FALSE; // Don't waste a Z-Move busting disguise
-        if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
-            && !MoveIgnoresTargetAbility(zMove)
-            && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
-            return FALSE; // Don't waste a Z-Move busting Ice Face
+        //TODO: handling for contextual status z-moves
+        if (IsBattleMoveStatus(zMove))
+        {
+            // always use extreme evoboost
+            if (zMove == MOVE_EXTREME_EVOBOOST)
+                return TRUE;
 
-        if (IsBattleMoveStatus(chosenMove) && !IsBattleMoveStatus(zMove))
-            return FALSE;
-        else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
-            return FALSE;
+            // other moves you can use pretty much universally
+            u32 zEffect = GetMoveZEffect(chosenMove);
+            switch (zEffect)
+            {
+            case Z_EFFECT_ATK_UP_3:
+            case Z_EFFECT_DEF_UP_3:
+            case Z_EFFECT_SPD_UP_3:
+            case Z_EFFECT_SPATK_UP_3:
+            case Z_EFFECT_SPDEF_UP_3:
+            case Z_EFFECT_ACC_UP_3:
+            case Z_EFFECT_EVSN_UP_3:
+            case Z_EFFECT_ALL_STATS_UP_1:
+                return TRUE;
+            case Z_EFFECT_FOLLOW_ME:
+                return HasPartnerIgnoreFlags(battlerAtk) && (GetHealthPercentage(battlerAtk) <= Z_EFFECT_FOLLOW_ME_THRESHOLD);
+            case Z_EFFECT_CURSE:
+                if (!IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GHOST))
+                    return FALSE;
+                // otherwise, fall through
+            case Z_EFFECT_RECOVER_HP:
+                return GetHealthPercentage(battlerAtk) <= Z_EFFECT_RESTORE_HP_THRESHOLD;
+            // case Z_EFFECT_RESTORE_REPLACEMENT_HP:
+                // this needs to share logic with Healing Wish etc
+            default:
+                break;
+            }
+        }
+        // damaging z-moves
+        else
+        {
+            // Something is wrong.
+            if (IsBattleMoveStatus(chosenMove))
+                return FALSE;
 
-        dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
+            uq4_12_t effectiveness;
+            struct SimulatedDamage dmg;
 
-        if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
-            return FALSE;   // don't waste damaging z move if can otherwise faint target
+            if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
+                && !MoveIgnoresTargetAbility(zMove)
+                && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
+                return FALSE; // Don't waste a Z-Move busting disguise
+            if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
+                && !MoveIgnoresTargetAbility(zMove)
+                && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
+                return FALSE; // Don't waste a Z-Move busting Ice Face
 
-        return TRUE;
+
+            dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
+
+            if (!IsBattleMoveStatus(chosenMove) && dmg.minimum >= gBattleMons[battlerDef].hp)
+                return FALSE;   // don't waste damaging z move if can otherwise faint target
+
+            return TRUE;
+        }
     }
 
     return FALSE;
