@@ -6061,35 +6061,26 @@ static void Cmd_moveend(void)
             switch (moveEffect)
             {
             case EFFECT_ABSORB:
-                if (!(gStatuses3[gBattlerAttacker] & STATUS3_HEAL_BLOCK) && IsBattlerAlive(gBattlerAttacker))
+                if (!(gStatuses3[gBattlerAttacker] & STATUS3_HEAL_BLOCK)
+                     && gBattleStruct->moveDamage[gBattlerTarget] > 0
+                     && IsBattlerAlive(gBattlerAttacker))
                 {
-                    // Special handling for dealing 0 damage (i.e. Endured target takes 0 damage at 1 HP)
-                    if (gBattleStruct->moveDamage[gBattlerTarget] > 0)
-                    {
-                        gBattleStruct->moveDamage[gBattlerAttacker] = max(1, (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100));
-                        gBattleStruct->moveDamage[gBattlerAttacker] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
-                    }
-                    else
-                    {
-                        gBattleStruct->moveDamage[gBattlerAttacker] = 0;
-                    }
+                    gBattleStruct->moveDamage[gBattlerAttacker] = max(1, (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100));
+                    gBattleStruct->moveDamage[gBattlerAttacker] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
 
                     gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE;
                     effect = TRUE;
-                    if (gBattleStruct->moveDamage[gBattlerAttacker] != 0)
+                    if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
                     {
-                        if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
-                        {
-                            gBattleStruct->moveDamage[gBattlerAttacker] *= -1;
-                            gHitMarker |= HITMARKER_PASSIVE_DAMAGE;
-                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
-                            BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
-                        }
-                        else
-                        {
-                            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
-                            BattleScriptCall(BattleScript_EffectAbsorb);
-                        }
+                        gBattleStruct->moveDamage[gBattlerAttacker] *= -1;
+                        gHitMarker |= HITMARKER_PASSIVE_DAMAGE;
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
+                        BattleScriptCall(BattleScript_EffectAbsorbLiquidOoze);
+                    }
+                    else
+                    {
+                        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB;
+                        BattleScriptCall(BattleScript_EffectAbsorb);
                     }
                 }
                 break;
