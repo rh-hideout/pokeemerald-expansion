@@ -94,6 +94,7 @@ SINGLE_BATTLE_TEST("Life Orb does not activate if on a confusion hit")
         HP_BAR(player);
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, player);
+            HP_BAR(opponent);
             HP_BAR(player);
             MESSAGE("Wobbuffet was hurt by the Life Orb!");
         }
@@ -110,8 +111,23 @@ SINGLE_BATTLE_TEST("Life Orb does not activate if move was absorbed by target")
     } SCENE {
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHOCK_WAVE, player);
+            HP_BAR(opponent);
             HP_BAR(player);
             MESSAGE("Wobbuffet was hurt by the Life Orb!");
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Life Orb activates if move connected but no damage was dealt")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FALSE_SWIPE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FALSE_SWIPE, player);
+        HP_BAR(player);
+        MESSAGE("Wobbuffet was hurt by the Life Orb!");
     }
 }
