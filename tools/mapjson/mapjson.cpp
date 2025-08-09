@@ -610,6 +610,7 @@ string generate_layout_headers_text(Json layouts_data) {
 
     for (auto &layout : layouts_data["layouts"].array_items()) {
         if (layout == Json::object()) continue;
+        string layout_version = json_to_string(layout, "layout_version");
         string layoutName = json_to_string(layout, "name");
         string border_label = layoutName + "_Border";
         string blockdata_label = layoutName + "_Blockdata";
@@ -625,10 +626,21 @@ string generate_layout_headers_text(Json layouts_data) {
              << "\t.4byte " << blockdata_label << "\n"
              << "\t.4byte " << json_to_string(layout, "primary_tileset") << "\n"
              << "\t.4byte " << json_to_string(layout, "secondary_tileset") << "\n";
-        if (version == "firered") {
+        if (layout_version == "frlg")
+            text << "\t.byte TRUE\n";
+        else
+            text << "\t.byte FALSE\n";
+        
+        if (layout_version == "frlg")
+        {
             text << "\t.byte " << json_to_string(layout, "border_width") << "\n"
                  << "\t.byte " << json_to_string(layout, "border_height") << "\n"
-                 << "\t.2byte 0\n";
+                 << "\t.byte 0\n";
+        }
+        else
+        {
+            text << "\t.2byte 0\n"
+                 << "\t.byte 0\n";
         }
         text << "\n";
     }

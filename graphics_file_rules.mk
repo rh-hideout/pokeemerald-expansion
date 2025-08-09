@@ -275,6 +275,9 @@ $(FONTGFXDIR)/frlg_female.fwjpnfont: $(FONTGFXDIR)/japanese_frlg_female.png
 
 ### Miscellaneous ###
 
+$(MISCGFXDIR)/emoticons.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 2
+
 $(TITLESCREENGFXDIR)/pokemon_logo.gbapal: %.gbapal: %.pal
 	$(GFX) $< $@ -num_colors 224
 

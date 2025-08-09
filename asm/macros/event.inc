@@ -58,6 +58,8 @@
 	STD_FIND_ITEM = 1
 	STD_OBTAIN_DECORATION = 7
 	STD_REGISTER_MATCH_CALL = 8
+	STD_PUT_ITEM_AWAY = 11
+	STD_RECEIVED_ITEM = 12
 
 	@ Calls the script in gStdScripts at index function.
 	.macro callstd function:req
@@ -707,7 +709,7 @@
 	OBJ_ID_NONE = 0
 
 	@ Configures the arguments for a trainer battle, then jumps to the appropriate script in scripts/trainer_battle.inc
-	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req
+	.macro trainerbattle type:req localIdA:req, trainer_a:req, intro_text_a:req, lose_text_a:req, event_script_a:req, localIdB:req, trainer_b:req, intro_text_b:req, lose_text_b:req, event_script_b:req, victory_text:req, cannot_battle:req, isDouble:req, playMusicA:req, playMusicB:req, isRematch:req, rival_battle_flags=0
 	.byte SCR_OP_TRAINERBATTLE
 	.set trainerbattle_flags, 0
 	.ifgt \isDouble; .set trainerbattle_flags, trainerbattle_flags | (1 << 0); .endif
@@ -728,6 +730,7 @@
 	.4byte \event_script_b      @ retAddrB
 	.4byte \victory_text        @ victoryText
 	.4byte \cannot_battle       @ cannotBattle
+	.byte \rival_battle_flags	@ rivalBattleFlags
 	.endm
 
 	NO_MUSIC = FALSE
@@ -775,6 +778,11 @@
 	@ Takes two trainers and defeat text for each
 	.macro trainerbattle_two_trainers trainer_a:req, lose_text_a:req, trainer_b:req, lose_text_b:req
 	trainerbattle TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO, OBJ_ID_NONE, \trainer_a, NULL, \lose_text_a, NULL, OBJ_ID_NONE, \trainer_b, NULL, \lose_text_b, NULL, NULL, NULL, FALSE, TRUE, FALSE, FALSE
+	.endm
+
+	@ Starts a trainer battle with victory text if the player loses. If flags is nonzero, the player will be healed after battle (and its assumed to be the tutorial battle)
+	.macro trainerbattle_earlyrival trainer:req, flags:req, lose_text:req, victory_text:req
+	trainerbattle TRAINER_BATTLE_EARLY_RIVAL, OBJ_ID_NONE, \trainer, NULL, \lose_text, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, \victory_text, NULL, FALSE, TRUE, FALSE, FALSE, \flags
 	.endm
 
 	@ Starts a trainer battle using the battle information stored in RAM (usually by the scripts in trainer_battle.inc, which
@@ -1886,6 +1894,12 @@
 	.2byte \id
 	.endm
 
+	@ Gets the width of the specified message in the Braille font and sets the result to VAR_0x8004.
+	.macro getbraillestringwidth msg:req
+	.byte SCR_OP_GETBRAILLESTRINGWIDTH
+	.4byte \msg
+	.endm
+
 	.macro dynmultistack left:req, top:req, ignoreBPress:req, maxBeforeScroll:req, shouldSort:req, initialSelected:req, callbacks:req
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
@@ -2061,6 +2075,13 @@
 	setorcopyvar VAR_0x8000, \item
 	setorcopyvar VAR_0x8001, \amount
 	callstd STD_FIND_ITEM
+	.endm
+
+	@ Prints the message "{PLAYER} put the {ITEM} in the {POCKET}." The item name is pluralized, if applicable.
+	.macro putitemaway item:req, amount=1
+	setorcopyvar VAR_0x8000, \item
+	setorcopyvar VAR_0x8001, \amount
+	callstd STD_PUT_ITEM_AWAY
 	.endm
 
 	@ Equivalent to giveitem but for a single decoration.
@@ -2652,4 +2673,44 @@
 	.macro changefollowerbattler battlePartner:req
 	callnative ScriptChangeFollowerNPCBattlePartner
 	.2byte \battlePartner
+	.endm
+
+@ FRLG
+
+
+	@ Prints the provided message after playing the fanfare music (can only be MUS_LEVEL_UP or MUS_RG_OBTAIN_KEY_ITEM).
+	@ It then prints the message shown by using putitemaway.
+	.macro msgreceiveditem msg:req, item:req, amount=1, fanfare=MUS_LEVEL_UP
+	loadword 0, \msg
+	setorcopyvar VAR_0x8000, \item
+	setorcopyvar VAR_0x8001, \amount
+	setorcopyvar VAR_0x8002, \fanfare
+	callstd STD_RECEIVED_ITEM
+	.endm
+
+	@ Adds the specified item to the bag, then prints a message with fanfare. See description of msgreceiveditem.
+	.macro giveitem_msg msg:req, item:req, amount=1, fanfare=MUS_LEVEL_UP
+	additem \item, \amount
+	msgreceiveditem \msg, \item, \amount, \fanfare
+	.endm
+
+	@ Depends on the provided function. With the default argument, unlocks the specified entry in the Fame Checker.
+	.macro famechecker person:req, index:req, function=SetFlavorTextFlagFromSpecialVars
+	setvar VAR_0x8004, \person
+	setvar VAR_0x8005, \index
+	special \function
+	.endm
+
+	@ Sets the 'defeated' flag for all trainers in the specified gym.
+	.macro set_gym_trainers_frlg gym:req
+	setvar VAR_0x8008, \gym
+	call Common_EventScript_SetGymTrainers_Frlg
+	.endm
+
+	@ Prints a braille message, then waits for users input.
+	.macro braillemessage_wait text:req
+	setvar VAR_0x8006, 0
+	braillemessage \text
+	getbraillestringwidth \text
+	call EventScript_BrailleCursorWaitButton
 	.endm
