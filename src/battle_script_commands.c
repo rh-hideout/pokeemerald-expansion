@@ -3727,7 +3727,7 @@ void SetMoveEffect(bool32 primary, bool32 certain)
                     if (gBattleMons[gEffectBattler].statStages[i] != DEFAULT_STAT_STAGE)
                         break;
                 }
-                if (IsBattlerTurnDamaged(gEffectBattler))
+                if (IsBattlerTurnDamaged(gEffectBattler) && i != NUM_BATTLE_STATS)
                 {
                     for (i = 0; i < NUM_BATTLE_STATS; i++)
                         gBattleMons[gEffectBattler].statStages[i] = DEFAULT_STAT_STAGE;
