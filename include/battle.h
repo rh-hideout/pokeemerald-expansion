@@ -169,7 +169,8 @@ struct ProtectStruct
     u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
     u16 lashOutAffected:1;
-    u16 padding:4;
+    u16 assuranceDoubled:1;
+    u16 padding:3;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
