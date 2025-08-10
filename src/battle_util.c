@@ -1194,7 +1194,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         SET_STATCHANGER(STAT_SPEED, 1, FALSE);
     }
 
-    if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNWASNTAFFECTED || stringId == STRINGID_PKMNUNAFFECTED))
+    if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNUNAFFECTED))
         TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
 
     BtlController_EmitPrintString(battler, B_COMM_TO_CONTROLLER, stringId);
@@ -2408,6 +2408,18 @@ static enum MoveCanceller CancellerPsychicTerrain(void)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceller CancellerDreamEeater(void)
+{
+    if (GetMoveEffect(gCurrentMove) == EFFECT_DREAM_EATER
+        && !(gBattleMons[gBattlerTarget].status1 & STATUS1_SLEEP)
+        && GetBattlerAbility(gBattlerTarget) != ABILITY_COMATOSE)
+    {
+        gBattlescriptCurrInstr = BattleScript_DoesntAffectTargetAtkString;
+        return MOVE_STEP_BREAK;
+    }
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceller CancellerExplodingDamp(void)
 {
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
@@ -2595,6 +2607,7 @@ static enum MoveCanceller (*const sMoveSuccessOrderCancellers[])(void) =
     [CANCELLER_PROTEAN] = CancellerProtean,
     [CANCELLER_PSYCHIC_TERRAIN] = CancellerPsychicTerrain,
     [CANCELLER_EXPLODING_DAMP] = CancellerExplodingDamp,
+    [CANCELLER_DREAM_EATER] = CancellerDreamEeater,
     [CANCELLER_MULTIHIT_MOVES] = CancellerMultihitMoves,
     [CANCELLER_Z_MOVES] = CancellerZMoves,
     [CANCELLER_MULTI_TARGET_MOVES] = CancellerMultiTargetMoves,
@@ -3046,7 +3059,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
             if (option == RUN_SCRIPT && !IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, move)))
                 CancelMultiTurnMoves(battlerAtk, SKY_DROP_ATTACKCANCELLER_CHECK); // Don't cancel moves that can hit two targets bc one target might not be protected
 
-            battleScriptBlocksMove = BattleScript_DarkTypePreventsPrankster;
+            battleScriptBlocksMove = BattleScript_DoesntAffectTargetAtkString;
         }
 
         // Check def partner ability
