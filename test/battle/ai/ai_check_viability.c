@@ -339,3 +339,26 @@ AI_SINGLE_BATTLE_TEST("AI uses Skill Swap against Poison Heal")
             TURN { NOT_EXPECT_MOVE(opponent, MOVE_SKILL_SWAP); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Tailwind and Trick Room (singles)")
+{
+    u32 speed;
+    u32 move;
+    PARAMETRIZE { speed =  1; move = MOVE_TAILWIND; }
+    PARAMETRIZE { speed = 10; move = MOVE_TAILWIND; }
+    PARAMETRIZE { speed = 20; move = MOVE_TAILWIND; }
+    PARAMETRIZE { speed = 10; move = MOVE_TRICK_ROOM; }
+    PARAMETRIZE { speed = 20; move = MOVE_TRICK_ROOM; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(11); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(speed); Moves(MOVE_TACKLE, move); }
+    } WHEN {
+        if (speed == 10)
+            TURN { EXPECT_MOVE(opponent, move); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponent, move); }
+    }
+
+}

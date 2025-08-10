@@ -5163,8 +5163,14 @@ case EFFECT_GUARD_SPLIT:
 
         if (isBattle1v1)
         {
-            if (aiData->speedStats[battlerAtk] <= aiData->speedStats[battlerDef])
+            u32 speed = aiData->speedStats[battlerAtk];
+            u32 foeSpeed = aiData->speedStats[battlerDef];
+
+            if (speed <= foeSpeed && (speed * 2) > foeSpeed)
                 ADJUST_SCORE(GOOD_EFFECT);
+
+            if (CountUsablePartyMons(battlerAtk) != 0)
+                ADJUST_SCORE(DECENT_EFFECT);
         }
         else
         {

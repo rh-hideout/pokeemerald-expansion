@@ -3667,27 +3667,6 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     return FALSE;
 }
 
-u32 GetBattlerSideSpeedAverage(u32 battler)
-{
-    u32 speed1 = 0;
-    u32 speed2 = 0;
-    u32 numBattlersAlive = 0;
-
-    if (IsBattlerAlive(battler))
-    {
-        speed1 = gAiLogicData->speedStats[battler];
-        numBattlersAlive++;
-    }
-
-    if (HasPartner(battler))
-    {
-        speed2 = gAiLogicData->speedStats[BATTLE_PARTNER(battler)];
-        numBattlersAlive++;
-    }
-
-    return (speed1 + speed2) / numBattlersAlive;
-}
-
 bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex)
 {
     if (recoilDmg >= gBattleMons[battlerAtk].hp //Recoil kills attacker
