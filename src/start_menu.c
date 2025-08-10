@@ -31,6 +31,7 @@
 #include "party_menu.h"
 #include "pokedex.h"
 #include "pokenav.h"
+#include "rtc.h"
 #include "safari_zone.h"
 #include "save.h"
 #include "scanline_effect.h"
@@ -161,12 +162,12 @@ enum
 COMMON_DATA bool8 (*gMenuCallback)(void) = NULL;
 
 // EWRAM
-EWRAM_DATA static u8 sSafariBallsWindowId = 0;
+EWRAM_DATA static u8 sSafariBallsWindowId        = 0;
 EWRAM_DATA static u8 sBattlePyramidFloorWindowId = 0;
-EWRAM_DATA static u8 sStartMenuCursorPos = 0;
-EWRAM_DATA static u8 sNumStartMenuActions = 0;
+EWRAM_DATA static u8 sStartMenuCursorPos         = 0;
+EWRAM_DATA static u8 sNumStartMenuActions        = 0;
 EWRAM_DATA static u8 sCurrentStartMenuActions[9] = {0};
-EWRAM_DATA static s8 sInitStartMenuData[2] = {0};
+EWRAM_DATA static s8 sInitStartMenuData[2]       = {0};
 
 EWRAM_DATA static u8 (*sSaveDialogCallback)(void) = NULL;
 EWRAM_DATA static u8 sSaveDialogTimer = 0;
@@ -227,7 +228,17 @@ static const struct WindowTemplate sWindowTemplate_SafariBalls = {
     .tilemapTop = 1,
     .width = 9,
     .height = 4,
-    .paletteNum = 15,
+    .paletteNum = 0xF,
+    .baseBlock = 0x8
+};
+
+static const struct WindowTemplate sWindowTemplate_StartMenu = {
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 7,
+    .height = 6,
+    .paletteNum = 0xF,
     .baseBlock = 0x8
 };
 
@@ -249,7 +260,7 @@ static const struct WindowTemplate sWindowTemplate_PyramidFloor = {
     .tilemapTop = 1,
     .width = 10,
     .height = 4,
-    .paletteNum = 15,
+    .paletteNum = 0xF,
     .baseBlock = 0x8
 };
 
@@ -259,7 +270,7 @@ static const struct WindowTemplate sWindowTemplate_PyramidPeak = {
     .tilemapTop = 1,
     .width = 12,
     .height = 4,
-    .paletteNum = 15,
+    .paletteNum = 0xF,
     .baseBlock = 0x8
 };
 
@@ -305,7 +316,7 @@ static const struct WindowTemplate sWindowTemplates_LinkBattleSave[] =
         .tilemapTop = 15,
         .width = 26,
         .height = 4,
-        .paletteNum = 15,
+        .paletteNum = 0xF,
         .baseBlock = 0x194
     },
     DUMMY_WIN_TEMPLATE
@@ -317,7 +328,7 @@ static const struct WindowTemplate sSaveInfoWindowTemplate = {
     .tilemapTop = 1,
     .width = 14,
     .height = 10,
-    .paletteNum = 15,
+    .paletteNum = 0xF,
     .baseBlock = 8
 };
 
@@ -355,6 +366,7 @@ static void ShowSaveInfoWindow(void);
 static void RemoveSaveInfoWindow(void);
 static void HideStartMenuWindow(void);
 static void HideStartMenuDebug(void);
+static void ShowStartMenuExtraWindow(void);
 
 void SetDexPokemonPokenavFlags(void) // unused
 {
@@ -425,6 +437,7 @@ static void BuildNormalStartMenu(void)
     AddStartMenuAction(MENU_ACTION_SAVE);
     AddStartMenuAction(MENU_ACTION_OPTION);
     AddStartMenuAction(MENU_ACTION_EXIT);
+    ShowStartMenuExtraWindow();
 }
 
 static void BuildDebugStartMenu(void)
@@ -545,10 +558,14 @@ static void RemoveExtraStartMenuWindows(void)
         CopyWindowToVram(sSafariBallsWindowId, COPYWIN_GFX);
         RemoveWindow(sSafariBallsWindowId);
     }
-    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
+    else if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         ClearStdWindowAndFrameToTransparent(sBattlePyramidFloorWindowId, FALSE);
         RemoveWindow(sBattlePyramidFloorWindowId);
+    }
+    else{ //Borra de la pantalla la venta auxiliar de la hora
+        ClearStdWindowAndFrameToTransparent(sSafariBallsWindowId, FALSE);
+        RemoveWindow(sSafariBallsWindowId);
     }
 }
 
@@ -1576,4 +1593,35 @@ void Script_ForceSaveGame(struct ScriptContext *ctx)
     ShowSaveInfoWindow();
     gMenuCallback = SaveCallback;
     sSaveDialogCallback = SaveSavingMessageCallback;
+}
+
+static void ShowStartMenuExtraWindow(void) // Función que carga una ventana auxiliar en el menú de pausa.
+{   
+    u8 month;
+    u8 year;
+    sSafariBallsWindowId = AddWindow(&sWindowTemplate_StartMenu);
+    PutWindowTilemap(sSafariBallsWindowId);
+    DrawStdWindowFrame(sSafariBallsWindowId, FALSE);
+    // First Line: DayOfWeek, hh:mm
+    FormatDecimalTimeWOSeconds(gStringVar4, Rtc_GetCurrentHour(), Rtc_GetCurrentMinute());
+    UpdateDayOfWeek();
+    StringCopy(gStringVar1, ConvertDayOfWeekInt2Str());
+    StringAppend(gStringVar1, gStringVar4);
+    AddTextPrinterParameterized(sSafariBallsWindowId, 1, gStringVar1, 0, 1, 0xFF, NULL);
+    // Second line: DD MMM YY
+    month = Rtc_GetCurrentMonth();
+    FormatDecimalDateDay(gStringVar5, Rtc_GetCurrentDay());
+    StringCopy(gStringVar2, ConvertMonth2Str(month));
+    StringAppend(gStringVar5, gStringVar2);
+    year = Rtc_GetCurrentYear();
+    FormatDecimalDateYear(gStringVar3, year);
+    StringAppend(gStringVar5, gStringVar3);
+    //FormatDecimalDateV2(gStringVar4, Rtc_GetCurrentYear(), Rtc_GetCurrentMonth(), Rtc_GetCurrentDay());
+    AddTextPrinterParameterized(sSafariBallsWindowId, 1, gStringVar5, 0, 17, 0xFF, NULL);
+    // Third line: Season
+    UpdateSeason();
+    StringCopy(gStringVar1, ConvertSeasonInt2Str());
+    AddTextPrinterParameterized(sSafariBallsWindowId, 1, gStringVar1, 0, 33, 0xFF, NULL);
+    // Outputs Window to VRAM
+    CopyWindowToVram(sSafariBallsWindowId, 2);
 }

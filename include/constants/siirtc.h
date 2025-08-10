@@ -23,6 +23,14 @@ enum Weekday
     WEEKDAY_COUNT,
 };
 
+enum Season
+{
+    SEASON_SUMMER = 0,
+    SEASON_AUTUMN,
+    SEASON_WINTER,
+    SEASON_SPRING,
+};
+
 enum Month
 {
     MONTH_JAN = 1,

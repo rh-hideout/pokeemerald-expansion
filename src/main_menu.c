@@ -700,10 +700,12 @@ static void Task_MainMenuCheckBattery(u8 taskId)
 
         if (!(RtcGetErrorStatus() & RTC_ERR_FLAG_MASK))
         {
+            FlagSet(FLAG_IS_RTC_ENABLED);
             gTasks[taskId].func = Task_DisplayMainMenu;
         }
         else
         {
+            FlagClear(FLAG_IS_RTC_ENABLED);
             CreateMainMenuErrorWindow(gText_BatteryRunDry);
             gTasks[taskId].func = Task_WaitForBatteryDryErrorWindow;
         }

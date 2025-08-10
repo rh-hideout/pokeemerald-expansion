@@ -60,10 +60,13 @@ struct Tileset
     /*0x02*/ u8 lightPalettes; // Bitmask determining whether a palette should be time-blended as a light
     /*0x03*/ u8 customLightColor; // Bitmask determining which light palettes have custom light colors (color 15)
     /*0x04*/ const u32 *tiles;
-    /*0x08*/ const u16 (*palettes)[16];
+    /*0x08*/ const u16 (*palettes)[16]; //Spring Palette
     /*0x0C*/ const u16 *metatiles;
     /*0x10*/ const u16 *metatileAttributes;
     /*0x14*/ TilesetCB callback;
+    /*0x08*/ const u16 (*palettes_summer)[16];
+    /*0x08*/ const u16 (*palettes_autumn)[16];
+    /*0x08*/ const u16 (*palettes_winter)[16];
 };
 
 struct MapLayout

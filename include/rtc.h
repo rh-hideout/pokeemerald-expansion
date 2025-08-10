@@ -46,4 +46,21 @@ enum Weekday GetDayOfWeek(void);
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay);
 enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay);
 
+u8 Rtc_GetCurrentHour(void);
+u8 Rtc_GetCurrentMinute(void);
+u8 Rtc_GetCurrentMonth(void);
+u8 Rtc_GetCurrentDay(void);
+u8 Rtc_GetCurrentYear(void);
+u8 Rtc_GetCurrentDayOfWeek(void);
+void Rtc_GetCurrentSeason_Short(void);
+void UpdateSeason(void);
+void UpdateDayOfWeek(void);
+const u8 *ConvertSeasonInt2Str(void);
+const u8 *ConvertDayOfWeekInt2Str(void);
+const u8 *ConvertMonth2Str(u8);
+void FormatDecimalDateV2(u8 *dest, s32 year, s32 month, s32 day);
+void FormatDecimalTimeWOSeconds(u8 *dest, u8 hour, u8 minute);
+void FormatDecimalDateDay(u8 *dest, s32 day);
+void FormatDecimalDateYear(u8 *dest, s32 year);
+
 #endif // GUARD_RTC_UTIL_H
