@@ -14744,6 +14744,7 @@ static bool32 CriticalCapture(u32 odds)
 {
     u32 numCaught;
     u32 totalDexCount;
+    u32 charmBoost = 1;
 
     if (B_CRITICAL_CAPTURE == FALSE)
         return FALSE;
@@ -14753,27 +14754,28 @@ static bool32 CriticalCapture(u32 odds)
     else
         totalDexCount = NATIONAL_DEX_COUNT;
 
-    numCaught = GetNationalPokedexCount(FLAG_GET_CAUGHT);
-
-    if (numCaught <= (totalDexCount * 30) / 650)
-        odds = 0;
-    else if (numCaught <= (totalDexCount * 150) / 650)
-        odds /= 2;
-    else if (numCaught <= (totalDexCount * 300) / 650)
-        ;   // odds = (odds * 100) / 100;
-    else if (numCaught <= (totalDexCount * 450) / 650)
-        odds = (odds * 150) / 100;
-    else if (numCaught <= (totalDexCount * 600) / 650)
-        odds *= 2;
-    else
-        odds = (odds * 250) / 100;
-
     if (CheckBagHasItem(ITEM_CATCHING_CHARM, 1))
-        odds = (odds * (100 + B_CATCHING_CHARM_BOOST)) / 100;
+        charmBoost = (100 + B_CATCHING_CHARM_BOOST) / 100;
+
+    numCaught = GetNationalPokedexCount(FLAG_GET_CAUGHT);
+    if (numCaught > (totalDexCount * 600) / 650)
+        odds = (odds * (250 * charmBoost)) / 100;
+    else if (numCaught > (totalDexCount * 450) / 650)
+        odds *= 2 * charmBoost;
+    else if (numCaught > (totalDexCount * 300) / 650)
+        odds = (odds * (150 * charmBoost)) / 100;
+    else if (numCaught > (totalDexCount * 150) / 650)
+        odds *= 1 * charmBoost;
+    else if (numCaught > (totalDexCount * 30) / 650)
+        odds = (odds * (50 * charmBoost)) / 100;
+    else
+        return FALSE;
+
+    if (odds > 255)
+        odds = 255;
 
     odds /= 6;
-
-    if ((Random() % 255) < odds)
+    if ((Random() % 256) < odds)
         return TRUE;
 
     return FALSE;
