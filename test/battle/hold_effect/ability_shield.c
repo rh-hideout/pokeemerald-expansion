@@ -200,6 +200,7 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Skill Swap even if user has 
     }
 }
 
+// These currently do not activate, but probably should do held item animation + message
 TO_DO_BATTLE_TEST("Ability Shield prevents the user's Trace from changing its ability");
 TO_DO_BATTLE_TEST("Ability Shield prevents the user's Receiver from changing its ability");
 TO_DO_BATTLE_TEST("Ability Shield protects against Wandering Spirit");
