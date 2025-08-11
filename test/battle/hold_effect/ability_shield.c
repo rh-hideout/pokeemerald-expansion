@@ -139,8 +139,6 @@ SINGLE_BATTLE_TEST("Ability Shield protects the user's ability from being suppre
     } SCENE {
         if (item == ITEM_ABILITY_SHIELD) {
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
-            MESSAGE("Blaziken's Ability is protected by the effects of its Ability Shield!");
             ABILITY_POPUP(player, ABILITY_SPEED_BOOST);
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GASTRO_ACID, opponent);
