@@ -20,6 +20,7 @@
 #include "follower_npc.h"
 #include "item_menu.h"
 #include "link.h"
+#include "map_preview_screen.h"
 #include "match_call.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -223,7 +224,7 @@ int ProcessPlayerFieldInput(struct FieldInput *input)
     }
     if (input->pressedAButton && TrySetupDiveDownScript() == TRUE)
         return TRUE;
-    if (input->pressedStartButton)
+    if (input->pressedStartButton && !ForestMapPreviewScreenIsRunning()) // Prevents opening the Start menu while the map preview is still fading out.
     {
         PlaySE(SE_WIN_OPEN);
         ShowStartMenu();

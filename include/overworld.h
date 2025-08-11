@@ -171,6 +171,8 @@ bool32 Overworld_RecvKeysFromLinkIsRunning(void);
 bool32 Overworld_SendKeysToLinkIsRunning(void);
 bool32 IsSendingKeysOverCable(void);
 void ClearLinkPlayerObjectEvents(void);
+u8 GetLastUsedWarpMapSectionId(void);
+u8 GetDestinationWarpMapSectionId(void);
 bool16 SetTimeOfDay(u16 hours);
 
 // Item Description Headers
