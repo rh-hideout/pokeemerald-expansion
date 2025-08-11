@@ -42,7 +42,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_DREAM_EATER] =
     {
-        .battleScript = BattleScript_EffectHit,
+        .battleScript = BattleScript_EffectDreamEater,
         .battleTvScore = 5,
         .encourageEncore = TRUE,
     },

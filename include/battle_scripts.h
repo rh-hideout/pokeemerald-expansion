@@ -580,6 +580,7 @@ extern const u8 BattleScript_MoveBlockedByDynamax[];
 extern const u8 BattleScript_EffectAbsorb[];
 extern const u8 BattleScript_EffectAbsorbLiquidOoze[];
 extern const u8 BattleScript_EffectExplosion[];
+extern const u8 BattleScript_EffectDreamEater[];
 extern const u8 BattleScript_EffectMirrorMove[];
 extern const u8 BattleScript_EffectAttackUp[];
 extern const u8 BattleScript_EffectDefenseUp[];

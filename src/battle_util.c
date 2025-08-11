@@ -2408,18 +2408,6 @@ static enum MoveCanceller CancellerPsychicTerrain(void)
     return MOVE_STEP_SUCCESS;
 }
 
-static enum MoveCanceller CancellerDreamEeater(void)
-{
-    if (GetMoveEffect(gCurrentMove) == EFFECT_DREAM_EATER
-        && !(gBattleMons[gBattlerTarget].status1 & STATUS1_SLEEP)
-        && GetBattlerAbility(gBattlerTarget) != ABILITY_COMATOSE)
-    {
-        gBattlescriptCurrInstr = BattleScript_DoesntAffectTargetAtkString;
-        return MOVE_STEP_BREAK;
-    }
-    return MOVE_STEP_SUCCESS;
-}
-
 static enum MoveCanceller CancellerExplodingDamp(void)
 {
     u32 dampBattler = IsAbilityOnField(ABILITY_DAMP);
@@ -2607,7 +2595,6 @@ static enum MoveCanceller (*const sMoveSuccessOrderCancellers[])(void) =
     [CANCELLER_PROTEAN] = CancellerProtean,
     [CANCELLER_PSYCHIC_TERRAIN] = CancellerPsychicTerrain,
     [CANCELLER_EXPLODING_DAMP] = CancellerExplodingDamp,
-    [CANCELLER_DREAM_EATER] = CancellerDreamEeater,
     [CANCELLER_MULTIHIT_MOVES] = CancellerMultihitMoves,
     [CANCELLER_Z_MOVES] = CancellerZMoves,
     [CANCELLER_MULTI_TARGET_MOVES] = CancellerMultiTargetMoves,

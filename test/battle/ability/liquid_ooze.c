@@ -140,7 +140,6 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder"
 
 SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of heal (Gen 5+)")
 {
-    KNOWN_FAILING;
     s16 damage;
     GIVEN {
         WITH_CONFIG(GEN_DREAM_EATER_LIQUID_OOZE, GEN_5);
