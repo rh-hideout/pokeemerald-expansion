@@ -13026,7 +13026,7 @@ static void Cmd_setgastroacid(void)
     CMD_ARGS(const u8 *failInstr);
 
     if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed
-     || GetBattlerHoldEffectIgnoreAbility(gBattlerTarget) == HOLD_EFFECT_ABILITY_SHIELD)
+     || GetBattlerHoldEffectIgnoreAbility(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -16698,7 +16698,7 @@ void BS_TryActivateAbilityShield(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 
     if (ability != ABILITY_NONE // if ability would be negated by breaking effects Ability Shield doesn't print message
-     && ability == GetBattlerAbilityInternal(TRUE, TRUE))
+     && ability == GetBattlerAbilityInternal(battler, TRUE, TRUE))
         return;
 
     if (GetBattlerAbilityNoAbilityShield(battler) != ability)
