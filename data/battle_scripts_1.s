@@ -2459,6 +2459,7 @@ BattleScript_EffectGastroAcid::
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
+	jumpifstatus3 BS_TARGET, STATUS3_GASTRO_ACID, BattleScript_ButItFailed
 	setgastroacid BattleScript_ButItFailed
 	attackanimation
 	waitanimation

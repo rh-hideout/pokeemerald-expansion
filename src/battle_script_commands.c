@@ -13025,7 +13025,8 @@ static void Cmd_setgastroacid(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed)
+    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed
+     || GetBattlerHoldEffectIgnoreAbility(gBattlerTarget) == HOLD_EFFECT_ABILITY_SHIELD)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
