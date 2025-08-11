@@ -523,6 +523,8 @@ static void Task_HandleMonAnimation(u8 taskId)
         sprite->data[2] = gTasks[taskId].tSpeciesId;
         sprite->data[1] = 0;
 
+        if (gBattleStruct->animsRunning > 0)
+            gBattleStruct->animsRunning--;
         DestroyTask(taskId);
     }
 }
