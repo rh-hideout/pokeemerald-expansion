@@ -12956,6 +12956,11 @@ static void Cmd_trycopyability(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
+    else if (CanAbilityShieldActivateForBattler(gBattlerAttacker))
+    {
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
+    }
     else
     {
         gBattleScripting.abilityPopupOverwrite = gBattleMons[battler].ability;
