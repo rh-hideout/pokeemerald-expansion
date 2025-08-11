@@ -1527,7 +1527,7 @@ static void Task_DisplayPokeFluteMessage(u8 taskId)
 {
     if (WaitFanfare(FALSE))
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PokeFluteAwakenedMon, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, sText_PokeFluteAwakenedMon, Task_CloseCantUseKeyItemMessage);
@@ -1553,14 +1553,14 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 
     if (wokeSomeoneUp)
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFlute, Task_PlayPokeFlute);
         else
             DisplayItemMessageOnField(taskId, sText_PlayedPokeFlute, Task_PlayPokeFlute);
     }
     else
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFluteCatchy, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, sText_PlayedPokeFluteCatchy, Task_CloseCantUseKeyItemMessage);
