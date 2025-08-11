@@ -1194,7 +1194,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         SET_STATCHANGER(STAT_SPEED, 1, FALSE);
     }
 
-    if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNWASNTAFFECTED || stringId == STRINGID_PKMNUNAFFECTED))
+    if ((stringId == STRINGID_ITDOESNTAFFECT || stringId == STRINGID_PKMNUNAFFECTED))
         TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
 
     BtlController_EmitPrintString(battler, B_COMM_TO_CONTROLLER, stringId);
@@ -3046,7 +3046,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
             if (option == RUN_SCRIPT && !IsSpreadMove(GetBattlerMoveTargetType(battlerAtk, move)))
                 CancelMultiTurnMoves(battlerAtk, SKY_DROP_ATTACKCANCELLER_CHECK); // Don't cancel moves that can hit two targets bc one target might not be protected
 
-            battleScriptBlocksMove = BattleScript_DarkTypePreventsPrankster;
+            battleScriptBlocksMove = BattleScript_DoesntAffectTargetAtkString;
         }
 
         // Check def partner ability

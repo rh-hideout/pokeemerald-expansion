@@ -434,7 +434,7 @@
  * Spaces in pattern match newlines (\n, \l, and \p) in the message.
  * Often used to check that a battler took its turn but it failed, e.g.:
  *     MESSAGE("Wobbuffet used Dream Eater!");
- *     MESSAGE("The opposing Wobbuffet wasn't affected!");
+ *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
  * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
  * Causes the test to fail if the battler's status is not changed to the
