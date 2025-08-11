@@ -90,7 +90,7 @@ TO_DO_BATTLE_TEST("AI understands Instruct")
 TO_DO_BATTLE_TEST("AI understands Quick Guard")
 TO_DO_BATTLE_TEST("AI understands Wide Guard")
 
-AI_DOUBLE_BATTLE_TEST("AI will not use the same nondamaging move as its partner for no reason")
+AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for no reason")
 {
     u32 move;
     PARAMETRIZE { move = MOVE_AROMATHERAPY; }
@@ -648,3 +648,16 @@ AI_DOUBLE_BATTLE_TEST("AI uses Power Split to improve its stats")
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinching.")
+{
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZUBAT) { Ability(ABILITY_INNER_FOCUS); }
+        PLAYER(SPECIES_BRAIXEN) { Ability(ABILITY_BLAZE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_FAKE_OUT, MOVE_BRANCH_POKE, MOVE_ROCK_SMASH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight); }
+    }
+}
