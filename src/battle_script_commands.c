@@ -14761,11 +14761,11 @@ static bool32 CriticalCapture(u32 odds)
     if (numCaught > (totalDexCount * 600) / 650)
         odds = (odds * (250 * charmBoost)) / 100;
     else if (numCaught > (totalDexCount * 450) / 650)
-        odds *= 2 * charmBoost;
+        odds = (odds * (200 * charmBoost)) / 100;
     else if (numCaught > (totalDexCount * 300) / 650)
         odds = (odds * (150 * charmBoost)) / 100;
     else if (numCaught > (totalDexCount * 150) / 650)
-        odds *= 1 * charmBoost;
+        odds = (odds * (100 * charmBoost)) / 100;
     else if (numCaught > (totalDexCount * 30) / 650)
         odds = (odds * (50 * charmBoost)) / 100;
     else
