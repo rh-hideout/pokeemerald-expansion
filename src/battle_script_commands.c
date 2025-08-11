@@ -335,6 +335,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 static void ResetValuesForCalledMove(void);
 static void TryRestoreDamageAfterCheekPouch(u32 battler);
 static bool32 TrySymbiosis(u32 battler, u32 itemId, bool32 moveEnd);
+static bool32 CanAbilityShieldActivateForBattler(u32 battler);
 
 static void Cmd_attackcanceler(void);
 static void Cmd_accuracycheck(void);
@@ -13100,6 +13101,16 @@ static void Cmd_setroom(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+static bool32 CanAbilityShieldActivateForBattler(u32 battler)
+{
+    if (GetBattlerHoldEffectIgnoreAbility(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD)
+        return FALSE;
+    
+    RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
+    gBattlerAbility = battler;
+    return TRUE;
+}
+
 // Skill Swap
 static void Cmd_tryswapabilities(void)
 {
@@ -13111,10 +13122,10 @@ static void Cmd_tryswapabilities(void)
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (CanAbilityShieldActivateForBattler(gBattlerAttacker) || CanAbilityShieldActivateForBattler(gBattlerTarget))
     {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
     else
     {
@@ -14563,10 +14574,10 @@ static void Cmd_tryworryseed(void)
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
     {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
     else
     {
@@ -16673,10 +16684,15 @@ void BS_TryActivateAbilityShield(void)
 {
     NATIVE_ARGS(u8 battler);
     u32 battler = GetBattlerForBattleScript(cmd->battler);
+    u32 ability = GetBattlerAbility(battler);
 
     gBattlescriptCurrInstr = cmd->nextInstr;
 
-    if (GetBattlerAbilityNoAbilityShield(battler) != GetBattlerAbility(battler))
+    if (ability != ABILITY_NONE // if ability would be negated by breaking effects Ability Shield doesn't print message
+     && ability == GetBattlerAbilityInternal(TRUE, TRUE))
+        return;
+
+    if (GetBattlerAbilityNoAbilityShield(battler) != ability)
     {
         gLastUsedItem = gBattleMons[battler].item;
         RecordItemEffectBattle(battler, GetItemHoldEffect(gLastUsedItem));
@@ -17371,10 +17387,10 @@ void BS_SetSimpleBeam(void)
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
     {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
     else
     {
@@ -17396,10 +17412,10 @@ void BS_TryEntrainment(void)
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    else if (GetBattlerHoldEffect(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
     {
-        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
-        gBattlescriptCurrInstr = cmd->failInstr;
+        gBattlescriptCurrInstr = BattleScript_MoveEnd;
+        BattleScriptCall(BattleScript_AbilityShieldProtects);
     }
     else
     {
