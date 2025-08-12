@@ -80,7 +80,6 @@ static union PokemonSubstruct *GetSubstruct(struct BoxPokemon *boxMon, u32 perso
 static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
-static bool8 ShouldSkipFriendshipChange(void);
 void TrySpecialOverworldEvo();
 
 EWRAM_DATA static u8 sLearningMoveTableID = 0;
@@ -6385,7 +6384,7 @@ bool8 HasTwoFramesAnimation(u16 species)
         && !gTestRunnerHeadless;
 }
 
-static bool8 ShouldSkipFriendshipChange(void)
+bool8 ShouldSkipFriendshipChange(void)
 {
     if (gMain.inBattle && gBattleTypeFlags & (BATTLE_TYPE_FRONTIER))
         return TRUE;
