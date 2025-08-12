@@ -329,12 +329,12 @@ struct AiLogicData
     u8 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
     u8 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
     u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
-    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
     u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
-    u8 padding:2;
-    u8 shouldSwitch; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 aiCalcInProgress:1;
-    u8 battlerDoingPrediction; // Stores which battler is currently running its prediction calcs
+    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
+    u8 padding1:1;
+    u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
+    u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
 };
 
@@ -1074,7 +1074,6 @@ extern u32 gHitMarker;
 extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
 extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
-extern u32 gStatuses3[MAX_BATTLERS_COUNT];
 extern struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT];
 extern u16 gPauseCounterBattle;
 extern u16 gPaydayMoney;

@@ -227,9 +227,9 @@ static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
             return FIELD_EFFECT_NEUTRAL;
     }
 
-    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SUN) 
-    || HasLightSensitiveMove(battler) 
-    || HasDamagingMoveOfType(battler, TYPE_FIRE) 
+    if (DoesAbilityBenefitFromWeather(ability, B_WEATHER_SUN)
+    || HasLightSensitiveMove(battler)
+    || HasDamagingMoveOfType(battler, TYPE_FIRE)
     || HasMoveWithEffect(battler, EFFECT_HYDRO_STEAM))
         return FIELD_EFFECT_POSITIVE;
 
@@ -248,8 +248,8 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
-        if (!(IS_BATTLER_ANY_TYPE(FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)) 
-         || gAiLogicData->holdEffects[FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES 
+        if (!(IS_BATTLER_ANY_TYPE(FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
+         || gAiLogicData->holdEffects[FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
          || DoesAbilityBenefitFromWeather(gAiLogicData->abilities[FOE(battler)], B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
@@ -285,7 +285,7 @@ static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
 {
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
         return FIELD_EFFECT_NEUTRAL;
-    
+
     if (DoesAbilityBenefitFromWeather(gAiLogicData->abilities[battler], B_WEATHER_RAIN)
       || HasMoveWithFlag(battler, MoveAlwaysHitsInRain)
       || HasDamagingMoveOfType(battler, TYPE_WATER))
@@ -316,8 +316,8 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
     if (grounded && HasBattlerSideMoveWithAdditionalEffect(FOE(battler), MOVE_EFFECT_SLEEP))
         return FIELD_EFFECT_POSITIVE;
 
-    if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP) 
-    || (gStatuses3[battler] & STATUS3_YAWN) 
+    if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP)
+    || gBattleMons[battler].volatiles.yawn
     || HasDamagingMoveOfType(battler, TYPE_ELECTRIC)))
         return FIELD_EFFECT_POSITIVE;
 
@@ -382,8 +382,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
      && (HasNonVolatileMoveEffect(FOE(battler), MOVE_EFFECT_SLEEP) || HasNonVolatileMoveEffect(BATTLE_PARTNER(FOE(battler)), MOVE_EFFECT_SLEEP)))
         return FIELD_EFFECT_POSITIVE;
 
-    if (grounded && ((gBattleMons[battler].status1 & STATUS1_SLEEP) 
-     || (gStatuses3[battler] & STATUS3_YAWN)))
+    if (grounded && (gBattleMons[battler].status1 & STATUS1_SLEEP || gBattleMons[battler].volatiles.yawn))
         return FIELD_EFFECT_POSITIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -407,7 +406,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
     if (grounded || allyGrounded)
     {
         // harass priority
-        if (HasBattlerSideAbility(FOE(battler), ABILITY_GALE_WINGS, gAiLogicData) 
+        if (HasBattlerSideAbility(FOE(battler), ABILITY_GALE_WINGS, gAiLogicData)
          || HasBattlerSideAbility(FOE(battler), ABILITY_TRIAGE, gAiLogicData)
          || HasBattlerSideAbility(FOE(battler), ABILITY_PRANKSTER, gAiLogicData))
             return FIELD_EFFECT_POSITIVE;
@@ -419,7 +418,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
     if (HasBattlerSideMoveWithEffect(FOE(battler), EFFECT_EXPANDING_FORCE))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (HasBattlerSideAbility(battler, ABILITY_GALE_WINGS, gAiLogicData) 
+    if (HasBattlerSideAbility(battler, ABILITY_GALE_WINGS, gAiLogicData)
      || HasBattlerSideAbility(battler, ABILITY_TRIAGE, gAiLogicData)
      || HasBattlerSideAbility(battler, ABILITY_PRANKSTER, gAiLogicData))
         return FIELD_EFFECT_NEGATIVE;
@@ -436,7 +435,7 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
             return FIELD_EFFECT_POSITIVE;
         // If we tie, we shouldn't change trick room state.
         else if (GetBattlerSideSpeedAverage(battler) == GetBattlerSideSpeedAverage(FOE(battler)))
-            return FIELD_EFFECT_NEUTRAL; 
+            return FIELD_EFFECT_NEUTRAL;
         else
             return FIELD_EFFECT_NEGATIVE;
     }

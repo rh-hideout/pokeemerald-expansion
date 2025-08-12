@@ -1244,8 +1244,8 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     u16 hp = GetMonData(mon, MON_DATA_HP);
 
     // Embargo Check
-    if ((gPartyMenu.slotId == 0 && gStatuses3[B_POSITION_PLAYER_LEFT] & STATUS3_EMBARGO)
-        || (gPartyMenu.slotId == 1 && gStatuses3[B_POSITION_PLAYER_RIGHT] & STATUS3_EMBARGO))
+    if ((gPartyMenu.slotId == 0 && gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.embargo)
+        || (gPartyMenu.slotId == 1 && gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.embargo))
     {
         return TRUE;
     }
