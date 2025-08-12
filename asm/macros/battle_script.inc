@@ -1737,6 +1737,10 @@
 	callnative BS_ActivateTerrainChangeAbilities
 	.byte \battler
 	.endm
+    
+    .macro resetterrainabilityflags
+    callnative BS_ResetTerrainAbilityFlags
+    .endm
 
 	@ Stores Healing Wish effect.
 	.macro storehealingwish battler:req
