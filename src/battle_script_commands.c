@@ -18175,6 +18175,16 @@ void BS_ActivateTerrainChangeAbilities(void)
     AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0, 0);
 }
 
+void BS_ResetTerrainAbilityFlags(void)
+{
+    NATIVE_ARGS();
+    // reset terrain ability checks
+    for (u32 i = 0; i < gBattlersCount; i++)
+        gDisableStructs[i].terrainAbilityDone = 0;
+
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_StoreHealingWish(void)
 {
     NATIVE_ARGS(u8 battler);

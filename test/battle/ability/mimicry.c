@@ -70,3 +70,24 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
         EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[1], TYPE_STEEL);
     }
 }
+
+DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_TOXEL) { Speed(50); Ability(ABILITY_MIMICRY); }
+        PLAYER(SPECIES_MORELULL) { Speed(40); }
+        OPPONENT(SPECIES_IGGLYBUFF) { Speed(60); }
+        OPPONENT(SPECIES_BAGON) { Speed(70); }
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_ELECTRIC_TERRAIN, target: playerLeft); MOVE(opponentLeft, MOVE_MISTY_TERRAIN); }
+    } SCENE {
+        MESSAGE("The opposing Bagon used Electric Terrain!");
+        ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
+        MESSAGE("Toxel's type changed to Electric!");
+        // igglybuff
+        MESSAGE("The opposing Igglybuff used Misty Terrain!");
+        ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
+        MESSAGE("Toxel's type changed to Fairy!");
+    }
+}
+
