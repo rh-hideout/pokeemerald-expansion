@@ -171,17 +171,17 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will use it if partner holds Clear Amu
     PARAMETRIZE { move = MOVE_SWIFT;}
 
     GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); Item(ITEM_CLEAR_AMULET); Moves(move); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_HEADBUTT, MOVE_SPICY_EXTRACT); }
     } WHEN {
         TURN {
             if (move == MOVE_SCRATCH)
-                EXPECT_MOVE(opponentRight, MOVE_SPICY_EXTRACT);
+                EXPECT_MOVE(opponentRight, MOVE_SPICY_EXTRACT, target: opponentLeft);
             else
-                EXPECT_MOVE(opponentRight, MOVE_SCRATCH);
+                EXPECT_MOVE(opponentRight, MOVE_HEADBUTT);
         }
     }
 }
@@ -195,14 +195,14 @@ AI_DOUBLE_BATTLE_TEST("Spicy Extract user will not choose the move if it does no
     PARAMETRIZE { species = SPECIES_SNIVY; ability = ABILITY_CONTRARY; }
 
     GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
-        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Moves(MOVE_SCRATCH, MOVE_CELEBRATE); }
         OPPONENT(species) { Speed(20); Ability(ability); Moves(MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_SCRATCH, MOVE_SPICY_EXTRACT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(40); Moves(MOVE_HEADBUTT, MOVE_SPICY_EXTRACT); }
     } WHEN {
         TURN {
-            EXPECT_MOVE(opponentRight, MOVE_SCRATCH);
-        }
+            NOT_EXPECT_MOVE(opponentRight, MOVE_SPICY_EXTRACT);
+         }
     }
 }

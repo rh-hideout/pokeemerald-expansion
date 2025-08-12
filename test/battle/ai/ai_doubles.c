@@ -2,6 +2,158 @@
 #include "test/battle.h"
 #include "battle_ai_util.h"
 
+AI_DOUBLE_BATTLE_TEST("AI considers all moves; TODO: first group of move effects")
+{
+    s32 j;
+    u32 move = MOVE_NONE;
+    enum BattleMoveEffects moveEffect;
+
+    for (j = MOVE_NONE + 1; j < MOVES_COUNT; j++)
+    {
+        // Damaging moves are universally usable.
+        if (GetMoveCategory(j) != DAMAGE_CATEGORY_STATUS)
+            continue;
+        if (IsMoveEffectWeather(j))
+            continue;
+
+        moveEffect = GetMoveEffect(j);
+
+        if (IsStatRaisingEffect(moveEffect))
+            continue;
+        if (IsStatRaisingEffect(moveEffect))
+            continue;
+
+        switch (moveEffect)
+        {
+        // These move effects are problematic or missing entirely
+        case EFFECT_MIST:
+        case EFFECT_TELEPORT:
+        case EFFECT_LIGHT_SCREEN:
+        case EFFECT_REFLECT:
+        case EFFECT_AURORA_VEIL:
+        case EFFECT_SKETCH:
+        case EFFECT_PROTECT:
+        case EFFECT_HEAL_BELL:
+        case EFFECT_REFRESH:
+        case EFFECT_SAFEGUARD:
+        case EFFECT_FOLLOW_ME:
+        case EFFECT_WISH:
+        case EFFECT_MUD_SPORT:
+        case EFFECT_WATER_SPORT:
+        case EFFECT_HEALING_WISH:
+        case EFFECT_TAILWIND:
+        case EFFECT_PSYCHO_SHIFT:
+        case EFFECT_LUCKY_CHANT:
+        case EFFECT_ME_FIRST:
+        case EFFECT_COPYCAT:
+        case EFFECT_AQUA_RING:
+        case EFFECT_MAGNET_RISE:
+        case EFFECT_CAPTIVATE:
+        case EFFECT_WONDER_ROOM:
+        case EFFECT_MAGIC_ROOM:
+        case EFFECT_ALLY_SWITCH:
+        case EFFECT_MAT_BLOCK:
+        case EFFECT_POWDER:
+        case EFFECT_PURIFY:
+        case EFFECT_INSTRUCT:
+        case EFFECT_TEATIME:
+        case EFFECT_JUNGLE_HEALING:
+        case EFFECT_TAKE_HEART:
+        case EFFECT_REVIVAL_BLESSING:
+
+        // These all should be usable under circumstances unrelated to this test.
+        // If there is not an AI test to see if it works, make one yourself!
+        case EFFECT_COURT_CHANGE:
+        case EFFECT_DRAGON_CHEER:
+        case EFFECT_LIFE_DEW:
+        case EFFECT_FAIRY_LOCK:
+        case EFFECT_ELECTRIFY:
+        case EFFECT_GRASSY_TERRAIN:
+        case EFFECT_MISTY_TERRAIN:
+        case EFFECT_ELECTRIC_TERRAIN:
+        case EFFECT_PSYCHIC_TERRAIN:
+        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_TOPSY_TURVY:
+        case EFFECT_ION_DELUGE:
+        case EFFECT_LASER_FOCUS:
+        case EFFECT_ROTOTILLER:
+        case EFFECT_HEAL_PULSE:
+        case EFFECT_BESTOW:
+        case EFFECT_AFTER_YOU:
+        case EFFECT_SHORE_UP:
+        case EFFECT_TRICK_ROOM:
+        case EFFECT_HEART_SWAP:
+        case EFFECT_POWER_SWAP:
+        case EFFECT_GUARD_SWAP:
+        case EFFECT_POWER_TRICK:
+        case EFFECT_POWER_SPLIT:
+        case EFFECT_GUARD_SPLIT:
+        case EFFECT_GRAVITY:
+        case EFFECT_CAMOUFLAGE:
+        case EFFECT_SNATCH:
+        case EFFECT_IMPRISON:
+        case EFFECT_GRUDGE:
+        case EFFECT_RECYCLE:
+        case EFFECT_MAGIC_COAT:
+        case EFFECT_INGRAIN:
+        case EFFECT_ROLE_PLAY:
+        case EFFECT_SKILL_SWAP:
+        case EFFECT_DOODLE:
+        case EFFECT_ENTRAINMENT:
+        case EFFECT_SIMPLE_BEAM:
+        case EFFECT_WORRY_SEED:
+        case EFFECT_BATON_PASS:
+        case EFFECT_ENCORE:
+        case EFFECT_SWALLOW:
+        case EFFECT_PERISH_SONG:
+        case EFFECT_DESTINY_BOND:
+        case EFFECT_SLEEP_TALK:
+        case EFFECT_CURSE:
+        case EFFECT_ENDURE:
+        case EFFECT_SPITE:
+        case EFFECT_SUBSTITUTE:
+        case EFFECT_SHED_TAIL:
+        case EFFECT_HAZE:
+        case EFFECT_RESTORE_HP:
+        case EFFECT_SOFTBOILED:
+        case EFFECT_ROOST:
+        case EFFECT_MORNING_SUN:
+        case EFFECT_SYNTHESIS:
+        case EFFECT_MOONLIGHT:
+        case EFFECT_REST:
+        case EFFECT_CONVERSION:
+        case EFFECT_CONVERSION_2:
+        case EFFECT_MIMIC:
+        case EFFECT_DISABLE:
+        case EFFECT_HELPING_HAND:
+        case EFFECT_FOCUS_ENERGY:
+        case EFFECT_MIRROR_MOVE:
+
+        // Skipped on purpose.
+        case EFFECT_DO_NOTHING:
+        case EFFECT_HOLD_HANDS:
+        case EFFECT_CELEBRATE:
+        case EFFECT_HAPPY_HOUR:
+            break;
+        default:
+            PARAMETRIZE { move = j; }
+        }
+    }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_ZIGZAGOON);
+        PLAYER(SPECIES_ZIGZAGOON);
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SPLASH, move); Status1(STATUS1_BURN); Item(ITEM_STARF_BERRY); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_POUND, move); Item(ITEM_STARF_BERRY); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Status1(STATUS1_BURN); }
+        OPPONENT(SPECIES_ZIGZAGOON);
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already chose such move")
 {
     u32 j, k;
@@ -689,3 +841,69 @@ AI_DOUBLE_BATTLE_TEST("AI prefers to Fake Out the opponent vulnerable to flinchi
         TURN { EXPECT_MOVE(opponentLeft, MOVE_FAKE_OUT, target:playerRight); }
     }
 }
+
+AI_DOUBLE_BATTLE_TEST("AI can use Flower Shield")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BULBASAUR) { Moves(MOVE_FLOWER_SHIELD, MOVE_POUND); }
+        OPPONENT(SPECIES_BULBASAUR);
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FLOWER_SHIELD); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can use Rototiller")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_BULBASAUR) { Moves(MOVE_ROTOTILLER, MOVE_POUND); }
+        OPPONENT(SPECIES_BULBASAUR);
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_ROTOTILLER); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can use Dragon Cheer")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_DRATINI) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
+        OPPONENT(SPECIES_DRATINI) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can use Magnetic Flux")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
+        OPPONENT(SPECIES_KLINK) { Ability(ABILITY_PLUS); Moves(MOVE_MAGNETIC_FLUX, MOVE_POUND); }
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_MAGNETIC_FLUX); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI can use Gear Up")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_KLINKLANG) { Ability(ABILITY_PLUS); Moves(MOVE_GEAR_UP, MOVE_WATER_GUN, MOVE_POUND); }
+        OPPONENT(SPECIES_KLINKLANG) { Ability(ABILITY_PLUS); Moves(MOVE_GEAR_UP, MOVE_WATER_GUN, MOVE_POUND); }
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_GEAR_UP); }
+    }
+}
+

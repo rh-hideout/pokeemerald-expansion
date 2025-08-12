@@ -1981,6 +1981,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_BELLY_DRUM:
+        case EFFECT_CLANGOROUS_SOUL:
         case EFFECT_FILLET_AWAY:
             if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, aiData))
                 ADJUST_SCORE(-10);
@@ -2041,12 +2042,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (gBattleMons[battlerDef].statStages[STAT_ATK] == MIN_STAT_STAGE && gBattleMons[battlerDef].statStages[STAT_SPATK] == MIN_STAT_STAGE)
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_FOLLOW_ME:
+        case EFFECT_AROMATIC_MIST:
         case EFFECT_HELPING_HAND:
+            if (gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
+                ADJUST_SCORE(-10);
+            // falls through
+        case EFFECT_FOLLOW_ME:
+        case EFFECT_COACHING:
             if (!hasPartner
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
-              || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
-              || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
+              || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_TRICK:
@@ -2125,10 +2130,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               && !(hasPartner && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(battlerAtk), TYPE_GRASS)))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_AROMATIC_MIST:
-            if (!hasPartner || !BattlerStatCanRise(BATTLE_PARTNER(battlerAtk), aiData->abilities[BATTLE_PARTNER(battlerAtk)], STAT_SPDEF))
-                ADJUST_SCORE(-10);
-            break;
         case EFFECT_BIDE:
             if (!HasDamagingMove(battlerDef)
               || aiData->hpPercents[battlerAtk] < 30 //Close to death
@@ -2159,6 +2160,22 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             else if (aiData->hpPercents[battlerAtk] >= 90)
                 ADJUST_SCORE(-9); //No point in healing, but should at least do it if nothing better
+            break;
+        case EFFECT_LIFE_DEW:
+            if (AI_BattlerAtMaxHp(battlerAtk))
+            {
+                if (hasPartner)
+                {
+                    if (AI_BattlerAtMaxHp(BATTLE_PARTNER(battlerAtk)))
+                        ADJUST_SCORE(-10);
+                    else
+                        break;
+                }
+                else
+                {
+                    ADJUST_SCORE(-10);
+                }
+            }
             break;
         case EFFECT_MORNING_SUN:
         case EFFECT_SYNTHESIS:
@@ -2350,7 +2367,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_DEFOG:
-            if (gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)
+            if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_FOG
              || AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)))
             {
                 if (HasPartner(battlerAtk) && AreMovesEquivalent(battlerAtk, BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
@@ -2903,9 +2920,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_SPICY_EXTRACT:
             if (battlerAtk != BATTLE_PARTNER(battlerDef)
              && (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
-              || aiData->abilities[battlerDef] == ABILITY_CLEAR_BODY
-              || aiData->abilities[battlerDef] == ABILITY_GOOD_AS_GOLD
-              || aiData->holdEffects[battlerDef] == HOLD_EFFECT_CLEAR_AMULET))
+              || !CanLowerStat(battlerAtk, battlerDef, aiData->abilities[battlerDef], STAT_DEF)))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_UPPER_HAND:
@@ -3100,7 +3115,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_AROMATIC_MIST:
         if (hasPartner)
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, battlerDef, STAT_CHANGE_SPDEF));
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtkPartner, FOE(battlerAtk), STAT_CHANGE_SPDEF));
+        break;
+    case EFFECT_COACHING:
+        if (hasPartner)
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), FOE(battlerAtk), STAT_CHANGE_ATK));
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), FOE(battlerAtk), STAT_CHANGE_DEF));
+        }
         break;
     case EFFECT_HELPING_HAND:
         if (!hasPartner || !HasDamagingMove(battlerAtkPartner))
@@ -3512,6 +3534,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
             switch (effect)
             {
+            case EFFECT_ACUPRESSURE:
+                if (atkPartnerAbility == ABILITY_CONTRARY)
+                    ADJUST_SCORE(AWFUL_EFFECT);
+                else if (atkPartnerAbility == ABILITY_SIMPLE)
+                    ADJUST_SCORE(GOOD_EFFECT);
+                else
+                    ADJUST_SCORE(WEAK_EFFECT);
+                break;
             case EFFECT_DOODLE:
             case EFFECT_ENTRAINMENT:
             case EFFECT_GASTRO_ACID:
@@ -4078,6 +4108,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_DEFENSE_UP_3:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
+    case EFFECT_STUFF_CHEEKS:
     case EFFECT_DEFENSE_UP_2:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF_2));
         break;
@@ -4138,14 +4169,17 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_EVASION));
         break;
     case EFFECT_SPICY_EXTRACT:
-        // TODO: Make IncreaseStatDownScore function, just like IncreaseStatUpScore
+        if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_FOUL_PLAY)
+         || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_SPECTRAL_THIEF))
+            ADJUST_SCORE(WEAK_EFFECT);
+        ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_DEF));
         break;
     case EFFECT_BIDE:
         if (aiData->hpPercents[battlerAtk] < 90)
             ADJUST_SCORE(-2); // Should be either removed or turned into increasing score
     case EFFECT_ACUPRESSURE:
     {
-        u32 ability = aiData->abilities[battlerDef];
+        u32 ability = aiData->abilities[battlerAtk];
         if (ability == ABILITY_CONTRARY)
             ADJUST_SCORE(AWFUL_EFFECT);
         else if (ability == ABILITY_SIMPLE)
@@ -4296,6 +4330,12 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SYNTHESIS:
     case EFFECT_MOONLIGHT:
         if (ShouldRecover(battlerAtk, battlerDef, move, 50))
+            ADJUST_SCORE(GOOD_EFFECT);
+        break;
+    case EFFECT_LIFE_DEW:
+        if (ShouldRecover(battlerAtk, battlerDef, move, 25))
+            ADJUST_SCORE(GOOD_EFFECT);
+        if (hasPartner && ShouldRecover(BATTLE_PARTNER(battlerAtk), battlerDef, move, 25))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_LIGHT_SCREEN:
@@ -4673,6 +4713,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         && gBattleMons[battlerAtk].statStages[STAT_ATK] < MAX_STAT_STAGE - 2
         && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
+    case EFFECT_CLANGOROUS_SOUL:
+        if (!CanTargetFaintAi(battlerDef, battlerAtk) && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_PSYCH_UP:
@@ -5416,10 +5460,10 @@ case EFFECT_GUARD_SPLIT:
         break;
     //case EFFECT_EXTREME_EVOBOOST: // TODO
         //break;
-    //case EFFECT_CLANGOROUS_SOUL:  // TODO
-        //break;
-    //case EFFECT_NO_RETREAT:       // TODO
-        //break;
+    case EFFECT_NO_RETREAT:
+        if (!(gDisableStructs[battlerAtk].noRetreat) && aiData->hpPercents[battlerAtk] >= 90)
+            ADJUST_SCORE(BEST_EFFECT);
+        break;
     //case EFFECT_SKY_DROP
         //break;
     case EFFECT_JUNGLE_HEALING:
@@ -5870,6 +5914,8 @@ static s32 AI_Risky(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
     case EFFECT_BELLY_DRUM:
+    case EFFECT_CLANGOROUS_SOUL:
+    case EFFECT_FILLET_AWAY:
         if (aiData->hpPercents[battlerAtk] >= 90)
             ADJUST_SCORE(AVERAGE_RISKY_EFFECT);
         break;
