@@ -197,12 +197,22 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% c
 
 AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
-    u32 status1_0, status1_1, partnerAbility;
+    u32 status1_0, status1_1, partnerAbility, move;
 
-    PARAMETRIZE { status1_0 = STATUS1_NONE; status1_1 = STATUS1_NONE; partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_NONE; status1_1 = STATUS1_PARALYSIS; partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_NONE; status1_1 = STATUS1_PARALYSIS; partnerAbility = ABILITY_SOUNDPROOF; }
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS; 
+                  move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SOUNDPROOF; }
+
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+                  move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+                  move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
+
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
@@ -210,11 +220,11 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, MOVE_HEAL_BELL, MOVE_ACID); Status1(status1_0); }
+        OPPONENT(SPECIES_REGIROCK) { Moves(MOVE_ROCK_SLIDE, move, MOVE_ACID); Status1(status1_0); }
         OPPONENT(SPECIES_EXPLOUD) { Status1(status1_1); Ability(partnerAbility); }
     } WHEN {
         if (status1_0 != STATUS1_NONE || (status1_1 != STATUS1_NONE && partnerAbility != ABILITY_SOUNDPROOF))
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_HEAL_BELL); }
+            TURN { EXPECT_MOVE(opponentLeft, move); }
         else
             TURN { EXPECT_MOVE(opponentLeft, MOVE_ROCK_SLIDE); }
     }
