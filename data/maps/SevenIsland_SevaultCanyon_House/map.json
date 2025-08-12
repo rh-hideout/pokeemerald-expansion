@@ -3,6 +3,7 @@
   "name": "SevenIsland_SevaultCanyon_House",
   "layout": "LAYOUT_HOUSE3_FRLG",
   "music": "MUS_RG_SEVII_67",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SEVAULT_CANYON",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

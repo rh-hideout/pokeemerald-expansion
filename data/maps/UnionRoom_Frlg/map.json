@@ -3,6 +3,7 @@
   "name": "UnionRoom_Frlg",
   "layout": "LAYOUT_UNION_ROOM_FRLG",
   "music": "MUS_RG_UNION_ROOM",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SPECIAL_AREA",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

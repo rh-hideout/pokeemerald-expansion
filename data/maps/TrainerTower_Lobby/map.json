@@ -3,6 +3,7 @@
   "name": "TrainerTower_Lobby",
   "layout": "LAYOUT_TRAINER_TOWER_LOBBY",
   "music": "MUS_RG_TRAINER_TOWER",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_TRAINER_TOWER_2",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

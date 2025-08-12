@@ -3,6 +3,7 @@
   "name": "SSAnne_2F_Room1",
   "layout": "LAYOUT_SSANNE_ROOM2",
   "music": "MUS_RG_SS_ANNE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_S_S_ANNE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

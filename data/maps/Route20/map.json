@@ -3,6 +3,7 @@
   "name": "Route20",
   "layout": "LAYOUT_ROUTE20",
   "music": "MUS_RG_ROUTE3",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_20",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

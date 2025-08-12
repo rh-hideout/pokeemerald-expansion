@@ -3,6 +3,7 @@
   "name": "VermilionCity",
   "layout": "LAYOUT_VERMILION_CITY",
   "music": "MUS_RG_VERMILLION",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VERMILION_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

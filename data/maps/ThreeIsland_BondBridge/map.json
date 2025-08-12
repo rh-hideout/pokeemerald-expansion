@@ -3,6 +3,7 @@
   "name": "ThreeIsland_BondBridge",
   "layout": "LAYOUT_THREE_ISLAND_BOND_BRIDGE",
   "music": "MUS_RG_ROUTE3",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_BOND_BRIDGE",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

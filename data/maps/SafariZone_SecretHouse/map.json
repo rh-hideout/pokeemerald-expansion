@@ -3,6 +3,7 @@
   "name": "SafariZone_SecretHouse",
   "layout": "LAYOUT_SAFARI_ZONE_SECRET_HOUSE",
   "music": "MUS_EVOLUTION",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_KANTO_SAFARI_ZONE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

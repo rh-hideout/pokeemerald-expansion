@@ -3,6 +3,7 @@
   "name": "PokemonTower_2F",
   "layout": "LAYOUT_POKEMON_TOWER_2F",
   "music": "MUS_RG_POKE_TOWER",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_POKEMON_TOWER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

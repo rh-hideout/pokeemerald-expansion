@@ -3,6 +3,7 @@
   "name": "VermilionCity_Gym",
   "layout": "LAYOUT_VERMILION_CITY_GYM",
   "music": "MUS_GYM",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_VERMILION_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

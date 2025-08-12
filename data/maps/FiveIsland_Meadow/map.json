@@ -3,6 +3,7 @@
   "name": "FiveIsland_Meadow",
   "layout": "LAYOUT_FIVE_ISLAND_MEADOW",
   "music": "MUS_RG_SEVII_ROUTE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FIVE_ISLE_MEADOW",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

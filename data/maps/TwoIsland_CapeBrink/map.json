@@ -3,6 +3,7 @@
   "name": "TwoIsland_CapeBrink",
   "layout": "LAYOUT_TWO_ISLAND_CAPE_BRINK",
   "music": "MUS_RG_ROUTE3",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CAPE_BRINK",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

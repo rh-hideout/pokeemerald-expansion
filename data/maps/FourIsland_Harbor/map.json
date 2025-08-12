@@ -3,6 +3,7 @@
   "name": "FourIsland_Harbor",
   "layout": "LAYOUT_ISLAND_HARBOR_FRLG",
   "music": "MUS_RG_SEVII_45",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_FOUR_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

@@ -1000,27 +1000,43 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
+#if IS_FRLG
+    return FALSE;
+#else
     return gMapHeader.mapLayout->primaryTileset == &gTileset_Building && (tileId == METATILE_Building_PC_On || tileId == METATILE_Building_PC_Off);
+#endif
 }
 
 static bool32 IsBuildingPCTileFrlg(u32 tileId)
 {
+#if IS_FRLG
     return gMapHeader.mapLayout->primaryTileset == &gTileset_BuildingFrlg && (tileId == METATILE_BuildingFrlg_PCOn || tileId == METATILE_BuildingFrlg_PCOff);
+#else
+    return FALSE;
+#endif
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
 {
+#if IS_FRLG
+    return FALSE;
+#else
     return gMapHeader.mapLayout->secondaryTileset == &gTileset_BrendansMaysHouse
         && (tileId == METATILE_BrendansMaysHouse_BrendanPC_On
             || tileId == METATILE_BrendansMaysHouse_BrendanPC_Off
             || tileId == METATILE_BrendansMaysHouse_MayPC_On
             || tileId == METATILE_BrendansMaysHouse_MayPC_Off);
+#endif
 }
 
 static bool32 IsPlayerHousePCTileFrlg(u32 tileId)
 {
+#if IS_FRLG
     return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1 
         && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff);
+#else
+    return FALSE;
+#endif
 }
 
 static bool8 IsPlayerInFrontOfPC(void)

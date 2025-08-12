@@ -3,6 +3,7 @@
   "name": "SilphCo_8F",
   "layout": "LAYOUT_SILPH_CO_8F",
   "music": "MUS_RG_SILPH",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SILPH_CO",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

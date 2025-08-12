@@ -3,6 +3,7 @@
   "name": "FourIsland_IcefallCave_Entrance",
   "layout": "LAYOUT_FOUR_ISLAND_ICEFALL_CAVE_ENTRANCE",
   "music": "MUS_RG_SEVII_CAVE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ICEFALL_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

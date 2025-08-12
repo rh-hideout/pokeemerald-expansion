@@ -3,6 +3,7 @@
   "name": "Route18_EastEntrance_1F",
   "layout": "LAYOUT_ENTRANCE_1F",
   "music": "MUS_RG_PEWTER",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_18",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

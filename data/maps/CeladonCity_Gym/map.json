@@ -3,6 +3,7 @@
   "name": "CeladonCity_Gym",
   "layout": "LAYOUT_CELADON_CITY_GYM",
   "music": "MUS_GYM",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CELADON_CITY",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

@@ -3,6 +3,7 @@
   "name": "Prototype_SeviiIsle_6",
   "layout": "LAYOUT_PROTOTYPE_SEVII_ISLE_6",
   "music": "MUS_RG_SEVII_ROUTE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SEVII_ISLE_6",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

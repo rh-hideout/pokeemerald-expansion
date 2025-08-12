@@ -3,6 +3,7 @@
   "name": "Route12_FishingHouse",
   "layout": "LAYOUT_HOUSE4_FRLG",
   "music": "MUS_RG_CELADON",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_ROUTE_12",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

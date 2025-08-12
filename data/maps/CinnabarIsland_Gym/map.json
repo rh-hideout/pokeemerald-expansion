@@ -3,6 +3,7 @@
   "name": "CinnabarIsland_Gym",
   "layout": "LAYOUT_CINNABAR_ISLAND_GYM",
   "music": "MUS_GYM",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CINNABAR_ISLAND",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

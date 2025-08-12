@@ -3,6 +3,7 @@
   "name": "CeruleanCave_1F",
   "layout": "LAYOUT_CERULEAN_CAVE_1F",
   "music": "MUS_RG_ROCKET_HIDEOUT",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_CERULEAN_CAVE",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

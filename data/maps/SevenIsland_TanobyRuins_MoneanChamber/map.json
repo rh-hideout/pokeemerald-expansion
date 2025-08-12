@@ -3,6 +3,7 @@
   "name": "SevenIsland_TanobyRuins_MoneanChamber",
   "layout": "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS_MONEAN_CHAMBER",
   "music": "MUS_RG_SEVII_DUNGEON",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_MONEAN_CHAMBER",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

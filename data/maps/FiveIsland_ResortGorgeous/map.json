@@ -3,6 +3,7 @@
   "name": "FiveIsland_ResortGorgeous",
   "layout": "LAYOUT_FIVE_ISLAND_RESORT_GORGEOUS",
   "music": "MUS_RG_SEVII_ROUTE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_RESORT_GORGEOUS",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

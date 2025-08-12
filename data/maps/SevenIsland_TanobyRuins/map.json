@@ -3,6 +3,7 @@
   "name": "SevenIsland_TanobyRuins",
   "layout": "LAYOUT_SEVEN_ISLAND_TANOBY_RUINS",
   "music": "MUS_RG_SEVII_ROUTE",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_TANOBY_RUINS",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",

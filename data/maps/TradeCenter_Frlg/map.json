@@ -3,6 +3,7 @@
   "name": "TradeCenter_Frlg",
   "layout": "LAYOUT_TRADE_CENTER_FRLG",
   "music": "MUS_POKE_CENTER",
+  "region": "REGION_KANTO",
   "region_map_section": "MAPSEC_SPECIAL_AREA",
   "requires_flash": false,
   "weather": "WEATHER_NONE",

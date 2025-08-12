@@ -1,28 +1,24 @@
 GAME_VERSION ?= EMERALD
 
 ifeq (firered,$(MAKECMDGOALS))
-  GAME_VERSION := FIRERED
-endif
+  	GAME_VERSION 	:= FIRERED
+	TITLE       	:= POKEMON FIRE
+	GAME_CODE   	:= BPRE
+	BUILD_NAME  	:= firered
+else
 ifeq (leafgreen,$(MAKECMDGOALS))
-  GAME_VERSION := LEAFGREEN
+	GAME_VERSION 	:= LEAFGREEN
+	TITLE       	:= POKEMON LEAF
+	GAME_CODE   	:= BPGE
+	BUILD_NAME  	:= leafgreen
+else
+	TITLE       	:= POKEMON EMER
+	GAME_CODE   	:= BPEE
+	BUILD_NAME  	:= emerald
+endif
 endif
 
 # GBA rom header
-ifeq ($(GAME_VERSION),FIRERED)
-TITLE       := POKEMON FIRE
-GAME_CODE   := BPRE
-BUILD_NAME  := firered
-else
-ifeq ($(GAME_VERSION),LEAFGREEN)
-TITLE       := POKEMON LEAF
-GAME_CODE   := BPGE
-BUILD_NAME  := leafgreen
-else
-TITLE       := POKEMON EMER
-GAME_CODE   := BPEE
-BUILD_NAME  := emerald
-endif
-endif
 MAKER_CODE  := 01
 REVISION    := 0
 KEEP_TEMPS  ?= 0
@@ -262,7 +258,7 @@ ifeq ($(SETUP_PREREQS),1)
     $(error Errors occurred while building tools. See error messages above for more details)
   endif
   # Oh and also generate mapjson sources before we use `SCANINC`.
-  $(foreach line, $(shell $(MAKE) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
+  $(foreach line, $(shell $(MAKE) VERSION_NAME=$(BUILD_NAME) generated | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
   ifneq ($(.SHELLSTATUS),0)
     $(error Errors occurred while generating map-related sources. See error messages above for more details)
   endif
