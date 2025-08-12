@@ -5220,7 +5220,8 @@ case EFFECT_GUARD_SPLIT:
 
         if (isBattle1v1)
         {
-            IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
+            if (aiData->speedStats[battlerAtk] * 2 > aiData->speedStats[battlerDef])
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
 
             if (CountUsablePartyMons(battlerAtk) != 0)
                 ADJUST_SCORE(WEAK_EFFECT);
