@@ -12983,14 +12983,17 @@ static void Cmd_settoxicspikes(void)
     }
 }
 
-// TODO: possible failing bug for when gastro acid is already active
 static void Cmd_setgastroacid(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed
-     || GetBattlerHoldEffectIgnoreAbility(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeSuppressed)
     {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (GetBattlerHoldEffectIgnoreAbility(gBattlerTarget, TRUE) == HOLD_EFFECT_ABILITY_SHIELD)
+    {
+        RecordItemEffectBattle(gBattlerTarget, HOLD_EFFECT_ABILITY_SHIELD);
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
