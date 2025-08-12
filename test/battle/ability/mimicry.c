@@ -79,7 +79,7 @@ DOUBLE_BATTLE_TEST("Mimicry can trigger multiple times in a turn")
         OPPONENT(SPECIES_IGGLYBUFF) { Speed(60); }
         OPPONENT(SPECIES_BAGON) { Speed(70); }
     } WHEN {
-        TURN { MOVE(opponentRight, MOVE_ELECTRIC_TERRAIN, target: playerLeft); MOVE(opponentLeft, MOVE_MISTY_TERRAIN); }
+        TURN { MOVE(opponentRight, MOVE_ELECTRIC_TERRAIN); MOVE(opponentLeft, MOVE_MISTY_TERRAIN); }
     } SCENE {
         MESSAGE("The opposing Bagon used Electric Terrain!");
         ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
