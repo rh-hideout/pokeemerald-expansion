@@ -254,7 +254,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI prioritizes Pursuit if it would KO opponent")
+AI_SINGLE_BATTLE_TEST("AI uses Pursuit if it would KO opponent")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_PURSUIT) == EFFECT_PURSUIT);

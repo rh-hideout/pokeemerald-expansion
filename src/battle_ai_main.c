@@ -2678,6 +2678,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 }*/
             }
             break;
+        case EFFECT_TEATIME:
+            if (GetItemPocket(aiData->items[battlerAtk]) != POCKET_BERRIES 
+            && (hasPartner && GetItemPocket(aiData->items[BATTLE_PARTNER(battlerAtk)]) != POCKET_BERRIES))
+                ADJUST_SCORE(-10);
+            break;
         case EFFECT_EMBARGO:
             if (!IsBattlerItemEnabled(battlerAtk)
               || gBattleMons[battlerDef].volatiles.embargo
@@ -2920,7 +2925,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_SPICY_EXTRACT:
             if (battlerAtk != BATTLE_PARTNER(battlerDef)
              && (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL)
-              || !CanLowerStat(battlerAtk, battlerDef, aiData->abilities[battlerDef], STAT_DEF)))
+              || !CanLowerStat(battlerAtk, battlerDef, aiData, STAT_DEF)))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_UPPER_HAND:
@@ -2933,10 +2938,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                  || defPrio > 3) // Opponent going first or not using priority move
                     ADJUST_SCORE(-10);
             }
-            break;
-        case EFFECT_TEATIME:
-            if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
             break;
         case EFFECT_DARK_VOID:
             if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[battlerAtk].species != SPECIES_DARKRAI)
@@ -3560,7 +3561,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_PURIFY:
                 if (gBattleMons[battlerAtkPartner].status1 & STATUS1_ANY)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (!(gBattleMons[battlerAtkPartner].status1 & STATUS1_CAN_MOVE))
+                        RETURN_SCORE_PLUS(BEST_EFFECT);
+                    RETURN_SCORE_PLUS(DECENT_EFFECT);
                 }
                 break;
             case EFFECT_SWAGGER:
@@ -4187,6 +4190,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         else
             ADJUST_SCORE(WEAK_EFFECT);
     }
+        break;
     case EFFECT_MAGNETIC_FLUX:
         if (aiData->abilities[battlerAtk] == ABILITY_PLUS || aiData->abilities[battlerAtk] == ABILITY_MINUS)
         {
@@ -4238,7 +4242,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             else
                 ADJUST_SCORE(AWFUL_EFFECT);
         }
-        if (hasTwoOpponents && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS) && IsBattlerGrounded(BATTLE_PARTNER(FOE(battlerAtk))))
+        if (IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS) && IsBattlerGrounded(BATTLE_PARTNER(FOE(battlerAtk))))
         {
             if (aiData->abilities[BATTLE_PARTNER(FOE(battlerAtk))] == ABILITY_CONTRARY)
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -4262,7 +4266,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             else
                 ADJUST_SCORE(AWFUL_EFFECT);
         }
-        if (hasTwoOpponents && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS))
+        if (IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS))
         {
             if (aiData->abilities[BATTLE_PARTNER(FOE(battlerAtk))] == ABILITY_CONTRARY)
                 ADJUST_SCORE(WEAK_EFFECT);
