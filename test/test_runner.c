@@ -34,6 +34,25 @@ static void Intr_Timer2(void);
 extern const struct Test __start_tests[];
 extern const struct Test __stop_tests[];
 
+static enum TestFilterMode DetectFilterMode(const char *pattern)
+{
+    size_t n = strlen(pattern);
+    if (n > 2 && pattern[n-2] == '.' && pattern[n-1] == 'c')
+        return TEST_FILTER_MODE_FILENAME_EXACT;
+    else if (pattern[0] == '*') // TODO: Support '*pattern*'.
+        return TEST_FILTER_MODE_TEST_NAME_INFIX;
+    else
+        return TEST_FILTER_MODE_TEST_NAME_PREFIX;
+}
+
+static bool32 ExactMatch(const char *pattern, const char *string)
+{
+    if (string == NULL)
+        return TRUE;
+
+    return strcmp(pattern, string) == 0;
+}
+
 static bool32 PrefixMatch(const char *pattern, const char *string)
 {
     if (string == NULL)
@@ -48,6 +67,14 @@ static bool32 PrefixMatch(const char *pattern, const char *string)
         pattern++;
         string++;
     }
+}
+
+static bool32 InfixMatch(const char *pattern, const char *string)
+{
+    if (string == NULL)
+        return TRUE;
+
+    return strstr(string, &pattern[1]) != NULL;
 }
 
 enum
@@ -171,6 +198,8 @@ top:
             return;
         }
 
+        gTestRunnerState.filterMode = DetectFilterMode(gTestRunnerArgv);
+
         MoveSaveBlocks_ResetHeap();
         ClearSav1();
         ClearSav2();
@@ -231,11 +260,17 @@ top:
                 gTestRunnerState.state = STATE_EXIT;
                 return;
             }
-            if (gTestRunnerState.test->runner != &gAssumptionsRunner
-              && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                ++gTestRunnerState.test;
-            else
-                break;
+            if (gTestRunnerState.test->runner != &gAssumptionsRunner)
+            {
+                if ((gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_PREFIX && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename)))
+                {
+                    ++gTestRunnerState.test;
+                    continue;
+                }
+            }
+            break;
         }
 
         Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
