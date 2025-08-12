@@ -5212,14 +5212,10 @@ case EFFECT_GUARD_SPLIT:
 
         if (isBattle1v1)
         {
-            u32 speed = aiData->speedStats[battlerAtk];
-            u32 foeSpeed = aiData->speedStats[battlerDef];
-
-            if (speed <= foeSpeed && (speed * 2) > foeSpeed)
-                ADJUST_SCORE(GOOD_EFFECT);
+            IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
 
             if (CountUsablePartyMons(battlerAtk) != 0)
-                ADJUST_SCORE(DECENT_EFFECT);
+                ADJUST_SCORE(WEAK_EFFECT);
         }
         else
         {
