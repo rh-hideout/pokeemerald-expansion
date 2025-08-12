@@ -164,4 +164,3 @@ TO_DO_BATTLE_TEST("Counter cannot return damage dealt to a substitute (Gen 2+)")
 
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Counter can hit non-adjacent opponents if they were the last Pokémon to hit the user");
-
