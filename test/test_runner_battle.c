@@ -1341,6 +1341,10 @@ void TestRunner_Battle_AfterLastTurn(void)
 
 static void TearDownBattle(void)
 {
+    // Zero out the parties, data in them could potentially carry over
+    ZeroPlayerPartyMons();
+    ZeroEnemyPartyMons();
+
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();

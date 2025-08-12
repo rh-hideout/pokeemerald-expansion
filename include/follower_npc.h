@@ -21,6 +21,7 @@ enum FollowerNPCDataTypes
     FNPC_DATA_WARP_END,
     FNPC_DATA_SURF_BLOB,
     FNPC_DATA_COME_OUT_DOOR,
+    FNPC_DATA_FORCED_MOVEMENT,
     FNPC_DATA_OBJ_ID,
     FNPC_DATA_CURRENT_SPRITE,
     FNPC_DATA_DELAYED_STATE,
@@ -60,7 +61,8 @@ enum FollowerNPCSurfBlobStates
     FNPC_SURF_BLOB_DESTROY
 };
 
-enum FollowerNPCOutOfDoorTaskStates{
+enum FollowerNPCOutOfDoorTaskStates
+{
     OPEN_DOOR,
     NPC_WALK_OUT,
     CLOSE_DOOR,
@@ -68,7 +70,8 @@ enum FollowerNPCOutOfDoorTaskStates{
     REALLOW_MOVEMENT
 };
 
-enum FollowerNPCHandleEscalatorFinishTaskStates{
+enum FollowerNPCHandleEscalatorFinishTaskStates
+{
     MOVE_TO_PLAYER_POS,
     WAIT_FOR_PLAYER_MOVE,
     SHOW_FOLLOWER_DOWN,
