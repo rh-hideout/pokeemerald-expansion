@@ -701,6 +701,7 @@ struct BattleTestData
     u8 moveBattlers;
     bool8 hasAI:1;
     bool8 logAI:1;
+    u16 multipleShellSideArm;
 
     struct RecordedBattleSave recordedBattle;
     u8 battleRecordTypes[MAX_BATTLERS_COUNT][BATTLER_RECORD_SIZE];
