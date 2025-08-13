@@ -344,7 +344,6 @@ struct AiThinkingStruct
     u8 movesetIndex;
     u16 moveConsidered;
     s32 score[MAX_MON_MOVES];
-    u32 funcResult;
     u64 aiFlags[MAX_BATTLERS_COUNT];
     u8 aiAction;
     u8 aiLogicId;
