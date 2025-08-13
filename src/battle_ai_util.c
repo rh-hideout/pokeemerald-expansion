@@ -2618,6 +2618,7 @@ bool32 IsStatRaisingEffect(enum BattleMoveEffects effect)
     case EFFECT_DEFENSE_UP:
     case EFFECT_DEFENSE_UP_2:
     case EFFECT_DEFENSE_UP_3:
+    case EFFECT_AUTOTOMIZE:
     case EFFECT_SPEED_UP:
     case EFFECT_SPEED_UP_2:
     case EFFECT_SPECIAL_ATTACK_UP:
