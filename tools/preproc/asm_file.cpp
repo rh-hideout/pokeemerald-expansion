@@ -620,6 +620,10 @@ bool AsmFile::ParseEnum()
                 }
                 enumCounter = 0;
             }
+            // HACK(#7394): Make the definitions global so that C 'asm'
+            // statements are able to reference them (if they happen to
+            // be available in an assembled object file).
+            std::printf(".global %s; ", currentIdentName.c_str());
             std::printf(".equiv %s, (%s) + %ld\n", currentIdentName.c_str(), enumBase.c_str(), enumCounter);
             enumCounter++;
             symbolCount++;
@@ -724,7 +728,7 @@ void AsmFile::RaiseWarning(const char* format, ...)
 int AsmFile::SkipWhitespaceAndEol()
 {
     int newlines = 0;
-    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\n')
+    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
     {
         if (m_buffer[m_pos] == '\n')
             newlines++;

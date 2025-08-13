@@ -217,3 +217,35 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Vine Lash, G-Max
         }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Court Change")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_HEADBUTT; }
+    PARAMETRIZE { move = MOVE_REFLECT; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
+    PARAMETRIZE { move = MOVE_SAFEGUARD; }
+    PARAMETRIZE { move = MOVE_SPIKES; }
+    PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { move = MOVE_TOXIC_SPIKES; }
+    PARAMETRIZE { move = MOVE_TAILWIND; }
+    PARAMETRIZE { move = MOVE_STICKY_WEB; }
+    PARAMETRIZE { move = MOVE_MIST; }
+    PARAMETRIZE { move = MOVE_LUCKY_CHANT; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_COURT_CHANGE, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_COURT_CHANGE, MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { MOVE(player, move); EXPECT_MOVE(opponent, MOVE_HEADBUTT); }
+        if (move == MOVE_HEADBUTT)
+            TURN { MOVE(player, MOVE_CELEBRATE); NOT_EXPECT_MOVE(opponent, MOVE_COURT_CHANGE); }
+        else
+            TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_COURT_CHANGE); }
+    }
+}
+
