@@ -48,8 +48,6 @@ static inline bool32 RngSeedNotDefault(const rng_value_t *seed)
 struct BattleTestRunnerState *const gBattleTestRunnerState = (void *)sBackupMapData;
 STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sBackupMapDataSpace);
 
-STATIC_ASSERT(MAX_TURNS <= 8 * sizeof(DATA.multipleShellSideArm), NeedBiggerIntegerSizeForMultipleShellSideArm);
-
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
 static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
@@ -2216,14 +2214,17 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
         DATA.battleRecordTurns[DATA.turns][battlerId].criticalHit = 1 + ctx.criticalHit;
     if (ctx.explicitSecondaryEffect)
         DATA.battleRecordTurns[DATA.turns][battlerId].secondaryEffect = 1 + ctx.secondaryEffect;
-    if (ctx.explicitRNG) {
+    if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
-        if (ctx.rng.tag == RNG_SHELL_SIDE_ARM)
+    
+    u32 shellSideArmCount = 0;
+    for (u32 i = 0; i < STATE->battlersCount; i++)
+    {
+        if (DATA.battleRecordTurns[DATA.turns][i].rng.tag == RNG_SHELL_SIDE_ARM)
         {
-            if (DATA.multipleShellSideArm & (1 << DATA.turns))
+            shellSideArmCount++;
+            if (shellSideArmCount > 1)
                 Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L Tried to use fixed RNG for multiple Shell Side Arm moves in the same turn");
-            else
-                DATA.multipleShellSideArm |= (1 << DATA.turns);
         }
     }
 
