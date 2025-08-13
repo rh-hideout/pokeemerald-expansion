@@ -37,6 +37,7 @@ bool8 FieldEffectCmd_loadgfx_callnative(u8 **script, u32 *val);
 bool8 FieldEffectCmd_loadtiles_callnative(u8 **script, u32 *val);
 bool8 FieldEffectCmd_loadfadedpal_callnative(u8 **script, u32 *val);
 void FieldCB_FallWarpExit(void);
+void HideFollowerForFieldEffect(void);
 void StartEscalatorWarp(u8 metatileBehavior, u8 priority);
 void StartLavaridgeGymB1FWarp(u8 priority);
 void StartLavaridgeGym1FWarp(u8 priority);

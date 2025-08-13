@@ -80,6 +80,7 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 bool32 IsAiVsAiBattle(void);
 bool32 BattlerHasAi(u32 battlerId);
 bool32 IsAiBattlerAware(u32 battlerId);
+bool32 CanAiPredictMove(void);
 bool32 IsAiBattlerAssumingStab(void);
 bool32 IsAiBattlerAssumingStatusMoves(void);
 bool32 ShouldRecordStatusMove(u32 move);
@@ -124,7 +125,6 @@ bool32 BattlerWillFaintFromWeather(u32 battler, u32 ability);
 bool32 BattlerWillFaintFromSecondaryDamage(u32 battler, u32 ability);
 bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbility, u32 move);
 bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex);
-u32 GetBattlerSideSpeedAverage(u32 battler);
 bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage);
 bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent);
 bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect);
@@ -296,9 +296,9 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
+u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
-u32 GetThinkingBattler(u32 battler);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 
 // These are for the purpose of not doubling up on moves during double battles.

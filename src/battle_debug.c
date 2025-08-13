@@ -105,7 +105,6 @@ enum
     LIST_ITEM_STAT_STAGES,
     LIST_ITEM_STATUS1,
     LIST_ITEM_VOLATILE,
-    LIST_ITEM_STATUS3,
     LIST_ITEM_HAZARDS,
     LIST_ITEM_SIDE_STATUS,
     LIST_ITEM_AI,
@@ -138,30 +137,6 @@ enum
     LIST_STATUS1_TOXIC_POISON,
     LIST_STATUS1_TOXIC_COUNTER,
     LIST_STATUS1_FROSTBITE,
-};
-
-enum
-{
-    LIST_STATUS3_LEECH_SEED_HEALER,
-    LIST_STATUS3_LEECH_SEEDED,
-    LIST_STATUS3_ALWAYS_HITS,
-    LIST_STATUS3_PERISH_SONG,
-    LIST_STATUS3_MINIMIZED,
-    LIST_STATUS3_CHARGED_UP,
-    LIST_STATUS3_ROOTED,
-    LIST_STATUS3_YAWN,
-    LIST_STATUS3_IMPRISONED_OTHERS,
-    LIST_STATUS3_GRUDGE,
-    LIST_STATUS3_GASTRO_ACID,
-    LIST_STATUS3_EMBARGO,
-    LIST_STATUS3_SMACKED_DOWN,
-    LIST_STATUS3_TELEKINESIS,
-    LIST_STATUS3_MIRACLE_EYED,
-    LIST_STATUS3_MAGNET_RISE,
-    LIST_STATUS3_HEAL_BLOCK,
-    LIST_STATUS3_AQUA_RING,
-    LIST_STATUS3_LASER_FOCUS,
-    LIST_STATUS3_POWER_TRICK,
 };
 
 enum
@@ -346,7 +321,6 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("Stat Stages"),  LIST_ITEM_STAT_STAGES},
     {COMPOUND_STRING("Status1"),      LIST_ITEM_STATUS1},
     {COMPOUND_STRING("Volatiles"),    LIST_ITEM_VOLATILE},
-    {COMPOUND_STRING("Status3"),      LIST_ITEM_STATUS3},
     {COMPOUND_STRING("Hazards"),      LIST_ITEM_HAZARDS},
     {COMPOUND_STRING("Side Status"),  LIST_ITEM_SIDE_STATUS},
     {COMPOUND_STRING("AI"),           LIST_ITEM_AI},
@@ -402,30 +376,25 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
     {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
     {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
-};
-
-static const struct ListMenuItem sStatus3ListItems[] =
-{
-    {COMPOUND_STRING("Leech Seed Healer"), LIST_STATUS3_LEECH_SEED_HEALER},
-    {COMPOUND_STRING("Leech Seeded"),      LIST_STATUS3_LEECH_SEEDED},
-    {COMPOUND_STRING("Always Hits"),       LIST_STATUS3_ALWAYS_HITS},
-    {COMPOUND_STRING("Perish Song"),       LIST_STATUS3_PERISH_SONG},
-    {COMPOUND_STRING("Minimized"),         LIST_STATUS3_MINIMIZED},
-    {COMPOUND_STRING("Charged Up"),        LIST_STATUS3_CHARGED_UP},
-    {COMPOUND_STRING("Rooted"),            LIST_STATUS3_ROOTED},
-    {COMPOUND_STRING("Yawn"),              LIST_STATUS3_YAWN},
-    {COMPOUND_STRING("Imprisoned Others"), LIST_STATUS3_IMPRISONED_OTHERS},
-    {COMPOUND_STRING("Grudge"),            LIST_STATUS3_GRUDGE},
-    {COMPOUND_STRING("Gastro Acid"),       LIST_STATUS3_GASTRO_ACID},
-    {COMPOUND_STRING("Embargo"),           LIST_STATUS3_EMBARGO},
-    {COMPOUND_STRING("Smacked Down"),      LIST_STATUS3_SMACKED_DOWN},
-    {COMPOUND_STRING("Telekinesis"),       LIST_STATUS3_TELEKINESIS},
-    {COMPOUND_STRING("Miracle Eyed"),      LIST_STATUS3_MIRACLE_EYED},
-    {COMPOUND_STRING("Magnet Rise"),       LIST_STATUS3_MAGNET_RISE},
-    {COMPOUND_STRING("Heal Block"),        LIST_STATUS3_HEAL_BLOCK},
-    {COMPOUND_STRING("Aqua Ring"),         LIST_STATUS3_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),       LIST_STATUS3_LASER_FOCUS},
-    {COMPOUND_STRING("Power Trick"),       LIST_STATUS3_POWER_TRICK},
+    {COMPOUND_STRING("Leech Seed"),         VOLATILE_LEECH_SEED},
+    {COMPOUND_STRING("Lock On"),            VOLATILE_LOCK_ON},
+    {COMPOUND_STRING("Perish Song"),        VOLATILE_PERISH_SONG},
+    {COMPOUND_STRING("Minimize"),           VOLATILE_MINIMIZE},
+    {COMPOUND_STRING("Charge"),             VOLATILE_CHARGE},
+    {COMPOUND_STRING("Root"),               VOLATILE_ROOT},
+    {COMPOUND_STRING("Yawn"),               VOLATILE_YAWN},
+    {COMPOUND_STRING("Imprison"),           VOLATILE_IMPRISON},
+    {COMPOUND_STRING("Grudge"),             VOLATILE_GRUDGE},
+    {COMPOUND_STRING("Gastro Acid"),        VOLATILE_GASTRO_ACID},
+    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO},
+    {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
+    {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
+    {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
+    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
+    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
+    {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
+    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
+    {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 
 static const struct ListMenuItem sHazardsListItems[] =
@@ -1403,11 +1372,6 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sVolatileStatusListItems;
         itemsCount = ARRAY_COUNT(sVolatileStatusListItems);
         break;
-    case LIST_ITEM_STATUS3:
-        listTemplate.items = sStatus3ListItems;
-        itemsCount = ARRAY_COUNT(sStatus3ListItems);
-        data->bitfield = sStatus3Bitfield;
-        break;
     case LIST_ITEM_AI:
         listTemplate.items = sAIListItems;
         itemsCount = ARRAY_COUNT(sAIListItems);
@@ -2024,7 +1988,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     case LIST_ITEM_VOLATILE:
-        data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
+        data->modifyArrows.currValue = GetBattlerVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
 #define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeMaxValue, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeMaxValue)); break;
@@ -2045,11 +2009,6 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         }
         data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
-    case LIST_ITEM_STATUS3:
-        data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
     case LIST_ITEM_AI:
         data->modifyArrows.modifiedValPtr = &gAiThinkingStruct->aiFlags[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gAiThinkingStruct->aiFlags[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
