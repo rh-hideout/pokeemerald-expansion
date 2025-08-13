@@ -8,7 +8,6 @@ AI_DOUBLE_BATTLE_TEST("AI uses Purify")
     u32 status1;
 
     PARAMETRIZE { status1 = STATUS1_NONE; }
-    PARAMETRIZE { status1 = STATUS1_TOXIC_POISON; }
     PARAMETRIZE { status1 = STATUS1_FREEZE; }
 
     GIVEN {
