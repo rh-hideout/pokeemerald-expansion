@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Future Sight is not boosted by Life Orb is original user if 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FUTURE_SIGHT, player);
         MESSAGE("The opposing Regice took the Future Sight attack!");
         HP_BAR(opponent, captureDamage: &futureSightDmg);
-        NOT MESSAGE("Raichu was hurt by its Life Orb!");
+        NOT HP_BAR(player);
     } THEN {
         EXPECT_EQ(seedFlareDmg, futureSightDmg);
     }
