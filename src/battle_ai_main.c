@@ -1113,15 +1113,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             }
 
-            switch(nonVolatileStatus)
+            switch (nonVolatileStatus)
             {
             case MOVE_EFFECT_POISON:
             case MOVE_EFFECT_TOXIC:
             case MOVE_EFFECT_BURN:
                 ADJUST_SCORE(-5);
                 break;
+            default:
+                break;
             }
-            break;
             break;
         case ABILITY_WONDER_GUARD:
             if (effectiveness < UQ_4_12(2.0))
