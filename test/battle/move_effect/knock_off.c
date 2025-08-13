@@ -394,3 +394,19 @@ SINGLE_BATTLE_TEST("Knock Off doesn't remove item if it's prevented by Sticky Ho
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Knock Off does not activate if the item was previously consumed")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_AIR_BALLOON); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_KNOCK_OFF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, player);
+        MESSAGE("The opposing Wobbuffet's Air Balloon popped!");
+        NOT MESSAGE("Wobbuffet knocked off the opposing Wobbuffet's Air Balloon!");
+    } THEN {
+        EXPECT(opponent->item == ITEM_NONE);
+    }
+}
