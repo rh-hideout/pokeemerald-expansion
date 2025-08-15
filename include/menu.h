@@ -28,6 +28,10 @@
 #define MENU_INFO_ICON_BALL_RED  (NUMBER_OF_MON_TYPES + 6)
 #define MENU_INFO_ICON_BALL_BLUE (NUMBER_OF_MON_TYPES + 7)
 
+#define DLW_WIN_PLATE_SIZE      8
+#define DLW_TOP_BLOCK_FILL      20
+#define DLW_BOT_BLOCK_FILL      48
+
 enum
 {
     SAVE_MENU_NAME,
@@ -55,6 +59,7 @@ void InitTextBoxGfxAndPrinters(void);
 u16 RunTextPrintersAndIsPrinter0Active(void);
 void LoadMessageBoxAndBorderGfx(void);
 void DrawDialogueFrame(u8 windowId, bool8 copyToVram);
+void DrawDialogueFrameWithNameplate(u8 windowId, bool8 copyToVram);
 void ClearStdWindowAndFrame(u8 windowId, bool8 copyToVram);
 u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16), u8 fgColor, u8 bgColor, u8 shadowColor);
 void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y);
