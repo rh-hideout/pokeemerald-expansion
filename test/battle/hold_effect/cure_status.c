@@ -116,6 +116,8 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries cure sleep")
     }
 }
 
+TO_DO_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
+
 SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis")
 {
     u16 item;
@@ -289,6 +291,5 @@ DOUBLE_BATTLE_TEST("Lum Berry correctly cures all battlers if multiple fainted t
         EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
         EXPECT_EQ(playerRight->status1, STATUS1_NONE);
         EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
-
     }
 }

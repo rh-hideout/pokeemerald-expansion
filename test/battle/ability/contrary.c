@@ -241,3 +241,5 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
         MESSAGE("The opposing Snivy's Speed rose!");
     }
 }
+
+TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")

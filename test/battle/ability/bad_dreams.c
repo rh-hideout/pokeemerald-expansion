@@ -35,6 +35,8 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     }
 }
 
+TO_DO_BATTLE_TEST("Bad Dreams affects Pokémon with Comatose")
+
 DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is sleeping")
 {
     GIVEN {
