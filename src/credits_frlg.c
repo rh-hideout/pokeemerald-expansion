@@ -20,6 +20,8 @@
 #include "constants/rgb.h"
 #include "constants/sound.h"
 
+#if IS_FRLG
+
 #if defined(FIRERED)
 #define TITLE_TEXT gString_PokemonFireRed_Staff
 #else
@@ -815,7 +817,7 @@ static const struct CreditsTextHeader sCreditsTexts[] = {
     { gText_EmptyString2, gText_EmptyString2, FALSE }
 };
 
-void DoCredits(void)
+void CB2_StartCreditsSequence(void)
 {
     sCreditsMgr = AllocZeroed(sizeof(*sCreditsMgr));
     ResetTasks();
@@ -1551,3 +1553,5 @@ static void LoadPlayerOrRivalSprite(u8 whichScene)
         gSprites[data->groundSpriteId].subpriority = 1;
     }
 }
+
+#endif // IS_FRLG
