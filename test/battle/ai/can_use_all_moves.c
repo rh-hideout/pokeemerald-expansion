@@ -374,70 +374,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-515")
-{
-    KNOWN_FAILING; // crashes
-    u32 moveStart = 500;
-    u32 moveCap = 515;
-    
-    if (moveCap > MOVES_COUNT)
-        moveCap = MOVES_COUNT - 1;
-
-    s32 j;
-    u32 move = MOVE_NONE;
-
-    enum BattleMoveEffects effect;
-
-    for (j = moveStart + 1; j <= moveCap; j++)
-    {
-        effect = GetMoveEffect(j);
-
-        // Stat raising effects are not meant to be used when you have only Splash.
-        if (IsStatRaisingEffect(effect))
-            continue;
-
-        switch (effect)
-        {
-        //TODO: AI HANDLING
-        case EFFECT_ALLY_SWITCH:
-        case EFFECT_QUASH:
-        case EFFECT_REFLECT_TYPE:
-        case EFFECT_SKY_DROP:
-
-        //TODO: AI TESTS
-        case EFFECT_RESTORE_HP:
-        case EFFECT_HEAL_PULSE:
-
-        // tests exist elsewhere
- 
-        // Skipped on purpose.
-        case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
-        case EFFECT_DO_NOTHING:
-        case EFFECT_HOLD_HANDS:
-        case EFFECT_CELEBRATE:
-        case EFFECT_HAPPY_HOUR:
-            break;
-        default:
-            PARAMETRIZE { move = j; }
-        }
-    }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SPLASH, move); Status1(STATUS1_BURN); Item(ITEM_STARF_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, move); Item(ITEM_STARF_BERRY); }
-        OPPONENT(SPECIES_WOBBUFFET) { Status1(STATUS1_BURN); }
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN {  EXPECT_MOVE(opponentLeft, move); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI can use all moves, 516-600")
+AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 {
     u32 moveStart = 515;
     u32 moveCap = 600;
@@ -460,6 +397,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 516-600")
 
         switch (effect)
         {
+        case EFFECT_FINAL_GAMBIT:
         //TODO: AI HANDLING
         case EFFECT_ALLY_SWITCH:
         case EFFECT_QUASH:
