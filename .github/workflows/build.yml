@@ -36,14 +36,16 @@ jobs:
       - name: ROM (Firered)
         env:
           COMPARE: 0
-          GAME_VERSION: FIRERED
-        run: make -j${nproc} -O all
+        run: |
+          make clean
+          make firered -j${nproc} -O all
 
       - name: ROM (Leafgreen)
         env:
           COMPARE: 0
-          GAME_VERSION: LEAFGREEN
-        run: make -j${nproc} -O all
+        run: |
+          make clean
+          make leafgreen -j${nproc} -O all
         
       - name: LTO
         env:
