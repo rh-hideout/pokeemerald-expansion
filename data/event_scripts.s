@@ -118,6 +118,7 @@ gStdScripts::
 	.4byte Std_ReceivedItem            @ STD_RECEIVED_ITEM
 gStdScripts_End::
 
+
 	.include "data/maps/PetalburgCity/scripts.inc"
 	.include "data/maps/SlateportCity/scripts.inc"
 	.include "data/maps/MauvilleCity/scripts.inc"
@@ -587,7 +588,9 @@ gStdScripts_End::
 	.include "data/maps/Route119_WeatherInstitute_2F/scripts.inc"
 	.include "data/maps/Route119_House/scripts.inc"
 	.include "data/maps/Route124_DivingTreasureHuntersHouse/scripts.inc"
-	
+
+.if IS_FRLG
+
 @ FRLG scripts
 	.include "data/maps/BattleColosseum_2P_Frlg/scripts.inc"
 	.include "data/maps/TradeCenter_Frlg/scripts.inc"
@@ -1014,6 +1017,30 @@ gStdScripts_End::
 	.include "data/maps/SixIsland_WaterPath_House1/scripts.inc"
 	.include "data/maps/SixIsland_WaterPath_House2/scripts.inc"
 	.include "data/maps/SevenIsland_SevaultCanyon_House/scripts.inc"
+
+	.include "data/scripts/trainer_tower.inc"
+	.include "data/scripts/fame_checker.inc"
+	.include "data/text/fame_checker.inc"
+	.include "data/scripts/item_ball_scripts_frlg.inc"
+	.include "data/scripts/silphco_doors.inc"
+	.include "data/scripts/move_tutors_frlg.inc"
+	.include "data/scripts/cable_club_frlg.inc"
+	.include "data/scripts/trainer_card.inc"
+	.include "data/text/trainer_card.inc"
+	.include "data/scripts/mystery_event_club.inc"
+	.include "data/scripts/day_care_frlg.inc"
+	.include "data/text/day_care_frlg.inc"
+	.include "data/scripts/seagallop.inc"
+	.include "data/scripts/static_pokemon.inc"
+	.include "data/scripts/aide.inc"
+	.include "data/scripts/pokemon_mansion.inc"
+	.include "data/scripts/pokemon_league.inc"
+	.include "data/scripts/route23.inc"
+	.include "data/text/new_game_intro_frlg.inc"
+	.include "data/scripts/trainers_frlg.inc"
+	.include "data/text/trainers_frlg.inc"
+
+.endif
 
 	.include "data/scripts/std_msgbox.inc"
 	.include "data/scripts/trainer_battle.inc"
@@ -1605,23 +1632,6 @@ EventScript_SetEnteringCyclingRoad::
 	releaseall
 	end
 
-VermilionCity_PokemonCenter_1F_EventScript_VSSeekerWoman::
-	lock
-	faceplayer
-	goto_if_set FLAG_GOT_VS_SEEKER, VermilionCity_PokemonCenter_1F_EventScript_ExplainVSSeeker
-	msgbox VermilionCity_PokemonCenter_1F_Text_UrgeToBattleSomeoneAgain
-	setflag FLAG_GOT_VS_SEEKER
-	giveitem ITEM_VS_SEEKER
-	goto_if_eq VAR_RESULT, FALSE, EventScript_BagIsFull
-	msgbox VermilionCity_PokemonCenter_1F_Text_UseDeviceForRematches
-	release
-	end
-
-VermilionCity_PokemonCenter_1F_EventScript_ExplainVSSeeker::
-	msgbox VermilionCity_PokemonCenter_1F_Text_ExplainVSSeeker
-	release
-	end
-
 EventScript_TryDarkenRuins::
 	goto_if_set FLAG_SYS_UNLOCKED_TANOBY_RUINS, Common_EventScript_NopReturn
 	setweather WEATHER_SHADE
@@ -1644,26 +1654,24 @@ EventScript_BrailleCursorWaitButton::
 	special BrailleCursorToggle
 	return
 
-
-	.include "data/scripts/trainers_frlg.inc"
-	.include "data/scripts/trainer_tower.inc"
-	.include "data/scripts/fame_checker.inc"
-	.include "data/text/fame_checker.inc"
-	.include "data/scripts/item_ball_scripts_frlg.inc"
-	.include "data/scripts/silphco_doors.inc"
-	.include "data/scripts/move_tutors_frlg.inc"
-	.include "data/scripts/cable_club_frlg.inc"
-	.include "data/scripts/trainer_card.inc"
-	.include "data/text/trainer_card.inc"
-	.include "data/scripts/mystery_event_club.inc"
-	.include "data/scripts/day_care_frlg.inc"
-	.include "data/text/day_care_frlg.inc"
-	.include "data/scripts/seagallop.inc"
-	.include "data/scripts/static_pokemon.inc"
-	.include "data/scripts/aide.inc"
-	.include "data/scripts/pokemon_mansion.inc"
-	.include "data/scripts/pokemon_league.inc"
-	.include "data/scripts/route23.inc"
+EventScript_PalletTown_PlayersHouse_2F_ShutDownPC::
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
+	playse SE_PC_OFF
+	special DoPCTurnOffEffect
+	releaseall
+	end
+	
+EventScript_PalletTown_PlayersHouse_2F_TurnOnPC::
+	lockall
+	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
+	special DoPCTurnOnEffect
+	playse SE_PC_ON
+	msgbox gText_PlayerHouseBootPC
+	special BedroomPC
+	waitstate
+	releaseall
+	end
+	
 
 	.include "data/scripts/pc_transfer.inc"
 	.include "data/scripts/questionnaire.inc"
@@ -1692,7 +1700,6 @@ EventScript_BrailleCursorWaitButton::
 	.include "data/scripts/berry_blender.inc"
 	.include "data/text/mauville_man.inc"
 	.include "data/text/trainers.inc"
-	.include "data/text/trainers_frlg.inc"
 	.include "data/scripts/repel.inc"
 	.include "data/scripts/safari_zone.inc"
 	.include "data/scripts/roulette.inc"
@@ -1722,4 +1729,3 @@ EventScript_BrailleCursorWaitButton::
 	.include "data/text/save.inc"
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/dexnav.inc"
-	.include "data/text/new_game_intro_frlg.inc"

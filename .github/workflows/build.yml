@@ -38,14 +38,14 @@ jobs:
           COMPARE: 0
         run: |
           make clean
-          make firered -j${nproc} -O all
+          make firered -j${nproc} -O
 
       - name: ROM (Leafgreen)
         env:
           COMPARE: 0
         run: |
           make clean
-          make leafgreen -j${nproc} -O all
+          make leafgreen -j${nproc} -O
         
       - name: LTO
         env:

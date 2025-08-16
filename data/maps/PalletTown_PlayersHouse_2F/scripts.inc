@@ -28,24 +28,6 @@ PalletTown_PlayersHouse_2F_EventScript_Sign::
 	msgbox PalletTown_PlayersHouse_2F_Text_PressLRForHelp, MSGBOX_SIGN
 	end
 
-PalletTown_PlayersHouse_2F_EventScript_PC::
-	lockall
-	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
-	special DoPCTurnOnEffect
-	playse SE_PC_ON
-	msgbox gText_PlayerHouseBootPC
-	special BedroomPC
-	waitstate
-	releaseall
-	end
-
-EventScript_PalletTown_PlayersHouse_2F_ShutDownPC::
-	setvar VAR_0x8004, PC_LOCATION_PLAYER_HOUSE_FRLG
-	playse SE_PC_OFF
-	special DoPCTurnOffEffect
-	releaseall
-	end
-
 PalletTown_PlayersHouse_2F_Text_PlayedWithNES::
     .string "{PLAYER} played with the NES.\p"
     .string "…Okay!\n"

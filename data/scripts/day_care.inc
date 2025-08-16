@@ -263,7 +263,7 @@ Route117_PokemonDayCare_EventScript_UnusedRetrieveMon::
 	release
 	end
 
-EventScript_EggHatch_Frlg::
+EventScript_EggHatch::
 	lockall
 	msgbox Text_EggHatchHuh, MSGBOX_DEFAULT
 	special EggHatch

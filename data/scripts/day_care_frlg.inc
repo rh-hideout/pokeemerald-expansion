@@ -106,11 +106,3 @@ Route5_PokemonDayCare_EventScript_CloseMoneyBox::
 	hidemoneybox
 	release
 	end
-
-EventScript_EggHatch::
-	lockall
-	msgbox DayCare_Text_Huh
-	special EggHatch
-	waitstate
-	releaseall
-	end
