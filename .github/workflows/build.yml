@@ -33,20 +33,6 @@ jobs:
           GAME_VERSION: EMERALD
         run: make -j${nproc} -O all
 
-      - name: ROM (Firered)
-        env:
-          COMPARE: 0
-        run: |
-          make clean
-          make firered -j${nproc} -O
-
-      - name: ROM (Leafgreen)
-        env:
-          COMPARE: 0
-        run: |
-          make clean
-          make leafgreen -j${nproc} -O
-        
       - name: LTO
         env:
           GAME_VERSION: EMERALD
@@ -61,6 +47,19 @@ jobs:
           TEST: 1
         run: |
           make -j${nproc} check
+
+      - name: ROM (Firered)
+        env:
+          COMPARE: 0
+        run: |
+          make clean
+          make firered -j${nproc} -O
+
+      - name: ROM (Leafgreen)
+        env:
+          COMPARE: 0
+        run: |
+          make leafgreen -j${nproc} -O
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest
