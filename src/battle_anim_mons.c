@@ -2473,3 +2473,11 @@ void AnimWeatherBallDown(struct Sprite *sprite)
     sprite->callback = StartAnimLinearTranslation;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
+
+u8 GetGhostSpriteDefault_Y(u8 battlerId)
+{
+    if (GetBattlerSide(battlerId) != B_SIDE_OPPONENT)
+        return GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y_PIC_OFFSET_DEFAULT);
+    else
+        return GetBattlerSpriteCoord(battlerId, BATTLER_COORD_Y);
+}

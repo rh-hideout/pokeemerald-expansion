@@ -66,6 +66,7 @@
 #include "constants/battle_move_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_partner.h"
+#include "constants/battle_setup.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -368,6 +369,57 @@ const struct TrainerClass gTrainerClasses[TRAINER_CLASS_COUNT] =
     [TRAINER_CLASS_PIKE_QUEEN] = { _("PIKE QUEEN") },
     [TRAINER_CLASS_PYRAMID_KING] = { _("PYRAMID KING") },
     [TRAINER_CLASS_RS_PROTAG] = { _("{PKMN} TRAINER") },
+
+    [TRAINER_CLASS_YOUNGSTER_FRLG] =       { _("YOUNGSTER"), 4 },
+    [TRAINER_CLASS_BUG_CATCHER_FRLG] =     { _("BUG CATCHER"), 3 },
+    [TRAINER_CLASS_LASS_FRLG] =            { _("LASS"), 4 },
+    [TRAINER_CLASS_SAILOR_FRLG] =          { _("SAILOR"), 8 },
+    [TRAINER_CLASS_CAMPER_FRLG] =          { _("CAMPER"), 5 },
+    [TRAINER_CLASS_PICNICKER_FRLG] =       { _("PICNICKER"), 5 },
+    [TRAINER_CLASS_POKEMANIAC_FRLG] =      { _("POKéMANIAC"), 12 },
+    [TRAINER_CLASS_SUPER_NERD_FRLG] =      { _("SUPER NERD"), 6 },
+    [TRAINER_CLASS_HIKER_FRLG] =           { _("HIKER"), 9 },
+    [TRAINER_CLASS_BIKER_FRLG] =           { _("BIKER"), 5 },
+    [TRAINER_CLASS_BURGLAR_FRLG] =         { _("BURGLAR"), 22 },
+    [TRAINER_CLASS_ENGINEER_FRLG] =        { _("ENGINEER"), 12 },
+    [TRAINER_CLASS_FISHERMAN_FRLG] =       { _("FISHERMAN"), 9, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_DIVE : BALL_LURE },
+    [TRAINER_CLASS_SWIMMER_M_FRLG] =       { _("SWIMMER♂"), 1 },
+    [TRAINER_CLASS_CUE_BALL_FRLG] =        { _("CUE BALL"), 6 },
+    [TRAINER_CLASS_GAMER_FRLG] =           { _("GAMER"), 18 },
+    [TRAINER_CLASS_BEAUTY_FRLG] =          { _("BEAUTY"), 18 },
+    [TRAINER_CLASS_SWIMMER_F_FRLG] =       { _("SWIMMER♀"), 1, BALL_DIVE },
+    [TRAINER_CLASS_PSYCHIC_FRLG] =         { _("PSYCHIC"), 5 },
+    [TRAINER_CLASS_ROCKER_FRLG] =          { _("ROCKER"), 6 },
+    [TRAINER_CLASS_JUGGLER_FRLG] =         { _("JUGGLER"), 10 },
+    [TRAINER_CLASS_TAMER_FRLG] =           { _("TAMER"), 10 },
+    [TRAINER_CLASS_BIRD_KEEPER_FRLG] =     { _("BIRD KEEPER"), 6 },
+    [TRAINER_CLASS_BLACK_BELT_FRLG] =      { _("BLACK BELT"), 6, BALL_ULTRA },
+    [TRAINER_CLASS_RIVAL_EARLY_FRLG] =     { _("RIVAL"), 4 },
+    [TRAINER_CLASS_SCIENTIST_FRLG] =       { _("SCIENTIST"), 12 },
+    [TRAINER_CLASS_BOSS_FRLG] =            { _("BOSS"), 25 },
+    [TRAINER_CLASS_LEADER_FRLG] =          { _("LEADER"), 25 },
+    [TRAINER_CLASS_TEAM_ROCKET_FRLG] =     { _("TEAM ROCKET"), 8 },
+    [TRAINER_CLASS_COOLTRAINER_FRLG] =     { _("COOLTRAINER"), 9, BALL_ULTRA },
+    [TRAINER_CLASS_ELITE_FOUR_FRLG] =      { _("ELITE FOUR"), 25, BALL_ULTRA },
+    [TRAINER_CLASS_GENTLEMAN_FRLG] =       { _("GENTLEMAN"), 18, BALL_LUXURY },
+    [TRAINER_CLASS_RIVAL_LATE_FRLG] =      { _("RIVAL"), 9 },
+    [TRAINER_CLASS_CHAMPION_FRLG] =        { _("CHAMPION"), 25 },
+    [TRAINER_CLASS_CHANNELER_FRLG] =       { _("CHANNELER"), 8 },
+    [TRAINER_CLASS_TWINS_FRLG] =           { _("TWINS"), 3 },
+    [TRAINER_CLASS_COOL_COUPLE_FRLG] =     { _("COOL COUPLE"), 6 },
+    [TRAINER_CLASS_YOUNG_COUPLE_FRLG] =    { _("YOUNG COUPLE"), 7 },
+    [TRAINER_CLASS_CRUSH_KIN_FRLG] =       { _("CRUSH KIN"), 6 },
+    [TRAINER_CLASS_SIS_AND_BRO_FRLG] =     { _("SIS AND BRO"), 1 },
+    [TRAINER_CLASS_PKMN_PROF_FRLG] =       { _("{PKMN} PROF."), 25 },
+    [TRAINER_CLASS_PLAYER_FRLG] =          { _("{PKMN} TRAINER"), 1 },
+    [TRAINER_CLASS_CRUSH_GIRL_FRLG] =      { _("CRUSH GIRL"), 6 },
+    [TRAINER_CLASS_TUBER_FRLG] =           { _("TUBER"), 1 },
+    [TRAINER_CLASS_PKMN_BREEDER_FRLG] =    { _("{PKMN} BREEDER"), 7, B_TRAINER_CLASS_POKE_BALLS >= GEN_8 ? BALL_HEAL : BALL_FRIEND },
+    [TRAINER_CLASS_PKMN_RANGER_FRLG] =     { _("{PKMN} RANGER"), 9 },
+    [TRAINER_CLASS_AROMA_LADY_FRLG] =      { _("AROMA LADY"), 7 },
+    [TRAINER_CLASS_RUIN_MANIAC_FRLG] =     { _("RUIN MANIAC"), 12 },
+    [TRAINER_CLASS_LADY_FRLG] =            { _("LADY"), 50 },
+    [TRAINER_CLASS_PAINTER_FRLG] =         { _("PAINTER"), 4 },
 };
 
 static void (*const sTurnActionsFuncsTable[])(void) =
@@ -3666,7 +3718,14 @@ static void DoBattleIntro(void)
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
+        {
+            if (gBattleTypeFlags & BATTLE_TYPE_GHOST && CheckBagHasItem(ITEM_SILPH_SCOPE, 1))
+            {
+                gBattleScripting.battler = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+                BattleScriptExecute(BattleScript_SilphScopeUnveiled);
+            }
             gBattleStruct->introState++;
+        }
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
@@ -5468,6 +5527,18 @@ static void HandleEndTurn_BattleLost(void)
     }
     else
     {
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && GetTrainerBattleMode() == TRAINER_BATTLE_EARLY_RIVAL)
+        {
+            if (GetRivalBattleFlags() & RIVAL_BATTLE_HEAL_AFTER)
+                gBattleCommunication[MULTISTRING_CHOOSER] = 1; // Dont do white out text
+            else
+                gBattleCommunication[MULTISTRING_CHOOSER] = 2; // Do white out text
+            gBattlerAttacker = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        }
+        else
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        }
         gBattlescriptCurrInstr = BattleScript_LocalBattleLost;
     }
 
@@ -5534,8 +5605,9 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_FIRST_BATTLE
                                   | BATTLE_TYPE_SAFARI
                                   | BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_WALLY_TUTORIAL
-                                  | BATTLE_TYPE_FRONTIER)))
+                                  | BATTLE_TYPE_CATCH_TUTORIAL
+                                  | BATTLE_TYPE_FRONTIER))
+            && !(gBattleTypeFlags & BATTLE_TYPE_GHOST && IsGhostBattleWithoutScope()))
         {
             for (battler = 0; battler < gBattlersCount; battler++)
             {
@@ -5567,7 +5639,7 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_SAFARI
                                   | BATTLE_TYPE_FRONTIER
                                   | BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_WALLY_TUTORIAL))
+                                  | BATTLE_TYPE_CATCH_TUTORIAL))
             && gBattleResults.shinyWildMon)
         {
             TryPutBreakingNewsOnAir();
@@ -5646,7 +5718,7 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
                                   | BATTLE_TYPE_SAFARI
                                   | BATTLE_TYPE_FRONTIER
                                   | BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_WALLY_TUTORIAL))
+                                  | BATTLE_TYPE_CATCH_TUTORIAL))
             && (B_EVOLUTION_AFTER_WHITEOUT >= GEN_6
                 || gBattleOutcome == B_OUTCOME_WON
                 || gBattleOutcome == B_OUTCOME_CAUGHT))

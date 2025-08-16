@@ -1356,6 +1356,16 @@ static bool32 JumpIfMoveAffectedByProtect(u32 move, u32 battler, u32 shouldJump,
 
 static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u8 *failInstr, u16 move)
 {
+    if (IS_FRLG && 
+        ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE
+        && (!BtlCtrl_OakOldMan_TestState2Flag(1) || !BtlCtrl_OakOldMan_TestState2Flag(2))
+        && gMovesInfo[move].power != 0
+        && GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER) || (gBattleTypeFlags & BATTLE_TYPE_POKEDUDE)))
+    {
+        JumpIfMoveFailed(7, move, GetBattleMoveType(move), failInstr);
+        return;
+    }
+
     if (move == ACC_CURR_MOVE)
         move = gCurrentMove;
 
@@ -1755,7 +1765,8 @@ static void Cmd_critcalc(void)
         else
             gBattleStruct->critChance[battlerDef] = CalcCritChanceStage(gBattlerAttacker, battlerDef, gCurrentMove, TRUE, abilityAtk, abilityDef, holdEffectAtk);
 
-        if (gBattleTypeFlags & (BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_FIRST_BATTLE))
+        if ((gBattleTypeFlags & (BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_POKEDUDE))
+        || ((gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE) && (!IS_FRLG || !BtlCtrl_OakOldMan_TestState2Flag(1))))
             gSpecialStatuses[battlerDef].criticalHit = FALSE;
         else if (gBattleStruct->critChance[battlerDef] == -1)
             gSpecialStatuses[battlerDef].criticalHit = FALSE;
@@ -13703,13 +13714,19 @@ static void Cmd_handleballthrow(void)
 
     gBattlerTarget = GetCatchingBattler();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (gBattleTypeFlags & BATTLE_TYPE_GHOST)
+    {
+        BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_GHOST_DODGE);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+        gBattlescriptCurrInstr = BattleScript_GhostBallDodge;
+    }
+    else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
         MarkBattlerForControllerExec(gBattlerAttacker);
         gBattlescriptCurrInstr = BattleScript_TrainerBallBlock;
     }
-    else if (gBattleTypeFlags & BATTLE_TYPE_WALLY_TUTORIAL)
+    else if (gBattleTypeFlags & BATTLE_TYPE_CATCH_TUTORIAL)
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -14744,7 +14761,7 @@ static bool32 CriticalCapture(u32 odds)
         return FALSE;
 
     if (B_CRITICAL_CAPTURE_LOCAL_DEX == TRUE)
-        totalDexCount = HOENN_DEX_COUNT;
+        totalDexCount = REGIONAL_DEX_COUNT;
     else
         totalDexCount = NATIONAL_DEX_COUNT;
 

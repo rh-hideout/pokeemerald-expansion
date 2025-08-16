@@ -65,7 +65,7 @@ enum BattlerId
 #define BATTLE_TYPE_MULTI              (1 << 6)
 #define BATTLE_TYPE_SAFARI             (1 << 7)
 #define BATTLE_TYPE_BATTLE_TOWER       (1 << 8)
-#define BATTLE_TYPE_WALLY_TUTORIAL     (1 << 9) // Used in pokefirered as BATTLE_TYPE_OLD_MAN_TUTORIAL.
+#define BATTLE_TYPE_CATCH_TUTORIAL     (1 << 9) // Used in pokefirered as BATTLE_TYPE_OLD_MAN_TUTORIAL.
 #define BATTLE_TYPE_ROAMER             (1 << 10)
 #define BATTLE_TYPE_EREADER_TRAINER    (1 << 11)
 #define BATTLE_TYPE_RAID               (1 << 12)
@@ -83,15 +83,16 @@ enum BattlerId
 #define BATTLE_TYPE_RECORDED           (1 << 24)
 #define BATTLE_TYPE_RECORDED_LINK      (1 << 25)
 #define BATTLE_TYPE_TRAINER_HILL       (1 << 26)
+#define BATTLE_TYPE_TRAINER_TOWER      BATTLE_TYPE_TRAINER_HILL
 #define BATTLE_TYPE_SECRET_BASE        (1 << 27)
-#define BATTLE_TYPE_28                 (1 << 28)
-#define BATTLE_TYPE_29                 (1 << 29)
+#define BATTLE_TYPE_GHOST              (1 << 28)
+#define BATTLE_TYPE_POKEDUDE           (1 << 29)
 #define BATTLE_TYPE_30                 (1 << 30)
 #define BATTLE_TYPE_RECORDED_IS_MASTER (1 << 31)
 #define BATTLE_TYPE_FRONTIER                (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE | BATTLE_TYPE_PYRAMID)
 #define BATTLE_TYPE_FRONTIER_NO_PYRAMID     (BATTLE_TYPE_BATTLE_TOWER | BATTLE_TYPE_DOME | BATTLE_TYPE_PALACE | BATTLE_TYPE_ARENA | BATTLE_TYPE_FACTORY | BATTLE_TYPE_PIKE)
 #define BATTLE_TYPE_RECORDED_INVALID        ((BATTLE_TYPE_LINK | BATTLE_TYPE_SAFARI | BATTLE_TYPE_FIRST_BATTLE                  \
-                                             | BATTLE_TYPE_WALLY_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
+                                             | BATTLE_TYPE_CATCH_TUTORIAL | BATTLE_TYPE_ROAMER | BATTLE_TYPE_EREADER_TRAINER    \
                                              | BATTLE_TYPE_LEGENDARY                                                            \
                                              | BATTLE_TYPE_RECORDED | BATTLE_TYPE_TRAINER_HILL | BATTLE_TYPE_SECRET_BASE))
 
@@ -99,6 +100,9 @@ enum BattlerId
 #define RECORDED_WILD_BATTLE ((gBattleTypeFlags & BATTLE_TYPE_RECORDED) && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FRONTIER)))
 #define BATTLE_TWO_VS_ONE_OPPONENT ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
 #define BATTLE_TYPE_HAS_AI          (BATTLE_TYPE_TRAINER | BATTLE_TYPE_FIRST_BATTLE | BATTLE_TYPE_SAFARI | BATTLE_TYPE_ROAMER | BATTLE_TYPE_INGAME_PARTNER)
+
+#define RIVAL_BATTLE_HEAL_AFTER  1
+#define RIVAL_BATTLE_TUTORIAL    3
 
 // Battle Outcome defines
 #define B_OUTCOME_WON                  1
@@ -593,6 +597,7 @@ enum BattleEnvironments
 #define B_WIN_VS_OUTCOME_LEFT    22
 #define B_WIN_VS_OUTCOME_RIGHT   23
 #define B_WIN_MOVE_DESCRIPTION   24
+#define B_WIN_OAK_OLD_MAN        25
 
 // The following are duplicate id values for windows that Battle Arena uses differently.
 #define ARENA_WIN_PLAYER_NAME      15

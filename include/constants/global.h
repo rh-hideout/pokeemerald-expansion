@@ -41,8 +41,18 @@
 #define LANGUAGE_SPANISH  7
 #define NUM_LANGUAGES     7
 
-#define GAME_VERSION (VERSION_EMERALD)
+#ifdef FIRERED
+    #define GAME_VERSION (VERSION_FIRE_RED)
+#else
+    #ifdef LEAFGREEN
+    #define GAME_VERSION (VERSION_LEAF_GREEN)
+    #else
+    #define GAME_VERSION (VERSION_EMERALD)
+    #endif
+#endif
 #define GAME_LANGUAGE (LANGUAGE_ENGLISH)
+
+#define IS_FRLG (GAME_VERSION == VERSION_FIRE_RED || GAME_VERSION == VERSION_LEAF_GREEN)
 
 // party sizes
 #define PARTY_SIZE 6
