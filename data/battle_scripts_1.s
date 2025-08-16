@@ -5232,6 +5232,7 @@ BattleScript_FaintAttacker::
 	dofaintanimation BS_ATTACKER
 	printstring STRINGID_ATTACKERFAINTED
 	cleareffectsonfaint BS_ATTACKER
+	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_ATTACKER
 	trytrainerslidefirstdownmsg BS_ATTACKER
@@ -5246,6 +5247,7 @@ BattleScript_FaintTarget::
 	dofaintanimation BS_TARGET
 	printstring STRINGID_TARGETFAINTED
 	cleareffectsonfaint BS_TARGET
+	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
 	trytrainerslidefirstdownmsg BS_TARGET
@@ -8980,6 +8982,7 @@ BattleScript_ArenaDoJudgment::
 	waitcry BS_ATTACKER
 	dofaintanimation BS_OPPONENT1
 	cleareffectsonfaint BS_OPPONENT1
+	waitanimation
 	arenaopponentmonlost
 	end2
 
@@ -8994,6 +8997,7 @@ BattleScript_ArenaJudgmentPlayerLoses:
 	waitcry BS_ATTACKER
 	dofaintanimation BS_PLAYER1
 	cleareffectsonfaint BS_PLAYER1
+	waitanimation
 	arenaplayermonlost
 	end2
 
@@ -9008,10 +9012,12 @@ BattleScript_ArenaJudgmentDraw:
 	waitcry BS_ATTACKER
 	dofaintanimation BS_PLAYER1
 	cleareffectsonfaint BS_PLAYER1
+	waitanimation
 	playfaintcry BS_OPPONENT1
 	waitcry BS_ATTACKER
 	dofaintanimation BS_OPPONENT1
 	cleareffectsonfaint BS_OPPONENT1
+	waitanimation
 	arenabothmonlost
 	end2
 
