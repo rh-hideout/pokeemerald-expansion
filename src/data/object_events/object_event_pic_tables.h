@@ -1345,6 +1345,20 @@ static const struct SpriteFrameImage sPicTable_HoOhOld[] = {
     overworld_frame(gObjectEventPic_HoOhOld, 4, 4, 1),
 };
 
+static const struct SpriteFrameImage sPicTable_RubySapphireBrendan[] = {
+    overworld_ascending_frames(gObjectEventPic_RubySapphireBrendanNormal, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_KirliaOld[] = {
+    overworld_ascending_frames(gObjectEventPic_KirliaOld, 2, 4),
+};
+
+static const struct SpriteFrameImage sPicTable_RubySapphireMay[] = {
+    overworld_ascending_frames(gObjectEventPic_RubySapphireMayNormal, 2, 4),
+};
+
+#if IS_FRLG
+
 static const struct SpriteFrameImage sPicTable_RedNormal[] = {
     overworld_frame(gObjectEventPic_RedNormal, 2, 4, 0),
     overworld_frame(gObjectEventPic_RedNormal, 2, 4, 1),
@@ -1516,20 +1530,6 @@ static const struct SpriteFrameImage sPicTable_GreenVSSeekerBike[] = {
     overworld_frame(gObjectEventPic_GreenVSSeekerBike, 4, 4, 4),
     overworld_frame(gObjectEventPic_GreenVSSeekerBike, 4, 4, 5),
 };
-
-static const struct SpriteFrameImage sPicTable_RubySapphireBrendan[] = {
-    overworld_ascending_frames(gObjectEventPic_RubySapphireBrendanNormal, 2, 4),
-};
-
-static const struct SpriteFrameImage sPicTable_KirliaOld[] = {
-    overworld_ascending_frames(gObjectEventPic_KirliaOld, 2, 4),
-};
-
-static const struct SpriteFrameImage sPicTable_RubySapphireMay[] = {
-    overworld_ascending_frames(gObjectEventPic_RubySapphireMayNormal, 2, 4),
-};
-
-
 
 static const struct SpriteFrameImage sPicTable_Policeman[] = {
     overworld_frame(gObjectEventPic_Policeman, 2, 4, 0),
@@ -3013,13 +3013,15 @@ static const struct SpriteFrameImage sPicTable_Kabuto[] = {
 };
 
 static const struct SpriteFrameImage sPicTable_MomFrlg[] = {
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 0),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 1),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 0),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 0),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 1),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 1),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
-    overworld_frame(gObjectEventPic_Mom, 2, 4, 2),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 0),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 1),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
+    overworld_frame(gObjectEventPic_MomFrlg, 2, 4, 2),
 };
+
+#endif // IS_FRLG
