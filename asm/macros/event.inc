@@ -1890,6 +1890,18 @@
 	_dynmultichoice \left, \top, \ignoreBPress, \maxBeforeScroll, \shouldSort, \initialSelected, \callbacks, NULL
 	.endm
 
+	@Checks if the species pokemon is in party and can trigger an EVO_SCRIPT_TRIGGER evolutions
+	@Sets VAR_RESULT to 0 if species pokemon is not in party
+	@Sets VAR_RESULT to 1 if species pokemon doesn not meet evolutions conditions
+	@Sets VAR_RESULT to 2 if player cancelled evolution
+	@Sets VAR_RESULT to 3 if evolution was succesful
+	.macro triggerevolution species:req, cancellable=1, arg=0
+	.byte SCR_OP_TRIGGEREVOLUTION
+	.2byte \species
+	.byte \cancellable
+	.byte \arg
+	.endm
+
 @ Supplementary
 
 	.macro goto_if_unset flag:req, dest:req

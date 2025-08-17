@@ -18,6 +18,7 @@
 #include "event_object_lock.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
+#include "evolution_scene.h"
 #include "fake_rtc.h"
 #include "field_message_box.h"
 #include "field_player_avatar.h"
@@ -3245,6 +3246,38 @@ bool8 ScrCmd_fwdweekday(struct ScriptContext *ctx)
 
     FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
     return FALSE;
+}
+
+bool8 ScrCmd_triggerevolution(struct ScriptContext *ctx)
+{
+    u16 species = ScriptReadHalfword(ctx);
+    bool32 canStopEvo = ScriptReadByte(ctx);
+    u16 evoArg = ScriptReadByte(ctx);
+
+    u32 partyCount = CalculatePlayerPartyCount();
+    u32 partyIndex;
+    for (partyIndex = 0; partyIndex < partyCount; partyIndex++)
+        if (GetMonData(&gPlayerParty[partyIndex], MON_DATA_SPECIES) == species)
+            break;
+
+    if (partyIndex == partyCount)
+    {
+        gSpecialVar_Result = 0;
+        return FALSE;
+    }
+    u32 targetSpecies = GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_OVERWORLD_SPECIAL, evoArg, NULL, &canStopEvo, CHECK_EVO);
+    if (targetSpecies == SPECIES_NONE)
+    {
+        gSpecialVar_Result = 1;
+        return FALSE;
+    }
+    gSpecialVar_Result = 3;
+    GetEvolutionTargetSpecies(&gPlayerParty[partyIndex], EVO_MODE_OVERWORLD_SPECIAL, evoArg, NULL, &canStopEvo, DO_EVO);
+    BeginEvolutionScene(&gPlayerParty[partyIndex], targetSpecies, canStopEvo, partyIndex);
+    gCB2_AfterEvolution = CB2_ReturnToFieldContinueScript;
+    ScriptContext_Stop();
+    return TRUE;
+
 }
 
 void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)

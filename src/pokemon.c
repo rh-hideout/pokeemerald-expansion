@@ -4897,6 +4897,9 @@ u32 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
             switch (evolutions[i].method)
             {
             case EVO_SCRIPT_TRIGGER:
+               if (evolutionItem == evolutions[i].param)
+                    conditionsMet = TRUE;
+                break;
             case EVO_SPIN:
                 if (gSpecialVar_0x8000 == evolutions[i].param)
                     conditionsMet = TRUE;
