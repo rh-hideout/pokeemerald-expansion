@@ -4114,8 +4114,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         {
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_SLP
               || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_STATUS
-              || HasMoveWithEffect(EFFECT_SLEEP_TALK, battlerAtk)
-              || HasMoveWithEffect(EFFECT_SNORE, battlerAtk)
+              || HasMoveWithEffect(battlerAtk, EFFECT_SLEEP_TALK)
+              || HasMoveWithEffect(battlerAtk, EFFECT_SNORE)
               || aiData->abilities[battlerAtk] == ABILITY_SHED_SKIN
               || aiData->abilities[battlerAtk] == ABILITY_EARLY_BIRD
               || (AI_GetWeather() & B_WEATHER_RAIN && gWishFutureKnock.weatherDuration != 1 && aiData->abilities[battlerAtk] == ABILITY_HYDRATION && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_UTILITY_UMBRELLA))
