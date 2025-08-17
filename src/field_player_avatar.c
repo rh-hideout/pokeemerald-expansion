@@ -1937,7 +1937,8 @@ static void Task_WaitStopSurfing(u8 taskId)
 #define tFishingRod        data[15]
 
 #define FISHING_PROXIMITY_BOOST 20
-#define FISHING_STICKY_BOOST    36
+#define FISHING_TIME_OF_DAY_BOOST 20
+#define FISHING_GEN3_STICKY_CHANCE 85
 
 #if I_FISHING_BITE_ODDS >= GEN_4
     #define FISHING_OLD_ROD_ODDS 25
@@ -2128,7 +2129,7 @@ static bool32 Fishing_CheckForBite(struct Task *task)
     firstMonHasSuctionOrSticky = Fishing_DoesFirstMonInPartyHaveSuctionCupsOrStickyHold();
 
     if(firstMonHasSuctionOrSticky && I_FISHING_STICKY_BOOST < GEN_4)
-        bite = RandomPercentage(RNG_FISHING_GEN3_STICKY, 85);
+        bite = RandomPercentage(RNG_FISHING_GEN3_STICKY, FISHING_GEN3_STICKY_CHANCE);
 
     if (!bite)
         bite = Fishing_RollForBite(task->tFishingRod, firstMonHasSuctionOrSticky);
@@ -2439,7 +2440,7 @@ static u32 CalculateFishingTimeOfDayBoost()
 
     enum TimeOfDay timeOfDay = GetTimeOfDay();
     if (timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING)
-        return 20;
+        return FISHING_TIME_OF_DAY_BOOST;
     return 0;
 }
 
