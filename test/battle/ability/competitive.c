@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-DOUBLE_BATTLE_TEST("Competitive sharply raises player's Attack after Intimidate")
+DOUBLE_BATTLE_TEST("Competitive sharply raises player's Sp. Atk after Intimidate")
 {
     u32 abilityLeft, abilityRight;
 
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Attack after Intimidate"
 }
 
 // Same as above, but for opponent.
-DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Attack after Intimidate")
+DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Sp. Atk after Intimidate")
 {
     u32 abilityLeft, abilityRight;
 
