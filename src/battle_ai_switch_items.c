@@ -2135,6 +2135,10 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         // Check through current mon's moves
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
+            // Check that move has PP remaining before running calcs
+            if (gAiLogicData->switchinCandidate.battleMon.pp[j] < 1)
+                continue;
+
             aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
             damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, AI_ATTACKING);
             hitsToKOPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
