@@ -2107,10 +2107,12 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
             tempScore += DECENT_EFFECT;
         break;
     case STAT_SPEED:
+    {
         u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
         if (AI_IsSlower(battlerAtk, battlerDef, gAiThinkingStruct->moveConsidered, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY))
             tempScore += DECENT_EFFECT;
         break;
+    }
     case STAT_SPATK:
         if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
             tempScore += DECENT_EFFECT;
@@ -3632,7 +3634,7 @@ bool32 HasChoiceEffect(u32 battler)
 
     if (ability == ABILITY_KLUTZ)
         return FALSE;
-    
+
     enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battler];
     switch (holdEffect)
     {
@@ -3881,7 +3883,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 p
         return FALSE;
 
     u32 battlerDef = gBattleStruct->moveTarget[battlerAtk];
-    
+
     // We don't care the effect is basically the same; we would use this move anyway.
     if (GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING) == move)
         return FALSE;
