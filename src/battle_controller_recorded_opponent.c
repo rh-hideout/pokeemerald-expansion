@@ -283,13 +283,9 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
         {
             trainerPicId = TRAINER_PIC_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
-            {
                 xPos = 176;
-            }
             else
-            {
                 xPos = 200;
-            }
         }
         else
         {
@@ -300,24 +296,16 @@ static void RecordedOpponentHandleDrawTrainerPic(u32 battler)
     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
     {
         if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
-        {
             xPos = 152;
-        }
         else // first mon
-        {
             xPos = 200;
-        }
 
         if (gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
         {
             if (battler == B_POSITION_OPPONENT_LEFT)
-            {
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentA);
-            }
             else
-            {
                 trainerPicId = GetFrontierTrainerFrontSpriteId(TRAINER_BATTLE_PARAM.opponentB);
-            }
         }
         else
         {

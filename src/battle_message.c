@@ -2096,13 +2096,9 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                         if (TESTING && gBattleTypeFlags & BATTLE_TYPE_MULTI)
                         {
                             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
-                            {
                                 stringPtr = sText_Trainer1WantsToBattle;
-                            }
                             else
-                            {
                                 stringPtr = sText_TwoTrainersWantToBattle;
-                            }
                         }
                         else if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
                         {
@@ -2121,17 +2117,11 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                 else
                 {
                     if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_UNION_ROOM)
-                    {
                         stringPtr = sText_Trainer1WantsToBattle;
-                    }
                     else if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-                    {
                         stringPtr = sText_LinkTrainerWantsToBattlePause;
-                    }
                     else
-                    {
                         stringPtr = sText_LinkTrainerWantsToBattle;
-                    }
                 }
             }
             else

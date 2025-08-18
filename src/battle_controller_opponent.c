@@ -382,13 +382,9 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
         {
             trainerPicId = TRAINER_PIC_LEAF;
             if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
-            {
                 xPos = 176;
-            }
             else
-            {
                 xPos = 200;
-            }
         }
         else
         {
@@ -403,13 +399,9 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
-            {
                 xPos = 152;
-            }
            else // first mon
-            {
                 xPos = 200;
-            }
         }
         else
         {
