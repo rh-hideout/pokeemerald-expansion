@@ -1186,7 +1186,9 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         else
             SET_STATCHANGER(STAT_SPATK, 2, FALSE);
     }
-    else if (B_UPDATED_INTIMIDATE >= GEN_8 && stringId == STRINGID_PKMNCUTSATTACKWITH && targetAbility == ABILITY_RATTLED
+    else if (GetGenConfig(GEN_CONFIG_UPDATED_INTIMIDATE) >= GEN_8
+            && stringId == STRINGID_PKMNCUTSATTACKWITH
+            && targetAbility == ABILITY_RATTLED
             && CompareStat(gBattlerTarget, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
         gBattlerAbility = gBattlerTarget;

@@ -12906,7 +12906,7 @@ static bool32 CanAbilityShieldActivateForBattler(u32 battler)
 {
     if (GetBattlerHoldEffectIgnoreAbility(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD)
         return FALSE;
-    
+
     RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
     gBattlerAbility = battler;
     gLastUsedItem = gBattleMons[battler].item;
@@ -16572,7 +16572,7 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
     case ABILITY_SCRAPPY:
     case ABILITY_OWN_TEMPO:
     case ABILITY_OBLIVIOUS:
-        if (B_UPDATED_INTIMIDATE >= GEN_8)
+        if (GetGenConfig(GEN_CONFIG_UPDATED_INTIMIDATE) >= GEN_8)
         {
             hasAbility = TRUE;
             gBattlescriptCurrInstr = BattleScript_IntimidatePrevented;
