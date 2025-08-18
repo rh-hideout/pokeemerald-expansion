@@ -32,6 +32,7 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
     [GEN_SNOW_WARNING]                     = B_SNOW_WARNING,
     [GEN_ALLY_SWITCH_FAIL_CHANCE]          = B_ALLY_SWITCH_FAIL_CHANCE,
     [GEN_DREAM_EATER_LIQUID_OOZE]          = B_DREAM_EATER_LIQUID_OOZE,
+    [GEN_CONFIG_TRANSISTOR_BOOST]          = B_TRANSISTOR_BOOST,
 };
 
 #if TESTING
