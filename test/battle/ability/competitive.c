@@ -52,9 +52,8 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises player's Attack after Intimidate"
             MESSAGE("Jigglypuff's Sp. Atk sharply rose!");
         }
     } FINALLY {
-        // -2 from Intimidates and +4 from Defiants gets +2 total
-        EXPECT_EQ(playerLeft->statStages[STAT_SPATK], (abilityLeft == ABILITY_COMPETITIVE) ? DEFAULT_STAT_STAGE + 4 : DEFAULT_STAT_STAGE - 2);
-        EXPECT_EQ(playerRight->statStages[STAT_SPATK], (abilityRight == ABILITY_COMPETITIVE) ? DEFAULT_STAT_STAGE + 4 : DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(playerLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + (abilityLeft == ABILITY_COMPETITIVE ? 4 : 0));
+        EXPECT_EQ(playerRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + (abilityRight == ABILITY_COMPETITIVE ? 4 : 0));
     }
 }
 
@@ -110,9 +109,8 @@ DOUBLE_BATTLE_TEST("Competitive sharply raises opponent's Attack after Intimidat
             MESSAGE("The opposing Jigglypuff's Sp. Atk sharply rose!");
         }
     } FINALLY {
-        // -2 from Intimidates and +4 from Defiants gets +2 total
-        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], (abilityLeft == ABILITY_COMPETITIVE) ? DEFAULT_STAT_STAGE + 4 : DEFAULT_STAT_STAGE - 2);
-        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], (abilityRight == ABILITY_COMPETITIVE) ? DEFAULT_STAT_STAGE + 4 : DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentLeft->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + (abilityLeft == ABILITY_COMPETITIVE ? 4 : 0));
+        EXPECT_EQ(opponentRight->statStages[STAT_SPATK], DEFAULT_STAT_STAGE + (abilityRight == ABILITY_COMPETITIVE ? 4 : 0));
     }
 }
 
