@@ -2635,6 +2635,7 @@ static void Cmd_healthbarupdate(void)
 static void Cmd_datahpupdate(void)
 {
     CMD_ARGS(u8 battler);
+    bool32 isPassiveDamageOrHealing = gHitMarker & HITMARKER_PASSIVE_DAMAGE;
 
     if (gBattleControllerExecFlags)
         return;
@@ -2750,11 +2751,13 @@ static void Cmd_datahpupdate(void)
         }
 
         if (gBattlerAttacker != gBattlerTarget
+         && isPassiveDamageOrHealing
          && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
          && IsBattlerTurnDamaged(gBattlerTarget))
             gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]]++;
 
         if (GetMoveEffect(gCurrentMove) == EFFECT_KNOCK_OFF
+         && isPassiveDamageOrHealing
          && IsBattlerTurnDamaged(gBattlerTarget)
          && gBattleMons[gBattlerTarget].item != ITEM_NONE
          && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
@@ -6630,7 +6633,7 @@ static void Cmd_moveend(void)
             {
                 gBattleStruct->moveDamage[gBattlerAttacker] = max(1, (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100));
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
-                gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE;
+                gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE | HITMARKER_PASSIVE_DAMAGE;
                 effect = TRUE;
                 if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
                 {
