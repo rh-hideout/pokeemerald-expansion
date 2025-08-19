@@ -2751,13 +2751,13 @@ static void Cmd_datahpupdate(void)
         }
 
         if (gBattlerAttacker != gBattlerTarget
-         && isPassiveDamageOrHealing
+         && !isPassiveDamageOrHealing
          && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
          && IsBattlerTurnDamaged(gBattlerTarget))
             gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]]++;
 
         if (GetMoveEffect(gCurrentMove) == EFFECT_KNOCK_OFF
-         && isPassiveDamageOrHealing
+         && !isPassiveDamageOrHealing
          && IsBattlerTurnDamaged(gBattlerTarget)
          && gBattleMons[gBattlerTarget].item != ITEM_NONE
          && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
