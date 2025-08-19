@@ -2429,6 +2429,8 @@ static u32 CalculateFishingProximityBoost()
             continue;
         if (!MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(tile_x, tile_y)))
             numQualifyingTile++;
+        else if (MapGridGetCollisionAt(tile_x, tile_y) == COLLISION_IMPASSABLE)
+            numQualifyingTile++;
     }
 
     return (numQualifyingTile * FISHING_PROXIMITY_BOOST);
