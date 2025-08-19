@@ -2375,8 +2375,9 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
     odds += CalculateFishingTimeOfDayBoost();
 
     if (isStickyHold && I_FISHING_STICKY_BOOST >= GEN_4)
-        odds = min(100, odds * 2);
+        odds *= 2;
 
+    odds = min(100, odds);
     return odds;
 }
 
