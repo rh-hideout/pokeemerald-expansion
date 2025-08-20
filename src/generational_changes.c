@@ -16,44 +16,54 @@ const struct GenChanges sGenerationalChanges =
 
 #if TESTING
 EWRAM_DATA struct GenChanges *gGenerationalChangesTestOverride = NULL;
-#define UNPACK_CONFIG_GETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: \
-                                                        if (gGenerationalChangesTestOverride == NULL) \
-                                                            return sGenerationalChanges._field; \
-                                                        return gGenerationalChangesTestOverride->_field;
-//#define UNPACK_CONFIG_SETTERS(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: gGenerationalChangesTestOverride->_field = min(GET_CONFIG_MAXIMUM(_typeMaxValue), _value); break;
+#define UNPACK_CONFIG_OVERRIDE_GETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: return gGenerationalChangesTestOverride->_field;
+#define UNPACK_CONFIG_GETTERS(_name, _field, ...) case GEN_CONFIG_##_name: return sGenerationalChanges._field;
 #define UNPACK_CONFIG_CLAMPER(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: clampedValue = min(GET_CONFIG_MAXIMUM(_typeMaxValue), newValue); break;
 #define UNPACK_CONFIG_SETTERS(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: gGenerationalChangesTestOverride->_field = clampedValue; break;
 
 #else
 
-#define UNPACK_CONFIG_GETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: return sGenerationalChanges._field;
-#define UNPACK_CONFIG_CLAMPER(_name, _field, ...)   case GEN_CONFIG_##_name: return;
-#define UNPACK_CONFIG_SETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: return;
+#define UNPACK_CONFIG_OVERRIDE_GETTERS(_name, _field, ...) case GEN_CONFIG_##_name: return sGenerationalChanges._field;
+#define UNPACK_CONFIG_GETTERS(_name, _field, ...) case GEN_CONFIG_##_name: return sGenerationalChanges._field;
+#define UNPACK_CONFIG_CLAMPER(_name, _field, ...) case GEN_CONFIG_##_name: return 0;
+#define UNPACK_CONFIG_SETTERS(_name, _field, ...) case GEN_CONFIG_##_name: return;
 #endif
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
 u32 GetGenConfig(enum GenConfigTag _genConfig)
 {
-    switch (_genConfig)
+#if TESTING
+    if (gGenerationalChangesTestOverride == NULL)
     {
-        CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
-    /* Expands to:
-    #if TESTING
-        case GEN_CONFIG_CRIT_CHANCE:
-            if (gGenerationalChangesTestOverride == NULL)
-                return sGenerationalChanges.critChance;
-            return gGenerationalChangesTestOverride->critChance;
-    #else
-        case GEN_CONFIG_CRIT_CHANCE:
-            return sGenerationalChanges.critChance;
-    #endif
-    */
-        default: // Invalid config tag
-            return 0;
+        switch (_genConfig)
+        {
+            CONFIG_DEFINITIONS(UNPACK_CONFIG_GETTERS)
+        /* Expands to:
+            case GEN_CONFIG_CRIT_CHANCE:
+                return gGenerationalChangesTestOverride->critChance;
+        */
+            default:
+                return 0;
+        }
     }
+    else
+#endif
+    {
+        switch (_genConfig)
+        {
+            CONFIG_DEFINITIONS(UNPACK_CONFIG_OVERRIDE_GETTERS)
+        /* Expands to:
+            case GEN_CONFIG_CRIT_CHANCE:
+                 return sGenerationalChanges.critChance;
+        */
+            default: // Invalid config tag
+                return 0;
+        }
+     }
 }
 
+#if TESTING
 u32 GetClampedValue(enum GenConfigTag _genConfig, u32 newValue)
 {
     u32 clampedValue = 0;
@@ -65,9 +75,11 @@ u32 GetClampedValue(enum GenConfigTag _genConfig, u32 newValue)
     }
     return clampedValue;
 }
+#endif
 
 void SetGenConfig(enum GenConfigTag _genConfig, u32 _value)
 {
+#if TESTING
     u32 clampedValue = GetClampedValue(_genConfig, _value);
     switch (_genConfig)
     {
@@ -85,6 +97,7 @@ void SetGenConfig(enum GenConfigTag _genConfig, u32 _value)
         default: // Invalid config tag
             return;
     }
+#endif
 }
 
 #if TESTING
