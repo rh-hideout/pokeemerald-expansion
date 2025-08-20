@@ -290,8 +290,8 @@
     F(SKETCH_BANS,               sketchBans,             (u32, GEN_9)) /* TODO */ \
     F(KNOCK_OFF_REMOVAL,         knockOffRemoval,        (u32, GEN_9)) /* TODO */ \
     F(HEAL_BELL_SOUNDPROOF,      healBellSoundproof,     (u32, GEN_9)) \
-    /* F(CHARGE,                    charge,                 (u32, GEN_9)) TODO */ \
-    /* F(POWDER_RAIN,               powderRain,             (u32, GEN_9)) TODO */ \
+    F(CHARGE,                    charge,                 (u32, GEN_9)) /* TODO */ \
+    F(POWDER_RAIN,               powderRain,             (u32, GEN_9)) /* TODO */ \
     /* F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,      (u32, GEN_9)) TODO */ \
     /* F(QUASH_TURN_ORDER,          quashTurnOrder,         (u32, GEN_9)) TODO */ \
     /* F(DESTINY_BOND_FAIL,         destinyBondFail,        (u32, GEN_9)) TODO */ \

@@ -20,13 +20,15 @@ EWRAM_DATA struct GenChanges *gGenerationalChangesTestOverride = NULL;
                                                         if (gGenerationalChangesTestOverride == NULL) \
                                                             return sGenerationalChanges._field; \
                                                         return gGenerationalChangesTestOverride->_field;
-#define UNPACK_CONFIG_SETTERS(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: gGenerationalChangesTestOverride->_field = min(GET_CONFIG_MAXIMUM(_typeMaxValue), _value); break;
+//#define UNPACK_CONFIG_SETTERS(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: gGenerationalChangesTestOverride->_field = min(GET_CONFIG_MAXIMUM(_typeMaxValue), _value); break;
+#define UNPACK_CONFIG_CLAMPER(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: clampedValue = min(GET_CONFIG_MAXIMUM(_typeMaxValue), newValue); break;
+#define UNPACK_CONFIG_SETTERS(_name, _field, _typeMaxValue, ...) case GEN_CONFIG_##_name: gGenerationalChangesTestOverride->_field = clampedValue; break;
+
 #else
 
-#define UNPACK_CONFIG_GETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: \
-                                                        return sGenerationalChanges._field;
-#define UNPACK_CONFIG_SETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: \
-                                                        return;
+#define UNPACK_CONFIG_GETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: return sGenerationalChanges._field;
+#define UNPACK_CONFIG_CLAMPER(_name, _field, ...)   case GEN_CONFIG_##_name: return;
+#define UNPACK_CONFIG_SETTERS(_name, _field, ...)   case GEN_CONFIG_##_name: return;
 #endif
 
 // Gets the value of a volatile status flag for a certain battler
@@ -52,8 +54,21 @@ u32 GetGenConfig(enum GenConfigTag _genConfig)
     }
 }
 
+u32 GetClampedValue(enum GenConfigTag _genConfig, u32 newValue)
+{
+    u32 clampedValue = 0;
+    switch(_genConfig)
+    {
+        CONFIG_DEFINITIONS(UNPACK_CONFIG_CLAMPER)
+        default:
+            return 0;
+    }
+    return clampedValue;
+}
+
 void SetGenConfig(enum GenConfigTag _genConfig, u32 _value)
 {
+    u32 clampedValue = GetClampedValue(_genConfig, _value);
     switch (_genConfig)
     {
         CONFIG_DEFINITIONS(UNPACK_CONFIG_SETTERS)
