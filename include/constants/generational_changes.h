@@ -198,7 +198,7 @@
     F(LEVEL_UP_NOTIFICATION,     levelUpNotification,    (u32, GEN_9)) /* TODO */ \
     /* Stat settings */ \
     F(BADGE_BOOST,               badgeBoost,             (u32, GEN_9)) /* TODO */ \
-    F(FRIENDSHIP_BOOST,          friendshipBoost,        (u32, TRUE))  /* TODO */ \
+    F(FRIENDSHIP_BOOST,          friendshipBoost,        (u32, GEN_9)) /* TODO */ \
     F(MAX_LEVEL_EV_GAINS,        maxLevelEvGains,        (u32, GEN_9)) /* TODO */ \
     F(RECALCULATE_STATS,         recalculateStats,       (u32, GEN_9)) /* TODO */ \
     /* Damage settings */ \
@@ -211,9 +211,9 @@
     F(ROUGH_SKIN_DMG,            roughSkinDmg,           (u32, GEN_9)) /* TODO */ \
     F(KNOCK_OFF_DMG,             knockOffDmg,            (u32, GEN_9)) /* TODO */ \
     F(SPORT_DMG_REDUCTION,       sportDmgReduction,      (u32, GEN_9)) /* TODO */ \
-    F(EXPLOSION_DEFENSE,         explosionDefense,       (u32, GEN_9)) /* TODO */ \
-    F(PARENTAL_BOND_DMG,         parentalBondDmg,        (u32, GEN_9)) /* TODO */ \
-    F(MULTIPLE_TARGETS_DMG,      multipleTargetsDmg,     (u32, GEN_9)) /* TODO */ \
+     /*F(EXPLOSION_DEFENSE,         explosionDefense,       (u32, GEN_9)) TODO */ \
+    /* F(PARENTAL_BOND_DMG,         parentalBondDmg,        (u32, GEN_9)) TODO */ \
+    /* F(MULTIPLE_TARGETS_DMG,      multipleTargetsDmg,     (u32, GEN_9)) TODO */ \
     /* Type settings */ \
     F(GHOSTS_ESCAPE,             ghostsEscape,           (u32, GEN_9)) /* TODO */ \
     F(PARALYZE_ELECTRIC,         paralyzeElectric,       (u32, GEN_9)) /* TODO */ \
@@ -224,28 +224,28 @@
     F(ROOST_PURE_FLYING,         roostPureFlying,        (u32, GEN_9)) /* TODO */ \
     F(STATUS_TYPE_IMMUNITY,      statusTypeImmunity,     (u32, GEN_9)) /* TODO */ \
     /* Turn settings */ \
-    F(BINDING_TURNS,             bindingTurns,           (u32, GEN_9)) /* TODO */ \
-    F(UPROAR_TURNS,              uproarTurns,            (u32, GEN_9)) /* TODO */ \
-    F(UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof, (u32, GEN_9)) /* TODO */ \
-    F(DISABLE_TURNS,             disableTurns,           (u32, GEN_9)) /* TODO */ \
-    F(TAILWIND_TURNS,            tailwindTurns,          (u32, GEN_9)) /* TODO */ \
-    F(SLEEP_TURNS,               sleepTurns,             (u32, GEN_9)) /* TODO */ \
-    F(TAUNT_TURNS,               tauntTurns,             (u32, GEN_9)) /* TODO */ \
-    F(SPORT_TURNS,               sportTurns,             (u32, GEN_9)) /* TODO */ \
-    F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,       (u32, GEN_9)) /* TODO */ \
-    F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions, (u32, GEN_9)) /* TODO */ \
-    F(FAINT_SWITCH_IN,           faintSwitchIn,          (u32, GEN_9)) /* TODO */ \
+    /* F(BINDING_TURNS,             bindingTurns,           (u32, GEN_9)) TODO */ \
+    /* F(UPROAR_TURNS,              uproarTurns,            (u32, GEN_9)) TODO */ \
+    /* F(UPROAR_IGNORE_SOUNDPROOF,  uproarIgnoreSoundproof, (u32, GEN_9)) TODO */ \
+    /* F(DISABLE_TURNS,             disableTurns,           (u32, GEN_9)) TODO */ \
+    /* F(TAILWIND_TURNS,            tailwindTurns,          (u32, GEN_9)) TODO */ \
+    /* F(SLEEP_TURNS,               sleepTurns,             (u32, GEN_9)) TODO */ \
+    /* F(TAUNT_TURNS,               tauntTurns,             (u32, GEN_9)) TODO */ \
+    /* F(SPORT_TURNS,               sportTurns,             (u32, GEN_9)) TODO */ \
+    /* F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,       (u32, GEN_9)) TODO */ \
+    /* F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions, (u32, GEN_9)) TODO */ \
+    /* F(FAINT_SWITCH_IN,           faintSwitchIn,          (u32, GEN_9)) TODO */ \
     /* Move data settings */ \
-    F(UPDATED_MOVE_DATA,         updatedMoveData,        (u32, GEN_9)) /* TODO */ \
-    F(UPDATED_MOVE_TYPES,        updatedMoveTypes,       (u32, GEN_9)) /* TODO */ \
-    F(UPDATED_MOVE_FLAGS,        updatedMoveFlags,       (u32, GEN_9)) /* TODO */ \
-    F(PHYSICAL_SPECIAL_SPLIT,    physicalSpecialSplit,   (u32, GEN_9)) /* TODO */ \
-    F(RECOIL_IF_MISS_DMG,        recoilIfMissDmg,        (u32, GEN_9)) /* TODO */ \
-    F(KLUTZ_FLING_INTERACTION,   klutzFlingInteraction,  (u32, GEN_9)) /* TODO */ \
-    F(UPDATED_CONVERSION,        updatedConversion,      (u32, GEN_9)) /* TODO */ \
-    F(UPDATED_CONVERSION_2,      updatedConversion2,     (u32, GEN_9)) /* TODO */ \
-    F(PP_REDUCED_BY_SPITE,       ppReducedBySpite,       (u32, GEN_9)) /* TODO */ \
-    F(EXTRAPOLATED_MOVE_FLAGS,   extrapolatedMoveFlags,  (u32, TRUE))  /* TODO */ \
+    /* F(UPDATED_MOVE_DATA,         updatedMoveData,        (u32, GEN_9)) TODO */ \
+    /* F(UPDATED_MOVE_TYPES,        updatedMoveTypes,       (u32, GEN_9)) TODO */ \
+    /* F(UPDATED_MOVE_FLAGS,        updatedMoveFlags,       (u32, GEN_9)) TODO */ \
+    /* F(PHYSICAL_SPECIAL_SPLIT,    physicalSpecialSplit,   (u32, GEN_9)) TODO */ \
+    /* F(RECOIL_IF_MISS_DMG,        recoilIfMissDmg,        (u32, GEN_9)) TODO */ \
+    /* F(KLUTZ_FLING_INTERACTION,   klutzFlingInteraction,  (u32, GEN_9)) TODO */ \
+    /* F(UPDATED_CONVERSION,        updatedConversion,      (u32, GEN_9)) TODO */ \
+    /* F(UPDATED_CONVERSION_2,      updatedConversion2,     (u32, GEN_9)) TODO */ \
+    /* F(PP_REDUCED_BY_SPITE,       ppReducedBySpite,       (u32, GEN_9)) TODO */ \
+    /* F(EXTRAPOLATED_MOVE_FLAGS,   extrapolatedMoveFlags,  (u32, GEN_9)) TODO */ \
     /* Ability data settings */ \
     F(UPDATED_ABILITY_DATA,      updatedAbilityData,     (u32, GEN_9)) /* TODO */ \
     /* Move accuracy settings */ \
@@ -290,13 +290,13 @@
     F(SKETCH_BANS,               sketchBans,             (u32, GEN_9)) /* TODO */ \
     F(KNOCK_OFF_REMOVAL,         knockOffRemoval,        (u32, GEN_9)) /* TODO */ \
     F(HEAL_BELL_SOUNDPROOF,      healBellSoundproof,     (u32, GEN_9)) \
-    F(CHARGE,                    charge,                 (u32, GEN_9)) /* TODO */ \
-    F(POWDER_RAIN,               powderRain,             (u32, GEN_9)) /* TODO */ \
-    F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,      (u32, GEN_9)) /* TODO */ \
-    F(QUASH_TURN_ORDER,          quashTurnOrder,         (u32, GEN_9)) /* TODO */ \
-    F(DESTINY_BOND_FAIL,         destinyBondFail,        (u32, GEN_9)) /* TODO */ \
-    F(PURSUIT_TARGET,            pursuitTarget,          (u32, GEN_9)) /* TODO */ \
-    F(SKIP_RECHARGE,             skipRecharge,           (u32, GEN_9)) /* TODO */ \
+    /* F(CHARGE,                    charge,                 (u32, GEN_9)) TODO */ \
+    /* F(POWDER_RAIN,               powderRain,             (u32, GEN_9)) TODO */ \
+    /* F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,      (u32, GEN_9)) TODO */ \
+    /* F(QUASH_TURN_ORDER,          quashTurnOrder,         (u32, GEN_9)) TODO */ \
+    /* F(DESTINY_BOND_FAIL,         destinyBondFail,        (u32, GEN_9)) TODO */ \
+    /* F(PURSUIT_TARGET,            pursuitTarget,          (u32, GEN_9)) TODO */ \
+    /* F(SKIP_RECHARGE,             skipRecharge,           (u32, GEN_9)) TODO */ \
     F(ENCORE_TARGET,             encoreTarget,           (u32, GEN_9)) \
     F(TIME_OF_DAY_HEALING_MOVES, timeOfDayHealingMoves,  (u32, GEN_9)) \
     F(DREAM_EATER_LIQUID_OOZE,   dreamEaterLiquidOoze,   (u32, GEN_9)) \
