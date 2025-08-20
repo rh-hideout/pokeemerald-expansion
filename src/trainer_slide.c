@@ -500,13 +500,13 @@ void TryInitializeTrainerSlideEnemyLandsFirstCriticalHit(u32 target)
 {
     enum TrainerSlideType slideId = TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT;
 
-    if (IsSlideInitalizedOrPlayed(target, slideId))
+    if (IsSlideInitalizedOrPlayed(gBattlerAttacker, slideId))
         return;
 
     if (!IsOnPlayerSide(target))
         return;
 
-    InitalizeTrainerSlide(target, slideId);
+    InitalizeTrainerSlide(gBattlerAttacker, slideId);
 }
 
 void TryInitializeTrainerSlidePlayerLandsFirstSuperEffectiveHit(u32 target)
