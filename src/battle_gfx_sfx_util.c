@@ -699,6 +699,7 @@ void DecompressTrainerBackPic(u16 backPicId, u8 battler)
 {
     u8 position = GetBattlerPosition(battler);
     CopyTrainerBackspriteFramesToDest(backPicId, gMonSpritesGfxPtr->spritesGfx[position]);
+    // Aiming for palette slots 8 and 9 for Player and PlayerPartner to prevent Trainer Slides causing mons to change colour
     LoadPalette(gTrainerBacksprites[backPicId].palette.data,
                           OBJ_PLTT_ID(8 + battler/2), PLTT_SIZE_4BPP);
 }
