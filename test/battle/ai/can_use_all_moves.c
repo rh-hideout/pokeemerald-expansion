@@ -595,7 +595,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         {
         //TODO: AI HANDLING
         case EFFECT_CLANGOROUS_SOUL:
-        case EFFECT_LIFE_DEW:
         case EFFECT_POLTERGEIST:
         case EFFECT_COACHING:
         case EFFECT_REVIVAL_BLESSING:
@@ -611,6 +610,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
         // tests exist elsewhere
         case EFFECT_COURT_CHANGE:
         case EFFECT_DOODLE:
+        case EFFECT_LIFE_DEW:
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
