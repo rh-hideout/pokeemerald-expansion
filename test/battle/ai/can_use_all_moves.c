@@ -522,7 +522,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         switch (effect)
         {
         //TODO: AI HANDLING
-        case EFFECT_GEAR_UP:
         case EFFECT_FAIL_IF_NOT_ARG_TYPE:
         case EFFECT_STUFF_CHEEKS:
         case EFFECT_NO_RETREAT:
@@ -540,8 +539,9 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         // tests exist elsewhere
         case EFFECT_ELECTRIC_TERRAIN:
         case EFFECT_PSYCHIC_TERRAIN:
-        case EFFECT_MAGNETIC_FLUX:
         case EFFECT_AURORA_VEIL:
+        case EFFECT_GEAR_UP:
+        case EFFECT_MAGNETIC_FLUX:
  
         // Skipped on purpose.
         case EFFECT_PROTECT:
