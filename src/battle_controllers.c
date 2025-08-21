@@ -3122,6 +3122,8 @@ static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront)
     u32 species = GetBattlerVisualSpecies(battlerId);
     u32 spriteId = gBattlerSpriteIds[battlerId];
 
+    gBattleStruct->battlerKOAnimsRunning++;
+
     if (isFront)
     {
         LaunchAnimationTaskForFrontSprite(&gSprites[spriteId], animId);
