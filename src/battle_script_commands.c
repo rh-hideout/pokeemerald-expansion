@@ -2635,7 +2635,7 @@ static void Cmd_healthbarupdate(void)
 static void Cmd_datahpupdate(void)
 {
     CMD_ARGS(u8 battler);
-    bool32 isPassiveDamageUpdate = gHitMarker & HITMARKER_PASSIVE_HP_UPDATE;
+    bool32 isPassiveHpUpdate = gHitMarker & HITMARKER_PASSIVE_HP_UPDATE;
 
     if (gBattleControllerExecFlags)
         return;
@@ -2751,13 +2751,13 @@ static void Cmd_datahpupdate(void)
         }
 
         if (gBattlerAttacker != gBattlerTarget
-         && !isPassiveDamageUpdate
+         && !isPassiveHpUpdate
          && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS
          && IsBattlerTurnDamaged(gBattlerTarget))
             gBattleStruct->timesGotHit[GetBattlerSide(gBattlerTarget)][gBattlerPartyIndexes[gBattlerTarget]]++;
 
         if (GetMoveEffect(gCurrentMove) == EFFECT_KNOCK_OFF
-         && !isPassiveDamageUpdate
+         && !isPassiveHpUpdate
          && IsBattlerTurnDamaged(gBattlerTarget)
          && gBattleMons[gBattlerTarget].item != ITEM_NONE
          && !DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove)
