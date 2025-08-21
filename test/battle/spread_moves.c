@@ -433,3 +433,23 @@ DOUBLE_BATTLE_TEST("Spread Moves: Unless move hits every target user will not in
         MESSAGE("It's super effective on the opposing Torkoal and Torkoal!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Spread Moves: Focus Sash activates correctly")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { HP(2); MaxHP(2); Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_HYPER_VOICE); MOVE(playerLeft, MOVE_EXPLOSION); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
+        MESSAGE("The opposing Wynaut hung on using its Focus Sash!");
+        MESSAGE("The opposing Wobbuffet hung on using its Focus Sash!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, playerLeft);
+        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("Wynaut hung on using its Focus Sash!");
+        MESSAGE("The opposing Wynaut fainted!");
+    }
+}

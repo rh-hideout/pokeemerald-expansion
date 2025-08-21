@@ -2271,10 +2271,9 @@ static void Cmd_adjustdamage(void)
         {
             gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
             gSpecialStatuses[battlerDef].enduredDamage = TRUE;
-        }
-
-        if (gSpecialStatuses[battlerDef].enduredDamage)
             gProtectStructs[battlerDef].assuranceDoubled = TRUE;
+            enduredHit = FALSE; // Reset for next battler
+        }
     }
 
     if (calcSpreadMoveDamage)
