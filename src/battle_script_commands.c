@@ -6633,12 +6633,11 @@ static void Cmd_moveend(void)
             {
                 gBattleStruct->moveDamage[gBattlerAttacker] = max(1, (gBattleStruct->moveDamage[gBattlerTarget] * GetMoveAbsorbPercentage(gCurrentMove) / 100));
                 gBattleStruct->moveDamage[gBattlerAttacker] = GetDrainedBigRootHp(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerAttacker]);
-                gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE | HITMARKER_PASSIVE_DAMAGE;
+                gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_IGNORE_DISGUISE | HITMARKER_PASSIVE_HP_UPDATE;
                 effect = TRUE;
                 if (GetBattlerAbility(gBattlerTarget) == ABILITY_LIQUID_OOZE)
                 {
                     gBattleStruct->moveDamage[gBattlerAttacker] *= -1;
-                    gHitMarker |= HITMARKER_PASSIVE_HP_UPDATE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABSORB_OOZE;
                     BattleScriptPushCursor();
                     gBattlescriptCurrInstr = BattleScript_EffectAbsorbLiquidOoze;
