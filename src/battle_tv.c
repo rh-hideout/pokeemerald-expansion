@@ -480,12 +480,10 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         }
         break;
     case STRINGID_PKMNRAISEDDEF:
-    case STRINGID_PKMNRAISEDDEFALITTLE:
         tvPtr->side[atkSide].reflectMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].reflectMoveSlot = moveSlot;
         break;
     case STRINGID_PKMNRAISEDSPDEF:
-    case STRINGID_PKMNRAISEDSPDEFALITTLE:
         tvPtr->side[atkSide].lightScreenMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->side[atkSide].lightScreenMoveSlot = moveSlot;
         break;

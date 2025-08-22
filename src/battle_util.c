@@ -5657,13 +5657,11 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
             abilityAffected = TRUE;
             battlerDef = sideBattler - 1;
             abilityDef = ABILITY_PASTEL_VEIL;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PASTEL_VEIL;
             battleScript = BattleScript_ImmunityProtected;
         }
         else if (abilityDef == ABILITY_IMMUNITY)
         {
             abilityAffected = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_POISON;
             battleScript = BattleScript_ImmunityProtected;
         }
         break;
@@ -5685,7 +5683,6 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         else if (abilityDef == ABILITY_LIMBER)
         {
             abilityAffected = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_PARALYSIS;
             battleScript = BattleScript_ImmunityProtected;
         }
         break;
@@ -5701,7 +5698,6 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         else if (abilityDef == ABILITY_WATER_VEIL || abilityDef == ABILITY_WATER_BUBBLE)
         {
             abilityAffected = TRUE;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_ABILITY_PREVENTS_MOVE_BURN;
             battleScript = BattleScript_ImmunityProtected;
         }
         else if (abilityDef == ABILITY_THERMAL_EXCHANGE)
@@ -5732,7 +5728,6 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
             abilityAffected = TRUE;
             battlerDef = sideBattler - 1;
             abilityDef = ABILITY_SWEET_VEIL;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STATUS_HAD_NO_EFFECT;
             battleScript = BattleScript_ImmunityProtected;
         }
         else if (abilityDef == ABILITY_VITAL_SPIRIT || abilityDef == ABILITY_INSOMNIA)
