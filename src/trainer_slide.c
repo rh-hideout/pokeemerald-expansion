@@ -57,6 +57,47 @@ static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_
 {
     [DIFFICULTY_NORMAL] =
     {
+        [TRAINER_WATTSON_1] = {
+            [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING(
+                "This is Trainer A!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_LAST_LOW_HP] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_LAST_LOW_HP!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_LAST_HALF_HP] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_LAST_HALF_HP!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_PLAYER_LANDS_FIRST_CRITICAL_HIT!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_ENEMY_LANDS_FIRST_CRITICAL_HIT!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_PLAYER_LANDS_FIRST_SUPER_EFFECTIVE_HIT!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_ENEMY_MON_UNAFFECTED] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_ENEMY_MON_UNAFFECTED!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_PLAYER_LANDS_FIRST_DOWN!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_LAST_SWITCHIN] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_LAST_SWITCHIN!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_MEGA_EVOLUTION] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_MEGA_EVOLUTION!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_Z_MOVE!{PAUSE_UNTIL_PRESS}"
+            ),
+            [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING(
+                "This is Trainer A TRAINER_SLIDE_DYNAMAX!{PAUSE_UNTIL_PRESS}"
+            ),
+        },
         [TRAINER_MAXIE_MOSSDEEP] = {
             [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING(
                 "This is Trainer A!{PAUSE_UNTIL_PRESS}"
@@ -451,6 +492,13 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
     if (shouldRun == FALSE)
         return TRAINER_SLIDE_TARGET_NONE;
 
+    // Prevents slides triggering twice in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
+    // Currently prevents slides triggering if both mons would activate the slide at the same time
+    if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
+    || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+    || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+        MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
+    
     MarkTrainerSlideAsPlayed(battler, slideId);
     SetTrainerSlideMessage(difficulty,trainerId,slideId);
     return retValue;

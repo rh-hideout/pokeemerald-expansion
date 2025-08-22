@@ -1561,8 +1561,6 @@ static bool32 HandleEndTurnTrainerBSlides(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
-        return slide;
 
     if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_LAST_LOW_HP))
         slide = TRUE;
@@ -1580,7 +1578,14 @@ static bool32 HandleEndTurnTrainerBSlides(u32 battler)
         slide = TRUE;
 
     if (slide == TRUE)
-        BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+    {
+        if ((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA) 
+        || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+        || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF))
+            BattleScriptExecute(BattleScript_TrainerASlideMsgEnd2);
+        else
+            BattleScriptExecute(BattleScript_TrainerBSlideMsgEnd2);
+    }
 
     return slide;
 }
