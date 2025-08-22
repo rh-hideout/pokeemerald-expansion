@@ -1,0 +1,3 @@
+[submodule "tools/wav2agb"]
+	path = tools/wav2agb
+	url = https://github.com/ipatix/wav2agb

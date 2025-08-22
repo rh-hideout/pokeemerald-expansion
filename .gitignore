@@ -22,6 +22,7 @@
 *.fwjpnfont
 sound/**/*.bin
 sound/songs/midi/*.s
+sound/direct_sound_samples/**/*.s
 tools/agbcc
 *.map
 *.bat
@@ -51,6 +52,7 @@ src/data/debug_trainers.h
 test/battle/trainer_control.h
 tools/compresSmol/compresSmol
 tools/compresSmol/compresSmolTilemap
+tools/wav2agb/wav2agb
 *.Identifier
 *.smol
 *.fastSmol

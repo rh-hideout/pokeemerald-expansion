@@ -81,6 +81,7 @@ SECTIONS {
         *libc.a:*.o(.rodata*);
         *libc.a:*.o(.data*);
         sound/songs/*.o(.rodata);
+        sound/direct_sound_samples/*.o(.rodata);
     } > ROM =0
 
     .data.iwram :

@@ -108,6 +108,12 @@ SECTIONS {
         sound/songs/*.o(.rodata);
     } > ROM =0
 
+    sample_data :
+    ALIGN(4)
+    {
+        sound/direct_sound_samples/*.o(.rodata);
+    } > ROM =0
+
     lib_rodata :
     SUBALIGN(4)
     {
