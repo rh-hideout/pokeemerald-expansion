@@ -1513,14 +1513,14 @@ static u32 GetFirstNonIvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 ba
         return PARTY_SIZE;
 
     if (PARTY_SIZE != gBattleStruct->monToSwitchIntoId[battlerIn1]
-     || PARTY_SIZE != gBattleStruct->monToSwitchIntoId[battlerIn2])
+     && PARTY_SIZE != gBattleStruct->monToSwitchIntoId[battlerIn2])
         return PARTY_SIZE;
 
-    for (u32 i = firstId; i < lastId; i++)
+    for (u32 chosenMonId = (lastId-1); chosenMonId >= firstId; chosenMonId--)
     {
-        if ((1 << (i)) & invalidMons)
+        if ((1 << (chosenMonId)) & invalidMons)
             continue;
-        return i; // first non invalid mon found
+        return chosenMonId; // first non invalid mon found
     }
     return PARTY_SIZE;
 }
@@ -2063,6 +2063,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 aiMove, hitsToKOAI, maxHitsToKO = 0;
     u16 bestResist = UQ_4_12(1.0), bestResistEffective = UQ_4_12(1.0), typeMatchup;
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, canSwitchinWin1v1;
+    u32 invalidMons = 0;
 
     // Iterate through mons
     for (i = firstId; i < lastId; i++)
@@ -2074,6 +2075,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             || i == gBattleStruct->monToSwitchIntoId[battlerIn1]
             || i == gBattleStruct->monToSwitchIntoId[battlerIn2])
         {
+            invalidMons |= 1u << i;
             continue;
         }
         // Save Ace Pokemon for last
@@ -2081,6 +2083,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         {
             aceMonId = i;
             aceMonCount++;
+            invalidMons |= 1u << i;
             continue;
         }
         else
@@ -2229,6 +2232,11 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
      && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch))
         return aceMonId;
+
+    // Fallback
+    u32 bestMonId = GetFirstNonIvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
+    if (bestMonId != PARTY_SIZE)
+        return bestMonId;
 
     return PARTY_SIZE;
 }
