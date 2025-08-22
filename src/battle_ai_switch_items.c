@@ -1507,6 +1507,24 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     return bestMonId;
 }
 
+static u32 GetFirstNonIvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 battlerIn1, u32 battlerIn2)
+{
+    if (!IsDoubleBattle())
+        return PARTY_SIZE;
+
+    if (PARTY_SIZE != gBattleStruct->monToSwitchIntoId[battlerIn1]
+     || PARTY_SIZE != gBattleStruct->monToSwitchIntoId[battlerIn2])
+        return PARTY_SIZE;
+
+    for (u32 i = firstId; i < lastId; i++)
+    {
+        if ((1 << (i)) & invalidMons)
+            continue;
+        return i; // first non invalid mon found
+    }
+    return PARTY_SIZE;
+}
+
 bool32 IsMonGrounded(u16 heldItemEffect, u32 ability, u8 type1, u8 type2)
 {
     // List that makes mon not grounded
@@ -2328,6 +2346,11 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
         && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch))
             return aceMonId;
+
+        // Fallback
+        bestMonId = GetFirstNonIvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
+        if (bestMonId != PARTY_SIZE)
+            return bestMonId;
 
         return PARTY_SIZE;
     }
