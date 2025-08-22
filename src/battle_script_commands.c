@@ -2181,7 +2181,7 @@ static void Cmd_adjustdamage(void)
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
-    bool32 enduredHit = FALSE;
+    u32 enduredHit = 0;
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
@@ -2227,30 +2227,30 @@ static void Cmd_adjustdamage(void)
 
         if (moveEffect == EFFECT_FALSE_SWIPE)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
         }
         else if (gProtectStructs[battlerDef].endured)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
         }
         else if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordItemEffectBattle(battlerDef, holdEffect);
             gLastUsedItem = gBattleMons[battlerDef].item;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
         else if (B_STURDY >= GEN_5 && GetBattlerAbility(battlerDef) == ABILITY_STURDY && IsBattlerAtMaxHp(battlerDef))
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordAbilityBattle(battlerDef, ABILITY_STURDY);
             gLastUsedAbility = ABILITY_STURDY;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_STURDIED;
         }
         else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(battlerDef))
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordItemEffectBattle(battlerDef, holdEffect);
             gLastUsedItem = gBattleMons[battlerDef].item;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
@@ -2261,18 +2261,17 @@ static void Cmd_adjustdamage(void)
              || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
              || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
             {
-                enduredHit = TRUE;
+                enduredHit |= 1u << battlerDef;
                 gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
             }
         }
 
         // Handle reducing the dmg to 1 hp.
-        if (enduredHit)
+        if (enduredHit & 1u << battlerDef)
         {
             gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
             gSpecialStatuses[battlerDef].enduredDamage = TRUE;
             gProtectStructs[battlerDef].assuranceDoubled = TRUE;
-            enduredHit = FALSE; // Reset for next battler
         }
     }
 
