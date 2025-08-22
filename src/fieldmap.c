@@ -16,6 +16,7 @@
 #include "tv.h"
 #include "constants/rgb.h"
 #include "constants/metatile_behaviors.h"
+#include "constants/metatile_behaviors_frlg.h"
 #include "wild_encounter.h"
 
 struct ConnectionFlags
@@ -50,6 +51,24 @@ static bool8 IsCoordInIncomingConnectingMap(int coord, int srcMax, int destMax, 
 
 static inline u16 GetBorderBlockAt(int x, int y)
 {
+    const struct MapLayout *mapLayout = gMapHeader.mapLayout;
+
+    if (mapLayout->isFrlg)
+    {
+        s32 xprime;
+        s32 yprime;
+
+        xprime = x - MAP_OFFSET;
+        xprime += 8 * mapLayout->borderWidth;
+        xprime %= mapLayout->borderWidth;
+
+        yprime = y - MAP_OFFSET;
+        yprime += 8 * mapLayout->borderHeight;
+        yprime %= mapLayout->borderHeight;
+
+        return mapLayout->border[xprime + yprime * mapLayout->borderWidth] | MAPGRID_COLLISION_MASK;
+    }
+
     int i = (x + 1) & 1;
     i += ((y + 1) & 1) * 2;
     return gMapHeader.mapLayout->border[i] | MAPGRID_IMPASSABLE;
@@ -58,6 +77,54 @@ static inline u16 GetBorderBlockAt(int x, int y)
 #define AreCoordsWithinMapGridBounds(x, y) (x >= 0 && x < gBackupMapLayout.width && y >= 0 && y < gBackupMapLayout.height)
 
 #define GetMapGridBlockAt(x, y) (AreCoordsWithinMapGridBounds(x, y) ? gBackupMapLayout.map[x + gBackupMapLayout.width * y] : GetBorderBlockAt(x, y))
+
+// Masks/shifts for metatile attributes
+// This is the format of the data stored in each data/tilesets/*/*/metatile_attributes.bin file
+static const u32 sMetatileAttrMasks[METATILE_ATTRIBUTE_COUNT] = {
+    [METATILE_ATTRIBUTE_BEHAVIOR]       = 0x000001ff, // Bits 0-8
+    [METATILE_ATTRIBUTE_TERRAIN]        = 0x00003e00, // Bits 9-13
+    [METATILE_ATTRIBUTE_2]              = 0x0003c000, // Bits 14-17
+    [METATILE_ATTRIBUTE_3]              = 0x00fc0000, // Bits 18-23
+    [METATILE_ATTRIBUTE_ENCOUNTER_TYPE] = 0x07000000, // Bits 24-26
+    [METATILE_ATTRIBUTE_5]              = 0x18000000, // Bits 27-28
+    [METATILE_ATTRIBUTE_LAYER_TYPE]     = 0x60000000, // Bits 29-30
+    [METATILE_ATTRIBUTE_7]              = 0x80000000  // Bit  31
+};
+
+static const u8 sMetatileAttrShifts[METATILE_ATTRIBUTE_COUNT] = {
+    [METATILE_ATTRIBUTE_BEHAVIOR]       = 0,
+    [METATILE_ATTRIBUTE_TERRAIN]        = 9,
+    [METATILE_ATTRIBUTE_2]              = 14,
+    [METATILE_ATTRIBUTE_3]              = 18,
+    [METATILE_ATTRIBUTE_ENCOUNTER_TYPE] = 24,
+    [METATILE_ATTRIBUTE_5]              = 27,
+    [METATILE_ATTRIBUTE_LAYER_TYPE]     = 29,
+    [METATILE_ATTRIBUTE_7]              = 31
+};
+
+static const u32 sMetatileAttrMasksEmerald[METATILE_ATTRIBUTE_COUNT] = {
+    
+    [METATILE_ATTRIBUTE_BEHAVIOR]       = METATILE_ATTR_BEHAVIOR_MASK,
+    [METATILE_ATTRIBUTE_TERRAIN]        = 0xFFFFFFFF,
+    [METATILE_ATTRIBUTE_2]              = 0xFFFFFFFF,
+    [METATILE_ATTRIBUTE_3]              = 0xFFFFFFFF,
+    [METATILE_ATTRIBUTE_ENCOUNTER_TYPE] = 0xFFFFFFFF,
+    [METATILE_ATTRIBUTE_5]              = 0xFFFFFFFF,
+    [METATILE_ATTRIBUTE_LAYER_TYPE]     = METATILE_ATTR_LAYER_MASK,
+    [METATILE_ATTRIBUTE_7]              = 0xFFFFFFFF
+};
+
+static const u8 sMetatileAttrShiftsEmerald[METATILE_ATTRIBUTE_COUNT] = {
+    
+    [METATILE_ATTRIBUTE_BEHAVIOR]       = 0,
+    [METATILE_ATTRIBUTE_TERRAIN]        = 0,
+    [METATILE_ATTRIBUTE_2]              = 0,
+    [METATILE_ATTRIBUTE_3]              = 0,
+    [METATILE_ATTRIBUTE_ENCOUNTER_TYPE] = 0,
+    [METATILE_ATTRIBUTE_5]              = 0,
+    [METATILE_ATTRIBUTE_LAYER_TYPE]     = METATILE_ATTR_LAYER_SHIFT,
+    [METATILE_ATTRIBUTE_7]              = 0
+};
 
 const struct MapHeader *const GetMapHeaderFromConnection(const struct MapConnection *connection)
 {
@@ -358,26 +425,45 @@ u8 MapGridGetCollisionAt(int x, int y)
     return UNPACK_COLLISION(block);
 }
 
+u32 GetNumTilesInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_TILES_IN_PRIMARY_FRLG : NUM_TILES_IN_PRIMARY;
+}
+
+u32 GetNumMetatilesInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_METATILES_IN_PRIMARY_FRLG : NUM_METATILES_IN_PRIMARY;
+}
+
+u32 GetNumPalsInPrimary(struct MapLayout const *mapLayout)
+{
+    return mapLayout->isFrlg ? NUM_PALS_IN_PRIMARY_FRLG : NUM_PALS_IN_PRIMARY;
+}
+
 u32 MapGridGetMetatileIdAt(int x, int y)
 {
     u16 block = GetMapGridBlockAt(x, y);
 
     if (block == MAPGRID_UNDEFINED)
-        return UNPACK_METATILE(GetBorderBlockAt(x, y));
+        return GetBorderBlockAt(x, y) & MAPGRID_METATILE_ID_MASK;
 
     return UNPACK_METATILE(block);
 }
 
+u32 MapGridGetMetatileAttributeAt(s16 x, s16 y, u8 attributeType)
+{
+    u16 metatileId = MapGridGetMetatileIdAt(x, y);
+    return GetAttributeByMetatileIdAndMapLayout(metatileId, attributeType, gMapHeader.mapLayout->isFrlg);
+}
+
 u32 MapGridGetMetatileBehaviorAt(int x, int y)
 {
-    u16 metatile = MapGridGetMetatileIdAt(x, y);
-    return UNPACK_BEHAVIOR(GetMetatileAttributesById(metatile));
+    return MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_BEHAVIOR);
 }
 
 u8 MapGridGetMetatileLayerTypeAt(int x, int y)
 {
-    u16 metatile = MapGridGetMetatileIdAt(x, y);
-    return UNPACK_LAYER_TYPE(GetMetatileAttributesById(metatile));
+    return MapGridGetMetatileAttributeAt(x, y, METATILE_ATTRIBUTE_LAYER_TYPE);
 }
 
 void MapGridSetMetatileIdAt(int x, int y, u16 metatile)
@@ -402,23 +488,190 @@ void MapGridSetMetatileEntryAt(int x, int y, u16 metatile)
     }
 }
 
-u16 GetMetatileAttributesById(u16 metatile)
+static const u32 sFrlgToEmeraldBehavior[NUM_METATILE_BEHAVIORS] =
 {
-    const u16 *attributes;
-    if (metatile < NUM_METATILES_IN_PRIMARY)
+    [MB_FRLG_NORMAL] = MB_NORMAL,
+    [MB_FRLG_UNUSED_01] = MB_SECRET_BASE_WALL,
+    [MB_FRLG_TALL_GRASS] = MB_TALL_GRASS,
+    [MB_FRLG_CAVE] = MB_CAVE,
+    [MB_FRLG_RUNNING_DISALLOWED] = MB_NO_RUNNING,
+    [MB_FRLG_INDOOR_ENCOUNTER] = MB_INDOOR_ENCOUNTER,
+    [MB_FRLG_MOUNTAIN_TOP] = MB_MOUNTAIN_TOP,
+    [MB_FRLG_POND_WATER]         = MB_POND_WATER,
+    [MB_FRLG_FAST_WATER]         = MB_FAST_WATER,
+    [MB_FRLG_DEEP_WATER]         = MB_DEEP_WATER,
+    [MB_FRLG_WATERFALL]          = MB_WATERFALL,
+    [MB_FRLG_OCEAN_WATER]        = MB_OCEAN_WATER,
+    [MB_FRLG_PUDDLE] = MB_PUDDLE,
+    [MB_FRLG_SHALLOW_WATER] = MB_SHALLOW_WATER,
+    [MB_FRLG_UNDERWATER_BLOCKED_ABOVE] = MB_NO_SURFACING,
+    [MB_FRLG_UNUSED_WATER] = MB_UNUSED_SOOTOPOLIS_DEEP_WATER_2,
+    [MB_FRLG_CYCLING_ROAD_WATER] = MB_CYCLING_ROAD_WATER,
+    [MB_FRLG_STRENGTH_BUTTON] = MB_STRENGTH_BUTTON,
+    [MB_FRLG_SAND] = MB_SAND,
+    [MB_FRLG_SEAWEED] = MB_SEAWEED,
+    [MB_FRLG_ICE] = MB_ICE,
+    [MB_FRLG_THIN_ICE] = MB_THIN_ICE,
+    [MB_FRLG_CRACKED_ICE] = MB_CRACKED_ICE,
+    [MB_FRLG_HOT_SPRINGS] = MB_HOT_SPRINGS,
+    [MB_FRLG_ROCK_STAIRS] = MB_ROCK_STAIRS,
+    [MB_FRLG_SAND_CAVE] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_IMPASSABLE_EAST]      = MB_IMPASSABLE_EAST,
+    [MB_FRLG_IMPASSABLE_WEST]      = MB_IMPASSABLE_WEST,
+    [MB_FRLG_IMPASSABLE_NORTH]     = MB_IMPASSABLE_NORTH,
+    [MB_FRLG_IMPASSABLE_SOUTH]     = MB_IMPASSABLE_SOUTH,
+    [MB_FRLG_IMPASSABLE_NORTHEAST] = MB_IMPASSABLE_NORTHEAST,
+    [MB_FRLG_IMPASSABLE_NORTHWEST] = MB_IMPASSABLE_NORTHWEST,
+    [MB_FRLG_IMPASSABLE_SOUTHEAST] = MB_IMPASSABLE_SOUTHEAST,
+    [MB_FRLG_IMPASSABLE_SOUTHWEST] = MB_IMPASSABLE_SOUTHWEST,
+    [MB_FRLG_JUMP_EAST] = MB_JUMP_EAST,
+    [MB_FRLG_JUMP_WEST] = MB_JUMP_WEST,
+    [MB_FRLG_JUMP_NORTH] = MB_JUMP_NORTH,
+    [MB_FRLG_JUMP_SOUTH] = MB_JUMP_SOUTH,
+    [MB_FRLG_WALK_EAST] =   MB_WALK_EAST,
+    [MB_FRLG_WALK_WEST] =   MB_WALK_WEST,
+    [MB_FRLG_WALK_NORTH] =  MB_WALK_NORTH,
+    [MB_FRLG_WALK_SOUTH] =  MB_WALK_SOUTH,
+    [MB_FRLG_SLIDE_EAST] =  MB_SLIDE_EAST,
+    [MB_FRLG_SLIDE_WEST] =  MB_SLIDE_WEST,
+    [MB_FRLG_SLIDE_NORTH] = MB_SLIDE_NORTH,
+    [MB_FRLG_SLIDE_SOUTH] = MB_SLIDE_SOUTH,
+    [MB_FRLG_TRICK_HOUSE_PUZZLE_8_FLOOR] = MB_TRICK_HOUSE_PUZZLE_8_FLOOR,
+    [MB_FRLG_EASTWARD_CURRENT]   = MB_EASTWARD_CURRENT,
+    [MB_FRLG_WESTWARD_CURRENT]   = MB_WESTWARD_CURRENT,
+    [MB_FRLG_NORTHWARD_CURRENT]  = MB_NORTHWARD_CURRENT,
+    [MB_FRLG_SOUTHWARD_CURRENT]  = MB_SOUTHWARD_CURRENT,
+    [MB_FRLG_SPIN_RIGHT] = MB_SPIN_RIGHT,
+    [MB_FRLG_SPIN_LEFT] = MB_SPIN_LEFT,
+    [MB_FRLG_SPIN_UP] = MB_SPIN_UP,
+    [MB_FRLG_SPIN_DOWN] = MB_SPIN_DOWN,
+    [MB_FRLG_STOP_SPINNING] = MB_STOP_SPINNING,
+    [MB_FRLG_CAVE_DOOR] = MB_NON_ANIMATED_DOOR,
+    [MB_FRLG_LADDER] = MB_LADDER,
+    [MB_FRLG_EAST_ARROW_WARP] = MB_EAST_ARROW_WARP,
+    [MB_FRLG_WEST_ARROW_WARP] = MB_WEST_ARROW_WARP,
+    [MB_FRLG_NORTH_ARROW_WARP] = MB_NORTH_ARROW_WARP,
+    [MB_FRLG_SOUTH_ARROW_WARP] = MB_SOUTH_ARROW_WARP,
+    [MB_FRLG_FALL_WARP] = MB_MT_PYRE_HOLE,
+    [MB_FRLG_REGULAR_WARP] = MB_AQUA_HIDEOUT_WARP,
+    [MB_FRLG_LAVARIDGE_1F_WARP] = MB_LAVARIDGE_GYM_1F_WARP,
+    [MB_FRLG_WARP_DOOR] = MB_ANIMATED_DOOR,
+    [MB_FRLG_UP_ESCALATOR] = MB_UP_ESCALATOR,
+    [MB_FRLG_DOWN_ESCALATOR] = MB_DOWN_ESCALATOR,
+    [MB_FRLG_UP_RIGHT_STAIR_WARP] = MB_UP_RIGHT_STAIR_WARP,
+    [MB_FRLG_UP_LEFT_STAIR_WARP] = MB_UP_LEFT_STAIR_WARP,
+    [MB_FRLG_DOWN_RIGHT_STAIR_WARP] = MB_DOWN_RIGHT_STAIR_WARP,
+    [MB_FRLG_DOWN_LEFT_STAIR_WARP] = MB_DOWN_LEFT_STAIR_WARP,
+    [MB_FRLG_UNION_ROOM_WARP] = MB_BRIDGE_OVER_OCEAN,
+    [MB_FRLG_COUNTER] = MB_COUNTER,
+    [MB_FRLG_BOOKSHELF] = MB_BOOKSHELF,
+    [MB_FRLG_POKEMART_SHELF] = MB_POKEMON_CENTER_BOOKSHELF,
+    [MB_FRLG_PC] = MB_PC,
+    [MB_FRLG_SIGNPOST] = MB_SIGNPOST,
+    [MB_FRLG_REGION_MAP] = MB_REGION_MAP,
+    [MB_FRLG_TELEVISION] = MB_TELEVISION,
+    [MB_FRLG_POKEMON_CENTER_SIGN] = MB_POKEMON_CENTER_SIGN,
+    [MB_FRLG_POKEMART_SIGN] = MB_POKEMART_SIGN,
+    [MB_FRLG_CABINET] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_KITCHEN] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_DRESSER] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_SNACKS] = MB_NORMAL,
+    [MB_FRLG_CABLE_CLUB_WIRELESS_MONITOR] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_BATTLE_RECORDS] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_QUESTIONNAIRE] = MB_QUESTIONNAIRE,
+    [MB_FRLG_FOOD] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_INDIGO_PLATEAU_SIGN_1] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_INDIGO_PLATEAU_SIGN_2] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_BLUEPRINTS] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_PAINTING] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_POWER_PLANT_MACHINE] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_TELEPHONE] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_COMPUTER] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_ADVERTISING_POSTER] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_FOOD_SMELLS_TASTY] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_TRASH_BIN] = MB_TRASH_CAN,
+    [MB_FRLG_CUP] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_PORTHOLE] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_WINDOW] = MB_NORMAL,
+    [MB_FRLG_BLINKING_LIGHTS] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_NEATLY_LINED_UP_TOOLS] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_IMPRESSIVE_MACHINE] = MB_NORMAL,
+    [MB_FRLG_VIDEO_GAME] = MB_NORMAL,
+    [MB_FRLG_BURGLARY] = MB_NORMAL, // TODO: FRLG behavior
+    [MB_FRLG_TRAINER_TOWER_MONITOR] = MB_TRAINER_HILL_TIMER,
+    [MB_FRLG_CYCLING_ROAD_PULL_DOWN] = MB_CYCLING_ROAD_PULL_DOWN,
+    [MB_FRLG_CYCLING_ROAD_PULL_DOWN_GRASS] = MB_CYCLING_ROAD_PULL_DOWN_GRASS,
+ };
+
+static u32 TranslateFrlgBehaviour(u32 behavior)
+{
+    if (behavior >= NUM_METATILE_BEHAVIORS)
+        return MB_INVALID;
+    return sFrlgToEmeraldBehavior[behavior];
+}
+
+u32 ExtractMetatileAttribute(u32 attributes, u8 attributeType, bool32 isFrlg)
+{
+    if (attributeType >= METATILE_ATTRIBUTE_COUNT) // Check for METATILE_ATTRIBUTES_ALL
+        return attributes;
+
+    if (isFrlg)
     {
-        attributes = gMapHeader.mapLayout->primaryTileset->metatileAttributes;
-        return attributes[metatile];
+        if (attributeType == METATILE_ATTRIBUTE_BEHAVIOR)
+            return TranslateFrlgBehaviour((attributes & sMetatileAttrMasks[attributeType]) >> sMetatileAttrShifts[attributeType]);
+        else
+            return (attributes & sMetatileAttrMasks[attributeType]) >> sMetatileAttrShifts[attributeType];
+    }
+
+    return (attributes & sMetatileAttrMasksEmerald[attributeType]) >> sMetatileAttrShiftsEmerald[attributeType];
+}
+
+static u32 GetAttributeByMetatileIdAndMapLayoutFrlg(u16 metatile, u8 attributeType)
+{
+    u32 attribute;
+    if (metatile < GetNumMetatilesInPrimary(gMapHeader.mapLayout))
+    {
+        const u32 *attributes = (const u32*)gMapHeader.mapLayout->primaryTileset->metatileAttributes;
+        attribute = attributes[metatile];
     }
     else if (metatile < NUM_METATILES_TOTAL)
     {
-        attributes = gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
-        return attributes[metatile - NUM_METATILES_IN_PRIMARY];
+        const u32 *attributes = (const u32*) gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
+        metatile -= GetNumMetatilesInPrimary(gMapHeader.mapLayout);
+        attribute = attributes[metatile];
     }
     else
     {
         return MB_INVALID;
     }
+
+    return ExtractMetatileAttribute(attribute, attributeType, TRUE);
+}
+
+u32 GetAttributeByMetatileIdAndMapLayout(u16 metatile, u8 attributeType, bool32 isFrlg)
+{
+    u32 attribute;
+
+    if (isFrlg)
+        return GetAttributeByMetatileIdAndMapLayoutFrlg(metatile, attributeType);
+
+    if (metatile < GetNumMetatilesInPrimary(gMapHeader.mapLayout))
+    {
+        const u16 *attributes = (const u16*)gMapHeader.mapLayout->primaryTileset->metatileAttributes;
+        attribute = attributes[metatile];
+    }
+    else if (metatile < NUM_METATILES_TOTAL)
+    {
+        const u16 *attributes = (const u16*)gMapHeader.mapLayout->secondaryTileset->metatileAttributes;
+        metatile -= GetNumMetatilesInPrimary(gMapHeader.mapLayout);
+        attribute = attributes[metatile];
+    }
+    else
+    {
+        return MB_INVALID;
+    }
+
+    return ExtractMetatileAttribute(attribute, attributeType, FALSE);
 }
 
 void SaveMapView(void)
@@ -879,7 +1132,7 @@ static void UNUSED ApplyGlobalTintToPaletteSlot(u8 slot, u8 count)
 
 }
 
-static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded)
+static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded, u32 numPalsInPrimary)
 {
     if (tileset)
     {
@@ -897,9 +1150,9 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
             // All 'gTilesetPalettes_' arrays should have ALIGNED(4) in them,
             // but we use SmartCopy here just in case they don't
             if (skipFaded)
-                CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                CpuCopy16(tileset->palettes[numPalsInPrimary], &gPlttBufferUnfaded[destOffset], size);
             else
-                LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                LoadPaletteFast(tileset->palettes[numPalsInPrimary], destOffset, size);
         }
         else
         {
@@ -911,35 +1164,35 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
 
 void CopyPrimaryTilesetToVram(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVram(mapLayout->primaryTileset, NUM_TILES_IN_PRIMARY, 0);
+    CopyTilesetToVram(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
 }
 
 void CopySecondaryTilesetToVram(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVram(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+    CopyTilesetToVram(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
 }
 
 void CopySecondaryTilesetToVramUsingHeap(struct MapLayout const *mapLayout)
 {
-    CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+    CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
 }
 
 static void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout)
 {
-    LoadTilesetPalette(mapLayout->primaryTileset, 0, NUM_PALS_IN_PRIMARY * PLTT_SIZE_4BPP, FALSE);
+    LoadTilesetPalette(mapLayout->primaryTileset, 0, GetNumPalsInPrimary(mapLayout) * PLTT_SIZE_4BPP, FALSE, GetNumPalsInPrimary(mapLayout));
 }
 
 void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
 {
-    LoadTilesetPalette(mapLayout->secondaryTileset, NUM_PALS_IN_PRIMARY * 16, (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * PLTT_SIZE_4BPP, skipFaded);
+    LoadTilesetPalette(mapLayout->secondaryTileset, GetNumPalsInPrimary(mapLayout) * 16, (NUM_PALS_TOTAL - GetNumPalsInPrimary(mapLayout)) * PLTT_SIZE_4BPP, skipFaded, GetNumPalsInPrimary(mapLayout));
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
 {
     if (mapLayout)
     {
-        CopyTilesetToVramUsingHeap(mapLayout->primaryTileset, NUM_TILES_IN_PRIMARY, 0);
-        CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - NUM_TILES_IN_PRIMARY, NUM_TILES_IN_PRIMARY);
+        CopyTilesetToVramUsingHeap(mapLayout->primaryTileset, GetNumTilesInPrimary(mapLayout), 0);
+        CopyTilesetToVramUsingHeap(mapLayout->secondaryTileset, NUM_TILES_TOTAL - GetNumTilesInPrimary(mapLayout), GetNumTilesInPrimary(mapLayout));
     }
 }
 

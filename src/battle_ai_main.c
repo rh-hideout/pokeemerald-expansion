@@ -6495,7 +6495,7 @@ static s32 AI_Safari(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 // First battle logic
 static s32 AI_FirstBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
-    if (gAiLogicData->hpPercents[battlerDef] <= 20)
+    if (!IS_FRLG && gAiLogicData->hpPercents[battlerDef] <= 20)
         AI_Flee();
 
     return score;
