@@ -69,3 +69,5 @@ SINGLE_BATTLE_TEST("Protect always works when used after flinching")
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HEADBUTT, opponent);
     }
 }
+
+TO_DO_BATTLE_TEST("Dynamax: Dynamax Pokémon are immune to flinching")

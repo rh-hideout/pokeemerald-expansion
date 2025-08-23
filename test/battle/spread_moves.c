@@ -83,7 +83,7 @@ DOUBLE_BATTLE_TEST("Spread Moves: A spread move attack will activate both resist
     }
 }
 
-DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist berries on one pokemon, only the damage for that mon will be reduced")
+DOUBLE_BATTLE_TEST("Spread Moves: If a spread move attack will activate a resist berries on one Pokémon, only the damage for that mon will be reduced")
 {
     s16 opponentLeftDmg[2];
     s16 opponentRightDmg[2];

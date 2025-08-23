@@ -199,7 +199,7 @@ SINGLE_BATTLE_TEST("Defiant correctly activates after Sticky Web lowers Speed if
     }
 }
 
-DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally pokemon")
+DOUBLE_BATTLE_TEST("Defiant is activated by Cotton Down for non-ally Pokémon")
 {
     GIVEN {
         PLAYER(SPECIES_MANKEY) { Ability(ABILITY_DEFIANT); }
@@ -301,7 +301,7 @@ SINGLE_BATTLE_TEST("Defiant activates for each stat that is lowered")
     }
 }
 
-SINGLE_BATTLE_TEST("Defiant doesn't activate if the pokemon lowers it's own stats")
+SINGLE_BATTLE_TEST("Defiant doesn't activate if the Pokémon lowers it's own stats")
 {
     u32 move;
 
