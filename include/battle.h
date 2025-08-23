@@ -869,8 +869,6 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 //       in include/constants/battle_script_commands.h
 struct BattleScripting
 {
-    s32 unused1;
-    s32 bideDmg;
     u8 multihitString[6];
     bool8 expOnCatch;
     u8 unused2;
