@@ -871,7 +871,7 @@ struct BattleScripting
 {
     u8 multihitString[6];
     bool8 expOnCatch;
-    u8 unused2;
+    u8 stickyWebStatDrop; // To prevent Defiant activating on a Court Change'd Sticky Web
     u8 animArg1;
     u8 animArg2;
     u16 savedStringId;
@@ -904,7 +904,6 @@ struct BattleScripting
     u16 abilityPopupOverwrite;
     u8 switchCase;  // Special switching conditions, eg. red card
     u8 overrideBerryRequirements;
-    u8 stickyWebStatDrop; // To prevent Defiant activating on a Court Change'd Sticky Web
 };
 
 struct BattleSpriteInfo

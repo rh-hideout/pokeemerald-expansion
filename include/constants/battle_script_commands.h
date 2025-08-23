@@ -4,7 +4,7 @@
 // The following correspond to the struct members of BattleScripting by adding their offset
 #define sMULTIHIT_STRING             (gBattleScripting + 0x00) // multihitString
 #define sEXP_CATCH                   (gBattleScripting + 0x06) // expOnCatch
-#define sUNUSED                      (gBattleScripting + 0x07) // unused
+#define sSTICKY_WEB_STAT_DROP        (gBattleScripting + 0x07) // stickyWebStatDrop
 #define sB_ANIM_ARG1                 (gBattleScripting + 0x08) // animArg1
 #define sB_ANIM_ARG2                 (gBattleScripting + 0x09) // animArg2
 #define sSAVED_STRINID               (gBattleScripting + 0x0A) // savedStringId
@@ -37,7 +37,6 @@
 #define sABILITY_OVERWRITE           (gBattleScripting + 0x2C) // abilityPopupOverwrite
 #define sSWITCH_CASE                 (gBattleScripting + 0x2E) // switchCase
 #define sBERRY_OVERRIDE              (gBattleScripting + 0x2F) // overrideBerryRequirements
-#define sSTICKY_WEB_STAT_DROP        (gBattleScripting + 0x30) // stickyWebStatDrop
 
 // Array entries for battle communication
 #define MULTIUSE_STATE          0
