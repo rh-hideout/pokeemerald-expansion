@@ -1869,7 +1869,10 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     if (IsMultibattleTest())
     {
         trainerPicId = TRAINER_BACK_PIC_BRENDAN;
-        xPos = 32;
+        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+            xPos = 32;
+        else
+            xPos = 80;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
     else
