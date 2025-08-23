@@ -66,7 +66,9 @@ SINGLE_BATTLE_TEST("Sheer Force doesn't boost Present", s16 damage)
         PLAYER(SPECIES_TAUROS) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_PRESENT); }
+        //Test will fail if present heals because the hp change would be 0
+        //so we want a damaging version of present
+        TURN { MOVE(player, MOVE_PRESENT, WITH_RNG(RNG_PRESENT, 1)); } 
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
