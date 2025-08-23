@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Rototiller fails if there are no valid targets")
     }
 }
 
-SINGLE_BATTLE_TEST("Rototiller doesn't affect pokemon that are semi-invulnerable")
+SINGLE_BATTLE_TEST("Rototiller doesn't affect Pokémon that are semi-invulnerable")
 {
     GIVEN {
         ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);

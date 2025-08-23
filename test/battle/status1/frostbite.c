@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Frostbite reduces the special attack by 50 percent")
    } THEN { EXPECT_EQ(reducedDamage * 2, normaleDamage); }
 }
 
-SINGLE_BATTLE_TEST("Frostbite deals 1/16th (Gen7+) or 1/8th damage to affected pokemon")
+SINGLE_BATTLE_TEST("Frostbite deals 1/16th (Gen7+) or 1/8th damage to affected Pokémon")
 {
     s16 frostbiteDamage;
 
