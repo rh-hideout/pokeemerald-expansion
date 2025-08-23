@@ -149,6 +149,30 @@ NAKED static void InvokeTwoVsOneTestFunctionWithStack(void *results, u32 i, stru
         .pool");
 }
 
+NAKED static void InvokeOneVsTwoTestFunctionWithStack(void *results, u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight, OneVsTwoBattleTestFunction function, void *stack)
+{
+    asm("push {r4-r7,lr}\n\
+         ldr r4, [sp, #28] @ function\n\
+         ldr r5, [sp, #32] @ stack\n\
+         mov r6, sp\n\
+         mov sp, r5\n\
+         push {r6}\n\
+         add r6, #20\n\
+         ldmia r6, {r6, r7} @ playerRight, opponentRight\n\
+         push {r6, r7}\n\
+         ldr r6, =OneVsTwoRestoreSP + 1\n\
+         mov lr, r6\n\
+         bx r4\n\
+    OneVsTwoRestoreSP:\n\
+         add sp, #8\n\
+         pop {r0}\n\
+         mov sp, r0\n\
+         pop {r4-r7}\n\
+         pop {r0}\n\
+         bx r0\n\
+        .pool");
+}
+
 // Calls test->function, but pointing its stack at DATA.stack so that
 // local variables are live after the function returns (and so can be
 // referenced by HP_BAR, or the next call, etc).
@@ -177,6 +201,10 @@ static void InvokeTestFunction(const struct BattleTest *test)
     case BATTLE_TEST_AI_TWO_VS_ONE:
         InvokeTwoVsOneTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.two_vs_one, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
         break;
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
+        InvokeOneVsTwoTestFunctionWithStack(STATE->results, STATE->runParameter, &gBattleMons[B_POSITION_PLAYER_LEFT], &gBattleMons[B_POSITION_OPPONENT_LEFT], &gBattleMons[B_POSITION_PLAYER_RIGHT], &gBattleMons[B_POSITION_OPPONENT_RIGHT], test->function.one_vs_two, &DATA.stack[BATTLE_TEST_STACK_SIZE]);
+        break;
     }
 }
 
@@ -194,6 +222,7 @@ static bool32 IsAITest(void)
     case BATTLE_TEST_AI_DOUBLES:
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
         return TRUE;
     }
     return FALSE;
@@ -242,6 +271,8 @@ static void BattleTest_SetUp(void *data)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
         STATE->battlersCount = 4;
         break;
     }
@@ -366,6 +397,16 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[3] = 1;
         DATA.hasAI = TRUE;
         break;
+    case BATTLE_TEST_AI_ONE_VS_TWO:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
+        DATA.recordedBattle.opponentA = TRAINER_LEAF;
+        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 1;
+        DATA.currentMonIndexes[3] = 3;
+        DATA.hasAI = TRUE;
+        break;
     case BATTLE_TEST_SINGLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
@@ -398,6 +439,15 @@ static void BattleTest_Run(void *data)
         DATA.currentMonIndexes[1] = 0;
         DATA.currentMonIndexes[2] = 3;
         DATA.currentMonIndexes[3] = 1;
+        break;
+    case BATTLE_TEST_ONE_VS_TWO:
+        DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
+        DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        DATA.currentMonIndexes[0] = 0;
+        DATA.currentMonIndexes[1] = 0;
+        DATA.currentMonIndexes[2] = 1;
+        DATA.currentMonIndexes[3] = 3;
         break;
     }
 
@@ -1729,24 +1779,24 @@ void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
     struct Pokemon *party;
     INVALID_IF(species >= SPECIES_EGG, "Invalid species: %d", species);
     ASSUMPTION_FAIL_IF(!IsSpeciesEnabled(species), "Species disabled: %d", species);
-    if (position == B_POSITION_PLAYER_LEFT)
+    if (position == B_POSITION_PLAYER_LEFT) // MULTI_PLAYER
     {
         partySize = &DATA.playerPartySize;
         party = DATA.recordedBattle.playerParty;
     }
-    else if (position == B_POSITION_PLAYER_RIGHT)
+    else if (position == B_POSITION_PLAYER_RIGHT) // MULTI_PARTNER
     {
         partySize = &DATA.playerPartySize;
         if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.playerParty;
     } 
-    else if (position == B_POSITION_OPPONENT_LEFT)
+    else if (position == B_POSITION_OPPONENT_LEFT) // MULTI_OPPONENT_A
     {
         partySize = &DATA.opponentPartySize;
         party = DATA.recordedBattle.opponentParty;
     } 
-    else
+    else // MULTI_OPPONENT_B
     {
         partySize = &DATA.opponentPartySize;
         if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))

@@ -207,3 +207,43 @@ TWO_VS_ONE_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO
         }
     }
 }
+
+ONE_VS_TWO_BATTLE_TEST("Switch-in abilities trigger in Speed Order after post-KO switch - 1v2")
+{
+    u32 spdPlayer1, spdPlayer2, spdOpponent1, spdOpponent2;
+
+    PARAMETRIZE { spdPlayer1 = 5; spdPlayer2 = 4; spdOpponent1 = 3; spdOpponent2 = 2; }
+    PARAMETRIZE { spdPlayer1 = 2; spdPlayer2 = 3; spdOpponent1 = 4; spdOpponent2 = 5; }
+    PARAMETRIZE { spdPlayer1 = 4; spdPlayer2 = 3; spdOpponent1 = 5; spdOpponent2 = 2; }
+
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_PLAYER(SPECIES_TYRANITAR) { Speed(spdPlayer1); Ability(ABILITY_SAND_STREAM); }
+        MULTI_PLAYER(SPECIES_GYARADOS) { Speed(spdPlayer2); Ability(ABILITY_INTIMIDATE); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(1); Speed(1); }
+        MULTI_OPPONENT_A(SPECIES_WEEZING_GALAR) { Speed(spdOpponent1); Ability(ABILITY_MISTY_SURGE); }
+        MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(1); Speed(1); }
+        MULTI_OPPONENT_B(SPECIES_VULPIX_ALOLA) { Speed(spdOpponent2); Ability(ABILITY_SNOW_WARNING); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_EXPLOSION); SEND_OUT(playerLeft, 2); SEND_OUT(opponentLeft, 1); SEND_OUT(playerRight, 3); SEND_OUT(opponentRight, 4); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Explosion!");
+        if (spdPlayer1 == 5) {
+            ABILITY_POPUP(playerLeft, ABILITY_SAND_STREAM);
+            ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+            ABILITY_POPUP(opponentLeft, ABILITY_MISTY_SURGE);
+            ABILITY_POPUP(opponentRight, ABILITY_SNOW_WARNING);
+        } else if (spdOpponent2 == 5) {
+            ABILITY_POPUP(opponentRight, ABILITY_SNOW_WARNING);
+            ABILITY_POPUP(opponentLeft, ABILITY_MISTY_SURGE);
+            ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+            ABILITY_POPUP(playerLeft, ABILITY_SAND_STREAM);
+        } else {
+            ABILITY_POPUP(opponentLeft, ABILITY_MISTY_SURGE);
+            ABILITY_POPUP(playerLeft, ABILITY_SAND_STREAM);
+            ABILITY_POPUP(playerRight, ABILITY_INTIMIDATE);
+            ABILITY_POPUP(opponentRight, ABILITY_SNOW_WARNING);
+        }
+    }
+}
