@@ -6585,7 +6585,8 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     StringAppend(gStringVar4, COMPOUND_STRING(", "));
                 }
 
-                switch((enum EvolutionConditions)evolutions[i].params[j].condition)
+                enum EvolutionConditions condition = evolutions[i].params[j].condition;
+                switch(condition)
                 {
                 // Gen 2
                 case IF_GENDER:
@@ -6642,10 +6643,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 case IF_PID_UPPER_MODULO_10_EQ:
                 case IF_PID_UPPER_MODULO_10_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_GT
+                        if (condition == IF_PID_UPPER_MODULO_10_GT
                             && arg < 10 && arg >= 0)
                             arg = 9 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_UPPER_MODULO_10_EQ
+                        else if (condition == IF_PID_UPPER_MODULO_10_EQ
                              && arg < 10 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg * 10, STR_CONV_MODE_LEFT_ALIGN, 3);
@@ -6704,6 +6705,33 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                     StringAppend(gStringVar4, gTypesInfo[evolutions[i].params[j].arg1].name);
                     StringAppend(gStringVar4, COMPOUND_STRING(" move"));
                     break;
+                case IF_REGION:
+                case IF_NOT_REGION:
+                {
+                    if (condition == IF_REGION)
+                        StringAppend(gStringVar4, COMPOUND_STRING("in "));
+                    else if (condition == IF_NOT_REGION)
+                        StringAppend(gStringVar4, COMPOUND_STRING("out of "));
+
+                    switch ((enum Region)evolutions[i].params[j].arg1)
+                    {
+                    case REGION_NONE:
+                    case REGIONS_COUNT:
+                        StringAppend(gStringVar4, COMPOUND_STRING("???"));
+                        break;
+                    case REGION_KANTO: StringAppend(gStringVar4, COMPOUND_STRING("Kanto")); break;
+                    case REGION_JOHTO: StringAppend(gStringVar4, COMPOUND_STRING("Johto")); break;
+                    case REGION_HOENN: StringAppend(gStringVar4, COMPOUND_STRING("Hoenn")); break;
+                    case REGION_SINNOH: StringAppend(gStringVar4, COMPOUND_STRING("Sinnoh")); break;
+                    case REGION_UNOVA: StringAppend(gStringVar4, COMPOUND_STRING("Unova")); break;
+                    case REGION_KALOS: StringAppend(gStringVar4, COMPOUND_STRING("Kalos")); break;
+                    case REGION_ALOLA: StringAppend(gStringVar4, COMPOUND_STRING("Alola")); break;
+                    case REGION_GALAR: StringAppend(gStringVar4, COMPOUND_STRING("Galar")); break;
+                    case REGION_HISUI: StringAppend(gStringVar4, COMPOUND_STRING("Hisui")); break;
+                    case REGION_PALDEA: StringAppend(gStringVar4, COMPOUND_STRING("Paldea")); break;
+                    }
+                    break;
+                }
                 // Gen 8
                 case IF_NATURE:
                     StringCopy(gStringVar2, gNaturesInfo[evolutions[i].params[j].arg1].name);
@@ -6755,10 +6783,10 @@ static void PrintEvolutionTargetSpeciesAndMethod(u8 taskId, u16 species, u8 dept
                 case IF_PID_MODULO_100_EQ:
                 case IF_PID_MODULO_100_LT:
                     arg = evolutions[i].params[j].arg1;
-                        if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_GT
+                        if (condition == IF_PID_MODULO_100_GT
                             && arg < 100 && arg >= 0)
                             arg = 99 - arg;
-                        else if ((enum EvolutionConditions)evolutions[i].params[j].condition == IF_PID_MODULO_100_EQ
+                        else if (condition == IF_PID_MODULO_100_EQ
                                  && arg < 100 && arg >= 0)
                             arg = 1;
                     ConvertIntToDecimalStringN(gStringVar2, arg, STR_CONV_MODE_LEFT_ALIGN, 3);
