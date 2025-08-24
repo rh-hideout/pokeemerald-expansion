@@ -108,6 +108,7 @@ static const u8 sText_PkmnComeBack[] = _("{B_BUFF1}, come back!");
 static const u8 sText_PkmnOkComeBack[] = _("OK, {B_BUFF1}! Come back!");
 static const u8 sText_PkmnGoodComeBack[] = _("Good job, {B_BUFF1}! Come back!");
 static const u8 sText_Trainer1WithdrewPkmn[] = _("{B_TRAINER1_NAME_WITH_CLASS} withdrew {B_BUFF1}!");
+static const u8 sText_Trainer2WithdrewPkmn[] = _("{B_TRAINER2_NAME_WITH_CLASS} withdrew {B_BUFF1}!");
 static const u8 sText_LinkTrainer1WithdrewPkmn[] = _("{B_LINK_OPPONENT1_NAME} withdrew {B_BUFF1}!");
 static const u8 sText_LinkTrainer2WithdrewPkmn[] = _("{B_LINK_SCR_TRAINER_NAME} withdrew {B_BUFF1}!");
 static const u8 sText_WildPkmnPrefix[] = _("The wild ");
@@ -2222,7 +2223,18 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
             }
             else
             {
-                stringPtr = sText_Trainer1WithdrewPkmn;
+                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                {
+                    if (GetBattlerAtPosition(battler) == 1)
+                        stringPtr = sText_Trainer1WithdrewPkmn;
+                    else
+                        stringPtr = sText_Trainer2WithdrewPkmn;
+
+                }
+                else
+                {
+                    stringPtr = sText_Trainer1WithdrewPkmn;
+                }
             }
         }
         break;
