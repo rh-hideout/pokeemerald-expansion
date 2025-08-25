@@ -108,14 +108,15 @@ DOUBLE_BATTLE_TEST("Mimicry triggers after Skill Swap")
                MOVE(playerLeft,  MOVE_SPLASH);
              }
     } SCENE {
+        // turn 1
         MESSAGE("Shiftry used Grassy Terrain!");
         ABILITY_POPUP(playerLeft, ABILITY_MIMICRY);
         MESSAGE("Stunfisk's type changed to Grass!");
-        // move
+        // turn 2
         MESSAGE("Shiftry used Skill Swap!");
         ABILITY_POPUP(playerRight, ABILITY_MIMICRY);
         MESSAGE("Shiftry's type changed to Grass!");
-        MESSAGE("Stunfisk used Splash!"); // make sure popup occurs in right timing
+        MESSAGE("Stunfisk used Splash!"); // make sure popup occurs before the subsequent move
     } THEN {
         EXPECT_EQ(playerLeft->types[0], TYPE_GRASS);
         EXPECT_EQ(playerLeft->types[1], TYPE_GRASS);
