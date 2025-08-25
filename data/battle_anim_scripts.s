@@ -31598,6 +31598,7 @@ MegaEvolutionSpinEffect:
 	return
 
 gBattleAnimGeneral_TeraCharge::
+	createvisualtask AnimTask_HideOpponentShadows, 2 @ Hide opponent shadows so they don't flicker between battle anims
 	loadspritegfx ANIM_TAG_TERA_CRYSTAL
 	loadspritegfx ANIM_TAG_TERA_SHATTER
 	loadspritegfx ANIM_TAG_FOCUS_ENERGY
@@ -31635,6 +31636,7 @@ TeraChargeParticles:
 	return
 
 gBattleAnimGeneral_TeraActivate::
+	createvisualtask AnimTask_SetOpponentShadowCallbacks, 2 @ Restore shadows hidden in the charge script
 	loadspritegfx ANIM_TAG_TERA_SYMBOL
 	loadspritegfx ANIM_TAG_SPARKLE_6
 	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0

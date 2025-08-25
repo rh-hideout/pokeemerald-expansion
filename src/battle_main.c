@@ -3188,6 +3188,8 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
             gBattleMons[i].volatiles.wrapped = FALSE;
         if (gBattleMons[i].volatiles.syrupBomb && gBattleStruct->stickySyrupdBy[i] == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
+        if (gDisableStructs[i].octolock && gDisableStructs[i].octolockedBy == battler)
+            gDisableStructs[i].octolock = FALSE;
     }
 
     gActionSelectionCursor[battler] = 0;
@@ -3308,6 +3310,8 @@ const u8* FaintClearSetData(u32 battler)
             gBattleMons[i].volatiles.wrapped = FALSE;
         if (gBattleMons[i].volatiles.syrupBomb && gBattleStruct->stickySyrupdBy[i] == battler)
             gBattleMons[i].volatiles.syrupBomb = FALSE;
+        if (gDisableStructs[i].octolock && gDisableStructs[i].octolockedBy == battler)
+            gDisableStructs[i].octolock = FALSE;
     }
 
     gActionSelectionCursor[battler] = 0;
@@ -3981,7 +3985,7 @@ void BattleTurnPassed(void)
     gHitMarker &= ~HITMARKER_NO_ATTACKSTRING;
     gHitMarker &= ~HITMARKER_UNABLE_TO_USE_MOVE;
     gHitMarker &= ~HITMARKER_PLAYER_FAINTED;
-    gHitMarker &= ~HITMARKER_PASSIVE_DAMAGE;
+    gHitMarker &= ~HITMARKER_PASSIVE_HP_UPDATE;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gBattleScripting.moveendState = 0;
@@ -5367,7 +5371,7 @@ static void RunTurnActionsFunctions(void)
 
     if (gCurrentTurnActionNumber >= gBattlersCount) // everyone did their actions, turn finished
     {
-        gHitMarker &= ~HITMARKER_PASSIVE_DAMAGE;
+        gHitMarker &= ~HITMARKER_PASSIVE_HP_UPDATE;
         gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
     }
     else

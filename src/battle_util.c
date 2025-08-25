@@ -873,9 +873,13 @@ void HandleAction_NothingIsFainted(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-    gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
-                    | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS);
+    gHitMarker &= ~(HITMARKER_DESTINYBOND 
+                  | HITMARKER_IGNORE_SUBSTITUTE 
+                  | HITMARKER_ATTACKSTRING_PRINTED
+                  | HITMARKER_NO_PPDEDUCT 
+                  | HITMARKER_STATUS_ABILITY_EFFECT 
+                  | HITMARKER_PASSIVE_HP_UPDATE
+                  | HITMARKER_OBEYS);
 }
 
 void HandleAction_ActionFinished(void)
@@ -886,9 +890,14 @@ void HandleAction_ActionFinished(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     SpecialStatusesClear();
-    gHitMarker &= ~(HITMARKER_DESTINYBOND | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_ATTACKSTRING_PRINTED
-                    | HITMARKER_NO_PPDEDUCT | HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_PASSIVE_DAMAGE
-                    | HITMARKER_OBEYS | HITMARKER_IGNORE_DISGUISE);
+    gHitMarker &= ~(HITMARKER_DESTINYBOND 
+                  | HITMARKER_IGNORE_SUBSTITUTE 
+                  | HITMARKER_ATTACKSTRING_PRINTED
+                  | HITMARKER_NO_PPDEDUCT 
+                  | HITMARKER_STATUS_ABILITY_EFFECT 
+                  | HITMARKER_PASSIVE_HP_UPDATE
+                  | HITMARKER_OBEYS 
+                  | HITMARKER_IGNORE_DISGUISE);
 
     ClearDamageCalcResults();
     gCurrentMove = 0;
@@ -9408,7 +9417,7 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         dmg = gBattleMons[ctx->battlerAtk].level;
         break;
     case EFFECT_PSYWAVE:
-        randDamage = B_PSYWAVE_DMG >= GEN_6 ? (Random() % 101) : ((Random() % 11) * 10);
+        randDamage = B_PSYWAVE_DMG >= GEN_5 ? (Random() % 101) : ((Random() % 11) * 10);
         dmg = gBattleMons[ctx->battlerAtk].level * (randDamage + 50) / 100;
         break;
     case EFFECT_FIXED_HP_DAMAGE:

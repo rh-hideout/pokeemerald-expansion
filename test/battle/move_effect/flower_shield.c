@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_FLOWER_SHIELD);
 }
 
-DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all grass type pokemon")
+DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
@@ -35,3 +35,5 @@ DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all grass type pokemon")
         MESSAGE("The opposing Sunflora's Defense rose!");
     }
 }
+
+TO_DO_BATTLE_TEST("Flower Shield fails if there's no Grass-type Pokémon on the field")

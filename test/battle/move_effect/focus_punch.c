@@ -75,6 +75,18 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
     }
 }
 
+TO_DO_BATTLE_TEST("Focus Punch activates when the user's Substitute is hit");
+TO_DO_BATTLE_TEST("Focus Punch activates when the user is hit by a status move");
+TO_DO_BATTLE_TEST("Focus Punch uses PP when losing focus (Gen 3-4)");
+TO_DO_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)");
+TO_DO_BATTLE_TEST("Focus Punch losing focus is considered as the last move used (Gen 3-4)"); //Eg. Encore
+TO_DO_BATTLE_TEST("Focus Punch losing focus is not considered as the last move used (Gen 5+)"); //Eg. Encore
+TO_DO_BATTLE_TEST("Focus Punch's initial message is not considered as using the move for Zoom Lens");
+TO_DO_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch");
+TO_DO_BATTLE_TEST("Focus Punch will use the selected move's priority when being Encored into Focus Punch");
+TO_DO_BATTLE_TEST("Focus Punch will lose focus if damaged when used by selecting a different move and being Encored (Gen 3-4)");
+TO_DO_BATTLE_TEST("Focus Punch will NOT lose focus if damaged when used by selecting a different move and being Encored (Gen 5+)");
+
 AI_SINGLE_BATTLE_TEST("AI won't use Focus Punch if it predicts a damaging move")
 {
     GIVEN {
