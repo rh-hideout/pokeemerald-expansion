@@ -37,8 +37,8 @@ void BS_JumpIfTerrainAffected(void)
 ```
 Each of the arguments defined in the macro (`battler`, `flags`, `failInstr`) need to be called at the start of the command using `NATIVE_ARGS`.
 The byte count in the macro should correspond to the type that will be used for the command (eg, `u8` is `byte`, while the pointer are `4byte`).
-These arguments can then be accessed as `cmd->battler`, `cmd->flags` and `cmd->failInstr`. Note that for `cmd->battler` we need to use `GetBattlerForBattleScript`
-to fetch the correct battler because with the macro we are accessing a scripting command that doesn't corresponds to `gBattlerTarget`, `gBattlerAttacker`, etc.
-For the battler argument specifically majority of time the battler is accessed through `gBattlerAttacker`, `gBattlerTarget` and the battler argument left out.
-In majority of cases this is fine since majority of times the script commands are used for moves and the interaction is usually between an attacker and target.
-A script command usually ends with either a jump or next instruction  `gBattlescriptCurrInstr = cmd->nextInstr / cmd->nextInstr;` advances to the next instruction.
+These arguments can then be accessed as `cmd->battler`, `cmd->flags` and `cmd->failInstr`.
+Note that for `cmd->battler` we need to use `GetBattlerForBattleScript` to fetch the correct battler because with the macro we are accessing a scripting command that doesn't corresponds to `gBattlerTarget`, `gBattlerAttacker`, etc.
+For the battler argument specifically, most of the time the battler is accessed through `gBattlerAttacker`, `gBattlerTarget` and the battler argument left out.
+In the majority of cases, this is fine since the script commands are mostly used for moves and the interaction is usually between an attacker and target.
+A script command usually ends with either a jump or next instruction `gBattlescriptCurrInstr = cmd->nextInstr / cmd->nextInstr;` advancing to the next instruction.
