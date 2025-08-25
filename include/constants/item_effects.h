@@ -93,4 +93,8 @@
 #define ITEM_EFFECT_HEAL_PP 21
 #define ITEM_EFFECT_NONE 22
 
+// Since X item stat increases are now handled by battle scripts, the friendship increase effect is now handled by the battle controller in HandleAction_UseItem.
+#define X_ITEM_FRIENDSHIP_INCREASE    1   // The amount of friendship gained by using an X item on a Pokémon in battle.
+#define X_ITEM_MAX_FRIENDSHIP         200 // Friendship threshold at which Pokémon stop receiving a friendship increase from using X items on them in battle.
+
 #endif // GUARD_CONSTANTS_ITEM_EFFECTS_H

@@ -44,6 +44,7 @@
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
+#include "constants/item_effects.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/species.h"
@@ -580,6 +581,11 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
+    if (X_ITEM_FRIENDSHIP_INCREASE > 0
+        && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
+        && !ShouldSkipFriendshipChange())
+        UpdateFriendshipFromXItem(gBattlerAttacker);
+
     gBattlescriptCurrInstr = gBattlescriptsForUsingItem[GetItemBattleUsage(gLastUsedItem) - 1];
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
