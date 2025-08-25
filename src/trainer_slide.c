@@ -330,7 +330,6 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
         return TRAINER_SLIDE_TARGET_NONE;
 
     // Prevents slides triggering twice in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
-    // Currently prevents slides triggering if both mons would activate the slide at the same time
     if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
     || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
     || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
