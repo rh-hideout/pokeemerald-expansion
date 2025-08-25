@@ -5282,6 +5282,7 @@ static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickCl
 static void CheckChangingTurnOrderEffects(void)
 {
     u32 i, battler;
+    enum TrainerSlideType slideId;
 
     if (!(gHitMarker & HITMARKER_RUN))
     {
@@ -5326,6 +5327,16 @@ static void CheckChangingTurnOrderEffects(void)
 
     // setup stuff before turns/actions
     TryClearRageAndFuryCutter();
+
+    // Prevents trainer slides triggering a turn late if another slide took priority on the previous turn
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (slideId = 0; slideId < TRAINER_SLIDE_COUNT; slideId++)
+        {
+            MarkInitializedTrainerSlidesAsPlayed(i, slideId);
+        }
+    }
+
     gCurrentTurnActionNumber = 0;
     gCurrentActionFuncId = gActionsByTurnOrder[0];
     gBattleStruct->dynamicMoveType = 0;
