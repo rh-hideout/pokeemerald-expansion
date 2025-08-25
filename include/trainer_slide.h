@@ -21,5 +21,6 @@ bool32 IsTrainerSlideInitialized(u32 battler, enum TrainerSlideType slideId);
 bool32 IsTrainerSlidePlayed(u32 battler, enum TrainerSlideType slideId);
 void InitalizeTrainerSlide(u32 battler, enum TrainerSlideType slideId);
 void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId);
+void MarkInitializedTrainerSlidesAsPlayed(u32 battler, enum TrainerSlideType slideId);
 
 #endif // GUARD_TRAINER_SLIDE_H

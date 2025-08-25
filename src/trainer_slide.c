@@ -443,6 +443,17 @@ void InitalizeTrainerSlide(u32 battler, enum TrainerSlideType slideId)
     gBattleStruct->slideMessageStatus.messageInitalized[battler][arrayIndex] |= (1 << bitPosition);
 }
 
+void MarkInitializedTrainerSlidesAsPlayed(u32 battler, enum TrainerSlideType slideId)
+{
+    u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
+    u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
+
+    if (IsTrainerSlideInitialized(battler, slideId) && !IsTrainerSlidePlayed(battler, slideId))
+    {
+        gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] |= (1 << bitPosition);
+    }
+}
+
 void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId)
 {
     u32 arrayIndex = slideId / TRAINER_SLIDES_PER_ARRAY;
