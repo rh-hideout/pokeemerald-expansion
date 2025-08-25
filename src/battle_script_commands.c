@@ -12906,7 +12906,7 @@ static bool32 CanAbilityShieldActivateForBattler(u32 battler)
 {
     if (GetBattlerHoldEffectIgnoreAbility(battler, TRUE) != HOLD_EFFECT_ABILITY_SHIELD)
         return FALSE;
-    
+
     RecordItemEffectBattle(battler, HOLD_EFFECT_ABILITY_SHIELD);
     gBattlerAbility = battler;
     gLastUsedItem = gBattleMons[battler].item;
@@ -14534,7 +14534,7 @@ static void Cmd_setnonvolatilestatus(void)
     switch (cmd->trigger)
     {
     case TRIGGER_ON_ABILITY:
-        if (gBattleScripting.moveEffect == MOVE_EFFECT_CONFUSION)
+        if (gBattleScripting.moveEffect >= MOVE_EFFECT_CONFUSION)
             SetMoveEffect(gBattleScripting.battler, gEffectBattler, FALSE, FALSE);
         else
             SetNonVolatileStatusCondition(gEffectBattler, gBattleScripting.moveEffect, TRIGGER_ON_ABILITY);
