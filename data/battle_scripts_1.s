@@ -244,7 +244,7 @@ BattleScript_EffectDoodle_AfterCopy:
 BattleScript_EffectDoodleMoveEnd:
 	restoreattacker
 	goto BattleScript_MoveEnd
- 
+
 BattleScript_EffectGlaiveRush::
 	call BattleScript_EffectHit_Ret
 	jumpifmoveresultflags MOVE_RESULT_DOESNT_AFFECT_FOE, BattleScript_TryFaintMon
