@@ -241,8 +241,6 @@ BattleScript_EffectDoodle_AfterCopy:
 	addbyte gBattleCommunication, 1
 	jumpifnoally BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
 	setallytonextattacker BattleScript_EffectDoodle_CopyAbility
-	goto BattleScript_EffectDoodleMoveEnd
-
 BattleScript_EffectDoodleMoveEnd:
 	restoreattacker
 	goto BattleScript_MoveEnd
