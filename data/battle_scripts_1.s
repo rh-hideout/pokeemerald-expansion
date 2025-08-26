@@ -2718,7 +2718,6 @@ BattleScript_Hit_RetFromAtkAnimation::
 	waitmessage B_WAIT_TIME_LONG
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	setadditionaleffects
 	return
 
 BattleScript_EffectNaturalGift::
@@ -3427,7 +3426,7 @@ BattleScript_FirstChargingTurnAfterAttackString:
 	setsemiinvulnerablebit @ only for moves with EFFECT_SEMI_INVULNERABLE/EFFECT_SKY_DROP
 	setchargingturn
 	twoturnmoveschargestringandanimation
-	setadditionaleffects @ only onChargeTurnOnly effects will work here
+	moveendcase MOVEEND_ADDITIONAL_EFFECTS @ only onChargeTurnOnly effects will work here
 	return
 
 BattleScript_TwoTurnMovesSecondPowerHerbActivates:
@@ -4757,7 +4756,6 @@ BattleScript_BrickBreakDoHit::
 	waitmessage B_WAIT_TIME_LONG
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
-	setadditionaleffects
 	tryfaintmon BS_TARGET
 	goto BattleScript_MoveEnd
 
@@ -9256,7 +9254,6 @@ BattleScript_EffectMaxMove::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_TARGET
-	setadditionaleffects
 	moveendall
 	end
 

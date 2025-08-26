@@ -33,7 +33,7 @@
 #define sSAVED_DMG                   (gBattleScripting + 0x28) // savedDmg
 #define sSAVED_MOVE_EFFECT           (gBattleScripting + 0x2C) // savedMoveEffect
 #define sMOVE_EFFECT                 (gBattleScripting + 0x2E) // moveEffect
-#define sMULTIHIT_EFFECT             (gBattleScripting + 0x30) // multihitMoveEffect
+#define sUNUSED_0x30                 (gBattleScripting + 0x30) // unused_0x30
 #define sILLUSION_NICK_HACK          (gBattleScripting + 0x32) // illusionNickHack
 #define sFIXED_ABILITY_POPUP         (gBattleScripting + 0x33) // fixedPopup
 #define sABILITY_OVERWRITE           (gBattleScripting + 0x34) // abilityPopupOverwrite
@@ -130,6 +130,7 @@ enum MoveEndEffects
 {
     MOVEEND_SUM_DAMAGE,
     MOVEEND_PROTECT_LIKE_EFFECT,
+    MOVEEND_ADDITIONAL_EFFECTS,
     MOVEEND_ABSORB,
     MOVEEND_RAGE,
     MOVEEND_SYNCHRONIZE_TARGET,

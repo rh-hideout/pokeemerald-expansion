@@ -358,7 +358,7 @@ static void Cmd_printselectionstring(void);
 static void Cmd_waitmessage(void);
 static void Cmd_printfromtable(void);
 static void Cmd_printselectionstringfromtable(void);
-static void Cmd_setadditionaleffects(void);
+static void Cmd_unused_0x15(void);
 static void Cmd_seteffectprimary(void);
 static void Cmd_seteffectsecondary(void);
 static void Cmd_clearvolatile(void);
@@ -617,7 +617,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_waitmessage,                             //0x12
     Cmd_printfromtable,                          //0x13
     Cmd_printselectionstringfromtable,           //0x14
-    Cmd_setadditionaleffects,                    //0x15
+    Cmd_unused_0x15,                             //0x15
     Cmd_seteffectprimary,                        //0x16
     Cmd_seteffectsecondary,                      //0x17
     Cmd_clearvolatile,                           //0x18
@@ -4070,6 +4070,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
 
 static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additionalEffect)
 {
+    if (additionalEffect->moveEffect == MOVE_EFFECT_NONE)
+        return FALSE;
+
     if (additionalEffect->self
      && NumAffectedSpreadMoveTargets() > 1
      && GetNextTarget(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), TRUE) != MAX_BATTLERS_COUNT)
@@ -4086,63 +4089,8 @@ static bool32 CanApplyAdditionalEffect(const struct AdditionalEffect *additional
     return TRUE;
 }
 
-static void Cmd_setadditionaleffects(void)
+static void Cmd_unused_0x15(void)
 {
-    CMD_ARGS();
-
-    if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
-    {
-        u32 numAdditionalEffects = GetMoveAdditionalEffectCount(gCurrentMove);
-        if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
-        {
-            u32 percentChance;
-            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
-            const u8 *currentPtr = gBattlescriptCurrInstr;
-
-            // Various checks for if this move effect can be applied this turn
-            if (CanApplyAdditionalEffect(additionalEffect))
-            {
-                percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
-
-                // Activate effect if it's primary (chance == 0) or if RNGesus says so
-                if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
-                {
-                    gBattleScripting.moveEffect = additionalEffect->moveEffect;
-                    gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
-
-                    SetMoveEffect(
-                        gBattlerAttacker,
-                        additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
-                        percentChance == 0, // a primary effect
-                        percentChance >= 100 // certain to happen
-                    );
-                }
-            }
-
-            // Move script along if we haven't jumped elsewhere
-            if (gBattlescriptCurrInstr == currentPtr)
-                gBattlescriptCurrInstr = cmd->nextInstr;
-
-            // Call setadditionaleffects again in the case of a move with multiple effects
-            gBattleStruct->additionalEffectsCounter++;
-            if (numAdditionalEffects > gBattleStruct->additionalEffectsCounter)
-                gBattleScripting.moveEffect = MOVE_EFFECT_CONTINUE;
-            else
-                gBattleScripting.moveEffect = gBattleStruct->additionalEffectsCounter = 0;
-        }
-        else
-        {
-            gBattleScripting.moveEffect = 0;
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-    }
-    else
-    {
-        gBattleScripting.moveEffect = 0;
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-
-    gBattleScripting.multihitMoveEffect = 0;
 }
 
 static void Cmd_seteffectprimary(void)
@@ -4176,7 +4124,6 @@ static void Cmd_clearvolatile(void)
         gProtectStructs[battler].chargingTurn = FALSE;
 
     gBattlescriptCurrInstr = cmd->nextInstr;
-    gBattleScripting.multihitMoveEffect = 0;
 }
 
 static void Cmd_tryfaintmon(void)
@@ -6040,9 +5987,48 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
-        case MOVEEND_ABSORB:
+        case MOVEEND_ADDITIONAL_EFFECTS:
             if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE
-             || !IsBattlerTurnDamaged(gBattlerTarget))
+             // || !IsBattlerTurnDamaged(gBattlerTarget)
+             || GetMoveAdditionalEffectCount(gCurrentMove) == gBattleStruct->additionalEffectsCounter)
+            {
+                gBattleScripting.moveendState++;
+                break;
+            }
+            const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(gCurrentMove, gBattleStruct->additionalEffectsCounter);
+
+            // Various checks for if this move effect can be applied this turn
+            if (CanApplyAdditionalEffect(additionalEffect))
+            {
+                u32 percentChance = CalcSecondaryEffectChance(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), additionalEffect);
+
+                // Activate effect if it's primary (chance == 0) or if RNGesus says so
+                if ((percentChance == 0) || RandomPercentage(RNG_SECONDARY_EFFECT + gBattleStruct->additionalEffectsCounter, percentChance))
+                {
+                    gBattleScripting.moveEffect = additionalEffect->moveEffect;
+                    gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
+
+                    gBattlescriptCurrInstr--; // Decremnted by one since the curr instruction will be incremented by one in SetMoveEffect
+                    SetMoveEffect(
+                        gBattlerAttacker,
+                        additionalEffect->self ? gBattlerAttacker : gBattlerTarget,
+                        percentChance == 0, // a primary effect
+                        percentChance >= 100 // certain to happen
+                    );
+                    effect = TRUE;
+                }
+            }
+
+            gBattleStruct->additionalEffectsCounter++;
+            if (GetMoveAdditionalEffectCount(gCurrentMove) == gBattleStruct->additionalEffectsCounter)
+            {
+                // Move to next step once all additional effects were applied
+                gBattleScripting.moveendState++;
+                gBattleStruct->additionalEffectsCounter = 0;
+            }
+            break;
+        case MOVEEND_ABSORB:
+            if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE || !IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gBattleScripting.moveendState++;
                 break;
