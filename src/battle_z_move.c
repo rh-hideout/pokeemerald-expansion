@@ -161,7 +161,6 @@ u32 GetUsableZMove(u32 battler, u32 move)
 
 void ActivateZMove(u32 battler)
 {
-    gBattleStruct->zmove.baseMoves[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
@@ -438,7 +437,7 @@ static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gBattleStruct->zmove.baseMoves[gBattlerAttacker]);
+    u32 effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {

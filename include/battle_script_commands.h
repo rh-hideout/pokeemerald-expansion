@@ -64,7 +64,6 @@ bool32 IsShieldsDownProtected(u32 battler, u32 ability);
 u32 IsAbilityStatusProtected(u32 battler, u32 ability);
 bool32 TryResetBattlerStatChanges(u8 battler);
 bool32 CanCamouflage(u8 battlerId);
-u32 GetNaturePowerMove(u32 battler);
 void StealTargetItem(u8 battlerStealer, u8 battlerItem);
 u8 GetCatchingBattler(void);
 u32 GetHighestStatId(u32 battlerId);
