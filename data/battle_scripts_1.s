@@ -221,12 +221,13 @@ BattleScript_EffectDoodle::
 	attackstring
 	ppreduce
 	trycopyability BS_ATTACKER, BattleScript_ButItFailed
+	saveattacker
 	attackanimation
 	waitanimation
 	setbyte gBattleCommunication, 0
 	goto BattleScript_EffectDoodle_AfterCopy
 BattleScript_EffectDoodle_CopyAbility:
-	trycopyability BS_ATTACKER, BattleScript_MoveEnd
+	trycopyability BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
 BattleScript_EffectDoodle_AfterCopy:
 .if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerAttacker
@@ -238,8 +239,10 @@ BattleScript_EffectDoodle_AfterCopy:
 	switchinabilities BS_ATTACKER
 	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_MoveEnd
 	addbyte gBattleCommunication, 1
-	jumpifnoally BS_ATTACKER, BattleScript_MoveEnd
+	jumpifnoally BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
 	setallytonextattacker BattleScript_EffectDoodle_CopyAbility
+BattleScript_EffectDoodleMoveEnd:
+	restoreattacker
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectGlaiveRush::
@@ -868,7 +871,7 @@ BattleScript_EffectOctolock::
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
 	attackstring
 	ppreduce
-	trysetoctolock BS_TARGET, BattleScript_ButItFailed
+	trysetoctolock BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	printstring STRINGID_CANTESCAPEBECAUSEOFCURRENTMOVE

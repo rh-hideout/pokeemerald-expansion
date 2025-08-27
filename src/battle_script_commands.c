@@ -2181,7 +2181,7 @@ static void Cmd_adjustdamage(void)
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     bool32 calcSpreadMoveDamage = IsSpreadMove(moveTarget) && !IsBattleMoveStatus(gCurrentMove);
-    bool32 enduredHit = FALSE;
+    u32 enduredHit = 0;
 
     for (battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
@@ -2227,30 +2227,30 @@ static void Cmd_adjustdamage(void)
 
         if (moveEffect == EFFECT_FALSE_SWIPE)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
         }
         else if (gProtectStructs[battlerDef].endured)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED;
         }
         else if (holdEffect == HOLD_EFFECT_FOCUS_BAND && rand < param)
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordItemEffectBattle(battlerDef, holdEffect);
             gLastUsedItem = gBattleMons[battlerDef].item;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
         }
         else if (B_STURDY >= GEN_5 && GetBattlerAbility(battlerDef) == ABILITY_STURDY && IsBattlerAtMaxHp(battlerDef))
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordAbilityBattle(battlerDef, ABILITY_STURDY);
             gLastUsedAbility = ABILITY_STURDY;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_STURDIED;
         }
         else if (holdEffect == HOLD_EFFECT_FOCUS_SASH && IsBattlerAtMaxHp(battlerDef))
         {
-            enduredHit = TRUE;
+            enduredHit |= 1u << battlerDef;
             RecordItemEffectBattle(battlerDef, holdEffect);
             gLastUsedItem = gBattleMons[battlerDef].item;
             gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_HUNG_ON;
@@ -2261,20 +2261,18 @@ static void Cmd_adjustdamage(void)
              || (affectionScore == AFFECTION_FOUR_HEARTS && rand < 15)
              || (affectionScore == AFFECTION_THREE_HEARTS && rand < 10))
             {
-                enduredHit = TRUE;
+                enduredHit |= 1u << battlerDef;
                 gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FOE_ENDURED_AFFECTION;
             }
         }
 
         // Handle reducing the dmg to 1 hp.
-        if (enduredHit)
+        if (enduredHit & 1u << battlerDef)
         {
             gBattleStruct->moveDamage[battlerDef] = gBattleMons[battlerDef].hp - 1;
             gSpecialStatuses[battlerDef].enduredDamage = TRUE;
-        }
-
-        if (gSpecialStatuses[battlerDef].enduredDamage)
             gProtectStructs[battlerDef].assuranceDoubled = TRUE;
+        }
     }
 
     if (calcSpreadMoveDamage)
@@ -6078,28 +6076,6 @@ static inline bool32 IsProtectivePadsProtected(u32 battler, enum ItemHoldEffect 
 
     RecordItemEffectBattle(battler, holdEffect);
     return TRUE;
-}
-
-static inline bool32 IsProtectEffectAffected(u32 battler, u32 move)
-{
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-    if (IsProtectivePadsProtected(battler, holdEffect))
-        return TRUE;
-
-    if (holdEffect == HOLD_EFFECT_CLEAR_AMULET)
-    {
-        RecordItemEffectBattle(battler, holdEffect);
-        return TRUE;
-    }
-
-    u32 ability = GetBattlerAbility(gBattlerAttacker);
-    if (CanAbilityPreventStatLoss(ability))
-    {
-        RecordAbilityBattle(battler, ability);
-        return TRUE;
-    }
-
-    return FALSE;
 }
 
 static inline bool32 CanEjectButtonTrigger(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
@@ -10645,6 +10621,13 @@ static void Cmd_various(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
         AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, 0, 0, 0);
         AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0, 0);
+        
+        if (gBattleWeather & B_WEATHER_ANY && HasWeatherEffect())
+            AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0, 0);
+        
+        if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
+            AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, 0, 0, 0);
+        
         AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, 0, 0, 0);
         return;
     }
@@ -17448,18 +17431,18 @@ void BS_TryReflectType(void)
 
 void BS_TrySetOctolock(void)
 {
-    NATIVE_ARGS(u8 battler, const u8 *failInstr);
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
+    NATIVE_ARGS(const u8 *failInstr);
 
-    if (gDisableStructs[battler].octolock)
+    if (gDisableStructs[gBattlerTarget].octolock)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
     else
     {
-        gDisableStructs[battler].octolock = TRUE;
-        gBattleMons[battler].status2 |= STATUS2_ESCAPE_PREVENTION;
-        gDisableStructs[battler].battlerPreventingEscape = gBattlerAttacker;
+        gDisableStructs[gBattlerTarget].octolock = TRUE;
+        gDisableStructs[gBattlerTarget].octolockedBy = gBattlerAttacker;
+        gBattleMons[gBattlerTarget].status2 |= STATUS2_ESCAPE_PREVENTION;
+        gDisableStructs[gBattlerTarget].battlerPreventingEscape = gBattlerAttacker;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }

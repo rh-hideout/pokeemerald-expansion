@@ -74,9 +74,9 @@ SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze electric/fire/ice typ
 }
 
 #if B_USE_FROSTBITE == TRUE
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/frostbite Pokémon with abilities preventing respective statuses")
 #else
-SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Tri Attack cannot paralyze/burn/freeze Pokémon with abilities preventing respective statuses")
 #endif
 {
     u8 statusAnim;

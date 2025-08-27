@@ -44,6 +44,7 @@
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
+#include "constants/item_effects.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/species.h"
@@ -580,6 +581,11 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
+    if (X_ITEM_FRIENDSHIP_INCREASE > 0
+        && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
+        && !ShouldSkipFriendshipChange())
+        UpdateFriendshipFromXItem(gBattlerAttacker);
+
     gBattlescriptCurrInstr = gBattlescriptsForUsingItem[GetItemBattleUsage(gLastUsedItem) - 1];
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
@@ -8859,6 +8865,14 @@ static inline u32 CalcAttackStat(struct DamageCalculationData *damageCalcData, u
                 RecordAbilityBattle(battlerDef, ABILITY_THICK_FAT);
         }
         break;
+    case ABILITY_PURIFYING_SALT:
+        if (moveType == TYPE_GHOST)
+        {
+            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
+            if (damageCalcData->updateFlags)
+                RecordAbilityBattle(battlerDef, ABILITY_PURIFYING_SALT);
+        }
+        break;
     }
 
     // ally's abilities
@@ -8941,31 +8955,38 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
     uq4_12_t modifier;
     u32 battlerDef = damageCalcData->battlerDef;
     u32 move = damageCalcData->move;
-    u32 moveType = damageCalcData->moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
-    if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
-    {
-        def = gBattleMons[battlerDef].spDefense;
-        spDef = gBattleMons[battlerDef].defense;
-    }
-    else
-    {
-        def = gBattleMons[battlerDef].defense;
-        spDef = gBattleMons[battlerDef].spDefense;
-    }
+    def = gBattleMons[battlerDef].defense;
+    spDef = gBattleMons[battlerDef].spDefense;
 
     if (moveEffect == EFFECT_PSYSHOCK || IsBattleMovePhysical(move)) // uses defense stat instead of sp.def
     {
-        defStat = def;
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
+        {
+            defStat = spDef;
+            usesDefStat = FALSE;
+        }
+        else
+        {
+            defStat = def;
+            usesDefStat = TRUE;
+        }
         defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
-        usesDefStat = TRUE;
     }
     else // is special
     {
-        defStat = spDef;
+        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
+        {
+            defStat = def;
+            usesDefStat = TRUE;
+        }
+        else
+        {
+            defStat = spDef;
+            usesDefStat = FALSE;
+        }
         defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
-        usesDefStat = FALSE;
     }
 
     // Self-destruct / Explosion cut defense in half
@@ -9018,10 +9039,6 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
     case ABILITY_FLOWER_GIFT:
         if (gBattleMons[battlerDef].species == SPECIES_CHERRIM_SUNSHINE && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SUN) && !usesDefStat)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
-        break;
-    case ABILITY_PURIFYING_SALT:
-        if (moveType == TYPE_GHOST)
-            modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     }
 

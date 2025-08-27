@@ -2515,6 +2515,32 @@ void AnimTask_HideSwapSprite(u8 taskId)
     }
 }
 
+void AnimTask_HideOpponentShadows(u8 taskId)
+{
+    u32 battlerLeft = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
+    gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
+    if (IsDoubleBattle())
+    {
+        u32 battlerRight = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerRight].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
+        gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerRight].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
+    }
+    DestroyAnimVisualTask(taskId);
+}
+
+void AnimTask_SetOpponentShadowCallbacks(u8 taskId)
+{
+    u32 battlerLeft = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    SetBattlerShadowSpriteCallback(battlerLeft, gBattleMons[battlerLeft].species);
+    if (IsDoubleBattle())
+    {
+        u32 battlerRight = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        SetBattlerShadowSpriteCallback(battlerRight, gBattleMons[battlerRight].species);
+    }
+    DestroyAnimVisualTask(taskId);
+}
+
 void AnimTask_TransformMon(u8 taskId)
 {
     int i, j;
