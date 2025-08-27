@@ -1363,6 +1363,14 @@
 	callnative BS_RestoreAttacker
 	.endm
 
+	.macro saveeffectbattler
+	callnative BS_SaveEffectBattler
+	.endm
+
+	.macro restoreeffectbattler
+	callnative BS_RestoreEffectBattler
+	.endm
+
 	.macro jumpifintimidateabilityprevented
 	callnative BS_JumpIfIntimidateAbilityPrevented
 	.endm
@@ -2514,4 +2522,14 @@
 	.macro tryboosterenergy onFieldStatus:req
 	callnative BS_TryBoosterEnergy
 	.byte \onFieldStatus
+	.endm
+
+	.macro trysynchronize moveEffect:req, jumpInstr:req
+	callnative BS_TrySynchronize
+	.byte \moveEffect
+	.4byte \jumpInstr
+	.endm
+
+	.macro trycurestatus
+	callnative BS_TryCureStatus
 	.endm

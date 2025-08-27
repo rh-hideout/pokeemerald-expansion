@@ -2955,13 +2955,6 @@ static void SetNonVolatileStatusCondition(u32 effectBattler, enum MoveEffect eff
 
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
 
-    // for synchronize
-    if (effect == MOVE_EFFECT_POISON
-     || effect == MOVE_EFFECT_TOXIC
-     || effect == MOVE_EFFECT_PARALYSIS
-     || effect == MOVE_EFFECT_BURN)
-        gBattleStruct->synchronizeMoveEffect = effect;
-
     if (effect == MOVE_EFFECT_POISON || effect == MOVE_EFFECT_TOXIC)
         gBattleStruct->poisonPuppeteerConfusion = TRUE;
 }
@@ -3385,6 +3378,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
             gBattleStruct->moveDamage[i] = gBattleMons[i].maxHP / 16;
             if (gBattleStruct->moveDamage[i] == 0)
                 gBattleStruct->moveDamage[i] = 1;
+            BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_MoveEffectFlameBurst;
         }
         break;
@@ -3891,7 +3885,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
             || gFieldStatuses & STATUS_FIELD_TERRAIN_ANY)
         {
             BattleScriptPush(gBattlescriptCurrInstr + 1);
-            gBattlescriptCurrInstr = BattleScript_DefogTryHazards;
+            gBattlescriptCurrInstr = BattleScript_MoveEffectDefog;
         }
         break;
     case MOVE_EFFECT_AURORA_VEIL:
@@ -3904,7 +3898,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
                 gSideTimers[GetBattlerSide(gBattlerAttacker)].auroraVeilTimer = gBattleTurnCounter + 5;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SAFEGUARD;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
-            gBattlescriptCurrInstr = BattleScript_EffectAuroraVeilSuccess;
+            gBattlescriptCurrInstr = BattleScript_MoveEffectAuroraVeil;
         }
         break;
     case MOVE_EFFECT_GRAVITY:
@@ -4016,7 +4010,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         break;
     case MOVE_EFFECT_AROMATHERAPY:
         BattleScriptPush(gBattlescriptCurrInstr + 1);
-        gBattlescriptCurrInstr = BattleScript_EffectHealBell_FromHeal;
+        gBattlescriptCurrInstr = BattleScript_MoveEffectAromatherapy;
         break;
     case MOVE_EFFECT_RECYCLE_BERRIES:
         if (RandomPercentage(RNG_G_MAX_REPLENISH, 50))
@@ -4904,7 +4898,6 @@ static void Cmd_checkteamslost(void)
 static void MoveValuesCleanUp(void)
 {
     gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
-    gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
     gBattleCommunication[MISS_TYPE] = 0;
     if (!gMultiHitCounter)
         gHitMarker &= ~HITMARKER_DESTINYBOND;
@@ -5987,9 +5980,15 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
+        case MOVEEND_TOXIC_CHAIN:
+            if (AbilityBattleEffects(ABILITYEFFECT_TOXIC_CHAIN, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), 0, 0))
+                effect = TRUE;
+            gBattleScripting.moveendState++;
+            break;
         case MOVEEND_ADDITIONAL_EFFECTS:
+            // Needs better handling
             if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE
-             // || !IsBattlerTurnDamaged(gBattlerTarget)
+             || !IsBattlerTurnDamaged(gBattlerTarget)
              || GetMoveAdditionalEffectCount(gCurrentMove) == gBattleStruct->additionalEffectsCounter)
             {
                 gBattleScripting.moveendState++;
@@ -6085,11 +6084,6 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
-        case MOVEEND_SYNCHRONIZE_TARGET: // target synchronize
-            if (AbilityBattleEffects(ABILITYEFFECT_SYNCHRONIZE, gBattlerTarget, 0, 0, 0))
-                effect = TRUE;
-            gBattleScripting.moveendState++;
-            break;
         case MOVEEND_ABILITIES: // Such as abilities activating on contact(Poison Spore, Rough Skin, etc.).
             if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, 0, 0, 0))
                 effect = TRUE;
@@ -6107,11 +6101,6 @@ static void Cmd_moveend(void)
                 effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
             else
                 gBattleScripting.moveendState++;
-            break;
-        case MOVEEND_SYNCHRONIZE_ATTACKER: // attacker synchronize
-            if (AbilityBattleEffects(ABILITYEFFECT_ATK_SYNCHRONIZE, gBattlerAttacker, 0, 0, 0))
-                effect = TRUE;
-            gBattleScripting.moveendState++;
             break;
         case MOVEEND_ITEM_EFFECTS_TARGET:
             if (ItemBattleEffects(ITEMEFFECT_TARGET, gBattlerTarget))
@@ -14637,6 +14626,14 @@ void BS_RestoreAttacker(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
+void BS_SaveEffectBattler(void)
+{
+}
+
+void BS_RestoreEffectBattler(void)
+{
+}
+
 void BS_CalcMetalBurstDmg(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
@@ -18335,5 +18332,81 @@ void BS_BattlerItemToLastUsedItem(void)
 {
     NATIVE_ARGS();
     gBattleMons[gBattlerTarget].item = gLastUsedItem;
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TrySynchronize(void)
+{
+    NATIVE_ARGS(u8 moveEffect, const u8 *jumpInstr);
+
+    // Add toxicSpikes check
+    if (GetBattlerAbility(gEffectBattler) != ABILITY_SYNCHRONIZE)
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+        return;
+    }
+
+    u32 synchronizeAttacker = gBattlerAttacker;
+    u32 synchronizeBattler = gEffectBattler;
+    // If inflicted status came from target, e.g. static
+    if (gEffectBattler == gBattlerAttacker)
+    {
+        synchronizeBattler = gEffectBattler;
+        synchronizeAttacker = gBattlerTarget;
+    }
+
+    u32 moveEffect = cmd->moveEffect;
+    if (B_SYNCHRONIZE_TOXIC < GEN_5 && moveEffect == MOVE_EFFECT_TOXIC)
+        moveEffect = MOVE_EFFECT_POISON;
+
+    gBattleScripting.battler = gBattlerAbility = synchronizeBattler;
+    gLastUsedAbility = ABILITY_SYNCHRONIZE;
+    RecordAbilityBattle(synchronizeBattler, ABILITY_SYNCHRONIZE);
+    PREPARE_ABILITY_BUFFER(gBattleTextBuff1, ABILITY_SYNCHRONIZE);
+
+    if (CanSetNonVolatileStatus(
+            synchronizeBattler,
+            synchronizeAttacker,
+            ABILITY_SYNCHRONIZE,
+            GetBattlerAbility(synchronizeAttacker),
+            moveEffect,
+            CHECK_TRIGGER))
+    {
+        gBattleScripting.moveEffect = moveEffect;
+        BattleScriptPush(cmd->nextInstr);
+        gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
+        gEffectBattler = synchronizeAttacker;
+    }
+    else
+    {
+        BattleScriptPush(cmd->nextInstr);
+        gBattlescriptCurrInstr = BattleScript_AbilityPopUp;
+    }
+}
+
+void BS_TryCureStatus(void)
+{
+    NATIVE_ARGS();
+    for (u32 battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    {
+        u32 holdEffect = GetBattlerHoldEffect(battler, TRUE);
+
+        if (holdEffect != HOLD_EFFECT_CURE_PAR
+         && holdEffect != HOLD_EFFECT_CURE_PSN
+         && holdEffect != HOLD_EFFECT_CURE_BRN
+         && holdEffect != HOLD_EFFECT_CURE_FRZ
+         && holdEffect != HOLD_EFFECT_CURE_SLP
+         && holdEffect != HOLD_EFFECT_CURE_STATUS)
+            continue;
+
+        if (ItemEffectMoveEnd(battler, holdEffect) != ITEM_NO_EFFECT)
+        {
+            gPotentialItemEffectBattler = gBattleScripting.battler = battler;
+            BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
+            MarkBattlerForControllerExec(battler);
+            return;
+        }
+    }
+
     gBattlescriptCurrInstr = cmd->nextInstr;
 }

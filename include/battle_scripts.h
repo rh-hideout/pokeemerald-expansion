@@ -551,8 +551,8 @@ extern const u8 BattleScript_EffectStonesurge[];
 extern const u8 BattleScript_EffectSteelsurge[];
 extern const u8 BattleScript_DamageNonTypesStarts[];
 extern const u8 BattleScript_DamageNonTypesContinues[];
-extern const u8 BattleScript_DefogTryHazards[];
-extern const u8 BattleScript_EffectAuroraVeilSuccess[];
+extern const u8 BattleScript_MoveEffectDefog[];
+extern const u8 BattleScript_MoveEffectAuroraVeil[];
 extern const u8 BattleScript_EffectGravitySuccess[];
 extern const u8 BattleScript_EffectYawnSuccess[];
 extern const u8 BattleScript_EffectTryReducePP[];
@@ -649,7 +649,7 @@ extern const u8 BattleScript_EffectSleepTalk[];
 extern const u8 BattleScript_EffectDestinyBond[];
 extern const u8 BattleScript_EffectSpite[];
 extern const u8 BattleScript_EffectHealBell[];
-extern const u8 BattleScript_EffectHealBell_FromHeal[];
+extern const u8 BattleScript_MoveEffectAromatherapy[];
 extern const u8 BattleScript_EffectMeanLook[];
 extern const u8 BattleScript_EffectNightmare[];
 extern const u8 BattleScript_EffectMinimize[];
@@ -865,5 +865,6 @@ extern const u8 BattleScript_FickleBeamDoubled[];
 extern const u8 BattleScript_QuestionForfeitBattle[];
 extern const u8 BattleScript_ForfeitBattleGaveMoney[];
 extern const u8 BattleScript_AbilityPopUp[];
+extern const u8 BattleScript_CureMoveEffectStatusRet[];
 
 #endif // GUARD_BATTLE_SCRIPTS_H

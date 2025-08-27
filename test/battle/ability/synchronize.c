@@ -67,3 +67,21 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back static activation")
         STATUS_ICON(player, paralysis: TRUE);
     }
 }
+
+SINGLE_BATTLE_TEST("Synchronize - X")
+{
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_TOXIC_CHAIN); Item(ITEM_LUM_BERRY); };
+        OPPONENT(SPECIES_ABRA) { Item(ITEM_LUM_BERRY); Ability(ABILITY_SYNCHRONIZE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_NUZZLE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
+        // ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        // STATUS_ICON(opponent, poison: TRUE);
+        // ABILITY_POPUP(opponent, ABILITY_SYNCHRONIZE);
+        // ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
+        // STATUS_ICON(player, poison: TRUE);
+    }
+}
