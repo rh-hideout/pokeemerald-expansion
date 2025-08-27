@@ -8955,7 +8955,6 @@ static inline u32 CalcDefenseStat(struct DamageCalculationData *damageCalcData, 
     uq4_12_t modifier;
     u32 battlerDef = damageCalcData->battlerDef;
     u32 move = damageCalcData->move;
-    u32 moveType = damageCalcData->moveType;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
