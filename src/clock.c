@@ -104,3 +104,9 @@ void StartWallClock(void)
     SetMainCallback2(CB2_StartWallClock);
     gMain.savedCallback = ReturnFromStartWallClock;
 }
+
+void CheckWallClock(void)
+{
+    SetMainCallback2(CB2_ViewWallClock);
+    gMain.savedCallback = ReturnFromStartWallClock;
+}

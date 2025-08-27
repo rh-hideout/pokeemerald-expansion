@@ -427,45 +427,45 @@ LittlerootTown_EventScript_PlayersHouseSignFemale::
 	msgbox LittlerootTown_Text_PlayersHouse, MSGBOX_DEFAULT
 	return
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger0::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger0::
 	lockall
 	setvar VAR_0x8008, 0
 	setobjectxy LOCALID_LITTLEROOT_MOM, 10, 9
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger1::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger1::
 	lockall
 	setvar VAR_0x8008, 1
 	setobjectxy LOCALID_LITTLEROOT_MOM, 11, 9
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger2::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger2::
 	lockall
 	setvar VAR_0x8008, 2
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger3::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger3::
 	lockall
 	setvar VAR_0x8008, 3
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger4::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger4::
 	lockall
 	setvar VAR_0x8008, 4
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger5::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger5::
 	lockall
 	setvar VAR_0x8008, 5
-	goto LittlerootTown_EventScript_GiveRunningShoesTrigger
+	goto LittlerootTown_EventScript_TalkBeforeAdventureTrigger
 	end
 
-LittlerootTown_EventScript_GiveRunningShoesTrigger::
+LittlerootTown_EventScript_TalkBeforeAdventureTrigger::
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomNoticePlayerMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomNoticePlayerFemale
@@ -477,7 +477,7 @@ LittlerootTown_EventScript_GiveRunningShoesTrigger::
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomApproachPlayerMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomApproachPlayerFemale
-	call LittlerootTown_EventScript_GiveRunningShoes
+	call LittlerootTown_EventScript_TalkBeforeAdventure
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_MomReturnHomeMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_MomReturnHomeFemale
@@ -872,7 +872,7 @@ LittlerootTown_EventScript_Mom::
 	checkplayergender
 	call_if_eq VAR_RESULT, MALE, LittlerootTown_EventScript_SetHomeDoorCoordsMale
 	call_if_eq VAR_RESULT, FEMALE, LittlerootTown_EventScript_SetHomeDoorCoordsFemale
-	call LittlerootTown_EventScript_GiveRunningShoes
+	call LittlerootTown_EventScript_TalkBeforeAdventure
 	applymovement LOCALID_LITTLEROOT_MOM, Common_Movement_WalkInPlaceFasterUp
 	waitmovement 0
 	opendoor VAR_0x8009, VAR_0x800A
@@ -892,20 +892,47 @@ LittlerootTown_EventScript_SetReceivedRunningShoes::
 	release
 	end
 
-LittlerootTown_EventScript_GiveRunningShoes::
-	msgbox LittlerootTown_Text_WearTheseRunningShoes, MSGBOX_DEFAULT
-	playfanfare MUS_OBTAIN_ITEM
-	message LittlerootTown_Text_SwitchShoesWithRunningShoes
-	waitfanfare
-	setflag FLAG_RECEIVED_RUNNING_SHOES
-	msgbox LittlerootTown_Text_ExplainRunningShoes, MSGBOX_DEFAULT
-	msgbox LittlerootTown_Text_ComeHomeIfAnythingHappens, MSGBOX_DEFAULT
+LittlerootTown_EventScript_TalkBeforeAdventure::
+	msgbox LittlerootTown_Text_GiftForYourAdventure, MSGBOX_DEFAULT
+	closemessage
+	delay 60
+	msgbox LittlerootTown_Text_WantToTraverseRegion, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	msgbox LittlerootTown_Text_OhBytheWay_Item, MSGBOX_DEFAULT
+	switch VAR_STARTER_MON
+	case 0, LittlerootTown_EventScript_GiveMiracleSeed
+	case 1, LittlerootTown_EventScript_GiveCharcoal
+	case 2, LittlerootTown_EventScript_GiveMysticWater
+	end
+
+LittlerootTown_EventScript_GiveMiracleSeed::
+	giveitem ITEM_MIRACLE_SEED
+	closemessage
+	delay 15
+	msgbox LittlerootTown_Text_GoodbyeMom, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	return
+LittlerootTown_EventScript_GiveCharcoal::
+	giveitem ITEM_CHARCOAL
+	closemessage
+	delay 15
+	msgbox LittlerootTown_Text_GoodbyeMom, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	return
+LittlerootTown_EventScript_GiveMysticWater::
+	giveitem ITEM_MYSTIC_WATER
+	closemessage
+	delay 15
+	msgbox LittlerootTown_Text_GoodbyeMom, MSGBOX_DEFAULT
 	closemessage
 	delay 30
 	return
 
 LittlerootTown_Text_OurNewHomeLetsGoInside:
-	.string "MOM: {PLAYER}, we're here, honey!\p"
+	.string "Mom: {PLAYER}, we're here, honey!\p"
 	.string "It must be tiring riding with our things\n"
 	.string "in the moving truck.\p"
 	.string "Well, this is LITTLEROOT TOWN.\p"
@@ -917,40 +944,45 @@ LittlerootTown_Text_OurNewHomeLetsGoInside:
 	.string "Let's go inside.$"
 
 LittlerootTown_Text_WaitPlayer:
-	.string "MOM: Wait, {PLAYER}!$"
+	.string "Mom: Wait, {PLAYER}!$"
 
-LittlerootTown_Text_WearTheseRunningShoes:
-	.string "MOM: {PLAYER}! {PLAYER}! Did you\n"
-	.string "introduce yourself to PROF. BIRCH?\p"
-	.string "Oh! What an adorable POKéMON!\n"
-	.string "You got it from PROF. BIRCH. How nice!\p"
-	.string "You're your father's child, all right.\n"
-	.string "You look good together with POKéMON!\p"
-	.string "Here, honey! If you're going out on an\n"
-	.string "adventure, wear these RUNNING SHOES.\p"
-	.string "They'll put a zip in your step!$"
+LittlerootTown_Text_GiftForYourAdventure:
+	.string "Mom: {PLAYER}! {PLAYER}! \p"
+	.string "Are you ok?? Prof. Birch told me\n"
+	.string "what happened on the woods!\l"
+	.string "What a relief that you are not hurt.\p"
+	.string "Prof. Birch also told me that you.\n"
+	.string "have a new companion. Can I see it?\p"
+	.string "… … … … … … … …\n"
+	.string "… … … … … … … …\p"
+	.string "Oh! What an adorable Pokémon!!\n"
+	.string "You dad will be delighted!$"
 
-LittlerootTown_Text_SwitchShoesWithRunningShoes:
-	.string "{PLAYER} switched shoes with the\n"
-	.string "RUNNING SHOES.$"
+LittlerootTown_Text_WantToTraverseRegion:
+	.string "… … … … … … … …\n"
+	.string "I see, you want to traverse the region?\p"
+	.string "Well, I raised a free-spirit confident\n"
+	.string "child, I cannot be more proud!!\p"
+	.string "I think it is a bit too soon to travel,\n"
+	.string "but I trust your good heart, honey.$"
 
-LittlerootTown_Text_ExplainRunningShoes:
-	.string "MOM: {PLAYER}, those shoes came with\n"
-	.string "instructions.\p"
-	.string "“Press the B Button while wearing these\n"
-	.string "RUNNING SHOES to run extra-fast!\p"
-	.string "“Slip on these RUNNING SHOES and race\n"
-	.string "in the great outdoors!”$"
+LittlerootTown_Text_OhBytheWay_Item:
+	.string "Oh, before you go, I got something\n"
+	.string "that can help you in your adventure!\p"
+	.string "Please, take this.$"
 
-LittlerootTown_Text_ComeHomeIfAnythingHappens:
+LittlerootTown_Text_GoodbyeMom:
+	.string "Mom: This will enhance the power\n"
+	.string "of your partner, so you can help\l"
+	.string "each other if anything happens!\p"
 	.string "… … … … … … … …\n"
 	.string "… … … … … … … …\p"
 	.string "To think that you have your very own\n"
 	.string "POKéMON now…\l"
-	.string "Your father will be overjoyed.\p"
+	.string "We are very proud of you.\p"
 	.string "…But please be careful.\n"
 	.string "If anything happens, you can come home.\p"
-	.string "Go on, go get them, honey!$"
+	.string "Go get them, honey! We love you!$"
 
 LittlerootTown_Text_CanUsePCToStoreItems:
 	.string "If you use a PC, you can store items\n"
