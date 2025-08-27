@@ -1,39 +1,37 @@
 gText_Birch_Welcome::
-	.string "Hi! Sorry to keep you waiting!\p"
-	.string "Welcome to the world of POKéMON!\p"
-	.string "My name is BIRCH.\p"
-	.string "But everyone calls me the POKéMON\n"
-	.string "PROFESSOR.\p"
+	.string "Hi! Nice to meet you!\p"
+	.string "My name is {COLOR GREEN}Professor Birch{COLOR DARK_GRAY}, and I'm the\n"
+	.string "lead researcher of Pokémon on {COLOR BLUE}Hoenn{COLOR DARK_GRAY}.\p"
+	.string "I specialize on the coexistence of\n"
+	.string "People and Pokémon, and how different\p"
+	.string "are their behavior on the wild, as\n"
+	.string "as opposed to befriended ones.\p"
 	.string "$"
 
 gText_Birch_Pokemon::
-	.string "This is what we call a “POKéMON.”\p"
+	.string "In fact, here is one of my friends!\p"
 	.string "\n"
 	.string "$"
 
 gText_Birch_MainSpeech::
-	.string "This world is widely inhabited by\n"
-	.string "creatures known as POKéMON.\p"
-	.string "We humans live alongside POKéMON,\n"
-	.string "at times as friendly playmates, and\l"
-	.string "at times as cooperative workmates.\p"
-	.string "And sometimes, we band together\n"
-	.string "and battle others like us.\p"
-	.string "But despite our closeness, we don't\n"
-	.string "know everything about POKéMON.\p"
-	.string "In fact, there are many, many\n"
-	.string "secrets surrounding POKéMON.\p"
-	.string "To unravel POKéMON mysteries,\n"
-	.string "I've been undertaking research.\l"
-	.string "That's what I do.\p"
+	.string "Hoenn, as you are well aware, is very\n"
+	.string "{COLOR GREEN}geographically diverse{COLOR DARK_GRAY}, and that\l"
+	.string "implies that the distribution of\p"
+	.string "Pokémon is vastly different across the\n"
+	.string "region. Because of that, I'm usually on\p"
+	.string "fieldwork, so I decided to pre record\n"
+	.string "this conversation to introduce to you.\p"
+	.string "Your father is a very close friend, and\n"
+	.string "have the family of the newly appointed\p "
+	.string "{COLOR BLUE}Petalburg Gym Leader{COLOR DARK_GRAY} as our new\n"
+	.string "neighbors on Littleroot Town is an honor!\p"
 	.string "$"
 
 gText_Birch_AndYouAre::
-	.string "And you are?$"
+	.string "But enough about me.$"
 
 gText_Birch_BoyOrGirl::
-	.string "Are you a boy?\n"
-	.string "Or are you a girl?$"
+	.string "Tell me about yourself!$"
 
 gText_Birch_WhatsYourName::
 	.string "All right.\n"
@@ -43,19 +41,13 @@ gText_Birch_SoItsPlayer::
 	.string "So it's {PLAYER}{KUN}?$"
 
 gText_Birch_YourePlayer::
-	.string "Ah, okay!\p"
-	.string "You're {PLAYER}{KUN} who's moving to my\n"
-	.string "hometown of LITTLEROOT.\l"
-	.string "I get it now!\p"
+	.string "I see!\p"
 	.string "$"
 
 gText_Birch_AreYouReady::
-	.string "All right, are you ready?\p"
-	.string "Your very own adventure is about\n"
-	.string "to unfold.\p"
-	.string "Take courage, and leap into the\n"
-	.string "world of POKéMON where dreams,\l"
-	.string "adventure, and friendships await!\p"
-	.string "Well, I'll be expecting you later.\n"
-	.string "Come see me in my POKéMON LAB.\p"
+	.string "Well, I hope that by now you have\n"
+	.string "arrived safe and sound.\p"
+	.string "When you are well rested and ready,\n"
+	.string "come to visit us next door!\l"
+	.string "See you soon!\p"
 	.string "$"
