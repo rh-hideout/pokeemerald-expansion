@@ -348,5 +348,63 @@ DOUBLE_BATTLE_TEST("Ally switch updates last used moves for Mimic")
     }
 }
 
+DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_SOLOSIS);
+        OPPONENT(SPECIES_BULBASAUR) { HP(50); MaxHP(100); }
+        OPPONENT(SPECIES_RALTS)  { HP(50); MaxHP(100); }
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_LEECH_SEED, target: playerLeft); }
+        TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+        TURN { ; }
+    } SCENE {
+        // turn 1
+        MESSAGE("The opposing Bulbasaur used Leech Seed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, playerLeft);
+        HP_BAR(playerLeft);
+        HP_BAR(opponentLeft);
+        
+        MESSAGE("The opposing Ralts used Ally Switch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
+        MESSAGE("The opposing Ralts and the opposing Bulbasaur switched places!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, playerLeft);
+        HP_BAR(playerLeft);
+        HP_BAR(opponentLeft); // Ralts now gets hp gain
+    } THEN {
+        EXPECT_GT(opponentLeft->hp, 50);
+        EXPECT_GT(opponentRight->hp, 50);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Ally Switch updates attract battler")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); Gender(MON_MALE); }
+        PLAYER(SPECIES_SOLOSIS)   { Speed(50); }
+        OPPONENT(SPECIES_CLEFAIRY) { Speed(20); Gender(MON_FEMALE); Ability(ABILITY_CUTE_CHARM); }
+        OPPONENT(SPECIES_RALTS)    { Speed(30); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_TACKLE, target: opponentLeft); }
+        TURN { MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+        TURN { ; }
+    } SCENE {
+        // turn 1
+        MESSAGE("Wobbuffet used Tackle!");
+        HP_BAR(opponentLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_CUTE_CHARM);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_INFATUATION, playerLeft);
+        MESSAGE("The opposing Clefairy's Cute Charm infatuated Wobbuffet!");
+        // turn 2
+        MESSAGE("The opposing Ralts used Ally Switch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
+        MESSAGE("The opposing Ralts and the opposing Clefairy switched places!");
+        // turn 3
+        MESSAGE("Wobbuffet is in love with the opposing Clefairy!"); // tracks attract battler
+    }
+}
+
 // Triple Battles required to test
 //TO_DO_BATTLE_TEST("Ally Switch fails if the user is in the middle of the field in a Triple Battle");
