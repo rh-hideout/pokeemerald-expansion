@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Stun Spore does not affect Grass-types")
 {
     GIVEN {
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
-        ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
         PLAYER(SPECIES_ODDISH); // 1.
         OPPONENT(SPECIES_ODDISH); // 2.
     } WHEN {
@@ -428,7 +428,7 @@ Spaces in pattern match newlines (\n, \l, and \p) in the message.
 Often used to check that a battler took its turn but it failed, e.g.:
 ```
      MESSAGE("Wobbuffet used Dream Eater!");
-     MESSAGE("The opposing Wobbuffet wasn't affected!");
+     MESSAGE("It doesn't affect the opposing Wobbuffet…");
 ```
 
 ### `STATUS_ICON`

@@ -74,8 +74,9 @@ SECTIONS {
     ALIGN(4)
     {
         src/rom_header.o(.text);
-        src/rom_header_gf.o(.text.*);
-        src/rom_header_rhh.o(.text.*);
+        KEEP(*.o(.text.header_gf));
+        KEEP(*.o(.text.header_rhh));
+        KEEP(*.o(.text.consts));
         src/*.o(.text);
     } > ROM =0
 

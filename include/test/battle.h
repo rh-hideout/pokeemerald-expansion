@@ -2,8 +2,13 @@
  *
  * To run all the tests use:
  *     make check -j
- * To run specific tests, e.g. Spikes ones, use:
+ * To run specific tests, e.g. Spikes ones, use either:
  *     make check TESTS="Spikes"
+ *     make check TESTS="*Spikes*"
+ * The first runs tests with names that start with Spikes, whereas the
+ * second runs tests with names that include Spikes anywhere in them.
+ * To run tests from a specific file, e.g. 'test/battle/move_effect/spikes.c', use:
+ *     make check TESTS="test/battle/move_effect/spikes.c"
  * To build a ROM (pokemerald-test.elf) that can be opened in mgba to
  * view specific tests, e.g. Spikes ones, use:
  *     make pokeemerald-test.elf TESTS="Spikes"
@@ -88,7 +93,7 @@
  *   {
  *       GIVEN {
  *           ASSUME(IsPowderMove(MOVE_STUN_SPORE));
- *           ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
+ *           ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
  *           PLAYER(SPECIES_ODDISH); // 1.
  *           OPPONENT(SPECIES_ODDISH); // 2.
  *       } WHEN {
@@ -434,7 +439,7 @@
  * Spaces in pattern match newlines (\n, \l, and \p) in the message.
  * Often used to check that a battler took its turn but it failed, e.g.:
  *     MESSAGE("Wobbuffet used Dream Eater!");
- *     MESSAGE("The opposing Wobbuffet wasn't affected!");
+ *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
  * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
  * Causes the test to fail if the battler's status is not changed to the

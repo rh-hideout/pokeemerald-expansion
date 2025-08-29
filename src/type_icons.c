@@ -311,7 +311,7 @@ static u32 GetMonPublicType(u32 battlerId, u32 typeNum)
         return GetMonDefensiveTeraType(mon,monIllusion,battlerId,typeNum,illusionSpecies,monSpecies);
 
     if (IsIllusionActiveAndTypeUnchanged(monIllusion,monSpecies, battlerId))
-        return gSpeciesInfo[illusionSpecies].types[typeNum];
+        return GetSpeciesType(illusionSpecies, typeNum);
 
     return gBattleMons[battlerId].types[typeNum];
 }
@@ -348,7 +348,7 @@ static u32 GetMonDefensiveTeraType(struct Pokemon * mon, struct Pokemon* monIllu
 
     targetSpecies = (monIllusion != NULL) ? illusionSpecies : monSpecies;
 
-    return gSpeciesInfo[targetSpecies].types[typeNum];
+    return GetSpeciesType(targetSpecies, typeNum);
 }
 
 static u32 IsIllusionActiveAndTypeUnchanged(struct Pokemon* monIllusion, u32 monSpecies, u32 battlerId)
@@ -359,7 +359,7 @@ static u32 IsIllusionActiveAndTypeUnchanged(struct Pokemon* monIllusion, u32 mon
         return FALSE;
 
     for (typeNum = 0; typeNum < 2; typeNum++)
-        if (gSpeciesInfo[monSpecies].types[typeNum] != gBattleMons[battlerId].types[typeNum])
+        if (GetSpeciesType(monSpecies, typeNum) != gBattleMons[battlerId].types[typeNum])
         return FALSE;
 
     return TRUE;
