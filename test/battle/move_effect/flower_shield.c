@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_FLOWER_SHIELD) == EFFECT_FLOWER_SHIELD);
 }
 
-DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all grass type pokemon")
+DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon")
 {
     GIVEN {
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
@@ -33,5 +33,23 @@ DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all grass type pokemon")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         MESSAGE("The opposing Sunflora's Defense rose!");
+    }
+}
+
+TO_DO_BATTLE_TEST("Flower Shield fails if there's no Grass-type Pokémon on the field")
+
+AI_DOUBLE_BATTLE_TEST("AI uses Flower Shield")
+{
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GRASS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_TANGELA) { Moves(MOVE_FLOWER_SHIELD, MOVE_POUND); }
+        OPPONENT(SPECIES_TANGELA);
+    } WHEN {
+        TURN {  EXPECT_MOVE(opponentLeft, MOVE_FLOWER_SHIELD); }
     }
 }

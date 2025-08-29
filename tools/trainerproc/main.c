@@ -155,6 +155,9 @@ struct Trainer
 
     struct String macro;
     int macro_line;
+
+    struct String back_pic;
+    int back_pic_line;
 };
 
 static bool is_empty_string(struct String s)
@@ -175,7 +178,7 @@ static bool is_literal_string(struct String s1, const char *s2)
     }
 }
 
-static bool starts_with(struct String s, const char *prefix)
+static bool __attribute__((unused)) starts_with(struct String s, const char *prefix)
 {
     int n = strlen(prefix);
     return strncmp((const char *)s.string, prefix, n) == 0;
@@ -1300,6 +1303,13 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
             trainer->macro_line = value.location.line;
             trainer->macro = token_string(&value);
         }
+        else if (is_literal_token(&key, "Back Pic"))
+        {
+            if (trainer->back_pic_line)
+                any_error = !set_show_parse_error(p, key.location, "duplicate 'Back Pic'");
+            trainer->back_pic_line = value.location.line;
+            trainer->back_pic = token_string(&value);
+        }
         else
         {
             any_error = !set_show_parse_error(p, key.location, "expected one of 'Name', 'Class', 'Pic', 'Gender', 'Music', 'Items', 'Battle Type', 'Difficulty', 'Party Size', 'Pool Rules', 'Pool Pick Functions', 'Pool Prune' or 'AI'");
@@ -1776,10 +1786,7 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         {
             fprintf(f, "#line %d\n", trainer->pic_line);
             fprintf(f, "        .trainerPic = ");
-            if (starts_with(trainer->id, "PARTNER_"))
-                fprint_constant(f, "TRAINER_BACK_PIC", trainer->pic);
-            else
-                fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprint_constant(f, "TRAINER_PIC", trainer->pic);
             fprintf(f, ",\n");
         }
 
@@ -1884,6 +1891,21 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
             fprint_string(f, trainer->copy_pool);
             fprintf(f, ",\n");
         }
+        if (!is_empty_string(trainer->back_pic))
+        {
+            fprintf(f, "#line %d\n", trainer->back_pic_line);
+            fprintf(f, "        .trainerBackPic = ");
+            fprint_constant(f, "TRAINER_BACK_PIC", trainer->back_pic);
+            fprintf(f, ",\n");
+        }
+        else // defaults to front pic in absence of defined back pic
+        {
+            fprintf(f, "#line %d\n", trainer->back_pic_line);
+            fprintf(f, "        .trainerBackPic = ");
+            fprint_constant(f, "TRAINER_PIC", trainer->pic);
+            fprintf(f, ",\n");
+        }
+        
         if (trainer->macro_line)
         {
             fprintf(f, "#line %d\n", trainer->macro_line);

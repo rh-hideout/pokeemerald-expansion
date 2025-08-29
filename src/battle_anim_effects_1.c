@@ -6863,6 +6863,32 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
         SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
 }
 
+static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
+{
+    u32 attractedTo;
+
+    // our own infatuation handled with gBattleMons struct data swapping
+
+    // if another battler is infatuated with one of us, change to other battler
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (i == battlerAtk || i == battlerPartner || !gBattleMons[i].volatiles.infatuation)
+            continue;
+
+        attractedTo = INFATUATED_WITH(i);
+        if (attractedTo == battlerAtk)
+        {
+            gBattleMons[i].volatiles.infatuation = INFATUATED_WITH(battlerPartner);
+            break;
+        }
+        else if (attractedTo == battlerPartner)
+        {
+            gBattleMons[i].volatiles.infatuation = INFATUATED_WITH(battlerAtk);
+            break;
+        }
+    }
+}
+
 static void SwapBattlerMoveData(u32 battler1, u32 battler2)
 {
     u32 temp;
@@ -6906,7 +6932,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
-    SWAP(gStatuses3[battlerAtk], gStatuses3[battlerPartner], temp);
 
     SwapBattlerMoveData(battlerAtk, battlerPartner);
 
@@ -6934,6 +6959,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
+    TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)

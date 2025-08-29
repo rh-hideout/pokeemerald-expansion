@@ -144,39 +144,59 @@ enum VolatileFlags
 
 /* Volatile status ailments
  * These are removed after exiting the battle or switching
- *  Enum,                                       Type                               Type, max value, flags */
+ *  Enum,                                   Type                           Type, max value, flags */
 #define VOLATILE_DEFINITIONS(F) \
-    F(VOLATILE_CONFUSION,                       confusionTurns,                    (u32, 6), V_BATON_PASSABLE) \
-    F(VOLATILE_FLINCHED,                        flinched,                          (u32, 1)) \
-    F(VOLATILE_UPROAR,                          uproarTurns,                       (u32, 5)) \
-    F(VOLATILE_TORMENT,                         torment,                           (u32, 1)) \
-    F(VOLATILE_BIDE,                            bideTurns,                         (u32, 3)) \
-    F(VOLATILE_LOCK_CONFUSE,                    lockConfusionTurns,                (u32, 3)) \
-    F(VOLATILE_MULTIPLETURNS,                   multipleTurns,                     (u32, 1)) \
-    F(VOLATILE_WRAPPED,                         wrapped,                           (u32, 1)) \
-    F(VOLATILE_POWDER,                          powder,                            (u32, 1)) \
-    F(VOLATILE_UNUSED,                          padding,                           (u32, 1)) \
-    F(VOLATILE_INFATUATION,                     infatuation,                       (enum BattlerId, MAX_BITS(4))) \
-    F(VOLATILE_DEFENSE_CURL,                    defenseCurl,                       (u32, 1)) \
-    F(VOLATILE_TRANSFORMED,                     transformed,                       (u32, 1)) \
-    F(VOLATILE_RECHARGE,                        recharge,                          (u32, 1)) \
-    F(VOLATILE_RAGE,                            rage,                              (u32, 1)) \
-    F(VOLATILE_SUBSTITUTE,                      substitute,                        (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND,                    destinyBond,                       (u32, 1)) \
-    F(VOLATILE_ESCAPE_PREVENTION,               escapePrevention,                  (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_NIGHTMARE,                       nightmare,                         (u32, 1)) \
-    F(VOLATILE_CURSED,                          cursed,                            (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FORESIGHT,                       foresight,                         (u32, 1)) \
-    F(VOLATILE_DRAGON_CHEER,                    dragonCheer,                       (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_FOCUS_ENERGY,                    focusEnergy,                       (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_SEMI_INVULNERABLE,               semiInvulnerable,                  (u32, 5)) \
-    F(VOLATILE_ELECTRIFIED,                     electrified,                       (u32, 1)) \
-    F(VOLATILE_MUD_SPORT,                       mudSport,                          (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_WATER_SPORT,                     waterSport,                        (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_INFINITE_CONFUSION,              infiniteConfusion,                 (u32, 1)) \
-    F(VOLATILE_SALT_CURE,                       saltCure,                          (u32, 1)) \
-    F(VOLATILE_SYRUP_BOMB,                      syrupBomb,                         (u32, 1)) \
-    F(VOLATILE_GLAIVE_RUSH,                     glaiveRush,                        (u32, 1))
+    F(VOLATILE_CONFUSION,                   confusionTurns,                (u32, 6), V_BATON_PASSABLE) \
+    F(VOLATILE_FLINCHED,                    flinched,                      (u32, 1)) \
+    F(VOLATILE_UPROAR,                      uproarTurns,                   (u32, 5)) \
+    F(VOLATILE_TORMENT,                     torment,                       (u32, 1)) \
+    F(VOLATILE_BIDE,                        bideTurns,                     (u32, 3)) \
+    F(VOLATILE_LOCK_CONFUSE,                lockConfusionTurns,            (u32, 3)) \
+    F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
+    F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
+    F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
+    F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
+    F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(4))) \
+    F(VOLATILE_DEFENSE_CURL,                defenseCurl,                   (u32, 1)) \
+    F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
+    F(VOLATILE_RECHARGE,                    recharge,                      (u32, 1)) \
+    F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
+    F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 1)) \
+    F(VOLATILE_ESCAPE_PREVENTION,           escapePrevention,              (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
+    F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
+    F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, 5)) \
+    F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
+    F(VOLATILE_MUD_SPORT,                   mudSport,                      (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_WATER_SPORT,                 waterSport,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_INFINITE_CONFUSION,          infiniteConfusion,             (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_SALT_CURE,                   saltCure,                      (u32, 1)) \
+    F(VOLATILE_SYRUP_BOMB,                  syrupBomb,                     (u32, 1)) \
+    F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
+    F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(4)), V_BATON_PASSABLE) \
+    F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
+    F(VOLATILE_PERISH_SONG,                 perishSong,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_MINIMIZE,                    minimize,                      (u32, 1)) \
+    F(VOLATILE_CHARGE,                      charge,                        (u32, 1)) \
+    F(VOLATILE_ROOT,                        root,                          (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_YAWN,                        yawn,                          (u32, 2)) \
+    F(VOLATILE_IMPRISON,                    imprison,                      (u32, 1)) \
+    F(VOLATILE_GRUDGE,                      grudge,                        (u32, 1)) \
+    F(VOLATILE_GASTRO_ACID,                 gastroAcid,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_EMBARGO,                     embargo,                       (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_SMACK_DOWN,                  smackDown,                     (u32, 1)) \
+    F(VOLATILE_TELEKINESIS,                 telekinesis,                   (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_MIRACLE_EYE,                 miracleEye,                    (u32, 1)) \
+    F(VOLATILE_MAGNET_RISE,                 magnetRise,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_HEAL_BLOCK,                  healBlock,                     (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
+    F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE)
+
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
 #define GET_VOLATILE_MAXIMUM(_typeMaxValue, ...) INVOKE_WITH_B(GET_VOLATILE_MAXIMUM_, _typeMaxValue)
@@ -193,37 +213,7 @@ enum Volatile
 
 // Helper macros
 #define INFATUATED_WITH(battler) (battler + 1)
-
-#define STATUS3_LEECHSEED_BATTLER       (1 << 0 | 1 << 1) // The battler to receive HP from Leech Seed
-#define STATUS3_LEECHSEED               (1 << 2)
-#define STATUS3_ALWAYS_HITS             (1 << 3 | 1 << 4)
-#define STATUS3_ALWAYS_HITS_TURN(num)   (((num) << 3) & STATUS3_ALWAYS_HITS) // "Always Hits" is set as a 2 turn timer, i.e. next turn is the last turn when it's active
-#define STATUS3_PERISH_SONG             (1 << 5)
-#define STATUS3_UNUSED_6                (1 << 6)
-#define STATUS3_UNUSED_7                (1 << 7)
-#define STATUS3_MINIMIZED               (1 << 8)
-#define STATUS3_CHARGED_UP              (1 << 9)
-#define STATUS3_ROOTED                  (1 << 10)
-#define STATUS3_YAWN                    (1 << 11 | 1 << 12) // Number of turns to sleep
-#define STATUS3_YAWN_TURN(num)          (((num) << 11) & STATUS3_YAWN)
-#define STATUS3_IMPRISONED_OTHERS       (1 << 13)
-#define STATUS3_GRUDGE                  (1 << 14)
-#define STATUS3_UNUSED_15               (1 << 15)
-#define STATUS3_GASTRO_ACID             (1 << 16)
-#define STATUS3_EMBARGO                 (1 << 17)
-#define STATUS3_UNUSED_18               (1 << 18)
-#define STATUS3_UNUSED_19               (1 << 19)
-#define STATUS3_UNUSED_20               (1 << 20)
-#define STATUS3_SMACKED_DOWN            (1 << 21)
-#define STATUS3_UNUSED_22               (1 << 22)
-#define STATUS3_TELEKINESIS             (1 << 23)
-#define STATUS3_UNUSED_24               (1 << 24)
-#define STATUS3_MIRACLE_EYED            (1 << 25)
-#define STATUS3_MAGNET_RISE             (1 << 26)
-#define STATUS3_HEAL_BLOCK              (1 << 27)
-#define STATUS3_AQUA_RING               (1 << 28)
-#define STATUS3_LASER_FOCUS             (1 << 29)
-#define STATUS3_POWER_TRICK             (1 << 30)
+#define LEECHSEEDED_BY(battler) (battler + 1)
 
 enum SemiInvulnerableState
 {
@@ -258,7 +248,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
-#define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
+#define HITMARKER_PASSIVE_HP_UPDATE     (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
@@ -373,16 +363,17 @@ enum BattleWeather
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
+// Explicit numbers until frostbite because those shouldn't be shifted 
 enum __attribute__((packed)) MoveEffect
 {
-    MOVE_EFFECT_NONE,
-    MOVE_EFFECT_SLEEP,
-    MOVE_EFFECT_POISON,
-    MOVE_EFFECT_BURN,
-    MOVE_EFFECT_FREEZE,
-    MOVE_EFFECT_PARALYSIS,
-    MOVE_EFFECT_TOXIC,
-    MOVE_EFFECT_FROSTBITE,
+    MOVE_EFFECT_NONE = 0,
+    MOVE_EFFECT_SLEEP = 1,
+    MOVE_EFFECT_POISON = 2,
+    MOVE_EFFECT_BURN = 3,
+    MOVE_EFFECT_FREEZE = 4,
+    MOVE_EFFECT_PARALYSIS = 5,
+    MOVE_EFFECT_TOXIC = 6,
+    MOVE_EFFECT_FROSTBITE = 7,
     MOVE_EFFECT_CONFUSION,
     MOVE_EFFECT_FLINCH,
     MOVE_EFFECT_TRI_ATTACK,

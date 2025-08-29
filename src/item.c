@@ -32,6 +32,7 @@ static bool32 CheckPyramidBagHasItem(u16 itemId, u16 count);
 static bool32 CheckPyramidBagHasSpace(u16 itemId, u16 count);
 static const u8 *GetItemPluralName(u16);
 static bool32 DoesItemHavePluralName(u16);
+static void NONNULL BagPocket_CompactItems(struct BagPocket *pocket);
 
 EWRAM_DATA struct BagPocket gBagPockets[POCKETS_COUNT] = {0};
 
@@ -390,6 +391,9 @@ static bool32 NONNULL BagPocket_RemoveItem(struct BagPocket *pocket, u16 itemId,
                 BagPocket_SetSlotItemIdAndCount(pocket, itemRemoveIndex, itemId, tempPocketSlotQuantities[itemRemoveIndex] - 1);
         }
     }
+
+    if (totalQuantity == count)
+        BagPocket_CompactItems(pocket);
 
     Free(tempPocketSlotQuantities);
     return totalQuantity >= count;

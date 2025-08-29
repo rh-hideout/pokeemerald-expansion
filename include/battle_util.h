@@ -394,7 +394,7 @@ bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void UpdateStallMons(void);
 bool32 TryRestoreHPBerries(u32 battler, enum ItemCaseId caseId);
 bool32 TrySwitchInEjectPack(enum ItemCaseId caseID);
-u32 GetMonVolatile(u32 battler, enum Volatile _volatile);
+u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
 u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID);
 bool32 ItemHealMonVolatile(u32 battler, u16 itemId);

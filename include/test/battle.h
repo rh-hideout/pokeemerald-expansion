@@ -2,8 +2,13 @@
  *
  * To run all the tests use:
  *     make check -j
- * To run specific tests, e.g. Spikes ones, use:
+ * To run specific tests, e.g. Spikes ones, use either:
  *     make check TESTS="Spikes"
+ *     make check TESTS="*Spikes*"
+ * The first runs tests with names that start with Spikes, whereas the
+ * second runs tests with names that include Spikes anywhere in them.
+ * To run tests from a specific file, e.g. 'test/battle/move_effect/spikes.c', use:
+ *     make check TESTS="test/battle/move_effect/spikes.c"
  * To build a ROM (pokemerald-test.elf) that can be opened in mgba to
  * view specific tests, e.g. Spikes ones, use:
  *     make pokeemerald-test.elf TESTS="Spikes"

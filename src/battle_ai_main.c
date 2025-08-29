@@ -211,7 +211,7 @@ static u64 GetAiFlags(u16 trainerId)
             flags = GetTrainerAIFlagsFromId(trainerId);
     }
 
-    if (IsDoubleBattle())
+    if (IsDoubleBattle() && flags != 0)
     {
         flags |= AI_FLAG_DOUBLE_BATTLE;
     }
@@ -742,7 +742,10 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     u64 flags = gAiThinkingStruct->aiFlags[battler];
     u32 opposingBattler = GetOppositeBattler(battler);
 
+    gAiThinkingStruct->aiLogicId = 0;
+    gAiThinkingStruct->movesetIndex = 0;
     gAiLogicData->partnerMove = 0;   // no ally
+
     while (flags != 0)
     {
         if (flags & 1)
@@ -1078,6 +1081,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     u32 i;
     u32 weather;
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     u32 abilityAtk = aiData->abilities[battlerAtk];
     u32 abilityDef = aiData->abilities[battlerDef];
     s32 atkPriority = GetBattleMovePriority(battlerAtk, abilityAtk, move);
@@ -1088,7 +1092,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
         RETURN_SCORE_MINUS(10);
 
-    if (!BreaksThroughSemiInvulnerablity(battlerDef, move) && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+    if (!BreaksThroughSemiInvulnerablity(battlerDef, move) && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
         RETURN_SCORE_MINUS(10);
 
     if (IsTwoTurnNotSemiInvulnerableMove(battlerAtk, move) && CanTargetFaintAi(battlerDef, battlerAtk))
@@ -1166,8 +1170,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case MOVE_EFFECT_BURN:
                 ADJUST_SCORE(-5);
                 break;
+            default:
+                break;
             }
-            break;
             break;
         case ABILITY_WONDER_GUARD:
             if (effectiveness < UQ_4_12(2.0))
@@ -1281,7 +1286,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (gDisableStructs[battlerAtk].throatChopTimer > gBattleTurnCounter && IsSoundMove(move))
         return 0; // Can't even select move at all
     // heal block check
-    if (gStatuses3[battlerAtk] & STATUS3_HEAL_BLOCK && IsHealBlockPreventingMove(battlerAtk, move))
+    if (gBattleMons[battlerAtk].volatiles.healBlock && IsHealBlockPreventingMove(battlerAtk, move))
         return 0; // Can't even select heal blocked move
 
     // primal weather check
@@ -1320,7 +1325,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     switch (moveEffect)
     {
         case EFFECT_HIT: // only applies to Vital Throw
-            if (GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move) < 0 && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && aiData->hpPercents[battlerAtk] < 40)
+            if (GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move) < 0 && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && aiData->hpPercents[battlerAtk] < 40)
                 ADJUST_SCORE(-2);    // don't want to move last
             break;
         default:
@@ -1432,7 +1437,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_CHARGE:
-            if (gStatuses3[battlerAtk] & STATUS3_CHARGED_UP)
+            if (gBattleMons[battlerAtk].volatiles.charge)
                 ADJUST_SCORE(-20);
             else if (!HasMoveWithType(battlerAtk, TYPE_ELECTRIC))
                 ADJUST_SCORE(-10);
@@ -1552,12 +1557,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 else if (!BattlerStatCanRise(battlerAtk, aiData->abilities[battlerAtk], STAT_SPDEF))
                     ADJUST_SCORE(-8);
             }
-            else if (!hasPartner)
-            {
-                ADJUST_SCORE(-10);    // our stats wont rise from this move
-            }
-
-            if (hasPartner)
+            else if (hasPartner)
             {
                 if (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_PLUS || aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_MINUS)
                 {
@@ -1570,6 +1570,10 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 {
                     ADJUST_SCORE(-10);    // nor our or our partner's ability is plus/minus
                 }
+            }
+            else
+            {
+                ADJUST_SCORE(-10);    // our stats wont rise from this move
             }
             break;
     // stat lowering effects
@@ -1761,7 +1765,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-8);
             break;
         case EFFECT_LEECH_SEED:
-            if (gStatuses3[battlerDef] & STATUS3_LEECHSEED
+            if (gBattleMons[battlerDef].volatiles.leechSeed
              || IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)
              || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -1775,7 +1779,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
                 && !DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {
-                if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Attacker should go first
+                if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Attacker should go first
                 {
                     if (gLastMoves[battlerDef] == MOVE_NONE || gLastMoves[battlerDef] == 0xFFFF)
                         ADJUST_SCORE(-10);    // no anticipated move to disable
@@ -1797,7 +1801,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
                 && !DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {
-                if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Attacker should go first
+                if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Attacker should go first
                 {
                     if (gLastMoves[battlerDef] == MOVE_NONE || gLastMoves[battlerDef] == 0xFFFF)
                         ADJUST_SCORE(-10);    // no anticipated move to encore
@@ -1891,9 +1895,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     ADJUST_SCORE(-10); //Don't wipe your team if you're going to lose
                 }
                 else if ((!IsBattlerAlive(FOE(battlerAtk)) || aiData->abilities[FOE(battlerAtk)] == ABILITY_SOUNDPROOF
-                  || gStatuses3[FOE(battlerAtk)] & STATUS3_PERISH_SONG)
+                  || gBattleMons[FOE(battlerAtk)].volatiles.perishSong)
                   && (!IsBattlerAlive(BATTLE_PARTNER(FOE(battlerAtk))) || aiData->abilities[BATTLE_PARTNER(FOE(battlerAtk))] == ABILITY_SOUNDPROOF
-                  || gStatuses3[BATTLE_PARTNER(FOE(battlerAtk))] & STATUS3_PERISH_SONG))
+                  || gBattleMons[BATTLE_PARTNER(FOE(battlerAtk))].volatiles.perishSong))
                 {
                     ADJUST_SCORE(-10); //Both enemies are perish songed
                 }
@@ -1908,7 +1912,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && CountUsablePartyMons(battlerDef) >= 1)
                     ADJUST_SCORE(-10);
 
-                if (gStatuses3[FOE(battlerAtk)] & STATUS3_PERISH_SONG || aiData->abilities[FOE(battlerAtk)] == ABILITY_SOUNDPROOF)
+                if (gBattleMons[FOE(battlerAtk)].volatiles.perishSong || aiData->abilities[FOE(battlerAtk)] == ABILITY_SOUNDPROOF)
                     ADJUST_SCORE(-10);
             }
             break;
@@ -1954,8 +1958,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (CountUsablePartyMons(battlerAtk) == 0)
                 ADJUST_SCORE(-10);
             else if (gBattleMons[battlerAtk].volatiles.substitute
-              || (gStatuses3[battlerAtk] & (STATUS3_ROOTED | STATUS3_AQUA_RING | STATUS3_MAGNET_RISE | STATUS3_POWER_TRICK))
-              || AnyStatIsRaised(battlerAtk))
+                  || gBattleMons[battlerAtk].volatiles.powerTrick
+                  || gBattleMons[battlerAtk].volatiles.magnetRise
+                  || gBattleMons[battlerAtk].volatiles.aquaRing
+                  || gBattleMons[battlerAtk].volatiles.root
+                  || AnyStatIsRaised(battlerAtk))
                 break;
             else
                 ADJUST_SCORE(-6);
@@ -2035,7 +2042,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
               || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
               || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
-                ADJUST_SCORE(-10);
+                ADJUST_SCORE(-20);
             break;
         case EFFECT_TRICK:
         case EFFECT_KNOCK_OFF:
@@ -2044,11 +2051,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_INGRAIN:
-            if (gStatuses3[battlerAtk] & STATUS3_ROOTED)
+            if (gBattleMons[battlerAtk].volatiles.root)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_AQUA_RING:
-            if (gStatuses3[battlerAtk] & STATUS3_AQUA_RING)
+            if (gBattleMons[battlerAtk].volatiles.aquaRing)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_RECYCLE:
@@ -2056,11 +2063,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_IMPRISON:
-            if (gStatuses3[battlerAtk] & STATUS3_IMPRISONED_OTHERS)
+            if (gBattleMons[battlerAtk].volatiles.imprison)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_REFRESH:
-            if (!(gBattleMons[battlerDef].status1 & STATUS1_CAN_MOVE))
+            if (!(gBattleMons[battlerAtk].status1 & STATUS1_CAN_MOVE))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_PSYCHO_SHIFT:
@@ -2128,7 +2135,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10); // don't scare away pokemon twice
             else if (aiData->hpPercents[battlerDef] < 10 && GetBattlerSecondaryDamage(battlerDef))
                 ADJUST_SCORE(-10);    // don't blow away mon that will faint soon
-            else if (gStatuses3[battlerDef] & STATUS3_PERISH_SONG)
+            else if (gBattleMons[battlerDef].volatiles.perishSong)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_CONVERSION:
@@ -2181,7 +2188,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_SPITE:
         case EFFECT_MIMIC:
-            if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Attacker should go first
+            if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Attacker should go first
             {
                 if (gLastMoves[battlerDef] == MOVE_NONE
                   || gLastMoves[battlerDef] == 0xFFFF)
@@ -2200,14 +2207,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             //TODO
             break;
         case EFFECT_LOCK_ON:
-            if (gStatuses3[battlerDef] & STATUS3_ALWAYS_HITS
+            if (gBattleMons[battlerDef].volatiles.lockOn
               || aiData->abilities[battlerAtk] == ABILITY_NO_GUARD
               || aiData->abilities[battlerDef] == ABILITY_NO_GUARD
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_LASER_FOCUS:
-            if (gStatuses3[battlerAtk] & STATUS3_LASER_FOCUS)
+            if (gBattleMons[battlerDef].volatiles.laserFocus)
                 ADJUST_SCORE(-10);
             else if (aiData->abilities[battlerDef] == ABILITY_SHELL_ARMOR || aiData->abilities[battlerDef] == ABILITY_BATTLE_ARMOR)
                 ADJUST_SCORE(-8);
@@ -2312,13 +2319,30 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_MIRACLE_EYE:
-            if (gStatuses3[battlerDef] & STATUS3_MIRACLE_EYED)
+            if (gBattleMons[battlerDef].volatiles.miracleEye)
                 ADJUST_SCORE(-10);
 
             if (gBattleMons[battlerDef].statStages[STAT_EVASION] <= 4
               || !(IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK))
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-9);
+            break;
+        case EFFECT_COURT_CHANGE:
+            if (gSideStatuses[GetBattlerSide(FOE(battlerAtk))] & SIDE_STATUS_BAD_COURT)
+                ADJUST_SCORE(BAD_EFFECT);
+            if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_GOOD_COURT)
+                ADJUST_SCORE(BAD_EFFECT);
+            if (AreAnyHazardsOnSide(GetBattlerSide(FOE(battlerAtk))) && CountUsablePartyMons(battlerAtk) != 0)
+                ADJUST_SCORE(WORST_EFFECT);
+            if (hasPartner)
+            {
+                if (IsHazardMove(aiData->partnerMove) // partner is going to set up hazards
+                  && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // partner is going to set up before the Court Change
+                {
+                    ADJUST_SCORE(-10);
+                    break; // Don't use Defog if partner is going to set up hazards
+                }
+            }
             break;
         case EFFECT_DEFOG:
             if (gSideStatuses[GetBattlerSide(battlerDef)] & (SIDE_STATUS_SCREEN_ANY | SIDE_STATUS_SAFEGUARD | SIDE_STATUS_MIST)
@@ -2340,7 +2364,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (hasPartner)
             {
                 if (IsHazardMove(aiData->partnerMove) // partner is going to set up hazards
-                  && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // partner is going to set up before the potential Defog
+                  && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // partner is going to set up before the potential Defog
                 {
                     ADJUST_SCORE(-10);
                     break; // Don't use Defog if partner is going to set up hazards
@@ -2368,7 +2392,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_SEMI_INVULNERABLE:
             if (predictedMove != MOVE_NONE
-              && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+              && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
               && GetMoveEffect(predictedMove) == EFFECT_SEMI_INVULNERABLE)
                 ADJUST_SCORE(-10); // Don't Fly/dig/etc if opponent is going to fly/dig/etc after you
 
@@ -2414,7 +2438,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_YAWN:
-            if (gStatuses3[battlerDef] & STATUS3_YAWN)
+            if (gBattleMons[battlerDef].volatiles.yawn)
                 ADJUST_SCORE(-10);
             else if (!AI_CanPutToSleep(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -2516,7 +2540,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_ME_FIRST:
             if (predictedMove != MOVE_NONE)
             {
-                if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+                if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                     ADJUST_SCORE(-10);    // Target is predicted to go first, Me First will fail
                 else if (GetMoveEffect(predictedMove) != GetMoveEffect(move))
                     return AI_CheckBadMove(battlerAtk, battlerDef, predictedMove, score);
@@ -2634,7 +2658,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_EMBARGO:
             if (!IsBattlerItemEnabled(battlerAtk)
-             || gStatuses3[battlerDef] & STATUS3_EMBARGO
+              || gBattleMons[battlerDef].volatiles.embargo
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
@@ -2644,15 +2668,17 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_TELEKINESIS:
-            if (gStatuses3[battlerDef] & (STATUS3_TELEKINESIS | STATUS3_ROOTED | STATUS3_SMACKED_DOWN)
-              || gFieldStatuses & STATUS_FIELD_GRAVITY
-              || aiData->holdEffects[battlerDef] == HOLD_EFFECT_IRON_BALL
-              || IsTelekinesisBannedSpecies(gBattleMons[battlerDef].species)
-              || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+            if (gBattleMons[battlerDef].volatiles.telekinesis
+             || gBattleMons[battlerDef].volatiles.root
+             || gBattleMons[battlerDef].volatiles.smackDown
+             || gFieldStatuses & STATUS_FIELD_GRAVITY
+             || aiData->holdEffects[battlerDef] == HOLD_EFFECT_IRON_BALL
+             || IsTelekinesisBannedSpecies(gBattleMons[battlerDef].species)
+             || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_HEAL_BLOCK:
-            if (gStatuses3[battlerDef] & STATUS3_HEAL_BLOCK
+            if (gBattleMons[battlerDef].volatiles.healBlock
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
@@ -2681,7 +2707,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_HIT_ENEMY_HEAL_ALLY:    // pollen puff
             if (IsTargetingPartner(battlerAtk, battlerDef))
             {
-                if (gStatuses3[battlerDef] & STATUS3_HEAL_BLOCK)
+                if (gBattleMons[battlerDef].volatiles.healBlock)
                     return 0; // cannot even select
                 if (AI_BattlerAtMaxHp(battlerDef))
                     ADJUST_SCORE(-10);
@@ -2690,7 +2716,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_ELECTRIFY:
-            if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+            if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
               //|| GetMoveTypeSpecial(battlerDef, predictedMove) == TYPE_ELECTRIC // Move will already be electric type
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
@@ -2722,7 +2748,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_INSTRUCT:
             {
                 u32 instructedMove;
-                if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+                if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                     instructedMove = predictedMove;
                 else
                     instructedMove = gLastMoves[battlerDef];
@@ -2759,21 +2785,21 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_QUASH:
             if (!hasPartner
-            || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+            || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
             || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_AFTER_YOU:
             if (!IsTargetingPartner(battlerAtk, battlerDef)
               || !hasPartner
-              || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+              || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
               || PartnerMoveIsSameAsAttacker(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SUCKER_PUNCH:
             if ((HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_STATUS) && RandomPercentage(RNG_AI_SUCKER_PUNCH, SUCKER_PUNCH_CHANCE)) // Player has a status move
             || (IsBattleMoveStatus(predictedMove) && RandomPercentage(RNG_AI_SUCKER_PUNCH, SUCKER_PUNCH_PREDICTION_CHANCE) && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREDICT_MOVE)) // AI actively predicting incoming status move
-            || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Opponent going first
+            || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Opponent going first
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_TAILWIND:
@@ -2789,9 +2815,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_MAGNET_RISE:
             if (gFieldStatuses & STATUS_FIELD_GRAVITY
-              ||  gDisableStructs[battlerAtk].magnetRiseTimer > gBattleTurnCounter
+              || gDisableStructs[battlerAtk].magnetRiseTimer > gBattleTurnCounter
               || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_IRON_BALL
-              || gStatuses3[battlerAtk] & (STATUS3_ROOTED | STATUS3_MAGNET_RISE | STATUS3_SMACKED_DOWN)
+              || gBattleMons[battlerAtk].volatiles.smackDown
+              || gBattleMons[battlerAtk].volatiles.root
+              || gBattleMons[battlerAtk].volatiles.magnetRise
               || !IsBattlerGrounded(battlerAtk))
                 ADJUST_SCORE(-10);
             break;
@@ -2808,7 +2836,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FLAIL:
-            if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) // Opponent should go first
+            if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) // Opponent should go first
              || aiData->hpPercents[battlerAtk] > 50)
                 ADJUST_SCORE(-4);
             break;
@@ -2825,25 +2853,25 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ||  GetBattlerWeight(battlerDef) >= 2000) //200.0 kg
                 ADJUST_SCORE(-10);
             break;
-        /*case EFFECT_NO_RETREAT:
-            if (TrappedByNoRetreat(battlerAtk))
+        case EFFECT_NO_RETREAT:
+            if (gDisableStructs[battlerAtk].noRetreat)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_EXTREME_EVOBOOST:
-            if (MainStatsMaxed(battlerAtk))
+            if (AreBattlersStatsMaxed(battlerAtk))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_CLANGOROUS_SOUL:
             if (gBattleMons[battlerAtk].hp <= gBattleMons[battlerAtk].maxHP / 3)
                 ADJUST_SCORE(-10);
-            break;*/
+            break;
         case EFFECT_REVIVAL_BLESSING:
             if (GetFirstFaintedPartyIndex(battlerAtk) == PARTY_SIZE)
                 ADJUST_SCORE(-10);
             else if (CanAIFaintTarget(battlerAtk, battlerDef, 0))
                 ADJUST_SCORE(-10);
             else if (CanTargetFaintAi(battlerDef, battlerAtk)
-             && AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+             && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_JUNGLE_HEALING:
@@ -2874,15 +2902,22 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 u32 defPrio = GetBattleMovePriority(battlerDef, aiData->abilities[battlerDef], predictedMove);
                 if (predictedMove == MOVE_NONE
                  || IsBattleMoveStatus(predictedMove)
-                 || AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)
+                 || AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
                  || defPrio < 1
                  || defPrio > 3) // Opponent going first or not using priority move
                     ADJUST_SCORE(-10);
             }
             break;
-        case EFFECT_COURT_CHANGE:
         case EFFECT_TEATIME:
             if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                ADJUST_SCORE(-10);
+            break;
+        case EFFECT_DARK_VOID:
+            if (B_DARK_VOID_FAIL >= GEN_7 && gBattleMons[battlerAtk].species != SPECIES_DARKRAI)
+                ADJUST_SCORE(-10);
+            break;
+        case EFFECT_HYPERSPACE_FURY:
+            if (gBattleMons[battlerAtk].species != SPECIES_HOOPA_UNBOUND)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_PLACEHOLDER:
@@ -2944,6 +2979,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     u32 movesetIndex = gAiThinkingStruct->movesetIndex;
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
 
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
@@ -2955,7 +2991,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING)
         && effect != EFFECT_EXPLOSION && effect != EFFECT_MISTY_EXPLOSION)
     {
-        if (AI_IsFaster(battlerAtk, battlerDef, move, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), CONSIDER_PRIORITY))
+        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
             ADJUST_SCORE(FAST_KILL);
         else
             ADJUST_SCORE(SLOW_KILL);
@@ -2989,10 +3025,12 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     bool32 partnerProtecting = IsAllyProtectingFromMove(battlerAtk, move, aiData->partnerMove) && !MoveIgnoresProtect(move);
     bool32 partnerHasBadAbility = (gAbilitiesInfo[atkPartnerAbility].aiRating < 0);
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
 
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
+    bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
@@ -3036,7 +3074,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // Adjust for always crit moves
     if (MoveAlwaysCrits(aiData->partnerMove) && aiData->abilities[battlerAtk] == ABILITY_ANGER_POINT)
     {
-        if (AI_IsSlower(battlerAtk, battlerAtkPartner, move, predictedMove, CONSIDER_PRIORITY))   // Partner moving first
+        if (AI_IsSlower(battlerAtk, battlerAtkPartner, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))   // Partner moving first
         {
             // discourage raising our attack since it's about to be maxed out
             if (IsAttackBoostMoveEffect(effect))
@@ -3051,8 +3089,54 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     switch (effect)
     {
     case EFFECT_HELPING_HAND:
-        if (!hasPartner || !HasDamagingMove(battlerAtkPartner))
-            ADJUST_SCORE(-20);
+        if (!hasPartner 
+         || !HasDamagingMove(battlerAtkPartner)
+         || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
+        {
+            ADJUST_SCORE(WORST_EFFECT);
+        }
+        else
+        {
+            u32 ownHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtk, FOE(battlerAtk), AI_ATTACKING);
+            u32 partnerHitsToKOFoe1 = GetBestNoOfHitsToKO(battlerAtkPartner, FOE(battlerAtk), AI_ATTACKING);
+            u32 ownHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtk, FOE(battlerAtkPartner), AI_ATTACKING);
+            u32 partnerHitsToKOFoe2 = GetBestNoOfHitsToKO(battlerAtkPartner, FOE(battlerAtkPartner), AI_ATTACKING);
+
+            if (hasTwoOpponents)
+            {
+                // Might be about to die
+                if (CanTargetFaintAi(FOE(battlerAtk), battlerAtk) && CanTargetFaintAi(FOE(battlerAtkPartner), battlerAtk) 
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtk), move, predictedMove, DONT_CONSIDER_PRIORITY)
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
+                    ADJUST_SCORE(GOOD_EFFECT);
+
+                if (ownHitsToKOFoe1 > partnerHitsToKOFoe1 && partnerHitsToKOFoe1 > 1
+                 && ownHitsToKOFoe2 > partnerHitsToKOFoe2 && partnerHitsToKOFoe2 > 1)
+                    ADJUST_SCORE(GOOD_EFFECT);
+            }
+            else if (IsBattlerAlive(FOE(battlerAtk)))
+            {
+                // Might be about to die
+                if (CanTargetFaintAi(FOE(battlerAtk), battlerAtk)
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtk), move, predictedMove, DONT_CONSIDER_PRIORITY))
+                    ADJUST_SCORE(GOOD_EFFECT);
+
+                if (ownHitsToKOFoe1 > partnerHitsToKOFoe1 && partnerHitsToKOFoe1 > 1)
+                    ADJUST_SCORE(GOOD_EFFECT);
+            }
+            else if (IsBattlerAlive(FOE(battlerAtkPartner)))
+            {
+                // Might be about to die
+                if (CanTargetFaintAi(FOE(battlerAtkPartner), battlerAtk) 
+                 && AI_IsSlower(battlerAtk, FOE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
+                    ADJUST_SCORE(GOOD_EFFECT);
+
+                if (ownHitsToKOFoe2 > partnerHitsToKOFoe2 && partnerHitsToKOFoe2 > 1)
+                    ADJUST_SCORE(GOOD_EFFECT);
+
+            }
+            
+        }
         break;
     case EFFECT_PERISH_SONG:
         if (aiData->partnerMove != 0 && HasTrappingMoveEffect(battlerAtkPartner))
@@ -3209,7 +3293,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_ANGER_POINT:
                 if (MoveAlwaysCrits(move)
                     && BattlerStatCanRise(battlerAtkPartner, atkPartnerAbility, STAT_ATK)
-                    && AI_IsFaster(battlerAtk, battlerAtkPartner, move, predictedMove, CONSIDER_PRIORITY)
+                    && AI_IsFaster(battlerAtk, battlerAtkPartner, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
                     && isFriendlyFireOK)
                 {
                     if (MoveAlwaysCrits(move))
@@ -3478,7 +3562,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_PURIFY:
                 if (gBattleMons[battlerAtkPartner].status1 & STATUS1_ANY)
                 {
-                    RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    if (gBattleMons[battlerAtkPartner].status1 & STATUS1_CAN_MOVE)
+                        RETURN_SCORE_PLUS(WEAK_EFFECT);
+                    RETURN_SCORE_PLUS(GOOD_EFFECT);
                 }
                 break;
             case EFFECT_SWAGGER:
@@ -3528,7 +3614,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_INSTRUCT:
                 {
                     u16 instructedMove;
-                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, predictedMove, CONSIDER_PRIORITY))
+                    if (AI_IsFaster(battlerAtk, battlerAtkPartner, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                         instructedMove = aiData->partnerMove;
                     else
                         instructedMove = gLastMoves[battlerAtkPartner];
@@ -3545,8 +3631,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && HasMoveWithEffect(battlerAtkPartner, EFFECT_TRICK_ROOM))
                     ADJUST_SCORE(DECENT_EFFECT);
 
-                if (AI_IsSlower(battlerAtkPartner, FOE(battlerAtkPartner), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)  // Opponent mon 1 goes before partner
-                 && AI_IsSlower(battlerAtkPartner, BATTLE_PARTNER(FOE(battlerAtkPartner)), aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // Opponent mon 2 goes before partner
+                if (AI_IsSlower(battlerAtkPartner, FOE(battlerAtkPartner), aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY)  // Opponent mon 1 goes before partner
+                 && AI_IsSlower(battlerAtkPartner, BATTLE_PARTNER(FOE(battlerAtkPartner)), aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Opponent mon 2 goes before partner
                 {
                     if (partnerEffect == EFFECT_COUNTER || partnerEffect == EFFECT_MIRROR_COAT)
                         break; // These moves need to go last
@@ -3555,8 +3641,8 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 break;
             case EFFECT_HEAL_PULSE:
             case EFFECT_HIT_ENEMY_HEAL_ALLY:
-                if (AI_IsFaster(battlerAtk, FOE(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)
-                 && AI_IsFaster(battlerAtk, BATTLE_PARTNER(FOE(battlerAtk)), move, predictedMove, CONSIDER_PRIORITY)
+                if (AI_IsFaster(battlerAtk, FOE(battlerAtk), move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
+                 && AI_IsFaster(battlerAtk, BATTLE_PARTNER(FOE(battlerAtk)), move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
                  && gBattleMons[battlerAtkPartner].hp < gBattleMons[battlerAtkPartner].maxHP / 2)
                     RETURN_SCORE_PLUS(WEAK_EFFECT);
                 break;
@@ -3676,9 +3762,9 @@ static enum MoveComparisonResult CompareMoveAccuracies(u32 battlerAtk, u32 battl
 
 static enum MoveComparisonResult CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
 {
-    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
-    u32 speed1 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move1, predictedMove, CONSIDER_PRIORITY);
-    u32 speed2 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move2, predictedMove, CONSIDER_PRIORITY);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    u32 speed1 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move1, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
+    u32 speed2 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move2, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
 
     if (speed1 == AI_IS_FASTER && speed2 == AI_IS_SLOWER)
         return MOVE_WON_COMPARISON;
@@ -3914,6 +4000,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
 
     s32 score = 0;
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     u32 predictedType = GetMoveType(predictedMove);
     u32 predictedMoveSlot = GetMoveSlot(GetMovesArray(battlerDef), predictedMove);
     bool32 isBattle1v1 = IsBattle1v1();
@@ -4010,8 +4097,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (predictedMove && GetMoveEffect(predictedMove) != GetMoveEffect(move))
             return AI_CheckViability(battlerAtk, battlerDef, predictedMove, score);
         break;
-    case EFFECT_ATTACK_UP:
     case EFFECT_ATTACK_UP_USER_ALLY:
+        ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_ATK));
+    case EFFECT_ATTACK_UP:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
         break;
     case EFFECT_ATTACK_UP_2:
@@ -4021,12 +4109,14 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_DEFENSE_UP_3:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
+    case EFFECT_STUFF_CHEEKS:
     case EFFECT_DEFENSE_UP_2:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF_2));
         break;
     case EFFECT_SPEED_UP:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
         break;
+    case EFFECT_AUTOTOMIZE:
     case EFFECT_SPEED_UP_2:
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED_2));
         break;
@@ -4087,6 +4177,18 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(-2); // Should be either removed or turned into increasing score
     case EFFECT_ACUPRESSURE:
         break;
+    case EFFECT_MAGNETIC_FLUX:
+        if (aiData->abilities[battlerAtk] == ABILITY_PLUS || aiData->abilities[battlerAtk] == ABILITY_MINUS)
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPDEF));
+        }
+        if (hasPartner && (aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_PLUS || aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_MINUS))
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_DEF));
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_SPDEF));
+        }
+        break;
     case EFFECT_ATTACK_ACCURACY_UP: // hone claws
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ACC));
@@ -4095,6 +4197,56 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_ATTACK_SPATK_UP:    // work up
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK));
+        break;
+    case EFFECT_ROTOTILLER:
+            if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GRASS) && IsBattlerGrounded(battlerAtk))
+            {
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK));
+            }
+            if (hasPartner && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(battlerAtk), TYPE_GRASS) && IsBattlerGrounded(BATTLE_PARTNER(battlerAtk)))
+            {
+                ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_ATK));
+                ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_SPATK));
+            }
+            if (IS_BATTLER_OF_TYPE(FOE(battlerAtk), TYPE_GRASS) && IsBattlerGrounded(FOE(battlerAtk)))
+            {
+                if (aiData->abilities[FOE(battlerAtk)] == ABILITY_CONTRARY)
+                    ADJUST_SCORE(WEAK_EFFECT);
+                else
+                    ADJUST_SCORE(AWFUL_EFFECT);
+            }
+            if (IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS) && IsBattlerGrounded(BATTLE_PARTNER(FOE(battlerAtk))))
+            {
+                if (aiData->abilities[BATTLE_PARTNER(FOE(battlerAtk))] == ABILITY_CONTRARY)
+                    ADJUST_SCORE(WEAK_EFFECT);
+                else
+                    ADJUST_SCORE(AWFUL_EFFECT);
+            }
+            break;
+    case EFFECT_FLOWER_SHIELD:
+        if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GRASS))
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
+        }
+        if (hasPartner && IS_BATTLER_OF_TYPE(BATTLE_PARTNER(battlerAtk), TYPE_GRASS))
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(BATTLE_PARTNER(battlerAtk), battlerDef, STAT_CHANGE_DEF));
+        }
+        if (IS_BATTLER_OF_TYPE(FOE(battlerAtk), TYPE_GRASS))
+        {
+            if (aiData->abilities[FOE(battlerAtk)] == ABILITY_CONTRARY)
+                ADJUST_SCORE(WEAK_EFFECT);
+            else
+                ADJUST_SCORE(AWFUL_EFFECT);
+        }
+        if (IS_BATTLER_OF_TYPE(BATTLE_PARTNER(FOE(battlerAtk)), TYPE_GRASS))
+        {
+            if (aiData->abilities[BATTLE_PARTNER(FOE(battlerAtk))] == ABILITY_CONTRARY)
+                ADJUST_SCORE(WEAK_EFFECT);
+            else
+                ADJUST_SCORE(AWFUL_EFFECT);
+        }
         break;
     case EFFECT_HAZE:
         if (AnyStatIsRaised(BATTLE_PARTNER(battlerAtk))
@@ -4177,8 +4329,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         {
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_SLP
               || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_CURE_STATUS
-              || HasMoveWithEffect(EFFECT_SLEEP_TALK, battlerAtk)
-              || HasMoveWithEffect(EFFECT_SNORE, battlerAtk)
+              || HasMoveWithEffect(battlerAtk, EFFECT_SLEEP_TALK)
+              || HasMoveWithEffect(battlerAtk, EFFECT_SNORE)
               || aiData->abilities[battlerAtk] == ABILITY_SHED_SKIN
               || aiData->abilities[battlerAtk] == ABILITY_EARLY_BIRD
               || (AI_GetWeather() & B_WEATHER_RAIN && gWishFutureKnock.weatherDuration != 1 && aiData->abilities[battlerAtk] == ABILITY_HYDRATION && aiData->holdEffects[battlerAtk] != HOLD_EFFECT_UTILITY_UMBRELLA))
@@ -4189,7 +4341,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_SHEER_COLD:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (gStatuses3[battlerAtk] & STATUS3_ALWAYS_HITS)
+        else if (gBattleMons[battlerAtk].volatiles.lockOn)
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_MEAN_LOOK:
@@ -4212,7 +4364,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         ADJUST_SCORE(IncreaseSubstituteMoveScore(battlerAtk, battlerDef, move));
         break;
     case EFFECT_MIMIC:
-        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
         {
             if (gLastMoves[battlerDef] != MOVE_NONE && gLastMoves[battlerDef] != 0xFFFF
                     && (GetMoveEffect(gLastMoves[battlerDef]) != GetMoveEffect(move)))
@@ -4221,7 +4373,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_LEECH_SEED:
         if (IS_BATTLER_OF_TYPE(battlerDef, TYPE_GRASS)
-          || gStatuses3[battlerDef] & STATUS3_LEECHSEED
+          || gBattleMons[battlerDef].volatiles.leechSeed
           || HasMoveWithEffect(battlerDef, EFFECT_RAPID_SPIN)
           || aiData->abilities[battlerDef] == ABILITY_LIQUID_OOZE
           || aiData->abilities[battlerDef] == ABILITY_MAGIC_GUARD)
@@ -4270,7 +4422,10 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_BATON_PASS:
         if ((gAiLogicData->shouldSwitch & (1u << battlerAtk)) && (gBattleMons[battlerAtk].volatiles.substitute
-          || (gStatuses3[battlerAtk] & (STATUS3_ROOTED | STATUS3_AQUA_RING | STATUS3_MAGNET_RISE | STATUS3_POWER_TRICK))
+          || gBattleMons[battlerAtk].volatiles.powerTrick
+          || gBattleMons[battlerAtk].volatiles.magnetRise
+          || gBattleMons[battlerAtk].volatiles.aquaRing
+          || gBattleMons[battlerAtk].volatiles.root
           || AnyStatIsRaised(battlerAtk)))
             ADJUST_SCORE(BEST_EFFECT);
         break;
@@ -4281,7 +4436,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         && (gLastMoves[battlerDef] != MOVE_NONE)
         && (gLastMoves[battlerDef] != 0xFFFF)
         && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
-        && (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)))
+        && (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)))
         {
             if (CanTargetMoveFaintAi(gLastMoves[battlerDef], battlerDef, battlerAtk, 1))
                 ADJUST_SCORE(GOOD_EFFECT); // Disable move that can kill attacker
@@ -4321,7 +4476,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_DESTINY_BOND:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && CanTargetFaintAi(battlerDef, battlerAtk))
+        else if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && CanTargetFaintAi(battlerDef, battlerAtk))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_SPITE:
@@ -4538,7 +4693,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (predictedMove != MOVE_NONE && isBattle1v1)
         {
             enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
-            if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+            if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
              && (predictedEffect == EFFECT_EXPLOSION
               || predictedEffect == EFFECT_MISTY_EXPLOSION
               || predictedEffect == EFFECT_PROTECT))
@@ -4587,7 +4742,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_ATTRACT:
         if (isBattle1v1
-        && (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+        && (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
         && BattlerWillFaintFromSecondaryDamage(battlerDef, aiData->abilities[battlerDef]))
             break; // Don't use if the attract won't have a change to activate
         if (gBattleMons[battlerDef].status1 & STATUS1_ANY
@@ -4603,6 +4758,27 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         //if (CountUsablePartyMons(battlerDef) != 0)
             //ADJUST_SCORE(8);
         break;
+    case EFFECT_COURT_CHANGE:
+        if (gSideStatuses[GetBattlerSide(FOE(battlerAtk))] & SIDE_STATUS_GOOD_COURT)
+            ADJUST_SCORE(WEAK_EFFECT);
+        if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_BAD_COURT)
+            ADJUST_SCORE(WEAK_EFFECT);
+
+        if (AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
+        {
+            ADJUST_SCORE(DECENT_EFFECT);
+        }
+
+        if (hasPartner)
+        {
+            if (IsHazardMove(aiData->partnerMove) // partner is going to set up hazards
+              && AI_IsFaster(BATTLE_PARTNER(battlerAtk), battlerAtk, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY)) // partner is going to set up before the Court Change
+            {
+                ADJUST_SCORE(-10);
+                break;
+            }
+        }
+        break;
     case EFFECT_DEFOG:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
             || (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_FOG))
@@ -4614,7 +4790,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             if (hasPartner)
             {
                 if (IsHazardMove(aiData->partnerMove) // Partner is going to set up hazards
-                    && AI_IsSlower(battlerAtk, BATTLE_PARTNER(battlerAtk), move, predictedMove, CONSIDER_PRIORITY)) // Partner going first
+                    && AI_IsSlower(battlerAtk, BATTLE_PARTNER(battlerAtk), move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Partner going first
                     break; // Don't use Defog if partner is going to set up hazards
             }
             ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_EVASION));
@@ -4807,7 +4983,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(WEAK_EFFECT);
         break;
     case EFFECT_REFRESH:
-        if (gBattleMons[battlerAtk].status1 & STATUS1_ANY)
+        if (gBattleMons[battlerAtk].status1 & STATUS1_CAN_MOVE)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_TAKE_HEART:
@@ -4903,9 +5079,9 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_POWER_TRICK:
-        if (!(gStatuses3[battlerAtk] & STATUS3_POWER_TRICK)
-        && gBattleMons[battlerAtk].defense > gBattleMons[battlerAtk].attack
-        && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
+        if (!gBattleMons[battlerAtk].volatiles.powerTrick
+         && gBattleMons[battlerAtk].defense > gBattleMons[battlerAtk].attack
+         && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_HEART_SWAP:
@@ -4979,7 +5155,7 @@ case EFFECT_GUARD_SPLIT:
         if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN))
         {
             ADJUST_SCORE(GOOD_EFFECT);
-            if (gStatuses3[battlerAtk] & STATUS3_YAWN && IsBattlerGrounded(battlerAtk))
+            if (gBattleMons[battlerAtk].volatiles.yawn && IsBattlerGrounded(battlerAtk))
                 ADJUST_SCORE(BEST_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_TERRAIN_EXTENDER || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_TERRAIN_PULSE))
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -4989,7 +5165,7 @@ case EFFECT_GUARD_SPLIT:
         if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_MISTY_TERRAIN))
         {
             ADJUST_SCORE(GOOD_EFFECT);
-            if (gStatuses3[battlerAtk] & STATUS3_YAWN && IsBattlerGrounded(battlerAtk))
+            if (gBattleMons[battlerAtk].volatiles.yawn && IsBattlerGrounded(battlerAtk))
                 ADJUST_SCORE(BEST_EFFECT);
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_TERRAIN_EXTENDER || HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_TERRAIN_PULSE))
                 ADJUST_SCORE(WEAK_EFFECT);
@@ -5038,6 +5214,9 @@ case EFFECT_GUARD_SPLIT:
         {
             if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(GOOD_EFFECT);
+            // Set it for next pokemon in singles.
+            else if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && !hasPartner && (CountUsablePartyMons(battlerAtk) != 0))
+                ADJUST_SCORE(DECENT_EFFECT);             
             // Don't unset it on last turn.
             else if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer != gBattleTurnCounter && ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(GOOD_EFFECT);
@@ -5108,7 +5287,7 @@ case EFFECT_GUARD_SPLIT:
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_HEAL_BLOCK:
-        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && predictedMove != MOVE_NONE && IsHealingMove(predictedMove))
+        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && predictedMove != MOVE_NONE && IsHealingMove(predictedMove))
             ADJUST_SCORE(DECENT_EFFECT); // Try to cancel healing move
         else if (HasHealingEffect(battlerDef) || aiData->holdEffects[battlerDef] == HOLD_EFFECT_LEFTOVERS
           || (aiData->holdEffects[battlerDef] == HOLD_EFFECT_BLACK_SLUDGE && IS_BATTLER_OF_TYPE(battlerDef, TYPE_POISON)))
@@ -5142,13 +5321,49 @@ case EFFECT_GUARD_SPLIT:
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_QUASH:
-        if (hasPartner && AI_IsSlower(BATTLE_PARTNER(battlerAtk), battlerDef, aiData->partnerMove, predictedMove, CONSIDER_PRIORITY))
+        if (hasPartner && AI_IsSlower(BATTLE_PARTNER(battlerAtk), battlerDef, aiData->partnerMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
             ADJUST_SCORE(DECENT_EFFECT); // Attacker partner wouldn't go before target
         break;
     case EFFECT_TAILWIND:
-        if (GetBattlerSideSpeedAverage(battlerAtk) < GetBattlerSideSpeedAverage(battlerDef))
-            ADJUST_SCORE(GOOD_EFFECT);
+    {
+        if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer != gBattleTurnCounter)
+            break;
+
+        if (HasBattlerSideMoveWithEffect(battlerAtk, EFFECT_ELECTRO_BALL))
+            ADJUST_SCORE(WEAK_EFFECT);
+
+        if (isBattle1v1)
+        {
+            if (aiData->speedStats[battlerAtk] * 2 > aiData->speedStats[battlerDef])
+                ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
+
+            if (CountUsablePartyMons(battlerAtk) != 0)
+                ADJUST_SCORE(WEAK_EFFECT);
+        }
+        else
+        {
+            u32 tailwindScore = 0;
+            u32 speed = aiData->speedStats[battlerAtk];
+            u32 partnerSpeed = aiData->speedStats[BATTLE_PARTNER(battlerAtk)];
+            u32 foe1Speed = aiData->speedStats[FOE(battlerAtk)];
+            u32 foe2Speed = aiData->speedStats[BATTLE_PARTNER(FOE(battlerAtk))];
+            
+            if (speed <= foe1Speed && (speed * 2) > foe1Speed)
+                tailwindScore += 1;
+            if (speed <= foe2Speed && (speed * 2) > foe2Speed)
+                tailwindScore += 1;
+            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+                tailwindScore += 1;
+            if (partnerSpeed <= foe1Speed && (speed * 2) > foe1Speed)
+                tailwindScore += 1;
+
+            if (tailwindScore > 0)
+                tailwindScore += 1;
+
+            ADJUST_SCORE(tailwindScore);
+        }
         break;
+    }
     case EFFECT_LUCKY_CHANT:
         if (isBattle1v1 && CountUsablePartyMons(battlerDef) > 0)
             ADJUST_SCORE(GOOD_EFFECT);
@@ -5157,7 +5372,7 @@ case EFFECT_GUARD_SPLIT:
         if (IsBattlerGrounded(battlerAtk) && HasDamagingMoveOfType(battlerDef, TYPE_ELECTRIC)
           && !(effectiveness == UQ_4_12(0.0))) // Doesn't resist ground move
         {
-            if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY)) // Attacker goes first
+            if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)) // Attacker goes first
            {
                 if (predictedType == TYPE_GROUND)
                     ADJUST_SCORE(GOOD_EFFECT); // Cause the enemy's move to fail
@@ -5172,7 +5387,7 @@ case EFFECT_GUARD_SPLIT:
         }
         break;
     case EFFECT_CAMOUFLAGE:
-        if (predictedMove != MOVE_NONE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) // Attacker goes first
+        if (predictedMove != MOVE_NONE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) // Attacker goes first
          && !IsBattleMoveStatus(move) && effectiveness != UQ_4_12(0.0))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
@@ -5199,7 +5414,7 @@ case EFFECT_GUARD_SPLIT:
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_ENDEAVOR:
-        if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) && !CanTargetFaintAi(battlerDef, battlerAtk))
+        if (AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) && !CanTargetFaintAi(battlerDef, battlerAtk))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_REVIVAL_BLESSING:
@@ -5229,7 +5444,7 @@ case EFFECT_GUARD_SPLIT:
         break;
     case EFFECT_RAPID_SPIN:
         if ((AreAnyHazardsOnSide(GetBattlerSide(battlerAtk)) && CountUsablePartyMons(battlerAtk) != 0)
-         || (gStatuses3[battlerAtk] & STATUS3_LEECHSEED || gBattleMons[battlerAtk].volatiles.wrapped))
+         || (gBattleMons[battlerAtk].volatiles.leechSeed || gBattleMons[battlerAtk].volatiles.wrapped))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_SPECTRAL_THIEF:
@@ -5469,7 +5684,7 @@ case EFFECT_GUARD_SPLIT:
             case MOVE_EFFECT_THROAT_CHOP:
                 if (IsSoundMove(GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING)))
                 {
-                    if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY))
+                    if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
                         ADJUST_SCORE(GOOD_EFFECT);
                     else
                         ADJUST_SCORE(DECENT_EFFECT);
@@ -5524,8 +5739,10 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
       || gBattleResults.battleTurnCounter != 0)
         return score;
 
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_SMART_SWITCHING
-      && AI_IsSlower(battlerAtk, battlerDef, move, GetIncomingMove(battlerAtk, battlerDef, gAiLogicData), CONSIDER_PRIORITY)
+      && AI_IsSlower(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)
       && CanTargetFaintAi(battlerDef, battlerAtk)
       && GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], move) == 0)
     {
@@ -5769,11 +5986,11 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
     switch (effect)
     {
     case EFFECT_INGRAIN:
-        if (!(gStatuses3[battlerAtk] & STATUS3_ROOTED))
+        if (!gBattleMons[battlerAtk].volatiles.root)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_AQUA_RING:
-        if (!(gStatuses3[battlerAtk] & STATUS3_AQUA_RING))
+        if (!gBattleMons[battlerAtk].volatiles.aquaRing)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_PROTECT:
@@ -5783,9 +6000,9 @@ static s32 AI_PreferBatonPass(u32 battlerAtk, u32 battlerDef, u32 move, s32 scor
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_BATON_PASS:
-        if (gStatuses3[battlerAtk] & (STATUS3_ROOTED | STATUS3_AQUA_RING))
+        if (gBattleMons[battlerAtk].volatiles.root || gBattleMons[battlerAtk].volatiles.aquaRing)
             ADJUST_SCORE(DECENT_EFFECT);
-        if (gStatuses3[battlerAtk] & STATUS3_LEECHSEED)
+        if (gBattleMons[battlerAtk].volatiles.leechSeed)
             ADJUST_SCORE(-3);
         ADJUST_SCORE(CountPositiveStatStages(battlerAtk) - CountNegativeStatStages(battlerAtk));
         break;
@@ -5811,7 +6028,7 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
          || (moveType == TYPE_GROUND && gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_EARTH_EATER)
          || (moveType == TYPE_WATER && (gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_DRY_SKIN || gAiLogicData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_WATER_ABSORB)))
         {
-            if (gStatuses3[battlerDef] & STATUS3_HEAL_BLOCK)
+            if (gBattleMons[battlerDef].volatiles.healBlock)
                 return 0;
 
             if (CanTargetFaintAi(FOE(battlerAtk), BATTLE_PARTNER(battlerAtk))
@@ -6115,6 +6332,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     struct AiLogicData *aiData = gAiLogicData;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex];
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
 
     // Switch benefit
     switch (moveEffect)
@@ -6126,7 +6344,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(GOOD_EFFECT);
         else if (hitsToKO == 1)
             ADJUST_SCORE(BEST_EFFECT);
-        else if (IsSwitchOutEffect(GetMoveEffect(predictedMove)) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMove, CONSIDER_PRIORITY) == AI_IS_SLOWER) // Pursuit against fast U-Turn
+        else if (IsSwitchOutEffect(GetMoveEffect(predictedMove)) && AI_WhoStrikesFirst(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY) == AI_IS_SLOWER) // Pursuit against fast U-Turn
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     }
