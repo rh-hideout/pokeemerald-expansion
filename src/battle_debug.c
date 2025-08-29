@@ -235,9 +235,6 @@ enum
 static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect);
 
 // const rom data
-static const u8 sText_InstantWin[] = _("Instant Win");
-static const u8 sText_CompleteFactoryChallenge[] = _("Complete Factory Challenge");
-static const u8 sText_Moves[] = _("Moves");
 static const u8 sText_Ability[] = _("Ability");
 static const u8 sText_HeldItem[] = _("Held Item");
 static const u8 sText_HoldEffect[] = _("Hold Effect");
@@ -317,6 +314,8 @@ static const struct BitfieldInfo sAIBitfield[] =
 
 static const struct ListMenuItem sMainListItems[] =
 {
+    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
+    {COMPOUND_STRING("Win Factory"), LIST_ITEM_COMPLETE_FACTORY_CHALLENGE},
     {COMPOUND_STRING("Moves"),        LIST_ITEM_MOVES},
     {sText_Ability,                   LIST_ITEM_ABILITY},
     {sText_HeldItem,                  LIST_ITEM_HELD_ITEM},
@@ -333,8 +332,6 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("AI Info"),      LIST_ITEM_AI_INFO},
     {COMPOUND_STRING("AI Party"),     LIST_ITEM_AI_PARTY},
     {COMPOUND_STRING("Various"),      LIST_ITEM_VARIOUS},
-    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
-    {sText_CompleteFactoryChallenge, LIST_ITEM_COMPLETE_FACTORY_CHALLENGE}
 };
 
 static const struct ListMenuItem sStatsListItems[] =

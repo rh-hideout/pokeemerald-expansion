@@ -1,6 +1,6 @@
 	.include "MPlayDef.s"
 
-	.equ	mus_aqua_magma_hideout_grp, voicegroup005
+	.equ	mus_aqua_magma_hideout_grp, voicegroup076
 	.equ	mus_aqua_magma_hideout_pri, 0
 	.equ	mus_aqua_magma_hideout_rev, reverb_set+50
 	.equ	mus_aqua_magma_hideout_mvl, 84
@@ -19,7 +19,6 @@ mus_aqua_magma_hideout_1:
 	.byte		VOL   , 127*mus_aqua_magma_hideout_mvl/mxv
 	.byte	KEYSH , mus_aqua_magma_hideout_key+0
 @ 000   ----------------------------------------
-mus_aqua_magma_hideout_1_000:
 	.byte	TEMPO , 90*mus_aqua_magma_hideout_tbs/2
 	.byte		VOICE , 0
 	.byte		N48   , Bn1 , v052
@@ -1181,9 +1180,7 @@ mus_aqua_magma_hideout_1_001:
 	.byte		N96   , Bn4 
 	.byte	W96
 @ 061   ----------------------------------------
-    .byte  GOTO
-    .word  mus_aqua_magma_hideout_1_000
-	.byte  FINE
+	.byte	FINE
 
 @******************************************************@
 	.align	2
