@@ -44,7 +44,6 @@
 #include "constants/battle_string_ids.h"
 #include "constants/hold_effects.h"
 #include "constants/items.h"
-#include "constants/item_effects.h"
 #include "constants/moves.h"
 #include "constants/songs.h"
 #include "constants/species.h"
@@ -599,11 +598,6 @@ void HandleAction_UseItem(void)
     ClearVariousBattlerFlags(gBattlerAttacker);
 
     gLastUsedItem = gBattleResources->bufferB[gBattlerAttacker][1] | (gBattleResources->bufferB[gBattlerAttacker][2] << 8);
-    if (X_ITEM_FRIENDSHIP_INCREASE > 0
-        && GetItemEffectType(gLastUsedItem) == ITEM_EFFECT_X_ITEM
-        && !ShouldSkipFriendshipChange())
-        UpdateFriendshipFromXItem(gBattlerAttacker);
-
     gBattlescriptCurrInstr = gBattlescriptsForUsingItem[GetItemBattleUsage(gLastUsedItem) - 1];
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
@@ -8081,7 +8075,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
         basePower = gBattleMons[battlerDef].hp * basePower / gBattleMons[battlerDef].maxHP;
         break;
     case EFFECT_ASSURANCE:
-        if (gProtectStructs[battlerDef].assuranceDoubled)
+        if (gProtectStructs[battlerDef].physicalDmg != 0 || gProtectStructs[battlerDef].specialDmg != 0 || gProtectStructs[battlerDef].confusionSelfDmg)
             basePower *= 2;
         break;
     case EFFECT_TRUMP_CARD:
@@ -8874,36 +8868,28 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     u32 move = ctx->move;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
-    def = gBattleMons[battlerDef].defense;
-    spDef = gBattleMons[battlerDef].spDefense;
+    if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
+    {
+        def = gBattleMons[battlerDef].spDefense;
+        spDef = gBattleMons[battlerDef].defense;
+    }
+    else
+    {
+        def = gBattleMons[battlerDef].defense;
+        spDef = gBattleMons[battlerDef].spDefense;
+    }
 
     if (moveEffect == EFFECT_PSYSHOCK || IsBattleMovePhysical(move)) // uses defense stat instead of sp.def
     {
-        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
-        {
-            defStat = spDef;
-            usesDefStat = FALSE;
-        }
-        else
-        {
-            defStat = def;
-            usesDefStat = TRUE;
-        }
+        defStat = def;
         defStage = gBattleMons[battlerDef].statStages[STAT_DEF];
+        usesDefStat = TRUE;
     }
     else // is special
     {
-        if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM) // the defense stats are swapped
-        {
-            defStat = def;
-            usesDefStat = TRUE;
-        }
-        else
-        {
-            defStat = spDef;
-            usesDefStat = FALSE;
-        }
+        defStat = spDef;
         defStage = gBattleMons[battlerDef].statStages[STAT_SPDEF];
+        usesDefStat = FALSE;
     }
 
     // Self-destruct / Explosion cut defense in half

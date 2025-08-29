@@ -246,5 +246,6 @@ u32 GetItemStatus1Mask(u16 itemId);
 bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
 u32 GetItemSellPrice(u32 itemId);
 bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect);
+void AddBattleKeyItemsToBag(void);
 
 #endif // GUARD_ITEM_H

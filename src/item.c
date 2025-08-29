@@ -128,6 +128,13 @@ void NONNULL BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, stru
     }
 }
 
+void AddBattleKeyItemsToBag() {
+    AddBagItem(ITEM_MEGA_RING, 1);
+    AddBagItem(ITEM_Z_POWER_RING, 1);
+    AddBagItem(ITEM_DYNAMAX_BAND, 1);
+    AddBagItem(ITEM_TERA_ORB, 1);
+}
+
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
     enum Pocket pocketId;

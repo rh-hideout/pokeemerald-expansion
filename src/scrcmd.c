@@ -1,3 +1,4 @@
+#include "battle_factory.h"
 #include "global.h"
 #include "frontier_util.h"
 #include "battle_setup.h"

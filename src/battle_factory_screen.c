@@ -1107,6 +1107,7 @@ static void VBlankCB_SelectScreen(void)
 
 void DoBattleFactorySelectScreen(void)
 {
+    DebugPrintf("DoBattleFactorySelectScreen");
     sFactorySelectScreen = NULL;
     SetMainCallback2(CB2_InitSelectScreen);
 }

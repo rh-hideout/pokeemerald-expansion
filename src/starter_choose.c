@@ -60,6 +60,9 @@ const u32 gBirchBagGrass_Gfx[] = INCBIN_U32("graphics/starter_choose/tiles.4bpp.
 const u32 gPokeballSelection_Gfx[] = INCBIN_U32("graphics/starter_choose/pokeball_selection.4bpp.smol");
 static const u32 sStarterCircle_Gfx[] = INCBIN_U32("graphics/starter_choose/starter_circle.4bpp.smol");
 
+const struct Pokemon *gStarterSelectionOverride = NULL;
+u8 gStarterSelectionOverrideCount = 0;
+
 static const struct WindowTemplate sWindowTemplates[] =
 {
     {
@@ -350,10 +353,19 @@ static const struct SpriteTemplate sSpriteTemplate_StarterCircle =
 // .text
 u16 GetStarterPokemon(u16 chosenStarterId)
 {
-    if (chosenStarterId > STARTER_MON_COUNT)
+    // Use override party if available
+    if (gStarterSelectionOverride != NULL && chosenStarterId < gStarterSelectionOverrideCount)
+    {
+        return GetMonData((struct Pokemon *) &gStarterSelectionOverride[chosenStarterId], MON_DATA_SPECIES, NULL);
+    }
+
+    // Fallback to default starter list
+    if (chosenStarterId >= STARTER_MON_COUNT)
         chosenStarterId = 0;
+
     return sStarterMon[chosenStarterId];
 }
+
 
 static void VblankCB_StarterChoose(void)
 {
@@ -475,7 +487,7 @@ static void Task_StarterChoose(u8 taskId)
 {
     CreateStarterPokemonLabel(gTasks[taskId].tStarterSelection);
     DrawStdFrameWithCustomTileAndPalette(0, FALSE, 0x2A8, 0xD);
-    AddTextPrinterParameterized(0, FONT_NORMAL, gText_BirchInTrouble, 0, 1, 0, NULL);
+    AddTextPrinterParameterized(0, FONT_NORMAL, gText_BattleFactoryReward, 0, 1, 0, NULL);
     PutWindowTilemap(0);
     ScheduleBgCopyTilemapToVram(0);
     gTasks[taskId].func = Task_HandleStarterChooseInput;

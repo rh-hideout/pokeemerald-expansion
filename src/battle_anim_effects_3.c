@@ -2555,6 +2555,7 @@ void AnimTask_HideOpponentShadows(u8 taskId)
     u32 battlerLeft = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
     gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
+
     if (IsDoubleBattle())
     {
         u32 battlerRight = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);

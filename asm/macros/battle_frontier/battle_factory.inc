@@ -81,6 +81,13 @@
 	special CallBattleFactoryFunction
 	.endm
 
+	@ Return the facility class of the opposing trainer, or FACILITY_CLASSES_COUNT if class cannot be determined
+	.macro factory_getopponentclass
+	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_GET_OPPONENT_CLASS
+	special CallBattleFactoryFunction
+	copyvar VAR_0x8008, VAR_RESULT
+	.endm
+
 	@ Return the pokemon type most common in the opponents team, or NUMBER_OF_MON_TYPES if there is no standout type
 	.macro factory_getopponentmontype
 	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_GET_OPPONENT_MON_TYPE
@@ -98,4 +105,18 @@
 	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_RESET_HELD_ITEMS
 	special CallBattleFactoryFunction
 	.endm
+
+	@ Select a reward Mon after winning the challenge
+	.macro factory_selectrewardmon
+	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_SELECT_REWARD_MON
+	special CallBattleFactoryFunction
+	.endm
+
+	@ Give the selected reward Mon after restoring original party
+	.macro factory_giverewardmon
+	setvar VAR_0x8004, BATTLE_FACTORY_FUNC_GIVE_REWARD_MON
+	special CallBattleFactoryFunction
+	.endm
+
+
 

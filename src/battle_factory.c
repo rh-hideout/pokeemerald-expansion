@@ -8,8 +8,18 @@
 #include "frontier_util.h"
 #include "battle_tower.h"
 #include "random.h"
+#include "pokedex.h"
 #include "constants/battle_ai.h"
 #include "constants/battle_factory.h"
+
+#include "fieldmap.h"
+#include "field_weather.h"
+#include "gpu_regs.h"
+#include "main.h"
+#include "palette.h"
+#include "script_pokemon_util.h"
+#include "starter_choose.h"
+#include "task.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
 #include "constants/battle_tent.h"
@@ -18,8 +28,15 @@
 #include "constants/trainers.h"
 #include "constants/moves.h"
 #include "constants/items.h"
+#include "constants/factory_pools.h"
+#include "constants/rgb.h"
+#include "data/battle_frontier/facility_classes_types.h"
 
 static bool8 sPerformedRentalSwap;
+static struct Pokemon sFactoryRewardBuffer;
+extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardResumeScript[];
+extern const u8 BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardSaveAndExitScript[];
+static bool8 sFactoryPoolsReady = FALSE;
 
 static void InitFactoryChallenge(void);
 static void GetBattleFactoryData(void);
@@ -40,6 +57,14 @@ static void GetOpponentBattleStyle(void);
 static void RestorePlayerPartyHeldItems(void);
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
 static u8 GetMoveBattleStyle(u16 move);
+void DebugAction_FactoryWinChallenge(void);
+const u8 *GetFacilityClassTypeWhitelist(u8 facilityClass, u8 *count);
+static void GetOpponentFrontierClass();
+void GetOpponentFrontierClassInternal(u8 trainerId);
+static void SelectRewardMonFromParty();
+static void GiveRewardMonFromParty();
+static void CB2_SelectReward();
+static void CB2_GiveReward();
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -51,7 +76,6 @@ static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
     [FACTORY_STYLE_UNPREDICTABLE - 1] = 2,
     [FACTORY_STYLE_WEATHER - 1]       = 2
 };
-
 static const u16 sMoves_TotalPreparation[] =
 {
     MOVE_SWORDS_DANCE, MOVE_GROWTH, MOVE_MEDITATE, MOVE_AGILITY, MOVE_DOUBLE_TEAM, MOVE_HARDEN,
@@ -140,6 +164,9 @@ static void (*const sBattleFactoryFunctions[])(void) =
     [BATTLE_FACTORY_FUNC_GET_OPPONENT_MON_TYPE]  = GetOpponentMostCommonMonType,
     [BATTLE_FACTORY_FUNC_GET_OPPONENT_STYLE]     = GetOpponentBattleStyle,
     [BATTLE_FACTORY_FUNC_RESET_HELD_ITEMS]       = RestorePlayerPartyHeldItems,
+    [BATTLE_FACTORY_FUNC_GET_OPPONENT_CLASS]     = GetOpponentFrontierClass,
+    [BATTLE_FACTORY_FUNC_SELECT_REWARD_MON]      = SelectRewardMonFromParty,
+    [BATTLE_FACTORY_FUNC_GIVE_REWARD_MON]        = GiveRewardMonFromParty
 };
 
 static const u32 sWinStreakFlags[][2] =
@@ -166,40 +193,29 @@ static const u8 sFixedIVTable[][2] =
     {31, 31},
 };
 
-static const u16 sInitialRentalMonRanges[][2] =
-{
-    // Level 50
-    {FRONTIER_MON_GRIMER,     FRONTIER_MON_FURRET_1},   // 110 - 199
-    {FRONTIER_MON_DELCATTY_1, FRONTIER_MON_CLOYSTER_1}, // 162 - 266
-    {FRONTIER_MON_DELCATTY_2, FRONTIER_MON_CLOYSTER_2}, // 267 - 371
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MON_SLAKING_1},  // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2,  FRONTIER_MON_SLAKING_2},  // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3,  FRONTIER_MON_SLAKING_3},  // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4,  FRONTIER_MON_SLAKING_4},  // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1,  FRONTIER_MONS_HIGH_TIER}, // 372 - 849
-
-    // Open level
-    {FRONTIER_MON_DUGTRIO_1, FRONTIER_MON_SLAKING_1}, // 372 - 467
-    {FRONTIER_MON_DUGTRIO_2, FRONTIER_MON_SLAKING_2}, // 468 - 563
-    {FRONTIER_MON_DUGTRIO_3, FRONTIER_MON_SLAKING_3}, // 564 - 659
-    {FRONTIER_MON_DUGTRIO_4, FRONTIER_MON_SLAKING_4}, // 660 - 755
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-    {FRONTIER_MON_DUGTRIO_1, NUM_FRONTIER_MONS - 1},  // 372 - 881
-};
-
 // code
+static void EnsureFactoryPoolsReady(void)
+{
+    if (!sFactoryPoolsReady)
+    {
+        InitFactoryRankPools();
+        sFactoryPoolsReady = TRUE;
+    }
+}
+
 void CallBattleFactoryFunction(void)
 {
+    DebugPrintf("🚩 CallBattleFactoryFunction: index = %d", gSpecialVar_0x8004);
     sBattleFactoryFunctions[gSpecialVar_0x8004]();
 }
 
-static void InitFactoryChallenge(void)
-{
+static void InitFactoryChallenge(void) {
+    DebugPrintf("Battle Factory init");
     u8 i;
     u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+
+    EnsureFactoryPoolsReady();
 
     gSaveBlock2Ptr->frontier.challengeStatus = 0;
     gSaveBlock2Ptr->frontier.curChallengeBattleNum = 0;
@@ -221,8 +237,9 @@ static void InitFactoryChallenge(void)
     TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
-static void GetBattleFactoryData(void)
-{
+static void GetBattleFactoryData(void) {
+    DebugPrintf("GetBattleFactoryData");
+
     int lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     int battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
@@ -240,8 +257,9 @@ static void GetBattleFactoryData(void)
     }
 }
 
-static void SetBattleFactoryData(void)
-{
+static void SetBattleFactoryData(void) {
+    DebugPrintf("SetBattleFactoryData");
+
     int lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     int battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
 
@@ -285,8 +303,8 @@ static void FactoryDummy2(void)
 
 }
 
-static void SelectInitialRentalMons(void)
-{
+static void SelectInitialRentalMons(void) {
+    DebugPrintf("SelectInitialRentalMons");
     ZeroPlayerPartyMons();
     DoBattleFactorySelectScreen();
 }
@@ -308,6 +326,7 @@ static void GenerateOpponentMons(void)
     u16 heldItems[FRONTIER_PARTY_SIZE];
     int firstMonId = 0;
     u16 trainerId = 0;
+    u8 facilityClass = 0;
     u32 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
     u32 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
     u32 winStreak = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode];
@@ -329,10 +348,39 @@ static void GenerateOpponentMons(void)
     if (gSaveBlock2Ptr->frontier.curChallengeBattleNum < FRONTIER_STAGES_PER_CHALLENGE - 1)
         gSaveBlock2Ptr->frontier.trainerIds[gSaveBlock2Ptr->frontier.curChallengeBattleNum] = trainerId;
 
+    facilityClass = gFacilityTrainers[trainerId].facilityClass;
+
     i = 0;
+
+    u8 typeCount;
+    const u8 *whitelist = GetFacilityClassTypeWhitelist(facilityClass, &typeCount);
+    //
+    // DebugPrintf("📋 Facility class: %d", facilityClass);
+    // DebugPrintf("📦 Allowed types:");
+    //
+    // for (int t = 0; t < typeCount; t++)
+    // {
+    //     DebugPrintf(" - Type %d", whitelist[t]);
+    // }
     while (i != FRONTIER_PARTY_SIZE)
     {
         u16 monId = GetFactoryMonId(lvlMode, challengeNum, FALSE);
+
+        u16 speciesId = gFacilityTrainerMons[monId].species;
+        u8 type1 = gSpeciesInfo[speciesId].types[0];
+        u8 type2 = gSpeciesInfo[speciesId].types[1];
+
+
+        bool8 matchesType = FALSE;
+        for (int t = 0; t < typeCount; t++) {
+            if (whitelist[t] == type1 || whitelist[t] == type2) {
+                matchesType = TRUE;
+                break;
+            }
+        }
+
+        if (!matchesType)
+            continue; // Doesn't fit this trainer's theme
 
         // Unown (FRONTIER_MON_UNOWN) is forbidden on opponent Factory teams.
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
@@ -345,10 +393,6 @@ static void GenerateOpponentMons(void)
                 break;
         }
         if (j != (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons))
-            continue;
-
-        // "High tier" Pokémon are only allowed on open level mode
-        if (lvlMode == FRONTIER_LVL_50 && monId > FRONTIER_MONS_HIGH_TIER)
             continue;
 
         // Ensure this species hasn't already been chosen for the opponent
@@ -450,97 +494,95 @@ static void SetPlayerAndOpponentParties(void)
 
 static void GenerateInitialRentalMons(void)
 {
-    int i, j;
-    u8 firstMonId;
-    u8 battleMode;
-    u8 lvlMode;
-    u8 challengeNum;
-    u8 factoryLvlMode;
-    u8 factoryBattleMode;
-    u8 rentalRank;
+    int i;
+    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+    u8 challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
+    u8 rentalRank = GetNumPastRentalsRank(battleMode, lvlMode);
     u16 monId;
-    u16 currSpecies;
     u16 species[PARTY_SIZE];
     u16 monIds[PARTY_SIZE];
     u16 heldItems[PARTY_SIZE];
 
-    gFacilityTrainers = gBattleFrontierTrainers;
+    DebugPrintf("GenerateInitialRentalMons");
+    DebugPrintf("challengeNum = %d (streak = %d)", challengeNum, gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode]);
+
+    gFacilityTrainerMons = gBattleFrontierMons;
+
     for (i = 0; i < PARTY_SIZE; i++)
     {
         species[i] = SPECIES_NONE;
         monIds[i] = 0;
         heldItems[i] = ITEM_NONE;
     }
-    lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-    battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
-    challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-    if (VarGet(VAR_FRONTIER_BATTLE_MODE) == FRONTIER_MODE_DOUBLES)
-        factoryBattleMode = FRONTIER_MODE_DOUBLES;
-    else
-        factoryBattleMode = FRONTIER_MODE_SINGLES;
 
-    gFacilityTrainerMons = gBattleFrontierMons;
-    if (gSaveBlock2Ptr->frontier.lvlMode != FRONTIER_LVL_50)
-    {
-        factoryLvlMode = FRONTIER_LVL_OPEN;
-        firstMonId = 0;
-    }
-    else
-    {
-        factoryLvlMode = FRONTIER_LVL_50;
-        firstMonId = 0;
-    }
-    rentalRank = GetNumPastRentalsRank(factoryBattleMode, factoryLvlMode);
-
-    currSpecies = SPECIES_NONE;
     i = 0;
-    while (i != PARTY_SIZE)
+    int retry = 0;
+
+    while (i < PARTY_SIZE && retry < 5000)
     {
-        if (i < rentalRank) // The more times the player has rented, the more initial rentals are generated from a better set of Pokémon
-            monId = GetFactoryMonId(factoryLvlMode, challengeNum, TRUE);
-        else
-            monId = GetFactoryMonId(factoryLvlMode, challengeNum, FALSE);
+        retry++;
 
-        if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
-            continue;
+        bool8 useBetterRange = (i < rentalRank);
+        monId = GetFactoryMonId(lvlMode, challengeNum, useBetterRange);
 
-        // Cannot have two Pokémon of the same species.
-        for (j = firstMonId; j < firstMonId + i; j++)
+        u16 thisSpecies = gBattleFrontierMons[monId].species;
+        u16 item = gBattleFrontierMons[monId].heldItem;
+
+        DebugPrintf("Trying monId %d: species=%d, item=%d", monId, thisSpecies, item);
+
+        // Skip Unown
+        if (thisSpecies == SPECIES_UNOWN)
         {
-            u16 existingMonId = monIds[j];
-            if (existingMonId == monId)
-                break;
-            if (species[j] == gFacilityTrainerMons[monId].species)
-            {
-                if (currSpecies == SPECIES_NONE)
-                    currSpecies = gFacilityTrainerMons[monId].species;
-                else
-                    break;
-            }
+            DebugPrintf("❌ Skipped: Unown");
+            continue;
         }
-        if (j != firstMonId + i)
-            continue;
 
-        // Cannot have two same held items.
-        for (j = firstMonId; j < firstMonId + i; j++)
+        // Check duplicate species
+        bool8 dupSpecies = FALSE;
+        for (int j = 0; j < i; j++)
         {
-            if (heldItems[j] != ITEM_NONE && heldItems[j] == gFacilityTrainerMons[monId].heldItem)
+            if (thisSpecies == species[j])
             {
-                if (gFacilityTrainerMons[monId].species == currSpecies)
-                    currSpecies = SPECIES_NONE;
+                dupSpecies = TRUE;
                 break;
             }
         }
-        if (j != firstMonId + i)
+        if (dupSpecies)
+        {
+            DebugPrintf("❌ Skipped: Duplicate species");
             continue;
+        }
 
+        // Check duplicate held items
+        bool8 dupItem = FALSE;
+        for (int j = 0; j < i; j++)
+        {
+            if (item != ITEM_NONE && heldItems[j] == item)
+            {
+                dupItem = TRUE;
+                break;
+            }
+        }
+        if (dupItem)
+        {
+            DebugPrintf("❌ Skipped: Duplicate held item");
+            continue;
+        }
+
+        // ✅ Passed all checks
         gSaveBlock2Ptr->frontier.rentalMons[i].monId = monId;
-        species[i] = gFacilityTrainerMons[monId].species;
-        heldItems[i] = gFacilityTrainerMons[monId].heldItem;
+        species[i] = thisSpecies;
+        heldItems[i] = item;
         monIds[i] = monId;
+        DebugPrintf("✅ Selected monId %d", monId);
         i++;
     }
+
+    if (retry >= 5000)
+        DebugPrintf("‼️ Rental loop bailed out after 5000 attempts.");
 }
+
 
 // Determines if the upcoming opponent has a single most-common
 // type in its party. If there are two different types that are
@@ -721,8 +763,6 @@ void FillFactoryBrainParty(void)
 
         if (gFacilityTrainerMons[monId].species == SPECIES_UNOWN)
             continue;
-        if (monLevel == FRONTIER_MAX_LEVEL_50 && monId > FRONTIER_MONS_HIGH_TIER)
-            continue;
 
         for (j = 0; j < (int)ARRAY_COUNT(gSaveBlock2Ptr->frontier.rentalMons); j++)
         {
@@ -757,44 +797,53 @@ void FillFactoryBrainParty(void)
     }
 }
 
+static const u16 *GetFactoryRentalPool(u8 lvlMode, u8 challengeNum, u16 *poolSize)
+{
+    if (challengeNum < 1) {
+        *poolSize = gFactoryPoolRank1Count;
+        DebugPrintf("Using Rank 1 pool, size=%d", *poolSize);
+        return sFactoryPoolRank1;
+    } else if (challengeNum < 2) {
+        *poolSize = gFactoryPoolRank2Count;
+        DebugPrintf("Using Rank 2 pool, size=%d", *poolSize);
+        return sFactoryPoolRank2;
+    } else if (challengeNum < 3) {
+        *poolSize = gFactoryPoolRank3Count;
+        DebugPrintf("Using Rank 3 pool, size=%d", *poolSize);
+        return sFactoryPoolRank3;
+    } else {
+        *poolSize = gFactoryPoolRank4Count;
+        DebugPrintf("Using Rank 4 pool, size=%d", *poolSize);
+        return sFactoryPoolRank4;
+    }
+}
+
+
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange)
 {
-    u16 numMons, monId;
-    u16 adder; // Used to skip past early mons for open level
+    DebugPrintf("GetFactoryMonId");
 
-    if (lvlMode == FRONTIER_LVL_50)
-        adder = 0;
-    else
-        adder = 8;
+    EnsureFactoryPoolsReady();
 
-    if (challengeNum < 7)
+    u16 poolSize;
+    const u16 *pool = GetFactoryRentalPool(lvlMode, challengeNum, &poolSize);
+
+    DebugPrintf("lvlMode: %d", lvlMode);
+    DebugPrintf("challengeNum: %d", challengeNum);
+    DebugPrintf("poolSize: %d", poolSize);
+
+    if (pool == NULL || poolSize == 0)
     {
-        if (useBetterRange)
-        {
-            numMons = (sInitialRentalMonRanges[adder + challengeNum + 1][1] - sInitialRentalMonRanges[adder + challengeNum + 1][0]) + 1;
-            monId = Random() % numMons;
-            monId += sInitialRentalMonRanges[adder + challengeNum + 1][0];
-        }
-        else
-        {
-            numMons = (sInitialRentalMonRanges[adder + challengeNum][1] - sInitialRentalMonRanges[adder + challengeNum][0]) + 1;
-            monId = Random() % numMons;
-            monId += sInitialRentalMonRanges[adder + challengeNum][0];
-        }
-    }
-    else
-    {
-        u16 challenge = challengeNum;
-        if (challenge != 7)
-            challenge = 7; // why bother assigning it above at all
-
-        numMons = (sInitialRentalMonRanges[adder + challenge][1] - sInitialRentalMonRanges[adder + challenge][0]) + 1;
-        monId = Random() % numMons;
-        monId += sInitialRentalMonRanges[adder + challenge][0];
+        DebugPrintfLevel(MGBA_LOG_FATAL, "❌ No factory rental pool found for challengeNum=%d", challengeNum);
+        return 0;
     }
 
+    u16 monId = pool[Random() % poolSize];
+
+    DebugPrintf("BF: selected monId = %d", monId);
     return monId;
 }
+
 
 u8 GetNumPastRentalsRank(u8 battleMode, u8 lvlMode)
 {
@@ -819,26 +868,7 @@ u8 GetNumPastRentalsRank(u8 battleMode, u8 lvlMode)
 
 u64 GetAiScriptsInBattleFactory(void)
 {
-    int lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
-
-    if (lvlMode == FRONTIER_LVL_TENT)
-    {
-        return 0;
-    }
-    else
-    {
-        int battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
-        int challengeNum = gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE;
-
-        if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
-            return AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY;
-        else if (challengeNum < 2)
-            return 0;
-        else if (challengeNum < 4)
-            return AI_FLAG_CHECK_BAD_MOVE;
-        else
-            return AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY;
-    }
+    return AI_FLAG_SMART_TRAINER;
 }
 
 void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot)
@@ -847,4 +877,255 @@ void SetMonMoveAvoidReturn(struct Pokemon *mon, u16 moveArg, u8 moveSlot)
     if (moveArg == MOVE_RETURN)
         move = MOVE_FRUSTRATION;
     SetMonMoveSlot(mon, move, moveSlot);
+}
+
+void DebugAction_FactoryWinChallenge(void)
+{
+    u8 lvlMode = gSaveBlock2Ptr->frontier.lvlMode;
+    u8 battleMode = VarGet(VAR_FRONTIER_BATTLE_MODE);
+
+    DebugPrintf("Complete factory challenge triggered");
+
+    // Simulate full challenge win
+    gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] += 7;
+    gSaveBlock2Ptr->frontier.curChallengeBattleNum = 6;
+    gSaveBlock2Ptr->frontier.factoryRentsCount[battleMode][lvlMode] = 0;
+    gSaveBlock2Ptr->frontier.winStreakActiveFlags |= sWinStreakFlags[battleMode][lvlMode];
+
+    DebugPrintf("Simulated full Factory challenge win.");
+    DebugPrintf("Total wins: %d → challengeNum: %d",
+        gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode],
+        gSaveBlock2Ptr->frontier.factoryWinStreaks[battleMode][lvlMode] / FRONTIER_STAGES_PER_CHALLENGE);
+
+    // Now end the battle
+    BattleDebug_WonBattle();
+}
+
+void MarkAllFactorySpeciesAsSeen(void)
+{
+    for (int i = NUM_ORIGINAL_FRONTIER_MONS; i < NUM_FRONTIER_MONS; i++)
+    {
+        u16 species = gBattleFrontierMons[i].species;
+        u16 nationalDexNo = SpeciesToNationalPokedexNum(species);
+
+        if (nationalDexNo != 0)
+            GetSetPokedexFlag(nationalDexNo, FLAG_SET_SEEN);
+    }
+}
+
+const u8 *GetFacilityClassTypeWhitelist(u8 facilityClass, u8 *count)
+{
+    switch (facilityClass)
+    {
+        case FACILITY_CLASS_YOUNGSTER:
+            *count = FACILITY_CLASS_YOUNGSTER_TYPE_COUNT;
+            return gSpeciesListFacilityClassYoungsterType;
+        case FACILITY_CLASS_LASS:
+            *count = FACILITY_CLASS_LASS_TYPE_COUNT;
+            return gSpeciesListFacilityClassLassType;
+        case FACILITY_CLASS_SCHOOL_KID_M:
+        case FACILITY_CLASS_SCHOOL_KID_F:
+            *count = FACILITY_CLASS_SCHOOL_KID_TYPE_COUNT;
+            return gSpeciesListFacilityClassSchoolKidType;
+        case FACILITY_CLASS_RICH_BOY:
+            *count = FACILITY_CLASS_RICH_BOY_TYPE_COUNT;
+            return gSpeciesListFacilityClassRichBoyType;
+        case FACILITY_CLASS_LADY:
+            *count = FACILITY_CLASS_LADY_TYPE_COUNT;
+            return gSpeciesListFacilityClassLadyType;
+        case FACILITY_CLASS_CAMPER:
+            *count = FACILITY_CLASS_CAMPER_TYPE_COUNT;
+            return gSpeciesListFacilityClassCamperType;
+        case FACILITY_CLASS_PICNICKER:
+            *count = FACILITY_CLASS_PICNICKER_TYPE_COUNT;
+            return gSpeciesListFacilityClassPicnickerType;
+        case FACILITY_CLASS_TUBER_M:
+            *count = FACILITY_CLASS_TUBER_M_TYPE_COUNT;
+            return gSpeciesListFacilityClassTuberMType;
+        case FACILITY_CLASS_TUBER_F:
+            *count = FACILITY_CLASS_TUBER_F_TYPE_COUNT;
+            return gSpeciesListFacilityClassTuberFType;
+        case FACILITY_CLASS_SWIMMER_M:
+            *count = FACILITY_CLASS_SWIMMER_M_TYPE_COUNT;
+            return gSpeciesListFacilityClassSwimmerMType;
+        case FACILITY_CLASS_SWIMMER_F:
+            *count = FACILITY_CLASS_SWIMMER_F_TYPE_COUNT;
+            return gSpeciesListFacilityClassSwimmerFType;
+        case FACILITY_CLASS_POKEFAN_M:
+            *count = FACILITY_CLASS_POKEFAN_TYPE_COUNT;
+            return gSpeciesListFacilityClassPokefanType;
+        case FACILITY_CLASS_POKEFAN_F:
+            *count = FACILITY_CLASS_POKEFAN_TYPE_COUNT;
+            return gSpeciesListFacilityClassPokefanType;
+        case FACILITY_CLASS_PARASOL_LADY:
+            *count = FACILITY_CLASS_PARASOL_LADY_TYPE_COUNT;
+            return gSpeciesListFacilityClassParasolLadyType;
+        case FACILITY_CLASS_GUITARIST:
+            *count = FACILITY_CLASS_GUITARIST_TYPE_COUNT;
+            return gSpeciesListFacilityClassGuitaristType;
+        case FACILITY_CLASS_BIRD_KEEPER:
+            *count = FACILITY_CLASS_BIRD_KEEPER_TYPE_COUNT;
+            return gSpeciesListFacilityClassBirdKeeperType;
+        case FACILITY_CLASS_HIKER:
+            *count = FACILITY_CLASS_HIKER_TYPE_COUNT;
+            return gSpeciesListFacilityClassHikerType;
+        case FACILITY_CLASS_KINDLER:
+            *count = FACILITY_CLASS_KINDLER_TYPE_COUNT;
+            return gSpeciesListFacilityClassKindlerType;
+        case FACILITY_CLASS_CYCLING_TRIATHLETE_M:
+        case FACILITY_CLASS_CYCLING_TRIATHLETE_F:
+        case FACILITY_CLASS_RUNNING_TRIATHLETE_M:
+        case FACILITY_CLASS_RUNNING_TRIATHLETE_F:
+        case FACILITY_CLASS_SWIMMING_TRIATHLETE_M:
+        case FACILITY_CLASS_SWIMMING_TRIATHLETE_F:
+            *count = FACILITY_CLASS_TRIATHLETE_TYPE_COUNT;
+            return gSpeciesListFacilityClassTriathleteType;
+        case FACILITY_CLASS_BLACK_BELT:
+            *count = FACILITY_CLASS_BLACK_BELT_TYPE_COUNT;
+            return gSpeciesListFacilityClassBlackBeltType;
+        case FACILITY_CLASS_EXPERT_M:
+        case FACILITY_CLASS_EXPERT_F:
+            *count = FACILITY_CLASS_EXPERT_TYPE_COUNT;
+            return gSpeciesListFacilityClassExpertType;
+        case FACILITY_CLASS_PSYCHIC_M:
+        case FACILITY_CLASS_PSYCHIC_F:
+            *count = FACILITY_CLASS_PSYCHIC_TYPE_COUNT;
+            return gSpeciesListFacilityClassPsychicType;
+        case FACILITY_CLASS_POKEMANIAC:
+            *count = FACILITY_CLASS_POKEMANIAC_TYPE_COUNT;
+            return gSpeciesListFacilityClassPokemaniacType;
+        case FACILITY_CLASS_GENTLEMAN:
+            *count = FACILITY_CLASS_GENTLEMAN_TYPE_COUNT;
+            return gSpeciesListFacilityClassGentlemanType;
+        case FACILITY_CLASS_COLLECTOR:
+            *count = FACILITY_CLASS_COLLECTOR_TYPE_COUNT;
+            return gSpeciesListFacilityClassCollectorType;
+        case FACILITY_CLASS_BEAUTY:
+            *count = FACILITY_CLASS_BEAUTY_TYPE_COUNT;
+            return gSpeciesListFacilityClassBeautyType;
+        case FACILITY_CLASS_COOLTRAINER_M:
+        case FACILITY_CLASS_COOLTRAINER_F:
+            *count = FACILITY_CLASS_COOLTRAINER_TYPE_COUNT;
+            return gSpeciesListFacilityClassCooltrainerType;
+        case FACILITY_CLASS_PKMN_RANGER_M:
+        case FACILITY_CLASS_PKMN_RANGER_F:
+            *count = FACILITY_CLASS_PKMN_RANGER_TYPE_COUNT;
+            return gSpeciesListFacilityClassPkmnRangerType;
+        case FACILITY_CLASS_PKMN_BREEDER_M:
+        case FACILITY_CLASS_PKMN_BREEDER_F:
+            *count = FACILITY_CLASS_PKMN_BREEDER_TYPE_COUNT;
+            return gSpeciesListFacilityClassPkmnBreederType;
+        case FACILITY_CLASS_FISHERMAN:
+            *count = FACILITY_CLASS_FISHERMAN_TYPE_COUNT;
+            return gSpeciesListFacilityClassFishermanType;
+        case FACILITY_CLASS_RUIN_MANIAC:
+            *count = FACILITY_CLASS_RUIN_MANIAC_TYPE_COUNT;
+            return gSpeciesListFacilityClassRuinManiacType;
+        case FACILITY_CLASS_SAILOR:
+            *count = FACILITY_CLASS_SAILOR_TYPE_COUNT;
+            return gSpeciesListFacilityClassSailorType;
+        case FACILITY_CLASS_DRAGON_TAMER:
+            *count = FACILITY_CLASS_DRAGON_TAMER_TYPE_COUNT;
+            return gSpeciesListFacilityClassDragonTamerType;
+        case FACILITY_CLASS_BUG_CATCHER:
+            *count = FACILITY_CLASS_BUG_CATCHER_TYPE_COUNT;
+            return gSpeciesListFacilityClassBugCatcherType;
+        case FACILITY_CLASS_BUG_MANIAC:
+            *count = FACILITY_CLASS_BUG_MANIAC_TYPE_COUNT;
+            return gSpeciesListFacilityClassBugManiacType;
+        case FACILITY_CLASS_AROMA_LADY:
+            *count = FACILITY_CLASS_AROMA_LADY_TYPE_COUNT;
+            return gSpeciesListFacilityClassAromaLadyType;
+        case FACILITY_CLASS_HEX_MANIAC:
+            *count = FACILITY_CLASS_HEX_MANIAC_TYPE_COUNT;
+            return gSpeciesListFacilityClassHexManiacType;
+        case FACILITY_CLASS_NINJA_BOY:
+            *count = FACILITY_CLASS_NINJA_BOY_TYPE_COUNT;
+            return gSpeciesListFacilityClassNinjaBoyType;
+        case FACILITY_CLASS_BATTLE_GIRL:
+            *count = FACILITY_CLASS_BATTLE_GIRL_TYPE_COUNT;
+            return gSpeciesListFacilityClassBattleGirlType;
+        default:
+            DebugPrintf("facilityClass not found: $s", facilityClass);
+            *count = FACILITY_CLASS_DEFAULT_TYPE_COUNT;
+            return gSpeciesListFacilityClassDefaultType;
+    }
+}
+
+static void GetOpponentFrontierClass(void)
+{
+    DebugPrintf("🚩 CallBattleFactoryFunction: index = %d", gSpecialVar_0x8008);
+    GetOpponentFrontierClassInternal(TRAINER_BATTLE_PARAM.opponentA);
+}
+
+void GetOpponentFrontierClassInternal(u8 trainerId)
+{
+    u8 facilityClass = gFacilityTrainers[trainerId].facilityClass;
+    DebugPrintf("Trainer ID: %d, Facility Class: %d", trainerId, gFacilityTrainers[trainerId].facilityClass);
+
+    if (trainerId < FRONTIER_TRAINERS_COUNT)
+    {
+        gSpecialVar_Result = facilityClass;
+    }
+    else {
+        gSpecialVar_Result = 0;
+    }
+
+}
+
+static void SelectRewardMonFromParty(void)
+{
+    // gFactoryRewardMode = TRUE;
+    // DoBattleFactorySelectScreen();
+    gStarterSelectionOverride = gPlayerParty;
+    gStarterSelectionOverrideCount = FRONTIER_PARTY_SIZE;
+
+    SetMainCallback2(CB2_ChooseStarter);
+    gMain.savedCallback = CB2_SelectReward;
+}
+
+static void GiveRewardMonFromParty(void)
+{
+    SetMainCallback2(CB2_GiveReward);
+    gMain.savedCallback = CB2_GiveReward;
+}
+
+static void CB2_SelectReward(void)
+{
+    u8 selected = gSpecialVar_Result;
+    DebugPrintf("Selected reward %d", selected);
+
+    for (int i = 0; i < FRONTIER_PARTY_SIZE; i++)
+    {
+        u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
+        DebugPrintf("Slot %d: species=%d", i, species);
+    }
+
+    if (selected >= FRONTIER_PARTY_SIZE)
+        selected = 0;
+
+    CopyMon(&sFactoryRewardBuffer, &gPlayerParty[selected], sizeof(struct Pokemon));
+
+    gStarterSelectionOverride = NULL;
+    gStarterSelectionOverrideCount = 0;
+
+    ScriptContext_SetupScript(BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardResumeScript);
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
+}
+
+static void CB2_GiveReward(void)
+{
+    u8 result = GiveMonToPlayer(&sFactoryRewardBuffer);
+    DebugPrintf("GiveMonToPlayer: %d", result);
+
+    u16 species = GetMonData(&sFactoryRewardBuffer, MON_DATA_SPECIES);
+    u16 nationalDexNum = SpeciesToNationalPokedexNum(species);
+    if (nationalDexNum != 0)
+    {
+        GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
+        GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
+    }
+
+    ScriptContext_SetupScript(BattleFrontier_BattleFactoryLobby_EventScript_FactoryRewardSaveAndExitScript);
+    SetMainCallback2(CB2_ReturnToFieldContinueScriptPlayMapMusic);
 }

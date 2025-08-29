@@ -21,6 +21,7 @@
 #include "strings.h"
 #include "battle_ai_main.h"
 #include "battle_ai_util.h"
+#include "battle_factory.h"
 #include "list_menu.h"
 #include "decompress.h"
 #include "trainer_pokemon_sprites.h"
@@ -113,6 +114,7 @@ enum
     LIST_ITEM_AI_PARTY,
     LIST_ITEM_VARIOUS,
     LIST_ITEM_INSTANT_WIN,
+    LIST_ITEM_COMPLETE_FACTORY_CHALLENGE,
     LIST_ITEM_COUNT
 };
 
@@ -312,6 +314,8 @@ static const struct BitfieldInfo sAIBitfield[] =
 
 static const struct ListMenuItem sMainListItems[] =
 {
+    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
+    {COMPOUND_STRING("Win Factory"), LIST_ITEM_COMPLETE_FACTORY_CHALLENGE},
     {COMPOUND_STRING("Moves"),        LIST_ITEM_MOVES},
     {sText_Ability,                   LIST_ITEM_ABILITY},
     {sText_HeldItem,                  LIST_ITEM_HELD_ITEM},
@@ -328,7 +332,6 @@ static const struct ListMenuItem sMainListItems[] =
     {COMPOUND_STRING("AI Info"),      LIST_ITEM_AI_INFO},
     {COMPOUND_STRING("AI Party"),     LIST_ITEM_AI_PARTY},
     {COMPOUND_STRING("Various"),      LIST_ITEM_VARIOUS},
-    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
 };
 
 static const struct ListMenuItem sStatsListItems[] =
@@ -1192,11 +1195,21 @@ static void Task_DebugMenuProcessInput(u8 taskId)
             }
             else if (listItemId == LIST_ITEM_INSTANT_WIN && JOY_NEW(A_BUTTON))
             {
+                DebugPrintf("Instant Win triggered");
                 BattleDebug_WonBattle();
                 BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
                 gTasks[taskId].func = Task_DebugMenuFadeOut;
                 return;
             }
+            else if (listItemId == LIST_ITEM_COMPLETE_FACTORY_CHALLENGE && JOY_NEW(A_BUTTON))
+            {
+                DebugPrintf("Complete factory challenge triggered");
+                DebugAction_FactoryWinChallenge();
+                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                gTasks[taskId].func = Task_DebugMenuFadeOut;
+                return;
+            }
+
             data->currentMainListItemId = listItemId;
 
             // Create the secondary menu list.

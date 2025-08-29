@@ -6959,7 +6959,6 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
-    TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)

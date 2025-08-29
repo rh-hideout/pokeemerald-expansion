@@ -29,10 +29,12 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_EnterRoom::
 	goto_if_eq VAR_0x8006, 2, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_ResumeChallenge
 	factory_generaterentalmons
 	factory_generateopponentmons
+	factory_getopponentclass
 	factory_getopponentmontype
 	setorcopyvar VAR_0x8005, VAR_RESULT
 	factory_getopponentstyle
 	setorcopyvar VAR_0x8006, VAR_RESULT
+	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentClass
 	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentType
 	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentStyle
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_HoldMonsChooseFromSelection, MSGBOX_DEFAULT
@@ -40,6 +42,7 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_EnterRoom::
 	factory_setswapped
 	factory_rentmons
 	waitstate
+
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_EnterBattleRoom::
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_RightThisWay, MSGBOX_DEFAULT
 	closemessage
@@ -137,9 +140,11 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskRetireChallenge::
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskSwapMon::
 	factory_generateopponentmons
 	factory_getopponentmontype
+	factory_getopponentclass
 	setorcopyvar VAR_0x8005, VAR_RESULT
 	factory_getopponentstyle
 	setorcopyvar VAR_0x8006, VAR_RESULT
+	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentClass
 	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentType
 	call BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentStyle
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_LikeToSwapMon, MSGBOX_YESNO
@@ -205,7 +210,6 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_ResumeChallenge::
 	goto BattleFrontier_BattleFactoryPreBattleRoom_EventScript_AskReadyForOpponent
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentType::
-	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_InvestigatedUpcomingOpponent, MSGBOX_DEFAULT
 	call_if_eq VAR_0x8005, TYPE_NORMAL, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentUsesNormal
 	call_if_eq VAR_0x8005, TYPE_FIGHTING, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentUsesFighting
 	call_if_eq VAR_0x8005, TYPE_FLYING, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentUsesFlying
@@ -302,6 +306,155 @@ BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentUsesFairy::
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_OpponentHasNoMostCommonType::
 	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_TrainerHasNoClearFavorite, MSGBOX_DEFAULT
 	return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassYoungster::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassYoungster, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassLass::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassLass, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSchoolKid::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSchoolKid, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassRichBoy::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassRichBoy, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassLady::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassLady, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCamper::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCamper, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPicnicker::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPicnicker, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTuber::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassTuber, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSwimmer::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSwimmer, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPokefan::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPokefan, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassParasolLady::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassParasolLady, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassGuitarist::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassGuitarist, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBirdKeeper::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBirdKeeper, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassHiker::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassHiker, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassKindler::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassKindler, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassTriathlete, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBlackBelt::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBlackBelt, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassExpert::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassExpert, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPsychic::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPsychic, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPokemaniac::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPokemaniac, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassGentleman::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassGentleman, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCollector::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCollector, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBeauty::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBeauty, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCooltrainer::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCooltrainer, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnRanger::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPkmnRanger, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnBreeder::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPkmnBreeder, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassDefault::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassDefault, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassFisherman::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassFisherman, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassRuinManiac::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassRuinManiac, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSailor::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSailor, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassDragonTamer::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassDragonTamer, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBugCatcher::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBugCatcher, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBugManiac::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBugManiac, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassAromaLady::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassAromaLady, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassHexManiac::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassHexManiac, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassNinjaBoy::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassNinjaBoy, MSGBOX_DEFAULT
+    return
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBattleGirl::
+    msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBattleGirl, MSGBOX_DEFAULT
+    return
+
 
 BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentStyle::
 	call_if_eq VAR_0x8006, FACTORY_STYLE_NONE, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_StyleUnrestrained
@@ -451,6 +604,60 @@ BattleFrontier_BattleFactoryPreBattleRoom_Movement_AttendantReturnToPlayer:
 	walk_right
 	face_down
 	step_end
+
+BattleFrontier_BattleFactoryPreBattleRoom_EventScript_CommentOnOpponentClass::
+	msgbox BattleFrontier_BattleFactoryPreBattleRoom_Text_InvestigatedUpcomingOpponent, MSGBOX_DEFAULT
+	call_if_eq VAR_0x8008, FACILITY_CLASS_YOUNGSTER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassYoungster
+	call_if_eq VAR_0x8008, FACILITY_CLASS_LASS, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassLass
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SCHOOL_KID_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSchoolKid
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SCHOOL_KID_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSchoolKid
+	call_if_eq VAR_0x8008, FACILITY_CLASS_RICH_BOY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassRichBoy
+	call_if_eq VAR_0x8008, FACILITY_CLASS_LADY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassLady
+	call_if_eq VAR_0x8008, FACILITY_CLASS_CAMPER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCamper
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PICNICKER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPicnicker
+	call_if_eq VAR_0x8008, FACILITY_CLASS_TUBER_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTuber
+	call_if_eq VAR_0x8008, FACILITY_CLASS_TUBER_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTuber
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SWIMMER_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSwimmer
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SWIMMER_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSwimmer
+	call_if_eq VAR_0x8008, FACILITY_CLASS_POKEFAN_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPokefan
+	call_if_eq VAR_0x8008, FACILITY_CLASS_POKEFAN_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPokefan
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PARASOL_LADY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassParasolLady
+	call_if_eq VAR_0x8008, FACILITY_CLASS_GUITARIST, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassGuitarist
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BIRD_KEEPER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBirdKeeper
+	call_if_eq VAR_0x8008, FACILITY_CLASS_HIKER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassHiker
+	call_if_eq VAR_0x8008, FACILITY_CLASS_KINDLER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassKindler
+	call_if_eq VAR_0x8008, FACILITY_CLASS_CYCLING_TRIATHLETE_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_CYCLING_TRIATHLETE_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_RUNNING_TRIATHLETE_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_RUNNING_TRIATHLETE_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SWIMMING_TRIATHLETE_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SWIMMING_TRIATHLETE_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassTriathlete
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BLACK_BELT, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBlackBelt
+	call_if_eq VAR_0x8008, FACILITY_CLASS_EXPERT_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassExpert
+	call_if_eq VAR_0x8008, FACILITY_CLASS_EXPERT_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassExpert
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PSYCHIC_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPsychic
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PSYCHIC_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPsychic
+	call_if_eq VAR_0x8008, FACILITY_CLASS_POKEMANIAC, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPokemaniac
+	call_if_eq VAR_0x8008, FACILITY_CLASS_GENTLEMAN, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassGentleman
+	call_if_eq VAR_0x8008, FACILITY_CLASS_COLLECTOR, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCollector
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BEAUTY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBeauty
+	call_if_eq VAR_0x8008, FACILITY_CLASS_COOLTRAINER_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCooltrainer
+	call_if_eq VAR_0x8008, FACILITY_CLASS_COOLTRAINER_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassCooltrainer
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PKMN_RANGER_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnRanger
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PKMN_RANGER_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnRanger
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PKMN_BREEDER_M, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnBreeder
+	call_if_eq VAR_0x8008, FACILITY_CLASS_PKMN_BREEDER_F, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassPkmnBreeder
+	call_if_eq VAR_0x8008, FACILITY_CLASS_FISHERMAN, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassFisherman
+	call_if_eq VAR_0x8008, FACILITY_CLASS_RUIN_MANIAC, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassRuinManiac
+	call_if_eq VAR_0x8008, FACILITY_CLASS_SAILOR, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassSailor
+	call_if_eq VAR_0x8008, FACILITY_CLASS_DRAGON_TAMER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassDragonTamer
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BUG_CATCHER, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBugCatcher
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BUG_MANIAC, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBugManiac
+	call_if_eq VAR_0x8008, FACILITY_CLASS_AROMA_LADY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassAromaLady
+	call_if_eq VAR_0x8008, FACILITY_CLASS_HEX_MANIAC, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassHexManiac
+	call_if_eq VAR_0x8008, FACILITY_CLASS_NINJA_BOY, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassNinjaBoy
+	call_if_eq VAR_0x8008, FACILITY_CLASS_BATTLE_GIRL, BattleFrontier_BattleFactoryPreBattleRoom_EventScript_FacilityClassBattleGirl
+	return
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_HoldMonsChooseFromSelection:
 	.string "First, we will hold your POKéMON for\n"
@@ -652,3 +859,151 @@ BattleFrontier_BattleFactoryPreBattleRoom_Text_PreparedToFaceHead:
 BattleFrontier_BattleFactoryPreBattleRoom_Text_CantTellAnythingAboutHead:
 	.string "I'm terribly sorry, but I can't tell you\n"
 	.string "anything about the FACTORY HEAD.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassYoungster:
+	.string "The TRAINER battles with youth!\n"
+	.string "Expect basic POKéMON types.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassLass:
+	.string "The TRAINER is very charming!\n"
+	.string "Expect graceful POKéMON types.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSchoolKid:
+	.string "The TRAINER battles with knowledge!\n"
+	.string "Expect basic POKéMON types.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassRichBoy:
+	.string "The TRAINER's style is refined!\n"
+	.string "Expect stylish and rare POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassLady:
+	.string "The TRAINER oozes with class!\n"
+	.string "Expect refined or elegant POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCamper:
+	.string "The TRAINER loves the outdoors!\n"
+	.string "Expect earthy and wild POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPicnicker:
+	.string "The TRAINER cheers his POKéMON on!\n"
+	.string "Expect cute and colorful POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassTuber:
+	.string "The TRAINER splashes around!\n"
+	.string "Expect playful water POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSwimmer:
+	.string "The TRAINER crushes the waves!\n"
+	.string "Expect wet and brawling POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPokefan:
+	.string "The TRAINER battles with adoration!\n"
+	.string "Expect some classic POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassParasolLady:
+	.string "The TRAINER battles with elegance!\n"
+	.string "Expect stylish POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassGuitarist:
+	.string "The TRAINER rocks out!\n"
+	.string "Expect some shocking POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBirdKeeper:
+	.string "The TRAINER soars with power\n"
+	.string "Expect high-flying POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassHiker:
+	.string "The TRAINER battles with grit!\n"
+	.string "Expect rock-solid types.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassKindler:
+	.string "The TRAINER blazes with passion!\n"
+	.string "Expect burning offense POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassTriathlete:
+	.string "The TRAINER battles with agility!\n"
+	.string "Expect training-focused POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBlackBelt:
+	.string "The TRAINER fights with courage!\n"
+	.string "Expect brawling POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassExpert:
+	.string "The TRAINER is a book worm!\n"
+	.string "Expect intelligent POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPsychic:
+	.string "The TRAINER uses mind games!\n"
+	.string "Expect intelligent POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPokemaniac:
+	.string "The TRAINER battles with obsession!\n"
+	.string "Expect unusual POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassGentleman:
+	.string "The TRAINER battles with wisdom!\n"
+	.string "Expect a range of POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCollector:
+	.string "The TRAINER loves oollecting!\n"
+	.string "Expect some rare POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBeauty:
+	.string "The TRAINER dazzles with beauty!\n"
+	.string "Expect beautiful POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCooltrainer:
+	.string "The TRAINER is an elite talent!\n"
+	.string "Expect strong, powerful POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPkmnRanger:
+	.string "The TRAINER battles with nature!\n"
+	.string "Expect woodland POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassPkmnBreeder:
+	.string "The TRAINER battles with care!\n"
+	.string "Expect well-raised POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassDefault:
+	.string "The TRAINER battles widly!\n"
+	.string "Expect any POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassFisherman:
+	.string "The TRAINER hunts by the sea!\n"
+	.string "Expect fishy POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassRuinManiac:
+	.string "The TRAINER explores with curiosity!\n"
+	.string "Expect forgotten POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassSailor:
+	.string "The TRAINER sails with strength!\n"
+	.string "Expect ocean-hardened POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassDragonTamer:
+	.string "The TRAINER battles with mythic ambition!\n"
+	.string "Expect rare POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBugCatcher:
+	.string "The TRAINER battles with tiny courage!\n"
+	.string "Expect some small POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBugManiac:
+	.string "The TRAINER battles with bugsy fixation!\n"
+	.string "Expect crawling POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassAromaLady:
+	.string "The TRAINER battles with grace!\n"
+	.string "Expect fragrant POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassHexManiac:
+	.string "The TRAINER battles with spooky mystery!\n"
+	.string "Expect ghostly POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassNinjaBoy:
+	.string "The TRAINER battles with stealth!\n"
+	.string "Expect tricky POKéMON.$"
+
+BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBattleGirl:
+	.string "The TRAINER battles with confidence!\n"
+	.string "Expect brawling POKéMON.$"
