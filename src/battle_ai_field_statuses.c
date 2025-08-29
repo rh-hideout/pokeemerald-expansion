@@ -44,6 +44,7 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler);
 static enum FieldEffectOutcome BenefitsFromGrassyTerrain(u32 battler);
 static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler);
 static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler);
+static enum FieldEffectOutcome BenefitsFromGravity(u32 battler);
 static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler);
 
 bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredResult)
@@ -108,6 +109,8 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
             result = BenefitsFromPsychicTerrain(battler);
 
         // other field statuses
+        if (fieldStatus & STATUS_FIELD_GRAVITY)
+            result = BenefitsFromGravity(battler);
         if (fieldStatus & STATUS_FIELD_TRICK_ROOM)
             result = BenefitsFromTrickRoom(battler);
 
@@ -425,6 +428,35 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
 
     return FIELD_EFFECT_NEUTRAL;
 }
+
+static enum FieldEffectOutcome BenefitsFromGravity(u32 battler)
+{
+    if (!IsBattlerGrounded(battler))
+        return FIELD_EFFECT_NEGATIVE;
+
+    if (HasBattlerSideAbility(battler, ABILITY_HUSTLE, gAiLogicData))
+        return FIELD_EFFECT_POSITIVE;
+
+    if (HasMoveWithFlag(battler, IsMoveGravityBanned))
+        return FIELD_EFFECT_NEGATIVE;
+
+    if (IsBattlerAlive(FOE(battler)))
+    {
+        if (HasMoveWithLowAccuracy(battler, FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
+         || (!IsBattlerGrounded(FOE(battler) && HasDamagingMoveOfType(battler, TYPE_GROUND))))
+            return FIELD_EFFECT_POSITIVE;
+    }
+
+    if (IsBattlerAlive(BATTLE_PARTNER(FOE(battler))))
+    {
+        if (HasMoveWithLowAccuracy(battler, BATTLE_PARTNER(FOE(battler)), LOW_ACCURACY_THRESHOLD, FALSE)
+         || (!IsBattlerGrounded(BATTLE_PARTNER(FOE(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND))))
+            return FIELD_EFFECT_POSITIVE;
+    }
+
+    return FIELD_EFFECT_NEUTRAL;
+}
+
 
 static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
 {

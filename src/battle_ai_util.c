@@ -2506,7 +2506,7 @@ bool32 HasMoveThatRaisesOwnStats(u32 battlerId)
     return FALSE;
 }
 
-bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect)
+bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus)
 {
     s32 i;
     u16 *moves = GetMovesArray(battlerAtk);
@@ -5127,7 +5127,7 @@ bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef)
             case STAT_SPATK:
                 return (HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_SPECIAL));
             case STAT_ACC:
-                return (HasLowAccuracyMove(battlerAtk, battlerDef));
+                return HasMoveWithLowAccuracy(battlerAtk, battlerDef, LOW_ACCURACY_THRESHOLD, FALSE);
             case STAT_EVASION:
             case STAT_SPEED:
                 return TRUE;
@@ -5256,17 +5256,6 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
     if (gAiLogicData->hpPercents[battlerAtk] > 70)
         scoreIncrease += WEAK_EFFECT;
     return scoreIncrease;
-}
-
-bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef)
-{
-    int i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (gAiLogicData->moveAccuracy[battlerAtk][battlerDef][i] <= LOW_ACCURACY_THRESHOLD)
-            return TRUE;
-    }
-    return FALSE;
 }
 
 bool32 IsBattlerItemEnabled(u32 battler)
@@ -5633,7 +5622,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         return GOOD_EFFECT;
     // Conditional ability logic goes here.
     case ABILITY_COMPOUND_EYES:
-        if (HasMoveWithLowAccuracy(battler, FOE(battler), 90, TRUE, aiData->abilities[battler], aiData->abilities[FOE(battler)], aiData->holdEffects[battler], aiData->holdEffects[FOE(battler)]))
+        if (HasMoveWithLowAccuracy(battler, FOE(battler), 90, FALSE))
             return GOOD_EFFECT;
         break;
     case ABILITY_CONTRARY:
@@ -5693,7 +5682,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         }
     }
     case ABILITY_NO_GUARD:
-        if (HasLowAccuracyMove(battler, FOE(battler)))
+        if (HasMoveWithLowAccuracy(battler, FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE))
             return GOOD_EFFECT;
         break;
     // Toxic counter ticks upward while Poison Healed; losing Poison Heal while Toxiced can KO.
