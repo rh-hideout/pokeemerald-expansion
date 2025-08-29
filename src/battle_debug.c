@@ -752,7 +752,8 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
 
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
-        u32 switchMon = GetMonData(&gEnemyParty[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
+        u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Switching to "), 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, gSpeciesInfo[switchMon].speciesName, 74 + 68, 64, 0, NULL);
     }
