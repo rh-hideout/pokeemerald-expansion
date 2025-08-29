@@ -2056,6 +2056,10 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
         case ABILITY_WHITE_SMOKE:
         case ABILITY_FULL_METAL_BODY:
             return FALSE;
+        case ABILITY_SHIELD_DUST:
+            if (!IsBattleMoveStatus(move) && GetActiveGimmick(battlerAtk) != GIMMICK_DYNAMAX)
+                return FALSE;
+            break;
         default:
             break;
         }

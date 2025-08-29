@@ -5661,7 +5661,8 @@ case EFFECT_GUARD_SPLIT:
                 break;
             case MOVE_EFFECT_SPD_MINUS_1:
             case MOVE_EFFECT_SPD_MINUS_2:
-                ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_SPEED));
+                if (CanLowerStat(battlerAtk, battlerDef, aiData, STAT_SPEED))
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, STAT_SPEED));
                 break;
             case MOVE_EFFECT_ATK_MINUS_1:
             case MOVE_EFFECT_DEF_MINUS_1:
@@ -5669,18 +5670,35 @@ case EFFECT_GUARD_SPLIT:
             case MOVE_EFFECT_SP_DEF_MINUS_1:
             case MOVE_EFFECT_ACC_MINUS_1:
             case MOVE_EFFECT_EVS_MINUS_1:
-                if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
-                    ADJUST_SCORE(DECENT_EFFECT);
+            {
+                u32 statId = STAT_ATK + additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1;
+                if (CanLowerStat(battlerAtk, battlerDef, aiData, statId))
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, statId));
                 break;
+            }
             case MOVE_EFFECT_ATK_MINUS_2:
             case MOVE_EFFECT_DEF_MINUS_2:
             case MOVE_EFFECT_SP_ATK_MINUS_2:
             case MOVE_EFFECT_SP_DEF_MINUS_2:
             case MOVE_EFFECT_ACC_MINUS_2:
             case MOVE_EFFECT_EVS_MINUS_2:
-                if (aiData->abilities[battlerDef] != ABILITY_CONTRARY)
-                    ADJUST_SCORE(DECENT_EFFECT);
+            {
+                u32 statId = STAT_ATK + additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2;
+                if (CanLowerStat(battlerAtk, battlerDef, aiData, statId))
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, statId));
                 break;
+            }
+            case MOVE_EFFECT_LOWER_ATTACK_SIDE:
+            case MOVE_EFFECT_LOWER_DEFENSE_SIDE:
+            case MOVE_EFFECT_LOWER_SPEED_SIDE:
+            case MOVE_EFFECT_LOWER_SP_ATK_SIDE:
+            case MOVE_EFFECT_LOWER_SP_DEF_SIDE:
+            {
+                u32 statId = STAT_ATK + additionalEffect->moveEffect - MOVE_EFFECT_LOWER_ATTACK_SIDE;
+                if (CanLowerStat(battlerAtk, battlerDef, aiData, statId))
+                    ADJUST_SCORE(IncreaseStatDownScore(battlerAtk, battlerDef, statId));
+                break;
+            }
             case MOVE_EFFECT_POISON:
                 IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
                 break;

@@ -391,3 +391,21 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
         TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
+{
+    u32 ability;
+    PARAMETRIZE { ability = ABILITY_SHIELD_DUST; }
+    PARAMETRIZE { ability = ABILITY_TINTED_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VENOMOTH) { Ability(ability); Moves(MOVE_CELEBRATE, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
+    } WHEN {
+    if (ability == ABILITY_SHIELD_DUST)
+        TURN { EXPECT_MOVE(opponent, MOVE_BRINE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_CHILLING_WATER); }
+    }
+}
