@@ -116,8 +116,6 @@ SINGLE_BATTLE_TEST("Chesto and Lum Berries cure sleep")
     }
 }
 
-TO_DO_BATTLE_TEST("Chesto and Lum Berries don't trigger if the holder has Comatose")
-
 SINGLE_BATTLE_TEST("Cheri and Lum Berries cure paralysis")
 {
     u16 item;
@@ -160,7 +158,7 @@ SINGLE_BATTLE_TEST("Perism and Lum Berries cure confusion")
     }
 }
 
-SINGLE_BATTLE_TEST("Berry hold effect cures status if a Pokémon enters a battle")
+SINGLE_BATTLE_TEST("Berry hold effect cures status if a pokemon enters a battle")
 {
     u16 status;
     u16 item;
@@ -291,5 +289,6 @@ DOUBLE_BATTLE_TEST("Lum Berry correctly cures all battlers if multiple fainted t
         EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
         EXPECT_EQ(playerRight->status1, STATUS1_NONE);
         EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
+
     }
 }

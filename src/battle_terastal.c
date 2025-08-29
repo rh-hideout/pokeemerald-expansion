@@ -88,6 +88,9 @@ bool32 CanTerastallize(u32 battler)
         return FALSE;
     }
 
+    if ((gBattleTypeFlags & BATTLE_TYPE_FRONTIER) && (FlagGet(FLAG_BATTLE_FACTORY_ALLOW_TERASTALLISATION) == FALSE))
+        return FALSE;
+
     // Check if Trainer has already Terastallized.
     if (HasTrainerUsedGimmick(battler, GIMMICK_TERA))
         return FALSE;

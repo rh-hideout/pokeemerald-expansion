@@ -51,6 +51,13 @@ static void SetPCItemQuantity(u16 *quantity, u16 newValue)
     *quantity = newValue;
 }
 
+void AddBattleKeyItemsToBag() {
+    AddBagItem(ITEM_MEGA_RING, 1);
+    AddBagItem(ITEM_Z_POWER_RING, 1);
+    AddBagItem(ITEM_DYNAMAX_BAND, 1);
+    AddBagItem(ITEM_TERA_ORB, 1);
+}
+
 void ApplyNewEncryptionKeyToBagItems(u32 newKey)
 {
     u32 pocket, item;

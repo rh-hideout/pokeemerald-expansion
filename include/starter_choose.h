@@ -7,6 +7,9 @@ extern const u32 gBirchGrassTilemap[];
 extern const u32 gBirchBagGrass_Gfx[];
 extern const u32 gPokeballSelection_Gfx[];
 
+extern const struct Pokemon *gStarterSelectionOverride;
+extern u8 gStarterSelectionOverrideCount;
+
 u16 GetStarterPokemon(u16 chosenStarterId);
 void CB2_ChooseStarter(void);
 

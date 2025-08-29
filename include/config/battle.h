@@ -28,7 +28,7 @@
 #define B_BURN_DAMAGE               GEN_LATEST // In Gen7+, burn damage is 1/16th of max HP instead of 1/8th. Also applies to Frostbite.
 #define B_BURN_FACADE_DMG           GEN_LATEST // In Gen6+, burn's effect of lowering the Attack stat no longer applies to Facade.
 #define B_BINDING_DAMAGE            GEN_LATEST // In Gen6+, binding damage is 1/8 of max HP instead of 1/16. (With Binding Band, 1/6 and 1/8 respectively.)
-#define B_PSYWAVE_DMG               GEN_LATEST // Psywave's damage formula. See DoFixedDamageMoveCalc for details.
+#define B_PSYWAVE_DMG               GEN_LATEST // Psywave's damage formula. See Cmd_psywavedamageeffect.
 #define B_PAYBACK_SWITCH_BOOST      GEN_LATEST // In Gen5+, if the opponent switches out, Payback's damage will no longer be doubled.
 #define B_HIDDEN_POWER_DMG          GEN_LATEST // In Gen6+, Hidden Power's base power was set to always be 60. Before, it was determined by the mon's IVs.
 #define B_ROUGH_SKIN_DMG            GEN_LATEST // In Gen4+, Rough Skin contact damage is 1/8th of max HP instead of 1/16th. This will also affect Iron Barbs.
@@ -208,8 +208,8 @@
 #define B_FLAG_NO_RUNNING           0     // If this flag is set, the ability to escape from wild battles is disabled. Also makes Roar/Whirlwind and Teleport (under Gen8) fail.
 #define B_FLAG_AI_VS_AI_BATTLE      0     // If this flag is set, the player's mons will be controlled by the ai next battles.
 #define B_FLAG_DYNAMAX_BATTLE       0     // If this flag is set, the ability to Dynamax in battle is enabled for all trainers.
-#define B_FLAG_TERA_ORB_CHARGED     0     // If this flag is set, the Tera Orb is charged. It is automatically set upon healing and cleared upon Terastallizing once configured.
-#define B_FLAG_TERA_ORB_NO_COST     0     // If this flag is set, the Tera Orb does not use up its charge upon Terastallization. In S/V, this occurs after an event with Terapagos.
+#define B_FLAG_TERA_ORB_CHARGED     1     // If this flag is set, the Tera Orb is charged. It is automatically set upon healing and cleared upon Terastallizing once configured.
+#define B_FLAG_TERA_ORB_NO_COST     1     // If this flag is set, the Tera Orb does not use up its charge upon Terastallization. In S/V, this occurs after an event with Terapagos.
 #define B_FLAG_SLEEP_CLAUSE         0     // If this flag is set, sleep clause is enabled; if the player / AI has already put a Pokémon on the opponent's side to sleep and it is still sleeping, another one can't be put to sleep. AI requires AI_FLAG_CHECK_BAD_MOVE to understand.
 #define B_FLAG_NO_WHITEOUT          0     // If this flag is set, the player can not white out against Trainers. Please note that the party is not healed automatically!
 
@@ -304,7 +304,7 @@
 #define B_USE_FROSTBITE                 FALSE      // In PLA, Frostbite replaces Freeze. Enabling this flag does the same here. Moves can still be cherry-picked to either Freeze or Frostbite. Freeze-Dry, Secret Power & Tri Attack depend on this config.
 #define B_TOXIC_REVERSAL                GEN_LATEST // In Gen5+, bad poison will change to regular poison at the end of battles.
 #define B_TRY_CATCH_TRAINER_BALL        GEN_LATEST // In Gen4+, trying to catch a Trainer's Pokémon does not consume the Poké Ball.
-#define B_SLEEP_CLAUSE                  FALSE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
+#define B_SLEEP_CLAUSE                  TRUE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely
@@ -359,5 +359,7 @@
 #define B_POOL_RULE_EXCLUDE_FORMS           FALSE    // Exclude different forms from the Species Clause
 #define B_POOL_RULE_ITEM_CLAUSE             FALSE    // Only allow each item to be picked once
 #define B_POOL_RULES_USE_ITEM_EXCLUSIONS    FALSE    // Exclude items listed in poolItemClauseExclusions
+
+#define B_BATTLE_SPEED VarGet(VAR_BATTLE_SPEED) // Usage with a variable
 
 #endif // GUARD_CONFIG_BATTLE_H

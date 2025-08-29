@@ -254,6 +254,10 @@ extern const u8 gText_BattleSceneOn[];
 extern const u8 gText_BattleSceneOff[];
 extern const u8 gText_BattleStyleShift[];
 extern const u8 gText_BattleStyleSet[];
+extern const u8 gText_BattleSpeedOff[];
+extern const u8 gText_BattleSpeed2x[];
+extern const u8 gText_BattleSpeed3x[];
+extern const u8 gText_BattleSpeed4x[];
 extern const u8 gText_SoundMono[];
 extern const u8 gText_SoundStereo[];
 extern const u8 gText_FrameTypeNumber[];
@@ -266,6 +270,7 @@ extern const u8 gText_OptionMenu[];
 extern const u8 gText_TextSpeed[];
 extern const u8 gText_BattleScene[];
 extern const u8 gText_BattleStyle[];
+extern const u8 gText_BattleSpeed[];
 extern const u8 gText_Sound[];
 extern const u8 gText_Frame[];
 extern const u8 gText_OptionMenuCancel[];
@@ -288,7 +293,19 @@ extern const u8 gText_Birch_SoItsPlayer[];
 extern const u8 gText_Birch_YourePlayer[];
 extern const u8 gText_Birch_AreYouReady[];
 
+// New intro speech test (Noland)
+extern const u8 gText_Noland_Welcome[];
+extern const u8 gText_Noland_ExplainFactory[];
+extern const u8 gText_Noland_MainSpeech[];
+extern const u8 gText_Noland_AndYouAre[];
+extern const u8 gText_Noland_BoyOrGirl[];
+extern const u8 gText_Noland_WhatsYourName[];
+extern const u8 gText_Noland_SoItsPlayer[];
+extern const u8 gText_Noland_YourePlayer[];
+extern const u8 gText_Noland_AreYouReady[];
+
 extern const u8 gText_BirchInTrouble[];
+extern const u8 gText_BattleFactoryReward[];
 extern const u8 gText_ConfirmStarterChoice[];
 
 // mystery event menu text

@@ -28732,7 +28732,6 @@ MegaEvolutionSpinEffect:
 	return
 
 gBattleAnimGeneral_TeraCharge::
-	createvisualtask AnimTask_HideOpponentShadows, 2 @ Hide opponent shadows so they don't flicker between battle anims
 	loadspritegfx ANIM_TAG_TERA_CRYSTAL
 	loadspritegfx ANIM_TAG_TERA_SHATTER
 	loadspritegfx ANIM_TAG_FOCUS_ENERGY
@@ -28754,6 +28753,7 @@ gBattleAnimGeneral_TeraCharge::
 	delay 20
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 0, 16, RGB_WHITEALPHA
 	waitforvisualfinish
+	createvisualtask AnimTask_TransformMon, 2, 1, 0
 	call TeraChargeParticles
 	playsewithpan SE_M_BRICK_BREAK, SOUND_PAN_ATTACKER
 	clearmonbg ANIM_ATK_PARTNER
@@ -28770,7 +28770,6 @@ TeraChargeParticles:
 	return
 
 gBattleAnimGeneral_TeraActivate::
-	createvisualtask AnimTask_SetOpponentShadowCallbacks, 2 @ Restore shadows hidden in the charge script
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 16, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
 	waitforvisualfinish

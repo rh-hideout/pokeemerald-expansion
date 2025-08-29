@@ -529,6 +529,7 @@ void ClearRematchMovementByTrainerId(void)
 
         TryGetObjectEventIdByLocalIdAndMap(objectEventTemplates[i].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objEventId);
         objectEvent = &gObjectEvents[objEventId];
+        GetRandomFaceDirectionMovementType(&objectEventTemplates[i]);
         TryOverrideTemplateCoordsForObjectEvent(objectEvent, sFaceDirectionMovementTypeByFacingDirection[objectEvent->facingDirection]);
 
         if (gSelectedObjectEvent == objEventId)
@@ -704,11 +705,22 @@ static u8 GetResponseMovementTypeFromTrainerGraphicsId(u8 graphicsId)
 #endif //FREE_MATCH_CALL
 
 static u16 GetTrainerFlagFromScript(const u8 *script)
+    /*
+ * The trainer flag is a little-endian short located +2 from
+ * the script pointer, assuming the trainerbattle command is
+ * first in the script.  Because scripts are unaligned, and
+ * because the ARM processor requires shorts to be 16-bit
+ * aligned, this function needs to perform explicit bitwise
+ * operations to get the correct flag.
+ *
+ * 5c XX YY ZZ ...
+ *       -- --
+     */
 {
-    // The trainer flag is located 3 bytes (command + flags + localIdA) from the script pointer, assuming the trainerbattle command is first in the script.
-    // Because scripts are unaligned, and because the ARM processor requires shorts to be 16-bit aligned, this function needs to perform explicit bitwise operations to get the correct flag.
-    script += 3;
-    u16 trainerFlag = script[0];
+    u16 trainerFlag;
+
+    script += 2;
+    trainerFlag = script[0];
     trainerFlag |= script[1] << 8;
     return trainerFlag;
 }

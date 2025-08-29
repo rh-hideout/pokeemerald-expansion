@@ -596,7 +596,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         gBattleScripting.animArg2 = gBattlerAttacker;
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
         gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
-        gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE;
+        gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE;
         if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
         {
             gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * -1;
