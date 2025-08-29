@@ -2172,8 +2172,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 {
                     if (AI_BattlerAtMaxHp(BATTLE_PARTNER(battlerAtk)))
                         ADJUST_SCORE(-10);
-                    else
-                        break;
                 }
                 else
                 {
