@@ -371,14 +371,14 @@ void AnimTask_InitAttackerFadeFromInvisible(u8 taskId)
 
 static void AnimUnusedBagSteal(struct Sprite *sprite)
 {
-    sprite->sInputStartX_ltf = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->sInputEndX_ltf = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-    sprite->sInputStartY_ltf = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->sInputEndY_ltf = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->sDuration_ltf = 0x7E;
+    sprite->sInputStartX_lt = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndX_lt = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lt = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sInputEndY_lt = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lt = 0x7E;
     InitSpriteLinearTranslation(sprite);
-    sprite->data[3] = -sprite->sXIncrement_ltf;
-    sprite->data[4] = -sprite->sYIncrement_ltf;
+    sprite->data[3] = -sprite->sXIncrement_lt;
+    sprite->data[4] = -sprite->sYIncrement_lt;
     sprite->data[6] = 0xFFD8;
     sprite->callback = AnimUnusedBagSteal_Step;
     sprite->callback(sprite);

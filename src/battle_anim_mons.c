@@ -527,13 +527,13 @@ void TranslateSpriteLinearInteger(struct Sprite *sprite)
 
 void TranslateSpriteLinear(struct Sprite *sprite)
 {
-    if (sprite->sDuration_ltf > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->sDuration_ltf--;
-        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
-        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
-        sprite->x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
-        sprite->y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -543,13 +543,13 @@ void TranslateSpriteLinear(struct Sprite *sprite)
 
 static void TranslateSpriteLinearFixedPointIconFrame(struct Sprite *sprite)
 {
-    if (sprite->sDuration_ltf > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->sDuration_ltf--;
-        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
-        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
-        sprite->x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
-        sprite->y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -585,13 +585,13 @@ void TranslateSpecifiedSpriteLinearInteger(struct Sprite *sprite)
 
 void TranslateSpecifiedSpriteLinear(struct Sprite *sprite)
 {
-    if (sprite->sDuration_ltf > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->sDuration_ltf--;
-        sprite->sCurXOffsetFixedPoint_ltf += sprite->sXIncrement_ltf;
-        sprite->sCurYOffsetFixedPoint_ltf += sprite->sYIncrement_ltf;
-        gSprites[sprite->sSpriteId_ltf].x2 = sprite->sCurXOffsetFixedPoint_ltf >> 8;
-        gSprites[sprite->sSpriteId_ltf].y2 = sprite->sCurYOffsetFixedPoint_ltf >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        gSprites[sprite->sSpriteId_lt].x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        gSprites[sprite->sSpriteId_lt].y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -982,8 +982,8 @@ void UpdateAnimBg3ScreenSize(bool8 largeScreenSize)
 
 void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 {
-    sprite->sInputStartX_ltf = sprite->x;
-    sprite->sInputStartY_ltf = sprite->y;
+    sprite->sInputStartX_lt = sprite->x;
+    sprite->sInputStartY_lt = sprite->y;
     InitSpriteLinearTranslation(sprite);
     sprite->callback = TranslateSpriteLinearFixedPointIconFrame;
     sprite->callback(sprite);
@@ -991,13 +991,13 @@ void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 
 void InitSpriteLinearTranslation(struct Sprite *sprite)
 {
-    s16 xDistance = (sprite->sInputEndX_ltf - sprite->sInputStartX_ltf) << 8;
-    s16 yDistance = (sprite->sInputEndY_ltf - sprite->sInputStartY_ltf) << 8;
+    s16 xDistance = (sprite->sInputEndX_lt - sprite->sInputStartX_lt) << 8;
+    s16 yDistance = (sprite->sInputEndY_lt - sprite->sInputStartY_lt) << 8;
     // increment is simply distance / time
-    sprite->sXIncrement_ltf = SAFE_DIV(xDistance, sprite->sDuration_ltf);
-    sprite->sYIncrement_ltf = SAFE_DIV(yDistance, sprite->sDuration_ltf);
-    sprite->sCurYOffsetFixedPoint_ltf = 0;
-    sprite->sCurXOffsetFixedPoint_ltf = 0;
+    sprite->sXIncrement_lt = SAFE_DIV(xDistance, sprite->sDuration_lt);
+    sprite->sYIncrement_lt = SAFE_DIV(yDistance, sprite->sDuration_lt);
+    sprite->sCurYOffsetFixedPoint_lt = 0;
+    sprite->sCurXOffsetFixedPoint_lt = 0;
 }
 
 void InitSpriteLinearTranslationIterator(struct Sprite *sprite)

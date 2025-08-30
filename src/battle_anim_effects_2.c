@@ -2325,20 +2325,20 @@ static void AnimBreathPuff(struct Sprite *sprite)
     {
         StartSpriteAnim(sprite, 0);
         sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) + 32;
-        sprite->sXIncrement_ltf = Q_8_8(0.25);
+        sprite->sXIncrement_lt = Q_8_8(0.25);
     }
     else
     {
         StartSpriteAnim(sprite, 1);
         sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) - 32;
-        sprite->sXIncrement_ltf = Q_8_8(-0.25);
+        sprite->sXIncrement_lt = Q_8_8(-0.25);
     }
 
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->sDuration_ltf = 52;
-    sprite->sYIncrement_ltf = 0;
-    sprite->sCurXOffsetFixedPoint_ltf = 0;
-    sprite->sCurYOffsetFixedPoint_ltf = 0;
+    sprite->sDuration_lt = 52;
+    sprite->sYIncrement_lt = 0;
+    sprite->sCurXOffsetFixedPoint_lt = 0;
+    sprite->sCurYOffsetFixedPoint_lt = 0;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     sprite->callback = TranslateSpriteLinear;
 }

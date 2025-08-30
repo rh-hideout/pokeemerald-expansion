@@ -3,22 +3,22 @@
 
 // for InitSpriteLinearTranslation
 // both input and output
-#define sDuration_ltf data[0]
+#define sDuration_lt data[0]
 
 // input only
-#define sInputStartX_ltf data[1]
-#define sInputEndX_ltf data[2]
-#define sInputStartY_ltf data[3]
-#define sInputEndY_ltf data[4]
+#define sInputStartX_lt data[1]
+#define sInputEndX_lt data[2]
+#define sInputStartY_lt data[3]
+#define sInputEndY_lt data[4]
 
 // output only
-#define sXIncrement_ltf data[1]
-#define sYIncrement_ltf data[2]
-#define sCurXOffsetFixedPoint_ltf data[3]
-#define sCurYOffsetFixedPoint_ltf data[4]
+#define sXIncrement_lt data[1]
+#define sYIncrement_lt data[2]
+#define sCurXOffsetFixedPoint_lt data[3]
+#define sCurYOffsetFixedPoint_lt data[4]
 
 // only when calling TranslateSpecifiedSpriteLinear
-#define sSpriteId_ltf data[5]
+#define sSpriteId_lt data[5]
 
 // ============================
 
