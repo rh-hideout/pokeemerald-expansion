@@ -707,7 +707,7 @@ static void AnimSunlight(struct Sprite *sprite)
     sprite->data[0] = 60;
     sprite->data[2] = 140;
     sprite->data[4] = 80;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1255,7 +1255,7 @@ void AnimWillOWispOrb(struct Sprite *sprite)
             sprite->data[3] = sprite->y;
             sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-            InitAnimLinearTranslationWithSpeed(sprite);
+            InitSpriteLinearTranslationIteratorWithSpeed(sprite);
             sprite->callback = AnimWillOWispOrb_Step;
         }
         break;

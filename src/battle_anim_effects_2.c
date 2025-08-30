@@ -1427,7 +1427,7 @@ static void AnimMovingClamp_Step(struct Sprite *sprite)
     sprite->data[0] = sprite->data[1];
     sprite->data[2] = sprite->x;
     sprite->data[4] = sprite->y + 15;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimMovingClamp_End);
 }
 
@@ -1536,7 +1536,7 @@ static void AnimSwordsDanceBlade_Step(struct Sprite *sprite)
     sprite->data[0] = 6;
     sprite->data[2] = sprite->x;
     sprite->data[4] = sprite->y - 32;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1576,7 +1576,7 @@ void AnimSonicBoomProjectile(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = targetXPos;
     sprite->data[4] = targetYPos;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1851,7 +1851,7 @@ static void AnimCoinThrow(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = r6;
     sprite->data[4] = r7;
-    sprite->callback = InitAnimLinearTranslationWithSpeedAndPos;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1886,7 +1886,7 @@ static void AnimBulletSeed(struct Sprite *sprite)
     sprite->data[0] = 20;
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     sprite->affineAnimPaused = 1;
     StoreSpriteCallbackInData6(sprite, AnimBulletSeed_Step1);
 }
@@ -1977,7 +1977,7 @@ static void AnimViceGripPincer(struct Sprite *sprite)
     sprite->data[0] = 6;
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimViceGripPincer_Step);
 }
 
@@ -3125,7 +3125,7 @@ static void AnimHealBellMusicNote(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     SetMusicNotePalette(sprite, gBattleAnimArgs[5], gBattleAnimArgs[6]);
 }
@@ -3886,7 +3886,7 @@ static void AnimGuardRing(struct Sprite *sprite)
     sprite->data[2] = sprite->x;
     sprite->data[4] = sprite->y - 72;
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 

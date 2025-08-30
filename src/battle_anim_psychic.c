@@ -528,7 +528,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
     sprite->data[2] = lVarX;
     sprite->data[4] = lVarY;
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 

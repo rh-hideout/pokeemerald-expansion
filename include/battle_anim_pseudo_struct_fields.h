@@ -23,13 +23,13 @@
 // ============================
 
 // API for the following functions:
-// - StartAnimLinearTranslation
+// - InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart
 // - InitSpriteLinearTranslationIterator
 // - UpdateSpriteLinearTranslationIterator (TranslateSpriteLinear_FromIterator)
 // - StartAnimLinearTranslation_SetCornerVecX
 //   - AnimTranslateLinear_WithFollowup_SetCornerVecX
-// - InitAnimLinearTranslationWithSpeed
-// - InitAnimLinearTranslationWithSpeedAndPos
+// - InitSpriteLinearTranslationIteratorWithSpeed
+// - InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart
 // - AnimTravelDiagonally
 
 // - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document

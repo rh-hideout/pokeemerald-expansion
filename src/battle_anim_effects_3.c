@@ -1483,7 +1483,7 @@ void AnimTealAlert(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[2] = x;
     sprite->data[4] = y;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -2260,7 +2260,7 @@ static void AnimTriAttackTriangle(struct Sprite *sprite)
         sprite->data[0] = 20;
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     }
 }
 

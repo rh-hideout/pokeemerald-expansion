@@ -699,7 +699,7 @@ void AnimRaiseSprite(struct Sprite *sprite)
     sprite->data[2] = sprite->x;
     sprite->data[4] = sprite->y + gBattleAnimArgs[2];
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 

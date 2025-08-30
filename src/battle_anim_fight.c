@@ -615,7 +615,7 @@ static void AnimCrossChopHand(struct Sprite *sprite)
     }
 
     sprite->data[4] = sprite->y - 20;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimCrossChopHand_Step);
 }
 
@@ -631,7 +631,7 @@ static void AnimCrossChopHand_Step(struct Sprite *sprite)
         sprite->y2 = 0;
         sprite->x2 = 0;
 
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }
@@ -721,7 +721,7 @@ static void AnimStompFoot_Step(struct Sprite *sprite)
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimStompFoot_End);
     }
 }

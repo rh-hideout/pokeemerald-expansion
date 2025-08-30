@@ -449,7 +449,7 @@ static void StartDragonFireTranslation(struct Sprite *sprite)
     }
 
     sprite->data[0] = gBattleAnimArgs[4];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 

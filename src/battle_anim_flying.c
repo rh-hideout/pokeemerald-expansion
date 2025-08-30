@@ -491,7 +491,7 @@ void AnimAirWaveCrescent(struct Sprite *sprite)
 
     sprite->data[2] = sprite->data[2] + gBattleAnimArgs[2];
     sprite->data[4] = sprite->data[4] + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     SeekSpriteAnim(sprite, gBattleAnimArgs[5]);

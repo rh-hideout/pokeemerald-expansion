@@ -8005,7 +8005,7 @@ static void SpriteCB_CoreEnforcerBeam(struct Sprite *sprite)
         sprite->data[4] = (GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET)
                         +  GetBattlerSpriteCoord(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
 
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }
@@ -8039,7 +8039,7 @@ static void SpriteCB_TranslateAnimSpriteToTargetMonLocationDoubles(struct Sprite
         sprite->data[0] = gBattleAnimArgs[4];
         sprite->data[2] = GetBattlerSpriteCoord(target, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
         sprite->data[4] = GetBattlerSpriteCoord(target, coordType) + gBattleAnimArgs[3];
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }
@@ -8457,7 +8457,7 @@ static void SpriteCB_AcidDripSingleTarget(struct Sprite *sprite)
     sprite->data[2] = sprite->x + gBattleAnimArgs[2];
     sprite->data[4] = sprite->y + sprite->data[0];
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -8533,7 +8533,7 @@ static void SpriteCB_SurroundingRing(struct Sprite *sprite)
     sprite->data[2] = sprite->x;
     sprite->data[4] = sprite->y - 72;
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -9190,7 +9190,7 @@ static void SpriteCB_ShellSmashShell(struct Sprite* sprite)
     sprite->data[0] = gBattleAnimArgs[2]; //Duration
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) + gBattleAnimArgs[1];
     sprite->data[4] = sprite->y;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, SpriteCB_ShellSmashShell_DestroyDuringFadeOut);
 
     //Rotate properly
@@ -9419,7 +9419,7 @@ static void SpriteCB_DragonEnergyShot(struct Sprite* sprite)
     sprite->data[0] = gBattleAnimArgs[0];
     sprite->data[2] = finishingX;
     sprite->data[4] = y;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 
@@ -9537,7 +9537,7 @@ static void SpriteCB_GlacialLance_Step2(struct Sprite* sprite)
         sprite->data[5] = 0;
         sprite->data[6] = 0;
         sprite->data[7] = 0;
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }

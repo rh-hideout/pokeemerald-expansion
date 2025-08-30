@@ -715,7 +715,7 @@ void AnimIceBeamParticle(struct Sprite *sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     sprite->data[0] = gBattleAnimArgs[4];
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 }
 
 // Animates the ice crystals at the end of Ice Punch, Ice Beam, Tri Attack,
@@ -1436,7 +1436,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
 
             sprite->data[7]++;
             sprite->x2 = sprite->y2 = 0;
-            InitAnimLinearTranslationWithSpeed(sprite);
+            InitSpriteLinearTranslationIteratorWithSpeed(sprite);
         }
         break;
     case 2:

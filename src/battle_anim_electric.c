@@ -1626,7 +1626,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 		sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
 		sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-		sprite->callback = StartAnimLinearTranslation;
+		sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 		StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 	}
 }

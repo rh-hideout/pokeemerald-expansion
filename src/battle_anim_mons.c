@@ -1028,7 +1028,7 @@ void InitSpriteLinearTranslationIterator(struct Sprite *sprite)
     sprite->data[3] = 0;
 }
 
-void StartAnimLinearTranslation(struct Sprite *sprite)
+void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite *sprite)
 {
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
@@ -1090,18 +1090,18 @@ static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite
         SetCallbackToStoredInData6(sprite);
 }
 
-void InitAnimLinearTranslationWithSpeed(struct Sprite *sprite)
+void InitSpriteLinearTranslationIteratorWithSpeed(struct Sprite *sprite)
 {
     int v1 = abs(sprite->data[2] - sprite->data[1]) << 8;
     sprite->data[0] = v1 / sprite->data[0];
     InitSpriteLinearTranslationIterator(sprite);
 }
 
-void InitAnimLinearTranslationWithSpeedAndPos(struct Sprite *sprite)
+void InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart(struct Sprite *sprite)
 {
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
-    InitAnimLinearTranslationWithSpeed(sprite);
+    InitSpriteLinearTranslationIteratorWithSpeed(sprite);
     sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
 }
@@ -1522,7 +1522,7 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1582,7 +1582,7 @@ void AnimTravelDiagonally(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[2] = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(battler, coordType) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -2471,6 +2471,6 @@ void AnimWeatherBallDown(struct Sprite *sprite)
         sprite->x += x;
         sprite->y = gBattleAnimArgs[5] - 80;
     }
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }

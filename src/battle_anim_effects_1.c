@@ -3307,7 +3307,7 @@ void AnimPowerAbsorptionOrb(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 
@@ -3323,7 +3323,7 @@ void AnimSolarBeamBigOrb(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -5785,7 +5785,7 @@ static void AnimLockOnTarget_Step1(struct Sprite *sprite)
         sprite->data[0] = 8;
         sprite->data[2] = sprite->x + gInclineMonCoordTable[sprite->data[5] >> 8][0];
         sprite->data[4] = sprite->y + gInclineMonCoordTable[sprite->data[5] >> 8][1];
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimLockOnTarget_Step2);
         sprite->data[5] += 0x100;
         PlaySE12WithPanning(SE_M_LOCK_ON, BattleAnimAdjustPanning(SOUND_PAN_TARGET));
@@ -5850,7 +5850,7 @@ static void AnimLockOnTarget_Step3(struct Sprite *sprite)
         sprite->data[0] = 6;
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + a;
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + b;
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimLockOnTarget_Step5);
     }
 }
@@ -6421,7 +6421,7 @@ static void AnimConversion2_Step(struct Sprite *sprite)
         sprite->data[0] = 30;
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-        sprite->callback = StartAnimLinearTranslation;
+        sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
 }
@@ -7505,7 +7505,7 @@ void AnimPoisonJabProjectile(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[2] = targetXPos;
     sprite->data[4] = targetYPos;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
