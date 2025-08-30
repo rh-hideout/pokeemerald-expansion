@@ -606,11 +606,18 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
 // arg 2: target y pixel offset
 // arg 3: mirror vertical translation for opposite battle side
 // arg 4: duration
+
+#define ARG_WHICH_BATTLER 0
+#define ARG_END_X_OFFSET 1
+#define ARG_END_Y_OFFSET 2
+#define ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION 3
+#define ARG_DURATION 4
+
 static void SlideMonToOffset(struct Sprite *sprite)
 {
     u8 battler;
     u8 monSpriteId;
-    if (!gBattleAnimArgs[0])
+    if (!gBattleAnimArgs[ARG_WHICH_BATTLER])
         battler = gBattleAnimAttacker;
     else
         battler = gBattleAnimTarget;
@@ -618,18 +625,18 @@ static void SlideMonToOffset(struct Sprite *sprite)
     monSpriteId = gBattlerSpriteIds[battler];
     if (!IsOnPlayerSide(battler))
     {
-        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
-        if (gBattleAnimArgs[3] == 1)
+        gBattleAnimArgs[ARG_END_X_OFFSET] = -gBattleAnimArgs[ARG_END_X_OFFSET];
+        if (gBattleAnimArgs[ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION] == TRUE)
         {
-            gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+            gBattleAnimArgs[ARG_END_Y_OFFSET] = -gBattleAnimArgs[ARG_END_Y_OFFSET];
         }
     }
 
-    sprite->sDuration_ltf = gBattleAnimArgs[4];
+    sprite->sDuration_ltf = gBattleAnimArgs[ARG_DURATION];
     sprite->sInputStartX_ltf = gSprites[monSpriteId].x;
-    sprite->sInputEndX_ltf = gSprites[monSpriteId].x + gBattleAnimArgs[1];
+    sprite->sInputEndX_ltf = gSprites[monSpriteId].x + gBattleAnimArgs[ARG_END_X_OFFSET];
     sprite->sInputStartY_ltf = gSprites[monSpriteId].y;
-    sprite->sInputEndY_ltf = gSprites[monSpriteId].y + gBattleAnimArgs[2];
+    sprite->sInputEndY_ltf = gSprites[monSpriteId].y + gBattleAnimArgs[ARG_END_Y_OFFSET];
     InitSpriteDataForLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
@@ -638,6 +645,12 @@ static void SlideMonToOffset(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     sprite->callback = TranslateSpriteLinearByIdFixedPoint;
 }
+
+#undef ARG_WHICH_BATTLER
+#undef ARG_END_X_OFFSET
+#undef ARG_END_Y_OFFSET
+#undef ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION
+#undef ARG_DURATION
 
 static void SlideMonToOffsetPartner(struct Sprite *sprite)
 {
