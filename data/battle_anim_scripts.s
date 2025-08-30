@@ -4256,7 +4256,7 @@ gBattleAnimMove_StormThrow::
 	createsprite gSlideMonToOffsetSpriteTemplate, ANIM_ATTACKER, 2, ANIM_ATTACKER, 20, 0, 0, 4
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_TARGET
 	delay 1
-	createvisualtask AnimTask_RotateMonSpriteToSide, 2, 10, 3072, ANIM_TARGET, 2
+	createvisualtask AnimTask_RotateVertically, 2, ANIM_TARGET, 10 * 256, 3 * 256, 0 @ 10 * 256 == Q_8_8(10), 3 * 256 == Q_8_8(3)
 	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
 	delay 3
 	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, 7
