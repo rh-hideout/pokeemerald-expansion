@@ -445,7 +445,7 @@ static void AnimGunkShotParticles(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0xD200 / sprite->data[0];
     sprite->data[7] = gBattleAnimArgs[3];
     retArg = gBattleAnimArgs[ARG_RET_ID];
@@ -464,7 +464,7 @@ static void AnimGunkShotParticles(struct Sprite *sprite)
 
 static void AnimGunkShotParticlesStep(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
     sprite->y2 += Sin(sprite->data[6] >> 8, sprite->data[7]);
     if ((sprite->data[6] + sprite->data[5]) >> 8 > 127)
@@ -494,7 +494,7 @@ static void AnimSuckerPunch(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->y;
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = gBattleAnimArgs[5];
     sprite->data[6] = gBattleAnimArgs[4];
@@ -505,7 +505,7 @@ static void AnimSuckerPunch(struct Sprite *sprite)
 
 static void AnimSuckerPunchStep(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->y2 += Sin(sprite->data[7] >> 8, sprite->data[5]);
         sprite->data[7] += sprite->data[6];
@@ -610,7 +610,7 @@ void AnimSludgeBombHitParticle(struct Sprite *sprite)
     sprite->sInputStartY_ltf = sprite->y;
     sprite->sInputEndY_ltf = sprite->y + gBattleAnimArgs[1];
 
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
 
     sprite->data[5] = sprite->sXIncrement_ltf / gBattleAnimArgs[2];
     sprite->data[6] = sprite->sYIncrement_ltf / gBattleAnimArgs[2];
@@ -620,7 +620,7 @@ void AnimSludgeBombHitParticle(struct Sprite *sprite)
 
 static void AnimSludgeBombHitParticle_Step(struct Sprite *sprite)
 {
-    TranslateSpriteLinearFixedPoint(sprite);
+    TranslateSpriteLinear(sprite);
 
     sprite->sXIncrement_ltf -= sprite->data[5];
     sprite->sYIncrement_ltf -= sprite->data[6];

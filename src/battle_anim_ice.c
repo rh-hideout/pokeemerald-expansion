@@ -1062,7 +1062,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->y + gBattleAnimArgs[2];
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = 64;
     sprite->callback = AnimSwirlingFogAnim;
@@ -1072,7 +1072,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
 // Animates swirling fog initialized by InitSwirlingFogAnim.
 static void AnimSwirlingFogAnim(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], sprite->data[6]);
         sprite->y2 += Cos(sprite->data[5], -6);
@@ -1346,7 +1346,7 @@ static void InitPoisonGasCloudAnim(struct Sprite *sprite)
         sprite->subpriority = 0x80;
     }
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = MovePoisonGasCloud;
 }
 
@@ -1357,7 +1357,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
     switch (sprite->data[7] & 0xFF)
     {
     case 0:
-        AnimTranslateLinear(sprite);
+        UpdateSpriteLinearTranslationIterator(sprite);
         value = gSineTable[sprite->data[5]];
         sprite->x2 += value >> 4;
         if (sprite->data[6])
@@ -1392,11 +1392,11 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             value = gSineTable[sprite->data[5]];
             sprite->x2 = value >> 3;
             sprite->data[5] = (sprite->data[5] + 2) & 0xFF;
-            InitAnimLinearTranslation(sprite);
+            InitSpriteLinearTranslationIterator(sprite);
         }
         break;
     case 1:
-        AnimTranslateLinear(sprite);
+        UpdateSpriteLinearTranslationIterator(sprite);
         value = gSineTable[sprite->data[5]];
         sprite->x2 += value >> 3;
         sprite->y2 += (gSineTable[sprite->data[5] + 0x40] * -3) >> 8;
@@ -1440,7 +1440,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
         }
         break;
     case 2:
-        if (AnimTranslateLinear(sprite))
+        if (UpdateSpriteLinearTranslationIterator(sprite))
         {
             if (sprite->oam.affineMode & 1)
             {

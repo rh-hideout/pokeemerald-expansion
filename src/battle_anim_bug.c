@@ -276,7 +276,7 @@ static void AnimTranslateWebThread(struct Sprite *sprite)
 
 static void AnimTranslateWebThread_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         DestroyAnimSprite(sprite);
         return;

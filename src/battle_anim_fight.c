@@ -653,7 +653,7 @@ static void AnimSlidingKick(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->y;
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = gBattleAnimArgs[5];
     sprite->data[6] = gBattleAnimArgs[4];
@@ -664,7 +664,7 @@ static void AnimSlidingKick(struct Sprite *sprite)
 
 static void AnimSlidingKick_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->y2 += Sin(sprite->data[7] >> 8, sprite->data[5]);
         sprite->data[7] += sprite->data[6];
@@ -897,9 +897,9 @@ static void AnimSuperpowerOrb_Step(struct Sprite *sprite)
         sprite->data[3] = sprite->y;
         sprite->data[4] = GetBattlerSpriteCoord(sprite->data[7], BATTLER_COORD_Y_PIC_OFFSET);
 
-        InitAnimLinearTranslation(sprite);
+        InitSpriteLinearTranslationIterator(sprite);
         StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
-        sprite->callback = AnimTranslateLinear_WithFollowup;
+        sprite->callback = TranslateSpriteLinear_FromIterator;
     }
 }
 
@@ -993,9 +993,9 @@ void AnimSuperpowerFireball(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->callback = TranslateSpriteLinear_FromIterator;
 }
 
 static void AnimArmThrustHit_Step(struct Sprite *sprite)

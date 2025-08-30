@@ -2011,7 +2011,7 @@ static void AnimGuillotinePincer(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[0];
     sprite->data[6] = sprite->data[0];
     sprite->callback = AnimGuillotinePincer_Step1;
@@ -2019,7 +2019,7 @@ static void AnimGuillotinePincer(struct Sprite *sprite)
 
 static void AnimGuillotinePincer_Step1(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite) && sprite->animEnded)
+    if (UpdateSpriteLinearTranslationIterator(sprite) && sprite->animEnded)
     {
         SeekSpriteAnim(sprite, 0);
         sprite->animPaused = 1;
@@ -2059,7 +2059,7 @@ static void AnimGuillotinePincer_Step2(struct Sprite *sprite)
 
 static void AnimGuillotinePincer_Step3(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -2340,7 +2340,7 @@ static void AnimBreathPuff(struct Sprite *sprite)
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
 }
 
 // Animates an "angry" mark above a mon's head.
@@ -2650,7 +2650,7 @@ static void AnimBlendThinRing(struct Sprite *sprite)
 
 static void AnimHyperVoiceRing_WaitEnd(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         FreeSpriteOamMatrix(sprite);
         DestroyAnimSprite(sprite);
@@ -2737,7 +2737,7 @@ void AnimHyperVoiceRing(struct Sprite *sprite)
     sprite->data[2] = x;
     sprite->data[4] = y;
     sprite->data[0] = gBattleAnimArgs[0];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimHyperVoiceRing_WaitEnd;
     sprite->callback(sprite);
 }
@@ -3246,13 +3246,13 @@ static void AnimRedHeartProjectile(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimRedHeartProjectile_Step;
 }
 
 static void AnimRedHeartProjectile_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->y2 += Sin(sprite->data[5], 14);
         sprite->data[5] = (sprite->data[5] + 4) & 0xFF;

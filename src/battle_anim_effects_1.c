@@ -3138,7 +3138,7 @@ static void AnimGrassKnot(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->y;
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = gBattleAnimArgs[5];
     sprite->data[6] = gBattleAnimArgs[4];
@@ -3149,7 +3149,7 @@ static void AnimGrassKnot(struct Sprite *sprite)
 
 static void AnimGrassKnotStep(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->y2 += Sin(sprite->data[7] >> 8, sprite->data[5]);
         sprite->data[7] += sprite->data[6];
@@ -3186,11 +3186,11 @@ static void AnimWoodHammerSmall(struct Sprite *sprite)
     sprite->sInputStartY_ltf = sprite->y;
     sprite->sInputEndY_ltf = sprite->y + gBattleAnimArgs[3];
 
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
 
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 
@@ -3350,7 +3350,7 @@ static void AnimSolarBeamSmallOrb(struct Sprite *sprite)
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     }
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[3];
     sprite->callback = AnimSolarBeamSmallOrb_Step;
     sprite->callback(sprite);
@@ -3358,7 +3358,7 @@ static void AnimSolarBeamSmallOrb(struct Sprite *sprite)
 
 static void AnimSolarBeamSmallOrb_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         DestroySprite(sprite);
     }
@@ -3558,7 +3558,7 @@ static void AnimMoveFeintSwipeStep(struct Sprite *sprite)
     switch(sprite->data[5])
     {
     case 0:
-        if(AnimTranslateLinear(sprite))
+        if(UpdateSpriteLinearTranslationIterator(sprite))
         {
             //Not the most elegant solution here, but it works without messing up the sprites coordinates
             sprite->x2 = 0;
@@ -3569,11 +3569,11 @@ static void AnimMoveFeintSwipeStep(struct Sprite *sprite)
             sprite->data[2] = sprite->x - 64;
             sprite->data[3] = sprite->y;
             sprite->data[4] = sprite->y;
-            InitAnimLinearTranslation(sprite);
+            InitSpriteLinearTranslationIterator(sprite);
         }
         break;
     case 1:
-        if(AnimTranslateLinear(sprite))
+        if(UpdateSpriteLinearTranslationIterator(sprite))
         {
             sprite->callback = DestroyAnimSprite;
         }
@@ -3596,7 +3596,7 @@ static void AnimMoveFeintSwipe(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->y;
     sprite->data[5] = 0;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveFeintSwipeStep;
 }
 
@@ -3609,7 +3609,7 @@ static void AnimMoveFeintZoom(struct Sprite *sprite)
 
 static void AnimMoveTrumpCardArc(struct Sprite *sprite)
 {
-    if(AnimTranslateLinear(sprite))
+    if(UpdateSpriteLinearTranslationIterator(sprite))
     {
         DestroyAnimSprite(sprite);
     }
@@ -3636,7 +3636,7 @@ static void AnimMoveTrumpCard(struct Sprite *sprite)
     sprite->data[4] = sprite->y;
     sprite->data[5] = 128;
     sprite->data[6] = 128 / sprite->data[0];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveTrumpCardArc;
 }
 
@@ -3690,7 +3690,7 @@ static void AnimMoveAccupressureTransition(struct Sprite *sprite)
     switch(sprite->data[5])
     {
     case 0:
-        if(AnimTranslateLinear(sprite))
+        if(UpdateSpriteLinearTranslationIterator(sprite))
         {
             StartSpriteAffineAnim(sprite, 1);
             sprite->data[5]++;
@@ -3714,7 +3714,7 @@ static void AnimMoveAccupressure(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
     sprite->data[5] = 0;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveAccupressureTransition;
 }
 
@@ -3880,7 +3880,7 @@ void AnimPetalDanceBigFlower(struct Sprite *sprite)
     sprite->data[2] = sprite->x;
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0x40;
     sprite->callback = AnimPetalDanceBigFlower_Step;
     sprite->callback(sprite);
@@ -3888,7 +3888,7 @@ void AnimPetalDanceBigFlower(struct Sprite *sprite)
 
 static void AnimPetalDanceBigFlower_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], 32);
         sprite->y2 += Cos(sprite->data[5], -5);
@@ -3918,7 +3918,7 @@ void AnimPetalDanceSmallFlower(struct Sprite *sprite)
     sprite->data[2] = sprite->x;
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0x40;
     sprite->callback = AnimPetalDanceSmallFlower_Step;
     sprite->callback(sprite);
@@ -3926,7 +3926,7 @@ void AnimPetalDanceSmallFlower(struct Sprite *sprite)
 
 static void AnimPetalDanceSmallFlower_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], 8);
         if ((u16)(sprite->data[5] - 59) < 5 || (u16)(sprite->data[5] - 187) < 5)
@@ -4053,7 +4053,7 @@ static void AnimTeraStarstormBeam(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[3] = 0;
     sprite->data[4] = -70;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimTeraStarstormBeam_Step;
     sprite->affineAnimPaused = TRUE;
     sprite->callback(sprite);
@@ -4062,7 +4062,7 @@ static void AnimTeraStarstormBeam(struct Sprite *sprite)
 
 static void AnimTeraStarstormBeam_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -4128,7 +4128,7 @@ void AnimTeraStarstormStars(struct Sprite *sprite)
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2] ;
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     }
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimTeraStarstormStars_Step;
     sprite->affineAnimPaused = TRUE;
     sprite->callback(sprite);
@@ -4136,7 +4136,7 @@ void AnimTeraStarstormStars(struct Sprite *sprite)
 
 static void AnimTeraStarstormStars_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
     if ((u16)gBattleAnimArgs[7] == 0xFFFF)
     {
@@ -5658,7 +5658,7 @@ void AnimGrantingStars(struct Sprite *sprite)
     sprite->sXIncrement_ltf = gBattleAnimArgs[3];
     sprite->sYIncrement_ltf = gBattleAnimArgs[4];
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
 }
 
 static void AnimSparklingStars(struct Sprite *sprite)
@@ -5695,7 +5695,7 @@ static void AnimSparklingStars(struct Sprite *sprite)
     sprite->sXIncrement_ltf = gBattleAnimArgs[3];
     sprite->sYIncrement_ltf = gBattleAnimArgs[4];
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
 }
 
 static void AnimBubbleBurst(struct Sprite *sprite)
@@ -5965,7 +5965,7 @@ static void AnimBowMon_Step1(struct Sprite *sprite)
     sprite->data[2] = 0;
     sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
     StoreSpriteCallbackInData6(sprite, AnimBowMon_Step1_Callback);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void AnimBowMon_Step1_Callback(struct Sprite *sprite)
@@ -5995,7 +5995,7 @@ static void AnimBowMon_Step2(struct Sprite *sprite)
     sprite->data[2] = 0;
     sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
     StoreSpriteCallbackInData6(sprite, AnimBowMon_Step4);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void AnimBowMon_Step3(struct Sprite *sprite)
@@ -6271,7 +6271,7 @@ static void AnimFalseSwipeSlice_Step1(struct Sprite *sprite)
         sprite->data[1] = 8;
         sprite->data[2] = 0;
         StoreSpriteCallbackInData6(sprite, AnimFalseSwipeSlice_Step2);
-        sprite->callback = TranslateSpriteLinear;
+        sprite->callback = TranslateSpriteLinearInteger;
     }
 }
 
@@ -7280,14 +7280,14 @@ void AnimSlowFlyingMusicNotes(struct Sprite *sprite)
     sprite->data[2] = xDiff + sprite->data[1];
     sprite->data[3] = sprite->y;
     sprite->data[4] = sprite->data[3] - 40;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[3];
     sprite->callback = AnimSlowFlyingMusicNotes_Step;
 }
 
 static void AnimSlowFlyingMusicNotes_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite) == 0)
+    if (UpdateSpriteLinearTranslationIterator(sprite) == 0)
     {
         s16 xDiff;
         xDiff = Sin(sprite->data[5], 8);

@@ -732,7 +732,7 @@ static void AnimWaterBubbleProjectile(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     spriteId = CreateInvisibleSpriteWithCallback(SpriteCallbackDummy);
     sprite->data[5] = spriteId;
     sprite->x -= Sin((u8)gBattleAnimArgs[4], gBattleAnimArgs[2]);
@@ -753,7 +753,7 @@ static void AnimWaterBubbleProjectile_Step1(struct Sprite *sprite)
     u16 trigIndex = gSprites[otherSpriteId].data[3];
 
     sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    UpdateSpriteLinearTranslationIterator(sprite);
     sprite->x2 += Sin(trigIndex >> 8, gSprites[otherSpriteId].data[0]);
     sprite->y2 += Cos(trigIndex >> 8, gSprites[otherSpriteId].data[1]);
     gSprites[otherSpriteId].data[3] = trigIndex + gSprites[otherSpriteId].data[2];
@@ -796,7 +796,7 @@ static void AnimAuroraBeamRings(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + unkArg;
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimAuroraBeamRings_Step;
     sprite->affineAnimPaused = TRUE;
     sprite->callback(sprite);
@@ -809,7 +809,7 @@ static void AnimAuroraBeamRings_Step(struct Sprite *sprite)
         StartSpriteAnim(sprite, 1);
         sprite->affineAnimPaused = FALSE;
     }
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -872,7 +872,7 @@ static void AnimToTargetInSinWave(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0xD200 / sprite->data[0];
     sprite->data[7] = gBattleAnimArgs[3];
     retArg = gBattleAnimArgs[7];
@@ -891,7 +891,7 @@ static void AnimToTargetInSinWave(struct Sprite *sprite)
 
 static void AnimToTargetInSinWave_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
     sprite->y2 += Sin(sprite->data[6] >> 8, sprite->data[7]);
     if ((sprite->data[6] + sprite->data[5]) >> 8 > 127)

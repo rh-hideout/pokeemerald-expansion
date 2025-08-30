@@ -303,7 +303,7 @@ static void AnimConfuseRayBallBounce_Step1(struct Sprite *sprite)
     s16 r0;
     s16 r2;
     UpdateConfuseRayBallBlend(sprite);
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->callback = AnimConfuseRayBallBounce_Step2;
         return;
@@ -326,7 +326,7 @@ static void AnimConfuseRayBallBounce_Step2(struct Sprite *sprite)
     s16 r2;
     s16 r0;
     sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    UpdateSpriteLinearTranslationIterator(sprite);
     sprite->x2 += Sin(sprite->data[5], 10);
     sprite->y2 += Cos(sprite->data[5], 15);
 
@@ -610,7 +610,7 @@ void AnimTask_NightmareClone(u8 taskId)
     gSprites[task->data[0]].sCurXOffsetFixedPoint_ltf = 0;
     gSprites[task->data[0]].sCurYOffsetFixedPoint_ltf = 0;
     StoreSpriteCallbackInData6(&gSprites[task->data[0]], SpriteCallbackDummy);
-    gSprites[task->data[0]].callback = TranslateSpriteLinearFixedPoint;
+    gSprites[task->data[0]].callback = TranslateSpriteLinear;
     task->func = AnimTask_NightmareClone_Step;
 }
 

@@ -1186,7 +1186,7 @@ static void SpriteCB_MonSendOut_2(struct Sprite *sprite)
             StartSpriteAffineAnim(sprite, 4);
         }
         r4 = sprite->data[0];
-        AnimTranslateLinear(sprite);
+        UpdateSpriteLinearTranslationIterator(sprite);
         sprite->data[7] += sprite->sBattler / 3;
         sprite->y2 += Sin(HIBYTE(sprite->data[7]), sprite->data[5]);
         sprite->oam.affineParam += 0x100;

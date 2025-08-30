@@ -466,14 +466,14 @@ static void DoHorizontalLunge(struct Sprite *sprite)
     sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseHorizontalLungeDirection);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void ReverseHorizontalLungeDirection(struct Sprite *sprite)
 {
     sprite->data[0] = sprite->data[4];
     sprite->data[1] = -sprite->data[1];
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -493,14 +493,14 @@ static void DoVerticalDip(struct Sprite *sprite)
     sprite->data[3] = spriteId;
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseVerticalDipDirection);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void ReverseVerticalDipDirection(struct Sprite *sprite)
 {
     sprite->data[0] = sprite->data[4];
     sprite->data[2] = -sprite->data[2];
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -522,7 +522,7 @@ static void SlideMonToOriginalPos(struct Sprite *sprite)
     sprite->sInputEndX_ltf = gSprites[monSpriteId].x;
     sprite->sInputStartY_ltf = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
     sprite->sInputEndY_ltf = gSprites[monSpriteId].y;
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
     sprite->data[5] = gSprites[monSpriteId].x2;
@@ -552,7 +552,7 @@ static void SlideMonToOriginalPosPartner(struct Sprite *sprite)
     sprite->data[2] = gSprites[monSpriteId].x;
     sprite->data[3] = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
     sprite->data[4] = gSprites[monSpriteId].y;
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->data[3] = 0;
     sprite->data[4] = 0;
     sprite->data[5] = gSprites[monSpriteId].x2;
@@ -637,13 +637,13 @@ static void SlideMonToOffset(struct Sprite *sprite)
     sprite->sInputEndX_ltf = gSprites[monSpriteId].x + gBattleAnimArgs[ARG_END_X_OFFSET];
     sprite->sInputStartY_ltf = gSprites[monSpriteId].y;
     sprite->sInputEndY_ltf = gSprites[monSpriteId].y + gBattleAnimArgs[ARG_END_Y_OFFSET];
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
     sprite->sSpriteId_ltf = monSpriteId;
     sprite->invisible = TRUE;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
 
 #undef ARG_WHICH_BATTLER
@@ -676,13 +676,13 @@ static void SlideMonToOffsetPartner(struct Sprite *sprite)
     sprite->data[2] = gSprites[monSpriteId].x + gBattleAnimArgs[1];
     sprite->data[3] = gSprites[monSpriteId].y;
     sprite->data[4] = gSprites[monSpriteId].y + gBattleAnimArgs[2];
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->data[3] = 0;
     sprite->data[4] = 0;
     sprite->data[5] = monSpriteId;
     sprite->invisible = TRUE;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
 
 static void SlideMonToOffsetAndBack(struct Sprite *sprite)
@@ -710,7 +710,7 @@ static void SlideMonToOffsetAndBack(struct Sprite *sprite)
     sprite->sInputEndX_ltf = sprite->sInputStartX_ltf + gBattleAnimArgs[1];
     sprite->sInputStartY_ltf = gSprites[spriteId].y + gSprites[spriteId].y2;
     sprite->sInputEndY_ltf = sprite->sInputStartY_ltf + gBattleAnimArgs[2];
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = gSprites[spriteId].x2 << 8;
     sprite->sCurYOffsetFixedPoint_ltf = gSprites[spriteId].y2 << 8;
     sprite->sSpriteId_ltf = spriteId;
@@ -724,7 +724,7 @@ static void SlideMonToOffsetAndBack(struct Sprite *sprite)
     {
         StoreSpriteCallbackInData6(sprite, SlideMonToOffsetAndBack_End);
     }
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
 
 

@@ -586,7 +586,7 @@ void AnimFireSpread(struct Sprite *sprite)
     sprite->sXIncrement_ltf = gBattleAnimArgs[2];
     sprite->sYIncrement_ltf = gBattleAnimArgs[3];
 
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -769,7 +769,7 @@ static void AnimFireRing_Step1(struct Sprite *sprite)
         sprite->data[3] = sprite->y;
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-        InitAnimLinearTranslation(sprite);
+        InitSpriteLinearTranslationIterator(sprite);
 
         sprite->callback = AnimFireRing_Step2;
     }
@@ -777,7 +777,7 @@ static void AnimFireRing_Step1(struct Sprite *sprite)
 
 static void AnimFireRing_Step2(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->data[0] = 0;
 
@@ -831,7 +831,7 @@ void AnimFireCross(struct Sprite *sprite)
 
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 
-    sprite->callback = TranslateSpriteLinear;
+    sprite->callback = TranslateSpriteLinearInteger;
 }
 
 void AnimFireSpiralOutward(struct Sprite *sprite)
@@ -1267,7 +1267,7 @@ static void AnimWillOWispOrb_Step(struct Sprite *sprite)
     s16 initialData5;
     s16 newData5;
 
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], 16);
         initialData5 = sprite->data[5];

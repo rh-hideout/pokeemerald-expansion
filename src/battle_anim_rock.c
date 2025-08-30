@@ -466,11 +466,11 @@ void AnimRockFragment(struct Sprite *sprite)
     sprite->sInputStartY_ltf = sprite->y;
     sprite->sInputEndY_ltf = sprite->y + gBattleAnimArgs[3];
 
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->sCurXOffsetFixedPoint_ltf = 0;
     sprite->sCurYOffsetFixedPoint_ltf = 0;
 
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 

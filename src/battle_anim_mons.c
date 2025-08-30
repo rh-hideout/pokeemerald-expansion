@@ -484,16 +484,16 @@ void WaitAnimForDuration(struct Sprite *sprite)
 #define sStartY  data[3]
 #define sTargetY data[4]
 
-// Sprite data for TranslateSpriteLinear
+// Sprite data for TranslateSpriteLinearInteger
 #define sMoveSteps data[0]
 #define sSpeedX    data[1]
 #define sSpeedY    data[2]
 
 // Functionally unused
-static void AnimPosToTranslateLinear(struct Sprite *sprite)
+static void UNUSED AnimPosToTranslateLinear(struct Sprite *sprite)
 {
     ConvertPosDataToTranslateLinearData(sprite);
-    sprite->callback = TranslateSpriteLinear;
+    sprite->callback = TranslateSpriteLinearInteger;
     sprite->callback(sprite);
 }
 
@@ -511,7 +511,7 @@ void ConvertPosDataToTranslateLinearData(struct Sprite *sprite)
     sprite->sSpeedX = old;
 }
 
-void TranslateSpriteLinear(struct Sprite *sprite)
+void TranslateSpriteLinearInteger(struct Sprite *sprite)
 {
     if (sprite->sMoveSteps > 0)
     {
@@ -525,7 +525,7 @@ void TranslateSpriteLinear(struct Sprite *sprite)
     }
 }
 
-void TranslateSpriteLinearFixedPoint(struct Sprite *sprite)
+void TranslateSpriteLinear(struct Sprite *sprite)
 {
     if (sprite->sDuration_ltf > 0)
     {
@@ -568,8 +568,8 @@ static void UNUSED TranslateSpriteToBattleTargetPos(struct Sprite *sprite)
     sprite->callback = AnimPosToTranslateLinear;
 }
 
-// Same as TranslateSpriteLinear but takes an id to specify which sprite to move
-void TranslateSpriteLinearById(struct Sprite *sprite)
+// Same as TranslateSpriteLinearInteger but takes an id to specify which sprite to move
+void TranslateSpecifiedSpriteLinearInteger(struct Sprite *sprite)
 {
     if (sprite->data[0] > 0)
     {
@@ -583,7 +583,7 @@ void TranslateSpriteLinearById(struct Sprite *sprite)
     }
 }
 
-void TranslateSpriteLinearByIdFixedPoint(struct Sprite *sprite)
+void TranslateSpecifiedSpriteLinear(struct Sprite *sprite)
 {
     if (sprite->sDuration_ltf > 0)
     {
@@ -701,14 +701,14 @@ void InitAnimArcTranslation(struct Sprite *sprite)
 {
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[6] = 0x8000 / sprite->data[0];
     sprite->data[7] = 0;
 }
 
 bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
     sprite->data[7] += sprite->data[6];
     sprite->y2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
@@ -717,7 +717,7 @@ bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
 
 bool8 TranslateAnimVerticalArc(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
     sprite->data[7] += sprite->data[6];
     sprite->x2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
@@ -984,12 +984,12 @@ void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 {
     sprite->sInputStartX_ltf = sprite->x;
     sprite->sInputStartY_ltf = sprite->y;
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->callback = TranslateSpriteLinearFixedPointIconFrame;
     sprite->callback(sprite);
 }
 
-void InitSpriteDataForLinearTranslation(struct Sprite *sprite)
+void InitSpriteLinearTranslation(struct Sprite *sprite)
 {
     s16 xDistance = (sprite->sInputEndX_ltf - sprite->sInputStartX_ltf) << 8;
     s16 yDistance = (sprite->sInputEndY_ltf - sprite->sInputStartY_ltf) << 8;
@@ -1000,7 +1000,7 @@ void InitSpriteDataForLinearTranslation(struct Sprite *sprite)
     sprite->sCurXOffsetFixedPoint_ltf = 0;
 }
 
-void InitAnimLinearTranslation(struct Sprite *sprite)
+void InitSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
     int x = sprite->sInputEndX_lt - sprite->sInputStartX_lt;
     int y = sprite->sInputEndY_lt - sprite->sInputStartY_lt;
@@ -1032,8 +1032,8 @@ void StartAnimLinearTranslation(struct Sprite *sprite)
 {
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    InitSpriteLinearTranslationIterator(sprite);
+    sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
 }
 
@@ -1041,12 +1041,12 @@ static void UNUSED StartAnimLinearTranslation_SetCornerVecX(struct Sprite *sprit
 {
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimTranslateLinear_WithFollowup_SetCornerVecX;
     sprite->callback(sprite);
 }
 
-bool8 AnimTranslateLinear(struct Sprite *sprite)
+bool8 UpdateSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
     u16 v1, v2, x, y;
 
@@ -1076,9 +1076,9 @@ bool8 AnimTranslateLinear(struct Sprite *sprite)
     return FALSE;
 }
 
-void AnimTranslateLinear_WithFollowup(struct Sprite *sprite)
+void TranslateSpriteLinear_FromIterator(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         SetCallbackToStoredInData6(sprite);
 }
 
@@ -1086,7 +1086,7 @@ void AnimTranslateLinear_WithFollowup(struct Sprite *sprite)
 static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite)
 {
     AnimSetCenterToCornerVecX(sprite);
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         SetCallbackToStoredInData6(sprite);
 }
 
@@ -1094,7 +1094,7 @@ void InitAnimLinearTranslationWithSpeed(struct Sprite *sprite)
 {
     int v1 = abs(sprite->data[2] - sprite->data[1]) << 8;
     sprite->data[0] = v1 / sprite->data[0];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 }
 
 void InitAnimLinearTranslationWithSpeedAndPos(struct Sprite *sprite)
@@ -1102,7 +1102,7 @@ void InitAnimLinearTranslationWithSpeedAndPos(struct Sprite *sprite)
     sprite->data[1] = sprite->x;
     sprite->data[3] = sprite->y;
     InitAnimLinearTranslationWithSpeed(sprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
 }
 

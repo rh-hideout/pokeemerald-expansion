@@ -446,14 +446,14 @@ static void AnimGustToTarget(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = RunStoredCallbackWhenAffineAnimEnds;
     StoreSpriteCallbackInData6(sprite, AnimGustToTarget_Step);
 }
 
 static void AnimGustToTarget_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -543,14 +543,14 @@ void AnimFlyBallAttack(struct Sprite *sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[5] = gBattleAnimArgs[1]; // if sprite is to remain invisible
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimFlyBallAttack_Step;
 }
 
 void AnimFlyBallAttack_Step(struct Sprite *sprite)
 {
     sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    UpdateSpriteLinearTranslationIterator(sprite);
     if (((u16)sprite->data[3] >> 8) > 200)
     {
         sprite->x += sprite->x2;

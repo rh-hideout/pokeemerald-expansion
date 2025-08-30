@@ -376,7 +376,7 @@ static void AnimUnusedBagSteal(struct Sprite *sprite)
     sprite->sInputStartY_ltf = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->sInputEndY_ltf = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->sDuration_ltf = 0x7E;
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->data[3] = -sprite->sXIncrement_ltf;
     sprite->data[4] = -sprite->sYIncrement_ltf;
     sprite->data[6] = 0xFFD8;

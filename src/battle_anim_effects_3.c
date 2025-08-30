@@ -4975,11 +4975,11 @@ static void AnimForesightMagnifyingGlass_Step(struct Sprite *sprite)
         sprite->data[2] = x;
         sprite->data[3] = sprite->y;
         sprite->data[4] = y;
-        InitAnimLinearTranslation(sprite);
+        InitSpriteLinearTranslationIterator(sprite);
         sprite->data[5]++;
         break;
     case 1:
-        if (AnimTranslateLinear(sprite))
+        if (UpdateSpriteLinearTranslationIterator(sprite))
         {
             switch (sprite->data[6])
             {

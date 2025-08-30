@@ -7947,9 +7947,9 @@ static void SpriteCB_GrowingSuperpower(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(battler, BATTLER_COORD_Y_PIC_OFFSET);
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->callback = TranslateSpriteLinear_FromIterator;
 }
 
 static void SpriteCB_CentredSpiderWeb(struct Sprite *sprite)
@@ -8117,7 +8117,7 @@ static void SpriteCB_SunsteelStrikeRings(struct Sprite *sprite)
     sprite->data[3] = sprite->y;
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimFlyBallAttack_Step;
 }
 

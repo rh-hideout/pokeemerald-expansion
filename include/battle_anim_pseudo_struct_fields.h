@@ -1,7 +1,7 @@
 #ifndef GUARD_BATTLE_ANIM_PSEUDO_STRUCT_FIELDS_H
 #define GUARD_BATTLE_ANIM_PSEUDO_STRUCT_FIELDS_H
 
-// for InitSpriteDataForLinearTranslation
+// for InitSpriteLinearTranslation
 // both input and output
 #define sDuration_ltf data[0]
 
@@ -17,22 +17,22 @@
 #define sCurXOffsetFixedPoint_ltf data[3]
 #define sCurYOffsetFixedPoint_ltf data[4]
 
-// only when calling TranslateSpriteLinearByIdFixedPoint
+// only when calling TranslateSpecifiedSpriteLinear
 #define sSpriteId_ltf data[5]
 
 // ============================
 
 // API for the following functions:
 // - StartAnimLinearTranslation
-// - InitAnimLinearTranslation
-// - AnimTranslateLinear (AnimTranslateLinear_WithFollowup)
+// - InitSpriteLinearTranslationIterator
+// - UpdateSpriteLinearTranslationIterator (TranslateSpriteLinear_FromIterator)
 // - StartAnimLinearTranslation_SetCornerVecX
 //   - AnimTranslateLinear_WithFollowup_SetCornerVecX
 // - InitAnimLinearTranslationWithSpeed
 // - InitAnimLinearTranslationWithSpeedAndPos
 // - AnimTravelDiagonally
 
-// - also TranslateSpriteToBattleTargetPos and TranslateSpriteToBattleAttackerPos, but both are unused so I'm not bothering to document them
+// - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document
 
 // TranslateAnimHorizontalArc, TranslateAnimVerticalArc are subclasses
 
