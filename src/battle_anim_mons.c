@@ -1002,15 +1002,15 @@ void InitSpriteDataForLinearTranslation(struct Sprite *sprite)
 
 void InitAnimLinearTranslation(struct Sprite *sprite)
 {
-    int x = sprite->data[2] - sprite->data[1];
-    int y = sprite->data[4] - sprite->data[3];
+    int x = sprite->sInputEndX_lt - sprite->sInputStartX_lt;
+    int y = sprite->sInputEndY_lt - sprite->sInputStartY_lt;
     bool8 movingLeft = x < 0;
     bool8 movingUp = y < 0;
-    u16 xDelta = abs(x) << 8;
-    u16 yDelta = abs(y) << 8;
+    u16 xDelta = UQ_8_8(abs(x));
+    u16 yDelta = UQ_8_8(abs(y));
 
-    xDelta = SAFE_DIV(xDelta, sprite->data[0]);
-    yDelta = SAFE_DIV(yDelta, sprite->data[0]);
+    xDelta = SAFE_DIV(xDelta, sprite->sDuration_lt);
+    yDelta = SAFE_DIV(yDelta, sprite->sDuration_lt);
 
     if (movingLeft)
         xDelta |= 1;

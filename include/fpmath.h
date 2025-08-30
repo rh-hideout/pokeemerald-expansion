@@ -8,6 +8,7 @@ typedef u32 uq4_12_t;
 #define UQ_4_12_SHIFT (12)
 
 // Converts a number to Q8.8 fixed-point format
+#define UQ_8_8(n) ((u16)((n) * 256))
 #define Q_8_8(n) ((s16)((n) * 256))
 
 // Converts a number to Q4.12 fixed-point format
