@@ -741,8 +741,8 @@ void InitSpritePosToAnimTarget(struct Sprite *sprite, bool8 respectMonPicOffsets
         sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X);
         sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -757,8 +757,8 @@ void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffse
         sprite->x = GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -773,8 +773,8 @@ void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonP
         sprite->x = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -791,8 +791,8 @@ void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOf
     }
     sprite->x = sprite->x / 2;
     sprite->y = sprite->y / 2;
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -814,8 +814,8 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
         sprite->x = GetBattlerSpriteCoord2(battler, BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(battler, BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     return TRUE;
 }
 
@@ -1492,8 +1492,8 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
     }
 }
 
-// Linearly translates a sprite to a target position on the
-// other mon's sprite.
+// Linearly translates a sprite, which is set to start
+// at the attacker position, to the target's position
 // arg 0: initial x offset
 // arg 1: initial y offset
 // arg 2: target x offset

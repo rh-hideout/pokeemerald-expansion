@@ -1087,12 +1087,12 @@ static void AnimHitSplatHandleInvert(struct Sprite *sprite)
 
 void AnimHitSplatRandom(struct Sprite *sprite)
 {
-    if (gBattleAnimArgs[1] == -1)
-        gBattleAnimArgs[1] = Random2() & 3;
+    if (gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] == -1)
+        gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = Random2() & 3;
 
-    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[0], sprite, FALSE))
+    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM], sprite, FALSE))
         return;
-    StartSpriteAffineAnim(sprite, gBattleAnimArgs[1]);
+    StartSpriteAffineAnim(sprite, gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM]);
 
     sprite->x2 += (Random2() % 48) - 24;
     sprite->y2 += (Random2() % 24) - 12;

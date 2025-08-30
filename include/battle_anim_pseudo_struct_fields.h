@@ -20,4 +20,15 @@
 // only when calling TranslateSpriteLinearByIdFixedPoint
 #define sSpriteId_ltf data[5]
 
+// for InitSpritePosToAnimTarget, InitSpritePosToAnimAttacker, InitSpritePosToAnimAttackerPartner, InitSpritePosToAnimBattler
+
+// expansion only: InitSpritePosToGivenTarget, InitSpritePosToAnimTargetsCentre, InitSpritePosToAnimAttackersCentre
+
+// ISPM = InitSpritePos[To]Mon
+
+// value that's added to the sprite's current x
+#define ARG_SPRITE_X_OFFSET_ISPM 0
+// value that's added to the sprite's current y
+#define ARG_SPRITE_Y_OFFSET_ISPM 1
+
 #endif // GUARD_BATTLE_ANIM_PSEUDO_STRUCT_FIELDS_H

@@ -496,7 +496,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
         if (!IsOnPlayerSide(gBattleAnimAttacker))
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-            gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+            gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
             gBattleAnimArgs[3] = -gBattleAnimArgs[3];
         }
     }
@@ -511,8 +511,8 @@ static void AnimPsychoCut(struct Sprite *sprite)
             temp1 = gBattleAnimArgs[2];
             gBattleAnimArgs[2] = -temp1;
 
-            temp2 = gBattleAnimArgs[0];
-            gBattleAnimArgs[0] = -temp2;
+            temp2 = gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -temp2;
         }
     }
 
@@ -722,13 +722,13 @@ static void AnimWallSparkle(struct Sprite *sprite)
         {
             if (IsOnPlayerSide(gBattleAnimAttacker))
             {
-                sprite->x = 72 - gBattleAnimArgs[0];
-                sprite->y = gBattleAnimArgs[1] + 80;
+                sprite->x = 72 - gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+                sprite->y = gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] + 80;
             }
             else
             {
-                sprite->x = gBattleAnimArgs[0] + 176;
-                sprite->y = gBattleAnimArgs[1] + 40;
+                sprite->x = gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] + 176;
+                sprite->y = gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] + 40;
             }
         }
         else

@@ -733,10 +733,10 @@ void AnimIceEffectParticle(struct Sprite *sprite)
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
         if (!IsOnPlayerSide(gBattleAnimAttacker))
-            gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-        sprite->x += gBattleAnimArgs[0];
-        sprite->y += gBattleAnimArgs[1];
+        sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+        sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     }
 
     StoreSpriteCallbackInData6(sprite, AnimFlickerIceEffectParticle);
@@ -974,10 +974,10 @@ static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
 
             if (!IsOnPlayerSide(gBattleAnimAttacker))
-                gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+                gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->x += gBattleAnimArgs[0];
-            sprite->y += gBattleAnimArgs[1];
+            sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         sprite->data[0]++;
@@ -1010,12 +1010,15 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         else
         {
             SetAverageBattlerPositions(gBattleAnimAttacker, FALSE, &sprite->x, &sprite->y);
+            // these fields would have been passed to the InitSpritePosToMon functions
+            // but we have to use the center position, so we just read from the fields
+            // directly
             if (!IsOnPlayerSide(gBattleAnimAttacker))
-                sprite->x -= gBattleAnimArgs[0];
+                sprite->x -= gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
             else
-                sprite->x += gBattleAnimArgs[0];
+                sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->y += gBattleAnimArgs[1];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         battler = gBattleAnimAttacker;
@@ -1028,13 +1031,16 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         }
         else
         {
+            // these fields would have been passed to the InitSpritePosToMon functions
+            // but we have to use the center position, so we just read from the fields
+            // directly
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
             if (!IsOnPlayerSide(gBattleAnimTarget))
-                sprite->x -= gBattleAnimArgs[0];
+                sprite->x -= gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
             else
-                sprite->x += gBattleAnimArgs[0];
+                sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->y += gBattleAnimArgs[1];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         battler = gBattleAnimTarget;
@@ -1599,8 +1605,8 @@ static void AnimHailBegin(struct Sprite *sprite)
         sprite->data[0] = spriteId;
         if (spriteId != MAX_SPRITES)
         {
-            // The sprite template we're using is shared amongst a few other 
-            // places, which make the sprite flicker. That's not what we want 
+            // The sprite template we're using is shared amongst a few other
+            // places, which make the sprite flicker. That's not what we want
             // here, though. Override the callback.
             gSprites[sprite->data[0]].callback = AnimHailContinue;
             gSprites[sprite->data[0]].sOwnerTaskId = sprite->sOwnerTaskId;

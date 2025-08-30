@@ -481,7 +481,7 @@ static void AnimGunkShotParticlesStep(struct Sprite *sprite)
 static void AnimSuckerPunch(struct Sprite *sprite)
 {
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);
 
@@ -670,10 +670,10 @@ void AnimBubbleEffect(struct Sprite *sprite)
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
 
         if (!IsOnPlayerSide(gBattleAnimAttacker))
-            gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-        sprite->x += gBattleAnimArgs[0];
-        sprite->y += gBattleAnimArgs[1];
+        sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+        sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     }
 
     sprite->callback = AnimBubbleEffect_Step;

@@ -1560,7 +1560,7 @@ void AnimSonicBoomProjectile(struct Sprite *sprite)
     else if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+        gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
     }
 

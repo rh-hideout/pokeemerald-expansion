@@ -4907,8 +4907,13 @@ static void AnimTask_HelpingHandAttackerMovement_Step(u8 taskId)
 // arg 0: magnifying glass target mon
 static void AnimForesightMagnifyingGlass(struct Sprite *sprite)
 {
-    if (gBattleAnimArgs[0] == ANIM_ATTACKER)
-    {
+    // OOPS: The arg field for whether to set the sprite to the attacker or target
+    // uses the same arg field for ARG_SPRITE_X_OFFSET_ISPM (0)
+    // which means that the x offset supplied to InitSpritePosToAnimAttacker
+    // can only be of value ANIM_ATTACKER
+    // this never manifests in actual gameplay since the only use of AnimForesightMagnifyingGlass is in sprite gForesightMagnifyingGlassSpriteTemplate, which is only called by foresight, which only supplies ANIM_TARGET
+    if (gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] == ANIM_ATTACKER)
+     {
         InitSpritePosToAnimAttacker(sprite, TRUE);
         sprite->data[7] = gBattleAnimAttacker;
     }

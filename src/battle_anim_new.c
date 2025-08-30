@@ -7684,8 +7684,8 @@ static void InitSpritePosToGivenTarget(struct Sprite *sprite, u8 target)
     sprite->x = GetBattlerSpriteCoord2(target, BATTLER_COORD_X);
     sprite->y = GetBattlerSpriteCoord2(target, BATTLER_COORD_Y);
 
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y2 = gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y2 = gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimTargetsCentre(struct Sprite *sprite, bool32 respectMonPicOffsets)
@@ -7698,8 +7698,8 @@ void InitSpritePosToAnimTargetsCentre(struct Sprite *sprite, bool32 respectMonPi
                        +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y)) / 2;
     }
 
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 static void InitSpritePosToAnimAttackersCentre(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -7719,8 +7719,8 @@ static void InitSpritePosToAnimAttackersCentre(struct Sprite *sprite, bool8 resp
                        +  GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET)) / 2;
     }
 
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 //sprite callbacks
@@ -8252,12 +8252,12 @@ static void SpriteCB_MindBlownExplosion(struct Sprite *sprite)
 
 void SpriteCB_RandomCentredHits(struct Sprite *sprite)
 {
-    if (gBattleAnimArgs[1] == -1)
-        gBattleAnimArgs[1] = Random() & 3;
+    if (gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] == -1)
+        gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = Random() & 3;
 
-    StartSpriteAffineAnim(sprite, gBattleAnimArgs[1]);
+    StartSpriteAffineAnim(sprite, gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM]);
 
-    if (gBattleAnimArgs[0] == ANIM_ATTACKER)
+    if (gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] == ANIM_ATTACKER)
     {
         if (IsDoubleBattle())
             InitSpritePosToAnimAttackersCentre(sprite, FALSE);
@@ -8476,7 +8476,7 @@ static void SpriteCB_WaterDroplet(struct Sprite *sprite)
         InitSpritePosToGivenTarget(sprite, target);
         sprite->data[1] = sprite->y; //Target's y coord
 
-        sprite->x2 = gBattleAnimArgs[0];
+        sprite->x2 = gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
         sprite->y2 = 0;
 
         //Put droplet at the top of the screen

@@ -844,7 +844,7 @@ void AnimFlyUpTarget(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
     sprite->y2 += GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2;
-    sprite->y2 += gBattleAnimArgs[1];
+    sprite->y2 += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     sprite->data[0] = gBattleAnimArgs[2]; //max y offset
     sprite->data[1] = gBattleAnimArgs[3]; //speed
     sprite->callback = AnimFlyUpTarget_Step;
@@ -963,9 +963,9 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
     u8 coordType;
     if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
         if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_LEFT)
-            gBattleAnimArgs[0] *= -1;
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
     }
     if ((gBattleAnimArgs[5] & 0xFF00) == 0)
         respectMonPicOffsets = TRUE;

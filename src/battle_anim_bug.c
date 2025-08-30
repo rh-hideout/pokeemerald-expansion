@@ -384,7 +384,7 @@ void AnimTranslateStinger(struct Sprite *sprite)
         if (!IsOnPlayerSide(gBattleAnimAttacker))
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-            gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+            gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
             gBattleAnimArgs[3] = -gBattleAnimArgs[3];
         }
     }
@@ -395,7 +395,7 @@ void AnimTranslateStinger(struct Sprite *sprite)
          || GetBattlerPosition(gBattleAnimTarget) == B_POSITION_OPPONENT_LEFT)
         {
             gBattleAnimArgs[2] *= -1;
-            gBattleAnimArgs[0] *= -1;
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
         }
     }
 

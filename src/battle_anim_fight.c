@@ -640,7 +640,7 @@ static void AnimCrossChopHand_Step(struct Sprite *sprite)
 static void AnimSlidingKick(struct Sprite *sprite)
 {
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);
 

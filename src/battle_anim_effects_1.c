@@ -3125,7 +3125,7 @@ const struct SpriteTemplate gChainBindingSpriteTemplate =
 static void AnimGrassKnot(struct Sprite *sprite)
 {
     if (BATTLE_PARTNER(gBattleAnimAttacker) == gBattleAnimTarget && GetBattlerPosition(gBattleAnimTarget) < B_POSITION_PLAYER_RIGHT)
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
 
     InitSpritePosToAnimTarget(sprite, TRUE);
 
@@ -3548,8 +3548,8 @@ static void AnimPluck(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2]; //lifetime of the particle
     sprite->data[5] = gBattleAnimArgs[3]; //upward velocity
     sprite->data[2] = gBattleAnimArgs[4]; //horizontal velocity
-    sprite->x += gBattleAnimArgs[0];
-    sprite->y += gBattleAnimArgs[1];
+    sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     sprite->callback = AnimPluckParticle;
 }
 
@@ -3586,7 +3586,7 @@ static void AnimMoveFeintSwipe(struct Sprite *sprite)
 {
     if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
-        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
     }
     InitSpritePosToAnimTarget(sprite, TRUE);
     sprite->data[0] = gBattleAnimArgs[2];
@@ -3625,7 +3625,7 @@ static void AnimMoveTrumpCard(struct Sprite *sprite)
 {
     if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
-        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
     }
     InitSpritePosToAnimTarget(sprite, TRUE);
     StartSpriteAnim(sprite, gBattleAnimArgs[2]);
@@ -3674,7 +3674,7 @@ static void AnimMoveTrumpCardParticle(struct Sprite *sprite)
 {
     if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
-        gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
     }
     InitSpritePosToAnimTarget(sprite, TRUE);
     StartSpriteAnim(sprite, gBattleAnimArgs[2]);
@@ -3722,7 +3722,7 @@ static void AnimMoveWringOutCircle(struct Sprite *sprite)
 {
     sprite->x2 = Cos(sprite->data[3], sprite->data[2]);
     sprite->y2 = Sin(sprite->data[3], sprite->data[2]);
-    if(sprite->data[1] > 0)
+    if (sprite->data[1] > 0)
     {
         if(sprite->data[3] + sprite->data[0] >= 256)
         {
@@ -3749,7 +3749,7 @@ static void AnimMoveWringOutCircle(struct Sprite *sprite)
 static void AnimMoveWringOut(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    if(gBattleAnimArgs[5] == TRUE)
+    if (gBattleAnimArgs[5] == TRUE)
     {
         sprite->oam.objMode = ST_OAM_OBJ_BLEND;
     }
