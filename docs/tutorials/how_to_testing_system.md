@@ -164,17 +164,17 @@ ASSUMPTIONS
 ```
 
 ### `SINGLE_BATTLE_TEST`
-`SINGLE_BATTLE_TEST(name, results...)` and `DOUBLE_BATTLE_TEST(name, results...)`
-Define single- and double- battles. The names should start with the name of the mechanic being tested so that it is easier to run all the related tests. `results` contains variable declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
-The main differences for doubles are:
+`SINGLE_BATTLE_TEST(name, results...)`, `DOUBLE_BATTLE_TEST(name, results...)`, `MULTI_BATTLE_TEST(name, results...)`, `TWO_VS_ONE_BATTLE_TEST(name, results...)`, and `ONE_VS_TWO_BATTLE_TEST(name, results...)`
+Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with the name of the mechanic being tested so that it is easier to run all the related tests. `results` contains variable declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
+The main differences for doubles, 2v2, 2v1, and 1v2 are:
  - Move targets sometimes need to be explicit.
  - Instead of `player` and `opponent` there is `playerLeft`, `playerRight`, `opponentLeft`, and `opponentRight`.
 
 ### `AI_SINGLE_BATTLE_TEST`
-`AI_SINGLE_BATTLE_TEST(name, results...)` and `AI_DOUBLE_BATTLE_TEST(name, results...)`
+`AI_SINGLE_BATTLE_TEST(name, results...)`, `AI_DOUBLE_BATTLE_TEST(name, results...)`, `AI_MULTI_BATTLE_TEST(name, results...)`, `AI_TWO_VS_ONE_BATTLE_TEST(name, results...)`, and `AI_ONE_VS_TWO_BATTLE_TEST(name, results...)`
 Define battles where opponent mons are controlled by AI, the same that runs
 when battling regular Trainers. The flags for AI should be specified by the `AI_FLAGS` command.
-The rules remain the same as with the `SINGLE` and `DOUBLE` battle tests with some differences:
+The rules remain the same as with the `SINGLE`, `DOUBLE`, `MULTI`, `TWO_VS_ONE`, and `ONE_VS_TWO` battle tests with some differences:
  - opponent's action is specified by the `EXPECT_MOVE` / `EXPECT_SEND_OUT` / `EXPECT_SWITCH` commands
  - we don't control what opponent actually does, instead we make sure the opponent does what we expect it to do
  - we still control the player's action the same way
@@ -268,7 +268,7 @@ GIVEN {
 ```
 
 ### `PLAYER` and `OPPONENT`
-`PLAYER(species)` and `OPPONENT(species`
+`PLAYER(species)` and `OPPONENT(species)`
 Adds the species to the player's or opponent's party respectively.
 The Pokémon can be further customized with the following functions:
  - `Gender(MON_MALE | MON_FEMALE)`
@@ -284,6 +284,17 @@ For example to create a level 42 Wobbuffet that is poisoned:
 `PLAYER(SPECIES_WOBBUFFET) { Level(42); Status1(STATUS1_POISON); }`
 **Note if Speed is specified for any Pokémon then it must be specified for all Pokémon.**
 **Note if Moves is specified then MOVE will not automatically add moves to the moveset.**
+
+### `MULTI_PLAYER`, `MULTI_PARTNER`, `MULTI_OPPONENT_A`, and `MULTI_OPPONENT_B`
+For tests using `MULTI_BATTLE_TEST`, `AI_MULTI_BATTLE_TEST`, `TWO_VS_ONE_BATTLE_TEST`, `AI_TWO_VS_ONE_BATTLE_TEST`, `ONE_VS_TWO_BATTLE_TEST`, and `AI_ONE_VS_TWO_BATTLE_TEST`, the below must be used instead of `PLAYER(species)` and `OPPONENT(species)`.
+`MULTI_PLAYER(species)`, `MULTI_PARTNER(species)`, `MULTI_OPPONENT_A(species)`, and `MULTI_OPPONENT_B(species)`
+Adds the species to the player's, player partner's, opponent A's, or opponent B's party, respectively.
+Pokemon can be customised as per the guidance for `PLAYER(species)` and `OPPONENT(species)`.
+The functions assign the Pokémon to the party of the trainer at `B_POSITION_PLAYER_LEFT`, `B_POSITION_PLAYER_RIGHT`, `B_POSITION_OPPONENT_LEFT`, and `B_POSITION_OPPONENT_RIGHT`, respectively.
+`MULTI_PLAYER(species)` and `MULTI_OPPONENT_A(species)` set Pokémon starting at party index 0, while `MULTI_PARTNER(species)` and `MULTI_OPPONENT_B(species)` set Pokémon starting at party index 3.
+For `ONE_VS_TWO` tests, `MULTI_PLAYER(species)` must be used for all player-side Pokémon, and for `TWO_VS_ONE` tests, `MULTI_OPPONENT_A(species)` must be used for all opponent-side Pokémon. 
+All `MULTI_PLAYER(species)` Pokémon must be set before any `MULTI_PARTNER(species)` Pokémon, and all `MULTI_OPPONENT_A(species)` must be set before any `MULTI_OPPONENT_B(species)` Pokémon, else Pokémon will be set in the incorrect parties in the test.
+**Note where a side in a test has two trainers, the test setup manages the assigning of correct multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B Pokémon may be referenced using indexes 3, 4, and 5.**
 
 ### `AI_FLAGS`
 `AI_FLAGS(flags)`

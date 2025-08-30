@@ -69,6 +69,96 @@ AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spo
     }
 }
 
+AI_MULTI_BATTLE_TEST("AI will not switch into a partner Pokémon in a multibattle (all bad moves)")
+{
+    u32 flags;
+
+    PARAMETRIZE {flags = AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE {flags = 0; }
+
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | flags);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PARTNER(SPECIES_KANGASKHAN);
+        // No moves to damage player.
+        MULTI_OPPONENT_A(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_B(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_B(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        MULTI_OPPONENT_B(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
+        
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 5); };
+    } SCENE {
+        MESSAGE(AI_TRAINER_2_NAME " withdrew Gengar!");
+        MESSAGE(AI_TRAINER_2_NAME " sent out Raticate!");
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        }
+    }
+}
+
+AI_TWO_VS_ONE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a 2v1 battle (all bad moves)")
+{
+    u32 flags;
+
+    PARAMETRIZE {flags = AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE {flags = 0; }
+
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | flags);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PARTNER(SPECIES_KANGASKHAN);
+        // No moves to damage player.
+        MULTI_OPPONENT_A(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_A(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        MULTI_OPPONENT_A(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentLeft, 3); };
+    } SCENE {
+        MESSAGE(AI_TRAINER_NAME " withdrew Gengar!");
+        MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        }
+    }
+}
+
+AI_ONE_VS_TWO_BATTLE_TEST("AI will not switch into a partner Pokémon in a 1v2 battle (all bad moves)")
+{
+    u32 flags;
+
+    PARAMETRIZE {flags = AI_FLAG_SMART_SWITCHING; }
+    PARAMETRIZE {flags = 0; }
+
+    PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | flags);
+        MULTI_PLAYER(SPECIES_RATTATA);
+        MULTI_PLAYER(SPECIES_KANGASKHAN);
+        // No moves to damage player.
+        MULTI_OPPONENT_A(SPECIES_HAUNTER) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_B(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
+        MULTI_OPPONENT_B(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        MULTI_OPPONENT_B(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
+        
+    } WHEN {
+        TURN { EXPECT_SWITCH(opponentRight, 5); };
+    } SCENE {
+        MESSAGE(AI_TRAINER_2_NAME " withdrew Gengar!");
+        MESSAGE(AI_TRAINER_2_NAME " sent out Raticate!");
+        NONE_OF {
+            MESSAGE(AI_TRAINER_NAME " withdrew Haunter!");
+            MESSAGE(AI_TRAINER_NAME " sent out Raticate!");
+        }
+    }
+}
+
 AI_SINGLE_BATTLE_TEST("AI will switch out if it has no move that affects the player")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ALL_MOVES_BAD_PERCENTAGE, 100, RNG_AI_SWITCH_ALL_MOVES_BAD);
