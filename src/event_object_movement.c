@@ -524,6 +524,23 @@ static const struct SpritePalette sObjectEventSpritePalettes[] = {
     {gObjectEventPal_Lugia,                 OBJ_EVENT_PAL_TAG_LUGIA},
     {gObjectEventPal_RubySapphireBrendan,   OBJ_EVENT_PAL_TAG_RS_BRENDAN},
     {gObjectEventPal_RubySapphireMay,       OBJ_EVENT_PAL_TAG_RS_MAY},
+#if IS_FRLG
+    {gObjectEventPal_PlayerFrlg,            OBJ_EVENT_PAL_TAG_PLAYER_RED},
+    {gObjectEventPal_PlayerReflectionFrlg,  OBJ_EVENT_PAL_TAG_PLAYER_RED_REFLECTION},
+    {gObjectEventPal_PlayerFrlg,            OBJ_EVENT_PAL_TAG_PLAYER_GREEN},
+    {gObjectEventPal_PlayerReflectionFrlg,  OBJ_EVENT_PAL_TAG_PLAYER_GREEN_REFLECTION},
+    {gObjectEventPal_NpcBlue,               OBJ_EVENT_PAL_TAG_NPC_BLUE},
+    {gObjectEventPal_NpcPink,               OBJ_EVENT_PAL_TAG_NPC_PINK},
+    {gObjectEventPal_NpcGreen,              OBJ_EVENT_PAL_TAG_NPC_GREEN},
+    {gObjectEventPal_NpcWhite,              OBJ_EVENT_PAL_TAG_NPC_WHITE},
+    {gObjectEventPal_NpcBlueReflection,     OBJ_EVENT_PAL_TAG_NPC_BLUE_REFLECTION},
+    {gObjectEventPal_NpcPinkReflection,     OBJ_EVENT_PAL_TAG_NPC_PINK_REFLECTION},
+    {gObjectEventPal_NpcGreenReflection,    OBJ_EVENT_PAL_TAG_NPC_GREEN_REFLECTION},
+    {gObjectEventPal_NpcWhiteReflection,    OBJ_EVENT_PAL_TAG_NPC_WHITE_REFLECTION},
+    {gObjectEventPal_Meteorite,             OBJ_EVENT_PAL_TAG_METEORITE},
+    {gObjectEventPal_SSAnne,                OBJ_EVENT_PAL_TAG_SS_ANNE},
+    {gObjectEventPal_Seagallop,             OBJ_EVENT_PAL_TAG_SEAGALLOP},
+#endif // IS_FRLG
 #if OW_FOLLOWERS_POKEBALLS
     {gObjectEventPal_MasterBall,            OBJ_EVENT_PAL_TAG_BALL_MASTER},
     {gObjectEventPal_UltraBall,             OBJ_EVENT_PAL_TAG_BALL_ULTRA},
@@ -937,6 +954,18 @@ const u8 gTrainerFacingDirectionMovementTypes[] = {
     [DIR_NORTHEAST] = MOVEMENT_TYPE_FACE_UP,
 };
 
+static const u8 sSpinDirectionAnimNums[] = {
+    [DIR_NONE]      = ANIM_SPIN_SOUTH,
+    [DIR_SOUTH]     = ANIM_SPIN_SOUTH,
+    [DIR_NORTH]     = ANIM_SPIN_NORTH,
+    [DIR_WEST]      = ANIM_SPIN_WEST,
+    [DIR_EAST]      = ANIM_SPIN_EAST,
+    [DIR_SOUTHWEST] = ANIM_SPIN_SOUTH,
+    [DIR_SOUTHEAST] = ANIM_SPIN_NORTH,
+    [DIR_NORTHWEST] = ANIM_SPIN_WEST,
+    [DIR_NORTHEAST] = ANIM_SPIN_EAST,
+};
+
 bool8 (*const gOppositeDirectionBlockedMetatileFuncs[])(u8) = {
     MetatileBehavior_IsSouthBlocked,
     MetatileBehavior_IsNorthBlocked,
@@ -1240,6 +1269,14 @@ const u8 gRunSlowMovementActions[] = {
     [DIR_NORTHEAST]  = MOVEMENT_ACTION_RUN_RIGHT_SLOW,
 };
 
+static const u8 sSpinMovementActions[] = {
+    [DIR_NONE]  = MOVEMENT_ACTION_SPIN_DOWN,
+    [DIR_SOUTH] = MOVEMENT_ACTION_SPIN_DOWN,
+    [DIR_NORTH] = MOVEMENT_ACTION_SPIN_UP,
+    [DIR_WEST]  = MOVEMENT_ACTION_SPIN_LEFT,
+    [DIR_EAST]  = MOVEMENT_ACTION_SPIN_RIGHT,
+};
+
 static const u8 sOppositeDirections[] = {
     DIR_NORTH,
     DIR_SOUTH,
@@ -1423,19 +1460,128 @@ u8 GetObjectEventIdByLocalId(u8 localId)
     return OBJECT_EVENTS_COUNT;
 }
 
+static void SetHideObstacleFlag(const struct ObjectEventTemplate *template)
+{
+    if (template->flagId >= FLAG_TEMP_11 && template->flagId <= FLAG_TEMP_1F)
+        FlagSet(template->flagId);
+}
+
+static bool8 TemplateIsObstacleAndWithinView(const struct ObjectEventTemplate *template, s16 x, s16 y)
+{
+    if (template->graphicsId == OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG || template->graphicsId == OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG)
+    {
+        if (gSaveBlock1Ptr->pos.x < x)
+        {
+            if (gSaveBlock1Ptr->pos.x + (MAP_OFFSET + 1) < x)
+                return TRUE;
+            if (gSaveBlock1Ptr->pos.y - (MAP_OFFSET - 1) <= y && gSaveBlock1Ptr->pos.y + (MAP_OFFSET - 1) >= y)
+                return FALSE;
+        }
+        else
+        {
+            if (gSaveBlock1Ptr->pos.x - (MAP_OFFSET + 1) > x)
+                return TRUE;
+
+            if (gSaveBlock1Ptr->pos.y - (MAP_OFFSET - 1) <= y && gSaveBlock1Ptr->pos.y + (MAP_OFFSET - 1) >= y)
+                return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+static bool8 TemplateIsObstacleAndVisibleFromConnectingMap(const struct ObjectEventTemplate *template, s16 unused1, s16 unused2)
+{
+    if (IsMapTypeOutdoors(GetCurrentMapType()))
+    {
+        s32 width = gBackupMapLayout.width - MAP_OFFSET_W - 1;
+        s32 height = gBackupMapLayout.height - MAP_OFFSET_H - 1;
+
+        if (template->graphicsId == OBJ_EVENT_GFX_CUTTABLE_TREE_FRLG || template->graphicsId == OBJ_EVENT_GFX_BREAKABLE_ROCK_FRLG)
+        {
+            if (gSaveBlock1Ptr->pos.x == 0 && template->x <= (MAP_OFFSET + 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.x == width && template->x >= width - (MAP_OFFSET + 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.y == 0 && template->y <= (MAP_OFFSET - 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+
+            if (gSaveBlock1Ptr->pos.y == height && template->y >= height - (MAP_OFFSET - 1))
+            {
+                SetHideObstacleFlag(template);
+                return FALSE;
+            }
+        }
+    }
+    return TRUE;
+}
+
+static bool8 ShouldInitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, bool8 isClone, s16 x, s16 y)
+{
+    if (isClone && !TemplateIsObstacleAndWithinView(template, x, y))
+        return FALSE;
+
+    if (!TemplateIsObstacleAndVisibleFromConnectingMap(template, x, y))
+        return FALSE;
+    
+    return TRUE;
+}
+
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
     struct ObjectEvent *objectEvent;
+    const struct MapHeader *mapHeader;
     u8 objectEventId;
     s16 x;
     s16 y;
+    bool8 isClone = FALSE;
+    u8 localId = LOCALID_NONE;
+    s16 x2 = 0;
+    s16 y2 = 0;
+    s16 x3 = 0;
+    s16 y3 = 0;
+    
+    if (template->kind == OBJ_KIND_CLONE)
+    {
+        isClone = TRUE;
+        localId = template->targetLocalId;
+        mapNum = template->targetMapNum;
+        mapGroup = template->targetMapGroup;
+        x2 = template->x;
+        y2 = template->y;
+        x3 = template->x;
+        y3 = template->y;
+        mapHeader = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum);
+        template = &(mapHeader->events->objectEvents[localId - 1]);
+    }
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
+
+    if (!ShouldInitObjectEventStateFromTemplate(template, isClone, x3, y3))
+        return OBJECT_EVENTS_COUNT;
     objectEvent = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);
-    x = template->x + MAP_OFFSET;
-    y = template->y + MAP_OFFSET;
+    if (isClone)
+    {
+        x = x2 + MAP_OFFSET;
+        y = y2 + MAP_OFFSET;
+    }
+    else
+    {
+        x = template->x + MAP_OFFSET;
+        y = template->y + MAP_OFFSET;
+    }
     objectEvent->active = TRUE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
     objectEvent->graphicsId = template->graphicsId;
@@ -1813,7 +1959,7 @@ u8 TrySpawnObjectEvent(u8 localId, u8 mapNum, u8 mapGroup)
     return TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
 }
 
-static void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(struct Sprite *), struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
+void CopyObjectGraphicsInfoToSpriteTemplate(u16 graphicsId, void (*callback)(struct Sprite *), struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables)
 {
     const struct ObjectEventGraphicsInfo *graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
 
@@ -6109,6 +6255,11 @@ u8 GetRunningDirectionAnimNum(u8 direction)
     return sRunningDirectionAnimNums[direction];
 }
 
+u8 GetSpinDirectionAnimNum(u8 direction)
+{
+    return sSpinDirectionAnimNums[direction];
+}
+
 static const struct StepAnimTable *GetStepAnimTable(const union AnimCmd *const *anims)
 {
     const struct StepAnimTable *stepTable;
@@ -6751,6 +6902,7 @@ dirn_to_anim(GetFaceDirectionMovementAction, gFaceDirectionMovementActions);
 dirn_to_anim(GetWalkSlowStairsMovementAction, gWalkSlowStairsMovementActions);
 dirn_to_anim(GetWalkSlowMovementAction, gWalkSlowMovementActions);
 dirn_to_anim(GetPlayerRunSlowMovementAction, gRunSlowMovementActions);
+dirn_to_anim(GetSpinMovementAction, sSpinMovementActions);
 dirn_to_anim(GetWalkNormalMovementAction, gWalkNormalMovementActions);
 dirn_to_anim(GetWalkFastMovementAction, gWalkFastMovementActions);
 dirn_to_anim(GetRideWaterCurrentMovementAction, gRideWaterCurrentMovementActions);
@@ -11542,6 +11694,77 @@ bool8 MovementAction_SurfStillRight_Step1(struct ObjectEvent *objectEvent, struc
     if (UpdateMovementNormal(objectEvent, sprite))
     {
         sprite->sActionFuncId = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+void InitSpin(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction, u8 speed)
+{
+    InitNpcForMovement(objectEvent, sprite, direction, speed);
+    SetStepAnimHandleAlternation(objectEvent, sprite, GetSpinDirectionAnimNum(objectEvent->facingDirection));
+    SeekSpriteAnim(sprite, 0);
+}
+
+bool8 MovementAction_SpinDown_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitSpin(objectEvent, sprite, DIR_SOUTH, MOVE_SPEED_FAST_1);
+    return MovementAction_SpinDown_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_SpinDown_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateMovementNormal(objectEvent, sprite))
+    {
+        sprite->data[2] = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_SpinUp_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitSpin(objectEvent, sprite, DIR_NORTH, MOVE_SPEED_FAST_1);
+    return MovementAction_SpinUp_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_SpinUp_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateMovementNormal(objectEvent, sprite))
+    {
+        sprite->data[2] = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_SpinLeft_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitSpin(objectEvent, sprite, DIR_WEST, MOVE_SPEED_FAST_1);
+    return MovementAction_SpinLeft_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_SpinLeft_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateMovementNormal(objectEvent, sprite))
+    {
+        sprite->data[2] = 2;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool8 MovementAction_SpinRight_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    InitSpin(objectEvent, sprite, DIR_EAST, MOVE_SPEED_FAST_1);
+    return MovementAction_SpinRight_Step1(objectEvent, sprite);
+}
+
+bool8 MovementAction_SpinRight_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    if (UpdateMovementNormal(objectEvent, sprite))
+    {
+        sprite->data[2] = 2;
         return TRUE;
     }
     return FALSE;

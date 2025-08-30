@@ -108,6 +108,7 @@ bool8 UseRegisteredKeyItemOnField(void);
 void CB2_GoToSellMenu(void);
 void GoToBagMenu(u8 location, u8 pocket, void ( *exitCallback)());
 void DoWallyTutorialBagMenu(void);
+void InitOldManBag(void);
 void ResetBagScrollPositions(void);
 void ChooseBerryForMachine(void (*exitCallback)(void));
 void CB2_ChooseBerry(void);

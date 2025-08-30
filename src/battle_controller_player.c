@@ -1066,7 +1066,10 @@ void HandleMoveSwitching(u32 battler)
             }
         }
 
-        gBattlerControllerFuncs[battler] = HandleInputChooseMove;
+        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+            gBattlerControllerFuncs[battler] = OakOldManHandleInputChooseMove;
+        else
+            gBattlerControllerFuncs[battler] = HandleInputChooseMove;
         gMoveSelectionCursor[battler] = gMultiUsePlayerCursor;
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
         if (B_SHOW_EFFECTIVENESS)
@@ -1082,7 +1085,12 @@ void HandleMoveSwitching(u32 battler)
         PlaySE(SE_SELECT);
         MoveSelectionDestroyCursorAt(gMultiUsePlayerCursor);
         MoveSelectionCreateCursorAt(gMoveSelectionCursor[battler], 0);
-        gBattlerControllerFuncs[battler] = HandleInputChooseMove;
+        
+        if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE)
+            gBattlerControllerFuncs[battler] = OakOldManHandleInputChooseMove;
+        else
+            gBattlerControllerFuncs[battler] = HandleInputChooseMove;
+
         if (B_SHOW_EFFECTIVENESS)
             MoveSelectionDisplayMoveEffectiveness(CheckTargetTypeEffectiveness(battler), battler);
         else
@@ -1854,7 +1862,7 @@ static u32 PlayerGetTrainerBackPicId(void)
     if (gBattleTypeFlags & BATTLE_TYPE_LINK)
         trainerPicId = LinkPlayerGetTrainerPicId(GetMultiplayerId());
     else
-        trainerPicId = gSaveBlock2Ptr->playerGender + TRAINER_BACK_PIC_BRENDAN;
+        trainerPicId = gSaveBlock2Ptr->playerGender ? TRAINER_BACK_PIC_PLAYER_FEMALE : TRAINER_BACK_PIC_PLAYER_MALE;
 
     return trainerPicId;
 }
@@ -2336,6 +2344,9 @@ enum
 
 static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 {
+    if (IsGhostBattleWithoutScope())
+        return FALSE;
+
     if (B_SHOW_EFFECTIVENESS == SHOW_EFFECTIVENESS_CAUGHT)
         return GetSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[targetId].species), FLAG_GET_CAUGHT);
 

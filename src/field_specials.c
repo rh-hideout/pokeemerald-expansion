@@ -24,6 +24,7 @@
 #include "link.h"
 #include "load_save.h"
 #include "list_menu.h"
+#include "mail.h"
 #include "main.h"
 #include "mystery_gift.h"
 #include "match_call.h"
@@ -46,6 +47,7 @@
 #include "strings.h"
 #include "task.h"
 #include "text.h"
+#include "text_window.h"
 #include "tilesets.h"
 #include "tv.h"
 #include "wallclock.h"
@@ -102,6 +104,11 @@ static EWRAM_DATA u32 sBattleTowerMultiBattleTypeFlags = 0;
 COMMON_DATA struct ListMenuTemplate gScrollableMultichoice_ListMenuTemplate = {0};
 EWRAM_DATA u16 gScrollableMultichoice_ScrollOffset = 0;
 
+static EWRAM_DATA u8 sElevatorCurrentFloorWindowId = 0;
+static EWRAM_DATA u16 sElevatorScroll = 0;
+static EWRAM_DATA u16 sElevatorCursorPos = 0;
+static EWRAM_DATA u8 sBrailleTextCursorSpriteID = 0;
+
 void TryLoseFansFromPlayTime(void);
 void SetPlayerGotFirstFans(void);
 u16 GetNumFansOfPlayerInTrainerFanClub(void);
@@ -149,6 +156,15 @@ static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
 static void BufferFanClubTrainerName_(u8 whichLinkTrainer, u8 whichNPCTrainer);
 #endif //FREE_LINK_BATTLE_RECORDS
+static void Task_ElevatorShake(u8 taskId);
+static void AnimateElevatorWindowView(u16 nfloors, bool8 direction);
+static void Task_AnimateElevatorWindowView(u8 taskId);
+static void Task_RunPokemonLeagueLightingEffect(u8 taskId);
+static void Task_CancelPokemonLeagueLightingEffect(u8 taskId);
+static u16 SampleResortGorgeousMon(void);
+static u16 SampleResortGorgeousReward(void);
+static void Task_ShakeScreen(u8 taskId);
+static void Task_EndScreenShake(u8 taskId);
 
 static const u8 sText_BigGuy[] = _("Big guy");
 static const u8 sText_BigGirl[] = _("Big girl");
@@ -984,16 +1000,43 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
+#if IS_FRLG
+    return FALSE;
+#else
     return gMapHeader.mapLayout->primaryTileset == &gTileset_Building && (tileId == METATILE_Building_PC_On || tileId == METATILE_Building_PC_Off);
+#endif
+}
+
+static bool32 IsBuildingPCTileFrlg(u32 tileId)
+{
+#if IS_FRLG
+    return gMapHeader.mapLayout->primaryTileset == &gTileset_BuildingFrlg && (tileId == METATILE_BuildingFrlg_PCOn || tileId == METATILE_BuildingFrlg_PCOff);
+#else
+    return FALSE;
+#endif
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
 {
+#if IS_FRLG
+    return FALSE;
+#else
     return gMapHeader.mapLayout->secondaryTileset == &gTileset_BrendansMaysHouse
         && (tileId == METATILE_BrendansMaysHouse_BrendanPC_On
             || tileId == METATILE_BrendansMaysHouse_BrendanPC_Off
             || tileId == METATILE_BrendansMaysHouse_MayPC_On
             || tileId == METATILE_BrendansMaysHouse_MayPC_Off);
+#endif
+}
+
+static bool32 IsPlayerHousePCTileFrlg(u32 tileId)
+{
+#if IS_FRLG
+    return gMapHeader.mapLayout->secondaryTileset == &gTileset_GenericBuilding1 
+        && (tileId == METATILE_GenericBuilding1_PlayersPCOn || tileId == METATILE_GenericBuilding1_PlayersPCOff);
+#else
+    return FALSE;
+#endif
 }
 
 static bool8 IsPlayerInFrontOfPC(void)
@@ -1004,7 +1047,10 @@ static bool8 IsPlayerInFrontOfPC(void)
     GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     tileInFront = MapGridGetMetatileIdAt(x, y);
 
-    return IsBuildingPCTile(tileInFront) || IsPlayerHousePCTile(tileInFront);
+    return IsBuildingPCTile(tileInFront)
+        || IsBuildingPCTileFrlg(tileInFront)
+        || IsPlayerHousePCTile(tileInFront)
+        || IsPlayerHousePCTileFrlg(tileInFront);
 }
 
 // Task data for Task_PCTurnOnEffect and Task_LotteryCornerComputerEffect
@@ -1082,21 +1128,25 @@ static void PCTurnOnEffect_SetMetatile(s16 isScreenOn, s8 dx, s8 dy)
     {
         // Screen is on, set it off
         if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
-            metatileId = METATILE_Building_PC_Off;
+            metatileId = IS_FRLG ? METATILE_BuildingFrlg_PCOff : METATILE_Building_PC_Off;
         else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_BrendanPC_Off;
         else if (gSpecialVar_0x8004 == PC_LOCATION_MAYS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_MayPC_Off;
+        else if (gSpecialVar_0x8004 == PC_LOCATION_PLAYER_HOUSE_FRLG)
+            metatileId = METATILE_GenericBuilding1_PlayersPCOff;
     }
     else
     {
         // Screen is off, set it on
         if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
-            metatileId = METATILE_Building_PC_On;
+            metatileId = IS_FRLG ? METATILE_BuildingFrlg_PCOn : METATILE_Building_PC_On;
         else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_BrendanPC_On;
         else if (gSpecialVar_0x8004 == PC_LOCATION_MAYS_HOUSE)
             metatileId = METATILE_BrendansMaysHouse_MayPC_On;
+        else if (gSpecialVar_0x8004 == PC_LOCATION_PLAYER_HOUSE_FRLG)
+            metatileId = METATILE_GenericBuilding1_PlayersPCOn;
     }
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_IMPASSABLE);
 }
@@ -1135,11 +1185,13 @@ static void PCTurnOffEffect(void)
     }
 
     if (gSpecialVar_0x8004 == PC_LOCATION_OTHER)
-        metatileId = METATILE_Building_PC_Off;
+        metatileId = IS_FRLG ? METATILE_BuildingFrlg_PCOff : METATILE_Building_PC_Off;
     else if (gSpecialVar_0x8004 == PC_LOCATION_BRENDANS_HOUSE)
         metatileId = METATILE_BrendansMaysHouse_BrendanPC_Off;
     else if (gSpecialVar_0x8004 == PC_LOCATION_MAYS_HOUSE)
         metatileId = METATILE_BrendansMaysHouse_MayPC_Off;
+    else if (gSpecialVar_0x8004 == PC_LOCATION_PLAYER_HOUSE_FRLG)
+        metatileId = METATILE_GenericBuilding1_PlayersPCOff;
 
     MapGridSetMetatileIdAt(gSaveBlock1Ptr->pos.x + dx + MAP_OFFSET, gSaveBlock1Ptr->pos.y + dy + MAP_OFFSET, metatileId | MAPGRID_IMPASSABLE);
     DrawWholeMapView();
@@ -2417,6 +2469,28 @@ void ShowScrollableMultichoice(void)
         task->tKeepOpenAfterSelect = FALSE;
         task->tTaskId = taskId;
         break;
+    case SCROLL_MULTI_BADGES:
+        task->tMaxItemsOnScreen = 4;
+        task->tNumItems = 9;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 12;
+        task->tHeight = 8;
+        task->tKeepOpenAfterSelect = FALSE;
+        task->tTaskId = taskId;
+        break;
+    case SCROLL_MULTI_SILPHCO_FLOORS:
+        task->tMaxItemsOnScreen = 7;
+        task->tNumItems = 12;
+        task->tLeft = 1;
+        task->tTop = 1;
+        task->tWidth = 8;
+        task->tHeight = 12;
+        task->tKeepOpenAfterSelect = 0;
+        task->tTaskId = taskId;
+        task->tScrollOffset = sElevatorScroll;
+        task->tSelectedRow = sElevatorCursorPos;
+        break;
     default:
         gSpecialVar_Result = MULTI_B_PRESSED;
         DestroyTask(taskId);
@@ -2577,6 +2651,33 @@ static const u8 *const sScrollableMultichoiceOptions[][MAX_SCROLL_MULTI_LENGTH] 
         gText_Underpowered,
         gText_WhenInDanger,
         gText_Exit
+    },
+    [SCROLL_MULTI_BADGES] = 
+    {
+		gText_Boulderbadge,
+		gText_Cascadebadge,
+		gText_Thunderbadge,
+		gText_Rainbowbadge,
+		gText_Soulbadge,
+		gText_Marshbadge,
+		gText_Volcanobadge,
+		gText_Earthbadge,
+        gText_Exit,
+    },
+    [SCROLL_MULTI_SILPHCO_FLOORS] =
+    {
+        gText_11F,
+        gText_10F,
+        gText_9F,
+        gText_8F,
+        gText_7F,
+        gText_6F,
+        gText_5F,
+        gText_4F,
+        gText_3F,
+        gText_2F,
+        gText_1F,
+        gText_Exit,
     }
 };
 
@@ -2808,9 +2909,9 @@ void SetBattleTowerLinkPlayerGfx(void)
     for (i = 0; i < 2; i++)
     {
         if (gLinkPlayers[i].gender == MALE)
-            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_BRENDAN_NORMAL);
+            VarSet(VAR_OBJ_GFX_ID_F - i, PLAYER_AVATAR_GFX_MALE_NORMAL);
         else
-            VarSet(VAR_OBJ_GFX_ID_F - i, OBJ_EVENT_GFX_RIVAL_MAY_NORMAL);
+            VarSet(VAR_OBJ_GFX_ID_F - i, PLAYER_AVATAR_GFX_FEMALE_NORMAL);
     }
 }
 
@@ -3291,8 +3392,16 @@ static void ChangeDeoxysRockLevel(u8 rockLevel)
 
     CreateTask(WaitForDeoxysRockMovement, 8);
     gFieldEffectArguments[0] = LOCALID_BIRTH_ISLAND_EXTERIOR_ROCK;
-    gFieldEffectArguments[1] = MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR);
-    gFieldEffectArguments[2] = MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR);
+    if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR_FRLG) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR_FRLG))
+    {
+        gFieldEffectArguments[1] = MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR_FRLG);
+        gFieldEffectArguments[2] = MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR_FRLG);
+    }
+    else
+    {
+        gFieldEffectArguments[1] = MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR);
+        gFieldEffectArguments[2] = MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR);
+    }
     gFieldEffectArguments[3] = sDeoxysRockCoords[rockLevel][0];
     gFieldEffectArguments[4] = sDeoxysRockCoords[rockLevel][1];
 
@@ -3319,7 +3428,8 @@ static void WaitForDeoxysRockMovement(u8 taskId)
 void IncrementBirthIslandRockStepCount(void)
 {
     u16 stepCount = VarGet(VAR_DEOXYS_ROCK_STEP_COUNT);
-    if (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR))
+    if ((gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR))
+     || (gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_BIRTH_ISLAND_EXTERIOR_FRLG) && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_BIRTH_ISLAND_EXTERIOR_FRLG)))
     {
         if (++stepCount > 99)
             VarSet(VAR_DEOXYS_ROCK_STEP_COUNT, 0);
@@ -4367,4 +4477,1202 @@ void SetHiddenNature(void)
     u32 hiddenNature = gSpecialVar_Result;
     SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HIDDEN_NATURE, &hiddenNature);
     CalculateMonStats(&gPlayerParty[gSpecialVar_0x8004]);
+}
+
+void DaisyMassageServices(void)
+{
+    AdjustFriendship(&gPlayerParty[gSpecialVar_0x8004], FRIENDSHIP_EVENT_MASSAGE);
+    VarSet(VAR_MASSAGE_COOLDOWN_STEP_COUNTER, 0);
+}
+
+u8 GetLeadMonFriendship(void)
+{
+    struct Pokemon * pokemon = &gPlayerParty[GetLeadMonIndex()];
+    if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) == 255)
+        return 6;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 200)
+        return 5;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 150)
+        return 4;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 100)
+        return 3;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) >= 50)
+        return 2;
+    else if (GetMonData(pokemon, MON_DATA_FRIENDSHIP) > 0)
+        return 1;
+    else
+        return 0;
+}
+
+u16 GetFirstPartnerMove(u16 species)
+{
+    switch(species)
+    {
+        case SPECIES_VENUSAUR:
+        case SPECIES_MEGANIUM:
+        case SPECIES_SCEPTILE:
+        case SPECIES_TORTERRA:
+        case SPECIES_SERPERIOR:
+        case SPECIES_CHESNAUGHT:
+        case SPECIES_DECIDUEYE:
+        case SPECIES_DECIDUEYE_HISUI:
+        case SPECIES_RILLABOOM:
+        case SPECIES_MEOWSCARADA:
+            return MOVE_FRENZY_PLANT;
+        case SPECIES_CHARIZARD:
+        case SPECIES_TYPHLOSION:
+        case SPECIES_TYPHLOSION_HISUI:
+        case SPECIES_BLAZIKEN:
+        case SPECIES_INFERNAPE:
+        case SPECIES_EMBOAR:
+        case SPECIES_DELPHOX:
+        case SPECIES_INCINEROAR:
+        case SPECIES_CINDERACE:
+        case SPECIES_SKELEDIRGE:
+            return MOVE_BLAST_BURN;
+        case SPECIES_BLASTOISE:
+        case SPECIES_FERALIGATR:
+        case SPECIES_SWAMPERT:
+        case SPECIES_EMPOLEON:
+        case SPECIES_SAMUROTT:
+        case SPECIES_SAMUROTT_HISUI:
+        case SPECIES_GRENINJA:
+        case SPECIES_GRENINJA_ASH:
+        case SPECIES_GRENINJA_BATTLE_BOND:
+        case SPECIES_PRIMARINA:
+        case SPECIES_INTELEON:
+        case SPECIES_QUAQUAVAL:
+            return MOVE_HYDRO_CANNON;
+        default:
+            return MOVE_NONE;
+    }
+}
+
+bool8 CapeBrinkGetMoveToTeachLeadPokemon(void)
+{
+    // Returns:
+    //   8005 = Move tutor index
+    //   8006 = Num moves known by lead mon
+    //   8007 = Index of lead mon
+    //   to specialvar = whether a move can be taught in the first place
+    u8 i, leadMonSlot, moveCount = 0;
+    u16 moveId, tutorFlag; 
+    struct Pokemon *leadMon;
+    
+    leadMonSlot = GetLeadMonIndex();
+    leadMon = &gPlayerParty[leadMonSlot];
+    
+    if (GetMonData(leadMon, MON_DATA_FRIENDSHIP) != 255)
+        return FALSE;
+
+    moveId = GetFirstPartnerMove(GetMonData(leadMon, MON_DATA_SPECIES_OR_EGG));
+    switch(moveId)
+    {
+        case MOVE_FRENZY_PLANT:
+            tutorFlag = FLAG_TUTOR_FRENZY_PLANT;
+            break;
+        case MOVE_BLAST_BURN:
+            tutorFlag = FLAG_TUTOR_BLAST_BURN;
+            break;
+        case MOVE_HYDRO_CANNON:
+            tutorFlag = FLAG_TUTOR_HYDRO_CANNON;
+            break;
+        default:
+            return FALSE;
+    }
+    
+    StringCopy(gStringVar2, gMovesInfo[moveId].name);
+    if (!I_REUSABLE_TMS && FlagGet(tutorFlag) == TRUE)
+        return FALSE;
+    
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moveCount += (GetMonData(leadMon, MON_DATA_MOVE1 + i) != MOVE_NONE);
+    
+    gSpecialVar_0x8005 = moveId;
+    gSpecialVar_0x8006 = moveCount;
+    gSpecialVar_0x8007 = leadMonSlot;
+
+    return TRUE;
+}
+
+bool8 HasLearnedAllMovesFromCapeBrinkTutor(void)
+{
+    // 8005 is set by CapeBrinkGetMoveToTeachLeadPokemon
+    if (I_REUSABLE_TMS)
+    {
+        return FALSE;
+    }
+
+    switch (gSpecialVar_0x8005)
+    {
+        case MOVE_FRENZY_PLANT:
+            FlagSet(FLAG_TUTOR_FRENZY_PLANT);
+            break;
+        case MOVE_BLAST_BURN:
+            FlagSet(FLAG_TUTOR_BLAST_BURN);
+            break;
+        case MOVE_HYDRO_CANNON:
+            FlagSet(FLAG_TUTOR_HYDRO_CANNON);
+            break;
+    }
+
+    return (FlagGet(FLAG_TUTOR_FRENZY_PLANT) == TRUE)
+        && (FlagGet(FLAG_TUTOR_BLAST_BURN) == TRUE)
+        && (FlagGet(FLAG_TUTOR_HYDRO_CANNON) == TRUE);
+}
+
+void SetSeenMon(void)
+{
+    GetSetPokedexFlag(SpeciesToNationalPokedexNum(gSpecialVar_0x8004), 2);
+}
+
+#define tTimer data[0]
+#define tState data[1]
+#define tX     data[2]
+#define tY     data[3]
+
+static void Task_DrawTeleporterHousing(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    
+    if (tTimer == 0)
+    {
+        // Alternate the teleporter light / brightness of the teleporter door
+        if ((tState & 1) == 0)
+        {
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Yellow | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door_HalfGlowing | MAPGRID_COLLISION_MASK);
+        }
+        else
+        {
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Red | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door_FullGlowing | MAPGRID_COLLISION_MASK);
+        }
+        CurrentMapDrawMetatileAt(tX, tY);
+        CurrentMapDrawMetatileAt(tX, tY + 2);
+    }
+    
+    tTimer++;
+    if (tTimer != 16)
+        return;
+    
+    tTimer = 0;
+    tState++;
+    if (tState != 13)
+        return;
+    
+    MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Light_Green | MAPGRID_COLLISION_MASK);
+    MapGridSetMetatileIdAt(tX, tY + 2, METATILE_SeaCottage_Teleporter_Door | MAPGRID_COLLISION_MASK);
+    CurrentMapDrawMetatileAt(tX, tY);
+    CurrentMapDrawMetatileAt(tX, tY + 2);
+    DestroyTask(taskId);
+}
+
+void AnimateTeleporterHousing(void)
+{
+    u8 taskId;
+    s16 *data;
+    
+    taskId = CreateTask(Task_DrawTeleporterHousing, 0);
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tState = 0;
+    data = gTasks[taskId].data;
+    PlayerGetDestCoords(&tX, &tY);
+
+    // Set the coords of whichever teleporter is being animated
+    // 0 for the right teleporter, 1 for the left teleporter
+    if (gSpecialVar_0x8004 == 0)
+    {
+        gTasks[taskId].tX += 6;
+        gTasks[taskId].tY -= 5;
+    }
+    else
+    {
+        gTasks[taskId].tX -= 1;
+        gTasks[taskId].tY -= 5;
+    }    
+}
+
+static void Task_DrawTeleporterCable(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    
+    if (tTimer == 0)
+    {
+        if (tState != 0)
+        {
+            // Set default cable tiles to clear the ball
+            MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_Cable_Top | MAPGRID_COLLISION_MASK);
+            MapGridSetMetatileIdAt(tX, tY + 1, METATILE_SeaCottage_Teleporter_Cable_Bottom | MAPGRID_COLLISION_MASK);
+            CurrentMapDrawMetatileAt(tX, tY);
+            CurrentMapDrawMetatileAt(tX, tY + 1);
+
+            // End after drawing 4 times (length of the cable)
+            if (tState == 4)
+            {
+                DestroyTask(taskId);
+                return;
+            }
+            
+            tX--;
+        }
+
+        // Draw the cable ball
+        MapGridSetMetatileIdAt(tX, tY, METATILE_SeaCottage_Teleporter_CableBall_Top | MAPGRID_COLLISION_MASK);
+        MapGridSetMetatileIdAt(tX, tY + 1, METATILE_SeaCottage_Teleporter_CableBall_Bottom | MAPGRID_COLLISION_MASK);
+        CurrentMapDrawMetatileAt(tX, tY);
+        CurrentMapDrawMetatileAt(tX, tY + 1);
+    }
+    
+    tTimer++;
+    if (tTimer == 4)
+    {
+        tTimer = 0;
+        tState++;
+    }
+}
+
+void AnimateTeleporterCable(void)
+{
+    u8 taskId;
+    s16 *data;
+    
+    taskId = CreateTask(Task_DrawTeleporterCable, 0);
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tState = 0;
+    data = gTasks[taskId].data;
+    PlayerGetDestCoords(&tX, &tY);
+    gTasks[taskId].tX += 4;
+    gTasks[taskId].tY -= 5;
+}
+
+#undef tTimer
+#undef tState
+#undef tX
+#undef tY
+
+void SetVermilionTrashCans(void)
+{
+    u16 idx = (Random() % 15) + 1;
+    gSpecialVar_0x8004 = idx;
+    gSpecialVar_0x8005 = idx;
+    switch (gSpecialVar_0x8004)
+    {
+    case 1:
+        idx = Random() % 2;
+        if (idx == 0)
+            gSpecialVar_0x8005 += 1;
+        else
+            gSpecialVar_0x8005 += 5;
+        break;
+    case 2:
+    case 3:
+    case 4:
+        idx = Random() % 3;
+        if (idx == 0)
+            gSpecialVar_0x8005 += 1;
+        else if (idx == 1)
+            gSpecialVar_0x8005 += 5;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    case 5:
+        idx = Random() % 2;
+        if (idx == 0)
+            gSpecialVar_0x8005 += 5;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    case 6:
+        idx = Random() % 3;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else if (idx == 1)
+            gSpecialVar_0x8005 += 1;
+        else
+            gSpecialVar_0x8005 += 5;
+        break;
+    case 7:
+    case 8:
+    case 9:
+        idx = Random() % 4;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else if (idx == 1)
+            gSpecialVar_0x8005 += 1;
+        else if (idx == 2)
+            gSpecialVar_0x8005 += 5;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    case 10:
+        idx = Random() % 3;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else if (idx == 1)
+            gSpecialVar_0x8005 += 5;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    case 11:
+        idx = Random() % 2;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else
+            gSpecialVar_0x8005 += 1;
+        break;
+    case 12:
+    case 13:
+    case 14:
+        idx = Random() % 3;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else if (idx == 1)
+            gSpecialVar_0x8005 += 1;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    case 15:
+        idx = Random() % 2;
+        if (idx == 0)
+            gSpecialVar_0x8005 -= 5;
+        else
+            gSpecialVar_0x8005 -= 1;
+        break;
+    }
+    if (gSpecialVar_0x8005 > 15)
+    {
+        if (gSpecialVar_0x8004 % 5 == 1)
+            gSpecialVar_0x8005 = gSpecialVar_0x8004 + 1;
+        else if (gSpecialVar_0x8004 % 5 == 0)
+            gSpecialVar_0x8005 = gSpecialVar_0x8004 - 1;
+        else
+            gSpecialVar_0x8005 = gSpecialVar_0x8004 + 1;
+    }
+}
+
+bool8 DoesPlayerPartyContainSpecies(void)
+{
+    u8 partyCount = CalculatePlayerPartyCount();
+    u8 i;
+    for (i = 0; i < partyCount; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004)
+            return TRUE;
+    }
+    return FALSE;
+}
+
+static const u8 sSlotMachineIndices[] = {
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    1,
+    2,
+    2,
+    2,
+    3,
+    3,
+    3,
+    4,
+    4,
+    5
+};
+
+u8 GetRandomSlotMachineId(void)
+{
+    u16 rval = Random() % NELEMS(sSlotMachineIndices);
+    return sSlotMachineIndices[rval];
+}
+
+static const struct WindowTemplate sElevatorCurrentFloorWindowTemplate = {
+    .bg = 0,
+    .tilemapLeft = 22,
+    .tilemapTop = 1,
+    .width = 7,
+    .height = 4,
+    .paletteNum = 15,
+    .baseBlock = 0x008
+};
+
+static const u8 *const sFloorNamePointers[] = {
+    gText_B4F,
+    gText_B3F,
+    gText_B2F,
+    gText_B1F,
+    gText_1F,
+    gText_2F,
+    gText_3F,
+    gText_4F,
+    gText_5F,
+    gText_6F,
+    gText_7F,
+    gText_8F,
+    gText_9F,
+    gText_10F,
+    gText_11F,
+    gText_Rooftop
+};
+
+static const u16 sElevatorWindowMetatilesGoingUp[][3] = {
+    {
+        METATILE_SilphCo_ElevatorWindow_Top0, 
+        METATILE_SilphCo_ElevatorWindow_Top1, 
+        METATILE_SilphCo_ElevatorWindow_Top2
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Mid0, 
+        METATILE_SilphCo_ElevatorWindow_Mid1, 
+        METATILE_SilphCo_ElevatorWindow_Mid2
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Bottom0, 
+        METATILE_SilphCo_ElevatorWindow_Bottom1, 
+        METATILE_SilphCo_ElevatorWindow_Bottom2
+    }
+};
+
+static const u16 sElevatorWindowMetatilesGoingDown[][3] = {
+    {
+        METATILE_SilphCo_ElevatorWindow_Top0, 
+        METATILE_SilphCo_ElevatorWindow_Top2, 
+        METATILE_SilphCo_ElevatorWindow_Top1
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Mid0, 
+        METATILE_SilphCo_ElevatorWindow_Mid2, 
+        METATILE_SilphCo_ElevatorWindow_Mid1
+    },
+    {
+        METATILE_SilphCo_ElevatorWindow_Bottom0, 
+        METATILE_SilphCo_ElevatorWindow_Bottom2, 
+        METATILE_SilphCo_ElevatorWindow_Bottom1
+    }
+};
+
+static const u8 sElevatorAnimationDuration[] = {
+    8,
+    16,
+    24,
+    32,
+    38,
+    46,
+    53,
+    56,
+    57
+};
+
+static const u8 sElevatorWindowAnimDuration[] = {
+    3,
+    6,
+    9,
+    12,
+    15,
+    18,
+    21,
+    24,
+    27
+};
+
+void GetElevatorFloor(void)
+{
+    u16 floor = 4;
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_ROCKET_HIDEOUT_B1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_SILPH_CO_1F):
+            floor = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_2F):
+            floor = 5;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_3F):
+            floor = 6;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_4F):
+            floor = 7;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_5F):
+            floor = 8;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_6F):
+            floor = 9;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_7F):
+            floor = 10;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_8F):
+            floor = 11;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_9F):
+            floor = 12;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_10F):
+            floor = 13;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_11F):
+            floor = 14;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B1F):
+            floor = 3;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B2F):
+            floor = 2;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B4F):
+            floor = 0;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_CELADON_CITY_DEPARTMENT_STORE_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_1F):
+            floor = 4;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_2F):
+            floor = 5;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_3F):
+            floor = 6;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_4F):
+            floor = 7;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_5F):
+            floor = 8;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_TRAINER_TOWER_1F):
+        case MAP_NUM(MAP_TRAINER_TOWER_2F):
+        case MAP_NUM(MAP_TRAINER_TOWER_3F):
+        case MAP_NUM(MAP_TRAINER_TOWER_4F):
+        case MAP_NUM(MAP_TRAINER_TOWER_5F):
+        case MAP_NUM(MAP_TRAINER_TOWER_6F):
+        case MAP_NUM(MAP_TRAINER_TOWER_7F):
+        case MAP_NUM(MAP_TRAINER_TOWER_8F):
+        case MAP_NUM(MAP_TRAINER_TOWER_ROOF):
+            floor = 15;
+            break;
+        case MAP_NUM(MAP_TRAINER_TOWER_LOBBY):
+            floor = 3;
+            break;
+        }
+    }
+    VarSet(VAR_ELEVATOR_FLOOR, floor);
+}
+
+u16 InitElevatorFloorSelectMenuPos(void)
+{
+    sElevatorScroll = 0;
+    sElevatorCursorPos = 0;
+
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_ROCKET_HIDEOUT_B1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_SILPH_CO_11F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_10F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_9F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_8F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 3;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_7F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_6F):
+            sElevatorScroll = 1;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_5F):
+            sElevatorScroll = 2;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_4F):
+            sElevatorScroll = 3;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_3F):
+            sElevatorScroll = 4;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_2F):
+            sElevatorScroll = 5;
+            sElevatorCursorPos = 4;
+            break;
+        case MAP_NUM(MAP_SILPH_CO_1F):
+            sElevatorScroll = 5;
+            sElevatorCursorPos = 5;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B1F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B2F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_ROCKET_HIDEOUT_B4F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_CELADON_CITY_DEPARTMENT_STORE_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_5F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_4F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_3F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 2;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_2F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 3;
+            break;
+        case MAP_NUM(MAP_CELADON_CITY_DEPARTMENT_STORE_1F):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 4;
+            break;
+        }
+    }
+    if (gSaveBlock1Ptr->dynamicWarp.mapGroup == MAP_GROUP(MAP_TRAINER_TOWER_1F))
+    {
+        switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
+        {
+        case MAP_NUM(MAP_TRAINER_TOWER_1F):
+        case MAP_NUM(MAP_TRAINER_TOWER_2F):
+        case MAP_NUM(MAP_TRAINER_TOWER_3F):
+        case MAP_NUM(MAP_TRAINER_TOWER_4F):
+        case MAP_NUM(MAP_TRAINER_TOWER_5F):
+        case MAP_NUM(MAP_TRAINER_TOWER_6F):
+        case MAP_NUM(MAP_TRAINER_TOWER_7F):
+        case MAP_NUM(MAP_TRAINER_TOWER_8F):
+        case MAP_NUM(MAP_TRAINER_TOWER_ROOF):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 0;
+            break;
+        case MAP_NUM(MAP_TRAINER_TOWER_LOBBY):
+            sElevatorScroll = 0;
+            sElevatorCursorPos = 1;
+            break;
+        }
+    }
+    return sElevatorCursorPos;
+}
+
+void AnimateElevator(void)
+{
+    u16 nfloors;
+    s16 *data = gTasks[CreateTask(Task_ElevatorShake, 9)].data;
+    data[1] = 0;
+    data[2] = 0;
+    data[4] = 1;
+    if (gSpecialVar_0x8005 > gSpecialVar_0x8006)
+    {
+        nfloors = gSpecialVar_0x8005 - gSpecialVar_0x8006;
+        data[6] = 1;
+    }
+    else
+    {
+        nfloors = gSpecialVar_0x8006 - gSpecialVar_0x8005;
+        data[6] = 0;
+    }
+    if (nfloors > 8)
+        nfloors = 8;
+    data[5] = sElevatorAnimationDuration[nfloors];
+    SetCameraPanningCallback(NULL);
+    AnimateElevatorWindowView(nfloors, data[6]);
+    PlaySE(SE_ELEVATOR);
+}
+
+static void Task_ElevatorShake(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    data[1]++;
+    if ((data[1] % 3) == 0)
+    {
+        data[1] = 0;
+        data[2]++;
+        data[4] = -data[4];
+        SetCameraPanning(0, data[4]);
+        if (data[2] == data[5])
+        {
+            PlaySE(SE_DING_DONG);
+            DestroyTask(taskId);
+            ScriptContext_Enable();
+            InstallCameraPanAheadCallback();
+        }
+    }
+}
+
+static const u8 sText_NowOn[] = _("Now on:");
+
+void DrawElevatorCurrentFloorWindow(void)
+{
+    const u8 *floorname;
+    u32 strwidth;
+
+    sElevatorCurrentFloorWindowId = AddWindow(&sElevatorCurrentFloorWindowTemplate);
+    LoadUserWindowBorderGfx(sElevatorCurrentFloorWindowId, 0x21D, BG_PLTT_ID(13));
+    DrawStdFrameWithCustomTileAndPalette(sElevatorCurrentFloorWindowId, FALSE, 0x21D, 13);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, sText_NowOn, 0, 2, 0xFF, NULL);
+    floorname = sFloorNamePointers[gSpecialVar_0x8005];
+    strwidth = GetStringWidth(FONT_NORMAL, floorname, 0);
+    AddTextPrinterParameterized(sElevatorCurrentFloorWindowId, FONT_NORMAL, floorname, 56 - strwidth, 16, 0xFF, NULL);
+    PutWindowTilemap(sElevatorCurrentFloorWindowId);
+    CopyWindowToVram(sElevatorCurrentFloorWindowId, COPYWIN_FULL);
+}
+
+void CloseElevatorCurrentFloorWindow(void)
+{
+    ClearStdWindowAndFrameToTransparent(sElevatorCurrentFloorWindowId, TRUE);
+    RemoveWindow(sElevatorCurrentFloorWindowId);
+}
+
+static void AnimateElevatorWindowView(u16 nfloors, u8 direction)
+{
+    u8 taskId;
+    if (FuncIsActiveTask(Task_AnimateElevatorWindowView) != TRUE)
+    {
+        taskId = CreateTask(Task_AnimateElevatorWindowView, 8);
+        gTasks[taskId].data[0] = 0;
+        gTasks[taskId].data[1] = 0;
+        gTasks[taskId].data[2] = direction;
+        gTasks[taskId].data[3] = sElevatorWindowAnimDuration[nfloors];
+    }
+}
+
+static void Task_AnimateElevatorWindowView(u8 taskId)
+{
+    u8 i;
+    u8 j;
+    s16 *data = gTasks[taskId].data;
+    if (data[1] == 6)
+    {
+        data[0]++;
+        if (data[2] == 0)
+        {
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                    MapGridSetMetatileIdAt(j + 1 + MAP_OFFSET, i + MAP_OFFSET, sElevatorWindowMetatilesGoingUp[i][data[0] % 3] | MAPGRID_COLLISION_MASK);
+            }
+        }
+        else
+        {
+            for (i = 0; i < 3; i++)
+            {
+                for (j = 0; j < 3; j++)
+                    MapGridSetMetatileIdAt(j + 1 + MAP_OFFSET, i + MAP_OFFSET, sElevatorWindowMetatilesGoingDown[i][data[0] % 3] | MAPGRID_COLLISION_MASK);
+            }
+        }
+        DrawWholeMapView();
+        data[1] = 0;
+        if (data[0] == data[3])
+            DestroyTask(taskId);
+    }
+    data[1]++;
+}
+
+void ForcePlayerOntoBike(void)
+{
+    if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+        SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_ACRO_BIKE);
+    Overworld_SetSavedMusic(MUS_CYCLING);
+    Overworld_ChangeMusicTo(MUS_CYCLING);
+}
+
+void BrailleCursorToggle(void)
+{
+    // 8004 = x - 27
+    // 8005 = y
+    // 8006 = action (0 = create, 1 = delete)
+    u16 x = gSpecialVar_0x8004 + 27;
+
+    if (gSpecialVar_0x8006 == 0)
+        sBrailleTextCursorSpriteID = CreateTextCursorSprite(0, x, gSpecialVar_0x8005, 0, 0);
+    else
+        DestroyTextCursorSprite(sBrailleTextCursorSpriteID);
+}
+
+static const u16 sEliteFourLightingPalettes[][16] = {
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_0.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_1.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_2.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_3.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_4.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_5.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_6.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_7.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_8.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_9.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_10.gbapal"),
+    INCBIN_U16("graphics/field_specials/elite_four_lighting_11.gbapal")
+};
+
+static const u16 sChampionRoomLightingPalettes[][16] = {
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_0.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_1.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_2.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_3.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_4.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_5.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_6.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_7.gbapal"),
+    INCBIN_U16("graphics/field_specials/champion_room_lighting_8.gbapal")
+};
+
+static const u8 sEliteFourLightingTimers[] = {
+    40,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12,
+    12
+};
+
+static const u8 sChampionRoomLightingTimers[] = {
+    20,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8,
+     8
+};
+
+void DoPokemonLeagueLightingEffect(void)
+{
+    u8 taskId = CreateTask(Task_RunPokemonLeagueLightingEffect, 8);
+    s16 *data = gTasks[taskId].data;
+    if (FlagGet(FLAG_TEMP_3) == TRUE)
+    {
+        gTasks[taskId].func = Task_CancelPokemonLeagueLightingEffect;
+    }
+    else
+    {
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM))
+        {
+            data[0] = sChampionRoomLightingTimers[0];
+            data[2] = 8;
+            LoadPalette(sChampionRoomLightingPalettes[0], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        }
+        else
+        {
+            data[0] = sEliteFourLightingTimers[0];
+            data[2] = 11;
+            LoadPalette(sEliteFourLightingPalettes[0], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        }
+        data[1] = 0;
+        // ApplyGlobalTintToPaletteSlot(7, 1);
+    }
+}
+
+static void Task_RunPokemonLeagueLightingEffect(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    if (!gPaletteFade.active
+     && FlagGet(FLAG_TEMP_2) != FALSE
+     && FlagGet(FLAG_TEMP_5) != TRUE
+     && --data[0] == 0
+    )
+    {
+        if (++data[1] == data[2])
+            data[1] = 0;
+
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM))
+        {
+            data[0] = sChampionRoomLightingTimers[data[1]];
+            LoadPalette(sChampionRoomLightingPalettes[data[1]], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        }
+        else
+        {
+            data[0] = sEliteFourLightingTimers[data[1]];
+            LoadPalette(sEliteFourLightingPalettes[data[1]], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        }
+        // ApplyGlobalTintToPaletteSlot(7, 1);
+    }
+}
+
+static void Task_CancelPokemonLeagueLightingEffect(u8 taskId)
+{
+    if (FlagGet(FLAG_TEMP_4) != FALSE)
+    {
+        if (gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM) && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_POKEMON_LEAGUE_CHAMPIONS_ROOM))
+            LoadPalette(sChampionRoomLightingPalettes[8], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        else
+            LoadPalette(sEliteFourLightingPalettes[11], BG_PLTT_ID(7), PLTT_SIZE_4BPP);
+        // ApplyGlobalTintToPaletteSlot(7, 1);
+        if (gPaletteFade.active)
+        {
+            BlendPalettes(0x00000080, 16, RGB_BLACK);
+        }
+        DestroyTask(taskId);
+    }
+}
+
+void StopPokemonLeagueLightingEffectTask(void)
+{
+    if (FuncIsActiveTask(Task_RunPokemonLeagueLightingEffect) == TRUE)
+    {
+        DestroyTask(FindTaskIdByFunc(Task_RunPokemonLeagueLightingEffect));
+    }
+}
+
+/*
+ * Determines which of Lorelei's doll collection to show
+ * based on how many times you've entered the Hall of Fame.
+ */
+void UpdateLoreleiDollCollection(void)
+{
+    u32 numHofClears = GetGameStat(GAME_STAT_ENTERED_HOF);
+    if (numHofClears >= 25)
+    {
+        FlagClear(FLAG_HIDE_LORELEI_HOUSE_MEOWTH_DOLL);
+        if (numHofClears >= 50)
+            FlagClear(FLAG_HIDE_LORELEI_HOUSE_CHANSEY_DOLL);
+        if (numHofClears >= 75)
+            FlagClear(FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_F_DOLL);
+        if (numHofClears >= 100)
+            FlagClear(FLAG_HIDE_LORELEI_HOUSE_JIGGLYPUFF_DOLL);
+        if (numHofClears >= 125)
+            FlagClear(FLAG_HIDE_LORELEIS_HOUSE_NIDORAN_M_DOLL);
+        if (numHofClears >= 150)
+            FlagClear(FLAG_HIDE_LORELEIS_HOUSE_FEAROW_DOLL);
+        if (numHofClears >= 175)
+            FlagClear(FLAG_HIDE_LORELEIS_HOUSE_PIDGEOT_DOLL);
+        if (numHofClears >= 200)
+            FlagClear(FLAG_HIDE_LORELEIS_HOUSE_LAPRAS_DOLL);
+    }
+}
+
+void SampleResortGorgeousMonAndReward(void)
+{
+    u16 requestedSpecies = VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON);
+    if (requestedSpecies == SPECIES_NONE || requestedSpecies == 0xFFFF)
+    {
+        VarSet(VAR_RESORT_GORGEOUS_REQUESTED_MON, SampleResortGorgeousMon());
+        VarSet(VAR_RESORT_GORGEOUS_REWARD, SampleResortGorgeousReward());
+        VarSet(VAR_RESORT_GOREGEOUS_STEP_COUNTER, 0);
+    }
+    StringCopy(gStringVar1, gSpeciesInfo[VarGet(VAR_RESORT_GORGEOUS_REQUESTED_MON)].speciesName);
+}
+
+static u16 SampleResortGorgeousMon(void)
+{
+    u16 i;
+    u16 species;
+    for (i = 0; i < 100; i++)
+    {
+        species = (Random() % (NUM_SPECIES - 1)) + 1;
+        if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), 0) == TRUE)
+            return species;
+    }
+    while (GetSetPokedexFlag(SpeciesToNationalPokedexNum(species), 0) != TRUE)
+    {
+        if (species == SPECIES_BULBASAUR)
+            species = NUM_SPECIES - 1;
+        else
+            species--;
+    }
+    return species;
+}
+
+static const u16 sResortGorgeousDeluxeRewards[] = {
+    ITEM_BIG_PEARL,
+    ITEM_PEARL,
+    ITEM_STARDUST,
+    ITEM_STAR_PIECE,
+    ITEM_NUGGET,
+    ITEM_RARE_CANDY
+};
+
+static u16 SampleResortGorgeousReward(void)
+{
+    if ((Random() % 100) >= 30)
+        return ITEM_LUXURY_BALL;
+    else
+        return sResortGorgeousDeluxeRewards[Random() % NELEMS(sResortGorgeousDeluxeRewards)];
+}
+
+bool8 PlayerPartyContainsSpeciesWithPlayerID(void)
+{
+    // 8004 = species
+    u8 playerCount = CalculatePlayerPartyCount();
+    u8 i;
+    for (i = 0; i < playerCount; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL) == gSpecialVar_0x8004 
+            && GetPlayerIDAsU32() == GetMonData(&gPlayerParty[i], MON_DATA_OT_ID, NULL))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+#define tXtrans   data[0]
+#define tTimer    data[1]
+#define tNremain  data[2]
+#define tDuration data[3]
+#define tYtrans   data[4]
+
+void ShakeScreen(void)
+{
+    /*
+     * 0x8004 = x translation
+     * 0x8005 = y translation
+     * 0x8006 = num interations
+     * 0x8007 = duration of an iteration
+     */
+    u8 taskId = CreateTask(Task_ShakeScreen, 9);
+    gTasks[taskId].tXtrans = gSpecialVar_0x8005;
+    gTasks[taskId].tTimer = 0;
+    gTasks[taskId].tNremain = gSpecialVar_0x8006;
+    gTasks[taskId].tDuration = gSpecialVar_0x8007;
+    gTasks[taskId].tYtrans = gSpecialVar_0x8004;
+    SetCameraPanningCallback(NULL);
+    PlaySE(SE_M_STRENGTH);
+}
+
+static void Task_ShakeScreen(u8 taskId)
+{
+    s16 *data = gTasks[taskId].data;
+    tTimer++;
+    if (tTimer % tDuration == 0)
+    {
+        tTimer = 0;
+        tNremain--;
+        tXtrans = -tXtrans;
+        tYtrans = -tYtrans;
+        SetCameraPanning(tXtrans, tYtrans);
+        if (tNremain == 0)
+        {
+            Task_EndScreenShake(taskId);
+            InstallCameraPanAheadCallback();
+        }
+    }
+}
+
+static void Task_EndScreenShake(u8 taskId)
+{
+    DestroyTask(taskId);
+    ScriptContext_Enable();
+}
+
+#undef tYtrans
+#undef tDuration
+#undef tNremain
+#undef tTimer
+#undef tXtrans
+
+bool8 CutMoveRuinValleyCheck(void)
+{
+    if (FlagGet(FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE) != TRUE
+     && gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_SIX_ISLAND_RUIN_VALLEY)
+     && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_SIX_ISLAND_RUIN_VALLEY)
+     && gSaveBlock1Ptr->pos.x == 24
+     && gSaveBlock1Ptr->pos.y == 25
+     && GetPlayerFacingDirection() == DIR_NORTH
+    )
+        return TRUE;
+    else
+        return FALSE;
+}
+
+void CutMoveOpenDottedHoleDoor(void)
+{
+    MapGridSetMetatileIdAt(31, 31, METATILE_SeviiIslands67_DottedHoleDoor_Open);
+    DrawWholeMapView();
+    PlaySE(SE_BANG);
+    FlagSet(FLAG_USED_CUT_ON_RUIN_VALLEY_BRAILLE);
+    UnlockPlayerFieldControls();
+}
+
+void ForcePlayerToStartSurfing(void)
+{
+    SetPlayerAvatarTransitionFlags(PLAYER_AVATAR_FLAG_SURFING);
+}
+
+void UpdateTrainerCardPhotoIcons(void)
+{
+    u16 species[PARTY_SIZE];
+    u32 personality[PARTY_SIZE];
+    u8 i;
+    u8 partyCount;
+    for (i = 0; i < PARTY_SIZE; i++)
+        species[i] = SPECIES_NONE;
+    partyCount = CalculatePlayerPartyCount();
+    for (i = 0; i < partyCount; i++)
+    {
+        species[i] = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG, NULL);
+        personality[i] = GetMonData(&gPlayerParty[i], MON_DATA_PERSONALITY, NULL);
+    }
+    VarSet(VAR_TRAINER_CARD_MON_ICON_1, SpeciesToMailSpecies(species[0], personality[0]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_2, SpeciesToMailSpecies(species[1], personality[1]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_3, SpeciesToMailSpecies(species[2], personality[2]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_4, SpeciesToMailSpecies(species[3], personality[3]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_5, SpeciesToMailSpecies(species[4], personality[4]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_6, SpeciesToMailSpecies(species[5], personality[5]));
+    VarSet(VAR_TRAINER_CARD_MON_ICON_TINT_IDX, gSpecialVar_0x8004);
+}
+
+u16 StickerManGetBragFlags(void)
+{
+    u16 result = 0;
+    u32 numEggs;
+    gSpecialVar_0x8004 = GetGameStat(GAME_STAT_ENTERED_HOF);
+    numEggs = GetGameStat(GAME_STAT_HATCHED_EGGS);
+    gSpecialVar_0x8006 = GetGameStat(GAME_STAT_LINK_BATTLE_WINS);
+    if (numEggs > 0xFFFF)
+        gSpecialVar_0x8005 = 0xFFFF;
+    else
+        gSpecialVar_0x8005 = numEggs;
+    if (gSpecialVar_0x8004 != 0)
+        result |= 1 << 0;
+    if (gSpecialVar_0x8005 != 0)
+        result |= 1 << 1;
+    if (gSpecialVar_0x8006 != 0)
+        result |= 1 << 2;
+    return result;
 }

@@ -24,6 +24,9 @@ enum {
     FONT_SHORT_NARROWER,
 };
 
+#define FONT_MALE FONT_NORMAL
+#define FONT_FEMALE FONT_NORMAL
+
 // Return values for font functions
 enum {
     RENDER_PRINT,
@@ -177,5 +180,8 @@ u32 GetGlyphWidth_Braille(u16 glyphId, bool32 isJapanese);
 u32 GetFontIdToFit(const u8 *string, u32 widestFontId, u32 letterSpacing, u32 widthPx);
 u8 *PrependFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
+
+u8 CreateTextCursorSprite(u8 sheetId, u16 x, u16 y, u8 priority, u8 subpriority);
+void DestroyTextCursorSprite(u8 spriteId);
 
 #endif // GUARD_TEXT_H
