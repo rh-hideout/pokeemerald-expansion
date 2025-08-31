@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Purifying Salt user can't be poisoned by Toxic Spikes")
     }
 }
 
-SINGLE_BATTLE_TEST("Purifying Salt doesn't prevent pokemon from being poisoned by Toxic Spikes on switch-in if forced in by phazing with Mold Breaker")
+SINGLE_BATTLE_TEST("Purifying Salt doesn't prevent Pokémon from being poisoned by Toxic Spikes on switch-in if forced in by phazing with Mold Breaker")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);

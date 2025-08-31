@@ -130,7 +130,9 @@ struct DisableStruct
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
     u8 hazardsDone:1;
-    u8 padding:1;
+    u8 padding1:1;
+    u8 octolockedBy:3;
+    u8 padding2:5;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -682,7 +684,7 @@ struct BattleStruct
     u8 startingStatusDone:1;
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
-    u8 unused:3;
+    u8 battlerKOAnimsRunning:3;
     u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
@@ -1231,7 +1233,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE | HITMARKER_UNABLE_TO_USE_MOVE))
+        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE | HITMARKER_UNABLE_TO_USE_MOVE))
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
