@@ -312,7 +312,7 @@ if __name__ == '__main__':
     try:
         [argv0, trainers_in_path, parties_in_path, out_path] = sys.argv
     except:
-        print(f"usage: python3 {sys.argv[0]} <trainers.h> <out>")
+        print(f"usage: python3 {sys.argv[0]} <trainers.h> <trainer_parties.h> <out>")
     else:
         with open(trainers_in_path, "r") as trainers_in_h, open(parties_in_path, "r") as parties_in_h, open(out_path, "w") as out_party:
             parties = convert_parties(parties_in_path, parties_in_h)
