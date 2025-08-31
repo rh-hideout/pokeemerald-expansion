@@ -1,7 +1,13 @@
 #ifndef GUARD_BATTLE_ANIM_PSEUDO_STRUCT_FIELDS_H
 #define GUARD_BATTLE_ANIM_PSEUDO_STRUCT_FIELDS_H
 
-// for InitSpriteLinearTranslation
+// API for the following functions
+// - InitSpriteLinearTranslation
+// - TradeMenuBouncePartySprites (in pokeemerald: Trade_MoveSelectedMonToTarget)
+// - TranslateSpriteLinear
+// - TranslateSpriteLinearIconFrame
+// - TranslateSpecifiedSpriteLinear
+
 // both input and output
 #define sDuration_lt data[0]
 
@@ -34,16 +40,27 @@
 
 // - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document
 
-// TranslateAnimHorizontalArc, TranslateAnimVerticalArc are subclasses
+// InitAnimArcTranslation, TranslateAnimHorizontalArc, TranslateAnimVerticalArc are subclasses
 
 // both input and output
-#define sDuration_lt data[0]
+#define sDuration_lti data[0]
+
+// If using InitSpriteLinearTranslationIteratorWithSpeed and InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart
+#define sInputSpeed_lti data[0]
 
 // input only
-#define sInputStartX_lt data[1]
-#define sInputEndX_lt data[2]
-#define sInputStartY_lt data[3]
-#define sInputEndY_lt data[4]
+#define sInputStartX_lti data[1]
+#define sInputEndX_lti data[2]
+#define sInputStartY_lti data[3]
+#define sInputEndY_lti data[4]
+
+// output only
+#define sXIncrement_lti data[1]
+#define sYIncrement_lti data[2]
+#define sCurXOffsetFixedPoint_lti data[3]
+#define sCurYOffsetFixedPoint_lti data[4]
+
+// TODO InitAnimArcTranslation etc.
 
 // ============================
 // API for the following functions
@@ -59,6 +76,19 @@
 // TranslateSpriteLinearAndFlicker
 // AnimTranslateLinearAndFlicker_Flipped
 // AnimTranslateLinearAndFlicker
+
+// ============================
+// API for the following functions:
+// - TranslateSpriteLinearInteger
+// - TranslateSpecifiedSpriteLinearInteger
+
+// ltz - Linear Translation Integer (Z = Integer)
+#define sDuration_ltz data[0]
+#define sXIncrement_ltz data[1]
+#define sYIncrement_ltz data[2]
+
+// For TranslateSpecifiedSpriteLinearInteger only
+#define sSpriteId_ltz data[3]
 
 // ============================
 // for InitSpritePosToAnimTarget, InitSpritePosToAnimAttacker, InitSpritePosToAnimAttackerPartner, InitSpritePosToAnimBattler

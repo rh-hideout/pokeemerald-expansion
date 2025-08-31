@@ -699,8 +699,8 @@ void SetAnimSpriteInitialXOffset(struct Sprite *sprite, s16 xOffset)
 
 void InitAnimArcTranslation(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->data[6] = 0x8000 / sprite->data[0];
     sprite->data[7] = 0;
@@ -1000,38 +1000,54 @@ void InitSpriteLinearTranslation(struct Sprite *sprite)
     sprite->sCurXOffsetFixedPoint_lt = 0;
 }
 
+// The Iterator version of SpriteLinearTranslation works a little differently
+// The idea is that the user can call UpdateSpriteLinearTranslationIterator
+// to perform an iteration of the linear translation,
+// which will return TRUE if the translation is complete
+// and FALSE otherwise
+// However, there are some slight implementation differences
+// For some reason, the Iterator function's increments are stored
+// as a Q_9_7, with 9 bits for the whole part (including the sign, so a range of (-256,256), and 7 bits for the fractional part
+// Specifically, this is the format
+// - where w is a whole bit
+// - f is a fractional bit
+// - and s is the sign bit
+// wwwwwwww.fffffffs
+// however, the game will still treat the sign bit as a fractional bit
+// when adding the increment to the current x/y offset
+// which introduces some insignificant rounding
 void InitSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
-    int x = sprite->sInputEndX_lt - sprite->sInputStartX_lt;
-    int y = sprite->sInputEndY_lt - sprite->sInputStartY_lt;
+    int x = sprite->sInputEndX_lti - sprite->sInputStartX_lti;
+    int y = sprite->sInputEndY_lti - sprite->sInputStartY_lti;
     bool8 movingLeft = x < 0;
     bool8 movingUp = y < 0;
-    u16 xDelta = UQ_8_8(abs(x));
-    u16 yDelta = UQ_8_8(abs(y));
+    u16 xIncrement = UQ_8_8(abs(x));
+    u16 yIncrement = UQ_8_8(abs(y));
 
-    xDelta = SAFE_DIV(xDelta, sprite->sDuration_lt);
-    yDelta = SAFE_DIV(yDelta, sprite->sDuration_lt);
+    xIncrement = SAFE_DIV(xIncrement, sprite->sDuration_lti);
+    yIncrement = SAFE_DIV(yIncrement, sprite->sDuration_lti);
 
     if (movingLeft)
-        xDelta |= 1;
+        xIncrement |= 1;
     else
-        xDelta &= ~1;
+        xIncrement &= ~1;
 
     if (movingUp)
-        yDelta |= 1;
+        yIncrement |= 1;
     else
-        yDelta &= ~1;
+        yIncrement &= ~1;
 
-    sprite->data[1] = xDelta;
-    sprite->data[2] = yDelta;
-    sprite->data[4] = 0;
-    sprite->data[3] = 0;
+    sprite->sXIncrement_lti = xIncrement;
+    sprite->sYIncrement_lti = yIncrement;
+    sprite->sCurYOffsetFixedPoint_lti = 0;
+    sprite->sCurXOffsetFixedPoint_lti = 0;
 }
 
 void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
@@ -1039,8 +1055,8 @@ void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite
 
 static void UNUSED StartAnimLinearTranslation_SetCornerVecX(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimTranslateLinear_WithFollowup_SetCornerVecX;
     sprite->callback(sprite);
@@ -1048,31 +1064,31 @@ static void UNUSED StartAnimLinearTranslation_SetCornerVecX(struct Sprite *sprit
 
 bool8 UpdateSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
-    u16 v1, v2, x, y;
+    u16 xIncrement, yIncrement, curXOffsetFixedPoint, curYOffsetFixedPoint;
 
-    if (!sprite->data[0])
+    if (!sprite->sDuration_lti)
         return TRUE;
 
-    v1 = sprite->data[1];
-    v2 = sprite->data[2];
-    x = sprite->data[3];
-    y = sprite->data[4];
-    x += v1;
-    y += v2;
+    xIncrement = sprite->sXIncrement_lti;
+    yIncrement = sprite->sYIncrement_lti;
+    curXOffsetFixedPoint = sprite->sCurXOffsetFixedPoint_lti;
+    curYOffsetFixedPoint = sprite->sCurYOffsetFixedPoint_lti;
+    curXOffsetFixedPoint += xIncrement;
+    curYOffsetFixedPoint += yIncrement;
 
-    if (v1 & 1)
-        sprite->x2 = -(x >> 8);
+    if (xIncrement & 1)
+        sprite->x2 = -(curXOffsetFixedPoint >> 8);
     else
-        sprite->x2 = x >> 8;
+        sprite->x2 = curXOffsetFixedPoint >> 8;
 
-    if (v2 & 1)
-        sprite->y2 = -(y >> 8);
+    if (yIncrement & 1)
+        sprite->y2 = -(curYOffsetFixedPoint >> 8);
     else
-        sprite->y2 = y >> 8;
+        sprite->y2 = curYOffsetFixedPoint >> 8;
 
-    sprite->data[3] = x;
-    sprite->data[4] = y;
-    sprite->data[0]--;
+    sprite->sCurXOffsetFixedPoint_lti = curXOffsetFixedPoint;
+    sprite->sCurYOffsetFixedPoint_lti = curYOffsetFixedPoint;
+    sprite->sDuration_lti--;
     return FALSE;
 }
 
@@ -1092,15 +1108,16 @@ static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite
 
 void InitSpriteLinearTranslationIteratorWithSpeed(struct Sprite *sprite)
 {
-    int v1 = abs(sprite->data[2] - sprite->data[1]) << 8;
-    sprite->data[0] = v1 / sprite->data[0];
+    // The duration is calculated by treating the x distance as the distance in the duration = distance / speed calculation
+    int v1 = abs(sprite->sInputEndX_lti - sprite->sInputStartX_lti) << 8;
+    sprite->sDuration_lti = v1 / sprite->sInputSpeed_lti;
     InitSpriteLinearTranslationIterator(sprite);
 }
 
 void InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
     InitSpriteLinearTranslationIteratorWithSpeed(sprite);
     sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
