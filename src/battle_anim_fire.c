@@ -276,7 +276,7 @@ const struct SpriteTemplate gIncinerateSpriteTemplate =
     .anims = gIncinerateAnims,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = TranslateAnimSpriteToTargetMonLocation,
+    .callback = TranslateAnimSpriteToAverageTargetMonLocation,
 };
 
 const struct SpriteTemplate gBurnFlameSpriteTemplate =

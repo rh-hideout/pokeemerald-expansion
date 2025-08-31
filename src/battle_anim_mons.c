@@ -1565,6 +1565,57 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
 #undef ARG_DURATION
 #undef ARG_PIC_OFFSET_RELATED
 
+// Like above, but will take the average position of the target
+
+// arg 0: initial x offset
+// arg 1: initial y offset
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
+// arg 2: target x offset
+#define ARG_SPRITE_X_END_OFFSET 2
+// arg 3: target y offset
+#define ARG_SPRITE_Y_END_OFFSET 3
+// arg 4: duration
+#define ARG_DURATION 4
+// arg 5: upper 8 bits = location on attacking mon, lower 8 bits = location on target mon pick to target
+#define ARG_PIC_OFFSET_RELATED 5
+
+void TranslateAnimSpriteToAverageTargetMonLocation(struct Sprite *sprite)
+{
+    bool8 respectMonPicOffsets;
+    bool32 respectMonPicOffsetsForTarget;
+
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff00))
+        respectMonPicOffsets = TRUE;
+    else
+        respectMonPicOffsets = FALSE;
+
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff))
+        respectMonPicOffsetsForTarget = TRUE;
+    else
+        respectMonPicOffsetsForTarget = FALSE;
+
+    InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+
+    SetAverageBattlerPositions(gBattleAnimTarget, respectMonPicOffsetsForTarget, &sprite->sInputEndX_lti, &sprite->sInputEndY_lti);
+
+    sprite->sInputEndX_lti += gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti += gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_PIC_OFFSET_RELATED
+
 // 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
 #define ARG_SPRITE_X_END_OFFSET 2
 #define ARG_SPRITE_Y_END_OFFSET 3

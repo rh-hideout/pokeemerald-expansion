@@ -104,6 +104,7 @@ void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite
 void InitSpriteArcTranslation(struct Sprite *sprite);
 bool8 UpdateSpriteLinearTranslationIterator(struct Sprite *sprite);
 void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite);
+void TranslateAnimSpriteToAverageTargetMonLocation(struct Sprite *sprite);
 u8 GetBattlerSpriteCoord2(u8 battler, u8 coordType);
 void InitSpriteLinearTranslationIteratorWithSpeed(struct Sprite *sprite);
 u16 ArcTan2Neg(s16 x, s16 y);

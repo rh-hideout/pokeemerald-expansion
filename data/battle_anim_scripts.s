@@ -5013,27 +5013,27 @@ gBattleAnimMove_Incinerate::
 	splitbgprio ANIM_TARGET
 	setalpha 12, 8
 	delay 1
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_SwayMon, 5, 0, 3, 3072, 8, ANIM_TARGET
 	createvisualtask AnimTask_SwayMon, 5, 0, 3, 3072, 8, ANIM_DEF_PARTNER
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	playsewithpan SE_M_FLAME_WHEEL, SOUND_PAN_ATTACKER
 	delay 3
-	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 6, 20, 0, -16, 24, 20
+	createsprite gIncinerateSpriteTemplate, ANIM_TARGET, 2, 0, 0, 0, 0, 24, 0
 	delay 5
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 5, 0, 8, 1
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_DEF_PARTNER, 5, 0, 8, 1
