@@ -248,9 +248,9 @@ static enum FieldEffectOutcome BenefitsFromSandstorm(u32 battler)
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SAFETY_GOGGLES || IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
     {
-        if (!(IS_BATTLER_ANY_TYPE(FOE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
-         || gAiLogicData->holdEffects[FOE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
-         || DoesAbilityBenefitFromWeather(gAiLogicData->abilities[FOE(battler)], B_WEATHER_SANDSTORM))
+        if (!(IS_BATTLER_ANY_TYPE(BATTLE_OPPOSITE(battler), TYPE_ROCK, TYPE_GROUND, TYPE_STEEL))
+         || gAiLogicData->holdEffects[BATTLE_OPPOSITE(battler)] == HOLD_EFFECT_SAFETY_GOGGLES
+         || DoesAbilityBenefitFromWeather(gAiLogicData->abilities[BATTLE_OPPOSITE(battler)], B_WEATHER_SANDSTORM))
             return FIELD_EFFECT_POSITIVE;
         else
             return FIELD_EFFECT_NEUTRAL;
@@ -274,7 +274,7 @@ static enum FieldEffectOutcome BenefitsFromHailOrSnow(u32 battler, u32 weather)
     if (HasLightSensitiveMove(battler))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (HasMoveWithFlag(FOE(battler), MoveAlwaysHitsInHailSnow))
+    if (HasMoveWithFlag(FOE(battler), MoveAlwaysHitsInHailSnow) || HasMoveWithFlag(BATTLE_PARTNER(FOE(battler)), MoveAlwaysHitsInHailSnow))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -294,7 +294,7 @@ static enum FieldEffectOutcome BenefitsFromRain(u32 battler)
     if (HasLightSensitiveMove(battler) || HasDamagingMoveOfType(battler, TYPE_FIRE))
         return FIELD_EFFECT_NEGATIVE;
 
-    if (HasMoveWithFlag(FOE(battler), MoveAlwaysHitsInRain))
+    if (HasMoveWithFlag(FOE(battler), MoveAlwaysHitsInRain) || HasMoveWithFlag(BATTLE_PARTNER(FOE(battler)), MoveAlwaysHitsInRain))
         return FIELD_EFFECT_NEGATIVE;
 
     return FIELD_EFFECT_NEUTRAL;
@@ -309,7 +309,8 @@ static enum FieldEffectOutcome BenefitsFromElectricTerrain(u32 battler)
     if (HasMoveWithEffect(battler, EFFECT_RISING_VOLTAGE))
         return FIELD_EFFECT_POSITIVE;
 
-    if (HasMoveWithEffect(FOE(battler), EFFECT_REST) && IsBattlerGrounded(FOE(battler)))
+    if ((HasMoveWithEffect(FOE(battler), EFFECT_REST) && IsBattlerGrounded(FOE(battler)))
+     || (HasMoveWithEffect(BATTLE_PARTNER(FOE(battler)), EFFECT_REST) && IsBattlerGrounded(BATTLE_PARTNER(FOE(battler)))))
         return FIELD_EFFECT_POSITIVE;
 
     bool32 grounded = IsBattlerGrounded(battler);
