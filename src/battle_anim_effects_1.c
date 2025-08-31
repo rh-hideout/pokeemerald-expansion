@@ -3407,13 +3407,13 @@ void AnimAbsorptionOrb(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[5] = gBattleAnimArgs[2];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimAbsorptionOrb_Step;
 }
 
 static void AnimAbsorptionOrb_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -3466,7 +3466,7 @@ static void AnimHyperBeamOrb_Step(struct Sprite *sprite)
 
 static void AnimMoveWorrySeedWait(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -3482,7 +3482,7 @@ static void AnimMoveWorrySeed(struct Sprite *sprite)
 
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[5] = gBattleAnimArgs[3];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMoveWorrySeedWait;
 }
 
@@ -3778,13 +3778,13 @@ static void AnimLeechSeed(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[3];
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimLeechSeed_Step;
 }
 
 static void AnimLeechSeed_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->invisible = TRUE;
         sprite->data[0] = 10;
@@ -4175,7 +4175,7 @@ void AnimTranslateLinearSingleSineWave(struct Sprite *sprite)
     }
 
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         sprite->data[0] = 1;
     else
@@ -4192,7 +4192,7 @@ static void AnimTranslateLinearSingleSineWave_Step(struct Sprite *sprite)
     s16 r0;
 
     sprite->data[0] = 1;
-    TranslateAnimHorizontalArc(sprite);
+    TranslateSpriteHorizontalArc(sprite);
     r0 = sprite->data[7];
     sprite->data[0] = a;
     if (b > 200 && r0 < 56 && sprite->oam.affineParam == 0)
@@ -4834,7 +4834,7 @@ void AnimTask_LeafBlade(u8 taskId)
     gSprites[task->data[2]].data[3] = task->data[9];
     gSprites[task->data[2]].data[4] = task->data[7] + (task->data[11] / 2 + 10) * task->data[5];
     gSprites[task->data[2]].data[5] = LeafBladeGetPosFactor(&gSprites[task->data[2]]);
-    InitAnimArcTranslation(&gSprites[task->data[2]]);
+    InitSpriteArcTranslation(&gSprites[task->data[2]]);
     task->func = AnimTask_LeafBlade_Step;
 }
 
@@ -4847,7 +4847,7 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
     {
     case 4:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 5;
             task->data[0] = 0xFF;
@@ -4855,7 +4855,7 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         break;
     case 8:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 9;
             task->data[0] = 0xFF;
@@ -4863,7 +4863,7 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         break;
     case 0:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 1;
             task->data[0] = 0xFF;
@@ -4884,12 +4884,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = a;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     case 2:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 3;
             task->data[0] = 0xFF;
@@ -4909,7 +4909,7 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = 2;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     case 5:
@@ -4927,12 +4927,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = 3;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     case 6:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 7;
             task->data[0] = 0xFF;
@@ -4953,7 +4953,7 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = 4;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     case 9:
@@ -4970,12 +4970,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = 5;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     case 10:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             task->data[15] = 11;
             task->data[0] = 0xFF;
@@ -4997,13 +4997,13 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         task->data[3] = 6;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         task->data[0]++;
         break;
     }
     case 12:
         AnimTask_LeafBlade_Step2(task, taskId);
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             DestroySprite(sprite);
             task->data[0]++;

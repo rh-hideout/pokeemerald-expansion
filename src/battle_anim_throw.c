@@ -1057,7 +1057,7 @@ static void SpriteCB_Ball_Throw(struct Sprite *sprite)
     sprite->sOffsetY = sprite->y;
     sprite->sTargetY = targetY;
     sprite->sAmplitude = -40;
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_Ball_Arc;
 }
 
@@ -1076,7 +1076,7 @@ static void SpriteCB_Ball_Arc(struct Sprite *sprite)
 {
     u32 i;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_TRAINER_BLOCK)
         {
@@ -1644,7 +1644,7 @@ static void MakeCaptureStars(struct Sprite *sprite)
             gSprites[spriteId].sTargetX = sprite->x + sCaptureStars[i].xOffset;
             gSprites[spriteId].sTargetY = sprite->y + sCaptureStars[i].yOffset;
             gSprites[spriteId].sAmplitude = sCaptureStars[i].amplitude;
-            InitAnimArcTranslation(&gSprites[spriteId]);
+            InitSpriteArcTranslation(&gSprites[spriteId]);
             gSprites[spriteId].callback = SpriteCB_CaptureStar_Flicker;
             StartSpriteAnim(&gSprites[spriteId], sBallParticleAnimNums[BALL_MASTER]);
         }
@@ -1659,7 +1659,7 @@ static void MakeCaptureStars(struct Sprite *sprite)
 static void SpriteCB_CaptureStar_Flicker(struct Sprite *sprite)
 {
     sprite->invisible = !sprite->invisible;
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroySprite(sprite);
 }
 
@@ -2621,7 +2621,7 @@ static void SpriteCB_PokeBlock_Throw(struct Sprite *sprite)
     sprite->sTargetX = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_X) + gBattleAnimArgs[2];
     sprite->sTargetY = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_Y) + gBattleAnimArgs[3];
     sprite->sAmplitude = -32;
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].callback = SpriteCB_TrainerThrowObject;
     sprite->callback = SpriteCB_PokeBlock_LiftArm;
 }
@@ -2639,7 +2639,7 @@ static void SpriteCB_PokeBlock_LiftArm(struct Sprite *sprite)
 
 static void SpriteCB_PokeBlock_Arc(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->data[0] = 0;
         sprite->invisible = TRUE;
@@ -2768,4 +2768,3 @@ static void CB_CriticalCaptureThrownBallMovement(struct Sprite *sprite)
         sprite->callback = SpriteCB_Ball_Bounce_Step;
     }
 }
-

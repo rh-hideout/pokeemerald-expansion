@@ -623,7 +623,7 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
     gSprites[ballSpriteId].data[2] = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_X);
     gSprites[ballSpriteId].data[4] = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_Y) - 16;
     gSprites[ballSpriteId].data[5] = -40;
-    InitAnimArcTranslation(&gSprites[ballSpriteId]);
+    InitSpriteArcTranslation(&gSprites[ballSpriteId]);
     gSprites[ballSpriteId].oam.affineParam = taskId;
     gTasks[taskId].tOpponentBattler = gBattlerTarget;
     gTasks[taskId].func = TaskDummy;
@@ -651,7 +651,7 @@ static inline void *GetOpponentMonSendOutCallback(void)
 // These do not seem to get run.
 static void SpriteCB_BallThrow(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         u16 ballId;
         u8 taskId = sprite->oam.affineParam;
@@ -1161,7 +1161,7 @@ static void SpriteCB_MonSendOut_1(struct Sprite *sprite)
     sprite->data[4] = GetBattlerSpriteCoord(sprite->sBattler, coordY) + 24;
     sprite->data[5] = -30;
     sprite->oam.affineParam = sprite->sBattler;
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_MonSendOut_2;
 }
 
@@ -1204,7 +1204,7 @@ static void SpriteCB_MonSendOut_2(struct Sprite *sprite)
     }
     else
     {
-        if (TranslateAnimHorizontalArc(sprite))
+        if (TranslateSpriteHorizontalArc(sprite))
         {
             sprite->x += sprite->x2;
             sprite->y += sprite->y2;

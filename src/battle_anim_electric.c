@@ -1613,7 +1613,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 {
 	sprite->invisible = FALSE;
 
-	if (TranslateAnimHorizontalArc(sprite))
+	if (TranslateSpriteHorizontalArc(sprite))
 	{
 		//Merge coords into one
 		sprite->x += sprite->x2;
@@ -1644,7 +1644,7 @@ void AnimTask_VoltSwitch(struct Sprite* sprite)
 	sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
 	sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
 	sprite->data[5] = gBattleAnimArgs[5];
-	InitAnimArcTranslation(sprite);
+	InitSpriteArcTranslation(sprite);
 
 	sprite->callback = VoltSwitch_Step;
 }

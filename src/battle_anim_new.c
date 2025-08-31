@@ -8137,7 +8137,7 @@ static void SpriteCB_MoongeistCharge(struct Sprite *sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
     sprite->data[5] = gBattleAnimArgs[5];
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMissileArc_Step;
 }
 
@@ -8417,7 +8417,7 @@ static void SpriteCB_PyroBallLaunch(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimMissileArc_Step;
 }
@@ -8440,7 +8440,7 @@ static void SpriteCB_AcidLaunchSingleTarget(struct Sprite *sprite)
     sprite->data[2] = l1 + gBattleAnimArgs[4];
     sprite->data[4] = l2 + gBattleAnimArgs[5];
     sprite->data[5] = -30;
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimAcidPoisonBubble_Step;
 }
 
@@ -9103,13 +9103,13 @@ static void SpriteCB_PowerShiftBall(struct Sprite* sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
     sprite->data[5] = gBattleAnimArgs[5]; //Wave Amplitude
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_PowerShiftBallStep;
 }
 
 static void SpriteCB_PowerShiftBallStep(struct Sprite* sprite) // Also used by Triple Arrows
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroySpriteAndMatrix(sprite);
 }
 
@@ -9315,7 +9315,7 @@ static void SpriteCB_SurgingStrikes(struct Sprite* sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMissileArc_Step;
 }
 
@@ -9461,7 +9461,7 @@ static void SpriteCB_MaxFlutterbyStep1(struct Sprite* sprite)
             PlaySE(SE_M_SAND_ATTACK);
 
         StartSpriteAffineAnim(sprite, 1);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         sprite->callback = SpriteCB_MaxFlutterbyStep2;
     }
 }
@@ -9471,7 +9471,7 @@ static void SpriteCB_MaxFlutterbyStep2(struct Sprite* sprite)
 {
     sprite->invisible = FALSE;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         if (gAnimMoveIndex == MOVE_INFERNAL_PARADE)
             PlaySE(SE_M_FLAME_WHEEL2);
@@ -9558,7 +9558,7 @@ static void SpriteCB_TripleArrowKick(struct Sprite* sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET); //Target Y
     sprite->data[5] = gBattleAnimArgs[3];
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_PowerShiftBallStep; //Arc until complete
 }
 

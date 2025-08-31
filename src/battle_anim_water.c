@@ -1660,7 +1660,7 @@ static void CreateWaterSportDroplet(struct Task *task)
             gSprites[spriteId].data[2] = task->data[5];
             gSprites[spriteId].data[4] = task->data[6];
             gSprites[spriteId].data[5] = task->data[9];
-            InitAnimArcTranslation(&gSprites[spriteId]);
+            InitSpriteArcTranslation(&gSprites[spriteId]);
             gSprites[spriteId].callback = AnimWaterSportDroplet;
             task->data[8]++;
         }
@@ -1669,7 +1669,7 @@ static void CreateWaterSportDroplet(struct Task *task)
 
 static void AnimWaterSportDroplet(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->x += sprite->x2;
         sprite->y += sprite->y2;
@@ -1677,7 +1677,7 @@ static void AnimWaterSportDroplet(struct Sprite *sprite)
         sprite->data[2] = (Random2() & 0x1F) - 16 + sprite->x;
         sprite->data[4] = (Random2() & 0x1F) - 16 + sprite->y;
         sprite->data[5] = ~(Random2() & 7);
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         sprite->callback = AnimWaterSportDroplet_Step;
     }
 }
@@ -1686,7 +1686,7 @@ static void AnimWaterSportDroplet_Step(struct Sprite *sprite)
 {
     u16 i;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         for (i = 0; i < NUM_TASKS; i++)
         {

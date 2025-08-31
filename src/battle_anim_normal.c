@@ -307,7 +307,7 @@ const struct SpriteTemplate gPersistHitSplatSpriteTemplate =
 
 static void AnimMovePowerSwapGuardSwapWait(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -334,7 +334,7 @@ static void AnimMovePowerSwapGuardSwap(struct Sprite *sprite)
     }
     sprite->data[0] = gBattleAnimArgs[4];
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMovePowerSwapGuardSwapWait;
 }
 

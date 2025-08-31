@@ -164,13 +164,13 @@ static void AnimBonemerangProjectile(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[5] = -40;
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimBonemerangProjectile_Step;
 }
 
 static void AnimBonemerangProjectile_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->x += sprite->x2;
         sprite->y += sprite->y2;
@@ -180,14 +180,14 @@ static void AnimBonemerangProjectile_Step(struct Sprite *sprite)
         sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
         sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
         sprite->data[5] = 40;
-        InitAnimArcTranslation(sprite);
+        InitSpriteArcTranslation(sprite);
         sprite->callback = AnimBonemerangProjectile_End;
     }
 }
 
 static void AnimBonemerangProjectile_End(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -541,13 +541,13 @@ void AnimDirtPlumeParticle(struct Sprite *sprite)
     sprite->data[2] = sprite->x + gBattleAnimArgs[2];
     sprite->data[4] = sprite->y + gBattleAnimArgs[3];
     sprite->data[5] = gBattleAnimArgs[4];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimDirtPlumeParticle_Step;
 }
 
 static void AnimDirtPlumeParticle_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 

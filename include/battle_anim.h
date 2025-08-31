@@ -101,7 +101,7 @@ void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffse
 void InitSpritePosToAnimTarget(struct Sprite *sprite, bool8 respectMonPicOffsets);
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets);
 void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite *sprite);
-void InitAnimArcTranslation(struct Sprite *sprite);
+void InitSpriteArcTranslation(struct Sprite *sprite);
 bool8 UpdateSpriteLinearTranslationIterator(struct Sprite *sprite);
 void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite);
 u8 GetBattlerSpriteCoord2(u8 battler, u8 coordType);
@@ -126,7 +126,7 @@ void InitPrioritiesForVisibleBattlers(void);
 void GetBattleAnimBg1Data(struct BattleAnimBgData *out);
 void GetBattleAnimBgData(struct BattleAnimBgData *out, u32 bgId);
 u8 GetBattlerSpriteSubpriority(u8 battler);
-bool8 TranslateAnimHorizontalArc(struct Sprite *sprite);
+bool8 TranslateSpriteHorizontalArc(struct Sprite *sprite);
 void TranslateSpecifiedSpriteLinear(struct Sprite *sprite);
 void ResetSpriteRotScale(u8 spriteId);
 void SetSpriteRotScale(u8 spriteId, s16 xScale, s16 yScale, u16 rotation);

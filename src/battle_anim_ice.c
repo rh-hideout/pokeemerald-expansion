@@ -1672,7 +1672,7 @@ static void InitIceBallAnim(struct Sprite *sprite)
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     sprite->data[5] = gBattleAnimArgs[5];
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimThrowIceBall;
 }
@@ -1680,7 +1680,7 @@ static void InitIceBallAnim(struct Sprite *sprite)
 // Throws the ball of ice in Ice Ball.
 static void AnimThrowIceBall(struct Sprite *sprite)
 {
-    if (!TranslateAnimHorizontalArc(sprite))
+    if (!TranslateSpriteHorizontalArc(sprite))
         return;
 
     StartSpriteAnim(sprite, 1);

@@ -433,7 +433,7 @@ void AnimMissileArc(struct Sprite *sprite)
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimMissileArc_Step;
     sprite->invisible = TRUE;
@@ -443,7 +443,7 @@ void AnimMissileArc_Step(struct Sprite *sprite)
 {
     sprite->invisible = FALSE;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         DestroyAnimSprite(sprite);
     }
@@ -463,7 +463,7 @@ void AnimMissileArc_Step(struct Sprite *sprite)
         x2 += x1;
         y2 += y1;
 
-        if (!TranslateAnimHorizontalArc(sprite))
+        if (!TranslateSpriteHorizontalArc(sprite))
         {
             u16 rotation = ArcTan2Neg(sprite->x + sprite->x2 - x2,
                                   sprite->y + sprite->y2 - y2);

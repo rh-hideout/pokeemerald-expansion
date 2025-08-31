@@ -385,13 +385,13 @@ static void AnimStealthRock(struct Sprite *sprite)
     sprite->data[4] = y + gBattleAnimArgs[3];
     sprite->data[5] = -50;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimStealthRockStep;
 }
 
 static void AnimStealthRockStep(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->data[0] = 30;
         sprite->data[1] = 0;
@@ -905,7 +905,7 @@ static void CreateRolloutDirtSprite(struct Task *task)
         gSprites[spriteId].data[5] = -16 - (task->data[1] * 2);
         gSprites[spriteId].oam.tileNum += tileOffset;
 
-        InitAnimArcTranslation(&gSprites[spriteId]);
+        InitSpriteArcTranslation(&gSprites[spriteId]);
         task->data[11]++;
     }
 
@@ -914,7 +914,7 @@ static void CreateRolloutDirtSprite(struct Task *task)
 
 static void AnimRolloutParticle(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         u8 taskId = FindTaskIdByFunc(AnimTask_Rollout_Step);
         if (taskId != TASK_NONE)

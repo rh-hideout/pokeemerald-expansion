@@ -1662,13 +1662,13 @@ static void AnimSpikes(struct Sprite *sprite)
     sprite->data[4] = y + gBattleAnimArgs[3];
     sprite->data[5] = -50;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimSpikes_Step1;
 }
 
 static void AnimSpikes_Step1(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->data[0] = 30;
         sprite->data[1] = 0;
@@ -4466,7 +4466,7 @@ void AnimTask_BarrageBall(u8 taskId)
         gSprites[task->data[15]].data[2] = task->data[13];
         gSprites[task->data[15]].data[4] = task->data[14];
         gSprites[task->data[15]].data[5] = -32;
-        InitAnimArcTranslation(&gSprites[task->data[15]]);
+        InitSpriteArcTranslation(&gSprites[task->data[15]]);
         if (!IsOnPlayerSide(gBattleAnimAttacker))
             StartSpriteAffineAnim(&gSprites[task->data[15]], 1);
 
@@ -4488,13 +4488,13 @@ static void AnimTask_BarrageBall_Step(u8 taskId)
         if (++task->data[1] > 1)
         {
             task->data[1] = 0;
-            TranslateAnimHorizontalArc(&gSprites[task->data[15]]);
+            TranslateSpriteHorizontalArc(&gSprites[task->data[15]]);
             if (++task->data[2] > 7)
                 task->data[0]++;
         }
         break;
     case 1:
-        if (TranslateAnimHorizontalArc(&gSprites[task->data[15]]))
+        if (TranslateSpriteHorizontalArc(&gSprites[task->data[15]]))
         {
             task->data[1] = 0;
             task->data[2] = 0;

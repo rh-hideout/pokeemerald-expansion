@@ -560,14 +560,14 @@ static void AnimSludgeProjectile(struct Sprite *sprite)
     sprite->data[0] = gBattleAnimArgs[2];
     sprite->data[5] = -30;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimSludgeProjectile_Step;
 }
 
 static void AnimSludgeProjectile_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -591,14 +591,14 @@ static void AnimAcidPoisonBubble(struct Sprite *sprite)
     sprite->data[4] = l2 + gBattleAnimArgs[5];
     sprite->data[5] = -30;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimAcidPoisonBubble_Step;
 }
 
 void AnimAcidPoisonBubble_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 

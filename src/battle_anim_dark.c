@@ -487,13 +487,13 @@ void AnimTearDrop(struct Sprite *sprite)
     sprite->data[4] = sprite->y + 12;
     sprite->data[5] = -12;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimTearDrop_Step;
 }
 
 static void AnimTearDrop_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroySpriteAndMatrix(sprite);
 }
 

@@ -39,9 +39,9 @@
 // - AnimTravelDiagonally
 
 // The following functions inherit from this API:
-// - InitAnimArcTranslation
-// - TranslateAnimHorizontalArc
-// - TranslateAnimVerticalArc
+// - InitSpriteArcTranslation
+// - TranslateSpriteHorizontalArc
+// - TranslateSpriteVerticalArc
 
 // - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document
 
@@ -63,7 +63,7 @@
 #define sCurXOffsetFixedPoint_lti data[3]
 #define sCurYOffsetFixedPoint_lti data[4]
 
-// For InitAnimArcTranslation, TranslateAnimHorizontalArc, and TranslateAnimVerticalArc only
+// For InitSpriteArcTranslation, TranslateSpriteHorizontalArc, and TranslateSpriteVerticalArc only
 
 // Think of amplitude as the max height of the arc
 #define sArcAmplitude_ati data[5]

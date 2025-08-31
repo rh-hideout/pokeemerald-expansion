@@ -1104,7 +1104,7 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
                 gSprites[spriteId].data[4] = task->data[14];
                 gSprites[spriteId].data[5] = task->data[10];
 
-                InitAnimArcTranslation(&gSprites[spriteId]);
+                InitSpriteArcTranslation(&gSprites[spriteId]);
                 StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);
             }
 
@@ -1140,7 +1140,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
                 gSprites[spriteId].data[4] = task->data[14];
                 gSprites[spriteId].data[5] = task->data[10];
 
-                InitAnimArcTranslation(&gSprites[spriteId]);
+                InitSpriteArcTranslation(&gSprites[spriteId]);
                 StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);
             }
 
@@ -1157,7 +1157,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
 
 static void AnimSkillSwapOrb(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         FreeOamMatrix(sprite->oam.matrixNum);
         DestroySprite(sprite);

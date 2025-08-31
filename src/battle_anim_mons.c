@@ -697,7 +697,7 @@ void SetAnimSpriteInitialXOffset(struct Sprite *sprite, s16 xOffset)
     }
 }
 
-void InitAnimArcTranslation(struct Sprite *sprite)
+void InitSpriteArcTranslation(struct Sprite *sprite)
 {
     sprite->sInputStartX_lti = sprite->x;
     sprite->sInputStartY_lti = sprite->y;
@@ -714,7 +714,7 @@ void InitAnimArcTranslation(struct Sprite *sprite)
 }
 
 // horizontal as in the sprite moves linearly horizontally while the arc moves vertically
-bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
+bool8 TranslateSpriteHorizontalArc(struct Sprite *sprite)
 {
     if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
@@ -724,7 +724,7 @@ bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
 }
 
 // vertical as in the sprite moves linearly vertically while the arc moves horizontally
-bool8 TranslateAnimVerticalArc(struct Sprite *sprite)
+bool8 TranslateSpriteVerticalArc(struct Sprite *sprite)
 {
     if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
@@ -1572,7 +1572,7 @@ void AnimThrowProjectile(struct Sprite *sprite)
     sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
     sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
     sprite->sArcAmplitude_ati = gBattleAnimArgs[ARG_ARC_AMPLITUDE];
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimThrowProjectile_Step;
 }
 
@@ -1583,7 +1583,7 @@ void AnimThrowProjectile(struct Sprite *sprite)
 
 static void AnimThrowProjectile_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
