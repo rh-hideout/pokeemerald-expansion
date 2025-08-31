@@ -702,25 +702,34 @@ void InitAnimArcTranslation(struct Sprite *sprite)
     sprite->sInputStartX_lti = sprite->x;
     sprite->sInputStartY_lti = sprite->y;
     InitSpriteLinearTranslationIterator(sprite);
-    sprite->data[6] = 0x8000 / sprite->data[0];
-    sprite->data[7] = 0;
+    // since this performs one full arc
+    // (think from sin(0) to sin(pi))
+    // the sin index should start at 0
+    // and end at 128
+    // it will end at 128 after the duration completes
+    // so we divide 128 by the duration
+    // (with some fixed point logic to preserve accuracy)
+    sprite->sArcIncrement_ati = UQ_8_8(128) / sprite->sDuration_lti;
+    sprite->sCurArcHeightFixedPoint_ati = 0;
 }
 
+// horizontal as in the sprite moves linearly horizontally while the arc moves vertically
 bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
 {
     if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
-    sprite->data[7] += sprite->data[6];
-    sprite->y2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
+    sprite->sCurArcHeightFixedPoint_ati += sprite->sArcIncrement_ati;
+    sprite->y2 += Sin((u8)(UQ_8_8_TO_WHOLE(sprite->sCurArcHeightFixedPoint_ati)), sprite->sArcAmplitude_ati);
     return FALSE;
 }
 
+// vertical as in the sprite moves linearly vertically while the arc moves horizontally
 bool8 TranslateAnimVerticalArc(struct Sprite *sprite)
 {
     if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
-    sprite->data[7] += sprite->data[6];
-    sprite->x2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
+    sprite->sCurArcHeightFixedPoint_ati += sprite->sArcIncrement_ati;
+    sprite->x2 += Sin((u8)(sprite->sCurArcHeightFixedPoint_ati >> 8), sprite->sArcAmplitude_ati);
     return FALSE;
 }
 
@@ -1543,6 +1552,11 @@ void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+#define ARG_SPRITE_X_END_OFFSET 2
+#define ARG_SPRITE_Y_END_OFFSET 3
+#define ARG_DURATION 4
+#define ARG_ARC_AMPLITUDE 5
 // arg0: start x offset
 // arg1: start y offset
 // arg2: end x offset
@@ -1553,14 +1567,19 @@ void AnimThrowProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    sprite->data[5] = gBattleAnimArgs[5];
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[ARG_ARC_AMPLITUDE];
     InitAnimArcTranslation(sprite);
     sprite->callback = AnimThrowProjectile_Step;
 }
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_ARC_AMPLITUDE
 
 static void AnimThrowProjectile_Step(struct Sprite *sprite)
 {

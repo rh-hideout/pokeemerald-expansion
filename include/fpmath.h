@@ -25,6 +25,7 @@ typedef u32 uq4_12_t;
 // Converts a Q8.8 fixed-point format number to a whole number
 // Uses a shift instead for matching
 #define Q_8_8_TO_WHOLE(n) ((n) >> 8)
+#define UQ_8_8_TO_WHOLE(n) ((n) >> 8)
 // Converts a Q4.12 fixed-point format number to a regular integer
 #define Q_4_12_TO_INT(n)  ((s32)((n) / 4096))
 #define UQ_4_12_TO_INT(n)  ((u32)((n) / 4096))

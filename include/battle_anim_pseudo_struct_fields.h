@@ -29,18 +29,21 @@
 // ============================
 
 // API for the following functions:
-// - InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart
 // - InitSpriteLinearTranslationIterator
-// - UpdateSpriteLinearTranslationIterator (TranslateSpriteLinear_FromIterator)
-// - StartAnimLinearTranslation_SetCornerVecX
-//   - AnimTranslateLinear_WithFollowup_SetCornerVecX
+// - UpdateSpriteLinearTranslationIterator
+// - TranslateSpriteLinear_FromIterator
+// - TranslateSpriteLinearWithSetCornerVecX_FromIterator
 // - InitSpriteLinearTranslationIteratorWithSpeed
+// - InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart
 // - InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart
 // - AnimTravelDiagonally
 
-// - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document
+// The following functions inherit from this API:
+// - InitAnimArcTranslation
+// - TranslateAnimHorizontalArc
+// - TranslateAnimVerticalArc
 
-// InitAnimArcTranslation, TranslateAnimHorizontalArc, TranslateAnimVerticalArc are subclasses
+// - also TranslateSpriteToBattleTargetPos, TranslateSpriteToBattleAttackerPos, StartAnimLinearTranslation_SetCornerVecX, but all unused, so not bothering to document
 
 // both input and output
 #define sDuration_lti data[0]
@@ -60,7 +63,14 @@
 #define sCurXOffsetFixedPoint_lti data[3]
 #define sCurYOffsetFixedPoint_lti data[4]
 
-// TODO InitAnimArcTranslation etc.
+// For InitAnimArcTranslation, TranslateAnimHorizontalArc, and TranslateAnimVerticalArc only
+
+// Think of amplitude as the max height of the arc
+#define sArcAmplitude_ati data[5]
+
+// output only
+#define sArcIncrement_ati data[6]
+#define sCurArcHeightFixedPoint_ati data[7]
 
 // ============================
 // API for the following functions
