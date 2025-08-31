@@ -1522,35 +1522,48 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
 // at the attacker position, to the target's position
 // arg 0: initial x offset
 // arg 1: initial y offset
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
 // arg 2: target x offset
+#define ARG_SPRITE_X_END_OFFSET 2
 // arg 3: target y offset
+#define ARG_SPRITE_Y_END_OFFSET 3
 // arg 4: duration
-// arg 5: lower 8 bits = location on attacking mon, upper 8 bits = location on target mon pick to target
+#define ARG_DURATION 4
+// arg 5: upper 8 bits = location on attacking mon, lower 8 bits = location on target mon pick to target
+#define ARG_PIC_OFFSET_RELATED 5
+
 void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
 {
     bool8 respectMonPicOffsets;
     u8 coordType;
 
-    if (!(gBattleAnimArgs[5] & 0xff00))
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff00))
         respectMonPicOffsets = TRUE;
     else
         respectMonPicOffsets = FALSE;
 
-    if (!(gBattleAnimArgs[5] & 0xff))
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff))
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     else
         coordType = BATTLER_COORD_Y;
 
     InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_PIC_OFFSET_RELATED
 
 // 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
 #define ARG_SPRITE_X_END_OFFSET 2
