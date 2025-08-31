@@ -482,10 +482,10 @@ void AnimTearDrop(struct Sprite *sprite)
         break;
     }
 
-    sprite->data[0] = 32;
-    sprite->data[2] = sprite->x + xOffset;
-    sprite->data[4] = sprite->y + 12;
-    sprite->data[5] = -12;
+    sprite->sDuration_lti = 32;
+    sprite->sInputEndX_lti = sprite->x + xOffset;
+    sprite->sInputEndY_lti = sprite->y + 12;
+    sprite->sArcAmplitude_ati = -12;
 
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimTearDrop_Step;

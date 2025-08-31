@@ -1480,9 +1480,9 @@ void AnimTealAlert(struct Sprite *sprite)
 
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rotation);
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = x;
-    sprite->data[4] = y;
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = x;
+    sprite->sInputEndY_lti = y;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -1657,10 +1657,10 @@ static void AnimSpikes(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = x + gBattleAnimArgs[2];
-    sprite->data[4] = y + gBattleAnimArgs[3];
-    sprite->data[5] = -50;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = y + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = -50;
 
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimSpikes_Step1;
@@ -2257,9 +2257,9 @@ static void AnimTriAttackTriangle(struct Sprite *sprite)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 20;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 20;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
         sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     }
 }
@@ -4462,10 +4462,10 @@ void AnimTask_BarrageBall(u8 taskId)
     task->data[15] = CreateSprite(&gBarrageBallSpriteTemplate, task->data[11], task->data[12], GetBattlerSpriteSubpriority(gBattleAnimTarget) - 5);
     if (task->data[15] != MAX_SPRITES)
     {
-        gSprites[task->data[15]].data[0] = 16;
-        gSprites[task->data[15]].data[2] = task->data[13];
-        gSprites[task->data[15]].data[4] = task->data[14];
-        gSprites[task->data[15]].data[5] = -32;
+        gSprites[task->data[15]].sDuration_lti = 16;
+        gSprites[task->data[15]].sInputEndX_lti = task->data[13];
+        gSprites[task->data[15]].sInputEndY_lti = task->data[14];
+        gSprites[task->data[15]].sArcAmplitude_ati = -32;
         InitSpriteArcTranslation(&gSprites[task->data[15]]);
         if (!IsOnPlayerSide(gBattleAnimAttacker))
             StartSpriteAffineAnim(&gSprites[task->data[15]], 1);
@@ -4965,16 +4965,16 @@ static void AnimForesightMagnifyingGlass_Step(struct Sprite *sprite)
         }
 
         if (sprite->data[6] == 4)
-            sprite->data[0] = 24;
+            sprite->sDuration_lti = 24;
         else if (sprite->data[6] == 5)
-            sprite->data[0] = 6;
+            sprite->sDuration_lti = 6;
         else
-            sprite->data[0] = 12;
+            sprite->sDuration_lti = 12;
 
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = x;
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = y;
+        sprite->sInputStartX_lti = sprite->x;
+        sprite->sInputEndX_lti = x;
+        sprite->sInputStartY_lti = sprite->y;
+        sprite->sInputEndY_lti = y;
         InitSpriteLinearTranslationIterator(sprite);
         sprite->data[5]++;
         break;

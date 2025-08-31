@@ -619,10 +619,10 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
     }
 
     // this will perform an unused ball throw animation
-    gSprites[ballSpriteId].data[0] = 34;
-    gSprites[ballSpriteId].data[2] = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_X);
-    gSprites[ballSpriteId].data[4] = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_Y) - 16;
-    gSprites[ballSpriteId].data[5] = -40;
+    gSprites[ballSpriteId].sDuration_lti = 34;
+    gSprites[ballSpriteId].sInputEndX_lti = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_X);
+    gSprites[ballSpriteId].sInputEndY_lti = GetBattlerSpriteCoord(gBattlerTarget, BATTLER_COORD_Y) - 16;
+    gSprites[ballSpriteId].sArcAmplitude_ati = -40;
     InitSpriteArcTranslation(&gSprites[ballSpriteId]);
     gSprites[ballSpriteId].oam.affineParam = taskId;
     gTasks[taskId].tOpponentBattler = gBattlerTarget;
@@ -1156,10 +1156,10 @@ static void SpriteCB_MonSendOut_1(struct Sprite *sprite)
     u32 coordX = (isPlayer) ? BATTLER_COORD_X_2 : BATTLER_COORD_X;
     u32 coordY = (isPlayer) ? BATTLER_COORD_Y_PIC_OFFSET : BATTLER_COORD_Y;
 
-    sprite->data[0] = 25;
-    sprite->data[2] = GetBattlerSpriteCoord(sprite->sBattler, coordX);
-    sprite->data[4] = GetBattlerSpriteCoord(sprite->sBattler, coordY) + 24;
-    sprite->data[5] = -30;
+    sprite->sDuration_lti = 25;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(sprite->sBattler, coordX);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(sprite->sBattler, coordY) + 24;
+    sprite->sArcAmplitude_ati = -30;
     sprite->oam.affineParam = sprite->sBattler;
     InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_MonSendOut_2;
@@ -1179,27 +1179,28 @@ static void SpriteCB_MonSendOut_2(struct Sprite *sprite)
 
         if ((sprite->oam.affineParam & 0xFF00) == 0)
         {
-            r6 = sprite->data[1] & 1;
-            r7 = sprite->data[2] & 1;
-            sprite->data[1] = ((sprite->data[1] / 3) & ~1) | r6;
-            sprite->data[2] = ((sprite->data[2] / 3) & ~1) | r7;
+            // TODO: are these really the correct fields?
+            r6 = sprite->sXIncrement_lti & 1;
+            r7 = sprite->sYIncrement_lti & 1;
+            sprite->sXIncrement_lti = ((sprite->sXIncrement_lti / 3) & ~1) | r6;
+            sprite->sYIncrement_lti = ((sprite->sYIncrement_lti / 3) & ~1) | r7;
             StartSpriteAffineAnim(sprite, 4);
         }
-        r4 = sprite->data[0];
+        r4 = sprite->sDuration_lti;
         UpdateSpriteLinearTranslationIterator(sprite);
         sprite->data[7] += sprite->sBattler / 3;
         sprite->y2 += Sin(HIBYTE(sprite->data[7]), sprite->data[5]);
         sprite->oam.affineParam += 0x100;
         if ((sprite->oam.affineParam >> 8) % 3 != 0)
-            sprite->data[0] = r4;
+            sprite->sDuration_lti = r4;
         else
-            sprite->data[0] = r4 - 1;
+            sprite->sDuration_lti = r4 - 1;
         if (HIBYTE(sprite->data[7]) >= 80)
         {
-            r6 = sprite->data[1] & 1;
-            r7 = sprite->data[2] & 1;
-            sprite->data[1] = ((sprite->data[1] * 3) & ~1) | r6;
-            sprite->data[2] = ((sprite->data[2] * 3) & ~1) | r7;
+            r6 = sprite->sXIncrement_lti & 1;
+            r7 = sprite->sYIncrement_lti & 1;
+            sprite->sXIncrement_lti = ((sprite->sXIncrement_lti * 3) & ~1) | r6;
+            sprite->sYIncrement_lti = ((sprite->sYIncrement_lti * 3) & ~1) | r7;
         }
     }
     else

@@ -704,9 +704,9 @@ static void AnimSunlight(struct Sprite *sprite)
 {
     sprite->x = 0;
     sprite->y = 0;
-    sprite->data[0] = 60;
-    sprite->data[2] = 140;
-    sprite->data[4] = 80;
+    sprite->sDuration_lti = 60;
+    sprite->sInputEndX_lti = 140;
+    sprite->sInputEndY_lti = 80;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -763,11 +763,11 @@ static void AnimFireRing_Step1(struct Sprite *sprite)
 
     if (++sprite->data[0] == 0x12)
     {
-        sprite->data[0] = 0x19;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 0x19;
+        sprite->sInputStartX_lti = sprite->x;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputStartY_lti = sprite->y;
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
         InitSpriteLinearTranslationIterator(sprite);
 
@@ -1249,11 +1249,11 @@ void AnimWillOWispOrb(struct Sprite *sprite)
             sprite->y2 = 0;
             sprite->x2 = 0;
 
-            sprite->data[0] = 256;
-            sprite->data[1] = sprite->x;
-            sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-            sprite->data[3] = sprite->y;
-            sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+            sprite->sInputSpeed_lti = Q_8_8(1.0);
+            sprite->sInputStartX_lti = sprite->x;
+            sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+            sprite->sInputStartY_lti = sprite->y;
+            sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
             InitSpriteLinearTranslationIteratorWithSpeed(sprite);
             sprite->callback = AnimWillOWispOrb_Step;

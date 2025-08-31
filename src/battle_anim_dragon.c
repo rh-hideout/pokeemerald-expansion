@@ -436,19 +436,19 @@ static void StartDragonFireTranslation(struct Sprite *sprite)
     {
         sprite->x -= gBattleAnimArgs[1];
         sprite->y += gBattleAnimArgs[1];
-        sprite->data[2] -= gBattleAnimArgs[2];
-        sprite->data[4] += gBattleAnimArgs[3];
+        sprite->sInputEndX_lti -= gBattleAnimArgs[2];
+        sprite->sInputEndY_lti += gBattleAnimArgs[3];
     }
     else
     {
         sprite->x += gBattleAnimArgs[0];
         sprite->y += gBattleAnimArgs[1];
-        sprite->data[2] += gBattleAnimArgs[2];
-        sprite->data[4] += gBattleAnimArgs[3];
+        sprite->sInputEndX_lti += gBattleAnimArgs[2];
+        sprite->sInputEndY_lti += gBattleAnimArgs[3];
         StartSpriteAnim(sprite, 1);
     }
 
-    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }

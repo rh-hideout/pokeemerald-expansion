@@ -440,6 +440,11 @@ static void AnimGunkShotParticles(struct Sprite *sprite)
     u16 retArg;
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
+    sprite->sDuration_lti = 30;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->data[0] = 30;
     sprite->data[1] = sprite->x;
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
@@ -488,11 +493,11 @@ static void AnimSuckerPunch(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y;
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y;
 
     InitSpriteLinearTranslationIterator(sprite);
 
@@ -586,10 +591,10 @@ static void AnimAcidPoisonBubble(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[4] = -gBattleAnimArgs[4];
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = l1 + gBattleAnimArgs[4];
-    sprite->data[4] = l2 + gBattleAnimArgs[5];
-    sprite->data[5] = -30;
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = l1 + gBattleAnimArgs[4];
+    sprite->sInputEndY_lti = l2 + gBattleAnimArgs[5];
+    sprite->sArcAmplitude_ati = -30;
 
     InitSpriteArcTranslation(sprite);
 
@@ -645,9 +650,9 @@ static void AnimAcidPoisonDroplet(struct Sprite *sprite)
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[4] = sprite->y + sprite->data[0];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = sprite->y + sprite->data[0];
 
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);

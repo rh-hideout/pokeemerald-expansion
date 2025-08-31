@@ -323,17 +323,17 @@ static void AnimMovePowerSwapGuardSwap(struct Sprite *sprite)
     if(gBattleAnimArgs[3] == 0)
     {
         InitSpritePosToAnimAttacker(sprite, TRUE);
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
     }
     else
     {
         InitSpritePosToAnimTarget(sprite, TRUE);
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
     }
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[5] = gBattleAnimArgs[5];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[5];
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMovePowerSwapGuardSwapWait;
 }

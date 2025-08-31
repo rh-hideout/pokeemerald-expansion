@@ -524,9 +524,9 @@ static void AnimPsychoCut(struct Sprite *sprite)
     rot += 0xC000;
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rot);
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = lVarX;
-    sprite->data[4] = lVarY;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = lVarX;
+    sprite->sInputEndY_lti = lVarY;
 
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
@@ -1099,10 +1099,10 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
             spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
-                gSprites[spriteId].data[0] = 16;
-                gSprites[spriteId].data[2] = task->data[13];
-                gSprites[spriteId].data[4] = task->data[14];
-                gSprites[spriteId].data[5] = task->data[10];
+                gSprites[spriteId].sDuration_lti = 16;
+                gSprites[spriteId].sInputEndX_lti = task->data[13];
+                gSprites[spriteId].sInputEndY_lti = task->data[14];
+                gSprites[spriteId].sArcAmplitude_ati = task->data[10];
 
                 InitSpriteArcTranslation(&gSprites[spriteId]);
                 StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);

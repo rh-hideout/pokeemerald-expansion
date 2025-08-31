@@ -3132,11 +3132,11 @@ static void AnimGrassKnot(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y;
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y;
 
     InitSpriteLinearTranslationIterator(sprite);
 
@@ -3304,9 +3304,9 @@ static void AnimMovePowderParticle_Step(struct Sprite *sprite)
 void AnimPowerAbsorptionOrb(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
@@ -3320,9 +3320,9 @@ void AnimSolarBeamBigOrb(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
     StartSpriteAnim(sprite, gBattleAnimArgs[3]);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -3343,11 +3343,11 @@ static void AnimSolarBeamSmallOrb(struct Sprite *sprite)
     }
     else
     {
-        sprite->data[0] = gBattleAnimArgs[2];
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = gBattleAnimArgs[2];
+        sprite->sInputStartX_lti = sprite->x;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputStartY_lti = sprite->y;
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     }
 
     InitSpriteLinearTranslationIterator(sprite);
@@ -3403,10 +3403,10 @@ void AnimTask_CreateSmallSolarBeamOrbs(u8 taskId)
 void AnimAbsorptionOrb(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->data[5] = gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[2];
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimAbsorptionOrb_Step;
 }
@@ -3564,11 +3564,11 @@ static void AnimMoveFeintSwipeStep(struct Sprite *sprite)
             sprite->x2 = 0;
             sprite->x += 64;
             sprite->data[5]++;
-            sprite->data[0] = sprite->data[6];
-            sprite->data[1] = sprite->x;
-            sprite->data[2] = sprite->x - 64;
-            sprite->data[3] = sprite->y;
-            sprite->data[4] = sprite->y;
+            sprite->sDuration_lti = sprite->data[6];
+            sprite->sInputStartX_lti = sprite->x;
+            sprite->sInputEndX_lti = sprite->x - 64;
+            sprite->sInputStartY_lti = sprite->y;
+            sprite->sInputEndY_lti = sprite->y;
             InitSpriteLinearTranslationIterator(sprite);
         }
         break;
@@ -3589,12 +3589,12 @@ static void AnimMoveFeintSwipe(struct Sprite *sprite)
         gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
     }
     InitSpritePosToAnimTarget(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[2];
     sprite->data[6] = gBattleAnimArgs[2];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + 64;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x + 64;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y;
     sprite->data[5] = 0;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveFeintSwipeStep;
@@ -3629,13 +3629,13 @@ static void AnimMoveTrumpCard(struct Sprite *sprite)
     }
     InitSpritePosToAnimTarget(sprite, TRUE);
     StartSpriteAnim(sprite, gBattleAnimArgs[2]);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x - 80;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y;
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x - 80;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y;
     sprite->data[5] = 128;
-    sprite->data[6] = 128 / sprite->data[0];
+    sprite->data[6] = 128 / sprite->sDuration_lti;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveTrumpCardArc;
 }
@@ -3708,11 +3708,11 @@ static void AnimMoveAccupressureTransition(struct Sprite *sprite)
 static void AnimMoveAccupressure(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
     sprite->data[5] = 0;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimMoveAccupressureTransition;
@@ -3774,10 +3774,10 @@ static void AnimLeechSeed(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[3];
-    sprite->data[5] = gBattleAnimArgs[5];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[5];
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimLeechSeed_Step;
 }
@@ -3875,11 +3875,11 @@ void AnimTask_SporeDoubleBattle(u8 taskId)
 void AnimPetalDanceBigFlower(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, FALSE);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
     InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0x40;
     sprite->callback = AnimPetalDanceBigFlower_Step;
@@ -3913,11 +3913,11 @@ static void AnimPetalDanceBigFlower_Step(struct Sprite *sprite)
 void AnimPetalDanceSmallFlower(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[2];
     InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0x40;
     sprite->callback = AnimPetalDanceSmallFlower_Step;
@@ -4161,20 +4161,20 @@ void AnimTranslateLinearSingleSineWave(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
     if (!gBattleAnimArgs[6])
     {
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     }
     else
     {
-        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->data[2], &sprite->data[4]);
-        sprite->data[2] += gBattleAnimArgs[2];
-        sprite->data[4] += gBattleAnimArgs[3];
+        SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->sInputEndX_lti, &sprite->sInputEndY_lti);
+        sprite->sInputEndX_lti += gBattleAnimArgs[2];
+        sprite->sInputEndY_lti += gBattleAnimArgs[3];
     }
 
-    sprite->data[5] = gBattleAnimArgs[5];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[5];
     InitSpriteArcTranslation(sprite);
     if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
         sprite->data[0] = 1;
@@ -4187,18 +4187,18 @@ void AnimTranslateLinearSingleSineWave(struct Sprite *sprite)
 static void AnimTranslateLinearSingleSineWave_Step(struct Sprite *sprite)
 {
     bool8 destroy = FALSE;
-    s16 a = sprite->data[0];
+    s16 a = sprite->sDuration_lti;
     s16 b = sprite->data[7];
     s16 r0;
 
-    sprite->data[0] = 1;
+    sprite->sDuration_lti = 1;
     TranslateSpriteHorizontalArc(sprite);
     r0 = sprite->data[7];
-    sprite->data[0] = a;
+    sprite->sDuration_lti = a;
     if (b > 200 && r0 < 56 && sprite->oam.affineParam == 0)
         sprite->oam.affineParam++;
 
-    if (sprite->oam.affineParam && sprite->data[0])
+    if (sprite->oam.affineParam && sprite->sDuration_lti)
     {
         sprite->invisible ^= 1;
         sprite->oam.affineParam++;
@@ -4828,12 +4828,17 @@ void AnimTask_LeafBlade(u8 taskId)
     if (task->data[2] == MAX_SPRITES)
         DestroyAnimVisualTask(taskId);
 
-    gSprites[task->data[2]].data[0] = 10;
-    gSprites[task->data[2]].data[1] = task->data[8];
-    gSprites[task->data[2]].data[2] = task->data[6] - (task->data[10] / 2 + 10) * task->data[5];
-    gSprites[task->data[2]].data[3] = task->data[9];
-    gSprites[task->data[2]].data[4] = task->data[7] + (task->data[11] / 2 + 10) * task->data[5];
-    gSprites[task->data[2]].data[5] = LeafBladeGetPosFactor(&gSprites[task->data[2]]);
+    gSprites[task->data[2]].sDuration_lti = 10;
+    // writing this is redundant, since it gets overwritten in InitSpriteArcTranslation
+    gSprites[task->data[2]].sInputStartX_lti = task->data[8];
+
+    gSprites[task->data[2]].sInputEndX_lti = task->data[6] - (task->data[10] / 2 + 10) * task->data[5];
+
+    // writing this is redundant, since it gets overwritten in InitSpriteArcTranslation
+    gSprites[task->data[2]].sInputStartY_lti = task->data[9];
+
+    gSprites[task->data[2]].sInputEndY_lti = task->data[7] + (task->data[11] / 2 + 10) * task->data[5];
+    gSprites[task->data[2]].sArcAmplitude_ati = LeafBladeGetPosFactor(&gSprites[task->data[2]]);
     InitSpriteArcTranslation(&gSprites[task->data[2]]);
     task->func = AnimTask_LeafBlade_Step;
 }
@@ -4874,12 +4879,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[6];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[7];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[6];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[7];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[4] += 2;
         task->data[3] = a;
         sprite->subpriority = task->data[4];
@@ -4900,12 +4905,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[6] - ((task->data[10] / 2) + 10) * task->data[5];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[7] - ((task->data[11] / 2) + 10) * task->data[5];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[6] - ((task->data[10] / 2) + 10) * task->data[5];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[7] - ((task->data[11] / 2) + 10) * task->data[5];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[3] = 2;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
@@ -4917,12 +4922,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[6] + ((task->data[10] / 2) + 10) * task->data[5];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[7] + ((task->data[11] / 2) + 10) * task->data[5];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[6] + ((task->data[10] / 2) + 10) * task->data[5];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[7] + ((task->data[11] / 2) + 10) * task->data[5];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[4] -= 2;
         task->data[3] = 3;
         sprite->subpriority = task->data[4];
@@ -4943,12 +4948,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[6];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[7];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[6];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[7];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[4] += 2;
         task->data[3] = 4;
         sprite->subpriority = task->data[4];
@@ -4961,12 +4966,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[6] - ((task->data[10] / 2) + 10) * task->data[5];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[7] + ((task->data[11] / 2) + 10) * task->data[5];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[6] - ((task->data[10] / 2) + 10) * task->data[5];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[7] + ((task->data[11] / 2) + 10) * task->data[5];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[3] = 5;
         sprite->subpriority = task->data[4];
         StartSpriteAnim(sprite, task->data[3]);
@@ -4987,12 +4992,12 @@ static void AnimTask_LeafBlade_Step(u8 taskId)
         sprite->y += sprite->y2;
         sprite->x2 = 0;
         sprite->y2 = 0;
-        sprite->data[0] = 10;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = task->data[8];
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = task->data[9];
-        sprite->data[5] = LeafBladeGetPosFactor(sprite);
+        sprite->sDuration_lti = 10;
+        sprite->sInputStartX_lti = sprite->x; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndX_lti = task->data[8];
+        sprite->sInputStartY_lti = sprite->y; // redundant since overwritten in InitSpriteArcTranslation
+        sprite->sInputEndY_lti = task->data[9];
+        sprite->sArcAmplitude_ati = LeafBladeGetPosFactor(sprite);
         task->data[4] -= 2;
         task->data[3] = 6;
         sprite->subpriority = task->data[4];
@@ -5782,9 +5787,9 @@ static void AnimLockOnTarget_Step1(struct Sprite *sprite)
         sprite->y += sprite->y2;
         sprite->y2 = 0;
         sprite->x2 = 0;
-        sprite->data[0] = 8;
-        sprite->data[2] = sprite->x + gInclineMonCoordTable[sprite->data[5] >> 8][0];
-        sprite->data[4] = sprite->y + gInclineMonCoordTable[sprite->data[5] >> 8][1];
+        sprite->sDuration_lti = 8;
+        sprite->sInputEndX_lti = sprite->x + gInclineMonCoordTable[sprite->data[5] >> 8][0];
+        sprite->sInputEndY_lti = sprite->y + gInclineMonCoordTable[sprite->data[5] >> 8][1];
         sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimLockOnTarget_Step2);
         sprite->data[5] += 0x100;
@@ -5847,9 +5852,9 @@ static void AnimLockOnTarget_Step3(struct Sprite *sprite)
         sprite->y += sprite->y2;
         sprite->y2 = 0;
         sprite->x2 = 0;
-        sprite->data[0] = 6;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + a;
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + b;
+        sprite->sDuration_lti = 6;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + a;
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + b;
         sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, AnimLockOnTarget_Step5);
     }
@@ -6418,9 +6423,9 @@ static void AnimConversion2_Step(struct Sprite *sprite)
     else
     {
         sprite->animPaused = 0;
-        sprite->data[0] = 30;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 30;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
         sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
         StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     }
@@ -7275,11 +7280,11 @@ void AnimSlowFlyingMusicNotes(struct Sprite *sprite)
         sprite->oam.paletteNum = index;
 
     xDiff = (gBattleAnimArgs[0] == 0) ? -32 : 32;
-    sprite->data[0] = 40;
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = xDiff + sprite->data[1];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->data[3] - 40;
+    sprite->sDuration_lti = 40;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = xDiff + sprite->sInputStartX_lti;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->sInputStartY_lti - 40;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[3];
     sprite->callback = AnimSlowFlyingMusicNotes_Step;
@@ -7502,9 +7507,9 @@ void AnimPoisonJabProjectile(struct Sprite *sprite)
     targetYPos = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     rotation = ArcTan2Neg(targetXPos - sprite->x, targetYPos - sprite->y);
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rotation);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = targetXPos;
-    sprite->data[4] = targetYPos;
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = targetXPos;
+    sprite->sInputEndY_lti = targetYPos;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }

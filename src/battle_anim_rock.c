@@ -380,10 +380,10 @@ static void AnimStealthRock(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = x + gBattleAnimArgs[2];
-    sprite->data[4] = y + gBattleAnimArgs[3];
-    sprite->data[5] = -50;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = y + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = -50;
 
     InitSpriteArcTranslation(sprite);
     sprite->callback = AnimStealthRockStep;
@@ -695,9 +695,9 @@ void AnimRaiseSprite(struct Sprite *sprite)
     StartSpriteAnim(sprite, gBattleAnimArgs[4]);
     InitSpritePosToAnimAttacker(sprite, FALSE);
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[2] = sprite->x;
-    sprite->data[4] = sprite->y + gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputEndY_lti = sprite->y + gBattleAnimArgs[2];
 
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
@@ -899,10 +899,10 @@ static void CreateRolloutDirtSprite(struct Task *task)
     spriteId = CreateSprite(spriteTemplate, x, y, 35);
     if (spriteId != MAX_SPRITES)
     {
-        gSprites[spriteId].data[0] = 18;
-        gSprites[spriteId].data[2] = ((task->data[12] * 20) + x) + (task->data[1] * 3);
-        gSprites[spriteId].data[4] = y;
-        gSprites[spriteId].data[5] = -16 - (task->data[1] * 2);
+        gSprites[spriteId].sDuration_lti = 18;
+        gSprites[spriteId].sInputEndX_lti = ((task->data[12] * 20) + x) + (task->data[1] * 3);
+        gSprites[spriteId].sInputEndY_lti = y;
+        gSprites[spriteId].sArcAmplitude_ati = -16 - (task->data[1] * 2);
         gSprites[spriteId].oam.tileNum += tileOffset;
 
         InitSpriteArcTranslation(&gSprites[spriteId]);

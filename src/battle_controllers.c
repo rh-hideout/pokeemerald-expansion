@@ -2389,9 +2389,9 @@ void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
 void BtlController_HandleTrainerSlideBack(u32 battler, s16 data0, bool32 startAnim)
 {
     SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = data0;
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = IsOnPlayerSide(battler) ? -40 : 280;
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[4] = gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y;
+    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sDuration_lti = data0;
+    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sInputEndX_lti = IsOnPlayerSide(battler) ? -40 : 280;
+    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sInputEndY_lti = gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y;
     gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]], SpriteCallbackDummy);
     if (startAnim)
@@ -2681,16 +2681,16 @@ void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, c
     SetSpritePrimaryCoordsFromSecondaryCoords(&gSprites[gBattleStruct->trainerSlideSpriteIds[battler]]);
     if (side == B_SIDE_PLAYER)
     {
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 50;
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = -40;
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sDuration_lti = 50;
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sInputEndX_lti = -40;
     }
     else
     {
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[0] = 35;
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[2] = 280;
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sDuration_lti = 35;
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sInputEndX_lti = 280;
     }
 
-    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].data[4] = gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y;
+    gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sInputEndY_lti = gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].y;
     gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sBattlerId = battler;
 

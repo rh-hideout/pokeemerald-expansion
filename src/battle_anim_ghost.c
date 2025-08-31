@@ -286,11 +286,11 @@ const struct SpriteTemplate gPoltergeistEffectTemplate =
 static void AnimConfuseRayBallBounce(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sInputSpeed_lti = gBattleAnimArgs[2];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     InitSpriteLinearTranslationIteratorWithSpeed(sprite);
     sprite->callback = AnimConfuseRayBallBounce_Step1;
     sprite->data[6] = 16;
@@ -325,7 +325,7 @@ static void AnimConfuseRayBallBounce_Step2(struct Sprite *sprite)
 {
     s16 r2;
     s16 r0;
-    sprite->data[0] = 1;
+    sprite->sDuration_lti = 1;
     UpdateSpriteLinearTranslationIterator(sprite);
     sprite->x2 += Sin(sprite->data[5], 10);
     sprite->y2 += Cos(sprite->data[5], 15);

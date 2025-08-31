@@ -1424,9 +1424,9 @@ static void AnimMovingClamp(struct Sprite *sprite)
 
 static void AnimMovingClamp_Step(struct Sprite *sprite)
 {
-    sprite->data[0] = sprite->data[1];
-    sprite->data[2] = sprite->x;
-    sprite->data[4] = sprite->y + 15;
+    sprite->sDuration_lti = sprite->data[1];
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputEndY_lti = sprite->y + 15;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimMovingClamp_End);
 }
@@ -1533,9 +1533,9 @@ static void AnimSwordsDanceBlade(struct Sprite *sprite)
 
 static void AnimSwordsDanceBlade_Step(struct Sprite *sprite)
 {
-    sprite->data[0] = 6;
-    sprite->data[2] = sprite->x;
-    sprite->data[4] = sprite->y - 32;
+    sprite->sDuration_lti = 6;
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputEndY_lti = sprite->y - 32;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -1573,9 +1573,9 @@ void AnimSonicBoomProjectile(struct Sprite *sprite)
         rotation -= 0x6000;
 
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rotation);
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = targetXPos;
-    sprite->data[4] = targetYPos;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = targetXPos;
+    sprite->sInputEndY_lti = targetYPos;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -1848,9 +1848,9 @@ static void AnimCoinThrow(struct Sprite *sprite)
     var = ArcTan2Neg(r6 - sprite->x, r7 - sprite->y);
     var += 0xC000;
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, var);
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = r6;
-    sprite->data[4] = r7;
+    sprite->sInputSpeed_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = r6;
+    sprite->sInputEndY_lti = r7;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -1883,9 +1883,9 @@ static void AnimFallingCoin_Step(struct Sprite *sprite)
 static void AnimBulletSeed(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = 20;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = 20;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     sprite->affineAnimPaused = 1;
     StoreSpriteCallbackInData6(sprite, AnimBulletSeed_Step1);
@@ -1974,9 +1974,9 @@ static void AnimViceGripPincer(struct Sprite *sprite)
 
     sprite->x += startXOffset;
     sprite->y += startYOffset;
-    sprite->data[0] = 6;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
+    sprite->sDuration_lti = 6;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, AnimViceGripPincer_Step);
 }
@@ -2006,11 +2006,11 @@ static void AnimGuillotinePincer(struct Sprite *sprite)
 
     sprite->x += startXOffset;
     sprite->y += startYOffset;
-    sprite->data[0] = 6;
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
+    sprite->sDuration_lti = 6;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + endXOffset;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + endYOffset;
     InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[0];
     sprite->data[6] = sprite->data[0];
@@ -2027,7 +2027,13 @@ static void AnimGuillotinePincer_Step1(struct Sprite *sprite)
         sprite->y += sprite->y2;
         sprite->x2 = 2;
         sprite->y2 = -2;
-        sprite->data[0] = sprite->data[6];
+        sprite->sDuration_lti = sprite->data[6];
+        // maybe meant to be adjusting sInputStartX_lti and sInputEndX_lti?
+        // but they never get read again
+        // UpdateSpriteLinearTranslationIterator is called in AnimGuillotinePincer_Step3
+        // but since sDuration_lti is never modified, a second linear translation
+        // will never occur
+        // so these fields never end up being read
         sprite->data[1] ^= 1;
         sprite->data[2] ^= 1;
         sprite->data[4] = 0;
@@ -2732,11 +2738,11 @@ void AnimHyperVoiceRing(struct Sprite *sprite)
         x -= gBattleAnimArgs[3];
 
     y += gBattleAnimArgs[4];
-    sprite->x = sprite->data[1] = startX;
-    sprite->y = sprite->data[3] = startY;
-    sprite->data[2] = x;
-    sprite->data[4] = y;
-    sprite->data[0] = gBattleAnimArgs[0];
+    sprite->x = sprite->sInputStartX_lti = startX;
+    sprite->y = sprite->sInputStartY_lti = startY;
+    sprite->sInputEndX_lti = x;
+    sprite->sInputEndY_lti = y;
+    sprite->sDuration_lti = gBattleAnimArgs[0];
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimHyperVoiceRing_WaitEnd;
     sprite->callback(sprite);
@@ -3122,9 +3128,9 @@ static void AnimHealBellMusicNote(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + gBattleAnimArgs[3];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + gBattleAnimArgs[3];
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
     SetMusicNotePalette(sprite, gBattleAnimArgs[5], gBattleAnimArgs[6]);
@@ -3241,11 +3247,11 @@ void AnimTask_StretchAttackerUp(u8 taskId)
 static void AnimRedHeartProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = 95;
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sDuration_lti = 95;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
     InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimRedHeartProjectile_Step;
 }
@@ -3882,9 +3888,9 @@ static void AnimGuardRing(struct Sprite *sprite)
         sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y) + 40;
     }
 
-    sprite->data[0] = 13;
-    sprite->data[2] = sprite->x;
-    sprite->data[4] = sprite->y - 72;
+    sprite->sDuration_lti = 13;
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputEndY_lti = sprite->y - 72;
 
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
