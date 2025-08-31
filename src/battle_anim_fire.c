@@ -825,9 +825,9 @@ void AnimFireCross(struct Sprite *sprite)
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = gBattleAnimArgs[3];
-    sprite->data[2] = gBattleAnimArgs[4];
+    sprite->sDuration_ltz = gBattleAnimArgs[2];
+    sprite->sXIncrement_ltz = gBattleAnimArgs[3];
+    sprite->sYIncrement_ltz = gBattleAnimArgs[4];
 
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 

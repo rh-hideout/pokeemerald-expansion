@@ -5965,10 +5965,10 @@ static void AnimBowMon(struct Sprite *sprite)
 
 static void AnimBowMon_Step1(struct Sprite *sprite)
 {
-    sprite->data[0] = 6;
-    sprite->data[1] = (!IsOnPlayerSide(gBattleAnimAttacker)) ? 2 : -2;
-    sprite->data[2] = 0;
-    sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
+    sprite->sDuration_ltz = 6;
+    sprite->sXIncrement_ltz = (!IsOnPlayerSide(gBattleAnimAttacker)) ? 2 : -2;
+    sprite->sYIncrement_ltz = 0;
+    sprite->sSpriteId_ltz = gBattlerSpriteIds[gBattleAnimAttacker];
     StoreSpriteCallbackInData6(sprite, AnimBowMon_Step1_Callback);
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
@@ -5995,10 +5995,10 @@ static void AnimBowMon_Step1_Callback(struct Sprite *sprite)
 
 static void AnimBowMon_Step2(struct Sprite *sprite)
 {
-    sprite->data[0] = 4;
-    sprite->data[1] = (!IsOnPlayerSide(gBattleAnimAttacker)) ? -3 : 3;
-    sprite->data[2] = 0;
-    sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
+    sprite->sDuration_ltz = 4;
+    sprite->sXIncrement_ltz = (!IsOnPlayerSide(gBattleAnimAttacker)) ? -3 : 3;
+    sprite->sYIncrement_ltz = 0;
+    sprite->sSpriteId_ltz = gBattlerSpriteIds[gBattleAnimAttacker];
     StoreSpriteCallbackInData6(sprite, AnimBowMon_Step4);
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
@@ -6272,9 +6272,9 @@ static void AnimFalseSwipeSlice_Step1(struct Sprite *sprite)
 {
     if (++sprite->data[0] > 8)
     {
-        sprite->data[0] = 12;
-        sprite->data[1] = 8;
-        sprite->data[2] = 0;
+        sprite->sDuration_ltz = 12;
+        sprite->sXIncrement_ltz = 8;
+        sprite->sYIncrement_ltz = 0;
         StoreSpriteCallbackInData6(sprite, AnimFalseSwipeSlice_Step2);
         sprite->callback = TranslateSpriteLinearInteger;
     }

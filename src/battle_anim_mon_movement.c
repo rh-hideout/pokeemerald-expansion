@@ -457,13 +457,13 @@ static void DoHorizontalLunge(struct Sprite *sprite)
 {
     sprite->invisible = TRUE;
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        sprite->data[1] = -gBattleAnimArgs[1];
+        sprite->sXIncrement_ltz = -gBattleAnimArgs[1];
     else
-        sprite->data[1] = gBattleAnimArgs[1];
+        sprite->sXIncrement_ltz = gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[0];
-    sprite->data[2] = 0;
-    sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
+    sprite->sDuration_ltz = gBattleAnimArgs[0];
+    sprite->sYIncrement_ltz = 0;
+    sprite->sSpriteId_ltz = gBattlerSpriteIds[gBattleAnimAttacker];
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseHorizontalLungeDirection);
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
@@ -471,8 +471,8 @@ static void DoHorizontalLunge(struct Sprite *sprite)
 
 static void ReverseHorizontalLungeDirection(struct Sprite *sprite)
 {
-    sprite->data[0] = sprite->data[4];
-    sprite->data[1] = -sprite->data[1];
+    sprite->sDuration_ltz = sprite->data[4];
+    sprite->sXIncrement_ltz = -sprite->data[1];
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
@@ -487,10 +487,10 @@ static void DoVerticalDip(struct Sprite *sprite)
     u8 spriteId;
     sprite->invisible = TRUE;
     spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[2]);
-    sprite->data[0] = gBattleAnimArgs[0];
-    sprite->data[1] = 0;
-    sprite->data[2] = gBattleAnimArgs[1];
-    sprite->data[3] = spriteId;
+    sprite->sDuration_ltz = gBattleAnimArgs[0];
+    sprite->sXIncrement_ltz = 0;
+    sprite->sYIncrement_ltz = gBattleAnimArgs[1];
+    sprite->sSpriteId_ltz = spriteId;
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseVerticalDipDirection);
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
@@ -498,8 +498,8 @@ static void DoVerticalDip(struct Sprite *sprite)
 
 static void ReverseVerticalDipDirection(struct Sprite *sprite)
 {
-    sprite->data[0] = sprite->data[4];
-    sprite->data[2] = -sprite->data[2];
+    sprite->sDuration_ltz = sprite->data[4];
+    sprite->sYIncrement_ltz = -sprite->data[2];
     sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
