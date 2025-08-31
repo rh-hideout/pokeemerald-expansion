@@ -1587,12 +1587,25 @@ static void AnimThrowProjectile_Step(struct Sprite *sprite)
         DestroyAnimSprite(sprite);
 }
 
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
+// this is probably not the correct name, since it just performs a linear translation
+// something like "wrapper" as the function name?
+
+// TODO: AnimTravelDiagonally is called elsewhere and its arg indices are used non-locally
+// so these arg indices will have to be moved out of here
+#define ARG_SPRITE_X_END_OFFSET 2
+#define ARG_SPRITE_Y_END_OFFSET 3
+#define ARG_DURATION 4
+#define ARG_BATTLER_FOR_START_POS 5
+#define ARG_PIC_OFFSET_RELATED 6
+
 void AnimTravelDiagonally(struct Sprite *sprite)
 {
     bool8 respectOffsets;
     u8 battler, coordType;
 
-    if (!gBattleAnimArgs[6])
+    if (!gBattleAnimArgs[ARG_PIC_OFFSET_RELATED])
     {
         respectOffsets = TRUE;
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
@@ -1602,7 +1615,7 @@ void AnimTravelDiagonally(struct Sprite *sprite)
         respectOffsets = FALSE;
         coordType = BATTLER_COORD_Y;
     }
-    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+    if (gBattleAnimArgs[ARG_BATTLER_FOR_START_POS] == ANIM_ATTACKER)
     {
         InitSpritePosToAnimAttacker(sprite, respectOffsets);
         battler = gBattleAnimAttacker;
@@ -1613,14 +1626,20 @@ void AnimTravelDiagonally(struct Sprite *sprite)
         battler = gBattleAnimTarget;
     }
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
     InitSpritePosToAnimTarget(sprite, respectOffsets);
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(battler, coordType) + gBattleAnimArgs[3];
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(battler, coordType) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
     sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_BATTLER_FOR_START_POS
+#undef ARG_PIC_OFFSET_RELATED
 
 s16 CloneBattlerSpriteWithBlend(u8 animBattler)
 {
