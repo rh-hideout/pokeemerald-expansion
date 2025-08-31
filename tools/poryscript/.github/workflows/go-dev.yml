@@ -1,0 +1,145 @@
+name: Go
+on:
+  push:
+    branches:
+    - master
+    tags:
+    - '*'
+  pull_request:
+    branches:
+    - master
+
+jobs:
+  build-linux:
+    name: Build & Test on ubuntu-latest
+    runs-on: ubuntu-latest
+    steps:
+    - name: Set up Go 1.19
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies
+      run: go get -v -t -d ./...
+
+    - name: Build
+      run: go build -v .
+
+    - name: Test
+      run: |
+        go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+        bash <(curl -s https://codecov.io/bash) -t ${{ secrets.CODECOV_TOKEN }}
+
+    - name: Prep Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        mkdir poryscript-linux
+        cp poryscript poryscript-linux
+        cp font_config.json poryscript-linux
+        cp command_config.json poryscript-linux
+        cp CHANGELOG.md poryscript-linux
+        cp README.md poryscript-linux
+
+    - name: Bundle Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: montudor/action-zip@v0.1.0
+      with:
+        args: zip -r poryscript-linux.zip poryscript-linux
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: poryscript-linux.zip
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-mac:
+    name: Build & Test on macos-latest
+    runs-on: macos-latest
+    steps:
+    - name: Set up Go 1.19
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies
+      run: go get -v -t -d ./...
+
+    - name: Build
+      run: go build -v .
+
+    - name: Test
+      run: go test ./...
+
+    - name: Prep Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        mkdir poryscript-mac
+        cp poryscript poryscript-mac
+        cp font_config.json poryscript-mac
+        cp command_config.json poryscript-mac
+        cp CHANGELOG.md poryscript-mac
+        cp README.md poryscript-mac
+
+    - name: Bundle Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      run: zip -r poryscript-mac.zip poryscript-mac
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: poryscript-mac.zip
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  build-windows:
+    name: Build & Test on windows-latest
+    runs-on: windows-latest
+    steps:
+    - name: Set up Go 1.19
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies
+      run: go get -v -t -d ./...
+
+    - name: Build
+      run: go build -v .
+
+    - name: Test
+      run: go test ./...
+
+    - name: Prep Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        mkdir poryscript-windows
+        cp poryscript.exe poryscript-windows
+        cp font_config.json poryscript-windows
+        cp command_config.json poryscript-windows
+        cp CHANGELOG.md poryscript-windows
+        cp README.md poryscript-windows
+
+    - name: Bundle Release Directory
+      if: startsWith(github.ref, 'refs/tags/')
+      run: powershell.exe -Command "Compress-Archive -Path poryscript-windows -DestinationPath poryscript-windows.zip"
+
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: poryscript-windows.zip
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
