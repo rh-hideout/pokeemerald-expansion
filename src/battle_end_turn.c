@@ -763,8 +763,9 @@ static bool32 HandleEndTurnWrap(u32 battler)
 
     if (gBattleMons[battler].volatiles.wrapped && IsBattlerAlive(battler))
     {
-        if (--gDisableStructs[battler].wrapTurns != 0)
+        if (gDisableStructs[battler].wrapTurns != 0)
         {
+            gDisableStructs[battler].wrapTurns--;
             if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;
 
