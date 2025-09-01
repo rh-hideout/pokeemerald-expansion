@@ -5238,7 +5238,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         // Prints message only. separate from ABILITYEFFECT_ON_SWITCHIN bc activates before entry hazards
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[i].neutralizingGas)
+            if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS
+             && !gDisableStructs[i].neutralizingGas
+             && IsBattlerAlive(i))
             {
                 gDisableStructs[i].neutralizingGas = TRUE;
                 gBattlerAbility = i;
