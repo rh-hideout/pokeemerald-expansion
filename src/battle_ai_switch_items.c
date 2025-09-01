@@ -1222,7 +1222,7 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         score = gAiBattleData->finalScore[battler][opposingBattler][i];
-        if (score > AI_BAD_SCORE_THRESHOLD)
+        if (score >= AI_BAD_SCORE_THRESHOLD)
             return FALSE;
     }
     if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD)))
