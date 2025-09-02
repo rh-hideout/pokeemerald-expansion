@@ -248,7 +248,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
-#define HITMARKER_PASSIVE_DAMAGE        (1 << 20)
+#define HITMARKER_PASSIVE_HP_UPDATE     (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_ALLOW_NO_PP           (1 << 23)
@@ -363,16 +363,17 @@ enum BattleWeather
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
+// Explicit numbers until frostbite because those shouldn't be shifted 
 enum __attribute__((packed)) MoveEffect
 {
-    MOVE_EFFECT_NONE,
-    MOVE_EFFECT_SLEEP,
-    MOVE_EFFECT_POISON,
-    MOVE_EFFECT_BURN,
-    MOVE_EFFECT_FREEZE,
-    MOVE_EFFECT_PARALYSIS,
-    MOVE_EFFECT_TOXIC,
-    MOVE_EFFECT_FROSTBITE,
+    MOVE_EFFECT_NONE = 0,
+    MOVE_EFFECT_SLEEP = 1,
+    MOVE_EFFECT_POISON = 2,
+    MOVE_EFFECT_BURN = 3,
+    MOVE_EFFECT_FREEZE = 4,
+    MOVE_EFFECT_PARALYSIS = 5,
+    MOVE_EFFECT_TOXIC = 6,
+    MOVE_EFFECT_FROSTBITE = 7,
     MOVE_EFFECT_CONFUSION,
     MOVE_EFFECT_FLINCH,
     MOVE_EFFECT_TRI_ATTACK,

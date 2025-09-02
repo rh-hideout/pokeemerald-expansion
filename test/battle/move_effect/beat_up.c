@@ -3,6 +3,7 @@
 
 // General
 TO_DO_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused member in the party");
+TO_DO_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
 TO_DO_BATTLE_TEST("Beat Up's strikes have each an independent chance of a critical hit");
 
 // B_BEAT_UP Gen2-4

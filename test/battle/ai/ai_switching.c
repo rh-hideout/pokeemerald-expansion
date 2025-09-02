@@ -40,7 +40,7 @@ AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (all bad moves)")
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (all bad moves)")
 {
     u32 flags;
 
@@ -98,7 +98,7 @@ AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects t
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same pokemon for 2 spots in a double battle (Wonder Guard)")
+AI_DOUBLE_BATTLE_TEST("AI will not try to switch for the same Pokémon for 2 spots in a double battle (Wonder Guard)")
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_WONDER_GUARD_PERCENTAGE, 100, RNG_AI_SWITCH_WONDER_GUARD);
     GIVEN {
