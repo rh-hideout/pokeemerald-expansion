@@ -581,6 +581,7 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
 // TODO another time - select rental pool options here
 // TODO here - set other rules (trick room, random weather, random terrain, inverse battles)
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions {
+    msgbox(format("Interested in spicing up your battles?"))
 	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "TERASTALLISATION", "MEGA EVOLUTION", "Z-MOVES", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0: #
@@ -590,11 +591,11 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions {
         case 2:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode)
 		case 3:
-		    releaseall
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
         default:
-			releaseall
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 	}
-	releaseall
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseTeraMode {
@@ -614,7 +615,7 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseTeraMode {
 			msgbox(format("You disabled TERASTALLISATION!"))
             clearflag(FLAG_BATTLE_FACTORY_ALLOW_TERASTALLISATION)
 	}
-	releaseall
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode {
@@ -634,7 +635,7 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseMegaMode {
         msgbox(format("You disabled MEGA EVOLUTION!"))
         clearflag(FLAG_BATTLE_FACTORY_ALLOW_MEGA_EVOLUTION)
     }
-    releaseall
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
@@ -654,10 +655,11 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
         msgbox(format("You disabled Z-MOVES!"))
         clearflag(FLAG_BATTLE_FACTORY_ALLOW_Z_MOVES)
     }
-    releaseall
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
+    msgbox(format("Interested in spicing up your battles?"))
 	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
 	 "DEFAULT", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA", "VS. TRAINER",
      "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
@@ -706,11 +708,9 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
         case 19:
             setvar(VAR_FRONTIER_BGM, 19)
 		case 20:
-		    msgbox(format("Is there anything else I can help you with?"))
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
         default:
-			msgbox(format("Is there anything else I can help you with?"))
-            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 	}
     playse(SE_SUCCESS)
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
@@ -720,8 +720,12 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess {
 	playse(SE_SUCCESS)
 	msgbox(format("All done! Your music selection has been changed."))
 	waitse
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse {
     msgbox(format("Is there anything else I can help you with?"))
-	goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints {
