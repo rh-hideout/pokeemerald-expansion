@@ -113,6 +113,8 @@ SINGLE_BATTLE_TEST("Wake-Up Slap gets increased power against sleeping targets")
     }
 }
 
+TO_DO_BATTLE_TEST("Wake-Up Slap gets increased power against Pokémon with Comatose")
+
 DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and behind substitutes")
 {
     GIVEN {
