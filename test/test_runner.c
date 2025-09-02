@@ -235,6 +235,8 @@ top:
             }
             else
             {
+                // Cost must be assigned to the test that crashed, otherwise tests will be desynched
+                AssignCostToRunner();
                 gTestRunnerState.state = STATE_REPORT_RESULT;
                 gTestRunnerState.result = TEST_RESULT_CRASH;
             }
