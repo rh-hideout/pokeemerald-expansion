@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_TELEPORT) == EFFECT_TELEPORT);
 }
 
-SINGLE_BATTLE_TEST("Teleport fails when there is no pokemon to switch in")
+SINGLE_BATTLE_TEST("Teleport fails when there is no Pokémon to switch in")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -18,7 +18,7 @@ SINGLE_BATTLE_TEST("Teleport fails when there is no pokemon to switch in")
     }
 }
 
-SINGLE_BATTLE_TEST("Teleport fails when there no alive pokemon left")
+SINGLE_BATTLE_TEST("Teleport fails when there no alive Pokémon left")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Teleport fails when there no alive pokemon left")
     }
 }
 
-SINGLE_BATTLE_TEST("Teleport forces the pokemon to switch out")
+SINGLE_BATTLE_TEST("Teleport forces the Pokémon to switch out")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
