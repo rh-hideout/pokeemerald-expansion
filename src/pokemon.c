@@ -114,6 +114,34 @@ static const struct CombinedMove sCombinedMoves[2] =
     {0xFFFF, 0xFFFF, 0xFFFF}
 };
 
+#define FRONTIER_BGM_COUNT 19
+
+static const u16 customFrontierSongs[FRONTIER_BGM_COUNT] = {
+    // RSE Music
+    MUS_VS_FRONTIER_BRAIN,
+    MUS_VS_MEW,
+    MUS_VS_WILD,
+    MUS_VS_AQUA_MAGMA,
+    MUS_VS_TRAINER,
+    MUS_VS_GYM_LEADER,
+    MUS_VS_CHAMPION,
+    MUS_VS_REGI,
+    MUS_VS_KYOGRE_GROUDON,
+    MUS_VS_RIVAL,
+    MUS_VS_ELITE_FOUR,
+    MUS_VS_AQUA_MAGMA_LEADER,
+
+    // FRLG Music
+    MUS_RG_VS_GYM_LEADER,
+    MUS_RG_VS_TRAINER,
+    MUS_RG_VS_WILD,
+    MUS_RG_VS_CHAMPION,
+    MUS_RG_VS_DEOXYS,
+    MUS_RG_VS_MEWTWO,
+    MUS_RG_VS_LEGEND,
+};
+
+
 // NOTE: The order of the elements in the array below is irrelevant.
 // To reorder the pokedex, see the values in include/constants/pokedex.h.
 
@@ -5781,6 +5809,19 @@ bool32 IsSpeciesInHoennDex(u16 species)
 
 u16 GetBattleBGM(void)
 {
+    // Get custom battle frontier bgm
+    const u16 frontierBGM = VarGet(VAR_FRONTIER_BGM);
+
+    // Custom battle frontier bgm is set
+    if (frontierBGM > 0 &&
+        frontierBGM <= FRONTIER_BGM_COUNT && (
+        gBattleTypeFlags & BATTLE_TYPE_FRONTIER ||
+        gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL
+    )){
+        // Return the selected custom battle frontier song
+        return customFrontierSongs[frontierBGM - 1];
+    }
+
     if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)
     {
         switch (GetMonData(&gEnemyParty[0], MON_DATA_SPECIES, NULL))
