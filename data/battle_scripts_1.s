@@ -14,6 +14,7 @@
 #include "constants/game_stat.h"
 #include "constants/trainers.h"
 #include "constants/species.h"
+#include "constants/generational_changes.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/battle_script.inc"
 	.include "constants/constants.inc"
@@ -4222,12 +4223,13 @@ BattleScript_EffectFutureSight::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTeleport::
-.if B_TELEPORT_BEHAVIOR >= GEN_8
+	jumpifgenconfiglowerthan GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8, BattleScript_EffectTeleportGen7
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_EffectBatonPass
 	jumpifside BS_ATTACKER, B_SIDE_PLAYER, BattleScript_EffectBatonPass
-.else
+	goto BattleScript_DoEffectTeleport
+BattleScript_EffectTeleportGen7::
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_FailedFromAtkCanceler
-.endif
+BattleScript_DoEffectTeleport::
 	attackcanceler
 	attackstring
 	ppreduce

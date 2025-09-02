@@ -18347,3 +18347,12 @@ void BS_BattlerItemToLastUsedItem(void)
     gBattleMons[gBattlerTarget].item = gLastUsedItem;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
+
+void BS_JumpIfGenConfigLowerThan(void)
+{
+    NATIVE_ARGS(u16 tag, u8 gen, const u8 *jumpInstr);
+    if (GetGenConfig(cmd->tag) < cmd->gen)
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
