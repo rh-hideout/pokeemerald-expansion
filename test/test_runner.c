@@ -212,12 +212,16 @@ top:
         // The current test restarted the ROM (e.g. by jumping to NULL).
         if (gPersistentTestRunnerState.address != 0)
         {
+            gTestRunnerState.state = STATE_EXIT;
             gTestRunnerState.test = __start_tests;
             while ((uintptr_t)gTestRunnerState.test != gPersistentTestRunnerState.address)
             {
                 AssignCostToRunner();
                 gTestRunnerState.test++;
             }
+            gTestRunnerState.result = TEST_RESULT_CRASH;
+            //  Commented out until crash detection is fixed properly
+            /*
 
             if (gPersistentTestRunnerState.state == CURRENT_TEST_STATE_ESTIMATE)
             {
@@ -241,6 +245,7 @@ top:
 
             if (gPersistentTestRunnerState.expectCrash)
                 gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
+            */
         }
         else
         {
@@ -442,6 +447,11 @@ top:
         break;
 
     case STATE_EXIT:
+        if (gTestRunnerState.result == TEST_RESULT_CRASH)
+        {
+            Test_MgbaPrintf("\n\e[31mCrash in %s:%d %s\nFurther tests skipped to to prevent false negatives\e[0m", gTestRunnerState.test->filename, SourceLine(0), gTestRunnerState.test->name);
+            gTestRunnerState.exitCode = 1;
+        }
         MgbaExit_(gTestRunnerState.exitCode);
         break;
     }
