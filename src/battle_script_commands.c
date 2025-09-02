@@ -9453,7 +9453,7 @@ static bool32 ChangeOrderTargetAfterAttacker(void)
     if (GetBattlerTurnOrderNum(gBattlerAttacker) > GetBattlerTurnOrderNum(gBattlerTarget))
         return FALSE;
     if (GetBattlerTurnOrderNum(gBattlerAttacker) + 1 == GetBattlerTurnOrderNum(gBattlerTarget))
-        return B_AFTER_YOU_TURN_ORDER >= GEN_8;
+        return GetGenConfig(GEN_CONFIG_AFTER_YOU_TURN_ORDER) >= GEN_8;
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
