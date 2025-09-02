@@ -563,6 +563,24 @@ script BattleFrontier_BattleFactoryLobby_Noland {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0: #
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions)
+        case 1:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+		case 2:
+		    releaseall
+        default:
+			releaseall
+	}
+	releaseall
+}
+
+// TODO tomorrow - add another set of options here for music choices, by setting VAR_FRONTIER_BGM
+// TODO another time - select rental pool options here
+// TODO here - set other rules (trick room, random weather, random terrain, inverse battles)
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions {
 	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "TERASTALLISATION", "MEGA EVOLUTION", "Z-MOVES", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0: #
@@ -637,6 +655,73 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
         clearflag(FLAG_BATTLE_FACTORY_ALLOW_Z_MOVES)
     }
     releaseall
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	 "DEFAULT", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA", "VS. TRAINER",
+     "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
+     "VS. ELITE FOUR", "VS. AQUA & MAGMA LEADER", "VS. GYM LEADER (FRLG)", "VS. TRAINER (FRLG)",
+     "VS. WILD POKEMON (FRLG)", "VS. CHAMPION (FRLG)", "VS. DEOXYS (FRLG)",
+     "VS. MEWTWO (FRLG)", "VS. LEGEND (FRLG)", "CANCEL")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            setvar(VAR_FRONTIER_BGM, 0)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 1)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 2)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 3)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 4)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 5)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 6)
+        case 7:
+            setvar(VAR_FRONTIER_BGM, 7)
+        case 8:
+            setvar(VAR_FRONTIER_BGM, 8)
+        case 9:
+            setvar(VAR_FRONTIER_BGM, 9)
+        case 10:
+            setvar(VAR_FRONTIER_BGM, 10)
+        case 11:
+            setvar(VAR_FRONTIER_BGM, 11)
+        case 12:
+            setvar(VAR_FRONTIER_BGM, 12)
+        case 13:
+            setvar(VAR_FRONTIER_BGM, 13)
+        case 14:
+            setvar(VAR_FRONTIER_BGM, 14)
+        case 15:
+            setvar(VAR_FRONTIER_BGM, 15)
+        case 16:
+            setvar(VAR_FRONTIER_BGM, 16)
+        case 17:
+            setvar(VAR_FRONTIER_BGM, 17)
+        case 18:
+            setvar(VAR_FRONTIER_BGM, 18)
+        case 19:
+            setvar(VAR_FRONTIER_BGM, 19)
+		case 20:
+		    msgbox(format("Is there anything else I can help you with?"))
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
+        default:
+			msgbox(format("Is there anything else I can help you with?"))
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
+	}
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess {
+	playse(SE_SUCCESS)
+	msgbox(format("All done! Your music selection has been changed."))
+	waitse
+    msgbox(format("Is there anything else I can help you with?"))
+	goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions)
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_GiveBattlePoints {
