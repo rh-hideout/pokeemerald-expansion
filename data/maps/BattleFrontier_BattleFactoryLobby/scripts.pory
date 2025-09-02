@@ -563,13 +563,15 @@ script BattleFrontier_BattleFactoryLobby_Noland {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandOptions {
-	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "CANCEL")
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE, "GIMMICK OPTIONS", "MUSIC OPTIONS", "BACKGROUND OPTIONS", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0: #
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandGimmickOptions)
         case 1:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
-		case 2:
+        case 2:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions)
+		case 3:
 		    releaseall
         default:
 			releaseall
@@ -716,9 +718,80 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
 }
 
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions {
+    msgbox(format("Fancy a new lick of paint on your battles?"))
+    	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+    	 "DEFAULT", "GRASS", "LONG GRASS", "SAND", "UNDERWATER", "WATER",
+         "POND", "MOUNTAIN", "CAVE", "BUILDING", "PLAIN",
+         "GYM", "GYM LEADER", "TEAM MAGMA", "TEAM AQUA",
+         "ELITE FOUR SIDNEY", "ELITE FOUR PHOEBE", "ELITE FOUR GLACIA",
+         "ELITE FOUR DRAKE", "CHAMPION", "GROUDON", "KYOGRE", "RAYQUAZA", "CANCEL")
+    	switch(var(VAR_RESULT)) {
+    		case 0:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 0)
+            case 1:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 1)
+            case 2:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 2)
+            case 3:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 3)
+            case 4:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 4)
+            case 5:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 5)
+            case 6:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 6)
+            case 7:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 7)
+            case 8:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 8)
+            case 9:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 9)
+            case 10:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 10)
+            case 11:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 11)
+            case 12:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 12)
+            case 13:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 13)
+            case 14:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 14)
+            case 15:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 15)
+            case 16:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 16)
+            case 17:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 17)
+            case 18:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 18)
+            case 19:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 19)
+            case 20:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 20)
+            case 21:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 21)
+            case 22:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 22)
+    		case 23:
+                goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+            default:
+                goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+    	}
+        playse(SE_SUCCESS)
+        goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeBackgroundSuccess)
+}
+
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess {
 	playse(SE_SUCCESS)
 	msgbox(format("All done! Your music selection has been changed."))
+	waitse
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeBackgroundSuccess {
+	playse(SE_SUCCESS)
+	msgbox(format("All done! Your background has been changed."))
 	waitse
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 }
