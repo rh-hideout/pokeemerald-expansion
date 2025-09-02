@@ -12000,9 +12000,7 @@ static u32 GetMirrorMoveMove(void)
         move = validMoves[Random() % validMovesCount];
 
     if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_Z_MOVE && !IsBattleMoveStatus(move))
-    {
         move = GetTypeBasedZMove(move);
-    }
 
     return move;
 }
@@ -12112,9 +12110,7 @@ static u32 GetSleepTalkMove(void)
     {
         if (IsMoveSleepTalkBanned(gBattleMons[gBattlerAttacker].moves[i])
             || gBattleMoveEffects[GetMoveEffect(gBattleMons[gBattlerAttacker].moves[i])].twoTurnEffect)
-        {
             unusableMovesBits |= (1 << (i));
-        }
     }
 
     unusableMovesBits = CheckMoveLimitations(gBattlerAttacker, unusableMovesBits, ~(MOVE_LIMITATION_PP | MOVE_LIMITATION_CHOICE_ITEM));
