@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_UPROAR) == EFFECT_UPROAR);
 }
 
-DOUBLE_BATTLE_TEST("Uproar status causes sleeping pokemon to wake up during an attack")
+DOUBLE_BATTLE_TEST("Uproar status causes sleeping Pokémon to wake up during an attack")
 {
     PASSES_RANDOMLY(1, 2, RNG_RANDOM_TARGET); // test fails if we target soundproof mon
     GIVEN {

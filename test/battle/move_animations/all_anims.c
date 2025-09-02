@@ -1550,4 +1550,261 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
 
 //  Max Moves
 
+// Tera Blast and all type variants
+#define TERA_BLAST_PARAMETERS PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_NORMAL; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FIGHTING; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FLYING; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_POISON; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_GROUND; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_ROCK; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_BUG; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_GHOST; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_STEEL; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_WATER; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FIRE; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_GRASS; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_ELECTRIC; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_PSYCHIC; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_ICE; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_DRAGON; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_DARK; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FAIRY; } \
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_STELLAR; }
+
+SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (player to opponent)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { TeraType(type); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (opponent to player)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(species) { TeraType(type); }
+    } WHEN {
+        TURN { MOVE(opponent, move, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to opponentLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { TeraType(type); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(playerLeft, move, gimmick: GIMMICK_TERA, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to opponentRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { TeraType(type); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(playerLeft, move, gimmick: GIMMICK_TERA, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to opponentLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(species) { TeraType(type); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(playerRight, move, gimmick: GIMMICK_TERA, target: opponentLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to opponentRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(species) { TeraType(type); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(playerRight, move, gimmick: GIMMICK_TERA, target: opponentRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to playerLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(type); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_TERA, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to playerRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET) { TeraType(type); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, move, gimmick: GIMMICK_TERA, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight to playerLeft)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { TeraType(type); }
+    } WHEN {
+        TURN { MOVE(opponentRight, move, gimmick: GIMMICK_TERA, target: playerLeft); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight to playerRight)")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(ITEM_FOCUS_SASH); }
+        PLAYER(SPECIES_WYNAUT) { Item(ITEM_FOCUS_SASH); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { TeraType(type); }
+    } WHEN {
+        TURN { MOVE(opponentRight, move, gimmick: GIMMICK_TERA, target: playerRight); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponentRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail)
+            DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
+        EXPECT_EQ(gLoadFail, FALSE);
+    }
+}
+
 #endif

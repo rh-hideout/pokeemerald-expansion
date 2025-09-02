@@ -591,7 +591,7 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
     tvPtr->side[atkSide].usedMoveSlot = moveSlot;
     AddMovePoints(PTS_MOVE_EFFECT, moveSlot, move, 0);
     AddPointsBasedOnWeather(weatherFlags, move, moveSlot);
-    if (gStatuses3[gBattlerAttacker] & STATUS3_CHARGED_UP)
+    if (gBattleMons[gBattlerAttacker].volatiles.charge)
         AddMovePoints(PTS_ELECTRIC, move, moveSlot, 0);
 
     if (move == MOVE_WISH)
@@ -768,7 +768,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             for (i = 0; i < GetMoveAdditionalEffectCount(move); i++)
             {
                 const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-                switch ((enum MoveEffects)additionalEffect->moveEffect)
+                switch ((enum MoveEffect)additionalEffect->moveEffect)
                 {
                 case MOVE_EFFECT_ATK_PLUS_1:
                 case MOVE_EFFECT_DEF_PLUS_1:
@@ -840,10 +840,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
             switch (additionalEffect->moveEffect)
             {
-            case MOVE_EFFECT_STEAL_ITEM:
-                if ((additionalEffect->chance == 100 || additionalEffect->chance == 0))
-                    baseFromEffect += 3;
-                break;
             case MOVE_EFFECT_THRASH:
                 if (additionalEffect->self == TRUE)
                     baseFromEffect += 3;
@@ -866,6 +862,8 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             case MOVE_EFFECT_EVS_MINUS_2:
                 if (additionalEffect->self == TRUE && (additionalEffect->chance == 100 || additionalEffect->chance == 0))
                     baseFromEffect += 2;
+                break;
+            default:
                 break;
             }
         }

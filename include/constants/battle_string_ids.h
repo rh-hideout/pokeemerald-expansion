@@ -41,7 +41,6 @@ enum StringID
     STRINGID_PKMNMADESLEEP,
     STRINGID_PKMNALREADYASLEEP,
     STRINGID_PKMNALREADYASLEEP2,
-    STRINGID_PKMNWASNTAFFECTED,
     STRINGID_PKMNWASPOISONED,
     STRINGID_PKMNPOISONEDBY,
     STRINGID_PKMNHURTBYPOISON,
@@ -1167,8 +1166,7 @@ enum StartingStatusStringID
 };
 
 // gWrappedStringIds
-// These correspond in order to sTrappingMoves!
-enum WrappedStringID
+enum __attribute__((packed)) WrappedStringID
 {
     B_MSG_WRAPPED_BIND,
     B_MSG_WRAPPED_WRAP,
