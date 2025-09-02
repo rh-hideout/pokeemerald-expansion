@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making con
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -246,7 +246,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making cont
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
