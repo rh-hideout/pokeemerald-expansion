@@ -427,6 +427,13 @@ void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor)
 
     u16 *current = sFontHalfRowLookupTable;
 
+    if (fgColor == sLastTextFgColor
+     && bgColor == sLastTextBgColor
+     && shadowColor == sLastTextShadowColor)
+    {
+        return;
+    }
+
     sLastTextBgColor = bgColor;
     sLastTextFgColor = fgColor;
     sLastTextShadowColor = shadowColor;
@@ -629,27 +636,35 @@ static u8 UNUSED GetLastTextColor(u8 colorType)
     }
 }
 
-inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 j, u32 i, u32 *glyphPixels, s32 width, s32 height)
+inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
 {
-    u32 xAdd, yAdd, pixelData, bits, toOrr, dummyX;
-    u8 *dst;
+    if (width <= 0)
+        return;
 
-    xAdd = j + width;
-    yAdd = i + height;
-    dummyX = j;
-    for (; i < yAdd; i++)
+    u32 widthMask = (1 << (width * 4)) - 1;
+
+    u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
+
+    u32 *alignedWindowTilesX = (u32 *)(windowTiles + ((x0 / 8) * TILE_SIZE_4BPP));
+
+    u32 y1 = y0 + height;
+    for (u32 y = y0; y < y1; y++)
     {
-        pixelData = *glyphPixels++;
-        for (j = dummyX; j < xAdd; j++)
-        {
-            if ((toOrr = pixelData & 0xF))
-            {
-                dst = windowTiles + ((j / 8) * 32) + ((j % 8) / 2) + ((i / 8) * widthOffset) + ((i % 8) * 4);
-                bits = ((j & 1) * 4);
-                *dst = (toOrr << bits) | (*dst & (0xF0 >> bits));
-            }
-            pixelData >>= 4;
-        }
+        u32 pixels = *glyphPixels++ & widthMask;
+
+        u32 mask = pixels;
+        mask = mask | (mask >> 2);
+        mask = mask | (mask >> 1);
+        mask = mask & 0x11111111;
+        mask = mask * 0xF;
+
+        u32 pixels0 = pixels << shift0, pixels8 = pixels >> shift8;
+        u32 mask0 = mask << shift0, mask8 = mask >> shift8;
+
+        u32 *alignedWindowTiles = (u32 *)((u8 *)alignedWindowTilesX + ((y / 8) * widthOffset) + ((y % 8) * 4));
+
+        alignedWindowTiles[0] = (alignedWindowTiles[0] & ~mask0) | pixels0;
+        alignedWindowTiles[8] = (alignedWindowTiles[8] & ~mask8) | pixels8;
     }
 }
 

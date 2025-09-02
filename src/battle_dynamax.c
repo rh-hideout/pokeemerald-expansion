@@ -181,14 +181,14 @@ void ActivateDynamax(u32 battler)
     gBattleStruct->dynamax.dynamaxTurns[battler] = gBattleTurnCounter + DYNAMAX_TURNS_COUNT;
 
     // Substitute is removed upon Dynamaxing.
-    gBattleMons[battler].status2 &= ~STATUS2_SUBSTITUTE;
+    gBattleMons[battler].volatiles.substitute = FALSE;
     ClearBehindSubstituteBit(battler);
 
     // Choiced Moves are reset upon Dynamaxing.
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
 
     // Try Gigantamax form change.
-    if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED)) // Ditto cannot Gigantamax.
+    if (!gBattleMons[battler].volatiles.transformed) // Ditto cannot Gigantamax.
         TryBattleFormChange(battler, FORM_CHANGE_BATTLE_GIGANTAMAX);
 
     BattleScriptExecute(BattleScript_DynamaxBegins);

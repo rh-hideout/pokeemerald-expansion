@@ -457,7 +457,7 @@ static u8 CheckTrainer(u8 objectEventId)
         }
     }
 
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         if (GetBattlePyramidTrainerFlag(objectEventId))
             return 0;

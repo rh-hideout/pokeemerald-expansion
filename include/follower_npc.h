@@ -12,6 +12,7 @@ struct FollowerNPCSpriteGraphics
     u16 acroBikeId;
     u16 surfId;
     u16 underwaterId;
+    bool8 hasRunningFrames;
 };
 
 enum FollowerNPCDataTypes
@@ -20,12 +21,10 @@ enum FollowerNPCDataTypes
     FNPC_DATA_WARP_END,
     FNPC_DATA_SURF_BLOB,
     FNPC_DATA_COME_OUT_DOOR,
+    FNPC_DATA_FORCED_MOVEMENT,
     FNPC_DATA_OBJ_ID,
     FNPC_DATA_CURRENT_SPRITE,
     FNPC_DATA_DELAYED_STATE,
-    FNPC_DATA_MAP_ID,
-    FNPC_DATA_MAP_NUM,
-    FNPC_DATA_MAP_GROUP,
     FNPC_DATA_EVENT_FLAG,
     FNPC_DATA_GFX_ID,
     FNPC_DATA_FOLLOWER_FLAGS,
@@ -62,7 +61,8 @@ enum FollowerNPCSurfBlobStates
     FNPC_SURF_BLOB_DESTROY
 };
 
-enum FollowerNPCOutOfDoorTaskStates{
+enum FollowerNPCOutOfDoorTaskStates
+{
     OPEN_DOOR,
     NPC_WALK_OUT,
     CLOSE_DOOR,
@@ -70,7 +70,8 @@ enum FollowerNPCOutOfDoorTaskStates{
     REALLOW_MOVEMENT
 };
 
-enum FollowerNPCHandleEscalatorFinishTaskStates{
+enum FollowerNPCHandleEscalatorFinishTaskStates
+{
     MOVE_TO_PLAYER_POS,
     WAIT_FOR_PLAYER_MOVE,
     SHOW_FOLLOWER_DOWN,
@@ -80,11 +81,18 @@ enum FollowerNPCHandleEscalatorFinishTaskStates{
     MOVEMENT_FINISH
 };
 
+#define FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES    0x1
+
+#define FNPC_NONE   0
+#define FNPC_ALWAYS 2
+
 void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value);
 const u8 *GetFollowerNPCScriptPointer(void);
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type);
 void ClearFollowerNPCData(void);
 
+void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
+void DestroyFollowerNPC(void);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 

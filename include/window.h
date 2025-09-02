@@ -45,7 +45,7 @@ struct WindowTemplate
 struct Window
 {
     struct WindowTemplate window;
-    u8 *tileData;
+    ALIGNED(4) u8 *tileData;
 };
 
 bool32 InitWindows(const struct WindowTemplate *templates);
