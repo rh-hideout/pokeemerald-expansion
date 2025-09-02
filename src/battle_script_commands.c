@@ -2358,7 +2358,7 @@ static void Cmd_datahpupdate(void)
                 gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED_TOTEM;
             else
                 gBattleMons[battler].species = SPECIES_MIMIKYU_BUSTED;
-            if (B_DISGUISE_HP_LOSS >= GEN_8)
+            if (GetGenConfig(GEN_CONFIG_DISGUISE_HP_LOSS) >= GEN_8)
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = BattleScript_TargetFormChange;
