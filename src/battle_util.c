@@ -11452,7 +11452,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (gProtectStructs[i].tryEjectPack
+        if (gDisableStructs[i].tryEjectPack
          && GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_EJECT_PACK
          && IsBattlerAlive(i)
          && CountUsablePartyMons(i) > 0)
@@ -11470,7 +11470,7 @@ bool32 TrySwitchInEjectPack(enum ItemCaseId caseID)
         SortBattlersBySpeed(battlers, FALSE);
 
     for (u32 i = 0; i < gBattlersCount; i++)
-        gProtectStructs[i].tryEjectPack = FALSE;
+        gDisableStructs[i].tryEjectPack = FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
