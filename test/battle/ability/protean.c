@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Protean changes the type of the user to the move used every time (Gen6-8)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_PROTEAN_LIBERO, GEN_6);
+        WITH_CONFIG(GEN_CONFIG_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Protean changes the type of the user to the move used every 
 SINGLE_BATTLE_TEST("Protean changes the type of the user only once per switch in (Gen9+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_PROTEAN_LIBERO, GEN_9);
+        WITH_CONFIG(GEN_CONFIG_PROTEAN_LIBERO, GEN_9);
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
         OPPONENT(SPECIES_WOBBUFFET);
