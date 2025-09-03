@@ -154,7 +154,6 @@ static void AnimDoubleTeam(struct Sprite *);
 static void AnimNightSlash(struct Sprite *);
 static void AnimRockPolishStreak(struct Sprite *);
 static void AnimRockPolishSparkle(struct Sprite *);
-static void AnimPoisonJabProjectile(struct Sprite *);
 static void AnimNightSlash(struct Sprite *);
 static void AnimPluck(struct Sprite *);
 static void AnimAcrobaticsSlashes(struct Sprite *);
@@ -5190,7 +5189,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
     {
         if (gBattleAnimArgs[0] == 0)
         {
-            if (IsDoubleBattle())
+            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimAttacker, TRUE, &a, &b);
             }
@@ -5202,7 +5201,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
         }
         else
         {
-            if (IsDoubleBattle())
+            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &a, &b);
             }
@@ -6864,6 +6863,32 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
         SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
 }
 
+static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
+{
+    u32 attractedTo;
+
+    // our own infatuation handled with gBattleMons struct data swapping
+
+    // if another battler is infatuated with one of us, change to other battler
+    for (u32 i = 0; i < gBattlersCount; i++)
+    {
+        if (i == battlerAtk || i == battlerPartner || !gBattleMons[i].volatiles.infatuation)
+            continue;
+
+        attractedTo = INFATUATED_WITH(i);
+        if (attractedTo == battlerAtk)
+        {
+            gBattleMons[i].volatiles.infatuation = INFATUATED_WITH(battlerPartner);
+            break;
+        }
+        else if (attractedTo == battlerPartner)
+        {
+            gBattleMons[i].volatiles.infatuation = INFATUATED_WITH(battlerAtk);
+            break;
+        }
+    }
+}
+
 static void SwapBattlerMoveData(u32 battler1, u32 battler2)
 {
     u32 temp;
@@ -6872,7 +6897,7 @@ static void SwapBattlerMoveData(u32 battler1, u32 battler2)
     SWAP(gBattleStruct->moveTarget[battler1], gBattleStruct->moveTarget[battler2], temp);
     SWAP(gMoveSelectionCursor[battler1], gMoveSelectionCursor[battler2], temp);
     SWAP(gLockedMoves[battler1], gLockedMoves[battler2], temp);
-    
+
     // update last moves
     SWAP(gLastPrintedMoves[battler1],   gLastPrintedMoves[battler2], temp);
     SWAP(gLastMoves[battler1],          gLastMoves[battler2], temp);
@@ -6907,11 +6932,9 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     SWAP(gBattleSpritesDataPtr->battlerData[battlerAtk].invisible, gBattleSpritesDataPtr->battlerData[battlerPartner].invisible, temp);
     SWAP(gTransformedPersonalities[battlerAtk], gTransformedPersonalities[battlerPartner], temp);
     SWAP(gTransformedShininess[battlerAtk], gTransformedShininess[battlerPartner], temp);
-    SWAP(gStatuses3[battlerAtk], gStatuses3[battlerPartner], temp);
-    SWAP(gStatuses4[battlerAtk], gStatuses4[battlerPartner], temp);
-    
+
     SwapBattlerMoveData(battlerAtk, battlerPartner);
-    
+
     // Swap turn order, so that all the battlers take action
     SWAP(gChosenActionByBattler[battlerAtk], gChosenActionByBattler[battlerPartner], temp);
     for (i = 0; i < gBattlersCount; i++)
@@ -6936,6 +6959,7 @@ static void AnimTask_AllySwitchDataSwap(u8 taskId)
     TrySwapSkyDropTargets(battlerAtk, battlerPartner);
     TrySwapStickyWebBattlerId(battlerAtk, battlerPartner);
     TrySwapWishBattlerIds(battlerAtk, battlerPartner);
+    TrySwapAttractBattlerIds(battlerAtk, battlerPartner);
 
     // For Snipe Shot and abilities Stalwart/Propeller Tail - keep the original target.
     for (i = 0; i < gBattlersCount; i++)
@@ -7467,7 +7491,7 @@ static void AnimRockPolishSparkle(struct Sprite *sprite)
 // arg 0: initial x pixel offset
 // arg 1: initial y pixel offset
 // arg 2: duration
-static void AnimPoisonJabProjectile(struct Sprite *sprite)
+void AnimPoisonJabProjectile(struct Sprite *sprite)
 {
     s16 targetXPos;
     s16 targetYPos;
