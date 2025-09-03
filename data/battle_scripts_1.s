@@ -5176,12 +5176,26 @@ BattleScript_PayDayMoneyAndPickUpItems::
 	pickup
 	end2
 
+BattleScript_RivalBattleLost::
+	jumpifhasnohp BS_ATTACKER, BattleScript_RivalBattleLostSkipMonRecall
+	printstring STRINGID_TRAINER1MON1COMEBACK
+	waitmessage B_WAIT_TIME_LONG
+	returnatktoball
+	waitstate
+BattleScript_RivalBattleLostSkipMonRecall::
+	trainerslidein BS_ATTACKER
+	waitstate
+	printstring STRINGID_TRAINER1WINTEXT
+	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, 2, BattleScript_LocalBattleLostPrintWhiteOut
+	end2
+
 BattleScript_LocalBattleLost::
 	jumpifbattletype BATTLE_TYPE_DOME, BattleScript_CheckDomeDrew
 	jumpifbattletype BATTLE_TYPE_FRONTIER, BattleScript_LocalBattleLostPrintTrainersWinText
 	jumpifbattletype BATTLE_TYPE_TRAINER_HILL, BattleScript_LocalBattleLostPrintTrainersWinText
 	jumpifbattletype BATTLE_TYPE_EREADER_TRAINER, BattleScript_LocalBattleLostEnd
 	jumpifhalfword CMP_EQUAL, gTrainerBattleParameter + 2, TRAINER_SECRET_BASE, BattleScript_LocalBattleLostEnd
+	jumpifbyte CMP_NOT_EQUAL, cMULTISTRING_CHOOSER, 0, BattleScript_RivalBattleLost
 	jumpifnowhiteout BattleScript_LocalBattleLostEnd_
 	jumpifbattletype BATTLE_TYPE_INGAME_PARTNER, BattleScript_LocalBattleLostPrintWhiteOut
 BattleScript_LocalBattleLostPrintWhiteOut::
@@ -9666,5 +9680,26 @@ BattleScript_ForfeitBattleGaveMoney::
 .else
 	printstring STRINGID_PLAYERWHITEOUT3
 .endif
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_TooScaredToMove::
+	printstring STRINGID_MONTOOSCAREDTOMOVE
+	waitmessage B_WAIT_TIME_LONG
+	playanimation BS_ATTACKER, B_ANIM_MON_SCARED
+	goto BattleScript_MoveEnd
+
+BattleScript_GhostGetOutGetOut::
+	printstring STRINGID_GHOSTGETOUTGETOUT
+	playanimation BS_ATTACKER, B_ANIM_GHOST_GET_OUT
+	goto BattleScript_MoveEnd
+
+BattleScript_SilphScopeUnveiled::
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_SILPHSCOPEUNVEILED
+	waitstate
+	playanimation BS_OPPONENT1, B_ANIM_SILPH_SCOPED
+	pause B_WAIT_TIME_SHORT
+	printstring STRINGID_GHOSTWASMAROWAK
 	waitmessage B_WAIT_TIME_LONG
 	end2

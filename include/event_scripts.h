@@ -410,6 +410,7 @@ extern const u8 EventScript_UseCutGrass[];
 extern const u8 EventScript_UseDefog[];
 
 //player pc
+extern const u8 EventScript_PalletTown_PlayersHouse_2F_ShutDownPC[];
 extern const u8 LittlerootTown_BrendansHouse_2F_EventScript_TurnOffPlayerPC[];
 extern const u8 LittlerootTown_MaysHouse_2F_EventScript_TurnOffPlayerPC[];
 
@@ -545,6 +546,7 @@ extern const u8 MauvilleCity_PokemonCenter_1F_Text_HotSpringsStory[];
 
 extern const u8 LittlerootTown_BrendansHouse_2F_EventScript_PC[];
 extern const u8 LittlerootTown_MaysHouse_2F_EventScript_PC[];
+extern const u8 EventScript_PalletTown_PlayersHouse_2F_TurnOnPC[];
 extern const u8 EventScript_PC[];
 extern const u8 EventScript_AccessPokemonBoxLink[];
 extern const u8 EventScript_TestSignpostMsg[];
@@ -568,6 +570,7 @@ extern const u8 EventScript_WirelessBoxResults[];
 extern const u8 EventScript_CableBoxResults[];
 extern const u8 EventScript_Questionnaire[];
 extern const u8 EventScript_TrainerHillTimer[];
+extern const u8 EventScript_CurrentTooFast[];
 extern const u8 EventScript_UseSurf[];
 extern const u8 EventScript_UseWaterfall[];
 extern const u8 EventScript_CannotUseWaterfall[];
@@ -686,5 +689,72 @@ extern const u8 EventScript_LostSignal[];
 extern const u8 EventScript_TooDark[];
 extern const u8 EventScript_MovedTooFast[];
 
+// oak speech
+
+extern const u8 gOtherText_NewName[];
+extern const u8 gNameChoice_Green[];
+extern const u8 gNameChoice_Red[];
+extern const u8 gNameChoice_Fire[];
+extern const u8 gNameChoice_Leaf[];
+extern const u8 gNameChoice_Gary[];
+extern const u8 gNameChoice_Kaz[];
+extern const u8 gNameChoice_Toru[];
+extern const u8 gNameChoice_Ash[];
+extern const u8 gNameChoice_Kene[];
+extern const u8 gNameChoice_Geki[];
+extern const u8 gNameChoice_Jak[];
+extern const u8 gNameChoice_Janne[];
+extern const u8 gNameChoice_Jonn[];
+extern const u8 gNameChoice_Kamon[];
+extern const u8 gNameChoice_Karl[];
+extern const u8 gNameChoice_Taylor[];
+extern const u8 gNameChoice_Oscar[];
+extern const u8 gNameChoice_Hiro[];
+extern const u8 gNameChoice_Max[];
+extern const u8 gNameChoice_Jon[];
+extern const u8 gNameChoice_Ralph[];
+extern const u8 gNameChoice_Kay[];
+extern const u8 gNameChoice_Tosh[];
+extern const u8 gNameChoice_Roak[];
+extern const u8 gNameChoice_Omi[];
+extern const u8 gNameChoice_Jodi[];
+extern const u8 gNameChoice_Amanda[];
+extern const u8 gNameChoice_Hillary[];
+extern const u8 gNameChoice_Makey[];
+extern const u8 gNameChoice_Michi[];
+extern const u8 gNameChoice_Paula[];
+extern const u8 gNameChoice_June[];
+extern const u8 gNameChoice_Cassie[];
+extern const u8 gNameChoice_Rey[];
+extern const u8 gNameChoice_Seda[];
+extern const u8 gNameChoice_Kiko[];
+extern const u8 gNameChoice_Mina[];
+extern const u8 gNameChoice_Norie[];
+extern const u8 gNameChoice_Sai[];
+extern const u8 gNameChoice_Momo[];
+extern const u8 gNameChoice_Suzi[];
+extern const u8 gControlsGuide_Text_Intro[];
+extern const u8 gControlsGuide_Text_DPad[];
+extern const u8 gControlsGuide_Text_AButton[];
+extern const u8 gControlsGuide_Text_BButton[];
+extern const u8 gControlsGuide_Text_StartButton[];
+extern const u8 gControlsGuide_Text_SelectButton[];
+extern const u8 gControlsGuide_Text_LRButtons[];
+extern const u8 gOakSpeech_Text_AskPlayerGender[];
+extern const u8 gPikachuIntro_Text_Page1[];
+extern const u8 gPikachuIntro_Text_Page2[];
+extern const u8 gPikachuIntro_Text_Page3[];
+extern const u8 gOakSpeech_Text_WelcomeToTheWorld[];
+extern const u8 gOakSpeech_Text_ThisWorld[];
+extern const u8 gOakSpeech_Text_IsInhabitedFarAndWide[];
+extern const u8 gOakSpeech_Text_IStudyPokemon[];
+extern const u8 gOakSpeech_Text_TellMeALittleAboutYourself[];
+extern const u8 gOakSpeech_Text_YourNameWhatIsIt[];
+extern const u8 gOakSpeech_Text_SoYourNameIsPlayer[];
+extern const u8 gOakSpeech_Text_WhatWasHisName[];
+extern const u8 gOakSpeech_Text_YourRivalsNameWhatWasIt[];
+extern const u8 gOakSpeech_Text_ConfirmRivalName[];
+extern const u8 gOakSpeech_Text_RememberRivalsName[];
+extern const u8 gOakSpeech_Text_LetsGo[];
 
 #endif // GUARD_EVENT_SCRIPTS_H
