@@ -343,7 +343,7 @@ SINGLE_BATTLE_TEST("Rage Fist doesn't get increased power if Substitute is hit")
     }
 }
 
-SINGLE_BATTLE_TEST("Rage Fist - X")
+SINGLE_BATTLE_TEST("Rage Fist counter will be updated correctly after absorb move")
 {
     s16 timesGotHit[2];
 
