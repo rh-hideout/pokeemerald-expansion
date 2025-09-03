@@ -251,7 +251,7 @@ SINGLE_BATTLE_TEST("Rage Fist base power is not increased if move had no affect"
 
 SINGLE_BATTLE_TEST("Rage Fist base power is increased if Disguise breaks (Gen7)")
 {
-    KNOWN_FAILING;
+    // KNOWN_FAILING;
     s16 timesGotHit[2];
     u16 species = SPECIES_NONE;
 
