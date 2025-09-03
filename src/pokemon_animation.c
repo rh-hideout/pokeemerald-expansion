@@ -468,7 +468,7 @@ static void SetPosForRotation(struct Sprite *sprite, u16 index, s16 amplitudeX, 
     sprite->y2 = yAdder + amplitudeY;
 }
 
-u8 GetSpeciesBackAnimSet(u16 species)
+enum BackAnim GetSpeciesBackAnimSet(u16 species)
 {
     if (gSpeciesInfo[species].backAnimId != BACK_ANIM_NONE)
         return gSpeciesInfo[species].backAnimId - 1;
@@ -532,7 +532,7 @@ static void Task_HandleMonAnimation(u8 taskId)
     }
 }
 
-void LaunchAnimationTaskForFrontSprite(struct Sprite *sprite, u8 frontAnimId)
+void LaunchAnimationTaskForFrontSprite(struct Sprite *sprite, enum AnimFunctionIDs frontAnimId)
 {
     u8 taskId = CreateTask(Task_HandleMonAnimation, 128);
     gTasks[taskId].tPtrHi = (u32)(sprite) >> 16;
@@ -540,16 +540,17 @@ void LaunchAnimationTaskForFrontSprite(struct Sprite *sprite, u8 frontAnimId)
     gTasks[taskId].tAnimId = frontAnimId;
 }
 
-void StartMonSummaryAnimation(struct Sprite *sprite, u8 frontAnimId)
+void StartMonSummaryAnimation(struct Sprite *sprite, enum AnimFunctionIDs frontAnimId)
 {
     // sDontFlip is expected to still be FALSE here, not explicitly cleared
     sIsSummaryAnim = TRUE;
     sprite->callback = sMonAnimFunctions[frontAnimId];
 }
 
-void LaunchAnimationTaskForBackSprite(struct Sprite *sprite, u8 backAnimSet)
+void LaunchAnimationTaskForBackSprite(struct Sprite *sprite, enum BackAnim backAnimSet)
 {
-    u8 nature, taskId, animId, battler;
+    u8 nature, taskId, battler;
+    enum AnimFunctionIDs animId;
 
     taskId = CreateTask(Task_HandleMonAnimation, 128);
     gTasks[taskId].tPtrHi = (u32)(sprite) >> 16;

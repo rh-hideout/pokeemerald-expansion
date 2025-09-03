@@ -777,6 +777,24 @@ void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonP
     sprite->y += gBattleAnimArgs[1];
 }
 
+void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOffsets)
+{
+    if (!respectMonPicOffsets)
+    {
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y);
+    }
+    else
+    {
+        sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X_2) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimTarget), BATTLER_COORD_Y_PIC_OFFSET);
+    }
+    sprite->x = sprite->x / 2;
+    sprite->y = sprite->y / 2;
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
+    sprite->y += gBattleAnimArgs[1];
+}
+
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets)
 {
     u32 battler = GetAnimBattlerId(animBattlerId);
@@ -916,7 +934,7 @@ void ClearBattleAnimBg(u32 bgId)
 void AnimLoadCompressedBgGfx(u32 bgId, const u32 *src, u32 tilesOffset)
 {
     CpuFill32(0, gBattleAnimBgTileBuffer, 0x2000);
-    LZDecompressWram(src, gBattleAnimBgTileBuffer);
+    DecompressDataWithHeaderWram(src, gBattleAnimBgTileBuffer);
     LoadBgTiles(bgId, gBattleAnimBgTileBuffer, 0x2000, tilesOffset);
 }
 
@@ -1445,12 +1463,24 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
         else
             respectMonPicOffsets = FALSE;
 
-        if (gBattleAnimArgs[2] == 0)
-            InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
-        else if (gBattleAnimArgs[2] == 1)
-            InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
-        else if (gBattleAnimArgs[2] == 2)
-            InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
+        switch(gBattleAnimArgs[2])
+        {
+            case 0:
+                InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
+                break;
+            case 1:
+                InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
+                break;
+            case 2:
+                InitSpritePosToAnimAttackerPartner(sprite, respectMonPicOffsets);
+                break;
+            case 3:
+                if(IsDoubleBattle())
+                    InitSpritePosToAnimBothTargets(sprite, respectMonPicOffsets);
+                else
+                    InitSpritePosToAnimTarget(sprite, respectMonPicOffsets);
+                break;
+        }
 
         sprite->data[0]++;
 
@@ -2178,6 +2208,37 @@ void SetAverageBattlerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, 
 
     *x = (battlerX + partnerX) / 2;
     *y = (battlerY + partnerY) / 2;
+}
+
+void SetToPartnerPositions(u8 battler, bool8 respectMonPicOffsets, s16 *x, s16 *y)
+{
+    u8 xCoordType, yCoordType;
+    s16 returnX, returnY;
+
+    if (!respectMonPicOffsets)
+    {
+        xCoordType = BATTLER_COORD_X;
+        yCoordType = BATTLER_COORD_Y;
+    }
+    else
+    {
+        xCoordType = BATTLER_COORD_X_2;
+        yCoordType = BATTLER_COORD_Y_PIC_OFFSET;
+    }
+
+    if (IsDoubleBattle() && !IsContest() && IsBattlerAlive(BATTLE_PARTNER(battler)))
+    {
+        returnX = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), xCoordType);
+        returnY = GetBattlerSpriteCoord(BATTLE_PARTNER(battler), yCoordType);
+    }
+    else
+    {
+        returnX = GetBattlerSpriteCoord(battler, xCoordType);
+        returnY = GetBattlerSpriteCoord(battler, yCoordType);
+    }
+
+    *x = returnX;
+    *y = returnY;
 }
 
 u8 CreateInvisibleSpriteCopy(int battler, u8 spriteId, int species)

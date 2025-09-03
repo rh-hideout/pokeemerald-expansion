@@ -25,6 +25,7 @@
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
+#include "constants/field_move.h"
 #include "constants/field_poison.h"
 #include "constants/field_specials.h"
 #include "constants/field_tasks.h"
