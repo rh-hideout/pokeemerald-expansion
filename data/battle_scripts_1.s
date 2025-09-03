@@ -207,10 +207,8 @@ BattleScript_EffectDoodle::
 BattleScript_EffectDoodle_CopyAbility:
 	trycopyability BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
 BattleScript_EffectDoodle_AfterCopy:
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
@@ -2226,10 +2224,8 @@ BattleScript_EffectSimpleBeam::
 	setsimplebeam BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerTarget
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_TARGET
 	printstring STRINGID_PKMNACQUIREDSIMPLE
 	waitmessage B_WAIT_TIME_LONG
@@ -2328,10 +2324,8 @@ BattleScript_EffectWorrySeed::
 	tryworryseed BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerTarget
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_TARGET
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
@@ -2804,14 +2798,6 @@ BattleScript_AromaVeilProtects:
 	setmoveresultflags MOVE_RESULT_FAILED
 	goto BattleScript_MoveEnd
 
-BattleScript_PastelVeilProtects:
-	pause B_WAIT_TIME_SHORT
-	call BattleScript_AbilityPopUp
-	printstring STRINGID_PASTELVEILPROTECTED
-	waitmessage B_WAIT_TIME_LONG
-	setmoveresultflags MOVE_RESULT_FAILED
-	goto BattleScript_MoveEnd
-
 BattleScript_AbilityProtectsDoesntAffectRet::
 	pause B_WAIT_TIME_SHORT
 	call BattleScript_AbilityPopUp
@@ -3127,10 +3113,7 @@ BattleScript_AlreadyPoisoned::
 
 BattleScript_ImmunityProtected::
 	call BattleScript_AbilityPopUp
-	pause B_WAIT_TIME_SHORT
-	printfromtable gStatusPreventionStringIds
-	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_MoveEnd
+	goto BattleScript_DoesntAffectTargetAtkString
 
 BattleScript_EffectAuroraVeil::
 	attackcanceler
@@ -4671,10 +4654,8 @@ BattleScript_EffectRolePlay::
 	trycopyability BS_ATTACKER, BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_ATTACKER
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
@@ -4806,13 +4787,11 @@ BattleScript_EffectSkillSwap::
 	attackanimation
 	waitanimation
 	jumpiftargetally BattleScript_EffectSkillSwap_AfterAbilityPopUp
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	copybyte gBattlerAbility, gBattlerTarget
 	copyhword sABILITY_OVERWRITE, gLastUsedAbility
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 BattleScript_EffectSkillSwap_AfterAbilityPopUp:
 	recordability BS_ATTACKER
 	recordability BS_TARGET
@@ -7102,10 +7081,8 @@ BattleScript_AbilityPopUpTarget::
 	copybyte gBattlerAbility, gBattlerTarget
 BattleScript_AbilityPopUp::
 	tryactivateabilityshield BS_ABILITY_BATTLER
-	.if B_ABILITY_POP_UP == TRUE
 	showabilitypopup
 	pause B_WAIT_TIME_SHORT
-	.endif
 	recordability BS_ABILITY_BATTLER
 	sethword sABILITY_OVERWRITE, 0
 	return
@@ -7156,11 +7133,9 @@ BattleScript_MoodyEnd:
 	end3
 
 BattleScript_EmergencyExit::
-	.if B_ABILITY_POP_UP == TRUE
 	pause 5
 	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_LONG
-	.endif
 	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
 	openpartyscreen BS_SCRIPTING, BattleScript_EmergencyExitRet
@@ -7179,11 +7154,9 @@ BattleScript_EmergencyExitRet:
 	return
 
 BattleScript_EmergencyExitWild::
-	.if B_ABILITY_POP_UP == TRUE
 	pause 5
 	call BattleScript_AbilityPopUpScripting
 	pause B_WAIT_TIME_LONG
-	.endif
 	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
 	setteleportoutcome BS_SCRIPTING
@@ -7914,13 +7887,11 @@ BattleScript_CursedBodyActivates::
 	return
 
 BattleScript_MummyActivates::
-.if B_ABILITY_POP_UP == TRUE
 	setbyte sFIXED_ABILITY_POPUP, TRUE
 	call BattleScript_AbilityPopUpTarget
 	copybyte gBattlerAbility, gBattlerAttacker
 	copyhword sABILITY_OVERWRITE, gLastUsedAbility
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_TARGET
 	recordability BS_ATTACKER
 	printstring STRINGID_ATTACKERACQUIREDABILITY
@@ -7930,14 +7901,12 @@ BattleScript_MummyActivates::
 BattleScript_WanderingSpiritActivates::
 	saveattacker
 	savetarget
-.if B_ABILITY_POP_UP == TRUE
 	copybyte gBattlerAbility, gBattlerTarget
 	sethword sABILITY_OVERWRITE, ABILITY_WANDERING_SPIRIT
 	call BattleScript_AbilityPopUpOverwriteThenNormal
 	copybyte gBattlerAbility, gBattlerAttacker
 	copyhword sABILITY_OVERWRITE, gLastUsedAbility
 	call BattleScript_AbilityPopUpOverwriteThenNormal
-.endif
 	recordability BS_TARGET
 	recordability BS_ATTACKER
 	printstring STRINGID_SWAPPEDABILITIES
