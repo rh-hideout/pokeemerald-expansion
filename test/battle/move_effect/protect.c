@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making con
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -202,7 +202,6 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
     } WHEN {
         TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
         TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, MOVE_SCRATCH); }
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
         STATUS_ICON(player, STATUS1_BURN);
@@ -215,7 +214,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -247,7 +246,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making cont
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -255,7 +254,6 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are alre
     } WHEN {
         TURN { MOVE(opponent, MOVE_TOXIC); }
         TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
         STATUS_ICON(player, STATUS1_TOXIC_POISON);
@@ -579,10 +577,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_TANGROWTH].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_SUNKERN].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_SUNFLORA].types[0] == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_TANGROWTH, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_SUNKERN, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_SUNFLORA, 0) == TYPE_GRASS);
         PLAYER(SPECIES_TANGELA);
         PLAYER(SPECIES_TANGROWTH);
         OPPONENT(SPECIES_SUNKERN);

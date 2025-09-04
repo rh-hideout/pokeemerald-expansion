@@ -86,7 +86,7 @@ static void FillPalBufferBlack(void)
 
 void WarpFadeInScreen(void)
 {
-    u8 previousMapType = GetLastUsedWarpMapType();
+    enum MapType previousMapType = GetLastUsedWarpMapType();
     switch (GetMapPairFadeFromType(previousMapType, GetCurrentMapType()))
     {
     case 0:
@@ -113,7 +113,7 @@ void FadeInFromBlack(void)
 
 void WarpFadeOutScreen(void)
 {
-    u8 currentMapType = GetCurrentMapType();
+    enum MapType currentMapType = GetCurrentMapType();
     switch (GetMapPairFadeToType(currentMapType, GetDestinationWarpMapHeader()->mapType))
     {
     case 0:
@@ -1384,10 +1384,10 @@ static bool32 PrintWhiteOutRecoveryMessage(u8 taskId, const u8 *text, u32 x, u32
 }
 
 enum {
-    FRLG_WHITEOUT_ENTER_MSG_SCREEN,
-    FRLG_WHITEOUT_PRINT_MSG,
-    FRLG_WHITEOUT_LEAVE_MSG_SCREEN,
-    FRLG_WHITEOUT_HEAL_SCRIPT,
+    WHITEOUT_CUTSCENE_ENTER_MSG_SCREEN,
+    WHITEOUT_CUTSCENE_PRINT_MSG,
+    WHITEOUT_CUTSCENE_LEAVE_MSG_SCREEN,
+    WHITEOUT_CUTSCENE_HEAL_SCRIPT,
 };
 
 static const u8 *GenerateRecoveryMessage(u8 taskId)
@@ -1411,7 +1411,7 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
 
     switch (gTasks[taskId].tState)
     {
-    case FRLG_WHITEOUT_ENTER_MSG_SCREEN:
+    case WHITEOUT_CUTSCENE_ENTER_MSG_SCREEN:
         windowId = AddWindow(&sWindowTemplate_WhiteoutText);
         gTasks[taskId].tWindowId = windowId;
         Menu_LoadStdPalAt(BG_PLTT_ID(15));
@@ -1420,28 +1420,28 @@ static void Task_RushInjuredPokemonToCenter(u8 taskId)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 
         gTasks[taskId].tIsPlayerHouse = IsLastHealLocationPlayerHouse();
-        gTasks[taskId].tState = FRLG_WHITEOUT_PRINT_MSG;
+        gTasks[taskId].tState = WHITEOUT_CUTSCENE_PRINT_MSG;
         break;
-    case FRLG_WHITEOUT_PRINT_MSG:
+    case WHITEOUT_CUTSCENE_PRINT_MSG:
     {
         const u8 *recoveryMessage = GenerateRecoveryMessage(taskId);
 
         if (PrintWhiteOutRecoveryMessage(taskId, recoveryMessage, 2, 8))
         {
             ObjectEventTurn(&gObjectEvents[gPlayerAvatar.objectEventId], DIR_NORTH);
-            gTasks[taskId].tState = FRLG_WHITEOUT_LEAVE_MSG_SCREEN;
+            gTasks[taskId].tState = WHITEOUT_CUTSCENE_LEAVE_MSG_SCREEN;
         }
         break;
     }
-    case FRLG_WHITEOUT_LEAVE_MSG_SCREEN:
+    case WHITEOUT_CUTSCENE_LEAVE_MSG_SCREEN:
         windowId = gTasks[taskId].tWindowId;
         ClearWindowTilemap(windowId);
         CopyWindowToVram(windowId, COPYWIN_MAP);
         RemoveWindow(windowId);
         FadeInFromBlack();
-        gTasks[taskId].tState = FRLG_WHITEOUT_HEAL_SCRIPT;
+        gTasks[taskId].tState = WHITEOUT_CUTSCENE_HEAL_SCRIPT;
         break;
-    case FRLG_WHITEOUT_HEAL_SCRIPT:
+    case WHITEOUT_CUTSCENE_HEAL_SCRIPT:
         if (WaitForWeatherFadeIn() == TRUE)
         {
             DestroyTask(taskId);
@@ -1461,7 +1461,7 @@ void FieldCB_RushInjuredPokemonToCenter(void)
     LockPlayerFieldControls();
     FillPalBufferBlack();
     taskId = CreateTask(Task_RushInjuredPokemonToCenter, 10);
-    gTasks[taskId].tState = FRLG_WHITEOUT_ENTER_MSG_SCREEN;
+    gTasks[taskId].tState = WHITEOUT_CUTSCENE_ENTER_MSG_SCREEN;
 }
 
 static void GetStairsMovementDirection(u32 metatileBehavior, s16 *speedX, s16 *speedY)
@@ -1571,12 +1571,14 @@ static void Task_ExitStairs(u8 taskId)
             tState++;
         break;
     }
+    gObjectEvents[gPlayerAvatar.objectEventId].noShadow = FALSE;
 }
 
 static void ForceStairsMovement(u32 metatileBehavior, s16 *speedX, s16 *speedY)
 {
     ObjectEventForceSetHeldMovement(&gObjectEvents[gPlayerAvatar.objectEventId], GetWalkInPlaceNormalMovementAction(GetPlayerFacingDirection()));
     GetStairsMovementDirection(metatileBehavior, speedX, speedY);
+    gObjectEvents[gPlayerAvatar.objectEventId].noShadow = TRUE;
 }
 #undef tSpeedX
 #undef tSpeedY
@@ -1620,6 +1622,7 @@ static void Task_StairWarp(u8 taskId)
         LockPlayerFieldControls();
         FreezeObjectEvents();
         CameraObjectFreeze();
+        HideFollowerForFieldEffect();
         tState++;
         break;
     case 1:

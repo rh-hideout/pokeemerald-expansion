@@ -756,27 +756,28 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                         gDisableStructs[battler].mimickedMoves |= mimickedMoveSlots[j] << j;
                     }
 
-                    if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+                    if (!(gBattleMons[battler].volatiles.transformed))
                     {
+                        struct Pokemon *mon = GetBattlerMon(battler);
                         for (j = 0; j < MAX_MON_MOVES; j++)
-                            ppBonuses[j] = (GetMonData(GetBattlerMon(battler), MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
+                            ppBonuses[j] = (GetMonData(mon, MON_DATA_PP_BONUSES, NULL) & ((3 << (j << 1)))) >> (j << 1);
 
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            movePp.moves[j] = GetMonData(GetBattlerMon(battler), MON_DATA_MOVE1 + moveSlots[j], NULL);
-                            movePp.currentPp[j] = GetMonData(GetBattlerMon(battler), MON_DATA_PP1 + moveSlots[j], NULL);
+                            movePp.moves[j] = GetMonData(mon, MON_DATA_MOVE1 + moveSlots[j], NULL);
+                            movePp.currentPp[j] = GetMonData(mon, MON_DATA_PP1 + moveSlots[j], NULL);
                             movePp.maxPp[j] = ppBonuses[moveSlots[j]];
                         }
                         for (j = 0; j < MAX_MON_MOVES; j++)
                         {
-                            SetMonData(GetBattlerMon(battler), MON_DATA_MOVE1 + j, &movePp.moves[j]);
-                            SetMonData(GetBattlerMon(battler), MON_DATA_PP1 + j, &movePp.currentPp[j]);
+                            SetMonData(mon, MON_DATA_MOVE1 + j, &movePp.moves[j]);
+                            SetMonData(mon, MON_DATA_PP1 + j, &movePp.currentPp[j]);
                         }
                         ppBonusSet = 0;
                         for (j = 0; j < MAX_MON_MOVES; j++)
                             ppBonusSet |= movePp.maxPp[j] << (j << 1);
 
-                        SetMonData(GetBattlerMon(battler), MON_DATA_PP_BONUSES, &ppBonusSet);
+                        SetMonData(mon, MON_DATA_PP_BONUSES, &ppBonusSet);
                     }
                     gChosenMoveByBattler[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
                 }

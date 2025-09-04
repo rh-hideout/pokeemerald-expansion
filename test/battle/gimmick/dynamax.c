@@ -601,7 +601,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot use Max Guard while holdin
 
 // Almost anything that calculates damage based on HP has been changed to non-Dynamax HP.
 // This includes Leftovers, Life Orb, Heal Pulse, Rocky Helmet, Sandstorm, etc. etc.
-// There are some redundant cases (i.e Substitute) that can never be used by a Dynamaxed pokemon.
+// There are some redundant cases (i.e Substitute) that can never be used by a Dynamaxed Pokémon.
 // Anything that is conditional based off max HP still uses gBattleMons[battler].maxHP.
 // Below are some tests, but very far from all encompassing:
 
@@ -630,7 +630,7 @@ SINGLE_BATTLE_TEST("Dynamax: Super Fang uses a Pokemon's non-Dynamax HP", s16 da
     PARAMETRIZE { dynamax = GIMMICK_NONE; }
     PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_SUPER_FANG);
+        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(100); }
     } WHEN {
@@ -875,7 +875,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Overgrowth sets up Grassy Terrain")
     s32 maxHP = 490; // Because of recalculated stats upon Dynamaxing
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MAX_OVERGROWTH, MOVE_EFFECT_GRASSY_TERRAIN));
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseHP == 190);
+        ASSUME(GetSpeciesBaseHP(SPECIES_WOBBUFFET) == 190);
         OPPONENT(SPECIES_WOBBUFFET) { MaxHP(maxHP); HP(maxHP / 2); };
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(maxHP); HP(maxHP / 2); };
     } WHEN {
@@ -1221,7 +1221,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Terror traps both opponents")
         MESSAGE("The opposing Wobbuffet can no longer escape!");
         MESSAGE("The opposing Wobbuffet can no longer escape!");
     } THEN { // Can't find good way to test trapping
-        EXPECT(opponentLeft->status2 & STATUS2_ESCAPE_PREVENTION);
+        EXPECT(opponentLeft->volatiles.escapePrevention);
     }
 }
 
@@ -1238,7 +1238,7 @@ SINGLE_BATTLE_TEST("Dynamax: Baton Pass passes G-Max Terror's escape prevention 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_G_MAX_TERROR, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, opponent);
     } THEN {
-        EXPECT(opponent->status2 & STATUS2_ESCAPE_PREVENTION);
+        EXPECT(opponent->volatiles.escapePrevention);
     }
 }
 
@@ -1660,3 +1660,6 @@ SINGLE_BATTLE_TEST("Dynamax: Destiny Bond fails if a dynamaxed battler is presen
         MESSAGE("The move was blocked by the power of Dynamax!");
     }
 }
+
+TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
+TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
