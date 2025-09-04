@@ -280,7 +280,8 @@ void BattleAI_SetupFlags(void)
     }
     else // Assign ai flags for player for prediction
     {
-        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA) | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB);
+        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_POSITION_OPPONENT_LEFT) 
+        | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_POSITION_OPPONENT_RIGHT);
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = aiFlags;
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = aiFlags;
     }
