@@ -1591,16 +1591,20 @@ bool32 CanTargetFaintAiWithMod(u32 battlerDef, u32 battlerAtk, s32 hpMod, s32 dm
         if (dmgMod)
             dmg *= dmgMod;
 
-        gAiLogicData->hpPercents[battlerAtk] = hpCheck;
+        // Applies modified HP percent to AI data for consideration when running CanEndureHit
+        gAiLogicData->hpPercents[battlerAtk] = (hpCheck/gBattleMons[battlerAtk].maxHP)*100;
 
         if (dmg >= hpCheck && !(CanEndureHit(battlerDef, battlerAtk, moves[moveIndex]) && (dmgMod <= 1)))
         {
-            gAiLogicData->hpPercents[battlerAtk] = gBattleMons[battlerAtk].hp;
+            // Restores original HP percent to AI data for remaining calculations
+            gAiLogicData->hpPercents[battlerAtk] = (gBattleMons[battlerAtk].hp/gBattleMons[battlerAtk].maxHP)*100;
             return TRUE;
         }
+
+        // Restores original HP percent to AI data for remaining calculations
+        gAiLogicData->hpPercents[battlerAtk] = (gBattleMons[battlerAtk].hp/gBattleMons[battlerAtk].maxHP)*100;
     }
 
-    gAiLogicData->hpPercents[battlerAtk] = gBattleMons[battlerAtk].hp;
     return FALSE;
 }
 
