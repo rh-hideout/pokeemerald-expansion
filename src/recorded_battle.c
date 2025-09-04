@@ -756,7 +756,7 @@ void RecordedBattle_CheckMovesetChanges(u8 mode)
                         gDisableStructs[battler].mimickedMoves |= mimickedMoveSlots[j] << j;
                     }
 
-                    if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+                    if (!(gBattleMons[battler].volatiles.transformed))
                     {
                         struct Pokemon *mon = GetBattlerMon(battler);
                         for (j = 0; j < MAX_MON_MOVES; j++)
