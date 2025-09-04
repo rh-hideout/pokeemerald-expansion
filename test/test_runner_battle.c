@@ -370,7 +370,7 @@ static void BattleTest_Run(void *data)
     case BATTLE_TEST_AI_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
-        DATA.recordedBattle.opponentB = TRAINER_RED;
+        DATA.recordedBattle.opponentB = TRAINER_NONE;
         DATA.hasAI = TRUE;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
@@ -416,7 +416,7 @@ static void BattleTest_Run(void *data)
     case BATTLE_TEST_DOUBLES:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
-        DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
+        DATA.recordedBattle.opponentB = TRAINER_NONE;
         for (i = 0; i < STATE->battlersCount; i++)
             DATA.currentMonIndexes[i] = i / 2;
         break;
@@ -1691,7 +1691,17 @@ void RNGSeed_(u32 sourceLine, rng_value_t seed)
 void AIFlags_(u32 sourceLine, u64 flags)
 {
     INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
-    DATA.recordedBattle.AI_scripts = flags;
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        DATA.recordedBattle.AI_scripts[i] = flags;
+    }
+    DATA.hasAI = TRUE;
+}
+
+void BattlerAIFlags_(u32 sourceLine, u32 battler, u64 flags)
+{
+    INVALID_IF(!IsAITest(), "AI_FLAGS is usable only in AI_SINGLE_BATTLE_TEST, AI_DOUBLE_BATTLE_TEST, AI_MULTI_BATTLE_TEST, and AI_TWO_VS_ONE_TEST");
+    DATA.recordedBattle.AI_scripts[battler] |= flags;
     DATA.hasAI = TRUE;
 }
 
@@ -2711,6 +2721,7 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 
 void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
+    Test_MgbaPrintf("partyIndex %d", partyIndex);
     s32 i;
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SEND_OUT outside TURN");

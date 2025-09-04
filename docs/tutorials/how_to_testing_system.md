@@ -298,8 +298,15 @@ All `MULTI_PLAYER(species)` Pokémon must be set before any `MULTI_PARTNER(speci
 
 ### `AI_FLAGS`
 `AI_FLAGS(flags)`
-Specifies which AI flags are run during the test. Has use only for AI tests.
+Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
 The most common combination is `AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)` which is the general 'smart' AI.
+
+### `BATTLER_AI_FLAGS`
+`BATTLER_AI_FLAGS(battler, flags)`
+Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
+Must be used strictly after `AI_FLAGS(flags)`, which overwrites all existing flags.
+Example: `BATTLER_AI_FLAGS(3, AI_FLAG_RISKY)` used after `AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)`
+will set `AI_FLAG_RISKY` to only `battler3` (Opponent B), in addition to the flags set by `AI_FLAGS`.
 
 ### `WHEN`
 ```
