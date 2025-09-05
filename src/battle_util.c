@@ -11331,7 +11331,7 @@ void ClearDamageCalcResults(void)
 
 bool32 DoesDestinyBondFail(u32 battler)
 {
-    if (B_DESTINY_BOND_FAIL >= GEN_7
+    if (GetGenConfig(GEN_CONFIG_DESTINY_BOND_FAIL) >= GEN_7
         && GetMoveEffect(gLastLandedMoves[battler]) == EFFECT_DESTINY_BOND
         && GetMoveEffect(gLastResultingMoves[battler]) == EFFECT_DESTINY_BOND)
         return TRUE;
