@@ -446,6 +446,11 @@ top:
     case STATE_EXIT:
         MgbaExit_(gTestRunnerState.exitCode);
         break;
+    default:
+        MgbaOpen_();
+        Test_MgbaPrintf("\e[31mInvalid TestRunner state, exiting\e[0m");
+        gTestRunnerState.exitCode = 1;
+        gTestRunnerState.state = STATE_EXIT;
     }
 
     if (gMain.callback2 == CB2_TestRunner)
