@@ -1024,7 +1024,6 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !UproarWakeUpCheck(battler)
          && !IsLeafGuardProtected(battler, ability))
         {
-            CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
             gEffectBattler = gBattlerTarget = battler;
             if (IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
@@ -1055,6 +1054,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
                 else
                     gBattleMons[battler].status1 |= ((Random() % 4) + 3);
 
+                CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
                 BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
