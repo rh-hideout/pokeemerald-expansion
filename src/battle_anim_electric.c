@@ -770,12 +770,12 @@ void AnimSparkElectricity(struct Sprite *sprite)
 void AnimZapCannonSpark(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = gBattleAnimArgs[2];
     sprite->data[6] = gBattleAnimArgs[5];
     sprite->data[7] = gBattleAnimArgs[4];
@@ -786,7 +786,7 @@ void AnimZapCannonSpark(struct Sprite *sprite)
 
 static void AnimZapCannonSpark_Step(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[7], sprite->data[5]);
         sprite->y2 += Cos(sprite->data[7], sprite->data[5]);
@@ -1052,14 +1052,14 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
                 sprite->x += sElectricChargingParticleCoordOffsets[task->data[9]][0];
                 sprite->y += sElectricChargingParticleCoordOffsets[task->data[9]][1];
 
-                sprite->data[0] = 40 - task->data[8] * 5;
-                sprite->data[1] = sprite->x;
-                sprite->data[2] = task->data[14];
-                sprite->data[3] = sprite->y;
-                sprite->data[4] = task->data[15];
+                sprite->sDuration_lti = 40 - task->data[8] * 5;
+                sprite->sInputStartX_lti = sprite->x;
+                sprite->sInputEndX_lti = task->data[14];
+                sprite->sInputStartY_lti = sprite->y;
+                sprite->sInputEndY_lti = task->data[15];
                 sprite->data[5] = taskId;
 
-                InitAnimLinearTranslation(sprite);
+                InitSpriteLinearTranslationIterator(sprite);
                 StoreSpriteCallbackInData6(sprite, AnimElectricChargingParticles);
                 sprite->callback = RunStoredCallbackWhenAnimEnds;
 
@@ -1086,7 +1086,7 @@ static void AnimTask_ElectricChargingParticles_Step(u8 taskId)
 
 static void AnimElectricChargingParticles_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         gTasks[sprite->data[5]].data[7]--;
         DestroySprite(sprite);
@@ -1613,7 +1613,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 {
 	sprite->invisible = FALSE;
 
-	if (TranslateAnimHorizontalArc(sprite))
+	if (TranslateSpriteHorizontalArc(sprite))
 	{
 		//Merge coords into one
 		sprite->x += sprite->x2;
@@ -1626,7 +1626,7 @@ static void VoltSwitch_Step(struct Sprite* sprite)
 		sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
 		sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-		sprite->callback = StartAnimLinearTranslation;
+		sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 		StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 	}
 }
@@ -1644,7 +1644,7 @@ void AnimTask_VoltSwitch(struct Sprite* sprite)
 	sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2]; //Target X
 	sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3]; //Target Y
 	sprite->data[5] = gBattleAnimArgs[5];
-	InitAnimArcTranslation(sprite);
+	InitSpriteArcTranslation(sprite);
 
 	sprite->callback = VoltSwitch_Step;
 }

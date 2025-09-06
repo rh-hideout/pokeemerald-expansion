@@ -380,18 +380,18 @@ static void AnimStealthRock(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = x + gBattleAnimArgs[2];
-    sprite->data[4] = y + gBattleAnimArgs[3];
-    sprite->data[5] = -50;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = y + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = -50;
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimStealthRockStep;
 }
 
 static void AnimStealthRockStep(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->data[0] = 30;
         sprite->data[1] = 0;
@@ -460,17 +460,17 @@ void AnimRockFragment(struct Sprite *sprite)
 
     sprite->y += gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y + gBattleAnimArgs[3];
+    sprite->sDuration_lt = gBattleAnimArgs[4];
+    sprite->sInputStartX_lt = sprite->x;
+    sprite->sInputEndX_lt = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputStartY_lt = sprite->y;
+    sprite->sInputEndY_lt = sprite->y + gBattleAnimArgs[3];
 
-    InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = 0;
-    sprite->data[4] = 0;
+    InitSpriteLinearTranslation(sprite);
+    sprite->sCurXOffsetFixedPoint_lt = 0;
+    sprite->sCurYOffsetFixedPoint_lt = 0;
 
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 
@@ -626,10 +626,10 @@ static void AnimTask_LoadSandstormBackground_Step(u8 taskId)
 #define sFractionalY data[4] // 256ths of a pixel
 #define sMirroredX   data[5] // init'd from gBattleAnimArgs[3]
 
-// The fields named "velocity" are arguably more like "acceleration," 
+// The fields named "velocity" are arguably more like "acceleration,"
 // and the fields named "fractional" are arguably more like "velocity."
 //
-// ...is what I WOULD say if the "fractional" fields weren't AND'd with 
+// ...is what I WOULD say if the "fractional" fields weren't AND'd with
 // 0xFF after every frame.
 
 void AnimFlyingSandCrescent(struct Sprite *sprite)
@@ -695,11 +695,11 @@ void AnimRaiseSprite(struct Sprite *sprite)
     StartSpriteAnim(sprite, gBattleAnimArgs[4]);
     InitSpritePosToAnimAttacker(sprite, FALSE);
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[2] = sprite->x;
-    sprite->data[4] = sprite->y + gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputEndY_lti = sprite->y + gBattleAnimArgs[2];
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -899,13 +899,13 @@ static void CreateRolloutDirtSprite(struct Task *task)
     spriteId = CreateSprite(spriteTemplate, x, y, 35);
     if (spriteId != MAX_SPRITES)
     {
-        gSprites[spriteId].data[0] = 18;
-        gSprites[spriteId].data[2] = ((task->data[12] * 20) + x) + (task->data[1] * 3);
-        gSprites[spriteId].data[4] = y;
-        gSprites[spriteId].data[5] = -16 - (task->data[1] * 2);
+        gSprites[spriteId].sDuration_lti = 18;
+        gSprites[spriteId].sInputEndX_lti = ((task->data[12] * 20) + x) + (task->data[1] * 3);
+        gSprites[spriteId].sInputEndY_lti = y;
+        gSprites[spriteId].sArcAmplitude_ati = -16 - (task->data[1] * 2);
         gSprites[spriteId].oam.tileNum += tileOffset;
 
-        InitAnimArcTranslation(&gSprites[spriteId]);
+        InitSpriteArcTranslation(&gSprites[spriteId]);
         task->data[11]++;
     }
 
@@ -914,7 +914,7 @@ static void CreateRolloutDirtSprite(struct Task *task)
 
 static void AnimRolloutParticle(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         u8 taskId = FindTaskIdByFunc(AnimTask_Rollout_Step);
         if (taskId != TASK_NONE)

@@ -276,7 +276,7 @@ const struct SpriteTemplate gIncinerateSpriteTemplate =
     .anims = gIncinerateAnims,
     .images = NULL,
     .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = TranslateAnimSpriteToTargetMonLocation,
+    .callback = TranslateAnimSpriteToAverageTargetMonLocation,
 };
 
 const struct SpriteTemplate gBurnFlameSpriteTemplate =
@@ -582,11 +582,11 @@ void AnimFireSpread(struct Sprite *sprite)
     SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
 
     sprite->y += gBattleAnimArgs[1];
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = gBattleAnimArgs[2];
-    sprite->data[2] = gBattleAnimArgs[3];
+    sprite->sDuration_lt = gBattleAnimArgs[4];
+    sprite->sXIncrement_lt = gBattleAnimArgs[2];
+    sprite->sYIncrement_lt = gBattleAnimArgs[3];
 
-    sprite->callback = TranslateSpriteLinearFixedPoint;
+    sprite->callback = TranslateSpriteLinear;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -704,10 +704,10 @@ static void AnimSunlight(struct Sprite *sprite)
 {
     sprite->x = 0;
     sprite->y = 0;
-    sprite->data[0] = 60;
-    sprite->data[2] = 140;
-    sprite->data[4] = 80;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = 60;
+    sprite->sInputEndX_lti = 140;
+    sprite->sInputEndY_lti = 80;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -763,13 +763,13 @@ static void AnimFireRing_Step1(struct Sprite *sprite)
 
     if (++sprite->data[0] == 0x12)
     {
-        sprite->data[0] = 0x19;
-        sprite->data[1] = sprite->x;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-        sprite->data[3] = sprite->y;
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sDuration_lti = 0x19;
+        sprite->sInputStartX_lti = sprite->x;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->sInputStartY_lti = sprite->y;
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-        InitAnimLinearTranslation(sprite);
+        InitSpriteLinearTranslationIterator(sprite);
 
         sprite->callback = AnimFireRing_Step2;
     }
@@ -777,7 +777,7 @@ static void AnimFireRing_Step1(struct Sprite *sprite)
 
 static void AnimFireRing_Step2(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->data[0] = 0;
 
@@ -825,13 +825,13 @@ void AnimFireCross(struct Sprite *sprite)
     sprite->x += gBattleAnimArgs[0];
     sprite->y += gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = gBattleAnimArgs[3];
-    sprite->data[2] = gBattleAnimArgs[4];
+    sprite->sDuration_ltz = gBattleAnimArgs[2];
+    sprite->sXIncrement_ltz = gBattleAnimArgs[3];
+    sprite->sYIncrement_ltz = gBattleAnimArgs[4];
 
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 
-    sprite->callback = TranslateSpriteLinear;
+    sprite->callback = TranslateSpriteLinearInteger;
 }
 
 void AnimFireSpiralOutward(struct Sprite *sprite)
@@ -1249,13 +1249,13 @@ void AnimWillOWispOrb(struct Sprite *sprite)
             sprite->y2 = 0;
             sprite->x2 = 0;
 
-            sprite->data[0] = 256;
-            sprite->data[1] = sprite->x;
-            sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-            sprite->data[3] = sprite->y;
-            sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+            sprite->sInputSpeed_lti = Q_8_8(1.0);
+            sprite->sInputStartX_lti = sprite->x;
+            sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+            sprite->sInputStartY_lti = sprite->y;
+            sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
 
-            InitAnimLinearTranslationWithSpeed(sprite);
+            InitSpriteLinearTranslationIteratorWithSpeed(sprite);
             sprite->callback = AnimWillOWispOrb_Step;
         }
         break;
@@ -1267,7 +1267,7 @@ static void AnimWillOWispOrb_Step(struct Sprite *sprite)
     s16 initialData5;
     s16 newData5;
 
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], 16);
         initialData5 = sprite->data[5];
