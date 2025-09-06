@@ -19,7 +19,7 @@
 #define NAME_BOX_BASE_TILE_TOTAL (6)
 #define NAME_BOX_BASE_TILE_NUM (0x194 - (OW_NAME_BOX_DEFAULT_WIDTH * OW_NAME_BOX_DEFAULT_HEIGHT) - NAME_BOX_BASE_TILE_TOTAL)
 
-static EWRAM_INIT u8 sNameboxWindowId = WINDOW_NONE;
+static EWRAM_INIT u32 sNameboxWindowId = WINDOW_NONE;
 static EWRAM_DATA u8 sNameboxBuffer[32] = {0};
 EWRAM_DATA const u8 *gSpeakerName = NULL;
 
