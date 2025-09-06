@@ -6577,6 +6577,7 @@ BattleScript_CudChewActivates::
 
 BattleScript_ApplyDisguiseFormChangeHPLoss::
 	jumpifgenconfiglowerthan GEN_CONFIG_DISGUISE_HP_LOSS, GEN_8, BattleScript_ApplyDisguiseFormChangeHPLossReturn
+	orword gHitMarker, HITMARKER_PASSIVE_HP_UPDATE
 	healthbarupdate BS_SCRIPTING
 	datahpupdate BS_SCRIPTING
 BattleScript_ApplyDisguiseFormChangeHPLossReturn:
