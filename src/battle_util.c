@@ -2710,7 +2710,7 @@ static enum MoveCanceller CancellerPriorityBlock(struct BattleContext *ctx)
         blockAbility = ctx->ability[ctx->battlerDef];
         effect = TRUE;
     }
-    else if (IsDoubleBattle())
+    else if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(ctx->battlerDef)))
     {
         blockAbility = GetBattlerAbility(BATTLE_PARTNER(ctx->battlerDef));
         if (IsDazzlingAbility(blockAbility))

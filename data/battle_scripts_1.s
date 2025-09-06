@@ -3428,14 +3428,9 @@ BattleScript_DoGhostCurse::
 	tryfaintmon BS_ATTACKER
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectMatBlock::
-	attackcanceler
-	goto BattleScript_ProtectLikeAttack
-
 BattleScript_EffectProtect::
 BattleScript_EffectEndure::
 	attackcanceler
-BattleScript_ProtectLikeAttack:
 	setprotectlike
 	attackanimation
 	waitanimation

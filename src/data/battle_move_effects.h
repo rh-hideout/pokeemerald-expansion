@@ -1721,7 +1721,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_MAT_BLOCK] =
     {
-        .battleScript = BattleScript_EffectMatBlock,
+        .battleScript = BattleScript_EffectProtect,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },

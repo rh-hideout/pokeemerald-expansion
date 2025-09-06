@@ -790,7 +790,6 @@ extern const u8 BattleScript_EffectAcupressure[];
 extern const u8 BattleScript_EffectAromaticMist[];
 extern const u8 BattleScript_EffectPowder[];
 extern const u8 BattleScript_EffectPartingShot[];
-extern const u8 BattleScript_EffectMatBlock[];
 extern const u8 BattleScript_EffectInstruct[];
 extern const u8 BattleScript_EffectLaserFocus[];
 extern const u8 BattleScript_EffectMagneticFlux[];
