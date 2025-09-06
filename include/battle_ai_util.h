@@ -151,6 +151,7 @@ u32 CountPositiveStatStages(u32 battlerId);
 u32 CountNegativeStatStages(u32 battlerId);
 
 // move checks
+bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData);
 bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
@@ -308,7 +309,7 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 #define AI_EFFECT_TERRAIN              (1 <<  1)
 #define AI_EFFECT_CLEAR_HAZARDS        (1 <<  2)
 #define AI_EFFECT_BREAK_SCREENS        (1 <<  3)
-#define AI_EFFECT_RESET_STATS          (1 <<  4) 
+#define AI_EFFECT_RESET_STATS          (1 <<  4)
 #define AI_EFFECT_FORCE_SWITCH         (1 <<  5)
 #define AI_EFFECT_TORMENT              (1 <<  6)
 #define AI_EFFECT_LIGHT_SCREEN         (1 <<  7)

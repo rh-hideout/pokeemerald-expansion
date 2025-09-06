@@ -1143,6 +1143,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     // check non-user target
     if (!(moveTarget & MOVE_TARGET_USER))
     {
+        if (Ai_IsPriorityBlocked(battlerAtk, battlerDef, move, aiData))
+            return TRUE;
+
         if (CanAbilityBlockMove(battlerAtk, battlerDef, abilityAtk, abilityDef, move, AI_CHECK))
             RETURN_SCORE_MINUS(20);
 
@@ -2869,7 +2872,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_NO_RETREAT:
-            if (gDisableStructs[battlerAtk].noRetreat)
+            if (gBattleMons[battlerAtk].volatiles.noRetreat)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_EXTREME_EVOBOOST:
@@ -3104,7 +3107,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     switch (effect)
     {
     case EFFECT_HELPING_HAND:
-        if (!hasPartner 
+        if (!hasPartner
          || !HasDamagingMove(battlerAtkPartner)
          || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
         {
@@ -3120,7 +3123,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (hasTwoOpponents)
             {
                 // Might be about to die
-                if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtk), battlerAtk) && CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtk) 
+                if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtk), battlerAtk) && CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtk)
                  && AI_IsSlower(battlerAtk, BATTLE_OPPOSITE(battlerAtk), move, predictedMove, DONT_CONSIDER_PRIORITY)
                  && AI_IsSlower(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
@@ -3142,14 +3145,14 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (IsBattlerAlive(BATTLE_OPPOSITE(battlerAtkPartner)))
             {
                 // Might be about to die
-                if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtk) 
+                if (CanTargetFaintAi(BATTLE_OPPOSITE(battlerAtkPartner), battlerAtk)
                  && AI_IsSlower(battlerAtk, BATTLE_OPPOSITE(battlerAtkPartner), move, predictedMove, DONT_CONSIDER_PRIORITY))
                     ADJUST_SCORE(GOOD_EFFECT);
 
                 if (ownHitsToKOFoe2 > partnerHitsToKOFoe2 && partnerHitsToKOFoe2 > 1)
                     ADJUST_SCORE(GOOD_EFFECT);
 
-            }            
+            }
         }
         break;
     case EFFECT_PERISH_SONG:
@@ -3176,7 +3179,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_COACHING:
-        if (!hasPartner 
+        if (!hasPartner
          || !HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL))
         {
             ADJUST_SCORE(WORST_EFFECT);
@@ -5269,7 +5272,7 @@ case EFFECT_GUARD_SPLIT:
                 ADJUST_SCORE(GOOD_EFFECT);
             // Set it for next pokemon in singles.
             else if (!(gFieldStatuses & STATUS_FIELD_TRICK_ROOM) && !hasPartner && (CountUsablePartyMons(battlerAtk) != 0))
-                ADJUST_SCORE(DECENT_EFFECT);             
+                ADJUST_SCORE(DECENT_EFFECT);
             // Don't unset it on last turn.
             else if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer != gBattleTurnCounter && ShouldClearFieldStatus(battlerAtk, STATUS_FIELD_TRICK_ROOM))
                 ADJUST_SCORE(GOOD_EFFECT);
@@ -5400,7 +5403,7 @@ case EFFECT_GUARD_SPLIT:
             u32 partnerSpeed = aiData->speedStats[BATTLE_PARTNER(battlerAtk)];
             u32 foe1Speed = aiData->speedStats[FOE(battlerAtk)];
             u32 foe2Speed = aiData->speedStats[BATTLE_PARTNER(FOE(battlerAtk))];
-            
+
             if (speed <= foe1Speed && (speed * 2) > foe1Speed)
                 tailwindScore += 1;
             if (speed <= foe2Speed && (speed * 2) > foe2Speed)

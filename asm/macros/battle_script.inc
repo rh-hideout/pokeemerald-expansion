@@ -724,14 +724,12 @@
 	.byte \mode
 	.endm
 
-	.macro trysetrest failInstr:req
+	.macro trysetrest
 	.byte 0x81
-	.4byte \failInstr
 	.endm
 
-	.macro jumpifnotfirstturn jumpInstr:req
+	.macro unused_0x82
 	.byte 0x82
-	.4byte \jumpInstr
 	.endm
 
 	.macro unused_0x83
@@ -748,9 +746,8 @@
 	.byte \id
 	.endm
 
-	.macro stockpiletobasedamage failInstr:req
+	.macro stockpiletobasedamage
 	.byte 0x86
-	.4byte \failInstr
 	.endm
 
 	.macro stockpiletohpheal failInstr:req
@@ -1045,9 +1042,8 @@
 	.byte 0xc2
 	.endm
 
-	.macro trysetfutureattack failInstr:req
+	.macro setfutureattack
 	.byte 0xc3
-	.4byte \failInstr
 	.endm
 
 	.macro trydobeatup endInstr, failInstr
@@ -1224,10 +1220,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifnotcurrentmoveargtype battler:req, failInstr:req
+	.macro unused_0xE4
 	.byte 0xe4
-	.byte \battler
-	.4byte \failInstr
 	.endm
 
 	.macro pickup
@@ -1378,12 +1372,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcantfling battler:req, jumpInstr:req
-	callnative BS_JumpIfCantFling
-	.byte \battler
-	.4byte \jumpInstr
-	.endm
-
 	.macro itemstatchangeeffects battler:req
 	callnative BS_RunStatChangeItems
 	.byte \battler
@@ -1436,10 +1424,6 @@
 	.macro trysetoctolock failInstr:req
 	callnative BS_TrySetOctolock
 	.4byte \failInstr
-	.endm
-
-	.macro setglaiverush
-	callnative BS_SetGlaiveRush
 	.endm
 
 	.macro setpledge jumpInstr:req
@@ -2179,11 +2163,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro suckerpunchcheck failInstr:req
-	callnative BS_SuckerPunchCheck
-	.4byte \failInstr
-	.endm
-
 	.macro setsimplebeam failInstr:req
 	callnative BS_SetSimpleBeam
 	.4byte \failInstr
@@ -2216,11 +2195,6 @@
 	callnative BS_HandleFormChange
 	.byte \battler
 	.byte \case_
-	.endm
-
-	.macro trylastresort failInstr:req
-	callnative BS_TryLastResort
-	.4byte \failInstr
 	.endm
 
 	.macro tryautotomize failInstr:req
@@ -2411,13 +2385,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro checkpoltergeist failInstr:req
-	callnative BS_CheckPoltergeist
-	.4byte \failInstr
-	.endm
-
-	.macro trynoretreat failInstr:req
-	callnative BS_TryNoRetreat
+	.macro setpoltergeistmessage failInstr:req
+	callnative BS_SetPoltergeistMessage
 	.4byte \failInstr
 	.endm
 
