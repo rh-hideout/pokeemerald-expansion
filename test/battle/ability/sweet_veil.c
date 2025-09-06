@@ -17,7 +17,7 @@ DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - right target")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentRight); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_SWEET_VEIL);
         NOT STATUS_ICON(opponentRight, sleep: TRUE);
     }
@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - left target")
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_HYPNOSIS, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPNOSIS, playerLeft);
         ABILITY_POPUP(opponentRight, ABILITY_SWEET_VEIL);
         NOT STATUS_ICON(opponentLeft, sleep: TRUE);
     }
