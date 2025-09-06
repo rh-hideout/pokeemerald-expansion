@@ -93,6 +93,7 @@ Contains more fundamental functions that control the flow of the battle. Functio
 ### data/battle_scripts_1.s
 Each move's effect is governed by a script defined here. For a simple example, let's look at the script for Fake Out/First Impression:
 
+TODO: New Script
 ```
 BattleScript_EffectFirstTurnOnly::
 	attackcanceler
