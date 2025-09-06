@@ -10171,11 +10171,17 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
                 statValue = -2;
 
             if (statValue == -2)
+            {
                 PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATHARSHLY);
+            }
             else if (statValue <= -3)
+            {
                 PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_SEVERELY);
+            }
             else
+            {
                 PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+            }
 
             gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_FELL or B_MSG_DEFENDER_STAT_FELL
 
@@ -10199,11 +10205,17 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
             statValue = 2;
 
         if (statValue == 2)
+        {
             PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATSHARPLY);
+        }
         else if (statValue >= 3)
+        {
             PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_DRASTICALLY);
+        }
         else
+        {
             PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+        }
 
         gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_ROSE or B_MSG_DEFENDER_STAT_ROSE
 
