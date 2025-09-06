@@ -1185,7 +1185,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     // Support for Contrary ability.
     // If a move attempted to raise stat - print "won't increase".
     // If a move attempted to lower stat - print "won't decrease".
-    switch (stringID)
+    switch (stringId)
     {
     case STRINGID_ATTACKERSSTATROSE:
     case STRINGID_DEFENDERSSTATROSE:
