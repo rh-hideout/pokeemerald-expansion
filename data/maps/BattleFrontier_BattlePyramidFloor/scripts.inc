@@ -105,7 +105,7 @@ BattlePyramid_WarpToTop::
 
 @ TRAINER_PHILLIP is used as a placeholder
 BattlePyramid_TrainerBattle::
-	trainerbattle TRAINER_BATTLE_HILL, OBJ_ID_NONE, TRAINER_PHILLIP, BattleFacility_TrainerBattle_PlaceholderText, BattleFacility_TrainerBattle_PlaceholderText, NULL, OBJ_ID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, FALSE, FALSE, FALSE
+	trainerbattle TRAINER_BATTLE_HILL, LOCALID_NONE, TRAINER_PHILLIP, BattleFacility_TrainerBattle_PlaceholderText, BattleFacility_TrainerBattle_PlaceholderText, NULL, LOCALID_NONE, TRAINER_NONE, NULL, NULL, NULL, NULL, NULL, FALSE, FALSE, FALSE, FALSE
 	pyramid_showhint
 	waitmessage
 	waitbuttonpress

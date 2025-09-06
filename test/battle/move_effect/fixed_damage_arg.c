@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_SONIC_BOOM) == EFFECT_FIXED_DAMAGE_ARG);
+    ASSUME(GetMoveEffect(MOVE_SONIC_BOOM) == EFFECT_FIXED_HP_DAMAGE);
 }
 
 SINGLE_BATTLE_TEST("Sonic Boom deals fixed damage", s16 damage)
@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Sonic Boom deals fixed damage", s16 damage)
     PARAMETRIZE { mon = SPECIES_ARON; }
 
     GIVEN {
-        ASSUME(GetMoveFixedDamage(MOVE_SONIC_BOOM) == 20);
+        ASSUME(GetMoveFixedHPDamage(MOVE_SONIC_BOOM) == 20);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(mon);
     } WHEN {
@@ -27,7 +27,9 @@ SINGLE_BATTLE_TEST("Sonic Boom deals fixed damage", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Sonic Boom doesn't affect ghost types")
+TO_DO_BATTLE_TEST("Sonic Boom affects ghost types (Gen1)")
+
+SINGLE_BATTLE_TEST("Sonic Boom doesn't affect ghost types (Gen2+)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

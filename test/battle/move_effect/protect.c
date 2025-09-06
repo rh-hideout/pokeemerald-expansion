@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -194,7 +194,27 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making con
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are already statused")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WILL_O_WISP); }
+        TURN { MOVE(opponent, MOVE_BANEFUL_BUNKER); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WILL_O_WISP, opponent);
+        STATUS_ICON(player, STATUS1_BURN);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BANEFUL_BUNKER, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            HP_BAR(opponent);
+            STATUS_ICON(player, STATUS1_POISON);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -222,6 +242,26 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making cont
                 HP_BAR(opponent);
                 STATUS_ICON(player, STATUS1_BURN);
             }
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are already statused")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TOXIC); }
+        TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, opponent);
+        STATUS_ICON(player, STATUS1_TOXIC_POISON);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            HP_BAR(opponent);
+            STATUS_ICON(player, STATUS1_BURN);
         }
     }
 }
@@ -537,10 +577,10 @@ DOUBLE_BATTLE_TEST("Crafty Shield protects self and ally from Confide and Decora
 DOUBLE_BATTLE_TEST("Crafty Shield does not protect against moves that target all battlers")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_TANGROWTH].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_SUNKERN].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_SUNFLORA].types[0] == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_TANGROWTH, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_SUNKERN, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_SUNFLORA, 0) == TYPE_GRASS);
         PLAYER(SPECIES_TANGELA);
         PLAYER(SPECIES_TANGROWTH);
         OPPONENT(SPECIES_SUNKERN);
@@ -616,5 +656,22 @@ SINGLE_BATTLE_TEST("Protect: Quick Guard, Wide Guard and Crafty Shield don't red
         EXPECT_EQ(results[0].damage, results[1].damage);
         EXPECT_EQ(results[2].damage, results[3].damage);
         EXPECT_EQ(results[4].damage, results[5].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_PROTECTIVE_PADS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BURNING_BULWARK); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BURNING_BULWARK, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+            HP_BAR(opponent);
+            STATUS_ICON(player, STATUS1_BURN);
+        }
     }
 }

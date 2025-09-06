@@ -81,13 +81,14 @@ struct RectangularSpiralLine
 {
     u8 state;
     s16 position;
-    u8 moveIdx;
+    u8 moveIndex;
     s16 reboundPosition;
     bool8 outward;
 };
 
 typedef bool8 (*TransitionStateFunc)(struct Task *task);
 typedef bool8 (*TransitionSpriteCallback)(struct Sprite *sprite);
+typedef bool8 (*TransitionSpriteCallbackPartner)(struct Sprite *sprite);
 
 static bool8 Transition_StartIntro(struct Task *);
 static bool8 Transition_WaitForIntro(struct Task *);
@@ -274,14 +275,16 @@ static s16 IsTrainerPicSlideDone(s16);
 static bool8 TransitionIntro_FadeToGray(struct Task *);
 static bool8 TransitionIntro_FadeFromGray(struct Task *);
 static bool8 IsIntroTaskDone(void);
-static bool16 UpdateRectangularSpiralLine(const s16 * const *, struct RectangularSpiralLine *);
+static bool16 UpdateRectangularSpiralLine(const s16 *const *, struct RectangularSpiralLine *);
 static void SpriteCB_FldEffPokeballTrail(struct Sprite *);
 static void SpriteCB_MugshotTrainerPic(struct Sprite *);
+static void SpriteCB_MugshotTrainerPicPartner(struct Sprite *);
 static void SpriteCB_WhiteBarFade(struct Sprite *);
 static bool8 MugshotTrainerPic_Pause(struct Sprite *);
 static bool8 MugshotTrainerPic_Init(struct Sprite *);
 static bool8 MugshotTrainerPic_Slide(struct Sprite *);
 static bool8 MugshotTrainerPic_SlideSlow(struct Sprite *);
+static bool8 MugshotTrainerPic_SlidePartner(struct Sprite *);
 static bool8 MugshotTrainerPic_SlideOffscreen(struct Sprite *);
 
 static s16 sDebug_RectangularSpiralData;
@@ -299,10 +302,10 @@ static const u8 sUnusedBrendan_Gfx[] = INCBIN_U8("graphics/battle_transitions/un
 static const u8 sUnusedLass_Gfx[] = INCBIN_U8("graphics/battle_transitions/unused_lass.4bpp");
 static const u32 sShrinkingBoxTileset[] = INCBIN_U32("graphics/battle_transitions/shrinking_box.4bpp");
 static const u16 sEvilTeam_Palette[] = INCBIN_U16("graphics/battle_transitions/evil_team.gbapal");
-static const u32 sTeamAqua_Tileset[] = INCBIN_U32("graphics/battle_transitions/team_aqua.4bpp.lz");
-static const u32 sTeamAqua_Tilemap[] = INCBIN_U32("graphics/battle_transitions/team_aqua.bin.lz");
-static const u32 sTeamMagma_Tileset[] = INCBIN_U32("graphics/battle_transitions/team_magma.4bpp.lz");
-static const u32 sTeamMagma_Tilemap[] = INCBIN_U32("graphics/battle_transitions/team_magma.bin.lz");
+static const u32 sTeamAqua_Tileset[] = INCBIN_U32("graphics/battle_transitions/team_aqua.4bpp.smol");
+static const u32 sTeamAqua_Tilemap[] = INCBIN_U32("graphics/battle_transitions/team_aqua.bin.smolTM");
+static const u32 sTeamMagma_Tileset[] = INCBIN_U32("graphics/battle_transitions/team_magma.4bpp.smol");
+static const u32 sTeamMagma_Tilemap[] = INCBIN_U32("graphics/battle_transitions/team_magma.bin.smolTM");
 static const u32 sRegis_Tileset[] = INCBIN_U32("graphics/battle_transitions/regis.4bpp");
 static const u16 sRegice_Palette[] = INCBIN_U16("graphics/battle_transitions/regice.gbapal");
 static const u16 sRegisteel_Palette[] = INCBIN_U16("graphics/battle_transitions/registeel.gbapal");
@@ -311,10 +314,10 @@ static const u32 sRegice_Tilemap[] = INCBIN_U32("graphics/battle_transitions/reg
 static const u32 sRegisteel_Tilemap[] = INCBIN_U32("graphics/battle_transitions/registeel.bin");
 static const u32 sRegirock_Tilemap[] = INCBIN_U32("graphics/battle_transitions/regirock.bin");
 static const u16 sUnused_Palette[] = INCBIN_U16("graphics/battle_transitions/unused.gbapal");
-static const u32 sKyogre_Tileset[] = INCBIN_U32("graphics/battle_transitions/kyogre.4bpp.lz");
-static const u32 sKyogre_Tilemap[] = INCBIN_U32("graphics/battle_transitions/kyogre.bin.lz");
-static const u32 sGroudon_Tileset[] = INCBIN_U32("graphics/battle_transitions/groudon.4bpp.lz");
-static const u32 sGroudon_Tilemap[] = INCBIN_U32("graphics/battle_transitions/groudon.bin.lz");
+static const u32 sKyogre_Tileset[] = INCBIN_U32("graphics/battle_transitions/kyogre.4bpp.smol");
+static const u32 sKyogre_Tilemap[] = INCBIN_U32("graphics/battle_transitions/kyogre.bin.smolTM");
+static const u32 sGroudon_Tileset[] = INCBIN_U32("graphics/battle_transitions/groudon.4bpp.smol");
+static const u32 sGroudon_Tilemap[] = INCBIN_U32("graphics/battle_transitions/groudon.bin.smolTM");
 static const u16 sKyogre1_Palette[] = INCBIN_U16("graphics/battle_transitions/kyogre_pt1.gbapal");
 static const u16 sKyogre2_Palette[] = INCBIN_U16("graphics/battle_transitions/kyogre_pt2.gbapal");
 static const u16 sGroudon1_Palette[] = INCBIN_U16("graphics/battle_transitions/groudon_pt1.gbapal");
@@ -323,13 +326,13 @@ static const u16 sRayquaza_Palette[] = INCBIN_U16("graphics/battle_transitions/r
 static const u32 sRayquaza_Tileset[] = INCBIN_U32("graphics/battle_transitions/rayquaza.4bpp");
 static const u32 sRayquaza_Tilemap[] = INCBIN_U32("graphics/battle_transitions/rayquaza.bin");
 static const u16 sFrontierLogo_Palette[] = INCBIN_U16("graphics/battle_transitions/frontier_logo.gbapal");
-static const u32 sFrontierLogo_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_logo.4bpp.lz");
-static const u32 sFrontierLogo_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo.bin.lz");
+static const u32 sFrontierLogo_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_logo.4bpp.smol");
+static const u32 sFrontierLogo_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_logo.bin.smolTM");
 static const u16 sFrontierSquares_Palette[] = INCBIN_U16("graphics/battle_transitions/frontier_squares_blanktiles.gbapal");
-static const u32 sFrontierSquares_FilledBg_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_1.4bpp.lz");
-static const u32 sFrontierSquares_EmptyBg_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_2.4bpp.lz");
-static const u32 sFrontierSquares_Shrink1_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_3.4bpp.lz");
-static const u32 sFrontierSquares_Shrink2_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_4.4bpp.lz");
+static const u32 sFrontierSquares_FilledBg_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_1.4bpp.smol");
+static const u32 sFrontierSquares_EmptyBg_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_2.4bpp.smol");
+static const u32 sFrontierSquares_Shrink1_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_3.4bpp.smol");
+static const u32 sFrontierSquares_Shrink2_Tileset[] = INCBIN_U32("graphics/battle_transitions/frontier_square_4.4bpp.smol");
 static const u32 sFrontierSquares_Tilemap[] = INCBIN_U32("graphics/battle_transitions/frontier_squares.bin");
 
 // All battle transitions use the same intro
@@ -538,6 +541,17 @@ static const TransitionSpriteCallback sMugshotTrainerPicFuncs[] =
     MugshotTrainerPic_Pause,
     MugshotTrainerPic_Init,
     MugshotTrainerPic_Slide,
+    MugshotTrainerPic_SlideSlow,
+    MugshotTrainerPic_Pause,
+    MugshotTrainerPic_SlideOffscreen,
+    MugshotTrainerPic_Pause
+};
+
+static const TransitionSpriteCallbackPartner sMugshotTrainerPicFuncsPartner[] =
+{
+    MugshotTrainerPic_Pause,
+    MugshotTrainerPic_Init,
+    MugshotTrainerPic_SlidePartner,
     MugshotTrainerPic_SlideSlow,
     MugshotTrainerPic_Pause,
     MugshotTrainerPic_SlideOffscreen,
@@ -1034,6 +1048,9 @@ static void Task_BattleTransition(u8 taskId)
 static bool8 Transition_StartIntro(struct Task *task)
 {
     SetWeatherScreenFadeOut();
+    // cause all shadow sprites to destroy themselves,
+    // freeing up sprite slots for the transition
+    gWeatherPtr->noShadows = TRUE;
     CpuCopy32(gPlttBufferFaded, gPlttBufferUnfaded, PLTT_SIZE);
     if (sTasks_Intro[task->tTransitionId] != NULL)
     {
@@ -1355,6 +1372,7 @@ static void InitPatternWeaveTransition(struct Task *task)
     sTransitionData->WIN0V = DISPLAY_HEIGHT;
     sTransitionData->BLDCNT = BLDCNT_TGT1_BG0 | BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL;
     sTransitionData->BLDALPHA = BLDALPHA_BLEND(task->tBlendTarget2, task->tBlendTarget1);
+    UpdateShadowColor(RGB_GRAY);
 
     for (i = 0; i < DISPLAY_HEIGHT; i++)
         gScanlineEffectRegBuffers[1][i] = DISPLAY_WIDTH;
@@ -1370,7 +1388,7 @@ static bool8 Aqua_Init(struct Task *task)
     InitPatternWeaveTransition(task);
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sTeamAqua_Tileset, tileset);
+    DecompressDataWithHeaderVram(sTeamAqua_Tileset, tileset);
     LoadPalette(sEvilTeam_Palette, BG_PLTT_ID(15), sizeof(sEvilTeam_Palette));
 
     task->tState++;
@@ -1385,7 +1403,7 @@ static bool8 Magma_Init(struct Task *task)
     InitPatternWeaveTransition(task);
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sTeamMagma_Tileset, tileset);
+    DecompressDataWithHeaderVram(sTeamMagma_Tileset, tileset);
     LoadPalette(sEvilTeam_Palette, BG_PLTT_ID(15), sizeof(sEvilTeam_Palette));
 
     task->tState++;
@@ -1445,7 +1463,7 @@ static bool8 Aqua_SetGfx(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sTeamAqua_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sTeamAqua_Tilemap, tilemap);
     SetSinWave((s16*)gScanlineEffectRegBuffers[0], 0, task->tSinIndex, 132, task->tAmplitude, DISPLAY_HEIGHT);
 
     task->tState++;
@@ -1457,7 +1475,7 @@ static bool8 Magma_SetGfx(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sTeamMagma_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sTeamMagma_Tilemap, tilemap);
     SetSinWave((s16*)gScanlineEffectRegBuffers[0], 0, task->tSinIndex, 132, task->tAmplitude, DISPLAY_HEIGHT);
 
     task->tState++;
@@ -1511,8 +1529,8 @@ static bool8 Kyogre_Init(struct Task *task)
 
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sKyogre_Tileset, tileset);
-    LZ77UnCompVram(sKyogre_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sKyogre_Tileset, tileset);
+    DecompressDataWithHeaderVram(sKyogre_Tilemap, tilemap);
 
     task->tState++;
     return FALSE;
@@ -2216,8 +2234,10 @@ static void VBlankCB_Wave(void)
 #define tBottomBannerX      data[3]
 #define tTimer              data[3] // Re-used
 #define tFadeSpread         data[4]
-#define tOpponentSpriteId   data[13]
+#define tOpponentSpriteAId   data[11]
+#define tOpponentSpriteBId   data[12]
 #define tPlayerSpriteId     data[14]
+#define tPartnerSpriteId    data[13]
 
 // Sprite data for trainer sprites in mugshots
 #define sState       data[0]
@@ -2358,13 +2378,26 @@ static bool8 Mugshot_StartOpponentSlide(struct Task *task)
     sTransitionData->BG0HOFS_Lower -= 8;
     sTransitionData->BG0HOFS_Upper += 8;
 
-    SetTrainerPicSlideDirection(task->tOpponentSpriteId, 0);
+    SetTrainerPicSlideDirection(task->tOpponentSpriteAId, 0);
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+            SetTrainerPicSlideDirection(task->tOpponentSpriteBId, 0);
+    }
     SetTrainerPicSlideDirection(task->tPlayerSpriteId, 1);
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+    {
+        SetTrainerPicSlideDirection(task->tPartnerSpriteId, 1);
+    }
 
     // Start opponent slide
-    IncrementTrainerPicState(task->tOpponentSpriteId);
+    IncrementTrainerPicState(task->tOpponentSpriteAId);
 
     PlaySE(SE_MUGSHOT);
+
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+        IncrementTrainerPicState(task->tOpponentSpriteBId);
+    }
 
     sTransitionData->VBlank_DMA++;
     return FALSE;
@@ -2376,9 +2409,13 @@ static bool8 Mugshot_WaitStartPlayerSlide(struct Task *task)
     sTransitionData->BG0HOFS_Upper += 8;
 
     // Start player's slide in once the opponent is finished
-    if (IsTrainerPicSlideDone(task->tOpponentSpriteId))
+    if (IsTrainerPicSlideDone(task->tOpponentSpriteAId))
     {
         task->tState++;
+        if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+        {
+            IncrementTrainerPicState(task->tPartnerSpriteId);
+        }
         IncrementTrainerPicState(task->tPlayerSpriteId);
     }
     return FALSE;
@@ -2389,20 +2426,49 @@ static bool8 Mugshot_WaitPlayerSlide(struct Task *task)
     sTransitionData->BG0HOFS_Lower -= 8;
     sTransitionData->BG0HOFS_Upper += 8;
 
-    if (IsTrainerPicSlideDone(task->tPlayerSpriteId))
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
     {
-        sTransitionData->VBlank_DMA = FALSE;
-        SetVBlankCallback(NULL);
-        DmaStop(0);
-        memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
-        memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
-        SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
-        SetGpuReg(REG_OFFSET_BLDY, 0);
-        task->tState++;
-        task->tTimer = 0;
-        task->tFadeSpread = 0;
-        sTransitionData->BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
-        SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        if (IsTrainerPicSlideDone(task->tPartnerSpriteId))
+        {
+            sTransitionData->VBlank_DMA = FALSE;
+            SetVBlankCallback(NULL);
+            DmaStop(0);
+            memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
+            memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
+            SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            task->tState++;
+            task->tTimer = 0;
+            task->tFadeSpread = 0;
+            sTransitionData->BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
+            SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        }
+        else
+        {
+            return FALSE;
+        } 
+    }
+    else
+    {
+        if (IsTrainerPicSlideDone(task->tPlayerSpriteId))
+        {
+            sTransitionData->VBlank_DMA = FALSE;
+            SetVBlankCallback(NULL);
+            DmaStop(0);
+            memset(gScanlineEffectRegBuffers[0], 0, DISPLAY_HEIGHT * 2);
+            memset(gScanlineEffectRegBuffers[1], 0, DISPLAY_HEIGHT * 2);
+            SetGpuReg(REG_OFFSET_WIN0H, DISPLAY_WIDTH);
+            SetGpuReg(REG_OFFSET_BLDY, 0);
+            task->tState++;
+            task->tTimer = 0;
+            task->tFadeSpread = 0;
+            sTransitionData->BLDCNT = BLDCNT_TGT1_ALL | BLDCNT_EFFECT_LIGHTEN;
+            SetVBlankCallback(VBlankCB_MugshotsFadeOut);
+        }
+        else
+        {
+            return FALSE;
+        } 
     }
     return FALSE;
 }
@@ -2517,48 +2583,83 @@ static void HBlankCB_Mugshots(void)
 
 static void Mugshots_CreateTrainerPics(struct Task *task)
 {
-    struct Sprite *opponentSprite, *playerSprite;
+    struct Sprite *opponentSpriteA, *opponentSpriteB=0, *playerSprite, *partnerSprite=0;
 
-    u8 trainerPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
-    s16 opponentRotationScales = 0;
+    u8 trainerAPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentA);
+    u8 trainerBPicId = GetTrainerPicFromId(TRAINER_BATTLE_PARAM.opponentB);
+    u8 partnerPicId = GetTrainerPicFromId(gPartnerTrainerId);
+    s16 opponentARotationScales = 0;
+    s16 opponentBRotationScales = 0;
 
     gReservedSpritePaletteCount = 10;
-    task->tOpponentSpriteId = CreateTrainerSprite(trainerPicId,
-                                                  gTrainerSprites[trainerPicId].mugshotCoords.x - 32,
-                                                  gTrainerSprites[trainerPicId].mugshotCoords.y + 42,
+    if (TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+    {
+        task->tOpponentSpriteBId = CreateTrainerSprite(trainerBPicId,
+                                                    gTrainerSprites[trainerBPicId].mugshotCoords.x - 240,
+                                                    gTrainerSprites[trainerBPicId].mugshotCoords.y + 42,
+                                                    0, NULL);
+        opponentSpriteB = &gSprites[task->tOpponentSpriteBId];
+        opponentSpriteB->callback = SpriteCB_MugshotTrainerPicPartner;
+        opponentSpriteB->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+        opponentSpriteB->oam.matrixNum = AllocOamMatrix();
+        opponentSpriteB->oam.shape = SPRITE_SHAPE(64x32);
+        opponentSpriteB->oam.size = SPRITE_SIZE(64x32);
+        CalcCenterToCornerVec(opponentSpriteB, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        opponentBRotationScales = gTrainerSprites[trainerBPicId].mugshotRotation;
+        SetOamMatrixRotationScaling(opponentSpriteB->oam.matrixNum, opponentBRotationScales, opponentBRotationScales, 0);
+    }
+
+    task->tOpponentSpriteAId = CreateTrainerSprite(trainerAPicId,
+                                                  gTrainerSprites[trainerAPicId].mugshotCoords.x - 32,
+                                                  gTrainerSprites[trainerAPicId].mugshotCoords.y + 42,
                                                   0, NULL);
+
     gReservedSpritePaletteCount = 12;
-
-    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender),
-                                                DISPLAY_WIDTH + 32,
-                                                106,
+    if (gPartnerTrainerId != TRAINER_PARTNER(PARTNER_NONE) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) 
+    {
+        task->tPartnerSpriteId = CreateTrainerSprite(partnerPicId, 
+                                                DISPLAY_WIDTH + 240, 
+                                                106, 
                                                 0, NULL);
+        partnerSprite = &gSprites[task->tPartnerSpriteId];
+        partnerSprite->callback = SpriteCB_MugshotTrainerPicPartner;
+        partnerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+        partnerSprite->oam.matrixNum = AllocOamMatrix();
+        partnerSprite->oam.shape = SPRITE_SHAPE(64x32);
+        partnerSprite->oam.size = SPRITE_SIZE(64x32);
+        CalcCenterToCornerVec(partnerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+        SetOamMatrixRotationScaling(partnerSprite->oam.matrixNum, -512, 512, 0);
+    }
 
-    opponentSprite = &gSprites[task->tOpponentSpriteId];
+    task->tPlayerSpriteId = CreateTrainerSprite(PlayerGenderToFrontTrainerPicId(gSaveBlock2Ptr->playerGender), 
+                                                DISPLAY_WIDTH + 32, 
+                                                106, 
+                                                0, NULL); 
+
+    opponentSpriteA = &gSprites[task->tOpponentSpriteAId];
     playerSprite = &gSprites[task->tPlayerSpriteId];
 
-    opponentSprite->callback = SpriteCB_MugshotTrainerPic;
+    opponentSpriteA->callback = SpriteCB_MugshotTrainerPic;
     playerSprite->callback = SpriteCB_MugshotTrainerPic;
 
-    opponentSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
+    opponentSpriteA->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
     playerSprite->oam.affineMode = ST_OAM_AFFINE_DOUBLE;
 
-    opponentSprite->oam.matrixNum = AllocOamMatrix();
+    opponentSpriteA->oam.matrixNum = AllocOamMatrix();
     playerSprite->oam.matrixNum = AllocOamMatrix();
 
-    opponentSprite->oam.shape = SPRITE_SHAPE(64x32);
+    opponentSpriteA->oam.shape = SPRITE_SHAPE(64x32);
     playerSprite->oam.shape = SPRITE_SHAPE(64x32);
 
-    opponentSprite->oam.size = SPRITE_SIZE(64x32);
+    opponentSpriteA->oam.size = SPRITE_SIZE(64x32);
     playerSprite->oam.size = SPRITE_SIZE(64x32);
 
-    CalcCenterToCornerVec(opponentSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
+    CalcCenterToCornerVec(opponentSpriteA, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
     CalcCenterToCornerVec(playerSprite, SPRITE_SHAPE(64x32), SPRITE_SIZE(64x32), ST_OAM_AFFINE_DOUBLE);
 
-    opponentRotationScales = gTrainerSprites[trainerPicId].mugshotRotation;
+    opponentARotationScales = gTrainerSprites[trainerAPicId].mugshotRotation;
 
-    SetOamMatrixRotationScaling(opponentSprite->oam.matrixNum, opponentRotationScales, opponentRotationScales, 0);
-
+    SetOamMatrixRotationScaling(opponentSpriteA->oam.matrixNum, opponentARotationScales, opponentARotationScales, 0);
     SetOamMatrixRotationScaling(playerSprite->oam.matrixNum, -512, 512, 0);
 }
 
@@ -2566,6 +2667,12 @@ static void SpriteCB_MugshotTrainerPic(struct Sprite *sprite)
 {
     while (sMugshotTrainerPicFuncs[sprite->sState](sprite));
 }
+
+static void SpriteCB_MugshotTrainerPicPartner(struct Sprite *sprite)
+{
+    while (sMugshotTrainerPicFuncsPartner[sprite->sState](sprite));
+}
+
 
 // Wait until IncrementTrainerPicState is called
 static bool8 MugshotTrainerPic_Pause(struct Sprite *sprite)
@@ -2595,6 +2702,18 @@ static bool8 MugshotTrainerPic_Slide(struct Sprite *sprite)
     if (sprite->sSlideDir && sprite->x < DISPLAY_WIDTH - 107)
         sprite->sState++;
     else if (!sprite->sSlideDir && sprite->x > 103)
+        sprite->sState++;
+    return FALSE;
+}
+
+static bool8 MugshotTrainerPic_SlidePartner(struct Sprite *sprite)
+{
+    sprite->x += sprite->sSlideSpeed;
+
+    // Advance state when pic passes ~40% of screen
+    if (sprite->sSlideDir && sprite->x < DISPLAY_WIDTH - 60)
+        sprite->sState++;
+    else if (!sprite->sSlideDir && sprite->x > 60)
         sprite->sState++;
     return FALSE;
 }
@@ -2653,8 +2772,10 @@ static s16 IsTrainerPicSlideDone(s16 spriteId)
 #undef tBottomBannerX
 #undef tTimer
 #undef tFadeSpread
-#undef tOpponentSpriteId
+#undef tOpponentSpriteAId
+#undef tOpponentSpriteBId
 #undef tPlayerSpriteId
+#undef tPartnerSpriteId
 
 //--------------------
 // B_TRANSITION_SLICE
@@ -3125,28 +3246,28 @@ static bool8 RectangularSpiral_Init(struct Task *task)
     // Line starting in top left
     sRectangularSpiralLines[0].state = SPIRAL_INWARD_START;
     sRectangularSpiralLines[0].position = -1;
-    sRectangularSpiralLines[0].moveIdx = 1;
+    sRectangularSpiralLines[0].moveIndex = 1;
     sRectangularSpiralLines[0].reboundPosition = 308;
     sRectangularSpiralLines[0].outward = FALSE;
 
     // Line starting in bottom right
     sRectangularSpiralLines[1].state = SPIRAL_INWARD_START;
     sRectangularSpiralLines[1].position = -1;
-    sRectangularSpiralLines[1].moveIdx = 1;
+    sRectangularSpiralLines[1].moveIndex = 1;
     sRectangularSpiralLines[1].reboundPosition = 308;
     sRectangularSpiralLines[1].outward = FALSE;
 
     // Line starting in top right
     sRectangularSpiralLines[2].state = SPIRAL_INWARD_START;
     sRectangularSpiralLines[2].position = -3;
-    sRectangularSpiralLines[2].moveIdx = 1;
+    sRectangularSpiralLines[2].moveIndex = 1;
     sRectangularSpiralLines[2].reboundPosition = 307;
     sRectangularSpiralLines[2].outward = FALSE;
 
     // Line starting in bottom left
     sRectangularSpiralLines[3].state = SPIRAL_INWARD_START;
     sRectangularSpiralLines[3].position = -3;
-    sRectangularSpiralLines[3].moveIdx = 1;
+    sRectangularSpiralLines[3].moveIndex = 1;
     sRectangularSpiralLines[3].reboundPosition = 307;
     sRectangularSpiralLines[3].outward = FALSE;
 
@@ -3202,14 +3323,14 @@ static bool8 RectangularSpiral_End(struct Task *task)
 }
 
 // Returns TRUE if a tile should be drawn, FALSE otherwise
-static bool16 UpdateRectangularSpiralLine(const s16 * const *moveDataTable, struct RectangularSpiralLine *line)
+static bool16 UpdateRectangularSpiralLine(const s16 *const *moveDataTable, struct RectangularSpiralLine *line)
 {
     const s16 *moveData = moveDataTable[line->state];
 
     // Has spiral finished?
     // Note that most move data arrays endsin SPIRAL_END but it is
     // only ever reached on the final array of spiraling outward.
-    if (moveData[line->moveIdx] == SPIRAL_END)
+    if (moveData[line->moveIndex] == SPIRAL_END)
         return FALSE;
 
     // Presumably saving data for debug.
@@ -3240,21 +3361,21 @@ static bool16 UpdateRectangularSpiralLine(const s16 * const *moveDataTable, stru
 
     // Below check is never true.
     // SPIRAL_END was already checked, and position is never >= 640
-    if (line->position >= 640 || moveData[line->moveIdx] == SPIRAL_END)
+    if (line->position >= 640 || moveData[line->moveIndex] == SPIRAL_END)
         return FALSE;
 
-    if (!line->outward && moveData[line->moveIdx] == SPIRAL_REBOUND)
+    if (!line->outward && moveData[line->moveIndex] == SPIRAL_REBOUND)
     {
         // Line has reached the final point of spiraling inward.
         // Time to flip and start spiraling outward.
         line->outward = TRUE;
-        line->moveIdx = 1;
+        line->moveIndex = 1;
         line->position = line->reboundPosition;
         line->state = SPIRAL_OUTWARD_START;
     }
 
     // Reached move target, advance to next movement.
-    if (line->position == moveData[line->moveIdx])
+    if (line->position == moveData[line->moveIndex])
     {
         line->state++;
         if (line->outward == TRUE)
@@ -3264,7 +3385,7 @@ static bool16 UpdateRectangularSpiralLine(const s16 * const *moveDataTable, stru
                 // Still spiraling outward, loop back to the first state
                 // but use the second set of move targets.
                 // For example, the 28 in sRectangularSpiral_Major_OutwardUp
-                line->moveIdx++;
+                line->moveIndex++;
                 line->state = SPIRAL_OUTWARD_START;
             }
         }
@@ -3275,7 +3396,7 @@ static bool16 UpdateRectangularSpiralLine(const s16 * const *moveDataTable, stru
                 // Still spiraling inward, loop back to the first state
                 // but use the second set of move targets.
                 // For example, the 275 in sRectangularSpiral_Major_InwardRight
-                line->moveIdx++;
+                line->moveIndex++;
                 line->state = SPIRAL_INWARD_START;
             }
         }
@@ -3300,8 +3421,8 @@ static bool8 Groudon_Init(struct Task *task)
 
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sGroudon_Tileset, tileset);
-    LZ77UnCompVram(sGroudon_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sGroudon_Tileset, tileset);
+    DecompressDataWithHeaderVram(sGroudon_Tilemap, tilemap);
 
     task->tState++;
     task->tTimer = 0;
@@ -3885,6 +4006,8 @@ static void VBlankCB_AngledWipes(void)
 #define tFadeFromGrayIncrement data[5]
 #define tDelayTimer            data[6]
 #define tBlend                 data[7]
+#define tBldCntSaved           data[8]
+#define tShadowColor           data[9]
 
 static void CreateIntroTask(s16 fadeToGrayDelay, s16 fadeFromGrayDelay, s16 numFades, s16 fadeToGrayIncrement, s16 fadeFromGrayIncrement)
 {
@@ -3912,17 +4035,28 @@ void Task_BattleTransition_Intro(u8 taskId)
 
 static bool8 TransitionIntro_FadeToGray(struct Task *task)
 {
+    u8 paletteNum = IndexOfSpritePaletteTag(TAG_WEATHER_START);
+    u16 index = OBJ_PLTT_ID(paletteNum) + SHADOW_COLOR_INDEX;
     if (task->tDelayTimer == 0 || --task->tDelayTimer == 0)
     {
         task->tDelayTimer = task->tFadeToGrayDelay;
         task->tBlend += task->tFadeToGrayIncrement;
         if (task->tBlend > 16)
             task->tBlend = 16;
+        if (paletteNum < 16)
+            task->tShadowColor = gPlttBufferFaded[index];
         BlendPalettes(PALETTES_ALL, task->tBlend, RGB(11, 11, 11));
+        if (paletteNum < 16)
+            gPlttBufferFaded[index] = task->tShadowColor;
     }
     if (task->tBlend >= 16)
     {
         // Fade to gray complete, start fade back
+        // Save BLDCNT and turn off targets temporarily
+        task->tBldCntSaved = GetGpuReg(REG_OFFSET_BLDCNT);
+        SetGpuReg(REG_OFFSET_BLDCNT, task->tBldCntSaved & ~BLDCNT_TGT2_BG_ALL);
+        if (paletteNum < 16)
+            gPlttBufferFaded[index] = RGB(11, 11, 11);
         task->tState++;
         task->tDelayTimer = task->tFadeFromGrayDelay;
     }
@@ -3933,11 +4067,19 @@ static bool8 TransitionIntro_FadeFromGray(struct Task *task)
 {
     if (task->tDelayTimer == 0 || --task->tDelayTimer == 0)
     {
+        u8 paletteNum = IndexOfSpritePaletteTag(TAG_WEATHER_START);
         task->tDelayTimer = task->tFadeFromGrayDelay;
         task->tBlend -= task->tFadeFromGrayIncrement;
         if (task->tBlend < 0)
             task->tBlend = 0;
         BlendPalettes(PALETTES_ALL, task->tBlend, RGB(11, 11, 11));
+        // Restore BLDCNT
+        SetGpuReg(REG_OFFSET_BLDCNT, task->tBldCntSaved);
+        if (paletteNum < 16)
+        {
+            u16 index = OBJ_PLTT_ID(paletteNum) + SHADOW_COLOR_INDEX;
+            gPlttBufferFaded[index] = task->tShadowColor;
+        }
     }
     if (task->tBlend == 0)
     {
@@ -4165,7 +4307,7 @@ static bool8 FrontierLogoWiggle_Init(struct Task *task)
     InitPatternWeaveTransition(task);
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sFrontierLogo_Tileset, tileset);
+    DecompressDataWithHeaderVram(sFrontierLogo_Tileset, tileset);
     LoadPalette(sFrontierLogo_Palette, BG_PLTT_ID(15), sizeof(sFrontierLogo_Palette));
 
     task->tState++;
@@ -4177,7 +4319,7 @@ static bool8 FrontierLogoWiggle_SetGfx(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sFrontierLogo_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sFrontierLogo_Tilemap, tilemap);
     SetSinWave((s16*)gScanlineEffectRegBuffers[0], 0, task->tSinIndex, 132, task->tAmplitude, DISPLAY_HEIGHT);
 
     task->tState++;
@@ -4227,9 +4369,10 @@ static bool8 FrontierLogoWave_Init(struct Task *task)
     REG_BLDALPHA = sTransitionData->BLDALPHA;
     GetBg0TilesDst(&tilemap, &tileset);
     CpuFill16(0, tilemap, BG_SCREEN_SIZE);
-    LZ77UnCompVram(sFrontierLogo_Tileset, tileset);
+    DecompressDataWithHeaderVram(sFrontierLogo_Tileset, tileset);
     LoadPalette(sFrontierLogo_Palette, BG_PLTT_ID(15), sizeof(sFrontierLogo_Palette));
     sTransitionData->cameraY = 0;
+    UpdateShadowColor(RGB_GRAY);
 
     task->tState++;
     return FALSE;
@@ -4240,7 +4383,7 @@ static bool8 FrontierLogoWave_SetGfx(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sFrontierLogo_Tilemap, tilemap);
+    DecompressDataWithHeaderVram(sFrontierLogo_Tilemap, tilemap);
 
     task->tState++;
     return TRUE;
@@ -4372,7 +4515,7 @@ static bool8 FrontierSquares_Init(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sFrontierSquares_FilledBg_Tileset, tileset);
+    DecompressDataWithHeaderVram(sFrontierSquares_FilledBg_Tileset, tileset);
 
     FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
     FillBgTilemapBufferRect(0, 1, 0, 0, MARGIN_SIZE, 32, 15);
@@ -4430,13 +4573,13 @@ static bool8 FrontierSquares_Shrink(struct Task *task)
             break;
         case 1:
             BlendPalettes(PALETTES_ALL & ~(1 << 15), 16, RGB_BLACK);
-            LZ77UnCompVram(sFrontierSquares_EmptyBg_Tileset, tileset);
+            DecompressDataWithHeaderVram(sFrontierSquares_EmptyBg_Tileset, tileset);
             break;
         case 2:
-            LZ77UnCompVram(sFrontierSquares_Shrink1_Tileset, tileset);
+            DecompressDataWithHeaderVram(sFrontierSquares_Shrink1_Tileset, tileset);
             break;
         case 3:
-            LZ77UnCompVram(sFrontierSquares_Shrink2_Tileset, tileset);
+            DecompressDataWithHeaderVram(sFrontierSquares_Shrink2_Tileset, tileset);
             break;
         default:
             FillBgTilemapBufferRect_Palette0(0, 1, 0, 0, 32, 32);
@@ -4467,7 +4610,7 @@ static bool8 FrontierSquaresSpiral_Init(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sFrontierSquares_FilledBg_Tileset, tileset);
+    DecompressDataWithHeaderVram(sFrontierSquares_FilledBg_Tileset, tileset);
 
     FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
     FillBgTilemapBufferRect(0, 1, 0, 0, MARGIN_SIZE, 32, 15);
@@ -4585,7 +4728,7 @@ static bool8 FrontierSquaresScroll_Init(struct Task *task)
     u16 *tilemap, *tileset;
 
     GetBg0TilesDst(&tilemap, &tileset);
-    LZ77UnCompVram(sFrontierSquares_FilledBg_Tileset, tileset);
+    DecompressDataWithHeaderVram(sFrontierSquares_FilledBg_Tileset, tileset);
     FillBgTilemapBufferRect_Palette0(0, 0, 0, 0, 32, 32);
     CopyBgTilemapBufferToVram(0);
     LoadPalette(sFrontierSquares_Palette, BG_PLTT_ID(15), sizeof(sFrontierSquares_Palette));

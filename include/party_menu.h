@@ -16,9 +16,11 @@ struct PartyMenu
     s8 slotId2;
     u8 action;
     u16 bagItem;
-    s16 data1;           // used variously as a moveId, counter, moveSlotId, or cursorPos
+    s16 data1;           // used variously as a move, counter, moveSlotId, cursorPos, or indicator that the menu is opened from the field
     s16 learnMoveState;  // data2, used only as a learn move state
 };
+
+#define DATA1_PARTY_MENU_FROM_FIELD -1
 
 extern struct PartyMenu gPartyMenu;
 extern bool8 gPartyMenuUseExitCallback;
@@ -41,7 +43,7 @@ void Task_HandleChooseMonInput(u8 taskId);
 u8 *GetMonNickname(struct Pokemon *mon, u8 *dest);
 u8 DisplayPartyMenuMessage(const u8 *str, bool8 keepOpen);
 bool8 IsPartyMenuTextPrinterActive(void);
-void PartyMenuModifyHP(u8 taskId, u8 slot, s8 hpIncrement, s16 HPDifference, TaskFunc task);
+void PartyMenuModifyHP(u8 taskId, u8 slot, s8 hpIncrement, s16 hpDifference, TaskFunc task);
 u8 GetAilmentFromStatus(u32 status);
 u8 GetMonAilment(struct Pokemon *mon);
 void DisplayPartyMenuStdMessage(u32 stringId);
@@ -87,10 +89,10 @@ void ChooseMonForWirelessMinigame(void);
 void OpenPartyMenuInBattle(u8 partyAction);
 void ChooseMonForInBattleItem(void);
 void BufferBattlePartyCurrentOrder(void);
-void BufferBattlePartyCurrentOrderBySide(u8 battlerId, u8 flankId);
-void SwitchPartyOrderLinkMulti(u8 battlerId, u8 slot, u8 arrayIndex);
+void BufferBattlePartyCurrentOrderBySide(u8 battler, u8 flankId);
+void SwitchPartyOrderLinkMulti(u8 battler, u8 slot, u8 slot2);
 void SwitchPartyMonSlots(u8 slot, u8 slot2);
-u8 GetPartyIdFromBattlePartyId(u8 slot);
+u8 GetPartyIdFromBattlePartyId(u8 battlePartyId);
 void ShowPartyMenuToShowcaseMultiBattleParty(void);
 void ChooseMonForDaycare(void);
 bool8 CB2_FadeFromPartyMenu(void);
@@ -105,5 +107,11 @@ void MoveDeleterForgetMove(void);
 void BufferMoveDeleterNicknameAndMove(void);
 void GetNumMovesSelectedMonHas(void);
 void MoveDeleterChooseMoveToForget(void);
+
+bool32 SetUpFieldMove_Surf(void);
+bool32 SetUpFieldMove_Fly(void);
+bool32 SetUpFieldMove_Waterfall(void);
+bool32 SetUpFieldMove_Dive(void);
+bool32 SetUpFieldMove_RockClimb(void);
 
 #endif // GUARD_PARTY_MENU_H

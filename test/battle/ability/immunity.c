@@ -18,7 +18,8 @@ SINGLE_BATTLE_TEST("Immunity prevents Poison Sting poison")
 SINGLE_BATTLE_TEST("Immunity prevents Toxic bad poison")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORLAX) { Ability(ABILITY_IMMUNITY); }
     } WHEN {
@@ -46,7 +47,7 @@ SINGLE_BATTLE_TEST("Immunity prevents Toxic Spikes poison")
     }
 }
 
-SINGLE_BATTLE_TEST("Immunity doesn't prevent pokemon from being poisoned by Toxic Spikes on switch-in if forced in by phazing with Mold Breaker, but it cures it immediately")
+SINGLE_BATTLE_TEST("Immunity doesn't prevent Pokémon from being poisoned by Toxic Spikes on switch-in if forced in by phazing with Mold Breaker, but it cures it immediately")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);

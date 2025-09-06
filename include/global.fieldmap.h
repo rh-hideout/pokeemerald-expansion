@@ -7,18 +7,35 @@
 #define MAPGRID_METATILE_ID_MASK 0x03FF // Bits 0-9
 #define MAPGRID_COLLISION_MASK   0x0C00 // Bits 10-11
 #define MAPGRID_ELEVATION_MASK   0xF000 // Bits 12-15
+#define MAPGRID_METATILE_ID_SHIFT 0
 #define MAPGRID_COLLISION_SHIFT  10
 #define MAPGRID_ELEVATION_SHIFT  12
 
+#define PACK_METATILE(metatileId) PACK(metatileId, MAPGRID_METATILE_ID_SHIFT, MAPGRID_METATILE_ID_MASK)
+#define PACK_COLLISION(collision) PACK(collision, MAPGRID_COLLISION_SHIFT, MAPGRID_COLLISION_MASK)
+#define PACK_ELEVATION(elevation) PACK(elevation, MAPGRID_ELEVATION_SHIFT, MAPGRID_ELEVATION_MASK)
+#define UNPACK_METATILE(data)  UNPACK(data, MAPGRID_METATILE_ID_SHIFT, MAPGRID_METATILE_ID_MASK)
+#define UNPACK_COLLISION(data) UNPACK(data, MAPGRID_COLLISION_SHIFT, MAPGRID_COLLISION_MASK)
+#define UNPACK_ELEVATION(data) UNPACK(data, MAPGRID_ELEVATION_SHIFT, MAPGRID_ELEVATION_MASK)
+
 // An undefined map grid block has all metatile id bits set and nothing else
 #define MAPGRID_UNDEFINED   MAPGRID_METATILE_ID_MASK
+
+// When setting impassability manually GF sets all the collision bits
+#define MAPGRID_IMPASSABLE  MAPGRID_COLLISION_MASK
 
 // Masks/shifts for metatile attributes
 // Metatile attributes consist of an 8 bit behavior value, 4 unused bits, and a 4 bit layer type value
 // This is the data stored in each data/tilesets/*/*/metatile_attributes.bin file
 #define METATILE_ATTR_BEHAVIOR_MASK 0x00FF // Bits 0-7
 #define METATILE_ATTR_LAYER_MASK    0xF000 // Bits 12-15
+#define METATILE_ATTR_BEHAVIOR_SHIFT 0
 #define METATILE_ATTR_LAYER_SHIFT   12
+
+#define PACK_BEHAVIOR(behavior) PACK(behavior, METATILE_ATTR_BEHAVIOR_SHIFT, METATILE_ATTR_BEHAVIOR_MASK)
+#define PACK_LAYER_TYPE(layerType) PACK(layerType, METATILE_ATTR_LAYER_SHIFT, METATILE_ATTR_LAYER_MASK)
+#define UNPACK_BEHAVIOR(data) UNPACK(data, METATILE_ATTR_BEHAVIOR_SHIFT, METATILE_ATTR_BEHAVIOR_MASK)
+#define UNPACK_LAYER_TYPE(data) UNPACK(data, METATILE_ATTR_LAYER_SHIFT, METATILE_ATTR_LAYER_MASK)
 
 enum {
     METATILE_LAYER_TYPE_NORMAL,  // Metatile uses middle and top bg layers
@@ -37,8 +54,11 @@ typedef void (*TilesetCB)(void);
 
 struct Tileset
 {
-    /*0x00*/ bool8 isCompressed;
+    /*0x00*/ u8 isCompressed:1;
+    /*0x00*/ u8 swapPalettes:7; // Bitmask determining whether palette has an alternate, night-time palette
     /*0x01*/ bool8 isSecondary;
+    /*0x02*/ u8 lightPalettes; // Bitmask determining whether a palette should be time-blended as a light
+    /*0x03*/ u8 customLightColor; // Bitmask determining which light palettes have custom light colors (color 15)
     /*0x04*/ const u32 *tiles;
     /*0x08*/ const u16 (*palettes)[16];
     /*0x0C*/ const u16 *metatiles;
@@ -188,14 +208,15 @@ struct ObjectEvent
              u32 inShallowFlowingWater:1;
              u32 inSandPile:1;
              u32 inHotSprings:1;
-             u32 hasShadow:1;
+             u32 noShadow:1;
              u32 spriteAnimPausedBackup:1;
     /*0x03*/ u32 spriteAffineAnimPausedBackup:1;
              u32 disableJumpLandingGroundEffect:1;
              u32 fixedPriority:1;
              u32 hideReflection:1;
              u32 shiny:1; // OW mon shininess
-             u32 padding:3;
+             u32 jumpDone:1;
+             u32 padding:2;
     /*0x04*/ u16 graphicsId; // 12 bits for species; high 4 bits for form
     /*0x06*/ u8 movementType;
     /*0x07*/ u8 trainerType;

@@ -2,7 +2,7 @@
 #include "test/battle.h"
 
 // Also checks that non-sleeping enemy is not affected.
-SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of hp")
+SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of HP")
 {
     u32 status;
     PARAMETRIZE { status = STATUS1_NONE; }
@@ -35,6 +35,8 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     }
 }
 
+TO_DO_BATTLE_TEST("Bad Dreams affects Pokémon with Comatose")
+
 DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is sleeping")
 {
     GIVEN {
@@ -57,7 +59,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is 
     }
 }
 
-DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping pokemon on the player side")
+DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the player side")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}

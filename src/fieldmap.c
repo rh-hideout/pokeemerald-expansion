@@ -52,7 +52,7 @@ static inline u16 GetBorderBlockAt(int x, int y)
 {
     int i = (x + 1) & 1;
     i += ((y + 1) & 1) * 2;
-    return gMapHeader.mapLayout->border[i] | MAPGRID_COLLISION_MASK;
+    return gMapHeader.mapLayout->border[i] | MAPGRID_IMPASSABLE;
 }
 
 #define AreCoordsWithinMapGridBounds(x, y) (x >= 0 && x < gBackupMapLayout.width && y >= 0 && y < gBackupMapLayout.height)
@@ -345,7 +345,7 @@ u8 MapGridGetElevationAt(int x, int y)
     if (block == MAPGRID_UNDEFINED)
         return 0;
 
-    return block >> MAPGRID_ELEVATION_SHIFT;
+    return UNPACK_ELEVATION(block);
 }
 
 u8 MapGridGetCollisionAt(int x, int y)
@@ -355,7 +355,7 @@ u8 MapGridGetCollisionAt(int x, int y)
     if (block == MAPGRID_UNDEFINED)
         return TRUE;
 
-    return (block & MAPGRID_COLLISION_MASK) >> MAPGRID_COLLISION_SHIFT;
+    return UNPACK_COLLISION(block);
 }
 
 u32 MapGridGetMetatileIdAt(int x, int y)
@@ -363,21 +363,21 @@ u32 MapGridGetMetatileIdAt(int x, int y)
     u16 block = GetMapGridBlockAt(x, y);
 
     if (block == MAPGRID_UNDEFINED)
-        return GetBorderBlockAt(x, y) & MAPGRID_METATILE_ID_MASK;
+        return UNPACK_METATILE(GetBorderBlockAt(x, y));
 
-    return block & MAPGRID_METATILE_ID_MASK;
+    return UNPACK_METATILE(block);
 }
 
 u32 MapGridGetMetatileBehaviorAt(int x, int y)
 {
     u16 metatile = MapGridGetMetatileIdAt(x, y);
-    return GetMetatileAttributesById(metatile) & METATILE_ATTR_BEHAVIOR_MASK;
+    return UNPACK_BEHAVIOR(GetMetatileAttributesById(metatile));
 }
 
 u8 MapGridGetMetatileLayerTypeAt(int x, int y)
 {
     u16 metatile = MapGridGetMetatileIdAt(x, y);
-    return (GetMetatileAttributesById(metatile) & METATILE_ATTR_LAYER_MASK) >> METATILE_ATTR_LAYER_SHIFT;
+    return UNPACK_LAYER_TYPE(GetMetatileAttributesById(metatile));
 }
 
 void MapGridSetMetatileIdAt(int x, int y, u16 metatile)
@@ -386,6 +386,8 @@ void MapGridSetMetatileIdAt(int x, int y, u16 metatile)
     if (AreCoordsWithinMapGridBounds(x, y))
     {
         i = x + y * gBackupMapLayout.width;
+
+        // Elevation is ignored in the argument, but copy metatile ID and collision
         gBackupMapLayout.map[i] = (gBackupMapLayout.map[i] & MAPGRID_ELEVATION_MASK) | (metatile & ~MAPGRID_ELEVATION_MASK);
     }
 }
@@ -839,7 +841,7 @@ static bool8 SkipCopyingMetatileFromSavedMap(u16 *mapBlock, u16 mapWidth, u8 yMo
     else
         mapBlock += mapWidth;
 
-    if (IsLargeBreakableDecoration(*mapBlock & MAPGRID_METATILE_ID_MASK, yMode) == TRUE)
+    if (IsLargeBreakableDecoration(UNPACK_METATILE(*mapBlock), yMode) == TRUE)
         return TRUE;
     return FALSE;
 }
@@ -877,26 +879,31 @@ static void UNUSED ApplyGlobalTintToPaletteSlot(u8 slot, u8 count)
 
 }
 
-static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size)
+static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded)
 {
-    u16 black = RGB_BLACK;
-
     if (tileset)
     {
         if (tileset->isSecondary == FALSE)
         {
-            LoadPalette(&black, destOffset, PLTT_SIZEOF(1));
-            LoadPalette(tileset->palettes[0] + 1, destOffset + 1, size - PLTT_SIZEOF(1));
-            ApplyGlobalTintToPaletteEntries(destOffset + 1, (size - PLTT_SIZEOF(1)) >> 1);
+            if (skipFaded)
+                CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+            else
+                LoadPaletteFast(tileset->palettes, destOffset, size);
+            gPlttBufferFaded[destOffset] = gPlttBufferUnfaded[destOffset] = RGB_BLACK;
+            ApplyGlobalTintToPaletteEntries(destOffset + 1, (size - 2) >> 1);
         }
         else if (tileset->isSecondary == TRUE)
         {
-            LoadPalette(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
-            ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
+            // All 'gTilesetPalettes_' arrays should have ALIGNED(4) in them,
+            // but we use SmartCopy here just in case they don't
+            if (skipFaded)
+                CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+            else
+                LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
         }
         else
         {
-            LoadCompressedPalette((const u32 *)tileset->palettes, destOffset, size);
+            LoadPalette((const u16 *)tileset->palettes, destOffset, size);
             ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
         }
     }
@@ -919,12 +926,12 @@ void CopySecondaryTilesetToVramUsingHeap(struct MapLayout const *mapLayout)
 
 static void LoadPrimaryTilesetPalette(struct MapLayout const *mapLayout)
 {
-    LoadTilesetPalette(mapLayout->primaryTileset, BG_PLTT_ID(0), NUM_PALS_IN_PRIMARY * PLTT_SIZE_4BPP);
+    LoadTilesetPalette(mapLayout->primaryTileset, 0, NUM_PALS_IN_PRIMARY * PLTT_SIZE_4BPP, FALSE);
 }
 
-void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout)
+void LoadSecondaryTilesetPalette(struct MapLayout const *mapLayout, bool8 skipFaded)
 {
-    LoadTilesetPalette(mapLayout->secondaryTileset, BG_PLTT_ID(NUM_PALS_IN_PRIMARY), (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * PLTT_SIZE_4BPP);
+    LoadTilesetPalette(mapLayout->secondaryTileset, NUM_PALS_IN_PRIMARY * 16, (NUM_PALS_TOTAL - NUM_PALS_IN_PRIMARY) * PLTT_SIZE_4BPP, skipFaded);
 }
 
 void CopyMapTilesetsToVram(struct MapLayout const *mapLayout)
@@ -941,6 +948,6 @@ void LoadMapTilesetPalettes(struct MapLayout const *mapLayout)
     if (mapLayout)
     {
         LoadPrimaryTilesetPalette(mapLayout);
-        LoadSecondaryTilesetPalette(mapLayout);
+        LoadSecondaryTilesetPalette(mapLayout, FALSE);
     }
 }

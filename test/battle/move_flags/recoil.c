@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Take Down deals 25% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Take Down deals 25% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Take Down deals 25% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Double Edge deals 33% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Double Edge deals 33% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Double Edge deals 33% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Head Smash deals 50% of recoil damage to the user")
+SINGLE_BATTLE_TEST("Recoil: Head Smash deals 50% of recoil damage to the user")
 {
     s16 directDamage;
     s16 recoilDamage;
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Head Smash deals 50% of recoil damage to the user")
     }
 }
 
-SINGLE_BATTLE_TEST("Flare Blitz deals 33% of recoil damage to the user and can burn target")
+SINGLE_BATTLE_TEST("Recoil: Flare Blitz deals 33% of recoil damage to the user and can burn target")
 {
     s16 directDamage;
     s16 recoilDamage;
@@ -84,7 +84,7 @@ SINGLE_BATTLE_TEST("Flare Blitz deals 33% of recoil damage to the user and can b
     }
 }
 
-SINGLE_BATTLE_TEST("Flare Blitz is absorbed by Flash Fire and no recoil damage is dealt")
+SINGLE_BATTLE_TEST("Recoil: Flare Blitz is absorbed by Flash Fire and no recoil damage is dealt")
 {
     GIVEN {
         ASSUME(GetMoveRecoil(MOVE_FLARE_BLITZ) > 0);
@@ -100,5 +100,25 @@ SINGLE_BATTLE_TEST("Flare Blitz is absorbed by Flash Fire and no recoil damage i
             HP_BAR(opponent);
             HP_BAR(player);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Recoil: The correct amount of recoil damage is dealt after targets recovery berry proc")
+{
+    s16 directDamage;
+    s16 recoilDamage;
+
+    GIVEN {
+        ASSUME(GetMoveRecoil(MOVE_TAKE_DOWN) == 25);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); HP(51); Item(ITEM_SITRUS_BERRY); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_TAKE_DOWN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAKE_DOWN, player);
+        HP_BAR(opponent, captureDamage: &directDamage);
+        HP_BAR(player, captureDamage: &recoilDamage);
+    } THEN {
+        EXPECT_MUL_EQ(directDamage, UQ_4_12(0.25), recoilDamage);
     }
 }

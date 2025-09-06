@@ -45,7 +45,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     } SCENE {
         MESSAGE("Shuckle's Defense fell!"); // Contrary activates
     } THEN {
-        EXPECT(gBattleResources->aiData->abilities[B_POSITION_PLAYER_LEFT] == ABILITY_CONTRARY);
+        EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_LEFT] == ABILITY_CONTRARY);
     }
 }
 
@@ -369,88 +369,6 @@ AI_SINGLE_BATTLE_TEST("AI won't use ground type attacks against flying type Poke
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI won't use a Weather changing move if partner already chose such move")
-{
-    u32 j, k;
-    static const u16 weatherMoves[] = {MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_RAIN_DANCE, MOVE_SANDSTORM, MOVE_SNOWSCAPE};
-    u16 weatherMoveLeft = MOVE_NONE, weatherMoveRight = MOVE_NONE;
-
-    for (j = 0; j < ARRAY_COUNT(weatherMoves); j++)
-    {
-        for (k = 0; k < ARRAY_COUNT(weatherMoves); k++)
-        {
-            PARAMETRIZE { weatherMoveLeft = weatherMoves[j]; weatherMoveRight = weatherMoves[k]; }
-        }
-    }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(weatherMoveLeft); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, weatherMoveRight); }
-    } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentRight, weatherMoveRight);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentRight, weatherMoveRight, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any damage moves")
-{
-    u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-
-    PARAMETRIZE { move1 = MOVE_LEER; move2 = MOVE_TOXIC; }
-    PARAMETRIZE { move1 = MOVE_HELPING_HAND; move2 = MOVE_PROTECT; }
-    PARAMETRIZE { move1 = MOVE_ACUPRESSURE; move2 = MOVE_DOUBLE_TEAM; move3 = MOVE_TOXIC; move4 = MOVE_PROTECT; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move1, move2, move3, move4); }
-    } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentLeft, MOVE_HELPING_HAND, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
-    } SCENE {
-        NOT MESSAGE("The opposing Wobbuffet used Helping Hand!");
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose Helping Hand")
-{
-    s32 j;
-    u32 statusMove = MOVE_NONE;
-
-    for (j = MOVE_NONE + 1; j < MOVES_COUNT; j++)
-    {
-        if (GetMoveCategory(j) == DAMAGE_CATEGORY_STATUS) {
-            PARAMETRIZE { statusMove = j; }
-        }
-    }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove); }
-    } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentRight, statusMove);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerLeft);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerRight);
-                    SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:opponentLeft);
-                 }
-    } SCENE {
-        MESSAGE("The opposing Wobbuffet used Helping Hand!");
-    }
-}
 
 AI_SINGLE_BATTLE_TEST("AI without any flags chooses moves at random - singles")
 {
@@ -600,8 +518,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
         ASSUME(GetMovePower(MOVE_POWER_UP_PUNCH) == 40);
         ASSUME(GetMoveType(MOVE_POWER_UP_PUNCH) == TYPE_FIGHTING);
-        ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[0] == TYPE_WATER);
-        ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[1] == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 0) == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 1) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SQUIRTLE) { };
         OPPONENT(SPECIES_MALAMAR) { Ability(ability); Moves(MOVE_SCRATCH, MOVE_POWER_UP_PUNCH); }
@@ -626,8 +544,8 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
         ASSUME(GetMoveType(MOVE_SUPERPOWER) == TYPE_FIGHTING);
         ASSUME(GetMovePower(MOVE_OUTRAGE) == 120);
         ASSUME(GetMoveType(MOVE_OUTRAGE) == TYPE_DRAGON);
-        ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[0] == TYPE_WATER);
-        ASSUME(gSpeciesInfo[SPECIES_SQUIRTLE].types[1] == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 0) == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_SQUIRTLE, 1) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SQUIRTLE) { };
         OPPONENT(SPECIES_MALAMAR) { Ability(ability); Moves(MOVE_OUTRAGE, MOVE_SUPERPOWER); }
@@ -638,79 +556,6 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
             else
                 EXPECT_MOVE(opponent, MOVE_SUPERPOWER);
         }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner")
-{
-    u32 species;
-
-    PARAMETRIZE { species = SPECIES_CHARIZARD; }
-    PARAMETRIZE { species = SPECIES_CHARMANDER; }
-    PARAMETRIZE { species = SPECIES_CHIKORITA; }
-
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_PHANPY) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
-        OPPONENT(species) { Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        if (species == SPECIES_CHARIZARD)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
-        else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if partner is not alive")
-{
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_PIKACHU) { HP(1); Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); }
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will choose Earthquake if it kill an opposing mon and does 1/3 of damage to AI")
-{
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_EARTHQUAKE, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_PARAS) { Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_EARTHQUAKE); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI will the see a corresponding absorbing ability on partner to one of its moves")
-{
-    u32 ability;
-    PARAMETRIZE { ability = ABILITY_LIGHTNING_ROD; }
-    PARAMETRIZE { ability = ABILITY_STATIC; }
-
-    GIVEN {
-        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_DISCHARGE, MOVE_SCRATCH); }
-        OPPONENT(SPECIES_PIKACHU) { HP(1); Ability(ability); Moves(MOVE_CELEBRATE); }
-    } WHEN {
-        if (ability == ABILITY_LIGHTNING_ROD)
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_DISCHARGE); }
-        else
-            TURN { EXPECT_MOVE(opponentLeft, MOVE_SCRATCH); }
     }
 }
 
@@ -734,22 +579,6 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
             TURN { EXPECT_MOVE(opponent, MOVE_BRICK_BREAK); }
         else
             TURN { EXPECT_MOVE(opponent, MOVE_STORM_THROW); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
-{
-    KNOWN_FAILING; // MGriffin's PR that switched two turn charging moves in AI tests broke this test, waiting on a fix
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_MAGNETON);
-        PLAYER(SPECIES_GARDEVOIR) { Ability(ABILITY_TRACE); }
-        OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
-        OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
-    } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK); NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
-    } THEN {
-        EXPECT(gBattleResources->aiData->abilities[B_POSITION_PLAYER_RIGHT] == ABILITY_VOLT_ABSORB);
     }
 }
 
@@ -832,17 +661,55 @@ AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player'
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a move of the same priority bracket and the opponent is faster")
+AI_SINGLE_BATTLE_TEST("AI won't use Sucker Punch if it expects a status move a percentage of the time")
+{
+    PASSES_RANDOMLY(SUCKER_PUNCH_CHANCE, 100, RNG_AI_SUCKER_PUNCH);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_SUCKER_PUNCH) == EFFECT_SUCKER_PUNCH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_GROWL, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SUCKER_PUNCH, MOVE_SCRATCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SUCKER_PUNCH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it is super effective or it has no other options")
+{
+    u32 aiFlags = 0; u32 status = 0; u32 aiMove = 0;
+    PARAMETRIZE { status = STATUS1_FREEZE;      aiMove = MOVE_SCALD;    aiFlags = 0; }
+    PARAMETRIZE { status = STATUS1_FREEZE;      aiMove = MOVE_SCALD;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_SCALD;    aiFlags = 0; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_SCALD;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
+    PARAMETRIZE { status = STATUS1_FREEZE;      aiMove = MOVE_EMBER;    aiFlags = 0; }
+    PARAMETRIZE { status = STATUS1_FREEZE;      aiMove = MOVE_EMBER;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_EMBER;    aiFlags = 0; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_EMBER;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
+
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
+        ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+        ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(gMovesInfo[MOVE_SCALD].thawsUser == TRUE);
+        AI_FLAGS(aiFlags | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); Status1(status); }
+        OPPONENT(SPECIES_VULPIX) { Moves(MOVE_TACKLE, aiMove); }
+    } WHEN {
+        if (aiFlags == AI_FLAG_CHECK_BAD_MOVE)
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, aiMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI score for Mean Look will be decreased if target can escape")
 {
     GIVEN {
-        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
-        ASSUME(GetMovePriority(MOVE_SUCKER_PUNCH) == 1);
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(300); Moves(MOVE_QUICK_ATTACK); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_SUCKER_PUNCH, MOVE_SCRATCH); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_BULBASAUR) { Item(ITEM_SHED_SHELL); }
+        OPPONENT(SPECIES_BULBASAUR) { Moves(MOVE_TACKLE, MOVE_MEAN_LOOK); }
     } WHEN {
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_SUCKER_PUNCH); }
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SCORE_EQ_VAL(opponent, MOVE_MEAN_LOOK, 90); }
     }
 }
 
@@ -864,7 +731,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI considers Focus Sash when det
 AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon")
 {
     GIVEN {
-        ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
@@ -878,7 +745,7 @@ AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon")
 AI_SINGLE_BATTLE_TEST("AI sees popped Air Balloon after Air Balloon mon switches out and back in")
 {
     GIVEN {
-        ASSUME(ItemId_GetHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
+        ASSUME(GetItemHoldEffect(ITEM_AIR_BALLOON) == HOLD_EFFECT_AIR_BALLOON);
         ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_TORCHIC) { Item(ITEM_AIR_BALLOON); Moves(MOVE_SCRATCH); }
@@ -903,14 +770,256 @@ SINGLE_BATTLE_TEST("AI correctly records used moves")
         TURN { MOVE(player, MOVE_TORCH_SONG);   MOVE(opponent, MOVE_PSYCHIC);    }
         TURN { MOVE(player, MOVE_GROWL);        MOVE(opponent, MOVE_RAGE_FIST);  }
     } THEN {
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][0], MOVE_TACKLE);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][1], MOVE_GROWL);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][2], MOVE_FLOWER_TRICK);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_PLAYER_LEFT][3], MOVE_TORCH_SONG);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][0], MOVE_TACKLE);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][1], MOVE_GROWL);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][2], MOVE_FLOWER_TRICK);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_PLAYER_LEFT][3], MOVE_TORCH_SONG);
 
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][0], MOVE_RAGE_FIST);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][1], MOVE_PSYCHIC);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][2], MOVE_SCRATCH);
-        EXPECT_EQ(BATTLE_HISTORY->usedMoves[B_POSITION_OPPONENT_LEFT][3], MOVE_EARTHQUAKE);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][0], MOVE_RAGE_FIST);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][1], MOVE_PSYCHIC);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][2], MOVE_SCRATCH);
+        EXPECT_EQ(gBattleHistory->usedMoves[B_POSITION_OPPONENT_LEFT][3], MOVE_EARTHQUAKE);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't boost stats against opponent with Unaware")
+{
+    GIVEN {
+        MoveHasAdditionalEffectSelf(MOVE_SWORDS_DANCE, MOVE_EFFECT_ATK_PLUS_2);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_QUAGSIRE) { Ability(ABILITY_UNAWARE); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BODY_SLAM, MOVE_SWORDS_DANCE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_BODY_SLAM); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't use status moves against opponents that would benefit")
+{
+    u32 aiMove;
+    PARAMETRIZE { aiMove = MOVE_WILL_O_WISP; }
+    PARAMETRIZE { aiMove = MOVE_TOXIC; }
+    PARAMETRIZE { aiMove = MOVE_THUNDER_WAVE; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SWELLOW) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, aiMove); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees that Primal weather can block a move by type")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_HYDRO_PUMP) == TYPE_WATER);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GROUDON) { Item(ITEM_RED_ORB); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_BLASTOISE) { Moves(MOVE_HYDRO_PUMP, MOVE_POUND); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_RAZOR_LEAF) != TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_METAL_CLAW) != TYPE_ELECTRIC);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_CELEBRATE); }
+        PLAYER(SPECIES_KRABBY) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_MAGNETON) { Moves(MOVE_THUNDERBOLT, MOVE_RAZOR_LEAF); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_THUNDERBOLT, MOVE_METAL_CLAW); }
+    } WHEN {
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERBOLT);
+            NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDERBOLT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
+{
+    u32 ability;
+
+    PARAMETRIZE { ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { ability = ABILITY_DAMP; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_GOLDUCK) { Ability(ability); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_KABUTOPS) { Ability(ABILITY_SWIFT_SWIM); Moves(MOVE_RAIN_DANCE, MOVE_POUND); }
+    } WHEN {
+        if (ability == ABILITY_CLOUD_NINE)
+            TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_POUND); }
+        else
+            TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_RAIN_DANCE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
+        ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WAILORD) { Level(50); }
+        OPPONENT(SPECIES_WAILORD) { Moves(MOVE_THUNDER, MOVE_WATER_SPOUT, MOVE_WATER_GUN, MOVE_SURF); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_WATER_SPOUT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will stop setting up at +4")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_TACKLE, MOVE_IRON_DEFENSE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_IRON_DEFENSE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("Move scoring comparison properly awards bonus point to best OHKO move")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_THUNDER, MOVE_EFFECT_PARALYSIS));
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_SPOUT) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_WATER_GUN) == 0);
+        ASSUME(GetMoveAdditionalEffectCount(MOVE_ORIGIN_PULSE) == 0);
+        ASSUME(GetMoveAccuracy(MOVE_WATER_SPOUT) > GetMoveAccuracy(MOVE_THUNDER));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_WAILORD) { Level(50); }
+        OPPONENT(SPECIES_WAILORD) { Moves(MOVE_THUNDER, MOVE_WATER_SPOUT, MOVE_WATER_GUN, MOVE_SURF); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_WATER_SPOUT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_MAGNITUDE) == EFFECT_MAGNITUDE);
+        ASSUME(GetMoveType(MOVE_MAGNITUDE) == TYPE_GROUND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_GEODUDE) { Level(15); Moves(MOVE_DEFENSE_CURL, MOVE_MAGNITUDE); }
+        OPPONENT(SPECIES_TYRUNT) { Level(13); Moves(MOVE_BITE, MOVE_THUNDER_FANG, MOVE_ROCK_TOMB); }
+        OPPONENT(SPECIES_ZUBAT) { Level(14); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MAGNITUDE); EXPECT_SWITCH(opponent, 1); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
+        PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
+        OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ABSORB); EXPECT_MOVE(opponent, MOVE_MEGA_DRAIN);}
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't setup if it can KO through Sturdy effect")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_SKARMORY) { Ability(ABILITY_STURDY); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_MOLTRES) { Moves(MOVE_FIRE_BLAST, MOVE_AGILITY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_FIRE_BLAST); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't setup if otherwise good scenario is changed by the presence of priority")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_FLOATZEL) { Speed(2); Moves(MOVE_AQUA_JET, MOVE_SURF); }
+        OPPONENT(SPECIES_DONPHAN) { Speed(5); Moves(MOVE_BULK_UP, MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SURF); EXPECT_MOVE(opponent, MOVE_EARTHQUAKE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use Recovery move if it outheals your damage and outspeeds")
+{
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HEADBUTT); EXPECT_MOVE(opponent, MOVE_RECOVER); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if it outheals your damage and is outsped")
+{
+    u32 aiMove = MOVE_NONE;
+    PASSES_RANDOMLY(100, 100, RNG_AI_SHOULD_RECOVER);
+    PARAMETRIZE{ aiMove = MOVE_RECOVER; }
+    PARAMETRIZE{ aiMove = MOVE_STRENGTH_SAP; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(5); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(2); Moves(MOVE_SCALD, aiMove); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, aiMove); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will use recovery move if is in no immediate danger beneath an HP threshold")
+{
+    PASSES_RANDOMLY(SHOULD_RECOVER_CHANCE, 100, RNG_AI_SHOULD_RECOVER);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LINOONE) { Speed(2); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_GASTRODON) { Speed(5); Moves(MOVE_SCALD, MOVE_RECOVER); HP(200); MaxHP(400); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_RECOVER); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI has a chance to prioritize last chance priority damage over slow KO")
+{
+    PASSES_RANDOMLY(PRIORITIZE_LAST_CHANCE_CHANCE, 100, RNG_AI_PRIORITIZE_LAST_CHANCE);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_CAMERUPT) { Speed(2); Moves(MOVE_FLAMETHROWER, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_FLOATZEL) { Level(90); Speed(1); HP(1); Moves(MOVE_WAVE_CRASH, MOVE_AQUA_JET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_AQUA_JET); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's previous priority moves when evaluating KOs")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_BEAUTIFLY) { Speed(1); Moves(MOVE_DETECT, MOVE_SCRATCH); }
+        PLAYER(SPECIES_MASQUERAIN) { Speed(10); Moves(MOVE_DETECT, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_CRADILY) { Speed(5); Moves(MOVE_POWER_GEM); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(4); Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_DETECT); EXPECT_MOVE(opponentLeft, MOVE_POWER_GEM, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); }
+        TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_DETECT); EXPECT_MOVE(opponentLeft, MOVE_POWER_GEM, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); }
     }
 }

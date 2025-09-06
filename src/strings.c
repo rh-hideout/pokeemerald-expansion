@@ -18,8 +18,8 @@ const u8 gText_ExpandedPlaceholder_Kyogre[] = _("KYOGRE");
 const u8 gText_ExpandedPlaceholder_Groudon[] = _("GROUDON");
 const u8 gText_ExpandedPlaceholder_Brendan[] = _("BRENDAN");
 const u8 gText_ExpandedPlaceholder_May[] = _("MAY");
-const u8 gText_EggNickname[] = _("EGG");
-const u8 gText_Pokemon[] = _("POKéMON");
+const u8 gText_EggNickname[POKEMON_NAME_LENGTH + 1] = _("EGG");
+const u8 gText_Pokemon[POKEMON_NAME_LENGTH + 1] = _("POKéMON");
 const u8 gText_Player[] = _("PLAYER"); // Unused
 const u8 gText_Pokedex[] = _("POKéDEX"); // Unused
 const u8 gText_Time[] = _("TIME");
@@ -199,11 +199,11 @@ const u8 gText_ReturnToVar1[] = _("Return to\n{STR_VAR_1}.");
 
 const u8 *const gPocketNamesStringsTable[] =
 {
-    [ITEMS_POCKET] =    COMPOUND_STRING("ITEMS"),
-    [BALLS_POCKET] =    COMPOUND_STRING("POKé BALLS"),
-    [TMHM_POCKET]  =    COMPOUND_STRING("TMs & HMs"),
-    [BERRIES_POCKET] =  COMPOUND_STRING("BERRIES"),
-    [KEYITEMS_POCKET] = COMPOUND_STRING("KEY ITEMS")
+    [POCKET_ITEMS] =        COMPOUND_STRING("ITEMS"),
+    [POCKET_POKE_BALLS] =   COMPOUND_STRING("POKé BALLS"),
+    [POCKET_TM_HM]  =       COMPOUND_STRING("TMs & HMs"),
+    [POCKET_BERRIES] =      COMPOUND_STRING("BERRIES"),
+    [POCKET_KEY_ITEMS] =    COMPOUND_STRING("KEY ITEMS")
 };
 
 const u8 gText_NumberItem_TMBerry[] = _("{NO}{STR_VAR_1}{CLEAR 0x07}{STR_VAR_2}");
@@ -320,6 +320,9 @@ const u8 gText_DoWhatWithMail[] = _("Do what with the MAIL?");
 const u8 gText_ChoosePokemonCancel[] = _("Choose POKéMON or CANCEL.");
 const u8 gText_ChoosePokemonConfirm[] = _("Choose POKéMON and confirm.");
 const u8 gText_SendWhichMonToPC[] = _("Send which POKéMON to the PC?");
+const u8 gText_MoveItemWhere[] = _("Move item to where?");
+const u8 gText_XsYAnd[] = _("{STR_VAR_1}'s {STR_VAR_2} and\n");
+const u8 gText_XsYWereSwapped[] = _("{STR_VAR_1}'s {STR_VAR_2} were swapped!{PAUSE_UNTIL_PRESS}");
 const u8 gText_EnjoyCycling[] = _("Let's enjoy cycling!");
 const u8 gText_InUseAlready_PM[] = _("This is in use already.");
 const u8 gText_AlreadyHoldingOne[] = _("{STR_VAR_1} is already holding\none {STR_VAR_2}.");
@@ -806,6 +809,8 @@ const u8 gText_ThankYou[] = _("THANK YOU");
 const u8 gText_ByeBye[] = _("BYE-BYE!");
 const u8 gText_PlayerScurriedToCenter[] = _("{PLAYER} scurried to a POKéMON CENTER,\nprotecting the exhausted and fainted\nPOKéMON from further harm…\p");
 const u8 gText_PlayerScurriedBackHome[] = _("{PLAYER} scurried back home, protecting\nthe exhausted and fainted POKéMON from\nfurther harm…\p");
+const u8 gText_PlayerRegroupCenter[] = _("{PLAYER} scurried to a POKéMON CENTER,\nto regroup and reconsider the battle\nstrategy…\p");
+const u8 gText_PlayerRegroupHome[] = _("{PLAYER} scurried back home, to regroup\nand reconsider the battle strategy…\p");
 const u8 gText_HatchedFromEgg[] = _("{STR_VAR_1} hatched from the EGG!");
 const u8 gText_NicknameHatchPrompt[] = _("Would you like to nickname the newly\nhatched {STR_VAR_1}?");
 ALIGNED(4) const u8 gText_ReadyPickBerry[] = _("Are you ready to BERRY-CRUSH?\nPlease pick a BERRY for use.\p");

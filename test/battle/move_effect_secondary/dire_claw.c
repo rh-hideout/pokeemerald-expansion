@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
     }
 }
 
-SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep pokemon with abilities preventing respective statuses")
+SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokémon with abilities preventing respective statuses")
 {
     u8 statusAnim;
     u16 species, ability;

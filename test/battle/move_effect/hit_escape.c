@@ -159,7 +159,7 @@ SINGLE_BATTLE_TEST("Hit Escape: Held items are consumed immediately after a mon 
     }
 }
 
-SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right pokemon after U-turn and Intimidate")
+SINGLE_BATTLE_TEST("Hit Escape: Electric Seed boost is received by the right Pokémon after U-turn and Intimidate")
 {
     GIVEN {
         PLAYER(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
@@ -193,5 +193,19 @@ SINGLE_BATTLE_TEST("Hit Escape: U-turn triggers before Eject Pack")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
         HP_BAR(opponent);
         SEND_IN_MESSAGE("Wynaut");
+    }
+}
+
+SINGLE_BATTLE_TEST("Hit Escape: U-turn will fail to switch if the user faints")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ROCKY_HELMET); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
+        HP_BAR(opponent);
     }
 }
