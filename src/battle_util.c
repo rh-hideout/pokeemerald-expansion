@@ -1216,19 +1216,6 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
             gBattlerAbility = gBattlerTarget;
             BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
             SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-            break;
-        }
-        // fallthrough
-    case STRINGID_DEFENDERSSTATFELL:
-        // Check Defiant and Competitive stat raise whenever a stat is lowered.
-        if (ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
-        {
-            gBattlerAbility = gBattlerTarget;
-            BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
-            if (targetAbility == ABILITY_DEFIANT)
-                SET_STATCHANGER(STAT_ATK, 2, FALSE);
-            else
-                SET_STATCHANGER(STAT_SPATK, 2, FALSE);
         }
         break;
     case STRINGID_ITDOESNTAFFECT:
@@ -1237,6 +1224,17 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         break;
     default:
         break;
+    }
+
+    if ((stringId == STRINGID_PKMNCUTSATTACKWITH || stringId == STRINGID_DEFENDERSSTATFELL)
+     && ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
+    {
+        gBattlerAbility = gBattlerTarget;
+        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
+        if (targetAbility == ABILITY_DEFIANT)
+            SET_STATCHANGER(STAT_ATK, 2, FALSE);
+        else
+            SET_STATCHANGER(STAT_SPATK, 2, FALSE);
     }
 
     BtlController_EmitPrintString(battler, B_COMM_TO_CONTROLLER, stringId);
