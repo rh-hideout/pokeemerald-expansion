@@ -51,7 +51,7 @@ WILD_BATTLE_TEST("Ion Deluge works the same way as always when used by a mon wit
 SINGLE_BATTLE_TEST("Ion Deluge makes Normal type moves Electric type")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GOLBAT);
     } WHEN {

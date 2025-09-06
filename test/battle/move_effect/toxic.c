@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type")
     PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = TRUE; }
     GIVEN {
         ASSUME(B_TOXIC_NEVER_MISS >= GEN_6);
-        ASSUME(gSpeciesInfo[SPECIES_NIDORAN_M].types[0] == TYPE_POISON);
+        ASSUME(gSpeciesInfo[SPECIES_NIDORAN_M].types[0] == TYPE_FILTH);
         PLAYER(species);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -29,6 +29,7 @@ const struct SpritePalette gMonIconPaletteTable[] =
     { gMonIconPalettes[3], POKE_ICON_BASE_PAL_TAG + 3 },
     { gMonIconPalettes[4], POKE_ICON_BASE_PAL_TAG + 4 },
     { gMonIconPalettes[5], POKE_ICON_BASE_PAL_TAG + 5 },
+  //  { gMonIconPalettes[6], POKE_ICON_BASE_PAL_TAG + 6 },//the sixth is added by me
 };
 
 static const struct OamData sMonIconOamData =

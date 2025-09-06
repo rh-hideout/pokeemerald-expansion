@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Attract causes the target to become infatuated with the user
 SINGLE_BATTLE_TEST("Attract ignores type immunity")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_ATTRACT) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_ATTRACT) == TYPE_NULL);
         PLAYER(SPECIES_NIDOQUEEN);
         OPPONENT(SPECIES_MISDREAVUS) { Gender(MON_MALE); }
     } WHEN {

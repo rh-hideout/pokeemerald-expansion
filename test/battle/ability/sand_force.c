@@ -6,9 +6,9 @@ SINGLE_BATTLE_TEST("Sand Force prevents damage from sandstorm")
     u32 type1 = gSpeciesInfo[SPECIES_SHELLOS].types[0];
     u32 type2 = gSpeciesInfo[SPECIES_SHELLOS].types[1];
     GIVEN {
-        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
-        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
-        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
+        ASSUME(type1 != TYPE_BEAST && type2 != TYPE_BEAST);
+        ASSUME(type1 != TYPE_EARTH && type2 != TYPE_EARTH);
+        ASSUME(type1 != TYPE_MACHINE && type2 != TYPE_MACHINE);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -28,9 +28,9 @@ SINGLE_BATTLE_TEST("Sand Force increases the power of Rock-, Ground- and Steel-t
     PARAMETRIZE { moveOpponent = MOVE_CELEBRATE; movePlayer = MOVE_IRON_HEAD; }
     PARAMETRIZE { moveOpponent = MOVE_SANDSTORM; movePlayer = MOVE_IRON_HEAD; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
-        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
-        ASSUME(GetMoveType(MOVE_IRON_HEAD) == TYPE_STEEL);
+        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_BEAST);
+        ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_EARTH);
+        ASSUME(GetMoveType(MOVE_IRON_HEAD) == TYPE_MACHINE);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Sand Force don't increase move power if Cloud Nine/Air Lock 
     PARAMETRIZE { move = MOVE_CELEBRATE; }
     PARAMETRIZE { move = MOVE_SANDSTORM; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
+        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_BEAST);
         PLAYER(SPECIES_SHELLOS) { Ability(ABILITY_SAND_FORCE); }
         OPPONENT(SPECIES_GOLDUCK) { Ability(ABILITY_CLOUD_NINE); }
     } WHEN {

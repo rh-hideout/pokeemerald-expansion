@@ -135,7 +135,7 @@ DOUBLE_BATTLE_TEST("Powder fails if target is already affected by Powder")
 SINGLE_BATTLE_TEST("Powder fails if the target is Grass type")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_VENUSAUR].types[0] == TYPE_GRASS || gSpeciesInfo[SPECIES_VENUSAUR].types[1] == TYPE_GRASS);
+        ASSUME(gSpeciesInfo[SPECIES_VENUSAUR].types[0] == TYPE_PLANT || gSpeciesInfo[SPECIES_VENUSAUR].types[1] == TYPE_PLANT);
         PLAYER(SPECIES_VENUSAUR);
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -165,7 +165,7 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FORESTS_CURSE) == EFFECT_THIRD_TYPE);
-        ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_GRASS);
+        ASSUME(GetMoveArgType(MOVE_FORESTS_CURSE) == TYPE_PLANT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TREVENANT);

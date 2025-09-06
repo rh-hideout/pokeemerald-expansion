@@ -580,7 +580,7 @@ Edit [src/data/pokemon/species_info.h](https://github.com/rh-hideout/pokeemerald
          .baseSpeed     = 106,
          .baseSpAttack  = 135,
          .baseSpDefense = 80,
-         .types = { TYPE_FAIRY, TYPE_FLYING},
+         .types = { TYPE_PUPPET, TYPE_WIND},
          .catchRate = 3,
          .expYield = 261,
          .evYield_SpAttack    = 3,

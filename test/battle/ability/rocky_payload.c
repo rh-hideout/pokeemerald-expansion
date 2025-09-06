@@ -14,9 +14,9 @@ SINGLE_BATTLE_TEST("Rocky Payload increases Rock-type move damage", s16 damage)
     PARAMETRIZE { move = MOVE_POWER_GEM; ability = ABILITY_ROCKY_PAYLOAD; }
 
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ROCK);
-        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_ROCK);
-        ASSUME(GetMoveType(MOVE_POWER_GEM) == TYPE_ROCK);
+        ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_BEAST);
+        ASSUME(GetMoveType(MOVE_ROCK_THROW) == TYPE_BEAST);
+        ASSUME(GetMoveType(MOVE_POWER_GEM) == TYPE_BEAST);
         ASSUME(GetMoveCategory(MOVE_ROCK_THROW) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_POWER_GEM) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_BOMBIRDIER) { Ability(ability); }

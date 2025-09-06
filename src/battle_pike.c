@@ -851,8 +851,8 @@ static bool8 DoesTypePreventStatus(u16 species, u32 status)
     switch (status)
     {
     case STATUS1_TOXIC_POISON:
-        if (gSpeciesInfo[species].types[0] == TYPE_STEEL || gSpeciesInfo[species].types[0] == TYPE_POISON
-            || gSpeciesInfo[species].types[1] == TYPE_STEEL || gSpeciesInfo[species].types[1] == TYPE_POISON)
+        if (gSpeciesInfo[species].types[0] == TYPE_MACHINE || gSpeciesInfo[species].types[0] == TYPE_FILTH
+            || gSpeciesInfo[species].types[1] == TYPE_MACHINE || gSpeciesInfo[species].types[1] == TYPE_FILTH)
             ret = TRUE;
         break;
     case STATUS1_FREEZE:
@@ -861,7 +861,7 @@ static bool8 DoesTypePreventStatus(u16 species, u32 status)
             ret = TRUE;
         break;
     case STATUS1_PARALYSIS:
-        if (gSpeciesInfo[species].types[0] == TYPE_GROUND || gSpeciesInfo[species].types[1] == TYPE_GROUND
+        if (gSpeciesInfo[species].types[0] == TYPE_EARTH || gSpeciesInfo[species].types[1] == TYPE_EARTH
             || (B_PARALYZE_ELECTRIC >= GEN_6 && (gSpeciesInfo[species].types[0] == TYPE_ELECTRIC || gSpeciesInfo[species].types[1] == TYPE_ELECTRIC)))
             ret = TRUE;
         break;

@@ -6,7 +6,7 @@
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_SWELLOW].types[1] == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
+        ASSUME(gSpeciesInfo[SPECIES_SWELLOW].types[1] == TYPE_WIND);
         PLAYER(SPECIES_AURORUS) { Ability(ABILITY_REFRIGERATE); Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_SWELLOW);
     } WHEN {
@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are affected by Ion Deluge")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
         ASSUME(GetMoveEffect(MOVE_ION_DELUGE) == EFFECT_ION_DELUGE);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_SWELLOW);
@@ -57,7 +57,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves deal 1/4 damage through protect", s16 damag
     PARAMETRIZE { protected = TRUE; }
     PARAMETRIZE { protected = FALSE; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
         ASSUME(GetMoveEffect(MOVE_PROTECT) == EFFECT_PROTECT);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -96,7 +96,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_RESET_STATS clears a battler's negative st
 SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_ALL_STATS_UP raises all of a battler's stat stages by one")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_CELEBRATE) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_CELEBRATE) == TYPE_NULL);
         ASSUME(GetMoveZEffect(MOVE_CELEBRATE) == Z_EFFECT_ALL_STATS_UP_1);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hi
 {
     PASSES_RANDOMLY(1, 2, RNG_CRITICAL_HIT);
     GIVEN {
-        ASSUME(GetMoveType(MOVE_FORESIGHT) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_FORESIGHT) == TYPE_NULL);
         ASSUME(GetMoveZEffect(MOVE_FORESIGHT) == Z_EFFECT_BOOST_CRITS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hi
 DOUBLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_FOLLOW_ME redirects attacks to the user")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_DESTINY_BOND) == TYPE_GHOST);
+        ASSUME(GetMoveType(MOVE_DESTINY_BOND) == TYPE_UNDEAD);
         ASSUME(GetMoveZEffect(MOVE_DESTINY_BOND) == Z_EFFECT_FOLLOW_ME);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_GHOSTIUM_Z); }
         PLAYER(SPECIES_WYNAUT);
@@ -181,10 +181,10 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_E
     PARAMETRIZE { species = SPECIES_WOBBUFFET; }
     PARAMETRIZE { species = SPECIES_DUSCLOPS; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_CURSE) == TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_DUSCLOPS].types[0] == TYPE_GHOST);
+        ASSUME(GetMoveType(MOVE_CURSE) == TYPE_UNDEAD);
+        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_UNDEAD);
+        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_UNDEAD);
+        ASSUME(gSpeciesInfo[SPECIES_DUSCLOPS].types[0] == TYPE_UNDEAD);
         ASSUME(GetMoveZEffect(MOVE_CURSE) == Z_EFFECT_CURSE);
         PLAYER(species) { Item(ITEM_GHOSTIUM_Z); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_E
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stages and copies the last used non-status move as a Z-Move")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_WIND);
         ASSUME(GetMoveZEffect(MOVE_MIRROR_MOVE) == Z_EFFECT_ATK_UP_2);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FLYINIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -240,7 +240,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stage
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stages and copies the last used status move regularly")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_WIND);
         ASSUME(GetMoveZEffect(MOVE_MIRROR_MOVE) == Z_EFFECT_ATK_UP_2);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FLYINIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -259,7 +259,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Mirror Move raises the user's attack by two stage
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Copycat raises the user's accuracy by one stage and copies the last used non-status move as a Z-Move")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_COPYCAT) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_COPYCAT) == TYPE_NULL);
         ASSUME(GetMoveZEffect(MOVE_COPYCAT) == Z_EFFECT_ACC_UP_1);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -281,7 +281,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Me First raises the user's speed by two stages an
     PARAMETRIZE { meFirst = TRUE; }
     PARAMETRIZE { meFirst = FALSE; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_ME_FIRST) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_ME_FIRST) == TYPE_NULL);
         ASSUME(GetMoveZEffect(MOVE_ME_FIRST) == Z_EFFECT_SPD_UP_2);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -310,10 +310,10 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Nature Power transforms into different Z-Moves ba
     u32 zMove = MOVE_NONE;
     PARAMETRIZE { terrainMove = MOVE_ELECTRIC_TERRAIN;  zMove = gTypesInfo[TYPE_ELECTRIC].zMove; }
     PARAMETRIZE { terrainMove = MOVE_PSYCHIC_TERRAIN;   zMove = gTypesInfo[TYPE_PSYCHIC].zMove; }
-    PARAMETRIZE { terrainMove = MOVE_GRASSY_TERRAIN;    zMove = gTypesInfo[TYPE_GRASS].zMove; }
-    PARAMETRIZE { terrainMove = MOVE_MISTY_TERRAIN;     zMove = gTypesInfo[TYPE_FAIRY].zMove; }
+    PARAMETRIZE { terrainMove = MOVE_GRASSY_TERRAIN;    zMove = gTypesInfo[TYPE_PLANT].zMove; }
+    PARAMETRIZE { terrainMove = MOVE_MISTY_TERRAIN;     zMove = gTypesInfo[TYPE_PUPPET].zMove; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_NATURE_POWER) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_NATURE_POWER) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -334,7 +334,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Hidden Power always transforms into Breakneck Bli
     PARAMETRIZE { iv = 21; }
     PARAMETRIZE { iv = 31; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_HIDDEN_POWER) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_HIDDEN_POWER) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); AttackIV(iv); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -351,10 +351,10 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Weather Ball transforms into different Z-Moves ba
     u32 zMove = MOVE_NONE;
     PARAMETRIZE { weatherMove = MOVE_RAIN_DANCE;  zMove = gTypesInfo[TYPE_WATER].zMove; }
     PARAMETRIZE { weatherMove = MOVE_SUNNY_DAY;   zMove = gTypesInfo[TYPE_FIRE].zMove; }
-    PARAMETRIZE { weatherMove = MOVE_SANDSTORM;   zMove = gTypesInfo[TYPE_ROCK].zMove; }
+    PARAMETRIZE { weatherMove = MOVE_SANDSTORM;   zMove = gTypesInfo[TYPE_BEAST].zMove; }
     PARAMETRIZE { weatherMove = MOVE_HAIL;        zMove = gTypesInfo[TYPE_ICE].zMove; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -370,7 +370,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Weather Ball transforms into different Z-Moves ba
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Sleep Talk transforms a used non-status move into a Z-Move")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_ABSORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -385,7 +385,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Sleep Talk transforms a used non-status move into
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Sleep Talk turns Weather Ball into Breakneck Blitz even under rain")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SLEEP_TALK) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_WEATHER_BALL); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -418,7 +418,7 @@ DOUBLE_BATTLE_TEST("(Z-MOVE) Powder blocks Fire type Z-Moves (from Z-Mirror Move
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
-        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_FLYING);
+        ASSUME(GetMoveType(MOVE_MIRROR_MOVE) == TYPE_WIND);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_FLYINIUM_Z); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -455,7 +455,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Powder blocks Fire type Z-Moves but not boosts gran
 DOUBLE_BATTLE_TEST("(Z-MOVE) Instruct fails if the target last used a Z-Move")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -474,7 +474,7 @@ DOUBLE_BATTLE_TEST("(Z-MOVE) Instruct fails if the target last used a Z-Move")
 DOUBLE_BATTLE_TEST("(Z-MOVE) Dancer does not use a Z-Move if the battler has used a Z-Move the same turn")
 {
     GIVEN {
-        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
         PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_DANCER); Item(ITEM_NORMALIUM_Z); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -669,7 +669,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck
     PARAMETRIZE { species = SPECIES_ORICORIO_POM_POM; }
     PARAMETRIZE { species = SPECIES_ORICORIO_SENSU; }
     GIVEN {
-        ASSUME(GetMoveType(MOVE_REVELATION_DANCE) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_REVELATION_DANCE) == TYPE_NULL);
         PLAYER(species) { Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

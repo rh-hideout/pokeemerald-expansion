@@ -500,11 +500,11 @@ static void GetMonConditionGraphData(s16 listId, u8 loadId)
     {
         boxId = monListPtr->monData[listId].boxId;
         monId = monListPtr->monData[listId].monId;
-        menu->graph.conditions[loadId][CONDITION_COOL] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_COOL, NULL);
-        menu->graph.conditions[loadId][CONDITION_TOUGH] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_TOUGH, NULL);
-        menu->graph.conditions[loadId][CONDITION_SMART] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_SMART, NULL);
-        menu->graph.conditions[loadId][CONDITION_CUTE] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_CUTE, NULL);
-        menu->graph.conditions[loadId][CONDITION_BEAUTY] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_BEAUTY, NULL);
+        menu->graph.conditions[loadId][CONDITION_COOL] = (GetBoxOrPartyMonData(boxId, monId, MON_DATA_ATK, NULL)/3);
+        menu->graph.conditions[loadId][CONDITION_TOUGH] = (GetBoxOrPartyMonData(boxId, monId, MON_DATA_DEF, NULL)/3);
+        menu->graph.conditions[loadId][CONDITION_SMART] = (GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPATK, NULL)/3);
+        menu->graph.conditions[loadId][CONDITION_CUTE] = (GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPDEF, NULL)/3);
+        menu->graph.conditions[loadId][CONDITION_BEAUTY] = (GetBoxOrPartyMonData(boxId, monId, MON_DATA_SPEED, NULL)/3);
         menu->numSparkles[loadId] = GET_NUM_CONDITION_SPARKLES(GetBoxOrPartyMonData(boxId, monId, MON_DATA_SHEEN, NULL));
         menu->monMarks[loadId] = GetBoxOrPartyMonData(boxId, monId, MON_DATA_MARKINGS, NULL);
         ConditionGraph_CalcPositions(menu->graph.conditions[loadId], menu->graph.savedPositions[loadId]);

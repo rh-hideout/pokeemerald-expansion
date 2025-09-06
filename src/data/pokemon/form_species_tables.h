@@ -2195,3 +2195,10 @@ static const u16 sTerapagosFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_TERAPAGOS
+
+//digimon list
+static const u16 sAgumonFormSpeciesIdTable[] = {
+    SPECIES_AGUMON,
+    SPECIES_BLACKAGUMON,
+    SPECIES_SNOWAGUMON,
+};

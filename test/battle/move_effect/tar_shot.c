@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Tar Shot doubles the effectiveness of Fire-type moves used o
 
     ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] == TYPE_PSYCHIC);
     ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] == TYPE_PSYCHIC);
-    ASSUME(gSpeciesInfo[SPECIES_OMASTAR].types[0] == TYPE_ROCK);
+    ASSUME(gSpeciesInfo[SPECIES_OMASTAR].types[0] == TYPE_BEAST);
     ASSUME(gSpeciesInfo[SPECIES_OMASTAR].types[1] == TYPE_WATER);
     ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
 
@@ -46,7 +46,7 @@ SINGLE_BATTLE_TEST("Tar Shot does not affect Pokemon that are Terastallized")
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NULL); }
         OPPONENT(SPECIES_WOBBUFFET) ;
     } WHEN {
         TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_EMBER); }
@@ -68,7 +68,7 @@ SINGLE_BATTLE_TEST("Tar Shot does affect Pokemon that Terastallized after Tar Sh
 {
     s16 damage[2];
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NORMAL); }
+        PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_NULL); }
         OPPONENT(SPECIES_WOBBUFFET) ;
     } WHEN {
         TURN { MOVE(opponent, MOVE_EMBER); }

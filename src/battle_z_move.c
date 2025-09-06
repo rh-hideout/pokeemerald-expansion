@@ -284,7 +284,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
 
             if (zEffect == Z_EFFECT_CURSE)
             {
-                if (moveInfo->monTypes[0] == TYPE_GHOST || moveInfo->monTypes[1] == TYPE_GHOST || moveInfo->monTypes[2] == TYPE_GHOST)
+                if (moveInfo->monTypes[0] == TYPE_UNDEAD || moveInfo->monTypes[1] == TYPE_UNDEAD || moveInfo->monTypes[2] == TYPE_UNDEAD)
                     zEffect = Z_EFFECT_RECOVER_HP;
                 else
                     zEffect = Z_EFFECT_ATK_UP_1;
@@ -437,7 +437,7 @@ void SetZEffect(void)
 
     if (effect == Z_EFFECT_CURSE)
     {
-        if (IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
+        if (IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_UNDEAD))
             effect = Z_EFFECT_RECOVER_HP;
         else
             effect = Z_EFFECT_ATK_UP_1;

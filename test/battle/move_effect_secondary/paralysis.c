@@ -47,9 +47,9 @@ SINGLE_BATTLE_TEST("Body Slam shouldn't paralyze Normal-types")
 #endif
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_TAUROS].types[0] == TYPE_NORMAL);
+        ASSUME(gSpeciesInfo[SPECIES_TAUROS].types[0] == TYPE_NULL);
         ASSUME(MoveHasAdditionalEffect(MOVE_BODY_SLAM, MOVE_EFFECT_PARALYSIS) == TRUE);
-        ASSUME(GetMoveType(MOVE_BODY_SLAM) == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_BODY_SLAM) == TYPE_NULL);
         PLAYER(SPECIES_TAUROS);
         OPPONENT(SPECIES_TAUROS);
     } WHEN {

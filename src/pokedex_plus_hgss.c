@@ -431,7 +431,7 @@ struct PokedexView
     u16 seenCount;
     u16 ownCount;
     u16 monSpriteIds[MAX_MONS_ON_SCREEN];
-    u8 typeIconSpriteIds[2];
+    u8 typeIconSpriteIds[3];//changed from 2 because theres 3 types now
     u16 moveSelected;
     u8 movesTotal;
     u8 statBarsSpriteId;
@@ -1905,24 +1905,24 @@ static const struct SearchOptionText sDexSearchColorOptions[] =
 static const struct SearchOptionText sDexSearchTypeOptions[] =
 {
     {gText_DexEmptyString, gTypesInfo[TYPE_NONE].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_NORMAL].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FIGHTING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FLYING].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_POISON].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GROUND].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_ROCK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_BUG].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GHOST].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_STEEL].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_NULL].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_COMBAT].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_WIND].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_FILTH].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_EARTH].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_BEAST].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_INSECT].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_UNDEAD].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_MACHINE].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_FIRE].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_WATER].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_GRASS].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_PLANT].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_ELECTRIC].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_PSYCHIC].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_ICE].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_DRAGON].name},
     {gText_DexEmptyString, gTypesInfo[TYPE_DARK].name},
-    {gText_DexEmptyString, gTypesInfo[TYPE_FAIRY].name},
+    {gText_DexEmptyString, gTypesInfo[TYPE_PUPPET].name},
     {},
 };
 
@@ -1940,24 +1940,28 @@ static const u8 sOrderOptions[] =
 static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 {
     TYPE_NONE,
-    TYPE_NORMAL,
-    TYPE_FIGHTING,
-    TYPE_FLYING,
-    TYPE_POISON,
-    TYPE_GROUND,
-    TYPE_ROCK,
-    TYPE_BUG,
-    TYPE_GHOST,
-    TYPE_STEEL,
+    TYPE_NULL,
+    TYPE_COMBAT,
+    TYPE_WIND,
+    TYPE_FILTH,
+    TYPE_EARTH,
+    TYPE_BEAST,
+    TYPE_INSECT,
+    TYPE_UNDEAD,
+    TYPE_MACHINE,
     TYPE_FIRE,
     TYPE_WATER,
-    TYPE_GRASS,
+    TYPE_PLANT,
     TYPE_ELECTRIC,
     TYPE_PSYCHIC,
     TYPE_ICE,
     TYPE_DRAGON,
     TYPE_DARK,
-    TYPE_FAIRY,
+    TYPE_PUPPET,
+    TYPE_VACCINE,
+    TYPE_DATA,
+    TYPE_VIRUS,
+    TYPE_FREE,
 };
 
 // Number pairs are the task data for tracking the cursor pos and scroll offset of each option list
@@ -3799,9 +3803,9 @@ static void Task_LoadInfoScreen(u8 taskId)
         LoadTilesetTilemapHGSS(INFO_SCREEN);
         FillWindowPixelBuffer(WIN_INFO, PIXEL_FILL(0));
         PutWindowTilemap(WIN_INFO);
-        PutWindowTilemap(WIN_FOOTPRINT);
-        DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
-        CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
+      //  PutWindowTilemap(WIN_FOOTPRINT);
+      //  DrawFootprint(WIN_FOOTPRINT, NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum));
+      //  CopyWindowToVram(WIN_FOOTPRINT, COPYWIN_GFX);
         gMain.state++;
         break;
     case 2:
@@ -3812,6 +3816,7 @@ static void Task_LoadInfoScreen(u8 taskId)
     case 3:
         sPokedexView->typeIconSpriteIds[0] = 0xFF;
         sPokedexView->typeIconSpriteIds[1] = 0xFF;
+        sPokedexView->typeIconSpriteIds[2] = 0xFF;
         CreateTypeIconSprites();
         gMain.state++;
         break;
@@ -4348,7 +4353,7 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
 }
 static void PrintCurrentSpeciesTypeInfo(u8 newEntry, u16 species)
 {
-    u8 type1, type2;
+    u8 type1, type2, type3;//elephantmuffin
 
     if (!newEntry)
     {
@@ -4356,24 +4361,29 @@ static void PrintCurrentSpeciesTypeInfo(u8 newEntry, u16 species)
     }
     //type icon(s)
     #ifdef TX_RANDOMIZER_AND_CHALLENGES
-        type1 = GetTypeBySpecies(species, 1);
-        type2 = GetTypeBySpecies(species, 2);
+        type1 = GetTypeBySpecies(species, 0);
+        type2 = GetTypeBySpecies(species, 1);
+        type3 = GetTypeBySpecies(species, 2);
     #else
         type1 = gSpeciesInfo[species].types[0];
         type2 = gSpeciesInfo[species].types[1];
+        type3 = gSpeciesInfo[species].types[2];
     #endif
     if (species == SPECIES_NONE)
-        type1 = type2 = TYPE_MYSTERY;
+        type2 = type3 = TYPE_MYSTERY;
 
-    if (type1 == type2)
+    if (type2 == type3)
     {
-        SetTypeIconPosAndPal(type1, 147, 48, 0);
+        SetTypeIconPosAndPal(type1, 140, 48, 0);
         SetSpriteInvisibility(1, TRUE);
+        SetTypeIconPosAndPal(type2, 171, 48, 1);//elephantmuffin
+        SetSpriteInvisibility(1, FALSE);
     }
-    else
+    else//this bit is where you define the position of the three type icons. elephantmuffin
     {
-        SetTypeIconPosAndPal(type1, 147, 48, 0);
-        SetTypeIconPosAndPal(type2, 147 + 33, 48, 1);
+        SetTypeIconPosAndPal(type1, 140, 48, 0);
+        SetTypeIconPosAndPal(type2, 173, 48, 1);
+        SetTypeIconPosAndPal(type3, 206, 48, 2);
     }
 
 }
@@ -4383,7 +4393,8 @@ static void CreateTypeIconSprites(void)
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
     LoadCompressedPalette(gMoveTypes_Pal, 0x1D0, 0x60);
-    for (i = 0; i < 2; i++)
+   // for (i = 0; i < 2; i++)//this only works for 2 types
+    for (i = 0; i < 3; i++)
     {
         if (sPokedexView->typeIconSpriteIds[i] == 0xFF)
             sPokedexView->typeIconSpriteIds[i] = CreateSprite(&gSpriteTemplate_MoveTypes, 10, 10, 2);

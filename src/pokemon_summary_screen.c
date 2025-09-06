@@ -831,40 +831,40 @@ static const union AnimCmd sSpriteAnim_TypeNone[] = {
     ANIMCMD_FRAME(TYPE_NONE * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeNormal[] = {
-    ANIMCMD_FRAME(TYPE_NORMAL * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeNull[] = {
+    ANIMCMD_FRAME(TYPE_NULL * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeFighting[] = {
-    ANIMCMD_FRAME(TYPE_FIGHTING * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeCombat[] = {
+    ANIMCMD_FRAME(TYPE_COMBAT * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeFlying[] = {
-    ANIMCMD_FRAME(TYPE_FLYING * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeWind[] = {
+    ANIMCMD_FRAME(TYPE_WIND * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypePoison[] = {
-    ANIMCMD_FRAME(TYPE_POISON * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeFilth[] = {
+    ANIMCMD_FRAME(TYPE_FILTH * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeGround[] = {
-    ANIMCMD_FRAME(TYPE_GROUND * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeEarth[] = {
+    ANIMCMD_FRAME(TYPE_EARTH * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeRock[] = {
-    ANIMCMD_FRAME(TYPE_ROCK * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeBeast[] = {
+    ANIMCMD_FRAME(TYPE_BEAST * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeBug[] = {
-    ANIMCMD_FRAME(TYPE_BUG * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeInsect[] = {
+    ANIMCMD_FRAME(TYPE_INSECT * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeGhost[] = {
-    ANIMCMD_FRAME(TYPE_GHOST * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeUndead[] = {
+    ANIMCMD_FRAME(TYPE_UNDEAD * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeSteel[] = {
-    ANIMCMD_FRAME(TYPE_STEEL * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypeMachine[] = {
+    ANIMCMD_FRAME(TYPE_MACHINE * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 static const union AnimCmd sSpriteAnim_TypeMystery[] = {
@@ -879,8 +879,8 @@ static const union AnimCmd sSpriteAnim_TypeWater[] = {
     ANIMCMD_FRAME(TYPE_WATER * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeGrass[] = {
-    ANIMCMD_FRAME(TYPE_GRASS * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypePlant[] = {
+    ANIMCMD_FRAME(TYPE_PLANT * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 static const union AnimCmd sSpriteAnim_TypeElectric[] = {
@@ -903,8 +903,8 @@ static const union AnimCmd sSpriteAnim_TypeDark[] = {
     ANIMCMD_FRAME(TYPE_DARK * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
-static const union AnimCmd sSpriteAnim_TypeFairy[] = {
-    ANIMCMD_FRAME(TYPE_FAIRY * 8, 0, FALSE, FALSE),
+static const union AnimCmd sSpriteAnim_TypePuppet[] = {
+    ANIMCMD_FRAME(TYPE_PUPPET * 8, 0, FALSE, FALSE),
     ANIMCMD_END
 };
 static const union AnimCmd sSpriteAnim_TypeStellar[] = {
@@ -953,25 +953,25 @@ static const union AnimCmd sSpriteAnim_CategoryTough[] = {
 };
 static const union AnimCmd *const sSpriteAnimTable_MoveTypes[NUMBER_OF_MON_TYPES + CONTEST_CATEGORIES_COUNT] = {
     [TYPE_NONE] = sSpriteAnim_TypeNone,
-    [TYPE_NORMAL] = sSpriteAnim_TypeNormal,
-    [TYPE_FIGHTING] = sSpriteAnim_TypeFighting,
-    [TYPE_FLYING] = sSpriteAnim_TypeFlying,
-    [TYPE_POISON] = sSpriteAnim_TypePoison,
-    [TYPE_GROUND] = sSpriteAnim_TypeGround,
-    [TYPE_ROCK] = sSpriteAnim_TypeRock,
-    [TYPE_BUG] = sSpriteAnim_TypeBug,
-    [TYPE_GHOST] = sSpriteAnim_TypeGhost,
-    [TYPE_STEEL] = sSpriteAnim_TypeSteel,
+    [TYPE_NULL] = sSpriteAnim_TypeNull,
+    [TYPE_COMBAT] = sSpriteAnim_TypeCombat,
+    [TYPE_WIND] = sSpriteAnim_TypeWind,
+    [TYPE_FILTH] = sSpriteAnim_TypeFilth,
+    [TYPE_EARTH] = sSpriteAnim_TypeEarth,
+    [TYPE_BEAST] = sSpriteAnim_TypeBeast,
+    [TYPE_INSECT] = sSpriteAnim_TypeInsect,
+    [TYPE_UNDEAD] = sSpriteAnim_TypeUndead,
+    [TYPE_MACHINE] = sSpriteAnim_TypeMachine,
     [TYPE_MYSTERY] = sSpriteAnim_TypeMystery,
     [TYPE_FIRE] = sSpriteAnim_TypeFire,
     [TYPE_WATER] = sSpriteAnim_TypeWater,
-    [TYPE_GRASS] = sSpriteAnim_TypeGrass,
+    [TYPE_PLANT] = sSpriteAnim_TypePlant,
     [TYPE_ELECTRIC] = sSpriteAnim_TypeElectric,
     [TYPE_PSYCHIC] = sSpriteAnim_TypePsychic,
     [TYPE_ICE] = sSpriteAnim_TypeIce,
     [TYPE_DRAGON] = sSpriteAnim_TypeDragon,
     [TYPE_DARK] = sSpriteAnim_TypeDark,
-    [TYPE_FAIRY] = sSpriteAnim_TypeFairy,
+    [TYPE_PUPPET] = sSpriteAnim_TypePuppet,
     [TYPE_STELLAR] = sSpriteAnim_TypeStellar,
     [TYPE_VACCINE] = sSpriteAnim_TypeVaccine,
     [TYPE_VIRUS] = sSpriteAnim_TypeVirus,

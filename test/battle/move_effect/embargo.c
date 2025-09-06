@@ -148,7 +148,7 @@ SINGLE_BATTLE_TEST("Embargo doesn't block a held item's form-changing effect, bu
         OPPONENT(SPECIES_ARCEUS_GRASS) { Item(heldItem); };
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffect == HOLD_EFFECT_PLATE);
         ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].holdEffectParam == 20);
-        ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].secondaryId == TYPE_GRASS);
+        ASSUME(gItemsInfo[ITEM_MEADOW_PLATE].secondaryId == TYPE_PLANT);
     } WHEN {
         TURN { MOVE(player, MOVE_EMBARGO); MOVE(opponent, MOVE_RAZOR_LEAF); }
     } SCENE {

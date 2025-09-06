@@ -205,7 +205,6 @@ static const struct LevelUpMove sButterfreeLevelUpLearnset[] = {
     LEVEL_UP_MOVE(12, MOVE_SLEEP_POWDER),
     LEVEL_UP_MOVE(16, MOVE_PSYBEAM),
 	LEVEL_UP_MOVE(19, MOVE_SILVER_WIND),
-    LEVEL_UP_MOVE(20, MOVE_WHIRLWIND),
     LEVEL_UP_MOVE(24, MOVE_AIR_SLASH),
     LEVEL_UP_MOVE(28, MOVE_SAFEGUARD),
     LEVEL_UP_MOVE(32, MOVE_BUG_BUZZ),
@@ -22318,77 +22317,1321 @@ static const struct LevelUpMove sPecharuntLevelUpLearnset[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
-static const struct LevelUpMove sVeemonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_TACKLE),
-    LEVEL_UP_MOVE(6, MOVE_MACH_PUNCH),
-    LEVEL_UP_MOVE(8, MOVE_HEADBUTT),
-    LEVEL_UP_END
-};
-
-static const struct LevelUpMove sAgumonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_EMBER),
-    LEVEL_UP_MOVE(6, MOVE_SCRATCH),
-    LEVEL_UP_MOVE(8, MOVE_LEER),
-    LEVEL_UP_MOVE(12, MOVE_HEADBUTT),
-    LEVEL_UP_END
-};
-
-static const struct LevelUpMove sPalmonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_POUND),
-    LEVEL_UP_MOVE(6, MOVE_VINE_WHIP),
-    LEVEL_UP_MOVE(8, MOVE_POISON_POWDER),
-    LEVEL_UP_MOVE(12, MOVE_WRAP),
-    LEVEL_UP_MOVE(15, MOVE_CONSTRICT),
-    LEVEL_UP_END
-};
-
+//SPECIES_KOROMON
 static const struct LevelUpMove sKoromonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_FLAIL),
-    LEVEL_UP_MOVE(6, MOVE_BUBBLE),
-    LEVEL_UP_MOVE(8, MOVE_EMBER),
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
     LEVEL_UP_END
 };
 
-static const struct LevelUpMove sBukamonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_FLAIL),
-    LEVEL_UP_MOVE(6, MOVE_BUBBLE),
-    LEVEL_UP_MOVE(8, MOVE_WATER_GUN),
-    LEVEL_UP_END
-};
-
+//SPECIES_YOKOMON
 static const struct LevelUpMove sYokomonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_FLAIL),
-    LEVEL_UP_MOVE(6, MOVE_BUBBLE),
-    LEVEL_UP_MOVE(8, MOVE_LEAFAGE),
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
     LEVEL_UP_END
 };
 
-static const struct LevelUpMove sBiyomonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_PECK),
-    LEVEL_UP_MOVE(8, MOVE_EMBER),
-    LEVEL_UP_MOVE(12, MOVE_WING_ATTACK),
-    LEVEL_UP_MOVE(13, MOVE_LEER),
-    LEVEL_UP_MOVE(16, MOVE_WORK_UP),
-    LEVEL_UP_MOVE(20, MOVE_SLASH),
+//SPECIES_BUKAMON
+static const struct LevelUpMove sBukamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
     LEVEL_UP_END
 };
 
-static const struct LevelUpMove sSyakomonLevelUpLearnset[] = {
-    LEVEL_UP_MOVE(1, MOVE_IRON_DEFENSE),
-    LEVEL_UP_MOVE(8, MOVE_WHIRLPOOL),
-    LEVEL_UP_MOVE(12, MOVE_LEECH_SEED),
-    LEVEL_UP_MOVE(13, MOVE_DIVE),
-    LEVEL_UP_MOVE(16, MOVE_CLAMP),
-    LEVEL_UP_MOVE(20, MOVE_SCARY_FACE),
+//SPECIES_TSUNOMON
+static const struct LevelUpMove sTsunomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
     LEVEL_UP_END
 };
 
+//SPECIES_TANEMON
+static const struct LevelUpMove sTanemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MOTIMON
+static const struct LevelUpMove sMotimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KODOKUGUMON2
+static const struct LevelUpMove sKodokugumon2LevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DEMIMERAMON
+static const struct LevelUpMove sDemimeramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KAPURIMON
+static const struct LevelUpMove sKapurimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DEMIVEEMON
+static const struct LevelUpMove sDemiveemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_POROMON
+static const struct LevelUpMove sPoromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_UPAMON
+static const struct LevelUpMove sUpamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MINOMON
+static const struct LevelUpMove sMinomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TOKOMON
+static const struct LevelUpMove sTokomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_NIYAROMON
+static const struct LevelUpMove sNiyaromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PAGUMON
+static const struct LevelUpMove sPagumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TSUMEMON
+static const struct LevelUpMove sTsumemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GIGIMON
+static const struct LevelUpMove sGigimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GUMMYMON
+static const struct LevelUpMove sGummymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KOKOMON
+static const struct LevelUpMove sKokomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_VIXIMON
+static const struct LevelUpMove sViximonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_YAAMON
+static const struct LevelUpMove sYaamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CALUMON
+static const struct LevelUpMove sCalumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GURIMON
+static const struct LevelUpMove sGurimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PUYOYOMON
+static const struct LevelUpMove sPuyoyomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BOSAMON
+static const struct LevelUpMove sBosamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BIBIMON
+static const struct LevelUpMove sBibimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PUROROMON
+static const struct LevelUpMove sPuroromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FLUFFYMON
+static const struct LevelUpMove sFluffymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GOROMON
+static const struct LevelUpMove sGoromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HIYARIMON
+static const struct LevelUpMove sHiyarimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MISSIMON
+static const struct LevelUpMove sMissimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ONIBIMON
+static const struct LevelUpMove sOnibimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_AGUMON
+static const struct LevelUpMove sAgumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_MOVE(6, MOVE_FLAME_WHEEL),
+    LEVEL_UP_MOVE(7, MOVE_DRAGON_TAIL),
+    LEVEL_UP_END
+};
+
+//SPECIES_GOMAMON
 static const struct LevelUpMove sGomamonLevelUpLearnset[] = {
     LEVEL_UP_MOVE(1, MOVE_POUND),
-    LEVEL_UP_MOVE(8, MOVE_WATER_PULSE),
-    LEVEL_UP_MOVE(12, MOVE_ICE_BALL),
-    LEVEL_UP_MOVE(13, MOVE_MUD_SPORT),
-    LEVEL_UP_MOVE(16, MOVE_FURY_SWIPES),
-    LEVEL_UP_MOVE(20, MOVE_LEER),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
     LEVEL_UP_END
 };
+
+//SPECIES_BIYOMON
+static const struct LevelUpMove sBiyomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TENTOMON
+static const struct LevelUpMove sTentomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PATAMON
+static const struct LevelUpMove sPatamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SALAMON
+static const struct LevelUpMove sSalamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GABUMON
+static const struct LevelUpMove sGabumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ELECMON
+static const struct LevelUpMove sElecmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PALMON
+static const struct LevelUpMove sPalmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FLORAMON
+static const struct LevelUpMove sFloramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CRABMON
+static const struct LevelUpMove sCrabmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CANDLEMON
+static const struct LevelUpMove sCandlemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MUSHROOMON
+static const struct LevelUpMove sMushroomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BETAMON
+static const struct LevelUpMove sBetamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_OTAMAMON
+static const struct LevelUpMove sOtamamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DEMIDEVIMON
+static const struct LevelUpMove sDemidevimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GAZIMON
+static const struct LevelUpMove sGazimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GOBLIMON
+static const struct LevelUpMove sGoblimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BLACKAGUMON
+static const struct LevelUpMove sBlackagumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BLACKGABUMON
+static const struct LevelUpMove sBlackgabumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ELECMONV
+static const struct LevelUpMove sElecmonvLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SNOWAGUMON
+static const struct LevelUpMove sSnowagumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SNOWGOBLIMON
+static const struct LevelUpMove sSnowgoblimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TAPIRMON
+static const struct LevelUpMove sTapirmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GOTSUMON
+static const struct LevelUpMove sGotsumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SYAKOMON
+static const struct LevelUpMove sSyakomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GIZAMON
+static const struct LevelUpMove sGizamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CHUUMON
+static const struct LevelUpMove sChuumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KUNEMON
+static const struct LevelUpMove sKunemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HAGURUMON
+static const struct LevelUpMove sHagurumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SOLARMON
+static const struct LevelUpMove sSolarmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_VEEMON
+static const struct LevelUpMove sVeemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_WORMMON
+static const struct LevelUpMove sWormmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HAWKMON
+static const struct LevelUpMove sHawkmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ARMADILLOMON
+static const struct LevelUpMove sArmadillomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KERAMON
+static const struct LevelUpMove sKeramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TERRIERMON
+static const struct LevelUpMove sTerriermonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LOPMON
+static const struct LevelUpMove sLopmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GUILMON
+static const struct LevelUpMove sGuilmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RENAMON
+static const struct LevelUpMove sRenamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MONODRAMON
+static const struct LevelUpMove sMonodramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_IMPMON
+static const struct LevelUpMove sImpmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BLACKGUILMON
+static const struct LevelUpMove sBlackguilmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FLAMEMON
+static const struct LevelUpMove sFlamemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_STRABIMON
+static const struct LevelUpMove sStrabimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TINKERMON
+static const struct LevelUpMove sTinkermonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KOKUWAMON
+static const struct LevelUpMove sKokuwamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PENGUINMON
+static const struct LevelUpMove sPenguinmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LUCEMON
+static const struct LevelUpMove sLucemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MONMON
+static const struct LevelUpMove sMonmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BEARMON
+static const struct LevelUpMove sBearmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KOTEMON
+static const struct LevelUpMove sKotemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RYUDAMON
+static const struct LevelUpMove sRyudamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SWIMMON
+static const struct LevelUpMove sSwimmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LUXMON
+static const struct LevelUpMove sLuxmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DORUMON
+static const struct LevelUpMove sDorumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FANBEEMON
+static const struct LevelUpMove sFanbeemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KODOKUGUMON3
+static const struct LevelUpMove sKodokugumon3LevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_COMMANDRAMON
+static const struct LevelUpMove sCommandramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SOUNDBIRDMON
+static const struct LevelUpMove sSoundbirdmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GAOMON
+static const struct LevelUpMove sGaomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LALAMON
+static const struct LevelUpMove sLalamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CORONAMON
+static const struct LevelUpMove sCoronamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LUNAMON
+static const struct LevelUpMove sLunamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_JUNKMON
+static const struct LevelUpMove sJunkmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PHASCOMON
+static const struct LevelUpMove sPhascomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KKABUTERIMON
+static const struct LevelUpMove sKkabuterimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HACKMON
+static const struct LevelUpMove sHackmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SISTERMONB
+static const struct LevelUpMove sSistermonbLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SISTERMONBA
+static const struct LevelUpMove sSistermonbaLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PULSEMON
+static const struct LevelUpMove sPulsemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RURIMON
+static const struct LevelUpMove sRurimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SANGOMON
+static const struct LevelUpMove sSangomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_POMUMON
+static const struct LevelUpMove sPomumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_VORVOMON
+static const struct LevelUpMove sVorvomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BULUCOMON
+static const struct LevelUpMove sBulucomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SUNARIZAMON
+static const struct LevelUpMove sSunarizamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GHOSTMON
+static const struct LevelUpMove sGhostmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GAMMAMON
+static const struct LevelUpMove sGammamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ANGORAMON
+static const struct LevelUpMove sAngoramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_JELLYMON
+static const struct LevelUpMove sJellymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ESPIMON
+static const struct LevelUpMove sEspimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SHOEMON
+static const struct LevelUpMove sShoemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PTEROMON
+static const struct LevelUpMove sPteromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ELIZAMON
+static const struct LevelUpMove sElizamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BATTERIMON
+static const struct LevelUpMove sBatterimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CHIKURIMON
+static const struct LevelUpMove sChikurimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HUBMON
+static const struct LevelUpMove sHubmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MORPHOMON
+static const struct LevelUpMove sMorphomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_UKKOMON
+static const struct LevelUpMove sUkkomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FLAMEDRAMON
+static const struct LevelUpMove sFlamedramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LIGHDRAMON
+static const struct LevelUpMove sLighdramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DEPTHMON
+static const struct LevelUpMove sDepthmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_YAKSAMON
+static const struct LevelUpMove sYaksamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SETHMON
+static const struct LevelUpMove sSethmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GARGOYLEMON
+static const struct LevelUpMove sGargoylemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HONEYBEEMON
+static const struct LevelUpMove sHoneybeemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MAGNAMON
+static const struct LevelUpMove sMagnamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_GVEEDRAMON
+static const struct LevelUpMove sGveedramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KANGARUMON
+static const struct LevelUpMove sKangarumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SHADRAMON
+static const struct LevelUpMove sShadramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TOGEMOGUMON
+static const struct LevelUpMove sTogemogumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_AURUMON
+static const struct LevelUpMove sAurumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_NOHEMON
+static const struct LevelUpMove sNohemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SEARCHMON
+static const struct LevelUpMove sSearchmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BULLMON
+static const struct LevelUpMove sBullmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ARCHELOMON
+static const struct LevelUpMove sArchelomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_QUETZALMON
+static const struct LevelUpMove sQuetzalmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BUCCHIEMON
+static const struct LevelUpMove sBucchiemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KONGOUMON
+static const struct LevelUpMove sKongoumonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ALLOMON
+static const struct LevelUpMove sAllomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RINKMON
+static const struct LevelUpMove sRinkmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HALSEMON
+static const struct LevelUpMove sHalsemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SHURIMON
+static const struct LevelUpMove sShurimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FLYBEEMON
+static const struct LevelUpMove sFlybeemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ORCAMON
+static const struct LevelUpMove sOrcamonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MOOSEMON
+static const struct LevelUpMove sMoosemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_HARPYMON
+static const struct LevelUpMove sHarpymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TOUCANMON
+static const struct LevelUpMove sToucanmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PEACOCKMON
+static const struct LevelUpMove sPeacockmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_LYNXMON
+static const struct LevelUpMove sLynxmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RABBITMON
+static const struct LevelUpMove sRabbitmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SWANMON
+static const struct LevelUpMove sSwanmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KABUKIMON
+static const struct LevelUpMove sKabukimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BUTTERFLYMON
+static const struct LevelUpMove sButterflymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TYLOMON
+static const struct LevelUpMove sTylomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ORYXMON
+static const struct LevelUpMove sOryxmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_NEFERTIMON
+static const struct LevelUpMove sNefertimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_OPOSSUMMON
+static const struct LevelUpMove sOpossummonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MAILDRAMON
+static const struct LevelUpMove sMaildramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MAILDRAMONB
+static const struct LevelUpMove sMaildramonbLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BOARMON
+static const struct LevelUpMove sBoarmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SEPIKMON
+static const struct LevelUpMove sSepikmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_KENKIMON
+static const struct LevelUpMove sKenkimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PTERAMON
+static const struct LevelUpMove sPteramonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_FROGMON
+static const struct LevelUpMove sFrogmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_DIGMON
+static const struct LevelUpMove sDigmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SUBMARIMON
+static const struct LevelUpMove sSubmarimonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SHEEPMON
+static const struct LevelUpMove sSheepmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SEAHOMON
+static const struct LevelUpMove sSeahomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_CHAMELEMON
+static const struct LevelUpMove sChamelemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_ELEPHANTMON
+static const struct LevelUpMove sElephantmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_BAROMON
+static const struct LevelUpMove sBaromonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_STEGOMON
+static const struct LevelUpMove sStegomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PIPISMON
+static const struct LevelUpMove sPipismonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PONCHOMON
+static const struct LevelUpMove sPonchomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MOTHMON
+static const struct LevelUpMove sMothmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MANTARAYMON
+static const struct LevelUpMove sMantaraymonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PEGASUSMON
+static const struct LevelUpMove sPegasusmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_MANBOMON
+static const struct LevelUpMove sManbomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_PRAIRIEMON
+static const struct LevelUpMove sPrairiemonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RHINOMON
+static const struct LevelUpMove sRhinomonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_TNDRBIRDMON
+static const struct LevelUpMove sTndrbirdmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_SALAMANDRMON
+static const struct LevelUpMove sSalamandrmonLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+
+//SPECIES_RAPIDMONG
+static const struct LevelUpMove sRapidmongLevelUpLearnset[] = {
+    LEVEL_UP_MOVE(1, MOVE_POUND),
+    LEVEL_UP_MOVE(5, MOVE_LEER),
+    LEVEL_UP_END
+};
+

@@ -182,11 +182,11 @@ static const struct BattlePyramidRequirement sBattlePyramidRequirementsByRound[]
     },
     [9] = /* rock types */
     {
-        .type = TYPE_ROCK,
+        .type = TYPE_BEAST,
     },
     [10] = /* fighting types */
     {
-        .type = TYPE_FIGHTING,
+        .type = TYPE_COMBAT,
     },
     [11] = /* pokemon with weather-altering effects */
     {
@@ -198,7 +198,7 @@ static const struct BattlePyramidRequirement sBattlePyramidRequirementsByRound[]
     },
     [12] = /* bug types */
     {
-        .type = TYPE_BUG,
+        .type = TYPE_INSECT,
     },
     [13] = /* dark types */
     {
@@ -210,11 +210,11 @@ static const struct BattlePyramidRequirement sBattlePyramidRequirementsByRound[]
     },
     [15] = /* ghost types */
     {
-        .type = TYPE_GHOST,
+        .type = TYPE_UNDEAD,
     },
     [16] = /* steel types */
     {
-        .type = TYPE_STEEL,
+        .type = TYPE_MACHINE,
     },
     [17] = /* flying/dragon types */
     {
@@ -228,7 +228,7 @@ static const struct BattlePyramidRequirement sBattlePyramidRequirementsByRound[]
     },
     [19] = /* normal with powerful moves */
     {
-        .type = TYPE_NORMAL,
+        .type = TYPE_NULL,
         .moves = sPowerfulNormalMoves,
         .nMoves = NELEMS(sPowerfulNormalMoves),
     },

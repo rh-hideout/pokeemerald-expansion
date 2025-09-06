@@ -35838,3 +35838,1320 @@ static const u16 sPecharuntTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 #endif //P_FAMILY_PECHARUNT
+
+//SPECIES_KOROMON
+static const u16 sKoromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_YOKOMON
+static const u16 sYokomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BUKAMON
+static const u16 sBukamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TSUNOMON
+static const u16 sTsunomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TANEMON
+static const u16 sTanemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MOTIMON
+static const u16 sMotimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KODOKUGUMON2
+static const u16 sKodokugumon2TeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DEMIMERAMON
+static const u16 sDemimeramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KAPURIMON
+static const u16 sKapurimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DEMIVEEMON
+static const u16 sDemiveemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_POROMON
+static const u16 sPoromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_UPAMON
+static const u16 sUpamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MINOMON
+static const u16 sMinomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TOKOMON
+static const u16 sTokomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_NIYAROMON
+static const u16 sNiyaromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PAGUMON
+static const u16 sPagumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TSUMEMON
+static const u16 sTsumemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GIGIMON
+static const u16 sGigimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GUMMYMON
+static const u16 sGummymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KOKOMON
+static const u16 sKokomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_VIXIMON
+static const u16 sViximonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_YAAMON
+static const u16 sYaamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CALUMON
+static const u16 sCalumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GURIMON
+static const u16 sGurimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PUYOYOMON
+static const u16 sPuyoyomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BOSAMON
+static const u16 sBosamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BIBIMON
+static const u16 sBibimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PUROROMON
+static const u16 sPuroromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FLUFFYMON
+static const u16 sFluffymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GOROMON
+static const u16 sGoromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HIYARIMON
+static const u16 sHiyarimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MISSIMON
+static const u16 sMissimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ONIBIMON
+static const u16 sOnibimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_AGUMON
+static const u16 sAgumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GOMAMON
+static const u16 sGomamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BIYOMON
+static const u16 sBiyomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TENTOMON
+static const u16 sTentomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PATAMON
+static const u16 sPatamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SALAMON
+static const u16 sSalamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GABUMON
+static const u16 sGabumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ELECMON
+static const u16 sElecmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PALMON
+static const u16 sPalmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FLORAMON
+static const u16 sFloramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CRABMON
+static const u16 sCrabmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CANDLEMON
+static const u16 sCandlemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MUSHROOMON
+static const u16 sMushroomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BETAMON
+static const u16 sBetamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_OTAMAMON
+static const u16 sOtamamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DEMIDEVIMON
+static const u16 sDemidevimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GAZIMON
+static const u16 sGazimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GOBLIMON
+static const u16 sGoblimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BLACKAGUMON
+static const u16 sBlackagumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BLACKGABUMON
+static const u16 sBlackgabumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ELECMONV
+static const u16 sElecmonvTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SNOWAGUMON
+static const u16 sSnowagumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SNOWGOBLIMON
+static const u16 sSnowgoblimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TAPIRMON
+static const u16 sTapirmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GOTSUMON
+static const u16 sGotsumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SYAKOMON
+static const u16 sSyakomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GIZAMON
+static const u16 sGizamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CHUUMON
+static const u16 sChuumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KUNEMON
+static const u16 sKunemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HAGURUMON
+static const u16 sHagurumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SOLARMON
+static const u16 sSolarmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_VEEMON
+static const u16 sVeemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_WORMMON
+static const u16 sWormmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HAWKMON
+static const u16 sHawkmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ARMADILLOMON
+static const u16 sArmadillomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KERAMON
+static const u16 sKeramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TERRIERMON
+static const u16 sTerriermonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LOPMON
+static const u16 sLopmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GUILMON
+static const u16 sGuilmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RENAMON
+static const u16 sRenamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MONODRAMON
+static const u16 sMonodramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_IMPMON
+static const u16 sImpmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BLACKGUILMON
+static const u16 sBlackguilmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FLAMEMON
+static const u16 sFlamemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_STRABIMON
+static const u16 sStrabimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TINKERMON
+static const u16 sTinkermonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KOKUWAMON
+static const u16 sKokuwamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PENGUINMON
+static const u16 sPenguinmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LUCEMON
+static const u16 sLucemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MONMON
+static const u16 sMonmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BEARMON
+static const u16 sBearmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KOTEMON
+static const u16 sKotemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RYUDAMON
+static const u16 sRyudamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SWIMMON
+static const u16 sSwimmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LUXMON
+static const u16 sLuxmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DORUMON
+static const u16 sDorumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FANBEEMON
+static const u16 sFanbeemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KODOKUGUMON3
+static const u16 sKodokugumon3TeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_COMMANDRAMON
+static const u16 sCommandramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SOUNDBIRDMON
+static const u16 sSoundbirdmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GAOMON
+static const u16 sGaomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LALAMON
+static const u16 sLalamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CORONAMON
+static const u16 sCoronamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LUNAMON
+static const u16 sLunamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_JUNKMON
+static const u16 sJunkmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PHASCOMON
+static const u16 sPhascomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KKABUTERIMON
+static const u16 sKkabuterimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HACKMON
+static const u16 sHackmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SISTERMONB
+static const u16 sSistermonbTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SISTERMONBA
+static const u16 sSistermonbaTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PULSEMON
+static const u16 sPulsemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RURIMON
+static const u16 sRurimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SANGOMON
+static const u16 sSangomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_POMUMON
+static const u16 sPomumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_VORVOMON
+static const u16 sVorvomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BULUCOMON
+static const u16 sBulucomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SUNARIZAMON
+static const u16 sSunarizamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GHOSTMON
+static const u16 sGhostmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GAMMAMON
+static const u16 sGammamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ANGORAMON
+static const u16 sAngoramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_JELLYMON
+static const u16 sJellymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ESPIMON
+static const u16 sEspimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SHOEMON
+static const u16 sShoemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PTEROMON
+static const u16 sPteromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ELIZAMON
+static const u16 sElizamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BATTERIMON
+static const u16 sBatterimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CHIKURIMON
+static const u16 sChikurimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HUBMON
+static const u16 sHubmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MORPHOMON
+static const u16 sMorphomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_UKKOMON
+static const u16 sUkkomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FLAMEDRAMON
+static const u16 sFlamedramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LIGHDRAMON
+static const u16 sLighdramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DEPTHMON
+static const u16 sDepthmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_YAKSAMON
+static const u16 sYaksamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SETHMON
+static const u16 sSethmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GARGOYLEMON
+static const u16 sGargoylemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HONEYBEEMON
+static const u16 sHoneybeemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MAGNAMON
+static const u16 sMagnamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_GVEEDRAMON
+static const u16 sGveedramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KANGARUMON
+static const u16 sKangarumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SHADRAMON
+static const u16 sShadramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TOGEMOGUMON
+static const u16 sTogemogumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_AURUMON
+static const u16 sAurumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_NOHEMON
+static const u16 sNohemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SEARCHMON
+static const u16 sSearchmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BULLMON
+static const u16 sBullmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ARCHELOMON
+static const u16 sArchelomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_QUETZALMON
+static const u16 sQuetzalmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BUCCHIEMON
+static const u16 sBucchiemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KONGOUMON
+static const u16 sKongoumonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ALLOMON
+static const u16 sAllomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RINKMON
+static const u16 sRinkmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HALSEMON
+static const u16 sHalsemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SHURIMON
+static const u16 sShurimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FLYBEEMON
+static const u16 sFlybeemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ORCAMON
+static const u16 sOrcamonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MOOSEMON
+static const u16 sMoosemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_HARPYMON
+static const u16 sHarpymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TOUCANMON
+static const u16 sToucanmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PEACOCKMON
+static const u16 sPeacockmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_LYNXMON
+static const u16 sLynxmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RABBITMON
+static const u16 sRabbitmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SWANMON
+static const u16 sSwanmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KABUKIMON
+static const u16 sKabukimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BUTTERFLYMON
+static const u16 sButterflymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TYLOMON
+static const u16 sTylomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ORYXMON
+static const u16 sOryxmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_NEFERTIMON
+static const u16 sNefertimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_OPOSSUMMON
+static const u16 sOpossummonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MAILDRAMON
+static const u16 sMaildramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MAILDRAMONB
+static const u16 sMaildramonbTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BOARMON
+static const u16 sBoarmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SEPIKMON
+static const u16 sSepikmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_KENKIMON
+static const u16 sKenkimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PTERAMON
+static const u16 sPteramonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_FROGMON
+static const u16 sFrogmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_DIGMON
+static const u16 sDigmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SUBMARIMON
+static const u16 sSubmarimonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SHEEPMON
+static const u16 sSheepmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SEAHOMON
+static const u16 sSeahomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_CHAMELEMON
+static const u16 sChamelemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_ELEPHANTMON
+static const u16 sElephantmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_BAROMON
+static const u16 sBaromonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_STEGOMON
+static const u16 sStegomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PIPISMON
+static const u16 sPipismonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PONCHOMON
+static const u16 sPonchomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MOTHMON
+static const u16 sMothmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MANTARAYMON
+static const u16 sMantaraymonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PEGASUSMON
+static const u16 sPegasusmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_MANBOMON
+static const u16 sManbomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_PRAIRIEMON
+static const u16 sPrairiemonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RHINOMON
+static const u16 sRhinomonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_TNDRBIRDMON
+static const u16 sTndrbirdmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_SALAMANDRMON
+static const u16 sSalamandrmonTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+
+//SPECIES_RAPIDMONG
+static const u16 sRapidmongTeachableLearnset[] = {
+    MOVE_SLEEP_TALK,
+    MOVE_SNORE,
+    MOVE_UNAVAILABLE,
+};
+

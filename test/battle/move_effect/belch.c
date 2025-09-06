@@ -4,9 +4,9 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_BELCH) == EFFECT_BELCH);
-    ASSUME(GetMoveType(MOVE_MUD_SHOT) == TYPE_GROUND);
+    ASSUME(GetMoveType(MOVE_MUD_SHOT) == TYPE_EARTH);
     ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].holdEffect == HOLD_EFFECT_RESIST_BERRY);
-    ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].holdEffectParam == TYPE_GROUND);
+    ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].holdEffectParam == TYPE_EARTH);
     ASSUME(gItemsInfo[ITEM_SHUCA_BERRY].pocket == POCKET_BERRIES);
     ASSUME(gItemsInfo[ITEM_ORAN_BERRY].pocket == POCKET_BERRIES);
 }

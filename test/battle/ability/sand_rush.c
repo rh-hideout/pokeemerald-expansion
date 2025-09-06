@@ -6,9 +6,9 @@ SINGLE_BATTLE_TEST("Sand Rush prevents damage from sandstorm")
     u32 type1 = gSpeciesInfo[SPECIES_STOUTLAND].types[0];
     u32 type2 = gSpeciesInfo[SPECIES_STOUTLAND].types[1];
     GIVEN {
-        ASSUME(type1 != TYPE_ROCK && type2 != TYPE_ROCK);
-        ASSUME(type1 != TYPE_GROUND && type2 != TYPE_GROUND);
-        ASSUME(type1 != TYPE_STEEL && type2 != TYPE_STEEL);
+        ASSUME(type1 != TYPE_BEAST && type2 != TYPE_BEAST);
+        ASSUME(type1 != TYPE_EARTH && type2 != TYPE_EARTH);
+        ASSUME(type1 != TYPE_MACHINE && type2 != TYPE_MACHINE);
         PLAYER(SPECIES_STOUTLAND) { Ability(ABILITY_SAND_RUSH); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

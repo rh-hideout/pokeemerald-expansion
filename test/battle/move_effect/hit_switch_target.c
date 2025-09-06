@@ -145,7 +145,7 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
-        ASSUME(gSpeciesInfo[SPECIES_WEEZING].types[0] == TYPE_POISON || gSpeciesInfo[SPECIES_WEEZING].types[1] == TYPE_POISON);
+        ASSUME(gSpeciesInfo[SPECIES_WEEZING].types[0] == TYPE_FILTH || gSpeciesInfo[SPECIES_WEEZING].types[1] == TYPE_FILTH);
         PLAYER(SPECIES_PANCHAM) { Ability(ABILITY_MOLD_BREAKER); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_LEVITATE); }

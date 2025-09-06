@@ -5,8 +5,8 @@ static const u16 terrainData[][2] =
 {
     { MOVE_ELECTRIC_TERRAIN, TYPE_ELECTRIC, },
     { MOVE_PSYCHIC_TERRAIN,  TYPE_PSYCHIC, },
-    { MOVE_GRASSY_TERRAIN,   TYPE_GRASS, },
-    { MOVE_MISTY_TERRAIN,    TYPE_FAIRY, },
+    { MOVE_GRASSY_TERRAIN,   TYPE_PLANT, },
+    { MOVE_MISTY_TERRAIN,    TYPE_PUPPET, },
 };
 
 SINGLE_BATTLE_TEST("Mimicry changes the battler's type based on Terrain")
@@ -51,8 +51,8 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
     }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[0] == TYPE_GROUND);
-        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[1] == TYPE_STEEL);
+        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[0] == TYPE_EARTH);
+        ASSUME(gSpeciesInfo[SPECIES_STUNFISK_GALAR].types[1] == TYPE_MACHINE);
         PLAYER(SPECIES_WOBBUFFET); 
         OPPONENT(SPECIES_STUNFISK_GALAR) { Ability(ABILITY_MIMICRY); }
     } WHEN {
@@ -66,7 +66,7 @@ SINGLE_BATTLE_TEST("Mimicry restores the battler's types when terrain is removed
         case MOVE_MISTY_TERRAIN:    MESSAGE("The mist disappeared from the battlefield."); break;
         }
     } THEN {
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[0], TYPE_GROUND);
-        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[1], TYPE_STEEL);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[0], TYPE_EARTH);
+        EXPECT_EQ(gBattleMons[B_POSITION_OPPONENT_LEFT].types[1], TYPE_MACHINE);
     }
 }

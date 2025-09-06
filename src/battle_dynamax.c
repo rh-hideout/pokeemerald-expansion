@@ -34,37 +34,37 @@ struct GMaxMove
 
 static const struct GMaxMove sGMaxMoveTable[] =
 {
-    {SPECIES_VENUSAUR_GMAX,                   TYPE_GRASS,      MOVE_G_MAX_VINE_LASH},
+    {SPECIES_VENUSAUR_GMAX,                   TYPE_PLANT,      MOVE_G_MAX_VINE_LASH},
     {SPECIES_BLASTOISE_GMAX,                  TYPE_WATER,      MOVE_G_MAX_CANNONADE},
     {SPECIES_CHARIZARD_GMAX,                  TYPE_FIRE,       MOVE_G_MAX_WILDFIRE},
-    {SPECIES_BUTTERFREE_GMAX,                 TYPE_BUG,        MOVE_G_MAX_BEFUDDLE},
+    {SPECIES_BUTTERFREE_GMAX,                 TYPE_INSECT,        MOVE_G_MAX_BEFUDDLE},
     {SPECIES_PIKACHU_GMAX,                    TYPE_ELECTRIC,   MOVE_G_MAX_VOLT_CRASH},
-    {SPECIES_MEOWTH_GMAX,                     TYPE_NORMAL,     MOVE_G_MAX_GOLD_RUSH},
-    {SPECIES_MACHAMP_GMAX,                    TYPE_FIGHTING,   MOVE_G_MAX_CHI_STRIKE},
-    {SPECIES_GENGAR_GMAX,                     TYPE_GHOST,      MOVE_G_MAX_TERROR},
+    {SPECIES_MEOWTH_GMAX,                     TYPE_NULL,     MOVE_G_MAX_GOLD_RUSH},
+    {SPECIES_MACHAMP_GMAX,                    TYPE_COMBAT,   MOVE_G_MAX_CHI_STRIKE},
+    {SPECIES_GENGAR_GMAX,                     TYPE_UNDEAD,      MOVE_G_MAX_TERROR},
     {SPECIES_KINGLER_GMAX,                    TYPE_WATER,      MOVE_G_MAX_FOAM_BURST},
     {SPECIES_LAPRAS_GMAX,                     TYPE_ICE,        MOVE_G_MAX_RESONANCE},
-    {SPECIES_EEVEE_GMAX,                      TYPE_NORMAL,     MOVE_G_MAX_CUDDLE},
-    {SPECIES_SNORLAX_GMAX,                    TYPE_NORMAL,     MOVE_G_MAX_REPLENISH},
-    {SPECIES_GARBODOR_GMAX,                   TYPE_POISON,     MOVE_G_MAX_MALODOR},
-    {SPECIES_MELMETAL_GMAX,                   TYPE_STEEL,      MOVE_G_MAX_MELTDOWN},
-    {SPECIES_RILLABOOM_GMAX,                  TYPE_GRASS,      MOVE_G_MAX_DRUM_SOLO},
+    {SPECIES_EEVEE_GMAX,                      TYPE_NULL,     MOVE_G_MAX_CUDDLE},
+    {SPECIES_SNORLAX_GMAX,                    TYPE_NULL,     MOVE_G_MAX_REPLENISH},
+    {SPECIES_GARBODOR_GMAX,                   TYPE_FILTH,     MOVE_G_MAX_MALODOR},
+    {SPECIES_MELMETAL_GMAX,                   TYPE_MACHINE,      MOVE_G_MAX_MELTDOWN},
+    {SPECIES_RILLABOOM_GMAX,                  TYPE_PLANT,      MOVE_G_MAX_DRUM_SOLO},
     {SPECIES_CINDERACE_GMAX,                  TYPE_FIRE,       MOVE_G_MAX_FIREBALL},
     {SPECIES_INTELEON_GMAX,                   TYPE_WATER,      MOVE_G_MAX_HYDROSNIPE},
-    {SPECIES_CORVIKNIGHT_GMAX,                TYPE_FLYING,     MOVE_G_MAX_WIND_RAGE},
+    {SPECIES_CORVIKNIGHT_GMAX,                TYPE_WIND,     MOVE_G_MAX_WIND_RAGE},
     {SPECIES_ORBEETLE_GMAX,                   TYPE_PSYCHIC,    MOVE_G_MAX_GRAVITAS},
     {SPECIES_DREDNAW_GMAX,                    TYPE_WATER,      MOVE_G_MAX_STONESURGE},
-    {SPECIES_COALOSSAL_GMAX,                  TYPE_ROCK,       MOVE_G_MAX_VOLCALITH},
-    {SPECIES_FLAPPLE_GMAX,                    TYPE_GRASS,      MOVE_G_MAX_TARTNESS},
-    {SPECIES_APPLETUN_GMAX,                   TYPE_GRASS,      MOVE_G_MAX_SWEETNESS},
-    {SPECIES_SANDACONDA_GMAX,                 TYPE_GROUND,     MOVE_G_MAX_SANDBLAST},
+    {SPECIES_COALOSSAL_GMAX,                  TYPE_BEAST,       MOVE_G_MAX_VOLCALITH},
+    {SPECIES_FLAPPLE_GMAX,                    TYPE_PLANT,      MOVE_G_MAX_TARTNESS},
+    {SPECIES_APPLETUN_GMAX,                   TYPE_PLANT,      MOVE_G_MAX_SWEETNESS},
+    {SPECIES_SANDACONDA_GMAX,                 TYPE_EARTH,     MOVE_G_MAX_SANDBLAST},
     {SPECIES_TOXTRICITY_AMPED_GMAX,           TYPE_ELECTRIC,   MOVE_G_MAX_STUN_SHOCK},
     {SPECIES_TOXTRICITY_LOW_KEY_GMAX,         TYPE_ELECTRIC,   MOVE_G_MAX_STUN_SHOCK},
     {SPECIES_CENTISKORCH_GMAX,                TYPE_FIRE,       MOVE_G_MAX_CENTIFERNO},
-    {SPECIES_HATTERENE_GMAX,                  TYPE_FAIRY,      MOVE_G_MAX_SMITE},
+    {SPECIES_HATTERENE_GMAX,                  TYPE_PUPPET,      MOVE_G_MAX_SMITE},
     {SPECIES_GRIMMSNARL_GMAX,                 TYPE_DARK,       MOVE_G_MAX_SNOOZE},
-    {SPECIES_ALCREMIE_GMAX,                   TYPE_FAIRY,      MOVE_G_MAX_FINALE},
-    {SPECIES_COPPERAJAH_GMAX,                 TYPE_STEEL,      MOVE_G_MAX_STEELSURGE},
+    {SPECIES_ALCREMIE_GMAX,                   TYPE_PUPPET,      MOVE_G_MAX_FINALE},
+    {SPECIES_COPPERAJAH_GMAX,                 TYPE_MACHINE,      MOVE_G_MAX_STEELSURGE},
     {SPECIES_DURALUDON_GMAX,                  TYPE_DRAGON,     MOVE_G_MAX_DEPLETION},
     {SPECIES_URSHIFU_SINGLE_STRIKE_GMAX,TYPE_DARK,       MOVE_G_MAX_ONE_BLOW},
     {SPECIES_URSHIFU_RAPID_STRIKE_GMAX, TYPE_WATER,      MOVE_G_MAX_RAPID_FLOW},
@@ -333,8 +333,8 @@ u32 GetMaxMovePower(u32 move)
 
     tier = GetMaxPowerTier(move);
     u32 moveType = GetMoveType(move);
-    if (moveType == TYPE_FIGHTING
-     || moveType == TYPE_POISON
+    if (moveType == TYPE_COMBAT
+     || moveType == TYPE_FILTH
      || move == MOVE_MULTI_ATTACK)
     {
         switch (tier)
@@ -453,7 +453,7 @@ void ChooseDamageNonTypesString(u8 type)
 {
     switch (type)
     {
-        case TYPE_GRASS:
+        case TYPE_PLANT:
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TRAPPED_WITH_VINES;
             break;
         case TYPE_WATER:
@@ -462,7 +462,7 @@ void ChooseDamageNonTypesString(u8 type)
         case TYPE_FIRE:
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_FIRE;
             break;
-        case TYPE_ROCK:
+        case TYPE_BEAST:
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SURROUNDED_BY_ROCKS;
             break;
     }

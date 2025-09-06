@@ -3,25 +3,25 @@
 
 // Pokémon types
 #define TYPE_NONE             0
-#define TYPE_NORMAL           1
-#define TYPE_FIGHTING         2
-#define TYPE_FLYING           3
-#define TYPE_POISON           4
-#define TYPE_GROUND           5
-#define TYPE_ROCK             6
-#define TYPE_BUG              7
-#define TYPE_GHOST            8
-#define TYPE_STEEL            9
+#define TYPE_NULL           1
+#define TYPE_COMBAT         2
+#define TYPE_WIND           3
+#define TYPE_FILTH           4
+#define TYPE_EARTH           5
+#define TYPE_BEAST             6
+#define TYPE_INSECT              7
+#define TYPE_UNDEAD            8
+#define TYPE_MACHINE            9
 #define TYPE_MYSTERY          10
 #define TYPE_FIRE             11
 #define TYPE_WATER            12
-#define TYPE_GRASS            13
+#define TYPE_PLANT            13
 #define TYPE_ELECTRIC         14
 #define TYPE_PSYCHIC          15
 #define TYPE_ICE              16
 #define TYPE_DRAGON           17
 #define TYPE_DARK             18
-#define TYPE_FAIRY            19
+#define TYPE_PUPPET            19
 #define TYPE_STELLAR          20
 #define TYPE_VACCINE		  21
 #define TYPE_VIRUS			  22
@@ -305,7 +305,10 @@ enum EvolutionMethods {
     EVO_ITEM_COUNT_999,                  // Pokémon levels up after trainer has collected 999 of a specific item
     EVO_DEFEAT_THREE_WITH_ITEM,          // Pokémon levels up after having defeat 3 Pokémon of the same species holding the specified item
     EVO_OVERWORLD_STEPS,                 // Pokémon levels up after having taken a specific amount of steps in the overworld
+    EVO_STAT_BASED, 					 // Pokemon evolve when stat requirements are met
+    EVO_SADNESS,                         // Pokemon evolves after levelling up with low happines. for failure evolutions like numemon
 };
+#define param levelRequirement //to fix old code referencing evolutions[i].param
 
 enum EvolutionMode {
     EVO_MODE_NORMAL,

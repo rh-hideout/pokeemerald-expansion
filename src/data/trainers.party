@@ -3591,20 +3591,20 @@ Class: Guitarist
 Pic: Guitarist
 Gender: Male
 Music: Intense
-Double Battle: No
+Double Battle: Yes
 AI: Check Bad Move
 
-Magnemite
-Level: 25
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Wobbuffet  
+Ability: Run Away  
+Level: 10  
+IVs: 0 Atk   
+- Splash
 
-Whismur
-Level: 25
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
-
-Magnemite
-Level: 25
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Wobbuffet  
+Ability: Run Away  
+Level: 10  
+IVs: 0 Atk  
+- Splash
 
 === TRAINER_DALTON_3 ===
 Name: DALTON

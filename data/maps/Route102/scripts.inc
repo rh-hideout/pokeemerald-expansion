@@ -72,6 +72,7 @@ Route102_EventScript_Allen::
 	trainerbattle_single TRAINER_ALLEN, Route102_Text_AllenIntro, Route102_Text_AllenDefeated
 	msgbox Route102_Text_AllenPostBattle, MSGBOX_AUTOCLOSE
 	end
+	
 
 Route102_Text_WatchMeCatchPokemon:
 	.string "WALLY: {PLAYER}…\n"
@@ -109,3 +110,66 @@ Route102_Text_RouteSignOldale:
 Route102_Text_RouteSignPetalburg:
 	.string "ROUTE 102\n"
 	.string "{LEFT_ARROW} PETALBURG CITY$"
+
+// Calvin battle code -----------------------------------------------------------------------------
+
+TrainerBattleCalvin::
+	lockall
+	faceplayer
+	goto_if_not_defeated TRAINER_DALTON_2 Calvin_AskforInitialBattle
+	goto_if_eq Calvin_AskforRematch
+	end
+
+//if you have battled them before	
+Calvin_AskforRematch:
+	msgbox CalvinReBattle_Text_Ask, MSGBOX_YESNO
+	compare VAR_RESULT, TRUE
+	goto_if_eq CalvinBattleStart
+	goto_if_ne CalvinDecline
+	releaseall
+	end
+//if you haven't battled them before
+Calvin_AskforInitialBattle:
+	msgbox CalvinInitialBattle_Text_ask, MSGBOX_YESNO
+	compare VAR_RESULT, TRUE
+	goto_if_eq CalvinBattleStart
+	goto_if_ne CalvinDecline
+	releaseall
+	end
+//regardless, this is the start of the battle. 
+CalvinBattleStart:
+	cleartrainerflag TRAINER_DALTON_2
+	trainerbattle_single TRAINER_DALTON_2, CalvinBattle_Text_BattleBegin, CalvinBattle_Text_BattleEnd
+	releaseall
+	end
+//if you decline the battle	
+CalvinDecline:
+	msgbox Calvin_Text_Decline, MSGBOX_DEFAULT
+    releaseall
+    end
+
+//what they say if you haven't battled before
+CalvinInitialBattle_Text_ask:
+	.string "If you have POKéMON with you, then\n"
+	.string "you're an official POKéMON TRAINER!\l"
+	.string "You can't say no to my challenge!$"
+
+//what you say if you HAVE battled before
+CalvinReBattle_Text_Ask:
+	.string "Ever since I lost to you, I desperately\n"
+	.string "trained my POKéMON.\l"
+	.string "You can't say no to my challenge!$"
+
+//what they say once you've agreed to battle
+CalvinBattle_Text_BattleBegin:
+	.string "Yes! Let's go!$"
+	
+//what they say after you beat them	
+CalvinBattle_Text_BattleEnd:
+	.string "Arrgh, I lost…\n"
+	.string "Is my training method not right?$"
+	
+//what they say if you decline to battle	
+Calvin_Text_Decline:
+	.string "If you're going to get stronger,\n"
+	.string "I'll get stronger, too.$"

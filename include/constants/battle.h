@@ -267,8 +267,8 @@ enum BattlerId
 // Used for damaging entry hazards based on type
 enum TypeSideHazard
 {
-    TYPE_SIDE_HAZARD_POINTED_STONES = TYPE_ROCK,
-    TYPE_SIDE_HAZARD_SHARP_STEEL    = TYPE_STEEL,
+    TYPE_SIDE_HAZARD_POINTED_STONES = TYPE_BEAST,
+    TYPE_SIDE_HAZARD_SHARP_STEEL    = TYPE_MACHINE,
 };
 
 // Field affecting statuses.

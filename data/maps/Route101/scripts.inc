@@ -297,5 +297,7 @@ Route101_Text_WildPokemonInTallGrass:
 	.string "to go into the tall grass and search.$"
 
 Route101_Text_RouteSign:
-	.string "Pokemon in grass: Zigzagoon, Poochyena\n"
-    .string "and whurmple.$"
+	.string "Japanese coming up!\p"
+	.string "デジタルモンスター$"
+//	.string "Pokemon in grass: Zigzagoon, Poochyena\n"
+ //   .string "and whurmple.$"

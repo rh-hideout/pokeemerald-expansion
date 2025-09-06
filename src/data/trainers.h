@@ -8883,44 +8883,45 @@ F_TRAINER_FEMALE |
 #line 3593
             TRAINER_ENCOUNTER_MUSIC_INTENSE,
 #line 3594
-        .doubleBattle = FALSE,
+        .doubleBattle = TRUE,
 #line 3595
         .aiFlags = AI_FLAG_CHECK_BAD_MOVE,
-        .partySize = 3,
+        .partySize = 2,
         .party = (const struct TrainerMon[])
         {
             {
 #line 3597
-            .species = SPECIES_MAGNEMITE,
+            .species = SPECIES_WOBBUFFET,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 3599
-            .iv = TRAINER_PARTY_IVS(1, 1, 1, 1, 1, 1),
+#line 3600
+            .iv = TRAINER_PARTY_IVS(31, 0, 31, 31, 31, 31),
 #line 3598
-            .lvl = 25,
+            .ability = ABILITY_RUN_AWAY,
+#line 3599
+            .lvl = 10,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
-            },
-            {
+            .moves = {
 #line 3601
-            .species = SPECIES_WHISMUR,
-            .gender = TRAINER_MON_RANDOM_GENDER,
-#line 3603
-            .iv = TRAINER_PARTY_IVS(1, 1, 1, 1, 1, 1),
-#line 3602
-            .lvl = 25,
-            .nature = NATURE_HARDY,
-            .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+                MOVE_SPLASH,
+            },
             },
             {
-#line 3605
-            .species = SPECIES_MAGNEMITE,
+#line 3603
+            .species = SPECIES_WOBBUFFET,
             .gender = TRAINER_MON_RANDOM_GENDER,
-#line 3607
-            .iv = TRAINER_PARTY_IVS(1, 1, 1, 1, 1, 1),
 #line 3606
-            .lvl = 25,
+            .iv = TRAINER_PARTY_IVS(31, 0, 31, 31, 31, 31),
+#line 3604
+            .ability = ABILITY_RUN_AWAY,
+#line 3605
+            .lvl = 10,
             .nature = NATURE_HARDY,
             .dynamaxLevel = MAX_DYNAMAX_LEVEL,
+            .moves = {
+#line 3607
+                MOVE_SPLASH,
+            },
             },
         },
     },

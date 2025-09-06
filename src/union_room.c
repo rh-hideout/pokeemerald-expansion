@@ -2531,7 +2531,7 @@ static void Task_RunUnionRoom(u8 taskId)
                 if (id >= PARTY_SIZE)
                 {
                     ResetUnionRoomTrade(&sUnionRoomTrade);
-                    SetTradeBoardRegisteredMonInfo(TYPE_NORMAL, SPECIES_NONE, 0);
+                    SetTradeBoardRegisteredMonInfo(TYPE_NULL, SPECIES_NONE, 0);
                     ScheduleFieldMessageAndExit(sText_RegistrationCanceled);
                 }
                 else if (!RegisterTradeMonAndGetIsEgg(GetCursorSelectionMonId(), &sUnionRoomTrade))
@@ -2623,7 +2623,7 @@ static void Task_RunUnionRoom(u8 taskId)
             case PLIST_CONTACTED:
                 uroom->state = UR_STATE_PLAYER_CONTACTED_YOU;
                 StartScriptInteraction();
-                SetTradeBoardRegisteredMonInfo(TYPE_NORMAL, SPECIES_NONE, 0);
+                SetTradeBoardRegisteredMonInfo(TYPE_NULL, SPECIES_NONE, 0);
                 UpdateGameData_SetActivity(ACTIVITY_NPCTALK | IN_UNION_ROOM, GetActivePartnersInfo(uroom), FALSE);
                 break;
             }
@@ -3113,7 +3113,7 @@ static void Task_RunUnionRoom(u8 taskId)
             case LIST_CANCEL:
             case NUMBER_OF_MON_TYPES: // Exit
                 ResetUnionRoomTrade(&sUnionRoomTrade);
-                SetTradeBoardRegisteredMonInfo(TYPE_NORMAL, SPECIES_NONE, 0);
+                SetTradeBoardRegisteredMonInfo(TYPE_NULL, SPECIES_NONE, 0);
                 ScheduleFieldMessageAndExit(sText_RegistrationCanceled);
                 break;
             default:
@@ -3143,7 +3143,7 @@ static void Task_RunUnionRoom(u8 taskId)
     case UR_STATE_CANCEL_REGISTRATION:
         if (PrintOnTextbox(&uroom->textState, sText_RegistrationCanceled2))
         {
-            SetTradeBoardRegisteredMonInfo(TYPE_NORMAL, SPECIES_NONE, 0);
+            SetTradeBoardRegisteredMonInfo(TYPE_NULL, SPECIES_NONE, 0);
             ResetUnionRoomTrade(&sUnionRoomTrade);
             HandleCancelActivity(TRUE);
             uroom->state = UR_STATE_MAIN;

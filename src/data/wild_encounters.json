@@ -85,62 +85,62 @@
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_AGUMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_PALMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_AGUMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_PALMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_AGUMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_PALMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_VEEMON"
+                "species": "SPECIES_MOTIMON"
               }
             ]
           }

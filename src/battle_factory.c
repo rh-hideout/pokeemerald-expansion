@@ -555,7 +555,7 @@ static void GetOpponentMostCommonMonType(void)
     gFacilityTrainerMons = gBattleFrontierMons;
 
     // Count the number of times each type occurs in the opponent's party.
-    for (i = TYPE_NORMAL; i < NUMBER_OF_MON_TYPES; i++)
+    for (i = TYPE_NULL; i < NUMBER_OF_MON_TYPES; i++)
         typeCounts[i] = 0;
     for (i = 0; i < FRONTIER_PARTY_SIZE; i++)
     {

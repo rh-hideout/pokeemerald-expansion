@@ -64,6 +64,9 @@
 #include "constants/union_room.h"
 #include "constants/weather.h"
 #include "wild_encounter.h"
+#include <stdbool.h>
+
+u16 GetMonStatValue(struct Pokemon *mon, u8 statId);
 
 #define FRIENDSHIP_EVO_THRESHOLD ((P_FRIENDSHIP_EVO_THRESHOLD >= GEN_8) ? 160 : 220)
 
@@ -4758,6 +4761,53 @@ u16 GetEvolutionTargetSpecies(struct Pokemon *mon, enum EvolutionMode mode, u16 
                 if (mon == GetFirstLiveMon() && gFollowerSteps >= evolutions[i].param)
                     targetSpecies = evolutions[i].targetSpecies;
                 break;
+            case EVO_SADNESS:
+                if (evolutions[i].param >=friendship)
+                    targetSpecies = evolutions[i].targetSpecies;
+                break;
+            case EVO_STAT_BASED:
+    if (level >= evolutions[i].levelRequirement)
+    {
+        bool statsPass = TRUE;
+
+        if (evolutions[i].stat1Id < NUM_STATS)
+        {
+            u16 statValue = GetMonStatValue(mon, evolutions[i].stat1Id);
+            if (statValue < evolutions[i].stat1Min)
+                statsPass = FALSE;
+        }
+
+        if (evolutions[i].stat2Id < NUM_STATS)
+        {
+            u16 statValue = GetMonStatValue(mon, evolutions[i].stat2Id);
+            if (statValue < evolutions[i].stat2Min)
+                statsPass = FALSE;
+        }
+
+        if (evolutions[i].stat3Id < NUM_STATS)
+        {
+            u16 statValue = GetMonStatValue(mon, evolutions[i].stat3Id);
+            if (statValue < evolutions[i].stat3Min)
+                statsPass = FALSE;
+        }
+
+        if (statsPass)
+        {
+            u16 friendshipCheck = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);
+            u16 heldItemCheck = GetMonData(mon, MON_DATA_HELD_ITEM, NULL);
+
+            if (friendshipCheck >= evolutions[i].friendshipMin
+                && friendshipCheck <= evolutions[i].friendshipMax
+                && (evolutions[i].heldItem == ITEM_NONE || heldItemCheck == evolutions[i].heldItem))
+            {
+                targetSpecies = evolutions[i].targetSpecies;
+            }
+        }
+    }
+    break;
+
+
+
             }
         }
         break;
@@ -7091,4 +7141,21 @@ u32 GetTeraTypeFromPersonality(struct Pokemon *mon)
 {
     const u8 *types = gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].types;
     return (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1) == 0 ? types[0] : types[1];
+}
+
+u16 GetMonStatValue(struct Pokemon *mon, u8 statId)
+{
+    static const u8 statDataOffsets[NUM_STATS] = {
+        MON_DATA_HP, 
+        MON_DATA_ATK, 
+        MON_DATA_DEF, 
+        MON_DATA_SPEED, 
+        MON_DATA_SPATK, 
+        MON_DATA_SPDEF
+    };
+
+    if (statId >= NUM_STATS)
+        return 0;
+
+    return GetMonData(mon, statDataOffsets[statId], NULL);
 }

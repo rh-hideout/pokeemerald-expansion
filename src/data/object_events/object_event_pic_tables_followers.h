@@ -6727,4 +6727,946 @@ static const struct SpriteFrameImage sPicTable_Pecharunt[] = {
 };
 #endif //P_FAMILY_PECHARUNT
 
+//SPECIES_KOROMON
+static const struct SpriteFrameImage sPicTable_Koromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Koromon, 4, 4),
+};
+
+//SPECIES_YOKOMON
+static const struct SpriteFrameImage sPicTable_Yokomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Yokomon, 4, 4),
+};
+
+//SPECIES_BUKAMON
+static const struct SpriteFrameImage sPicTable_Bukamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bukamon, 4, 4),
+};
+
+//SPECIES_TSUNOMON
+static const struct SpriteFrameImage sPicTable_Tsunomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tsunomon, 4, 4),
+};
+
+//SPECIES_TANEMON
+static const struct SpriteFrameImage sPicTable_Tanemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tanemon, 4, 4),
+};
+
+//SPECIES_MOTIMON
+static const struct SpriteFrameImage sPicTable_Motimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Motimon, 4, 4),
+};
+
+//SPECIES_KODOKUGUMON2
+static const struct SpriteFrameImage sPicTable_Kodokugumon2[] = {
+    overworld_ascending_frames(gObjectEventPic_Kodokugumon2, 4, 4),
+};
+
+//SPECIES_DEMIMERAMON
+static const struct SpriteFrameImage sPicTable_Demimeramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Demimeramon, 4, 4),
+};
+
+//SPECIES_KAPURIMON
+static const struct SpriteFrameImage sPicTable_Kapurimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kapurimon, 4, 4),
+};
+
+//SPECIES_DEMIVEEMON
+static const struct SpriteFrameImage sPicTable_Demiveemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Demiveemon, 4, 4),
+};
+
+//SPECIES_POROMON
+static const struct SpriteFrameImage sPicTable_Poromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Poromon, 4, 4),
+};
+
+//SPECIES_UPAMON
+static const struct SpriteFrameImage sPicTable_Upamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Upamon, 4, 4),
+};
+
+//SPECIES_MINOMON
+static const struct SpriteFrameImage sPicTable_Minomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Minomon, 4, 4),
+};
+
+//SPECIES_TOKOMON
+static const struct SpriteFrameImage sPicTable_Tokomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tokomon, 4, 4),
+};
+
+//SPECIES_NIYAROMON
+static const struct SpriteFrameImage sPicTable_Niyaromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Niyaromon, 4, 4),
+};
+
+//SPECIES_PAGUMON
+static const struct SpriteFrameImage sPicTable_Pagumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pagumon, 4, 4),
+};
+
+//SPECIES_TSUMEMON
+static const struct SpriteFrameImage sPicTable_Tsumemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tsumemon, 4, 4),
+};
+
+//SPECIES_GIGIMON
+static const struct SpriteFrameImage sPicTable_Gigimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gigimon, 4, 4),
+};
+
+//SPECIES_GUMMYMON
+static const struct SpriteFrameImage sPicTable_Gummymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gummymon, 4, 4),
+};
+
+//SPECIES_KOKOMON
+static const struct SpriteFrameImage sPicTable_Kokomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kokomon, 4, 4),
+};
+
+//SPECIES_VIXIMON
+static const struct SpriteFrameImage sPicTable_Viximon[] = {
+    overworld_ascending_frames(gObjectEventPic_Viximon, 4, 4),
+};
+
+//SPECIES_YAAMON
+static const struct SpriteFrameImage sPicTable_Yaamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Yaamon, 4, 4),
+};
+
+//SPECIES_CALUMON
+static const struct SpriteFrameImage sPicTable_Calumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Calumon, 4, 4),
+};
+
+//SPECIES_GURIMON
+static const struct SpriteFrameImage sPicTable_Gurimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gurimon, 4, 4),
+};
+
+//SPECIES_PUYOYOMON
+static const struct SpriteFrameImage sPicTable_Puyoyomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Puyoyomon, 4, 4),
+};
+
+//SPECIES_BOSAMON
+static const struct SpriteFrameImage sPicTable_Bosamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bosamon, 4, 4),
+};
+
+//SPECIES_BIBIMON
+static const struct SpriteFrameImage sPicTable_Bibimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bibimon, 4, 4),
+};
+
+//SPECIES_PUROROMON
+static const struct SpriteFrameImage sPicTable_Puroromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Puroromon, 4, 4),
+};
+
+//SPECIES_FLUFFYMON
+static const struct SpriteFrameImage sPicTable_Fluffymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Fluffymon, 4, 4),
+};
+
+//SPECIES_GOROMON
+static const struct SpriteFrameImage sPicTable_Goromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Goromon, 4, 4),
+};
+
+//SPECIES_HIYARIMON
+static const struct SpriteFrameImage sPicTable_Hiyarimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Hiyarimon, 4, 4),
+};
+
+//SPECIES_MISSIMON
+static const struct SpriteFrameImage sPicTable_Missimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Missimon, 4, 4),
+};
+
+//SPECIES_ONIBIMON
+static const struct SpriteFrameImage sPicTable_Onibimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Onibimon, 4, 4),
+};
+
+//SPECIES_AGUMON
+static const struct SpriteFrameImage sPicTable_Agumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Agumon, 4, 4),
+};
+
+//SPECIES_GOMAMON
+static const struct SpriteFrameImage sPicTable_Gomamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gomamon, 4, 4),
+};
+
+//SPECIES_BIYOMON
+static const struct SpriteFrameImage sPicTable_Biyomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Biyomon, 4, 4),
+};
+
+//SPECIES_TENTOMON
+static const struct SpriteFrameImage sPicTable_Tentomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tentomon, 4, 4),
+};
+
+//SPECIES_PATAMON
+static const struct SpriteFrameImage sPicTable_Patamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Patamon, 4, 4),
+};
+
+//SPECIES_SALAMON
+static const struct SpriteFrameImage sPicTable_Salamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Salamon, 4, 4),
+};
+
+//SPECIES_GABUMON
+static const struct SpriteFrameImage sPicTable_Gabumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gabumon, 4, 4),
+};
+
+//SPECIES_ELECMON
+static const struct SpriteFrameImage sPicTable_Elecmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Elecmon, 4, 4),
+};
+
+//SPECIES_PALMON
+static const struct SpriteFrameImage sPicTable_Palmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Palmon, 4, 4),
+};
+
+//SPECIES_FLORAMON
+static const struct SpriteFrameImage sPicTable_Floramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Floramon, 4, 4),
+};
+
+//SPECIES_CRABMON
+static const struct SpriteFrameImage sPicTable_Crabmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Crabmon, 4, 4),
+};
+
+//SPECIES_CANDLEMON
+static const struct SpriteFrameImage sPicTable_Candlemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Candlemon, 4, 4),
+};
+
+//SPECIES_MUSHROOMON
+static const struct SpriteFrameImage sPicTable_Mushroomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Mushroomon, 4, 4),
+};
+
+//SPECIES_BETAMON
+static const struct SpriteFrameImage sPicTable_Betamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Betamon, 4, 4),
+};
+
+//SPECIES_OTAMAMON
+static const struct SpriteFrameImage sPicTable_Otamamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Otamamon, 4, 4),
+};
+
+//SPECIES_DEMIDEVIMON
+static const struct SpriteFrameImage sPicTable_Demidevimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Demidevimon, 4, 4),
+};
+
+//SPECIES_GAZIMON
+static const struct SpriteFrameImage sPicTable_Gazimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gazimon, 4, 4),
+};
+
+//SPECIES_GOBLIMON
+static const struct SpriteFrameImage sPicTable_Goblimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Goblimon, 4, 4),
+};
+
+//SPECIES_BLACKAGUMON
+static const struct SpriteFrameImage sPicTable_Blackagumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Blackagumon, 4, 4),
+};
+
+//SPECIES_BLACKGABUMON
+static const struct SpriteFrameImage sPicTable_Blackgabumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Blackgabumon, 4, 4),
+};
+
+//SPECIES_ELECMONV
+static const struct SpriteFrameImage sPicTable_Elecmonv[] = {
+    overworld_ascending_frames(gObjectEventPic_Elecmonv, 4, 4),
+};
+
+//SPECIES_SNOWAGUMON
+static const struct SpriteFrameImage sPicTable_Snowagumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Snowagumon, 4, 4),
+};
+
+//SPECIES_SNOWGOBLIMON
+static const struct SpriteFrameImage sPicTable_Snowgoblimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Snowgoblimon, 4, 4),
+};
+
+//SPECIES_TAPIRMON
+static const struct SpriteFrameImage sPicTable_Tapirmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tapirmon, 4, 4),
+};
+
+//SPECIES_GOTSUMON
+static const struct SpriteFrameImage sPicTable_Gotsumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gotsumon, 4, 4),
+};
+
+//SPECIES_SYAKOMON
+static const struct SpriteFrameImage sPicTable_Syakomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Syakomon, 4, 4),
+};
+
+//SPECIES_GIZAMON
+static const struct SpriteFrameImage sPicTable_Gizamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gizamon, 4, 4),
+};
+
+//SPECIES_CHUUMON
+static const struct SpriteFrameImage sPicTable_Chuumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Chuumon, 4, 4),
+};
+
+//SPECIES_KUNEMON
+static const struct SpriteFrameImage sPicTable_Kunemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kunemon, 4, 4),
+};
+
+//SPECIES_HAGURUMON
+static const struct SpriteFrameImage sPicTable_Hagurumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Hagurumon, 4, 4),
+};
+
+//SPECIES_SOLARMON
+static const struct SpriteFrameImage sPicTable_Solarmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Solarmon, 4, 4),
+};
+
+//SPECIES_VEEMON
+static const struct SpriteFrameImage sPicTable_Veemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Veemon, 4, 4),
+};
+
+//SPECIES_WORMMON
+static const struct SpriteFrameImage sPicTable_Wormmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Wormmon, 4, 4),
+};
+
+//SPECIES_HAWKMON
+static const struct SpriteFrameImage sPicTable_Hawkmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Hawkmon, 4, 4),
+};
+
+//SPECIES_ARMADILLOMON
+static const struct SpriteFrameImage sPicTable_Armadillomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Armadillomon, 4, 4),
+};
+
+//SPECIES_KERAMON
+static const struct SpriteFrameImage sPicTable_Keramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Keramon, 4, 4),
+};
+
+//SPECIES_TERRIERMON
+static const struct SpriteFrameImage sPicTable_Terriermon[] = {
+    overworld_ascending_frames(gObjectEventPic_Terriermon, 4, 4),
+};
+
+//SPECIES_LOPMON
+static const struct SpriteFrameImage sPicTable_Lopmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lopmon, 4, 4),
+};
+
+//SPECIES_GUILMON
+static const struct SpriteFrameImage sPicTable_Guilmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Guilmon, 4, 4),
+};
+
+//SPECIES_RENAMON
+static const struct SpriteFrameImage sPicTable_Renamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Renamon, 4, 4),
+};
+
+//SPECIES_MONODRAMON
+static const struct SpriteFrameImage sPicTable_Monodramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Monodramon, 4, 4),
+};
+
+//SPECIES_IMPMON
+static const struct SpriteFrameImage sPicTable_Impmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Impmon, 4, 4),
+};
+
+//SPECIES_BLACKGUILMON
+static const struct SpriteFrameImage sPicTable_Blackguilmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Blackguilmon, 4, 4),
+};
+
+//SPECIES_FLAMEMON
+static const struct SpriteFrameImage sPicTable_Flamemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Flamemon, 4, 4),
+};
+
+//SPECIES_STRABIMON
+static const struct SpriteFrameImage sPicTable_Strabimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Strabimon, 4, 4),
+};
+
+//SPECIES_TINKERMON
+static const struct SpriteFrameImage sPicTable_Tinkermon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tinkermon, 4, 4),
+};
+
+//SPECIES_KOKUWAMON
+static const struct SpriteFrameImage sPicTable_Kokuwamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kokuwamon, 4, 4),
+};
+
+//SPECIES_PENGUINMON
+static const struct SpriteFrameImage sPicTable_Penguinmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Penguinmon, 4, 4),
+};
+
+//SPECIES_LUCEMON
+static const struct SpriteFrameImage sPicTable_Lucemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lucemon, 4, 4),
+};
+
+//SPECIES_MONMON
+static const struct SpriteFrameImage sPicTable_Monmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Monmon, 4, 4),
+};
+
+//SPECIES_BEARMON
+static const struct SpriteFrameImage sPicTable_Bearmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bearmon, 4, 4),
+};
+
+//SPECIES_KOTEMON
+static const struct SpriteFrameImage sPicTable_Kotemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kotemon, 4, 4),
+};
+
+//SPECIES_RYUDAMON
+static const struct SpriteFrameImage sPicTable_Ryudamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Ryudamon, 4, 4),
+};
+
+//SPECIES_SWIMMON
+static const struct SpriteFrameImage sPicTable_Swimmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Swimmon, 4, 4),
+};
+
+//SPECIES_LUXMON
+static const struct SpriteFrameImage sPicTable_Luxmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Luxmon, 4, 4),
+};
+
+//SPECIES_DORUMON
+static const struct SpriteFrameImage sPicTable_Dorumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Dorumon, 4, 4),
+};
+
+//SPECIES_FANBEEMON
+static const struct SpriteFrameImage sPicTable_Fanbeemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Fanbeemon, 4, 4),
+};
+
+//SPECIES_KODOKUGUMON3
+static const struct SpriteFrameImage sPicTable_Kodokugumon3[] = {
+    overworld_ascending_frames(gObjectEventPic_Kodokugumon3, 4, 4),
+};
+
+//SPECIES_COMMANDRAMON
+static const struct SpriteFrameImage sPicTable_Commandramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Commandramon, 4, 4),
+};
+
+//SPECIES_SOUNDBIRDMON
+static const struct SpriteFrameImage sPicTable_Soundbirdmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Soundbirdmon, 4, 4),
+};
+
+//SPECIES_GAOMON
+static const struct SpriteFrameImage sPicTable_Gaomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gaomon, 4, 4),
+};
+
+//SPECIES_LALAMON
+static const struct SpriteFrameImage sPicTable_Lalamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lalamon, 4, 4),
+};
+
+//SPECIES_CORONAMON
+static const struct SpriteFrameImage sPicTable_Coronamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Coronamon, 4, 4),
+};
+
+//SPECIES_LUNAMON
+static const struct SpriteFrameImage sPicTable_Lunamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lunamon, 4, 4),
+};
+
+//SPECIES_JUNKMON
+static const struct SpriteFrameImage sPicTable_Junkmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Junkmon, 4, 4),
+};
+
+//SPECIES_PHASCOMON
+static const struct SpriteFrameImage sPicTable_Phascomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Phascomon, 4, 4),
+};
+
+//SPECIES_KKABUTERIMON
+static const struct SpriteFrameImage sPicTable_Kkabuterimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kkabuterimon, 4, 4),
+};
+
+//SPECIES_HACKMON
+static const struct SpriteFrameImage sPicTable_Hackmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Hackmon, 4, 4),
+};
+
+//SPECIES_SISTERMONB
+static const struct SpriteFrameImage sPicTable_Sistermonb[] = {
+    overworld_ascending_frames(gObjectEventPic_Sistermonb, 4, 4),
+};
+
+//SPECIES_SISTERMONBA
+static const struct SpriteFrameImage sPicTable_Sistermonba[] = {
+    overworld_ascending_frames(gObjectEventPic_Sistermonba, 4, 4),
+};
+
+//SPECIES_PULSEMON
+static const struct SpriteFrameImage sPicTable_Pulsemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pulsemon, 4, 4),
+};
+
+//SPECIES_RURIMON
+static const struct SpriteFrameImage sPicTable_Rurimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Rurimon, 4, 4),
+};
+
+//SPECIES_SANGOMON
+static const struct SpriteFrameImage sPicTable_Sangomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Sangomon, 4, 4),
+};
+
+//SPECIES_POMUMON
+static const struct SpriteFrameImage sPicTable_Pomumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pomumon, 4, 4),
+};
+
+//SPECIES_VORVOMON
+static const struct SpriteFrameImage sPicTable_Vorvomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Vorvomon, 4, 4),
+};
+
+//SPECIES_BULUCOMON
+static const struct SpriteFrameImage sPicTable_Bulucomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bulucomon, 4, 4),
+};
+
+//SPECIES_SUNARIZAMON
+static const struct SpriteFrameImage sPicTable_Sunarizamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Sunarizamon, 4, 4),
+};
+
+//SPECIES_GHOSTMON
+static const struct SpriteFrameImage sPicTable_Ghostmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Ghostmon, 4, 4),
+};
+
+//SPECIES_GAMMAMON
+static const struct SpriteFrameImage sPicTable_Gammamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gammamon, 4, 4),
+};
+
+//SPECIES_ANGORAMON
+static const struct SpriteFrameImage sPicTable_Angoramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Angoramon, 4, 4),
+};
+
+//SPECIES_JELLYMON
+static const struct SpriteFrameImage sPicTable_Jellymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Jellymon, 4, 4),
+};
+
+//SPECIES_ESPIMON
+static const struct SpriteFrameImage sPicTable_Espimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Espimon, 4, 4),
+};
+
+//SPECIES_SHOEMON
+static const struct SpriteFrameImage sPicTable_Shoemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Shoemon, 4, 4),
+};
+
+//SPECIES_PTEROMON
+static const struct SpriteFrameImage sPicTable_Pteromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pteromon, 4, 4),
+};
+
+//SPECIES_ELIZAMON
+static const struct SpriteFrameImage sPicTable_Elizamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Elizamon, 4, 4),
+};
+
+//SPECIES_BATTERIMON
+static const struct SpriteFrameImage sPicTable_Batterimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Batterimon, 4, 4),
+};
+
+//SPECIES_CHIKURIMON
+static const struct SpriteFrameImage sPicTable_Chikurimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Chikurimon, 4, 4),
+};
+
+//SPECIES_HUBMON
+static const struct SpriteFrameImage sPicTable_Hubmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Hubmon, 4, 4),
+};
+
+//SPECIES_MORPHOMON
+static const struct SpriteFrameImage sPicTable_Morphomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Morphomon, 4, 4),
+};
+
+//SPECIES_UKKOMON
+static const struct SpriteFrameImage sPicTable_Ukkomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Ukkomon, 4, 4),
+};
+
+//SPECIES_FLAMEDRAMON
+static const struct SpriteFrameImage sPicTable_Flamedramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Flamedramon, 4, 4),
+};
+
+//SPECIES_LIGHDRAMON
+static const struct SpriteFrameImage sPicTable_Lighdramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lighdramon, 4, 4),
+};
+
+//SPECIES_DEPTHMON
+static const struct SpriteFrameImage sPicTable_Depthmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Depthmon, 4, 4),
+};
+
+//SPECIES_YAKSAMON
+static const struct SpriteFrameImage sPicTable_Yaksamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Yaksamon, 4, 4),
+};
+
+//SPECIES_SETHMON
+static const struct SpriteFrameImage sPicTable_Sethmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Sethmon, 4, 4),
+};
+
+//SPECIES_GARGOYLEMON
+static const struct SpriteFrameImage sPicTable_Gargoylemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gargoylemon, 4, 4),
+};
+
+//SPECIES_HONEYBEEMON
+static const struct SpriteFrameImage sPicTable_Honeybeemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Honeybeemon, 4, 4),
+};
+
+//SPECIES_MAGNAMON
+static const struct SpriteFrameImage sPicTable_Magnamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Magnamon, 4, 4),
+};
+
+//SPECIES_GVEEDRAMON
+static const struct SpriteFrameImage sPicTable_Gveedramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Gveedramon, 4, 4),
+};
+
+//SPECIES_KANGARUMON
+static const struct SpriteFrameImage sPicTable_Kangarumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kangarumon, 4, 4),
+};
+
+//SPECIES_SHADRAMON
+static const struct SpriteFrameImage sPicTable_Shadramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Shadramon, 4, 4),
+};
+
+//SPECIES_TOGEMOGUMON
+static const struct SpriteFrameImage sPicTable_Togemogumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Togemogumon, 4, 4),
+};
+
+//SPECIES_AURUMON
+static const struct SpriteFrameImage sPicTable_Aurumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Aurumon, 4, 4),
+};
+
+//SPECIES_NOHEMON
+static const struct SpriteFrameImage sPicTable_Nohemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Nohemon, 4, 4),
+};
+
+//SPECIES_SEARCHMON
+static const struct SpriteFrameImage sPicTable_Searchmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Searchmon, 4, 4),
+};
+
+//SPECIES_BULLMON
+static const struct SpriteFrameImage sPicTable_Bullmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bullmon, 4, 4),
+};
+
+//SPECIES_ARCHELOMON
+static const struct SpriteFrameImage sPicTable_Archelomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Archelomon, 4, 4),
+};
+
+//SPECIES_QUETZALMON
+static const struct SpriteFrameImage sPicTable_Quetzalmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Quetzalmon, 4, 4),
+};
+
+//SPECIES_BUCCHIEMON
+static const struct SpriteFrameImage sPicTable_Bucchiemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Bucchiemon, 4, 4),
+};
+
+//SPECIES_KONGOUMON
+static const struct SpriteFrameImage sPicTable_Kongoumon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kongoumon, 4, 4),
+};
+
+//SPECIES_ALLOMON
+static const struct SpriteFrameImage sPicTable_Allomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Allomon, 4, 4),
+};
+
+//SPECIES_RINKMON
+static const struct SpriteFrameImage sPicTable_Rinkmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Rinkmon, 4, 4),
+};
+
+//SPECIES_HALSEMON
+static const struct SpriteFrameImage sPicTable_Halsemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Halsemon, 4, 4),
+};
+
+//SPECIES_SHURIMON
+static const struct SpriteFrameImage sPicTable_Shurimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Shurimon, 4, 4),
+};
+
+//SPECIES_FLYBEEMON
+static const struct SpriteFrameImage sPicTable_Flybeemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Flybeemon, 4, 4),
+};
+
+//SPECIES_ORCAMON
+static const struct SpriteFrameImage sPicTable_Orcamon[] = {
+    overworld_ascending_frames(gObjectEventPic_Orcamon, 4, 4),
+};
+
+//SPECIES_MOOSEMON
+static const struct SpriteFrameImage sPicTable_Moosemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Moosemon, 4, 4),
+};
+
+//SPECIES_HARPYMON
+static const struct SpriteFrameImage sPicTable_Harpymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Harpymon, 4, 4),
+};
+
+//SPECIES_TOUCANMON
+static const struct SpriteFrameImage sPicTable_Toucanmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Toucanmon, 4, 4),
+};
+
+//SPECIES_PEACOCKMON
+static const struct SpriteFrameImage sPicTable_Peacockmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Peacockmon, 4, 4),
+};
+
+//SPECIES_LYNXMON
+static const struct SpriteFrameImage sPicTable_Lynxmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Lynxmon, 4, 4),
+};
+
+//SPECIES_RABBITMON
+static const struct SpriteFrameImage sPicTable_Rabbitmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Rabbitmon, 4, 4),
+};
+
+//SPECIES_SWANMON
+static const struct SpriteFrameImage sPicTable_Swanmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Swanmon, 4, 4),
+};
+
+//SPECIES_KABUKIMON
+static const struct SpriteFrameImage sPicTable_Kabukimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kabukimon, 4, 4),
+};
+
+//SPECIES_BUTTERFLYMON
+static const struct SpriteFrameImage sPicTable_Butterflymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Butterflymon, 4, 4),
+};
+
+//SPECIES_TYLOMON
+static const struct SpriteFrameImage sPicTable_Tylomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tylomon, 4, 4),
+};
+
+//SPECIES_ORYXMON
+static const struct SpriteFrameImage sPicTable_Oryxmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Oryxmon, 4, 4),
+};
+
+//SPECIES_NEFERTIMON
+static const struct SpriteFrameImage sPicTable_Nefertimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Nefertimon, 4, 4),
+};
+
+//SPECIES_OPOSSUMMON
+static const struct SpriteFrameImage sPicTable_Opossummon[] = {
+    overworld_ascending_frames(gObjectEventPic_Opossummon, 4, 4),
+};
+
+//SPECIES_MAILDRAMON
+static const struct SpriteFrameImage sPicTable_Maildramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Maildramon, 4, 4),
+};
+
+//SPECIES_MAILDRAMONB
+static const struct SpriteFrameImage sPicTable_Maildramonb[] = {
+    overworld_ascending_frames(gObjectEventPic_Maildramonb, 4, 4),
+};
+
+//SPECIES_BOARMON
+static const struct SpriteFrameImage sPicTable_Boarmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Boarmon, 4, 4),
+};
+
+//SPECIES_SEPIKMON
+static const struct SpriteFrameImage sPicTable_Sepikmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Sepikmon, 4, 4),
+};
+
+//SPECIES_KENKIMON
+static const struct SpriteFrameImage sPicTable_Kenkimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Kenkimon, 4, 4),
+};
+
+//SPECIES_PTERAMON
+static const struct SpriteFrameImage sPicTable_Pteramon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pteramon, 4, 4),
+};
+
+//SPECIES_FROGMON
+static const struct SpriteFrameImage sPicTable_Frogmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Frogmon, 4, 4),
+};
+
+//SPECIES_DIGMON
+static const struct SpriteFrameImage sPicTable_Digmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Digmon, 4, 4),
+};
+
+//SPECIES_SUBMARIMON
+static const struct SpriteFrameImage sPicTable_Submarimon[] = {
+    overworld_ascending_frames(gObjectEventPic_Submarimon, 4, 4),
+};
+
+//SPECIES_SHEEPMON
+static const struct SpriteFrameImage sPicTable_Sheepmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Sheepmon, 4, 4),
+};
+
+//SPECIES_SEAHOMON
+static const struct SpriteFrameImage sPicTable_Seahomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Seahomon, 4, 4),
+};
+
+//SPECIES_CHAMELEMON
+static const struct SpriteFrameImage sPicTable_Chamelemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Chamelemon, 4, 4),
+};
+
+//SPECIES_ELEPHANTMON
+static const struct SpriteFrameImage sPicTable_Elephantmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Elephantmon, 4, 4),
+};
+
+//SPECIES_BAROMON
+static const struct SpriteFrameImage sPicTable_Baromon[] = {
+    overworld_ascending_frames(gObjectEventPic_Baromon, 4, 4),
+};
+
+//SPECIES_STEGOMON
+static const struct SpriteFrameImage sPicTable_Stegomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Stegomon, 4, 4),
+};
+
+//SPECIES_PIPISMON
+static const struct SpriteFrameImage sPicTable_Pipismon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pipismon, 4, 4),
+};
+
+//SPECIES_PONCHOMON
+static const struct SpriteFrameImage sPicTable_Ponchomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Ponchomon, 4, 4),
+};
+
+//SPECIES_MOTHMON
+static const struct SpriteFrameImage sPicTable_Mothmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Mothmon, 4, 4),
+};
+
+//SPECIES_MANTARAYMON
+static const struct SpriteFrameImage sPicTable_Mantaraymon[] = {
+    overworld_ascending_frames(gObjectEventPic_Mantaraymon, 4, 4),
+};
+
+//SPECIES_PEGASUSMON
+static const struct SpriteFrameImage sPicTable_Pegasusmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Pegasusmon, 4, 4),
+};
+
+//SPECIES_MANBOMON
+static const struct SpriteFrameImage sPicTable_Manbomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Manbomon, 4, 4),
+};
+
+//SPECIES_PRAIRIEMON
+static const struct SpriteFrameImage sPicTable_Prairiemon[] = {
+    overworld_ascending_frames(gObjectEventPic_Prairiemon, 4, 4),
+};
+
+//SPECIES_RHINOMON
+static const struct SpriteFrameImage sPicTable_Rhinomon[] = {
+    overworld_ascending_frames(gObjectEventPic_Rhinomon, 4, 4),
+};
+
+//SPECIES_TNDRBIRDMON
+static const struct SpriteFrameImage sPicTable_Tndrbirdmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Tndrbirdmon, 4, 4),
+};
+
+//SPECIES_SALAMANDRMON
+static const struct SpriteFrameImage sPicTable_Salamandrmon[] = {
+    overworld_ascending_frames(gObjectEventPic_Salamandrmon, 4, 4),
+};
+
+//SPECIES_RAPIDMONG
+static const struct SpriteFrameImage sPicTable_Rapidmong[] = {
+    overworld_ascending_frames(gObjectEventPic_Rapidmong, 4, 4),
+};
+
+
+
 #endif //OW_POKEMON_OBJECT_EVENTS

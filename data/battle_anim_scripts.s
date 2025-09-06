@@ -14399,8 +14399,8 @@ gBattleAnimMove_TerrainPulse::
 	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, 1, 1, 0, 7, RGB_BLACK
 	createvisualtask AnimTask_TerrainPulse, 0x5
 	jumpargeq 0x0, TYPE_ELECTRIC, TerrainPulseElectric
-	jumpargeq 0x0, TYPE_GRASS, TerrainPulseGrass
-	jumpargeq 0x0, TYPE_FAIRY, TerrainPulseFairy
+	jumpargeq 0x0, TYPE_PLANT, TerrainPulseGrass
+	jumpargeq 0x0, TYPE_PUPPET, TerrainPulseFairy
 	jumpargeq 0x0, TYPE_PSYCHIC, TerrainPulsePsychic
 TerrainPulseNormal:
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_DRAGON_PULSE, 0, 12, 12, RGB_WHITE
@@ -17375,7 +17375,7 @@ gBattleAnimMove_IvyCudgel::
 	playsewithpan SE_M_SWAGGER, SOUND_PAN_ATTACKER
 	createvisualtask AnimTask_TranslateMonEllipticalRespectSide, 2, ANIM_ATTACKER, 12, 4, 2, 4
 	jumpifmovetypeequal TYPE_FIRE, IvyCudgelFire
-	jumpifmovetypeequal TYPE_ROCK, IvyCudgelRock
+	jumpifmovetypeequal TYPE_BEAST, IvyCudgelRock
 	jumpifmovetypeequal TYPE_WATER, IvyCudgelWater
 	createsprite gIvyCudgelSpriteTemplate, ANIM_TARGET, 2
 	delay 60

@@ -2490,13 +2490,13 @@
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req
-	jumpifnottype BS_TARGET, TYPE_GRASS, 1f
+	jumpifnottype BS_TARGET, TYPE_PLANT, 1f
 	jumpifability BS_TARGET_SIDE, ABILITY_FLOWER_VEIL, \jumpInstr
 	1:
 	.endm
 
 	.macro jumpifflowerveilattacker jumpInstr:req
-	jumpifnottype BS_ATTACKER, TYPE_GRASS, 1f
+	jumpifnottype BS_ATTACKER, TYPE_PLANT, 1f
 	jumpifability BS_ATTACKER_SIDE, ABILITY_FLOWER_VEIL, \jumpInstr
 	1:
 	.endm

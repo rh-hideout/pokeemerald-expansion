@@ -3,13 +3,13 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveType(MOVE_FURY_CUTTER) == TYPE_BUG);
+    ASSUME(GetMoveType(MOVE_FURY_CUTTER) == TYPE_INSECT);
     ASSUME(!IsBattleMoveStatus(MOVE_FURY_CUTTER));
     ASSUME(GetMoveType(MOVE_FEINT_ATTACK) == TYPE_DARK);
     ASSUME(!IsBattleMoveStatus(MOVE_FEINT_ATTACK));
-    ASSUME(GetMoveType(MOVE_SHADOW_PUNCH) == TYPE_GHOST);
+    ASSUME(GetMoveType(MOVE_SHADOW_PUNCH) == TYPE_UNDEAD);
     ASSUME(!IsBattleMoveStatus(MOVE_SHADOW_PUNCH));
-    ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+    ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NULL);
     ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
 }
 
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn") // Specific 
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
-        ASSUME(GetMoveType(MOVE_U_TURN) == TYPE_BUG);
+        ASSUME(GetMoveType(MOVE_U_TURN) == TYPE_INSECT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }

@@ -344,11 +344,22 @@ struct BattlePokemon
     /*0x5A*/ bool8 isShiny;
 };
 
-struct Evolution
-{
+struct Evolution {
     u16 method;
-    u16 param;
+    u16 levelRequirement;
     u16 targetSpecies;
+
+    u8 stat1Id;
+    u8 stat1Min;
+    u8 stat2Id;
+    u8 stat2Min;
+    u8 stat3Id;
+    u8 stat3Min;
+
+    u8 friendshipMin;
+    u8 friendshipMax;
+
+    u16 heldItem;
 };
 
 struct SpeciesInfo /*0xC4*/

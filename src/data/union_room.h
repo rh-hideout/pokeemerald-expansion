@@ -869,24 +869,24 @@ static const struct WindowTemplate sWindowTemplate_TradingBoardRequestType = {
 
 // Subtract two from the total type count to handle in-battle types not for display
 static const struct ListMenuItem sTradingBoardTypes[NUMBER_OF_MON_TYPES - 2] = {
-    { gTypesInfo[TYPE_NORMAL].name,   TYPE_NORMAL         },
+    { gTypesInfo[TYPE_NULL].name,   TYPE_NULL         },
     { gTypesInfo[TYPE_FIRE].name,     TYPE_FIRE           },
     { gTypesInfo[TYPE_WATER].name,    TYPE_WATER          },
     { gTypesInfo[TYPE_ELECTRIC].name, TYPE_ELECTRIC       },
-    { gTypesInfo[TYPE_GRASS].name,    TYPE_GRASS          },
+    { gTypesInfo[TYPE_PLANT].name,    TYPE_PLANT          },
     { gTypesInfo[TYPE_ICE].name,      TYPE_ICE            },
-    { gTypesInfo[TYPE_GROUND].name,   TYPE_GROUND         },
-    { gTypesInfo[TYPE_ROCK].name,     TYPE_ROCK           },
-    { gTypesInfo[TYPE_FLYING].name,   TYPE_FLYING         },
+    { gTypesInfo[TYPE_EARTH].name,   TYPE_EARTH         },
+    { gTypesInfo[TYPE_BEAST].name,     TYPE_BEAST           },
+    { gTypesInfo[TYPE_WIND].name,   TYPE_WIND         },
     { gTypesInfo[TYPE_PSYCHIC].name,  TYPE_PSYCHIC        },
-    { gTypesInfo[TYPE_FIGHTING].name, TYPE_FIGHTING       },
-    { gTypesInfo[TYPE_POISON].name,   TYPE_POISON         },
-    { gTypesInfo[TYPE_BUG].name,      TYPE_BUG            },
-    { gTypesInfo[TYPE_GHOST].name,    TYPE_GHOST          },
+    { gTypesInfo[TYPE_COMBAT].name, TYPE_COMBAT       },
+    { gTypesInfo[TYPE_FILTH].name,   TYPE_FILTH         },
+    { gTypesInfo[TYPE_INSECT].name,      TYPE_INSECT            },
+    { gTypesInfo[TYPE_UNDEAD].name,    TYPE_UNDEAD          },
     { gTypesInfo[TYPE_DRAGON].name,   TYPE_DRAGON         },
-    { gTypesInfo[TYPE_STEEL].name,    TYPE_STEEL          },
+    { gTypesInfo[TYPE_MACHINE].name,    TYPE_MACHINE          },
     { gTypesInfo[TYPE_DARK].name,     TYPE_DARK           },
-    { gTypesInfo[TYPE_FAIRY].name,    TYPE_FAIRY          },
+    { gTypesInfo[TYPE_PUPPET].name,    TYPE_PUPPET          },
     { sText_Exit,                NUMBER_OF_MON_TYPES }
 };
 

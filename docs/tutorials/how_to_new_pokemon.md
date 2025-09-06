@@ -219,7 +219,7 @@ The `.` is the structure reference operator in C to refer to the member object o
 
 - `baseHP`, `baseAttack`, `baseDefense`, `baseSpeed`, `baseSpAttack` and `baseSpDefense` are the base stats. They can't go higher than 255.
 - `types` is using the macro `MON_TYPES` as a helper function for formatting so that only one type has to be input for species with a single type.
-    - To add a species with 2 types, use the format `MON_TYPES(TYPE_PSYCHIC, TYPE_NORMAL)`.
+    - To add a species with 2 types, use the format `MON_TYPES(TYPE_PSYCHIC, TYPE_NULL)`.
     - ***1.9 and earlier:*** The format for setting types is the following:
         ```c
         // Mono-type

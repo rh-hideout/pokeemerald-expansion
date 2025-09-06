@@ -26,7 +26,7 @@ SINGLE_BATTLE_TEST("Metronome's called powder move fails against Grass Types")
 {
     GIVEN {
         ASSUME(IsPowderMove(MOVE_POISON_POWDER));
-        ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_GRASS);
+        ASSUME(gSpeciesInfo[SPECIES_TANGELA].types[0] == TYPE_PLANT);
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_TANGELA);

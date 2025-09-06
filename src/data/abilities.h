@@ -2408,4 +2408,164 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
         .cantBeSwapped = TRUE,
         .cantBeTraced = TRUE,
     },
+
+    [ABILITY_ANCIENT_WARRIOR] =
+    {
+        .name = _("Ancient_Warrior"),
+        .description = COMPOUND_STRING("Boosts NULL moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_VIRUS_BUSTER] =
+    {
+        .name = _("Virus Buster"),
+        .description = COMPOUND_STRING("Boosts LIGHT moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_ANIMAL_COLOSSEUM] =
+    {
+        .name = _("Animal Colosseum"),
+        .description = COMPOUND_STRING("Boosts BEAST moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+    
+    [ABILITY_VOLCANIC_BEAT] =
+    {
+        .name = _("Volcanic Beat"),
+        .description = COMPOUND_STRING("Boosts FIRE moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_DRAGONS_ROAR] =
+    {
+        .name = _("Dragon's Roar"),
+        .description = COMPOUND_STRING("Boosts DRAGON moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_DEEP_SAVERS] =
+    {
+        .name = _("Deep Savers"),
+        .description = COMPOUND_STRING("Boosts WATER moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_BLIZZARD_FANG] =
+    {
+        .name = _("Blizzard Fang"),
+        .description = COMPOUND_STRING("Boosts ICE moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_IMPULSE_CITY] =
+    {
+        .name = _("Impulse City"),
+        .description = COMPOUND_STRING("Boosts ELECTRIC moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_WIND_GUARDIANS] =
+    {
+        .name = _("Wind Guardians"),
+        .description = COMPOUND_STRING("Boosts WIND moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_TITAN_OF_DUST] =
+    {
+        .name = _("Dragon's Roar"),
+        .description = COMPOUND_STRING("Boosts EARTH moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_METAL_EMPIRE] =
+    {
+        .name = _("Metal Empire"),
+        .description = COMPOUND_STRING("Boosts MACHINE moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_NIGHT_SOLDIER] =
+    {
+        .name = _("Night Solider"),
+        .description = COMPOUND_STRING("Boosts UNDEAD moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_FABLE_WALTZ] =
+    {
+        .name = _("Fable Waltz"),
+        .description = COMPOUND_STRING("Boosts PUPPET moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_NATURE_SPIRIT] =
+    {
+        .name = _("Nature Spirit"),
+        .description = COMPOUND_STRING("Boosts PLANT moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_JUNGLE_TROOPERS] =
+    {
+        .name = _("Jungle Troopers"),
+        .description = COMPOUND_STRING("Boosts INSECT moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
+
+    [ABILITY_DYNASTY_OF_EVIL] =
+    {
+        .name = _("Dynasty of Evil"),
+        .description = COMPOUND_STRING("Boosts Dark moves"),
+        .aiRating = 8,
+        .cantBeCopied = TRUE,
+        .cantBeSwapped = TRUE,
+        .cantBeTraced = TRUE,
+    },
 };

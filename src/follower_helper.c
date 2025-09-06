@@ -256,7 +256,7 @@ const struct FollowerMsgInfoExtended gFollowerConditionalMessages[COND_MSG_COUNT
         .emotion = FOLLOWER_EMOTION_UPSET,
         .conditions =
         {
-            MATCH_NOT_TYPES(TYPE_GHOST, TYPE_GHOST),
+            MATCH_NOT_TYPES(TYPE_UNDEAD, TYPE_UNDEAD),
             MATCH_MAPSEC(MAPSEC_MT_PYRE),
             MATCH_MUSIC(MUS_MT_PYRE),
         },
