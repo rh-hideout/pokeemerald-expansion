@@ -4413,8 +4413,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             case ABILITY_SPEED_BOOST:
                 if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN) && gDisableStructs[battler].isFirstTurn != 2)
                 {
+                    SaveBattlerAttacker(gBattlerAttacker);
                     SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-                    BattleScriptPushCursorAndCallback(BattleScript_SpeedBoostActivates);
+                    BattleScriptPushCursorAndCallback(BattleScript_AttackerAbilityStatRaiseEnd3);
                     gBattleScripting.battler = battler;
                     effect++;
                 }
