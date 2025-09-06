@@ -4056,7 +4056,6 @@ BattleScript_EffectFocusPunch::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-@ TODO: Maybe a general script can be written
 BattleScript_EffectFollowMe::
 	attackcanceler
 	setforcedtarget
