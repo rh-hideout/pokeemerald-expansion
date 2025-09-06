@@ -13,6 +13,7 @@
 #include "field_name_box.h"
 #include "event_data.h"
 #include "match_call.h"
+#include "malloc.h"
 #include "constants/speaker_names.h"
 #include "data/speaker_names.h"
 
@@ -20,7 +21,6 @@
 #define NAME_BOX_BASE_TILE_NUM (0x194 - (OW_NAME_BOX_DEFAULT_WIDTH * OW_NAME_BOX_DEFAULT_HEIGHT) - NAME_BOX_BASE_TILE_TOTAL)
 
 static EWRAM_INIT u32 sNameboxWindowId = WINDOW_NONE;
-static EWRAM_DATA u8 sNameboxBuffer[32] = {0};
 EWRAM_DATA const u8 *gSpeakerName = NULL;
 
 static const u32 sNameBoxDefaultGfx[] = INCBIN_U32("graphics/text_window/name_box.4bpp");
@@ -31,20 +31,25 @@ static void WindowFunc_ClearNamebox(u8, u8, u8, u8, u8, u8);
 
 void TrySpawnNamebox(void)
 {
-    if (gSpeakerName == NULL || (OW_FLAG_SUPPRESS_NAME_BOX != 0 && FlagGet(OW_FLAG_SUPPRESS_NAME_BOX)))
+    u8 *strbuf = AllocZeroed(32 * sizeof(u8));
+    if (gSpeakerName == NULL || (OW_FLAG_SUPPRESS_NAME_BOX != 0 && FlagGet(OW_FLAG_SUPPRESS_NAME_BOX)) || !strbuf)
     {
+        // Re-check again in case anything but !strbuf is TRUE.
+        if (strbuf)
+            Free(strbuf);
+
         DestroyNamebox();
         return;
     }
 
-    StringExpandPlaceholders(sNameboxBuffer, gSpeakerName);
+    StringExpandPlaceholders(strbuf, gSpeakerName);
 
     u32 fontId = FONT_SMALL;
     u32 winWidth = OW_NAME_BOX_DEFAULT_WIDTH;
 
     if (OW_NAME_BOX_USE_DYNAMIC_WIDTH)
     {
-        winWidth = ConvertPixelWidthToTileWidth(GetStringWidth(fontId, sNameboxBuffer, -1));
+        winWidth = ConvertPixelWidthToTileWidth(GetStringWidth(fontId, strbuf, -1));
         if (winWidth > OW_NAME_BOX_DEFAULT_WIDTH)
             winWidth = OW_NAME_BOX_DEFAULT_WIDTH;
     }
@@ -73,7 +78,7 @@ void TrySpawnNamebox(void)
 
     u8 colors[3] = {TEXT_COLOR_TRANSPARENT, OW_NAME_BOX_FOREGROUND_COLOR, OW_NAME_BOX_SHADOW_COLOR};
     u8 bakColors[3];
-    int strX = GetStringCenterAlignXOffset(fontId, sNameboxBuffer, (winWidth * 8));
+    int strX = GetStringCenterAlignXOffset(fontId, strbuf, (winWidth * 8));
     if (matchCall)
     {
         colors[1] = 1;
@@ -81,9 +86,10 @@ void TrySpawnNamebox(void)
     }
 
     SaveTextColors(&bakColors[0], &bakColors[1], &bakColors[2]);
-    AddTextPrinterParameterized3(sNameboxWindowId, fontId, strX, 0, colors, 0, sNameboxBuffer);
+    AddTextPrinterParameterized3(sNameboxWindowId, fontId, strX, 0, colors, 0, strbuf);
     RestoreTextColors(&bakColors[0], &bakColors[1], &bakColors[2]);
     PutWindowTilemap(sNameboxWindowId);
+    Free(strbuf);
 }
 
 u32 GetNameboxWindowId(void)
