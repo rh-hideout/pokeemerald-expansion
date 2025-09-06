@@ -7129,14 +7129,6 @@ BattleScript_AbilityPopUpOverwriteThenNormal:
 	setbyte sFIXED_ABILITY_POPUP, FALSE
 	return
 
-BattleScript_SpeedBoostActivates::
-	call BattleScript_AbilityPopUp
-	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_SpeedBoostActivatesEnd
-	printstring STRINGID_PKMNRAISEDSPEED
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_SpeedBoostActivatesEnd:
-	end3
-
 @ Can't compare directly to a value, have to compare to value at pointer
 sZero:
 .byte 0
@@ -7965,7 +7957,7 @@ BattleScript_BattlerAbilityStatRaiseOnSwitchIn::
 	call BattleScript_AbilityPopUpScripting
 	statbuffchange BS_SCRIPTING, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_BattlerAbilityStatRaiseOnSwitchInRet
 	waitanimation
-	printstring STRINGID_BATTLERABILITYRAISEDSTAT
+	printstring STRINGID_SCRIPTINGABILITYSTATRAISE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_BattlerAbilityStatRaiseOnSwitchInRet:
 	end3
