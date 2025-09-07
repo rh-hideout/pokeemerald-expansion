@@ -725,25 +725,15 @@ enum StringID
 // They are assigned to the MULTISTRING_CHOOSER byte of gBattleCommunication
 // and read when e.g. the command printfromtable is used.
 
-// gStatUpStringIds
-enum StatUpStringID
+// gStatUpStringIds and gStatDownStringIds
+enum StatChangedStringID
 {
-    B_MSG_ATTACKER_STAT_ROSE,
-    B_MSG_DEFENDER_STAT_ROSE,
-    B_MSG_STAT_WONT_INCREASE,
-    B_MSG_STAT_ROSE_EMPTY,
-    B_MSG_STAT_ROSE_ITEM,
+    B_MSG_ATTACKER_STAT_CHANGED,
+    B_MSG_DEFENDER_STAT_CHANGED,
+    B_MSG_STAT_WONT_CHANGE,
+    B_MSG_STAT_CHANGE_EMPTY,
+    B_MSG_STAT_CHANGED_ITEM,
     B_MSG_USED_DIRE_HIT,
-};
-
-// gStatDownStringIds
-enum StatDownStringID
-{
-    B_MSG_ATTACKER_STAT_FELL = 0,
-    B_MSG_DEFENDER_STAT_FELL = 1,
-    B_MSG_STAT_WONT_DECREASE,
-    B_MSG_STAT_FELL_EMPTY,
-    B_MSG_STAT_FELL_ITEM,
 };
 
 // gMissStringIds
