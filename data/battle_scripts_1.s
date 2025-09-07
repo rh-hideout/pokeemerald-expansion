@@ -2423,7 +2423,7 @@ BattleScript_EffectCaptivate::
 	goto BattleScript_ButItFailed
 BattleScript_CaptivateCheckAcc:
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	goto BattleScript_StatDownFromAttackString
+	goto BattleScript_EffectStatDownFromStatBuffChange
 
 BattleScript_EffectHealBlock::
 	attackcanceler
@@ -2720,7 +2720,6 @@ BattleScript_EffectStatDown:
 	jumpifsubstituteblocks BattleScript_ButItFailed
 BattleScript_EffectStatDownFromAccCheck:
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-BattleScript_StatDownFromAttackString:
 BattleScript_EffectStatDownFromStatBuffChange:
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_StatDownEnd
 	jumpifbyte CMP_LESS_THAN, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_CHANGE, BattleScript_StatDownDoAnim

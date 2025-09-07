@@ -160,8 +160,8 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
 SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normally lower it: Growl", s16 damage)
 {
     u32 ability;
-    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
+    PARAMETRIZE { ability = ABILITY_CONTRARY; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GROWL) == EFFECT_ATTACK_DOWN);
         PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
