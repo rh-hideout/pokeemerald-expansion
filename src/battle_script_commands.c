@@ -10188,11 +10188,13 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
             if (gBattleMons[battler].statStages[statId] == MIN_STAT_STAGE)
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+                gBattleScripting.statChanger |= STAT_BUFF_NEGATIVE;
             }
             else if (!flags.onlyChecking)
             {
                 gProtectStructs[battler].tryEjectPack = TRUE;
                 gProtectStructs[battler].lashOutAffected = TRUE;
+                gBattleScripting.statChanger |= STAT_BUFF_NEGATIVE;
             }
         }
     }
@@ -10222,6 +10224,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
         if (gBattleMons[battler].statStages[statId] == MAX_STAT_STAGE)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+            gBattleScripting.statChanger &= ~STAT_BUFF_NEGATIVE;
         }
         else if (!flags.onlyChecking)
         {
@@ -10232,6 +10235,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
                 statIncrease = statValue;
 
             gProtectStructs[battler].statRaised = TRUE;
+            gBattleScripting.statChanger &= ~STAT_BUFF_NEGATIVE;
 
             if (statIncrease)
             {
