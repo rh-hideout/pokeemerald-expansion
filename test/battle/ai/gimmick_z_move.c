@@ -32,3 +32,94 @@ AI_SINGLE_BATTLE_TEST("AI does not use damaging Z-moves if the player would fain
         TURN { EXPECT_MOVE(opponent, MOVE_QUICK_ATTACK, gimmick: GIMMICK_NONE); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Splash")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_POUND, MOVE_SPLASH); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_SPLASH, gimmick: GIMMICK_Z_MOVE);
+               SCORE_GT_VAL(opponent, MOVE_SPLASH, AI_SCORE_DEFAULT); }
+        TURN { EXPECT_MOVE(opponent, MOVE_POUND, gimmick: GIMMICK_NONE);
+               SCORE_EQ_VAL(opponent, MOVE_SPLASH, 90); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Happy Hour")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Moves(MOVE_POUND, MOVE_HAPPY_HOUR); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_HAPPY_HOUR, gimmick: GIMMICK_Z_MOVE);
+               SCORE_GT_VAL(opponent, MOVE_HAPPY_HOUR, AI_SCORE_DEFAULT); }
+        TURN { EXPECT_MOVE(opponent, MOVE_POUND, gimmick: GIMMICK_NONE);
+               SCORE_EQ_VAL(opponent, MOVE_HAPPY_HOUR, 90); }
+    }
+}
+
+// Last Resort itself is missing logic!
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Extreme Evoboost")
+{
+    KNOWN_FAILING;
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_EEVEE) { Item(ITEM_EEVIUM_Z); Moves(MOVE_POUND, MOVE_LAST_RESORT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_Z_MOVE); }
+        TURN { EXPECT_MOVE(opponent, MOVE_POUND, gimmick: GIMMICK_NONE);
+               SCORE_EQ_VAL(opponent, MOVE_LAST_RESORT, 80); }
+// Uncomment when Last Resort works correctly.
+//        TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_NONE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- 10,000,000 Volt Thunderbolt")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_PIKACHU_PARTNER) { Item(ITEM_PIKASHUNIUM_Z); Moves(MOVE_THUNDERBOLT); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_THUNDERBOLT, gimmick: GIMMICK_Z_MOVE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is not used in singles")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_GHOSTIUM_Z); Moves(MOVE_DESTINY_BOND); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_DESTINY_BOND, gimmick: GIMMICK_NONE); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is used when about to die")
+{
+    u32 currentHP;
+    PARAMETRIZE { currentHP = 1; }
+    PARAMETRIZE { currentHP = 500; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_POUND); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(currentHP); Item(ITEM_GHOSTIUM_Z); Moves(MOVE_DESTINY_BOND); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+    if (currentHP == 1)
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_DESTINY_BOND, gimmick: GIMMICK_Z_MOVE); }
+    else
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_DESTINY_BOND, gimmick: GIMMICK_NONE); }
+    }
+}
+

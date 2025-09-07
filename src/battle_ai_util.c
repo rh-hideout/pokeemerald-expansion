@@ -4847,25 +4847,14 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
-    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk))
+    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
         return FALSE;   // can't use z move twice
 
     if (IsViableZMove(battlerAtk, chosenMove))
     {
-        uq4_12_t effectiveness;
         u32 zMove = GetUsableZMove(battlerAtk, chosenMove);
-        struct SimulatedDamage dmg;
-
-        if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
-            && !MoveIgnoresTargetAbility(zMove)
-            && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
-            return FALSE; // Don't waste a Z-Move busting disguise
-        if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
-            && !MoveIgnoresTargetAbility(zMove)
-            && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
-            return FALSE; // Don't waste a Z-Move busting Ice Face
 
         if (IsBattleMoveStatus(chosenMove))
         {
@@ -4897,9 +4886,10 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
             case Z_EFFECT_BOOST_CRITS:
                 return TRUE;
             case Z_EFFECT_FOLLOW_ME:
-                return TRUE;
+                return HasPartnerIgnoreFlags(battlerAtk) && (GetHealthPercentage(battlerAtk) <= Z_EFFECT_FOLLOW_ME_THRESHOLD || GetBestNoOfHitsToKO(battlerDef, battlerAtk, AI_DEFENDING) == 1);
+                break;
             case Z_EFFECT_RECOVER_HP:
-                return (gAiLogicData->hpPercents[battlerAtk] <= 60);
+                return gAiLogicData->hpPercents[battlerAtk] <= Z_EFFECT_RESTORE_HP_THRESHOLD;
             case Z_EFFECT_RESTORE_REPLACEMENT_HP:
                 break;
             case Z_EFFECT_ACC_UP_1:
@@ -4946,6 +4936,18 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
         }
         else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
             return FALSE;
+
+        uq4_12_t effectiveness;
+        struct SimulatedDamage dmg;
+
+        if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
+            && !MoveIgnoresTargetAbility(zMove)
+            && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
+            return FALSE; // Don't waste a Z-Move busting disguise
+        if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
+            && !MoveIgnoresTargetAbility(zMove)
+            && gBattleMons[battlerDef].species == SPECIES_EISCUE_ICE && IsBattleMovePhysical(chosenMove))
+            return FALSE; // Don't waste a Z-Move busting Ice Face
 
         dmg = AI_CalcDamageSaveBattlers(chosenMove, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK);
 
