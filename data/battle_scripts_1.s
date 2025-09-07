@@ -7996,7 +7996,6 @@ BattleScript_ConsumableStatRaiseRet_AbilityPopup:
 BattleScript_ConsumableStatRaiseRet_Anim:
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR | STAT_CHANGE_ONLY_CHECKING, BattleScript_ConsumableStatRaiseRet_End
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT, sB_ANIM_ARG1
-	jumpifbyte CMP_COMMON_BITS, sSTATCHANGER, STAT_BUFF_NEGATIVE, BattleScript_ConsumableStatDrop
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_ConsumableStatRaiseRet_End
 	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_CHANGED_ITEM
 	call BattleScript_StatUp
@@ -8004,13 +8003,6 @@ BattleScript_ConsumableStatRaiseRet_Anim:
 BattleScript_ConsumableStatRaiseRet_End:
 	restoretarget
 	return
-
-BattleScript_ConsumableStatDrop:
-	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_ConsumableStatRaiseRet_End
-	setbyte cMULTISTRING_CHOOSER, B_MSG_STAT_CHANGED_ITEM
-	call BattleScript_StatDown
-	removeitem BS_SCRIPTING
-	goto BattleScript_ConsumableStatRaiseRet_End
 
 BattleScript_BerryFocusEnergyRet::
 	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT

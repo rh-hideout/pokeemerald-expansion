@@ -113,8 +113,6 @@ enum CmdVarious
 #define STAT_CHANGE_CHECK_PREVENTION        (1 << 5)
 #define STAT_CHANGE_CERTAIN                 (1 << 6)
 
-#define STAT_BUFF_NEGATIVE 0x80                     // 0x80, the sign bit
-
 // stat flags for TryPlayStatChangeAnimation
 #define BIT_HP                      (1 << 0)
 #define BIT_ATK                     (1 << 1)
