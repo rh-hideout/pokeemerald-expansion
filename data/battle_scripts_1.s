@@ -14,6 +14,7 @@
 #include "constants/game_stat.h"
 #include "constants/trainers.h"
 #include "constants/species.h"
+#include "constants/generational_changes.h"
 	.include "asm/macros.inc"
 	.include "asm/macros/battle_script.inc"
 	.include "constants/constants.inc"
@@ -2096,7 +2097,11 @@ BattleScript_EffectHealingWish::
 	setatkhptozero
 	tryfaintmon BS_ATTACKER
 	storehealingwish BS_ATTACKER
-.if B_HEALING_WISH_SWITCH <= GEN_4
+	jumpifgenconfiglowerthan GEN_CONFIG_HEALING_WISH_SWITCH, GEN_5, BattleScript_EffectHealingWishGen4
+BattleScript_EffectHealingWishEnd:
+	moveendall
+	end
+BattleScript_EffectHealingWishGen4:
 	openpartyscreen BS_ATTACKER, BattleScript_EffectHealingWishEnd
 	waitstate
 	switchhandleorder BS_ATTACKER, 2
@@ -2110,10 +2115,7 @@ BattleScript_EffectHealingWish::
 	switchinanim BS_ATTACKER, FALSE, TRUE
 	waitstate
 	switchineffects BS_ATTACKER
-.endif
-BattleScript_EffectHealingWishEnd:
-	moveendall
-	end
+	goto BattleScript_EffectHealingWishEnd
 
 BattleScript_HealingWishActivates::
 	setbyte cMULTISTRING_CHOOSER, 0
@@ -3792,12 +3794,13 @@ BattleScript_EffectFutureSight::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectTeleport::
-.if B_TELEPORT_BEHAVIOR >= GEN_8
+	jumpifgenconfiglowerthan GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8, BattleScript_EffectTeleportGen7
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_EffectBatonPass
 	jumpifside BS_ATTACKER, B_SIDE_PLAYER, BattleScript_EffectBatonPass
-.else
+	goto BattleScript_DoEffectTeleport
+BattleScript_EffectTeleportGen7::
 	jumpifbattletype BATTLE_TYPE_TRAINER, BattleScript_FailedFromAtkCanceler
-.endif
+BattleScript_DoEffectTeleport::
 	attackcanceler
 	isrunningimpossible
 	jumpifbyte CMP_EQUAL, gBattleCommunication, BATTLE_RUN_FORBIDDEN, BattleScript_ButItFailed
@@ -6022,10 +6025,10 @@ BattleScript_CudChewActivates::
 	end3
 
 BattleScript_ApplyDisguiseFormChangeHPLoss::
-.if B_DISGUISE_HP_LOSS >= GEN_8
+	jumpifgenconfiglowerthan GEN_CONFIG_DISGUISE_HP_LOSS, GEN_8, BattleScript_ApplyDisguiseFormChangeHPLossReturn
 	healthbarupdate BS_SCRIPTING
 	datahpupdate BS_SCRIPTING
-.endif
+BattleScript_ApplyDisguiseFormChangeHPLossReturn:
 	return
 
 BattleScript_TargetFormChangeNoPopup:

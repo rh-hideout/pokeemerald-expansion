@@ -2514,3 +2514,10 @@
 	callnative BS_TryBoosterEnergy
 	.byte \onFieldStatus
 	.endm
+
+	.macro jumpifgenconfiglowerthan tag:req, gen:req, jumpInstr:req
+	callnative BS_JumpIfGenConfigLowerThan
+	.2byte \tag
+	.byte \gen
+	.4byte \jumpInstr
+	.endm
