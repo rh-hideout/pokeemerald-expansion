@@ -7209,7 +7209,7 @@ BattleScript_DazzlingProtected::
 
 BattleScript_MoveUsedPsychicTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
-	printstring STRINGID_POKEMONCANNOTUSEMOVE
+	printstring STRINGID_PSYCHICTERRAINPREVENTS
 	waitmessage B_WAIT_TIME_LONG
 	setmoveresultflags MOVE_RESULT_NO_EFFECT
 	goto BattleScript_MoveEnd
