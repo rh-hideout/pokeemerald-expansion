@@ -859,7 +859,6 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 #define GET_STAT_BUFF_ID(n) ((n & 7))              // first three bits 0x1, 0x2, 0x4
 #define GET_STAT_BUFF_VALUE_WITH_SIGN(n) ((n & 0xF8))
 #define GET_STAT_BUFF_VALUE(n) (((n >> 3) & 0xF))      // 0x8, 0x10, 0x20, 0x40
-#define STAT_BUFF_NEGATIVE 0x80                     // 0x80, the sign bit
 
 #define SET_STAT_BUFF_VALUE(n) ((((n) << 3) & 0xF8))
 
