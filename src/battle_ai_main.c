@@ -1888,8 +1888,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 if (CountUsablePartyMons(battlerAtk) == 0
                   && aiData->abilities[battlerAtk] != ABILITY_SOUNDPROOF
-                  && aiData->abilities[BATTLE_PARTNER(battlerAtk)] != ABILITY_SOUNDPROOF
-                  && CountUsablePartyMons(LEFT_FOE(battlerAtk)) >= 1)
+                  && CountUsablePartyMons(battlerDef) >= 1
+                  && (aiData->abilities[BATTLE_PARTNER(battlerAtk)] != ABILITY_SOUNDPROOF || !IsBattlerAlive(BATTLE_PARTNER(battlerAtk))))
                 {
                     ADJUST_SCORE(-10); //Don't wipe your team if you're going to lose
                 }
@@ -1911,7 +1911,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                   && CountUsablePartyMons(battlerDef) >= 1)
                     ADJUST_SCORE(-10);
 
-                if (gBattleMons[LEFT_FOE(battlerAtk)].volatiles.perishSong || aiData->abilities[LEFT_FOE(battlerAtk)] == ABILITY_SOUNDPROOF)
+                if (gBattleMons[battlerDef].volatiles.perishSong || aiData->abilities[battlerDef] == ABILITY_SOUNDPROOF)
                     ADJUST_SCORE(-10);
             }
             break;
@@ -2341,11 +2341,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-9);
             break;
         case EFFECT_COURT_CHANGE:
-            if (gSideStatuses[GetBattlerSide(LEFT_FOE(battlerAtk))] & SIDE_STATUS_BAD_COURT)
+            if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_BAD_COURT)
                 ADJUST_SCORE(BAD_EFFECT);
             if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_GOOD_COURT)
                 ADJUST_SCORE(BAD_EFFECT);
-            if (AreAnyHazardsOnSide(GetBattlerSide(LEFT_FOE(battlerAtk))) && CountUsablePartyMons(battlerAtk) != 0)
+            if (AreAnyHazardsOnSide(GetBattlerSide(battlerDef)) && CountUsablePartyMons(battlerAtk) != 0)
                 ADJUST_SCORE(WORST_EFFECT);
             if (hasPartner)
             {
@@ -4810,7 +4810,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
             //ADJUST_SCORE(8);
         break;
     case EFFECT_COURT_CHANGE:
-        if (gSideStatuses[GetBattlerSide(LEFT_FOE(battlerAtk))] & SIDE_STATUS_GOOD_COURT)
+        if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_GOOD_COURT)
             ADJUST_SCORE(WEAK_EFFECT);
         if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_BAD_COURT)
             ADJUST_SCORE(WEAK_EFFECT);
