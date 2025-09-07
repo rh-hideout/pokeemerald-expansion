@@ -903,7 +903,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Mindstorm sets up Psychic Terrain")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Extreme Speed!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
-        MESSAGE("The opposing Wobbuffet cannot use Extreme Speed!");
+        MESSAGE("Wobbuffet is protected by psychic terrain!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
     }
 }
