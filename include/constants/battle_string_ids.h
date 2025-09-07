@@ -752,7 +752,7 @@ enum MissStringID
     B_MSG_MISSED,
     B_MSG_PROTECTED,
     B_MSG_AVOIDED_ATK,
-    // Ability-related messages need to below this comment
+    // Ability-related messages need to be below this comment
     B_MSG_AVOIDED_DMG,
     B_MSG_GROUND_MISS,
 };
