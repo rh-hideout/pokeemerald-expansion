@@ -638,7 +638,8 @@ struct BattlerTurn
 
 struct ExpectedAIAction
 {
-    u16 sourceLine;
+    u16 sourceLine:13; // TODO: Avoid stealing these bits.
+    enum Gimmick gimmick:3;
     u8 type:4; // which action
     u8 moveSlots:4; // Expected move(s) to be chosen or not, marked as bits.
     u8 target:4; // move target or id of mon which gets sent out
