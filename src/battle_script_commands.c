@@ -10050,7 +10050,6 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
         statValue = (SET_STAT_BUFF_VALUE(GET_STAT_BUFF_VALUE(statValue) * 2)) | ((statValue <= -1) ? STAT_BUFF_NEGATIVE : 0);
         RecordAbilityBattle(battler, battlerAbility);
     }
-    SET_STATCHANGER(statId, statValue, statValue <= 0);
 
     PREPARE_STAT_BUFFER(gBattleTextBuff1, statId);
 

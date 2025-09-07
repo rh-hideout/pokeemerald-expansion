@@ -1191,14 +1191,14 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
     case STRINGID_DEFENDERSSTATROSE:
     case STRINGID_STATSWONTINCREASE:
     case STRINGID_USINGITEMSTATOFPKMNROSE:
-        if (gBattleScripting.statChanger & STAT_BUFF_NEGATIVE)
+        if (battlerAbility == ABILITY_CONTRARY)
             stringId = gStatDownStringIds[gBattleCommunication[MULTISTRING_CHOOSER]];
         break;
     case STRINGID_ATTACKERSSTATFELL:
     case STRINGID_DEFENDERSSTATFELL:
     case STRINGID_STATSWONTDECREASE:
     case STRINGID_USINGITEMSTATOFPKMNFELL:
-        if (!(gBattleScripting.statChanger & STAT_BUFF_NEGATIVE))
+        if (battlerAbility == ABILITY_CONTRARY)
             stringId = gStatUpStringIds[gBattleCommunication[MULTISTRING_CHOOSER]];
         break;
     case STRINGID_STATSWONTINCREASE2:
@@ -1216,6 +1216,10 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
             gBattlerAbility = gBattlerTarget;
             BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
             SET_STATCHANGER(STAT_SPEED, 1, FALSE);
+        }
+        else if (targetAbility == ABILITY_CONTRARY)
+        {
+            stringId = STRINGID_DEFENDERSSTATROSE;
         }
         break;
     case STRINGID_ITDOESNTAFFECT:

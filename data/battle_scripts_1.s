@@ -6792,7 +6792,6 @@ BattleScript_IntimidateEffect:
 	copybyte sBATTLER, gBattlerAttacker
 	setstatchanger STAT_ATK, 1, TRUE
 	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_IntimidateLoopIncrement
-	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_IntimidateContrary
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_IntimidateWontDecrease
 	printstring STRINGID_PKMNCUTSATTACKWITH
 BattleScript_IntimidateEffect_WaitString:
@@ -6823,10 +6822,6 @@ BattleScript_IntimidateWontDecrease:
 	printstring STRINGID_STATSWONTDECREASE
 	goto BattleScript_IntimidateEffect_WaitString
 
-BattleScript_IntimidateContrary:
-	printfromtable gStatUpStringIds
-	goto BattleScript_IntimidateEffect_WaitString
-
 BattleScript_IntimidateInReverse::
 	copybyte sBATTLER, gBattlerTarget
 	call BattleScript_AbilityPopUpTarget
@@ -6849,7 +6844,6 @@ BattleScript_SupersweetSyrupEffect:
 	copybyte sBATTLER, gBattlerAttacker
 	setstatchanger STAT_EVASION, 1, TRUE
 	statbuffchange BS_TARGET, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_ALLOW_PTR, BattleScript_SupersweetSyrupLoopIncrement
-	jumpifability BS_TARGET, ABILITY_CONTRARY, BattleScript_SupersweetSyrupContrary
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_SupersweetSyrupWontDecrease
 	printfromtable gStatDownStringIds
 BattleScript_SupersweetSyrupEffect_WaitString:
@@ -6872,10 +6866,6 @@ BattleScript_SupersweetSyrupLoopIncrement:
 
 BattleScript_SupersweetSyrupWontDecrease:
 	printstring STRINGID_STATSWONTDECREASE
-	goto BattleScript_SupersweetSyrupEffect_WaitString
-
-BattleScript_SupersweetSyrupContrary:
-	printfromtable gStatUpStringIds
 	goto BattleScript_SupersweetSyrupEffect_WaitString
 
 BattleScript_DroughtActivates::
