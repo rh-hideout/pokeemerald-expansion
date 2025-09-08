@@ -2608,8 +2608,6 @@ BattleScript_EffectMiracleEye::
 	ppreduce
 	setvolatile BS_TARGET, VOLATILE_MIRACLE_EYE
 	goto BattleScript_IdentifiedFoe
-
-
 BattleScript_EffectGravity::
 	call BattleScript_EffectGravityInternal
 	goto BattleScript_MoveEnd
