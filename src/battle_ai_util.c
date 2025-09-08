@@ -665,7 +665,8 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_LAST_RESORT:
-        if (!CanUseLastResort(ctx->battlerAtk))
+        if (!CanUseLastResort(ctx->battlerAtk)
+         && (gBattleStruct->gimmick.usableGimmick[ctx->battlerAtk] != GIMMICK_Z_MOVE || !ShouldUseZMove(ctx->battlerAtk, ctx->battlerDef, ctx->move)))
             return TRUE;
         break;
     case EFFECT_LOW_KICK:

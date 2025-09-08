@@ -63,10 +63,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Happy Hour")
     }
 }
 
-// Last Resort itself is missing logic!
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Extreme Evoboost")
 {
-    KNOWN_FAILING;
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
@@ -75,9 +73,8 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Extreme Evoboost")
     } WHEN {
         TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_Z_MOVE); }
         TURN { EXPECT_MOVE(opponent, MOVE_POUND, gimmick: GIMMICK_NONE);
-               SCORE_EQ_VAL(opponent, MOVE_LAST_RESORT, 80); }
-// Uncomment when Last Resort works correctly.
-//        TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_NONE); }
+               SCORE_LT_VAL(opponent, MOVE_LAST_RESORT, AI_SCORE_DEFAULT); }
+        TURN { EXPECT_MOVE(opponent, MOVE_LAST_RESORT, gimmick: GIMMICK_NONE); }
     }
 }
 
