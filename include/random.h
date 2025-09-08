@@ -214,6 +214,7 @@ enum RandomTag
     RNG_AI_ASSUME_ALL_STATUS,
     RNG_AI_REFRESH_TRICK_ROOM_ON_LAST_TURN,
     RNG_AI_APPLY_TAILWIND_ON_LAST_TURN_OF_TRICK_ROOM,
+    RNG_WRAP,
 };
 
 #define RandomWeighted(tag, ...) \

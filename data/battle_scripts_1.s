@@ -2756,6 +2756,13 @@ BattleScript_TerrainPreventsEnd2::
 	waitmessage B_WAIT_TIME_LONG
 	end2
 
+BattleScript_ImmunityProtectedEnd2::
+	call BattleScript_AbilityPopUp
+	pause B_WAIT_TIME_SHORT
+	printfromtable gStatusPreventionStringIds
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
 BattleScript_ElectricTerrainPrevents::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_ELECTRICTERRAINPREVENTS
@@ -6575,6 +6582,7 @@ BattleScript_CudChewActivates::
 
 BattleScript_ApplyDisguiseFormChangeHPLoss::
 	jumpifgenconfiglowerthan GEN_CONFIG_DISGUISE_HP_LOSS, GEN_8, BattleScript_ApplyDisguiseFormChangeHPLossReturn
+	orword gHitMarker, HITMARKER_PASSIVE_HP_UPDATE
 	healthbarupdate BS_SCRIPTING
 	datahpupdate BS_SCRIPTING
 BattleScript_ApplyDisguiseFormChangeHPLossReturn:
@@ -6945,7 +6953,7 @@ BattleScript_UpdateEffectStatusIconRet::
 	flushtextbox
 	return
 
-BattleScript_YawnMakesAsleep::
+BattleScript_YawnMakesAsleepEnd2::
 	statusanimation BS_EFFECT_BATTLER
 	printstring STRINGID_PKMNFELLASLEEP
 	waitmessage B_WAIT_TIME_LONG
@@ -9680,7 +9688,7 @@ BattleScript_SleepClauseBlocked::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_SleepClausePreventsEnd::
+BattleScript_SleepClausePreventsEnd2::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BLOCKEDBYSLEEPCLAUSE
 	waitmessage B_WAIT_TIME_LONG
