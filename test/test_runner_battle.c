@@ -2145,6 +2145,8 @@ static const char *BattlerIdentifier(s32 battlerId)
     case BATTLE_TEST_AI_MULTI:
     case BATTLE_TEST_TWO_VS_ONE:
     case BATTLE_TEST_AI_TWO_VS_ONE:
+    case BATTLE_TEST_ONE_VS_TWO:
+    case BATTLE_TEST_AI_ONE_VS_TWO:
         return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
