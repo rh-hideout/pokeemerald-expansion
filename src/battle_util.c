@@ -4173,6 +4173,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_VESSEL_OF_RUIN:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
+                gBattleMons[battler].volatiles.fieldStatus = STATUS_VESSEL_OF_RUIN;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_RuinAbilityActivates);
@@ -4182,6 +4183,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_SWORD_OF_RUIN:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
+                gBattleMons[battler].volatiles.fieldStatus = STATUS_SWORD_OF_RUIN;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_DEF);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_RuinAbilityActivates);
@@ -4191,6 +4193,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_TABLETS_OF_RUIN:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
+                gBattleMons[battler].volatiles.fieldStatus = STATUS_TABLETS_OF_RUIN;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_ATK);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_RuinAbilityActivates);
@@ -4200,6 +4203,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         case ABILITY_BEADS_OF_RUIN:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
+                gBattleMons[battler].volatiles.fieldStatus = STATUS_BEADS_OF_RUIN;
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPDEF);
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_RuinAbilityActivates);
@@ -8696,6 +8700,20 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
     return uq4_12_multiply_by_int_half_down(modifier, basePower);
 }
 
+static bool32 IsRuinStatusOnField(enum BattlerStatuses fieldStatus)
+{
+    if (IsNeutralizingGasOnField()) // Neutralizing Gas still blocks Ruin field statuses
+        return FALSE;
+
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleMons[battler].volatiles.fieldStatus == fieldStatus)
+            return TRUE;
+    }
+
+    return FALSE;
+}
+
 static inline u32 CalcAttackStat(struct DamageContext *ctx)
 {
     u8 atkStage;
@@ -8928,10 +8946,10 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     }
 
     // field abilities
-    if (IsAbilityOnField(ABILITY_VESSEL_OF_RUIN) && ctx->abilityAtk != ABILITY_VESSEL_OF_RUIN && IsBattleMoveSpecial(move))
+    if (IsRuinStatusOnField(STATUS_VESSEL_OF_RUIN) && ctx->abilityAtk != ABILITY_VESSEL_OF_RUIN && IsBattleMoveSpecial(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.75));
 
-    if (IsAbilityOnField(ABILITY_TABLETS_OF_RUIN) && ctx->abilityAtk != ABILITY_TABLETS_OF_RUIN && IsBattleMovePhysical(move))
+    if (IsRuinStatusOnField(STATUS_TABLETS_OF_RUIN) && ctx->abilityAtk != ABILITY_TABLETS_OF_RUIN && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.75));
 
     // attacker's hold effect
@@ -9096,10 +9114,10 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     }
 
     // field abilities
-    if (IsAbilityOnField(ABILITY_SWORD_OF_RUIN) && ctx->abilityDef != ABILITY_SWORD_OF_RUIN && usesDefStat)
+    if (IsRuinStatusOnField(STATUS_SWORD_OF_RUIN) && ctx->abilityDef != ABILITY_SWORD_OF_RUIN && usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.75));
 
-    if (IsAbilityOnField(ABILITY_BEADS_OF_RUIN) && ctx->abilityDef != ABILITY_BEADS_OF_RUIN && !usesDefStat)
+    if (IsRuinStatusOnField(STATUS_BEADS_OF_RUIN) && ctx->abilityDef != ABILITY_BEADS_OF_RUIN && !usesDefStat)
         modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.75));
 
     // target's hold effects

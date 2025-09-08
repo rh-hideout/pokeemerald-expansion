@@ -195,7 +195,8 @@ enum VolatileFlags
     F(VOLATILE_HEAL_BLOCK,                  healBlock,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
-    F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE)
+    F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_RUIN_FIELD_STATUS,           fieldStatus,                   (u32, 4))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -230,6 +231,18 @@ enum SemiInvulnerableExclusion
 {
     CHECK_ALL,
     EXCLUDE_COMMANDER,
+};
+
+// Field effects that correspond to a battler. They expire when the battler leaves the field without message.
+// They can also be negated by Mold Breaker (e.g. Circle Throw drags out a user of such status))
+// Limited to 16 right now, If more are needed the volatile bits "fieldStatus" need to be increased.
+enum BattlerStatuses
+{
+    STATUS_BETTLER_NONE,
+    STATUS_VESSEL_OF_RUIN,
+    STATUS_SWORD_OF_RUIN,
+    STATUS_TABLETS_OF_RUIN,
+    STATUS_BEADS_OF_RUIN,
 };
 
 #define HITMARKER_STRING_PRINTED        (1 << 4)
@@ -363,7 +376,7 @@ enum BattleWeather
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
-// Explicit numbers until frostbite because those shouldn't be shifted 
+// Explicit numbers until frostbite because those shouldn't be shifted
 enum __attribute__((packed)) MoveEffect
 {
     MOVE_EFFECT_NONE = 0,

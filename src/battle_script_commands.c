@@ -6150,7 +6150,7 @@ static void Cmd_moveend(void)
             if (!IsOnPlayerSide(gBattlerAttacker))
                 UpdateStallMons();
             if ((gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE))
-             || (gBattleMons[gBattlerAttacker].volatiles.flinched)
+             || gBattleMons[gBattlerAttacker].volatiles.flinched
              || gBattleStruct->pledgeMove == TRUE // Is the battler that uses the first Pledge move in the combo
              || gProtectStructs[gBattlerAttacker].nonVolatileStatusImmobility)
                 gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;

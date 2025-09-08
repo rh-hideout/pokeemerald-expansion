@@ -2123,7 +2123,7 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
     case STAT_SPEED:
     {
         u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-        if (AI_IsSlower(battlerAtk, battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY) 
+        if (AI_IsSlower(battlerAtk, battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY)
         || AI_IsSlower(BATTLE_PARTNER(battlerAtk), battlerDef, MOVE_NONE, predictedMoveSpeedCheck, DONT_CONSIDER_PRIORITY))
             tempScore += DECENT_EFFECT;
         break;
@@ -4214,6 +4214,28 @@ void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons)
     Free(savedBattleMons);
 }
 
+// Set potential field effect from ability for switch in
+static void SetBattlerFieldStatusForSwitchin(u32 battler)
+{
+    switch (gAiLogicData->abilities[battler])
+    {
+    case ABILITY_VESSEL_OF_RUIN:
+        gBattleMons[battler].volatiles.fieldStatus = STATUS_VESSEL_OF_RUIN;
+        break;
+    case ABILITY_SWORD_OF_RUIN:
+        gBattleMons[battler].volatiles.fieldStatus = STATUS_SWORD_OF_RUIN;
+        break;
+    case ABILITY_TABLETS_OF_RUIN:
+        gBattleMons[battler].volatiles.fieldStatus = STATUS_TABLETS_OF_RUIN;
+        break;
+    case ABILITY_BEADS_OF_RUIN:
+        gBattleMons[battler].volatiles.fieldStatus = STATUS_BEADS_OF_RUIN;
+        break;
+    default:
+        break;
+    }
+}
+
 // party logic
 s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, enum DamageCalcContext calcContext)
 {
@@ -4226,6 +4248,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gBattleMons[battlerAtk] = switchinCandidate;
         gAiThinkingStruct->saved[battlerDef].saved = TRUE;
         SetBattlerAiData(battlerAtk, gAiLogicData); // set known opposing battler data
+        SetBattlerFieldStatusForSwitchin(battlerAtk);
         gAiThinkingStruct->saved[battlerDef].saved = FALSE;
     }
     else if (calcContext == AI_DEFENDING)
@@ -4233,6 +4256,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gBattleMons[battlerDef] = switchinCandidate;
         gAiThinkingStruct->saved[battlerAtk].saved = TRUE;
         SetBattlerAiData(battlerDef, gAiLogicData); // set known opposing battler data
+        SetBattlerFieldStatusForSwitchin(battlerDef);
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
 
@@ -4881,7 +4905,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
                 if (AreBattlersStatsMaxed(battlerAtk))
                     return FALSE;
                 return IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) > 0
-                    || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) > 0; 
+                    || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) > 0;
                 break;
             case Z_EFFECT_BOOST_CRITS:
                 return TRUE;
@@ -4932,7 +4956,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
         }
         else if (GetMoveEffect(zMove) == EFFECT_EXTREME_EVOBOOST)
         {
-            return (!AreBattlersStatsMaxed(battlerAtk) && (IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_2) || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK_2))); 
+            return (!AreBattlersStatsMaxed(battlerAtk) && (IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_2) || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK_2)));
         }
         else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
             return FALSE;

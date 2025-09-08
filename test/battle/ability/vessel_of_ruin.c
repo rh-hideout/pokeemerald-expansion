@@ -73,3 +73,31 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
         MESSAGE("The opposing Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Vessel of Ruin does not reduce Sp. Atk if if Neutralizing Gas is on the field")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft);
+        }
+        TURN {
+            SWITCH(opponentRight, 2);
+            MOVE(playerLeft, MOVE_WATER_GUN, target: opponentLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
+    }
+}
