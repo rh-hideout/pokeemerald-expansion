@@ -37,18 +37,5 @@ AI_SINGLE_BATTLE_TEST("AI uses Dynamax -- AI does not dynamax before using a uti
     }
 }
 
-// This test needs a better setup as well.
-AI_DOUBLE_BATTLE_TEST("AI uses Dynamax -- AI can Copycat a Max Move")
-{
-    KNOWN_FAILING;
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TRICK_ROOM); DynamaxLevel(10); }
-        OPPONENT(SPECIES_RIOLU) { Ability(ABILITY_PRANKSTER); Moves(MOVE_COPYCAT); }
-    } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft,  MOVE_TRICK_ROOM, gimmick: GIMMICK_DYNAMAX);        
-               EXPECT_MOVE(opponentRight, MOVE_COPYCAT, target: opponentLeft); }
-    }
-}
+// Copycatting an ally's Max Guard rendition of Trick Room was a notable strategy.
+TO_DO_BATTLE_TEST("TODO: AI uses Dynamax -- AI uses Copycat against a Dynamaxed Pokemon intelligently")
