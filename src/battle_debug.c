@@ -762,6 +762,9 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
         u32 chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Chosen move: "), 74, 64, 0, NULL);
         AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, GetMoveName(gBattleMons[data->aiBattlerId].moves[chosenMoveIndex]), 74 + 68, 64, 0, NULL);
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Target: Battler "), 74, 64 + 15, 0, NULL);
+        ConvertIntToDecimalStringN(text, gAiBattleData->chosenTarget[data->aiBattlerId], STR_CONV_MODE_RIGHT_ALIGN, 1);
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 74 + 84, 64 + 15, 0, NULL);
     }
 
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);
