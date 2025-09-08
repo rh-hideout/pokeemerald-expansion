@@ -10169,37 +10169,32 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
                 statValue = -1;
             else if (gBattleMons[battler].statStages[statId] == 2 && statValue < -2)
                 statValue = -2;
-            gBattleTextBuff2[0] = B_BUFF_PLACEHOLDER_BEGIN;
-            index = 1;
+
             if (statValue == -2)
             {
-                gBattleTextBuff2[1] = B_BUFF_STRING;
-                gBattleTextBuff2[2] = STRINGID_STATHARSHLY;
-                gBattleTextBuff2[3] = STRINGID_STATHARSHLY >> 8;
-                index = 4;
+                PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATHARSHLY);
             }
             else if (statValue <= -3)
             {
-                gBattleTextBuff2[1] = B_BUFF_STRING;
-                gBattleTextBuff2[2] = STRINGID_SEVERELY & 0xFF;
-                gBattleTextBuff2[3] = STRINGID_SEVERELY >> 8;
-                index = 4;
+                PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_SEVERELY);
             }
-            gBattleTextBuff2[index++] = B_BUFF_STRING;
-            gBattleTextBuff2[index++] = STRINGID_STATFELL;
-            gBattleTextBuff2[index++] = STRINGID_STATFELL >> 8;
-            gBattleTextBuff2[index] = B_BUFF_EOS;
+            else
+            {
+                PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+            }
 
-            gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_FELL or B_MSG_DEFENDER_STAT_FELL
+            gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_CHANGED or B_MSG_DEFENDER_STAT_CHANGED
 
             if (gBattleMons[battler].statStages[statId] == MIN_STAT_STAGE)
             {
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_DECREASE;
+                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+                gBattleScripting.statChanger |= STAT_BUFF_NEGATIVE;
             }
             else if (!flags.onlyChecking)
             {
                 gProtectStructs[battler].tryEjectPack = TRUE;
                 gProtectStructs[battler].lashOutAffected = TRUE;
+                gBattleScripting.statChanger |= STAT_BUFF_NEGATIVE;
             }
         }
     }
@@ -10210,32 +10205,26 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
             statValue = 1;
         else if (gBattleMons[battler].statStages[statId] == 10 && statValue > 2)
             statValue = 2;
-        gBattleTextBuff2[0] = B_BUFF_PLACEHOLDER_BEGIN;
-        index = 1;
+
         if (statValue == 2)
         {
-            gBattleTextBuff2[1] = B_BUFF_STRING;
-            gBattleTextBuff2[2] = STRINGID_STATSHARPLY;
-            gBattleTextBuff2[3] = STRINGID_STATSHARPLY >> 8;
-            index = 4;
+            PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_STATSHARPLY);
         }
         else if (statValue >= 3)
         {
-            gBattleTextBuff2[1] = B_BUFF_STRING;
-            gBattleTextBuff2[2] = STRINGID_DRASTICALLY & 0xFF;
-            gBattleTextBuff2[3] = STRINGID_DRASTICALLY >> 8;
-            index = 4;
+            PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_DRASTICALLY);
         }
-        gBattleTextBuff2[index++] = B_BUFF_STRING;
-        gBattleTextBuff2[index++] = STRINGID_STATROSE;
-        gBattleTextBuff2[index++] = STRINGID_STATROSE >> 8;
-        gBattleTextBuff2[index] = B_BUFF_EOS;
+        else
+        {
+            PREPARE_STRING_BUFFER(gBattleTextBuff2, STRINGID_EMPTYSTRING3);
+        }
 
-        gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_ROSE or B_MSG_DEFENDER_STAT_ROSE
+        gBattleCommunication[MULTISTRING_CHOOSER] = (gBattlerTarget == battler); // B_MSG_ATTACKER_STAT_CHANGED or B_MSG_DEFENDER_STAT_CHANGED
 
         if (gBattleMons[battler].statStages[statId] == MAX_STAT_STAGE)
         {
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_INCREASE;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STAT_WONT_CHANGE;
+            gBattleScripting.statChanger &= ~STAT_BUFF_NEGATIVE;
         }
         else if (!flags.onlyChecking)
         {
@@ -10246,6 +10235,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
                 statIncrease = statValue;
 
             gProtectStructs[battler].statRaised = TRUE;
+            gBattleScripting.statChanger &= ~STAT_BUFF_NEGATIVE;
 
             if (statIncrease)
             {
@@ -10275,7 +10265,7 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChan
         }
     }
 
-    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_INCREASE) // same as B_MSG_STAT_WONT_DECREASE
+    if (gBattleCommunication[MULTISTRING_CHOOSER] == B_MSG_STAT_WONT_CHANGE) // at max or min
     {
         if (!flags.allowPtr)
             return STAT_CHANGE_DIDNT_WORK;

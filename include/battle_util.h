@@ -333,7 +333,6 @@ bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes);
 void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast);
 bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind);
 bool32 TryRoomService(u32 battler);
-void BufferStatChange(u32 battler, u8 statId, enum StringID stringId);
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 u16 GetUsedHeldItem(u32 battler);
 bool32 PickupHasValidTarget(u32 battler);

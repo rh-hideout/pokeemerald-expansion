@@ -1983,7 +1983,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] <= 60)
+            else if (aiData->hpPercents[battlerAtk] <= 60 && (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE || GetMoveZEffect(move) == Z_EFFECT_NONE))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FUTURE_SIGHT:
@@ -2758,6 +2758,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
+        case EFFECT_LAST_RESORT:
+            if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move))
+                break;
             ADJUST_SCORE(-10);
             break;
         case EFFECT_INSTRUCT:
@@ -4441,7 +4444,8 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     case EFFECT_HOLD_HANDS:
     case EFFECT_CELEBRATE:
     case EFFECT_HAPPY_HOUR:
-        //todo - check z splash, z celebrate, z happy hour (lol)
+        if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move))
+            ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_TELEPORT: // Either remove or add better logic
         if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || !IsOnPlayerSide(battlerAtk))
