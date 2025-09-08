@@ -6203,7 +6203,7 @@ static s32 AI_HPAware(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 return 0;
 
             if (CanTargetFaintAi(LEFT_FOE(battlerAtk), BATTLE_PARTNER(battlerAtk))
-              || (CanTargetFaintAi(RIGHT_FOE(battlerAtk), BATTLE_PARTNER(battlerAtk))))
+             || CanTargetFaintAi(RIGHT_FOE(battlerAtk), BATTLE_PARTNER(battlerAtk)))
                 ADJUST_SCORE(-1);
 
             if (gAiLogicData->hpPercents[battlerDef] <= 50)

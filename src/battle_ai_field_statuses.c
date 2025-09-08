@@ -417,7 +417,7 @@ static enum FieldEffectOutcome BenefitsFromPsychicTerrain(u32 battler)
             return FIELD_EFFECT_POSITIVE;
     }
 
-    if (grounded && (HasDamagingMoveOfType(battler, TYPE_PSYCHIC)))
+    if (grounded && HasDamagingMoveOfType(battler, TYPE_PSYCHIC))
         return FIELD_EFFECT_POSITIVE;
 
     if (HasBattlerSideMoveWithEffect(LEFT_FOE(battler), EFFECT_EXPANDING_FORCE))
@@ -445,14 +445,14 @@ static enum FieldEffectOutcome BenefitsFromGravity(u32 battler)
     if (IsBattlerAlive(LEFT_FOE(battler)))
     {
         if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
-         || (!IsBattlerGrounded(LEFT_FOE(battler) && HasDamagingMoveOfType(battler, TYPE_GROUND))))
+         || (!IsBattlerGrounded(LEFT_FOE(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
             return FIELD_EFFECT_POSITIVE;
     }
 
     if (IsBattlerAlive(RIGHT_FOE(battler)))
     {
         if (HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
-         || (!IsBattlerGrounded(RIGHT_FOE(battler) && HasDamagingMoveOfType(battler, TYPE_GROUND))))
+         || (!IsBattlerGrounded(RIGHT_FOE(battler)) && HasDamagingMoveOfType(battler, TYPE_GROUND)))
             return FIELD_EFFECT_POSITIVE;
     }
 

@@ -5745,8 +5745,8 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         return GOOD_EFFECT;
     // Conditional ability logic goes here.
     case ABILITY_COMPOUND_EYES:
-        if ((HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), 90, FALSE))
-         || (HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), 90, FALSE)))
+        if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), 90, FALSE)
+         || HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), 90, FALSE))
             return GOOD_EFFECT;
         break;
     case ABILITY_CONTRARY:
@@ -5806,8 +5806,8 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, u32 ability, struct AiLogicData
         }
     }
     case ABILITY_NO_GUARD:
-        if ((HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE))
-         || (HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)))
+        if (HasMoveWithLowAccuracy(battler, LEFT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE)
+         || HasMoveWithLowAccuracy(battler, RIGHT_FOE(battler), LOW_ACCURACY_THRESHOLD, FALSE))
             return GOOD_EFFECT;
         break;
     // Toxic counter ticks upward while Poison Healed; losing Poison Heal while Toxiced can KO.
