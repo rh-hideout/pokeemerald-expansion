@@ -6709,7 +6709,7 @@ BattleScript_MoveUsedWokeUp::
 BattleScript_MonWokeUpInUproar::
 	printstring STRINGID_PKMNWOKEUPINUPROAR
 	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_ATTACKER
+	updatestatusicon BS_EFFECT_BATTLER
 	end2
 
 BattleScript_PoisonTurnDmg::
