@@ -291,10 +291,10 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
         HP_BAR(opponent, captureDamage: &damage[1]);
         MESSAGE("The Pokémon was hit 2 time(s)!");
     } THEN {
-        if (B_PARENTAL_BOND_DMG == GEN_6)
-            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
-        else
+        if (B_PARENTAL_BOND_DMG >= GEN_7)
             EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+        else
+            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
     }
 }
 
