@@ -2067,10 +2067,10 @@ void Item_(u32 sourceLine, u32 item)
     switch (GetItemHoldEffect(item))
     {
     case HOLD_EFFECT_MEGA_STONE:
-        SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_MEGA);
+        SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_MEGA);
         break;
     case HOLD_EFFECT_Z_CRYSTAL:
-        SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+        SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
         break;
     }
 }
@@ -2129,21 +2129,21 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
-    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
     INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
-    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void TeraType_(u32 sourceLine, u32 teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
-    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_TERA);
+    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_TERA);
 }
 
 void Shadow_(u32 sourceLine, bool32 isShadow)
