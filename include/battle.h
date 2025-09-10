@@ -151,11 +151,10 @@ struct ProtectStruct
     u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
     u32 notFirstStrike:1;
     u32 palaceUnableToUseMove:1;
-    u32 powderSelfDmg:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
-    u32 unused:8;
+    u32 unused:9;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
     u16 tryEjectPack:1;
@@ -666,7 +665,7 @@ struct BattleStruct
     u8 multipleSwitchInState:2;
     u8 multipleSwitchInCursor:3;
     u8 sleepClauseNotBlocked:1;
-    u8 padding1:1;
+    u8 isSkyBattle:1;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
@@ -745,7 +744,6 @@ struct BattleStruct
     u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
-    u8 isSkyBattle:1;
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
@@ -780,7 +778,8 @@ struct BattleStruct
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
-    u8 padding2:4;
+    enum SubmoveState submoveAnnouncement:2;
+    u8 padding2:2;
 };
 
 struct AiBattleData

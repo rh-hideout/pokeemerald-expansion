@@ -96,11 +96,11 @@ Each move's effect is governed by a script defined here. For a simple example, l
 ```
 BattleScript_EffectFirstTurnOnly::
 	attackcanceler
-	jumpifnotfirstturn BattleScript_FailedFromAtkString
+	jumpifnotfirstturn BattleScript_ButItFailed
 	goto BattleScript_EffectHit
 ```
 
-`attackcanceler` is a command that covers all the cases that could cause a move to fail before it's even attempted (e.g. paralysis). And as we can tell from the commands, if it's not the first turn, we go to `BattleScript_FailedFromAtkString` which evidently causes us to print the `attackstring` ("POKEMON used MOVE") then fail ("But it failed!"). Otherwise, we go to the generic "hit" effect which is the same script for moves that just deal damage and nothing else.
+`attackcanceler` is a command that covers all the cases that could cause a move to fail before it's even attempted (e.g. paralysis). And as we can tell from the commands, if it's not the first turn, we go to `BattleScript_ButItFailed` which evidently causes us to print the `attackstring` ("POKEMON used MOVE") then fail ("But it failed!"). Otherwise, we go to the generic "hit" effect which is the same script for moves that just deal damage and nothing else.
 
 This is the most advanced part of the ROM. There are dozens upon dozens of commands and hundreds of scripts so this guide would go on forever if I were to go into more detail. To learn how these scripts work, it's best to look at a few examples of moves you know.
 
