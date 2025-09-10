@@ -42,7 +42,6 @@ TO_DO_BATTLE_TEST("Burn Up doesn't thaw the user if it fails due to the user not
 
 SINGLE_BATTLE_TEST("Burn Up fails if the user has Protean/Libero and is not a Fire-type")
 {
-    KNOWN_FAILING;
     GIVEN {
         WITH_CONFIG(GEN_PROTEAN_LIBERO, GEN_6);
         PLAYER(SPECIES_REGIROCK);
