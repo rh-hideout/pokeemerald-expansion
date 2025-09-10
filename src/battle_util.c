@@ -3975,27 +3975,33 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_INTREPID_SWORD:
-            if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN)
+            if (!gSpecialStatuses[battler].switchInAbilityDone
              && !GetBattlerPartyState(battler)->intrepidSwordBoost)
             {
                 if (GetGenConfig(GEN_INTREPID_SWORD) == GEN_9)
                     GetBattlerPartyState(battler)->intrepidSwordBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_ATK, 1, FALSE);
-                BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
-                effect++;
+                if (CompareStat(battler, STAT_ATK, MAX_STAT_STAGE, CMP_LESS_THAN))
+                {
+                    SET_STATCHANGER(STAT_ATK, 1, FALSE);
+                    BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
+                    effect++;
+                }
             }
             break;
         case ABILITY_DAUNTLESS_SHIELD:
-            if (!gSpecialStatuses[battler].switchInAbilityDone && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN)
+            if (!gSpecialStatuses[battler].switchInAbilityDone
              && !GetBattlerPartyState(battler)->dauntlessShieldBoost)
             {
                 if (GetGenConfig(GEN_DAUNTLESS_SHIELD) == GEN_9)
                     GetBattlerPartyState(battler)->dauntlessShieldBoost = TRUE;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                SET_STATCHANGER(STAT_DEF, 1, FALSE);
-                BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
-                effect++;
+                if (CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN))
+                {
+                    SET_STATCHANGER(STAT_DEF, 1, FALSE);
+                    BattleScriptPushCursorAndCallback(BattleScript_BattlerAbilityStatRaiseOnSwitchIn);
+                    effect++;
+                }
             }
             break;
         case ABILITY_WIND_RIDER:

@@ -7920,7 +7920,7 @@ BattleScript_TeraShellDistortingTypeMatchups::
 
 BattleScript_CursedBodyActivates::
 	call BattleScript_AbilityPopUp
-	printstring STRINGID_CUSEDBODYDISABLED
+	printstring STRINGID_CURSEDBODYDISABLED
 	waitmessage B_WAIT_TIME_LONG
 	return
 
