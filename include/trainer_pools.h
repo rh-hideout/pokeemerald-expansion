@@ -62,6 +62,8 @@ struct PoolRules
     bool8 itemClauseExclusions;
     u8 tagMaxMembers[POOL_NUM_TAGS];
     bool8 tagRequired[POOL_NUM_TAGS];
+    bool8 megaStoneClause;
+    bool8 zCrystalClause;
 };
 
 struct PickFunctions
