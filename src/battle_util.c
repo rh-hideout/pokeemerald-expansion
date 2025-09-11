@@ -11651,7 +11651,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
 
     if ((gBattleMons[battlerDef].volatiles.lockOn && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
-     || (B_TOXIC_NEVER_MISS >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
+     || (GetGenConfig(GEN_CONFIG_TOXIC_NEVER_MISS) >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
         effect = TRUE;
