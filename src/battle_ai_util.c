@@ -1954,9 +1954,6 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     if (AreBattlersStatsMaxed(battlerAtk))
         return FALSE;
 
-    if (HasChoiceEffect(battlerAtk))
-        return FALSE;
-
     // Don't increase stats if opposing battler has Unaware
     if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, gAiLogicData))
         return FALSE;
