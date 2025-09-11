@@ -191,6 +191,7 @@ bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 bool32 IsBattlerDamagedByStatus(u32 battler);
 s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
+bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef);
 bool32 ShouldSetWeather(u32 battler, u32 weather);
 bool32 ShouldClearWeather(u32 battler, u32 weather);
 bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus);
