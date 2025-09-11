@@ -120,3 +120,22 @@ AI_DOUBLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is used when about to d
     }
 }
 
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Conversion")
+
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Detect")
+
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Haze")
+
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Mirror Move")
+
+// Requires handling for Prankster as well.
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Nature Power")
+
+// Requires handling for Wish passing/Healing Wish/other ways to determine what pokemon to heal via switching into.
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Parting Shot")
+
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Tailwind")
+
+TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Trick Room")
+
+
