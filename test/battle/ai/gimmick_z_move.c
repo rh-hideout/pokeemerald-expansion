@@ -120,7 +120,24 @@ AI_DOUBLE_BATTLE_TEST("AI uses Z-Moves -- Z-Destiny Bond is used when about to d
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Conversion")
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Conversion")
+{
+    u32 ability;
+    PARAMETRIZE { ability = ABILITY_NONE; }
+    PARAMETRIZE { ability = ABILITY_OPPORTUNIST; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        ASSUME(GetMoveType(MOVE_CONVERSION) == TYPE_NORMAL);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Ability(ABILITY_ADAPTABILITY); Moves(MOVE_THUNDERBOLT, MOVE_CONVERSION); }
+    } WHEN {
+    if (ability == ABILITY_OPPORTUNIST)
+        TURN { EXPECT_MOVE(opponent, MOVE_CONVERSION, gimmick: GIMMICK_NONE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_CONVERSION, gimmick: GIMMICK_Z_MOVE); }
+    }
+}
 
 TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Detect")
 
@@ -135,6 +152,26 @@ TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Nature Power")
 TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Parting Shot")
 
 TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Tailwind")
+
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Transform")
+{
+    u32 currentHP, move;
+    PARAMETRIZE { currentHP = 1;   move = MOVE_HEADBUTT; }
+    PARAMETRIZE { currentHP = 1;   move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { currentHP = 500; move = MOVE_HEADBUTT; }
+    PARAMETRIZE { currentHP = 500; move = MOVE_THUNDERBOLT; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT );
+        PLAYER(SPECIES_WOBBUFFET) { Moves(move, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(currentHP); Item(ITEM_NORMALIUM_Z); Moves(MOVE_TRANSFORM); }
+    } WHEN {
+    if (currentHP == 1 || move == MOVE_THUNDERBOLT)
+        TURN { EXPECT_MOVE(opponent, MOVE_TRANSFORM, gimmick: GIMMICK_Z_MOVE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_TRANSFORM, gimmick: GIMMICK_NONE); }
+    }
+}
 
 TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Trick Room")
 

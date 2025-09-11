@@ -4323,7 +4323,13 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         break;
     case EFFECT_CONVERSION:
         if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(gBattleMons[battlerAtk].moves[0])))
+        {
             ADJUST_SCORE(WEAK_EFFECT);
+            if (aiData->abilities[battlerAtk] == ABILITY_ADAPTABILITY)
+                ADJUST_SCORE(WEAK_EFFECT);
+            if (IsConsideringZMove(battlerAtk, battlerDef, move))
+                ADJUST_SCORE(BEST_EFFECT);
+        }
         break;
     case EFFECT_SWALLOW:
         if (gDisableStructs[battlerAtk].stockpileCounter == 0)
