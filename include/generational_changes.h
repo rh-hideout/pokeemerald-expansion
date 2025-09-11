@@ -45,6 +45,7 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
     [GEN_CONFIG_DESTINY_BOND_FAIL]         = B_DESTINY_BOND_FAIL,
     [GEN_CONFIG_POWDER_RAIN]               = B_POWDER_RAIN,
     [GEN_CONFIG_POWDER_GRASS]              = B_POWDER_GRASS,
+    [GEN_CONFIG_OBLIVIOUS_TAUNT]           = B_OBLIVIOUS_TAUNT,
 };
 
 #if TESTING

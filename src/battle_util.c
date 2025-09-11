@@ -5148,7 +5148,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             case ABILITY_OBLIVIOUS:
                 if (gBattleMons[battler].volatiles.infatuation)
                     effect = 3;
-                else if (gDisableStructs[battler].tauntTimer != 0)
+                else if (gDisableStructs[battler].tauntTimer != 0 && GetGenConfig(GEN_CONFIG_OBLIVIOUS_TAUNT) >= GEN_6)
                     effect = 4;
                 break;
             }
