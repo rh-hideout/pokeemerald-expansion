@@ -139,7 +139,23 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Conversion")
     }
 }
 
-TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Detect")
+AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Detect")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_THUNDERBOLT; }
+    PARAMETRIZE { move = MOVE_CLOSE_COMBAT; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT | AI_FLAG_PREDICT_MOVE );
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_FAKE_OUT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FIGHTINIUM_Z); Moves(MOVE_DETECT, move); }
+    } WHEN {
+    if (move == MOVE_CLOSE_COMBAT)
+        TURN { EXPECT_MOVE(opponent, MOVE_DETECT, gimmick: GIMMICK_NONE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_DETECT, gimmick: GIMMICK_Z_MOVE); }
+    }
+}
 
 TO_DO_BATTLE_TEST("TODO: AI uses Z-Moves -- Z-Haze")
 
