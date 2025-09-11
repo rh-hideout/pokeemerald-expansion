@@ -2055,7 +2055,6 @@ static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
                 spritePalette.data = gSpeciesInfo[species].overworldPalette;
         }
 
-        // Check if pal data must be decompressed
         paletteNum = LoadSpritePalette(&spritePalette);
     }
     else
