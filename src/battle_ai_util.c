@@ -4856,6 +4856,9 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
 
 bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
 {
+    if (IsBattleMoveStatus(move) && GetMoveZEffect(move) == Z_EFFECT_NONE)
+        return FALSE;
+
     return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
 }
 
