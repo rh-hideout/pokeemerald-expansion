@@ -313,7 +313,6 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         case EFFECT_COPYCAT:
         case EFFECT_LAST_RESORT:
         case EFFECT_AQUA_RING:
-        case EFFECT_GRAVITY:
         case EFFECT_HEALING_WISH:
 
         //TODO: AI TESTS
@@ -327,6 +326,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
         case EFFECT_MAGNET_RISE:
 
         // tests exist elsewhere
+        case EFFECT_GRAVITY:
         case EFFECT_HEAL_BELL:
         case EFFECT_ATTACK_UP_USER_ALLY:
  
