@@ -295,7 +295,10 @@ PlayersHouse_1F_Text_MoversPokemonGoSetClock:
 	.string "Go check it out, dear!\p"
 	.string "DAD bought you a new clock to mark\n"
 	.string "our move here.\l"
-	.string "Don't forget to set it!$"
+	.string "Don't forget to set it!\p"
+	.string "Oh, and if you talk to your little\n"
+	.string "game console, you can find some\l"
+	.string "new settings to try.$"
 
 PlayersHouse_1F_Text_ArentYouInterestedInRoom:
 	.string "MOM: Well, {PLAYER}?\p"

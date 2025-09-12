@@ -266,7 +266,7 @@
       "y": 1,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "PlayersHouse_2F_EventScript_GameCube"
+      "script": "LittlerootTown_BrendansHouse_2F_OptionsMenu"
     }
   ]
 }
