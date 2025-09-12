@@ -1956,6 +1956,7 @@ static enum MoveCanceller CancellerAsleepOrFrozen(void)
             TryDeactivateSleepClause(GetBattlerSide(gBattlerAttacker), gBattlerPartyIndexes[gBattlerAttacker]);
             gBattleMons[gBattlerAttacker].status1 &= ~STATUS1_SLEEP;
             gBattleMons[gBattlerAttacker].volatiles.nightmare = FALSE;
+            gEffectBattler = gBattlerAttacker;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
             BattleScriptCall(BattleScript_MoveUsedWokeUp);
             return MOVE_STEP_REMOVES_STATUS;
