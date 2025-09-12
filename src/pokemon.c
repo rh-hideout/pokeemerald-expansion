@@ -1134,7 +1134,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     SetBoxMonData(boxMon, MON_DATA_TERA_TYPE, &teraType);
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    #if defined(P_PERFECT_IVS) && P_PERFECT_IVS == 1
+    #if defined(P_PERFECT_IVS) && P_PERFECT_IVS != 0
         u32 perfectIVs = 31;
         SetBoxMonData(boxMon, MON_DATA_HP_IV, &perfectIVs);
         SetBoxMonData(boxMon, MON_DATA_ATK_IV, &perfectIVs);

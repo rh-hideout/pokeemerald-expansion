@@ -43,20 +43,26 @@
 #define TEMP_FLAGS_END   FLAG_TEMP_1F
 #define NUM_TEMP_FLAGS   (TEMP_FLAGS_END - TEMP_FLAGS_START + 1)
 
-#define FLAG_PERFECT_STATS     0x20 // Unused Flag
-#define FLAG_UNUSED_0x021    0x21 // Unused Flag
-#define FLAG_UNUSED_0x022    0x22 // Unused Flag
-#define FLAG_UNUSED_0x023    0x23 // Unused Flag
-#define FLAG_UNUSED_0x024    0x24 // Unused Flag
-#define FLAG_UNUSED_0x025    0x25 // Unused Flag
-#define FLAG_UNUSED_0x026    0x26 // Unused Flag
-#define FLAG_UNUSED_0x027    0x27 // Unused Flag
-#define FLAG_UNUSED_0x028    0x28 // Unused Flag
-#define FLAG_UNUSED_0x029    0x29 // Unused Flag
-#define FLAG_UNUSED_0x02A    0x2A // Unused Flag
-#define FLAG_UNUSED_0x02B    0x2B // Unused Flag
-#define FLAG_UNUSED_0x02C    0x2C // Unused Flag
-#define FLAG_UNUSED_0x02D    0x2D // Unused Flag
+// Added settings
+#define FLAG_PERFECT_STATS              0x20 
+#define FLAG_FOLLOWER_POKEMON_FLAG      0x21 
+#define FLAG_UNUSED_0x022               0x22 // Unused Flag
+#define FLAG_UNUSED_0x023               0x23 // Unused Flag
+#define FLAG_UNUSED_0x024               0x24 // Unused Flag
+#define FLAG_UNUSED_0x025               0x25 // Unused Flag
+#define FLAG_UNUSED_0x026               0x26 // Unused Flag
+#define FLAG_UNUSED_0x027               0x27 // Unused Flag
+#define FLAG_UNUSED_0x028               0x28 // Unused Flag
+#define FLAG_UNUSED_0x029               0x29 // Unused Flag
+#define FLAG_UNUSED_0x02A               0x2A // Unused Flag
+
+// Dexnav Flags
+#define FLAG_DEXNAV_SEARCH    0x2B // Unused Flag
+#define FLAG_DEXNAV_OBTAINED    0x2C // Unused Flag
+#define FLAG_DEXNAV_HIDDEN    0x2D // Unused Flag
+
+
+
 #define FLAG_UNUSED_0x02E    0x2E // Unused Flag
 #define FLAG_UNUSED_0x02F    0x2F // Unused Flag
 #define FLAG_UNUSED_0x030    0x30 // Unused Flag
@@ -656,8 +662,9 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_123_RARE_CANDY                (FLAG_HIDDEN_ITEMS_START + 0x6E)
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL                 (FLAG_HIDDEN_ITEMS_START + 0x6F)
 
-#define FLAG_UNUSED_0x264  0x264 // Unused Flag
-#define FLAG_UNUSED_0x265  0x265 // Unused Flag
+// Flags for Level Caps, specifically route/event clears
+#define FLAG_ROUTE102_CLEAR  0x264 // Unused Flag
+#define FLAG_ROUTE104_PART1_CLEAR  0x265 // Unused Flag
 #define FLAG_UNUSED_0x266  0x266 // Unused Flag
 #define FLAG_UNUSED_0x267  0x267 // Unused Flag
 #define FLAG_UNUSED_0x268  0x268 // Unused Flag

@@ -1261,7 +1261,7 @@ static u8 DexNavTryGenerateMonLevel(u16 species, enum EncounterType environment)
         return MON_LEVEL_NONEXISTENT;   //species not found in the area
 
     if (Random() % 100 < 4)
-        levelBonus += 10; //4% chance of having a +10 level
+        levelBonus += 0; //4% chance of having a +10 level
 
     if (levelBase + levelBonus > MAX_LEVEL)
         return MAX_LEVEL;
