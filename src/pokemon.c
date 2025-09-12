@@ -5823,8 +5823,15 @@ bool32 IsSpeciesInHoennDex(u16 species)
 
 u16 GetBattleBGM(void)
 {
-    // Get custom battle frontier bgm
-    const u16 frontierBGM = VarGet(VAR_FRONTIER_BGM);
+    u16 frontierBGM;
+    const bool8 isRandomMode = FlagGet(FLAG_SHUFFLE_FRONTIER_BGM);
+
+    if (isRandomMode) {
+        frontierBGM = (Random() % FRONTIER_BGM_COUNT) + 1;
+    } else {
+        // Get custom battle frontier bgm
+        frontierBGM = VarGet(VAR_FRONTIER_BGM);
+    }
 
     // Custom battle frontier bgm is set
     if (frontierBGM > 0 &&
