@@ -5594,9 +5594,6 @@ static u32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     // move data
     s32 score = 0;
 
-    if (TestIfSheerForceAffected(battlerAtk, move))
-        return score;
-
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, aiData);
     bool32 hasPartner = HasPartner(battlerAtk);
     u32 i;
@@ -5607,6 +5604,11 @@ static u32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
 
+        if (aiData->abilities[battlerAtk] == ABILITY_SHEER_FORCE)
+        {
+            if ((additionalEffect->chance > 0) != additionalEffect->sheerForceOverride)
+                continue;
+        }
 
         // Only consider effects with a guaranteed chance to happen
         if (!MoveEffectIsGuaranteed(battlerAtk, aiData->abilities[battlerAtk], additionalEffect))
