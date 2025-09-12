@@ -56,14 +56,14 @@ enum PoolTags {
 
 struct PoolRules
 {
-    bool8 speciesClause;
-    bool8 excludeForms;
-    bool8 itemClause;
-    bool8 itemClauseExclusions;
+    u8 speciesClause:1;
+    u8 excludeForms:1;
+    u8 itemClause:1;
+    u8 itemClauseExclusions:1;
+    u8 megaStoneClause:1;
+    u8 zCrystalClause:1;
     u8 tagMaxMembers[POOL_NUM_TAGS];
     bool8 tagRequired[POOL_NUM_TAGS];
-    bool8 megaStoneClause;
-    bool8 zCrystalClause;
 };
 
 struct PickFunctions
