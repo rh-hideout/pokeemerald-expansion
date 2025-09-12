@@ -112,8 +112,8 @@ static const u8 sTextColors[] = { TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_C
 // Table of move info icon offsets in graphics/interface/menu_info.png
 static const struct MenuInfoIcon sMenuInfoIcons[] =
 {   // { width, height, offset }
-    { 12, 12, 0x00 },  // Unused
-    [TYPE_NONE + 1]     = { 32, 12, 0xA4 }, // Copy of TYPE_MYSTERY's
+    [TYPE_VIRUS + 1]     = { 12, 12, 0x00 },  // previously Unused
+    [TYPE_DATA + 1]     = { 32, 12, 0xA4 }, // previously a Copy of TYPE_MYSTERY's
     [TYPE_NULL + 1]   = { 32, 12, 0x20 },
     [TYPE_COMBAT + 1] = { 32, 12, 0x64 },
     [TYPE_WIND + 1]   = { 32, 12, 0x60 },
@@ -137,8 +137,8 @@ static const struct MenuInfoIcon sMenuInfoIcons[] =
     [MENU_INFO_ICON_POWER]     = { 42, 12, 0xC0 },
     [MENU_INFO_ICON_ACCURACY]  = { 42, 12, 0xC8 },
     [MENU_INFO_ICON_PP]        = { 42, 12, 0xE0 },
-    [MENU_INFO_ICON_EFFECT]    = { 42, 12, 0xE8 }, // Unused
-    [MENU_INFO_ICON_BALL_RED]  = {  8,  8, 0xAE }, // For placed decorations in Secret Base
+    [TYPE_VACCINE + 1]    = { 42, 12, 0xE8 }, // Unused
+    [TYPE_FREE + 1]  = {  8,  8, 0xAE }, // previously For placed decorations in Secret Base
     [MENU_INFO_ICON_BALL_BLUE] = {  8,  8, 0xAF }, // For placed decorations in player's room
 };
 

@@ -2468,7 +2468,7 @@ static void CreateCaughtBall(bool16 owned, u8 x, u8 y, u16 unused)
     else
         FillWindowPixelRect(0, PIXEL_FILL(0), x * 8, y * 8, 8, 16);
 }
-
+//elephantmuffin this is how dashed lines are created
 static u8 CreateMonName(u16 num, u8 left, u8 top)
 {
     const u8 *str;

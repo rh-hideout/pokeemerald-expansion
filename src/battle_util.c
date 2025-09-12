@@ -9404,7 +9404,6 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
     && IS_BATTLER_OF_TYPE(battlerDef, TYPE_VIRUS))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
 
-
     if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_VIRUS)
     && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DATA))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
@@ -9416,7 +9415,6 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
     if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_VACCINE)
     && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DATA))
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
-
 
     if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_VIRUS)
     && IS_BATTLER_OF_TYPE(battlerDef, TYPE_VACCINE))
