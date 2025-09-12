@@ -5588,7 +5588,23 @@ case EFFECT_GUARD_SPLIT:
         break;
     } // move effect checks
 
+    return score;
+}
+
+static u32 AI_CalcMoveAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    // move data
+    struct AiLogicData *aiData = gAiLogicData;
+
+    s32 score = 0;
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
+    bool32 hasPartner = HasPartner(battlerAtk);
+    bool32 moveTargetsBothOpponents = hasTwoOpponents && (gMovesInfo[move].target & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
+    u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
+
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)
     {
@@ -5800,7 +5816,6 @@ case EFFECT_GUARD_SPLIT:
             }
         }
     }
-
     return score;
 }
 
@@ -5824,6 +5839,7 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
     }
 
     ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move));
+    ADJUST_SCORE(AI_CalcMoveAdditionalEffectScore(battlerAtk, battlerDef, move));
     ADJUST_SCORE(AI_CalcHoldEffectMoveScore(battlerAtk, battlerDef, move));
 
     return score;
