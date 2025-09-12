@@ -101,3 +101,48 @@ DOUBLE_BATTLE_TEST("Vessel of Ruin does not reduce Sp. Atk if if Neutralizing Ga
         EXPECT_MUL_EQ(damage[0], Q_4_12(1.33), damage[1]);
     }
 }
+
+SINGLE_BATTLE_TEST("Vessel of Ruin is still active if Entrainment together with Mold Breaker blocks the ability")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+        TURN { MOVE(opponent, MOVE_ENTRAINMENT); }
+        TURN { MOVE(opponent, MOVE_WATER_GUN); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_VESSEL_OF_RUIN);
+        MESSAGE("Ting-Lu's Vessel of Ruin weakened the Sp. Atk of all surrounding Pokémon!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENTRAINMENT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, opponent);
+        HP_BAR(player, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Vessel of Ruin and Sword Of Ruin will be both active if the first ability is removed with Mold Breaker Entrainment and Skill Swapped Sword Of Ruin")
+{
+    GIVEN {
+        PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
+        PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_TELEPATHY); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_ENTRAINMENT, target: playerLeft);
+            MOVE(opponentRight, MOVE_SKILL_SWAP, target: playerLeft);
+            MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft);
+        }
+    } THEN {
+        bool32 isVesselOfRuinActive = gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.vesselOfRuin;
+        bool32 isSwordOfRuinActive = gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.swordOfRuin;
+        EXPECT_EQ(isVesselOfRuinActive, TRUE);
+        EXPECT_EQ(isSwordOfRuinActive, TRUE);
+    }
+}

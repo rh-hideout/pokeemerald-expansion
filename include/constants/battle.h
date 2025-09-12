@@ -196,7 +196,10 @@ enum VolatileFlags
     F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
     F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_RUIN_FIELD_STATUS,           fieldStatus,                   (u32, 4))
+    F(VOLATILE_VESSEL_OF_RUIN,              vesselOfRuin,                  (u32, 1)) \
+    F(VOLATILE_SWORD_OF_RUIN,               swordOfRuin,                   (u32, 1)) \
+    F(VOLATILE_TABLETS_OF_RUIN,             tabletsOfRuin,                 (u32, 1)) \
+    F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -231,18 +234,6 @@ enum SemiInvulnerableExclusion
 {
     CHECK_ALL,
     EXCLUDE_COMMANDER,
-};
-
-// Field effects that correspond to a battler. They expire when the battler leaves the field without message.
-// They can also be negated by Mold Breaker (e.g. Circle Throw drags out a user of such status))
-// Limited to 16 right now, If more are needed the volatile bits "fieldStatus" need to be increased.
-enum BattlerStatuses
-{
-    STATUS_BETTLER_NONE,
-    STATUS_VESSEL_OF_RUIN,
-    STATUS_SWORD_OF_RUIN,
-    STATUS_TABLETS_OF_RUIN,
-    STATUS_BEADS_OF_RUIN,
 };
 
 #define HITMARKER_STRING_PRINTED        (1 << 4)

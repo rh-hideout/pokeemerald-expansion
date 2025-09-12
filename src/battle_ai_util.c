@@ -4220,16 +4220,16 @@ static void SetBattlerFieldStatusForSwitchin(u32 battler)
     switch (gAiLogicData->abilities[battler])
     {
     case ABILITY_VESSEL_OF_RUIN:
-        gBattleMons[battler].volatiles.fieldStatus = STATUS_VESSEL_OF_RUIN;
+        gBattleMons[battler].volatiles.vesselOfRuin = TRUE;
         break;
     case ABILITY_SWORD_OF_RUIN:
-        gBattleMons[battler].volatiles.fieldStatus = STATUS_SWORD_OF_RUIN;
+        gBattleMons[battler].volatiles.swordOfRuin = TRUE;
         break;
     case ABILITY_TABLETS_OF_RUIN:
-        gBattleMons[battler].volatiles.fieldStatus = STATUS_TABLETS_OF_RUIN;
+        gBattleMons[battler].volatiles.tabletsOfRuin = TRUE;
         break;
     case ABILITY_BEADS_OF_RUIN:
-        gBattleMons[battler].volatiles.fieldStatus = STATUS_BEADS_OF_RUIN;
+        gBattleMons[battler].volatiles.beadsOfRuin = TRUE;
         break;
     default:
         break;
