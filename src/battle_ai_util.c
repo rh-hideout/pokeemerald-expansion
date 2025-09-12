@@ -665,7 +665,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
             return TRUE;
         break;
     case EFFECT_LAST_RESORT:
-        if (!CanUseLastResort(ctx->battlerAtk))
+        if (!CanUseLastResort(ctx->battlerAtk) && !IsConsideringZMove(ctx->battlerAtk, ctx->battlerDef, ctx->move))
             return TRUE;
         break;
     case EFFECT_LOW_KICK:
@@ -1947,6 +1947,43 @@ bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, u32 atkAbility, u32 defAbil
             return TRUE;
     }
     return FALSE;
+}
+
+bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
+{
+    if (AreBattlersStatsMaxed(battlerAtk))
+        return FALSE;
+
+    // Don't increase stats if opposing battler has Unaware
+    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, gAiLogicData))
+        return FALSE;
+
+    // Don't set up if AI is dead to residual damage from weather
+    if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp)
+        return FALSE;
+
+    // Don't increase stats if opposing battler has Opportunist
+    if (HasBattlerSideAbility(battlerDef, ABILITY_OPPORTUNIST, gAiLogicData))
+        return FALSE;
+
+    // Don't increase stats if opposing battler has Encore
+    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
+        return FALSE;
+
+    // Don't increase stats if opposing battler has used Haze effect or AI effect
+    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
+      && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
+        return FALSE;
+
+    if (CountPositiveStatStages(battlerAtk) > 0
+      && HasBattlerSideMoveWithAIEffect(battlerDef, AI_EFFECT_RESET_STATS))
+        return FALSE;
+
+    // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
+    if (CanBattlerKOTargetIgnoringSturdy(battlerAtk, battlerDef))
+        return FALSE;
+
+    return TRUE;
 }
 
 bool32 ShouldSetWeather(u32 battler, u32 weather)
@@ -4583,8 +4620,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     if (considerContrary && gAiLogicData->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
 
-    // Don't increase stats if opposing battler has Unaware
-    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, gAiLogicData))
+    if (!ShouldRaiseAnyStat(battlerAtk, battlerDef))
         return NO_INCREASE;
 
     // Don't increase stat if AI is at +4
@@ -4593,32 +4629,6 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
 
     // Don't increase stat if AI has less then 70% HP and number of hits isn't known
     if (gAiLogicData->hpPercents[battlerAtk] < 70 && noOfHitsToFaint == UNKNOWN_NO_OF_HITS)
-        return NO_INCREASE;
-
-    // Don't set up if AI is dead to residual damage from weather
-    if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp)
-        return NO_INCREASE;
-
-    // Don't increase stats if opposing battler has Opportunist
-    if (HasBattlerSideAbility(battlerDef, ABILITY_OPPORTUNIST, gAiLogicData))
-        return NO_INCREASE;
-
-    // Don't increase stats if opposing battler has Encore
-    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
-        return NO_INCREASE;
-
-    // Don't increase stats if opposing battler has used Haze effect or AI effect
-    if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
-      && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
-        return NO_INCREASE;
-
-    // Don't increase if AI is at +1 and opponent has Haze effect
-    if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 5
-      && HasBattlerSideMoveWithAIEffect(battlerDef, AI_EFFECT_RESET_STATS))
-        return NO_INCREASE;
-
-    // Don't increase stats if AI could KO target through Sturdy effect, as otherwise it always 2HKOs
-    if (CanBattlerKOTargetIgnoringSturdy(battlerAtk, battlerDef))
         return NO_INCREASE;
 
     // Don't increase stats if player has a move that can change the KO threshold
@@ -4867,6 +4877,12 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
     return FALSE;
 }
 
+
+bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+}
+
 //TODO - this could use some more sophisticated logic
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
@@ -4902,11 +4918,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
                     return TRUE;
                 break;
             case Z_EFFECT_ALL_STATS_UP_1:
-                if (AreBattlersStatsMaxed(battlerAtk))
-                    return FALSE;
-                return IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) > 0
-                    || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) > 0;
-                break;
+                return ShouldRaiseAnyStat(battlerAtk, battlerDef);
             case Z_EFFECT_BOOST_CRITS:
                 return TRUE;
             case Z_EFFECT_FOLLOW_ME:
@@ -4956,10 +4968,12 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
         }
         else if (GetMoveEffect(zMove) == EFFECT_EXTREME_EVOBOOST)
         {
-            return (!AreBattlersStatsMaxed(battlerAtk) && (IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_2) || IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK_2)));
+            return ShouldRaiseAnyStat(battlerAtk, battlerDef);
         }
         else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
+        {
             return FALSE;
+        }
 
         uq4_12_t effectiveness;
         struct SimulatedDamage dmg;
