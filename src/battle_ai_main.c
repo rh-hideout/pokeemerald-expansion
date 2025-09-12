@@ -3992,9 +3992,8 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
     }
 }
 
-static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
+static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
-    struct AiLogicData *aiData = gAiLogicData;
     enum ItemHoldEffect holdEffect = aiData->holdEffects[battlerAtk];
 
     s32 score = 0;
@@ -4022,11 +4021,10 @@ static u32 AI_CalcHoldEffectMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
     return score;
 }
 
-static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
+static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
     // move data
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    struct AiLogicData *aiData = gAiLogicData;
     u32 movesetIndex = gAiThinkingStruct->movesetIndex;
     uq4_12_t effectiveness = aiData->effectiveness[battlerAtk][battlerDef][movesetIndex];
 
@@ -5591,17 +5589,13 @@ case EFFECT_GUARD_SPLIT:
     return score;
 }
 
-static u32 AI_CalcMoveAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
+static u32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
     // move data
-    struct AiLogicData *aiData = gAiLogicData;
-
     s32 score = 0;
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-    bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
-    bool32 moveTargetsBothOpponents = hasTwoOpponents && (gMovesInfo[move].target & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
     u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
 
@@ -5767,8 +5761,12 @@ static u32 AI_CalcMoveAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 
                 IncreasePoisonScore(battlerAtk, battlerDef, move, &score);
                 break;
             case MOVE_EFFECT_CLEAR_SMOG:
+            {
+                bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk) && (gMovesInfo[move].target & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
+
                 score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
                 break;
+            }
             case MOVE_EFFECT_BUG_BITE:   // And pluck
                 if (gBattleMons[battlerDef].volatiles.substitute || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
                     break;
@@ -5822,6 +5820,8 @@ static u32 AI_CalcMoveAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 
 // AI_FLAG_CHECK_VIABILITY - Chooses best possible move to hit player
 static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
+    struct AiLogicData *aiData = gAiLogicData;
+
     // Targeting partner, check benefits of doing that instead
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
@@ -5838,9 +5838,9 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
         }
     }
 
-    ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move));
-    ADJUST_SCORE(AI_CalcMoveAdditionalEffectScore(battlerAtk, battlerDef, move));
-    ADJUST_SCORE(AI_CalcHoldEffectMoveScore(battlerAtk, battlerDef, move));
+    ADJUST_SCORE(AI_CalcMoveEffectScore(battlerAtk, battlerDef, move, aiData));
+    ADJUST_SCORE(AI_CalcAdditionalEffectScore(battlerAtk, battlerDef, move, aiData));
+    ADJUST_SCORE(AI_CalcHoldEffectMoveScore(battlerAtk, battlerDef, move, aiData));
 
     return score;
 }
