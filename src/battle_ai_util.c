@@ -4856,12 +4856,16 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
 
 bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
 {
+    if (IsBattleMoveStatus(move) && GetMoveZEffect(move) == Z_EFFECT_NONE)
+        return FALSE;
+
     return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
 }
 
 //TODO - this could use some more sophisticated logic
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
+
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
     if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
         return FALSE;   // don't use z move on partner
@@ -4870,6 +4874,39 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
     if (IsViableZMove(battlerAtk, chosenMove))
     {
+        enum BattleMoveEffects baseEffect = GetMoveEffect(chosenMove);
+        bool32 isEager = FALSE; // more likely to use a z move than typical
+
+        u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+        bool32 isSlower = AI_IsSlower(battlerAtk, battlerDef, chosenMove, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
+
+        switch (baseEffect)
+        {
+        case EFFECT_BELLY_DRUM:
+        case EFFECT_FILLET_AWAY:
+            if (isSlower)
+                return TRUE;
+            isEager = TRUE;
+            break;
+        case EFFECT_PROTECT:
+            if (HasDamagingMoveOfType(battlerAtk, GetMoveType(gMovesInfo[chosenMove].type)))
+                return FALSE;
+            else
+                isEager = TRUE;
+            break;
+        case EFFECT_TELEPORT:
+            isEager = TRUE;
+            break;
+        case EFFECT_TRANSFORM:
+            if (IsBattlerTrapped(battlerDef, battlerAtk) && !HasDamagingMoveOfType(battlerDef, GetMoveType(gMovesInfo[chosenMove].type)))
+                return TRUE;
+            if (isSlower)
+                isEager = TRUE;
+            break;
+        default:
+            break;
+        }
+
         u32 zMove = GetUsableZMove(battlerAtk, chosenMove);
 
         if (IsBattleMoveStatus(chosenMove))
@@ -4901,7 +4938,11 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
                 return HasPartnerIgnoreFlags(battlerAtk) && (GetHealthPercentage(battlerAtk) <= Z_EFFECT_FOLLOW_ME_THRESHOLD || GetBestNoOfHitsToKO(battlerDef, battlerAtk, AI_DEFENDING) == 1);
                 break;
             case Z_EFFECT_RECOVER_HP:
-                return gAiLogicData->hpPercents[battlerAtk] <= Z_EFFECT_RESTORE_HP_THRESHOLD;
+                if (GetBestNoOfHitsToKO(battlerDef, battlerAtk, AI_DEFENDING) == 1 && GetHealthPercentage(battlerAtk) > Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD)
+                    return TRUE;
+                if (isEager)
+                    return GetHealthPercentage(battlerAtk) <= Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD;
+                return GetHealthPercentage(battlerAtk) <= Z_EFFECT_RESTORE_HP_LOWER_THRESHOLD;
             case Z_EFFECT_RESTORE_REPLACEMENT_HP:
                 break;
             case Z_EFFECT_ACC_UP_1:
@@ -4939,8 +4980,9 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
                 return FALSE;
             }
 
-            if (statChange != 0 && IncreaseStatUpScore(battlerAtk, battlerDef, statChange) > 0)
+            if (statChange != 0 && (isEager || IncreaseStatUpScore(battlerAtk, battlerDef, statChange) > 0))
                 return TRUE;
+
         }
         else if (GetMoveEffect(zMove) == EFFECT_EXTREME_EVOBOOST)
         {

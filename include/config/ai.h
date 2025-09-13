@@ -112,6 +112,7 @@
 
 // HP thresholds to use a status z-move.
 #define Z_EFFECT_FOLLOW_ME_THRESHOLD    30
-#define Z_EFFECT_RESTORE_HP_THRESHOLD   60
+#define Z_EFFECT_RESTORE_HP_LOWER_THRESHOLD   ENABLE_RECOVERY_THRESHOLD // threshold used for moves you could conceivably use more than once
+#define Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD  90                        // these moves are one-time use or drop your HP
 
 #endif // GUARD_CONFIG_AI_H
