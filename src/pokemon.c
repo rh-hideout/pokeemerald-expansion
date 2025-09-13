@@ -114,7 +114,7 @@ static const struct CombinedMove sCombinedMoves[2] =
     {0xFFFF, 0xFFFF, 0xFFFF}
 };
 
-#define FRONTIER_BGM_COUNT 19
+#define FRONTIER_BGM_COUNT 31
 
 static const u16 customFrontierSongs[FRONTIER_BGM_COUNT] = {
     // RSE Music
@@ -139,6 +139,20 @@ static const u16 customFrontierSongs[FRONTIER_BGM_COUNT] = {
     MUS_RG_VS_DEOXYS,
     MUS_RG_VS_MEWTWO,
     MUS_RG_VS_LEGEND,
+
+    // HGSS Music
+    MUS_HG_VS_WILD,
+    MUS_HG_VS_TRAINER,
+    MUS_HG_VS_GYM_LEADER,
+    MUS_HG_VS_RIVAL,
+    MUS_HG_VS_ROCKET,
+    MUS_HG_VS_SUICUNE,
+    MUS_HG_VS_ENTEI,
+    MUS_HG_VS_RAIKOU,
+    MUS_HG_VS_CHAMPION,
+    MUS_HG_VS_WILD_KANTO,
+    MUS_HG_VS_TRAINER_KANTO,
+    MUS_HG_VS_GYM_LEADER_KANTO
 };
 
 

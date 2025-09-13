@@ -667,7 +667,9 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
      "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
      "VS. ELITE FOUR", "VS. AQUA & MAGMA LEADER", "VS. GYM LEADER (FRLG)", "VS. TRAINER (FRLG)",
      "VS. WILD POKEMON (FRLG)", "VS. CHAMPION (FRLG)", "VS. DEOXYS (FRLG)",
-     "VS. MEWTWO (FRLG)", "VS. LEGEND (FRLG)", "CANCEL")
+     "VS. MEWTWO (FRLG)", "VS. LEGEND (FRLG)", "VS. WILD POKEMON (HGSS)", "VS. TRAINER (HGSS)", "VS. GYM LEADER (HGSS)",
+     "VS. RIVAL (HGSS)", "VS. TEAM ROCKET (HGSS)", "VS. SUICUNE (HGSS)", "VS. ENTEI (HGSS)", "VS. RAIKOU (HGSS)",
+     "VS. CHAMPION (HGSS)", "VS. WILD POKEMON KANTO (HGSS)", "VS. TRAINER KANTO (HGSS)", "VS. GYM LEADER KANTO (HGSS)", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0:
             setvar(VAR_FRONTIER_BGM, 0)
@@ -709,7 +711,31 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
             setvar(VAR_FRONTIER_BGM, 18)
         case 19:
             setvar(VAR_FRONTIER_BGM, 19)
-		case 20:
+        case 20:
+            setvar(VAR_FRONTIER_BGM, 20)
+        case 21:
+            setvar(VAR_FRONTIER_BGM, 21)
+        case 22:
+            setvar(VAR_FRONTIER_BGM, 22)
+        case 23:
+            setvar(VAR_FRONTIER_BGM, 23)
+        case 24:
+            setvar(VAR_FRONTIER_BGM, 24)
+        case 25:
+            setvar(VAR_FRONTIER_BGM, 25)
+        case 26:
+            setvar(VAR_FRONTIER_BGM, 26)
+        case 27:
+            setvar(VAR_FRONTIER_BGM, 27)
+        case 28:
+            setvar(VAR_FRONTIER_BGM, 28)
+        case 29:
+            setvar(VAR_FRONTIER_BGM, 29)
+        case 30:
+            setvar(VAR_FRONTIER_BGM, 30)
+        case 31:
+            setvar(VAR_FRONTIER_BGM, 31)
+		case 32:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
         default:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
