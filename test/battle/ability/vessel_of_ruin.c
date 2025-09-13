@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin's message displays correctly after all battle
     }
 }
 
-DOUBLE_BATTLE_TEST("Vessel of Ruin does not reduce Sp. Atk if if Neutralizing Gas is on the field")
+DOUBLE_BATTLE_TEST("Vessel of Ruin does not reduce Sp. Atk if Neutralizing Gas is on the field")
 {
     s16 damage[2];
 
