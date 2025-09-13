@@ -567,7 +567,6 @@ static inline bool32 IsMoveSheerForceBoosted(u32 move)
         case MOVE_POWDER_SNOW:
         case MOVE_PSYSHIELD_BASH:
         case MOVE_PYRO_BALL:
-        case MOVE_RAPID_SPIN:
         case MOVE_RELIC_SONG:
         case MOVE_ROLLING_KICK:
         case MOVE_SACRED_FIRE:
@@ -605,6 +604,8 @@ static inline bool32 IsMoveSheerForceBoosted(u32 move)
         case MOVE_ELECTRO_SHOT:
         case MOVE_PSYCHIC_NOISE:
             return TRUE;
+        case MOVE_RAPID_SPIN:
+            return B_SPEED_BUFFING_RAPID_SPIN >= GEN_8;
     }
     return FALSE;
 }

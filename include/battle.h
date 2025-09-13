@@ -130,16 +130,16 @@ struct DisableStruct
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
     u8 hazardsDone:1;
-    u8 padding1:1;
+    u8 endured:1;
     u8 octolockedBy:3;
-    u8 padding2:5;
+    u8 tryEjectPack:1;
+    u8 padding:4;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
     u32 protected:7; // 126 protect options
-    u32 endured:1;
     u32 noValidMoves:1;
     u32 helpingHand:1;
     u32 bounceMove:1;
@@ -155,10 +155,9 @@ struct ProtectStruct
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
-    u32 unused:8;
+    u32 unused:9;
     // End of 32-bit bitfield
     u16 disableEjectPack:1;
-    u16 tryEjectPack:1;
     u16 pranksterElevated:1;
     u16 quickDraw:1;
     u16 beakBlastCharge:1;
@@ -169,12 +168,12 @@ struct ProtectStruct
     u16 usedAllySwitch:1;
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
-    u16 padding:3;
+    u16 padding:4;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
-    u8 physicalBattlerId;
-    u8 specialBattlerId;
+    u8 physicalBattlerId:4;
+    u8 specialBattlerId:4;
 };
 
 // Cleared at the start of HandleAction_ActionFinished

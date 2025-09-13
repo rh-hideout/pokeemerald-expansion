@@ -55,7 +55,7 @@
     F(TAUNT_TURNS,               tauntTurns,              (u32, GEN_9)) /* TODO */ \
     F(SPORT_TURNS,               sportTurns,              (u32, GEN_9)) /* TODO */ \
     F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_9)) /* TODO */ \
-    F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_9)) /* TODO */ \
+    F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_9)) \
     F(FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_9)) /* TODO */ \
     /* Move data settings */ \
     F(UPDATED_MOVE_DATA,         updatedMoveData,         (u32, GEN_9)) /* TODO */ \
@@ -100,7 +100,7 @@
     F(BEAT_UP,                   beatUp,                  (u32, GEN_9)) /* TODO */ \
     F(DARK_VOID_FAIL,            darkVoidFail,            (u32, GEN_9)) /* TODO */ \
     F(BURN_HIT_THAW,             burnHitThaw,             (u32, GEN_9)) /* TODO */ \
-    F(HEALING_WISH_SWITCH,       healingWishSwitch,       (u32, GEN_9)) /* TODO */ \
+    F(HEALING_WISH_SWITCH,       healingWishSwitch,       (u32, GEN_9)) \
     F(DEFOG_EFFECT_CLEARING,     defogEffectClearing,     (u32, GEN_9)) /* TODO */ \
     F(STOCKPILE_RAISES_DEFS,     stockpileRaisesDefs,     (u32, GEN_9)) /* TODO */ \
     F(TRANSFORM_SHINY,           transformShiny,          (u32, GEN_9)) /* TODO */ \
@@ -114,7 +114,7 @@
     F(HEAL_BELL_SOUNDPROOF,      healBellSoundproof,      (u32, GEN_9)) \
     F(CHARGE,                    charge,                  (u32, GEN_9)) /* TODO */ \
     F(POWDER_RAIN,               powderRain,              (u32, GEN_9)) /* TODO */ \
-    F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_9)) /* TODO */ \
+    F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_9)) \
     F(QUASH_TURN_ORDER,          quashTurnOrder,          (u32, GEN_9)) /* TODO */ \
     F(DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_9)) /* TODO */ \
     F(PURSUIT_TARGET,            pursuitTarget,           (u32, GEN_9)) /* TODO */ \
@@ -129,7 +129,7 @@
     F(MOODY_ACC_EVASION,         moodyAccEvasion,         (u32, GEN_9)) \
     F(FLASH_FIRE_FROZEN,         flashFireFrozen,         (u32, GEN_9)) /* TODO */ \
     F(SYNCHRONIZE_TOXIC,         synchronizeToxic,        (u32, GEN_9)) /* TODO */ \
-    F(UPDATED_INTIMIDATE,        updatedIntimidate,       (u32, GEN_9)) /* TODO */ \
+    F(UPDATED_INTIMIDATE,        updatedIntimidate,       (u32, GEN_9)) \
     F(OBLIVIOUS_TAUNT,           obliviousTaunt,          (u32, GEN_9)) /* TODO */ \
     F(STURDY,                    sturdy,                  (u32, GEN_9)) /* TODO */ \
     F(PLUS_MINUS_INTERACTION,    plusMinusInteraction,    (u32, GEN_9)) /* TODO */ \
@@ -145,7 +145,7 @@
     F(PROTEAN_LIBERO,            proteanLibero,           (u32, GEN_9)) \
     F(INTREPID_SWORD,            intrepidSword,           (u32, GEN_9)) \
     F(DAUNTLESS_SHIELD,          dauntlessShield,         (u32, GEN_9)) \
-    F(DISGUISE_HP_LOSS,          disguiseHpLoss,          (u32, GEN_9)) /* TODO */ \
+    F(DISGUISE_HP_LOSS,          disguiseHpLoss,          (u32, GEN_9)) \
     F(ABILITY_TRIGGER_CHANCE,    abilityTriggerChance,    (u32, GEN_9)) /* TODO */ \
     F(PICKUP_WILD,               pickupWild,              (u32, GEN_9)) \
     F(MAGIC_GUARD,               magicGuard,              (u32, GEN_9)) /* TODO */ \
