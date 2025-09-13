@@ -135,6 +135,7 @@ LittlerootTown_EventScript_GoInsideWithMom::
 	playse SE_LEDGE
 	applymovement LOCALID_PLAYER, LittlerootTown_Movement_PlayerStepOffTruck
 	waitmovement 0
+	call LittlerootTown_EventScript_SetOptions
 	opendoor VAR_0x8004, VAR_0x8005
 	waitdooranim
 	addobject LOCALID_LITTLEROOT_MOM
@@ -1021,4 +1022,108 @@ script LittlerootTown_EventScript_NewSign{
     lockall
     msgbox("Hello World!")
     releaseall
+}
+
+script LittlerootTown_EventScript_SetOptions{
+	lockall
+	fadescreen(FADE_TO_BLACK)
+	clearflag(FLAG_FOLLOWER_POKEMON_FLAG)
+	msgbox(format("Let's start by setting a few options. \n Note: You cannot change the first option outside of this menu.\p Would you like to 
+	enable Minimal Grinding Mode, where all IVs are 31?"), MSGBOX_YESNO)
+	if (var(VAR_RESULT) == 1)
+	{
+		setflag(P_PERFECT_IVS)
+		msgbox(format("Minimal Grinding mode enabled."), MSGBOX_AUTOCLOSE)
+	}
+	else{
+		clearflag(P_PERFECT_IVS)
+		msgbox(format("Minimal Grinding mode disabled."), MSGBOX_AUTOCLOSE)
+	}
+	msgbox(format("Would you like to enable overworld followers? \p Note: This can be changed at any time at the GameCube in your room."), MSGBOX_YESNO)
+	if (var(VAR_RESULT) == 1)
+	{
+		
+		msgbox(format("Followers have been enabled."), MSGBOX_AUTOCLOSE)	
+	}
+	else{
+		setflag(FLAG_FOLLOWER_POKEMON_FLAG)
+		msgbox(format("Followers are disabled. Speak to the GameCube to enable this in the future."), MSGBOX_AUTOCLOSE)
+	}
+	fadescreen(FADE_FROM_BLACK)
+	releaseall
+	return
+}
+
+script LittlerootTown_EventScript_AideDexNav{
+	lockall
+	faceplayer
+	if (flag(FLAG_DEXNAV_OBTAINED) == FALSE)
+	{
+		msgbox(format("Hello {PLAYER}! Come back and talk to me once you receive a DexNav!"))
+		releaseall
+		end
+	}
+	elif (flag(FLAG_DEXNAV_OBTAINED) == TRUE)
+	{
+	call(LittlerootTown_EventScript_CheckDexNavAll)
+	releaseall
+	end
+	}
+	else
+	{
+	msgbox(format("Hello {PLAYER}; I cannot be bothered right now, I am seconds away from a mighty discovery!
+	 I do sincerely apologize."), MSGBOX_AUTOCLOSE)
+	}
+	releaseall
+	end
+}
+
+script LittlerootTown_EventScript_CheckDexNavAll{
+	if (flag(FLAG_DEXNAV_ALL) == FALSE)
+	{
+		msgbox(format("Hello {PLAYER}! I see you have a DexNav. Now, how would you like to see every POKéMON without having
+		to painstakingly discover them one by one?"), MSGBOX_YESNO)
+		if (var(VAR_RESULT) == YES)
+		{
+			msgbox(format("Ah! I knew you were a trainer after my own heart. Here, let me update this for you."), MSGBOX_AUTOCLOSE)
+			waitmessage
+			setflag(FLAG_DEXNAV_ALL)
+			playfanfare(MUS_OBTAIN_ITEM)
+			msgbox(format("The DexNav has been updated!"), MSGBOX_AUTOCLOSE)
+			waitfanfare
+			waitmessage
+			return
+		}
+		else
+		{
+			msgbox(format("I see. Well, if you happen to change your mind, you know where to find me."), MSGBOX_AUTOCLOSE)
+			return
+		}
+		return
+	}
+	elif (flag(FLAG_DEXNAV_ALL) == TRUE)
+	{
+		msgbox(format("Hello {PLAYER}! I assume your DexNav is not treating you well? Here, I can change it back to the
+		regular mode, if you prefer."), MSGBOX_YESNO)
+
+		if (var(VAR_RESULT) == YES)
+		{
+			msgbox(format("No worries! I will reset it as quick as Regieleki!"), MSGBOX_AUTOCLOSE)
+			waitmessage
+			clearflag(FLAG_DEXNAV_ALL)
+			playfanfare(MUS_MOVE_DELETED)
+			msgbox(format("The DexNav has been reverted to it's original state."), MSGBOX_AUTOCLOSE)
+			waitfanfare
+			waitmessage
+			return
+		}
+		else
+		{
+			msgbox(format("No bother! Come back anytime."), MSGBOX_AUTOCLOSE)
+			waitmessage
+			return
+		}
+		return
+	}
+	return
 }
