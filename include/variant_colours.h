@@ -27,7 +27,7 @@ static const u8 sCLTable[4] = {0, 5, 10, 25};
 const struct SpeciesVariant *GetSpeciesVariants(u32 species);
 
 void ApplyPaletteVariantToPaletteBuffer(u16 pal16[16], const struct PaletteVariant *pv, u16 prn16);
-void ApplyCustomRestrictionToPalletteBuffer(u8 hMin, u8 hMax, u8 cMin, u8 cMax, u8 lMin, u8 lMax, u16 pal16[16]);
+void ApplyCustomRestrictionToPaletteBuffer(u8 hMin, u8 hMax, u8 cMin, u8 cMax, u8 lMin, u8 lMax, u16 pal16[16]);
 void ApplyMonSpeciesVariantToPaletteBuffer(u32 species, bool8 shiny, u32 PID, u16 pal16[16]);
 
 // Species data helpers

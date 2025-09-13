@@ -15,14 +15,14 @@ Copy the files [variant_colours.c](./src/variant_colours.c) and [variant_colours
 
 Either pull this branch directly:
 
-```
+```bash
 git pull https://github.com/SpaceOtter99/pokeemerald-expansion.git refs/heads/colour-variants
 ```
 
 Or add this repo as a remote, pull the branch, then (optionally) delete the remote:
-```
+```bash
 git remote add SpaceOtter https://github.com/SpaceOtter99/pokeemerald-expansion
-git pull colour-variants
+git pull SpaceOtter colour-variants
 git remote rm Spaceotter
 ```
 
@@ -66,13 +66,13 @@ To set up new species variant colours, add to the `gSpeciesVariants` array in [v
 
 ### ApplyPaletteVariantToPaletteBuffer
 
-Similar to the above, but applies a pre-determined `SpeciesPalette` to a given palette instead of automatically finding the palette given a species. I don't know when you'd use it, but it's exposed in case you do want to. (`ApplyMonSpeciesVariantToPaletteBuffer` calls it).
+Similar to the above, but applies a pre-determined `PaletteVariant` to a given palette instead of automatically finding the palette given a species. I don't know when you'd use it, but it's exposed in case you do want to. (`ApplyMonSpeciesVariantToPaletteBuffer` calls it). It would be trivial to make an adaption of this function which averages L, C & H values of two colours by a coefficient the same way `BlendPalette` does in [util.c](./src/util.c) - this is left as an exercise to the reader as an alternative is presented below.
 
-### ApplyCustomRestrictionToPalletteBuffer
+### ApplyCustomRestrictionToPaletteBuffer
 
-Performs a similar funcitonality to [util.c](./src/util.c)'s `BlendPalette` function, but with a few differences. `BlendPalette` directly blends between two RGB values, encountering the exact issues OKLab aims to solve - colours often appear overly dark, light or desaturated; in some cases the colour itself is also lost due to strong opposing colours on the pokemon. `ApplyCustomRestrictionToPalletteBuffer` instead remaps the L, C or H to a given new range. Preserving L & C whilst varying the H range keeps the pokemon very recognisable whilst changing its colours. Here's a comparison of a normal pokemon (first row), a `BlendPalette` (second row) and a `ApplyCustomRestrictionToPalletteBuffer` (third row).
+Performs a similar functionality to [util.c](./src/util.c)'s `BlendPalette` function, but with a few differences. `BlendPalette` directly blends between two RGB values, encountering the exact issues OKLab aims to solve - colours often appear overly dark, light or desaturated; in some cases the colour itself is also lost due to strong opposing colours on the pokemon. `ApplyCustomRestrictionToPaletteBuffer` instead remaps the L, C or H to a given new range. Preserving L & C whilst varying the H range keeps the pokemon's contrast the same whilst changing its colours. Here's a comparison of a normal pokemon (first row), a `BlendPalette` (second row) and a `ApplyCustomRestrictionToPaletteBuffer` (third row).
 
-![An image showing three rows of a fight between Poochyene and Smeargle. The first row shows the pokemon as normal; the second and third row show recoloured variants of the pokemon](./pokemonColours.jpeg)
+![An image showing three rows of a fight between Poochyena and Smeargle. The first row shows the pokemon as normal; the second and third row show recoloured variants of the pokemon](./pokemonColours.jpeg)
 
 Similarly, it is very easy to create unique variants of pokemon - for example, shadow pokemon:
 
@@ -98,7 +98,7 @@ To fill out the actual variation data, we need to know what we want to modify. O
 
 ![A screenshot of Tyranitar inside of the image editing software GIMP](./Tyranitar_Indexed.png)
 
-Let's say we want to vary Tyranitar's blue chest slightly. We can see that the blue colours start at index 11 (remember - the index counts up from 0), and carries on for 3 entries total. We can ammend our array to add:
+Let's say we want to vary Tyranitar's blue chest slightly. We can see that the blue colours start at index 11 (remember - the index counts up from 0), and carries on for 3 entries total. We can amend our array to add:
 
 ```
     [SPECIES_TYRANITAR] = {

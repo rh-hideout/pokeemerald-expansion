@@ -324,7 +324,7 @@ void ApplyPaletteVariantToPaletteBuffer(u16 pal16[16], const struct PaletteVaria
   }
 }
 
-void ApplyCustomRestrictionToPalletteBuffer(u8 hMin, u8 hMax, u8 cMin, u8 cMax, u8 lMin, u8 lMax, u16 pal16[16])
+void ApplyCustomRestrictionToPaletteBuffer(u8 hMin, u8 hMax, u8 cMin, u8 cMax, u8 lMin, u8 lMax, u16 pal16[16])
 {
 
   for (u8 i = 1; i <= 15; ++i)
