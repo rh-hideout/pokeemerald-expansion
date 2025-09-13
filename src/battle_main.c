@@ -42,6 +42,7 @@
 #include "pokeball.h"
 #include "pokedex.h"
 #include "pokemon.h"
+#include "pokerus.h"
 #include "random.h"
 #include "recorded_battle.h"
 #include "roamer.h"
