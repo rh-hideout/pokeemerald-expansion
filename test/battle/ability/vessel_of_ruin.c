@@ -102,7 +102,7 @@ DOUBLE_BATTLE_TEST("Vessel of Ruin does not reduce Sp. Atk if if Neutralizing Ga
     }
 }
 
-SINGLE_BATTLE_TEST("Vessel of Ruin is still active if Entrainment together with Mold Breaker blocks the ability")
+SINGLE_BATTLE_TEST("Vessel of Ruin is still active if removed by Mold Breaker + Entrainment")
 {
     s16 damage[2];
 
