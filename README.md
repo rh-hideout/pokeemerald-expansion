@@ -55,7 +55,6 @@ const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny,
 
 const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale)
 {
-    DebugPrintf((char *)GetTrainerClassNameFromId(TRAINER_BATTLE_PARAM.opponentA));
     const u16 *base = GetMonSpritePalFromSpeciesInternal(species, isShiny, isFemale);
     static u16 sVariantPal[16];
     CpuCopy16(base, sVariantPal, sizeof(sVariantPal));
