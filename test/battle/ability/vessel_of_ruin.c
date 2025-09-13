@@ -126,7 +126,7 @@ SINGLE_BATTLE_TEST("Vessel of Ruin is still active if removed by Mold Breaker + 
     }
 }
 
-DOUBLE_BATTLE_TEST("Vessel of Ruin and Sword Of Ruin will be both active if the first ability is removed with Mold Breaker Entrainment and Skill Swapped Sword Of Ruin")
+DOUBLE_BATTLE_TEST("Vessel of Ruin is active if removed by Mold Breaker Entrainment and Sword of Ruin is active after obtaining it")
 {
     GIVEN {
         PLAYER(SPECIES_TING_LU) { Ability(ABILITY_VESSEL_OF_RUIN); }
