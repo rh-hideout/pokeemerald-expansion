@@ -3920,8 +3920,8 @@ static void TryDoEventsBeforeFirstTurn(void)
                 gBattleStruct->appearedInBattle |= 1u << gBattlerPartyIndexes[i];
         }
 
-        *(&gBattleStruct->eventBlockCounter) = 0;
-        *(&gBattleStruct->turnEffectsBattlerId) = 0;
+        gBattleStruct->eventBlockCounter = 0;
+        gBattleStruct->turnEffectsBattlerId = 0;
         gBattleScripting.moveendState = 0;
         gBattleStruct->faintedActionsState = 0;
         gBattleStruct->endTurnEventsCounter = 0;
@@ -5342,7 +5342,6 @@ static void CheckChangingTurnOrderEffects(void)
     gBattleMainFunc = RunTurnActionsFunctions;
     gBattleCommunication[3] = 0;
     gBattleCommunication[4] = 0;
-    gBattleScripting.multihitMoveEffect = 0;
     gBattleResources->battleScriptsStack->size = 0;
 }
 
