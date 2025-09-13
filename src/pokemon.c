@@ -114,9 +114,7 @@ static const struct CombinedMove sCombinedMoves[2] =
     {0xFFFF, 0xFFFF, 0xFFFF}
 };
 
-#define FRONTIER_BGM_COUNT 31
-
-static const u16 customFrontierSongs[FRONTIER_BGM_COUNT] = {
+static const u16 customFrontierSongs[] = {
     // RSE Music
     MUS_VS_FRONTIER_BRAIN,
     MUS_VS_MEW,
@@ -5827,7 +5825,7 @@ u16 GetBattleBGM(void)
     const bool8 isRandomMode = FlagGet(FLAG_SHUFFLE_FRONTIER_BGM);
 
     if (isRandomMode) {
-        frontierBGM = (Random() % FRONTIER_BGM_COUNT) + 1;
+        frontierBGM = Random() % ARRAY_COUNT(customFrontierSongs) + 1;
     } else {
         // Get custom battle frontier bgm
         frontierBGM = VarGet(VAR_FRONTIER_BGM);
@@ -5835,7 +5833,7 @@ u16 GetBattleBGM(void)
 
     // Custom battle frontier bgm is set
     if (frontierBGM > 0 &&
-        frontierBGM <= FRONTIER_BGM_COUNT && (
+        frontierBGM <= ARRAY_COUNT(customFrontierSongs) && (
         gBattleTypeFlags & BATTLE_TYPE_FRONTIER ||
         gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL
     )){
