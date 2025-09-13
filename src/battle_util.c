@@ -2342,7 +2342,7 @@ static enum MoveCanceller CancellerWeatherPrimal(void)
     if (HasWeatherEffect() && GetMovePower(gCurrentMove) > 0)
     {
         u32 moveType = GetBattleMoveType(gCurrentMove);
-        if (moveType == TYPE_FIRE && (gBattleWeather & B_WEATHER_RAIN_PRIMAL) && (B_POWDER_RAIN >= GEN_7 || !TryActivatePowderStatus(gCurrentMove)))
+        if (moveType == TYPE_FIRE && (gBattleWeather & B_WEATHER_RAIN_PRIMAL) && (GetGenConfig(GEN_CONFIG_POWDER_RAIN) >= GEN_7 || !TryActivatePowderStatus(gCurrentMove)))
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PRIMAL_WEATHER_FIZZLED_BY_RAIN;
             effect = MOVE_STEP_BREAK;
@@ -9724,7 +9724,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
             RecordAbilityBattle(ctx->battlerDef, ABILITY_LEVITATE);
         }
     }
-    else if (B_SHEER_COLD_IMMUNITY >= GEN_7 && GetMoveEffect(ctx->move) == EFFECT_SHEER_COLD && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_ICE))
+    else if (GetGenConfig(GEN_CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && GetMoveEffect(ctx->move) == EFFECT_SHEER_COLD && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_ICE))
     {
         modifier = UQ_4_12(0.0);
     }
@@ -10812,7 +10812,7 @@ bool32 TryRoomService(u32 battler)
 
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget)
 {
-    if (B_PRANKSTER_DARK_TYPES < GEN_7)
+    if (GetGenConfig(GEN_CONFIG_PRANKSTER_DARK_TYPES) < GEN_7)
         return FALSE;
     if (!gProtectStructs[battlerPrankster].pranksterElevated)
         return FALSE;
@@ -11338,7 +11338,7 @@ void ClearDamageCalcResults(void)
 
 bool32 DoesDestinyBondFail(u32 battler)
 {
-    if (B_DESTINY_BOND_FAIL >= GEN_7
+    if (GetGenConfig(GEN_CONFIG_DESTINY_BOND_FAIL) >= GEN_7
         && GetMoveEffect(gLastLandedMoves[battler]) == EFFECT_DESTINY_BOND
         && GetMoveEffect(gLastResultingMoves[battler]) == EFFECT_DESTINY_BOND)
         return TRUE;

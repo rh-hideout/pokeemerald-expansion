@@ -7,17 +7,18 @@ ASSUMPTIONS
     ASSUME(!IsBattleMoveStatus(MOVE_GUST));
     ASSUME(GetMoveCategory(MOVE_GUST) == DAMAGE_CATEGORY_SPECIAL);
     ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
-    ASSUME(B_WEAK_ARMOR_SPEED >= GEN_7);
 }
 
-SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 2 when hit by a physical attack")
+SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6) or 2 (Gen7+) when hit by a physical attack")
 {
-    u16 move;
+    u16 move, gen;
 
-    PARAMETRIZE { move = MOVE_SCRATCH; }
-    PARAMETRIZE { move = MOVE_GUST; }
+    PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_6; }
+    PARAMETRIZE { move = MOVE_SCRATCH; gen = GEN_7; }
+    PARAMETRIZE { move = MOVE_GUST;    gen = GEN_7; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -41,7 +42,10 @@ SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 2 when hi
     } THEN {
         if (move == MOVE_SCRATCH) {
             EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE - 1);
-            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + (gen == GEN_7 ? 2 : 1));
+        } else {
+            EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+            EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         }
     }
 }
@@ -79,7 +83,12 @@ SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail a
 
 SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower")
 {
+    u16 gen;
+
+    PARAMETRIZE { gen = GEN_6; }
+    PARAMETRIZE { gen = GEN_7; }
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_WEAK_ARMOR_SPEED, gen);
         PLAYER(SPECIES_SLUGMA) { Ability(ABILITY_WEAK_ARMOR); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -100,7 +109,7 @@ SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower"
         MESSAGE("Slugma's Weak Armor raised its Speed!");
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], MIN_STAT_STAGE);
-        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + (gen == GEN_7 ? 2 : 1));
     }
 }
 
@@ -135,6 +144,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can'
 {
     u32 j;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_WEAK_ARMOR_SPEED, GEN_7);
         PLAYER(SPECIES_MAGCARGO) { Ability(ABILITY_WEAK_ARMOR); Defense(999); }
         OPPONENT(SPECIES_CLOYSTER) { Ability(ABILITY_SKILL_LINK); }
     } WHEN {
@@ -173,6 +183,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
 {
     u32 j;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_WEAK_ARMOR_SPEED, GEN_7);
         PLAYER(SPECIES_MAGCARGO) { Ability(ABILITY_WEAK_ARMOR); Defense(999); }
         OPPONENT(SPECIES_CLOYSTER) { Ability(ABILITY_SKILL_LINK); }
     } WHEN {

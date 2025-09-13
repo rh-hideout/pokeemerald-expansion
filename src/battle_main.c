@@ -5184,7 +5184,7 @@ static bool32 TryDoGimmicksBeforeMoves(void)
         }
     }
 
-    if (B_MEGA_EVO_TURN_ORDER >= GEN_7)
+    if (GetGenConfig(GEN_CONFIG_MEGA_EVO_TURN_ORDER) >= GEN_7)
         TryChangeTurnOrder(); // This will just do nothing if no mon has mega evolved.
     return FALSE;
 }
