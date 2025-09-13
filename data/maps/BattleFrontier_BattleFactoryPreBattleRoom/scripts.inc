@@ -945,7 +945,7 @@ BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassGentleman:
 	.string "Expect a range of POKéMON.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassCollector:
-	.string "The TRAINER loves oollecting!\n"
+	.string "The TRAINER loves collecting!\n"
 	.string "Expect some rare POKéMON.$"
 
 BattleFrontier_BattleFactoryPreBattleRoom_Text_FacilityClassBeauty:

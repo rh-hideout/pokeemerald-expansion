@@ -663,7 +663,7 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
     msgbox(format("Interested in spicing up your battles?"))
 	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
-	 "DEFAULT", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA", "VS. TRAINER",
+	 "DEFAULT", "SHUFFLE", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA", "VS. TRAINER",
      "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
      "VS. ELITE FOUR", "VS. AQUA & MAGMA LEADER", "VS. GYM LEADER (FRLG)", "VS. TRAINER (FRLG)",
      "VS. WILD POKEMON (FRLG)", "VS. CHAMPION (FRLG)", "VS. DEOXYS (FRLG)",
@@ -673,69 +673,103 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
 	switch(var(VAR_RESULT)) {
 		case 0:
             setvar(VAR_FRONTIER_BGM, 0)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 1:
-            setvar(VAR_FRONTIER_BGM, 1)
+            setflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 2:
-            setvar(VAR_FRONTIER_BGM, 2)
+            setvar(VAR_FRONTIER_BGM, 1)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 3:
-            setvar(VAR_FRONTIER_BGM, 3)
+            setvar(VAR_FRONTIER_BGM, 2)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 4:
-            setvar(VAR_FRONTIER_BGM, 4)
+            setvar(VAR_FRONTIER_BGM, 3)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 5:
-            setvar(VAR_FRONTIER_BGM, 5)
+            setvar(VAR_FRONTIER_BGM, 4)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 6:
-            setvar(VAR_FRONTIER_BGM, 6)
+            setvar(VAR_FRONTIER_BGM, 5)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 7:
-            setvar(VAR_FRONTIER_BGM, 7)
+            setvar(VAR_FRONTIER_BGM, 6)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 8:
-            setvar(VAR_FRONTIER_BGM, 8)
+            setvar(VAR_FRONTIER_BGM, 7)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 9:
-            setvar(VAR_FRONTIER_BGM, 9)
+            setvar(VAR_FRONTIER_BGM, 8)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 10:
-            setvar(VAR_FRONTIER_BGM, 10)
+            setvar(VAR_FRONTIER_BGM, 9)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 11:
-            setvar(VAR_FRONTIER_BGM, 11)
+            setvar(VAR_FRONTIER_BGM, 10)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 12:
-            setvar(VAR_FRONTIER_BGM, 12)
+            setvar(VAR_FRONTIER_BGM, 11)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 13:
-            setvar(VAR_FRONTIER_BGM, 13)
+            setvar(VAR_FRONTIER_BGM, 12)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 14:
-            setvar(VAR_FRONTIER_BGM, 14)
+            setvar(VAR_FRONTIER_BGM, 13)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 15:
-            setvar(VAR_FRONTIER_BGM, 15)
+            setvar(VAR_FRONTIER_BGM, 14)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 16:
-            setvar(VAR_FRONTIER_BGM, 16)
+            setvar(VAR_FRONTIER_BGM, 15)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 17:
-            setvar(VAR_FRONTIER_BGM, 17)
+            setvar(VAR_FRONTIER_BGM, 16)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 18:
-            setvar(VAR_FRONTIER_BGM, 18)
+            setvar(VAR_FRONTIER_BGM, 17)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 19:
-            setvar(VAR_FRONTIER_BGM, 19)
+            setvar(VAR_FRONTIER_BGM, 18)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 20:
-            setvar(VAR_FRONTIER_BGM, 20)
+            setvar(VAR_FRONTIER_BGM, 19)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 21:
-            setvar(VAR_FRONTIER_BGM, 21)
+            setvar(VAR_FRONTIER_BGM, 20)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 22:
-            setvar(VAR_FRONTIER_BGM, 22)
+            setvar(VAR_FRONTIER_BGM, 21)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 23:
-            setvar(VAR_FRONTIER_BGM, 23)
+            setvar(VAR_FRONTIER_BGM, 22)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 24:
-            setvar(VAR_FRONTIER_BGM, 24)
+            setvar(VAR_FRONTIER_BGM, 23)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 25:
-            setvar(VAR_FRONTIER_BGM, 25)
+            setvar(VAR_FRONTIER_BGM, 24)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 26:
-            setvar(VAR_FRONTIER_BGM, 26)
+            setvar(VAR_FRONTIER_BGM, 25)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 27:
-            setvar(VAR_FRONTIER_BGM, 27)
+            setvar(VAR_FRONTIER_BGM, 26)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 28:
-            setvar(VAR_FRONTIER_BGM, 28)
+            setvar(VAR_FRONTIER_BGM, 27)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 29:
-            setvar(VAR_FRONTIER_BGM, 29)
+            setvar(VAR_FRONTIER_BGM, 28)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 30:
-            setvar(VAR_FRONTIER_BGM, 30)
+            setvar(VAR_FRONTIER_BGM, 29)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
         case 31:
+            setvar(VAR_FRONTIER_BGM, 30)
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+        case 32:
             setvar(VAR_FRONTIER_BGM, 31)
-		case 32:
+            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+		case 33:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
         default:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
@@ -747,7 +781,7 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions {
     msgbox(format("Fancy a new lick of paint on your battles?"))
     	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
-    	 "DEFAULT", "GRASS", "LONG GRASS", "SAND", "UNDERWATER", "WATER",
+    	 "DEFAULT", "SHUFFLE", "GRASS", "LONG GRASS", "SAND", "UNDERWATER", "WATER",
          "POND", "MOUNTAIN", "CAVE", "BUILDING", "PLAIN",
          "GYM", "GYM LEADER", "TEAM MAGMA", "TEAM AQUA",
          "ELITE FOUR SIDNEY", "ELITE FOUR PHOEBE", "ELITE FOUR GLACIA",
@@ -755,51 +789,76 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandBackgroundOptions {
     	switch(var(VAR_RESULT)) {
     		case 0:
                 setvar(VAR_FRONTIER_ENVIRONMENT, 0)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 1:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 1)
+                setflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 2:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 2)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 1)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 3:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 3)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 2)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 4:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 4)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 3)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 5:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 5)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 4)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 6:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 6)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 5)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 7:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 7)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 6)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 8:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 8)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 7)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 9:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 9)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 8)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 10:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 10)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 9)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 11:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 11)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 10)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 12:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 12)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 11)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 13:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 13)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 12)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 14:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 14)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 13)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 15:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 15)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 14)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 16:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 16)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 15)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 17:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 17)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 16)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 18:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 18)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 17)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 19:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 19)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 18)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 20:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 20)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 19)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 21:
-                setvar(VAR_FRONTIER_ENVIRONMENT, 21)
+                setvar(VAR_FRONTIER_ENVIRONMENT, 20)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
             case 22:
+                setvar(VAR_FRONTIER_ENVIRONMENT, 21)
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
+            case 23:
                 setvar(VAR_FRONTIER_ENVIRONMENT, 22)
-    		case 23:
+                clearflag(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT)
+    		case 24:
                 goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
             default:
                 goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)

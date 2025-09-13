@@ -423,6 +423,33 @@ const u8 *const gStatusConditionStringsTable[][2] =
     {gStatusConditionString_LoveJpn, gText_Love}
 };
 
+#define FRONTIER_ENVIRONMENT_COUNT 22
+
+static const u16 customFrontierEnvironments[] = {
+    BATTLE_ENVIRONMENT_GRASS,
+    BATTLE_ENVIRONMENT_LONG_GRASS,
+    BATTLE_ENVIRONMENT_SAND,
+    BATTLE_ENVIRONMENT_UNDERWATER,
+    BATTLE_ENVIRONMENT_WATER,
+    BATTLE_ENVIRONMENT_POND,
+    BATTLE_ENVIRONMENT_MOUNTAIN,
+    BATTLE_ENVIRONMENT_CAVE,
+    BATTLE_ENVIRONMENT_BUILDING,
+    BATTLE_ENVIRONMENT_PLAIN,
+    BATTLE_ENVIRONMENT_GYM,
+    BATTLE_ENVIRONMENT_LEADER,
+    BATTLE_ENVIRONMENT_MAGMA,
+    BATTLE_ENVIRONMENT_AQUA,
+    BATTLE_ENVIRONMENT_SIDNEY,
+    BATTLE_ENVIRONMENT_PHOEBE,
+    BATTLE_ENVIRONMENT_GLACIA,
+    BATTLE_ENVIRONMENT_DRAKE,
+    BATTLE_ENVIRONMENT_CHAMPION,
+    BATTLE_ENVIRONMENT_GROUDON,
+    BATTLE_ENVIRONMENT_KYOGRE,
+    BATTLE_ENVIRONMENT_RAYQUAZA,
+};
+
 void CB2_InitBattle(void)
 {
     if (!gTestRunnerEnabled)
@@ -520,6 +547,21 @@ static void CB2_InitBattleInternal(void)
     }
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
+
+    if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED)) {
+        const bool8 shuffle = FlagGet(FLAG_SHUFFLE_FRONTIER_ENVIRONMENT);
+        s16 frontierEnvironment;
+
+        if (shuffle) {
+            frontierEnvironment = Random() % ARRAY_COUNT(customFrontierEnvironments) + 1;
+        } else {
+            frontierEnvironment = VarGet(VAR_FRONTIER_ENVIRONMENT);
+        }
+
+        if (frontierEnvironment > 0 && frontierEnvironment <= ARRAY_COUNT(customFrontierEnvironments)) {
+            gBattleEnvironment = customFrontierEnvironments[frontierEnvironment - 1];
+        }
+    }
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
