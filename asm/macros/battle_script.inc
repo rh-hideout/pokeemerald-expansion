@@ -1014,8 +1014,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryrestorehpberry
+	.macro tryrestorehpberry battler:req
 	.byte 0xbb
+	.byte \battler
 	.endm
 
 	.macro halvehp failInstr:req

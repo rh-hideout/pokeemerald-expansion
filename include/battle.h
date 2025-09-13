@@ -608,8 +608,9 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 eventBlockCounter;
-    u8 turnEffectsBattlerId;
     u8 endTurnEventsCounter;
+    u8 turnEffectsBattlerId:4;
+    u8 moveEndBattlerId:4;
     u16 wrappedMove[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
@@ -779,7 +780,8 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding2:2;
+    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
+    u8 padding2:1;
 };
 
 struct AiBattleData
@@ -901,7 +903,7 @@ struct BattleScripting
     s32 savedDmg;
     u16 savedMoveEffect; // For moves hitting multiple targets.
     u16 moveEffect;
-    u16 multihitMoveEffect;
+    u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
     bool8 fixedPopup;   // Force ability popup to stick until manually called back
     u16 abilityPopupOverwrite;

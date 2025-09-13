@@ -516,17 +516,8 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_LEFTOVERS:
-        case HOLD_EFFECT_BLACK_SLUDGE:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (ItemBattleEffects(ITEMEFFECT_LEFTOVERS, battler))
+            effect = TRUE;
         gBattleStruct->eventBlockCounter = 0;
         gBattleStruct->turnEffectsBattlerId++;
         break;
