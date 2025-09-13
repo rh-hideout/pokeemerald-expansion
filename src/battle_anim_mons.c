@@ -484,16 +484,16 @@ void WaitAnimForDuration(struct Sprite *sprite)
 #define sStartY  data[3]
 #define sTargetY data[4]
 
-// Sprite data for TranslateSpriteLinear
+// Sprite data for TranslateSpriteLinearInteger
 #define sMoveSteps data[0]
 #define sSpeedX    data[1]
 #define sSpeedY    data[2]
 
 // Functionally unused
-static void AnimPosToTranslateLinear(struct Sprite *sprite)
+static void UNUSED AnimPosToTranslateLinear(struct Sprite *sprite)
 {
     ConvertPosDataToTranslateLinearData(sprite);
-    sprite->callback = TranslateSpriteLinear;
+    sprite->callback = TranslateSpriteLinearInteger;
     sprite->callback(sprite);
 }
 
@@ -511,7 +511,7 @@ void ConvertPosDataToTranslateLinearData(struct Sprite *sprite)
     sprite->sSpeedX = old;
 }
 
-void TranslateSpriteLinear(struct Sprite *sprite)
+void TranslateSpriteLinearInteger(struct Sprite *sprite)
 {
     if (sprite->sMoveSteps > 0)
     {
@@ -525,15 +525,15 @@ void TranslateSpriteLinear(struct Sprite *sprite)
     }
 }
 
-void TranslateSpriteLinearFixedPoint(struct Sprite *sprite)
+void TranslateSpriteLinear(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        sprite->x2 = sprite->data[3] >> 8;
-        sprite->y2 = sprite->data[4] >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -543,13 +543,13 @@ void TranslateSpriteLinearFixedPoint(struct Sprite *sprite)
 
 static void TranslateSpriteLinearFixedPointIconFrame(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        sprite->x2 = sprite->data[3] >> 8;
-        sprite->y2 = sprite->data[4] >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        sprite->x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        sprite->y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -568,8 +568,8 @@ static void UNUSED TranslateSpriteToBattleTargetPos(struct Sprite *sprite)
     sprite->callback = AnimPosToTranslateLinear;
 }
 
-// Same as TranslateSpriteLinear but takes an id to specify which sprite to move
-void TranslateSpriteLinearById(struct Sprite *sprite)
+// Same as TranslateSpriteLinearInteger but takes an id to specify which sprite to move
+void TranslateSpecifiedSpriteLinearInteger(struct Sprite *sprite)
 {
     if (sprite->data[0] > 0)
     {
@@ -583,15 +583,15 @@ void TranslateSpriteLinearById(struct Sprite *sprite)
     }
 }
 
-void TranslateSpriteLinearByIdFixedPoint(struct Sprite *sprite)
+void TranslateSpecifiedSpriteLinear(struct Sprite *sprite)
 {
-    if (sprite->data[0] > 0)
+    if (sprite->sDuration_lt > 0)
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        gSprites[sprite->data[5]].x2 = sprite->data[3] >> 8;
-        gSprites[sprite->data[5]].y2 = sprite->data[4] >> 8;
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        gSprites[sprite->sSpriteId_lt].x2 = sprite->sCurXOffsetFixedPoint_lt >> 8;
+        gSprites[sprite->sSpriteId_lt].y2 = sprite->sCurYOffsetFixedPoint_lt >> 8;
     }
     else
     {
@@ -697,30 +697,39 @@ void SetAnimSpriteInitialXOffset(struct Sprite *sprite, s16 xOffset)
     }
 }
 
-void InitAnimArcTranslation(struct Sprite *sprite)
+void InitSpriteArcTranslation(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
-    sprite->data[6] = 0x8000 / sprite->data[0];
-    sprite->data[7] = 0;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    InitSpriteLinearTranslationIterator(sprite);
+    // since this performs one full arc
+    // (think from sin(0) to sin(pi))
+    // the sin index should start at 0
+    // and end at 128
+    // it will end at 128 after the duration completes
+    // so we divide 128 by the duration
+    // (with some fixed point logic to preserve accuracy)
+    sprite->sArcIncrement_ati = UQ_8_8(128) / sprite->sDuration_lti;
+    sprite->sCurArcHeightFixedPoint_ati = 0;
 }
 
-bool8 TranslateAnimHorizontalArc(struct Sprite *sprite)
+// horizontal as in the sprite moves linearly horizontally while the arc moves vertically
+bool8 TranslateSpriteHorizontalArc(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
-    sprite->data[7] += sprite->data[6];
-    sprite->y2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
+    sprite->sCurArcHeightFixedPoint_ati += sprite->sArcIncrement_ati;
+    sprite->y2 += Sin((u8)(UQ_8_8_TO_WHOLE(sprite->sCurArcHeightFixedPoint_ati)), sprite->sArcAmplitude_ati);
     return FALSE;
 }
 
-bool8 TranslateAnimVerticalArc(struct Sprite *sprite)
+// vertical as in the sprite moves linearly vertically while the arc moves horizontally
+bool8 TranslateSpriteVerticalArc(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         return TRUE;
-    sprite->data[7] += sprite->data[6];
-    sprite->x2 += Sin((u8)(sprite->data[7] >> 8), sprite->data[5]);
+    sprite->sCurArcHeightFixedPoint_ati += sprite->sArcIncrement_ati;
+    sprite->x2 += Sin((u8)(sprite->sCurArcHeightFixedPoint_ati >> 8), sprite->sArcAmplitude_ati);
     return FALSE;
 }
 
@@ -741,8 +750,8 @@ void InitSpritePosToAnimTarget(struct Sprite *sprite, bool8 respectMonPicOffsets
         sprite->x = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_X);
         sprite->y = GetBattlerSpriteCoord2(gBattleAnimTarget, BATTLER_COORD_Y);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -757,8 +766,8 @@ void InitSpritePosToAnimAttacker(struct Sprite *sprite, bool8 respectMonPicOffse
         sprite->x = GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -773,8 +782,8 @@ void InitSpritePosToAnimAttackerPartner(struct Sprite *sprite, bool8 respectMonP
         sprite->x = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(BATTLE_PARTNER(gBattleAnimAttacker), BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -791,8 +800,8 @@ void InitSpritePosToAnimBothTargets(struct Sprite *sprite, bool8 respectMonPicOf
     }
     sprite->x = sprite->x / 2;
     sprite->y = sprite->y / 2;
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
 }
 
 bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool8 respectMonPicOffsets)
@@ -814,8 +823,8 @@ bool32 InitSpritePosToAnimBattler(u32 animBattlerId, struct Sprite *sprite, bool
         sprite->x = GetBattlerSpriteCoord2(battler, BATTLER_COORD_X_2);
         sprite->y = GetBattlerSpriteCoord2(battler, BATTLER_COORD_Y_PIC_OFFSET);
     }
-    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[0]);
-    sprite->y += gBattleAnimArgs[1];
+    SetAnimSpriteInitialXOffset(sprite, gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM]);
+    sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     return TRUE;
 }
 
@@ -982,102 +991,119 @@ void UpdateAnimBg3ScreenSize(bool8 largeScreenSize)
 
 void Trade_MoveSelectedMonToTarget(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
-    InitSpriteDataForLinearTranslation(sprite);
+    sprite->sInputStartX_lt = sprite->x;
+    sprite->sInputStartY_lt = sprite->y;
+    InitSpriteLinearTranslation(sprite);
     sprite->callback = TranslateSpriteLinearFixedPointIconFrame;
     sprite->callback(sprite);
 }
 
-void InitSpriteDataForLinearTranslation(struct Sprite *sprite)
+void InitSpriteLinearTranslation(struct Sprite *sprite)
 {
-    s16 x = (sprite->data[2] - sprite->data[1]) << 8;
-    s16 y = (sprite->data[4] - sprite->data[3]) << 8;
-    sprite->data[1] = SAFE_DIV(x, sprite->data[0]);
-    sprite->data[2] = SAFE_DIV(y, sprite->data[0]);
-    sprite->data[4] = 0;
-    sprite->data[3] = 0;
+    s16 xDistance = (sprite->sInputEndX_lt - sprite->sInputStartX_lt) << 8;
+    s16 yDistance = (sprite->sInputEndY_lt - sprite->sInputStartY_lt) << 8;
+    // increment is simply distance / time
+    sprite->sXIncrement_lt = SAFE_DIV(xDistance, sprite->sDuration_lt);
+    sprite->sYIncrement_lt = SAFE_DIV(yDistance, sprite->sDuration_lt);
+    sprite->sCurYOffsetFixedPoint_lt = 0;
+    sprite->sCurXOffsetFixedPoint_lt = 0;
 }
 
-void InitAnimLinearTranslation(struct Sprite *sprite)
+// The Iterator version of SpriteLinearTranslation works a little differently
+// The idea is that the user can call UpdateSpriteLinearTranslationIterator
+// to perform an iteration of the linear translation,
+// which will return TRUE if the translation is complete
+// and FALSE otherwise
+// However, there are some slight implementation differences
+// For some reason, the Iterator function's increments are stored
+// as a Q_9_7, with 9 bits for the whole part (including the sign, so a range of (-256,256), and 7 bits for the fractional part
+// Specifically, this is the format
+// - where w is a whole bit
+// - f is a fractional bit
+// - and s is the sign bit
+// wwwwwwww.fffffffs
+// however, the game will still treat the sign bit as a fractional bit
+// when adding the increment to the current x/y offset
+// which introduces some insignificant rounding
+void InitSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
-    int x = sprite->data[2] - sprite->data[1];
-    int y = sprite->data[4] - sprite->data[3];
+    int x = sprite->sInputEndX_lti - sprite->sInputStartX_lti;
+    int y = sprite->sInputEndY_lti - sprite->sInputStartY_lti;
     bool8 movingLeft = x < 0;
     bool8 movingUp = y < 0;
-    u16 xDelta = abs(x) << 8;
-    u16 yDelta = abs(y) << 8;
+    u16 xIncrement = UQ_8_8(abs(x));
+    u16 yIncrement = UQ_8_8(abs(y));
 
-    xDelta = SAFE_DIV(xDelta, sprite->data[0]);
-    yDelta = SAFE_DIV(yDelta, sprite->data[0]);
+    xIncrement = SAFE_DIV(xIncrement, sprite->sDuration_lti);
+    yIncrement = SAFE_DIV(yIncrement, sprite->sDuration_lti);
 
     if (movingLeft)
-        xDelta |= 1;
+        xIncrement |= 1;
     else
-        xDelta &= ~1;
+        xIncrement &= ~1;
 
     if (movingUp)
-        yDelta |= 1;
+        yIncrement |= 1;
     else
-        yDelta &= ~1;
+        yIncrement &= ~1;
 
-    sprite->data[1] = xDelta;
-    sprite->data[2] = yDelta;
-    sprite->data[4] = 0;
-    sprite->data[3] = 0;
+    sprite->sXIncrement_lti = xIncrement;
+    sprite->sYIncrement_lti = yIncrement;
+    sprite->sCurYOffsetFixedPoint_lti = 0;
+    sprite->sCurXOffsetFixedPoint_lti = 0;
 }
 
-void StartAnimLinearTranslation(struct Sprite *sprite)
+void InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    InitSpriteLinearTranslationIterator(sprite);
+    sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
 }
 
 static void UNUSED StartAnimLinearTranslation_SetCornerVecX(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
-    InitAnimLinearTranslation(sprite);
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimTranslateLinear_WithFollowup_SetCornerVecX;
     sprite->callback(sprite);
 }
 
-bool8 AnimTranslateLinear(struct Sprite *sprite)
+bool8 UpdateSpriteLinearTranslationIterator(struct Sprite *sprite)
 {
-    u16 v1, v2, x, y;
+    u16 xIncrement, yIncrement, curXOffsetFixedPoint, curYOffsetFixedPoint;
 
-    if (!sprite->data[0])
+    if (!sprite->sDuration_lti)
         return TRUE;
 
-    v1 = sprite->data[1];
-    v2 = sprite->data[2];
-    x = sprite->data[3];
-    y = sprite->data[4];
-    x += v1;
-    y += v2;
+    xIncrement = sprite->sXIncrement_lti;
+    yIncrement = sprite->sYIncrement_lti;
+    curXOffsetFixedPoint = sprite->sCurXOffsetFixedPoint_lti;
+    curYOffsetFixedPoint = sprite->sCurYOffsetFixedPoint_lti;
+    curXOffsetFixedPoint += xIncrement;
+    curYOffsetFixedPoint += yIncrement;
 
-    if (v1 & 1)
-        sprite->x2 = -(x >> 8);
+    if (xIncrement & 1)
+        sprite->x2 = -(curXOffsetFixedPoint >> 8);
     else
-        sprite->x2 = x >> 8;
+        sprite->x2 = curXOffsetFixedPoint >> 8;
 
-    if (v2 & 1)
-        sprite->y2 = -(y >> 8);
+    if (yIncrement & 1)
+        sprite->y2 = -(curYOffsetFixedPoint >> 8);
     else
-        sprite->y2 = y >> 8;
+        sprite->y2 = curYOffsetFixedPoint >> 8;
 
-    sprite->data[3] = x;
-    sprite->data[4] = y;
-    sprite->data[0]--;
+    sprite->sCurXOffsetFixedPoint_lti = curXOffsetFixedPoint;
+    sprite->sCurYOffsetFixedPoint_lti = curYOffsetFixedPoint;
+    sprite->sDuration_lti--;
     return FALSE;
 }
 
-void AnimTranslateLinear_WithFollowup(struct Sprite *sprite)
+void TranslateSpriteLinear_FromIterator(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         SetCallbackToStoredInData6(sprite);
 }
 
@@ -1085,23 +1111,24 @@ void AnimTranslateLinear_WithFollowup(struct Sprite *sprite)
 static void AnimTranslateLinear_WithFollowup_SetCornerVecX(struct Sprite *sprite)
 {
     AnimSetCenterToCornerVecX(sprite);
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         SetCallbackToStoredInData6(sprite);
 }
 
-void InitAnimLinearTranslationWithSpeed(struct Sprite *sprite)
+void InitSpriteLinearTranslationIteratorWithSpeed(struct Sprite *sprite)
 {
-    int v1 = abs(sprite->data[2] - sprite->data[1]) << 8;
-    sprite->data[0] = v1 / sprite->data[0];
-    InitAnimLinearTranslation(sprite);
+    // The duration is calculated by treating the x distance as the distance in the duration = distance / speed calculation
+    int v1 = abs(sprite->sInputEndX_lti - sprite->sInputStartX_lti) << 8;
+    sprite->sDuration_lti = v1 / sprite->sInputSpeed_lti;
+    InitSpriteLinearTranslationIterator(sprite);
 }
 
-void InitAnimLinearTranslationWithSpeedAndPos(struct Sprite *sprite)
+void InitAndRunSpriteLinearTranslationIteratorWithSpeedAndSpritePosAsStart(struct Sprite *sprite)
 {
-    sprite->data[1] = sprite->x;
-    sprite->data[3] = sprite->y;
-    InitAnimLinearTranslationWithSpeed(sprite);
-    sprite->callback = AnimTranslateLinear_WithFollowup;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    InitSpriteLinearTranslationIteratorWithSpeed(sprite);
+    sprite->callback = TranslateSpriteLinear_FromIterator;
     sprite->callback(sprite);
 }
 
@@ -1491,40 +1518,109 @@ void AnimSpriteOnMonPos(struct Sprite *sprite)
     }
 }
 
-// Linearly translates a sprite to a target position on the
-// other mon's sprite.
+// Linearly translates a sprite, which is set to start
+// at the attacker position, to the target's position
 // arg 0: initial x offset
 // arg 1: initial y offset
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
 // arg 2: target x offset
+#define ARG_SPRITE_X_END_OFFSET 2
 // arg 3: target y offset
+#define ARG_SPRITE_Y_END_OFFSET 3
 // arg 4: duration
-// arg 5: lower 8 bits = location on attacking mon, upper 8 bits = location on target mon pick to target
+#define ARG_DURATION 4
+// arg 5: upper 8 bits = location on attacking mon, lower 8 bits = location on target mon pick to target
+#define ARG_PIC_OFFSET_RELATED 5
+
 void TranslateAnimSpriteToTargetMonLocation(struct Sprite *sprite)
 {
     bool8 respectMonPicOffsets;
     u8 coordType;
 
-    if (!(gBattleAnimArgs[5] & 0xff00))
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff00))
         respectMonPicOffsets = TRUE;
     else
         respectMonPicOffsets = FALSE;
 
-    if (!(gBattleAnimArgs[5] & 0xff))
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff))
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
     else
         coordType = BATTLER_COORD_Y;
 
     InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_PIC_OFFSET_RELATED
+
+// Like above, but will take the average position of the target
+
+// arg 0: initial x offset
+// arg 1: initial y offset
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
+// arg 2: target x offset
+#define ARG_SPRITE_X_END_OFFSET 2
+// arg 3: target y offset
+#define ARG_SPRITE_Y_END_OFFSET 3
+// arg 4: duration
+#define ARG_DURATION 4
+// arg 5: upper 8 bits = location on attacking mon, lower 8 bits = location on target mon pick to target
+#define ARG_PIC_OFFSET_RELATED 5
+
+void TranslateAnimSpriteToAverageTargetMonLocation(struct Sprite *sprite)
+{
+    bool8 respectMonPicOffsets;
+    bool32 respectMonPicOffsetsForTarget;
+
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff00))
+        respectMonPicOffsets = TRUE;
+    else
+        respectMonPicOffsets = FALSE;
+
+    if (!(gBattleAnimArgs[ARG_PIC_OFFSET_RELATED] & 0xff))
+        respectMonPicOffsetsForTarget = TRUE;
+    else
+        respectMonPicOffsetsForTarget = FALSE;
+
+    InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+
+    SetAverageBattlerPositions(gBattleAnimTarget, respectMonPicOffsetsForTarget, &sprite->sInputEndX_lti, &sprite->sInputEndY_lti);
+
+    sprite->sInputEndX_lti += gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti += gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
+    StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
+}
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_PIC_OFFSET_RELATED
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+#define ARG_SPRITE_X_END_OFFSET 2
+#define ARG_SPRITE_Y_END_OFFSET 3
+#define ARG_DURATION 4
+#define ARG_ARC_AMPLITUDE 5
 // arg0: start x offset
 // arg1: start y offset
 // arg2: end x offset
@@ -1535,27 +1631,45 @@ void AnimThrowProjectile(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[ARG_ARC_AMPLITUDE];
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimThrowProjectile_Step;
 }
 
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_ARC_AMPLITUDE
+
 static void AnimThrowProjectile_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
+
+// 0 and 1 use ARG_SPRITE_X_OFFSET_ISPM and ARG_SPRITE_Y_OFFSET_ISPM
+
+// this is probably not the correct name, since it just performs a linear translation
+// something like "wrapper" as the function name?
+
+// TODO: AnimTravelDiagonally is called elsewhere and its arg indices are used non-locally
+// so these arg indices will have to be moved out of here
+#define ARG_SPRITE_X_END_OFFSET 2
+#define ARG_SPRITE_Y_END_OFFSET 3
+#define ARG_DURATION 4
+#define ARG_BATTLER_FOR_START_POS 5
+#define ARG_PIC_OFFSET_RELATED 6
 
 void AnimTravelDiagonally(struct Sprite *sprite)
 {
     bool8 respectOffsets;
     u8 battler, coordType;
 
-    if (!gBattleAnimArgs[6])
+    if (!gBattleAnimArgs[ARG_PIC_OFFSET_RELATED])
     {
         respectOffsets = TRUE;
         coordType = BATTLER_COORD_Y_PIC_OFFSET;
@@ -1565,7 +1679,7 @@ void AnimTravelDiagonally(struct Sprite *sprite)
         respectOffsets = FALSE;
         coordType = BATTLER_COORD_Y;
     }
-    if (gBattleAnimArgs[5] == ANIM_ATTACKER)
+    if (gBattleAnimArgs[ARG_BATTLER_FOR_START_POS] == ANIM_ATTACKER)
     {
         InitSpritePosToAnimAttacker(sprite, respectOffsets);
         battler = gBattleAnimAttacker;
@@ -1576,14 +1690,20 @@ void AnimTravelDiagonally(struct Sprite *sprite)
         battler = gBattleAnimTarget;
     }
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+        gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET] = -gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
     InitSpritePosToAnimTarget(sprite, respectOffsets);
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(battler, coordType) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + gBattleAnimArgs[ARG_SPRITE_X_END_OFFSET];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(battler, coordType) + gBattleAnimArgs[ARG_SPRITE_Y_END_OFFSET];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
+
+#undef ARG_SPRITE_X_END_OFFSET
+#undef ARG_SPRITE_Y_END_OFFSET
+#undef ARG_DURATION
+#undef ARG_BATTLER_FOR_START_POS
+#undef ARG_PIC_OFFSET_RELATED
 
 s16 CloneBattlerSpriteWithBlend(u8 animBattler)
 {
@@ -2470,6 +2590,6 @@ void AnimWeatherBallDown(struct Sprite *sprite)
         sprite->x += x;
         sprite->y = gBattleAnimArgs[5] - 80;
     }
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
