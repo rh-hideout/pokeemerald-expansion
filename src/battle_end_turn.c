@@ -1370,25 +1370,22 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     case THIRD_EVENT_BLOCK_UPROAR:
         if (gBattleMons[battler].volatiles.uproarTurns)
         {
-            for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount; gBattlerAttacker++)
+            for (gEffectBattler = 0; gEffectBattler < gBattlersCount; gEffectBattler++)
             {
-                if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP)
-                && GetBattlerAbility(gBattlerAttacker) != ABILITY_SOUNDPROOF)
+                if ((gBattleMons[gEffectBattler].status1 & STATUS1_SLEEP)
+                 && GetBattlerAbility(gEffectBattler) != ABILITY_SOUNDPROOF)
                 {
-                    gBattleMons[gBattlerAttacker].status1 &= ~STATUS1_SLEEP;
-                    gBattleMons[gBattlerAttacker].volatiles.nightmare = FALSE;
+                    gBattleMons[gEffectBattler].status1 &= ~STATUS1_SLEEP;
+                    gBattleMons[gEffectBattler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = 1;
                     BattleScriptExecute(BattleScript_MonWokeUpInUproar);
-                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
-                    MarkBattlerForControllerExec(gBattlerAttacker);
+                    BtlController_EmitSetMonData(gEffectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
+                    MarkBattlerForControllerExec(gEffectBattler);
+                    effect = TRUE;
                     break;
                 }
             }
-            if (gBattlerAttacker != gBattlersCount)
-            {
-                break;
-            }
-            else
+            if (effect == FALSE)
             {
                 gBattlerAttacker = battler;
                 gBattleMons[battler].volatiles.uproarTurns--;  // uproar timer goes down
