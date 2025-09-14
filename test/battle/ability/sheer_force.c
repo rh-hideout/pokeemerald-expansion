@@ -567,7 +567,6 @@ static inline bool32 IsMoveSheerForceBoosted(u32 move)
         case MOVE_POWDER_SNOW:
         case MOVE_PSYSHIELD_BASH:
         case MOVE_PYRO_BALL:
-        case MOVE_RAPID_SPIN:
         case MOVE_RELIC_SONG:
         case MOVE_ROLLING_KICK:
         case MOVE_SACRED_FIRE:
@@ -605,6 +604,8 @@ static inline bool32 IsMoveSheerForceBoosted(u32 move)
         case MOVE_ELECTRO_SHOT:
         case MOVE_PSYCHIC_NOISE:
             return TRUE;
+        case MOVE_RAPID_SPIN:
+            return B_SPEED_BUFFING_RAPID_SPIN >= GEN_8;
     }
     return FALSE;
 }
@@ -1355,5 +1356,21 @@ DOUBLE_BATTLE_TEST("Sheer Force only boosts the damage of moves it's supposed to
             EXPECT_GT(damage1, damage2);
         else
             EXPECT_EQ(damage2, damage1);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
+{
+    u16 ability, expectedMove;
+
+    PARAMETRIZE { ability = ABILITY_NONE;        expectedMove = MOVE_POWER_UP_PUNCH; }
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; expectedMove = MOVE_KARATE_CHOP; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, MOVE_KARATE_CHOP); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
 }

@@ -4,7 +4,10 @@
 #include "battle_ai_main.h"
 #include "battle_ai_field_statuses.h"
 
-#define FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
+// Left and right are determined by how they're referred to in tests and everywhere else.
+// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
+#define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
+#define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
 
 // Roll boundaries used by AI when scoring. Doesn't affect actual damage dealt.
 #define MAX_ROLL_PERCENTAGE DMG_ROLL_PERCENT_HI
@@ -136,6 +139,7 @@ bool32 CanKnockOffItem(u32 battler, u32 item);
 bool32 IsAbilityOfRating(u32 ability, s8 rating);
 bool32 AI_IsAbilityOnSide(u32 battlerId, u32 ability);
 bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move);
+bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove);
 void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
@@ -182,7 +186,7 @@ bool32 HasBattlerSideMoveWithAdditionalEffect(u32 battler, u32 moveEffect);
 bool32 HasMoveWithCriticalHitChance(u32 battlerId);
 bool32 HasMoveWithMoveEffectExcept(u32 battlerId, u32 moveEffect, enum BattleMoveEffects exception);
 bool32 HasMoveThatLowersOwnStats(u32 battlerId);
-bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus, u32 atkAbility, u32 defAbility, u32 atkHoldEffect, u32 defHoldEffect);
+bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool32 ignoreStatus);
 bool32 HasAnyKnownMove(u32 battlerId);
 bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect);
 bool32 IsNonVolatileStatusMove(u32 moveEffect);
@@ -191,6 +195,7 @@ bool32 IsHazardMove(u32 move);
 bool32 IsTwoTurnNotSemiInvulnerableMove(u32 battlerAtk, u32 move);
 bool32 IsBattlerDamagedByStatus(u32 battler);
 s32 ProtectChecks(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMove);
+bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef);
 bool32 ShouldSetWeather(u32 battler, u32 weather);
 bool32 ShouldClearWeather(u32 battler, u32 weather);
 bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus);
@@ -298,7 +303,6 @@ bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
-bool32 HasLowAccuracyMove(u32 battlerAtk, u32 battlerDef);
 bool32 HasBattlerSideAbility(u32 battlerDef, u32 ability, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 
