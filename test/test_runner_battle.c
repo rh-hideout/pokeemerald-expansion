@@ -1569,7 +1569,7 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     {
         data = MOVE_NONE;
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
-        data = 0x7F;
+        data = 0x7F; // Max PP possible
         SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
     }
     data = 0;

@@ -114,7 +114,6 @@ AI_SINGLE_BATTLE_TEST("AI will Incapacitate -> Substitute -> Focus Punch if able
 
 AI_SINGLE_BATTLE_TEST("AI won't use status moves if the player's best attacking move is Focus Punch")
 {
-    //AI_LOG;
     PASSES_RANDOMLY(STATUS_MOVE_FOCUS_PUNCH_CHANCE, 100, RNG_AI_STATUS_FOCUS_PUNCH);
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
