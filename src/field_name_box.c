@@ -32,7 +32,7 @@ static void WindowFunc_ClearNamebox(u8, u8, u8, u8, u8, u8);
 void TrySpawnNamebox(void)
 {
     u8 *strbuf = AllocZeroed(32 * sizeof(u8));
-    if (gSpeakerName == NULL || (OW_FLAG_SUPPRESS_NAME_BOX != 0 && FlagGet(OW_FLAG_SUPPRESS_NAME_BOX)) || !strbuf)
+    if ((OW_FLAG_SUPPRESS_NAME_BOX != 0 && FlagGet(OW_FLAG_SUPPRESS_NAME_BOX)) || gSpeakerName == NULL || !strbuf)
     {
         // Re-check again in case anything but !strbuf is TRUE.
         if (strbuf)

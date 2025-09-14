@@ -9,7 +9,7 @@ _New implementation made by mudskipper13, originally made by Tustin2121._
 ![Messagebox](/docs/tutorials/img/namebox/msgbox.gif)
 
 This is a broad and self-contained implementation of Tustin2121's namebox feature branch [here](https://github.com/tustin2121/pokeemerald/tree/feature/namebox), which includes the following:
-- Cleaner implementation of namebox onto both the field messagebox _and_ the field pokenav textbox.
+- Cleaner implementation of namebox onto both the field message box _and_ the field PokéNav textbox.
 - New configs:
   - `OW_NAME_BOX_USE_DYNAMIC_WIDTH` lets the namebox use dynamic window width depending on the speaker's string length.
     - When disabled and/or the speaker name is too long, `OW_NAME_BOX_DEFAULT_WIDTH` will be used as the maximum width.
@@ -24,9 +24,9 @@ This is a broad and self-contained implementation of Tustin2121's namebox featur
   - `release`, `releaseall`, and `closemessage` will automatically remove the namebox, together with the messagebox.
 - Added a new text control code/inline text `{SPEAKER NAME_*}`.
   - Unlike the `setspeaker` macro, you can only use the `SP_NAME_*` constants for this. It is partly due to the text engine's limitation itself.
-    - You'll need to add the constants into `charmap.txt` to be able to use them, This is for the same reason as above.
+  - You'll need to add the constants into `charmap.txt` to be able to use them for the same reason as above.
   - Feed it `SP_NAME_NONE` to remove the namebox manually.
-  - Similarly, `release`, `releaseall`, and `closemessage` will automatically remove the namebox, together with the messagebox.
+  - Similarly, `release`, `releaseall`, and `closemessage` will automatically remove the namebox, together with the message box.
 
 ## Usage
 
