@@ -421,6 +421,7 @@ bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCom
 bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
 u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
+void RemoveAbilityFlags(u32 battler);
 bool32 IsDazzlingAbility(u32 ability);
 
 #endif // GUARD_BATTLE_UTIL_H

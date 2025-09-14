@@ -2024,7 +2024,7 @@ BattleScript_EffectEntrainment::
 	tryentrainment BattleScript_ButItFailed
 	attackanimation
 	waitanimation
-	setlastusedability
+	switchinabilities BS_TARGET
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
