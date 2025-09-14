@@ -8187,6 +8187,10 @@ BattleScript_OpportunistStartCopyStats:
 	goto BattleScript_OpportunistStartCopyStats
 BattleScript_OpportunistCopyStatChangeEnd:
 	setbyte sSTAT_ANIM_PLAYED, FALSE
+	return
+
+BattleScript_OpportunistCopyStatChangeEnd3::
+	call BattleScript_OpportunistCopyStatChange
 	end3
 
 BattleScript_TotemVar::

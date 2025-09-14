@@ -5197,6 +5197,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_OPPORTUNIST:
+    case ABILITYEFFECT_OPPORTUNIST_FIRST_TURN:
         switch (ability)
         {
         case ABILITY_OPPORTUNIST:
@@ -5205,7 +5206,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gBattleScripting.battler = battler;
                 gProtectStructs[battler].activateOpportunist--;
                 ChooseStatBoostAnimation(battler);
-                BattleScriptPushCursorAndCallback(BattleScript_OpportunistCopyStatChange);
+                if (caseID == ABILITYEFFECT_OPPORTUNIST_FIRST_TURN)
+                    BattleScriptPushCursorAndCallback(BattleScript_OpportunistCopyStatChangeEnd3);
+                else
+                    BattleScriptCall(BattleScript_OpportunistCopyStatChange);
                 effect = 1;
             }
             break;
@@ -6358,7 +6362,7 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
         gBattleScripting.battler = battler;
         gProtectStructs[battler].eatMirrorHerb = 0;
         ChooseStatBoostAnimation(battler);
-        if (ITEMEFFECT_MIRROR_HERB_FIRST_TURN)
+        if (caseID == ITEMEFFECT_MIRROR_HERB_FIRST_TURN)
             BattleScriptExecute(BattleScript_MirrorHerbCopyStatChangeEnd2);
         else
             BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
