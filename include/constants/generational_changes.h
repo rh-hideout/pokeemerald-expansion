@@ -41,8 +41,8 @@
     F(PARALYZE_ELECTRIC,         paralyzeElectric,        (u32, GEN_9)) /* TODO */ \
     F(POWDER_GRASS,              powderGrass,             (u32, GEN_9)) /* TODO */ \
     F(UPDATED_TYPE_MATCHUPS,     updatedTypeMatchups,     (u32, GEN_9)) /* TODO */ \
-    F(PRANKSTER_DARK_TYPES,      pranksterDarkTypes,      (u32, GEN_9)) /* TODO */ \
-    F(SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_9)) /* TODO */ \
+    F(PRANKSTER_DARK_TYPES,      pranksterDarkTypes,      (u32, GEN_9)) \
+    F(SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_9)) \
     F(ROOST_PURE_FLYING,         roostPureFlying,         (u32, GEN_9)) /* TODO */ \
     F(STATUS_TYPE_IMMUNITY,      statusTypeImmunity,      (u32, GEN_9)) /* TODO */ \
     /* Turn settings */ \
@@ -54,7 +54,7 @@
     F(SLEEP_TURNS,               sleepTurns,              (u32, GEN_9)) /* TODO */ \
     F(TAUNT_TURNS,               tauntTurns,              (u32, GEN_9)) /* TODO */ \
     F(SPORT_TURNS,               sportTurns,              (u32, GEN_9)) /* TODO */ \
-    F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_9)) /* TODO */ \
+    F(MEGA_EVO_TURN_ORDER,       megaEvoTurnOrder,        (u32, GEN_9)) \
     F(RECALC_TURN_AFTER_ACTIONS, recalcTurnAfterActions,  (u32, GEN_9)) \
     F(FAINT_SWITCH_IN,           faintSwitchIn,           (u32, GEN_9)) /* TODO */ \
     /* Move data settings */ \
@@ -113,10 +113,10 @@
     F(KNOCK_OFF_REMOVAL,         knockOffRemoval,         (u32, GEN_9)) /* TODO */ \
     F(HEAL_BELL_SOUNDPROOF,      healBellSoundproof,      (u32, GEN_9)) \
     F(CHARGE,                    charge,                  (u32, GEN_9)) /* TODO */ \
-    F(POWDER_RAIN,               powderRain,              (u32, GEN_9)) /* TODO */ \
+    F(POWDER_RAIN,               powderRain,              (u32, GEN_9)) \
     F(AFTER_YOU_TURN_ORDER,      afterYouTurnOrder,       (u32, GEN_9)) \
     F(QUASH_TURN_ORDER,          quashTurnOrder,          (u32, GEN_9)) /* TODO */ \
-    F(DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_9)) /* TODO */ \
+    F(DESTINY_BOND_FAIL,         destinyBondFail,         (u32, GEN_9)) \
     F(PURSUIT_TARGET,            pursuitTarget,           (u32, GEN_9)) /* TODO */ \
     F(SKIP_RECHARGE,             skipRecharge,            (u32, GEN_9)) /* TODO */ \
     F(ENCORE_TARGET,             encoreTarget,            (u32, GEN_9)) \
@@ -141,7 +141,7 @@
     F(LEAF_GUARD_PREVENTS_REST,  leafGuardPreventsRest,   (u32, GEN_9)) /* TODO */ \
     F(TRANSISTOR_BOOST,          transistorBoost,         (u32, GEN_9)) \
     F(ILLUMINATE_EFFECT,         illuminateEffect,        (u32, GEN_9)) \
-    F(WEAK_ARMOR_SPEED,          weakArmorSpeed,          (u32, GEN_9)) /* TODO */ \
+    F(WEAK_ARMOR_SPEED,          weakArmorSpeed,          (u32, GEN_9)) \
     F(PROTEAN_LIBERO,            proteanLibero,           (u32, GEN_9)) \
     F(INTREPID_SWORD,            intrepidSword,           (u32, GEN_9)) \
     F(DAUNTLESS_SHIELD,          dauntlessShield,         (u32, GEN_9)) \
