@@ -74,6 +74,8 @@ enum ItemCaseId
     ITEMEFFECT_LIFEORB_SHELLBELL,
     ITEMEFFECT_USE_LAST_ITEM, // move end effects for just the battler, not whole field
     ITEMEFFECT_STATS_CHANGED, // For White Herb and Eject Pack
+    ITEMEFFECT_MIRROR_HERB,
+    ITEMEFFECT_MIRROR_HERB_FIRST_TURN,
 };
 
 enum ItemEffect

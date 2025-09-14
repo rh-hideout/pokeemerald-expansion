@@ -6693,10 +6693,24 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_OPPORTUNIST:
-            if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, 0, 0, 0, 0))
-                effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
-            else
-                gBattleScripting.moveendState++;
+            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            {
+                u32 battler = gBattleStruct->moveEndBattlerId++;
+                if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, 0))
+                    return;
+            }
+            gBattleStruct->moveEndBattlerId = 0;
+            gBattleScripting.moveendState++;
+            break;
+        case MOVEEND_MIRROR_HERB:
+            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            {
+                u32 battler = gBattleStruct->moveEndBattlerId++;
+                if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, battler))
+                    return;
+            }
+            gBattleStruct->moveEndBattlerId = 0;
+            gBattleScripting.moveendState++;
             break;
         case MOVEEND_PICKPOCKET:
             if (IsBattlerAlive(gBattlerAttacker)
@@ -7766,29 +7780,39 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
 
         if (DoSwitchInAbilities(battler) || ItemBattleEffects(ITEMEFFECT_ON_SWITCH_IN, battler))
             return TRUE;
-        else if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, 0, 0, 0))
-            return TRUE;
 
         for (i = 0; i < gBattlersCount; i++)
         {
             if (i == battler)
                 continue;
 
-            switch (GetBattlerAbility(i))
+            u32 ability = GetBattlerAbility(i);
+            switch (ability)
             {
             case ABILITY_TRACE:
             case ABILITY_COMMANDER:
-                if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, 0, 0, 0))
+                if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, ability, 0, 0))
                     return TRUE;
                 break;
             case ABILITY_FORECAST:
             case ABILITY_FLOWER_GIFT:
             case ABILITY_PROTOSYNTHESIS:
-                if (AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, i, 0, 0, 0))
+                if (AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, i, ability, 0, 0))
                     return TRUE;
                 break;
             }
             if (TryClearIllusion(i, ABILITYEFFECT_ON_SWITCHIN))
+                return TRUE;
+        }
+
+        for (i = 0; i < gBattlersCount; i++)
+        {
+            if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, i, GetBattlerAbility(i), 0, 0))
+                return TRUE;
+        }
+        for (i = 0; i < gBattlersCount; i++)
+        {
+            if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, battler))
                 return TRUE;
         }
 

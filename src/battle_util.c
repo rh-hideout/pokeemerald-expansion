@@ -5197,25 +5197,18 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_OPPORTUNIST:
-        /* Similar to ABILITYEFFECT_IMMUNITY in that it loops through all battlers.
-         * Is called after ABILITYEFFECT_ON_SWITCHIN to copy any boosts
-         * from switch in abilities e.g. intrepid sword, as
-         */
-        for (battler = 0; battler < gBattlersCount; battler++)
+        switch (ability)
         {
-            switch (GetBattlerAbility(battler))
+        case ABILITY_OPPORTUNIST:
+            if (gProtectStructs[battler].activateOpportunist == 2)
             {
-            case ABILITY_OPPORTUNIST:
-                if (gProtectStructs[battler].activateOpportunist == 2)
-                {
-                    gBattleScripting.battler = battler;
-                    gProtectStructs[battler].activateOpportunist--;
-                    ChooseStatBoostAnimation(battler);
-                    BattleScriptPushCursorAndCallback(BattleScript_OpportunistCopyStatChange);
-                    effect = 1;
-                }
-                break;
+                gBattleScripting.battler = battler;
+                gProtectStructs[battler].activateOpportunist--;
+                ChooseStatBoostAnimation(battler);
+                BattleScriptPushCursorAndCallback(BattleScript_OpportunistCopyStatChange);
+                effect = 1;
             }
+            break;
         }
         break;
     case ABILITYEFFECT_IMMUNITY:
@@ -6365,7 +6358,7 @@ static u32 TryConsumeMirrorHerb(u32 battler, enum ItemCaseId caseID)
         gBattleScripting.battler = battler;
         gProtectStructs[battler].eatMirrorHerb = 0;
         ChooseStatBoostAnimation(battler);
-        if (caseID == ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN || caseID == ITEMEFFECT_NORMAL)
+        if (ITEMEFFECT_MIRROR_HERB_FIRST_TURN)
             BattleScriptExecute(BattleScript_MirrorHerbCopyStatChangeEnd2);
         else
             BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
@@ -6604,9 +6597,6 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
         break;
     case HOLD_EFFECT_BERSERK_GENE:
         effect = ConsumeBerserkGene(battler, ITEMEFFECT_NONE);
-        break;
-    case HOLD_EFFECT_MIRROR_HERB:
-        effect = TryConsumeMirrorHerb(battler, ITEMEFFECT_NONE);
         break;
     default:
         break;
@@ -6907,9 +6897,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             case HOLD_EFFECT_BERSERK_GENE:
                 effect = ConsumeBerserkGene(battler, caseID);
                 break;
-            case HOLD_EFFECT_MIRROR_HERB:
-                effect = TryConsumeMirrorHerb(battler, caseID);
-                break;
             case HOLD_EFFECT_BOOSTER_ENERGY:
                 effect = TryBoosterEnergy(battler, GetBattlerAbility(battler), caseID);
                 break;
@@ -7103,9 +7090,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 break;
             case HOLD_EFFECT_BERSERK_GENE:
                 effect = ConsumeBerserkGene(battler, caseID);
-                break;
-            case HOLD_EFFECT_MIRROR_HERB:
-                effect = TryConsumeMirrorHerb(battler, caseID);
                 break;
             default:
                 break;
@@ -7465,6 +7449,17 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             effect = RestoreWhiteHerbStats(battler);
             if (effect != 0)
                 BattleScriptCall(BattleScript_WhiteHerbRet);
+            break;
+        default:
+            break;
+        }
+        break;
+    case ITEMEFFECT_MIRROR_HERB:
+    case ITEMEFFECT_MIRROR_HERB_FIRST_TURN:
+        switch (battlerHoldEffect)
+        {
+        case HOLD_EFFECT_MIRROR_HERB:
+            effect = TryConsumeMirrorHerb(battler, caseID);
             break;
         default:
             break;
