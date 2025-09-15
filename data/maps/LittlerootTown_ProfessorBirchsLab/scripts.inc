@@ -2017,6 +2017,128 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ReceiveNationalDex::
 	return
 
 
+LittlerootTown_EventScript_AideDexNav::
+# 1016 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	lockall
+# 1017 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	faceplayer
+# 1018 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	goto_if_unset FLAG_DEXNAV_OBTAINED, LittlerootTown_EventScript_AideDexNav_2
+# 1024 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	goto_if_set FLAG_DEXNAV_OBTAINED, LittlerootTown_EventScript_AideDexNav_3
+# 1032 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_AideDexNav_Text_1, MSGBOX_AUTOCLOSE
+# 1035 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+LittlerootTown_EventScript_AideDexNav_2:
+# 1020 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_AideDexNav_Text_0
+# 1021 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+LittlerootTown_EventScript_AideDexNav_3:
+# 1026 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	call LittlerootTown_EventScript_CheckDexNavAll
+# 1027 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+
+LittlerootTown_EventScript_CheckDexNavAll::
+# 1040 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	lockall
+# 1041 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	faceplayer
+# 1042 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	goto_if_unset FLAG_DEXNAV_ALL, LittlerootTown_EventScript_CheckDexNavAll_2
+# 1070 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	goto_if_set FLAG_DEXNAV_ALL, LittlerootTown_EventScript_CheckDexNavAll_3
+# 1097 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+LittlerootTown_EventScript_CheckDexNavAll_2:
+# 1044 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_0, MSGBOX_YESNO
+# 1046 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	compare VAR_RESULT, YES
+	goto_if_eq LittlerootTown_EventScript_CheckDexNavAll_7
+# 1063 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_4, MSGBOX_AUTOCLOSE
+# 1064 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	return
+
+LittlerootTown_EventScript_CheckDexNavAll_3:
+# 1072 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_5, MSGBOX_YESNO
+# 1075 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	compare VAR_RESULT, YES
+	goto_if_eq LittlerootTown_EventScript_CheckDexNavAll_11
+# 1089 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_8, MSGBOX_AUTOCLOSE
+# 1090 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1091 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+# 1067 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	return
+
+LittlerootTown_EventScript_CheckDexNavAll_7:
+# 1048 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_1, MSGBOX_AUTOCLOSE
+# 1049 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1050 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	setflag FLAG_DEXNAV_ALL
+# 1051 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	playfanfare MUS_OBTAIN_ITEM
+# 1052 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_2, MSGBOX_DEFAULT
+# 1053 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitfanfare
+# 1054 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1055 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	faceplayer
+# 1056 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_3, MSGBOX_DEFAULT
+# 1057 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1058 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	return
+
+# 1094 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	return
+
+LittlerootTown_EventScript_CheckDexNavAll_11:
+# 1077 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_6, MSGBOX_AUTOCLOSE
+# 1078 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1079 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	clearflag FLAG_DEXNAV_ALL
+# 1080 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	playfanfare MUS_MOVE_DELETED
+# 1081 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_7, MSGBOX_DEFAULT
+# 1082 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitfanfare
+# 1083 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	waitmessage
+# 1084 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	releaseall
+	end
+
+
 LittlerootTown_ProfessorBirchsLab_EventScript_ReceiveNationalDex_Text_0:
 # 1001 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
 	.string "{PLAYER} has received the National Dex!$"
@@ -2037,3 +2159,64 @@ LittlerootTown_ProfessorBirchsLab_EventScript_ReceiveNationalDex_Text_2:
 LittlerootTown_ProfessorBirchsLab_EventScript_ReceiveNationalDex_Text_3:
 # 1009 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
 	.string "{PLAYER} has received the DexNav!$"
+
+LittlerootTown_EventScript_AideDexNav_Text_0:
+# 1020 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "Hello {PLAYER}! Come back and talk to\n"
+	.string "me once you receive a DexNav!$"
+
+LittlerootTown_EventScript_AideDexNav_Text_1:
+# 1032 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "Hello {PLAYER}; I cannot be bothered\n"
+	.string "right now, I am seconds away from a\l"
+	.string "mighty discovery! I do sincerely\l"
+	.string "apologize.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_0:
+# 1044 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "Hello {PLAYER}! I see you have a\n"
+	.string "DexNav. Now, how would you like to see\l"
+	.string "every POKéMON without having to\l"
+	.string "painstakingly discover them one by\l"
+	.string "one?$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_1:
+# 1048 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "Ah! I knew you were a trainer after my\n"
+	.string "own heart. Here, let me update this for\l"
+	.string "you.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_2:
+# 1052 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "The DexNav has been updated!$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_3:
+# 1056 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "There you go! Come talk to me if you\n"
+	.string "ever want to revert this back.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_4:
+# 1063 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "I see. Well, if you happen to change\n"
+	.string "your mind, you know where to find me.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_5:
+# 1072 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "Hello {PLAYER}! I assume your DexNav\n"
+	.string "is not treating you well? Here, I can\l"
+	.string "change it back to the regular mode, if\l"
+	.string "you prefer.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_6:
+# 1077 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "No worries! I will reset it as quick as\n"
+	.string "Regieleki!$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_7:
+# 1081 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "The DexNav has been reverted to it's\n"
+	.string "original state.$"
+
+LittlerootTown_EventScript_CheckDexNavAll_Text_8:
+# 1089 "data/maps/LittlerootTown_ProfessorBirchsLab/scripts.pory"
+	.string "No bother! Come back anytime.$"

@@ -123,4 +123,8 @@ script Route102_EventScript_PokemonBlockade{
     releaseall
     end
 
+
+// trainerbattle_single TRAINER_BRAWLY_1 (Trainer Name), DewfordTown_Gym_Text_BrawlyIntro (Intro Text), 
+// DewfordTown_Gym_Text_BrawlyDefeat (Defeat Text), DewfordTown_Gym_EventScript_BrawlyDefeated (Event Script upon battle completion; can be used
+// to clear route and update level cap.)
 }

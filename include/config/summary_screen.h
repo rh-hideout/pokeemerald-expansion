@@ -23,7 +23,7 @@ LETTER GRADE GUIDE:
 
 Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 */
-#define P_SUMMARY_SCREEN_IV_ONLY         FALSE  // If TRUE, will only show IV info in the summary screen.
+#define P_SUMMARY_SCREEN_IV_ONLY         TRUE  // If TRUE, will only show IV info in the summary screen.
 #define P_SUMMARY_SCREEN_EV_ONLY         FALSE  // If TRUE, will only show EV info in the summary screen.
 
 // IV/EV flags

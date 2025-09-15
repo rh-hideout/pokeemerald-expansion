@@ -440,20 +440,16 @@ script OldaleTown_EventScript_OldRodFisherman{
 		if(var(VAR_RESULT) == 0)
 		{
 			msgbox(format("Alright. If you ever change your mind, come back and talk to me."), MSGBOX_AUTOCLOSE)
-			waitmessage
-			releaseall
-			end
 		}
 		elif(var(VAR_RESULT) == 1){
 			msgbox(format("Well, I think I'll have an item you'll want to have!"), MSGBOX_AUTOCLOSE)
-			waitmessage
 			setflag(FLAG_RECEIVED_OLD_ROD)
 			giveitem(ITEM_OLD_ROD, 1)
 			playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
 			waitfanfare
-			releaseall
-			end
 		}
+		releaseall
+		end
 	}
 
 }

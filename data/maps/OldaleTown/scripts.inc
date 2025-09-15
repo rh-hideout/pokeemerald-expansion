@@ -846,11 +846,14 @@ OldaleTown_EventScript_OldRodFisherman::
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_1, MSGBOX_YESNO
 # 440 "data/maps/OldaleTown/scripts.pory"
 	compare VAR_RESULT, 0
-	goto_if_eq OldaleTown_EventScript_OldRodFisherman_4
-# 447 "data/maps/OldaleTown/scripts.pory"
-	compare VAR_RESULT, 1
 	goto_if_eq OldaleTown_EventScript_OldRodFisherman_5
-	return
+# 444 "data/maps/OldaleTown/scripts.pory"
+	compare VAR_RESULT, 1
+	goto_if_eq OldaleTown_EventScript_OldRodFisherman_6
+OldaleTown_EventScript_OldRodFisherman_4:
+# 451 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
 
 OldaleTown_EventScript_OldRodFisherman_1:
 # 432 "data/maps/OldaleTown/scripts.pory"
@@ -861,31 +864,23 @@ OldaleTown_EventScript_OldRodFisherman_1:
 	releaseall
 	end
 
-OldaleTown_EventScript_OldRodFisherman_4:
+OldaleTown_EventScript_OldRodFisherman_5:
 # 442 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_2, MSGBOX_AUTOCLOSE
-# 443 "data/maps/OldaleTown/scripts.pory"
-	waitmessage
-# 444 "data/maps/OldaleTown/scripts.pory"
-	releaseall
-	end
+	goto OldaleTown_EventScript_OldRodFisherman_4
 
-OldaleTown_EventScript_OldRodFisherman_5:
-# 448 "data/maps/OldaleTown/scripts.pory"
+OldaleTown_EventScript_OldRodFisherman_6:
+# 445 "data/maps/OldaleTown/scripts.pory"
 	msgbox OldaleTown_EventScript_OldRodFisherman_Text_3, MSGBOX_AUTOCLOSE
-# 449 "data/maps/OldaleTown/scripts.pory"
-	waitmessage
-# 450 "data/maps/OldaleTown/scripts.pory"
+# 446 "data/maps/OldaleTown/scripts.pory"
 	setflag FLAG_RECEIVED_OLD_ROD
-# 451 "data/maps/OldaleTown/scripts.pory"
+# 447 "data/maps/OldaleTown/scripts.pory"
 	giveitem ITEM_OLD_ROD, 1
-# 452 "data/maps/OldaleTown/scripts.pory"
+# 448 "data/maps/OldaleTown/scripts.pory"
 	playfanfare MUS_RG_OBTAIN_KEY_ITEM
-# 453 "data/maps/OldaleTown/scripts.pory"
+# 449 "data/maps/OldaleTown/scripts.pory"
 	waitfanfare
-# 454 "data/maps/OldaleTown/scripts.pory"
-	releaseall
-	end
+	goto OldaleTown_EventScript_OldRodFisherman_4
 
 
 OldaleTown_EventScript_MeowthCarePackage_Text_0:
@@ -911,6 +906,6 @@ OldaleTown_EventScript_OldRodFisherman_Text_2:
 	.string "come back and talk to me.$"
 
 OldaleTown_EventScript_OldRodFisherman_Text_3:
-# 448 "data/maps/OldaleTown/scripts.pory"
+# 445 "data/maps/OldaleTown/scripts.pory"
 	.string "Well, I think I'll have an item you'll\n"
 	.string "want to have!$"
