@@ -792,3 +792,125 @@ OldaleTown_Text_TownSign:
 	.string "OLDALE TOWN\n"
 # 397 "data/maps/OldaleTown/scripts.pory"
 	.string "“Where things start off scarce.”$"
+
+OldaleTown_EventScript_MeowthCarePackage::
+# 402 "data/maps/OldaleTown/scripts.pory"
+	lockall
+# 403 "data/maps/OldaleTown/scripts.pory"
+	faceplayer
+# 404 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_MeowthCarePackage_Text_0, MSGBOX_YESNO
+# 405 "data/maps/OldaleTown/scripts.pory"
+	compare VAR_RESULT, YES
+	goto_if_eq OldaleTown_EventScript_MeowthCarePackage_1
+# 420 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_MeowthCarePackage_Text_1, MSGBOX_AUTOCLOSE
+# 421 "data/maps/OldaleTown/scripts.pory"
+	waitmessage
+# 422 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
+
+OldaleTown_EventScript_MeowthCarePackage_1:
+# 407 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_OBTAIN_ITEM
+# 408 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_RARE_CANDY, 999
+# 409 "data/maps/OldaleTown/scripts.pory"
+	waitfanfare
+# 410 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_OBTAIN_ITEM
+# 411 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_QUICK_BALL, 500
+# 412 "data/maps/OldaleTown/scripts.pory"
+	waitfanfare
+# 413 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_OBTAIN_ITEM
+# 414 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_TIMER_BALL, 500
+# 415 "data/maps/OldaleTown/scripts.pory"
+	waitfanfare
+# 416 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
+
+
+OldaleTown_EventScript_OldRodFisherman::
+# 428 "data/maps/OldaleTown/scripts.pory"
+	lockall
+# 429 "data/maps/OldaleTown/scripts.pory"
+	faceplayer
+# 430 "data/maps/OldaleTown/scripts.pory"
+	goto_if_set FLAG_RECEIVED_OLD_ROD, OldaleTown_EventScript_OldRodFisherman_1
+# 439 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_OldRodFisherman_Text_1, MSGBOX_YESNO
+# 440 "data/maps/OldaleTown/scripts.pory"
+	compare VAR_RESULT, 0
+	goto_if_eq OldaleTown_EventScript_OldRodFisherman_4
+# 447 "data/maps/OldaleTown/scripts.pory"
+	compare VAR_RESULT, 1
+	goto_if_eq OldaleTown_EventScript_OldRodFisherman_5
+	return
+
+OldaleTown_EventScript_OldRodFisherman_1:
+# 432 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_OldRodFisherman_Text_0, MSGBOX_AUTOCLOSE
+# 433 "data/maps/OldaleTown/scripts.pory"
+	waitmessage
+# 434 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
+
+OldaleTown_EventScript_OldRodFisherman_4:
+# 442 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_OldRodFisherman_Text_2, MSGBOX_AUTOCLOSE
+# 443 "data/maps/OldaleTown/scripts.pory"
+	waitmessage
+# 444 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
+
+OldaleTown_EventScript_OldRodFisherman_5:
+# 448 "data/maps/OldaleTown/scripts.pory"
+	msgbox OldaleTown_EventScript_OldRodFisherman_Text_3, MSGBOX_AUTOCLOSE
+# 449 "data/maps/OldaleTown/scripts.pory"
+	waitmessage
+# 450 "data/maps/OldaleTown/scripts.pory"
+	setflag FLAG_RECEIVED_OLD_ROD
+# 451 "data/maps/OldaleTown/scripts.pory"
+	giveitem ITEM_OLD_ROD, 1
+# 452 "data/maps/OldaleTown/scripts.pory"
+	playfanfare MUS_RG_OBTAIN_KEY_ITEM
+# 453 "data/maps/OldaleTown/scripts.pory"
+	waitfanfare
+# 454 "data/maps/OldaleTown/scripts.pory"
+	releaseall
+	end
+
+
+OldaleTown_EventScript_MeowthCarePackage_Text_0:
+# 404 "data/maps/OldaleTown/scripts.pory"
+	.string "Looks like Meowth wants to give you\n"
+	.string "items! Do you accept?$"
+
+OldaleTown_EventScript_MeowthCarePackage_Text_1:
+# 420 "data/maps/OldaleTown/scripts.pory"
+	.string "Meowth smirks at you.$"
+
+OldaleTown_EventScript_OldRodFisherman_Text_0:
+# 432 "data/maps/OldaleTown/scripts.pory"
+	.string "Howdy. How are the fish biting?$"
+
+OldaleTown_EventScript_OldRodFisherman_Text_1:
+# 439 "data/maps/OldaleTown/scripts.pory"
+	.string "Howdy! Tell me- do you like fishing?$"
+
+OldaleTown_EventScript_OldRodFisherman_Text_2:
+# 442 "data/maps/OldaleTown/scripts.pory"
+	.string "Alright. If you ever change your mind,\n"
+	.string "come back and talk to me.$"
+
+OldaleTown_EventScript_OldRodFisherman_Text_3:
+# 448 "data/maps/OldaleTown/scripts.pory"
+	.string "Well, I think I'll have an item you'll\n"
+	.string "want to have!$"

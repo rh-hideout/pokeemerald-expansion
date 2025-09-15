@@ -397,3 +397,63 @@ OldaleTown_Text_TownSign:
 	.string "“Where things start off scarce.”$"
 
 `
+
+script OldaleTown_EventScript_MeowthCarePackage{
+	lockall
+	faceplayer
+	msgbox(format("Looks like Meowth wants to give you items! Do you accept?"), MSGBOX_YESNO)
+	if (var(VAR_RESULT) == YES)
+	{
+		playfanfare(MUS_OBTAIN_ITEM)
+		giveitem(ITEM_RARE_CANDY, 999)
+		waitfanfare
+		playfanfare(MUS_OBTAIN_ITEM)
+		giveitem(ITEM_QUICK_BALL, 500)
+		waitfanfare
+		playfanfare(MUS_OBTAIN_ITEM)
+		giveitem(ITEM_TIMER_BALL, 500)
+		waitfanfare
+		releaseall
+		end
+	}
+	else{
+		msgbox(format("Meowth smirks at you."), MSGBOX_AUTOCLOSE)
+		waitmessage
+		releaseall
+		end
+	}
+}
+
+script OldaleTown_EventScript_OldRodFisherman{
+	lockall
+	faceplayer
+	if(flag(FLAG_RECEIVED_OLD_ROD) == TRUE)
+	{
+		msgbox(format("Howdy. How are the fish biting?"), MSGBOX_AUTOCLOSE)
+		waitmessage
+		releaseall
+		end
+	}
+	else
+	{
+		msgbox(format("Howdy! Tell me- do you like fishing?"), MSGBOX_YESNO)
+		if(var(VAR_RESULT) == 0)
+		{
+			msgbox(format("Alright. If you ever change your mind, come back and talk to me."), MSGBOX_AUTOCLOSE)
+			waitmessage
+			releaseall
+			end
+		}
+		elif(var(VAR_RESULT) == 1){
+			msgbox(format("Well, I think I'll have an item you'll want to have!"), MSGBOX_AUTOCLOSE)
+			waitmessage
+			setflag(FLAG_RECEIVED_OLD_ROD)
+			giveitem(ITEM_OLD_ROD, 1)
+			playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
+			waitfanfare
+			releaseall
+			end
+		}
+	}
+
+}

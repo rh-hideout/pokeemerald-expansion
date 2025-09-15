@@ -1025,35 +1025,44 @@ script LittlerootTown_EventScript_NewSign{
 }
 
 script LittlerootTown_EventScript_SetOptions{
-	lockall
-	fadescreen(FADE_TO_BLACK)
-	clearflag(FLAG_FOLLOWER_POKEMON_FLAG)
-	msgbox(format("Let's start by setting a few options. \n Note: You cannot change the first option outside of this menu.\p Would you like to 
-	enable Minimal Grinding Mode, where all IVs are 31?"), MSGBOX_YESNO)
-	if (var(VAR_RESULT) == 1)
-	{
-		setflag(P_PERFECT_IVS)
-		msgbox(format("Minimal Grinding mode enabled."), MSGBOX_AUTOCLOSE)
-	}
-	else{
-		clearflag(P_PERFECT_IVS)
-		msgbox(format("Minimal Grinding mode disabled."), MSGBOX_AUTOCLOSE)
-	}
-	msgbox(format("Would you like to enable overworld followers? \p Note: This can be changed at any time at the GameCube in your room."), MSGBOX_YESNO)
-	if (var(VAR_RESULT) == 1)
-	{
-		
-		msgbox(format("Followers have been enabled."), MSGBOX_AUTOCLOSE)	
-	}
-	else{
-		setflag(FLAG_FOLLOWER_POKEMON_FLAG)
-		msgbox(format("Followers are disabled. Speak to the GameCube to enable this in the future."), MSGBOX_AUTOCLOSE)
-	}
-	fadescreen(FADE_FROM_BLACK)
-	releaseall
-	return
-}
+	if(flag(FLAG_OPENING_OPTIONS) == FALSE){
+		lockall
+		fadescreen(FADE_TO_BLACK)
+		clearflag(FLAG_FOLLOWER_POKEMON_FLAG)
+		msgbox(format("Let's start by setting a few options. \n Note: You cannot change the first option outside of this menu.\p Would you like to 
+		enable Minimal Grinding Mode, where all IVs are 31?"), MSGBOX_YESNO)
+		if (var(VAR_RESULT) == 1)
+		{
+			setflag(P_PERFECT_IVS)
+			msgbox(format("Minimal Grinding mode enabled."), MSGBOX_AUTOCLOSE)
+		}
+		else{
+			clearflag(P_PERFECT_IVS)
+			msgbox(format("Minimal Grinding mode disabled."), MSGBOX_AUTOCLOSE)
+		}
+		msgbox(format("Would you like to enable overworld followers? \p Note: This can be changed at any time at the GameCube in your room."), MSGBOX_YESNO)
+		if (var(VAR_RESULT) == 1)
+		{
+			
+			msgbox(format("Followers have been enabled."), MSGBOX_AUTOCLOSE)	
+		}
+		else{
+			setflag(FLAG_FOLLOWER_POKEMON_FLAG)
+			msgbox(format("Followers are disabled. Speak to the GameCube to enable this in the future."), MSGBOX_AUTOCLOSE)
+		}
 
+		fadescreen(FADE_FROM_BLACK)
+		setflag(FLAG_OPENING_OPTIONS)
+		releaseall
+		return
+	}
+	else{
+		return
+	}
+}
+// fadescreen(FADE_FROM_BLACK)
+// 		releaseall
+// 		return
 script LittlerootTown_EventScript_AideDexNav{
 	lockall
 	faceplayer
@@ -1126,4 +1135,8 @@ script LittlerootTown_EventScript_CheckDexNavAll{
 		return
 	}
 	return
+}
+
+script LittlerootTown_EventScript_MultichoiceTest{
+	
 }

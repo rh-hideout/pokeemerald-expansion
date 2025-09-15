@@ -27,8 +27,8 @@
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_LITTLE_BOY",
-      "x": 18,
-      "y": 11,
+      "x": 17,
+      "y": 7,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -40,8 +40,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
-      "x": 33,
-      "y": 14,
+      "x": 29,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
@@ -53,7 +53,7 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
-      "x": 25,
+      "x": 26,
       "y": 15,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_UP",
@@ -66,10 +66,10 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_LASS",
-      "x": 8,
-      "y": 7,
+      "x": 16,
+      "y": 11,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_AND_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
@@ -131,8 +131,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
-      "x": 19,
-      "y": 4,
+      "x": 23,
+      "y": 10,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 1,
@@ -141,6 +141,32 @@
       "trainer_sight_or_berry_tree_id": "3",
       "script": "Route102_EventScript_Allen",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(POOCHYENA)",
+      "x": 34,
+      "y": 8,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_RUN_IN_PLACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Route102_EventScript_PokemonBlockade",
+      "flag": "FLAG_ROUTE102_CLEAR"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(POOCHYENA)",
+      "x": 16,
+      "y": 9,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_RUN_IN_PLACE_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "Route102_EventScript_PokemonBlockade",
+      "flag": "FLAG_ROUTE102_CLEAR"
     }
   ],
   "warp_events": [],

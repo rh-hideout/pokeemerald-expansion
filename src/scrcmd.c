@@ -50,6 +50,7 @@
 #include "script_pokemon_util.h"
 #include "shop.h"
 #include "slot_machine.h"
+#include "starter_choose.h"
 #include "sound.h"
 #include "string_util.h"
 #include "text.h"
@@ -1864,6 +1865,7 @@ bool8 ScrCmd_dynmultichoice(struct ScriptContext *ctx)
     }
 }
 
+
 bool8 ScrCmd_dynmultipush(struct ScriptContext *ctx)
 {
     const u8 *name = (const u8*) ScriptReadWord(ctx);
@@ -1879,6 +1881,7 @@ bool8 ScrCmd_dynmultipush(struct ScriptContext *ctx)
     MultichoiceDynamic_PushElement(item);
     return FALSE;
 }
+
 
 bool8 ScrCmd_multichoice(struct ScriptContext *ctx)
 {

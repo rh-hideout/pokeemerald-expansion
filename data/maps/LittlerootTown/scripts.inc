@@ -2046,145 +2046,156 @@ LittlerootTown_EventScript_NewSign::
 
 LittlerootTown_EventScript_SetOptions::
 # 1028 "data/maps/LittlerootTown/scripts.pory"
-	lockall
-# 1029 "data/maps/LittlerootTown/scripts.pory"
-	fadescreen FADE_TO_BLACK
-# 1030 "data/maps/LittlerootTown/scripts.pory"
-	clearflag FLAG_FOLLOWER_POKEMON_FLAG
-# 1031 "data/maps/LittlerootTown/scripts.pory"
-	msgbox LittlerootTown_EventScript_SetOptions_Text_0, MSGBOX_YESNO
-# 1033 "data/maps/LittlerootTown/scripts.pory"
-	compare VAR_RESULT, 1
-	goto_if_eq LittlerootTown_EventScript_SetOptions_2
-# 1039 "data/maps/LittlerootTown/scripts.pory"
-	clearflag P_PERFECT_IVS
-# 1040 "data/maps/LittlerootTown/scripts.pory"
-	msgbox LittlerootTown_EventScript_SetOptions_Text_2, MSGBOX_AUTOCLOSE
+	goto_if_unset FLAG_OPENING_OPTIONS, LittlerootTown_EventScript_SetOptions_1
+	return
+
 LittlerootTown_EventScript_SetOptions_1:
-# 1042 "data/maps/LittlerootTown/scripts.pory"
-	msgbox LittlerootTown_EventScript_SetOptions_Text_3, MSGBOX_YESNO
-# 1043 "data/maps/LittlerootTown/scripts.pory"
+# 1029 "data/maps/LittlerootTown/scripts.pory"
+	lockall
+# 1030 "data/maps/LittlerootTown/scripts.pory"
+	fadescreen FADE_TO_BLACK
+# 1031 "data/maps/LittlerootTown/scripts.pory"
+	clearflag FLAG_FOLLOWER_POKEMON_FLAG
+# 1032 "data/maps/LittlerootTown/scripts.pory"
+	msgbox LittlerootTown_EventScript_SetOptions_Text_0, MSGBOX_YESNO
+# 1034 "data/maps/LittlerootTown/scripts.pory"
 	compare VAR_RESULT, 1
-	goto_if_eq LittlerootTown_EventScript_SetOptions_6
-# 1049 "data/maps/LittlerootTown/scripts.pory"
-	setflag FLAG_FOLLOWER_POKEMON_FLAG
+	goto_if_eq LittlerootTown_EventScript_SetOptions_5
+# 1040 "data/maps/LittlerootTown/scripts.pory"
+	clearflag P_PERFECT_IVS
+# 1041 "data/maps/LittlerootTown/scripts.pory"
+	msgbox LittlerootTown_EventScript_SetOptions_Text_2, MSGBOX_AUTOCLOSE
+LittlerootTown_EventScript_SetOptions_4:
+# 1043 "data/maps/LittlerootTown/scripts.pory"
+	msgbox LittlerootTown_EventScript_SetOptions_Text_3, MSGBOX_YESNO
+# 1044 "data/maps/LittlerootTown/scripts.pory"
+	compare VAR_RESULT, 1
+	goto_if_eq LittlerootTown_EventScript_SetOptions_9
 # 1050 "data/maps/LittlerootTown/scripts.pory"
+	setflag FLAG_FOLLOWER_POKEMON_FLAG
+# 1051 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_5, MSGBOX_AUTOCLOSE
-LittlerootTown_EventScript_SetOptions_5:
-# 1052 "data/maps/LittlerootTown/scripts.pory"
+LittlerootTown_EventScript_SetOptions_8:
+# 1054 "data/maps/LittlerootTown/scripts.pory"
 	fadescreen FADE_FROM_BLACK
-# 1053 "data/maps/LittlerootTown/scripts.pory"
+# 1055 "data/maps/LittlerootTown/scripts.pory"
+	setflag FLAG_OPENING_OPTIONS
+# 1056 "data/maps/LittlerootTown/scripts.pory"
 	releaseall
 	return
 
-LittlerootTown_EventScript_SetOptions_2:
-# 1035 "data/maps/LittlerootTown/scripts.pory"
-	setflag P_PERFECT_IVS
+LittlerootTown_EventScript_SetOptions_5:
 # 1036 "data/maps/LittlerootTown/scripts.pory"
+	setflag P_PERFECT_IVS
+# 1037 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_1, MSGBOX_AUTOCLOSE
-	goto LittlerootTown_EventScript_SetOptions_1
+	goto LittlerootTown_EventScript_SetOptions_4
 
-LittlerootTown_EventScript_SetOptions_6:
-# 1046 "data/maps/LittlerootTown/scripts.pory"
+LittlerootTown_EventScript_SetOptions_9:
+# 1047 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_4, MSGBOX_AUTOCLOSE
-	goto LittlerootTown_EventScript_SetOptions_5
+	goto LittlerootTown_EventScript_SetOptions_8
 
 
 LittlerootTown_EventScript_AideDexNav::
-# 1058 "data/maps/LittlerootTown/scripts.pory"
+# 1067 "data/maps/LittlerootTown/scripts.pory"
 	lockall
-# 1059 "data/maps/LittlerootTown/scripts.pory"
+# 1068 "data/maps/LittlerootTown/scripts.pory"
 	faceplayer
-# 1060 "data/maps/LittlerootTown/scripts.pory"
+# 1069 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_unset FLAG_DEXNAV_OBTAINED, LittlerootTown_EventScript_AideDexNav_2
-# 1066 "data/maps/LittlerootTown/scripts.pory"
+# 1075 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_set FLAG_DEXNAV_OBTAINED, LittlerootTown_EventScript_AideDexNav_3
-# 1074 "data/maps/LittlerootTown/scripts.pory"
+# 1083 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_AideDexNav_Text_1, MSGBOX_AUTOCLOSE
-# 1077 "data/maps/LittlerootTown/scripts.pory"
+# 1086 "data/maps/LittlerootTown/scripts.pory"
 	releaseall
 	end
 
 LittlerootTown_EventScript_AideDexNav_2:
-# 1062 "data/maps/LittlerootTown/scripts.pory"
+# 1071 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_AideDexNav_Text_0
-# 1063 "data/maps/LittlerootTown/scripts.pory"
+# 1072 "data/maps/LittlerootTown/scripts.pory"
 	releaseall
 	end
 
 LittlerootTown_EventScript_AideDexNav_3:
-# 1068 "data/maps/LittlerootTown/scripts.pory"
+# 1077 "data/maps/LittlerootTown/scripts.pory"
 	call LittlerootTown_EventScript_CheckDexNavAll
-# 1069 "data/maps/LittlerootTown/scripts.pory"
+# 1078 "data/maps/LittlerootTown/scripts.pory"
 	releaseall
 	end
 
 
 LittlerootTown_EventScript_CheckDexNavAll::
-# 1082 "data/maps/LittlerootTown/scripts.pory"
+# 1091 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_unset FLAG_DEXNAV_ALL, LittlerootTown_EventScript_CheckDexNavAll_2
-# 1104 "data/maps/LittlerootTown/scripts.pory"
+# 1113 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_set FLAG_DEXNAV_ALL, LittlerootTown_EventScript_CheckDexNavAll_3
 	return
 
 LittlerootTown_EventScript_CheckDexNavAll_2:
-# 1084 "data/maps/LittlerootTown/scripts.pory"
+# 1093 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_0, MSGBOX_YESNO
-# 1086 "data/maps/LittlerootTown/scripts.pory"
+# 1095 "data/maps/LittlerootTown/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq LittlerootTown_EventScript_CheckDexNavAll_7
-# 1099 "data/maps/LittlerootTown/scripts.pory"
+# 1108 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_3, MSGBOX_AUTOCLOSE
 	return
 
 LittlerootTown_EventScript_CheckDexNavAll_3:
-# 1106 "data/maps/LittlerootTown/scripts.pory"
+# 1115 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_4, MSGBOX_YESNO
-# 1109 "data/maps/LittlerootTown/scripts.pory"
+# 1118 "data/maps/LittlerootTown/scripts.pory"
 	compare VAR_RESULT, YES
 	goto_if_eq LittlerootTown_EventScript_CheckDexNavAll_11
-# 1122 "data/maps/LittlerootTown/scripts.pory"
+# 1131 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_7, MSGBOX_AUTOCLOSE
-# 1123 "data/maps/LittlerootTown/scripts.pory"
+# 1132 "data/maps/LittlerootTown/scripts.pory"
 	waitmessage
 	return
 
 	return
 
 LittlerootTown_EventScript_CheckDexNavAll_7:
-# 1088 "data/maps/LittlerootTown/scripts.pory"
+# 1097 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_1, MSGBOX_AUTOCLOSE
-# 1089 "data/maps/LittlerootTown/scripts.pory"
+# 1098 "data/maps/LittlerootTown/scripts.pory"
 	waitmessage
-# 1090 "data/maps/LittlerootTown/scripts.pory"
+# 1099 "data/maps/LittlerootTown/scripts.pory"
 	setflag FLAG_DEXNAV_ALL
-# 1091 "data/maps/LittlerootTown/scripts.pory"
+# 1100 "data/maps/LittlerootTown/scripts.pory"
 	playfanfare MUS_OBTAIN_ITEM
-# 1092 "data/maps/LittlerootTown/scripts.pory"
+# 1101 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_2, MSGBOX_AUTOCLOSE
-# 1093 "data/maps/LittlerootTown/scripts.pory"
+# 1102 "data/maps/LittlerootTown/scripts.pory"
 	waitfanfare
-# 1094 "data/maps/LittlerootTown/scripts.pory"
+# 1103 "data/maps/LittlerootTown/scripts.pory"
 	waitmessage
 	return
 
 	return
 
 LittlerootTown_EventScript_CheckDexNavAll_11:
-# 1111 "data/maps/LittlerootTown/scripts.pory"
+# 1120 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_5, MSGBOX_AUTOCLOSE
-# 1112 "data/maps/LittlerootTown/scripts.pory"
+# 1121 "data/maps/LittlerootTown/scripts.pory"
 	waitmessage
-# 1113 "data/maps/LittlerootTown/scripts.pory"
+# 1122 "data/maps/LittlerootTown/scripts.pory"
 	clearflag FLAG_DEXNAV_ALL
-# 1114 "data/maps/LittlerootTown/scripts.pory"
+# 1123 "data/maps/LittlerootTown/scripts.pory"
 	playfanfare MUS_MOVE_DELETED
-# 1115 "data/maps/LittlerootTown/scripts.pory"
+# 1124 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_CheckDexNavAll_Text_6, MSGBOX_AUTOCLOSE
-# 1116 "data/maps/LittlerootTown/scripts.pory"
+# 1125 "data/maps/LittlerootTown/scripts.pory"
 	waitfanfare
-# 1117 "data/maps/LittlerootTown/scripts.pory"
+# 1126 "data/maps/LittlerootTown/scripts.pory"
 	waitmessage
+	return
+
+
+LittlerootTown_EventScript_MultichoiceTest::
 	return
 
 
@@ -2193,7 +2204,7 @@ LittlerootTown_EventScript_NewSign_Text_0:
 	.string "Hello World!$"
 
 LittlerootTown_EventScript_SetOptions_Text_0:
-# 1031 "data/maps/LittlerootTown/scripts.pory"
+# 1032 "data/maps/LittlerootTown/scripts.pory"
 	.string "Let's start by setting a few options.\n"
 	.string "Note: You cannot change the first\l"
 	.string "option outside of this menu.\p"
@@ -2201,43 +2212,43 @@ LittlerootTown_EventScript_SetOptions_Text_0:
 	.string "Grinding Mode, where all IVs are 31?$"
 
 LittlerootTown_EventScript_SetOptions_Text_1:
-# 1036 "data/maps/LittlerootTown/scripts.pory"
+# 1037 "data/maps/LittlerootTown/scripts.pory"
 	.string "Minimal Grinding mode enabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_2:
-# 1040 "data/maps/LittlerootTown/scripts.pory"
+# 1041 "data/maps/LittlerootTown/scripts.pory"
 	.string "Minimal Grinding mode disabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_3:
-# 1042 "data/maps/LittlerootTown/scripts.pory"
+# 1043 "data/maps/LittlerootTown/scripts.pory"
 	.string "Would you like to enable overworld\n"
 	.string "followers?\p"
 	.string "Note: This can be changed at any time\n"
 	.string "at the GameCube in your room.$"
 
 LittlerootTown_EventScript_SetOptions_Text_4:
-# 1046 "data/maps/LittlerootTown/scripts.pory"
+# 1047 "data/maps/LittlerootTown/scripts.pory"
 	.string "Followers have been enabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_5:
-# 1050 "data/maps/LittlerootTown/scripts.pory"
+# 1051 "data/maps/LittlerootTown/scripts.pory"
 	.string "Followers are disabled. Speak to the\n"
 	.string "GameCube to enable this in the future.$"
 
 LittlerootTown_EventScript_AideDexNav_Text_0:
-# 1062 "data/maps/LittlerootTown/scripts.pory"
+# 1071 "data/maps/LittlerootTown/scripts.pory"
 	.string "Hello {PLAYER}! Come back and talk to\n"
 	.string "me once you receive a DexNav!$"
 
 LittlerootTown_EventScript_AideDexNav_Text_1:
-# 1074 "data/maps/LittlerootTown/scripts.pory"
+# 1083 "data/maps/LittlerootTown/scripts.pory"
 	.string "Hello {PLAYER}; I cannot be bothered\n"
 	.string "right now, I am seconds away from a\l"
 	.string "mighty discovery! I do sincerely\l"
 	.string "apologize.$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_0:
-# 1084 "data/maps/LittlerootTown/scripts.pory"
+# 1093 "data/maps/LittlerootTown/scripts.pory"
 	.string "Hello {PLAYER}! I see you have a\n"
 	.string "DexNav. Now, how would you like to see\l"
 	.string "every POKéMON without having to\l"
@@ -2245,37 +2256,37 @@ LittlerootTown_EventScript_CheckDexNavAll_Text_0:
 	.string "one?$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_1:
-# 1088 "data/maps/LittlerootTown/scripts.pory"
+# 1097 "data/maps/LittlerootTown/scripts.pory"
 	.string "Ah! I knew you were a trainer after my\n"
 	.string "own heart. Here, let me update this for\l"
 	.string "you.$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_2:
-# 1092 "data/maps/LittlerootTown/scripts.pory"
+# 1101 "data/maps/LittlerootTown/scripts.pory"
 	.string "The DexNav has been updated!$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_3:
-# 1099 "data/maps/LittlerootTown/scripts.pory"
+# 1108 "data/maps/LittlerootTown/scripts.pory"
 	.string "I see. Well, if you happen to change\n"
 	.string "your mind, you know where to find me.$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_4:
-# 1106 "data/maps/LittlerootTown/scripts.pory"
+# 1115 "data/maps/LittlerootTown/scripts.pory"
 	.string "Hello {PLAYER}! I assume your DexNav\n"
 	.string "is not treating you well? Here, I can\l"
 	.string "change it back to the regular mode, if\l"
 	.string "you prefer.$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_5:
-# 1111 "data/maps/LittlerootTown/scripts.pory"
+# 1120 "data/maps/LittlerootTown/scripts.pory"
 	.string "No worries! I will reset it as quick as\n"
 	.string "Regieleki!$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_6:
-# 1115 "data/maps/LittlerootTown/scripts.pory"
+# 1124 "data/maps/LittlerootTown/scripts.pory"
 	.string "The DexNav has been reverted to it's\n"
 	.string "original state.$"
 
 LittlerootTown_EventScript_CheckDexNavAll_Text_7:
-# 1122 "data/maps/LittlerootTown/scripts.pory"
+# 1131 "data/maps/LittlerootTown/scripts.pory"
 	.string "No bother! Come back anytime.$"

@@ -2415,4 +2415,16 @@ extern const u8 gText_CannotSendMonToBoxHM[];
 extern const u8 gText_CannotSendMonToBoxActive[];
 extern const u8 gText_CannotSendMonToBoxPartner[];
 
+
+// Declaring constants for region names; used in starter region multichoice
+extern const u8 gText_Starter_Kanto[];
+extern const u8 gText_Starter_Johto[];
+extern const u8 gText_Starter_Hoenn[];
+extern const u8 gText_Starter_Sinnoh[];
+extern const u8 gText_Starter_Unova[];
+extern const u8 gText_Starter_Kalos[];
+extern const u8 gText_Starter_Alola[];
+extern const u8 gText_Starter_Galar[];
+extern const u8 gText_Starter_Paldea[];
+
 #endif // GUARD_STRINGS_H
