@@ -168,52 +168,47 @@
           "map": "MAP_ROUTE102",
           "base_label": "gRoute102",
           "land_mons": {
-            "encounter_rate": 20,
+            "encounter_rate": 40,
             "mons": [
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 4,
-                "max_level": 4,
-                "species": "SPECIES_POOCHYENA"
-              },
-              {
-                "min_level": 4,
-                "max_level": 4,
-                "species": "SPECIES_WURMPLE"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_LOTAD"
-              },
-              {
-                "min_level": 4,
-                "max_level": 4,
                 "species": "SPECIES_LOTAD"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
-              },
-              {
-                "min_level": 3,
-                "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_SEEDOT"
               },
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_TOEDSCOOL"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_BUNNELBY"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_LILLIPUP"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_PHANPY"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_TAILLOW"
+              },
+              {
+                "min_level": 3,
+                "max_level": 3,
+                "species": "SPECIES_ABRA"
               },
               {
                 "min_level": 4,
@@ -223,12 +218,17 @@
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_RALTS"
+              },
+              {
+                "min_level": 4,
+                "max_level": 4,
+                "species": "SPECIES_RALTS"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_SEEDOT"
+                "species": "SPECIES_RALTS"
               }
             ]
           },
@@ -367,22 +367,22 @@
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_DROWZEE"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_DROWZEE"
               },
               {
                 "min_level": 2,
                 "max_level": 2,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_DROWZEE"
               },
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_ZIGZAGOON"
+                "species": "SPECIES_DROWZEE"
               }
             ]
           },
@@ -11507,6 +11507,75 @@
                 "min_level": 40,
                 "max_level": 40,
                 "species": "SPECIES_GOLBAT"
+              }
+            ]
+          }
+        },
+        {
+          "map": "MAP_OLDALE_TOWN",
+          "base_label": "gOldaleTown",
+          "land_mons": {
+            "encounter_rate": 10,
+            "mons": [
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_ZIGZAGOON"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BUNEARY"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_FLETCHLING"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_PONYTA"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_VULPIX"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_LITLEO"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_EKANS"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_MEOWTH"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BIDOOF"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BIDOOF"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BIDOOF"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_BIDOOF"
               }
             ]
           }

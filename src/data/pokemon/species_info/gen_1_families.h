@@ -10035,7 +10035,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpeed     = 90,
         .baseSpAttack  = 65,
         .baseSpDefense = 65,
-        .types = MON_TYPES(TYPE_PSYCHIC),
+        .types = MON_TYPES(TYPE_FIRE, TYPE_FAIRY),
         .catchRate = 190,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 82 : 152,
         .evYield_Speed = 1,
@@ -10102,7 +10102,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpeed     = 105,
         .baseSpAttack  = 80,
         .baseSpDefense = 80,
-        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_FAIRY),
+        .types = MON_TYPES(TYPE_FIRE, TYPE_FAIRY),
         .catchRate = 60,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 175 : 192,
         .evYield_Speed = 2,
@@ -11042,7 +11042,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .teachableLearnset = sFarfetchdGalarTeachableLearnset,
         .eggMoveLearnset = sFarfetchdGalarEggMoveLearnset,
         .formSpeciesIdTable = sFarfetchdFormSpeciesIdTable,
-        .evolutions = EVOLUTION({EVO_BATTLE_END, 0, SPECIES_SIRFETCHD, CONDITIONS({IF_CRITICAL_HITS_GE, 3})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 30, SPECIES_SIRFETCHD}),
     },
 
     [SPECIES_SIRFETCHD] =
@@ -12476,7 +12476,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpAttack  = P_UPDATED_STATS >= GEN_2 ? 43 : 90,
         .baseSpDefense = 90,
         .types = MON_TYPES(TYPE_PSYCHIC),
-        .catchRate = 190,
+        .catchRate = 255,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 66 : 102,
         .evYield_SpDefense = 1,
         .genderRatio = PERCENT_FEMALE(50),
@@ -13197,8 +13197,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sExeggcuteLevelUpLearnset,
         .teachableLearnset = sExeggcuteTeachableLearnset,
         .eggMoveLearnset = sExeggcuteEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_ITEM, ITEM_LEAF_STONE, SPECIES_EXEGGUTOR, CONDITIONS({IF_NOT_REGION, REGION_ALOLA})},
-                                {EVO_ITEM, ITEM_LEAF_STONE, SPECIES_EXEGGUTOR_ALOLA, CONDITIONS({IF_REGION, REGION_ALOLA})}),
+        .evolutions = EVOLUTION({EVO_ITEM, ITEM_LEAF_STONE, SPECIES_EXEGGUTOR},
+                                {EVO_ITEM, ITEM_SUN_STONE, SPECIES_EXEGGUTOR_ALOLA}),
     },
 
 #if P_UPDATED_EXP_YIELDS >= GEN_7
@@ -13424,8 +13424,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sCuboneLevelUpLearnset,
         .teachableLearnset = sCuboneTeachableLearnset,
         .eggMoveLearnset = sCuboneEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_MAROWAK, CONDITIONS({IF_NOT_REGION, REGION_ALOLA})},
-                                {EVO_LEVEL, 28, SPECIES_MAROWAK_ALOLA, CONDITIONS({IF_REGION, REGION_ALOLA}, {IF_TIME, TIME_NIGHT})},
+        .evolutions = EVOLUTION({EVO_LEVEL, 28, SPECIES_MAROWAK},
+                                {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_MAROWAK_ALOLA},
                                 {EVO_NONE, 0, SPECIES_MAROWAK_ALOLA_TOTEM}),
     },
 
@@ -17913,8 +17913,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
                                 ,{EVO_LEVEL, 0, SPECIES_SYLVEON, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD}, {IF_KNOWS_MOVE_TYPE, TYPE_FAIRY})}
                             #endif
                             #if P_GEN_2_CROSS_EVOS
-                                ,{EVO_LEVEL, 0, SPECIES_ESPEON, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD}, {IF_NOT_TIME, TIME_NIGHT})},
-                                {EVO_LEVEL, 0, SPECIES_UMBREON, CONDITIONS({IF_MIN_FRIENDSHIP, FRIENDSHIP_EVO_THRESHOLD}, {IF_TIME, TIME_NIGHT})}
+                                ,{EVO_ITEM, ITEM_SUN_STONE, SPECIES_ESPEON},
+                                {EVO_ITEM, ITEM_DUSK_STONE, SPECIES_UMBREON}
                             #endif
                             #if P_GEN_4_CROSS_EVOS
                                 ,{EVO_LEVEL, 0, SPECIES_LEAFEON, CONDITIONS({IF_IN_MAP, MAP_PETALBURG_WOODS})},
@@ -18344,7 +18344,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = 35,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
-        .abilities = { ABILITY_SYNCHRONIZE, ABILITY_INNER_FOCUS, ABILITY_MARVEL_SCALE },
+        .abilities = { ABILITY_SYNCHRONIZE, ABILITY_INNER_FOCUS, ABILITY_MOLD_BREAKER },
         .bodyColor = BODY_COLOR_BLACK,
         .speciesName = _("Umbreon"),
         .cryId = CRY_UMBREON,

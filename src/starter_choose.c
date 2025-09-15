@@ -23,6 +23,7 @@
 #include "window.h"
 #include "constants/songs.h"
 #include "constants/rgb.h"
+#include "constants/starter_choose.h"
 
 #define STARTER_MON_COUNT   3
 
@@ -59,6 +60,24 @@ const u32 gBirchGrassTilemap[] = INCBIN_U32("graphics/starter_choose/birch_grass
 const u32 gBirchBagGrass_Gfx[] = INCBIN_U32("graphics/starter_choose/tiles.4bpp.smol");
 const u32 gPokeballSelection_Gfx[] = INCBIN_U32("graphics/starter_choose/pokeball_selection.4bpp.smol");
 static const u32 sStarterCircle_Gfx[] = INCBIN_U32("graphics/starter_choose/starter_circle.4bpp.smol");
+
+
+const u8 gRegionNames[REGION_COUNT][REGION_MAX_NAME_LENGTH + 1] = {
+    [REGION_KANTO]  = _("Kanto"),
+    [REGION_JOHTO]  = _("Johto"),
+    [REGION_HOENN]  = _("Hoenn"),
+    [REGION_SINNOH] = _("Sinnoh"),
+    [REGION_UNOVA]  = _("Unova"),
+    [REGION_KALOS]  = _("Kalos"),
+    [REGION_ALOLA]  = _("Alola"),
+    [REGION_GALAR]  = _("Galar"),
+    [REGION_PALDEA]  = _("Paldea"),
+};
+
+const u8 *GetRegionName(u16 region)
+{
+    return gRegionNames[region];
+}
 
 static const struct WindowTemplate sWindowTemplates[] =
 {
@@ -112,10 +131,67 @@ static const u8 sStarterLabelCoords[STARTER_MON_COUNT][2] =
 
 static const u16 sStarterMon[STARTER_MON_COUNT] =
 {
-    SPECIES_TREECKO,
-    SPECIES_TORCHIC,
-    SPECIES_MUDKIP,
+    SPECIES_SPRIGATITO,
+    SPECIES_FUECOCO,
+    SPECIES_QUAXLY,
 };
+
+// static const u16 sStarterMon[REGION_COUNT][STARTER_MON_COUNT] = {
+//     [REGION_KANTO] =
+//     {
+//         SPECIES_BULBASAUR,
+//         SPECIES_CHARMANDER,
+//         SPECIES_SQUIRTLE
+//     },
+//     [REGION_JOHTO] =
+//     {
+//         SPECIES_CHIKORITA,
+//         SPECIES_CYNDAQUIL,
+//         SPECIES_TOTODILE
+//     },
+//     [REGION_HOENN] = 
+//     {
+//         SPECIES_TREECKO,
+//         SPECIES_TORCHIC,
+//         SPECIES_MUDKIP,
+//     },
+//     [REGION_SINNOH] = 
+//     {
+//         SPECIES_TURTWIG,
+//         SPECIES_CHIMCHAR,
+//         SPECIES_PIPLUP
+//     },
+//     [REGION_UNOVA] = 
+//     {
+//         SPECIES_SNIVY,
+//         SPECIES_TEPIG,
+//         SPECIES_OSHAWOTT
+//     },
+//     [REGION_KALOS] = 
+//     {
+//         SPECIES_CHESPIN,
+//         SPECIES_FENNEKIN,
+//         SPECIES_FROAKIE
+//     },
+//     [REGION_ALOLA] = 
+//     {
+//         SPECIES_ROWLET,
+//         SPECIES_LITTEN,
+//         SPECIES_POPPLIO
+//     },
+//     [REGION_GALAR] = 
+//     {
+//         SPECIES_GROOKEY,
+//         SPECIES_SCORBUNNY,
+//         SPECIES_SOBBLE
+//     },
+//     [REGION_PALDEA] = 
+//     {
+//         SPECIES_SPRIGATITO,
+//         SPECIES_FUECOCO,
+//         SPECIES_QUAXLY
+//     },
+// };
 
 static const struct BgTemplate sBgTemplates[3] =
 {

@@ -5206,8 +5206,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .levelUpLearnset = sSliggooLevelUpLearnset,
         .teachableLearnset = sSliggooTeachableLearnset,
         .formSpeciesIdTable = sSliggooFormSpeciesIdTable,
-        .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_GOODRA, CONDITIONS({IF_WEATHER, WEATHER_RAIN})},
-                                {EVO_LEVEL, 50, SPECIES_GOODRA, CONDITIONS({IF_WEATHER, WEATHER_FOG})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 50, SPECIES_GOODRA},
+                                {EVO_LEVEL, 50, SPECIES_GOODRA}),
     },
 
     [SPECIES_GOODRA] =
