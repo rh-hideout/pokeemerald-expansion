@@ -2223,6 +2223,10 @@ BattleScript_EffectEntrainment::
 	setlastusedability
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectSimpleBeam::
@@ -2298,6 +2302,9 @@ BattleScript_EffectHealingWishGen4:
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
 	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	flushtextbox
 	printstring STRINGID_SWITCHINMON
 	switchinanim BS_ATTACKER, FALSE, TRUE
@@ -3319,6 +3326,9 @@ BattleScript_EffectTransform::
 	attackstring
 	ppreduce
 	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	flushtextbox
 	transformdataexecution
 	attackanimation
@@ -5075,6 +5085,9 @@ BattleScript_FaintAttacker::
 	dofaintanimation BS_ATTACKER
 	printstring STRINGID_ATTACKERFAINTED
 	cleareffectsonfaint BS_ATTACKER
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
 	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_ATTACKER
@@ -5090,6 +5103,9 @@ BattleScript_FaintTarget::
 	dofaintanimation BS_TARGET
 	printstring STRINGID_TARGETFAINTED
 	cleareffectsonfaint BS_TARGET
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
 	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
@@ -7962,6 +7978,10 @@ BattleScript_MummyActivates::
 	recordability BS_ATTACKER
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	return
 
 BattleScript_WanderingSpiritActivates::
