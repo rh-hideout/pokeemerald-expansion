@@ -15057,6 +15057,21 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    [ITEM_POKE_VIAL] =
+    {
+        .name = ITEM_NAME("Poké-Vial"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Used as a pocket\n"
+            "Nurse Joy."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_PokeVial,
+        .iconPic = gItemIcon_Flute,
+        .iconPalette = gItemIconPalette_RedFlute,
+    },
 };
 
 #undef ITEM_NAME

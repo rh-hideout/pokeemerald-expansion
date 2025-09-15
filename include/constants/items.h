@@ -994,6 +994,7 @@
 
 #define ITEM_STRANGE_BALL 828
 
+
 #define ITEM_CLEFABLITE 829
 #define ITEM_VICTREEBELITE 830
 #define ITEM_STARMINITE 831
@@ -1020,8 +1021,11 @@
 #define ITEM_ZYGARDITE 852
 #define ITEM_DRAMPANITE 853
 #define ITEM_FALINKSITE 854
+#define ITEM_POKE_VIAL 855
 
-#define ITEMS_COUNT 855
+#define ITEMS_COUNT 856
+// PokeVial Item
+
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

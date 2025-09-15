@@ -451,5 +451,29 @@ script OldaleTown_EventScript_OldRodFisherman{
 		releaseall
 		end
 	}
+}
 
+script OldaleTown_EventScript_PokeVial_Guy{
+	lockall
+	faceplayer
+	checkitem(ITEM_POKE_VIAL, 1)
+	if (var(VAR_RESULT) == TRUE)
+	{
+		msgbox(format("You already have the PokeVial!"), MSGBOX_DEFAULT)
+		releaseall
+		end
+	}
+	elif(var(VAR_RESULT) == FALSE)
+	{
+		msgbox(format("Here, take the PokeVial!"), MSGBOX_DEFAULT)
+		giveitem(ITEM_POKE_VIAL, 1)
+		setflag(FLAG_GET_POKEVIAL)
+		releaseall
+		end
+	}
+	else{
+		msgbox(format("Something went wrong."), MSGBOX_AUTOCLOSE)
+		releaseall
+		end
+	}
 }
