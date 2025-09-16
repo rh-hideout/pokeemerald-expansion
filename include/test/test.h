@@ -2,6 +2,7 @@
 #define GUARD_TEST_H
 
 #include "test_runner.h"
+#include "random.h"
 
 #define MAX_PROCESSES 32 // See also tools/mgba-rom-test-hydra/main.c
 
@@ -89,6 +90,14 @@ extern struct FunctionTestRunnerState *gFunctionTestRunnerState;
 extern struct TestRunnerState gTestRunnerState;
 extern struct PersistentTestRunnerState gPersistentTestRunnerState;
 
+struct RiggedRNG
+{
+    u16 tag;
+    u16 value;
+};
+
+extern EWRAM_DATA struct RiggedRNG gRiggedRngList[8];
+
 void CB2_TestRunner(void);
 
 void Test_ExpectedResult(enum TestResult);
@@ -97,6 +106,8 @@ void Test_ExpectCrash(bool32);
 void Test_ExitWithResult(enum TestResult, u32 stopLine, const char *fmt, ...);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value);
+void ClearRiggedRng();
 
 s32 Test_MgbaPrintf(const char *fmt, ...);
 
@@ -244,6 +255,8 @@ static inline struct Benchmark BenchmarkStop(void)
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 
 #define PARAMETRIZE_LABEL(f, label) if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter && (Test_MgbaPrintf(":N%s: " f " (%d/%d)", gTestRunnerState.test->name, label, gFunctionTestRunnerState->runParameter + 1, gFunctionTestRunnerState->parameters), 1))
+
+#define SET_RNG(tag, value) SetupRiggedRng(__LINE__, tag, value)
 
 #define TO_DO \
     do { \

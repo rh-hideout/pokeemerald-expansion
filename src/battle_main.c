@@ -5739,8 +5739,9 @@ static void ReturnFromBattleToOverworld(void)
 {
     if (!(gBattleTypeFlags & BATTLE_TYPE_LINK))
     {
-        RandomlyGivePartyPokerus(gPlayerParty);
-        PartySpreadPokerus(gPlayerParty);
+        CalculatePlayerPartyCount();
+        RandomlyGivePartyPokerus();
+        PartySpreadPokerus();
     }
 
     if (gBattleTypeFlags & BATTLE_TYPE_LINK && gReceivedRemoteLinkPlayers)

@@ -1,11 +1,12 @@
 #ifndef GUARD_POKERUS_H
 #define GUARD_POKERUS_H
 
-void RandomlyGivePartyPokerus(struct Pokemon *party);
-u8 CheckPartyPokerus(struct Pokemon *party);
-u8 CheckMonPokerus(struct Pokemon *mon);
-u8 CheckMonHasHadPokerus(struct Pokemon *mon);
+u32 GetDaysLeftBasedOnStrain(u32 strain);
+void RandomlyGivePartyPokerus(void);
+bool32 CheckPartyPokerus(void);
+bool32 CheckMonPokerus(struct Pokemon *mon);
+bool32 CheckMonHasHadPokerus(struct Pokemon *mon);
 void UpdatePartyPokerusTime(u16 days);
-void PartySpreadPokerus(struct Pokemon *party);
+void PartySpreadPokerus(void);
 
 #endif // GUARD_POKERUS_H
