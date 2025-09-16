@@ -3403,4 +3403,10 @@ extern const u32 gBattleIcons_Gfx2[];
 extern const u16 gBattleIcons_Pal1[];
 extern const u16 gBattleIcons_Pal2[];
 
+
+// PokeVial- from PokemonSanFran
+extern const u32 gItemIcon_PokeVial[];
+extern const u16 gItemIconPalette_PokeVial[];
+
 #endif //GUARD_GRAPHICS_H
+

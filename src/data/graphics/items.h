@@ -2099,3 +2099,7 @@ const u16 gItemIconPalette_SwapSnack[] = INCBIN_U16("graphics/items/icon_palette
 
 const u32 gItemIcon_TwiceSpicedRadish[] = INCBIN_U32("graphics/items/icons/twice_spiced_radish.4bpp.smol");
 const u16 gItemIconPalette_TwiceSpicedRadish[] = INCBIN_U16("graphics/items/icon_palettes/twice_spiced_radish.gbapal");
+
+// PokeVial; Palette and PNG from PokemonSanFran
+const u32 gItemIcon_PokeVial[] = INCBIN_U32("graphics/items/icons/pokevial.4bpp.smol");
+const u16 gItemIconPalette_PokeVial[] = INCBIN_U16("graphics/items/icon_palettes/pokevial.gbapal");

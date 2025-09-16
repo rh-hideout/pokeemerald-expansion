@@ -47,7 +47,7 @@ Route102_Text_AllenPostBattle:
 	.string "I wish I would win soon…$"
 
 Route102_Text_RickIntro:
-	.string "Hahah! Our eyes met!\n"
+	.string "Hahah! You fool!\n"
 	.string "I'll take you on with my BUG POKéMON!$"
 
 Route102_Text_RickDefeated:
@@ -58,16 +58,15 @@ Route102_Text_RickPostBattle:
 	.string "you have to challenge! It's a rule!$"
 
 Route102_Text_TianaIntro:
-	.string "I'm going to keep winning and aim\n"
-	.string "to be the best TRAINER.\p"
-	.string "Help me further my career!$"
+	.string "This route is mine! You better\n"
+	.string "stay out of my way!$"
 
 Route102_Text_TianaDefeated:
-	.string "I ended up furthering your career…$"
+	.string "I've learned my lesson…$"
 
 Route102_Text_TianaPostBattle:
-	.string "To keep winning my way up, I see that\n"
-	.string "I have to catch more POKéMON.$"
+	.string "I get it! I'll leave the POKéMON\n"
+	.string "alone now, okay??$"
 
 Route103_Text_DaisyIntro:
 	.string "Did you feel the tug of our\n"

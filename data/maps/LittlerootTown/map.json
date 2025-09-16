@@ -238,15 +238,15 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 14,
-      "y": 2,
+      "x": 15,
+      "y": 13,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_TownSign"
     },
     {
       "type": "sign",
-      "x": 4,
+      "x": 6,
       "y": 17,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
@@ -267,14 +267,6 @@
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "LittlerootTown_EventScript_MaysHouseSign"
-    },
-    {
-      "type": "sign",
-      "x": 1,
-      "y": 7,
-      "elevation": 0,
-      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
-      "script": "LittlerootTown_EventScript_NewSign"
     }
   ]
 }

@@ -2034,79 +2034,61 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 # 1017 "data/maps/LittlerootTown/scripts.pory"
 	.string "Let's go to my LAB.$"
 
-LittlerootTown_EventScript_NewSign::
-# 1022 "data/maps/LittlerootTown/scripts.pory"
-	lockall
-# 1023 "data/maps/LittlerootTown/scripts.pory"
-	msgbox LittlerootTown_EventScript_NewSign_Text_0
-# 1024 "data/maps/LittlerootTown/scripts.pory"
-	releaseall
-	return
-
-
 LittlerootTown_EventScript_SetOptions::
-# 1028 "data/maps/LittlerootTown/scripts.pory"
+# 1022 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_unset FLAG_OPENING_OPTIONS, LittlerootTown_EventScript_SetOptions_1
 	return
 
 LittlerootTown_EventScript_SetOptions_1:
-# 1029 "data/maps/LittlerootTown/scripts.pory"
+# 1023 "data/maps/LittlerootTown/scripts.pory"
 	lockall
-# 1030 "data/maps/LittlerootTown/scripts.pory"
+# 1024 "data/maps/LittlerootTown/scripts.pory"
 	fadescreen FADE_TO_BLACK
-# 1031 "data/maps/LittlerootTown/scripts.pory"
+# 1025 "data/maps/LittlerootTown/scripts.pory"
 	clearflag FLAG_FOLLOWER_POKEMON_FLAG
-# 1032 "data/maps/LittlerootTown/scripts.pory"
+# 1026 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_0, MSGBOX_YESNO
-# 1034 "data/maps/LittlerootTown/scripts.pory"
+# 1028 "data/maps/LittlerootTown/scripts.pory"
 	compare VAR_RESULT, 1
 	goto_if_eq LittlerootTown_EventScript_SetOptions_5
-# 1040 "data/maps/LittlerootTown/scripts.pory"
+# 1034 "data/maps/LittlerootTown/scripts.pory"
 	clearflag P_PERFECT_IVS
-# 1041 "data/maps/LittlerootTown/scripts.pory"
+# 1035 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_2, MSGBOX_AUTOCLOSE
 LittlerootTown_EventScript_SetOptions_4:
-# 1043 "data/maps/LittlerootTown/scripts.pory"
+# 1037 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_3, MSGBOX_YESNO
-# 1044 "data/maps/LittlerootTown/scripts.pory"
+# 1038 "data/maps/LittlerootTown/scripts.pory"
 	compare VAR_RESULT, 1
 	goto_if_eq LittlerootTown_EventScript_SetOptions_9
-# 1050 "data/maps/LittlerootTown/scripts.pory"
+# 1044 "data/maps/LittlerootTown/scripts.pory"
 	setflag FLAG_FOLLOWER_POKEMON_FLAG
-# 1051 "data/maps/LittlerootTown/scripts.pory"
+# 1045 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_5, MSGBOX_AUTOCLOSE
 LittlerootTown_EventScript_SetOptions_8:
-# 1054 "data/maps/LittlerootTown/scripts.pory"
+# 1048 "data/maps/LittlerootTown/scripts.pory"
 	fadescreen FADE_FROM_BLACK
-# 1055 "data/maps/LittlerootTown/scripts.pory"
+# 1049 "data/maps/LittlerootTown/scripts.pory"
 	setflag FLAG_OPENING_OPTIONS
-# 1056 "data/maps/LittlerootTown/scripts.pory"
+# 1050 "data/maps/LittlerootTown/scripts.pory"
 	releaseall
 	return
 
 LittlerootTown_EventScript_SetOptions_5:
-# 1036 "data/maps/LittlerootTown/scripts.pory"
+# 1030 "data/maps/LittlerootTown/scripts.pory"
 	setflag P_PERFECT_IVS
-# 1037 "data/maps/LittlerootTown/scripts.pory"
+# 1031 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_1, MSGBOX_AUTOCLOSE
 	goto LittlerootTown_EventScript_SetOptions_4
 
 LittlerootTown_EventScript_SetOptions_9:
-# 1047 "data/maps/LittlerootTown/scripts.pory"
+# 1041 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_SetOptions_Text_4, MSGBOX_AUTOCLOSE
 	goto LittlerootTown_EventScript_SetOptions_8
 
 
-LittlerootTown_EventScript_MultichoiceTest::
-	return
-
-
-LittlerootTown_EventScript_NewSign_Text_0:
-# 1023 "data/maps/LittlerootTown/scripts.pory"
-	.string "Hello World!$"
-
 LittlerootTown_EventScript_SetOptions_Text_0:
-# 1032 "data/maps/LittlerootTown/scripts.pory"
+# 1026 "data/maps/LittlerootTown/scripts.pory"
 	.string "Let's start by setting a few options.\n"
 	.string "Note: You cannot change the first\l"
 	.string "option outside of this menu.\p"
@@ -2114,25 +2096,25 @@ LittlerootTown_EventScript_SetOptions_Text_0:
 	.string "Grinding Mode, where all IVs are 31?$"
 
 LittlerootTown_EventScript_SetOptions_Text_1:
-# 1037 "data/maps/LittlerootTown/scripts.pory"
+# 1031 "data/maps/LittlerootTown/scripts.pory"
 	.string "Minimal Grinding mode enabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_2:
-# 1041 "data/maps/LittlerootTown/scripts.pory"
+# 1035 "data/maps/LittlerootTown/scripts.pory"
 	.string "Minimal Grinding mode disabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_3:
-# 1043 "data/maps/LittlerootTown/scripts.pory"
+# 1037 "data/maps/LittlerootTown/scripts.pory"
 	.string "Would you like to enable overworld\n"
 	.string "followers?\p"
 	.string "Note: This can be changed at any time\n"
 	.string "at the GameCube in your room.$"
 
 LittlerootTown_EventScript_SetOptions_Text_4:
-# 1047 "data/maps/LittlerootTown/scripts.pory"
+# 1041 "data/maps/LittlerootTown/scripts.pory"
 	.string "Followers have been enabled.$"
 
 LittlerootTown_EventScript_SetOptions_Text_5:
-# 1051 "data/maps/LittlerootTown/scripts.pory"
+# 1045 "data/maps/LittlerootTown/scripts.pory"
 	.string "Followers are disabled. Speak to the\n"
 	.string "GameCube to enable this in the future.$"

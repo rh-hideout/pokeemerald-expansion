@@ -133,10 +133,17 @@ Movement_PkmnCenterNurse_Turn:
 	step_end
 
 PokeVialHealScript::
+	@fadescreen before follower is hidden, if Pokeball animation doesn't fully trigger
+	fadescreen FADE_TO_BLACK
+	hidefollower 0
 	special HealPlayerParty
+	callnative UpdateFollowingPokemon		
+	playfanfare MUS_HEAL
+	waitfanfare
 	msgbox PokeVialText, MSGBOX_DEFAULT
+	fadescreen FADE_FROM_BLACK
 	releaseall
 	end
 
 PokeVialText::
-	.string "POKéMON have been healed!$"
+	.string "Your Pokémon have been healed!$"

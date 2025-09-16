@@ -15069,9 +15069,9 @@ const struct Item gItemsInfo[] =
         .pocket = POCKET_KEY_ITEMS,
         .type = ITEM_USE_BAG_MENU,
         .fieldUseFunc = ItemUseOutOfBattle_PokeVial,
-        .iconPic = gItemIcon_Flute,
-        .iconPalette = gItemIconPalette_RedFlute,
-    },
+        .iconPic = gItemIcon_PokeVial,
+        .iconPalette = gItemIconPalette_PokeVial,
+    },  // C:\Users\Ben\Desktop\Games\Roms\Pokemon Romhack Side Project\pokeemerald-expansion-personal\graphics\items\icons
 };
 
 #undef ITEM_NAME

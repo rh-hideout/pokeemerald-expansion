@@ -1018,12 +1018,6 @@ LittlerootTown_Text_BirchSomethingToShowYouAtLab:
 
 `
 
-script LittlerootTown_EventScript_NewSign{
-    lockall
-    msgbox("Hello World!")
-    releaseall
-}
-
 script LittlerootTown_EventScript_SetOptions{
 	if(flag(FLAG_OPENING_OPTIONS) == FALSE){
 		lockall
@@ -1059,11 +1053,4 @@ script LittlerootTown_EventScript_SetOptions{
 	else{
 		return
 	}
-}
-// fadescreen(FADE_FROM_BLACK)
-// 		releaseall
-// 		return
-
-script LittlerootTown_EventScript_MultichoiceTest{
-	
 }

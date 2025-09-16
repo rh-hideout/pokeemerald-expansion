@@ -5940,18 +5940,39 @@ Hariyama
 Level: 39
 IVs: 29 HP / 29 Atk / 29 Def / 29 SpA / 29 SpD / 29 Spe
 
-=== TRAINER_CALVIN_1 ===
+=== TRAINER_CALVIN_1 === /* Route 102 */
 Name: CALVIN
 Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Poochyena
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Pichu  
+Ability: Static  
+Level: 5   
+Bashful Nature  
+IVs: 0 Atk  
+- Thunder Shock  
+- Disarming Voice  
+
+Poochyena  
+Ability: Quick Feet  
+Level: 6  
+Bashful Nature  
+- Bite  
+- Quick Attack  
+- Astonish  
+
+Kakuna @ Oran Berry  
+Ability: Shed Skin  
+Level: 6   
+Bashful Nature  
+- Bug Bite  
+- Poison Sting  
+
+
 
 === TRAINER_BILLY ===
 Name: BILLY
@@ -6045,7 +6066,6 @@ Class: Cooltrainer
 Pic: Cooltrainer M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -6071,7 +6091,6 @@ Class: Cooltrainer
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -6206,7 +6225,7 @@ Zigzagoon
 Level: 16
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_ALLEN ===
+=== TRAINER_ALLEN ===  /* UNUSED */
 Name: ALLEN
 Class: Youngster
 Pic: Youngster
@@ -6246,7 +6265,6 @@ Class: Champion
 Pic: Champion Wallace
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Yellow
@@ -7610,7 +7628,6 @@ Class: Cooltrainer
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 
 Claydol
@@ -9187,7 +9204,6 @@ Class: Cooltrainer 2
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
-Items: Hyper Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -9269,7 +9285,6 @@ Class: Cooltrainer
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
-Items: Hyper Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -9457,7 +9472,6 @@ Class: Rival
 Pic: Wally
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10073,7 +10087,6 @@ Class: Cooltrainer
 Pic: Cooltrainer F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10236,7 +10249,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10250,7 +10262,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10272,7 +10283,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10286,7 +10296,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
@@ -10300,7 +10309,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10314,7 +10322,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
@@ -10328,7 +10335,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger M
 Gender: Male
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10346,7 +10352,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
@@ -10364,7 +10369,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
@@ -10386,7 +10390,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -10404,7 +10407,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
@@ -10422,7 +10424,6 @@ Class: Pkmn Ranger
 Pic: Pokemon Ranger F
 Gender: Female
 Music: Cool
-Items: Full Restore
 Double Battle: No
 AI: Basic Trainer
 
@@ -11044,22 +11045,38 @@ Camerupt
 Level: 25
 IVs: 18 HP / 18 Atk / 18 Def / 18 SpA / 18 SpD / 18 Spe
 
-=== TRAINER_TIANA ===
+=== TRAINER_TIANA === /* Route 102- BOSS */
 Name: TIANA
 Class: Lass
 Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Zigzagoon
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Capsakid @ Lum Berry  
+Ability: Chlorophyll  
+Level: 6  
+Jolly Nature  
+- Leafage  
+- Rollout  
+- Leer  
 
-Shroomish
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lechonk @ Oran Berry  
+Ability: Aroma Veil  
+Level: 5  
+Shiny: Yes  
+- Tackle  
+- Trailblaze  
+- Stuff Cheeks  
+
+Wingull @ Wacan Berry  
+Ability: Keen Eye  
+Level: 5   
+Naive Nature  
+- Water Gun  
+- Wing Attack  
+- Growl  
 
 === TRAINER_HALEY_1 ===
 Name: HALEY
@@ -11248,22 +11265,35 @@ Wailmer
 Level: 39
 IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
 
-=== TRAINER_RICK ===
+=== TRAINER_RICK === /* Route 102 */
 Name: RICK
 Class: Bug Catcher
 Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Wurmple
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Weedle  
+Ability: Shield Dust  
+Level: 6  
+- Bug Bite  
+- Poison Sting  
+- String Shot  
 
-Wurmple
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Wurmple  
+Ability: Shield Dust  
+Level: 6  
+- Bug Bite  
+- Poison Sting  
+- String Shot  
+
+Spewpa @ Oran Berry  
+Ability: Shed Skin  
+Level: 5  
+- Struggle Bug  
+- Stun Spore  
+
 
 === TRAINER_LYLE ===
 Name: LYLE
