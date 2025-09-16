@@ -425,8 +425,14 @@ static bool32 HandleEndTurnWish(u32 battler)
 static bool32 HandleEndTurnFirstEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
-
     u32 side;
+
+    if (!IsBattlerAlive(battler))
+    {
+        gBattleStruct->eventBlockCounter = 0;
+        gBattleStruct->turnEffectsBattlerId++;
+        return effect;
+    }
 
     switch (gBattleStruct->eventBlockCounter)
     {
@@ -434,8 +440,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         side = GetBattlerSide(battler);
         if (gSideStatuses[side] & SIDE_STATUS_DAMAGE_NON_TYPES)
         {
-            if (IsBattlerAlive(battler)
-             && !IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
+            if (!IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
              && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
             {
                 gBattlerAttacker = battler;
@@ -448,7 +453,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE:
-        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE && IsBattlerAlive(battler))
+        if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
@@ -484,7 +489,6 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
         if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN
-         && IsBattlerAlive(battler)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
@@ -515,22 +519,11 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
-    {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-        switch (holdEffect)
-        {
-        case HOLD_EFFECT_LEFTOVERS:
-        case HOLD_EFFECT_BLACK_SLUDGE:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
-                effect = TRUE;
-            break;
-        default:
-            break;
-        }
+        if (ItemBattleEffects(ITEMEFFECT_LEFTOVERS, battler))
+            effect = TRUE;
         gBattleStruct->eventBlockCounter = 0;
         gBattleStruct->turnEffectsBattlerId++;
         break;
-    }
     }
 
     return effect;
