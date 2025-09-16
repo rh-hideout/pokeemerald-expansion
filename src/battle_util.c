@@ -1928,6 +1928,13 @@ static inline bool32 TryActivatePowderStatus(u32 move)
     return FALSE;
 }
 
+static enum MoveCanceller CancellerClearFlags(struct BattleContext *ctx)
+{
+    gBattleMons[ctx->battlerAtk].volatiles.grudge = FALSE;
+    gBattleMons[ctx->battlerAtk].volatiles.glaiveRush = FALSE;
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceller CancellerStanceChangeOne(struct BattleContext *ctx)
 {
     if (B_STANCE_CHANGE_FAIL < GEN_7 && gChosenMove == ctx->currentMove && TryFormChangeBeforeMove())
@@ -2906,6 +2913,7 @@ static enum MoveCanceller CancellerMultiTargetMoves(struct BattleContext *ctx)
 
 static enum MoveCanceller (*const sMoveSuccessOrderCancellers[])(struct BattleContext *ctx) =
 {
+    [CANCELLER_CLEAR_FLAGS] = CancellerClearFlags,
     [CANCELLER_STANCE_CHANGE_1] = CancellerStanceChangeOne,
     [CANCELLER_SKY_DROP] = CancellerSkyDrop,
     [CANCELLER_RECHARGE] = CancellerRecharge,
@@ -4838,7 +4846,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     RecordItemEffectBattle(gBattlerAttacker, HOLD_EFFECT_ABILITY_SHIELD);
                     break;
                 }
-                
+
                 RemoveAbilityFlags(gBattlerAttacker);
                 gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
                 gBattleMons[gBattlerAttacker].ability = gDisableStructs[gBattlerAttacker].overwrittenAbility = gBattleMons[gBattlerTarget].ability;
@@ -7588,7 +7596,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
 void ClearVariousBattlerFlags(u32 battler)
 {
     gDisableStructs[battler].furyCutterCounter = 0;
-    gBattleMons[battler].volatiles.destinyBond = FALSE;
+    gBattleMons[battler].volatiles.destinyBond = 0;
     gBattleMons[battler].volatiles.glaiveRush = FALSE;
     gBattleMons[battler].volatiles.grudge = FALSE;
 }

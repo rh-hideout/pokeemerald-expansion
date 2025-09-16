@@ -49,4 +49,4 @@ SINGLE_BATTLE_TEST("Clangorous Soul fails if the user's HP is less or equal than
     }
 }
 
-TO_DO_BATTLE_TEST("C;langorous Soul fails if Attack, Defense, Sp. Attack, Sp. Defense and Speed are all maxed out");
+TO_DO_BATTLE_TEST("Clangorous Soul fails if Attack, Defense, Sp. Attack, Sp. Defense and Speed are all maxed out");

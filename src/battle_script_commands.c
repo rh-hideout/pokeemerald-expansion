@@ -6810,10 +6810,6 @@ static void Cmd_moveend(void)
 
             if (gBattleMons[gBattlerAttacker].volatiles.destinyBond > 0)
                 gBattleMons[gBattlerAttacker].volatiles.destinyBond--;
-            if (gBattleMons[gBattlerAttacker].volatiles.grudge > 0)
-                gBattleMons[gBattlerAttacker].volatiles.grudge--;
-            if (gBattleMons[gBattlerAttacker].volatiles.glaiveRush > 0)
-                gBattleMons[gBattlerAttacker].volatiles.glaiveRush--;
             gProtectStructs[gBattlerAttacker].shellTrap = FALSE;
             gBattleStruct->battlerState[gBattlerAttacker].ateBoost = FALSE;
             gSpecialStatuses[gBattlerAttacker].gemBoost = FALSE;

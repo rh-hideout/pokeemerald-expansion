@@ -3,7 +3,7 @@
 
 TO_DO_BATTLE_TEST("TODO: Write No Retreat (Move Effect) test titles")
 
-SINGLE_BATTLE_TEST("No retreat raises all stats from user unless no retreat was previous used by user")
+SINGLE_BATTLE_TEST("No Retreat raises user's Atk/Def/Sp.Atk/Sp.Def/Speed unless No Retreat was already used by user")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("No retreat raises all stats from user unless no retreat was 
 }
 
 // Question: If No Retreat is used is the mon blocking the switch out changed?
-SINGLE_BATTLE_TEST("No retreat wont fail if user is prevented from escaping")
+SINGLE_BATTLE_TEST("No Retreat won't fail if user is prevented from escaping")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("No retreat wont fail if user is prevented from escaping")
     }
 }
 
-SINGLE_BATTLE_TEST("No retreat wont activate protean if it fails due to previous usage of the move")
+SINGLE_BATTLE_TEST("No Retreat won't activate Protean if it fails due to already being used by the user")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

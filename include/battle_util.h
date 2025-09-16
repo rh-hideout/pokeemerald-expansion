@@ -105,6 +105,7 @@ struct TypePower
 
 enum MoveSuccessOrder
 {
+    CANCELLER_CLEAR_FLAGS,
     CANCELLER_STANCE_CHANGE_1,
     CANCELLER_SKY_DROP,
     CANCELLER_RECHARGE,

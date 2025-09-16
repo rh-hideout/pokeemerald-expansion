@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("x Psychic Terrain protects grounded battlers from priority moves")
+SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves")
 {
     GIVEN {
         PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("x Psychic Terrain protects grounded battlers from priority m
         TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_QUICK_ATTACK); }
     } SCENE {
         MESSAGE("Claydol used Psychic Terrain!");
-        MESSAGE("The opposing Wobbuffet is protected by psychic terrain!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
         NOT { HP_BAR(opponent); }
         MESSAGE("The opposing Wobbuffet used Quick Attack!");
         HP_BAR(player);
