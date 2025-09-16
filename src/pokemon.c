@@ -116,11 +116,11 @@ static const struct CombinedMove sCombinedMoves[2] =
 
 static const u16 customFrontierSongs[] = {
     // RSE Music
+    MUS_VS_TRAINER,
     MUS_VS_FRONTIER_BRAIN,
     MUS_VS_MEW,
     MUS_VS_WILD,
     MUS_VS_AQUA_MAGMA,
-    MUS_VS_TRAINER,
     MUS_VS_GYM_LEADER,
     MUS_VS_CHAMPION,
     MUS_VS_REGI,
@@ -138,6 +138,26 @@ static const u16 customFrontierSongs[] = {
     MUS_RG_VS_MEWTWO,
     MUS_RG_VS_LEGEND,
 
+    // DPPT Music
+     MUS_DP_VS_WILD,
+     MUS_DP_VS_GYM_LEADER,
+     MUS_DP_VS_UXIE_MESPRIT_AZELF,
+     MUS_DP_VS_TRAINER,
+     MUS_DP_VS_GALACTIC_BOSS,
+     MUS_DP_VS_DIALGA_PALKIA,
+     MUS_DP_VS_CHAMPION,
+     MUS_DP_VS_GALACTIC,
+     MUS_DP_VS_RIVAL,
+     MUS_DP_VS_ARCEUS,
+     MUS_DP_VS_LEGEND,
+     MUS_DP_VS_GALACTIC_COMMANDER,
+     MUS_DP_VS_ELITE_FOUR,
+
+    // Platinum Music
+    MUS_PL_VS_GIRATINA,
+    MUS_PL_VS_FRONTIER_BRAIN,
+    MUS_PL_VS_REGI,
+
     // HGSS Music
     MUS_HG_VS_WILD,
     MUS_HG_VS_TRAINER,
@@ -150,7 +170,33 @@ static const u16 customFrontierSongs[] = {
     MUS_HG_VS_CHAMPION,
     MUS_HG_VS_WILD_KANTO,
     MUS_HG_VS_TRAINER_KANTO,
-    MUS_HG_VS_GYM_LEADER_KANTO
+    MUS_HG_VS_GYM_LEADER_KANTO,
+    MUS_HG_VS_HO_OH,
+    MUS_HG_VS_LUGIA,
+    MUS_HG_VS_FRONTIER_BRAIN,
+    MUS_HG_VS_KYOGRE_GROUDON,
+    MUS_HG_VS_ARCEUS,
+
+    // BW Music
+    MUS_BW_VS_RIVAL,
+    MUS_BW_VS_WILD,
+    MUS_BW_VS_TRAINER,
+    MUS_BW_VS_PLASMA,
+    MUS_BW_VS_GYM_LEADER,
+    MUS_BW_VS_WINNING,
+    MUS_BW_VS_N_1,
+    MUS_BW_VS_IN_PINCH,
+    MUS_BW_VS_ELITE_FOUR,
+    MUS_BW_VS_RESHIRAM_ZEKROM,
+    MUS_BW_VS_N_2,
+    MUS_BW_VS_GHETSIS,
+    MUS_BW_VS_SUBWAY_TRAINER,
+    MUS_BW_VS_LEGEND,
+    MUS_BW_VS_CYNTHIA,
+    MUS_BW_VS_WILD_STRONG,
+    MUS_BW_VS_KYUREM,
+    MUS_BW_VS_CHAMPION,
+    MUS_BW_VS_WCS_CHAMPION
 };
 
 
@@ -5825,20 +5871,19 @@ u16 GetBattleBGM(void)
     const bool8 isRandomMode = FlagGet(FLAG_SHUFFLE_FRONTIER_BGM);
 
     if (isRandomMode) {
-        frontierBGM = Random() % ARRAY_COUNT(customFrontierSongs) + 1;
+        frontierBGM = Random() % ARRAY_COUNT(customFrontierSongs);
     } else {
         // Get custom battle frontier bgm
         frontierBGM = VarGet(VAR_FRONTIER_BGM);
     }
 
     // Custom battle frontier bgm is set
-    if (frontierBGM > 0 &&
-        frontierBGM <= ARRAY_COUNT(customFrontierSongs) && (
+    if (frontierBGM <= ARRAY_COUNT(customFrontierSongs) && (
         gBattleTypeFlags & BATTLE_TYPE_FRONTIER ||
         gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL
     )){
         // Return the selected custom battle frontier song
-        return customFrontierSongs[frontierBGM - 1];
+        return customFrontierSongs[frontierBGM];
     }
 
     if (gBattleTypeFlags & BATTLE_TYPE_LEGENDARY)

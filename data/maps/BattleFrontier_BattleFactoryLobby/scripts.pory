@@ -661,119 +661,278 @@ script BattleFrontier_BattleFactoryLobby_EventScript_NolandChooseZMoveMode {
 }
 
 script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions {
-    msgbox(format("Interested in spicing up your battles?"))
-	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
-	 "DEFAULT", "SHUFFLE", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA", "VS. TRAINER",
-     "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
-     "VS. ELITE FOUR", "VS. AQUA & MAGMA LEADER", "VS. GYM LEADER (FRLG)", "VS. TRAINER (FRLG)",
-     "VS. WILD POKEMON (FRLG)", "VS. CHAMPION (FRLG)", "VS. DEOXYS (FRLG)",
-     "VS. MEWTWO (FRLG)", "VS. LEGEND (FRLG)", "VS. WILD POKEMON (HGSS)", "VS. TRAINER (HGSS)", "VS. GYM LEADER (HGSS)",
-     "VS. RIVAL (HGSS)", "VS. TEAM ROCKET (HGSS)", "VS. SUICUNE (HGSS)", "VS. ENTEI (HGSS)", "VS. RAIKOU (HGSS)",
-     "VS. CHAMPION (HGSS)", "VS. WILD POKEMON KANTO (HGSS)", "VS. TRAINER KANTO (HGSS)", "VS. GYM LEADER KANTO (HGSS)", "CANCEL")
+    msgbox(format("I can change the music that plays during your battles!"))
+	dynmultichoice(0, 0, FALSE, 4, 0, DYN_MULTICHOICE_CB_NONE,
+	 "R/S/E MUSIC", "FR/LG MUSIC", "D/P MUSIC", "PLATINUM MUSIC", "HG/SS MUSIC", "BLACK/WHITE MUSIC", "SHUFFLE", "CANCEL")
 	switch(var(VAR_RESULT)) {
 		case 0:
-            setvar(VAR_FRONTIER_BGM, 0)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_RSE)
         case 1:
-            setflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_FrLg)
         case 2:
-            setvar(VAR_FRONTIER_BGM, 1)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_DP)
         case 3:
-            setvar(VAR_FRONTIER_BGM, 2)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_Platinum)
         case 4:
-            setvar(VAR_FRONTIER_BGM, 3)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_HgSs)
         case 5:
-            setvar(VAR_FRONTIER_BGM, 4)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_BlackWhite)
         case 6:
-            setvar(VAR_FRONTIER_BGM, 5)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 7:
-            setvar(VAR_FRONTIER_BGM, 6)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 8:
-            setvar(VAR_FRONTIER_BGM, 7)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 9:
-            setvar(VAR_FRONTIER_BGM, 8)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 10:
-            setvar(VAR_FRONTIER_BGM, 9)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 11:
-            setvar(VAR_FRONTIER_BGM, 10)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 12:
-            setvar(VAR_FRONTIER_BGM, 11)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 13:
-            setvar(VAR_FRONTIER_BGM, 12)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 14:
-            setvar(VAR_FRONTIER_BGM, 13)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 15:
-            setvar(VAR_FRONTIER_BGM, 14)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 16:
-            setvar(VAR_FRONTIER_BGM, 15)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 17:
-            setvar(VAR_FRONTIER_BGM, 16)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 18:
-            setvar(VAR_FRONTIER_BGM, 17)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 19:
-            setvar(VAR_FRONTIER_BGM, 18)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 20:
-            setvar(VAR_FRONTIER_BGM, 19)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 21:
-            setvar(VAR_FRONTIER_BGM, 20)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 22:
-            setvar(VAR_FRONTIER_BGM, 21)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 23:
-            setvar(VAR_FRONTIER_BGM, 22)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 24:
-            setvar(VAR_FRONTIER_BGM, 23)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 25:
-            setvar(VAR_FRONTIER_BGM, 24)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 26:
-            setvar(VAR_FRONTIER_BGM, 25)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 27:
-            setvar(VAR_FRONTIER_BGM, 26)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 28:
-            setvar(VAR_FRONTIER_BGM, 27)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 29:
-            setvar(VAR_FRONTIER_BGM, 28)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 30:
-            setvar(VAR_FRONTIER_BGM, 29)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 31:
-            setvar(VAR_FRONTIER_BGM, 30)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-        case 32:
-            setvar(VAR_FRONTIER_BGM, 31)
-            clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
-		case 33:
+            setflag(FLAG_SHUFFLE_FRONTIER_BGM)
+            playse(SE_SUCCESS)
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+		case 7:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
         default:
             goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandAnythingElse)
 	}
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_RSE {
+    msgbox(format("Select battle music from Ruby, Sapphire and Emerald:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	 "VS. TRAINER", "VS. FRONTIER BRAIN", "VS. MEW", "VS. WILD POKEMON", "VS. TEAM AQUA & MAGMA",
+     "VS. GYM LEADER", "VS. CHAMPION", "VS. REGI", "VS. KYOGRE & GROUDON", "VS. RIVAL",
+     "VS. ELITE FOUR", "VS. AQUA & MAGMA LEADER", "BACK")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            setvar(VAR_FRONTIER_BGM, 0)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 1)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 2)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 3)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 4)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 5)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 6)
+        case 7:
+            setvar(VAR_FRONTIER_BGM, 7)
+        case 8:
+            setvar(VAR_FRONTIER_BGM, 8)
+        case 9:
+            setvar(VAR_FRONTIER_BGM, 9)
+        case 10:
+            setvar(VAR_FRONTIER_BGM, 10)
+        case 11:
+            setvar(VAR_FRONTIER_BGM, 11)
+		case 12:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+	}
+	clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_FrLg {
+    msgbox(format("Select battle music from FireRed and LeafGreen:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	      "VS. GYM LEADER", "VS. TRAINER",
+          "VS. WILD POKEMON", "VS. CHAMPION", "VS. DEOXYS",
+          "VS. MEWTWO", "VS. LEGEND", "BACK")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            setvar(VAR_FRONTIER_BGM, 12)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 13)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 14)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 15)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 16)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 17)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 18)
+		case 7:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+	}
+    clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_DP {
+    msgbox(format("Select battle music from Diamond and Pearl:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	      "VS. WILD POKEMON", "VS. GYM LEADER", "VS. UXIE/ASELF/MESPRIT",
+	      "VS. TRAINER", "VS. TEAM GALACTIC BOSS", "VS DIALGA/PALKIA",
+	      "VS. CHAMPION", "VS. TEAM GALACTIC", "VS. RIVAL", "VS. ARCEUS",
+	      "VS. LEGEND", "VS. GALACTIC COMMANDER", "VS. ELITE FOUR", "BACK")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            setvar(VAR_FRONTIER_BGM, 19)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 20)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 21)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 22)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 23)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 24)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 25)
+        case 7:
+            setvar(VAR_FRONTIER_BGM, 26)
+        case 8:
+            setvar(VAR_FRONTIER_BGM, 27)
+        case 9:
+            setvar(VAR_FRONTIER_BGM, 28)
+        case 10:
+            setvar(VAR_FRONTIER_BGM, 29)
+        case 11:
+            setvar(VAR_FRONTIER_BGM, 30)
+        case 12:
+            setvar(VAR_FRONTIER_BGM, 31)
+		case 13:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+	}
+    clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_Platinum {
+    msgbox(format("Select battle music from Platinum:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	      "VS. GIRATINA", "VS. FRONTIER BRAIN", "VS. REGI", "BACK")
+	switch(var(VAR_RESULT)) {
+		case 0:
+            setvar(VAR_FRONTIER_BGM, 32)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 33)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 34)
+		case 3:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+	}
+    clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_HgSs {
+    msgbox(format("Select battle music from HeartGold and SoulSilver:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	      "VS. WILD POKEMON", "VS. TRAINER", "VS. GYM LEADER",
+          "VS. RIVAL", "VS. TEAM ROCKET", "VS. SUICUNE",
+          "VS. ENTEI", "VS. RAIKOU", "VS. CHAMPION", "VS. WILD POKEMON KANTO",
+          "VS. TRAINER KANTO", "VS. GYM LEADER KANTO", "VS. HO-OH", "VS. LUGIA",
+          "VS. FRONTIER BRAIN", "VS. KYOGRE/GROUDON", "VS. ARCEUS", "BACK")
+    switch(var(VAR_RESULT)) {
+        case 0:
+            setvar(VAR_FRONTIER_BGM, 35)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 36)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 37)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 38)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 39)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 40)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 41)
+        case 7:
+            setvar(VAR_FRONTIER_BGM, 42)
+        case 8:
+            setvar(VAR_FRONTIER_BGM, 43)
+        case 9:
+            setvar(VAR_FRONTIER_BGM, 44)
+        case 10:
+            setvar(VAR_FRONTIER_BGM, 45)
+        case 11:
+            setvar(VAR_FRONTIER_BGM, 46)
+        case 12:
+            setvar(VAR_FRONTIER_BGM, 47)
+        case 13:
+            setvar(VAR_FRONTIER_BGM, 48)
+        case 14:
+            setvar(VAR_FRONTIER_BGM, 49)
+        case 15:
+            setvar(VAR_FRONTIER_BGM, 50)
+        case 16:
+            setvar(VAR_FRONTIER_BGM, 51)
+        case 17:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+    }
+    clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
+    playse(SE_SUCCESS)
+    goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
+}
+
+script BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions_BlackWhite {
+    msgbox(format("Select battle music from Black and White:"))
+	dynmultichoice(0, 0, FALSE, 6, 0, DYN_MULTICHOICE_CB_NONE,
+	      "VS. RIVAL", "VS. WILD POKEMON", "VS. TRAINER", "VS. TEAM PLASMA",
+	       "VS. GYM LEADER", "VS. WINNING THEME", "VS. N (1)", "VS. IN A PINCH THEME",
+	       "VS. ELITE FOUR", "VS. RESHIRAM/ZEKROM", "VS. N (2)", "VS. GHETSIS",
+	       "VS. SUBWAY TRAINER", "VS. LEGEND", "VS. CYNTHIA", "VS. STRONG WILD POKEMON",
+	       "VS. KYUREM", "VS. CHAMPION", "VS. WCS CHAMPION", "BACK")
+    switch(var(VAR_RESULT)) {
+        case 0:
+            setvar(VAR_FRONTIER_BGM, 52)
+        case 1:
+            setvar(VAR_FRONTIER_BGM, 53)
+        case 2:
+            setvar(VAR_FRONTIER_BGM, 54)
+        case 3:
+            setvar(VAR_FRONTIER_BGM, 55)
+        case 4:
+            setvar(VAR_FRONTIER_BGM, 56)
+        case 5:
+            setvar(VAR_FRONTIER_BGM, 57)
+        case 6:
+            setvar(VAR_FRONTIER_BGM, 58)
+        case 7:
+            setvar(VAR_FRONTIER_BGM, 59)
+        case 8:
+            setvar(VAR_FRONTIER_BGM, 60)
+        case 9:
+            setvar(VAR_FRONTIER_BGM, 61)
+        case 10:
+            setvar(VAR_FRONTIER_BGM, 62)
+        case 11:
+            setvar(VAR_FRONTIER_BGM, 63)
+        case 12:
+            setvar(VAR_FRONTIER_BGM, 64)
+        case 13:
+            setvar(VAR_FRONTIER_BGM, 65)
+        case 14:
+            setvar(VAR_FRONTIER_BGM, 66)
+        case 15:
+            setvar(VAR_FRONTIER_BGM, 67)
+        case 16:
+            setvar(VAR_FRONTIER_BGM, 68)
+        case 17:
+            setvar(VAR_FRONTIER_BGM, 69)
+        case 18:
+            setvar(VAR_FRONTIER_BGM, 70)
+        case 19:
+            setvar(VAR_FRONTIER_BGM, 71)
+        case 20:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+        default:
+            goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandMusicOptions)
+    }
+    clearflag(FLAG_SHUFFLE_FRONTIER_BGM)
     playse(SE_SUCCESS)
     goto(BattleFrontier_BattleFactoryLobby_EventScript_NolandChangeMusicSuccess)
 }
