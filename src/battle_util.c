@@ -9715,6 +9715,15 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         if (B_GLARE_GHOST < GEN_4 && ctx->move == MOVE_GLARE && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GHOST))
             modifier = UQ_4_12(0.0);
     }
+    else if (ctx->moveType == TYPE_GROUND && ctx->abilityDef == ABILITY_LEVITATE && IsMoldBreakerTypeAbility(ctx->battlerAtk, ctx->abilityAtk) 
+    && ctx->holdEffectDef != HOLD_EFFECT_ABILITY_SHIELD && !(gFieldStatuses & STATUS_FIELD_WONDER_ROOM) && gAiLogicData->aiCalcInProgress == TRUE)
+    {
+        if (ctx->updateFlags) // TODO: replace this block with changes to IsBattlerGrounded
+        {
+            gLastUsedAbility = ABILITY_LEVITATE;
+            RecordAbilityBattle(ctx->battlerDef, ABILITY_LEVITATE);
+        }
+    }
     else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, CHECK_IRON_BALL) && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)))
     {
         modifier = UQ_4_12(0.0);
