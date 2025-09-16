@@ -94,6 +94,7 @@ SINGLE_BATTLE_TEST("Desolate Land is removed immediately if user faints")
         TURN { MOVE(opponent, MOVE_POUND); SEND_OUT(player, 1); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, opponent);
+        NOT MESSAGE("The sunlight is strong.");
         MESSAGE("The extremely harsh sunlight faded!");
     }
 }
