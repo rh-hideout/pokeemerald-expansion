@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include "global.h"
+#include "generational_changes.h"
 #include "gpu_regs.h"
 #include "load_save.h"
 #include "main.h"
@@ -16,6 +17,7 @@ void CB2_TestRunner(void);
 
 EWRAM_DATA struct TestRunnerState gTestRunnerState;
 EWRAM_DATA struct FunctionTestRunnerState *gFunctionTestRunnerState;
+EWRAM_DATA struct RiggedRNG gRiggedRngList[8];
 
 enum {
     CURRENT_TEST_STATE_ESTIMATE,
@@ -477,6 +479,8 @@ void Test_ExpectCrash(bool32 expectCrash)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    TestInitConfigData();
+    ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
 }
@@ -496,6 +500,7 @@ static void FunctionTest_Run(void *data)
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
+    TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
 
@@ -820,4 +825,36 @@ u32 SourceLineOffset(u32 sourceLine)
         return 0;
     else
         return sourceLine - test->sourceLine;
+}
+
+void ClearRiggedRng(void)
+{
+    struct RiggedRNG zeroRng = {.tag = RNG_NONE, .value = 0};
+    for (u32 i = 0; i < 8; i++)
+    {
+        memcpy(&gRiggedRngList[i], &zeroRng, sizeof(zeroRng));
+    }
+}
+
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
+{
+    u32 i;
+    struct RiggedRNG rng = {.tag = randomTag, .value = value};
+    for (i = 0; i < 8; i++)
+    {
+        if (gRiggedRngList[i].tag == randomTag)
+        {
+            memcpy(&gRiggedRngList[i], &rng, sizeof(rng));
+            break;
+        }
+        else if (gRiggedRngList[i].tag > RNG_NONE)
+            continue;
+        else
+        {
+            memcpy(&gRiggedRngList[i], &rng, sizeof(rng));
+            break;
+        }
+    }
+    if (i == 8)
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }
