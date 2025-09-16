@@ -2,7 +2,9 @@
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "datetime.h"
+#include "event_data.h"
 #include "rtc.h"
+#include "siirtc.h"
 #include "string_util.h"
 #include "strings.h"
 #include "text.h"
@@ -263,6 +265,148 @@ void FormatHexTime(u8 *dest, s32 hour, s32 minute, s32 second)
 void FormatHexRtcTime(u8 *dest)
 {
     FormatHexTime(dest, sRtc.hour, sRtc.minute, sRtc.second);
+}
+
+void FormatDecimalDateDay(u8 *dest, s32 day)
+{
+    dest = ConvertIntToDecimalStringN(dest, day, STR_CONV_MODE_LEADING_ZEROS, 2);
+    *dest++ = CHAR_SPACE;
+    *dest = EOS;
+}
+
+void FormatDecimalDateYear(u8 *dest, s32 year)
+{
+    *dest++ = CHAR_SPACE;
+    dest = ConvertIntToDecimalStringN(dest, year, STR_CONV_MODE_LEADING_ZEROS, 2);
+    *dest = EOS;
+}
+
+u8 Rtc_GetCurrentHour(void) // Returns current hour from RTC data
+{     
+    RtcGetInfo(&sRtc);	
+	return sRtc.hour - (sRtc.hour/0x10) * 6;
+}
+
+u8 Rtc_GetCurrentMinute(void){ // Returns current minute from RTC data
+
+    RtcGetInfo(&sRtc);
+    return sRtc.minute - (sRtc.minute/0x10) * 6;
+}
+
+u8 Rtc_GetCurrentMonth(void)
+{
+    RtcGetInfo(&sRtc);
+    return sRtc.month < 10 ? sRtc.month : sRtc.month - 6;
+}
+
+u8 Rtc_GetCurrentDay(void)
+{
+    RtcGetInfo(&sRtc);
+    return sRtc.day - (sRtc.day/0x10) * 6;
+}
+
+u8 Rtc_GetCurrentYear(void)
+{
+    RtcGetInfo(&sRtc);
+    return sRtc.year - (sRtc.year/0x10) * 6;
+}
+
+u8 Rtc_GetCurrentDayOfWeek(void)
+{
+    RtcGetInfo(&sRtc);
+    return sRtc.dayOfWeek;
+}
+
+void UpdateDayOfWeek(void)
+{
+    VarSet(VAR_CURRENT_DAYOFWEEK, Rtc_GetCurrentDayOfWeek());
+}
+
+u8 valueinarray(u8 val, u8 *arr, int n)
+{
+    int i;
+    for(i = 0; i < n; i++) {
+        if(arr[i] == val)
+            return 1;
+    }
+    return 0;
+}
+
+void Rtc_GetCurrentSeason_Short(void)
+{
+    u8 current_month = Rtc_GetCurrentMonth();
+    u8 season = (current_month % 4) + 1; // Maps months to seasons: 1->Summer, 2->Autumn, 3->Winter, 4->Spring
+    VarSet(VAR_CURRENT_SEASON, season);
+}
+
+void UpdateSeason(void)
+{
+    Rtc_GetCurrentSeason_Short();
+}
+
+// Convertir de Season(Int) a Season(Str)
+const u8 *ConvertSeasonInt2Str(void)
+{
+    u8 season = getCurrentSeason();
+    switch(season)
+    {
+    case SEASON_SUMMER:
+        return gText_SEASONS_Summer;
+    case SEASON_AUTUMN:
+        return gText_SEASONS_Autumn;
+    case SEASON_WINTER:
+        return gText_SEASONS_Winter;
+    case SEASON_SPRING:
+        return gText_SEASONS_Spring;
+    default:
+        return gText_SEASONS_Summer;
+    }
+}
+
+const u8 *ConvertDayOfWeekInt2Str(void)
+{
+    u8 dayOfWeek = VarGet(VAR_CURRENT_DAYOFWEEK);
+    switch(dayOfWeek)
+    {
+    case WEEKDAY_SUN:
+        return gText_dayOfWeek_Sunday;
+    case WEEKDAY_MON:
+        return gText_dayOfWeek_Monday;
+    case WEEKDAY_TUE:
+        return gText_dayOfWeek_Tuesday;
+    case WEEKDAY_WED:
+        return gText_dayOfWeek_Wednesday;
+    case WEEKDAY_THU:
+        return gText_dayOfWeek_Thursday;
+    case WEEKDAY_FRI:
+        return gText_dayOfWeek_Friday;
+    case WEEKDAY_SAT:
+        return gText_dayOfWeek_Saturday;
+    default:
+        return gText_dayOfWeek_Saturday;
+    }
+}
+
+const u8 *ConvertMonth2Str(u8 month_int)
+{
+    static const u8 *const monthNames[] = {
+        gText_MONTH_JAN, gText_MONTH_FEB, gText_MONTH_MAR, gText_MONTH_APR,
+        gText_MONTH_MAY, gText_MONTH_JUN, gText_MONTH_JUL, gText_MONTH_AUG,
+        gText_MONTH_SEP, gText_MONTH_OCT, gText_MONTH_NOV, gText_MONTH_DEC
+    };
+
+    if (month_int >= MONTH_JAN && month_int <= MONTH_DEC)
+        return monthNames[month_int - 1];
+    return gText_MONTH_JAN;
+}
+
+// Función para obtener los datos de hora y minutos del RTC
+void FormatDecimalTimeWOSeconds(u8 *dest, u8 hour, u8 minute)
+{
+    dest = ConvertIntToDecimalStringN(dest, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
+    *dest++ = CHAR_COLON;
+    dest = ConvertIntToDecimalStringN(dest, minute, STR_CONV_MODE_LEADING_ZEROS, 2);
+    *dest = EOS;
 }
 
 void FormatDecimalDate(u8 *dest, s32 year, s32 month, s32 day)

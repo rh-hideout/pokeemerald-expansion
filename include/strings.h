@@ -2433,4 +2433,31 @@ extern const u8 gText_Rename[]; // change nickname from summary screen
 // Switch Caught Mon into Party
 extern const u8 gText_CannotSendMonToBoxHM[];
 
+// Seasons strings
+extern const u8 gText_SEASONS_Summer[];
+extern const u8 gText_SEASONS_Autumn[];
+extern const u8 gText_SEASONS_Winter[];
+extern const u8 gText_SEASONS_Spring[];
+
+extern const u8 gText_dayOfWeek_Sunday[];
+extern const u8 gText_dayOfWeek_Monday[];
+extern const u8 gText_dayOfWeek_Tuesday[];
+extern const u8 gText_dayOfWeek_Wednesday[];
+extern const u8 gText_dayOfWeek_Thursday[];
+extern const u8 gText_dayOfWeek_Friday[];
+extern const u8 gText_dayOfWeek_Saturday[];
+
+extern const u8 gText_MONTH_JAN[];
+extern const u8 gText_MONTH_FEB[];
+extern const u8 gText_MONTH_MAR[];
+extern const u8 gText_MONTH_APR[];
+extern const u8 gText_MONTH_MAY[];
+extern const u8 gText_MONTH_JUN[];
+extern const u8 gText_MONTH_JUL[];
+extern const u8 gText_MONTH_AUG[];
+extern const u8 gText_MONTH_SEP[];
+extern const u8 gText_MONTH_OCT[];
+extern const u8 gText_MONTH_NOV[];
+extern const u8 gText_MONTH_DEC[];
+
 #endif // GUARD_STRINGS_H

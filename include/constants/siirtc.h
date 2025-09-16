@@ -40,4 +40,12 @@ enum Month
     MONTH_COUNT = MONTH_DEC,
 };
 
+enum Season
+{
+    SEASON_SUMMER = 0,
+    SEASON_AUTUMN,
+    SEASON_WINTER,
+    SEASON_SPRING,
+};
+
 #endif // GUARD_CONSTANTS_SIIRTC_H

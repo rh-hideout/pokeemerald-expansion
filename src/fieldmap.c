@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_pyramid.h"
 #include "bg.h"
+#include "event_data.h"
 #include "fieldmap.h"
 #include "fldeff.h"
 #include "fldeff_misc.h"
@@ -881,15 +882,71 @@ static void UNUSED ApplyGlobalTintToPaletteSlot(u8 slot, u8 count)
 
 static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u16 size, bool8 skipFaded)
 {
+    u8 season = getCurrentSeason();
     if (tileset)
     {
         if (tileset->isSecondary == FALSE)
         {
+            /*
             if (skipFaded)
                 CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
             else
                 LoadPaletteFast(tileset->palettes, destOffset, size);
+            */
             gPlttBufferFaded[destOffset] = gPlttBufferUnfaded[destOffset] = RGB_BLACK;
+            switch(season){
+                case SEASON_SPRING:
+                    if (skipFaded)
+                        CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                    else
+                        LoadPaletteFast(tileset->palettes, destOffset, size);
+                    break;
+                case SEASON_SUMMER:
+                    if (tileset->palettes_summer != NULL){
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes_summer, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes_summer, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes, destOffset, size);
+                        break;
+                    }
+                case SEASON_AUTUMN:
+                    if (tileset->palettes_autumn != NULL){
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes_autumn, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes_autumn, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes, destOffset, size);
+                        break;
+                    }
+                case SEASON_WINTER:
+                    if (tileset->palettes_winter != NULL){
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes_winter, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes_winter, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuFastCopy(tileset->palettes, &gPlttBufferUnfaded[destOffset], size); // always word-aligned
+                        else
+                            LoadPaletteFast(tileset->palettes, destOffset, size);
+                        break;
+                    }
+            }
             ApplyGlobalTintToPaletteEntries(destOffset + 1, (size - 2) >> 1);
         }
         else if (tileset->isSecondary == TRUE)
@@ -900,10 +957,121 @@ static void LoadTilesetPalette(struct Tileset const *tileset, u16 destOffset, u1
                 CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
             else
                 LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+            switch(season){
+                case SEASON_SPRING:
+                    if (skipFaded)
+                        CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                    else
+                        LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                    break;
+                case SEASON_SUMMER:
+                    if (tileset->palettes_summer != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_summer[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes_summer[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+                case SEASON_AUTUMN:
+                    if (tileset->palettes_autumn != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_autumn[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes_autumn[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+                case SEASON_WINTER:
+                    if (tileset->palettes_winter != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_winter[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes_winter[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes[NUM_PALS_IN_PRIMARY], &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPaletteFast(tileset->palettes[NUM_PALS_IN_PRIMARY], destOffset, size);
+                        break;
+                    }
+            }
         }
         else
+        /*
         {
             LoadPalette((const u16 *)tileset->palettes, destOffset, size);
+            ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
+        }
+        */
+        {
+            switch(season){
+                case SEASON_SPRING:
+                    if (skipFaded)
+                        CpuCopy16(tileset->palettes, &gPlttBufferUnfaded[destOffset], size);
+                    else
+                        LoadPalette((const u32 *)tileset->palettes, destOffset, size);
+                    break;
+                case SEASON_SUMMER:
+                    if (tileset->palettes_summer != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_summer, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes_summer, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes, destOffset, size);
+                        break;
+                    }
+                case SEASON_AUTUMN:
+                    if (tileset->palettes_autumn != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_autumn, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes_autumn, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes, destOffset, size);
+                        break;
+                    }
+                case SEASON_WINTER:
+                    if (tileset->palettes_winter != NULL){
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes_winter, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes_winter, destOffset, size);
+                        break;
+                    }
+                    else{
+                        if (skipFaded)
+                            CpuCopy16(tileset->palettes, &gPlttBufferUnfaded[destOffset], size);
+                        else
+                            LoadPalette((const u32 *)tileset->palettes, destOffset, size);
+                        break;
+                    }
+            }
             ApplyGlobalTintToPaletteEntries(destOffset, size >> 1);
         }
     }
