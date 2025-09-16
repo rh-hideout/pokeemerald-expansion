@@ -1142,7 +1142,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (!(moveTarget & MOVE_TARGET_USER))
     {
         if (Ai_IsPriorityBlocked(battlerAtk, battlerDef, move, aiData))
-            return TRUE;
+            RETURN_SCORE_MINUS(20);
 
         if (CanAbilityBlockMove(battlerAtk, battlerDef, abilityAtk, abilityDef, move, AI_CHECK))
             RETURN_SCORE_MINUS(20);
