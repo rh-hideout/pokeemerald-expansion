@@ -5,6 +5,7 @@
 	.include "include/config/general.h"
 	.include "include/config/pokemon.h"
 	.include "sound/voice_groups.inc"
+    .include "sound/keysplit_macros.inc"
 	.include "sound/keysplit_tables.inc"
 	.include "sound/programmable_wave_data.inc"
 	.include "sound/music_player_table.inc"
