@@ -9511,7 +9511,7 @@ Double Battle: No
 AI: Basic Trainer
 
 Treecko
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_BRENDAN_ROUTE_110_MUDKIP ===
@@ -9566,7 +9566,7 @@ Double Battle: No
 AI: Check Bad Move / Try To Faint / Force Setup First Turn
 
 Torchic
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_BRENDAN_ROUTE_110_TREECKO ===
@@ -9621,7 +9621,7 @@ Double Battle: No
 AI: Basic Trainer
 
 Mudkip
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_BRENDAN_ROUTE_110_TORCHIC ===
@@ -9676,7 +9676,7 @@ Double Battle: No
 AI: Basic Trainer
 
 Treecko
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_MAY_ROUTE_110_MUDKIP ===
@@ -9731,7 +9731,7 @@ Double Battle: No
 AI: Basic Trainer
 
 Torchic
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_MAY_ROUTE_110_TREECKO ===
@@ -9786,7 +9786,7 @@ Double Battle: No
 AI: Basic Trainer
 
 Mudkip
-Level: 5
+Level: 4
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_MAY_ROUTE_110_TORCHIC ===

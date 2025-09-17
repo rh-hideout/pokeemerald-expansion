@@ -1,3 +1,5 @@
+.set LOCALID_SHOES_BALL, 17
+
 PlayersHouse_2F_EventScript_BlockStairsUntilClockIsSet::
 	setvar VAR_LITTLEROOT_INTRO_STATE, 5
 	return
@@ -8,7 +10,7 @@ PlayersHouse_1F_EventScript_EnterHouseMovingIn::
 	waitmovement 0
 	call_if_eq VAR_0x8005, MALE, PlayersHouse_1F_EventScript_MomFacePlayerMovingInMale
 	call_if_eq VAR_0x8005, FEMALE, PlayersHouse_1F_EventScript_MomFacePlayerMovingInFemale
-	msgbox PlayersHouse_1F_Text_MoversPokemonGoSetClock, MSGBOX_DEFAULT
+	msgbox PlayersHouse_1F_Text_MoversPokemonGoGetGift, MSGBOX_DEFAULT
 	closemessage
 	setvar VAR_LITTLEROOT_INTRO_STATE, 4
 	applymovement LOCALID_PLAYER, PlayersHouse_1F_Movement_PlayerWalkIn
@@ -52,11 +54,56 @@ LittlerootTown_MaysHouse_2F_EventScript_WallClock::
 	goto PlayersHouse_2F_EventScript_WallClock
 	end
 
-PlayersHouse_2F_EventScript_WallClock::
-	goto_if_set FLAG_SET_WALL_CLOCK, PlayersHouse_2F_EventScript_CheckWallClock
-	msgbox PlayersHouse_2F_Text_ClockIsStopped, MSGBOX_DEFAULT
-	call PlayersHouse_2F_EventScript_SetWallClock
+PlayersHouse_2F_EventScript_CheckWallClock_FirstTime::
+	fadescreen FADE_TO_BLACK
+	special CheckWallClock
+	waitstate
+	return
+
+PlayersHouse_2F_EventScript_RunningShoes::
+	lockall
+	msgbox PlayersHouse_2F_Text_Gift, MSGBOX_DEFAULT
+	setflag FLAG_SYS_B_DASH
+	playfanfare MUS_OBTAIN_ITEM
+	message PlayersHouse_2F_Receive_RunningShoes
+	waitfanfare
+	closemessage
+	setvar VAR_0x8008, LOCALID_SHOES_BALL
+	fadescreen FADE_TO_BLACK
+	checkplayergender
+	call_if_eq VAR_RESULT, MALE, PlayerHouse_2F_EventScript_ResetPos_RunningShoesMale
+	call_if_eq VAR_RESULT, FEMALE, PlayerHouse_2F_EventScript_ResetPos_RunningShoesFemale
+	removeobject VAR_0x8008
+	msgbox PlayersHouse_2F_Text_SwitchShoesWithRunningShoes, MSGBOX_DEFAULT
+	setflag FLAG_RECEIVED_RUNNING_SHOES
+	closemessage
+	fadescreen FADE_FROM_BLACK
 	delay 30
+	msgbox PlayersHouse_2F_Text_RunningShoesInstructions, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	goto PlayersHouse_2F_EventScript_AfterClock
+	End
+
+PlayersHouse_2F_EventScript_WallClock::
+	call PlayersHouse_2F_EventScript_CheckWallClock
+	End
+
+PlayerHouse_2F_EventScript_ResetPos_RunningShoesMale::
+	setobjectxy OBJ_EVENT_ID_PLAYER, 5, 2
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_SOUTH
+	return
+
+PlayerHouse_2F_EventScript_ResetPos_RunningShoesFemale::
+	setobjectxy OBJ_EVENT_ID_PLAYER, 3, 2
+	turnobject OBJ_EVENT_ID_PLAYER, DIR_SOUTH
+	return
+PlayersHouse_2F_EventScript_RTC_SetWallClock::
+	msgbox PlayersHouse_2F_Text_ClockIsSet, MSGBOX_DEFAULT
+	call PlayersHouse_2F_EventScript_CheckWallClock
+	End
+
+PlayersHouse_2F_EventScript_AfterClock::
 	setvar VAR_LITTLEROOT_INTRO_STATE, 6
 	setflag FLAG_SET_WALL_CLOCK
 	setflag FLAG_HIDE_LITTLEROOT_TOWN_PLAYERS_HOUSE_VIGOROTH_1
@@ -673,3 +720,24 @@ PlayersHouse_1F_Movement_PlayerApproachTVForLatiFemale:
 EventScript_RunningShoesManual::
 	msgbox PlayersHouse_1F_Text_RunningShoesManual, MSGBOX_SIGN
 	end
+
+PlayersHouse_2F_Text_Gift::
+	.string "Let's see what is in here.\p"
+	.string "...\p"
+	.string "Oh! A new pair of Running Shoes!\n"
+	.string "Better try them on now!$"
+
+PlayersHouse_2F_Receive_RunningShoes::
+	.string "Received new {COLOR GREEN}Running Shoes!{COLOR DARK_GRAY}$"
+
+PlayersHouse_2F_Text_SwitchShoesWithRunningShoes:
+	.string "{PLAYER} switched shoes with the\n"
+	.string "RUNNING SHOES.$"
+
+PlayersHouse_2F_Text_RunningShoesInstructions:
+	.string "...\n"
+	.string "There are some instructions on the box:\p"
+	.string "“Press the B Button while wearing these\n"
+	.string "{COLOR GREEN}RUNNING SHOES{COLOR DARK_GRAY} to run extra-fast!\p"
+	.string "“You can also press the L Button\n"
+	.string "to {COLOR GREEN}enable{COLOR DARK_GRAY}/{COLOR RED}disable{COLOR DARK_GRAY} auto-run!”$"

@@ -274,6 +274,10 @@ PlayersHouse_2F_Text_ClockIsStopped:
 	.string "The clock is stopped…\p"
 	.string "Better set it and start it!$"
 
+PlayersHouse_2F_Text_ClockIsSet:
+	.string "Seems the clock is already set up.\p"
+	.string "Let's check it just in case!$"
+
 PlayersHouse_2F_Text_HowDoYouLikeYourRoom:
 	.string "MOM: {PLAYER}, how do you like your\n"
 	.string "new room?\p"
