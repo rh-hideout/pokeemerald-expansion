@@ -2223,6 +2223,10 @@ BattleScript_EffectEntrainment::
 	setlastusedability
 	printstring STRINGID_PKMNACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectSimpleBeam::
@@ -2298,6 +2302,9 @@ BattleScript_EffectHealingWishGen4:
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
 	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	flushtextbox
 	printstring STRINGID_SWITCHINMON
 	switchinanim BS_ATTACKER, FALSE, TRUE
@@ -3319,6 +3326,9 @@ BattleScript_EffectTransform::
 	attackstring
 	ppreduce
 	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	flushtextbox
 	transformdataexecution
 	attackanimation
@@ -4276,15 +4286,6 @@ BattleScript_DoEffectTeleport::
 BattleScript_EffectBeatUp::
 	attackcanceler
 	accuracycheck BattleScript_PrintMoveMissed, ACC_CURR_MOVE
-.if B_BEAT_UP >= GEN_5
-	attackstring
-	ppreduce
-	critcalc
-	damagecalc
-	adjustdamage
-	trydobeatup
-	goto BattleScript_HitFromAtkAnimation
-.else
 	attackstring
 	pause B_WAIT_TIME_SHORT
 	ppreduce
@@ -4314,7 +4315,6 @@ BattleScript_BeatUpAttack::
 	goto BattleScript_BeatUpLoop
 BattleScript_BeatUpEnd::
 	end
-.endif
 
 BattleScript_EffectDefenseCurl::
 	attackcanceler
@@ -4551,6 +4551,7 @@ BattleScript_EffectNonVolatileStatus::
 	attackanimation
 	waitanimation
 	setnonvolatilestatus TRIGGER_ON_MOVE
+	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
@@ -5075,6 +5076,9 @@ BattleScript_FaintAttacker::
 	dofaintanimation BS_ATTACKER
 	printstring STRINGID_ATTACKERFAINTED
 	cleareffectsonfaint BS_ATTACKER
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
 	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_ATTACKER
@@ -5090,6 +5094,9 @@ BattleScript_FaintTarget::
 	dofaintanimation BS_TARGET
 	printstring STRINGID_TARGETFAINTED
 	cleareffectsonfaint BS_TARGET
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
 	waitanimation
 	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
@@ -7962,6 +7969,10 @@ BattleScript_MummyActivates::
 	recordability BS_ATTACKER
 	printstring STRINGID_ATTACKERACQUIREDABILITY
 	waitmessage B_WAIT_TIME_LONG
+	trytoclearprimalweather
+	tryrevertweatherform
+	flushtextbox
+	tryendneutralizinggas
 	return
 
 BattleScript_WanderingSpiritActivates::
