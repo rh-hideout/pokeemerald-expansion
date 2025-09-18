@@ -2885,8 +2885,7 @@ static enum MoveCanceller CancellerMultiTargetMoves(struct BattleContext *ctx)
                 gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
                 gBattleStruct->noResultString[battlerDef] = WILL_FAIL;
             }
-            else if (CanAbilityBlockMove(ctx->battlerAtk, battlerDef, abilityAtk, abilityDef, ctx->currentMove, CHECK_TRIGGER)
-                  || (IsBattlerTerrainAffected(ctx->battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN) && GetBattleMovePriority(ctx->battlerAtk, abilityAtk, gCurrentMove) > 0))
+            else if (CanAbilityBlockMove(ctx->battlerAtk, battlerDef, abilityAtk, abilityDef, ctx->currentMove, CHECK_TRIGGER))
             {
                 gBattleStruct->moveResultFlags[battlerDef] = 0;
                 gBattleStruct->noResultString[battlerDef] = WILL_FAIL;
