@@ -32,7 +32,6 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
     s16 normalHit;
 
     GIVEN {
-        ASSUME(I_GEM_BOOST_POWER >= GEN_6);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMAL_GEM); };
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -46,7 +45,10 @@ SINGLE_BATTLE_TEST("Gem boost is only applied once")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         HP_BAR(opponent, captureDamage: &normalHit);
     } THEN {
-        EXPECT_MUL_EQ(normalHit, Q_4_12(1.3), boostedHit);
+        if (I_GEM_BOOST_POWER >= GEN_6)
+            EXPECT_MUL_EQ(normalHit, Q_4_12(1.3), boostedHit);
+        else
+            EXPECT_MUL_EQ(normalHit, Q_4_12(1.5), boostedHit);
     }
 }
 
