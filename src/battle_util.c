@@ -1076,9 +1076,10 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
 
         // If the target can be confused, confuse them.
         // Don't use CanBeConfused, can cause issues in edge cases.
+        u32 ability = GetBattlerAbility(otherSkyDropper);
         if (!(gBattleMons[otherSkyDropper].volatiles.confusionTurns > 0
-            || IsAbilityAndRecord(otherSkyDropper, GetBattlerAbility(otherSkyDropper), ABILITY_OWN_TEMPO)
-            || IsBattlerTerrainAffected(otherSkyDropper, STATUS_FIELD_MISTY_TERRAIN)))
+            || IsAbilityAndRecord(otherSkyDropper, ability, ABILITY_OWN_TEMPO)
+            || IsBattlerTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper, TRUE), STATUS_FIELD_MISTY_TERRAIN)))
         {
             // Set confused status
             gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
@@ -2885,8 +2886,7 @@ static enum MoveCanceller CancellerMultiTargetMoves(struct BattleContext *ctx)
                 gBattleStruct->moveResultFlags[battlerDef] = MOVE_RESULT_NO_EFFECT;
                 gBattleStruct->noResultString[battlerDef] = WILL_FAIL;
             }
-            else if (CanAbilityBlockMove(ctx->battlerAtk, battlerDef, abilityAtk, abilityDef, ctx->currentMove, CHECK_TRIGGER)
-                  || (IsBattlerTerrainAffected(ctx->battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN) && GetBattleMovePriority(ctx->battlerAtk, abilityAtk, gCurrentMove) > 0))
+            else if (CanAbilityBlockMove(ctx->battlerAtk, battlerDef, abilityAtk, abilityDef, ctx->currentMove, CHECK_TRIGGER))
             {
                 gBattleStruct->moveResultFlags[battlerDef] = 0;
                 gBattleStruct->noResultString[battlerDef] = WILL_FAIL;
@@ -3382,7 +3382,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 a
                 CancelMultiTurnMoves(battlerAtk, SKY_DROP_ATTACKCANCELLER_CHECK); // Don't cancel moves that can hit two targets bc one target might not be protected
             battleScriptBlocksMove = BattleScript_DoesntAffectTargetAtkString;
         }
-        else if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_PSYCHIC_TERRAIN) // Not an ability but similar conditions
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef, TRUE), STATUS_FIELD_PSYCHIC_TERRAIN) // Not an ability but similar conditions
               && !IsBattlerAlly(battlerAtk, battlerDef)
               && GetMoveTarget(move) != MOVE_TARGET_ALL_BATTLERS
               && GetMoveTarget(move) != MOVE_TARGET_OPPONENTS_FIELD)
@@ -5793,6 +5793,7 @@ u32 IsAbilityPreventingEscape(u32 battler)
     if (B_GHOSTS_ESCAPE >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return 0;
 
+    bool32 isBattlerGrounded = IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler, TRUE));
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
         if (battler == battlerDef || IsBattlerAlly(battler, battlerDef))
@@ -5803,7 +5804,7 @@ u32 IsAbilityPreventingEscape(u32 battler)
         if (ability == ABILITY_SHADOW_TAG && (B_SHADOW_TAG_ESCAPE <= GEN_3 || GetBattlerAbility(battler) != ABILITY_SHADOW_TAG))
             return battlerDef + 1;
 
-        if (ability == ABILITY_ARENA_TRAP && IsBattlerGrounded(battler))
+        if (ability == ABILITY_ARENA_TRAP && isBattlerGrounded)
             return battlerDef + 1;
 
         if (ability == ABILITY_MAGNET_PULL && IS_BATTLER_OF_TYPE(battler, TYPE_STEEL))
@@ -5850,14 +5851,14 @@ void BattleScriptPushCursorAndCallback(const u8 *BS_ptr)
     gBattleMainFunc = RunBattleScriptCommands;
 }
 
-bool32 IsBattlerTerrainAffected(u32 battler, u32 terrainFlag)
+bool32 IsBattlerTerrainAffected(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, u32 terrainFlag)
 {
     if (!(gFieldStatuses & terrainFlag))
         return FALSE;
     if (IsSemiInvulnerable(battler, CHECK_ALL))
         return FALSE;
 
-    return IsBattlerGrounded(battler);
+    return IsBattlerGrounded(battler, ability, holdEffect);
 }
 
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, u32 abilityDef, enum SleepClauseBlock isBlockedBySleepClause)
@@ -5935,7 +5936,7 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
     return FALSE;
 }
 
-// Unused, technically also redundant
+// Unused, technically also redundant because it is just a copy of CanBeFrozen
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(
@@ -6035,7 +6036,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         {
             battleScript = BattleScript_SleepClauseBlocked;
         }
-        else if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef, TRUE), STATUS_FIELD_ELECTRIC_TERRAIN))
         {
             battleScript = BattleScript_ElectricTerrainPrevents;
         }
@@ -6083,7 +6084,7 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         abilityAffected = TRUE;
         battleScript = BattleScript_AbilityProtectsDoesntAffect;
     }
-    else if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN))
+    else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef, TRUE), STATUS_FIELD_MISTY_TERRAIN))
     {
         battleScript = BattleScript_MistyTerrainPrevents;
     }
@@ -6160,9 +6161,10 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum Func
 
 bool32 CanBeConfused(u32 battler)
 {
+    u32 ability = GetBattlerAbility(battler);
     if (gBattleMons[battler].volatiles.confusionTurns > 0
-     || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
-     || IsAbilityAndRecord(battler, GetBattlerAbility(battler),ABILITY_OWN_TEMPO))
+     || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler, TRUE), STATUS_FIELD_MISTY_TERRAIN)
+     || IsAbilityAndRecord(battler, ability, ABILITY_OWN_TEMPO))
         return FALSE;
     return TRUE;
 }
@@ -8007,11 +8009,9 @@ enum IronBallCheck
 };
 
 // Only called directly when calculating damage type effectiveness, and Iron Ball's type effectiveness mechanics
-static bool32 IsBattlerGroundedInverseCheck(u32 battler, u32 ability, enum InverseBattleCheck checkInverse, enum IronBallCheck checkIronBall)
+bool32 IsBattlerGroundedInverseCheck(u32 battler, u32 ability, enum ItemHoldEffect holdEffect, enum InverseBattleCheck checkInverse)
 {
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
-
-    if (!(checkIronBall == IGNORE_IRON_BALL) && holdEffect == HOLD_EFFECT_IRON_BALL)
+    if (holdEffect == HOLD_EFFECT_IRON_BALL)
         return TRUE;
     if (gFieldStatuses & STATUS_FIELD_GRAVITY)
         return TRUE;
@@ -8027,14 +8027,14 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, u32 ability, enum Inver
         return FALSE;
     if (ability == ABILITY_LEVITATE)
         return FALSE;
-    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (!(checkInverse == INVERSE_BATTLE) || !FlagGet(B_FLAG_INVERSE_BATTLE)))
+    if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (checkInverse != INVERSE_BATTLE || !FlagGet(B_FLAG_INVERSE_BATTLE)))
         return FALSE;
     return TRUE;
 }
 
-bool32 IsBattlerGrounded(u32 battler)
+bool32 IsBattlerGrounded(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
-    return IsBattlerGroundedInverseCheck(battler, GetBattlerAbility(battler), NOT_INVERSE_BATTLE, CHECK_IRON_BALL);
+    return IsBattlerGroundedInverseCheck(battler, ability, holdEffect, NOT_INVERSE_BATTLE);
 }
 
 u32 GetMoveSlot(u16 *moves, u32 move)
@@ -8468,7 +8468,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_MISTY_EXPLOSION:
-        if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_MISTY_TERRAIN))
+        if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_MISTY_TERRAIN))
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_DYNAMAX_DOUBLE_DMG:
@@ -8495,15 +8495,15 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_TERRAIN_PULSE:
-        if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_TERRAIN_ANY))
+        if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_TERRAIN_ANY))
             basePower *= 2;
         break;
     case EFFECT_EXPANDING_FORCE:
-        if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN))
+        if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_PSYCHIC_TERRAIN))
             basePower = uq4_12_multiply(basePower, UQ_4_12(1.5));
         break;
     case EFFECT_RISING_VOLTAGE:
-        if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_ELECTRIC_TERRAIN))
+        if (IsBattlerTerrainAffected(battlerDef, ctx->abilityDef, ctx->holdEffectDef, STATUS_FIELD_ELECTRIC_TERRAIN))
             basePower *= 2;
         break;
     case EFFECT_BEAT_UP:
@@ -8611,13 +8611,13 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
     if (GetMoveEffect(gChosenMove) == EFFECT_ME_FIRST)
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
-    if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_GRASSY_TERRAIN) && moveType == TYPE_GRASS)
+    if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_GRASSY_TERRAIN) && moveType == TYPE_GRASS)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsBattlerTerrainAffected(battlerDef, STATUS_FIELD_MISTY_TERRAIN) && moveType == TYPE_DRAGON)
+    if (IsBattlerTerrainAffected(battlerDef, ctx->abilityDef, ctx->holdEffectDef, STATUS_FIELD_MISTY_TERRAIN) && moveType == TYPE_DRAGON)
         modifier = uq4_12_multiply(modifier, UQ_4_12(0.5));
-    if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN) && moveType == TYPE_ELECTRIC)
+    if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_ELECTRIC_TERRAIN) && moveType == TYPE_ELECTRIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
-    if (IsBattlerTerrainAffected(battlerAtk, STATUS_FIELD_PSYCHIC_TERRAIN) && moveType == TYPE_PSYCHIC)
+    if (IsBattlerTerrainAffected(battlerAtk, ctx->abilityAtk, ctx->holdEffectAtk, STATUS_FIELD_PSYCHIC_TERRAIN) && moveType == TYPE_PSYCHIC)
         modifier = uq4_12_multiply(modifier, (B_TERRAIN_TYPE_BOOST >= GEN_8 ? UQ_4_12(1.3) : UQ_4_12(1.5)));
     if (IsFieldMudSportAffected(ctx->moveType))
         modifier = uq4_12_multiply(modifier, UQ_4_12(B_SPORT_DMG_REDUCTION >= GEN_5 ? 0.33 : 0.5));
@@ -9857,8 +9857,8 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
     ctx->weather = GetWeather();
     ctx->abilityAtk = GetBattlerAbility(ctx->battlerAtk);
     ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
-    ctx->holdEffectAtk = GetItemHoldEffect(ctx->battlerAtk);
-    ctx->holdEffectDef = GetItemHoldEffect(ctx->battlerDef);
+    ctx->holdEffectAtk = GetBattlerHoldEffect(ctx->battlerAtk, TRUE);
+    ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef, TRUE);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
 
@@ -9905,7 +9905,7 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
         mod = UQ_4_12(1.0);
     if (GetMoveEffect(ctx->move) == EFFECT_SUPER_EFFECTIVE_ON_ARG && defType == GetMoveArgType(ctx->move))
         mod = UQ_4_12(2.0);
-    if (ctx->moveType == TYPE_GROUND && defType == TYPE_FLYING && IsBattlerGrounded(ctx->battlerDef) && mod == UQ_4_12(0.0))
+    if (ctx->moveType == TYPE_GROUND && defType == TYPE_FLYING && IsBattlerGrounded(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef) && mod == UQ_4_12(0.0))
         mod = UQ_4_12(1.0);
     if (ctx->moveType == TYPE_STELLAR && GetActiveGimmick(ctx->battlerDef) == GIMMICK_TERA)
         mod = UQ_4_12(2.0);
@@ -10002,7 +10002,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         if (B_GLARE_GHOST < GEN_4 && ctx->move == MOVE_GLARE && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GHOST))
             modifier = UQ_4_12(0.0);
     }
-    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityDef, INVERSE_BATTLE, CHECK_IRON_BALL) && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)))
+    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef, INVERSE_BATTLE) && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)))
     {
         modifier = UQ_4_12(0.0);
         if (ctx->updateFlags && ctx->abilityDef == ABILITY_LEVITATE)
@@ -10020,8 +10020,8 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     }
 
     // Thousand Arrows ignores type modifiers for flying mons
-    if (!IsBattlerGrounded(ctx->battlerDef)
-     && MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)
+    if (MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)
+     && !IsBattlerGrounded(ctx->battlerDef, ctx->abilityDef, ctx->holdEffectDef)
      && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING))
     {
         modifier = UQ_4_12(1.0);
@@ -10030,9 +10030,9 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     // Iron Ball ignores type modifiers for flying-type mons if it is the only source of grounding
     if (B_IRON_BALL >= GEN_5
         && ctx->moveType == TYPE_GROUND
+        && ctx->holdEffectDef == HOLD_EFFECT_IRON_BALL
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
-        && GetBattlerHoldEffect(ctx->battlerDef, TRUE) == HOLD_EFFECT_IRON_BALL
-        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityAtk, NOT_INVERSE_BATTLE, IGNORE_IRON_BALL)
+        && !IsBattlerGrounded(ctx->battlerDef, ctx->abilityDef, HOLD_EFFECT_NONE) // We want to ignore Iron Ball so skip item check
         && !FlagGet(B_FLAG_INVERSE_BATTLE))
     {
         modifier = UQ_4_12(1.0);
@@ -11132,12 +11132,13 @@ bool32 IsBattlerWeatherAffected(u32 battler, u32 weatherFlags)
 
 // Gets move target before redirection effects etc. are applied
 // Possible return values are defined in battle.h following MOVE_TARGET_SELECTED
+// TODO: Add args: ability and hold effect
 u32 GetBattlerMoveTargetType(u32 battler, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
         return MOVE_TARGET_USER;
-    if (effect == EFFECT_EXPANDING_FORCE && IsBattlerTerrainAffected(battler, STATUS_FIELD_PSYCHIC_TERRAIN))
+    if (effect == EFFECT_EXPANDING_FORCE && IsBattlerTerrainAffected(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler, TRUE), STATUS_FIELD_PSYCHIC_TERRAIN))
         return MOVE_TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
         return MOVE_TARGET_BOTH;
@@ -11222,12 +11223,11 @@ void RemoveConfusionStatus(u32 battler)
 
 static bool32 CanBeInfinitelyConfused(u32 battler)
 {
-    if  (GetBattlerAbility(battler) == ABILITY_OWN_TEMPO
-         || IsBattlerTerrainAffected(battler, STATUS_FIELD_MISTY_TERRAIN)
-         || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
-    {
+    u32 ability = GetBattlerAbility(battler);
+    if  (ability == ABILITY_OWN_TEMPO
+      || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler, TRUE), STATUS_FIELD_MISTY_TERRAIN)
+      || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
-    }
     return TRUE;
 }
 
