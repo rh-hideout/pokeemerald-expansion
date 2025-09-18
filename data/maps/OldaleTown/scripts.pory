@@ -477,3 +477,23 @@ script OldaleTown_EventScript_PokeVial_Guy{
 		end
 	}
 }
+
+// script OldaleTown_EventScript_InfiniteRepelGuy{
+// 	lockall
+// 	faceplayer
+// 	if(!flag(FLAG_GET_INFINITE_REPEL)){
+// 		msgbox(format("Here, take the Infinite Repel!"), MSGBOX_DEFAULT)
+// 		giveitem(ITEM_INFINITE_REPEL, 1)
+// 		setflag(FLAG_GET_INFINITE_REPEL)
+// 		releaseall
+// 		end
+// 	}
+// 	else{
+// 		faceplayer
+// 		msgbox(format("You already have the infinite repel!"), MSGBOX_DEFAULT)
+// 		releaseall
+// 		end
+// 	}
+// 	releaseall
+// 	end
+// }

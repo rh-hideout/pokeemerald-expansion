@@ -2427,4 +2427,8 @@ extern const u8 gText_Starter_Alola[];
 extern const u8 gText_Starter_Galar[];
 extern const u8 gText_Starter_Paldea[];
 
+// Infinite Repel text
+extern const u8 gText_InfiniteRepelOn[];
+extern const u8 gText_InfiniteRepelOff[];
+
 #endif // GUARD_STRINGS_H

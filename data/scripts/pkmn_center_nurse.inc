@@ -140,8 +140,9 @@ PokeVialHealScript::
 	callnative UpdateFollowingPokemon		
 	playfanfare MUS_HEAL
 	waitfanfare
-	msgbox PokeVialText, MSGBOX_DEFAULT
 	fadescreen FADE_FROM_BLACK
+	msgbox PokeVialText, MSGBOX_DEFAULT
+	
 	releaseall
 	end
 

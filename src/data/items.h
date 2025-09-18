@@ -15072,6 +15072,37 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeVial,
         .iconPalette = gItemIconPalette_PokeVial,
     },  // C:\Users\Ben\Desktop\Games\Roms\Pokemon Romhack Side Project\pokeemerald-expansion-personal\graphics\items\icons
+
+    
+    [ITEM_INFINITE_REPEL] =
+    {
+        .name = ITEM_NAME("Infinite Repel"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            " A permanent Repel."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_InfiniteRepel,
+        .iconPic = gItemIcon_Repel,
+        .iconPalette = gItemIconPalette_SuperRepel,
+    }, 
+
+    [ITEM_INFINITE_CANDY] =
+    {
+        .name = ITEM_NAME("Infinite Candy"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            " A jar of candies!"),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_BAG_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
+        .iconPic = gItemIcon_Repel,
+        .iconPalette = gItemIconPalette_SuperRepel,
+    }, 
+
+
 };
 
 #undef ITEM_NAME

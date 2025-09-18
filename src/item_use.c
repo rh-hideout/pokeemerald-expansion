@@ -95,7 +95,8 @@ static const u8 sText_UsedVar2WildRepelled[] = _("{PLAYER} used the\n{STR_VAR_2}
 static const u8 sText_PlayedPokeFluteCatchy[] = _("Played the POKé FLUTE.\pNow, that's a catchy tune!{PAUSE_UNTIL_PRESS}");
 static const u8 sText_PlayedPokeFlute[] = _("Played the POKé FLUTE.");
 static const u8 sText_PokeFluteAwakenedMon[] = _("The POKé FLUTE awakened sleeping\nPOKéMON.{PAUSE_UNTIL_PRESS}");
-
+static const u8 sText_InfiniteRepelOn[] = _("Infinite Repel turned on.{PAUSE_UNTIL_PRESS}");
+static const u8 sText_InfiniteRepelOff[] = _("Infinite Repel turned off.{PAUSE_UNTIL_PRESS}");
 // EWRAM variables
 EWRAM_DATA static TaskFunc sItemUseOnFieldCB = NULL;
 
@@ -808,6 +809,33 @@ void ItemUseOutOfBattle_PokeVial(u8 taskId)
     }
 }
 
+
+void ItemUseOutOfBattle_InfiniteRepel(u8 taskId)
+{
+    bool8 infiniteRepelOn = FlagGet(OW_FLAG_NO_ENCOUNTER);
+    if (!infiniteRepelOn)
+    {
+        FlagToggle(OW_FLAG_NO_ENCOUNTER);
+        PlaySE(SE_REPEL);
+        if(gTasks[taskId].tUsingRegisteredKeyItem){
+            DisplayItemMessageOnField(taskId, sText_InfiniteRepelOn, Task_CloseCantUseKeyItemMessage);
+        }
+        else{
+            DisplayItemMessage(taskId, 1, sText_InfiniteRepelOn, CloseItemMessage);
+        }
+    }
+    else
+    {
+        FlagToggle(OW_FLAG_NO_ENCOUNTER);
+        PlaySE(SE_PC_OFF);
+        if (gTasks[taskId].tUsingRegisteredKeyItem){
+            DisplayItemMessageOnField(taskId, sText_InfiniteRepelOff, Task_CloseCantUseKeyItemMessage);
+        }
+        else{
+            DisplayItemMessage(taskId, 1, sText_InfiniteRepelOff, CloseItemMessage);
+        }
+    }
+}
 void ItemUseOutOfBattle_Berry(u8 taskId)
 {
     if (IsPlayerFacingEmptyBerryTreePatch() == TRUE)
