@@ -6703,16 +6703,10 @@ static void Cmd_moveend(void)
                 if (!IsBattlerAlive(i))
                     continue;
 
-                if (GetBattlerHoldEffect(i, TRUE) == HOLD_EFFECT_WHITE_HERB
-                 && RestoreWhiteHerbStats(i))
-                {
-                    BattleScriptCall(BattleScript_WhiteHerbRet);
-                    effect = TRUE;
-                    break;
-                }
+                if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, i))
+                    return;
             }
-            if (!effect)
-                gBattleScripting.moveendState++;
+            gBattleScripting.moveendState++;
             break;
         case MOVEEND_THIRD_MOVE_BLOCK:
             // Special case for Steel Roller since it has to check the chosen move
@@ -15270,7 +15264,7 @@ void BS_RunStatChangeItems(void)
 
     // Change instruction before calling ItemBattleEffects.
     gBattlescriptCurrInstr = cmd->nextInstr;
-    ItemBattleEffects(ITEMEFFECT_STATS_CHANGED, GetBattlerForBattleScript(cmd->battler));
+    ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, GetBattlerForBattleScript(cmd->battler));
 }
 
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove)

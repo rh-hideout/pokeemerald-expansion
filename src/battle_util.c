@@ -6874,7 +6874,12 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             case HOLD_EFFECT_WHITE_HERB:
                 effect = RestoreWhiteHerbStats(battler);
                 if (effect != 0)
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+                {
+                    if (caseID == ITEMEFFECT_ON_SWITCH_IN)
+                        BattleScriptCall(BattleScript_WhiteHerbRet);
+                    else
+                        BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+                }
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 if (B_BERRIES_INSTANT >= GEN_4)
@@ -7071,11 +7076,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 break;
             case HOLD_EFFECT_RESTORE_PP:
                 effect = ItemRestorePp(battler, gLastUsedItem, caseID);
-                break;
-            case HOLD_EFFECT_WHITE_HERB:
-                effect = RestoreWhiteHerbStats(battler);
-                if (effect != 0)
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
                 break;
             case HOLD_EFFECT_BLACK_SLUDGE:
                 if (IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
@@ -7580,13 +7580,19 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         }
     }
         break;
-    case ITEMEFFECT_STATS_CHANGED:
+    case ITEMEFFECT_MIRROR_HERB:
+    case ITEMEFFECT_MIRROR_HERB_ENDTURN:
         switch (battlerHoldEffect)
         {
         case HOLD_EFFECT_WHITE_HERB:
             effect = RestoreWhiteHerbStats(battler);
             if (effect != 0)
-                BattleScriptCall(BattleScript_WhiteHerbRet);
+            {
+                if (caseID == ITEMEFFECT_MIRROR_HERB)
+                    BattleScriptCall(BattleScript_WhiteHerbRet);
+                else
+                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+            }
             break;
         default:
             break;
