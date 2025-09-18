@@ -109,14 +109,3 @@ SINGLE_BATTLE_TEST("Skill Swap fails if user or target has an ability that can't
         MESSAGE("But it failed!");
     }
 }
-
-SINGLE_BATTLE_TEST("xyz Skill Swap swaps user and target's abilities")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SWORD_OF_RUIN); }
-        OPPONENT(SPECIES_CHARMANDER) { Ability(ABILITY_BEADS_OF_RUIN); }
-    }WHEN {
-        TURN { MOVE(player, MOVE_SKILL_SWAP); }
-    } SCENE {
-    }
-}
