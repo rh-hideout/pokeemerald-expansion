@@ -22,6 +22,7 @@
 #include "task.h"
 #include "text_window.h"
 #include "window.h"
+#include "match_call.h"
 #include "config/overworld.h"
 #include "constants/songs.h"
 
@@ -339,6 +340,53 @@ void DrawDialogueFrame(u8 windowId, bool8 copyToVram)
     PutWindowTilemap(windowId);
     if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
+static void WindowFunc_RedrawDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+{
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 1,
+                            tilemapLeft - 2,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 3,
+                            tilemapLeft - 1,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 4,
+                            tilemapLeft,
+                            tilemapTop - 1,
+                            width - 1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 5,
+                            tilemapLeft + width - 1,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 6,
+                            tilemapLeft + width,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+}
+
+void RedrawDialogueFrame(void)
+{
+    if (IsMatchCallTaskActive())
+        RedrawMatchCallTextBoxBorder();
+    else
+        CallWindowFunction(0, WindowFunc_RedrawDialogueFrame);
 }
 
 void DrawStdWindowFrame(u8 windowId, bool8 copyToVram)

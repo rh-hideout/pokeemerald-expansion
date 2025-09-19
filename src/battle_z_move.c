@@ -161,7 +161,6 @@ u32 GetUsableZMove(u32 battler, u32 move)
 
 void ActivateZMove(u32 battler)
 {
-    gBattleStruct->zmove.baseMoves[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
@@ -438,7 +437,7 @@ static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gBattleStruct->zmove.baseMoves[gBattlerAttacker]);
+    u32 effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {
@@ -486,9 +485,9 @@ void SetZEffect(void)
         break;
     }
     case Z_EFFECT_BOOST_CRITS:
-        if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_FOCUS_ENERGY_ANY))
+        if (!(gBattleMons[gBattlerAttacker].volatiles.dragonCheer || gBattleMons[gBattlerAttacker].volatiles.focusEnergy))
         {
-            gBattleMons[gBattlerAttacker].status2 |= STATUS2_FOCUS_ENERGY;
+            gBattleMons[gBattlerAttacker].volatiles.focusEnergy = TRUE;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_BOOST_CRITS;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;

@@ -131,7 +131,7 @@ BattleScript_PokeFluteEnd::
 BattleScript_ItemSetMist::
 	call BattleScript_UseItemMessage
 	setmist
-	playmoveanimation BS_ATTACKER, MOVE_MIST
+	playmoveanimation MOVE_MIST
 	waitanimation
 	printfromtable gMistUsedStringIds
 	waitmessage B_WAIT_TIME_LONG
@@ -142,7 +142,7 @@ BattleScript_ItemSetFocusEnergy::
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
 	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
 	setfocusenergy BS_ATTACKER
-	playmoveanimation BS_ATTACKER, MOVE_FOCUS_ENERGY
+	playmoveanimation MOVE_FOCUS_ENERGY
 	waitanimation
 	copybyte sBATTLER, gBattlerAttacker
 	printstring STRINGID_PKMNUSEDXTOGETPUMPED
@@ -211,6 +211,9 @@ BattleScript_WallyBallThrow::
 	finishturn
 
 BattleScript_ShakeBallThrow::
+	animatewildpokemonafterfailedpokeball BS_TARGET
+	waitstate
+	waitmessage B_WAIT_TIME_LONG
 	printfromtable gBallEscapeStringIds
 	waitmessage B_WAIT_TIME_LONG
 	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrowEnd

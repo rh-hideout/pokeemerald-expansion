@@ -2,8 +2,13 @@
  *
  * To run all the tests use:
  *     make check -j
- * To run specific tests, e.g. Spikes ones, use:
+ * To run specific tests, e.g. Spikes ones, use either:
  *     make check TESTS="Spikes"
+ *     make check TESTS="*Spikes*"
+ * The first runs tests with names that start with Spikes, whereas the
+ * second runs tests with names that include Spikes anywhere in them.
+ * To run tests from a specific file, e.g. 'test/battle/move_effect/spikes.c', use:
+ *     make check TESTS="test/battle/move_effect/spikes.c"
  * To build a ROM (pokemerald-test.elf) that can be opened in mgba to
  * view specific tests, e.g. Spikes ones, use:
  *     make pokeemerald-test.elf TESTS="Spikes"
@@ -219,6 +224,17 @@
  *     {
  *         KNOWN_FAILING; // #2596.
  *
+ * KNOWN_CRASHING
+ * Marks a test as crashing due to a bug. If there is an issue number
+ * associated with the bug it should be included in a comment. If the
+ * test passes the developer will be notified to remove KNOWN_CRASHING.
+ * For example:
+ *     TEST("Crashes")
+ *     {
+ *         KNOWN_CRASHING; // #7255
+ *         void (*f)(void) = NULL;
+ *         f(); // Crashes!
+ *
  * PARAMETRIZE
  * Runs a test multiple times. i will be set to which parameter is
  * running, and results will contain an entry for each parameter, e.g.:
@@ -423,7 +439,7 @@
  * Spaces in pattern match newlines (\n, \l, and \p) in the message.
  * Often used to check that a battler took its turn but it failed, e.g.:
  *     MESSAGE("Wobbuffet used Dream Eater!");
- *     MESSAGE("The opposing Wobbuffet wasn't affected!");
+ *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
  * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
  * Causes the test to fail if the battler's status is not changed to the
@@ -622,7 +638,8 @@ struct BattlerTurn
 
 struct ExpectedAIAction
 {
-    u16 sourceLine;
+    u16 sourceLine:13; // TODO: Avoid stealing these bits.
+    enum Gimmick gimmick:3;
     u8 type:4; // which action
     u8 moveSlots:4; // Expected move(s) to be chosen or not, marked as bits.
     u8 target:4; // move target or id of mon which gets sent out

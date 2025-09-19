@@ -210,7 +210,7 @@ DOUBLE_BATTLE_TEST("Opportunist copies the stat increase of each opposing mon")
 }
 
 
-DOUBLE_BATTLE_TEST("Opportunist copies the stat of each pokemon that were raised at the same time")
+DOUBLE_BATTLE_TEST("Opportunist copies the stat of each Pokémon that were raised at the same time")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

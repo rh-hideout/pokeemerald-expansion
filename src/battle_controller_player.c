@@ -889,7 +889,10 @@ void HandleInputChooseMove(u32 battler)
     }
     else if (JOY_NEW(START_BUTTON))
     {
-        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler]))
+        if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
+            && !HasTrainerUsedGimmick(battler, gBattleStruct->gimmick.usableGimmick[battler])
+            && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
+                 && GetUsableZMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]) == MOVE_NONE))
         {
             gBattleStruct->gimmick.playerSelect ^= 1;
             ReloadMoveNames(battler);
@@ -1025,7 +1028,7 @@ void HandleMoveSwitching(u32 battler)
                 gBattleMons[battler].pp[i] = moveInfo->currentPp[i];
             }
 
-            if (!(gBattleMons[battler].status2 & STATUS2_TRANSFORMED))
+            if (!(gBattleMons[battler].volatiles.transformed))
             {
                 for (i = 0; i < MAX_MON_MOVES; i++)
                 {

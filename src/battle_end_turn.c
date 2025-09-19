@@ -163,14 +163,14 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gStatuses3[i] & STATUS3_ALWAYS_HITS)
-            gStatuses3[i] -= STATUS3_ALWAYS_HITS_TURN(1);
+        if (gBattleMons[i].volatiles.lockOn > 0)
+            gBattleMons[i].volatiles.lockOn--;
 
         if (gDisableStructs[i].chargeTimer && --gDisableStructs[i].chargeTimer == 0)
-            gStatuses3[i] &= ~STATUS3_CHARGED_UP;
+            gBattleMons[i].volatiles.charge = FALSE;
 
-        if (gStatuses3[i] & STATUS3_LASER_FOCUS && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
-            gStatuses3[i] &= ~STATUS3_LASER_FOCUS;
+        if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
+            gBattleMons[i].volatiles.laserFocus = FALSE;
 
         gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
     }
@@ -232,9 +232,10 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && ability != ABILITY_SAND_FORCE
          && ability != ABILITY_SAND_RUSH
          && ability != ABILITY_OVERCOAT
-         && !IS_BATTLER_ANY_TYPE(gBattlerAttacker, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
-         && !(gStatuses3[gBattlerAttacker] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
-         && GetBattlerHoldEffect(gBattlerAttacker, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
+         && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
+         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
+         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -257,7 +258,8 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
             if (ability != ABILITY_SNOW_CLOAK
              && ability != ABILITY_OVERCOAT
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
-             && !(gStatuses3[battler] & (STATUS3_UNDERGROUND | STATUS3_UNDERWATER))
+             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
+             && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
              && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
@@ -306,7 +308,7 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
          && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
          && CountUsablePartyMons(battler) > 0
-         && !(gStatuses3[battler] & STATUS3_SKY_DROPPED)) // Not currently held by Sky Drop
+         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
         {
             gBattlerAbility = battler;
             gLastUsedAbility = ability;
@@ -407,7 +409,7 @@ static bool32 HandleEndTurnWish(u32 battler)
         }
 
         gBattleStruct->moveDamage[battler] *= -1;
-        if (gStatuses3[battler] & STATUS3_HEAL_BLOCK)
+        if (gBattleMons[battler].volatiles.healBlock)
             BattleScriptExecute(BattleScript_WishButHealBlocked);
         else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
             BattleScriptExecute(BattleScript_WishButFullHp);
@@ -458,21 +460,21 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (gBattleMons[battler].status2 & STATUS2_LOCK_CONFUSE && !(gStatuses3[battler] & STATUS3_SKY_DROPPED))
+        if (gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
         {
-            gBattleMons[battler].status2 -= STATUS2_LOCK_CONFUSE_TURN(1);
+            gBattleMons[battler].volatiles.lockConfusionTurns--;
             if (WasUnableToUseMove(battler))
             {
                 CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
             }
-            else if (!(gBattleMons[battler].status2 & STATUS2_LOCK_CONFUSE) && (gBattleMons[battler].status2 & STATUS2_MULTIPLETURNS))
+            else if (!gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.multipleTurns)
             {
-                gBattleMons[battler].status2 &= ~STATUS2_MULTIPLETURNS;
-                if (!(gBattleMons[battler].status2 & STATUS2_CONFUSION))
+                gBattleMons[battler].volatiles.multipleTurns = FALSE;
+                if (!gBattleMons[battler].volatiles.confusionTurns)
                 {
                     gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
                     SetMoveEffect(battler, battler, TRUE, FALSE);
-                    if (gBattleMons[battler].status2 & STATUS2_CONFUSION)
+                    if (gBattleMons[battler].volatiles.confusionTurns)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;
                 }
@@ -481,10 +483,17 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventBlockCounter++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
-        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN && IsBattlerAlive(battler) && !IsBattlerAtMaxHp(battler) && IsBattlerGrounded(battler))
+        if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN
+         && IsBattlerAlive(battler)
+         && !IsBattlerAtMaxHp(battler)
+         && !gBattleMons[battler].volatiles.healBlock
+         && !IsSemiInvulnerable(battler, CHECK_ALL)
+         && IsBattlerGrounded(battler))
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
+            if (gBattleStruct->moveDamage[battler] == 0)
+                gBattleStruct->moveDamage[battler] = -1;
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
             effect = TRUE;
         }
@@ -535,8 +544,8 @@ static bool32 HandleEndTurnAquaRing(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_AQUA_RING
-     && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)
+    if (gBattleMons[battler].volatiles.aquaRing
+     && !gBattleMons[battler].volatiles.healBlock
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerAlive(battler))
     {
@@ -554,8 +563,8 @@ static bool32 HandleEndTurnIngrain(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_ROOTED
-     && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK)
+    if (gBattleMons[battler].volatiles.root
+     && !gBattleMons[battler].volatiles.healBlock
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerAlive(battler))
     {
@@ -573,24 +582,24 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_LEECHSEED
-     && IsBattlerAlive(gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER)
+    if (gBattleMons[battler].volatiles.leechSeed
+     && IsBattlerAlive(gBattleMons[battler].volatiles.leechSeed - 1)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattlerTarget = gStatuses3[battler] & STATUS3_LEECHSEED_BATTLER; // Notice gBattlerTarget is actually the HP receiver.
+        gBattlerTarget = gBattleMons[battler].volatiles.leechSeed - 1; // leech seed receiver
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
         gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
         gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
-        gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE;
+        gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE;
         if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
         {
             gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * -1;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptExecute(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
-        else if (gStatuses3[gBattlerTarget] & STATUS3_HEAL_BLOCK)
+        else if (gBattleMons[gBattlerTarget].volatiles.healBlock)
         {
             BattleScriptExecute(BattleScript_LeechSeedTurnDrainHealBlock);
         }
@@ -619,7 +628,7 @@ static bool32 HandleEndTurnPoison(u32 battler)
     {
         if (ability == ABILITY_POISON_HEAL)
         {
-            if (!IsBattlerAtMaxHp(battler) && !(gStatuses3[battler] & STATUS3_HEAL_BLOCK))
+            if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
                 if (gBattleStruct->moveDamage[battler] == 0)
@@ -707,7 +716,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gBattleMons[battler].status2 & STATUS2_NIGHTMARE
+    if (gBattleMons[battler].volatiles.nightmare
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
@@ -721,7 +730,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
         }
         else
         {
-            gBattleMons[battler].status2 &= ~STATUS2_NIGHTMARE;
+            gBattleMons[battler].volatiles.nightmare = FALSE;
         }
     }
 
@@ -734,7 +743,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gBattleMons[battler].status2 & STATUS2_CURSED
+    if (gBattleMons[battler].volatiles.cursed
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
@@ -754,10 +763,11 @@ static bool32 HandleEndTurnWrap(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gBattleMons[battler].status2 & STATUS2_WRAPPED && IsBattlerAlive(battler))
+    if (gBattleMons[battler].volatiles.wrapped && IsBattlerAlive(battler))
     {
-        if (--gDisableStructs[battler].wrapTurns != 0)
+        if (gDisableStructs[battler].wrapTurns != 0)
         {
+            gDisableStructs[battler].wrapTurns--;
             if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;
 
@@ -775,7 +785,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
         }
         else  // broke free
         {
-            gBattleMons[battler].status2 &= ~STATUS2_WRAPPED;
+            gBattleMons[battler].volatiles.wrapped = FALSE;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
             BattleScriptExecute(BattleScript_WrapEnds);
         }
@@ -791,7 +801,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses4[battler] & STATUS4_SALT_CURE
+    if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
@@ -832,10 +842,10 @@ static bool32 HandleEndTurnSyrupBomb(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if ((gStatuses4[battler] & STATUS4_SYRUP_BOMB) && (IsBattlerAlive(battler)))
+    if (gBattleMons[battler].volatiles.syrupBomb && (IsBattlerAlive(battler)))
     {
         if (gDisableStructs[battler].syrupBombTimer > 0 && --gDisableStructs[battler].syrupBombTimer == 0)
-            gStatuses4[battler] &= ~STATUS4_SYRUP_BOMB;
+            gBattleMons[battler].volatiles.syrupBomb = FALSE;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SYRUP_BOMB);
         gBattlescriptCurrInstr = BattleScript_SyrupBombEndTurn;
         BattleScriptExecute(gBattlescriptCurrInstr);
@@ -869,7 +879,7 @@ static bool32 HandleEndTurnTorment(u32 battler)
 
     if (gDisableStructs[battler].tormentTimer == gBattleTurnCounter)
     {
-        gBattleMons[battler].status2 &= ~STATUS2_TORMENT;
+        gBattleMons[battler].volatiles.torment = FALSE;
         BattleScriptExecute(BattleScript_TormentEnds);
         effect = TRUE;
     }
@@ -939,9 +949,9 @@ static bool32 HandleEndTurnMagnetRise(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_MAGNET_RISE && gDisableStructs[battler].magnetRiseTimer == gBattleTurnCounter)
+    if (gBattleMons[battler].volatiles.magnetRise && gDisableStructs[battler].magnetRiseTimer == gBattleTurnCounter)
     {
-        gStatuses3[battler] &= ~STATUS3_MAGNET_RISE;
+        gBattleMons[battler].volatiles.magnetRise = FALSE;
         BattleScriptExecute(BattleScript_BufferEndTurn);
         PREPARE_STRING_BUFFER(gBattleTextBuff1, STRINGID_ELECTROMAGNETISM);
         effect = TRUE;
@@ -956,9 +966,9 @@ static bool32 HandleEndTurnTelekinesis(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_TELEKINESIS && gDisableStructs[battler].telekinesisTimer == gBattleTurnCounter)
+    if (gBattleMons[battler].volatiles.telekinesis && gDisableStructs[battler].telekinesisTimer == gBattleTurnCounter)
     {
-        gStatuses3[battler] &= ~STATUS3_TELEKINESIS;
+        gBattleMons[battler].volatiles.telekinesis = FALSE;
         BattleScriptExecute(BattleScript_TelekinesisEndTurn);
         effect = TRUE;
     }
@@ -972,9 +982,9 @@ static bool32 HandleEndTurnHealBlock(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_HEAL_BLOCK && gDisableStructs[battler].healBlockTimer == gBattleTurnCounter)
+    if (gBattleMons[battler].volatiles.healBlock && gDisableStructs[battler].healBlockTimer == gBattleTurnCounter)
     {
-        gStatuses3[battler] &= ~STATUS3_HEAL_BLOCK;
+        gBattleMons[battler].volatiles.healBlock = FALSE;
         BattleScriptExecute(BattleScript_BufferEndTurn);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_HEAL_BLOCK);
         effect = TRUE;
@@ -989,9 +999,9 @@ static bool32 HandleEndTurnEmbargo(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_EMBARGO && gDisableStructs[battler].embargoTimer == gBattleTurnCounter)
+    if (gBattleMons[battler].volatiles.embargo && gDisableStructs[battler].embargoTimer == gBattleTurnCounter)
     {
-        gStatuses3[battler] &= ~STATUS3_EMBARGO;
+        gBattleMons[battler].volatiles.embargo = FALSE;
         BattleScriptExecute(BattleScript_EmbargoEndTurn);
         effect = TRUE;
     }
@@ -1007,16 +1017,16 @@ static bool32 HandleEndTurnYawn(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (gStatuses3[battler] & STATUS3_YAWN)
+    if (gBattleMons[battler].volatiles.yawn > 0)
     {
-        gStatuses3[battler] -= STATUS3_YAWN_TURN(1);
-        if (!(gStatuses3[battler] & STATUS3_YAWN) && !(gBattleMons[battler].status1 & STATUS1_ANY)
+        gBattleMons[battler].volatiles.yawn--;
+        if (!gBattleMons[battler].volatiles.yawn
+         && !(gBattleMons[battler].status1 & STATUS1_ANY)
          && ability != ABILITY_VITAL_SPIRIT
          && ability != ABILITY_INSOMNIA
          && !UproarWakeUpCheck(battler)
          && !IsLeafGuardProtected(battler, ability))
         {
-            CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
             gEffectBattler = gBattlerTarget = battler;
             if (IsBattlerTerrainAffected(battler, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
@@ -1030,7 +1040,15 @@ static bool32 HandleEndTurnYawn(u32 battler)
             }
             else if (IsSleepClauseActiveForSide(GetBattlerSide(battler)))
             {
-                BattleScriptExecute(BattleScript_SleepClausePreventsEnd);
+                BattleScriptExecute(BattleScript_SleepClausePreventsEnd2);
+            }
+            else if ((gBattleScripting.battler = IsAbilityOnSide(battler, ABILITY_SWEET_VEIL)))
+            {
+                gBattleScripting.battler--;
+                gLastUsedAbility = ABILITY_SWEET_VEIL;
+                gBattlerAbility = gBattleScripting.battler;
+                RecordAbilityBattle(gBattleScripting.battler, ABILITY_SWEET_VEIL);
+                BattleScriptExecute(BattleScript_ImmunityProtectedEnd2);
             }
             else
             {
@@ -1039,10 +1057,11 @@ static bool32 HandleEndTurnYawn(u32 battler)
                 else
                     gBattleMons[battler].status1 |= ((Random() % 4) + 3);
 
+                CancelMultiTurnMoves(battler, SKY_DROP_STATUS_YAWN);
                 TryActivateSleepClause(battler, gBattlerPartyIndexes[battler]);
                 BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                 MarkBattlerForControllerExec(battler);
-                BattleScriptExecute(BattleScript_YawnMakesAsleep);
+                BattleScriptExecute(BattleScript_YawnMakesAsleepEnd2);
             }
             effect = TRUE;
         }
@@ -1057,12 +1076,12 @@ static bool32 HandleEndTurnPerishSong(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (IsBattlerAlive(battler) && gStatuses3[battler] & STATUS3_PERISH_SONG)
+    if (IsBattlerAlive(battler) && gBattleMons[battler].volatiles.perishSong)
     {
         PREPARE_BYTE_NUMBER_BUFFER(gBattleTextBuff1, 1, gDisableStructs[battler].perishSongTimer);
         if (gDisableStructs[battler].perishSongTimer == 0)
         {
-            gStatuses3[battler] &= ~STATUS3_PERISH_SONG;
+            gBattleMons[battler].volatiles.perishSong = FALSE;
             gBattleStruct->moveDamage[battler] = gBattleMons[battler].hp;
             BattleScriptExecute(BattleScript_PerishSongTakesLife);
         }
@@ -1351,39 +1370,36 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     switch (gBattleStruct->eventBlockCounter)
     {
     case THIRD_EVENT_BLOCK_UPROAR:
-        if (gBattleMons[battler].status2 & STATUS2_UPROAR)
+        if (gBattleMons[battler].volatiles.uproarTurns)
         {
-            for (gBattlerAttacker = 0; gBattlerAttacker < gBattlersCount; gBattlerAttacker++)
+            for (gEffectBattler = 0; gEffectBattler < gBattlersCount; gEffectBattler++)
             {
-                if ((gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP)
-                && GetBattlerAbility(gBattlerAttacker) != ABILITY_SOUNDPROOF)
+                if ((gBattleMons[gEffectBattler].status1 & STATUS1_SLEEP)
+                 && GetBattlerAbility(gEffectBattler) != ABILITY_SOUNDPROOF)
                 {
-                    gBattleMons[gBattlerAttacker].status1 &= ~STATUS1_SLEEP;
-                    gBattleMons[gBattlerAttacker].status2 &= ~STATUS2_NIGHTMARE;
+                    gBattleMons[gEffectBattler].status1 &= ~STATUS1_SLEEP;
+                    gBattleMons[gEffectBattler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = 1;
                     BattleScriptExecute(BattleScript_MonWokeUpInUproar);
-                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
-                    MarkBattlerForControllerExec(gBattlerAttacker);
+                    BtlController_EmitSetMonData(gEffectBattler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[gBattlerAttacker].status1);
+                    MarkBattlerForControllerExec(gEffectBattler);
+                    effect = TRUE;
                     break;
                 }
             }
-            if (gBattlerAttacker != gBattlersCount)
-            {
-                break;
-            }
-            else
+            if (effect == FALSE)
             {
                 gBattlerAttacker = battler;
-                gBattleMons[battler].status2 -= STATUS2_UPROAR_TURN(1);  // uproar timer goes down
+                gBattleMons[battler].volatiles.uproarTurns--;  // uproar timer goes down
                 if (WasUnableToUseMove(battler))
                 {
                     CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;
                 }
-                else if (gBattleMons[battler].status2 & STATUS2_UPROAR)
+                else if (gBattleMons[battler].volatiles.uproarTurns)
                 {
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_CONTINUES;
-                    gBattleMons[battler].status2 |= STATUS2_MULTIPLETURNS;
+                    gBattleMons[battler].volatiles.multipleTurns = TRUE;
                 }
                 else
                 {
@@ -1520,6 +1536,19 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
+/*
+ * Various end turn effects that happen after all battlers moved.
+ * Each Case will apply the effects for each battler. Moving to the next case when all battlers are done.
+ * If an effect is going to be applied on a better, the bool effect will be set to TRUE and a script set.
+ * The script is set with `BattleScriptExecute` and should have the ending `end2`
+   Example:
+        BattleScriptExecute(BattleScript_X);
+
+        (in battle_scripts_1.s)
+        BattleScript_X:
+            some commands
+            end2
+ */
 static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,

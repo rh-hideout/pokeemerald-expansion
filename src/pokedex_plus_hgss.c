@@ -4228,6 +4228,13 @@ static void Task_ExitCaughtMonPage(u8 taskId)
         paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
         paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, otId, personality);
         LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+
+        if (sPokedexView)
+        {
+            Free(sPokedexView);
+            sPokedexView = NULL;
+        }
+
         DestroyTask(taskId);
     }
 }

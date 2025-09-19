@@ -105,14 +105,14 @@ enum
     LIST_ITEM_STAT_STAGES,
     LIST_ITEM_STATUS1,
     LIST_ITEM_VOLATILE,
-    LIST_ITEM_STATUS3,
-    LIST_ITEM_STATUS4,
+    LIST_ITEM_HAZARDS,
     LIST_ITEM_SIDE_STATUS,
     LIST_ITEM_AI,
     LIST_ITEM_AI_MOVES_PTS,
     LIST_ITEM_AI_INFO,
     LIST_ITEM_AI_PARTY,
     LIST_ITEM_VARIOUS,
+    LIST_ITEM_INSTANT_WIN,
     LIST_ITEM_COUNT
 };
 
@@ -141,53 +141,22 @@ enum
 
 enum
 {
-    LIST_STATUS3_LEECH_SEED_HEALER,
-    LIST_STATUS3_LEECH_SEEDED,
-    LIST_STATUS3_ALWAYS_HITS,
-    LIST_STATUS3_PERISH_SONG,
-    LIST_STATUS3_ON_AIR,
-    LIST_STATUS3_UNDERGROUND,
-    LIST_STATUS3_MINIMIZED,
-    LIST_STATUS3_CHARGED_UP,
-    LIST_STATUS3_ROOTED,
-    LIST_STATUS3_YAWN,
-    LIST_STATUS3_IMPRISONED_OTHERS,
-    LIST_STATUS3_GRUDGE,
-    LIST_STATUS3_GASTRO_ACID,
-    LIST_STATUS3_EMBARGO,
-    LIST_STATUS3_UNDERWATER,
-    LIST_STATUS3_SMACKED_DOWN,
-    LIST_STATUS3_TELEKINESIS,
-    LIST_STATUS3_MIRACLE_EYED,
-    LIST_STATUS3_MAGNET_RISE,
-    LIST_STATUS3_HEAL_BLOCK,
-    LIST_STATUS3_AQUA_RING,
-    LIST_STATUS3_LASER_FOCUS,
-    LIST_STATUS3_POWER_TRICK,
-};
-
-enum
-{
-    LIST_STATUS4_ELECTRIFIED,
-    LIST_STATUS4_SALT_CURE,
-    LIST_STATUS4_SYRUP_BOMB,
-    LIST_STATUS4_GLAIVE_RUSH,
+    LIST_SIDE_STICKY_WEB,
+    LIST_SIDE_SPIKES,
+    LIST_SIDE_TOXIC_SPIKES,
+    LIST_SIDE_STEALTH_ROCK,
+    LIST_SIDE_STEELSURGE,
 };
 
 enum
 {
     LIST_SIDE_REFLECT,
     LIST_SIDE_LIGHTSCREEN,
-    LIST_SIDE_STICKY_WEB,
-    LIST_SIDE_SPIKES,
     LIST_SIDE_SAFEGUARD,
     LIST_SIDE_MIST,
     LIST_SIDE_TAILWIND,
     LIST_SIDE_AURORA_VEIL,
     LIST_SIDE_LUCKY_CHANT,
-    LIST_SIDE_TOXIC_SPIKES,
-    LIST_SIDE_STEALTH_ROCK,
-    LIST_SIDE_STEELSURGE,
     LIST_SIDE_DAMAGE_NON_TYPES,
     LIST_SIDE_RAINBOW,
     LIST_SIDE_SEA_OF_FIRE,
@@ -250,6 +219,7 @@ enum
     VAL_BITFIELD_16,
     VAL_BITFIELD_32,
     VAL_VOLATILE,
+    VAL_HAZARDS,
     VAR_SIDE_STATUS,
     VAR_SHOW_HP,
     VAR_SUBSTITUTE,
@@ -307,16 +277,6 @@ static const struct BitfieldInfo sStatus3Bitfield[] =
     {/*Power Trick*/ 1, 30},
 };
 
-static const struct BitfieldInfo sStatus4Bitfield[] =
-{
-    {/*Electrified*/ 1, 0},
-    {/*Mud Sport*/ 1, 1},
-    {/*Water Sport*/ 1, 2},
-    {/*Salt Cure*/ 1, 4},
-    {/*Syrup Bomb*/ 1, 5},
-    {/*Glaive Rush*/ 1, 6},
-};
-
 static const struct BitfieldInfo sAIBitfield[] =
 {
     {/*Check Bad Move*/ 1, 0},
@@ -352,23 +312,23 @@ static const struct BitfieldInfo sAIBitfield[] =
 
 static const struct ListMenuItem sMainListItems[] =
 {
-    {COMPOUND_STRING("Moves"),       LIST_ITEM_MOVES},
-    {sText_Ability,                  LIST_ITEM_ABILITY},
-    {sText_HeldItem,                 LIST_ITEM_HELD_ITEM},
-    {COMPOUND_STRING("PP"),          LIST_ITEM_PP},
-    {COMPOUND_STRING("Types"),       LIST_ITEM_TYPES},
-    {COMPOUND_STRING("Stats"),       LIST_ITEM_STATS},
-    {COMPOUND_STRING("Stat Stages"), LIST_ITEM_STAT_STAGES},
-    {COMPOUND_STRING("Status1"),     LIST_ITEM_STATUS1},
-    {COMPOUND_STRING("Volatiles"),   LIST_ITEM_VOLATILE},
-    {COMPOUND_STRING("Status3"),     LIST_ITEM_STATUS3},
-    {COMPOUND_STRING("Status4"),     LIST_ITEM_STATUS4},
-    {COMPOUND_STRING("Side Status"), LIST_ITEM_SIDE_STATUS},
-    {COMPOUND_STRING("AI"),          LIST_ITEM_AI},
-    {COMPOUND_STRING("AI Pts/Dmg"),  LIST_ITEM_AI_MOVES_PTS},
-    {COMPOUND_STRING("AI Info"),     LIST_ITEM_AI_INFO},
-    {COMPOUND_STRING("AI Party"),    LIST_ITEM_AI_PARTY},
-    {COMPOUND_STRING("Various"),     LIST_ITEM_VARIOUS},
+    {COMPOUND_STRING("Moves"),        LIST_ITEM_MOVES},
+    {sText_Ability,                   LIST_ITEM_ABILITY},
+    {sText_HeldItem,                  LIST_ITEM_HELD_ITEM},
+    {COMPOUND_STRING("PP"),           LIST_ITEM_PP},
+    {COMPOUND_STRING("Types"),        LIST_ITEM_TYPES},
+    {COMPOUND_STRING("Stats"),        LIST_ITEM_STATS},
+    {COMPOUND_STRING("Stat Stages"),  LIST_ITEM_STAT_STAGES},
+    {COMPOUND_STRING("Status1"),      LIST_ITEM_STATUS1},
+    {COMPOUND_STRING("Volatiles"),    LIST_ITEM_VOLATILE},
+    {COMPOUND_STRING("Hazards"),      LIST_ITEM_HAZARDS},
+    {COMPOUND_STRING("Side Status"),  LIST_ITEM_SIDE_STATUS},
+    {COMPOUND_STRING("AI"),           LIST_ITEM_AI},
+    {COMPOUND_STRING("AI Pts/Dmg"),   LIST_ITEM_AI_MOVES_PTS},
+    {COMPOUND_STRING("AI Info"),      LIST_ITEM_AI_INFO},
+    {COMPOUND_STRING("AI Party"),     LIST_ITEM_AI_PARTY},
+    {COMPOUND_STRING("Various"),      LIST_ITEM_VARIOUS},
+    {COMPOUND_STRING("Instant Win"),  LIST_ITEM_INSTANT_WIN},
 };
 
 static const struct ListMenuItem sStatsListItems[] =
@@ -396,72 +356,65 @@ static const struct ListMenuItem sStatus1ListItems[] =
 
 static const struct ListMenuItem sVolatileStatusListItems[] =
 {
-    {COMPOUND_STRING("Confusion"),        VOLATILE_CONFUSION},
-    {COMPOUND_STRING("Flinched"),         VOLATILE_FLINCHED},
-    {COMPOUND_STRING("Torment"),          VOLATILE_TORMENT},
-    {COMPOUND_STRING("Powder"),           VOLATILE_POWDER},
-    {COMPOUND_STRING("DefenseCurl"),      VOLATILE_DEFENSE_CURL},
-    {COMPOUND_STRING("Recharge"),         VOLATILE_RECHARGE},
-    {COMPOUND_STRING("Rage"),             VOLATILE_RAGE},
-    {COMPOUND_STRING("DestinyBond"),      VOLATILE_DESTINY_BOND},
-    {COMPOUND_STRING("EscapePrevention"), VOLATILE_ESCAPE_PREVENTION},
-    {COMPOUND_STRING("Cursed"),           VOLATILE_CURSED},
-    {COMPOUND_STRING("Foresight"),        VOLATILE_FORESIGHT},
-    {COMPOUND_STRING("DragonCheer"),      VOLATILE_DRAGON_CHEER},
-    {COMPOUND_STRING("FocusEnergy"),      VOLATILE_FOCUS_ENERGY},
-    {COMPOUND_STRING("MudSport"),         VOLATILE_MUD_SPORT},
-    {COMPOUND_STRING("WaterSport"),       VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Confusion"),          VOLATILE_CONFUSION},
+    {COMPOUND_STRING("Flinched"),           VOLATILE_FLINCHED},
+    {COMPOUND_STRING("Torment"),            VOLATILE_TORMENT},
+    {COMPOUND_STRING("Powder"),             VOLATILE_POWDER},
+    {COMPOUND_STRING("DefenseCurl"),        VOLATILE_DEFENSE_CURL},
+    {COMPOUND_STRING("Recharge"),           VOLATILE_RECHARGE},
+    {COMPOUND_STRING("Rage"),               VOLATILE_RAGE},
+    {COMPOUND_STRING("DestinyBond"),        VOLATILE_DESTINY_BOND},
+    {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},
+    {COMPOUND_STRING("Cursed"),             VOLATILE_CURSED},
+    {COMPOUND_STRING("Foresight"),          VOLATILE_FORESIGHT},
+    {COMPOUND_STRING("DragonCheer"),        VOLATILE_DRAGON_CHEER},
+    {COMPOUND_STRING("FocusEnergy"),        VOLATILE_FOCUS_ENERGY},
+    {COMPOUND_STRING("Electrified"),        VOLATILE_ELECTRIFIED},
+    {COMPOUND_STRING("MudSport"),           VOLATILE_MUD_SPORT},
+    {COMPOUND_STRING("WaterSport"),         VOLATILE_WATER_SPORT},
+    {COMPOUND_STRING("Infinite Confusion"), VOLATILE_INFINITE_CONFUSION},
+    {COMPOUND_STRING("Salt Cure"),          VOLATILE_SALT_CURE},
+    {COMPOUND_STRING("Syrup Bomb"),         VOLATILE_SYRUP_BOMB},
+    {COMPOUND_STRING("Glaive Rush"),        VOLATILE_GLAIVE_RUSH},
+    {COMPOUND_STRING("Leech Seed"),         VOLATILE_LEECH_SEED},
+    {COMPOUND_STRING("Lock On"),            VOLATILE_LOCK_ON},
+    {COMPOUND_STRING("Perish Song"),        VOLATILE_PERISH_SONG},
+    {COMPOUND_STRING("Minimize"),           VOLATILE_MINIMIZE},
+    {COMPOUND_STRING("Charge"),             VOLATILE_CHARGE},
+    {COMPOUND_STRING("Root"),               VOLATILE_ROOT},
+    {COMPOUND_STRING("Yawn"),               VOLATILE_YAWN},
+    {COMPOUND_STRING("Imprison"),           VOLATILE_IMPRISON},
+    {COMPOUND_STRING("Grudge"),             VOLATILE_GRUDGE},
+    {COMPOUND_STRING("Gastro Acid"),        VOLATILE_GASTRO_ACID},
+    {COMPOUND_STRING("Embargo"),            VOLATILE_EMBARGO},
+    {COMPOUND_STRING("Smack Down"),         VOLATILE_SMACK_DOWN},
+    {COMPOUND_STRING("Telekinesis"),        VOLATILE_TELEKINESIS},
+    {COMPOUND_STRING("Miracle Eye"),        VOLATILE_MIRACLE_EYE},
+    {COMPOUND_STRING("Magnet Rise"),        VOLATILE_MAGNET_RISE},
+    {COMPOUND_STRING("Heal Block"),         VOLATILE_HEAL_BLOCK},
+    {COMPOUND_STRING("Aqua Ring"),          VOLATILE_AQUA_RING},
+    {COMPOUND_STRING("Laser Focus"),        VOLATILE_LASER_FOCUS},
+    {COMPOUND_STRING("Power Trick"),        VOLATILE_POWER_TRICK},
 };
 
-static const struct ListMenuItem sStatus3ListItems[] =
+static const struct ListMenuItem sHazardsListItems[] =
 {
-    {COMPOUND_STRING("Leech Seed Healer"), LIST_STATUS3_LEECH_SEED_HEALER},
-    {COMPOUND_STRING("Leech Seeded"),      LIST_STATUS3_LEECH_SEEDED},
-    {COMPOUND_STRING("Always Hits"),       LIST_STATUS3_ALWAYS_HITS},
-    {COMPOUND_STRING("Perish Song"),       LIST_STATUS3_PERISH_SONG},
-    {COMPOUND_STRING("On Air"),            LIST_STATUS3_ON_AIR},
-    {COMPOUND_STRING("Underground"),       LIST_STATUS3_UNDERGROUND},
-    {COMPOUND_STRING("Minimized"),         LIST_STATUS3_MINIMIZED},
-    {COMPOUND_STRING("Charged Up"),        LIST_STATUS3_CHARGED_UP},
-    {COMPOUND_STRING("Rooted"),            LIST_STATUS3_ROOTED},
-    {COMPOUND_STRING("Yawn"),              LIST_STATUS3_YAWN},
-    {COMPOUND_STRING("Imprisoned Others"), LIST_STATUS3_IMPRISONED_OTHERS},
-    {COMPOUND_STRING("Grudge"),            LIST_STATUS3_GRUDGE},
-    {COMPOUND_STRING("Gastro Acid"),       LIST_STATUS3_GASTRO_ACID},
-    {COMPOUND_STRING("Embargo"),           LIST_STATUS3_EMBARGO},
-    {COMPOUND_STRING("Underwater"),        LIST_STATUS3_UNDERWATER},
-    {COMPOUND_STRING("Smacked Down"),      LIST_STATUS3_SMACKED_DOWN},
-    {COMPOUND_STRING("Telekinesis"),       LIST_STATUS3_TELEKINESIS},
-    {COMPOUND_STRING("Miracle Eyed"),      LIST_STATUS3_MIRACLE_EYED},
-    {COMPOUND_STRING("Magnet Rise"),       LIST_STATUS3_MAGNET_RISE},
-    {COMPOUND_STRING("Heal Block"),        LIST_STATUS3_HEAL_BLOCK},
-    {COMPOUND_STRING("Aqua Ring"),         LIST_STATUS3_AQUA_RING},
-    {COMPOUND_STRING("Laser Focus"),       LIST_STATUS3_LASER_FOCUS},
-    {COMPOUND_STRING("Power Trick"),       LIST_STATUS3_POWER_TRICK},
-};
-
-static const struct ListMenuItem sStatus4ListItems[] =
-{
-    {COMPOUND_STRING("Electrified"), LIST_STATUS4_ELECTRIFIED},
-    {COMPOUND_STRING("Salt Cure"),   LIST_STATUS4_SALT_CURE},
-    {COMPOUND_STRING("Syrup Bomb"),  LIST_STATUS4_SYRUP_BOMB},
-    {COMPOUND_STRING("Glaive Rush"), LIST_STATUS4_GLAIVE_RUSH},
+    {COMPOUND_STRING("Spikes"),       LIST_SIDE_SPIKES},
+    {COMPOUND_STRING("Sticky Web"),   LIST_SIDE_STICKY_WEB},
+    {COMPOUND_STRING("Toxic Spikes"), LIST_SIDE_TOXIC_SPIKES},
+    {COMPOUND_STRING("Stealth Rock"), LIST_SIDE_STEALTH_ROCK},
+    {COMPOUND_STRING("Steelsurge"),   LIST_SIDE_STEELSURGE},
 };
 
 static const struct ListMenuItem sSideStatusListItems[] =
 {
     {COMPOUND_STRING("Reflect"),          LIST_SIDE_REFLECT},
     {COMPOUND_STRING("Light Screen"),     LIST_SIDE_LIGHTSCREEN},
-    {COMPOUND_STRING("Sticky Web"),       LIST_SIDE_STICKY_WEB},
-    {COMPOUND_STRING("Spikes"),           LIST_SIDE_SPIKES},
     {COMPOUND_STRING("Safeguard"),        LIST_SIDE_SAFEGUARD},
     {COMPOUND_STRING("Mist"),             LIST_SIDE_MIST},
     {COMPOUND_STRING("Tailwind"),         LIST_SIDE_TAILWIND},
     {COMPOUND_STRING("Aurora Veil"),      LIST_SIDE_AURORA_VEIL},
     {COMPOUND_STRING("Lucky Chant"),      LIST_SIDE_LUCKY_CHANT},
-    {COMPOUND_STRING("Toxic Spikes"),     LIST_SIDE_TOXIC_SPIKES},
-    {COMPOUND_STRING("Stealth Rock"),     LIST_SIDE_STEALTH_ROCK},
-    {COMPOUND_STRING("Steelsurge"),       LIST_SIDE_STEELSURGE},
     {COMPOUND_STRING("Damage Non-Types"), LIST_SIDE_DAMAGE_NON_TYPES},
     {COMPOUND_STRING("Rainbow"),          LIST_SIDE_RAINBOW},
     {COMPOUND_STRING("Sea of Fire"),      LIST_SIDE_SEA_OF_FIRE},
@@ -659,6 +612,8 @@ static void PrintDigitChars(struct BattleDebugMenu *data);
 static void SetUpModifyArrows(struct BattleDebugMenu *data);
 static void UpdateBattlerValue(struct BattleDebugMenu *data);
 static void UpdateMonData(struct BattleDebugMenu *data);
+static void ChangeHazardsValue(struct BattleDebugMenu *data);
+static u32 GetHazardsValue(struct BattleDebugMenu *data);
 static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue);
 static bool32 TryMoveDigit(struct BattleDebugModifyArrows *modArrows, bool32 moveUp);
 static void SwitchToDebugView(u8 taskId);
@@ -765,17 +720,27 @@ void CB2_BattleDebugMenu(void)
     }
 }
 
+enum {
+    COLORID_RED,
+};
+
+static const u8 sTextColorTable[][3] =
+{
+    [COLORID_RED]        = {TEXT_COLOR_WHITE,       TEXT_COLOR_RED,        TEXT_COLOR_LIGHT_RED},
+};
+
 static void PutMovesPointsText(struct BattleDebugMenu *data)
 {
-    u32 i, j, count, battlerDef;
+    u32 i, j, count, battlerDef, chosenMoveIndex = gAiBattleData->chosenMoveIndex[data->aiBattlerId];
     u8 *text = Alloc(0x50);
 
     FillWindowPixelBuffer(data->aiMovesWindowId, 0x11);
+    AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Score/Dmg"), 3, 0, 0, NULL);
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         text[0] = CHAR_SPACE;
         StringCopy(text + 1, GetMoveName(gBattleMons[data->aiBattlerId].moves[i]));
-        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, i * 15, 0, NULL);
+        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 0, (i * 15) + 15, 0, NULL);
         for (count = 0, j = 0; j < MAX_BATTLERS_COUNT; j++)
         {
             if (data->spriteIds.aiIconSpriteIds[j] == 0xFF)
@@ -784,12 +749,24 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
             ConvertIntToDecimalStringN(text,
                                        gAiBattleData->finalScore[data->aiBattlerId][battlerDef][i],
                                        STR_CONV_MODE_RIGHT_ALIGN, 3);
-            AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 83 + count * 54, i * 15, 0, NULL);
+            // If chosen move and chosen target
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 84 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            else
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 84 + count * 54, (i * 15) + 15, 0, NULL);
 
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
+            else
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (i * 15) + 15, 0, NULL);
+            
             ConvertIntToDecimalStringN(text,
                                        AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
-                                       STR_CONV_MODE_RIGHT_ALIGN, 3);
-            AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, i * 15, 0, NULL);
+                                       STR_CONV_MODE_LEADING_ZEROS, 3);
+            if ((chosenMoveIndex == i) && (gAiBattleData->chosenTarget[data->aiBattlerId] == j) && !(gAiLogicData->shouldSwitch & (1u << data->aiBattlerId)))
+                AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 110 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, text);
+            else
+                AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, text, 110 + count * 54, (i * 15) + 15, 0, NULL);
 
             count++;
         }
@@ -797,10 +774,10 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
 
     if (gAiLogicData->shouldSwitch & (1u << data->aiBattlerId))
     {
-        u32 switchMon = GetMonData(&gEnemyParty[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
-
-        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("Switching to "), 74, 64, 0, NULL);
-        AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, gSpeciesInfo[switchMon].speciesName, 74 + 68, 64, 0, NULL);
+        struct Pokemon *party = GetBattlerParty(data->aiBattlerId);
+        u32 switchMon = GetMonData(&party[gAiLogicData->mostSuitableMonId[data->aiBattlerId]], MON_DATA_SPECIES);
+        AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74, 79, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("Switching to "));
+        AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 74 + 68, 79, sTextColorTable[COLORID_RED], 0, gSpeciesInfo[switchMon].speciesName);
     }
 
     CopyWindowToVram(data->aiMovesWindowId, COPYWIN_FULL);
@@ -852,7 +829,7 @@ static void Task_ShowAiPoints(u8 taskId)
             {
                 data->spriteIds.aiIconSpriteIds[i] = CreateMonIcon(gBattleMons[i].species,
                                                          SpriteCallbackDummy,
-                                                         95 + (count * 60), 17, 0, 0);
+                                                         106 + (count * 54), 17, 0, 0);
                 gSprites[data->spriteIds.aiIconSpriteIds[i]].data[0] = i; // battler id
                 count++;
             }
@@ -867,7 +844,7 @@ static void Task_ShowAiPoints(u8 taskId)
                                                  GetMonData(mon, MON_DATA_IS_SHINY),
                                                  gBattleMons[data->aiBattlerId].personality,
                                                  TRUE,
-                                                 39, 130, 15, TAG_NONE);
+                                                 39, 135, 15, TAG_NONE);
         data->aiViewState++;
         break;
     // Put text
@@ -1230,6 +1207,13 @@ static void Task_DebugMenuProcessInput(u8 taskId)
                 SwitchToAiPartyView(taskId);
                 return;
             }
+            else if (listItemId == LIST_ITEM_INSTANT_WIN && JOY_NEW(A_BUTTON))
+            {
+                BattleDebug_WonBattle();
+                BeginNormalPaletteFade(-1, 0, 0, 0x10, 0);
+                gTasks[taskId].func = Task_DebugMenuFadeOut;
+                return;
+            }
             data->currentMainListItemId = listItemId;
 
             // Create the secondary menu list.
@@ -1405,16 +1389,6 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sVolatileStatusListItems;
         itemsCount = ARRAY_COUNT(sVolatileStatusListItems);
         break;
-    case LIST_ITEM_STATUS3:
-        listTemplate.items = sStatus3ListItems;
-        itemsCount = ARRAY_COUNT(sStatus3ListItems);
-        data->bitfield = sStatus3Bitfield;
-        break;
-    case LIST_ITEM_STATUS4:
-        listTemplate.items = sStatus4ListItems;
-        itemsCount = ARRAY_COUNT(sStatus4ListItems);
-        data->bitfield = sStatus4Bitfield;
-        break;
     case LIST_ITEM_AI:
         listTemplate.items = sAIListItems;
         itemsCount = ARRAY_COUNT(sAIListItems);
@@ -1424,10 +1398,15 @@ static void CreateSecondaryListMenu(struct BattleDebugMenu *data)
         listTemplate.items = sVariousListItems;
         itemsCount = ARRAY_COUNT(sVariousListItems);
         break;
+    case LIST_ITEM_HAZARDS:
+        listTemplate.items = sHazardsListItems;
+        itemsCount = ARRAY_COUNT(sHazardsListItems);
+        break;
     case LIST_ITEM_SIDE_STATUS:
         listTemplate.items = sSideStatusListItems;
         itemsCount = ARRAY_COUNT(sSideStatusListItems);
         break;
+    case LIST_ITEM_INSTANT_WIN:
     case LIST_ITEM_AI_MOVES_PTS:
     case LIST_ITEM_AI_INFO:
         return;
@@ -1625,6 +1604,9 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
     case VAL_VOLATILE:
         SetMonVolatile(data->battlerId, data->currentSecondaryListItemId, data->modifyArrows.currValue);
         break;
+    case VAL_HAZARDS:
+        ChangeHazardsValue(data);
+        break;
     case VAR_SIDE_STATUS:
         *GetSideStatusValue(data, TRUE, data->modifyArrows.currValue != 0) = data->modifyArrows.currValue;
         break;
@@ -1648,13 +1630,13 @@ static void UpdateBattlerValue(struct BattleDebugMenu *data)
         if (data->modifyArrows.currValue)
         {
             if (IsBattlerAlive(BATTLE_OPPOSITE(data->battlerId)))
-                gBattleMons[data->battlerId].status2 |= STATUS2_INFATUATED_WITH(BATTLE_OPPOSITE(data->battlerId));
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_OPPOSITE(data->battlerId));
             else
-                gBattleMons[data->battlerId].status2 |= STATUS2_INFATUATED_WITH(BATTLE_PARTNER(BATTLE_OPPOSITE(data->battlerId)));
+                gBattleMons[data->battlerId].volatiles.infatuation = INFATUATED_WITH(BATTLE_PARTNER(BATTLE_OPPOSITE(data->battlerId)));
         }
         else
         {
-            gBattleMons[data->battlerId].status2 &= ~STATUS2_INFATUATION;
+            gBattleMons[data->battlerId].volatiles.infatuation = 0;
         }
         break;
     }
@@ -1702,6 +1684,83 @@ static void ValueToCharDigits(u8 *charDigits, u32 newValue, u8 maxDigits)
         charDigits[i] = valueDigits[i] + CHAR_0;
 }
 
+static void ChangeHazardsValue(struct BattleDebugMenu *data)
+{
+    u32 side = GetBattlerSide(data->battlerId);
+
+    switch (data->currentSecondaryListItemId)
+    {
+    case LIST_SIDE_SPIKES:
+        if (data->modifyArrows.currValue > 0)
+        {
+            if (gSideTimers[side].spikesAmount == 0)
+                PushHazardTypeToQueue(side, HAZARDS_SPIKES);
+            gSideTimers[side].spikesAmount = data->modifyArrows.currValue;
+        }
+        else if (data->modifyArrows.currValue == 0)
+        {
+            gSideTimers[side].spikesAmount = 0;
+            RemoveHazardFromField(side, HAZARDS_SPIKES);
+        }
+        break;
+    case LIST_SIDE_TOXIC_SPIKES:
+        if (data->modifyArrows.currValue > 0)
+        {
+            if (gSideTimers[side].toxicSpikesAmount == 0)
+                PushHazardTypeToQueue(side, HAZARDS_TOXIC_SPIKES);
+            gSideTimers[side].toxicSpikesAmount = data->modifyArrows.currValue;
+        }
+        else if (data->modifyArrows.currValue == 0)
+        {
+            gSideTimers[side].toxicSpikesAmount = 0;
+            RemoveHazardFromField(side, HAZARDS_TOXIC_SPIKES);
+        }
+        break;
+    case LIST_SIDE_STICKY_WEB:
+        if (data->modifyArrows.currValue > 0)
+            PushHazardTypeToQueue(side, HAZARDS_STICKY_WEB);
+        else if (data->modifyArrows.currValue == 0)
+            RemoveHazardFromField(side, HAZARDS_STICKY_WEB);
+        break;
+    case LIST_SIDE_STEALTH_ROCK:
+        if (data->modifyArrows.currValue > 0)
+            PushHazardTypeToQueue(side, HAZARDS_STEALTH_ROCK);
+        else if (data->modifyArrows.currValue == 0)
+            RemoveHazardFromField(side, HAZARDS_STEALTH_ROCK);
+        break;
+    case LIST_SIDE_STEELSURGE:
+        if (data->modifyArrows.currValue > 0)
+            PushHazardTypeToQueue(side, HAZARDS_STEELSURGE);
+        else if (data->modifyArrows.currValue == 0)
+            RemoveHazardFromField(side, HAZARDS_STEELSURGE);
+        break;
+    }
+}
+
+static u32 GetHazardsValue(struct BattleDebugMenu *data)
+{
+    u32 hazardsLayers = 0;
+    switch (data->currentSecondaryListItemId)
+    {
+    case LIST_SIDE_SPIKES:
+        hazardsLayers = gSideTimers[GetBattlerSide(data->battlerId)].spikesAmount;
+        break;
+    case LIST_SIDE_TOXIC_SPIKES:
+        hazardsLayers = gSideTimers[GetBattlerSide(data->battlerId)].toxicSpikesAmount;
+        break;
+    case LIST_SIDE_STICKY_WEB:
+        hazardsLayers = IsHazardOnSide(GetBattlerSide(data->battlerId), HAZARDS_STICKY_WEB);
+        break;
+    case LIST_SIDE_STEALTH_ROCK:
+        hazardsLayers = IsHazardOnSide(GetBattlerSide(data->battlerId), HAZARDS_STEALTH_ROCK);
+        break;
+    case LIST_SIDE_STEELSURGE:
+        hazardsLayers = IsHazardOnSide(GetBattlerSide(data->battlerId), HAZARDS_STEELSURGE);
+        break;
+    }
+    return hazardsLayers;
+}
+
 static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus, bool32 statusTrue)
 {
     struct SideTimer *sideTimer = &gSideTimers[GetBattlerSide(data->battlerId)];
@@ -1726,26 +1785,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_LIGHTSCREEN;
         }
         return &sideTimer->lightscreenTimer;
-    case LIST_SIDE_STICKY_WEB:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_STICKY_WEB;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_STICKY_WEB;
-            sideTimer->stickyWebBattlerId = data->battlerId;
-            sideTimer->stickyWebBattlerSide = GetBattlerSide(data->battlerId);
-        }
-        return &sideTimer->stickyWebAmount;
-    case LIST_SIDE_SPIKES:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_SPIKES;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_SPIKES;
-        }
-        return &sideTimer->spikesAmount;
     case LIST_SIDE_SAFEGUARD:
         if (changeStatus)
         {
@@ -1791,33 +1830,6 @@ static u16 *GetSideStatusValue(struct BattleDebugMenu *data, bool32 changeStatus
                 *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_LUCKY_CHANT;
         }
         return &sideTimer->luckyChantTimer;
-    case LIST_SIDE_TOXIC_SPIKES:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_TOXIC_SPIKES;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_TOXIC_SPIKES;
-        }
-        return &sideTimer->toxicSpikesAmount;
-    case LIST_SIDE_STEALTH_ROCK:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_STEALTH_ROCK;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_STEALTH_ROCK;
-        }
-        return &sideTimer->stealthRockAmount;
-    case LIST_SIDE_STEELSURGE:
-        if (changeStatus)
-        {
-            if (statusTrue)
-                *(u32 *)(data->modifyArrows.modifiedValPtr) |= SIDE_STATUS_STEELSURGE;
-            else
-                *(u32 *)(data->modifyArrows.modifiedValPtr) &= ~SIDE_STATUS_STEELSURGE;
-        }
-        return &sideTimer->steelsurgeAmount;
     case LIST_SIDE_DAMAGE_NON_TYPES:
         if (changeStatus)
         {
@@ -1984,7 +1996,7 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
             data->modifyArrows.maxDigits = 1;
             data->modifyArrows.modifiedValPtr = NULL;
             data->modifyArrows.typeOfVal = VAR_IN_LOVE;
-            data->modifyArrows.currValue = (gBattleMons[data->battlerId].status2 & STATUS2_INFATUATION) != 0;
+            data->modifyArrows.currValue = gBattleMons[data->battlerId].volatiles.infatuation;
         }
         break;
     case LIST_ITEM_STATUS1:
@@ -1993,10 +2005,10 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
         goto CASE_ITEM_STATUS;
     case LIST_ITEM_VOLATILE:
-        data->modifyArrows.currValue = GetMonVolatile(data->battlerId, data->currentSecondaryListItemId);
+        data->modifyArrows.currValue = GetBattlerVolatile(data->battlerId, data->currentSecondaryListItemId);
         data->modifyArrows.typeOfVal = VAL_VOLATILE;
         data->modifyArrows.minValue = 0;
-#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeBitSize, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeBitSize)); break;
+#define UNPACK_VOLATILE_MAX_SIZE(_enum, _fieldName, _typeMaxValue, ...) case _enum: data->modifyArrows.maxValue = min(MAX_u16, GET_VOLATILE_MAXIMUM(_typeMaxValue)); break;
         switch (data->currentSecondaryListItemId)
         {
             VOLATILE_DEFINITIONS(UNPACK_VOLATILE_MAX_SIZE)
@@ -2014,16 +2026,6 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         }
         data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
-    case LIST_ITEM_STATUS3:
-        data->modifyArrows.modifiedValPtr = &gStatuses3[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gStatuses3[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
-    case LIST_ITEM_STATUS4:
-        data->modifyArrows.modifiedValPtr = &gStatuses4[data->battlerId];
-        data->modifyArrows.currValue = GetBitfieldValue(gStatuses4[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
-        data->modifyArrows.typeOfVal = VAL_BITFIELD_32;
-        goto CASE_ITEM_STATUS;
     case LIST_ITEM_AI:
         data->modifyArrows.modifiedValPtr = &gAiThinkingStruct->aiFlags[data->battlerId];
         data->modifyArrows.currValue = GetBitfieldValue(gAiThinkingStruct->aiFlags[data->battlerId], data->bitfield[data->currentSecondaryListItemId].currBit, data->bitfield[data->currentSecondaryListItemId].bitsCount);
@@ -2034,16 +2036,29 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
         data->modifyArrows.maxValue = (1 << data->bitfield[data->currentSecondaryListItemId].bitsCount) - 1;
         data->modifyArrows.maxDigits = MAX_DIGITS(data->modifyArrows.maxValue);
         break;
+    case LIST_ITEM_HAZARDS:
+        data->modifyArrows.minValue = 0;
+        switch (data->currentSecondaryListItemId)
+        {
+        case LIST_SIDE_SPIKES:
+            data->modifyArrows.maxValue = 3;
+            break;
+        case LIST_SIDE_TOXIC_SPIKES:
+            data->modifyArrows.maxValue = 2;
+            break;
+        case LIST_SIDE_STICKY_WEB:
+        case LIST_SIDE_STEALTH_ROCK:
+        case LIST_SIDE_STEELSURGE:
+            data->modifyArrows.maxValue = 1;
+            break;
+        }
+        data->modifyArrows.maxDigits = 2;
+        data->modifyArrows.typeOfVal = VAL_HAZARDS;
+        data->modifyArrows.currValue = GetHazardsValue(data);
+        break;
     case LIST_ITEM_SIDE_STATUS:
         data->modifyArrows.minValue = 0;
-
-        if (data->currentSecondaryListItemId == LIST_SIDE_SPIKES)
-            data->modifyArrows.maxValue = 3;
-        else if (data->currentSecondaryListItemId == LIST_SIDE_STEALTH_ROCK || data->currentSecondaryListItemId == LIST_SIDE_STICKY_WEB)
-            data->modifyArrows.maxValue = 1;
-        else
-            data->modifyArrows.maxValue = 9;
-
+        data->modifyArrows.maxValue = 9;
         data->modifyArrows.maxDigits = 2;
         data->modifyArrows.modifiedValPtr = &gSideStatuses[GetBattlerSide(data->battlerId)];
         data->modifyArrows.typeOfVal = VAR_SIDE_STATUS;

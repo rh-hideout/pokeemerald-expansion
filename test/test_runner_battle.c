@@ -445,7 +445,7 @@ u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
     if (sum == 0)
         Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called with zero sum");
 
-    if (gCurrentTurnActionNumber < gBattlersCount)
+    if (gCurrentTurnActionNumber < gBattlersCount || tag == RNG_SHELL_SIDE_ARM)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
@@ -766,6 +766,16 @@ static const char *const sBattleActionNames[] =
     [B_ACTION_SWITCH] = "SWITCH",
 };
 
+static const char *const sGimmickIdentifiers[GIMMICKS_COUNT] =
+{
+    [GIMMICK_NONE] = "N/A",
+    [GIMMICK_MEGA] = "Mega Evolution",
+    [GIMMICK_ULTRA_BURST] = "Ultra Burst",
+    [GIMMICK_Z_MOVE] = "Z-Move",
+    [GIMMICK_DYNAMAX] = "Dynamax",
+    [GIMMICK_TERA] = "Terastallize",
+};
+
 static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battlerId, bool32 printLog)
 {
     u32 i, countExpected = 0;
@@ -781,7 +791,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battl
     return countExpected;
 }
 
-void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target)
+void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, enum Gimmick gimmick)
 {
     const char *filename = gTestRunnerState.test->filename;
     u32 id = DATA.trial.aiActionsPlayed[battlerId];
@@ -802,6 +812,9 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target)
 
         if (expectedAction->explicitTarget && expectedAction->target != target)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected target %s, got %s", filename, expectedAction->sourceLine, BattlerIdentifier(expectedAction->target), BattlerIdentifier(target));
+
+        if (expectedAction->gimmick != GIMMICKS_COUNT && expectedAction->gimmick != gimmick)
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected gimmick %s, got %s", filename, expectedAction->sourceLine, sGimmickIdentifiers[expectedAction->gimmick], sGimmickIdentifiers[gimmick]);
 
         for (i = 0; i < MAX_MON_MOVES; i++)
         {
@@ -1342,6 +1355,10 @@ void TestRunner_Battle_AfterLastTurn(void)
 
 static void TearDownBattle(void)
 {
+    // Zero out the parties, data in them could potentially carry over
+    ZeroPlayerPartyMons();
+    ZeroEnemyPartyMons();
+
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
@@ -1561,9 +1578,14 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     (*partySize)++;
 
     CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
+    // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        data = MOVE_NONE;
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 0x7F; // Max PP possible
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+    }
     data = 0;
     if (B_FRIENDSHIP_BOOST)
     {
@@ -1611,6 +1633,17 @@ void ClosePokemon(u32 sourceLine)
     SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     UpdateMonPersonality(&DATA.currentMon->box, GenerateNature(DATA.nature, DATA.gender % NUM_NATURES) | DATA.gender);
     DATA.currentMon = NULL;
+}
+
+static void SetGimmick(u32 sourceLine, u32 side, u32 partyIndex, enum Gimmick gimmick)
+{
+    enum Gimmick currentGimmick = DATA.chosenGimmick[side][partyIndex];
+    if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
+       || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
+    {
+        INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
+    }
+    DATA.chosenGimmick[side][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -1775,6 +1808,15 @@ void Item_(u32 sourceLine, u32 item)
     INVALID_IF(!DATA.currentMon, "Item outside of PLAYER/OPPONENT");
     INVALID_IF(item >= ITEMS_COUNT, "Illegal item: %d", item);
     SetMonData(DATA.currentMon, MON_DATA_HELD_ITEM, &item);
+    switch (GetItemHoldEffect(item))
+    {
+    case HOLD_EFFECT_MEGA_STONE:
+        SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_MEGA);
+        break;
+    case HOLD_EFFECT_Z_CRYSTAL:
+        SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_Z_MOVE);
+        break;
+    }
 }
 
 void Moves_(u32 sourceLine, u16 moves[MAX_MON_MOVES])
@@ -1831,18 +1873,21 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
+    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
 {
     INVALID_IF(!DATA.currentMon, "GigantamaxFactor outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_GIGANTAMAX_FACTOR, &gigantamaxFactor);
+    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void TeraType_(u32 sourceLine, u32 teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);
+    SetGimmick(sourceLine, DATA.currentSide, DATA.currentPartyIndex, GIMMICK_TERA);
 }
 
 void Shadow_(u32 sourceLine, bool32 isShadow)
@@ -2109,6 +2154,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
                 SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
                 *moveSlot = i;
                 *moveId = ctx->move;
+                INVALID_IF(GetMovePP(ctx->move) == 0, "%S has 0 PP!", GetMoveName(ctx->move));
                 break;
             }
         }
@@ -2143,11 +2189,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
         INVALID_IF(ctx->gimmick != GIMMICK_Z_MOVE && ctx->gimmick != GIMMICK_ULTRA_BURST && holdEffect == HOLD_EFFECT_Z_CRYSTAL, "Cannot use another gimmick while holding a Z-Crystal");
 
         // Check multiple gimmick use.
-        INVALID_IF(DATA.chosenGimmick[side][DATA.currentMonIndexes[battlerId]] != GIMMICK_NONE
-                   && !(DATA.chosenGimmick[side][DATA.currentMonIndexes[battlerId]] == GIMMICK_ULTRA_BURST
-                   && ctx->gimmick == GIMMICK_Z_MOVE), "Cannot use multiple gimmicks on the same battler");
-
-        DATA.chosenGimmick[side][DATA.currentMonIndexes[battlerId]] = ctx->gimmick;
+        SetGimmick(sourceLine, side, DATA.currentMonIndexes[battlerId], ctx->gimmick);
         *moveSlot |= RET_GIMMICK;
     }
 }
@@ -2214,6 +2256,17 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
     if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
 
+    u32 shellSideArmCount = 0;
+    for (u32 i = 0; i < STATE->battlersCount; i++)
+    {
+        if (DATA.battleRecordTurns[DATA.turns][i].rng.tag == RNG_SHELL_SIDE_ARM)
+        {
+            shellSideArmCount++;
+            if (shellSideArmCount > 1)
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L Tried to use fixed RNG for multiple Shell Side Arm moves in the same turn");
+        }
+    }
+
     if (!(DATA.actionBattlers & (1 << battlerId)))
     {
         PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_MOVE);
@@ -2266,11 +2319,12 @@ static void TryMarkExpectMove(u32 sourceLine, struct BattlePokemon *battler, str
 
     id = DATA.expectedAiActionIndex[battlerId];
     DATA.expectedAiActions[battlerId][id].type = B_ACTION_USE_MOVE;
-    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << moveSlot;
+    DATA.expectedAiActions[battlerId][id].moveSlots |= 1 << (moveSlot & ~RET_GIMMICK);
     DATA.expectedAiActions[battlerId][id].target = target;
     DATA.expectedAiActions[battlerId][id].explicitTarget = ctx->explicitTarget;
     DATA.expectedAiActions[battlerId][id].sourceLine = sourceLine;
     DATA.expectedAiActions[battlerId][id].actionSet = TRUE;
+    DATA.expectedAiActions[battlerId][id].gimmick = ctx->explicitGimmick ? ctx->gimmick : GIMMICKS_COUNT;
     if (ctx->explicitNotExpected)
         DATA.expectedAiActions[battlerId][id].notMove = ctx->notExpected;
 
@@ -2545,7 +2599,6 @@ void CloseQueueGroup(u32 sourceLine)
 
 void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityEventContext ctx)
 {
-#if B_ABILITY_POP_UP
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(!STATE->runScene, "ABILITY_POPUP outside of SCENE");
     if (DATA.queuedEventsCount == MAX_QUEUED_EVENTS)
@@ -2560,7 +2613,6 @@ void QueueAbility(u32 sourceLine, struct BattlePokemon *battler, struct AbilityE
             .ability = ctx.ability,
         }},
     };
-#endif
 }
 
 void QueueAnimation(u32 sourceLine, u32 type, u32 id, struct AnimationEventContext ctx)
