@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Opportunist only copies foe's positive stat changes in a turn", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FRISK; }
     PARAMETRIZE { ability = ABILITY_OPPORTUNIST; }
     GIVEN {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Opportunist only copies foe's positive stat changes in a tur
 
 DOUBLE_BATTLE_TEST("Opportunist raises Attack only once when partner has Intimidate against Contrary foe in a double battle", s16 damageLeft, s16 damageRight)
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_CONTRARY; abilityRight = ABILITY_CONTRARY; }
     PARAMETRIZE { abilityLeft = ABILITY_TANGLED_FEET; abilityRight = ABILITY_TANGLED_FEET; }

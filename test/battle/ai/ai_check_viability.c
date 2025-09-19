@@ -176,7 +176,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
 
 AI_SINGLE_BATTLE_TEST("AI chooses moves with secondary effect that have a 100% chance to trigger")
 {
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_NONE; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; }
@@ -199,18 +199,18 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
     u32 status1_0, status1_1, partnerAbility, move;
 
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
     PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SOUNDPROOF; }
 
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
                   move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
 
 
@@ -232,7 +232,8 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 
 AI_SINGLE_BATTLE_TEST("AI chooses moves that cure inactive party members")
 {
-    u32 status, ability, config;
+    u32 status, config;
+    enum Ability ability;
 
     PARAMETRIZE { status = STATUS1_TOXIC_POISON; ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { status = STATUS1_NONE;         ability = ABILITY_SCRAPPY; }
@@ -312,7 +313,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Worry Seed against Rest")
 
 AI_SINGLE_BATTLE_TEST("AI uses Simple Beam against Contrary Leaf Storm")
 {
-    u32 ability, move;
+    enum Ability ability, move;
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_LEAF_STORM; }
     PARAMETRIZE { ability = ABILITY_CONTRARY; move = MOVE_CHARGE_BEAM; }
     PARAMETRIZE { ability = ABILITY_OVERGROW; move = MOVE_CHARGE_BEAM; }
@@ -394,7 +395,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
 
 AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SHIELD_DUST; }
     PARAMETRIZE { ability = ABILITY_TINTED_LENS; }
 

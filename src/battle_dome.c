@@ -2393,8 +2393,9 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 
 static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
 {
-    int defType1, defType2, defAbility, moveType;
+    int defType1, defType2, moveType;
     int typePower = TYPE_x1;
+    enum Ability defAbility;
 
     if (move == MOVE_NONE || move == MOVE_UNAVAILABLE || IsBattleMoveStatus(move))
         return 0;
@@ -5141,7 +5142,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
             {
                 u32 personality = 0;
                 u32 targetSpecies = 0;
-                u32 targetAbility = 0;
+                enum Ability targetAbility = 0;
                 uq4_12_t typeMultiplier = 0;
                 do
                 {
