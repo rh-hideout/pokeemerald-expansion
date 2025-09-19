@@ -412,25 +412,25 @@ AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
 
 AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
 {
-    u32 fieldStatus, ability;
+    u32 species, fieldStatus, ability;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
 
-    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; ability = ABILITY_NONE; }
-    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; ability = ABILITY_LIQUID_VOICE; }
-    PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; ability = ABILITY_GALVANIZE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  fieldStatus = MOVE_RAIN_DANCE; ability = ABILITY_NONE; }
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  fieldStatus = MOVE_RAIN_DANCE; ability = ABILITY_LIQUID_VOICE; }
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
     PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
-                  fieldStatus = MOVE_ELECTRIC_TERRAIN; ability = ABILITY_GALVANIZE; }
+                  fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
 
     GIVEN {
         AI_FLAGS(aiFlags);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
+        OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
     } WHEN {
         if (ability != ABILITY_NONE)
             TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }
