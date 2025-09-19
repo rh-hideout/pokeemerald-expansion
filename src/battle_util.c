@@ -7578,15 +7578,15 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         }
     }
         break;
-    case ITEMEFFECT_MIRROR_HERB:
-    case ITEMEFFECT_MIRROR_HERB_ENDTURN:
+    case ITEMEFFECT_WHITE_HERB:
+    case ITEMEFFECT_WHITE_HERB_ENDTURN:
         switch (battlerHoldEffect)
         {
         case HOLD_EFFECT_WHITE_HERB:
             effect = RestoreWhiteHerbStats(battler);
             if (effect != 0)
             {
-                if (caseID == ITEMEFFECT_MIRROR_HERB)
+                if (caseID == ITEMEFFECT_WHITE_HERB)
                     BattleScriptCall(BattleScript_WhiteHerbRet);
                 else
                     BattleScriptExecute(BattleScript_WhiteHerbEnd2);

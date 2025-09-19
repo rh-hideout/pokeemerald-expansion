@@ -6703,7 +6703,7 @@ static void Cmd_moveend(void)
                 if (!IsBattlerAlive(i))
                     continue;
 
-                if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, i))
+                if (ItemBattleEffects(ITEMEFFECT_WHITE_HERB, i))
                     return;
             }
             gBattleScripting.moveendState++;
@@ -15261,7 +15261,7 @@ void BS_RunStatChangeItems(void)
 
     // Change instruction before calling ItemBattleEffects.
     gBattlescriptCurrInstr = cmd->nextInstr;
-    ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, GetBattlerForBattleScript(cmd->battler));
+    ItemBattleEffects(ITEMEFFECT_WHITE_HERB, GetBattlerForBattleScript(cmd->battler));
 }
 
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove)
