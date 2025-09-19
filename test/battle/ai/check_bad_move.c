@@ -15,6 +15,7 @@ AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is prot
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY;   species = SPECIES_BELDUM;  move = MOVE_NOBLE_ROAR; }
 
     GIVEN {
+        WITH_CONFIG(GEN_ILLUMINATE_EFFECT, GEN_9);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_OMNISCIENT);
         PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, move); }

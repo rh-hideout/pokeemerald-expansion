@@ -37,10 +37,18 @@ struct Test
     u16 sourceLine;
 };
 
+enum TestFilterMode
+{
+    TEST_FILTER_MODE_TEST_NAME_PREFIX,
+    TEST_FILTER_MODE_TEST_NAME_INFIX,
+    TEST_FILTER_MODE_FILENAME_EXACT,
+};
+
 struct TestRunnerState
 {
     u8 state;
     u8 exitCode;
+    enum TestFilterMode filterMode:8;
     const char *skipFilename;
     u32 failedAssumptionsBlockLine;
     const struct Test *test;

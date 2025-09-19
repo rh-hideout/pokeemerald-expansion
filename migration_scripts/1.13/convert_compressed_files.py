@@ -9,9 +9,10 @@ if not os.path.exists("Makefile"):
 
 primaryTileset_pattern = re.compile(r"(.*\"data/tilesets/primary/.+\.4bpp\.)lz(\".*)")
 secondaryTileset_pattern = re.compile(r"(.*\"data/tilesets/secondary/.+\.4bpp\.)lz(\".*)")
-tilemap_pattern = re.compile(r"(.*\"graphics/.+\.bin\.)lz(\".*)")
+tilemap_pattern = re.compile(r"(.*\"graphics/.+\.bin\.)(?:lz|rl)(\".*)")
 lzuncomp_pattern = re.compile(r"(.*)\bLZ77UnComp([WV])ram\b(\(.*)")
 lzdecomp_pattern = re.compile(r"(.*)\bLZDecompress([WV])ram\b(\(.*)")
+rluncomp_pattern = re.compile(r"(.*)\bRLUnComp([WV])ram\b(\(.*)")
 
 def handle_file(fileInput):
     fileTest = Path(fileInput)
@@ -33,13 +34,20 @@ def handle_file(fileInput):
                 line = match.group(1) + "smolTM" + match.group(2) + "\n"
             elif ".4bpp.lz" in line:
                 line = line.replace(".4bpp.lz", ".4bpp.smol")
+            elif ".4bpp.rl" in line:
+                line = line.replace(".4bpp.rl", ".4bpp.smol")
             elif ".8bpp.lz" in line:
                 line = line.replace(".8bpp.lz", ".8bpp.smol")
+            elif ".8bpp.rl" in line:
+                line = line.replace(".8bpp.rl", ".8bpp.smol")
             elif match := lzuncomp_pattern.match(line):
                 if allLines[-1].strip() != "case MODE_LZ77:": # do not modify DecompressDataWithHeader itself
                     line = match.group(1) + "DecompressDataWithHeader" + match.group(2) + "ram" + match.group(3) + "\n"
                     needs_decompress_h = True
             elif match := lzdecomp_pattern.match(line):
+                line = match.group(1) + "DecompressDataWithHeader" + match.group(2) + "ram" + match.group(3) + "\n"
+                needs_decompress_h = True
+            elif match := rluncomp_pattern.match(line):
                 line = match.group(1) + "DecompressDataWithHeader" + match.group(2) + "ram" + match.group(3) + "\n"
                 needs_decompress_h = True
             else:

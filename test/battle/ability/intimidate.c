@@ -376,7 +376,7 @@ DOUBLE_BATTLE_TEST("Intimidate will correctly decrease the attack of the second 
     }
 }
 
-SINGLE_BATTLE_TEST("Intimdate does not lose timing after mega evolution and switch out by a hit escape move")
+SINGLE_BATTLE_TEST("Intimidate does not lose timing after mega evolution and switch out by a hit escape move")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);

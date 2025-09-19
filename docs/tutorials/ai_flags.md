@@ -54,6 +54,9 @@ This flag is divided into two components to calculate the best available move fo
 
 This is different to `AI_FLAG_CHECK_BAD_MOVE` as it calculates how poor a move is and not whether it will fail or not.
 
+## `AI_FLAG_ATTACKS_PARTNER`
+This flag is meant for double battles where both of the opponents hate each other.  They prioritize damage to their 'partner' over the player.
+
 ## `AI_FLAG_FORCE_SETUP_FIRST_TURN`
 AI will prioritize using setup moves on the first turn at the expense of all else. These include stat buffs, field effects, status moves, etc. AI_FLAG_CHECK_VIABILITY will instead do this when the AI determines it makes sense.
 

@@ -459,6 +459,13 @@ JPN = FC 15
 ENG = FC 16
 PAUSE_MUSIC = FC 17
 RESUME_MUSIC = FC 18
+SPEAKER = FC 19
+
+@ Speaker names, the order must be matching with include/constants/speaker_names.h
+NAME_NONE = 00
+NAME_MOM = 01
+NAME_PLAYER = 02
+NAME_COUNT = 03
 
 @ fonts
 

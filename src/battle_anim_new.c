@@ -9632,7 +9632,7 @@ void AnimTask_RandomBool(u8 taskId)
 // Credit to Skeli
 #define PRIMAL_PULSE_SCALE_SIZE 16
 #define PRIMAL_PULSE_FRAME_COUNT 4
-static const union AffineAnimCmd sSpriteAffineAnim_PrimalSymbol[] = 
+static const union AffineAnimCmd sSpriteAffineAnim_PrimalSymbol[] =
 {
     AFFINEANIMCMD_FRAME(16, 16, 0, 0),
     AFFINEANIMCMD_FRAME(32, 32, 0, 15),
@@ -9679,7 +9679,7 @@ const union AffineAnimCmd* const gSpriteAffineAnimTable_MegaSymbol[] =
 // Used for determining which animation to use for Order Up
 void AnimTask_GetCommanderType(u8 taskId)
 {
-    switch (gBattleStruct->commanderActive[gEffectBattler])
+    switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
     {
     case SPECIES_TATSUGIRI_CURLY:
         gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_CURLY;
@@ -9694,6 +9694,6 @@ void AnimTask_GetCommanderType(u8 taskId)
         gBattleAnimArgs[ARG_RET_ID] = ANIM_ORDER_UP_NONE;
         break;
     }
-    
+
     DestroyAnimVisualTask(taskId);
 }

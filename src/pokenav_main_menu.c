@@ -32,7 +32,7 @@ struct Pokenav_MainMenu
 // Needed to match LoadLeftHeaderGfxForSubMenu.
 struct CompressedSpriteSheetNoSize
 {
-    const u32 *data;  // LZ77 compressed palette data
+    const u32 *data;  // Compressed sprite data
     u32 tag;
 };
 

@@ -60,7 +60,7 @@ AI_SINGLE_BATTLE_TEST("AI doesn't use accuracy-lowering moves if it knows that t
                if (abilityAI == ABILITY_MOLD_BREAKER) {
                    SCORE_GT(opponent, MOVE_SAND_ATTACK, MOVE_CELEBRATE);
                } else {
-                   SCORE_EQ(opponent, MOVE_SAND_ATTACK, MOVE_CELEBRATE);
+                   SCORE_LT_VAL(opponent, MOVE_SAND_ATTACK, AI_SCORE_DEFAULT);
                }
         }
     } SCENE {

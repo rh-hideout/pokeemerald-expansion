@@ -31084,6 +31084,17 @@ gBattleAnimStatus_Nightmare::
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
+gBattleAnimStatus_Frostbite::
+	playsewithpan SE_M_ICY_WIND, 0
+	loadspritegfx ANIM_TAG_ICE_CRYSTALS
+	monbg ANIM_DEF_PARTNER
+	splitbgprio ANIM_TARGET
+	call IceCrystalEffectShort
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, 5, 7, 0, RGB(0, 20, 31)
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	end
+
 gBattleAnimGeneral_StatsChange::
 	createvisualtask AnimTask_StatsChange, 5
 	waitforvisualfinish
@@ -31598,6 +31609,7 @@ MegaEvolutionSpinEffect:
 	return
 
 gBattleAnimGeneral_TeraCharge::
+	createvisualtask AnimTask_HideOpponentShadows, 2 @ Hide opponent shadows so they don't flicker between battle anims
 	loadspritegfx ANIM_TAG_TERA_CRYSTAL
 	loadspritegfx ANIM_TAG_TERA_SHATTER
 	loadspritegfx ANIM_TAG_FOCUS_ENERGY
@@ -31635,6 +31647,7 @@ TeraChargeParticles:
 	return
 
 gBattleAnimGeneral_TeraActivate::
+	createvisualtask AnimTask_SetOpponentShadowCallbacks, 2 @ Restore shadows hidden in the charge script
 	loadspritegfx ANIM_TAG_TERA_SYMBOL
 	loadspritegfx ANIM_TAG_SPARKLE_6
 	createvisualtask AnimTask_HideSwapSprite, 2, 1, 0
