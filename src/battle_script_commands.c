@@ -10499,6 +10499,8 @@ static inline bool32 ChangeStatBuffsStatChanger(u32 battler, union StatChanger s
         .pushInstr = failPtr,
         .statChanger = statChanger,
         .multistring = (gBattlerTarget == battler), // Set multistring depending on mon raising/lowering stats
+        .ability = GetBattlerAbility(battler),
+        .holdEffect = GetBattlerHoldEffect(battler, TRUE),
     };
 
     ChangeStatBuffsWithResult(&result, flags);
@@ -10558,9 +10560,6 @@ static bool32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatC
 
 static void ChangeStatBuffsWithResult(struct MoveEffectResult *result, union StatChangeFlags flags)
 {
-    result->ability = GetBattlerAbility(result->effectBattler);
-    result->holdEffect = GetBattlerHoldEffect(result->effectBattler, TRUE);
-
     if (result->ability == ABILITY_CONTRARY)
     {
         result->statChanger.isNegative ^= TRUE;
