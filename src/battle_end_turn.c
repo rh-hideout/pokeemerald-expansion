@@ -1530,6 +1530,19 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
+/*
+ * Various end turn effects that happen after all battlers moved.
+ * Each Case will apply the effects for each battler. Moving to the next case when all battlers are done.
+ * If an effect is going to be applied on a better, the bool effect will be set to TRUE and a script set.
+ * The script is set with `BattleScriptExecute` and should have the ending `end2`
+   Example:
+        BattleScriptExecute(BattleScript_X);
+
+        (in battle_scripts_1.s)
+        BattleScript_X:
+            some commands
+            end2
+ */
 static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 {
     [ENDTURN_ORDER] = HandleEndTurnOrder,

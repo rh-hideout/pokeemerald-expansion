@@ -4509,7 +4509,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 {
                     gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
                     gLastUsedItem = GetUsedHeldItem(gBattlerTarget);
-                    BattleScriptPushCursorAndCallback(BattleScript_PickupActivates);
+                    BattleScriptExecute(BattleScript_PickupActivates);
                     effect++;
                 }
                 break;
@@ -4520,7 +4520,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && GetItemPocket(GetUsedHeldItem(battler)) == POCKET_BERRIES)
                 {
                     gLastUsedItem = GetUsedHeldItem(battler);
-                    BattleScriptPushCursorAndCallback(BattleScript_HarvestActivates);
+                    BattleScriptExecute(BattleScript_HarvestActivates);
                     effect++;
                 }
                 break;
@@ -4531,7 +4531,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
                  && !gBattleMons[battler].volatiles.healBlock)
                 {
-                    BattleScriptPushCursorAndCallback(BattleScript_IceBodyHeal);
+                    BattleScriptExecute(BattleScript_IceBodyHeal);
                     gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
                     if (gBattleStruct->moveDamage[battler] == 0)
                         gBattleStruct->moveDamage[battler] = 1;
@@ -4548,7 +4548,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && !IsBattlerAtMaxHp(battler)
                  && !gBattleMons[battler].volatiles.healBlock)
                 {
-                    BattleScriptPushCursorAndCallback(BattleScript_RainDishActivates);
+                    BattleScriptExecute(BattleScript_RainDishActivates);
                     gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (gLastUsedAbility == ABILITY_RAIN_DISH ? 16 : 8);
                     if (gBattleStruct->moveDamage[battler] == 0)
                         gBattleStruct->moveDamage[battler] = 1;
@@ -4586,7 +4586,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gBattleMons[battler].status1 = 0;
                     gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleScripting.battler = battler;
-                    BattleScriptPushCursorAndCallback(BattleScript_ShedSkinActivates);
+                    BattleScriptExecute(BattleScript_ShedSkinActivates);
                     BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, 4, &gBattleMons[battler].status1);
                     MarkBattlerForControllerExec(battler);
                     effect++;
@@ -4597,7 +4597,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 {
                     SaveBattlerAttacker(gBattlerAttacker);
                     SET_STATCHANGER(STAT_SPEED, 1, FALSE);
-                    BattleScriptPushCursorAndCallback(BattleScript_AttackerAbilityStatRaiseEnd3);
+                    BattleScriptExecute(BattleScript_AttackerAbilityStatRaiseEnd2);
                     gBattleScripting.battler = battler;
                     effect++;
                 }
@@ -4629,7 +4629,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                         i = RandomUniformExcept(RNG_MOODY_DECREASE, STAT_ATK, statsNum - 1, MoodyCantLowerStat);
                         SET_STATCHANGER2(gBattleScripting.savedStatChanger, i, 1, TRUE);
                     }
-                    BattleScriptPushCursorAndCallback(BattleScript_MoodyActivates);
+                    BattleScriptExecute(BattleScript_MoodyActivates);
                     effect++;
                 }
                 break;
@@ -4644,14 +4644,14 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 }
                 break;
             case ABILITY_BAD_DREAMS:
-                BattleScriptPushCursorAndCallback(BattleScript_BadDreamsActivates);
+                BattleScriptExecute(BattleScript_BadDreamsActivates);
                 effect++;
                 break;
             case ABILITY_SOLAR_POWER:
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
                 {
                 SOLAR_POWER_HP_DROP:
-                    BattleScriptPushCursorAndCallback(BattleScript_SolarPowerActivates);
+                    BattleScriptExecute(BattleScript_SolarPowerActivates);
                     gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
                     if (gBattleStruct->moveDamage[battler] == 0)
                         gBattleStruct->moveDamage[battler] = 1;
@@ -4664,7 +4664,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     && gBattleMons[gBattleScripting.battler].status1 & STATUS1_ANY
                     && RandomPercentage(RNG_HEALER, 30))
                 {
-                    BattleScriptPushCursorAndCallback(BattleScript_HealerActivates);
+                    BattleScriptExecute(BattleScript_HealerActivates);
                     effect++;
                 }
                 break;
@@ -4677,7 +4677,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
                 {
                     gBattleScripting.battler = battler;
-                    BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeEnd3);
+                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd2);
                     effect++;
                 }
                 break;
@@ -4685,7 +4685,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 if (TryBattleFormChange(battler, FORM_CHANGE_BATTLE_HP_PERCENT))
                 {
                     gBattleScripting.battler = battler;
-                    BattleScriptPushCursorAndCallback(BattleScript_PowerConstruct);
+                    BattleScriptExecute(BattleScript_PowerConstruct);
                     effect++;
                 }
                 break;
@@ -4699,7 +4699,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
                     gLastUsedItem = gLastUsedBall;
-                    BattleScriptPushCursorAndCallback(BattleScript_BallFetch);
+                    BattleScriptExecute(BattleScript_BallFetch);
                     effect++;
                 }
                 break;
@@ -4709,7 +4709,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                  && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_TURN_END))
                 {
                     gBattleScripting.battler = battler;
-                    BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeEnd3NoPopup);
+                    BattleScriptExecute(BattleScript_BattlerFormChangeEnd3NoPopup);
                     effect++;
                 }
                 break;
@@ -4720,7 +4720,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                     gDisableStructs[battler].cudChew = FALSE;
                     gLastUsedItem = gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)];
                     gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)] = ITEM_NONE;
-                    BattleScriptPushCursorAndCallback(BattleScript_CudChewActivates);
+                    BattleScriptExecute(BattleScript_CudChewActivates);
                     effect++;
                 }
                 else if (!gDisableStructs[battler].cudChew && GetItemPocket(GetUsedHeldItem(battler)) == POCKET_BERRIES)
