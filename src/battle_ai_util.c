@@ -4912,7 +4912,7 @@ bool32 AI_MoveMakesContact(u32 ability, enum ItemHoldEffect holdEffect, u32 move
 
 bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
 {
-    if (gMovesInfo[move].power == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
+    if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
         return FALSE;
 
     return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
@@ -4981,7 +4981,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
             switch (zEffect)
             {
             case Z_EFFECT_NONE:
-                if (gMovesInfo[chosenMove].power == 0)
+                if (GetMovePower(chosenMove) == 0)
                     return FALSE;
                 break;
             case Z_EFFECT_RESET_STATS:
