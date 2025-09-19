@@ -901,6 +901,7 @@ LittlerootTown_EventScript_GiveRunningShoes::
 	waitfanfare
 	setflag FLAG_RECEIVED_RUNNING_SHOES
 	msgbox LittlerootTown_Text_ExplainRunningShoes, MSGBOX_DEFAULT
+	call   LittlerootTown_EventScript_GiveCandyJar
 	msgbox LittlerootTown_Text_ComeHomeIfAnythingHappens, MSGBOX_DEFAULT
 	closemessage
 	delay 30
@@ -1053,4 +1054,23 @@ script LittlerootTown_EventScript_SetOptions{
 	else{
 		return
 	}
+}
+
+script LittlerootTown_EventScript_GiveCandyJar
+{
+	if (flag(FLAG_GET_CANDY_JAR) == FALSE)
+	{
+		msgbox(format("And here, Dad wanted to give you these before leaving."), MSGBOX_DEFAULT)
+		giveitem(ITEM_CANDY_JAR, 1)
+		setflag(FLAG_GET_CANDY_JAR)
+		giveitem(ITEM_SHINY_CHARM, 1)
+		msgbox(format("This can help all party members reach the level caps! And that was your father's 
+		shiny charm, which he used to find his personal ace. Hopefully his luck transfers!"), MSGBOX_DEFAULT)
+		return
+	}
+	else{
+		msgbox(format("Looks like you already have the candy jar!"), MSGBOX_DEFAULT)
+		return
+	}
+
 }

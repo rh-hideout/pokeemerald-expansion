@@ -965,6 +965,21 @@ void ItemUseOutOfBattle_RareCandy(u8 taskId)
     SetUpItemUseCallback(taskId);
 }
 
+void ItemUseOutOfBattle_CandyJar(u8 taskId)
+{
+    if (!gTasks[taskId].tUsingRegisteredKeyItem)
+    {
+        gItemUseCB = ItemUseCB_CandyJar;
+        SetUpItemUseCallback(taskId);
+    }
+    else
+    {
+        VarSet(VAR_USING_KEYITEM, 1);
+        gItemUseCB = ItemUseCB_CandyJar;
+        SetMainCallback2(CB2_ShowPartyMenuForItemUse);
+    }
+}
+
 void ItemUseOutOfBattle_DynamaxCandy(u8 taskId)
 {
     gItemUseCB = ItemUseCB_DynamaxCandy;

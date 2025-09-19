@@ -15088,18 +15088,19 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_SuperRepel,
     }, 
 
-    [ITEM_INFINITE_CANDY] =
+    [ITEM_CANDY_JAR] =
     {
-        .name = ITEM_NAME("Infinite Candy"),
+        .name = ITEM_NAME("Candy Jar"),
         .price = 0,
-        .description = COMPOUND_STRING(
-            " A jar of candies!"),
+        .description = COMPOUND_STRING(" A jar of rare\ncandies!"),
         .importance = 1,
+        .effect = gItemEffect_RareCandy,
+        .sortType = ITEM_TYPE_LEVEL_UP_ITEM,
         .pocket = POCKET_KEY_ITEMS,
-        .type = ITEM_USE_BAG_MENU,
-        .fieldUseFunc = ItemUseOutOfBattle_RareCandy,
-        .iconPic = gItemIcon_Repel,
-        .iconPalette = gItemIconPalette_SuperRepel,
+        .type = ITEM_USE_PARTY_MENU,
+        .fieldUseFunc = ItemUseOutOfBattle_CandyJar,
+        .iconPic = gItemIcon_CandyJar,
+        .iconPalette = gItemIconPalette_CandyJar,
     }, 
 
 

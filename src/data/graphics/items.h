@@ -2103,3 +2103,8 @@ const u16 gItemIconPalette_TwiceSpicedRadish[] = INCBIN_U16("graphics/items/icon
 // PokeVial; Palette and PNG from PokemonSanFran
 const u32 gItemIcon_PokeVial[] = INCBIN_U32("graphics/items/icons/pokevial.4bpp.smol");
 const u16 gItemIconPalette_PokeVial[] = INCBIN_U16("graphics/items/icon_palettes/pokevial.gbapal");
+
+
+//Infinite Candy; Palette  and PNG from Pawkkie
+const u32 gItemIcon_CandyJar[] = INCBIN_U32("graphics/items/icons/candy_jar.4bpp.smol");
+const u16 gItemIconPalette_CandyJar[] = INCBIN_U16("graphics/items/icon_palettes/candy_jar.gbapal");
