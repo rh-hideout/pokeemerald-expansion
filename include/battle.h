@@ -854,6 +854,7 @@ struct MoveEffectResult
     u32 effectBattler:3; // The "effect" battler is the target to which the move effect is applied (not necessarily gBattlerTarget)
     u32 certain:1;
     u32 padding:16; // Future flags coming soon...
+    u32 padding:10; // Future flags coming soon...
 
     // statChanger flags that must also be set on init
     u32 notProtectAffected:1; // Bypasses Protect (e.g. Intimidate Attack drop)

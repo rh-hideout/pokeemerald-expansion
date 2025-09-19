@@ -11239,7 +11239,9 @@ static void Cmd_printstatchangestrings(void)
     if (key->allStats != 0)
     {
         if (statChanger->backwardsCompatibleStatId)
+        {
             HandleSingleStat(statChanger->backwardsCompatibleStatId, cmd->nextInstr, statChanger, key);
+        }    
         else
         {
             // Print strings in the correct order
@@ -11265,7 +11267,9 @@ static void Cmd_printstatchangestrings(void)
         gBattleScripting.haveSavedStatChanger = FALSE;
     }
     else
+    {
         gBattleScripting.statChangerKey.value = 0;
+    }        
 }
 
 static void Cmd_tryinfatuating(void)

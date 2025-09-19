@@ -11487,7 +11487,9 @@ static inline void QueueSingleStatBoost(u32 battler, union StatChanger statChang
 void QueueStatBoostsForMirrorHerbOpportunist(u32 battler, union StatChanger statChanger)
 {
     if (statChanger.backwardsCompatibleStatId)
+    {
         QueueSingleStatBoost(battler, statChanger, statChanger.backwardsCompatibleStatId);
+    }        
     else
     {
         // Go through each stat and update queued stat boosts
