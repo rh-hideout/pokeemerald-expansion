@@ -2929,30 +2929,38 @@ static inline bool32 IsMoveSleepClauseTrigger(u32 move)
     return FALSE;
 }
 
-bool32 HasDamagingMove(u32 battlerId)
+bool32 HasDamagingMove(u32 battler)
 {
     u32 i;
-    u16 *moves = GetMovesArray(battlerId);
+    u16 *moves = GetMovesArray(battler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && !IsBattleMoveStatus(moves[i]))
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && gMovesInfo[moves[i]].power > 0)
             return TRUE;
     }
 
     return FALSE;
 }
 
-bool32 HasDamagingMoveOfType(u32 battlerId, u32 type)
+bool32 HasDamagingMoveOfType(u32 battler, u32 type)
 {
     s32 i;
-    u16 *moves = GetMovesArray(battlerId);
+    u16 *moves = GetMovesArray(battler);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE
-          && GetMoveType(moves[i]) == type && !IsBattleMoveStatus(moves[i]))
-            return TRUE;
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && gMovesInfo[moves[i]].power > 0)
+        {
+            u32 moveType = GetDynamicMoveType(GetBattlerMon(battler), moves[i], battler, MON_IN_BATTLE);
+
+            if (moveType != TYPE_NONE && type == moveType)
+                return TRUE;
+            if (GetMoveType(moves[i]) == type)
+                return TRUE;
+            if (GetMoveEffect(moves[i]) == EFFECT_NATURE_POWER && GetMoveType(GetNaturePowerMove(moves[i])) == type)
+                return TRUE;
+        }
     }
 
     return FALSE;
