@@ -239,13 +239,13 @@ struct BattleMsgData
     u16 currentMove;
     u16 originallyUsedMove;
     u16 lastItem;
-    enum Abilities lastAbility;
+    enum Ability lastAbility;
     u8 scrActive;
     u8 bakScriptPartyIdx;
     u8 hpScale;
     u8 itemEffectBattler;
     u8 moveType;
-    enum Abilities abilities[MAX_BATTLERS_COUNT];
+    enum Ability abilities[MAX_BATTLERS_COUNT];
     u8 textBuffs[3][TEXT_BUFF_ARRAY_COUNT];
 };
 

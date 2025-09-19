@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Galvanize can not turn certain moves into Electric type move
 
 SINGLE_BATTLE_TEST("Galvanize boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    enum Abilities ability;
+    enum Ability ability;
     u32 genConfig;
     PARAMETRIZE { ability = ABILITY_STURDY;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_STURDY;     genConfig = GEN_6; }
@@ -70,7 +70,7 @@ SINGLE_BATTLE_TEST("Galvanize boosts power of affected moves by 20% (Gen7+) or 3
 SINGLE_BATTLE_TEST("Galvanize doesn't affect Weather Ball's type", s16 damage)
 {
     u16 move;
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_GALVANIZE; }
@@ -98,7 +98,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Galvanize doesn't affect Natural Gift's type")
 {
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_GALVANIZE; }
     GIVEN {

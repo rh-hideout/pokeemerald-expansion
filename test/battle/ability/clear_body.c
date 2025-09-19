@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
     s16 turnOneHit;
     s16 turnTwoHit;
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
 
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
@@ -41,8 +41,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent intimid
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat stage reduction from moves")
 {
     u16 move = MOVE_NONE;
-    u32 j, species = SPECIES_NONE; 
-    enum Abilities ability = ABILITY_NONE;
+    u32 j, species = SPECIES_NONE;
+    enum Ability ability = ABILITY_NONE;
     static const u16 statReductionMoves[] = {
         MOVE_GROWL,
         MOVE_LEER,
@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent stat st
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky Web effect on switchin")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke prevent Sticky 
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent stat stage reduction from moves used by the user")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
     PARAMETRIZE{ species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }
@@ -142,8 +142,8 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent s
 SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and White Smoke, but not Full Metal Body")
 {
     u32 j, k, species = SPECIES_NONE;
-    enum Abilities ability = ABILITY_NONE;
-    enum Abilities breakerAbility = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
+    enum Ability breakerAbility = ABILITY_NONE;
     u16 move = ABILITY_NONE;
     static const u16 breakerAbilities[] = {
         ABILITY_MOLD_BREAKER,
@@ -203,7 +203,7 @@ SINGLE_BATTLE_TEST("Mold Breaker, Teravolt, and Turboblaze ignore Clear Body and
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from Iron Ball")
 {
     u32 j, species = SPECIES_NONE;
-    enum Abilities ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     u16 heldItem = ITEM_NONE;
     static const u16 heldItems[] = {
         ITEM_NONE,
@@ -246,7 +246,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent S
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Speed reduction from paralysis")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
 
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
@@ -284,7 +284,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent A
 {
     bool32 burned = FALSE;
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; burned = FALSE; }
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; burned = TRUE; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; burned = FALSE; }
@@ -308,7 +308,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent A
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent receiving negative stat changes from Baton Pass")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
 
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
@@ -339,7 +339,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent r
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Topsy-Turvy")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
 
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
@@ -381,7 +381,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent T
 SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke don't prevent Spectral Thief from resetting positive stat changes")
 {
     u32 species;
-    enum Abilities ability;
+    enum Ability ability;
 
     PARAMETRIZE{ species = SPECIES_METANG; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE{ species = SPECIES_SOLGALEO; ability = ABILITY_FULL_METAL_BODY; }
@@ -428,7 +428,7 @@ SINGLE_BATTLE_TEST("Clear Body, Full Metal Body, and White Smoke protect from Pr
 {
     u32 move = MOVE_NONE;
     u32 species = SPECIES_NONE;
-    enum Abilities ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
 
     static const u32 moves[] = {
         MOVE_SPIKY_SHIELD,

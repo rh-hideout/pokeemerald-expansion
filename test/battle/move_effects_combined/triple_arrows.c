@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
 {
-    enum Abilities ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 50; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 100; }
@@ -28,7 +28,7 @@ SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
 
 SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
 {
-    enum Abilities ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 30; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 60; }

@@ -4,7 +4,7 @@
 
 AI_SINGLE_BATTLE_TEST("AI will not try to lower opposing stats if target is protected by it's ability")
 {
-    enum Abilities ability;
+    enum Ability ability;
     u32 species, move;
 
     PARAMETRIZE { ability = ABILITY_SPEED_BOOST;  species = SPECIES_TORCHIC; move = MOVE_SCARY_FACE; }

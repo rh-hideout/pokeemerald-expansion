@@ -23,7 +23,7 @@ SINGLE_BATTLE_TEST("Pixilate turns a Normal-type move into a Fairy-type move")
 
 SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    enum Abilities ability;
+    enum Ability ability;
     u32 genConfig;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM;     genConfig = GEN_6; }
@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Pixilate boosts power of affected moves by 20% (Gen7+) or 30
 SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type", s16 damage)
 {
     u16 move;
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_PIXILATE; }
@@ -77,7 +77,7 @@ SINGLE_BATTLE_TEST("Pixilate doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Pixilate doesn't affect Natural Gift's type")
 {
-    enum Abilities ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_PIXILATE; }
     GIVEN {

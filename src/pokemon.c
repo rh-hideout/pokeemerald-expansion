@@ -3391,7 +3391,7 @@ u8 GetMonsStateToDoubles_2(void)
     return (aliveCount > 1) ? PLAYER_HAS_TWO_USABLE_MONS : PLAYER_HAS_ONE_USABLE_MON;
 }
 
-enum Abilities GetAbilityBySpecies(u16 species, u8 abilityNum)
+enum Ability GetAbilityBySpecies(u16 species, u8 abilityNum)
 {
     int i;
 
@@ -3416,7 +3416,7 @@ enum Abilities GetAbilityBySpecies(u16 species, u8 abilityNum)
     return gLastUsedAbility;
 }
 
-enum Abilities GetMonAbility(struct Pokemon *mon)
+enum Ability GetMonAbility(struct Pokemon *mon)
 {
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
     u8 abilityNum = GetMonData(mon, MON_DATA_ABILITY_NUM, NULL);
@@ -3532,7 +3532,7 @@ u32 GetSpeciesType(u16 species, u8 slot)
     return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
 }
 
-enum Abilities GetSpeciesAbility(u16 species, u8 slot)
+enum Ability GetSpeciesAbility(u16 species, u8 slot)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
 }
@@ -6053,7 +6053,7 @@ static s32 GetWildMonTableIdInAlteringCave(u16 species)
 
 static inline bool32 CanFirstMonBoostHeldItemRarity(void)
 {
-    enum Abilities ability;
+    enum Ability ability;
     if (GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
         return FALSE;
 
@@ -6585,7 +6585,7 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
     u32 targetSpecies = species;
     const struct FormChange *formChanges = GetSpeciesFormChanges(species);
     u16 heldItem;
-    enum Abilities ability;
+    enum Ability ability;
 
     if (formChanges != NULL)
     {
