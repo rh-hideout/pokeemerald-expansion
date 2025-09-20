@@ -3860,6 +3860,9 @@ static void TryDoEventsBeforeFirstTurn(void)
         {
             i = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
 
+            if (!IsBattlerAlive(i))
+                continue;
+
             if (TryPrimalReversion(i))
                 return;
             if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, 0, 0, 0) != 0)
