@@ -67,7 +67,7 @@ DOUBLE_BATTLE_TEST("Flower Shield doesn't affect Grass-type Pokémon that are in
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerOpponentRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         }
     }
 }
