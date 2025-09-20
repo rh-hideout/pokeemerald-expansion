@@ -5535,20 +5535,18 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         break;
 
     case ABILITYEFFECT_NEUTRALIZINGGAS:
+    case ABILITYEFFECT_NEUTRALIZINGGAS_FIRST_TURN:
         // Prints message only. separate from ABILITYEFFECT_ON_SWITCHIN bc activates before entry hazards
-        for (i = 0; i < gBattlersCount; i++)
+        if (ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[battler].neutralizingGas)
         {
-            if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[i].neutralizingGas)
-            {
-                gDisableStructs[i].neutralizingGas = TRUE;
-                gBattlerAbility = i;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
+            gDisableStructs[battler].neutralizingGas = TRUE;
+            gBattlerAbility = battler;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
+            if (caseID == ABILITYEFFECT_NEUTRALIZINGGAS_FIRST_TURN)
                 BattleScriptPushCursorAndCallback(BattleScript_SwitchInAbilityMsg);
-                effect++;
-            }
-
-            if (effect != 0)
-                break;
+            else
+                BattleScriptCall(BattleScript_SwitchInAbilityMsgRet);
+            effect++;
         }
         break;
     case ABILITYEFFECT_ON_WEATHER: // For ability effects that activate when the battle weather changes.
@@ -6873,7 +6871,12 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             case HOLD_EFFECT_WHITE_HERB:
                 effect = RestoreWhiteHerbStats(battler);
                 if (effect != 0)
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+                {
+                    if (caseID == ITEMEFFECT_ON_SWITCH_IN)
+                        BattleScriptCall(BattleScript_WhiteHerbRet);
+                    else
+                        BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+                }
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 if (B_BERRIES_INSTANT >= GEN_4)
@@ -7070,11 +7073,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 break;
             case HOLD_EFFECT_RESTORE_PP:
                 effect = ItemRestorePp(battler, gLastUsedItem, caseID);
-                break;
-            case HOLD_EFFECT_WHITE_HERB:
-                effect = RestoreWhiteHerbStats(battler);
-                if (effect != 0)
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
                 break;
             case HOLD_EFFECT_BLACK_SLUDGE:
                 if (IS_BATTLER_OF_TYPE(battler, TYPE_POISON))
@@ -7579,13 +7577,19 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         }
     }
         break;
-    case ITEMEFFECT_STATS_CHANGED:
+    case ITEMEFFECT_WHITE_HERB:
+    case ITEMEFFECT_WHITE_HERB_ENDTURN:
         switch (battlerHoldEffect)
         {
         case HOLD_EFFECT_WHITE_HERB:
             effect = RestoreWhiteHerbStats(battler);
             if (effect != 0)
-                BattleScriptCall(BattleScript_WhiteHerbRet);
+            {
+                if (caseID == ITEMEFFECT_WHITE_HERB)
+                    BattleScriptCall(BattleScript_WhiteHerbRet);
+                else
+                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+            }
             break;
         default:
             break;
