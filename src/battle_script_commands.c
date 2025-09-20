@@ -13950,6 +13950,13 @@ static void Cmd_handleballthrow(void)
             BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, shakes);
             MarkBattlerForControllerExec(gBattlerAttacker);
 
+            #if TESTING
+                if (gTestRunnerEnabled)
+                {
+                    shakes = 0; // Force failure for tests.  TODO: make capture RNG flag
+                }
+            #endif
+
             if (shakes == maxShakes) // mon caught, copy of the code above
             {
                 if (IsCriticalCapture())
