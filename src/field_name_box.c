@@ -184,7 +184,6 @@ void SetSpeaker(struct ScriptContext *ctx)
 }
 
 // useful for other context e.g. match call
-
 void TrySpawnAndShowNamebox(const u8 *speaker, u32 tileNum)
 {
     gSpeakerName = speaker;
