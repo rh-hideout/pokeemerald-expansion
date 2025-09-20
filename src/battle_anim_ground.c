@@ -160,34 +160,34 @@ static void AnimBonemerangProjectile(struct Sprite *sprite)
 {
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->data[0] = 20;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    sprite->data[5] = -40;
-    InitAnimArcTranslation(sprite);
+    sprite->sDuration_lti = 20;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    sprite->sArcAmplitude_ati = -40;
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimBonemerangProjectile_Step;
 }
 
 static void AnimBonemerangProjectile_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->x += sprite->x2;
         sprite->y += sprite->y2;
         sprite->y2 = 0;
         sprite->x2 = 0;
-        sprite->data[0] = 20;
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-        sprite->data[5] = 40;
-        InitAnimArcTranslation(sprite);
+        sprite->sInputSpeed_lti = 20;
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
+        sprite->sArcAmplitude_ati = 40;
+        InitSpriteArcTranslation(sprite);
         sprite->callback = AnimBonemerangProjectile_End;
     }
 }
 
 static void AnimBonemerangProjectile_End(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -204,10 +204,10 @@ void AnimBoneHitProjectile(struct Sprite *sprite)
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -234,10 +234,10 @@ void AnimDirtScatter(struct Sprite *sprite)
     if (yOffset > 16)
         yOffset = 16 - yOffset;
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[2] = targetXPos + xOffset;
-    sprite->data[4] = targetYPos + yOffset;
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[2];
+    sprite->sInputEndX_lti = targetXPos + xOffset;
+    sprite->sInputEndY_lti = targetYPos + yOffset;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
 }
 
@@ -537,17 +537,17 @@ void AnimDirtPlumeParticle(struct Sprite *sprite)
 
     sprite->x = GetBattlerSpriteCoord(battler, BATTLER_COORD_X_2) + xOffset;
     sprite->y = GetBattlerYCoordWithElevation(battler) + 30;
-    sprite->data[0] = gBattleAnimArgs[5];
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[4] = sprite->y + gBattleAnimArgs[3];
-    sprite->data[5] = gBattleAnimArgs[4];
-    InitAnimArcTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[5];
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = sprite->y + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[4];
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimDirtPlumeParticle_Step;
 }
 
 static void AnimDirtPlumeParticle_Step(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
