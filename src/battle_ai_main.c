@@ -1986,7 +1986,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] <= 60 && (GetActiveGimmick(battlerAtk) != GIMMICK_Z_MOVE || GetMoveZEffect(move) == Z_EFFECT_NONE))
+            else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FUTURE_SIGHT:
@@ -4322,7 +4322,13 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_CONVERSION:
         if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(gBattleMons[battlerAtk].moves[0])))
+        {
             ADJUST_SCORE(WEAK_EFFECT);
+            if (aiData->abilities[battlerAtk] == ABILITY_ADAPTABILITY)
+                ADJUST_SCORE(WEAK_EFFECT);
+            if (IsConsideringZMove(battlerAtk, battlerDef, move))
+                ADJUST_SCORE(BEST_EFFECT);
+        }
         break;
     case EFFECT_SWALLOW:
         if (gDisableStructs[battlerAtk].stockpileCounter == 0)
