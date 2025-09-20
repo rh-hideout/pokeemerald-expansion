@@ -36,4 +36,38 @@ DOUBLE_BATTLE_TEST("Flower Shield raises the defense of all Grass-type Pokémon"
     }
 }
 
-TO_DO_BATTLE_TEST("Flower Shield fails if there's no Grass-type Pokémon on the field")
+SINGLE_BATTLE_TEST("Flower Shield fails if there's no Grass-type Pokémon on the field")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLOWER_SHIELD); }
+    } SCENE {
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flower Shield doesn't affect Grass-type Pokémon that are in a semi-invulnerable position")
+{
+    GIVEN {
+        PLAYER(SPECIES_BULBASAUR);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_BULBASAUR);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_FLY, target: playerLeft);
+            MOVE(playerLeft, MOVE_FLOWER_SHIELD);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLOWER_SHIELD, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        }
+    }
+}
