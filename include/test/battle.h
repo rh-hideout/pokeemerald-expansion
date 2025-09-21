@@ -1029,26 +1029,10 @@ void Shadow_(u32 sourceLine, bool32 isShadow);
 
 static inline bool8 IsMultibattleTest(void)
 {
-    u32 isMaster = gBattleTypeFlags & BATTLE_TYPE_IS_MASTER;
-    u32 isRecordedMaster = gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER;
-    u32 isRecordedLink = gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK;
-    u32 isTrainer = gBattleTypeFlags & BATTLE_TYPE_TRAINER;
-    u32 isIngamePartner = gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER;
-    u32 isDouble = gBattleTypeFlags & BATTLE_TYPE_DOUBLE;
-    u32 isMulti = gBattleTypeFlags & BATTLE_TYPE_MULTI;
-    u32 isTwoOpponents = gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS;
-
     if (TESTING)
     {
-        if (isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
-            return TRUE;
-        else if (isMaster && isRecordedMaster && isRecordedLink && isTrainer && isIngamePartner && isMulti)
-            return TRUE;
-        else if (isMaster && isTrainer && isIngamePartner && isMulti && isTwoOpponents)
-            return TRUE;
-        else if (isMaster && isTrainer && isIngamePartner && isMulti)
-            return TRUE;
-        else if (isMaster && isTrainer && isDouble && isTwoOpponents)
+        if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
+        || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
             return TRUE;
         else
             return FALSE;

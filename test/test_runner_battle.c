@@ -381,30 +381,30 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = TRAINER_RED;
         DATA.hasAI = TRUE;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 3;
-        DATA.currentMonIndexes[3] = 3;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
         break;
     case BATTLE_TEST_AI_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = 0xFFFF;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 3;
-        DATA.currentMonIndexes[3] = 1;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent first mon
+        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[3] = 1; // Opponent second mon
         DATA.hasAI = TRUE;
         break;
     case BATTLE_TEST_AI_ONE_VS_TWO:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
         DATA.recordedBattle.opponentA = TRAINER_LEAF;
         DATA.recordedBattle.opponentB = TRAINER_RED;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 1;
-        DATA.currentMonIndexes[3] = 3;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 1; // Player second mon
+        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
         DATA.hasAI = TRUE;
         break;
     case BATTLE_TEST_SINGLES:
@@ -425,29 +425,29 @@ static void BattleTest_Run(void *data)
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 3;
-        DATA.currentMonIndexes[3] = 3;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
         break;
     case BATTLE_TEST_TWO_VS_ONE:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_MULTI;
         DATA.recordedBattle.partnerId = TRAINER_PARTNER(PARTNER_STEVEN);
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = 0xFFFF;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 3;
-        DATA.currentMonIndexes[3] = 1;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent first mon
+        DATA.currentMonIndexes[2] = 3; // Player partner first mon
+        DATA.currentMonIndexes[3] = 1; // Opponent second mon
         break;
     case BATTLE_TEST_ONE_VS_TWO:
         DATA.recordedBattle.battleFlags = BATTLE_TYPE_IS_MASTER | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_TRAINER | BATTLE_TYPE_DOUBLE | BATTLE_TYPE_TWO_OPPONENTS;
         DATA.recordedBattle.opponentA = TRAINER_LINK_OPPONENT;
         DATA.recordedBattle.opponentB = TRAINER_LINK_OPPONENT;
-        DATA.currentMonIndexes[0] = 0;
-        DATA.currentMonIndexes[1] = 0;
-        DATA.currentMonIndexes[2] = 1;
-        DATA.currentMonIndexes[3] = 3;
+        DATA.currentMonIndexes[0] = 0; // Player first mon
+        DATA.currentMonIndexes[1] = 0; // Opponent A first mon
+        DATA.currentMonIndexes[2] = 1; // Player second mon
+        DATA.currentMonIndexes[3] = 3; // Opponent B first mon
         break;
     }
 
@@ -2777,7 +2777,6 @@ void SkipTurn(u32 sourceLine, struct BattlePokemon *battler)
 
 void SendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex)
 {
-    Test_MgbaPrintf("partyIndex %d", partyIndex);
     s32 i;
     s32 battlerId = battler - gBattleMons;
     INVALID_IF(DATA.turnState == TURN_CLOSED, "SEND_OUT outside TURN");

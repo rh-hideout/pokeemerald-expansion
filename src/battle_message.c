@@ -2248,7 +2248,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     {
                         if (gBattleScripting.battler == 1)
                             stringPtr = sText_Trainer1SentOutPkmn;
-                        else if (gBattleScripting.battler == 3)
+                        else
                             stringPtr = sText_Trainer2SentOutPkmn;
                     }
                     else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
