@@ -203,27 +203,26 @@ static u32 GetVariationsNumber(u32 move, bool8 isDouble)
     u32 variationsNumber;
 
     if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL
-        || gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE
-        || move == MOVE_TECHNO_BLAST)
+     || gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE
+     || move == MOVE_TECHNO_BLAST)
         variationsNumber = 5;
     else if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
-        || gMovesInfo[move].effect == EFFECT_RETURN
-        || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
-        || move == MOVE_WATER_SPOUT //we don't use the effect because other moves with the water spout effect don't have animation variations
-        )
+          || gMovesInfo[move].effect == EFFECT_RETURN
+          || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
+          || move == MOVE_WATER_SPOUT) //we don't use the effect because other moves with the water spout effect don't have animation variations
         variationsNumber = 4;
     else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
-        || gMovesInfo[move].effect == EFFECT_SWALLOW
-        || move == MOVE_SEISMIC_TOSS
-        || gMovesInfo[move].effect == EFFECT_DRAGON_DARTS)
+          || gMovesInfo[move].effect == EFFECT_SWALLOW
+          || gMovesInfo[move].effect == EFFECT_DRAGON_DARTS
+          || move == MOVE_SEISMIC_TOSS)
         variationsNumber = 3;
     else if (gMovesInfo[move].effect == EFFECT_CURSE
-        || gMovesInfo[move].effect == EFFECT_PRESENT
-        || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
-        || move == MOVE_SYRUP_BOMB
-        || gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM
-        || gMovesInfo[move].effect == EFFECT_FICKLE_BEAM
-        || gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+          || gMovesInfo[move].effect == EFFECT_PRESENT
+          || gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM
+          || gMovesInfo[move].effect == EFFECT_FICKLE_BEAM
+          || gMovesInfo[move].effect == EFFECT_MAGNITUDE
+          || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
+          || move == MOVE_SYRUP_BOMB)
         variationsNumber = 2;
     else
         variationsNumber = 1;
