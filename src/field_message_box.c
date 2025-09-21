@@ -43,7 +43,7 @@ static void Task_DrawFieldMessage(u8 taskId)
             u32 nameboxWinId = GetNameboxWindowId();
             DrawDialogueFrame(0, TRUE);
             if (nameboxWinId != WINDOW_NONE)
-                DrawNamebox(nameboxWinId, NAME_BOX_BASE_TILE_NUM, TRUE);
+                DrawNamebox(nameboxWinId, NAME_BOX_BASE_TILE_NUM - NAME_BOX_BASE_TILES_TOTAL, TRUE);
             task->tState++;
             break;
         case 2:
