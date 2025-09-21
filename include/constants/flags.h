@@ -661,45 +661,46 @@
 #define FLAG_HIDDEN_ITEM_ROUTE_105_BIG_PEARL                 (FLAG_HIDDEN_ITEMS_START + 0x6F)
 
 // Flags for Level Caps, specifically route/event clears
-#define FLAG_ROUTE102_CLEAR         0x264 // Unused Flag
-#define FLAG_ROUTE104_PART1_CLEAR   0x265 // Unused Flag
-#define FLAG_PB_WOODS_CLEAR         0x266 // Unused Flag
-#define FLAG_ROUTE104_PART2_CLEAR   0x267 // Unused Flag
-#define FLAG_ROUTE116_CLEAR         0x268 // Unused Flag
-#define FLAG_RUSTBORO_RIVAL         0x269 // Unused Flag
-#define FLAG_ROUTE106_CLEAR         0x26A // Unused Flag
-#define FLAG_SLATEPORT_GRUNT        0x26B // Unused Flag
-#define FLAG_ROUTE110_CLEAR         0x26C // Unused Flag
-#define FLAG_ROUTE110_RIVAL         0x26D // Unused Flag
-#define FLAG_MAUVILLE_WALLY         0x26E // Unused Flag
-#define FLAG_ROUTE117_CLEAR         0x26F // Unused Flag
-#define FLAG_ROUTE111_CLEAR         0x270 // Unused Flag
-#define FLAG_ROUTE112_CLEAR         0x271 // Unused Flag
-#define FLAG_UNUSED_0x272           0x272 // Unused Flag
-#define FLAG_UNUSED_0x273           0x273 // Unused Flag
-#define FLAG_UNUSED_0x274           0x274 // Unused Flag
-#define FLAG_UNUSED_0x275           0x275 // Unused Flag
-#define FLAG_UNUSED_0x276           0x276 // Unused Flag
-#define FLAG_UNUSED_0x277           0x277 // Unused Flag
-#define FLAG_UNUSED_0x278           0x278 // Unused Flag
-#define FLAG_UNUSED_0x279           0x279 // Unused Flag
-#define FLAG_UNUSED_0x27A           0x27A // Unused Flag
-#define FLAG_UNUSED_0x27B           0x27B // Unused Flag
-#define FLAG_UNUSED_0x27C           0x27C // Unused Flag
-#define FLAG_UNUSED_0x27D           0x27D // Unused Flag
-#define FLAG_UNUSED_0x27E           0x27E // Unused Flag
-#define FLAG_UNUSED_0x27F           0x27F // Unused Flag
-#define FLAG_UNUSED_0x280           0x280 // Unused Flag
-#define FLAG_UNUSED_0x281           0x281 // Unused Flag
-#define FLAG_UNUSED_0x282           0x282 // Unused Flag
-#define FLAG_UNUSED_0x283           0x283 // Unused Flag
-#define FLAG_UNUSED_0x284           0x284 // Unused Flag
-#define FLAG_UNUSED_0x285           0x285 // Unused Flag
-#define FLAG_UNUSED_0x286           0x286 // Unused Flag
-#define FLAG_UNUSED_0x287           0x287 // Unused Flag
-#define FLAG_UNUSED_0x288  0x288 // Unused Flag
-#define FLAG_UNUSED_0x289  0x289 // Unused Flag
-#define FLAG_UNUSED_0x28A  0x28A // Unused Flag
+#define FLAG_ROUTE102_CLEAR         0x264 // Gym 1 Split
+#define FLAG_ROUTE104_PART1_CLEAR   0x265 
+#define FLAG_PB_WOODS_CLEAR         0x266 
+#define FLAG_ROUTE104_PART2_CLEAR   0x267 
+#define FLAG_ROUTE116_CLEAR         0x268 
+#define FLAG_RUSTBORO_RIVAL         0x269 // Gym 2 Split
+#define FLAG_ROUTE106_CLEAR         0x26A 
+#define FLAG_SLATEPORT_GRUNT        0x26B // Gym 3
+#define FLAG_ROUTE110_CLEAR         0x26C 
+#define FLAG_ROUTE110_RIVAL         0x26D 
+#define FLAG_MAUVILLE_WALLY         0x26E 
+#define FLAG_ROUTE117_CLEAR         0x26F 
+#define FLAG_ROUTE111_CLEAR         0x270 // Gym 4 Split
+#define FLAG_ROUTE112_CLEAR         0x271 
+#define FLAG_MT_CHIMNEY_CLEAR       0x272 
+#define FLAG_ROUTE113_CLEAR         0x273 
+#define FLAG_ROUTE114_CLEAR         0x274 
+#define FLAG_DESERT_CLEAR           0x275 
+#define FLAG_METEOR_FALLS_CLEAR     0x276 
+#define FLAG_ROUTE118_CLEAR         0x277 // Gym 6 Split
+#define FLAG_ROUTE119_CLEAR         0x278 
+#define FLAG_WEATHER_INST_CLEAR     0x279 
+#define FLAG_ROUTE120_CLEAR         0x27A 
+#define FLAG_ROUTE121_CLEAR         0x27B // Gym 7th Split
+#define FLAG_MT_PYRE_CLEAR          0x27C 
+#define FLAG_ROUTE123_CLEAR         0x27D 
+#define FLAG_MAGMA_HIDEOUT_CLEAR    0x27E 
+#define FLAG_ROUTE124_CLEAR         0x27F 
+#define FLAG_AQUA_HIDEOUT_CLEAR     0x280 
+#define FLAG_SPACE_CENTER_CLEAR     0x281 // Gym 8 Split
+#define FLAG_SEA_CAVERN_CLEAR       0x282 
+#define FLAG_SHOAL_CAVE_CLEAR       0x283 
+#define FLAG_SKY_PILLAR_CLEAR       0x284 
+#define FLAG_SOOTOPOLIS_RIVAL       0x285 
+#define FLAG_ABANDONED_SHIP_CLEAR   0x286 
+#define FLAG_EVERGRANDE_RIVAL       0x287 // E4/Finale
+#define FLAG_VICTORY_ROAD_WALLY     0x288 
+#define FLAG_VICTORY_ROAD_CLEAR     0x289 
+// OPTIONAL ROUTES/TRAINERS: like Slateport Beach clear
+#define FLAG_MEGA_RING_CLEAR        0x28A // Mega Ring Route
 #define FLAG_UNUSED_0x28B  0x28B // Unused Flag
 #define FLAG_UNUSED_0x28C  0x28C // Unused Flag
 #define FLAG_UNUSED_0x28D  0x28D // Unused Flag
@@ -1514,7 +1515,7 @@
 
 // Reward Flags
 #define FLAG_ROUTE102_REWARD                        (SYSTEM_FLAGS + 0x85) // Rewards for 102
-#define FLAG_UNUSED_0x8E6                           (SYSTEM_FLAGS + 0x86) // Unused Flag
+#define FLAG_GET_PETALBURG_EGG                      (SYSTEM_FLAGS + 0x86) // Unused Flag
 #define FLAG_UNUSED_0x8E7                           (SYSTEM_FLAGS + 0x87) // Unused Flag
 #define FLAG_UNUSED_0x8E8                           (SYSTEM_FLAGS + 0x88) // Unused Flag
 #define FLAG_UNUSED_0x8E9                           (SYSTEM_FLAGS + 0x89) // Unused Flag

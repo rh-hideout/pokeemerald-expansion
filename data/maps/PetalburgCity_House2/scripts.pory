@@ -1,0 +1,140 @@
+raw `
+PetalburgCity_House2_MapScripts::
+	.byte 0
+
+PetalburgCity_House2_EventScript_Woman::
+	msgbox PetalburgCity_House2_Text_NormanBecameGymLeader, MSGBOX_NPC
+	end
+
+
+PetalburgCity_House2_Text_NormanBecameGymLeader:
+	.string "NORMAN became our town's new\n"
+	.string "GYM LEADER.\p"
+	.string "I think he called his family over from\n"
+	.string "somewhere far away.$"
+
+`
+
+script PetalburgCity_House2_EventScript_SchoolKid{
+    faceplayer
+    lock
+    if(!flag(FLAG_GET_PETALBURG_EGG))
+    {
+        getpartysize
+        if(var(VAR_RESULT) != 6)
+        {
+            call(PetalburgCity_House2_EventScript_GetEgg)
+        }
+        else{
+            msgbox(format("Oops! You don't have room."), MSGBOX_DEFAULT)
+            release
+            end
+        }
+        msgbox(format("Even I don't know what species it can be!"), MSGBOX_DEFAULT)
+        release
+        end
+    }
+    else
+    {
+        msgbox(format("Treat the egg well please!"), MSGBOX_DEFAULT)
+        release
+        end
+    }
+}
+
+script PetalburgCity_House2_EventScript_GetEgg{
+    lock
+    faceplayer
+    msgbox(format("The trainer school gave me an egg that will evolve via friendship, but I 
+    already have a full party. Would you like to take it?"), MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES)
+    {
+        call(PetalburgCity_House2_EventScript_GenerateEgg)
+        return
+    }
+    else
+    {
+        msgbox(format("Come back if you change your mind!"), MSGBOX_DEFAULT)
+        release
+        end
+    }
+}
+
+script PetalburgCity_House2_EventScript_GenerateEgg{
+    lock
+    faceplayer
+    random(7)
+    if(var(VAR_RESULT) == 0)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_CHINGLING)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 1)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_PICHU)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 2)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_CLEFFA)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 3)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_IGGLYBUFF)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 4)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_BUDEW)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 5)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_WOOBAT)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 6)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_SNOM)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    elif(var(VAR_RESULT) == 7)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_MUNCHLAX)
+        setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    return
+}

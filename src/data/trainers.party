@@ -5956,6 +5956,7 @@ Bashful Nature
 IVs: 0 Atk  
 - Thunder Shock  
 - Disarming Voice  
+- Double Slap
 
 Poochyena  
 Ability: Quick Feet  
@@ -11061,22 +11062,21 @@ Jolly Nature
 - Leafage  
 - Rollout  
 - Leer  
+- Bite
 
-Lechonk @ Oran Berry  
-Ability: Aroma Veil  
-Level: 5  
-Shiny: Yes  
-- Tackle  
-- Trailblaze  
-- Stuff Cheeks  
-
-Wingull @ Wacan Berry  
-Ability: Keen Eye  
-Level: 5   
-Naive Nature  
+Lotad @ Oran Berry  
+Ability: Swift Swim  
+Level: 6  
 - Water Gun  
-- Wing Attack  
-- Growl  
+- Mega Drain  
+- Thief
+
+Numel @ Passho Berry  
+Ability: Simple  
+Level: 6   
+- Mud Shot  
+- Flame Charge  
+- Stomp
 
 === TRAINER_HALEY_1 ===
 Name: HALEY
@@ -11276,23 +11276,25 @@ AI: DEFAULT_TRAINER_BASIC
 
 Weedle  
 Ability: Shield Dust  
-Level: 6  
+Level: 5  
 - Bug Bite  
 - Poison Sting  
 - String Shot  
 
 Wurmple  
 Ability: Shield Dust  
-Level: 6  
+Level: 5  
 - Bug Bite  
 - Poison Sting  
 - String Shot  
 
-Spewpa @ Oran Berry  
-Ability: Shed Skin  
-Level: 5  
-- Struggle Bug  
-- Stun Spore  
+Skorupi  
+Ability: Keen Eye  
+Level: 6  
+- Bug Bite  
+- Cut  
+- Rock Smash  
+- Poison Tail
 
 
 === TRAINER_LYLE ===

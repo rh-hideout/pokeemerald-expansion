@@ -136,41 +136,48 @@ script Route102_EventScript_Route_Clear
 
 script Route102_EventScript_Boy
 {
-	lockall
+	lock
 	faceplayer
-	msgbox(format("Well, I WAS gonna catch a bunch of POKéMON, but these trainers are in the way! When this happens, you
+	if (!flag(FLAG_ROUTE102_CLEAR))
+	{
+		msgbox(format("Well, I WAS gonna catch a bunch of POKéMON, but these trainers are in the way! When this happens, you
 	can either risk the trainer battles while saving the encounters until after, or just picking up an encounter before."), MSGBOX_DEFAULT)
-	waitmessage
-	releaseall
+		waitmessage
+	}
+	else{
+		msgbox(format("Thanks for your help! I'll be around if you need anything."), MSGBOX_DEFAULT)
+		waitmessage
+	}
+	release
 	end
 }
 	
 
 script Route102_EventScript_Route_Rewards{
-	lockall
+	lock
 	if (!flag(FLAG_ROUTE102_REWARD)){
 		msgbox(format("Would you like the route rewards?"), MSGBOX_YESNO)
 		if(var(VAR_RESULT) == YES)
 		{
+			removeobject(11)
 			giveitem(ITEM_SILK_SCARF, 1)
 			giveitem(ITEM_SOOTHE_BELL, 1)
 			giveitem(ITEM_AIR_BALLOON, 1)
 			setflag(FLAG_ROUTE102_REWARD)
-			removeobject(11)
-			releaseall
+			release
 			end
 		}
 		else{
 			msgbox(format("You didn't take the route rewards."), MSGBOX_DEFAULT)
 			waitmessage
-			releaseall
+			release
 			end
 		}
 	}
 	else{
 		msgbox(format("An error occurred."), MSGBOX_AUTOCLOSE)
 		waitmessage
-		releaseall
+		release
 		end
 	}
 	

@@ -30,9 +30,7 @@ OldaleTown_EventScript_TownSign::
 	msgbox OldaleTown_Text_TownSign, MSGBOX_SIGN
 	end
 
-OldaleTown_EventScript_Girl::
-	msgbox OldaleTown_Text_SavingMyProgress, MSGBOX_NPC
-	end
+
 
 OldaleTown_EventScript_MartEmployee::
 	lock
@@ -340,10 +338,6 @@ OldaleTown_Movement_ReturnToOriginalPosition:
 	walk_left
 	step_end
 
-OldaleTown_Text_SavingMyProgress:
-	.string "I want to take a rest, so I'm saving my\n"
-	.string "progress.$"
-
 OldaleTown_Text_IWorkAtPokemonMart:
 	.string "Hi!\n"
 	.string "I work at a POKéMON MART.\p"
@@ -399,8 +393,8 @@ OldaleTown_Text_TownSign:
 `
 
 script OldaleTown_EventScript_MeowthCarePackage{
-	lockall
 	faceplayer
+	lock
 	msgbox(format("Looks like Meowth wants to give you items! Do you accept?"), MSGBOX_YESNO)
 	if (var(VAR_RESULT) == YES)
 	{
@@ -413,20 +407,20 @@ script OldaleTown_EventScript_MeowthCarePackage{
 		playfanfare(MUS_OBTAIN_ITEM)
 		giveitem(ITEM_TIMER_BALL, 500)
 		waitfanfare
-		releaseall
+		release
 		end
 	}
 	else{
 		msgbox(format("Meowth smirks at you."), MSGBOX_AUTOCLOSE)
 		waitmessage
-		releaseall
+		release
 		end
 	}
 }
 
 script OldaleTown_EventScript_OldRodFisherman{
-	lockall
 	faceplayer
+	lock
 	if(flag(FLAG_RECEIVED_OLD_ROD) == TRUE)
 	{
 		msgbox(format("Howdy. How are the fish biting?"), MSGBOX_AUTOCLOSE)
@@ -443,12 +437,13 @@ script OldaleTown_EventScript_OldRodFisherman{
 		}
 		elif(var(VAR_RESULT) == 1){
 			msgbox(format("Well, I think I'll have an item you'll want to have!"), MSGBOX_AUTOCLOSE)
+			lock
 			setflag(FLAG_RECEIVED_OLD_ROD)
 			giveitem(ITEM_OLD_ROD, 1)
 			playfanfare(MUS_RG_OBTAIN_KEY_ITEM)
 			waitfanfare
 		}
-		releaseall
+		release
 		end
 	}
 }

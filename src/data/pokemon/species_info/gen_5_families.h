@@ -2559,7 +2559,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_7) ? 65 : 63,
         .evYield_Speed = 1,
         .genderRatio = PERCENT_FEMALE(50),
-        .eggCycles = 15,
+        .eggCycles =  2,
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD, EGG_GROUP_FLYING),
