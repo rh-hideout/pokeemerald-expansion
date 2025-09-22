@@ -67,6 +67,7 @@ DOUBLE_BATTLE_TEST("Helping Hand still boosts moves used due to Instruct", s16 d
     PARAMETRIZE { useHelpingHand = TRUE;  }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
