@@ -19,9 +19,11 @@ struct ApricornTree
 
 const struct ApricornTree gApricornTrees[APRICORN_TREE_COUNT] =
 {
+    #if APRICORN_TREE_COUNT > 0
     [APRICORN_TREE_NONE] =
     {
         .isSapling = FALSE,
         .apricornType = APRICORN_RED,
     },
+    #endif
 };

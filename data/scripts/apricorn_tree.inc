@@ -1,3 +1,4 @@
+#if APRICORN_TREE_COUNT > 0
 ApricornTreeScript::
 	special ObjectEventInteractionGetApricornTreeData
 	goto_if_gt VAR_0x8005, 0, ApricornTree_EventScript_WantToPick
@@ -18,10 +19,13 @@ ApricornTree_EventScript_PickApricorn::
 	special ObjectEventInteractionPickApricornTree
 	goto_if_eq VAR_0x8006, APRICORN_NORMAL_BAG_FULL, ApricornTree_EventScript_PocketFull
 	message ApricornTree_Text_PickedTheApricorn
-	@ uncomment the lines below if you're using ghoulslash's item description branch
-	@ copyvar VAR_0x8006 VAR_0x8004
+	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+	copyvar VAR_0x8006 VAR_0x8004
+	.endif
 	delay 10
-	@ showberrydesc
+	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+	showberrydesc
+	.endif
 	playfanfare MUS_OBTAIN_BERRY
 	waitmessage
 	waitfanfare
@@ -29,7 +33,9 @@ ApricornTree_EventScript_PickApricorn::
 	message ApricornTree_Text_PutAwayApricorn
 	waitmessage
 	waitbuttonpress
-	@ hideitemdesc
+	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+	hideitemdesc
+	.endif
 	release
 	end
 
@@ -68,3 +74,4 @@ ApricornTree_Text_PocketFull:
 ApricornTree_Text_ApricornLeftUnpicked:
 	.string "{PLAYER} left the {STR_VAR_1}\n"
 	.string "unpicked.$"
+#endif

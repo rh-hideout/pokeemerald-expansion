@@ -8,6 +8,7 @@
 #include "string_util.h"
 #include "data/apricorns.h"
 
+#if (APRICORN_TREE_COUNT > 0)
 void DailyResetApricornTrees(void)
 {
     memset(&gSaveBlock3Ptr->apricornTrees[0], 0, NUM_APRICORN_TREE_BYTES);
@@ -75,3 +76,4 @@ void SetApricornTreePicked(u8 id)
     u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
     *flagByte = (*flagByte) | (1 << (id % 8));
 }
+#endif
