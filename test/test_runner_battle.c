@@ -1574,12 +1574,18 @@ void OpenPokemon(u32 sourceLine, u32 side, u32 species)
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
+    DATA.isShiny = FALSE;
     (*partySize)++;
 
     CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
-    data = MOVE_NONE;
+    // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        data = MOVE_NONE;
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 0x7F; // Max PP possible
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+    }
     data = 0;
     if (B_FRIENDSHIP_BOOST)
     {
@@ -1623,9 +1629,9 @@ void ClosePokemon(u32 sourceLine)
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
         }
     }
-    data = FALSE;
-    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     UpdateMonPersonality(&DATA.currentMon->box, GenerateNature(DATA.nature, DATA.gender % NUM_NATURES) | DATA.gender);
+    data = DATA.isShiny;
+    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     DATA.currentMon = NULL;
 }
 
@@ -1890,6 +1896,12 @@ void Shadow_(u32 sourceLine, bool32 isShadow)
     SetMonData(DATA.currentMon, MON_DATA_IS_SHADOW, &isShadow);
 }
 
+void Shiny_(u32 sourceLine, bool32 isShiny)
+{
+    INVALID_IF(!DATA.currentMon, "Shiny outside of PLAYER/OPPONENT");
+    DATA.isShiny = isShiny;
+}
+
 static const char *const sBattlerIdentifiersSingles[] =
 {
     "player",
@@ -2148,6 +2160,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
                 SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &pp);
                 *moveSlot = i;
                 *moveId = ctx->move;
+                INVALID_IF(GetMovePP(ctx->move) == 0, "%S has 0 PP!", GetMoveName(ctx->move));
                 break;
             }
         }
@@ -2248,7 +2261,7 @@ void Move(u32 sourceLine, struct BattlePokemon *battler, struct MoveContext ctx)
         DATA.battleRecordTurns[DATA.turns][battlerId].secondaryEffect = 1 + ctx.secondaryEffect;
     if (ctx.explicitRNG)
         DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
-    
+
     u32 shellSideArmCount = 0;
     for (u32 i = 0; i < STATE->battlersCount; i++)
     {

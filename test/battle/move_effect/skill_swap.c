@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Skill Swap swaps user and target's abilities")
     } THEN {
         EXPECT_EQ(player->ability, ABILITY_BLAZE);
         EXPECT_EQ(opponent->ability, ABILITY_TELEPATHY);
-    } 
+    }
 }
 
 DOUBLE_BATTLE_TEST("Skill Swap only swaps user's ability with target's ability")

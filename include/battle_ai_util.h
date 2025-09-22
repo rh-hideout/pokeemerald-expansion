@@ -121,8 +121,8 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
-bool32 HasDamagingMove(u32 battlerId);
-bool32 HasDamagingMoveOfType(u32 battlerId, u32 type);
+bool32 HasDamagingMove(u32 battler);
+bool32 HasDamagingMoveOfType(u32 battler, u32 type);
 u32 GetBattlerSecondaryDamage(u32 battlerId);
 bool32 BattlerWillFaintFromWeather(u32 battler, u32 ability);
 bool32 BattlerWillFaintFromSecondaryDamage(u32 battler, u32 ability);
@@ -155,6 +155,7 @@ u32 CountPositiveStatStages(u32 battlerId);
 u32 CountNegativeStatStages(u32 battlerId);
 
 // move checks
+bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData);
 bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category);
 enum MoveComparisonResult AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo);
@@ -312,7 +313,7 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 #define AI_EFFECT_TERRAIN              (1 <<  1)
 #define AI_EFFECT_CLEAR_HAZARDS        (1 <<  2)
 #define AI_EFFECT_BREAK_SCREENS        (1 <<  3)
-#define AI_EFFECT_RESET_STATS          (1 <<  4) 
+#define AI_EFFECT_RESET_STATS          (1 <<  4)
 #define AI_EFFECT_FORCE_SWITCH         (1 <<  5)
 #define AI_EFFECT_TORMENT              (1 <<  6)
 #define AI_EFFECT_LIGHT_SCREEN         (1 <<  7)

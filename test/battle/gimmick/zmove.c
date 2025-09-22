@@ -6,9 +6,10 @@
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH);
                MOVE(player, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
@@ -588,7 +589,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
-        MESSAGE("Mew cannot use Quick Attack!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
     }
 }
 

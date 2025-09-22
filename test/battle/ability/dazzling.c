@@ -96,3 +96,25 @@ SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail protect from all mu
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Dazzling, Queenly Majesty and Armor Tail prevent Protean activation")
+{
+    u32 species, ability;
+
+    PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
+    PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
+    PARAMETRIZE { species = SPECIES_TSAREENA; ability = ABILITY_QUEENLY_MAJESTY; }
+
+    GIVEN {
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_WATER_SHURIKEN); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_SHURIKEN, player);
+            ABILITY_POPUP(player, ABILITY_PROTEAN);
+        }
+        ABILITY_POPUP(opponent, ability);
+    }
+}
