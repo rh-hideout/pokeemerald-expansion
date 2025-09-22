@@ -124,7 +124,7 @@
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_BIDOOF"
+                "species": "SPECIES_LECHONK"
               },
               {
                 "min_level": 3,
@@ -266,14 +266,14 @@
             "encounter_rate": 30,
             "mons": [
               {
-                "min_level": 5,
-                "max_level": 10,
-                "species": "SPECIES_MAGIKARP"
+                "min_level": 3,
+                "max_level": 4,
+                "species": "SPECIES_MARILL"
               },
               {
-                "min_level": 5,
-                "max_level": 10,
-                "species": "SPECIES_GOLDEEN"
+                "min_level": 3,
+                "max_level": 4,
+                "species": "SPECIES_TENTACOOL"
               },
               {
                 "min_level": 10,
@@ -332,12 +332,12 @@
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_LOTAD"
+                "species": "SPECIES_EXEGGCUTE"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_EXEGGCUTE"
+                "species": "SPECIES_EKANS"
               },
               {
                 "min_level": 2,
@@ -420,13 +420,13 @@
             "encounter_rate": 30,
             "mons": [
               {
-                "min_level": 5,
-                "max_level": 10,
+                "min_level": 3,
+                "max_level": 4,
                 "species": "SPECIES_MAGIKARP"
               },
               {
-                "min_level": 5,
-                "max_level": 10,
+                "min_level": 3,
+                "max_level": 4,
                 "species": "SPECIES_TENTACOOL"
               },
               {
@@ -506,7 +506,7 @@
               {
                 "min_level": 5,
                 "max_level": 5,
-                "species": "SPECIES_ABRA"
+                "species": "SPECIES_ZUBAT"
               },
               {
                 "min_level": 4,
@@ -521,22 +521,22 @@
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_SHINX"
+                "species": "SPECIES_FLABEBE"
               },
               {
                 "min_level": 4,
                 "max_level": 4,
-                "species": "SPECIES_SHINX"
+                "species": "SPECIES_FLABEBE"
               },
               {
                 "min_level": 3,
                 "max_level": 3,
-                "species": "SPECIES_SHINX"
+                "species": "SPECIES_FLABEBE"
               },
               {
                 "min_level": 5,
                 "max_level": 5,
-                "species": "SPECIES_SHINX"
+                "species": "SPECIES_FLABEBE"
               }
             ]
           },
@@ -574,14 +574,14 @@
             "encounter_rate": 30,
             "mons": [
               {
-                "min_level": 5,
-                "max_level": 10,
-                "species": "SPECIES_MAGIKARP"
+                "min_level": 3,
+                "max_level": 4,
+                "species": "SPECIES_KRABBY"
               },
               {
-                "min_level": 5,
-                "max_level": 10,
-                "species": "SPECIES_MAGIKARP"
+                "min_level": 3,
+                "max_level": 4,
+                "species": "SPECIES_CORPHISH"
               },
               {
                 "min_level": 10,
@@ -9082,14 +9082,14 @@
             "encounter_rate": 10,
             "mons": [
               {
-                "min_level": 5,
-                "max_level": 10,
+                "min_level": 3,
+                "max_level": 5,
                 "species": "SPECIES_MAGIKARP"
               },
               {
-                "min_level": 5,
-                "max_level": 10,
-                "species": "SPECIES_GOLDEEN"
+                "min_level": 3,
+                "max_level": 5,
+                "species": "SPECIES_WIMPOD"
               },
               {
                 "min_level": 10,
@@ -11555,7 +11555,7 @@
               {
                 "min_level": 2,
                 "max_level": 3,
-                "species": "SPECIES_MEOWTH"
+                "species": "SPECIES_HOUNDOUR"
               },
               {
                 "min_level": 2,
@@ -11576,6 +11576,61 @@
                 "min_level": 2,
                 "max_level": 3,
                 "species": "SPECIES_BIDOOF"
+              }
+            ]
+          },
+          "fishing_mons": {
+            "encounter_rate": 30,
+            "mons": [
+              {
+                "min_level": 2,
+                "max_level": 3,
+                "species": "SPECIES_PSYDUCK"
+              },
+              {
+                "min_level": 2,
+                "max_level": 3,
+                "species": "SPECIES_BUIZEL"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
+              },
+              {
+                "min_level": 5,
+                "max_level": 5,
+                "species": "SPECIES_NONE"
               }
             ]
           }

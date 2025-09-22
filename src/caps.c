@@ -14,7 +14,7 @@ u32 GetCurrentLevelCap(void)
         {FLAG_PB_WOODS_CLEAR, 10},
         {FLAG_ROUTE104_PART2_CLEAR, 12},
         {FLAG_ROUTE116_CLEAR, 14},
-        {FLAG_BADGE01_GET, 15},
+        {FLAG_BADGE01_GET, 16},
         {FLAG_RUSTBORO_RIVAL, 17},
         {FLAG_ROUTE106_CLEAR, 19},
         {FLAG_BADGE02_GET, 21},

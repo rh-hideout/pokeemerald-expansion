@@ -2,9 +2,6 @@ raw `
 Route102_MapScripts::
 	.byte 0
 
-Route102_EventScript_LittleBoy::
-	msgbox Route102_Text_ImNotVeryTall, MSGBOX_NPC
-	end
 
 Route102_EventScript_RouteSignOldale::
 	msgbox Route102_Text_RouteSignOldale, MSGBOX_SIGN
@@ -83,13 +80,6 @@ Route102_Text_LetsGoBack:
 	.string "{PLAYER}, thank you!\n"
 	.string "Let's go back to the GYM!$"
 
-Route102_Text_ImNotVeryTall:
-	.string "I'm…not very tall, so I sink right\n"
-	.string "into tall grass.\p"
-	.string "The grass goes up my nose and…\n"
-	.string "Fwafwafwafwafwa…\p"
-	.string "Fwatchoo!$"
-
 Route102_Text_RouteSignOldale:
 	.string "ROUTE 102\n"
 	.string "{RIGHT_ARROW} OLDALE TOWN$"
@@ -126,7 +116,7 @@ script Route102_EventScript_Route_Clear
 	setflag(FLAG_ROUTE102_CLEAR)
 	removeobject(9)
 	removeobject(10)
-	msgbox(format("Route 102 has been cleared!\n The level cap is now 9."), MSGBOX_DEFAULT)
+	msgbox(format("Route 104 has been cleared!\n The level cap is now 10."), MSGBOX_DEFAULT)
 	waitmessage
 	waitfanfare
 	fadescreen(FADE_FROM_BLACK)
@@ -162,7 +152,6 @@ script Route102_EventScript_Route_Rewards{
 			removeobject(11)
 			giveitem(ITEM_SILK_SCARF, 1)
 			giveitem(ITEM_SOOTHE_BELL, 1)
-			giveitem(ITEM_AIR_BALLOON, 1)
 			setflag(FLAG_ROUTE102_REWARD)
 			release
 			end
@@ -181,4 +170,14 @@ script Route102_EventScript_Route_Rewards{
 		end
 	}
 	
+}
+
+
+script Route102_EventScript_LittleBoy{
+	faceplayer
+	lock
+	msgbox(format("I'm hiding from my parents. They got mad at me for eating off the berry trees before dinner. How was I supposed to know
+	they are reserved for POKéMON?"), MSGBOX_DEFAULT)
+	release
+	end
 }

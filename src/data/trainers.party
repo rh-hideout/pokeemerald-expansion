@@ -229,11 +229,32 @@ Pic: Aqua Grunt M
 Gender: Male
 Music: Aqua
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Poochyena
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Impidimp @ Light Ball  
+Ability: Prankster  
+Level: 10  
+- Fake Out  
+- Parting Shot  
+- Thief  
+- Trick
+
+Zubat @ Poison Barb  
+Ability: Inner Focus  
+Level: 10    
+Jolly Nature  
+- Aerial Ace  
+- Quick Attack  
+- Poison Fang
+
+Mareanie @ Oran Berry  
+Ability: Regenerator  
+Level: 10   
+- Mud Shot  
+- Water Pulse  
+- Poison Sting
+
+
 
 === TRAINER_MARCEL ===
 Name: MARCEL
@@ -2113,19 +2134,38 @@ Grumpig
 Level: 42
 IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
 
-=== TRAINER_CINDY_1 ===
+=== TRAINER_CINDY_1 ===         /* Route 104 Pt 1 Boss */
 Name: CINDY
 Class: Lady
 Pic: Lady
 Gender: Female
 Music: Female
-Items: Full Restore
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Zigzagoon @ Nugget
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Skorupi  
+Ability: Keen Eye  
+Level: 8
+- Bug Bite  
+- Cut  
+- Rock Smash  
+- Poison Tail
+
+Bellsprout @ Oran Berry  
+Ability: Chlorophyll 
+Brave Nature
+Level: 8  
+- Bullet Seed  
+- Clear Smog  
+- Stun Spore
+
+Corvisquire @ Silk Scarf 
+Ability: Unnerve  
+Level: 9 
+Jolly Nature 
+- Pluck  
+- Fury Attack  
+- Payback
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -4584,13 +4624,12 @@ IVs: 4 HP / 4 Atk / 4 Def / 4 SpA / 4 SpD / 4 Spe
 - Odor Sleuth
 - Roar
 
-=== TRAINER_SIDNEY ===
+=== TRAINER_SIDNEY === /* Dark*/ 
 Name: SIDNEY
 Class: Elite Four
 Pic: Elite Four Sidney
 Gender: Male
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer / Force Setup First Turn
 Mugshot: Purple
@@ -4635,13 +4674,12 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Swords Dance
 - Slash
 
-=== TRAINER_PHOEBE ===
+=== TRAINER_PHOEBE === /* Ghost */ 
 Name: PHOEBE
 Class: Elite Four
 Pic: Elite Four Phoebe
 Gender: Female
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Green
@@ -4686,13 +4724,12 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Rock Slide
 - Earthquake
 
-=== TRAINER_GLACIA ===
+=== TRAINER_GLACIA === /* Ice */ 
 Name: GLACIA
 Class: Elite Four
 Pic: Elite Four Glacia
 Gender: Female
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Pink
@@ -4737,13 +4774,12 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Ice Beam
 - Sheer Cold
 
-=== TRAINER_DRAKE ===
+=== TRAINER_DRAKE === /* Dragon */ 
 Name: DRAKE
 Class: Elite Four
 Pic: Elite Four Drake
 Gender: Male
 Music: Elite Four
-Items: Full Restore / Full Restore
 Double Battle: No
 AI: Basic Trainer
 Mugshot: Blue
@@ -4788,47 +4824,63 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Rock Slide
 - Crunch
 
-=== TRAINER_ROXANNE_1 ===
+=== TRAINER_ROXANNE_1 ===   /* Rock & Normal- LVL CAP 16 */
 Name: ROXANNE
 Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
-Items: Potion / Potion
 Double Battle: No
-AI: Basic Trainer
+AI: DEFAULT_TRAINER_BASIC
 
-Geodude
-Level: 12
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
-- Defense Curl
-- Rock Throw
-- Rock Tomb
+Corsola-Galar @ Oran Berry  
+Ability: Cursed Body  
+Level: 15  
+Docile Nature  
+- Stealth Rock  
+- Water Pulse  
+- Icy Wind  
+- Will-O-Wisp
 
-Geodude
-Level: 12
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
-- Defense Curl
-- Rock Throw
-- Rock Tomb
+Anorith @ Hard Stone  
+Ability: Swift Swim  
+Level: 15 
+Adamant Nature  
+- Smack Down  
+- Aqua Jet  
+- Bug Bite  
+- Metal Claw
 
-Nosepass @ Oran Berry
-Level: 15
-IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
-- Block
-- Harden
-- Tackle
-- Rock Tomb
+Binacle @ Mystic Water  
+Ability: Tough Claws  
+Level: 15  
+- Ancient Power  
+- Water Pulse  
+- Slash
 
-=== TRAINER_BRAWLY_1 ===
+Raticate @ Toxic Orb  
+Ability: Guts  
+Level: 16  
+Shiny: Yes  
+Naive Nature  
+- Rock Smash  
+- Bite  
+- Headbutt
+
+Shuppet @ Eviolite  
+Ability: Insomnia  
+Level: 14  
+- Shock Wave  
+- Ominous Wind  
+- Retaliate
+
+
+=== TRAINER_BRAWLY_1 ===  /* Poison & Fighting */ 
 Name: BRAWLY
 Class: Leader
 Pic: Leader Brawly
 Gender: Male
 Music: Male
-Items: Super Potion / Super Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -4856,13 +4908,12 @@ IVs: 24 HP / 24 Atk / 24 Def / 24 SpA / 24 SpD / 24 Spe
 - Reversal
 - Bulk Up
 
-=== TRAINER_WATTSON_1 ===
+=== TRAINER_WATTSON_1 === /* Electric & Water */ 
 Name: WATTSON
 Class: Leader
 Pic: Leader Wattson
 Gender: Male
 Music: Male
-Items: Super Potion / Super Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -4898,13 +4949,12 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Shock Wave
 - Howl
 
-=== TRAINER_FLANNERY_1 ===
+=== TRAINER_FLANNERY_1 === /* Fire & Grass */ 
 Name: FLANNERY
 Class: Leader
 Pic: Leader Flannery
 Gender: Female
 Music: Female
-Items: Hyper Potion / Hyper Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -4940,13 +4990,12 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Body Slam
 - Attract
 
-=== TRAINER_NORMAN_1 ===
+=== TRAINER_NORMAN_1 === /* Ghost & Normal */ 
 Name: NORMAN
 Class: Leader
 Pic: Leader Norman
 Gender: Male
 Music: Male
-Items: Hyper Potion / Hyper Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -4982,13 +5031,12 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Facade
 - Feint Attack
 
-=== TRAINER_WINONA_1 ===
+=== TRAINER_WINONA_1 === /* Flying & Ground */ 
 Name: WINONA
 Class: Leader
 Pic: Leader Winona
 Gender: Female
 Music: Female
-Items: Hyper Potion / Hyper Potion
 Double Battle: No
 AI: Basic Trainer / Risky
 
@@ -5032,13 +5080,12 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Dragon Dance
 - Aerial Ace
 
-=== TRAINER_TATE_AND_LIZA_1 ===
+=== TRAINER_TATE_AND_LIZA_1 === /* Psychic & Fairy */ 
 Name: TATE&LIZA
 Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Hyper Potion / Hyper Potion / Hyper Potion / Hyper Potion
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -5074,13 +5121,12 @@ IVs: 30 HP / 30 Atk / 30 Def / 30 SpA / 30 SpD / 30 Spe
 - Psychic
 - Flamethrower
 
-=== TRAINER_JUAN_1 ===
+=== TRAINER_JUAN_1 === /* Steel & Fire */ 
 Name: JUAN
 Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Hyper Potion / Hyper Potion
 Double Battle: No
 AI: Basic Trainer
 
@@ -5966,31 +6012,47 @@ Bashful Nature
 - Quick Attack  
 - Astonish  
 
-Kakuna @ Oran Berry  
-Ability: Shed Skin  
-Level: 6   
-Bashful Nature  
-- Bug Bite  
-- Poison Sting  
+Flittle  
+Ability: Speed Boost  
+Level: 6  
+Naive Nature  
+- Peck  
+- Confusion  
+- Disarming Voice
 
 
 
-=== TRAINER_BILLY ===
+=== TRAINER_BILLY === /* Route 104 Pt 1 */
 Name: BILLY
 Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Zigzagoon
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Clobbopus @ Black Belt  
+Ability: Limber  
+Level: 7   
+- Low Sweep  
+- Bind  
+- Detect  
+- Feint
 
-Seedot
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Houndour @ Oran Berry  
+Ability: Flash Fire  
+Level: 8  
+Naive Nature  
+- Bite  
+- Incinerate  
+- Leer
+
+Aron  @ Oran Berry
+Ability: Sturdy  
+Level: 8  
+- Body Slam
+- Cut  
+- Autotomize
 
 === TRAINER_JOSH ===
 Name: JOSH
@@ -11297,30 +11359,41 @@ Level: 6
 - Poison Tail
 
 
-=== TRAINER_LYLE ===
+=== TRAINER_LYLE ===        /* PB Woods */
 Name: LYLE
 Class: Bug Catcher
 Pic: Bug Catcher
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bonsly @ Custap Berry  
+Ability: Sturdy  
+Level: 9  
+- Mud Shot  
+- Rock Tomb  
+- Feint Attack  
+- Explosion
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Exeggcute @ Oran Berry  
+Ability: Harvest  
+Level: 9  
+Relaxed Nature  
+- Bullet Seed  
+- Confusion  
+- Stun Spore
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Vivillon  
+Ability: Shield Dust  
+Level: 9  
+Hardy Nature  
+- Struggle Bug  
+- Gust  
+- Poison Powder  
+- Swift
 
-Wurmple
-Level: 3
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
 
 === TRAINER_JOSE ===
 Name: JOSE
@@ -11392,16 +11465,29 @@ Class: Bug Catcher
 Pic: Bug Catcher
 Gender: Male
 Music: Male
-Double Battle: No
-AI: Check Bad Move
+Double Battle: Yes
+AI: DEFAULT_TRAINER_BASIC
 
-Nincada
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lombre @ Miracle Seed  
+Ability: Own Tempo  
+Level: 9  
+- Fake Out  
+- Bubble Beam  
+- Mega Drain
 
-Nincada
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Cottonee @ Kebia Berry  
+Ability: Prankster  
+Level: 9  
+- Tailwind  
+- Encore  
+- Toxic
+
+Togepi @ Eviolite  
+Ability: Super Luck  
+Level: 12  
+Tera Type: Steel
+Rash Nature  
+- Metronome
 
 === TRAINER_JAMES_2 ===
 Name: JAMES
@@ -12999,18 +13085,38 @@ Zigzagoon @ Nugget
 Level: 8
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_DARIAN ===
-Name: DARIAN
+=== TRAINER_DARIAN === /* Route 104 */
+Name: DARIAN            
 Class: Fisherman
 Pic: Fisherman
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Magikarp
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Lotad @ Oran Berry  
+Ability: Swift Swim 
+Modest Nature 
+Level: 8  
+- Water Gun  
+- Mega Drain  
+- Thief
+
+Carvanha @ Oran Berry  
+Ability: Rough Skin  
+Jolly Nature
+Level: 8  
+- Poison Fang  
+- Bite  
+- Aqua Jet
+
+Surskit 
+Ability: Rain Dish  
+Level: 8  
+- Mud Shot  
+- Water Pulse  
+- Aqua Jet  
+- Bug Bite
 
 === TRAINER_HAILEY ===
 Name: HAILEY
@@ -14191,7 +14297,6 @@ Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14233,7 +14338,6 @@ Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14283,7 +14387,6 @@ Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14333,7 +14436,6 @@ Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14391,7 +14493,6 @@ Class: Leader
 Pic: Leader Brawly
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14433,7 +14534,6 @@ Class: Leader
 Pic: Leader Brawly
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14475,7 +14575,6 @@ Class: Leader
 Pic: Leader Brawly
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14525,7 +14624,6 @@ Class: Leader
 Pic: Leader Brawly
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14583,7 +14681,6 @@ Class: Leader
 Pic: Leader Wattson
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14625,7 +14722,6 @@ Class: Leader
 Pic: Leader Wattson
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14675,7 +14771,6 @@ Class: Leader
 Pic: Leader Wattson
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14725,7 +14820,6 @@ Class: Leader
 Pic: Leader Wattson
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14783,7 +14877,6 @@ Class: Leader
 Pic: Leader Flannery
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14825,7 +14918,6 @@ Class: Leader
 Pic: Leader Flannery
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14875,7 +14967,6 @@ Class: Leader
 Pic: Leader Flannery
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14933,7 +15024,6 @@ Class: Leader
 Pic: Leader Flannery
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -14991,7 +15081,6 @@ Class: Leader
 Pic: Leader Norman
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15033,7 +15122,6 @@ Class: Leader
 Pic: Leader Norman
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15083,7 +15171,6 @@ Class: Leader
 Pic: Leader Norman
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15133,7 +15220,6 @@ Class: Leader
 Pic: Leader Norman
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15191,7 +15277,6 @@ Class: Leader
 Pic: Leader Winona
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer / Risky
 
@@ -15241,7 +15326,6 @@ Class: Leader
 Pic: Leader Winona
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer / Risky
 
@@ -15299,7 +15383,6 @@ Class: Leader
 Pic: Leader Winona
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer / Risky
 
@@ -15357,7 +15440,6 @@ Class: Leader
 Pic: Leader Winona
 Gender: Female
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer / Risky
 
@@ -15415,7 +15497,6 @@ Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15465,7 +15546,6 @@ Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15523,7 +15603,6 @@ Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15581,7 +15660,6 @@ Class: Leader
 Pic: Leader Tate And Liza
 Gender: Male
 Music: Female
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15639,7 +15717,6 @@ Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15689,7 +15766,6 @@ Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15739,7 +15815,6 @@ Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
@@ -15797,7 +15872,6 @@ Class: Leader
 Pic: Leader Juan
 Gender: Male
 Music: Male
-Items: Full Restore / Full Restore / Full Restore
 Double Battle: Yes
 AI: Basic Trainer
 
