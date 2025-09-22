@@ -67,6 +67,7 @@ DOUBLE_BATTLE_TEST("Helping Hand boosts the power of attacking moves by 125% if 
     PARAMETRIZE { useHelpingHandTwice = TRUE;  }
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_INSTRUCT) == EFFECT_INSTRUCT);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
