@@ -12760,7 +12760,7 @@ static void Cmd_trysethelpinghand(void)
 
     if (IsDoubleBattle()
         && !(gAbsentBattlerFlags & (1u << gBattlerTarget))
-        && GetBattlerTurnOrderNum(gBattlerAttacker) < GetBattlerTurnOrderNum(gBattlerTarget))
+        && gCurrentTurnActionNumber < GetBattlerTurnOrderNum(gBattlerTarget))
     {
         gProtectStructs[gBattlerTarget].helpingHand++;
         gBattlescriptCurrInstr = cmd->nextInstr;
