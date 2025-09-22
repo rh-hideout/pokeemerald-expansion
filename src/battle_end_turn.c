@@ -1447,7 +1447,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                 effect = TRUE;
             break;
         case HOLD_EFFECT_WHITE_HERB:
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
+            if (ItemBattleEffects(ITEMEFFECT_WHITE_HERB_ENDTURN, battler))
                 effect = TRUE;
             break;
         default:
