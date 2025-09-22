@@ -202,7 +202,6 @@ struct UCoords32
     u32 y;
 };
 
-    u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
 struct Time
 {
     /*0x00*/ s16 days;
@@ -255,6 +254,9 @@ struct SaveBlock3
     u8 dexNavSearchLevels[NUM_SPECIES];
 #endif
     u8 dexNavChain;
+#if APRICORN_TREE_COUNT > 0
+    u8 apricornTrees[NUM_APRICORN_TREE_BYTES];
+#endif
 }; /* max size 1624 bytes */
 
 extern struct SaveBlock3 *gSaveBlock3Ptr;
