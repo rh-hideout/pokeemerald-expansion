@@ -13944,18 +13944,15 @@ static void Cmd_handleballthrow(void)
             {
                 odds = Sqrt(Sqrt(16711680 / odds));
                 odds = 1048560 / odds;
-                for (shakes = 0; shakes < maxShakes && Random() < odds; shakes++);
+                for (shakes = 0; shakes < maxShakes; shakes++)
+                {
+                    if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) < odds)
+                        break;
+                }
             }
 
             BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, shakes);
             MarkBattlerForControllerExec(gBattlerAttacker);
-
-            #if TESTING
-                if (gTestRunnerEnabled)
-                {
-                    shakes = 0; // Force failure for tests.  TODO: make capture RNG flag
-                }
-            #endif
 
             if (shakes == maxShakes) // mon caught, copy of the code above
             {
@@ -14753,8 +14750,7 @@ static bool32 CriticalCapture(u32 odds)
         odds = (odds * (100 + B_CATCHING_CHARM_BOOST)) / 100;
 
     odds /= 6;
-
-    if ((Random() % 255) < odds)
+    if (RandomUniform(RNG_BALLTHROW_CRITICAL, 0, MAX_u8) < odds)
         return TRUE;
 
     return FALSE;
