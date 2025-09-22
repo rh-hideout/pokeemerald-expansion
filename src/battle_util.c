@@ -4398,14 +4398,15 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 break;
             case ABILITY_BALL_FETCH:
                 if (gBattleMons[battler].item == ITEM_NONE
-                    && gBattleResults.catchAttempts[gLastUsedBall - ITEM_ULTRA_BALL] >= 1
+                    && gBattleResults.catchAttempts[ItemIdToBallId(gLastUsedBall)] >= 1
                     && !gHasFetchedBall)
                 {
+                    gLastUsedItem = gLastUsedBall;
                     gBattleScripting.battler = battler;
-                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedBall);
+                    gBattleMons[battler].item = gLastUsedItem;
+                    BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, 2, &gLastUsedItem);
                     MarkBattlerForControllerExec(battler);
                     gHasFetchedBall = TRUE;
-                    gLastUsedItem = gLastUsedBall;
                     BattleScriptPushCursorAndCallback(BattleScript_BallFetch);
                     effect++;
                 }
@@ -7732,7 +7733,7 @@ enum IronBallCheck
 };
 
 // Only called directly when calculating damage type effectiveness, and Iron Ball's type effectiveness mechanics
-static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck checkInverse, enum IronBallCheck checkIronBall)
+static bool32 IsBattlerGroundedInverseCheck(u32 battler, u32 ability, enum InverseBattleCheck checkInverse, enum IronBallCheck checkIronBall)
 {
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
 
@@ -7750,7 +7751,7 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck
         return FALSE;
     if (holdEffect == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
-    if (gAiLogicData->aiCalcInProgress ? gAiLogicData->abilities[battler] == ABILITY_LEVITATE : IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_LEVITATE))
+    if (ability == ABILITY_LEVITATE)
         return FALSE;
     if (IS_BATTLER_OF_TYPE(battler, TYPE_FLYING) && (!(checkInverse == INVERSE_BATTLE) || !FlagGet(B_FLAG_INVERSE_BATTLE)))
         return FALSE;
@@ -7759,7 +7760,7 @@ static bool32 IsBattlerGroundedInverseCheck(u32 battler, enum InverseBattleCheck
 
 bool32 IsBattlerGrounded(u32 battler)
 {
-    return IsBattlerGroundedInverseCheck(battler, NOT_INVERSE_BATTLE, CHECK_IRON_BALL);
+    return IsBattlerGroundedInverseCheck(battler, GetBattlerAbility(battler), NOT_INVERSE_BATTLE, CHECK_IRON_BALL);
 }
 
 u32 GetMoveSlot(u16 *moves, u32 move)
@@ -9568,8 +9569,8 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
     ctx->weather = GetWeather();
     ctx->abilityAtk = GetBattlerAbility(ctx->battlerAtk);
     ctx->abilityDef = GetBattlerAbility(ctx->battlerDef);
-    ctx->holdEffectAtk = GetItemHoldEffect(ctx->battlerAtk);
-    ctx->holdEffectDef = GetItemHoldEffect(ctx->battlerDef);
+    ctx->holdEffectAtk = GetBattlerHoldEffect(ctx->battlerAtk, TRUE);
+    ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef, TRUE);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
 
@@ -9713,7 +9714,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         if (B_GLARE_GHOST < GEN_4 && ctx->move == MOVE_GLARE && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GHOST))
             modifier = UQ_4_12(0.0);
     }
-    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, INVERSE_BATTLE, CHECK_IRON_BALL) && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)))
+    else if (ctx->moveType == TYPE_GROUND && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityDef, INVERSE_BATTLE, CHECK_IRON_BALL) && !(MoveIgnoresTypeIfFlyingAndUngrounded(ctx->move)))
     {
         modifier = UQ_4_12(0.0);
         if (ctx->updateFlags && ctx->abilityDef == ABILITY_LEVITATE)
@@ -9743,7 +9744,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
         && ctx->moveType == TYPE_GROUND
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
         && GetBattlerHoldEffect(ctx->battlerDef, TRUE) == HOLD_EFFECT_IRON_BALL
-        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, NOT_INVERSE_BATTLE, IGNORE_IRON_BALL)
+        && !IsBattlerGroundedInverseCheck(ctx->battlerDef, ctx->abilityDef, NOT_INVERSE_BATTLE, IGNORE_IRON_BALL)
         && !FlagGet(B_FLAG_INVERSE_BATTLE))
     {
         modifier = UQ_4_12(1.0);

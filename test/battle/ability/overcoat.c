@@ -40,6 +40,7 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from sandstorm")
 DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         PLAYER(SPECIES_WYNAUT)    { Speed(50); Ability(ABILITY_SNOW_CLOAK); } 
         PLAYER(SPECIES_SOLOSIS)   { Speed(40); Ability(ABILITY_RUN_AWAY); }
         OPPONENT(SPECIES_PINECO)  { Speed(30); Ability(ABILITY_OVERCOAT); }
