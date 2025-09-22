@@ -8330,9 +8330,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
     // various effects
     for (u32 i = 0; i < gProtectStructs[battlerAtk].helpingHand; i++)
-    {
         modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
-    }
 
     if (gSpecialStatuses[battlerAtk].gemBoost)
         modifier = uq4_12_multiply(modifier, uq4_12_add(UQ_4_12(1.0), PercentToUQ4_12(gSpecialStatuses[battlerAtk].gemParam)));
