@@ -372,12 +372,8 @@ bool32 HandleMoveTargetRedirection(void)
             u16 battlerAbility;
             battler = gBattlerByTurnOrder[redirectorOrderNum];
             battlerAbility = GetBattlerAbility(battler);
-
-            RecordAbilityBattle(battler, gBattleMons[battler].ability);
-            if (battlerAbility == ABILITY_LIGHTNING_ROD && gCurrentMove != MOVE_TEATIME)
-                gSpecialStatuses[battler].lightningRodRedirected = TRUE;
-            else if (battlerAbility == ABILITY_STORM_DRAIN)
-                gSpecialStatuses[battler].stormDrainRedirected = TRUE;
+            RecordAbilityBattle(battler, battlerAbility);
+            gSpecialStatuses[battler].abilityRedirected = TRUE;
             gBattlerTarget = battler;
             return TRUE;
         }
@@ -7677,7 +7673,7 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
                 {
                     targetBattler = battlerAbilityOnField - 1;
                     RecordAbilityBattle(targetBattler, gBattleMons[targetBattler].ability);
-                    gSpecialStatuses[targetBattler].lightningRodRedirected = TRUE;
+                    gSpecialStatuses[targetBattler].abilityRedirected = TRUE;
                 }
             }
             else if (moveType == TYPE_WATER && GetBattlerAbility(targetBattler) != ABILITY_STORM_DRAIN)
@@ -7691,7 +7687,7 @@ u32 GetBattleMoveTarget(u16 move, u8 setTarget)
                 {
                     targetBattler = battlerAbilityOnField - 1;
                     RecordAbilityBattle(targetBattler, gBattleMons[targetBattler].ability);
-                    gSpecialStatuses[targetBattler].lightningRodRedirected = TRUE;
+                    gSpecialStatuses[targetBattler].abilityRedirected = TRUE;
                 }
             }
         }

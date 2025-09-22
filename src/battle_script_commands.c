@@ -1249,19 +1249,10 @@ static void Cmd_attackcanceler(void)
         }
     }
 
-    if (gSpecialStatuses[gBattlerTarget].lightningRodRedirected)
+    if (gSpecialStatuses[gBattlerTarget].abilityRedirected)
     {
-        gSpecialStatuses[gBattlerTarget].lightningRodRedirected = FALSE;
-        gLastUsedAbility = ABILITY_LIGHTNING_ROD;
+        gSpecialStatuses[gBattlerTarget].abilityRedirected = FALSE;
         BattleScriptCall(BattleScript_TookAttack);
-        RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
-    }
-    else if (gSpecialStatuses[gBattlerTarget].stormDrainRedirected)
-    {
-        gSpecialStatuses[gBattlerTarget].stormDrainRedirected = FALSE;
-        gLastUsedAbility = ABILITY_STORM_DRAIN;
-        BattleScriptCall(BattleScript_TookAttack);
-        RecordAbilityBattle(gBattlerTarget, gLastUsedAbility);
     }
     else if (IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
      && (ctx.moveEffect != EFFECT_CURSE || IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
