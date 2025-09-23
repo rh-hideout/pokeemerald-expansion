@@ -15106,6 +15106,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_DYNAMAX] =
         .zMove = { .effect = Z_EFFECT_ALL_STATS_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .piercingMove = TRUE,
         .metronomeBanned = TRUE,
         .mimicBanned = TRUE,
         .copycatBanned = TRUE,

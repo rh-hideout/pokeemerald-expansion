@@ -1157,7 +1157,9 @@ void PrepareStringBattle(u16 stringId, u32 battler)
         SET_STATCHANGER(STAT_SPEED, 1, FALSE);
     }
 
-    else if (battlerAbility == ABILITY_SHOCK_THREADS && CompareStat(gBattlerTarget, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+    else if 
+    ((stringId == STRINGID_DEFENDERSSTATFELL || stringId == STRINGID_PKMNCUTSATTACKWITH) &&
+    (battlerAbility == ABILITY_SHOCK_THREADS && targetAbility != ABILITY_SHOCK_THREADS))
     {
         BattleScriptPushCursorAndCallback(BattleScript_ShockThreadsActivates);
                 

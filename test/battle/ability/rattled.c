@@ -91,3 +91,21 @@ SINGLE_BATTLE_TEST("Rattled triggers correctly when hit by U-Turn") // Specific 
         SEND_IN_MESSAGE("Wynaut");
     }
 }
+
+SINGLE_BATTLE_TEST("Rattled triggers correctly when move has no effect")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_SHADOW_PUNCH].type == TYPE_GHOST);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CHATOT) {Ability(ABILITY_RATTLED); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SHADOW_PUNCH); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Shadow Punch!");
+        NONE_OF { HP_BAR(player); HP_BAR(opponent); }
+            ABILITY_POPUP(opponent, ABILITY_RATTLED);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("Foe Chatot's Speed rose!");
+            
+    }
+}

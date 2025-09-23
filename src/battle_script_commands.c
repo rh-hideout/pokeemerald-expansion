@@ -8148,12 +8148,6 @@ static void Cmd_setgravity(void)
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
-    if (gBattlerAbility == ABILITY_TRAP_MASTER)
-    {
-        gFieldStatuses |= STATUS_FIELD_GRAVITY;
-        gFieldTimers.gravityTimer = 8;
-        gBattlescriptCurrInstr = cmd->nextInstr;        
-    }
     else
     {
         gFieldStatuses |= STATUS_FIELD_GRAVITY;
@@ -8864,6 +8858,8 @@ u32 IsFlowerVeilProtected(u32 battler)
         return 0;
 }
 
+
+
 u32 IsLeafGuardProtected(u32 battler)
 {
     if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
@@ -9188,15 +9184,12 @@ static void Cmd_various(void)
     case VARIOUS_TRY_FAIRY_LOCK:
     {
         VARIOUS_ARGS(const u8 *failInstr);
+
+        u16 battlerAbility = GetBattlerAbility(battler);
+
         if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK)
         {
             gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        if (gBattlerAbility == ABILITY_TRAP_MASTER)
-        {
-            gFieldStatuses |= STATUS_FIELD_FAIRY_LOCK;
-            gFieldTimers.fairyLockTimer = 4;
-            gBattlescriptCurrInstr = cmd->nextInstr;
         }
         else
         {
