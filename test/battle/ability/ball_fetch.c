@@ -15,7 +15,7 @@ WILD_BATTLE_TEST("Ball Fetch causes the Pokémon to pick up the last failed Ball
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); }
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {
-        TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, 0) );}
+        TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16) );}
         TURN {}
     } SCENE {
         if (item != ITEM_X_ACCURACY)
@@ -41,7 +41,7 @@ WILD_BATTLE_TEST("Ball Fetch doesn't trigger if the Pokémon is already holding 
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); Item(item); }
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {
-        TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
+        TURN { USE_ITEM(player, ITEM_GREAT_BALL, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
         if (item == ITEM_NONE)
         {
@@ -80,9 +80,9 @@ WILD_BATTLE_TEST("Ball Fetch only picks up the first failed ball, once per battl
         PLAYER(SPECIES_YAMPER) { Ability(ABILITY_BALL_FETCH); }
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {
-        TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
+        TURN { USE_ITEM(player, item, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
         TURN { MOVE(player, MOVE_BESTOW); }
-        TURN { USE_ITEM(player, item2, WITH_RNG(RNG_BALLTHROW_SHAKE, 0)); }
+        TURN { USE_ITEM(player, item2, WITH_RNG(RNG_BALLTHROW_SHAKE, MAX_u16)); }
     } SCENE {
         MESSAGE("You used Great Ball!");
         ABILITY_POPUP(player, ABILITY_BALL_FETCH);
