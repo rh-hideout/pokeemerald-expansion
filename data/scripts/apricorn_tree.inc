@@ -1,7 +1,9 @@
 #if APRICORN_TREE_COUNT > 0
 ApricornTreeScript::
+	message ApricornTree_Text_Intro
 	special ObjectEventInteractionGetApricornTreeData
 	goto_if_gt VAR_0x8005, 0, ApricornTree_EventScript_WantToPick
+	message ApricornTree_Text_Empty
 	end
 
 ApricornTree_EventScript_WantToPick::
@@ -53,13 +55,19 @@ ApricornTree_EventScript_CancelPickingApricorn::
 	release
 	end
 
+ApricornTree_Text_Intro:
+	.string "It's an Apricorn Tree!$"
+
+ApricornTree_Text_Empty:
+	.string "There are no Apricorns...$"
+
 ApricornTree_Text_WantToPick:
-	.string "You found {STR_VAR_2} {STR_VAR_1}!\p"
+	.string "...It's {STR_VAR_2} {STR_VAR_1}!\p"
 	.string "Do you want to pick the\n"
 	.string "{STR_VAR_1}?$"
 
 ApricornTree_Text_PickedTheApricorn:
-	.string "{PLAYER} picked the\n"
+	.string "{PLAYER} obtained\n"
 	.string "{STR_VAR_2} {STR_VAR_1}.$"
 
 ApricornTree_Text_PutAwayApricorn:
@@ -69,9 +77,10 @@ ApricornTree_Text_PutAwayApricorn:
 
 ApricornTree_Text_PocketFull:
 	.string "The BAG's ITEMS POCKET is full.\p"
-	.string "The {STR_VAR_1} couldn't be taken.$"
+	.string "{PLAYER} gave up on the\p"
+	.string "{STR_VAR_1}...$"
 
 ApricornTree_Text_ApricornLeftUnpicked:
-	.string "{PLAYER} left the {STR_VAR_1}\n"
-	.string "unpicked.$"
+	.string "{PLAYER} gave up on the\p"
+	.string "{STR_VAR_1}...$"
 #endif
