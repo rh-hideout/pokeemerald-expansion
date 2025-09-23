@@ -13945,7 +13945,7 @@ static void Cmd_handleballthrow(void)
                 odds = 1048560 / odds;
                 for (shakes = 0; shakes < maxShakes; shakes++)
                 {
-                    if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) < odds)
+                    if (RandomUniform(RNG_BALLTHROW_SHAKE, 0, MAX_u16) >= odds)
                         break;
                 }
             }
