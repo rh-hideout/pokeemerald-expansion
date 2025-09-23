@@ -141,7 +141,6 @@ struct ProtectStruct
 {
     u32 protected:7; // 126 protect options
     u32 noValidMoves:1;
-    u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
     u32 nonVolatileStatusImmobility:1;
@@ -163,13 +162,14 @@ struct ProtectStruct
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
-    // End of 32-bit bitfield
     u16 usedAllySwitch:1;
+    // End of 32-bit bitfield
+    u32 helpingHand:3;
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
     u16 laggingTail:1;
-    u16 padding:11;
+    u16 padding:9;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
