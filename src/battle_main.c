@@ -4283,7 +4283,11 @@ static void HandleTurnActionSelectionState(void)
                     }
                     break;
                 case B_ACTION_USE_ITEM:
-                    if (FlagGet(B_FLAG_NO_BAG_USE))
+                    u32 noBagVar = VarGet(B_VAR_NO_BAG_USE);
+                    if (ShouldBattleRestrictionsApply(battler) && 
+                        ((noBagVar == 1 && (gBattleTypeFlags & BATTLE_TYPE_TRAINER))
+                        ||  (noBagVar == 2))
+                        )
                     {
                         RecordedBattle_ClearBattlerAction(battler, 1);
                         gSelectionBattleScripts[battler] = BattleScript_ActionSelectionItemsCantBeUsed;
