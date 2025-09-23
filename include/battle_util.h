@@ -432,5 +432,6 @@ u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);
 bool32 IsDazzlingAbility(enum Ability ability);
+bool32 IsAllowedToUseBag(void);
 
 #endif // GUARD_BATTLE_UTIL_H

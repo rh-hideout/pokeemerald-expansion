@@ -12447,3 +12447,18 @@ void RemoveAbilityFlags(u32 battler)
        break;
     }
 }
+
+bool32 IsAllowedToUseBag(void)
+{
+    switch(VarGet(B_VAR_NO_BAG_USE))
+    {
+        case NO_BAG_RESTRICTION:
+            return TRUE;
+        case NO_BAG_AGAINST_TRAINER: //True in wild battle; False in trainer battle
+            return (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER));
+        case NO_BAG_IN_BATTLE:
+            return FALSE;
+        default:
+            return TRUE; // Undefined Behavior
+    }
+}
