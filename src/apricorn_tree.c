@@ -8,10 +8,16 @@
 #include "string_util.h"
 #include "data/apricorns.h"
 
-#if (APRICORN_TREE_COUNT > 0)
+static u16 ApricornTypeToItemId(u8 apricorn)
+{
+    return ApricornTypes[apricorn];
+}
+
 void DailyResetApricornTrees(void)
 {
-    memset(&gSaveBlock3Ptr->apricornTrees[0], 0, NUM_APRICORN_TREE_BYTES);
+    #if (APRICORN_TREE_COUNT > 0)
+        memset(&gSaveBlock3Ptr->apricornTrees[0], 0, NUM_APRICORN_TREE_BYTES);
+    #endif
 }
 
 void ObjectEventInteractionGetApricornTreeData(void)
@@ -41,7 +47,11 @@ void ObjectEventInteractionPickApricornTree(void)
 
 u8 GetApricornTypeByApricornTreeId(u8 id)
 {
-    return gApricornTrees[id].apricornType;
+    #if (APRICORN_TREE_COUNT > 0)
+        return gApricornTrees[id].apricornType;
+    #else
+        return 0;
+    #endif
 }
 
 u8 GetApricornCountByApricornTreeId(u8 id)
@@ -51,12 +61,11 @@ u8 GetApricornCountByApricornTreeId(u8 id)
         return 0;
     }
 
-    return gApricornTrees[id].isSapling ? 1 : 2;
-}
-
-static u16 ApricornTypeToItemId(u8 apricorn)
-{
-    return ApricornTypes[apricorn];
+    #if (APRICORN_TREE_COUNT > 0)
+        return gApricornTrees[id].isSapling ? 1 : 2;
+    #else
+        return 0;
+    #endif
 }
 
 bool8 IsApricornTreePicked(u8 id)
@@ -64,16 +73,20 @@ bool8 IsApricornTreePicked(u8 id)
     if (id > APRICORN_TREE_COUNT)
         return TRUE;
 
-    bool8 tree = gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
-    return tree;
+    #if (APRICORN_TREE_COUNT > 0)
+        bool8 tree = gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
+        return tree;
+    #else
+        return TRUE;
+    #endif
 }
 
 void SetApricornTreePicked(u8 id)
 {
     if (id > APRICORN_TREE_COUNT)
         return;
-
-    u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
-    *flagByte = (*flagByte) | (1 << (id % 8));
+    #if (APRICORN_TREE_COUNT > 0)
+        u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
+        *flagByte = (*flagByte) | (1 << (id % 8));
+    #endif
 }
-#endif

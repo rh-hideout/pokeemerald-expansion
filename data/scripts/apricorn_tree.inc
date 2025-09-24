@@ -1,4 +1,3 @@
-#if APRICORN_TREE_COUNT > 0
 ApricornTreeScript::
 	message ApricornTree_Text_Intro
 	special ObjectEventInteractionGetApricornTreeData
@@ -83,4 +82,3 @@ ApricornTree_Text_PocketFull:
 ApricornTree_Text_ApricornLeftUnpicked:
 	.string "{PLAYER} gave up on the\p"
 	.string "{STR_VAR_1}...$"
-#endif
