@@ -453,7 +453,6 @@ static bool32 ShouldSwitchIfWonderGuard(u32 battler)
     // Check if Pokémon has a super effective move.
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        u32 move = gBattleMons[battler].moves[i];
         if (gBattleMons[battler].moves[i] != MOVE_NONE && gAiLogicData->effectiveness[battler][opposingBattler][i] >= UQ_4_12(2.0))
             return FALSE;
     }
