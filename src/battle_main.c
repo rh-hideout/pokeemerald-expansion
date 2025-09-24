@@ -5562,12 +5562,22 @@ static void HandleEndTurn_FinishBattle(void)
                         GetMonData(GetBattlerMon(battler), MON_DATA_NICKNAME, gBattleResults.playerMon2Name);
                     }
                 }
-                else if (!IsOnPlayerSide(battler))
-                {
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
-                }
             }
             TryPutPokemonTodayOnAir();
+        }
+
+        if (!(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
+                                  | BATTLE_TYPE_FRONTIER
+                                  | BATTLE_TYPE_LINK
+                                  | BATTLE_TYPE_RECORDED_LINK
+                                  | BATTLE_TYPE_TRAINER_HILL)))
+        {
+            for (u32 enemyMon = 0; enemyMon < gEnemyPartyCount; enemyMon++)
+            {
+                u32 species = GetMonData(&gEnemyParty[enemyMon], MON_DATA_SPECIES);
+                u32 personality = GetMonData(&gEnemyParty[enemyMon], MON_DATA_PERSONALITY);
+                HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
+            }
         }
 
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
