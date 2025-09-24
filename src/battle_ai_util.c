@@ -2308,6 +2308,17 @@ u16 *GetMovesArray(u32 battler)
         return gBattleHistory->usedMoves[battler];
 }
 
+u32 GetIndexInMoveArray(u32 battler, u32 move)
+{
+    u16 *moves = GetMovesArray(battler);
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++) {
+        if (moves[i] == move)
+            return i;
+    }
+    return MAX_MON_MOVES;
+}
+
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     u32 i;
@@ -4314,10 +4325,9 @@ static void SetBattlerFieldStatusForSwitchin(u32 battler)
 }
 
 // party logic
-s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, enum DamageCalcContext calcContext)
+s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, uq4_12_t *effectiveness, enum DamageCalcContext calcContext)
 {
     struct SimulatedDamage dmg;
-    uq4_12_t effectiveness;
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
     if (calcContext == AI_ATTACKING)
@@ -4337,7 +4347,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
 
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate));
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate));
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 

@@ -22,3 +22,16 @@ DOUBLE_BATTLE_TEST("Flame Burst Substitute")
         NOT MESSAGE("The substitute took damage for the opposing Wynaut!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Flame Burst doesn't crash")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentRight, MOVE_FLAME_BURST, target: playerLeft); }
+    } SCENE {
+    }
+}
