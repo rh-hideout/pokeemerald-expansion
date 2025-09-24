@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
 SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move happened")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SLIGGOO_HISUI; ability = ABILITY_GOOEY; }
     PARAMETRIZE { species = SPECIES_DUGTRIO_ALOLA; ability = ABILITY_TANGLING_HAIR; }
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if Magician steals it"
 SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggered Defiant and Competitive")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_IGGLYBUFF; ability = ABILITY_COMPETITIVE; }
     PARAMETRIZE { species = SPECIES_MANKEY; ability = ABILITY_DEFIANT; }
