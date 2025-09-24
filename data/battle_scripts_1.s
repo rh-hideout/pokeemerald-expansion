@@ -8510,15 +8510,15 @@ BattleScript_ItemHealHP_RemoveItemEnd2_Anim:
 	end2
 
 BattleScript_BerryPPHealRet::
-	jumpifability BS_ATTACKER, ABILITY_RIPEN, BattleScript_BerryPPHeal_AbilityPopup
+	jumpifability BS_SCRIPTING, ABILITY_RIPEN, BattleScript_BerryPPHeal_AbilityPopup
 	goto BattleScript_BerryPPHeal_Anim
 BattleScript_BerryPPHeal_AbilityPopup:
-	call BattleScript_AbilityPopUp
+	call BattleScript_AbilityPopUpScripting
 BattleScript_BerryPPHeal_Anim:
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT
+	playanimation BS_SCRIPTING, B_ANIM_HELD_ITEM_EFFECT
 	printstring STRINGID_PKMNSITEMRESTOREDPP
 	waitmessage B_WAIT_TIME_LONG
-	removeitem BS_ATTACKER
+	removeitem BS_SCRIPTING
 	return
 
 BattleScript_BerryPPHealEnd2::

@@ -6145,6 +6145,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, enum ItemCaseId caseID)
             else
                 BattleScriptCall(BattleScript_BerryPPHealRet);
 
+            gBattleScripting.battler = battler;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, i + REQUEST_PPMOVE1_BATTLE, 0, 1, &changedPP);
             MarkBattlerForControllerExec(battler);
             if (MOVE_IS_PERMANENT(battler, i))
@@ -6728,6 +6729,9 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             case HOLD_EFFECT_RESTORE_PCT_HP:
                 if (B_BERRIES_INSTANT >= GEN_4)
                     effect = ItemHealHp(battler, gLastUsedItem, caseID, TRUE);
+                break;
+            case HOLD_EFFECT_RESTORE_PP:
+                effect = ItemRestorePp(battler, gLastUsedItem, caseID);
                 break;
             case HOLD_EFFECT_AIR_BALLOON:
                 effect = ITEM_EFFECT_OTHER;
