@@ -1582,7 +1582,6 @@ BattleScript_EffectAfterYou::
 	goto BattleScript_MoveEnd
 
 BattleScript_MoveEffectFlameBurst::
-	tryfaintmon BS_TARGET
 	printstring STRINGID_BURSTINGFLAMESHIT
 	waitmessage B_WAIT_TIME_LONG
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE
