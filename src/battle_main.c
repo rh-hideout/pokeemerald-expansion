@@ -3742,12 +3742,12 @@ static void DoBattleIntro(void)
             if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(3);
+                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(PARTY_SIZE / 2);
                 else
                     gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(1);
 
                 if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-                    gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(3);
+                    gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(PARTY_SIZE / 2);
             }
 
             // Try to set a status to start the battle with
