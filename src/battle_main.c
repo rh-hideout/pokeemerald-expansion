@@ -5596,7 +5596,6 @@ static void HandleEndTurn_FinishBattle(void)
                 // enemy party
                 if (gBattleStruct->enemySentOutFlags & sentOutFlag)
                 {
-                    DebugPrintf("enemy slot %u sent out, flag %X", partySlot, sentOutFlag);
                     species = GetMonData(&gEnemyParty[partySlot], MON_DATA_SPECIES);
                     personality = GetMonData(&gEnemyParty[partySlot], MON_DATA_PERSONALITY);
                     HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
@@ -5605,7 +5604,6 @@ static void HandleEndTurn_FinishBattle(void)
                 // player party (for in-game partners)
                 if (gBattleStruct->partnerSentOutFlags & sentOutFlag)
                 {
-                    DebugPrintf("partner slot %u sent out, flag %X", partySlot, sentOutFlag);
                     species = GetMonData(&gPlayerParty[partySlot], MON_DATA_SPECIES);
                     personality = GetMonData(&gPlayerParty[partySlot], MON_DATA_PERSONALITY);
                     HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
