@@ -2317,7 +2317,8 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
 {
     u16 *moves = GetMovesArray(battler);
     u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++) {
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
         if (moves[i] == move)
             return i;
     }
