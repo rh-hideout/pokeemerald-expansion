@@ -15194,7 +15194,7 @@ void BS_ItemRestorePP(void)
 void BS_TryRevertWeatherForm(void)
 {
     NATIVE_ARGS();
-    if (TryBattleFormChange(gBattlerTarget, FORM_CHANGE_BATTLE_WEATHER))
+    if (IsBattlerAlive(gBattlerTarget) && TryBattleFormChange(gBattlerTarget, FORM_CHANGE_BATTLE_WEATHER))
     {
         gBattleScripting.battler = gBattlerTarget;
         BattleScriptPush(cmd->nextInstr);
