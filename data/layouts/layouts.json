@@ -604,7 +604,7 @@
     {
       "id": "LAYOUT_POKEMON_CENTER_1F",
       "name": "PokemonCenter_1F_Layout",
-      "width": 14,
+      "width": 15,
       "height": 9,
       "primary_tileset": "gTileset_Building",
       "secondary_tileset": "gTileset_PokemonCenter",

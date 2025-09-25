@@ -937,7 +937,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .levelUpLearnset = sYungoosLevelUpLearnset,
         .teachableLearnset = sYungoosTeachableLearnset,
         .eggMoveLearnset = sYungoosEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GUMSHOOS, CONDITIONS({IF_NOT_TIME, TIME_NIGHT})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GUMSHOOS}),
     },
 
     [SPECIES_GUMSHOOS] =
@@ -2949,7 +2949,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .levelUpLearnset = sFomantisLevelUpLearnset,
         .teachableLearnset = sFomantisTeachableLearnset,
         .eggMoveLearnset = sFomantisEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_LURANTIS, CONDITIONS({IF_NOT_TIME, TIME_NIGHT})},
+        .evolutions = EVOLUTION({EVO_LEVEL, 34, SPECIES_LURANTIS},
                                 {EVO_NONE, 0, SPECIES_LURANTIS_TOTEM}),
     },
 

@@ -2289,7 +2289,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .teachableLearnset = sRattataAlolaTeachableLearnset,
         .eggMoveLearnset = sRattataAlolaEggMoveLearnset,
         .formSpeciesIdTable = sRattataFormSpeciesIdTable,
-        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_RATICATE_ALOLA, CONDITIONS({IF_TIME, TIME_NIGHT})},
+        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_RATICATE_ALOLA},
                                 {EVO_NONE, 0, SPECIES_RATICATE_ALOLA_TOTEM}),
     },
 
@@ -6345,7 +6345,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sParasLevelUpLearnset,
         .teachableLearnset = sParasTeachableLearnset,
         .eggMoveLearnset = sParasEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 24, SPECIES_PARASECT}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 23, SPECIES_PARASECT}),
     },
 
     [SPECIES_PARASECT] =
@@ -14637,8 +14637,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sHappinyLevelUpLearnset,
         .teachableLearnset = sHappinyTeachableLearnset,
         .eggMoveLearnset = sHappinyEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_CHANSEY, CONDITIONS({IF_NOT_TIME, TIME_NIGHT},{IF_HOLD_ITEM, ITEM_OVAL_STONE})},
-                                {EVO_ITEM, ITEM_OVAL_STONE, SPECIES_CHANSEY, CONDITIONS({IF_NOT_TIME, TIME_NIGHT})}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 0, SPECIES_CHANSEY, CONDITIONS({IF_HOLD_ITEM, ITEM_OVAL_STONE})},
+                                {EVO_ITEM, ITEM_OVAL_STONE, SPECIES_CHANSEY}),
     },
 #endif //P_GEN_4_CROSS_EVOS
 

@@ -1173,7 +1173,7 @@
 #define FLAG_ITEM_ROUTE_103_GUARD_SPEC                              0x45A
 #define FLAG_ITEM_ROUTE_104_X_ACCURACY                              0x45B
 #define FLAG_ITEM_MAUVILLE_CITY_X_SPEED                             0x45C
-#define FLAG_ITEM_PETALBURG_WOODS_PARALYZE_HEAL                     0x45D
+#define FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD                      0x45D
 #define FLAG_ITEM_ROUTE_115_GREAT_BALL                              0x45E
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_CALCIUM                         0x45F
 #define FLAG_ITEM_MT_PYRE_3F_SUPER_REPEL                            0x460
@@ -1517,7 +1517,7 @@
 #define FLAG_ROUTE102_REWARD                        (SYSTEM_FLAGS + 0x85) // Rewards for 102
 #define FLAG_GET_PETALBURG_EGG                      (SYSTEM_FLAGS + 0x86) // Unused Flag
 #define FLAG_ROUTE104_PT1_REWARD                    (SYSTEM_FLAGS + 0x87) // Unused Flag
-#define FLAG_UNUSED_0x8E8                           (SYSTEM_FLAGS + 0x88) // Unused Flag
+#define FLAG_PB_WOODS_REWARD                        (SYSTEM_FLAGS + 0x88) // Unused Flag
 #define FLAG_UNUSED_0x8E9                           (SYSTEM_FLAGS + 0x89) // Unused Flag
 #define FLAG_UNUSED_0x8EA                           (SYSTEM_FLAGS + 0x8A) // Unused Flag
 #define FLAG_UNUSED_0x8EB                           (SYSTEM_FLAGS + 0x8B) // Unused Flag

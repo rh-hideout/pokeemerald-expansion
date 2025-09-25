@@ -122,27 +122,27 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
-      "x": 7,
-      "y": 32,
+      "x": 9,
+      "y": 31,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_LEFT_AND_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_DOWN",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "4",
       "script": "PetalburgWoods_EventScript_Lyle",
       "flag": "0"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BUG_CATCHER",
       "x": 4,
-      "y": 14,
+      "y": 29,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_FACE_DOWN_UP_AND_RIGHT",
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
       "movement_range_x": 0,
       "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NORMAL",
-      "trainer_sight_or_berry_tree_id": "3",
+      "trainer_sight_or_berry_tree_id": "5",
       "script": "PetalburgWoods_EventScript_James",
       "flag": "0"
     },
@@ -161,16 +161,16 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_ITEM_BALL",
-      "x": 4,
-      "y": 26,
+      "x": 12,
+      "y": 23,
       "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_type": "MOVEMENT_TYPE_NONE",
       "movement_range_x": 1,
       "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
-      "trainer_sight_or_berry_tree_id": "ITEM_PARALYZE_HEAL",
-      "script": "Common_EventScript_FindItem",
-      "flag": "FLAG_ITEM_PETALBURG_WOODS_PARALYZE_HEAL"
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PetalburgWoods_EventScript_Route_Rewards",
+      "flag": "FLAG_ITEM_PETALBURG_WOODS_ROUTE_REWARD"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_GIRL_2",
@@ -184,6 +184,32 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "PetalburgWoods_EventScript_Girl",
       "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(SHROOMISH)",
+      "x": 21,
+      "y": 30,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WALK_IN_PLACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PetalburgWoods_EventScript_Shroomish_2",
+      "flag": "FLAG_PB_WOODS_CLEAR"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(SHROOMISH)",
+      "x": 16,
+      "y": 30,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WALK_IN_PLACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "PetalburgWoods_EventScript_Shroomish_1",
+      "flag": "FLAG_PB_WOODS_CLEAR"
     }
   ],
   "warp_events": [
@@ -253,8 +279,8 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 14,
-      "y": 32,
+      "x": 19,
+      "y": 35,
       "elevation": 3,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "PetalburgWoods_EventScript_Sign1"

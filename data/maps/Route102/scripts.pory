@@ -116,7 +116,7 @@ script Route102_EventScript_Route_Clear
 	setflag(FLAG_ROUTE102_CLEAR)
 	removeobject(9)
 	removeobject(10)
-	msgbox(format("Route 104 has been cleared!\n The level cap is now 10."), MSGBOX_DEFAULT)
+	msgbox(format("Route 104 has been cleared!\nThe level cap is now 10."), MSGBOX_DEFAULT)
 	waitmessage
 	waitfanfare
 	fadescreen(FADE_FROM_BLACK)

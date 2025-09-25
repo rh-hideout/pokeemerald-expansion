@@ -1,0 +1,156 @@
+raw `
+PetalburgCity_PokemonCenter_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_TRANSITION, PetalburgCity_PokemonCenter_1F_OnTransition
+	map_script MAP_SCRIPT_ON_RESUME, CableClub_OnResume
+	.byte 0
+
+PetalburgCity_PokemonCenter_1F_OnTransition:
+	setrespawn HEAL_LOCATION_PETALBURG_CITY
+	call Common_EventScript_UpdateBrineyLocation
+	end
+
+PetalburgCity_PokemonCenter_1F_EventScript_Nurse::
+	setvar VAR_0x800B, LOCALID_PETALBURG_NURSE
+	call Common_EventScript_PkmnCenterNurse
+	waitmessage
+	waitbuttonpress
+	release
+	end
+
+PetalburgCity_PokemonCenter_1F_EventScript_FatMan::
+	msgbox PetalburgCity_PokemonCenter_1F_Text_PCStorageSystem, MSGBOX_NPC
+	end
+
+
+PetalburgCity_PokemonCenter_1F_EventScript_Woman::
+	lock
+	faceplayer
+	msgbox PetalburgCity_PokemonCenter_1F_Text_ManyTypesOfPokemon, MSGBOX_DEFAULT
+	specialvar VAR_RESULT, IsStarterInParty
+	goto_if_eq VAR_RESULT, TRUE, PetalburgCity_PokemonCenter_1F_EventScript_SayStarterTypeInfo
+	release
+	end
+
+PetalburgCity_PokemonCenter_1F_EventScript_SayStarterTypeInfo::
+	call_if_eq VAR_STARTER_MON, 0, PetalburgCity_PokemonCenter_1F_EventScript_SayTreeckoType
+	call_if_eq VAR_STARTER_MON, 1, PetalburgCity_PokemonCenter_1F_EventScript_SayTorchicType
+	call_if_eq VAR_STARTER_MON, 2, PetalburgCity_PokemonCenter_1F_EventScript_SayMudkipType
+	release
+	end
+
+PetalburgCity_PokemonCenter_1F_EventScript_SayTreeckoType::
+	msgbox PetalburgCity_PokemonCenter_1F_Text_TreeckoIsGrassType, MSGBOX_DEFAULT
+	return
+
+PetalburgCity_PokemonCenter_1F_EventScript_SayTorchicType::
+	msgbox PetalburgCity_PokemonCenter_1F_Text_TorchicIsFireType, MSGBOX_DEFAULT
+	return
+
+PetalburgCity_PokemonCenter_1F_EventScript_SayMudkipType::
+	msgbox PetalburgCity_PokemonCenter_1F_Text_MudkipIsWaterType, MSGBOX_DEFAULT
+	return
+
+PetalburgCity_PokemonCenter_1F_Text_PCStorageSystem:
+	.string "That PC-based POKéMON Storage\n"
+	.string "System…\p"
+	.string "Whoever made it must be some kind\n"
+	.string "of a scientific wizard!$"
+
+PetalburgCity_PokemonCenter_1F_Text_ManyTypesOfPokemon:
+	.string "There are many types of POKéMON.\p"
+	.string "All types have their strengths and\n"
+	.string "weaknesses against other types.\p"
+	.string "Depending on the types of POKéMON,\n"
+	.string "a battle could be easy or hard.$"
+
+PetalburgCity_PokemonCenter_1F_Text_TreeckoIsGrassType:
+	.string "For example, your TREECKO\n"
+	.string "is a GRASS type.\p"
+	.string "It's strong against the WATER and\n"
+	.string "GROUND types.\p"
+	.string "But, it's weak against FIRE-type\n"
+	.string "POKéMON.$"
+
+PetalburgCity_PokemonCenter_1F_Text_TorchicIsFireType:
+	.string "For example, your TORCHIC\n"
+	.string "is a FIRE type.\p"
+	.string "It's strong against the GRASS and\n"
+	.string "BUG types.\p"
+	.string "But, it's weak against WATER-type\n"
+	.string "POKéMON.$"
+
+PetalburgCity_PokemonCenter_1F_Text_MudkipIsWaterType:
+	.string "For example, your MUDKIP\n"
+	.string "is a WATER type.\p"
+	.string "It's strong against the FIRE type.\p"
+	.string "But, it's weak against GRASS-type\n"
+	.string "and ELECTRIC-type POKéMON.$"
+
+.align 2
+Petalburg_Center_Item_Mart::
+    .2byte ITEM_ORAN_BERRY
+    .2byte ITEM_POMEG_BERRY
+	.2byte ITEM_CHERI_BERRY
+	.2byte ITEM_CHESTO_BERRY
+	.2byte ITEM_PECHA_BERRY
+	.2byte ITEM_RAWST_BERRY
+	.2byte ITEM_ASPEAR_BERRY
+    .2byte ITEM_POKE_VIAL
+    .2byte ITEM_ESCAPE_ROPE
+    .2byte ITEM_NONE
+    release
+    end
+
+.align 2
+Petalburg_Center_Mon_Mart::
+	.2byte ITEM_LONELY_MINT
+	.2byte ITEM_ADAMANT_MINT
+	.2byte ITEM_NAUGHTY_MINT
+	.2byte ITEM_BRAVE_MINT
+	.2byte ITEM_BOLD_MINT
+	.2byte ITEM_IMPISH_MINT
+	.2byte ITEM_LAX_MINT
+	.2byte ITEM_RELAXED_MINT
+	.2byte ITEM_MODEST_MINT
+	.2byte ITEM_MILD_MINT
+	.2byte ITEM_RASH_MINT
+	.2byte ITEM_QUIET_MINT
+	.2byte ITEM_CALM_MINT
+	.2byte ITEM_GENTLE_MINT
+	.2byte ITEM_CAREFUL_MINT
+	.2byte ITEM_SASSY_MINT
+	.2byte ITEM_TIMID_MINT
+	.2byte ITEM_HASTY_MINT
+	.2byte ITEM_JOLLY_MINT
+	.2byte ITEM_NAIVE_MINT
+	.2byte ITEM_SERIOUS_MINT
+	.2byte ITEM_NONE
+
+
+`
+script PetalburgCity_PokemonCenter_1F_EventScript_Merchant {
+    lock
+    faceplayer
+    message("How can I help you?")
+    waitmessage
+    pokemart(Petalburg_Center_Item_Mart)
+	message("Come again soon!")
+    release
+    end
+}
+
+script PetalburgCity_PokemonCenter_1F_EventScript_Bookcase {
+	msgbox (format("A collection of books about Hoenn, and how to identify different species."), MSGBOX_SIGN)
+	end
+}
+
+script PetalburgCity_PokemonCenter_1F_EventScript_NatureGuy {
+	lock
+    faceplayer
+    message("How can I help you?")
+    waitmessage
+    pokemart(Petalburg_Center_Mon_Mart)
+    message("I'm always here!")
+    release
+    end
+}

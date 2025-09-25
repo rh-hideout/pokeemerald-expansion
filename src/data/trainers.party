@@ -231,13 +231,13 @@ Music: Aqua
 Double Battle: No
 AI: DEFAULT_TRAINER_BASIC
 
-Impidimp @ Light Ball  
-Ability: Prankster  
-Level: 10  
-- Fake Out  
-- Parting Shot  
-- Thief  
-- Trick
+Rattata-Alola @ Silk Scarf
+Ability: Hustle  
+Level: 11  
+Adamant Nature  
+- U-turn  
+- Bite  
+- Facade
 
 Zubat @ Poison Barb  
 Ability: Inner Focus  
@@ -249,11 +249,10 @@ Jolly Nature
 
 Mareanie @ Oran Berry  
 Ability: Regenerator  
-Level: 10   
+Level: 12   
 - Mud Shot  
 - Water Pulse  
 - Poison Sting
-
 
 
 === TRAINER_MARCEL ===
@@ -11368,13 +11367,12 @@ Music: Male
 Double Battle: No
 AI: DEFAULT_TRAINER_BASIC
 
-Bonsly @ Custap Berry  
+Bonsly  
 Ability: Sturdy  
 Level: 9  
 - Mud Shot  
 - Rock Tomb  
 - Feint Attack  
-- Explosion
 
 Exeggcute @ Oran Berry  
 Ability: Harvest  
@@ -11470,14 +11468,14 @@ AI: DEFAULT_TRAINER_BASIC
 
 Lombre @ Miracle Seed  
 Ability: Own Tempo  
-Level: 9  
+Level: 10  
 - Fake Out  
 - Bubble Beam  
 - Mega Drain
 
 Cottonee @ Kebia Berry  
 Ability: Prankster  
-Level: 9  
+Level: 10 
 - Tailwind  
 - Encore  
 - Toxic
@@ -11485,7 +11483,6 @@ Level: 9
 Togepi @ Eviolite  
 Ability: Super Luck  
 Level: 12  
-Tera Type: Steel
 Rash Nature  
 - Metronome
 
