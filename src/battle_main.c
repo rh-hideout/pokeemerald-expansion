@@ -3735,6 +3735,21 @@ static void DoBattleIntro(void)
             gBattleStruct->overworldWeatherDone = FALSE;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
+            // first slot
+            gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(0);
+
+            // check for double battle types
+            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+            {
+                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
+                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(3);
+                else
+                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(1);
+
+                if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
+                    gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(3);
+            }
+
             // Try to set a status to start the battle with
             gBattleStruct->startingStatus = 0;
             if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB))
@@ -5566,17 +5581,35 @@ static void HandleEndTurn_FinishBattle(void)
             TryPutPokemonTodayOnAir();
         }
 
-        if (!(gBattleTypeFlags & (BATTLE_TYPE_EREADER_TRAINER
-                                  | BATTLE_TYPE_FRONTIER
-                                  | BATTLE_TYPE_LINK
+        if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK
+                                  | BATTLE_TYPE_EREADER_TRAINER
                                   | BATTLE_TYPE_RECORDED_LINK
-                                  | BATTLE_TYPE_TRAINER_HILL)))
+                                  | BATTLE_TYPE_TRAINER_HILL
+                                  | BATTLE_TYPE_FRONTIER)))
         {
-            for (u32 enemyMon = 0; enemyMon < gEnemyPartyCount; enemyMon++)
+            for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
             {
-                u32 species = GetMonData(&gEnemyParty[enemyMon], MON_DATA_SPECIES);
-                u32 personality = GetMonData(&gEnemyParty[enemyMon], MON_DATA_PERSONALITY);
-                HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
+                u32 species;
+                u32 personality;
+                u32 sentOutFlag = MON_SENT_OUT_FLAG(partySlot);
+
+                // enemy party
+                if (gBattleStruct->enemySentOutFlags & sentOutFlag)
+                {
+                    DebugPrintf("enemy slot %u sent out, flag %X", partySlot, sentOutFlag);
+                    species = GetMonData(&gEnemyParty[partySlot], MON_DATA_SPECIES);
+                    personality = GetMonData(&gEnemyParty[partySlot], MON_DATA_PERSONALITY);
+                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
+                }
+
+                // player party (for in-game partners)
+                if (gBattleStruct->partnerSentOutFlags & sentOutFlag)
+                {
+                    DebugPrintf("partner slot %u sent out, flag %X", partySlot, sentOutFlag);
+                    species = GetMonData(&gPlayerParty[partySlot], MON_DATA_SPECIES);
+                    personality = GetMonData(&gPlayerParty[partySlot], MON_DATA_PERSONALITY);
+                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
+                }
             }
         }
 

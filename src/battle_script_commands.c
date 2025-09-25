@@ -7171,13 +7171,10 @@ static void Cmd_switchinanim(void)
 
     battler = GetBattlerForBattleScript(cmd->battler);
 
-    if (!IsOnPlayerSide(battler)
-        && !(gBattleTypeFlags & (BATTLE_TYPE_LINK
-                                 | BATTLE_TYPE_EREADER_TRAINER
-                                 | BATTLE_TYPE_RECORDED_LINK
-                                 | BATTLE_TYPE_TRAINER_HILL
-                                 | BATTLE_TYPE_FRONTIER)))
-        HandleSetPokedexFlag(SpeciesToNationalPokedexNum(gBattleMons[battler].species), FLAG_SET_SEEN, gBattleMons[battler].personality);
+    if(!IsOnPlayerSide(battler))
+        gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(gBattleStruct->monToSwitchIntoId[battler]);
+    else
+        gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(gBattleStruct->monToSwitchIntoId[battler]);
 
     gAbsentBattlerFlags &= ~(1u << battler);
 
