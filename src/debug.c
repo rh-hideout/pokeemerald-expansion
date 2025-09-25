@@ -105,8 +105,8 @@ enum FlagsVarsDebugMenu
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE,
-    DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE,
     DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING,
+    DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE,
 };
 
 enum DebugBattleType
@@ -341,6 +341,7 @@ static void DebugAction_Player_Id(u8 taskId);
 
 extern const u8 Debug_FlagsNotSetOverworldConfigMessage[];
 extern const u8 Debug_FlagsNotSetBattleConfigMessage[];
+extern const u8 Debug_VarsNotSetBattleConfigMessage[];
 extern const u8 Debug_FlagsAndVarNotSetBattleConfigMessage[];
 extern const u8 Debug_EventScript_FontTest[];
 extern const u8 Debug_EventScript_CheckEVs[];
@@ -650,9 +651,16 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_COLLISION]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Collision OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_CollisionOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_ENCOUNTER]     = { COMPOUND_STRING("Toggle {STR_VAR_1}Encounter OFF"),   DebugAction_ToggleFlag, DebugAction_FlagsVars_EncounterOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_TRAINER_SEE]   = { COMPOUND_STRING("Toggle {STR_VAR_1}Trainer See OFF"), DebugAction_ToggleFlag, DebugAction_FlagsVars_TrainerSeeOnOff },
-    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_ToggleFlag, DebugAction_FlagsVars_BagUseOnOff },
     [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING]      = { COMPOUND_STRING("Toggle {STR_VAR_1}Catching OFF"),    DebugAction_ToggleFlag, DebugAction_FlagsVars_CatchingOnOff },
+    [DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE]       = { COMPOUND_STRING("Toggle {STR_VAR_1}Bag Use OFF"),     DebugAction_ToggleFlag, DebugAction_FlagsVars_BagUseOnOff },
     { NULL }
+};
+
+static const u8 *sDebugMenu_Actions_BagUse_Options[] =
+{
+    COMPOUND_STRING("No Bag: {STR_VAR_1}Inactive"),
+    COMPOUND_STRING("No Bag: {STR_VAR_1}VS Trainers"),
+    COMPOUND_STRING("No Bag: {STR_VAR_1}Active"),
 };
 
 static const struct DebugMenuOption sDebugMenu_Actions_Main[] =
@@ -1017,16 +1025,14 @@ static u8 Debug_CheckToggleFlags(u8 id)
             result = FlagGet(OW_FLAG_NO_TRAINER_SEE);
             break;
     #endif
-    #if B_FLAG_NO_BAG_USE != 0
-        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
-            result = FlagGet(B_FLAG_NO_BAG_USE);
-            break;
-    #endif
     #if B_FLAG_NO_CATCHING != 0
         case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_CATCHING:
             result = FlagGet(B_FLAG_NO_CATCHING);
             break;
     #endif
+        case DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE:
+            result = VarGet(B_VAR_NO_BAG_USE);
+            break;
         default:
             result = 0xFF;
             break;
@@ -1053,7 +1059,10 @@ static u8 Debug_GenerateListMenuNames(void)
         if (sDebugMenuListData->listId == 1)
         {
             flagResult = Debug_CheckToggleFlags(i);
-            name = sDebugMenu_Actions_Flags[i].text;
+            if (i == DEBUG_FLAGVAR_MENU_ITEM_TOGGLE_BAG_USE)
+                name = sDebugMenu_Actions_BagUse_Options[flagResult];
+            else
+                name = sDebugMenu_Actions_Flags[i].text;
         }
 
         if (flagResult == 0xFF)
@@ -2005,14 +2014,11 @@ static void DebugAction_FlagsVars_TrainerSeeOnOff(u8 taskId)
 
 static void DebugAction_FlagsVars_BagUseOnOff(u8 taskId)
 {
-#if B_FLAG_NO_BAG_USE == 0
-    Debug_DestroyMenu_Full_Script(taskId, Debug_FlagsNotSetBattleConfigMessage);
+#if B_VAR_NO_BAG_USE < VARS_START || B_VAR_NO_BAG_USE > VARS_END
+    Debug_DestroyMenu_Full_Script(taskId, Debug_VarsNotSetBattleConfigMessage);
 #else
-    if (FlagGet(B_FLAG_NO_BAG_USE))
-        PlaySE(SE_PC_OFF);
-    else
-        PlaySE(SE_PC_LOGIN);
-    FlagToggle(B_FLAG_NO_BAG_USE);
+    PlaySE(SE_SELECT);
+    VarSet(B_VAR_NO_BAG_USE, (VarGet(B_VAR_NO_BAG_USE) + 1) % 3);
 #endif
 }
 
