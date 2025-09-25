@@ -402,7 +402,9 @@ BattleScript_MoveEffectSaltCure::
 BattleScript_SaltCureExtraDamage::
 	playanimation BS_ATTACKER, B_ANIM_SALT_CURE_DAMAGE, NULL
 	waitanimation
-	call BattleScript_HurtTarget_NoString
+	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE
+	healthbarupdate BS_ATTACKER
+	datahpupdate BS_ATTACKER
 	printstring STRINGID_TARGETISHURTBYSALTCURE
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
