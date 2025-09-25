@@ -211,6 +211,9 @@ BattleScript_WallyBallThrow::
 	finishturn
 
 BattleScript_ShakeBallThrow::
+	animatewildpokemonafterfailedpokeball BS_TARGET
+	waitstate
+	waitmessage B_WAIT_TIME_LONG
 	printfromtable gBallEscapeStringIds
 	waitmessage B_WAIT_TIME_LONG
 	jumpifword CMP_NO_COMMON_BITS, gBattleTypeFlags, BATTLE_TYPE_SAFARI, BattleScript_ShakeBallThrowEnd

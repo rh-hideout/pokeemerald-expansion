@@ -279,6 +279,7 @@ void InitBattleControllers(void);
 bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data);
+void UpdateFriendshipFromXItem(u32 battler);
 
 // emitters
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);
@@ -426,6 +427,7 @@ void LinkPartnerBufferExecCompleted(u32 battler);
 
 void TrySetBattlerShadowSpriteCallback(u32 battler);
 
+void AnimateMonAfterPokeBallFail(u32 battler);
 void TryShinyAnimAfterMonAnim(u32 battler);
 void WaitForMonAnimAfterLoad(u32 battler);
 void BtlController_HandleSwitchInWaitAndEnd(u32 battler);

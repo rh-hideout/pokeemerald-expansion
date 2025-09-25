@@ -334,14 +334,8 @@ const u8 gItemEffect_PPMax[9] = {
     VITAMIN_FRIENDSHIP_CHANGE(6),
 };
 
-#define STAT_BOOST_FRIENDSHIP_CHANGE      \
-    [6] = 1, /* Friendship change, low */ \
-    [7] = 1  /* Friendship change, mid */
-
 const u8 gItemEffect_GuardSpec[8] = {
     [3] = ITEM3_GUARD_SPEC,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 // The first item effect value for the stat boost items
@@ -350,44 +344,30 @@ const u8 gItemEffect_GuardSpec[8] = {
 
 const u8 gItemEffect_DireHit[8] = {
     [0] = 1 << 5, // ITEM0_DIRE_HIT
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XAttack[8] = {
     [1] = ITEM1_X_ATTACK,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XDefense[8] = {
     [1] = ITEM1_X_DEFENSE,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XSpeed[8] = {
     [1] = ITEM1_X_SPEED,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XAccuracy[8] = {
     [1] = ITEM1_X_ACCURACY,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XSpecialAttack[8] = {
     [1] = ITEM1_X_SPATK,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_XSpecialDefense[8] = {
     [1] = ITEM1_X_SPDEF,
-    [5] = ITEM5_FRIENDSHIP_LOW | ITEM5_FRIENDSHIP_MID,
-    STAT_BOOST_FRIENDSHIP_CHANGE,
 };
 
 const u8 gItemEffect_EvoItem[6] = {

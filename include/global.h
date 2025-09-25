@@ -107,6 +107,9 @@
 #define T2_READ_32(ptr) ((ptr)[0] + ((ptr)[1] << 8) + ((ptr)[2] << 16) + ((ptr)[3] << 24))
 #define T2_READ_PTR(ptr) (void *) T2_READ_32(ptr)
 
+#define PACK(data, shift, mask)   ( ((data) << (shift)) & (mask) )
+#define UNPACK(data, shift, mask) ( ((data) & (mask)) >> (shift) )
+
 // Macros for checking the joypad
 #define TEST_BUTTON(field, button) ((field) & (button))
 #define JOY_NEW(button) TEST_BUTTON(gMain.newKeys,  button)
@@ -216,7 +219,8 @@ struct NPCFollower
     u8 inProgress:1;
     u8 warpEnd:1;
     u8 createSurfBlob:3;
-    u8 comeOutDoorStairs:3;
+    u8 comeOutDoorStairs:2;
+    u8 forcedMovement:1;
     u8 objId;
     u8 currentSprite;
     u8 delayedState;

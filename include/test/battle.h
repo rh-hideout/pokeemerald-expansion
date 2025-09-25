@@ -2,8 +2,13 @@
  *
  * To run all the tests use:
  *     make check -j
- * To run specific tests, e.g. Spikes ones, use:
+ * To run specific tests, e.g. Spikes ones, use either:
  *     make check TESTS="Spikes"
+ *     make check TESTS="*Spikes*"
+ * The first runs tests with names that start with Spikes, whereas the
+ * second runs tests with names that include Spikes anywhere in them.
+ * To run tests from a specific file, e.g. 'test/battle/move_effect/spikes.c', use:
+ *     make check TESTS="test/battle/move_effect/spikes.c"
  * To build a ROM (pokemerald-test.elf) that can be opened in mgba to
  * view specific tests, e.g. Spikes ones, use:
  *     make pokeemerald-test.elf TESTS="Spikes"
@@ -434,7 +439,7 @@
  * Spaces in pattern match newlines (\n, \l, and \p) in the message.
  * Often used to check that a battler took its turn but it failed, e.g.:
  *     MESSAGE("Wobbuffet used Dream Eater!");
- *     MESSAGE("The opposing Wobbuffet wasn't affected!");
+ *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
  * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
  * Causes the test to fail if the battler's status is not changed to the
@@ -633,7 +638,8 @@ struct BattlerTurn
 
 struct ExpectedAIAction
 {
-    u16 sourceLine;
+    u16 sourceLine:13; // TODO: Avoid stealing these bits.
+    enum Gimmick gimmick:3;
     u8 type:4; // which action
     u8 moveSlots:4; // Expected move(s) to be chosen or not, marked as bits.
     u8 target:4; // move target or id of mon which gets sent out
@@ -691,6 +697,7 @@ struct BattleTestData
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
+    bool8 isShiny;
     u16 forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
 
@@ -875,7 +882,8 @@ struct moveWithPP {
 #define DynamaxLevel(dynamaxLevel) DynamaxLevel_(__LINE__, dynamaxLevel)
 #define GigantamaxFactor(gigantamaxFactor) GigantamaxFactor_(__LINE__, gigantamaxFactor)
 #define TeraType(teraType) TeraType_(__LINE__, teraType)
-#define Shadow(isShadow) Shadow_(__LINE__, shadow)
+#define Shadow(isShadow) Shadow_(__LINE__, isShadow)
+#define Shiny(isShiny) Shiny_(__LINE__, isShiny)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
@@ -913,6 +921,7 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, u32 teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
+void Shiny_(u32 sourceLine, bool32 isShiny);
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
