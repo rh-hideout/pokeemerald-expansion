@@ -24,8 +24,8 @@ DOUBLE_BATTLE_TEST("Causing a Forecast or Flower Gift Pokémon to faint should n
     PARAMETRIZE { species = SPECIES_CASTFORM; }
     PARAMETRIZE { species = SPECIES_CHERRIM; }
     GIVEN {
-        PLAYER(SPECIES_TORCHIC);
-        PLAYER(SPECIES_MAGEARNA);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_VULPIX) { Ability(ABILITY_DROUGHT); }
         OPPONENT(species) { HP(1); }
     } WHEN {
