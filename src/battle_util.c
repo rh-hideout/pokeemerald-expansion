@@ -7091,6 +7091,7 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
             break;
         case HOLD_EFFECT_THROAT_SPRAY:  // Does NOT need to be a damaging move
             if (IsSoundMove(gCurrentMove)
+             && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
              && IsBattlerAlive(gBattlerAttacker)
              && IsAnyTargetAffected(gBattlerAttacker)
              && CompareStat(gBattlerAttacker, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)
