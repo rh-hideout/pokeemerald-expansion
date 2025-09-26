@@ -600,7 +600,8 @@ struct PartyState
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 padding:10;
+    bool32 sentOut:1;
+    u32 padding:9;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -781,12 +782,8 @@ struct BattleStruct
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
-    u8 enemySentOutFlags:PARTY_SIZE;
-    u8 partnerSentOutFlags:PARTY_SIZE;
     u8 padding2:4;
 };
-
-#define MON_SENT_OUT_FLAG(slot) (1 << slot)
 
 struct AiBattleData
 {

@@ -3730,24 +3730,16 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
+            struct PartyState *battlerState;
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             gBattleStruct->overworldWeatherDone = FALSE;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
-            // first slot
-            gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(0);
-
-            // check for double battle types
-            if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+            for (battler = 0; battler < gBattlersCount; battler++)
             {
-                if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(PARTY_SIZE / 2);
-                else
-                    gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(1);
-
-                if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-                    gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(PARTY_SIZE / 2);
+                battlerState = GetBattlerPartyState(battler);
+                battlerState->sentOut = TRUE;
             }
 
             // Try to set a status to start the battle with
@@ -5587,26 +5579,17 @@ static void HandleEndTurn_FinishBattle(void)
                                   | BATTLE_TYPE_TRAINER_HILL
                                   | BATTLE_TYPE_FRONTIER)))
         {
-            for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
+            for (u32 side = 0; side < NUM_BATTLE_SIDES; side++)
             {
-                u32 species;
-                u32 personality;
-                u32 sentOutFlag = MON_SENT_OUT_FLAG(partySlot);
+                struct Pokemon *party = GetSideParty(side);
 
-                // enemy party
-                if (gBattleStruct->enemySentOutFlags & sentOutFlag)
-                {
-                    species = GetMonData(&gEnemyParty[partySlot], MON_DATA_SPECIES);
-                    personality = GetMonData(&gEnemyParty[partySlot], MON_DATA_PERSONALITY);
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
-                }
+                if (side == B_SIDE_PLAYER && !B_PARTNER_MONS_MARKED_SEEN)
+                    continue;
 
-                // player party (for in-game partners)
-                if (gBattleStruct->partnerSentOutFlags & sentOutFlag)
+                for (u32 partySlot = 0; partySlot < PARTY_SIZE; partySlot++)
                 {
-                    species = GetMonData(&gPlayerParty[partySlot], MON_DATA_SPECIES);
-                    personality = GetMonData(&gPlayerParty[partySlot], MON_DATA_PERSONALITY);
-                    HandleSetPokedexFlag(SpeciesToNationalPokedexNum(species), FLAG_SET_SEEN, personality);
+                    if (gBattleStruct->partyState[side][partySlot].sentOut)
+                        HandleSetPokedexFlagFromMon(&party[partySlot], FLAG_SET_SEEN);
                 }
             }
         }

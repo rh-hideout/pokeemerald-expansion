@@ -7162,7 +7162,7 @@ static void Cmd_switchindataupdate(void)
 
 static void Cmd_switchinanim(void)
 {
-    u32 battler;
+    u32 battler, side, monIndex;
 
     CMD_ARGS(u8 battler, bool8 dontClearTransform, bool8 dontClearSubstitute);
 
@@ -7171,10 +7171,9 @@ static void Cmd_switchinanim(void)
 
     battler = GetBattlerForBattleScript(cmd->battler);
 
-    if(!IsOnPlayerSide(battler))
-        gBattleStruct->enemySentOutFlags |= MON_SENT_OUT_FLAG(gBattleStruct->monToSwitchIntoId[battler]);
-    else
-        gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(gBattleStruct->monToSwitchIntoId[battler]);
+    side = GetBattlerSide(battler);
+    monIndex = gBattleStruct->monToSwitchIntoId[battler];
+    gBattleStruct->partyState[side][monIndex].sentOut = TRUE;
 
     gAbsentBattlerFlags &= ~(1u << battler);
 

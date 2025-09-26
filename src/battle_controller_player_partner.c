@@ -275,6 +275,7 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
 
 static void PlayerPartnerHandleChoosePokemon(u32 battler)
 {
+    struct PartyState *battlerState;
     s32 chosenMonId;
     // Choosing Revival Blessing target
     if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
@@ -284,8 +285,9 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
     // Switching out
     else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gPlayerParty[gBattleStruct->monToSwitchIntoId[battler]]))
     {
-        chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
+        battlerState = GetBattlerPartyState(battler);
 
+        chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
         if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gPlayerParty[chosenMonId])) // just switch to the next mon
         {
             s32 firstId = (IsAiVsAiBattle()) ? 0 : (PARTY_SIZE / 2);
@@ -303,14 +305,15 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(chosenMonId);
+        battlerState->sentOut = TRUE;
     }
     else // Mon to switch out has been already chosen.
     {
+        battlerState = GetBattlerPartyState(battler);
         chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        gBattleStruct->partnerSentOutFlags |= MON_SENT_OUT_FLAG(chosenMonId);
+        battlerState->sentOut = TRUE;
     }
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
