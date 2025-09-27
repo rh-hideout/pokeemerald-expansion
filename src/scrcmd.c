@@ -31,6 +31,7 @@
 #include "item.h"
 #include "lilycove_lady.h"
 #include "main.h"
+#include "map_preview_screen.h"
 #include "menu.h"
 #include "money.h"
 #include "move.h"
@@ -3252,4 +3253,36 @@ void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
     u8 condition = ScriptReadByte(ctx);
     if (ctx->breakOnTrainerBattle && sScriptConditionTable[condition][ctx->comparisonResult] == 1)
         StopScript(ctx);
+}
+
+bool8 ScrCmd_textcolor(struct ScriptContext * ctx)
+{
+    // gSpecialVar_PrevTextColor = gSpecialVar_TextColor;
+    u16 UNUSED gSpecialVar_TextColor = ScriptReadByte(ctx);
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+
+    return FALSE;
+}
+
+bool8 ScrCmd_setworldmapflag(struct ScriptContext * ctx)
+{
+    u16 value = ScriptReadHalfword(ctx);
+    
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+    MapPreview_SetFlag(value);
+    return FALSE;
+}
+
+bool8 ScrCmd_getbraillestringwidth(struct ScriptContext * ctx)
+{
+    u8 *msg = (u8 *)ScriptReadWord(ctx);
+
+    Script_RequestEffects(SCREFF_V1);
+
+    if (msg == NULL)
+        msg = (u8 *)ctx->data[0];
+
+    gSpecialVar_0x8004 = GetStringWidth(FONT_BRAILLE, msg, -1);
+    return FALSE;
 }
