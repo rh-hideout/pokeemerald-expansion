@@ -226,7 +226,7 @@ DOUBLE_BATTLE_TEST("Moves do not fail if an alive partner is the target")
     }
 }
 
-DOUBLE_BATTLE_TEST("Moves fail if they target into a pokemon that was fainted by the previous move")
+DOUBLE_BATTLE_TEST("Moves fail if they target into a Pokémon that was fainted by the previous move")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);

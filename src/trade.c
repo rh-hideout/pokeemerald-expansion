@@ -138,7 +138,7 @@ enum {
 #define NUM_CHOOSE_PKMN_SPRITES (1 + GFXTAG_CHOOSE_PKMN_EMPTY_3 - GFXTAG_CHOOSE_PKMN_L)
 
 // Values for signaling to/from the link partner
-enum {
+enum SignalStatus {
     STATUS_NONE,
     STATUS_READY,
     STATUS_CANCEL,

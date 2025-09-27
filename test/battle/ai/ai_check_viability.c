@@ -391,3 +391,50 @@ AI_SINGLE_BATTLE_TEST("AI uses Wide Guard against Earthquake when opponent would
         TURN { MOVE(player, MOVE_EARTHQUAKE); EXPECT_MOVE(opponent, MOVE_WIDE_GUARD); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI sees Shield Dust immunity to additional effects")
+{
+    u32 ability;
+    PARAMETRIZE { ability = ABILITY_SHIELD_DUST; }
+    PARAMETRIZE { ability = ABILITY_TINTED_LENS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_VENOMOTH) { Ability(ability); Moves(MOVE_CELEBRATE, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CHILLING_WATER, MOVE_BRINE); }
+    } WHEN {
+    if (ability == ABILITY_SHIELD_DUST)
+        TURN { EXPECT_MOVE(opponent, MOVE_BRINE); }
+    else
+        TURN { EXPECT_MOVE(opponent, MOVE_CHILLING_WATER); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI sees type-changing moves as the correct type")
+{
+    u32 species, fieldStatus, ability;
+    u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
+
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_NONE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_RAIN_DANCE; species = SPECIES_PRIMARINA; ability = ABILITY_LIQUID_VOICE; }
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
+                  fieldStatus = MOVE_ELECTRIC_TERRAIN; species = SPECIES_GEODUDE_ALOLA; ability = ABILITY_GALVANIZE; }
+
+    GIVEN {
+        AI_FLAGS(aiFlags);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(fieldStatus, MOVE_RETURN, MOVE_TAUNT); }
+        OPPONENT(species) { Ability(ability); Moves(MOVE_HYPER_VOICE);  }
+    } WHEN {
+        if (ability != ABILITY_NONE)
+            TURN { EXPECT_MOVE(opponentLeft, fieldStatus); }
+        else
+            TURN { NOT_EXPECT_MOVE(opponentLeft, fieldStatus); }
+    }
+}

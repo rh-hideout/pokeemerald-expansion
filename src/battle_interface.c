@@ -2643,9 +2643,6 @@ void CreateAbilityPopUp(u8 battler, u32 ability, bool32 isDoubleBattle)
     struct SpriteTemplate template;
     const s16 (*coords)[2];
 
-    if (!B_ABILITY_POP_UP)
-        return;
-
     if (gBattleScripting.abilityPopupOverwrite)
         ability = gBattleScripting.abilityPopupOverwrite;
 
