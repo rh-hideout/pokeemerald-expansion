@@ -1233,38 +1233,6 @@
       "height": 1
     },
     {
-      "id": "MAPSEC_SEVII_ISLE_6",
-      "name": "SEVII ISLE 6",
-      "x": 4,
-      "y": 3,
-      "width": 1,
-      "height": 1
-    },
-    {
-      "id": "MAPSEC_SEVII_ISLE_7",
-      "name": "SEVII ISLE 7",
-      "x": 5,
-      "y": 4,
-      "width": 1,
-      "height": 1
-    },
-    {
-      "id": "MAPSEC_SEVII_ISLE_8",
-      "name": "SEVII ISLE 8",
-      "x": 1,
-      "y": 4,
-      "width": 3,
-      "height": 1
-    },
-    {
-      "id": "MAPSEC_SEVII_ISLE_9",
-      "name": "SEVII ISLE 9",
-      "x": 4,
-      "y": 5,
-      "width": 1,
-      "height": 2
-    },
-    {
       "id": "MAPSEC_RESORT_GORGEOUS",
       "name": "RESORT GORGEOUS",
       "x": 16,
