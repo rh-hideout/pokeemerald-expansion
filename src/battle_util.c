@@ -6501,6 +6501,21 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
     case HOLD_EFFECT_MIRROR_HERB:
         effect = TryConsumeMirrorHerb(battler, ITEMEFFECT_NONE);
         break;
+    case HOLD_EFFECT_THROAT_SPRAY:
+        if (IsSoundMove(gCurrentMove)
+         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+         && IsBattlerAlive(gBattlerAttacker)
+         && IsAnyTargetAffected(gBattlerAttacker)
+         && CompareStat(gBattlerAttacker, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)
+         && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
+        {
+            gLastUsedItem = gBattleMons[gBattlerAttacker].item;
+            gBattleScripting.battler = gBattlerAttacker;
+            SET_STATCHANGER(STAT_SPATK, 1, FALSE);
+            effect = ITEM_STATS_CHANGE;
+            BattleScriptCall(BattleScript_AttackerItemStatRaise);
+        }
+        break;
     default:
         break;
     }
@@ -7087,21 +7102,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 effect = ITEM_HP_CHANGE;
                 BattleScriptCall(BattleScript_ItemHurtRet);
                 gLastUsedItem = atkItem;
-            }
-            break;
-        case HOLD_EFFECT_THROAT_SPRAY:  // Does NOT need to be a damaging move
-            if (IsSoundMove(gCurrentMove)
-             && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-             && IsBattlerAlive(gBattlerAttacker)
-             && IsAnyTargetAffected(gBattlerAttacker)
-             && CompareStat(gBattlerAttacker, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)
-             && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
-            {
-                gLastUsedItem = atkItem;
-                gBattleScripting.battler = gBattlerAttacker;
-                SET_STATCHANGER(STAT_SPATK, 1, FALSE);
-                effect = ITEM_STATS_CHANGE;
-                BattleScriptCall(BattleScript_AttackerItemStatRaise);
             }
             break;
         default:
