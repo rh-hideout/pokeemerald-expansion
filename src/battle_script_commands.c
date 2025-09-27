@@ -7171,9 +7171,7 @@ static void Cmd_switchinanim(void)
 
     battler = GetBattlerForBattleScript(cmd->battler);
 
-    side = GetBattlerSide(battler);
-    monIndex = gBattleStruct->monToSwitchIntoId[battler];
-    gBattleStruct->partyState[side][monIndex].sentOut = TRUE;
+    GetBattlerPartyState(battler)->sentOut = TRUE;
 
     gAbsentBattlerFlags &= ~(1u << battler);
 
