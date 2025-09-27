@@ -705,17 +705,17 @@ static void AnimIcePunchSwirlingParticle(struct Sprite *sprite)
 void AnimIceBeamParticle(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
 
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        sprite->data[2] -= gBattleAnimArgs[2];
+        sprite->sInputEndX_lti -= gBattleAnimArgs[2];
     else
-        sprite->data[2] += gBattleAnimArgs[2];
+        sprite->sInputEndX_lti += gBattleAnimArgs[2];
 
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
 }
 
 // Animates the ice crystals at the end of Ice Punch, Ice Beam, Tri Attack,
@@ -733,10 +733,10 @@ void AnimIceEffectParticle(struct Sprite *sprite)
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
         if (!IsOnPlayerSide(gBattleAnimAttacker))
-            gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-        sprite->x += gBattleAnimArgs[0];
-        sprite->y += gBattleAnimArgs[1];
+        sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+        sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     }
 
     StoreSpriteCallbackInData6(sprite, AnimFlickerIceEffectParticle);
@@ -974,10 +974,10 @@ static void AnimWaveFromCenterOfTarget(struct Sprite *sprite)
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
 
             if (!IsOnPlayerSide(gBattleAnimAttacker))
-                gBattleAnimArgs[0] = -gBattleAnimArgs[0];
+                gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->x += gBattleAnimArgs[0];
-            sprite->y += gBattleAnimArgs[1];
+            sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         sprite->data[0]++;
@@ -1010,12 +1010,15 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         else
         {
             SetAverageBattlerPositions(gBattleAnimAttacker, FALSE, &sprite->x, &sprite->y);
+            // these fields would have been passed to the InitSpritePosToMon functions
+            // but we have to use the center position, so we just read from the fields
+            // directly
             if (!IsOnPlayerSide(gBattleAnimAttacker))
-                sprite->x -= gBattleAnimArgs[0];
+                sprite->x -= gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
             else
-                sprite->x += gBattleAnimArgs[0];
+                sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->y += gBattleAnimArgs[1];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         battler = gBattleAnimAttacker;
@@ -1028,13 +1031,16 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
         }
         else
         {
+            // these fields would have been passed to the InitSpritePosToMon functions
+            // but we have to use the center position, so we just read from the fields
+            // directly
             SetAverageBattlerPositions(gBattleAnimTarget, FALSE, &sprite->x, &sprite->y);
             if (!IsOnPlayerSide(gBattleAnimTarget))
-                sprite->x -= gBattleAnimArgs[0];
+                sprite->x -= gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
             else
-                sprite->x += gBattleAnimArgs[0];
+                sprite->x += gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
 
-            sprite->y += gBattleAnimArgs[1];
+            sprite->y += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
         }
 
         battler = gBattleAnimTarget;
@@ -1050,13 +1056,13 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
     if (IsOnPlayerSide(gBattleAnimTarget))
         sprite->y += 8;
 
-    sprite->data[0] = gBattleAnimArgs[3];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = sprite->x;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = sprite->y + gBattleAnimArgs[2];
+    sprite->sDuration_lti = gBattleAnimArgs[3];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = sprite->x;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = sprite->y + gBattleAnimArgs[2];
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
 
     sprite->data[5] = 64;
     sprite->callback = AnimSwirlingFogAnim;
@@ -1066,7 +1072,7 @@ static void InitSwirlingFogAnim(struct Sprite *sprite)
 // Animates swirling fog initialized by InitSwirlingFogAnim.
 static void AnimSwirlingFogAnim(struct Sprite *sprite)
 {
-    if (!AnimTranslateLinear(sprite))
+    if (!UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->x2 += Sin(sprite->data[5], sprite->data[6]);
         sprite->y2 += Cos(sprite->data[5], -6);
@@ -1288,7 +1294,7 @@ static void AnimTask_MistBallFog_Step(u8 taskId)
 // arg 7: ??? unknown boolean
 static void InitPoisonGasCloudAnim(struct Sprite *sprite)
 {
-    sprite->data[0] = gBattleAnimArgs[0];
+    sprite->sDuration_lti = gBattleAnimArgs[0];
 
     if (GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) < GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2))
         sprite->data[7] = 0x8000;
@@ -1319,18 +1325,18 @@ static void InitPoisonGasCloudAnim(struct Sprite *sprite)
     }
     else if (gBattleAnimArgs[7])
     {
-        sprite->data[1] = sprite->x + gBattleAnimArgs[1];
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[3];
-        sprite->data[3] = sprite->y + gBattleAnimArgs[2];
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[4];
+        sprite->sInputStartX_lti = sprite->x + gBattleAnimArgs[1];
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[3];
+        sprite->sInputStartY_lti = sprite->y + gBattleAnimArgs[2];
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[4];
         sprite->data[7] |= GetBattlerSpriteBGPriority(gBattleAnimTarget) << 8;
     }
     else
     {
-        sprite->data[1] = sprite->x + gBattleAnimArgs[1];
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[3];
-        sprite->data[3] = sprite->y + gBattleAnimArgs[2];
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[4];
+        sprite->sInputStartX_lti = sprite->x + gBattleAnimArgs[1];
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[3];
+        sprite->sInputStartY_lti = sprite->y + gBattleAnimArgs[2];
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[4];
         sprite->data[7] |= GetBattlerSpriteBGPriority(gBattleAnimTarget) << 8;
     }
 
@@ -1340,7 +1346,7 @@ static void InitPoisonGasCloudAnim(struct Sprite *sprite)
         sprite->subpriority = 0x80;
     }
 
-    InitAnimLinearTranslation(sprite);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = MovePoisonGasCloud;
 }
 
@@ -1351,7 +1357,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
     switch (sprite->data[7] & 0xFF)
     {
     case 0:
-        AnimTranslateLinear(sprite);
+        UpdateSpriteLinearTranslationIterator(sprite);
         value = gSineTable[sprite->data[5]];
         sprite->x2 += value >> 4;
         if (sprite->data[6])
@@ -1359,7 +1365,7 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
         else
             sprite->data[5] = (sprite->data[5] + 8) & 0xFF;
 
-        if (sprite->data[0] <= 0)
+        if (sprite->sDuration_lti <= 0)
         {
             #if B_UPDATED_MOVE_DATA >= GEN_5
                 s16 x, y;
@@ -1368,12 +1374,12 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             #else
                 sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
             #endif
-            sprite->data[0] = 80;
-            sprite->data[1] = sprite->x;
-            sprite->data[2] = sprite->x;
+            sprite->sDuration_lti = 80;
+            sprite->sInputStartX_lti = sprite->x;
+            sprite->sInputEndX_lti = sprite->x;
             sprite->y += sprite->y2;
-            sprite->data[3] = sprite->y;
-            sprite->data[4] = sprite->y + 29;
+            sprite->sInputStartY_lti = sprite->y;
+            sprite->sInputEndY_lti = sprite->y + 29;
             sprite->data[7]++;
             if (IsContest())
                 sprite->data[5] = 80;
@@ -1386,11 +1392,11 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             value = gSineTable[sprite->data[5]];
             sprite->x2 = value >> 3;
             sprite->data[5] = (sprite->data[5] + 2) & 0xFF;
-            InitAnimLinearTranslation(sprite);
+            InitSpriteLinearTranslationIterator(sprite);
         }
         break;
     case 1:
-        AnimTranslateLinear(sprite);
+        UpdateSpriteLinearTranslationIterator(sprite);
         value = gSineTable[sprite->data[5]];
         sprite->x2 += value >> 3;
         sprite->y2 += (gSineTable[sprite->data[5] + 0x40] * -3) >> 8;
@@ -1415,26 +1421,26 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
             sprite->data[5] = (sprite->data[5] - 4) & 0xFF;
         }
 
-        if (sprite->data[0] <= 0)
+        if (sprite->sDuration_lti <= 0)
         {
-            sprite->data[0] = 0x300;
-            sprite->data[1] = sprite->x += sprite->x2;
-            sprite->data[3] = sprite->y += sprite->y2;
-            sprite->data[4] = sprite->y + 4;
+            sprite->sInputSpeed_lti = Q_8_8(3.0);
+            sprite->sInputStartX_lti = sprite->x += sprite->x2;
+            sprite->sInputStartY_lti = sprite->y += sprite->y2;
+            sprite->sInputEndY_lti = sprite->y + 4;
             if (IsContest())
-                sprite->data[2] = -16;
+                sprite->sInputEndX_lti = -16;
             else if (!IsOnPlayerSide(gBattleAnimTarget))
-                sprite->data[2] = DISPLAY_WIDTH + 16;
+                sprite->sInputEndX_lti = DISPLAY_WIDTH + 16;
             else
-                sprite->data[2] = -16;
+                sprite->sInputEndX_lti = -16;
 
             sprite->data[7]++;
             sprite->x2 = sprite->y2 = 0;
-            InitAnimLinearTranslationWithSpeed(sprite);
+            InitSpriteLinearTranslationIteratorWithSpeed(sprite);
         }
         break;
     case 2:
-        if (AnimTranslateLinear(sprite))
+        if (UpdateSpriteLinearTranslationIterator(sprite))
         {
             if (sprite->oam.affineMode & 1)
             {
@@ -1599,8 +1605,8 @@ static void AnimHailBegin(struct Sprite *sprite)
         sprite->data[0] = spriteId;
         if (spriteId != MAX_SPRITES)
         {
-            // The sprite template we're using is shared amongst a few other 
-            // places, which make the sprite flicker. That's not what we want 
+            // The sprite template we're using is shared amongst a few other
+            // places, which make the sprite flicker. That's not what we want
             // here, though. Override the callback.
             gSprites[sprite->data[0]].callback = AnimHailContinue;
             gSprites[sprite->data[0]].sOwnerTaskId = sprite->sOwnerTaskId;
@@ -1657,16 +1663,16 @@ static void InitIceBallAnim(struct Sprite *sprite)
     StartSpriteAffineAnim(sprite, animNum);
     InitSpritePosToAnimAttacker(sprite, TRUE);
 
-    sprite->data[0] = gBattleAnimArgs[4];
+    sprite->sDuration_lti = gBattleAnimArgs[4];
 
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
 
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    sprite->data[5] = gBattleAnimArgs[5];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[5];
 
-    InitAnimArcTranslation(sprite);
+    InitSpriteArcTranslation(sprite);
 
     sprite->callback = AnimThrowIceBall;
 }
@@ -1674,7 +1680,7 @@ static void InitIceBallAnim(struct Sprite *sprite)
 // Throws the ball of ice in Ice Ball.
 static void AnimThrowIceBall(struct Sprite *sprite)
 {
-    if (!TranslateAnimHorizontalArc(sprite))
+    if (!TranslateSpriteHorizontalArc(sprite))
         return;
 
     StartSpriteAnim(sprite, 1);

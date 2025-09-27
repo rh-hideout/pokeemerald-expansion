@@ -955,9 +955,8 @@ void AnimTask_IsBallBlockedByTrainer(u8 taskId)
 
 #define tSpriteId data[0]
 
-#define sDuration data[0]
-#define sTargetX  data[1]
-#define sTargetY  data[2]
+#define sTargetXArg data[1]
+#define sTargetYArg data[2]
 
 void AnimTask_ThrowBall(u8 taskId)
 {
@@ -965,9 +964,9 @@ void AnimTask_ThrowBall(u8 taskId)
 
     enum PokeBall ballId = ItemIdToBallId(gLastUsedItem);
     spriteId = CreateSprite(&gBallSpriteTemplates[ballId], 32, 80, 29);
-    gSprites[spriteId].sDuration = 34;
-    gSprites[spriteId].sTargetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
-    gSprites[spriteId].sTargetY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
+    gSprites[spriteId].sDuration_lti = 34;
+    gSprites[spriteId].sTargetXArg = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+    gSprites[spriteId].sTargetYArg = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
     gSprites[spriteId].callback = SpriteCB_Ball_Throw;
     gBattleSpritesDataPtr->animationData->wildMonInvisible = gSprites[gBattlerSpriteIds[gBattleAnimTarget]].invisible;
     gTasks[taskId].tSpriteId = spriteId;
@@ -977,7 +976,7 @@ void AnimTask_ThrowBall(u8 taskId)
 static void AnimTask_ThrowBall_Step(u8 taskId)
 {
     u8 spriteId = gTasks[taskId].tSpriteId;
-    if ((u16)gSprites[spriteId].sDuration == 0xFFFF)
+    if ((u16)gSprites[spriteId].sDuration_lti == 0xFFFF)
         DestroyAnimVisualTask(taskId);
 }
 
@@ -1003,9 +1002,9 @@ void AnimTask_ThrowBall_StandingTrainer(u8 taskId)
     ballId = ItemIdToBallId(gLastUsedItem);
     subpriority = GetBattlerSpriteSubpriority(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)) + 1;
     spriteId = CreateSprite(&gBallSpriteTemplates[ballId], x + 32, y | 80, subpriority);
-    gSprites[spriteId].sDuration = 34;
-    gSprites[spriteId].sTargetX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
-    gSprites[spriteId].sTargetY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
+    gSprites[spriteId].sDuration_lti = 34;
+    gSprites[spriteId].sTargetXArg = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+    gSprites[spriteId].sTargetYArg = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) - 16;
     gSprites[spriteId].callback = SpriteCallbackDummy;
     gSprites[gBattlerSpriteIds[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)]].callback = SpriteCB_TrainerThrowObject;
     gTasks[taskId].tSpriteId = spriteId;
@@ -1023,10 +1022,6 @@ static void AnimTask_ThrowBall_StandingTrainer_Step(u8 taskId)
     }
 }
 
-#undef sDuration
-#undef sTargetX
-#undef sTargetY
-
 #undef tSpriteId
 
 static void Task_PlayerThrow_Wait(u8 taskId)
@@ -1038,36 +1033,22 @@ static void Task_PlayerThrow_Wait(u8 taskId)
     }
 }
 
-#define sTargetXArg data[1]
-#define sTargetYArg data[2]
-
-#define sOffsetX   data[1] // re-use
-#define sTargetX   data[2] // re-use
-#define sOffsetY   data[3]
-#define sTargetY   data[4]
-#define sAmplitude data[5]
-
 static void SpriteCB_Ball_Throw(struct Sprite *sprite)
 {
     u16 targetX = sprite->sTargetXArg;
     u16 targetY = sprite->sTargetYArg;
 
-    sprite->sOffsetX = sprite->x;
-    sprite->sTargetX = targetX;
-    sprite->sOffsetY = sprite->y;
-    sprite->sTargetY = targetY;
-    sprite->sAmplitude = -40;
-    InitAnimArcTranslation(sprite);
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = targetX;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = targetY;
+    sprite->sArcAmplitude_ati = -40;
+    InitSpriteArcTranslation(sprite);
     sprite->callback = SpriteCB_Ball_Arc;
 }
 
 #undef sTargetXArg
 #undef sTargetYArg
-#undef sOffsetX
-#undef sTargetX
-#undef sOffsetY
-#undef sTargetY
-#undef sAmplitude
 
 #define sTimer  data[5]
 #define sTaskId data[5] // re-use
@@ -1076,7 +1057,7 @@ static void SpriteCB_Ball_Arc(struct Sprite *sprite)
 {
     u32 i;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         if (gBattleSpritesDataPtr->animationData->ballThrowCaseId == BALL_TRAINER_BLOCK)
         {
@@ -1614,11 +1595,6 @@ static void DestroySpriteAfterOneFrame(struct Sprite *sprite)
 }
 #undef sFrame
 
-#define sDuration  data[0]
-#define sTargetX   data[2]
-#define sTargetY   data[4]
-#define sAmplitude data[5]
-
 static void MakeCaptureStars(struct Sprite *sprite)
 {
     u32 i;
@@ -1640,26 +1616,21 @@ static void MakeCaptureStars(struct Sprite *sprite)
         u8 spriteId = CreateSprite(&sBallParticleSpriteTemplates[BALL_MASTER], sprite->x, sprite->y, subpriority);
         if (spriteId != MAX_SPRITES)
         {
-            gSprites[spriteId].sDuration = 24;
-            gSprites[spriteId].sTargetX = sprite->x + sCaptureStars[i].xOffset;
-            gSprites[spriteId].sTargetY = sprite->y + sCaptureStars[i].yOffset;
-            gSprites[spriteId].sAmplitude = sCaptureStars[i].amplitude;
-            InitAnimArcTranslation(&gSprites[spriteId]);
+            gSprites[spriteId].sDuration_lti = 24;
+            gSprites[spriteId].sInputEndX_lti = sprite->x + sCaptureStars[i].xOffset;
+            gSprites[spriteId].sInputEndY_lti = sprite->y + sCaptureStars[i].yOffset;
+            gSprites[spriteId].sArcAmplitude_ati = sCaptureStars[i].amplitude;
+            InitSpriteArcTranslation(&gSprites[spriteId]);
             gSprites[spriteId].callback = SpriteCB_CaptureStar_Flicker;
             StartSpriteAnim(&gSprites[spriteId], sBallParticleAnimNums[BALL_MASTER]);
         }
     }
 }
 
-#undef sDuration
-#undef sTargetX
-#undef sTargetY
-#undef sAmplitude
-
 static void SpriteCB_CaptureStar_Flicker(struct Sprite *sprite)
 {
     sprite->invisible = !sprite->invisible;
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroySprite(sprite);
 }
 
@@ -2609,27 +2580,17 @@ void AnimTask_FreePokeblockGfx(u8 taskId)
     DestroyAnimVisualTask(taskId);
 }
 
-#define sDuration data[0]
-#define sTargetX data[2]
-#define sTargetY data[4]
-#define sAmplitude data[5]
-
 static void SpriteCB_PokeBlock_Throw(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, FALSE);
-    sprite->sDuration = 30;
-    sprite->sTargetX = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_X) + gBattleAnimArgs[2];
-    sprite->sTargetY = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_Y) + gBattleAnimArgs[3];
-    sprite->sAmplitude = -32;
-    InitAnimArcTranslation(sprite);
+    sprite->sDuration_lti = 30;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_X) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), BATTLER_COORD_Y) + gBattleAnimArgs[3];
+    sprite->sArcAmplitude_ati = -32;
+    InitSpriteArcTranslation(sprite);
     gSprites[gBattlerSpriteIds[gBattleAnimAttacker]].callback = SpriteCB_TrainerThrowObject;
     sprite->callback = SpriteCB_PokeBlock_LiftArm;
 }
-
-#undef sDuration
-#undef sTargetX
-#undef sTargetY
-#undef sAmplitude
 
 static void SpriteCB_PokeBlock_LiftArm(struct Sprite *sprite)
 {
@@ -2639,7 +2600,7 @@ static void SpriteCB_PokeBlock_LiftArm(struct Sprite *sprite)
 
 static void SpriteCB_PokeBlock_Arc(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->data[0] = 0;
         sprite->invisible = TRUE;
@@ -2768,4 +2729,3 @@ static void CB_CriticalCaptureThrownBallMovement(struct Sprite *sprite)
         sprite->callback = SpriteCB_Ball_Bounce_Step;
     }
 }
-

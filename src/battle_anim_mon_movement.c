@@ -457,23 +457,23 @@ static void DoHorizontalLunge(struct Sprite *sprite)
 {
     sprite->invisible = TRUE;
     if (!IsOnPlayerSide(gBattleAnimAttacker))
-        sprite->data[1] = -gBattleAnimArgs[1];
+        sprite->sXIncrement_ltz = -gBattleAnimArgs[1];
     else
-        sprite->data[1] = gBattleAnimArgs[1];
+        sprite->sXIncrement_ltz = gBattleAnimArgs[1];
 
-    sprite->data[0] = gBattleAnimArgs[0];
-    sprite->data[2] = 0;
-    sprite->data[3] = gBattlerSpriteIds[gBattleAnimAttacker];
+    sprite->sDuration_ltz = gBattleAnimArgs[0];
+    sprite->sYIncrement_ltz = 0;
+    sprite->sSpriteId_ltz = gBattlerSpriteIds[gBattleAnimAttacker];
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseHorizontalLungeDirection);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void ReverseHorizontalLungeDirection(struct Sprite *sprite)
 {
-    sprite->data[0] = sprite->data[4];
-    sprite->data[1] = -sprite->data[1];
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->sDuration_ltz = sprite->data[4];
+    sprite->sXIncrement_ltz = -sprite->data[1];
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -487,20 +487,20 @@ static void DoVerticalDip(struct Sprite *sprite)
     u8 spriteId;
     sprite->invisible = TRUE;
     spriteId = GetAnimBattlerSpriteId(gBattleAnimArgs[2]);
-    sprite->data[0] = gBattleAnimArgs[0];
-    sprite->data[1] = 0;
-    sprite->data[2] = gBattleAnimArgs[1];
-    sprite->data[3] = spriteId;
+    sprite->sDuration_ltz = gBattleAnimArgs[0];
+    sprite->sXIncrement_ltz = 0;
+    sprite->sYIncrement_ltz = gBattleAnimArgs[1];
+    sprite->sSpriteId_ltz = spriteId;
     sprite->data[4] = gBattleAnimArgs[0];
     StoreSpriteCallbackInData6(sprite, ReverseVerticalDipDirection);
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
 }
 
 static void ReverseVerticalDipDirection(struct Sprite *sprite)
 {
-    sprite->data[0] = sprite->data[4];
-    sprite->data[2] = -sprite->data[2];
-    sprite->callback = TranslateSpriteLinearById;
+    sprite->sDuration_ltz = sprite->data[4];
+    sprite->sYIncrement_ltz = -sprite->data[2];
+    sprite->callback = TranslateSpecifiedSpriteLinearInteger;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -517,22 +517,22 @@ static void SlideMonToOriginalPos(struct Sprite *sprite)
     else
         monSpriteId = gBattlerSpriteIds[gBattleAnimTarget];
 
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
-    sprite->data[2] = gSprites[monSpriteId].x;
-    sprite->data[3] = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
-    sprite->data[4] = gSprites[monSpriteId].y;
-    InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = 0;
-    sprite->data[4] = 0;
+    sprite->sDuration_lt = gBattleAnimArgs[2];
+    sprite->sInputStartX_lt = gSprites[monSpriteId].x + gSprites[monSpriteId].x2;
+    sprite->sInputEndX_lt = gSprites[monSpriteId].x;
+    sprite->sInputStartY_lt = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
+    sprite->sInputEndY_lt = gSprites[monSpriteId].y;
+    InitSpriteLinearTranslation(sprite);
+    sprite->sCurXOffsetFixedPoint_lt = 0;
+    sprite->sCurYOffsetFixedPoint_lt = 0;
     sprite->data[5] = gSprites[monSpriteId].x2;
     sprite->data[6] = gSprites[monSpriteId].y2;
     sprite->invisible = TRUE;
 
     if (gBattleAnimArgs[1] == 1)
-        sprite->data[2] = 0;
+        sprite->sYIncrement_lt = 0;
     else if (gBattleAnimArgs[1] == 2)
-        sprite->data[1] = 0;
+        sprite->sXIncrement_lt = 0;
 
     sprite->data[7] = gBattleAnimArgs[1];
     sprite->data[7] |= monSpriteId << 8;
@@ -552,7 +552,7 @@ static void SlideMonToOriginalPosPartner(struct Sprite *sprite)
     sprite->data[2] = gSprites[monSpriteId].x;
     sprite->data[3] = gSprites[monSpriteId].y + gSprites[monSpriteId].y2;
     sprite->data[4] = gSprites[monSpriteId].y;
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->data[3] = 0;
     sprite->data[4] = 0;
     sprite->data[5] = gSprites[monSpriteId].x2;
@@ -578,7 +578,7 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
     lo = sprite->data[7] & 0xff;
     monSpriteId = sprite->data[7] >> 8;
     monSprite = &gSprites[monSpriteId];
-    if (sprite->data[0] == 0)
+    if (sprite->sDuration_lt == 0)
     {
         if (lo < 2)
             monSprite->x2 = 0;
@@ -590,11 +590,11 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
     }
     else
     {
-        sprite->data[0]--;
-        sprite->data[3] += sprite->data[1];
-        sprite->data[4] += sprite->data[2];
-        monSprite->x2 = (s8)(sprite->data[3] >> 8) + sprite->data[5];
-        monSprite->y2 = (s8)(sprite->data[4] >> 8) + sprite->data[6];
+        sprite->sDuration_lt--;
+        sprite->sCurXOffsetFixedPoint_lt += sprite->sXIncrement_lt;
+        sprite->sCurYOffsetFixedPoint_lt += sprite->sYIncrement_lt;
+        monSprite->x2 = (s8)(sprite->sCurXOffsetFixedPoint_lt >> 8) + sprite->data[5];
+        monSprite->y2 = (s8)(sprite->sCurYOffsetFixedPoint_lt >> 8) + sprite->data[6];
     }
 }
 
@@ -606,11 +606,18 @@ static void SlideMonToOriginalPos_Step(struct Sprite *sprite)
 // arg 2: target y pixel offset
 // arg 3: mirror vertical translation for opposite battle side
 // arg 4: duration
+
+#define ARG_WHICH_BATTLER 0
+#define ARG_END_X_OFFSET 1
+#define ARG_END_Y_OFFSET 2
+#define ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION 3
+#define ARG_DURATION 4
+
 static void SlideMonToOffset(struct Sprite *sprite)
 {
     u8 battler;
     u8 monSpriteId;
-    if (!gBattleAnimArgs[0])
+    if (!gBattleAnimArgs[ARG_WHICH_BATTLER])
         battler = gBattleAnimAttacker;
     else
         battler = gBattleAnimTarget;
@@ -618,26 +625,32 @@ static void SlideMonToOffset(struct Sprite *sprite)
     monSpriteId = gBattlerSpriteIds[battler];
     if (!IsOnPlayerSide(battler))
     {
-        gBattleAnimArgs[1] = -gBattleAnimArgs[1];
-        if (gBattleAnimArgs[3] == 1)
+        gBattleAnimArgs[ARG_END_X_OFFSET] = -gBattleAnimArgs[ARG_END_X_OFFSET];
+        if (gBattleAnimArgs[ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION] == TRUE)
         {
-            gBattleAnimArgs[2] = -gBattleAnimArgs[2];
+            gBattleAnimArgs[ARG_END_Y_OFFSET] = -gBattleAnimArgs[ARG_END_Y_OFFSET];
         }
     }
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = gSprites[monSpriteId].x;
-    sprite->data[2] = gSprites[monSpriteId].x + gBattleAnimArgs[1];
-    sprite->data[3] = gSprites[monSpriteId].y;
-    sprite->data[4] = gSprites[monSpriteId].y + gBattleAnimArgs[2];
-    InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = 0;
-    sprite->data[4] = 0;
-    sprite->data[5] = monSpriteId;
+    sprite->sDuration_lt = gBattleAnimArgs[ARG_DURATION];
+    sprite->sInputStartX_lt = gSprites[monSpriteId].x;
+    sprite->sInputEndX_lt = gSprites[monSpriteId].x + gBattleAnimArgs[ARG_END_X_OFFSET];
+    sprite->sInputStartY_lt = gSprites[monSpriteId].y;
+    sprite->sInputEndY_lt = gSprites[monSpriteId].y + gBattleAnimArgs[ARG_END_Y_OFFSET];
+    InitSpriteLinearTranslation(sprite);
+    sprite->sCurXOffsetFixedPoint_lt = 0;
+    sprite->sCurYOffsetFixedPoint_lt = 0;
+    sprite->sSpriteId_lt = monSpriteId;
     sprite->invisible = TRUE;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
+
+#undef ARG_WHICH_BATTLER
+#undef ARG_END_X_OFFSET
+#undef ARG_END_Y_OFFSET
+#undef ARG_MIRROR_OPPONENT_VERTICAL_TRANSLATION
+#undef ARG_DURATION
 
 static void SlideMonToOffsetPartner(struct Sprite *sprite)
 {
@@ -663,13 +676,13 @@ static void SlideMonToOffsetPartner(struct Sprite *sprite)
     sprite->data[2] = gSprites[monSpriteId].x + gBattleAnimArgs[1];
     sprite->data[3] = gSprites[monSpriteId].y;
     sprite->data[4] = gSprites[monSpriteId].y + gBattleAnimArgs[2];
-    InitSpriteDataForLinearTranslation(sprite);
+    InitSpriteLinearTranslation(sprite);
     sprite->data[3] = 0;
     sprite->data[4] = 0;
     sprite->data[5] = monSpriteId;
     sprite->invisible = TRUE;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
 
 static void SlideMonToOffsetAndBack(struct Sprite *sprite)
@@ -692,15 +705,16 @@ static void SlideMonToOffsetAndBack(struct Sprite *sprite)
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
         }
     }
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = gSprites[spriteId].x + gSprites[spriteId].x2;
-    sprite->data[2] = sprite->data[1] + gBattleAnimArgs[1];
-    sprite->data[3] = gSprites[spriteId].y + gSprites[spriteId].y2;
-    sprite->data[4] = sprite->data[3] + gBattleAnimArgs[2];
-    InitSpriteDataForLinearTranslation(sprite);
-    sprite->data[3] = gSprites[spriteId].x2 << 8;
-    sprite->data[4] = gSprites[spriteId].y2 << 8;
-    sprite->data[5] = spriteId;
+    sprite->sDuration_lt = gBattleAnimArgs[4];
+    sprite->sInputStartX_lt = gSprites[spriteId].x + gSprites[spriteId].x2;
+    sprite->sInputEndX_lt = sprite->sInputStartX_lt + gBattleAnimArgs[1];
+    sprite->sInputStartY_lt = gSprites[spriteId].y + gSprites[spriteId].y2;
+    sprite->sInputEndY_lt = sprite->sInputStartY_lt + gBattleAnimArgs[2];
+    InitSpriteLinearTranslation(sprite);
+    sprite->sCurXOffsetFixedPoint_lt = gSprites[spriteId].x2 << 8;
+    sprite->sCurYOffsetFixedPoint_lt = gSprites[spriteId].y2 << 8;
+    sprite->sSpriteId_lt = spriteId;
+    // TODO: unused field entirely
     sprite->data[6] = gBattleAnimArgs[5];
     if (!gBattleAnimArgs[5])
     {
@@ -710,7 +724,7 @@ static void SlideMonToOffsetAndBack(struct Sprite *sprite)
     {
         StoreSpriteCallbackInData6(sprite, SlideMonToOffsetAndBack_End);
     }
-    sprite->callback = TranslateSpriteLinearByIdFixedPoint;
+    sprite->callback = TranslateSpecifiedSpriteLinear;
 }
 
 
