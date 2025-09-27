@@ -1,0 +1,26 @@
+raw `
+BeachCave_1F_MapScripts::
+	.byte 0
+
+`
+
+script BeachCave_1F_EventScript_GetItem{
+    lock
+    removeobject(2)
+    giveitem(ITEM_SLOWBRONITE, 1)
+    setflag(FLAG_BEACH_CAVE_ITEM )
+    release
+    end
+}
+
+script BeachCave_1F_EventScript_OldMan
+{
+    faceplayer
+    lock
+    msgbox(format("Hello there! This cave has recently opened up due to the instability of the region.
+    I have lived here for many years, and have never seen such POKéMON on the surface. Be careful."), MSGBOX_DEFAULT)
+    waitmessage
+    turnobject(3, DIR_SOUTH)
+    release
+    end
+}

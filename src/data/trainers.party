@@ -231,10 +231,10 @@ Music: Aqua
 Double Battle: No
 AI: DEFAULT_TRAINER_BASIC
 
-Rattata-Alola @ Silk Scarf
+Rattata-Alola @ Silver Powder
 Ability: Hustle  
 Level: 11  
-Adamant Nature  
+Jolly Nature  
 - U-turn  
 - Bite  
 - Facade
@@ -2144,7 +2144,7 @@ AI: DEFAULT_TRAINER_BASIC
 
 Skorupi  
 Ability: Keen Eye  
-Level: 8
+Level: 7
 - Bug Bite  
 - Cut  
 - Rock Smash  
@@ -2153,7 +2153,7 @@ Level: 8
 Bellsprout @ Oran Berry  
 Ability: Chlorophyll 
 Brave Nature
-Level: 8  
+Level: 7  
 - Bullet Seed  
 - Clear Smog  
 - Stun Spore
@@ -2562,13 +2562,31 @@ Class: Rich Boy
 Pic: Rich Boy
 Gender: Male
 Music: Rich
-Items: Full Restore
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Zigzagoon @ Nugget
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Yanma @ Iron Ball  
+Ability: Speed Boost  
+Level: 11  
+Jolly Nature  
+- Sonic Boom  
+
+
+Stunky @ Oran Berry  
+Ability: Aftermath  
+Level: 11   
+Hardy Nature  
+- Poison Tail  
+- Thief  
+- Hex
+
+Omanyte @ Berry Juice  
+Ability: Shell Armor  
+Level: 11  
+Naive Nature  
+- Icy Wind  
+- Water Gun  
+- Rock Throw
 
 === TRAINER_MOLLIE ===
 Name: MOLLIE
@@ -4864,11 +4882,11 @@ Shiny: Yes
 Naive Nature  
 - Rock Smash  
 - Bite  
-- Headbutt
+- Take Down
 
 Shuppet @ Eviolite  
 Ability: Insomnia  
-Level: 14  
+Level: 15  
 - Shock Wave  
 - Ominous Wind  
 - Retaliate
@@ -6407,19 +6425,29 @@ Pic: Fisherman
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC / FORCE_SETUP_FIRST_TURN 
 
-Magikarp
-Level: 5
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Tentacool @ Oran Berry  
+Ability: Clear Body  
+Level: 12  
+Brave Nature
+- Toxic Spikes  
+- Icy Wind  
+- Water Pulse
 
-Magikarp
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Feebas @ Expert Belt  
+Ability: Adaptability  
+Level: 12  
+Modest Nature  
+- Icy Wind  
+- Water Pulse  
+- Hypnosis
 
-Magikarp
-Level: 7
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Magikarp @ Choice Specs  
+Ability: Swift Swim  
+Level: 13  
+Modest Nature  
+- Hydro Pump
 
 === TRAINER_CLAUDE ===
 Name: CLAUDE
@@ -8883,15 +8911,42 @@ Pic: Twins
 Gender: Male
 Music: Twins
 Double Battle: Yes
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Seedot
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Shinx @ Oran Berry  
+Ability: Intimidate  
+Level: 13    
+Gentle Nature  
+- Spark  
+- Bite  
+- Scary Face
 
-Lotad
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Bidoof @ Oran Berry  
+Ability: Simple  
+Level: 13    
+Brave Nature  
+- Curse  
+- Tackle 
+- Aqua Jet 
+
+Turtwig @ Miracle Seed  
+Ability: Shell Armor  
+Level: 14    
+Adamant Nature  
+- Razor Leaf  
+- Leech Seed  
+- Iron Head
+
+Chimchar @ Berry Juice  
+Ability: Blaze  
+Level: 14   
+Hasty Nature  
+- Fake Out  
+- Will-O-Wisp  
+- Flame Wheel  
+- Encore  
+
+
 
 === TRAINER_MIU_AND_YUKI ===
 Name: MIU & YUKI
@@ -9587,8 +9642,10 @@ Double Battle: No
 AI: Basic Trainer
 
 Treecko
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Pound
+- Leer
 
 === TRAINER_BRENDAN_ROUTE_110_MUDKIP ===
 Name: BRENDAN
@@ -9639,11 +9696,13 @@ Pic: Brendan
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move / Try To Faint / Force Setup First Turn
+AI: Basic Trainer
 
 Torchic
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Scratch
+- Leer
 
 === TRAINER_BRENDAN_ROUTE_110_TREECKO ===
 Name: BRENDAN
@@ -9697,8 +9756,10 @@ Double Battle: No
 AI: Basic Trainer
 
 Mudkip
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+-Pound
+-Leer
 
 === TRAINER_BRENDAN_ROUTE_110_TORCHIC ===
 Name: BRENDAN
@@ -9752,8 +9813,10 @@ Double Battle: No
 AI: Basic Trainer
 
 Treecko
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Pound
+- Leer
 
 === TRAINER_MAY_ROUTE_110_MUDKIP ===
 Name: MAY
@@ -9807,8 +9870,10 @@ Double Battle: No
 AI: Basic Trainer
 
 Torchic
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Scratch
+- Leer
 
 === TRAINER_MAY_ROUTE_110_TREECKO ===
 Name: MAY
@@ -9862,8 +9927,10 @@ Double Battle: No
 AI: Basic Trainer
 
 Mudkip
-Level: 5
+Level: 3
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+- Pound
+- Leer
 
 === TRAINER_MAY_ROUTE_110_TORCHIC ===
 Name: MAY
@@ -11146,15 +11213,31 @@ Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Lotad
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Wormadam-Sandy @ Oran Berry  
+Ability: Overcoat  
+Level: 12   
+Bashful Nature  
+- Confusion  
+- Bug Bite  
+- Mud Shot
 
-Shroomish
-Level: 6
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+Pancham @ Black Belt  
+Ability: Iron Fist  
+Level: 12  
+Adamant Nature  
+- Karate Chop  
+- Fire Punch  
+- Rock Tomb
+
+Dewpider @ Silver Powder  
+Ability: Water Bubble  
+Level: 12    
+- Water Gun  
+- Bug Bite  
+- Hidden Power
 
 === TRAINER_JANICE ===
 Name: JANICE
@@ -11349,13 +11432,12 @@ Level: 5
 - Poison Sting  
 - String Shot  
 
-Skorupi  
-Ability: Keen Eye  
+Burmy  
+Ability: Shed Skin  
 Level: 6  
-- Bug Bite  
-- Cut  
-- Rock Smash  
-- Poison Tail
+- Struggle Bug 
+- Detect
+- Tackle
 
 
 === TRAINER_LYLE ===        /* PB Woods */
@@ -13102,7 +13184,7 @@ Level: 8
 Carvanha @ Oran Berry  
 Ability: Rough Skin  
 Jolly Nature
-Level: 8  
+Level: 7  
 - Poison Fang  
 - Bite  
 - Aqua Jet

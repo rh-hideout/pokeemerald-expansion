@@ -4410,6 +4410,36 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
+    },
+    {
+      "id": "LAYOUT_BEACH_CAVE_1F",
+      "name": "BeachCave_1F_Layout",
+      "width": 15,
+      "height": 12,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_Cave",
+      "border_filepath": "data/layouts/BeachCave_1F/border.bin",
+      "blockdata_filepath": "data/layouts/BeachCave_1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_MEGA_CAVE_1F",
+      "name": "MEGA_CAVE_1F_Layout",
+      "width": 21,
+      "height": 16,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_RusturfTunnel",
+      "border_filepath": "data/layouts/MEGA_CAVE_1F/border.bin",
+      "blockdata_filepath": "data/layouts/MEGA_CAVE_1F/map.bin"
+    },
+    {
+      "id": "LAYOUT_MEGA_CAVE_2F",
+      "name": "MEGA_CAVE_2F_Layout",
+      "width": 21,
+      "height": 16,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_RusturfTunnel",
+      "border_filepath": "data/layouts/MEGA_CAVE_2F/border.bin",
+      "blockdata_filepath": "data/layouts/MEGA_CAVE_2F/map.bin"
     }
   ]
 }

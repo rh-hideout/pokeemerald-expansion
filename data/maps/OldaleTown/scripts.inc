@@ -873,44 +873,6 @@ OldaleTown_EventScript_OldRodFisherman_6:
 	goto OldaleTown_EventScript_OldRodFisherman_4
 
 
-OldaleTown_EventScript_PokeVial_Guy::
-# 452 "data/maps/OldaleTown/scripts.pory"
-	lockall
-# 453 "data/maps/OldaleTown/scripts.pory"
-	faceplayer
-# 454 "data/maps/OldaleTown/scripts.pory"
-	checkitem ITEM_POKE_VIAL, 1
-# 455 "data/maps/OldaleTown/scripts.pory"
-	compare VAR_RESULT, TRUE
-	goto_if_eq OldaleTown_EventScript_PokeVial_Guy_1
-# 461 "data/maps/OldaleTown/scripts.pory"
-	compare VAR_RESULT, FALSE
-	goto_if_eq OldaleTown_EventScript_PokeVial_Guy_2
-# 470 "data/maps/OldaleTown/scripts.pory"
-	msgbox OldaleTown_EventScript_PokeVial_Guy_Text_2, MSGBOX_AUTOCLOSE
-# 471 "data/maps/OldaleTown/scripts.pory"
-	releaseall
-	end
-
-OldaleTown_EventScript_PokeVial_Guy_1:
-# 457 "data/maps/OldaleTown/scripts.pory"
-	msgbox OldaleTown_EventScript_PokeVial_Guy_Text_0, MSGBOX_DEFAULT
-# 458 "data/maps/OldaleTown/scripts.pory"
-	releaseall
-	end
-
-OldaleTown_EventScript_PokeVial_Guy_2:
-# 463 "data/maps/OldaleTown/scripts.pory"
-	msgbox OldaleTown_EventScript_PokeVial_Guy_Text_1, MSGBOX_DEFAULT
-# 464 "data/maps/OldaleTown/scripts.pory"
-	giveitem ITEM_POKE_VIAL, 1
-# 465 "data/maps/OldaleTown/scripts.pory"
-	setflag FLAG_GET_POKEVIAL
-# 466 "data/maps/OldaleTown/scripts.pory"
-	releaseall
-	end
-
-
 OldaleTown_EventScript_MeowthCarePackage_Text_0:
 # 398 "data/maps/OldaleTown/scripts.pory"
 	.string "Looks like Meowth wants to give you\n"
@@ -937,15 +899,3 @@ OldaleTown_EventScript_OldRodFisherman_Text_3:
 # 439 "data/maps/OldaleTown/scripts.pory"
 	.string "Well, I think I'll have an item you'll\n"
 	.string "want to have!$"
-
-OldaleTown_EventScript_PokeVial_Guy_Text_0:
-# 457 "data/maps/OldaleTown/scripts.pory"
-	.string "You already have the PokeVial!$"
-
-OldaleTown_EventScript_PokeVial_Guy_Text_1:
-# 463 "data/maps/OldaleTown/scripts.pory"
-	.string "Here, take the PokeVial!$"
-
-OldaleTown_EventScript_PokeVial_Guy_Text_2:
-# 470 "data/maps/OldaleTown/scripts.pory"
-	.string "Something went wrong.$"

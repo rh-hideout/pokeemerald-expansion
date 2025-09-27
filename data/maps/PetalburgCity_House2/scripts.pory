@@ -26,7 +26,7 @@ script PetalburgCity_House2_EventScript_SchoolKid{
             call(PetalburgCity_House2_EventScript_GetEgg)
         }
         else{
-            msgbox(format("Oops! You don't have room."), MSGBOX_DEFAULT)
+            msgbox(format("I have a gift, but it looks like you don't have room in your party."), MSGBOX_DEFAULT)
             release
             end
         }

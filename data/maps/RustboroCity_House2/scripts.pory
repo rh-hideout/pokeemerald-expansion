@@ -1,0 +1,143 @@
+raw `
+RustboroCity_House2_MapScripts::
+	.byte 0
+
+
+
+`
+script RustboroCity_House2_EventScript_Give_LowKick
+{
+    faceplayer
+    lock
+    if (!flag(FLAG_LOW_SWEEP_TM))
+    {
+        msgbox(format("Here, take this!!"))
+        giveitem(ITEM_TM_LOW_SWEEP, 1)
+        setflag(FLAG_LOW_SWEEP_TM)
+        release
+        end
+    }
+    else{
+        msgbox(format("My mom says that move is really powerful!"), MSGBOX_DEFAULT)
+        release
+        end
+    }
+}
+script RustboroCity_House2_EventScript_KantoStarter
+{
+    faceplayer
+    lock
+    if(!flag(FLAG_KANTO_STARTER_GET))
+    {
+        call(RustboroCity_House2_EventScript_KantoStarter_Start)
+        release
+        end
+    }
+    else
+    {
+        msgbox(format("POKéMON are the essential bonds that bring us together. Please treat that POKéMON with love."), MSGBOX_DEFAULT)
+        release
+        end
+    }
+    release
+    end
+}
+
+
+script RustboroCity_House2_EventScript_KantoStarter_Start
+{
+    getpartysize
+    if(var(VAR_RESULT) != 6)
+    {
+        msgbox(format("Hello, dear. I lived in the Kanto region for many years, raising starter POKéMON for all new trainers.
+        I have moved to the Hoenn region to help the developing trainer school. You seem relatively new to your adventure; would
+        you like a starter egg from Kanto?"), MSGBOX_YESNO)
+        if(var(VAR_RESULT) == YES)
+        {
+            call(RustboroCity_House2_EventScript_KantoStarter_GenerateEgg)
+            return
+        }
+        else{
+            msgbox(format("Oh, well. You know where to find me."), MSGBOX_DEFAULT)
+            release
+            end
+        }
+    }
+    else
+    {
+        msgbox(format("Oh hello, dear. I have a Kanto starter egg to give away, so please return with room."), MSGBOX_DEFAULT)
+        release
+        end
+    }
+}
+
+script RustboroCity_House2_EventScript_KantoStarter_GenerateEgg
+{
+    lock
+    faceplayer
+    random(2)
+    if(var(VAR_RESULT) == 0)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_BULBASAUR)
+        setflag(FLAG_KANTO_STARTER_GET)
+        return
+    }
+    elif(var(VAR_RESULT) == 1)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_SQUIRTLE)
+        setflag(FLAG_KANTO_STARTER_GET)
+        return
+    }
+    elif(var(VAR_RESULT) == 2)
+    {
+        playfanfare(MUS_OBTAIN_ITEM)
+        msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
+        waitfanfare
+        giveegg(SPECIES_CHARMANDER)
+        setflag(FLAG_KANTO_STARTER_GET)
+        return
+    }
+    msgbox(format("Please, raise this POKéMON with care."), MSGBOX_DEFAULT)
+    return
+}
+
+script RustboroCity_House2_EventScript_Bulbasaur
+{
+    applymovement(3, moves(face_player))
+    lock
+    playmoncry(SPECIES_BULBASAUR, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("Bulbasaur looks like it's smirking."), MSGBOX_DEFAULT)
+    turnobject(3, DIR_WEST)
+	release
+    end
+}
+script RustboroCity_House2_EventScript_Squirtle
+{
+    applymovement(4, moves(face_player))
+    lock
+    playmoncry(SPECIES_SQUIRTLE, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("Squirtle looks like they want you to scratch their shell."), MSGBOX_DEFAULT)
+    turnobject(4, DIR_SOUTH)
+	release
+    end
+}
+script RustboroCity_House2_EventScript_Charmander
+{
+    applymovement(5, moves(face_player))
+    lock
+    playmoncry(SPECIES_CHARMANDER, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("Charmander is looking around for anything flammable."), MSGBOX_DEFAULT)
+    turnobject(5, DIR_NORTH)
+	release
+    end
+}
+

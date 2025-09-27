@@ -283,7 +283,7 @@ Route104_Text_IvanIntro:
 	.string "Why keep it a secret?\n"
 	.string "I'm the WATER POKéMON expert!\p"
 	.string "Huh?\n"
-	.string "You don't know me?$"
+	.string "You wanna fight?$"
 
 Route104_Text_IvanDefeat:
 	.string "I thought I wasn't too bad, if I may\n"
@@ -345,11 +345,11 @@ Route104_Text_HaleyPostRematch:
 	.string "I am still upset about losing!$"
 
 Route104_Text_WinstonIntro:
-	.string "Oh, sure, I'll accept your challenge.\n"
+	.string "Oh, sure, I bought these guards.\n"
 	.string "I have a lot of money.$"
 
 Route104_Text_WinstonDefeat:
-	.string "Why couldn't I win?$"
+	.string "Why couldn't I win? GUARDS???$"
 
 Route104_Text_WinstonPostBattle:
 	.string "There are some things money can't buy.\n"

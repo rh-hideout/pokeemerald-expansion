@@ -1063,9 +1063,11 @@ script LittlerootTown_EventScript_GiveCandyJar
 		msgbox(format("And here, Dad wanted to give you these before leaving."), MSGBOX_DEFAULT)
 		giveitem(ITEM_CANDY_JAR, 1)
 		setflag(FLAG_GET_CANDY_JAR)
-		giveitem(ITEM_SHINY_CHARM, 1)
-		msgbox(format("This can help all party members reach the level caps! And that was your father's 
-		shiny charm, which he used to find his personal ace. Hopefully his luck transfers!"), MSGBOX_DEFAULT)
+		giveitem(ITEM_POKE_VIAL, 1)
+		setflag(FLAG_GET_POKEVIAL)
+		msgbox(format("These items were left by your father for your journey. The Candy Jar is filled with 
+		all the Rare Candies he left around, so you can level up your partners, and the Poke-Vial is used to
+		restore your party when you are out and about- don't use this as an excuse to avoid going into town, however!"), MSGBOX_DEFAULT)
 		return
 	}
 	else{

@@ -227,7 +227,8 @@ PetalburgCity_House2_EventScript_GenerateEgg_9:
 
 PetalburgCity_House2_EventScript_SchoolKid_Text_0:
 # 29 "data/maps/PetalburgCity_House2/scripts.pory"
-	.string "Oops! You don't have room.$"
+	.string "I have a gift, but it looks like you\n"
+	.string "don't have room in your party.$"
 
 PetalburgCity_House2_EventScript_SchoolKid_Text_1:
 # 33 "data/maps/PetalburgCity_House2/scripts.pory"

@@ -13,7 +13,7 @@
 #define FLAG_TEMP_2      (TEMP_FLAGS_START + 0x2)
 #define FLAG_TEMP_3      (TEMP_FLAGS_START + 0x3)
 #define FLAG_TEMP_4      (TEMP_FLAGS_START + 0x4)
-#define FLAG_TEMP_5      (TEMP_FLAGS_START + 0x5)  // Unused Flag
+#define FLAG_TEMP_5      (TEMP_FLAGS_START + 0x5)  // Beach Cave Boulder
 #define FLAG_TEMP_6      (TEMP_FLAGS_START + 0x6)  // Unused Flag
 #define FLAG_TEMP_7      (TEMP_FLAGS_START + 0x7)  // Unused Flag
 #define FLAG_TEMP_8      (TEMP_FLAGS_START + 0x8)  // Unused Flag
@@ -62,7 +62,7 @@
 #define FLAG_DEXNAV_HIDDEN    0x2D // Unused Flag
 #define FLAG_DEXNAV_ALL    0x2E // Unused Flag
 
-#define FLAG_UNUSED_0x02F    0x2F // Unused Flag
+#define FLAG_LOW_SWEEP_TM    0x2F // Unused Flag
 #define FLAG_UNUSED_0x030    0x30 // Unused Flag
 #define FLAG_UNUSED_0x031    0x31 // Unused Flag
 #define FLAG_UNUSED_0x032    0x32 // Unused Flag
@@ -1515,13 +1515,13 @@
 
 // Reward Flags
 #define FLAG_ROUTE102_REWARD                        (SYSTEM_FLAGS + 0x85) // Rewards for 102
-#define FLAG_GET_PETALBURG_EGG                      (SYSTEM_FLAGS + 0x86) // Unused Flag
-#define FLAG_ROUTE104_PT1_REWARD                    (SYSTEM_FLAGS + 0x87) // Unused Flag
-#define FLAG_PB_WOODS_REWARD                        (SYSTEM_FLAGS + 0x88) // Unused Flag
-#define FLAG_UNUSED_0x8E9                           (SYSTEM_FLAGS + 0x89) // Unused Flag
-#define FLAG_UNUSED_0x8EA                           (SYSTEM_FLAGS + 0x8A) // Unused Flag
-#define FLAG_UNUSED_0x8EB                           (SYSTEM_FLAGS + 0x8B) // Unused Flag
-#define FLAG_UNUSED_0x8EC                           (SYSTEM_FLAGS + 0x8C) // Unused Flag
+#define FLAG_GET_PETALBURG_EGG                      (SYSTEM_FLAGS + 0x86) // Random Egg in Petalburg
+#define FLAG_ROUTE104_PT1_REWARD                    (SYSTEM_FLAGS + 0x87) // Rewards for Route 104 Pt 1
+#define FLAG_PB_WOODS_REWARD                        (SYSTEM_FLAGS + 0x88) // Rewards for Petalburg Woods
+#define FLAG_BEACH_CAVE_ITEM                        (SYSTEM_FLAGS + 0x89) // Ground Item for Beach Cave
+#define FLAG_ROUTE104_PT2_REWARD                    (SYSTEM_FLAGS + 0x8A) // Rewards for Route 104 Pt 1
+#define FLAG_ROUTE116_REWARD                        (SYSTEM_FLAGS + 0x8B) // Rewards for Route 116
+#define FLAG_KANTO_STARTER_GET                      (SYSTEM_FLAGS + 0x8C) // Random Kanto Egg in Rustboro
 #define FLAG_UNUSED_0x8ED                           (SYSTEM_FLAGS + 0x8D) // Unused Flag
 #define FLAG_UNUSED_0x8EE                           (SYSTEM_FLAGS + 0x8E) // Unused Flag
 #define FLAG_UNUSED_0x8EF                           (SYSTEM_FLAGS + 0x8F) // Unused Flag

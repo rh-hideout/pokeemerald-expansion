@@ -2092,7 +2092,7 @@ LittlerootTown_EventScript_SetOptions_9:
 LittlerootTown_EventScript_GiveCandyJar::
 # 1061 "data/maps/LittlerootTown/scripts.pory"
 	goto_if_unset FLAG_GET_CANDY_JAR, LittlerootTown_EventScript_GiveCandyJar_1
-# 1072 "data/maps/LittlerootTown/scripts.pory"
+# 1074 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_GiveCandyJar_Text_2, MSGBOX_DEFAULT
 	return
 
@@ -2104,8 +2104,10 @@ LittlerootTown_EventScript_GiveCandyJar_1:
 # 1065 "data/maps/LittlerootTown/scripts.pory"
 	setflag FLAG_GET_CANDY_JAR
 # 1066 "data/maps/LittlerootTown/scripts.pory"
-	giveitem ITEM_SHINY_CHARM, 1
+	giveitem ITEM_POKE_VIAL, 1
 # 1067 "data/maps/LittlerootTown/scripts.pory"
+	setflag FLAG_GET_POKEVIAL
+# 1068 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_GiveCandyJar_Text_1, MSGBOX_DEFAULT
 	return
 
@@ -2148,14 +2150,17 @@ LittlerootTown_EventScript_GiveCandyJar_Text_0:
 	.string "before leaving.$"
 
 LittlerootTown_EventScript_GiveCandyJar_Text_1:
-# 1067 "data/maps/LittlerootTown/scripts.pory"
-	.string "This can help all party members reach\n"
-	.string "the level caps! And that was your\l"
-	.string "father's shiny charm, which he used to\l"
-	.string "find his personal ace. Hopefully his\l"
-	.string "luck transfers!$"
+# 1068 "data/maps/LittlerootTown/scripts.pory"
+	.string "These items were left by your father\n"
+	.string "for your journey. The Candy Jar is\l"
+	.string "filled with all the Rare Candies he left\l"
+	.string "around, so you can level up your\l"
+	.string "partners, and the Poke-Vial is used to\l"
+	.string "restore your party when you are out and\l"
+	.string "about- don't use this as an excuse to\l"
+	.string "avoid going into town, however!$"
 
 LittlerootTown_EventScript_GiveCandyJar_Text_2:
-# 1072 "data/maps/LittlerootTown/scripts.pory"
+# 1074 "data/maps/LittlerootTown/scripts.pory"
 	.string "Looks like you already have the candy\n"
 	.string "jar!$"

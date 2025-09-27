@@ -1,0 +1,28 @@
+{
+  "id": "MAP_MEGA_CAVE_1F",
+  "name": "MEGA_CAVE_1F",
+  "layout": "LAYOUT_MEGA_CAVE_1F",
+  "music": "MUS_DUMMY",
+  "region_map_section": "MAPSEC_MEGA_CAVE",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_NONE",
+  "allow_cycling": true,
+  "allow_escaping": true,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [],
+  "warp_events": [
+    {
+      "x": 10,
+      "y": 14,
+      "elevation": 0,
+      "dest_map": "MAP_RUSTURF_TUNNEL",
+      "dest_warp_id": "3"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

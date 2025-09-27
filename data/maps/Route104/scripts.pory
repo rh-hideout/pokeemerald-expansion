@@ -271,16 +271,6 @@ Route104_EventScript_ReceivedBerry::
 	release
 	end
 
-Route104_EventScript_WhiteHerbFlorist::
-	lock
-	faceplayer
-	goto_if_set FLAG_RECEIVED_WHITE_HERB, Route104_EventScript_ReceivedWhiteHerb
-	msgbox Route104_Text_DontNeedThisTakeIt, MSGBOX_DEFAULT
-	giveitem ITEM_WHITE_HERB
-	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
-	setflag FLAG_RECEIVED_WHITE_HERB
-	release
-	end
 
 Route104_EventScript_ReceivedWhiteHerb::
 	msgbox Route104_Text_FlowerShopSellingSaplings, MSGBOX_DEFAULT
@@ -847,7 +837,7 @@ Route104_EventScript_Billy::
 	end
 
 Route104_EventScript_Haley::
-	trainerbattle_single TRAINER_HALEY_1, Route104_Text_HaleyIntro, Route104_Text_HaleyDefeat, Route104_EventScript_TryRegisterHaleyAfterBattle
+	trainerbattle_single TRAINER_HALEY_1, Route104_Text_HaleyIntro, Route104_Text_HaleyDefeat, Route104_Pt2_EventScript_Route_Clear
 	specialvar VAR_RESULT, ShouldTryRematchBattle
 	goto_if_eq VAR_RESULT, TRUE, Route104_EventScript_RematchHaley
 	setvar VAR_0x8004, TRAINER_HALEY_1
@@ -1266,6 +1256,104 @@ script Route104_Pt1_EventScript_RouteRewards{
 	else
 	{
 		msgbox(format("I think Mr. Briney is a nice man. His Wingull is so cute!!"), MSGBOX_DEFAULT)
+		release
+		end
+	}
+}
+
+
+script Route104_EventScript_WhiteHerbFlorist{
+	lock
+	faceplayer
+	msgbox(format("I used to have a White Herb to give away, but those scoundrels took it!!"), MSGBOX_DEFAULT)
+	release
+	end
+}
+
+script Route104_Pt2_EventScript_Route_Clear
+{
+	lockall
+	fadescreen(FADE_TO_BLACK)
+	playfanfare(MUS_OBTAIN_ITEM)
+	setflag(FLAG_ROUTE104_PART2_CLEAR)
+	removeobject(39)
+	removeobject(40)
+	removeobject(41)
+	msgbox(format("Route 104 Pt. 2 has been cleared!\nThe level cap is now 14."), MSGBOX_DEFAULT)
+	waitmessage
+	waitfanfare
+	fadescreen(FADE_FROM_BLACK)
+	releaseall
+	end
+}
+
+script Route104_EventScript_Dewpider
+{
+	applymovement(40, moves(face_player))
+    lock
+    playmoncry(SPECIES_DEWPIDER, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("The Dewpider shudders in anticipation. Yuck."), MSGBOX_DEFAULT)
+	turnobject(40, DIR_SOUTH)
+    applymovement(40, moves(walk_in_place_down))
+	release
+    end
+}
+
+script Route104_EventScript_Pancham
+{
+	applymovement(41, moves(face_player))
+    lock
+    playmoncry(SPECIES_PANCHAM, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("The Pancham flexes- how tough!"), MSGBOX_DEFAULT)
+	turnobject(41, DIR_SOUTH)
+    applymovement(41, moves(walk_in_place_down))
+	release
+    end
+}
+
+script Route104_EventScript_Lillipup
+{
+	applymovement(39, moves(face_player))
+    lock
+    playmoncry(SPECIES_LILLIPUP, CRY_MODE_ENCOUNTER)
+    waitmoncry
+    msgbox(format("Lillipup is whimpering at the sight of the trainers."), MSGBOX_DEFAULT)
+	turnobject(39, DIR_SOUTH)
+    applymovement(39, moves(walk_in_place_down))
+	release
+    end
+}
+
+script Route104_Pt_2_EventScript_Rewards
+{
+	lock
+	faceplayer
+	if(!flag(FLAG_ROUTE104_PT2_REWARD))
+	{
+		msgbox(format("Would you like the reward?"), MSGBOX_YESNO)
+		if(var(VAR_RESULT) == YES)
+		{
+			giveitem(ITEM_HARD_STONE, 1)
+			giveitem(ITEM_SOFT_SAND, 1)
+			giveitem(ITEM_BLACK_BELT, 1)
+			giveitem(ITEM_BLACK_GLASSES, 1)
+			giveitem(ITEM_BIG_NUGGET, 2)
+			setflag(FLAG_ROUTE104_PT2_REWARD)
+			release
+			end
+		}
+		else
+		{
+			msgbox(format("OK! Come see me if you ever want them!"), MSGBOX_DEFAULT)
+			release
+			end
+		}
+	}
+	else
+	{
+		msgbox(format("I think Lillipup is the cutest!"), MSGBOX_DEFAULT)
 		release
 		end
 	}
