@@ -216,7 +216,7 @@ BattleScript_EffectDoodle_AfterCopy:
 	printstring STRINGID_PKMNCOPIEDFOE
 	waitmessage B_WAIT_TIME_LONG
 	switchinabilities BS_ATTACKER
-	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_MoveEnd
+	jumpifbyte CMP_NOT_EQUAL, gBattleCommunication, 0x0, BattleScript_EffectDoodleMoveEnd
 	addbyte gBattleCommunication, 1
 	jumpifnoally BS_ATTACKER, BattleScript_EffectDoodleMoveEnd
 	setallytonextattacker BattleScript_EffectDoodle_CopyAbility
