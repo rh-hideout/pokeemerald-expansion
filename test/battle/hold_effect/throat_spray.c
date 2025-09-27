@@ -89,7 +89,6 @@ SINGLE_BATTLE_TEST("Throat Spray does not activate if move fails")
     }
 }
 
-
 SINGLE_BATTLE_TEST("Throat Spray does not activate if user flinches")
 {
     GIVEN {
