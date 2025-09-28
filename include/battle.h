@@ -142,7 +142,6 @@ struct ProtectStruct
 {
     u32 protected:7; // 126 protect options
     u32 noValidMoves:1;
-    u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
     u32 nonVolatileStatusImmobility:1;
@@ -163,13 +162,14 @@ struct ProtectStruct
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
-    u32 usedAllySwitch:1;
+    u16 usedAllySwitch:1;
     // End of 32-bit bitfield
+    u16 helpingHand:3;
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
     u16 laggingTail:1;
-    u16 padding:12;
+    u16 padding:9;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -608,8 +608,9 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 eventBlockCounter;
-    u8 turnEffectsBattlerId;
     u8 endTurnEventsCounter;
+    u8 turnEffectsBattlerId:4;
+    u8 moveEndBattlerId:4;
     u16 wrappedMove[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
@@ -780,7 +781,8 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding2:2;
+    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
+    u8 padding2:1;
 };
 
 struct AiBattleData
@@ -902,7 +904,7 @@ struct BattleScripting
     s32 savedDmg;
     u16 savedMoveEffect; // For moves hitting multiple targets.
     u16 moveEffect;
-    u16 multihitMoveEffect;
+    u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
     bool8 fixedPopup;   // Force ability popup to stick until manually called back
     u16 abilityPopupOverwrite;
@@ -1123,7 +1125,7 @@ extern u8 gHealthboxSpriteIds[MAX_BATTLERS_COUNT];
 extern u8 gMultiUsePlayerCursor;
 extern u8 gNumberOfMovesToChoose;
 extern bool8 gHasFetchedBall;
-extern u8 gLastUsedBall;
+extern u16 gLastUsedBall;
 extern u16 gLastThrownBall;
 extern u16 gBallToDisplay;
 extern bool8 gLastUsedBallMenuPresent;
@@ -1243,6 +1245,11 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+}
+
+static inline u32 GetChosenMoveFromPosition(u32 battler)
+{
+    return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }
 
 #endif // GUARD_BATTLE_H

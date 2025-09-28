@@ -3,6 +3,7 @@
 
 extern const u8 BattleScript_SupersweetSyrupActivates[];
 extern const u8 BattleScript_OpportunistCopyStatChange[];
+extern const u8 BattleScript_OpportunistCopyStatChangeEnd3[];
 extern const u8 BattleScript_MirrorHerbCopyStatChange[];
 extern const u8 BattleScript_MirrorHerbCopyStatChangeEnd2[];
 extern const u8 BattleScript_NotAffected[];
@@ -461,6 +462,7 @@ extern const u8 BattleScript_RemoveFireType[];
 extern const u8 BattleScript_TargetAbilityStatRaiseRet[];
 extern const u8 BattleScript_RemoveElectricType[];
 extern const u8 BattleScript_SeedSowerActivates[];
+extern const u8 BattleScript_BerserkActivates[];
 extern const u8 BattleScript_AngerShellActivates[];
 extern const u8 BattleScript_WellBakedBodyActivates[];
 extern const u8 BattleScript_WindRiderActivatesMoveEnd[];

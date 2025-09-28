@@ -838,7 +838,11 @@ SINGLE_BATTLE_TEST("Dynamax: Max Geyser sets up heavy rain")
     }
 }
 
+#if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
+SINGLE_BATTLE_TEST("Dynamax: Max Hailstorm sets up snow")
+#else
 SINGLE_BATTLE_TEST("Dynamax: Max Hailstorm sets up hail")
+#endif
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_MAX_HAILSTORM, MOVE_EFFECT_HAIL));
@@ -848,9 +852,15 @@ SINGLE_BATTLE_TEST("Dynamax: Max Hailstorm sets up hail")
         TURN { MOVE(player, MOVE_POWDER_SNOW, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
         MESSAGE("Wobbuffet used Max Hailstorm!");
+#if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
+        MESSAGE("It started to snow!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SNOW_CONTINUES);
+#else
         MESSAGE("It started to hail!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HAIL_CONTINUES);
+#endif        
     }
 }
 
