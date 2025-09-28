@@ -1476,9 +1476,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 static bool32 HandleEndTurnEjectPack(u32 battler)
 {
     gBattleStruct->turnEffectsBattlerId++;
-    if (TrySwitchInEjectPack(ITEMEFFECT_NORMAL))
-        return TRUE;
-    return FALSE;
+    return TrySwitchInEjectPack(ITEMEFFECT_NORMAL);
 }
 
 static bool32 HandleEndTurnDynamax(u32 battler)
