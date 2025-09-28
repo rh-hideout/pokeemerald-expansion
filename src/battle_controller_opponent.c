@@ -523,7 +523,6 @@ static inline bool32 IsDoubleAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u3
 
 static void OpponentHandleChoosePokemon(u32 battler)
 {
-    struct PartyState *battlerState;
     s32 chosenMonId;
     s32 pokemonInBattle = 1;
     enum SwitchType switchType = SWITCH_AFTER_KO;
@@ -536,8 +535,6 @@ static void OpponentHandleChoosePokemon(u32 battler)
     // Switching out
     else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
     {
-        battlerState = GetBattlerPartyState(battler);
-
         if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch)
             switchType = SWITCH_MID_BATTLE;
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
@@ -570,15 +567,14 @@ static void OpponentHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        battlerState->sentOut = TRUE;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     else
     {
-        battlerState = GetBattlerPartyState(battler);
         chosenMonId = gBattleStruct->AI_monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        battlerState->sentOut = TRUE;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     #if TESTING
     TestRunner_Battle_CheckSwitch(battler, chosenMonId);

@@ -3730,17 +3730,14 @@ static void DoBattleIntro(void)
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            struct PartyState *battlerState;
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             gBattleStruct->overworldWeatherDone = FALSE;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
+            // mark all battlers as sent out
             for (battler = 0; battler < gBattlersCount; battler++)
-            {
-                battlerState = GetBattlerPartyState(battler);
-                battlerState->sentOut = TRUE;
-            }
+                GetBattlerPartyState(battler)->sentOut = TRUE;
 
             // Try to set a status to start the battle with
             gBattleStruct->startingStatus = 0;
