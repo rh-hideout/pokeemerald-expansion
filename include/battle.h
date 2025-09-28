@@ -600,7 +600,8 @@ struct PartyState
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 padding:10;
+    u32 sentOut:1;
+    u32 padding:9;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.

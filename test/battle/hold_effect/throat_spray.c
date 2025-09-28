@@ -104,3 +104,16 @@ SINGLE_BATTLE_TEST("Throat Spray does not activate if user flinches")
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Throat Spray is not blocked by Sheer Force")
+{
+    GIVEN {
+        PLAYER(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); Item(ITEM_THROAT_SPRAY); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_BUG_BUZZ); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUG_BUZZ, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    }
+}
