@@ -1416,7 +1416,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
                 continue;
 
             numTargets++;
-            u32 abilityDef = GetBattlerAbility(battlerDef);
+            enum Ability abilityDef = GetBattlerAbility(battlerDef);
             if (JumpIfMoveAffectedByProtect(move, battlerDef, FALSE, failInstr)
              || CanMoveSkipAccuracyCalc(gBattlerAttacker, battlerDef, abilityAtk, abilityDef, move, RUN_SCRIPT))
                 continue;
@@ -4061,7 +4061,7 @@ static void SetToxicChainPriority(void)
     if (gBattleStruct->toxicChainPriority)
         return;
 
-    u32 abilityAtk = GetBattlerAbility(gBattlerAttacker);
+    enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
     if (abilityAtk == ABILITY_TOXIC_CHAIN
      && IsBattlerAlive(gBattlerTarget)
      && CanBePoisoned(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerAbility(gBattlerTarget))
@@ -7662,7 +7662,7 @@ void TryHazardsOnSwitchIn(u32 battler, u32 side, enum Hazards hazardType)
         break;
     case HAZARDS_SPIKES:
     {
-        u32 ability = GetBattlerAbility(battler);
+        enum Ability ability = GetBattlerAbility(battler);
         if (ability != ABILITY_MAGIC_GUARD
          && IsBattlerAffectedByHazards(battler, FALSE)
          && IsBattlerGrounded(battler, ability, GetBattlerHoldEffect(battler, TRUE)))
@@ -7804,7 +7804,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             if (i == battler)
                 continue;
 
-            u32 ability = GetBattlerAbility(i);
+            enum Ability ability = GetBattlerAbility(i);
             switch (ability)
             {
             case ABILITY_TRACE:
@@ -9744,7 +9744,7 @@ static void Cmd_trysetrest(void)
 
     gBattlerTarget = gBattlerAttacker;
     gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].maxHP * (-1);
-    u32 ability = GetBattlerAbility(gBattlerTarget);
+    enum Ability ability = GetBattlerAbility(gBattlerTarget);
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
 
     if (IsBattlerTerrainAffected(gBattlerTarget, ability, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
@@ -12779,7 +12779,7 @@ static void Cmd_setgastroacid(void)
 static void Cmd_setyawn(void)
 {
     CMD_ARGS(const u8 *failInstr);
-    u32 ability = GetBattlerAbility(gBattlerTarget);
+    enum Ability ability = GetBattlerAbility(gBattlerTarget);
     enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(gBattlerTarget, TRUE);
 
     if (gBattleMons[gBattlerTarget].volatiles.yawn
