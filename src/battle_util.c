@@ -5094,11 +5094,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
     case ABILITYEFFECT_IMMUNITY:
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            effect = DoImmunityAbilityHealStatus(caseID, battler);
+            effect = DoImmunityAbilityHealStatus(battler, caseID);
+            if (effect)
+                return effect;
         }
         break;
     case ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES:
-        effect = DoImmunityAbilityHealStatus(caseID, battler);
+        effect = DoImmunityAbilityHealStatus(battler, caseID);
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
@@ -10338,7 +10340,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     return FALSE;
 }
 
-u32 DoImmunityAbilityHealStatus(u32 caseID, u32 battler) //here
+u32 DoImmunityAbilityHealStatus(u32 battler, u32 caseID) //here
 {
     u32 effect = 0;
     switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
