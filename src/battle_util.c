@@ -5094,11 +5094,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
     case ABILITYEFFECT_IMMUNITY:
         for (battler = 0; battler < gBattlersCount; battler++)
         {
-            effect = DoImmunityAbilityHealStatus(battler);
+            effect = DoImmunityAbilityHealStatus(caseID, battler);
         }
         break;
     case ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES:
-        effect = DoImmunityAbilityHealStatus(battler);
+        effect = DoImmunityAbilityHealStatus(caseID, battler);
         break;
     case ABILITYEFFECT_SYNCHRONIZE:
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
@@ -10338,7 +10338,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     return FALSE;
 }
 
-u32 DoImmunityAbilityHealStatus(u32 battler)
+u32 DoImmunityAbilityHealStatus(u32 caseID, u32 battler) //here
 {
     u32 effect = 0;
     switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
@@ -10405,19 +10405,39 @@ u32 DoImmunityAbilityHealStatus(u32 battler)
         {
         case 1: // status cleared
             gBattleMons[battler].status1 = 0;
-            BattleScriptCall(BattleScript_AbilityCuredStatus);
+            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES){
+                BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
+            }
+            else {
+                BattleScriptCall(BattleScript_AbilityCuredStatus);
+            }
             break;
         case 2: // get rid of confusion
             RemoveConfusionStatus(battler);
-            BattleScriptCall(BattleScript_AbilityCuredStatus);
+            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES){
+                BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
+            }
+            else {
+                BattleScriptCall(BattleScript_AbilityCuredStatus);
+            }
             break;
         case 3: // get rid of infatuation
             gBattleMons[battler].volatiles.infatuation = 0;
-            BattleScriptCall(BattleScript_BattlerGotOverItsInfatuation);
+            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES){
+                BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
+            }
+            else {
+                BattleScriptCall(BattleScript_AbilityCuredStatus);
+            }
             break;
         case 4: // get rid of taunt
             gDisableStructs[battler].tauntTimer = 0;
-            BattleScriptCall(BattleScript_BattlerShookOffTaunt);
+            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES){
+                BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
+            }
+            else {
+                BattleScriptCall(BattleScript_AbilityCuredStatus);
+            }
             break;
         }
 

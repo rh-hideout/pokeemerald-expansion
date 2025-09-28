@@ -8285,6 +8285,13 @@ BattleScript_AbilityCuredStatus::
 	updatestatusicon BS_SCRIPTING
 	return
 
+BattleScript_AbilityCuredStatusEnd3::
+    call BattleScript_AbilityPopUp
+	printstring STRINGID_PKMNSXCUREDITSYPROBLEM
+	waitmessage B_WAIT_TIME_LONG
+	updatestatusicon BS_SCRIPTING
+	end3
+
 BattleScript_BattlerShookOffTaunt::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_PKMNSHOOKOFFTHETAUNT
