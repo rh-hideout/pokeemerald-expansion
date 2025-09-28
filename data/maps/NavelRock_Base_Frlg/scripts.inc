@@ -1,33 +1,33 @@
 NavelRock_Base_Frlg_MapScripts::
-	map_script MAP_SCRIPT_ON_TRANSITION, NavelRock_Bottom_Frlg_OnTransition
-	map_script MAP_SCRIPT_ON_RESUME, NavelRock_Bottom_Frlg_OnResume
+	map_script MAP_SCRIPT_ON_TRANSITION, NavelRock_Base_Frlg_OnTransition
+	map_script MAP_SCRIPT_ON_RESUME, NavelRock_Base_Frlg_OnResume
 	.byte 0
 
-NavelRock_Bottom_Frlg_OnTransition::
-	call_if_set FLAG_FOUGHT_LUGIA, NavelRock_Bottom_Frlg_EventScript_HideLugia
-	call_if_unset FLAG_FOUGHT_LUGIA, NavelRock_Bottom_Frlg_EventScript_TryShowLugia
+NavelRock_Base_Frlg_OnTransition::
+	call_if_set FLAG_FOUGHT_LUGIA, NavelRock_Base_Frlg_EventScript_HideLugia
+	call_if_unset FLAG_FOUGHT_LUGIA, NavelRock_Base_Frlg_EventScript_TryShowLugia
 	end
 
-NavelRock_Bottom_Frlg_EventScript_HideLugia::
+NavelRock_Base_Frlg_EventScript_HideLugia::
 	setflag FLAG_HIDE_LUGIA
 	return
 
-NavelRock_Bottom_Frlg_EventScript_TryShowLugia::
+NavelRock_Base_Frlg_EventScript_TryShowLugia::
 	goto_if_set FLAG_LUGIA_FLEW_AWAY, Common_EventScript_NopReturn
 	clearflag FLAG_HIDE_LUGIA
 	return
 
-NavelRock_Bottom_Frlg_OnResume::
-	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, NavelRock_Bottom_Frlg_EventScript_TryRemoveLugia
+NavelRock_Base_Frlg_OnResume::
+	call_if_set FLAG_SYS_CTRL_OBJ_DELETE, NavelRock_Base_Frlg_EventScript_TryRemoveLugia
 	end
 
-NavelRock_Bottom_Frlg_EventScript_TryRemoveLugia::
+NavelRock_Base_Frlg_EventScript_TryRemoveLugia::
 	specialvar VAR_RESULT, GetBattleOutcome
 	goto_if_ne VAR_RESULT, B_OUTCOME_CAUGHT, Common_EventScript_NopReturn
 	removeobject LOCALID_NAVEL_ROCK_LUGIA
 	return
 
-NavelRock_Bottom_Frlg_EventScript_Lugia::
+NavelRock_Base_Frlg_EventScript_Lugia::
 	lock
 	faceplayer
 	waitse
@@ -57,20 +57,20 @@ NavelRock_Bottom_Frlg_EventScript_Lugia::
 	waitstate
 	clearflag FLAG_SYS_CTRL_OBJ_DELETE
 	specialvar VAR_RESULT, GetBattleOutcome
-	goto_if_eq VAR_RESULT, B_OUTCOME_WON, NavelRock_Bottom_Frlg_EventScript_DefeatedLugia
-	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, NavelRock_Bottom_Frlg_EventScript_RanFromLugia
-	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, NavelRock_Bottom_Frlg_EventScript_RanFromLugia
+	goto_if_eq VAR_RESULT, B_OUTCOME_WON, NavelRock_Base_Frlg_EventScript_DefeatedLugia
+	goto_if_eq VAR_RESULT, B_OUTCOME_RAN, NavelRock_Base_Frlg_EventScript_RanFromLugia
+	goto_if_eq VAR_RESULT, B_OUTCOME_PLAYER_TELEPORTED, NavelRock_Base_Frlg_EventScript_RanFromLugia
 	setflag FLAG_FOUGHT_LUGIA
 	release
 	end
 
-NavelRock_Bottom_Frlg_EventScript_DefeatedLugia::
+NavelRock_Base_Frlg_EventScript_DefeatedLugia::
 	setflag FLAG_LUGIA_FLEW_AWAY
 	setvar VAR_0x8004, SPECIES_LUGIA
 	goto EventScript_MonFlewAway
 	end
 
-NavelRock_Bottom_Frlg_EventScript_RanFromLugia::
+NavelRock_Base_Frlg_EventScript_RanFromLugia::
 	setvar VAR_0x8004, SPECIES_LUGIA
 	goto EventScript_MonFlewAway
 	end
