@@ -622,18 +622,12 @@ struct QueuedEvent
     } as;
 };
 
-struct TurnRNG
-{
-    u16 tag;
-    u16 value;
-};
-
 struct BattlerTurn
 {
     u8 hit:2;
     u8 criticalHit:2;
     u8 secondaryEffect:2;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
 };
 
 struct ExpectedAIAction
@@ -972,7 +966,7 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SKIP_TURN(battler) SkipTurn(__LINE__, battler)
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
-#define WITH_RNG(tag, value) rng: ((struct TurnRNG) { tag, value })
+#define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
 
 struct MoveContext
 {
@@ -997,7 +991,7 @@ struct MoveContext
     u16 explicitNotExpected:1;
     struct BattlePokemon *target;
     bool8 explicitTarget;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
     bool8 explicitRNG;
 };
 
@@ -1009,7 +1003,7 @@ struct ItemContext
     u16 explicitPartyIndex:1;
     u16 move;
     u16 explicitMove:1;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
     u16 explicitRNG:1;
 };
 
