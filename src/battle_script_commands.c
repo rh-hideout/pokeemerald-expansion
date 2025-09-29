@@ -2861,7 +2861,8 @@ void StealTargetItem(u8 battlerStealer, u8 battlerItem)
     BtlController_EmitSetMonData(battlerItem, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[battlerItem].item);  // remove target item
     MarkBattlerForControllerExec(battlerItem);
 
-    gBattleStruct->choicedMove[battlerItem] = 0;
+    if (gBattleMons[gBattlerTarget].ability != ABILITY_GORILLA_TACTICS)
+        gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
 
     TrySaveExchangedItem(battlerItem, gLastUsedItem);
 }
@@ -5705,7 +5706,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
             gLastUsedItem = gBattleMons[gBattlerTarget].item;
             gBattleMons[gBattlerTarget].item = 0;
             if (gBattleMons[gBattlerTarget].ability != ABILITY_GORILLA_TACTICS)
-                gBattleStruct->choicedMove[gBattlerTarget] = 0;
+                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
             CheckSetUnburden(gBattlerTarget);
 
             // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable.
@@ -12865,8 +12866,10 @@ static void Cmd_tryswapitems(void)
             BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
             MarkBattlerForControllerExec(gBattlerTarget);
 
-            gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-            gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
+            if (gBattleMons[gBattlerTarget].ability != ABILITY_GORILLA_TACTICS)
+                gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
+            if (gBattleMons[gBattlerAttacker].ability != ABILITY_GORILLA_TACTICS)
+                gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
