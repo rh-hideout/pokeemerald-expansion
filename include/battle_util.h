@@ -388,6 +388,7 @@ bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
+bool32 IsAnyTargetAffected(u32 battlerAtk);
 u32 RestoreWhiteHerbStats(u32 battler);
 bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
