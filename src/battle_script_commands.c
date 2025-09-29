@@ -5355,9 +5355,6 @@ static void Cmd_setroost(void)
     CMD_ARGS();
 
     gDisableStructs[gBattlerAttacker].roostActive = TRUE;
-    gBattleStruct->roostTypes[gBattlerAttacker][0] = gBattleMons[gBattlerAttacker].types[0];
-    gBattleStruct->roostTypes[gBattlerAttacker][1] = gBattleMons[gBattlerAttacker].types[1];
-
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

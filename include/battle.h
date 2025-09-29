@@ -685,10 +685,10 @@ struct BattleStruct
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
     u8 battlerKOAnimsRunning:3;
-    u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
+    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u16 startingStatusTimer;
     u8 atkCancellerTracker;
     struct BattleTvMovePoints tvMovePoints;
@@ -702,7 +702,6 @@ struct BattleStruct
     u8 debugBattler;
     u8 magnitudeBasePower;
     u8 presentBasePower;
-    u8 roostTypes[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
     u8 savedTargetCount:4;
@@ -780,8 +779,7 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
-    u8 padding2:1;
+    u8 padding2:2;
 };
 
 struct AiBattleData
