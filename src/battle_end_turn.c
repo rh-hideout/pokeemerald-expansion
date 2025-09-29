@@ -235,7 +235,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && !IS_BATTLER_ANY_TYPE(battler, TYPE_ROCK, TYPE_GROUND, TYPE_STEEL)
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-         && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
+         && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
             gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -260,7 +260,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && !IS_BATTLER_OF_TYPE(battler, TYPE_ICE)
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERGROUND
              && gBattleMons[battler].volatiles.semiInvulnerable != STATE_UNDERWATER
-             && GetBattlerHoldEffect(battler, TRUE) != HOLD_EFFECT_SAFETY_GOGGLES
+             && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
@@ -492,7 +492,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
          && !IsBattlerAtMaxHp(battler)
          && !gBattleMons[battler].volatiles.healBlock
          && !IsSemiInvulnerable(battler, CHECK_ALL)
-         && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler, TRUE)))
+         && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler)))
         {
             gBattlerAttacker = battler;
             gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
@@ -766,7 +766,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
-            if (GetBattlerHoldEffect(gBattleStruct->wrappedBy[battler], TRUE) == HOLD_EFFECT_BINDING_BAND)
+            if (GetBattlerHoldEffect(gBattleStruct->wrappedBy[battler]) == HOLD_EFFECT_BINDING_BAND)
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
                 gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -1019,7 +1019,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
          && !IsLeafGuardProtected(battler, ability))
         {
             gEffectBattler = gBattlerTarget = battler;
-            enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
+            enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler);
             if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
@@ -1427,7 +1427,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     }
     case THIRD_EVENT_BLOCK_ITEMS:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler);
         switch (holdEffect)
         {
         case HOLD_EFFECT_FLAME_ORB:
@@ -1492,7 +1492,7 @@ static bool32 HandleEndTurnFourthEventBlock(u32 battler)
     }
     case FOURTH_EVENT_BLOCK_EJECT_PACK:
     {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, TRUE);
+        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler);
         if (holdEffect == HOLD_EFFECT_EJECT_PACK)
         {
             if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))

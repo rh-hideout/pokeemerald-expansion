@@ -1705,7 +1705,7 @@ enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
     if (!IsAiBattlerAware(battlerId))
         holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
     else
-        holdEffect = GetBattlerHoldEffect(battlerId, FALSE);
+        holdEffect = GetBattlerHoldEffectIgnoreNegation(battlerId);
 
     if (gAiThinkingStruct->aiFlags[battlerId] & AI_FLAG_NEGATE_UNAWARE)
         return holdEffect;
