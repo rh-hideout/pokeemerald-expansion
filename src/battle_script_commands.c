@@ -2861,7 +2861,7 @@ void StealTargetItem(u8 battlerStealer, u8 battlerItem)
     BtlController_EmitSetMonData(battlerItem, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[battlerItem].item);  // remove target item
     MarkBattlerForControllerExec(battlerItem);
 
-    if (gBattleMons[gBattlerTarget].ability != ABILITY_GORILLA_TACTICS)
+    if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
         gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
 
     TrySaveExchangedItem(battlerItem, gLastUsedItem);
