@@ -6575,7 +6575,7 @@ u32 TryBoosterEnergy(u32 battler, enum Ability ability, enum ItemCaseId caseID)
     return ITEM_NO_EFFECT;
 }
 
-u32 RestoreWhiteHerbStats(u32 battler)
+static u32 RestoreWhiteHerbStats(u32 battler, enum ItemCaseId caseID)
 {
     u32 i, effect = 0;
 
@@ -6592,7 +6592,13 @@ u32 RestoreWhiteHerbStats(u32 battler)
         gLastUsedItem = gBattleMons[battler].item;
         gBattleScripting.battler = battler;
         gPotentialItemEffectBattler = battler;
+        if (caseID == ITEMEFFECT_WHITE_HERB)
+            BattleScriptCall(BattleScript_WhiteHerbRet);
+        else
+            BattleScriptExecute(BattleScript_WhiteHerbEnd2);
+
     }
+
     return effect;
 }
 
@@ -6932,16 +6938,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                     gBattleStruct->moneyMultiplierItem = 1;
                 }
                 break;
-            case HOLD_EFFECT_WHITE_HERB:
-                effect = RestoreWhiteHerbStats(battler);
-                if (effect != 0)
-                {
-                    if (caseID == ITEMEFFECT_ON_SWITCH_IN)
-                        BattleScriptCall(BattleScript_WhiteHerbRet);
-                    else
-                        BattleScriptExecute(BattleScript_WhiteHerbEnd2);
-                }
-                break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 if (B_BERRIES_INSTANT >= GEN_4)
                     effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
@@ -7176,11 +7172,6 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
                 break;
             case HOLD_EFFECT_RESTORE_PP:
                 effect = ItemRestorePp(battler, gLastUsedItem, caseID);
-                break;
-            case HOLD_EFFECT_WHITE_HERB:
-                effect = RestoreWhiteHerbStats(battler);
-                if (effect != 0)
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
                 break;
             case HOLD_EFFECT_CONFUSE_SPICY:
                 effect = HealConfuseBerry(battler, gLastUsedItem, FLAVOR_SPICY, caseID);
@@ -7638,32 +7629,14 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         break;
     case ITEMEFFECT_WHITE_HERB:
     case ITEMEFFECT_WHITE_HERB_ENDTURN:
-        switch (battlerHoldEffect)
-        {
-        case HOLD_EFFECT_WHITE_HERB:
-            effect = RestoreWhiteHerbStats(battler);
-            if (effect != 0)
-            {
-                if (caseID == ITEMEFFECT_WHITE_HERB)
-                    BattleScriptCall(BattleScript_WhiteHerbRet);
-                else
-                    BattleScriptExecute(BattleScript_WhiteHerbEnd2);
-            }
-            break;
-        default:
-            break;
-        }
+    case ITEMEFFECT_WHITE_HERB_FIRST_TURN:
+        if (battlerHoldEffect == HOLD_EFFECT_WHITE_HERB)
+            effect = RestoreWhiteHerbStats(battler, caseID);
         break;
     case ITEMEFFECT_MIRROR_HERB:
     case ITEMEFFECT_MIRROR_HERB_FIRST_TURN:
-        switch (battlerHoldEffect)
-        {
-        case HOLD_EFFECT_MIRROR_HERB:
+        if (battlerHoldEffect == HOLD_EFFECT_MIRROR_HERB)
             effect = TryConsumeMirrorHerb(battler, caseID);
-            break;
-        default:
-            break;
-        }
         break;
     }
 

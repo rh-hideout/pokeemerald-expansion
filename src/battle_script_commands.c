@@ -7824,12 +7824,17 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
 
         for (i = 0; i < gBattlersCount; i++)
         {
+            if (ItemBattleEffects(ITEMEFFECT_WHITE_HERB, i))
+                return TRUE;
+        }
+        for (i = 0; i < gBattlersCount; i++)
+        {
             if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, i, GetBattlerAbility(i), 0, 0))
                 return TRUE;
         }
         for (i = 0; i < gBattlersCount; i++)
         {
-            if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, battler))
+            if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, i))
                 return TRUE;
         }
 
@@ -15350,15 +15355,6 @@ void BS_TryAllySwitch(void)
     {
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-}
-
-void BS_RunStatChangeItems(void)
-{
-    NATIVE_ARGS(u8 battler);
-
-    // Change instruction before calling ItemBattleEffects.
-    gBattlescriptCurrInstr = cmd->nextInstr;
-    ItemBattleEffects(ITEMEFFECT_WHITE_HERB, GetBattlerForBattleScript(cmd->battler));
 }
 
 static void TryUpdateEvolutionTracker(u32 evolutionCondition, u32 upAmount, u16 usedMove)
