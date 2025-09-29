@@ -12868,7 +12868,7 @@ static void Cmd_tryswapitems(void)
 
             if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
-            if (gBattleMons[gBattlerAttacker].ability != ABILITY_GORILLA_TACTICS)
+            if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
                 gBattleStruct->choicedMove[gBattlerAttacker] = MOVE_NONE;
 
             gBattlescriptCurrInstr = cmd->nextInstr;
