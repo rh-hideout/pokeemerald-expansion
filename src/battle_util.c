@@ -65,7 +65,6 @@ static u32 GetFlingPowerFromItemId(u32 itemId);
 static void SetRandomMultiHitCounter();
 static u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
 static bool32 CanBeInfinitelyConfused(u32 battler);
-static bool32 IsAnyTargetAffected(u32 battlerAtk);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
 
@@ -6501,21 +6500,6 @@ static u8 ItemEffectMoveEnd(u32 battler, enum ItemHoldEffect holdEffect)
     case HOLD_EFFECT_MIRROR_HERB:
         effect = TryConsumeMirrorHerb(battler, ITEMEFFECT_NONE);
         break;
-    case HOLD_EFFECT_THROAT_SPRAY:
-        if (IsSoundMove(gCurrentMove)
-         && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-         && IsBattlerAlive(gBattlerAttacker)
-         && IsAnyTargetAffected(gBattlerAttacker)
-         && CompareStat(gBattlerAttacker, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)
-         && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
-        {
-            gLastUsedItem = gBattleMons[gBattlerAttacker].item;
-            gBattleScripting.battler = gBattlerAttacker;
-            SET_STATCHANGER(STAT_SPATK, 1, FALSE);
-            effect = ITEM_STATS_CHANGE;
-            BattleScriptCall(BattleScript_AttackerItemStatRaise);
-        }
-        break;
     default:
         break;
     }
@@ -11412,7 +11396,7 @@ bool32 HasWeatherEffect(void)
     return TRUE;
 }
 
-static bool32 IsAnyTargetAffected(u32 battlerAtk)
+bool32 IsAnyTargetAffected(u32 battlerAtk)
 {
     for (u32 battlerDef = 0; battlerDef < gBattlersCount; battlerDef++)
     {
