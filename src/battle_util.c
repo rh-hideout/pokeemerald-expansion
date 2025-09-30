@@ -6596,8 +6596,7 @@ static u32 RestoreWhiteHerbStats(u32 battler, enum ItemCaseId caseID)
             BattleScriptCall(BattleScript_WhiteHerbRet);
         else
             BattleScriptExecute(BattleScript_WhiteHerbEnd2);
-
-    }
+}
 
     return effect;
 }
