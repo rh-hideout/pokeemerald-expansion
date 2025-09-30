@@ -6715,6 +6715,8 @@ static void Cmd_moveend(void)
             while (gBattleStruct->moveEndBattlerId < gBattlersCount)
             {
                 u32 battler = gBattleStruct->moveEndBattlerId++;
+                if (!IsBattlerAlive(battler))
+                    continue;
                 if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, 0))
                     return;
             }
@@ -6725,6 +6727,8 @@ static void Cmd_moveend(void)
             while (gBattleStruct->moveEndBattlerId < gBattlersCount)
             {
                 u32 battler = gBattleStruct->moveEndBattlerId++;
+                if (!IsBattlerAlive(battler))
+                    continue;
                 if (ItemBattleEffects(ITEMEFFECT_MIRROR_HERB, battler))
                     return;
             }
