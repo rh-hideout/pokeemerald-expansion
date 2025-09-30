@@ -5092,12 +5092,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
         }
         break;
     case ABILITYEFFECT_IMMUNITY:
-        for (battler = 0; battler < gBattlersCount; battler++)
-        {
-            effect = DoImmunityAbilityHealStatus(battler, caseID);
-            if (effect)
-                return effect;
-        }
+        effect = DoImmunityAbilityHealStatus(battler, caseID);
+        if (effect)
+            return effect;
         break;
     case ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES:
         effect = DoImmunityAbilityHealStatus(battler, caseID);

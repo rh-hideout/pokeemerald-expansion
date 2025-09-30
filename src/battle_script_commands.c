@@ -6120,9 +6120,12 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_STATUS_IMMUNITY_ABILITIES: // status immunities
-            if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, 0, 0, 0, 0))
-                effect = TRUE; // it loops through all battlers, so we increment after its done with all battlers
-            else
+            for (u16 battler = 0; battler < gBattlersCount; battler++)
+            {
+                if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, 0))
+                    effect = TRUE;
+            }
+            if(!effect)
                 gBattleScripting.moveendState++;
             break;
         case MOVEEND_SYNCHRONIZE_ATTACKER: // attacker synchronize
@@ -17227,7 +17230,7 @@ void BS_SwitchinAbilities(void)
     AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, 0, 0, 0);
     AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, 0, 0, 0);
     AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, 0, 0, 0);
-    AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES, battler, 0, 0, 0);
+    AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, 0);
 
     if (gBattleWeather & B_WEATHER_ANY && HasWeatherEffect())
         AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, 0, 0, 0);
