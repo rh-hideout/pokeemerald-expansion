@@ -2301,7 +2301,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryhealquarterhealth battler:req, failInstr:req
+	.macro tryhealquarterhealth failInstr:req, battler:req
 	callnative BS_TryHealQuarterHealth
 	.byte \battler
 	.4byte \failInstr

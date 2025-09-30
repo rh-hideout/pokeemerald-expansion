@@ -525,7 +525,7 @@ BattleScript_Teatimevul:
 	goto BattleScript_MoveEnd
 BattleScript_Teatimesorb:
 	call BattleScript_AbilityPopUpTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_Teatimesorb_end
+	tryhealquarterhealth BattleScript_Teatimesorb_end, BS_TARGET
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
 	printstring STRINGID_PKMNREGAINEDHEALTH
@@ -971,7 +971,7 @@ BattleScript_EffectJungleHealing::
 	setbyte gBattleCommunication, 0
 JungleHealing_RestoreTargetHealth:
 	copybyte gBattlerAttacker, gBattlerTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_JungleHealing_TryCureStatus
+	tryhealquarterhealth BattleScript_JungleHealing_TryCureStatus, BS_TARGET
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
@@ -1016,7 +1016,7 @@ BattleScript_EffectLifeDewCheckPartner:
 
 BattleScript_EffectLifeDewHealing:
     orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
-    tryhealquarterhealth BS_TARGET, BattleScript_EffectLifeDewEnd
+    tryhealquarterhealth BattleScript_EffectLifeDewEnd, BS_TARGET
     healthbarupdate BS_TARGET
     datahpupdate BS_TARGET
     printstring STRINGID_PKMNREGAINEDHEALTH
@@ -3060,7 +3060,7 @@ BattleScript_MoveEffectAuroraVeil::
 
 BattleScript_VoltAbsorbHeal:
 	copybyte gBattlerAbility, gBattlerTarget
-	tryhealquarterhealth BS_TARGET, BattleScript_MonMadeMoveUseless @ Check if max hp
+	tryhealquarterhealth BattleScript_MonMadeMoveUseless, BS_TARGET @ Check if max hp
 	goto BattleScript_MoveHPDrain
 
 BattleScript_AlreadyParalyzed::
@@ -5462,7 +5462,7 @@ BattleScript_ToxicDebrisRet:
 BattleScript_EarthEaterActivates::
 	call BattleScript_AbilityPopUp
 	pause B_WAIT_TIME_LONG
-	tryhealquarterhealth BS_TARGET, BattleScript_EarthEaterRet
+	tryhealquarterhealth BattleScript_EarthEaterRet, BS_TARGET
 	orword gHitMarker, HITMARKER_IGNORE_BIDE | HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE
 	healthbarupdate BS_TARGET
 	datahpupdate BS_TARGET
