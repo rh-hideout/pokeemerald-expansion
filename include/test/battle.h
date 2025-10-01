@@ -1005,6 +1005,8 @@ struct ItemContext
     u16 explicitPartyIndex:1;
     u16 move;
     u16 explicitMove:1;
+    struct TurnRNG rng;
+    u16 explicitRNG:1;
 };
 
 void OpenTurn(u32 sourceLine);

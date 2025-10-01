@@ -4477,7 +4477,7 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
         {
         // Gen 2
         case IF_GENDER:
-            if (gender == GetMonGender(mon))
+            if (gender == params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_MIN_FRIENDSHIP:
@@ -6347,6 +6347,14 @@ void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 pers
         if (NationalPokedexNumToSpecies(nationalNum) == SPECIES_SPINDA)
             gSaveBlock2Ptr->pokedex.spindaPersonality = personality;
     }
+}
+
+void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId)
+{
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY);
+    enum NationalDexOrder nationalNum = SpeciesToNationalPokedexNum(GetMonData(mon, MON_DATA_SPECIES));
+
+    HandleSetPokedexFlag(nationalNum, caseId, personality);
 }
 
 bool8 HasTwoFramesAnimation(u16 species)

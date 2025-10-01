@@ -141,7 +141,6 @@ struct ProtectStruct
 {
     u32 protected:7; // 126 protect options
     u32 noValidMoves:1;
-    u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
     u32 nonVolatileStatusImmobility:1;
@@ -163,13 +162,14 @@ struct ProtectStruct
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
-    // End of 32-bit bitfield
     u16 usedAllySwitch:1;
+    // End of 32-bit bitfield
+    u32 helpingHand:3;
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
     u16 laggingTail:1;
-    u16 padding:11;
+    u16 padding:9;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -600,7 +600,8 @@ struct PartyState
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 padding:10;
+    u32 sentOut:1;
+    u32 padding:9;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -1124,7 +1125,7 @@ extern u8 gHealthboxSpriteIds[MAX_BATTLERS_COUNT];
 extern u8 gMultiUsePlayerCursor;
 extern u8 gNumberOfMovesToChoose;
 extern bool8 gHasFetchedBall;
-extern u8 gLastUsedBall;
+extern u16 gLastUsedBall;
 extern u16 gLastThrownBall;
 extern u16 gBallToDisplay;
 extern bool8 gLastUsedBallMenuPresent;
