@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - upcoming
+      - frlg
   pull_request:
 
 jobs:
@@ -12,7 +13,6 @@ jobs:
     if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
     env:
-      GAME_VERSION: EMERALD
       GAME_REVISION: 0
       GAME_LANGUAGE: ENGLISH
       COMPARE: 0
@@ -27,12 +27,15 @@ jobs:
           sudo apt install -y binutils-arm-none-eabi gcc-arm-none-eabi libnewlib-arm-none-eabi libpng-dev python3
         # build-essential and git are already installed
 
-      - name: ROM
+      - name: ROM (Emerald)
         env:
           COMPARE: 0
+          GAME_VERSION: EMERALD
         run: make -j${nproc} -O all
-        
+
       - name: LTO
+        env:
+          GAME_VERSION: EMERALD
         run: |
           make tidy
           make -j${nproc} LTO=1
@@ -40,9 +43,23 @@ jobs:
 
       - name: Test
         env:
+          GAME_VERSION: EMERALD
           TEST: 1
         run: |
           make -j${nproc} check
+
+      - name: ROM (Firered)
+        env:
+          COMPARE: 0
+        run: |
+          make clean
+          make firered -j${nproc} -O
+
+      - name: ROM (Leafgreen)
+        env:
+          COMPARE: 0
+        run: |
+          make leafgreen -j${nproc} -O
   allcontributors:
     if: github.actor == 'allcontributors[bot]'
     runs-on: ubuntu-latest

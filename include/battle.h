@@ -19,6 +19,7 @@
 #include "battle_terastal.h"
 #include "battle_gimmick.h"
 #include "generational_changes.h"
+#include "item.h"
 #include "move.h"
 #include "random.h" // for rng_value_t
 #include "trainer_slide.h"
@@ -1247,6 +1248,11 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 static inline u32 GetChosenMoveFromPosition(u32 battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+}
+
+static inline bool32 IsGhostBattleWithoutScope()
+{
+    return (gBattleTypeFlags & BATTLE_TYPE_GHOST) && !CheckBagHasItem(ITEM_SILPH_SCOPE, 1);
 }
 
 #endif // GUARD_BATTLE_H
