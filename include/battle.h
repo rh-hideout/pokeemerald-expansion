@@ -149,7 +149,7 @@ struct ProtectStruct
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
     u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
-    u32 notFirstStrike:1;
+    u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
@@ -168,8 +168,7 @@ struct ProtectStruct
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
-    u16 laggingTail:1;
-    u16 padding:9;
+    u16 padding:10;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -187,10 +186,10 @@ struct SpecialStatus
     u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 dancerUsedMove:1;
+    u8 padding:1;
     // End of byte
     u8 switchInAbilityDone:1;
     u8 switchInItemDone:1;

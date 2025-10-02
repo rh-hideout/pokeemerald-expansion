@@ -2477,8 +2477,6 @@ static enum MoveCanceller CancellerPPDeduction(struct BattleContext *ctx)
              ppToDeduct++;
     }
 
-    gProtectStructs[ctx->battlerAtk].notFirstStrike = TRUE;
-
     // For item Metronome, echoed voice
     if (ctx->currentMove != gLastResultingMoves[ctx->battlerAtk] || WasUnableToUseMove(ctx->battlerAtk))
         gBattleStruct->sameMoveTurns[ctx->battlerAtk] = 0;
