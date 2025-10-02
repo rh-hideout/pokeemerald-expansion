@@ -78,7 +78,6 @@ static const struct FriendshipHookChanceBoost sFriendshipHookChanceBoostArray[] 
     {.threshold =   0, .bonus =  0},
 };
 
-#define FISHING_CHAIN_LENGTH_MAX 200
 #define FISHING_CHAIN_SHINY_STREAK_MAX 20
 
 enum
@@ -627,7 +626,7 @@ void UpdateChainFishingStreak()
     if (!I_FISHING_CHAIN)
         return;
 
-    if (gChainFishingDexNavStreak >= FISHING_CHAIN_LENGTH_MAX)
+    if (gChainFishingDexNavStreak == MAX_u8)
         return;
 
     gChainFishingDexNavStreak++;
