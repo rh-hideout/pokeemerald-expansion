@@ -19,7 +19,7 @@ If you've done this before and just need a quick lookup, here's what files you n
 ## The Graphics
 
 ### 1. Edit the sprites
-We will start with a graphic that we want to use for our new trainer pic. Unlike with adding Pokémon, the trainer sprites aren't sorted in individual folders, but rather in one folder: [`graphics/trainers/front_pics`](./graphics/trainers/front_pics).  **Trainers sprites cannot be more than 16 - this includes the color that will be transparent, which is the first slot of the palette.**
+We will start with a graphic that we want to use for our new trainer pic. Unlike with adding Pokémon, the trainer sprites aren't sorted in individual folders, but rather in one folder: [`graphics/trainers/front_pics`](./graphics/trainers/front_pics).  **Trainers sprites cannot have more than 16 colors - this includes the color that will be transparent, which is the first slot of the palette.**
 
 ### 2. Register the sprites
 Sadly, just putting the image files into the graphics folder is not enough. To use the sprites we have to register them by linking the graphic files in [`src/data/graphics/trainers`](./data/graphics/trainers.h):

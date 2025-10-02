@@ -59,7 +59,7 @@ AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- 10,000,000 Volt Thunderbolt")
 }
 AI_SINGLE_BATTLE_TEST("AI uses Z-Moves -- Z-Conversion")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NONE; }
     PARAMETRIZE { ability = ABILITY_OPPORTUNIST; }
 

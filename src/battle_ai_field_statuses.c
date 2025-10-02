@@ -24,8 +24,8 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 
-static bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather);
-static bool32 DoesAbilityBenefitFromFieldStatus(u32 ability, u32 fieldStatus);
+static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather);
+static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus);
 // A move is light sensitive if it is boosted by Sunny Day and weakened by low light weathers.
 static bool32 IsLightSensitiveMove(u32 move);
 static bool32 HasLightSensitiveMove(u32 battler);
@@ -128,7 +128,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
     return (result == desiredResult);
 }
 
-static bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather)
+static bool32 DoesAbilityBenefitFromWeather(enum Ability ability, u32 weather)
 {
     switch (ability)
     {
@@ -166,7 +166,7 @@ static bool32 DoesAbilityBenefitFromWeather(u32 ability, u32 weather)
     return FALSE;
 }
 
-static bool32 DoesAbilityBenefitFromFieldStatus(u32 ability, u32 fieldStatus)
+static bool32 DoesAbilityBenefitFromFieldStatus(enum Ability ability, u32 fieldStatus)
 {
     switch (ability)
     {
@@ -220,7 +220,7 @@ static bool32 HasLightSensitiveMove(u32 battler)
 // Utility Umbrella does NOT block Ancient Pokemon from their stat boosts.
 static enum FieldEffectOutcome BenefitsFromSun(u32 battler)
 {
-    u32 ability = gAiLogicData->abilities[battler];
+    enum Ability ability = gAiLogicData->abilities[battler];
 
     if (gAiLogicData->holdEffects[battler] == HOLD_EFFECT_UTILITY_UMBRELLA)
     {
