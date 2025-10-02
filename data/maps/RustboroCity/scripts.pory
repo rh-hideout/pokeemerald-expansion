@@ -1295,12 +1295,12 @@ RustboroCity_Text_YouCanHave2On2Battle:
 
 script RustboroCity_EventScript_GymBlockade
 {
-    faceplayer
+    applymovement(17, moves(face_player))
     lockall
-    msgbox(format("Howdy trainer! Roxanne is currently taking her lunch break. I heard there's something
-    going down on Route 116, so maybe check that out in the meantime?"), MSGBOX_DEFAULT)
+    msgbox(format("Howdy trainer! We are currently undergoing construction after the last explosive battle. It seems a trainer
+	from the Kanto region brought the heat! Check the nearby routes in the meantime."), MSGBOX_DEFAULT)
     waitmessage
-    turnobject(17, DIR_SOUTH)
+    turnobject(17, DIR_NORTH)
     releaseall
     end
 }

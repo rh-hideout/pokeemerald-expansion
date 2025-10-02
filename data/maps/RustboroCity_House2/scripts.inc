@@ -91,7 +91,7 @@ RustboroCity_House2_EventScript_KantoStarter_GenerateEgg::
 # 77 "data/maps/RustboroCity_House2/scripts.pory"
 	faceplayer
 # 78 "data/maps/RustboroCity_House2/scripts.pory"
-	random 2
+	random 3
 # 79 "data/maps/RustboroCity_House2/scripts.pory"
 	compare VAR_RESULT, 0
 	goto_if_eq RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_2
@@ -101,8 +101,12 @@ RustboroCity_House2_EventScript_KantoStarter_GenerateEgg::
 # 97 "data/maps/RustboroCity_House2/scripts.pory"
 	compare VAR_RESULT, 2
 	goto_if_eq RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_4
-# 106 "data/maps/RustboroCity_House2/scripts.pory"
-	msgbox RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_1, MSGBOX_DEFAULT
+# 108 "data/maps/RustboroCity_House2/scripts.pory"
+	msgbox RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_1
+	return
+
+# 111 "data/maps/RustboroCity_House2/scripts.pory"
+	msgbox RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_2, MSGBOX_DEFAULT
 	return
 
 RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_2:
@@ -146,62 +150,62 @@ RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_4:
 
 
 RustboroCity_House2_EventScript_Bulbasaur::
-# 112 "data/maps/RustboroCity_House2/scripts.pory"
-	applymovement 3, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
-# 113 "data/maps/RustboroCity_House2/scripts.pory"
-	lock
-# 114 "data/maps/RustboroCity_House2/scripts.pory"
-	playmoncry SPECIES_BULBASAUR, CRY_MODE_ENCOUNTER
-# 115 "data/maps/RustboroCity_House2/scripts.pory"
-	waitmoncry
-# 116 "data/maps/RustboroCity_House2/scripts.pory"
-	msgbox RustboroCity_House2_EventScript_Bulbasaur_Text_0, MSGBOX_DEFAULT
 # 117 "data/maps/RustboroCity_House2/scripts.pory"
-	turnobject 3, DIR_WEST
+	applymovement 3, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
 # 118 "data/maps/RustboroCity_House2/scripts.pory"
+	lock
+# 119 "data/maps/RustboroCity_House2/scripts.pory"
+	playmoncry SPECIES_BULBASAUR, CRY_MODE_ENCOUNTER
+# 120 "data/maps/RustboroCity_House2/scripts.pory"
+	waitmoncry
+# 121 "data/maps/RustboroCity_House2/scripts.pory"
+	msgbox RustboroCity_House2_EventScript_Bulbasaur_Text_0, MSGBOX_DEFAULT
+# 122 "data/maps/RustboroCity_House2/scripts.pory"
+	turnobject 3, DIR_WEST
+# 123 "data/maps/RustboroCity_House2/scripts.pory"
 	release
 	end
 
 
 RustboroCity_House2_EventScript_Squirtle::
-# 123 "data/maps/RustboroCity_House2/scripts.pory"
-	applymovement 4, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
-# 124 "data/maps/RustboroCity_House2/scripts.pory"
-	lock
-# 125 "data/maps/RustboroCity_House2/scripts.pory"
-	playmoncry SPECIES_SQUIRTLE, CRY_MODE_ENCOUNTER
-# 126 "data/maps/RustboroCity_House2/scripts.pory"
-	waitmoncry
-# 127 "data/maps/RustboroCity_House2/scripts.pory"
-	msgbox RustboroCity_House2_EventScript_Squirtle_Text_0, MSGBOX_DEFAULT
 # 128 "data/maps/RustboroCity_House2/scripts.pory"
-	turnobject 4, DIR_SOUTH
+	applymovement 4, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
 # 129 "data/maps/RustboroCity_House2/scripts.pory"
+	lock
+# 130 "data/maps/RustboroCity_House2/scripts.pory"
+	playmoncry SPECIES_SQUIRTLE, CRY_MODE_ENCOUNTER
+# 131 "data/maps/RustboroCity_House2/scripts.pory"
+	waitmoncry
+# 132 "data/maps/RustboroCity_House2/scripts.pory"
+	msgbox RustboroCity_House2_EventScript_Squirtle_Text_0, MSGBOX_DEFAULT
+# 133 "data/maps/RustboroCity_House2/scripts.pory"
+	turnobject 4, DIR_SOUTH
+# 134 "data/maps/RustboroCity_House2/scripts.pory"
 	release
 	end
 
 
 RustboroCity_House2_EventScript_Charmander::
-# 134 "data/maps/RustboroCity_House2/scripts.pory"
-	applymovement 5, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
-# 135 "data/maps/RustboroCity_House2/scripts.pory"
-	lock
-# 136 "data/maps/RustboroCity_House2/scripts.pory"
-	playmoncry SPECIES_CHARMANDER, CRY_MODE_ENCOUNTER
-# 137 "data/maps/RustboroCity_House2/scripts.pory"
-	waitmoncry
-# 138 "data/maps/RustboroCity_House2/scripts.pory"
-	msgbox RustboroCity_House2_EventScript_Charmander_Text_0, MSGBOX_DEFAULT
 # 139 "data/maps/RustboroCity_House2/scripts.pory"
-	turnobject 5, DIR_NORTH
+	applymovement 5, RustboroCity_House2_EventScript_Bulbasaur_Movement_0
 # 140 "data/maps/RustboroCity_House2/scripts.pory"
+	lock
+# 141 "data/maps/RustboroCity_House2/scripts.pory"
+	playmoncry SPECIES_CHARMANDER, CRY_MODE_ENCOUNTER
+# 142 "data/maps/RustboroCity_House2/scripts.pory"
+	waitmoncry
+# 143 "data/maps/RustboroCity_House2/scripts.pory"
+	msgbox RustboroCity_House2_EventScript_Charmander_Text_0, MSGBOX_DEFAULT
+# 144 "data/maps/RustboroCity_House2/scripts.pory"
+	turnobject 5, DIR_NORTH
+# 145 "data/maps/RustboroCity_House2/scripts.pory"
 	release
 	end
 
 
-# 112 "data/maps/RustboroCity_House2/scripts.pory"
+# 117 "data/maps/RustboroCity_House2/scripts.pory"
 RustboroCity_House2_EventScript_Bulbasaur_Movement_0:
-# 112 "data/maps/RustboroCity_House2/scripts.pory"
+# 117 "data/maps/RustboroCity_House2/scripts.pory"
 	face_player
 	step_end
 
@@ -245,19 +249,23 @@ RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_0:
 	.string "{PLAYER} obtained the egg!$"
 
 RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_1:
-# 106 "data/maps/RustboroCity_House2/scripts.pory"
+# 108 "data/maps/RustboroCity_House2/scripts.pory"
+	.string "Hmmm, try again.$"
+
+RustboroCity_House2_EventScript_KantoStarter_GenerateEgg_Text_2:
+# 111 "data/maps/RustboroCity_House2/scripts.pory"
 	.string "Please, raise this POKéMON with care.$"
 
 RustboroCity_House2_EventScript_Bulbasaur_Text_0:
-# 116 "data/maps/RustboroCity_House2/scripts.pory"
+# 121 "data/maps/RustboroCity_House2/scripts.pory"
 	.string "Bulbasaur looks like it's smirking.$"
 
 RustboroCity_House2_EventScript_Squirtle_Text_0:
-# 127 "data/maps/RustboroCity_House2/scripts.pory"
+# 132 "data/maps/RustboroCity_House2/scripts.pory"
 	.string "Squirtle looks like they want you to\n"
 	.string "scratch their shell.$"
 
 RustboroCity_House2_EventScript_Charmander_Text_0:
-# 138 "data/maps/RustboroCity_House2/scripts.pory"
+# 143 "data/maps/RustboroCity_House2/scripts.pory"
 	.string "Charmander is looking around for\n"
 	.string "anything flammable.$"

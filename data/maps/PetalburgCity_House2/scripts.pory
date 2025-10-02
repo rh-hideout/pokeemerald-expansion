@@ -45,7 +45,7 @@ script PetalburgCity_House2_EventScript_SchoolKid{
 script PetalburgCity_House2_EventScript_GetEgg{
     lock
     faceplayer
-    msgbox(format("The trainer school gave me an egg that will evolve via friendship, but I 
+    msgbox(format("The trainer school gave me an egg that is good for beginner trainers, but I 
     already have a full party. Would you like to take it?"), MSGBOX_YESNO)
     if(var(VAR_RESULT) == YES)
     {
@@ -63,7 +63,7 @@ script PetalburgCity_House2_EventScript_GetEgg{
 script PetalburgCity_House2_EventScript_GenerateEgg{
     lock
     faceplayer
-    random(7)
+    random(8)
     if(var(VAR_RESULT) == 0)
     {
         playfanfare(MUS_OBTAIN_ITEM)
@@ -105,7 +105,7 @@ script PetalburgCity_House2_EventScript_GenerateEgg{
         playfanfare(MUS_OBTAIN_ITEM)
         msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
         waitfanfare
-        giveegg(SPECIES_BUDEW)
+        giveegg(SPECIES_FLITTLE)
         setflag(FLAG_GET_PETALBURG_EGG)
         return
     }
@@ -132,8 +132,13 @@ script PetalburgCity_House2_EventScript_GenerateEgg{
         playfanfare(MUS_OBTAIN_ITEM)
         msgbox(format("{PLAYER} obtained the egg!"), MSGBOX_DEFAULT)
         waitfanfare
-        giveegg(SPECIES_MUNCHLAX)
+        giveegg(SPECIES_BUNEARY)
         setflag(FLAG_GET_PETALBURG_EGG)
+        return
+    }
+    else
+    {
+        msgbox(format("Hmmm, try again."))
         return
     }
     return

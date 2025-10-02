@@ -52,7 +52,8 @@
     F(SKILL_SWAP) \
     F(SNATCH) \
     F(OVERHEAT)\
-    F(LOW_SWEEP)
+    F(LOW_SWEEP)\
+    F(TAKE_DOWN)
 
 #define FOREACH_HM(F) \
     F(CUT) \

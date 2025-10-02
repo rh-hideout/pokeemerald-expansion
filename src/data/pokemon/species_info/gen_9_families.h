@@ -1103,7 +1103,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .levelUpLearnset = sPawmiLevelUpLearnset,
         .teachableLearnset = sPawmiTeachableLearnset,
         .eggMoveLearnset = sPawmiEggMoveLearnset,
-        .evolutions = EVOLUTION({EVO_LEVEL, 16, SPECIES_PAWMO}),
+        .evolutions = EVOLUTION({EVO_LEVEL, 15, SPECIES_PAWMO}),
     },
 
     [SPECIES_PAWMO] =
@@ -3528,7 +3528,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .expYield = 51,
         .evYield_Speed = 1,
         .genderRatio = PERCENT_FEMALE(50),
-        .eggCycles = 20,
+        .eggCycles = 2,
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),

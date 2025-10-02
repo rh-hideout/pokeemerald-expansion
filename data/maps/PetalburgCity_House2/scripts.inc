@@ -93,7 +93,7 @@ PetalburgCity_House2_EventScript_GenerateEgg::
 # 65 "data/maps/PetalburgCity_House2/scripts.pory"
 	faceplayer
 # 66 "data/maps/PetalburgCity_House2/scripts.pory"
-	random 7
+	random 8
 # 67 "data/maps/PetalburgCity_House2/scripts.pory"
 	compare VAR_RESULT, 0
 	goto_if_eq PetalburgCity_House2_EventScript_GenerateEgg_2
@@ -118,6 +118,10 @@ PetalburgCity_House2_EventScript_GenerateEgg::
 # 130 "data/maps/PetalburgCity_House2/scripts.pory"
 	compare VAR_RESULT, 7
 	goto_if_eq PetalburgCity_House2_EventScript_GenerateEgg_9
+# 141 "data/maps/PetalburgCity_House2/scripts.pory"
+	msgbox PetalburgCity_House2_EventScript_GenerateEgg_Text_1
+	return
+
 	return
 
 PetalburgCity_House2_EventScript_GenerateEgg_2:
@@ -180,7 +184,7 @@ PetalburgCity_House2_EventScript_GenerateEgg_6:
 # 107 "data/maps/PetalburgCity_House2/scripts.pory"
 	waitfanfare
 # 108 "data/maps/PetalburgCity_House2/scripts.pory"
-	giveegg SPECIES_BUDEW
+	giveegg SPECIES_FLITTLE
 # 109 "data/maps/PetalburgCity_House2/scripts.pory"
 	setflag FLAG_GET_PETALBURG_EGG
 	return
@@ -219,7 +223,7 @@ PetalburgCity_House2_EventScript_GenerateEgg_9:
 # 134 "data/maps/PetalburgCity_House2/scripts.pory"
 	waitfanfare
 # 135 "data/maps/PetalburgCity_House2/scripts.pory"
-	giveegg SPECIES_MUNCHLAX
+	giveegg SPECIES_BUNEARY
 # 136 "data/maps/PetalburgCity_House2/scripts.pory"
 	setflag FLAG_GET_PETALBURG_EGG
 	return
@@ -242,9 +246,9 @@ PetalburgCity_House2_EventScript_SchoolKid_Text_2:
 PetalburgCity_House2_EventScript_GetEgg_Text_0:
 # 48 "data/maps/PetalburgCity_House2/scripts.pory"
 	.string "The trainer school gave me an egg that\n"
-	.string "will evolve via friendship, but I already\l"
-	.string "have a full party. Would you like to take\l"
-	.string "it?$"
+	.string "is good for beginner trainers, but I\l"
+	.string "already have a full party. Would you like\l"
+	.string "to take it?$"
 
 PetalburgCity_House2_EventScript_GetEgg_Text_1:
 # 57 "data/maps/PetalburgCity_House2/scripts.pory"
@@ -253,3 +257,7 @@ PetalburgCity_House2_EventScript_GetEgg_Text_1:
 PetalburgCity_House2_EventScript_GenerateEgg_Text_0:
 # 70 "data/maps/PetalburgCity_House2/scripts.pory"
 	.string "{PLAYER} obtained the egg!$"
+
+PetalburgCity_House2_EventScript_GenerateEgg_Text_1:
+# 141 "data/maps/PetalburgCity_House2/scripts.pory"
+	.string "Hmmm, try again.$"

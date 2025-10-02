@@ -2193,17 +2193,6 @@ Route116_Text_JoeyPostBattle:
 	.string "Bandages are signs of toughness!\n"
 	.string "I've got another one!$"
 
-Route116_Text_JoseIntro:
-	.string "My BUG POKéMON are tough!\n"
-	.string "Let's battle!$"
-
-Route116_Text_JoseDefeat:
-	.string "I lost!\n"
-	.string "I thought I had you!$"
-
-Route116_Text_JosePostBattle:
-	.string "BUG POKéMON evolve quickly.\n"
-	.string "So they get strong quickly, too.$"
 
 Route116_Text_JaniceIntro:
 	.string "Let me teach you how strong my\n"
@@ -2327,15 +2316,15 @@ Route116_Text_DevanPostBattle:
 	.string "types, that's what I ought to do.$"
 
 Route116_Text_JohnsonIntro:
-	.string "It's a dead end up here.\n"
-	.string "I'm bored, so can we battle?$"
+	.string "I love baby POKéMON!\n"
+	.string "I'll show you why they're cool!$"
 
 Route116_Text_JohnsonDefeat:
-	.string "That was fun even though I lost.$"
+	.string "I still think they rock!$"
 
 Route116_Text_JohnsonPostBattle:
 	.string "Want to stay here and keep\n"
-	.string "me company?$"
+	.string "my POKéMON company?$"
 
 Route117_Text_IsaacIntro:
 	.string "Listen, could I get you to battle\n"

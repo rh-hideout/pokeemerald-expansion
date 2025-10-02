@@ -75,7 +75,7 @@ script RustboroCity_House2_EventScript_KantoStarter_GenerateEgg
 {
     lock
     faceplayer
-    random(2)
+    random(3)
     if(var(VAR_RESULT) == 0)
     {
         playfanfare(MUS_OBTAIN_ITEM)
@@ -101,6 +101,11 @@ script RustboroCity_House2_EventScript_KantoStarter_GenerateEgg
         waitfanfare
         giveegg(SPECIES_CHARMANDER)
         setflag(FLAG_KANTO_STARTER_GET)
+        return
+    }
+    else
+    {
+        msgbox(format("Hmmm, try again."))
         return
     }
     msgbox(format("Please, raise this POKéMON with care."), MSGBOX_DEFAULT)

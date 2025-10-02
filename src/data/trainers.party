@@ -2148,7 +2148,6 @@ Level: 7
 - Bug Bite  
 - Cut  
 - Rock Smash  
-- Poison Tail
 
 Bellsprout @ Oran Berry  
 Ability: Chlorophyll 
@@ -2158,13 +2157,12 @@ Level: 7
 - Clear Smog  
 - Stun Spore
 
-Corvisquire @ Silk Scarf 
-Ability: Unnerve  
-Level: 9 
-Jolly Nature 
-- Pluck  
-- Fury Attack  
-- Payback
+Kirlia  
+Ability: Trace  
+Level: 8 
+Timid Nature 
+- Confusion  
+- Disarming Voice 
 
 === TRAINER_DAPHNE ===
 Name: DAPHNE
@@ -4841,27 +4839,27 @@ IVs: 31 HP / 31 Atk / 31 Def / 31 SpA / 31 SpD / 31 Spe
 - Rock Slide
 - Crunch
 
-=== TRAINER_ROXANNE_1 ===   /* Rock & Normal- LVL CAP 16 */
+=== TRAINER_ROXANNE_1 ===   /* Rock & Normal- LVL CAP 15 */
 Name: ROXANNE
 Class: Leader
 Pic: Leader Roxanne
 Gender: Female
 Music: Female
 Double Battle: No
-AI: DEFAULT_TRAINER_BASIC
+AI: DEFAULT_TRAINER_BASIC 
 
-Corsola-Galar @ Oran Berry  
+Corsola-Galar 
 Ability: Cursed Body  
-Level: 15  
+Level: 13 
 Docile Nature  
 - Stealth Rock  
 - Water Pulse  
-- Icy Wind  
+- Rock Throw
 - Will-O-Wisp
 
 Anorith @ Hard Stone  
 Ability: Swift Swim  
-Level: 15 
+Level: 13  
 Adamant Nature  
 - Smack Down  
 - Aqua Jet  
@@ -4870,26 +4868,26 @@ Adamant Nature
 
 Binacle @ Mystic Water  
 Ability: Tough Claws  
-Level: 15  
+Level: 13  
 - Ancient Power  
 - Water Pulse  
 - Slash
 
 Raticate @ Toxic Orb  
 Ability: Guts  
-Level: 16  
+Level: 15  
 Shiny: Yes  
-Naive Nature  
+Hasty Nature  
 - Rock Smash  
 - Bite  
-- Take Down
+- Stomp
 
 Shuppet @ Eviolite  
 Ability: Insomnia  
-Level: 15  
-- Shock Wave  
+Level: 13   
 - Ominous Wind  
-- Retaliate
+- Feint Attack
+- Shadow Sneak
 
 
 === TRAINER_BRAWLY_1 ===  /* Poison & Fighting */ 
@@ -5306,18 +5304,38 @@ Medicham
 Level: 34
 IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
 
-=== TRAINER_KAREN_1 ===
+=== TRAINER_KAREN_1 ===             /* Route 116 */
 Name: KAREN
 Class: School Kid
 Pic: School Kid F
 Gender: Female
 Music: Girl
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Shroomish
-Level: 9
-IVs: 1 HP / 1 Atk / 1 Def / 1 SpA / 1 SpD / 1 Spe
+Marill @ Oran Berry  
+Ability: Huge Power  
+Level: 12  
+Naive Nature  
+- Power Up Punch 
+- Covet  
+- Aqua Jet
+
+Litleo @ Charcoal  
+Ability: Unnerve  
+Level: 12  
+Adamant Nature  
+- Fire Fang  
+- Take Down  
+- Yawn
+
+Buneary @ Silk Scarf 
+Ability: Limber  
+Level: 13    
+Jolly Nature  
+- Fake Out  
+- Low Sweep
+- Double Hit
 
 === TRAINER_GEORGIA ===
 Name: GEORGIA
@@ -6062,7 +6080,7 @@ Level: 8
 Naive Nature  
 - Bite  
 - Incinerate  
-- Leer
+
 
 Aron  @ Oran Berry
 Ability: Sturdy  
@@ -6071,49 +6089,111 @@ Level: 8
 - Cut  
 - Autotomize
 
-=== TRAINER_JOSH ===
+=== TRAINER_JOSH ===   /* Rustboro Gym */
 Name: JOSH
 Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Geodude
-Level: 10
-IVs: 12 HP / 12 Atk / 12 Def / 12 SpA / 12 SpD / 12 Spe
-- Tackle
+Cufant @ Berry Juice  
+Ability: Sheer Force  
+Level: 12  
+Adamant Nature  
+- Body Slam  
+- Rock Smash  
+- Bulldoze  
 
-=== TRAINER_TOMMY ===
+Amaura @ Chople Berry  
+Ability: Refrigerate  
+Level: 13  
+Modest Nature  
+- Rock Tomb  
+- Aurora Beam  
+- Thunder Wave
+
+Glameow @ Silk Scarf  
+Ability: Limber  
+Level: 14   
+Adamant Nature  
+- Fake Out  
+- Bite  
+- Scratch  
+- Attract
+
+=== TRAINER_TOMMY === /* Rustboro Gym */
 Name: TOMMY
 Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Geodude
-Level: 8
-IVs: 13 HP / 13 Atk / 13 Def / 13 SpA / 13 SpD / 13 Spe
+Geodude-Alola @ Magnet  
+Ability: Sturdy  
+Level: 13  
+Impish Nature  
+- Spark  
+- Rock Throw  
+- Rock Polish  
+- Counter
 
-Geodude
-Level: 8
-IVs: 14 HP / 14 Atk / 14 Def / 14 SpA / 14 SpD / 14 Spe
+Meowth @ Normal Gem  
+Ability: Unnerve  
+Level: 13   
+Jolly Nature  
+- Fake Out  
+- Bite  
+- Bullet Seed  
+- Screech
 
-=== TRAINER_JOEY ===
+Wooper @ Eviolite  
+Ability: Water Absorb  
+Level: 13  
+Sassy Nature  
+- Water Gun  
+- Mud Shot  
+- Tail Whip  
+- Slam
+
+=== TRAINER_JOEY ===        /* Route 116 */
 Name: JOEY
 Class: Youngster
 Pic: Youngster
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Machop
-Level: 9
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Ekans @ Poison Barb  
+Ability: Intimidate  
+Level: 12   
+Impish Nature  
+- Bite  
+- Glare  
+- Wrap  
+- Poison Tail
+
+Tirtouga @ Mystic Water  
+Ability: Solid Rock  
+Level: 12  
+Bashful Nature  
+- Aqua Jet  
+- Water Pulse  
+- Rock Tomb
+
+Wattrel @ Berry Juice  
+Ability: Volt Absorb  
+Level: 13  
+Jolly Nature  
+- Pluck  
+- Quick Attack  
+- Spark
+- U-turn
+
 
 === TRAINER_BEN ===
 Name: BEN
@@ -8914,7 +8994,7 @@ Double Battle: Yes
 AI: DEFAULT_TRAINER_BASIC
 
 Shinx @ Oran Berry  
-Ability: Intimidate  
+Ability: Guts 
 Level: 13    
 Gentle Nature  
 - Spark  
@@ -8931,20 +9011,18 @@ Brave Nature
 
 Turtwig @ Miracle Seed  
 Ability: Shell Armor  
-Level: 14    
+Level: 13    
 Adamant Nature  
-- Razor Leaf  
-- Leech Seed  
+- Razor Leaf   
 - Iron Head
 
 Chimchar @ Berry Juice  
 Ability: Blaze  
-Level: 14   
-Hasty Nature  
-- Fake Out  
-- Will-O-Wisp  
+Level: 13   
+Hasty Nature     
 - Flame Wheel  
-- Encore  
+- Encore 
+- Low Kick 
 
 
 
@@ -10681,22 +10759,40 @@ Numel
 Level: 22
 IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
 
-=== TRAINER_MARC ===
+=== TRAINER_MARC === /* Rustboro Gym */
 Name: MARC
 Class: Hiker
 Pic: Hiker
 Gender: Male
 Music: Hiker
-Double Battle: No
-AI: Check Bad Move
+Double Battle: Yes
+AI: DEFAULT_TRAINER_BASIC
 
-Geodude
-Level: 8
-IVs: 14 HP / 14 Atk / 14 Def / 14 SpA / 14 SpD / 14 Spe
+Mudbray @ Oran Berry  
+Ability: Stamina  
+Level: 13   
+Careful Nature  
+- Rock Tomb  
+- Payback  
+- Double Kick  
+- Toxic
 
-Geodude
-Level: 8
-IVs: 15 HP / 15 Atk / 15 Def / 15 SpA / 15 SpD / 15 Spe
+Bronzor @ Oran Berry  
+Ability: Levitate  
+Level: 13  
+Sassy Nature  
+- Confusion  
+- Hypnosis  
+- Heavy Slam
+
+Munchlax @ Sitrus Berry  
+Ability: Gluttony  
+Level: 14  
+Adamant Nature  
+- Recycle  
+- Chip Away  
+- Bite  
+- Lick
 
 === TRAINER_BRENDEN ===
 Name: BRENDEN
@@ -11468,14 +11564,14 @@ Vivillon
 Ability: Shield Dust  
 Level: 9  
 Hardy Nature  
-- Struggle Bug  
+- Bug Bite
 - Gust  
 - Poison Powder  
 - Swift
 
 
 
-=== TRAINER_JOSE ===
+=== TRAINER_JOSE ===            /* UNUSED */
 Name: JOSE
 Class: Bug Catcher
 Pic: Bug Catcher
@@ -11484,13 +11580,14 @@ Music: Male
 Double Battle: No
 AI: Check Bad Move
 
-Wurmple
-Level: 8
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
-
-Nincada
-Level: 8
-IVs: 6 HP / 6 Atk / 6 Def / 6 SpA / 6 SpD / 6 Spe
+Vivillon  
+Ability: Shield Dust  
+Level: 9  
+Hardy Nature  
+- Bug Bite
+- Gust  
+- Poison Powder  
+- Swift
 
 === TRAINER_DOUG ===
 Name: DOUG
@@ -11737,18 +11834,38 @@ Graveler
 Level: 22
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_CLARK ===
+=== TRAINER_CLARK ===       /* Route 116 */
 Name: CLARK
 Class: Hiker
 Pic: Hiker
 Gender: Male
 Music: Hiker
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC 
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Cranidos @ Black Belt  
+Ability: Sheer Force  
+Level: 13   
+Adamant Nature  
+- Rock Tomb  
+- Trailblaze  
+- Rock Smash
+
+Baltoy @ Oran Berry  
+Ability: Levitate  
+Level: 13    
+Timid Nature  
+- Rapid Spin 
+- Confusion  
+- Mud Shot
+
+Dartrix @ Miracle Seed  
+Ability: Overgrow  
+Level: 12  
+Docile Nature  
+- Aerial Ace  
+- Razor Leaf 
+- Astonish
 
 === TRAINER_ERIC ===
 Name: ERIC
@@ -13183,9 +13300,9 @@ Level: 8
 
 Carvanha @ Oran Berry  
 Ability: Rough Skin  
-Jolly Nature
-Level: 7  
-- Poison Fang  
+Naive Nature
+Level: 6  
+- Water Pulse 
 - Bite  
 - Aqua Jet
 
@@ -14067,39 +14184,74 @@ Spoink
 Level: 18
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
-=== TRAINER_DEVAN ===
+=== TRAINER_DEVAN ===                   /* Route 116 */
 Name: DEVAN
 Class: Hiker
 Pic: Hiker
 Gender: Male
 Music: Hiker
-Double Battle: No
-AI: Check Bad Move
+Double Battle: Yes
+AI: DEFAULT_TRAINER_BASIC
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Mienfoo @ Black Belt  
+Ability: Regenerator  
+Level: 13   
+- Force Palm  
+- U-turn  
+- Rock Tomb  
+- Fake Out
 
-Geodude
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Archen  @ Sitrus Berry
+Ability: Defeatist  
+Level: 13  
+Docile Nature  
+- Aerial Ace  
+- Rock Tomb  
+- Bite
 
-=== TRAINER_JOHNSON ===
+Drowzee  
+Ability: Inner Focus  
+Level: 14   
+Quiet Nature  
+- Thunder Wave  
+- Confusion  
+- Headbutt
+
+=== TRAINER_JOHNSON ===         /* Route 116 */
 Name: JOHNSON
-Class: Youngster
-Pic: Youngster
+Class: Pokefan
+Pic: Pokefan M
 Gender: Male
 Music: Male
 Double Battle: No
-AI: Check Bad Move
+AI: DEFAULT_TRAINER_BASIC
 
-Shroomish
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Elekid @ Magnet  
+Ability: Static  
+Level: 13  
+Adamant Nature  
+- Low Kick  
+- Thunder Shock  
+- Quick Attack  
+- Trailblaze
 
-Lotad
-Level: 8
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+Magby @ Berry Juice  
+Ability: Flame Body  
+Level: 13  
+Modest Nature  
+- Smog  
+- Ember  
+- Will-O-Wisp  
+- Fire Spin
+
+Smoochum @ Wide Lens  
+Ability: Oblivious  
+Level: 13  
+Bold Nature  
+- Fake Out  
+- Sweet Kiss  
+- Sing  
+- Draining Kiss
 
 === TRAINER_MELINA ===
 Name: MELINA

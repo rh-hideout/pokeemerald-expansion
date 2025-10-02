@@ -2587,7 +2587,7 @@ RustboroCity_Text_YouCanHave2On2Battle:
 
 RustboroCity_EventScript_GymBlockade::
 # 1298 "data/maps/RustboroCity/scripts.pory"
-	faceplayer
+	applymovement 17, RustboroCity_EventScript_GymBlockade_Movement_0
 # 1299 "data/maps/RustboroCity/scripts.pory"
 	lockall
 # 1300 "data/maps/RustboroCity/scripts.pory"
@@ -2595,15 +2595,23 @@ RustboroCity_EventScript_GymBlockade::
 # 1302 "data/maps/RustboroCity/scripts.pory"
 	waitmessage
 # 1303 "data/maps/RustboroCity/scripts.pory"
-	turnobject 17, DIR_SOUTH
+	turnobject 17, DIR_NORTH
 # 1304 "data/maps/RustboroCity/scripts.pory"
 	releaseall
 	end
 
 
+# 1298 "data/maps/RustboroCity/scripts.pory"
+RustboroCity_EventScript_GymBlockade_Movement_0:
+# 1298 "data/maps/RustboroCity/scripts.pory"
+	face_player
+	step_end
+
 RustboroCity_EventScript_GymBlockade_Text_0:
 # 1300 "data/maps/RustboroCity/scripts.pory"
-	.string "Howdy trainer! Roxanne is currently\n"
-	.string "taking her lunch break. I heard there's\l"
-	.string "something going down on Route 116, so\l"
-	.string "maybe check that out in the meantime?$"
+	.string "Howdy trainer! We are currently\n"
+	.string "undergoing construction after the last\l"
+	.string "explosive battle. It seems a trainer\l"
+	.string "from the Kanto region brought the\l"
+	.string "heat! Check the nearby routes in the\l"
+	.string "meantime.$"
