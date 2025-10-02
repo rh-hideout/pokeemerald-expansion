@@ -43,9 +43,9 @@ static u32 CalculateFishingFollowerBoost(void);
 static u32 CalculateFishingProximityBoost(void);
 static u32 CalculateFishingTimeOfDayBoost(void);
 
-#define FISHING_PROXIMITY_BOOST 20
-#define FISHING_TIME_OF_DAY_BOOST 20
-#define FISHING_GEN3_STICKY_CHANCE 85
+#define FISHING_PROXIMITY_BOOST 20     //Active if config I_FISHING_PROXIMITY is TRUE
+#define FISHING_TIME_OF_DAY_BOOST 20   //Active if config I_FISHING_TIME_OF_DAY_BOOST is TRUE
+#define FISHING_GEN3_STICKY_CHANCE 85  //Active if config I_FISHING_STICKY_BOOST is set to GEN_3 or lower
 
 #if I_FISHING_BITE_ODDS >= GEN_4
     #define FISHING_OLD_ROD_ODDS 25
@@ -61,6 +61,22 @@ static u32 CalculateFishingTimeOfDayBoost(void);
     #define FISHING_SUPER_ROD_ODDS 50
 #endif
 
+struct FriendshipHookChanceBoost
+{
+    u8 threshold;
+    u8 bonus;
+};
+
+//Needs to be defined in descending order and end with the 0 friendship boost
+//Active if config I_FISHING_FOLLOWER_BOOST is TRUE
+static const struct FriendshipHookChanceBoost sFriendshipHookChanceBoostArray[] =
+{
+    {.threshold = 250, .bonus = 50},
+    {.threshold = 200, .bonus = 40},
+    {.threshold = 150, .bonus = 30},
+    {.threshold = 100, .bonus = 20},
+    {.threshold =   0, .bonus =  0},
+};
 
 #define FISHING_CHAIN_LENGTH_MAX 200
 #define FISHING_CHAIN_SHINY_STREAK_MAX 20
@@ -510,16 +526,11 @@ static u32 CalculateFishingFollowerBoost()
         return 0;
 
     friendship = GetMonData(mon, MON_DATA_FRIENDSHIP);
-    if (friendship >= 250)
-        return 50;
-    else if (friendship >= 200)
-        return 40;
-    else if (friendship >= 150)
-        return 30;
-    else if (friendship >= 100)
-        return 20;
-    else
-        return 0;
+    for (u32 i = 0;; i++)
+    {
+        if (friendship >= sFriendshipHookChanceBoostArray[i].threshold)
+            return sFriendshipHookChanceBoostArray[i].bonus;
+    }
 }
 
 static u32 CalculateFishingProximityBoost()
