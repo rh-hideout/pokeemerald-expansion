@@ -1279,7 +1279,7 @@ script Route104_Pt2_EventScript_Route_Clear
 	removeobject(39)
 	removeobject(40)
 	removeobject(41)
-	msgbox(format("Route 104 Pt. 2 has been cleared!\nThe level cap is now 14."), MSGBOX_DEFAULT)
+	msgbox(format("Route 104 has been cleared!\nThe level cap is now 14."), MSGBOX_DEFAULT)
 	waitmessage
 	waitfanfare
 	fadescreen(FADE_FROM_BLACK)

@@ -309,8 +309,8 @@ Route102_EventScript_PokemonBlockade_Text_0:
 
 Route102_EventScript_Route_Clear_Text_0:
 # 119 "data/maps/Route102/scripts.pory"
-	.string "Route 104 has been cleared!\n"
-	.string "The level cap is now 10.$"
+	.string "Route 102 has been cleared!\n"
+	.string "The level cap is now 9.$"
 
 Route102_EventScript_Boy_Text_0:
 # 133 "data/maps/Route102/scripts.pory"

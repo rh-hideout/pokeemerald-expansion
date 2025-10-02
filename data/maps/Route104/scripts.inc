@@ -2672,7 +2672,7 @@ Route104_EventScript_WhiteHerbFlorist_Text_0:
 
 Route104_Pt2_EventScript_Route_Clear_Text_0:
 # 1282 "data/maps/Route104/scripts.pory"
-	.string "Route 104 Pt. 2 has been cleared!\n"
+	.string "Route 104 has been cleared!\n"
 	.string "The level cap is now 14.$"
 
 Route104_EventScript_Dewpider_Text_0:
