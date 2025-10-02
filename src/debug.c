@@ -236,6 +236,8 @@ static void Debug_DestroyMenu(u8 taskId);
 static void DebugAction_Cancel(u8 taskId);
 static void DebugAction_DestroyExtraWindow(u8 taskId);
 static void Debug_RefreshListMenu(u8 taskId);
+static u8 DebugNativeStep_CreateDebugWindow(void);
+static void DebugNativeStep_CloseDebugWindow(u8 taskId);
 
 static void DebugAction_OpenSubMenu(u8 taskId, const struct DebugMenuOption *items);
 static void DebugAction_OpenSubMenuFlagsVars(u8 taskId, const struct DebugMenuOption *items);
@@ -348,6 +350,8 @@ extern const u8 Debug_EventScript_CheckEVs[];
 extern const u8 Debug_EventScript_CheckIVs[];
 extern const u8 Debug_EventScript_InflictStatus1[];
 extern const u8 Debug_EventScript_SetHiddenNature[];
+extern const u8 Debug_EventScript_SetAbility[];
+extern const u8 Debug_EventScript_SetFriendship[];
 extern const u8 Debug_EventScript_Script_1[];
 extern const u8 Debug_EventScript_Script_2[];
 extern const u8 Debug_EventScript_Script_3[];
@@ -576,6 +580,8 @@ static const struct DebugMenuOption sDebugMenu_Actions_Party[] =
     { COMPOUND_STRING("Heal party"),         DebugAction_Party_HealParty },
     { COMPOUND_STRING("Inflict Status1"),    DebugAction_ExecuteScript, Debug_EventScript_InflictStatus1 },
     { COMPOUND_STRING("Set Hidden Nature"),  DebugAction_ExecuteScript, Debug_EventScript_SetHiddenNature },
+    { COMPOUND_STRING("Set Friendship"),     DebugAction_ExecuteScript, Debug_EventScript_SetFriendship },
+    { COMPOUND_STRING("Set Ability"),        DebugAction_ExecuteScript, Debug_EventScript_SetAbility },
     { COMPOUND_STRING("Check EVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckEVs },
     { COMPOUND_STRING("Check IVs"),          DebugAction_ExecuteScript, Debug_EventScript_CheckIVs },
     { COMPOUND_STRING("Clear Party"),        DebugAction_Party_ClearParty },
@@ -937,6 +943,30 @@ static void DebugAction_DestroyExtraWindow(u8 taskId)
     DestroyTask(taskId);
     ScriptContext_Enable();
     UnfreezeObjectEvents();
+}
+
+static u8 DebugNativeStep_CreateDebugWindow(void)
+{
+    u8 windowId;
+
+    LockPlayerFieldControls();
+    FreezeObjectEvents();
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+    DrawStdWindowFrame(windowId, FALSE);
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+
+    return windowId;
+}
+
+static void DebugNativeStep_CloseDebugWindow(u8 taskId)
+{
+    ClearStdWindowAndFrame(gTasks[taskId].tSubWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tSubWindowId);
+    DestroyTask(taskId);
+    UnfreezeObjectEvents();
+    UnlockPlayerFieldControls();
 }
 
 static const u16 sLocationFlags[] =
@@ -3390,11 +3420,6 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
 
 #undef tCurrentSong
 
-#undef tMenuTaskId
-#undef tWindowId
-#undef tSubWindowId
-#undef tInput
-#undef tDigit
 
 #define SOUND_LIST_BGM              \
     X(MUS_LITTLEROOT_TEST)          \
@@ -4017,6 +4042,81 @@ static void DebugAction_Party_HealParty(u8 taskId)
     ScriptContext_Enable();
     Debug_DestroyMenu_Full(taskId);
 }
+
+void DebugNative_GetAbilityNames(void)
+{
+    u32 species = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES);
+    StringCopy(gStringVar1, gAbilitiesInfo[GetAbilityBySpecies(species, 0)].name);
+    StringCopy(gStringVar2, gAbilitiesInfo[GetAbilityBySpecies(species, 1)].name);
+    StringCopy(gStringVar3, gAbilitiesInfo[GetAbilityBySpecies(species, 2)].name);
+}
+
+#define tPartyId               data[5]
+#define tFriendship            data[6]
+
+static void Debug_Display_FriendshipInfo(s32 oldFriendship, s32 newFriendship, u32 digit, u8 windowId)
+{
+    ConvertIntToDecimalStringN(gStringVar1, oldFriendship, STR_CONV_MODE_LEADING_ZEROS, 3);
+    ConvertIntToDecimalStringN(gStringVar2, newFriendship, STR_CONV_MODE_LEADING_ZEROS, 3);
+    StringCopy(gStringVar3, gText_DigitIndicator[digit]);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Friendship:\n{STR_VAR_1} {RIGHT_ARROW} {STR_VAR_2}\n\n{STR_VAR_3}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugNativeStep_Party_SetFriendshipSelect(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        gTasks[taskId].tFriendship = gTasks[taskId].tInput;
+        SetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP, &gTasks[taskId].tInput);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        DebugNativeStep_CloseDebugWindow(taskId);
+        return;
+    }
+
+    Debug_HandleInput_Numeric(taskId, 0, 255, 3);
+
+    if (JOY_NEW(DPAD_ANY) || JOY_NEW(A_BUTTON))
+        Debug_Display_FriendshipInfo(gTasks[taskId].tFriendship, gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugNativeStep_Party_SetFriendshipMain(u8 taskId)
+{
+    u8 windowId = DebugNativeStep_CreateDebugWindow();
+    u32 friendship = GetMonData(&gPlayerParty[gTasks[taskId].tPartyId], MON_DATA_FRIENDSHIP);
+
+    // Display initial flag
+    Debug_Display_FriendshipInfo(friendship, friendship, 0, windowId);
+
+    gTasks[taskId].func = DebugNativeStep_Party_SetFriendshipSelect;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tFriendship = friendship;
+    gTasks[taskId].tInput = friendship;
+    gTasks[taskId].tDigit = 0;
+    gTasks[taskId].tPartyId = 0;
+}
+
+void DebugNative_Party_SetFriendship(void)
+{
+    if (gSpecialVar_0x8004 < PARTY_SIZE)
+    {
+        u32 taskId = CreateTask(DebugNativeStep_Party_SetFriendshipMain, 1);
+        gTasks[taskId].tPartyId = gSpecialVar_0x8004;
+    }
+}
+
+#undef tPartyId
+#undef tFriendship
+
+#undef tMenuTaskId
+#undef tWindowId
+#undef tSubWindowId
+#undef tInput
+#undef tDigit
 
 static void DebugAction_Party_ClearParty(u8 taskId)
 {
