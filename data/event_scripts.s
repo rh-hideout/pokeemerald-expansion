@@ -3,6 +3,7 @@
 #include "config/item.h"
 #include "constants/global.h"
 #include "constants/apprentice.h"
+#include "constants/apricorn_tree.h"
 #include "constants/battle.h"
 #include "constants/battle_arena.h"
 #include "constants/battle_dome.h"
@@ -1159,3 +1160,4 @@ EventScript_VsSeekerChargingDone::
 	.include "data/text/save.inc"
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/dexnav.inc"
+	.include "data/scripts/apricorn_tree.inc"
