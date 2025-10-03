@@ -513,6 +513,7 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
         odds *= 2;
 
     odds = min(100, odds);
+    DebugPrintf("Fishing odds: %d", odds);
     return odds;
 }
 
@@ -559,7 +560,9 @@ static u32 CalculateFishingProximityBoost()
             continue;
         if (!MetatileBehavior_IsSurfableFishableWater(MapGridGetMetatileBehaviorAt(tile_x, tile_y)))
             numQualifyingTile++;
-        else if (MapGridGetCollisionAt(tile_x, tile_y) == COLLISION_IMPASSABLE)
+        else if (MapGridGetCollisionAt(tile_x, tile_y))
+            numQualifyingTile++;
+        else if (GetMapBorderIdAt(tile_x, tile_y) == -1)
             numQualifyingTile++;
     }
 
@@ -636,7 +639,9 @@ u32 CalculateChainFishingShinyRolls(void)
 {
     if (!I_FISHING_CHAIN || !gIsFishingEncounter)
         return 0;
-    return (2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX));
+    u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
+    DebugPrintf("Total Shiny Rolls %d", a);
+    return a;
 }
 
 bool32 ShouldUseFishingEnvironmentInBattle()
