@@ -34,6 +34,7 @@
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
+#include "pokerus.h"
 #include "random.h"
 #include "rayquaza_scene.h"
 #include "region_map.h"
@@ -1489,10 +1490,7 @@ bool8 ScriptCheckFreePokemonStorageSpace(void)
 
 bool8 IsPokerusInParty(void)
 {
-    if (!CheckPartyPokerus(gPlayerParty, (1 << PARTY_SIZE) - 1))
-        return FALSE;
-
-    return TRUE;
+    return CheckPartyPokerus();
 }
 
 // Task data for Task_ShakeCamera
