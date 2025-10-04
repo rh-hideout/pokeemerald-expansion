@@ -496,7 +496,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
         if (!IsOnPlayerSide(gBattleAnimAttacker))
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-            gBattleAnimArgs[1] = -gBattleAnimArgs[1];
+            gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = -gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
             gBattleAnimArgs[3] = -gBattleAnimArgs[3];
         }
     }
@@ -511,8 +511,8 @@ static void AnimPsychoCut(struct Sprite *sprite)
             temp1 = gBattleAnimArgs[2];
             gBattleAnimArgs[2] = -temp1;
 
-            temp2 = gBattleAnimArgs[0];
-            gBattleAnimArgs[0] = -temp2;
+            temp2 = gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] = -temp2;
         }
     }
 
@@ -524,11 +524,11 @@ static void AnimPsychoCut(struct Sprite *sprite)
     rot += 0xC000;
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rot);
 
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = lVarX;
-    sprite->data[4] = lVarY;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = lVarX;
+    sprite->sInputEndY_lti = lVarY;
 
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -722,13 +722,13 @@ static void AnimWallSparkle(struct Sprite *sprite)
         {
             if (IsOnPlayerSide(gBattleAnimAttacker))
             {
-                sprite->x = 72 - gBattleAnimArgs[0];
-                sprite->y = gBattleAnimArgs[1] + 80;
+                sprite->x = 72 - gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM];
+                sprite->y = gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] + 80;
             }
             else
             {
-                sprite->x = gBattleAnimArgs[0] + 176;
-                sprite->y = gBattleAnimArgs[1] + 40;
+                sprite->x = gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] + 176;
+                sprite->y = gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] + 40;
             }
         }
         else
@@ -1099,12 +1099,12 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
             spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
-                gSprites[spriteId].data[0] = 16;
-                gSprites[spriteId].data[2] = task->data[13];
-                gSprites[spriteId].data[4] = task->data[14];
-                gSprites[spriteId].data[5] = task->data[10];
+                gSprites[spriteId].sDuration_lti = 16;
+                gSprites[spriteId].sInputEndX_lti = task->data[13];
+                gSprites[spriteId].sInputEndY_lti = task->data[14];
+                gSprites[spriteId].sArcAmplitude_ati = task->data[10];
 
-                InitAnimArcTranslation(&gSprites[spriteId]);
+                InitSpriteArcTranslation(&gSprites[spriteId]);
                 StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);
             }
 
@@ -1140,7 +1140,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
                 gSprites[spriteId].data[4] = task->data[14];
                 gSprites[spriteId].data[5] = task->data[10];
 
-                InitAnimArcTranslation(&gSprites[spriteId]);
+                InitSpriteArcTranslation(&gSprites[spriteId]);
                 StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);
             }
 
@@ -1157,7 +1157,7 @@ static void AnimTask_HeartSwap_Step(u8 taskId)
 
 static void AnimSkillSwapOrb(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         FreeOamMatrix(sprite->oam.matrixNum);
         DestroySprite(sprite);

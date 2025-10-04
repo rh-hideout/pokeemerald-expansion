@@ -727,12 +727,12 @@ static void AnimWaterBubbleProjectile(struct Sprite *sprite)
     }
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    sprite->data[0] = gBattleAnimArgs[6];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[6];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    InitSpriteLinearTranslationIterator(sprite);
     spriteId = CreateInvisibleSpriteWithCallback(SpriteCallbackDummy);
     sprite->data[5] = spriteId;
     sprite->x -= Sin((u8)gBattleAnimArgs[4], gBattleAnimArgs[2]);
@@ -752,8 +752,8 @@ static void AnimWaterBubbleProjectile_Step1(struct Sprite *sprite)
     u8 timer = gSprites[otherSpriteId].data[4];
     u16 trigIndex = gSprites[otherSpriteId].data[3];
 
-    sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    sprite->sDuration_lti = 1;
+    UpdateSpriteLinearTranslationIterator(sprite);
     sprite->x2 += Sin(trigIndex >> 8, gSprites[otherSpriteId].data[0]);
     sprite->y2 += Cos(trigIndex >> 8, gSprites[otherSpriteId].data[1]);
     gSprites[otherSpriteId].data[3] = trigIndex + gSprites[otherSpriteId].data[2];
@@ -791,12 +791,12 @@ static void AnimAuroraBeamRings(struct Sprite *sprite)
         unkArg = -gBattleAnimArgs[2];
     else
         unkArg = gBattleAnimArgs[2];
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + unkArg;
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
-    InitAnimLinearTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, 2) + unkArg;
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, 3) + gBattleAnimArgs[3];
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->callback = AnimAuroraBeamRings_Step;
     sprite->affineAnimPaused = TRUE;
     sprite->callback(sprite);
@@ -809,7 +809,7 @@ static void AnimAuroraBeamRings_Step(struct Sprite *sprite)
         StartSpriteAnim(sprite, 1);
         sprite->affineAnimPaused = FALSE;
     }
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -844,7 +844,7 @@ void AnimFlyUpTarget(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
     sprite->y2 += GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2;
-    sprite->y2 += gBattleAnimArgs[1];
+    sprite->y2 += gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM];
     sprite->data[0] = gBattleAnimArgs[2]; //max y offset
     sprite->data[1] = gBattleAnimArgs[3]; //speed
     sprite->callback = AnimFlyUpTarget_Step;
@@ -867,12 +867,12 @@ static void AnimToTargetInSinWave(struct Sprite *sprite)
     u16 retArg;
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = 30;
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslation(sprite);
+    sprite->sDuration_lti = 30;
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    InitSpriteLinearTranslationIterator(sprite);
     sprite->data[5] = 0xD200 / sprite->data[0];
     sprite->data[7] = gBattleAnimArgs[3];
     retArg = gBattleAnimArgs[7];
@@ -891,7 +891,7 @@ static void AnimToTargetInSinWave(struct Sprite *sprite)
 
 static void AnimToTargetInSinWave_Step(struct Sprite *sprite)
 {
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
         DestroyAnimSprite(sprite);
     sprite->y2 += Sin(sprite->data[6] >> 8, sprite->data[7]);
     if ((sprite->data[6] + sprite->data[5]) >> 8 > 127)
@@ -963,9 +963,9 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
     u8 coordType;
     if (IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
-        gBattleAnimArgs[0] *= -1;
+        gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
         if (GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_PLAYER_LEFT || GetBattlerPosition(gBattleAnimAttacker) == B_POSITION_OPPONENT_LEFT)
-            gBattleAnimArgs[0] *= -1;
+            gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM] *= -1;
     }
     if ((gBattleAnimArgs[5] & 0xFF00) == 0)
         respectMonPicOffsets = TRUE;
@@ -978,10 +978,10 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
     InitSpritePosToAnimAttacker(sprite, respectMonPicOffsets);
     if (!IsOnPlayerSide(gBattleAnimAttacker))
         gBattleAnimArgs[2] = -gBattleAnimArgs[2];
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, coordType) + gBattleAnimArgs[3];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -989,10 +989,10 @@ static void AnimHydroCannonBeam(struct Sprite *sprite)
 static void AnimWaterGunDroplet(struct Sprite *sprite)
 {
     InitSpritePosToAnimTarget(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[2] = sprite->x + gBattleAnimArgs[2];
-    sprite->data[4] = sprite->y + gBattleAnimArgs[4];
-    sprite->callback = StartAnimLinearTranslation;
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sInputEndX_lti = sprite->x + gBattleAnimArgs[2];
+    sprite->sInputEndY_lti = sprite->y + gBattleAnimArgs[4];
+    sprite->callback = InitAndRunSpriteLinearTranslationIteratorWithSpritePosAsStart;
     StoreSpriteCallbackInData6(sprite, DestroyAnimSprite);
 }
 
@@ -1656,11 +1656,11 @@ static void CreateWaterSportDroplet(struct Task *task)
         spriteId = CreateSprite(&gSmallWaterOrbSpriteTemplate, task->data[3], task->data[4], 10);
         if (spriteId != MAX_SPRITES)
         {
-            gSprites[spriteId].data[0] = 16;
-            gSprites[spriteId].data[2] = task->data[5];
-            gSprites[spriteId].data[4] = task->data[6];
-            gSprites[spriteId].data[5] = task->data[9];
-            InitAnimArcTranslation(&gSprites[spriteId]);
+            gSprites[spriteId].sDuration_lti = 16;
+            gSprites[spriteId].sInputEndX_lti = task->data[5];
+            gSprites[spriteId].sInputEndY_lti = task->data[6];
+            gSprites[spriteId].sArcAmplitude_ati = task->data[9];
+            InitSpriteArcTranslation(&gSprites[spriteId]);
             gSprites[spriteId].callback = AnimWaterSportDroplet;
             task->data[8]++;
         }
@@ -1669,15 +1669,15 @@ static void CreateWaterSportDroplet(struct Task *task)
 
 static void AnimWaterSportDroplet(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         sprite->x += sprite->x2;
         sprite->y += sprite->y2;
-        sprite->data[0] = 6;
-        sprite->data[2] = (Random2() & 0x1F) - 16 + sprite->x;
-        sprite->data[4] = (Random2() & 0x1F) - 16 + sprite->y;
-        sprite->data[5] = ~(Random2() & 7);
-        InitAnimArcTranslation(sprite);
+        sprite->sDuration_lti = 6;
+        sprite->sInputEndX_lti = (Random2() & 0x1F) - 16 + sprite->x;
+        sprite->sInputEndY_lti = (Random2() & 0x1F) - 16 + sprite->y;
+        sprite->sArcAmplitude_ati = ~(Random2() & 7);
+        InitSpriteArcTranslation(sprite);
         sprite->callback = AnimWaterSportDroplet_Step;
     }
 }
@@ -1686,7 +1686,7 @@ static void AnimWaterSportDroplet_Step(struct Sprite *sprite)
 {
     u16 i;
 
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
     {
         for (i = 0; i < NUM_TASKS; i++)
         {

@@ -286,12 +286,12 @@ const struct SpriteTemplate gPoltergeistEffectTemplate =
 static void AnimConfuseRayBallBounce(struct Sprite *sprite)
 {
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    sprite->data[0] = gBattleAnimArgs[2];
-    sprite->data[1] = sprite->x;
-    sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
-    sprite->data[3] = sprite->y;
-    sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    InitAnimLinearTranslationWithSpeed(sprite);
+    sprite->sInputSpeed_lti = gBattleAnimArgs[2];
+    sprite->sInputStartX_lti = sprite->x;
+    sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+    sprite->sInputStartY_lti = sprite->y;
+    sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
+    InitSpriteLinearTranslationIteratorWithSpeed(sprite);
     sprite->callback = AnimConfuseRayBallBounce_Step1;
     sprite->data[6] = 16;
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));
@@ -303,7 +303,7 @@ static void AnimConfuseRayBallBounce_Step1(struct Sprite *sprite)
     s16 r0;
     s16 r2;
     UpdateConfuseRayBallBlend(sprite);
-    if (AnimTranslateLinear(sprite))
+    if (UpdateSpriteLinearTranslationIterator(sprite))
     {
         sprite->callback = AnimConfuseRayBallBounce_Step2;
         return;
@@ -325,8 +325,8 @@ static void AnimConfuseRayBallBounce_Step2(struct Sprite *sprite)
 {
     s16 r2;
     s16 r0;
-    sprite->data[0] = 1;
-    AnimTranslateLinear(sprite);
+    sprite->sDuration_lti = 1;
+    UpdateSpriteLinearTranslationIterator(sprite);
     sprite->x2 += Sin(sprite->data[5], 10);
     sprite->y2 += Cos(sprite->data[5], 15);
 
@@ -596,21 +596,21 @@ void AnimTask_NightmareClone(u8 taskId)
     task->data[4] = 0;
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));
     SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(task->data[2], task->data[3]));
-    gSprites[task->data[0]].data[0] = 80;
+    gSprites[task->data[0]].sDuration_lt = 80;
     if (IsOnPlayerSide(gBattleAnimTarget))
     {
-        gSprites[task->data[0]].data[1] = -144;
-        gSprites[task->data[0]].data[2] = 112;
+        gSprites[task->data[0]].sXIncrement_lt = Q_8_8(-0.5625);
+        gSprites[task->data[0]].sYIncrement_lt = Q_8_8(0.4375);
     }
     else
     {
-        gSprites[task->data[0]].data[1] = 144;
-        gSprites[task->data[0]].data[2] = -112;
+        gSprites[task->data[0]].sXIncrement_lt = Q_8_8(0.5625);
+        gSprites[task->data[0]].sYIncrement_lt = Q_8_8(-0.4375);
     }
-    gSprites[task->data[0]].data[3] = 0;
-    gSprites[task->data[0]].data[4] = 0;
+    gSprites[task->data[0]].sCurXOffsetFixedPoint_lt = 0;
+    gSprites[task->data[0]].sCurYOffsetFixedPoint_lt = 0;
     StoreSpriteCallbackInData6(&gSprites[task->data[0]], SpriteCallbackDummy);
-    gSprites[task->data[0]].callback = TranslateSpriteLinearFixedPoint;
+    gSprites[task->data[0]].callback = TranslateSpriteLinear;
     task->func = AnimTask_NightmareClone_Step;
 }
 

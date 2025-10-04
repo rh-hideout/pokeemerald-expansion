@@ -307,7 +307,7 @@ const struct SpriteTemplate gPersistHitSplatSpriteTemplate =
 
 static void AnimMovePowerSwapGuardSwapWait(struct Sprite *sprite)
 {
-    if (TranslateAnimHorizontalArc(sprite))
+    if (TranslateSpriteHorizontalArc(sprite))
         DestroyAnimSprite(sprite);
 }
 
@@ -323,18 +323,18 @@ static void AnimMovePowerSwapGuardSwap(struct Sprite *sprite)
     if(gBattleAnimArgs[3] == 0)
     {
         InitSpritePosToAnimAttacker(sprite, TRUE);
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y);
     }
     else
     {
         InitSpritePosToAnimTarget(sprite, TRUE);
-        sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
-        sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
+        sprite->sInputEndX_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
+        sprite->sInputEndY_lti = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
     }
-    sprite->data[0] = gBattleAnimArgs[4];
-    sprite->data[5] = gBattleAnimArgs[5];
-    InitAnimArcTranslation(sprite);
+    sprite->sDuration_lti = gBattleAnimArgs[4];
+    sprite->sArcAmplitude_ati = gBattleAnimArgs[5];
+    InitSpriteArcTranslation(sprite);
     sprite->callback = AnimMovePowerSwapGuardSwapWait;
 }
 
@@ -1087,12 +1087,12 @@ static void AnimHitSplatHandleInvert(struct Sprite *sprite)
 
 void AnimHitSplatRandom(struct Sprite *sprite)
 {
-    if (gBattleAnimArgs[1] == -1)
-        gBattleAnimArgs[1] = Random2() & 3;
+    if (gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] == -1)
+        gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM] = Random2() & 3;
 
-    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[0], sprite, FALSE))
+    if (!InitSpritePosToAnimBattler(gBattleAnimArgs[ARG_SPRITE_X_OFFSET_ISPM], sprite, FALSE))
         return;
-    StartSpriteAffineAnim(sprite, gBattleAnimArgs[1]);
+    StartSpriteAffineAnim(sprite, gBattleAnimArgs[ARG_SPRITE_Y_OFFSET_ISPM]);
 
     sprite->x2 += (Random2() % 48) - 24;
     sprite->y2 += (Random2() % 24) - 12;
