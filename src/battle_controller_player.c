@@ -2002,7 +2002,7 @@ static void PlayerHandleChooseAction(u32 battler)
     if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(B_POSITION_PLAYER_RIGHT))
     {
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
-        u32 move = gBattleMons[B_POSITION_PLAYER_RIGHT].moves[gBattleStruct->chosenMovePositions[B_POSITION_PLAYER_RIGHT]];
+        u32 move = GetChosenMoveFromPosition(B_POSITION_PLAYER_RIGHT);
         StringAppend(gStringVar1, GetMoveName(move));
         u32 moveTarget = GetBattlerMoveTargetType(B_POSITION_PLAYER_RIGHT, move);
         if (moveTarget == MOVE_TARGET_SELECTED)
@@ -2368,8 +2368,8 @@ static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = GetBattlerAbility(battlerAtk);
     ctx.abilityDef = GetBattlerAbility(battlerDef);
-    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
-    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef, TRUE);
+    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk);
+    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef);
 
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(&ctx);
 

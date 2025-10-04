@@ -17,6 +17,7 @@
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/trainers.h"
+#include "constants/abilities.h"
 
 #if defined(__INTELLISENSE__)
 #undef TestRunner_Battle_RecordAbilityPopUp
@@ -743,7 +744,7 @@ const void *RandomElementArray(enum RandomTag tag, const void *array, size_t siz
     return (const u8 *)array + size * index;
 }
 
-static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, u32 ability)
+static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, enum Ability ability)
 {
     struct QueuedAbilityEvent *event;
     s32 iMax = i + n;
@@ -761,7 +762,7 @@ static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, u32 ability)
     return -1;
 }
 
-void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, u32 ability)
+void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, enum Ability ability)
 {
     s32 queuedEvent;
     s32 match;
@@ -1836,6 +1837,7 @@ void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
     DATA.currentMon = &party[DATA.currentPartyIndex];
     DATA.gender = 0xFF; // Male
     DATA.nature = NATURE_HARDY;
+    DATA.isShiny = FALSE;
     (*partySize)++;
 
     CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
@@ -1890,9 +1892,9 @@ void ClosePokemon(u32 sourceLine)
             INVALID_IF(GetMonData(DATA.currentMon, MON_DATA_HP) == 0, "Battlers cannot be fainted");
         }
     }
-    data = FALSE;
-    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     UpdateMonPersonality(&DATA.currentMon->box, GenerateNature(DATA.nature, DATA.gender % NUM_NATURES) | DATA.gender);
+    data = DATA.isShiny;
+    SetMonData(DATA.currentMon, MON_DATA_IS_SHINY, &data);
     DATA.currentMon = NULL;
 }
 
@@ -1935,7 +1937,7 @@ void Nature_(u32 sourceLine, u32 nature)
     DATA.nature = nature;
 }
 
-void Ability_(u32 sourceLine, u32 ability)
+void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
     u32 species;
@@ -2155,6 +2157,12 @@ void Shadow_(u32 sourceLine, bool32 isShadow)
 {
     INVALID_IF(!DATA.currentMon, "Shadow outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_IS_SHADOW, &isShadow);
+}
+
+void Shiny_(u32 sourceLine, bool32 isShiny)
+{
+    INVALID_IF(!DATA.currentMon, "Shiny outside of PLAYER/OPPONENT");
+    DATA.isShiny = isShiny;
 }
 
 static const char *const sBattlerIdentifiersSingles[] =
@@ -2821,6 +2829,9 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     {
         i = 0;
     }
+
+    if (ctx.explicitRNG)
+        DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_ITEM);
     PushBattlerAction(sourceLine, battlerId, RECORDED_ITEM_ID, (ctx.itemId >> 8) & 0xFF);
     PushBattlerAction(sourceLine, battlerId, RECORDED_ITEM_ID, ctx.itemId & 0xFF);
