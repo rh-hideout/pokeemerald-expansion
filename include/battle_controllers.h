@@ -395,6 +395,10 @@ void HandleChooseMoveAfterDma3(u32 battler);
 void SetControllerToRecordedPlayer(u32 battler);
 void RecordedPlayerBufferExecCompleted(u32 battler);
 
+// recorded partner controller
+void SetControllerToRecordedPartner(u32 battler);
+void RecordedPartnerBufferExecCompleted(u32 battler);
+
 // opponent controller
 void SetControllerToOpponent(u32 battler);
 void OpponentBufferExecCompleted(u32 battler);
