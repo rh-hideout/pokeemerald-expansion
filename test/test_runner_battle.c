@@ -359,7 +359,15 @@ u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi)
 {
     const struct BattlerTurn *turn = NULL;
 
-    if (gCurrentTurnActionNumber < gBattlersCount)
+    if (gTestRunnerState.test->runner == &gFunctionTestRunner)
+    {
+        for (u32 i = 0; i < 8; i++)
+        {
+            if (gRiggedRngList[i].tag == tag)
+                return gRiggedRngList[i].value;
+        }
+    }
+    else if (gCurrentTurnActionNumber < gBattlersCount)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
@@ -392,7 +400,19 @@ u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
     const struct BattlerTurn *turn = NULL;
     u32 default_;
 
-    if (gCurrentTurnActionNumber < gBattlersCount)
+    if (gTestRunnerState.test->runner == &gFunctionTestRunner)
+    {
+        for (u32 i = 0; i < 8; i++)
+        {
+            if (gRiggedRngList[i].tag == tag)
+            {
+                if (reject(gRiggedRngList[i].value))
+                    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", gRiggedRngList[i].value);
+                return gRiggedRngList[i].value;
+            }
+        }
+    }
+    else if (gCurrentTurnActionNumber < gBattlersCount)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
@@ -445,7 +465,15 @@ u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
     if (sum == 0)
         Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called with zero sum");
 
-    if (gCurrentTurnActionNumber < gBattlersCount || tag == RNG_SHELL_SIDE_ARM)
+    if (gTestRunnerState.test->runner == &gFunctionTestRunner)
+    {
+        for (u32 i = 0; i < 8; i++)
+        {
+            if (gRiggedRngList[i].tag == tag)
+                return gRiggedRngList[i].value;
+        }
+    }
+    else if (gCurrentTurnActionNumber < gBattlersCount || tag == RNG_SHELL_SIDE_ARM)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
         turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
