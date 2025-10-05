@@ -1673,7 +1673,10 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
 
 enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
 {
-    enum ItemHoldEffect holdEffect;
+    enum ItemHoldEffect holdEffect = HOLD_EFFECT_NONE;
+
+    if (gBattleMons[battlerId].item == ITEM_NONE) // Failsafe for when user recorded an item but it was consumed
+        return holdEffect;
 
     if (!IsAiBattlerAware(battlerId))
         holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
