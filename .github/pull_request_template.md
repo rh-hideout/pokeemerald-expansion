@@ -24,6 +24,7 @@
 <!-- CREDITS -->
 <!-- Once your PR is submitted, leave a comment asking the bot to add you to the credits. -->
 <!-- If anybody helped with this PR, please encourage them to comment on your PR and ask the bot to add them to the credits. -->
+<!-- If somebody has contributed and has already requested to be credited, please ask the bot to add them to the credits. If they do not not have a known GitHub account, add them to the list at bottom of `CREDITS.md`. -->
 <!-- EVERY contribution matters! -->
 <!-- https://github.com/rh-hideout/pokeemerald-expansion/wiki/CREDITS.md-Frequently-Asked-Questions -->
 
