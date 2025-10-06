@@ -243,3 +243,5 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
 }
 
 TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
+
+TO_DO_BATTLE_TEST("Contrary interacts correctly with X Attack and other stat boost items")
