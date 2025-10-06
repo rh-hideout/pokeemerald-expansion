@@ -18,6 +18,7 @@
 //Morning and evening don't exist in Gen 3
 #if OW_TIMES_OF_DAY == GEN_3
     #define MORNING_HOUR_BEGIN 0
+    #define MORNING_HOUR_MIDDLE 0
     #define MORNING_HOUR_END   0
 
     #define DAY_HOUR_BEGIN     12
@@ -31,6 +32,7 @@
 //Evening doesn't exist in Gen 4
 #elif OW_TIMES_OF_DAY == GEN_4
     #define MORNING_HOUR_BEGIN 4
+    #define MORNING_HOUR_MIDDLE 7 //Used for palette transition but not gameplay
     #define MORNING_HOUR_END   10
 
     #define DAY_HOUR_BEGIN     10
@@ -44,6 +46,7 @@
 //Gen 5 currently not included as the seasons change the times of day
 #elif OW_TIMES_OF_DAY <= GEN_6
     #define MORNING_HOUR_BEGIN 4
+    #define MORNING_HOUR_MIDDLE 7 //Used for palette transition but not gameplay
     #define MORNING_HOUR_END   11
 
     #define DAY_HOUR_BEGIN     11
@@ -57,6 +60,7 @@
 //These are the Sun/Ultra Sun times
 #elif OW_TIMES_OF_DAY == GEN_7
     #define MORNING_HOUR_BEGIN 6
+    #define MORNING_HOUR_MIDDLE 8 //Used for palette transition but not gameplay
     #define MORNING_HOUR_END   10
 
     #define DAY_HOUR_BEGIN     10
@@ -69,6 +73,7 @@
     #define NIGHT_HOUR_END     6
 #elif OW_TIMES_OF_DAY >= GEN_8
     #define MORNING_HOUR_BEGIN 6
+    #define MORNING_HOUR_MIDDLE 8 //Used for palette transition but not gameplay
     #define MORNING_HOUR_END   10
 
     #define DAY_HOUR_BEGIN     10

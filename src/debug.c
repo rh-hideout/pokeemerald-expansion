@@ -257,6 +257,7 @@ static void DebugAction_Util_WatchCredits(u8 taskId);
 static void DebugAction_Util_CheatStart(u8 taskId);
 
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId);
+static void DebugAction_TimeMenu_ChooseTimeOfDay(u8 taskId);
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId);
 
 static void DebugAction_CreateFollowerNPC(u8 taskId);
@@ -413,10 +414,10 @@ static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
 };
 
 static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
-    COMPOUND_STRING("Morning"),
-    COMPOUND_STRING("Day"),
-    COMPOUND_STRING("Evening"),
-    COMPOUND_STRING("Night"),
+    COMPOUND_STRING("Morning " STR(MORNING_HOUR_MIDDLE) ":00"),
+    COMPOUND_STRING("Day " STR(DAY_HOUR_BEGIN) ":00"),
+    COMPOUND_STRING("Evening " STR(EVENING_HOUR_BEGIN) ":00"),
+    COMPOUND_STRING("Night " STR(NIGHT_HOUR_BEGIN) ":00"),
 };
 
 // Follower NPC
@@ -476,6 +477,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_TimeMenu_TimesOfDay[] =
     [TIME_DAY]     = { gTimeOfDayStringsTable[TIME_DAY],     DebugAction_TimeMenu_ChangeTimeOfDay },
     [TIME_EVENING] = { gTimeOfDayStringsTable[TIME_EVENING], DebugAction_TimeMenu_ChangeTimeOfDay },
     [TIME_NIGHT]   = { gTimeOfDayStringsTable[TIME_NIGHT],   DebugAction_TimeMenu_ChangeTimeOfDay },
+    [TIMES_OF_DAY_COUNT] = {COMPOUND_STRING("Choose hour"),  DebugAction_TimeMenu_ChooseTimeOfDay },
     { NULL }
 };
 
@@ -3035,7 +3037,7 @@ static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
     switch (input)
     {
         case TIME_MORNING:
-            FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(MORNING_HOUR_MIDDLE, 0, 0);
             break;
         case TIME_DAY:
             FakeRtc_ForwardTimeTo(DAY_HOUR_BEGIN, 0, 0);
@@ -3049,6 +3051,60 @@ static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
     }
     Debug_DestroyMenu_Full(taskId);
     SetMainCallback2(CB2_LoadMap);
+}
+
+static void Debug_Display_HourInfo(u32 hour, u32 digit, u8 windowId)
+{
+    StringCopy(gStringVar2, gText_DigitIndicator[digit]);
+    ConvertIntToDecimalStringN(gStringVar1, hour, STR_CONV_MODE_LEADING_ZEROS, 2);
+    StringExpandPlaceholders(gStringVar4, COMPOUND_STRING("Time: \n{STR_VAR_1}:00\n\n{STR_VAR_2}"));
+    AddTextPrinterParameterized(windowId, DEBUG_MENU_FONT, gStringVar4, 0, 0, 0, NULL);
+}
+
+static void DebugAction_TimeMenu_ChooseTimeOfDay_SelectHour(u8 taskId)
+{
+    if (JOY_NEW(A_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        FakeRtc_ForwardTimeTo(gTasks[taskId].tInput, 0, 0);
+        DebugAction_DestroyExtraWindow(taskId);
+        Debug_DestroyMenu_Full(taskId);
+        SetMainCallback2(CB2_LoadMap);
+    }
+    else if (JOY_NEW(B_BUTTON))
+    {
+        PlaySE(SE_SELECT);
+        DebugAction_DestroyExtraWindow(taskId);
+        return;
+    }
+
+    Debug_HandleInput_Numeric(taskId, 0, 23, 2);
+
+    if (JOY_NEW(DPAD_ANY) || JOY_NEW(A_BUTTON))
+        Debug_Display_HourInfo(gTasks[taskId].tInput, gTasks[taskId].tDigit, gTasks[taskId].tSubWindowId);
+}
+
+static void DebugAction_TimeMenu_ChooseTimeOfDay(u8 taskId)
+{
+    u8 windowId;
+
+    ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+    RemoveWindow(gTasks[taskId].tWindowId);
+
+    HideMapNamePopUpWindow();
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sDebugMenuWindowTemplateExtra);
+    DrawStdWindowFrame(windowId, FALSE);
+
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+
+    // Display initial item
+    Debug_Display_HourInfo(0, 0, windowId);
+
+    gTasks[taskId].func = DebugAction_TimeMenu_ChooseTimeOfDay_SelectHour;
+    gTasks[taskId].tSubWindowId = windowId;
+    gTasks[taskId].tInput = 0;
+    gTasks[taskId].tDigit = 0;
 }
 
 static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
