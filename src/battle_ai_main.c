@@ -2194,7 +2194,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             else if (battlerDef == BATTLE_PARTNER(battlerAtk))
                 break; //Always heal your ally
-            else if (!ShouldCureStatus(battlerAtk, battlerDef, FALSE, aiData))
+            else if (!ShouldCureStatus(battlerAtk, battlerDef, aiData))
             {
                 if (AI_BattlerAtMaxHp(battlerAtk))
                     ADJUST_SCORE(-10);
@@ -3606,7 +3606,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 {
                     if (gBattleMons[battlerAtkPartner].status1 & STATUS1_CAN_MOVE)
                     {
-                        if (ShouldCureStatus(battlerAtk, battlerAtkPartner, FALSE, aiData))
+                        if (ShouldCureStatus(battlerAtk, battlerAtkPartner, aiData))
                             ADJUST_SCORE(DECENT_EFFECT);
                     }
                     else
@@ -4573,8 +4573,8 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_PURIFY:
         if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
         {
-            if (ShouldCureStatus(battlerAtk, battlerDef, FALSE, aiData))
-                ADJUST_SCORE(BEST_EFFECT);
+            if (ShouldCureStatus(battlerAtk, battlerDef, aiData))
+                ADJUST_SCORE(GOOD_EFFECT);
             if (ShouldRecover(battlerAtk, battlerDef, move, 50))
                 RETURN_SCORE_PLUS(WEAK_EFFECT);
         }
@@ -5934,8 +5934,10 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
             case MOVE_EFFECT_REMOVE_STATUS:
                 if (gBattleMons[battlerDef].status1 & GetMoveEffectArg_Status(move))
                 {
-                    if (ShouldCureStatus(battlerAtk, battlerDef, FALSE, aiData))
+                    if (ShouldCureStatus(battlerAtk, battlerDef, aiData))
                         ADJUST_SCORE(DECENT_EFFECT);
+                    else if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB || aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB)
+                        ADJUST_SCORE(WEAK_EFFECT);
                     else
                         ADJUST_SCORE(BAD_EFFECT);
                 }

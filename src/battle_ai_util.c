@@ -3928,7 +3928,7 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     return FALSE;
 }
 
-bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct AiLogicData *aiData)
+static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct AiLogicData *aiData)
 {
     bool32 targetingSelf = (battlerAtk == battlerDef);
     bool32 targetingAlly = IsTargetingPartner(battlerAtk, battlerDef);
@@ -4012,6 +4012,16 @@ bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct
         else
             return FALSE;
     }
+}
+
+bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+{
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, FALSE, aiData);
+}
+
+bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+{
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, TRUE, aiData);
 }
 
 // Partner Logic
