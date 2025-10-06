@@ -5931,6 +5931,15 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                 if (ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
+            case MOVE_EFFECT_REMOVE_STATUS:
+                if (gBattleMons[battlerDef].status1 & GetMoveEffectArg_Status(move))
+                {
+                    if (ShouldCureStatus(battlerAtk, battlerDef, FALSE, aiData))
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    else
+                        ADJUST_SCORE(BAD_EFFECT);
+                }
+                break;
             default:
                 break;
             }
