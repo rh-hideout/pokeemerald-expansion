@@ -61,14 +61,6 @@ enum {
     ABILITYEFFECT_SWITCH_IN_STATUSES,
 };
 
-// For the first argument of ItemBattleEffects, to deteremine which block of item effects to try
-enum ItemCaseId
-{
-    ITEMEFFECT_NONE,
-    ITEMEFFECT_ON_SWITCH_IN,
-    ITEMEFFECT_ON_SWITCH_IN_FIRST_TURN,
-};
-
 enum ItemEffect
 {
     ITEM_NO_EFFECT,
@@ -259,7 +251,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbility);
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum FunctionCallOption option);
 bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, u32 move, u32 moveType, enum FunctionCallOption option);
-enum Ability AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg);
+u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg);
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
 bool32 IsMoldBreakerTypeAbility(u32 battler, enum Ability ability);
@@ -423,6 +415,7 @@ u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);
 bool32 IsDazzlingAbility(enum Ability ability);
+bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 
 #endif // GUARD_BATTLE_UTIL_H

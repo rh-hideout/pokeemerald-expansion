@@ -2513,8 +2513,6 @@ static enum MoveCanceller CancellerPPDeduction(struct BattleContext *ctx)
              ppToDeduct++;
     }
 
-    gProtectStructs[ctx->battlerAtk].notFirstStrike = TRUE;
-
     // For item Metronome, echoed voice
     if (ctx->currentMove != gLastResultingMoves[ctx->battlerAtk] || WasUnableToUseMove(ctx->battlerAtk))
         gBattleStruct->sameMoveTurns[ctx->battlerAtk] = 0;
@@ -3622,7 +3620,7 @@ static inline u32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 ani
     return 0;
 }
 
-enum Ability AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg)
+u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg)
 {
     u32 effect = 0;
     u32 moveType = 0, move = 0;
@@ -10929,4 +10927,19 @@ bool32 IsAnyTargetTurnDamaged(u32 battlerAtk)
             return TRUE;
     }
     return FALSE;
+}
+
+bool32 IsAllowedToUseBag(void)
+{
+    switch(VarGet(B_VAR_NO_BAG_USE))
+    {
+    case NO_BAG_RESTRICTION:
+        return TRUE;
+    case NO_BAG_AGAINST_TRAINER: //True in wild battle; False in trainer battle
+        return (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER));
+    case NO_BAG_IN_BATTLE:
+        return FALSE;
+    default:
+        return TRUE; // Undefined Behavior
+    }
 }
