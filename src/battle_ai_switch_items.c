@@ -2519,19 +2519,78 @@ static bool32 ShouldUseItem(u32 battler)
                 shouldUse = TRUE;
             break;
         case EFFECT_ITEM_INCREASE_STAT:
-        case EFFECT_ITEM_INCREASE_ALL_STATS:
-            if (!gDisableStructs[battler].isFirstTurn
-                || AI_OpponentCanFaintAiWithMod(battler, 0))
+            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            {
+                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
+                {
+                    shouldUse = TRUE;
+                    break;
+                }
+
+                enum StatChange statChange = STAT_CHANGE_ATK;
+
+                if (B_X_ITEMS_BUFF >= GEN_7)
+                    statChange = STAT_CHANGE_ATK_2;
+
+                statChange = statChange + itemEffects[1] - STAT_ATK;
+
+                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
+                    shouldUse = TRUE;
+
+                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
+                    shouldUse = TRUE;
+
                 break;
-            shouldUse = TRUE;
+            }
+            break;
+        case EFFECT_ITEM_INCREASE_ALL_STATS:
+            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
+            {
+                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
+                {
+                    shouldUse = TRUE;
+                    break;
+                }
+
+                if (IsBattlerAlive(LEFT_FOE(battler)))
+                {
+                    if (ShouldRaiseAnyStat(battler, LEFT_FOE(battler)))
+                        shouldUse = TRUE;
+                    else
+                        break;
+                }
+
+                if (IsBattlerAlive(RIGHT_FOE(battler)))
+                {
+                    if (ShouldRaiseAnyStat(battler, RIGHT_FOE(battler)))
+                        shouldUse = TRUE;
+                    else
+                        break;
+                }
+            }
             break;
         case EFFECT_ITEM_SET_FOCUS_ENERGY:
             if (!gDisableStructs[battler].isFirstTurn
                 || gBattleMons[battler].volatiles.dragonCheer
                 || gBattleMons[battler].volatiles.focusEnergy
                 || AI_OpponentCanFaintAiWithMod(battler, 0))
+            {
                 break;
-            shouldUse = TRUE;
+            }
+            else
+            {
+                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
+                {
+                    shouldUse = TRUE;
+                    break;
+                }
+
+                if (gAiLogicData->abilities[battler] == ABILITY_SUPER_LUCK
+                 || gAiLogicData->abilities[battler] == ABILITY_SNIPER
+                 || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SCOPE_LENS
+                 || HasMoveWithFlag(battler, GetMoveCriticalHitStage))
+                    shouldUse = TRUE;
+            }
             break;
         case EFFECT_ITEM_SET_MIST:
             battlerSide = GetBattlerSide(battler);
