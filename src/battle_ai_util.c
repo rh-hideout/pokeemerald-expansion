@@ -3928,7 +3928,13 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     return FALSE;
 }
 
-static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct AiLogicData *aiData)
+enum CureStatus
+{
+    CURE_STATUS_WITH_ITEM,
+    CURE_STATUS_WITH_MOVE
+};
+
+static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, enum CureStatus cureMethod, struct AiLogicData *aiData)
 {
     bool32 targetingSelf = (battlerAtk == battlerDef);
     bool32 targetingAlly = IsTargetingPartner(battlerAtk, battlerDef);
@@ -3941,7 +3947,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
             if (HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK) || HasMoveWithEffect(battlerDef, EFFECT_SNORE))
                 return FALSE;
             else
-                return usingItem || targetingAlly;
+            return cureMethod == CURE_STATUS_WITH_ITEM || targetingAlly;
         }
         return FALSE;
     }
@@ -3952,7 +3958,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
         {
             if (HasThawingMove(battlerDef))
                 return FALSE;
-            return usingItem || targetingAlly;
+            return cureMethod == CURE_STATUS_WITH_ITEM || targetingAlly;
         }
         return FALSE;
     }
@@ -4016,12 +4022,12 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
 
 bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
 {
-    return ShouldCureStatusInternal(battlerAtk, battlerDef, FALSE, aiData);
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, CURE_STATUS_WITH_MOVE, aiData);
 }
 
 bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
 {
-    return ShouldCureStatusInternal(battlerAtk, battlerDef, TRUE, aiData);
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, CURE_STATUS_WITH_ITEM, aiData);
 }
 
 // Partner Logic
