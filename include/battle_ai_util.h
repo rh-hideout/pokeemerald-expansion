@@ -285,6 +285,8 @@ bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category);
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
 u32 IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
+u32 IncreaseStatUpScoreNoEncore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
+u32 IncreaseStatUpScoreContraryNoEncore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
 u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat);
 void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
