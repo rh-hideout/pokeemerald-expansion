@@ -315,3 +315,5 @@ DOUBLE_BATTLE_TEST("Opportunist and Mirror Herb resolve correctly")
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }
+
+TO_DO_BATTLE_TEST("Opportunist copies stat changes from the opponent's X Attack and other stat-boosting items.")
