@@ -97,7 +97,6 @@ SINGLE_BATTLE_TEST("Weakness berries do not activate unless a move is super effe
 
 SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16 damage)
 {
-    KNOWN_FAILING; // #7376
     u32 item = 0;
 
     PARAMETRIZE { item = ITEM_NONE; }

@@ -56,7 +56,6 @@ SINGLE_BATTLE_TEST("Type-enhancing items increase the base power of moves by 20%
 
 SINGLE_BATTLE_TEST("Type-enhancing items do not increase the power of Struggle", s16 damage)
 {
-    KNOWN_FAILING; // #7376
     u32 item = 0;
 
     PARAMETRIZE { item = ITEM_NONE; }
