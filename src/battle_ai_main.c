@@ -319,21 +319,8 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
-bool32 BattlerChooseNonMoveAction(u32 battler)
+bool32 BattlerChooseNonMoveAction()
 {
-    //We run only the AI functions that can result in fleeing
-    u32 flags = (gAiThinkingStruct->aiFlags[battler] >> 61);
-    gAiThinkingStruct->aiLogicId = 61;
-    gAiThinkingStruct->score[0] = 1;
-    while (flags != 0)
-    {
-        if (flags & 1)
-            BattleAI_DoAIProcessing(gAiThinkingStruct, battler, GetOppositeBattler(battler));
-        flags >>= (u64)1;
-        gAiThinkingStruct->aiLogicId++;
-    }
-    gAiThinkingStruct->score[0] = 0;
-
     if (gAiThinkingStruct->aiAction & AI_ACTION_FLEE)
     {
         gAiBattleData->actionFlee = TRUE;
@@ -374,10 +361,6 @@ void ComputeBattlerDecisions(u32 battler)
     bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
     if (isAiBattler || CanAiPredictMove())
     {
-        // If ai is about to flee or chosen to watch player, no need to calc anything
-        if (isAiBattler && BattlerChooseNonMoveAction(battler))
-            return;
-
         // Risky AI switches aggressively even mid battle
         enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE;
 
@@ -398,6 +381,8 @@ void ComputeBattlerDecisions(u32 battler)
 
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
+        if (isAiBattler)
+            BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
 
         gAiLogicData->aiCalcInProgress = FALSE;
