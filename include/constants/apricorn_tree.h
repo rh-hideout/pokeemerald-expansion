@@ -77,6 +77,7 @@
 #define APRICORN_BERRY_KEE      72
 #define APRICORN_BERRY_MARANGA  73
 
+// default is set to an u8, so limited to 256 by default
 #define APRICORN_COUNT          74
 
 // Trees

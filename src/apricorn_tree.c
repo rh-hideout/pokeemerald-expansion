@@ -62,7 +62,9 @@ u8 GetApricornCountByApricornTreeId(u8 id)
     }
 
     #if (APRICORN_TREE_COUNT > 0)
-        return gApricornTrees[id].isSapling ? 1 : 2;
+        return gApricornTrees[id].maximum > gApricornTrees[id].minimum
+                ? gApricornTrees[id].minimum + Random() % (gApricornTrees[id].maximum - gApricornTrees[id].minimum)
+                : gApricornTrees[id].minimum;
     #else
         return 0;
     #endif

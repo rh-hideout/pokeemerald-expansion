@@ -79,8 +79,9 @@ const u16 ApricornTypes[APRICORN_COUNT] =
 
 struct ApricornTree
 {
-    u8 isSapling:1;
-    u8 apricornType:7; // ensure that there's enough bits for APRICORN_COUNT
+    u8 minimum;
+    u8 maximum;
+    u8 apricornType; // ensure that there's enough bits for APRICORN_COUNT
 };
 
 const struct ApricornTree gApricornTrees[APRICORN_TREE_COUNT] =
@@ -88,7 +89,8 @@ const struct ApricornTree gApricornTrees[APRICORN_TREE_COUNT] =
     #if APRICORN_TREE_COUNT > 0
     [APRICORN_TREE_NONE] =
     {
-        .isSapling = FALSE,
+        .minimum = 1,
+        .maximum = 1,
         .apricornType = APRICORN_RED,
     },
     #endif

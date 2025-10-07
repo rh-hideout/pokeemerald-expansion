@@ -9,12 +9,13 @@ To add a new tree, first increase the tree count and expand the tree list in `in
 
 Note that each tree will take a bit in the savegame's `SaveBlock3` struct so increasing `APRICORN_TREE_COUNT` **breaks the savegame**.
 Due to this, pokeemerald-expansion doesn't have any trees set up by default to prevent breaking downstream savegames.
+The trees support random yields and properly use plural case on plural yields.
 
 ```diff
 #define APRICORN_TREE_NONE 0
 
 -#define APRICORN_TREE_COUNT 0
-+#define APRICORN_TREE_ROUTE101_RED_SAPLING 1
++#define APRICORN_TREE_ROUTE101_RED_TREE 1
 +
 +#define APRICORN_TREE_COUNT 32
 ```
@@ -26,13 +27,15 @@ const struct ApricornTree gApricornTrees[APRICORN_TREE_COUNT] =
 {
     [APRICORN_TREE_NONE] =
     {
-        .isSapling = FALSE,
+        .minimum = 1,
+        .maximum = 1,
         .apricornType = APRICORN_RED,
     },
 
-+   [APRICORN_TREE_ROUTE101_RED_SAPLING] =
++   [APRICORN_TREE_ROUTE101_RED_TREE] =
 +   {
-+       .isSapling = TRUE, // Saplings grow a single apricot each day, trees grow two.
++       .minimum = 1,
++       .maximum = 1,
 +       .apricornType = APRICORN_RED,
 +   },
 };
