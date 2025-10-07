@@ -726,7 +726,6 @@ BattleScript_EffectFlingConsumeBerry:
 	bicword gHitMarker, HITMARKER_DISABLE_ANIMATION
 	setbyte sBERRY_OVERRIDE, 0
 	restorebattleritem
-
 BattleScript_FlingEnd:
 	tryfaintmon BS_TARGET
 	trysymbiosis BS_ATTACKER
@@ -7815,7 +7814,7 @@ BattleScript_AirBaloonMsgIn::
 	waitmessage B_WAIT_TIME_LONG
 	end3
 
-BattleScript_AirBaloonMsgInRet::
+BattleScript_AirBalloonMsgInRet::
 	printstring STRINGID_AIRBALLOONFLOAT
 	waitmessage B_WAIT_TIME_LONG
 	return

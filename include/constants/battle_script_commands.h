@@ -149,7 +149,7 @@ enum MoveEndEffects
     MOVEEND_MIRROR_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
-    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (parental bond))
+    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond))
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
@@ -159,7 +159,7 @@ enum MoveEndEffects
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
     MOVEEND_RED_CARD,
     MOVEEND_EJECT_BUTTON,
-    MOVEEND_LIFEORB_SHELLBELL,
+    MOVEEND_LIFE_ORB_SHELL_BELL,
     MOVEEND_FORM_CHANGE,
     MOVEEND_EMERGENCY_EXIT,
     MOVEEND_EJECT_PACK,
@@ -180,8 +180,6 @@ enum MoveEndEffects
     // This guarantees a correct jump if new moveends are added directly after MOVEEND_HIT_ESCAPE
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
 };
-
-
 
 // switch cases
 #define B_SWITCH_NORMAL     0

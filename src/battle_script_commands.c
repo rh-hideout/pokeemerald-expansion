@@ -6393,11 +6393,9 @@ static void Cmd_moveend(void)
             break;
         }
         case MOVEEND_HP_THRESHHOLD_ITEMS_TARGET:
-            if (gMultiHitCounter)
-            {
-                if (ItemBattleEffects(gBattlerTarget, gBattlerAttacker, GetBattlerHoldEffect(gBattlerTarget), IsOnHpThresholdActivation))
-                    effect = TRUE;
-            }
+            if (gMultiHitCounter
+             && ItemBattleEffects(gBattlerTarget, gBattlerAttacker, GetBattlerHoldEffect(gBattlerTarget), IsOnHpThresholdActivation))
+                effect = TRUE;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_MULTIHIT_MOVE:
@@ -6608,7 +6606,7 @@ static void Cmd_moveend(void)
             else
                 gBattleScripting.moveendState++;
             break;
-        case MOVEEND_LIFEORB_SHELLBELL:
+        case MOVEEND_LIFE_ORB_SHELL_BELL:
             if (ItemBattleEffects(gBattlerAttacker, 0, GetBattlerHoldEffect(gBattlerAttacker), IsLifeOrbShellBellActivation))
                 effect = TRUE;
             gBattleScripting.moveendState++;

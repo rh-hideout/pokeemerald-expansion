@@ -32,16 +32,13 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 item
 
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect);
 bool32 IsOnSwitchInFirstTurnActivation(enum HoldEffect holdEffect);
-
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect);
 bool32 IsMirrorHerbFirstTurnActivation(enum HoldEffect holdEffect);
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect);
 bool32 IsWhiteHerbFirstTurnActivation(enum HoldEffect holdEffect);
 bool32 IsWhiteHerbEndTurnActivation(enum HoldEffect holdEffect);
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect);
-
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect);
-
 bool32 IsKeeMarangaBerryActivation(enum HoldEffect holdEffect);
 bool32 IsOnTargetHitActivation(enum HoldEffect holdEffect);
 bool32 IsOnAttackerAfterHitActivation(enum HoldEffect holdEffect);
