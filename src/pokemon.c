@@ -83,7 +83,6 @@ static void EncryptBoxMon(struct BoxPokemon *boxMon);
 static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
 void TrySpecialOverworldEvo();
-static void ApplyFriendshipBonuses(struct Pokemon *mon, s32 *friendship);
 
 EWRAM_DATA static u8 sLearningMoveTableID = 0;
 EWRAM_DATA u8 gPlayerPartyCount = 0;
@@ -3704,14 +3703,7 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, 
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);                                        \
-        if (friendshipChange > 0 && holdEffect == HOLD_EFFECT_FRIENDSHIP_UP)                            \
-            friendship += 150 * friendshipChange / 100;                                                 \
-        else                                                                                            \
-            friendship += friendshipChange;                                                             \
-        if (friendshipChange > 0)                                                                       \
-        {                                                                                               \
-            ApplyFriendshipBonuses(mon,&friendship);                                                    \
-        }                                                                                               \
+        ApplyFriendshipBonuses(mon,&friendship,friendshipChange,holdEffect);                            \
         if (friendship < 0)                                                                             \
             friendship = 0;                                                                             \
         if (friendship > MAX_FRIENDSHIP)                                                                \
@@ -5266,15 +5258,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         }
 
         mod = sFriendshipEventModifiers[event][friendshipLevel];
-        if (mod > 0 && holdEffect == HOLD_EFFECT_FRIENDSHIP_UP)
-            // 50% increase, rounding down
-            mod = (150 * mod) / 100;
-
-        friendship += mod;
-        if (mod > 0)
-        {
-            ApplyFriendshipBonuses(mon,&friendship);
-        }
+        ApplyFriendshipBonuses(mon,&friendship,mod,holdEffect);
 
         if (friendship < 0)
             friendship = 0;
@@ -5285,8 +5269,16 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-static void ApplyFriendshipBonuses(struct Pokemon *mon, s32 *friendship)
+void ApplyFriendshipBonuses(struct Pokemon *mon, s32 *friendship, u32 modifier, enum ItemHoldEffect itemHoldEffect)
 {
+    if ((modifier > 0) && (itemHoldEffect == HOLD_EFFECT_FRIENDSHIP_UP))
+        *friendship += 150 * modifier / 100;
+    else
+        *friendship += modifier;
+
+    if (modifier == 0)
+        return;
+
     if (GetMonData(mon, MON_DATA_POKEBALL, NULL) == ITEM_LUXURY_BALL)
         *friendship += ITEM_FRIENDSHIP_LUXURY_BONUS;
 
