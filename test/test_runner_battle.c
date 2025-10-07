@@ -15,6 +15,7 @@
 #include "window.h"
 #include "constants/characters.h"
 #include "constants/trainers.h"
+#include "constants/abilities.h"
 
 #if defined(__INTELLISENSE__)
 #undef TestRunner_Battle_RecordAbilityPopUp
@@ -544,7 +545,7 @@ const void *RandomElementArray(enum RandomTag tag, const void *array, size_t siz
     return (const u8 *)array + size * index;
 }
 
-static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, u32 ability)
+static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, enum Ability ability)
 {
     struct QueuedAbilityEvent *event;
     s32 iMax = i + n;
@@ -562,7 +563,7 @@ static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, u32 ability)
     return -1;
 }
 
-void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, u32 ability)
+void TestRunner_Battle_RecordAbilityPopUp(u32 battlerId, enum Ability ability)
 {
     s32 queuedEvent;
     s32 match;
@@ -1674,7 +1675,7 @@ void Nature_(u32 sourceLine, u32 nature)
     DATA.nature = nature;
 }
 
-void Ability_(u32 sourceLine, u32 ability)
+void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
     u32 species;
@@ -2560,6 +2561,9 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
     {
         i = 0;
     }
+
+    if (ctx.explicitRNG)
+        DATA.battleRecordTurns[DATA.turns][battlerId].rng = ctx.rng;
     PushBattlerAction(sourceLine, battlerId, RECORDED_ACTION_TYPE, B_ACTION_USE_ITEM);
     PushBattlerAction(sourceLine, battlerId, RECORDED_ITEM_ID, (ctx.itemId >> 8) & 0xFF);
     PushBattlerAction(sourceLine, battlerId, RECORDED_ITEM_ID, ctx.itemId & 0xFF);

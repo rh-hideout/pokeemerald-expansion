@@ -759,7 +759,7 @@ static void PutMovesPointsText(struct BattleDebugMenu *data)
                 AddTextPrinterParameterized3(data->aiMovesWindowId, FONT_NORMAL, 103 + count * 54, (i * 15) + 15, sTextColorTable[COLORID_RED], 0, COMPOUND_STRING("/"));
             else
                 AddTextPrinterParameterized(data->aiMovesWindowId, FONT_NORMAL, COMPOUND_STRING("/"), 103 + count * 54, (i * 15) + 15, 0, NULL);
-            
+
             ConvertIntToDecimalStringN(text,
                                        AI_GetDamage(data->aiBattlerId, battlerDef, i, AI_ATTACKING, gAiLogicData),
                                        STR_CONV_MODE_LEADING_ZEROS, 3);
@@ -920,7 +920,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
     {
         if (IsOnPlayerSide(i) && IsBattlerAlive(i))
         {
-            u16 ability = gAiLogicData->abilities[i];
+            enum Ability ability = gAiLogicData->abilities[i];
             enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[i];
             u16 item = gAiLogicData->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;

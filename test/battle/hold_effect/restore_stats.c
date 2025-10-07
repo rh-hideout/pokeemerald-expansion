@@ -55,10 +55,10 @@ DOUBLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
         MESSAGE("The opposing Wobbuffet returned its stats to normal using its White Herb!");
-
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
         MESSAGE("The opposing Wynaut returned its stats to normal using its White Herb!");
     } THEN {
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("White Herb restores stats after Attack was lowered by Intimi
 SINGLE_BATTLE_TEST("White Herb restores stats after all hits of a multi hit move happened")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SLIGGOO_HISUI; ability = ABILITY_GOOEY; }
     PARAMETRIZE { species = SPECIES_DUGTRIO_ALOLA; ability = ABILITY_TANGLING_HAIR; }
@@ -187,7 +187,7 @@ SINGLE_BATTLE_TEST("White Herb wont have time to activate if Magician steals it"
 SINGLE_BATTLE_TEST("White Herb has correct interactions with Intimidate triggered Defiant and Competitive")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_IGGLYBUFF; ability = ABILITY_COMPETITIVE; }
     PARAMETRIZE { species = SPECIES_MANKEY; ability = ABILITY_DEFIANT; }
