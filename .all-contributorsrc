@@ -357,6 +357,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "Mother-Of-Dragons",
+      "name": "Avara",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31101124?v=4",
+      "profile": "https://github.com/Mother-Of-Dragons",
+      "contributions": [
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,
