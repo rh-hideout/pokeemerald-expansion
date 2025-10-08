@@ -6843,7 +6843,7 @@ BattleScript_PowderMoveNoEffectWaitMsg:
 BattleScript_MoveUsedFlinched::
 	printstring STRINGID_PKMNFLINCHED
 	waitmessage B_WAIT_TIME_LONG
-	waitmessage B_WAIT_TIME_LONG
+	jumpifability BS_ATTACKER, ABILITY_STEADFAST, BattleScript_TryActivateSteadFast
 BattleScript_MoveUsedFlinchedEnd:
 	goto BattleScript_MoveEnd
 BattleScript_TryActivateSteadFast:
@@ -6853,7 +6853,7 @@ BattleScript_TryActivateSteadFast:
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_MoveUsedFlinchedEnd
-	setbyte gBattleCommunication STAT_SPEED
+	setbyte gBattleCommunication, STAT_SPEED
 	stattextbuffer
 	printstring STRINGID_ATTACKERABILITYSTATRAISE
 	waitmessage B_WAIT_TIME_LONG
