@@ -357,6 +357,16 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "mvit",
+      "name": "mv",
+      "avatar_url": "https://avatars.githubusercontent.com/u/128863?v=4",
+      "profile": "https://github.com/mvit",
+      "contributions": [
+        "code",
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,
