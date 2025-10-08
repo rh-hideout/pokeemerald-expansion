@@ -5,6 +5,7 @@
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_util.h"
@@ -581,10 +582,9 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 itemCanBeKnockedOff:1;
     u32 ateBoost:1;
     u32 commanderSpecies:11;
-    u32 padding:4;
+    u32 padding:5;
     // End of Word
 };
 
@@ -780,7 +780,7 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding2:2;
+    u8 padding1:2;
 };
 
 struct AiBattleData

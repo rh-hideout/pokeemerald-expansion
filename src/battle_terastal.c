@@ -14,7 +14,6 @@
 #include "sprite.h"
 #include "util.h"
 #include "constants/abilities.h"
-#include "constants/hold_effects.h"
 #include "constants/rgb.h"
 
 // Sets flags and variables upon a battler's Terastallization.
@@ -62,7 +61,7 @@ void ApplyBattlerVisualsForTeraAnim(u32 battler)
 // Returns whether a battler can Terastallize.
 bool32 CanTerastallize(u32 battler)
 {
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (gBattleMons[battler].volatiles.transformed && GET_BASE_SPECIES_ID(gBattleMons[battler].species) == SPECIES_TERAPAGOS)
         return FALSE;

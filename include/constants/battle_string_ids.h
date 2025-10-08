@@ -977,9 +977,15 @@ enum FlashFireStringID
     B_MSG_FLASH_FIRE_NO_BOOST,
 };
 
-// gBerryEffectStringIds
-enum BerryEffectStringID
+// CureStatusBerryEffectStringID
+enum CureStatusBerryEffectStringID
 {
+    B_MSG_CURED_PARALYSIS,
+    B_MSG_CURED_POISON,
+    B_MSG_CURED_BURN,
+    B_MSG_CURED_FREEEZE,
+    B_MSG_CURED_FROSTBITE,
+    B_MSG_CURED_SLEEP,
     B_MSG_CURED_PROBLEM,
     B_MSG_NORMALIZED_STATUS,
 };
