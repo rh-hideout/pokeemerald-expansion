@@ -1,5 +1,5 @@
 // Apricorn type lookup table, added to allow adding new apricorns without being forced to rearrange the item constants.
-const u16 ApricornTypes[APRICORN_COUNT] =
+const u16 ApricornTypes[] =
 {
     [APRICORN_RED]           = ITEM_RED_APRICORN,
     [APRICORN_BLUE]          = ITEM_BLUE_APRICORN,
@@ -81,7 +81,7 @@ struct ApricornTree
 {
     u8 minimum;
     u8 maximum;
-    u8 apricornType; // ensure that there's enough bits for APRICORN_COUNT
+    enum ApricornType apricornType;
 };
 
 const struct ApricornTree gApricornTrees[APRICORN_TREE_COUNT] =
