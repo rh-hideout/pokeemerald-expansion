@@ -3181,10 +3181,9 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
         return SHOULD_PIVOT;
 
     battlerToSwitch = gAiLogicData->mostSuitableMonId[battlerAtk];
-    if (battlerToSwitch >= PARTY_SIZE) {
-        // This shouldn't ever happen, but it's there to make sure we don't accidentally read past the gParty array.
+    // This shouldn't ever happen, but it's there to make sure we don't accidentally read past the gParty array.
+    if (battlerToSwitch >= PARTY_SIZE)
         battlerToSwitch = 0;
-    }
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
