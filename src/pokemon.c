@@ -3703,7 +3703,7 @@ bool8 ExecuteTableBasedItemEffect(struct Pokemon *mon, u16 item, u8 partyIndex, 
     {                                                                                                   \
         friendshipChange = itemEffect[itemEffectParam];                                                 \
         friendship = GetMonData(mon, MON_DATA_FRIENDSHIP, NULL);                                        \
-        ApplyFriendshipBonuses(mon,&friendship,friendshipChange,holdEffect);                            \
+        friendship += CalculateFriendshipBonuses(mon,friendshipChange,holdEffect);                      \
         if (friendship < 0)                                                                             \
             friendship = 0;                                                                             \
         if (friendship > MAX_FRIENDSHIP)                                                                \
@@ -5258,7 +5258,7 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
         }
 
         mod = sFriendshipEventModifiers[event][friendshipLevel];
-        ApplyFriendshipBonuses(mon,&friendship,mod,holdEffect);
+        friendship += CalculateFriendshipBonuses(mon,mod,holdEffect);
 
         if (friendship < 0)
             friendship = 0;
@@ -5269,21 +5269,25 @@ void AdjustFriendship(struct Pokemon *mon, u8 event)
     }
 }
 
-void ApplyFriendshipBonuses(struct Pokemon *mon, s32 *friendship, u32 modifier, enum ItemHoldEffect itemHoldEffect)
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum ItemHoldEffect itemHoldEffect)
 {
+    u32 bonus = 0;
+
     if ((modifier > 0) && (itemHoldEffect == HOLD_EFFECT_FRIENDSHIP_UP))
-        *friendship += 150 * modifier / 100;
+        bonus += 150 * modifier / 100;
     else
-        *friendship += modifier;
+        bonus += modifier;
 
     if (modifier == 0)
-        return;
+        return bonus;
 
     if (GetMonData(mon, MON_DATA_POKEBALL, NULL) == ITEM_LUXURY_BALL)
-        *friendship += ITEM_FRIENDSHIP_LUXURY_BONUS;
+        bonus += ITEM_FRIENDSHIP_LUXURY_BONUS;
 
     if (GetMonData(mon, MON_DATA_MET_LOCATION, NULL) == GetCurrentRegionMapSectionId())
-        *friendship += ITEM_FRIENDSHIP_MAPSEC_BONUS;
+        bonus += ITEM_FRIENDSHIP_MAPSEC_BONUS;
+
+    return bonus;
 }
 
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)

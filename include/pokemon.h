@@ -807,7 +807,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
-void ApplyFriendshipBonuses(struct Pokemon *mon, s32 *friendship, u32 modifier, enum ItemHoldEffect itemHoldEffect);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum ItemHoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);
