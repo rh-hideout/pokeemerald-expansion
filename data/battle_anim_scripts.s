@@ -171,7 +171,7 @@ gBattleAnimMove_Brine::
 	playsewithpan SE_M_DIVE, -64
 	waitforvisualfinish
 	delay 16
-	createvisualtask AnimTask_WaterSpoutRain, 5
+	createvisualtask AnimTask_BrineRain, 5
 	playsewithpan SE_M_SURF, +63
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
