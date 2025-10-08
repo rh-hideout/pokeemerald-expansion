@@ -544,7 +544,7 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
 bool32 IsAffectedByPowder(u32 battler, enum Ability ability, enum HoldEffect holdEffect)
 {
     if (ability == ABILITY_OVERCOAT
-        || (B_POWDER_GRASS >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
+        || (GetGenConfig(GEN_CONFIG_POWDER_GRASS) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
         || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES)
         return FALSE;
     return TRUE;
@@ -1699,7 +1699,10 @@ enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId)
 
 enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
 {
-    enum HoldEffect holdEffect;
+    enum HoldEffect holdEffect = HOLD_EFFECT_NONE;
+
+    if (gBattleMons[battlerId].item == ITEM_NONE) // Failsafe for when user recorded an item but it was consumed
+        return holdEffect;
 
     if (!IsAiBattlerAware(battlerId))
         holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
@@ -3925,6 +3928,102 @@ bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects mo
     }
 
     return FALSE;
+}
+
+static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 usingItem, struct AiLogicData *aiData)
+{
+    bool32 targetingSelf = (battlerAtk == battlerDef);
+    bool32 targetingAlly = IsTargetingPartner(battlerAtk, battlerDef);
+    u32 status = gBattleMons[battlerDef].status1;
+
+    if (status & STATUS1_SLEEP)
+    {
+        if (targetingAlly || targetingSelf)
+        {
+            if (HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK) || HasMoveWithEffect(battlerDef, EFFECT_SNORE))
+                return FALSE;
+            else
+                return usingItem || targetingAlly;
+        }
+        return FALSE;
+    }
+
+    if (status & STATUS1_FREEZE)
+    {
+        if (targetingAlly || targetingSelf)
+        {
+            if (HasThawingMove(battlerDef))
+                return FALSE;
+            return usingItem || targetingAlly;
+        }
+        return FALSE;
+    }
+
+    bool32 isHarmless = FALSE;
+
+    if (DoesBattlerBenefitFromAllVolatileStatus(battlerDef, aiData->abilities[battlerDef]))
+        isHarmless = TRUE;
+
+    if (status & STATUS1_PSN_ANY)
+    {
+        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB)
+            return FALSE;
+
+        if (aiData->abilities[battlerDef] == ABILITY_POISON_HEAL)
+            isHarmless = TRUE;
+
+        if (aiData->abilities[battlerDef] == ABILITY_TOXIC_BOOST && !isHarmless)
+        {
+            if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
+                isHarmless = TRUE;
+            else if (!(targetingSelf || targetingAlly) && !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
+                isHarmless = TRUE;
+        }
+    }
+
+    if (status & STATUS1_BURN)
+    {
+        if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB)
+            return FALSE;
+
+        if (aiData->abilities[battlerDef] == ABILITY_FLARE_BOOST && !isHarmless)
+        {
+            if (HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL))
+                isHarmless = TRUE;
+            else if (!(targetingSelf || targetingAlly) && !HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
+                isHarmless = TRUE;
+        }
+    }
+
+/*
+    if (status & STATUS1_PARALYSIS)
+    if (status & STATUS1_FROSTBITE)
+*/
+
+    if (isHarmless)
+    {
+        if (targetingSelf || targetingAlly)
+            return FALSE;
+        else
+            return TRUE;
+    }
+    else
+    {
+        if (targetingSelf || targetingAlly)
+            return TRUE;
+        else
+            return FALSE;
+    }
+}
+
+bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+{
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, FALSE, aiData);
+}
+
+bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData)
+{
+    return ShouldCureStatusInternal(battlerAtk, battlerDef, TRUE, aiData);
 }
 
 // Partner Logic

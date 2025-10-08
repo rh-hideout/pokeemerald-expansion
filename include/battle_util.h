@@ -59,6 +59,7 @@ enum {
     ABILITYEFFECT_OPPORTUNIST,
     ABILITYEFFECT_OPPORTUNIST_FIRST_TURN,
     ABILITYEFFECT_SWITCH_IN_STATUSES,
+    ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES,
 };
 
 enum ItemEffect
@@ -315,6 +316,7 @@ struct Pokemon *GetIllusionMonPtr(u32 battler);
 void ClearIllusionMon(u32 battler);
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, u32 battler);
 bool32 SetIllusionMon(struct Pokemon *mon, u32 battler);
+u32 TryImmunityAbilityHealStatus(u32 battler, u32 caseID);
 bool32 ShouldGetStatBadgeBoost(u16 flagId, u32 battler);
 enum DamageCategory GetBattleMoveCategory(u32 move);
 void SetDynamicMoveCategory(u32 battlerAtk, u32 battlerDef, u32 move);
@@ -393,6 +395,7 @@ bool32 IsPursuitTargetSet(void);
 void ClearPursuitValuesIfSet(u32 battler);
 void ClearPursuitValues(void);
 bool32 HasWeatherEffect(void);
+bool32 IsAnyTargetAffected(u32 battlerAtk);
 bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler);
 void ChooseStatBoostAnimation(u32 battler);
