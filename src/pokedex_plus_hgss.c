@@ -4147,7 +4147,8 @@ void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
         CopyBgTilemapBufferToVram(3);
         gTasks[taskId].tState++;
         break;
-    case 4: {
+    case 4:
+    {
         u32 personality = ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo;
         const u16 *paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, FALSE, personality);
 
