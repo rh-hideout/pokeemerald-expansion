@@ -22,8 +22,8 @@ void DailyResetApricornTrees(void)
 
 void ObjectEventInteractionGetApricornTreeData(void)
 {
-    u8 id;
-    u8 apricorn;
+    u32 id;
+    u32 apricorn;
 
     id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
     apricorn = GetApricornTypeByApricornTreeId(id);
@@ -34,8 +34,8 @@ void ObjectEventInteractionGetApricornTreeData(void)
 
 void ObjectEventInteractionPickApricornTree(void)
 {
-    u8 id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
-    u8 apricorn = GetApricornTypeByApricornTreeId(id);
+    u32 id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
+    u32 apricorn = GetApricornTypeByApricornTreeId(id);
 
     gSpecialVar_0x8006 = CheckBagHasSpace(ApricornTypeToItemId(apricorn), GetApricornCountByApricornTreeId(id));
     if (gSpecialVar_0x8006)
@@ -45,7 +45,7 @@ void ObjectEventInteractionPickApricornTree(void)
     }
 }
 
-u8 GetApricornTypeByApricornTreeId(u8 id)
+u8 GetApricornTypeByApricornTreeId(u32 id)
 {
     #if (APRICORN_TREE_COUNT > 0)
         return gApricornTrees[id].apricornType;
@@ -54,7 +54,7 @@ u8 GetApricornTypeByApricornTreeId(u8 id)
     #endif
 }
 
-u8 GetApricornCountByApricornTreeId(u8 id)
+u8 GetApricornCountByApricornTreeId(u32 id)
 {
     if (IsApricornTreePicked(id))
     {
@@ -70,7 +70,7 @@ u8 GetApricornCountByApricornTreeId(u8 id)
     #endif
 }
 
-bool8 IsApricornTreePicked(u8 id)
+bool8 IsApricornTreePicked(u32 id)
 {
     if (id > APRICORN_TREE_COUNT)
         return TRUE;
@@ -83,7 +83,7 @@ bool8 IsApricornTreePicked(u8 id)
     #endif
 }
 
-void SetApricornTreePicked(u8 id)
+void SetApricornTreePicked(u32 id)
 {
     if (id > APRICORN_TREE_COUNT)
         return;
