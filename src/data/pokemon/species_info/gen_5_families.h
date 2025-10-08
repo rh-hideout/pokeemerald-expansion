@@ -2865,11 +2865,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
         .abilities = { ABILITY_HEALER, ABILITY_HEALER, ABILITY_HEALER },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Audino"),
-    #if P_MODIFIED_MEGA_CRIES
-        .cryId = CRY_AUDINO_MEGA,
-    #else
-        .cryId = CRY_AUDINO,
-    #endif // P_MODIFIED_MEGA_CRIES
+        .cryId = P_MODIFIED_MEGA_CRIES ? CRY_AUDINO_MEGA : CRY_AUDINO,
         .natDexNum = NATIONAL_DEX_AUDINO,
         .categoryName = _("Hearing"),
         .height = 15,
