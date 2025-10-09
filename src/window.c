@@ -5,8 +5,6 @@
 #include "blit.h"
 #include "decompress.h"
 
-// This global is set to 0 and never changed.
-COMMON_DATA u8 gTransparentTileNumber = 0;
 COMMON_DATA void *gWindowBgTilemapBuffers[NUM_BACKGROUNDS] = {0};
 extern u32 gWindowTileAutoAllocEnabled;
 
@@ -101,7 +99,6 @@ bool32 InitWindows(const struct WindowTemplate *templates)
         }
     }
 
-    gTransparentTileNumber = 0;
     return TRUE;
 }
 
@@ -373,7 +370,7 @@ void ClearWindowTilemap(u32 windowId)
 
     FillBgTilemapBufferRect(
         windowLocal.window.bg,
-        gTransparentTileNumber,
+        0,
         windowLocal.window.tilemapLeft,
         windowLocal.window.tilemapTop,
         windowLocal.window.width,
