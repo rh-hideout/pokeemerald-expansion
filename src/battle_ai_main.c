@@ -319,7 +319,7 @@ void BattleAI_SetupAIData(u8 defaultScoreMoves, u32 battler)
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
 }
 
-bool32 BattlerChoseNonMoveAction(void)
+bool32 BattlerChooseNonMoveAction(void)
 {
     if (gAiThinkingStruct->aiAction & AI_ACTION_FLEE)
     {
@@ -361,10 +361,6 @@ void ComputeBattlerDecisions(u32 battler)
     bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
     if (isAiBattler || CanAiPredictMove())
     {
-        // If ai is about to flee or chosen to watch player, no need to calc anything
-        if (isAiBattler && BattlerChoseNonMoveAction())
-            return;
-
         // Risky AI switches aggressively even mid battle
         enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE;
 
@@ -385,6 +381,8 @@ void ComputeBattlerDecisions(u32 battler)
 
         // AI's move scoring
         gAiBattleData->chosenMoveIndex[battler] = BattleAI_ChooseMoveIndex(battler); // Calculate score and chose move index
+        if (isAiBattler)
+            BattlerChooseNonMoveAction();
         ModifySwitchAfterMoveScoring(battler);
 
         gAiLogicData->aiCalcInProgress = FALSE;

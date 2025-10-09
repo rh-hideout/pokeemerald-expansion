@@ -534,7 +534,7 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
 bool32 IsAffectedByPowder(u32 battler, u32 ability, enum ItemHoldEffect holdEffect)
 {
     if (ability == ABILITY_OVERCOAT
-        || (B_POWDER_GRASS >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
+        || (GetGenConfig(GEN_CONFIG_POWDER_GRASS) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
         || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES)
         return FALSE;
     return TRUE;
@@ -1673,7 +1673,10 @@ s32 AI_DecideKnownAbilityForTurn(u32 battlerId)
 
 enum ItemHoldEffect AI_DecideHoldEffectForTurn(u32 battlerId)
 {
-    enum ItemHoldEffect holdEffect;
+    enum ItemHoldEffect holdEffect = HOLD_EFFECT_NONE;
+
+    if (gBattleMons[battlerId].item == ITEM_NONE) // Failsafe for when user recorded an item but it was consumed
+        return holdEffect;
 
     if (!IsAiBattlerAware(battlerId))
         holdEffect = gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect;
@@ -3171,14 +3174,16 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 defAbility, u32 mov
     u32 battlerToSwitch;
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
 
-    battlerToSwitch = gBattleStruct->AI_monToSwitchIntoId[battlerAtk];
-
     // Palafin always wants to activate Zero to Hero
     if (gBattleMons[battlerAtk].species == SPECIES_PALAFIN_ZERO
         && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
         && CountUsablePartyMons(battlerAtk) != 0)
         return SHOULD_PIVOT;
 
+    battlerToSwitch = gAiLogicData->mostSuitableMonId[battlerAtk];
+    // This shouldn't ever happen, but it's there to make sure we don't accidentally read past the gParty array.
+    if (battlerToSwitch >= PARTY_SIZE)
+        battlerToSwitch = 0;
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
