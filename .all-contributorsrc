@@ -357,6 +357,15 @@
       "contributions": [
         "design"
       ]
+    },
+    {
+      "login": "Squeetz",
+      "name": "Squeetz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21145213?v=4",
+      "profile": "https://github.com/Squeetz",
+      "contributions": [
+        "maintenance"
+      ]
     }
   ],
   "contributorsPerLine": 7,
