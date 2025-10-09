@@ -1239,7 +1239,7 @@ static void PlayerRun(u8 direction)
 void PlayerOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
     // Edge case: If the player stops at the top of a mud slide, but the NPC follower is still on a mud slide tile,
     // move the follower into the player and hide them.
     if (PlayerHasFollowerNPC())
@@ -1260,18 +1260,18 @@ void PlayerOnBikeCollide(u8 direction)
 
 void PlayerOnBikeCollideWithFarawayIslandMew(u8 direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
 }
 
 static void PlayerNotOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
 }
 
 static void PlayerNotOnBikeCollideWithFarawayIslandMew(u8 direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
 }
 
 void PlayerFaceDirection(u8 direction)
