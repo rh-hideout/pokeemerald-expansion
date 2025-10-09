@@ -10990,7 +10990,6 @@ gBattleAnimMove_SmartStrike::
 	setalpha 12, 8
 	call SonicBoomProjectile
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 3, 0, 10, 1
-	loadspritegfx ANIM_TAG_FLASH_CANNON_BALL
 	createsprite gSmartStrikeImpactTemplate, ANIM_TARGET, 4, 0x0, 0x0, 0x8, 0x1, 0x0
 	playsewithpan SE_M_VITAL_THROW2, SOUND_PAN_TARGET
 	createsprite gSmartStrikeGemTemplate, ANIM_TARGET, 2, 0x1, 0x1, 0x0, 0xffe8, 0xa
@@ -11005,7 +11004,6 @@ gBattleAnimMove_SmartStrike::
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	waitforvisualfinish
-	clearmonbg ANIM_ATTACKER
 	blendoff
 	waitforvisualfinish
 	end
