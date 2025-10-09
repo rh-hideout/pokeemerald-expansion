@@ -6293,10 +6293,7 @@ static void DeleteInvalidFusionMoves(struct Pokemon *mon, u32 species)
             }
         }
         if (toDelete)
-        {
-            move = MOVE_NONE;
-            SetMonData(mon, MON_DATA_MOVE1 + i, &move);
-        }
+            DeleteMove(mon, move);
     }
 }
 
