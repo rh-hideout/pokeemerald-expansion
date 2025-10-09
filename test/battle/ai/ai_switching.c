@@ -1399,3 +1399,20 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: Fake Out style moves won't confu
         TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_CLOSE_COMBAT); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked player priority when determining which mon to send out")
+{
+    u32 item;
+    PARAMETRIZE { item = ITEM_NONE; }
+    PARAMETRIZE { item = ITEM_CHOICE_BAND; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_CHOICE_BAND].holdEffect == HOLD_EFFECT_CHOICE_BAND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_LYCANROC) { Speed(5); Moves(MOVE_ACCELEROCK, MOVE_MIGHTY_CLEAVE); Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(4); HP(1); Moves(MOVE_TACKLE); }
+        OPPONENT(SPECIES_DECIDUEYE_HISUI) { Speed(4); Moves(MOVE_LEAF_BLADE); }
+        OPPONENT(SPECIES_PHEROMOSA) { Speed(6); HP(1); Moves(MOVE_EARTHQUAKE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_MIGHTY_CLEAVE); EXPECT_MOVE(opponent, MOVE_TACKLE); item == ITEM_NONE ? EXPECT_SEND_OUT(opponent, 1) : EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
