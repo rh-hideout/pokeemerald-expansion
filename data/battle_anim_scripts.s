@@ -1608,7 +1608,6 @@ gBattleAnimMove_DragonRush::
 	createsprite gRockFragmentSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -30, -18, 8, 2
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 7, 1
 	waitforvisualfinish
-	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
 
@@ -2311,7 +2310,6 @@ gBattleAnimMove_MirrorShot::
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 10, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
 	waitforvisualfinish
-	clearmonbg ANIM_ATTACKER
 	blendoff
 	end
 
