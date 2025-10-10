@@ -62,6 +62,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://tustin2121.github.io/"><img src="https://avatars.githubusercontent.com/u/794812?v=4?s=100" width="100px;" alt="tustin2121"/><br /><sub><b>tustin2121</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=tustin2121" title="Documentation">📖</a> <a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=tustin2121" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Ddaretrogamer"><img src="https://avatars.githubusercontent.com/u/131238004?v=4?s=100" width="100px;" alt="Phantonomy"/><br /><sub><b>Phantonomy</b></sub></a><br /><a href="#design-Ddaretrogamer" title="Design">🎨</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ghostyboyy97"><img src="https://avatars.githubusercontent.com/u/106448956?v=4?s=100" width="100px;" alt="ghostyboyy97"/><br /><sub><b>ghostyboyy97</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=ghostyboyy97" title="Code">💻</a></td>
+    </tr>
   </tbody>
   <tfoot>
     <tr>
