@@ -541,7 +541,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
         // reset the AI data to consider the correct on-field state at time of switch
         SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), gAiLogicData);
         if (IsDoubleBattle())
-            SetBattlerAiData(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), gAiLogicData);
+            SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), gAiLogicData);
 
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE)
