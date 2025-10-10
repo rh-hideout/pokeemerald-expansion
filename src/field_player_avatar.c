@@ -1197,17 +1197,18 @@ void PlayerSetAnimId(u8 movementActionId, u8 copyableMovement)
 // slow stairs (from FRLG--faster than slow)
 static void PlayerWalkSlowStairs(u8 direction)
 {
-    PlayerSetAnimId(GetWalkSlowStairsMovementAction(direction), 2);
+    PlayerSetAnimId(GetWalkSlowStairsMovementAction(direction), COPY_MOVE_WALK);
 }
 
 // slow
 static void UNUSED PlayerWalkSlow(u8 direction)
 {
-    PlayerSetAnimId(GetWalkSlowMovementAction(direction), 2);
+    PlayerSetAnimId(GetWalkSlowMovementAction(direction), COPY_MOVE_WALK);
 }
+
 static void PlayerRunSlow(u8 direction)
 {
-    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), 2);
+    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), COPY_MOVE_WALK);
 }
 
 // normal speed (1 speed)
