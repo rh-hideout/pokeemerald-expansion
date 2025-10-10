@@ -897,8 +897,7 @@ void HandleAction_ActionFinished(void)
                   | HITMARKER_ATTACKSTRING_PRINTED
                   | HITMARKER_STATUS_ABILITY_EFFECT
                   | HITMARKER_PASSIVE_HP_UPDATE
-                  | HITMARKER_OBEYS
-                  | HITMARKER_IGNORE_DISGUISE);
+                  | HITMARKER_OBEYS);
 
     ClearDamageCalcResults();
     gCurrentMove = 0;
