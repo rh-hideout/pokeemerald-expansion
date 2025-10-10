@@ -537,12 +537,11 @@ static void OpponentHandleChoosePokemon(u32 battler)
     {
         if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch)
             switchType = SWITCH_MID_BATTLE;
-        else
-            // Update the AI's data so that it sees the on-field state correctly for post-KO switch calculations
-            // NOTE: per @AlexOn1ine, this SetAiLogicDataForTurn() could be replaced by a callnative that just updates the ai data added everywhere after the switchineffects macro in battle_script_x.s files
-            // this also does not handle any mid-battle switch cases
-            SetAiLogicDataForTurn(gAiLogicData);
 
+        // reset the AI data to consider the correct on-field state at time of switch
+        SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), gAiLogicData);
+        if (IsDoubleBattle())
+            SetBattlerAiData(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), gAiLogicData);
 
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
         if (chosenMonId == PARTY_SIZE)
