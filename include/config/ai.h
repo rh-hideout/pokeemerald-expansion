@@ -94,6 +94,7 @@
 #define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
 
 // Configurations specifically for AI_FLAG_DOUBLE_BATTLE.
+#define REDIRECTION_CHANCE                       25 // chance to use redirection moves on most turns after the first, like Ally Switch or Follow Me
 #define FRIENDLY_FIRE_RISKY_THRESHOLD             2 // AI_FLAG_RISKY acceptable number of hits to KO the partner via friendly fire
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD            3 // typical acceptable number of hits to KO the partner via friendly fire
 #define FRIENDLY_FIRE_CONSERVATIVE_THRESHOLD      4 // AI_FLAG_CONSERVATIVE acceptable number of hits to KO the partner via friendly fire
@@ -103,6 +104,7 @@
 
 #define AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER  FALSE  // if TRUE, AI_FLAG_ATTACKS_PARTNER prefers attacking the partner over the ally.
                                                         // This is treated as true regardless during wild battles with AI.
+#define SAC_SELF_IN_DOUBLES_THRESHOLD            30 // point at which the AI will consider sacrificing itself to protect the partner
 
 // AI's desired stat changes for Guard Split and Power Split, treated as %
 #define GUARD_SPLIT_ALLY_PERCENTAGE     200
@@ -111,7 +113,7 @@
 #define POWER_SPLIT_ENEMY_PERCENTAGE    50
 
 // HP thresholds to use a status z-move.
-#define Z_EFFECT_FOLLOW_ME_THRESHOLD    30
+#define Z_EFFECT_FOLLOW_ME_THRESHOLD          SAC_SELF_IN_DOUBLES_THRESHOLD
 #define Z_EFFECT_RESTORE_HP_LOWER_THRESHOLD   ENABLE_RECOVERY_THRESHOLD // threshold used for moves you could conceivably use more than once
 #define Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD  90                        // these moves are one-time use or drop your HP
 

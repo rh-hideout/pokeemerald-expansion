@@ -2046,7 +2046,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (gBattleMons[battlerDef].statStages[STAT_ATK] == MIN_STAT_STAGE && gBattleMons[battlerDef].statStages[STAT_SPATK] == MIN_STAT_STAGE)
                 ADJUST_SCORE(-10);
             break;
+        case EFFECT_ALLY_SWITCH:
         case EFFECT_FOLLOW_ME:
+            if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                ADJUST_SCORE(-20);
+                break;
         case EFFECT_HELPING_HAND:
             if (!hasPartner
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
@@ -3080,6 +3084,11 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (IsBattleMoveStatus(move))
                 ADJUST_SCORE(-7);
             break;
+        case EFFECT_ALLY_SWITCH:
+        case EFFECT_FOLLOW_ME:
+            if (effect == EFFECT_PROTECT)
+                ADJUST_SCORE(WORST_EFFECT);
+            break;
         case EFFECT_PERISH_SONG:
             if (!(gBattleMons[battlerDef].volatiles.escapePrevention || gBattleMons[battlerDef].volatiles.wrapped))
             {
@@ -3165,6 +3174,10 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
             }
         }
+        break;
+    case EFFECT_FOLLOW_ME:
+        if (hasPartner && (gDisableStructs[battlerAtk].isFirstTurn || gDisableStructs[battlerAtkPartner].isFirstTurn))
+            ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_PERISH_SONG:
         if (aiData->partnerMove != 0 && HasTrappingMoveEffect(battlerAtkPartner))
@@ -4890,17 +4903,57 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_TORMENT:
         break;
+    case EFFECT_ALLY_SWITCH:
     case EFFECT_FOLLOW_ME:
-        if (hasPartner
-          && GetMoveTarget(move) == MOVE_TARGET_USER
-          && !IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
-          && (!IsPowderMove(move) || IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef])))
-          // Rage Powder doesn't affect powder immunities
+        if (GetMoveTarget(move) == MOVE_TARGET_USER)
         {
-            u32 predictedMoveOnPartner = gLastMoves[BATTLE_PARTNER(battlerAtk)];
-            if (predictedMoveOnPartner != MOVE_NONE && !IsBattleMoveStatus(predictedMoveOnPartner))
-                ADJUST_SCORE(GOOD_EFFECT);
+            if (!hasPartner)
+                return score;
+
+            if (predictedMove != MOVE_NONE)
+                if (GetMoveTarget(predictedMove) != MOVE_TARGET_SELECTED || GetMoveEffect(predictedMove) == EFFECT_DRAGON_DARTS)
+                    break;
+
         }
+        else // Spotlight
+        {
+            if (!hasTwoOpponents)
+                return score;
+
+            u32 opponentMove = GetIncomingMove(battlerAtk, BATTLE_PARTNER(battlerDef), aiData);
+            if (opponentMove != MOVE_NONE)
+                if (GetMoveTarget(opponentMove) != MOVE_TARGET_SELECTED || GetMoveEffect(opponentMove) == EFFECT_DRAGON_DARTS)
+                    return score;
+        }
+
+        if (GetHealthPercentage(battlerAtk) <= SAC_SELF_IN_DOUBLES_THRESHOLD)
+        {
+            if (HasMoveWithEffect(battlerAtk, EFFECT_PROTECT))
+                ADJUST_SCORE(WEAK_EFFECT);
+            else
+                ADJUST_SCORE(DECENT_EFFECT);
+        }
+
+        if (hasPartner)
+        {
+            u32 selfDamage = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
+            u32 partnerDamage = GetBestDmgFromBattler(battlerDef, BATTLE_PARTNER(battlerAtk), AI_DEFENDING);
+
+            if (selfDamage * gBattleMons[BATTLE_PARTNER(battlerAtk)].maxHP < partnerDamage * gBattleMons[battlerAtk].maxHP)
+            {
+                ADJUST_SCORE(WEAK_EFFECT);
+
+                if (GetHealthPercentage(battlerAtk) <= SAC_SELF_IN_DOUBLES_THRESHOLD)
+                    ADJUST_SCORE(DECENT_EFFECT);
+
+                if (gBattleMons[BATTLE_PARTNER(battlerAtk)].hp <= partnerDamage)
+                    ADJUST_SCORE(DECENT_EFFECT);
+            }
+
+        }
+
+        if (RandomPercentage(RNG_AI_USE_REDIRECTION, REDIRECTION_CHANCE))
+            ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_CHARGE:
         if (HasDamagingMoveOfType(battlerAtk, TYPE_ELECTRIC))
