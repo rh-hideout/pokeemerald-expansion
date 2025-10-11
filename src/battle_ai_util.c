@@ -641,6 +641,50 @@ static inline s32 DmgRoll(s32 dmg)
     return dmg;
 }
 
+bool32 IsDamageMoveEffectUnusable(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    switch (GetMoveEffect(move))
+    {
+    case EFFECT_DREAM_EATER:
+        if (!AI_IsBattlerAsleepOrComatose(battlerDef))
+            return TRUE;
+        break;
+    case EFFECT_BELCH:
+        if (IsBelchPreventingMove(battlerAtk, move))
+            return TRUE;
+        break;
+    case EFFECT_LAST_RESORT:
+        if (!CanUseLastResort(battlerAtk))
+            return TRUE;
+        break;
+    case EFFECT_LOW_KICK:
+    case EFFECT_HEAT_CRASH:
+        if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
+            return TRUE;
+        break;
+    case EFFECT_FAIL_IF_NOT_ARG_TYPE:
+        if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveArgType(move)))
+            return TRUE;
+        break;
+    case EFFECT_STEEL_ROLLER:
+        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
+            return TRUE;
+        break;
+    case EFFECT_POLTERGEIST:
+        if (gAiLogicData->items[battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(battlerDef))
+            return TRUE;
+        break;
+    case EFFECT_FIRST_TURN_ONLY:
+        if (!gDisableStructs[battlerAtk].isFirstTurn)
+            return TRUE;
+        break;
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
 bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
 {
     enum Ability battlerDefAbility;
@@ -667,9 +711,6 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     if (Ai_IsPriorityBlocked(ctx->battlerAtk, ctx->battlerDef, ctx->move, aiData))
         return TRUE;
 
-    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, AI_CHECK))
-        return TRUE;
-
     if (CanAbilityAbsorbMove(ctx->battlerAtk, ctx->battlerDef, battlerDefAbility, ctx->move, ctx->moveType, AI_CHECK))
         return TRUE;
 
@@ -691,44 +732,12 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     if (IsMoveDampBanned(ctx->move) && (battlerDefAbility == ABILITY_DAMP || partnerDefAbility == ABILITY_DAMP))
         return TRUE;
 
-    switch (GetMoveEffect(ctx->move))
-    {
-    case EFFECT_DREAM_EATER:
-        if (!AI_IsBattlerAsleepOrComatose(ctx->battlerDef))
-            return TRUE;
-        break;
-    case EFFECT_BELCH:
-        if (IsBelchPreventingMove(ctx->battlerAtk, ctx->move))
-            return TRUE;
-        break;
-    case EFFECT_LAST_RESORT:
-        if (!CanUseLastResort(ctx->battlerAtk) && !IsConsideringZMove(ctx->battlerAtk, ctx->battlerDef, ctx->move))
-            return TRUE;
-        break;
-    case EFFECT_LOW_KICK:
-    case EFFECT_HEAT_CRASH:
-        if (GetActiveGimmick(ctx->battlerDef) == GIMMICK_DYNAMAX)
-            return TRUE;
-        break;
-    case EFFECT_FAIL_IF_NOT_ARG_TYPE:
-        if (!IS_BATTLER_OF_TYPE(ctx->battlerAtk, GetMoveArgType(ctx->move)))
-            return TRUE;
-        break;
-    case EFFECT_STEEL_ROLLER:
-        if (!(gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
-            return TRUE;
-        break;
-    case EFFECT_POLTERGEIST:
-        if (gAiLogicData->items[ctx->battlerDef] == ITEM_NONE || !IsBattlerItemEnabled(ctx->battlerDef))
-            return TRUE;
-        break;
-    case EFFECT_FIRST_TURN_ONLY:
-        if (!gDisableStructs[ctx->battlerAtk].isFirstTurn)
-            return TRUE;
-        break;
-    default:
-        break;
-    }
+    if (CanAbilityBlockMove(ctx->battlerAtk, ctx->battlerDef, ctx->abilityAtk, battlerDefAbility, ctx->move, AI_CHECK))
+        return TRUE;
+
+    if (IsDamageMoveEffectUnusable(ctx->battlerAtk, ctx->battlerDef, ctx->move)
+     && !DoesGimmickReplaceMove(ctx->battlerAtk, ctx->move, GetActiveGimmick(ctx->battlerAtk)))
+        return TRUE;
 
     return FALSE;
 }
@@ -5033,12 +5042,19 @@ bool32 AI_MoveMakesContact(enum Ability ability, enum ItemHoldEffect holdEffect,
 }
 
 
-bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
+bool32 IsConsideringGimmick(u32 battlerAtk, u32 battlerDef, enum Gimmick gimmick, u32 move)
 {
-    if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
-        return FALSE;
+    switch (gimmick)
+    {
+    case GIMMICK_Z_MOVE:
+        if (GetMovePower(move) == 0 && GetMoveZEffect(move) == Z_EFFECT_NONE)
+            return FALSE;
+        return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+    default:
+        break;
+    }
 
-    return gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && ShouldUseZMove(battlerAtk, battlerDef, move);
+    return GetActiveGimmick(battlerAtk) == gimmick || gBattleStruct->gimmick.usableGimmick[battlerAtk] == gimmick;
 }
 
 //TODO - this could use some more sophisticated logic

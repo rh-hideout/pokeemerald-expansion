@@ -393,6 +393,9 @@ void ReconsiderGimmick(u32 battlerAtk, u32 battlerDef, u16 move)
 {
     // After choosing a move for battlerAtk assuming that a gimmick will be used, reconsider whether the gimmick is necessary.
 
+    if (IsDamageMoveEffectUnusable(battlerAtk, battlerDef, move))
+        return;
+
     if (gBattleStruct->gimmick.usableGimmick[battlerAtk] == GIMMICK_Z_MOVE && !ShouldUseZMove(battlerAtk, battlerDef, move))
         SetAIUsingGimmick(battlerAtk, NO_GIMMICK);
 
@@ -1992,7 +1995,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             if (aiData->abilities[battlerAtk] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringZMove(battlerAtk, battlerDef, move))
+            else if (aiData->hpPercents[battlerAtk] <= 60 && !IsConsideringGimmick(battlerAtk, battlerDef, GIMMICK_Z_MOVE, move))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FUTURE_SIGHT:
@@ -2770,7 +2773,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
         case EFFECT_HAPPY_HOUR:
-            if (IsConsideringZMove(battlerAtk, battlerDef, move))
+            if (IsConsideringGimmick(battlerAtk, battlerDef, GIMMICK_Z_MOVE, move))
                 break;
             ADJUST_SCORE(-10);
             break;
@@ -4345,7 +4348,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             ADJUST_SCORE(WEAK_EFFECT);
             if (aiData->abilities[battlerAtk] == ABILITY_ADAPTABILITY)
                 ADJUST_SCORE(WEAK_EFFECT);
-            if (IsConsideringZMove(battlerAtk, battlerDef, move))
+            if (IsConsideringGimmick(battlerAtk, battlerDef, GIMMICK_Z_MOVE, move))
                 ADJUST_SCORE(BEST_EFFECT);
         }
         break;
@@ -4470,7 +4473,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_CELEBRATE:
     case EFFECT_HAPPY_HOUR:
     case EFFECT_LAST_RESORT:
-        if (IsConsideringZMove(battlerAtk, battlerDef, move))
+        if (IsConsideringGimmick(battlerAtk, battlerDef, GIMMICK_Z_MOVE, move))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_TELEPORT: // Either remove or add better logic

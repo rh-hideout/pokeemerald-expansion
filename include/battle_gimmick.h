@@ -30,6 +30,7 @@ void SetActiveGimmick(u32 battler, enum Gimmick gimmick);
 enum Gimmick GetActiveGimmick(u32 battler);
 bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick);
 bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick);
+bool32 DoesGimmickReplaceMove(u32 battler, u32 move, enum Gimmick gimmick);
 void SetGimmickAsActivated(u32 battler, enum Gimmick gimmick);
 
 void ChangeGimmickTriggerSprite(u32 spriteId, u32 animId);
@@ -46,5 +47,6 @@ void UpdateIndicatorLevelData(u32 healthboxId, u32 level);
 void CreateIndicatorSprite(u32 battler);
 
 extern const struct GimmickInfo gGimmicksInfo[];
+
 
 #endif
