@@ -1,5 +1,4 @@
 #include "global.h"
-#include "event_data.h"
 #include "event_object_movement.h"
 #include "field_camera.h"
 #include "field_effect.h"
@@ -8,7 +7,6 @@
 #include "fieldmap.h"
 #include "gpu_regs.h"
 #include "metatile_behavior.h"
-#include "oras_dowse.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
