@@ -3129,7 +3129,7 @@ bool32 ShouldBattleRestrictionsApply(u32 battler)
 
 void FreeShinyStars(void)
 {
-    for (u32 battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleSpritesDataPtr->healthBoxesData[battler].triedShinyMonAnim)
             return;
