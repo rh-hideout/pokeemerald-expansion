@@ -2006,10 +2006,6 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     if (HasBattlerSideAbility(battlerDef, ABILITY_OPPORTUNIST, gAiLogicData))
         return FALSE;
 
-    // Don't increase stats if opposing battler has Encore
-    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
-        return FALSE;
-
     // Don't increase stats if opposing battler has used Haze effect or AI effect
     if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
       && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
@@ -2173,10 +2169,6 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
 
     // Don't decrease stat if target will die to residual damage
     if (GetBattlerSecondaryDamage(battlerDef) >= gBattleMons[battlerDef].hp)
-        return NO_INCREASE;
-
-    // Don't decrease stat if opposing battler has Encore
-    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
     if (DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerDef]))
