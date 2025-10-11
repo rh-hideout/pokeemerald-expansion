@@ -235,6 +235,8 @@ top:
             }
             else
             {
+                // Cost must be assigned to the test that crashed, otherwise tests will be desynched
+                AssignCostToRunner();
                 gTestRunnerState.state = STATE_REPORT_RESULT;
                 gTestRunnerState.result = TEST_RESULT_CRASH;
             }
@@ -444,6 +446,11 @@ top:
     case STATE_EXIT:
         MgbaExit_(gTestRunnerState.exitCode);
         break;
+    default:
+        MgbaOpen_();
+        Test_MgbaPrintf("\e[31mInvalid TestRunner state, exiting\e[0m");
+        gTestRunnerState.exitCode = 1;
+        gTestRunnerState.state = STATE_EXIT;
     }
 
     if (gMain.callback2 == CB2_TestRunner)

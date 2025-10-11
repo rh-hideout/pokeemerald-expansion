@@ -566,7 +566,7 @@ enum
 struct QueuedAbilityEvent
 {
     u8 battlerId;
-    u16 ability;
+    enum Ability ability;
 };
 
 struct QueuedAnimationEvent
@@ -638,7 +638,8 @@ struct BattlerTurn
 
 struct ExpectedAIAction
 {
-    u16 sourceLine;
+    u16 sourceLine:13; // TODO: Avoid stealing these bits.
+    enum Gimmick gimmick:3;
     u8 type:4; // which action
     u8 moveSlots:4; // Expected move(s) to be chosen or not, marked as bits.
     u8 target:4; // move target or id of mon which gets sent out
@@ -696,7 +697,8 @@ struct BattleTestData
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
-    u16 forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    bool8 isShiny;
+    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
@@ -880,7 +882,8 @@ struct moveWithPP {
 #define DynamaxLevel(dynamaxLevel) DynamaxLevel_(__LINE__, dynamaxLevel)
 #define GigantamaxFactor(gigantamaxFactor) GigantamaxFactor_(__LINE__, gigantamaxFactor)
 #define TeraType(teraType) TeraType_(__LINE__, teraType)
-#define Shadow(isShadow) Shadow_(__LINE__, shadow)
+#define Shadow(isShadow) Shadow_(__LINE__, isShadow)
+#define Shiny(isShiny) Shiny_(__LINE__, isShiny)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
@@ -893,7 +896,7 @@ void AIFlags_(u32 sourceLine, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);
-void Ability_(u32 sourceLine, u32 ability);
+void Ability_(u32 sourceLine, enum Ability ability);
 void Level_(u32 sourceLine, u32 level);
 void MaxHP_(u32 sourceLine, u32 maxHP);
 void HP_(u32 sourceLine, u32 hp);
@@ -918,6 +921,7 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, u32 teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
+void Shiny_(u32 sourceLine, bool32 isShiny);
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
@@ -1005,6 +1009,8 @@ struct ItemContext
     u16 explicitPartyIndex:1;
     u16 move;
     u16 explicitMove:1;
+    struct TurnRNG rng;
+    u16 explicitRNG:1;
 };
 
 void OpenTurn(u32 sourceLine);
@@ -1064,7 +1070,7 @@ enum QueueGroupType
 
 struct AbilityEventContext
 {
-    u16 ability;
+    enum Ability ability;
 };
 
 struct AnimationEventContext

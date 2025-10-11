@@ -42,6 +42,7 @@
 #include "data.h"
 #include "vs_seeker.h"
 #include "item.h"
+#include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
@@ -51,7 +52,7 @@
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
-#include "wild_encounter.h"
+#include "fishing.h"
 
 enum {
     TRANSITION_TYPE_NORMAL,
@@ -626,7 +627,7 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
     u16 tileBehavior;
     s16 x, y;
 
-    if (I_FISHING_ENVIRONMENT >= GEN_4 && gIsFishingEncounter)
+    if (ShouldUseFishingEnvironmentInBattle())
         GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
     else
         PlayerGetDestCoords(&x, &y);
@@ -1004,7 +1005,7 @@ void TrainerBattleLoadArgsSecondTrainer(const u8 *data)
 
 void SetMapVarsToTrainerA(void)
 {
-    if (TRAINER_BATTLE_PARAM.objEventLocalIdA != 0)
+    if (TRAINER_BATTLE_PARAM.objEventLocalIdA != LOCALID_NONE)
     {
         gSpecialVar_LastTalked = TRAINER_BATTLE_PARAM.objEventLocalIdA;
         gSelectedObjectEvent = GetObjectEventIdByLocalIdAndMap(TRAINER_BATTLE_PARAM.objEventLocalIdA, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
@@ -1488,9 +1489,19 @@ static const u8 *ReturnEmptyStringIfNull(const u8 *string)
 static const u8 *GetIntroSpeechOfApproachingTrainer(void)
 {
     if (gApproachingTrainerId == 0)
+    {
+        if (OW_NAME_BOX_NPC_TRAINER)
+            gSpeakerName = GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentA);
+
         return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.introTextA);
+    }
     else
+    {
+        if (OW_NAME_BOX_NPC_TRAINER)
+            gSpeakerName = GetTrainerNameFromId(TRAINER_BATTLE_PARAM.opponentB);
+
         return ReturnEmptyStringIfNull(TRAINER_BATTLE_PARAM.introTextB);
+    }
 }
 
 const u8 *GetTrainerALoseText(void)

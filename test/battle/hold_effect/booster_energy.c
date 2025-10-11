@@ -38,6 +38,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
 SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunlight ends")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_RAGING_BOLT) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); };
     } WHEN {
@@ -133,7 +134,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
 SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the highest stat", s16 damage)
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
     u32 item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
@@ -159,7 +160,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
 SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the highest stat", s16 damage)
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
     u32 item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }

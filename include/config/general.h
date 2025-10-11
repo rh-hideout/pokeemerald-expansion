@@ -6,11 +6,16 @@
 // still has them in the ROM. This is because the developers forgot
 // to define NDEBUG before release, however this has been changed as
 // Ruby's actual debug build does not use the AGBPrint features.
+//
+// Use `make release` to automatically enable NDEBUG.
+#ifdef RELEASE
 #define NDEBUG
+#endif
 
-// To enable printf debugging, comment out "#define NDEBUG". This allows
+// printf debugging is now enabled by default. This allows
 // the various AGBPrint functions to be used. (See include/gba/isagbprint.h).
 // See below for enabling different pretty printing versions.
+// To disable printf debugging, build a release build using `make release`.
 
 #ifndef NDEBUG
 
@@ -83,5 +88,4 @@
 // Naming Screen
 #define AUTO_LOWERCASE_KEYBOARD      GEN_LATEST  // Starting in GEN_6, after entering the first uppercase character, the keyboard switches to lowercase letters.
 
-#define SAVE_TYPE_ERROR_SCREEN              FALSE   // When enabled, this shows an error message when the game is loaded on a cart without a flash chip or on an emulator with the wrong save type setting instead of crashing.
 #endif // GUARD_CONFIG_GENERAL_H

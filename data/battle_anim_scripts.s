@@ -3361,6 +3361,7 @@ gBattleAnimMove_AquaJet::
 	visible ANIM_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
+	setarg 7, 0x1000
 	end
 
 gBattleAnimMove_AttackOrder::

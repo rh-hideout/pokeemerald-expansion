@@ -131,3 +131,22 @@ SINGLE_BATTLE_TEST("Life Orb activates if move connected but no damage was dealt
         MESSAGE("Wobbuffet was hurt by the Life Orb!");
     }
 }
+
+SINGLE_BATTLE_TEST("Life Orb does not activate on a charge turn")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLY); }
+        TURN { SKIP_TURN(player); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLY, player);
+        NONE_OF {
+            HP_BAR(player);
+            MESSAGE("Wobbuffet was hurt by the Life Orb!");
+        }
+        HP_BAR(opponent);
+        HP_BAR(player); // Lief Orb
+    }
+}

@@ -162,7 +162,7 @@ enum VolatileFlags
     F(VOLATILE_RECHARGE,                    recharge,                      (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 1)) \
+    F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 2)) \
     F(VOLATILE_ESCAPE_PREVENTION,           escapePrevention,              (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_NIGHTMARE,                   nightmare,                     (u32, 1)) \
     F(VOLATILE_CURSED,                      cursed,                        (u32, 1), V_BATON_PASSABLE) \
@@ -195,7 +195,12 @@ enum VolatileFlags
     F(VOLATILE_HEAL_BLOCK,                  healBlock,                     (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_AQUA_RING,                   aquaRing,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_LASER_FOCUS,                 laserFocus,                    (u32, 1)) \
-    F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE)
+    F(VOLATILE_POWER_TRICK,                 powerTrick,                    (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_NO_RETREAT,                  noRetreat,                     (u32, 1), V_BATON_PASSABLE) \
+    F(VOLATILE_VESSEL_OF_RUIN,              vesselOfRuin,                  (u32, 1)) \
+    F(VOLATILE_SWORD_OF_RUIN,               swordOfRuin,                   (u32, 1)) \
+    F(VOLATILE_TABLETS_OF_RUIN,             tabletsOfRuin,                 (u32, 1)) \
+    F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -237,9 +242,9 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
 #define HITMARKER_IGNORE_SUBSTITUTE     (1 << 8)
-#define HITMARKER_NO_ATTACKSTRING       (1 << 9)
-#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 10)
-#define HITMARKER_NO_PPDEDUCT           (1 << 11)
+#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
+#define HITMARKER_UNUSED_10             (1 << 10)
+#define HITMARKER_UNUSED_11             (1 << 11)
 #define HITMARKER_UNUSED_12             (1 << 12)
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
 #define HITMARKER_UNUSED_14             (1 << 14)
@@ -251,7 +256,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_PASSIVE_HP_UPDATE     (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
-#define HITMARKER_ALLOW_NO_PP           (1 << 23)
+#define HITMARKER_UNUSED_23             (1 << 23)
 #define HITMARKER_GRUDGE                (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
 #define HITMARKER_UNUSED_26             (1 << 26)
@@ -363,7 +368,7 @@ enum BattleWeather
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
 
-// Explicit numbers until frostbite because those shouldn't be shifted 
+// Explicit numbers until frostbite because those shouldn't be shifted
 enum __attribute__((packed)) MoveEffect
 {
     MOVE_EFFECT_NONE = 0,
@@ -677,6 +682,13 @@ enum __attribute__((packed)) CalcDamageState
     CAN_DAMAGE,
     WILL_FAIL,
     CHECK_ACCURACY,
+};
+
+enum SubmoveState
+{
+    SUBMOVE_NO_EFFECT,
+    SUBMOVE_SUCCESS,
+    SUBMOVE_FAILURE,
 };
 
 #endif // GUARD_CONSTANTS_BATTLE_H
