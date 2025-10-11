@@ -18,6 +18,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
+#include "fishing.h"
 #include "fldeff.h"
 #include "follower_npc.h"
 #include "item.h"
@@ -1133,7 +1134,7 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_NO_ROOM;
     else if (B_SEMI_INVULNERABLE_CATCH >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
-    else if (FlagGet(B_FLAG_NO_CATCHING))
+    else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
 
     return BALL_THROW_ABLE;
@@ -1414,41 +1415,35 @@ void ItemUseOutOfBattle_EnigmaBerry(u8 taskId)
 void ItemUseOutOfBattle_FormChange(u8 taskId)
 {
     gItemUseCB = ItemUseCB_FormChange;
-    gTasks[taskId].data[0] = FALSE;
     SetUpItemUseCallback(taskId);
 }
 
 void ItemUseOutOfBattle_FormChange_ConsumedOnUse(u8 taskId)
 {
     gItemUseCB = ItemUseCB_FormChange_ConsumedOnUse;
-    gTasks[taskId].data[0] = TRUE;
     SetUpItemUseCallback(taskId);
 }
 
 void ItemUseOutOfBattle_RotomCatalog(u8 taskId)
 {
     gItemUseCB = ItemUseCB_RotomCatalog;
-    gTasks[taskId].data[0] = TRUE;
     SetUpItemUseCallback(taskId);
 }
 
 void ItemUseOutOfBattle_ZygardeCube(u8 taskId)
 {
     gItemUseCB = ItemUseCB_ZygardeCube;
-    gTasks[taskId].data[0] = TRUE;
     SetUpItemUseCallback(taskId);
 }
 
 void ItemUseOutOfBattle_Fusion(u8 taskId)
 {
     gItemUseCB = ItemUseCB_Fusion;
-    gTasks[taskId].data[0] = FALSE;
     SetUpItemUseCallback(taskId);
 }
 
 void Task_UseHoneyOnField(u8 taskId)
 {
-    //ResetInitialPlayerAvatarState();
     StartSweetScentFieldEffect();
     DestroyTask(taskId);
 }
@@ -1459,7 +1454,6 @@ static void ItemUseOnFieldCB_Honey(u8 taskId)
     RemoveBagItem(gSpecialVar_ItemId, 1);
     CopyItemName(gSpecialVar_ItemId, gStringVar2);
     StringExpandPlaceholders(gStringVar4, gText_PlayerUsedVar2);
-    gTasks[taskId].data[0] = 0;
     DisplayItemMessageOnField(taskId, gStringVar4, Task_UseHoneyOnField);
 }
 
@@ -1544,7 +1538,7 @@ static void Task_DisplayPokeFluteMessage(u8 taskId)
 {
     if (WaitFanfare(FALSE))
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PokeFluteAwakenedMon, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, sText_PokeFluteAwakenedMon, Task_CloseCantUseKeyItemMessage);
@@ -1570,14 +1564,14 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId)
 
     if (wokeSomeoneUp)
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFlute, Task_PlayPokeFlute);
         else
             DisplayItemMessageOnField(taskId, sText_PlayedPokeFlute, Task_PlayPokeFlute);
     }
     else
     {
-        if (gTasks[taskId].data[3] == 0)
+        if (!gTasks[taskId].tUsingRegisteredKeyItem)
             DisplayItemMessage(taskId, FONT_NORMAL, sText_PlayedPokeFluteCatchy, CloseItemMessage);
         else
             DisplayItemMessageOnField(taskId, sText_PlayedPokeFluteCatchy, Task_CloseCantUseKeyItemMessage);

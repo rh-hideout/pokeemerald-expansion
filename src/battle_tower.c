@@ -25,6 +25,7 @@
 #include "battle_factory.h"
 #include "constants/abilities.h"
 #include "constants/apprentice.h"
+#include "constants/battle_ai.h"
 #include "constants/battle_dome.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -1568,7 +1569,8 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 {
     u8 ball = (fmon->ball == 0xFF) ? Random() % POKEBALL_COUNT : fmon->ball;
     u16 move;
-    u32 personality = 0, ability, friendship, j;
+    u32 personality = 0, friendship, j;
+    enum Ability ability;
 
     if (fmon->gender == TRAINER_MON_MALE)
     {
@@ -1647,8 +1649,8 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
         SetMonData(dst, MON_DATA_TERA_TYPE, &data);
     }
 
-
-    SetMonData(dst, MON_DATA_POKEBALL, &ball);
+    if (ball != BALL_STRANGE)
+        SetMonData(dst, MON_DATA_POKEBALL, &ball);
     CalculateMonStats(dst);
 }
 

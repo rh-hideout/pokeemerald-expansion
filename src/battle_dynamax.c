@@ -74,7 +74,7 @@ static const struct GMaxMove sGMaxMoveTable[] =
 bool32 CanDynamax(u32 battler)
 {
     u16 species = GetBattlerVisualSpecies(battler);
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum ItemHoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Prevents Zigzagoon from dynamaxing in vanilla.
     if (gBattleTypeFlags & BATTLE_TYPE_FIRST_BATTLE && !IsOnPlayerSide(battler))
@@ -230,21 +230,6 @@ bool32 IsMoveBlockedByMaxGuard(u32 move)
         case MOVE_TEATIME:
         case MOVE_TRANSFORM:
             return TRUE;
-    }
-    return FALSE;
-}
-
-// Weight-based moves (and some other moves in Raids) are blocked by Dynamax.
-bool32 IsMoveBlockedByDynamax(u32 move)
-{
-    // TODO: Certain moves are banned in raids.
-    switch (GetMoveEffect(move))
-    {
-        case EFFECT_HEAT_CRASH:
-        case EFFECT_LOW_KICK:
-            return TRUE;
-        default:
-            break;
     }
     return FALSE;
 }

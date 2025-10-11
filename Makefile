@@ -21,6 +21,9 @@ UNUSED_ERROR ?= 0
 DEBUG        ?= 0
 # Adds -flto flag, which increases link time but results in a more efficient binary (especially in audio processing)
 LTO          ?= 0
+# Makes an optimized build for release, also enabling NDEBUG macro and disabling other debugging features
+# Enables LTO by default, but can be changed in the config.mk file
+RELEASE      ?= 0
 
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
@@ -31,6 +34,11 @@ endif
 ifeq (debug,$(MAKECMDGOALS))
   DEBUG := 1
 endif
+ifneq (,$(filter release tidyrelease,$(MAKECMDGOALS)))
+  RELEASE := 1
+endif
+
+include config.mk
 
 # Default make rule
 all: rom
@@ -62,10 +70,15 @@ endif
 
 CPP := $(PREFIX)cpp
 
+ifeq ($(RELEASE),1)
+	FILE_NAME := $(FILE_NAME)-release
+endif
+
 ROM_NAME := $(FILE_NAME).gba
 OBJ_DIR_NAME := $(BUILD_DIR)/modern
 OBJ_DIR_NAME_TEST := $(BUILD_DIR)/modern-test
 OBJ_DIR_NAME_DEBUG := $(BUILD_DIR)/modern-debug
+OBJ_DIR_NAME_RELEASE := $(BUILD_DIR)/modern-release
 
 ELF_NAME := $(ROM_NAME:.gba=.elf)
 MAP_NAME := $(ROM_NAME:.gba=.map)
@@ -84,6 +97,9 @@ else
 endif
 ifeq ($(DEBUG),1)
   OBJ_DIR := $(OBJ_DIR_NAME_DEBUG)
+endif
+ifeq ($(RELEASE),1)
+  OBJ_DIR := $(OBJ_DIR_NAME_RELEASE)
 endif
 ELF := $(ROM:.gba=.elf)
 MAP := $(ROM:.gba=.map)
@@ -120,6 +136,12 @@ else
 O_LEVEL ?= 2
 endif
 CPPFLAGS := $(INCLUDE_CPP_ARGS) -Wno-trigraphs -DMODERN=1 -DTESTING=$(TEST) -std=gnu17
+ifeq ($(RELEASE),1)
+	override CPPFLAGS += -DRELEASE
+	ifeq ($(USE_LTO_ON_RELEASE),1)
+		LTO := 1
+	endif
+endif
 ARMCC := $(PREFIX)gcc
 PATH_ARMCC := PATH="$(PATH)" $(ARMCC)
 CC1 := $(shell $(PATH_ARMCC) --print-prog-name=cc1) -quiet
@@ -212,8 +234,8 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck generated clean-generated
-.PHONY: all rom agbcc modern compare check debug
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated
+.PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
 infoshell = $(foreach line, $(shell $1 | sed "s/ /__SPACE__/g"), $(info $(subst __SPACE__, ,$(line))))
@@ -284,6 +306,7 @@ $(shell mkdir -p $(SUBDIRS))
 modern: all
 compare: all
 debug: all
+release: all
 # Uncomment the next line, and then comment the 4 lines after it to reenable agbcc.
 #agbcc: all
 agbcc:
@@ -332,7 +355,7 @@ clean-assets:
 	find . \( -iname '*.1bpp' -o -iname '*.4bpp' -o -iname '*.8bpp' -o -iname '*.gbapal' -o -iname '*.lz' -o -iname '*.smol' -o -iname '*.fastSmol' -o -iname '*.smolTM' -o -iname '*.rl' -o -iname '*.latfont' -o -iname '*.hwjpnfont' -o -iname '*.fwjpnfont' \) -exec rm {} +
 	find $(DATA_ASM_SUBDIR)/maps \( -iname 'connections.inc' -o -iname 'events.inc' -o -iname 'header.inc' \) -exec rm {} +
 
-tidy: tidymodern tidycheck tidydebug
+tidy: tidymodern tidycheck tidydebug tidyrelease
 
 tidymodern:
 	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
@@ -344,6 +367,14 @@ tidycheck:
 
 tidydebug:
 	rm -rf $(DEBUG_OBJ_DIR_NAME)
+
+tidyrelease:
+ifeq ($(RELEASE),1)
+	rm -f $(ROM_NAME) $(ELF_NAME) $(MAP_NAME)
+else # Manually remove the release files on clean/tidy
+	rm -f $(FILE_NAME)-release.gba $(FILE_NAME)-release.elf $(FILE_NAME)-release.map
+endif
+	rm -rf $(OBJ_DIR_NAME_RELEASE)
 
 # Other rules
 include graphics_file_rules.mk

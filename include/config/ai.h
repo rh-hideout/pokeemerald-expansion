@@ -15,7 +15,7 @@
 #define SHOULD_SWITCH_ABSORBS_MOVE_PERCENTAGE                       100
 #define SHOULD_SWITCH_ABSORBS_HIDDEN_POWER_PERCENTAGE               50
 #define SHOULD_SWITCH_TRAPPER_PERCENTAGE                            100
-#define SHOULD_SWITCH_FREE_TURN_PERCENTAGE                          100
+#define SHOULD_SWITCH_FREE_TURN_PERCENTAGE                          50
 #define STAY_IN_ABSORBING_PERCENTAGE                                66  // Chance to stay in if outgoing mon has super effective move against player, will prevent switching out for an absorber with this likelihood
 #define SHOULD_SWITCH_HASBADODDS_PERCENTAGE                         50
 #define SHOULD_SWITCH_ENCORE_STATUS_PERCENTAGE                      100
@@ -109,5 +109,10 @@
 #define GUARD_SPLIT_ENEMY_PERCENTAGE    50
 #define POWER_SPLIT_ALLY_PERCENTAGE     150
 #define POWER_SPLIT_ENEMY_PERCENTAGE    50
+
+// HP thresholds to use a status z-move.
+#define Z_EFFECT_FOLLOW_ME_THRESHOLD    30
+#define Z_EFFECT_RESTORE_HP_LOWER_THRESHOLD   ENABLE_RECOVERY_THRESHOLD // threshold used for moves you could conceivably use more than once
+#define Z_EFFECT_RESTORE_HP_HIGHER_THRESHOLD  90                        // these moves are one-time use or drop your HP
 
 #endif // GUARD_CONFIG_AI_H

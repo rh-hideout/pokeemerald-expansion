@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Protect: Spiky Shield does 1/8 dmg of max hp of attackers ma
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker poisons pokemon for moves making con
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Protect: Baneful Bunker can't poison pokemon if they are alr
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making contact")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns Pokémon for moves making contact")
 {
     u16 usedMove = MOVE_NONE;
 
@@ -246,7 +246,7 @@ SINGLE_BATTLE_TEST("Protect: Burning Bulwark burns pokemon for moves making cont
     }
 }
 
-SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn pokemon if they are already statused")
+SINGLE_BATTLE_TEST("Protect: Burning Bulwark can't burn Pokémon if they are already statused")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -672,6 +672,61 @@ SINGLE_BATTLE_TEST("Protect: Protective Pads protects from secondary effects")
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
             HP_BAR(opponent);
             STATUS_ICON(player, STATUS1_BURN);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Protect is not transferred to a mon that is switched in due to Eject Button")
+{
+    GIVEN {
+        PLAYER(SPECIES_URSHIFU) { Ability(ABILITY_UNSEEN_FIST); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_PROTECT);
+            MOVE(playerLeft, MOVE_POUND, target: opponentRight);
+            SEND_OUT(opponentRight, 2);
+            MOVE(playerRight, MOVE_POUND, target: opponentRight);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerRight);
+        HP_BAR(opponentRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Wide Guard is still activate even if user is switched out due to Eject Button")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_SQUIRTLE);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_WIDE_GUARD);
+            MOVE(playerLeft, MOVE_POUND, target: opponentRight);
+            SEND_OUT(opponentRight, 2);
+            MOVE(playerRight, MOVE_HYPER_VOICE, target: opponentRight);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_WIDE_GUARD, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
+            HP_BAR(opponentLeft);
+            HP_BAR(opponentRight);
         }
     }
 }

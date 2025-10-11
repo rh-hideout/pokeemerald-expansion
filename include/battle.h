@@ -2,6 +2,7 @@
 #define GUARD_BATTLE_H
 
 // should they be included here or included individually by every file?
+#include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
 #include "battle_main.h"
@@ -113,7 +114,6 @@ struct DisableStruct
     u8 usedMoves:4;
     u8 truantCounter:1;
     u8 truantSwitchInHack:1;
-    u8 noRetreat:1;
     u8 tarShot:1;
     u8 octolock:1;
     u8 cudChew:1;
@@ -123,6 +123,7 @@ struct DisableStruct
     u8 usedProteanLibero:1;
     u8 flashFireBoosted:1;
     u8 boosterEnergyActivated:1;
+    u8 padding1:1;
     u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
     u8 roostActive:1;
     u8 unburdenActive:1;
@@ -130,16 +131,17 @@ struct DisableStruct
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
     u8 hazardsDone:1;
-    u8 padding:1;
+    u8 endured:1;
+    u8 tryEjectPack:1;
+    u8 octolockedBy:3;
+    u8 padding:5;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
     u32 protected:7; // 126 protect options
-    u32 endured:1;
     u32 noValidMoves:1;
-    u32 helpingHand:1;
     u32 bounceMove:1;
     u32 stealMove:1;
     u32 nonVolatileStatusImmobility:1;
@@ -147,32 +149,31 @@ struct ProtectStruct
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
     u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
-    u32 notFirstStrike:1;
+    u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
-    u32 powderSelfDmg:1;
     u32 statRaised:1;
     u32 usedCustapBerry:1;    // also quick claw
     u32 touchedProtectLike:1;
-    u32 unused:8;
-    // End of 32-bit bitfield
-    u16 disableEjectPack:1;
-    u16 tryEjectPack:1;
-    u16 pranksterElevated:1;
-    u16 quickDraw:1;
-    u16 beakBlastCharge:1;
-    u16 quash:1;
-    u16 shellTrap:1;
-    u16 eatMirrorHerb:1;
-    u16 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
+    u32 disableEjectPack:1;
+    u32 pranksterElevated:1;
+    u32 quickDraw:1;
+    u32 beakBlastCharge:1;
+    u32 quash:1;
+    u32 shellTrap:1;
+    u32 eatMirrorHerb:1;
+    u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
+    // End of 32-bit bitfield
+    u16 helpingHand:3;
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
-    u16 padding:3;
+    u16 myceliumMight:1;
+    u16 padding:10;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
-    u8 physicalBattlerId;
-    u8 specialBattlerId;
+    u8 physicalBattlerId:4;
+    u8 specialBattlerId:4;
 };
 
 // Cleared at the start of HandleAction_ActionFinished
@@ -182,13 +183,13 @@ struct SpecialStatus
     s32 specialDmg;
     u8 changedStatsBattlerId; // Battler that was responsible for the latest stat change. Can be self.
     u8 statLowered:1;
-    u8 lightningRodRedirected:1;
+    u8 abilityRedirected:1;
     u8 restoredBattlerSprite: 1;
     u8 faintedHasReplacement:1;
-    u8 preventLifeOrbDamage:1; // So that Life Orb doesn't activate various effects.
     u8 afterYou:1;
     u8 enduredDamage:1;
-    u8 stormDrainRedirected:1;
+    u8 dancerUsedMove:1;
+    u8 padding:1;
     // End of byte
     u8 switchInAbilityDone:1;
     u8 switchInItemDone:1;
@@ -207,9 +208,8 @@ struct SpecialStatus
     u8 teraShellAbilityDone:1;
     u8 criticalHit:1;
     // End of byte
-    u8 dancerUsedMove:1;
     u8 dancerOriginalTarget:3;
-    u8 unused:4;
+    u8 unused:5;
     // End of byte
 };
 
@@ -264,7 +264,7 @@ struct WishFutureKnock
 
 struct AI_SavedBattleMon
 {
-    u16 ability;
+    enum Ability ability;
     u16 moves[MAX_MON_MOVES];
     u16 heldItem;
     u16 species:15;
@@ -277,7 +277,7 @@ struct AiPartyMon
     u16 species;
     u16 item;
     u16 heldEffect;
-    u16 ability;
+    enum Ability ability;
     u16 level;
     u16 moves[MAX_MON_MOVES];
     u32 status;
@@ -310,7 +310,7 @@ struct SimulatedDamage
 // Ai Data used when deciding which move to use, computed only once before each turn's start.
 struct AiLogicData
 {
-    u16 abilities[MAX_BATTLERS_COUNT];
+    enum Ability abilities[MAX_BATTLERS_COUNT];
     u16 items[MAX_BATTLERS_COUNT];
     u16 holdEffects[MAX_BATTLERS_COUNT];
     u8 holdEffectParams[MAX_BATTLERS_COUNT];
@@ -354,7 +354,7 @@ struct AiThinkingStruct
 
 struct BattleHistory
 {
-    u16 abilities[MAX_BATTLERS_COUNT];
+    enum Ability abilities[MAX_BATTLERS_COUNT];
     u8 itemEffects[MAX_BATTLERS_COUNT];
     u16 usedMoves[MAX_BATTLERS_COUNT][MAX_MON_MOVES];
     u16 moveHistory[MAX_BATTLERS_COUNT][AI_MOVE_HISTORY_COUNT]; // 3 last used moves for each battler
@@ -598,7 +598,8 @@ struct PartyState
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 padding:10;
+    u32 sentOut:1;
+    u32 padding:9;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -607,8 +608,9 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 eventBlockCounter;
-    u8 turnEffectsBattlerId;
     u8 endTurnEventsCounter;
+    u8 turnEffectsBattlerId:4;
+    u8 moveEndBattlerId:4;
     u16 wrappedMove[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
@@ -664,7 +666,7 @@ struct BattleStruct
     u8 multipleSwitchInState:2;
     u8 multipleSwitchInCursor:3;
     u8 sleepClauseNotBlocked:1;
-    u8 padding1:1;
+    u8 isSkyBattle:1;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
@@ -683,11 +685,11 @@ struct BattleStruct
     u8 startingStatusDone:1;
     u8 terrainDone:1;
     u8 overworldWeatherDone:1;
-    u8 unused:3;
-    u8 isAtkCancelerForCalledMove:1; // Certain cases in atk canceler should only be checked once, when the original move is called, however others need to be checked the twice.
+    u8 battlerKOAnimsRunning:3;
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
+    u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u16 startingStatusTimer;
     u8 atkCancellerTracker;
     struct BattleTvMovePoints tvMovePoints;
@@ -701,7 +703,6 @@ struct BattleStruct
     u8 debugBattler;
     u8 magnitudeBasePower;
     u8 presentBasePower;
-    u8 roostTypes[MAX_BATTLERS_COUNT][NUM_BATTLE_SIDES];
     u8 savedBattlerTarget[5];
     u8 savedBattlerAttacker[5];
     u8 savedTargetCount:4;
@@ -714,7 +715,7 @@ struct BattleStruct
     enum BattleIntroStates introState:8;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
-    u16 tracedAbility[MAX_BATTLERS_COUNT];
+    enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     u16 hpBefore[MAX_BATTLERS_COUNT]; // Hp of battlers before using a move. For Berserk and Anger Shell.
     struct Illusion illusion[MAX_BATTLERS_COUNT];
     u8 soulheartBattlerId;
@@ -735,6 +736,7 @@ struct BattleStruct
     u8 appearedInBattle; // Bitfield to track which Pokemon appeared in battle. Used for Burmy's form change
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
+    u16 beatUpSpecies[PARTY_SIZE];
     u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
@@ -743,7 +745,6 @@ struct BattleStruct
     u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
-    u8 isSkyBattle:1;
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
@@ -778,7 +779,8 @@ struct BattleStruct
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
-    u8 padding2:4;
+    enum SubmoveState submoveAnnouncement:2;
+    u8 padding2:2;
 };
 
 struct AiBattleData
@@ -900,7 +902,7 @@ struct BattleScripting
     s32 savedDmg;
     u16 savedMoveEffect; // For moves hitting multiple targets.
     u16 moveEffect;
-    u16 multihitMoveEffect;
+    u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
     bool8 fixedPopup;   // Force ability popup to stick until manually called back
     u16 abilityPopupOverwrite;
@@ -1047,7 +1049,7 @@ extern u16 gChosenMove;
 extern u16 gCalledMove;
 extern s32 gBideDmg[MAX_BATTLERS_COUNT];
 extern u16 gLastUsedItem;
-extern u16 gLastUsedAbility;
+extern enum Ability gLastUsedAbility;
 extern u8 gBattlerAttacker;
 extern u8 gBattlerTarget;
 extern u8 gBattlerFainted;
@@ -1121,7 +1123,7 @@ extern u8 gHealthboxSpriteIds[MAX_BATTLERS_COUNT];
 extern u8 gMultiUsePlayerCursor;
 extern u8 gNumberOfMovesToChoose;
 extern bool8 gHasFetchedBall;
-extern u8 gLastUsedBall;
+extern u16 gLastUsedBall;
 extern u16 gLastThrownBall;
 extern u16 gBallToDisplay;
 extern bool8 gLastUsedBallMenuPresent;
@@ -1232,7 +1234,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_DAMAGE | HITMARKER_UNABLE_TO_USE_MOVE))
+        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE | HITMARKER_UNABLE_TO_USE_MOVE))
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
@@ -1241,6 +1243,11 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
         || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+}
+
+static inline u32 GetChosenMoveFromPosition(u32 battler)
+{
+    return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
 }
 
 #endif // GUARD_BATTLE_H

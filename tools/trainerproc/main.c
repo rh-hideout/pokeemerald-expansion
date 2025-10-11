@@ -178,7 +178,7 @@ static bool is_literal_string(struct String s1, const char *s2)
     }
 }
 
-static bool starts_with(struct String s, const char *prefix)
+static bool __attribute__((unused)) starts_with(struct String s, const char *prefix)
 {
     int n = strlen(prefix);
     return strncmp((const char *)s.string, prefix, n) == 0;

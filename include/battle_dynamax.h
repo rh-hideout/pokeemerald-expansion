@@ -11,7 +11,6 @@ u16 GetNonDynamaxHP(u32 battler);
 u16 GetNonDynamaxMaxHP(u32 battler);
 void UndoDynamax(u32 battler);
 bool32 IsMoveBlockedByMaxGuard(u32 move);
-bool32 IsMoveBlockedByDynamax(u32 move);
 
 u16 GetMaxMove(u32 battler, u32 baseMove);
 u32 GetMaxMovePower(u32 move);
