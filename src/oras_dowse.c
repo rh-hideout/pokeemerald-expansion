@@ -354,9 +354,7 @@ static void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
         sprite->y2++;
 
     if (playerObj->previousMovementDirection != playerObj->movementDirection)
-    {
         UpdateDowsingAnimDirection(sprite, playerObj);
-    }
 
     if (playerObj->movementActionId != MOVEMENT_ACTION_NONE)
     {
