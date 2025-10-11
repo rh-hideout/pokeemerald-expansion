@@ -401,9 +401,7 @@ void UpdateDowseState(struct Sprite *sprite)
         u8 directionToItem = CARDINAL_DIRECTION_COUNT;
         u8 playerDirToItem = GetDirectionToHiddenItem(distX, distY);
         if (playerDirToItem != DIR_NONE)
-        {
-            directionToItem = (sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1]);
-        }
+            directionToItem = sClockwiseDirections[GetDirectionToHiddenItem(distX, distY) - 1];
 
         if (distX < 0)
             distX *= -1;
