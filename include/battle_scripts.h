@@ -198,6 +198,7 @@ extern const u8 BattleScript_AbilityStatusEffect[];
 extern const u8 BattleScript_SynchronizeActivates[];
 extern const u8 BattleScript_NoItemSteal[];
 extern const u8 BattleScript_AbilityCuredStatus[];
+extern const u8 BattleScript_AbilityCuredStatusEnd3[];
 extern const u8 BattleScript_IgnoresWhileAsleep[];
 extern const u8 BattleScript_IgnoresAndUsesRandomMove[];
 extern const u8 BattleScript_MoveUsedLoafingAround[];

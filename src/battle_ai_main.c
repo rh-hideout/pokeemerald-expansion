@@ -2194,10 +2194,13 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             else if (battlerDef == BATTLE_PARTNER(battlerAtk))
                 break; //Always heal your ally
-            else if (AI_BattlerAtMaxHp(battlerAtk))
-                ADJUST_SCORE(-10);
-            else if (aiData->hpPercents[battlerAtk] >= 90)
-                ADJUST_SCORE(-8); //No point in healing, but should at least do it if nothing better
+            else if (!ShouldCureStatus(battlerAtk, battlerDef, aiData))
+            {
+                if (AI_BattlerAtMaxHp(battlerAtk))
+                    ADJUST_SCORE(-10);
+                else if (aiData->hpPercents[battlerAtk] >= 90)
+                    ADJUST_SCORE(-8); //No point in healing, but should at least do it if nothing better
+            }
             break;
         case EFFECT_RECOIL_IF_MISS:
             if (aiData->abilities[battlerAtk] != ABILITY_MAGIC_GUARD && gAiLogicData->moveAccuracy[battlerAtk][battlerDef][gAiThinkingStruct->movesetIndex] < 75
@@ -3602,8 +3605,18 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 if (gBattleMons[battlerAtkPartner].status1 & STATUS1_ANY)
                 {
                     if (gBattleMons[battlerAtkPartner].status1 & STATUS1_CAN_MOVE)
+                    {
+                        if (ShouldCureStatus(battlerAtk, battlerAtkPartner, aiData))
+                            ADJUST_SCORE(DECENT_EFFECT);
+                    }
+                    else
+                    {
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    }
+
+                    if ((!IsBattlerAlive(LEFT_FOE(battlerAtk)) || ShouldRecover(battlerAtk, LEFT_FOE(battlerAtk), move, 50))
+                     && (!IsBattlerAlive(RIGHT_FOE(battlerAtk)) || ShouldRecover(battlerAtk, RIGHT_FOE(battlerAtk), move, 50)))
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
-                    RETURN_SCORE_PLUS(GOOD_EFFECT);
                 }
                 break;
             case EFFECT_SWAGGER:
@@ -4556,6 +4569,15 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_HEAL_BELL:
         if (ShouldUseWishAromatherapy(battlerAtk, battlerDef, move))
             ADJUST_SCORE(DECENT_EFFECT);
+        break;
+    case EFFECT_PURIFY:
+        if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
+        {
+            if (ShouldCureStatus(battlerAtk, battlerDef, aiData))
+                ADJUST_SCORE(GOOD_EFFECT);
+            if (ShouldRecover(battlerAtk, battlerDef, move, 50))
+                RETURN_SCORE_PLUS(WEAK_EFFECT);
+        }
         break;
     case EFFECT_CURSE:
         if (IS_BATTLER_OF_TYPE(battlerAtk, TYPE_GHOST))
@@ -5908,6 +5930,17 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
             case MOVE_EFFECT_AURORA_VEIL:
                 if (ShouldSetScreen(battlerAtk, battlerDef, EFFECT_AURORA_VEIL))
                     ADJUST_SCORE(DECENT_EFFECT);
+                break;
+            case MOVE_EFFECT_REMOVE_STATUS:
+                if (gBattleMons[battlerDef].status1 & GetMoveEffectArg_Status(move))
+                {
+                    if (ShouldCureStatus(battlerAtk, battlerDef, aiData))
+                        ADJUST_SCORE(DECENT_EFFECT);
+                    else if (aiData->holdEffects[battlerDef] == HOLD_EFFECT_FLAME_ORB || aiData->holdEffects[battlerDef] == HOLD_EFFECT_TOXIC_ORB)
+                        ADJUST_SCORE(WEAK_EFFECT);
+                    else
+                        ADJUST_SCORE(BAD_EFFECT);
+                }
                 break;
             default:
                 break;

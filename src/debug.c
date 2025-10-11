@@ -2889,6 +2889,10 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
     //Moves
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
+        // Non-default moveset chosen. Reset moves before setting the chosen moves.
+        if (moves[0] != MOVE_NONE)
+            SetMonMoveSlot(&mon, MOVE_NONE, i);
+
         if (moves[i] == MOVE_NONE || moves[i] >= MOVES_COUNT)
             continue;
 

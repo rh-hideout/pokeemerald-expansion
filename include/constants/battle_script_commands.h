@@ -153,6 +153,7 @@ enum MoveEndEffects
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER,
+    MOVEEND_ITEM_THROAT_SPRAY,
     MOVEEND_ABILITY_BLOCK,
     MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip until Opportunist
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell

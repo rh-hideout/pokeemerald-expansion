@@ -61,8 +61,8 @@ enum EndTurnResolutionOrder
     ENDTURN_TERRAIN,
     ENDTURN_THIRD_EVENT_BLOCK,
     ENDTURN_EMERGENCY_EXIT_4,
-    ENDTURN_ABILITIES,
-    ENDTURN_FOURTH_EVENT_BLOCK,
+    ENDTURN_FORM_CHANGE_ABILITIES,
+    ENDTURN_EJECT_PACK,
     ENDTURN_DYNAMAX,
     ENDTURN_COUNT,
 };
@@ -99,13 +99,6 @@ enum ThirdEventBlock
     THIRD_EVENT_BLOCK_UPROAR,
     THIRD_EVENT_BLOCK_ABILITIES,
     THIRD_EVENT_BLOCK_ITEMS,
-};
-
-// Form changing abilities and Eject Pack
-enum FourthEventBlock
-{
-    FOURTH_EVENT_BLOCK_HUNGER_SWITCH,
-    FOURTH_EVENT_BLOCK_EJECT_PACK,
 };
 
 static u32 GetBattlerSideForMessage(u32 side)
@@ -1456,7 +1449,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnAbilities(u32 battler)
+static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 {
     bool32 effect = FALSE;
 
@@ -1470,6 +1463,7 @@ static bool32 HandleEndTurnAbilities(u32 battler)
     case ABILITY_SCHOOLING:
     case ABILITY_SHIELDS_DOWN:
     case ABILITY_ZEN_MODE:
+    case ABILITY_HUNGER_SWITCH:
         if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
             effect = TRUE;
     default:
@@ -1479,38 +1473,10 @@ static bool32 HandleEndTurnAbilities(u32 battler)
     return effect;
 }
 
-static bool32 HandleEndTurnFourthEventBlock(u32 battler)
+static bool32 HandleEndTurnEjectPack(u32 battler)
 {
-    bool32 effect = FALSE;
-
-    switch (gBattleStruct->eventBlockCounter)
-    {
-    case FOURTH_EVENT_BLOCK_HUNGER_SWITCH:
-    {
-        enum Ability ability = GetBattlerAbility(battler);
-        if (ability == ABILITY_HUNGER_SWITCH)
-        {
-            if (AbilityBattleEffects(ABILITYEFFECT_ENDTURN, battler, ability, 0, MOVE_NONE))
-                effect = TRUE;
-        }
-        gBattleStruct->eventBlockCounter++;
-        break;
-    }
-    case FOURTH_EVENT_BLOCK_EJECT_PACK:
-    {
-        enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler);
-        if (holdEffect == HOLD_EFFECT_EJECT_PACK)
-        {
-            if (ItemBattleEffects(ITEMEFFECT_NORMAL, battler))
-                effect = TRUE;
-        }
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId++;
-        break;
-    }
-    }
-
-    return effect;
+    gBattleStruct->turnEffectsBattlerId++;
+    return TrySwitchInEjectPack(ITEMEFFECT_NORMAL);
 }
 
 static bool32 HandleEndTurnDynamax(u32 battler)
@@ -1590,8 +1556,8 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_TERRAIN] = HandleEndTurnTerrain,
     [ENDTURN_THIRD_EVENT_BLOCK] = HandleEndTurnThirdEventBlock,
     [ENDTURN_EMERGENCY_EXIT_4] = HandleEndTurnEmergencyExit,
-    [ENDTURN_ABILITIES] = HandleEndTurnAbilities,
-    [ENDTURN_FOURTH_EVENT_BLOCK] = HandleEndTurnFourthEventBlock,
+    [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,
+    [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
 };
 
