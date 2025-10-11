@@ -423,17 +423,11 @@ void UpdateDowseState(struct Sprite *sprite)
         else if (distX == distY && distX != 0)
         {
             if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && sprite->tItemDistanceX > 0 && playerObj->movementDirection == DIR_EAST)
-            {
                 ChangeDowsingColor(DIR_EAST, sprite);
-            }
             else if ((directionToItem == DIR_NORTH || directionToItem == DIR_SOUTH) && sprite->tItemDistanceX < 0 && playerObj->movementDirection == DIR_WEST)
-            {
                 ChangeDowsingColor(DIR_WEST, sprite);
-            }
             else
-            {
                 ClearDowsingColor(sprite);
-            }
         }
         else
         {
