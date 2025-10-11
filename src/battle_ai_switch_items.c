@@ -2544,6 +2544,8 @@ static bool32 ShouldUseItem(u32 battler)
             }
             break;
         case EFFECT_ITEM_INCREASE_ALL_STATS:
+            if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
+                break;
             if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
             {
                 if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
