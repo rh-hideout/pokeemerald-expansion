@@ -307,7 +307,6 @@ bool32 IsBattlerItemEnabled(u32 battler);
 bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
-bool32 HasBattlerSideAbility(u32 battlerDef, enum Ability ability, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 
 // These are for the purpose of not doubling up on moves during double battles.

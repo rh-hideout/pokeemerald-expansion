@@ -1995,7 +1995,7 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
         return FALSE;
 
     // Don't increase stats if opposing battler has Unaware
-    if (HasBattlerSideAbility(battlerDef, ABILITY_UNAWARE, gAiLogicData))
+    if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
         return FALSE;
 
     // Don't set up if AI is dead to residual damage from weather
@@ -2003,7 +2003,7 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
         return FALSE;
 
     // Don't increase stats if opposing battler has Opportunist
-    if (HasBattlerSideAbility(battlerDef, ABILITY_OPPORTUNIST, gAiLogicData))
+    if (AI_IsAbilityOnSide(battlerDef, ABILITY_OPPORTUNIST))
         return FALSE;
 
     // Don't increase stats if opposing battler has Encore
@@ -5629,15 +5629,6 @@ bool32 IsBattlerItemEnabled(u32 battler)
     if (gBattleMons[battler].ability == ABILITY_KLUTZ && !gBattleMons[battler].volatiles.gastroAcid)
         return FALSE;
     return TRUE;
-}
-
-bool32 HasBattlerSideAbility(u32 battler, enum Ability ability, struct AiLogicData *aiData)
-{
-    if (aiData->abilities[battler] == ability)
-        return TRUE;
-    if (HasPartnerIgnoreFlags(battler) && gAiLogicData->abilities[BATTLE_PARTNER(battler)] == ability)
-        return TRUE;
-    return FALSE;
 }
 
 u32 GetFriendlyFireKOThreshold(u32 battler)
