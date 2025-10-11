@@ -376,9 +376,7 @@ static void UpdateORASDowsingFieldEffect(struct Sprite *sprite)
 
     if (I_ORAS_DOWSING_SOUNDS && sprite->sDowseState == ORASD_WIGGLE_FASTER && playerObj->heldMovementFinished != FALSE)
     {
-        sprite->sSoundTimer++;
-
-        if (sprite->sSoundTimer == 70)
+        if (++sprite->sSoundTimer == 70)
         {
             PlaySE(SE_ITEMFINDER);
             sprite->sSoundTimer = 0;
