@@ -1286,7 +1286,7 @@ const struct Ability gAbilitiesInfo[ABILITIES_COUNT] =
     {
         .name = _("Bulletproof"),
         .description = COMPOUND_STRING("Avoids some projectiles."),
-        .breakable = TRUE
+        .breakable = TRUE,
         .aiRating = 7,
     },
 
