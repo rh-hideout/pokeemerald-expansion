@@ -2003,6 +2003,10 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     if (HasBattlerSideAbility(battlerDef, ABILITY_OPPORTUNIST, gAiLogicData))
         return FALSE;
 
+    // Don't increase stats if opposing battler has Encore
+    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
+        return FALSE;
+
     // Don't increase stats if opposing battler has used Haze effect or AI effect
     if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
       && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
@@ -4658,7 +4662,7 @@ static u32 GetStagesOfStatChange(enum StatChange statChange)
     return 0; // STAT_HP, should never be getting changed
 }
 
-static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, enum StatChange statChange, bool32 considerContrary, bool32 considerEncore)
+static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, enum StatChange statChange, bool32 considerContrary)
 {
     enum AIScore tempScore = NO_INCREASE;
     u32 noOfHitsToFaint = NoOfHitsForTargetToFaintBattler(battlerDef, battlerAtk);
@@ -4674,10 +4678,6 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
 
     if (!ShouldRaiseAnyStat(battlerAtk, battlerDef))
         return NO_INCREASE;
-
-    // Don't increase stats if opposing battler has Encore
-    if (considerEncore && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
-        return FALSE;
 
     // Don't increase stat if AI is at +4
     if (gBattleMons[battlerAtk].statStages[statId] >= MAX_STAT_STAGE - 2)
@@ -4785,22 +4785,12 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
 
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE, TRUE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE);
 }
 
 u32 IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
 {
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE, TRUE);
-}
-
-u32 IncreaseStatUpScoreNoEncore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
-{
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, TRUE, FALSE);
-}
-
-u32 IncreaseStatUpScoreContraryNoEncore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
-{
-    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE, FALSE);
+    return IncreaseStatUpScoreInternal(battlerAtk, battlerDef, statChange, FALSE);
 }
 
 void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
@@ -5072,13 +5062,13 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
                 return FALSE;
             }
 
-            if (statChange != 0 && (isEager || IncreaseStatUpScoreContraryNoEncore(battlerAtk, battlerDef, statChange) > 0))
+            if (statChange != 0 && (isEager || IncreaseStatUpScore(battlerAtk, battlerDef, statChange) > 0))
                 return TRUE;
 
         }
         else if (GetMoveEffect(zMove) == EFFECT_EXTREME_EVOBOOST)
         {
-            return gAiLogicData->abilities[battlerAtk] != ABILITY_CONTRARY && ShouldRaiseAnyStat(battlerAtk, battlerDef);
+            return ShouldRaiseAnyStat(battlerAtk, battlerDef);
         }
         else if (!IsBattleMoveStatus(chosenMove) && IsBattleMoveStatus(zMove))
         {

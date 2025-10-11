@@ -2534,10 +2534,10 @@ static bool32 ShouldUseItem(u32 battler)
 
                 statChange = statChange + itemEffects[1] - STAT_ATK;
 
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScoreNoEncore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
                     shouldUse = TRUE;
 
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScoreNoEncore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
+                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
                     shouldUse = TRUE;
 
                 break;
