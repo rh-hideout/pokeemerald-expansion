@@ -48,5 +48,4 @@ void CreateIndicatorSprite(u32 battler);
 
 extern const struct GimmickInfo gGimmicksInfo[];
 
-
 #endif
