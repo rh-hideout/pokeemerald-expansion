@@ -4957,11 +4957,13 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
 
         if (hasPartner)
         {
-            if (gDisableStructs[battlerDef].isFirstTurn)
+            if (gDisableStructs[battlerDef].isFirstTurn
+             || (gBattleMoveEffects[GetMoveEffect(aiData->partnerMove)].encourageEncore || aiData->partnerMove == MOVE_NONE))
+            {
                 ADJUST_SCORE(WEAK_EFFECT);
-
-            if (gBattleMoveEffects[GetMoveEffect(aiData->partnerMove)].encourageEncore && HasMoveWithEffect(battlerDef, EFFECT_ENCORE))
-                ADJUST_SCORE(GOOD_EFFECT);
+                if (HasMoveWithEffect(battlerDef, EFFECT_ENCORE) || HasMoveWithEffect(battlerDef, EFFECT_TAUNT))
+                    ADJUST_SCORE(WEAK_EFFECT);
+            }
 
             u32 selfDamage = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
             u32 partnerDamage = GetBestDmgFromBattler(battlerDef, BATTLE_PARTNER(battlerAtk), AI_DEFENDING);
