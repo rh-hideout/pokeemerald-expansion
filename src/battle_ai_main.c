@@ -3096,8 +3096,6 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_FOLLOW_ME:
             if (effect == EFFECT_PROTECT)
                 ADJUST_AND_RETURN_SCORE(WORST_EFFECT);
-            if (moveTarget == MOVE_TARGET_ALL_BATTLERS)
-                ADJUST_SCORE(GOOD_EFFECT);
             break;
         case EFFECT_PERISH_SONG:
             if (!(gBattleMons[battlerDef].volatiles.escapePrevention || gBattleMons[battlerDef].volatiles.wrapped))
