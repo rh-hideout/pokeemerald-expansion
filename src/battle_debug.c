@@ -35,7 +35,6 @@
 #include "constants/moves.h"
 #include "constants/items.h"
 #include "constants/rgb.h"
-#include "constants/hold_effects.h"
 
 #define MAX_MODIFY_DIGITS 4
 
@@ -230,7 +229,7 @@ enum
 };
 
 // Static Declarations
-static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect);
+static const u8 *GetHoldEffectName(enum HoldEffect holdEffect);
 
 // const rom data
 static const u8 sText_Ability[] = _("Ability");
@@ -921,7 +920,7 @@ static void PutAiInfoText(struct BattleDebugMenu *data)
         if (IsOnPlayerSide(i) && IsBattlerAlive(i))
         {
             enum Ability ability = gAiLogicData->abilities[i];
-            enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[i];
+            enum HoldEffect holdEffect = gAiLogicData->holdEffects[i];
             u16 item = gAiLogicData->items[i];
             u8 x = (i == B_POSITION_PLAYER_LEFT) ? 83 + (i) * 75 : 83 + (i-1) * 75;
             AddTextPrinterParameterized(data->aiMovesWindowId, FONT_SMALL, gAbilitiesInfo[ability].name, x, 0, 0, NULL);
@@ -2272,7 +2271,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_PRIMAL_ORB]       = COMPOUND_STRING("Primal Orb"),
     [HOLD_EFFECT_PROTECTIVE_PADS]  = COMPOUND_STRING("Protective Pads"),
     [HOLD_EFFECT_TERRAIN_EXTENDER] = COMPOUND_STRING("Terrain Extender"),
-    [HOLD_EFFECT_SEEDS]            = COMPOUND_STRING("Seeds"),
+    [HOLD_EFFECT_TERRAIN_SEED]     = COMPOUND_STRING("Seeds"),
     [HOLD_EFFECT_ADRENALINE_ORB]   = COMPOUND_STRING("Adrenaline Orb"),
     [HOLD_EFFECT_MEMORY]           = COMPOUND_STRING("Memory"),
     [HOLD_EFFECT_Z_CRYSTAL]        = COMPOUND_STRING("Z-Crystal"),
@@ -2292,7 +2291,7 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_OGERPON_MASK]     = COMPOUND_STRING("Ogerpon Mask"),
     [HOLD_EFFECT_BERSERK_GENE]     = COMPOUND_STRING("Berserk Gene"),
 };
-static const u8 *GetHoldEffectName(enum ItemHoldEffect holdEffect)
+static const u8 *GetHoldEffectName(enum HoldEffect holdEffect)
 {
     if (sHoldEffectNames[holdEffect] == NULL)
         return sHoldEffectNames[0];
