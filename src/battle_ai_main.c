@@ -4918,7 +4918,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
 
             if (predictedMove != MOVE_NONE)
             {
-                if (GetMoveTarget(predictedMove) != MOVE_TARGET_SELECTED || GetMoveEffect(predictedMove) == EFFECT_DRAGON_DARTS)
+                if (GetMoveTarget(predictedMove) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS) || GetMoveEffect(predictedMove) == EFFECT_DRAGON_DARTS)
                     break;
                 if (IsMoveRedirectionPrevented(battlerDef, predictedMove, aiData->abilities[battlerDef]))
                     break;
@@ -4947,6 +4947,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         {
             if (gDisableStructs[battlerDef].isFirstTurn)
                 ADJUST_SCORE(WEAK_EFFECT);
+
+            if (gBattleMoveEffects[GetMoveEffect(aiData->partnerMove)].encourageEncore && HasMoveWithEffect(battlerDef, EFFECT_ENCORE))
+                ADJUST_SCORE(GOOD_EFFECT);
 
             u32 selfDamage = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
             u32 partnerDamage = GetBestDmgFromBattler(battlerDef, BATTLE_PARTNER(battlerAtk), AI_DEFENDING);
