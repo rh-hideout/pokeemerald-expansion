@@ -2047,7 +2047,15 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_ALLY_SWITCH:
+            // TODO: correctly prevent being used in multi battles
+            if (GetMoveEffect(gLastMoves[battlerAtk]) == EFFECT_ALLY_SWITCH)
+                ADJUST_SCORE(-2);
+            if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+                ADJUST_SCORE(-20);
+                break;
         case EFFECT_FOLLOW_ME:
+            if (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
+                ADJUST_SCORE(-10);
             if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-20);
                 break;
@@ -3087,7 +3095,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_ALLY_SWITCH:
         case EFFECT_FOLLOW_ME:
             if (effect == EFFECT_PROTECT)
-                ADJUST_SCORE(WORST_EFFECT);
+                ADJUST_AND_RETURN_SCORE(WORST_EFFECT);
+            if (moveTarget == MOVE_TARGET_ALL_BATTLERS)
+                ADJUST_SCORE(GOOD_EFFECT);
             break;
         case EFFECT_PERISH_SONG:
             if (!(gBattleMons[battlerDef].volatiles.escapePrevention || gBattleMons[battlerDef].volatiles.wrapped))
@@ -3174,10 +3184,6 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
             }
         }
-        break;
-    case EFFECT_FOLLOW_ME:
-        if (hasPartner && (gDisableStructs[battlerAtk].isFirstTurn || gDisableStructs[battlerAtkPartner].isFirstTurn))
-            ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_PERISH_SONG:
         if (aiData->partnerMove != 0 && HasTrappingMoveEffect(battlerAtkPartner))
@@ -4903,8 +4909,11 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_TORMENT:
         break;
-    case EFFECT_ALLY_SWITCH:
     case EFFECT_FOLLOW_ME:
+        if (AI_IsAbilityOnSide(battlerDef, ABILITY_STALWART))
+            break;
+        // fall through
+    case EFFECT_ALLY_SWITCH:
         if (GetMoveTarget(move) == MOVE_TARGET_USER)
         {
             if (!hasPartner)
@@ -4936,6 +4945,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
 
         if (hasPartner)
         {
+            if (gDisableStructs[battlerDef].isFirstTurn)
+                ADJUST_SCORE(WEAK_EFFECT);
+
             u32 selfDamage = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
             u32 partnerDamage = GetBestDmgFromBattler(battlerDef, BATTLE_PARTNER(battlerAtk), AI_DEFENDING);
 
@@ -4952,6 +4964,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
 
         }
 
+        // this is for using redirection for no particular reason, _not_ to redirect at all
         if (RandomPercentage(RNG_AI_USE_REDIRECTION, REDIRECTION_CHANCE))
             ADJUST_SCORE(BEST_EFFECT);
         break;

@@ -4245,13 +4245,17 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
     if (!HasPartner(battlerAtkPartner))
         return FALSE;
 
-    if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
-      && partnerMove != MOVE_NONE)
+    enum BattleMoveEffects ownEffect = GetMoveEffect(move);
+
+    if (ownEffect == GetMoveEffect(partnerMove) && partnerMove != MOVE_NONE)
     {
+        // required for Spotlight
+        if (ownEffect == EFFECT_FOLLOW_ME)
+            return TRUE;
+
         if (gMovesInfo[move].target == MOVE_TARGET_SELECTED && gMovesInfo[partnerMove].target == MOVE_TARGET_SELECTED)
-        {
             return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
-        }
+
         return TRUE;
     }
     return FALSE;

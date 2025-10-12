@@ -104,7 +104,7 @@
 
 #define AI_FLAG_ATTACKS_PARTNER_FOCUSES_PARTNER  FALSE  // if TRUE, AI_FLAG_ATTACKS_PARTNER prefers attacking the partner over the ally.
                                                         // This is treated as true regardless during wild battles with AI.
-#define SAC_SELF_IN_DOUBLES_THRESHOLD            30 // point at which the AI will consider sacrificing itself to protect the partner
+#define SAC_SELF_IN_DOUBLES_THRESHOLD            40 // point at which the AI will try to sacrifice itself to protect the partner
 
 // AI's desired stat changes for Guard Split and Power Split, treated as %
 #define GUARD_SPLIT_ALLY_PERCENTAGE     200
