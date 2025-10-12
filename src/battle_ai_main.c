@@ -2054,6 +2054,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-20);
                 break;
         case EFFECT_FOLLOW_ME:
+            if (IsMoveRedirectionPrevented(battlerDef, MOVE_NONE, aiData->abilities[battlerDef]))
+                ADJUST_SCORE(-5);
             if (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
                 ADJUST_SCORE(-10);
             if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
@@ -4907,20 +4909,20 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_TORMENT:
         break;
-    case EFFECT_FOLLOW_ME:
-        if (AI_IsAbilityOnSide(battlerDef, ABILITY_STALWART))
-            break;
-        // fall through
     case EFFECT_ALLY_SWITCH:
+    case EFFECT_FOLLOW_ME:
         if (GetMoveTarget(move) == MOVE_TARGET_USER)
         {
             if (!hasPartner)
                 return score;
 
             if (predictedMove != MOVE_NONE)
+            {
                 if (GetMoveTarget(predictedMove) != MOVE_TARGET_SELECTED || GetMoveEffect(predictedMove) == EFFECT_DRAGON_DARTS)
                     break;
-
+                if (IsMoveRedirectionPrevented(battlerDef, predictedMove, aiData->abilities[battlerDef]))
+                    break;
+            }
         }
         else // Spotlight
         {
