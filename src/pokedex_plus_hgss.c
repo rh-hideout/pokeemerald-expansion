@@ -2421,6 +2421,8 @@ static bool8 LoadPokedexListPage(u8 page)
             // when returning to search results after selecting an evo, we have to restore
             // the original dexNum because the search results page doesn't rebuild the list
             sPokedexListItem->dexNum = sPokedexView->originalSearchSelectionNum;
+            sPokedexListItem->seen   = GetSetPokedexFlag(sPokedexView->originalSearchSelectionNum, FLAG_GET_SEEN);
+            sPokedexListItem->owned  = GetSetPokedexFlag(sPokedexView->originalSearchSelectionNum, FLAG_GET_CAUGHT);
             sPokedexView->originalSearchSelectionNum = 0;
         }
         CreateMonSpritesAtPos(sPokedexView->selectedPokemon, 0xE);
