@@ -57,7 +57,6 @@
 // AI move scoring
 #define STATUS_MOVE_FOCUS_PUNCH_CHANCE                          50 // Chance the AI will use a status move if the player's best move is Focus Punch
 #define BOOST_INTO_HAZE_CHANCE                                  0 // Chance the AI will use a stat boosting move if the player has used Haze
-#define RISK_ENCORE_CHANCE                                      25 // Chance the AI will use an Encore-encouraged move when it knows the player knows Encore
 #define SHOULD_RECOVER_CHANCE                                   50 // Chance the AI will give recovery moves score increase if less than ENABLE_RECOVERY_THRESHOLD and in no immediate danger
 #define ENABLE_RECOVERY_THRESHOLD                               60 // HP percentage beneath which SHOULD_RECOVER_CHANCE is active
 #define SUCKER_PUNCH_CHANCE                                     50 // Chance for the AI to not use Sucker Punch if the player has a status move
