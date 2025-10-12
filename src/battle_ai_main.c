@@ -2048,18 +2048,18 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_ALLY_SWITCH:
             // TODO: correctly prevent being used in multi battles
-            if (GetMoveEffect(gLastMoves[battlerAtk]) == EFFECT_ALLY_SWITCH)
-                ADJUST_SCORE(-2);
             if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-20);
+            else if (GetMoveEffect(gLastMoves[battlerAtk]) == EFFECT_ALLY_SWITCH)
+                ADJUST_SCORE(-2);
                 break;
         case EFFECT_FOLLOW_ME:
-            if (IsMoveRedirectionPrevented(battlerDef, MOVE_NONE, aiData->abilities[battlerDef]))
-                ADJUST_SCORE(-5);
-            if (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
-                ADJUST_SCORE(-10);
-            if (!hasPartner || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+            if (!hasPartner
+             || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
+             || (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef])))
                 ADJUST_SCORE(-20);
+            else if (IsMoveRedirectionPrevented(battlerDef, MOVE_NONE, aiData->abilities[battlerDef]))
+                ADJUST_SCORE(-5);
                 break;
         case EFFECT_HELPING_HAND:
             if (!hasPartner
