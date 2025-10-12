@@ -13,7 +13,7 @@
 	.byte 0x2
 	.endm
 
-	.macro unused0x3
+	.macro unused_0x3
 	.byte 0x3
 	.endm
 
@@ -1011,9 +1011,10 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryrestorehpberry battler:req
+	.macro tryactivateitem battler:req, flag:req
 	.byte 0xbb
 	.byte \battler
+	.byte \flag
 	.endm
 
 	.macro halvehp failInstr:req
@@ -1760,6 +1761,10 @@
 	.macro setmoveresultflags flags:req
 	callnative BS_SetMoveResultFlags
 	.2byte \flags
+	.endm
+
+	.macro clearspecialstatuses
+	callnative BS_ClearSpecialStatuses
 	.endm
 
 	.macro clearmoveresultflags flags:req
