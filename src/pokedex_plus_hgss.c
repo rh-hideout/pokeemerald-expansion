@@ -6311,6 +6311,13 @@ static void HandlePreEvolutionSpeciesPrint(u8 taskId, u16 preSpecies, u16 specie
     }
 }
 
+static bool32 HasMultiplePreEvolutions(u32 species)
+{
+    if (species == SPECIES_GHOLDENGO)
+        return TRUE;
+    return FALSE;
+}
+
 static u8 PrintPreEvolutions(u8 taskId, u16 species)
 {
     u16 i;
@@ -6362,11 +6369,37 @@ static u8 PrintPreEvolutions(u8 taskId, u16 species)
         {
             if (evolutions[j].targetSpecies == species)
             {
-                preEvolutionOne = i;
-                numPreEvolutions += 1;
-                break;
+                if (numPreEvolutions == 0)
+                {
+                    preEvolutionOne = i;
+                    numPreEvolutions += 1;
+                    if (!HasMultiplePreEvolutions(species))
+                        break;
+                }
+                else
+                {
+                    preEvolutionTwo = i;
+                    numPreEvolutions += 1;
+                    break;
+                }
             }
         }
+    }
+
+    if (HasMultiplePreEvolutions(species))
+    {
+        CreateCaughtBallEvolutionScreen(preEvolutionOne, base_x - 9, base_y + base_y_offset*0, 0);
+        HandlePreEvolutionSpeciesPrint(taskId, preEvolutionOne, species, base_x, base_y, base_y_offset, 0);
+
+        CreateCaughtBallEvolutionScreen(preEvolutionTwo, base_x - 9, base_y + base_y_offset*(numPreEvolutions - 1), 0);
+        HandlePreEvolutionSpeciesPrint(taskId, preEvolutionTwo, species, base_x, base_y, base_y_offset, numPreEvolutions - 1);
+
+        sPokedexView->sEvoScreenData.targetSpecies[0] = preEvolutionOne;
+        sPokedexView->sEvoScreenData.targetSpecies[1] = preEvolutionTwo;
+
+        sPokedexView->numPreEvolutions = numPreEvolutions;
+        sPokedexView->sEvoScreenData.numAllEvolutions += numPreEvolutions;
+        return numPreEvolutions;
     }
 
     //Calculate if previous evolution also has a previous evolution
