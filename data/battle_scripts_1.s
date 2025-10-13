@@ -8268,31 +8268,6 @@ BattleScript_ExtremeEvoboostSpDef::
 BattleScript_ExtremeEvoboostEnd::
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectHitSetTerrain::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	critcalc
-	damagecalc
-	adjustdamage
-	attackanimation
-	waitanimation
-	effectivenesssound
-	hitanimation BS_TARGET
-	waitstate
-	healthbarupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	datahpupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	critmessage
-	waitmessage B_WAIT_TIME_LONG
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	setterrain BattleScript_TryFaint
-	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
-	printfromtable gTerrainStringIds
-	waitmessage B_WAIT_TIME_LONG
-BattleScript_TryFaint:
-	tryfaintmon BS_TARGET
-	goto BattleScript_MoveEnd
-
 BattleScript_RemoveTerrain::
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG

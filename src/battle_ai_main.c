@@ -4066,6 +4066,19 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_PREFER_STATUS_MOVES && IsBattleMoveStatus(move) && effectiveness != UQ_4_12(0.0))
         ADJUST_SCORE(10);
 
+    // don't get baited into encore
+    if (gBattleMoveEffects[moveEffect].encourageEncore
+     && HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE)
+     && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerAtk] != HOLD_EFFECT_MENTAL_HERB))
+     {
+        if (!AI_IsAbilityOnSide(battlerAtk, ABILITY_AROMA_VEIL)
+         || IsMoldBreakerTypeAbility(battlerDef, aiData->abilities[battlerDef])
+         || aiData->abilities[battlerDef] == ABILITY_MYCELIUM_MIGHT
+         || IsMoldBreakerTypeAbility(BATTLE_PARTNER(battlerDef), aiData->abilities[BATTLE_PARTNER(battlerDef)])
+         || aiData->abilities[BATTLE_PARTNER(battlerDef)] == ABILITY_MYCELIUM_MIGHT)
+            return score;
+     }
+
     // check thawing moves
     if (gBattleMons[battlerAtk].status1 & STATUS1_ICY_ANY && MoveThawsUser(move))
         ADJUST_SCORE(10);

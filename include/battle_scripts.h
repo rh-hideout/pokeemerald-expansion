@@ -815,7 +815,6 @@ extern const u8 BattleScript_EffectSkyDrop[];
 extern const u8 BattleScript_EffectMeteorBeam[];
 extern const u8 BattleScript_EffectCourtChange[];
 extern const u8 BattleScript_EffectExtremeEvoboost[];
-extern const u8 BattleScript_EffectHitSetTerrain[];
 extern const u8 BattleScript_EffectDarkVoid[];
 extern const u8 BattleScript_EffectVictoryDance[];
 extern const u8 BattleScript_EffectTeatime[];
