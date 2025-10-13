@@ -21519,6 +21519,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .battleAnimScript = gBattleAnimMove_GenesisSupernova,
         .additionalEffects = ADDITIONAL_EFFECTS({
             .moveEffect = MOVE_EFFECT_PSYCHIC_TERRAIN,
+            .chance = 100,
         }),
     },
     [MOVE_SINISTER_ARROW_RAID] =
