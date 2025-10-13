@@ -17128,7 +17128,6 @@ void BS_ArenaJudgmentString(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// Argument passed but no use
 void BS_ArenaWaitMessage(void)
 {
     NATIVE_ARGS();
