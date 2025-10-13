@@ -8783,6 +8783,7 @@ BattleScript_ArenaJudgmentDraw:
 	erasearenareftextbox
 	printstring STRINGID_TIEDOPPONENTBYREFEREE
 	waitmessage B_WAIT_TIME_LONG
+	arenabothmonslost
 	playfaintcry BS_PLAYER1
 	waitcry
 	dofaintanimation BS_PLAYER1
@@ -8793,7 +8794,6 @@ BattleScript_ArenaJudgmentDraw:
 	dofaintanimation BS_OPPONENT1
 	cleareffectsonfaint BS_OPPONENT1
 	waitanimation
-	arenabothmonslost
 	end2
 
 BattleScript_AskIfWantsToForfeitMatch::
