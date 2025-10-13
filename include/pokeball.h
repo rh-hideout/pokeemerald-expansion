@@ -42,6 +42,9 @@ enum {
     BALL_AFFINE_ANIM_4
 };
 
+#define BALL_GFX_TAG_START          55000
+#define BALL_SPRITE_SHEET_SIZE      384
+
 extern const struct CompressedSpriteSheet gBallSpriteSheets[];
 extern const struct SpritePalette gBallSpritePalettes[];
 extern const struct SpriteTemplate gBallSpriteTemplates[];
