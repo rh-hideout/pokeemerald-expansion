@@ -1065,7 +1065,7 @@ bool32 IsMovePowderBlocked(struct BattleContext *ctx)
     if (IsPowderMove(ctx->currentMove) && (ctx->battlerAtk != ctx->battlerDef))
     {
         if (GetGenConfig(GEN_CONFIG_POWDER_GRASS) >= GEN_6
-         && (IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GRASS) || ctx->ability[ctx->battlerDef] == ABILITY_OVERCOAT))
+         && (IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_GRASS) || ctx->abilities[ctx->battlerDef] == ABILITY_OVERCOAT))
         {
             gBattlerAbility = ctx->battlerDef;
             RecordAbilityBattle(ctx->battlerDef, ABILITY_OVERCOAT);
@@ -1125,11 +1125,12 @@ static void Cmd_attackcanceler(void)
     ctx.battlerAtk = gBattlerAttacker;
     ctx.battlerDef = gBattlerTarget;
     ctx.currentMove = gCurrentMove;
-    ctx.moveEffect = GetMoveEffect(ctx.currentMove);
+
+    enum BattleMoveEffects moveEffect = GetMoveEffect(ctx.currentMove);
 
     if (!IsBattlerAlive(gBattlerAttacker)
-        && ctx.moveEffect != EFFECT_EXPLOSION
-        && ctx.moveEffect != EFFECT_MISTY_EXPLOSION)
+        && moveEffect != EFFECT_EXPLOSION
+        && moveEffect != EFFECT_MISTY_EXPLOSION)
     {
         gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
         gBattlescriptCurrInstr = BattleScript_MoveEnd;
@@ -1137,14 +1138,14 @@ static void Cmd_attackcanceler(void)
     }
 
     // With how attackcanceller works right now we only need attacker and target abilities. Might change in the future
-    ctx.ability[ctx.battlerAtk] = GetBattlerAbility(ctx.battlerAtk);
-    ctx.ability[ctx.battlerDef] = GetBattlerAbility(ctx.battlerDef);
+    ctx.abilities[ctx.battlerAtk] = GetBattlerAbility(ctx.battlerAtk);
+    ctx.abilities[ctx.battlerDef] = GetBattlerAbility(ctx.battlerDef);
 
     if (AtkCanceller_MoveSuccessOrder(&ctx) != MOVE_STEP_SUCCESS)
         return;
 
     if (gSpecialStatuses[gBattlerAttacker].parentalBondState == PARENTAL_BOND_OFF
-     && ctx.ability[ctx.battlerAtk] == ABILITY_PARENTAL_BOND
+     && ctx.abilities[ctx.battlerAtk] == ABILITY_PARENTAL_BOND
      && IsMoveAffectedByParentalBond(gCurrentMove, gBattlerAttacker)
      && !(gAbsentBattlerFlags & (1u << gBattlerTarget))
      && GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE)
@@ -1158,8 +1159,8 @@ static void Cmd_attackcanceler(void)
     if (CanAbilityBlockMove(
             ctx.battlerAtk,
             ctx.battlerDef,
-            ctx.ability[ctx.battlerAtk],
-            ctx.ability[ctx.battlerDef],
+            ctx.abilities[ctx.battlerAtk],
+            ctx.abilities[ctx.battlerDef],
             ctx.currentMove,
             RUN_SCRIPT))
         return;
@@ -1169,7 +1170,7 @@ static void Cmd_attackcanceler(void)
         if (CanAbilityAbsorbMove(
                 ctx.battlerAtk,
                 ctx.battlerDef,
-                ctx.ability[ctx.battlerDef],
+                ctx.abilities[ctx.battlerDef],
                 ctx.currentMove,
                 GetBattleMoveType(ctx.currentMove),
                 RUN_SCRIPT))
@@ -1181,17 +1182,17 @@ static void Cmd_attackcanceler(void)
 
     // Check if no available target present on the field or if Sky Battles ban the move
     if ((NoTargetPresent(gBattlerAttacker, gCurrentMove)
-        && (!gBattleMoveEffects[ctx.moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns)))
+        && (!gBattleMoveEffects[moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns)))
         || (IsMoveNotAllowedInSkyBattles(gCurrentMove)))
     {
         gBattleStruct->noTargetPresent = TRUE;
 
-        if (ctx.moveEffect == EFFECT_FLING) // Edge case for removing a mon's item when there is no target available after using Fling.
+        if (moveEffect == EFFECT_FLING) // Edge case for removing a mon's item when there is no target available after using Fling.
             gBattlescriptCurrInstr = BattleScript_FlingFailConsumeItem;
         else
             gBattlescriptCurrInstr = BattleScript_ButItFailed;
 
-        if (!gBattleMoveEffects[ctx.moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns))
+        if (!gBattleMoveEffects[moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns))
             CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_ATTACKCANCELLER_CHECK);
         return;
     }
@@ -1222,7 +1223,7 @@ static void Cmd_attackcanceler(void)
     {
         u32 battler = gBattlerTarget;
 
-        if (ctx.ability[ctx.battlerDef] == ABILITY_MAGIC_BOUNCE)
+        if (ctx.abilities[ctx.battlerDef] == ABILITY_MAGIC_BOUNCE)
         {
             battler = gBattlerTarget;
             gBattleStruct->bouncedMoveIsUsed = TRUE;
@@ -1273,11 +1274,11 @@ static void Cmd_attackcanceler(void)
         BattleScriptCall(BattleScript_TookAttack);
     }
     else if (IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
-     && (ctx.moveEffect != EFFECT_CURSE || IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
-     && (!gBattleMoveEffects[ctx.moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns))
-     && ctx.moveEffect != EFFECT_SUCKER_PUNCH
-     && ctx.moveEffect != EFFECT_COUNTER
-     && ctx.moveEffect != EFFECT_UPPER_HAND)
+     && (moveEffect != EFFECT_CURSE || IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
+     && (!gBattleMoveEffects[moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns))
+     && moveEffect != EFFECT_SUCKER_PUNCH
+     && moveEffect != EFFECT_COUNTER
+     && moveEffect != EFFECT_UPPER_HAND)
     {
         if (!CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
             gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
