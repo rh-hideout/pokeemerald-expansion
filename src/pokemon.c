@@ -95,9 +95,6 @@ EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
 #include "data/abilities.h"
-#if P_TUTOR_MOVES_ARRAY
-#include "data/tutor_moves.h"
-#endif // P_TUTOR_MOVES_ARRAY
 
 // Used in an unreferenced function in RS.
 // Unreferenced here and in FRLG.
@@ -5581,7 +5578,7 @@ bool8 TryIncrementMonLevel(struct Pokemon *mon)
     }
 }
 
-static const u16 sUniversalMoves[] =
+const u16 gUniversalMoves[] =
 {
     MOVE_BIDE,
     MOVE_FRUSTRATION,
@@ -5594,6 +5591,11 @@ static const u16 sUniversalMoves[] =
     MOVE_SUBSTITUTE,
     MOVE_TERA_BLAST,
 };
+
+u32 GetUniversalMovesCount(void)
+{
+    return ARRAY_COUNT(gUniversalMoves);
+}
 
 u8 CanLearnTeachableMove(u16 species, u16 move)
 {
@@ -5629,9 +5631,9 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
     {
         u32 i, j;
         const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
-        for (i = 0; i < ARRAY_COUNT(sUniversalMoves); i++)
+        for (i = 0; i < ARRAY_COUNT(gUniversalMoves); i++)
         {
-            if (sUniversalMoves[i] == move)
+            if (gUniversalMoves[i] == move)
             {
                 if (!gSpeciesInfo[species].tmIlliterate)
                 {
