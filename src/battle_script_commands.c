@@ -5715,6 +5715,8 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
             {
                 BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);
                 MarkBattlerForControllerExec(gBattlerTarget);
+                // Mark item as stolen so it will be restored after battle
+                gBattleStruct->itemLost[side][gBattlerPartyIndexes[gBattlerTarget]].stolen = TRUE;
             }
             else
             {
