@@ -335,7 +335,7 @@ u8 valueinarray(u8 val, u8 *arr, int n)
 void Rtc_GetCurrentSeason_Short(void)
 {
     u8 current_month = Rtc_GetCurrentMonth();
-    u8 season = (current_month % 4) + 1; // Maps months to seasons: 1->Summer, 2->Autumn, 3->Winter, 4->Spring
+    u8 season = (current_month % 4); // Maps months to seasons: 0->Summer, 1->Autumn, 2->Winter, 3->Spring
     VarSet(VAR_CURRENT_SEASON, season);
 }
 
