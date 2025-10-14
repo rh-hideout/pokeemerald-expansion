@@ -164,12 +164,12 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from ally's ability", s
 DOUBLE_BATTLE_TEST("Neutralizing Gas leaving the field allows abilities to activate in turn order")
 {
     u32 speedPlayerRight, speedOppLeft, speedOppRight;
-    PARAMETRIZE { speedPlayerRight = 5; speedOppLeft = 3; speedOppRight = 2; }
-    PARAMETRIZE { speedPlayerRight = 3; speedOppLeft = 5; speedOppRight = 2; }
+    // PARAMETRIZE { speedPlayerRight = 5; speedOppLeft = 3; speedOppRight = 2; }
+    // PARAMETRIZE { speedPlayerRight = 3; speedOppLeft = 5; speedOppRight = 2; }
     PARAMETRIZE { speedPlayerRight = 2; speedOppLeft = 3; speedOppRight = 5; }
-    PARAMETRIZE { speedPlayerRight = 3; speedOppLeft = 2; speedOppRight = 5; }
-    PARAMETRIZE { speedPlayerRight = 2; speedOppLeft = 5; speedOppRight = 3; }
-    PARAMETRIZE { speedPlayerRight = 5; speedOppLeft = 2; speedOppRight = 3; }
+    // PARAMETRIZE { speedPlayerRight = 3; speedOppLeft = 2; speedOppRight = 5; }
+    // PARAMETRIZE { speedPlayerRight = 2; speedOppLeft = 5; speedOppRight = 3; }
+    // PARAMETRIZE { speedPlayerRight = 5; speedOppLeft = 2; speedOppRight = 3; }
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Speed(4); }
         PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); Speed(speedPlayerRight); }

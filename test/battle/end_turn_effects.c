@@ -116,3 +116,31 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     }
 }
 
+DOUBLE_BATTLE_TEST("End Turn Effects: xx")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WYNAUT) { HP(1); };
+        OPPONENT(SPECIES_WOBBUFFET) { HP(1); };
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SPIKES);
+            MOVE(playerRight, MOVE_HYPER_VOICE);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(opponentRight, 3);
+            HP_BAR(opponentLeft);
+            HP_BAR(opponentRight);
+            SEND_OUT(opponentLeft, 4);
+            SEND_OUT(opponentRight, 5);
+        }
+    } SCENE {
+
+    } THEN {
+
+    }
+}

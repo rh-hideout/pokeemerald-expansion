@@ -134,11 +134,10 @@ struct DisableStruct
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
-    u8 hazardsDone:1;
     u8 endured:1;
     u8 tryEjectPack:1;
     u8 octolockedBy:3;
-    u8 padding:5;
+    u8 padding:6;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -172,7 +171,8 @@ struct ProtectStruct
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
-    u16 padding:10;
+    u16 forcedSwitch:1;
+    u16 padding:9;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -193,27 +193,23 @@ struct SpecialStatus
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 dancerUsedMove:1;
-    u8 padding:1;
+    u8 rototillerAffected:1;  // to be affected by rototiller
     // End of byte
-    u8 switchInAbilityDone:1;
+    u8 criticalHit:1;
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
     u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
     // End of byte
-    u8 gemParam;
-    // End of byte
+    u8 gemParam:7;
     u8 gemBoost:1;
-    u8 rototillerAffected:1;  // to be affected by rototiller
+    // End of byte
     u8 parentalBondState:2;
     u8 multiHitOn:1;
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
-    u8 criticalHit:1;
-    // End of byte
     u8 dancerOriginalTarget:3;
-    u8 unused:5;
     // End of byte
 };
 
@@ -589,6 +585,7 @@ struct BattlerState
     u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
     u32 commanderSpecies:11;
     u32 selectionScriptFinished:1;
+    u32 switchIn:1;
     u32 padding:3;
     // End of Word
 };
@@ -647,6 +644,8 @@ struct BattleStruct
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
+    u8 switchInEvents:4;
+    u8 battlerSwitchInEvents:4;
     u8 scriptPartyIdx; // for printing the nickname
     u8 battlerPartyIndexes[MAX_BATTLERS_COUNT];
     u8 monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -676,11 +675,10 @@ struct BattleStruct
     u8 hpScale;
     u16 synchronizeMoveEffect;
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
-    u8 multipleSwitchInState:2;
-    u8 multipleSwitchInCursor:3;
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
+    u8 unused:5;
+    u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -788,7 +786,7 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 padding3:4;
+    u8 padding4:4;
 };
 
 struct AiBattleData
@@ -1046,6 +1044,7 @@ extern u16 gBattlerPartyIndexes[MAX_BATTLERS_COUNT];
 extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern u8 gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
+extern u8 gBattlersBySpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];

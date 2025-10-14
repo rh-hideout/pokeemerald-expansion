@@ -98,8 +98,7 @@ enum CmdVarious
 #define DMG_CHANGE_SIGN         1
 #define DMG_DOUBLED             2
 #define DMG_1_8_TARGET_HP       3
-#define DMG_FULL_ATTACKER_HP    4
-#define DMG_BIG_ROOT            5
+#define DMG_BIG_ROOT            4
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -130,6 +129,40 @@ enum SetMoveEffectFlags
     NO_FLAGS = 0,
     EFFECT_PRIMARY = (1 << 0),
     EFFECT_CERTAIN = (1 << 1),
+};
+
+enum SwitchInEvents
+{
+    SWITCH_IN_EVENTS_ORDER_BY_SPEED,
+    SWITCH_IN_EVENTS_TERA_SHIFT,
+    SWITCH_IN_EVENTS_NEUTRALIZING_GAS,
+    SWITCH_IN_EVENTS_UNNERVE,
+    SWITCH_IN_EVENTS_FIRST_BLOCK,
+    SWITCH_IN_EVENTS_SECOND_BLOCK,
+    SWITCH_IN_EVENTS_WHITE_HERB,
+    SWITCH_IN_EVENTS_OPPORTUNIST,
+    SWITCH_IN_EVENTS_MIRROR_HERB,
+    SWITCH_IN_EVENTS_CLEAR_SET_VALUES,
+    SWITCH_IN_EVENTS_EJECT_PACK,
+    SWITCH_IN_EVENTS_COUNT,
+};
+
+enum SwitchInFirstEventBlock
+{
+    FIRST_EVENT_BLOCK_HEALING_WISH,
+    FIRST_EVENT_BLOCK_HAZARDS,
+    FIRST_EVENT_BLOCK_EMERGENCY_EXIT,
+    FIRST_EVENT_BLOCK_GENERAL_ABILITIES,
+    FIRST_EVENT_BLOCK_IMMUNITY_ABILITIES,
+    FIRST_EVENT_BLOCK_ITEMS,
+    FIRST_EVENT_BLOCK_COUNT,
+};
+
+enum SwitchInSecondEventBlock
+{
+    SECOND_EVENT_ABILITIES,
+    SECOND_EVENT_BOOSTER_ENERGY,
+    SECOND_EVENT_BLOCK_COUNT,
 };
 
 // cases for Cmd_moveend - Order matters!
@@ -190,10 +223,12 @@ enum MoveEndEffects
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
 };
 
-// switch cases
-#define B_SWITCH_NORMAL     0
-#define B_SWITCH_HIT        1   // dragon tail, circle throw
-#define B_SWITCH_RED_CARD   2
+enum SwitchInCases
+{
+    B_SWITCH_NORMAL,
+    B_SWITCH_HIT, // dragon tail, circle throw
+    B_SWITCH_RED_CARD,
+};
 
 enum StatusTrigger
 {

@@ -12,11 +12,8 @@
 #include "constants/berry.h"
 
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].onSwitchIn; }
-bool32 IsOnSwitchInFirstTurnActivation(enum HoldEffect holdEffect) { return gHoldEffectsInfo[holdEffect].onSwitchInFirstTurn; }
 bool32 IsMirrorHerbActivation(enum HoldEffect holdEffect)          { return gHoldEffectsInfo[holdEffect].mirrorHerb; }
-bool32 IsMirrorHerbFirstTurnActivation(enum HoldEffect holdEffect) { return gHoldEffectsInfo[holdEffect].mirrorHerbFirstTurn; }
 bool32 IsWhiteHerbActivation(enum HoldEffect holdEffect)           { return gHoldEffectsInfo[holdEffect].whiteHerb; }
-bool32 IsWhiteHerbFirstTurnActivation(enum HoldEffect holdEffect)  { return gHoldEffectsInfo[holdEffect].whiteHerbFirstTurn; }
 bool32 IsWhiteHerbEndTurnActivation(enum HoldEffect holdEffect)    { return gHoldEffectsInfo[holdEffect].whiteHerbEndTurn; }
 bool32 IsOnStatusChangeActivation(enum HoldEffect holdEffect)      { return gHoldEffectsInfo[holdEffect].onStatusChange; }
 bool32 IsOnHpThresholdActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].onHpThreshold; }
@@ -29,6 +26,7 @@ bool32 IsOrbsActivation(enum HoldEffect holdEffect)                { return gHol
 bool32 IsOnEffectActivation(enum HoldEffect holdEffect)            { return gHoldEffectsInfo[holdEffect].onEffect; }
 bool32 IsOnBerryActivation(enum HoldEffect holdEffect)             { return GetItemPocket(gLastUsedItem) == POCKET_BERRIES; }
 bool32 IsOnFlingActivation(enum HoldEffect holdEffect)             { return gHoldEffectsInfo[holdEffect].onFling; }
+bool32 IsBoosterEnergyActivation(enum HoldEffect holdEffect)       { return gHoldEffectsInfo[holdEffect].boosterEnergy; }
 
 bool32 IsForceTriggerItemActivation(enum HoldEffect holdEffect)
 {
@@ -65,10 +63,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTi
         gBattlerAbility = gBattleScripting.battler = battler;
         gDisableStructs[battler].boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BoosterEnergyEnd2);
-        else
-            BattleScriptCall(BattleScript_BoosterEnergyRet);
+        BattleScriptCall(BattleScript_BoosterEnergyRet);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -83,12 +78,8 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_SPEED;
         gBattleScripting.animArg2 = 0;
-
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
-        else
-            BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
-
+        gLastUsedItem = gBattleMons[battler].item;
+        BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
     }
 
@@ -103,10 +94,7 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, Ac
         SET_STATCHANGER(statId, 1, FALSE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
         gBattleScripting.animArg2 = 0;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
-        else
-            BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
+        BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         return ITEM_STATS_CHANGE;
     }
     return ITEM_NO_EFFECT;
@@ -153,11 +141,7 @@ static enum ItemEffect TryBerserkGene(u32 battler, ActivationTiming timing)
     SET_STATCHANGER(STAT_ATK, 2, FALSE);
     gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + STAT_ATK;
     gBattleScripting.animArg2 = 0;
-    if (timing == IsOnSwitchInFirstTurnActivation)
-        BattleScriptExecute(BattleScript_BerserkGeneRetEnd2);
-    else
-        BattleScriptCall(BattleScript_BerserkGeneRet);
-
+    BattleScriptCall(BattleScript_BerserkGeneRet);
     return ITEM_STATS_CHANGE;
 }
 
@@ -192,10 +176,7 @@ static enum ItemEffect TryConsumeMirrorHerb(u32 battler, ActivationTiming timing
     {
         gProtectStructs[battler].eatMirrorHerb = 0;
         ChooseStatBoostAnimation(battler);
-        if (timing == IsMirrorHerbFirstTurnActivation)
-            BattleScriptExecute(BattleScript_MirrorHerbCopyStatChangeEnd2);
-        else
-            BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
+        BattleScriptCall(BattleScript_MirrorHerbCopyStatChange);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -240,10 +221,7 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
     else if (!gSpecialStatuses[battler].switchInItemDone)
     {
         gSpecialStatuses[battler].switchInItemDone = TRUE;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptPushCursorAndCallback(BattleScript_AirBalloonMsgIn);
-        else
-            BattleScriptCall(BattleScript_AirBalloonMsgInRet);
+        BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
         effect = ITEM_EFFECT_OTHER;
     }
@@ -407,7 +385,7 @@ static enum ItemEffect TrySetEnigmaBerry(u32 battlerDef, u32 battlerAtk)
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
             healAmount *= 2;
         SetHealAmount(battlerDef, healAmount);
-        BattleScriptCall(BattleScript_ItemHealHP_RemoveItemRet);
+        BattleScriptCall(BattleScript_ItemHealHP_RemoveItem);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -681,10 +659,7 @@ static enum ItemEffect TryCureParalysis(u32 battler, ActivationTiming timing)
     {
         gBattleMons[battler].status1 &= ~STATUS1_PARALYSIS;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_PARALYSIS;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -699,10 +674,7 @@ static enum ItemEffect TryCurePoison(u32 battler, ActivationTiming timing)
     {
         gBattleMons[battler].status1 &= ~(STATUS1_PSN_ANY | STATUS1_TOXIC_COUNTER);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_POISON;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -717,10 +689,7 @@ static enum ItemEffect TryCureBurn(u32 battler, ActivationTiming timing)
     {
         gBattleMons[battler].status1 &= ~STATUS1_BURN;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_BURN;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -745,12 +714,7 @@ static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler, ActivationTiming ti
     }
 
     if (effect == ITEM_STATUS_CHANGE)
-    {
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
-    }
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
 
     return effect;
 }
@@ -765,10 +729,7 @@ static enum ItemEffect TryCureSleep(u32 battler, ActivationTiming timing)
         gBattleMons[battler].volatiles.nightmare = FALSE;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_CURED_SLEEP;
         TryDeactivateSleepClause(GetBattlerSide(battler), gBattlerPartyIndexes[battler]);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -782,10 +743,7 @@ static enum ItemEffect TryCureConfusion(u32 battler, ActivationTiming timing)
     if (gBattleMons[battler].volatiles.confusionTurns > 0)
     {
         RemoveConfusionStatus(battler);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureConfusionEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureConfusionRet);
+        BattleScriptCall(BattleScript_BerryCureConfusionRet);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -837,10 +795,7 @@ static enum ItemEffect TryCureAnyStatus(u32 battler, ActivationTiming timing)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_NORMALIZED_STATUS;
         gBattleMons[battler].status1 = 0;
         RemoveConfusionStatus(battler);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryCureStatusEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryCureStatusRet);
+        BattleScriptCall(BattleScript_BerryCureStatusRet);
         effect = ITEM_STATUS_CHANGE;
     }
 
@@ -872,11 +827,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal, Acti
             healAmount *= 2;
 
         SetHealAmount(battler, healAmount);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_ItemHealHP_RemoveItemEnd2);
-        else
-            BattleScriptCall(BattleScript_ItemHealHP_RemoveItemRet);
-
+        BattleScriptCall(BattleScript_ItemHealHP_RemoveItem);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -911,12 +862,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
                 changedPP = currentPP + ppRestored;
 
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, move);
-
-            if (timing == IsOnSwitchInFirstTurnActivation)
-                BattleScriptExecute(BattleScript_BerryPPHealEnd2);
-            else
-                BattleScriptCall(BattleScript_BerryPPHealRet);
-
+            BattleScriptCall(BattleScript_BerryPPHeal);
             gBattleScripting.battler = battler;
             BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, i + REQUEST_PPMOVE1_BATTLE, 0, 1, &changedPP);
             MarkBattlerForControllerExec(battler);
@@ -941,21 +887,10 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
         if (ability == ABILITY_RIPEN)
             healAmount *= 2;
         SetHealAmount(battler, healAmount);
-        if (timing == IsOnSwitchInFirstTurnActivation)
-        {
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
-                BattleScriptExecute(BattleScript_BerryConfuseHealEnd2);
-            else
-                BattleScriptExecute(BattleScript_ItemHealHP_RemoveItemEnd2);
-        }
+        if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
+            BattleScriptCall(BattleScript_BerryConfuseHeal);
         else
-        {
-            if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
-                BattleScriptCall(BattleScript_BerryConfuseHealRet);
-            else
-                BattleScriptCall(BattleScript_ItemHealHP_RemoveItemRet);
-        }
-        PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, flavorId);
+            BattleScriptCall(BattleScript_ItemHealHP_RemoveItem);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -974,11 +909,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId,
         SET_STATCHANGER(statId, ability == ABILITY_RIPEN ? 2 : 1, FALSE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS1 + statId;
         gBattleScripting.animArg2 = 0;
-
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
-        else
-            BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
+        BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -994,10 +925,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTim
      && HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), GetItemHoldEffectParam(itemId), itemId))
     {
         gBattleMons[battler].volatiles.focusEnergy = TRUE;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_BerryFocusEnergyEnd2);
-        else
-            BattleScriptCall(BattleScript_BerryFocusEnergyRet);
+        BattleScriptCall(BattleScript_BerryFocusEnergy);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -1035,10 +963,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationT
         SET_STATCHANGER(stat, ability == ABILITY_RIPEN ? 4 : 2, FALSE);
         gBattleScripting.animArg1 = STAT_ANIM_PLUS2 + stat;
         gBattleScripting.animArg2 = 0;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_ConsumableStatRaiseEnd2);
-        else
-            BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
+        BattleScriptCall(BattleScript_ConsumableStatRaiseRet);
         effect = ITEM_STATS_CHANGE;
     }
 
@@ -1052,10 +977,7 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
     if (HasEnoughHpToEatBerry(battler, GetBattlerAbility(battler), 4, itemId))
     {
         gBattleStruct->battlerState[battler].usedMicleBerry = TRUE;
-        if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptExecute(BattleScript_MicleBerryActivateEnd2);
-        else
-            BattleScriptCall(BattleScript_MicleBerryActivateRet);
+        BattleScriptCall(BattleScript_MicleBerryActivate);
         effect = ITEM_EFFECT_OTHER;
     }
     return effect;
