@@ -5714,7 +5714,6 @@ u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves)
 u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
 {
     u16 learnedMoves[MAX_MON_MOVES];
-    u16 moves[MAX_LEVEL_UP_MOVES];
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
     u8 level = GetMonData(mon, MON_DATA_LEVEL, 0);
@@ -5743,11 +5742,11 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
 
             if (j == MAX_MON_MOVES)
             {
-                for (k = 0; k < numMoves && moves[k] != learnset[i].move; k++)
+                for (k = 0; k < i && learnset[k].move != learnset[i].move; k++)
                     ;
 
-                if (k == numMoves)
-                    moves[numMoves++] = learnset[i].move;
+                if (k == i)
+                    numMoves++;
             }
         }
     }
