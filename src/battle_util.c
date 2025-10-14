@@ -10934,3 +10934,9 @@ bool32 IsAllowedToUseBag(void)
         return TRUE; // Undefined Behavior
     }
 }
+
+bool32 IsMimikyuDisguised(u32 battler)
+{
+    return gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED
+        || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
+}

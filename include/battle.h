@@ -1264,10 +1264,4 @@ static inline void SetHealAmount(u32 battler, s32 value)
         gBattleStruct->passiveHpUpdate[battler] = -1;
 }
 
-static inline bool32 IsMimikyuDisguised(u32 battler)
-{
-    return gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED
-        || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
-}
-
 #endif // GUARD_BATTLE_H
