@@ -407,6 +407,7 @@ struct PokedexView
     u8 numEggMoves;
     u8 numLevelUpMoves;
     u8 numTeachableMoves;
+    u8 *teachableLearnsetOrder;
     u8 numPreEvolutions;
     struct PokemonStats sPokemonStats;
     struct EvoScreenData sEvoScreenData;
@@ -5126,6 +5127,63 @@ static u16 AddTMTutorMoves(u16 species, u16 movesTotal, u8 *numTMHMMoves, u8 *nu
 }
 */
 
+static void OrderTeachableLearnset(u16 species, u32 numTeachableMoves)
+{
+    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+    bool8 *isTMMove = AllocZeroed(sizeof(u8) * numTeachableMoves);
+    sPokedexView->teachableLearnsetOrder = AllocZeroed(sizeof(u8) * numTeachableMoves);
+
+    u32 counter = 0;
+    u32 move;
+    u32 i, j;
+    if (HGSS_SORT_TMS_BY_NUM)
+    {
+        for (i = 0; i < NUM_ALL_MACHINES; i++)
+        {
+            move = GetTMHMMoveId(i + 1);
+            for (u16 j = 0; j < numTeachableMoves; j++)
+            {
+                if (teachableLearnset[j] == move)
+                {
+                    sPokedexView->teachableLearnsetOrder[counter] = j;
+                    isTMMove[j] = TRUE;
+                    counter++;
+                    break;
+                }
+            }
+        }
+    }
+    else
+    {
+        for (i = 0; i < numTeachableMoves; i++)
+        {
+            move = teachableLearnset[i];
+            for (j = 0; j < NUM_ALL_MACHINES; j++)
+            {
+                if (GetTMHMMoveId(j + 1) == move)
+                {
+                    sPokedexView->teachableLearnsetOrder[counter] = i;
+                    isTMMove[i] = TRUE;
+                    counter++;
+                    break;
+                }
+            }
+        }
+    }
+
+    for (i = 0;  i < numTeachableMoves; i++)
+    {
+        move = teachableLearnset[i];
+        if (!isTMMove[i])
+        {
+            sPokedexView->teachableLearnsetOrder[counter] = i;
+            counter++;
+        }
+    }
+
+    FREE_AND_SET_NULL(isTMMove);
+}
+
 static bool8 CalculateMoves(void)
 {
     u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
@@ -5166,6 +5224,7 @@ static bool8 CalculateMoves(void)
     //movesTotal = AddTMTutorMoves(species, movesTotal, &numTMHMMoves, &numTutorMoves);
     for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         numTeachableMoves++;
+    OrderTeachableLearnset(species, numTeachableMoves);
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
@@ -5184,7 +5243,7 @@ static u16 GetSelectedMove(u32 species, u32 selected)
         return GetSpeciesLevelUpLearnset(species)[selected].move;
     selected -= sPokedexView->numLevelUpMoves;
     if (selected < sPokedexView->numTeachableMoves)
-        return GetSpeciesTeachableLearnset(species)[selected];
+        return GetSpeciesTeachableLearnset(species)[sPokedexView->teachableLearnsetOrder[selected]];
     return MOVE_NONE; //It should never get here but it allows us to visually see errors
 }
 
@@ -5224,7 +5283,7 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     selected -= sPokedexView->numLevelUpMoves;
     if (selected >= 0 && selected < sPokedexView->numTeachableMoves)
     {
-        move = GetSpeciesTeachableLearnset(species)[selected];
+        move = GetSpeciesTeachableLearnset(species)[sPokedexView->teachableLearnsetOrder[selected]];
         u32 TMHMItemId = ITEM_NONE;
         if (!gSpeciesInfo[species].tmIlliterate)
         {
@@ -5922,6 +5981,7 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
+        FREE_AND_SET_NULL(sPokedexView->teachableLearnsetOrder);
         FreeSpriteTilesByTag(ITEM_TAG);                         //Destroy item icon
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
@@ -5956,6 +6016,7 @@ static void Task_ExitStatsScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
+        FREE_AND_SET_NULL(sPokedexView->teachableLearnsetOrder);
         FreeSpriteTilesByTag(ITEM_TAG);                         //Destroy item icon
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
