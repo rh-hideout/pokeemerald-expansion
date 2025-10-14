@@ -1901,13 +1901,13 @@ static void Cmd_adjustdamage(void)
             gBattleStruct->moveResultFlags[battlerDef] &= ~(MOVE_RESULT_SUPER_EFFECTIVE | MOVE_RESULT_NOT_VERY_EFFECTIVE);
             gBattleStruct->moveDamage[battlerDef] = 0;
             gSpecialStatuses[battlerDef].enduredDamage = TRUE;
-            RecordAbilityBattle(gBattlerTarget, ABILITY_ICE_FACE);
+            RecordAbilityBattle(battlerDef, ABILITY_ICE_FACE);
             gDisableStructs[battlerDef].iceFaceActivationPrevention = TRUE;
             // Form change will be done after attack animation in Cmd_resultmessage.
             continue;
         }
 
-        if (gBattleMons[gBattlerTarget].hp > gBattleStruct->moveDamage[battlerDef])
+        if (gBattleMons[battlerDef].hp > gBattleStruct->moveDamage[battlerDef])
             continue;
 
         holdEffect = GetBattlerHoldEffect(battlerDef, TRUE);
@@ -15286,34 +15286,55 @@ void BS_SetTerrain(void)
     switch (GetMoveEffect(gCurrentMove))
     {
     case EFFECT_MISTY_TERRAIN:
-        statusFlag = STATUS_FIELD_MISTY_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
+        if (!(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+        {
+            statusFlag = STATUS_FIELD_MISTY_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
+        }
         break;
     case EFFECT_GRASSY_TERRAIN:
-        statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+        if (!(gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN))
+        {
+            statusFlag = STATUS_FIELD_GRASSY_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_GRASSY;
+        }
         break;
     case EFFECT_ELECTRIC_TERRAIN:
-        statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
+        if (!(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN))
+        {
+            statusFlag = STATUS_FIELD_ELECTRIC_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
+        }
         break;
     case EFFECT_PSYCHIC_TERRAIN:
-        statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
+        if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
+        {
+            statusFlag = STATUS_FIELD_PSYCHIC_TERRAIN;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
+        }
         break;
     case EFFECT_HIT_SET_TERRAIN:
-        statusFlag = GetMoveTerrainFlag(gCurrentMove);
-        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
+        if (!(gFieldStatuses & GetMoveTerrainFlag(gCurrentMove)))
+        {
+            statusFlag = GetMoveTerrainFlag(gCurrentMove);
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_PSYCHIC;
+        }
         break;
     default:
         break;
     }
-    enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
-
-    gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
-    gFieldStatuses |= statusFlag;
-    gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
-    gBattlescriptCurrInstr = cmd->nextInstr;
+    if (statusFlag)
+    {
+        enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
+        gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
+        gFieldStatuses |= statusFlag;
+        gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
+        gBattlescriptCurrInstr = cmd->nextInstr;
+    }
+    else
+    {
+        gBattlescriptCurrInstr = cmd->jumpInstr;
+    }
 }
 
 void BS_JumpIfTerrainAffected(void)
@@ -17123,13 +17144,12 @@ void BS_EraseArenaRefTextBox(void)
 
 void BS_ArenaJudgmentString(void)
 {
-    CMD_ARGS(u8 id);
+    NATIVE_ARGS(u8 id);
     BattleStringExpandPlaceholdersToDisplayedString(gRefereeStringsTable[cmd->id]);
     BattlePutTextOnWindow(gDisplayedStringBattle, ARENA_WIN_JUDGMENT_TEXT);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-// Argument passed but no use
 void BS_ArenaWaitMessage(void)
 {
     NATIVE_ARGS();
