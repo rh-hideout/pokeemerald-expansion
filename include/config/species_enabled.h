@@ -315,7 +315,7 @@
 #define P_FAMILY_PANSEAR                 FALSE
 #define P_FAMILY_PANPOUR                 FALSE
 #define P_FAMILY_MUNNA                   FALSE
-#define P_FAMILY_PIDOVE                  FALSE
+#define P_FAMILY_PIDOVE                  P_GEN_5_POKEMON
 #define P_FAMILY_BLITZLE                 FALSE
 #define P_FAMILY_ROGGENROLA              FALSE
 #define P_FAMILY_WOOBAT                  FALSE
