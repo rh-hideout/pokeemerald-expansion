@@ -3356,6 +3356,7 @@ gBattleAnimMove_AquaJet::
 	call RisingWaterHitEffect
 	waitforvisualfinish
 	createvisualtask AnimTask_ExtremeSpeedMonReappear, 2
+	setarg 0x7, 0x1000
 	waitforvisualfinish
 	visible ANIM_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER
