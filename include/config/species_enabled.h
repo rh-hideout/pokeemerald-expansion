@@ -567,12 +567,12 @@
 #define P_FAMILY_VELUZA                  FALSE
 #define P_FAMILY_DONDOZO                 FALSE
 #define P_FAMILY_TATSUGIRI               FALSE
-#define P_FAMILY_GREAT_TUSK              FALSE
-#define P_FAMILY_SCREAM_TAIL             FALSE
-#define P_FAMILY_BRUTE_BONNET            FALSE
-#define P_FAMILY_FLUTTER_MANE            FALSE
-#define P_FAMILY_SLITHER_WING            FALSE
-#define P_FAMILY_SANDY_SHOCKS            FALSE
+#define P_FAMILY_GREAT_TUSK              P_GEN_9_POKEMON
+#define P_FAMILY_SCREAM_TAIL             P_GEN_9_POKEMON
+#define P_FAMILY_BRUTE_BONNET            P_GEN_9_POKEMON
+#define P_FAMILY_FLUTTER_MANE            P_GEN_9_POKEMON
+#define P_FAMILY_SLITHER_WING            P_GEN_9_POKEMON
+#define P_FAMILY_SANDY_SHOCKS            P_GEN_9_POKEMON
 #define P_FAMILY_IRON_TREADS             FALSE
 #define P_FAMILY_IRON_BUNDLE             FALSE
 #define P_FAMILY_IRON_HANDS              FALSE
@@ -585,7 +585,7 @@
 #define P_FAMILY_CHIEN_PAO               FALSE
 #define P_FAMILY_TING_LU                 FALSE
 #define P_FAMILY_CHI_YU                  FALSE
-#define P_FAMILY_ROARING_MOON            FALSE
+#define P_FAMILY_ROARING_MOON            P_GEN_9_POKEMON
 #define P_FAMILY_IRON_VALIANT            FALSE
 #define P_FAMILY_KORAIDON                FALSE
 #define P_FAMILY_MIRAIDON                FALSE
