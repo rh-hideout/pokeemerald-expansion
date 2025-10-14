@@ -121,15 +121,21 @@ static bool32 HandleEndTurnOrder(u32 battler)
     gBattleStruct->endTurnEventsCounter++;
 
     u32 i, j;
+    struct BattleContext ctx = {0};
     for (i = 0; i < gBattlersCount; i++)
     {
         gBattlerByTurnOrder[i] = i;
+        ctx.abilities[i] = GetBattlerAbility(i);
+        ctx.holdEffects[i] = GetBattlerHoldEffect(i);
     }
     for (i = 0; i < gBattlersCount - 1; i++)
     {
         for (j = i + 1; j < gBattlersCount; j++)
         {
-            if (GetWhichBattlerFaster(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], FALSE) == -1)
+            ctx.battlerAtk = gBattlerByTurnOrder[i];
+            ctx.battlerDef = gBattlerByTurnOrder[j];
+
+            if (GetWhichBattlerFaster(&ctx, FALSE) == -1)
                 SwapTurnOrder(i, j);
         }
     }
