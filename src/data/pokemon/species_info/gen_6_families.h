@@ -2352,7 +2352,11 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .categoryName = _("Single Bloom"),
         // height
         // weight
-        .description = gFallbackPokedexText,
+        .description = COMPOUND_STRING(
+            "The Eternal Flower has absorbed\n"
+            "all the energy from Mega\n"
+            "Evolution. The flower now attacks\n"
+            "enemies on its own."),
         .frontPic = gMonFrontPic_CircledQuestionMark,
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
