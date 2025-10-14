@@ -5700,7 +5700,8 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         if (gBattleStruct->battlerState[gBattlerTarget].itemCanBeKnockedOff
          && gBattleMons[gBattlerTarget].item != ITEM_NONE
          && IsBattlerTurnDamaged(gBattlerTarget)
-         && IsBattlerAlive(gBattlerAttacker))
+         && IsBattlerAlive(gBattlerAttacker)
+         && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER)))
         {
             u32 side = GetBattlerSide(gBattlerTarget);
             gLastUsedItem = gBattleMons[gBattlerTarget].item;
@@ -5709,7 +5710,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
                 gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
             CheckSetUnburden(gBattlerTarget);
 
-            // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable.
+            // In Gen 5+, Knock Off removes the target's item rather than rendering it unusable
             if (B_KNOCK_OFF_REMOVAL >= GEN_5)
             {
                 BtlController_EmitSetMonData(gBattlerTarget, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[gBattlerTarget].item);

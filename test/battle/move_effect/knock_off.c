@@ -6,6 +6,24 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
 }
 
+WILD_BATTLE_TEST("Knock Off does not remove item when used by Wild Pokemon (Gen 5+)")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEFTOVERS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_KNOCK_OFF); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
+        if (B_KNOCK_OFF_REMOVAL >= GEN_5)
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+        else
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ITEM_KNOCKOFF, player);
+    } THEN {
+        EXPECT(player->item == ITEM_LEFTOVERS);
+    }
+}
+
 SINGLE_BATTLE_TEST("Knock Off knocks a healing berry before it has the chance to activate")
 {
     GIVEN {
