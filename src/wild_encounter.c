@@ -182,38 +182,26 @@ u32 ChooseWildMonIndex_Land(void)
 {
     u8 wildMonIndex = 0;
     bool8 swap = FALSE;
-    u8 rand = Random() % ENCOUNTER_CHANCE_LAND_MONS_TOTAL;
-
+    u8 timeOfDay, currentSeason;
+    u8 rand = Random() % 100;
+    UpdateSeason();
+    RtcCalcLocalTime();
+    timeOfDay = GetTimeOfDay();
+    currentSeason = VarGet(VAR_CURRENT_SEASON);
     if (rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_0)
         wildMonIndex = 0;
     else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_0 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_1)
         wildMonIndex = 1;
     else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_1 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_2)
-        wildMonIndex = 2;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_2 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_3)
-        wildMonIndex = 3;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_3 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_4)
-        wildMonIndex = 4;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_4 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_5)
-        wildMonIndex = 5;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_5 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_6)
-        wildMonIndex = 6;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_6 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_7)
-        wildMonIndex = 7;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_7 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_8)
-        wildMonIndex = 8;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_8 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_9)
-        wildMonIndex = 9;
-    else if (rand >= ENCOUNTER_CHANCE_LAND_MONS_SLOT_9 && rand < ENCOUNTER_CHANCE_LAND_MONS_SLOT_10)
-        wildMonIndex = 10;
+        wildMonIndex = 2 + timeOfDay; // Slot 2-5 are time of day mons
     else
-        wildMonIndex = 11;
+        wildMonIndex = (2 * 3) + currentSeason; // Slot 6-9 are seasonal mons
 
     if (LURE_STEP_COUNT != 0 && (Random() % 10 < 2))
         swap = TRUE;
 
     if (swap)
-        wildMonIndex = 11 - wildMonIndex;
+        wildMonIndex = 9 - wildMonIndex;
 
     return wildMonIndex;
 }
