@@ -360,7 +360,7 @@
 	.byte 0x3a
 	.endm
 
-	.macro isdmgblockedbydisguse
+	.macro isdmgblockedbydisguise
 	.byte 0x3b
 	.endm
 

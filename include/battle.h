@@ -1252,16 +1252,16 @@ static inline u32 GetChosenMoveFromPosition(u32 battler)
 
 static inline void SetPassiveDamageAmount(u32 battler, s32 value)
 {
+    if (value == 0)
+        value = 1;
     gBattleStruct->passiveHpUpdate[battler] = value;
-    if (gBattleStruct->passiveHpUpdate[battler] == 0)
-        gBattleStruct->passiveHpUpdate[battler] = 1;
 }
 
 static inline void SetHealAmount(u32 battler, s32 value)
 {
+    if (value == 0)
+        value = 1;
     gBattleStruct->passiveHpUpdate[battler] = -1 * value;
-    if (gBattleStruct->passiveHpUpdate[battler] == 0)
-        gBattleStruct->passiveHpUpdate[battler] = -1;
 }
 
 #endif // GUARD_BATTLE_H

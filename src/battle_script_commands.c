@@ -395,7 +395,7 @@ static void Cmd_bichalfword(void);
 static void Cmd_bicword(void);
 static void Cmd_pause(void);
 static void Cmd_waitstate(void);
-static void Cmd_isdmgblockedbydisguse(void);
+static void Cmd_isdmgblockedbydisguise(void);
 static void Cmd_return(void);
 static void Cmd_end(void);
 static void Cmd_end2(void);
@@ -654,7 +654,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_bicword,                                 //0x38
     Cmd_pause,                                   //0x39
     Cmd_waitstate,                               //0x3A
-    Cmd_isdmgblockedbydisguse,                   //0x3B
+    Cmd_isdmgblockedbydisguise,                  //0x3B
     Cmd_return,                                  //0x3C
     Cmd_end,                                     //0x3D
     Cmd_end2,                                    //0x3E
@@ -960,12 +960,6 @@ static const struct PickupItem sPickupTable[] =
 };
 
 #undef _
-
-static void PrepareHealthBarUpdate(u32 battler, u32 bufferId, s32 healthValue)
-{
-    BtlController_EmitHealthBarUpdate(battler, bufferId, healthValue);
-    MarkBattlerForControllerExec(battler);
-}
 
 static void ValidateSavedBattlerCounts(void)
 {
@@ -2213,7 +2207,8 @@ static void DoublesHPBarReduction(void)
             continue;
 
         s32 dmgUpdate = min(gBattleStruct->moveDamage[battlerDef], 10000);
-        PrepareHealthBarUpdate(battlerDef, B_COMM_TO_CONTROLLER, dmgUpdate);
+        BtlController_EmitHealthBarUpdate(battlerDef, B_COMM_TO_CONTROLLER, dmgUpdate);
+        MarkBattlerForControllerExec(battlerDef);
         if (IsOnPlayerSide(battlerDef) && dmgUpdate > 0)
             gBattleResults.playerMonWasDamaged = TRUE;
     }
@@ -2232,7 +2227,8 @@ static void Cmd_healthbarupdate(void)
     switch (cmd->updateState)
     {
     case PASSIVE_HP_UPDATE:
-        PrepareHealthBarUpdate(battler, B_COMM_TO_CONTROLLER, min(gBattleStruct->passiveHpUpdate[battler], 10000));
+        BtlController_EmitHealthBarUpdate(battler, B_COMM_TO_CONTROLLER, min(gBattleStruct->passiveHpUpdate[battler], 10000));
+        MarkBattlerForControllerExec(battler);
         break;
     case MOVE_DAMAGE_HP_UPDATE:
         if (IsDoubleSpreadMove())
@@ -2249,7 +2245,8 @@ static void Cmd_healthbarupdate(void)
               && !DoesDisguiseBlockMove(battler, gCurrentMove))
         {
             s32 damage = min(gBattleStruct->moveDamage[battler], 10000);
-            PrepareHealthBarUpdate(battler, B_COMM_TO_CONTROLLER, damage);
+            BtlController_EmitHealthBarUpdate(battler, B_COMM_TO_CONTROLLER, damage);
+            MarkBattlerForControllerExec(battler);
             if (IsOnPlayerSide(battler) && damage > 0)
                 gBattleResults.playerMonWasDamaged = TRUE;
         }
@@ -5303,7 +5300,7 @@ static void Cmd_waitstate(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_isdmgblockedbydisguse(void)
+static void Cmd_isdmgblockedbydisguise(void)
 {
     CMD_ARGS();
 
@@ -9619,7 +9616,8 @@ static void Cmd_tryexplosion(void)
         return;
 
     gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
-    PrepareHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+    BtlController_EmitHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+    MarkBattlerForControllerExec(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
@@ -12450,7 +12448,9 @@ static void Cmd_trymemento(void)
     {
         // Success, drop user's HP bar to 0
         gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
-        PrepareHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+        BtlController_EmitHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+        MarkBattlerForControllerExec(gBattlerAttacker);
+
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -16932,7 +16932,8 @@ void BS_SwitchinAbilities(void)
 void BS_InstantHpDrop(void)
 {
     NATIVE_ARGS();
-    PrepareHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+    BtlController_EmitHealthBarUpdate(gBattlerAttacker, B_COMM_TO_CONTROLLER, INSTANT_HP_BAR_DROP);
+    MarkBattlerForControllerExec(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
