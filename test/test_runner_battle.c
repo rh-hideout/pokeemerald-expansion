@@ -1815,7 +1815,7 @@ void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
     else if (position == B_POSITION_PLAYER_RIGHT) // MULTI_PARTNER
     {
         partySize = &DATA.playerPartySize;
-        if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
+        if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.playerParty;
     } 
