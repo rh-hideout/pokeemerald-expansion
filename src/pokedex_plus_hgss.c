@@ -120,6 +120,8 @@ enum
     NAME_YZ,
 };
 
+#define NUM_TUTOR_MOVES (ARRAY_COUNT(gTutorMoves) - 1)
+
 extern const u16 gPokedexOrder_Alphabetical[];
 extern const u16 gPokedexOrder_Height[];
 extern const u16 gPokedexOrder_Weight[];
@@ -5201,17 +5203,23 @@ static bool8 CalculateMoves(void)
     }
 
     // Level up moves
+    u32 validUniversalMoves = 0;
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
     for (i = 0; i < MAX_LEVEL_UP_MOVES && learnset[i].move != LEVEL_UP_MOVE_END; i++)
         numLevelUpMoves++;
 
-    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
     // TM and Tutor moves
-    //movesTotal = AddTMTutorMoves(species, movesTotal, &numTMHMMoves, &numTutorMoves);
-    for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
-        numTeachableMoves++;
-    u32 validUniversalMoves;
-    OrderTeachableLearnset(species, numTeachableMoves, &validUniversalMoves);
+    if (species != SPECIES_MEW)
+    {
+        const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
+        for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
+            numTeachableMoves++;
+        OrderTeachableLearnset(species, numTeachableMoves, &validUniversalMoves);
+    }
+    else
+    {
+        numTeachableMoves = NUM_ALL_MACHINES + NUM_TUTOR_MOVES;
+    }
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
@@ -5229,6 +5237,15 @@ static u16 GetSelectedMove(u32 species, u32 selected)
     if (selected < sPokedexView->numLevelUpMoves)
         return GetSpeciesLevelUpLearnset(species)[selected].move;
     selected -= sPokedexView->numLevelUpMoves;
+    if (species == SPECIES_MEW)
+    {
+        if (selected < NUM_ALL_MACHINES)
+            return GetTMHMMoveId(selected + 1);
+        selected -= NUM_ALL_MACHINES;
+        if (selected < NUM_TUTOR_MOVES)
+            return gTutorMoves[selected];
+        return MOVE_NONE;
+    }
     selected = sPokedexView->teachableLearnsetOrder[selected];
     if (selected == 0xFF)
         return MOVE_NONE;
@@ -5277,7 +5294,12 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
             if (move == GetTMHMMoveId(i + 1))
                 TMHMItemId = GetTMHMItemId(i + 1);
         }
-        if (TMHMItemId)
+        if (species == SPECIES_MEW && !CanLearnTeachableMove(species, move))
+        {
+            PrintStatsScreenTextSmall(WIN_STATS_MOVES_TOP, gText_ThreeDashes, moves_x + 113, moves_y + 9);
+            item = ITEM_NONE;
+        }
+        else if (TMHMItemId)
         {
             CopyItemName(TMHMItemId, gStringVar1); //TM name
             PrintStatsScreenTextSmall(WIN_STATS_MOVES_TOP, gStringVar1, moves_x + 113, moves_y + 9);
@@ -5331,7 +5353,11 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
     u32 move = GetSelectedMove(species, sPokedexView->moveSelected);
 
     //Move description
-    if (gTasks[taskId].data[5] == 0)
+    if (species == SPECIES_MEW && !CanLearnTeachableMove(species, move))
+    {
+        PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gText_MewCannotLearn, moves_x, moves_y);
+    }
+    else if (gTasks[taskId].data[5] == 0)
     {
         StringCopy(gStringVar4, GetMoveDescription(move));
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gStringVar4, moves_x, moves_y);
@@ -5378,6 +5404,9 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
 
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u32 move = GetSelectedMove(species, sPokedexView->moveSelected);
+
+    if (species == SPECIES_MEW && !CanLearnTeachableMove(species, move))
+        move = MOVE_NONE;
 
     //Power + Accuracy
     if (gTasks[taskId].data[5] == 0)
