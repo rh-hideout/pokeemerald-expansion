@@ -464,6 +464,8 @@ void BtlCtrl_DrawVoiceoverMessageFrame(void);
 void BtlCtrl_RemoveVoiceoverMessageFrame(void);
 
 bool32 ShouldBattleRestrictionsApply(u32 battler);
+void FreeShinyStars(void);
+
 
 // oak and old man controller
 void SetControllerToOakOrOldMan(u32 battler);

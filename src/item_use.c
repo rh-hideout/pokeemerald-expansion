@@ -18,6 +18,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
+#include "fishing.h"
 #include "fldeff.h"
 #include "follower_npc.h"
 #include "item.h"

@@ -5241,13 +5241,13 @@ static void ShowMoveSelectWindow(u8 slot)
 {
     u8 i;
     u8 moveCount = 0;
-    u8 fontId = FONT_NORMAL;
     u8 windowId = DisplaySelectionWindow(SELECTWINDOW_MOVES);
     u16 move;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         move = GetMonData(&gPlayerParty[slot], MON_DATA_MOVE1 + i);
+        u8 fontId = GetFontIdToFit(GetMoveName(move), FONT_NORMAL, 0, 72);
         AddTextPrinterParameterized(windowId, fontId, GetMoveName(move), 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
         if (move != MOVE_NONE)
             moveCount++;
@@ -8043,7 +8043,6 @@ static void FieldCallback_RockClimb(void)
     gFieldEffectArguments[0] = GetCursorSelectionMonId();
     FieldEffectStart(FLDEFF_USE_ROCK_CLIMB);
 }
-
 
 static void PartyMenu_Oak_PrintText(u8 windowId, const u8 *str)
 {

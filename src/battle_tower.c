@@ -1649,8 +1649,8 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
         SetMonData(dst, MON_DATA_TERA_TYPE, &data);
     }
 
-
-    SetMonData(dst, MON_DATA_POKEBALL, &ball);
+    if (ball != BALL_STRANGE)
+        SetMonData(dst, MON_DATA_POKEBALL, &ball);
     CalculateMonStats(dst);
 }
 

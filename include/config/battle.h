@@ -168,8 +168,6 @@
 #define B_DEFIANT_STICKY_WEB        GEN_LATEST // In Gen9+, Defiant activates on Sticky Web regardless of who set it up. In Gen8, Defiant does not activate on Sticky Web set up by an ally after Court Change swaps its side.
 
 // Item settings
-#define B_HP_BERRIES                GEN_LATEST // In Gen4+, berries which restore HP activate immediately after HP drops to half. In Gen3, the effect occurs at the end of the turn.
-#define B_BERRIES_INSTANT           GEN_LATEST // In Gen4+, most berries activate on battle start/switch-in if applicable. In Gen3, they only activate either at the move end or turn end.
 #define B_CONFUSE_BERRIES_HEAL      GEN_LATEST // Before Gen7, Figy and similar berries restore 1/8th of HP and trigger at half HP. In Gen7 they restore half HP, triggering at 25% HP. In Gen8 they heal 1/3rd of HP.
 #define B_X_ITEMS_BUFF              GEN_LATEST // In Gen7+, the X Items raise a stat by 2 stages instead of 1.
 #define B_MENTAL_HERB               GEN_LATEST // In Gen5+, the Mental Herb cures Taunt, Encore, Torment, Heal Block, and Disable in addition to Infatuation from before.
@@ -317,6 +315,7 @@
 #define B_TOXIC_REVERSAL                GEN_LATEST // In Gen5+, bad poison will change to regular poison at the end of battles.
 #define B_TRY_CATCH_TRAINER_BALL        GEN_LATEST // In Gen4+, trying to catch a Trainer's Pokémon does not consume the Poké Ball.
 #define B_SLEEP_CLAUSE                  FALSE      // Enables Sleep Clause all the time in every case, overriding B_FLAG_SLEEP_CLAUSE. Use that for modularity.
+#define B_PARTNER_MONS_MARKED_SEEN      FALSE      // If TRUE, if your double battle partner sends out a Pokémon you haven't encountered yet, it will be marked as SEEN in your Pokédex.
 
 #define NUM_BEEPS_GEN_LATEST            4                    // Loops 4 times
 #define NUM_BEEPS_GEN_3                 -1                   // Loops infinitely

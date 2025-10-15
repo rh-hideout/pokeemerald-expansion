@@ -147,8 +147,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
             gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
             gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
 
-            FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
-            FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+            FreeShinyStars();
 
             HandleLowHpMusicChange(GetBattlerMon(battler), battler);
             if (IsDoubleBattle())

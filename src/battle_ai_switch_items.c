@@ -7,7 +7,6 @@
 #include "battle_anim.h"
 #include "battle_controllers.h"
 #include "battle_main.h"
-#include "constants/hold_effects.h"
 #include "battle_setup.h"
 #include "data.h"
 #include "item.h"
@@ -668,7 +667,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
 {
     bool32 switchMon = FALSE;
     enum Ability monAbility = gAiLogicData->abilities[battler];
-    enum ItemHoldEffect holdEffect = gAiLogicData->holdEffects[battler];
+    enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
     u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
     bool32 hasStatRaised = AnyStatIsRaised(battler);
@@ -1027,7 +1026,7 @@ static bool32 ShouldSwitchIfEncored(u32 battler)
 
 static bool32 ShouldSwitchIfBadChoiceLock(u32 battler)
 {
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffect(battler);
+    enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
     u32 lastUsedMove = gAiLogicData->lastUsedMove[battler];
     u32 opposingBattler = GetOppositeBattler(battler);
     bool32 moveAffectsTarget = TRUE;
@@ -1518,7 +1517,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     return bestMonId;
 }
 
-static u32 GetFirstNonIvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 battlerIn1, u32 battlerIn2)
+static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 battlerIn1, u32 battlerIn2)
 {
     if (!IsDoubleBattle())
         return PARTY_SIZE;
@@ -1616,7 +1615,7 @@ static s32 GetSwitchinWeatherImpact(void)
 {
     s32 weatherImpact = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
     enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum ItemHoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
 
     if (HasWeatherEffect())
     {
@@ -1681,7 +1680,7 @@ static u32 GetSwitchinRecurringHealing(void)
 {
     u32 recurringHealing = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
     enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum ItemHoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_KLUTZ)
@@ -1716,7 +1715,7 @@ static u32 GetSwitchinRecurringDamage(void)
 {
     u32 passiveDamage = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
     enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum ItemHoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
 
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
@@ -2301,7 +2300,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         return aceMonId;
 
     // Fallback
-    u32 bestMonId = GetFirstNonIvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
+    u32 bestMonId = GetFirstNonInvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
     if (bestMonId != PARTY_SIZE)
         return bestMonId;
 
@@ -2423,7 +2422,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
             return aceMonId;
 
         // Fallback
-        bestMonId = GetFirstNonIvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
+        bestMonId = GetFirstNonInvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
 
@@ -2505,18 +2504,13 @@ static bool32 ShouldUseItem(u32 battler)
             shouldUse = AI_ShouldHeal(battler, healAmount);
             break;
         case EFFECT_ITEM_CURE_STATUS:
-            if (itemEffects[3] & ITEM3_SLEEP && gBattleMons[battler].status1 & STATUS1_SLEEP)
-                shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_POISON && gBattleMons[battler].status1 & STATUS1_PSN_ANY)
-                shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
-                shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
-                shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-                shouldUse = TRUE;
-            if (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0)
-                shouldUse = TRUE;
+            if ((itemEffects[3] & ITEM3_SLEEP && gBattleMons[battler].status1 & STATUS1_SLEEP)
+             || (itemEffects[3] & ITEM3_POISON && gBattleMons[battler].status1 & STATUS1_PSN_ANY)
+             || (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
+             || (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
+             || (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
+             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0))
+                shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
             break;
         case EFFECT_ITEM_INCREASE_STAT:
         case EFFECT_ITEM_INCREASE_ALL_STATS:

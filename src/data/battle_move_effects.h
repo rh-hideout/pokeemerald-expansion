@@ -1984,12 +1984,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 0, // TODO: Assign points
     },
 
-    [EFFECT_HIT_SET_TERRAIN] =
-    {
-        .battleScript = BattleScript_EffectHitSetTerrain,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
     [EFFECT_DARK_VOID] =
     {
         .battleScript = BattleScript_EffectDarkVoid,

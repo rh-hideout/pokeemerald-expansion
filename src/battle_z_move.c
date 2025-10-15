@@ -36,7 +36,6 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/species.h"
-#include "constants/hold_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_move_effects.h"
 #include "constants/abilities.h"
@@ -113,7 +112,7 @@ bool32 IsZMove(u32 move)
 
 bool32 CanUseZMove(u32 battler)
 {
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Check if Player has Z-Power Ring.
     if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
@@ -144,7 +143,7 @@ bool32 CanUseZMove(u32 battler)
 u32 GetUsableZMove(u32 battler, u32 move)
 {
     u32 item = gBattleMons[battler].item;
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
     {
@@ -167,7 +166,7 @@ void ActivateZMove(u32 battler)
 bool32 IsViableZMove(u32 battler, u32 move)
 {
     u32 item;
-    enum ItemHoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     int moveSlotIndex;
 
     item = gBattleMons[battler].item;

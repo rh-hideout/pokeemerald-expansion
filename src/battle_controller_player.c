@@ -35,7 +35,6 @@
 #include "constants/battle_anim.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_partner.h"
-#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
@@ -1255,8 +1254,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
-        FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
-        FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+        FreeShinyStars();
 
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 

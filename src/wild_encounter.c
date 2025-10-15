@@ -3,6 +3,7 @@
 #include "pokemon.h"
 #include "metatile_behavior.h"
 #include "fieldmap.h"
+#include "fishing.h"
 #include "follower_npc.h"
 #include "random.h"
 #include "field_player_avatar.h"
@@ -43,7 +44,6 @@ extern const u8 EventScript_SprayWoreOff[];
 
 static u16 FeebasRandom(void);
 static void FeebasSeedRng(u16 seed);
-static void UpdateChainFishingStreak();
 static bool8 IsWildLevelAllowedByRepel(u8 level);
 static void ApplyFluteEncounterRateMod(u32 *encRate);
 static void ApplyCleanseTagEncounterRateMod(u32 *encRate);
@@ -962,22 +962,6 @@ bool8 DoesCurrentMapHaveFishingMons(void)
         return TRUE;
     else
         return FALSE;
-}
-
-u32 CalculateChainFishingShinyRolls(void)
-{
-    return (2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX));
-}
-
-static void UpdateChainFishingStreak()
-{
-    if (!I_FISHING_CHAIN)
-        return;
-
-    if (gChainFishingDexNavStreak >= FISHING_CHAIN_LENGTH_MAX)
-        return;
-
-    gChainFishingDexNavStreak++;
 }
 
 void FishingWildEncounter(u8 rod)
