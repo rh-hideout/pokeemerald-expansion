@@ -5574,7 +5574,7 @@ bool8 TryIncrementMonLevel(struct Pokemon *mon)
     }
 }
 
-static const u16 sUniversalMoves[] =
+const u16 gUniversalMoves[] =
 {
     MOVE_BIDE,
     MOVE_FRUSTRATION,
@@ -5587,6 +5587,11 @@ static const u16 sUniversalMoves[] =
     MOVE_SUBSTITUTE,
     MOVE_TERA_BLAST,
 };
+
+u32 GetUniversalMovesCount(void)
+{
+    return ARRAY_COUNT(gUniversalMoves);
+}
 
 u8 CanLearnTeachableMove(u16 species, u16 move)
 {
@@ -5622,9 +5627,9 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
     {
         u32 i, j;
         const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
-        for (i = 0; i < ARRAY_COUNT(sUniversalMoves); i++)
+        for (i = 0; i < ARRAY_COUNT(gUniversalMoves); i++)
         {
-            if (sUniversalMoves[i] == move)
+            if (gUniversalMoves[i] == move)
             {
                 if (!gSpeciesInfo[species].tmIlliterate)
                 {

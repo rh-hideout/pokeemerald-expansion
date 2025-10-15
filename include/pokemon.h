@@ -696,6 +696,8 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct Ability gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
+
+extern const u16 gUniversalMoves[];
 #if P_TUTOR_MOVES_ARRAY
 extern const u16 gTutorMoves[];
 #endif // P_TUTOR_MOVES_ARRAY
@@ -905,5 +907,6 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 u32 IsSpeciesOfType(u32 species, u32 type);
+u32 GetUniversalMovesCount(void);
 
 #endif // GUARD_POKEMON_H
