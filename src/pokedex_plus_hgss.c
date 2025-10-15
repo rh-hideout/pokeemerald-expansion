@@ -50,6 +50,7 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
+#include "data/tutor_moves.h"
 
 enum
 {
@@ -5129,7 +5130,6 @@ static void OrderTeachableLearnset(u16 species, u32 numTeachableMoves, u32 *vali
         }
     }
 
-#if P_TUTOR_MOVES_ARRAY
     for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
     {
         move = gTutorMoves[i];
@@ -5160,28 +5160,7 @@ static void OrderTeachableLearnset(u16 species, u32 numTeachableMoves, u32 *vali
             }
         }
     }
-#else
-    for (i = 0; i < numUniversalMoves; i++)
-    {
-        move = gUniversalMoves[i];
-        if (isTMMove[i + numTeachableMoves])
-            continue;
-        if (!CanLearnTeachableMove(species, move))
-            continue;
-        sPokedexView->teachableLearnsetOrder[counter] = i + numTeachableMoves;
-        counter++;
-    }
 
-    for (i = 0;  i < numTeachableMoves; i++)
-    {
-        move = teachableLearnset[i];
-        if (!isTMMove[i])
-        {
-            sPokedexView->teachableLearnsetOrder[counter] = i;
-            counter++;
-        }
-    }
-#endif
     *validUniversalMoves = numUniversalMoves;
     for (i = counter; i < numTeachableMoves + numUniversalMoves; i++)
     {
