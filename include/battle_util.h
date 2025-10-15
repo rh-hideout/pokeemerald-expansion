@@ -173,8 +173,9 @@ struct BattleContext
     u32 battlerAtk:3;
     u32 battlerDef:3;
     u32 currentMove:16;
-    enum BattleMoveEffects moveEffect:10;
-    enum Ability ability[MAX_BATTLERS_COUNT];
+    u32 padding:10;
+    enum Ability abilities[MAX_BATTLERS_COUNT];
+    enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
 };
 
 enum SleepClauseBlock

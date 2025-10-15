@@ -311,7 +311,6 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_MAX_HP_50_RECOIL,
     EFFECT_CHLOROBLAST, // Same effect as EFFECT_MAX_HP_50_RECOIL but follows the same rules as EFFECT_RECOIL
     EFFECT_EXTREME_EVOBOOST,
-    EFFECT_HIT_SET_TERRAIN,
     EFFECT_DARK_VOID,
     EFFECT_VICTORY_DANCE,
     EFFECT_TEATIME,

@@ -2005,10 +2005,6 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     if (AI_IsAbilityOnSide(battlerDef, ABILITY_OPPORTUNIST))
         return FALSE;
 
-    // Don't increase stats if opposing battler has Encore
-    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
-        return FALSE;
-
     // Don't increase stats if opposing battler has used Haze effect or AI effect
     if (!RandomPercentage(RNG_AI_BOOST_INTO_HAZE, BOOST_INTO_HAZE_CHANCE)
       && HasBattlerSideUsedMoveWithEffect(battlerDef, EFFECT_HAZE))
@@ -2027,6 +2023,9 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
 
 bool32 ShouldSetWeather(u32 battler, u32 weather)
 {
+    if (AI_GetWeather() & weather)
+        return FALSE;
+
     return WeatherChecker(battler, weather, FIELD_EFFECT_POSITIVE);
 }
 
@@ -2037,6 +2036,15 @@ bool32 ShouldClearWeather(u32 battler, u32 weather)
 
 bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
 {
+    if (gFieldStatuses & fieldStatus)
+    {
+        if (!(fieldStatus & STATUS_FIELD_TRICK_ROOM))
+            return FALSE;
+        // DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE
+        else if (gFieldTimers.trickRoomTimer != (gBattleTurnCounter + 1))
+            return FALSE;
+    }
+
     return FieldStatusChecker(battler, fieldStatus, FIELD_EFFECT_POSITIVE);
 }
 
@@ -2172,10 +2180,6 @@ u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat)
 
     // Don't decrease stat if target will die to residual damage
     if (GetBattlerSecondaryDamage(battlerDef) >= gBattleMons[battlerDef].hp)
-        return NO_INCREASE;
-
-    // Don't decrease stat if opposing battler has Encore
-    if (HasBattlerSideMoveWithEffect(battlerDef, EFFECT_ENCORE))
         return NO_INCREASE;
 
     if (DoesAbilityRaiseStatsWhenLowered(gAiLogicData->abilities[battlerDef]))
