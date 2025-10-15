@@ -1827,7 +1827,7 @@ void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
     else // MULTI_OPPONENT_B
     {
         partySize = &DATA.opponentPartySize;
-        if((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
+        if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.opponentParty;
     } 
