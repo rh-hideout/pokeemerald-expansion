@@ -7,7 +7,7 @@ try:
         print("Please run this script from the project's root folder.")
         quit()
     sys.path.append("./tools/wild_encounters/")
-    from wild_encounters_to_header import TimeOfDay, SetupUserTimeEnum
+    from wild_encounters_to_header import Config
 except ImportError:
     print("Could not import the file tools/wild_encounters/wild_encounters_to_header.py")
     quit()
@@ -24,10 +24,12 @@ def GetWildEncounterFile():
         print("Please run this script from the project's root folder.")
         quit()
 
-    timeOfDay = SetupUserTimeEnum(TimeOfDay())
-
     wFile = open("src/data/wild_encounters.json")
     wData = json.load(wFile)
+
+    config = Config('include/config/overworld.h', 'include/constants/rtc.h', wData)
+    timeOfDay = config.times_of_day
+
 
     wBackupData = json.dumps(wData, indent=2)
     wBackupFile = open("src/data/wild_encounters.json.bak", mode="w", encoding="utf-8")
@@ -49,7 +51,7 @@ def GetWildEncounterFile():
 
         wEncounters_New = list()
         for map in wEncounters:
-            for suffix in timeOfDay.fvals:
+            for suffix in timeOfDay.values():
                 tempSuffix = "_" + suffix
                 if tempSuffix in map["base_label"]:
                     editMap = False
@@ -59,7 +61,7 @@ def GetWildEncounterFile():
 
             if editMap:
                 k = 0
-                for suffix in timeOfDay.fvals:
+                for suffix in timeOfDay.values():
                     tempDict = dict()
                     if k == TIME_OF_DAY_DEFAULT or COPY_FULL_ENCOUNTER:
                         tempDict = map.copy()
