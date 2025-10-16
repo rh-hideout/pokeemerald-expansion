@@ -5270,8 +5270,8 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .cryId = CRY_FALINKS,
         .natDexNum = NATIONAL_DEX_FALINKS,
         .categoryName = _("Formation"),
-        // height
-        // weight
+        .height = 16,
+        .weight = 990,
         .description = COMPOUND_STRING(
             "Mega Falinks has taken on the\n"
             "ultimate battle formation, which\n"

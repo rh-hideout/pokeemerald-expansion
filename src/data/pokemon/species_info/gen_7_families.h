@@ -5231,9 +5231,9 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .speciesName = _("Drampa"),
         .cryId = CRY_DRAMPA, // CRY_DRAMPA_MEGA,
         .natDexNum = NATIONAL_DEX_DRAMPA,
-        .categoryName = _("Placid"),
-        // height
-        // weight
+        .categoryName = _("Imposing"),
+        .height = 3,
+        .weight = 2405,
         .description = COMPOUND_STRING(
             "Drampa's cells have been\n"
             "invigorated, allowing it to regain\n"

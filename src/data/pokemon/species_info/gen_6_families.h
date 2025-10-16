@@ -225,7 +225,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 115,
         .types = MON_TYPES(TYPE_GRASS, TYPE_FIGHTING),
         .catchRate = 45,
-        .expYield = 1,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 265 : 239,
         .evYield_Defense = 3,
         .genderRatio = PERCENT_FEMALE(12.5),
         .eggCycles = 20,
@@ -238,8 +238,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_CHESNAUGHT,
         .natDexNum = NATIONAL_DEX_CHESNAUGHT,
         .categoryName = _("Spiny Armor"),
-        // height
-        // weight
+        .height = 16,
+        .weight = 900,
         .description = COMPOUND_STRING(
             "It has fortified armor and a\n"
             "will to defend at all costs.\n"
@@ -515,7 +515,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 125,
         .types = MON_TYPES(TYPE_FIRE, TYPE_PSYCHIC),
         .catchRate = 45,
-        .expYield = 1,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 267 : 240,
         .evYield_SpAttack = 3,
         .genderRatio = PERCENT_FEMALE(12.5),
         .eggCycles = 20,
@@ -528,8 +528,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_DELPHOX, // CRY_DELPHOX_MEGA,
         .natDexNum = NATIONAL_DEX_DELPHOX,
         .categoryName = _("Fox"),
-        // height
-        // weight
+        .height = 15,
+        .weight = 390,
         .description = COMPOUND_STRING(
             "It wields flaming branches to\n"
             "dazzle its opponents before\n"
@@ -926,7 +926,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 81,
         .types = MON_TYPES(TYPE_WATER, TYPE_DARK),
         .catchRate = 45,
-        .expYield = 1,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 265 : 239,
         .evYield_Speed = 3,
         .genderRatio = PERCENT_FEMALE(12.5),
         .eggCycles = 20,
@@ -940,8 +940,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_GRENINJA, // CRY_GRENINJA_MEGA,
         .natDexNum = NATIONAL_DEX_GRENINJA,
         .categoryName = _("Ninja"),
-        // height
-        // weight
+        .height = 15,
+        .weight = 400,
         .description = COMPOUND_STRING(
             "This Pokémon spins a giant\n"
             "shuriken at high speed to make it\n"
@@ -1917,7 +1917,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 86,
         .types = MON_TYPES(TYPE_FIRE, TYPE_NORMAL),
         .catchRate = 65,
-        .expYield = 1,
+        .expYield = 177,
         .evYield_SpAttack = 2,
         .genderRatio = PERCENT_FEMALE(87.5),
         .eggCycles = 20,
@@ -1930,8 +1930,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_PYROAR, // CRY_PYROAR_MEGA,
         .natDexNum = NATIONAL_DEX_PYROAR,
         .categoryName = _("Royal"),
-        // height
-        // weight
+        .height = 15,
+        .weight = 933,
         .description = COMPOUND_STRING(
             "This Pokémon spews flames hotter\n"
             "than 18,000 degrees Fahrenheit.\n"
@@ -3705,8 +3705,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_MALAMAR, // CRY_MALAMAR_MEGA,
         .natDexNum = NATIONAL_DEX_MALAMAR,
         .categoryName = _("Overturning"),
-        // height
-        // weight
+        .height = 29,
+        .weight = 698,
         .description = COMPOUND_STRING(
             "It uses its colorful lights to\n"
             "overwrite the personality and\n"
@@ -3910,7 +3910,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 106,
         .types = MON_TYPES(TYPE_ROCK, TYPE_FIGHTING),
         .catchRate = 45,
-        .expYield = 1,
+        .expYield = 175,
         .evYield_Attack = 2,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
@@ -3924,8 +3924,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_BARBARACLE, // CRY_BARBARACLE_MEGA,
         .natDexNum = NATIONAL_DEX_BARBARACLE,
         .categoryName = _("Collective"),
-        // height
-        // weight
+        .height = 22,
+        .weight = 1000,
         .description = COMPOUND_STRING(
             "It uses its many arms to toy\n"
             "with its opponents. This\n"
@@ -4131,7 +4131,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .baseSpDefense = 163,
         .types = MON_TYPES(TYPE_POISON, TYPE_DRAGON),
         .catchRate = 55,
-        .expYield = 1,
+        .expYield = 173,
         .evYield_SpDefense = 2,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
@@ -4144,8 +4144,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_DRAGALGE, // CRY_DRAGALGE_MEGA,
         .natDexNum = NATIONAL_DEX_DRAGALGE,
         .categoryName = _("Mock Kelp"),
-        // height
-        // weight
+        .height = 21,
+        .weight = 1003,
         .description = COMPOUND_STRING(
             "It spits a liquid that causes the\n"
             "regenerative power of cells to run\n"
@@ -4865,8 +4865,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_HAWLUCHA, // CRY_HAWLUCHA_MEGA,
         .natDexNum = NATIONAL_DEX_HAWLUCHA,
         .categoryName = _("Wrestling"),
-        // height
-        // weight
+        .height = 10,
+        .weight = 250,
         .description = COMPOUND_STRING(
             "Mega Evolution has pumped up all\n"
             "its muscles. Hawlucha flexes to\n"
@@ -7088,8 +7088,8 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         .cryId = CRY_ZYGARDE_COMPLETE, // CRY_ZYGARDE_MEGA,
         .natDexNum = NATIONAL_DEX_ZYGARDE,
         .categoryName = _("Order"),
-        // height
-        // weight
+        .height = 77,
+        .weight = 6100,
         .description = COMPOUND_STRING(
             "In response to people's emotions\n"
             "during an unprecedented crisis,\n"

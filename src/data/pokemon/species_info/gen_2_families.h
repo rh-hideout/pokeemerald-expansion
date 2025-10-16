@@ -240,7 +240,13 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .baseSpDefense = 115,
         .types = MON_TYPES(TYPE_GRASS, TYPE_FAIRY),
         .catchRate = 45,
-        .expYield = 1,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 263,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 236,
+    #else
+        .expYield = 208,
+    #endif
         .evYield_Defense = 1,
         .evYield_SpDefense = 2,
         .genderRatio = PERCENT_FEMALE(12.5),
@@ -254,8 +260,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .cryId = CRY_MEGANIUM, // CRY_MEGANIUM_MEGA,
         .natDexNum = NATIONAL_DEX_MEGANIUM,
         .categoryName = _("Herb"),
-        // height
-        // weight
+        .height = 24,
+        .weight = 2010,
         .description = COMPOUND_STRING(
             "This Pokémon can fire a tremendously\n"
             "powerful Solar Beam from its four\n"
@@ -821,7 +827,13 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .baseSpDefense = 93,
         .types = MON_TYPES(TYPE_WATER, TYPE_DRAGON),
         .catchRate = 45,
-        .expYield = 1,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 265,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 239,
+    #else
+        .expYield = 210,
+    #endif
         .evYield_Attack = 2,
         .evYield_Defense = 1,
         .genderRatio = PERCENT_FEMALE(12.5),
@@ -834,9 +846,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .speciesName = _("Feraligatr"),
         .cryId = CRY_FERALIGATR, // CRY_FERALIGATR_MEGA,
         .natDexNum = NATIONAL_DEX_FERALIGATR,
-        .categoryName = _("Big Jaw"),
-        // height
-        // weight
+        .categoryName = _("Double Jaw"),
+        .height = 23,
+        .weight = 1088,
         .description = COMPOUND_STRING(
             "With its arms and hoodlike fin, this\n"
             "Pokémon forms a gigantic set of jaws\n"
@@ -7278,7 +7290,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_STEEL, TYPE_FLYING),
         .catchRate = 25,
-        .expYield = 1,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 163 : 168,
         .evYield_Defense = 2,
         .itemRare = ITEM_METAL_COAT,
         .genderRatio = PERCENT_FEMALE(50),
@@ -7292,8 +7304,8 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         .cryId = CRY_SKARMORY, // CRY_SKARMORY_MEGA,
         .natDexNum = NATIONAL_DEX_SKARMORY,
         .categoryName = _("Armor Bird"),
-        // height
-        // weight
+        .height = 17,
+        .weight = 404,
         .description = COMPOUND_STRING(
             "Due to the effects of Mega Evolution,\n"
             "its pincers have taken a more\n"

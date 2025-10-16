@@ -10703,7 +10703,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_ICE, TYPE_GHOST),
         .catchRate = 75,
-        .expYield = 1,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 168 : 187,
         .evYield_Speed = 2,
         .genderRatio = MON_FEMALE,
         .eggCycles = 20,
@@ -10716,8 +10716,8 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .cryId = CRY_FROSLASS, // CRY_FROSLASS_MEGA,
         .natDexNum = NATIONAL_DEX_FROSLASS,
         .categoryName = _("Snow Land"),
-        // height
-        // weight
+        .height = 26,
+        .weight = 296,
         .description = COMPOUND_STRING(
             "This Pokémon can use eerie cold\n"
             "air imbued with ghost energy to\n"
