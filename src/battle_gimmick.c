@@ -107,6 +107,27 @@ bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
     }
 }
 
+bool32 DoesGimmickReplaceMove(u32 battler, u32 move, enum Gimmick gimmick)
+{
+    switch (gimmick)
+    {
+    case GIMMICK_DYNAMAX:
+        return TRUE;
+    case GIMMICK_Z_MOVE:
+    {
+        u32 zMove = GetUsableZMove(battler, move);
+        if (GetMovePower(move) == 0 && zMove == GetTypeBasedZMove(move))
+            return FALSE;
+        else
+            return TRUE;
+    }
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
 // Sets a gimmick as used by a trainer with checks for Multi Battles.
 void SetGimmickAsActivated(u32 battler, enum Gimmick gimmick)
 {
