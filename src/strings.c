@@ -1300,3 +1300,6 @@ const u8 gText_PM[] = _("PM");
 const u8 gText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
 const u8 gText_Rename[] = _("RENAME");
 const u8 gText_CannotSendMonToBoxHM[] = _("Cannot send that mon to the box,\nbecause it knows a HM move.{PAUSE_UNTIL_PRESS}");
+const u8 gText_BallsCannotBeUsedNuz[] = _("You already saw a POKéMON\non {STR_VAR_1}!{PAUSE_UNTIL_PRESS}");
+const u8 gText_WontHaveEffectNuzlocke[] = _("It won't have any effect due to\nrunning Nuzlocke challenge.{PAUSE_UNTIL_PRESS}");
+const u8 gText_Var1NuzlockePrevents[] = _("Nuzlocke challenge\nprevents using\n{STR_VAR_1}.");

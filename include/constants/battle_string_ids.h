@@ -9,6 +9,8 @@ enum StringID
     STRINGID_SWITCHINMON,
     STRINGID_USEDMOVE,
     STRINGID_BATTLEEND,
+    STRINGID_NUZLOCKELOST,
+    STRINGID_NUZLOCKEDUPS,
     STRINGID_TRAINERSLIDE,
     STRINGID_TABLE_START, // Make sure to add new messages below this marker
     // todo: make some of those names less vague: attacker/target vs pkmn, etc.

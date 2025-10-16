@@ -4246,6 +4246,10 @@ static void Cmd_tryfaintmon(void)
             gBattlescriptCurrInstr = faintScript;
             if (IsOnPlayerSide(battler))
             {
+                if (FlagGet(FLAG_NUZLOCKE) && FlagGet(FLAG_SYS_POKEDEX_GET)){
+                     bool8 dead = TRUE;
+                     SetMonData(&gPlayerParty[gBattlerPartyIndexes[gActiveBattler]], MON_DATA_DEAD, &dead);
+                 }
                 gHitMarker |= HITMARKER_PLAYER_FAINTED;
                 if (gBattleResults.playerFaintCounter < 255)
                     gBattleResults.playerFaintCounter++;
@@ -4626,8 +4630,7 @@ static void Cmd_getexp(void)
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
             }
-            else if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && *expMonId >= 3)
-                  || GetMonData(&gPlayerParty[*expMonId], MON_DATA_LEVEL) == MAX_LEVEL)
+            else if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && expMonId >= 3) || GetMonData(&gPlayerParty[expMonId], MON_DATA_LEVEL) == MAX_LEVEL || levelCappedNuzlocke(GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL)))
             {
                 gBattleScripting.getexpState = 5;
                 gBattleStruct->battlerExpReward = 0;
@@ -4730,7 +4733,8 @@ static void Cmd_getexp(void)
         {
             gBattleResources->bufferB[gBattleStruct->expGetterBattlerId][0] = 0;
             currLvl = GetMonData(&gPlayerParty[*expMonId], MON_DATA_LEVEL);
-            if (GetMonData(&gPlayerParty[*expMonId], MON_DATA_HP) && currLvl != MAX_LEVEL)
+            if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_HP) && GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL) != MAX_LEVEL
+            && !levelCappedNuzlocke(GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_LEVEL)))
             {
                 gBattleResources->beforeLvlUp->stats[STAT_HP]    = GetMonData(&gPlayerParty[*expMonId], MON_DATA_MAX_HP);
                 gBattleResources->beforeLvlUp->stats[STAT_ATK]   = GetMonData(&gPlayerParty[*expMonId], MON_DATA_ATK);

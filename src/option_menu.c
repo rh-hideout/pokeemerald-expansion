@@ -482,6 +482,12 @@ static void BattleStyle_DrawChoices(u8 selection)
     styles[0] = 0;
     styles[1] = 0;
     styles[selection] = 1;
+    
+    if (FlagGet(FLAG_NUZLOCKE)){
+        styles[1] = 1;
+         DrawOptionMenuChoice(gText_BattleStyleSet, 104, YPOS_BATTLESTYLE, styles[1]);
+        return;
+    }
 
     DrawOptionMenuChoice(gText_BattleStyleShift, 104, YPOS_BATTLESTYLE, styles[0]);
     DrawOptionMenuChoice(gText_BattleStyleSet, GetStringRightAlignXOffset(FONT_NORMAL, gText_BattleStyleSet, 198), YPOS_BATTLESTYLE, styles[1]);

@@ -27,6 +27,7 @@
 #include "constants/hold_effects.h"
 #include "constants/moves.h"
 #include "constants/region_map_sections.h"
+#include "battle_setup.h"
 
 #define IS_DITTO(species) (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_DITTO || gSpeciesInfo[species].eggGroups[1] == EGG_GROUP_DITTO)
 
@@ -360,7 +361,8 @@ static u16 TakeSelectedPokemonFromDaycare(struct DaycareMon *daycareMon)
         species = newSpecies;
     }
 
-    if (GetMonData(&pokemon, MON_DATA_LEVEL) < GetCurrentLevelCap())
+    if (GetMonData(&pokemon, MON_DATA_LEVEL) != MAX_LEVEL 
+    && !levelCappedNuzlocke(GetMonData(&pokemon, MON_DATA_LEVEL)))
     {
         experience = GetMonData(&pokemon, MON_DATA_EXP) + daycareMon->steps;
         u32 maxExp = GetExpAtLevelCap(&pokemon);

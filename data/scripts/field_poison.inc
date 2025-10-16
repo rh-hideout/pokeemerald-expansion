@@ -11,6 +11,8 @@ EventScript_FieldWhiteOut::
 	message gText_PlayerWhitedOut
 	waitmessage
 	waitbuttonpress
+	call_if_set FLAG_NUZLOCKE, EventScript_LostNuzlocke
+EventScript_FieldWhiteOutCont::
 	special Script_FadeOutMapMusic
 	waitstate
 	fadescreen FADE_TO_BLACK
@@ -18,6 +20,15 @@ EventScript_FieldWhiteOut::
 	special SetCB2WhiteOut
 	waitstate
 	end
+
+	EventScript_LostNuzlocke::
+	call_if_unset FLAG_SYS_POKEDEX_GET, EventScript_FieldWhiteOutCont
+	clearflag FLAG_NUZLOCKE
+	message gText_PlayerNuzlockeFailed
+	waitmessage
+	waitbuttonpress
+	return
+
 
 EventScript_SetRespawnLavaridgePkmnCenter::
 	setrespawn HEAL_LOCATION_LAVARIDGE_TOWN
@@ -27,6 +38,7 @@ EventScript_FrontierFieldWhiteOut::
 	message gText_PlayerWhitedOut
 	waitmessage
 	waitbuttonpress
+	call_if_set FLAG_NUZLOCKE, EventScript_LostNuzlocke
 	pike_inchallenge
 	goto_if_eq VAR_RESULT, TRUE, BattleFrontier_BattlePike_EventScript_Retire
 	pyramid_getlocation

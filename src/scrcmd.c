@@ -2304,7 +2304,9 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
         u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL);
         if (!species)
             break;
-        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], move) == TRUE)
+        if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG) && MonKnowsMove(&gPlayerParty[i], moveId) == TRUE
+           && !(GetMonData(&gPlayerParty[i], MON_DATA_DEAD) && FlagGet(FLAG_NUZLOCKE)))
+           // Nuzlocke check to stop a dead Pokemon from using field moves.
         {
             gSpecialVar_Result = i;
             gSpecialVar_0x8004 = species;

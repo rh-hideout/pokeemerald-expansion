@@ -34,6 +34,8 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "caps.h"
+#include "battle_setup.h"
+#include "event_data.h"
 
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
@@ -1784,13 +1786,18 @@ static void TryAddPokeballIconToHealthbox(u8 healthboxSpriteId, bool8 noStatus)
     battler = gSprites[healthboxSpriteId].hMain_Battler;
     if (IsOnPlayerSide(battler))
         return;
-    if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(GetBattlerMon(battler), MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
+    if (!GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(&gEnemyParty[gBattlerPartyIndexes[BattlerId]], MON_DATA_SPECIES)), FLAG_GET_CAUGHT) 
+    && (gNuzlockeCannotCatch || !FlagGet(FLAG_NUZLOCKE) || !FlagGet(FLAG_SYS_POKEDEX_GET)))
         return;
 
     healthBarSpriteId = gSprites[healthboxSpriteId].hMain_HealthBarSpriteId;
 
-    if (noStatus)
-        CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_STATUS_BALL_CAUGHT), (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
+        if (noStatus){
+        if(GetSetPokedexFlag(SpeciesToNationalPokedexNum(GetMonData(&gEnemyParty[gBattlerPartyIndexes[BattlerId]], MON_DATA_SPECIES)), FLAG_GET_CAUGHT))
+            CpuCopy32(GetHealthboxElementGfxPtr(HEALTHBOX_GFX_STATUS_BALL_CAUGHT), (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
+        else if(!gNuzlockeCannotCatch && FlagGet(FLAG_NUZLOCKE) && FlagGet(FLAG_SYS_POKEDEX_GET))
+            CpuCopy32(gNuzlockeFirstEncounterIndicator, (void*)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
+    }
     else
         CpuFill32(0, (void *)(OBJ_VRAM0 + (gSprites[healthBarSpriteId].oam.tileNum + 8) * TILE_SIZE_4BPP), 32);
 }
@@ -2145,7 +2152,7 @@ static void MoveBattleBarGraphically(u8 battler, u8 whichBar)
                     &gBattleSpritesDataPtr->battleBars[battler].currValue,
                     array, B_EXPBAR_PIXELS / 8);
         level = GetMonData(GetBattlerMon(battler), MON_DATA_LEVEL);
-        if (level >= MAX_LEVEL)
+        if (level == MAX_LEVEL || levelCappedNuzlocke(level))
         {
             for (i = 0; i < 8; i++)
                 array[i] = 0;

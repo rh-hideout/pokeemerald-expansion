@@ -451,6 +451,7 @@ PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV::
 	call_if_eq VAR_0x8008, FEMALE, PlayersHouse_1F_EventScript_MomApproachPlayerFemale
 	delay 20
 	msgbox PlayersHouse_1F_Text_DadShouldStayLonger, MSGBOX_DEFAULT
+	call_if_set FLAG_NUZLOCKE, PlayersHouse_1F_EventScript_NuzlockeOver
 	closemessage
 	setflag FLAG_SYS_TV_LATIAS_LATIOS
 	special TurnOnTVScreen
@@ -479,6 +480,13 @@ PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV::
 	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 4
 	releaseall
 	end
+
+PlayersHouse_1F_EventScript_NuzlockeOver::
+	playfanfare MUS_OBTAIN_BADGE
+	msgbox PlayersHouse_1F_Text_NuzlockeIsOver, MSGBOX_DEFAULT
+	waitfanfare
+	clearflag FLAG_NUZLOCKE
+	return
 
 @ Never called.
 PlayersHouse_1F_EventScript_AirLatiBroadcast::

@@ -45,6 +45,8 @@
 #include "constants/item_effects.h"
 #include "constants/items.h"
 #include "constants/songs.h"
+#include "battle_setup.h"
+#include "region_map.h"
 
 static void SetUpItemUseCallback(u8);
 static void FieldCB_UseItemOnField(void);
@@ -1131,6 +1133,12 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_TWO_MONS;
     else if (IsPlayerPartyAndPokemonStorageFull() == TRUE)
         return BALL_THROW_UNABLE_NO_ROOM;
+    else if (gNuzlockeCannotCatch == 1){
+        GetMapNameHandleAquaHideout(gStringVar1, currLocConvertForNuzlocke(GetCurrentRegionMapSectionId()));
+        DisplayItemMessage(taskId, FONT_NORMAL, gText_BallsCannotBeUsedNuz, CloseItemMessage);
+        return;
+    }
+        return;
     else if (B_SEMI_INVULNERABLE_CATCH >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
     else if (FlagGet(B_FLAG_NO_CATCHING))

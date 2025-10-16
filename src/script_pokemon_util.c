@@ -36,6 +36,18 @@ void HealPlayerParty(void)
 {
     u32 i;
     for (i = 0; i < gPlayerPartyCount; i++)
+    {
+        u16 maxHP;
+        if (GetMonData(&gPlayerParty[i], MON_DATA_DEAD)){
+            if (!FlagGet(FLAG_NUZLOCKE) || !FlagGet(FLAG_SYS_POKEDEX_GET)){
+                bool8 dead = FALSE;
+                SetMonData(&gPlayerParty[i], MON_DATA_DEAD, &dead);
+            }
+            else{
+                continue;
+            }
+        }
+    }
         HealPokemon(&gPlayerParty[i]);
     if (OW_PC_HEAL >= GEN_8)
         HealPlayerBoxes();

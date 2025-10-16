@@ -35,6 +35,7 @@
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "overworld.h"
 
 struct BattleWindowText
 {
@@ -72,6 +73,8 @@ static const u8 sText_GotAwaySafely[] = _("{PLAY_SE SE_FLEE}You got away safely!
 static const u8 sText_PlayerDefeatedLinkTrainer[] = _("You defeated {B_LINK_OPPONENT1_NAME}!");
 static const u8 sText_TwoLinkTrainersDefeated[] = _("You defeated {B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME}!");
 static const u8 sText_PlayerLostAgainstLinkTrainer[] = _("You lost against {B_LINK_OPPONENT1_NAME}!");
+static const u8 sText_PlayerFailedNuzlocke[] = _("{B_PLAYER_NAME} failed the\nNuzlocke challenge.\pThe Nuzlocke setting\nhas been turned off.\p");
+static const u8 sText_PlayerDuplicateMon[] = _("Since this type has already been\ncaught, it will not count towards\pthe Nuzlocke challenge.\p");
 static const u8 sText_PlayerLostToTwo[] = _("You lost to {B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME}!");
 static const u8 sText_PlayerBattledToDrawLinkTrainer[] = _("You battled to a draw against {B_LINK_OPPONENT1_NAME}!");
 static const u8 sText_PlayerBattledToDrawVsTwo[] = _("You battled to a draw against {B_LINK_OPPONENT1_NAME} and {B_LINK_OPPONENT2_NAME}!");
@@ -2230,6 +2233,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         else
         {
+            gNuzlockeCannotCatch = HasWildPokmnOnThisRouteBeenSeen(GetCurrentRegionMapSectionId(), FALSE);
             if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TOWER_LINK_MULTI)
@@ -2345,6 +2349,12 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         break;
     case STRINGID_TRAINERSLIDE:
         stringPtr = gBattleStruct->trainerSlideMsg;
+        break;
+    case STRINGID_NUZLOCKELOST:
+        stringPtr = sText_PlayerFailedNuzlocke;
+        break;
+        case STRINGID_NUZLOCKEDUPS:
+        stringPtr = sText_PlayerDuplicateMon;
         break;
     default: // load a string from the table
         if (stringID >= STRINGID_COUNT)

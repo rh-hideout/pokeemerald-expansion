@@ -1,6 +1,7 @@
 #include "global.h"
 #include "trainer_pokemon_sprites.h"
 #include "bg.h"
+#include "constants/flags.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
@@ -127,12 +128,14 @@
  * Task_NewGameBirchSpeech_ChooseGender
  *  - Animates by advancing to Task_NewGameBirchSpeech_SlideOutOldGenderSprite
  *    whenever the player's selection changes.
- *  - Advances to Task_NewGameBirchSpeech_WhatsYourName when done.
- *
+ * Advances to Task_NameBirchSpeech_Nuzlocke when done.
  * Task_NewGameBirchSpeech_SlideOutOldGenderSprite
  * Task_NewGameBirchSpeech_SlideInNewGenderSprite
  *  - Returns back to Task_NewGameBirchSpeech_ChooseGender.
- *
+ * Task_NewGameBirchSpeech_Nuzlocke
+ * Task_NewGameBirchSpeech_WaitToShowNuzlockeMenu
+ * Task_NewGameBirchSpeech_ChooseNuzlocke
+ *  Advances to Task_NewGameBirchSpeech_WhatsYourName when done.
  * Task_NewGameBirchSpeech_WhatsYourName
  * Task_NewGameBirchSpeech_WaitForWhatsYourNameToPrint
  * Task_NewGameBirchSpeech_WaitPressBeforeNameChoice
@@ -210,14 +213,20 @@ static void Task_NewGameBirchSpeech_SlidePlatformAway(u8);
 static void Task_NewGameBirchSpeech_StartPlayerFadeIn(u8);
 static void Task_NewGameBirchSpeech_WaitForPlayerFadeIn(u8);
 static void Task_NewGameBirchSpeech_BoyOrGirl(u8);
+static void Task_NewGameBirchSpeech_Nuzlocke(u8);
 static void LoadMainMenuWindowFrameTiles(u8, u16);
 static void DrawMainMenuWindowBorder(const struct WindowTemplate *, u16);
 static void Task_HighlightSelectedMainMenuItem(u8);
 static void Task_NewGameBirchSpeech_WaitToShowGenderMenu(u8);
 static void Task_NewGameBirchSpeech_ChooseGender(u8);
+static void Task_NewGameBirchSpeech_WaitToShowNuzlockeMenu(u8);
+static void Task_NewGameBirchSpeech_ChooseNuzlocke(u8);
 static void NewGameBirchSpeech_ShowGenderMenu(void);
 static s8 NewGameBirchSpeech_ProcessGenderMenuInput(void);
 static void NewGameBirchSpeech_ClearGenderWindow(u8, u8);
+static void NewGameBirchSpeech_ShowNuzlockeMenu(void);
+static s8 NewGameBirchSpeech_ProcessNuzlockeMenuInput(void);
+static void NewGameBirchSpeech_ClearNuzlockeWindow(u8, u8);
 static void Task_NewGameBirchSpeech_WhatsYourName(u8);
 static void Task_NewGameBirchSpeech_SlideOutOldGenderSprite(u8);
 static void Task_NewGameBirchSpeech_SlideInNewGenderSprite(u8);
@@ -475,6 +484,11 @@ static const union AffineAnimCmd *const sSpriteAffineAnimTable_PlayerShrink[] =
 static const struct MenuAction sMenuActions_Gender[] = {
     {COMPOUND_STRING("BOY"), {NULL}},
     {COMPOUND_STRING("GIRL"), {NULL}}
+};
+
+static const struct MenuAction sMenuActions_Nuzlocke[] = {
+    {gText_Yes, NULL},
+    {gText_No, NULL}
 };
 
 static const u8 *const sMalePresetNames[] = {
@@ -1529,13 +1543,13 @@ static void Task_NewGameBirchSpeech_ChooseGender(u8 taskId)
             PlaySE(SE_SELECT);
             gSaveBlock2Ptr->playerGender = gender;
             NewGameBirchSpeech_ClearGenderWindow(1, 1);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            gTasks[taskId].func = Task_NewGameBirchSpeech_Nuzlocke;
             break;
         case FEMALE:
             PlaySE(SE_SELECT);
             gSaveBlock2Ptr->playerGender = gender;
             NewGameBirchSpeech_ClearGenderWindow(1, 1);
-            gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            gTasks[taskId].func = Task_NewGameBirchSpeech_Nuzlocke;
             break;
     }
     gender2 = Menu_GetCursorPos();
@@ -1569,6 +1583,43 @@ static void Task_NewGameBirchSpeech_SlideOutOldGenderSprite(u8 taskId)
         gSprites[spriteId].oam.objMode = ST_OAM_OBJ_BLEND;
         NewGameBirchSpeech_StartFadeInTarget1OutTarget2(taskId, 0);
         gTasks[taskId].func = Task_NewGameBirchSpeech_SlideInNewGenderSprite;
+    }
+}
+
+
+static void Task_NewGameBirchSpeech_Nuzlocke(u8 taskId)
+{
+    NewGameBirchSpeech_ClearWindow(0);
+    StringExpandPlaceholders(gStringVar4, gText_Birch_Nuzlocke);
+    gTasks[taskId].func = Task_NewGameBirchSpeech_WaitToShowNuzlockeMenu;
+}
+
+static void Task_NewGameBirchSpeech_WaitToShowNuzlockeMenu(u8 taskId)
+{
+    if (!RunTextPrintersAndIsPrinter0Active())
+    {
+        NewGameBirchSpeech_ShowNuzlockeMenu();
+        gTasks[taskId].func = Task_NewGameBirchSpeech_ChooseNuzlocke;
+    }
+}
+
+static void Task_NewGameBirchSpeech_ChooseNuzlocke(u8 taskId)
+{
+    int nuzlocke = NewGameBirchSpeech_ProcessNuzlockeMenuInput();
+    switch (nuzlocke)
+    {
+        case 0:
+            PlaySE(SE_SELECT);
+            FlagSet(FLAG_NUZLOCKE);
+            NewGameBirchSpeech_ClearNuzlockeWindow(1, 1);
+            gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            break;
+        case 1:
+            PlaySE(SE_SELECT);
+            FlagClear(FLAG_NUZLOCKE);
+            NewGameBirchSpeech_ClearNuzlockeWindow(1, 1);
+            gTasks[taskId].func = Task_NewGameBirchSpeech_WhatsYourName;
+            break;
     }
 }
 
@@ -2123,6 +2174,21 @@ static s8 NewGameBirchSpeech_ProcessGenderMenuInput(void)
     return Menu_ProcessInputNoWrap();
 }
 
+static void NewGameBirchSpeech_ShowNuzlockeMenu(void)
+{
+    DrawMainMenuWindowBorder(&sNewGameBirchSpeechTextWindows[1], 0xF3);
+    FillWindowPixelBuffer(1, PIXEL_FILL(1));
+    PrintMenuTable(1, ARRAY_COUNT(sMenuActions_Nuzlocke), sMenuActions_Nuzlocke);
+    InitMenuInUpperLeftCornerNormal(1, ARRAY_COUNT(sMenuActions_Nuzlocke), 1);
+    PutWindowTilemap(1);
+    CopyWindowToVram(1, COPYWIN_FULL);
+}
+
+static s8 NewGameBirchSpeech_ProcessNuzlockeMenuInput(void)
+{
+    return Menu_ProcessInputNoWrap();
+}
+
 void NewGameBirchSpeech_SetDefaultPlayerName(u8 nameId)
 {
     const u8 *name;
@@ -2257,6 +2323,20 @@ static void NewGameBirchSpeech_ClearGenderWindow(u8 windowId, bool8 copyToVram)
     if (copyToVram == TRUE)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
+static void NewGameBirchSpeech_ClearNuzlockeWindowTilemap(u8 bg, u8 x, u8 y, u8 width, u8 height, u8 unused)
+{
+    FillBgTilemapBufferRect(bg, 0, x + 255, y + 255, width + 2, height + 2, 2);
+}
+
+static void NewGameBirchSpeech_ClearNuzlockeWindow(u8 windowId, bool8 copyToVram)
+{
+    CallWindowFunction(windowId, NewGameBirchSpeech_ClearNuzlockeWindowTilemap);
+    FillWindowPixelBuffer(windowId, PIXEL_FILL(1));
+    ClearWindowTilemap(windowId);
+    if (copyToVram == TRUE)
+        CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
 
 static void NewGameBirchSpeech_ClearWindow(u8 windowId)
 {
