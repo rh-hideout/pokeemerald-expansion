@@ -50,7 +50,6 @@
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "config/pokedex_plus_hgss.h"
-#include "data/tutor_moves.h"
 
 enum
 {
@@ -119,8 +118,6 @@ enum
     NAME_VWX,
     NAME_YZ,
 };
-
-#define NUM_TUTOR_MOVES (ARRAY_COUNT(gTutorMoves) - 1)
 
 extern const u16 gPokedexOrder_Alphabetical[];
 extern const u16 gPokedexOrder_Height[];
@@ -5218,7 +5215,7 @@ static bool8 CalculateMoves(void)
     }
     else
     {
-        numTeachableMoves = NUM_ALL_MACHINES + NUM_TUTOR_MOVES;
+        numTeachableMoves = NUM_ALL_MACHINES + GetTutorMovesCount();
     }
 
     sPokedexView->numEggMoves = numEggMoves;
@@ -5242,7 +5239,7 @@ static u16 GetSelectedMove(u32 species, u32 selected)
         if (selected < NUM_ALL_MACHINES)
             return GetTMHMMoveId(selected + 1);
         selected -= NUM_ALL_MACHINES;
-        if (selected < NUM_TUTOR_MOVES)
+        if (selected < GetTutorMovesCount())
             return gTutorMoves[selected];
         return MOVE_NONE;
     }

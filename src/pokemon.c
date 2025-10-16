@@ -5590,6 +5590,11 @@ u32 GetUniversalMovesCount(void)
     return ARRAY_COUNT(gUniversalMoves);
 }
 
+u32 GetTutorMovesCount(void)
+{
+    return (ARRAY_COUNT(gTutorMoves) - 1);
+}
+
 u8 CanLearnTeachableMove(u16 species, u16 move)
 {
     if (species == SPECIES_EGG)
