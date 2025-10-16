@@ -1423,7 +1423,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
     {
         if (B_STURDY >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
-        if (gBattleMons[battlerTarget].species == SPECIES_MIMIKYU_DISGUISED)
+        if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
     }
 
@@ -5184,7 +5184,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
         if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
             && !MoveIgnoresTargetAbility(zMove)
-            && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
+            && IsMimikyuDisguised(battlerDef))
             return FALSE; // Don't waste a Z-Move busting disguise
         if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
             && !MoveIgnoresTargetAbility(zMove)

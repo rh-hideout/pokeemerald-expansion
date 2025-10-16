@@ -237,10 +237,9 @@ enum SemiInvulnerableExclusion
     EXCLUDE_COMMANDER,
 };
 
-#define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
-#define HITMARKER_IGNORE_SUBSTITUTE     (1 << 8)
+#define HITMARKER_UNUSED_8              (1 << 8)
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
 #define HITMARKER_UNUSED_10             (1 << 10)
 #define HITMARKER_UNUSED_11             (1 << 11)
@@ -252,7 +251,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
-#define HITMARKER_PASSIVE_HP_UPDATE     (1 << 20)
+#define HITMARKER_UNUSED_20             (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_UNUSED_23             (1 << 23)

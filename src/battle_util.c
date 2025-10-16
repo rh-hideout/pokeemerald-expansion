@@ -914,9 +914,7 @@ void HandleAction_NothingIsFainted(void)
     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
     gHitMarker &= ~(HITMARKER_DESTINYBOND
                   | HITMARKER_ATTACKSTRING_PRINTED
-                  | HITMARKER_IGNORE_SUBSTITUTE
                   | HITMARKER_STATUS_ABILITY_EFFECT
-                  | HITMARKER_PASSIVE_HP_UPDATE
                   | HITMARKER_OBEYS);
 }
 
@@ -929,10 +927,8 @@ void HandleAction_ActionFinished(void)
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
     gHitMarker &= ~(HITMARKER_DESTINYBOND
-                  | HITMARKER_IGNORE_SUBSTITUTE
                   | HITMARKER_ATTACKSTRING_PRINTED
                   | HITMARKER_STATUS_ABILITY_EFFECT
-                  | HITMARKER_PASSIVE_HP_UPDATE
                   | HITMARKER_OBEYS);
 
     ClearDamageCalcResults();
@@ -1790,7 +1786,7 @@ void TryToRevertMimicryAndFlags(void)
 
 bool32 BattleArenaTurnEnd(void)
 {
-    gHitMarker |= (HITMARKER_GRUDGE | HITMARKER_IGNORE_BIDE);
+    gHitMarker |= HITMARKER_GRUDGE;
 
     if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
      && gBattleStruct->arenaTurnCounter == 2
@@ -1804,7 +1800,7 @@ bool32 BattleArenaTurnEnd(void)
         return TRUE;
     }
 
-    gHitMarker &= ~(HITMARKER_GRUDGE | HITMARKER_IGNORE_BIDE);
+    gHitMarker &= ~HITMARKER_GRUDGE;
 
     return FALSE;
 }
@@ -1817,7 +1813,7 @@ s32 GetDrainedBigRootHp(u32 battler, s32 hp)
     if (hp == 0)
         hp = 1;
 
-    return hp * -1;
+    return hp;
 }
 
 // Should always be the last check. Otherwise the ability might be wrongly recorded.
@@ -2258,7 +2254,7 @@ static enum MoveCanceller CancellerConfused(struct BattleContext *ctx)
                 dmgCtx.randomFactor = FALSE;
                 dmgCtx.updateFlags = TRUE;
                 dmgCtx.fixedBasePower = 40;
-                gBattleStruct->moveDamage[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
+                gBattleStruct->passiveHpUpdate[ctx->battlerAtk] = CalculateMoveDamage(&dmgCtx);
                 gProtectStructs[ctx->battlerAtk].confusionSelfDmg = TRUE;
                 gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
                 gBattlescriptCurrInstr = BattleScript_MoveUsedIsConfused;
@@ -2735,7 +2731,7 @@ static enum MoveCanceller CancellerPowderStatus(struct BattleContext *ctx)
     if (TryActivatePowderStatus(ctx->currentMove))
     {
         if (!IsAbilityAndRecord(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ABILITY_MAGIC_GUARD))
-            gBattleStruct->moveDamage[ctx->battlerAtk] = GetNonDynamaxMaxHP(ctx->battlerAtk) / 4;
+            SetPassiveDamageAmount(ctx->battlerAtk, GetNonDynamaxMaxHP(ctx->battlerAtk) / 4);
 
         // This might be incorrect
         if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
@@ -3543,10 +3539,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
         else
         {
             battleScript = BattleScript_MoveHPDrain;
-            gBattleStruct->moveDamage[battlerDef] = GetNonDynamaxMaxHP(battlerDef) / 4;
-            if (gBattleStruct->moveDamage[battlerDef] == 0)
-                gBattleStruct->moveDamage[battlerDef] = 1;
-            gBattleStruct->moveDamage[battlerDef] *= -1;
+            SetHealAmount(battlerDef, GetNonDynamaxMaxHP(battlerDef) / 4);
         }
         break;
     case MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY:
@@ -4459,7 +4452,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
             {
                 gEffectBattler = partner;
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
-                gBattleStruct->moveDamage[partner] = (GetNonDynamaxMaxHP(partner) / 4) * -1;
+                SetHealAmount(partner, GetNonDynamaxMaxHP(partner) / 4);
                 BattleScriptPushCursorAndCallback(BattleScript_HospitalityActivates);
                 effect++;
             }
@@ -4575,10 +4568,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                  && !gBattleMons[battler].volatiles.healBlock)
                 {
                     BattleScriptExecute(BattleScript_IceBodyHeal);
-                    gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
-                    if (gBattleStruct->moveDamage[battler] == 0)
-                        gBattleStruct->moveDamage[battler] = 1;
-                    gBattleStruct->moveDamage[battler] *= -1;
+                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                     effect++;
                 }
                 break;
@@ -4591,11 +4581,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                  && !IsBattlerAtMaxHp(battler)
                  && !gBattleMons[battler].volatiles.healBlock)
                 {
+                    s32 healAmount = gLastUsedAbility == ABILITY_RAIN_DISH ? 16 : 8;
+                    SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / healAmount);
                     BattleScriptExecute(BattleScript_RainDishActivates);
-                    gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (gLastUsedAbility == ABILITY_RAIN_DISH ? 16 : 8);
-                    if (gBattleStruct->moveDamage[battler] == 0)
-                        gBattleStruct->moveDamage[battler] = 1;
-                    gBattleStruct->moveDamage[battler] *= -1;
                     effect++;
                 }
                 break;
@@ -4694,10 +4682,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                 if (IsBattlerWeatherAffected(battler, B_WEATHER_SUN))
                 {
                 SOLAR_POWER_HP_DROP:
+                    SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
                     BattleScriptExecute(BattleScript_SolarPowerActivates);
-                    gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-                    if (gBattleStruct->moveDamage[battler] == 0)
-                        gBattleStruct->moveDamage[battler] = 1;
                     effect++;
                 }
                 break;
@@ -4985,9 +4971,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move))
             {
-                gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16);
-                if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
-                    gBattleStruct->moveDamage[gBattlerAttacker] = 1;
+                SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / (B_ROUGH_SKIN_DMG >= GEN_4 ? 8 : 16));
                 PREPARE_ABILITY_BUFFER(gBattleTextBuff1, gLastUsedAbility);
                 BattleScriptCall(BattleScript_RoughSkinActivates);
                 effect++;
@@ -5007,9 +4991,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                 else
                 {
                     gBattleScripting.battler = gBattlerTarget;
-                    gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-                    if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
-                        gBattleStruct->moveDamage[gBattlerAttacker] = 1;
+                    SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
                     BattleScriptCall(BattleScript_AftermathDmg);
                 }
                 effect++;
@@ -5025,7 +5007,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                     break;
 
                 gBattleScripting.battler = gBattlerTarget;
-                gBattleStruct->moveDamage[gBattlerAttacker] = gBattleStruct->moveDamage[gBattlerTarget];
+                SetPassiveDamageAmount(gBattlerAttacker, gBattleStruct->moveDamage[gBattlerTarget]);
                 BattleScriptCall(BattleScript_AftermathDmg);
                 effect++;
             }
@@ -5225,12 +5207,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
              && IsBattlerAlive(gBattlerAttacker)
              && gBattleMons[gBattlerTarget].species != SPECIES_CRAMORANT)
             {
-                if (GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
-                {
-                    gBattleStruct->moveDamage[gBattlerAttacker] = GetNonDynamaxMaxHP(gBattlerAttacker) / 4;
-                    if (gBattleStruct->moveDamage[gBattlerAttacker] == 0)
-                        gBattleStruct->moveDamage[gBattlerAttacker] = 1;
-                }
+                if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
+                    SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
 
                 switch(gBattleMons[gBattlerTarget].species)
                 {
@@ -10965,4 +10943,10 @@ bool32 IsAllowedToUseBag(void)
     default:
         return TRUE; // Undefined Behavior
     }
+}
+
+bool32 IsMimikyuDisguised(u32 battler)
+{
+    return gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED
+        || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
 }
