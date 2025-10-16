@@ -702,6 +702,7 @@ extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
 
 extern const u16 gUniversalMoves[];
+extern const u16 gTutorMoves[];
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
@@ -909,5 +910,6 @@ u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 u32 IsSpeciesOfType(u32 species, u32 type);
 u32 GetUniversalMovesCount(void);
+u32 GetTutorMovesCount(void);
 
 #endif // GUARD_POKEMON_H
