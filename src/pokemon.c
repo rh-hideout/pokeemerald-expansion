@@ -5578,25 +5578,6 @@ bool8 TryIncrementMonLevel(struct Pokemon *mon)
     }
 }
 
-const u16 gUniversalMoves[] =
-{
-    MOVE_BIDE,
-    MOVE_FRUSTRATION,
-    MOVE_HIDDEN_POWER,
-    MOVE_MIMIC,
-    MOVE_NATURAL_GIFT,
-    MOVE_RAGE,
-    MOVE_RETURN,
-    MOVE_SECRET_POWER,
-    MOVE_SUBSTITUTE,
-    MOVE_TERA_BLAST,
-};
-
-u32 GetUniversalMovesCount(void)
-{
-    return ARRAY_COUNT(gUniversalMoves);
-}
-
 u32 GetTutorMovesCount(void)
 {
     return (ARRAY_COUNT(gTutorMoves) - 1);
