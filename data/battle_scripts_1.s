@@ -8881,14 +8881,28 @@ BattleScript_ActivateTeraformZero_RemoveWeather:
 	removeweather
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
-	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_End
+	call BattleScript_ActivateWeatherAbilities
+	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZeroEffects
 BattleScript_ActivateTeraformZero_RemoveTerrain:
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_ActivateTeraformZero_End:
+BattleScript_ActivateTeraformZeroEffects:
+	saveattacker
+	savetarget
 	tryboosterenergy ON_ANY
+	resetterrainabilityflags
+	setbyte gBattlerAttacker, 0
+BattleScript_ActivateTeraformZeroLoop:
+	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	activateterrainchangeabilities BS_TARGET
+	activateweatherchangeabilities BS_TARGET
+	addbyte gBattlerAttacker, 1
+	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_ActivateTeraformZeroLoop
+	restoreattacker
+	restoretarget
+BattleScript_ActivateTeraformZero_End:
 	end3
 
 BattleScript_QuickClawActivation::
