@@ -5194,8 +5194,8 @@ static u16 GetSelectedMove(u32 species, u32 selected)
 
 static void PrintStatsScreen_Moves_Top(u8 taskId)
 {
-    #define moves_x 5
-    #define moves_y 3
+    u8 moves_x = 5;
+    u8 moves_y = 3;
 
     u32 item = ITEM_MASTER_BALL;
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
@@ -5269,15 +5269,12 @@ static void PrintStatsScreen_Moves_Top(u8 taskId)
     gSprites[gTasks[taskId].data[3]].y2 = 39;
     gSprites[gTasks[taskId].data[3]].oam.priority = 0;
 
-    #undef moves_x
-    #undef moves_y
-
 }
 
 static void PrintStatsScreen_Moves_Description(u8 taskId)
 {
-    #define moves_x 5
-    #define moves_y 5
+    u8 moves_x = 5;
+    u8 moves_y = 5;
 
     u32 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
     u32 move = GetSelectedMove(species, sPokedexView->moveSelected);
@@ -5293,15 +5290,12 @@ static void PrintStatsScreen_Moves_Description(u8 taskId)
         StringCopy(gStringVar4, gContestEffectDescriptionPointers[GetMoveContestEffect(move)]);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_DESCRIPTION, gStringVar4, moves_x, moves_y);
     }
-
-    #undef moves_x
-    #undef moves_y
 }
 
 static void PrintStatsScreen_Moves_BottomText(u8 taskId)
 {
-    #define moves_x 8
-    #define moves_y 3
+    u8 moves_x = 8;
+    u8 moves_y = 3;
 
     if (gTasks[taskId].data[5] == 0)
     {
@@ -5313,15 +5307,12 @@ static void PrintStatsScreen_Moves_BottomText(u8 taskId)
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Appeal,  moves_x, moves_y);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gText_Jam,  moves_x + 66, moves_y);
     }
-
-    #undef moves_x
-    #undef moves_y
 }
 
 static void PrintStatsScreen_Moves_Bottom(u8 taskId)
 {
-    #define moves_x 8
-    #define moves_y 3
+    u8 moves_x = 8;
+    u8 moves_y = 3;
 
     //Contest
     u8 contest_effectValue;
@@ -5373,9 +5364,6 @@ static void PrintStatsScreen_Moves_Bottom(u8 taskId)
         StringAppend(gStringVar2, gStringVar1);
         PrintStatsScreenTextSmall(WIN_STATS_MOVES_BOTTOM, gStringVar2,  moves_x + 119, moves_y);
     }
-
-    #undef moves_x
-    #undef moves_y
 }
 
 static void PrintStatsScreen_NameGender(u8 taskId, u32 num, u32 value)
