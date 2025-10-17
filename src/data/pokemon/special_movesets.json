@@ -29,9 +29,5 @@
       "MOVE_SPLISHY_SPLASH",
       "MOVE_VOLT_TACKLE",
       "MOVE_ZIPPY_ZAP"
-    ],
-  "excludedByTerapagos":
-    [
-      "MOVE_TERA_BLAST"
     ]
 }
