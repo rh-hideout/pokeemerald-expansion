@@ -39,6 +39,7 @@ SINGLE_BATTLE_TEST("Rest fails if the user is protected by Leaf Guard")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUNNY_DAY) == EFFECT_SUNNY_DAY);
+        ASSUME(B_LEAF_GUARD_PREVENTS_REST >= GEN_5);
         PLAYER(SPECIES_CHIKORITA) { Ability(ABILITY_LEAF_GUARD); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
