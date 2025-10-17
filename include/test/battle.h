@@ -804,6 +804,7 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 
 #define AI_TRAINER_NAME "{PKMN} TRAINER LEAF"
 #define AI_TRAINER_2_NAME "{PKMN} TRAINER RED"
+#define AI_PARTNER_NAME "{PKMN} TRAINER 1"
 
 /* Test */
 
