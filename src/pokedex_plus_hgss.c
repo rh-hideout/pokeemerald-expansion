@@ -5158,8 +5158,7 @@ static bool8 CalculateMoves(void)
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
     for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         numTeachableMoves++;
-    if (species != SPECIES_MEW)
-        OrderTeachableLearnset(species, numTeachableMoves);
+    OrderTeachableLearnset(species, numTeachableMoves);
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
@@ -5177,15 +5176,6 @@ static u16 GetSelectedMove(u32 species, u32 selected)
     if (selected < sPokedexView->numLevelUpMoves)
         return GetSpeciesLevelUpLearnset(species)[selected].move;
     selected -= sPokedexView->numLevelUpMoves;
-    if (species == SPECIES_MEW)
-    {
-        if (selected < NUM_ALL_MACHINES)
-            return GetTMHMMoveId(selected + 1);
-        selected -= NUM_ALL_MACHINES;
-        if (selected < GetTutorMovesCount())
-            return gTutorMoves[selected];
-        return MOVE_NONE;
-    }
     selected = sPokedexView->teachableLearnsetOrder[selected];
     if (selected < sPokedexView->numTeachableMoves)
         return GetSpeciesTeachableLearnset(species)[selected];
