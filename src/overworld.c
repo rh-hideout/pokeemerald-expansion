@@ -1716,8 +1716,7 @@ static void OverworldBasic(void)
          || bld0[1] != bld1[1]
          || bld0[2] != bld1[2])
         {
-           UpdateAltBgPalettes(PALETTES_BG);
-           UpdatePalettesWithTime(PALETTES_ALL);
+           ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
 }

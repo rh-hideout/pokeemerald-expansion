@@ -1197,17 +1197,18 @@ void PlayerSetAnimId(u8 movementActionId, u8 copyableMovement)
 // slow stairs (from FRLG--faster than slow)
 static void PlayerWalkSlowStairs(u8 direction)
 {
-    PlayerSetAnimId(GetWalkSlowStairsMovementAction(direction), 2);
+    PlayerSetAnimId(GetWalkSlowStairsMovementAction(direction), COPY_MOVE_WALK);
 }
 
 // slow
 static void UNUSED PlayerWalkSlow(u8 direction)
 {
-    PlayerSetAnimId(GetWalkSlowMovementAction(direction), 2);
+    PlayerSetAnimId(GetWalkSlowMovementAction(direction), COPY_MOVE_WALK);
 }
+
 static void PlayerRunSlow(u8 direction)
 {
-    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), 2);
+    PlayerSetAnimId(GetPlayerRunSlowMovementAction(direction), COPY_MOVE_WALK);
 }
 
 // normal speed (1 speed)
@@ -1239,7 +1240,7 @@ static void PlayerRun(u8 direction)
 void PlayerOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
     // Edge case: If the player stops at the top of a mud slide, but the NPC follower is still on a mud slide tile,
     // move the follower into the player and hide them.
     if (PlayerHasFollowerNPC())
@@ -1260,18 +1261,18 @@ void PlayerOnBikeCollide(u8 direction)
 
 void PlayerOnBikeCollideWithFarawayIslandMew(u8 direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceNormalMovementAction(direction), COPY_MOVE_FACE);
 }
 
 static void PlayerNotOnBikeCollide(u8 direction)
 {
     PlayCollisionSoundIfNotFacingWarp(direction);
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
 }
 
 static void PlayerNotOnBikeCollideWithFarawayIslandMew(u8 direction)
 {
-    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_WALK);
+    PlayerSetAnimId(GetWalkInPlaceSlowMovementAction(direction), COPY_MOVE_FACE);
 }
 
 void PlayerFaceDirection(u8 direction)
