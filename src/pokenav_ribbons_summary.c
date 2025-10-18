@@ -585,7 +585,11 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
             DecompressAndCopyTileDataToVram(1, sRibbonIconsSmall_Gfx, 0, 1, 0);
             SetBgTilemapBuffer(1, menu->tilemapBuffers[1]);
             FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), 5 * PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons2_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons3_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons4_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons5_Pal, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sMonInfo_Pal, BG_PLTT_ID(10), sizeof(sMonInfo_Pal));
             CopyBgTilemapBufferToVram(1);
             return LT_INC_AND_PAUSE;
