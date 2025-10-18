@@ -87,6 +87,15 @@ Debug_FlagsNotSetBattleConfigMessage_Text:
 	.string "Please define a usable flag in:\l"
 	.string "'include/config/battle.h'!$"
 
+Debug_VarsNotSetBattleConfigMessage::
+	message Debug_VarsNotSetBattleConfigMessage_Text
+	goto Debug_MessageEnd
+
+Debug_VarsNotSetBattleConfigMessage_Text:
+	.string "Feature unavailable!\n"
+	.string "Please define a usable var in:\l"
+	.string "'include/config/battle.h'!$"
+
 Debug_BoxFilledMessage::
 	message Debug_BoxFilledMessage_Text
 	goto Debug_MessageEnd
@@ -387,7 +396,29 @@ Debug_EventScript_SetHiddenNature::
 	dynmultistack 0, 0, TRUE, 7, FALSE, 0, NULL
 	switch VAR_RESULT
 	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
-    special SetHiddenNature
+	special SetHiddenNature
+	releaseall
+	end
+
+Debug_EventScript_SetAbility::
+	special ChoosePartyMon
+	waitstate
+	callnative DebugNative_GetAbilityNames
+	dynmultipush gStringVar1, 0
+	dynmultipush gStringVar2, 1
+	dynmultipush gStringVar3, 2
+	dynmultistack 0, 0, FALSE, 3 FALSE, 0, NULL
+	switch VAR_RESULT
+	case MULTI_B_PRESSED, Debug_EventScript_SetAbilityClose
+	special SetAbility
+Debug_EventScript_SetAbilityClose:
+	releaseall
+	end
+
+Debug_EventScript_SetFriendship::
+	special ChoosePartyMon
+	waitstate
+	callnative DebugNative_Party_SetFriendship
 	releaseall
 	end
 

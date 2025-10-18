@@ -433,7 +433,6 @@ static void Task_SacredAshDisplayHPRestored(u8);
 static void GiveItemOrMailToSelectedMon(u8);
 static void DisplayItemMustBeRemovedFirstMessage(u8);
 static void Task_SwitchItemsFromBagYesNo(u8);
-static void RemoveItemToGiveFromBag(u16);
 static void CB2_WriteMailToGiveMonFromBag(void);
 static void GiveItemToSelectedMon(u8);
 static void Task_UpdateHeldItemSpriteAndClosePartyMenu(u8);
@@ -502,6 +501,7 @@ void TryItemHoldFormChange(struct Pokemon *mon, s8 slotId);
 static void ShowMoveSelectWindow(u8 slot);
 static void Task_HandleWhichMoveInput(u8 taskId);
 static void Task_HideFollowerNPCForTeleport(u8);
+static void FieldCallback_RockClimb(void);
 
 // static const data
 #include "data/party_menu.h"
@@ -3413,7 +3413,7 @@ static void CursorCb_Give(u8 taskId)
 
 static void CB2_SelectBagItemToGive(void)
 {
-    if (InBattlePyramid() == FALSE)
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
         GoToBagMenu(ITEMMENULOCATION_PARTY, POCKETS_COUNT, CB2_GiveHoldItem);
     else
         GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PARTY, CB2_GiveHoldItem);
@@ -4287,6 +4287,21 @@ bool32 SetUpFieldMove_Waterfall(void)
     return FALSE;
 }
 
+bool32 SetUpFieldMove_RockClimb(void)
+{
+    s16 x, y;
+
+    GetXYCoordsOneStepInFrontOfPlayer(&x, &y);
+    if (MetatileBehavior_IsRockClimbable(MapGridGetMetatileBehaviorAt(x, y)))
+    {
+        gFieldCallback2 = FieldCallback_PrepareFadeInFromMenu;
+        gPostMenuFieldCallback = FieldCallback_RockClimb;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
 static void FieldCallback_Dive(void)
 {
     gFieldEffectArguments[0] = GetCursorSelectionMonId();
@@ -4613,6 +4628,12 @@ void CB2_ShowPartyMenuForItemUse(void)
     u8 msgId;
     TaskFunc task;
 
+    if (gPartyMenu.data1 == DATA1_PARTY_MENU_FROM_FIELD)
+    {
+        callback = CB2_ReturnToField;
+        gPartyMenu.data1 = 0;
+    }
+
     if (gMain.inBattle)
     {
         menuType = PARTY_MENU_TYPE_IN_BATTLE;
@@ -4653,7 +4674,7 @@ void CB2_ShowPartyMenuForItemUse(void)
 
 static void CB2_ReturnToBagMenu(void)
 {
-    if (InBattlePyramid() == FALSE)
+    if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)
         GoToBagMenu(ITEMMENULOCATION_LAST, POCKETS_COUNT, NULL);
     else
         GoToBattlePyramidBagMenu(PYRAMIDBAG_LOC_PREV, gPyramidBagMenuState.exitCallback);
@@ -5301,13 +5322,13 @@ static void ShowMoveSelectWindow(u8 slot)
 {
     u8 i;
     u8 moveCount = 0;
-    u8 fontId = FONT_NORMAL;
     u8 windowId = DisplaySelectionWindow(SELECTWINDOW_MOVES);
     u16 move;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         move = GetMonData(&gPlayerParty[slot], MON_DATA_MOVE1 + i);
+        u8 fontId = GetFontIdToFit(GetMoveName(move), FONT_NORMAL, 0, 72);
         AddTextPrinterParameterized(windowId, fontId, GetMoveName(move), 8, (i * 16) + 1, TEXT_SKIP_DRAW, NULL);
         if (move != MOVE_NONE)
             moveCount++;
@@ -6184,13 +6205,14 @@ void ItemUseCB_EvolutionStone(u8 taskId, TaskFunc task)
 #define tAnimWait       data[2]
 #define tNextFunc       3
 
-#define fusionType           data[7]
-#define firstFusion          data[8]
-#define firstFusionSlot      data[9]
-#define fusionResult         data[10]
-#define secondFusionSlot     data[11]
-#define unfuseSecondMon      data[12]
-#define moveToLearn          data[13]
+#define fusionType           data[6]
+#define firstFusion          data[7]
+#define firstFusionSlot      data[8]
+#define fusionResult         data[9]
+#define secondFusionSlot     data[10]
+#define unfuseSecondMon      data[11]
+#define moveToLearn          data[12]
+#define tExtraMoveHandling   data[13]
 #define forgetMove           data[14]
 #define storageIndex         data[15]
 
@@ -6325,6 +6347,75 @@ static void RestoreFusionMon(struct Pokemon *mon)
     }
 }
 
+static void DeleteInvalidFusionMoves(struct Pokemon *mon, u32 species)
+{
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        bool32 toDelete = TRUE;
+        const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
+        for (u32 j = 0; learnset[j].move != LEVEL_UP_MOVE_END;j++)
+        {
+            if (learnset[j].move == move)
+            {
+                toDelete = FALSE;
+                break;
+            }
+        }
+        if (!toDelete)
+            continue;
+        const u16 *learnset2 = GetSpeciesTeachableLearnset(species);
+        for (u32 j = 0; learnset2[j] != MOVE_UNAVAILABLE;j++)
+        {
+            if (learnset2[j] == move)
+            {
+                toDelete = FALSE;
+                break;
+            }
+        }
+        if (!toDelete)
+            continue;
+        const u16 *learnset3 = GetSpeciesEggMoves(species);
+        for (u32 j = 0; learnset3[j] != MOVE_UNAVAILABLE;j++)
+        {
+            if (learnset3[j] == move)
+            {
+                toDelete = FALSE;
+                break;
+            }
+        }
+        if (toDelete)
+            DeleteMove(mon, move);
+    }
+}
+
+static void SwapFusionMonMoves(struct Pokemon *mon, const u16 moveTable[][2], u32 mode)
+{
+    u32 oldMoveIndex, newMoveIndex;
+    if (mode == FUSE_MON)
+    {
+        oldMoveIndex = 0;
+        newMoveIndex = 1;
+    }
+    else //mode == UNFUSE_MON
+    {
+        oldMoveIndex = 1;
+        newMoveIndex = 0;
+    }
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        u32 move = GetMonData(mon, MON_DATA_MOVE1 + i);
+        for (u32 j = 0; j < 2; j++)
+        {
+            if (move == moveTable[j][oldMoveIndex])
+            {
+                SetMonData(mon, MON_DATA_MOVE1 + i, &moveTable[j][newMoveIndex]);
+                SetMonData(mon, MON_DATA_PP1 + i, &gMovesInfo[moveTable[j][newMoveIndex]].pp);
+            }
+        }
+    }
+
+}
 static void Task_TryItemUseFusionChange(u8 taskId)
 {
     struct Pokemon *mon = &gPlayerParty[gTasks[taskId].firstFusionSlot];
@@ -6416,15 +6507,38 @@ static void Task_TryItemUseFusionChange(u8 taskId)
     case 6:
         if (!IsPartyMenuTextPrinterActive())
         {
-            if (gTasks[taskId].moveToLearn != 0)
+            if (gTasks[taskId].fusionType == FUSE_MON)
             {
-                if (gTasks[taskId].fusionType == FUSE_MON)
+#if P_FAMILY_KYUREM
+#if P_FAMILY_RESHIRAM
+                if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
+                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, FUSE_MON);
+#endif //P_FAMILY_RESHIRAM
+#if P_FAMILY_ZEKROM
+                if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
+                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, FUSE_MON);
+#endif //P_FAMILY_ZEKROM
+#endif //P_FAMILY_KYUREM
+                if (gTasks[taskId].moveToLearn != 0)
                     FormChangeTeachMove(taskId, gTasks[taskId].moveToLearn, gTasks[taskId].firstFusionSlot);
-                else
+            }
+            else //(gTasks[taskId].fusionType == UNFUSE_MON)
+            {
+#if P_FAMILY_KYUREM
+#if P_FAMILY_RESHIRAM
+                if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
+                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, UNFUSE_MON);
+#endif //P_FAMILY_RESHIRAM
+#if P_FAMILY_ZEKROM
+                if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
+                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, UNFUSE_MON);
+#endif //P_FAMILY_ZEKROM
+#endif //P_FAMILY_KYUREM
+                if ( gTasks[taskId].tExtraMoveHandling == FORGET_EXTRA_MOVES)
                 {
-                    DeleteMove(mon, gTasks[taskId].forgetMove);
+                    DeleteInvalidFusionMoves(mon, gTasks[taskId].fusionResult);
                     if (!DoesMonHaveAnyMoves(mon))
-                        FormChangeTeachMove(taskId, gTasks[taskId].moveToLearn, gTasks[taskId].firstFusionSlot);
+                        FormChangeTeachMove(taskId, MOVE_CONFUSION, gTasks[taskId].firstFusionSlot);
                 }
             }
             gTasks[taskId].tState++;
@@ -6471,7 +6585,7 @@ void ItemUseCB_Fusion(u8 taskId, TaskFunc taskFunc)
                     task->storageIndex = itemFusion[i].fusionStorageIndex;
                     task->fusionResult = itemFusion[i].targetSpecies1;
                     task->unfuseSecondMon = itemFusion[i].targetSpecies2;
-                    task->moveToLearn = itemFusion[i].unfuseForgetMove;
+                    task->tExtraMoveHandling = itemFusion[i].extraMoveHandling;
                     task->forgetMove = itemFusion[i].fusionMove;
                     TryItemUseFusionChange(taskId, taskFunc);
                     return;
@@ -6511,6 +6625,7 @@ void ItemUseCB_Fusion(u8 taskId, TaskFunc taskFunc)
                     task->fusionResult = itemFusion[i].fusingIntoMon;
                     task->secondFusionSlot = gPartyMenu.slotId;
                     task->moveToLearn = itemFusion[i].fusionMove;
+                    task->tExtraMoveHandling = itemFusion[i].extraMoveHandling;
                     // Start Fusion
                     TryItemUseFusionChange(taskId, taskFunc);
                     return;
@@ -6915,7 +7030,7 @@ void CB2_PartyMenuFromStartMenu(void)
 // As opposted to by selecting Give in the party menu, which is handled by CursorCb_Give
 void CB2_ChooseMonToGiveItem(void)
 {
-    MainCallback callback = (InBattlePyramid() == FALSE) ? CB2_ReturnToBagMenu : CB2_ReturnToPyramidBagMenu;
+    MainCallback callback = (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE) ? CB2_ReturnToBagMenu : CB2_ReturnToPyramidBagMenu;
     InitPartyMenu(PARTY_MENU_TYPE_FIELD, PARTY_LAYOUT_SINGLE, PARTY_ACTION_GIVE_ITEM, FALSE, PARTY_MSG_GIVE_TO_WHICH_MON, Task_HandleChooseMonInput, callback);
     gPartyMenu.bagItem = gSpecialVar_ItemId;
 }
@@ -6942,7 +7057,7 @@ static void GiveItemOrMailToSelectedMon(u8 taskId)
 {
     if (ItemIsMail(gPartyMenu.bagItem))
     {
-        RemoveItemToGiveFromBag(gPartyMenu.bagItem);
+        RemoveBagItem(gPartyMenu.bagItem, 1);
         sPartyMenuInternal->exitCallback = CB2_WriteMailToGiveMonFromBag;
         Task_ClosePartyMenu(taskId);
     }
@@ -6961,7 +7076,7 @@ static void GiveItemToSelectedMon(u8 taskId)
         item = gPartyMenu.bagItem;
         DisplayGaveHeldItemMessage(&gPlayerParty[gPartyMenu.slotId], item, FALSE, 1);
         GiveItemToMon(&gPlayerParty[gPartyMenu.slotId], item);
-        RemoveItemToGiveFromBag(item);
+        RemoveBagItem(item, 1);
         gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
     }
 }
@@ -7040,7 +7155,7 @@ static void Task_HandleSwitchItemsFromBagYesNoInput(u8 taskId)
     {
     case 0: // Yes, switch items
         item = gPartyMenu.bagItem;
-        RemoveItemToGiveFromBag(item);
+        RemoveBagItem(item, 1);
         if (AddBagItem(sPartyMenuItemId, 1) == FALSE)
         {
             ReturnGiveItemToBagOrPC(item);
@@ -7074,14 +7189,6 @@ static void DisplayItemMustBeRemovedFirstMessage(u8 taskId)
     DisplayPartyMenuMessage(gText_RemoveMailBeforeItem, TRUE);
     ScheduleBgCopyTilemapToVram(2);
     gTasks[taskId].func = Task_UpdateHeldItemSpriteAndClosePartyMenu;
-}
-
-static void RemoveItemToGiveFromBag(u16 item)
-{
-    if (gPartyMenu.action == PARTY_ACTION_GIVE_PC_ITEM) // Unused, never occurs
-        RemovePCItem(item, 1);
-    else
-        RemoveBagItem(item, 1);
 }
 
 // Returns FALSE if there was no space to return the item
@@ -8163,4 +8270,10 @@ void CursorCb_MoveItem(u8 taskId)
         ScheduleBgCopyTilemapToVram(2);
         gTasks[taskId].func = Task_UpdateHeldItemSprite;
     }
+}
+
+static void FieldCallback_RockClimb(void)
+{
+    gFieldEffectArguments[0] = GetCursorSelectionMonId();
+    FieldEffectStart(FLDEFF_USE_ROCK_CLIMB);
 }

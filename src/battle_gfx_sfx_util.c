@@ -331,6 +331,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
     case MOVE_TARGET_RANDOM:
     case MOVE_TARGET_BOTH:
     case MOVE_TARGET_FOES_AND_ALLY:
+    case MOVE_TARGET_ALL_BATTLERS:
         if (IsBattleMoveStatus(move))
             return PALACE_MOVE_GROUP_SUPPORT;
         else
@@ -338,6 +339,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
         break;
     case MOVE_TARGET_DEPENDS:
     case MOVE_TARGET_OPPONENTS_FIELD:
+    case MOVE_TARGET_ALLY:
         return PALACE_MOVE_GROUP_SUPPORT;
     case MOVE_TARGET_USER:
         return PALACE_MOVE_GROUP_DEFENSE;
@@ -459,13 +461,15 @@ static void SpriteCB_TrainerSlideVertical(struct Sprite *sprite)
 
 #undef sSpeedX
 
-void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isStatus2, u32 status)
+void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isVolatile, u32 status)
 {
     gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 1;
-    if (!isStatus2)
+    if (!isVolatile)
     {
-        if (status == STATUS1_FREEZE || status == STATUS1_FROSTBITE)
+        if (status == STATUS1_FREEZE)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_FRZ);
+        else if (status == STATUS1_FROSTBITE)
+            LaunchStatusAnimation(battler, B_ANIM_STATUS_FRB);
         else if (status == STATUS1_POISON || status & STATUS1_TOXIC_POISON)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_PSN);
         else if (status == STATUS1_BURN)
@@ -479,13 +483,13 @@ void InitAndLaunchChosenStatusAnimation(u32 battler, bool32 isStatus2, u32 statu
     }
     else
     {
-        if (status & STATUS2_INFATUATION)
+        if (status == VOLATILE_INFATUATION)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_INFATUATION);
-        else if (status & STATUS2_CONFUSION)
+        else if (status == VOLATILE_CONFUSION)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_CONFUSION);
-        else if (status & STATUS2_CURSED)
+        else if (status == VOLATILE_CURSED)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_CURSED);
-        else if (status & STATUS2_NIGHTMARE)
+        else if (status == VOLATILE_NIGHTMARE)
             LaunchStatusAnimation(battler, B_ANIM_STATUS_NIGHTMARE);
         else // no animation
             gBattleSpritesDataPtr->healthBoxesData[battler].statusAnimActive = 0;
@@ -940,7 +944,7 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
         {
             // Get base form if its currently Gigantamax
             if (IsGigantamaxed(battlerDef))
-                targetSpecies = gBattleStruct->changedSpecies[GetBattlerSide(battlerDef)][gBattlerPartyIndexes[battlerDef]];
+                targetSpecies = GetBattlerPartyState(battlerDef)->changedSpecies;
             else if (gBattleStruct->illusion[battlerDef].state == ILLUSION_ON)
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
@@ -993,13 +997,6 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
             BlendPalette(paletteOffset, 16, 4, RGB(12, 0, 31));
         else
             BlendPalette(paletteOffset, 16, 4, RGB(31, 0, 12));
-        CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
-    }
-
-    // Terastallization's tint
-    if (GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
-    {
-        BlendPalette(paletteOffset, 16, 8, GetTeraTypeRGB(GetBattlerTeraType(battlerAtk)));
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
     }
 
@@ -1161,7 +1158,7 @@ void CreateEnemyShadowSprite(u32 battler)
 {
     if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
-        u16 species = SanitizeSpeciesId(gBattleMons[battler].species);
+        u16 species = GetBattlerVisualSpecies(battler);
         u8 size = gSpeciesInfo[species].enemyShadowSize;
 
         gBattleSpritesDataPtr->healthBoxesData[battler].shadowSpriteIdPrimary = CreateSprite(&gSpriteTemplate_EnemyShadow,
@@ -1265,8 +1262,8 @@ void SpriteCB_EnemyShadow(struct Sprite *shadowSprite)
     }
     else if (transformSpecies != SPECIES_NONE)
     {
-        xOffset = gSpeciesInfo[transformSpecies].enemyShadowXOffset;
-        yOffset = gSpeciesInfo[transformSpecies].enemyShadowYOffset;
+        xOffset = gSpeciesInfo[transformSpecies].enemyShadowXOffset + (shadowSprite->tSpriteSide == SPRITE_SIDE_LEFT ? -16 : 16);
+        yOffset = gSpeciesInfo[transformSpecies].enemyShadowYOffset + 16;
         size = gSpeciesInfo[transformSpecies].enemyShadowSize;
 
         invisible = (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
@@ -1275,7 +1272,7 @@ void SpriteCB_EnemyShadow(struct Sprite *shadowSprite)
     }
     else if (B_ENEMY_MON_SHADOW_STYLE >= GEN_4 && P_GBA_STYLE_SPECIES_GFX == FALSE)
     {
-        u16 species = SanitizeSpeciesId(gBattleMons[battler].species);
+        u16 species = GetBattlerVisualSpecies(battler);
         xOffset = gSpeciesInfo[species].enemyShadowXOffset + (shadowSprite->tSpriteSide == SPRITE_SIDE_LEFT ? -16 : 16);
         yOffset = gSpeciesInfo[species].enemyShadowYOffset + 16;
         size = gSpeciesInfo[species].enemyShadowSize;

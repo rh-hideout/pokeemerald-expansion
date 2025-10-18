@@ -54,6 +54,9 @@ This flag is divided into two components to calculate the best available move fo
 
 This is different to `AI_FLAG_CHECK_BAD_MOVE` as it calculates how poor a move is and not whether it will fail or not.
 
+## `AI_FLAG_ATTACKS_PARTNER`
+This flag is meant for double battles where both of the opponents hate each other.  They prioritize damage to their 'partner' over the player.
+
 ## `AI_FLAG_FORCE_SETUP_FIRST_TURN`
 AI will prioritize using setup moves on the first turn at the expense of all else. These include stat buffs, field effects, status moves, etc. AI_FLAG_CHECK_VIABILITY will instead do this when the AI determines it makes sense.
 
@@ -143,6 +146,16 @@ Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviou
 
 ## `AI_FLAG_OMNISCIENT`
 AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.
+
+## `AI_FLAG_ASSUME_STAB`
+A significantly more restricted version of `AI_FLAG_OMNISCIENT`, the AI only knows the player's STAB moves, as their existence would be reasonable to assume in almost any case.
+
+## `AI_FLAG_ASSUME_STATUS_MOVES`
+A more restricted version of `AI_FLAG_OMNISCIENT`. The AI has a _chance_ to know what status moves the player has, plus additionally Fake Out and fixed percentage moves like Super Fang. The intention is so that if the AI has a counterplay implemented, it will seem to have guessed if the player's pokemon has a move, without giving the AI perfect information. For example, with Omniscient set, the AI will not usually put a pokemon to sleep if it has Sleep Talk; with neither Assume Powerful Status nor Omniscient set, the AI will always assume the pokemon does not have Sleep Talk.
+
+By default, there are three groups of higher likelihood status moves defined in `include/config/ai.h` under `ASSUME_STATUS_HIGH_ODDS`, `ASSUME_STATUS_MEDIUM_ODDS`, and `ASSUME_STATUS_LOW_ODDS`.  Moves are sorted in `src/battle_ai_util.c` within `ShouldRecordStatusMove()`.
+
+Any move that is not special cased is then potentially caught by `ASSUME_ALL_STATUS_ODDS`.
 
 ## `AI_FLAG_SMART_MON_CHOICES`
 Affects what the AI chooses to send out after a switch. AI will make smarter decisions when choosing which mon to send out mid-battle and after a KO, which are handled separately. Automatically included when `AI_FLAG_SMART_SWITCHING` is enabled.

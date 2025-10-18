@@ -14,8 +14,8 @@ After completing the install instructions for your OS, proceed to [Building poke
 On Windows, the project can be built using the following systems:
 - WSL2, fastest
 - WSL1, 7 times slower than WSL2
-- Msys2, 20 times slower than WSL2 (**NOTE**: Currently broken on pret upstream)
-- Cygwin, 30 timer slower than WSL2 (**NOTE**: Currently broken on pret upstream)
+- Msys2, 20 times slower than WSL2
+- Cygwin, 30 timer slower than WSL2
 
 **NOTE**: Only WSL systems are recommended.
 
@@ -179,6 +179,6 @@ If you targeted a specific version that is not the latest version listed on the 
 # Useful additional tools
 
 * [porymap](https://github.com/huderlem/porymap) for viewing and editing maps
-* [porytiles](https://github.com/gruntlucas/porytiles) for add new metatiles for maps
+* [porytiles](https://github.com/grunt-lucas/porytiles) for add new metatiles for maps
 * [poryscript](https://github.com/huderlem/poryscript) for scripting ([VS Code extension](https://marketplace.visualstudio.com/items?itemName=karathan.poryscript))
 * [Tilemap Studio](https://github.com/Rangi42/tilemap-studio) for viewing and editing tilemaps

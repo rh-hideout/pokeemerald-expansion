@@ -517,8 +517,53 @@ bool AsmFile::ParseEnum()
 
     long fallbackPosition = m_pos;
     std::string headerFilename = "";
-    long currentHeaderLine = SkipWhitespaceAndEol();
-    std::string enumName = ReadIdentifier();
+    long currentHeaderLine = 0;
+    std::string enumName;
+    while (true)
+    {
+        currentHeaderLine += SkipWhitespaceAndEol();
+        std::string identifier = ReadIdentifier();
+        if (identifier == "__attribute__")
+        {
+            if (m_pos + 1 >= m_size
+             || m_buffer[m_pos] != '('
+             || m_buffer[m_pos + 1] != '(')
+            {
+                m_pos = fallbackPosition - 4;
+                return false;
+            }
+
+            m_pos += 2;
+            int parens = 2;
+            while (true)
+            {
+                char c = m_buffer[m_pos++];
+                if (c == '\n')
+                    currentHeaderLine++;
+
+                if (c == '(')
+                {
+                    parens++;
+                }
+                else if (c == ')')
+                {
+                    parens--;
+                    if (parens == 0)
+                        break;
+                }
+                else if (parens < 2 || m_pos == m_size)
+                {
+                    m_pos = fallbackPosition - 4;
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            enumName = identifier;
+            break;
+        }
+    }
     currentHeaderLine += SkipWhitespaceAndEol();
     std::string enumBase = "0";
     long enumCounter = 0;
@@ -575,6 +620,10 @@ bool AsmFile::ParseEnum()
                 }
                 enumCounter = 0;
             }
+            // HACK(#7394): Make the definitions global so that C 'asm'
+            // statements are able to reference them (if they happen to
+            // be available in an assembled object file).
+            std::printf(".global %s; ", currentIdentName.c_str());
             std::printf(".equiv %s, (%s) + %ld\n", currentIdentName.c_str(), enumBase.c_str(), enumCounter);
             enumCounter++;
             symbolCount++;
@@ -679,7 +728,7 @@ void AsmFile::RaiseWarning(const char* format, ...)
 int AsmFile::SkipWhitespaceAndEol()
 {
     int newlines = 0;
-    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\n')
+    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
     {
         if (m_buffer[m_pos] == '\n')
             newlines++;

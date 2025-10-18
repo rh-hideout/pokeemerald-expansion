@@ -279,6 +279,7 @@ void InitBattleControllers(void);
 bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data);
+void UpdateFriendshipFromXItem(u32 battler);
 
 // emitters
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);
@@ -301,8 +302,8 @@ void BtlController_EmitChooseItem(u32 battler, u32 bufferId, u8 *battlePartyOrde
 void BtlController_EmitChoosePokemon(u32 battler, u32 bufferId, u8 caseId, u8 slotId, u16 abilityId, u8 battlerPreventingSwitchout, u8 *data);
 void BtlController_EmitHealthBarUpdate(u32 battler, u32 bufferId, u16 hpValue);
 void BtlController_EmitExpUpdate(u32 battler, u32 bufferId, u8 partyId, s32 expPoints);
-void BtlController_EmitStatusIconUpdate(u32 battler, u32 bufferId, u32 status1, u32 status2);
-void BtlController_EmitStatusAnimation(u32 battler, u32 bufferId, bool8 status2, u32 status);
+void BtlController_EmitStatusIconUpdate(u32 battler, u32 bufferId, u32 status);
+void BtlController_EmitStatusAnimation(u32 battler, u32 bufferId, bool8 isVolatile, u32 status);
 void BtlController_EmitDataTransfer(u32 battler, u32 bufferId, u16 size, void *data);
 void BtlController_EmitTwoReturnValues(u32 battler, u32 bufferId, u8 ret8, u32 ret32);
 void BtlController_EmitChosenMonReturnValue(u32 battler, u32 bufferId, u8 partyId, u8 *battlePartyOrder);
@@ -426,6 +427,7 @@ void LinkPartnerBufferExecCompleted(u32 battler);
 
 void TrySetBattlerShadowSpriteCallback(u32 battler);
 
+void AnimateMonAfterPokeBallFail(u32 battler);
 void TryShinyAnimAfterMonAnim(u32 battler);
 void WaitForMonAnimAfterLoad(u32 battler);
 void BtlController_HandleSwitchInWaitAndEnd(u32 battler);
@@ -434,5 +436,8 @@ void BtlController_HandleSwitchInShowHealthbox(u32 battler);
 void BtlController_HandleSwitchInTryShinyAnim(u32 battler);
 void BtlController_HandleSwitchInSoundAndEnd(u32 battler);
 void BtlController_HandleSwitchInShowSubstitute(u32 battler);
+
+bool32 ShouldBattleRestrictionsApply(u32 battler);
+void FreeShinyStars(void);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H

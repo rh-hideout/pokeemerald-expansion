@@ -206,7 +206,7 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
 
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
-        trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic;
+        trainerPicId = gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic;
         xPos = 90;
         yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
@@ -285,7 +285,6 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
     else if (gBattleStruct->monToSwitchIntoId[battler] >= PARTY_SIZE || !IsValidForBattle(&gPlayerParty[gBattleStruct->monToSwitchIntoId[battler]]))
     {
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, SWITCH_AFTER_KO);
-
         if (chosenMonId == PARTY_SIZE || !IsValidForBattle(&gPlayerParty[chosenMonId])) // just switch to the next mon
         {
             s32 firstId = (IsAiVsAiBattle()) ? 0 : (PARTY_SIZE / 2);
@@ -303,12 +302,14 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     else // Mon to switch out has been already chosen.
     {
         chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
+        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
@@ -320,9 +321,9 @@ static void PlayerPartnerHandleIntroTrainerBallThrow(u32 battler)
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
     if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
-        trainerPal = gTrainerBacksprites[gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerPic].palette.data;
+        trainerPal = gTrainerBacksprites[gBattlePartners[difficulty][gPartnerTrainerId - TRAINER_PARTNER(PARTNER_NONE)].trainerBackPic].palette.data;
     else if (IsAiVsAiBattle())
-        trainerPal = gTrainerSprites[GetTrainerPicFromId(gPartnerTrainerId)].palette.data;
+        trainerPal = gTrainerSprites[GetTrainerBackPicFromId(gPartnerTrainerId)].palette.data;
     else
         trainerPal = gTrainerSprites[GetFrontierTrainerFrontSpriteId(gPartnerTrainerId)].palette.data; // 2 vs 2 multi battle in Battle Frontier, load front sprite and pal.
 

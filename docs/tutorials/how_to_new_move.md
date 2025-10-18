@@ -40,7 +40,6 @@ Let's look at an example:
     .target = MOVE_TARGET_SELECTED,
     .priority = 0,
     .category = DAMAGE_CATEGORY_SPECIAL,
-    .sheerForceBoost = TRUE,
     .additionalEffects = ADDITIONAL_EFFECTS({
         .moveEffect = MOVE_EFFECT_PARALYSIS,
         .chance = 10,
@@ -94,14 +93,21 @@ Contains more fundamental functions that control the flow of the battle. Functio
 ### data/battle_scripts_1.s
 Each move's effect is governed by a script defined here. For a simple example, let's look at the script for Fake Out/First Impression:
 
+TODO: New Script
 ```
-BattleScript_EffectFirstTurnOnly::
+BattleScript_EffectTaunt::
 	attackcanceler
-	jumpifnotfirstturn BattleScript_FailedFromAtkString
-	goto BattleScript_EffectHit
+	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
+	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
+	settaunt BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_PKMNFELLFORTAUNT
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
 ```
 
-`attackcanceler` is a command that covers all the cases that could cause a move to fail before it's even attempted (e.g. paralysis). And as we can tell from the commands, if it's not the first turn, we go to `BattleScript_FailedFromAtkString` which evidently causes us to print the `attackstring` ("POKEMON used MOVE") then fail ("But it failed!"). Otherwise, we go to the generic "hit" effect which is the same script for moves that just deal damage and nothing else.
+`attackcanceler` is a command that covers all cases that could cause a move to fail before it's even attempted (e.g. paralysis). The next command is a jump command. A jump command can check anything and usually comes with a jump instruction. Usually it jumps to a place from where the move should pick up because of certain conditions. The next one is an accuracy check. Accuracy checks happen after all prior move failure checks happened. The next set of commands are unique to a certain move, they are mostly the same for damaging moves but can widely differ for status moves. Lastly there is `BattleScript_MoveEnd` which the move after a succesful hit. An ability activation or specific move effect like Burn, Freeze, Absorb etc.
 
 This is the most advanced part of the ROM. There are dozens upon dozens of commands and hundreds of scripts so this guide would go on forever if I were to go into more detail. To learn how these scripts work, it's best to look at a few examples of moves you know.
 
@@ -140,7 +146,18 @@ If you look at the example [here](#srcdatamoves_infoh), you can see that Thunder
 
 All additional effects with a defined chance (even 100%) are treated as "secondary effects". This means that they are nullified by Sheer Force, blocked by Shield Dust or the Covert Cloak, and have their chance modified by Serene Grace. Additional effects without a chance field (effectively setting it to 0) are treated as "primary effects", which means that they cannot be blocked by the aforementioned items and abilities and their chance to occur cannot be modified; they will *always* happen.
 
-Each move can have up to 15 additional effects, allowing you to construct monstrosities like this:
+Depending on the move effect, it is possible to also set a `multistring` value. For example:
+
+```
+.additionalEffects = ADDITIONAL_EFFECTS({
+    .moveEffect = MOVE_EFFECT_WRAP,
+    .multistring = B_MSG_WRAPPED_MAGMA_STORM,
+}),
+```
+
+For Magma Storm, we not only want the wrapping move effect, we want to give it a unique string when it activates. The index is an enum defined in `battle_string_ids.h` and it corresponds to an entry (for this move effect) in the `gWrappedStringIds` list in battle_message.c. For custom strings, you need to add an enum and an entry respectively. For new custom move effects, you will have to add a new set of enums and a new table of strings.
+
+Each move can have up to 3 additional effects, allowing you to construct monstrosities like this:
 ```
 [MOVE_POUND] =
 {
@@ -165,13 +182,6 @@ Each move can have up to 15 additional effects, allowing you to construct monstr
     },{
         .moveEffect = MOVE_EFFECT_FLINCH,
         .chance = 30,
-    },{
-        .moveEffect = MOVE_EFFECT_ALL_STATS_UP,
-        .chance = 40,
-        .self = TRUE,
-    },{
-        .moveEffect = MOVE_EFFECT_DEF_MINUS_2,
-        .chance = 50,
     }),
     .makesContact = TRUE,
     .ignoresKingsRock = B_UPDATED_MOVE_FLAGS == GEN_4,

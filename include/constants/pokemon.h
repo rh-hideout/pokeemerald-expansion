@@ -299,6 +299,8 @@ enum EvolutionConditions {
     IF_PID_MODULO_100_LT,               // The Pokémon's personality value's modulo by 100 is lower than the defined value.
     IF_MIN_OVERWORLD_STEPS,             // The Player has taken a specific amount of steps in the overworld with the Pokémon following them or in the first slot of the party.
     IF_BAG_ITEM_COUNT,                  // The Player has the specific amount of an item in the bag. It then removes those items.
+    IF_REGION,                          // The Player is in the specific region.
+    IF_NOT_REGION,                      // The Player is NOT in the specific region.
     CONDITIONS_END
 };
 
@@ -321,6 +323,7 @@ enum EvolutionMode {
     EVO_MODE_ITEM_CHECK,         // If an Everstone is being held, still want to show that the stone *could* be used on that Pokémon to evolve
     EVO_MODE_BATTLE_SPECIAL,
     EVO_MODE_OVERWORLD_SPECIAL,
+    EVO_MODE_SCRIPT_TRIGGER,
     EVO_MODE_BATTLE_ONLY,        // This mode is only used in battles to support Tandemaus' unique requirement
 };
 
@@ -343,6 +346,12 @@ enum EvoSpinDirections {
     SPIN_CCW_SHORT,             // Player spins counter-clockwise
     SPIN_CCW_LONG,              // Player spins counter-clockwise
     SPIN_EITHER,                // Player spins either clockwise or counter-clockwise
+};
+
+enum ShinyMode {
+    SHINY_MODE_ALWAYS,
+    SHINY_MODE_RANDOM,
+    SHINY_MODE_NEVER
 };
 
 #define MON_PIC_WIDTH 64

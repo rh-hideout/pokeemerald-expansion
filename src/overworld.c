@@ -429,10 +429,13 @@ void Overworld_ResetBattleFlagsAndVars(void)
         VarSet(B_VAR_WILD_AI_FLAGS,0);
     #endif
 
+    #if B_VAR_NO_BAG_USE != 0
+        VarSet(B_VAR_NO_BAG_USE, 0);
+    #endif
+
     FlagClear(B_FLAG_INVERSE_BATTLE);
     FlagClear(B_FLAG_FORCE_DOUBLE_WILD);
     FlagClear(B_SMART_WILD_AI_FLAG);
-    FlagClear(B_FLAG_NO_BAG_USE);
     FlagClear(B_FLAG_NO_CATCHING);
     FlagClear(B_FLAG_NO_RUNNING);
     FlagClear(B_FLAG_DYNAMAX_BATTLE);
@@ -707,16 +710,16 @@ void SetWarpDestinationToHealLocation(u8 healLocationId)
         SetWarpDestination(healLocation->mapGroup, healLocation->mapNum, WARP_ID_NONE, healLocation->x, healLocation->y);
 }
 
-static bool32 IsFRLGWhiteout(void)
+static bool32 IsWhiteoutCutscene(void)
 {
-    if (!OW_FRLG_WHITEOUT)
+    if (OW_WHITEOUT_CUTSCENE < GEN_4)
         return FALSE;
     return GetHealNpcLocalId(GetHealLocationIndexByWarpData(&gSaveBlock1Ptr->lastHealLocation)) > 0;
 }
 
 void SetWarpDestinationToLastHealLocation(void)
 {
-    if (IsFRLGWhiteout())
+    if (IsWhiteoutCutscene())
         SetWhiteoutRespawnWarpAndHealerNPC(&sWarpDestination);
     else
         sWarpDestination = gSaveBlock1Ptr->lastHealLocation;
@@ -1558,7 +1561,7 @@ const struct BlendSettings gTimeOfDayBlend[] =
 };
 
 #define DEFAULT_WEIGHT 256
-#define TIME_BLEND_WEIGHT(begin, end) (DEFAULT_WEIGHT - (DEFAULT_WEIGHT * ((hours - begin) * MINUTES_PER_HOUR + minutes) / ((end - begin) * MINUTES_PER_HOUR)))
+#define TIME_BLEND_WEIGHT(begin, end) (DEFAULT_WEIGHT - SAFE_DIV((DEFAULT_WEIGHT * ((hours - begin) * MINUTES_PER_HOUR + minutes)), ((end - begin) * MINUTES_PER_HOUR)))
 
 #define MORNING_HOUR_MIDDLE (MORNING_HOUR_BEGIN + ((MORNING_HOUR_END - MORNING_HOUR_BEGIN) / 2))
 
@@ -1810,7 +1813,7 @@ void CB2_WhiteOut(void)
         ResetInitialPlayerAvatarState();
         ScriptContext_Init();
         UnlockPlayerFieldControls();
-        if (IsFRLGWhiteout())
+        if (IsWhiteoutCutscene())
             gFieldCallback = FieldCB_RushInjuredPokemonToCenter;
         else
             gFieldCallback = FieldCB_WarpExitFadeFromBlack;
