@@ -401,9 +401,10 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (player to op
         SceneSingles(move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -439,9 +440,10 @@ SINGLE_BATTLE_TEST("Move Animations don't leak when used - Singles (opponent to 
         SceneSingles(move, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -497,9 +499,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -556,9 +559,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -615,9 +619,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerLeft t
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -674,9 +679,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -733,9 +739,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -792,9 +799,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentLeft
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -851,9 +859,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (playerRight 
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -910,9 +919,10 @@ DOUBLE_BATTLE_TEST("Move Animations don't leak when used - Doubles (opponentRigh
         DoublesScene(move, attacker);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1197,9 +1207,10 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
         SceneSingles(move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1265,9 +1276,10 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)"
         ANIMATION(ANIM_TYPE_MOVE, zmove, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1294,9 +1306,10 @@ SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (opponent to player)"
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1325,9 +1338,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1356,9 +1370,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerLeft to oppone
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1387,9 +1402,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1418,9 +1434,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (playerRight to oppon
         ANIMATION(ANIM_TYPE_MOVE, zmove, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1449,9 +1466,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1480,9 +1498,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentLeft to play
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1511,9 +1530,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1542,9 +1562,10 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
         ANIMATION(ANIM_TYPE_MOVE, zmove, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1587,9 +1608,10 @@ SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (player to oppon
         ANIMATION(ANIM_TYPE_MOVE, move, player);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1609,9 +1631,10 @@ SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (opponent to pla
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1633,9 +1656,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to o
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1657,9 +1681,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerLeft to o
         ANIMATION(ANIM_TYPE_MOVE, move, playerLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1681,9 +1706,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to 
         ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1705,9 +1731,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (playerRight to 
         ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1729,9 +1756,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1753,9 +1781,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentLeft to
         ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1777,9 +1806,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
@@ -1801,9 +1831,10 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
-        if (gLoadFail)
+        if (gLoadFail || gSpriteAllocs != 0)
             DebugPrintf("Move failed: %S (%u)", gMovesInfo[move].name, move);
         EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
     }
 }
 
