@@ -5713,7 +5713,6 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
 
     // Checks that apply to all non volatile statuses
     if (abilityDef == ABILITY_COMATOSE
-     || abilityDef == ABILITY_SHIELDS_DOWN
      || abilityDef == ABILITY_PURIFYING_SALT)
     {
         abilityAffected = TRUE;
@@ -5724,6 +5723,11 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u
         battleScript = BattleScript_MistyTerrainPrevents;
     }
     else if (IsLeafGuardProtected(battlerDef, abilityDef))
+    {
+        abilityAffected = TRUE;
+        battleScript = BattleScript_AbilityProtectsDoesntAffect;
+    }
+    else if (IsShieldsDownProtected(battlerDef, abilityDef))
     {
         abilityAffected = TRUE;
         battleScript = BattleScript_AbilityProtectsDoesntAffect;

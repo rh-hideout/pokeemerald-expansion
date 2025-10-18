@@ -2405,8 +2405,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifleafguardprotected battler:req, jumpInstr:req
-	callnative BS_JumpIfLeafGuardProtected
+	.macro jumpifabilitypreventsrest battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityPreventsRest
 	.byte \battler
 	.4byte \jumpInstr
 	.endm
