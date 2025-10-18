@@ -4038,17 +4038,6 @@ static void DebugAction_BerryFunctions_Weeds(u8 taskId)
 // *******************************
 // Actions Party/Boxes
 
-// these are commented out since they're not used
-/*static void DebugAction_Party_MoveReminder(u8 taskId)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Common_EventScript_MoveRelearner);
-}
-
-static void DebugAction_Party_HatchAnEgg(u8 taskId)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_HatchAnEgg);
-}*/
-
 static void DebugAction_Party_HealParty(u8 taskId)
 {
     PlaySE(SE_USE_ITEM);
