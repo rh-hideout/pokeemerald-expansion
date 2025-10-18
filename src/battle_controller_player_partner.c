@@ -318,9 +318,8 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
     }
-    #if TESTING
-    TestRunner_Battle_CheckSwitch(battler, chosenMonId);
-    #endif // TESTING
+    if (TESTING)
+        TestRunner_Battle_CheckSwitch(battler, chosenMonId);
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
 }
