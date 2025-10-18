@@ -4048,6 +4048,17 @@ static void LoadDexMonPalette(u32 taskId, bool32 isShiny)
     LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
 }
 
+u32 Pokedex_CreateCaughtMonSprite(u32 species, s32 x, s32 y)
+{
+    u32 spriteId;
+
+    SetMultiuseSpriteTemplateToPokemon(species, GetCatchingBattler());
+    spriteId = CreateSprite(&gMultiuseSpriteTemplate, x, y, 0);
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].callback = SpriteCallbackDummy;
+    return spriteId;
+}
+
 static void Task_DisplayCaughtMonDexPage(u8 taskId)
 {
     u8 spriteId;
@@ -4096,11 +4107,8 @@ static void Task_DisplayCaughtMonDexPage(u8 taskId)
         break;
     case 4:
         // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonPicSprite.
-        SetMultiuseSpriteTemplateToPokemon(species, GetCatchingBattler());
-        spriteId = CreateSprite(&gMultiuseSpriteTemplate, MON_PAGE_X, MON_PAGE_Y, 0);
+        spriteId = Pokedex_CreateCaughtMonSprite(species, MON_PAGE_X, MON_PAGE_Y);
         gTasks[taskId].tMonSpriteId = spriteId;
-        gSprites[spriteId].oam.priority = 0;
-        gSprites[spriteId].callback = SpriteCallbackDummy;
         LoadDexMonPalette(taskId, FALSE);
         gSprites[spriteId].oam.priority = 0;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);

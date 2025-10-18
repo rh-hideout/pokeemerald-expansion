@@ -42,7 +42,7 @@ The main things that the Expansion changes are listed here.
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
 
-![visualizer1](/docs/tutorials/img/add_pokemon/visualizer1.gif)
+![visualizer1](img/add_pokemon/visualizer1.gif)
 
 # The Data - Part 1
 
@@ -73,7 +73,7 @@ We add this at the end so that no existing species change Id and so that we don'
 
 Now, let's see how it looks in-game!
 
-![visualizer2](/docs/tutorials/img/add_pokemon/visualizer2.png)
+![visualizer2](img/add_pokemon/visualizer2.png)
 
 Hmmm, something's not right...
 
@@ -446,7 +446,7 @@ Now we can add the number and entry to our Mewthree:
     },
  };
 ```
-![image](/docs/tutorials/img/add_pokemon/dex1.png)
+![image](img/add_pokemon/dex1.png)
 
 The values `pokemonScale`, `pokemonOffset`, `trainerScale` and `trainerOffset` are used for the height comparison figure in the Pokédex.
 
@@ -497,7 +497,7 @@ Edit [src/data/pokemon/pokedex_orders.h](https://github.com/rh-hideout/pokeemera
      ...
  };
 ```
-![mGBA_lUBfmFEKUx](/docs/tutorials/img/add_pokemon/dex2.gif)
+![mGBA_lUBfmFEKUx](img/add_pokemon/dex2.gif)
 
 
 # The Graphics
@@ -1058,7 +1058,7 @@ What this allows us to do is to be able to get all forms of a Pokémon in our co
 
 For example, in the HGSS dex, it lets us browse between the entries of every form available.:
 
-![hgssdex1](/docs/tutorials/img/add_pokemon/hgssdex1.png) ![image](/docs/tutorials/img/add_pokemon/hgssdex2.png)
+![hgssdex1](img/add_pokemon/hgssdex1.png) ![image](img/add_pokemon/hgssdex2.png)
 
 In addition, we have the `GET_BASE_SPECIES_ID` macro, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
 ```c
@@ -1089,7 +1089,7 @@ The second value is the target form, to which the Pokémon will change into.
 Values after that are referred as arguments, and needs to be put there depends on the type of form change, detailed in `include/constants/form_change_types.h`.
 
 ## 3. Gender differences
-![gender_diffs](/docs/tutorials/img/add_pokemon/gender_diffs.gif)
+![gender_diffs](img/add_pokemon/gender_diffs.gif)
 
 You may have seen that there's a couple of duplicate fields with a "Female" suffix.
 ```diff
@@ -1262,8 +1262,8 @@ Either way, you may also create custom animation tables and use them here approp
 
 ### How to add the Pokémon Object Events to map
 In Porymap, select the object you want to set the sprite to. Then, change the field "Sprite" to use `OBJ_EVENT_GFX_SPECIES(SPECIES)`, replacing SPECIES with the name of the species you want to use. If you get a compiler error, it's because it used the species define as part of the macro, so it needs to match how you defined it all the way back in [Declare a species constant](#1-Declare-a-species-constant).
-![charizard](/docs/tutorials/img/add_pokemon/charizard.png)
-![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
+![charizard](img/add_pokemon/charizard.png)
+![overworld_data](img/add_pokemon/overworld_data.gif)
 
 If you want to use their shiny and/or female versions, use one of the following macros:
 - `OBJ_EVENT_GFX_SPECIES_SHINY(name)`
