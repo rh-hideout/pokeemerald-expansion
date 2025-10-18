@@ -2102,9 +2102,8 @@
 	.byte \id
 	.endm
 
-	.macro arenawaitmessage id:req
+	.macro arenawaitmessage
 	callnative BS_ArenaWaitMessage
-	.byte \id
 	.endm
 
 	.macro waitcry
@@ -2406,8 +2405,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifleafguardprotected battler:req, jumpInstr:req
-	callnative BS_JumpIfLeafGuardProtected
+	.macro jumpifabilitypreventsrest battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityPreventsRest
 	.byte \battler
 	.4byte \jumpInstr
 	.endm
