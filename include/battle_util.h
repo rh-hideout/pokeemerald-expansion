@@ -165,7 +165,8 @@ struct DamageContext
     u32 isCrit:1;
     u32 randomFactor:1;
     u32 updateFlags:1;
-    u32 padding1:2;
+    u32 isAnticipation:1;
+    u32 padding1:1;
     u32 weather:16;
     u32 fixedBasePower:8;
     u32 padding2:8;

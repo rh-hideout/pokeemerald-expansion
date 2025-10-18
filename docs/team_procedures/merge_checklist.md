@@ -7,7 +7,7 @@ This document is a guide for maintainers to account for all the reccomended step
 # Checklist
 
 ## Is the branch's theoretical functionality in scope?
-If you're not sure if a branch's functionality is [in scope](docs/team_procedures/scope.md), start a conversation on Discord to resolve.
+If you're not sure if a branch's functionality is [in scope](scope.md), start a conversation on Discord to resolve.
 
 ## Does the branch successfully compile?
 From `make clean`, the branch should locally compile.
@@ -37,18 +37,18 @@ If you're not sure if something CAN be tested, start a discussion. Some contribu
 
 If any new tests are `KNOWN_FAILING`, issues should be opened describing each of the `KNOWN_FAILING` tests and our understanding of why they fail.
 
-## Does the branch meet our [config philosophy](/docs/STYLEGUIDE.md#config-philosophy)?
+## Does the branch meet our [config philosophy](../STYLEGUIDE.md#config-philosophy)?
 
-## Does the branch meet our [saves philosophy](/docs/STYLEGUIDE.md#saves-philosophy)?
+## Does the branch meet our [saves philosophy](../STYLEGUIDE.md#saves-philosophy)?
 
-## Does the submitted code follow the [styleguide](/docs/STYLEGUIDE.md)?
+## Does the submitted code follow the [styleguide](../STYLEGUIDE.md)?
 This applies to code that comes from other branches or games.
 
 ## Is the pull request appropriately labeled?
 Without labels, the CHANGELOG will not be properly formatted. For specifically the `bugfix` label, an additional label, detailing what area the bug exists in is required.
 
 ## Is `pokeemerald-expansion` free from a merge freeze?
-Our [release schedule](/docs/team_procedures/schedule.md) prevents us from merging Big Features and non-bugfixes within certain dates close to a release. Please use `/release` in the RHH Discord to clarify when these are occuring.
+Our [release schedule](schedule.md) prevents us from merging Big Features and non-bugfixes within certain dates close to a release. Please use `/release` in the RHH Discord to clarify when these are occuring.
 
 # Merging
 
