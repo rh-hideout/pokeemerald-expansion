@@ -2630,7 +2630,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
          || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT)))
-                SetAiActionToPass(sourceLine, battlerId);
+            SetAiActionToPass(sourceLine, battlerId);
         else
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
     }
