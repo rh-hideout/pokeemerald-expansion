@@ -2336,7 +2336,7 @@ void CloseTurn(u32 sourceLine)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (!(DATA.actionBattlers & (1 << i)))
-        {
+        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case.
             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
             else
@@ -2627,9 +2627,9 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
             INVALID_IF(DATA.currentMonIndexes[i] == partyIndex, "EXPECT_SEND_OUT to battler");
     }
     if (!(DATA.actionBattlers & (1 << battlerId)))
-    {
-        if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT)
-                || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT))) // If Move was not specified, allow any move used.
+    { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
+        if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
+         || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT)))
                 SetAiActionToPass(sourceLine, battlerId);
         else
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
