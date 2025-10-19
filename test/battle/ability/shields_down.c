@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Minior Core doesn't transform into Minior Meteor on switch-i
     }
 }
 
-SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if has it more then 1/2 health")
+SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if it has more than 1/2 health")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if ha
     }
 }
 
-SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on battle start if it has more then 1/2 health")
+SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on battle start if it has more than 1/2 health")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
