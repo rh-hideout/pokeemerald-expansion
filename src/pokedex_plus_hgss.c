@@ -5056,69 +5056,6 @@ static void PrintStatsScreen_DestroyMoveItemIcon(u8 taskId)
     DestroySprite(&gSprites[gTasks[taskId].data[3]]);       //Destroy item icon
 }
 
-static void OrderTeachableLearnset(u16 species, u32 numTeachableMoves)
-{
-    const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
-    bool8 *isTMMove = AllocZeroed(sizeof(u8) * numTeachableMoves);
-    sPokedexView->teachableLearnsetOrder = AllocZeroed(sizeof(u8) * numTeachableMoves);
-
-    u32 counter = 0;
-    u32 move;
-    u32 i, j;
-    if (HGSS_SORT_TMS_BY_NUM)
-    {
-        for (i = 0; i < NUM_ALL_MACHINES; i++)
-        {
-            move = GetTMHMMoveId(i + 1);
-            for (j = 0; j < numTeachableMoves; j++)
-            {
-                if (teachableLearnset[j] == move)
-                {
-                    sPokedexView->teachableLearnsetOrder[counter] = j;
-                    isTMMove[j] = TRUE;
-                    counter++;
-                    break;
-                }
-            }
-        }
-    }
-    else
-    {
-        for (i = 0; i < numTeachableMoves; i++)
-        {
-            move = teachableLearnset[i];
-            for (j = 0; j < NUM_ALL_MACHINES; j++)
-            {
-                if (GetTMHMMoveId(j + 1) == move)
-                {
-                    sPokedexView->teachableLearnsetOrder[counter] = i;
-                    isTMMove[i] = TRUE;
-                    counter++;
-                    break;
-                }
-            }
-        }
-    }
-
-    for (i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
-    {
-        move = gTutorMoves[i];
-        for (j = 0; j < numTeachableMoves; j++)
-        {
-            if (isTMMove[j])
-                continue;
-            if (teachableLearnset[j] == move)
-            {
-                sPokedexView->teachableLearnsetOrder[counter] = j;
-                counter++;
-                break;
-            }
-        }
-    }
-
-    FREE_AND_SET_NULL(isTMMove);
-}
-
 static bool8 CalculateMoves(void)
 {
     u16 species = NationalPokedexNumToSpeciesHGSS(sPokedexListItem->dexNum);
@@ -5158,7 +5095,6 @@ static bool8 CalculateMoves(void)
     const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
     for (i = 0; teachableLearnset[i] != MOVE_UNAVAILABLE; i++)
         numTeachableMoves++;
-    OrderTeachableLearnset(species, numTeachableMoves);
 
     sPokedexView->numEggMoves = numEggMoves;
     sPokedexView->numLevelUpMoves = numLevelUpMoves;
@@ -5176,7 +5112,6 @@ static u16 GetSelectedMove(u32 species, u32 selected)
     if (selected < sPokedexView->numLevelUpMoves)
         return GetSpeciesLevelUpLearnset(species)[selected].move;
     selected -= sPokedexView->numLevelUpMoves;
-    selected = sPokedexView->teachableLearnsetOrder[selected];
     if (selected < sPokedexView->numTeachableMoves)
         return GetSpeciesTeachableLearnset(species)[selected];
     return MOVE_NONE; //It should never get here but it allows us to visually see errors

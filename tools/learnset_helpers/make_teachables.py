@@ -33,6 +33,7 @@ import typing
 
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
+ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)")
 TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 TEACHABLE_ARRAY_DECL_PAT = re.compile(r"(?P<decl>static const u16 s(?P<name>\w+)TeachableLearnset\[\]) = {[\s\S]*?};")
@@ -63,17 +64,6 @@ def extract_repo_tms() -> typing.Generator[str, None, None]:
         for match in match_it:
             yield f"MOVE_{match.group(1)}"
 
-
-def extract_repo_universals() -> list[str]:
-    """
-    Return a list of MOVE constants which are deemed to be universal and can
-    thus be learned by any species.
-    """
-    with open("./src/pokemon.c", "r") as pokemon_fp:
-        if match := UNIVERSAL_MOVES_PAT.search(pokemon_fp.read()):
-            return list(filter(lambda s: s, map(lambda s: s.strip(), match.group(1).split(','))))
-        return list()
-
 def extract_repo_teaching_types() -> dict[str, str]:
     species_teaching_types = {}
     for families_fname in sorted(glob.glob("src/data/pokemon/species_info/gen_*_families.h")):
@@ -97,7 +87,7 @@ def extract_tm_litteracy_config() -> bool:
                 config = True
     return config
 
-def prepare_output(all_learnables: dict[str, set[str]], repo_teachables: set[str], tutors: list[str], special_movesets, header: str) -> str:
+def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: list[str], special_movesets, header: str) -> str:
     """
     Build the file content for teachable_learnsets.h.
     """
@@ -125,19 +115,21 @@ def prepare_output(all_learnables: dict[str, set[str]], repo_teachables: set[str
             continue
 
         if repo_teaching_types[species.group("name")] == "ALL_TEACHABLES":
-            repo_species_teachables = filter(lambda m: m not in special_movesets["signatureTeachables"], repo_teachables)
+            learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
         elif repo_teaching_types[species.group("name")] == "TM_ILLITERATE":
             learnables = all_learnables[species_upper]
             if not tm_litteracy_config:
                 learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
-            repo_species_teachables = filter(lambda m: m in repo_teachables, learnables)
         else:
-            repo_species_teachables = filter(lambda m: m in repo_teachables, chain(all_learnables[species_upper], special_movesets["universalMoves"]))
+            learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
 
+        part1 = list(filter(lambda m: m in learnables, tms))
+        part2 = list(filter(lambda m: m in learnables, tutors))
+        repo_species_teachables = part1 + part2
         if species_upper == "TERAPAGOS":
              repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
 
-        repo_species_teachables = list(dict.fromkeys(sorted(repo_species_teachables)))
+        repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
         new += old[cursor:match_b]
         new += "\n".join([
             f"{species.group('decl')} = {{",
@@ -213,23 +205,27 @@ def main():
     assert SOURCE_TUTORS_JSON.is_file(), f"{SOURCE_TUTORS_JSON=} is not a file"
 
     repo_tms = list(extract_repo_tms())
+    order_alphabetically = False
+
+    with open("./include/config/pokedex_plus_hgss.h", "r") as cfg_pokemon_fp:
+        cfg_pokemon = cfg_pokemon_fp.read()
+        cfg_defined = ALPHABETICAL_ORDER_ENABLED_PAT.search(cfg_pokemon)
+        if cfg_defined is None or cfg_defined.group("cfg_val") in ("FALSE", "0"):
+            repo_tms = sorted(repo_tms)
+
     with open(SOURCE_TUTORS_JSON, "r") as fp:
         repo_tutors = json.load(fp)
-
-    repo_teachables = set(
-        chain(repo_tms, repo_tutors)
-    )
 
     with open("src/data/pokemon/special_movesets.json", "r") as file:
         special_movesets = json.load(file)
 
-    h_align = max(map(lambda move: len(move), chain(special_movesets["universalMoves"], repo_teachables))) + 2
+    h_align = max(map(lambda move: len(move), chain(special_movesets["universalMoves"], repo_tms, repo_tutors))) + 2
     header = prepare_header(h_align, repo_tms, repo_tutors, special_movesets["universalMoves"])
 
     with open(SOURCE_LEARNSETS_JSON, "r") as source_fp:
         all_learnables = json.load(source_fp)
 
-    content = prepare_output(all_learnables, repo_teachables, repo_tutors, special_movesets, header)
+    content = prepare_output(all_learnables, repo_tms, repo_tutors, special_movesets, header)
     with open("./src/data/pokemon/teachable_learnsets.h", "w") as teachables_fp:
         teachables_fp.write(content)
 
