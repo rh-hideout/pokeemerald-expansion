@@ -2403,8 +2403,7 @@ static enum MoveCanceller CancellerProtean(void)
 
 static enum MoveCanceller CancellerPsychicTerrain(void)
 {
-    if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN
-        && IsBattlerGrounded(gBattlerTarget)
+    if (IsBattlerTerrainAffected(gBattlerTarget, STATUS_FIELD_PSYCHIC_TERRAIN)
         && GetChosenMovePriority(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) > 0
         && GetMoveTarget(gCurrentMove) != MOVE_TARGET_ALL_BATTLERS
         && GetMoveTarget(gCurrentMove) != MOVE_TARGET_OPPONENTS_FIELD
