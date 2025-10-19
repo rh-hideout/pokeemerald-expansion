@@ -1374,8 +1374,8 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
             return AI_IS_SLOWER;
     }
 
-    speedBattlerAI = GetBattlerTotalSpeedStatArgs(battlerAI, abilityAI, holdEffectAI);
-    speedBattler   = GetBattlerTotalSpeedStatArgs(battler, abilityPlayer, holdEffectPlayer);
+    speedBattlerAI = GetBattlerTotalSpeedStat(battlerAI, abilityAI, holdEffectAI);
+    speedBattler   = GetBattlerTotalSpeedStat(battler, abilityPlayer, holdEffectPlayer);
 
     if (holdEffectAI == HOLD_EFFECT_LAGGING_TAIL && holdEffectPlayer != HOLD_EFFECT_LAGGING_TAIL)
         return AI_IS_SLOWER;
@@ -1423,7 +1423,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
     {
         if (B_STURDY >= GEN_5 && gAiLogicData->abilities[battlerTarget] == ABILITY_STURDY)
             return TRUE;
-        if (gBattleMons[battlerTarget].species == SPECIES_MIMIKYU_DISGUISED)
+        if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
     }
 
@@ -3267,14 +3267,16 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Ability defAbility
     u32 battlerToSwitch;
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
 
-    battlerToSwitch = gBattleStruct->AI_monToSwitchIntoId[battlerAtk];
-
     // Palafin always wants to activate Zero to Hero
     if (gBattleMons[battlerAtk].species == SPECIES_PALAFIN_ZERO
         && gBattleMons[battlerAtk].ability == ABILITY_ZERO_TO_HERO
         && CountUsablePartyMons(battlerAtk) != 0)
         return SHOULD_PIVOT;
 
+    battlerToSwitch = gAiLogicData->mostSuitableMonId[battlerAtk];
+    // This shouldn't ever happen, but it's there to make sure we don't accidentally read past the gParty array.
+    if (battlerToSwitch >= PARTY_SIZE)
+        battlerToSwitch = 0;
     if (PartyBattlerShouldAvoidHazards(battlerAtk, battlerToSwitch))
         return DONT_PIVOT;
 
@@ -5182,7 +5184,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 
         if (gBattleMons[battlerDef].ability == ABILITY_DISGUISE
             && !MoveIgnoresTargetAbility(zMove)
-            && (gBattleMons[battlerDef].species == SPECIES_MIMIKYU_DISGUISED || gBattleMons[battlerDef].species == SPECIES_MIMIKYU_TOTEM_DISGUISED))
+            && IsMimikyuDisguised(battlerDef))
             return FALSE; // Don't waste a Z-Move busting disguise
         if (gBattleMons[battlerDef].ability == ABILITY_ICE_FACE
             && !MoveIgnoresTargetAbility(zMove)

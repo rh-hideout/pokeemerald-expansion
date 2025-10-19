@@ -14,7 +14,6 @@
 #include "battle_scripts.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
-#include "battle_util.h"
 #include "battle_z_move.h"
 #include "battle_gimmick.h"
 #include "berry.h"
@@ -112,7 +111,7 @@ static void SetActionsAndBattlersTurnOrder(void);
 static void UpdateBattlerPartyOrdersOnSwitch(u32 battler);
 static bool8 AllAtActionConfirmed(void);
 static void TryChangeTurnOrder(void);
-static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickClawRandom, u32 *quickDrawRandom);
+static void TryChangingTurnOrderEffects(struct BattleContext *ctx, u32 *quickClawRandom, u32 *quickDrawRandom);
 static void CheckChangingTurnOrderEffects(void);
 static void FreeResetData_ReturnToOvOrDoEvolutions(void);
 static void ReturnFromBattleToOverworld(void);
@@ -3801,13 +3800,21 @@ static void TryDoEventsBeforeFirstTurn(void)
         gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
         gBattleTurnCounter = 0;
 
+        struct BattleContext ctx = {0};
         for (i = 0; i < gBattlersCount; i++)
+        {
             gBattlerByTurnOrder[i] = i;
+            ctx.abilities[i] = GetBattlerAbility(i);
+            ctx.holdEffects[i] = GetBattlerHoldEffect(i);
+        }
         for (i = 0; i < gBattlersCount - 1; i++)
         {
             for (j = i + 1; j < gBattlersCount; j++)
             {
-                if (GetWhichBattlerFaster(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], TRUE) == -1)
+                ctx.battlerAtk = gBattlerByTurnOrder[i];
+                ctx.battlerDef = gBattlerByTurnOrder[j];
+
+                if (GetWhichBattlerFaster(&ctx, TRUE) == -1)
                     SwapTurnOrder(i, j);
             }
         }
@@ -4016,7 +4023,6 @@ void BattleTurnPassed(void)
     gHitMarker &= ~HITMARKER_UNABLE_TO_USE_MOVE;
     gHitMarker &= ~HITMARKER_ATTACKSTRING_PRINTED;
     gHitMarker &= ~HITMARKER_PLAYER_FAINTED;
-    gHitMarker &= ~HITMARKER_PASSIVE_HP_UPDATE;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gBattleScripting.moveendState = 0;
@@ -4759,7 +4765,7 @@ void SwapTurnOrder(u8 id1, u8 id2)
 }
 
 // For AI, so it doesn't 'cheat' by knowing player's ability
-u32 GetBattlerTotalSpeedStatArgs(u32 battler, enum Ability ability, enum HoldEffect holdEffect)
+u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect holdEffect)
 {
     u32 speed = gBattleMons[battler].speed;
 
@@ -4826,13 +4832,6 @@ u32 GetBattlerTotalSpeedStatArgs(u32 battler, enum Ability ability, enum HoldEff
     return speed;
 }
 
-u32 GetBattlerTotalSpeedStat(u32 battler)
-{
-    enum Ability ability = GetBattlerAbility(battler);
-    enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-    return GetBattlerTotalSpeedStatArgs(battler, ability, holdEffect);
-}
-
 s32 GetChosenMovePriority(u32 battler, enum Ability ability)
 {
     u16 move;
@@ -4886,8 +4885,7 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
     return priority;
 }
 
-s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMoves, enum Ability ability1, enum Ability ability2,
-                              enum HoldEffect holdEffectBattler1, enum HoldEffect holdEffectBattler2, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2)
+s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2)
 {
     u32 strikesFirst = 0;
 
@@ -4896,18 +4894,18 @@ s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMov
         // Quick Claw / Quick Draw / Custap Berry - always first
         // Stall / Mycelium Might - last but before Lagging Tail
         // Lagging Tail - always last
-        bool32 battler1HasQuickEffect = gProtectStructs[battler1].quickDraw || gProtectStructs[battler1].usedCustapBerry;
-        bool32 battler2HasQuickEffect = gProtectStructs[battler2].quickDraw || gProtectStructs[battler2].usedCustapBerry;
-        bool32 battler1HasStallingAbility = ability1 == ABILITY_STALL || gProtectStructs[battler1].myceliumMight;
-        bool32 battler2HasStallingAbility = ability2 == ABILITY_STALL || gProtectStructs[battler2].myceliumMight;
+        bool32 battler1HasQuickEffect = gProtectStructs[ctx->battlerAtk].quickDraw || gProtectStructs[ctx->battlerAtk].usedCustapBerry;
+        bool32 battler2HasQuickEffect = gProtectStructs[ctx->battlerDef].quickDraw || gProtectStructs[ctx->battlerDef].usedCustapBerry;
+        bool32 battler1HasStallingAbility = ctx->abilities[ctx->battlerAtk] == ABILITY_STALL || gProtectStructs[ctx->battlerAtk].myceliumMight;
+        bool32 battler2HasStallingAbility = ctx->abilities[ctx->battlerDef] == ABILITY_STALL || gProtectStructs[ctx->battlerDef].myceliumMight;
 
         if (battler1HasQuickEffect && !battler2HasQuickEffect)
             strikesFirst = 1;
         else if (battler2HasQuickEffect && !battler1HasQuickEffect)
             strikesFirst = -1;
-        else if (gProtectStructs[battler1].laggingTail && !gProtectStructs[battler2].laggingTail)
+        else if (gProtectStructs[ctx->battlerAtk].laggingTail && !gProtectStructs[ctx->battlerDef].laggingTail)
             strikesFirst = -1;
-        else if (gProtectStructs[battler2].laggingTail && !gProtectStructs[battler1].laggingTail)
+        else if (gProtectStructs[ctx->battlerDef].laggingTail && !gProtectStructs[ctx->battlerAtk].laggingTail)
             strikesFirst = 1;
         else if (battler1HasStallingAbility && !battler2HasStallingAbility)
             strikesFirst = -1;
@@ -4949,32 +4947,27 @@ s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMov
     return strikesFirst;
 }
 
-s32 GetWhichBattlerFasterOrTies(u32 battler1, u32 battler2, bool32 ignoreChosenMoves)
+s32 GetWhichBattlerFasterOrTies(struct BattleContext *ctx, bool32 ignoreChosenMoves)
 {
     s32 priority1 = 0, priority2 = 0;
-    enum Ability ability1 = GetBattlerAbility(battler1);
-    u32 speedBattler1 = GetBattlerTotalSpeedStat(battler1);
-    enum HoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1);
-    u32 speedBattler2 = GetBattlerTotalSpeedStat(battler2);
-    enum HoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2);
-    enum Ability ability2 = GetBattlerAbility(battler2);
+    u32 speedBattler1 = GetBattlerTotalSpeedStat(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ctx->holdEffects[ctx->battlerAtk]);
+    u32 speedBattler2 = GetBattlerTotalSpeedStat(ctx->battlerDef, ctx->abilities[ctx->battlerDef], ctx->holdEffects[ctx->battlerDef]);
 
     if (!ignoreChosenMoves)
     {
-        if (gChosenActionByBattler[battler1] == B_ACTION_USE_MOVE)
-            priority1 = GetChosenMovePriority(battler1, ability1);
-        if (gChosenActionByBattler[battler2] == B_ACTION_USE_MOVE)
-            priority2 = GetChosenMovePriority(battler2, ability2);
+        if (gChosenActionByBattler[ctx->battlerAtk] == B_ACTION_USE_MOVE)
+            priority1 = GetChosenMovePriority(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk]);
+        if (gChosenActionByBattler[ctx->battlerDef] == B_ACTION_USE_MOVE)
+            priority2 = GetChosenMovePriority(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
     }
 
     return GetWhichBattlerFasterArgs(
-        battler1, battler2,
+        ctx,
         ignoreChosenMoves,
-        ability1, ability2,
-        holdEffectBattler1, holdEffectBattler2,
-        speedBattler1, speedBattler2,
-        priority1, priority2
-    );
+        speedBattler1,
+        speedBattler2,
+        priority1,
+        priority2);
 }
 
 // 24 == MAX_BATTLERS_COUNT!.
@@ -5008,13 +5001,13 @@ static const u8 sBattlerOrders[24][4] =
     { 3, 2, 1, 0 },
 };
 
-s32 GetWhichBattlerFaster(u32 battler1, u32 battler2, bool32 ignoreChosenMoves)
+s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves)
 {
-    s32 strikesFirst = GetWhichBattlerFasterOrTies(battler1, battler2, ignoreChosenMoves);
+    s32 strikesFirst = GetWhichBattlerFasterOrTies(ctx, ignoreChosenMoves);
     if (strikesFirst == 0)
     {
-        s32 order1 = sBattlerOrders[gBattleStruct->speedTieBreaks][battler1];
-        s32 order2 = sBattlerOrders[gBattleStruct->speedTieBreaks][battler2];
+        s32 order1 = sBattlerOrders[gBattleStruct->speedTieBreaks][ctx->battlerAtk];
+        s32 order2 = sBattlerOrders[gBattleStruct->speedTieBreaks][ctx->battlerDef];
         if (order1 < order2)
             strikesFirst = 1;
         else
@@ -5108,13 +5101,19 @@ static void SetActionsAndBattlersTurnOrder(void)
                     turnOrderId++;
                 }
             }
+            struct BattleContext ctx = {0};
+            for (i = 0; i < gBattlersCount; i++)
+            {
+                ctx.abilities[i] = GetBattlerAbility(i);
+                ctx.holdEffects[i] = GetBattlerHoldEffect(i);
+            }
             for (i = 0; i < gBattlersCount - 1; i++)
             {
                 for (j = i + 1; j < gBattlersCount; j++)
                 {
-                    u8 battler1 = gBattlerByTurnOrder[i];
-                    u8 battler2 = gBattlerByTurnOrder[j];
-                    TryChangingTurnOrderEffects(battler1, battler2, quickClawRandom, quickDrawRandom);
+                    ctx.battlerAtk = gBattlerByTurnOrder[i];
+                    ctx.battlerDef = gBattlerByTurnOrder[j];
+                    TryChangingTurnOrderEffects(&ctx, quickClawRandom, quickDrawRandom);
                     if (gActionsByTurnOrder[i] != B_ACTION_USE_ITEM
                         && gActionsByTurnOrder[j] != B_ACTION_USE_ITEM
                         && gActionsByTurnOrder[i] != B_ACTION_SWITCH
@@ -5122,7 +5121,7 @@ static void SetActionsAndBattlersTurnOrder(void)
                         && gActionsByTurnOrder[i] != B_ACTION_THROW_BALL
                         && gActionsByTurnOrder[j] != B_ACTION_THROW_BALL)
                     {
-                        if (GetWhichBattlerFaster(battler1, battler2, FALSE) == -1)
+                        if (GetWhichBattlerFaster(&ctx, FALSE) == -1)
                             SwapTurnOrder(i, j);
                     }
                 }
@@ -5270,29 +5269,38 @@ static bool32 TryDoMoveEffectsBeforeMoves(void)
 static void TryChangeTurnOrder(void)
 {
     u32 i, j;
+
+    struct BattleContext ctx = {0};
+    for (i = 0; i < gBattlersCount; i++)
+    {
+        ctx.abilities[i] = GetBattlerAbility(i);
+        ctx.holdEffects[i] = GetBattlerHoldEffect(i);
+    }
     for (i = gCurrentTurnActionNumber; i < gBattlersCount - 1; i++)
     {
         for (j = i + 1; j < gBattlersCount; j++)
         {
-            u32 battler1 = gBattlerByTurnOrder[i];
-            u32 battler2 = gBattlerByTurnOrder[j];
+            ctx.battlerAtk = gBattlerByTurnOrder[i];
+            ctx.battlerDef = gBattlerByTurnOrder[j];
 
             if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE
                 && gActionsByTurnOrder[j] == B_ACTION_USE_MOVE)
             {
-                if (GetWhichBattlerFaster(battler1, battler2, FALSE) == -1)
+                if (GetWhichBattlerFaster(&ctx, FALSE) == -1)
                     SwapTurnOrder(i, j);
             }
         }
     }
 }
 
-static void TryChangingTurnOrderEffects(u32 battler1, u32 battler2, u32 *quickClawRandom, u32 *quickDrawRandom)
+static void TryChangingTurnOrderEffects(struct BattleContext *ctx, u32 *quickClawRandom, u32 *quickDrawRandom)
 {
-    enum Ability ability1 = GetBattlerAbility(battler1);
-    enum HoldEffect holdEffectBattler1 = GetBattlerHoldEffect(battler1);
-    enum HoldEffect holdEffectBattler2 = GetBattlerHoldEffect(battler2);
-    enum Ability ability2 = GetBattlerAbility(battler2);
+    u32 battler1 = ctx->battlerAtk;
+    u32 battler2 = ctx->battlerDef;
+    enum Ability ability1 = ctx->abilities[ctx->battlerAtk];
+    enum Ability ability2 = ctx->abilities[ctx->battlerDef];
+    enum HoldEffect holdEffectBattler1 = ctx->holdEffects[ctx->battlerAtk];
+    enum HoldEffect holdEffectBattler2 = ctx->holdEffects[ctx->battlerDef];
 
     // Battler 1
     // Quick Draw
@@ -5407,7 +5415,6 @@ static void RunTurnActionsFunctions(void)
 
     if (gCurrentTurnActionNumber >= gBattlersCount) // everyone did their actions, turn finished
     {
-        gHitMarker &= ~HITMARKER_PASSIVE_HP_UPDATE;
         gBattleMainFunc = sEndTurnFuncsTable[gBattleOutcome & 0x7F];
     }
     else
@@ -5886,11 +5893,11 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     enum HoldEffect holdEffect;
     enum Gimmick gimmick = GetActiveGimmick(battler);
 
-    if (move == MOVE_STRUGGLE)
-        return TYPE_NORMAL;
-
     if (state == MON_IN_BATTLE)
     {
+        if (moveEffect == EFFECT_STRUGGLE)
+            return TYPE_MYSTERY;
+
         species = gBattleMons[battler].species;
         heldItem = gBattleMons[battler].item;
         holdEffect = GetBattlerHoldEffect(battler);
@@ -6143,8 +6150,7 @@ void SetTypeBeforeUsingMove(u32 move, u32 battler)
         && GetBattleMoveType(move) == GetItemSecondaryId(heldItem)
         && effect != EFFECT_PLEDGE
         && effect != EFFECT_OHKO
-        && effect != EFFECT_SHEER_COLD
-        && effect != EFFECT_STRUGGLE)
+        && effect != EFFECT_SHEER_COLD)
     {
         gSpecialStatuses[battler].gemParam = GetBattlerHoldEffectParam(battler);
         gSpecialStatuses[battler].gemBoost = TRUE;

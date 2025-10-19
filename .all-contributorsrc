@@ -348,6 +348,15 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "Ddaretrogamer",
+      "name": "Phantonomy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/131238004?v=4",
+      "profile": "https://github.com/Ddaretrogamer",
+      "contributions": [
+        "design"
+      ]
     }
   ],
   "contributorsPerLine": 7,

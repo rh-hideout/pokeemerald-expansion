@@ -1995,7 +1995,10 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
         {
             damageTaken = AI_CalcPartyMonDamage(playerMove, opposingBattler, battler, battleMon, &effectiveness, AI_DEFENDING);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
+            {
+                *bestPlayerMove = playerMove;
                 return damageTaken;
+            }
             if (damageTaken > maxDamageTaken)
             {
                 maxDamageTaken = damageTaken;
@@ -2016,13 +2019,19 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
+        // If player is choiced into a non-priority move, AI understands that it can't deal priority damage
+        if (gBattleStruct->choicedMove[opposingBattler] !=MOVE_NONE && GetMovePriority(gBattleStruct->choicedMove[opposingBattler]) < 1)
+            break;
         playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[i] : playerMoves[i];
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[i] > 0)
         {
             damageTaken = AI_CalcPartyMonDamage(playerMove, opposingBattler, battler, battleMon, &effectiveness, AI_DEFENDING);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
+            {
+                *bestPlayerPriorityMove = playerMove;
                 return damageTaken;
+            }
             if (damageTaken > maxDamageTaken)
             {
                 maxDamageTaken = damageTaken;

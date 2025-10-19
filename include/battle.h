@@ -761,6 +761,7 @@ struct BattleStruct
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
+    s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     s16 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
@@ -772,15 +773,14 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 noTargetPresent:1;
-    u8 cheekPouchActivated:1;
-    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
+    u8 padding1:1;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding1:2;
+    u8 padding2:2;
 };
 
 struct AiBattleData
@@ -1234,7 +1234,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE | HITMARKER_UNABLE_TO_USE_MOVE))
+        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
@@ -1248,6 +1248,20 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 static inline u32 GetChosenMoveFromPosition(u32 battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+}
+
+static inline void SetPassiveDamageAmount(u32 battler, s32 value)
+{
+    if (value == 0)
+        value = 1;
+    gBattleStruct->passiveHpUpdate[battler] = value;
+}
+
+static inline void SetHealAmount(u32 battler, s32 value)
+{
+    if (value == 0)
+        value = 1;
+    gBattleStruct->passiveHpUpdate[battler] = -1 * value;
 }
 
 #endif // GUARD_BATTLE_H

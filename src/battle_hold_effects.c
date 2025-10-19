@@ -266,9 +266,7 @@ static enum ItemEffect TryRockyHelmet(u32 battlerDef, u32 battlerAtk)
      && !CanBattlerAvoidContactEffects(battlerAtk, battlerDef, ability, GetBattlerHoldEffect(battlerAtk), gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, ability, ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battlerAtk] = GetNonDynamaxMaxHP(battlerAtk) / 6;
-        if (gBattleStruct->moveDamage[battlerAtk] == 0)
-            gBattleStruct->moveDamage[battlerAtk] = 1;
+        SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 6);
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battlerDef].item);
         BattleScriptCall(BattleScript_RockyHelmetActivates);
         effect = ITEM_HP_CHANGE;
@@ -366,12 +364,10 @@ static enum ItemEffect TryJabocaBerry(u32 battlerDef, u32 battlerAtk)
      && IsBattleMovePhysical(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battlerAtk] = GetNonDynamaxMaxHP(battlerAtk) / 8;
-        if (gBattleStruct->moveDamage[battlerAtk] == 0)
-            gBattleStruct->moveDamage[battlerAtk] = 1;
+        s32 jabocaDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
-            gBattleStruct->moveDamage[gBattlerAttacker] *= 2;
-
+            jabocaDamage *= 2;
+        SetPassiveDamageAmount(battlerAtk, jabocaDamage);
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battlerDef].item);
         effect = ITEM_HP_CHANGE;
@@ -390,12 +386,10 @@ static enum ItemEffect TryRowapBerry(u32 battlerDef, u32 battlerAtk)
      && IsBattleMoveSpecial(gCurrentMove)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battlerAtk] = GetNonDynamaxMaxHP(battlerAtk) / 8;
-        if (gBattleStruct->moveDamage[battlerAtk] == 0)
-            gBattleStruct->moveDamage[battlerAtk] = 1;
+        s32 rowapDamage = GetNonDynamaxMaxHP(battlerAtk) / 8;
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
-            gBattleStruct->moveDamage[battlerAtk] *= 2;
-
+            rowapDamage *= 2;
+        SetPassiveDamageAmount(battlerAtk, rowapDamage);
         BattleScriptCall(BattleScript_JabocaRowapBerryActivates);
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battlerDef].item);
         effect = ITEM_HP_CHANGE;
@@ -414,10 +408,10 @@ static enum ItemEffect TrySetEnigmaBerry(u32 battlerDef, u32 battlerAtk)
      && !(gBattleScripting.overrideBerryRequirements && gBattleMons[battlerDef].hp == gBattleMons[battlerDef].maxHP)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerDef].volatiles.healBlock))
     {
-        gBattleStruct->moveDamage[battlerDef] = (gBattleMons[battlerDef].maxHP * 25 / 100) * -1;
+        s32 healAmount = gBattleMons[battlerDef].maxHP * 25 / 100;
         if (GetBattlerAbility(battlerDef) == ABILITY_RIPEN)
-            gBattleStruct->moveDamage[battlerDef] *= 2;
-
+            healAmount *= 2;
+        SetHealAmount(battlerDef, healAmount);
         BattleScriptCall(BattleScript_ItemHealHP_RemoveItemRet);
         effect = ITEM_HP_CHANGE;
     }
@@ -560,9 +554,7 @@ static enum ItemEffect TryShellBell(u32 battlerAtk)
      && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battlerAtk].volatiles.healBlock))
     {
-        gBattleStruct->moveDamage[battlerAtk] = (gBattleScripting.savedDmg / GetBattlerHoldEffectParam(battlerAtk)) * -1;
-        if (gBattleStruct->moveDamage[battlerAtk] == 0)
-            gBattleStruct->moveDamage[battlerAtk] = -1;
+        SetHealAmount(battlerAtk, gBattleScripting.savedDmg / GetBattlerHoldEffectParam(battlerAtk));
         BattleScriptCall(BattleScript_ItemHealHP_Ret);
         effect = ITEM_HP_CHANGE;
     }
@@ -581,10 +573,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
      && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT
      && !IsFutureSightAttackerInParty(battlerAtk, gBattlerTarget, gCurrentMove))
     {
-        DebugPrintf("move %d", gCurrentMove);
-        gBattleStruct->moveDamage[battlerAtk] = GetNonDynamaxMaxHP(battlerAtk) / 10;
-        if (gBattleStruct->moveDamage[battlerAtk] == 0)
-            gBattleStruct->moveDamage[battlerAtk] = 1;
+        SetPassiveDamageAmount(battlerAtk, GetNonDynamaxMaxHP(battlerAtk) / 10);
         BattleScriptCall(BattleScript_ItemHurtRet);
         effect = ITEM_HP_CHANGE;
     }
@@ -619,9 +608,7 @@ static enum ItemEffect TryStickyBarbOnEndTurn(u32 battler)
 
     if (!IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, gBattleMons[battler].item);
         BattleScriptExecute(BattleScript_ItemHurtEnd2);
         effect = ITEM_HP_CHANGE;
@@ -667,10 +654,7 @@ static enum ItemEffect TryLeftovers(u32 battler, enum HoldEffect holdEffect)
     if (gBattleMons[battler].hp < gBattleMons[battler].maxHP
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
-        gBattleStruct->moveDamage[battler] *= -1;
+        SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
         RecordItemEffectBattle(battler, holdEffect);
         BattleScriptExecute(BattleScript_ItemHealHP_End2);
         effect = ITEM_HP_CHANGE;
@@ -679,15 +663,13 @@ static enum ItemEffect TryLeftovers(u32 battler, enum HoldEffect holdEffect)
     return effect;
 }
 
-static enum ItemEffect TryBlackSludge(u32 battler, enum HoldEffect holdEffect)
+static enum ItemEffect TryBlackSludgeDamage(u32 battler, enum HoldEffect holdEffect)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (!IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
         RecordItemEffectBattle(battler, holdEffect);
         BattleScriptExecute(BattleScript_ItemHurtEnd2);
         effect = ITEM_HP_CHANGE;
@@ -885,14 +867,16 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal, Acti
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock)
      && HasEnoughHpToEatBerry(battler, ability, 2, itemId))
     {
+        s32 healAmount = 0;
         if (percentHeal == PERCENT_HEAL_AMOUNT)
-            gBattleStruct->moveDamage[battler] = (GetNonDynamaxMaxHP(battler) * GetItemHoldEffectParam(itemId) / 100) * -1;
+            healAmount = (GetNonDynamaxMaxHP(battler) * GetItemHoldEffectParam(itemId) / 100);
         else
-            gBattleStruct->moveDamage[battler] = GetItemHoldEffectParam(itemId) * -1;
+            healAmount = GetItemHoldEffectParam(itemId);
 
         if (ability == ABILITY_RIPEN && GetItemPocket(itemId) == POCKET_BERRIES)
-            gBattleStruct->moveDamage[battler] *= 2;
+            healAmount *= 2;
 
+        SetHealAmount(battler, healAmount);
         if (timing == IsOnSwitchInFirstTurnActivation)
             BattleScriptExecute(BattleScript_ItemHealHP_RemoveItemEnd2);
         else
@@ -958,16 +942,10 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
     if (HasEnoughHpToEatBerry(battler, ability, hpFraction, itemId)
      && !(B_HEAL_BLOCKING >= GEN_5 && gBattleMons[battler].volatiles.healBlock))
     {
-        PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, flavorId);
-
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / GetItemHoldEffectParam(itemId);
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
-        gBattleStruct->moveDamage[battler] *= -1;
-
+        s32 healAmount = GetNonDynamaxMaxHP(battler) / GetItemHoldEffectParam(itemId);
         if (ability == ABILITY_RIPEN)
-            gBattleStruct->moveDamage[battler] *= 2;
-
+            healAmount *= 2;
+        SetHealAmount(battler, healAmount);
         if (timing == IsOnSwitchInFirstTurnActivation)
         {
             if (GetFlavorRelationByPersonality(gBattleMons[battler].personality, flavorId) < 0)
@@ -982,7 +960,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
             else
                 BattleScriptCall(BattleScript_ItemHealHP_RemoveItemRet);
         }
-
+        PREPARE_FLAVOR_BUFFER(gBattleTextBuff1, flavorId);
         effect = ITEM_HP_CHANGE;
     }
 
@@ -1200,7 +1178,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         if (IS_BATTLER_OF_TYPE(itemBattler, TYPE_POISON))
             effect = TryLeftovers(itemBattler, holdEffect);
         else
-            effect = TryBlackSludge(itemBattler, holdEffect);
+            effect = TryBlackSludgeDamage(itemBattler, holdEffect);
         break;
     case HOLD_EFFECT_CURE_PAR: // Cheri Berry
         effect = TryCureParalysis(itemBattler, timing);

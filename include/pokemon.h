@@ -635,6 +635,13 @@ struct FormChange
     u16 param3;
 };
 
+enum FusionExtraMoveHandling
+{
+    FORGET_EXTRA_MOVES,
+    SWAP_EXTRA_MOVES_KYUREM_WHITE,
+    SWAP_EXTRA_MOVES_KYUREM_BLACK
+};
+
 struct Fusion
 {
     u16 fusionStorageIndex;
@@ -643,10 +650,21 @@ struct Fusion
     u16 targetSpecies2;
     u16 fusingIntoMon;
     u16 fusionMove;
-    u16 unfuseForgetMove;
+    enum FusionExtraMoveHandling extraMoveHandling;
 };
 
 extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
+
+#if P_FUSION_FORMS
+#if P_FAMILY_KYUREM
+#if P_FAMILY_RESHIRAM
+extern const u16 gKyurenWhiteSwapMoveTable[][2];
+#endif //P_FAMILY_RESHIRAM
+#if P_FAMILY_ZEKROM
+extern const u16 gKyurenBlackSwapMoveTable[][2];
+#endif //P_FAMILY_ZEKROM
+#endif //P_FAMILY_KYUREM
+#endif //P_FUSION_FORMS
 
 #define NUM_UNOWN_FORMS 28
 

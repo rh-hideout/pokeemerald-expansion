@@ -421,5 +421,6 @@ void RemoveAbilityFlags(u32 battler);
 bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
+bool32 IsMimikyuDisguised(u32 battler);
 
 #endif // GUARD_BATTLE_UTIL_H

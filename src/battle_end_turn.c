@@ -121,15 +121,21 @@ static bool32 HandleEndTurnOrder(u32 battler)
     gBattleStruct->endTurnEventsCounter++;
 
     u32 i, j;
+    struct BattleContext ctx = {0};
     for (i = 0; i < gBattlersCount; i++)
     {
         gBattlerByTurnOrder[i] = i;
+        ctx.abilities[i] = GetBattlerAbility(i);
+        ctx.holdEffects[i] = GetBattlerHoldEffect(i);
     }
     for (i = 0; i < gBattlersCount - 1; i++)
     {
         for (j = i + 1; j < gBattlersCount; j++)
         {
-            if (GetWhichBattlerFaster(gBattlerByTurnOrder[i], gBattlerByTurnOrder[j], FALSE) == -1)
+            ctx.battlerAtk = gBattlerByTurnOrder[i];
+            ctx.battlerDef = gBattlerByTurnOrder[j];
+
+            if (GetWhichBattlerFaster(&ctx, FALSE) == -1)
                 SwapTurnOrder(i, j);
         }
     }
@@ -230,9 +236,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
          && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
          && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
         {
-            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = 1;
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SANDSTORM;
             BattleScriptExecute(BattleScript_DamagingWeather);
             effect = TRUE;
@@ -255,9 +259,7 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
              && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SAFETY_GOGGLES
              && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
             {
-                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
-                if (gBattleStruct->moveDamage[battler] == 0)
-                    gBattleStruct->moveDamage[battler] = 1;
+                SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_HAIL;
                 BattleScriptExecute(BattleScript_DamagingWeather);
                 effect = TRUE;
@@ -372,21 +374,22 @@ static bool32 HandleEndTurnWish(u32 battler)
 
     if (gWishFutureKnock.wishCounter[battler] == gBattleTurnCounter && IsBattlerAlive(battler))
     {
+        s32 wishHeal = 0;
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
         if (B_WISH_HP_SOURCE >= GEN_5)
         {
             if (IsOnPlayerSide(battler))
-                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
+                wishHeal = GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
             else
-                gBattleStruct->moveDamage[battler] = max(1, GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2);
+                wishHeal = GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
         }
         else
         {
-            gBattleStruct->moveDamage[battler] = max(1, GetNonDynamaxMaxHP(battler) / 2);
+            wishHeal = GetNonDynamaxMaxHP(battler) / 2;
         }
 
-        gBattleStruct->moveDamage[battler] *= -1;
+        SetHealAmount(battler, wishHeal);
         if (gBattleMons[battler].volatiles.healBlock)
             BattleScriptExecute(BattleScript_WishButHealBlocked);
         else if (gBattleMons[battler].hp == gBattleMons[battler].maxHP)
@@ -421,8 +424,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
             if (!IS_BATTLER_OF_TYPE(battler, gSideTimers[side].damageNonTypesType)
              && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
             {
-                gBattlerAttacker = battler;
-                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 6;
+                SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 6);
                 ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
                 BattleScriptExecute(BattleScript_DamageNonTypesContinues);
                 effect = TRUE;
@@ -434,7 +436,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
         {
             gBattlerAttacker = battler;
-            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
             BtlController_EmitStatusAnimation(battler, B_COMM_TO_CONTROLLER, FALSE, STATUS1_BURN);
             MarkBattlerForControllerExec(battler);
             BattleScriptExecute(BattleScript_HurtByTheSeaOfFire);
@@ -472,10 +474,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
          && !IsSemiInvulnerable(battler, CHECK_ALL)
          && IsBattlerGrounded(battler, GetBattlerAbility(battler), GetBattlerHoldEffect(battler)))
         {
-            gBattlerAttacker = battler;
-            gBattleStruct->moveDamage[battler] = -(GetNonDynamaxMaxHP(battler) / 16);
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = -1;
+            SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
             effect = TRUE;
         }
@@ -520,7 +519,7 @@ static bool32 HandleEndTurnAquaRing(u32 battler)
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerAlive(battler))
     {
-        gBattleStruct->moveDamage[battler] = GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16);
+        SetHealAmount(battler, GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16));
         BattleScriptExecute(BattleScript_AquaRingHeal);
         effect = TRUE;
     }
@@ -539,7 +538,7 @@ static bool32 HandleEndTurnIngrain(u32 battler)
      && !IsBattlerAtMaxHp(battler)
      && IsBattlerAlive(battler))
     {
-        gBattleStruct->moveDamage[battler] = GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16);
+        SetHealAmount(battler, GetDrainedBigRootHp(battler, GetNonDynamaxMaxHP(battler) / 16));
         BattleScriptExecute(BattleScript_IngrainTurnHeal);
         effect = TRUE;
     }
@@ -561,12 +560,12 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         gBattlerTarget = gBattleMons[battler].volatiles.leechSeed - 1; // leech seed receiver
         gBattleScripting.animArg1 = gBattlerTarget;
         gBattleScripting.animArg2 = gBattlerAttacker;
-        gBattleStruct->moveDamage[gBattlerAttacker] = max(1, GetNonDynamaxMaxHP(battler) / 8);
-        gBattleStruct->moveDamage[gBattlerTarget] = GetDrainedBigRootHp(gBattlerTarget, gBattleStruct->moveDamage[gBattlerAttacker]);
-        gHitMarker |= HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE;
+        s32 drainAmount = GetNonDynamaxMaxHP(gBattlerAttacker) / 8;
+        s32 healAmount = GetDrainedBigRootHp(gBattlerTarget, drainAmount);
         if (GetBattlerAbility(battler) == ABILITY_LIQUID_OOZE)
         {
-            gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * -1;
+            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
+            SetPassiveDamageAmount(gBattlerTarget, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_OOZE;
             BattleScriptExecute(BattleScript_LeechSeedTurnDrainLiquidOoze);
         }
@@ -576,6 +575,8 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
         }
         else
         {
+            SetPassiveDamageAmount(gBattlerAttacker, drainAmount);
+            SetHealAmount(gBattlerTarget, healAmount);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LEECH_SEED_DRAIN;
             BattleScriptExecute(BattleScript_LeechSeedTurnDrainRecovery);
         }
@@ -601,30 +602,23 @@ static bool32 HandleEndTurnPoison(u32 battler)
         {
             if (!IsBattlerAtMaxHp(battler) && !gBattleMons[battler].volatiles.healBlock)
             {
-                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-                if (gBattleStruct->moveDamage[battler] == 0)
-                    gBattleStruct->moveDamage[battler] = 1;
-                gBattleStruct->moveDamage[battler] *= -1;
+                SetHealAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
                 BattleScriptExecute(BattleScript_PoisonHealActivates);
                 effect = TRUE;
             }
         }
         else if (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
         {
-            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 16;
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = 1;
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 16);
             if ((gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
                 gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
-            gBattleStruct->moveDamage[battler] *= (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) >> 8;
+            gBattleStruct->passiveHpUpdate[battler] *= (gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER) >> 8;
             BattleScriptExecute(BattleScript_PoisonTurnDmg);
             effect = TRUE;
         }
         else
         {
-            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = 1;
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 8);
             BattleScriptExecute(BattleScript_PoisonTurnDmg);
             effect = TRUE;
         }
@@ -645,15 +639,14 @@ static bool32 HandleEndTurnBurn(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, ability, ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
+        s32 burnDamage = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
         if (ability == ABILITY_HEATPROOF)
         {
-            if (gBattleStruct->moveDamage[battler] > (gBattleStruct->moveDamage[battler] / 2) + 1) // Record ability if the burn takes less damage than it normally would.
+            if (burnDamage > (burnDamage / 2) + 1) // Record ability if the burn takes less damage than it normally would.
                 RecordAbilityBattle(battler, ABILITY_HEATPROOF);
-            gBattleStruct->moveDamage[battler] /= 2;
+            burnDamage /= 2;
         }
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+        SetPassiveDamageAmount(battler, burnDamage);
         BattleScriptExecute(BattleScript_BurnTurnDmg);
         effect = TRUE;
     }
@@ -671,9 +664,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8);
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / (B_BURN_DAMAGE >= GEN_7 ? 16 : 8));
         BattleScriptExecute(BattleScript_FrostbiteTurnDmg);
         effect = TRUE;
     }
@@ -693,9 +684,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
     {
         if (gBattleMons[battler].status1 & STATUS1_SLEEP)
         {
-            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = 1;
+            SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
             BattleScriptExecute(BattleScript_NightmareTurnDmg);
             effect = TRUE;
         }
@@ -718,9 +707,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
-        gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+        SetPassiveDamageAmount(battler, GetNonDynamaxMaxHP(battler) / 4);
         BattleScriptExecute(BattleScript_CurseTurnDmg);
         effect = TRUE;
     }
@@ -746,13 +733,12 @@ static bool32 HandleEndTurnWrap(u32 battler)
             gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
+            s32 bindDamage = 0;
             if (GetBattlerHoldEffect(gBattleStruct->wrappedBy[battler]) == HOLD_EFFECT_BINDING_BAND)
-                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
-                gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
-
-            if (gBattleStruct->moveDamage[battler] == 0)
-                gBattleStruct->moveDamage[battler] = 1;
+                bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+            SetPassiveDamageAmount(battler, bindDamage);
         }
         else  // broke free
         {
@@ -776,12 +762,12 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
      && IsBattlerAlive(battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
+        s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 4;
+            saltCureDamage = gBattleMons[battler].maxHP / 4;
         else
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 8;
-        if (gBattleStruct->moveDamage[battler] == 0)
-            gBattleStruct->moveDamage[battler] = 1;
+            saltCureDamage = gBattleMons[battler].maxHP / 8;
+        SetPassiveDamageAmount(battler, saltCureDamage);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptExecute(BattleScript_SaltCureExtraDamage);
         effect = TRUE;
@@ -1059,7 +1045,7 @@ static bool32 HandleEndTurnPerishSong(u32 battler)
         if (gDisableStructs[battler].perishSongTimer == 0)
         {
             gBattleMons[battler].volatiles.perishSong = FALSE;
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].hp;
+            SetPassiveDamageAmount(battler, gBattleMons[battler].hp);
             BattleScriptExecute(BattleScript_PerishSongTakesLife);
         }
         else
@@ -1554,7 +1540,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 u32 DoEndTurnEffects(void)
 {
     u32 battler = MAX_BATTLERS_COUNT;
-    gHitMarker |= (HITMARKER_GRUDGE | HITMARKER_IGNORE_BIDE);
+    gHitMarker |= HITMARKER_GRUDGE;
 
     for (;;)
     {
@@ -1570,7 +1556,7 @@ u32 DoEndTurnEffects(void)
         // Jump out if possible after endTurnEventsCounter was increased in the above code block
         if (gBattleStruct->endTurnEventsCounter == ENDTURN_COUNT)
         {
-            gHitMarker &= ~(HITMARKER_GRUDGE | HITMARKER_IGNORE_BIDE);
+            gHitMarker &= ~HITMARKER_GRUDGE;
             return FALSE;
         }
 

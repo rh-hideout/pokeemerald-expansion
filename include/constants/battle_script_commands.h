@@ -200,4 +200,10 @@ enum TriggerOnFieldStatus
     ON_WEATHER,
 };
 
+enum HealthUpdate
+{
+    PASSIVE_HP_UPDATE,
+    MOVE_DAMAGE_HP_UPDATE,
+};
+
 #endif // GUARD_CONSTANTS_BATTLE_SCRIPT_COMMANDS_H
