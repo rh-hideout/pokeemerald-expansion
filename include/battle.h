@@ -781,6 +781,7 @@ struct BattleStruct
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
     u8 padding2:2;
+    u16 flingItem;
 };
 
 struct AiBattleData

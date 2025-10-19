@@ -461,4 +461,25 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
     }
 }
 
+SINGLE_BATTLE_TEST("Flinging a Mental Herb does not trigger the item if the target doesn't have anything that's cured by Mental Herb")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            MESSAGE("The opposing Wobbuffet got over its infatuation!");
+            MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+            MESSAGE("The opposing Wobbuffet ended its encore!");
+            MESSAGE("The opposing Wobbuffet is no longer tormented!");
+            MESSAGE("The opposing Wobbuffet's move is no longer disabled!");
+            MESSAGE("The opposing Wobbuffet is cured of its heal block!");
+        }
+    }
+}
+
 TO_DO_BATTLE_TEST("Fling deals damage based on a TM's move power")

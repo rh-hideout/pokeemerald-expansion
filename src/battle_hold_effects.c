@@ -28,6 +28,7 @@ bool32 IsLeftoversActivation(enum HoldEffect holdEffect)           { return gHol
 bool32 IsOrbsActivation(enum HoldEffect holdEffect)                { return gHoldEffectsInfo[holdEffect].orbs; }
 bool32 IsOnEffectActivation(enum HoldEffect holdEffect)            { return gHoldEffectsInfo[holdEffect].onEffect; }
 bool32 IsActivationOnBerry(enum HoldEffect holdEffect)             { return GetItemPocket(gLastUsedItem) == POCKET_BERRIES; }
+bool32 IsOnFlingActivation(enum HoldEffect holdEffect)             { return gHoldEffectsInfo[holdEffect].onFling; }
 
 bool32 IsActivationForceTriggerItem(enum HoldEffect holdEffect)
 {
@@ -177,7 +178,7 @@ static enum ItemEffect RestoreWhiteHerbStats(u32 battler, ActivationTiming timin
     }
     if (effect != ITEM_NO_EFFECT)
     {
-        if (timing == IsWhiteHerbActivation)
+        if (timing == IsWhiteHerbActivation || timing == IsOnFlingActivation)
             BattleScriptCall(BattleScript_WhiteHerbRet);
         else
             BattleScriptExecute(BattleScript_WhiteHerbEnd2);

@@ -163,6 +163,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
         .whiteHerb = TRUE,
         .whiteHerbFirstTurn = TRUE,
         .whiteHerbEndTurn = TRUE,
+        .onFling = TRUE,
     },
 
     [HOLD_EFFECT_MACHO_BRACE] =
@@ -185,6 +186,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     {
         .onTargetAfterHit = TRUE,
         .onAttackerAfterHit = TRUE,
+        .onFling = TRUE,
     },
 
     [HOLD_EFFECT_CHOICE_BAND] =

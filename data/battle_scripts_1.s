@@ -697,15 +697,9 @@ BattleScript_EffectFling::
 	resultmessage
 	waitmessage B_WAIT_TIME_MED
 	jumpiflastuseditemberry BattleScript_EffectFlingConsumeBerry
-	jumpifability BS_TARGET, ABILITY_SHIELD_DUST, BattleScript_FlingBlockedByShieldDust
-	jumpiflastuseditemholdeffect HOLD_EFFECT_FLAME_ORB, 0, BattleScript_FlingFlameOrb
-	jumpiflastuseditemholdeffect HOLD_EFFECT_FLINCH, 0, BattleScript_FlingFlinch
-	jumpiflastuseditemholdeffect HOLD_EFFECT_LIGHT_BALL, 0, BattleScript_FlingLightBall
-	jumpiflastuseditemholdeffect HOLD_EFFECT_MENTAL_HERB, 0, BattleScript_FlingMentalHerb
-	jumpiflastuseditemholdeffect HOLD_EFFECT_TYPE_POWER, TYPE_POISON, BattleScript_FlingPoisonBarb
-	jumpiflastuseditemholdeffect HOLD_EFFECT_TOXIC_ORB, 0, BattleScript_FlingToxicOrb
-	jumpiflastuseditemholdeffect HOLD_EFFECT_WHITE_HERB, 0, BattleScript_FlingWhiteHerb
+	tryflingholdeffect
 	goto BattleScript_FlingEnd
+
 BattleScript_EffectFlingConsumeBerry:
 	savebattleritem
 	battleritemtolastuseditem
@@ -727,39 +721,6 @@ BattleScript_FlingFailConsumeItem::
 BattleScript_FlingBlockedByShieldDust::
 	printstring STRINGID_ITEMWASUSEDUP
 	waitmessage B_WAIT_TIME_LONG
-	goto BattleScript_FlingEnd
-
-BattleScript_FlingFlameOrb:
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_BURN
-	goto BattleScript_FlingEnd
-BattleScript_FlingFlinch:
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_FLINCH
-	goto BattleScript_FlingEnd
-BattleScript_FlingLightBall:
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_PARALYSIS
-	goto BattleScript_FlingEnd
-BattleScript_FlingMentalHerb:
-	curecertainstatuses
-	saveattacker
-	copybyte gBattlerAttacker, gBattlerTarget
-	playanimation BS_ATTACKER, B_ANIM_HELD_ITEM_EFFECT, NULL
-	printfromtable gMentalHerbCureStringIds
-	waitmessage B_WAIT_TIME_LONG
-	updatestatusicon BS_ATTACKER
-	restoreattacker
-	goto BattleScript_FlingEnd
-BattleScript_FlingPoisonBarb:
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_POISON
-	goto BattleScript_FlingEnd
-BattleScript_FlingToxicOrb:
-	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_TOXIC
-	goto BattleScript_FlingEnd
-BattleScript_FlingWhiteHerb:
-	tryresetnegativestatstages
-	swapattackerwithtarget
-	printstring STRINGID_PKMNSTATUSNORMAL
-	waitmessage B_WAIT_TIME_MED
-	swapattackerwithtarget
 	goto BattleScript_FlingEnd
 
 BattleScript_FlingMissed:
