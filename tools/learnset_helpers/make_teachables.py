@@ -34,8 +34,6 @@ import typing
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
 TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
-INCFILE_HAS_TUTOR_PAT = re.compile(r"special ChooseMonForMoveTutor")
-INCFILE_MOVE_PAT = re.compile(r"setvar VAR_0x8005, (MOVE_.*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 TEACHABLE_ARRAY_DECL_PAT = re.compile(r"(?P<decl>static const u16 s(?P<name>\w+)TeachableLearnset\[\]) = {[\s\S]*?};")
 MOVE_TUTOR_ARRAY_DECL_PAT = re.compile(r"(?P<decl>const u16 gTutorMoves\[\] = {)[\s\S]*?    MOVE_UNAVAILABLE,")
@@ -51,22 +49,6 @@ def enabled() -> bool:
         cfg_pokemon = cfg_pokemon_fp.read()
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
-
-
-def extract_repo_tutors() -> typing.Generator[str, None, None]:
-    """
-    Yield MOVE constants which are *likely* assigned to a move tutor. This isn't
-    foolproof, but it's suitable.
-    """
-    for inc_fname in chain(glob.glob("./data/scripts/*.inc"), glob.glob("./data/maps/*/scripts.inc")):
-        with open(inc_fname, "r") as inc_fp:
-            incfile = inc_fp.read()
-            if not INCFILE_HAS_TUTOR_PAT.search(incfile):
-                continue
-
-            for move in INCFILE_MOVE_PAT.finditer(incfile):
-                yield move.group(1)
-
 
 def extract_repo_tms() -> typing.Generator[str, None, None]:
     """
@@ -222,12 +204,18 @@ def main():
         quit(1)
 
     SOURCE_LEARNSETS_JSON = pathlib.Path(sys.argv[1])
+    SOURCE_TUTORS_JSON = pathlib.Path(sys.argv[2])
 
     assert SOURCE_LEARNSETS_JSON.exists(), f"{SOURCE_LEARNSETS_JSON=} does not exist"
     assert SOURCE_LEARNSETS_JSON.is_file(), f"{SOURCE_LEARNSETS_JSON=} is not a file"
 
+    assert SOURCE_TUTORS_JSON.exists(), f"{SOURCE_TUTORS_JSON=} does not exist"
+    assert SOURCE_TUTORS_JSON.is_file(), f"{SOURCE_TUTORS_JSON=} is not a file"
+
     repo_tms = list(extract_repo_tms())
-    repo_tutors = list(extract_repo_tutors())
+    with open(SOURCE_TUTORS_JSON, "r") as fp:
+        repo_tutors = json.load(fp)
+
     repo_teachables = set(
         chain(repo_tms, repo_tutors)
     )
