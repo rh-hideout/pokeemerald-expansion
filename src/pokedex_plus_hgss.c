@@ -407,7 +407,6 @@ struct PokedexView
     u8 numEggMoves;
     u8 numLevelUpMoves;
     u8 numTeachableMoves;
-    u8 *teachableLearnsetOrder;
     u8 numPreEvolutions;
     struct PokemonStats sPokemonStats;
     struct EvoScreenData sEvoScreenData;
@@ -5830,7 +5829,6 @@ static void Task_SwitchScreensFromStatsScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        FREE_AND_SET_NULL(sPokedexView->teachableLearnsetOrder);
         FreeSpriteTilesByTag(ITEM_TAG);                         //Destroy item icon
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
@@ -5865,7 +5863,6 @@ static void Task_ExitStatsScreen(u8 taskId)
 {
     if (!gPaletteFade.active)
     {
-        FREE_AND_SET_NULL(sPokedexView->teachableLearnsetOrder);
         FreeSpriteTilesByTag(ITEM_TAG);                         //Destroy item icon
         FreeSpritePaletteByTag(ITEM_TAG);                       //Destroy item icon
         FreeSpriteOamMatrix(&gSprites[gTasks[taskId].data[3]]); //Destroy item icon
