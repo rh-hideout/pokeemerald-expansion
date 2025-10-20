@@ -6,7 +6,7 @@ SINGLE_BATTLE_TEST("Minior Core doesn't transform into Minior Meteor on switch-i
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(1); }
+        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(50); MaxHP(100); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on switch-in if ha
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
-        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); }
+        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(51); MaxHP(101); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Minior Core transforms into Minior Meteor on battle start if
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); }
+        OPPONENT(SPECIES_MINIOR_CORE) { Ability(ABILITY_SHIELDS_DOWN); HP(51); MaxHP(101); }
     } WHEN {
         TURN { }
     } SCENE {
