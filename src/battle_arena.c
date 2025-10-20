@@ -116,7 +116,7 @@ static const struct CompressedSpriteSheet sBattleArenaJudgmentSymbolsSpriteSheet
     {0}
 };
 
-static void (* const sArenaFunctions[])(void) =
+static void (*const sArenaFunctions[])(void) =
 {
     [BATTLE_ARENA_FUNC_INIT]             = InitArenaChallenge,
     [BATTLE_ARENA_FUNC_GET_DATA]         = GetArenaData,
@@ -165,7 +165,7 @@ u8 BattleArena_ShowJudgmentWindow(u8 *state)
         BeginNormalPaletteFade(0x7FFFFF1C, 4, 0, 8, RGB_BLACK);
         SetGpuReg(REG_OFFSET_WININ, (WININ_WIN0_ALL & ~WININ_WIN0_BG0) | WININ_WIN1_ALL);
         LoadCompressedSpriteSheet(sBattleArenaJudgmentSymbolsSpriteSheet);
-        LoadCompressedPalette(gBattleArenaJudgmentSymbolsPalette, OBJ_PLTT_ID(15), PLTT_SIZE_4BPP);
+        LoadPalette(gBattleArenaJudgmentSymbolsPalette, OBJ_PLTT_ID(15), PLTT_SIZE_4BPP);
         gBattle_WIN0H = 0xFF;
         gBattle_WIN0V = 0x70;
         (*state)++;
@@ -360,20 +360,21 @@ void BattleArena_AddMindPoints(u8 battler)
 // All moves with power != 0 give 1 point, with the following exceptions:
 //    - Counter, Mirror Coat, and Bide give 0 points
 //    - Fake Out subtracts 1 point
-// All moves with power == 0 give 0 points, with the following exceptions:
+// All status moves give 0 points, with the following exceptions:
 //    - Protect, Detect, and Endure subtract 1 point
+    enum BattleMoveEffects effect = GetMoveEffect(gCurrentMove);
 
-    if (gMovesInfo[gCurrentMove].effect == EFFECT_FIRST_TURN_ONLY
-     || gMovesInfo[gCurrentMove].effect == EFFECT_PROTECT
-     || gMovesInfo[gCurrentMove].effect == EFFECT_ENDURE)
+    if (effect == EFFECT_FIRST_TURN_ONLY
+     || effect == EFFECT_PROTECT
+     || effect == EFFECT_ENDURE)
     {
         gBattleStruct->arenaMindPoints[battler]--;
     }
-    else if (gMovesInfo[gCurrentMove].power != 0
-          && gMovesInfo[gCurrentMove].effect != EFFECT_COUNTER
-          && gMovesInfo[gCurrentMove].effect != EFFECT_MIRROR_COAT
-          && gMovesInfo[gCurrentMove].effect != EFFECT_METAL_BURST
-          && gMovesInfo[gCurrentMove].effect != EFFECT_BIDE)
+    else if (!IsBattleMoveStatus(gCurrentMove)
+          && effect != EFFECT_COUNTER
+          && effect != EFFECT_MIRROR_COAT
+          && effect != EFFECT_METAL_BURST
+          && effect != EFFECT_BIDE)
     {
         gBattleStruct->arenaMindPoints[battler]++;
     }
@@ -385,26 +386,25 @@ void BattleArena_AddSkillPoints(u8 battler)
 
     if (gHitMarker & HITMARKER_OBEYS)
     {
-        u8 *failedMoveBits = &gBattleStruct->alreadyStatusedMoveAttempt;
-        if (*failedMoveBits & (1u << battler))
+        if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {
-            *failedMoveBits &= ~((1u << battler));
+            gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt = FALSE;
             skillPoints[battler] -= 2;
         }
-        else if (gMoveResultFlags & MOVE_RESULT_NO_EFFECT)
+        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
         {
-            if (!(gMoveResultFlags & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
+            if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_MISSED) || gBattleCommunication[MISS_TYPE] != B_MSG_PROTECTED)
                 skillPoints[battler] -= 2;
         }
-        else if ((gMoveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE) && (gMoveResultFlags & MOVE_RESULT_NOT_VERY_EFFECTIVE))
+        else if ((gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE) && (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE))
         {
             skillPoints[battler] += 1;
         }
-        else if (gMoveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE)
+        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_SUPER_EFFECTIVE)
         {
             skillPoints[battler] += 2;
         }
-        else if (gMoveResultFlags & MOVE_RESULT_NOT_VERY_EFFECTIVE)
+        else if (gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NOT_VERY_EFFECTIVE)
         {
             skillPoints[battler] -= 1;
         }
@@ -415,7 +415,7 @@ void BattleArena_AddSkillPoints(u8 battler)
     }
 }
 
-void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
+void BattleArena_DeductSkillPoints(u8 battler, enum StringID stringId)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
@@ -427,20 +427,19 @@ void BattleArena_DeductSkillPoints(u8 battler, u16 stringId)
     case STRINGID_PKMNSXBLOCKSY2:
     case STRINGID_PKMNSXPREVENTSYLOSS:
     case STRINGID_PKMNSXMADEYINEFFECTIVE:
-    case STRINGID_PKMNSXPREVENTSBURNS:
     case STRINGID_PKMNSXBLOCKSY:
     case STRINGID_PKMNPROTECTEDBY:
     case STRINGID_PKMNPREVENTSUSAGE:
     case STRINGID_PKMNRESTOREDHPUSING:
-    case STRINGID_PKMNPREVENTSPARALYSISWITH:
     case STRINGID_PKMNPREVENTSROMANCEWITH:
-    case STRINGID_PKMNPREVENTSPOISONINGWITH:
     case STRINGID_PKMNPREVENTSCONFUSIONWITH:
     case STRINGID_PKMNRAISEDFIREPOWERWITH:
     case STRINGID_PKMNANCHORSITSELFWITH:
     case STRINGID_PKMNPREVENTSSTATLOSSWITH:
     case STRINGID_PKMNSTAYEDAWAKEUSING:
         skillPoints[battler] -= 3;
+        break;
+    default:
         break;
     }
 }
@@ -472,7 +471,7 @@ static void InitArenaChallenge(void)
         gSaveBlock2Ptr->frontier.arenaWinStreaks[lvlMode] = 0;
 
     SetDynamicWarp(0, gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, WARP_ID_NONE);
-    gTrainerBattleOpponent_A = 0;
+    TRAINER_BATTLE_PARAM.opponentA = 0;
 }
 
 static void GetArenaData(void)
@@ -562,7 +561,7 @@ static void GiveArenaPrize(void)
 
 static void BufferArenaOpponentName(void)
 {
-    GetFrontierTrainerName(gStringVar1, gTrainerBattleOpponent_A);
+    GetFrontierTrainerName(gStringVar1, TRAINER_BATTLE_PARAM.opponentA);
 }
 
 void DrawArenaRefereeTextBox(void)

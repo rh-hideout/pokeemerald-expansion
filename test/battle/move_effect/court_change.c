@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_COURT_CHANGE].effect == EFFECT_COURT_CHANGE);
+    ASSUME(GetMoveEffect(MOVE_COURT_CHANGE) == EFFECT_COURT_CHANGE);
 }
 
 DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the opponent")
@@ -21,24 +21,24 @@ DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the opponent")
         TURN { MOVE(playerLeft, MOVE_COURT_CHANGE); }
         TURN { SWITCH(playerLeft, 2); SWITCH(opponentLeft, 2); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Sticky Web!");
-        MESSAGE("Foe Wobbuffet used Stealth Rock!");
-        MESSAGE("Foe Wobbuffet used Spikes!");
-        MESSAGE("Foe Wobbuffet used Toxic Spikes!");
+        MESSAGE("The opposing Wobbuffet used Sticky Web!");
+        MESSAGE("The opposing Wobbuffet used Stealth Rock!");
+        MESSAGE("The opposing Wobbuffet used Spikes!");
+        MESSAGE("The opposing Wobbuffet used Toxic Spikes!");
         MESSAGE("Wynaut used Court Change!");
-        MESSAGE("Wynaut swapped the battle effects affecting each side!");
+        MESSAGE("Wynaut swapped the battle effects affecting each side of the field!");
         SEND_IN_MESSAGE("Wynaut");
         NONE_OF {
-            MESSAGE("Wynaut is hurt by spikes!");
+            MESSAGE("Wynaut was caught in a sticky web!");
             MESSAGE("Pointed stones dug into Wynaut!");
+            MESSAGE("Wynaut was hurt by the spikes!");
             MESSAGE("Wynaut was poisoned!");
-            MESSAGE("Wynaut was caught in a Sticky Web!");
         }
         MESSAGE("2 sent out Wobbuffet!");
-        MESSAGE("Foe Wobbuffet is hurt by spikes!");
-        MESSAGE("Pointed stones dug into Foe Wobbuffet!");
-        MESSAGE("Foe Wobbuffet was poisoned!");
-        MESSAGE("Foe Wobbuffet was caught in a Sticky Web!");
+        MESSAGE("The opposing Wobbuffet was caught in a sticky web!");
+        MESSAGE("Pointed stones dug into the opposing Wobbuffet!");
+        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
+        MESSAGE("The opposing Wobbuffet was poisoned!");
     }
 }
 
@@ -61,19 +61,19 @@ DOUBLE_BATTLE_TEST("Court Change swaps entry hazards used by the player")
         MESSAGE("Wobbuffet used Stealth Rock!");
         MESSAGE("Wobbuffet used Spikes!");
         MESSAGE("Wobbuffet used Toxic Spikes!");
-        MESSAGE("Foe Wynaut used Court Change!");
-        MESSAGE("Foe Wynaut swapped the battle effects affecting each side!");
+        MESSAGE("The opposing Wynaut used Court Change!");
+        MESSAGE("The opposing Wynaut swapped the battle effects affecting each side of the field!");
         SEND_IN_MESSAGE("Wobbuffet");
-        MESSAGE("Wobbuffet is hurt by spikes!");
+        MESSAGE("Wobbuffet was caught in a sticky web!");
         MESSAGE("Pointed stones dug into Wobbuffet!");
+        MESSAGE("Wobbuffet was hurt by the spikes!");
         MESSAGE("Wobbuffet was poisoned!");
-        MESSAGE("Wobbuffet was caught in a Sticky Web!");
         MESSAGE("2 sent out Wynaut!");
         NONE_OF {
-            MESSAGE("Foe Wynaut is hurt by spikes!");
-            MESSAGE("Pointed stones dug into Foe Wynaut!");
-            MESSAGE("Foe Wynaut was poisoned!");
-            MESSAGE("Foe Wynaut was caught in a Sticky Web!");
+            MESSAGE("The opposing Wynaut was caught in a sticky web!");
+            MESSAGE("Pointed stones dug into the opposing Wynaut!");
+            MESSAGE("The opposing Wynaut was hurt by the spikes!");
+            MESSAGE("The opposing Wynaut was poisoned!");
         }
     }
 }
@@ -98,21 +98,21 @@ DOUBLE_BATTLE_TEST("Court Change used by the player swaps Mist, Safeguard, Auror
         TURN { }
     } SCENE {
         MESSAGE("Wynaut used Snowscape!");
-        MESSAGE("Foe Wobbuffet used Mist!");
-        MESSAGE("Foe Wobbuffet used Safeguard!");
-        MESSAGE("Foe Wobbuffet used Aurora Veil!");
-        MESSAGE("Foe Wobbuffet used Reflect!");
-        MESSAGE("Foe Wobbuffet used Light Screen!");
-        MESSAGE("Foe Wobbuffet used Tailwind!");
+        MESSAGE("The opposing Wobbuffet used Mist!");
+        MESSAGE("The opposing Wobbuffet used Safeguard!");
+        MESSAGE("The opposing Wobbuffet used Aurora Veil!");
+        MESSAGE("The opposing Wobbuffet used Reflect!");
+        MESSAGE("The opposing Wobbuffet used Light Screen!");
+        MESSAGE("The opposing Wobbuffet used Tailwind!");
         MESSAGE("Wynaut used Court Change!");
-        MESSAGE("Wynaut swapped the battle effects affecting each side!");
+        MESSAGE("Wynaut swapped the battle effects affecting each side of the field!");
         // The effects now end for the player side.
-        MESSAGE("Ally's Mist wore off!");
-        MESSAGE("Ally's party is no longer protected by Safeguard!");
-        MESSAGE("Ally's Reflect wore off!");
-        MESSAGE("Ally's Aurora Veil wore off!");
-        MESSAGE("Your team's tailwind petered out!");
-        MESSAGE("Ally's Light Screen wore off!");
+        MESSAGE("Your team is no longer protected by Safeguard!");
+        MESSAGE("Your team's Mist wore off!");
+        MESSAGE("Your team's Reflect wore off!");
+        MESSAGE("Your team's Tailwind petered out!");
+        MESSAGE("Your team's Aurora Veil wore off!");
+        MESSAGE("Your team's Light Screen wore off!");
     }
 }
 
@@ -141,16 +141,111 @@ DOUBLE_BATTLE_TEST("Court Change used by the opponent swaps Mist, Safeguard, Aur
         MESSAGE("Wobbuffet used Reflect!");
         MESSAGE("Wobbuffet used Light Screen!");
         MESSAGE("Wobbuffet used Tailwind!");
-        MESSAGE("Foe Wynaut used Court Change!");
-        MESSAGE("Foe Wynaut swapped the battle effects affecting each side!");
+        MESSAGE("The opposing Wynaut used Court Change!");
+        MESSAGE("The opposing Wynaut swapped the battle effects affecting each side of the field!");
         // The effects now end for the player side.
-        MESSAGE("Foe's Mist wore off!");
-        MESSAGE("Foe's party is no longer protected by Safeguard!");
-        MESSAGE("Foe's Reflect wore off!");
-        MESSAGE("Foe's Aurora Veil wore off!");
-        MESSAGE("The opposing team's tailwind petered out!");
-        MESSAGE("Foe's Light Screen wore off!");
+        MESSAGE("The snow stopped.");
+        MESSAGE("The opposing team is no longer protected by Safeguard!");
+        MESSAGE("The opposing team's Mist wore off!");
+        MESSAGE("The opposing team's Reflect wore off!");
+        MESSAGE("The opposing team's Tailwind petered out!");
+        MESSAGE("The opposing team's Aurora Veil wore off!");
+        MESSAGE("The opposing team's Light Screen wore off!");
     }
 }
 
-TO_DO_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge, G-Max Vine Lash, G-Max Wildfire, G-Max Cannonade");
+DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Steelsurge")
+{
+    GIVEN {
+        PLAYER(SPECIES_COPPERAJAH) { GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_IRON_HEAD, target: opponentRight, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(opponentLeft, MOVE_COURT_CHANGE); }
+        TURN { SWITCH(opponentLeft, 2); SWITCH(playerLeft, 2); }
+    } SCENE {
+        MESSAGE("Copperajah used G-Max Steelsurge!");
+        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("The sharp steel bit into Wobbuffet!");
+        NONE_OF {
+            MESSAGE("The sharp steel bit into the opposing Wynaut!");
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Court Change used by the player swaps G-Max Vine Lash, G-Max Wildfire, G-Max Cannonade")
+{
+    u32 species, move;
+    PARAMETRIZE { species = SPECIES_VENUSAUR;  move = MOVE_VINE_WHIP; }
+    PARAMETRIZE { species = SPECIES_CHARIZARD; move = MOVE_EMBER; }
+    PARAMETRIZE { species = SPECIES_BLASTOISE; move = MOVE_WATER_GUN; }
+    GIVEN {
+        PLAYER(species) { GigantamaxFactor(TRUE); }
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, move, target: opponentRight, gimmick: GIMMICK_DYNAMAX);
+            MOVE(opponentLeft, MOVE_COURT_CHANGE);
+        }
+    } SCENE {
+        switch (species) {
+            case SPECIES_VENUSAUR:
+                MESSAGE("Venusaur used G-Max Vine Lash!");
+                MESSAGE("Wobbuffet is hurt by G-Max Vine Lash's ferocious beating!");
+                break;
+            case SPECIES_CHARIZARD:
+                MESSAGE("Charizard used G-Max Wildfire!");
+                MESSAGE("Wobbuffet is burning up within G-Max Wildfire's flames!");
+                break;
+            case SPECIES_BLASTOISE:
+                MESSAGE("Blastoise used G-Max Cannonade!");
+                MESSAGE("Wobbuffet is hurt by G-Max Cannonade's vortex!");
+                break;
+        }
+        NONE_OF {
+            MESSAGE("The opposing Wynaut is hurt by G-Max Vine Lash's ferocious beating!");
+            MESSAGE("The opposing Wynaut is burning up within G-Max Wildfire's flames!");
+            MESSAGE("The opposing Wynaut is hurt by G-Max Cannonade's vortex!");
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Court Change")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_HEADBUTT; }
+    PARAMETRIZE { move = MOVE_REFLECT; }
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
+    PARAMETRIZE { move = MOVE_SAFEGUARD; }
+    PARAMETRIZE { move = MOVE_SPIKES; }
+    PARAMETRIZE { move = MOVE_STEALTH_ROCK; }
+    PARAMETRIZE { move = MOVE_TOXIC_SPIKES; }
+    PARAMETRIZE { move = MOVE_TAILWIND; }
+    PARAMETRIZE { move = MOVE_STICKY_WEB; }
+    PARAMETRIZE { move = MOVE_MIST; }
+    PARAMETRIZE { move = MOVE_LUCKY_CHANT; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(move, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_COURT_CHANGE, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_COURT_CHANGE, MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { MOVE(player, move); EXPECT_MOVE(opponent, MOVE_HEADBUTT); }
+        if (move == MOVE_HEADBUTT)
+            TURN { MOVE(player, MOVE_CELEBRATE); NOT_EXPECT_MOVE(opponent, MOVE_COURT_CHANGE); }
+        else
+            TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_COURT_CHANGE); }
+    }
+}
+

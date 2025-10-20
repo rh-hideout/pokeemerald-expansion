@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_STUFF_CHEEKS].effect == EFFECT_STUFF_CHEEKS);
+    ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
     ASSUME(gItemsInfo[ITEM_LIECHI_BERRY].pocket == POCKET_BERRIES);
     ASSUME(gItemsInfo[ITEM_LIECHI_BERRY].holdEffect == HOLD_EFFECT_ATTACK_UP);
 }
@@ -92,7 +92,7 @@ SINGLE_BATTLE_TEST("Stuff Cheeks can be used even if Magic Room is active")
 SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before they use the move")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_KNOCK_OFF].effect == EFFECT_KNOCK_OFF);
+        ASSUME(GetMoveEffect(MOVE_KNOCK_OFF) == EFFECT_KNOCK_OFF);
         PLAYER(SPECIES_SKWOVET) { Item(ITEM_LIECHI_BERRY); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,5 +101,18 @@ SINGLE_BATTLE_TEST("Stuff Cheeks fails if the user's berry is removed before the
         ANIMATION(ANIM_TYPE_MOVE, MOVE_KNOCK_OFF, opponent);
         MESSAGE("Skwovet used Stuff Cheeks!");
         MESSAGE("But it failed!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI uses Stuff Cheeks")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_STUFF_CHEEKS) == EFFECT_STUFF_CHEEKS);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_HEADBUTT); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LIECHI_BERRY); Moves(MOVE_HEADBUTT, MOVE_STUFF_CHEEKS); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponent, MOVE_STUFF_CHEEKS); }
     }
 }

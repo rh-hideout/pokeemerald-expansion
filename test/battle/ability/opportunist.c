@@ -3,12 +3,12 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TACKLE].category == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
 }
 
 SINGLE_BATTLE_TEST("Opportunist only copies foe's positive stat changes in a turn", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_FRISK; }
     PARAMETRIZE { ability = ABILITY_OPPORTUNIST; }
     GIVEN {
@@ -16,15 +16,15 @@ SINGLE_BATTLE_TEST("Opportunist only copies foe's positive stat changes in a tur
         OPPONENT(SPECIES_ESPATHRA) { Speed(5); Ability(ability); }
     } WHEN {
         TURN { MOVE(player, MOVE_SHELL_SMASH); }
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         if (ability == ABILITY_FRISK) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_SMASH, player);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
             HP_BAR(player, captureDamage: &results[i].damage);
         } else {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_SMASH, player);
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
             HP_BAR(player, captureDamage: &results[i].damage);
         }
     } FINALLY {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Opportunist only copies foe's positive stat changes in a tur
 
 DOUBLE_BATTLE_TEST("Opportunist raises Attack only once when partner has Intimidate against Contrary foe in a double battle", s16 damageLeft, s16 damageRight)
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_CONTRARY; abilityRight = ABILITY_CONTRARY; }
     PARAMETRIZE { abilityLeft = ABILITY_TANGLED_FEET; abilityRight = ABILITY_TANGLED_FEET; }
@@ -55,24 +55,22 @@ DOUBLE_BATTLE_TEST("Opportunist raises Attack only once when partner has Intimid
         OPPONENT(SPECIES_SPINDA) { Ability(abilityLeft); }
         OPPONENT(SPECIES_SPINDA) { Ability(abilityRight); }
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerLeft); MOVE(opponentRight, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); MOVE(opponentRight, MOVE_SCRATCH, target: playerRight); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         if (abilityLeft == ABILITY_CONTRARY) {
-            ABILITY_POPUP(opponentLeft, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Foe Spinda's Attack rose!");
+            MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
-            MESSAGE("Mightyena's Intimidate cuts Foe Spinda's attack!");
+            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
-            ABILITY_POPUP(opponentRight, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Foe Spinda's Attack rose!");
+            MESSAGE("The opposing Spinda's Attack rose!");
         } else {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
-            MESSAGE("Mightyena's Intimidate cuts Foe Spinda's attack!");
+            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
         }
 
         if ((abilityLeft == ABILITY_CONTRARY && abilityRight != ABILITY_CONTRARY)
@@ -212,7 +210,7 @@ DOUBLE_BATTLE_TEST("Opportunist copies the stat increase of each opposing mon")
 }
 
 
-DOUBLE_BATTLE_TEST("Opportunist copies the stat of each pokemon that were raised at the same time")
+DOUBLE_BATTLE_TEST("Opportunist copies the stat of each Pokémon that were raised at the same time")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -267,9 +265,9 @@ SINGLE_BATTLE_TEST("Opportunist copies the stat increase from the incoming mon")
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TACKLE); SEND_OUT(opponent, 1); }
+        TURN { MOVE(player, MOVE_SCRATCH); SEND_OUT(opponent, 1); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ABILITY_POPUP(opponent, ABILITY_INTREPID_SWORD);
         ABILITY_POPUP(player, ABILITY_OPPORTUNIST);
     } THEN {
@@ -294,5 +292,26 @@ SINGLE_BATTLE_TEST("Opportunist and Mirror Herb stack stat increases")
         EXPECT_EQ(opponent->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPATK], DEFAULT_STAT_STAGE);
         EXPECT_EQ(opponent->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Opportunist and Mirror Herb resolve correctly")
+{
+    GIVEN {
+        PLAYER(SPECIES_ZACIAN) { Ability(ABILITY_INTREPID_SWORD); }
+        PLAYER(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); }
+        OPPONENT(SPECIES_MEOWSCARADA) { Item(ITEM_MIRROR_HERB); }
+        OPPONENT(SPECIES_ESPATHRA) { Ability(ABILITY_OPPORTUNIST); Item(ITEM_MIRROR_HERB); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_INTREPID_SWORD);
+        ABILITY_POPUP(opponentRight, ABILITY_OPPORTUNIST);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
     }
 }

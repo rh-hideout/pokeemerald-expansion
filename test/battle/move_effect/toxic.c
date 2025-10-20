@@ -3,7 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TOXIC].effect == EFFECT_TOXIC);
+    ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
+    ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
 }
 
 SINGLE_BATTLE_TEST("Toxic inflicts bad poison")
@@ -21,15 +22,38 @@ SINGLE_BATTLE_TEST("Toxic inflicts bad poison")
     }
 }
 
-SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type")
+SINGLE_BATTLE_TEST("Toxic can't bad poison a poison or steel type")
 {
     u32 species;
-    bool32 hit;
-    PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; }
-    PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = TRUE; }
+
+    PARAMETRIZE { species = SPECIES_BELDUM; }
+    PARAMETRIZE { species = SPECIES_BULBASAUR; }
+
     GIVEN {
-        ASSUME(B_TOXIC_NEVER_MISS >= GEN_6);
-        ASSUME(gSpeciesInfo[SPECIES_NIDORAN_M].types[0] == TYPE_POISON);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            STATUS_ICON(opponent, badPoison: TRUE);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
+{
+    u32 species, gen;
+    bool32 hit;
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_5; }
+    PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = FALSE; gen = GEN_5; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_6; }
+    PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = TRUE;  gen = GEN_6; }
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_TOXIC_NEVER_MISS, gen);
+        ASSUME(GetSpeciesType(SPECIES_NIDORAN_M, 0) == TYPE_POISON);
         PLAYER(species);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -51,7 +75,8 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type")
 
 AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
 {
-    u32 species, ability;
+    u32 species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SNORLAX; ability = ABILITY_IMMUNITY; }
     PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }

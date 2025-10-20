@@ -1,10 +1,6 @@
 #include "global.h"
 #include "test/battle.h"
 
-ASSUMPTIONS
-{
-}
-
 SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was poisoned by a damaging move")
 {
     GIVEN {
@@ -20,7 +16,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was poisoned by a dam
         STATUS_ICON(opponent, poison: TRUE);
         ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-        MESSAGE("Foe Wobbuffet became confused!");
+        MESSAGE("The opposing Wobbuffet became confused!");
     }
 }
 
@@ -46,14 +42,14 @@ SINGLE_BATTLE_TEST("Poison Puppeteer confuses target if it was (badly) poisoned 
             STATUS_ICON(opponent, badPoison: TRUE);
         ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-        MESSAGE("Foe Wobbuffet became confused!");
+        MESSAGE("The opposing Wobbuffet became confused!");
     }
 }
 
 SINGLE_BATTLE_TEST("Poison Puppeteer does not trigger if poison is Toxic Spikes induced")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TOXIC_SPIKES].effect == EFFECT_TOXIC_SPIKES);
+        ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
         PLAYER(SPECIES_PECHARUNT) { Ability(ABILITY_POISON_PUPPETEER); }
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -67,7 +63,7 @@ SINGLE_BATTLE_TEST("Poison Puppeteer does not trigger if poison is Toxic Spikes 
         NONE_OF {
             ABILITY_POPUP(player, ABILITY_POISON_PUPPETEER);
             ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, opponent);
-            MESSAGE("Foe Wobbuffet became confused!");
+            MESSAGE("The opposing Wobbuffet became confused!");
         }
     }
 }

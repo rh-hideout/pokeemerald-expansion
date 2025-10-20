@@ -690,7 +690,7 @@ static const u8 sBattlePointAwards[NUM_FRONTIER_FACILITIES][FRONTIER_MODE_COUNT]
     },
 };
 
-static void (* const sFrontierUtilFuncs[])(void) =
+static void (*const sFrontierUtilFuncs[])(void) =
 {
     [FRONTIER_UTIL_FUNC_GET_STATUS]            = GetChallengeStatus,
     [FRONTIER_UTIL_FUNC_GET_DATA]              = GetFrontierData,
@@ -913,7 +913,7 @@ static void SaveSelectedParty(void)
     {
         u16 monId = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         if (monId < PARTY_SIZE)
-            gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1] = gPlayerParty[i];
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
     }
 }
 
@@ -1849,7 +1849,7 @@ void ResetFrontierTrainerIds(void)
 
 static void IsTrainerFrontierBrain(void)
 {
-    if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
         gSpecialVar_Result = TRUE;
     else
         gSpecialVar_Result = FALSE;
@@ -1900,7 +1900,7 @@ static void GiveBattlePoints(void)
         challengeNum = ARRAY_COUNT(sBattlePointAwards[0][0]) - 1;
 
     points = sBattlePointAwards[facility][battleMode][challengeNum];
-    if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
         points += 10;
     gSaveBlock2Ptr->frontier.battlePoints += points;
     ConvertIntToDecimalStringN(gStringVar1, points, STR_CONV_MODE_LEFT_ALIGN, 2);
@@ -1910,7 +1910,7 @@ static void GiveBattlePoints(void)
     points = gSaveBlock2Ptr->frontier.cardBattlePoints;
     points += sBattlePointAwards[facility][battleMode][challengeNum];
     IncrementDailyBattlePoints(sBattlePointAwards[facility][battleMode][challengeNum]);
-    if (gTrainerBattleOpponent_A == TRAINER_FRONTIER_BRAIN)
+    if (TRAINER_BATTLE_PARAM.opponentA == TRAINER_FRONTIER_BRAIN)
     {
         points += 10;
         IncrementDailyBattlePoints(10);
@@ -2165,7 +2165,7 @@ static void RestoreHeldItems(void)
     {
         if (gSaveBlock2Ptr->frontier.selectedPartyMons[i] != 0)
         {
-            u16 item = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_HELD_ITEM, NULL);
+            u16 item = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_HELD_ITEM, NULL);
             SetMonData(&gPlayerParty[i], MON_DATA_HELD_ITEM, &item);
         }
     }
@@ -2182,10 +2182,10 @@ static void BufferFrontierTrainerName(void)
     switch (gSpecialVar_0x8005)
     {
     case 0:
-        GetFrontierTrainerName(gStringVar1, gTrainerBattleOpponent_A);
+        GetFrontierTrainerName(gStringVar1, TRAINER_BATTLE_PARAM.opponentA);
         break;
     case 1:
-        GetFrontierTrainerName(gStringVar2, gTrainerBattleOpponent_A);
+        GetFrontierTrainerName(gStringVar2, TRAINER_BATTLE_PARAM.opponentA);
         break;
     }
 }
@@ -2203,14 +2203,14 @@ static void ResetSketchedMoves(void)
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
-                    if (GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1], MON_DATA_MOVE1 + k, NULL)
+                    if (GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1), MON_DATA_MOVE1 + k, NULL)
                         == GetMonData(&gPlayerParty[i], MON_DATA_MOVE1 + j, NULL))
                         break;
                 }
                 if (k == MAX_MON_MOVES)
                     SetMonMoveSlot(&gPlayerParty[i], MOVE_SKETCH, j);
             }
-            gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1] = gPlayerParty[i];
+            SavePlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1, &gPlayerParty[i]);
         }
     }
 }
@@ -2459,7 +2459,7 @@ u8 GetFrontierBrainTrainerPicIndex(void)
     return GetTrainerPicFromId(gFrontierBrainInfo[facility].trainerId);
 }
 
-u8 GetFrontierBrainTrainerClass(void)
+enum TrainerClassID GetFrontierBrainTrainerClass(void)
 {
     s32 facility;
 
@@ -2543,7 +2543,7 @@ void CreateFrontierBrainPokemon(void)
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             SetMonMoveSlot(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].moves[j], j);
-            if (gMovesInfo[sFrontierBrainsMons[facility][symbol][i].moves[j]].effect == EFFECT_FRUSTRATION)
+            if (GetMoveEffect(sFrontierBrainsMons[facility][symbol][i].moves[j]) == EFFECT_FRUSTRATION)
                 friendship = 0;
         }
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_FRIENDSHIP, &friendship);
@@ -2564,7 +2564,7 @@ u16 GetFrontierBrainMonSpecies(u8 monId)
 
 void SetFrontierBrainObjEventGfx(u8 facility)
 {
-    gTrainerBattleOpponent_A = TRAINER_FRONTIER_BRAIN;
+    TRAINER_BATTLE_PARAM.opponentA = TRAINER_FRONTIER_BRAIN;
     VarSet(VAR_OBJ_GFX_ID_0, gFrontierBrainInfo[facility].objEventGfx);
 }
 

@@ -3,14 +3,14 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_ROUND].effect == EFFECT_ROUND);
+    ASSUME(GetMoveEffect(MOVE_ROUND) == EFFECT_ROUND);
 }
 
 DOUBLE_BATTLE_TEST("Round allows other battlers which also selected the moves to immediately use the move, ignoring turn order")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LAGGING_TAIL].holdEffect == HOLD_EFFECT_LAGGING_TAIL);
-        ASSUME(gMovesInfo[MOVE_IRON_HEAD].additionalEffects[0].moveEffect == MOVE_EFFECT_FLINCH);
+        ASSUME(GetMoveAdditionalEffectById(MOVE_IRON_HEAD, 0)->moveEffect == MOVE_EFFECT_FLINCH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -94,7 +94,7 @@ DOUBLE_BATTLE_TEST("Round still preserves the turn order outside of the other Ro
     }
 }
 
-DOUBLE_BATTLE_TEST("Round causes opposing pokemon to use Round immediately")
+DOUBLE_BATTLE_TEST("Round causes opposing Pokémon to use Round immediately")
 {
     GIVEN {
         ASSUME(gItemsInfo[ITEM_LAGGING_TAIL].holdEffect == HOLD_EFFECT_LAGGING_TAIL);

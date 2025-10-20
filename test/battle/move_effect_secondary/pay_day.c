@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(MoveHasAdditionalEffect(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY));
+    ASSUME(MoveHasAdditionalEffectWithChance(MOVE_PAY_DAY, MOVE_EFFECT_PAYDAY, 0) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - singles")
@@ -16,7 +16,7 @@ SINGLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - singles")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PAY_DAY, player);
         HP_BAR(opponent);
-        MESSAGE("Coins scattered everywhere!");
+        MESSAGE("Coins were scattered everywhere!");
     }
 }
 
@@ -32,6 +32,6 @@ DOUBLE_BATTLE_TEST("Pay Day Scatters coins around after it hits - doubles")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PAY_DAY, playerLeft);
         HP_BAR(opponentLeft);
-        MESSAGE("Coins scattered everywhere!");
+        MESSAGE("Coins were scattered everywhere!");
     }
 }

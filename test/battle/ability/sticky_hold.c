@@ -4,7 +4,7 @@
 SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
 {
     GIVEN {
-        ASSUME(MoveHasAdditionalEffect(MOVE_THIEF, MOVE_EFFECT_STEAL_ITEM));
+        ASSUME(GetMoveEffect(MOVE_THIEF) == EFFECT_STEAL_ITEM);
         PLAYER(SPECIES_URSALUNA) { Item(ITEM_NONE); }
         OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STICKY_HOLD); Item(ITEM_LIFE_ORB); }
     } WHEN {
@@ -12,7 +12,7 @@ SINGLE_BATTLE_TEST("Sticky Hold prevents item theft")
     } SCENE {
         MESSAGE("Ursaluna used Thief!");
         ABILITY_POPUP(opponent, ABILITY_STICKY_HOLD);
-        MESSAGE("Foe Gastrodon's Sticky Hold made Thief ineffective!");
+        MESSAGE("The opposing Gastrodon's Sticky Hold made Thief ineffective!");
     }
 }
 

@@ -4,12 +4,12 @@
 SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less at the end of the turn")
 {
     u16 standardSpecies, zenSpecies;
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD;          zenSpecies = SPECIES_DARMANITAN_ZEN; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);
@@ -17,10 +17,10 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
         }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TACKLE); }
+            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Darmanitan used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ZEN_MODE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
@@ -33,12 +33,12 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
 SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less before the first turn")
 {
     u16 standardSpecies, zenSpecies;
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD;          zenSpecies = SPECIES_DARMANITAN_ZEN; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);
@@ -51,7 +51,7 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
         ABILITY_POPUP(player, ABILITY_ZEN_MODE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         MESSAGE("Darmanitan used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Celebrate!");
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
         EXPECT_LE(player->hp, player->maxHP / 2);
         EXPECT_EQ(player->species, zenSpecies);
@@ -61,12 +61,12 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
 SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is healed above half")
 {
     u16 standardSpecies, zenSpecies;
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD_MODE;          zenSpecies = SPECIES_DARMANITAN_ZEN_MODE; }
-    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALARIAN_STANDARD_MODE; zenSpecies = SPECIES_DARMANITAN_GALARIAN_ZEN_MODE; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_STANDARD;          zenSpecies = SPECIES_DARMANITAN_ZEN; }
+    PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD;    zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);
@@ -79,7 +79,7 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is healed above 
         ABILITY_POPUP(player, ABILITY_ZEN_MODE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
         MESSAGE("Darmanitan used Celebrate!");
-        MESSAGE("Foe Wobbuffet used Heal Pulse!");
+        MESSAGE("The opposing Wobbuffet used Heal Pulse!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ZEN_MODE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);

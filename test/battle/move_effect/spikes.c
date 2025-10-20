@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_SPIKES].effect == EFFECT_SPIKES);
+    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
 }
 
 SINGLE_BATTLE_TEST("Spikes damage on switch in")
@@ -28,11 +28,11 @@ SINGLE_BATTLE_TEST("Spikes damage on switch in")
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         for (count = 0; count < layers; ++count) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-            MESSAGE("Spikes were scattered all around the opposing team!");
+            MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         }
         MESSAGE("2 sent out Wynaut!");
         HP_BAR(opponent, damage: maxHP / divisor);
-        MESSAGE("Foe Wynaut is hurt by spikes!");
+        MESSAGE("The opposing Wynaut was hurt by the spikes!");
     }
 }
 
@@ -51,16 +51,16 @@ SINGLE_BATTLE_TEST("Spikes fails after 3 layers")
     } SCENE {
         s32 maxHP = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, player);
-        MESSAGE("Spikes were scattered all around the opposing team!");
+        MESSAGE("Spikes were scattered on the ground all around the opposing team!");
         MESSAGE("Wobbuffet used Spikes!");
         MESSAGE("But it failed!");
         MESSAGE("2 sent out Wynaut!");
         HP_BAR(opponent, damage: maxHP / 4);
-        MESSAGE("Foe Wynaut is hurt by spikes!");
+        MESSAGE("The opposing Wynaut was hurt by the spikes!");
     }
 }
 
@@ -79,10 +79,10 @@ SINGLE_BATTLE_TEST("Spikes damage on subsequent switch ins")
         s32 maxHP1 = GetMonData(&OPPONENT_PARTY[1], MON_DATA_MAX_HP);
         MESSAGE("2 sent out Wynaut!");
         HP_BAR(opponent, damage: maxHP1 / 8);
-        MESSAGE("Foe Wynaut is hurt by spikes!");
+        MESSAGE("The opposing Wynaut was hurt by the spikes!");
         MESSAGE("2 sent out Wobbuffet!");
         HP_BAR(opponent, damage: maxHP0 / 8);
-        MESSAGE("Foe Wobbuffet is hurt by spikes!");
+        MESSAGE("The opposing Wobbuffet was hurt by the spikes!");
     }
 }
 
@@ -94,13 +94,13 @@ SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
     u32 move2 = MOVE_CELEBRATE;
     bool32 airborne;
 
-    ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
+    ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
     PARAMETRIZE { species = SPECIES_PIDGEY; airborne = TRUE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; item = ITEM_IRON_BALL; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_GRAVITY; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_INGRAIN; airborne = FALSE; }
 
-    ASSUME(gSpeciesInfo[SPECIES_UNOWN].abilities[0] == ABILITY_LEVITATE);
+    ASSUME(GetSpeciesAbility(SPECIES_UNOWN, 0) == ABILITY_LEVITATE);
     PARAMETRIZE { species = SPECIES_UNOWN; airborne = TRUE; }
     PARAMETRIZE { species = SPECIES_UNOWN; item = ITEM_IRON_BALL; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_UNOWN; move1 = MOVE_GRAVITY; airborne = FALSE; }
@@ -131,5 +131,32 @@ SINGLE_BATTLE_TEST("Spikes do not damage airborne Pokemon")
         } else {
             HP_BAR(opponent, damage: maxHP / 8);
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Spikes: Only three layers can be set up")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SPIKES); }
+        TURN { MOVE(opponent, MOVE_SPIKES); }
+        TURN { MOVE(opponent, MOVE_SPIKES); }
+        TURN { MOVE(opponent, MOVE_SPIKES); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponent);
+    } THEN {
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_SPIKES);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][4], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][5], HAZARDS_NONE);
+        u32 spikesAmount = gSideTimers[0].spikesAmount;
+        EXPECT_EQ(spikesAmount, 3);
     }
 }

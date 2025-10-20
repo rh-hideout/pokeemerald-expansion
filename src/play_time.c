@@ -1,6 +1,7 @@
 #include "global.h"
 #include "play_time.h"
 #include "fake_rtc.h"
+#include "field_player_avatar.h"
 
 enum
 {
@@ -40,6 +41,7 @@ void PlayTimeCounter_Update(void)
         return;
 
     gSaveBlock2Ptr->playTimeVBlanks++;
+    UpdateSpinData();
 
     if (gSaveBlock2Ptr->playTimeVBlanks < 60)
         return;

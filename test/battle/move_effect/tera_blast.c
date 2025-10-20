@@ -3,13 +3,13 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TERA_BLAST].effect == EFFECT_TERA_BLAST);
+    ASSUME(GetMoveEffect(MOVE_TERA_BLAST) == EFFECT_TERA_BLAST);
 }
 
 SINGLE_BATTLE_TEST("Tera Blast changes from Normal-type to the user's Tera Type")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_TERA_BLAST].type == TYPE_NORMAL);
+        ASSUME(GetMoveType(MOVE_TERA_BLAST) == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(TYPE_DARK); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -46,27 +46,27 @@ SINGLE_BATTLE_TEST("Tera Blast has correct effectiveness for every Tera Type")
     PARAMETRIZE { species = SPECIES_ABRA;      type = TYPE_DARK;     }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_CHIKORITA].types[0] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_CHIKORITA].types[1] == TYPE_GRASS);
-        ASSUME(gSpeciesInfo[SPECIES_CYNDAQUIL].types[0] == TYPE_FIRE);
-        ASSUME(gSpeciesInfo[SPECIES_CYNDAQUIL].types[1] == TYPE_FIRE);
-        ASSUME(gSpeciesInfo[SPECIES_GASTLY].types[0] == TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_GASTLY].types[1] == TYPE_POISON);
-        ASSUME(gSpeciesInfo[SPECIES_TOTODILE].types[0] == TYPE_WATER);
-        ASSUME(gSpeciesInfo[SPECIES_TOTODILE].types[1] == TYPE_WATER);
-        ASSUME(gSpeciesInfo[SPECIES_DRATINI].types[0] == TYPE_DRAGON);
-        ASSUME(gSpeciesInfo[SPECIES_DRATINI].types[1] == TYPE_DRAGON);
-        ASSUME(gSpeciesInfo[SPECIES_SNEASEL].types[0] == TYPE_DARK);
-        ASSUME(gSpeciesInfo[SPECIES_SNEASEL].types[1] == TYPE_ICE);
-        ASSUME(gSpeciesInfo[SPECIES_ABRA].types[0] == TYPE_PSYCHIC);
-        ASSUME(gSpeciesInfo[SPECIES_ABRA].types[1] == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 0) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_CHIKORITA, 1) == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_CYNDAQUIL, 0) == TYPE_FIRE);
+        ASSUME(GetSpeciesType(SPECIES_CYNDAQUIL, 1) == TYPE_FIRE);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 0) == TYPE_GHOST);
+        ASSUME(GetSpeciesType(SPECIES_GASTLY, 1) == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_TOTODILE, 0) == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_TOTODILE, 1) == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_DRATINI, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_DRATINI, 1) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_SNEASEL, 0) == TYPE_DARK);
+        ASSUME(GetSpeciesType(SPECIES_SNEASEL, 1) == TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_ABRA, 0) == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_ABRA, 1) == TYPE_PSYCHIC);
         PLAYER(SPECIES_WOBBUFFET) { TeraType(type); }
         OPPONENT(species);
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); }
     } SCENE {
         if (species == SPECIES_GASTLY && type == TYPE_NORMAL)
-            MESSAGE("It doesn't affect Foe Gastly…");
+            MESSAGE("It doesn't affect the opposing Gastly…");
         else
             MESSAGE("It's super effective!");
     }
@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Flying-type Tera Blast does not have its priority boosted by
     } WHEN {
         TURN { MOVE(player, MOVE_TERA_BLAST, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_QUICK_ATTACK); }
     } SCENE {
-        MESSAGE("Foe Wobbuffet used Quick Attack!");
+        MESSAGE("The opposing Wobbuffet used Quick Attack!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, opponent);
         MESSAGE("Talonflame used Tera Blast!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TERA_BLAST, player);

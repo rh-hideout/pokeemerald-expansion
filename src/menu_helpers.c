@@ -74,7 +74,7 @@ static const struct CompressedSpriteSheet sSpriteSheet_SwapLine =
     gSwapLineGfx, 0x100, TAG_SWAP_LINE
 };
 
-static const struct CompressedSpritePalette sSpritePalette_SwapLine =
+static const struct SpritePalette sSpritePalette_SwapLine =
 {
     gSwapLinePal, TAG_SWAP_LINE
 };
@@ -279,8 +279,8 @@ bool8 IsHoldingItemAllowed(u16 itemId)
 {
     // e-Reader Enigma Berry can't be held in link areas
     if (itemId == ITEM_ENIGMA_BERRY_E_READER
-     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(TRADE_CENTER)
-       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(TRADE_CENTER))
+     && ((gSaveBlock1Ptr->location.mapGroup == MAP_GROUP(MAP_TRADE_CENTER)
+       && gSaveBlock1Ptr->location.mapNum == MAP_NUM(MAP_TRADE_CENTER))
        || InUnionRoom() == TRUE))
         return FALSE;
     else
@@ -322,13 +322,12 @@ bool8 MenuHelpers_ShouldWaitForLinkRecv(void)
 void SetItemListPerPageCount(struct ItemSlot *slots, u8 slotsCount, u8 *pageItems, u8 *totalItems, u8 maxPerPage)
 {
     u16 i;
-    struct ItemSlot *slots_ = slots;
 
     // Count the number of non-empty item slots
     *totalItems = 0;
     for (i = 0; i < slotsCount; i++)
     {
-        if (slots_[i].itemId != ITEM_NONE)
+        if (slots[i].itemId != ITEM_NONE)
             (*totalItems)++;
     }
     (*totalItems)++; // + 1 for 'Cancel'
@@ -393,7 +392,7 @@ void SetCursorScrollWithinListBounds(u16 *scrollOffset, u16 *cursorPos, u8 shown
 void LoadListMenuSwapLineGfx(void)
 {
     LoadCompressedSpriteSheet(&sSpriteSheet_SwapLine);
-    LoadCompressedSpritePalette(&sSpritePalette_SwapLine);
+    LoadSpritePalette(&sSpritePalette_SwapLine);
 }
 
 void CreateSwapLineSprites(u8 *spriteIds, u8 count)

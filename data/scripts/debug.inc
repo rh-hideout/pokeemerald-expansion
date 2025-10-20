@@ -87,6 +87,15 @@ Debug_FlagsNotSetBattleConfigMessage_Text:
 	.string "Please define a usable flag in:\l"
 	.string "'include/config/battle.h'!$"
 
+Debug_VarsNotSetBattleConfigMessage::
+	message Debug_VarsNotSetBattleConfigMessage_Text
+	goto Debug_MessageEnd
+
+Debug_VarsNotSetBattleConfigMessage_Text:
+	.string "Feature unavailable!\n"
+	.string "Please define a usable var in:\l"
+	.string "'include/config/battle.h'!$"
+
 Debug_BoxFilledMessage::
 	message Debug_BoxFilledMessage_Text
 	goto Debug_MessageEnd
@@ -270,6 +279,29 @@ Debug_ShowExpansionVersion::
 Debug_ExpansionVersion:
 	.string "pokeemerald-expansion {STR_VAR_1}$"
 
+Debug_Follower_NPC_Not_Enabled::
+	msgbox Debug_Enable_To_Use_Follower_NPCs, MSGBOX_DEFAULT
+	release
+	end
+
+Debug_Enable_To_Use_Follower_NPCs:
+	.string "Feature unavailable.\nSet FNPC_ENABLE_NPC_FOLLOWERS to\lTRUE in 'include/config/follower_npc.h'.$"
+
+Debug_Follower_NPC_Event_Script::
+	lock
+	facefollowernpc
+	msgbox Debug_Follower_NPC_Test_Message, MSGBOX_DEFAULT
+	releaseall
+	end
+
+Debug_Follower_NPC_Test_Message:
+	.string "This is a Follower NPC test.$"
+
+Debug_EventScript_Steven_Multi::
+	call MossdeepCity_SpaceCenter_2F_EventScript_ChoosePartyForMultiBattle
+	release
+	end
+
 Debug_BerryPestsDisabled::
 	msgbox DebugText_BerryPestsDisabled, MSGBOX_DEFAULT
 	release
@@ -327,6 +359,66 @@ Debug_EventScript_InflictStatus1_Single:
 	case 5, Debug_EventScript_InflictStatus1_Single_Frostbite
 	case 6, Debug_EventScript_InflictStatus1_Close
 	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
+	releaseall
+	end
+
+Debug_EventScript_SetHiddenNature::
+	special ChoosePartyMon
+	waitstate
+	goto_if_ge VAR_0x8004, PARTY_SIZE, Debug_EventScript_InflictStatus1_Close
+	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
+	goto_if_eq VAR_RESULT, SPECIES_EGG, Debug_EventScript_InflictStatus1_Close
+	dynmultipush Debug_EventScript_ChangeNature_Text_Hardy, 0
+	dynmultipush Debug_EventScript_ChangeNature_Text_Lonely, 1
+	dynmultipush Debug_EventScript_ChangeNature_Text_Brave, 2
+	dynmultipush Debug_EventScript_ChangeNature_Text_Adamant, 3
+	dynmultipush Debug_EventScript_ChangeNature_Text_Naughty, 4
+	dynmultipush Debug_EventScript_ChangeNature_Text_Bold, 5
+	dynmultipush Debug_EventScript_ChangeNature_Text_Docile, 6
+	dynmultipush Debug_EventScript_ChangeNature_Text_Relaxed, 7
+	dynmultipush Debug_EventScript_ChangeNature_Text_Impish, 8
+	dynmultipush Debug_EventScript_ChangeNature_Text_Lax, 9
+	dynmultipush Debug_EventScript_ChangeNature_Text_Timid, 10
+	dynmultipush Debug_EventScript_ChangeNature_Text_Hasty, 11
+	dynmultipush Debug_EventScript_ChangeNature_Text_Serious, 12
+	dynmultipush Debug_EventScript_ChangeNature_Text_Jolly, 13
+	dynmultipush Debug_EventScript_ChangeNature_Text_Naive, 14
+	dynmultipush Debug_EventScript_ChangeNature_Text_Modest, 15
+	dynmultipush Debug_EventScript_ChangeNature_Text_Mild, 16
+	dynmultipush Debug_EventScript_ChangeNature_Text_Quiet, 17
+	dynmultipush Debug_EventScript_ChangeNature_Text_Bashful, 18
+	dynmultipush Debug_EventScript_ChangeNature_Text_Rash, 19
+	dynmultipush Debug_EventScript_ChangeNature_Text_Calm, 20
+	dynmultipush Debug_EventScript_ChangeNature_Text_Gentle, 21
+	dynmultipush Debug_EventScript_ChangeNature_Text_Sassy, 22
+	dynmultipush Debug_EventScript_ChangeNature_Text_Careful, 23
+	dynmultipush Debug_EventScript_ChangeNature_Text_Quirky, 24
+	dynmultistack 0, 0, TRUE, 7, FALSE, 0, NULL
+	switch VAR_RESULT
+	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
+	special SetHiddenNature
+	releaseall
+	end
+
+Debug_EventScript_SetAbility::
+	special ChoosePartyMon
+	waitstate
+	callnative DebugNative_GetAbilityNames
+	dynmultipush gStringVar1, 0
+	dynmultipush gStringVar2, 1
+	dynmultipush gStringVar3, 2
+	dynmultistack 0, 0, FALSE, 3 FALSE, 0, NULL
+	switch VAR_RESULT
+	case MULTI_B_PRESSED, Debug_EventScript_SetAbilityClose
+	special SetAbility
+Debug_EventScript_SetAbilityClose:
+	releaseall
+	end
+
+Debug_EventScript_SetFriendship::
+	special ChoosePartyMon
+	waitstate
+	callnative DebugNative_Party_SetFriendship
 	releaseall
 	end
 
@@ -438,6 +530,57 @@ Debug_EventScript_InflictStatus1_Text_Freeze:
 Debug_EventScript_InflictStatus1_Text_Frostbite:
 	.string "Frostbite$"
 
+Debug_EventScript_ChangeNature_Text_Hardy:
+	.string "Hardy$"
+Debug_EventScript_ChangeNature_Text_Lonely:
+	.string "Lonely$"
+Debug_EventScript_ChangeNature_Text_Brave:
+	.string "Brave$"
+Debug_EventScript_ChangeNature_Text_Adamant:
+	.string "Adamant$"
+Debug_EventScript_ChangeNature_Text_Naughty:
+	.string "Naughty$"
+Debug_EventScript_ChangeNature_Text_Bold:
+	.string "Bold$"
+Debug_EventScript_ChangeNature_Text_Docile:
+	.string "Docile$"
+Debug_EventScript_ChangeNature_Text_Relaxed:
+	.string "Relaxed$"
+Debug_EventScript_ChangeNature_Text_Impish:
+	.string "Impish$"
+Debug_EventScript_ChangeNature_Text_Lax:
+	.string "Lax$"
+Debug_EventScript_ChangeNature_Text_Timid:
+	.string "Timid$"
+Debug_EventScript_ChangeNature_Text_Hasty:
+	.string "Hasty$"
+Debug_EventScript_ChangeNature_Text_Serious:
+	.string "Serious$"
+Debug_EventScript_ChangeNature_Text_Jolly:
+	.string "Jolly$"
+Debug_EventScript_ChangeNature_Text_Naive:
+	.string "Naive$"
+Debug_EventScript_ChangeNature_Text_Modest:
+	.string "Modest$"
+Debug_EventScript_ChangeNature_Text_Mild:
+	.string "Mild$"
+Debug_EventScript_ChangeNature_Text_Quiet:
+	.string "Quiet$"
+Debug_EventScript_ChangeNature_Text_Bashful:
+	.string "Bashful$"
+Debug_EventScript_ChangeNature_Text_Rash:
+	.string "Rash$"
+Debug_EventScript_ChangeNature_Text_Calm:
+	.string "Calm$"
+Debug_EventScript_ChangeNature_Text_Gentle:
+	.string "Gentle$"
+Debug_EventScript_ChangeNature_Text_Sassy:
+	.string "Sassy$"
+Debug_EventScript_ChangeNature_Text_Careful:
+	.string "Careful$"
+Debug_EventScript_ChangeNature_Text_Quirky:
+	.string "Quirky$"
+
 Debug_EventScript_EWRAMCounters::
 	callnative CheckEWRAMCounters
 	msgbox Debug_EventScript_EWRAMCounters_Text, MSGBOX_DEFAULT
@@ -447,3 +590,166 @@ Debug_EventScript_EWRAMCounters::
 Debug_EventScript_EWRAMCounters_Text::
 	.string "Follower Steps: {STR_VAR_1}.\n"
 	.string "Fishing Chain: {STR_VAR_2}.$"
+
+Debug_EventScript_FontTest_Text_1::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Angel Adept Blind Bodice Clique\n"
+	.string "Coast Dunce Docile Enact Eosin\l"
+	.string "Furlong Focal Gnome Gondola Human\l"
+	.string "Hoist Inlet Iodine Justin Jocose\l"
+	.string "Knoll Koala Linden Loads Milliner\l"
+	.string "Modal Number Nodule Onset Oddball\l"
+	.string "Pneumo Poncho Quanta Qophs Rhone\l"
+	.string "Roman Snout Sodium Tundra Tocsin\l"
+	.string "Uncle Udder Vulcan Vocal Whale\l"
+	.string "Woman Xmas Xenon Yunnan Young\l"
+	.string "Zloty Zodiac.$"
+
+Debug_EventScript_FontTest_Text_2::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Angel angel adept for the nuance loads\n"
+	.string "of the arena cocoa and quaalude. Blind\l"
+	.string "blind bodice for the submit oboe of the\l"
+	.string "club snob and abbot. Clique clique\l"
+	.string "coast for the pouch loco of the franc\l"
+	.string "assoc and accede. Dunce dunce docile\l"
+	.string "for the loudness mastodon of the\l"
+	.string "loud statehood and huddle.$"
+
+Debug_EventScript_FontTest_Text_3::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Enact enact eosin for the quench coed\n"
+	.string "of the pique canoe and bleep. Furlong\l"
+	.string "furlong focal for the genuflect\l"
+	.string "profound of the motif aloof and offers.\l"
+	.string "Gnome gnome gondola for the impugn\l"
+	.string "logos of the unplug analog and smuggle.\l"
+	.string "Human human hoist for the buddhist\l"
+	.string "alcohol of the riyadh caliph and\l"
+	.string "bathhouse.$"
+
+Debug_EventScript_FontTest_Text_4::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Inlet inlet iodine for the quince\n"
+	.string "champion of the ennui scampi and shiite.\l"
+	.string "Justin justin jocose for the djibouti\l"
+	.string "sojourn of the oranj raj and hajjis.\l"
+	.string "Knoll knoll koala for the banknote\l"
+	.string "lookout of the dybbuk outlook and\l"
+	.string "trekked. Linden linden loads for the\l"
+	.string "ulna monolog of the consul menthol and\l"
+	.string "shallot.$"
+
+Debug_EventScript_FontTest_Text_5::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Milliner milliner modal for the alumna\n"
+	.string "solomon of the album custom and summon.\l"
+	.string "Number number nodule for the unmade\l"
+	.string "economic of the shotgun bison and\l"
+	.string "tunnel. Onset onset oddball for the\l"
+	.string "abandon podium of the antiquo tempo\l"
+	.string "and moonlit. Pneumo pneumo poncho for\l"
+	.string "the dauphin opossum of the holdup\l"
+	.string "bishop and supplies.$"
+
+Debug_EventScript_FontTest_Text_6::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Quanta quanta qophs for the inquest\n"
+	.string "sheqel of the cinq coq and suqqu. Rhone\l"
+	.string "rhone roman for the burnt porous of the\l"
+	.string "lemur clamor and carrot. Snout snout\l"
+	.string "sodium for the ensnare bosom of the\l"
+	.string "genus pathos and missing. Tundra\l"
+	.string "tundra tocsin for the nutmeg isotope\l"
+	.string "of the peasant ingot and ottoman.$"
+
+Debug_EventScript_FontTest_Text_7::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Uncle uncle udder for the dunes cloud\n"
+	.string "of the hindu thou and continuum. Vulcan\l"
+	.string "vulcan vocal for the alluvial ovoid of\l"
+	.string "the yugoslav chekhov and revved. Whale\l"
+	.string "whale woman for the meanwhile blowout\l"
+	.string "of the forepaw meadow and glowworm.\l"
+	.string "Xmas xmas xenon for the bauxite\l"
+	.string "doxology of the tableaux equinox and\l"
+	.string "exxon.$"
+
+Debug_EventScript_FontTest_Text_8::
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "Yunnan yunnan young for the dynamo\n"
+	.string "coyote of the obloquy employ and\l"
+	.string "sayyid. Zloty zloty zodiac for the gizmo\l"
+	.string "ozone of the franz laissez and buzzing.$"
+
+
+Debug_EventScript_FontTest_Text_9::                 @ Special thanks to Nintendo for this nice pangram to test other glyphs
+	.string "{FONT_SMALL_NARROWER}"                 @ Edit this to test your font
+	.string "42 × 138 = 5796.\n"
+	.string "Mr Jock, TV quiz PhD: bags 20% fewer\l"
+	.string "lynx at a café; voilà, they're “worth”\l"
+	.string "♂1/♀1 = ¥1. That's 10 + 9 - 8 = 11\l"
+	.string "Nintendo GBA can connect to a Nintendo\l"
+	.string "GameCube console! He claimed-though I don't\l"
+	.string "believe him-to have done so in an eyes-shut\l"
+	.string "state…?$"
+
+Debug_PrintFontTest::
+	msgbox Debug_EventScript_FontTest_Text_1, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_2, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_3, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_4, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_5, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_6, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_7, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_8, MSGBOX_DEFAULT
+	msgbox Debug_EventScript_FontTest_Text_9, MSGBOX_DEFAULT
+	releaseall
+	end
+
+Debug_EventScript_FontTest::
+	lockall
+	goto Debug_PrintFontTest
+@	goto_if_eq VAR_RESULT, 0, Debug_NoPokemon
+@	dynmultipush Debug_EventScript_InflictStatus1_Text_Single, 0
+@	dynmultipush Debug_EventScript_InflictStatus1_Text_PartyWide, 1
+@	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 2
+@	dynmultistack 0, 0, FALSE, 3 FALSE, 0, NULL
+@	switch VAR_RESULT
+@	case 0, Debug_EventScript_InflictStatus1_Single
+@	case 1, Debug_EventScript_InflictStatus1_Party
+@	case 2, Debug_EventScript_InflictStatus1_Close
+@Debug_EventScript_InflictStatus1_Close:
+@	releaseall
+@	end
+
+Debug_EventScript_TellTheTime::
+	callnative DebugMenu_CalculateTime
+	msgbox Debug_EventScript_TellTheTime_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	end
+
+Debug_EventScript_PrintTimeOfDay::
+	callnative DebugMenu_CalculateTimeOfDay
+	msgbox DebugEventScript_PrintWeekday_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	end
+
+Debug_EventScript_FakeRTCNotEnabled::
+	msgbox Debug_EventScript_FakeRTCNotEnabled_Text_0, MSGBOX_DEFAULT
+	waitmessage
+	closemessage
+	return
+
+Debug_EventScript_FakeRTCNotEnabled_Text_0:
+	.string "You currently do not have Fake RTC\nenabled. Please enable it in include/\lconfig/overworld.h$"
+
+
+Debug_EventScript_TellTheTime_Text_0:
+	.string "Time and date:\n"
+	.string "{STR_VAR_1}, {STR_VAR_2}:{STR_VAR_3}$"
+
+DebugEventScript_PrintWeekday_Text_0:
+	.string "Time of day: {STR_VAR_1}$"

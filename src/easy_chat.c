@@ -17,6 +17,7 @@
 #include "main.h"
 #include "mystery_gift.h"
 #include "menu.h"
+#include "move.h"
 #include "overworld.h"
 #include "palette.h"
 #include "pokedex.h"
@@ -713,10 +714,10 @@ static const u32 sStartSelectButtons_Gfx[] = INCBIN_U32("graphics/easy_chat/star
 // on screen the interview_frame gfx was shown behind them.
 // In Emerald all Easy Chat screens have a filled background, so these gfx go unused
 static const u16 sRSInterviewFrame_Pal[] = INCBIN_U16("graphics/easy_chat/interview_frame.gbapal");
-static const u32 sRSInterviewFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/interview_frame.4bpp.lz");
+static const u32 sRSInterviewFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/interview_frame.4bpp.smol");
 static const u16 sTextInputFrameOrange_Pal[] = INCBIN_U16("graphics/easy_chat/text_input_frame_orange.gbapal");
 static const u16 sTextInputFrameGreen_Pal[] = INCBIN_U16("graphics/easy_chat/text_input_frame_green.gbapal");
-static const u32 sTextInputFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/text_input_frame.4bpp.lz");
+static const u32 sTextInputFrame_Gfx[] = INCBIN_U32("graphics/easy_chat/text_input_frame.4bpp.smol");
 static const u16 sTitleText_Pal[] = INCBIN_U16("graphics/easy_chat/title_text.gbapal");
 static const u16 sText_Pal[] = INCBIN_U16("graphics/easy_chat/text.gbapal");
 
@@ -1478,10 +1479,10 @@ void ShowEasyChatScreen(void)
         break;
     case EASY_CHAT_TYPE_BARD_SONG:
         bard = &gSaveBlock1Ptr->oldMan.bard;
-        for (i = 0; i < BARD_SONG_LENGTH; i ++)
-            bard->temporaryLyrics[i] = bard->songLyrics[i];
+        for (i = 0; i < NUM_BARD_SONG_WORDS; i ++)
+            bard->newSongLyrics[i] = bard->songLyrics[i];
 
-        words = bard->temporaryLyrics;
+        words = bard->newSongLyrics;
         break;
     case EASY_CHAT_TYPE_INTERVIEW:
         words = gSaveBlock1Ptr->tvShows[gSpecialVar_0x8005].bravoTrainer.words;
@@ -5544,7 +5545,7 @@ static u16 GetRandomUnlockedEasyChatPokemon(void)
     numWords = gEasyChatGroups[EC_GROUP_POKEMON].numWords;
     for (i = 0; i < numWords; i++)
     {
-        u16 dexNum = SpeciesToNationalPokedexNum(*species);
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(*species);
         if (GetSetPokedexFlag(dexNum, FLAG_GET_SEEN))
         {
             if (index)
@@ -5850,16 +5851,23 @@ static u8 IsEasyChatWordUnlocked(u16 easyChatWord)
 void InitializeEasyChatWordArray(u16 *words, u16 length)
 {
     u16 i;
-    for (i = length - 1; i != EC_EMPTY_WORD; i--)
-        *(words++) = EC_EMPTY_WORD;
+    if (words != NULL)
+    {
+        for (i = length - 1; i != EC_EMPTY_WORD; i--)
+            *(words++) = EC_EMPTY_WORD;
+    }
 }
 
 void InitQuestionnaireWords(void)
 {
     int i;
     u16 *words = GetQuestionnaireWordsPtr();
-    for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
-        words[i] = EC_EMPTY_WORD;
+
+    if (words != NULL)
+    {
+        for (i = 0; i < NUM_QUESTIONNAIRE_WORDS; i++)
+            words[i] = EC_EMPTY_WORD;
+    }
 }
 
 bool32 IsEasyChatAnswerUnlocked(int easyChatWord)

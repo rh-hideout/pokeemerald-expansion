@@ -50,7 +50,7 @@ SINGLE_BATTLE_TEST("Zero to Hero transforms both player and opponent")
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("Palafin underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Foe Palafin underwent a heroic transformation!");
+        MESSAGE("The opposing Palafin underwent a heroic transformation!");
     } THEN {
         EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO);
         EXPECT_EQ(opponent->species, SPECIES_PALAFIN_HERO);
@@ -60,7 +60,7 @@ SINGLE_BATTLE_TEST("Zero to Hero transforms both player and opponent")
 SINGLE_BATTLE_TEST("Zero to Hero will activate if a switch move is used")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_FLIP_TURN].effect == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_FLIP_TURN) == EFFECT_HIT_ESCAPE);
         PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -83,9 +83,9 @@ SINGLE_BATTLE_TEST("Gastro Acid, Worry Seed, and Simple Beam fail if the target 
     PARAMETRIZE { move = MOVE_SIMPLE_BEAM; }
 
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_GASTRO_ACID].effect == EFFECT_GASTRO_ACID);
-        ASSUME(gMovesInfo[MOVE_WORRY_SEED].effect == EFFECT_WORRY_SEED);
-        ASSUME(gMovesInfo[MOVE_SIMPLE_BEAM].effect == EFFECT_SIMPLE_BEAM);
+        ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_WORRY_SEED);
+        ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_SIMPLE_BEAM);
         PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Transform doesn't apply the heroic transformation message wh
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("Palafin underwent a heroic transformation!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRANSFORM, opponent);
-        MESSAGE("Foe Wobbuffet transformed into Palafin!");
+        MESSAGE("The opposing Wobbuffet transformed into Palafin!");
         NOT ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
@@ -128,10 +128,10 @@ SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message whe
         ABILITY_POPUP(player, ABILITY_ZERO_TO_HERO);
         MESSAGE("Palafin underwent a heroic transformation!");
         ABILITY_POPUP(opponent, ABILITY_IMPOSTER);
-        MESSAGE("Foe Ditto transformed into Palafin using Imposter!");
+        MESSAGE("The opposing Ditto transformed into Palafin using Imposter!");
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
-            MESSAGE("Foe Ditto underwent a heroic transformation!");
+            MESSAGE("The opposing Ditto underwent a heroic transformation!");
         }
     } THEN { EXPECT_EQ(player->species, SPECIES_PALAFIN_HERO); }
 }
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Imposter doesn't apply the heroic transformation message whe
 SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Player")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EXPLOSION].effect == EFFECT_EXPLOSION);
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_PALAFIN_ZERO);
         PLAYER(SPECIES_WOBBUFFET) { HP(1);}
         OPPONENT(SPECIES_WOBBUFFET);
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     } WHEN {
         TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
         TURN { MOVE(opponent, MOVE_EXPLOSION); SEND_OUT(player, 0); SEND_OUT(opponent, 1); }
-        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(opponent, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
@@ -162,7 +162,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
 SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers fainted - Opponent")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_EXPLOSION].effect == EFFECT_EXPLOSION);
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PALAFIN_ZERO);
@@ -170,7 +170,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLIP_TURN); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 0); }
-        TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
@@ -178,7 +178,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
         SEND_IN_MESSAGE("Wobbuffet");
         MESSAGE("2 sent out Palafin!");
         ABILITY_POPUP(opponent, ABILITY_ZERO_TO_HERO);
-        MESSAGE("Foe Palafin underwent a heroic transformation!");
+        MESSAGE("The opposing Palafin underwent a heroic transformation!");
     }
 }
 
@@ -193,7 +193,7 @@ SINGLE_BATTLE_TEST("Zero to Hero cannot be copied by Trace")
     } SCENE {
         NONE_OF {
             ABILITY_POPUP(opponent, ABILITY_TRACE);
-            MESSAGE("Foe Ralts Traced Palafin's Zero to Hero!");
+            MESSAGE("The opposing Ralts Traced Palafin's Zero to Hero!");
         }
     }
 }

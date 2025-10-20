@@ -263,7 +263,7 @@ static u32 LoopedTask_BuildMatchCallList(s32 taskState)
 bool32 IsRematchEntryRegistered(int rematchIndex)
 {
     if (rematchIndex < REMATCH_TABLE_ENTRIES)
-        return FlagGet(FLAG_MATCH_CALL_REGISTERED + rematchIndex);
+        return FlagGet(TRAINER_REGISTERED_FLAGS_START + rematchIndex);
 
     return FALSE;
 }
@@ -410,7 +410,7 @@ void BufferMatchCallNameAndDesc(struct PokenavMatchCallEntry *matchCallEntry, u8
     {
         int index = GetTrainerIdxByRematchIdx(matchCallEntry->headerId);
         const struct Trainer *trainer = GetTrainerStructFromId(index);
-        int class = trainer->trainerClass;
+        enum TrainerClassID class = trainer->trainerClass;
         className = gTrainerClasses[class].name;
         trainerName = trainer->trainerName;
     }

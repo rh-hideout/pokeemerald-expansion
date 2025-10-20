@@ -53,7 +53,6 @@ extern u16 gKeyRepeatContinueDelay;
 extern bool8 gSoftResetDisabled;
 extern IntrFunc gIntrTable[];
 extern u8 gLinkVSyncDisabled;
-extern u32 IntrMain_Buffer[];
 extern s8 gPcmDmaCounter;
 
 void AgbMain(void);
@@ -65,7 +64,7 @@ void SetHBlankCallback(IntrCallback callback);
 void SetVCountCallback(IntrCallback callback);
 void SetSerialCallback(IntrCallback callback);
 void InitFlashTimer(void);
-void SetTrainerHillVBlankCounter(u32 *var);
+void SetTrainerHillVBlankCounter(u32 *counter);
 void ClearTrainerHillVBlankCounter(void);
 void DoSoftReset(void);
 void ClearPokemonCrySongs(void);

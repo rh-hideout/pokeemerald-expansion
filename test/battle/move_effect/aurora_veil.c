@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_AURORA_VEIL].effect == EFFECT_AURORA_VEIL);
+    ASSUME(GetMoveEffect(MOVE_AURORA_VEIL) == EFFECT_AURORA_VEIL);
 }
 
 SINGLE_BATTLE_TEST("Aurora Veil can only be used in Hail and Snow")
@@ -22,6 +22,35 @@ SINGLE_BATTLE_TEST("Aurora Veil can only be used in Hail and Snow")
             MESSAGE("But it failed!");
         else
             NOT MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Aurora Veil will prevent Protean activation if it fails due to no Snow/Hail")
+{
+    GIVEN {
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_AURORA_VEIL); }
+    } SCENE {
+        MESSAGE("But it failed!");
+        NOT ABILITY_POPUP(player, ABILITY_PROTEAN);
+    }
+}
+
+SINGLE_BATTLE_TEST("Aurora Veil wont prevent Protean activation when it fails due to being set up already")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_KECLEON) { Ability(ABILITY_PROTEAN); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SNOWSCAPE); MOVE(player, MOVE_AURORA_VEIL); }
+        TURN { SWITCH(player, 1); }
+        TURN { MOVE(player, MOVE_AURORA_VEIL); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_PROTEAN);
+        MESSAGE("But it failed!");
     }
 }
 

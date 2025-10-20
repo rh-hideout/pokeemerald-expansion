@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability")
         TURN { }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TRACE);
-        MESSAGE("Ralts TRACED Foe Torchic's Blaze!");
+        MESSAGE("It traced the opposing Torchic's Blaze!");
     }
 }
 
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability on switch-in")
         TURN { SWITCH(player, 1); }
     } SCENE {
         ABILITY_POPUP(player, ABILITY_TRACE);
-        MESSAGE("Ralts TRACED Foe Torchic's Blaze!");
+        MESSAGE("It traced the opposing Torchic's Blaze!");
     }
 }
 
@@ -40,13 +40,13 @@ SINGLE_BATTLE_TEST("Trace copies opponents ability on switch-in even if opponent
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MISTY_EXPLOSION);
         ABILITY_POPUP(player, ABILITY_TRACE);
-        MESSAGE("Ralts TRACED Foe Torchic's Blaze!");
+        MESSAGE("It traced the opposing Torchic's Blaze!");
     }
 }
 
 DOUBLE_BATTLE_TEST("Trace copies opponents ability randomly")
 {
-    u16 ability1, ability2;
+    enum Ability ability1, ability2;
 
     PARAMETRIZE { ability1 = ABILITY_SPEED_BOOST; ability2 = ABILITY_BLAZE;}
     PARAMETRIZE { ability1 = ABILITY_BLAZE; ability2 = ABILITY_SPEED_BOOST; }
@@ -61,7 +61,7 @@ DOUBLE_BATTLE_TEST("Trace copies opponents ability randomly")
         TURN { }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_TRACE);
-        MESSAGE("Ralts TRACED Foe Torchic's Blaze!");
+        MESSAGE("It traced the opposing Torchic's Blaze!");
     }
 }
 
@@ -76,7 +76,22 @@ SINGLE_BATTLE_TEST("Trace will copy an opponent's ability whenever it has the ch
     } SCENE {
         // TURN 2
         ABILITY_POPUP(player, ABILITY_TRACE);
-        MESSAGE("Ralts TRACED Foe Torchic's Blaze!");
+        MESSAGE("It traced the opposing Torchic's Blaze!");
+    }
+}
+
+
+SINGLE_BATTLE_TEST("Trace copies opponent's Intimidate and triggers it immediately")
+{
+    GIVEN {
+        PLAYER(SPECIES_RALTS) { Ability(ABILITY_TRACE); }
+        OPPONENT(SPECIES_MASQUERAIN) { Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN { }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_TRACE);
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
     }
 }
 

@@ -25,6 +25,7 @@ static void AnimTask_MeditateStretchAttacker_Step(u8);
 static void AnimTask_Teleport_Step(u8);
 static void AnimTask_ImprisonOrbs_Step(u8);
 static void AnimTask_SkillSwap_Step(u8);
+static void AnimTask_HeartSwap_Step(u8);
 static void AnimTask_ExtrasensoryDistortion_Step(u8);
 static void AnimTask_TransparentCloneGrowAndShrink_Step(u8);
 static void AnimateZenHeadbutt(struct Sprite *sprite);
@@ -359,6 +360,18 @@ const struct SpriteTemplate gSkillSwapOrbSpriteTemplate =
     .callback = AnimSkillSwapOrb,
 };
 
+// Pink version of the Skill Swap orbs
+const struct SpriteTemplate gHeartSwapOrbSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_PINKVIO_ORB,
+    .paletteTag = ANIM_TAG_PINKVIO_ORB,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = sAffineAnims_SkillSwapOrb,
+    .callback = AnimSkillSwapOrb,
+};
+
 static const union AffineAnimCmd sAffineAnim_LusterPurgeCircle[] =
 {
     AFFINEANIMCMD_FRAME(0x20, 0x20, 0, 0),
@@ -480,7 +493,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker))
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
         {
             gBattleAnimArgs[2] = -gBattleAnimArgs[2];
             gBattleAnimArgs[1] = -gBattleAnimArgs[1];
@@ -488,7 +501,7 @@ static void AnimPsychoCut(struct Sprite *sprite)
         }
     }
 
-    if (!IsContest() && GetBattlerSide(gBattleAnimAttacker) == GetBattlerSide(gBattleAnimTarget))
+    if (!IsContest() && IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
         if (GetBattlerPosition(gBattleAnimTarget) == B_POSITION_PLAYER_LEFT
          || GetBattlerPosition(gBattleAnimTarget) == B_POSITION_OPPONENT_LEFT)
@@ -503,10 +516,10 @@ static void AnimPsychoCut(struct Sprite *sprite)
         }
     }
 
-    InitSpritePosToAnimAttacker(sprite, 1);
+    InitSpritePosToAnimAttacker(sprite, TRUE);
 
-    lVarX = GetBattlerSpriteCoord(gBattleAnimTarget, 2) + gBattleAnimArgs[2];
-    lVarY = GetBattlerSpriteCoord(gBattleAnimTarget, 3) + gBattleAnimArgs[3];
+    lVarX = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) + gBattleAnimArgs[2];
+    lVarY = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + gBattleAnimArgs[3];
     rot = ArcTan2Neg(lVarX - sprite->x, lVarY - sprite->y);
     rot += 0xC000;
     TrySetSpriteRotScale(sprite, FALSE, 0x100, 0x100, rot);
@@ -523,13 +536,13 @@ static void AnimateZenHeadbutt(struct Sprite *sprite)
 {
     if (gBattleAnimArgs[0] == 0)
     {
-        sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
-        sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, 3) + 18;
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) + 18;
     }
     else
     {
-        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
-        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, 3) + 18;
+        sprite->x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
+        sprite->y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) + 18;
     }
 
     StoreSpriteCallbackInData6(sprite, DestroySpriteAndMatrix);
@@ -541,7 +554,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 {
     u8 isContest = IsContest();
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER || isContest)
+    if (IsOnPlayerSide(gBattleAnimAttacker) || isContest)
     {
         sprite->oam.priority = 2;
         sprite->subpriority = 200;
@@ -565,7 +578,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
 
     if (!isContest && IsDoubleBattle())
     {
-        if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+        if (IsOnPlayerSide(gBattleAnimAttacker))
         {
             sprite->x = 72;
             sprite->y = 80;
@@ -578,7 +591,7 @@ static void AnimDefensiveWall(struct Sprite *sprite)
     }
     else
     {
-        if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+        if (!IsOnPlayerSide(gBattleAnimAttacker))
             gBattleAnimArgs[0] = -gBattleAnimArgs[0];
 
         sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X) + gBattleAnimArgs[0];
@@ -707,7 +720,7 @@ static void AnimWallSparkle(struct Sprite *sprite)
 
         if (!IsContest() && IsDoubleBattle())
         {
-            if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+            if (IsOnPlayerSide(gBattleAnimAttacker))
             {
                 sprite->x = 72 - gBattleAnimArgs[0];
                 sprite->y = gBattleAnimArgs[1] + 80;
@@ -740,7 +753,7 @@ static void AnimBentSpoon(struct Sprite *sprite)
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         StartSpriteAnim(sprite, 1);
         sprite->x -= 40;
@@ -764,7 +777,7 @@ static void AnimQuestionMark(struct Sprite *sprite)
     s16 x = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_WIDTH) /  2;
     s16 y = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_HEIGHT) / -2;
 
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_OPPONENT)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         x = -x;
 
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) + x;
@@ -828,7 +841,7 @@ void AnimTask_Teleport(u8 taskId)
     task->data[0] = spriteId;
     task->data[1] = 0;
     task->data[2] = 0;
-    task->data[3] = GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER ? 4 : 8;
+    task->data[3] = !IsOnPlayerSide(gBattleAnimAttacker) ? 4 : 8;
 
     PrepareAffineAnimInTaskData(task, task->data[0], sAffineAnim_Teleport);
     task->func = AnimTask_Teleport_Step;
@@ -1001,7 +1014,7 @@ void AnimTask_SkillSwap(u8 taskId)
     }
     else
     {
-        if (gBattleAnimArgs[0] == 1)
+        if (gBattleAnimArgs[0] == ANIM_TARGET)
         {
             task->data[10] = -10;
             task->data[11] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_LEFT) + 8;
@@ -1023,6 +1036,55 @@ void AnimTask_SkillSwap(u8 taskId)
     task->func = AnimTask_SkillSwap_Step;
 }
 
+// Copy of Skill Swap's function to get position of the user and target
+// arg 0: move target
+void AnimTask_HeartSwap(u8 taskId)
+{
+    struct Task *task = &gTasks[taskId];
+
+    if (IsContest())
+    {
+        if (gBattleAnimArgs[0] == ANIM_TARGET)
+        {
+            task->data[10] = -10;
+            task->data[11] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_RIGHT) - 8;
+            task->data[12] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_TOP) + 8;
+            task->data[13] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_RIGHT) - 8;
+            task->data[14] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_TOP) + 8;
+        }
+        else
+        {
+            task->data[10] = 10;
+            task->data[11] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_LEFT) + 8;
+            task->data[12] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM) - 8;
+            task->data[13] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_LEFT) + 8;
+            task->data[14] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_BOTTOM) - 8;
+        }
+    }
+    else
+    {
+        if (gBattleAnimArgs[0] == ANIM_TARGET)
+        {
+            task->data[10] = -10;
+            task->data[11] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_LEFT) + 8;
+            task->data[12] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_TOP) + 8;
+            task->data[13] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_LEFT) + 8;
+            task->data[14] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_TOP) + 8;
+        }
+        else
+        {
+            task->data[10] = 10;
+            task->data[11] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_RIGHT) - 8;
+            task->data[12] = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM) - 8;
+            task->data[13] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_RIGHT) - 8;
+            task->data[14] = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_BOTTOM) - 8;
+        }
+    }
+
+    task->data[1] = 6;
+    task->func = AnimTask_HeartSwap_Step;
+}
+
 static void AnimTask_SkillSwap_Step(u8 taskId)
 {
     u8 spriteId;
@@ -1035,6 +1097,42 @@ static void AnimTask_SkillSwap_Step(u8 taskId)
         {
             task->data[1] = 0;
             spriteId = CreateSprite(&gSkillSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
+            if (spriteId != MAX_SPRITES)
+            {
+                gSprites[spriteId].data[0] = 16;
+                gSprites[spriteId].data[2] = task->data[13];
+                gSprites[spriteId].data[4] = task->data[14];
+                gSprites[spriteId].data[5] = task->data[10];
+
+                InitAnimArcTranslation(&gSprites[spriteId]);
+                StartSpriteAffineAnim(&gSprites[spriteId], task->data[2] & 3);
+            }
+
+            if (++task->data[2] == 12)
+                task->data[0]++;
+        }
+        break;
+    case 1:
+        if (++task->data[1] > 17)
+            DestroyAnimVisualTask(taskId);
+        break;
+    }
+}
+
+// Copy of Skill Swap's function to vault the series of orbs between the user and target
+// CreateSprite modified so it uses the pink orbs instead of the blue/green ones
+static void AnimTask_HeartSwap_Step(u8 taskId)
+{
+    u8 spriteId;
+    struct Task *task = &gTasks[taskId];
+
+    switch (task->data[0])
+    {
+    case 0:
+        if (++task->data[1] > 6)
+        {
+            task->data[1] = 0;
+            spriteId = CreateSprite(&gHeartSwapOrbSpriteTemplate, task->data[11], task->data[12], 0);
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = 16;
@@ -1281,3 +1379,14 @@ void AnimPsychoBoost(struct Sprite *sprite)
         break;
     }
 }
+
+const struct SpriteTemplate gTachyonCutterSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_CUT,
+    .paletteTag = ANIM_TAG_BUBBLE,
+    .oam = &gOamData_AffineOff_ObjBlend_32x32,
+    .anims = gCuttingSliceAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimCuttingSlice,
+};

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_ROAR].effect == EFFECT_ROAR);
+    ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
 }
 
 SINGLE_BATTLE_TEST("Roar switches the target with a random non-fainted replacement")
@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Roar switches the target with a random non-fainted replaceme
         TURN { MOVE(player, MOVE_ROAR); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, player);
-        MESSAGE("Foe Bulbasaur was dragged out!");
+        MESSAGE("The opposing Bulbasaur was dragged out!");
     }
 }
 
@@ -38,7 +38,7 @@ DOUBLE_BATTLE_TEST("Roar switches the target with a random non-battler, non-fain
         TURN { MOVE(playerLeft, MOVE_ROAR, target: opponentRight); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, playerLeft);
-        MESSAGE("Foe Bulbasaur was dragged out!");
+        MESSAGE("The opposing Bulbasaur was dragged out!");
     }
 }
 
@@ -66,5 +66,40 @@ SINGLE_BATTLE_TEST("Roar fails if replacements fainted")
     } SCENE {
         MESSAGE("Wobbuffet used Roar!");
         MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Roar fails against target with Guard Dog")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_OKIDOGI) { Ability(ABILITY_GUARD_DOG); }
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROAR); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, player);
+            MESSAGE("The opposing Charmander was dragged out!");
+        }
+        MESSAGE("Wobbuffet used Roar!");
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Roar fails to switch out target with Suction Cups")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_OCTILLERY) { Ability(ABILITY_SUCTION_CUPS); }
+        OPPONENT(SPECIES_CHARMANDER);
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROAR); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Roar!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_ROAR, player);
+        ABILITY_POPUP(opponent, ABILITY_SUCTION_CUPS);
+        MESSAGE("The opposing Octillery anchors itself with Suction Cups!");
+        NOT MESSAGE("The opposing Charmander was dragged out!");
     }
 }

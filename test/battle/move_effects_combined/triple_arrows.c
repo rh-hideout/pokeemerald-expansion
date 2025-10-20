@@ -9,7 +9,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
 {
-    u32 ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 50; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 100; }
@@ -22,13 +22,13 @@ SINGLE_BATTLE_TEST("Triple Arrows may lower Defense by one stage")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Foe Wobbuffet's Defense fell!");
+        MESSAGE("The opposing Wobbuffet's Defense fell!");
     }
 }
 
 SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
 {
-    u32 ability;
+    enum Ability ability;
     u32 chance;
     PARAMETRIZE { ability = ABILITY_HUSTLE; chance = 30; }
     PARAMETRIZE { ability = ABILITY_SERENE_GRACE; chance = 60; }
@@ -40,16 +40,22 @@ SINGLE_BATTLE_TEST("Triple Arrows makes the foe flinch 30% of the time")
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
-        MESSAGE("Foe Wobbuffet flinched!");
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
     }
 }
 
-SINGLE_BATTLE_TEST("Triple Arrows lands a critical hit")
+SINGLE_BATTLE_TEST("Triple Arrows has an increased critical hit ratio")
 {
-    PASSES_RANDOMLY(1, 8, RNG_CRITICAL_HIT);
+    u32 j, genConfig = 0, passes = 0, trials = 0;
+
+    PARAMETRIZE { genConfig = GEN_1; passes = 1; trials = 2; }     // 50% with Wobbuffet's base speed
+    for (j = GEN_2; j <= GEN_9; j++) {
+        PARAMETRIZE { genConfig = GEN_2; passes = 1; trials = 8; }
+    }
+    PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        ASSUME(B_CRIT_CHANCE >= GEN_7);
-        ASSUME(gMovesInfo[MOVE_TRIPLE_ARROWS].criticalHitStage == 1);
+        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        ASSUME(GetMoveCriticalHitStage(MOVE_TRIPLE_ARROWS) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -70,8 +76,8 @@ SINGLE_BATTLE_TEST("Triple Arrows can lower Defense and cause flinch at the time
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-        MESSAGE("Foe Wobbuffet's Defense fell!");
-        MESSAGE("Foe Wobbuffet flinched!");
+        MESSAGE("The opposing Wobbuffet's Defense fell!");
+        MESSAGE("The opposing Wobbuffet flinched and couldn't move!");
     }
 }
 
@@ -82,11 +88,11 @@ SINGLE_BATTLE_TEST("Triple Arrows's flinching is prevented by Inner Focus")
         OPPONENT(SPECIES_RIOLU) { Ability(ABILITY_INNER_FOCUS); }
     } WHEN {
         TURN { MOVE(player, MOVE_TRIPLE_ARROWS);
-               MOVE(opponent, MOVE_TACKLE);
+               MOVE(opponent, MOVE_SCRATCH);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TRIPLE_ARROWS, player);
-        NONE_OF { MESSAGE("Foe Wobbuffet flinched!"); }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        NONE_OF { MESSAGE("The opposing Wobbuffet flinched and couldn't move!"); }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }

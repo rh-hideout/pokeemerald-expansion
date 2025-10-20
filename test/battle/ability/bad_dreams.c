@@ -2,7 +2,7 @@
 #include "test/battle.h"
 
 // Also checks that non-sleeping enemy is not affected.
-SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of hp")
+SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of HP")
 {
     u32 status;
     PARAMETRIZE { status = STATUS1_NONE; }
@@ -15,13 +15,13 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     } SCENE {
         if (status == STATUS1_SLEEP) {
             ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
-            MESSAGE("Foe Wobbuffet is tormented!");
+            MESSAGE("The opposing Wobbuffet is tormented!");
             HP_BAR(opponent);
         }
         else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
-                MESSAGE("Foe Wobbuffet is tormented!");
+                MESSAGE("The opposing Wobbuffet is tormented!");
                 HP_BAR(opponent);
             };
         }
@@ -34,6 +34,8 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
         }
     }
 }
+
+TO_DO_BATTLE_TEST("Bad Dreams affects Pokémon with Comatose")
 
 DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is sleeping")
 {
@@ -57,7 +59,7 @@ DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is 
     }
 }
 
-DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping pokemon on the player side")
+DOUBLE_BATTLE_TEST("Bad Dreams activates for both sleeping Pokémon on the player side")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) {Status1(STATUS1_SLEEP);}
@@ -115,11 +117,11 @@ DOUBLE_BATTLE_TEST("Bad Dreams faints both sleeping Pokemon on opponent side")
         TURN {SEND_OUT(opponentLeft, 2); SEND_OUT(opponentRight, 3);}
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BAD_DREAMS);
-        MESSAGE("Foe Wobbuffet is tormented!");
+        MESSAGE("The opposing Wobbuffet is tormented!");
         HP_BAR(opponentLeft);
-        MESSAGE("Foe Wobbuffet fainted!");
-        MESSAGE("Foe Wobbuffet is tormented!");
+        MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet is tormented!");
         HP_BAR(opponentRight);
-        MESSAGE("Foe Wobbuffet fainted!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }

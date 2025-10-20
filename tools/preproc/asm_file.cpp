@@ -26,7 +26,7 @@
 #include "char_util.h"
 #include "utf8.h"
 #include "string_parser.h"
-#include "../../gflib/characters.h"
+#include "../../include/constants/characters.h"
 #include "io.h"
 
 AsmFile::AsmFile(std::string filename, bool isStdin, bool doEnum) : m_filename(filename)
@@ -517,11 +517,68 @@ bool AsmFile::ParseEnum()
 
     long fallbackPosition = m_pos;
     std::string headerFilename = "";
-    long currentHeaderLine = SkipWhitespaceAndEol();
-    std::string enumName = ReadIdentifier();
+    long currentHeaderLine = 0;
+    std::string enumName;
+    while (true)
+    {
+        currentHeaderLine += SkipWhitespaceAndEol();
+        std::string identifier = ReadIdentifier();
+        if (identifier == "__attribute__")
+        {
+            if (m_pos + 1 >= m_size
+             || m_buffer[m_pos] != '('
+             || m_buffer[m_pos + 1] != '(')
+            {
+                m_pos = fallbackPosition - 4;
+                return false;
+            }
+
+            m_pos += 2;
+            int parens = 2;
+            while (true)
+            {
+                char c = m_buffer[m_pos++];
+                if (c == '\n')
+                    currentHeaderLine++;
+
+                if (c == '(')
+                {
+                    parens++;
+                }
+                else if (c == ')')
+                {
+                    parens--;
+                    if (parens == 0)
+                        break;
+                }
+                else if (parens < 2 || m_pos == m_size)
+                {
+                    m_pos = fallbackPosition - 4;
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            enumName = identifier;
+            break;
+        }
+    }
     currentHeaderLine += SkipWhitespaceAndEol();
+    std::string enumBase = "0";
     long enumCounter = 0;
     long symbolCount = 0;
+
+    if (m_buffer[m_pos] == ':') // : <type>
+    {
+        m_pos++;
+        std::string underlyingType;
+        do {
+            currentHeaderLine += SkipWhitespaceAndEol();
+            underlyingType = ReadIdentifier();
+        } while (!underlyingType.empty());
+        currentHeaderLine += SkipWhitespaceAndEol();
+    }
 
     if (m_buffer[m_pos] != '{') // assume assembly macro, otherwise assume enum and report errors accordingly
     {
@@ -542,11 +599,32 @@ bool AsmFile::ParseEnum()
             if (m_buffer[m_pos] == '=')
             {
                 m_pos++;
-                currentHeaderLine += SkipWhitespaceAndEol();
-                enumCounter = ReadInteger(headerFilename, currentHeaderLine);
-                currentHeaderLine += SkipWhitespaceAndEol();
+                SkipWhitespace();
+                enumBase.clear();
+                for (;;)
+                {
+                    if (m_pos == m_size)
+                        RaiseError("unexpected EOF");
+                    if (m_buffer[m_pos] == ',')
+                        break;
+                    if (m_buffer[m_pos] == '\n')
+                    {
+                        currentHeaderLine++;
+                        enumBase.push_back(' ');
+                    }
+                    else
+                    {
+                        enumBase.push_back(m_buffer[m_pos]);
+                    }
+                    m_pos++;
+                }
+                enumCounter = 0;
             }
-            std::printf(".equiv %s, %ld\n", currentIdentName.c_str(), enumCounter);
+            // HACK(#7394): Make the definitions global so that C 'asm'
+            // statements are able to reference them (if they happen to
+            // be available in an assembled object file).
+            std::printf(".global %s; ", currentIdentName.c_str());
+            std::printf(".equiv %s, (%s) + %ld\n", currentIdentName.c_str(), enumBase.c_str(), enumCounter);
             enumCounter++;
             symbolCount++;
         }
@@ -650,7 +728,7 @@ void AsmFile::RaiseWarning(const char* format, ...)
 int AsmFile::SkipWhitespaceAndEol()
 {
     int newlines = 0;
-    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\n')
+    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
     {
         if (m_buffer[m_pos] == '\n')
             newlines++;

@@ -416,6 +416,13 @@
 #define ANIM_TAG_BEAM                       (ANIM_SPRITES_START + 402)
 #define ANIM_TAG_RED_EXPLOSION              (ANIM_SPRITES_START + 403)
 #define ANIM_TAG_PURPLE_CHAIN               (ANIM_SPRITES_START + 404)
+#define ANIM_TAG_PINKVIO_ORB                (ANIM_SPRITES_START + 405)
+#define ANIM_TAG_STARSTORM                  (ANIM_SPRITES_START + 406)
+#define ANIM_TAG_SALT_PARTICLE              (ANIM_SPRITES_START + 407)
+#define ANIM_TAG_TERA_SYMBOL                (ANIM_SPRITES_START + 408)
+#define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
+#define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
+#define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -503,9 +510,9 @@
 #define BG_BOLT_STRIKE 55
 #define BG_ZMOVE_ACTIVATE 56
 #define BG_TECTONIC_RAGE 57
-#define BG_BLUE_SKY_DAY 58
-#define BG_BLUE_SKY_AFTERNOON 59
-#define BG_BLUE_SKY_NIGHT 60
+#define BG_ROCK_FIELD_DAY 58
+#define BG_ROCK_FIELD_AFTERNOON 59
+#define BG_ROCK_FIELD_NIGHT 60
 #define BG_ZMOVE_MOUNTAIN 61
 #define BG_NEVERENDING_NIGHTMARE 62
 #define BG_WATER_PULSE 63
@@ -583,8 +590,9 @@
 #define B_ANIM_TERA_CHARGE              50
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
+#define B_ANIM_POWER_CONSTRUCT          53
 
-#define NUM_B_ANIMS_GENERAL             53
+#define NUM_B_ANIMS_GENERAL             54
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -608,8 +616,9 @@
 #define B_ANIM_STATUS_FRZ               6
 #define B_ANIM_STATUS_CURSED            7
 #define B_ANIM_STATUS_NIGHTMARE         8
+#define B_ANIM_STATUS_FRB               9
 
-#define NUM_B_ANIMS_STATUS              9
+#define NUM_B_ANIMS_STATUS              10
 
 // Tasks with return values often assign them to gBattleAnimArgs[7].
 #define ARG_RET_ID 7
@@ -652,6 +661,12 @@
 #define ANIM_SURF_PAL_SURF           0
 #define ANIM_SURF_PAL_MUDDY_WATER    1
 #define ANIM_SURF_PAL_SLUDGE_WAVE    2
+
+// Order Up palettes for Commander
+#define ANIM_ORDER_UP_NONE           0
+#define ANIM_ORDER_UP_CURLY          1
+#define ANIM_ORDER_UP_DROOPY         2
+#define ANIM_ORDER_UP_STRETCHY       3
 
 // Flags given to various functions to indicate which palettes to consider.
 // Handled by UnpackSelectedBattlePalettes

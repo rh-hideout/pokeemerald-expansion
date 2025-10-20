@@ -3,6 +3,14 @@
 
 #include "battle_controllers.h"
 
+// used for sBattlerCoords and sBattlerHealthboxCoords
+enum BattleCoordTypes
+{
+    BATTLE_COORDS_SINGLES,
+    BATTLE_COORDS_DOUBLES,
+    BATTLE_COORDS_COUNT,
+};
+
 enum
 {
     HP_CURRENT,
@@ -100,13 +108,13 @@ enum
     HEALTHBOX_SAFARI_BALLS_TEXT
 };
 
-u32 WhichBattleCoords(u32 battlerId);
+enum BattleCoordTypes GetBattlerCoordsIndex(u32 battler);
 u8 CreateBattlerHealthboxSprites(u8 battler);
 u8 CreateSafariPlayerHealthboxSprites(void);
-void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 currVal, s32 receivedValue);
+void SetBattleBarStruct(u8 battler, u8 healthboxSpriteId, s32 maxVal, s32 oldVal, s32 receivedValue);
 void SetHealthboxSpriteInvisible(u8 healthboxSpriteId);
 void SetHealthboxSpriteVisible(u8 healthboxSpriteId);
-void DummyBattleInterfaceFunc(u8 healthboxSpriteId, bool8 isDoubleBattleBankOnly);
+void DummyBattleInterfaceFunc(u8 healthboxSpriteId, bool8 isDoubleBattleBattlerOnly);
 void UpdateOamPriorityInAllHealthboxes(u8 priority, bool32 hideHpBoxes);
 void InitBattlerHealthboxCoords(u8 battler);
 void GetBattlerHealthboxCoords(u8 battler, s16 *x, s16 *y);
@@ -118,7 +126,7 @@ void UpdateHealthboxAttribute(u8 healthboxSpriteId, struct Pokemon *mon, u8 elem
 s32 MoveBattleBar(u8 battler, u8 healthboxSpriteId, u8 whichBar, u8 unused);
 u8 GetScaledHPFraction(s16 hp, s16 maxhp, u8 scale);
 u8 GetHPBarLevel(s16 hp, s16 maxhp);
-void CreateAbilityPopUp(u8 battlerId, u32 ability, bool32 isDoubleBattle);
+void CreateAbilityPopUp(u8 battlerId, enum Ability ability, bool32 isDoubleBattle);
 void DestroyAbilityPopUp(u8 battlerId);
 bool32 CanThrowLastUsedBall(void);
 void TryHideLastUsedBall(void);
@@ -128,5 +136,7 @@ void SwapBallToDisplay(bool32 sameBall);
 void ArrowsChangeColorLastBallCycle(bool32 showArrows);
 void UpdateAbilityPopup(u8 battlerId);
 void CategoryIcons_LoadSpritesGfx(void);
+void TryToAddMoveInfoWindow(void);
+void TryToHideMoveInfoWindow(void);
 
 #endif // GUARD_BATTLE_INTERFACE_H

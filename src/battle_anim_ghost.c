@@ -346,7 +346,9 @@ static void AnimConfuseRayBallBounce_Step2(struct Sprite *sprite)
         sprite->callback = DestroyAnimSpriteAndDisableBlend;
     }
     else
+    {
         UpdateConfuseRayBallBlend(sprite);
+    }
 }
 
 static void UpdateConfuseRayBallBlend(struct Sprite *sprite)
@@ -595,7 +597,7 @@ void AnimTask_NightmareClone(u8 taskId)
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));
     SetGpuReg(REG_OFFSET_BLDALPHA, BLDALPHA_BLEND(task->data[2], task->data[3]));
     gSprites[task->data[0]].data[0] = 80;
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         gSprites[task->data[0]].data[1] = -144;
         gSprites[task->data[0]].data[2] = 112;
@@ -1029,7 +1031,7 @@ void AnimTask_CurseStretchingBlackBg(u8 taskId)
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_TGT1_BG3 | BLDCNT_EFFECT_DARKEN));
     SetGpuReg(REG_OFFSET_BLDY, 16);
 
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER || IsContest())
+    if (!IsOnPlayerSide(gBattleAnimAttacker) || IsContest())
         startX = 40;
     else
         startX = 200;
@@ -1112,7 +1114,7 @@ static void AnimCurseNail(struct Sprite *sprite)
     s16 xDelta2;
 
     InitSpritePosToAnimAttacker(sprite, TRUE);
-    if (GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimAttacker))
     {
         xDelta = 24;
         xDelta2 = -2;
@@ -1203,7 +1205,7 @@ void AnimGhostStatusSprite(struct Sprite *sprite)
     u16 coeffA;
 
     sprite->x2 = Sin(sprite->data[0], 12);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         sprite->x2 = -sprite->x2;
 
     sprite->data[0] = (sprite->data[0] + 6) & 0xFF;
@@ -1281,7 +1283,7 @@ void AnimTask_GrudgeFlames_Step(u8 taskId)
             if (spriteId != MAX_SPRITES)
             {
                 gSprites[spriteId].data[0] = taskId;
-                gSprites[spriteId].data[1] = GetBattlerSide(gBattleAnimAttacker) == B_SIDE_PLAYER;
+                gSprites[spriteId].data[1] = IsOnPlayerSide(gBattleAnimAttacker);
 
                 gSprites[spriteId].data[2] = (i * 42) & 0xFF;
                 gSprites[spriteId].data[3] = task->data[11];
@@ -1463,14 +1465,14 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     task->data[9] = 16;
     task->data[10] = gBattleAnimArgs[0];
 
-    baseX = GetBattlerSpriteCoord(gBattleAnimAttacker, 2);
+    baseX = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     baseY = GetBattlerSpriteCoordAttr(gBattleAnimAttacker, BATTLER_COORD_ATTR_BOTTOM);
     if (!IsContest())
     {
         spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);
         if (spriteId != MAX_SPRITES)
         {
-            x = GetBattlerSpriteCoord(gBattleAnimTarget, 2);
+            x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
             y = GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_BOTTOM);
             gSprites[spriteId].data[0] = baseX << 4;
             gSprites[spriteId].data[1] = baseY << 4;

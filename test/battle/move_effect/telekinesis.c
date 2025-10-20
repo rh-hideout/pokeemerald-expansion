@@ -3,14 +3,14 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_TELEKINESIS].effect == EFFECT_TELEKINESIS);
+    ASSUME(GetMoveEffect(MOVE_TELEKINESIS) == EFFECT_TELEKINESIS);
 }
 
 SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks made against it")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_MINIMIZE].effect == EFFECT_MINIMIZE); // Raises evs by 2
-        ASSUME(gMovesInfo[MOVE_SCREECH].accuracy < 100);
+        ASSUME(GetMoveEffect(MOVE_MINIMIZE) == EFFECT_MINIMIZE); // Raises evs by 2
+        ASSUME(GetMoveAccuracy(MOVE_SCREECH) < 100);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
@@ -18,8 +18,8 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target unable to avoid any attacks mad
         TURN { MOVE(player, MOVE_SCREECH, hit:FALSE); }
     } SCENE {
         MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("Foe Wynaut was hurled into the air!");
-        MESSAGE("Foe Wynaut used Minimize!");
+        MESSAGE("The opposing Wynaut was hurled into the air!");
+        MESSAGE("The opposing Wynaut used Minimize!");
         MESSAGE("Wobbuffet used Screech!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCREECH, player);
         NOT MESSAGE("Wobbuffet's attack missed!");
@@ -37,17 +37,17 @@ SINGLE_BATTLE_TEST("Telekinesis ends after 3 turns")
         TURN { }
     } SCENE {
         MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("Foe Wynaut was hurled into the air!");
+        MESSAGE("The opposing Wynaut was hurled into the air!");
         MESSAGE("Wobbuffet used Celebrate!");
         MESSAGE("Wobbuffet used Celebrate!");
-        MESSAGE("Foe Wynaut was freed from the telekinesis!");
+        MESSAGE("The opposing Wynaut was freed from the telekinesis!");
     }
 }
 
 SINGLE_BATTLE_TEST("Telekinesis makes the target immune to Ground-type attacks")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_BULLDOZE].type == TYPE_GROUND);
+        ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
@@ -59,13 +59,13 @@ SINGLE_BATTLE_TEST("Telekinesis makes the target immune to Ground-type attacks")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
         HP_BAR(opponent);
         MESSAGE("Wobbuffet used Telekinesis!");
-        MESSAGE("Foe Wynaut was hurled into the air!");
+        MESSAGE("The opposing Wynaut was hurled into the air!");
         MESSAGE("Wobbuffet used Bulldoze!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
             HP_BAR(opponent);
         }
-        MESSAGE("It doesn't affect Foe Wynaut…");
+        MESSAGE("It doesn't affect the opposing Wynaut…");
     }
 }
 
