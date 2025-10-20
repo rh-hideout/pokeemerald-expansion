@@ -4625,6 +4625,7 @@ static void Task_DidntLearnMove(u8 taskId)
         DestroyTask(taskId);
         ScriptContext_Enable();
     }
+}
 
 void EnterCode(void)
 {
