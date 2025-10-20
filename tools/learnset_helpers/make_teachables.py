@@ -37,7 +37,6 @@ ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"#define HGSS_SORT_TMS_BY_NUM\s+(?P
 TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 TEACHABLE_ARRAY_DECL_PAT = re.compile(r"(?P<decl>static const u16 s(?P<name>\w+)TeachableLearnset\[\]) = {[\s\S]*?};")
-MOVE_TUTOR_ARRAY_DECL_PAT = re.compile(r"(?P<decl>const u16 gTutorMoves\[\] = {)[\s\S]*?    MOVE_UNAVAILABLE,")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
 TUTOR_ARRAY_ENABLED_PAT = re.compile(r"#define\s+POKEDEX_PLUS_HGSS\s+(?P<cfg_val>[^ ]*)")
 POKEMON_TEACHING_TYPE_PAT = re.compile(r"\{[\s\S]*?(.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),[\s\S]*?)?\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset[\s\S]*?\}")
@@ -137,16 +136,6 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
             "};\n",
         ])
         cursor = match_e + 1
-
-    tutors_array = MOVE_TUTOR_ARRAY_DECL_PAT.search(old)
-    match_b, match_e = tutors_array.span()
-    new += old[cursor:match_b]
-    new += "\n".join([
-        f"{tutors_array.group('decl')}",
-        f"    {joinpat.join(chain(sorted(tutors)))},"
-        f"\n    MOVE_UNAVAILABLE,\n"
-    ])
-    cursor = match_e + 1
 
     new += old[cursor:]
 
