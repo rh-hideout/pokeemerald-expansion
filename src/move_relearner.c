@@ -781,8 +781,8 @@ static void DoMoveRelearnerMain(void)
                 else
                 {
                     move = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot);
-                    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot, &sMoveRelearnerStruct->menuItems[sMoveRelearnerMenuSate.listRow + sMoveRelearnerMenuSate.listOffset].id);
-                    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot, &gMovesInfo[sMoveRelearnerStruct->menuItems[sMoveRelearnerMenuSate.listRow + sMoveRelearnerMenuSate.listOffset].id].pp);
+                    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + sMoveRelearnerStruct->moveSlot, &sMoveRelearnerStruct->menuItems[sMoveRelearnerMenuState.listRow + sMoveRelearnerMenuState.listOffset].id);
+                    SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + sMoveRelearnerStruct->moveSlot, &gMovesInfo[sMoveRelearnerStruct->menuItems[sMoveRelearnerMenuState.listRow + sMoveRelearnerMenuState.listOffset].id].pp);
 
                     u8 ppBonuses = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP_BONUSES);
                     ppBonuses &= gPPUpClearMask[sMoveRelearnerStruct->moveSlot];
