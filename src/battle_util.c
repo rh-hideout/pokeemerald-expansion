@@ -2587,7 +2587,6 @@ static enum MoveCanceller CancellerWeatherPrimal(struct BattleContext *ctx)
         }
         if (effect == MOVE_STEP_FAILURE)
         {
-            gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
             gProtectStructs[ctx->battlerAtk].chargingTurn = FALSE;
             CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELLER_CHECK);
             gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
@@ -5314,10 +5313,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))
             {
-                gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-                BattleScriptPushCursor();
-                SetMoveEffect(gBattlerAttacker, gBattlerTarget, FALSE, FALSE);
-                BattleScriptPop();
+                SetMoveEffect(gBattlerAttacker, gBattlerTarget, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, FALSE, FALSE);
                 effect++;
             }
             break;

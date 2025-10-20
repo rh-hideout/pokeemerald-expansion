@@ -457,8 +457,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 gBattleMons[battler].volatiles.multipleTurns = FALSE;
                 if (!gBattleMons[battler].volatiles.confusionTurns)
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
-                    SetMoveEffect(battler, battler, TRUE, FALSE);
+                    SetMoveEffect(battler, battler, MOVE_EFFECT_CONFUSION, gBattlescriptCurrInstr, TRUE, FALSE);
                     if (gBattleMons[battler].volatiles.confusionTurns)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;

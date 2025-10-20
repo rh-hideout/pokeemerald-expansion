@@ -221,10 +221,13 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
      && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam)
      && ability != ABILITY_STENCH)
     {
-        gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-        BattleScriptPushCursor();
-        SetMoveEffect(battlerAtk, battlerDef, FALSE, FALSE);
-        BattleScriptPop();
+        SetMoveEffect(
+            battlerAtk,
+            battlerDef,
+            MOVE_EFFECT_FLINCH,
+            gBattlescriptCurrInstr,
+            FALSE,
+            FALSE);
         effect = ITEM_EFFECT_OTHER;
     }
 
