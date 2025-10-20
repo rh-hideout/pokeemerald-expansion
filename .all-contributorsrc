@@ -396,6 +396,42 @@
       "contributions": [
         "data"
       ]
+    },
+    {
+      "login": "Doesnty",
+      "name": "Doesnty",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6163136?v=4",
+      "profile": "https://github.com/Doesnty",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "FosterProgramming",
+      "name": "FosterProgramming",
+      "avatar_url": "https://avatars.githubusercontent.com/u/178871164?v=4",
+      "profile": "https://github.com/FosterProgramming",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Squeetz",
+      "name": "Squeetz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21145213?v=4",
+      "profile": "https://github.com/Squeetz",
+      "contributions": [
+        "maintenance"
+      ]
+    },
+    {
+      "login": "ghostyboyy97",
+      "name": "ghostyboyy97",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106448956?v=4",
+      "profile": "https://github.com/ghostyboyy97",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
