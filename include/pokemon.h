@@ -908,7 +908,5 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 u32 IsSpeciesOfType(u32 species, u32 type);
-u32 GetUniversalMovesCount(void);
-u32 GetTutorMovesCount(void);
 
 #endif // GUARD_POKEMON_H
