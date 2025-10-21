@@ -5754,7 +5754,8 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
     if (species == SPECIES_EGG)
         return 0;
 
-    for (i = 0; i < MAX_MON_MOVES; i++){
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
         if(gSpecialVar_MonBoxId == 0xFF)
             learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
         else

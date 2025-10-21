@@ -7967,13 +7967,15 @@ void MoveDeleterForgetMove(void)
 {
     u16 i;
 
-    if(gSpecialVar_MonBoxId == 0xFF){
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
         SetMonMoveSlot(&gPlayerParty[gSpecialVar_0x8004], MOVE_NONE, gSpecialVar_0x8005);
         RemoveMonPPBonus(&gPlayerParty[gSpecialVar_0x8004], gSpecialVar_0x8005);
         for (i = gSpecialVar_0x8005; i < MAX_MON_MOVES - 1; i++)
             ShiftMoveSlot(&gPlayerParty[gSpecialVar_0x8004], i, i + 1);
     }
-    else{
+    else
+    {
         i = MOVE_NONE;
         SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + gSpecialVar_0x8005, &i);
         SetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PP1 + gSpecialVar_0x8005, &gMovesInfo[MOVE_NONE].pp);
