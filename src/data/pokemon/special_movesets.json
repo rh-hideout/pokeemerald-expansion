@@ -29,5 +29,9 @@
       "MOVE_SPLISHY_SPLASH",
       "MOVE_VOLT_TACKLE",
       "MOVE_ZIPPY_ZAP"
+    ],
+  "extraTutors":
+    [
+      
     ]
 }
