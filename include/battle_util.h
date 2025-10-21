@@ -40,7 +40,15 @@ enum MoveAbsorbed
     MOVE_ABSORBED_BY_BOOST_FLASH_FIRE,
 };
 
-enum {
+enum FieldEffectCases
+{
+    FIELD_EFFECT_TRAINER_STATUSES,
+    FIELD_EFFECT_OVERWORLD_TERRAIN,
+    FIELD_EFFECT_OVERWORLD_WEATHER,
+};
+
+enum
+{
     ABILITYEFFECT_ON_SWITCHIN,
     ABILITYEFFECT_ENDTURN,
     ABILITYEFFECT_MOVE_END_ATTACKER,
@@ -54,11 +62,8 @@ enum {
     ABILITYEFFECT_NEUTRALIZINGGAS_FIRST_TURN,
     ABILITYEFFECT_ON_WEATHER,
     ABILITYEFFECT_ON_TERRAIN,
-    ABILITYEFFECT_SWITCH_IN_TERRAIN,
-    ABILITYEFFECT_SWITCH_IN_WEATHER,
     ABILITYEFFECT_OPPORTUNIST,
     ABILITYEFFECT_OPPORTUNIST_FIRST_TURN,
-    ABILITYEFFECT_SWITCH_IN_STATUSES,
     ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES,
 };
 
@@ -253,6 +258,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, bool32 viaAbility);
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum FunctionCallOption option);
 bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, u32 move, u32 moveType, enum FunctionCallOption option);
+bool32 TryFieldEffects(enum FieldEffectCases caseId);
 u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg);
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);

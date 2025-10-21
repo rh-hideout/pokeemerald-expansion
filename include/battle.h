@@ -681,15 +681,13 @@ struct BattleStruct
         struct LinkBattlerHeader linkBattlerHeader;
         struct BattleVideo battleVideo;
     } multiBuffer;
-    u8 startingStatus:6; // status to apply at battle start. defined in constants/battle.h
-    u8 startingStatusDone:1;
-    u8 terrainDone:1;
-    u8 overworldWeatherDone:1;
+    u8 startingStatus; // status to apply at battle start. defined in constants/battle.h
     u8 battlerKOAnimsRunning:3;
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
+    u8 padding1:1;
     u16 startingStatusTimer;
     u8 atkCancellerTracker;
     struct BattleTvMovePoints tvMovePoints;
@@ -773,14 +771,14 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 noTargetPresent:1;
-    u8 padding1:1;
+    u8 padding2:1;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding2:2;
+    u8 padding3:2;
     u16 flingItem;
 };
 

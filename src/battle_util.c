@@ -3584,7 +3584,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     return effect;
 }
 
-static inline u32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer)
+static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer)
 {
     if (!(gFieldStatuses & flag))
     {
@@ -3596,13 +3596,13 @@ static inline u32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *t
         else
             *timer = 0; // Infinite
 
-        return 1;
+        return TRUE;
     }
 
-    return 0;
+    return FALSE;
 }
 
-static inline u32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer)
+static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer)
 {
     if (!(gSideStatuses[side] & flag))
     {
@@ -3615,10 +3615,232 @@ static inline u32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 ani
         else
             *timer = 0; // Infinite
 
-        return 1;
+        return TRUE;
     }
 
-    return 0;
+    return FALSE;
+}
+
+bool32 TryFieldEffects(enum FieldEffectCases caseId)
+{
+    bool32 effect = FALSE;
+
+    if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
+        return FALSE;
+
+    switch (caseId)
+    {
+    case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
+        switch ((enum StartingStatus) gBattleStruct->startingStatus)
+        {
+        case STARTING_STATUS_NONE:
+            break;
+        case STARTING_STATUS_ELECTRIC_TERRAIN:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_ELECTRIC_TERRAIN,
+                        B_MSG_TERRAIN_SET_ELECTRIC,
+                        0,
+                        &gFieldTimers.terrainTimer);
+            break;
+        case STARTING_STATUS_MISTY_TERRAIN:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_MISTY_TERRAIN,
+                        B_MSG_TERRAIN_SET_MISTY,
+                        0,
+                        &gFieldTimers.terrainTimer);
+            break;
+        case STARTING_STATUS_GRASSY_TERRAIN:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_GRASSY_TERRAIN,
+                        B_MSG_TERRAIN_SET_GRASSY,
+                        0,
+                        &gFieldTimers.terrainTimer);
+            break;
+        case STARTING_STATUS_PSYCHIC_TERRAIN:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_PSYCHIC_TERRAIN,
+                        B_MSG_TERRAIN_SET_PSYCHIC,
+                        0,
+                        &gFieldTimers.terrainTimer);
+            break;
+        case STARTING_STATUS_TRICK_ROOM:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_TRICK_ROOM,
+                        B_MSG_SET_TRICK_ROOM,
+                        B_ANIM_TRICK_ROOM,
+                        &gFieldTimers.trickRoomTimer);
+            break;
+        case STARTING_STATUS_MAGIC_ROOM:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_MAGIC_ROOM,
+                        B_MSG_SET_MAGIC_ROOM,
+                        B_ANIM_MAGIC_ROOM,
+                        &gFieldTimers.magicRoomTimer);
+            break;
+        case STARTING_STATUS_WONDER_ROOM:
+            effect = SetStartingFieldStatus(
+                        STATUS_FIELD_WONDER_ROOM,
+                        B_MSG_SET_WONDER_ROOM,
+                        B_ANIM_WONDER_ROOM,
+                        &gFieldTimers.wonderRoomTimer);
+            break;
+        case STARTING_STATUS_TAILWIND_PLAYER:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_TAILWIND,
+                        B_SIDE_PLAYER,
+                        B_MSG_SET_TAILWIND,
+                        B_ANIM_TAILWIND,
+                        &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
+            break;
+        case STARTING_STATUS_TAILWIND_OPPONENT:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_TAILWIND,
+                        B_SIDE_OPPONENT,
+                        B_MSG_SET_TAILWIND,
+                        B_ANIM_TAILWIND,
+                        &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
+            break;
+        case STARTING_STATUS_RAINBOW_PLAYER:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_RAINBOW,
+                        B_SIDE_PLAYER,
+                        B_MSG_SET_RAINBOW,
+                        B_ANIM_RAINBOW,
+                        &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
+            break;
+        case STARTING_STATUS_RAINBOW_OPPONENT:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_RAINBOW,
+                        B_SIDE_OPPONENT,
+                        B_MSG_SET_RAINBOW,
+                        B_ANIM_RAINBOW,
+                        &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
+            break;
+        case STARTING_STATUS_SEA_OF_FIRE_PLAYER:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_SEA_OF_FIRE,
+                        B_SIDE_PLAYER,
+                        B_MSG_SET_SEA_OF_FIRE,
+                        B_ANIM_SEA_OF_FIRE,
+                        &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
+            break;
+        case STARTING_STATUS_SEA_OF_FIRE_OPPONENT:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_SEA_OF_FIRE,
+                        B_SIDE_OPPONENT,
+                        B_MSG_SET_SEA_OF_FIRE,
+                        B_ANIM_SEA_OF_FIRE,
+                        &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
+            break;
+        case STARTING_STATUS_SWAMP_PLAYER:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_SWAMP,
+                        B_SIDE_PLAYER,
+                        B_MSG_SET_SWAMP,
+                        B_ANIM_SWAMP,
+                        &gSideTimers[B_SIDE_PLAYER].swampTimer);
+            break;
+        case STARTING_STATUS_SWAMP_OPPONENT:
+            effect = SetStartingSideStatus(
+                        SIDE_STATUS_SWAMP,
+                        B_SIDE_OPPONENT,
+                        B_MSG_SET_SWAMP,
+                        B_ANIM_SWAMP,
+                        &gSideTimers[B_SIDE_OPPONENT].swampTimer);
+            break;
+        }
+        BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+        break;
+    case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
+        if (B_THUNDERSTORM_TERRAIN == TRUE
+         && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
+         && GetCurrentWeather() == WEATHER_RAIN_THUNDERSTORM)
+        {
+            // overworld weather started rain, so just do electric terrain anim
+            gFieldStatuses = STATUS_FIELD_ELECTRIC_TERRAIN;
+            gFieldTimers.terrainTimer = 0;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
+            BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+            effect = TRUE;
+        }
+        else if (B_OVERWORLD_FOG >= GEN_8
+              && (GetCurrentWeather() == WEATHER_FOG_HORIZONTAL || GetCurrentWeather() == WEATHER_FOG_DIAGONAL)
+              && !(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
+        {
+            gFieldStatuses = STATUS_FIELD_MISTY_TERRAIN;
+            gFieldTimers.terrainTimer = 0;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
+            BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+            effect = TRUE;
+        }
+        break;
+    case FIELD_EFFECT_OVERWORLD_WEATHER:
+        if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
+        {
+            switch (GetCurrentWeather())
+            {
+            case WEATHER_RAIN:
+            case WEATHER_RAIN_THUNDERSTORM:
+            case WEATHER_DOWNPOUR:
+                if (!(gBattleWeather & B_WEATHER_RAIN))
+                {
+                    gBattleWeather = B_WEATHER_RAIN_NORMAL;
+                    gBattleScripting.animArg1 = B_ANIM_RAIN_CONTINUES;
+                    effect = TRUE;
+                }
+                break;
+            case WEATHER_SANDSTORM:
+                if (!(gBattleWeather & B_WEATHER_SANDSTORM))
+                {
+                    gBattleWeather = B_WEATHER_SANDSTORM;
+                    gBattleScripting.animArg1 = B_ANIM_SANDSTORM_CONTINUES;
+                    effect = TRUE;
+                }
+                break;
+            case WEATHER_DROUGHT:
+                if (!(gBattleWeather & B_WEATHER_SUN))
+                {
+                    gBattleWeather = B_WEATHER_SUN_NORMAL;
+                    gBattleScripting.animArg1 = B_ANIM_SUN_CONTINUES;
+                    effect = TRUE;
+                }
+                break;
+            case WEATHER_SNOW:
+                if (!(gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+                {
+                    if (B_OVERWORLD_SNOW >= GEN_9)
+                    {
+                        gBattleWeather = B_WEATHER_SNOW;
+                        gBattleScripting.animArg1 = B_ANIM_SNOW_CONTINUES;
+                    }
+                    else
+                    {
+                        gBattleWeather = B_WEATHER_HAIL;
+                        gBattleScripting.animArg1 = B_ANIM_HAIL_CONTINUES;
+                    }
+                    effect = TRUE;
+                }
+                break;
+            case WEATHER_FOG_DIAGONAL:
+            case WEATHER_FOG_HORIZONTAL:
+                if (B_OVERWORLD_FOG == GEN_4 && !(gBattleWeather & B_WEATHER_FOG))
+                {
+                    gBattleWeather = B_WEATHER_FOG;
+                    gBattleScripting.animArg1 = B_ANIM_FOG_CONTINUES;
+                    effect = TRUE;
+                }
+                break;
+            }
+        }
+        if (effect)
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = GetCurrentWeather();
+            BattleScriptPushCursorAndCallback(BattleScript_OverworldWeatherStarts);
+        }
+        break;
+    }
+
+    return effect;
 }
 
 u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg)
@@ -3651,215 +3873,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
 
     switch (caseID)
     {
-    case ABILITYEFFECT_SWITCH_IN_STATUSES:  // starting field/side/etc statuses with a variable
-        {
-            gBattleScripting.battler = battler;
-            switch (gBattleStruct->startingStatus)
-            {
-            case STARTING_STATUS_ELECTRIC_TERRAIN:
-                effect = SetStartingFieldStatus(STATUS_FIELD_ELECTRIC_TERRAIN,
-                                                B_MSG_TERRAIN_SET_ELECTRIC,
-                                                0,
-                                                &gFieldTimers.terrainTimer);
-                effect = (effect == 1) ? 2 : 0;
-                break;
-            case STARTING_STATUS_MISTY_TERRAIN:
-                effect = SetStartingFieldStatus(STATUS_FIELD_MISTY_TERRAIN,
-                                                B_MSG_TERRAIN_SET_MISTY,
-                                                0,
-                                                &gFieldTimers.terrainTimer);
-                effect = (effect == 1) ? 2 : 0;
-                break;
-            case STARTING_STATUS_GRASSY_TERRAIN:
-                effect = SetStartingFieldStatus(STATUS_FIELD_GRASSY_TERRAIN,
-                                                B_MSG_TERRAIN_SET_GRASSY,
-                                                0,
-                                                &gFieldTimers.terrainTimer);
-                effect = (effect == 1) ? 2 : 0;
-                break;
-            case STARTING_STATUS_PSYCHIC_TERRAIN:
-                effect = SetStartingFieldStatus(STATUS_FIELD_PSYCHIC_TERRAIN,
-                                                B_MSG_TERRAIN_SET_PSYCHIC,
-                                                0,
-                                                &gFieldTimers.terrainTimer);
-                effect = (effect == 1) ? 2 : 0;
-                break;
-            case STARTING_STATUS_TRICK_ROOM:
-                effect = SetStartingFieldStatus(STATUS_FIELD_TRICK_ROOM,
-                                                B_MSG_SET_TRICK_ROOM,
-                                                B_ANIM_TRICK_ROOM,
-                                                &gFieldTimers.trickRoomTimer);
-                break;
-            case STARTING_STATUS_MAGIC_ROOM:
-                effect = SetStartingFieldStatus(STATUS_FIELD_MAGIC_ROOM,
-                                                B_MSG_SET_MAGIC_ROOM,
-                                                B_ANIM_MAGIC_ROOM,
-                                                &gFieldTimers.magicRoomTimer);
-                break;
-            case STARTING_STATUS_WONDER_ROOM:
-                effect = SetStartingFieldStatus(STATUS_FIELD_WONDER_ROOM,
-                                                B_MSG_SET_WONDER_ROOM,
-                                                B_ANIM_WONDER_ROOM,
-                                                &gFieldTimers.wonderRoomTimer);
-                break;
-            case STARTING_STATUS_TAILWIND_PLAYER:
-                effect = SetStartingSideStatus(SIDE_STATUS_TAILWIND,
-                                               B_SIDE_PLAYER,
-                                               B_MSG_SET_TAILWIND,
-                                               B_ANIM_TAILWIND,
-                                               &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
-                break;
-            case STARTING_STATUS_TAILWIND_OPPONENT:
-                effect = SetStartingSideStatus(SIDE_STATUS_TAILWIND,
-                                               B_SIDE_OPPONENT,
-                                               B_MSG_SET_TAILWIND,
-                                               B_ANIM_TAILWIND,
-                                               &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
-                break;
-            case STARTING_STATUS_RAINBOW_PLAYER:
-                effect = SetStartingSideStatus(SIDE_STATUS_RAINBOW,
-                                               B_SIDE_PLAYER,
-                                               B_MSG_SET_RAINBOW,
-                                               B_ANIM_RAINBOW,
-                                               &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
-                break;
-            case STARTING_STATUS_RAINBOW_OPPONENT:
-                effect = SetStartingSideStatus(SIDE_STATUS_RAINBOW,
-                                               B_SIDE_OPPONENT,
-                                               B_MSG_SET_RAINBOW,
-                                               B_ANIM_RAINBOW,
-                                               &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
-                break;
-            case STARTING_STATUS_SEA_OF_FIRE_PLAYER:
-                effect = SetStartingSideStatus(SIDE_STATUS_SEA_OF_FIRE,
-                                               B_SIDE_PLAYER,
-                                               B_MSG_SET_SEA_OF_FIRE,
-                                               B_ANIM_SEA_OF_FIRE,
-                                               &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
-                break;
-            case STARTING_STATUS_SEA_OF_FIRE_OPPONENT:
-                effect = SetStartingSideStatus(SIDE_STATUS_SEA_OF_FIRE,
-                                               B_SIDE_OPPONENT,
-                                               B_MSG_SET_SEA_OF_FIRE,
-                                               B_ANIM_SEA_OF_FIRE,
-                                               &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
-                break;
-            case STARTING_STATUS_SWAMP_PLAYER:
-                effect = SetStartingSideStatus(SIDE_STATUS_SWAMP,
-                                               B_SIDE_PLAYER,
-                                               B_MSG_SET_SWAMP,
-                                               B_ANIM_SWAMP,
-                                               &gSideTimers[B_SIDE_PLAYER].swampTimer);
-                break;
-            case STARTING_STATUS_SWAMP_OPPONENT:
-                effect = SetStartingSideStatus(SIDE_STATUS_SWAMP,
-                                               B_SIDE_OPPONENT,
-                                               B_MSG_SET_SWAMP,
-                                               B_ANIM_SWAMP,
-                                               &gSideTimers[B_SIDE_OPPONENT].swampTimer);
-                break;
-            }
-
-            if (effect == 1)
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-            else if (effect == 2)
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-        }
-        break;
-    case ABILITYEFFECT_SWITCH_IN_TERRAIN:   // terrain starting from overworld weather
-        if (B_THUNDERSTORM_TERRAIN == TRUE
-         && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
-         && GetCurrentWeather() == WEATHER_RAIN_THUNDERSTORM)
-        {
-            // overworld weather started rain, so just do electric terrain anim
-            gFieldStatuses = STATUS_FIELD_ELECTRIC_TERRAIN;
-            gFieldTimers.terrainTimer = 0;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_ELECTRIC;
-            BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-            effect++;
-        }
-        else if (B_OVERWORLD_FOG >= GEN_8
-              && (GetCurrentWeather() == WEATHER_FOG_HORIZONTAL || GetCurrentWeather() == WEATHER_FOG_DIAGONAL)
-              && !(gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN))
-        {
-            gFieldStatuses = STATUS_FIELD_MISTY_TERRAIN;
-            gFieldTimers.terrainTimer = 0;
-            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAIN_SET_MISTY;
-            BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-            effect++;
-        }
-        break;
-    case ABILITYEFFECT_SWITCH_IN_WEATHER:
-        gBattleScripting.battler = battler;
-        if (!(gBattleTypeFlags & BATTLE_TYPE_RECORDED))
-        {
-            switch (GetCurrentWeather())
-            {
-            case WEATHER_RAIN:
-            case WEATHER_RAIN_THUNDERSTORM:
-            case WEATHER_DOWNPOUR:
-                if (!(gBattleWeather & B_WEATHER_RAIN))
-                {
-                    gBattleWeather = B_WEATHER_RAIN_NORMAL;
-                    gBattleScripting.animArg1 = B_ANIM_RAIN_CONTINUES;
-                    effect++;
-                }
-                break;
-            case WEATHER_SANDSTORM:
-                if (!(gBattleWeather & B_WEATHER_SANDSTORM))
-                {
-                    gBattleWeather = B_WEATHER_SANDSTORM;
-                    gBattleScripting.animArg1 = B_ANIM_SANDSTORM_CONTINUES;
-                    effect++;
-                }
-                break;
-            case WEATHER_DROUGHT:
-                if (!(gBattleWeather & B_WEATHER_SUN))
-                {
-                    gBattleWeather = B_WEATHER_SUN_NORMAL;
-                    gBattleScripting.animArg1 = B_ANIM_SUN_CONTINUES;
-                    effect++;
-                }
-                break;
-            case WEATHER_SNOW:
-                if (!(gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
-                {
-                    if (B_OVERWORLD_SNOW >= GEN_9)
-                    {
-                        gBattleWeather = B_WEATHER_SNOW;
-                        gBattleScripting.animArg1 = B_ANIM_SNOW_CONTINUES;
-                    }
-                    else
-                    {
-                        gBattleWeather = B_WEATHER_HAIL;
-                        gBattleScripting.animArg1 = B_ANIM_HAIL_CONTINUES;
-                    }
-                    effect++;
-                }
-                break;
-            case WEATHER_FOG_DIAGONAL:
-            case WEATHER_FOG_HORIZONTAL:
-                if (B_OVERWORLD_FOG == GEN_4)
-                {
-                    if (!(gBattleWeather & B_WEATHER_FOG))
-                    {
-                        gBattleWeather = B_WEATHER_FOG;
-                        gBattleScripting.animArg1 = B_ANIM_FOG_CONTINUES;
-                        effect++;
-                    }
-                    break;
-                }
-            }
-        }
-        if (effect != 0)
-        {
-            gBattleCommunication[MULTISTRING_CHOOSER] = GetCurrentWeather();
-            BattleScriptPushCursorAndCallback(BattleScript_OverworldWeatherStarts);
-        }
-        break;
     case ABILITYEFFECT_ON_SWITCHIN:
-        if (gHoldEffectsInfo[HOLD_EFFECT_MIRROR_HERB].onSwitchIn)
-            break;
         gBattleScripting.battler = battler;
         switch (gLastUsedAbility)
         {

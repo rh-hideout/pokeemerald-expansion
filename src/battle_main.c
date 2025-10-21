@@ -3731,7 +3731,6 @@ static void DoBattleIntro(void)
         {
             gBattleStruct->eventsBeforeFirstTurnState = 0;
             gBattleStruct->switchInBattlerCounter = 0;
-            gBattleStruct->overworldWeatherDone = FALSE;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
             // mark all battlers as sent out
@@ -3821,32 +3820,19 @@ static void TryDoEventsBeforeFirstTurn(void)
         gBattleStruct->eventsBeforeFirstTurnState++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
-        if (!gBattleStruct->overworldWeatherDone
-         && AbilityBattleEffects(ABILITYEFFECT_SWITCH_IN_WEATHER, 0, 0, ABILITYEFFECT_SWITCH_IN_WEATHER, 0) != 0)
-        {
-            gBattleStruct->overworldWeatherDone = TRUE;
-            return;
-        }
         gBattleStruct->eventsBeforeFirstTurnState++;
+        if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_WEATHER))
+            return;
         break;
     case FIRST_TURN_EVENTS_TERRAIN:
-        if (!gBattleStruct->terrainDone
-         && AbilityBattleEffects(ABILITYEFFECT_SWITCH_IN_TERRAIN, 0, 0, ABILITYEFFECT_SWITCH_IN_TERRAIN, 0) != 0)
-        {
-            gBattleStruct->terrainDone = TRUE;
-            return;
-        }
         gBattleStruct->eventsBeforeFirstTurnState++;
+        if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_TERRAIN))
+            return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
-        if (!gBattleStruct->startingStatusDone
-         && gBattleStruct->startingStatus
-         && AbilityBattleEffects(ABILITYEFFECT_SWITCH_IN_STATUSES, 0, 0, ABILITYEFFECT_SWITCH_IN_STATUSES, 0) != 0)
-        {
-            gBattleStruct->startingStatusDone = TRUE;
-            return;
-        }
         gBattleStruct->eventsBeforeFirstTurnState++;
+        if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
+            return;
         break;
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (i = 0; i < gBattlersCount; i++)
