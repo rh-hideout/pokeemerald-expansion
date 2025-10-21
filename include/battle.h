@@ -783,6 +783,7 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     u8 padding2:4;
+    bool8 lastMonMusicPlayed; // Evita tocar a musica a musica repetidas vezes
 };
 
 struct AiBattleData

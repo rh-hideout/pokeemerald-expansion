@@ -436,6 +436,8 @@ void CB2_InitBattle(void)
     gLoadFail = FALSE;
 #endif // T_SHOULD_RUN_MOVE_ANIM
 
+    gBattleStruct->lastMonMusicPlayed = FALSE; // Confirmar que a musica do ultimo pokemon não está tocando
+
     if (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)

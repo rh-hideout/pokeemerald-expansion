@@ -1257,6 +1257,33 @@ void UpdateSentPokesToOpponentValue(u32 battler)
         for (i = 1; i < gBattlersCount; i++)
             gSentPokesToOpponent[(i & BIT_FLANK) >> 1] |= 1u << gBattlerPartyIndexes[battler];
     }
+
+    // Tocar a musica quando o lider de ginasio fica com um pokémon
+    switch (GetTrainerClassFromId(TRAINER_BATTLE_PARAM.opponentA))
+        {
+        // caso se a classe do treinador for líder de ginásio
+        case TRAINER_CLASS_LEADER:
+        {
+            u8 aliveCount = 0;
+
+            // Conta quantos Pokémon vivos o líder ainda tem
+            for (int i = 0; i < PARTY_SIZE; i++)
+            {
+                if (GetMonData(&gEnemyParty[i], MON_DATA_HP) > 0)
+                    aliveCount++;
+            }
+
+            // Se sobrou só 1 e ainda não tocou a música
+            if (aliveCount == 1 && !gBattleStruct->lastMonMusicPlayed)
+            {
+                    PlayBGM(MUS_ROUTE122);
+                gBattleStruct->lastMonMusicPlayed = TRUE;
+            }
+        }
+        // caso para todos as outras classes   
+        default:
+            break;
+        }
 }
 
 void BattleScriptPush(const u8 *bsPtr)
