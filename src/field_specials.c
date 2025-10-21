@@ -2032,7 +2032,8 @@ void BufferVarsForIVRater(void)
     u8 i;
     u32 ivStorage[NUM_STATS];
 
-    if(gSpecialVar_MonBoxId == 0xFF){
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
         ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
         ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
         ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
