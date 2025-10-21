@@ -4913,6 +4913,7 @@ void DecideTerastal(u32 battler)
 
     for (int i = 0; i < MAX_MON_MOVES; i++)
     {
+        gCurrMovePos = gChosenMovePos = i;
         if (!IsMoveUnusable(i, aiMoves[i], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i]))
             altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
         else

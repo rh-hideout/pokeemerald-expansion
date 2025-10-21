@@ -416,7 +416,7 @@ u32 BattleAI_ChooseMoveIndex(u32 battler)
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
 
-    chosenMoveIndex = ChooseMoveOrAction(battler);
+    gCurrMovePos = gChosenMovePos = chosenMoveIndex = ChooseMoveOrAction(battler);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE)
         ReconsiderGimmick(battler, gBattlerTarget, gBattleMons[battler].moves[chosenMoveIndex]);
@@ -603,6 +603,7 @@ static void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u
         if (IsMoveUnusable(moveIndex, move, moveLimitations))
             continue;
 
+        gCurrMovePos = gChosenMovePos = moveIndex;
         // Also get effectiveness of status moves
         dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
