@@ -9573,7 +9573,7 @@ static void Cmd_setprotectlike(void)
     if (gCurrentTurnActionNumber == (gBattlersCount - 1))
         notLastTurn = FALSE;
 
-    if ((sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] >= Random() && notLastTurn)
+    if ((sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
      || (protectMethod == PROTECT_WIDE_GUARD && B_WIDE_GUARD != GEN_5)
      || (protectMethod == PROTECT_QUICK_GUARD && B_QUICK_GUARD != GEN_5))
     {
@@ -9602,6 +9602,7 @@ static void Cmd_setprotectlike(void)
         gDisableStructs[gBattlerAttacker].protectUses = 0;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PROTECT_FAILED;
         gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
+        gBattleStruct->battlerState[gBattlerAttacker].stompingTantrumTimer = 2;
     }
 
     gBattlescriptCurrInstr = cmd->nextInstr;
