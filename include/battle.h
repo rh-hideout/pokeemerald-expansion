@@ -782,7 +782,8 @@ struct BattleStruct
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
-    u8 padding2:4;
+    u8 incrementEchoedVoice:1;
+    u8 echoedVoiceCounter:3;
 };
 
 struct AiBattleData

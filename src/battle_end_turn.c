@@ -168,6 +168,17 @@ static bool32 HandleEndTurnVarious(u32 battler)
         gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
     }
 
+    if (gBattleStruct->incrementEchoedVoice)
+    {
+        if (gBattleStruct->echoedVoiceCounter < 4)
+            gBattleStruct->echoedVoiceCounter++;
+        gBattleStruct->incrementEchoedVoice = FALSE;
+    }
+    else
+    {
+        gBattleStruct->echoedVoiceCounter = 0;
+    }
+
     return effect;
 }
 
