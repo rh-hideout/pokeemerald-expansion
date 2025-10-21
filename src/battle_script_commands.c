@@ -15339,7 +15339,7 @@ void BS_SetTerrain(void)
         enum ItemHoldEffect atkHoldEffect = GetBattlerHoldEffect(gBattlerAttacker, TRUE);
         gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= statusFlag;
-        gFieldTimers.terrainTimer = gBattleTurnCounter + (atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5;
+        gFieldTimers.terrainTimer = gBattleTurnCounter + ((atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
