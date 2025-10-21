@@ -797,9 +797,9 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 4;
+            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
         else
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 8;
+            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
         if (gBattleStruct->moveDamage[battler] == 0)
             gBattleStruct->moveDamage[battler] = 1;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);

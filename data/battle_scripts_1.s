@@ -408,6 +408,7 @@ BattleScript_SaltCureExtraDamage::
 	printstring STRINGID_TARGETISHURTBYSALTCURE
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
+	tryrestorehpberry
 	end2
 
 BattleScript_HurtTarget_NoString:
