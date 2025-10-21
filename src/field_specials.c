@@ -4413,7 +4413,9 @@ void CanTeachMoveBoxMon(void)
         else
         {
             if (GiveMoveToMon(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+            {
                 CreateTask(Task_LearnedMoveBoxMon, 1);
+            }
             else
             {
                 GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
