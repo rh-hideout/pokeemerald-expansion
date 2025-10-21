@@ -1790,11 +1790,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpiflastuseditemholdeffect holdEffect:req, secondaryId:req, jumpInstr:req
-	callnative BS_JumpIfLastUsedItemHoldEffect
-	.byte \holdEffect
-	.2byte \secondaryId
-	.4byte \jumpInstr
+	.macro tryflingholdeffect
+	callnative BS_TryFlingHoldEffect
 	.endm
 
 	.macro swapsidestatuses
@@ -2389,10 +2386,6 @@
 	.macro setpoltergeistmessage failInstr:req
 	callnative BS_SetPoltergeistMessage
 	.4byte \failInstr
-	.endm
-
-	.macro curecertainstatuses
-	callnative BS_CureCertainStatuses
 	.endm
 
 	.macro tryresetnegativestatstages

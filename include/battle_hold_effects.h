@@ -20,7 +20,8 @@ struct HoldEffectInfo
     u32 leftovers:1;
     u32 orbs:1;
     u32 onEffect:1;
-    u32 padding:15;
+    u32 onFling:1;
+    u32 padding:14;
 };
 
 extern const struct HoldEffectInfo gHoldEffectsInfo[];
@@ -48,5 +49,6 @@ bool32 IsOrbsActivation(enum HoldEffect holdEffect);
 bool32 IsOnEffectActivation(enum HoldEffect holdEffect);
 bool32 IsActivationForceTriggerItem(enum HoldEffect holdEffect);
 bool32 IsActivationOnBerry(enum HoldEffect holdEffect);
+bool32 IsOnFlingActivation(enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_HOLD_EFFECTS
