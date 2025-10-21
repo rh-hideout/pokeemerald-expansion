@@ -5106,7 +5106,14 @@ static bool8 CalculateMoves(void)
 static u16 GetSelectedMove(u32 species, u32 selected)
 {
     if (selected < sPokedexView->numEggMoves)
-        return GetSpeciesEggMoves(species)[selected];
+    {
+        if (!HGSS_SHOW_EGG_MOVES_FOR_EVOS)
+            return GetSpeciesEggMoves(species)[selected];
+        u16 preSpecies = species;
+        while (GetSpeciesPreEvolution(preSpecies) != SPECIES_NONE)
+            preSpecies = GetSpeciesPreEvolution(preSpecies);
+        return GetSpeciesEggMoves(preSpecies)[selected];
+    }
     selected -= sPokedexView->numEggMoves;
     if (selected < sPokedexView->numLevelUpMoves)
         return GetSpeciesLevelUpLearnset(species)[selected].move;
