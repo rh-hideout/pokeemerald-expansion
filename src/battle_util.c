@@ -3624,6 +3624,7 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
 {
     bool32 effect = FALSE;
+    bool32 isTerrain = FALSE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return FALSE;
@@ -3641,6 +3642,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
                         &gFieldTimers.terrainTimer);
+            isTerrain = TRUE;
             break;
         case STARTING_STATUS_MISTY_TERRAIN:
             effect = SetStartingFieldStatus(
@@ -3648,6 +3650,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
                         &gFieldTimers.terrainTimer);
+            isTerrain = TRUE;
             break;
         case STARTING_STATUS_GRASSY_TERRAIN:
             effect = SetStartingFieldStatus(
@@ -3655,6 +3658,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
                         &gFieldTimers.terrainTimer);
+            isTerrain = TRUE;
             break;
         case STARTING_STATUS_PSYCHIC_TERRAIN:
             effect = SetStartingFieldStatus(
@@ -3662,6 +3666,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
                         &gFieldTimers.terrainTimer);
+            isTerrain = TRUE;
             break;
         case STARTING_STATUS_TRICK_ROOM:
             effect = SetStartingFieldStatus(
@@ -3749,7 +3754,13 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
             break;
         }
-        BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+        if (effect)
+        {
+            if (isTerrain)
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+            else
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+        }
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
         if (B_THUNDERSTORM_TERRAIN == TRUE
