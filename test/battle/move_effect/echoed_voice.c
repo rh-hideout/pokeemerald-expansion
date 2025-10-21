@@ -92,8 +92,8 @@ SINGLE_BATTLE_TEST("Echoed Voice's power increase is reset when no battler uses 
 
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_BITE, MOVE_EFFECT_FLINCH));
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_ECHOED_VOICE); }
         TURN { MOVE(player, MOVE_ECHOED_VOICE); }
