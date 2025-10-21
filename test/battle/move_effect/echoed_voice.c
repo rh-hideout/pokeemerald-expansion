@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Echoed Voice's power increase is reset when no battler uses 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ECHOED_VOICE, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BITE, opponent);
-        MESSAGE("Wobbuffet flinched!");
+        MESSAGE("Wobbuffet flinched and couldn't move!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ECHOED_VOICE, player);
         HP_BAR(opponent, captureDamage: &damage[2]);
     } THEN {
