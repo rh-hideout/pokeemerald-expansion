@@ -297,7 +297,9 @@ void StoreSelectedPokemonInDaycare(void)
 {
     u8 monId = GetCursorSelectionMonId();
     if(gSpecialVar_MonBoxId == 0xFF)
+    {
         StorePokemonInEmptyDaycareSlot(&gPlayerParty[monId], &gSaveBlock1Ptr->daycare);
+    }
     else
     {
         s8 slotId = Daycare_FindEmptySpot(&gSaveBlock1Ptr->daycare);
