@@ -367,7 +367,7 @@
         "doc",
         "userTesting"
       ]
-    },    
+    },
     {
       "login": "Pyredrid",
       "name": "Pyredrid",
@@ -429,6 +429,15 @@
       "name": "ghostyboyy97",
       "avatar_url": "https://avatars.githubusercontent.com/u/106448956?v=4",
       "profile": "https://github.com/ghostyboyy97",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "HashtagMarky",
+      "name": "Marky",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143505183?v=4",
+      "profile": "http://hashtagmarky.github.io",
       "contributions": [
         "code"
       ]
