@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-Usage: python3 make_teachable.py SOURCE_LEARNSETS_JSON
+Usage: python3 make_teachable.py SOURCE_DIR
 
 Build a C-header defining the set of teachable moves for each configured-on
-species-family based on the learnable moves defined in SOURCE_LEARNSETS_JSON.
+species-family based on the learnable moves defined in SOURCE_DIR/all_learnables.json.
 
 A move is "teachable" if it is:
     1. Can be taught by some Move Tutor in the overworld, which is identified by
@@ -12,13 +12,13 @@ A move is "teachable" if it is:
        to the offered MOVE constant. (e.g., MOVE_SWAGGER)
     2. Assigned to some TM or HM in include/constants/tms_hms.h using the
        FOREACH_TM macro.
-    3. Not a universal move, as defined by sUniversalMoves in src/pokemon.c.
+    3. A universal move, as defined by universalMoves in
+       src/data/pokemon/special_movesets.json
 
 For a given species, a move is considered teachable to that species if:
-    1. The species is not NONE -- which learns nothing -- nor MEW -- which
-       learns everything.
-    2. The species can learn the move via *any* method within any Expansion-
+    1. The species can learn the move via *any* method within any Expansion-
        supported game.
+    2. The species rule defined by their teachingType in the species_info folder
 """
 
 from itertools import chain
@@ -38,8 +38,6 @@ TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
 TUTOR_ARRAY_ENABLED_PAT = re.compile(r"#define\s+POKEDEX_PLUS_HGSS\s+(?P<cfg_val>[^ ]*)")
-SPECIES_FAMILY_PAT = re.compile(r"#if P_FAMILY_(?P<family>\w+)(?P<content>[\s\S]*?)#endif //P_FAMILY_\w+")
-POKEMON_TEACHING_TYPE_PAT = re.compile(r"\{[\s\S]*?(.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),[\s\S]*?)?\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset[\s\S]*?\}")
 
 def enabled() -> bool:
     """
@@ -63,21 +61,6 @@ def extract_repo_tms() -> typing.Generator[str, None, None]:
         for match in match_it:
             yield f"MOVE_{match.group(1)}"
 
-def extract_repo_species_data() -> dict[str, str]:
-    species_teaching_types = {}
-    for families_fname in sorted(glob.glob("src/data/pokemon/species_info/gen_*_families.h")):
-        with open(families_fname, "r") as family_fp:
-            family_file = family_fp.read()
-            for family_match in SPECIES_FAMILY_PAT.finditer(family_file):
-                family = {}
-                for pokemon in POKEMON_TEACHING_TYPE_PAT.finditer(family_match.group("content")):
-                    if pokemon.group("teaching_type"):
-                        family[pokemon.group("name")] = pokemon.group("teaching_type")
-                    else:
-                        family[pokemon.group("name")] = "DEFAULT_LEARNING"
-                species_teaching_types[family_match.group("family")] = family;
-    return species_teaching_types
-
 def extract_tm_litteracy_config() -> bool:
     config = False
     with open("./include/config/pokemon.h", "r") as cfg_pokemon_fp:
@@ -89,12 +72,11 @@ def extract_tm_litteracy_config() -> bool:
                 config = True
     return config
 
-def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: list[str], special_movesets, header: str) -> str:
+def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: list[str], special_movesets, repo_teaching_types, header: str) -> str:
     """
     Build the file content for teachable_learnsets.h.
     """
 
-    repo_teaching_types = extract_repo_species_data()
     tm_litteracy_config = extract_tm_litteracy_config()
 
     cursor = 0
@@ -182,14 +164,19 @@ def main():
         print(__doc__, file=sys.stderr)
         quit(1)
 
-    SOURCE_LEARNSETS_JSON = pathlib.Path(sys.argv[1])
-    SOURCE_TUTORS_JSON = pathlib.Path(sys.argv[2])
+    SOURCE_DIR = pathlib.Path(sys.argv[1])
+    SOURCE_LEARNSETS_JSON = SOURCE_DIR /  "all_learnables.json"
+    SOURCE_TUTORS_JSON = SOURCE_DIR / "all_tutors.json"
+    SOURCE_TEACHING_TYPES_JSON = SOURCE_DIR / "all_teaching_types.json"
 
     assert SOURCE_LEARNSETS_JSON.exists(), f"{SOURCE_LEARNSETS_JSON=} does not exist"
     assert SOURCE_LEARNSETS_JSON.is_file(), f"{SOURCE_LEARNSETS_JSON=} is not a file"
 
     assert SOURCE_TUTORS_JSON.exists(), f"{SOURCE_TUTORS_JSON=} does not exist"
     assert SOURCE_TUTORS_JSON.is_file(), f"{SOURCE_TUTORS_JSON=} is not a file"
+
+    assert SOURCE_TEACHING_TYPES_JSON.exists(), f"{SOURCE_TEACHING_TYPES_JSON=} does not exist"
+    assert SOURCE_TEACHING_TYPES_JSON.is_file(), f"{SOURCE_TEACHING_TYPES_JSON=} is not a file"
 
     repo_tms = list(extract_repo_tms())
     order_alphabetically = False
@@ -213,7 +200,10 @@ def main():
     with open(SOURCE_LEARNSETS_JSON, "r") as source_fp:
         all_learnables = json.load(source_fp)
 
-    content = prepare_output(all_learnables, repo_tms, repo_tutors, special_movesets, header)
+    with open(SOURCE_TEACHING_TYPES_JSON, "r") as source_fp:
+        repo_teaching_types = json.load(source_fp)
+
+    content = prepare_output(all_learnables, repo_tms, repo_tutors, special_movesets, repo_teaching_types, header)
     with open("./src/data/pokemon/teachable_learnsets.h", "w") as teachables_fp:
         teachables_fp.write(content)
 
