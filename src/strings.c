@@ -974,6 +974,7 @@ ALIGNED(4) const u8 gText_FrontierFacilityFloorsCleared[] = _("Floors cleared: {
 ALIGNED(4) const u8 gText_123Dot[][3] = {_("1."), _("2."), _("3.")};
 const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[] = _(" and {STR_VAR_2} of the POKéMON species\nyou caught are inelegible");
 const u8 gText_FrontierFacilityIncluding[] = _(".\pThese include ");
+const u8 gText_FrontierFacilityAreInelegible[] = _(" are inelegible");
 
 const u8 gText_SavingDontTurnOff2[] = _("SAVING…\nDON'T TURN OFF THE POWER.");
 const u8 gText_BlenderMaxSpeedRecord[] = _("BERRY BLENDER\nMAXIMUM SPEED RECORD!");

@@ -2076,7 +2076,6 @@ static void CheckPartyIneligibility(void)
         break;
     }
 
-    gStringVar1[0] = EOS;
     monIdLooper = 0;
     do
     {
@@ -2146,7 +2145,7 @@ static void CheckPartyIneligibility(void)
         gSpecialVar_0x8004 = TRUE;
         if (totalCaughtBanned == 0)
         {
-            StringAppend(gStringVar1, gText_Space2);
+            StringAppend(gStringVar1, gText_FrontierFacilityAreInelegible);
         }
         else
         {
@@ -2776,9 +2775,13 @@ void ShowBattleFrontierCaughtBannedSpecies(void)
     SetWordTaskArg(inputTaskId, tListPointerElemId, (u32)listItems);
     u32 menuTaskId = ListMenuInit(&listTemplate, 0, 0);
     gTasks[inputTaskId].tMenuTaskId = menuTaskId;
-    gTempScrollArrowTemplate = sCaughtBannedSpeciesScrollArrowsTemplate;
-    gTempScrollArrowTemplate.fullyDownThreshold = listTemplate.totalItems - listTemplate.maxShowed;
-    gTasks[inputTaskId].tArrowTaskId = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, (u16 *)&gTasks[inputTaskId].tScrollOffset);
+    gTasks[inputTaskId].tArrowTaskId = TASK_NONE;
+    if (listTemplate.totalItems > listTemplate.maxShowed)
+    {
+        gTempScrollArrowTemplate = sCaughtBannedSpeciesScrollArrowsTemplate;
+        gTempScrollArrowTemplate.fullyDownThreshold = listTemplate.totalItems - listTemplate.maxShowed;
+        gTasks[inputTaskId].tArrowTaskId = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, (u16 *)&gTasks[inputTaskId].tScrollOffset);
+    }
 
     // draw everything
     CopyWindowToVram(windowId, COPYWIN_FULL);
@@ -2791,7 +2794,8 @@ static void Task_BannedSpeciesWindowInput(u8 taskId)
     if (JOY_NEW(B_BUTTON))
     {
         ScriptContext_Enable();
-        RemoveScrollIndicatorArrowPair(gTasks[taskId].tArrowTaskId);
+        if (gTasks[taskId].tArrowTaskId < TASK_NONE)
+            RemoveScrollIndicatorArrowPair(gTasks[taskId].tArrowTaskId);
         Free((struct ListItem *)(GetWordTaskArg(taskId, tListPointerElemId)));
         DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
         ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
