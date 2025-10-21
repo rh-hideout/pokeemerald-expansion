@@ -4402,9 +4402,6 @@ void CanTeachMoveBoxMon(void)
         }
         else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
         {
-            DebugPrintf("%u", gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
-            //DebugPrintf("%u", GetMonData(gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG));
-            DebugPrintf("%u", GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG));
             gSpecialVar_Result = CANNOT_LEARN_MOVE;
             ScriptContext_Enable();
         }
