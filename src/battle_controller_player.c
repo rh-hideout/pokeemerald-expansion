@@ -1726,6 +1726,13 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     u16 pwr = GetMovePower(move);
     u16 acc = GetMoveAccuracy(move);
 
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    {
+        pwr = GetMaxMovePower(move);
+        move = GetMaxMove(battler, move);
+        acc = 0;
+    }
+
     u8 pwr_num[3], acc_num[3];
     u8 cat_desc[7] = _("CAT: ");
     u8 pwr_desc[7] = _("PWR: ");
