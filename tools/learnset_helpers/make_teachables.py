@@ -36,9 +36,9 @@ CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_
 ALPHABETICAL_ORDER_ENABLED_PAT = re.compile(r"#define HGSS_SORT_TMS_BY_NUM\s+(?P<cfg_val>[^ ]*)")
 TM_LITTERACY_PAT = re.compile(r"#define P_TM_LITERACY\s+GEN_(?P<cfg_val>[^ ]*)")
 TMHM_MACRO_PAT = re.compile(r"F\((\w+)\)")
-TEACHABLE_ARRAY_DECL_PAT = re.compile(r"(?P<decl>static const u16 s(?P<name>\w+)TeachableLearnset\[\]) = {[\s\S]*?};")
 SNAKIFY_PAT = re.compile(r"(?!^)([A-Z]+)")
 TUTOR_ARRAY_ENABLED_PAT = re.compile(r"#define\s+POKEDEX_PLUS_HGSS\s+(?P<cfg_val>[^ ]*)")
+SPECIES_FAMILY_PAT = re.compile(r"#if P_FAMILY_(?P<family>\w+)(?P<content>[\s\S]*?)#endif //P_FAMILY_\w+")
 POKEMON_TEACHING_TYPE_PAT = re.compile(r"\{[\s\S]*?(.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),[\s\S]*?)?\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset[\s\S]*?\}")
 
 def enabled() -> bool:
@@ -63,16 +63,19 @@ def extract_repo_tms() -> typing.Generator[str, None, None]:
         for match in match_it:
             yield f"MOVE_{match.group(1)}"
 
-def extract_repo_teaching_types() -> dict[str, str]:
+def extract_repo_species_data() -> dict[str, str]:
     species_teaching_types = {}
     for families_fname in sorted(glob.glob("src/data/pokemon/species_info/gen_*_families.h")):
         with open(families_fname, "r") as family_fp:
             family_file = family_fp.read()
-            for pokemon in POKEMON_TEACHING_TYPE_PAT.finditer(family_file):
-                if pokemon.group("teaching_type"):
-                    species_teaching_types[pokemon.group("name")] = pokemon.group("teaching_type")
-                else:
-                    species_teaching_types[pokemon.group("name")] = "DEFAULT_LEARNING"
+            for family_match in SPECIES_FAMILY_PAT.finditer(family_file):
+                family = {}
+                for pokemon in POKEMON_TEACHING_TYPE_PAT.finditer(family_match.group("content")):
+                    if pokemon.group("teaching_type"):
+                        family[pokemon.group("name")] = pokemon.group("teaching_type")
+                    else:
+                        family[pokemon.group("name")] = "DEFAULT_LEARNING"
+                species_teaching_types[family_match.group("family")] = family;
     return species_teaching_types
 
 def extract_tm_litteracy_config() -> bool:
@@ -91,11 +94,8 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
     Build the file content for teachable_learnsets.h.
     """
 
-    repo_teaching_types = extract_repo_teaching_types()
+    repo_teaching_types = extract_repo_species_data()
     tm_litteracy_config = extract_tm_litteracy_config()
-
-    with open("./src/data/pokemon/teachable_learnsets.h", "r") as teachables_fp:
-        old = teachables_fp.read()
 
     cursor = 0
     new = header + dedent("""
@@ -105,39 +105,37 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
     """)
 
     joinpat = ",\n    "
-    for species in TEACHABLE_ARRAY_DECL_PAT.finditer(old):
-        match_b, match_e = species.span()
-        species_upper = SNAKIFY_PAT.sub(r"_\1", species.group("name")).upper()
-        if species_upper == "NONE":
-            # NONE is hard-coded to be at the start of the file to keep this code simple.
-            cursor = match_e + 1
-            continue
+    for family, members in repo_teaching_types.items():
+        new += (f"\n#if P_FAMILY_{family}\n")
+        i = 0
+        for species, teaching_type in members.items():
+            if i > 0:
+                 new += "\n"
+            new += f"static const u16 s{species}TeachableLearnset[] = "
+            new += "{\n"
+            species_upper =  SNAKIFY_PAT.sub(r"_\1", species).upper()
+            if teaching_type == "ALL_TEACHABLES":
+                learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
+            elif teaching_type == "TM_ILLITERATE":
+                learnables = all_learnables[species_upper]
+                if not tm_litteracy_config:
+                    learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
+            else:
+                learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
 
-        if repo_teaching_types[species.group("name")] == "ALL_TEACHABLES":
-            learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
-        elif repo_teaching_types[species.group("name")] == "TM_ILLITERATE":
-            learnables = all_learnables[species_upper]
-            if not tm_litteracy_config:
-                learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
-        else:
-            learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
+            part1 = list(filter(lambda m: m in learnables, tms))
+            part2 = list(filter(lambda m: m in learnables, tutors))
+            repo_species_teachables = part1 + part2
+            if species_upper == "TERAPAGOS":
+                 repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
 
-        part1 = list(filter(lambda m: m in learnables, tms))
-        part2 = list(filter(lambda m: m in learnables, tutors))
-        repo_species_teachables = part1 + part2
-        if species_upper == "TERAPAGOS":
-             repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
-
-        repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
-        new += old[cursor:match_b]
-        new += "\n".join([
-            f"{species.group('decl')} = {{",
-            f"    {joinpat.join(chain(repo_species_teachables, ('MOVE_UNAVAILABLE',)))},",
-            "};\n",
-        ])
-        cursor = match_e + 1
-
-    new += old[cursor:]
+            repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
+            new += "\n".join([
+                f"    {joinpat.join(chain(repo_species_teachables, ('MOVE_UNAVAILABLE',)))},",
+                "};\n",
+            ])
+            i += 1
+        new += (f"#endif //P_FAMILY_{family}\n")
 
     return new
 
