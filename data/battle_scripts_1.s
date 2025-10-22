@@ -1406,7 +1406,7 @@ BattleScript_EffectBestow::
 	waitanimation
 	printstring STRINGID_BESTOWITEMGIVING
 	waitmessage B_WAIT_TIME_LONG
-	tryactivateitem BS_TARGET, ON_ITEM_USABLE_AGAIN
+	tryactivateitem BS_TARGET, ACTIVATION_ON_USABLE_AGAIN
 	trysymbiosis BS_ATTACKER
 	goto BattleScript_MoveEnd
 
@@ -4906,7 +4906,7 @@ BattleScript_MagicRoomEnds::
 	setbyte gBattlerTarget, 0
 BattleScript_MagicRoomHealingItemsLoop:
 	copyarraywithindex gBattlerAttacker, gBattlerByTurnOrder, gBattlerTarget, 1
-	tryactivateitem BS_ATTACKER, ON_ITEM_USABLE_AGAIN
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
 	addbyte gBattlerTarget, 1
 	jumpifbytenotequal gBattlerTarget, gBattlersCount, BattleScript_MagicRoomHealingItemsLoop
 	end2
@@ -6077,7 +6077,7 @@ BattleScript_DoTurnDmg:
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	tryfaintmon BS_ATTACKER
 	checkteamslost BattleScript_DoTurnDmgEnd
-	tryactivateitem BS_ATTACKER, ON_ITEM_HP_THRESHOLD
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
 BattleScript_DoTurnDmgEnd:
 	end2
 
@@ -6317,7 +6317,7 @@ BattleScript_YawnEnd:
 BattleScript_EmbargoEndTurn::
 	printstring STRINGID_EMBARGOENDS
 	waitmessage B_WAIT_TIME_LONG
-	tryactivateitem BS_ATTACKER, ON_ITEM_USABLE_AGAIN
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
 	end2
 
 BattleScript_TelekinesisEndTurn::
@@ -6605,7 +6605,7 @@ BattleScript_PickupActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_XFOUNDONEY
 	waitmessage B_WAIT_TIME_LONG
-	tryactivateitem BS_ATTACKER, ON_ITEM_PICK_UP
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_PICK_UP
 BattleScript_PickupActivatesEnd:
 	end2
 
@@ -6615,7 +6615,7 @@ BattleScript_HarvestActivates::
 	call BattleScript_AbilityPopUp
 	printstring STRINGID_HARVESTBERRY
 	waitmessage B_WAIT_TIME_LONG
-	tryactivateitem BS_ATTACKER, ON_BERRY_HARVEST
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HARVEST
 BattleScript_HarvestActivatesEnd:
 	end2
 
