@@ -21928,6 +21928,7 @@ static const u16 sWormadamPlantTeachableLearnset[] = {
     MOVE_TOXIC,
     MOVE_DREAM_EATER,
     MOVE_ENDURE,
+    MOVE_MIMIC,
     MOVE_PSYCH_UP,
     MOVE_SLEEP_TALK,
     MOVE_SNORE,
@@ -30453,6 +30454,9 @@ static const u16 sKyuremTeachableLearnset[] = {
     MOVE_SWIFT,
     MOVE_UNAVAILABLE,
 };
+
+#if P_FUSION_FORMS
+#endif //P_FUSION_FORMS
 #endif //P_FAMILY_KYUREM
 
 #if P_FAMILY_KELDEO
@@ -36398,8 +36402,8 @@ static const u16 sNecrozmaTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
-#if P_ULTRA_BURST_FORMS
-#endif //P_ULTRA_BURST_FORMS
+#if P_FUSION_FORMS
+#endif //P_FUSION_FORMS
 #endif //P_FAMILY_NECROZMA
 
 #if P_FAMILY_MAGEARNA
@@ -39241,6 +39245,7 @@ static const u16 sCalyrexTeachableLearnset[] = {
     MOVE_UNAVAILABLE,
 };
 
+#if P_FUSION_FORMS
 static const u16 sCalyrexIceTeachableLearnset[] = {
     MOVE_BLIZZARD,
     MOVE_BULLET_SEED,
@@ -39314,6 +39319,7 @@ static const u16 sCalyrexShadowTeachableLearnset[] = {
     MOVE_SWIFT,
     MOVE_UNAVAILABLE,
 };
+#endif //P_FUSION_FORMS
 #endif //P_FAMILY_CALYREX
 
 #if P_FAMILY_ENAMORUS

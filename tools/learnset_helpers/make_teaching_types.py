@@ -32,7 +32,7 @@ def is_valid_preprocessor(line: str) -> (bool, bool):
         return (True, match.group("end"))
     match = re.match(FORMS_PAT, line)
     if match:
-        if match.group("forms") in ["GIGANTAMAX", "TERA", "FUSION", "COSPLAY_PIKACHU", "CAP_PIKACHU"]:
+        if match.group("forms") in ["GIGANTAMAX", "TERA", "ULTRA_BURST", "COSPLAY_PIKACHU", "CAP_PIKACHU"]:
             return (False, False)
         return (True, match.group("end"))
     return (False, False)
@@ -60,14 +60,15 @@ def extract_repo_species_data() -> list:
                 continue
 
             match = re.match(LEARNSET_PAT, line)
-            if match and match.group("name") not in pokemon_list:
-                if not is_last_line_preprocessor or is_endif_last:
-                    species_data.append("\n")
-                is_last_line_preprocessor = False
-                is_endif_last = False
-                species_data.append({"name": match.group("name"), "teaching_type": teaching_type})
+            if match:
+                if match.group("name") not in pokemon_list:
+                    if not is_last_line_preprocessor or is_endif_last:
+                        species_data.append("\n")
+                    is_last_line_preprocessor = False
+                    is_endif_last = False
+                    species_data.append({"name": match.group("name"), "teaching_type": teaching_type})
+                    pokemon_list.append(match.group("name"))
                 teaching_type = "DEFAULT_LEARNING"
-                pokemon_list.append(match.group("name"))
                 continue
             match = re.match(TEACHING_TYPE_PAT, line)
             if match:
