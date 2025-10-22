@@ -7691,9 +7691,6 @@ static void UpdateSentMonFlags(u32 battler)
 
     gHitMarker &= ~HITMARKER_FAINTED(battler);
     gSpecialStatuses[battler].faintedHasReplacement = FALSE;
-
-    if (!BattlerHasAi(battler))
-        gBattleStruct->appearedInBattle |= 1u << gBattlerPartyIndexes[battler];
 }
 
 static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)

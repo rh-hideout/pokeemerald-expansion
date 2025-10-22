@@ -302,14 +302,12 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     else // Mon to switch out has been already chosen.
     {
         chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
