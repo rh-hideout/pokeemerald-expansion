@@ -3949,9 +3949,6 @@ static void TryDoEventsBeforeFirstTurn(void)
         for (i = 0; i < BATTLE_COMMUNICATION_ENTRIES_COUNT; i++)
             gBattleCommunication[i] = 0;
 
-        for (i = 0; i < gBattlersCount; i++)
-            gBattleMons[i].volatiles.flinched = FALSE;
-
         gBattleStruct->eventBlockCounter = 0;
         gBattleStruct->turnEffectsBattlerId = 0;
         gBattleScripting.moveendState = 0;
