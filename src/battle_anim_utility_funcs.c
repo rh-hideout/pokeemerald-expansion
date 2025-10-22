@@ -480,7 +480,7 @@ static void StatsChangeAnimation_Step2(u8 taskId)
         AnimLoadCompressedBgTilemapHandleContest(&animBgData, gStatAnim_Decrease_Tilemap, FALSE);
 
     AnimLoadCompressedBgGfx(animBgData.bgId, gStatAnim_Gfx, animBgData.tilesOffset);
-    switch (sAnimStatsChangeData->aAnimStatId)
+    switch ((enum StatAnimPal)sAnimStatsChangeData->aAnimStatId)
     {
     case STAT_ANIM_PAL_ATK:
         LoadPalette(gStatAnim_Attack_Pal, BG_PLTT_ID(animBgData.paletteId), PLTT_SIZE_4BPP);
