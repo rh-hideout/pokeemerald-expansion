@@ -6,8 +6,13 @@ import sys
 import typing
 
 CONFIG_ENABLED_PAT = re.compile(r"#define P_LEARNSET_HELPER_TEACHABLE\s+(?P<cfg_val>[^ ]*)")
-SPECIES_FAMILY_PAT = re.compile(r"#if P_FAMILY_(?P<family>\w+)(?P<content>[\s\S]*?)#endif //P_FAMILY_\w+")
-POKEMON_TEACHING_TYPE_PAT = re.compile(r"\{[\s\S]*?(.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),[\s\S]*?)?\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset[\s\S]*?\}")
+
+TEACHING_TYPE_PAT =  re.compile(r"\s*\.teachingType\s*=\s*(?P<teaching_type>[A-Z_]+),")
+LEARNSET_PAT = re.compile(r"\s*\.teachableLearnset\s*=\s*s(?P<name>\w+?)TeachableLearnset")
+FAMILY_PAT = re.compile(r"#(?P<end>end)?if (//)?P_FAMILY_\w+")
+FORMS_PAT = re.compile(r"#(?P<end>end)?if (//)?P_(?P<forms>\w+)_FORMS")
+CROSSGEN_EVOS_PAT = re.compile(r"#(?P<end>end)?if (//)?P_GEN_\d+_CROSS_EVOS")
+
 
 def enabled() -> bool:
     """
@@ -18,20 +23,56 @@ def enabled() -> bool:
         cfg_defined = CONFIG_ENABLED_PAT.search(cfg_pokemon)
         return cfg_defined is not None and cfg_defined.group("cfg_val") in ("TRUE", "1")
 
-def extract_repo_species_data() -> dict[str, str]:
-    teaching_types = {}
+def is_valid_preprocessor(line: str) -> (bool, bool):
+    match = re.match(FAMILY_PAT, line)
+    if match:
+        return (True, match.group("end"))
+    match = re.match(CROSSGEN_EVOS_PAT, line)
+    if match:
+        return (True, match.group("end"))
+    match = re.match(FORMS_PAT, line)
+    if match:
+        if match.group("forms") in ["GIGANTAMAX", "TERA", "FUSION", "COSPLAY_PIKACHU", "CAP_PIKACHU"]:
+            return (False, False)
+        return (True, match.group("end"))
+    return (False, False)
+
+def extract_repo_species_data() -> list:
+    species_data = []
+    pokemon_list = []
+    teaching_type = "DEFAULT_LEARNING"
     for families_fname in sorted(glob.glob("src/data/pokemon/species_info/*_families.h")):
         with open(families_fname, "r") as family_fp:
-            family_file = family_fp.read()
-            for family_match in SPECIES_FAMILY_PAT.finditer(family_file):
-                family = {}
-                for pokemon in POKEMON_TEACHING_TYPE_PAT.finditer(family_match.group("content")):
-                    if pokemon.group("teaching_type"):
-                        family[pokemon.group("name")] = pokemon.group("teaching_type")
-                    else:
-                        family[pokemon.group("name")] = "DEFAULT_LEARNING"
-                teaching_types[family_match.group("family")] = family;
-    return teaching_types
+            species_lines = family_fp.readlines()
+        is_endif_last = False
+        is_last_line_preprocessor = False
+        for line in species_lines:
+            (valid, is_endif) = is_valid_preprocessor(line)
+            if valid:
+                if is_endif:
+                    is_endif_last = True
+                else:
+                    if is_endif_last or not is_last_line_preprocessor:
+                        species_data.append("\n")
+                    is_endif_last = False
+                is_last_line_preprocessor = True
+                species_data.append(line)
+                continue
+
+            match = re.match(LEARNSET_PAT, line)
+            if match and match.group("name") not in pokemon_list:
+                if not is_last_line_preprocessor or is_endif_last:
+                    species_data.append("\n")
+                is_last_line_preprocessor = False
+                is_endif_last = False
+                species_data.append({"name": match.group("name"), "teaching_type": teaching_type})
+                teaching_type = "DEFAULT_LEARNING"
+                pokemon_list.append(match.group("name"))
+                continue
+            match = re.match(TEACHING_TYPE_PAT, line)
+            if match:
+                teaching_type = match.group("teaching_type")
+    return species_data
 
 
 def dump_output(file, data):

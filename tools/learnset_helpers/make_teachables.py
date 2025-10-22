@@ -87,37 +87,35 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
     """)
 
     joinpat = ",\n    "
-    for family, members in repo_teaching_types.items():
-        new += (f"\n#if P_FAMILY_{family}\n")
-        i = 0
-        for species, teaching_type in members.items():
-            if i > 0:
-                 new += "\n"
-            new += f"static const u16 s{species}TeachableLearnset[] = "
-            new += "{\n"
-            species_upper =  SNAKIFY_PAT.sub(r"_\1", species).upper()
-            if teaching_type == "ALL_TEACHABLES":
-                learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
-            elif teaching_type == "TM_ILLITERATE":
-                learnables = all_learnables[species_upper]
-                if not tm_litteracy_config:
-                    learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
-            else:
-                learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
+    for species_data in repo_teaching_types:
+        if isinstance(species_data, str):
+            new += (species_data)
+            continue
+        species = species_data["name"]
+        teaching_type = species_data["teaching_type"]
+        new += f"static const u16 s{species}TeachableLearnset[] = "
+        new += "{\n"
+        species_upper =  SNAKIFY_PAT.sub(r"_\1", species).upper()
+        if teaching_type == "ALL_TEACHABLES":
+            learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
+        elif teaching_type == "TM_ILLITERATE":
+            learnables = all_learnables[species_upper]
+            if not tm_litteracy_config:
+                learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
+        else:
+            learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
 
-            part1 = list(filter(lambda m: m in learnables, tms))
-            part2 = list(filter(lambda m: m in learnables, tutors))
-            repo_species_teachables = part1 + part2
-            if species_upper == "TERAPAGOS":
-                 repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
+        part1 = list(filter(lambda m: m in learnables, tms))
+        part2 = list(filter(lambda m: m in learnables, tutors))
+        repo_species_teachables = part1 + part2
+        if species_upper == "TERAPAGOS":
+             repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
 
-            repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
-            new += "\n".join([
-                f"    {joinpat.join(chain(repo_species_teachables, ('MOVE_UNAVAILABLE',)))},",
-                "};\n",
-            ])
-            i += 1
-        new += (f"#endif //P_FAMILY_{family}\n")
+        repo_species_teachables = list(dict.fromkeys(repo_species_teachables))
+        new += "\n".join([
+            f"    {joinpat.join(chain(repo_species_teachables, ('MOVE_UNAVAILABLE',)))},",
+            "};\n",
+        ])
 
     return new
 
