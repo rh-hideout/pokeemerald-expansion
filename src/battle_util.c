@@ -8766,9 +8766,9 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
 
     // The offensive stats of a Player's Pokémon are boosted by x1.1 (+10%) if they have the corresponding flags set (eg. Badges)
     if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_ATTACK, battlerAtk) && IsBattleMovePhysical(move))
-        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
+        modifier = uq4_12_multiply_half_down(modifier, GetBadgeBoostModifier());
     if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_SPATK, battlerAtk) && IsBattleMoveSpecial(move))
-        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
+        modifier = uq4_12_multiply_half_down(modifier, GetBadgeBoostModifier());
 
     return uq4_12_multiply_by_int_half_down(modifier, atkStat);
 }
@@ -8944,9 +8944,9 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
 
     // The defensive stats of a Player's Pokémon are boosted by x1.1 (+10%) if they have the corresponding flags set (eg. Badges)
     if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_DEFENSE, battlerDef) && IsBattleMovePhysical(move))
-        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
+        modifier = uq4_12_multiply_half_down(modifier, GetBadgeBoostModifier());
     if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_SPDEF, battlerDef) && IsBattleMoveSpecial(move))
-        modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.1));
+        modifier = uq4_12_multiply_half_down(modifier, GetBadgeBoostModifier());
 
     return uq4_12_multiply_by_int_half_down(modifier, defStat);
 }
@@ -10432,9 +10432,17 @@ u32 TryImmunityAbilityHealStatus(u32 battler, u32 caseID)
     return 0;
 }
 
+uq4_12_t GetBadgeBoostModifier(void)
+{
+    if (GetGenConfig(GEN_CONFIG_BADGE_BOOST) < GEN_3)
+        return UQ_4_12(1.125);
+    else
+        return UQ_4_12(1.1);
+}
+
 bool32 ShouldGetStatBadgeBoost(u16 badgeFlag, u32 battler)
 {
-    if (B_BADGE_BOOST <= GEN_3 && badgeFlag != 0)
+    if (GetGenConfig(GEN_CONFIG_BADGE_BOOST) <= GEN_3 && badgeFlag != 0)
     {
         if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_EREADER_TRAINER | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_FRONTIER))
             return FALSE;
