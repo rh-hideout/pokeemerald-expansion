@@ -30454,9 +30454,6 @@ static const u16 sKyuremTeachableLearnset[] = {
     MOVE_SWIFT,
     MOVE_UNAVAILABLE,
 };
-
-#if P_FUSION_FORMS
-#endif //P_FUSION_FORMS
 #endif //P_FAMILY_KYUREM
 
 #if P_FAMILY_KELDEO
@@ -36401,9 +36398,6 @@ static const u16 sNecrozmaTeachableLearnset[] = {
     MOVE_THUNDER_WAVE,
     MOVE_UNAVAILABLE,
 };
-
-#if P_FUSION_FORMS
-#endif //P_FUSION_FORMS
 #endif //P_FAMILY_NECROZMA
 
 #if P_FAMILY_MAGEARNA

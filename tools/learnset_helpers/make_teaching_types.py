@@ -56,7 +56,11 @@ def extract_repo_species_data() -> list:
                         species_data.append("\n")
                     is_endif_last = False
                 is_last_line_preprocessor = True
-                species_data.append(line)
+                if line == "#endif //P_FUSION_FORMS\n" and species_data[-1] == "#if P_FUSION_FORMS\n":
+                    del species_data[-1]
+                    del species_data[-1]
+                else:
+                    species_data.append(line)
                 continue
 
             match = re.match(LEARNSET_PAT, line)
