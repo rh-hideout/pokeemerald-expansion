@@ -1199,7 +1199,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
     case HOLD_EFFECT_CURE_STATUS: // Lum Berry
         effect = TryCureAnyStatus(itemBattler, timing);
         break;
-    case HOLD_EFFECT_RESTORE_HP: // Oran/Sitrus Berry
+    case HOLD_EFFECT_RESTORE_HP: // Oran / Sitrus Berry / Berry Juice
         effect = ItemHealHp(itemBattler, item, FIXED_HEAL_AMOUNT, timing);
         break;
     case HOLD_EFFECT_RESTORE_PCT_HP: // Sitrus Berry

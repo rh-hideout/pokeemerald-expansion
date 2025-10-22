@@ -21,8 +21,7 @@ struct HoldEffectInfo
     u32 orbs:1;
     u32 onEffect:1;
     u32 onFling:1;
-    u32 berry:1;
-    u32 padding:13;
+    u32 padding:14;
 };
 
 extern const struct HoldEffectInfo gHoldEffectsInfo[];
