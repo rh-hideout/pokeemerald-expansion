@@ -1199,7 +1199,7 @@ static void ContestAICmd_if_condition_not_eq(void)
 
 static void ContestAICmd_get_used_combo_starter(void)
 {
-    u16 result = FALSE;
+    bool32 result = FALSE;
     u8 contestant = GetContestantIdByTurn(gAIScriptPtr[1]);
 
     if (IsContestantAllowedToCombo(contestant))

@@ -2388,7 +2388,7 @@ static enum MoveCanceller CancellerChoiceLock(struct BattleContext *ctx)
 
 static enum MoveCanceller CancellerCallSubmove(struct BattleContext *ctx)
 {
-    u32 noEffect = FALSE;
+    bool32 noEffect = FALSE;
     u32 calledMove = MOVE_NONE;
     const u8 *battleScript = NULL;
     battleScript = BattleScript_SubmoveAttackstring;

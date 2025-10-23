@@ -1630,7 +1630,7 @@ void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32
 
     if (fmon->isShiny)
     {
-        u32 data = TRUE;
+        bool32 data = TRUE;
         SetMonData(dst, MON_DATA_IS_SHINY, &data);
     }
     if (fmon->dynamaxLevel > 0)

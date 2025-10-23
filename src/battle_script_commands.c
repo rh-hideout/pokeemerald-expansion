@@ -5672,7 +5672,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
     if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         return FALSE;
 
-    u32 effect = FALSE;
+    bool32 effect = FALSE;
     u32 side = GetBattlerSide(gBattlerTarget);
     switch (moveEffect)
     {
@@ -7445,7 +7445,7 @@ static void Cmd_openpartyscreen(void)
             {
                 if (((1u << i) & hitmarkerFaintBits))
                 {
-                    u32 skipPartnerCheck = FALSE;
+                    bool32 skipPartnerCheck = FALSE;
                     if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS
                      && GetBattlerSide(i) == B_SIDE_OPPONENT
                      && TRAINER_BATTLE_PARAM.opponentB != TRAINER_NONE)
@@ -16281,7 +16281,7 @@ void BS_JumpIfIntimidateAbilityPrevented(void)
 {
     NATIVE_ARGS();
 
-    u32 hasAbility = FALSE;
+    bool32 hasAbility = FALSE;
     enum Ability ability = GetBattlerAbility(gBattlerTarget);
 
     switch (ability)
