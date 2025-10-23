@@ -94,7 +94,7 @@ void RecordAllMoves(u32 battler);
 void RecordKnownMove(u32 battlerId, u32 move);
 void RecordAbilityBattle(u32 battlerId, enum Ability abilityId);
 void ClearBattlerAbilityHistory(u32 battlerId);
-void RecordItemEffectBattle(u32 battlerId, u32 itemEffect);
+void RecordItemEffectBattle(u32 battlerId, enum HoldEffect itemEffect);
 void ClearBattlerItemEffectHistory(u32 battlerId);
 void SaveBattlerData(u32 battlerId);
 void SetBattlerData(u32 battlerId);

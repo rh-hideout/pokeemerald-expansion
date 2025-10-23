@@ -271,7 +271,7 @@ void ClearBattlerAbilityHistory(u32 battlerId)
     gBattleHistory->abilities[battlerId] = ABILITY_NONE;
 }
 
-void RecordItemEffectBattle(u32 battlerId, u32 itemEffect)
+void RecordItemEffectBattle(u32 battlerId, enum HoldEffect itemEffect)
 {
     gBattleHistory->itemEffects[battlerId] = itemEffect;
     gAiPartyData->mons[GetBattlerSide(battlerId)][gBattlerPartyIndexes[battlerId]].heldEffect = itemEffect;

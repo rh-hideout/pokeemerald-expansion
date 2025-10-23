@@ -43,7 +43,6 @@ union TRANSPARENT StatChangeFlags
 s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectAtk);
 s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordAbility, enum Ability abilityAtk, enum Ability abilityDef, enum HoldEffect holdEffectAtk);
 s32 GetCritHitOdds(s32 critChanceIndex);
-u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkAbility, enum Ability defAbility, u32 atkHoldEffect, u32 defHoldEffect);
 bool32 HasBattlerActedThisTurn(u32 battler);
 u32 GetBattlerTurnOrderNum(u32 battler);
 bool32 NoAliveMonsForBattlerSide(u32 battler);

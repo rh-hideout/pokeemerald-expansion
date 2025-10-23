@@ -10560,7 +10560,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     return effect;
 }
 
-u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkAbility, enum Ability defAbility, u32 atkHoldEffect, u32 defHoldEffect)
+u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkAbility, enum Ability defAbility, enum HoldEffect atkHoldEffect, enum HoldEffect defHoldEffect)
 {
     u32 calc, moveAcc;
     s8 buff, accStage, evasionStage;
@@ -10657,6 +10657,8 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkA
         if (HasBattlerActedThisTurn(battlerDef))
             calc = (calc * (100 + atkParam)) / 100;
         break;
+    default:
+        break;
     }
 
     // Target's hold effect
@@ -10664,6 +10666,8 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkA
     {
     case HOLD_EFFECT_EVASION_UP:
         calc = (calc * (100 - defParam)) / 100;
+        break;
+    default:
         break;
     }
 
