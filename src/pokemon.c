@@ -3576,18 +3576,18 @@ u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
 {
     switch (statIndex)
     {
-        case STAT_HP:
-            return GetSpeciesBaseHP(species);
-        case STAT_ATK:
-            return GetSpeciesBaseAttack(species);
-        case STAT_DEF:
-            return GetSpeciesBaseDefense(species);
-        case STAT_SPEED:
-            return GetSpeciesBaseSpeed(species);
-        case STAT_SPATK:
-            return GetSpeciesBaseSpAttack(species);
-        case STAT_SPDEF:
-            return GetSpeciesBaseSpDefense(species);
+    case STAT_HP:
+        return GetSpeciesBaseHP(species);
+    case STAT_ATK:
+        return GetSpeciesBaseAttack(species);
+    case STAT_DEF:
+        return GetSpeciesBaseDefense(species);
+    case STAT_SPEED:
+        return GetSpeciesBaseSpeed(species);
+    case STAT_SPATK:
+        return GetSpeciesBaseSpAttack(species);
+    case STAT_SPDEF:
+        return GetSpeciesBaseSpDefense(species);
     }
     return 0;
 }
