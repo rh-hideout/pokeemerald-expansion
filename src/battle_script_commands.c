@@ -3833,8 +3833,6 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         }
         if (TryChangeBattleWeather(gBattlerAttacker, weather, ABILITY_NONE))
         {
-            for (u32 i = 0; i < gBattlersCount; i++)
-                gDisableStructs[i].weatherAbilityDone = FALSE;
             gBattleCommunication[MULTISTRING_CHOOSER] = msg;
             BattleScriptPush(gBattlescriptCurrInstr + 1);
             gBattlescriptCurrInstr = BattleScript_EffectSetWeather;
