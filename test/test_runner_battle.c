@@ -1552,7 +1552,7 @@ void ClearFlagAfterTest(void)
     }
 }
 
-void OpenPokemon(u32 sourceLine, u32 side, u32 species)
+void OpenPokemon(u32 sourceLine, enum BattleSide side, u32 species)
 {
     s32 i, data;
     u8 *partySize;
