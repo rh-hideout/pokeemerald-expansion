@@ -1689,6 +1689,8 @@ void MaxHP_(u32 sourceLine, u32 maxHP)
     INVALID_IF(!DATA.currentMon, "MaxHP outside of PLAYER/OPPONENT");
     INVALID_IF(maxHP == 0, "Illegal max HP: %d", maxHP);
     SetMonData(DATA.currentMon, MON_DATA_MAX_HP, &maxHP);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_HP, &hyperTrainingFlag);
 }
 
 void HP_(u32 sourceLine, u32 hp)
@@ -1704,6 +1706,8 @@ void Attack_(u32 sourceLine, u32 attack)
     INVALID_IF(!DATA.currentMon, "Attack outside of PLAYER/OPPONENT");
     INVALID_IF(attack == 0, "Illegal attack: %d", attack);
     SetMonData(DATA.currentMon, MON_DATA_ATK, &attack);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_ATK, &hyperTrainingFlag);
 }
 
 void Defense_(u32 sourceLine, u32 defense)
@@ -1711,6 +1715,8 @@ void Defense_(u32 sourceLine, u32 defense)
     INVALID_IF(!DATA.currentMon, "Defense outside of PLAYER/OPPONENT");
     INVALID_IF(defense == 0, "Illegal defense: %d", defense);
     SetMonData(DATA.currentMon, MON_DATA_DEF, &defense);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_DEF, &hyperTrainingFlag);
 }
 
 void SpAttack_(u32 sourceLine, u32 spAttack)
@@ -1718,6 +1724,8 @@ void SpAttack_(u32 sourceLine, u32 spAttack)
     INVALID_IF(!DATA.currentMon, "SpAttack outside of PLAYER/OPPONENT");
     INVALID_IF(spAttack == 0, "Illegal special attack: %d", spAttack);
     SetMonData(DATA.currentMon, MON_DATA_SPATK, &spAttack);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPATK, &hyperTrainingFlag);
 }
 
 void SpDefense_(u32 sourceLine, u32 spDefense)
@@ -1725,6 +1733,8 @@ void SpDefense_(u32 sourceLine, u32 spDefense)
     INVALID_IF(!DATA.currentMon, "SpDefense outside of PLAYER/OPPONENT");
     INVALID_IF(spDefense == 0, "Illegal special defense: %d", spDefense);
     SetMonData(DATA.currentMon, MON_DATA_SPDEF, &spDefense);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPDEF, &hyperTrainingFlag);
 }
 
 void Speed_(u32 sourceLine, u32 speed)
@@ -1732,6 +1742,8 @@ void Speed_(u32 sourceLine, u32 speed)
     INVALID_IF(!DATA.currentMon, "Speed outside of PLAYER/OPPONENT");
     INVALID_IF(speed == 0, "Illegal speed: %d", speed);
     SetMonData(DATA.currentMon, MON_DATA_SPEED, &speed);
+    bool32 hyperTrainingFlag = TRUE;
+    SetMonData(DATA.currentMon, MON_DATA_HYPER_TRAINED_SPEED, &hyperTrainingFlag);
     DATA.hasExplicitSpeeds = TRUE;
     DATA.explicitSpeeds[DATA.currentSide] |= 1 << DATA.currentPartyIndex;
 }

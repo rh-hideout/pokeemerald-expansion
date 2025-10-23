@@ -25,3 +25,35 @@ SINGLE_BATTLE_TEST("Forced abilities activate on switch-in")
         MESSAGE("Kadabra's Sp. Atk was heightened!");
     }
 }
+
+
+SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP)")
+{
+    GIVEN {
+        PLAYER(SPECIES_DIANCIE) {Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Item(ITEM_DIANCITE);}
+        OPPONENT(SPECIES_WOBBUFFET) {Speed(1);}
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+    } THEN {
+        EXPECT_EQ(player->attack, 10);
+        EXPECT_EQ(player->defense, 10);
+        EXPECT_EQ(player->speed, 10);
+        EXPECT_EQ(player->spAttack, 10);
+        EXPECT_EQ(player->spDefense, 10);
+    }
+}
+
+SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (HP)")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS) {HP(5); MaxHP(10); TeraType(TYPE_STELLAR);}
+        OPPONENT(SPECIES_WOBBUFFET) {}
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); MOVE(opponent, MOVE_CELEBRATE);}
+    } THEN {
+        EXPECT_EQ(player->hp, 5);
+        EXPECT_EQ(player->maxHP, 10);
+    }
+}
