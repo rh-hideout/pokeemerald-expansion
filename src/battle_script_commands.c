@@ -15348,6 +15348,8 @@ void BS_SetTerrain(void)
         gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= statusFlag;
         gFieldTimers.terrainTimer = gBattleTurnCounter + ((atkHoldEffect == HOLD_EFFECT_TERRAIN_EXTENDER) ? 8 : 5);
+        for (u32 i = 0; i < gBattlersCount; i++)
+            gDisableStructs[i].terrainAbilityDone = FALSE;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
