@@ -26,6 +26,29 @@ SINGLE_BATTLE_TEST("Forced abilities activate on switch-in")
     }
 }
 
+SINGLE_BATTLE_TEST("Setting level doesn't overwrite set stats")
+{
+    u32 level = 0;
+
+    PARAMETRIZE{level = 1;}
+    PARAMETRIZE{level = 10;}
+    PARAMETRIZE{level = 50;}
+    PARAMETRIZE{level = 99;}
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {HP(5); MaxHP(10); Attack(10); Defense(10); Speed(10); SpAttack(10); SpDefense(10); Level(level); };
+        OPPONENT(SPECIES_WOBBUFFET) {Speed(1);}
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_CELEBRATE);}
+    } THEN {
+        EXPECT_EQ(player->hp, 5);
+        EXPECT_EQ(player->maxHP, 10);
+        EXPECT_EQ(player->attack, 10);
+        EXPECT_EQ(player->defense, 10);
+        EXPECT_EQ(player->speed, 10);
+        EXPECT_EQ(player->spAttack, 10);
+        EXPECT_EQ(player->spDefense, 10);
+    }
+}
 
 SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (not HP)")
 {
