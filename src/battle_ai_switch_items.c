@@ -1535,7 +1535,7 @@ static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 b
     return PARTY_SIZE;
 }
 
-bool32 IsMonGrounded(u16 heldItemEffect, enum Ability ability, u8 type1, u8 type2)
+bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, u8 type1, u8 type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
