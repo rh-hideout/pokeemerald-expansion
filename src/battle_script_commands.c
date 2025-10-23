@@ -9770,9 +9770,6 @@ static void Cmd_setfieldweather(void)
         break;
     }
 
-    for (u32 i = 0; i < gBattlersCount; i++)
-        gDisableStructs[i].weatherAbilityDone = FALSE;
-
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
