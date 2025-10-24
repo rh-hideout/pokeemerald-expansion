@@ -1185,7 +1185,7 @@ static inline u32 GetBattlerSide(u32 battler)
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
 
-static inline u32 IsOnPlayerSide(u32 battler)
+static inline bool32 IsOnPlayerSide(u32 battler)
 {
     return GetBattlerSide(battler) == B_SIDE_PLAYER;
 }
@@ -1206,7 +1206,7 @@ static inline struct Pokemon* GetBattlerMon(u32 battler)
     return !IsOnPlayerSide(battler) ? &gEnemyParty[index] : &gPlayerParty[index];
 }
 
-static inline struct Pokemon *GetSideParty(u32 side)
+static inline struct Pokemon *GetSideParty(enum BattleSide side)
 {
     return side == B_SIDE_PLAYER ? gPlayerParty : gEnemyParty;
 }
@@ -1223,7 +1223,7 @@ static inline struct PartyState *GetBattlerPartyState(u32 battler)
 
 static inline bool32 IsDoubleBattle(void)
 {
-    return gBattleTypeFlags & BATTLE_TYPE_DOUBLE;
+    return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
 static inline bool32 IsSpreadMove(u32 moveTarget)

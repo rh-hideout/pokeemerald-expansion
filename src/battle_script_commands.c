@@ -67,8 +67,10 @@
 #include "constants/pokemon.h"
 #include "config/battle.h"
 #include "data/battle_move_effects.h"
+#include "test/battle.h"
 #include "follower_npc.h"
 #include "load_save.h"
+#include "test/test_runner_battle.h"
 
 // table to avoid ugly powing on gba (courtesy of doesnt)
 // this returns (i^2.5)/4
@@ -4831,16 +4833,14 @@ bool32 NoAliveMonsForPlayer(void)
         {
             HP_count += GetMonData(&gPlayerParty[i], MON_DATA_HP);
         }
-
         // Get the number of fainted mons or eggs (not empty slots) in the first three party slots.
         if (i < 3 && ((GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) && !GetMonData(&gPlayerParty[i], MON_DATA_HP))
          || GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG)))
             ineligibleMonsCount++;
     }
 
-    // Get the number of inelligible slots in the saved player party.
     if (B_MULTI_BATTLE_WHITEOUT > GEN_3 && gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER)
-     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA))
+     && !(gBattleTypeFlags & BATTLE_TYPE_ARENA) && !(IsMultibattleTest())) // Multibattle tests appear to not save the player party data for the check below.
     {
         for (i = 0; i < PARTY_SIZE; i++)
         {
@@ -4893,7 +4893,6 @@ static void Cmd_checkteamslost(void)
 
     if (NoAliveMonsForPlayer())
         gBattleOutcome |= B_OUTCOME_LOST;
-
     if (NoAliveMonsForOpponent())
         gBattleOutcome |= B_OUTCOME_WON;
 
@@ -5673,7 +5672,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         return FALSE;
 
     bool32 effect = FALSE;
-    u32 side = GetBattlerSide(gBattlerTarget);
+    enum BattleSide side = GetBattlerSide(gBattlerTarget);
     switch (moveEffect)
     {
     case EFFECT_KNOCK_OFF:

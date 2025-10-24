@@ -415,7 +415,7 @@ static void CreateSpriteAndSetTypeSpriteAttributes(u32 type, u32 x, u32 y, u32 p
 
 static bool32 ShouldFlipTypeIcon(bool32 useDoubleBattleCoords, u32 position, u32 typeId)
 {
-    bool32 side = (useDoubleBattleCoords) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+    enum BattleSide side = (useDoubleBattleCoords) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
 
     if (GetBattlerSide(GetBattlerAtPosition(position)) != side)
         return FALSE;

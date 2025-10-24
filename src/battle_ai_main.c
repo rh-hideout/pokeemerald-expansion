@@ -182,7 +182,7 @@ static u64 GetWildAiFlags(void)
     return flags;
 }
 
-static u64 GetAiFlags(u16 trainerId)
+static u64 GetAiFlags(u16 trainerId, u32 battler)
 {
     u64 flags = 0;
 
@@ -195,7 +195,7 @@ static u64 GetAiFlags(u16 trainerId)
     else
     {
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
-            flags = GetAiScriptsInRecordedBattle();
+            flags = GetAiScriptsInRecordedBattle(battler);
         else if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
             flags = AI_FLAG_SAFARI;
         else if (gBattleTypeFlags & BATTLE_TYPE_ROAMER)
@@ -232,7 +232,7 @@ static u64 GetAiFlags(u16 trainerId)
 void BattleAI_SetupFlags(void)
 {
     if (IsAiVsAiBattle())
-        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = GetAiFlags(gPartnerTrainerId);
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = GetAiFlags(gPartnerTrainerId, B_POSITION_PLAYER_LEFT);
     else
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = 0; // player has no AI
 
@@ -246,8 +246,8 @@ void BattleAI_SetupFlags(void)
     if (IsWildMonSmart() && !(gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_TRAINER)))
     {
         // smart wild AI
-        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] = GetAiFlags(0xFFFF);
-        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = GetAiFlags(0xFFFF);
+        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] = GetAiFlags(0xFFFF, B_POSITION_OPPONENT_LEFT);
+        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = GetAiFlags(0xFFFF, B_POSITION_OPPONENT_RIGHT);
 
         // The check is here because wild natural enemies are not symmetrical.
         if (B_WILD_NATURAL_ENEMIES && IsDoubleBattle())
@@ -259,20 +259,19 @@ void BattleAI_SetupFlags(void)
             if (IsNaturalEnemy(speciesRight, speciesLeft))
                 gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] |= AI_FLAG_ATTACKS_PARTNER;
         }
-
     }
     else
     {
-        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA);
-        if (TRAINER_BATTLE_PARAM.opponentB != 0 && TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
-            gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentB);
+        gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_POSITION_OPPONENT_LEFT);
+        if ((TRAINER_BATTLE_PARAM.opponentB != 0) && (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF))
+            gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_POSITION_OPPONENT_RIGHT);
         else
             gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] = gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT];
     }
 
     if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     {
-        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = GetAiFlags(gPartnerTrainerId);
+        gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = GetAiFlags(gPartnerTrainerId, B_POSITION_PLAYER_RIGHT);
     }
     else if (IsDoubleBattle() && IsAiVsAiBattle())
     {
@@ -280,7 +279,8 @@ void BattleAI_SetupFlags(void)
     }
     else // Assign ai flags for player for prediction
     {
-        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA) | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB);
+        u64 aiFlags = GetAiFlags(TRAINER_BATTLE_PARAM.opponentA, B_POSITION_OPPONENT_LEFT) 
+        | GetAiFlags(TRAINER_BATTLE_PARAM.opponentB, B_POSITION_OPPONENT_RIGHT);
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_RIGHT] = aiFlags;
         gAiThinkingStruct->aiFlags[B_POSITION_PLAYER_LEFT] = aiFlags;
     }

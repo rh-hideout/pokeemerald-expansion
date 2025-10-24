@@ -39,6 +39,8 @@
 #include "constants/trainers.h"
 #include "trainer_hill.h"
 #include "test_runner.h"
+#include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void OpponentHandleDrawTrainerPic(u32 battler);
 static void OpponentHandleTrainerSlideBack(u32 battler);
@@ -369,18 +371,40 @@ static u32 OpponentGetTrainerPicId(u32 battlerId)
 static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
-    u32 trainerPicId = OpponentGetTrainerPicId(battler);
-
-    if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
+    u32 trainerPicId;
+    
+    // Sets Multibattle test opponent sprites to not be Hiker
+    if (IsMultibattleTest())
     {
-        if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+        if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
+        {
+            trainerPicId = TRAINER_PIC_LEAF;
+            if (!(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+                xPos = 176;
+            else
+                xPos = 200;
+        }
+        else
+        {
+            trainerPicId = TRAINER_PIC_RED;
             xPos = 152;
-        else // first mon
-            xPos = 200;
+        }
     }
     else
     {
-        xPos = 176;
+        trainerPicId = OpponentGetTrainerPicId(battler);
+    
+        if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
+        {
+            if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
+                xPos = 152;
+           else // first mon
+                xPos = 200;
+        }
+        else
+        {
+            xPos = 176;
+        }
     }
 
     BtlController_HandleDrawTrainerPic(battler, trainerPicId, TRUE, xPos, 40, -1);

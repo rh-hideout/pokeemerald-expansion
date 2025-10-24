@@ -6870,7 +6870,7 @@ bool32 SpeciesHasGenderDifferences(u16 species)
     return FALSE;
 }
 
-bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method)
+bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 {
     struct Pokemon *party = (side == B_SIDE_PLAYER) ? gPlayerParty : gEnemyParty;
 
