@@ -151,8 +151,8 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
-bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, u32 stat);
-bool32 BattlerStatCanRise(u32 battler, enum Ability battlerAbility, u32 stat);
+bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, enum Stat stat);
+bool32 BattlerStatCanRise(u32 battler, enum Ability battlerAbility, enum Stat stat);
 bool32 AreBattlersStatsMaxed(u32 battler);
 u32 CountPositiveStatStages(u32 battlerId);
 u32 CountNegativeStatStages(u32 battlerId);
@@ -256,7 +256,7 @@ s32 BattlerBenefitsFromAbilityScore(u32 battler, enum Ability ability, struct Ai
 bool32 IsTargetingPartner(u32 battlerAtk, u32 battlerDef);
 // IsTargetingPartner includes a check to make sure the adjacent pokemon is truly a partner.
 u32 GetAllyChosenMove(u32 battlerId);
-bool32 IsBattle1v1();
+bool32 IsBattle1v1(void);
 // IsBattle1v1 is distinct from !IsDoubleBattle. If the player is fighting Maxie and Tabitha, with Steven as their partner, and both Tabitha and Steven have run out of Pokemon, the battle is 1v1, even though mechanically it is a Double Battle for how battlers and flags are set.
 // Most AI checks should be using IsBattle1v1; most engine checks should be using !IsDoubleBattle
 bool32 HasTwoOpponents(u32 battler);
@@ -287,7 +287,7 @@ bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category);
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
 u32 IncreaseStatUpScoreContrary(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
-u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, u32 stat);
+u32 IncreaseStatDownScore(u32 battlerAtk, u32 battlerDef, enum Stat stat);
 void IncreasePoisonScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 void IncreaseParalyzeScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);

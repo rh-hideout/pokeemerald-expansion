@@ -852,7 +852,7 @@ static const u8 sGetMonDataEVConstants[] =
 };
 
 // For stat-raising items
-static const u8 sStatsToRaise[] =
+static const enum Stat sStatsToRaise[] =
 {
     STAT_ATK, STAT_ATK, STAT_DEF, STAT_SPEED, STAT_SPATK, STAT_SPDEF, STAT_ACC
 };
@@ -1042,8 +1042,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     u32 value;
     u16 checksum;
     u8 i;
-    u8 availableIVs[NUM_STATS];
-    u8 selectedIvs[NUM_STATS];
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
     bool32 isShiny;
 
     ZeroBoxMonData(boxMon);
@@ -1199,6 +1199,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
                     break;
                 case STAT_SPDEF:
                     SetBoxMonData(boxMon, MON_DATA_SPDEF_IV, &iv);
+                    break;
+                default:
                     break;
                 }
             }
@@ -4329,7 +4331,7 @@ u8 GetItemEffectParamOffset(u32 battler, u16 itemId, u8 effectByte, u8 effectBit
     return offset;
 }
 
-static void BufferStatRoseMessage(s32 statIdx)
+static void BufferStatRoseMessage(enum Stat statIdx)
 {
     gBattlerTarget = gBattlerInMenuId;
     StringCopy(gBattleTextBuff1, gStatNamesTable[sStatsToRaise[statIdx]]);
@@ -5204,7 +5206,7 @@ u8 GetTrainerEncounterMusicId(u16 trainerOpponentId)
         return gTrainers[difficulty][sanitizedTrainerId].encounterMusic_gender & (F_TRAINER_FEMALE - 1);
 }
 
-u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex)
+u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex)
 {
     // Don't modify HP, Accuracy, or Evasion by nature
     if (statIndex <= STAT_HP || statIndex > NUM_NATURE_STATS || gNaturesInfo[nature].statUp == gNaturesInfo[nature].statDown)
@@ -5303,7 +5305,8 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
     u16 totalEVs = 0;
     u16 heldItem;
     enum HoldEffect holdEffect;
-    int i, multiplier;
+    enum Stat i;
+    int multiplier;
     u8 stat;
     u8 bonus;
     u32 currentEVCap = GetCurrentEVCap();
@@ -5381,6 +5384,8 @@ void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies)
                 evIncrease = (gSpeciesInfo[defeatedSpecies].evYield_SpDefense + bonus) * multiplier;
             else
                 evIncrease = gSpeciesInfo[defeatedSpecies].evYield_SpDefense * multiplier;
+            break;
+        default:
             break;
         }
 

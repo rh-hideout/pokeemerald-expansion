@@ -338,7 +338,7 @@ void TrySaveExchangedItem(u32 battler, u16 stolenItem);
 bool32 IsPartnerMonFromSameTrainer(u32 battler);
 bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes);
 void SortBattlersBySpeed(u8 *battlers, bool32 slowToFast);
-bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind);
+bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind);
 bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 checkTarget);
 u16 GetUsedHeldItem(u32 battler);
 bool32 PickupHasValidTarget(u32 battler);

@@ -97,7 +97,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, u32 itemId, ActivationTiming timing)
+enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, u32 itemId, ActivationTiming timing)
 {
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
@@ -516,7 +516,7 @@ static enum ItemEffect TryThroatSray(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAtk, u32 statId, enum DamageCategory category)
+static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAtk, enum Stat statId, enum DamageCategory category)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -968,7 +968,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, ActivationTiming timing)
+static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -1013,7 +1013,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTim
 static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    s32 stat;
+    enum Stat stat;
 
     for (stat = STAT_ATK; stat < NUM_STATS; stat++)
     {

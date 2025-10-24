@@ -74,16 +74,18 @@
 #define NUM_NATURES     25
 
 // Pokémon Stats
-#define STAT_HP      0
-#define STAT_ATK     1
-#define STAT_DEF     2
-#define STAT_SPEED   3
-#define STAT_SPATK   4
-#define STAT_SPDEF   5
-#define NUM_STATS    6
-
-#define STAT_ACC     6 // Only in battles.
-#define STAT_EVASION 7 // Only in battles.
+enum __attribute__((packed)) Stat
+{
+    STAT_HP,
+    STAT_ATK,
+    STAT_DEF,
+    STAT_SPEED,
+    STAT_SPATK,
+    STAT_SPDEF,
+    NUM_STATS,
+    STAT_ACC = NUM_STATS, // Only in battles.
+    STAT_EVASION,         // Only in battles.
+};
 
 #define NUM_NATURE_STATS (NUM_STATS - 1) // excludes HP
 #define NUM_BATTLE_STATS (NUM_STATS + 2) // includes Accuracy and Evasion

@@ -518,8 +518,8 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     // Perfect IV calculation
     u32 i;
-    u8 availableIVs[NUM_STATS];
-    u8 selectedIvs[NUM_STATS];
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
     if (gSpeciesInfo[species].perfectIVCount != 0)
     {
         // Initialize a list of IV indices.
@@ -543,6 +543,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
             case STAT_SPEED: speedIv = MAX_PER_STAT_IVS; break;
             case STAT_SPATK: spAtkIv = MAX_PER_STAT_IVS; break;
             case STAT_SPDEF: spDefIv = MAX_PER_STAT_IVS; break;
+            default: break;
             }
         }
     }

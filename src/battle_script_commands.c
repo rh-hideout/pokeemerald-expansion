@@ -309,7 +309,7 @@ enum GiveCaughtMonStates
 #define TAG_LVLUP_BANNER_MON_ICON 55130
 
 static void TrySetDestinyBondToHappen(void);
-static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr);
+static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr);
 static bool32 IsMonGettingExpSentOut(void);
 static void InitLevelUpBanner(void);
 static bool8 SlideInLevelUpBanner(void);
@@ -3560,7 +3560,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         break;
     case MOVE_EFFECT_ORDER_UP:
         {
-            u32 stat = 0;
+            enum Stat stat = 0;
             bool32 commanderAffected = TRUE;
             switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
             {
@@ -3733,7 +3733,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
     case MOVE_EFFECT_LOWER_EVASIVENESS_SIDE:
         if (!NoAliveMonsForEitherParty())
         {
-            u32 statId = 0;
+            enum Stat statId = 0;
             u32 stage = 1;
             switch (gBattleScripting.moveEffect)
             {
@@ -5582,7 +5582,7 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
             if (!IsBattlerAlive(battlerAtk) || NoAliveMonsForEitherParty())
                 break;
 
-            u32 stat = STAT_ATK;
+            enum Stat stat = STAT_ATK;
             u32 numMonsFainted = NumFaintedBattlersByAttacker(battlerAtk);
 
             if (abilityAtk == ABILITY_BEAST_BOOST)
@@ -9332,9 +9332,11 @@ u32 IsAbilityStatusProtected(u32 battler, enum Ability ability)
         || IsFlowerVeilProtected(battler);
 }
 
-u32 GetHighestStatId(u32 battler)
+enum Stat GetHighestStatId(u32 battler)
 {
-    u32 i, highestId = STAT_ATK, highestStat = gBattleMons[battler].attack;
+    enum Stat i;
+    enum Stat highestId = STAT_ATK;
+    u32 highestStat = gBattleMons[battler].attack;
 
     for (i = STAT_DEF; i < NUM_STATS; i++)
     {
@@ -10013,7 +10015,7 @@ static u16 ReverseStatChangeMoveEffect(u16 moveEffect)
 
 static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 stats, s32 statValue, u32 statId, bool32 certain)
 {
-    u32 currStat = 0;
+    enum Stat currStat = 0;
     u32 changeableStatsCount = 1; // current stat is counted automatically
     u32 statAnimId = statId;
     bool32 statChangeByTwo = statValue > 1 || statValue < -1;
@@ -10099,7 +10101,7 @@ static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 st
     }
 }
 
-static u32 ChangeStatBuffs(u32 battler, s8 statValue, u32 statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr)
+static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union StatChangeFlags flags, u32 stats, const u8 *BS_ptr)
 {
     u32 index, battlerAbility;
     enum HoldEffect battlerHoldEffect;
@@ -14240,7 +14242,7 @@ static void Cmd_swapstatstages(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static u16 *GetBattlerStat(struct BattlePokemon *battler, u32 stat)
+static u16 *GetBattlerStat(struct BattlePokemon *battler, enum Stat stat)
 {
     switch (stat)
     {
@@ -15936,7 +15938,7 @@ void BS_TrySpectralThiefSteal(void)
     bool32 contrary = GetBattlerAbility(gBattlerAttacker) == ABILITY_CONTRARY;
     gBattleStruct->stolenStats[0] = 0; // Stats to steal.
     gBattleScripting.animArg1 = 0;
-    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
         if (gBattleMons[gBattlerTarget].statStages[stat] > DEFAULT_STAT_STAGE && gBattleMons[gBattlerAttacker].statStages[stat] != MAX_STAT_STAGE)
         {
@@ -15981,7 +15983,7 @@ void BS_SpectralThiefPrintStats(void)
 {
     NATIVE_ARGS();
 
-    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
         if (gBattleStruct->stolenStats[0] & (1u << stat))
         {
@@ -16047,7 +16049,7 @@ void BS_SwapStats(void)
 {
     NATIVE_ARGS(u8 stat);
 
-    u32 stat = cmd->stat;
+    enum Stat stat = cmd->stat;
     u32 temp;
 
     switch (stat)
@@ -16069,6 +16071,8 @@ void BS_SwapStats(void)
         break;
     case STAT_SPDEF:
         SWAP(gBattleMons[gBattlerAttacker].spDefense, gBattleMons[gBattlerTarget].spDefense, temp);
+        break;
+    default:
         break;
     }
     PREPARE_STAT_BUFFER(gBattleTextBuff1, stat);
@@ -16683,7 +16687,7 @@ void BS_TryAcupressure(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
     u32 bits = 0;
-    for (u32 stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
+    for (enum Stat stat = STAT_ATK; stat < NUM_BATTLE_STATS; stat++)
     {
         if (CompareStat(gBattlerTarget, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
             bits |= 1u << stat;

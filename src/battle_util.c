@@ -3453,7 +3453,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
 {
     enum MoveAbsorbed effect = MOVE_ABSORBED_BY_NO_ABILITY;
     const u8 *battleScript = NULL;
-    u32 statId = 0;
+    enum Stat statId = 0;
     u32 statAmount = 1;
 
     switch (abilityDef)
@@ -4067,7 +4067,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_DOWNLOAD:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
-                u32 statId, opposingBattler;
+                enum Stat statId;
+                u32 opposingBattler;
                 u32 opposingDef = 0, opposingSpDef = 0;
 
                 opposingBattler = BATTLE_OPPOSITE(battler);
@@ -4463,7 +4464,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_EMBODY_ASPECT_CORNERSTONE_MASK:
             if (!gSpecialStatuses[battler].switchInAbilityDone)
             {
-                u32 stat;
+                enum Stat stat;
 
                 if (gLastUsedAbility == ABILITY_EMBODY_ASPECT_HEARTHFLAME_MASK)
                     stat = STAT_ATK;
@@ -6603,7 +6604,7 @@ u32 GetBattlerWeight(u32 battler)
 
 u32 CountBattlerStatIncreases(u32 battler, bool32 countEvasionAcc)
 {
-    u32 i;
+    enum Stat i;
     u32 count = 0;
 
     for (i = 0; i < NUM_BATTLE_STATS; i++)
@@ -7293,7 +7294,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_PROTOSYNTHESIS:
         {
-            u8 defHighestStat = GetHighestStatId(battlerDef);
+            enum Stat defHighestStat = GetHighestStatId(battlerDef);
             if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -7566,7 +7567,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            u32 atkHighestStat = GetHighestStatId(battlerAtk);
+            enum Stat atkHighestStat = GetHighestStatId(battlerAtk);
             if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
@@ -7577,7 +7578,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            u32 atkHighestStat = GetHighestStatId(battlerAtk);
+            enum Stat atkHighestStat = GetHighestStatId(battlerAtk);
             if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
@@ -9631,7 +9632,7 @@ bool32 TestIfSheerForceAffected(u32 battler, u16 move)
 }
 
 // This function is the body of "jumpifstat", but can be used dynamically in a function
-bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
+bool32 CompareStat(u32 battler, enum Stat statId, u8 cmpTo, u8 cmpKind)
 {
     bool32 ret = FALSE;
     u8 statValue = gBattleMons[battler].statStages[statId];
