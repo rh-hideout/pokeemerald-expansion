@@ -4,8 +4,8 @@
 #include "constants/battle.h"
 #include "battle_bg.h"
 
-struct BattleEnvironment {
-    u8 name[26];
+struct BattleEnvironment
+{
     u16 naturePower;
     u16 secretPowerEffect;
     u8 camouflageType;
