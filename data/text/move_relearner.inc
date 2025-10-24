@@ -8,7 +8,7 @@ MoveRelearner_Text_LevelUpMoves:
 MoveRelearner_Text_EggMoves:
 	.string "Egg Moves$"
 
-MoveRelearner_Text_TMmoveMoves:
+MoveRelearner_Text_TMMoves:
 	.string "TM Moves$"
 
 MoveRelearner_Text_TutormoveMoves:

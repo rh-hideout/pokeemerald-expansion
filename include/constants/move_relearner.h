@@ -4,6 +4,7 @@
 // Max number of relearner moves shown in the list
 #define MAX_RELEARNER_MOVES             0xFF
 
+// Move Relearner menu change constants
 enum MoveRelearnerStates
 {
     MOVE_RELEARNER_LEVEL_UP_MOVES,

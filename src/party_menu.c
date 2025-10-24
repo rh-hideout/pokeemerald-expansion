@@ -2931,7 +2931,7 @@ static void SetPartyMonLearnMoveSelectionActions(struct Pokemon *mons, u8 slotId
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_EGG_MOVES);
     }
 
-    if (P_ENABLE_MOVE_RELEARNERS)
+    if (P_ENABLE_MOVE_RELEARNERS || (P_FLAG_TM_MOVES != 0 && FlagGet(P_FLAG_TM_MOVES)))
     {
         if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfTMMoves(&mons[slotId]) > 0)
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_TM_MOVES);
