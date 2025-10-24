@@ -5,6 +5,7 @@
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_util.h"
@@ -581,10 +582,9 @@ struct BattlerState
     u32 pursuitTarget:1;
     u32 stompingTantrumTimer:2;
     u32 canPickupItem:1;
-    u32 itemCanBeKnockedOff:1;
     u32 ateBoost:1;
     u32 commanderSpecies:11;
-    u32 padding:4;
+    u32 padding:5;
     // End of Word
 };
 
@@ -598,7 +598,8 @@ struct PartyState
     u32 supersweetSyrup:1;
     u32 timesGotHit:5;
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
-    u32 padding:10;
+    u32 sentOut:1;
+    u32 padding:9;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -732,7 +733,6 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
-    u8 appearedInBattle; // Bitfield to track which Pokemon appeared in battle. Used for Burmy's form change
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u16 beatUpSpecies[PARTY_SIZE];
@@ -760,6 +760,7 @@ struct BattleStruct
     u8 pursuitStoredSwitch; // Stored id for the Pursuit target's switch
     s32 battlerExpReward;
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
+    s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
     s16 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
@@ -771,8 +772,7 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 noTargetPresent:1;
-    u8 cheekPouchActivated:1;
-    s16 savedcheekPouchDamage; // Cheek Pouch can happen in the middle of an attack execution so we need to store the current dmg
+    u8 padding1:1;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
@@ -780,6 +780,7 @@ struct BattleStruct
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
     u8 padding2:2;
+    u16 flingItem;
 };
 
 struct AiBattleData
@@ -1184,7 +1185,7 @@ static inline u32 GetBattlerSide(u32 battler)
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
 
-static inline u32 IsOnPlayerSide(u32 battler)
+static inline bool32 IsOnPlayerSide(u32 battler)
 {
     return GetBattlerSide(battler) == B_SIDE_PLAYER;
 }
@@ -1205,7 +1206,7 @@ static inline struct Pokemon* GetBattlerMon(u32 battler)
     return !IsOnPlayerSide(battler) ? &gEnemyParty[index] : &gPlayerParty[index];
 }
 
-static inline struct Pokemon *GetSideParty(u32 side)
+static inline struct Pokemon *GetSideParty(enum BattleSide side)
 {
     return side == B_SIDE_PLAYER ? gPlayerParty : gEnemyParty;
 }
@@ -1233,7 +1234,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & (HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE | HITMARKER_UNABLE_TO_USE_MOVE))
+        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
@@ -1247,6 +1248,20 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 static inline u32 GetChosenMoveFromPosition(u32 battler)
 {
     return gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
+}
+
+static inline void SetPassiveDamageAmount(u32 battler, s32 value)
+{
+    if (value == 0)
+        value = 1;
+    gBattleStruct->passiveHpUpdate[battler] = value;
+}
+
+static inline void SetHealAmount(u32 battler, s32 value)
+{
+    if (value == 0)
+        value = 1;
+    gBattleStruct->passiveHpUpdate[battler] = -1 * value;
 }
 
 #endif // GUARD_BATTLE_H

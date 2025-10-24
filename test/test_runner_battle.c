@@ -1761,7 +1761,7 @@ void ClearFlagAfterTest(void)
     }
 }
 
-void OpenPokemon(u32 sourceLine, u32 position, u32 species)
+void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
 {
     s32 i, data;
     u8 *partySize;
@@ -1799,7 +1799,7 @@ void OpenPokemon(u32 sourceLine, u32 position, u32 species)
     }
 }
 
-void OpenPokemonMulti(u32 sourceLine, u32 position, u32 species)
+void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species)
 {
 
     s32 i, data;
@@ -2449,7 +2449,7 @@ void MoveGetIdAndSlot(s32 battlerId, struct MoveContext *ctx, u32 *moveId, u32 *
     if (ctx->explicitGimmick && ctx->gimmick != GIMMICK_NONE)
     {
         u32 item = GetMonData(mon, MON_DATA_HELD_ITEM);
-        enum ItemHoldEffect holdEffect = GetItemHoldEffect(item);
+        enum HoldEffect holdEffect = GetItemHoldEffect(item);
         u32 species = GetMonData(mon, MON_DATA_SPECIES);
         u32 side = battlerId & BIT_SIDE;
 

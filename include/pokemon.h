@@ -635,6 +635,13 @@ struct FormChange
     u16 param3;
 };
 
+enum FusionExtraMoveHandling
+{
+    FORGET_EXTRA_MOVES,
+    SWAP_EXTRA_MOVES_KYUREM_WHITE,
+    SWAP_EXTRA_MOVES_KYUREM_BLACK
+};
+
 struct Fusion
 {
     u16 fusionStorageIndex;
@@ -643,10 +650,21 @@ struct Fusion
     u16 targetSpecies2;
     u16 fusingIntoMon;
     u16 fusionMove;
-    u16 unfuseForgetMove;
+    enum FusionExtraMoveHandling extraMoveHandling;
 };
 
 extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
+
+#if P_FUSION_FORMS
+#if P_FAMILY_KYUREM
+#if P_FAMILY_RESHIRAM
+extern const u16 gKyurenWhiteSwapMoveTable[][2];
+#endif //P_FAMILY_RESHIRAM
+#if P_FAMILY_ZEKROM
+extern const u16 gKyurenBlackSwapMoveTable[][2];
+#endif //P_FAMILY_ZEKROM
+#endif //P_FAMILY_KYUREM
+#endif //P_FUSION_FORMS
 
 #define NUM_UNOWN_FORMS 28
 
@@ -853,6 +871,7 @@ u8 GetOpposingLinkMultiBattlerId(bool8 rightSide, u8 multiplayerId);
 u16 FacilityClassToPicIndex(u16 facilityClass);
 u16 PlayerGenderToFrontTrainerPicId(u8 playerGender);
 void HandleSetPokedexFlag(enum NationalDexOrder nationalNum, u8 caseId, u32 personality);
+void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId);
 bool8 HasTwoFramesAnimation(u16 species);
 struct MonSpritesGfxManager *CreateMonSpritesGfxManager(u8 managerId, u8 mode);
 void DestroyMonSpritesGfxManager(u8 managerId);
@@ -866,7 +885,7 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(u16 species);
-bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method);
+bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);

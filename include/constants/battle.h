@@ -45,9 +45,12 @@ enum BattlerId
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
 #define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)
 
-#define B_SIDE_PLAYER     0
-#define B_SIDE_OPPONENT   1
-#define NUM_BATTLE_SIDES  2
+enum BattleSide
+{
+    B_SIDE_PLAYER = 0,
+    B_SIDE_OPPONENT = 1,
+    NUM_BATTLE_SIDES = 2,
+};
 
 #define B_FLANK_LEFT  0
 #define B_FLANK_RIGHT 1
@@ -242,11 +245,9 @@ enum SemiInvulnerableExclusion
     EXCLUDE_COMMANDER,
 };
 
-#define HITMARKER_STRING_PRINTED        (1 << 4)
-#define HITMARKER_IGNORE_BIDE           (1 << 5)
 #define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
-#define HITMARKER_IGNORE_SUBSTITUTE     (1 << 8)
+#define HITMARKER_UNUSED_8              (1 << 8)
 #define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
 #define HITMARKER_UNUSED_10             (1 << 10)
 #define HITMARKER_UNUSED_11             (1 << 11)
@@ -254,11 +255,11 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
 #define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
-#define HITMARKER_IGNORE_DISGUISE       (1 << 16)
+#define HITMARKER_UNUSED_16             (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
 #define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
-#define HITMARKER_PASSIVE_HP_UPDATE     (1 << 20)
+#define HITMARKER_UNUSED_20             (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_UNUSED_23             (1 << 23)
@@ -266,8 +267,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_OBEYS                 (1 << 25)
 #define HITMARKER_UNUSED_26             (1 << 26)
 #define HITMARKER_UNUSED_27             (1 << 27)
-#define HITMARKER_FAINTED(battler)      (1u << (battler + 28))
-#define HITMARKER_FAINTED2(battler)     HITMARKER_FAINTED(battler)
+#define HITMARKER_FAINTED(battler)      (1u << (battler + 28)) // Also uses bits 29, 30 and 31
 
 // Per-side statuses that affect an entire party
 #define SIDE_STATUS_REFLECT                 (1 << 0)
