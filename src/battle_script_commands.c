@@ -15941,7 +15941,6 @@ void BS_CopyFoesStatIncrease(void)
                 SET_STATCHANGER(stat + 1, gQueuedStatBoosts[battler].statChanges[stat], FALSE);
 
             gQueuedStatBoosts[battler].stats &= ~(1 << stat);
-            gBattlerTarget = battler;
             gBattlescriptCurrInstr = cmd->nextInstr;
             return;
         }
