@@ -9118,17 +9118,15 @@ static void Cmd_useitemonopponent(void)
 
 bool32 CanUseLastResort(u8 battler)
 {
-    u32 i;
     u32 knownMovesCount = 0, usedMovesCount = 0;
 
-    for (i = 0; i < 4; i++)
+    for (u32 i = 0; i < 4; i++)
     {
         if (gBattleMons[battler].moves[i] != MOVE_NONE)
             knownMovesCount++;
-        if (i != gCurrMovePos && gDisableStructs[battler].usedMoves & (1u << i)) // Increment used move count for all moves except current Last Resort.
+        if (GetMoveEffect(gBattleMons[battler].moves[i]) != EFFECT_LAST_RESORT && gDisableStructs[battler].usedMoves & (1u << i)) // Increment used move count for all moves except current Last Resort.
             usedMovesCount++;
     }
-
     return (knownMovesCount >= 2 && usedMovesCount >= knownMovesCount - 1);
 }
 
