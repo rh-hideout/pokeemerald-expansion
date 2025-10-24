@@ -2421,6 +2421,10 @@ extern const u8 gText_PlayerRegroupCenter[];
 extern const u8 gText_PlayerRegroupHome[];
 
 extern const u8 gText_Relearn[]; // move relearner from summary screen
+extern const u8 gText_Relearn_LevelUp[];
+extern const u8 gText_Relearn_Egg[];
+extern const u8 gText_Relearn_TM[];
+extern const u8 gText_Relearn_Tutor[];
 extern const u8 gText_Rename[]; // change nickname from summary screen
 
 // Switch Caught Mon into Party

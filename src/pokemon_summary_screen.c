@@ -1907,15 +1907,18 @@ u32 GetRelearnMovesCount(enum MoveRelearnerStates state)
 {
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
 
-    u32 moveCount[MOVE_RELEARNER_COUNT] =
+    switch (state)
     {
-        [MOVE_RELEARNER_LEVEL_UP_MOVES] = GetNumberOfLevelUpMoves(mon),
-        [MOVE_RELEARNER_EGG_MOVES]      = GetNumberOfEggMoves(mon),
-        [MOVE_RELEARNER_TM_MOVES]       = GetNumberOfTMMoves(mon),
-        [MOVE_RELEARNER_TUTOR_MOVES]    = GetNumberOfTutorMoves(mon),
-
-    };
-    return moveCount[state];
+        case MOVE_RELEARNER_EGG_MOVES:
+            return GetNumberOfEggMoves(mon);
+        case MOVE_RELEARNER_TM_MOVES:
+            return GetNumberOfTMMoves(mon);
+        case MOVE_RELEARNER_TUTOR_MOVES:
+            return GetNumberOfTutorMoves(mon);
+        case MOVE_RELEARNER_LEVEL_UP_MOVES:
+        default:
+            return GetNumberOfLevelUpMoves(mon);
+    }
 }
 
 u32 GetCurrentRelearnMovesCount(void)
@@ -1939,16 +1942,15 @@ bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
 {
     switch (state)
     {
-    case MOVE_RELEARNER_LEVEL_UP_MOVES:
-        return FlagGet(P_FLAG_LEVEL_UP_MOVES);
     case MOVE_RELEARNER_EGG_MOVES:
         return FlagGet(P_FLAG_EGG_MOVES);
     case MOVE_RELEARNER_TM_MOVES:
         return FlagGet(P_FLAG_TM_MOVES);
     case MOVE_RELEARNER_TUTOR_MOVES:
         return FlagGet(P_FLAG_TUTOR_MOVES);
+    case MOVE_RELEARNER_LEVEL_UP_MOVES:
     default:
-        return FALSE;
+        return FlagGet(P_FLAG_LEVEL_UP_MOVES);
     }
 }
 
@@ -4917,23 +4919,27 @@ void ShowRelearnPrompt(u8 state)
         return;
 
     const u8* relearnText;
-    const u8* gText_Relearn_LevelUp = COMPOUND_STRING("{START_BUTTON} RELEARN LEVEL");
-    const u8* gText_Relearn_Egg     = COMPOUND_STRING("{START_BUTTON} RELEARN EGG");
-    const u8* gText_Relearn_TMHM    = COMPOUND_STRING("{START_BUTTON} RELEARN TMHM");
-    const u8* gText_Relearn_Tutor   = COMPOUND_STRING("{START_BUTTON} RELEARN TUTOR");
 
     int relearnTextXPos;
 
-    if (state == MOVE_RELEARNER_LEVEL_UP_MOVES)
-        relearnText = gText_Relearn_LevelUp;
-    else if (state == MOVE_RELEARNER_EGG_MOVES)
-        relearnText = gText_Relearn_Egg;
-    else if (state == MOVE_RELEARNER_TM_MOVES)
-        relearnText = gText_Relearn_TMHM;
-    else if (state == MOVE_RELEARNER_TUTOR_MOVES)
-        relearnText = gText_Relearn_Tutor;
-    else
-        relearnText = gText_Relearn;
+    switch (state)
+    {
+        case MOVE_RELEARNER_LEVEL_UP_MOVES:
+            relearnText = gText_Relearn_LevelUp;
+            break;
+        case MOVE_RELEARNER_EGG_MOVES:
+            relearnText = gText_Relearn_Egg;
+            break;
+        case MOVE_RELEARNER_TM_MOVES:
+            relearnText = gText_Relearn_TM;
+            break;
+        case MOVE_RELEARNER_TUTOR_MOVES:
+            relearnText = gText_Relearn_Tutor;
+            break;
+        default:
+            relearnText = gText_Relearn;
+            break;
+    }
 
     relearnTextXPos = GetStringRightAlignXOffset(FONT_NORMAL, relearnText, 0);
 
