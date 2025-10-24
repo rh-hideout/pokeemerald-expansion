@@ -164,7 +164,7 @@ def main():
         quit(1)
 
     SOURCE_DIR = pathlib.Path(sys.argv[1])
-    SOURCE_LEARNSETS_JSON = SOURCE_DIR /  "all_learnables.json"
+    SOURCE_LEARNSETS_JSON = pathlib.Path("./src/data/pokemon/all_learnables.json")
     SOURCE_TUTORS_JSON = SOURCE_DIR / "all_tutors.json"
     SOURCE_TEACHING_TYPES_JSON = SOURCE_DIR / "all_teaching_types.json"
 
