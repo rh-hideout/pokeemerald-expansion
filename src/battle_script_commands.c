@@ -6115,7 +6115,7 @@ static void Cmd_moveend(void)
                 if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, 0, 0, 0))
                     effect = TRUE;
             }
-            if(!effect)
+            if (!effect)
                 gBattleScripting.moveendState++;
             break;
         case MOVEEND_SYNCHRONIZE_ATTACKER: // attacker synchronize

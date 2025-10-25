@@ -5308,7 +5308,8 @@ void DecideTerastal(u32 battler)
 #define takenWithTera altCalcs->takenWithTera
 #define takenWithoutTera gAiLogicData->simulatedDmg[opposingBattler][battler]
 
-enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs) {
+enum AIConsiderGimmick ShouldTeraFromCalcs(u32 battler, u32 opposingBattler, struct AltTeraCalcs *altCalcs)
+{
     struct Pokemon* party = GetBattlerParty(battler);
 
     // Check how many pokemon we have that could tera
