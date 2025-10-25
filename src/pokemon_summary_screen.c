@@ -1176,13 +1176,9 @@ static void DestroyCategoryIcon(void)
 
 u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat)
 {
-    bool8 data = TRUE;
-    u32 originalStat = GetMonData(mon, MON_DATA_HP_IV + stat);
-    bool32 isStatHyperTrained = GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + stat, &data);
-
-    if (isStatHyperTrained && P_SUMMARY_SCREEN_IV_HYPERTRAIN)
+    if (GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + stat) && P_SUMMARY_SCREEN_IV_HYPERTRAIN)
         return MAX_PER_STAT_IVS;
-    return originalStat;
+    return GetMonData(mon, MON_DATA_HP_IV + stat);
 }
 
 void ShowPokemonSummaryScreen(u8 mode, void *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void))
