@@ -115,7 +115,6 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
 
 SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker", s16 damage)
 {
-    s16 damage[2];
     u32 ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
@@ -174,9 +173,8 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Bre
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid")
+DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid", s16 damage)
 {
-    s16 damage[2];
     u32 move;
 
     PARAMETRIZE { move = MOVE_GASTRO_ACID; }
