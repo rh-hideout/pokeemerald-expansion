@@ -3300,7 +3300,7 @@ bool32 ChangeTypeBasedOnTerrain(u32 battler)
     return TRUE;
 }
 
-static inline u8 GetSideFaintCounter(u32 side)
+static inline u8 GetSideFaintCounter(enum BattleSide side)
 {
     return (side == B_SIDE_PLAYER) ? gBattleResults.playerFaintCounter : gBattleResults.opponentFaintCounter;
 }
@@ -3854,7 +3854,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     return effect;
 }
 
-u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg)
+u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg)
 {
     u32 effect = 0;
     u32 moveType = 0, move = 0;
@@ -4569,7 +4569,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                  && PickupHasValidTarget(battler))
                 {
                     gBattlerTarget = RandomUniformExcept(RNG_PICKUP, 0, gBattlersCount - 1, CantPickupItem);
-                    gLastUsedItem = GetUsedHeldItem(gBattlerTarget);
+                    gLastUsedItem = GetBattlerPartyState(gBattlerTarget)->usedHeldItem;
                     BattleScriptExecute(BattleScript_PickupActivates);
                     effect++;
                 }
@@ -4578,9 +4578,9 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                 if ((IsBattlerWeatherAffected(battler, B_WEATHER_SUN) || RandomPercentage(RNG_HARVEST, 50))
                  && gBattleMons[battler].item == ITEM_NONE
                  && gBattleStruct->changedItems[battler] == ITEM_NONE   // Will not inherit an item
-                 && GetItemPocket(GetUsedHeldItem(battler)) == POCKET_BERRIES)
+                 && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
-                    gLastUsedItem = GetUsedHeldItem(battler);
+                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
                     BattleScriptExecute(BattleScript_HarvestActivates);
                     effect++;
                 }
@@ -4773,12 +4773,12 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, enum Ability ability, u32 spec
                 {
                     gBattleScripting.battler = battler;
                     gDisableStructs[battler].cudChew = FALSE;
-                    gLastUsedItem = gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)];
-                    gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)] = ITEM_NONE;
+                    gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
+                    GetBattlerPartyState(battler)->usedHeldItem = ITEM_NONE;
                     BattleScriptExecute(BattleScript_CudChewActivates);
                     effect++;
                 }
-                else if (!gDisableStructs[battler].cudChew && GetItemPocket(GetUsedHeldItem(battler)) == POCKET_BERRIES)
+                else if (!gDisableStructs[battler].cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
                     gDisableStructs[battler].cudChew = TRUE;
                 }
@@ -9162,7 +9162,7 @@ u32 GetBattlerVisualSpecies(u32 battler)
     return gBattleMons[battler].species;
 }
 
-bool32 TryClearIllusion(u32 battler, u32 caseID)
+bool32 TryClearIllusion(u32 battler, enum AbilityEffect caseID)
 {
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return FALSE;
@@ -9206,10 +9206,10 @@ u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pok
     s32 partyStart=0;
 
     // Adjust party search range for Multibattles and Player vs two-trainers
-    if((GetBattlerSide(battler) == B_SIDE_PLAYER && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
+    if ((GetBattlerSide(battler) == B_SIDE_PLAYER && (gBattleTypeFlags & BATTLE_TYPE_MULTI))
         || (GetBattlerSide(battler) == B_SIDE_OPPONENT && (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)))
         {
-            if((GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) || (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT))
+            if ((GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT) || (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT))
             {
                 partyEnd = 3;
                 partyStart = 0;
@@ -9267,7 +9267,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     return FALSE;
 }
 
-u32 TryImmunityAbilityHealStatus(u32 battler, u32 caseID)
+u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID)
 {
     u32 effect = 0;
     switch (GetBattlerAbilityIgnoreMoldBreaker(battler))
@@ -9334,28 +9334,28 @@ u32 TryImmunityAbilityHealStatus(u32 battler, u32 caseID)
         {
         case 1: // status cleared
             gBattleMons[battler].status1 = 0;
-            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
+            if (caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
                 BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
             else
                 BattleScriptCall(BattleScript_AbilityCuredStatus);
             break;
         case 2: // get rid of confusion
             RemoveConfusionStatus(battler);
-            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
+            if (caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
                 BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
             else
                 BattleScriptCall(BattleScript_AbilityCuredStatus);
             break;
         case 3: // get rid of infatuation
             gBattleMons[battler].volatiles.infatuation = 0;
-            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
+            if (caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
                 BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
             else
                 BattleScriptCall(BattleScript_AbilityCuredStatus);
             break;
         case 4: // get rid of taunt
             gDisableStructs[battler].tauntTimer = 0;
-            if(caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
+            if (caseID == ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES)
                 BattleScriptExecute(BattleScript_AbilityCuredStatusEnd3);
             else
                 BattleScriptCall(BattleScript_AbilityCuredStatus);
@@ -9579,7 +9579,7 @@ void TryRestoreHeldItems(void)
 
 bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
 {
-    u8 stealerSide = GetBattlerSide(battlerStealing);
+    enum BattleSide stealerSide = GetBattlerSide(battlerStealing);
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER_HILL)
         return FALSE;
@@ -9725,17 +9725,12 @@ bool32 BlocksPrankster(u16 move, u32 battlerPrankster, u32 battlerDef, bool32 ch
     return TRUE;
 }
 
-u16 GetUsedHeldItem(u32 battler)
-{
-    return gBattleStruct->usedHeldItems[gBattlerPartyIndexes[battler]][GetBattlerSide(battler)];
-}
-
 bool32 CantPickupItem(u32 battler)
 {
     // Used by RandomUniformExcept() for RNG_PICKUP
     if (battler == gBattlerAttacker && (GetGenConfig(GEN_PICKUP_WILD) < GEN_9 || gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_LINK)))
         return TRUE;
-    return !(IsBattlerAlive(battler) && GetUsedHeldItem(battler) && gBattleStruct->battlerState[battler].canPickupItem);
+    return !(IsBattlerAlive(battler) && GetBattlerPartyState(battler)->usedHeldItem && gBattleStruct->battlerState[battler].canPickupItem);
 }
 
 bool32 PickupHasValidTarget(u32 battler)

@@ -13,7 +13,6 @@ void DestroyNamebox(void);
 void FillNamebox(void);
 void DrawNamebox(u32 windowId, u32 tileNum, bool32 copyToVram);
 void ClearNamebox(u32 windowId, bool32 copyToVram);
-void SetSpeakerName(const u8 *name);
 u32 GetNameboxWidth(void);
 void TrySpawnAndShowNamebox(const u8 *speaker, u32 tileNum);
 

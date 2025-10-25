@@ -600,6 +600,7 @@ struct PartyState
     u32 changedSpecies:11; // For forms when multiple mons can change into the same pokemon.
     u32 sentOut:1;
     u32 padding:9;
+    u16 usedHeldItem;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -669,7 +670,6 @@ struct BattleStruct
     u8 isSkyBattle:1;
     u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
-    u16 usedHeldItems[PARTY_SIZE][NUM_BATTLE_SIDES]; // For each party member and side. For harvest, recycle
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
     u16 changedItems[MAX_BATTLERS_COUNT];
@@ -731,7 +731,6 @@ struct BattleStruct
     u8 throwingPokeBall:1;
     u8 ballSpriteIds[2];    // item gfx, window gfx
     u8 moveInfoSpriteId; // move info, window gfx
-    u8 appearedInBattle; // Bitfield to track which Pokemon appeared in battle. Used for Burmy's form change
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
     u16 beatUpSpecies[PARTY_SIZE];
@@ -1184,7 +1183,7 @@ static inline u32 GetBattlerSide(u32 battler)
     return GetBattlerPosition(battler) & BIT_SIDE;
 }
 
-static inline u32 IsOnPlayerSide(u32 battler)
+static inline bool32 IsOnPlayerSide(u32 battler)
 {
     return GetBattlerSide(battler) == B_SIDE_PLAYER;
 }
@@ -1205,7 +1204,7 @@ static inline struct Pokemon* GetBattlerMon(u32 battler)
     return !IsOnPlayerSide(battler) ? &gEnemyParty[index] : &gPlayerParty[index];
 }
 
-static inline struct Pokemon *GetSideParty(u32 side)
+static inline struct Pokemon *GetSideParty(enum BattleSide side)
 {
     return side == B_SIDE_PLAYER ? gPlayerParty : gEnemyParty;
 }
@@ -1222,7 +1221,7 @@ static inline struct PartyState *GetBattlerPartyState(u32 battler)
 
 static inline bool32 IsDoubleBattle(void)
 {
-    return gBattleTypeFlags & BATTLE_TYPE_DOUBLE;
+    return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
 static inline bool32 IsSpreadMove(u32 moveTarget)

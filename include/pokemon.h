@@ -505,7 +505,7 @@ struct SpeciesInfo /*0xC4*/
     u32 cannotBeTraded:1;
     u32 perfectIVCount:3;   // This species will always generate with the specified amount of perfect IVs.
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
-    u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
+    u32 tmIlliterate:1;     // This species will be unable to learn the universal moves.
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
     u32 padding4:11;
     // Shadow settings
@@ -700,8 +700,9 @@ extern const struct SpriteTemplate gBattlerSpriteTemplates[];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
-
+#if P_TUTOR_MOVES_ARRAY
 extern const u16 gTutorMoves[];
+#endif // P_TUTOR_MOVES_ARRAY
 
 void ZeroBoxMonData(struct BoxPokemon *boxMon);
 void ZeroMonData(struct Pokemon *mon);
@@ -884,7 +885,7 @@ u16 MonTryLearningNewMoveEvolution(struct Pokemon *mon, bool8 firstMove);
 void RemoveIVIndexFromList(u8 *ivs, u8 selectedIv);
 void TrySpecialOverworldEvo(void);
 bool32 SpeciesHasGenderDifferences(u16 species);
-bool32 TryFormChange(u32 monId, u32 side, enum FormChanges method);
+bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method);
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method);
 u32 GetMonFriendshipScore(struct Pokemon *pokemon);
 u32 GetMonAffectionHearts(struct Pokemon *pokemon);

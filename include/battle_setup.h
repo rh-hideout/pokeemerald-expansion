@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_SETUP_H
 #define GUARD_BATTLE_SETUP_H
 
+#include "battle_transition.h"
 #include "gym_leader_rematch.h"
 
 #define REMATCHES_COUNT 5
@@ -61,9 +62,9 @@ void BattleSetup_StartLegendaryBattle(void);
 void StartGroudonKyogreBattle(void);
 void StartRegiBattle(void);
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
-u8 GetWildBattleTransition(void);
-u8 GetTrainerBattleTransition(void);
-u8 GetSpecialBattleTransition(s32 id);
+enum BattleTransition GetWildBattleTransition(void);
+enum BattleTransition GetTrainerBattleTransition(void);
+enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id);
 void ChooseStarter(void);
 void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
