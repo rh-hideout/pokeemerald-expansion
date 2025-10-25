@@ -9120,7 +9120,7 @@ bool32 CanUseLastResort(u8 battler)
 {
     u32 knownMovesCount = 0, usedMovesCount = 0;
 
-    for (u32 i = 0; i < 4; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         if (gBattleMons[battler].moves[i] != MOVE_NONE)
             knownMovesCount++;
