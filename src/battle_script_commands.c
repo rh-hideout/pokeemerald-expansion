@@ -592,7 +592,7 @@ static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
-static void Cmd_tryworryseed(void);
+static void Cmd_tryoverwriteability(void);
 static void Cmd_callnative(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
@@ -851,7 +851,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_averagestats,                            //0xFB
     Cmd_jumpifcaptivateaffected,                 //0xFC
     Cmd_setnonvolatilestatus,                    //0xFD
-    Cmd_tryworryseed,                            //0xFE
+    Cmd_tryoverwriteability,                     //0xFE
     Cmd_callnative,                              //0xFF
 };
 
@@ -14305,12 +14305,12 @@ static void Cmd_setnonvolatilestatus(void)
     }
 }
 
-static void Cmd_tryworryseed(void)
+static void Cmd_tryoverwriteability(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
     if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten
-      || gBattleMons[gBattlerTarget].ability == ABILITY_INSOMNIA)
+     || gBattleMons[gBattlerTarget].ability == GetMoveOverwriteAbility(gCurrentMove))
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14327,7 +14327,7 @@ static void Cmd_tryworryseed(void)
 
         RemoveAbilityFlags(gBattlerTarget);
         gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
-        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = ABILITY_INSOMNIA;
+        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = GetMoveOverwriteAbility(gCurrentMove);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -17126,32 +17126,6 @@ void BS_SetLuckyChant(void)
     else
     {
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-void BS_SetSimpleBeam(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten
-        || gBattleMons[gBattlerTarget].ability == ABILITY_SIMPLE)
-    {
-        RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        BattleScriptCall(BattleScript_AbilityShieldProtects);
-    }
-    else
-    {
-        if (gBattleMons[gBattlerTarget].ability == ABILITY_NEUTRALIZING_GAS)
-            gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
-
-        RemoveAbilityFlags(gBattlerTarget);
-        gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
-        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = ABILITY_SIMPLE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

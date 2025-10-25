@@ -149,6 +149,7 @@ struct MoveInfo
         u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
+        u32 overwriteAbility;
     } argument;
 
     // primary/secondary effects
@@ -562,6 +563,11 @@ static inline u32 GetMoveNonVolatileStatus(u32 move)
 static inline u32 GetMoveDamagePercentage(u32 move)
 {
     return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
+}
+
+static inline u32 GetMoveOverwriteAbility(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.overwriteAbility;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

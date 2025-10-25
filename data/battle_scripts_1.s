@@ -1990,23 +1990,6 @@ BattleScript_EffectEntrainment::
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectSimpleBeam::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	setsimplebeam BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	copybyte gBattlerAbility, gBattlerTarget
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_TARGET
-	printstring STRINGID_PKMNACQUIREDSIMPLE
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	tryrevertweatherform
-	flushtextbox
-	tryendneutralizinggas
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectLuckyChant::
 	attackcanceler
 	setluckychant BattleScript_ButItFailed
@@ -2080,10 +2063,10 @@ BattleScript_EffectHealingWishRestore:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectWorrySeed::
+BattleScript_EffectOverwriteAbility::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	tryworryseed BattleScript_ButItFailed
+	tryoverwriteability BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	copybyte gBattlerAbility, gBattlerTarget

@@ -1340,7 +1340,7 @@
 	.byte \trigger
 	.endm
 
-	.macro tryworryseed failInstr:req
+	.macro tryoverwriteability failInstr:req
 	.byte 0xfe
 	.4byte \failInstr
 	.endm
@@ -2158,11 +2158,6 @@
 
 	.macro setluckychant failInstr:req
 	callnative BS_SetLuckyChant
-	.4byte \failInstr
-	.endm
-
-	.macro setsimplebeam failInstr:req
-	callnative BS_SetSimpleBeam
 	.4byte \failInstr
 	.endm
 
