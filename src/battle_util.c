@@ -7386,11 +7386,16 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
 
 static bool32 IsRuinStatusActive(u32 fieldEffect)
 {
-    if (IsNeutralizingGasOnField()) // Neutralizing Gas still blocks Ruin field statuses
-        return FALSE;
-
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
+        // Mold Breaker doesn't ignore Ruin field status but Gastro Acid and Neutralizing Gas do
+        if (gBattleMons[battler].volatiles.gastroAcid)
+            continue;
+        if (GetBattlerHoldEffectIgnoreAbility(battler) != HOLD_EFFECT_ABILITY_SHIELD
+         && IsNeutralizingGasOnField()
+         && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS)
+            continue;
+
         if (GetBattlerVolatile(battler, fieldEffect))
             return TRUE;
     }
