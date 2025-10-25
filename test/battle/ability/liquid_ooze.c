@@ -188,7 +188,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP inst
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze hp lose from Absorb is blocked by Magic Guard")
+SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Absorb is blocked by Magic Guard")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFFA) { Ability(ABILITY_MAGIC_GUARD); }
