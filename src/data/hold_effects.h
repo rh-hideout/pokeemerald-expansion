@@ -3,7 +3,7 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_NONE] =
     {
     },
-    
+
     [HOLD_EFFECT_RESTORE_HP] =
     {
         .onSwitchIn = TRUE,
