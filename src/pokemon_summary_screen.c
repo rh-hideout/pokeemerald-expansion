@@ -1176,7 +1176,7 @@ static void DestroyCategoryIcon(void)
 
 u32 GetAdjustedIvData(struct Pokemon *mon, u32 stat)
 {
-    if (GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + stat) && P_SUMMARY_SCREEN_IV_HYPERTRAIN)
+    if (P_SUMMARY_SCREEN_IV_HYPERTRAIN && GetMonData(mon, MON_DATA_HYPER_TRAINED_HP + stat))
         return MAX_PER_STAT_IVS;
     return GetMonData(mon, MON_DATA_HP_IV + stat);
 }
