@@ -311,13 +311,12 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
          && IsBattlerAlive(battler)
          && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-         && CountUsablePartyMons(battler) > 0
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
         {
             gBattlerAbility = battler;
             gLastUsedAbility = ability;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                 BattleScriptExecute(BattleScript_EmergencyExitEnd2);
             else
                 BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
