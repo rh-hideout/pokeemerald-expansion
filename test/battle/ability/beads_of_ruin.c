@@ -75,14 +75,15 @@ SINGLE_BATTLE_TEST("Beads of Ruin's message displays correctly after all battler
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wonder Room")
+DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wonder Room", s16 damage)
 {
     bool32 useWonderRoom;
-    s16 damage[4];
-    u32 arrayVal;
+    u32 move;
 
-    PARAMETRIZE { useWonderRoom = FALSE; arrayVal = 0; }
-    PARAMETRIZE { useWonderRoom = TRUE; arrayVal = 2; }
+    PARAMETRIZE { useWonderRoom = FALSE; move = MOVE_SCRATCH; }
+    PARAMETRIZE { useWonderRoom = FALSE; move = MOVE_ROUND;   }
+    PARAMETRIZE { useWonderRoom = TRUE;  move = MOVE_SCRATCH; }
+    PARAMETRIZE { useWonderRoom = TRUE;  move = MOVE_ROUND;   }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
@@ -94,22 +95,17 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         if (useWonderRoom)
-            TURN { MOVE(opponentLeft, MOVE_WONDER_ROOM);
-                   MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
-                   MOVE(playerRight, MOVE_ROUND, target: opponentRight); }
+            TURN { MOVE(opponentLeft, MOVE_WONDER_ROOM); MOVE(playerRight, move, target: opponentLeft); }
         else
-            TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
-                   MOVE(playerRight, MOVE_ROUND, target: opponentRight); }
+            TURN { MOVE(playerRight, move, target: opponentLeft); }
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
         MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
-        HP_BAR(opponentLeft, captureDamage: &damage[arrayVal]); // 0 when useWonderRoom = FALSE, 2 when useWonderRoom = TRUE
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, playerRight);
-        HP_BAR(opponentRight, captureDamage: &damage[arrayVal + 1]); // 1 when useWonderRoom = FALSE, 3 when useWonderRoom = TRUE
+        ANIMATION(ANIM_TYPE_MOVE, move, playerRight);
+        HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_GT(damage[2], damage[0]); // In Wonder Room, physical move deals more damage
-        EXPECT_LT(damage[3], damage[1]); // In Wonder Room, special move deals less damage
+        EXPECT_GT(results[2].damage, results[0].damage); // In Wonder Room, physical move deals more damage
+        EXPECT_LT(results[3].damage, results[1].damage); // In Wonder Room, special move deals less damage
     }
 }
 
@@ -126,7 +122,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
         PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_DRAGON_TAIL); }
         TURN { MOVE(player, MOVE_ROUND); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
