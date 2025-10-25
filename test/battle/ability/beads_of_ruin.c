@@ -79,9 +79,10 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
 {
     bool32 useWonderRoom;
     s16 damage[4];
+    u32 arrayVal;
 
-    PARAMETRIZE { useWonderRoom = FALSE; }
-    PARAMETRIZE { useWonderRoom = TRUE; }
+    PARAMETRIZE { useWonderRoom = FALSE; arrayVal = 0; }
+    PARAMETRIZE { useWonderRoom = TRUE; arrayVal = 2; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WONDER_ROOM) == EFFECT_WONDER_ROOM);
@@ -103,16 +104,16 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
         MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
-        HP_BAR(opponentLeft, captureDamage: &damage[i * 2]); // 0 when useWonderRoom = FALSE, 2 when useWonderRoom = TRUE
+        HP_BAR(opponentLeft, captureDamage: &damage[arrayVal]); // 0 when useWonderRoom = FALSE, 2 when useWonderRoom = TRUE
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, playerRight);
-        HP_BAR(opponentRight, captureDamage: &damage[i * 2 + 1]); // 1 when useWonderRoom = FALSE, 3 when useWonderRoom = TRUE
+        HP_BAR(opponentRight, captureDamage: &damage[arrayVal + 1]); // 1 when useWonderRoom = FALSE, 3 when useWonderRoom = TRUE
     } FINALLY {
         EXPECT_GT(damage[2], damage[0]); // In Wonder Room, physical move deals more damage
         EXPECT_LT(damage[3], damage[1]); // In Wonder Room, special move deals less damage
     }
 }
 
-SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker")
+SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker", s16 damage)
 {
     s16 damage[2];
     u32 ability;
@@ -143,15 +144,14 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
             MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
-        HP_BAR(opponent, captureDamage: &damage[i]);
+        HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_LT(damage[0], damage[1]);
+        EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
 
-DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Breaker")
+DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Breaker", s16 damage)
 {
-    s16 damage[2];
     u32 ability;
 
     PARAMETRIZE { ability = ABILITY_MOLD_BREAKER; }
@@ -168,9 +168,9 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is not ignored by Mold Bre
         ABILITY_POPUP(playerLeft, ABILITY_BEADS_OF_RUIN);
         MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
-        HP_BAR(playerRight, captureDamage: &damage[i]);
+        HP_BAR(playerRight, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
 
@@ -195,8 +195,8 @@ DOUBLE_BATTLE_TEST("Beads of Ruin's Sp. Def reduction is ignored by Gastro Acid"
         MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
         ANIMATION(ANIM_TYPE_MOVE, move, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, opponentLeft);
-        HP_BAR(playerRight, captureDamage: &damage[i]);
+        HP_BAR(playerRight, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_LT(damage[0], damage[1]);
+        EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
