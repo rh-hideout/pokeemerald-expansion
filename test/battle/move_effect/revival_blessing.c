@@ -71,7 +71,7 @@ AI_MULTI_BATTLE_TEST("Revival Blessing cannot revive a partner's party member")
         MULTI_OPPONENT_B(SPECIES_WYNAUT) { HP(0); }
         MULTI_OPPONENT_B(SPECIES_WYNAUT);
     } WHEN {
-            TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
+        TURN { EXPECT_MOVE(playerRight, move2); } // EXPECT_MOVE makes battler2 AI-controlled
     } SCENE {
         if (user == opponentLeft) {
             MESSAGE("The opposing Wobbuffet used Revival Blessing!");
