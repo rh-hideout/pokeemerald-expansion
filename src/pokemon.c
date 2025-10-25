@@ -95,9 +95,6 @@ EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
 #include "data/abilities.h"
-#if P_TUTOR_MOVES_ARRAY
-#include "data/tutor_moves.h"
-#endif // P_TUTOR_MOVES_ARRAY
 
 // Used in an unreferenced function in RS.
 // Unreferenced here and in FRLG.
@@ -5599,7 +5596,7 @@ bool8 TryIncrementMonLevel(struct Pokemon *mon)
     }
 }
 
-static const u16 sUniversalMoves[] =
+const u16 gUniversalMoves[] =
 {
     MOVE_BIDE,
     MOVE_FRUSTRATION,
@@ -5612,6 +5609,16 @@ static const u16 sUniversalMoves[] =
     MOVE_SUBSTITUTE,
     MOVE_TERA_BLAST,
 };
+
+u32 GetUniversalMovesCount(void)
+{
+    return ARRAY_COUNT(gUniversalMoves);
+}
+
+u32 GetTutorMovesCount(void)
+{
+    return (ARRAY_COUNT(gTutorMoves) - 1);
+}
 
 u8 CanLearnTeachableMove(u16 species, u16 move)
 {
@@ -5647,9 +5654,9 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
     {
         u32 i, j;
         const u16 *teachableLearnset = GetSpeciesTeachableLearnset(species);
-        for (i = 0; i < ARRAY_COUNT(sUniversalMoves); i++)
+        for (i = 0; i < ARRAY_COUNT(gUniversalMoves); i++)
         {
-            if (sUniversalMoves[i] == move)
+            if (gUniversalMoves[i] == move)
             {
                 if (!gSpeciesInfo[species].tmIlliterate)
                 {
@@ -5739,7 +5746,6 @@ u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves)
 u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
 {
     u16 learnedMoves[MAX_MON_MOVES];
-    u16 moves[MAX_LEVEL_UP_MOVES];
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
     u8 level = GetMonData(mon, MON_DATA_LEVEL, 0);
@@ -5768,11 +5774,11 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
 
             if (j == MAX_MON_MOVES)
             {
-                for (k = 0; k < numMoves && moves[k] != learnset[i].move; k++)
+                for (k = 0; k < i && learnset[k].move != learnset[i].move; k++)
                     ;
 
-                if (k == numMoves)
-                    moves[numMoves++] = learnset[i].move;
+                if (k == i)
+                    numMoves++;
             }
         }
     }
