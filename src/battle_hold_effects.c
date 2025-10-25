@@ -231,7 +231,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
     return effect;
 }
 
-static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -239,7 +239,7 @@ static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
     {
         if (IsBattlerTurnDamaged(battler))
         {
-            BattleScriptCall(BattleScript_AirBaloonMsgPop);
+            BattleScriptCall(BattleScript_AirBalloonMsgPop);
             effect = ITEM_EFFECT_OTHER;
         }
     }
@@ -247,7 +247,7 @@ static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
     {
         gSpecialStatuses[battler].switchInItemDone = TRUE;
         if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptPushCursorAndCallback(BattleScript_AirBaloonMsgIn);
+            BattleScriptPushCursorAndCallback(BattleScript_AirBalloonMsgIn);
         else
             BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
@@ -497,7 +497,7 @@ static enum ItemEffect TryMentalHerb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryThroatSray(u32 battlerAtk)
+static enum ItemEffect TryThroatSpray(u32 battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -1110,7 +1110,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         effect = TryKingsRock(itemBattler, battler, item);
         break;
     case HOLD_EFFECT_AIR_BALLOON:
-        effect = TryAirBallon(itemBattler, timing);
+        effect = TryAirBalloon(itemBattler, timing);
         break;
     case HOLD_EFFECT_ROCKY_HELMET:
         effect = TryRockyHelmet(itemBattler, battler);
@@ -1146,7 +1146,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         effect = TryMentalHerb(itemBattler);
         break;
     case HOLD_EFFECT_THROAT_SPRAY:
-        effect = TryThroatSray(itemBattler);
+        effect = TryThroatSpray(itemBattler);
         break;
     case HOLD_EFFECT_KEE_BERRY:  // consume and boost defense if used physical move
         effect = DamagedStatBoostBerryEffect(itemBattler, battler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);
