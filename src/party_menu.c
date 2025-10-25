@@ -2815,9 +2815,7 @@ static u8 DisplaySelectionWindow(u8 windowType)
 
         if (sPartyMenuInternal->actions[i] >= MENU_FIELD_MOVES)
             fontColorsId = 4;
-        if (sPartyMenuInternal->actions[i] == MENU_SUB_MOVES
-            || sPartyMenuInternal->actions[i] == MENU_LEVEL_UP_MOVES || sPartyMenuInternal->actions[i] == MENU_EGG_MOVES
-            || sPartyMenuInternal->actions[i] == MENU_TM_MOVES || sPartyMenuInternal->actions[i] == MENU_TUTOR_MOVES)
+        if (sPartyMenuInternal->actions[i] >= MENU_LEVEL_UP_MOVES && sPartyMenuInternal->actions[i] <= MENU_SUB_MOVES)
             fontColorsId = 6;
 
         if (sPartyMenuInternal->actions[i] >= MENU_FIELD_MOVES)
@@ -2887,9 +2885,10 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
 
-    if (P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER) && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
-    && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
-    || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
+    if (P_ENABLE_MOVE_RELEARNERS && P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER)
+     && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
+     && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
+     || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
 
     // Add field moves to action list
@@ -7965,10 +7964,13 @@ static void CB2_ChooseMonForMoveRelearner(void)
 {
     gSpecialVar_0x8004 = GetCursorSelectionMonId();
     if (gSpecialVar_0x8004 >= PARTY_SIZE)
-        gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
-    else
-    switch(VarGet(P_VAR_MOVE_RELEARNER_STATE))
     {
+        gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+    }
+    else
+    {
+        switch(VarGet(P_VAR_MOVE_RELEARNER_STATE))
+        {
         case MOVE_RELEARNER_EGG_MOVES:
             gSpecialVar_0x8005 = GetNumberOfEggMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
@@ -7981,6 +7983,7 @@ static void CB2_ChooseMonForMoveRelearner(void)
         default:
             gSpecialVar_0x8005 = GetNumberOfLevelUpMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
+        }
     }
     gFieldCallback2 = CB2_FadeFromPartyMenu;
     SetMainCallback2(CB2_ReturnToField);

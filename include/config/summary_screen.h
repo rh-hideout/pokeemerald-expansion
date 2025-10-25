@@ -33,17 +33,18 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 #define P_VAR_MOVE_RELEARNER_STATE       0       // IMPORTANT! Assign a var to make the move relearner swap between level up, egg, TM and tutor.
 
 // Move Relearner settings
-#define P_SUMMARY_SCREEN_MOVE_RELEARNER  TRUE    // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
 #define P_SUMMARY_MOVE_RELEARNER_FULL_PP FALSE   // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
 #define P_ENABLE_MOVE_RELEARNERS         FALSE   // If TRUE, it enables move relearners for level up, egg, TM and tutor.
-#define P_PRE_EVO_MOVES                  TRUE    // If TRUE, it enables the Pokémon to learn moves from it's pre evolution.
-#define P_ENABLE_ALL_LEVEL_UP_MOVES      TRUE    // If TRUE, it enables the Pokémon to learn all level up moves, regardless of its level.
-#define P_ENABLE_ALL_TM_MOVES            TRUE    // If TRUE, it enables the Pokémon to learn all TMs its compatible with, regardless of it being in the bag.
-#define P_SORT_MOVES                     TRUE    // If TRUE, sorts all moves alphabetically in the relearner's list.
+#define P_PRE_EVO_MOVES                  FALSE   // If TRUE, it enables the Pokémon to learn moves from it's pre evolution.
+#define P_ENABLE_ALL_LEVEL_UP_MOVES      FALSE   // If TRUE, it enables the Pokémon to learn all level up moves, regardless of its level.
+#define P_ENABLE_ALL_TM_MOVES            FALSE   // If TRUE, it enables the Pokémon to learn all TMs its compatible with, regardless of it being in the bag.
+#define P_SORT_MOVES                     FALSE   // If TRUE, sorts all moves alphabetically in the relearner's list.
 
-// Move Relearner flags
+// Move Relearner modes and flags
+#define P_SUMMARY_SCREEN_MOVE_RELEARNER  TRUE    // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
 #define P_FLAG_PARTY_MOVE_RELEARNER      0       // If this flag is set, it enables the move relearner in the party menu.
 #define P_FLAG_SCRIPT_MOVE_RELEARNER     0       // Set this flag if you're planning on using the move relearner script from data/scripts/move_relearner.inc
+
 // Redundant if P_ENABLE_MOVE_RELEARNERS is TRUE.
 #define P_FLAG_LEVEL_UP_MOVES            0       // If this flag is set, enables level up move relearner.
 #define P_FLAG_EGG_MOVES                 0       // If this flag is set, enables egg move relearner.
