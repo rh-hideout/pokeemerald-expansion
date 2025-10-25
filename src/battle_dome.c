@@ -2136,9 +2136,8 @@ static void InitDomeTrainers(void)
 static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, int *stats)
 {
     int evs[NUM_STATS];
-    enum Stat i;
 
-    for (i = 0; i < NUM_STATS; i++)
+    for (enum Stat i = 0; i < NUM_STATS; i++)
     {
         if (fmon->ev != NULL)
             evs[i] = fmon->ev[i];
