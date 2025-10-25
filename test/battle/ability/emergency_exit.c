@@ -109,7 +109,6 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
-//We do these tests separately for residual damage and move damage because they are handled separately in the code
 WILD_BATTLE_TEST("Emergency Exit makes the pokemon flee during wild battle")
 {
     GIVEN {
