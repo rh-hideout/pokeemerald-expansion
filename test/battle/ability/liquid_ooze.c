@@ -205,7 +205,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Absorb is blocked by Magic Guard")
     }
 }
 
-SINGLE_BATTLE_TEST("Liquid Ooze hp lose from Leech Seed is blocked by Magic Guard")
+SINGLE_BATTLE_TEST("Liquid Ooze HP loss from Leech Seed is blocked by Magic Guard")
 {
     GIVEN {
         PLAYER(SPECIES_CLEFFA) { Ability(ABILITY_MAGIC_GUARD); }
