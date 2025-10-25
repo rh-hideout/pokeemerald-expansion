@@ -3009,8 +3009,6 @@ static bool8 CreateSelectionWindow(u8 taskId)
 
     GetMonNickname(mon, gStringVar1);
     PartyMenuRemoveWindow(&sPartyMenuInternal->windowId[1]);
-    if (P_FLAG_PARTY_MOVE_RELEARNER != 0)
-        FlagSet(P_FLAG_PARTY_MOVE_RELEARNER);
     if (gPartyMenu.menuType != PARTY_MENU_TYPE_STORE_PYRAMID_HELD_ITEMS)
     {
         SetPartyMonSelectionActions(gPlayerParty, gPartyMenu.slotId, GetPartyMenuActionsType(mon));

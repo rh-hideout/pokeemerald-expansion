@@ -2,6 +2,7 @@
 #define GUARD_CONSTANTS_MOVE_RELEARNER_H
 
 // Max number of relearner moves shown in the list
+// This number was increased to 255 to show more moves
 #define MAX_RELEARNER_MOVES             0xFF
 
 // Move Relearner menu change constants
