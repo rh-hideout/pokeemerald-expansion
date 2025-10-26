@@ -3,10 +3,10 @@
 
 // You can use the ENABLED_ON_RELEASE and DISABLED_ON_RELEASE macros to
 // control whether a feature is enabled or disabled when making a release build.
-// 
+//
 // For example, the overworld debug menu is enabled by default, but when using
 // `make release`, it will be automatically disabled.
-// 
+//
 // #define DEBUG_OVERWORLD_MENU DISABLED_ON_RELEASE
 #ifdef RELEASE
 #define ENABLED_ON_RELEASE TRUE
@@ -163,6 +163,7 @@
 #define OPTIONS_TEXT_SPEED_SLOW 0
 #define OPTIONS_TEXT_SPEED_MID 1
 #define OPTIONS_TEXT_SPEED_FAST 2
+#define OPTIONS_TEXT_SPEED_INSTANT 3
 
 #define OPTIONS_SOUND_MONO 0
 #define OPTIONS_SOUND_STEREO 1
