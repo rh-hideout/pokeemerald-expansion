@@ -22,12 +22,12 @@
 #include "item.h"
 #include "item_icon.h"
 #include "link.h"
-#include "load_save.h"
 #include "list_menu.h"
+#include "load_save.h"
 #include "main.h"
-#include "mystery_gift.h"
 #include "match_call.h"
 #include "menu.h"
+#include "mystery_gift.h"
 #include "overworld.h"
 #include "party_menu.h"
 #include "pokeblock.h"
@@ -60,6 +60,7 @@
 #include "constants/field_specials.h"
 #include "constants/items.h"
 #include "constants/heal_locations.h"
+#include "constants/metatile_behaviors.h"
 #include "constants/mystery_gift.h"
 #include "constants/slot_machine.h"
 #include "constants/songs.h"
@@ -984,7 +985,7 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
-    return gMapHeader.mapLayout->primaryTileset == &gTileset_Building && (tileId == METATILE_Building_PC_On || tileId == METATILE_Building_PC_Off);
+    return (UNPACK_BEHAVIOR(GetMetatileAttributesById(tileId)) == MB_PC);
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
