@@ -2162,7 +2162,7 @@ void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)
     SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
-void TeraType_(u32 sourceLine, u32 teraType)
+void TeraType_(u32 sourceLine, enum Type teraType)
 {
     INVALID_IF(!DATA.currentMon, "TeraType outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_TERA_TYPE, &teraType);

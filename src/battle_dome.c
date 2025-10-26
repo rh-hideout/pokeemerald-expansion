@@ -2392,7 +2392,7 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 
 static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
 {
-    int defType1, defType2, moveType;
+    enum Type defType1, defType2, moveType;
     int typePower = TYPE_x1;
     enum Ability defAbility;
 

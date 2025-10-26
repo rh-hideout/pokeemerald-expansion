@@ -471,7 +471,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
 {
     u8 battlerIn1, battlerIn2;
     u8 numAbsorbingAbilities = 0;
-    u16 absorbingTypeAbilities[3]; // Array size is maximum number of absorbing abilities for a single type
+    enum Ability absorbingTypeAbilities[3]; // Array size is maximum number of absorbing abilities for a single type
     s32 firstId;
     s32 lastId;
     struct Pokemon *party;
@@ -479,7 +479,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     u16 aiMove;
     u32 opposingBattler = GetOppositeBattler(battler);
     u32 incomingMove = GetIncomingMove(battler, opposingBattler, gAiLogicData);
-    u32 incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
+    enum Type incomingType = CheckDynamicMoveType(GetBattlerMon(opposingBattler), incomingMove, opposingBattler, MON_IN_BATTLE);
     bool32 isOpposingBattlerChargingOrInvulnerable = !BreaksThroughSemiInvulnerablity(opposingBattler, incomingMove) || IsTwoTurnNotSemiInvulnerableMove(opposingBattler, incomingMove);
     s32 i, j;
 
@@ -1535,7 +1535,7 @@ static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons, u32 b
     return PARTY_SIZE;
 }
 
-bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, u8 type1, u8 type2)
+bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
@@ -1554,7 +1554,8 @@ bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, u8 ty
 // Gets hazard damage
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon)
 {
-    u8 defType1 = battleMon->types[0], defType2 = battleMon->types[1], tSpikesLayers;
+    enum Type defType1 = battleMon->types[0], defType2 = battleMon->types[1];
+    u8 tSpikesLayers;
     u16 heldItemEffect = GetItemHoldEffect(battleMon->item);
     u32 maxHP = battleMon->maxHP;
     enum Ability ability = battleMon->ability, status = battleMon->status1;
@@ -1745,7 +1746,7 @@ static u32 GetSwitchinRecurringDamage(void)
 // Gets one turn of status damage
 static u32 GetSwitchinStatusDamage(u32 battler)
 {
-    u8 defType1 = gAiLogicData->switchinCandidate.battleMon.types[0], defType2 = gAiLogicData->switchinCandidate.battleMon.types[1];
+    enum Type defType1 = gAiLogicData->switchinCandidate.battleMon.types[0], defType2 = gAiLogicData->switchinCandidate.battleMon.types[1];
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
     u16 heldItemEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
     u32 status = gAiLogicData->switchinCandidate.battleMon.status1;
@@ -1934,8 +1935,8 @@ static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struc
 {
     // Check type matchup
     u32 typeEffectiveness1 = UQ_4_12(1.0), typeEffectiveness2 = UQ_4_12(1.0);
-    u8 atkType1 = opposingBattleMon.types[0], atkType2 = opposingBattleMon.types[1],
-    defType1 = battleMon.types[0], defType2 = battleMon.types[1];
+    enum Type atkType1 = opposingBattleMon.types[0], atkType2 = opposingBattleMon.types[1];
+    enum Type defType1 = battleMon.types[0], defType2 = battleMon.types[1];
 
     // Add each independent defensive type matchup together
     typeEffectiveness1 = uq4_12_multiply(typeEffectiveness1, (GetTypeModifier(atkType1, defType1)));

@@ -1027,7 +1027,7 @@ void Status1_(u32 sourceLine, u32 status1);
 void OTName_(u32 sourceLine, const u8 *otName);
 void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
-void TeraType_(u32 sourceLine, u32 teraType);
+void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
 void Shiny_(u32 sourceLine, bool32 isShiny);
 

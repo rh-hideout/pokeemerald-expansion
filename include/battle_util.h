@@ -91,7 +91,7 @@ enum ItemEffect
 // for Natural Gift and Fling
 struct TypePower
 {
-    u8 type;
+    enum Type type;
     u8 power;
     u16 effect;
 };
@@ -158,7 +158,7 @@ struct DamageContext
     u32 battlerAtk:3;
     u32 battlerDef:3;
     u32 move:16;
-    u32 moveType:5;
+    enum Type moveType:5;
     u32 isCrit:1;
     u32 randomFactor:1;
     u32 updateFlags:1;
@@ -259,7 +259,7 @@ bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability);
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
 bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, u32 move, enum FunctionCallOption option);
-bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, u32 move, u32 moveType, enum FunctionCallOption option);
+bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, u32 move, enum Type moveType, enum FunctionCallOption option);
 bool32 TryFieldEffects(enum FieldEffectCases caseId);
 u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ability, u32 special, u32 moveArg);
 bool32 TryPrimalReversion(u32 battler);
@@ -302,11 +302,11 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx);
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
 uq4_12_t CalcTypeEffectivenessMultiplier(struct DamageContext *ctx);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
-uq4_12_t GetTypeModifier(u32 atkType, u32 defType);
-uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, u8 moveType);
+uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
+uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType);
 void UpdateMoveResultFlags(uq4_12_t modifier, u16 *resultFlags);
 s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, u32 battler);
-s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, u8 type1, u8 type2, u32 maxHp);
+s32 GetStealthHazardDamageByTypesAndHP(enum TypeSideHazard hazardType, enum Type type1, enum Type type2, u32 maxHp);
 bool32 CanMegaEvolve(u32 battler);
 bool32 CanUltraBurst(u32 battler);
 void ActivateMegaEvolution(u32 battler);
@@ -387,12 +387,12 @@ bool32 AreBattlersOfOppositeGender(u32 battler1, u32 battler2);
 bool32 AreBattlersOfSameGender(u32 battler1, u32 battler2);
 u32 CalcSecondaryEffectChance(u32 battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect);
 bool32 MoveEffectIsGuaranteed(u32 battler, enum Ability battlerAbility, const struct AdditionalEffect *additionalEffect);
-void GetBattlerTypes(u32 battler, bool32 ignoreTera, u32 types[static 3]);
-u32 GetBattlerType(u32 battler, u32 typeIndex, bool32 ignoreTera);
+void GetBattlerTypes(u32 battler, bool32 ignoreTera, enum Type types[static 3]);
+enum Type GetBattlerType(u32 battler, u32 typeIndex, bool32 ignoreTera);
 bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon);
 bool8 IsMonBannedFromSkyBattles(u16 species);
-void RemoveBattlerType(u32 battler, u8 type);
-u32 GetBattleMoveType(u32 move);
+void RemoveBattlerType(u32 battler, enum Type type);
+enum Type GetBattleMoveType(u32 move);
 void TryActivateSleepClause(u32 battler, u32 indexInParty);
 void TryDeactivateSleepClause(u32 battlerSide, u32 indexInParty);
 bool32 IsSleepClauseActiveForSide(u32 battlerSide);

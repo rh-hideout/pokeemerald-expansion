@@ -2,28 +2,31 @@
 #define GUARD_CONSTANTS_POKEMON_H
 
 // Pokémon types
-#define TYPE_NONE             0
-#define TYPE_NORMAL           1
-#define TYPE_FIGHTING         2
-#define TYPE_FLYING           3
-#define TYPE_POISON           4
-#define TYPE_GROUND           5
-#define TYPE_ROCK             6
-#define TYPE_BUG              7
-#define TYPE_GHOST            8
-#define TYPE_STEEL            9
-#define TYPE_MYSTERY          10
-#define TYPE_FIRE             11
-#define TYPE_WATER            12
-#define TYPE_GRASS            13
-#define TYPE_ELECTRIC         14
-#define TYPE_PSYCHIC          15
-#define TYPE_ICE              16
-#define TYPE_DRAGON           17
-#define TYPE_DARK             18
-#define TYPE_FAIRY            19
-#define TYPE_STELLAR          20
-#define NUMBER_OF_MON_TYPES   21
+enum __attribute__((packed)) Type
+{
+    TYPE_NONE = 0,
+    TYPE_NORMAL = 1,
+    TYPE_FIGHTING = 2,
+    TYPE_FLYING = 3,
+    TYPE_POISON = 4,
+    TYPE_GROUND = 5,
+    TYPE_ROCK = 6,
+    TYPE_BUG = 7,
+    TYPE_GHOST = 8,
+    TYPE_STEEL = 9,
+    TYPE_MYSTERY = 10,
+    TYPE_FIRE = 11,
+    TYPE_WATER = 12,
+    TYPE_GRASS = 13,
+    TYPE_ELECTRIC = 14,
+    TYPE_PSYCHIC = 15,
+    TYPE_ICE = 16,
+    TYPE_DRAGON = 17,
+    TYPE_DARK = 18,
+    TYPE_FAIRY = 19,
+    TYPE_STELLAR = 20,
+    NUMBER_OF_MON_TYPES
+};
 
 // Pokémon egg groups
 #define EGG_GROUP_NONE                0

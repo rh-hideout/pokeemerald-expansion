@@ -1495,7 +1495,7 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
     case LIST_ITEM_TYPES:
         for (i = 0; i < 3; i++)
         {
-            u8 *types = &gBattleMons[data->battlerId].types[0];
+            enum Type *types = &gBattleMons[data->battlerId].types[0];
 
             PadString(gTypesInfo[types[i]].name, text);
             printer.currentY = printer.y = (i * yMultiplier) + sSecondaryListTemplate.upText_Y;

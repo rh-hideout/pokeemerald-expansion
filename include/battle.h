@@ -233,7 +233,7 @@ struct SideTimer
     u8 followmePowder:1; // Rage powder, does not affect grass type pokemon.
     u8 retaliateTimer;
     u16 damageNonTypesTimer;
-    u8 damageNonTypesType;
+    enum Type damageNonTypesType;
     u16 rainbowTimer;
     u16 seaOfFireTimer;
     u16 swampTimer;
@@ -270,7 +270,7 @@ struct AI_SavedBattleMon
     u16 heldItem;
     u16 species:15;
     u16 saved:1;
-    u8 types[3];
+    enum Type types[3];
 };
 
 struct AiPartyMon
@@ -624,7 +624,7 @@ struct BattleStruct
     u8 givenExpMons; // Bits for enemy party's pokemon that gave exp to player's party.
     u8 expSentInMons; // As bits for player party mons - not including exp share mons.
     u8 wildVictorySong;
-    u8 dynamicMoveType;
+    enum Type dynamicMoveType;
     u8 wrappedBy[MAX_BATTLERS_COUNT];
     u8 battlerPreventingSwitchout;
     u8 moneyMultiplier:6;
@@ -825,7 +825,7 @@ static inline bool32 IsBattleMoveStatus(u32 move)
  * times with one type because it shares the 'GetBattlerTypes' result. */
 #define _IS_BATTLER_ANY_TYPE(battler, ignoreTera, ...)                           \
     ({                                                                           \
-        u32 types[3];                                                            \
+        enum Type types[3];                                                      \
         GetBattlerTypes(battler, ignoreTera, types);                             \
         RECURSIVELY(R_FOR_EACH(_IS_BATTLER_ANY_TYPE_HELPER, __VA_ARGS__)) FALSE; \
     })
@@ -839,7 +839,7 @@ static inline bool32 IsBattleMoveStatus(u32 move)
 
 #define IS_BATTLER_TYPELESS(battlerId)                                                    \
     ({                                                                                    \
-        u32 types[3];                                                                     \
+        enum Type types[3];                                                               \
         GetBattlerTypes(battlerId, FALSE, types);                                         \
         types[0] == TYPE_MYSTERY && types[1] == TYPE_MYSTERY && types[2] == TYPE_MYSTERY; \
     })

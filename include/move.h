@@ -65,7 +65,7 @@ struct MoveInfo
     const u8 *name;
     const u8 *description;
     enum BattleMoveEffects effect;
-    u16 type:5;     // Up to 32
+    enum Type type:5;     // Up to 32
     enum DamageCategory category:2;
     u16 power:9;    // up to 511
     // end of word
@@ -192,7 +192,7 @@ static inline const u8 *GetMoveDescription(u32 moveId)
     return gMovesInfo[moveId].description;
 }
 
-static inline u32 GetMoveType(u32 moveId)
+static inline enum Type GetMoveType(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }

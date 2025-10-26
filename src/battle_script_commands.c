@@ -1007,7 +1007,7 @@ static bool32 NoTargetPresent(u8 battler, u32 move)
     return FALSE;
 }
 
-bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, u32 moveType)
+bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType)
 {
       if ((ability == ABILITY_PROTEAN || ability == ABILITY_LIBERO)
          && !gDisableStructs[gBattlerAttacker].usedProteanLibero
@@ -15080,7 +15080,7 @@ void BS_TryReflectType(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
     u16 targetBaseSpecies = GET_BASE_SPECIES_ID(gBattleMons[gBattlerTarget].species);
-    u32 targetTypes[3];
+    enum Type targetTypes[3];
     GetBattlerTypes(gBattlerTarget, FALSE, targetTypes);
 
     if (targetBaseSpecies == SPECIES_ARCEUS || targetBaseSpecies == SPECIES_SILVALLY)
@@ -17236,9 +17236,9 @@ void BS_TryElectrify(void)
 void BS_TrySoak(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
-    u32 types[3];
+    enum Type types[3];
     GetBattlerTypes(gBattlerTarget, FALSE, types);
-    u32 typeToSet = GetMoveArgType(gCurrentMove);
+    enum Type typeToSet = GetMoveArgType(gCurrentMove);
     if ((types[0] == typeToSet && types[1] == typeToSet)
      || GetActiveGimmick(gBattlerTarget) == GIMMICK_TERA)
     {

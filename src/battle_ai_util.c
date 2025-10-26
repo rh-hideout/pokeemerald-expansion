@@ -761,14 +761,14 @@ static inline s32 SetFixedMoveBasePower(u32 battlerAtk, u32 move)
     return fixedBasePower;
 }
 
-static inline void AI_StoreBattlerTypes(u32 battlerAtk, u32 *types)
+static inline void AI_StoreBattlerTypes(u32 battlerAtk, enum Type *types)
 {
     types[0] = gBattleMons[battlerAtk].types[0];
     types[1] = gBattleMons[battlerAtk].types[1];
     types[2] = gBattleMons[battlerAtk].types[2];
 }
 
-static inline void AI_RestoreBattlerTypes(u32 battlerAtk, u32 *types)
+static inline void AI_RestoreBattlerTypes(u32 battlerAtk, enum Type *types)
 {
     gBattleMons[battlerAtk].types[0] = types[0];
     gBattleMons[battlerAtk].types[1] = types[1];
@@ -946,7 +946,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     if (movePower && !isDamageMoveUnusable)
     {
-        u32 types[3];
+        enum Type types[3];
         AI_StoreBattlerTypes(battlerAtk, types);
         ProteanTryChangeType(battlerAtk, aiData->abilities[battlerAtk], move, ctx.moveType);
 
@@ -2362,7 +2362,7 @@ bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category)
     return FALSE;
 }
 
-bool32 HasMoveWithType(u32 battler, u32 type)
+bool32 HasMoveWithType(u32 battler, enum Type type)
 {
     s32 i;
     u16 *moves = GetMovesArray(battler);
@@ -2968,7 +2968,7 @@ bool32 HasDamagingMove(u32 battler)
     return FALSE;
 }
 
-bool32 HasDamagingMoveOfType(u32 battler, u32 type)
+bool32 HasDamagingMoveOfType(u32 battler, enum Type type)
 {
     s32 i;
     u16 *moves = GetMovesArray(battler);
@@ -2977,7 +2977,7 @@ bool32 HasDamagingMoveOfType(u32 battler, u32 type)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && GetMovePower(moves[i]) > 0)
         {
-            u32 moveType = GetDynamicMoveType(GetBattlerMon(battler), moves[i], battler, MON_IN_BATTLE);
+            enum Type moveType = GetDynamicMoveType(GetBattlerMon(battler), moves[i], battler, MON_IN_BATTLE);
 
             if (moveType != TYPE_NONE && type == moveType)
                 return TRUE;
@@ -3228,8 +3228,8 @@ static bool32 PartyBattlerShouldAvoidHazards(u32 currBattler, u32 switchBattler)
     enum HoldEffect holdEffect;
     u32 species = GetMonData(mon, MON_DATA_SPECIES);
     s32 hazardDamage = 0;
-    u32 type1 = GetSpeciesType(species, 0);
-    u32 type2 = GetSpeciesType(species, 1);
+    enum Type type1 = GetSpeciesType(species, 0);
+    enum Type type2 = GetSpeciesType(species, 1);
     u32 maxHp = GetMonData(mon, MON_DATA_MAX_HP);
     u32 side = GetBattlerSide(currBattler);
 

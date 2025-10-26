@@ -1128,7 +1128,7 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
     SetBoxMonData(boxMon, MON_DATA_POKEBALL, &value);
     SetBoxMonData(boxMon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
 
-    u32 teraType = (boxMon->personality & 0x1) == 0 ? GetSpeciesType(species, 0) : GetSpeciesType(species, 1);
+    enum Type teraType = (boxMon->personality & 0x1) == 0 ? GetSpeciesType(species, 0) : GetSpeciesType(species, 1);
     SetBoxMonData(boxMon, MON_DATA_TERA_TYPE, &teraType);
 
     if (fixedIV < USE_RANDOM_IVS)
@@ -2740,7 +2740,7 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }
                 else if (substruct0->teraType == TYPE_NONE) // Tera Type hasn't been modified so we can just use the personality
                 {
-                    const u8 *types = gSpeciesInfo[substruct0->species].types;
+                    const enum Type *types = gSpeciesInfo[substruct0->species].types;
                     retVal = (boxMon->personality & 0x1) == 0 ? types[0] : types[1];
                 }
                 else
@@ -3533,7 +3533,7 @@ u32 GetSpeciesWeight(u16 species)
     return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
 }
 
-u32 GetSpeciesType(u16 species, u8 slot)
+enum Type GetSpeciesType(u16 species, u8 slot)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
 }
@@ -7013,7 +7013,7 @@ void UpdateMonPersonality(struct BoxPokemon *boxMon, u32 personality)
 
     bool32 isShiny = GetBoxMonData(boxMon, MON_DATA_IS_SHINY, NULL);
     u32 hiddenNature = GetBoxMonData(boxMon, MON_DATA_HIDDEN_NATURE, NULL);
-    u32 teraType = GetBoxMonData(boxMon, MON_DATA_TERA_TYPE, NULL);
+    enum Type teraType = GetBoxMonData(boxMon, MON_DATA_TERA_TYPE, NULL);
 
     old = *boxMon;
     old0 = &(GetSubstruct(&old, old.personality, SUBSTRUCT_TYPE_0)->type0);
@@ -7128,9 +7128,9 @@ void UpdateDaysPassedSinceFormChange(u16 days)
     }
 }
 
-u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
+enum Type CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
 {
-    u32 moveType = GetDynamicMoveType(mon, move, battler, state);
+    enum Type moveType = GetDynamicMoveType(mon, move, battler, state);
     if (moveType != TYPE_NONE)
         return moveType;
     return GetMoveType(move);
@@ -7210,7 +7210,7 @@ bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion)
     return FALSE;
 }
 
-u32 GetTeraTypeFromPersonality(struct Pokemon *mon)
+enum Type GetTeraTypeFromPersonality(struct Pokemon *mon)
 {
     const u8 *types = gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].types;
     return (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1) == 0 ? types[0] : types[1];
@@ -7231,7 +7231,7 @@ void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
     gSaveBlock1Ptr->playerParty[index] = *mon;
 }
 
-u32 IsSpeciesOfType(u32 species, u32 type)
+bool32 IsSpeciesOfType(u32 species, enum Type type)
 {
     if (gSpeciesInfo[species].types[0] == type
      || gSpeciesInfo[species].types[1] == type)

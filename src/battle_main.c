@@ -2003,7 +2003,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
             if (partyData[monIndex].teraType > 0)
             {
                 gBattleStruct->opponentMonCanTera |= 1 << i;
-                u32 data = partyData[monIndex].teraType;
+                enum Type data = partyData[monIndex].teraType;
                 SetMonData(&party[i], MON_DATA_TERA_TYPE, &data);
             }
             CalculateMonStats(&party[i]);
@@ -5815,9 +5815,9 @@ void RunBattleScriptCommands(void)
         gBattleScriptingCommandsTable[gBattlescriptCurrInstr[0]]();
 }
 
-u32 TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
+enum Type TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
 {
-    u32 ateType = TYPE_NONE;
+    enum Type ateType = TYPE_NONE;
 
     switch (GetMoveEffect(move))
     {
@@ -5863,11 +5863,12 @@ u32 TrySetAteType(u32 move, u32 battlerAtk, enum Ability attackerAbility)
 }
 
 // Returns TYPE_NONE if type doesn't change.
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
+enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state)
 {
-    u32 moveType = GetMoveType(move);
+    enum Type moveType = GetMoveType(move);
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 species, heldItem, type1, type2, type3;
+    u32 species, heldItem;
+    enum Type type1, type2, type3;
     enum Ability ability;
     enum HoldEffect holdEffect;
     enum Gimmick gimmick = GetActiveGimmick(battler);
@@ -5977,7 +5978,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
     case EFFECT_REVELATION_DANCE:
         if (gimmick != GIMMICK_Z_MOVE)
         {
-            u32 teraType;
+            enum Type teraType;
             if (gimmick == GIMMICK_TERA && ((teraType = GetMonData(mon, MON_DATA_TERA_TYPE)) != TYPE_STELLAR))
                 return teraType;
             else if (type1 != TYPE_MYSTERY && !(gDisableStructs[battler].roostActive && type1 == TYPE_FLYING))
@@ -6102,7 +6103,7 @@ u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState
 
 void SetTypeBeforeUsingMove(u32 move, u32 battler)
 {
-    u32 moveType;
+    enum Type moveType;
     u32 heldItem = gBattleMons[battler].item;
     enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
 

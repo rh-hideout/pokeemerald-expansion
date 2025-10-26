@@ -130,7 +130,7 @@ enum MonData {
 struct PokemonSubstruct0
 {
     u16 species:11; // 2047 species.
-    u16 teraType:5; // 30 types.
+    enum Type teraType:5; // 30 types.
     u16 heldItem:10; // 1023 items.
     u16 unused_02:6;
     u32 experience:21;
@@ -372,7 +372,7 @@ struct BattlePokemon
     /*0x17*/ u32 abilityNum:2;
     /*0x18*/ s8 statStages[NUM_BATTLE_STATS];
     /*0x20*/ enum Ability ability;
-    /*0x22*/ u8 types[3];
+    /*0x22*/ enum Type types[3];
     /*0x25*/ u8 pp[MAX_MON_MOVES];
     /*0x29*/ u16 hp;
     /*0x2B*/ u8 level;
@@ -415,7 +415,7 @@ struct SpeciesInfo /*0xC4*/
     u8 baseSpeed;
     u8 baseSpAttack;
     u8 baseSpDefense;
-    u8 types[2];
+    enum Type types[2];
     u8 catchRate;
     u8 forceTeraType;
     u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
@@ -785,7 +785,7 @@ const u8 *GetSpeciesCategory(u16 species);
 const u8 *GetSpeciesPokedexDescription(u16 species);
 u32 GetSpeciesHeight(u16 species);
 u32 GetSpeciesWeight(u16 species);
-u32 GetSpeciesType(u16 species, u8 slot);
+enum Type GetSpeciesType(u16 species, u8 slot);
 enum Ability GetSpeciesAbility(u16 species, u8 slot);
 u32 GetSpeciesBaseHP(u16 species);
 u32 GetSpeciesBaseAttack(u16 species);
@@ -900,15 +900,15 @@ void HealPokemon(struct Pokemon *mon);
 void HealBoxPokemon(struct BoxPokemon *boxMon);
 void UpdateDaysPassedSinceFormChange(u16 days);
 void TrySetDayLimitToFormChange(struct Pokemon *mon);
-u32 CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state);
+enum Type CheckDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState state);
 uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier);
 u32 GetRegionalFormByRegion(u32 species, u32 region);
 bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion);
-u32 GetTeraTypeFromPersonality(struct Pokemon *mon);
+enum Type GetTeraTypeFromPersonality(struct Pokemon *mon);
 bool8 ShouldSkipFriendshipChange(void);
 struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
-u32 IsSpeciesOfType(u32 species, u32 type);
+bool32 IsSpeciesOfType(u32 species, enum Type type);
 
 #endif // GUARD_POKEMON_H
