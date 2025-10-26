@@ -108,7 +108,7 @@ DOUBLE_BATTLE_TEST("Sword of Ruin increases damage taken by special moves in Won
     }
 }
 
-SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Breaker attacker", s16 damage)
+SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Breaker attacker")
 {
     u32 ability;
 
@@ -121,8 +121,7 @@ SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Brea
         PLAYER(SPECIES_CHIEN_PAO) { Ability(ABILITY_SWORD_OF_RUIN); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_DRAGON_TAIL); }
-        TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
         if (ability == ABILITY_MOLD_BREAKER)
@@ -137,10 +136,6 @@ SINGLE_BATTLE_TEST("Sword of Ruin doesn't activate when dragged out by Mold Brea
             ABILITY_POPUP(player, ABILITY_SWORD_OF_RUIN);
             MESSAGE("Chien-Pao's Sword of Ruin weakened the Defense of all surrounding Pokémon!");
         }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
 

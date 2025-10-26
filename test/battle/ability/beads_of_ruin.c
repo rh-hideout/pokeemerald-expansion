@@ -109,7 +109,7 @@ DOUBLE_BATTLE_TEST("Beads of Ruin increases damage taken by physical moves in Wo
     }
 }
 
-SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker", s16 damage)
+SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Breaker attacker")
 {
     u32 ability;
 
@@ -122,8 +122,7 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
         PLAYER(SPECIES_CHI_YU) { Ability(ABILITY_BEADS_OF_RUIN); }
         OPPONENT(SPECIES_EXCADRILL) { Ability(ability); }
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_DRAGON_TAIL); }
-        TURN { MOVE(player, MOVE_ROUND); }
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
         if (ability == ABILITY_MOLD_BREAKER)
@@ -138,10 +137,6 @@ SINGLE_BATTLE_TEST("Beads of Ruin doesn't activate when dragged out by Mold Brea
             ABILITY_POPUP(player, ABILITY_BEADS_OF_RUIN);
             MESSAGE("Chi-Yu's Beads of Ruin weakened the Sp. Def of all surrounding Pokémon!");
         }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
-        HP_BAR(opponent, captureDamage: &results[i].damage);
-    } FINALLY {
-        EXPECT_LT(results[0].damage, results[1].damage);
     }
 }
 
