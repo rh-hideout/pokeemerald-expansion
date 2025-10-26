@@ -27,6 +27,7 @@
 #include "main.h"
 #include "match_call.h"
 #include "menu.h"
+#include "metatile_behavior.h"
 #include "mystery_gift.h"
 #include "overworld.h"
 #include "party_menu.h"
@@ -985,7 +986,7 @@ void FieldShowRegionMap(void)
 
 static bool32 IsBuildingPCTile(u32 tileId)
 {
-    return (UNPACK_BEHAVIOR(GetMetatileAttributesById(tileId)) == MB_PC);
+    return (MetatileBehavior_IsPC(UNPACK_BEHAVIOR(GetMetatileAttributesById(tileId))));
 }
 
 static bool32 IsPlayerHousePCTile(u32 tileId)
