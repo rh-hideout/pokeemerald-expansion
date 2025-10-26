@@ -372,7 +372,7 @@
 	.byte 0x3d
 	.endm
 
-	.macro end2
+	.macro unused_0x3e
 	.byte 0x3e
 	.endm
 

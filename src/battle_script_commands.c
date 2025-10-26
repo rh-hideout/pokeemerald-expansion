@@ -400,7 +400,7 @@ static void Cmd_waitstate(void);
 static void Cmd_isdmgblockedbydisguise(void);
 static void Cmd_return(void);
 static void Cmd_end(void);
-static void Cmd_end2(void);
+static void Cmd_unused_0x3e(void);
 static void Cmd_end3(void);
 static void Cmd_setchargingturn(void);
 static void Cmd_call(void);
@@ -659,7 +659,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_isdmgblockedbydisguise,                  //0x3B
     Cmd_return,                                  //0x3C
     Cmd_end,                                     //0x3D
-    Cmd_end2,                                    //0x3E
+    Cmd_unused_0x3e,                             //0x3E
     Cmd_end3,                                    //0x3F
     Cmd_setchargingturn,                         //0x40
     Cmd_call,                                    //0x41
@@ -5342,13 +5342,10 @@ static void Cmd_end(void)
 {
     CMD_ARGS();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-        BattleArena_AddSkillPoints(gBattlerAttacker);
-
     gCurrentActionFuncId = B_ACTION_TRY_FINISH;
 }
 
-static void Cmd_end2(void)
+static void Cmd_unused_0x3e(void)
 {
     CMD_ARGS();
 
@@ -5939,6 +5936,8 @@ static void Cmd_moveend(void)
         switch (gBattleScripting.moveendState)
         {
         case MOVEEND_SET_VALUES:
+            if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+                BattleArena_AddSkillPoints(gBattlerAttacker);
             gBattleScripting.savedDmg += gBattleStruct->moveDamage[gBattlerTarget];
             gBattleStruct->moveEndBattlerId = 0;
             gBattleScripting.moveendState++;

@@ -239,12 +239,12 @@ BattleScript_RunByUsingItem::
 BattleScript_ActionWatchesCarefully:
 	printstring STRINGID_PKMNWATCHINGCAREFULLY
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	end
 
 BattleScript_ActionGetNear:
 	printfromtable gSafariGetNearStringIds
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	end
 
 BattleScript_ActionThrowPokeblock:
 	printstring STRINGID_THREWPOKEBLOCKATPKMN
@@ -252,7 +252,7 @@ BattleScript_ActionThrowPokeblock:
 	playanimation BS_ATTACKER, B_ANIM_POKEBLOCK_THROW, NULL
 	printfromtable gSafariPokeblockResultStringIds
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	end
 
 BattleScript_ActionWallyThrow:
 	printstring STRINGID_RETURNMON
@@ -263,7 +263,7 @@ BattleScript_ActionWallyThrow:
 	waitstate
 	printstring STRINGID_YOUTHROWABALLNOWRIGHT
 	waitmessage B_WAIT_TIME_LONG
-	end2
+	end
 
 BattleScript_TrainerASlideMsgRet::
 	trainerslidein BS_OPPONENT1
@@ -276,7 +276,7 @@ BattleScript_TrainerASlideMsgRet::
 
 BattleScript_TrainerASlideMsgEnd2::
 	call BattleScript_TrainerASlideMsgRet
-	end2
+	end
 
 BattleScript_TrainerBSlideMsgRet::
 	trainerslidein BS_OPPONENT2
@@ -289,4 +289,4 @@ BattleScript_TrainerBSlideMsgRet::
 
 BattleScript_TrainerBSlideMsgEnd2::
 	call BattleScript_TrainerBSlideMsgRet
-	end2
+	end
