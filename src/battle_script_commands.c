@@ -5936,8 +5936,6 @@ static void Cmd_moveend(void)
         switch (gBattleScripting.moveendState)
         {
         case MOVEEND_SET_VALUES:
-            if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
-                BattleArena_AddSkillPoints(gBattlerAttacker);
             gBattleScripting.savedDmg += gBattleStruct->moveDamage[gBattlerTarget];
             gBattleStruct->moveEndBattlerId = 0;
             gBattleScripting.moveendState++;
@@ -6982,6 +6980,9 @@ static void Cmd_moveend(void)
                 }
             }
 
+            if (gBattleTypeFlags & BATTLE_TYPE_ARENA)
+                BattleArena_AddSkillPoints(gBattlerAttacker);
+                
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_DANCER:
