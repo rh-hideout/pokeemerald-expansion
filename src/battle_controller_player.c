@@ -460,6 +460,7 @@ void HandleInputChooseTarget(u32 battler)
             gBattleStruct->zmove.viewing = TRUE;
             ReloadMoveNames(battler);
         }
+        TryToAddMoveInfoWindow();
         DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
         DoBounceEffect(battler, BOUNCE_MON, 7, 1);
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
