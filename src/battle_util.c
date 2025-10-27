@@ -67,6 +67,7 @@ static u32 GetBattlerItemHoldEffectParam(u32 battler, u32 item);
 static bool32 CanBeInfinitelyConfused(u32 battler);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
+static bool32 IsOpposingSideEmpty(u32 battler);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -3929,7 +3930,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_INTIMIDATE:
-            if (!gSpecialStatuses[battler].switchInAbilityDone)
+            if (!gSpecialStatuses[battler].switchInAbilityDone && !IsOpposingSideEmpty(battler))
             {
                 SaveBattlerAttacker(gBattlerAttacker);
                 gBattlerAttacker = battler;
@@ -3941,7 +3942,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             break;
         case ABILITY_SUPERSWEET_SYRUP:
             if (!gSpecialStatuses[battler].switchInAbilityDone
-             && !GetBattlerPartyState(battler)->supersweetSyrup)
+             && !GetBattlerPartyState(battler)->supersweetSyrup
+             && !IsOpposingSideEmpty(battler))
             {
                 SaveBattlerAttacker(gBattlerAttacker);
                 gBattlerAttacker = battler;
@@ -11906,4 +11908,18 @@ bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move)
     }
 
     return FALSE;
+}
+
+static bool32 IsOpposingSideEmpty(u32 battler)
+{
+    u32 oppositeBattler = BATTLE_OPPOSITE(battler);
+    bool32 noBattlerOnOpposingSide = FALSE;
+
+    if (gBattleMons[oppositeBattler].hp == 0)
+        noBattlerOnOpposingSide = TRUE;
+
+    if (IsDoubleBattle() && gBattleMons[BATTLE_PARTNER(oppositeBattler)].hp > 0)
+        noBattlerOnOpposingSide = FALSE;
+
+    return noBattlerOnOpposingSide;
 }
