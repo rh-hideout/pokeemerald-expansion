@@ -2090,6 +2090,8 @@ void PlayerHandleChooseMove(u32 battler)
 
         if (!IsGimmickTriggerSpriteActive())
             gBattleStruct->gimmick.triggerSpriteId = 0xFF;
+        else if (!IsGimmickTriggerSpriteMatchingBattler(battler))
+            DestroyGimmickTriggerSprite();
         if (!(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
             CreateGimmickTriggerSprite(battler);
 
