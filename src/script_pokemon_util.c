@@ -319,7 +319,7 @@ void CheckTeraType(struct ScriptContext *ctx)
 
 void SetTeraType(struct ScriptContext *ctx)
 {
-    u32 type = ScriptReadByte(ctx);
+    enum Type type = ScriptReadByte(ctx);
     u32 partyIndex = VarGet(ScriptReadHalfword(ctx));
 
     Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
@@ -332,7 +332,7 @@ void SetTeraType(struct ScriptContext *ctx)
  * if side/slot are assigned, it will create the mon at the assigned party location
  * if slot == PARTY_SIZE, it will give the mon to first available party or storage slot
  */
-static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, u8 teraType, u8 dmaxLevel)
+static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
     enum NationalDexOrder nationalDexNum;
     int sentToPc;
@@ -518,8 +518,8 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     // Perfect IV calculation
     u32 i;
-    u8 availableIVs[NUM_STATS];
-    u8 selectedIvs[NUM_STATS];
+    enum Stat availableIVs[NUM_STATS];
+    enum Stat selectedIvs[NUM_STATS];
     if (gSpeciesInfo[species].perfectIVCount != 0)
     {
         // Initialize a list of IV indices.
@@ -543,6 +543,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
             case STAT_SPEED: speedIv = MAX_PER_STAT_IVS; break;
             case STAT_SPATK: spAtkIv = MAX_PER_STAT_IVS; break;
             case STAT_SPDEF: spDefIv = MAX_PER_STAT_IVS; break;
+            default: break;
             }
         }
     }
@@ -558,7 +559,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u16 move4                = PARSE_FLAG(20, MOVE_NONE);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
-    u8 teraType              = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
+    enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
     u8 dmaxLevel             = PARSE_FLAG(24, 0);
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};

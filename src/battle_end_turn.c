@@ -173,6 +173,17 @@ static bool32 HandleEndTurnVarious(u32 battler)
         gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
     }
 
+    if (gBattleStruct->incrementEchoedVoice)
+    {
+        if (gBattleStruct->echoedVoiceCounter < 4)
+            gBattleStruct->echoedVoiceCounter++;
+        gBattleStruct->incrementEchoedVoice = FALSE;
+    }
+    else
+    {
+        gBattleStruct->echoedVoiceCounter = 0;
+    }
+
     return effect;
 }
 
@@ -764,9 +775,9 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
     {
         s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            saltCureDamage = gBattleMons[battler].maxHP / 4;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / 4;
         else
-            saltCureDamage = gBattleMons[battler].maxHP / 8;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / 8;
         SetPassiveDamageAmount(battler, saltCureDamage);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptExecute(BattleScript_SaltCureExtraDamage);

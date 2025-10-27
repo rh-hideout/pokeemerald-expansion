@@ -95,7 +95,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, u32 statId, ActivationTiming timing)
+enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, ActivationTiming timing)
 {
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
     {
@@ -228,7 +228,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
     return effect;
 }
 
-static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -236,7 +236,7 @@ static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
     {
         if (IsBattlerTurnDamaged(battler))
         {
-            BattleScriptCall(BattleScript_AirBaloonMsgPop);
+            BattleScriptCall(BattleScript_AirBalloonMsgPop);
             effect = ITEM_EFFECT_OTHER;
         }
     }
@@ -244,7 +244,7 @@ static enum ItemEffect TryAirBallon(u32 battler, ActivationTiming timing)
     {
         gSpecialStatuses[battler].switchInItemDone = TRUE;
         if (timing == IsOnSwitchInFirstTurnActivation)
-            BattleScriptPushCursorAndCallback(BattleScript_AirBaloonMsgIn);
+            BattleScriptPushCursorAndCallback(BattleScript_AirBalloonMsgIn);
         else
             BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
@@ -494,7 +494,7 @@ static enum ItemEffect TryMentalHerb(u32 battler)
     return effect;
 }
 
-static enum ItemEffect TryThroatSray(u32 battlerAtk)
+static enum ItemEffect TryThroatSpray(u32 battlerAtk)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -513,7 +513,7 @@ static enum ItemEffect TryThroatSray(u32 battlerAtk)
     return effect;
 }
 
-static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAtk, u32 statId, enum DamageCategory category)
+static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAtk, enum Stat statId, enum DamageCategory category)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -965,7 +965,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, u32 statId, ActivationTiming timing)
+static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -1010,7 +1010,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTim
 static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    s32 stat;
+    enum Stat stat;
 
     for (stat = STAT_ATK; stat < NUM_STATS; stat++)
     {
@@ -1107,7 +1107,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         effect = TryKingsRock(itemBattler, battler, item);
         break;
     case HOLD_EFFECT_AIR_BALLOON:
-        effect = TryAirBallon(itemBattler, timing);
+        effect = TryAirBalloon(itemBattler, timing);
         break;
     case HOLD_EFFECT_ROCKY_HELMET:
         effect = TryRockyHelmet(itemBattler, battler, item);
@@ -1143,7 +1143,7 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         effect = TryMentalHerb(itemBattler);
         break;
     case HOLD_EFFECT_THROAT_SPRAY:
-        effect = TryThroatSray(itemBattler);
+        effect = TryThroatSpray(itemBattler);
         break;
     case HOLD_EFFECT_KEE_BERRY:  // consume and boost defense if used physical move
         effect = DamagedStatBoostBerryEffect(itemBattler, battler, STAT_DEF, DAMAGE_CATEGORY_PHYSICAL);

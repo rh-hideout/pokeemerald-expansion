@@ -3970,9 +3970,9 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Unown,                                                                    \
             gShinyOverworldPalette_Unown,                                                               \
         )                                                                                               \
-        .teachingType = TM_ILLITERATE,                                                                  \
         .levelUpLearnset = sUnownLevelUpLearnset,                                                       \
         .teachableLearnset = sUnownTeachableLearnset,                                                   \
+        .tmIlliterate = TRUE,                                                                           \
         .formSpeciesIdTable = sUnownFormSpeciesIdTable,                                                 \
     }
 
@@ -4074,7 +4074,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Wynaut,
             gShinyOverworldPalette_Wynaut
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sWynautLevelUpLearnset,
         .teachableLearnset = sWynautTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 15, SPECIES_WOBBUFFET}),
@@ -4163,7 +4163,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             TRACKS_FOOT,
             sAnimTable_Following
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sWobbuffetLevelUpLearnset,
         .teachableLearnset = sWobbuffetTeachableLearnset,
     },
@@ -7697,7 +7697,7 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
             gOverworldPalette_Smeargle,
             gShinyOverworldPalette_Smeargle
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sSmeargleLevelUpLearnset,
         .teachableLearnset = sSmeargleTeachableLearnset,
     },

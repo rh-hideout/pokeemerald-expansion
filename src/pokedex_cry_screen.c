@@ -228,7 +228,7 @@ static const struct SpritePalette sCryMeterNeedleSpritePalettes[] =
 bool8 LoadCryWaveformWindow(struct CryScreenWindow *window, u8 windowId)
 {
     u8 i;
-    u8 finished = FALSE;
+    bool32 finished = FALSE;
 
     switch (gDexCryScreenState)
     {

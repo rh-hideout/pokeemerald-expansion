@@ -384,6 +384,7 @@ BattleScript_SaltCureExtraDamage::
 	printstring STRINGID_TARGETISHURTBYSALTCURE
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
+	tryactivateitem BS_ATTACKER, ACTIVATION_ON_HP_THRESHOLD
 	end2
 
 BattleScript_EffectCorrosiveGas::
@@ -2813,9 +2814,13 @@ BattleScript_EffectLightScreen::
 
 BattleScript_EffectRest::
 	attackcanceler
-.if B_LEAF_GUARD_PREVENTS_REST >= GEN_5
-	jumpifleafguardprotected BS_TARGET, BattleScript_LeafGuardPreventsRest
-.endif
+	jumpifstatus BS_ATTACKER, STATUS1_SLEEP, BattleScript_RestIsAlreadyAsleep
+	jumpifability BS_ATTACKER, ABILITY_COMATOSE, BattleScript_RestIsAlreadyAsleep
+	jumpifuproarwakes BattleScript_RestCantSleep
+	jumpifability BS_TARGET, ABILITY_INSOMNIA, BattleScript_InsomniaProtects
+	jumpifability BS_TARGET, ABILITY_VITAL_SPIRIT, BattleScript_InsomniaProtects
+	jumpifability BS_ATTACKER, ABILITY_PURIFYING_SALT, BattleScript_InsomniaProtects
+	jumpifabilitypreventsrest BS_TARGET, BattleScript_AbilityPreventsRest
 	trysetrest
 	pause B_WAIT_TIME_SHORT
 	printfromtable gRestUsedStringIds
@@ -2837,7 +2842,7 @@ BattleScript_RestIsAlreadyAsleep::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_LeafGuardPreventsRest::
+BattleScript_AbilityPreventsRest::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BUTITFAILED
 	waitmessage B_WAIT_TIME_LONG
@@ -5378,9 +5383,8 @@ BattleScript_ToxicDebrisActivates::
 	printstring STRINGID_POISONSPIKESSCATTERED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ToxicDebrisRet:
-	copybyte sBATTLER, gBattlerTarget
-	copybyte gBattlerTarget, gBattlerAttacker
-	copybyte gBattlerAttacker, sBATTLER
+	restoretarget
+	restoreattacker
 	return
 
 BattleScript_EarthEaterActivates::
@@ -7719,7 +7723,7 @@ BattleScript_ItemHealHP_End2::
 	call BattleScript_ItemHealHP_Ret
 	end2
 
-BattleScript_AirBaloonMsgIn::
+BattleScript_AirBalloonMsgIn::
 	printstring STRINGID_AIRBALLOONFLOAT
 	waitmessage B_WAIT_TIME_LONG
 	end3
@@ -7729,7 +7733,7 @@ BattleScript_AirBalloonMsgInRet::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_AirBaloonMsgPop::
+BattleScript_AirBalloonMsgPop::
 	printstring STRINGID_AIRBALLOONPOP
 	waitmessage B_WAIT_TIME_LONG
 	removeitem BS_TARGET
@@ -8023,7 +8027,7 @@ BattleScript_OpportunistCopyStatChange::
 	call BattleScript_AbilityPopUpScripting
 BattleScript_OpportunistStartCopyStats:
 	copyfoesstatincrease BS_SCRIPTING, BattleScript_OpportunistCopyStatChangeEnd
-	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_OpportunistCopyStatChangeEnd
+	statbuffchange BS_SCRIPTING, STAT_CHANGE_ALLOW_PTR, BattleScript_OpportunistCopyStatChangeEnd
 	printfromtable gStatUpStringIds
 	waitmessage B_WAIT_TIME_LONG
 	setbyte sSTAT_ANIM_PLAYED, TRUE @ play stat change animation only once
@@ -8068,14 +8072,28 @@ BattleScript_ActivateTeraformZero_RemoveWeather:
 	removeweather
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
-	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_End
+	call BattleScript_ActivateWeatherAbilities
+	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZeroEffects
 BattleScript_ActivateTeraformZero_RemoveTerrain:
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_ActivateTeraformZero_End:
+BattleScript_ActivateTeraformZeroEffects:
+	saveattacker
+	savetarget
 	tryboosterenergy ON_ANY
+	resetterrainabilityflags
+	setbyte gBattlerAttacker, 0
+BattleScript_ActivateTeraformZeroLoop:
+	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	activateterrainchangeabilities BS_TARGET
+	activateweatherchangeabilities BS_TARGET
+	addbyte gBattlerAttacker, 1
+	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_ActivateTeraformZeroLoop
+	restoreattacker
+	restoretarget
+BattleScript_ActivateTeraformZero_End:
 	end3
 
 BattleScript_QuickClawActivation::
