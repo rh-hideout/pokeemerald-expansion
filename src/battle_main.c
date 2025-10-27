@@ -5672,6 +5672,19 @@ static void FreeResetData_ReturnToOvOrDoEvolutions(void)
         else
             gSaveBlock3Ptr->dexNavChain = 0;
 
+ #if FREE_MATCH_CALL == FALSE
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+        {
+            if (FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
+            {
+                for (u32 i = 0; i < REMATCH_TABLE_ENTRIES; i++)
+                {
+                    if (gSaveBlock1Ptr->trainerRematches[i] == TRAINER_BATTLE_PARAM.opponentA)
+                        gSaveBlock1Ptr->trainerRematches[i] = 0;
+                }
+            }
+        }
+#endif
         gDexNavSpecies = SPECIES_NONE;
         ResetSpriteData();
         if (!(gBattleTypeFlags & (BATTLE_TYPE_LINK

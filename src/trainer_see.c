@@ -380,6 +380,7 @@ bool8 CheckForTrainersWantingBattle(void)
         if (numTrainers == 0xFF) // non-trainerbatle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
+            gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
             gSelectedObjectEvent = objectEventId;
             gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
             ScriptContext_SetupScript(EventScript_ObjectApproachPlayer);
