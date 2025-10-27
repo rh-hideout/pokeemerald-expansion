@@ -3612,7 +3612,7 @@ static bool8 PrintOnTextbox(u8 *textState, const u8 *str)
         LoadMessageBoxAndBorderGfx();
         DrawDialogueFrame(0, TRUE);
         StringExpandPlaceholders(gStringVar4, str);
-        AddTextPrinterForMessage_2(TRUE);
+        AddTextPrinterForMessage(TRUE);
         (*textState)++;
         break;
     case 1:
