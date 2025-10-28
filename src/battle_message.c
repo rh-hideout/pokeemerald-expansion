@@ -2178,7 +2178,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
     case STRINGID_RETURNMON: // sending poke to ball msg
         if (IsOnPlayerSide(battler))
         {
-            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && GetBattlerAtPosition(battler) == 2)
+            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
                 stringPtr = sText_InGamePartnerWithdrewPkmn2;
             else if (*(&gBattleStruct->hpScale) == 0)
                 stringPtr = sText_PkmnThatsEnough;
@@ -2202,7 +2202,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
                 {
-                    if (GetBattlerAtPosition(battler) == 1)
+                    if (GetBattlerPosition(battler) == B_POSITION_OPPONENT_LEFT)
                         stringPtr = sText_Trainer1WithdrewPkmn;
                     else
                         stringPtr = sText_Trainer2WithdrewPkmn;
