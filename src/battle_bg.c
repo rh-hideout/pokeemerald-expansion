@@ -652,8 +652,8 @@ static u8 GetBattleEnvironmentOverride(void)
     u8 battleScene = GetCurrentMapBattleScene();
 
     if (TestRunner_Battle_GetForcedEnvironment()
-    && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
-    && gBattleEnvironmentInfo[gBattleEnvironment].background.tileset)
+     && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
+     && gBattleEnvironmentInfo[gBattleEnvironment].background.tileset)
     {
         return gBattleEnvironment;
     }
