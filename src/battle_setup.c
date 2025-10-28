@@ -1772,9 +1772,9 @@ static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBa
         return FALSE;
     if (!HasTrainerBeenFought(table[tableId].trainerIds[1]))
         return FALSE;
-    if (FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
+    if (I_VS_SEEKER_CHARGING)
     {
-       if (gSaveBlock1Ptr->trainerRematches[tableId] == 0)
+        if (gSaveBlock1Ptr->trainerRematches[tableId] == 0)
             return FALSE;
     }
     return TRUE;
