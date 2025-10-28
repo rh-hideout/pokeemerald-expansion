@@ -3111,7 +3111,7 @@ u32 TestRunner_Battle_GetForcedAbility(u32 side, u32 partyIndex)
     return DATA.forcedAbilities[side][partyIndex];
 }
 
-u8 TestRunner_Battle_GetForcedEnvironment(void)
+u32 TestRunner_Battle_GetForcedEnvironment(void)
 {
     return DATA.forcedEnvironment;
 }
