@@ -46,6 +46,14 @@ static const u8 sGiftRibbonsMonDataIds[GIFT_RIBBONS_COUNT - 4] =
     MON_DATA_WORLD_RIBBON
 };
 
+enum
+{
+    POKEMON_NONE,
+    POKEMON_INCORRECT_SPECIES,
+    POKEMON_SIZE_SMALLER,
+    POKEMON_SIZE_LARGER
+};
+
 extern const u8 gText_DecimalPoint[];
 extern const u8 gText_Marco[];
 
@@ -134,7 +142,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 {
     if (gSpecialVar_Result == 0xFF)
     {
-        return 0;
+        return POKEMON_NONE;
     }
     else if(gSpecialVar_MonBoxId == 0xFF)
     {
@@ -142,7 +150,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 
         if (GetMonData(pkmn, MON_DATA_IS_EGG) == TRUE || GetMonData(pkmn, MON_DATA_SPECIES) != species)
         {
-            return 1;
+            return POKEMON_INCORRECT_SPECIES;
         }
         else
         {
@@ -156,12 +164,12 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
             FormatMonSizeRecord(gStringVar2, newSize);
             if (newSize <= oldSize)
             {
-                return 2;
+                return POKEMON_SIZE_SMALLER;
             }
             else
             {
                 *sizeRecord = sizeParams;
-                return 3;
+                return POKEMON_SIZE_LARGER;
             }
         }
     }
@@ -171,7 +179,7 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
 
         if (GetBoxMonData(pkmn, MON_DATA_IS_EGG) == TRUE || GetBoxMonData(pkmn, MON_DATA_SPECIES) != species)
         {
-            return 1;
+            return POKEMON_INCORRECT_SPECIES;
         }
         else
         {
@@ -185,12 +193,12 @@ static u8 CompareMonSize(u16 species, u16 *sizeRecord)
             FormatMonSizeRecord(gStringVar2, newSize);
             if (newSize <= oldSize)
             {
-                return 2;
+                return POKEMON_SIZE_SMALLER;
             }
             else
             {
                 *sizeRecord = sizeParams;
-                return 3;
+                return POKEMON_SIZE_LARGER;
             }
         }
     }
