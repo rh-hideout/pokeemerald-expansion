@@ -1030,8 +1030,8 @@ void DrawBattleEntryBackground(void)
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_EREADER_TRAINER))
     {
         if (TestRunner_Battle_GetForcedEnvironment()
-        && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
-        && gBattleEnvironmentInfo[gBattleEnvironment].background.tileset)
+         && gBattleEnvironmentInfo[gBattleEnvironment].background.tilemap
+         && gBattleEnvironmentInfo[gBattleEnvironment].background.tileset)
         {
             LoadBattleEnvironmentEntryGfx(gBattleEnvironment);
         }
