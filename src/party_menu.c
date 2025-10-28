@@ -1092,7 +1092,7 @@ static void DisplayPartyPokemonDataForContest(u8 slot)
 
 static void DisplayPartyPokemonDataForRelearner(u8 slot)
 {
-    switch (VarGet(P_VAR_MOVE_RELEARNER_STATE))
+    switch (gMoveRelearnerState)
     {
         case MOVE_RELEARNER_EGG_MOVES:
         {
@@ -2885,10 +2885,10 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
 
-    if (P_ENABLE_MOVE_RELEARNERS && P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER)
+    if (P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER)
      && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
-     && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
-     || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
+     && ((FlagGet(P_FLAG_LEVEL_UP_MOVES) && GetNumberOfLevelUpMoves(&mons[slotId])) // TLDR: Move Relearner should default to level up in scripts
+     || GetNumberOfEggMoves(&mons[slotId]) || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
 
     // Add field moves to action list
@@ -7967,7 +7967,7 @@ static void CB2_ChooseMonForMoveRelearner(void)
     }
     else
     {
-        switch(VarGet(P_VAR_MOVE_RELEARNER_STATE))
+        switch(gMoveRelearnerState)
         {
         case MOVE_RELEARNER_EGG_MOVES:
             gSpecialVar_0x8005 = GetNumberOfEggMoves(&gPlayerParty[gSpecialVar_0x8004]);
@@ -8115,9 +8115,9 @@ void IsLastMonThatKnowsSurf(void)
 static void CursorCb_ChangeLevelUpMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_LEVEL_UP_MOVES);
-    gLastViewedMonIndex =  gPartyMenu.slotId;
-    VarSet(VAR_0x8004, gPartyMenu.slotId);
+	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
     Task_ClosePartyMenu(taskId);
 }
@@ -8125,9 +8125,9 @@ static void CursorCb_ChangeLevelUpMoves(u8 taskId)
 static void CursorCb_ChangeEggMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_EGG_MOVES);
-    gLastViewedMonIndex =  gPartyMenu.slotId;
-    VarSet(VAR_0x8004, gPartyMenu.slotId);
+	gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
     Task_ClosePartyMenu(taskId);
 }
@@ -8135,9 +8135,9 @@ static void CursorCb_ChangeEggMoves(u8 taskId)
 static void CursorCb_ChangeTMMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_TM_MOVES);
-    gLastViewedMonIndex =  gPartyMenu.slotId;
-    VarSet(VAR_0x8004, gPartyMenu.slotId);
+	gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
     Task_ClosePartyMenu(taskId);
 }
@@ -8145,9 +8145,9 @@ static void CursorCb_ChangeTMMoves(u8 taskId)
 static void CursorCb_ChangeTutorMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
-	VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_TUTOR_MOVES);
-    gLastViewedMonIndex =  gPartyMenu.slotId;
-    VarSet(VAR_0x8004, gPartyMenu.slotId);
+	gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
+    gLastViewedMonIndex = gPartyMenu.slotId;
+    gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
     Task_ClosePartyMenu(taskId);
 }

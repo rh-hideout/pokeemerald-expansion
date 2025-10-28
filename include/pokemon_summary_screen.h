@@ -55,7 +55,7 @@ void ShowSelectMovePokemonSummaryScreen(struct Pokemon *mons, u8 monIndex, u8 ma
 void ShowPokemonSummaryScreenHandleDeoxys(u8 mode, struct BoxPokemon *mons, u8 monIndex, u8 maxMonIndex, void (*callback)(void));
 u8 GetMoveSlotToReplace(void);
 void SummaryScreen_SetAnimDelayTaskId(u8 taskId);
-void ShowRelearnPrompt(u8 state);
+void ShowRelearnPrompt(void);
 void TryUpdateRelearnType(enum IncrDecrUpdateValues delta);
 u32 GetCurrentRelearnMovesCount(void);
 u32 GetRelearnMovesCount(enum MoveRelearnerStates state);

@@ -1769,7 +1769,7 @@ static void Task_HandleInput(u8 taskId)
             {
                 TryUpdateRelearnType(TRY_INCREMENT);
                 PlaySE(SE_SELECT);
-                ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+                ShowRelearnPrompt();
             }
         }
         else if (JOY_NEW(L_BUTTON)) // L means decrease. Level <- Egg <- TM <- Tutor
@@ -1778,7 +1778,7 @@ static void Task_HandleInput(u8 taskId)
             {
                 TryUpdateRelearnType(TRY_DECREMENT);
                 PlaySE(SE_SELECT);
-                ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+                ShowRelearnPrompt();
             }
         }
     }
@@ -1923,7 +1923,7 @@ u32 GetRelearnMovesCount(enum MoveRelearnerStates state)
 
 u32 GetCurrentRelearnMovesCount(void)
 {
-    return GetRelearnMovesCount(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+    return GetRelearnMovesCount(gMoveRelearnerState);
 }
 
 bool32 NoMovesAvailableToRelearn(void)
@@ -1958,7 +1958,7 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
 {
     u32 moveCount;
     u32 zeroCounter = 0;
-    u32 relearnerState = VarGet(P_VAR_MOVE_RELEARNER_STATE);
+    u32 state = gMoveRelearnerState;
 
     // just in case everything is off
     if ((!P_ENABLE_MOVE_RELEARNERS
@@ -1991,20 +1991,20 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
             // should never reach this, but just in case
             break;
         case TRY_INCREMENT:
-            relearnerState = relearnerState >= MOVE_RELEARNER_TUTOR_MOVES ? MOVE_RELEARNER_LEVEL_UP_MOVES : relearnerState + 1;
+            state = state >= MOVE_RELEARNER_TUTOR_MOVES ? MOVE_RELEARNER_LEVEL_UP_MOVES : state + 1;
             break;
         case TRY_DECREMENT:
-            relearnerState = relearnerState == MOVE_RELEARNER_LEVEL_UP_MOVES ? MOVE_RELEARNER_TUTOR_MOVES : relearnerState - 1;
+            state = state == MOVE_RELEARNER_LEVEL_UP_MOVES ? MOVE_RELEARNER_TUTOR_MOVES : state - 1;
             break;
         }
 
-        if (!CheckRelearnerStateFlag(relearnerState) && !P_ENABLE_MOVE_RELEARNERS)
+        if (!CheckRelearnerStateFlag(state))
             continue;
 
-        moveCount = GetRelearnMovesCount(relearnerState);
+        moveCount = GetRelearnMovesCount(state);
         if (moveCount != 0)
         {
-            VarSet(P_VAR_MOVE_RELEARNER_STATE, relearnerState);
+            gMoveRelearnerState = state;
             sMonSummaryScreen->relearnableMovesNum = moveCount;
             return;
         }
@@ -2100,10 +2100,10 @@ static void Task_ChangeSummaryMon(u8 taskId)
              && (sMonSummaryScreen->currPageIndex == PSS_PAGE_BATTLE_MOVES 
              || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES))
         {
-            VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_LEVEL_UP_MOVES);
+            gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
             TryUpdateRelearnType(TRY_SET_UPDATE);
             if (ShouldShowMoveRelearner())
-                ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+                ShowRelearnPrompt();
             else
                 ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
         }
@@ -2266,7 +2266,7 @@ static void ChangePage(u8 taskId, s8 delta)
     // acts like a quick reset
     if (currPageIndex == PSS_PAGE_SKILLS)
     {
-        VarSet(P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_LEVEL_UP_MOVES);
+        gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
         TryUpdateRelearnType(TRY_SET_UPDATE);
     }
 
@@ -2318,7 +2318,7 @@ static void PssScrollRightEnd(u8 taskId) // display right
     SetTypeIcons();
     TryDrawExperienceProgressBar();
     SwitchTaskToFollowupFunc(taskId);
-    ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+    ShowRelearnPrompt();
 }
 
 static void PssScrollLeft(u8 taskId) // Scroll left
@@ -2371,7 +2371,7 @@ static void PssScrollLeftEnd(u8 taskId) // display left
     SetTypeIcons();
     TryDrawExperienceProgressBar();
     SwitchTaskToFollowupFunc(taskId);
-    ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+    ShowRelearnPrompt();
 }
 
 static void TryDrawExperienceProgressBar(void)
@@ -3388,7 +3388,7 @@ static void PrintPageNamesAndStats(void)
         || sMonSummaryScreen->currPageIndex == PSS_PAGE_CONTEST_MOVES)
     {
         TryUpdateRelearnType(TRY_SET_UPDATE);
-        ShowRelearnPrompt(VarGet(P_VAR_MOVE_RELEARNER_STATE));
+        ShowRelearnPrompt();
     }
 }
 
@@ -4905,7 +4905,7 @@ static inline void ShowUtilityPrompt(s16 mode)
     PrintTextOnWindow(PSS_LABEL_WINDOW_PROMPT_UTILITY, promptText, stringXPos, 1, 0, 0);
 }
 
-void ShowRelearnPrompt(u8 state)
+void ShowRelearnPrompt(void)
 {
     u32 currPage = sMonSummaryScreen->currPageIndex;
 
@@ -4922,7 +4922,7 @@ void ShowRelearnPrompt(u8 state)
 
     int relearnTextXPos;
 
-    switch (state)
+    switch (gMoveRelearnerState)
     {
         case MOVE_RELEARNER_LEVEL_UP_MOVES:
             relearnText = gText_Relearn_LevelUp;

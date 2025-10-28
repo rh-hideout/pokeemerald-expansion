@@ -28,12 +28,8 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 // IV/EV flags
 #define P_FLAG_SUMMARY_SCREEN_IV_EV_INFO 0      // If this flag is set, will allow player to cycle through the Stats, IVs, and EVs in the summary screen skills page. Note: if P_SUMMARY_SCREEN_IV_EV_INFO is TRUE, this flag does nothing.
 
-// Move Relearner var
-// NOTE: unused vars are found in include/constants/vars.h and named something like VAR_UNUSED_0x####. To assign a var, rename one of them to something relevant, ie VAR_MOVE_RELEARNER_STATE, and then replace the 0 below with that name.
-#define P_VAR_MOVE_RELEARNER_STATE       0       // IMPORTANT! Assign a var to make the move relearner swap between level up, egg, TM and tutor.
 
 // Move Relearner settings
-#define P_SUMMARY_MOVE_RELEARNER_FULL_PP FALSE   // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
 #define P_ENABLE_MOVE_RELEARNERS         FALSE   // If TRUE, it enables move relearners for level up, egg, TM and tutor.
 #define P_PRE_EVO_MOVES                  FALSE   // If TRUE, it enables the Pokémon to learn moves from it's pre evolution.
 #define P_ENABLE_ALL_LEVEL_UP_MOVES      FALSE   // If TRUE, it enables the Pokémon to learn all level up moves, regardless of its level.
@@ -42,13 +38,15 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 
 // Move Relearner modes and flags
 #define P_SUMMARY_SCREEN_MOVE_RELEARNER  TRUE    // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
+#define P_SUMMARY_MOVE_RELEARNER_FULL_PP TRUE    // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
+
 #define P_FLAG_PARTY_MOVE_RELEARNER      0       // If this flag is set, it enables the move relearner in the party menu.
 #define P_FLAG_SCRIPT_MOVE_RELEARNER     0       // Set this flag if you're planning on using the move relearner script from data/scripts/move_relearner.inc
 
 // Redundant if P_ENABLE_MOVE_RELEARNERS is TRUE.
 #define P_FLAG_LEVEL_UP_MOVES            0       // If this flag is set, enables level up move relearner.
 #define P_FLAG_EGG_MOVES                 0       // If this flag is set, enables egg move relearner.
-#define P_FLAG_TUTOR_MOVES               0       // If this flag is set, enables tutor move move relearner.
 #define P_FLAG_TM_MOVES                  0       // If this flag is set, enables tutor move move relearner.
+#define P_FLAG_TUTOR_MOVES               0       // If this flag is set, enables tutor move move relearner.
 
 #endif // GUARD_CONFIG_SUMMARY_SCREEN_H

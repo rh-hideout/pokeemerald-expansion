@@ -5888,6 +5888,8 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetNumberOfLevelUpMoves(struct Pokemon *mon)
 {
+    // This is not config dependant because of the move reminder in Lavaridge
+
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
 
@@ -5913,6 +5915,9 @@ u8 GetNumberOfEggMoves(struct Pokemon *mon)
 
 u8 GetNumberOfTMMoves(struct Pokemon *mon)
 {
+    if (!P_ENABLE_ALL_TM_MOVES && !IsBagPocketNonEmpty(POCKET_TM_HM))
+        return 0;
+
     if (!FlagGet(P_FLAG_TM_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 
@@ -5928,7 +5933,7 @@ u8 GetNumberOfTMMoves(struct Pokemon *mon)
 u8 GetNumberOfTutorMoves(struct Pokemon *mon)
 {
     if (!P_TUTOR_MOVES_ARRAY)
-        return FALSE;
+        return 0;
 
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;

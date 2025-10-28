@@ -51,22 +51,22 @@ MoveRelearner_EventScript_PushTutorMoves:
 	return
 
 MoveRelearner_EventScript_TeachLevelUpMoves:
-	setvar P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_LEVEL_UP_MOVES
+	setmoverelearnerstate MOVE_RELEARNER_LEVEL_UP_MOVES
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachEggMoves:
-	setvar P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_EGG_MOVES
+	setmoverelearnerstate MOVE_RELEARNER_EGG_MOVES
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachTMMoves:
-	setvar P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_TM_MOVES
+	setmoverelearnerstate MOVE_RELEARNER_TM_MOVES
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachTutorMoves:
-	setvar P_VAR_MOVE_RELEARNER_STATE, MOVE_RELEARNER_TUTOR_MOVES
+	setmoverelearnerstate MOVE_RELEARNER_TUTOR_MOVES
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
@@ -84,7 +84,8 @@ MoveRelearner_EventScript_TeachMove::
 	special IsSelectedMonEgg
 	call_if_eq VAR_RESULT, YES, MoveRelearner_EventScript_CantTeachMoveToEgg
 	call_if_eq VAR_0x8005, NO, MoveRelearner_EventScript_CantTeachMoveToPkmn
-	switch P_VAR_MOVE_RELEARNER_STATE
+	getmoverelearnerstate VAR_RESULT
+	switch VAR_0x8000
 	case MOVE_RELEARNER_EGG_MOVES, MoveRelearner_EventScript_StringToeggmove
 	case MOVE_RELEARNER_TM_MOVES, MoveRelearner_EventScript_StringToTMmove
 	case MOVE_RELEARNER_TUTOR_MOVES, MoveRelearner_EventScript_StringTotutormove

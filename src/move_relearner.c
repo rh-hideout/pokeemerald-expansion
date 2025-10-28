@@ -184,6 +184,7 @@ static EWRAM_DATA struct {
     bool8 showContestInfo;
 } sMoveRelearnerMenuState = {0};
 
+EWRAM_DATA enum MoveRelearnerStates gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
 EWRAM_DATA u8 gOriginSummaryScreenPage = 0; // indicates summary screen page that the move relearner was opened from (if opened from PSS)
 
 static const u16 sUI_Pal[] = INCBIN_U16("graphics/interface/ui_learn_move.gbapal");
@@ -409,7 +410,7 @@ void CB2_InitLearnMove(void)
     sMoveRelearnerMenuState.listRow = 0;
     sMoveRelearnerMenuState.showContestInfo = gOriginSummaryScreenPage == PSS_PAGE_CONTEST_MOVES;
 
-    switch (VarGet(P_VAR_MOVE_RELEARNER_STATE))
+    switch (gMoveRelearnerState)
     {
     case MOVE_RELEARNER_EGG_MOVES:
         StringCopy(gStringVar3, COMPOUND_STRING("egg move"));
@@ -975,7 +976,7 @@ static void CreateLearnableMovesList(void)
     s32 i;
     u8 nickname[POKEMON_NAME_LENGTH + 1];
 
-    switch (VarGet(P_VAR_MOVE_RELEARNER_STATE))
+    switch (gMoveRelearnerState)
     {
     case MOVE_RELEARNER_EGG_MOVES:
         sMoveRelearnerStruct->numMenuChoices = GetRelearnerEggMoves(&gPlayerParty[sMoveRelearnerStruct->partyMon], sMoveRelearnerStruct->movesToLearn);

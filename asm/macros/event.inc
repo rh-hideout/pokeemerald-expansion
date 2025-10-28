@@ -2662,3 +2662,15 @@
 	callnative SetSpeaker
 	.4byte \name
 	.endm
+
+	@ Sets the move relearner state
+	.macro setmoverelearnerstate state:req
+	callnative ScrCmd_setmoverelearnerstate, requests_effects=1
+	.2byte \state
+	.endm
+
+	@ Retrieves the move relearner state and stores it in the specified var
+	.macro getmoverelearnerstate varId:req
+	callnative ScrCmd_getmoverelearnerstate, requests_effects=1
+	.4byte \varId
+	.endm

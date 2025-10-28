@@ -34,6 +34,7 @@
 #include "menu.h"
 #include "money.h"
 #include "move.h"
+#include "move_relearner.h"
 #include "mystery_event_script.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -3252,4 +3253,26 @@ void Script_EndTrainerCanSeeIf(struct ScriptContext *ctx)
     u8 condition = ScriptReadByte(ctx);
     if (ctx->breakOnTrainerBattle && sScriptConditionTable[condition][ctx->comparisonResult] == 1)
         StopScript(ctx);
+}
+
+bool8 ScrCmd_setmoverelearnerstate(struct ScriptContext *ctx)
+{
+    enum MoveRelearnerStates state = VarGet(ScriptReadHalfword(ctx));
+
+    Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+
+    gMoveRelearnerState = state;
+    return FALSE;
+}
+
+bool8 ScrCmd_getmoverelearnerstate(struct ScriptContext *ctx)
+{
+    u32 varId = ScriptReadHalfword(ctx);
+
+    Script_RequestEffects(SCREFF_V1);
+    Script_RequestWriteVar(varId);
+
+    u16 *varPointer = GetVarPointer(varId);
+    *varPointer = gMoveRelearnerState;
+    return FALSE;
 }
