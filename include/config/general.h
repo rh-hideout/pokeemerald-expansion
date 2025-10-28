@@ -74,11 +74,11 @@
 // General settings
 #define EXPANSION_INTRO              TRUE    // If TRUE, a custom RHH intro will play after the vanilla copyright screen.
 #define HQ_RANDOM                    TRUE    // If TRUE, replaces the default RNG with an implementation of SFC32 RNG. May break code that relies on RNG.
-#define NUM_FRAMES_AUTO_SCROLL_DELAY 49
 #define PHONEMES_SHARED              FALSE   // If TRUE, bard phonemes all reference the same sound (sound/direct_sound_samples/phonemes/shared.bin) to save ROM space.
 
 // Text settings:
 #define AUTO_SCROLL_TEXT             FALSE   // If TRUE, text will automatically scroll to the next line after NUM_FRAMES_AUTO_SCROLL_DELAY. Players can still press A_BUTTON or B_BUTTON to scroll on their own.
+#define NUM_FRAMES_AUTO_SCROLL_DELAY 49
 
 // A note on the modifiers: they are roughly multiplicative, so having them set at 1 is vanilla speed. One of their functions is to help the down arrow sprite not speed up with the text printer speed, so to that end, their effective cap is 31. If you don't care about that, their max is 255; setting it higher will break compilation!
 #define TEXT_SPEED_SLOW_MODIFIER     1       // How fast the SLOW text speed option prints
