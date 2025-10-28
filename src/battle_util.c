@@ -912,8 +912,7 @@ void HandleAction_NothingIsFainted(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-    gHitMarker &= ~(HITMARKER_DESTINYBOND
-                  | HITMARKER_ATTACKSTRING_PRINTED
+    gHitMarker &= ~(HITMARKER_ATTACKSTRING_PRINTED
                   | HITMARKER_STATUS_ABILITY_EFFECT
                   | HITMARKER_OBEYS);
 }
@@ -926,8 +925,7 @@ void HandleAction_ActionFinished(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
-    gHitMarker &= ~(HITMARKER_DESTINYBOND
-                  | HITMARKER_ATTACKSTRING_PRINTED
+    gHitMarker &= ~(HITMARKER_ATTACKSTRING_PRINTED
                   | HITMARKER_STATUS_ABILITY_EFFECT
                   | HITMARKER_OBEYS);
 
@@ -1786,8 +1784,6 @@ void TryToRevertMimicryAndFlags(void)
 
 bool32 BattleArenaTurnEnd(void)
 {
-    gHitMarker |= HITMARKER_GRUDGE;
-
     if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
      && gBattleStruct->arenaTurnCounter == 2
      && IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_LEFT))
@@ -1799,9 +1795,6 @@ bool32 BattleArenaTurnEnd(void)
         BattleScriptExecute(BattleScript_ArenaDoJudgment);
         return TRUE;
     }
-
-    gHitMarker &= ~HITMARKER_GRUDGE;
-
     return FALSE;
 }
 

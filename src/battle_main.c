@@ -547,7 +547,7 @@ static void CB2_InitBattleInternal(void)
     gReservedSpritePaletteCount = MAX_BATTLERS_COUNT;
     SetVBlankCallback(VBlankCB_Battle);
     SetUpBattleVarsAndBirchZigzagoon();
-    
+
     if ((IsMultibattleTest() && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
     || (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_BATTLE_TOWER)
     || (gBattleTypeFlags & BATTLE_TYPE_MULTI && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER))
@@ -5157,6 +5157,8 @@ static void TurnValuesCleanUp(bool8 var0)
     gSideTimers[B_SIDE_OPPONENT].followmeTimer = 0;
 
     gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceller
+    gBattleStruct->tryDestinyBond = FALSE;
+    gBattleStruct->tryGrudge = FALSE;
     ClearPursuitValues();
     ClearDamageCalcResults();
 }

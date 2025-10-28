@@ -2323,6 +2323,7 @@ BattleScript_EffectMiracleEye::
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	setvolatile BS_TARGET, VOLATILE_MIRACLE_EYE
 	goto BattleScript_IdentifiedFoe
+
 BattleScript_EffectGravity::
 	call BattleScript_EffectGravityInternal
 	goto BattleScript_MoveEnd
@@ -2853,7 +2854,6 @@ BattleScript_EffectOHKO::
 	typecalc
 	jumpifmovehadnoeffect BattleScript_HitFromAtkAnimation
 	tryKO BattleScript_KOFail
-	trysetdestinybondtohappen
 	goto BattleScript_HitFromAtkAnimation
 BattleScript_KOFail::
 	pause B_WAIT_TIME_LONG
@@ -2868,6 +2868,7 @@ BattleScript_RecoilIfMiss::
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	tryfaintmon BS_ATTACKER
+BattleScript_RecoilEnd:
 	return
 
 BattleScript_EffectMist::
@@ -4408,40 +4409,23 @@ BattleScript_EffectCamouflage::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_FaintAttacker::
-	tryillusionoff BS_ATTACKER
+BattleScript_FaintBattler::
+	tryillusionoff BS_SCRIPTING
 	tryactivategulpmissile
-	playfaintcry BS_ATTACKER
+	playfaintcry BS_SCRIPTING
 	pause B_WAIT_TIME_LONG
-	dofaintanimation BS_ATTACKER
-	printstring STRINGID_ATTACKERFAINTED
-	cleareffectsonfaint BS_ATTACKER
+	dofaintanimation BS_SCRIPTING
+	printstring STRINGID_BATTLERFAINTED
+	cleareffectsonfaint BS_SCRIPTING
 	trytoclearprimalweather
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
 	tryactivatesoulheart
-	tryactivatereceiver BS_ATTACKER
-	trytrainerslidemsgfirstoff BS_ATTACKER
+	tryactivatereceiver BS_SCRIPTING
+	trytrainerslidemsgfirstoff BS_SCRIPTING
 	return
 
-BattleScript_FaintTarget::
-	tryillusionoff BS_TARGET
-	tryactivategulpmissile
-	tryupdateleaderscresttracker
-	playfaintcry BS_TARGET
-	pause B_WAIT_TIME_LONG
-	dofaintanimation BS_TARGET
-	printstring STRINGID_TARGETFAINTED
-	cleareffectsonfaint BS_TARGET
-	trytoclearprimalweather
-	tryrevertweatherform
-	flushtextbox
-	waitanimation
-	tryactivatesoulheart
-	tryactivatereceiver BS_TARGET
-	trytrainerslidemsgfirstoff BS_TARGET
-	return
 
 BattleScript_GiveExp::
 	setbyte sGIVEEXP_STATE, 0
@@ -6404,17 +6388,11 @@ BattleScript_MoveEffectConfusion::
 	return
 
 BattleScript_MoveEffectRecoil::
-	jumpifmove MOVE_STRUGGLE, BattleScript_DoRecoil
-	jumpifability BS_ATTACKER, ABILITY_ROCK_HEAD, BattleScript_RecoilEnd
-	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_RecoilEnd
-BattleScript_DoRecoil::
 	healthbarupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	datahpupdate BS_ATTACKER, PASSIVE_HP_UPDATE
 	printstring STRINGID_PKMNHITWITHRECOIL
 	waitmessage B_WAIT_TIME_LONG
-	tryupdaterecoiltracker
 	tryfaintmon BS_ATTACKER
-BattleScript_RecoilEnd::
 	return
 
 BattleScript_ItemSteal::
