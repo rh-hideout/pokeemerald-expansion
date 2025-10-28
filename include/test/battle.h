@@ -736,6 +736,7 @@ struct BattleTestData
     bool8 isShiny;
     enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
+    u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
@@ -990,6 +991,7 @@ struct moveWithPP {
 #define TeraType(teraType) TeraType_(__LINE__, teraType)
 #define Shadow(isShadow) Shadow_(__LINE__, isShadow)
 #define Shiny(isShiny) Shiny_(__LINE__, isShiny)
+#define Environment(environment) Environment_(__LINE__, environment)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
@@ -1030,6 +1032,7 @@ void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
 void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
 void Shiny_(u32 sourceLine, bool32 isShiny);
+void Environment_(u32 sourceLine, u32 environment);
 
 static inline bool8 IsMultibattleTest(void)
 {

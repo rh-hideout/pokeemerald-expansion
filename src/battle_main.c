@@ -521,6 +521,8 @@ static void CB2_InitBattleInternal(void)
     }
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
+    if (TestRunner_Battle_GetForcedEnvironment())
+        gBattleEnvironment = TestRunner_Battle_GetForcedEnvironment() - 1;
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
