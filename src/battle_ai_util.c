@@ -897,7 +897,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     gBattleStruct->magnitudeBasePower = 70;
     gBattleStruct->presentBasePower = 80;
 
-    struct DamageContext ctx;
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = move;
