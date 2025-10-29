@@ -407,7 +407,7 @@ struct PokedexView
     u8 categoryIconSpriteId; //Physical/Special/Status category
     u8 numEggMoves;
     u8 numLevelUpMoves;
-    u8 numTeachableMoves;
+    u16 numTeachableMoves;
     u8 numPreEvolutions;
     struct PokemonStats sPokemonStats;
     struct EvoScreenData sEvoScreenData;
@@ -5038,10 +5038,10 @@ static bool8 CalculateMoves(void)
 
     u16 statsMovesEgg[EGG_MOVES_ARRAY_COUNT] = {0};
 
-    u8 numEggMoves = 0;
-    u8 numLevelUpMoves = 0;
-    u8 numTeachableMoves = 0;
-    u8 i;
+    u32 numEggMoves = 0;
+    u32 numLevelUpMoves = 0;
+    u32 numTeachableMoves = 0;
+    u32 i;
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
     if (gSpeciesInfo[species].isMegaEvolution || gSpeciesInfo[species].isGigantamax)
