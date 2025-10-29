@@ -11910,6 +11910,15 @@ bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move)
     return FALSE;
 }
 
+bool32 HasPartnerTrainer(u32 battler)
+{
+    if ((GetBattlerSide(battler) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_PLAYER_HAS_PARTNER)
+     || (GetBattlerSide(battler) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+        return TRUE;
+    else
+        return FALSE;
+}
+
 static bool32 IsOpposingSideEmpty(u32 battler)
 {
     u32 oppositeBattler = BATTLE_OPPOSITE(battler);
