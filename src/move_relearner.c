@@ -602,6 +602,7 @@ static void DoMoveRelearnerMain(void)
     case MENU_STATE_PRINT_TRYING_TO_LEARN_PROMPT:
         PrintMessageWithPlaceholders(gText_MoveRelearnerPkmnTryingToLearnMove);
         sMoveRelearnerStruct->state++;
+        break;
     case MENU_STATE_WAIT_FOR_TRYING_TO_LEARN:
         if (!MoveRelearnerRunTextPrinters())
         {
