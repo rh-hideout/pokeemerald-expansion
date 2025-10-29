@@ -418,7 +418,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
 static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 {
     u8 *txtPtr, *end;
-    u32 zMoveType = GetBattleMoveType(zMove);
+    enum Type zMoveType = GetBattleMoveType(zMove);
 
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
@@ -506,7 +506,7 @@ void SetZEffect(void)
     case Z_EFFECT_RECOVER_HP:
         if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
         {
-            gBattleStruct->moveDamage[gBattlerAttacker] = (-1) * gBattleMons[gBattlerAttacker].maxHP;
+            SetHealAmount(gBattlerAttacker, gBattleMons[gBattlerAttacker].maxHP);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_RECOVER_HP;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_RecoverHPZMove;
