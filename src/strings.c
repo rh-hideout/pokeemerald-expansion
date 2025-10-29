@@ -1331,3 +1331,5 @@ const u8 gText_MONTH_SEP[]                          = _("Sep");
 const u8 gText_MONTH_OCT[]                          = _("Oct");
 const u8 gText_MONTH_NOV[]                          = _("Nov");
 const u8 gText_MONTH_DEC[]                          = _("Dec");
+const u8 gText_CannotSendMonToBoxActive[] = _("Cannot send an active battler\nto the box.{PAUSE_UNTIL_PRESS}");
+const u8 gText_CannotSendMonToBoxPartner[] = _("Cannot send a mon that doesn't,\nbelong to you to the box.{PAUSE_UNTIL_PRESS}");
