@@ -9,6 +9,6 @@ void MoveRelearnerShowHideCategoryIcon(s32);
 void CB2_InitLearnMove(void);
 
 extern enum MoveRelearnerStates gMoveRelearnerState;
-extern u8 gOriginSummaryScreenPage;
+extern enum RelearnMode gRelearnMode;
 
 #endif //GUARD_MOVE_RELEARNER_H

@@ -1632,6 +1632,9 @@ static void CloseSummaryScreen(u8 taskId)
             DestroyMonSpritesGfxManager(MON_SPR_GFX_MANAGER_A);
         FreeSummaryScreen();
         DestroyTask(taskId);
+        // This is used in one of the move relearner states. Party relearner should return to party instead of field
+        if (gRelearnMode != RELEARN_MODE_PARTY_MENU)
+            gRelearnMode = RELEARN_MODE_NONE;
     }
 }
 
@@ -1751,7 +1754,7 @@ static void Task_HandleInput(u8 taskId)
         {
             sMonSummaryScreen->callback = CB2_InitLearnMove;
             gSpecialVar_0x8004 = sMonSummaryScreen->curMonIndex;
-            gOriginSummaryScreenPage = sMonSummaryScreen->currPageIndex;
+            gRelearnMode = sMonSummaryScreen->currPageIndex;
             StopPokemonAnimations();
             PlaySE(SE_SELECT);
             BeginCloseSummaryScreen(taskId);
@@ -1916,8 +1919,9 @@ u32 GetRelearnMovesCount(enum MoveRelearnerStates state)
         case MOVE_RELEARNER_TUTOR_MOVES:
             return GetNumberOfTutorMoves(mon);
         case MOVE_RELEARNER_LEVEL_UP_MOVES:
-        default:
             return GetNumberOfLevelUpMoves(mon);
+        default:
+            return 0;
     }
 }
 
@@ -1940,6 +1944,9 @@ bool32 NoMovesAvailableToRelearn(void)
 
 bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
 {
+    if (P_ENABLE_MOVE_RELEARNERS)
+        return TRUE;
+
     switch (state)
     {
     case MOVE_RELEARNER_EGG_MOVES:
@@ -1949,8 +1956,9 @@ bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
     case MOVE_RELEARNER_TUTOR_MOVES:
         return FlagGet(P_FLAG_TUTOR_MOVES);
     case MOVE_RELEARNER_LEVEL_UP_MOVES:
-    default:
         return FlagGet(P_FLAG_LEVEL_UP_MOVES);
+    default:
+        return FALSE;
     }
 }
 
@@ -1958,7 +1966,7 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
 {
     u32 moveCount;
     u32 zeroCounter = 0;
-    u32 state = gMoveRelearnerState;
+    enum MoveRelearnerStates state = gMoveRelearnerState;
 
     // just in case everything is off
     if ((!P_ENABLE_MOVE_RELEARNERS

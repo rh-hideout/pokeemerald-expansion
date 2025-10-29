@@ -2887,8 +2887,8 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 
     if (P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER)
      && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
-     && ((FlagGet(P_FLAG_LEVEL_UP_MOVES) && GetNumberOfLevelUpMoves(&mons[slotId])) // TLDR: Move Relearner should default to level up in scripts
-     || GetNumberOfEggMoves(&mons[slotId]) || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
+     && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
+     || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
 
     // Add field moves to action list
@@ -7943,6 +7943,7 @@ static void Task_ChoosePartyMon(u8 taskId)
 
 void ChooseMonForMoveRelearner(void)
 {
+    gRelearnMode = RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChooseMonForMoveRelearner, 10);
@@ -8116,6 +8117,7 @@ static void CursorCb_ChangeLevelUpMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
 	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
@@ -8126,6 +8128,7 @@ static void CursorCb_ChangeEggMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
 	gMoveRelearnerState = MOVE_RELEARNER_EGG_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
@@ -8136,6 +8139,7 @@ static void CursorCb_ChangeTMMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
 	gMoveRelearnerState = MOVE_RELEARNER_TM_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();
@@ -8146,6 +8150,7 @@ static void CursorCb_ChangeTutorMoves(u8 taskId)
 {
     PlaySE(SE_SELECT);
 	gMoveRelearnerState = MOVE_RELEARNER_TUTOR_MOVES;
+    gRelearnMode = RELEARN_MODE_PARTY_MENU;
     gLastViewedMonIndex = gPartyMenu.slotId;
     gSpecialVar_0x8004 = gLastViewedMonIndex;
     TeachMoveRelearnerMove();

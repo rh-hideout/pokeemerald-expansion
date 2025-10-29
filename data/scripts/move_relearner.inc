@@ -1,7 +1,6 @@
 Common_EventScript_MoveRelearner::
 	lock
 	faceplayer
-	setflag P_FLAG_SCRIPT_MOVE_RELEARNER
 	message MoveRelearner_Text_WouldLearnNewMoves
 	waitmessage
 	goto Common_EventScript_MoveRelearnerDynMultiChoice
@@ -29,7 +28,6 @@ Common_EventScript_MoveRelearnerDynMultiChoice::
 	case 3, MoveRelearner_EventScript_TeachTutorMoves
 	case 4, MoveRelearner_EventScript_PleaseComeAgain
 MoveRelearner_EventScript_PleaseComeAgain:
-	clearflag P_FLAG_SCRIPT_MOVE_RELEARNER
 	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
 	release
 	end
@@ -95,7 +93,6 @@ MoveRelearner_EventScript_TeachWhichMove:
 	special TeachMoveRelearnerMove
 	waitstate
 	goto_if_eq VAR_0x8004, NO, MoveRelearner_EventScript_AnythingElse
-	clearflag P_FLAG_SCRIPT_MOVE_RELEARNER
 	msgbox MoveRelearner_Text_ThankYouComeAgain, MSGBOX_DEFAULT
 	release
 	end

@@ -5713,7 +5713,7 @@ u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
     for (u8 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
-    do 
+    do
     {
         const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
 
@@ -5889,7 +5889,9 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetNumberOfLevelUpMoves(struct Pokemon *mon)
 {
-    // This is not config dependant because of the move reminder in Lavaridge
+    if (gRelearnMode != RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT
+        && !FlagGet(P_FLAG_LEVEL_UP_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+        return 0;
 
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
