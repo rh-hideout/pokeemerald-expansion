@@ -1093,8 +1093,7 @@ bool32 EmergencyExitCanBeTriggered(u32 battler)
     if (ability != ABILITY_EMERGENCY_EXIT && ability != ABILITY_WIMP_OUT)
         return FALSE;
 
-    if (IsBattlerTurnDamaged(battler)
-     && IsBattlerAlive(battler)
+    if (IsBattlerAlive(battler)
      && HadMoreThanHalfHpNowDoesnt(battler)
      && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
@@ -2413,6 +2412,8 @@ static void Cmd_datahpupdate(void)
         MoveDamageDataHpUpdate(battler, cmd->battler, cmd->nextInstr);
         break;
     }
+    if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
+        gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
 
 }
 
@@ -6666,7 +6667,7 @@ static void Cmd_moveend(void)
 
                 for (i = 0; i < gBattlersCount; i++)
                 {
-                    if (EmergencyExitCanBeTriggered(i))
+                    if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
                     {
                         emergencyExitBattlers |= 1u << i;
                         numEmergencyExitBattlers++;
@@ -7107,7 +7108,7 @@ static void Cmd_getswitchedmondata(void)
 
     if (TESTING
      && gBattlerPartyIndexes[battler] == gBattleStruct->monToSwitchIntoId[battler]
-     && gBattleStruct->hpBefore[battler] != 0) // battler is alive
+     && IsBattlerAlive(battler))
         Test_ExitWithResult(TEST_RESULT_ERROR, 0, ":L:%s:%d: battler is trying to switch to themself", __FILE__, __LINE__);
 
     gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler];
@@ -7827,6 +7828,16 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             gBattleStruct->battlerState[battler].storedLunarDance = FALSE;
         }
     }
+    else if (EmergencyExitCanBeTriggered(battler))
+    {
+        gBattleScripting.battler = gBattlerAbility = battler;
+        gSpecialStatuses[battler].switchInItemDone = FALSE;
+        gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            BattleScriptCall(BattleScript_EmergencyExit);
+        else
+            BattleScriptCall(BattleScript_EmergencyExitWild);
+    }
     else if (!gDisableStructs[battler].hazardsDone)
     {
         TryHazardsOnSwitchIn(battler, side, gBattleStruct->hazardsQueue[side][gBattleStruct->hazardsCounter]);
@@ -7846,7 +7857,6 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         gBattleScripting.battler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         BattleScriptCall(BattleScript_HealReplacementZMove);
-        return TRUE;
     }
     else
     {
@@ -7919,6 +7929,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         gSpecialStatuses[battler].switchInItemDone = FALSE;
         gDisableStructs[battler].hazardsDone = FALSE;
         gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
+        gBattleStruct->battlerState[battler].wasAboveHalfHp = FALSE;
         return FALSE;
     }
 

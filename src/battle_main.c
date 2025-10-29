@@ -3237,6 +3237,9 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
+    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+    gBattleStruct->hazardsCounter = 0;
+    gDisableStructs[battler].hazardsDone = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -5141,6 +5144,7 @@ static void TurnValuesCleanUp(bool8 var0)
                     gBattleMons[i].volatiles.recharge = FALSE;
             }
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
+            gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
         }
 
         if (gDisableStructs[i].substituteHP == 0)

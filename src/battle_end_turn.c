@@ -170,7 +170,8 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
+        if (gBattleMons[i].hp > gBattleMons[i].maxHP / 2)
+            gBattleStruct->battlerState[i].wasAboveHalfHp = TRUE;
     }
 
     if (gBattleStruct->incrementEchoedVoice)
@@ -291,10 +292,8 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
 
     if (ability == ABILITY_EMERGENCY_EXIT || ability == ABILITY_WIMP_OUT)
     {
-        u32 cutoff = gBattleMons[battler].maxHP / 2;
-        bool32 HadMoreThanHalfHpNowDoesnt = gBattleStruct->hpBefore[battler] > cutoff && gBattleMons[battler].hp <= cutoff;
-
-        if (HadMoreThanHalfHpNowDoesnt
+        if (gBattleStruct->battlerState[battler].wasAboveHalfHp
+         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2
          && IsBattlerAlive(battler)
          && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
