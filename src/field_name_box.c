@@ -94,6 +94,11 @@ u32 GetNameboxWindowId(void)
     return sNameboxWindowId;
 }
 
+void ResetNameboxId(void)
+{
+    sNameboxWindowId = WINDOW_NONE;
+}
+
 void DestroyNamebox(void)
 {
     if (sNameboxWindowId == WINDOW_NONE)
