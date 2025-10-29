@@ -84,7 +84,7 @@ MoveRelearner_EventScript_TeachMove::
 	special IsSelectedMonEgg
 	call_if_eq VAR_RESULT, YES, MoveRelearner_EventScript_CantTeachMoveToEgg
 	call_if_eq VAR_0x8005, NO, MoveRelearner_EventScript_CantTeachMoveToPkmn
-	getmoverelearnerstate VAR_RESULT
+	getmoverelearnerstate VAR_0x8000
 	switch VAR_0x8000
 	case MOVE_RELEARNER_EGG_MOVES, MoveRelearner_EventScript_StringToeggmove
 	case MOVE_RELEARNER_TM_MOVES, MoveRelearner_EventScript_StringToTMmove
