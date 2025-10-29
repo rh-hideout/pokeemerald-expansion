@@ -11915,10 +11915,10 @@ static bool32 IsOpposingSideEmpty(u32 battler)
     u32 oppositeBattler = BATTLE_OPPOSITE(battler);
     bool32 noBattlerOnOpposingSide = FALSE;
 
-    if (gBattleMons[oppositeBattler].hp == 0)
+    if (!IsBattlerAlive(oppositeBattler))
         noBattlerOnOpposingSide = TRUE;
 
-    if (IsDoubleBattle() && gBattleMons[BATTLE_PARTNER(oppositeBattler)].hp > 0)
+    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(oppositeBattler)) > 0)
         noBattlerOnOpposingSide = FALSE;
 
     return noBattlerOnOpposingSide;

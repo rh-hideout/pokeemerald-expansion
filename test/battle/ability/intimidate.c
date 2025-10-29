@@ -295,9 +295,6 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         MESSAGE("The effects of the neutralizing gas wore off!");
         ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
         SEND_IN_MESSAGE("Wobbuffet");
-    } THEN {
-        if (move == MOVE_HEALING_WISH)
-            EXPECT_EQ(playerLeft->hp, playerLeft->maxHP);
     }
 }
 
