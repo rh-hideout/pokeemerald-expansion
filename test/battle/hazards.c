@@ -110,6 +110,7 @@ SINGLE_BATTLE_TEST("Hazards can trigger Emergency Exit and other hazards don't a
 DOUBLE_BATTLE_TEST("Hazards can trigger Emergency Exit and hazards still activate for other battlers")
 {
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         PLAYER(SPECIES_GOLISOPOD) { HP(105); MaxHP(200); Ability(ABILITY_EMERGENCY_EXIT); }
