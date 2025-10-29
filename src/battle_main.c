@@ -3237,7 +3237,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
     gBattleStruct->hazardsCounter = 0;
     gDisableStructs[battler].hazardsDone = FALSE;
-    gSpecialStatuses[battler].switchinItemDone = FALSE;
+    gSpecialStatuses[battler].switchInItemDone = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
