@@ -7954,7 +7954,16 @@ static void Task_ChoosePartyMon(u8 taskId)
 
 void ChooseMonForMoveRelearner(void)
 {
+	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
     gRelearnMode = RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT;
+    LockPlayerFieldControls();
+    FadeScreen(FADE_TO_BLACK, 0);
+    CreateTask(Task_ChooseMonForMoveRelearner, 10);
+}
+
+void ChooseMonForMoveRelearnerScript(void)
+{
+    gRelearnMode = RELEARN_MODE_SCRIPT;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChooseMonForMoveRelearner, 10);

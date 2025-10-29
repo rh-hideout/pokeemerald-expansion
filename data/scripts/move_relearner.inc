@@ -28,7 +28,7 @@ Common_EventScript_MoveRelearnerDynMultiChoice::
 	case 3, MoveRelearner_EventScript_TeachTutorMoves
 	case 4, MoveRelearner_EventScript_PleaseComeAgain
 MoveRelearner_EventScript_PleaseComeAgain:
-	msgbox gText_PleaseComeAgain, MSGBOX_DEFAULT
+	msgbox MoveRelearner_Text_ThankYouComeAgain, MSGBOX_DEFAULT
 	release
 	end
 
@@ -50,21 +50,25 @@ MoveRelearner_EventScript_PushTutorMoves:
 
 MoveRelearner_EventScript_TeachLevelUpMoves:
 	setmoverelearnerstate MOVE_RELEARNER_LEVEL_UP_MOVES
+	bufferstring STR_VAR_3, MoveRelearner_Text_LevelUpMoveLWR
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachEggMoves:
 	setmoverelearnerstate MOVE_RELEARNER_EGG_MOVES
+	bufferstring STR_VAR_3, MoveRelearner_Text_EggMoveLWR
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachTMMoves:
 	setmoverelearnerstate MOVE_RELEARNER_TM_MOVES
+	bufferstring STR_VAR_3, MoveRelearner_Text_TMMoveLWR
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
 MoveRelearner_EventScript_TeachTutorMoves:
 	setmoverelearnerstate MOVE_RELEARNER_TUTOR_MOVES
+	bufferstring STR_VAR_3, MoveRelearner_Text_TutorMoveLWR
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
@@ -76,26 +80,16 @@ MoveRelearner_EventScript_AnythingElse::
 
 MoveRelearner_EventScript_TeachMove::
 	msgbox MoveRelearner_Text_ChoosePkmn, MSGBOX_DEFAULT
-	special ChooseMonForMoveRelearner
+	special ChooseMonForMoveRelearnerScript
 	waitstate
 	call_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, MoveRelearner_EventScript_AnythingElse
 	special IsSelectedMonEgg
 	call_if_eq VAR_RESULT, YES, MoveRelearner_EventScript_CantTeachMoveToEgg
 	call_if_eq VAR_0x8005, NO, MoveRelearner_EventScript_CantTeachMoveToPkmn
-	getmoverelearnerstate VAR_0x8000
-	switch VAR_0x8000
-	case MOVE_RELEARNER_EGG_MOVES, MoveRelearner_EventScript_StringToeggmove
-	case MOVE_RELEARNER_TM_MOVES, MoveRelearner_EventScript_StringToTMmove
-	case MOVE_RELEARNER_TUTOR_MOVES, MoveRelearner_EventScript_StringTotutormove
-	bufferstring STR_VAR_3, MoveRelearner_Text_levelupmove
-MoveRelearner_EventScript_TeachWhichMove:
 	msgbox MoveRelearner_Text_WhichXmoveShouldTeach, MSGBOX_DEFAULT
 	special TeachMoveRelearnerMove
 	waitstate
-	goto_if_eq VAR_0x8004, NO, MoveRelearner_EventScript_AnythingElse
-	msgbox MoveRelearner_Text_ThankYouComeAgain, MSGBOX_DEFAULT
-	release
-	end
+	goto MoveRelearner_EventScript_AnythingElse
 
 MoveRelearner_EventScript_CantTeachMoveToEgg:
 	msgbox MoveRelearner_Text_CantTeachMoveToEgg, MSGBOX_AUTOCLOSE
@@ -104,15 +98,3 @@ MoveRelearner_EventScript_CantTeachMoveToEgg:
 MoveRelearner_EventScript_CantTeachMoveToPkmn:
 	msgbox MoveRelearner_Text_CantTeachMoveToPkmn, MSGBOX_AUTOCLOSE
 	goto MoveRelearner_EventScript_AnythingElse
-
-MoveRelearner_EventScript_StringToeggmove:
-	bufferstring STR_VAR_3, MoveRelearner_Text_eggmove
-	goto MoveRelearner_EventScript_TeachWhichMove
-
-MoveRelearner_EventScript_StringToTMmove:
-	bufferstring STR_VAR_3, MoveRelearner_Text_TMmove
-	goto MoveRelearner_EventScript_TeachWhichMove
-
-MoveRelearner_EventScript_StringTotutormove:
-	bufferstring STR_VAR_3, MoveRelearner_Text_tutormove
-	goto MoveRelearner_EventScript_TeachWhichMove

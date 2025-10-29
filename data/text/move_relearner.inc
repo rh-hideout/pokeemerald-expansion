@@ -32,17 +32,17 @@ MoveRelearner_Text_CantTeachMoveToPkmn:
 	.string "It doesn't appear as if I have any move\n"
 	.string "I can teach that Pokémon.$"
 
-MoveRelearner_Text_eggmove:
+MoveRelearner_Text_LevelUpMoveLWR::
+	.string "level up move$"
+
+MoveRelearner_Text_EggMoveLWR::
 	.string "egg move$"
 
-MoveRelearner_Text_TMmove:
+MoveRelearner_Text_TMMoveLWR::
 	.string "TM move$"
 
-MoveRelearner_Text_tutormove:
+MoveRelearner_Text_TutorMoveLWR::
 	.string "tutor move$"
-
-MoveRelearner_Text_levelupmove:
-	.string "level up move$"
 
 MoveRelearner_Text_WhichXmoveShouldTeach:
 	.string "Which {STR_VAR_3} should I teach?$"

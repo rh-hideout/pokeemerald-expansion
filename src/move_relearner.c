@@ -413,17 +413,17 @@ void CB2_InitLearnMove(void)
     switch (gMoveRelearnerState)
     {
     case MOVE_RELEARNER_EGG_MOVES:
-        StringCopy(gStringVar3, COMPOUND_STRING("egg move"));
+        StringCopy(gStringVar3, MoveRelearner_Text_EggMoveLWR);
         break;
     case MOVE_RELEARNER_TM_MOVES:
-        StringCopy(gStringVar3, COMPOUND_STRING("TM move"));
+        StringCopy(gStringVar3, MoveRelearner_Text_TMMoveLWR);
         break;
     case MOVE_RELEARNER_TUTOR_MOVES:
-        StringCopy(gStringVar3, COMPOUND_STRING("tutor move"));
+        StringCopy(gStringVar3, MoveRelearner_Text_TutorMoveLWR);
         break;
     case MOVE_RELEARNER_LEVEL_UP_MOVES:
     default:
-        StringCopy(gStringVar3, COMPOUND_STRING("level up move"));
+        StringCopy(gStringVar3, MoveRelearner_Text_LevelUpMoveLWR);
         break;
     }
 

@@ -21,7 +21,6 @@ FallarborTown_MoveRelearnersHouse_EventScript_AskTeachMove::
 	end
 
 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon::
-	setmoverelearnerstate MOVE_RELEARNER_LEVEL_UP_MOVES
 	msgbox FallarborTown_MoveRelearnersHouse_Text_TutorWhichMon, MSGBOX_DEFAULT
 	special ChooseMonForMoveRelearner
 	waitstate
