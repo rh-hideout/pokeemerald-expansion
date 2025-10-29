@@ -5710,7 +5710,7 @@ u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
     u8 level = (P_ENABLE_ALL_LEVEL_UP_MOVES ? MAX_LEVEL : GetMonData(mon, MON_DATA_LEVEL, 0));
 
-    for (u16 i = 0; i < MAX_MON_MOVES; i++)
+    for (u8 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
     do 
@@ -5764,7 +5764,7 @@ u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
     if (eggMoves == sNoneEggMoveLearnset)
         return numMoves;
 
-    for (u16 i = 0; i < MAX_MON_MOVES; i++)
+    for (u8 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
     for (u16 i = 0; eggMoves[i] != MOVE_UNAVAILABLE; i++)
@@ -5805,12 +5805,13 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
     for (u16 i = 0; i < NUM_ALL_MACHINES; i++)
     {
+        enum TMHMItemId item = GetTMHMItemId(i + 1);
         u16 move = GetTMHMMoveId(i + 1);
-        if ((P_ENABLE_ALL_TM_MOVES || CheckBagHasItem(i, 1)) && CanLearnTeachableMove(species, move) && move != MOVE_NONE)
+        if ((P_ENABLE_ALL_TM_MOVES || CheckBagHasItem(item, 1)) && CanLearnTeachableMove(species, move) && move != MOVE_NONE)
             allMoves[totalMoveCount++] = move;
     }
 
-    for (u16 i = 0; i < MAX_MON_MOVES; i++)
+    for (u8 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
     for (u16 i = 0; i < totalMoveCount; i++)
@@ -5850,7 +5851,7 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
 
-    for (u16 i = 0; i < MAX_MON_MOVES; i++)
+    for (u8 i = 0; i < MAX_MON_MOVES; i++)
         learnedMoves[i] = GetMonData(mon, MON_DATA_MOVE1 + i, 0);
 
     for (u16 i = 0; gTutorMoves[i] != MOVE_UNAVAILABLE; i++)
