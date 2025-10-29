@@ -5,6 +5,7 @@
 #include "decompress.h"
 #include "dma3.h"
 #include "event_data.h"
+#include "field_name_box.h"
 #include "field_weather.h"
 #include "graphics.h"
 #include "main.h"
@@ -146,6 +147,7 @@ static const struct MenuInfoIcon sMenuInfoIcons[] =
 
 void InitStandardTextBoxWindows(void)
 {
+    ResetNameboxData();
     InitWindows(sStandardTextBox_WindowTemplates);
     sStartMenuWindowId = WINDOW_NONE;
     sMapNamePopupWindowId = WINDOW_NONE;

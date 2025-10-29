@@ -16,7 +16,6 @@
 #include "field_effect.h"
 #include "field_effect_helpers.h"
 #include "field_message_box.h"
-#include "field_name_box.h"
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_special_scene.h"
@@ -1496,7 +1495,6 @@ static void InitOverworldBgs(void)
     SetBgTilemapBuffer(1, gOverworldTilemapBuffer_Bg1);
     SetBgTilemapBuffer(2, gOverworldTilemapBuffer_Bg2);
     SetBgTilemapBuffer(3, gOverworldTilemapBuffer_Bg3);
-    ResetNameboxId();
     InitStandardTextBoxWindows();
 }
 
