@@ -97,16 +97,19 @@ def prepare_output(all_learnables: dict[str, set[str]], tms: list[str], tutors: 
         new += "{\n"
         species_upper =  SNAKIFY_PAT.sub(r"_\1", species).upper()
         if teaching_type == "ALL_TEACHABLES":
-            learnables = filter(lambda m: m not in special_movesets["signatureTeachables"], tms + tutors)
-        elif teaching_type == "TM_ILLITERATE":
-            learnables = all_learnables[species_upper]
-            if not tm_litteracy_config:
-                learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
+            part1 = list(filter(lambda m: m not in special_movesets["signatureTeachables"], tms))
+            part2 = list(filter(lambda m: m not in special_movesets["signatureTeachables"], tutors))
         else:
-            learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
+            if teaching_type == "TM_ILLITERATE":
+                learnables = all_learnables[species_upper]
+                if not tm_litteracy_config:
+                    learnables = filter(lambda m: m not in special_movesets["universalMoves"], learnables)
+            else:
+                learnables = all_learnables[species_upper] + special_movesets["universalMoves"]
+            part1 = list(filter(lambda m: m in learnables, tms))
+            part2 = list(filter(lambda m: m in learnables, tutors))
 
-        part1 = list(filter(lambda m: m in learnables, tms))
-        part2 = list(filter(lambda m: m in learnables, tutors))
+
         repo_species_teachables = part1 + part2
         if species_upper == "TERAPAGOS":
              repo_species_teachables = filter(lambda m: m != "MOVE_TERA_BLAST", repo_species_teachables)
