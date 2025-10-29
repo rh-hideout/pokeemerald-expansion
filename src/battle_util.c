@@ -10745,12 +10745,9 @@ bool32 TestIfSheerForceAffected(u32 battler, u16 move)
     return GetBattlerAbility(battler) == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
 }
 
-// This function is the body of "jumpifstat", but can be used dynamically in a function
+// This function is the body of "jumpifstat", but can be used dynamically in a function. It considers Contrary.
 bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
 {
-    bool32 ret = FALSE;
-    u8 statValue = gBattleMons[battler].statStages[statId];
-
     // Because this command is used as a way of checking if a stat can be lowered/raised,
     // we need to do some modification at run-time.
     if (GetBattlerAbility(battler) == ABILITY_CONTRARY)
@@ -10765,6 +10762,14 @@ bool32 CompareStat(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
         else if (cmpTo == MAX_STAT_STAGE)
             cmpTo = MIN_STAT_STAGE;
     }
+    return CompareStatInternal(battler, statId, cmpTo, cmpKind);
+}
+
+// It doesn't consider Contrary.
+bool32 CompareStatInternal(u32 battler, u8 statId, u8 cmpTo, u8 cmpKind)
+{
+    bool32 ret = FALSE;
+    u8 statValue = gBattleMons[battler].statStages[statId];
 
     switch (cmpKind)
     {
