@@ -170,8 +170,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        if (gBattleMons[i].hp > gBattleMons[i].maxHP / 2)
-            gBattleStruct->battlerState[i].wasAboveHalfHp = TRUE;
+        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
 
     if (gBattleStruct->incrementEchoedVoice)

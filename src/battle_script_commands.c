@@ -6661,7 +6661,7 @@ static void Cmd_moveend(void)
         case MOVEEND_EMERGENCY_EXIT: // Special case, because moves hitting multiple opponents stop after switching out
             {
                 // Because sorting the battlers by speed takes lots of cycles,
-                // we check if EE can be activated and cound how many.
+                // we check if EE can be activated and count how many.
                 u32 numEmergencyExitBattlers = 0;
                 u32 emergencyExitBattlers = 0;
 
@@ -7927,7 +7927,6 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         }
 
         gSpecialStatuses[battler].switchInItemDone = FALSE;
-        gDisableStructs[battler].hazardsDone = FALSE;
         gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
         gBattleStruct->battlerState[battler].wasAboveHalfHp = FALSE;
         return FALSE;
