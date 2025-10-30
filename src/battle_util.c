@@ -589,7 +589,7 @@ void HandleAction_UseMove(void)
         BattleArena_AddMindPoints(gBattlerAttacker);
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
-        gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
+        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
 
     gCurrentActionFuncId = B_ACTION_EXEC_SCRIPT;
 }
@@ -3315,10 +3315,9 @@ static inline uq4_12_t GetSupremeOverlordModifier(u32 battler)
 
 bool32 HadMoreThanHalfHpNowDoesnt(u32 battler)
 {
-    u32 cutoff = gBattleMons[battler].maxHP / 2;
     // Had more than half of hp before, now has less
-    return gBattleStruct->hpBefore[battler] > cutoff
-        && gBattleMons[battler].hp <= cutoff;
+    return gBattleStruct->battlerState[battler].wasAboveHalfHp
+        && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2;
 }
 
 #define ANIM_STAT_HP      0
@@ -10762,6 +10761,15 @@ bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move)
     }
 
     return FALSE;
+}
+
+bool32 HasPartnerTrainer(u32 battler)
+{
+    if ((GetBattlerSide(battler) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_PLAYER_HAS_PARTNER)
+     || (GetBattlerSide(battler) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+        return TRUE;
+    else
+        return FALSE;
 }
 
 static u32 GetMirrorMoveMove(void)

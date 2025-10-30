@@ -1119,7 +1119,7 @@ bool32 ShouldSwitch(u32 battler)
 
     if (IsDoubleBattle())
     {
-        u32 partner = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerAtPosition(battler)));
+        u32 partner = BATTLE_PARTNER(battler);
         battlerIn1 = battler;
         if (gAbsentBattlerFlags & (1u << partner))
             battlerIn2 = battler;
@@ -1270,7 +1270,7 @@ void ModifySwitchAfterMoveScoring(u32 battler)
 
     if (IsDoubleBattle())
     {
-        u32 partner = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerAtPosition(battler)));
+        u32 partner = BATTLE_PARTNER(battler);
         battlerIn1 = battler;
         if (gAbsentBattlerFlags & (1u << partner))
             battlerIn2 = battler;
@@ -1318,7 +1318,7 @@ bool32 IsSwitchinValid(u32 battler)
     // Edge case: See if partner already chose to switch into the same mon
     if (IsDoubleBattle())
     {
-        u32 partner = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerAtPosition(battler)));
+        u32 partner = BATTLE_PARTNER(battler);
         if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE) // Generic switch
         {
             if ((gAiLogicData->shouldSwitch & (1u << partner)) && gAiLogicData->monToSwitchInId[partner] == gAiLogicData->mostSuitableMonId[battler])

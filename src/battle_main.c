@@ -521,6 +521,8 @@ static void CB2_InitBattleInternal(void)
     }
     if (gBattleTypeFlags & BATTLE_TYPE_RECORDED)
         gBattleEnvironment = BATTLE_ENVIRONMENT_BUILDING;
+    if (TestRunner_Battle_GetForcedEnvironment())
+        gBattleEnvironment = TestRunner_Battle_GetForcedEnvironment() - 1;
 
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !(gBattleTypeFlags & (BATTLE_TYPE_FRONTIER
                                                                         | BATTLE_TYPE_EREADER_TRAINER
@@ -3235,6 +3237,10 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gBattleStruct->battlerState[battler].stompingTantrumTimer = 0;
     gBattleStruct->palaceFlags &= ~(1u << battler);
     gBattleStruct->battlerState[battler].canPickupItem = FALSE;
+    gBattleStruct->battlerState[battler].wasAboveHalfHp = gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2;
+    gBattleStruct->hazardsCounter = 0;
+    gDisableStructs[battler].hazardsDone = FALSE;
+    gSpecialStatuses[battler].switchInItemDone = FALSE;
 
     ClearPursuitValuesIfSet(battler);
 
@@ -5139,6 +5145,7 @@ static void TurnValuesCleanUp(bool8 var0)
                     gBattleMons[i].volatiles.recharge = FALSE;
             }
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
+            gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
         }
 
         if (gDisableStructs[i].substituteHP == 0)

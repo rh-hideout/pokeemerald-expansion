@@ -2181,6 +2181,13 @@ void Shiny_(u32 sourceLine, bool32 isShiny)
     DATA.isShiny = isShiny;
 }
 
+void Environment_(u32 sourceLine, u32 environment)
+{
+    INVALID_IF(DATA.forcedEnvironment, "Environment is already set");
+    INVALID_IF(environment >= BATTLE_ENVIRONMENT_COUNT, "Illegal environment: %d", environment);
+    DATA.forcedEnvironment = environment + 1;
+}
+
 static const char *const sBattlerIdentifiersSingles[] =
 {
     "player",
@@ -3102,6 +3109,11 @@ void ValidateFinally(u32 sourceLine)
 u32 TestRunner_Battle_GetForcedAbility(u32 side, u32 partyIndex)
 {
     return DATA.forcedAbilities[side][partyIndex];
+}
+
+u32 TestRunner_Battle_GetForcedEnvironment(void)
+{
+    return DATA.forcedEnvironment;
 }
 
 u32 TestRunner_Battle_GetChosenGimmick(u32 side, u32 partyIndex)

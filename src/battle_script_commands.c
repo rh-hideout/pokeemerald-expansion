@@ -591,7 +591,7 @@ static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
 static void Cmd_setnonvolatilestatus(void);
-static void Cmd_tryworryseed(void);
+static void Cmd_tryoverwriteability(void);
 static void Cmd_callnative(void);
 
 void (*const gBattleScriptingCommandsTable[])(void) =
@@ -850,7 +850,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_averagestats,                            //0xFB
     Cmd_jumpifcaptivateaffected,                 //0xFC
     Cmd_setnonvolatilestatus,                    //0xFD
-    Cmd_tryworryseed,                            //0xFE
+    Cmd_tryoverwriteability,                     //0xFE
     Cmd_callnative,                              //0xFF
 };
 
@@ -1092,12 +1092,10 @@ bool32 EmergencyExitCanBeTriggered(u32 battler)
     if (ability != ABILITY_EMERGENCY_EXIT && ability != ABILITY_WIMP_OUT)
         return FALSE;
 
-    if (IsBattlerTurnDamaged(battler)
-     && IsBattlerAlive(battler)
+    if (IsBattlerAlive(battler)
      && HadMoreThanHalfHpNowDoesnt(battler)
      && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
      && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && CountUsablePartyMons(battler) > 0
      && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
         return TRUE;
 
@@ -2410,6 +2408,8 @@ static void Cmd_datahpupdate(void)
         MoveDamageDataHpUpdate(battler, cmd->battler, cmd->nextInstr);
         break;
     }
+    if (gBattleMons[battler].hp > gBattleMons[battler].maxHP / 2)
+        gBattleStruct->battlerState[battler].wasAboveHalfHp = TRUE;
 
 }
 
@@ -6683,13 +6683,13 @@ static void Cmd_moveend(void)
         case MOVEEND_EMERGENCY_EXIT: // Special case, because moves hitting multiple opponents stop after switching out
             {
                 // Because sorting the battlers by speed takes lots of cycles,
-                // we check if EE can be activated and cound how many.
+                // we check if EE can be activated and count how many.
                 u32 numEmergencyExitBattlers = 0;
                 u32 emergencyExitBattlers = 0;
 
                 for (i = 0; i < gBattlersCount; i++)
                 {
-                    if (EmergencyExitCanBeTriggered(i))
+                    if (IsBattlerTurnDamaged(i) && EmergencyExitCanBeTriggered(i))
                     {
                         emergencyExitBattlers |= 1u << i;
                         numEmergencyExitBattlers++;
@@ -6719,7 +6719,7 @@ static void Cmd_moveend(void)
                     effect = TRUE;
                     gBattleScripting.battler = battler;
 
-                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
+                    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                         BattleScriptCall(BattleScript_EmergencyExit);
                     else
                         BattleScriptCall(BattleScript_EmergencyExitWild);
@@ -7130,7 +7130,7 @@ static void Cmd_getswitchedmondata(void)
 
     if (TESTING
      && gBattlerPartyIndexes[battler] == gBattleStruct->monToSwitchIntoId[battler]
-     && gBattleStruct->hpBefore[battler] != 0) // battler is alive
+     && IsBattlerAlive(battler))
         Test_ExitWithResult(TEST_RESULT_ERROR, 0, ":L:%s:%d: battler is trying to switch to themself", __FILE__, __LINE__);
 
     gBattlerPartyIndexes[battler] = gBattleStruct->monToSwitchIntoId[battler];
@@ -7848,6 +7848,16 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             gBattleStruct->battlerState[battler].storedLunarDance = FALSE;
         }
     }
+    else if (EmergencyExitCanBeTriggered(battler))
+    {
+        gBattleScripting.battler = gBattlerAbility = battler;
+        gSpecialStatuses[battler].switchInItemDone = FALSE;
+        gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            BattleScriptCall(BattleScript_EmergencyExit);
+        else
+            BattleScriptCall(BattleScript_EmergencyExitWild);
+    }
     else if (!gDisableStructs[battler].hazardsDone)
     {
         TryHazardsOnSwitchIn(battler, side, gBattleStruct->hazardsQueue[side][gBattleStruct->hazardsCounter]);
@@ -7867,7 +7877,6 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         gBattleScripting.battler = battler;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         BattleScriptCall(BattleScript_HealReplacementZMove);
-        return TRUE;
     }
     else
     {
@@ -7938,8 +7947,8 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
         }
 
         gSpecialStatuses[battler].switchInItemDone = FALSE;
-        gDisableStructs[battler].hazardsDone = FALSE;
         gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
+        gBattleStruct->battlerState[battler].wasAboveHalfHp = FALSE;
         return FALSE;
     }
 
@@ -14327,12 +14336,12 @@ static void Cmd_setnonvolatilestatus(void)
     }
 }
 
-static void Cmd_tryworryseed(void)
+static void Cmd_tryoverwriteability(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
     if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten
-      || gBattleMons[gBattlerTarget].ability == ABILITY_INSOMNIA)
+     || gBattleMons[gBattlerTarget].ability == GetMoveOverwriteAbility(gCurrentMove))
     {
         RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
         gBattlescriptCurrInstr = cmd->failInstr;
@@ -14349,7 +14358,7 @@ static void Cmd_tryworryseed(void)
 
         RemoveAbilityFlags(gBattlerTarget);
         gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
-        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = ABILITY_INSOMNIA;
+        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = GetMoveOverwriteAbility(gCurrentMove);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -15393,9 +15402,7 @@ void BS_TryAllySwitch(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
 
-    if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker))
-     || (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-     || (GetBattlerSide(gBattlerAttacker) == B_SIDE_OPPONENT && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS))
+    if (!IsBattlerAlive(BATTLE_PARTNER(gBattlerAttacker)) || HasPartnerTrainer(gBattlerAttacker))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -16824,11 +16831,14 @@ void BS_ArenaJudgmentWindow(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void SetArenMonLostValues(u32 battler)
+static void SetArenMonLostValues(u32 battler, u32 side)
 {
     gBattleMons[battler].hp = 0;
     gHitMarker |= HITMARKER_FAINTED(battler);
-    gBattleStruct->arenaLostOpponentMons |= 1u << gBattlerPartyIndexes[battler];
+    if (side == B_SIDE_PLAYER)
+        gBattleStruct->arenaLostPlayerMons |= 1u << gBattlerPartyIndexes[battler];
+    else
+        gBattleStruct->arenaLostOpponentMons |= 1u << gBattlerPartyIndexes[battler];
     gDisableStructs[battler].truantSwitchInHack = TRUE;
 }
 
@@ -16837,22 +16847,22 @@ static void SetArenMonLostValues(u32 battler)
 void BS_ArenaOpponentMonLost(void)
 {
     NATIVE_ARGS();
-    SetArenMonLostValues(opponentMon);
+    SetArenMonLostValues(opponentMon, B_SIDE_OPPONENT);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_ArenaPlayerMonLost(void)
 {
     NATIVE_ARGS();
-    SetArenMonLostValues(playerMon);
+    SetArenMonLostValues(playerMon, B_SIDE_PLAYER);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_ArenaBothMonsLost(void)
 {
     NATIVE_ARGS();
-    SetArenMonLostValues(playerMon);
-    SetArenMonLostValues(opponentMon);
+    SetArenMonLostValues(playerMon, B_SIDE_PLAYER);
+    SetArenMonLostValues(opponentMon, B_SIDE_OPPONENT);
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 #undef playerMon
@@ -17135,32 +17145,6 @@ void BS_SetLuckyChant(void)
     else
     {
         gBattlescriptCurrInstr = cmd->failInstr;
-    }
-}
-
-void BS_SetSimpleBeam(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-    if (gAbilitiesInfo[gBattleMons[gBattlerTarget].ability].cantBeOverwritten
-        || gBattleMons[gBattlerTarget].ability == ABILITY_SIMPLE)
-    {
-        RecordAbilityBattle(gBattlerTarget, gBattleMons[gBattlerTarget].ability);
-        gBattlescriptCurrInstr = cmd->failInstr;
-    }
-    else if (CanAbilityShieldActivateForBattler(gBattlerTarget))
-    {
-        gBattlescriptCurrInstr = BattleScript_MoveEnd;
-        BattleScriptCall(BattleScript_AbilityShieldProtects);
-    }
-    else
-    {
-        if (gBattleMons[gBattlerTarget].ability == ABILITY_NEUTRALIZING_GAS)
-            gSpecialStatuses[gBattlerTarget].neutralizingGasRemoved = TRUE;
-
-        RemoveAbilityFlags(gBattlerTarget);
-        gBattleScripting.abilityPopupOverwrite = gBattleMons[gBattlerTarget].ability;
-        gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = ABILITY_SIMPLE;
-        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

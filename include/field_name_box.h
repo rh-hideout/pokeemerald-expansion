@@ -9,6 +9,7 @@ extern const u8 *const gSpeakerNamesTable[];
 
 void TrySpawnNamebox(u32 tileNum);
 u32 GetNameboxWindowId(void);
+void ResetNameboxData(void);
 void DestroyNamebox(void);
 void FillNamebox(void);
 void DrawNamebox(u32 windowId, u32 tileNum, bool32 copyToVram);
