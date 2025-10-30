@@ -248,14 +248,3 @@ SINGLE_BATTLE_TEST("Semi-invulnerable moves apply a status that won't block cert
         HP_BAR(player);
     }
 }
-
-SINGLE_BATTLE_TEST("11")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_FLY); MOVE(opponent, MOVE_TACKLE); }
-    } SCENE {
-    }
-}
