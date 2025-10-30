@@ -128,7 +128,7 @@ static void SetUpItemUseCallback(u8 taskId)
         type = gTasks[taskId].tEnigmaBerryType - 1;
     else
         type = GetItemType(gSpecialVar_ItemId) - 1;
-    
+
     if (gTasks[taskId].tUsingRegisteredKeyItem && type == (ITEM_USE_PARTY_MENU - 1))
     {
         FadeScreen(FADE_TO_BLACK, 0);
@@ -1293,7 +1293,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     case EFFECT_ITEM_INCREASE_ALL_STATS:
         for (i = STAT_ATK; i < NUM_STATS; i++)
         {
-            if (CompareStat(gBattlerInMenuId, i, MAX_STAT_STAGE, CMP_EQUAL))
+            if (CompareStat(gBattlerInMenuId, i, MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(gBattlerInMenuId)))
             {
                 cannotUse = TRUE;
                 break;
