@@ -6063,7 +6063,7 @@ static void Cmd_moveend(void)
                 gBattleStruct->tryDestinyBond = FALSE;
                 gBattleStruct->passiveHpUpdate[gBattlerAttacker] = gBattleMons[gBattlerAttacker].hp;
                 BattleScriptCall(BattleScript_DestinyBondTakesLife);
-                effect = 1;
+                effect = TRUE;
             }
             gBattleScripting.moveendState++;
             break;
