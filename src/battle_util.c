@@ -10118,7 +10118,7 @@ bool32 CanBattlerFormChange(u32 battler, enum FormChanges method)
     case FORM_CHANGE_BATTLE_SWITCH:
         if (IsGigantamaxed(battler))
             return TRUE;
-        else if (GetActiveGimmick(battler) == GIMMICK_TERA)
+        else if (GetActiveGimmick(battler) == GIMMICK_TERA && GetBattlerAbility(battler) == ABILITY_HUNGER_SWITCH)
             return FALSE;
         break;
     default:
