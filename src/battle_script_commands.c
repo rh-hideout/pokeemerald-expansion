@@ -18293,10 +18293,11 @@ void BS_CutOneThirdHpAndRaiseStats(void)
 
     bool8 atLeastOneStatBoosted = FALSE;
     u16 hpFraction = max(1, GetNonDynamaxMaxHP(gBattlerAttacker) / 3);
+    u32 ability = GetBattlerAbility(gBattlerAttacker);
 
     for (u32 stat = 1; stat < NUM_STATS; stat++)
     {
-        if (CompareStat(gBattlerAttacker, stat, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(gBattlerAttacker)))
+        if (CompareStat(gBattlerAttacker, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
         {
             atLeastOneStatBoosted = TRUE;
             break;

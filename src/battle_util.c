@@ -4493,7 +4493,7 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (gBattlerAttacker != gBattlerTarget
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(battler)
-             && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
+             && CompareStat(battler, STAT_DEF, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility))
             {
                 gEffectBattler = battler;
                 SET_STATCHANGER(STAT_DEF, 1, FALSE);
