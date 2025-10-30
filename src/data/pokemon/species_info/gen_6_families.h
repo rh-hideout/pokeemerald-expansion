@@ -1399,7 +1399,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Scatterbug,                                                   \
             gShinyOverworldPalette_Scatterbug                                               \
         )                                                                                   \
-        .teachingType = TM_ILLITERATE,                                                      \
+        .tmIlliterate = TRUE,                                                               \
         .levelUpLearnset = sScatterbugLevelUpLearnset,                                      \
         .teachableLearnset = sScatterbugTeachableLearnset,                                  \
         .eggMoveLearnset = sScatterbugEggMoveLearnset,                                      \
@@ -1483,7 +1483,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             gOverworldPalette_Spewpa,                                           \
             gShinyOverworldPalette_Spewpa                                       \
         )                                                                       \
-        .teachingType = TM_ILLITERATE,                                          \
+        .tmIlliterate = TRUE,                                                   \
         .levelUpLearnset = sSpewpaLevelUpLearnset,                              \
         .teachableLearnset = sSpewpaTeachableLearnset,                          \
         .formSpeciesIdTable = sSpewpaFormSpeciesIdTable,                        \

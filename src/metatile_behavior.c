@@ -331,7 +331,7 @@ bool8 MetatileBehavior_IsSouthArrowWarp(u8 metatileBehavior)
 
 bool8 UNUSED Unref_MetatileBehavior_IsArrowWarp(u8 metatileBehavior)
 {
-    u8 isArrowWarp = FALSE;
+    bool32 isArrowWarp = FALSE;
 
     if (MetatileBehavior_IsEastArrowWarp(metatileBehavior)
      || MetatileBehavior_IsWestArrowWarp(metatileBehavior)

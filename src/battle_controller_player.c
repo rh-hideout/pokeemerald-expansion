@@ -46,6 +46,8 @@
 #include "pokemon_summary_screen.h"
 #include "type_icons.h"
 #include "pokedex.h"
+#include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void PlayerHandleLoadMonSprite(u32 battler);
 static void PlayerHandleDrawTrainerPic(u32 battler);
@@ -453,6 +455,12 @@ void HandleInputChooseTarget(u32 battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
         gBattlerControllerFuncs[battler] = HandleInputChooseMove;
+        if (gBattleStruct->gimmick.playerSelect == 1 && gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE)
+        {
+            gBattleStruct->gimmick.playerSelect = 0;
+            gBattleStruct->zmove.viewing = TRUE;
+            ReloadMoveNames(battler);
+        }
         DoBounceEffect(battler, BOUNCE_HEALTHBOX, 7, 1);
         DoBounceEffect(battler, BOUNCE_MON, 7, 1);
         EndBounceEffect(gMultiUsePlayerCursor, BOUNCE_HEALTHBOX);
@@ -1671,7 +1679,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
-    u32 type = GetMoveType(move);
+    enum Type type = GetMoveType(move);
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (effect == EFFECT_TERA_BLAST)
@@ -1723,6 +1731,14 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     u16 move = moveInfo->moves[gMoveSelectionCursor[battler]];
     u16 pwr = GetMovePower(move);
     u16 acc = GetMoveAccuracy(move);
+    enum DamageCategory cat = GetBattleMoveCategory(move);
+
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
+    {
+        pwr = GetMaxMovePower(move);
+        move = GetMaxMove(battler, move);
+        acc = 0;
+    }
 
     u8 pwr_num[3], acc_num[3];
     u8 cat_desc[7] = _("CAT: ");
@@ -1756,7 +1772,7 @@ static void MoveSelectionDisplayMoveDescription(u32 battler)
     if (gCategoryIconSpriteId == 0xFF)
         gCategoryIconSpriteId = CreateSprite(&gSpriteTemplate_CategoryIcons, 38, 64, 1);
 
-    StartSpriteAnim(&gSprites[gCategoryIconSpriteId], GetBattleMoveCategory(move));
+    StartSpriteAnim(&gSprites[gCategoryIconSpriteId], cat);
 
     CopyWindowToVram(B_WIN_MOVE_DESCRIPTION, COPYWIN_FULL);
 }
@@ -1865,30 +1881,40 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     bool32 isFrontPic;
     s16 xPos, yPos;
     u32 trainerPicId;
-
-    trainerPicId = PlayerGetTrainerBackPicId();
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (IsMultibattleTest())
     {
-        if ((GetBattlerPosition(battler) & BIT_FLANK) != B_FLANK_LEFT) // Second mon, on the right.
-            xPos = 90;
-        else // First mon, on the left.
+        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
-
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
-        {
-            xPos = 90;
-            yPos = 80;
-        }
         else
-        {
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-        }
-
+            xPos = 80;
+        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
     else
     {
-        xPos = 80;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        trainerPicId = PlayerGetTrainerBackPicId();
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        {
+            if ((GetBattlerPosition(battler) & BIT_FLANK) != B_FLANK_LEFT) // Second mon, on the right.
+                xPos = 90;
+            else // First mon, on the left.
+                xPos = 32;
+
+            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
+            {
+                xPos = 90;
+                yPos = 80;
+            }
+            else
+            {
+                yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+            }
+        }
+        else
+        {
+            xPos = 80;
+            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        }
     }
 
     // Use front pic table for any tag battles unless your partner is Steven or a custom partner.
@@ -2080,6 +2106,8 @@ void PlayerHandleChooseMove(u32 battler)
 
         if (!IsGimmickTriggerSpriteActive())
             gBattleStruct->gimmick.triggerSpriteId = 0xFF;
+        else if (!IsGimmickTriggerSpriteMatchingBattler(battler))
+            DestroyGimmickTriggerSprite();
         if (!(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE && !gBattleStruct->zmove.viable))
             CreateGimmickTriggerSprite(battler);
 

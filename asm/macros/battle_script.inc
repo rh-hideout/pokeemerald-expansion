@@ -1340,7 +1340,7 @@
 	.byte \trigger
 	.endm
 
-	.macro tryworryseed failInstr:req
+	.macro tryoverwriteability failInstr:req
 	.byte 0xfe
 	.4byte \failInstr
 	.endm
@@ -2161,11 +2161,6 @@
 	.4byte \failInstr
 	.endm
 
-	.macro setsimplebeam failInstr:req
-	callnative BS_SetSimpleBeam
-	.4byte \failInstr
-	.endm
-
 	.macro tryentrainment failInstr:req
 	callnative BS_TryEntrainment
 	.4byte \failInstr
@@ -2368,8 +2363,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro jumpifleafguardprotected battler:req, jumpInstr:req
-	callnative BS_JumpIfLeafGuardProtected
+	.macro jumpifabilitypreventsrest battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityPreventsRest
 	.byte \battler
 	.4byte \jumpInstr
 	.endm

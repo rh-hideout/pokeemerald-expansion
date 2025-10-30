@@ -418,7 +418,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
 static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 {
     u8 *txtPtr, *end;
-    u32 zMoveType = GetBattleMoveType(zMove);
+    enum Type zMoveType = GetBattleMoveType(zMove);
 
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;

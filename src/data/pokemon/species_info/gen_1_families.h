@@ -1188,7 +1188,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Caterpie,
             gShinyOverworldPalette_Caterpie
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sCaterpieLevelUpLearnset,
         .teachableLearnset = sCaterpieTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 7, SPECIES_METAPOD}),
@@ -1256,7 +1256,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Metapod,
             gShinyOverworldPalette_Metapod
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sMetapodLevelUpLearnset,
         .teachableLearnset = sMetapodTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 10, SPECIES_BUTTERFREE}),
@@ -1499,7 +1499,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Weedle,
             gShinyOverworldPalette_Weedle
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sWeedleLevelUpLearnset,
         .teachableLearnset = sWeedleTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 7, SPECIES_KAKUNA}),
@@ -1577,7 +1577,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Kakuna,
             gShinyOverworldPalette_Kakuna
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sKakunaLevelUpLearnset,
         .teachableLearnset = sKakunaTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 10, SPECIES_BEEDRILL}),
@@ -12696,7 +12696,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Krabby,
             gShinyOverworldPalette_Krabby
         )
@@ -12766,7 +12766,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             SIZE_32x32,
             SHADOW_SIZE_M,
             TRACKS_FOOT,
-            sAnimTable_Following,
+            sAnimTable_Following_Asym,
             gOverworldPalette_Kingler,
             gShinyOverworldPalette_Kingler
         )
@@ -17456,7 +17456,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             TRACKS_SPOT,
             sAnimTable_Following
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sMagikarpLevelUpLearnset,
         .teachableLearnset = sMagikarpTeachableLearnset,
         .evolutions = EVOLUTION({EVO_LEVEL, 20, SPECIES_GYARADOS}),
@@ -17818,7 +17818,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
             gOverworldPalette_Ditto,
             gShinyOverworldPalette_Ditto
         )
-        .teachingType = TM_ILLITERATE,
+        .tmIlliterate = TRUE,
         .levelUpLearnset = sDittoLevelUpLearnset,
         .teachableLearnset = sDittoTeachableLearnset,
     },
@@ -20576,7 +20576,6 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
-        .teachingType = ALL_TEACHABLES,
         .levelUpLearnset = sMewLevelUpLearnset,
         .teachableLearnset = sMewTeachableLearnset,
     },

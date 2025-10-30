@@ -211,7 +211,8 @@ u8 GetSubstituteSpriteDefault_Y(u8 battler);
 #define STAT_ANIM_MULTIPLE_MINUS1 57
 #define STAT_ANIM_MULTIPLE_MINUS2 58
 
-enum {
+enum StatAnimPal
+{
     STAT_ANIM_PAL_ATK,
     STAT_ANIM_PAL_DEF,
     STAT_ANIM_PAL_ACC,

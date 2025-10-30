@@ -995,7 +995,7 @@ static const u16 sLocationFlags[] =
 
 static u8 Debug_CheckToggleFlags(u8 id)
 {
-    u8 result = FALSE;
+    bool32 result = FALSE;
 
     switch (id)
     {

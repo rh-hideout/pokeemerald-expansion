@@ -106,7 +106,7 @@ s32 GetWhichBattlerFasterOrTies(struct BattleContext *ctx, bool32 ignoreChosenMo
 s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
+enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);

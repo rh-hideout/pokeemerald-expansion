@@ -312,7 +312,7 @@ static bool32 IsSlideInitalizedOrPlayed(enum TrainerSlideType slideId)
     return FALSE;
 }
 
-void TryInitializeFirstSTABMoveTrainerSlide(u32 battlerDef, u32 battlerAtk, u32 moveType)
+void TryInitializeFirstSTABMoveTrainerSlide(u32 battlerDef, u32 battlerAtk, enum Type moveType)
 {
     enum TrainerSlideType slideId = TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE;
 
