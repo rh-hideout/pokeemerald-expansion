@@ -2473,10 +2473,9 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_ENTRAINMENT:
         case EFFECT_GASTRO_ACID:
         case EFFECT_ROLE_PLAY:
-        case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
-        case EFFECT_WORRY_SEED:
-            if (!CanEffectChangeAbility(battlerAtk, battlerDef, moveEffect, aiData)
+        case EFFECT_OVERWRITE_ABILITY:
+            if (!CanEffectChangeAbility(battlerAtk, battlerDef, move, aiData)
              || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_AND_RETURN_SCORE(NO_DAMAGE_OR_FAILS);
             break;
@@ -3600,10 +3599,9 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case EFFECT_ENTRAINMENT:
             case EFFECT_GASTRO_ACID:
             case EFFECT_ROLE_PLAY:
-            case EFFECT_SIMPLE_BEAM:
             case EFFECT_SKILL_SWAP:
-            case EFFECT_WORRY_SEED:
-                AbilityChangeScore(battlerAtk, battlerAtkPartner, effect, &score, aiData);
+            case EFFECT_OVERWRITE_ABILITY:
+                AbilityChangeScore(battlerAtk, battlerAtkPartner, move, &score, aiData);
                 return score;
             case EFFECT_SPICY_EXTRACT:
                 if (AI_ShouldSpicyExtract(battlerAtk, battlerAtkPartner, move, aiData))
@@ -5088,10 +5086,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_ENTRAINMENT:
     case EFFECT_GASTRO_ACID:
     case EFFECT_ROLE_PLAY:
-    case EFFECT_SIMPLE_BEAM:
     case EFFECT_SKILL_SWAP:
-    case EFFECT_WORRY_SEED:
-        AbilityChangeScore(battlerAtk, battlerDef, moveEffect, &score, aiData);
+    case EFFECT_OVERWRITE_ABILITY:
+        AbilityChangeScore(battlerAtk, battlerDef, move, &score, aiData);
         return score;
     case EFFECT_IMPRISON:
         if (predictedMove != MOVE_NONE && HasMove(battlerAtk, predictedMove))

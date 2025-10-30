@@ -294,7 +294,7 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
         gBattlerAbility = battler;
         gLastUsedAbility = ability;
 
-        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             BattleScriptExecute(BattleScript_EmergencyExitEnd2);
         else
             BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);

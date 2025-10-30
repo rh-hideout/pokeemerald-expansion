@@ -39,6 +39,29 @@ SINGLE_BATTLE_TEST("Hazards are applied based on order of set up")
     }
 }
 
+SINGLE_BATTLE_TEST("Hazards are applied correctly after a battler faints")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STEALTH_ROCK);
+               MOVE(player, MOVE_FINAL_GAMBIT);
+               SEND_OUT(player, 1);
+               SEND_OUT(player, 2); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FINAL_GAMBIT, player);
+        MESSAGE("Wynaut fainted!");
+        MESSAGE("Pointed stones dug into Wobbuffet!");
+        MESSAGE("Wobbuffet fainted!");
+        MESSAGE("Pointed stones dug into Wynaut!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Toxic Spikes can be removed after fainting to other hazards")
 {
     KNOWN_FAILING; // tryfaintmon changes something that doesn't allow other switch-in effects on the battler

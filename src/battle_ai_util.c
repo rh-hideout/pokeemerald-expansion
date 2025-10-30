@@ -891,7 +891,7 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
 
 struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather)
 {
-    struct SimulatedDamage simDamage;
+    struct SimulatedDamage simDamage = {0};
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     bool32 isDamageMoveUnusable = FALSE;
     bool32 toggledGimmickAtk = FALSE;
@@ -924,7 +924,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     gBattleStruct->magnitudeBasePower = 70;
     gBattleStruct->presentBasePower = 80;
 
-    struct DamageContext ctx;
+    struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = move;
@@ -4185,9 +4185,8 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
     case EFFECT_ENTRAINMENT:
     case EFFECT_GASTRO_ACID:
     case EFFECT_ROLE_PLAY:
-    case EFFECT_SIMPLE_BEAM:
     case EFFECT_SKILL_SWAP:
-    case EFFECT_WORRY_SEED:
+    case EFFECT_OVERWRITE_ABILITY:
         aiEffect |= AI_EFFECT_CHANGE_ABILITY;
         break;
     default:
@@ -5757,8 +5756,10 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
 
 // Used by CheckBadMove; this is determining purely if the effect CAN change an ability, not if it SHOULD.
 // At the moment, the parts about Mummy and Wandering Spirit are not actually used.
-bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct AiLogicData *aiData)
+bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
+    u32 effect = GetMoveEffect(move);
+
     // Dynamaxed Pokemon are immune to some ability-changing effects.
     if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
     {
@@ -5834,13 +5835,8 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
             return FALSE;
         break;
 
-    case EFFECT_SIMPLE_BEAM:
-        if (defAbility == ABILITY_SIMPLE || gAbilitiesInfo[defAbility].cantBeOverwritten)
-            return FALSE;
-        break;
-
-    case EFFECT_WORRY_SEED:
-        if (defAbility == ABILITY_INSOMNIA || gAbilitiesInfo[defAbility].cantBeOverwritten)
+    case EFFECT_OVERWRITE_ABILITY:
+        if (defAbility == GetMoveOverwriteAbility(move) || gAbilitiesInfo[defAbility].cantBeOverwritten)
             return FALSE;
         break;
 
@@ -5855,9 +5851,8 @@ bool32 CanEffectChangeAbility(u32 battlerAtk, u32 battlerDef, u32 effect, struct
         case EFFECT_ENTRAINMENT:
         case EFFECT_GASTRO_ACID:
         case EFFECT_ROLE_PLAY:
-        case EFFECT_SIMPLE_BEAM:
         case EFFECT_SKILL_SWAP:
-        case EFFECT_WORRY_SEED:
+        case EFFECT_OVERWRITE_ABILITY:
             return FALSE;
         default:
             break;
@@ -5886,17 +5881,17 @@ bool32 DoesEffectReplaceTargetAbility(u32 effect)
     {
     case EFFECT_ENTRAINMENT:
     case EFFECT_GASTRO_ACID:
-    case EFFECT_SIMPLE_BEAM:
     case EFFECT_SKILL_SWAP:
-    case EFFECT_WORRY_SEED:
+    case EFFECT_OVERWRITE_ABILITY:
         return TRUE;
     default:
         return FALSE;
     }
 }
 
-void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, struct AiLogicData *aiData)
+void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score, struct AiLogicData *aiData)
 {
+    u32 effect = GetMoveEffect(move);
     bool32 isTargetingPartner = IsTargetingPartner(battlerAtk, battlerDef);
     enum Ability abilityAtk = aiData->abilities[battlerAtk];
     enum Ability abilityDef = aiData->abilities[battlerDef];
@@ -5914,10 +5909,8 @@ void AbilityChangeScore(u32 battlerAtk, u32 battlerDef, u32 effect, s32 *score, 
 
     if (effect == EFFECT_GASTRO_ACID)
         abilityAtk = ABILITY_NONE;
-    else if (effect == EFFECT_SIMPLE_BEAM)
-        abilityAtk = ABILITY_SIMPLE;
-    else if (effect == EFFECT_WORRY_SEED)
-        abilityAtk = ABILITY_INSOMNIA;
+    else if (effect == EFFECT_OVERWRITE_ABILITY)
+        abilityAtk = GetMoveOverwriteAbility(move);
 
     if (effect == EFFECT_DOODLE || effect == EFFECT_ROLE_PLAY || effect == EFFECT_SKILL_SWAP)
     {

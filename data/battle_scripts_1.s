@@ -1991,23 +1991,6 @@ BattleScript_EffectEntrainment::
 	tryendneutralizinggas
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectSimpleBeam::
-	attackcanceler
-	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	setsimplebeam BattleScript_ButItFailed
-	attackanimation
-	waitanimation
-	copybyte gBattlerAbility, gBattlerTarget
-	call BattleScript_AbilityPopUpOverwriteThenNormal
-	recordability BS_TARGET
-	printstring STRINGID_PKMNACQUIREDSIMPLE
-	waitmessage B_WAIT_TIME_LONG
-	trytoclearprimalweather
-	tryrevertweatherform
-	flushtextbox
-	tryendneutralizinggas
-	goto BattleScript_MoveEnd
-
 BattleScript_EffectLuckyChant::
 	attackcanceler
 	setluckychant BattleScript_ButItFailed
@@ -2081,10 +2064,10 @@ BattleScript_EffectHealingWishRestore:
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_EffectWorrySeed::
+BattleScript_EffectOverwriteAbility::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
-	tryworryseed BattleScript_ButItFailed
+	tryoverwriteability BattleScript_ButItFailed
 	attackanimation
 	waitanimation
 	copybyte gBattlerAbility, gBattlerTarget
@@ -2553,6 +2536,7 @@ BattleScript_CantMakeAsleep::
 
 BattleScript_EffectAbsorbLiquidOoze::
 	call BattleScript_AbilityPopUpTarget
+	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_EffectAbsorbRet
 	goto BattleScript_EffectAbsorb
 
 BattleScript_EffectAbsorb::
@@ -2561,6 +2545,7 @@ BattleScript_EffectAbsorb::
 	printfromtable gAbsorbDrainStringIds
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
+BattleScript_EffectAbsorbRet:
 	return
 
 BattleScript_EffectExplosion::
@@ -4962,10 +4947,12 @@ BattleScript_LeechSeedTurnDrainLiquidOoze::
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	copybyte gBattlerAttacker, gBattlerTarget   @ needed to get liquid ooze message correct
+	jumpifability BS_TARGET, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockEnd2
 	goto BattleScript_LeechSeedTurnDrainGainHp
 
 BattleScript_LeechSeedTurnDrainHealBlock::
 	call BattleScript_LeechSeedTurnDrain
+BattleScript_LeechSeedTurnDrainHealBlockEnd2:
 	end2
 
 BattleScript_LeechSeedTurnDrainRecovery::
