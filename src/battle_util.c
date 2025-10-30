@@ -11922,13 +11922,14 @@ bool32 HasPartnerTrainer(u32 battler)
 static bool32 IsOpposingSideEmpty(u32 battler)
 {
     u32 oppositeBattler = BATTLE_OPPOSITE(battler);
-    bool32 noBattlerOnOpposingSide = FALSE;
 
-    if (!IsBattlerAlive(oppositeBattler))
-        noBattlerOnOpposingSide = TRUE;
+    if (IsBattlerAlive(oppositeBattler))
+        return FALSE;
 
-    if (IsDoubleBattle() && IsBattlerAlive(BATTLE_PARTNER(oppositeBattler)) > 0)
-        noBattlerOnOpposingSide = FALSE;
+    if (!IsDoubleBattle())
+        return TRUE;
 
-    return noBattlerOnOpposingSide;
+    if (IsBattlerAlive(BATTLE_PARTNER(oppositeBattler)))
+        return FALSE;
+    return TRUE;
 }
