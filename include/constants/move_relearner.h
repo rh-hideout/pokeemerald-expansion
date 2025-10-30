@@ -18,11 +18,12 @@ enum MoveRelearnerStates
 enum RelearnMode
 {
     RELEARN_MODE_NONE,
-    RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT,
-    RELEARN_MODE_PSS_PAGE_BATTLE_MOVES,
-    RELEARN_MODE_PSS_PAGE_CONTEST_MOVES,
-    RELEARN_MODE_SCRIPT,
-    RELEARN_MODE_PARTY_MENU,
+    RELEARN_MODE_FALLARBOR_RELEARNER_SCRIPT, // Relearning moves through the Fallarbor move relearner, specifically for level up moves
+    // These two must stay 2 and 3, they are tied to the summary screen pages
+    RELEARN_MODE_PSS_PAGE_BATTLE_MOVES,      // Relearning moves through the summary screen's battle moves page
+    RELEARN_MODE_PSS_PAGE_CONTEST_MOVES,     // Relearning moves through the summary screen's contest moves page (defaults to contest page on relearner screen)
+    RELEARN_MODE_SCRIPT,                     // Relearning moves through an event script
+    RELEARN_MODE_PARTY_MENU,                 // Relearning moves through the party menu's moves submenu
 };
 
 #endif // GUARD_CONSTANTS_MOVE_RELEARNER_H

@@ -72,15 +72,9 @@ MoveRelearner_EventScript_TeachTutorMoves:
 	goto MoveRelearner_EventScript_TeachMove
 	end
 
-MoveRelearner_EventScript_AnythingElse::
-	message MoveRelearner_Text_AnythingElse
-	waitmessage
-	goto Common_EventScript_MoveRelearnerDynMultiChoice
-	end
-
 MoveRelearner_EventScript_TeachMove::
 	msgbox MoveRelearner_Text_ChoosePkmn, MSGBOX_DEFAULT
-	special ChooseMonForMoveRelearnerScript
+	special ChooseMonForMoveRelearner
 	waitstate
 	call_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, MoveRelearner_EventScript_AnythingElse
 	special IsSelectedMonEgg
@@ -90,11 +84,20 @@ MoveRelearner_EventScript_TeachMove::
 	special TeachMoveRelearnerMove
 	waitstate
 	goto MoveRelearner_EventScript_AnythingElse
+	end
 
 MoveRelearner_EventScript_CantTeachMoveToEgg:
 	msgbox MoveRelearner_Text_CantTeachMoveToEgg, MSGBOX_AUTOCLOSE
 	goto MoveRelearner_EventScript_AnythingElse
+	end
 
 MoveRelearner_EventScript_CantTeachMoveToPkmn:
 	msgbox MoveRelearner_Text_CantTeachMoveToPkmn, MSGBOX_AUTOCLOSE
 	goto MoveRelearner_EventScript_AnythingElse
+	end
+
+MoveRelearner_EventScript_AnythingElse::
+	message MoveRelearner_Text_AnythingElse
+	waitmessage
+	goto Common_EventScript_MoveRelearnerDynMultiChoice
+	end

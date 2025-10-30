@@ -7954,16 +7954,17 @@ static void Task_ChoosePartyMon(u8 taskId)
 
 void ChooseMonForMoveRelearner(void)
 {
-	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
-    gRelearnMode = RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT;
+    gRelearnMode = RELEARN_MODE_SCRIPT;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChooseMonForMoveRelearner, 10);
 }
 
-void ChooseMonForMoveRelearnerScript(void)
+// The move relearner in Fallarbor should teach level up moves regardless of move relearner configs
+void ChooseMonForFallarborMoveRelearner(void)
 {
-    gRelearnMode = RELEARN_MODE_SCRIPT;
+	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
+    gRelearnMode = RELEARN_MODE_FALLARBOR_RELEARNER_SCRIPT;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChooseMonForMoveRelearner, 10);

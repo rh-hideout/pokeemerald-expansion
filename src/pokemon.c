@@ -5917,9 +5917,10 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
     return numMoves;
 }
 
+// Make sure that the move relearner in Fallarbor works regardless of the configs
 u8 GetNumberOfLevelUpMoves(struct Pokemon *mon)
 {
-    if (gRelearnMode != RELEARN_MODE_LAVARIDGE_RELEARNER_SCRIPT
+    if (gRelearnMode != RELEARN_MODE_FALLARBOR_RELEARNER_SCRIPT
         && !FlagGet(P_FLAG_LEVEL_UP_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 

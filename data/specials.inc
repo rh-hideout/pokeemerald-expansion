@@ -238,7 +238,7 @@ gSpecials::
 	def_special DoLotteryCornerComputerEffect
 	def_special EndLotteryCornerComputerEffect
 	def_special ChooseMonForMoveRelearner
-	def_special ChooseMonForMoveRelearnerScript
+	def_special ChooseMonForFallarborMoveRelearner
 	def_special MoveDeleterChooseMoveToForget
 	def_special MoveDeleterForgetMove
 	def_special BufferMoveDeleterNicknameAndMove
