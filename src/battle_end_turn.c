@@ -289,26 +289,17 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (ability == ABILITY_EMERGENCY_EXIT || ability == ABILITY_WIMP_OUT)
+    if (EmergencyExitCanBeTriggered(battler))
     {
-        if (gBattleStruct->battlerState[battler].wasAboveHalfHp
-         && gBattleMons[battler].hp <= gBattleMons[battler].maxHP / 2
-         && IsBattlerAlive(battler)
-         && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-         && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-         && CountUsablePartyMons(battler) > 0
-         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
-        {
-            gBattlerAbility = battler;
-            gLastUsedAbility = ability;
+        gBattlerAbility = battler;
+        gLastUsedAbility = ability;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
-                BattleScriptExecute(BattleScript_EmergencyExitEnd2);
-            else
-                BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
+            BattleScriptExecute(BattleScript_EmergencyExitEnd2);
+        else
+            BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
 
-            effect = TRUE;
-        }
+        effect = TRUE;
     }
 
     return effect;
