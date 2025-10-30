@@ -1,0 +1,11 @@
+
+
+POKEDEX_PLUS_HGSS                   = false # If TRUE, enables the custom HGSS style Pokedex.
+HGSS_DECAPPED                       = false # If TRUE, uses decapped gfx and strings.
+HGSS_DARK_MODE                      = false # If TRUE, enables dark mode.
+HGSS_HIDE_UNSEEN_EVOLUTION_NAMES    = false # If TRUE, hides evolution mon names.
+HGSS_HIDE_UNOWNED_EVOLUTION_METHODS = false # If TRUE, hides evolution methods.
+HGSS_SORT_TMS_BY_NUM                = false # If TRUE, sorts the TMS in HGSS Dex by TM number, rather than alphabetically.
+HGSS_SHOW_EGG_MOVES_FOR_EVOS        = false # If TRUE, shows Egg Moves for evolved Pokémon too.
+
+
