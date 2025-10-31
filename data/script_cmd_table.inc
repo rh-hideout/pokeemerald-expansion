@@ -255,6 +255,7 @@ gScriptCmdTable::
     script_cmd_table_entry SCR_OP_QUESTMENU                     ScrCmd_questmenu                    requests_effects=1  @ 0xe6
     script_cmd_table_entry SCR_OP_SUBQUESTMENU                  ScrCmd_subquestmenu                 requests_effects=1  @ 0xe7
     script_cmd_table_entry SCR_OP_RETURNQUESTSTATE              ScrCmd_returnqueststate             requests_effects=1  @ 0xe8
+	script_cmd_table_entry SCR_OP_HIDEFOLLOWER                  ScrCmd_hidefollower,                requests_effects=1  @ 0xe5
 
 	.if ALLOCATE_SCRIPT_CMD_TABLE
 gScriptCmdTableEnd::

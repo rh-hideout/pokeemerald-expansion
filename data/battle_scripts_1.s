@@ -408,6 +408,7 @@ BattleScript_SaltCureExtraDamage::
 	printstring STRINGID_TARGETISHURTBYSALTCURE
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
+	tryrestorehpberry
 	end2
 
 BattleScript_HurtTarget_NoString:
@@ -2879,6 +2880,7 @@ BattleScript_CantMakeAsleep::
 
 BattleScript_EffectAbsorbLiquidOoze::
 	call BattleScript_AbilityPopUpTarget
+	jumpifability BS_ATTACKER, ABILITY_MAGIC_GUARD, BattleScript_EffectAbsorbRet
 	goto BattleScript_EffectAbsorb
 
 BattleScript_EffectAbsorb::
@@ -2888,6 +2890,7 @@ BattleScript_EffectAbsorb::
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_ATTACKER
 	bicword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE | HITMARKER_PASSIVE_HP_UPDATE
+BattleScript_EffectAbsorbRet:
 	return
 
 BattleScript_EffectExplosion::
@@ -3186,9 +3189,7 @@ BattleScript_EffectRest::
 	jumpifability BS_TARGET, ABILITY_INSOMNIA, BattleScript_InsomniaProtects
 	jumpifability BS_TARGET, ABILITY_VITAL_SPIRIT, BattleScript_InsomniaProtects
 	jumpifability BS_ATTACKER, ABILITY_PURIFYING_SALT, BattleScript_InsomniaProtects
-.if B_LEAF_GUARD_PREVENTS_REST >= GEN_5
-	jumpifleafguardprotected BS_TARGET, BattleScript_LeafGuardPreventsRest
-.endif
+	jumpifabilitypreventsrest BS_TARGET, BattleScript_AbilityPreventsRest
 	trysetrest BattleScript_AlreadyAtFullHp
 	pause B_WAIT_TIME_SHORT
 	printfromtable gRestUsedStringIds
@@ -3210,7 +3211,7 @@ BattleScript_RestIsAlreadyAsleep::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
-BattleScript_LeafGuardPreventsRest::
+BattleScript_AbilityPreventsRest::
 	pause B_WAIT_TIME_SHORT
 	printstring STRINGID_BUTITFAILED
 	waitmessage B_WAIT_TIME_LONG
@@ -4220,7 +4221,7 @@ BattleScript_EffectBellyDrum::
 	attackcanceler
 	attackstring
 	ppreduce
-	jumpifstat BS_ATTACKER, CMP_EQUAL, STAT_ATK, MAX_STAT_STAGE, BattleScript_ButItFailed
+	jumpifstatignorecontrary BS_ATTACKER, CMP_EQUAL, STAT_ATK, MAX_STAT_STAGE, BattleScript_ButItFailed
 	halvehp BattleScript_ButItFailed
 	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE | HITMARKER_PASSIVE_HP_UPDATE
 	attackanimation
@@ -5626,10 +5627,12 @@ BattleScript_LeechSeedTurnDrainLiquidOoze::
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	copybyte gBattlerAttacker, gBattlerTarget   @ needed to get liquid ooze message correct
+	jumpifability BS_TARGET, ABILITY_MAGIC_GUARD, BattleScript_LeechSeedTurnDrainHealBlockEnd2
 	goto BattleScript_LeechSeedTurnDrainGainHp
 
 BattleScript_LeechSeedTurnDrainHealBlock::
 	call BattleScript_LeechSeedTurnDrain
+BattleScript_LeechSeedTurnDrainHealBlockEnd2:
 	end2
 
 BattleScript_LeechSeedTurnDrainRecovery::
@@ -6050,9 +6053,8 @@ BattleScript_ToxicDebrisActivates::
 	printstring STRINGID_POISONSPIKESSCATTERED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ToxicDebrisRet:
-	copybyte sBATTLER, gBattlerTarget
-	copybyte gBattlerTarget, gBattlerAttacker
-	copybyte gBattlerAttacker, sBATTLER
+	restoretarget
+	restoreattacker
 	return
 
 BattleScript_EarthEaterActivates::
@@ -6843,7 +6845,7 @@ BattleScript_PowderMoveNoEffectWaitMsg:
 BattleScript_MoveUsedFlinched::
 	printstring STRINGID_PKMNFLINCHED
 	waitmessage B_WAIT_TIME_LONG
-	waitmessage B_WAIT_TIME_LONG
+	jumpifability BS_ATTACKER, ABILITY_STEADFAST, BattleScript_TryActivateSteadFast
 BattleScript_MoveUsedFlinchedEnd:
 	goto BattleScript_MoveEnd
 BattleScript_TryActivateSteadFast:
@@ -6853,7 +6855,7 @@ BattleScript_TryActivateSteadFast:
 	copybyte gBattlerAbility, gBattlerAttacker
 	call BattleScript_AbilityPopUp
 	statbuffchange BS_ATTACKER, STAT_CHANGE_ALLOW_PTR, BattleScript_MoveUsedFlinchedEnd
-	setbyte gBattleCommunication STAT_SPEED
+	setbyte gBattleCommunication, STAT_SPEED
 	stattextbuffer
 	printstring STRINGID_ATTACKERABILITYSTATRAISE
 	waitmessage B_WAIT_TIME_LONG
@@ -8212,11 +8214,13 @@ BattleScript_CuteCharmActivates::
 	return
 
 BattleScript_GooeyActivates::
+	statbuffchange BS_ATTACKER, STAT_CHANGE_ONLY_CHECKING, BattleScript_GooeyActivatesRet
 	waitstate
 	call BattleScript_AbilityPopUp
 	swapattackerwithtarget  @ for defiant, mirror armor
 	seteffectsecondary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_SPD_MINUS_1
 	swapattackerwithtarget
+BattleScript_GooeyActivatesRet:
 	return
 
 BattleScript_AbilityStatusEffect::
@@ -8711,7 +8715,7 @@ BattleScript_ArenaTurnBeginning::
 	playse SE_ARENA_TIMEUP1
 	drawarenareftextbox
 	arenajudgmentstring B_MSG_REF_COMMENCE_BATTLE
-	arenawaitmessage B_MSG_REF_COMMENCE_BATTLE
+	arenawaitmessage
 	pause B_WAIT_TIME_LONG
 	erasearenareftextbox
 	volumeup
@@ -8729,26 +8733,26 @@ BattleScript_ArenaDoJudgment::
 	pause B_WAIT_TIME_LONG
 	drawarenareftextbox
 	arenajudgmentstring B_MSG_REF_THATS_IT
-	arenawaitmessage B_MSG_REF_THATS_IT
+	arenawaitmessage
 	pause B_WAIT_TIME_LONG
 	setbyte gBattleCommunication, 0  @ Reset state for arenajudgmentwindow
 	arenajudgmentwindow
 	pause B_WAIT_TIME_LONG
 	arenajudgmentwindow
 	arenajudgmentstring B_MSG_REF_JUDGE_MIND
-	arenawaitmessage B_MSG_REF_JUDGE_MIND
+	arenawaitmessage
 	arenajudgmentwindow
 	arenajudgmentstring B_MSG_REF_JUDGE_SKILL
-	arenawaitmessage B_MSG_REF_JUDGE_SKILL
+	arenawaitmessage
 	arenajudgmentwindow
 	arenajudgmentstring B_MSG_REF_JUDGE_BODY
-	arenawaitmessage B_MSG_REF_JUDGE_BODY
+	arenawaitmessage
 	arenajudgmentwindow
 	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, ARENA_RESULT_PLAYER_LOST, BattleScript_ArenaJudgmentPlayerLoses
 	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, ARENA_RESULT_TIE, BattleScript_ArenaJudgmentDraw
 @ ARENA_RESULT_PLAYER_WON
 	arenajudgmentstring B_MSG_REF_PLAYER_WON
-	arenawaitmessage B_MSG_REF_PLAYER_WON
+	arenawaitmessage
 	arenajudgmentwindow
 	erasearenareftextbox
 	printstring STRINGID_DEFEATEDOPPONENTBYREFEREE
@@ -8763,7 +8767,7 @@ BattleScript_ArenaDoJudgment::
 
 BattleScript_ArenaJudgmentPlayerLoses:
 	arenajudgmentstring B_MSG_REF_OPPONENT_WON
-	arenawaitmessage B_MSG_REF_OPPONENT_WON
+	arenawaitmessage
 	arenajudgmentwindow
 	erasearenareftextbox
 	printstring STRINGID_LOSTTOOPPONENTBYREFEREE
@@ -8778,11 +8782,12 @@ BattleScript_ArenaJudgmentPlayerLoses:
 
 BattleScript_ArenaJudgmentDraw:
 	arenajudgmentstring B_MSG_REF_DRAW
-	arenawaitmessage B_MSG_REF_DRAW
+	arenawaitmessage
 	arenajudgmentwindow
 	erasearenareftextbox
 	printstring STRINGID_TIEDOPPONENTBYREFEREE
 	waitmessage B_WAIT_TIME_LONG
+	arenabothmonslost
 	playfaintcry BS_PLAYER1
 	waitcry
 	dofaintanimation BS_PLAYER1
@@ -8793,7 +8798,6 @@ BattleScript_ArenaJudgmentDraw:
 	dofaintanimation BS_OPPONENT1
 	cleareffectsonfaint BS_OPPONENT1
 	waitanimation
-	arenabothmonslost
 	end2
 
 BattleScript_AskIfWantsToForfeitMatch::
@@ -8883,14 +8887,28 @@ BattleScript_ActivateTeraformZero_RemoveWeather:
 	removeweather
 	printfromtable gWeatherEndsStringIds
 	waitmessage B_WAIT_TIME_LONG
-	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZero_End
+	call BattleScript_ActivateWeatherAbilities
+	jumpifhalfword CMP_NO_COMMON_BITS, gFieldStatuses, STATUS_FIELD_TERRAIN_ANY, BattleScript_ActivateTeraformZeroEffects
 BattleScript_ActivateTeraformZero_RemoveTerrain:
 	removeterrain
 	playanimation BS_ATTACKER, B_ANIM_RESTORE_BG
 	printfromtable gTerrainStringIds
 	waitmessage B_WAIT_TIME_LONG
-BattleScript_ActivateTeraformZero_End:
+BattleScript_ActivateTeraformZeroEffects:
+	saveattacker
+	savetarget
 	tryboosterenergy ON_ANY
+	resetterrainabilityflags
+	setbyte gBattlerAttacker, 0
+BattleScript_ActivateTeraformZeroLoop:
+	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	activateterrainchangeabilities BS_TARGET
+	activateweatherchangeabilities BS_TARGET
+	addbyte gBattlerAttacker, 1
+	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_ActivateTeraformZeroLoop
+	restoreattacker
+	restoretarget
+BattleScript_ActivateTeraformZero_End:
 	end3
 
 BattleScript_QuickClawActivation::

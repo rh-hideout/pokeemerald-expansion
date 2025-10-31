@@ -1560,7 +1560,7 @@ const struct BlendSettings gTimeOfDayBlend[] =
 };
 
 #define DEFAULT_WEIGHT 256
-#define TIME_BLEND_WEIGHT(begin, end) (DEFAULT_WEIGHT - (DEFAULT_WEIGHT * SAFE_DIV(((hours - begin) * MINUTES_PER_HOUR + minutes), ((end - begin) * MINUTES_PER_HOUR))))
+#define TIME_BLEND_WEIGHT(begin, end) (DEFAULT_WEIGHT - SAFE_DIV((DEFAULT_WEIGHT * ((hours - begin) * MINUTES_PER_HOUR + minutes)), ((end - begin) * MINUTES_PER_HOUR)))
 
 #define MORNING_HOUR_MIDDLE (MORNING_HOUR_BEGIN + ((MORNING_HOUR_END - MORNING_HOUR_BEGIN) / 2))
 
@@ -1718,8 +1718,7 @@ static void OverworldBasic(void)
          || bld0[1] != bld1[1]
          || bld0[2] != bld1[2])
         {
-           UpdateAltBgPalettes(PALETTES_BG);
-           UpdatePalettesWithTime(PALETTES_ALL);
+           ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
 }
@@ -1803,6 +1802,10 @@ void CB2_NewGame(void)
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
     SetMainCallback2(CB2_Overworld);
+#if OW_USE_FAKE_RTC
+    // Wall clock now track local time so we set it to 10AM to match initial wall clock time
+    RtcCalcLocalTimeOffset(0, 10, 0, 0);
+#endif
 }
 
 

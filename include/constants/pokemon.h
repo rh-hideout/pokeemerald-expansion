@@ -347,6 +347,12 @@ enum EvoSpinDirections {
     SPIN_EITHER,                // Player spins either clockwise or counter-clockwise
 };
 
+enum ShinyMode {
+    SHINY_MODE_ALWAYS,
+    SHINY_MODE_RANDOM,
+    SHINY_MODE_NEVER
+};
+
 #define MON_PIC_WIDTH 64
 #define MON_PIC_HEIGHT 64
 #define MON_PIC_SIZE (MON_PIC_WIDTH * MON_PIC_HEIGHT / 2)
