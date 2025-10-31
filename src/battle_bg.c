@@ -681,6 +681,53 @@ static u8 GetBattleEnvironmentOverride(void)
     return GetBattleEnvironmentByMapScene(battleScene);
 }
 
+/*
+const u16 *GetBattlePalette(u8 environment)
+{
+    if (environment == BATTLE_ENVIRONMENT_GRASS)
+    {
+        if (GetTimeOfDay() == TIME_NIGHT)
+            return gBattleEnvironmentPalette_TallGrassNight;
+        else if (GetTimeOfDay() == TIME_MORNING)
+            return gBattleEnvironmentPalette_TallGrassMorning;
+        else
+            return gBattleEnvironmentPalette_TallGrass; 
+    }
+    if (environment == BATTLE_ENVIRONMENT_SAND)
+    {
+        if (GetTimeOfDay() == TIME_NIGHT)
+            return gBattleEnvironmentPalette_SandNight;
+        else if (GetTimeOfDay() == TIME_MORNING)
+            return gBattleEnvironmentPalette_SandMorning;
+        else
+            return gBattleEnvironmentPalette_Sand;
+    }
+    if (environment == BATTLE_ENVIRONMENT_PLAIN)
+    {
+        if (GetTimeOfDay() == TIME_NIGHT)
+            return gBattleEnvironmentPalette_PlainNight;
+        else if (GetTimeOfDay() == TIME_MORNING)
+            return gBattleEnvironmentPalette_Plain;
+        else
+            return gBattleEnvironmentPalette_Plain;
+    }
+    
+    return sBattleEnvironmentTable[environment].palette;
+}
+
+void LoadBattleBackground(u8 environment)
+{
+    const struct BattleBackground *bg = &sBattleEnvironmentTable[environment];
+    const u16 *palette = GetBattlePalette(environment);
+
+    LZDecompressWram(bg->tileset,      (void *)BG_VRAM);
+    LZDecompressWram(bg->tilemap,      (void *)(BG_VRAM + 0x800));
+    LZDecompressWram(bg->entryTileset, (void *)(BG_VRAM + 0x1000));
+    LZDecompressWram(bg->entryTilemap, (void *)(BG_VRAM + 0x1800));
+    LoadPalette(palette, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
+}
+*/
+
 void BattleInitBgsAndWindows(void)
 {
     ResetBgsAndClearDma3BusyFlags(0);
