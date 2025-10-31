@@ -531,7 +531,6 @@
     {
       "id": "MAPSEC_AQUA_HIDEOUT_OLD",
       "name": "{AQUA} HIDEOUT",
-      "name_clone": true,
       "x": 19,
       "y": 3,
       "width": 1,
@@ -1236,6 +1235,25 @@
       "name": "TRAINER HILL",
       "x": 8,
       "y": 4,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "id": "MAPSEC_SOUTH_CAMPUS",
+      "name": "South Campus",
+      "x": 0,
+      "y": 0,
+      "width": 1,
+      "height": 1
+    },
+    {
+      "id": "MAPSEC_NORTH"
+    },
+    {
+      "id": "MAPSEC_NORTH_CAMPUS",
+      "name": "North Campus",
+      "x": 0,
+      "y": 0,
       "width": 1,
       "height": 1
     }

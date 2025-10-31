@@ -109,6 +109,7 @@ bool8 MetatileBehavior_IsPacifidlogLog(u8 metatileBehavior);
 bool8 MetatileBehavior_IsTrickHousePuzzleDoor(u8 metatileBehavior);
 bool8 MetatileBehavior_IsRegionMap(u8 metatileBehavior);
 bool8 MetatileBehavior_IsClosedSootopolisDoor(u8 metatileBehavior);
+bool8 MetatileBehavior_NewTelevision(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSkyPillarClosedDoor(u8 metatileBehavior);
 bool8 MetatileBehavior_IsRoulette(u8 metatileBehavior);
 bool8 MetatileBehavior_IsPokeblockFeeder(u8 metatileBehavior);

@@ -3,11 +3,27 @@ Common_EventScript_PkmnCenterNurse::
 	faceplayer
 	setvar VAR_0x8004, 0
 	specialvar VAR_RESULT, CountPlayerTrainerStars
+	speakername Joy
 	goto_if_eq VAR_RESULT, 4, EventScript_PkmnCenterNurse_GoldCard
+	gettimeofday
+	compare VAR_0x8000, TIME_NIGHT
+	goto_if_eq EventScript_NurseJoy_Night
+	compare VAR_0x8000, TIME_MORNING
+	goto_if_eq EventScript_NurseJoy_Morning
 	msgbox gText_WouldYouLikeToRestYourPkmn, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
 	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
 	end
+
+EventScript_NurseJoy_Night::
+	msgbox gText_WouldYouLikeToRestYourPkmnNight, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+
+EventScript_NurseJoy_Morning::
+	msgbox gText_WouldYouLikeToRestYourPkmnMorning, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
 
 EventScript_PkmnCenterNurse_Goodbye::
 	message gText_WeHopeToSeeYouAgain

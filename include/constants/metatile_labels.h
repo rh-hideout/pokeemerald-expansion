@@ -140,8 +140,12 @@
 #define METATILE_Contest_WallShadow          0x221
 
 // gTileset_Dewford
-#define METATILE_Dewford_Door              0x225
-#define METATILE_Dewford_Door_BattleTower  0x25D
+#define METATILE_Dewford_Door                   0x225
+#define METATILE_Dewford_Door_BattleTower       0x25D
+#define METATILE_Dewford_SouthCampus_Cafeteria  0x373
+
+// gTileset_DormHallway
+#define METATILE_DormHallway_SouthCampus_Door  0x2EA
 
 // gTileset_EliteFour
 #define METATILE_EliteFour_EntryDoor_ClosedBottom    0x20E
@@ -214,7 +218,7 @@
 #define METATILE_General_Door_Contest          0x1DB
 #define METATILE_General_Door_Gym              0x1CD
 #define METATILE_General_Door_PokeCenter       0x061
-#define METATILE_General_Door_PokeMart         0x041
+#define METATILE_General_Door_PokeMart         0x062
 #define METATILE_General_Grass                 0x001
 #define METATILE_General_Grass_TreeLeft        0x1CE
 #define METATILE_General_Grass_TreeRight       0x1CF
@@ -730,6 +734,10 @@
 #define METATILE_SootopolisGym_Ice_Cracked  0x20E
 #define METATILE_SootopolisGym_Stairs       0x207
 
+// gTileset_TractorUniversity
+#define METATILE_TractorUniversity_Door_Main_Hall    0x2E5
+#define METATILE_TractorUniversity_Door_Main_Hall_2  0x2E4
+
 // gTileset_TrainerHill
 #define METATILE_TrainerHill_CounterDoor          0x334
 #define METATILE_TrainerHill_Door_Elevator_Lobby  0x32C
@@ -786,5 +794,6 @@
 #define METATILE_RSMossdeepGym_RedArrow_Up     0x20D
 #define METATILE_RSMossdeepGym_Switch_Down     0x239
 #define METATILE_RSMossdeepGym_Switch_Up       0x238
+#define METATILE_South_Campus_Dorm_Door        0x2CC
 
 #endif // GUARD_METATILE_LABELS_H

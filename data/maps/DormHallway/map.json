@@ -1,0 +1,140 @@
+{
+  "id": "MAP_DORM_HALLWAY",
+  "name": "DormHallway",
+  "layout": "LAYOUT_DORM_HALLWAY",
+  "music": "MUS_LILYCOVE_MUSEUM",
+  "region_map_section": "MAPSEC_SOUTH_CAMPUS",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_INDOOR",
+  "allow_cycling": false,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": false,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "local_id": "LOCALID_TRACIE",
+      "graphics_id": "OBJ_EVENT_GFX_TRACIE",
+      "x": 17,
+      "y": 21,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "0",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_TRACIEROTCART"
+    },
+    {
+      "local_id": "LOCALID_ROTCART",
+      "graphics_id": "OBJ_EVENT_GFX_ROTCART",
+      "x": 8,
+      "y": 20,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_TRACIEROTCART"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 17,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_PLAYER_DORM",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 2,
+      "y": 3,
+      "elevation": 0,
+      "dest_map": "MAP_DORM_RECEPTION",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 27,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_TRACIE_DORM",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 7,
+      "y": 19,
+      "elevation": 0,
+      "dest_map": "MAP_ROTCART_DORM",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [
+    {
+      "type": "trigger",
+      "x": 34,
+      "y": 19,
+      "elevation": 0,
+      "var": "VAR_PLAYERDORM_STATE",
+      "var_value": "3",
+      "script": "DormHallway_DontLeave"
+    },
+    {
+      "type": "trigger",
+      "x": 33,
+      "y": 19,
+      "elevation": 0,
+      "var": "VAR_PLAYERDORM_STATE",
+      "var_value": "3",
+      "script": "DormHallway_DontLeave"
+    },
+    {
+      "type": "trigger",
+      "x": 32,
+      "y": 19,
+      "elevation": 0,
+      "var": "VAR_PLAYERDORM_STATE",
+      "var_value": "3",
+      "script": "DormHallway_DontLeave"
+    },
+    {
+      "type": "trigger",
+      "x": 31,
+      "y": 19,
+      "elevation": 0,
+      "var": "VAR_PLAYERDORM_STATE",
+      "var_value": "3",
+      "script": "DormHallway_DontLeave"
+    }
+  ],
+  "bg_events": [
+    {
+      "type": "sign",
+      "x": 29,
+      "y": 19,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Player_Dorm_EventScript_TracieSign"
+    },
+    {
+      "type": "sign",
+      "x": 19,
+      "y": 19,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Player_Dorm_EventScript_PlayerSign"
+    },
+    {
+      "type": "sign",
+      "x": 9,
+      "y": 19,
+      "elevation": 0,
+      "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
+      "script": "Player_Dorm_EventScript_RotcartSign"
+    }
+  ]
+}

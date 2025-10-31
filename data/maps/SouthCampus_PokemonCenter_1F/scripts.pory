@@ -1,0 +1,25 @@
+mapscripts SouthCampus_PokemonCenter_1F_MapScripts{
+    MAP_SCRIPT_ON_TRANSITION: SouthCampus_PokemonCenter_1F_OnTransition
+    MAP_SCRIPT_ON_RESUME: CableClub_OnResume
+}
+
+script SouthCampus_PokemonCenter_1F_OnTransition{
+    setrespawn(HEAL_LOCATION_SOUTH_CAMPUS)
+    end
+}
+
+text Joy {
+	"Nurse Joy"
+}
+
+script SouthCampus_PokemonCenter_1F_EventScript_NurseJoy {
+    setvar(VAR_0x800B, 1)
+    call(Common_EventScript_PkmnCenterNurse)
+    waitmessage
+    waitbuttonpress
+    applymovement (OBJ_EVENT_ID_PLAYER, Common_Movement_FaceDown)
+    waitmovement(0)
+    release
+    end
+}
+

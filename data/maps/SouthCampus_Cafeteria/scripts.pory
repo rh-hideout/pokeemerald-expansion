@@ -1,0 +1,55 @@
+mapscripts SouthCampus_Cafeteria_MapScripts {}
+
+script SouthCampus_Cafeteria_Waiter {
+    lock
+    faceplayer
+    msgbox(format("Hello! Please, take a seat and enjoy!"))
+    closemessage
+}
+
+script SouthCampus_Cafeteria_Waitress {
+    lock
+    faceplayer
+    msgbox(format("Hello! Please, take a seat and enjoy!"))
+    closemessage
+}
+
+script SouthCampus_Cafeteria_YoungCoupleF {
+    lock
+    faceplayer
+    msgbox(format("My boyfriend and I met here at the cafeteria our freshman year.\pI don't think he realizes he's put on a few pounds…"))
+    closemessage
+    applymovement(LOCALID_GIRLFRIEND, moves(face_right))
+}
+
+script SouthCampus_Cafeteria_YoungCoupleM {
+    lock
+    faceplayer
+    msgbox(format("Don't tell my girlfriend, but I think she may have gained weight from all the free food."))
+    closemessage
+    applymovement(LOCALID_BOYFRIEND, moves(face_left))
+}
+
+script SouthCampus_Cafeteria_SchoolGirl {
+    lock
+    faceplayer
+    msgbox(format("I get the Chansey omelette every morning!\pDo you think it's giving me HP effort values?"))
+    closemessage
+    applymovement(LOCALID_SCHOOLGIRL, moves(face_right))
+}
+
+script SouthCampus_Cafeteria_AromaGirl {
+    lock
+    faceplayer
+    msgbox(format("With the ocean nearby, there's always a wide selection of seafood.\pJust last night, I had the Magikarp Piccata!"))
+    closemessage
+    applymovement(LOCALID_AROMAGIRL, moves(face_left))
+}
+
+script SouthCampus_Cafeteria_Guitarist {
+    lock
+    faceplayer
+    msgbox(format("Sigh…\pMy parents dropped me off this morning, but I actually flunked out last year.\pHow am I going to tell them?"))
+    closemessage
+    applymovement(LOCALID_GUITARIST, moves(face_right))
+}

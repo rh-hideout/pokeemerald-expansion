@@ -1,0 +1,300 @@
+mapscripts SouthCampus_MapScripts {   
+}
+
+script SouthCampus_LockedCafeteria {
+	lock
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_up))
+	msgbox(format("The cafeteria isn't open."))
+	closemessage
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_down))
+	waitmovement(0)
+	release
+}
+
+script SouthCampus_MoveToBattle1 {
+	call(SouthCampus_HearBattle)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*5, walk_fast_up*11, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_left*6, walk_fast_up*11, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle2 {
+	call(SouthCampus_HearBattle)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*5, walk_fast_up*12, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_left*6, walk_fast_up*12, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle3 {
+	call(SouthCampus_HearBattle)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*5, walk_fast_up*13, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_left*6, walk_fast_up*13, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle4 {
+	call(SouthCampus_HearBattle)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*5, walk_fast_up*14, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_left*6, walk_fast_up*14, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle5 {
+	call(SouthCampus_HearBattle2)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_down))
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_down, walk_fast_left))
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*8, walk_fast_up*12, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_down, walk_fast_left*8, walk_fast_up*12, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle6 {
+	call(SouthCampus_HearBattle2)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_up))
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_up, walk_fast_left))
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*8, walk_fast_up*11, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_up, walk_fast_left*8, walk_fast_up*11, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle7 {
+	call(SouthCampus_HearBattle2)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_up))
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_up, walk_fast_left))
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*8, walk_fast_up*12, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_up, walk_fast_left*8, walk_fast_up*12, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_MoveToBattle8 {
+	call(SouthCampus_HearBattle2)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_up))
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_up, walk_fast_left))
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_fast_left*8, walk_fast_up*14, walk_fast_left*7, face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_fast_up, walk_fast_left*8, walk_fast_up*14, walk_fast_left*6, face_up))
+	waitmovement(0)
+	call (SouthCampus_ApproachBattle)
+}
+
+script SouthCampus_HearBattle {
+	lock
+	applymovement(LOCALID_FAT_MAN, moves(face_up))
+	speakername(Unknown)
+	msgbox(format("Go, Meowth!"))
+	playmoncry(SPECIES_MEOWTH, 0)
+	waitmoncry
+	delay(10)
+	closemessage
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(emote_exclamation_mark))
+	playse(SE_PIN)
+    waitse
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
+    waitmovement(0)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(jump_in_place_left))
+	playse(SE_LEDGE)
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(jump_in_place_left))
+	playse(SE_LEDGE)
+	waitmovement(0)
+	speakername(Tracie)
+	msgbox(format("{PLAYER}, did you hear that?\pIt sounds like a Pokémon battle\njust started!\pLet's check it out!"))
+	closemessage
+	return
+}
+
+script SouthCampus_HearBattle2 {
+	lock
+	applymovement(LOCALID_FAT_MAN, moves(face_up))
+	speakername(Unknown)
+	msgbox(format("Go, Meowth!"))
+	playmoncry(SPECIES_MEOWTH, 0)
+	waitmoncry
+	delay(10)
+	closemessage
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_left, emote_exclamation_mark))
+	playse(SE_PIN)
+    waitse
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
+    waitmovement(0)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(jump_in_place_left))
+	playse(SE_LEDGE)
+	waitmovement(0)
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(jump_in_place_left))
+	playse(SE_LEDGE)
+	waitmovement(0)
+	speakername(Tracie)
+	msgbox(format("{PLAYER}, did you hear that?\pIt sounds like a Pokémon battle\njust started!\pLet's check it out!"))
+	closemessage
+	return
+}
+
+
+
+script SouthCampus_ApproachBattle {
+	speakername(Tracie)
+	msgbox(format("I knew it!\nThey're having a battle!"))
+	closemessage
+	special (SpawnCameraObject)
+	setobjectxy(LOCALID_CAMERA, 23, 29)
+	playbgm(CUS_VS_TRAINER, FALSE)
+	applymovement(LOCALID_CAMERA, moves(walk_fast_up*3))
+	waitmovement(0)
+	speakername("Youngster")
+	msgbox(format("My Meowth is way stronger!\nHe's going to win for sure!"))
+	closemessage
+	speakername("Lass")
+	msgbox(format("Don't get overconfident.\pI'll bet you've never seen a\nMeowth like mine before!"))
+	closemessage
+	applymovement(LOCALID_CAMERA, moves(walk_fast_down*3))
+	waitmovement(0)
+	speakername(Tracie)
+	msgbox(format("I've never seen a Meowth like her's before, either.\pI wonder why it looks so different…"))
+	closemessage
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_left))
+	applymovement(LOCALID_FAT_MAN, moves(face_right))
+	waitmovement(0)
+	speakername("Man")
+	msgbox(format("Some Pokémon come in different varieties depending on their habitat.\pHer Meowth is a Dark-type and his is a Normal-type.\pNeither Meowth has a type advantage against the other, so it's been a good battle so far!"))
+	closemessage	
+	speakername(Tracie)
+	msgbox(format("Oh, that makes sense!\pIt's so neat that Pokémon of the same species can be different types!"))
+	closemessage
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_up))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_up))
+	applymovement(LOCALID_FAT_MAN, moves(face_up))
+	applymovement(LOCALID_CAMERA, moves(walk_fast_up*3))
+	waitmovement(0)
+	call(SouthCampus_MeowthBattle)
+}
+
+script SouthCampus_MeowthBattle {
+	speakername("Youngster")
+	msgbox(format("Meowth, use Scratch!"))
+	closemessage
+	playmoncry(SPECIES_MEOWTH, 0)
+	waitmoncry
+	applymovement(LOCALID_MEOWTH, moves(slide_right*2))
+	waitmovement(0)
+	playse(SE_M_SCRATCH)
+	waitse
+	applymovement(LOCALID_MEOWTH, moves(slide_left*2, face_right))
+	waitmovement(0)
+	speakername("Lass")
+	msgbox(format("Meowth, use Pay Day!"))
+	closemessage
+	playmoncry(SPECIES_MEOWTH_ALOLA, 0)
+	waitmoncry
+	applymovement(LOCALID_MEOWTH_ALOLA, moves(slide_left*2))
+	waitmovement(0)
+	playse(SE_M_PAY_DAY)
+	waitse
+	applymovement(LOCALID_MEOWTH_ALOLA, moves(slide_right*2, face_left))
+	waitmovement(0)
+	delay(40)
+	playmoncry(SPECIES_MEOWTH, CRY_MODE_FAINT)
+	waitmoncry
+	playse(SE_FAINT)
+	applymovement(LOCALID_MEOWTH, moves(enter_pokeball))
+	waitmovement(0)
+	hideobjectat(LOCALID_MEOWTH, MAP_SOUTH_CAMPUS)
+	removeobject(LOCALID_MEOWTH)
+	delay(40)
+	fadedefaultbgm
+	applymovement(LOCALID_MEOWTH_ALOLA, moves(enter_pokeball))
+	waitmovement(0)
+	hideobjectat(LOCALID_MEOWTH_ALOLA, MAP_SOUTH_CAMPUS)
+	removeobject(LOCALID_MEOWTH_ALOLA)
+    setflag(FLAG_HIDE_MEOWTHS)
+	speakername("Youngster")
+	msgbox(format("Aww, darn!\nOh well.\pCan't win them all.\nThanks for the battle!"))
+	closemessage
+	speakername("Lass")
+	msgbox(format("Same to you!\nIt was fun!"))
+	closemessage
+	applymovement(LOCALID_LASS, moves(walk_right*5))
+	applymovement(LOCALID_YOUNGSTER, moves(walk_right*12))
+	applymovement(LOCALID_CAMERA, moves(walk_fast_down*3))
+	delay(20)
+	speakername(Tracie)
+	msgbox(format("That was such a great battle!\nI'm all fired up!"))
+	closemessage
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(face_left))
+	playbgm(MUS_ENCOUNTER_MAY, FALSE)	
+	speakername(Tracie)
+	msgbox(format("Hey!\nLet's have a battle!\pIt'll be the first battle of our final year of school, and I can't think of anyone better to have it with!"))
+	closemessage
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_up*3, walk_left*3, face_right))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_up*3, walk_right*3, face_left))	
+	applymovement(LOCALID_CAMERA, moves(walk_up*3))
+	delay(90)
+	speakername(Tracie)
+	msgbox(format("Alright, here we go.\nNo holding back!"))
+	closemessage
+	special(RemoveCameraObject)
+	removeobject(LOCALID_CAMERA)
+	setflag(FLAG_HIDE_SOUTH_CAMPUS_TRAINERS)
+	setflag(FLAG_WHITEOUT_CONTINUE)
+	trainerbattle_no_intro(TRAINER_TRACIE_SOUTH_CAMPUS, format("Looks like I still have some\ncatching up to do!"))
+	clearflag(FLAG_WHITEOUT_CONTINUE)
+	call(SouthCampus_TraciePostBattle)
+
+}
+
+script SouthCampus_TraciePostBattle {
+	special (SpawnCameraObject)
+	hideobjectat(LOCALID_LASS, MAP_SOUTH_CAMPUS)
+	removeobject(LOCALID_LASS)
+	hideobjectat(LOCALID_YOUNGSTER, MAP_SOUTH_CAMPUS)
+	removeobject(LOCALID_YOUNGSTER)
+	setobjectxyperm(LOCALID_CAMERA, 23, 26)
+	applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_right*3))
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_left*3))
+	waitmovement(0)
+	speakername(Tracie)
+	if (var(VAR_RESULT) == B_OUTCOME_LOST) {
+		msgbox(format("Thanks for the battle!\pBut, I could tell you were\nholding back!\pYou better not do that again!\pI can't wait to battle again once our journeys start!\pLet me heal your Pokémon quick!"))
+		closemessage
+		call(SouthCampus_HealParty)
+	}
+	else {
+		
+		msgbox(format("That was so much fun!\pI can't wait to battle again once our journeys start!\pLet me heal your Pokémon quick!"))
+		closemessage
+		call(SouthCampus_HealParty)
+	}
+	speakername(Tracie)
+	msgbox(format("I'm going to go on ahead to North Campus for orientation.\pTry not to take too long getting there. You don't want to be late!\pSee you soon!"))
+	closemessage
+	applymovement(OBJ_EVENT_ID_NPC_FOLLOWER, moves(walk_right*8))
+	waitmovement(0)
+	special(RemoveCameraObject)
+	removeobject(LOCALID_CAMERA)
+	destroyfollowernpc
+	setvar(VAR_SOUTH_CAMPUS_STATE, 1)
+	setrespawn(HEAL_LOCATION_SOUTH_CAMPUS)
+	fadedefaultbgm
+	release
+	end
+}
+
+script SouthCampus_HealParty {
+		fadescreenswapbuffers(FADE_TO_BLACK)
+		playse(SE_USE_ITEM)
+		waitse
+		fadescreenswapbuffers(FADE_FROM_BLACK)
+		special(HealPlayerParty)
+}
+

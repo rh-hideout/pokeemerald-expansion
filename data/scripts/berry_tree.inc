@@ -320,18 +320,18 @@ BerryTree_Text_PickedTheBerry:
 	.string "{PLAYER} picked the {STR_VAR_2} {STR_VAR_1}.$"
 
 BerryTree_Text_PutAwayBerry:
-	.string "{PLAYER} put away the {STR_VAR_1}\n"
-	.string "in the BAG's BERRIES POCKET.\p"
+	.string "{PLAYER} put away the {COLOR GREEN}{STR_VAR_1}\n"
+	.string "{COLOR DARK_GRAY}in the Bag's Berries Pocket.\p"
 	.string "The soil returned to its soft and\n"
 	.string "loamy state.$"
 
 BerryTree_Text_BerryPocketFull:
-	.string "The BAG's BERRIES POCKET is full.\p"
-	.string "The {STR_VAR_1} couldn't be taken.$"
+	.string "The Bag's Berries Pocket is full.\p"
+	.string "The {COLOR GREEN}{STR_VAR_1} {COLOR DARK_GRAY}couldn't be taken.$"
 
 BerryTree_Text_BerryLeftUnpicked:
-	.string "{PLAYER} left the {STR_VAR_1}\n"
-	.string "unpicked.$"
+	.string "{PLAYER} left the {COLOR GREEN}{STR_VAR_1}\n"
+	.string "{COLOR DARK_GRAY}unpicked.$"
 
 BerryTree_Text_WantToWater:
 	.string "Want to water the {STR_VAR_1} with the\n"
@@ -390,7 +390,7 @@ BerryTree_Text_BerryLeftUnpicked_Mutation:
 	.string "and the {STR_VAR_3} unpicked.$"
 
 BerryTree_Text_BerryPocketFull_Mutation:
-	.string "The BAG's BERRIES POCKET is full.\p"
+	.string "The Bag's erries Pocket is full.\p"
 	.string "The {STR_VAR_1} and the\n"
 	.string "{STR_VAR_3} couldn't be taken.$"
 
@@ -399,9 +399,9 @@ BerryTree_Text_PickedTheBerry_Mutation:
 	.string "and the {STR_VAR_3}.$"
 
 BerryTree_Text_PutAwayBerry_Mutation:
-	.string "{PLAYER} put away the {STR_VAR_1}\n"
-	.string "and the {STR_VAR_3} in the BAG's\l"
-	.string "BERRIES POCKET.\p"
+	.string "{PLAYER} put away the {COLOR GREEN}{STR_VAR_1}\n"
+	.string "and the {STR_VAR_3} in the Bag's\l"
+	.string "Berries Pocket.\p"
 	.string "The soil returned to its soft and\n"
 	.string "loamy state.$"
 .endif

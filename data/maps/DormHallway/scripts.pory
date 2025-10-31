@@ -1,0 +1,82 @@
+mapscripts DormHallway_MapScripts {
+    MAP_SCRIPT_ON_FRAME_TABLE [
+            VAR_PLAYERDORM_STATE, 2: DormHallway_LeaveDorm
+    ]
+}
+
+script DormHallway_LeaveDorm {
+    lockall
+    speakername(Tracie)
+    msgbox(format("Oh! Before I forget!\pI need to stop at my room to grab some things."))
+    closemessage
+    call(DormHallway_EnterRotcart)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_down))
+    waitmovement(0)
+    speakername(Tracie)
+    msgbox(format("Ugh! Rotcart…\nWhat an asshole!\pI know he's one of the strongest Trainers in this school, but does he really have to be such a dick?\pAt least you're able to give him a run for his money…\pHe does have a point though, we need to get going!\pFollow me to my room!"))
+    closemessage
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
+    applymovement(LOCALID_TRACIE, moves(walk_right*9, walk_up))
+    waitmovement(0)
+    removeobject(LOCALID_TRACIE)
+    playse(SE_DOOR)
+    waitse
+    setflag(FLAG_HIDE_TRACIEROTCART)
+    setvar(VAR_PLAYERDORM_STATE, 3)
+    end
+}
+
+script DormHallway_EnterRotcart {
+    playse(SE_DOOR)
+    waitse
+    playbgm (MUS_RG_ENCOUNTER_RIVAL, TRUE)
+    applymovement(LOCALID_ROTCART, moves(walk_right*8))
+    waitmovement(0)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
+    applymovement(LOCALID_TRACIE, moves(face_left))
+    waitmovement(0)
+    speakername(Unknown)
+    msgbox("… … …\p… … …\n… … …\pMove.")
+    closemessage
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_down, face_up))
+    applymovement(LOCALID_TRACIE, moves(walk_down, face_up))
+    waitmovement(0)
+    applymovement(LOCALID_ROTCART, moves(walk_right*9))
+    waitmovement(0)
+    removeobject(LOCALID_ROTCART)
+    fadedefaultbgm
+    return
+}
+
+script DormHallway_DontLeave {
+    lock
+    msgbox("Tracie's dorm isn't this way.")
+    closemessage
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_down))
+    waitmovement(0)
+    release
+    end
+}
+
+
+script Player_Dorm_EventScript_PlayerSign {
+    lock
+    msgbox("{PLAYER}'s room" MSGBOX_SIGN)
+    release
+    end
+}
+
+script Player_Dorm_EventScript_TracieSign {
+    lock
+    msgbox("Tracie's room" MSGBOX_SIGN)
+    release
+    end
+}
+
+script Player_Dorm_EventScript_RotcartSign {
+    lock
+    msgbox("Rotcart's room" MSGBOX_SIGN) 
+    release
+    end
+}
+

@@ -1,0 +1,6 @@
+mapscripts RotcartDorm_MapScripts {}
+
+script Rotcart_Laptop {
+    msgbox(format("This is Rotcart's laptop.\pHis desktop wallpaper is him flipping off a baby."))
+    closemessage
+}

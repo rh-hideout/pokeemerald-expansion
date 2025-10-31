@@ -56,6 +56,11 @@ static const u8* const sTrainerSlides[DIFFICULTY_COUNT][TRAINERS_COUNT][TRAINER_
 {
     [DIFFICULTY_NORMAL] =
     {
+        [TRAINER_TRACIE_SOUTH_CAMPUS] = // use the Trainer's Id from include/constants/opponents.h
+        {
+            [TRAINER_SLIDE_BEFORE_FIRST_TURN] = COMPOUND_STRING("Okay, Buneary!\nLet's show off our training!{PAUSE_UNTIL_PRESS}"),
+            [TRAINER_SLIDE_LAST_HALF_HP] = COMPOUND_STRING("Hang in there, Buneary!\nStay strong!{PAUSE_UNTIL_PRESS}"), 
+        }
     },
 };
 

@@ -830,3 +830,58 @@ const struct Tileset gTileset_UnionRoom =
     .metatileAttributes = gMetatileAttributes_UnionRoom,
     .callback = NULL,
 };
+
+const struct Tileset gTileset_GrayCave =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_GrayCave,
+    .palettes = gTilesetPalettes_GrayCave,
+    .metatiles = gMetatiles_GrayCave,
+    .metatileAttributes = gMetatileAttributes_GrayCave,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_DormHallway =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_DormHallway,
+    .palettes = gTilesetPalettes_DormHallway,
+    .metatiles = gMetatiles_DormHallway,
+    .metatileAttributes = gMetatileAttributes_DormHallway,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_SouthCampusCafeteria =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_SouthCampusCafeteria,
+    .palettes = gTilesetPalettes_SouthCampusCafeteria,
+    .metatiles = gMetatiles_SouthCampusCafeteria,
+    .metatileAttributes = gMetatileAttributes_SouthCampusCafeteria,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_TractorUniversity =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_TractorUniversity,
+    .palettes = gTilesetPalettes_TractorUniversity,
+    .metatiles = gMetatiles_TractorUniversity,
+    .metatileAttributes = gMetatileAttributes_TractorUniversity,
+    .callback = NULL,
+};
+
+const struct Tileset gTileset_Classroom =
+{
+    .isCompressed = TRUE,
+    .isSecondary = TRUE,
+    .tiles = gTilesetTiles_Classroom,
+    .palettes = gTilesetPalettes_Classroom,
+    .metatiles = gMetatiles_Classroom,
+    .metatileAttributes = gMetatileAttributes_Classroom,
+    .callback = NULL,
+};

@@ -72,9 +72,9 @@
     #define MORNING_HOUR_END   10
 
     #define DAY_HOUR_BEGIN     10
-    #define DAY_HOUR_END       19
+    #define DAY_HOUR_END       18
 
-    #define EVENING_HOUR_BEGIN 19
+    #define EVENING_HOUR_BEGIN 18
     #define EVENING_HOUR_END   20
 
     #define NIGHT_HOUR_BEGIN   20
@@ -88,6 +88,7 @@ enum TimeOfDay
     TIME_DAY,
     TIME_EVENING,
     TIME_NIGHT,
+    TIME_LATE,
     TIMES_OF_DAY_COUNT,
 };
 

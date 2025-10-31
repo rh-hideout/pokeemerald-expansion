@@ -1,0 +1,61 @@
+mapscripts DormReception_MapScripts {}
+
+script DormReception_Trash {
+    lock
+    msgbox("Nothing but trash inside…")
+    release
+    end
+}
+
+script DormReception_Trash_Found {
+    lock
+    if(!flag(FLAG_DORM_TRASH))
+    {
+        msgbox("Nothing but trash inside…\p…\pOh wait! There's something here!")
+        closemessage
+        giveitem(ITEM_ORAN_BERRY)
+        waitfanfare
+        setflag(FLAG_DORM_TRASH)
+    }
+    else
+    {
+        msgbox("Nothing but trash inside…")
+    }
+    release
+    end
+}
+
+script DormReception_TelevisionShow {
+    lock
+    msgbox(format("There are people dancing like chickens on this TV show.\pHave they ever even seen a chicken…?"))
+    release
+    end
+}
+
+script DormReception_Fridge {
+    lock
+    msgbox(format("It's filled with lots of beer\nand frozen meals."))
+    release
+    end
+}
+
+script DormReception_Stove {
+    lock
+    msgbox(format("There's half eaten ramen still\nsitting in the pot."))
+    release
+    end
+}
+
+script DormReception_Sink {
+    lock
+    msgbox(format("Piled up high with used dishes."))
+    release
+    end
+}
+
+script DormReception_Bookcase {
+    lock
+    msgbox(format("Very dusty, clearly not used."))
+    release
+    end
+}

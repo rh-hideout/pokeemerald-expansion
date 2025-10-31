@@ -145,7 +145,7 @@ static const struct FontInfo sFontInfos[] =
         .shadowColor = 3,
     },
     [FONT_NORMAL] = {
-        .fontFunction = FontFunc_Normal,
+        .fontFunction = FontFunc_Short,
         .maxLetterWidth = 6,
         .maxLetterHeight = 16,
         .letterSpacing = 0,
@@ -157,7 +157,7 @@ static const struct FontInfo sFontInfos[] =
     [FONT_SHORT] = {
         .fontFunction = FontFunc_Short,
         .maxLetterWidth = 6,
-        .maxLetterHeight = 14,
+        .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 0,
         .fgColor = 2,
@@ -908,8 +908,8 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
             FillWindowPixelRect(
                 textPrinter->printerTemplate.windowId,
                 textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
-                textPrinter->printerTemplate.currentX,
-                textPrinter->printerTemplate.currentY,
+                ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
+                ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
                 8,
                 16);
 
@@ -931,8 +931,8 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 sDownArrowYCoords[subStruct->downArrowYPosIdx],
                 8,
                 16,
-                textPrinter->printerTemplate.currentX,
-                textPrinter->printerTemplate.currentY,
+                ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
+                ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
                 8,
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
@@ -948,8 +948,8 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
     FillWindowPixelRect(
         textPrinter->printerTemplate.windowId,
         textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
-        textPrinter->printerTemplate.currentX,
-        textPrinter->printerTemplate.currentY,
+        ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
+        ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
         8,
         16);
     CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
@@ -1025,7 +1025,12 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
     }
     else
     {
-        FillWindowPixelRect(windowId, (bgColor << 4) | bgColor, x, y, 0x8, 0x10);
+        FillWindowPixelRect(windowId,
+            (bgColor << 4) | bgColor,
+            ((gWindows[windowId].window.width * 8) - 8),
+            ((gWindows[windowId].window.height * 8) - 16),
+            0x8,
+            0x10);
         if (drawArrow == 0)
         {
             switch (gTextFlags.useAlternateDownArrow)
@@ -1039,7 +1044,17 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
                 break;
             }
 
-            BlitBitmapRectToWindow(windowId, arrowTiles, 0, sDownArrowYCoords[*yCoordIndex & 3], 8, 16, x, y - 2, 8, 16);
+            BlitBitmapRectToWindow(
+                windowId,
+                arrowTiles,
+                0,
+                sDownArrowYCoords[*yCoordIndex & 3],
+                8,
+                16,
+                ((gWindows[windowId].window.width * 8) - 8),
+                ((gWindows[windowId].window.height * 8) - 16),
+                8,
+                16);
             CopyWindowToVram(windowId, COPYWIN_GFX);
             *counter = 8;
             ++*yCoordIndex;

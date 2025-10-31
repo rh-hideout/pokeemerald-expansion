@@ -76,6 +76,8 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
+#include "constants/rgb.h"
+
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -1779,6 +1781,12 @@ static bool8 RunFieldCallback(void)
     return TRUE;
 }
 
+static void FieldCB_ForceBlackScreen(void)
+{
+    BlendPalettes(PALETTES_ALL, 16, RGB(0, 0, 0));
+    gFieldCallback = NULL; 
+}
+
 void CB2_NewGame(void)
 {
     FieldClearVBlankHBlankCallbacks();
@@ -1789,13 +1797,15 @@ void CB2_NewGame(void)
     PlayTimeCounter_Start();
     ScriptContext_Init();
     UnlockPlayerFieldControls();
-    gFieldCallback = ExecuteTruckSequence;
     gFieldCallback2 = NULL;
+    gFieldCallback = FieldCB_ForceBlackScreen; // creating black screen
     DoMapLoadLoop(&gMain.state);
     SetFieldVBlankCallback();
     SetMainCallback1(CB1_Overworld);
     SetMainCallback2(CB2_Overworld);
 }
+
+
 
 void CB2_WhiteOut(void)
 {

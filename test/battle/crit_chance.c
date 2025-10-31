@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Critical hits without modifiers occur at different rates by 
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
-        MESSAGE("A critical hit!");
+        MESSAGE("{A critical hit!");
     }
 }
 

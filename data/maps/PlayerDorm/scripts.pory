@@ -1,0 +1,159 @@
+mapscripts PlayerDorm_MapScripts {   
+    MAP_SCRIPT_ON_FRAME_TABLE [
+            VAR_PLAYERDORM_STATE, 0: PlayerDorm_WakeUp 
+    ]
+}
+
+text Tracie {
+    "Tracie"
+}
+
+
+script PlayerDorm_WakeUp {
+    lockall
+    hideobjectat(LOCALID_TRACIE, MAP_PLAYER_DORM)
+    speakername(Unknown)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
+    delay(80)
+    call (Player_Dorm_Door_Knocking)
+    delay(40)
+    msgbox(format("Hello…? {PLAYER}?\p{PLAYER}, are you there?"), MSGBOX_DEFAULT)
+    closemessage
+    fadescreen(FADE_FROM_BLACK)
+    delay(80)
+    call (Player_Dorm_Door_Knocking)
+    delay(20)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_down, emote_exclamation_mark))
+    playse(SE_PIN)
+    waitse
+    delay(60)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(jump_right))
+    playse(SE_LEDGE)
+    waitse
+    waitmovement(0)
+    call (Player_Dorm_Enter_Tracie)
+}
+
+script Player_Dorm_Door_Knocking {
+    playse(SE_NOT_EFFECTIVE)
+    waitse
+    playse(SE_NOT_EFFECTIVE)
+    waitse
+    playse(SE_NOT_EFFECTIVE)
+    waitse
+    return
+}
+
+script Player_Dorm_Enter_Tracie {
+    playse(SE_DOOR)
+    showobjectat(LOCALID_TRACIE, MAP_PLAYER_DORM)
+    applymovement(LOCALID_TRACIE, moves(walk_up))
+    waitmovement(0)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_down))
+    waitmovement(0)
+    playbgm (MUS_LILYCOVE_MUSEUM, TRUE)
+    delay(40)
+    speakername(Tracie)
+    msgbox("Ugh! Seriously?")
+    closemessage
+    applymovement(LOCALID_TRACIE, Player_Dorm_Tracie_Approach)
+    waitmovement(0)
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
+    waitmovement(0)
+    speakername(Tracie)
+    msgbox(format("You're sleeping right now?\nToday of all days?\pCome on! You didn't actually\nforget, did you?\pOur senior orientation is today!\nI can't believe you!\pWe've been dreaming of this day since we were kids!"))
+    closemessage
+    applymovement(LOCALID_TRACIE, moves(walk_right*2))
+    waitmovement(0)
+    speakername(Tracie)
+    msgbox(format("I can’t believe it…\nMe… Tracie!\pSoon to be grad and official Pokémon Trainer!"))
+    closemessage
+    applymovement(LOCALID_TRACIE, moves(walk_fast_left*2))
+    waitmovement(0)
+    speakername(Tracie)
+    msgbox(format("Well, what are we waiting for!?\pGrab Eevee and let's go!\nI'm so excited!"))
+    closemessage
+    applymovement(LOCALID_TRACIE, Player_Dorm_Tracie_Leaves)
+    waitmovement(0)
+    hideobjectat(LOCALID_TRACIE, MAP_PLAYER_DORM)
+    playse(SE_EXIT)
+    removeobject(LOCALID_TRACIE)
+    setflag(FLAG_HIDE_TRACIE)
+    setflag(FLAG_SYS_B_DASH)
+    setvar(VAR_PLAYERDORM_STATE, 1)
+    releaseall
+    end
+}
+
+movement Player_Dorm_Tracie_Approach {
+    walk_up * 3
+    walk_left * 3
+}
+
+movement Player_Dorm_Tracie_Leaves {
+    walk_fast_right * 3
+    walk_fast_down * 3
+}
+
+script Player_Dorm_Take_Eevee {
+    setvar(VAR_PLAYERDORM_STATE, 2)
+    givemon(SPECIES_EEVEE, 10, ITEM_ORAN_BERRY)
+    removeobject(LOCALID_EEVEE)
+    updatefollowingmon
+    playfanfare(MUS_OBTAIN_ITEM)
+    msgbox("{PLAYER} picked up their\npartner, Eevee!")
+    waitfanfare
+    setflag(FLAG_TAKE_EEVEE)
+    setflag(FLAG_SYS_POKEMON_GET)
+    call(Player_Dorm_Nickname_Eevee)
+    release
+    end
+}
+
+script Player_Dorm_Nickname_Eevee {
+    msgbox("Does Eevee have a nickname?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES) {
+        call(Common_EventScript_GetGiftMonPartySlot)
+        call(Common_EventScript_NameReceivedPartyMon)
+    }
+    return
+}
+
+script Player_Dorm_EventScript_CheckPlayersPC {
+    setvar (VAR_0x8004, 1)
+	special(DoPCTurnOnEffect)
+	playse(SE_PC_ON)
+	msgbox("{PLAYER} booted up the laptop.", MSGBOX_DEFAULT) 
+	special (BedroomPC)
+	waitstate
+	releaseall
+	end
+}
+
+script Player_Dorm_Trigger_CantLeave {
+    lock
+    msgbox("You can't leave without Eevee.")
+    closemessage
+    applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_up))
+    waitmovement(0)
+    release
+    end
+}
+
+script Player_Dorm_NintendoSwitch {
+    msgbox(format("It's a Nintendo Switch 2.\pThere are two JoyCons attached to the sides."))
+    release
+    end
+}
+
+script Player_Dorm_Drawers {
+    msgbox(format("The drawers are filled with clothes and school supplies."))
+    release
+    end
+}
+
+script EventScript_New_TV {
+    msgbox(format("Mom would like this show…\n… … …\pTime to go!"))
+    release
+    end
+}

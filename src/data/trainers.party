@@ -73,6 +73,7 @@ Comments can be added as C comment blocks
 /*Comments can also be on a single line*/
 
 
+
 === TRAINER_NONE ===
 Name:
 Class: Pkmn Trainer 1
@@ -80,6 +81,20 @@ Pic: Hiker
 Gender: Male
 Music: Male
 Double Battle: No
+
+=== TRAINER_TRACIE_SOUTH_CAMPUS ===
+Name: Tracie
+Class: Rival
+Pic: Tracie
+Gender: Female
+Music: Female
+Double Battle: No
+AI: Smart Trainer
+Mugshot: Yellow
+
+Buneary
+Level: 10
+IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
 
 === TRAINER_SAWYER_1 ===
 Name: SAWYER

@@ -30,6 +30,7 @@
 #include "constants/field_specials.h"
 #include "constants/field_tasks.h"
 #include "constants/field_weather.h"
+#include "constants/quests.h"
 #include "constants/flags.h"
 #include "constants/follower_npc.h"
 #include "constants/frontier_util.h"
@@ -884,11 +885,11 @@ Common_EventScript_PlayerHandedOverTheItem::
 @ The below and surf.inc could be split into some text/notices.inc
 gText_PokemartSign::
 	.string "“Selected items for your convenience!”\n"
-	.string "POKéMON MART$"
+	.string "Pokémon Mart$"
 
 gText_PokemonCenterSign::
 	.string "“Rejuvenate your tired partners!”\n"
-	.string "POKéMON CENTER$"
+	.string "Pokémon Center$"
 
 gText_MomOrDadMightLikeThisProgram::
 	.string "{STR_VAR_1} might like this program.\n"
@@ -1158,3 +1159,35 @@ EventScript_VsSeekerChargingDone::
 	.include "data/text/save.inc"
 	.include "data/text/birch_speech.inc"
 	.include "data/scripts/dexnav.inc"
+
+	.include "data/maps/SouthCampus/scripts.inc"
+
+	.include "data/maps/PlayerDorm/scripts.inc"
+
+	.include "data/maps/SouthCampus_PokemonCenter_1F/scripts.inc"
+
+	.include "data/maps/SouthCampus_Mart/scripts.inc"
+
+	.include "data/maps/GrayCave_1F/scripts.inc"
+
+	.include "data/maps/DormHallway/scripts.inc"
+
+	.include "data/maps/DormReception/scripts.inc"
+
+	.include "data/maps/TracieDorm/scripts.inc"
+
+	.include "data/maps/Route1New/scripts.inc"
+
+	.include "data/maps/NorthCampus/scripts.inc"
+
+	.include "data/maps/RotcartDorm/scripts.inc"
+
+	.include "data/maps/SouthCampus_Cafeteria/scripts.inc"
+
+	.include "data/maps/PokemonCenter_1F/scripts.inc"
+
+	.include "data/maps/NorthCampus_PokemonMart/scripts.inc"
+
+	.include "data/maps/NorthCampus_MainHall/scripts.inc"
+
+	.include "data/maps/NorthCampus_Classroom1/scripts.inc"

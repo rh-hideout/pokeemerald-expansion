@@ -1,0 +1,21 @@
+mapscripts SouthCampus_Mart_MapScripts
+{
+
+}
+
+script SouthCampus_Mart_Clerk {
+    lock
+    faceplayer
+    msgbox("Welcome!\nHow may I serve you?")
+    waitmessage
+    pokemart(MyMartItems)
+    msgbox("Please come again.")
+    release
+    end
+}
+
+mart MyMartItems {
+    ITEM_POTION
+    ITEM_ANTIDOTE
+    ITEM_PARALYZE_HEAL
+}

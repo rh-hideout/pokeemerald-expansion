@@ -1084,6 +1084,14 @@ bool8 MetatileBehavior_IsClosedSootopolisDoor(u8 metatileBehavior)
         return FALSE;
 }
 
+bool8 MetatileBehavior_NewTelevision(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_TV)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 bool8 MetatileBehavior_IsSkyPillarClosedDoor(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_SKY_PILLAR_CLOSED_DOOR)

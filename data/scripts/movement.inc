@@ -166,3 +166,8 @@ Common_Movement_WalkRightFaster::
 Common_Movement_WalkLeftFaster::
     walk_faster_left
     step_end
+
+Common_Movement_NurseJoyBow::
+	nurse_joy_bow
+	delay_4
+	step_end
