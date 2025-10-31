@@ -3334,7 +3334,7 @@ static void BufferTradeSceneStrings(void)
         if(gSpecialVar_MonBoxId == 0xFF)
             GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, name);
         else
-            GetMonData(&gEnemyParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, name);
+            GetMonData(&gEnemyParty[1], MON_DATA_NICKNAME, name);
         StringCopy_Nickname(gStringVar2, name);
     }
 }
