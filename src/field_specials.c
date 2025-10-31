@@ -3112,7 +3112,7 @@ static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
 
 void BufferBattleFrontierTutorMoveName(void)
 {
-    StringCopy(gStringVar1, GetMoveName(gSpecialVar_0x8005));
+    StringCopy(gStringVar1, GetMoveName(gSpecialVar_ItemId));
 }
 
 static void ShowBattleFrontierTutorWindow(u8 menu, u16 selection)
@@ -4400,14 +4400,14 @@ void CanTeachMoveBoxMon(void)
             gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
             ScriptContext_Enable();
         }
-        else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
-        {
-            gSpecialVar_Result = CANNOT_LEARN_MOVE;
-            ScriptContext_Enable();
-        }
         else if (MonKnowsMove(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) == TRUE)
         {
             gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
             ScriptContext_Enable();
         }
         else
@@ -4432,14 +4432,14 @@ void CanTeachMoveBoxMon(void)
             gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
             ScriptContext_Enable();
         }
-        else if (CanLearnTeachableMove(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
-        {
-            gSpecialVar_Result = CANNOT_LEARN_MOVE;
-            ScriptContext_Enable();
-        }
         else if (BoxMonKnowsMove(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) == TRUE)
         {
             gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
             ScriptContext_Enable();
         }
         else

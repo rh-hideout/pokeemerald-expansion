@@ -12,7 +12,8 @@ BattleFrontier_Lounge1_EventScript_Breeder::
 	end
 
 BattleFrontier_Lounge1_EventScript_ChooseMonToShowBreeder::
-	special ChoosePartyMon
+	fadescreen FADE_TO_BLACK
+	special ChooseBoxMon
 	waitstate
 	goto_if_ne VAR_0x8004, PARTY_NOTHING_CHOSEN, BattleFrontier_Lounge1_EventScript_ShowMonToBreeder
 	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, BattleFrontier_Lounge1_EventScript_CancelMonSelect
