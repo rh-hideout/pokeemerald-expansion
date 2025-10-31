@@ -1511,7 +1511,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
         }
         case PARTY_ACTION_SEND_MON_TO_BOX:
         {
-            u8 partyId = GetPartyIdFromBattleSlot((u8)*slotPtr);
+            u8 partyId = (u8)*slotPtr;
             if (partyId == 0 || ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && partyId == 1))
             {
                 // Can't select if mon is currently on the field
@@ -1538,7 +1538,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
             else
             {
                 PlaySE(SE_SELECT);
-                gSelectedMonPartyId = partyId;
+                gSelectedMonPartyId = GetPartyIdFromBattleSlot(partyId);
                 Task_ClosePartyMenu(taskId);
             }
             break;
