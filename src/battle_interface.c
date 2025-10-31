@@ -2258,10 +2258,11 @@ static u8 CalcBarFilledPixels(s32 maxValue, s32 oldValue, s32 receivedValue, s32
     for (i = 0; i < scale; i++)
         pixelsArray[i] = 0;
 
+    // Safe Div, because 2vs1 battles can have maxValue 0.
     if (maxValue < totalPixels)
-        pixels = (*currValue * totalPixels / maxValue) >> 8;
+        pixels = SAFE_DIV(*currValue * totalPixels, maxValue) >> 8;
     else
-        pixels = *currValue * totalPixels / maxValue;
+        pixels = SAFE_DIV(*currValue * totalPixels, maxValue);
 
     filledPixels = pixels;
 

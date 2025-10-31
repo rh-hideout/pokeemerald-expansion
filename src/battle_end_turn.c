@@ -168,6 +168,17 @@ static bool32 HandleEndTurnVarious(u32 battler)
         gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
     }
 
+    if (gBattleStruct->incrementEchoedVoice)
+    {
+        if (gBattleStruct->echoedVoiceCounter < 4)
+            gBattleStruct->echoedVoiceCounter++;
+        gBattleStruct->incrementEchoedVoice = FALSE;
+    }
+    else
+    {
+        gBattleStruct->echoedVoiceCounter = 0;
+    }
+
     return effect;
 }
 
@@ -300,13 +311,12 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
          && IsBattlerAlive(battler)
          && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-         && CountUsablePartyMons(battler) > 0
          && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
         {
             gBattlerAbility = battler;
             gLastUsedAbility = ability;
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
                 BattleScriptExecute(BattleScript_EmergencyExitEnd2);
             else
                 BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
@@ -797,9 +807,9 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
      && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
     {
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 4;
+            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 4;
         else
-            gBattleStruct->moveDamage[battler] = gBattleMons[battler].maxHP / 8;
+            gBattleStruct->moveDamage[battler] = GetNonDynamaxMaxHP(battler) / 8;
         if (gBattleStruct->moveDamage[battler] == 0)
             gBattleStruct->moveDamage[battler] = 1;
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);

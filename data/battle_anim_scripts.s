@@ -366,6 +366,7 @@ gBattleAnimMove_UTurn::
 gBattleAnimMove_CloseCombat::
 	loadspritegfx ANIM_TAG_IMPACT
 	loadspritegfx ANIM_TAG_HANDS_AND_FEET
+	monbg ANIM_DEF_PARTNER
 	call SetHighSpeedBg
 	createsprite gFistFootRandomPosSpriteTemplate, ANIM_TARGET, 3, 1, 10, 0
 	createvisualtask AnimTask_ShakeMonInPlace, 2, ANIM_TARGET, 2, 0, 7, 1
@@ -440,7 +441,7 @@ gBattleAnimMove_CloseCombat::
 	playsewithpan SE_M_MEGA_KICK2, +63
 	delay 1
 	call UnsetHighSpeedBg
-	clearmonbg ANIM_TARGET
+	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	delay 1
 	setarg 7, 0x1000
@@ -969,6 +970,7 @@ gBattleAnimMove_HeartSwap::
 	loadspritegfx ANIM_TAG_RED_HEART
 	loadspritegfx ANIM_TAG_PINKVIO_ORB
 	loadspritegfx ANIM_TAG_SPARKLE_2
+	monbg ANIM_TARGET
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 3, 0, 8, RGB(31, 24, 26)
 	createvisualtask AnimTask_HeartSwap, 3, ANIM_TARGET
 	createvisualtask AnimTask_BlendMonInAndOut, 5, ANIM_TARGET, RGB_WHITE, 12, 3, 1
@@ -1001,7 +1003,6 @@ gBattleAnimMove_HeartSwap::
 	createsprite gRedHeartCharmSpriteTemplate, ANIM_ATTACKER, 3, 20, 20
 	playsewithpan SE_M_CHARM, SOUND_PAN_ATTACKER
 	waitforvisualfinish
-	clearmonbg ANIM_ATTACKER
 	clearmonbg ANIM_TARGET
 	blendoff
 	end
@@ -1607,7 +1608,6 @@ gBattleAnimMove_DragonRush::
 	createsprite gRockFragmentSpriteTemplate, ANIM_ATTACKER, 2, 0, 0, -30, -18, 8, 2
 	createvisualtask AnimTask_ShakeMon, 2, ANIM_TARGET, 0, 3, 7, 1
 	waitforvisualfinish
-	clearmonbg ANIM_DEF_PARTNER
 	blendoff
 	end
 
@@ -2310,7 +2310,6 @@ gBattleAnimMove_MirrorShot::
 	createvisualtask AnimTask_BlendBattleAnimPalExclude, 5, 5, 2, 10, 0, RGB_WHITEALPHA
 	createvisualtask AnimTask_HorizontalShake, 5, ANIM_TARGET, 5, 14
 	waitforvisualfinish
-	clearmonbg ANIM_ATTACKER
 	blendoff
 	end
 
@@ -3357,6 +3356,7 @@ gBattleAnimMove_AquaJet::
 	call RisingWaterHitEffect
 	waitforvisualfinish
 	createvisualtask AnimTask_ExtremeSpeedMonReappear, 2
+	setarg 0x7, 0x1000
 	waitforvisualfinish
 	visible ANIM_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER

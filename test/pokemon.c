@@ -477,6 +477,24 @@ TEST("Optimised SetMonData")
     EXPECT_FASTER(optimised, vanilla);
 }
 
+//Sanity check for a CalculateMonStats refactor (could be deleted or improved)
+TEST("CalculateMonStats")
+{
+    ZeroPlayerPartyMons();
+
+    RUN_OVERWORLD_SCRIPT(
+        givemon SPECIES_WOBBUFFET, 100, item=ITEM_LEFTOVERS, ball=ITEM_MASTER_BALL, nature=NATURE_BOLD, abilityNum=2, gender=MON_MALE, hpEv=1, atkEv=2, defEv=3, speedEv=4, spAtkEv=5, spDefEv=6, hpIv=7, atkIv=8, defIv=9, speedIv=10, spAtkIv=11, spDefIv=12, move1=MOVE_SCRATCH, move2=MOVE_SPLASH, move3=MOVE_CELEBRATE, move4=MOVE_EXPLOSION, shinyMode=SHINY_MODE_ALWAYS, gmaxFactor=TRUE, teraType=TYPE_FIRE, dmaxLevel=7;
+    );
+
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_MAX_HP), 497);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_ATK), 71);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_DEF), 143);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPEED), 82);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPATK), 83);
+    EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPDEF), 134);
+
+}
+
 TEST("BoxPokemon encryption works")
 {
     u32 raw[20] =
