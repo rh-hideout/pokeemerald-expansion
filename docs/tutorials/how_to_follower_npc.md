@@ -2,7 +2,7 @@
 *Written by Bivurnum*  
 *gif by ghoulslash*
 
-![follower-npc](/docs/tutorials/img/follower_npc/follower-npc.gif)
+![follower-npc](img/follower_npc/follower-npc.gif)
 
 ## Configs
 The configs for follower NPCs can be found in [include/config/follower_npc.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/upcoming/include/config/follower_npc.h).

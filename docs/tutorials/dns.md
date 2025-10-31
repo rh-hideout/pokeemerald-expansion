@@ -23,8 +23,8 @@ When writing map scripts, `fadescreenswapbuffers` should be preferred over `fade
 
 ### Q: How do I make lightbulbs glow?
 
-![Rustboro before adding lamp object events](/docs/tutorials/img/dns/without_lamp.png)
-![Rustboro after adding lamp object events](/docs/tutorials/img/dns/with_lamp.png)
+![Rustboro before adding lamp object events](img/dns/without_lamp.png)
+![Rustboro after adding lamp object events](img/dns/with_lamp.png)
 
 A: Making lamps glow is not part of the tileset itself.  Instead, place certain object events on top of where you desire a glowing effect.
 
@@ -48,7 +48,7 @@ on separate lines to mark those colors as being light-blended, i.e:
 
 During the day time, these color indices appear as normal, but will be blended with either yellow or the 0 index at night. These indices should only be used for things you expect to light up. If you are using [porytiles](https://github.com/grunt-lucas/porytiles/wiki), palette overrides and using slight alterations to a color will aid you in avoiding color conflicts where the wrong index is assigned.
 
-![Rustboro gym after light-blending the windows](/docs/tutorials/img/dns/window_lights.png)
+![Rustboro gym after light-blending the windows](img/dns/window_lights.png)
 
 The windows appear as normal during the day time (blue) and light up in the night. These use the default color.
 

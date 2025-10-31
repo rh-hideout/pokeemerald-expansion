@@ -348,6 +348,108 @@
         "doc",
         "code"
       ]
+    },
+    {
+      "login": "Ddaretrogamer",
+      "name": "Phantonomy",
+      "avatar_url": "https://avatars.githubusercontent.com/u/131238004?v=4",
+      "profile": "https://github.com/Ddaretrogamer",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "Syreldar",
+      "name": "Enrico Drago",
+      "avatar_url": "https://avatars.githubusercontent.com/u/42327659?v=4",
+      "profile": "https://metin2.dev/index.php",
+      "contributions": [
+        "doc",
+        "userTesting"
+      ]
+    },
+    {
+      "login": "Pyredrid",
+      "name": "Pyredrid",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8324784?v=4",
+      "profile": "https://github.com/Pyredrid",
+      "contributions": [
+        "userTesting",
+        "maintenance"
+      ]
+    },
+    {
+      "login": "mvit",
+      "name": "mv",
+      "avatar_url": "https://avatars.githubusercontent.com/u/128863?v=4",
+      "profile": "https://github.com/mvit",
+      "contributions": [
+        "code",
+        "design"
+      ]
+    },
+    {
+      "login": "Mother-Of-Dragons",
+      "name": "Avara",
+      "avatar_url": "https://avatars.githubusercontent.com/u/31101124?v=4",
+      "profile": "https://github.com/Mother-Of-Dragons",
+      "contributions": [
+        "data"
+      ]
+    },
+    {
+      "login": "Doesnty",
+      "name": "Doesnty",
+      "avatar_url": "https://avatars.githubusercontent.com/u/6163136?v=4",
+      "profile": "https://github.com/Doesnty",
+      "contributions": [
+        "design"
+      ]
+    },
+    {
+      "login": "FosterProgramming",
+      "name": "FosterProgramming",
+      "avatar_url": "https://avatars.githubusercontent.com/u/178871164?v=4",
+      "profile": "https://github.com/FosterProgramming",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "Squeetz",
+      "name": "Squeetz",
+      "avatar_url": "https://avatars.githubusercontent.com/u/21145213?v=4",
+      "profile": "https://github.com/Squeetz",
+      "contributions": [
+        "maintenance"
+      ]
+    },
+    {
+      "login": "ghostyboyy97",
+      "name": "ghostyboyy97",
+      "avatar_url": "https://avatars.githubusercontent.com/u/106448956?v=4",
+      "profile": "https://github.com/ghostyboyy97",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "HashtagMarky",
+      "name": "Marky",
+      "avatar_url": "https://avatars.githubusercontent.com/u/143505183?v=4",
+      "profile": "http://hashtagmarky.github.io",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "MandL27",
+      "name": "MandL27",
+      "avatar_url": "https://avatars.githubusercontent.com/u/10366615?v=4",
+      "profile": "https://github.com/MandL27",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

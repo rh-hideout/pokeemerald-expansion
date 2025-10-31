@@ -38,6 +38,7 @@
 #include "constants/items.h"
 #include "constants/event_objects.h"
 #include "party_menu.h"
+#include "list_menu.h"
 
 struct FrontierBrainMon
 {
@@ -93,6 +94,9 @@ static void ShowArenaResultsWindow(void);
 static void ShowPyramidResultsWindow(void);
 static void ShowLinkContestResultsWindow(void);
 static void CopyFrontierBrainText(bool8 playerWonText);
+static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies);
+static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y);
+static void Task_BannedSpeciesWindowInput(u8 taskId);
 
 // battledBit: Flags to change the conversation when the Frontier Brain is encountered for a battle
 // First bit is has battled them before and not won yet, second bit is has battled them and won (obtained a Symbol)
@@ -782,6 +786,58 @@ static const u8 *const sHallFacilityToRecordsText[] =
     [RANKING_HALL_PIKE]          = gText_FrontierFacilityRoomsCleared,
     [RANKING_HALL_PYRAMID]       = gText_FrontierFacilityFloorsCleared,
     [RANKING_HALL_TOWER_LINK]    = gText_FrontierFacilityWinStreak,
+};
+
+
+#define BANNED_SPECIES_SHOWN 6
+
+static const struct ListMenuTemplate sCaughtBannedSpeciesListTemplate =
+{
+    .items = NULL,
+    .isDynamic = TRUE,
+    .moveCursorFunc = ListMenuDefaultCursorMoveFunc,
+    .itemPrintFunc = PrintBannedSpeciesName,
+    .maxShowed = BANNED_SPECIES_SHOWN,
+    .header_X = 0,
+    .item_X = 8,
+    .cursor_X = 0,
+    .upText_Y = 1,
+    .cursorPal = 2,
+    .fillValue = 1,
+    .cursorShadowPal = 3,
+    .lettersSpacing = 1,
+    .itemVerticalPadding = 0,
+    .scrollMultiple = LIST_NO_MULTIPLE_SCROLL,
+    .fontId = FONT_NORMAL,
+    .cursorKind = 0
+};
+
+static const struct WindowTemplate sBannedSpeciesWindowTemplateMain =
+{
+    .bg = 0,
+    .tilemapLeft = 1,
+    .tilemapTop = 1,
+    .width = 12,
+    .height = 2 * BANNED_SPECIES_SHOWN,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
+#define TAG_LIST_ARROWS 5425
+
+static const struct ScrollArrowsTemplate sCaughtBannedSpeciesScrollArrowsTemplate =
+{
+    .firstArrowType = SCROLL_ARROW_UP,
+    .firstX = 56,
+    .firstY = 8,
+    .secondArrowType = SCROLL_ARROW_DOWN,
+    .secondX = 56,
+    .secondY = 104,
+    .fullyUpThreshold = 0,
+    .fullyDownThreshold = 0,
+    .tileTag = TAG_LIST_ARROWS,
+    .palTag = TAG_LIST_ARROWS,
+    .palNum = 0,
 };
 
 // code
@@ -1943,21 +1999,18 @@ static void CheckBattleTypeFlag(void)
         gSpecialVar_Result = FALSE;
 }
 
-#define SPECIES_PER_LINE 3
-
 static void AppendCaughtBannedMonSpeciesName(u16 species, u8 count, s32 numBannedMonsCaught)
 {
-    if (numBannedMonsCaught == count)
+    if (count == 1)
+        ;
+    else if (numBannedMonsCaught == count)
         StringAppend(gStringVar1, gText_SpaceAndSpace);
     else if (numBannedMonsCaught > count)
         StringAppend(gStringVar1, gText_CommaSpace);
-    if ((count % SPECIES_PER_LINE) == 0)
-    {
-        if (count == SPECIES_PER_LINE)
-            StringAppend(gStringVar1, gText_NewLine);
-        else
-            StringAppend(gStringVar1, gText_LineBreak);
-    }
+    if (count == 3)
+        StringAppend(gStringVar1, gText_NewLine2);
+    else if (count == 6)
+        StringAppend(gStringVar1, gText_LineBreak);
     StringAppend(gStringVar1, GetSpeciesName(species));
 }
 
@@ -2053,46 +2106,60 @@ static void CheckPartyIneligibility(void)
 
     if (numEligibleMons < toChoose)
     {
-        u32 i;
+        u32 i, j;
         u32 baseSpecies = 0;
         u32 totalCaughtBanned = 0;
-        u32 caughtBanned[100] = {0};
+        u32 totalPartyBanned = 0;
+        u32 partyBanned[PARTY_SIZE] = {0};
 
         for (i = 0; i < NUM_SPECIES; i++)
         {
-            if (totalCaughtBanned >= ARRAY_COUNT(caughtBanned))
-                break;
             baseSpecies = GET_BASE_SPECIES_ID(i);
-            if (baseSpecies == i)
+            if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
             {
-                if (gSpeciesInfo[baseSpecies].isFrontierBanned)
+                if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
+                    totalCaughtBanned++;
+            }
+        }
+
+        for (i = 0; i < PARTY_SIZE; i++)
+        {
+            u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
+            if (species == SPECIES_EGG || species == SPECIES_NONE)
+                continue;
+            if (gSpeciesInfo[GET_BASE_SPECIES_ID(species)].isFrontierBanned)
+            {
+                bool32 addToList = TRUE;
+                for (j = 0; j < totalPartyBanned; j++)
+                    if (partyBanned[j] == species)
+                        addToList = FALSE;
+                if (addToList)
                 {
-                    if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
-                    {
-                        caughtBanned[totalCaughtBanned] = baseSpecies;
-                        totalCaughtBanned++;
-                    }
+                    partyBanned[totalPartyBanned] = species;
+                    totalPartyBanned++;
                 }
             }
         }
+
         gStringVar1[0] = EOS;
         gSpecialVar_0x8004 = TRUE;
-        for (i = 0; i < totalCaughtBanned; i++)
-            AppendCaughtBannedMonSpeciesName(caughtBanned[i], i+1, totalCaughtBanned);
-
         if (totalCaughtBanned == 0)
         {
-            StringAppend(gStringVar1, gText_Space2);
-            StringAppend(gStringVar1, gText_Are);
+            StringAppend(gStringVar1, gText_FrontierFacilityAreInelegible);
         }
         else
         {
-            if (totalCaughtBanned % SPECIES_PER_LINE == SPECIES_PER_LINE - 1)
-                StringAppend(gStringVar1, gText_LineBreak);
-            else
-                StringAppend(gStringVar1, gText_Space2);
-            StringAppend(gStringVar1, gText_Are2);
+            ConvertIntToDecimalStringN(gStringVar2, totalCaughtBanned, STR_CONV_MODE_LEFT_ALIGN, 3);
+            StringExpandPlaceholders(gStringVar4, gText_FrontierFacilityTotalCaughtSpeciesBanned);
+            StringAppend(gStringVar1, gStringVar4);
         }
+        if (totalPartyBanned > 0)
+        {
+            StringAppend(gStringVar1, gText_FrontierFacilityIncluding);
+            for (i = 0; i < totalPartyBanned; i++)
+                AppendCaughtBannedMonSpeciesName(partyBanned[i], i+1, totalPartyBanned);
+        }
+        gSpecialVar_0x8005 = totalCaughtBanned;
     }
     else
     {
@@ -2101,8 +2168,6 @@ static void CheckPartyIneligibility(void)
     }
     #undef numEligibleMons
 }
-
-#undef SPECIES_PER_LINE
 
 static void ValidateVisitingTrainer(void)
 {
@@ -2649,3 +2714,98 @@ void ClearEnemyPartyAfterChallenge()
         ZeroEnemyPartyMons();
     }
 }
+
+#define tWindowId     data[0]
+#define tMenuTaskId   data[1]
+#define tArrowTaskId  data[2]
+#define tScrollOffset data[3]
+#define tListPointerElemId 4
+
+static u16 *MakeCaughtBannesSpeciesList(u32 totalBannedSpecies)
+{
+    u32 count = 0;
+    u16 *list = AllocZeroed(sizeof(u16) * totalBannedSpecies);
+    for (u32 i = 0; i < NUM_SPECIES; i++)
+    {
+        u32 baseSpecies = GET_BASE_SPECIES_ID(i);
+        if (baseSpecies == i && gSpeciesInfo[baseSpecies].isFrontierBanned)
+        {
+            if (GetSetPokedexFlag(SpeciesToNationalPokedexNum(baseSpecies), FLAG_GET_CAUGHT))
+            {
+                list[count] = i;
+                count++;
+            }
+        }
+    }
+    return list;
+}
+
+static void PrintBannedSpeciesName(u8 windowId, u32 itemId, u8 y)
+{
+    u8 colors[3] = {
+        sCaughtBannedSpeciesListTemplate.fillValue,
+        sCaughtBannedSpeciesListTemplate.cursorPal,
+        sCaughtBannedSpeciesListTemplate.cursorShadowPal
+    };
+    u16 *list = (u16 *) GetWordTaskArg(gSpecialVar_0x8006, tListPointerElemId);
+    AddTextPrinterParameterized4(windowId,
+                                 sCaughtBannedSpeciesListTemplate.fontId,
+                                 sCaughtBannedSpeciesListTemplate.item_X, y,
+                                 sCaughtBannedSpeciesListTemplate.lettersSpacing, 0, colors, TEXT_SKIP_DRAW,
+                                 GetSpeciesName(list[itemId]));
+}
+
+void ShowBattleFrontierCaughtBannedSpecies(void)
+{
+    u8 windowId;
+    struct ListMenuTemplate listTemplate = sCaughtBannedSpeciesListTemplate;
+    u32 totalCaughtBanned = gSpecialVar_0x8005;
+    listTemplate.totalItems = totalCaughtBanned;
+
+    // create window
+    LoadMessageBoxAndBorderGfx();
+    windowId = AddWindow(&sBannedSpeciesWindowTemplateMain);
+    DrawStdWindowFrame(windowId, FALSE);
+    listTemplate.windowId = windowId;
+
+    u16 *listItems = MakeCaughtBannesSpeciesList(totalCaughtBanned);
+    u32 inputTaskId = CreateTask(Task_BannedSpeciesWindowInput, 3);
+    gTasks[inputTaskId].tWindowId = windowId;
+    gSpecialVar_0x8006 = inputTaskId;
+    SetWordTaskArg(inputTaskId, tListPointerElemId, (u32)listItems);
+    u32 menuTaskId = ListMenuInit(&listTemplate, 0, 0);
+    gTasks[inputTaskId].tMenuTaskId = menuTaskId;
+    gTasks[inputTaskId].tArrowTaskId = TASK_NONE;
+    if (listTemplate.totalItems > listTemplate.maxShowed)
+    {
+        gTempScrollArrowTemplate = sCaughtBannedSpeciesScrollArrowsTemplate;
+        gTempScrollArrowTemplate.fullyDownThreshold = listTemplate.totalItems - listTemplate.maxShowed;
+        gTasks[inputTaskId].tArrowTaskId = AddScrollIndicatorArrowPair(&gTempScrollArrowTemplate, (u16 *)&gTasks[inputTaskId].tScrollOffset);
+    }
+
+    // draw everything
+    CopyWindowToVram(windowId, COPYWIN_FULL);
+}
+
+static void Task_BannedSpeciesWindowInput(u8 taskId)
+{
+    ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
+    ListMenuGetScrollAndRow(gTasks[taskId].tMenuTaskId, (u16 *)&gTasks[taskId].tScrollOffset, NULL);
+    if (JOY_NEW(B_BUTTON))
+    {
+        ScriptContext_Enable();
+        if (gTasks[taskId].tArrowTaskId < TASK_NONE)
+            RemoveScrollIndicatorArrowPair(gTasks[taskId].tArrowTaskId);
+        Free((struct ListItem *)(GetWordTaskArg(taskId, tListPointerElemId)));
+        DestroyListMenuTask(gTasks[taskId].tMenuTaskId, NULL, NULL);
+        ClearStdWindowAndFrame(gTasks[taskId].tWindowId, TRUE);
+        RemoveWindow(gTasks[taskId].tWindowId);
+        DestroyTask(taskId);
+    }
+}
+
+#undef tWindowId
+#undef tMenuTaskId
+#undef tArrowTaskId
+#undef tScrollOffset
+#undef tListPointerElemId

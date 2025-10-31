@@ -235,9 +235,9 @@ bool32 HasAtLeastOneBerry(void)
 
 bool32 HasAtLeastOnePokeBall(void)
 {
-    for (u32 ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
+    for (enum PokeBall ballId = BALL_STRANGE; ballId < POKEBALL_COUNT; ballId++)
     {
-        if (CheckBagHasItem(ballId, 1) == TRUE)
+        if (CheckBagHasItem(gBallItemIds[ballId], 1) == TRUE)
             return TRUE;
     }
     return FALSE;
@@ -812,7 +812,7 @@ const u8 *GetItemEffect(u32 itemId)
         return gItemsInfo[SanitizeItemId(itemId)].effect;
 }
 
-u32 GetItemHoldEffect(u32 itemId)
+enum HoldEffect GetItemHoldEffect(u32 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
 }
