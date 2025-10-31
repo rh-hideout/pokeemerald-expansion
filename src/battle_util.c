@@ -5528,7 +5528,6 @@ bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, u32 abilityAtk, u32 ability
     return FALSE;
 }
 
-// TODO: check order of battlerAtk and battlerDef
 bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
 {
     if (CanSetNonVolatileStatus(
