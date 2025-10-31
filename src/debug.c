@@ -1591,12 +1591,6 @@ void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
         case TIME_DAY:
         case TIME_EVENING:
         case TIME_NIGHT:
-        case TIME_LATE:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
-            break;
-        case TIME_DAY:
-        case TIME_EVENING:
-        case TIME_NIGHT:
             StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[timeOfDay]);
             break;
         case TIMES_OF_DAY_COUNT:
@@ -3609,12 +3603,7 @@ static void DebugAction_DestroyFollowerNPC(u8 taskId)
     X(MUS_RG_ENCOUNTER_DEOXYS)      \
     X(MUS_RG_TRAINER_TOWER)         \
     X(MUS_RG_SLOW_PALLET)           \
-    X(MUS_RG_TEACHY_TV_MENU)        \
-    X(CUS_VS_WILD)                  \
-    X(CUS_VS_TRAINER)               \
-    X(CUS_VS_TEAM_GENESIS)          \
-    X(CUS_ANCIENT_PONI_PATH)        \
-    X(CUS_KALOS_POWERPLANT)         
+    X(MUS_RG_TEACHY_TV_MENU)
 
 #define SOUND_LIST_SE               \
     X(SE_USE_ITEM)                  \
@@ -4079,9 +4068,4 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 {
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
-}
-
-static void DebugAction_Util_CheckEWRAMCounters(u8 taskId)
-{
-    Debug_DestroyMenu_Full_Script(taskId, Debug_EventScript_EWRAMCounters);
 }
