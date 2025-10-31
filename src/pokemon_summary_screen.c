@@ -1638,9 +1638,6 @@ static void CloseSummaryScreen(u8 taskId)
             DestroyMonSpritesGfxManager(MON_SPR_GFX_MANAGER_A);
         FreeSummaryScreen();
         DestroyTask(taskId);
-        // This is used in one of the move relearner states. Party relearner should return to party instead of field
-        if (gRelearnMode != RELEARN_MODE_PARTY_MENU)
-            gRelearnMode = RELEARN_MODE_NONE;
     }
 }
 

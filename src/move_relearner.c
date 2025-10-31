@@ -723,15 +723,16 @@ static void DoMoveRelearnerMain(void)
             {
                 switch (gRelearnMode)
                 {
-                default:
                 case RELEARN_MODE_PSS_PAGE_BATTLE_MOVES:
                     ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_BATTLE, gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
                     break;
                 case RELEARN_MODE_PSS_PAGE_CONTEST_MOVES:
                     ShowPokemonSummaryScreen(SUMMARY_MODE_RELEARNER_CONTEST, gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
                     break;
+                default:
+                    ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gPlayerParty, sMoveRelearnerStruct->partyMon, gPlayerPartyCount - 1, gInitialSummaryScreenCallback);
+                    break;
                 }
-                gRelearnMode = RELEARN_MODE_NONE;
             }
             else
             {
