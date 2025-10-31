@@ -14,21 +14,21 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_OLDALE_TOWN",
-      "offset": 0,
-      "direction": "up"
+      "map": "MAP_LITTLEROOT_TOWN",
+      "offset": -16,
+      "direction": "left"
     },
     {
-      "map": "MAP_LITTLEROOT_TOWN",
+      "map": "MAP_OLDALE_TOWN",
       "offset": 0,
-      "direction": "down"
+      "direction": "right"
     }
   ],
   "object_events": [
     {
       "graphics_id": "OBJ_EVENT_GFX_YOUNGSTER",
-      "x": 16,
-      "y": 8,
+      "x": 50,
+      "y": 14,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -42,7 +42,7 @@
       "local_id": "LOCALID_ROUTE101_BIRCH",
       "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
       "x": 9,
-      "y": 13,
+      "y": 21,
       "elevation": 0,
       "movement_type": "MOVEMENT_TYPE_JOG_IN_PLACE_RIGHT",
       "movement_range_x": 0,
@@ -54,8 +54,8 @@
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_BIRCHS_BAG",
-      "x": 7,
-      "y": 14,
+      "x": 2,
+      "y": 17,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -66,23 +66,22 @@
       "flag": "FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG"
     },
     {
-      "local_id": "LOCALID_ROUTE101_ZIGZAGOON",
-      "graphics_id": "OBJ_EVENT_GFX_ZIGZAGOON_1",
-      "x": 10,
-      "y": 13,
-      "elevation": 0,
-      "movement_type": "MOVEMENT_TYPE_JOG_IN_PLACE_LEFT",
-      "movement_range_x": 0,
-      "movement_range_y": 0,
+      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
+      "x": 39,
+      "y": 10,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "0x0",
-      "flag": "FLAG_HIDE_ROUTE_101_ZIGZAGOON"
+      "script": "Route101_EventScript_Boy",
+      "flag": "FLAG_HIDE_ROUTE_101_BOY"
     },
     {
       "graphics_id": "OBJ_EVENT_GFX_PROF_BIRCH",
       "x": 5,
-      "y": 11,
+      "y": 19,
       "elevation": 3,
       "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
       "movement_range_x": 0,
@@ -93,34 +92,26 @@
       "flag": "FLAG_HIDE_ROUTE_101_BIRCH"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_BOY_2",
-      "x": 2,
-      "y": 13,
-      "elevation": 3,
-      "movement_type": "MOVEMENT_TYPE_WANDER_LEFT_AND_RIGHT",
-      "movement_range_x": 1,
-      "movement_range_y": 1,
+      "local_id": "LOCALID_ROUTE101_ZIGZAGOON",
+      "graphics_id": "OBJ_EVENT_GFX_ZIGZAGOON_1",
+      "x": 10,
+      "y": 21,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_JOG_IN_PLACE_LEFT",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
       "trainer_type": "TRAINER_TYPE_NONE",
       "trainer_sight_or_berry_tree_id": "0",
-      "script": "Route101_EventScript_Boy",
-      "flag": "FLAG_HIDE_ROUTE_101_BOY"
+      "script": "0x0",
+      "flag": "FLAG_HIDE_ROUTE_101_ZIGZAGOON"
     }
   ],
   "warp_events": [],
   "coord_events": [
     {
       "type": "trigger",
-      "x": 10,
-      "y": 19,
-      "elevation": 3,
-      "var": "VAR_ROUTE101_STATE",
-      "var_value": "1",
-      "script": "Route101_EventScript_StartBirchRescue"
-    },
-    {
-      "type": "trigger",
-      "x": 11,
-      "y": 19,
+      "x": 1,
+      "y": 18,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "1",
@@ -129,7 +120,16 @@
     {
       "type": "trigger",
       "x": 10,
-      "y": 18,
+      "y": 24,
+      "elevation": 3,
+      "var": "VAR_ROUTE101_STATE",
+      "var_value": "1",
+      "script": "Route101_EventScript_StartBirchRescue"
+    },
+    {
+      "type": "trigger",
+      "x": 9,
+      "y": 23,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -137,8 +137,8 @@
     },
     {
       "type": "trigger",
-      "x": 11,
-      "y": 18,
+      "x": 10,
+      "y": 23,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -147,7 +147,7 @@
     {
       "type": "trigger",
       "x": 6,
-      "y": 16,
+      "y": 24,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -156,7 +156,7 @@
     {
       "type": "trigger",
       "x": 6,
-      "y": 15,
+      "y": 23,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -165,7 +165,7 @@
     {
       "type": "trigger",
       "x": 6,
-      "y": 17,
+      "y": 25,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -174,7 +174,7 @@
     {
       "type": "trigger",
       "x": 6,
-      "y": 18,
+      "y": 26,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -183,7 +183,7 @@
     {
       "type": "trigger",
       "x": 7,
-      "y": 13,
+      "y": 21,
       "elevation": 3,
       "var": "VAR_ROUTE101_STATE",
       "var_value": "2",
@@ -193,8 +193,8 @@
   "bg_events": [
     {
       "type": "sign",
-      "x": 5,
-      "y": 9,
+      "x": 8,
+      "y": 23,
       "elevation": 0,
       "player_facing_dir": "BG_EVENT_PLAYER_FACING_ANY",
       "script": "Route101_EventScript_RouteSign"

@@ -14,11 +14,6 @@
   "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
   "connections": [
     {
-      "map": "MAP_OLDALE_TOWN",
-      "offset": 0,
-      "direction": "down"
-    },
-    {
       "map": "MAP_ROUTE110",
       "offset": -60,
       "direction": "right"
