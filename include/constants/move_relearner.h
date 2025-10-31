@@ -1,9 +1,10 @@
 #ifndef GUARD_CONSTANTS_MOVE_RELEARNER_H
 #define GUARD_CONSTANTS_MOVE_RELEARNER_H
 
-// Max number of relearner moves shown in the list
-// This number was increased to 255 to show more moves
-#define MAX_RELEARNER_MOVES             0xFF
+// Max number of moves shown by the move relearner.
+// Increased from 25 to 60 so Mew can display all TMs/HMs.
+// If you plan on adding more TMs, increase this number too.
+#define MAX_RELEARNER_MOVES 60
 
 // Move Relearner menu change constants
 enum MoveRelearnerStates
