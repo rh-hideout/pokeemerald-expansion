@@ -2037,7 +2037,6 @@ LittlerootTown_EventScript_Maxie::
 # 1034 "data/maps/LittlerootTown/scripts.pory"
 	lockall
 # 1035 "data/maps/LittlerootTown/scripts.pory"
-	speakername Maxie
 # 1036 "data/maps/LittlerootTown/scripts.pory"
 	msgbox LittlerootTown_EventScript_Maxie_Text_0
 # 1037 "data/maps/LittlerootTown/scripts.pory"

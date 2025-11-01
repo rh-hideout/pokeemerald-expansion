@@ -1032,7 +1032,6 @@ text Birch {
 
 script LittlerootTown_EventScript_Maxie {
     lockall
-	speakername(Maxie)
     msgbox(format("Testing the speaker box."))
     releaseall
 }

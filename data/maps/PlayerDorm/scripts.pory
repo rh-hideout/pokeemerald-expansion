@@ -12,11 +12,11 @@ text Tracie {
 script PlayerDorm_WakeUp {
     lockall
     hideobjectat(LOCALID_TRACIE, MAP_PLAYER_DORM)
-    speakername(Unknown)
     applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
     delay(80)
     call (Player_Dorm_Door_Knocking)
     delay(40)
+    setspeaker(SP_NAME_UNKNOWN)
     msgbox(format("Hello…? {PLAYER}?\p{PLAYER}, are you there?"), MSGBOX_DEFAULT)
     closemessage
     fadescreen(FADE_FROM_BLACK)
@@ -53,24 +53,24 @@ script Player_Dorm_Enter_Tracie {
     waitmovement(0)
     playbgm (MUS_LILYCOVE_MUSEUM, TRUE)
     delay(40)
-    speakername(Tracie)
+    setspeaker(SP_NAME_TRACIE)
     msgbox("Ugh! Seriously?")
     closemessage
     applymovement(LOCALID_TRACIE, Player_Dorm_Tracie_Approach)
     waitmovement(0)
     applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
     waitmovement(0)
-    speakername(Tracie)
+    setspeaker(SP_NAME_TRACIE)
     msgbox(format("You're sleeping right now?\nToday of all days?\pCome on! You didn't actually\nforget, did you?\pOur senior orientation is today!\nI can't believe you!\pWe've been dreaming of this day since we were kids!"))
     closemessage
     applymovement(LOCALID_TRACIE, moves(walk_right*2))
     waitmovement(0)
-    speakername(Tracie)
+    setspeaker(SP_NAME_TRACIE)
     msgbox(format("I can’t believe it…\nMe… Tracie!\pSoon to be grad and official Pokémon Trainer!"))
     closemessage
     applymovement(LOCALID_TRACIE, moves(walk_fast_left*2))
     waitmovement(0)
-    speakername(Tracie)
+    setspeaker(SP_NAME_TRACIE)
     msgbox(format("Well, what are we waiting for!?\pGrab Eevee and let's go!\nI'm so excited!"))
     closemessage
     applymovement(LOCALID_TRACIE, Player_Dorm_Tracie_Leaves)

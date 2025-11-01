@@ -12,6 +12,8 @@
 #include "menu.h"
 #include "dynamic_placeholder_text_util.h"
 #include "fonts.h"
+#include "field_name_box.h"
+#include "constants/speaker_names.h"
 
 static u16 RenderText(struct TextPrinter *);
 static u32 RenderFont(struct TextPrinter *);
@@ -908,8 +910,8 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
             FillWindowPixelRect(
                 textPrinter->printerTemplate.windowId,
                 textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
-                ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
-                ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
+                textPrinter->printerTemplate.currentX,
+                textPrinter->printerTemplate.currentY,
                 8,
                 16);
 
@@ -931,8 +933,8 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 sDownArrowYCoords[subStruct->downArrowYPosIdx],
                 8,
                 16,
-                ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
-                ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
+                textPrinter->printerTemplate.currentX,
+                textPrinter->printerTemplate.currentY,
                 8,
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
@@ -948,8 +950,8 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
     FillWindowPixelRect(
         textPrinter->printerTemplate.windowId,
         textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
-        ((gWindows[textPrinter->printerTemplate.windowId].window.width * 8) - 8),
-        ((gWindows[textPrinter->printerTemplate.windowId].window.height * 8) - 16),
+        textPrinter->printerTemplate.currentX,
+        textPrinter->printerTemplate.currentY,
         8,
         16);
     CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
@@ -1025,12 +1027,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
     }
     else
     {
-        FillWindowPixelRect(windowId,
-            (bgColor << 4) | bgColor,
-            ((gWindows[windowId].window.width * 8) - 8),
-            ((gWindows[windowId].window.height * 8) - 16),
-            0x8,
-            0x10);
+        FillWindowPixelRect(windowId, (bgColor << 4) | bgColor, x, y, 0x8, 0x10);
         if (drawArrow == 0)
         {
             switch (gTextFlags.useAlternateDownArrow)
@@ -1044,17 +1041,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
                 break;
             }
 
-            BlitBitmapRectToWindow(
-                windowId,
-                arrowTiles,
-                0,
-                sDownArrowYCoords[*yCoordIndex & 3],
-                8,
-                16,
-                ((gWindows[windowId].window.width * 8) - 8),
-                ((gWindows[windowId].window.height * 8) - 16),
-                8,
-                16);
+            BlitBitmapRectToWindow(windowId, arrowTiles, 0, sDownArrowYCoords[*yCoordIndex & 3], 8, 16, x, y - 2, 8, 16);
             CopyWindowToVram(windowId, COPYWIN_GFX);
             *counter = 8;
             ++*yCoordIndex;
@@ -1228,6 +1215,20 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             case EXT_CTRL_CODE_ENG:
                 textPrinter->japanese = FALSE;
                 return RENDER_REPEAT;
+            case EXT_CTRL_CODE_SPEAKER:
+            {
+                enum SpeakerNames name = *textPrinter->printerTemplate.currentChar++;
+                gSpeakerName = gSpeakerNamesTable[name];
+                TrySpawnNamebox();
+
+                u32 nameboxWinId = GetNameboxWindowId();
+                if (nameboxWinId != WINDOW_NONE)
+                    DrawNamebox(nameboxWinId, TRUE);
+                else // redraw dialogue box as it is affected by SP_NAME_NONE
+                    RedrawDialogueFrame(0, TRUE);
+
+                return RENDER_REPEAT;
+            }
             }
             break;
         case CHAR_PROMPT_CLEAR:
@@ -1418,6 +1419,7 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -1566,6 +1568,7 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
             case EXT_CTRL_CODE_ESCAPE:
             case EXT_CTRL_CODE_SHIFT_RIGHT:
             case EXT_CTRL_CODE_SHIFT_DOWN:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++str;
                 break;
             case EXT_CTRL_CODE_FONT:
@@ -1735,6 +1738,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:

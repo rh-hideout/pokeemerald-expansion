@@ -43,7 +43,6 @@ Route101_EventScript_StartBirchRescue::
 # 22 "data/maps/Route101/scripts.pory"
 	playbgm MUS_HELP, TRUE
 # 23 "data/maps/Route101/scripts.pory"
-	speakername(Unknown)
 # 24 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_HelpMe, MSGBOX_DEFAULT
 # 25 "data/maps/Route101/scripts.pory"
@@ -77,7 +76,6 @@ Route101_EventScript_StartBirchRescue::
 # 39 "data/maps/Route101/scripts.pory"
 	waitmovement 0
 # 40 "data/maps/Route101/scripts.pory"
-	speakername(Birch)
 # 41 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_PleaseHelp, MSGBOX_DEFAULT
 # 42 "data/maps/Route101/scripts.pory"
@@ -95,7 +93,6 @@ Route101_EventScript_PreventExitSouth::
 # 48 "data/maps/Route101/scripts.pory"
 	lockall
 # 49 "data/maps/Route101/scripts.pory"
-	speakername(Birch)
 # 50 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
 # 51 "data/maps/Route101/scripts.pory"
@@ -115,7 +112,6 @@ Route101_EventScript_PreventExitWest::
 # 58 "data/maps/Route101/scripts.pory"
 	lockall
 # 59 "data/maps/Route101/scripts.pory"
-	speakername(Birch)
 # 60 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
 # 61 "data/maps/Route101/scripts.pory"
@@ -135,7 +131,6 @@ Route101_EventScript_PreventExitNorth::
 # 68 "data/maps/Route101/scripts.pory"
 	lockall
 # 69 "data/maps/Route101/scripts.pory"
-	speakername(Birch)
 # 70 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_DontLeaveMe, MSGBOX_DEFAULT
 # 71 "data/maps/Route101/scripts.pory"
@@ -473,7 +468,6 @@ Route101_EventScript_BirchsBag::
 # 237 "data/maps/Route101/scripts.pory"
 	waitmovement 0
 # 238 "data/maps/Route101/scripts.pory"
-	speakername(Birch)
 # 239 "data/maps/Route101/scripts.pory"
 	msgbox Route101_Text_YouSavedMe, MSGBOX_DEFAULT
 # 240 "data/maps/Route101/scripts.pory"

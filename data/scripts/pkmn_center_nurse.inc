@@ -3,7 +3,6 @@ Common_EventScript_PkmnCenterNurse::
 	faceplayer
 	setvar VAR_0x8004, 0
 	specialvar VAR_RESULT, CountPlayerTrainerStars
-	speakername Joy
 	goto_if_eq VAR_RESULT, 4, EventScript_PkmnCenterNurse_GoldCard
 	gettimeofday
 	compare VAR_0x8000, TIME_NIGHT

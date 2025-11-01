@@ -9,7 +9,6 @@ script TracieDorm_Enter {
     lockall
     applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_up*3))
     waitmovement(0)
-    speakername(Tracie)
     msgbox(format("Hmm… Where did I put it…?\nLet's see…\pOh! Found it!\nMy {COLOR BLUE}Quest Log{COLOR DARK_GRAY}!"))
     closemessage
     playfanfare(MUS_OBTAIN_ITEM)
@@ -18,13 +17,11 @@ script TracieDorm_Enter {
     closemessage
     applymovement(LOCALID_TRACIE, moves(walk_left, walk_down))
     waitmovement(0)
-    speakername(Tracie)
     msgbox(format("Here {PLAYER}, I actually have a second one.\pI'd like you to have it!"))
     closemessage
     playfanfare(MUS_OBTAIN_ITEM)
     msgbox(format("{PLAYER} obtained a {COLOR BLUE}Quest Log{COLOR DARK_GRAY} from Tracie!"))
     waitfanfare
-    speakername(Tracie)
     msgbox(format("You can keep track of anything you've been asked to do!\pJust press {START_BUTTON} and select {COLOR BLUE}Quest Log {COLOR DARK_GRAY}\nto view your requests!\pYou can press {R_BUTTON} to filter them too.\pWhy don't we test it out and add one for orientation!"))
     closemessage
     setflag (FLAG_SYS_QUEST_MENU_GET) 
@@ -33,7 +30,6 @@ script TracieDorm_Enter {
     msgbox(format("{COLOR BLUE}Senior Year{COLOR DARK_GRAY} has been added to your {COLOR BLUE}Quest Log{COLOR DARK_GRAY}."))
     waitse
     openquestmenu
-    speakername(Tracie)
     msgbox(format("Easy! Right?\pAnyways, we can't lag too far behind Rotcart.\pOrientation is starting soon, after all.\p Lead the way!\nI'll follow."))
     closemessage
     setfollowernpc(LOCALID_TRACIE, FNPC_ALL, TracieDorm_TracieFollowDialogue, 0)
@@ -44,7 +40,6 @@ script TracieDorm_Enter {
 
 script TracieDorm_TracieFollowDialogue {
     faceplayer
-    speakername(Tracie)
     msgbox(format("Hehehe… Senior year!\nLet's go! Let's go!"))
     closemessage
 }

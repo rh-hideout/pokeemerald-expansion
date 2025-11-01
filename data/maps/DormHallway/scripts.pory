@@ -6,13 +6,11 @@ mapscripts DormHallway_MapScripts {
 
 script DormHallway_LeaveDorm {
     lockall
-    speakername(Tracie)
     msgbox(format("Oh! Before I forget!\pI need to stop at my room to grab some things."))
     closemessage
     call(DormHallway_EnterRotcart)
     applymovement(OBJ_EVENT_ID_PLAYER, moves(face_down))
     waitmovement(0)
-    speakername(Tracie)
     msgbox(format("Ugh! Rotcart…\nWhat an asshole!\pI know he's one of the strongest Trainers in this school, but does he really have to be such a dick?\pAt least you're able to give him a run for his money…\pHe does have a point though, we need to get going!\pFollow me to my room!"))
     closemessage
     applymovement(OBJ_EVENT_ID_PLAYER, moves(face_right))
@@ -35,7 +33,6 @@ script DormHallway_EnterRotcart {
     applymovement(OBJ_EVENT_ID_PLAYER, moves(face_left))
     applymovement(LOCALID_TRACIE, moves(face_left))
     waitmovement(0)
-    speakername(Unknown)
     msgbox("… … …\p… … …\n… … …\pMove.")
     closemessage
     applymovement(OBJ_EVENT_ID_PLAYER, moves(walk_down, face_up))

@@ -15,15 +15,15 @@ PlayerDorm_WakeUp::
 # 14 "data/maps/PlayerDorm/scripts.pory"
 	hideobjectat LOCALID_TRACIE, MAP_PLAYER_DORM
 # 15 "data/maps/PlayerDorm/scripts.pory"
-	speakername Unknown
-# 16 "data/maps/PlayerDorm/scripts.pory"
 	applymovement OBJ_EVENT_ID_PLAYER, PlayerDorm_WakeUp_Movement_0
-# 17 "data/maps/PlayerDorm/scripts.pory"
+# 16 "data/maps/PlayerDorm/scripts.pory"
 	delay 80
-# 18 "data/maps/PlayerDorm/scripts.pory"
+# 17 "data/maps/PlayerDorm/scripts.pory"
 	call Player_Dorm_Door_Knocking
-# 19 "data/maps/PlayerDorm/scripts.pory"
+# 18 "data/maps/PlayerDorm/scripts.pory"
 	delay 40
+# 19 "data/maps/PlayerDorm/scripts.pory"
+	setspeaker SP_NAME_UNKNOWN
 # 20 "data/maps/PlayerDorm/scripts.pory"
 	msgbox PlayerDorm_WakeUp_Text_0, MSGBOX_DEFAULT
 # 21 "data/maps/PlayerDorm/scripts.pory"
@@ -91,7 +91,7 @@ Player_Dorm_Enter_Tracie::
 # 55 "data/maps/PlayerDorm/scripts.pory"
 	delay 40
 # 56 "data/maps/PlayerDorm/scripts.pory"
-	speakername Tracie
+	setspeaker SP_NAME_TRACIE
 # 57 "data/maps/PlayerDorm/scripts.pory"
 	msgbox Player_Dorm_Enter_Tracie_Text_0
 # 58 "data/maps/PlayerDorm/scripts.pory"
@@ -105,7 +105,7 @@ Player_Dorm_Enter_Tracie::
 # 62 "data/maps/PlayerDorm/scripts.pory"
 	waitmovement 0
 # 63 "data/maps/PlayerDorm/scripts.pory"
-	speakername Tracie
+	setspeaker SP_NAME_TRACIE
 # 64 "data/maps/PlayerDorm/scripts.pory"
 	msgbox Player_Dorm_Enter_Tracie_Text_1
 # 65 "data/maps/PlayerDorm/scripts.pory"
@@ -115,7 +115,7 @@ Player_Dorm_Enter_Tracie::
 # 67 "data/maps/PlayerDorm/scripts.pory"
 	waitmovement 0
 # 68 "data/maps/PlayerDorm/scripts.pory"
-	speakername Tracie
+	setspeaker SP_NAME_TRACIE
 # 69 "data/maps/PlayerDorm/scripts.pory"
 	msgbox Player_Dorm_Enter_Tracie_Text_2
 # 70 "data/maps/PlayerDorm/scripts.pory"
@@ -125,7 +125,7 @@ Player_Dorm_Enter_Tracie::
 # 72 "data/maps/PlayerDorm/scripts.pory"
 	waitmovement 0
 # 73 "data/maps/PlayerDorm/scripts.pory"
-	speakername Tracie
+	setspeaker SP_NAME_TRACIE
 # 74 "data/maps/PlayerDorm/scripts.pory"
 	msgbox Player_Dorm_Enter_Tracie_Text_3
 # 75 "data/maps/PlayerDorm/scripts.pory"
@@ -284,9 +284,9 @@ EventScript_New_TV::
 	end
 
 
-# 16 "data/maps/PlayerDorm/scripts.pory"
+# 15 "data/maps/PlayerDorm/scripts.pory"
 PlayerDorm_WakeUp_Movement_0:
-# 16 "data/maps/PlayerDorm/scripts.pory"
+# 15 "data/maps/PlayerDorm/scripts.pory"
 	face_left
 	step_end
 
