@@ -230,6 +230,9 @@ bool8 UpdateVsSeekerStepCounter(void)
 
     if (!I_VS_SEEKER_CHARGING) return FALSE;
 
+    // This condition helps in case your save file is switching between vs seeker and matchcall
+    if (gSaveBlock1Ptr->trainerRematchStepCounter > VSSEEKER_RECHARGE_STEPS && gSaveBlock1Ptr->trainerRematchStepCounter <= 0xFF)
+        gSaveBlock1Ptr->trainerRematchStepCounter = 0;
     if (CheckBagHasItem(ITEM_VS_SEEKER, 1))
     {
         if ((gSaveBlock1Ptr->trainerRematchStepCounter & 0xFF) < VSSEEKER_RECHARGE_STEPS)
@@ -376,8 +379,11 @@ static void GatherNearbyTrainerInfo(void)
         if (templates[objectEventIdx].trainerType != TRAINER_TYPE_NORMAL && templates[objectEventIdx].trainerType != TRAINER_TYPE_BURIED)
             continue;
 
+        u16 trainerIdx = GetTrainerFlagFromScript(templates[objectEventIdx].script);
+        if (trainerIdx == TRAINER_NONE)
+            continue;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].script = templates[objectEventIdx].script;
-        sVsSeeker->trainerInfo[vsSeekerObjectIdx].trainerIdx = GetTrainerFlagFromScript(templates[objectEventIdx].script);
+        sVsSeeker->trainerInfo[vsSeekerObjectIdx].trainerIdx = trainerIdx;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
         TryGetObjectEventIdByLocalIdAndMap(templates[objectEventIdx].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].objectEventId = objectEventId;
@@ -707,9 +713,31 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
 {
     // The trainer flag is located 3 bytes (command + flags + localIdA) from the script pointer, assuming the trainerbattle command is first in the script.
     // Because scripts are unaligned, and because the ARM processor requires shorts to be 16-bit aligned, this function needs to perform explicit bitwise operations to get the correct flag.
-    script += 3;
-    u16 trainerFlag = script[0];
-    trainerFlag |= script[1] << 8;
+    u16 trainerFlag;
+    if (script[0] == 0x5c)
+    {
+        script += 3;
+        trainerFlag = script[0];
+        trainerFlag |= script[1] << 8;
+    }
+    else if (script[0] == 0x23)
+    {
+        u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
+        if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
+        {
+            script += 5;
+            trainerFlag = script[0];
+            trainerFlag |= script[1] << 8;
+        }
+        else
+        {
+            trainerFlag = TRAINER_NONE;
+        }
+    }
+    else
+    {
+        trainerFlag = TRAINER_NONE;
+    }
     return trainerFlag;
 }
 
@@ -787,6 +815,14 @@ static u8 GetCurVsSeekerResponse(s32 vsSeekerIdx, u16 trainerIdx)
     return VSSEEKER_SINGLE_RESP_RAND;
 }
 #endif //FREE_MATCH_CALL
+
+void NativeVsSeekerRematchId(struct ScriptContext *ctx)
+{
+    u16 trainerId = ScriptReadHalfword(ctx);
+    if (ctx->breakOnTrainerBattle && HasTrainerBeenFought(trainerId) && !ShouldTryRematchBattleForTrainerId(trainerId))
+        StopScript(ctx);
+}
+
 
 static void StartAllRespondantIdleMovements(void)
 {
