@@ -1517,7 +1517,7 @@ static u8 GetEncounterLevelFromMapData(u16 species, enum EncounterType environme
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     enum TimeOfDay timeOfDay;
-    u8 min = 100;
+    u8 min = MAX_LEVEL;
     u8 max = 0;
     u8 i;
 
