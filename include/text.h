@@ -3,6 +3,12 @@
 
 #include "constants/characters.h"
 
+// This is to prevent the user from having a higher text speed modifier than the sTextSpeedModifiers array in src/text.c can handle. You can increase this higher (but, like, why would you?) by increasing the appropriate variables and arguments where the text speed modifier is used; most of them are for DrawDownArrow().
+STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 255
+              && TEXT_SPEED_MEDIUM_MODIFIER  <= 255
+              && TEXT_SPEED_FAST_MODIFIER    <= 255
+              && TEXT_SPEED_INSTANT_MODIFIER <= 255, TextSpeedModifiersCantGoPast255)
+
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
 #define TEXT_SKIP_DRAW 0xFF
@@ -59,7 +65,7 @@ struct TextPrinterSubStruct
     u8 fontId:4;  // 0x14
     bool8 hasPrintBeenSpedUp:1;
     u8 unk:3;
-    u8 downArrowDelay:5;
+    u16 downArrowDelay:13;
     u8 downArrowYPosIdx:2;
     bool8 hasFontIdBeenSet:1;
     u8 autoScrollDelay;
@@ -177,5 +183,11 @@ u32 GetGlyphWidth_Braille(u16 glyphId, bool32 isJapanese);
 u32 GetFontIdToFit(const u8 *string, u32 widestFontId, u32 letterSpacing, u32 widthPx);
 u8 *PrependFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
+
+// player text speed
+u32 GetPlayerTextSpeed(void);
+u32 GetPlayerTextSpeedDelay(void);
+u32 GetPlayerTextSpeedModifier(void);
+bool32 IsPlayerTextSpeedInstant(void);
 
 #endif // GUARD_TEXT_H
