@@ -1,0 +1,36 @@
+
+
+#  Settings
+P_SUMMARY_SCREEN_MOVE_RELEARNER  = true # If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
+P_SUMMARY_SCREEN_NATURE_COLORS   = true # If TRUE, nature-based stat boosts and reductions will be red and blue in the summary screen.
+P_SUMMARY_MOVE_RELEARNER_FULL_PP = true # If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
+P_SUMMARY_SCREEN_RENAME          = true # If TRUE, an option to change Pokémon nicknames replaces the cancel prompt on the summary screen info page.
+P_SUMMARY_SCREEN_IV_EV_INFO      = false # If TRUE, will allow player to cycle through the Stats, IVs, and EVs in the summary screen skills page.
+P_SUMMARY_SCREEN_IV_EV_BOX_ONLY  = false # If TRUE, will allow player to cycle through the Stats, IVs, and EVs in the summary screen skills page, but only in the PC storage box.
+P_SUMMARY_SCREEN_IV_HYPERTRAIN   = true # If TRUE, stats that have been hyper trained will show as 31/S when viewing them in the summary screen
+P_SUMMARY_SCREEN_IV_EV_TILESET   = false # If TRUE, loads an alternate tileset to allow changing the "STATS" label in the summary screen skills page. Note: if it's still loading the alternate tileset after changing this and recompiling, you may need a `make clean` before compilation.
+P_SUMMARY_SCREEN_IV_EV_VALUES    = false # If TRUE, will show the actual IV value instead of the letter grade.
+
+
+#  LETTER GRADE GUIDE:
+
+
+#      F = 0
+#      D = 1 - 15
+#      C = 16 - 25
+#      B = 26 - 29
+#      A = 30
+#      S = 31
+
+
+#  Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
+
+
+P_SUMMARY_SCREEN_IV_ONLY         = false # If TRUE, will only show IV info in the summary screen.
+P_SUMMARY_SCREEN_EV_ONLY         = false # If TRUE, will only show EV info in the summary screen.
+
+
+#  Flags
+P_FLAG_SUMMARY_SCREEN_IV_EV_INFO = 0 # If this flag is set, will allow player to cycle through the Stats, IVs, and EVs in the summary screen skills page. Note: if P_SUMMARY_SCREEN_IV_EV_INFO is TRUE, this flag does nothing.
+
+

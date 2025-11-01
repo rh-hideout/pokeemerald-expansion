@@ -1,0 +1,23 @@
+
+
+#  SaveBlock1 configs
+FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK1    = false # Free up unused Pokédex seen flags (52 bytes).
+FREE_TRAINER_HILL                   = false # Frees up Trainer Hill data (28 bytes).
+FREE_MYSTERY_EVENT_BUFFERS          = false # Frees up ramScript (1104 bytes).
+FREE_MATCH_CALL                     = false # Frees up match call and rematch / VS Seeker data. (104 bytes).
+FREE_UNION_ROOM_CHAT                = false # Frees up union room chat (212 bytes).
+FREE_ENIGMA_BERRY                   = false # Frees up E-Reader Enigma Berry data (52 bytes).
+FREE_LINK_BATTLE_RECORDS            = false # Frees up link battle record data (88 bytes).
+FREE_MYSTERY_GIFT                   = false # Frees up Mystery Gift data (876 bytes).
+#  SaveBlock1 total: 2516 bytes
+#  SaveBlock2 configs
+FREE_BATTLE_TOWER_E_READER          = false # Frees up Battle Tower E-Reader data (188 bytes).
+FREE_POKEMON_JUMP                   = false # Frees up Pokémon Jump data (16 bytes).
+FREE_RECORD_MIXING_HALL_RECORDS     = false # Frees up hall records for record mixing (1032 bytes).
+FREE_EXTRA_SEEN_FLAGS_SAVEBLOCK2    = false # Free up unused Pokédex seen flags (108 bytes).
+#  SaveBlock2 total: 1274 bytes
+
+
+#  Grand Total: 3790
+
+
