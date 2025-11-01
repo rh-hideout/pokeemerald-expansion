@@ -1,6 +1,7 @@
 #ifndef GUARD_POKEDEX_AREA_REGION_MAP_H
 #define GUARD_POKEDEX_AREA_REGION_MAP_H
 
+
 struct PokedexAreaMapTemplate
 {
     u32 bg:2;

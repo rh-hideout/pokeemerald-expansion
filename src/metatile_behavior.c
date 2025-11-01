@@ -36,7 +36,7 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_ICE]                                = TILE_FLAG_UNUSED,
     [MB_SAND]                               = TILE_FLAG_UNUSED,
     [MB_SEAWEED]                            = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE | TILE_FLAG_HAS_ENCOUNTERS,
-    [MB_UNUSED_23]                          = TILE_FLAG_UNUSED,
+    [MB_STRENGTH_BUTTON]                    = TILE_FLAG_UNUSED,
     [MB_ASHGRASS]                           = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_FOOTPRINTS]                         = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
     [MB_THIN_ICE]                           = TILE_FLAG_UNUSED,
@@ -134,6 +134,9 @@ static const u8 sTileBitAttributes[NUM_METATILE_BEHAVIORS] =
     [MB_SIDEWAYS_STAIRS_LEFT_SIDE_BOTTOM]   = TILE_FLAG_UNUSED,
     [MB_ROCK_STAIRS]                        = TILE_FLAG_UNUSED,
     [MB_ROCK_CLIMB]                         = TILE_FLAG_UNUSED,
+    [MB_CYCLING_ROAD_PULL_DOWN_GRASS]       = TILE_FLAG_UNUSED | TILE_FLAG_HAS_ENCOUNTERS,
+    [MB_FAST_WATER]                         = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
+    [MB_CYCLING_ROAD_WATER]                 = TILE_FLAG_UNUSED | TILE_FLAG_SURFABLE,
 };
 
 bool8 MetatileBehavior_IsATile(u8 metatileBehavior)
@@ -183,7 +186,7 @@ bool8 MetatileBehavior_IsJumpSouth(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsPokeGrass(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS)
+    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_LONG_GRASS || metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS)
         return TRUE;
     else
         return FALSE;
@@ -353,7 +356,12 @@ bool8 MetatileBehavior_IsForcedMovementTile(u8 metatileBehavior)
      || metatileBehavior == MB_WATERFALL
      || metatileBehavior == MB_ICE
      || metatileBehavior == MB_SECRET_BASE_JUMP_MAT
-     || metatileBehavior == MB_SECRET_BASE_SPIN_MAT)
+     || metatileBehavior == MB_SECRET_BASE_SPIN_MAT
+     || metatileBehavior == MB_SPIN_RIGHT
+     || metatileBehavior == MB_SPIN_LEFT
+     || metatileBehavior == MB_SPIN_UP
+     || metatileBehavior == MB_SPIN_DOWN
+    )
         return TRUE;
     else
         return FALSE;
@@ -737,7 +745,7 @@ bool8 MetatileBehavior_IsPuddle(u8 metatileBehavior)
 
 bool8 MetatileBehavior_IsTallGrass(u8 metatileBehavior)
 {
-    if (metatileBehavior == MB_TALL_GRASS)
+    if (metatileBehavior == MB_TALL_GRASS || metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS)
         return TRUE;
     else
         return FALSE;
@@ -1184,6 +1192,15 @@ bool8 MetatileBehavior_IsSurfableFishableWater(u8 metatileBehavior)
         return FALSE;
 }
 
+// Water that's too fast to surf on
+bool8 MetatileBehavior_IsFastWater(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_FAST_WATER)
+        return TRUE;
+    else
+        return FALSE;
+}
+
 bool8 MetatileBehavior_IsMtPyreHole(u8 metatileBehavior)
 {
     if (metatileBehavior == MB_MT_PYRE_HOLE)
@@ -1206,6 +1223,19 @@ bool8 MetatileBehavior_IsCrackedFloor(u8 metatileBehavior)
         return TRUE;
     else
         return FALSE;
+}
+
+bool32 MetatileBehavior_IsCyclingRoadPullDownTile(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN || metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsCyclingRoadPullDownTileGrass(u8 metatileBehavior)
+{
+    return metatileBehavior == MB_CYCLING_ROAD_PULL_DOWN_GRASS;
 }
 
 bool8 MetatileBehavior_IsMuddySlope(u8 metatileBehavior)
@@ -1550,4 +1580,59 @@ bool8 MetatileBehavior_IsRockClimbable(u8 metatileBehavior)
         return TRUE;
     else
         return FALSE;
+}
+
+bool8 MetatileBehavior_IsSpinRight(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SPIN_RIGHT)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSpinLeft(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SPIN_LEFT)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSpinUp(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SPIN_UP)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSpinDown(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_SPIN_DOWN)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsStopSpinning(u8 metatileBehavior)
+{
+    if (metatileBehavior == MB_STOP_SPINNING)
+        return TRUE;
+    else
+        return FALSE;
+}
+
+bool8 MetatileBehavior_IsSpinTile(u8 metatileBehavior)
+{
+    bool8 result = FALSE;
+
+    if (metatileBehavior == MB_SPIN_RIGHT
+     || metatileBehavior == MB_SPIN_LEFT
+     || metatileBehavior == MB_SPIN_UP
+     || metatileBehavior == MB_SPIN_DOWN)
+        result = TRUE;
+    else
+        result = FALSE;
+
+    return result;
 }
