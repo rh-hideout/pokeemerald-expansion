@@ -5728,10 +5728,18 @@ static void TryEvolvePokemon(void)
             if (species != SPECIES_NONE)
             {
                 FreeAllWindowBuffers();
-                gBattleMainFunc = WaitForEvoSceneToFinish;
                 GetEvolutionTargetSpecies(&gPlayerParty[i], mode, evolutionItemArg, NULL, &canStopEvo, DO_EVO);
-                EvolutionScene(&gPlayerParty[i], species, canStopEvo, i);
-                return;
+                if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_TANDEMAUS
+                 && !gBattleStruct->partyState[B_SIDE_PLAYER][i].sentOut)
+                {
+                    DoInvisibleEvolution(&gPlayerParty[i], species);
+                }
+                else
+                {
+                    gBattleMainFunc = WaitForEvoSceneToFinish;
+                    EvolutionScene(&gPlayerParty[i], species, canStopEvo, i);
+                    return;
+                }
             }
         }
     }
