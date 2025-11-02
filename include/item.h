@@ -231,7 +231,7 @@ bool32 RemovePyramidBagItem(u16 itemId, u16 count);
 const u8 *GetItemName(u16 itemId);
 u32 GetItemPrice(u16 itemId);
 const u8 *GetItemEffect(u32 itemId);
-u32 GetItemHoldEffect(u32 itemId);
+enum HoldEffect GetItemHoldEffect(u32 itemId);
 u32 GetItemHoldEffectParam(u32 itemId);
 const u8 *GetItemDescription(u16 itemId);
 u8 GetItemImportance(u16 itemId);
@@ -245,6 +245,6 @@ u32 GetItemFlingPower(u32 itemId);
 u32 GetItemStatus1Mask(u16 itemId);
 bool32 ItemHasVolatileFlag(u16 itemId, enum Volatile volatile);
 u32 GetItemSellPrice(u32 itemId);
-bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect);
+bool32 IsHoldEffectChoice(enum HoldEffect holdEffect);
 
 #endif // GUARD_ITEM_H

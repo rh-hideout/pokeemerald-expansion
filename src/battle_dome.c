@@ -2136,9 +2136,8 @@ static void InitDomeTrainers(void)
 static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, int *stats)
 {
     int evs[NUM_STATS];
-    int i;
 
-    for (i = 0; i < NUM_STATS; i++)
+    for (enum Stat i = 0; i < NUM_STATS; i++)
     {
         if (fmon->ev != NULL)
             evs[i] = fmon->ev[i];
@@ -2393,7 +2392,7 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 
 static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
 {
-    int defType1, defType2, moveType;
+    enum Type defType1, defType2, moveType;
     int typePower = TYPE_x1;
     enum Ability defAbility;
 
