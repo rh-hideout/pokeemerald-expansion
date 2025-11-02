@@ -36,13 +36,15 @@ void ObjectEventInteractionPickApricornTree(void)
 {
     u32 id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
     u32 apricorn = GetApricornTypeByApricornTreeId(id);
+    u32 apricornItemID = ApricornTypeToItemId(apricorn);
 
-    gSpecialVar_0x8006 = CheckBagHasSpace(ApricornTypeToItemId(apricorn), GetApricornCountByApricornTreeId(id));
+    gSpecialVar_0x8006 = CheckBagHasSpace(apricornItemID, GetApricornCountByApricornTreeId(id));
     if (gSpecialVar_0x8006)
     {
         AddBagItem(ApricornTypeToItemId(apricorn), GetApricornCountByApricornTreeId(id));
         SetApricornTreePicked(id);
     }
+    gSpecialVar_Result = GetItemPocket(apricornItemID);
 }
 
 u8 GetApricornTypeByApricornTreeId(u32 id)
