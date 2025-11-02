@@ -38,4 +38,15 @@
 // Vs. Seeker
 #define I_VS_SEEKER_CHARGING        0     // If this flag is assigned, the Vs Seeker functionality will be enabled. When the player has the Vs. Seeker, Match Call rematch functions will stop working.
 
+// ORAS Dowsing Machine
+#define I_ORAS_DOWSING_FLAG         0           // Replace 0 with an unused flag to enable the Dowsing Machine mechanic from ORAS.
+#define I_ORAS_DOWSING_SOUNDS       TRUE        // If TRUE, the Dowsing Machine will make sounds based on how far away the hidden item is.
+#define I_ORAS_DOWSING_COLOR_PAL    15          // The color within the palette that will change based on proximity to the item.
+// Color values for the ORAS dowsing distances/anims
+#define I_ORAS_DOWSING_COLOR_NONE   RGB_GRAY
+#define I_ORAS_DOWSING_COLOR_SLOW   RGB2GBA(56, 120, 255)
+#define I_ORAS_DOWSING_COLOR_NORMAL RGB2GBA(24, 216, 24)
+#define I_ORAS_DOWSING_COLOR_FAST   RGB2GBA(255, 255, 40)
+#define I_ORAS_DOWSING_COLOR_FASTER RGB_RED
+
 #endif // GUARD_CONFIG_ITEM_H

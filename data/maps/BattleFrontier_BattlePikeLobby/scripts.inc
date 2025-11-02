@@ -172,10 +172,14 @@ BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_CancelChallengeSaveFailed::
@@ -315,7 +319,9 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50:
 	.string "of Level 50 or less to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "EGGS{STR_VAR_1}.$"
+
+BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd:
 	.string "Please come see me when\n"
 	.string "you are ready…$"
 
@@ -327,9 +333,7 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "POKéMON to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
-	.string "Please come see me when\n"
-	.string "you are ready…$"
+	.string "EGGS{STR_VAR_1}.$"
 
 BattleFrontier_BattlePikeLobby_Text_PleaseChooseThreeMons:
 	.string "Please choose the three POKéMON\n"

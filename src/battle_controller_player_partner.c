@@ -31,6 +31,8 @@
 #include "constants/songs.h"
 #include "constants/party_menu.h"
 #include "constants/trainers.h"
+#include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void PlayerPartnerHandleDrawTrainerPic(u32 battler);
 static void PlayerPartnerHandleTrainerSlide(u32 battler);
@@ -217,7 +219,13 @@ static void PlayerPartnerHandleDrawTrainerPic(u32 battler)
 
     enum DifficultyLevel difficulty = GetBattlePartnerDifficultyLevel(gPartnerTrainerId);
 
-    if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
+    if (IsMultibattleTest())
+    {
+        trainerPicId = TRAINER_BACK_PIC_STEVEN;
+        xPos = 90;
+        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+    }
+    else if (gPartnerTrainerId > TRAINER_PARTNER(PARTNER_NONE))
     {
         trainerPicId = PlayerPartnerGetTrainerBackPicId(difficulty);
         xPos = 90;
@@ -322,15 +330,15 @@ static void PlayerPartnerHandleChoosePokemon(u32 battler)
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
     else // Mon to switch out has been already chosen.
     {
         chosenMonId = gBattleStruct->monToSwitchIntoId[battler];
         gBattleStruct->AI_monToSwitchIntoId[battler] = PARTY_SIZE;
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
-        GetBattlerPartyState(battler)->sentOut = TRUE;
     }
+    if (TESTING)
+        TestRunner_Battle_CheckSwitch(battler, chosenMonId);
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
 }

@@ -201,3 +201,21 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on
         NOT ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }
+
+SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset")
+{
+    GIVEN {
+        PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { MOVE(player, MOVE_RAIN_DANCE); }
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+    }
+}

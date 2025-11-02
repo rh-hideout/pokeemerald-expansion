@@ -94,6 +94,12 @@ u32 GetNameboxWindowId(void)
     return sNameboxWindowId;
 }
 
+void ResetNameboxData(void)
+{
+    sNameboxWindowId = WINDOW_NONE;
+    gSpeakerName = NULL;
+}
+
 void DestroyNamebox(void)
 {
     if (sNameboxWindowId == WINDOW_NONE)
