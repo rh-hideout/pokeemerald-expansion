@@ -160,8 +160,8 @@ SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a b
         PLAYER(SPECIES_CALYREX) { Item(ITEM_MENTAL_HERB); Ability(ABILITY_UNNERVE); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
     } WHEN {
-        TURN { MOVE(player, MOVE_TAUNT); }
-        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_TAUNT); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_FLING); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
