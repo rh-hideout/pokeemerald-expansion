@@ -153,6 +153,22 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
     }
 }
 
+SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a berry")
+{
+    GIVEN {
+        PLAYER(SPECIES_CALYREX) { Item(ITEM_FLAME_ORB); Ability(ABILITY_UNNERVE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        MESSAGE("Calyrex used Fling!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet was burned!");
+        STATUS_ICON(opponent, STATUS1_BURN);
+    }
+}
+
 SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/paralyzed")
 {
     u32 status;

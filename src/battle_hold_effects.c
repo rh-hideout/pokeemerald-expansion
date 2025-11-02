@@ -1067,7 +1067,12 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item = (timing == IsOnBerryActivation) ? gLastUsedItem : gBattleMons[itemBattler].item;
+    u32 item;
+
+    if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
+        item = gLastUsedItem;
+    else
+        item = gBattleMons[itemBattler].item;
 
     if (holdEffect == HOLD_EFFECT_NONE
      || !timing(holdEffect)
