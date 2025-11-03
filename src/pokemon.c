@@ -84,6 +84,9 @@ static void DecryptBoxMon(struct BoxPokemon *boxMon);
 static void Task_PlayMapChosenOrBattleBGM(u8 taskId);
 void TrySpecialOverworldEvo();
 
+void ApplyMonSpeciesVariantToPaletteBuffer(u32 species, bool8 shiny, u32 PID, u16 pal16[16]);
+void ApplyCustomRestrictionToPaletteBuffer(u8 hMin, u8 hMax, u8 cMin, u8 cMax, u8 lMin, u8 lMax, u16 pal16[16]);
+
 EWRAM_DATA static u8 sLearningMoveTableID = 0;
 EWRAM_DATA u8 gPlayerPartyCount = 0;
 EWRAM_DATA u8 gEnemyPartyCount = 0;
@@ -5935,20 +5938,7 @@ static void Task_PlayMapChosenOrBattleBGM(u8 taskId)
 
 #undef tSongId
 
-const u16 *GetMonFrontSpritePal(struct Pokemon *mon)
-{
-    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
-    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
-    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-    return GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality);
-}
-
-const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality)
-{
-    return GetMonSpritePalFromSpecies(species, isShiny, IsPersonalityFemale(species, personality));
-}
-
-const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale)
+const u16 *GetMonSpritePalFromSpeciesInternal(u16 species, bool32 isShiny, bool32 isFemale)
 {
     species = SanitizeSpeciesId(species);
 
@@ -5976,6 +5966,42 @@ const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFema
         else
             return gSpeciesInfo[SPECIES_NONE].palette;
     }
+}
+
+const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale)
+{
+    const u16 *base = GetMonSpritePalFromSpeciesInternal(species, isShiny, isFemale);
+#if P_ENABLE_VARIANT_COLOURS
+    static u16 sVariantPal[16];
+    CpuCopy16(base, sVariantPal, sizeof(sVariantPal));
+    ApplyMonSpeciesVariantToPaletteBuffer(species, isShiny, 0x00000000, sVariantPal);
+    // ApplyCustomRestrictionToPaletteBuffer(50, 110, 0, 200, 0, 160, sVariantPal);
+    return sVariantPal;
+#else
+    return base;
+#endif
+}
+
+const u16 *GetMonFrontSpritePal(struct Pokemon *mon)
+{
+    u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, NULL);
+    bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
+    u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
+    return GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality);
+}
+
+const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality)
+{
+    const u16 *base = GetMonSpritePalFromSpeciesInternal(species, isShiny, IsPersonalityFemale(species, personality));
+#if P_ENABLE_VARIANT_COLOURS
+    static u16 sVariantPal[16];
+    CpuCopy16(base, sVariantPal, sizeof(sVariantPal));
+    ApplyMonSpeciesVariantToPaletteBuffer(species, isShiny, personality, sVariantPal);
+    // ApplyCustomRestrictionToPaletteBuffer(50, 110, 0, 200, 0, 160, sVariantPal);
+    return sVariantPal;
+#else
+    return base;
+#endif
 }
 
 #define OR_MOVE_IS_HM(_hm) || (move == MOVE_##_hm)

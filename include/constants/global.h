@@ -12,6 +12,7 @@
 #include "config/summary_screen.h"
 #include "config/ai.h"
 #include "config/follower_npc.h"
+#include "config/variant_colours.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.
