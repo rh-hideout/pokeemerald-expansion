@@ -1936,7 +1936,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "This Pokémon spews flames hotter\n"
             "than 18,000 degrees Fahrenheit.\n"
             "It swings around its grand, blazing\n"
-            "many as it protects its allies."),
+            "mane as it protects its allies."),
         .frontPic = gMonFrontPic_CircledQuestionMark,
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
