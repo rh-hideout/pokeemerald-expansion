@@ -5590,7 +5590,7 @@ case EFFECT_GUARD_SPLIT:
         }
         else // consider move effects that hinder the target
         {
-            if (DoesShieldDustBlockAdditionalEffect(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battlerDef]))
+            if (DoesShieldDustBlockAdditionalEffect(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battlerDef]) || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
                 continue;
 
             switch (additionalEffect->moveEffect)
