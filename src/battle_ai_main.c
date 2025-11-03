@@ -5590,7 +5590,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         }
         else // consider move effects that hinder the target
         {
-            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battlerDef]))
+            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef]))
                 continue;
 
             switch (additionalEffect->moveEffect)

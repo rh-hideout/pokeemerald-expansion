@@ -701,7 +701,7 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     return FALSE;
 }
 
-bool32 IsAdditionalEffectBlocked(u32 battlerAtk, u32 abilityAtk, u32 abilityDef)
+bool32 IsAdditionalEffectBlocked(u32 battlerAtk, u32 abilityAtk, u32 battlerDef, u32 abilityDef)
 {
     if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
         return TRUE;
@@ -1084,7 +1084,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
         }
         else // consider move effects that hinder the target
         {
-            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, abilityDef))
+            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, battlerDef, abilityDef))
                 continue;
 
             switch (additionalEffect->moveEffect)
