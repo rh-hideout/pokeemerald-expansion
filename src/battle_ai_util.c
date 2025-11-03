@@ -701,12 +701,15 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     return FALSE;
 }
 
-bool32 DoesShieldDustBlockAdditionalEffect(u32 battlerAtk, u32 abilityAtk, u32 abilityDef)
+bool32 IsAdditionalEffectBlocked(u32 battlerAtk, u32 abilityAtk, u32 abilityDef)
 {
-    if (abilityDef != ABILITY_SHIELD_DUST || IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
-        return FALSE;
+    if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
+        return TRUE;
 
-    return TRUE;
+    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+        return TRUE;
+
+    return FALSE;
 }
 
 static inline s32 GetDamageByRollType(s32 dmg, enum DamageRollType rollType)
@@ -1081,7 +1084,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
         }
         else // consider move effects that hinder the target
         {
-            if (DoesShieldDustBlockAdditionalEffect(battlerAtk, abilityAtk, abilityDef) || gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
+            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, abilityDef))
                 continue;
 
             switch (additionalEffect->moveEffect)
