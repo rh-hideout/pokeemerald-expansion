@@ -2835,6 +2835,29 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
     }
 }
 
+// Field moves that can be used via items and should be excluded from the party menu
+static const u16 sItemBasedFieldMoves[] =
+{
+    MOVE_CUT,
+    MOVE_SURF,
+    MOVE_STRENGTH,
+    MOVE_ROCK_SMASH,
+    MOVE_DIVE,
+    MOVE_WATERFALL,
+};
+
+// Check if a field move should be excluded from the party menu (because it has an item alternative)
+static bool8 IsFieldMoveExcludedFromPartyMenu(u16 moveId)
+{
+    u32 i;
+    for (i = 0; i < ARRAY_COUNT(sItemBasedFieldMoves); i++)
+    {
+        if (sItemBasedFieldMoves[i] == moveId)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 // modified for field move implementation
 {
@@ -2851,7 +2874,7 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
         {
             u16 moveId = FieldMove_GetMoveId(i);
 
-            // Case 1: Fly and Flash (Defog would go here too)
+            // Case 1: Fly and Flash - show if learnable and badge obtained
             if (moveId == MOVE_FLY || moveId == MOVE_FLASH)
             {
                 if (IsFieldMoveUnlocked(i) && CanLearnTeachableMove(species, moveId))
@@ -2859,9 +2882,8 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
                     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, i + MENU_FIELD_MOVES);
                 }
             }
-            // Case 2: The 6 HMs to be excluded from the menu (Rock Climb would go here too)
-            else if (moveId == MOVE_CUT || moveId == MOVE_SURF || moveId == MOVE_STRENGTH
-                  || moveId == MOVE_ROCK_SMASH || moveId == MOVE_DIVE || moveId == MOVE_WATERFALL)
+            // Case 2: Item-based field moves - excluded from party menu
+            else if (IsFieldMoveExcludedFromPartyMenu(moveId))
             {
                 // Do nothing, effectively removing them from the menu.
             }

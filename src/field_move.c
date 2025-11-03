@@ -264,10 +264,10 @@ bool8 CanUseFly(void)
 
     // If no Pokémon is found, check for the Fly Tool item.
     if (CheckBagHasItem(ITEM_FLY_TOOL, 1))
-        {
-            sFieldMoveSource = FIELD_MOVE_SOURCE_ITEM;
-            return TRUE; // Found the item
-        }
+    {
+        sFieldMoveSource = FIELD_MOVE_SOURCE_ITEM;
+        return TRUE; // Found the item
+    }
 
     // If all checks fail, return FALSE.
     return FALSE;
@@ -293,13 +293,19 @@ bool8 CanUseFlash(void)
         {
             u16 species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES);
             if (CanLearnTeachableMove(species, MOVE_FLASH))
+            {
+                sFieldMoveSource = FIELD_MOVE_SOURCE_POKEMON;
                 return TRUE;
+            }
         }
     }
 
     // 3. Check for the item
     if (CheckBagHasItem(ITEM_FLASH_TOOL, 1))
+    {
+        sFieldMoveSource = FIELD_MOVE_SOURCE_ITEM;
         return TRUE;
+    }
 
     return FALSE;
 }

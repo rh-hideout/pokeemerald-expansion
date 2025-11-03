@@ -2312,6 +2312,11 @@ static u16 GetKeyItemForFieldMove(u16 move)
     }
 }
 
+// Checks if a field move can be used via either a Pokémon or a key item
+// Return values in gSpecialVar_Result:
+//   0-5: Party slot index of a Pokémon that can learn the move
+//   PARTY_SIZE (6): Cannot use the field move (no Pokémon/item, or badge not obtained)
+//   PARTY_SIZE + 1 (7): Can use the field move via a key item
 bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
 {
     enum FieldMove fieldMove = ScriptReadByte(ctx);
@@ -2319,7 +2324,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
     u16 keyItem = GetKeyItemForFieldMove(move);
     u32 i;
 
-        // 1. Check for a party Pokémon that can learn the move.
+    // 1. Check for a party Pokémon that can learn the move.
     for (i = 0; i < gPlayerPartyCount; i++)
     {
         if (!GetMonData(&gPlayerParty[i], MON_DATA_IS_EGG))
@@ -2347,7 +2352,7 @@ bool8 ScrCmd_checkfieldmove(struct ScriptContext *ctx)
         // Key item found. Check for the badge flag.
         if (IsFieldMoveUnlocked(fieldMove))
         {
-            gSpecialVar_Result = PARTY_SIZE + 1; // Return special value for item
+            gSpecialVar_Result = PARTY_SIZE + 1; // Special value indicating item use
             SetFieldMoveSource(FIELD_MOVE_SOURCE_ITEM);
             return FALSE;
         }

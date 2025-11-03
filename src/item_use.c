@@ -83,10 +83,9 @@ static void SetDistanceOfClosestHiddenItem(u8, s16, s16);
 static void CB2_OpenPokeblockFromBag(void);
 static void ItemUseOnFieldCB_Honey(u8 taskId);
 static bool32 IsValidLocationForVsSeeker(void);
-static void ItemUseOnFieldCB_CutItem(u8 taskId);
+static void ItemUseOnFieldCB_Cut(u8 taskId);
 static void ItemUseOnFieldCB_Surf(u8 taskId);
 static void ItemUseOnFieldCB_Strength(u8 taskId);
-static void ItemUseOnFieldCB_Flash(u8 taskId);
 static void ItemUseOnFieldCB_Flash(u8 taskId);
 static void ItemUseOnFieldCB_RockSmash(u8 taskId);
 static void ItemUseOnFieldCB_Waterfall(u8 taskId);
@@ -1612,7 +1611,7 @@ void ItemUseOutOfBattle_TownMap(u8 taskId)
     }
 }
 
-static void ItemUseOnFieldCB_CutItem(u8 taskId)
+static void ItemUseOnFieldCB_Cut(u8 taskId)
 {
     LockPlayerFieldControls();
     ScriptContext_SetupScript(FieldMove_EventScript_Cut);
@@ -1623,8 +1622,8 @@ void ItemUseOutOfBattle_Cut(u8 taskId)
 {
     if (CheckObjectGraphicsInFrontOfPlayer(OBJ_EVENT_GFX_CUTTABLE_TREE))
     {
-        sItemUseOnFieldCB = ItemUseOnFieldCB_CutItem;
-		SetUpItemUseOnFieldCallback(taskId);
+        sItemUseOnFieldCB = ItemUseOnFieldCB_Cut;
+        SetUpItemUseOnFieldCallback(taskId);
     }
     else
         DisplayDadsAdviceCannotUseItemMessage(taskId, gTasks[taskId].tUsingRegisteredKeyItem);

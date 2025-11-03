@@ -51,7 +51,6 @@ void ItemUseOutOfBattle_PokeFlute(u8 taskId);
 void ItemUseOutOfBattle_TownMap(u8 taskId);
 
 void ItemUseOutOfBattle_Cut(u8); // field items start
-void ItemUseOnFieldCB_Cut(u8);
 void ItemUseOutOfBattle_Fly(u8);
 void CB2_OpenFlyItemFromBag(void);
 void Task_OpenRegisteredFly(u8 taskId);
