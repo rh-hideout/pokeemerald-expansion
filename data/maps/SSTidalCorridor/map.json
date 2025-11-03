@@ -55,7 +55,7 @@
       "flag": "FLAG_HIDE_SS_TIDAL_CORRIDOR_MR_BRINEY"
     },
     {
-      "graphics_id": "OBJ_EVENT_GFX_WINGULL",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(WATTREL)",
       "x": 7,
       "y": 2,
       "elevation": 3,

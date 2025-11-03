@@ -27,6 +27,19 @@
       "trainer_sight_or_berry_tree_id": "0",
       "script": "CaveOfOrigin_B1F_EventScript_Wallace",
       "flag": "FLAG_HIDE_CAVE_OF_ORIGIN_B1F_WALLACE"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_TM_BALL",
+      "x": 11,
+      "y": 3,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_LOOK_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "ITEM_TM_STORED_POWER",
+      "script": "Common_EventScript_FindItem",
+      "flag": "FLAG_ITEM_CAVE_OF_ORIGIN_STORED_POWER"
     }
   ],
   "warp_events": [
