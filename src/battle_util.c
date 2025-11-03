@@ -5509,26 +5509,19 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_FORECAST:
         case ABILITY_FLOWER_GIFT:
         case ABILITY_ICE_FACE:
-        {
-            u32 battlerWeatherAffected = IsBattlerWeatherAffected(battler, gBattleWeather);
-            if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
+            switch (CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
-                // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
+            case FALSE: // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
-            }
-
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
-             || gBattleWeather == B_WEATHER_NONE
-             || !HasWeatherEffect()) // Air Lock active
-             && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
-            {
+                break;
+            case TRUE:
                 gBattleScripting.battler = battler;
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
                 BattleScriptPushCursorAndCallback(BattleScript_BattlerFormChangeWithStringEnd3);
                 effect++;
+                break;
             }
             break;
-        }
         case ABILITY_PROTOSYNTHESIS:
             if (!gDisableStructs[battler].weatherAbilityDone
              && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
