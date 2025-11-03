@@ -424,6 +424,9 @@ const u32 gObjectEventPic_StrangeBall[] = INCBIN_U32("graphics/object_events/pic
 #endif //ITEM_STRANGE_BALL
 #endif //OW_FOLLOWERS_POKEBALLS
 
+const u32 gObjectEventPic_TMBall[] = INCBIN_U32("graphics/object_events/pics/misc/ball_tm.4bpp");
+const u16 gObjectEventPal_TMBall[] = INCBIN_U16("graphics/object_events/palettes/ball_tm.gbapal");
+
 #if OW_FOLLOWERS_POKEBALLS
 // Palettes are small, so always include all of the palettes (no #ifdef)
 // Vanilla

@@ -97,7 +97,7 @@
     },
     {
       "local_id": "LOCALID_RUSTURF_TUNNEL_PEEKO",
-      "graphics_id": "OBJ_EVENT_GFX_WINGULL",
+      "graphics_id": "OBJ_EVENT_GFX_SPECIES(WATTREL)",
       "x": 14,
       "y": 4,
       "elevation": 3,

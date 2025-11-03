@@ -1222,19 +1222,19 @@
 #define FLAG_ITEM_SAFARI_ZONE_NORTH_EAST_NUGGET                     0x491
 #define FLAG_ITEM_SAFARI_ZONE_SOUTH_EAST_BIG_PEARL                  0x492
 
-#define FLAG_UNUSED_0x493                                           0x493 // Unused Flag
-#define FLAG_UNUSED_0x494                                           0x494 // Unused Flag
-#define FLAG_UNUSED_0x495                                           0x495 // Unused Flag
-#define FLAG_UNUSED_0x496                                           0x496 // Unused Flag
-#define FLAG_UNUSED_0x497                                           0x497 // Unused Flag
-#define FLAG_UNUSED_0x498                                           0x498 // Unused Flag
-#define FLAG_UNUSED_0x499                                           0x499 // Unused Flag
-#define FLAG_UNUSED_0x49A                                           0x49A // Unused Flag
-#define FLAG_UNUSED_0x49B                                           0x49B // Unused Flag
-#define FLAG_UNUSED_0x49C                                           0x49C // Unused Flag
-#define FLAG_UNUSED_0x49D                                           0x49D // Unused Flag
-#define FLAG_UNUSED_0x49E                                           0x49E // Unused Flag
-#define FLAG_UNUSED_0x49F                                           0x49F // Unused Flag
+#define FLAG_ITEM_ROUTE_105_ICY_WIND                                 0x493
+#define FLAG_RECEIVED_TM_PROTECT                                    0x494
+#define FLAG_ITEM_SKY_PILLAR_DRAGON_PULSE                            0x495
+#define FLAG_ITEM_MAGMA_HIDEOUT_FLAMETHROWER                        0x496
+#define FLAG_ITEM_SAFARI_ZONE_DAZZLING_GLEAM                         0x497
+#define FLAG_RECEIVED_TM_TRICK_ROOM                                 0x498
+#define FLAG_ITEM_ROUTE_119_THROAT_CHOP                             0x499
+#define FLAG_ITEM_ROUTE_119_LEECH_LIFE                              0x49A
+#define FLAG_ITEM_ROUTE_120_FLASH_CANNON                            0x49B
+#define FLAG_ITEM_ROUTE_111_POWER_GEM                               0x49C
+#define FLAG_ITEM_ROUTE_133_POISON_JAB                              0x49D
+#define FLAG_ITEM_CAVE_OF_ORIGIN_STORED_POWER                       0x49E
+#define FLAG_LANDMARK_PACIFIDLOG_SHOP                               0x49F
 #define FLAG_UNUSED_0x4A0                                           0x4A0 // Unused Flag
 #define FLAG_UNUSED_0x4A1                                           0x4A1 // Unused Flag
 #define FLAG_UNUSED_0x4A2                                           0x4A2 // Unused Flag
