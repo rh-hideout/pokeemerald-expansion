@@ -5942,7 +5942,7 @@ static void Cmd_moveend(void)
         {
         case MOVEEND_SET_VALUES:
             gBattleScripting.savedDmg += gBattleStruct->moveDamage[gBattlerTarget];
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_PROTECT_LIKE_EFFECT:
@@ -6559,21 +6559,21 @@ static void Cmd_moveend(void)
                 gBattleScripting.moveendState++;
             break;
         case MOVEEND_COLOR_CHANGE:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battler = gBattleStruct->moveEndBattlerId++;
+                u32 battler = gBattleStruct->state.moveEndBattler++;
                 if (battler == gBattlerAttacker)
                     continue;
                 if (AbilityBattleEffects(ABILITYEFFECT_COLOR_CHANGE, battler, GetBattlerAbility(battler), 0, 0))
                     return;
             }
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battlerDef = gBattleStruct->moveEndBattlerId++;
+                u32 battlerDef = gBattleStruct->state.moveEndBattler++;
                 if (battlerDef == gBattlerAttacker)
                     continue;
                 enum HoldEffect holdEffect = GetBattlerHoldEffect(battlerDef);
@@ -6808,53 +6808,53 @@ static void Cmd_moveend(void)
             break;
 
         case MOVEEND_ITEMS_EFFECTS_ALL:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battler = gBattleStruct->moveEndBattlerId++;
+                u32 battler = gBattleStruct->state.moveEndBattler++;
                 enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
                 if (ItemBattleEffects(battler, 0, holdEffect, IsOnStatusChangeActivation)
                  || ItemBattleEffects(battler, 0, holdEffect, IsOnHpThresholdActivation))
                     return;
             }
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_WHITE_HERB:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battler = gBattleStruct->moveEndBattlerId++;
+                u32 battler = gBattleStruct->state.moveEndBattler++;
                 if (!IsBattlerAlive(battler))
                     continue;
 
                 if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsWhiteHerbActivation))
                     return;
             }
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_OPPORTUNIST:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battler = gBattleStruct->moveEndBattlerId++;
+                u32 battler = gBattleStruct->state.moveEndBattler++;
                 if (!IsBattlerAlive(battler))
                     continue;
                 if (AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, GetBattlerAbility(battler), 0, 0))
                     return;
             }
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_MIRROR_HERB:
-            while (gBattleStruct->moveEndBattlerId < gBattlersCount)
+            while (gBattleStruct->state.moveEndBattler < gBattlersCount)
             {
-                u32 battler = gBattleStruct->moveEndBattlerId++;
+                u32 battler = gBattleStruct->state.moveEndBattler++;
                 if (!IsBattlerAlive(battler))
                     continue;
 
                 if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsMirrorHerbActivation))
                     return;
             }
-            gBattleStruct->moveEndBattlerId = 0;
+            gBattleStruct->state.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_PICKPOCKET:
@@ -8544,9 +8544,9 @@ static void Cmd_hidepartystatussummary(void)
 static void ResetValuesForCalledMove(void)
 {
     if (gBattlerByTurnOrder[gCurrentTurnActionNumber] != gBattlerAttacker)
-        gBattleStruct->atkCancellerTracker = 0;
+        gBattleStruct->state.atkCanceller = 0;
     else
-        gBattleStruct->atkCancellerTracker = CANCELLER_VOLATILE_BLOCKED;
+        gBattleStruct->state.atkCanceller = CANCELLER_VOLATILE_BLOCKED;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);

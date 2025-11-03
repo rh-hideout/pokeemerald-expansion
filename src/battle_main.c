@@ -2984,7 +2984,7 @@ void BeginBattleIntro(void)
 {
     BattleStartClearSetData();
     gBattleCommunication[1] = 0;
-    gBattleStruct->introState = 0;
+    gBattleStruct->state.intro = 0;
     gBattleMainFunc = DoBattleIntro;
 }
 
@@ -3261,7 +3261,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
     gCurrentMove = MOVE_NONE;
-    gBattleStruct->arenaTurnCounter = 0xFF;
+    gBattleStruct->state.arenaTurn = 0xFF;
 
     // Restore struct member so replacement does not miss timing
     gSpecialStatuses[battler].switchInAbilityDone = FALSE;
@@ -3443,21 +3443,21 @@ static void DoBattleIntro(void)
     s32 i;
     u32 battler;
 
-    switch ((enum BattleIntroStates)gBattleStruct->introState)
+    switch ((enum BattleIntroStates)gBattleStruct->state.intro)
     {
     case BATTLE_INTRO_STATE_GET_MON_DATA:
         battler = gBattleCommunication[1];
         BtlController_EmitGetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_ALL_BATTLE, 0);
         MarkBattlerForControllerExec(battler);
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_LOOP_BATTLER_DATA:
         if (!gBattleControllerExecFlags)
         {
             if (++gBattleCommunication[1] == gBattlersCount)
-                gBattleStruct->introState++;
+                gBattleStruct->state.intro++;
             else
-                gBattleStruct->introState = BATTLE_INTRO_STATE_GET_MON_DATA;
+                gBattleStruct->state.intro = BATTLE_INTRO_STATE_GET_MON_DATA;
         }
         break;
     case BATTLE_INTRO_STATE_PREPARE_BG_SLIDE:
@@ -3468,12 +3468,12 @@ static void DoBattleIntro(void)
             MarkBattlerForControllerExec(battler);
             gBattleCommunication[0] = 0;
             gBattleCommunication[1] = 0;
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         }
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_BG_SLIDE:
         if (!gBattleControllerExecFlags)
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_DRAW_SPRITES:
         for (battler = 0; battler < gBattlersCount; battler++)
@@ -3554,9 +3554,9 @@ static void DoBattleIntro(void)
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         else // Skip party summary since it is a wild battle.
-            gBattleStruct->introState = BATTLE_INTRO_STATE_INTRO_TEXT;
+            gBattleStruct->state.intro = BATTLE_INTRO_STATE_INTRO_TEXT;
         break;
     case BATTLE_INTRO_STATE_DRAW_PARTY_SUMMARY:
         if (!gBattleControllerExecFlags)
@@ -3601,18 +3601,18 @@ static void DoBattleIntro(void)
             BtlController_EmitDrawPartyStatusSummary(battler, B_COMM_TO_CONTROLLER, hpStatus, PARTY_SUMM_SKIP_DRAW_DELAY);
             MarkBattlerForControllerExec(battler);
 
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         }
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_PARTY_SUMMARY:
         if (!gBattleControllerExecFlags)
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_INTRO_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
         {
             PrepareStringBattle(STRINGID_INTROMSG, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         }
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_INTRO_TEXT:
@@ -3620,14 +3620,14 @@ static void DoBattleIntro(void)
         {
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
-                gBattleStruct->introState++;
+                gBattleStruct->state.intro++;
             }
             else
             {
                 if (B_FAST_INTRO_PKMN_TEXT == TRUE)
-                    gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
+                    gBattleStruct->state.intro = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT;
                 else
-                    gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM;
+                    gBattleStruct->state.intro = BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM;
             }
         }
         break;
@@ -3636,11 +3636,11 @@ static void DoBattleIntro(void)
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_PLAYER_LEFT));
         else
             PrepareStringBattle(STRINGID_INTROSENDOUT, GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT));
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_SEND_OUT_TEXT:
         if (!gBattleControllerExecFlags)
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_TRAINER_1_SEND_OUT_ANIM:
         if (gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK && !(gBattleTypeFlags & BATTLE_TYPE_RECORDED_IS_MASTER))
@@ -3650,7 +3650,7 @@ static void DoBattleIntro(void)
 
         BtlController_EmitIntroTrainerBallThrow(battler, B_COMM_TO_CONTROLLER);
         MarkBattlerForControllerExec(battler);
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_TRAINER_2_SEND_OUT_ANIM:
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
@@ -3665,17 +3665,17 @@ static void DoBattleIntro(void)
         }
         if (B_FAST_INTRO_PKMN_TEXT == TRUE
           && !(gBattleTypeFlags & (BATTLE_TYPE_RECORDED | BATTLE_TYPE_RECORDED_LINK | BATTLE_TYPE_RECORDED_IS_MASTER | BATTLE_TYPE_LINK)))
-            gBattleStruct->introState = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT; // Print at the same time as trainer sends out second mon.
+            gBattleStruct->state.intro = BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT; // Print at the same time as trainer sends out second mon.
         else
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_TRAINER_2_SEND_OUT_ANIM:
         if (!gBattleControllerExecFlags)
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_WILD_BATTLE_TEXT:
         if (!IsBattlerMarkedForControllerExec(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)))
-            gBattleStruct->introState++;
+            gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_SAFARI))
@@ -3696,7 +3696,7 @@ static void DoBattleIntro(void)
 
             PrepareStringBattle(STRINGID_INTROSENDOUT, battler);
         }
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_WAIT_FOR_PLAYER_SEND_OUT_TEXT:
         if (!(gBattleTypeFlags & BATTLE_TYPE_LINK && gBattleControllerExecFlags))
@@ -3707,7 +3707,7 @@ static void DoBattleIntro(void)
                 battler = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
 
             if (!IsBattlerMarkedForControllerExec(battler))
-                gBattleStruct->introState++;
+                gBattleStruct->state.intro++;
         }
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_1_SEND_OUT_TEXT:
@@ -3718,7 +3718,7 @@ static void DoBattleIntro(void)
 
         BtlController_EmitIntroTrainerBallThrow(battler, B_COMM_TO_CONTROLLER);
         MarkBattlerForControllerExec(battler);
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_PRINT_PLAYER_2_SEND_OUT_TEXT:
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_INGAME_PARTNER))
@@ -3731,12 +3731,12 @@ static void DoBattleIntro(void)
             BtlController_EmitIntroTrainerBallThrow(battler, B_COMM_TO_CONTROLLER);
             MarkBattlerForControllerExec(battler);
         }
-        gBattleStruct->introState++;
+        gBattleStruct->state.intro++;
         break;
     case BATTLE_INTRO_STATE_SET_DEX_AND_BATTLE_VARS:
         if (!gBattleControllerExecFlags)
         {
-            gBattleStruct->eventsBeforeFirstTurnState = 0;
+            gBattleStruct->state.beforeFristTurn = 0;
             gBattleStruct->switchInBattlerCounter = 0;
             Ai_InitPartyStruct(); // Save mons party counts, and first 2/4 mons on the battlefield.
 
@@ -3774,7 +3774,7 @@ static void TryDoEventsBeforeFirstTurn(void)
     if (gBattleControllerExecFlags)
         return;
 
-    switch ((enum FirstTurnEventsStates)gBattleStruct->eventsBeforeFirstTurnState)
+    switch (gBattleStruct->state.beforeFristTurn)
     {
     case FIRST_TURN_EVENTS_START:
         // Set invalid mons as absent(for example when starting a double battle with only one pokemon).
@@ -3824,20 +3824,20 @@ static void TryDoEventsBeforeFirstTurn(void)
                     SwapTurnOrder(i, j);
             }
         }
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_WEATHER))
             return;
         break;
     case FIRST_TURN_EVENTS_TERRAIN:
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         if (TryFieldEffects(FIELD_EFFECT_OVERWORLD_TERRAIN))
             return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
             return;
         break;
@@ -3852,7 +3852,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             }
         }
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts)); // erase all totem boosts for Mirror Herb and Opportunist
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_NEUTRALIZING_GAS:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3864,7 +3864,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_SWITCH_IN_ABILITIES:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3879,7 +3879,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_ITEM_EFFECTS:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3889,7 +3889,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_WHITE_HERB:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3899,7 +3899,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_OPPORTUNIST:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3909,7 +3909,7 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_MIRROR_HERB:
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
@@ -3919,10 +3919,10 @@ static void TryDoEventsBeforeFirstTurn(void)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_EJECT_PACK:
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->state.beforeFristTurn++;
         if (TrySwitchInEjectPack(FIRST_TURN))
             return;
         break;
@@ -3943,11 +3943,11 @@ static void TryDoEventsBeforeFirstTurn(void)
         for (i = 0; i < BATTLE_COMMUNICATION_ENTRIES_COUNT; i++)
             gBattleCommunication[i] = 0;
 
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId = 0;
+        gBattleStruct->state.endTurnBlock = 0;
+        gBattleStruct->state.endTurnBattler = 0;
         gBattleScripting.moveendState = 0;
-        gBattleStruct->faintedActionsState = 0;
-        gBattleStruct->endTurnEventsCounter = 0;
+        gBattleStruct->state.faintedAction = 0;
+        gBattleStruct->state.endTurn = 0;
 
         memset(gQueuedStatBoosts, 0, sizeof(gQueuedStatBoosts));
         SetShellSideArmCategory();
@@ -3961,7 +3961,7 @@ static void TryDoEventsBeforeFirstTurn(void)
 
         if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_BEFORE_FIRST_TURN)))
             BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
-        gBattleStruct->eventsBeforeFirstTurnState = 0;
+        gBattleStruct->state.beforeFristTurn = 0;
         break;
     }
 }
@@ -3981,9 +3981,9 @@ static void HandleEndTurn_ContinueBattle(void)
             if ((gBattleMons[i].status1 & STATUS1_SLEEP) && (gBattleMons[i].volatiles.multipleTurns))
                 CancelMultiTurnMoves(i, SKY_DROP_IGNORE);
         }
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId = 0;
-        gBattleStruct->endTurnEventsCounter = 0;
+        gBattleStruct->state.endTurnBlock = 0;
+        gBattleStruct->state.endTurnBattler = 0;
+        gBattleStruct->state.endTurn = 0;
     }
 }
 
@@ -4002,7 +4002,7 @@ void BattleTurnPassed(void)
     if (HandleFaintedMonActions())
         return;
 
-    gBattleStruct->faintedActionsState = 0;
+    gBattleStruct->state.faintedAction = 0;
 
     TurnValuesCleanUp(FALSE);
     gHitMarker &= ~HITMARKER_UNABLE_TO_USE_MOVE;
@@ -4025,7 +4025,7 @@ void BattleTurnPassed(void)
     if (gBattleResults.battleTurnCounter < 0xFF)
     {
         gBattleResults.battleTurnCounter++;
-        gBattleStruct->arenaTurnCounter++;
+        gBattleStruct->state.arenaTurn++;
     }
 
     for (i = 0; i < gBattlersCount; i++)
@@ -4057,7 +4057,7 @@ void BattleTurnPassed(void)
 
     if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         BattleScriptExecute(BattleScript_PalacePrintFlavorText);
-    else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->arenaTurnCounter == 0)
+    else if (gBattleTypeFlags & BATTLE_TYPE_ARENA && gBattleStruct->state.arenaTurn == 0)
         BattleScriptExecute(BattleScript_ArenaTurnBeginning);
     else if ((i = ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT), TRAINER_SLIDE_LAST_LOW_HP)))
         BattleScriptExecute(i == 1 ? BattleScript_TrainerASlideMsgEnd2 : BattleScript_TrainerBSlideMsgEnd2);
@@ -5643,7 +5643,7 @@ static void HandleEndTurn_FinishBattle(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             bool32 changedForm = TryRevertPartyMonFormChange(i);
-            
+
             // Recalculate the stats of every party member before the end
             if (!changedForm && B_RECALCULATE_STATS >= GEN_5)
                 CalculateMonStats(&gPlayerParty[i]);
