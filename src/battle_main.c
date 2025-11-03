@@ -5735,6 +5735,10 @@ static void TryEvolvePokemon(void)
                 }
                 else
                 {
+                    // We reduce canStopEvo to a boolean before passing it futher in case it checks
+                    // (canStopEvo == TRUE) instead of (canStopEvo) at some point
+                    if (canStopEvo == 2)
+                        canStopEvo = TRUE;
                     gBattleMainFunc = WaitForEvoSceneToFinish;
                     EvolutionScene(&gPlayerParty[i], species, canStopEvo, i);
                     return;
