@@ -50,6 +50,18 @@ void DisplayDadsAdviceCannotUseItemMessage(u8 taskId, bool8 isUsingRegisteredKey
 void ItemUseOutOfBattle_PokeFlute(u8 taskId);
 void ItemUseOutOfBattle_TownMap(u8 taskId);
 
+void ItemUseOutOfBattle_Cut(u8); // field items start
+void ItemUseOnFieldCB_Cut(u8);
+void ItemUseOutOfBattle_Fly(u8);
+void CB2_OpenFlyItemFromBag(void);
+void Task_OpenRegisteredFly(u8 taskId);
+void ItemUseOutOfBattle_Surf(u8 taskId);
+void ItemUseOutOfBattle_Strength(u8);
+void ItemUseOutOfBattle_Flash(u8 taskId);
+void ItemUseOutOfBattle_RockSmash(u8 taskId);
+void ItemUseOutOfBattle_Waterfall(u8 taskId);
+void ItemUseOutOfBattle_Dive(u8 taskId); // field items end
+
 enum {
     BALL_THROW_UNABLE_TWO_MONS,
     BALL_THROW_UNABLE_NO_ROOM,

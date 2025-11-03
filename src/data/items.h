@@ -14496,6 +14496,134 @@ const struct Item gItemsInfo[] =
         .iconPic = gItemIcon_PokeshiDoll,
         .iconPalette = gItemIconPalette_PokeshiDoll,
     },
+
+    [ITEM_CUT_TOOL] =
+    {
+        .name = ITEM_NAME("Cut Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Cut,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_FLY_TOOL] =
+    {
+        .name = ITEM_NAME("Fly Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Fly,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_SURF_TOOL] =
+    {
+        .name = ITEM_NAME("Surf Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Surf,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_STRENGTH_TOOL] =
+    {
+        .name = ITEM_NAME("Strength Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Strength,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_FLASH_TOOL] =
+    {
+        .name = ITEM_NAME("Flash Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Flash,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_ROCK_SMASH_TOOL] =
+    {
+        .name = ITEM_NAME("Rock Smash Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_RockSmash,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_WATERFALL_TOOL] =
+    {
+        .name = ITEM_NAME("Waterfall Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Waterfall,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
+
+    [ITEM_DIVE_TOOL] =
+    {
+        .name = ITEM_NAME("Dive Item"),
+        .price = 0,
+        .description = COMPOUND_STRING(
+            "Temporary item\n"
+            "description which\n"
+            "will be replaced."),
+        .importance = 1,
+        .pocket = POCKET_KEY_ITEMS,
+        .type = ITEM_USE_FIELD,
+        .fieldUseFunc = ItemUseOutOfBattle_Dive,
+        .iconPic = gItemIcon_QuestionMark,
+        .iconPalette = gItemIconPalette_QuestionMark,
+    },
 };
 
 #undef ITEM_NAME

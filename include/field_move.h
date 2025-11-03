@@ -4,6 +4,16 @@
 #include "global.h"
 #include "constants/field_move.h"
 
+enum {
+    FIELD_MOVE_SOURCE_POKEMON,
+    FIELD_MOVE_SOURCE_ITEM,
+};
+
+void SetFieldMoveSource(u8 source);
+u8 GetFieldMoveSource(void);
+bool8 CanUseFly(void);
+bool8 CanUseFlash(void);
+
 struct FieldMoveInfo
 {
     bool32 (*fieldMoveFunc)(void);

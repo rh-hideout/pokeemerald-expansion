@@ -994,10 +994,19 @@
 
 #define ITEM_STRANGE_BALL 828
 
+#define ITEM_CUT_TOOL 829 // field items start
+#define ITEM_FLY_TOOL 830
+#define ITEM_SURF_TOOL 831
+#define ITEM_STRENGTH_TOOL 832
+#define ITEM_FLASH_TOOL 833
+#define ITEM_ROCK_SMASH_TOOL 834
+#define ITEM_WATERFALL_TOOL 835
+#define ITEM_DIVE_TOOL 836 // field items end
+
 // HOPO BERRY
 // LEGEND PLATE
 
-#define ITEMS_COUNT 829
+#define ITEMS_COUNT 837
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

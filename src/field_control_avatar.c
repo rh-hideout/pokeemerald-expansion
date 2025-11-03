@@ -563,20 +563,20 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
 
 static const u8 *GetInteractedWaterScript(struct MapPosition *unused1, u8 metatileBehavior, u8 direction)
 {
-    if (IsFieldMoveUnlocked(FIELD_MOVE_SURF) && PartyHasMonWithSurf() == TRUE && IsPlayerFacingSurfableFishableWater() == TRUE
+    // Changed for field move implementation. Only check if the player is facing water.
+    // Moved IsFieldMoveUnlocked(FIELD_MOVE_SURF) from C code to the script to simplify + let EventScript_UseSurf manage badge, Pokemon & item checks.
+    if (IsPlayerFacingSurfableFishableWater() == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_SURF)
      )
         return EventScript_UseSurf;
 
+    // SIMPLIFIED WATERFALL LOGIC - changed for field move implementation.
+    // We only check if the player is facing a waterfall, the script will manage the rest.
     if (MetatileBehavior_IsWaterfall(metatileBehavior) == TRUE
      && CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_WATERFALL)
      )
-    {
-        if (IsFieldMoveUnlocked(FIELD_MOVE_WATERFALL) && IsPlayerSurfingNorth() == TRUE)
-            return EventScript_UseWaterfall;
-        else
-            return EventScript_CannotUseWaterfall;
-    }
+        return EventScript_UseWaterfall;
+
     return NULL;
 }
 
@@ -585,7 +585,8 @@ static bool32 TrySetupDiveDownScript(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
         return FALSE;
 
-    if (IsFieldMoveUnlocked(FIELD_MOVE_DIVE) && TrySetDiveWarp() == 2)
+    // We only check if the player is on a dive spot.
+    if (TrySetDiveWarp() == 2)
     {
         ScriptContext_SetupScript(EventScript_UseDive);
         return TRUE;
@@ -598,7 +599,8 @@ static bool32 TrySetupDiveEmergeScript(void)
     if (!CheckFollowerNPCFlag(FOLLOWER_NPC_FLAG_CAN_DIVE))
         return FALSE;
 
-    if (IsFieldMoveUnlocked(FIELD_MOVE_DIVE) && gMapHeader.mapType == MAP_TYPE_UNDERWATER && TrySetDiveWarp() == 1)
+    // We only check if the player is on a surfacing spot.
+    if (gMapHeader.mapType == MAP_TYPE_UNDERWATER && TrySetDiveWarp() == 1)
     {
         ScriptContext_SetupScript(EventScript_UseDiveUnderwater);
         return TRUE;
