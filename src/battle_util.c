@@ -1253,7 +1253,9 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
         break;
     case STRINGID_ITDOESNTAFFECT:
     case STRINGID_PKMNUNAFFECTED:
-        TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
+    {
+        TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, GetBattlerSide(gBattlerTarget));
+    }
         break;
     default:
         break;
@@ -8634,7 +8636,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     }
 
     if (ctx->updateFlags)
-        TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, ctx->moveType);
+        TryInitializeFirstSTABMoveTrainerSlide(ctx->battlerDef, ctx->battlerAtk, GetBattlerSide(ctx->battlerAtk), ctx->moveType);
 
     return modifier;
 }

@@ -34,6 +34,8 @@ BattleScript_FickleBeamDoubled::
 
 BattleScript_Terastallization::
 	@ TODO: no string prints in S/V, but right now this helps with clarity
+	flushtextbox
+	trytrainerslideteramsg
 	printstring STRINGID_PKMNSTORINGENERGY
 	playanimation BS_ATTACKER, B_ANIM_TERA_CHARGE
 	waitanimation

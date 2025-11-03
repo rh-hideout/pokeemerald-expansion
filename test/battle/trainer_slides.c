@@ -122,9 +122,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Enemy Mon Unaffected")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Last Switchin")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Last Switchin")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_SWITCHIN;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_LAST_SWITCHIN;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -137,9 +137,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Switchin")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Last Half Hp")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Last Half Hp")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_HALF_HP;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_LAST_HALF_HP;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
         ASSUME(GetSpeciesBaseHP(SPECIES_WOBBUFFET) == 190);
@@ -152,9 +152,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Half Hp")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Last Low Hp")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Last Low Hp")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_LAST_LOW_HP;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_LAST_LOW_HP;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FALSE_SWIPE) == EFFECT_FALSE_SWIPE);
         PLAYER(SPECIES_WOBBUFFET) { Attack(999);}
@@ -166,9 +166,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Last Low Hp")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Mega Evolution")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_MEGA_EVOLUTION;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -182,9 +182,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Mega Evolution")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Z Move")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_Z_MOVE;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_Z_MOVE;
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -198,9 +198,9 @@ SINGLE_BATTLE_TEST("Trainer Slide: Z Move")
     }
 }
 
-SINGLE_BATTLE_TEST("Trainer Slide: Dynamax")
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Dynamax")
 {
-    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_DYNAMAX;
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_DYNAMAX;
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

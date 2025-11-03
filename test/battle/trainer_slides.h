@@ -28,29 +28,49 @@
     {
         [TRAINER_SLIDE_PLAYER_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Player lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_LAST_SWITCHIN] =
+    [TRAINER_SLIDE_ENEMY_LAST_SWITCHIN] =
     {
-        [TRAINER_SLIDE_LAST_SWITCHIN] = COMPOUND_STRING("This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_LAST_SWITCHIN] = COMPOUND_STRING("This message plays after the enemy switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_LAST_HALF_HP] =
+    [TRAINER_SLIDE_ENEMY_LAST_HALF_HP] =
     {
-        [TRAINER_SLIDE_LAST_HALF_HP] = COMPOUND_STRING("Enemy last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_LAST_HALF_HP] = COMPOUND_STRING("Enemy last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_LAST_LOW_HP] =
+    [TRAINER_SLIDE_ENEMY_LAST_LOW_HP] =
     {
-        [TRAINER_SLIDE_LAST_LOW_HP] = COMPOUND_STRING("Enemy last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_LAST_LOW_HP] = COMPOUND_STRING("Enemy last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_MEGA_EVOLUTION] =
+    [TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION] =
     {
-        [TRAINER_SLIDE_MEGA_EVOLUTION] = COMPOUND_STRING("This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION] = COMPOUND_STRING("This message plays before the enemy activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_Z_MOVE] =
+    [TRAINER_SLIDE_ENEMY_Z_MOVE] =
     {
-        [TRAINER_SLIDE_Z_MOVE] = COMPOUND_STRING("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_Z_MOVE] = COMPOUND_STRING("This message plays before the enemy activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
     },
-    [TRAINER_SLIDE_DYNAMAX] =
+    [TRAINER_SLIDE_ENEMY_DYNAMAX] =
     {
-        [TRAINER_SLIDE_DYNAMAX] = COMPOUND_STRING("This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_DYNAMAX] = COMPOUND_STRING("This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_TERA] =
+    {
+        [TRAINER_SLIDE_ENEMY_DYNAMAX] = COMPOUND_STRING("This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION] =
+    {
+        [TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION] = COMPOUND_STRING("This message plays before the player activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_Z_MOVE] =
+    {
+        [TRAINER_SLIDE_PLAYER_Z_MOVE] = COMPOUND_STRING("This message plays before the player activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_DYNAMAX] =
+    {
+        [TRAINER_SLIDE_PLAYER_DYNAMAX] = COMPOUND_STRING("This message plays before the player activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_TERA] =
+    {
+        [TRAINER_SLIDE_PLAYER_TERA] = COMPOUND_STRING("This message plays before the player activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
     },
 },
 

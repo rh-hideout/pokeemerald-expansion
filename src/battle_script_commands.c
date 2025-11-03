@@ -2578,9 +2578,9 @@ static void Cmd_resultmessage(void)
                 stringId = STRINGID_SUPEREFFECTIVE;
             }
             if (stringId == STRINGID_SUPEREFFECTIVE || stringId == STRINGID_SUPEREFFECTIVETWOFOES)
-                TryInitializeTrainerSlidePlayerLandsFirstSuperEffectiveHit(gBattlerTarget);
+                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(gBattlerTarget, GetBattlerSide(gBattlerAttacker));
             if (stringId == STRINGID_SUPEREFFECTIVETWOFOES)
-                TryInitializeTrainerSlidePlayerLandsFirstSuperEffectiveHit(BATTLE_PARTNER(gBattlerTarget));
+                TryInitializeTrainerSlideLandsFirstSuperEffectiveHit(BATTLE_PARTNER(gBattlerTarget), GetBattlerSide(gBattlerAttacker));
             break;
         case MOVE_RESULT_NOT_VERY_EFFECTIVE:
             if (IsDoubleSpreadMove())
@@ -2611,8 +2611,8 @@ static void Cmd_resultmessage(void)
             {
                 if (ShouldPrintTwoFoesMessage(MOVE_RESULT_DOESNT_AFFECT_FOE))
                 {
-                    TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
-                    TryInitializeTrainerSlideEnemyMonUnaffected(BATTLE_PARTNER(gBattlerTarget));
+                    TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, GetBattlerSide(gBattlerTarget));
+                    TryInitializeTrainerSlideMonUnaffected(BATTLE_PARTNER(gBattlerTarget), GetBattlerSide(BATTLE_PARTNER(gBattlerTarget)));
                     stringId = STRINGID_ITDOESNTAFFECTTWOFOES;
                 }
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_DOESNT_AFFECT_FOE))
@@ -2621,13 +2621,13 @@ static void Cmd_resultmessage(void)
                 }
                 else
                 {
-                    TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
+                    TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, GetBattlerSide(gBattlerTarget));
                     stringId = STRINGID_ITDOESNTAFFECT;
                 }
             }
             else
             {
-                TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
+                TryInitializeTrainerSlideMonUnaffected(gBattlerTarget, GetBattlerSide(gBattlerTarget));
                 stringId = STRINGID_ITDOESNTAFFECT;
             }
             break;
@@ -15302,8 +15302,9 @@ void BS_TryTrainerSlideZMoveMsg(void)
 {
     NATIVE_ARGS();
     s32 shouldSlide;
+    u32 slideId = (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER) ? TRAINER_SLIDE_PLAYER_Z_MOVE : TRAINER_SLIDE_ENEMY_Z_MOVE;
 
-    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_Z_MOVE)))
+    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, slideId)))
     {
         gBattleScripting.battler = gBattlerAttacker;
         BattleScriptPush(cmd->nextInstr);
@@ -15331,8 +15332,9 @@ void BS_TryTrainerSlideMegaEvolutionMsg(void)
 {
     NATIVE_ARGS();
     s32 shouldSlide;
+    u32 slideId = (GetBattlerSide(gBattlerAttacker) == B_SIDE_PLAYER) ? TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION : TRAINER_SLIDE_ENEMY_MEGA_EVOLUTION;
 
-    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, TRAINER_SLIDE_MEGA_EVOLUTION)))
+    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, slideId)))
     {
         gBattleScripting.battler = gBattlerAttacker;
         BattleScriptPush(cmd->nextInstr);
@@ -15360,8 +15362,9 @@ void BS_TryTrainerSlideDynamaxMsg(void)
 {
     NATIVE_ARGS();
     s32 shouldSlide;
+    u32 slideId = (GetBattlerSide(gBattleScripting.battler) == B_SIDE_PLAYER) ? TRAINER_SLIDE_PLAYER_DYNAMAX : TRAINER_SLIDE_ENEMY_DYNAMAX;
 
-    if ((shouldSlide = ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_DYNAMAX)))
+    if ((shouldSlide = ShouldDoTrainerSlide(gBattleScripting.battler, slideId)))
     {
         BattleScriptPush(cmd->nextInstr);
         
@@ -15379,6 +15382,22 @@ void BS_TryTrainerSlideDynamaxMsg(void)
             default:
                 break;
         }
+    }
+    else
+        gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_TryTrainerSlideTeraMsg(void)
+{
+    NATIVE_ARGS();
+    s32 shouldSlide;
+    u32 slideId = (GetBattlerSide(gBattleScripting.battler) == B_SIDE_PLAYER) ? TRAINER_SLIDE_PLAYER_TERA : TRAINER_SLIDE_ENEMY_TERA;
+
+    if ((shouldSlide = ShouldDoTrainerSlide(gBattlerAttacker, slideId)))
+    {
+        gBattleScripting.battler = gBattlerAttacker;
+        BattleScriptPush(cmd->nextInstr);
+        gBattlescriptCurrInstr = (shouldSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
     }
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -17569,7 +17588,13 @@ void BS_TryTrainerSlideMsgLastOn(void)
     NATIVE_ARGS(u8 battler);
     u32 shouldDoTrainerSlide = 0;
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if ((shouldDoTrainerSlide = ShouldDoTrainerSlide(battler, TRAINER_SLIDE_LAST_SWITCHIN)))
+    if ((shouldDoTrainerSlide = ShouldDoTrainerSlide(battler, TRAINER_SLIDE_ENEMY_LAST_SWITCHIN)))
+    {
+        gBattleScripting.battler = battler;
+        BattleScriptPush(cmd->nextInstr);
+        gBattlescriptCurrInstr = (shouldDoTrainerSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+    }
+    else if ((shouldDoTrainerSlide = ShouldDoTrainerSlide(battler, TRAINER_SLIDE_PLAYER_LAST_SWITCHIN)))
     {
         gBattleScripting.battler = battler;
         BattleScriptPush(cmd->nextInstr);
