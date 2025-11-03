@@ -5116,6 +5116,7 @@ case EFFECT_GUARD_SPLIT:
             ADJUST_AND_RETURN_SCORE(GOOD_EFFECT);
 
         ADJUST_SCORE(WORST_EFFECT);
+        break;
     }
     case EFFECT_ELECTRIC_TERRAIN:
         if (ShouldSetFieldStatus(battlerAtk, STATUS_FIELD_ELECTRIC_TERRAIN))
