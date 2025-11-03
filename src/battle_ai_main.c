@@ -5590,6 +5590,9 @@ case EFFECT_GUARD_SPLIT:
         }
         else // consider move effects that hinder the target
         {
+            if (DoesShieldDustBlockAdditionalEffect(battlerAtk, aiData->abilities[battlerAtk], aiData->abilities[battlerDef]))
+                continue;
+
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_FLINCH:
