@@ -5729,8 +5729,7 @@ static void TryEvolvePokemon(void)
             {
                 FreeAllWindowBuffers();
                 GetEvolutionTargetSpecies(&gPlayerParty[i], mode, evolutionItemArg, NULL, &canStopEvo, DO_EVO);
-                if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_TANDEMAUS
-                 && !gBattleStruct->partyState[B_SIDE_PLAYER][i].sentOut)
+                if (canStopEvo == 2 && !gBattleStruct->partyState[B_SIDE_PLAYER][i].sentOut)
                 {
                     DoInvisibleEvolution(&gPlayerParty[i], species);
                 }

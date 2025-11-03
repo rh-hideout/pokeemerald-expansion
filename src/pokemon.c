@@ -4761,6 +4761,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                     *canStopEvo = FALSE;
             }
             break;
+        // Not a condition (always returns TRUE)
+        case SKIP_ANIM_IF_NOT_SENT_OUT:
+            currentCondition = TRUE;
+            if (canStopEvo != NULL)
+                *canStopEvo = 2;
+            break;
         case CONDITIONS_END:
             break;
         }
