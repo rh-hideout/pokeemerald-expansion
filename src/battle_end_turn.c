@@ -1540,7 +1540,6 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 u32 DoEndTurnEffects(void)
 {
     u32 battler = MAX_BATTLERS_COUNT;
-    gHitMarker |= HITMARKER_GRUDGE;
 
     for (;;)
     {
@@ -1555,10 +1554,7 @@ u32 DoEndTurnEffects(void)
 
         // Jump out if possible after endTurnEventsCounter was increased in the above code block
         if (gBattleStruct->endTurnEventsCounter == ENDTURN_COUNT)
-        {
-            gHitMarker &= ~HITMARKER_GRUDGE;
             return FALSE;
-        }
 
         battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->turnEffectsBattlerId];
 

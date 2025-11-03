@@ -777,11 +777,12 @@ struct BattleStruct
     u8 numHazards[NUM_BATTLE_SIDES];
     u8 hazardsCounter:4; // Counter for applying hazard on switch in
     enum SubmoveState submoveAnnouncement:2;
-    u8 padding3:2;
+    u8 tryDestinyBond:1;
+    u8 tryGrudge:1;
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 padding4:4;
+    u8 padding3:4;
 };
 
 struct AiBattleData

@@ -264,7 +264,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_UNUSED_23             (1 << 23)
-#define HITMARKER_GRUDGE                (1 << 24)
+#define HITMARKER_UNUSED_24             (1 << 24)
 #define HITMARKER_OBEYS                 (1 << 25)
 #define HITMARKER_UNUSED_26             (1 << 26)
 #define HITMARKER_UNUSED_27             (1 << 27)
