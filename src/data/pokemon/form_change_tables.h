@@ -1204,6 +1204,7 @@ static const struct FormChange sAlcremieFormChangeTable[] =
 
 #if P_FAMILY_EISCUE
 static const struct FormChange sEiscueFormChangeTable[] = {
+    {FORM_CHANGE_BATTLE_WEATHER,    SPECIES_EISCUE_ICE, B_WEATHER_HAIL | B_WEATHER_SNOW, ABILITY_ICE_FACE},
     {FORM_CHANGE_FAINT,             SPECIES_EISCUE_ICE},
     {FORM_CHANGE_END_BATTLE,        SPECIES_EISCUE_ICE},
     {FORM_CHANGE_TERMINATOR},
