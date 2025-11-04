@@ -89,7 +89,7 @@ static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused
 static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
 
-static const u8 sWindowVerticalScrollSpeeds[] =
+const u8 gTextScrollSpeeds[] =
 {
     [OPTIONS_TEXT_SPEED_SLOW]    = 1,
     [OPTIONS_TEXT_SPEED_MID]     = 2,
@@ -346,9 +346,9 @@ u32 GetPlayerTextSpeedModifier(void)
 
 bool32 IsPlayerTextSpeedInstant(void)
 {
-    return (FlagGet(FLAG_TEXT_SPEED_INSTANT)
-            || GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT
-            || TEXT_SPEED_INSTANT);
+    return FlagGet(FLAG_TEXT_SPEED_INSTANT)
+        || GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT
+        || TEXT_SPEED_INSTANT;
 }
 
 void DeactivateAllTextPrinters(void)
@@ -432,49 +432,49 @@ void RunTextPrinters(void)
     bool32 isInstantText = IsPlayerTextSpeedInstant(); // Force correct result. This is dumb, Revo knows.
     u32 textRepeats = GetPlayerTextSpeedModifier();
 
+    if (gDisableTextPrinters)
+        return;
+
     do
     {
         u32 numEmpty = 0;
-        if (!gDisableTextPrinters)
+        for (i = 0; i < WINDOWS_MAX; ++i)
         {
-            for (i = 0; i < WINDOWS_MAX; ++i)
+            if (sTextPrinters[i].active)
             {
-                if (sTextPrinters[i].active)
+                for (u32 j = 0; j < textRepeats; j++)
                 {
-                    for (u32 j = 0; j < textRepeats; j++)
+                    u32 renderState = RenderFont(&sTextPrinters[i]);
+                    switch (renderState)
                     {
-                        u32 renderState = RenderFont(&sTextPrinters[i]);
-                        switch (renderState)
-                        {
-                        case RENDER_PRINT:
-                            CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
-                            if (sTextPrinters[i].callback != NULL)
-                                sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
-                            break;
-                        case RENDER_UPDATE:
-                            if (sTextPrinters[i].callback != NULL)
-                                sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
-                            isInstantText = FALSE;
-                            break;
-                        case RENDER_FINISH:
-                            sTextPrinters[i].active = FALSE;
-                            isInstantText = FALSE;
-                            break;
-                        }
-
-                        if (!sTextPrinters[i].active)
-                            break;
+                    case RENDER_PRINT:
+                        CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
+                        if (sTextPrinters[i].callback != NULL)
+                            sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
+                        break;
+                    case RENDER_UPDATE:
+                        if (sTextPrinters[i].callback != NULL)
+                            sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
+                        isInstantText = FALSE;
+                        break;
+                    case RENDER_FINISH:
+                        sTextPrinters[i].active = FALSE;
+                        isInstantText = FALSE;
+                        break;
                     }
-                }
-                else
-                {
-                    numEmpty++;
+
+                    if (!sTextPrinters[i].active)
+                        break;
                 }
             }
-
-            if (numEmpty == WINDOWS_MAX)
-                return;
+            else
+            {
+                numEmpty++;
+            }
         }
+
+        if (numEmpty == WINDOWS_MAX)
+            return;
     } while (isInstantText);
 }
 
@@ -1414,7 +1414,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         if (textPrinter->scrollDistance)
         {
             int scrollSpeed = GetPlayerTextSpeed();
-            int speed = sWindowVerticalScrollSpeeds[scrollSpeed];
+            int speed = gTextScrollSpeeds[scrollSpeed];
             if (textPrinter->scrollDistance < speed)
             {
                 ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
