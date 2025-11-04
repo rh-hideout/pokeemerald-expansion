@@ -4206,7 +4206,7 @@ static void Cmd_tryfaintmon(void)
         if (cmd->battler == BS_ATTACKER)
             TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
 
-        gBattleScripting.battler = battler;
+        gBattlerFainted = battler;
         faintScript = BattleScript_FaintBattler;
         if (!(gAbsentBattlerFlags & (1u << battler))
          && !IsBattlerAlive(battler))
