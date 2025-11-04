@@ -189,7 +189,8 @@ SINGLE_BATTLE_TEST("Shield Dust does not prevent ability stat changes")
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly"){
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly")
+{
     AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
     GIVEN {
         PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
@@ -202,7 +203,8 @@ AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust corre
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly when it has Mold Breaker"){
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly when it has Mold Breaker")
+{
     AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
     GIVEN {
         PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
