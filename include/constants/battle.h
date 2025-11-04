@@ -252,7 +252,7 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_UNUSED_10             (1 << 10)
 #define HITMARKER_UNUSED_11             (1 << 11)
 #define HITMARKER_UNUSED_12             (1 << 12)
-#define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
+#define HITMARKER_UNUSED_13             (1 << 13)
 #define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_UNUSED_16             (1 << 16)
