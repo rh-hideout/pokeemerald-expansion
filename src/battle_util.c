@@ -433,7 +433,7 @@ void HandleAction_UseMove(void)
         return;
     }
 
-    gBattleStruct->state.atkCanceller = 0;
+    gBattleStruct->eventState.atkCanceller = 0;
     ClearDamageCalcResults();
     gMultiHitCounter = 0;
     gBattleScripting.savedDmg = 0;
@@ -904,7 +904,7 @@ void HandleAction_TryFinish(void)
 {
     if (!HandleFaintedMonActions())
     {
-        gBattleStruct->state.faintedAction = 0;
+        gBattleStruct->eventState.faintedAction = 0;
         gCurrentActionFuncId = B_ACTION_FINISHED;
     }
 }
@@ -1787,7 +1787,7 @@ void TryToRevertMimicryAndFlags(void)
 bool32 BattleArenaTurnEnd(void)
 {
     if ((gBattleTypeFlags & BATTLE_TYPE_ARENA)
-     && gBattleStruct->state.arenaTurn == 2
+     && gBattleStruct->eventState.arenaTurn == 2
      && IsBattlerAlive(B_POSITION_PLAYER_LEFT) && IsBattlerAlive(B_POSITION_OPPONENT_LEFT))
     {
         for (u32 battler = 0; battler < 2; battler++)
@@ -1828,11 +1828,11 @@ bool32 HandleFaintedMonActions(void)
     do
     {
         s32 i;
-        switch (gBattleStruct->state.faintedAction)
+        switch (gBattleStruct->eventState.faintedAction)
         {
         case FAINTED_ACTIONS_NO_MONS_TO_SWITCH:
-            gBattleStruct->state.faintedActionBattler = 0;
-            gBattleStruct->state.faintedAction++;
+            gBattleStruct->eventState.faintedActionBattler = 0;
+            gBattleStruct->eventState.faintedAction++;
             for (i = 0; i < gBattlersCount; i++)
             {
                 if (gAbsentBattlerFlags & (1u << i) && !HasNoMonsToSwitch(i, PARTY_SIZE, PARTY_SIZE))
@@ -1842,24 +1842,24 @@ bool32 HandleFaintedMonActions(void)
         case FAINTED_ACTIONS_GIVE_EXP:
             do
             {
-                gBattlerFainted = gBattlerTarget = gBattleStruct->state.faintedActionBattler;
-                if (gBattleMons[gBattleStruct->state.faintedActionBattler].hp == 0
-                 && !(gBattleStruct->givenExpMons & (1u << gBattlerPartyIndexes[gBattleStruct->state.faintedActionBattler]))
-                 && !(gAbsentBattlerFlags & (1u << gBattleStruct->state.faintedActionBattler)))
+                gBattlerFainted = gBattlerTarget = gBattleStruct->eventState.faintedActionBattler;
+                if (gBattleMons[gBattleStruct->eventState.faintedActionBattler].hp == 0
+                 && !(gBattleStruct->givenExpMons & (1u << gBattlerPartyIndexes[gBattleStruct->eventState.faintedActionBattler]))
+                 && !(gAbsentBattlerFlags & (1u << gBattleStruct->eventState.faintedActionBattler)))
                 {
                     BattleScriptExecute(BattleScript_GiveExp);
-                    gBattleStruct->state.faintedAction = 2;
+                    gBattleStruct->eventState.faintedAction = 2;
                     return TRUE;
                 }
-            } while (++gBattleStruct->state.faintedActionBattler != gBattlersCount);
-            gBattleStruct->state.faintedAction = 3;
+            } while (++gBattleStruct->eventState.faintedActionBattler != gBattlersCount);
+            gBattleStruct->eventState.faintedAction = 3;
             break;
         case FAINTED_ACTIONS_SET_ABSENT_FLAGS:
             OpponentSwitchInResetSentPokesToOpponentValue(gBattlerFainted);
-            if (++gBattleStruct->state.faintedActionBattler == gBattlersCount)
-                gBattleStruct->state.faintedAction = 3;
+            if (++gBattleStruct->eventState.faintedActionBattler == gBattlersCount)
+                gBattleStruct->eventState.faintedAction = 3;
             else
-                gBattleStruct->state.faintedAction = 1;
+                gBattleStruct->eventState.faintedAction = 1;
             // Don't switch mons until all pokemon performed their actions or the battle's over.
             if (B_FAINT_SWITCH_IN >= GEN_4
                 && gBattleOutcome == 0
@@ -1867,7 +1867,7 @@ bool32 HandleFaintedMonActions(void)
                 && gCurrentTurnActionNumber != gBattlersCount)
             {
                 gAbsentBattlerFlags |= 1u << gBattlerFainted;
-                if (gBattleStruct->state.faintedAction != 1)
+                if (gBattleStruct->eventState.faintedAction != 1)
                     return FALSE;
             }
             break;
@@ -1880,33 +1880,33 @@ bool32 HandleFaintedMonActions(void)
             {
                 return FALSE;
             }
-            gBattleStruct->state.faintedActionBattler = 0;
-            gBattleStruct->state.faintedAction++;
+            gBattleStruct->eventState.faintedActionBattler = 0;
+            gBattleStruct->eventState.faintedAction++;
             // fall through
         case FAINTED_ACTIONS_HANDLE_FAINTED_MON:
             do
             {
-                gBattlerFainted = gBattlerTarget = gBattleStruct->state.faintedActionBattler;
-                if (gBattleMons[gBattleStruct->state.faintedActionBattler].hp == 0
-                 && !(gAbsentBattlerFlags & (1u << gBattleStruct->state.faintedActionBattler)))
+                gBattlerFainted = gBattlerTarget = gBattleStruct->eventState.faintedActionBattler;
+                if (gBattleMons[gBattleStruct->eventState.faintedActionBattler].hp == 0
+                 && !(gAbsentBattlerFlags & (1u << gBattleStruct->eventState.faintedActionBattler)))
                 {
                     BattleScriptExecute(BattleScript_HandleFaintedMon);
-                    gBattleStruct->state.faintedAction = 5;
+                    gBattleStruct->eventState.faintedAction = 5;
                     return TRUE;
                 }
-            } while (++gBattleStruct->state.faintedActionBattler != gBattlersCount);
-            gBattleStruct->state.faintedAction = FAINTED_ACTIONS_MAX_CASE;
+            } while (++gBattleStruct->eventState.faintedActionBattler != gBattlersCount);
+            gBattleStruct->eventState.faintedAction = FAINTED_ACTIONS_MAX_CASE;
             break;
         case FAINTED_ACTIONS_HANDLE_NEXT_BATTLER:
-            if (++gBattleStruct->state.faintedActionBattler == gBattlersCount)
-                gBattleStruct->state.faintedAction = FAINTED_ACTIONS_MAX_CASE;
+            if (++gBattleStruct->eventState.faintedActionBattler == gBattlersCount)
+                gBattleStruct->eventState.faintedAction = FAINTED_ACTIONS_MAX_CASE;
             else
-                gBattleStruct->state.faintedAction = 4;
+                gBattleStruct->eventState.faintedAction = 4;
             break;
         case FAINTED_ACTIONS_MAX_CASE:
             break;
         }
-    } while (gBattleStruct->state.faintedAction != FAINTED_ACTIONS_MAX_CASE);
+    } while (gBattleStruct->eventState.faintedAction != FAINTED_ACTIONS_MAX_CASE);
     return FALSE;
 }
 
@@ -2977,10 +2977,10 @@ enum MoveCanceller AtkCanceller_MoveSuccessOrder(struct BattleContext *ctx)
 {
     enum MoveCanceller effect = MOVE_STEP_SUCCESS;
 
-    while (gBattleStruct->state.atkCanceller < CANCELLER_END && effect == MOVE_STEP_SUCCESS)
+    while (gBattleStruct->eventState.atkCanceller < CANCELLER_END && effect == MOVE_STEP_SUCCESS)
     {
-        effect = sMoveSuccessOrderCancellers[gBattleStruct->state.atkCanceller](ctx);
-        gBattleStruct->state.atkCanceller++;
+        effect = sMoveSuccessOrderCancellers[gBattleStruct->eventState.atkCanceller](ctx);
+        gBattleStruct->eventState.atkCanceller++;
     }
 
     if (effect == MOVE_STEP_REMOVES_STATUS)
