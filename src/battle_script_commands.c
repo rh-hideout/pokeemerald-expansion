@@ -2931,7 +2931,7 @@ static void SetNonVolatileStatus(u32 effectBattler, enum MoveEffect effect, cons
 }
 
 // To avoid confusion the arguments are naned battler/effectBattler since they can be different from gBattlerAttacker/gBattlerTarget
-void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFalgs effectFlags)
+void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, const u8 *battleScript, enum SetMoveEffectFlags effectFlags)
 {
     s32 i;
     bool32 primary = effectFlags & EFFECT_PRIMARY;
@@ -4102,7 +4102,7 @@ static void Cmd_setadditionaleffects(void)
                 {
                     gBattleCommunication[MULTISTRING_CHOOSER] = *((u8 *) &additionalEffect->multistring);
 
-                    enum SetMoveEffectFalgs flags = NO_FLAGS;
+                    enum SetMoveEffectFlags flags = NO_FLAGS;
                     if (percentChance == 0) flags |= EFFECT_PRIMARY;
                     if (percentChance >= 100) flags |= EFFECT_CERTAIN;
 
