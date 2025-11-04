@@ -17112,12 +17112,12 @@ void BS_TryActivateSoulheart(void)
     NATIVE_ARGS();
     while (gBattleStruct->soulheartBattlerId < gBattlersCount)
     {
-        gBattleScripting.battler = gBattleStruct->soulheartBattlerId++;
-        u32 ability = GetBattlerAbility(gBattleScripting.battler);
+        gBattlerAbility = gBattleStruct->soulheartBattlerId++;
+        u32 ability = GetBattlerAbility(gBattlerAbility);
         if (ability == ABILITY_SOUL_HEART
-            && IsBattlerAlive(gBattleScripting.battler)
+            && IsBattlerAlive(gBattlerAbility)
             && !NoAliveMonsForEitherParty()
-            && CompareStat(gBattleScripting.battler, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
+            && CompareStat(gBattlerAbility, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
         {
             SET_STATCHANGER(STAT_SPATK, 1, FALSE);
             PREPARE_STAT_BUFFER(gBattleTextBuff1, STAT_SPATK);
