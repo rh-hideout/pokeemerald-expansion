@@ -14,7 +14,7 @@
 static bool8 IsNotSpecialBattleString(enum StringID stringId);
 static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3);
 static void TrySetBattleSeminarShow(void);
-static void AddPointsOnFainting(bool8 targetFainted);
+static void AddPointsOnFainting(void);
 static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot);
 static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride);
 
@@ -124,12 +124,23 @@ static const u16 *const sPointsArray[] =
 // even if current Pokémon does not have corresponding move
 static const u16 sSpecialBattleStrings[] =
 {
-    STRINGID_PKMNPERISHCOUNTFELL, STRINGID_PKMNWISHCAMETRUE, STRINGID_PKMNLOSTPPGRUDGE,
-    STRINGID_PKMNTOOKFOE, STRINGID_PKMNABSORBEDNUTRIENTS, STRINGID_PKMNANCHOREDITSELF,
-    STRINGID_PKMNAFFLICTEDBYCURSE, STRINGID_PKMNSAPPEDBYLEECHSEED, STRINGID_PKMNLOCKEDINNIGHTMARE,
-    STRINGID_PKMNHURTBY, STRINGID_PKMNHURTBYBURN, STRINGID_PKMNHURTBYPOISON,
-    STRINGID_PKMNHURTBYSPIKES, STRINGID_ATTACKERFAINTED, STRINGID_TARGETFAINTED,
-    STRINGID_PKMNHITWITHRECOIL, STRINGID_PKMNCRASHED, TABLE_END
+    STRINGID_PKMNPERISHCOUNTFELL,
+    STRINGID_PKMNWISHCAMETRUE,
+    STRINGID_PKMNLOSTPPGRUDGE,
+    STRINGID_PKMNTOOKFOE,
+    STRINGID_PKMNABSORBEDNUTRIENTS,
+    STRINGID_PKMNANCHOREDITSELF,
+    STRINGID_PKMNAFFLICTEDBYCURSE,
+    STRINGID_PKMNSAPPEDBYLEECHSEED,
+    STRINGID_PKMNLOCKEDINNIGHTMARE,
+    STRINGID_PKMNHURTBY,
+    STRINGID_PKMNHURTBYBURN,
+    STRINGID_PKMNHURTBYPOISON,
+    STRINGID_PKMNHURTBYSPIKES,
+    STRINGID_BATTLERFAINTED,
+    STRINGID_PKMNHITWITHRECOIL,
+    STRINGID_PKMNCRASHED,
+    TABLE_END
 };
 
 // code
@@ -139,7 +150,7 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
     u32 atkSide, defSide, effSide, scriptingSide;
     struct Pokemon *atkMon, *defMon;
     u8 moveSlot;
-    u32 atkFlank, defFlank, effFlank;
+    u32 atkFlank, defFlank, effFlank, flank;
     u8 *perishCount;
     u16 *statStringId, *finishedMoveId;
 
@@ -452,8 +463,6 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
         tvPtr->pos[atkSide][atkFlank].mudSportMonId = gBattlerPartyIndexes[gBattlerAttacker] + 1;
         tvPtr->pos[atkSide][atkFlank].mudSportMoveSlot = moveSlot;
         break;
-    case STRINGID_ATTACKERFAINTED:
-        AddPointsOnFainting(FALSE);
     case STRINGID_RETURNMON:
         if (tvPtr->pos[atkSide][atkFlank].waterSportMonId != 0)
         {
@@ -466,17 +475,22 @@ void BattleTv_SetDataBasedOnString(enum StringID stringId)
             tvPtr->pos[atkSide][atkFlank].mudSportMoveSlot = 0;
         }
         break;
-    case STRINGID_TARGETFAINTED:
-        AddPointsOnFainting(TRUE);
-        if (tvPtr->pos[atkSide][defFlank].waterSportMonId != 0)
+    case STRINGID_BATTLERFAINTED:
+        AddPointsOnFainting();
+        if (gBattlerAttacker == gBattleScripting.battler)
+            flank = atkFlank;
+        else
+            flank = defFlank;
+
+        if (tvPtr->pos[atkSide][flank].waterSportMonId != 0)
         {
-            tvPtr->pos[atkSide][defFlank].waterSportMonId = 0;
-            tvPtr->pos[atkSide][defFlank].waterSportMoveSlot = 0;
+            tvPtr->pos[atkSide][flank].waterSportMonId = 0;
+            tvPtr->pos[atkSide][flank].waterSportMoveSlot = 0;
         }
-        if (tvPtr->pos[atkSide][defFlank].mudSportMonId != 0)
+        if (tvPtr->pos[atkSide][flank].mudSportMonId != 0)
         {
-            tvPtr->pos[atkSide][defFlank].mudSportMonId = 0;
-            tvPtr->pos[atkSide][defFlank].mudSportMoveSlot = 0;
+            tvPtr->pos[atkSide][flank].mudSportMonId = 0;
+            tvPtr->pos[atkSide][flank].mudSportMoveSlot = 0;
         }
         break;
     case STRINGID_PKMNRAISEDDEF:
@@ -1064,7 +1078,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
     }
 }
 
-static void AddPointsOnFainting(bool8 targetFainted)
+static void AddPointsOnFainting(void)
 {
     struct BattleTv *tvPtr = &gBattleStruct->tv;
     u32 atkSide = GetBattlerSide(gBattlerAttacker);
@@ -1187,7 +1201,7 @@ static void AddPointsOnFainting(bool8 targetFainted)
             }
             break;
         case FNT_RECOIL:
-            if (targetFainted == TRUE)
+            if (gBattlerAttacker == gBattleScripting.battler)
             {
                 AddMovePoints(PTS_FAINT_SET_UP, 0, atkSide,
                 (gBattlerPartyIndexes[gBattlerAttacker]) * 4 + tvPtr->side[atkSide].usedMoveSlot);

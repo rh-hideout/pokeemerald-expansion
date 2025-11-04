@@ -244,7 +244,7 @@ struct BattleMsgData
     u8 bakScriptPartyIdx;
     u8 hpScale;
     u8 itemEffectBattler;
-    u8 moveType;
+    enum Type moveType;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     u8 textBuffs[3][TEXT_BUFF_ARRAY_COUNT];
 };

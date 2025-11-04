@@ -231,7 +231,7 @@ bool32 RemovePyramidBagItem(u16 itemId, u16 count);
 const u8 *GetItemName(u16 itemId);
 u32 GetItemPrice(u16 itemId);
 const u8 *GetItemEffect(u32 itemId);
-u32 GetItemHoldEffect(u32 itemId);
+enum HoldEffect GetItemHoldEffect(u32 itemId);
 u32 GetItemHoldEffectParam(u32 itemId);
 const u8 *GetItemDescription(u16 itemId);
 u8 GetItemImportance(u16 itemId);

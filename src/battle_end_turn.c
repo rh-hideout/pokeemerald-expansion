@@ -170,7 +170,18 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
+        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
+    }
+
+    if (gBattleStruct->incrementEchoedVoice)
+    {
+        if (gBattleStruct->echoedVoiceCounter < 4)
+            gBattleStruct->echoedVoiceCounter++;
+        gBattleStruct->incrementEchoedVoice = FALSE;
+    }
+    else
+    {
+        gBattleStruct->echoedVoiceCounter = 0;
     }
 
     return effect;
@@ -278,28 +289,17 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
 
     gBattleStruct->turnEffectsBattlerId++;
 
-    if (ability == ABILITY_EMERGENCY_EXIT || ability == ABILITY_WIMP_OUT)
+    if (EmergencyExitCanBeTriggered(battler))
     {
-        u32 cutoff = gBattleMons[battler].maxHP / 2;
-        bool32 HadMoreThanHalfHpNowDoesnt = gBattleStruct->hpBefore[battler] > cutoff && gBattleMons[battler].hp <= cutoff;
+        gBattlerAbility = battler;
+        gLastUsedAbility = ability;
 
-        if (HadMoreThanHalfHpNowDoesnt
-         && IsBattlerAlive(battler)
-         && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-         && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-         && CountUsablePartyMons(battler) > 0
-         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
-        {
-            gBattlerAbility = battler;
-            gLastUsedAbility = ability;
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            BattleScriptExecute(BattleScript_EmergencyExitEnd2);
+        else
+            BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER || IsOnPlayerSide(battler))
-                BattleScriptExecute(BattleScript_EmergencyExitEnd2);
-            else
-                BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
-
-            effect = TRUE;
-        }
+        effect = TRUE;
     }
 
     return effect;
@@ -763,9 +763,9 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
     {
         s32 saltCureDamage = 0;
         if (IS_BATTLER_ANY_TYPE(battler, TYPE_STEEL, TYPE_WATER))
-            saltCureDamage = gBattleMons[battler].maxHP / 4;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / 4;
         else
-            saltCureDamage = gBattleMons[battler].maxHP / 8;
+            saltCureDamage = GetNonDynamaxMaxHP(battler) / 8;
         SetPassiveDamageAmount(battler, saltCureDamage);
         PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_SALT_CURE);
         BattleScriptExecute(BattleScript_SaltCureExtraDamage);
@@ -1539,7 +1539,6 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 u32 DoEndTurnEffects(void)
 {
     u32 battler = MAX_BATTLERS_COUNT;
-    gHitMarker |= HITMARKER_GRUDGE;
 
     for (;;)
     {
@@ -1554,10 +1553,7 @@ u32 DoEndTurnEffects(void)
 
         // Jump out if possible after endTurnEventsCounter was increased in the above code block
         if (gBattleStruct->endTurnEventsCounter == ENDTURN_COUNT)
-        {
-            gHitMarker &= ~HITMARKER_GRUDGE;
             return FALSE;
-        }
 
         battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->turnEffectsBattlerId];
 

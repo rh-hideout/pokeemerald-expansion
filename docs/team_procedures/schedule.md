@@ -53,4 +53,4 @@ This designation should be reserved for instances where an existing feature on `
 
 Blocking issues or PRs can be deferred to future releases but should be discussed with the Maintainers that assigned the designation in the first place.
 
-If a version's milestone does not have any issues or PRs assigned to it, that version should be [released](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/docs/team_procedures/expansion_versions.md) as close to the goal date as possible.
+If a version's milestone does not have any issues or PRs assigned to it, that version should be [released](expansion_versions.md) as close to the goal date as possible.
