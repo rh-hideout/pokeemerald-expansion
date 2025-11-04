@@ -246,10 +246,9 @@ enum SemiInvulnerableExclusion
     EXCLUDE_COMMANDER,
 };
 
-#define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
 #define HITMARKER_UNUSED_8              (1 << 8)
-#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
+#define HITMARKER_UNUSED_9              (1 << 9)
 #define HITMARKER_UNUSED_10             (1 << 10)
 #define HITMARKER_UNUSED_11             (1 << 11)
 #define HITMARKER_UNUSED_12             (1 << 12)

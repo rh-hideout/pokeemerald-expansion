@@ -4006,7 +4006,6 @@ void BattleTurnPassed(void)
 
     TurnValuesCleanUp(FALSE);
     gHitMarker &= ~HITMARKER_UNABLE_TO_USE_MOVE;
-    gHitMarker &= ~HITMARKER_ATTACKSTRING_PRINTED;
     gHitMarker &= ~HITMARKER_PLAYER_FAINTED;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
@@ -5408,10 +5407,7 @@ static void RunTurnActionsFunctions(void)
     else
     {
         if (gBattleStruct->savedTurnActionNumber != gCurrentTurnActionNumber) // action turn has been done, clear hitmarker bits for another battler
-        {
-            gHitMarker &= ~HITMARKER_ATTACKSTRING_PRINTED;
             gHitMarker &= ~HITMARKER_UNABLE_TO_USE_MOVE;
-        }
     }
 }
 
@@ -5643,7 +5639,7 @@ static void HandleEndTurn_FinishBattle(void)
         for (i = 0; i < PARTY_SIZE; i++)
         {
             bool32 changedForm = TryRevertPartyMonFormChange(i);
-            
+
             // Recalculate the stats of every party member before the end
             if (!changedForm && B_RECALCULATE_STATS >= GEN_5)
                 CalculateMonStats(&gPlayerParty[i]);

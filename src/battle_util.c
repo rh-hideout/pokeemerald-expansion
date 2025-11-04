@@ -914,9 +914,7 @@ void HandleAction_NothingIsFainted(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_NONE;
-    gHitMarker &= ~(HITMARKER_ATTACKSTRING_PRINTED
-                  | HITMARKER_STATUS_ABILITY_EFFECT
-                  | HITMARKER_OBEYS);
+    gHitMarker &= ~(HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_OBEYS);
 }
 
 void HandleAction_ActionFinished(void)
@@ -927,9 +925,7 @@ void HandleAction_ActionFinished(void)
     gCurrentTurnActionNumber++;
     gCurrentActionFuncId = gActionsByTurnOrder[gCurrentTurnActionNumber];
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
-    gHitMarker &= ~(HITMARKER_ATTACKSTRING_PRINTED
-                  | HITMARKER_STATUS_ABILITY_EFFECT
-                  | HITMARKER_OBEYS);
+    gHitMarker &= ~(HITMARKER_STATUS_ABILITY_EFFECT | HITMARKER_OBEYS);
 
     ClearDamageCalcResults();
     gCurrentMove = 0;
@@ -2476,8 +2472,9 @@ static enum MoveCanceller CancellerStanceChangeTwo(struct BattleContext *ctx)
 
 static enum MoveCanceller CancellerAttackstring(struct BattleContext *ctx)
 {
-    gHitMarker |= HITMARKER_ATTACKSTRING_PRINTED;
     BattleScriptCall(BattleScript_Attackstring);
+    if (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove)
+        gLastPrintedMoves[gBattlerAttacker] = gChosenMove;
     return MOVE_STEP_BREAK;
 }
 
