@@ -7246,13 +7246,15 @@ BattleScript_BattlerAbilityStatRaiseOnSwitchInRet:
 	end3
 
 BattleScript_ScriptingAbilityStatRaise::
-	call BattleScript_AbilityPopUp
-	statbuffchange BS_ABILITY_BATTLER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_ScriptingAbilityStatRaiseRet
-	copybyte sBATTLER, gBattlerAbility @ For message
-	printstring STRINGID_ATTACKERABILITYSTATRAISE
 	copybyte gBattlerAbility, sBATTLER
+	call BattleScript_AbilityPopUp
+	saveattacker
+	copybyte gBattlerAttacker, sBATTLER
+	statbuffchange BS_ATTACKER, STAT_CHANGE_NOT_PROTECT_AFFECTED | STAT_CHANGE_CERTAIN, BattleScript_ScriptingAbilityStatRaiseRet
+	printstring STRINGID_ATTACKERABILITYSTATRAISE
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ScriptingAbilityStatRaiseRet:
+	restoreattacker
 	return
 
 BattleScript_WeakArmorActivates::
