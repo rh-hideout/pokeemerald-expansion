@@ -7958,7 +7958,7 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
             if (gBattlerByTurnOrder[i] == battler)
                 gActionsByTurnOrder[i] = B_ACTION_CANCEL_PARTNER;
 
-            gBattleStruct->hpOnSwitchout[GetBattlerSide(i)] = gBattleMons[i].hp;
+            gBattleStruct->battlerState[i].hpOnSwitchout = gBattleMons[i].hp;
         }
 
         gSpecialStatuses[battler].switchInItemDone = FALSE;
@@ -9147,7 +9147,7 @@ static void Cmd_hpthresholds2(void)
     {
         u32 battler = GetBattlerForBattleScript(cmd->battler);
         u32 opposingBattler = BATTLE_OPPOSITE(battler);
-        u8 hpSwitchout = gBattleStruct->hpOnSwitchout[GetBattlerSide(opposingBattler)];
+        u32 hpSwitchout = gBattleStruct->battlerState[opposingBattler].hpOnSwitchout;
         s32 result = (hpSwitchout - gBattleMons[opposingBattler].hp) * 100 / hpSwitchout;
 
         if (gBattleMons[opposingBattler].hp >= hpSwitchout)

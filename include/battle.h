@@ -589,6 +589,7 @@ struct BattlerState
     u32 commanderSpecies:11;
     u32 padding:4;
     // End of Word
+    u16 hpOnSwitchout;
 };
 
 struct PartyState
@@ -671,7 +672,6 @@ struct BattleStruct
     u8 wallyWaitFrames;
     u8 wallyMoveFrames;
     u16 lastTakenMove[MAX_BATTLERS_COUNT]; // Last move that a battler was hit with.
-    u16 hpOnSwitchout[NUM_BATTLE_SIDES];
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;
