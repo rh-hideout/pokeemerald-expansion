@@ -1366,12 +1366,12 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
     u16 ability, expectedMove;
 
     PARAMETRIZE { ability = ABILITY_NONE;        expectedMove = MOVE_POWER_UP_PUNCH; }
-    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; expectedMove = MOVE_KARATE_CHOP; }
+    PARAMETRIZE { ability = ABILITY_SHEER_FORCE; expectedMove = MOVE_BRICK_BREAK; }
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, MOVE_KARATE_CHOP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, MOVE_BRICK_BREAK); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
