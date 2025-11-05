@@ -79,9 +79,7 @@ struct MoveInfo
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
-    u32 criticalHitStage:2;
-    bool32 alwaysCriticalHit:1;
-    u32 numAdditionalEffects:2; // limited to 3 - don't want to get too crazy
+    u32 numAdditionalEffects:5; // limited to 31 
     // Flags
     bool32 makesContact:1;
     bool32 ignoresProtect:1;
@@ -131,7 +129,9 @@ struct MoveInfo
     bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:6;
+    u32 criticalHitStage:2;
+    bool32 alwaysCriticalHit:1;
+    u32 padding:3;
     // end of word
 
     union {
