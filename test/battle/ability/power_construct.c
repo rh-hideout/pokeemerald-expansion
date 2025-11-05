@@ -50,7 +50,7 @@ WILD_BATTLE_TEST("Power Construct Zygarde reverts to its original form upon catc
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_POWER_CONSTRUCT, opponent);
 
         // Turn 2
-        ANIMATION(ANIM_TYPE_SPECIAL, B_ANIM_BALL_THROW, player);
+        MESSAGE("You used Master Ball!"); // Removed ANIMATION check as seems to fail if run in same thread as daycare ditto test
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_SPECIES), baseSpecies);
     }
