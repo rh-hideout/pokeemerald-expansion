@@ -4919,7 +4919,6 @@ static void Cmd_checkteamslost(void)
             u32 alivePartyMonsTotal = alivePlayerPartyMons + aliveOpponentPartyMons;
 
             if (emptySlotsTotal >= 2 && alivePartyMonsTotal >= 2)
-            // if (emptyPlayerSpots > 0 && alivePlayerPartyMons > 0 && emptyOpponentSpots > 0 && aliveOpponentPartyMons > 0)
                 gBattlescriptCurrInstr = cmd->jumpInstr;
             else
                 gBattlescriptCurrInstr = cmd->nextInstr;
@@ -6143,7 +6142,7 @@ static void Cmd_moveend(void)
             i = GetBattlerAbility(gBattlerTarget);
             if (AbilityBattleEffects(ABILITYEFFECT_MOVE_END, gBattlerTarget, i, 0, TRUE))
                 effect = TRUE;
-            else if (TryClearIllusion(gBattlerTarget, i, ABILITYEFFECT_MOVE_END))
+            else if (TryClearIllusion(gBattlerTarget, i))
                 effect = TRUE;
             gBattleScripting.moveendState++;
             break;
@@ -7718,7 +7717,7 @@ static void Cmd_switchhandleorder(void)
 
 static void SetDmgHazardsBattlescript(u8 battler, u8 multistringId)
 {
-    gBattleScripting.battler = gBattlerTarget = battler; // WARNING: MUTATION
+    gBattleScripting.battler = battler;
     gBattleCommunication[MULTISTRING_CHOOSER] = multistringId;
     BattleScriptCall(BattleScript_DmgHazardsOnBattler);
 }
@@ -7904,15 +7903,14 @@ static bool32 FirstEventBlockEvents(struct BattleContext *ctx)
         gBattleStruct->battlerSwitchInEvents++;
         break;
     case FIRST_EVENT_BLOCK_GENERAL_ABILITIES:
-        bool32 a = gBattleStruct->battlerState[battler].switchIn;
         if (TryPrimalReversion(battler)
-         || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ctx->abilities[battler], MOVE_NONE, a)
-         || TryClearIllusion(battler, ctx->abilities[battler], ABILITYEFFECT_ON_SWITCHIN))
+         || AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ctx->abilities[battler], MOVE_NONE, gBattleStruct->battlerState[battler].switchIn)
+         || TryClearIllusion(battler, ctx->abilities[battler]))
             effect = TRUE;
         gBattleStruct->battlerSwitchInEvents++;
         break;
     case FIRST_EVENT_BLOCK_IMMUNITY_ABILITIES:
-        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITIES, battler, ctx->abilities[battler], MOVE_NONE, TRUE))
+        if (AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, ctx->abilities[battler], MOVE_NONE, TRUE))
             effect = TRUE;
         gBattleStruct->battlerSwitchInEvents++;
         break;
@@ -16777,7 +16775,7 @@ void BS_TryIllusionOff(void)
 {
     NATIVE_ARGS(u8 battler);
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if (TryClearIllusion(battler, GetBattlerAbility(battler), ABILITYEFFECT_MOVE_END))
+    if (TryClearIllusion(battler, GetBattlerAbility(battler)))
         return;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
@@ -17144,12 +17142,15 @@ void BS_SwitchinAbilities(void)
     u32 battler = GetBattlerForBattleScript(cmd->battler);
     u32 ability = GetBattlerAbility(battler);
     gBattlescriptCurrInstr = cmd->nextInstr;
+    AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ability, MOVE_NONE, TRUE);
+    AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, battler, ability, MOVE_NONE, TRUE);
-    AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_IMMUNITY, battler, ability, MOVE_NONE, TRUE);
+    AbilityBattleEffects(ABILITYEFFECT_COMMANDER, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_ON_WEATHER, battler, ability, MOVE_NONE, TRUE);
     AbilityBattleEffects(ABILITYEFFECT_ON_TERRAIN, battler, ability, MOVE_NONE, TRUE);
+    AbilityBattleEffects(ABILITYEFFECT_OPPORTUNIST, battler, ability, MOVE_NONE, TRUE);
 }
 
 void BS_InstantHpDrop(void)

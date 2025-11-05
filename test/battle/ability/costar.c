@@ -27,18 +27,18 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
 
 DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle regardless of speed")
 {
-    u32 a, b = 0;
+    u32 speedLeft, speedRight = 0;
 
-    PARAMETRIZE { a = 200; b = 150; }
-    PARAMETRIZE { a = 150; b = 200; }
+    PARAMETRIZE { speedLeft = 200; speedRight = 150; }
+    PARAMETRIZE { speedLeft = 150; speedRight = 200; }
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(110); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); HP(1); };
         OPPONENT(SPECIES_WYNAUT) { Speed(10); HP(1); };
-        OPPONENT(SPECIES_FLAMIGO) { Speed(a); Ability(ABILITY_COSTAR); }
-        OPPONENT(SPECIES_ZACIAN) { Speed(b); Ability(ABILITY_INTREPID_SWORD); }
+        OPPONENT(SPECIES_FLAMIGO) { Speed(speedLeft); Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_ZACIAN) { Speed(speedRight); Ability(ABILITY_INTREPID_SWORD); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_HYPER_VOICE);

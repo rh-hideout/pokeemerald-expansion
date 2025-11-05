@@ -3867,9 +3867,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
     else
         gLastUsedAbility = GetBattlerAbility(battler);
 
-    if (move)
-        move = move;
-    else
+    if (move == MOVE_NONE)
         move = gCurrentMove;
 
     moveType = GetBattleMoveType(move);
@@ -5281,9 +5279,6 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         if (effect)
             return effect;
         break;
-    case ABILITYEFFECT_IMMUNITIES:
-        effect = TryImmunityAbilityHealStatus(battler, caseID);
-        break;
     case ABILITYEFFECT_SYNCHRONIZE:
         if (gLastUsedAbility == ABILITY_SYNCHRONIZE && gBattleStruct->synchronizeMoveEffect != MOVE_EFFECT_NONE)
         {
@@ -5467,7 +5462,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE; 
+                gDisableStructs[battler].weatherAbilityDone = TRUE;
             }
 
             if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
@@ -9141,7 +9136,7 @@ u32 GetBattlerVisualSpecies(u32 battler)
     return gBattleMons[battler].species;
 }
 
-bool32 TryClearIllusion(u32 battler, enum Ability ability, enum AbilityEffect caseID)
+bool32 TryClearIllusion(u32 battler, enum Ability ability)
 {
     if (gBattleStruct->illusion[battler].state != ILLUSION_ON)
         return FALSE;

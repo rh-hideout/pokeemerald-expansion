@@ -116,7 +116,7 @@ ONE_VS_TWO_BATTLE_TEST("End Turn Effects: First Event Block is executed correctl
     }
 }
 
-DOUBLE_BATTLE_TEST("End Turn Effects: xx")
+DOUBLE_BATTLE_TEST("End Turn Effects: New mons will switch in after if previous mons died due to hazards")
 {
     GIVEN {
         PLAYER(SPECIES_WYNAUT);
@@ -138,9 +138,5 @@ DOUBLE_BATTLE_TEST("End Turn Effects: xx")
             SEND_OUT(opponentLeft, 4);
             SEND_OUT(opponentRight, 5);
         }
-    } SCENE {
-
-    } THEN {
-
     }
 }

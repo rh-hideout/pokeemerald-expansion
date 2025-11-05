@@ -49,7 +49,7 @@ static enum ItemEffect TryDoublePrize(u32 battler)
     return effect;
 }
 
-enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTiming timing)
+enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -70,7 +70,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTi
     return effect;
 }
 
-static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryRoomService(u32 battler)
 {
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, GetBattlerAbility(battler)))
     {
@@ -86,7 +86,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
     return ITEM_NO_EFFECT;
 }
 
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, ActivationTiming timing)
+enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId)
 {
     if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
@@ -100,23 +100,23 @@ enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, Ac
     return ITEM_NO_EFFECT;
 }
 
-static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item, ActivationTiming timing)
+static enum ItemEffect TryTerrainSeeds(u32 battler, u32 item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     switch (GetItemHoldEffectParam(item))
     {
     case HOLD_EFFECT_PARAM_ELECTRIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF, timing);
+        effect = TryHandleSeed(battler, STATUS_FIELD_ELECTRIC_TERRAIN, STAT_DEF);
         break;
     case HOLD_EFFECT_PARAM_GRASSY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF, timing);
+        effect = TryHandleSeed(battler, STATUS_FIELD_GRASSY_TERRAIN, STAT_DEF);
         break;
     case HOLD_EFFECT_PARAM_MISTY_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF, timing);
+        effect = TryHandleSeed(battler, STATUS_FIELD_MISTY_TERRAIN, STAT_SPDEF);
         break;
     case HOLD_EFFECT_PARAM_PSYCHIC_TERRAIN:
-        effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF, timing);
+        effect = TryHandleSeed(battler, STATUS_FIELD_PSYCHIC_TERRAIN, STAT_SPDEF);
         break;
     }
 
@@ -133,7 +133,7 @@ static bool32 CanBeInfinitelyConfused(u32 battler)
     return TRUE;
 }
 
-static enum ItemEffect TryBerserkGene(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryBerserkGene(u32 battler)
 {
     if (CanBeInfinitelyConfused(battler))
         gBattleMons[battler].volatiles.infiniteConfusion = TRUE;
@@ -168,7 +168,7 @@ static enum ItemEffect RestoreWhiteHerbStats(u32 battler, ActivationTiming timin
     return effect;
 }
 
-static enum ItemEffect TryConsumeMirrorHerb(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryConsumeMirrorHerb(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -651,7 +651,7 @@ static enum ItemEffect TryBlackSludgeDamage(u32 battler, enum HoldEffect holdEff
     return effect;
 }
 
-static enum ItemEffect TryCureParalysis(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureParalysis(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -666,7 +666,7 @@ static enum ItemEffect TryCureParalysis(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryCurePoison(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCurePoison(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -681,7 +681,7 @@ static enum ItemEffect TryCurePoison(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryCureBurn(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureBurn(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -696,7 +696,7 @@ static enum ItemEffect TryCureBurn(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -719,7 +719,7 @@ static enum ItemEffect TryCureFreezeOrFrostbite(u32 battler, ActivationTiming ti
     return effect;
 }
 
-static enum ItemEffect TryCureSleep(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureSleep(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -736,7 +736,7 @@ static enum ItemEffect TryCureSleep(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryCureConfusion(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureConfusion(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -750,7 +750,7 @@ static enum ItemEffect TryCureConfusion(u32 battler, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect TryCureAnyStatus(u32 battler, ActivationTiming timing)
+static enum ItemEffect TryCureAnyStatus(u32 battler)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 string = 0;
@@ -808,7 +808,7 @@ enum HealAmount
     PERCENT_HEAL_AMOUNT,
 };
 
-static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal, ActivationTiming timing)
+static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -834,7 +834,7 @@ static u32 ItemHealHp(u32 battler, u32 itemId, enum HealAmount percentHeal, Acti
     return effect;
 }
 
-static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
+static u32 ItemRestorePp(u32 battler, u32 itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     struct Pokemon *mon = GetBattlerMon(battler);
@@ -874,7 +874,7 @@ static u32 ItemRestorePp(u32 battler, u32 itemId, ActivationTiming timing)
     return effect;
 }
 
-static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, ActivationTiming timing)
+static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     u32 hpFraction = B_CONFUSE_BERRIES_HEAL >= GEN_7 ? 4 : 2;
@@ -897,7 +897,7 @@ static enum ItemEffect HealConfuseBerry(u32 battler, u32 itemId, u32 flavorId, A
     return effect;
 }
 
-static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId, ActivationTiming timing)
+static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
@@ -916,7 +916,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId,
     return effect;
 }
 
-static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTiming timing)
+static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -932,7 +932,7 @@ static enum ItemEffect CriticalHitRatioUp(u32 battler, u32 itemId, ActivationTim
     return effect;
 }
 
-static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationTiming timing)
+static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
@@ -970,7 +970,7 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationT
     return effect;
 }
 
-static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTiming timing)
+static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
@@ -1010,22 +1010,22 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
         effect = TryDoublePrize(itemBattler);
         break;
     case HOLD_EFFECT_ROOM_SERVICE:
-        effect = TryRoomService(itemBattler, timing);
+        effect = TryRoomService(itemBattler);
         break;
     case HOLD_EFFECT_TERRAIN_SEED:
-        effect = TryTerrainSeeds(itemBattler, item, timing);
+        effect = TryTerrainSeeds(itemBattler, item);
         break;
     case HOLD_EFFECT_BERSERK_GENE:
-        effect = TryBerserkGene(itemBattler, timing);
+        effect = TryBerserkGene(itemBattler);
         break;
     case HOLD_EFFECT_BOOSTER_ENERGY:
-        effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler), timing);
+        effect = TryBoosterEnergy(itemBattler, GetBattlerAbility(itemBattler));
         break;
     case HOLD_EFFECT_WHITE_HERB:
         effect = RestoreWhiteHerbStats(itemBattler, timing);
         break;
     case HOLD_EFFECT_MIRROR_HERB:
-        effect = TryConsumeMirrorHerb(itemBattler, timing);
+        effect = TryConsumeMirrorHerb(itemBattler);
         break;
     case HOLD_EFFECT_FLINCH: // Kings Rock
         effect = TryKingsRock(itemBattler, battler, item);
@@ -1103,73 +1103,73 @@ enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect 
             effect = TryBlackSludgeDamage(itemBattler, holdEffect);
         break;
     case HOLD_EFFECT_CURE_PAR: // Cheri Berry
-        effect = TryCureParalysis(itemBattler, timing);
+        effect = TryCureParalysis(itemBattler);
         break;
     case HOLD_EFFECT_CURE_PSN: // Pecha Berry
-        effect = TryCurePoison(itemBattler, timing);
+        effect = TryCurePoison(itemBattler);
         break;
     case HOLD_EFFECT_CURE_BRN: // Rawst Berry
-        effect = TryCureBurn(itemBattler, timing);
+        effect = TryCureBurn(itemBattler);
         break;
     case HOLD_EFFECT_CURE_FRZ: // Aspear Berry
-        effect = TryCureFreezeOrFrostbite(itemBattler, timing);
+        effect = TryCureFreezeOrFrostbite(itemBattler);
         break;
     case HOLD_EFFECT_CURE_SLP: // Chesto Berry
-        effect = TryCureSleep(itemBattler, timing);
+        effect = TryCureSleep(itemBattler);
         break;
     case HOLD_EFFECT_CURE_CONFUSION: // Persim Berry
-        effect = TryCureConfusion(itemBattler, timing);
+        effect = TryCureConfusion(itemBattler);
         break;
     case HOLD_EFFECT_CURE_STATUS: // Lum Berry
-        effect = TryCureAnyStatus(itemBattler, timing);
+        effect = TryCureAnyStatus(itemBattler);
         break;
     case HOLD_EFFECT_RESTORE_HP: // Oran / Sitrus Berry / Berry Juice
-        effect = ItemHealHp(itemBattler, item, FIXED_HEAL_AMOUNT, timing);
+        effect = ItemHealHp(itemBattler, item, FIXED_HEAL_AMOUNT);
         break;
     case HOLD_EFFECT_RESTORE_PCT_HP: // Sitrus Berry
-        effect = ItemHealHp(itemBattler, item, PERCENT_HEAL_AMOUNT, timing);
+        effect = ItemHealHp(itemBattler, item, PERCENT_HEAL_AMOUNT);
         break;
     case HOLD_EFFECT_RESTORE_PP: // Leppa Berry
-        effect = ItemRestorePp(itemBattler, item, timing);
+        effect = ItemRestorePp(itemBattler, item);
         break;
     case HOLD_EFFECT_CONFUSE_SPICY: // Figy Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SPICY, timing);
+        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SPICY);
         break;
     case HOLD_EFFECT_CONFUSE_DRY: // Wiki Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_DRY, timing);
+        effect = HealConfuseBerry(itemBattler, item, FLAVOR_DRY);
         break;
     case HOLD_EFFECT_CONFUSE_SWEET: // Mago Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SWEET, timing);
+        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SWEET);
         break;
     case HOLD_EFFECT_CONFUSE_BITTER: // Aguav Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_BITTER, timing);
+        effect = HealConfuseBerry(itemBattler, item, FLAVOR_BITTER);
         break;
     case HOLD_EFFECT_CONFUSE_SOUR: // Iapapa Berry
-        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SOUR, timing);
+        effect = HealConfuseBerry(itemBattler, item, FLAVOR_SOUR);
         break;
     case HOLD_EFFECT_ATTACK_UP: // Liechi Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_ATK, timing);
+        effect = StatRaiseBerry(itemBattler, item, STAT_ATK);
         break;
     case HOLD_EFFECT_DEFENSE_UP: // Ganlon Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_DEF, timing);
+        effect = StatRaiseBerry(itemBattler, item, STAT_DEF);
         break;
     case HOLD_EFFECT_SPEED_UP: // Salac Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPEED, timing);
+        effect = StatRaiseBerry(itemBattler, item, STAT_SPEED);
         break;
     case HOLD_EFFECT_SP_ATTACK_UP: // Petaya Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPATK, timing);
+        effect = StatRaiseBerry(itemBattler, item, STAT_SPATK);
         break;
     case HOLD_EFFECT_SP_DEFENSE_UP: // Apicot Berry
-        effect = StatRaiseBerry(itemBattler, item, STAT_SPDEF, timing);
+        effect = StatRaiseBerry(itemBattler, item, STAT_SPDEF);
         break;
     case HOLD_EFFECT_CRITICAL_UP: // Lansat Berry
-        effect = CriticalHitRatioUp(itemBattler, item, timing);
+        effect = CriticalHitRatioUp(itemBattler, item);
         break;
     case HOLD_EFFECT_RANDOM_STAT_UP: // Starf Berry
-        effect = RandomStatRaiseBerry(itemBattler, item, timing);
+        effect = RandomStatRaiseBerry(itemBattler, item);
         break;
     case HOLD_EFFECT_MICLE_BERRY:
-        effect = TrySetMicleBerry(itemBattler, item, timing);
+        effect = TrySetMicleBerry(itemBattler, item);
         break;
     default:
         break;
