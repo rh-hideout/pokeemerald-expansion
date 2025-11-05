@@ -184,6 +184,18 @@ void TestRunner_CheckMemory(void)
     }
 }
 
+static void ClearSaveBlocks(void)
+{
+    for (u32 i = 0; i < sizeof(struct SaveBlock1) / 4; i++)
+        ((u32 *)gSaveBlock1Ptr)[i] = 0;
+
+    for (u32 i = 0; i < sizeof(struct SaveBlock2) / 4; i++)
+        ((u32 *)gSaveBlock2Ptr)[i] = 0;
+
+    for (u32 i = 0; i < sizeof(struct SaveBlock3) / 4; i++)
+        ((u32 *)gSaveBlock3Ptr)[i] = 0;
+}
+
 void CB2_TestRunner(void)
 {
 top:
@@ -206,8 +218,6 @@ top:
         ClearSav3();
 
         gIntrTable[7] = Intr_Timer2;
-
-        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
 
         // The current test restarted the ROM (e.g. by jumping to NULL).
         if (gPersistentTestRunnerState.address != 0)
@@ -336,6 +346,8 @@ top:
             gTestRunnerState.test->runner->tearDown(gTestRunnerState.test->data);
             gTestRunnerState.tearDown = FALSE;
         }
+
+        ClearSaveBlocks();
 
         TestRunner_CheckMemory();
 
