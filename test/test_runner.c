@@ -342,8 +342,6 @@ top:
             gTestRunnerState.tearDown = FALSE;
         }
 
-        ClearSaveBlocks();
-
         TestRunner_CheckMemory();
 
         if (gTestRunnerState.test->runner == &gAssumptionsRunner)
