@@ -28,8 +28,6 @@ extern const struct HoldEffectInfo gHoldEffectsInfo[];
 
 typedef bool32 (*ActivationTiming)(enum HoldEffect holdEffect);
 enum ItemEffect ItemBattleEffects(u32 primaryBattler, u32 secondaryBattler, enum HoldEffect holdEffect, ActivationTiming timing);
-enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTiming timing);
-enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, u32 itemId, ActivationTiming timing);
 
 bool32 IsOnSwitchInActivation(enum HoldEffect holdEffect);
 bool32 IsOnSwitchInFirstTurnActivation(enum HoldEffect holdEffect);
@@ -47,8 +45,8 @@ bool32 IsLifeOrbShellBellActivation(enum HoldEffect holdEffect);
 bool32 IsLeftoversActivation(enum HoldEffect holdEffect);
 bool32 IsOrbsActivation(enum HoldEffect holdEffect);
 bool32 IsOnEffectActivation(enum HoldEffect holdEffect);
-bool32 IsActivationForceTriggerItem(enum HoldEffect holdEffect);
-bool32 IsActivationOnBerry(enum HoldEffect holdEffect);
+bool32 IsForceTriggerItemActivation(enum HoldEffect holdEffect);
+bool32 IsOnBerryActivation(enum HoldEffect holdEffect);
 bool32 IsOnFlingActivation(enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_HOLD_EFFECTS

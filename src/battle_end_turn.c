@@ -12,94 +12,6 @@
 #include "constants/items.h"
 #include "constants/moves.h"
 
-// General End Turn Effects based on research from smogon from vanilla games:
-// https://www.smogon.com/forums/threads/sword-shield-battle-mechanics-research.3655528/page-64#post-9244179
-enum EndTurnResolutionOrder
-{
-    ENDTURN_ORDER,
-    ENDTURN_VARIOUS,
-    ENDTURN_WEATHER,
-    ENDTURN_WEATHER_DAMAGE,
-    ENDTURN_EMERGENCY_EXIT_1,
-    ENDTURN_AFFECTION,
-    ENDTURN_FUTURE_SIGHT,
-    ENDTURN_WISH,
-    ENDTURN_FIRST_EVENT_BLOCK,
-    ENDTURN_EMERGENCY_EXIT_2,
-    ENDTURN_AQUA_RING,
-    ENDTURN_INGRAIN,
-    ENDTURN_LEECH_SEED,
-    ENDTURN_POISON,
-    ENDTURN_BURN,
-    ENDTURN_FROSTBITE,
-    ENDTURN_NIGHTMARE,
-    ENDTURN_CURSE,
-    ENDTURN_WRAP,
-    ENDTURN_SALT_CURE,
-    ENDTURN_OCTOLOCK,
-    ENDTURN_SYRUP_BOMB,
-    ENDTURN_TAUNT,
-    ENDTURN_TORMENT,
-    ENDTURN_ENCORE,
-    ENDTURN_DISABLE,
-    ENDTURN_MAGNET_RISE,
-    ENDTURN_TELEKINESIS,
-    ENDTURN_HEAL_BLOCK,
-    ENDTURN_EMBARGO,
-    ENDTURN_YAWN,
-    ENDTURN_PERISH_SONG,
-    ENDTURN_ROOST,
-    ENDTURN_EMERGENCY_EXIT_3,
-    ENDTURN_SECOND_EVENT_BLOCK,
-    ENDTURN_TRICK_ROOM,
-    ENDTURN_GRAVITY,
-    ENDTURN_WATER_SPORT,
-    ENDTURN_MUD_SPORT,
-    ENDTURN_WONDER_ROOM,
-    ENDTURN_MAGIC_ROOM,
-    ENDTURN_TERRAIN,
-    ENDTURN_THIRD_EVENT_BLOCK,
-    ENDTURN_EMERGENCY_EXIT_4,
-    ENDTURN_FORM_CHANGE_ABILITIES,
-    ENDTURN_EJECT_PACK,
-    ENDTURN_DYNAMAX,
-    ENDTURN_COUNT,
-};
-
-// Block that handles effects for each individual battler on the field (eg residual damage)
-enum FirstEventBlock
-{
-    FIRST_EVENT_BLOCK_GMAX_MOVE_RESIDUAL, // Needs to be split
-    FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE,
-    FIRST_EVENT_BLOCK_THRASH, // Thrash isn't handled here in vanilla but for now it is that best place for it.
-    FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL,
-    FIRST_EVENT_BLOCK_ABILITIES,
-    FIRST_EVENT_BLOCK_HEAL_ITEMS,
-};
-
-// Block that tries to remove side statuses
-enum SecondEventBlock
-{
-    SECOND_EVENT_BLOCK_REFLECT,
-    SECOND_EVENT_BLOCK_LIGHT_SCREEN,
-    SECOND_EVENT_BLOCK_SAFEGUARD,
-    SECOND_EVENT_BLOCK_MIST,
-    SECOND_EVENT_BLOCK_TAILWIND,
-    SECOND_EVENT_BLOCK_LUCKY_CHANT,
-    SECOND_EVENT_BLOCK_RAINBOW,
-    SECOND_EVENT_BLOCK_SEA_OF_FIRE,
-    SECOND_EVENT_BLOCK_SWAMP,
-    SECOND_EVENT_BLOCK_AURORA_VEIL,
-};
-
-// Block that handles Uproar, items and non-form changing abilities
-enum ThirdEventBlock
-{
-    THIRD_EVENT_BLOCK_UPROAR,
-    THIRD_EVENT_BLOCK_ABILITIES,
-    THIRD_EVENT_BLOCK_ITEMS,
-};
-
 static u32 GetBattlerSideForMessage(u32 side)
 {
     u32 battler = 0;
@@ -118,7 +30,7 @@ static bool32 HandleEndTurnOrder(u32 battler)
     bool32 effect = FALSE;
 
     gBattleTurnCounter++;
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     u32 i, j;
     struct BattleContext ctx = {0};
@@ -148,7 +60,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
     u32 i;
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK && gFieldTimers.fairyLockTimer == gBattleTurnCounter)
         gFieldStatuses &= ~STATUS_FIELD_FAIRY_LOCK;
@@ -170,7 +82,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
-        gBattleStruct->hpBefore[i] = gBattleMons[i].hp;
+        gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
     }
 
     if (gBattleStruct->incrementEchoedVoice)
@@ -189,7 +101,7 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
 static bool32 HandleEndTurnWeather(u32 battler)
 {
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
     return EndOrContinueWeather();
 }
 
@@ -203,12 +115,12 @@ static bool32 HandleEndTurnWeatherDamage(u32 battler)
     if (currBattleWeather == 0xFF)
     {
         // If there is no weather on the field, no need to check other battlers so go to next state
-        gBattleStruct->turnEffectsBattlerId = 0;
-        gBattleStruct->endTurnEventsCounter++;
+        gBattleStruct->eventState.endTurnBattler = 0;
+        gBattleStruct->eventState.endTurn++;
         return effect;
     }
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (!IsBattlerAlive(battler) || !HasWeatherEffect())
         return effect;
@@ -287,29 +199,19 @@ static bool32 HandleEndTurnEmergencyExit(u32 battler)
     bool32 effect = FALSE;
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
-    if (ability == ABILITY_EMERGENCY_EXIT || ability == ABILITY_WIMP_OUT)
+    if (EmergencyExitCanBeTriggered(battler))
     {
-        u32 cutoff = gBattleMons[battler].maxHP / 2;
-        bool32 HadMoreThanHalfHpNowDoesnt = gBattleStruct->hpBefore[battler] > cutoff && gBattleMons[battler].hp <= cutoff;
+        gBattlerAbility = battler;
+        gLastUsedAbility = ability;
 
-        if (HadMoreThanHalfHpNowDoesnt
-         && IsBattlerAlive(battler)
-         && (CanBattlerSwitch(battler) || !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
-         && !(gBattleTypeFlags & BATTLE_TYPE_ARENA)
-         && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP) // Not currently held by Sky Drop
-        {
-            gBattlerAbility = battler;
-            gLastUsedAbility = ability;
+        if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            BattleScriptExecute(BattleScript_EmergencyExitEnd2);
+        else
+            BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
 
-            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-                BattleScriptExecute(BattleScript_EmergencyExitEnd2);
-            else
-                BattleScriptExecute(BattleScript_EmergencyExitWildEnd2);
-
-            effect = TRUE;
-        }
+        effect = TRUE;
     }
 
     return effect;
@@ -319,7 +221,7 @@ static bool32 HandleEndTurnAffection(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (!B_AFFECTION_MECHANICS
      || !IsBattlerAlive(battler)
@@ -342,7 +244,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter)
     {
@@ -380,7 +282,7 @@ static bool32 HandleEndTurnWish(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gWishFutureKnock.wishCounter[battler] == gBattleTurnCounter && IsBattlerAlive(battler))
     {
@@ -420,12 +322,12 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
 
     if (!IsBattlerAlive(battler))
     {
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId++;
+        gBattleStruct->eventState.endTurnBlock = 0;
+        gBattleStruct->eventState.endTurnBattler++;
         return effect;
     }
 
-    switch (gBattleStruct->eventBlockCounter)
+    switch (gBattleStruct->eventState.endTurnBlock)
     {
     case FIRST_EVENT_BLOCK_GMAX_MOVE_RESIDUAL: // TODO: Has to be split into 3 statuses and needs a queue
         side = GetBattlerSide(battler);
@@ -440,7 +342,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 effect = TRUE;
             }
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_SEA_OF_FIRE_DAMAGE:
         if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SEA_OF_FIRE)
@@ -452,7 +354,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_HurtByTheSeaOfFire);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
         if (gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
@@ -467,15 +369,14 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
                 gBattleMons[battler].volatiles.multipleTurns = FALSE;
                 if (!gBattleMons[battler].volatiles.confusionTurns)
                 {
-                    gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
-                    SetMoveEffect(battler, battler, TRUE, FALSE);
+                    SetMoveEffect(battler, battler, MOVE_EFFECT_CONFUSION, gBattlescriptCurrInstr, EFFECT_PRIMARY);
                     if (gBattleMons[battler].volatiles.confusionTurns)
                         BattleScriptExecute(BattleScript_ThrashConfuses);
                     effect = TRUE;
                 }
             }
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_GRASSY_TERRAIN_HEAL:
         if (gFieldStatuses & STATUS_FIELD_GRASSY_TERRAIN
@@ -488,7 +389,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_GrassyTerrainHeals);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_ABILITIES:
     {
@@ -504,14 +405,14 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         default:
             break;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     }
     case FIRST_EVENT_BLOCK_HEAL_ITEMS:
         if (ItemBattleEffects(battler, 0, GetBattlerHoldEffect(battler), IsLeftoversActivation))
             effect = TRUE;
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId++;
+        gBattleStruct->eventState.endTurnBlock = 0;
+        gBattleStruct->eventState.endTurnBattler++;
         break;
     }
 
@@ -522,7 +423,7 @@ static bool32 HandleEndTurnAquaRing(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.aquaRing
      && !gBattleMons[battler].volatiles.healBlock
@@ -541,7 +442,7 @@ static bool32 HandleEndTurnIngrain(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.root
      && !gBattleMons[battler].volatiles.healBlock
@@ -560,7 +461,7 @@ static bool32 HandleEndTurnLeechSeed(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.leechSeed
      && IsBattlerAlive(gBattleMons[battler].volatiles.leechSeed - 1)
@@ -602,7 +503,7 @@ static bool32 HandleEndTurnPoison(u32 battler)
 
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if ((gBattleMons[battler].status1 & STATUS1_POISON || gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
      && IsBattlerAlive(battler)
@@ -643,7 +544,7 @@ static bool32 HandleEndTurnBurn(u32 battler)
 
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].status1 & STATUS1_BURN
      && IsBattlerAlive(battler)
@@ -668,7 +569,7 @@ static bool32 HandleEndTurnFrostbite(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].status1 & STATUS1_FROSTBITE
      && IsBattlerAlive(battler)
@@ -686,7 +587,7 @@ static bool32 HandleEndTurnNightmare(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.nightmare
      && IsBattlerAlive(battler)
@@ -711,7 +612,7 @@ static bool32 HandleEndTurnCurse(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.cursed
      && IsBattlerAlive(battler)
@@ -729,7 +630,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.wrapped && IsBattlerAlive(battler))
     {
@@ -766,7 +667,7 @@ static bool32 HandleEndTurnSaltCure(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.saltCure
      && IsBattlerAlive(battler)
@@ -790,7 +691,7 @@ static bool32 HandleEndTurnOctolock(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].octolock)
     {
@@ -807,7 +708,7 @@ static bool32 HandleEndTurnSyrupBomb(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.syrupBomb && (IsBattlerAlive(battler)))
     {
@@ -826,7 +727,7 @@ static bool32 HandleEndTurnTaunt(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].tauntTimer && --gDisableStructs[battler].tauntTimer == 0)
     {
@@ -843,7 +744,7 @@ static bool32 HandleEndTurnTorment(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].tormentTimer == gBattleTurnCounter)
     {
@@ -860,7 +761,7 @@ static bool32 HandleEndTurnEncore(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].encoreTimer != 0)
     {
@@ -888,7 +789,7 @@ static bool32 HandleEndTurnDisable(u32 battler)
     bool32 effect = FALSE;
 
     u32 moveIndex = 0;
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].disableTimer != 0)
     {
@@ -918,7 +819,7 @@ static bool32 HandleEndTurnMagnetRise(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.magnetRise && gDisableStructs[battler].magnetRiseTimer == gBattleTurnCounter)
     {
@@ -935,7 +836,7 @@ static bool32 HandleEndTurnTelekinesis(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.telekinesis && gDisableStructs[battler].telekinesisTimer == gBattleTurnCounter)
     {
@@ -951,7 +852,7 @@ static bool32 HandleEndTurnHealBlock(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.healBlock && gDisableStructs[battler].healBlockTimer == gBattleTurnCounter)
     {
@@ -969,7 +870,7 @@ static bool32 HandleEndTurnEmbargo(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.embargo && gDisableStructs[battler].embargoTimer == gBattleTurnCounter)
     {
@@ -987,7 +888,7 @@ static bool32 HandleEndTurnYawn(u32 battler)
 
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gBattleMons[battler].volatiles.yawn > 0)
     {
@@ -1047,7 +948,7 @@ static bool32 HandleEndTurnPerishSong(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (IsBattlerAlive(battler) && gBattleMons[battler].volatiles.perishSong)
     {
@@ -1073,7 +974,7 @@ static bool32 HandleEndTurnRoost(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (gDisableStructs[battler].roostActive)
         gDisableStructs[battler].roostActive = FALSE;
@@ -1085,9 +986,9 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
 {
     bool32 effect = FALSE;
 
-    u32 side = gBattleStruct->turnSideTracker;
+    u32 side = gBattleStruct->eventState.battlerSide;
 
-    switch (gBattleStruct->eventBlockCounter)
+    switch (gBattleStruct->eventState.endTurnBlock)
     {
     case SECOND_EVENT_BLOCK_REFLECT:
         if (gSideStatuses[side] & SIDE_STATUS_REFLECT && gSideTimers[side].reflectTimer == gBattleTurnCounter)
@@ -1099,7 +1000,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_REFLECT);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_LIGHT_SCREEN:
         if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN && gSideTimers[side].lightscreenTimer == gBattleTurnCounter)
@@ -1111,7 +1012,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_LIGHT_SCREEN);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_SAFEGUARD:
         if (gSideStatuses[side] & SIDE_STATUS_SAFEGUARD && gSideTimers[side].safeguardTimer == gBattleTurnCounter)
@@ -1121,7 +1022,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_SafeguardEnds);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_MIST:
         if (gSideTimers[side].mistTimer != 0 && gSideTimers[side].mistTimer == gBattleTurnCounter)
@@ -1133,7 +1034,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_MIST);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_TAILWIND:
         if (gSideStatuses[side] & SIDE_STATUS_TAILWIND && gSideTimers[side].tailwindTimer == gBattleTurnCounter)
@@ -1143,7 +1044,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_TailwindEnds);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_LUCKY_CHANT:
         if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT && gSideTimers[side].luckyChantTimer == gBattleTurnCounter)
@@ -1153,7 +1054,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_LuckyChantEnds);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
         gBattlerAttacker = GetBattlerSideForMessage(side);
@@ -1163,7 +1064,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_TheRainbowDisappeared);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
             break;
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
         if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE && gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
@@ -1172,7 +1073,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_SWAMP:
         gBattlerAttacker = GetBattlerSideForMessage(side);
@@ -1182,7 +1083,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             BattleScriptExecute(BattleScript_TheSwampDisappeared);
             effect = TRUE;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_AURORA_VEIL:
         if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL && gSideTimers[side].auroraVeilTimer == gBattleTurnCounter)
@@ -1194,8 +1095,8 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_AURORA_VEIL);
             effect = TRUE;
         }
-        gBattleStruct->turnSideTracker++;
-        gBattleStruct->eventBlockCounter = 0;
+        gBattleStruct->eventState.battlerSide++;
+        gBattleStruct->eventState.endTurnBlock = 0;
         break;
     }
 
@@ -1206,7 +1107,7 @@ static bool32 HandleEndTurnTrickRoom(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == gBattleTurnCounter)
     {
@@ -1222,7 +1123,7 @@ static bool32 HandleEndTurnGravity(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_GRAVITY && gFieldTimers.gravityTimer == gBattleTurnCounter)
     {
@@ -1238,7 +1139,7 @@ static bool32 HandleEndTurnWaterSport(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_WATERSPORT && gFieldTimers.waterSportTimer == gBattleTurnCounter)
     {
@@ -1254,7 +1155,7 @@ static bool32 HandleEndTurnMudSport(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_MUDSPORT && gFieldTimers.mudSportTimer == gBattleTurnCounter)
     {
@@ -1270,7 +1171,7 @@ static bool32 HandleEndTurnWonderRoom(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM && gFieldTimers.wonderRoomTimer == gBattleTurnCounter)
     {
@@ -1286,7 +1187,7 @@ static bool32 HandleEndTurnMagicRoom(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM && gFieldTimers.magicRoomTimer == gBattleTurnCounter)
     {
@@ -1316,7 +1217,7 @@ static bool32 HandleEndTurnTerrain(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
 
     if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
         effect = EndTurnTerrain(STATUS_FIELD_ELECTRIC_TERRAIN, B_MSG_TERRAIN_END_ELECTRIC);
@@ -1336,11 +1237,11 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
 
     if (!IsBattlerAlive(battler))
     {
-        gBattleStruct->turnEffectsBattlerId++;
+        gBattleStruct->eventState.endTurnBattler++;
         return effect;
     }
 
-    switch (gBattleStruct->eventBlockCounter)
+    switch (gBattleStruct->eventState.endTurnBlock)
     {
     case THIRD_EVENT_BLOCK_UPROAR:
         if (gBattleMons[battler].volatiles.uproarTurns)
@@ -1383,7 +1284,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
                 effect = TRUE;
             }
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     case THIRD_EVENT_BLOCK_ABILITIES:
     {
@@ -1405,7 +1306,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         default:
             break;
         }
-        gBattleStruct->eventBlockCounter++;
+        gBattleStruct->eventState.endTurnBlock++;
         break;
     }
     case THIRD_EVENT_BLOCK_ITEMS:
@@ -1427,8 +1328,8 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
         default:
             break;
         }
-        gBattleStruct->eventBlockCounter = 0;
-        gBattleStruct->turnEffectsBattlerId++;
+        gBattleStruct->eventState.endTurnBlock = 0;
+        gBattleStruct->eventState.endTurnBattler++;
         break;
     }
     }
@@ -1442,7 +1343,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 
     enum Ability ability = GetBattlerAbility(battler);
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     switch (ability)
     {
@@ -1462,7 +1363,7 @@ static bool32 HandleEndTurnFormChangeAbilities(u32 battler)
 
 static bool32 HandleEndTurnEjectPack(u32 battler)
 {
-    gBattleStruct->endTurnEventsCounter++;
+    gBattleStruct->eventState.endTurn++;
     return TrySwitchInEjectPack(END_TURN);
 }
 
@@ -1470,7 +1371,7 @@ static bool32 HandleEndTurnDynamax(u32 battler)
 {
     bool32 effect = FALSE;
 
-    gBattleStruct->turnEffectsBattlerId++;
+    gBattleStruct->eventState.endTurnBattler++;
 
     if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] == gBattleTurnCounter)
     {
@@ -1550,29 +1451,25 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
 u32 DoEndTurnEffects(void)
 {
     u32 battler = MAX_BATTLERS_COUNT;
-    gHitMarker |= HITMARKER_GRUDGE;
 
     for (;;)
     {
         // If either turnEffectsBattlerId or turnSideTracker are at max count, reest values and go to the next state
-        if (gBattleStruct->turnEffectsBattlerId == gBattlersCount || gBattleStruct->turnSideTracker == NUM_BATTLE_SIDES)
+        if (gBattleStruct->eventState.endTurnBattler == gBattlersCount || gBattleStruct->eventState.battlerSide == NUM_BATTLE_SIDES)
         {
-            gBattleStruct->turnEffectsBattlerId = 0;
-            gBattleStruct->turnSideTracker = 0;
-            gBattleStruct->eventBlockCounter = 0;
-            gBattleStruct->endTurnEventsCounter++;
+            gBattleStruct->eventState.endTurnBattler = 0;
+            gBattleStruct->eventState.battlerSide = 0;
+            gBattleStruct->eventState.endTurnBlock = 0;
+            gBattleStruct->eventState.endTurn++;
         }
 
         // Jump out if possible after endTurnEventsCounter was increased in the above code block
-        if (gBattleStruct->endTurnEventsCounter == ENDTURN_COUNT)
-        {
-            gHitMarker &= ~HITMARKER_GRUDGE;
+        if (gBattleStruct->eventState.endTurn == ENDTURN_COUNT)
             return FALSE;
-        }
 
-        battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->turnEffectsBattlerId];
+        battler = gBattlerAttacker = gBattlerByTurnOrder[gBattleStruct->eventState.endTurnBattler];
 
-        if (sEndTurnEffectHandlers[gBattleStruct->endTurnEventsCounter](battler))
+        if (sEndTurnEffectHandlers[gBattleStruct->eventState.endTurn](battler))
             return TRUE;
     }
 }
