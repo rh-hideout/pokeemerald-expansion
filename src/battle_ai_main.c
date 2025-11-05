@@ -5069,7 +5069,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (gBattleMons[battlerDef].speed > gBattleMons[battlerAtk].speed)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
-case EFFECT_GUARD_SPLIT:
+    case EFFECT_GUARD_SPLIT:
     {
         u32 atkDefense = gBattleMons[battlerAtk].defense;
         u32 defDefense = gBattleMons[battlerDef].defense;
@@ -5590,6 +5590,9 @@ case EFFECT_GUARD_SPLIT:
         }
         else // consider move effects that hinder the target
         {
+            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef]))
+                continue;
+
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_FLINCH:
