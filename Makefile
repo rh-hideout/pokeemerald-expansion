@@ -195,8 +195,14 @@ ALL_LEARNABLES_JSON := $(LEARNSET_HELPERS_BUILD_DIR)/all_learnables.json
 WILD_ENCOUNTERS_TOOL_DIR := $(TOOLS_DIR)/wild_encounters
 AUTO_GEN_TARGETS += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
+MISC_TOOL_DIR := $(TOOLS_DIR)/misc
+AUTO_GEN_TARGETS +=  $(INCLUDE_DIRS)/constants/script_commands.h
+
 $(DATA_SRC_SUBDIR)/wild_encounters.h: $(DATA_SRC_SUBDIR)/wild_encounters.json $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py $(INCLUDE_DIRS)/config/overworld.h $(INCLUDE_DIRS)/config/dexnav.h
 	python3 $(WILD_ENCOUNTERS_TOOL_DIR)/wild_encounters_to_header.py > $@
+
+$(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_constants.py $(DATA_ASM_SUBDIR)/script_cmd_table.inc
+	python3  $(MISC_TOOL_DIR)/make_scr_cmd_constants.py
 
 $(C_BUILDDIR)/wild_encounter.o: c_dep += $(DATA_SRC_SUBDIR)/wild_encounters.h
 
