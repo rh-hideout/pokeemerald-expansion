@@ -6,7 +6,6 @@ The Vs. Seeker is a Key Item that is used to battle Trainers that the player has
 When used, the Vs. Seeker sends out a signal that allows the player to find other Trainers who want a rematch. This signal affects all Trainers that are on-screen. Once used on Trainers that can be rematched, the device cannot be used again until it is charged. The player does this by walking a specific number of steps. The effect on the Trainers wears off if they are battled, the player leaves the area, or the player walks a specific number of steps. If the player attempts to use the Vs. Seeker when it is not fully charged, the player will be told how many steps remain until it is. After the player uses the Vs. Seeker, some Trainers may have their team changed from their first battle. 
 
 ## How is the Vs. Seeker enabled?
-
 ### Users
 Vs. Seeker functionality is enabled by setting `I_VS_SEEKER_CHARGING` to `TRUE`. 
 
@@ -55,13 +54,9 @@ The game determines which version of the Trainer you'll fight next by following 
 4. If the next Trainer has already been defeated, check the next one in the sequence.
 
 ## How do users implement rematches with the Vs. Seeker?
-
 ### Existing `pokemerald` Trainers
-
 No extra work is required. With the exception of Wally, Gym Leaders and Elite Four, all of the rematchable Trainers in Emerald will work with the Vs. Seeker without any changes.
-
 ### New Trainers
-
 #### Party / `gRematchTable`
 Each of the rematches for the Trainer must be defined as seperate Trainers in `src/data/trainers.party` and `include/constants/opponents`. For example, `TRAINER_CALVIN_1` also has `TRAINER_CALVIN_2`,`TRAINER_CALVIN_3`,`TRAINER_CALVIN_4`, and `TRAINER_CALVIN_5`.  
 
@@ -77,7 +72,6 @@ If a Trainer is intended to have less than five unique rematch parties, the extr
 WARNING: Rematch IDs should be placed BEFORE `REMATCH_WALLY_VR`. Trainers below that are treated as "special Trainers" that are not triggered by the Vs. Seeker.
 
 #### Scripts
-
 The trainer's object needs to have a script that begins with a method to signify what this object's trainer ID is.
 
 #### `trainerbattle`
@@ -113,11 +107,9 @@ If the trainer has other script commands before the eventual `trainerbattle` mac
 If you want Trainers to spin once they are eligible for a rematch, their overworld graphics object ID (`include/constants/event_objects.h`) must be listed in either `regularTrainersOnLand` or `regularTrainersInWater`.Otherwise they will adopt the movement type `MOVEMENT_TYPE_FACE_DOWN`.
 
 ## What can be customized about the Vs. Seeker?
-
 * **Unlock Conditions**: The next "level" of rematches is unlocked when a specific flag is set. The flags that are currently used in `GetGameProgressFlags` can be changed to flags that better suit your game.
 * **Recharge Steps**: `VSSEEKER_RECHARGE_STEPS` is initally set to 100, but this value can be changed to any number under 256.
 * **Badge Requirement**: `HasAtLeastFiveBadges` is used to check if the Vs. Seeker will successfully work. You can customize the number of badges by changing `REMATCH_BADGE_COUNT` or otherwise alterting the function.
 
 ## What are the limitations of the Vs. Seeker?
-
-The Vs. Seeker does not currently work with Gym Leaders. There is a bug filed to remedy this
+The Vs. Seeker does not currently work with Gym Leaders. There is a bug filed to hopefully fix this in the future.
