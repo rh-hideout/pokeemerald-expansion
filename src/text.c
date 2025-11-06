@@ -446,7 +446,7 @@ void RunTextPrinters(void)
     do
     {
         u32 numEmpty = 0;
-        for (u32 windowId = 0; windowId < WINDOWS_MAX; ++windowId)
+        for (u32 windowId = 0; windowId < WINDOWS_MAX; windowId++)
         {
             if (sTextPrinters[windowId].active)
             {
