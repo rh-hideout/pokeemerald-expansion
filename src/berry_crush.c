@@ -1157,18 +1157,7 @@ static void SetNamesAndTextSpeed(struct BerryCrushGame *game)
         game->players[i].name[PLAYER_NAME_LENGTH] = EOS;
     }
 
-    switch (gSaveBlock2Ptr->optionsTextSpeed)
-    {
-    case OPTIONS_TEXT_SPEED_SLOW:
-        game->textSpeed = 8;
-        break;
-    case OPTIONS_TEXT_SPEED_MID:
-        game->textSpeed = 4;
-        break;
-    case OPTIONS_TEXT_SPEED_FAST:
-        game->textSpeed = 1;
-        break;
-    }
+    game->textSpeed = GetPlayerTextSpeedDelay();
 }
 
 static s32 ShowGameDisplay(void)

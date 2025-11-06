@@ -143,7 +143,6 @@ struct TextGlyph
 extern TextFlags gTextFlags;
 extern u8 gDisableTextPrinters;
 extern struct TextGlyph gCurGlyph;
-extern const u8 gTextScrollSpeeds[];
 
 void DeactivateAllTextPrinters(void);
 u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
@@ -188,6 +187,7 @@ u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 u32 GetPlayerTextSpeed(void);
 u32 GetPlayerTextSpeedDelay(void);
 u32 GetPlayerTextSpeedModifier(void);
+u32 GetPlayerTextScrollSpeed(void);
 bool32 IsPlayerTextSpeedInstant(void);
 
 #endif // GUARD_TEXT_H

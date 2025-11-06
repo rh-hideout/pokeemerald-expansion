@@ -16,6 +16,7 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
     u16 char_;
     struct TextPrinterSubStruct *subStruct;
     subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
+    u32 scrollSpeed = GetPlayerTextScrollSpeed();
 
     switch (textPrinter->state)
     {
@@ -158,15 +159,15 @@ u16 FontFunc_Braille(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            if (textPrinter->scrollDistance < gTextScrollSpeeds[gSaveBlock2Ptr->optionsTextSpeed])
+            if (textPrinter->scrollDistance < scrollSpeed)
             {
                 ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
                 textPrinter->scrollDistance = 0;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, gTextScrollSpeeds[gSaveBlock2Ptr->optionsTextSpeed], PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                textPrinter->scrollDistance -= gTextScrollSpeeds[gSaveBlock2Ptr->optionsTextSpeed];
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                textPrinter->scrollDistance -= scrollSpeed;
             }
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }

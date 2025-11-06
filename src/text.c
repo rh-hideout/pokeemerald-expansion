@@ -89,14 +89,6 @@ static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused
 static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
 
-const u8 gTextScrollSpeeds[] =
-{
-    [OPTIONS_TEXT_SPEED_SLOW]    = 1,
-    [OPTIONS_TEXT_SPEED_MID]     = 2,
-    [OPTIONS_TEXT_SPEED_FAST]    = 4,
-    [OPTIONS_TEXT_SPEED_INSTANT] = 4,
-};
-
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
 {
     { FONT_SMALL,          GetGlyphWidth_Small },
@@ -300,6 +292,7 @@ static const u8 sMenuCursorDimensions[][2] =
     [FONT_SHORT_NARROWER] = { 8,  14 },
 };
 
+// these three arrays are most for readability, ie instead of returning a magic number 8
 static const u8 sTextSpeedFrameDelays[] =
 {
     [OPTIONS_TEXT_SPEED_SLOW]    = 8,
@@ -316,6 +309,14 @@ static const u8 sTextSpeedModifiers[] =
     [OPTIONS_TEXT_SPEED_INSTANT] = TEXT_SPEED_INSTANT_MODIFIER,
 };
 
+static const u8 sTextScrollSpeeds[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = 1,
+    [OPTIONS_TEXT_SPEED_MID]     = 2,
+    [OPTIONS_TEXT_SPEED_FAST]    = 4,
+    [OPTIONS_TEXT_SPEED_INSTANT] = 6,
+};
+
 static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
@@ -329,7 +330,12 @@ u32 GetPlayerTextSpeed(void)
         return OPTIONS_TEXT_SPEED_MID;
 
     if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_INSTANT)
-        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
+        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+
+    if (FlagGet(FLAG_TEXT_SPEED_INSTANT)
+        || TEXT_SPEED_INSTANT
+        || gSaveBlock2Ptr->optionsTextSpeed == OPTIONS_TEXT_SPEED_INSTANT)
+        return OPTIONS_TEXT_SPEED_INSTANT;
 
     return gSaveBlock2Ptr->optionsTextSpeed;
 }
@@ -342,6 +348,11 @@ u32 GetPlayerTextSpeedDelay(void)
 u32 GetPlayerTextSpeedModifier(void)
 {
     return sTextSpeedModifiers[GetPlayerTextSpeed()];
+}
+
+u32 GetPlayerTextScrollSpeed(void)
+{
+    return sTextScrollSpeeds[GetPlayerTextSpeed()];
 }
 
 bool32 IsPlayerTextSpeedInstant(void)
@@ -1404,8 +1415,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL_START:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
+            subStruct->downArrowDelay = 0;
             TextPrinterClearDownArrow(textPrinter);
-            textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing;
+            textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing * GetPlayerTextSpeedModifier();
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->state = RENDER_STATE_SCROLL;
         }
@@ -1413,19 +1425,33 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            int scrollSpeed = GetPlayerTextSpeed();
-            int speed = gTextScrollSpeeds[scrollSpeed];
-            if (textPrinter->scrollDistance < speed)
+            int scrollSpeed = GetPlayerTextScrollSpeed();
+            u32 speedModifier = GetPlayerTextSpeedModifier();
+
+            if (subStruct->downArrowDelay != 0)
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                textPrinter->scrollDistance = 0;
+                subStruct->downArrowDelay--;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, speed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                textPrinter->scrollDistance -= speed;
+                if (textPrinter->scrollDistance < scrollSpeed)
+                {
+                    ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                    textPrinter->scrollDistance = 0;
+                }
+                else
+                {
+                    ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                    textPrinter->scrollDistance -= scrollSpeed;
+                }
+
+                if (speedModifier > 1)
+                    subStruct->downArrowDelay = speedModifier;
+                else
+                    subStruct->downArrowDelay = 0;
+
+                CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
             }
-            CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }
         else
         {
