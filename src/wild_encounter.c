@@ -444,7 +444,7 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
     if (wildMonInfo == NULL && !OW_TIME_OF_DAY_DISABLE_FALLBACK)
         return OW_TIME_OF_DAY_FALLBACK;
     else
-        return timeOfDay;
+        return GenConfigTimeOfDay(timeOfDay);
 }
 
 u8 PickWildMonNature(void)
