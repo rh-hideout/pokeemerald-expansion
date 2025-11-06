@@ -178,8 +178,8 @@ class WildEncounterAssembler:
             for time in self.config.times_of_day:
                 if not self.config.time_encounters and time != self.config.time_fallback:
                     continue
-                self.WriteLine(f"[{time}] =", 4)
-                self.WriteLine("{", 4)
+                self.WriteLine(f"[{time}] =", 3)
+                self.WriteLine("{", 3)
                 for mon_type in self.config.mon_types:
                     member_name = mon_type.title().replace("_", "")
                     member_name = member_name[0].lower() + member_name[1:] + "Info"
@@ -188,7 +188,7 @@ class WildEncounterAssembler:
                         value = encounter_data[time][mon_type]
                     if value != "NULL":
                         value = "&" + value
-                    self.WriteLine(f".{member_name} = {value},", 5)
+                    self.WriteLine(f".{member_name} = {value},", 4)
 
                 self.WriteLine("},", 3)
 
