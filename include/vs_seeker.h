@@ -12,6 +12,5 @@ bool32 IsVsSeekerEnabled(void);
 void NativeVsSeekerRematchId(struct ScriptContext *ctx);
 
 #define VSSEEKER_RECHARGE_STEPS 100
-#define REMATCH_BADGE_COUNT 5
 
 #endif //GUARD_VS_SEEKER_H
