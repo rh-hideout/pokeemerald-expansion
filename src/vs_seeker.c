@@ -28,6 +28,7 @@
 #include "constants/items.h"
 #include "constants/maps.h"
 #include "constants/songs.h"
+#include "constants/script_commands.h"
 #include "constants/trainer_types.h"
 #include "constants/field_effects.h"
 
