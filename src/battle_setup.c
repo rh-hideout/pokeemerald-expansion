@@ -1803,7 +1803,7 @@ static bool32 HasAtLeastFiveBadges(void)
     {
         if (FlagGet(gBadgeFlags[i]) == TRUE)
         {
-            if (++count >= 5)
+            if (++count >= REMATCH_BADGE_COUNT)
                 return TRUE;
         }
     }
