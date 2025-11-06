@@ -714,29 +714,29 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
     // The trainer flag is located 3 bytes (command + flags + localIdA) from the script pointer, assuming the trainerbattle command is first in the script.
     // Because scripts are unaligned, and because the ARM processor requires shorts to be 16-bit aligned, this function needs to perform explicit bitwise operations to get the correct flag.
     u16 trainerFlag;
-    if (script[0] == 0x5c)
+    switch (script[0])
     {
-        script += 3;
-        trainerFlag = script[0];
-        trainerFlag |= script[1] << 8;
-    }
-    else if (script[0] == 0x23)
-    {
-        u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
-        if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
-        {
-            script += 5;
+        case 0x5c:
+            script += 3;
             trainerFlag = script[0];
             trainerFlag |= script[1] << 8;
-        }
-        else
-        {
+            break;
+        case 0x23:
+            u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
+            if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
+            {
+                script += 5;
+                trainerFlag = script[0];
+                trainerFlag |= script[1] << 8;
+            }
+            else
+            {
+                trainerFlag = TRAINER_NONE;
+            }
+            break;
+        default:
             trainerFlag = TRAINER_NONE;
-        }
-    }
-    else
-    {
-        trainerFlag = TRAINER_NONE;
+        break;
     }
     return trainerFlag;
 }
