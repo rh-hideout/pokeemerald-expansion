@@ -986,7 +986,7 @@ void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter)
     else
     {
         subStruct->downArrowYPosIdx = 0;
-        subStruct->downArrowDelay = 0;
+        subStruct->utilityCounter = 0;
     }
 }
 
@@ -997,9 +997,9 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
 
     if (gTextFlags.autoScroll == 0)
     {
-        if (subStruct->downArrowDelay != 0)
+        if (subStruct->utilityCounter != 0)
         {
-            subStruct->downArrowDelay--;
+            subStruct->utilityCounter--;
         }
         else
         {
@@ -1035,7 +1035,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 
-            subStruct->downArrowDelay = 8 * GetPlayerTextSpeedModifier();
+            subStruct->utilityCounter = 8 * GetPlayerTextSpeedModifier();
             subStruct->downArrowYPosIdx++;
         }
     }
@@ -1413,7 +1413,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL_START:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
-            subStruct->downArrowDelay = 0;
+            subStruct->utilityCounter = 0;
             TextPrinterClearDownArrow(textPrinter);
             textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing * GetPlayerTextSpeedModifier();
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
@@ -1426,9 +1426,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             int scrollSpeed = GetPlayerTextScrollSpeed();
             u32 speedModifier = GetPlayerTextSpeedModifier();
 
-            if (subStruct->downArrowDelay != 0)
+            if (subStruct->utilityCounter != 0)
             {
-                subStruct->downArrowDelay--;
+                subStruct->utilityCounter--;
             }
             else
             {
@@ -1444,9 +1444,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 }
 
                 if (speedModifier > 1)
-                    subStruct->downArrowDelay = speedModifier;
+                    subStruct->utilityCounter = speedModifier;
                 else
-                    subStruct->downArrowDelay = 0;
+                    subStruct->utilityCounter = 0;
 
                 CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
             }
