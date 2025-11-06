@@ -8447,6 +8447,10 @@ static inline void MulByTypeEffectiveness(struct DamageContext *ctx, uq4_12_t *m
         if (ctx->updateFlags)
             RecordAbilityBattle(ctx->battlerAtk, ctx->abilityAtk);
     }
+    else if (GetMoveEffect(ctx->move) == EFFECT_NEUTRAL_EFFECTIVE_ON_ARG && defType == GetMoveArgType(ctx->move) && mod == UQ_4_12(0.0))
+    {
+        mod = UQ_4_12(1.0);
+    }
 
     if (ctx->moveType == TYPE_PSYCHIC && defType == TYPE_DARK && gBattleMons[ctx->battlerDef].volatiles.miracleEye && mod == UQ_4_12(0.0))
         mod = UQ_4_12(1.0);
