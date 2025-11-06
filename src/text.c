@@ -1415,7 +1415,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         {
             subStruct->utilityCounter = 0;
             TextPrinterClearDownArrow(textPrinter);
-            textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing * GetPlayerTextSpeedModifier();
+            textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing;
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->state = RENDER_STATE_SCROLL;
         }
@@ -1423,33 +1423,32 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            int scrollSpeed = GetPlayerTextScrollSpeed();
+            u32 scrollSpeed = GetPlayerTextScrollSpeed();
             u32 speedModifier = GetPlayerTextSpeedModifier();
 
             if (subStruct->utilityCounter != 0)
             {
                 subStruct->utilityCounter--;
+                return RENDER_UPDATE;
+            }
+
+            if (textPrinter->scrollDistance < scrollSpeed)
+            {
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                textPrinter->scrollDistance = 0;
             }
             else
             {
-                if (textPrinter->scrollDistance < scrollSpeed)
-                {
-                    ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                    textPrinter->scrollDistance = 0;
-                }
-                else
-                {
-                    ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                    textPrinter->scrollDistance -= scrollSpeed;
-                }
-
-                if (speedModifier > 1)
-                    subStruct->utilityCounter = speedModifier;
-                else
-                    subStruct->utilityCounter = 0;
-
-                CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                textPrinter->scrollDistance -= scrollSpeed;
             }
+
+            if (speedModifier > 1)
+                subStruct->utilityCounter = speedModifier;
+            else
+                subStruct->utilityCounter = 0;
+
+            CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }
         else
         {
