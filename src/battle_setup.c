@@ -1125,6 +1125,13 @@ bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
     return FlagGet(TRAINER_FLAGS_START + temp->params.opponentA);
 }
+
+bool32 GetRematchFromScriptPointer(const u8 *data)
+{
+    TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
+    return ShouldTryRematchBattleForTrainerId(temp->params.opponentA);
+}
+
 #undef OPCODE_OFFSET
 
 // Set trainer's movement type so they stop and remain facing that direction

@@ -472,7 +472,18 @@ static u8 CheckTrainer(u8 objectEventId)
     else if (trainerBattlePtr)
     {
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
-            return 0;
+        {
+            //If there is a rematch, we want to trigger the approach sequence
+            if (GetRematchFromScriptPointer(trainerBattlePtr))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else
+            {
+                 return 0;
+            }
+        }
     }
     else
     {
