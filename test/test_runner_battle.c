@@ -476,29 +476,29 @@ static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, co
     //default
     switch (tag)
     {
-        case RNG_ACCURACY:
-            ASSUME(n == 2);
-            if (turn && turn->hit)
-                return turn->hit - 1;
-            else
-                return TRUE;
+    case RNG_ACCURACY:
+        ASSUME(n == 2);
+        if (turn && turn->hit)
+            return turn->hit - 1;
+        else
+            return TRUE;
 
-        case RNG_CRITICAL_HIT:
-            ASSUME(n == 2);
-            if (turn && turn->criticalHit)
-                return turn->criticalHit - 1;
-            else
-                return weights[FALSE] > 0 ? FALSE : TRUE;
+    case RNG_CRITICAL_HIT:
+        ASSUME(n == 2);
+        if (turn && turn->criticalHit)
+            return turn->criticalHit - 1;
+        else
+            return weights[FALSE] > 0 ? FALSE : TRUE;
 
-        case RNG_SECONDARY_EFFECT:
-            ASSUME(n == 2);
-            if (turn && turn->secondaryEffect)
-                return turn->secondaryEffect - 1;
-            else
-                return TRUE;
+    case RNG_SECONDARY_EFFECT:
+        ASSUME(n == 2);
+        if (turn && turn->secondaryEffect)
+            return turn->secondaryEffect - 1;
+        else
+            return TRUE;
 
-        default:
-            return RandomWeightedArrayDefaultValue(tag, n, weights);
+    default:
+        return RandomWeightedArrayDefaultValue(tag, n, weights);
     }
 }
 
