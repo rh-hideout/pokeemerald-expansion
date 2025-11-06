@@ -4089,8 +4089,8 @@ static void UNUSED HighlightScreenSelectBarItem(u8 selectedScreen, u16 unused)
 #define tPersonalityHi data[15]
 
 // Types palettes need to be loaded at a different slot than anticipated by gTypesInfo
-// to avoid overlapping with caught mon sprite palatte slot
-// Normal type info palette slots: 13 ,14 and 15
+// to avoid overlapping with caught mon sprite palette slot
+// Normal type info palette slots: 13, 14 and 15
 // Caught mon palette slot: 15
 #define TYPE_INFO_PALETTE_NUM_OFFSET -1
 
