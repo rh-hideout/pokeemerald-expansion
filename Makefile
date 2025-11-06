@@ -205,6 +205,8 @@ $(INCLUDE_DIRS)/constants/script_commands.h: $(MISC_TOOL_DIR)/make_scr_cmd_const
 	python3  $(MISC_TOOL_DIR)/make_scr_cmd_constants.py
 
 $(C_BUILDDIR)/wild_encounter.o: c_dep += $(DATA_SRC_SUBDIR)/wild_encounters.h
+$(C_BUILDDIR)/trainer_see.o: c_dep += $(INCLUDE_DIRS)/constants/script_commands.h
+$(C_BUILDDIR)/vs_seeker.o: c_dep += $(INCLUDE_DIRS)/constants/script_commands.h
 
 PERL := perl
 SHA1 := $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
