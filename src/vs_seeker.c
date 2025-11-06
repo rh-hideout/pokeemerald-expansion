@@ -718,12 +718,12 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
     u16 trainerFlag;
     switch (script[0])
     {
-        case 0x5c:
+        case SCR_OP_TRAINERBATTLE:
             script += 3;
             trainerFlag = script[0];
             trainerFlag |= script[1] << 8;
             break;
-        case 0x23:
+        case SCR_OP_CALLNATIVE:
             u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
             if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
             {
