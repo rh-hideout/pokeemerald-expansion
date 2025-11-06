@@ -372,6 +372,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
         PrintTestName();
     }
     STATE->trialRatio = Q_4_12(1) / STATE->trials;
+
     if (!reject)
     {
         if (STATE->trials != (hi - lo + 1))

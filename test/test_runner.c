@@ -963,16 +963,13 @@ void ClearRiggedRng(void)
 {
     struct RiggedRNG zeroRng = {.tag = RNG_NONE, .value = 0};
     for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
-    {
         memcpy(&gFunctionTestRunnerState->rngList[i], &zeroRng, sizeof(zeroRng));
-    }
 }
 
 void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
 {
-    u32 i;
     struct RiggedRNG rng = {.tag = randomTag, .value = value};
-    for (i = 0; i < RIGGED_RNG_COUNT; i++)
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
     {
         if (gFunctionTestRunnerState->rngList[i].tag == randomTag)
         {
@@ -980,7 +977,9 @@ void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
             break;
         }
         else if (gFunctionTestRunnerState->rngList[i].tag > RNG_NONE)
+        {
             continue;
+        }
         else
         {
             memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
