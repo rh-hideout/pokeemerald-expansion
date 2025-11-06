@@ -4092,7 +4092,7 @@ static void UNUSED HighlightScreenSelectBarItem(u8 selectedScreen, u16 unused)
 // to avoid overlapping with caught mon sprite platte slot
 // Normarl type info palette slots: 13 , 14 and 15
 // Caugh mon palette slot: 15
-#define TYPE_INFO_PALETTE_NUM_OFFSET 1
+#define TYPE_INFO_PALETTE_NUM_OFFSET -1
 
 void Task_DisplayCaughtMonDexPageHGSS(u8 taskId)
 {
@@ -4355,9 +4355,9 @@ static void SetTypeIconPosAndPal(u8 typeId, u8 x, u8 y, u8 spriteArrayId)
     sprite = &gSprites[sPokedexView->typeIconSpriteIds[spriteArrayId]];
     StartSpriteAnim(sprite, typeId);
     if (typeId < NUMBER_OF_MON_TYPES)
-        sprite->oam.paletteNum = gTypesInfo[typeId].palette - TYPE_INFO_PALETTE_NUM_OFFSET;
+        sprite->oam.paletteNum = gTypesInfo[typeId].palette + TYPE_INFO_PALETTE_NUM_OFFSET;
     else
-        sprite->oam.paletteNum = sContestCategoryToOamPaletteNum[typeId - NUMBER_OF_MON_TYPES] - TYPE_INFO_PALETTE_NUM_OFFSET;
+        sprite->oam.paletteNum = sContestCategoryToOamPaletteNum[typeId - NUMBER_OF_MON_TYPES] + TYPE_INFO_PALETTE_NUM_OFFSET;
     sprite->x = x + 16;
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);
@@ -4398,7 +4398,7 @@ static void CreateTypeIconSprites(void)
     u8 i;
 
     LoadCompressedSpriteSheet(&gSpriteSheet_MoveTypes);
-    u32 paletteNum = gTypesInfo[TYPE_NORMAL].palette - TYPE_INFO_PALETTE_NUM_OFFSET;
+    u32 paletteNum = gTypesInfo[TYPE_NORMAL].palette + TYPE_INFO_PALETTE_NUM_OFFSET;
     LoadPalette(gMoveTypes_Pal, OBJ_PLTT_ID(paletteNum), 3 * PLTT_SIZE_4BPP);
     for (i = 0; i < 2; i++)
     {
