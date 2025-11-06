@@ -437,7 +437,6 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
 void RunTextPrinters(void)
 {
-    int i;
     bool32 isInstantText = IsPlayerTextSpeedInstant(); // Force correct result. This is dumb, Revo knows.
     u32 textRepeats = GetPlayerTextSpeedModifier();
 
@@ -447,32 +446,32 @@ void RunTextPrinters(void)
     do
     {
         u32 numEmpty = 0;
-        for (i = 0; i < WINDOWS_MAX; ++i)
+        for (u32 windowId = 0; windowId < WINDOWS_MAX; ++windowId)
         {
-            if (sTextPrinters[i].active)
+            if (sTextPrinters[windowId].active)
             {
-                for (u32 j = 0; j < textRepeats; j++)
+                for (u32 repeat = 0; repeat < textRepeats; repeat++)
                 {
-                    u32 renderState = RenderFont(&sTextPrinters[i]);
+                    u32 renderState = RenderFont(&sTextPrinters[windowId]);
                     switch (renderState)
                     {
                     case RENDER_PRINT:
-                        CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
-                        if (sTextPrinters[i].callback != NULL)
-                            sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
+                        CopyWindowToVram(sTextPrinters[windowId].printerTemplate.windowId, COPYWIN_GFX);
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
                         break;
                     case RENDER_UPDATE:
-                        if (sTextPrinters[i].callback != NULL)
-                            sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderState);
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
                         isInstantText = FALSE;
                         break;
                     case RENDER_FINISH:
-                        sTextPrinters[i].active = FALSE;
+                        sTextPrinters[windowId].active = FALSE;
                         isInstantText = FALSE;
                         break;
                     }
 
-                    if (!sTextPrinters[i].active)
+                    if (!sTextPrinters[windowId].active)
                         break;
                 }
             }
