@@ -75,6 +75,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ghostyboyy97"><img src="https://avatars.githubusercontent.com/u/106448956?v=4?s=100" width="100px;" alt="ghostyboyy97"/><br /><sub><b>ghostyboyy97</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=ghostyboyy97" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://hashtagmarky.github.io"><img src="https://avatars.githubusercontent.com/u/143505183?v=4?s=100" width="100px;" alt="Marky"/><br /><sub><b>Marky</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=HashtagMarky" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/MandL27"><img src="https://avatars.githubusercontent.com/u/10366615?v=4?s=100" width="100px;" alt="MandL27"/><br /><sub><b>MandL27</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=MandL27" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/cawtds"><img src="https://avatars.githubusercontent.com/u/38510667?v=4?s=100" width="100px;" alt="cawtds"/><br /><sub><b>cawtds</b></sub></a><br /><a href="https://github.com/rh-hideout/pokeemerald-expansion/commits?author=cawtds" title="Code">💻</a></td>
     </tr>
   </tbody>
   <tfoot>
