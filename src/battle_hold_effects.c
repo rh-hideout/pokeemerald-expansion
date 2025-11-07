@@ -218,10 +218,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
      && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam)
      && ability != ABILITY_STENCH)
     {
-        gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-        BattleScriptPushCursor();
-        SetMoveEffect(battlerAtk, battlerDef, FALSE, FALSE);
-        BattleScriptPop();
+        SetMoveEffect(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -588,7 +585,7 @@ static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, 
      && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattlerAlive(battlerAtk)
      && CanStealItem(battlerAtk, battlerDef, item)
-     && item == ITEM_NONE)
+     && gBattleMons[battlerAtk].item == ITEM_NONE)
     {
         // No sticky hold checks.
         gEffectBattler = battlerDef;
@@ -1067,7 +1064,12 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item = (timing == IsOnBerryActivation) ? gLastUsedItem : gBattleMons[itemBattler].item;
+    u32 item;
+
+    if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
+        item = gLastUsedItem;
+    else
+        item = gBattleMons[itemBattler].item;
 
     if (holdEffect == HOLD_EFFECT_NONE
      || !timing(holdEffect)

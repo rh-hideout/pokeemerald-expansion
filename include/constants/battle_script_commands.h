@@ -125,6 +125,13 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
+enum SetMoveEffectFlags
+{
+    NO_FLAGS = 0,
+    EFFECT_PRIMARY = (1 << 0),
+    EFFECT_CERTAIN = (1 << 1),
+};
+
 // cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {

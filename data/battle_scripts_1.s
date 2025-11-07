@@ -3015,7 +3015,6 @@ BattleScript_PowerHerbActivation:
 BattleScript_EffectTwoTurnsAttack::
 	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_TwoTurnMovesSecondTurn
 	tryfiretwoturnmovewithoutcharging BS_ATTACKER, BattleScript_EffectHit @ e.g. Solar Beam
-	jumpifword CMP_COMMON_BITS, gHitMarker, HITMARKER_ATTACKSTRING_PRINTED, BattleScript_EffectHit @ if it's not the first hit
 	call BattleScript_FirstChargingTurn
 	tryfiretwoturnmoveaftercharging BS_ATTACKER, BattleScript_TwoTurnMovesSecondTurn @ e.g. Electro Shot
 	jumpifholdeffect BS_ATTACKER, HOLD_EFFECT_POWER_HERB, BattleScript_TwoTurnMovesSecondPowerHerbActivates, TRUE
@@ -4397,20 +4396,21 @@ BattleScript_EffectCamouflage::
 	goto BattleScript_MoveEnd
 
 BattleScript_FaintBattler::
-	tryillusionoff BS_SCRIPTING
+	tryillusionoff BS_FAINTED
 	tryactivategulpmissile
-	playfaintcry BS_SCRIPTING
+	playfaintcry BS_FAINTED
 	pause B_WAIT_TIME_LONG
-	dofaintanimation BS_SCRIPTING
+	dofaintanimation BS_FAINTED
+	copybyte sBATTLER, gBattlerFainted @ for message
 	printstring STRINGID_BATTLERFAINTED
-	cleareffectsonfaint BS_SCRIPTING
+	cleareffectsonfaint BS_FAINTED
 	trytoclearprimalweather
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
 	tryactivatesoulheart
-	tryactivatereceiver BS_SCRIPTING
-	trytrainerslidemsgfirstoff BS_SCRIPTING
+	tryactivatereceiver BS_FAINTED
+	trytrainerslidemsgfirstoff BS_FAINTED
 	return
 
 
