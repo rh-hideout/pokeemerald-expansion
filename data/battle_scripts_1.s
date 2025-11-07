@@ -5085,8 +5085,8 @@ BattleScript_FaintAttacker::
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
-	tryactivatesoulheart
 	tryactivatereceiver BS_ATTACKER
+	tryactivatesoulheart
 	trytrainerslidemsgfirstoff BS_ATTACKER
 	return
 
@@ -5103,8 +5103,8 @@ BattleScript_FaintTarget::
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
-	tryactivatesoulheart
 	tryactivatereceiver BS_TARGET
+	tryactivatesoulheart
 	trytrainerslidemsgfirstoff BS_TARGET
 	return
 
