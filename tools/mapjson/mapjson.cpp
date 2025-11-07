@@ -165,11 +165,22 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
          << "\t.byte "  << json_to_string(map_data, "weather") << "\n"
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
-    if (version != "firered")
-        text << "\t.2byte 0\n";
+    // Multi-region support is currently only for pokeemerald-expansion
+    if (version == "emerald")
+    {
+        // If the 'region' field exists in the JSON, write it followed by a zero byte.
+        // If not, default the region to REGION_HOENN so that other projects are not affected if they don't specify it.
+        if (map_data.object_items().find("region") != map_data.object_items().end())
+            text << "\t.byte "  << json_to_string(map_data, "region") << "\n"
+                 << "\t.byte 0\n";
+        else
+            text << "\t.byte REGION_HOENN\n"
+                 << "\t.byte 0\n";
+    }
 
     if (version == "ruby")
-        text << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
+        text << "\t.2byte 0\n"
+             << "\t.byte " << json_to_string(map_data, "show_map_name") << "\n";
     else if (version == "emerald" || version == "firered")
         text << "\tmap_header_flags "
              << "allow_cycling=" << json_to_string(map_data, "allow_cycling") << ", "
