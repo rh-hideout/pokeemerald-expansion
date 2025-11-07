@@ -437,7 +437,7 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
 void RunTextPrinters(void)
 {
-    bool32 isInstantText = IsPlayerTextSpeedInstant(); // Force correct result. This is dumb, Revo knows.
+    bool32 isInstantText = IsPlayerTextSpeedInstant();
     u32 textRepeats = GetPlayerTextSpeedModifier();
 
     if (gDisableTextPrinters)
