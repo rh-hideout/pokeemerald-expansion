@@ -246,14 +246,13 @@ enum SemiInvulnerableExclusion
     EXCLUDE_COMMANDER,
 };
 
-#define HITMARKER_DESTINYBOND           (1 << 6)
 #define HITMARKER_NO_ANIMATIONS         (1 << 7)   // set from battleSceneOff. Never changed during battle
 #define HITMARKER_UNUSED_8              (1 << 8)
-#define HITMARKER_ATTACKSTRING_PRINTED  (1 << 9)
+#define HITMARKER_UNUSED_9              (1 << 9)
 #define HITMARKER_UNUSED_10             (1 << 10)
 #define HITMARKER_UNUSED_11             (1 << 11)
 #define HITMARKER_UNUSED_12             (1 << 12)
-#define HITMARKER_STATUS_ABILITY_EFFECT (1 << 13)
+#define HITMARKER_UNUSED_13             (1 << 13)
 #define HITMARKER_UNUSED_14             (1 << 14)
 #define HITMARKER_RUN                   (1 << 15)
 #define HITMARKER_UNUSED_16             (1 << 16)
@@ -648,6 +647,17 @@ enum BattleEnvironments
 
 // Constants for Torment
 #define PERMANENT_TORMENT   0xF
+
+enum FaintedActions
+{
+    FAINTED_ACTIONS_NO_MONS_TO_SWITCH,
+    FAINTED_ACTIONS_GIVE_EXP,
+    FAINTED_ACTIONS_SET_ABSENT_FLAGS,
+    FAINTED_ACTIONS_WAIT_STATE,
+    FAINTED_ACTIONS_HANDLE_FAINTED_MON,
+    FAINTED_ACTIONS_HANDLE_NEXT_BATTLER,
+    FAINTED_ACTIONS_MAX_CASE,
+};
 
 // Constants for B_VAR_STARTING_STATUS
 // Timer value controlled by B_VAR_STARTING_STATUS_TIMER

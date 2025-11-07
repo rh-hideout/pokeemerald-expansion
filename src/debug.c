@@ -664,7 +664,7 @@ static const struct DebugMenuOption sDebugMenu_Actions_Flags[] =
     { NULL }
 };
 
-static const u8 *sDebugMenu_Actions_BagUse_Options[] =
+static const u8 *const sDebugMenu_Actions_BagUse_Options[] =
 {
     COMPOUND_STRING("No Bag: {STR_VAR_1}Inactive"),
     COMPOUND_STRING("No Bag: {STR_VAR_1}VS Trainers"),

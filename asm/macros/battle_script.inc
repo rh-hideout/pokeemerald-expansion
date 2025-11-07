@@ -679,10 +679,8 @@
 	.byte 0x75
 	.endm
 
-	.macro various battler:req, id:req
+	.macro unused_0x78
 	.byte 0x76
-	.byte \battler
-	.byte \id
 	.endm
 
 	.macro setprotectlike
