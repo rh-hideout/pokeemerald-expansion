@@ -1041,6 +1041,41 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
         {
             switch (additionalEffect->moveEffect)
             {
+                case MOVE_EFFECT_ATK_MINUS_1:
+                case MOVE_EFFECT_ATK_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_DEF_MINUS_1:
+                case MOVE_EFFECT_DEF_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SPD_MINUS_1:
+                case MOVE_EFFECT_SPD_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SP_ATK_MINUS_1:
+                case MOVE_EFFECT_SP_ATK_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SP_DEF_MINUS_1:
+                case MOVE_EFFECT_SP_DEF_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_EVS_MINUS_1:
+                case MOVE_EFFECT_EVS_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_ACC_MINUS_1:
+                case MOVE_EFFECT_ACC_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
+                        return TRUE;
+                    break;
                 case MOVE_EFFECT_ATK_PLUS_1:
                 case MOVE_EFFECT_ATK_PLUS_2:
                     if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
