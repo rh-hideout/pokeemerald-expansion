@@ -98,12 +98,6 @@ static const struct SpriteSheet sCeilingCrumbleSpriteSheets[] =
     {}
 };
 
-static const struct SpritePalette sCeilingCrumbleSpritePalettes[] =
-{
-    {sMirageTowerCrumbles_Palette,     TAG_CEILING_CRUMBLE},
-    {},
-};
-
 static const struct MetatileCoords sInvisibleMirageTowerMetatiles[] =
 {
     {18, 53, METATILE_Mauville_DeepSand_Center},
@@ -426,7 +420,7 @@ static void IncrementCeilingCrumbleFinishedCount(void)
 
 void DoMirageTowerCeilingCrumble(void)
 {
-    LoadSpritePalettes(sCeilingCrumbleSpritePalettes);
+    LoadSpritePaletteWithTag(sMirageTowerCrumbles_Palette, TAG_CEILING_CRUMBLE);
     LoadSpriteSheets(sCeilingCrumbleSpriteSheets);
     CreateCeilingCrumbleSprites();
     CreateTask(WaitCeilingCrumble, 8);
