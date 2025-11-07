@@ -5341,7 +5341,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Causes a sandstorm that\n"
             "rages for several turns."),
-        .effect = EFFECT_SANDSTORM,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ROCK,
         .accuracy = 0,
@@ -5353,6 +5353,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .windMove = TRUE,
+        .argument = { .weatherType = BATTLE_WEATHER_SANDSTORM },
         .contestEffect = CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = COMBO_STARTER_SANDSTORM,
@@ -6358,7 +6359,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Boosts the power of Water-\n"
             "type moves for 5 turns."),
-        .effect = EFFECT_RAIN_DANCE,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_WATER,
         .accuracy = 0,
@@ -6369,6 +6370,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType =  BATTLE_WEATHER_RAIN },
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
         .contestCategory = CONTEST_CATEGORY_TOUGH,
         .contestComboStarterId = COMBO_STARTER_RAIN_DANCE,
@@ -6383,7 +6385,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Boosts the power of Fire-\n"
             "type moves for 5 turns."),
-        .effect = EFFECT_SUNNY_DAY,
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_FIRE,
         .accuracy = 0,
@@ -6394,6 +6396,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType = BATTLE_WEATHER_SUN },
         .contestEffect = CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_SUNNY_DAY,
@@ -6846,13 +6849,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .description = COMPOUND_STRING(
                 "Summons a snowstorm that\n"
                 "lasts for five turns."),
-            .effect = EFFECT_SNOWSCAPE,
         #else
             .description = COMPOUND_STRING(
                 "Summons a hailstorm that\n"
                 "strikes every turn."),
-            .effect = EFFECT_HAIL,
         #endif
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,
@@ -6863,6 +6865,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW) ? BATTLE_WEATHER_SNOW : BATTLE_WEATHER_HAIL },
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS,
         .contestCategory = CONTEST_CATEGORY_BEAUTY,
         .contestComboStarterId = COMBO_STARTER_HAIL,
@@ -20262,6 +20265,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,
         .metronomeBanned = TRUE,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .battleAnimScript = gBattleAnimMove_ChillyReception,
     },
 
@@ -20292,13 +20296,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .description = COMPOUND_STRING(
                 "Summons a hailstorm that\n"
                 "strikes every turn."),
-            .effect = EFFECT_HAIL,
         #else
             .description = COMPOUND_STRING(
                 "Summons a snowstorm that\n"
                 "lasts for five turns."),
-            .effect = EFFECT_SNOWSCAPE,
         #endif
+        .effect = EFFECT_WEATHER,
         .power = 0,
         .type = TYPE_ICE,
         .accuracy = 0,
@@ -20306,6 +20309,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_ALL_BATTLERS,
         .priority = 0,
         .category = DAMAGE_CATEGORY_STATUS,
+        .argument = { .weatherType = (B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_HAIL) ? BATTLE_WEATHER_HAIL : BATTLE_WEATHER_SNOW },
         .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
         .ignoresProtect = TRUE,
         .mirrorMoveBanned = TRUE,

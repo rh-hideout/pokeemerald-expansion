@@ -4129,11 +4129,7 @@ static u32 GetAIEffectGroup(enum BattleMoveEffects effect)
 
     switch (effect)
     {
-    case EFFECT_SUNNY_DAY:
-    case EFFECT_RAIN_DANCE:
-    case EFFECT_SANDSTORM:
-    case EFFECT_HAIL:
-    case EFFECT_SNOWSCAPE:
+    case EFFECT_WEATHER:
     case EFFECT_CHILLY_RECEPTION:
         aiEffect |= AI_EFFECT_WEATHER;
         break;
