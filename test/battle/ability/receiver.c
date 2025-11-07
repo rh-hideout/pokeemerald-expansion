@@ -25,19 +25,18 @@ DOUBLE_BATTLE_TEST("Receiver copies ally's ability when they faint and immediate
 DOUBLE_BATTLE_TEST("Receiver copies ally's ability when they faint and can activate it on future moves")
 {
     GIVEN {
-        ASSUME(!gAbilitiesInfo[ABILITY_STORM_DRAIN].cantBeCopied);
+        ASSUME(!gAbilitiesInfo[ABILITY_WATER_ABSORB].cantBeCopied);
         ASSUME(GetMoveType(MOVE_WATER_GUN) == TYPE_WATER);
-        ASSUME(B_REDIRECT_ABILITY_IMMUNITY >= GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PASSIMIAN) { Ability(ABILITY_RECEIVER); }
-        OPPONENT(SPECIES_GASTRODON) { Ability(ABILITY_STORM_DRAIN); HP(1); }
+        OPPONENT(SPECIES_LANTURN) { Ability(ABILITY_WATER_ABSORB); HP(1); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight); MOVE(playerRight, MOVE_WATER_GUN, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         ABILITY_POPUP(opponentLeft, ABILITY_RECEIVER);
-        ABILITY_POPUP(opponentLeft, ABILITY_STORM_DRAIN);
+        ABILITY_POPUP(opponentLeft, ABILITY_WATER_ABSORB);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_WATER_GUN, playerRight);
     }
 }
