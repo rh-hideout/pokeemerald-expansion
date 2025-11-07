@@ -7285,6 +7285,7 @@ BattleScript_ReceiverActivates::
 	printstring STRINGID_RECEIVERABILITYTAKEOVER
 	waitmessage B_WAIT_TIME_LONG
 	settracedability BS_ABILITY_BATTLER
+	switchinabilities BS_ABILITY_BATTLER
 	return
 
 BattleScript_AbilityHpHeal:
