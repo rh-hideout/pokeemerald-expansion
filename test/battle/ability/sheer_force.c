@@ -1371,8 +1371,8 @@ AI_SINGLE_BATTLE_TEST("AI sees Sheer Force skips additional effects")
 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_DRUDDIGON);
-        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, move); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_DRUDDIGON) { Ability(ability); Moves(MOVE_POWER_UP_PUNCH, move); }
     } WHEN {
         TURN { EXPECT_MOVE(opponent, expectedMove); }
     }
