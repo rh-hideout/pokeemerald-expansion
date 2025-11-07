@@ -1,19 +1,19 @@
 #include "global.h"
 #include "battle.h"
+#include "blit.h"
+#include "dynamic_placeholder_text_util.h"
 #include "event_data.h"
-#include "main.h"
+#include "field_name_box.h"
+#include "fonts.h"
 #include "m4a.h"
+#include "main.h"
+#include "menu.h"
 #include "palette.h"
 #include "sound.h"
-#include "constants/songs.h"
 #include "string_util.h"
-#include "window.h"
 #include "text.h"
-#include "blit.h"
-#include "menu.h"
-#include "dynamic_placeholder_text_util.h"
-#include "fonts.h"
-#include "field_name_box.h"
+#include "window.h"
+#include "constants/songs.h"
 #include "constants/speaker_names.h"
 
 static u16 RenderText(struct TextPrinter *);
@@ -355,9 +355,7 @@ u32 GetPlayerTextScrollSpeed(void)
 
 bool32 IsPlayerTextSpeedInstant(void)
 {
-    return FlagGet(FLAG_TEXT_SPEED_INSTANT)
-        || GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT
-        || TEXT_SPEED_INSTANT;
+    return GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT;
 }
 
 void DeactivateAllTextPrinters(void)

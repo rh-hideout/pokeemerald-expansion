@@ -1,8 +1,8 @@
 #include "global.h"
 #include "main.h"
-#include "window.h"
 #include "text.h"
 #include "sound.h"
+#include "window.h"
 
 // This file handles the braille font.
 // For printing braille messages, see ScrCmd_braillemessage

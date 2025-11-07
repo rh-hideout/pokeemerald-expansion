@@ -16,17 +16,18 @@
 #define DISABLED_ON_RELEASE TRUE
 #endif
 
-#include "config/general.h"
-#include "config/battle.h"
-#include "config/debug.h"
-#include "config/item.h"
-#include "config/caps.h"
-#include "config/pokemon.h"
-#include "config/overworld.h"
-#include "config/dexnav.h"
-#include "config/summary_screen.h"
 #include "config/ai.h"
+#include "config/battle.h"
+#include "config/caps.h"
+#include "config/debug.h"
+#include "config/dexnav.h"
 #include "config/follower_npc.h"
+#include "config/general.h"
+#include "config/item.h"
+#include "config/overworld.h"
+#include "config/pokemon.h"
+#include "config/summary_screen.h"
+#include "config/text.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.
