@@ -258,14 +258,14 @@
 #define PLACEHOLDER_ID_STRING_VAR_3  0x4
 #define PLACEHOLDER_ID_KUN           0x5
 #define PLACEHOLDER_ID_RIVAL         0x6
-#define PLACEHOLDER_ID_REGION        0x7
-#define PLACEHOLDER_ID_VERSION       0x8
-#define PLACEHOLDER_ID_AQUA          0x9
-#define PLACEHOLDER_ID_MAGMA         0xA
-#define PLACEHOLDER_ID_ARCHIE        0xB
-#define PLACEHOLDER_ID_MAXIE         0xC
-#define PLACEHOLDER_ID_KYOGRE        0xD
-#define PLACEHOLDER_ID_GROUDON       0xE
+#define PLACEHOLDER_ID_VERSION       0x7
+#define PLACEHOLDER_ID_AQUA          0x8
+#define PLACEHOLDER_ID_MAGMA         0x9
+#define PLACEHOLDER_ID_ARCHIE        0xA
+#define PLACEHOLDER_ID_MAXIE         0xB
+#define PLACEHOLDER_ID_KYOGRE        0xC
+#define PLACEHOLDER_ID_GROUDON       0xD
+#define PLACEHOLDER_ID_REGION        0xE
 
 // battle placeholders are located in battle_message.h
 

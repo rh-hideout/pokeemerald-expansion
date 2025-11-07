@@ -11,13 +11,10 @@
 // For adding new custom regions, be sure to add their names to strings.h/.c,
 // add an entry to the enum in include/constants/regions.h,
 // and handle them in GetCurrentRegionName()
-static inline u32 GetCurrentRegion(void)
+static inline enum Region GetCurrentRegion(void)
 {
     return gMapHeader.region;
 }
-
-// Returns the name of the current region as a string
-
 
 static inline const u8 *GetCurrentRegionName(void)
 {
@@ -43,8 +40,6 @@ static inline const u8 *GetCurrentRegionName(void)
         return gText_Hisui;
     case REGION_PALDEA:
         return gText_Paldea;
-    case REGION_SEVII:
-        return gText_Sevii;
     case REGION_NONE:
     default:
         return gText_RegionDefault;

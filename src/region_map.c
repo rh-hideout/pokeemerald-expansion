@@ -120,9 +120,9 @@ static void CB_ExitFlyMap(void);
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_small.4bpp.smol");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_large.4bpp.smol");
-static const u16 sHoennRegionMapBg_Pal[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
-static const u32 sHoennRegionMapBg_GfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
-static const u32 sHoennRegionMapBg_TilemapLZ[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
+static const u16 sRegionMapBg_Pal_Hoenn[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
+static const u32 sRegionMapBg_Gfx_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
+static const u32 sRegionMapBg_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 static const u16 sRegionMapPlayerIcon_BrendanPal[] = INCBIN_U16("graphics/pokenav/region_map/brendan_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_BrendanGfx[] = INCBIN_U8("graphics/pokenav/region_map/brendan_icon.4bpp");
 static const u16 sRegionMapPlayerIcon_MayPal[] = INCBIN_U16("graphics/pokenav/region_map/may_icon.gbapal");
@@ -138,29 +138,29 @@ const u16 *GetCurrentRegionMapBgPal(void)
     {
     case REGION_HOENN:
     default:
-        return sHoennRegionMapBg_Pal;
+        return sRegionMapBg_Pal_Hoenn;
     }
 }
 
 // When adding new regions add an entry here mapping the region to its bg gfx
-const u32 *GetCurrentRegionMapBgGfxLZ(void)
+const u32 *GetCurrentRegionMapBgGfx(void)
 {
     switch (GetCurrentRegion())
     {
     case REGION_HOENN:
     default:
-        return sHoennRegionMapBg_GfxLZ;
+        return sRegionMapBg_Gfx_Hoenn;
     }
 }
 
 // When adding new regions add an entry here mapping the region to its bg tilemap
-const u32 *GetCurrentRegionMapBgTilemapLZ(void)
+const u32 *GetCurrentRegionMapBgTilemap(void)
 {
     switch (GetCurrentRegion())
     {
     case REGION_HOENN:
     default:
-        return sHoennRegionMapBg_TilemapLZ;
+        return sRegionMapBg_Tilemap_Hoenn;
     }
 }
 
@@ -592,19 +592,19 @@ bool8 LoadRegionMapGfx(void)
     {
     case 0:
         if (sRegionMap->bgManaged)
-            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgGfxLZ(), 0, 0, 0);
+            DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgGfx(), 0, 0, 0);
         else
-            DecompressDataWithHeaderVram(GetCurrentRegionMapBgGfxLZ(), (u16 *)BG_CHAR_ADDR(2));
+            DecompressDataWithHeaderVram(GetCurrentRegionMapBgGfx(), (u16 *)BG_CHAR_ADDR(2));
         break;
     case 1:
         if (sRegionMap->bgManaged)
         {
             if (!FreeTempTileDataBuffersIfPossible())
-                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgTilemapLZ(), 0, 0, 1);
+                DecompressAndCopyTileDataToVram(sRegionMap->bgNum, GetCurrentRegionMapBgTilemap(), 0, 0, 1);
         }
         else
         {
-            DecompressDataWithHeaderVram(GetCurrentRegionMapBgTilemapLZ(), (u16 *)BG_SCREEN_ADDR(28));
+            DecompressDataWithHeaderVram(GetCurrentRegionMapBgTilemap(), (u16 *)BG_SCREEN_ADDR(28));
         }
         break;
     case 2:

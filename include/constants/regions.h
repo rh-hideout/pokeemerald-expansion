@@ -15,8 +15,7 @@ enum Region
     REGION_GALAR,
     REGION_HISUI,
     REGION_PALDEA,
-    REGION_SEVII,
     REGIONS_COUNT,
-};
+}__attribute__((packed));
 
 #endif  // GUARD_CONSTANTS_REGIONS_H
