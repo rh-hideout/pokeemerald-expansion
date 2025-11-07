@@ -1,6 +1,7 @@
 #ifndef GUARD_TEXT_H
 #define GUARD_TEXT_H
 
+#include "config/text.h"
 #include "constants/characters.h"
 
 // This is to prevent the user from having a higher text speed modifier than the printing system can handle.
