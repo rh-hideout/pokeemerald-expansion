@@ -72,8 +72,11 @@ DOUBLE_BATTLE_TEST("Retaliate works with passive damage")
         #if B_USE_FROSTBITE == TRUE
         ASSUME(GetMoveAdditionalEffectById(MOVE_ICE_BEAM, 0)->moveEffect == MOVE_EFFECT_FREEZE_OR_FROSTBITE);
         #endif
-        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_SANDSTORM);
-        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
+
+        ASSUME(GetMoveEffect(MOVE_SANDSTORM) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_SANDSTORM) == BATTLE_WEATHER_SANDSTORM);
+        ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_WEATHER);
+        ASSUME(GetMoveWeatherType(MOVE_HAIL) == BATTLE_WEATHER_HAIL);
         ASSUME(GetMoveEffect(MOVE_LEECH_SEED) == EFFECT_LEECH_SEED);
         ASSUME(GetMoveAdditionalEffectById(MOVE_MAGMA_STORM, 0)->moveEffect == MOVE_EFFECT_WRAP);
         ASSUME(GetMoveAdditionalEffectById(MOVE_FLAME_BURST, 0)->moveEffect == MOVE_EFFECT_FLAME_BURST);

@@ -109,6 +109,8 @@ struct BattleWeatherInfo
 {
     u16 flag;
     u8 rock;
+    u8 abilityStartMessage;
+    u8 moveStartMessage;
     u8 endMessage;
     u8 continuesMessage;
     u8 animation;
@@ -120,6 +122,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_RAIN_NORMAL,
         .rock = HOLD_EFFECT_DAMP_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_DRIZZLE,
+        .moveStartMessage = B_MSG_STARTED_RAIN,
         .endMessage = B_MSG_WEATHER_END_RAIN,
         .continuesMessage = B_MSG_WEATHER_TURN_RAIN,
         .animation = B_ANIM_RAIN_CONTINUES,
@@ -129,6 +133,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_RAIN_PRIMAL,
         .rock = HOLD_EFFECT_DAMP_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_PRIMORDIAL_SEA,
+        .moveStartMessage = B_MSG_STARTED_RAIN, // Placeholder
         .endMessage = B_MSG_WEATHER_END_RAIN,
         .continuesMessage = B_MSG_WEATHER_TURN_RAIN,
         .animation = B_ANIM_RAIN_CONTINUES,
@@ -138,6 +144,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_RAIN_NORMAL,
         .rock = HOLD_EFFECT_DAMP_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_DRIZZLE,
+        .moveStartMessage = B_MSG_STARTED_RAIN,
         .endMessage = B_MSG_WEATHER_END_RAIN,
         .continuesMessage = B_MSG_WEATHER_TURN_DOWNPOUR,
         .animation = B_ANIM_RAIN_CONTINUES,
@@ -147,6 +155,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_SUN_NORMAL,
         .rock = HOLD_EFFECT_HEAT_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_DROUGHT,
+        .moveStartMessage = B_MSG_STARTED_SUNLIGHT,
         .endMessage = B_MSG_WEATHER_END_SUN,
         .continuesMessage = B_MSG_WEATHER_TURN_SUN,
         .animation = B_ANIM_SUN_CONTINUES,
@@ -156,6 +166,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_SUN_PRIMAL,
         .rock = HOLD_EFFECT_HEAT_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_DESOLATE_LAND,
+        .moveStartMessage = B_MSG_STARTED_SUNLIGHT, // Placeholder
         .endMessage = B_MSG_WEATHER_END_SUN,
         .continuesMessage = B_MSG_WEATHER_TURN_SUN,
         .animation = B_ANIM_SUN_CONTINUES,
@@ -165,6 +177,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_SANDSTORM,
         .rock = HOLD_EFFECT_SMOOTH_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_SAND_STREAM,
+        .moveStartMessage = B_MSG_STARTED_SANDSTORM,
         .endMessage = B_MSG_WEATHER_END_SANDSTORM,
         .continuesMessage = B_MSG_WEATHER_TURN_SANDSTORM,
         .animation = B_ANIM_SANDSTORM_CONTINUES,
@@ -174,6 +188,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_HAIL,
         .rock = HOLD_EFFECT_ICY_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_HAIL_WARNING,
+        .moveStartMessage = B_MSG_STARTED_HAIL,
         .endMessage = B_MSG_WEATHER_END_HAIL,
         .continuesMessage = B_MSG_WEATHER_TURN_HAIL,
         .animation = B_ANIM_HAIL_CONTINUES,
@@ -183,6 +199,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_SNOW,
         .rock = HOLD_EFFECT_ICY_ROCK,
+        .abilityStartMessage = B_MSG_STARTED_SNOW_WARNING,
+        .moveStartMessage = B_MSG_STARTED_SNOW,
         .endMessage = B_MSG_WEATHER_END_SNOW,
         .continuesMessage = B_MSG_WEATHER_TURN_SNOW,
         .animation = B_ANIM_SNOW_CONTINUES,
@@ -192,6 +210,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_FOG,
         .rock = HOLD_EFFECT_NONE,
+        .abilityStartMessage = B_MSG_STARTED_DRIZZLE, // Placeholder
+        .moveStartMessage = B_MSG_STARTED_RAIN, // Placeholder
         .endMessage = B_MSG_WEATHER_END_FOG,
         .continuesMessage = B_MSG_WEATHER_TURN_FOG,
         .animation = B_ANIM_FOG_CONTINUES,
@@ -201,6 +221,8 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     {
         .flag = B_WEATHER_STRONG_WINDS,
         .rock = HOLD_EFFECT_NONE,
+        .abilityStartMessage = B_MSG_STARTED_STRONG_WINDS,
+        .moveStartMessage = B_MSG_STARTED_RAIN, // Placeholder
         .endMessage = B_MSG_WEATHER_END_STRONG_WINDS,
         .continuesMessage = B_MSG_WEATHER_TURN_STRONG_WINDS,
         .animation = B_ANIM_STRONG_WINDS,
@@ -3299,17 +3321,30 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
     {
         u32 rock = sBattleWeatherInfo[battleWeatherId].rock;
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
+
+        if (ability != ABILITY_NONE) // Weather started by Ability
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[battleWeatherId].abilityStartMessage;
+            gBattleScripting.animArg1 = sBattleWeatherInfo[battleWeatherId].animation;
+        }
+        else // Weather started by Move
+        {
+            gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[battleWeatherId].moveStartMessage;
+        }
+
         if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
             gBattleStruct->weatherDuration = 0;
         else if (rock != 0 && GetBattlerHoldEffect(battler) == rock)
             gBattleStruct->weatherDuration = 8;
         else
             gBattleStruct->weatherDuration = 5;
+
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
+
         return TRUE;
     }
 
@@ -4522,7 +4557,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_DRIZZLE:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_RAIN, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_DrizzleActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
@@ -4534,7 +4569,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_SAND_STREAM:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SANDSTORM, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_SandstreamActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
@@ -4547,7 +4582,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_DROUGHT:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SUN, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_DroughtActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
@@ -4559,12 +4594,12 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_SNOW_WARNING:
             if (GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_SNOW, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_SnowWarningActivatesSnow);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             else if (GetConfig(CONFIG_SNOW_WARNING) < GEN_9 && TryChangeBattleWeather(battler, BATTLE_WEATHER_HAIL, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_SnowWarningActivatesHail);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             else if (gBattleWeather & B_WEATHER_PRIMAL_ANY && HasWeatherEffect())
@@ -4692,21 +4727,21 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_DESOLATE_LAND:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SUN_PRIMAL, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_DesolateLandActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             break;
         case ABILITY_PRIMORDIAL_SEA:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_RAIN_PRIMAL, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_PrimordialSeaActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             break;
         case ABILITY_DELTA_STREAM:
             if (TryChangeBattleWeather(battler, BATTLE_WEATHER_STRONG_WINDS, gLastUsedAbility))
             {
-                BattleScriptCall(BattleScript_DeltaStreamActivates);
+                BattleScriptCall(BattleScript_WeatherAbilityActivates);
                 effect++;
             }
             break;
@@ -5436,10 +5471,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     BattleScriptCall(BattleScript_BlockedByPrimalWeather);
                     effect++;
                 }
-                else if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SANDSTORM, gLastUsedAbility))
+                else if (TryChangeBattleWeather(battler, BATTLE_WEATHER_SANDSTORM, ABILITY_SAND_STREAM))
                 {
                     gBattleScripting.battler = battler;
-                    BattleScriptCall(BattleScript_SandSpitActivates);
+                    BattleScriptCall(BattleScript_WeatherAbilityActivates);
                     effect++;
                 }
             }

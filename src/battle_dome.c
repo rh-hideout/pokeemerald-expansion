@@ -4042,11 +4042,7 @@ static bool32 IsDomeComboMove(u32 move)
     switch(effect)
     {
     // Weather moves
-    case EFFECT_SUNNY_DAY:
-    case EFFECT_RAIN_DANCE:
-    case EFFECT_SANDSTORM:
-    case EFFECT_HAIL:
-    case EFFECT_SNOWSCAPE:
+    case EFFECT_WEATHER:
     // Terrain moves
     case EFFECT_GRASSY_TERRAIN:
     case EFFECT_ELECTRIC_TERRAIN:
