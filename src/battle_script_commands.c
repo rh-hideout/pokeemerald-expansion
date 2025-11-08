@@ -3135,15 +3135,13 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         else
         {
-            gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
             if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_GRIP_CLAW)
                 gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? 7 : 5;
             else
                 gDisableStructs[gEffectBattler].wrapTurns = B_BINDING_TURNS >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
-
-            gBattleStruct->wrappedMove[gEffectBattler] = gCurrentMove;
-            gBattleStruct->wrappedBy[gEffectBattler] = gBattlerAttacker;
-
+            gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
+            gBattleMons[gEffectBattler].volatiles.wrappedMove = gCurrentMove;
+            gBattleMons[gEffectBattler].volatiles.wrappedBy = gBattlerAttacker;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectWrap;
         }
@@ -3493,9 +3491,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             struct Pokemon *mon = GetBattlerMon(gBattlerAttacker);
 
             gBattleMons[gEffectBattler].volatiles.syrupBomb = TRUE;
+            gBattleMons[gEffectBattler].volatiles.stickySyrupedBy = gBattlerAttacker;
             gDisableStructs[gEffectBattler].syrupBombTimer = 3;
             gDisableStructs[gEffectBattler].syrupBombIsShiny = IsMonShiny(mon);
-            gBattleStruct->stickySyrupdBy[gEffectBattler] = gBattlerAttacker;
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_SyrupBombActivates;
         }
@@ -3905,11 +3903,11 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
                 else
                     gDisableStructs[battler].wrapTurns = (Random() % 2) + 4;
                 // The Wrap effect does not expire when the user switches, so here's some cheese.
-                gBattleStruct->wrappedBy[battler] = gBattlerTarget;
+                gBattleMons[battler].volatiles.wrappedBy = gBattlerTarget;
                 if (moveEffect == MOVE_EFFECT_SANDBLAST_SIDE)
-                    gBattleStruct->wrappedMove[battler] = MOVE_SAND_TOMB;
+                    gBattleMons[battler].volatiles.wrappedMove = MOVE_SAND_TOMB;
                 else
-                    gBattleStruct->wrappedMove[battler] = MOVE_FIRE_SPIN;
+                    gBattleMons[battler].volatiles.wrappedMove = MOVE_FIRE_SPIN;
             }
         }
         break;
@@ -5390,8 +5388,7 @@ static void Cmd_jumpifabilitypresent(void)
 static void Cmd_endselectionscript(void)
 {
     CMD_ARGS();
-
-    *(gBattlerAttacker + gBattleStruct->selectionScriptFinished) = TRUE;
+    gBattleStruct->battlerState[gBattlerAttacker].selectionScriptFinished = TRUE;
 }
 
 static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *nextInstr)
@@ -12207,8 +12204,8 @@ static void Cmd_rapidspinfree(void)
     {
         gBattleScripting.battler = gBattlerTarget;
         gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
-        gBattlerTarget = gBattleStruct->wrappedBy[gBattlerAttacker];
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[gBattlerAttacker]);
+        gBattlerTarget = gBattleMons[gBattlerAttacker].volatiles.wrappedBy;
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[gBattlerAttacker].volatiles.wrappedMove);
         BattleScriptCall(BattleScript_WrapFree);
     }
     else if (gBattleMons[gBattlerAttacker].volatiles.leechSeed)

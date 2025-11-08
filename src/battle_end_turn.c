@@ -640,12 +640,12 @@ static bool32 HandleEndTurnWrap(u32 battler)
             if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
                 return effect;
 
-            gBattleScripting.animArg1 = gBattleStruct->wrappedMove[battler];
-            gBattleScripting.animArg2 = gBattleStruct->wrappedMove[battler] >> 8;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
+            gBattleScripting.animArg1 = gBattleMons[battler].volatiles.wrappedMove;
+            gBattleScripting.animArg2 = gBattleMons[battler].volatiles.wrappedMove >> 8;
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapTurnDmg);
             s32 bindDamage = 0;
-            if (GetBattlerHoldEffect(gBattleStruct->wrappedBy[battler]) == HOLD_EFFECT_BINDING_BAND)
+            if (GetBattlerHoldEffect(gBattleMons[battler].volatiles.wrappedBy) == HOLD_EFFECT_BINDING_BAND)
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
             else
                 bindDamage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
@@ -654,7 +654,7 @@ static bool32 HandleEndTurnWrap(u32 battler)
         else  // broke free
         {
             gBattleMons[battler].volatiles.wrapped = FALSE;
-            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->wrappedMove[battler]);
+            PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.wrappedMove);
             BattleScriptExecute(BattleScript_WrapEnds);
         }
         effect = TRUE;

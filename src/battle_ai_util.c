@@ -3057,17 +3057,16 @@ static u32 GetCurseDamage(u32 battlerId)
     return damage;
 }
 
-static u32 GetTrapDamage(u32 battlerId)
+static u32 GetTrapDamage(u32 battler)
 {
     // ai has no knowledge about turns remaining
     u32 damage = 0;
-    enum HoldEffect holdEffect = gAiLogicData->holdEffects[gBattleStruct->wrappedBy[battlerId]];
-    if (gBattleMons[battlerId].volatiles.wrapped)
+    if (gBattleMons[battler].volatiles.wrapped)
     {
-        if (holdEffect == HOLD_EFFECT_BINDING_BAND)
-            damage = GetNonDynamaxMaxHP(battlerId) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+        if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND)
+            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
         else
-            damage = GetNonDynamaxMaxHP(battlerId) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
 
         if (damage == 0)
             damage = 1;
