@@ -472,7 +472,7 @@ static u8 GetVsSeekerResponseInArea(void)
             continue;
         }
 
-        rematchTrainerIdx = GetRematchTrainerIdFromTable(gRematchTable, trainerIdx);
+        rematchTrainerIdx = GetRematchTrainerIdVSSeeker(trainerIdx);
         if (rematchTrainerIdx == 0)
         {
             StartTrainerObjectMovementScript(&sVsSeeker->trainerInfo[vsSeekerIdx], sMovementScript_TrainerNoRematch);
@@ -568,7 +568,14 @@ u16 GetRematchTrainerIdVSSeeker(u16 trainerId)
     u32 tableId = FirstBattleTrainerIdToRematchTableId(gRematchTable, trainerId);
     u32 rematchTrainerIdx = GetGameProgressFlags();
 
-    if (!I_VS_SEEKER_CHARGING) return 0;
+    if (!I_VS_SEEKER_CHARGING)
+        return 0;
+    if (tableId == -1)
+        return 0;
+    if (tableId >= REMATCH_ELITE_FOUR_ENTRIES)
+        return 0;
+    if (tableId >= REMATCH_SPECIAL_TRAINER_START)
+        return GetCurrentGymLeaderRematchLevel();
 
     while (!HasTrainerBeenFought(gRematchTable[tableId].trainerIds[rematchTrainerIdx-1]))
     {
@@ -782,7 +789,7 @@ static bool32 HasFightableTrainers(void)
     {
         if (IsTrainerVisibleOnScreen(&sVsSeeker->trainerInfo[i]))
         {
-            if (!HasTrainerBeenFought(sVsSeeker->trainerInfo[i].trainerIdx) || GetRematchTrainerIdFromTable(gRematchTable, sVsSeeker->trainerInfo[i].trainerIdx))
+            if (!HasTrainerBeenFought(sVsSeeker->trainerInfo[i].trainerIdx) || GetRematchTrainerIdVSSeeker(sVsSeeker->trainerInfo[i].trainerIdx))
                 return TRUE;
         }
     }
@@ -823,7 +830,7 @@ static void StartAllRespondantIdleMovements(void)
                 SetTrainerMovementType(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
             TryOverrideTemplateCoordsForObjectEvent(objectEvent, sVsSeeker->runningBehaviourEtcArray[i]);
         }
-        gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[j].localId)] = GetRematchTrainerIdFromTable(gRematchTable, sVsSeeker->trainerInfo[j].trainerIdx);
+        gSaveBlock1Ptr->trainerRematches[VsSeekerConvertLocalIdToTableId(sVsSeeker->trainerInfo[j].localId)] = GetRematchTrainerIdVSSeeker(sVsSeeker->trainerInfo[j].trainerIdx);
     }
 #endif //FREE_MATCH_CALL
 }
