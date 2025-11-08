@@ -6,6 +6,7 @@ on:
 
 jobs:
   label:
+    if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: check labels
@@ -27,3 +28,11 @@ jobs:
             category: pokemon
             category: sprite-issue
             type: documentation
+  allcontributors:
+    if: github.actor == 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Automatically pass for allcontributors
+        run: echo "CI automatically passes for allcontributors" && exit 0
+

@@ -54,20 +54,7 @@ struct ShortCopy {
     size_t length;
     size_t offset;
     unsigned short firstSymbol;
-    std::vector<unsigned short> usSequence;
-    ShortCopy();
-    ShortCopy(size_t index, size_t length, size_t offset, std::vector<unsigned short> usSequence);
-};
-
-struct CompressionInstruction {
-    size_t length;
-    size_t offset;
-    size_t index;
-    unsigned char firstSymbol;
-    std::vector<unsigned char> symbols;
-    std::vector<unsigned char> bytes;
-    void buildBytes();
-    bool verifyInstruction();
+    ShortCopy(size_t index, size_t length, size_t offset, unsigned short firstSymbol);
 };
 
 struct ShortCompressionInstruction {
@@ -75,20 +62,9 @@ struct ShortCompressionInstruction {
     size_t offset;
     size_t index;
     unsigned short firstSymbol;
-    std::vector<unsigned short> symbols;
     std::vector<unsigned char> loBytes;
     std::vector<unsigned short> symShorts;
-    void buildBytes();
-    bool verifyInstruction();
-};
-
-struct SortedShortElement {
-    size_t index;
-    ShortCopy copy;
-    bool isRun = false;
-    bool isCopy = false;
-    SortedShortElement();
-    SortedShortElement(size_t index, ShortCopy copy);
+    void buildBytes(std::vector<unsigned short> *pInput);
 };
 
 struct CompressedImage {
@@ -116,7 +92,6 @@ struct InputSettings {
     bool canEncodeLO = true;
     bool canEncodeSyms = true;
     bool canDeltaSyms = true;
-    bool shouldCompare = false;
     bool useFrames = false;
     InputSettings();
     InputSettings(bool canEncodeLO, bool canEncodeSyms, bool canDeltaSyms);
@@ -127,45 +102,38 @@ struct DataVecs {
     std::vector<unsigned short> symVec;
 };
 
-void analyzeImages(std::vector<CompressedImage> *allImages, std::mutex *imageMutex, FileDispatcher *dispatcher, std::mutex *dispatchMutex, InputSettings settings);
-
 CompressedImage processImage(std::string fileName, InputSettings settings);
 CompressedImage processImageFrames(std::string fileName, InputSettings settings);
-CompressedImage processImageData(std::vector<unsigned char> input, InputSettings settings, std::string fileName);
+bool processImageData(std::vector<unsigned char> *pInput, CompressedImage *pImage, InputSettings settings, std::string fileName);
 
-std::vector<unsigned int> readFileAsUInt(std::string filePath);
+bool readFileAsUInt(std::string filePath, std::vector<unsigned int> *pFileData);
 
-size_t getCompressedSize(CompressedImage *pImage);
-
-std::vector<ShortCopy> getShortCopies(std::vector<unsigned short> input, size_t minLength);
+bool getShortCopies(std::vector<unsigned short> *pInput, size_t minLength, std::vector<ShortCopy> *pShortCopies);
 bool verifyShortCopies(std::vector<ShortCopy> *pCopies, std::vector<unsigned short> *pImage);
 
 std::vector<int> getNormalizedCounts(std::vector<size_t> input);
 std::vector<unsigned int> getFreqWriteInts(std::vector<int> input);
 std::vector<unsigned int> getNewHeaders(CompressionMode mode, size_t imageSize, size_t symLength, int initialState, size_t bitstreamSize, size_t loLength);
-int findInitialState(EncodeCol encodeCol, unsigned char firstSymbol);
-CompressedImage fillCompressVecNew(std::vector<unsigned char> loVec, std::vector<unsigned short> symVec, CompressionMode mode, size_t imageBytes, std::string name);
-std::vector<ShortCompressionInstruction> getShortInstructions(std::vector<ShortCopy> copies, size_t lengthMod);
-std::vector<unsigned char> getLosFromInstructions(std::vector<ShortCompressionInstruction> instructions);
-std::vector<unsigned short> getSymsFromInstructions(std::vector<ShortCompressionInstruction> instructions);
+int findInitialState(EncodeCol *encodeCol, unsigned char firstSymbol);
+
+bool fillCompressVec(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec, CompressionMode mode, size_t imageBytes, std::string name, CompressedImage *pOutput);
+
+bool getShortInstructions(std::vector<ShortCopy> *pCopies, std::vector<ShortCompressionInstruction> *pInstructions, std::vector<unsigned short> *pInput);
+void getLosFromInstructions(std::vector<ShortCompressionInstruction> *pInstructions, std::vector<unsigned char> *pOutput);
+void getSymsFromInstructions(std::vector<ShortCompressionInstruction> *pInstructions, std::vector<unsigned short> *pOutput);
 std::vector<int> unpackFrequencies(unsigned int pInts[3]);
-CompressedImage getDataFromUIntVec(std::vector<unsigned int> *pInput);
-CompressedImage readNewHeader(std::vector<unsigned int> *pInput);
-std::vector<unsigned int> getUIntVecFromData(CompressedImage *pImage);
+void readNewHeader(std::vector<unsigned int> *pInput, CompressedImage *pOutput);
+void getUIntVecFromData(CompressedImage *pImage, std::vector<unsigned int> *pOutput);
 
 std::vector<unsigned short> decodeBytesShort(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec);
 std::vector<unsigned short> decodeImageShort(CompressedImage *pInput);
 DataVecs decodeDataVectorsNew(CompressedImage *pInput);
-
-size_t decodeNibbles(std::vector<DecodeCol> decodeTable, std::vector<unsigned int> *bits, int *currState, std::vector<unsigned char> *nibbleVec, size_t currBitIndex, size_t numNibbles);
-
 bool compareVectorsShort(std::vector<unsigned short> *pVec1, std::vector<unsigned short> *pVec2);
 
 bool verifyCompressionShort(CompressedImage *pInput, std::vector<unsigned short> *pImage);
-bool verifyBytesShort(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec, std::vector<unsigned short> *pImage);
-bool verifyUIntVecShort(std::vector<unsigned int> *pInput, std::vector<unsigned short> *pImage);
 
-std::vector<unsigned short> readRawDataVecs(std::vector<unsigned int> *pInput);
+bool verifyBytesShort(std::vector<unsigned char> *pLoVec, std::vector<unsigned short> *pSymVec, std::vector<unsigned short> *pImage);
+void readRawDataVecs(std::vector<unsigned int> *pInput, std::vector<unsigned short> *pOutput);
 
 bool isModeLoEncoded(CompressionMode mode);
 bool isModeSymEncoded(CompressionMode mode);
@@ -175,4 +143,5 @@ void deltaEncode(std::vector<unsigned char> *buffer, int length);
 void deltaDecode(std::vector<unsigned char> *buffer, int length);
 
 std::vector<int> getTestFreqs(std::vector<int> freqs, std::string name);
+
 #endif

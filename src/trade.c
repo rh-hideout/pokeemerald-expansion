@@ -138,7 +138,7 @@ enum {
 #define NUM_CHOOSE_PKMN_SPRITES (1 + GFXTAG_CHOOSE_PKMN_EMPTY_3 - GFXTAG_CHOOSE_PKMN_L)
 
 // Values for signaling to/from the link partner
-enum {
+enum SignalStatus {
     STATUS_NONE,
     STATUS_READY,
     STATUS_CANCEL,
@@ -2482,7 +2482,7 @@ s32 GetGameProgressForLinkTrade(void)
     return TRADE_BOTH_PLAYERS_READY;
 }
 
-int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, u8 requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter)
+int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct RfuGameCompatibilityData partner, u16 playerSpecies2, u16 partnerSpecies, enum Type requestedType, u16 playerSpecies, bool8 isModernFatefulEncounter)
 {
     bool8 playerHasNationalDex = player.hasNationalDex;
     bool8 playerCanLinkNationally = player.canLinkNationally;
@@ -2513,8 +2513,8 @@ int GetUnionRoomTradeMessageId(struct RfuGameCompatibilityData player, struct Rf
     else
     {
         // Player's Pokémon must be of the type the partner requested
-        if (gSpeciesInfo[playerSpecies2].types[0] != requestedType
-         && gSpeciesInfo[playerSpecies2].types[1] != requestedType)
+        if (GetSpeciesType(playerSpecies2, 0) != requestedType
+         && GetSpeciesType(playerSpecies2, 1) != requestedType)
             return UR_TRADE_MSG_NOT_MON_PARTNER_WANTS;
     }
 
@@ -3057,9 +3057,9 @@ static void UpdatePokedexForReceivedMon(u8 partyIdx)
     {
         u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
         u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
-        species = SpeciesToNationalPokedexNum(species);
-        GetSetPokedexFlag(species, FLAG_SET_SEEN);
-        HandleSetPokedexFlag(species, FLAG_SET_CAUGHT, personality);
+        enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
+        GetSetPokedexFlag(dexNum, FLAG_SET_SEEN);
+        HandleSetPokedexFlag(dexNum, FLAG_SET_CAUGHT, personality);
     }
 }
 
@@ -4535,7 +4535,7 @@ static void CreateInGameTradePokemonInternal(u8 whichPlayerMon, u8 whichInGameTr
     u8 level = GetMonData(&gPlayerParty[whichPlayerMon], MON_DATA_LEVEL);
 
     struct Mail mail;
-    u8 metLocation = METLOC_IN_GAME_TRADE;
+    metloc_u8_t metLocation = METLOC_IN_GAME_TRADE;
     u8 mailNum;
     struct Pokemon *pokemon = &gEnemyParty[0];
 

@@ -91,15 +91,19 @@ std::vector<unsigned short> decompressVector(std::vector<unsigned short> *pVec)
 CompressVectors compressVector(std::vector<unsigned short> *pVec)
 {
     CompressVectors vecs;
-    std::vector<ShortCopy> shortCopies = getShortCopies(*pVec, 2);
+    std::vector<ShortCopy> shortCopies;
+    getShortCopies(pVec, 2, &shortCopies);
     if (!verifyShortCopies(&shortCopies, pVec))
     {
         fprintf(stderr, "Error getting tile-number compression\n");
         return vecs;
     }
-    std::vector<ShortCompressionInstruction> shortInstructions = getShortInstructions(shortCopies, 0);
-    std::vector<unsigned char> loVec = getLosFromInstructions(shortInstructions);
-    std::vector<unsigned short> symVec = getSymsFromInstructions(shortInstructions);
+    std::vector<ShortCompressionInstruction> shortInstructions;
+    getShortInstructions(&shortCopies, &shortInstructions, pVec);
+    std::vector<unsigned char> loVec;
+    getLosFromInstructions(&shortInstructions, &loVec);
+    std::vector<unsigned short> symVec;
+    getSymsFromInstructions(&shortInstructions, &symVec);
 
     if (!verifyBytesShort(&loVec, &symVec, pVec))
     {

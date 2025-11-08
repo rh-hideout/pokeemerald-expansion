@@ -3395,7 +3395,7 @@ void AnimTask_ScaryFace(u8 taskId)
     bool32 onPlayer;
 
     if (gAnimMoveIndex == MOVE_BITTER_MALICE)
-        onPlayer = IsOnPlayerSide(gBattleAnimAttacker);
+        onPlayer = !IsOnPlayerSide(gBattleAnimAttacker);
     else
         onPlayer = !IsOnPlayerSide(gBattleAnimTarget);
 

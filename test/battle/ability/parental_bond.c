@@ -80,7 +80,7 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
     GIVEN {
         ASSUME(GetMoveStrikeCount(MOVE_EARTHQUAKE) < 2);
         ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
-        ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
         PLAYER(SPECIES_PIDGEY);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -105,7 +105,9 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
 
 SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod/Storm Drain mons")
 {
-    u16 move, species, ability, type;
+    u16 move, species;
+    enum Type type;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_RAICHU; type = TYPE_ELECTRIC; }
     PARAMETRIZE { move = MOVE_SURF; ability = ABILITY_STORM_DRAIN; species = SPECIES_LILEEP; type = TYPE_WATER; }
     GIVEN {
@@ -291,10 +293,10 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
         HP_BAR(opponent, captureDamage: &damage[1]);
         MESSAGE("The Pokémon was hit 2 time(s)!");
     } THEN {
-        if (B_PARENTAL_BOND_DMG == GEN_6)
-            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
-        else
+        if (B_PARENTAL_BOND_DMG >= GEN_7)
             EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+        else
+            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
     }
 }
 

@@ -966,6 +966,7 @@ extern const u8 gBattleAnimStatus_Paralysis[];
 extern const u8 gBattleAnimStatus_Freeze[];
 extern const u8 gBattleAnimStatus_Curse[];
 extern const u8 gBattleAnimStatus_Nightmare[];
+extern const u8 gBattleAnimStatus_Frostbite[];
 extern const u8 gBattleAnimStatus_Shadow[];
 extern const u8 gBattleAnimStatus_Enter_Reverse_Mode[];
 extern const u8 gBattleAnimStatus_Reverse_Mode[];

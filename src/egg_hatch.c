@@ -33,6 +33,7 @@
 #include "naming_screen.h"
 #include "pokemon_storage_system.h"
 #include "field_screen_effect.h"
+#include "trade.h"
 #include "data.h"
 #include "battle.h" // to get rid of later
 #include "constants/rgb.h"
@@ -63,7 +64,6 @@ struct EggHatchData
     u8 textColor[3];
 };
 
-extern const u32 gTradePlatform_Tilemap[];
 extern const u8 gText_HatchedFromEgg[];
 extern const u8 gText_NicknameHatchPrompt[];
 
@@ -362,10 +362,10 @@ static void CreateHatchedMon(struct Pokemon *egg, struct Pokemon *temp)
 static void AddHatchedMonToParty(u8 id)
 {
     u8 isEgg = 0x46; // ?
-    u16 species;
+    enum NationalDexOrder species;
     u8 name[POKEMON_NAME_LENGTH + 1];
     u16 metLevel;
-    u8 metLocation;
+    metloc_u8_t metLocation;
     struct Pokemon *mon = &gPlayerParty[id];
 
     CreateHatchedMon(mon, &gEnemyParty[0]);
@@ -931,7 +931,7 @@ u8 GetEggCyclesToSubtract(void)
     {
         if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG))
         {
-            u16 ability = GetMonAbility(&gPlayerParty[i]);
+            enum Ability ability = GetMonAbility(&gPlayerParty[i]);
             if (ability == ABILITY_MAGMA_ARMOR
              || ability == ABILITY_FLAME_BODY
              || ability == ABILITY_STEAM_ENGINE)

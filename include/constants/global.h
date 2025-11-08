@@ -1,17 +1,32 @@
 #ifndef GUARD_CONSTANTS_GLOBAL_H
 #define GUARD_CONSTANTS_GLOBAL_H
 
-#include "config/general.h"
-#include "config/battle.h"
-#include "config/debug.h"
-#include "config/item.h"
-#include "config/caps.h"
-#include "config/pokemon.h"
-#include "config/overworld.h"
-#include "config/dexnav.h"
-#include "config/summary_screen.h"
+// You can use the ENABLED_ON_RELEASE and DISABLED_ON_RELEASE macros to
+// control whether a feature is enabled or disabled when making a release build.
+//
+// For example, the overworld debug menu is enabled by default, but when using
+// `make release`, it will be automatically disabled.
+//
+// #define DEBUG_OVERWORLD_MENU DISABLED_ON_RELEASE
+#ifdef RELEASE
+#define ENABLED_ON_RELEASE TRUE
+#define DISABLED_ON_RELEASE FALSE
+#else
+#define ENABLED_ON_RELEASE FALSE
+#define DISABLED_ON_RELEASE TRUE
+#endif
+
 #include "config/ai.h"
+#include "config/battle.h"
+#include "config/caps.h"
+#include "config/debug.h"
+#include "config/dexnav.h"
 #include "config/follower_npc.h"
+#include "config/general.h"
+#include "config/item.h"
+#include "config/overworld.h"
+#include "config/pokemon.h"
+#include "config/summary_screen.h"
 
 // Invalid Versions show as "----------" in Gen 4 and Gen 5's summary screen.
 // In Gens 6 and 7, invalid versions instead show "a distant land" in the summary screen.
@@ -63,11 +78,6 @@
 #define SECRET_BASES_COUNT 20
 #define POKE_NEWS_COUNT 16
 #define PC_ITEMS_COUNT 50
-#define BAG_ITEMS_COUNT 30
-#define BAG_KEYITEMS_COUNT 30
-#define BAG_POKEBALLS_COUNT 16
-#define BAG_TMHM_COUNT 64
-#define BAG_BERRIES_COUNT 46
 #define OBJECT_EVENT_TEMPLATES_COUNT 64
 #define DECOR_MAX_SECRET_BASE 16
 #define DECOR_MAX_PLAYERS_HOUSE 12
@@ -80,6 +90,13 @@
 #define SAVED_TRENDS_COUNT 5
 #define PYRAMID_BAG_ITEMS_COUNT 10
 #define ROAMER_COUNT 1 // Number of maximum concurrent active roamers
+
+// Bag constants
+#define BAG_ITEMS_COUNT 30
+#define BAG_KEYITEMS_COUNT 30
+#define BAG_POKEBALLS_COUNT 16
+#define BAG_TMHM_COUNT 64
+#define BAG_BERRIES_COUNT 46
 
 // Number of facilities for Ranking Hall.
 // 7 facilities for single mode + tower double mode + tower multi mode.
@@ -146,6 +163,7 @@
 #define OPTIONS_TEXT_SPEED_SLOW 0
 #define OPTIONS_TEXT_SPEED_MID 1
 #define OPTIONS_TEXT_SPEED_FAST 2
+#define OPTIONS_TEXT_SPEED_INSTANT 3
 
 #define OPTIONS_SOUND_MONO 0
 #define OPTIONS_SOUND_STEREO 1

@@ -31,7 +31,8 @@ ASSUMPTIONS
 // IV combinations sourced from https://www.smogon.com/forums/threads/hidden-power-iv-combinations.78083/
 SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
 {
-    u32 type, j, foeType, foeSpecies, foeItem;
+    enum Type type, foeType, j;
+    u32 foeSpecies, foeItem;
     u32 hp, atk, def, spAtk, spDef, speed;
     bool32 hidden;
 
@@ -111,8 +112,8 @@ SINGLE_BATTLE_TEST("Hidden Power's type is determined by IVs")
     GIVEN {
         if (hidden) {
             ASSUME(gTypeEffectivenessTable[type][foeType] == UQ_4_12(2.0));                 // Foe's Type resists
-            ASSUME(gSpeciesInfo[foeSpecies].types[0] == gSpeciesInfo[foeSpecies].types[1]); // Foe's pure type
-            ASSUME(gSpeciesInfo[foeSpecies].types[0] == foeType);                           // Foe is the super-effective type
+            ASSUME(GetSpeciesType(foeSpecies, 0) == GetSpeciesType(foeSpecies, 1)); // Foe's pure type
+            ASSUME(GetSpeciesType(foeSpecies, 0) == foeType);                           // Foe is the super-effective type
             ASSUME(GetItemHoldEffect(foeItem) == HOLD_EFFECT_RESIST_BERRY);              // Item is resist berry
             ASSUME(GetItemHoldEffectParam(foeItem) == type);                             // Resist berry of type
             PLAYER(SPECIES_DUNSPARCE) { HPIV(hp); AttackIV(atk); DefenseIV(def); SpAttackIV(spAtk); SpDefenseIV(spDef); SpeedIV(speed); }

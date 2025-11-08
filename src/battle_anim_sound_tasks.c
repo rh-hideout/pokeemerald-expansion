@@ -311,6 +311,13 @@ void SoundTask_PlayCryWithEcho(u8 taskId)
         DestroyAnimVisualTask(taskId);
 }
 
+void SoundTask_PlayDynamaxCry(u8 taskId)
+{
+    u16 species = (GetIllusionMonSpecies(gBattleAnimAttacker) != SPECIES_NONE) ? GetIllusionMonSpecies(gBattleAnimAttacker) : gAnimBattlerSpecies[gBattleAnimAttacker];
+    PlayCry_ByMode(species, BattleAnimAdjustPanning(SOUND_PAN_ATTACKER), CRY_MODE_DYNAMAX);
+    gTasks[taskId].func = SoundTask_WaitForCry;
+}
+
 static void SoundTask_PlayCryWithEcho_Step(u8 taskId)
 {
     u16 species = gTasks[taskId].tSpecies;

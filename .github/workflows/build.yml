@@ -9,6 +9,7 @@ on:
 
 jobs:
   build:
+    if: github.actor != 'allcontributors[bot]'
     runs-on: ubuntu-latest
     env:
       GAME_VERSION: EMERALD
@@ -30,9 +31,23 @@ jobs:
         env:
           COMPARE: 0
         run: make -j${nproc} -O all
+        
+      - name: LTO
+        run: |
+          make tidy
+          make -j${nproc} LTO=1
+        # make tidy to purge previous build
 
       - name: Test
         env:
           TEST: 1
         run: |
           make -j${nproc} check
+  allcontributors:
+    if: github.actor == 'allcontributors[bot]'
+    runs-on: ubuntu-latest
+    needs: []
+    steps:
+      - name: Automatically pass for allcontributors
+        run: echo "CI automatically passes for allcontributors" && exit 0
+

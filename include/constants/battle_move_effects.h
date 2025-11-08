@@ -1,14 +1,15 @@
 #ifndef GUARD_CONSTANTS_BATTLE_MOVE_EFFECTS_H
 #define GUARD_CONSTANTS_BATTLE_MOVE_EFFECTS_H
 
-enum BattleMoveEffects
+enum __attribute__((packed)) BattleMoveEffects
 {
     EFFECT_PLACEHOLDER,
     EFFECT_HIT,
     EFFECT_NON_VOLATILE_STATUS,
     EFFECT_ABSORB,
     EFFECT_EXPLOSION,
-    EFFECT_DREAM_EATER,
+    EFFECT_MISTY_EXPLOSION, // Same as EFFECT_EXPLOSION but it's boosted on Misty Terrain
+    EFFECT_DREAM_EATER, // Same as EFFECT_ABSORB but it can only be used on sleeping targets
     EFFECT_MIRROR_MOVE,
     EFFECT_ATTACK_UP,
     EFFECT_DEFENSE_UP,
@@ -34,9 +35,10 @@ enum BattleMoveEffects
     EFFECT_LIGHT_SCREEN,
     EFFECT_REST,
     EFFECT_OHKO,
+    EFFECT_SHEER_COLD, // Same as EFFECT_OHKO but Ice-types are immune to it and has decreased accuracy for non Ice-type users.
     EFFECT_FUSION_COMBO,
-    EFFECT_SUPER_FANG,
-    EFFECT_FIXED_DAMAGE_ARG,
+    EFFECT_FIXED_PERCENT_DAMAGE,
+    EFFECT_FIXED_HP_DAMAGE,
     EFFECT_HEAL_BLOCK,
     EFFECT_RECOIL_IF_MISS,
     EFFECT_MIST,
@@ -131,7 +133,7 @@ enum BattleMoveEffects
     EFFECT_STOCKPILE,
     EFFECT_SPIT_UP,
     EFFECT_SWALLOW,
-    EFFECT_WORRY_SEED,
+    EFFECT_OVERWRITE_ABILITY,
     EFFECT_HAIL,
     EFFECT_TORMENT,
     EFFECT_FLATTER,
@@ -155,6 +157,7 @@ enum BattleMoveEffects
     EFFECT_BRICK_BREAK,
     EFFECT_YAWN,
     EFFECT_KNOCK_OFF,
+    EFFECT_STEAL_ITEM,
     EFFECT_ENDEAVOR,
     EFFECT_POWER_BASED_ON_USER_HP,
     EFFECT_SKILL_SWAP,
@@ -215,7 +218,6 @@ enum BattleMoveEffects
     EFFECT_METAL_BURST,
     EFFECT_LUCKY_CHANT,
     EFFECT_SUCKER_PUNCH,
-    EFFECT_SIMPLE_BEAM,
     EFFECT_ENTRAINMENT,
     EFFECT_HEAL_PULSE,
     EFFECT_QUASH,
@@ -279,7 +281,6 @@ enum BattleMoveEffects
     EFFECT_GEOMANCY,
     EFFECT_FAIRY_LOCK,
     EFFECT_ALLY_SWITCH,
-    EFFECT_RELIC_SONG,
     EFFECT_BODY_PRESS,
     EFFECT_JUNGLE_HEALING,
     EFFECT_COACHING,
@@ -307,9 +308,8 @@ enum BattleMoveEffects
     EFFECT_BEAK_BLAST,
     EFFECT_COURT_CHANGE,
     EFFECT_MAX_HP_50_RECOIL,
-    EFFECT_MIND_BLOWN, // Same as EFFECT_MAX_HP_50_RECOIL but is cancelled by Damp
+    EFFECT_CHLOROBLAST, // Same effect as EFFECT_MAX_HP_50_RECOIL but follows the same rules as EFFECT_RECOIL
     EFFECT_EXTREME_EVOBOOST,
-    EFFECT_HIT_SET_REMOVE_TERRAIN,
     EFFECT_DARK_VOID,
     EFFECT_VICTORY_DANCE,
     EFFECT_TEATIME,
@@ -341,13 +341,17 @@ enum BattleMoveEffects
     EFFECT_TERA_BLAST,
     EFFECT_TERA_STARSTORM,
     EFFECT_DRAGON_DARTS,
-    EFFECT_GUARDIAN_OF_ALOLA,
     EFFECT_SHELL_SIDE_ARM,
     EFFECT_ORDER_UP,
     EFFECT_RAPID_SPIN,
     EFFECT_SPECTRAL_THIEF,
     EFFECT_RECOIL,
     EFFECT_SMACK_DOWN,
+    EFFECT_LIFE_DEW,
+    EFFECT_ICE_SPINNER, // Removes terrain unless attacker is removed from field either by fainting or ejected out
+    EFFECT_STEEL_ROLLER, // Will fail if there is no terrain up but removes it regardless if attacker is removed from field or not
+    EFFECT_STONE_AXE, // Not to be confused with MOVE_EFFECT_STEALTH_ROCK. They have two different activation timings.
+    EFFECT_CEASELESS_EDGE, // Same applies to spikes
     EFFECT_SHADOW_HALF,
     EFFECT_SHADOW_SKY,
     NUM_BATTLE_MOVE_EFFECTS,
