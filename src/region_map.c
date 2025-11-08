@@ -131,48 +131,88 @@ static const u8 sRegionMapPlayerIcon_MayGfx[] = INCBIN_U8("graphics/pokenav/regi
 #include "data/region_map/region_map_entries.h"
 #include "data/region_map/region_map_layout_Hoenn.h"
 
-// When adding new regions add an entry here mapping the region to its bg palette
 const u16 *GetCurrentRegionMapBgPal(void)
 {
     switch (GetCurrentRegion())
     {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
     case REGION_HOENN:
-    default:
+    case REGION_NONE:
+    case REGIONS_COUNT:
         return sRegionMapBg_Pal_Hoenn;
     }
+    return sRegionMapBg_Pal_Hoenn;
 }
 
-// When adding new regions add an entry here mapping the region to its bg gfx
 const u32 *GetCurrentRegionMapBgGfx(void)
 {
     switch (GetCurrentRegion())
     {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
     case REGION_HOENN:
-    default:
+    case REGION_NONE:
+    case REGIONS_COUNT:
         return sRegionMapBg_Gfx_Hoenn;
     }
+    return sRegionMapBg_Gfx_Hoenn;
 }
 
-// When adding new regions add an entry here mapping the region to its bg tilemap
 const u32 *GetCurrentRegionMapBgTilemap(void)
 {
     switch (GetCurrentRegion())
     {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
     case REGION_HOENN:
-    default:
+    case REGION_NONE:
+    case REGIONS_COUNT:
         return sRegionMapBg_Tilemap_Hoenn;
     }
+    return sRegionMapBg_Tilemap_Hoenn;
 }
 
-// When adding new regions add an entry here mapping the region to its map layout
 const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
 {
     switch (GetCurrentRegion())
     {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
     case REGION_HOENN:
-    default:
+    case REGION_NONE:
+    case REGIONS_COUNT:
         return sRegionMap_MapSectionLayout_Hoenn;
     }
+    return sRegionMap_MapSectionLayout_Hoenn;
 }
 
 static const mapsec_u16_t sRegionMap_SpecialPlaceLocations[][2] =

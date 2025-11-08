@@ -6,11 +6,6 @@
 #include "constants/regions.h"
 #include "constants/region_map_sections.h"
 
-// Returns the current region based on the map's region field
-// For adding new maps be sure to set their region field in the map JSON files
-// For adding new custom regions, be sure to add their names to strings.h/.c,
-// add an entry to the enum in include/constants/regions.h,
-// and handle them in GetCurrentRegionName()
 static inline enum Region GetCurrentRegion(void)
 {
     return gMapHeader.region;

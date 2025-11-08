@@ -166,6 +166,7 @@ string generate_map_header_text(Json map_data, Json layouts_data) {
          << "\t.byte "  << json_to_string(map_data, "map_type") << "\n";
 
     // Multi-region support is currently only for pokeemerald-expansion
+    // TODO: Make this more generic for other versions if needed
     if (version == "emerald")
     {
         // If the 'region' field exists in the JSON, write it followed by a zero byte.
