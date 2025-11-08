@@ -2831,11 +2831,11 @@ static void CheckSetUnburden(u8 battler)
         gDisableStructs[battler].unburdenActive = TRUE;
 }
 
-// battlerStealer steals the item of battlerItem
-void StealTargetItem(u8 battlerStealer, u8 battlerItem)
+// battlerStealer steals the item of itemBattler
+void StealTargetItem(u8 battlerStealer, u8 itemBattler)
 {
-    gLastUsedItem = gBattleMons[battlerItem].item;
-    gBattleMons[battlerItem].item = ITEM_NONE;
+    gLastUsedItem = gBattleMons[itemBattler].item;
+    gBattleMons[itemBattler].item = ITEM_NONE;
 
     if (GetGenConfig(GEN_STEAL_WILD_ITEMS) >= GEN_9
      && !(gBattleTypeFlags & (BATTLE_TYPE_TRAINER | BATTLE_TYPE_PALACE))
@@ -2854,16 +2854,16 @@ void StealTargetItem(u8 battlerStealer, u8 battlerItem)
         MarkBattlerForControllerExec(battlerStealer);
     }
 
-    RecordItemEffectBattle(battlerItem, ITEM_NONE);
-    CheckSetUnburden(battlerItem);
+    RecordItemEffectBattle(itemBattler, ITEM_NONE);
+    CheckSetUnburden(itemBattler);
 
-    BtlController_EmitSetMonData(battlerItem, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[gBattlerTarget].item), &gBattleMons[battlerItem].item);  // remove target item
-    MarkBattlerForControllerExec(battlerItem);
+    BtlController_EmitSetMonData(itemBattler, B_COMM_TO_CONTROLLER, REQUEST_HELDITEM_BATTLE, 0, sizeof(gBattleMons[itemBattler].item), &gBattleMons[itemBattler].item);  // remove target item
+    MarkBattlerForControllerExec(itemBattler);
 
-    if (GetBattlerAbility(gBattlerTarget) != ABILITY_GORILLA_TACTICS)
-        gBattleStruct->choicedMove[gBattlerTarget] = MOVE_NONE;
+    if (GetBattlerAbility(itemBattler) != ABILITY_GORILLA_TACTICS)
+        gBattleStruct->choicedMove[itemBattler] = MOVE_NONE;
 
-    TrySaveExchangedItem(battlerItem, gLastUsedItem);
+    TrySaveExchangedItem(itemBattler, gLastUsedItem);
 }
 
 static inline bool32 TrySetReflect(u32 battler)
@@ -5598,22 +5598,54 @@ static bool32 HandleMoveEndAbilityBlock(u32 battlerAtk, u32 battlerDef, u32 move
     switch (abilityAtk)
     {
     case ABILITY_MAGICIAN:
-        if (move != MOVE_FLING && move != MOVE_NATURAL_GIFT
+        if (GetMoveEffect(move) != EFFECT_FLING
+         && GetMoveEffect(move) != EFFECT_NATURAL_GIFT
          && gBattleMons[battlerAtk].item == ITEM_NONE
-         && gBattleMons[battlerDef].item != ITEM_NONE
          && IsBattlerAlive(battlerAtk)
-         && IsBattlerTurnDamaged(battlerDef)
-         && CanStealItem(battlerAtk, battlerDef, gBattleMons[battlerDef].item)
-         && !gSpecialStatuses[battlerAtk].gemBoost   // In base game, gems are consumed after magician would activate.
-         && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(battlerDef)] & (1u << gBattlerPartyIndexes[battlerDef]))
-         && !DoesSubstituteBlockMove(battlerAtk, battlerDef, move)
-         && (GetBattlerAbility(battlerDef) != ABILITY_STICKY_HOLD || !IsBattlerAlive(battlerDef)))
+         && !gSpecialStatuses[battlerAtk].gemBoost) // In base game, gems are consumed after magician would activate.
         {
-            StealTargetItem(battlerAtk, battlerDef);
-            gBattleScripting.battler = gBattlerAbility = battlerAtk;
-            gEffectBattler = battlerDef;
-            BattleScriptCall(BattleScript_MagicianActivates);
-            effect = TRUE;
+            u32 numMagicianTargets = 0;
+            u32 magicianTargets = 0;
+
+            for (u32 i = 0; i < gBattlersCount; i++)
+            {
+                if (gBattleMons[i].item != ITEM_NONE
+                 && i != battlerAtk
+                 && IsBattlerTurnDamaged(i)
+                 && CanStealItem(battlerAtk, i, gBattleMons[i].item)
+                 && !(gWishFutureKnock.knockedOffMons[GetBattlerSide(i)] & (1u << gBattlerPartyIndexes[i]))
+                 && !DoesSubstituteBlockMove(battlerAtk, i, move)
+                 && (GetBattlerAbility(i) != ABILITY_STICKY_HOLD || !IsBattlerAlive(i)))
+                {
+                    magicianTargets |= 1u << i;
+                    numMagicianTargets++;
+                }
+            }
+
+            if (numMagicianTargets == 0)
+            {
+                effect = FALSE;
+                break;
+            }
+
+            u8 battlers[4] = {0, 1, 2, 3};
+            if (numMagicianTargets > 1)
+                SortBattlersBySpeed(battlers, FALSE);
+
+            for (u32 i = 0; i < gBattlersCount; i++)
+            {
+                u32 battler = battlers[i];
+
+                if (!(magicianTargets & 1u << battler))
+                    continue;
+
+                StealTargetItem(battlerAtk, battler);
+                gBattlerAbility = battlerAtk;
+                gEffectBattler = battler;
+                BattleScriptCall(BattleScript_MagicianActivates);
+                effect = TRUE;
+                break; // found target to steal from
+            }
         }
         break;
     case ABILITY_MOXIE:
@@ -5776,6 +5808,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
                 gBattleMons[gBattlerAttacker].item = ITEM_NONE; // Item assigned later on with thief (see MOVEEND_CHANGED_ITEMS)
                 gBattleStruct->changedItems[gBattlerAttacker] = gLastUsedItem; // Stolen item to be assigned later
             }
+            gEffectBattler = gBattlerTarget;
             BattleScriptCall(BattleScript_ItemSteal);
             effect = TRUE;
         }
