@@ -19,6 +19,7 @@
 #include "config/ai.h"
 #include "config/battle.h"
 #include "config/caps.h"
+#include "config/contest.h"
 #include "config/debug.h"
 #include "config/dexnav.h"
 #include "config/follower_npc.h"
