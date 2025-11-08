@@ -16845,15 +16845,6 @@ void BS_JumpIfNoAlly(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_InfatuateWithBattler(void)
-{
-    NATIVE_ARGS(u8 battler, u8 infatuateWith);
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
-    gBattleScripting.battler = battler;
-    gBattleMons[battler].volatiles.infatuation = INFATUATED_WITH(GetBattlerForBattleScript(cmd->infatuateWith));
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
 void BS_SetLastUsedItem(void)
 {
     NATIVE_ARGS(u8 battler);
