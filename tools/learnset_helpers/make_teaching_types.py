@@ -105,7 +105,7 @@ def main():
             old_teaching_types = fp.read()
     else:
         dump_output(OUTPUT_FILE, new_teaching_types)
-        return
+        quit()
 
     if new_teaching_types != old_teaching_types:
          dump_output(OUTPUT_FILE, new_teaching_types)

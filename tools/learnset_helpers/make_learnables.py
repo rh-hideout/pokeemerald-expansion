@@ -52,7 +52,7 @@ def main():
 
     batch = {
         species: list(sorted(learnables))
-        for species, learnables in from_batch(INPUTS_DIR).items()
+        for species, learnables in sorted(from_batch(INPUTS_DIR).items())
     }
     with open(OUTPUT_FILE, "w") as fp:
         json.dump(batch, fp, indent=2)
