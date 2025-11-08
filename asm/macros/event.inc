@@ -2684,6 +2684,12 @@
 	.4byte \name
 	.endm
 
+@ VS Seeker
+	.macro vsseeker_rematchid rematchId:req
+	callnative NativeVsSeekerRematchId, requests_effects=1
+	.2byte \rematchId
+	.endm
+
 	@ Sets the move relearner state
 	.macro setmoverelearnerstate state:req
 	callnative ScrCmd_setmoverelearnerstate, requests_effects=1
