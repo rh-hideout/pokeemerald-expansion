@@ -3799,18 +3799,18 @@ static const u8 *GetLetterGrade(u32 stat)
     static const u8 gText_GradeA[] = _("A");
     static const u8 gText_GradeS[] = _("S");
 
-    if (stat > 0 && stat <= 15)
-        return gText_GradeD;
-    else if (stat > 15 && stat <= 25)
-        return gText_GradeC;
-    else if (stat > 26 && stat <= 29)
-        return gText_GradeB;
-    else if (stat == 30)
-        return gText_GradeA;
-    else if (stat == 31)
-        return gText_GradeS;
-    else
+    if (stat <= 0)
         return gText_GradeF;
+    else if (stat <= 15)
+        return gText_GradeD;
+    else if (stat <= 25)
+        return gText_GradeC;
+    else if (stat <= 29)
+        return gText_GradeB;
+    else if (stat <= 30)
+        return gText_GradeA;
+    else
+        return gText_GradeS;
 }
 
 static void BufferLeftColumnStats(void)
