@@ -1557,6 +1557,7 @@ static void TearDownBattle(void)
     // Zero out the parties, data in them could potentially carry over
     ZeroPlayerPartyMons();
     ZeroEnemyPartyMons();
+    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
     FreeMonSpritesGfx();
     FreeBattleSpritesData();

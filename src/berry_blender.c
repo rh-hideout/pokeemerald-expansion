@@ -2432,6 +2432,7 @@ static void CalculatePokeblock(struct BlenderBerry *berries, struct Pokeblock *p
     }
 
     // Factor in max RPM and round
+    multiuseVar = maxRPM / 333 + 100;
     for (i = 0; i < FLAVOR_COUNT; i++)
     {
         s32 remainder;

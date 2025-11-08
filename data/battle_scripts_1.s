@@ -4406,11 +4406,10 @@ BattleScript_FaintBattler::
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
-	tryactivatesoulheart
 	tryactivatereceiver BS_FAINTED
+	tryactivatesoulheart
 	trytrainerslidemsgfirstoff BS_FAINTED
 	return
-
 
 BattleScript_GiveExp::
 	setbyte sGIVEEXP_STATE, 0
@@ -6547,6 +6546,7 @@ BattleScript_ReceiverActivates::
 	printstring STRINGID_RECEIVERABILITYTAKEOVER
 	waitmessage B_WAIT_TIME_LONG
 	settracedability BS_ABILITY_BATTLER
+	switchinabilities BS_ABILITY_BATTLER
 	return
 
 BattleScript_AbilityHpHeal:

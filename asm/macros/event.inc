@@ -2683,3 +2683,9 @@
 	callnative SetSpeaker
 	.4byte \name
 	.endm
+
+@ VS Seeker
+	.macro vsseeker_rematchid rematchId:req
+	callnative NativeVsSeekerRematchId, requests_effects=1
+	.2byte \rematchId
+	.endm
