@@ -1093,41 +1093,27 @@ static void DisplayPartyPokemonDataForContest(u8 slot)
 
 static void DisplayPartyPokemonDataForRelearner(u8 slot)
 {
+    struct Pokemon *mon = &gPlayerParty[slot];
+    bool32 hasMoves = FALSE;
+
     switch (gMoveRelearnerState)
     {
-        case MOVE_RELEARNER_EGG_MOVES:
-        {
-            if (GetNumberOfEggMoves(&gPlayerParty[slot]) == 0)
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE_2);
-            else
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_2);
-        }
+    case MOVE_RELEARNER_EGG_MOVES:
+        hasMoves = (GetNumberOfEggMoves(mon) > 0);
         break;
-        case MOVE_RELEARNER_TM_MOVES:
-        {
-            if (GetNumberOfTMMoves(&gPlayerParty[slot]) == 0)
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE_2);
-            else
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_2);
-        }
+    case MOVE_RELEARNER_TM_MOVES:
+        hasMoves = (GetNumberOfTMMoves(mon) > 0);
         break;
-        case MOVE_RELEARNER_TUTOR_MOVES:
-        {
-            if (GetNumberOfTutorMoves(&gPlayerParty[slot]) == 0)
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE_2);
-            else
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_2);
-        }
+    case MOVE_RELEARNER_TUTOR_MOVES:
+        hasMoves = (GetNumberOfTutorMoves(mon) > 0);
         break;
-        default:
-        {
-            if (GetNumberOfLevelUpMoves(&gPlayerParty[slot]) == 0)
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_NOT_ABLE_2);
-            else
-                DisplayPartyPokemonDescriptionData(slot, PARTYBOX_DESC_ABLE_2);
-        }
+    default:
+        hasMoves = (GetNumberOfLevelUpMoves(mon) > 0);
         break;
     }
+
+    u32 desc = (hasMoves ? PARTYBOX_DESC_ABLE_2 : PARTYBOX_DESC_NOT_ABLE_2);
+    DisplayPartyPokemonDescriptionData(slot, desc);
 }
 
 static void DisplayPartyPokemonDataForWirelessMinigame(u8 slot)
@@ -2876,7 +2862,7 @@ static void SetPartyMonSelectionActions(struct Pokemon *mons, u8 slotId, u8 acti
     {
         SetPartyMonFieldSelectionActions(mons, slotId);
     }
-    else if (action == ACTIONS_MOVES_SUB)
+    else if (action == ACTIONS_MOVES_SUB && P_PARTY_MOVE_RELEARNER)
     {
         sPartyMenuInternal->numActions = 0;
         SetPartyMonLearnMoveSelectionActions(mons, slotId);
@@ -2896,7 +2882,7 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
     sPartyMenuInternal->numActions = 0;
     AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUMMARY);
 
-    if (P_FLAG_PARTY_MOVE_RELEARNER != 0 && FlagGet(P_FLAG_PARTY_MOVE_RELEARNER)
+    if (P_PARTY_MOVE_RELEARNER
      && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
      && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
      || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
@@ -2929,11 +2915,8 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 
 static void SetPartyMonLearnMoveSelectionActions(struct Pokemon *mons, u8 slotId)
 {
-    if (P_ENABLE_MOVE_RELEARNERS || (P_FLAG_LEVEL_UP_MOVES != 0 && FlagGet(P_FLAG_LEVEL_UP_MOVES)))
-    {
-        if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfLevelUpMoves(&mons[slotId]) > 0)
-            AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_LEVEL_UP_MOVES);
-    }
+    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfLevelUpMoves(&mons[slotId]) > 0)
+        AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_LEVEL_UP_MOVES);
 
     if (P_ENABLE_MOVE_RELEARNERS || (P_FLAG_EGG_MOVES != 0 && FlagGet(P_FLAG_EGG_MOVES)))
     {
@@ -7955,16 +7938,6 @@ static void Task_ChoosePartyMon(u8 taskId)
 void ChooseMonForMoveRelearner(void)
 {
     gRelearnMode = RELEARN_MODE_SCRIPT;
-    LockPlayerFieldControls();
-    FadeScreen(FADE_TO_BLACK, 0);
-    CreateTask(Task_ChooseMonForMoveRelearner, 10);
-}
-
-// The move relearner in Fallarbor should teach level up moves regardless of move relearner configs
-void ChooseMonForFallarborMoveRelearner(void)
-{
-	gMoveRelearnerState = MOVE_RELEARNER_LEVEL_UP_MOVES;
-    gRelearnMode = RELEARN_MODE_FALLARBOR_RELEARNER_SCRIPT;
     LockPlayerFieldControls();
     FadeScreen(FADE_TO_BLACK, 0);
     CreateTask(Task_ChooseMonForMoveRelearner, 10);

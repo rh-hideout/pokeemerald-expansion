@@ -1,5 +1,5 @@
 Common_EventScript_MoveRelearner::
-	lock
+	lockall
 	faceplayer
 	message MoveRelearner_Text_WouldLearnNewMoves
 	waitmessage
@@ -7,13 +7,12 @@ Common_EventScript_MoveRelearner::
 	end
 
 Common_EventScript_MoveRelearnerDynMultiChoice::
-.if P_ENABLE_MOVE_RELEARNERS == TRUE
 	dynmultipush MoveRelearner_Text_LevelUpMoves, 0
+.if P_ENABLE_MOVE_RELEARNERS == TRUE
 	dynmultipush MoveRelearner_Text_EggMoves, 1
 	dynmultipush MoveRelearner_Text_TMMoves, 2
 	dynmultipush MoveRelearner_Text_TutormoveMoves, 3
 .else
-	call_if_set P_FLAG_LEVEL_UP_MOVES, MoveRelearner_EventScript_PushLevelUpMoves
 	call_if_set P_FLAG_EGG_MOVES, MoveRelearner_EventScript_PushEggMoves
 	call_if_set P_FLAG_TM_MOVES, MoveRelearner_EventScript_PushTMMoves
 	call_if_set P_FLAG_TUTOR_MOVES, MoveRelearner_EventScript_PushTutorMoves
@@ -29,12 +28,8 @@ Common_EventScript_MoveRelearnerDynMultiChoice::
 	case 4, MoveRelearner_EventScript_PleaseComeAgain
 MoveRelearner_EventScript_PleaseComeAgain:
 	msgbox MoveRelearner_Text_ThankYouComeAgain, MSGBOX_DEFAULT
-	release
+	releaseall
 	end
-
-MoveRelearner_EventScript_PushLevelUpMoves:
-	dynmultipush MoveRelearner_Text_LevelUpMoves, 0
-	return
 
 MoveRelearner_EventScript_PushEggMoves:
 	dynmultipush MoveRelearner_Text_EggMoves, 1
@@ -73,6 +68,8 @@ MoveRelearner_EventScript_TeachTutorMoves:
 	end
 
 MoveRelearner_EventScript_TeachMove::
+	getpartysize
+	goto_if_eq VAR_RESULT, 0, MoveRelearner_EventScript_NoPkmn
 	msgbox MoveRelearner_Text_ChoosePkmn, MSGBOX_DEFAULT
 	special ChooseMonForMoveRelearner
 	waitstate
@@ -84,6 +81,12 @@ MoveRelearner_EventScript_TeachMove::
 	special TeachMoveRelearnerMove
 	waitstate
 	goto MoveRelearner_EventScript_AnythingElse
+	end
+
+
+MoveRelearner_EventScript_NoPkmn:
+	msgbox MoveRelearner_Text_HaveNoPkmn, MSGBOX_AUTOCLOSE
+	releaseall
 	end
 
 MoveRelearner_EventScript_CantTeachMoveToEgg:

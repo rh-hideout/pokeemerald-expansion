@@ -23,6 +23,9 @@ MoveRelearner_Text_AnythingElse:
 MoveRelearner_Text_ChoosePkmn:
 	.string "Please choose your Pokémon.$"
 
+MoveRelearner_Text_HaveNoPkmn:
+	.string "You have no Pokémon.$"
+
 MoveRelearner_Text_CantTeachMoveToEgg:
 	.string "Sorry…\n"
 	.string "But an Egg can't learn moves.$"

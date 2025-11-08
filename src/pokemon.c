@@ -5887,9 +5887,7 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 {
-    if (!P_TUTOR_MOVES_ARRAY)
-        return FALSE;
-
+#if P_TUTOR_MOVES_ARRAY
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
@@ -5928,15 +5926,13 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
         SortMovesAlphabetically(moves, numMoves);
 
     return numMoves;
+#else
+    return 0;
+#endif // P_TUTOR_MOVES_ARRAY
 }
 
-// Make sure that the move relearner in Fallarbor works regardless of the configs
 u8 GetNumberOfLevelUpMoves(struct Pokemon *mon)
 {
-    if (gRelearnMode != RELEARN_MODE_FALLARBOR_RELEARNER_SCRIPT
-        && !FlagGet(P_FLAG_LEVEL_UP_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
-        return 0;
-
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
 
@@ -5979,9 +5975,6 @@ u8 GetNumberOfTMMoves(struct Pokemon *mon)
 
 u8 GetNumberOfTutorMoves(struct Pokemon *mon)
 {
-    if (!P_TUTOR_MOVES_ARRAY)
-        return 0;
-
     if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
         return 0;
 

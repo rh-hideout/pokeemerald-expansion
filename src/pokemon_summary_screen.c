@@ -1959,7 +1959,7 @@ bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
     case MOVE_RELEARNER_TUTOR_MOVES:
         return FlagGet(P_FLAG_TUTOR_MOVES);
     case MOVE_RELEARNER_LEVEL_UP_MOVES:
-        return FlagGet(P_FLAG_LEVEL_UP_MOVES);
+        return TRUE;
     default:
         return FALSE;
     }
@@ -1971,14 +1971,13 @@ void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
     u32 zeroCounter = 0;
     enum MoveRelearnerStates state = gMoveRelearnerState;
 
-    // just in case everything is off
+    // just in case everything is off, default to level up moves
     if ((!P_ENABLE_MOVE_RELEARNERS
-        && !FlagGet(P_FLAG_LEVEL_UP_MOVES)
         && !FlagGet(P_FLAG_EGG_MOVES)
         && !FlagGet(P_FLAG_TM_MOVES)
         && !FlagGet(P_FLAG_TUTOR_MOVES)))
     {
-        sMonSummaryScreen->relearnableMovesNum = 0;
+        sMonSummaryScreen->relearnableMovesNum = GetRelearnMovesCount(MOVE_RELEARNER_LEVEL_UP_MOVES);
         return;
     }
 

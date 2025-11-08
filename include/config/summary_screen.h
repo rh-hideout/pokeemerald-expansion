@@ -38,14 +38,13 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 #define P_SORT_MOVES                     FALSE   // If TRUE, sorts all moves alphabetically in the relearner's list.
 
 // Move Relearner modes and flags
-#define P_SUMMARY_SCREEN_MOVE_RELEARNER  FALSE   // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
-#define P_SUMMARY_MOVE_RELEARNER_FULL_PP FALSE   // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
-#define P_FLAG_PARTY_MOVE_RELEARNER      0       // If this flag is set, it enables the move relearner in the party menu.
+#define P_SUMMARY_SCREEN_MOVE_RELEARNER  TRUE   // If TRUE, shows an option for Pokémon to relearn moves on the summary screen moves page.
+#define P_SUMMARY_MOVE_RELEARNER_FULL_PP FALSE  // If TRUE, the move relearner in the summary screen restores relearned moves' PP to full.
+#define P_PARTY_MOVE_RELEARNER           FALSE  // If this flag is set, it enables the move relearner in the party menu.
 
 // Redundant if P_ENABLE_MOVE_RELEARNERS is TRUE. But still added here incase don't want all relearners unlocked at the same time.
-#define P_FLAG_LEVEL_UP_MOVES            0       // If this flag is set, enables level up move relearner.
 #define P_FLAG_EGG_MOVES                 0       // If this flag is set, enables egg move relearner.
 #define P_FLAG_TM_MOVES                  0       // If this flag is set, enables machine move relearner.
-#define P_FLAG_TUTOR_MOVES               0       // If this flag is set, enables tutor move move relearner.
+#define P_FLAG_TUTOR_MOVES               0       // If this flag is set, enables tutor move relearner.
 
 #endif // GUARD_CONFIG_SUMMARY_SCREEN_H
