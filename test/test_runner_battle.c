@@ -354,7 +354,7 @@ static void BattleTest_Run(void *data)
     PrintTestName();
 }
 
-u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
+u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
     STATE->didRunRandomly = TRUE;
     if (STATE->trials == 1)
@@ -376,14 +376,14 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
     if (!reject)
     {
         if (STATE->trials != (hi - lo + 1))
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, hi - lo + 1);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, hi - lo + 1);
         return STATE->runTrial + lo;
     }
 
     while (reject(STATE->runTrial + lo + STATE->rngTrialOffset))
     {
         if (STATE->runTrial + lo + STATE->rngTrialOffset > hi)
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d and inconsistent reject", __builtin_extract_return_addr(__builtin_return_address(0)), tag);
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d and inconsistent reject", caller, tag);
         STATE->rngTrialOffset++;
     }
 
@@ -391,7 +391,7 @@ u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32
 
 }
 
-u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
 {
     //Detect inconsistent sum
     u32 weightSum = 0;
@@ -400,7 +400,7 @@ u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weig
         for (u32 i = 0; i < n; i++)
             weightSum += weights[i];
         if (weightSum != sum)
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p has weights not matching its sum");
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p has weights not matching its sum", caller);
     }
 
     STATE->didRunRandomly = TRUE;
@@ -411,14 +411,14 @@ u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weig
     }
     else if (STATE->trials != n)
     {
-        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, n);
+        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, n);
     }
 
     STATE->trialRatio = Q_4_12(weights[STATE->runTrial]) / sum;
     return STATE->runTrial;
 }
 
-const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count)
+const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
 {
     STATE->didRunRandomly = TRUE;
     if (STATE->trials == 1)
@@ -428,13 +428,13 @@ const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size
     }
     else if (STATE->trials != count)
     {
-        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomElement called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, count);
+        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomElement called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, count);
     }
     STATE->trialRatio = Q_4_12(1) / count;
     return (const u8 *)array + size * STATE->runTrial;
 }
 
-static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
+static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
@@ -451,13 +451,13 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
     }
     //trials
     if (tag == STATE->rngTag)
-        return RandomUniformTrials(tag, lo, hi, reject);
+        return RandomUniformTrials(tag, lo, hi, reject, caller);
 
     //default
-    return RandomUniformDefaultValue(tag, lo, hi, reject);
+    return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
 }
 
-static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
@@ -471,7 +471,7 @@ static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, co
 
     //trials
     if (tag == STATE->rngTag)
-        return RandomWeightedArrayTrials(tag, sum, n, weights);
+        return RandomWeightedArrayTrials(tag, sum, n, weights, caller);
 
     //default
     switch (tag)
@@ -498,11 +498,11 @@ static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, co
             return TRUE;
 
     default:
-        return RandomWeightedArrayDefaultValue(tag, n, weights);
+        return RandomWeightedArrayDefaultValue(tag, n, weights, caller);
     }
 }
 
-static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count)
+static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
 {
     //rigged
     const struct BattlerTurn *turn = NULL;
@@ -526,10 +526,10 @@ static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void 
 
     //trials
     if (tag == STATE->rngTag)
-        return RandomElementArrayTrials(tag, array, size, count);
+        return RandomElementArrayTrials(tag, array, size, count, caller);
 
     //default
-    return RandomElementArrayDefaultValue(tag, array, size, count);
+    return RandomElementArrayDefaultValue(tag, array, size, count, caller);
 }
 
 static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, u32 ability)
