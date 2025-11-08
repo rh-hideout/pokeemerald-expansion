@@ -67,10 +67,10 @@ Now we need to vertically slice the map inserting a column of our first tile in 
 
 ![tilemap-studio-vertical-slice](img/region_map/TilemapStudioVerticalSlice.png)
 
-Now we will save this using `Tilemap > Save_As` and we will save this one as `tutorial_region_map.bin`. You can prepend `map.bin` and `region_map.bin` with the name of your region if you wish to either implement it without overwriting the default Hoenn ones or wish to have multiple regions, as detailed in the [Multi Region Tutorial](https://github.com/rh-hideout/pokeemerald-expansion/tree/master/docs/how_to_multi_region.md).
+Now we will save this using `Tilemap > Save_As` and we will save this one as `tutorial_region_map.bin`. You can prepend `map.bin` and `region_map.bin` with the name of your region if you wish to either implement it without overwriting the default Hoenn ones or wish to have multiple regions, as detailed in the [Multi Region Tutorial](how_to_multi_region.md).
 
 ## Moving and renaming our files
-At this point we have all the files we need to be able to see our new region map in game, we just need to move our files to the correct location and either reference them in code, which is covered in the [Multi Region Tutorial](https://github.com/rh-hideout/pokeemerald-expansion/tree/master/docs/how_to_multi_region.md), or rename them to overwrite the existing Hoenn region map.
+At this point we have all the files we need to be able to see our new region map in game, we just need to move our files to the correct location and either reference them in code, which is covered in the [Multi Region Tutorial](how_to_multi_region.md), or rename them to overwrite the existing Hoenn region map.
 
 First we will need to organize our files. At this point we should have:
 
@@ -79,9 +79,9 @@ First we will need to organize our files. At this point we should have:
 * Our `tileset.pal` file, we saved ours as `tutorial_tileset.pal`
 * Our `tileset.png` file, we saved ours as `tutorial_tileset.png`
 
-We will start by copying our `map.bin`, `tileset.pal`, and `tileset.png` files to [graphics/pokenav/region_map/](https://github.com/rh-hideout/pokeemerald-expansion/tree/master/graphics/pokenav/region_map). At this point if you have decided to overwrite the default Hoenn region map, having only one region, then you should make sure your files are named `map.bin`, `tileset.pal`, and `tileset.png` and overwrite the files in the destination, otherwise you will need to add references to the files in the code as detailed in the [Multi Region Tutorial](https://github.com/rh-hideout/pokeemerald-expansion/tree/master/docs/how_to_multi_region.md).
+We will start by copying our `map.bin`, `tileset.pal`, and `tileset.png` files to [graphics/pokenav/region_map/](../../graphics/pokenav/region_map). At this point if you have decided to overwrite the default Hoenn region map, having only one region, then you should make sure your files are named `map.bin`, `tileset.pal`, and `tileset.png` and overwrite the files in the destination, otherwise you will need to add references to the files in the code as detailed in the [Multi Region Tutorial](how_to_multi_region.md).
 
-Next we will copy our `region_map.bin`, `tileset.pal`, and `tileset.png` files to [graphics/pokedex](https://github.com/rh-hideout/pokeemerald-expansion/tree/master/graphics/pokedex). Similar to above you can either overwrite the default Hoenn files or keep yours named differently and add the appropriate references.
+Next we will copy our `region_map.bin`, `tileset.pal`, and `tileset.png` files to [graphics/pokedex](../..//graphics/pokedex). Similar to above you can either overwrite the default Hoenn files or keep yours named differently and add the appropriate references.
 
 We can double check that everything worked correctly by opening porymap and going into the region map editor.
 
