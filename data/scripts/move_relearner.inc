@@ -83,7 +83,6 @@ MoveRelearner_EventScript_TeachMove::
 	goto MoveRelearner_EventScript_AnythingElse
 	end
 
-
 MoveRelearner_EventScript_NoPkmn:
 	msgbox MoveRelearner_Text_HaveNoPkmn, MSGBOX_AUTOCLOSE
 	releaseall
