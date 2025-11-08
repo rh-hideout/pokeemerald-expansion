@@ -37,6 +37,7 @@
   - [How to use Follower NPCs](tutorials/how_to_follower_npc.md)
   - [Time-Based Encounters](tutorials/how_to_time_of_day_encounters.md)
   - [How to use Trainer Party Pools](tutorials/how_to_trainer_party_pool.md)
+  - [Vs. Seeker](tutorials/vs_seeker.md)
 - [Changelog](./CHANGELOG.md)
     - [1.13.x]()
         - [Version 1.13.3](changelogs/1.13.x/1.13.3.md)
