@@ -1128,8 +1128,12 @@ bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
 
 bool32 GetRematchFromScriptPointer(const u8 *data)
 {
+#if FREE_MATCH_CALL
+    return FALSE
+#else
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
     return ShouldTryRematchBattleForTrainerId(temp->params.opponentA);
+#endif
 }
 
 #undef OPCODE_OFFSET
