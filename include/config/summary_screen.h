@@ -45,7 +45,7 @@ Info taken from https://bulbapedia.bulbagarden.net/wiki/Stats_judge.
 // Redundant if P_ENABLE_MOVE_RELEARNERS is TRUE. But still added here incase don't want all relearners unlocked at the same time.
 #define P_FLAG_LEVEL_UP_MOVES            0       // If this flag is set, enables level up move relearner.
 #define P_FLAG_EGG_MOVES                 0       // If this flag is set, enables egg move relearner.
-#define P_FLAG_TM_MOVES                  0       // If this flag is set, enables tutor move move relearner.
+#define P_FLAG_TM_MOVES                  0       // If this flag is set, enables machine move relearner.
 #define P_FLAG_TUTOR_MOVES               0       // If this flag is set, enables tutor move move relearner.
 
 #endif // GUARD_CONFIG_SUMMARY_SCREEN_H
