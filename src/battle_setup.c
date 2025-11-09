@@ -1797,11 +1797,13 @@ static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBa
         return FALSE;
     if (!HasTrainerBeenFought(table[tableId].trainerIds[1]))
         return FALSE;
+#if FREE_MATCH_CALL == FALSE
     if (I_VS_SEEKER_CHARGING)
     {
         if (gSaveBlock1Ptr->trainerRematches[tableId] == 0)
             return FALSE;
     }
+#endif
     return TRUE;
 }
 
