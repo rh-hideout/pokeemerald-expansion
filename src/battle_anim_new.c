@@ -4843,6 +4843,29 @@ const struct SpriteTemplate gAxeKickSpriteTemplate =
     .callback = AnimBounceBallLand,
 };
 
+// shadow moves
+const struct SpriteTemplate gShadowParticleSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SHADOW_PARTICLES,
+    .paletteTag = ANIM_TAG_SHADOW_PARTICLES,
+    .oam = &gOamData_AffineOff_ObjNormal_16x32,
+    .anims = gEndureEnergyAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimEndureEnergy,
+};
+
+const struct SpriteTemplate gReverseParticleSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SHADOW_PARTICLES,
+    .paletteTag = ANIM_TAG_REVERSE_PARTICLES,
+    .oam = &gOamData_AffineOff_ObjNormal_16x32,
+    .anims = gEndureEnergyAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimEndureEnergy,
+};
+
 // Z MOVES
 //activate
 const struct SpriteTemplate gZMoveSymbolSpriteTemplate =

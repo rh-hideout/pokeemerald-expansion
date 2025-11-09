@@ -12,6 +12,7 @@
 #define AILMENT_PKRS  6
 #define AILMENT_FNT   7
 #define AILMENT_FRB   8
+#define AILMENT_SHADOW 9
 
 #define PARTY_LAYOUT_SINGLE          0
 #define PARTY_LAYOUT_DOUBLE          1

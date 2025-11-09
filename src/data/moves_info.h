@@ -6285,8 +6285,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "The type and effectiveness\n"
             "vary with the user."),
         #endif
-        .power = B_HIDDEN_POWER_DMG >= GEN_6 ? 60 : 1,
         .effect = EFFECT_HIDDEN_POWER,
+        .power = B_HIDDEN_POWER_DMG >= GEN_6 ? 60 : 1,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 15,
@@ -8858,8 +8858,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Howls to raise the spirit\n"
             "and boosts Attack."),
-        .power = 0,
         .effect = B_UPDATED_MOVE_DATA >= GEN_8 ? EFFECT_ATTACK_UP_USER_ALLY : EFFECT_ATTACK_UP,
+        .power = 0,
         .type = TYPE_NORMAL,
         .accuracy = 0,
         .pp = 40,
@@ -18988,8 +18988,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #else
             "the eyes. May freeze the foe."),
         #endif
-        .power = 90,
         .effect = EFFECT_HIT,
+        .power = 90,
         .type = TYPE_PSYCHIC,
         .accuracy = 100,
         .pp = 10,
@@ -21129,6 +21129,341 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             .chance = 50,
         }),
         .battleAnimScript = gBattleAnimMove_MalignantChain,
+    },
+
+    // Shadow Moves
+    [MOVE_SHADOW_BLITZ] =
+    {
+        .name = COMPOUND_STRING("Shadow Blitz"),
+        .description = COMPOUND_STRING(
+            "Tackles the opponent while\n"
+            "casting a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 40,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 60,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .battleAnimScript = Move_SHADOW_BLITZ,
+    },
+
+    [MOVE_SHADOW_WAVE] =
+    {
+        .name = COMPOUND_STRING("Shadow Wave"),
+        .description = COMPOUND_STRING(
+            "Shadowy aura waves are\n"
+            "loosed to inflict damage."),
+        .effect = EFFECT_HIT,
+        .power = 50,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 60,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .battleAnimScript = Move_SHADOW_WAVE,
+    },
+
+    [MOVE_SHADOW_RUSH] =
+    {
+        .name = COMPOUND_STRING("Shadow Rush"),
+        .description = COMPOUND_STRING(
+            "Executes a tackle while\n"
+            "exuding a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 55,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 60,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .battleAnimScript = Move_SHADOW_RUSH,
+    },
+
+    [MOVE_SHADOW_RAVE] =
+    {
+        .name = COMPOUND_STRING("Shadow Rave"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura in the ground\n"
+            "is used to launch spikes."),
+        .effect = EFFECT_HIT,
+        .power = 70,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 60,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .battleAnimScript = Move_SHADOW_RAVE,
+    },
+
+    [MOVE_SHADOW_FIRE] =
+    {
+        .name = COMPOUND_STRING("Shadow Fire"),
+        .description = COMPOUND_STRING(
+            "A shadowy fireball attack\n"
+            "that may inflict a burn."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 25,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_BURN,
+            .chance = 10,
+        }),
+        .battleAnimScript = Move_SHADOW_FIRE,
+    },
+
+    [MOVE_SHADOW_CHILL] =
+    {
+        .name = COMPOUND_STRING("Shadow Chill"),
+        .description = COMPOUND_STRING(
+            "A shadowy ice attack that\n"
+            "may freeze."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 25,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_FREEZE_OR_FROSTBITE,
+            .chance = 10,
+        }),
+        .battleAnimScript = Move_SHADOW_CHILL,
+    },
+
+    [MOVE_SHADOW_BOLT] =
+    {
+        .name = COMPOUND_STRING("Shadow Bolt"),
+        .description = COMPOUND_STRING(
+            "A shadowy thunder attack\n"
+            "that may paralyze."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 25,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_PARALYSIS,
+            .chance = 10,
+        }),
+        .battleAnimScript = Move_SHADOW_BOLT,
+    },
+
+    [MOVE_SHADOW_STORM] =
+    {
+        .name = COMPOUND_STRING("Shadow Storm"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura is used to\n"
+            "whip up a vicious tornado."),
+        .effect = EFFECT_HIT,
+        .power = 95,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 25,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .battleAnimScript = Move_SHADOW_STORM,
+    },
+
+    [MOVE_SHADOW_BLAST] =
+    {
+        .name = COMPOUND_STRING("Shadow Blast"),
+        .description = COMPOUND_STRING(
+            "A wicked blade of air is\n"
+            "formed using a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 80,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .criticalHitStage = 1,
+        .battleAnimScript = Move_SHADOW_BLAST,
+    },
+
+    [MOVE_SHADOW_BREAK] =
+    {
+        .name = COMPOUND_STRING("Shadow Break"),
+        .description = COMPOUND_STRING(
+            "A shattering ram attack with\n"
+            "a shadowy aura."),
+        .effect = EFFECT_HIT,
+        .power = 75,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 60,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .makesContact = TRUE,
+        .battleAnimScript = Move_SHADOW_BREAK,
+    },
+
+    [MOVE_SHADOW_END] =
+    {
+        .name = COMPOUND_STRING("Shadow End"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura ram attack\n"
+            "that rebounds on the user."),
+        .effect = EFFECT_HIT,
+        .power = 120,
+        .type = TYPE_SHADOW,
+        .accuracy = 60,
+        .pp = 40,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_PHYSICAL,
+        .argument = { .recoilPercentage = 33 }, // TODO: Rock Head shouldn't prevent this recoil.
+        .makesContact = TRUE,
+        .battleAnimScript = Move_SHADOW_END,
+    },
+
+    [MOVE_SHADOW_DOWN] =
+    {
+        .name = COMPOUND_STRING("Shadow Down"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura that sharply\n"
+            "cuts both foe's Defense."),
+        .effect = EFFECT_DEFENSE_DOWN_2,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 40,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_ATK_UP_2 },
+        .battleAnimScript = Move_SHADOW_DOWN,
+    },
+
+    [MOVE_SHADOW_HALF] =
+    {
+        .name = COMPOUND_STRING("Shadow Half"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura's energy cuts\n"
+            "everyone's HP by half."),
+        .effect = EFFECT_SHADOW_HALF,
+        .power = 1,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 10,
+        .target = MOVE_TARGET_FOES_AND_ALLY,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_SPECIAL,
+        .battleAnimScript = Move_SHADOW_HALF,
+    },
+
+    [MOVE_SHADOW_MIST] =
+    {
+        .name = COMPOUND_STRING("Shadow Mist"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura sharply cuts\n"
+            "the foe's evasiveness."),
+        .effect = EFFECT_EVASION_DOWN_2,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 0,
+        .pp = 30,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RECOVER_HP },
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = Move_SHADOW_MIST,
+    },
+
+    [MOVE_SHADOW_SHED] =
+    {
+        .name = COMPOUND_STRING("Shadow Shed"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura eliminates\n"
+            "Reflect and similar moves."),
+        .effect = EFFECT_BRICK_BREAK,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 0,
+        .pp = 30,
+        .target = MOVE_TARGET_SELECTED,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_RECOVER_HP },
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = Move_SHADOW_SHED,
+    },
+
+    [MOVE_SHADOW_HOLD] =
+    {
+        .name = COMPOUND_STRING("Shadow Hold"),
+        .description = COMPOUND_STRING(
+            "Shadowy chains prevent all\n"
+            "opponents from escaping."),
+        .effect = EFFECT_MEAN_LOOK,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 100,
+        .pp = 15,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
+        .battleAnimScript = Move_SHADOW_HOLD,
+    },
+
+    [MOVE_SHADOW_PANIC] =
+    {
+        .name = COMPOUND_STRING("Shadow Panic"),
+        .description = COMPOUND_STRING(
+            "A shadowy aura emanates to\n"
+            "cause a confuse condition."),
+        .effect = EFFECT_CONFUSE,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 80,
+        .pp = 20,
+        .target = MOVE_TARGET_BOTH,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPATK_UP_1 },
+        .soundMove = TRUE,
+        .battleAnimScript = Move_SHADOW_PANIC,
+    },
+
+    [MOVE_SHADOW_SKY] =
+    {
+        .name = COMPOUND_STRING("Shadow Sky"),
+        .description = COMPOUND_STRING(
+            "Darkness hurts all but\n"
+            "Shadow {PKMN} for 5 turns."),
+        .effect = EFFECT_SHADOW_SKY,
+        .power = 0,
+        .type = TYPE_SHADOW,
+        .accuracy = 0,
+        .pp = 5,
+        .target = MOVE_TARGET_ALL_BATTLERS,
+        .priority = 0,
+        .category = DAMAGE_CATEGORY_STATUS,
+        .zMove = { .effect = Z_EFFECT_SPD_UP_1 },
+        .mirrorMoveBanned = TRUE,
+        .battleAnimScript = Move_SHADOW_SKY,
     },
 
     // Z-Moves

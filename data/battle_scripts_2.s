@@ -204,6 +204,44 @@ BattleScript_SuccessBallThrowEnd::
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT
 	finishturn
 
+BattleScript_SuccessBallThrowShadow::
+	setbyte sMON_CAUGHT, TRUE
+	incrementgamestat GAME_STAT_POKEMON_CAPTURES
+BattleScript_PrintSnaggedMonInfo::
+	printstring STRINGID_GOTCHAPKMNCAUGHTTRAINER
+	jumpifbyte CMP_NOT_EQUAL, sEXP_CATCH, TRUE, BattleScript_TrySetFaint
+	setbyte sGIVEEXP_STATE, 0
+	getexp BS_TARGET
+	sethword gBattle_BG2_X, 0
+BattleScript_TrySetFaint::
+	tryfaintmon BS_TARGET
+	goto BattleScript_MoveEnd
+BattleScript_ShowCaughtTargetAsFainted::
+	tryillusionoff BS_TARGET
+	cleareffectsonfaint BS_TARGET
+	return
+	setbyte sMON_CAUGHT, FALSE
+	goto BattleScript_HandleFaintedMon
+
+BattleScript_TryPrintSnaggedMonInfo::
+    trysetcaughtmondexflags BattleScript_TryNicknameSnaggedMon
+    printstring STRINGID_PKMNDATAADDEDTODEX
+    waitstate
+    setbyte gBattleCommunication, 0
+    displaydexinfo
+BattleScript_TryNicknameSnaggedMon::
+    printstring STRINGID_GIVENICKNAMECAPTURED
+    waitstate
+    setbyte gBattleCommunication, 0
+    trygivecaughtmonnick
+    givecaughtmon BattleScript_SuccessBallThrowEnd
+    printfromtable gCaughtMonStringIds
+    waitmessage B_WAIT_TIME_LONG
+    return
+BattleScript_GiveSnaggedMonEnd::
+    givecaughtmon BattleScript_SuccessBallThrowEnd
+    return
+
 BattleScript_WallyBallThrow::
 	printstring STRINGID_GOTCHAPKMNCAUGHTWALLY
 	setbyte gBattleOutcome, B_OUTCOME_CAUGHT

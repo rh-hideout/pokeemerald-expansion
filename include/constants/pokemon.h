@@ -25,6 +25,7 @@ enum __attribute__((packed)) Type
     TYPE_DARK = 18,
     TYPE_FAIRY = 19,
     TYPE_STELLAR = 20,
+    TYPE_SHADOW = 21,
     NUMBER_OF_MON_TYPES
 };
 

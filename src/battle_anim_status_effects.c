@@ -8,7 +8,6 @@
 #include "task.h"
 #include "trig.h"
 #include "util.h"
-#include "constants/battle_anim.h"
 #include "constants/rgb.h"
 
 extern const struct CompressedSpriteSheet gBattleAnimPicTable[];

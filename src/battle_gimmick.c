@@ -302,6 +302,10 @@ const u32 *GetIndicatorSpriteSrc(u32 battler)
         else
             return (u32 *)&sAlphaIndicatorGfx;
     }
+    else if (gBattleMons[battler].isReverse)
+    {
+        return (u32 *)&sReverseIndicatorGfx;
+    }
     else if (gimmick == GIMMICK_TERA) // special case
     {
         return (u32 *)sTeraIndicatorDataPtrs[GetBattlerTeraType(battler)];
@@ -319,7 +323,7 @@ const u32 *GetIndicatorSpriteSrc(u32 battler)
 u32 GetIndicatorPalTag(u32 battler)
 {
     u32 gimmick = GetActiveGimmick(battler);
-    if (IsBattlerPrimalReverted(battler))
+    if (IsBattlerPrimalReverted(battler) || gBattleMons[battler].isReverse)
         return TAG_MISC_INDICATOR_PAL;
     else if (gGimmicksInfo[gimmick].indicatorPalTag != 0)
         return gGimmicksInfo[gimmick].indicatorPalTag;

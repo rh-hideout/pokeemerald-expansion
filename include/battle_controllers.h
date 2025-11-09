@@ -64,6 +64,10 @@ enum {
     REQUEST_CUTE_RIBBON_BATTLE,
     REQUEST_SMART_RIBBON_BATTLE,
     REQUEST_TOUGH_RIBBON_BATTLE,
+    REQUEST_IS_SHADOW_BATTLE,
+    REQUEST_REVERSE_MODE_BATTLE,
+    REQUEST_HEART_VALUE_BATTLE,
+    REQUEST_HEART_MAX_BATTLE,
 };
 
 // Accessors for gBattleControllerExecFlags.
@@ -262,6 +266,7 @@ enum
     CONTROLLER_RESETACTIONMOVESELECTION,
     CONTROLLER_ENDLINKBATTLE,
     CONTROLLER_DEBUGMENU,
+    CONTROLLER_HEARTVALUEUPDATE,
     /*new controllers should go here*/
     CONTROLLER_TERMINATOR_NOP,
     CONTROLLER_CMDS_COUNT
@@ -325,6 +330,7 @@ void BtlController_EmitLinkStandbyMsg(u32 battler, u32 bufferId, u8 mode, bool32
 void BtlController_EmitResetActionMoveSelection(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitEndLinkBattle(u32 battler, u32 bufferId, u8 battleOutcome);
 void BtlController_EmitDebugMenu(u32 battler, u32 bufferId);
+void BtlController_EmitHeartValueUpdate(u32 battler, u8 bufferId, u8 partyId, s32 amount);
 
 void BtlController_Complete(u32 battler); // Can be used for all the controllers.
 void BtlController_Empty(u32 battler); // Empty command, does nothing, only completes the execution.

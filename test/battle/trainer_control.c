@@ -40,71 +40,121 @@ TEST("CreateNPCTrainerPartyForTrainer generates customized Pokémon")
     CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[GetTrainerDifficultyLevelTest(currTrainer)][currTrainer], TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(IsMonShiny(&testParty[0]));
     EXPECT(!IsMonShiny(&testParty[1]));
+    EXPECT(!IsMonShiny(&testParty[3]));
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_POKEBALL, 0) == BALL_MASTER);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_POKEBALL, 0) == BALL_POKE);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_POKEBALL), BALL_MASTER);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_POKEBALL), BALL_POKE);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_POKEBALL), BALL_DUSK);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES, 0) == SPECIES_WOBBUFFET);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES, 0) == SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPECIES), SPECIES_WYNAUT);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPECIES), SPECIES_WOBBUFFET);
 
-    EXPECT(GetMonAbility(&testParty[0]) == ABILITY_TELEPATHY);
-    EXPECT(GetMonAbility(&testParty[1]) == ABILITY_SHADOW_TAG);
-    EXPECT(GetMonAbility(&testParty[2]) == ABILITY_SHADOW_TAG);
+    EXPECT_EQ(GetMonAbility(&testParty[0]), ABILITY_TELEPATHY);
+    EXPECT_EQ(GetMonAbility(&testParty[1]), ABILITY_SHADOW_TAG);
+    EXPECT_EQ(GetMonAbility(&testParty[2]), ABILITY_SHADOW_TAG);
+    EXPECT_EQ(GetMonAbility(&testParty[3]), ABILITY_TELEPATHY);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_FRIENDSHIP, 0) == 42);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_FRIENDSHIP, 0) == 0);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_FRIENDSHIP), 42);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_FRIENDSHIP), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_FRIENDSHIP), 0);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_FRIENDSHIP), 0);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_HELD_ITEM, 0) == ITEM_ASSAULT_VEST);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_HELD_ITEM, 0) == ITEM_NONE);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_HELD_ITEM), ITEM_ASSAULT_VEST);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_HELD_ITEM), ITEM_NONE);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_HELD_ITEM), ITEM_NONE);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_HELD_ITEM), ITEM_STICKY_BARB);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_HP_IV, 0) == 25);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_ATK_IV, 0) == 26);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_DEF_IV, 0) == 27);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPEED_IV, 0) == 28);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPATK_IV, 0) == 29);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPDEF_IV, 0) == 30);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_HP_IV), 25);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_ATK_IV), 26);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_DEF_IV), 27);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPEED_IV), 28);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPATK_IV), 29);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPDEF_IV), 30);
 
-    EXPECT(GetMonData(&testParty[1], MON_DATA_HP_IV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_ATK_IV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_DEF_IV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPEED_IV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPATK_IV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPDEF_IV, 0) == 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_HP_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_ATK_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_DEF_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPEED_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPATK_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPDEF_IV), 0);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_HP_EV, 0) == 252);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_ATK_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_DEF_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPEED_EV, 0) == 252);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPATK_EV, 0) == 4);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_SPDEF_EV, 0) == 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_HP_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_ATK_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_DEF_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPEED_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPATK_IV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPDEF_IV), 0);
 
-    EXPECT(GetMonData(&testParty[1], MON_DATA_HP_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_ATK_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_DEF_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPEED_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPATK_EV, 0) == 0);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_SPDEF_EV, 0) == 0);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_HP_IV), 25);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_ATK_IV), 26);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_DEF_IV), 27);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPEED_IV), 28);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPATK_IV), 29);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPDEF_IV), 30);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL, 0) == 67);
-    EXPECT(GetMonData(&testParty[1], MON_DATA_LEVEL, 0) == 5);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_HP_EV), 252);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_ATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_DEF_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPEED_EV), 252);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPATK_EV), 4);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_SPDEF_EV), 0);
 
-    EXPECT(GetMonData(&testParty[0], MON_DATA_MOVE1, 0) == MOVE_AIR_SLASH);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_MOVE2, 0) == MOVE_BARRIER);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_MOVE3, 0) == MOVE_SOLAR_BEAM);
-    EXPECT(GetMonData(&testParty[0], MON_DATA_MOVE4, 0) == MOVE_EXPLOSION);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_HP_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_ATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_DEF_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPEED_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_SPDEF_EV), 0);
+
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_HP_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_ATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_DEF_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPEED_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_SPDEF_EV), 0);
+
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_HP_EV), 252);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_ATK_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_DEF_EV), 0);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPEED_EV), 252);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPATK_EV), 4);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_SPDEF_EV), 0);
+
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_LEVEL), 67);
+    EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_LEVEL), 5);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_LEVEL), 5);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_LEVEL), 69);
+
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_MOVE1), MOVE_AIR_SLASH);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_MOVE2), MOVE_BARRIER);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_MOVE3), MOVE_SOLAR_BEAM);
+    EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_MOVE4), MOVE_EXPLOSION);
+
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_MOVE1), MOVE_AIR_SLASH);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_MOVE2), MOVE_BARRIER);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_MOVE3), MOVE_SOLAR_BEAM);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_MOVE4), MOVE_EXPLOSION);
 
     GetMonData(&testParty[0], MON_DATA_NICKNAME, nickBuffer);
-    EXPECT(StringCompare(nickBuffer, COMPOUND_STRING("Bubbles")) == 0);
+    EXPECT_EQ(StringCompare(nickBuffer, COMPOUND_STRING("Bubbles")), 0);
 
     GetMonData(&testParty[1], MON_DATA_NICKNAME, nickBuffer);
-    EXPECT(StringCompare(nickBuffer, COMPOUND_STRING("Wobbuffet")) == 0);
+    EXPECT_EQ(StringCompare(nickBuffer, COMPOUND_STRING("Wobbuffet")), 0);
 
-    EXPECT(GetMonGender(&testParty[0]) == MON_FEMALE);
-    EXPECT(GetNature(&testParty[0]) == NATURE_HASTY);
-    EXPECT(GetNature(&testParty[1]) == NATURE_HARDY);
+    EXPECT_EQ(GetMonGender(&testParty[0]), MON_FEMALE);
+    EXPECT_EQ(GetNature(&testParty[0]), NATURE_HASTY);
+    EXPECT_EQ(GetNature(&testParty[3]), NATURE_HASTY);
 
     EXPECT_EQ(GetMonData(&testParty[0], MON_DATA_DYNAMAX_LEVEL), 5);
     EXPECT_EQ(GetMonData(&testParty[1], MON_DATA_DYNAMAX_LEVEL), 10);
+    EXPECT_EQ(GetMonData(&testParty[2], MON_DATA_DYNAMAX_LEVEL), 10);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_DYNAMAX_LEVEL), 10);
+
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_IS_SHADOW), TRUE);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_HEART_VALUE), 3000);
+    EXPECT_EQ(GetMonData(&testParty[3], MON_DATA_HEART_MAX), 3000);
 
     Free(testParty);
 }

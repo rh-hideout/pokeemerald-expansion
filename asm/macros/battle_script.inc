@@ -1802,6 +1802,15 @@
 	callnative BS_RestoreSavedMove
 	.endm
 
+	.macro modifyheartvalue battler:req
+	callnative BS_ModifyHeartValue
+	.byte \battler
+	.endm
+
+	.macro collectsnags
+	callnative BS_CollectSnaggedMons
+	.endm
+
 @ helpful macros
 	.macro setstatchanger stat:req, stages:req, down:req
 	setbyte sSTATCHANGER, \stat | \stages << 3 | \down << 7

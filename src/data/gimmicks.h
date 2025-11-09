@@ -50,5 +50,5 @@ const struct GimmickInfo gGimmicksInfo[GIMMICKS_COUNT] =
         .indicatorPalTag = TAG_TERA_INDICATOR_PAL,
         .CanActivate = CanTerastallize,
         .ActivateGimmick = ActivateTera,
-    }
+    },
 };

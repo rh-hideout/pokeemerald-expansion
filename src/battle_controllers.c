@@ -1399,6 +1399,13 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         battleMon.otId = GetMonData(&party[monId], MON_DATA_OT_ID);
         battleMon.metLevel = GetMonData(&party[monId], MON_DATA_MET_LEVEL);
         battleMon.isShiny = GetMonData(&party[monId], MON_DATA_IS_SHINY);
+        battleMon.isShadow = GetMonData(&party[monId], MON_DATA_IS_SHADOW);
+        battleMon.shadowAggro = GetMonData(&party[monId], MON_DATA_REVERSE_MODE);
+        battleMon.isReverse = GetMonData(&party[monId], MON_DATA_SHADOW_AGGRO);
+        battleMon.snagged = GetMonData(&party[monId], MON_DATA_SNAGGED);
+        battleMon.shadowID = GetMonData(&party[monId], MON_DATA_SHADOW_ID);
+        battleMon.heartVal = GetMonData(&party[monId], MON_DATA_HEART_VALUE);
+        battleMon.heartMax = GetMonData(&party[monId], MON_DATA_HEART_MAX);
         GetMonData(&party[monId], MON_DATA_NICKNAME, nickname);
         StringCopy_Nickname(battleMon.nickname, nickname);
         GetMonData(&party[monId], MON_DATA_OT_NAME, battleMon.otName);
@@ -1667,6 +1674,22 @@ static u32 GetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId, u8 *
         dst[0] = GetMonData(&party[monId], MON_DATA_TOUGH_RIBBON);
         size = 1;
         break;
+    case REQUEST_IS_SHADOW_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_IS_SHADOW);
+        size = 1;
+        break;
+    case REQUEST_REVERSE_MODE_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_REVERSE_MODE);
+        size = 1;
+        break;
+    case REQUEST_HEART_VALUE_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_HEART_VALUE);
+        size = 1;
+        break;
+    case REQUEST_HEART_MAX_BATTLE:
+        dst[0] = GetMonData(&party[monId], MON_DATA_HEART_MAX);
+        size = 1;
+        break;
     }
 
     return size;
@@ -1683,6 +1706,7 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
     case REQUEST_ALL_BATTLE:
         {
             u8 iv;
+            u8 isShadow;
 
             SetMonData(&party[monId], MON_DATA_SPECIES, &battlePokemon->species);
             SetMonData(&party[monId], MON_DATA_HELD_ITEM, &battlePokemon->item);
@@ -1716,6 +1740,8 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
             SetMonData(&party[monId], MON_DATA_SPEED, &battlePokemon->speed);
             SetMonData(&party[monId], MON_DATA_SPATK, &battlePokemon->spAttack);
             SetMonData(&party[monId], MON_DATA_SPDEF, &battlePokemon->spDefense);
+            isShadow = battlePokemon->isShadow;
+            SetMonData(&party[monId], MON_DATA_IS_SHADOW, &isShadow);
         }
         break;
     case REQUEST_SPECIES_BATTLE:
@@ -1884,6 +1910,18 @@ static void SetBattlerMonData(u32 battler, struct Pokemon *party, u32 monId)
         break;
     case REQUEST_TOUGH_RIBBON_BATTLE:
         SetMonData(&party[monId], MON_DATA_TOUGH_RIBBON, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_IS_SHADOW_BATTLE:
+        SetMonData(&party[monId], MON_DATA_IS_SHADOW, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_REVERSE_MODE_BATTLE:
+        SetMonData(&party[monId], MON_DATA_REVERSE_MODE, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_HEART_VALUE_BATTLE:
+        SetMonData(&party[monId], MON_DATA_HEART_VALUE, &gBattleResources->bufferA[battler][3]);
+        break;
+    case REQUEST_HEART_MAX_BATTLE:
+        SetMonData(&party[monId], MON_DATA_HEART_MAX, &gBattleResources->bufferA[battler][3]);
         break;
     }
 
@@ -2455,7 +2493,8 @@ void BtlController_HandleFaintAnimation(u32 battler)
             }
             else
             {
-                PlaySE12WithPanning(SE_FAINT, SOUND_PAN_TARGET);
+                if (!gBattleMons[battler].snagged)
+                    PlaySE12WithPanning(SE_FAINT, SOUND_PAN_TARGET);
                 gSprites[gBattlerSpriteIds[battler]].callback = SpriteCB_FaintOpponentMon;
                 gBattlerControllerFuncs[battler] = Controller_FaintOpponentMon;
             }
@@ -2896,9 +2935,20 @@ void AnimateMonAfterPokeBallFail(u32 battler)
 {
     if (B_ANIMATE_MON_AFTER_FAILED_POKEBALL == FALSE)
         return;
-    
+
     LaunchKOAnimation(battler, ReturnAnimIdForBattler(TRUE, battler), TRUE);
     TryShinyAnimation(gBattlerTarget, GetBattlerMon(gBattlerTarget));
+}
+
+void BtlController_EmitHeartValueUpdate(u32 battler, u8 bufferId, u8 partyId, s32 amount)
+{
+    gBattleResources->transferBuffer[0] = CONTROLLER_HEARTVALUEUPDATE;
+    gBattleResources->transferBuffer[1] = partyId;
+    gBattleResources->transferBuffer[2] = amount;
+    gBattleResources->transferBuffer[3] = (amount & 0x0000FF00) >> 8;
+    gBattleResources->transferBuffer[4] = (amount & 0x00FF0000) >> 16;
+    gBattleResources->transferBuffer[5] = (amount & 0xFF000000) >> 24;
+    PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 6);
 }
 
 static void AnimateMonAfterKnockout(u32 battler)

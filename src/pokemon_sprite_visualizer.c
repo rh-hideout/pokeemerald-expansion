@@ -47,7 +47,6 @@ extern const struct BattleEnvironment gBattleEnvironmentInfo[BATTLE_ENVIRONMENT_
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow;
 extern const struct CompressedSpriteSheet gSpriteSheet_EnemyShadowsSized;
 extern const struct SpriteTemplate gSpriteTemplate_EnemyShadow;
-extern const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2];
 extern const struct UCoords8 sBattlerCoords[][MAX_BATTLERS_COUNT] ;
 static const u16 sBgColor[] = {RGB_WHITE};
 
@@ -878,7 +877,7 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
         invisible = gSpeciesInfo[species].suppressEnemyShadow;
 
         LoadCompressedSpriteSheet(&gSpriteSheet_EnemyShadowsSized);
-        LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
+        LoadSpritePalette(&gSpritePalettes_HealthBoxHealthBar[0]);
         u8 x = sBattlerCoords[0][1].x;
         u8 y = sBattlerCoords[0][1].y;
         s8 xOffset = data->shadowSettings.overrideX;
@@ -911,7 +910,7 @@ static void LoadAndCreateEnemyShadowSpriteCustom(struct PokemonSpriteVisualizer 
             invisible = TRUE;
 
         LoadCompressedSpriteSheet(&gSpriteSheet_EnemyShadow);
-        LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
+        LoadSpritePalette(&gSpritePalettes_HealthBoxHealthBar[0]);
         u8 x = sBattlerCoords[0][1].x;
         u8 y = sBattlerCoords[0][1].y;
 

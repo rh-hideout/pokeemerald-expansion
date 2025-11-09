@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle.h"
+#include "battle_anim.h"
 #include "battle_hold_effects.h"
 #include "battle_util.h"
 #include "battle_controllers.h"
@@ -1384,6 +1385,27 @@ static bool32 HandleEndTurnDynamax(u32 battler)
     return effect;
 }
 
+static bool32 HandleEndTurnReverseMode(u32 battler)
+{
+    bool32 effect = FALSE;
+
+    gBattleStruct->eventState.endTurnBattler++;
+
+    if (gBattleMons[battler].isReverse
+        && IsBattlerAlive(battler)
+        && !IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MAGIC_GUARD))
+    {
+        gBattleStruct->moveDamage[battler] = (GetNonDynamaxMaxHP(battler) / 16) + (Random() % 3) - 1;
+        if (gBattleStruct->moveDamage[battler] == 0)
+            gBattleStruct->moveDamage[battler] = 1;
+        BattleScriptExecute(BattleScript_ReverseModeTurnDmg);
+        LaunchStatusAnimation(battler, B_ANIM_STATUS_REVERSE_MODE);
+        effect = TRUE;
+    }
+
+    return effect;
+}
+
 /*
  * Various end turn effects that happen after all battlers moved.
  * Each Case will apply the effects for each battler. Moving to the next case when all battlers are done.
@@ -1446,6 +1468,7 @@ static bool32 (*const sEndTurnEffectHandlers[])(u32 battler) =
     [ENDTURN_FORM_CHANGE_ABILITIES] = HandleEndTurnFormChangeAbilities,
     [ENDTURN_EJECT_PACK] = HandleEndTurnEjectPack,
     [ENDTURN_DYNAMAX] = HandleEndTurnDynamax,
+    [ENDTURN_REVERSE_MODE] = HandleEndTurnReverseMode,
 };
 
 u32 DoEndTurnEffects(void)

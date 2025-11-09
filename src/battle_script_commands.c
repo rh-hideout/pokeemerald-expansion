@@ -4206,7 +4206,10 @@ static void Cmd_tryfaintmon(void)
             TryUpdateEvolutionTracker(IF_DEFEAT_X_WITH_ITEMS, 1, MOVE_NONE);
 
         gBattlerFainted = battler;
-        faintScript = BattleScript_FaintBattler;
+        if (gBattleMons[gBattlerTarget].snagged == TRUE)
+            faintScript = BattleScript_ShowCaughtTargetAsFainted;
+        else
+            faintScript = BattleScript_FaintBattler;
         if (!(gAbsentBattlerFlags & (1u << battler))
          && !IsBattlerAlive(battler))
         {
@@ -4509,7 +4512,7 @@ static void Cmd_getexp(void)
 
             for (i = 0; i < PARTY_SIZE; i++)
             {
-                if (!IsValidForBattle(&gPlayerParty[i]))
+                if (!IsValidForBattle(&gPlayerParty[i]) || !ShdwCanMonGainEXP(&gPlayerParty[i]))
                     continue;
                 if ((1u << i) & sentInBits)
                     viaSentIn++;
@@ -4612,7 +4615,7 @@ static void Cmd_getexp(void)
                     gBattleStruct->wildVictorySong++;
                 }
 
-                if (IsValidForBattle(&gPlayerParty[*expMonId]))
+                if (IsValidForBattle(&gPlayerParty[*expMonId]) && ShdwCanMonGainEXP(&gPlayerParty[*expMonId]))
                 {
                     if (wasSentOut)
                         gBattleStruct->battlerExpReward = GetSoftLevelCapExpValue(gPlayerParty[*expMonId].level, gBattleStruct->expValue);
@@ -4674,7 +4677,10 @@ static void Cmd_getexp(void)
 
                     if (wasSentOut || holdEffect == HOLD_EFFECT_EXP_SHARE)
                     {
-                        PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
+                        if (GetMonData(&gPlayerParty[gBattleStruct->expGetterMonId], MON_DATA_IS_SHADOW))
+                            PrepareStringBattle(STRINGID_PKMNSTOREDEXP, gBattleStruct->expGetterBattlerId);
+                        else
+                            PrepareStringBattle(STRINGID_PKMNGAINEDEXP, gBattleStruct->expGetterBattlerId);
                     }
                     else if (IsGen6ExpShareEnabled() && !gBattleStruct->teamGotExpMsgPrinted) // Print 'the rest of your team got exp' message once, when all of the sent-in mons were given experience
                     {
@@ -4694,7 +4700,7 @@ static void Cmd_getexp(void)
         {
             gBattleResources->bufferB[gBattleStruct->expGetterBattlerId][0] = 0;
             currLvl = GetMonData(&gPlayerParty[*expMonId], MON_DATA_LEVEL);
-            if (GetMonData(&gPlayerParty[*expMonId], MON_DATA_HP) && currLvl != MAX_LEVEL)
+            if (GetMonData(&gPlayerParty[*expMonId], MON_DATA_HP) && currLvl != MAX_LEVEL && ShdwCanMonGainEXP(&gPlayerParty[*expMonId]))
             {
                 gBattleResources->beforeLvlUp->stats[STAT_HP]    = GetMonData(&gPlayerParty[*expMonId], MON_DATA_MAX_HP);
                 gBattleResources->beforeLvlUp->stats[STAT_ATK]   = GetMonData(&gPlayerParty[*expMonId], MON_DATA_ATK);
@@ -5428,7 +5434,8 @@ static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *n
           || animId == B_ANIM_SANDSTORM_CONTINUES
           || animId == B_ANIM_HAIL_CONTINUES
           || animId == B_ANIM_SNOW_CONTINUES
-          || animId == B_ANIM_FOG_CONTINUES)
+          || animId == B_ANIM_FOG_CONTINUES
+          || animId == B_ANIM_SHADOW_SKY_CONTINUES)
     {
         BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, &gDisableStructs[battler], *argPtr);
         MarkBattlerForControllerExec(battler);
@@ -5828,6 +5835,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
         }
         break;
     case EFFECT_MAX_HP_50_RECOIL:
+    case EFFECT_SHADOW_HALF:
         if (IsBattlerAlive(gBattlerAttacker)
          && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FAILED)
          && !IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
@@ -7092,6 +7100,28 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
+        case MOVEEND_ENTER_REVERSE_MODE:
+        {
+            if (gBattleMons[gBattlerAttacker].isShadow == TRUE
+            && !gBattleMons[gBattlerAttacker].isReverse
+            && GetBattlerSide(gBattlerAttacker) != B_SIDE_OPPONENT)
+            {
+                u8 chance = GetReverseModeChance(&gBattleMons[gBattlerAttacker]);
+                u8 roll = Random() % 100;
+
+                if (roll < chance)
+                {
+                    gBattleMons[gBattlerAttacker].isReverse = FALSE;
+                    BtlController_EmitSetMonData(gBattlerAttacker, B_COMM_TO_CONTROLLER, REQUEST_STATUS_BATTLE, 0, sizeof(gBattleMons[gBattlerAttacker].status1), &gBattleMons[gBattlerAttacker].status1);
+                    UpdateHealthboxAttribute(gHealthboxSpriteIds[gBattlerAttacker], &gPlayerParty[gBattlerPartyIndexes[gBattlerAttacker]], HEALTHBOX_ALL);
+                    PrepareStringBattle(STRINGID_REVERSEMODE_ENTER, gBattlerAttacker);
+                    LaunchStatusAnimation(gBattlerAttacker, B_ANIM_ENTER_REVERSE_MODE);
+                }
+
+            }
+            gBattleScripting.moveendState++;
+            break;
+        }
         case MOVEEND_COUNT:
             break;
         }
@@ -9763,6 +9793,9 @@ static void Cmd_setfieldweather(void)
         break;
     case BATTLE_WEATHER_SNOW:
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SNOW;
+        break;
+    case BATTLE_WEATHER_SHADOW_SKY:
+        gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_STARTED_SHADOW_SKY;
         break;
     }
 
@@ -13499,7 +13532,7 @@ static void Cmd_handleballthrow(void)
 
     gBattlerTarget = GetCatchingBattler();
 
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && !gBattleMons[gBattlerTarget].isShadow)
     {
         BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_TRAINER_BLOCK);
         MarkBattlerForControllerExec(gBattlerAttacker);
@@ -13713,8 +13746,21 @@ static void Cmd_handleballthrow(void)
             BtlController_EmitBallThrowAnim(gBattlerAttacker, B_COMM_TO_CONTROLLER, BALL_3_SHAKES_SUCCESS);
             MarkBattlerForControllerExec(gBattlerAttacker);
             TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE);
-            gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
             struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+            {
+                bool8 snagFlag = TRUE;
+                gBattleMons[gBattlerTarget].snagged = TRUE;
+                gBattleMons[gBattlerTarget].hp = 0;
+                SetMonData(caughtMon, MON_DATA_SNAGGED, &snagFlag);
+                SetMonData(caughtMon, MON_DATA_HP, &gBattleMons[gBattlerTarget].hp);
+                SetHealthboxSpriteInvisible(gHealthboxSpriteIds[gBattlerTarget]);
+                gBattlescriptCurrInstr = BattleScript_SuccessBallThrowShadow;
+            }
+            else
+            {
+                gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
+            }
             SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
             if (CalculatePlayerPartyCount() == PARTY_SIZE)
@@ -13781,8 +13827,21 @@ static void Cmd_handleballthrow(void)
                     gBattleSpritesDataPtr->animationData->criticalCaptureSuccess = TRUE;
                 }
                 TryBattleFormChange(gBattlerTarget, FORM_CHANGE_END_BATTLE);
-                gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
                 struct Pokemon *caughtMon = GetBattlerMon(gBattlerTarget);
+                if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+                {
+                    bool8 snagFlag = TRUE;
+                    gBattleMons[gBattlerTarget].snagged = TRUE;
+                    gBattleMons[gBattlerTarget].hp = 0;
+                    SetMonData(caughtMon, MON_DATA_SNAGGED, &snagFlag);
+                    SetMonData(caughtMon, MON_DATA_HP, &gBattleMons[gBattlerTarget].hp);
+                    SetHealthboxSpriteInvisible(gHealthboxSpriteIds[gBattlerTarget]);
+                    gBattlescriptCurrInstr = BattleScript_SuccessBallThrowShadow;
+                }
+                else
+                {
+                    gBattlescriptCurrInstr = BattleScript_SuccessBallThrow;
+                }
                 SetMonData(caughtMon, MON_DATA_POKEBALL, &ballId);
 
                 if (CalculatePlayerPartyCount() == PARTY_SIZE)
@@ -17983,4 +18042,101 @@ void BS_JumpIfGenConfigLowerThan(void)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
+void BS_ModifyHeartValue(void)
+{
+    NATIVE_ARGS(u8 battler, u16 amount);
+
+    s32 j;
+    u32 battler = GetBattlerForBattleScript(cmd->battler);
+
+    switch (gBattleScripting.heartValueState)
+    {
+        case 0:
+        {
+            if (!gBattleControllerExecFlags)
+            {
+                if (gBattleTypeFlags & BATTLE_TYPE_DOUBLE)
+                {
+                    if (gBattlerPartyIndexes[2] == battler && !(gAbsentBattlerFlags & (1u << 2)))
+                        battler = 2;
+                    else
+                    {
+                        if (!(gAbsentBattlerFlags & (1u << 0)))
+                            battler = 0;
+                        else
+                            battler = 2;
+                    }
+                }
+            else
+            {
+                battler = 0;
+            }
+
+            if (gBattleMons[battler].isShadow)
+            {
+                j = ModifyHeartValueInBattle(battler, cmd->amount);
+                BtlController_EmitHeartValueUpdate(battler, B_COMM_TO_CONTROLLER, gBattlerPartyIndexes[battler], -j);
+            }
+
+            UpdateHealthboxAttribute(gHealthboxSpriteIds[battler], &gPlayerParty[gBattlerPartyIndexes[battler]], HEALTHBOX_ALL);
+            MarkBattlerForControllerExec(battler);
+            gBattleScripting.heartValueState++;
+            break;
+            }
+        }
+        case 1:
+        {
+            if (!gBattleControllerExecFlags)
+            {
+                PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gBattlerPartyIndexes[battler]);
+                BtlController_EmitPrintString(battler, B_COMM_TO_CONTROLLER, STRINGID_PKMNHEARTGAUGEUPDATE);
+                MarkBattlerForControllerExec(battler);
+                gBattleScripting.heartValueState++;
+            }
+            break;
+        }
+        case 2:
+        {
+            gBattlescriptCurrInstr = cmd->nextInstr;
+        }
+    }
+}
+
+void BS_CollectSnaggedMons(void)
+{
+    NATIVE_ARGS();
+    u8 i;
+    for (i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gEnemyParty[i], MON_DATA_SNAGGED))
+        {
+            if (GiveMonToPlayer(&gEnemyParty[i]) != MON_GIVEN_TO_PARTY)
+            {
+                if (!ShouldShowBoxWasFullMessage())
+                {
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SENT_SOMEONES_PC;
+                    StringCopy(gStringVar1, GetBoxNamePtr(VarGet(VAR_PC_BOX_TO_SEND_MON)));
+                    GetMonData(&gEnemyParty[i], MON_DATA_NICKNAME, gStringVar2);
+                }
+                else
+                {
+                    StringCopy(gStringVar1, GetBoxNamePtr(VarGet(VAR_PC_BOX_TO_SEND_MON))); // box the mon was sent to
+                    GetMonData(&gEnemyParty[i], MON_DATA_NICKNAME, gStringVar2);
+                    StringCopy(gStringVar3, GetBoxNamePtr(GetPCBoxToSendMon())); //box the mon was going to be sent to
+                    gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SOMEONES_BOX_FULL;
+                }
+
+                // Change to B_MSG_SENT_LANETTES_PC or B_MSG_LANETTES_BOX_FULL
+                if (FlagGet(FLAG_SYS_PC_LANETTE))
+                    gBattleCommunication[MULTISTRING_CHOOSER]++;
+            }
+
+            gBattleResults.caughtMonSpecies = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
+            GetMonData(&gEnemyParty[i], MON_DATA_NICKNAME, gBattleResults.caughtMonNick);
+            gBattleResults.caughtMonBall = GetMonData(&gEnemyParty[i], MON_DATA_POKEBALL, NULL);
+            gBattlescriptCurrInstr = BattleScript_TryPrintSnaggedMonInfo;
+        }
+    }
 }

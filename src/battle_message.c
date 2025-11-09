@@ -873,6 +873,18 @@ const u8 *const gBattleStringsTable[STRINGID_COUNT] =
     [STRINGID_POWERCONSTRUCTPRESENCEOFMANY]         = COMPOUND_STRING("You sense the presence of many!"),
     [STRINGID_POWERCONSTRUCTTRANSFORM]              = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} transformed into its Complete Forme!"),
     [STRINGID_ABILITYSHIELDPROTECTS]                = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s Ability is protected by the effects of its {B_LAST_ITEM}!"),
+    [STRINGID_SHADOWPKMNNOTICE]                     = COMPOUND_STRING("Oh! A Shadow Pokémon!\p"),
+    [STRINGID_TRAINERCALLTOMON]                     = COMPOUND_STRING("{B_ATK_TRAINER_NAME} called out to {B_ATK_NAME_WITH_PREFIX}!"),
+    [STRINGID_PKMNSTOREDEXP]                        = COMPOUND_STRING("{B_BUFF1} stored{B_BUFF2} {B_BUFF3} EXP. Points!\p"),
+    [STRINGID_PKMNHEARTGAUGEUPDATE]                 = COMPOUND_STRING("The door to {B_BUFF1}'s heart opened a little!\p"),
+    [STRINGID_STARTEDSHADOW_SKY]                    = COMPOUND_STRING("A shadowy aura filled\nthe sky!"),
+    [STRINGID_SHADOW_SKYCONTINUES]                  = COMPOUND_STRING("Bursts of light showered\nfrom the shadowy aura!"),
+    [STRINGID_SHADOW_SKYSTOPPED]                    = COMPOUND_STRING("The shadowy aura faded away!"),
+    [STRINGID_SHADOW_SKYDAMAGE]                     = COMPOUND_STRING("The flashing light strikes\n{B_ATK_NAME_WITH_PREFIX}!"),
+    [STRINGID_REVERSEMODE_ENTER]                    = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX}'s emotions rose to a fever pitch! It entered Reverse Mode!"),
+    [STRINGID_REVERSEMODE_DAMAGE]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} is hurt by Reverse Mode!"),
+    [STRINGID_REVERSEMODE_CALLED]                   = COMPOUND_STRING("{B_ATK_NAME_WITH_PREFIX} came to its senses!"),
+    [STRINGID_GOTCHAPKMNCAUGHTTRAINER]              = COMPOUND_STRING("Gotcha! {B_DEF_NAME} was caught!{WAIT_SE}\p"),
 };
 
 const u16 gTrainerUsedItemStringIds[] =
@@ -992,14 +1004,15 @@ const u16 gNoEscapeStringIds[] =
 
 const u16 gMoveWeatherChangeStringIds[] =
 {
-    [B_MSG_STARTED_RAIN]      = STRINGID_STARTEDTORAIN,
-    [B_MSG_STARTED_DOWNPOUR]  = STRINGID_DOWNPOURSTARTED, // Unused
-    [B_MSG_WEATHER_FAILED]    = STRINGID_BUTITFAILED,
-    [B_MSG_STARTED_SANDSTORM] = STRINGID_SANDSTORMBREWED,
-    [B_MSG_STARTED_SUNLIGHT]  = STRINGID_SUNLIGHTGOTBRIGHT,
-    [B_MSG_STARTED_HAIL]      = STRINGID_STARTEDHAIL,
-    [B_MSG_STARTED_SNOW]      = STRINGID_STARTEDSNOW,
-    [B_MSG_STARTED_FOG]       = STRINGID_FOGCREPTUP, // Unused, can use for custom moves that set fog
+    [B_MSG_STARTED_RAIN]        = STRINGID_STARTEDTORAIN,
+    [B_MSG_STARTED_DOWNPOUR]    = STRINGID_DOWNPOURSTARTED, // Unused
+    [B_MSG_WEATHER_FAILED]      = STRINGID_BUTITFAILED,
+    [B_MSG_STARTED_SANDSTORM]   = STRINGID_SANDSTORMBREWED,
+    [B_MSG_STARTED_SUNLIGHT]    = STRINGID_SUNLIGHTGOTBRIGHT,
+    [B_MSG_STARTED_HAIL]        = STRINGID_STARTEDHAIL,
+    [B_MSG_STARTED_SNOW]        = STRINGID_STARTEDSNOW,
+    [B_MSG_STARTED_FOG]         = STRINGID_FOGCREPTUP, // Unused, can use for custom moves that set fog
+    [B_MSG_STARTED_SHADOW_SKY]  = STRINGID_STARTEDSHADOW_SKY,
 };
 
 const u16 gWeatherEndsStringIds[B_MSG_WEATHER_END_COUNT] =
@@ -1011,6 +1024,7 @@ const u16 gWeatherEndsStringIds[B_MSG_WEATHER_END_COUNT] =
     [B_MSG_WEATHER_END_SNOW]         = STRINGID_SNOWSTOPPED,
     [B_MSG_WEATHER_END_FOG]          = STRINGID_FOGLIFTED,
     [B_MSG_WEATHER_END_STRONG_WINDS] = STRINGID_STRONGWINDSDISSIPATED,
+    [B_MSG_WEATHER_END_SHADOW_SKY]   = STRINGID_SHADOW_SKYSTOPPED,
 };
 
 const u16 gWeatherTurnStringIds[] =
@@ -1023,12 +1037,14 @@ const u16 gWeatherTurnStringIds[] =
     [B_MSG_WEATHER_TURN_SNOW]         = STRINGID_SNOWCONTINUES,
     [B_MSG_WEATHER_TURN_FOG]          = STRINGID_FOGISDEEP,
     [B_MSG_WEATHER_TURN_STRONG_WINDS] = STRINGID_MYSTERIOUSAIRCURRENTBLOWSON,
+    [B_MSG_WEATHER_TURN_SHADOW_SKY]   = STRINGID_SHADOW_SKYCONTINUES
 };
 
 const u16 gSandStormHailDmgStringIds[] =
 {
-    [B_MSG_SANDSTORM] = STRINGID_PKMNBUFFETEDBYSANDSTORM,
-    [B_MSG_HAIL]      = STRINGID_PKMNPELTEDBYHAIL
+    [B_MSG_SANDSTORM]   = STRINGID_PKMNBUFFETEDBYSANDSTORM,
+    [B_MSG_HAIL]        = STRINGID_PKMNPELTEDBYHAIL,
+    [B_MSG_SHADOW_SKY]  = STRINGID_SHADOW_SKYDAMAGE
 };
 
 const u16 gProtectLikeUsedStringIds[] =
@@ -1382,6 +1398,7 @@ const u8 gText_WhatWillPkmnDo2[] = _("What will\n{B_PLAYER_NAME} do?");
 const u8 gText_WhatWillWallyDo[] = _("What will\nWALLY do?");
 const u8 gText_LinkStandby[] = _("{PAUSE 16}Link standby…");
 const u8 gText_BattleMenu[] = _("Battle{CLEAR_TO 56}Bag\nPokémon{CLEAR_TO 56}Run");
+const u8 gText_BattleMenuTrainer[] = _("Battle{CLEAR_TO 56}Bag\nPokémon{CLEAR_TO 56}Run");
 const u8 gText_SafariZoneMenu[] = _("Ball{CLEAR_TO 56}{POKEBLOCK}\nGo Near{CLEAR_TO 56}Run");
 const u8 gText_MoveInterfacePP[] = _("PP ");
 const u8 gText_MoveInterfaceType[] = _("TYPE/");

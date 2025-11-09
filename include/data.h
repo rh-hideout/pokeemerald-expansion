@@ -61,12 +61,13 @@ struct TrainerMon
     const u8 *nickname;
     const u8 *ev;
     u32 iv;
-    u16 moves[4];
+    u16 moves[MAX_MON_MOVES];
     u16 species;
     u16 heldItem;
     enum Ability ability;
     u8 lvl;
     u8 ball;
+    // end of word
     u8 friendship;
     u8 nature:5;
     bool8 gender:2;
@@ -74,10 +75,16 @@ struct TrainerMon
     enum Type teraType:5;
     bool8 gigantamaxFactor:1;
     u8 shouldUseDynamax:1;
-    u8 padding1:1;
+    bool8 isShadow:1;
     u8 dynamaxLevel:4;
-    u8 padding2:4;
+    bool8 isXD:1;
+    u8 padding:2;
+    // end of word
     u32 tags;
+    u8 boostLevel;
+    u8 shadowAggro;
+    u8 shadowID;
+    u16 heartGauge;
 };
 
 #define TRAINER_PARTY(partyArray) partyArray, .partySize = ARRAY_COUNT(partyArray)

@@ -67,6 +67,12 @@ static const struct CompressedSpriteSheet sSpriteSheet_SafariHealthbox =
     gHealthboxSafariGfx, 0x1000, TAG_HEALTHBOX_SAFARI_TILE
 };
 
+// only need this one for shadow healthbox, because the "HEART" replacer for EXP is only shown on player-side single battles
+static const struct CompressedSpriteSheet sSpriteSheet_SinglesPlayerShadowHealthbox =
+{
+    gHealthboxSinglesPlayerShadowGfx, 0x1000, TAG_HEALTHBOX_PLAYER1_TILE
+};
+
 static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_COUNT] =
 {
     {gBlankGfxCompressed, 0x0100, TAG_HEALTHBAR_PLAYER1_TILE},
@@ -75,10 +81,26 @@ static const struct CompressedSpriteSheet sSpriteSheets_HealthBar[MAX_BATTLERS_C
     {gBlankGfxCompressed, 0x0120, TAG_HEALTHBAR_OPPONENT2_TILE}
 };
 
-const struct SpritePalette sSpritePalettes_HealthBoxHealthBar[2] =
+const struct SpritePalette gSpritePalettes_HealthBoxHealthBar[10] =
 {
-    {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PAL},
-    {gBattleInterface_BallDisplayPal, TAG_HEALTHBAR_PAL}
+    // The healthbox palettes are changed from vanilla by Shadow Pokmeon, because we need to individually
+    // set palette tags for each battler to avoid the palette swaps affecting non-shadow mon.
+
+    // vanilla palettes (still used by safari and probably elsewhere, plus the healthbar doesn't change)
+    /* 0 */ {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PAL},
+    /* 1 */ {gBattleInterface_BallDisplayPal, TAG_HEALTHBAR_PAL},
+
+    // default palettes
+    /* 2 */ {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PLAYER1_PAL},
+    /* 3 */ {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_PLAYER2_PAL},
+    /* 4 */ {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_OPPONENT1_PAL},
+    /* 5 */ {gBattleInterface_BallStatusBarPal, TAG_HEALTHBOX_OPPONENT2_PAL},
+
+    // shadow palettes
+    /* 6 */ {gBattleInterface_ShadowMenuPal, TAG_HEALTHBOX_PLAYER1_PAL},
+    /* 7 */ {gBattleInterface_ShadowMenuPal, TAG_HEALTHBOX_PLAYER2_PAL},
+    /* 8 */ {gBattleInterface_ShadowMenuPal, TAG_HEALTHBOX_OPPONENT1_PAL},
+    /* 9 */ {gBattleInterface_ShadowMenuPal, TAG_HEALTHBOX_OPPONENT2_PAL},
 };
 
 const struct CompressedSpriteSheet gSpriteSheet_EnemyShadow =
@@ -122,6 +144,54 @@ const struct SpriteTemplate gSpriteTemplate_EnemyShadow =
 };
 
 // code
+void ShdwLoadHealthboxPalette(u8 battlerId)
+{
+    u8 palNum;
+    u8 isShadow;
+    struct Pokemon *mon;
+
+    if (GetBattlerSide(battlerId) != B_SIDE_PLAYER)
+        mon = &gEnemyParty[gBattlerPartyIndexes[battlerId]];
+    else
+        mon = &gPlayerParty[gBattlerPartyIndexes[battlerId]];
+
+    switch (battlerId)
+    {
+        default:
+        case 0:
+            FreeSpritePaletteByTag(TAG_HEALTHBOX_PLAYER1_PAL);
+            isShadow = GetMonData(mon, MON_DATA_IS_SHADOW);
+            palNum = isShadow ? 6 : 2; break;
+        case 1:
+            FreeSpritePaletteByTag(TAG_HEALTHBOX_OPPONENT1_PAL);
+            isShadow = GetMonData(mon, MON_DATA_IS_SHADOW);
+            palNum = isShadow ? 8 : 4; break;
+        case 2:
+            FreeSpritePaletteByTag(TAG_HEALTHBOX_PLAYER2_PAL);
+            isShadow = GetMonData(mon, MON_DATA_IS_SHADOW);
+            palNum = isShadow ? 7 : 3; break;
+        case 3:
+            FreeSpritePaletteByTag(TAG_HEALTHBOX_OPPONENT2_PAL);
+            isShadow = GetMonData(mon, MON_DATA_IS_SHADOW);
+            palNum = isShadow ? 9 : 5; break;
+    }
+
+    LoadSpritePalette(&gSpritePalettes_HealthBoxHealthBar[palNum]);
+
+    if (GetMonData(mon, MON_DATA_STATUS))
+        UpdateHealthboxAttribute(gHealthboxSpriteIds[battlerId], mon, HEALTHBOX_STATUS_ICON);
+}
+
+void ShdwLoadHealthboxSprite(void)
+{
+    u8 isShadow = GetMonData(&gPlayerParty[gBattlerPartyIndexes[GetBattlerAtPosition(0)]], MON_DATA_IS_SHADOW);
+    FreeSpriteTilesByTag(TAG_HEALTHBOX_PLAYER1_TILE);
+    if (isShadow)
+        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerShadowHealthbox);
+    else
+        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+}
+
 void AllocateBattleSpritesData(void)
 {
     gBattleSpritesDataPtr = AllocZeroed(sizeof(struct BattleSpriteData));
@@ -553,6 +623,7 @@ static bool8 ShouldAnimBeDoneRegardlessOfSubstitute(u8 animId)
     case B_ANIM_HAIL_CONTINUES:
     case B_ANIM_SNOW_CONTINUES:
     case B_ANIM_FOG_CONTINUES:
+    case B_ANIM_SHADOW_SKY_CONTINUES:
     case B_ANIM_SNATCH_MOVE:
         return TRUE;
     default:
@@ -705,32 +776,6 @@ void FreeTrainerFrontPicPalette(u16 frontPicId)
     FreeSpritePaletteByTag(gTrainerSprites[frontPicId].palette.tag);
 }
 
-// Unused.
-void BattleLoadAllHealthBoxesGfxAtOnce(void)
-{
-    u8 numberOfBattlers = 0;
-    u8 i;
-
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-    LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
-    if (!IsDoubleBattle())
-    {
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
-        LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
-        numberOfBattlers = 2;
-    }
-    else
-    {
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
-        LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
-        numberOfBattlers = MAX_BATTLERS_COUNT;
-    }
-    for (i = 0; i < numberOfBattlers; i++)
-        LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(i)]);
-}
-
 bool8 BattleLoadAllHealthBoxesGfx(u8 state)
 {
     bool8 retVal = FALSE;
@@ -739,8 +784,8 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
     {
         if (state == 1)
         {
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[0]);
-            LoadSpritePalette(&sSpritePalettes_HealthBoxHealthBar[1]);
+            LoadSpritePalette(&gSpritePalettes_HealthBoxHealthBar[0]);
+            LoadSpritePalette(&gSpritePalettes_HealthBoxHealthBar[1]);
             LoadIndicatorSpritesGfx();
             CategoryIcons_LoadSpritesGfx();
         }
@@ -751,11 +796,13 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
                 if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
                     LoadCompressedSpriteSheet(&sSpriteSheet_SafariHealthbox);
                 else
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    ShdwLoadHealthboxSprite();
+                ShdwLoadHealthboxPalette(0);
             }
             else if (state == 3)
             {
                 LoadCompressedSpriteSheet(&sSpriteSheet_SinglesOpponentHealthbox);
+                ShdwLoadHealthboxPalette(1);
             }
             else if (state == 4)
             {
@@ -780,16 +827,26 @@ bool8 BattleLoadAllHealthBoxesGfx(u8 state)
                     LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[0]);
                     break;
                 case BATTLE_COORDS_SINGLES:
-                    LoadCompressedSpriteSheet(&sSpriteSheet_SinglesPlayerHealthbox);
+                    ShdwLoadHealthboxSprite();
                     break;
                 }
+                ShdwLoadHealthboxPalette(0);
             }
             else if (state == 3)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheets_DoublesPlayerHealthbox[1]);
+                ShdwLoadHealthboxPalette(2);
+            }
             else if (state == 4)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[0]);
+                ShdwLoadHealthboxPalette(1);
+            }
             else if (state == 5)
+            {
                 LoadCompressedSpriteSheet(&sSpriteSheets_DoublesOpponentHealthbox[1]);
+                ShdwLoadHealthboxPalette(3);
+            }
             else if (state == 6)
                 LoadCompressedSpriteSheet(&sSpriteSheets_HealthBar[GetBattlerPosition(B_BATTLER_0)]);
             else if (state == 7)

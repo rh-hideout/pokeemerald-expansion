@@ -107,6 +107,7 @@ enum MonData {
     MON_DATA_WORLD_RIBBON,
     MON_DATA_MODERN_FATEFUL_ENCOUNTER,
     MON_DATA_KNOWN_MOVES,
+    MON_DATA_UNUSED_RIBBONS,
     MON_DATA_RIBBON_COUNT,
     MON_DATA_RIBBONS,
     MON_DATA_ATK2,
@@ -120,11 +121,17 @@ enum MonData {
     MON_DATA_HYPER_TRAINED_SPEED,
     MON_DATA_HYPER_TRAINED_SPATK,
     MON_DATA_HYPER_TRAINED_SPDEF,
-    MON_DATA_IS_SHADOW,
     MON_DATA_DYNAMAX_LEVEL,
     MON_DATA_GIGANTAMAX_FACTOR,
     MON_DATA_TERA_TYPE,
     MON_DATA_EVOLUTION_TRACKER,
+    MON_DATA_IS_SHADOW,
+    MON_DATA_SHADOW_ID,
+    MON_DATA_SHADOW_AGGRO,
+    MON_DATA_REVERSE_MODE,
+    MON_DATA_SNAGGED,
+    MON_DATA_HEART_VALUE,
+    MON_DATA_HEART_MAX,
 };
 
 struct PokemonSubstruct0
@@ -253,11 +260,54 @@ union PokemonSubstruct
     u16 raw[NUM_SUBSTRUCT_BYTES / 2]; // /2 because it's u16, not u8
 };
 
+union __attribute__((packed, aligned(2))) NicknameShadowdata
+{
+    u8 nickname[min(10, POKEMON_NAME_LENGTH)];
+    struct Shadowdata
+    {
+    /* 0x00 */ u16 heartValue;
+    /* 0x02 */ u16 heartMax;
+    /* 0x04 */ u8 shadowID;
+    /* 0x05 */ u8 shadowAggro:3; //Determines chance to enter Reverse Mode
+    /* 0x05 */ u8 isXD:1; //for Shadow Lugia's special case
+    /* 0x05 */ u8 isReverse:1;
+    /* 0x05 */ u8 snagFlag:1; //Set when catching from another trainer, so that the mon is given to you after winning. Unset afterward.
+    /* 0x05 */ u8 filler:2;
+    /* 0x06 */
+    /* 0x07 */
+    /* 0x08 */
+    /* 0x09 */
+    /* size = 10 */
+
+    } shadowData;
+};
+
+enum {
+    SHADOW_AGGRO_NONE,
+    SHADOW_AGGRO_VERY_LOW,
+    SHADOW_AGGRO_LOW,
+    SHADOW_AGGRO_MEDIUM,
+    SHADOW_AGGRO_HIGH,
+    SHADOW_AGGRO_VERY_HIGH,
+    SHADOW_AGGRO_TEST,
+    NUM_AGGRO_LEVELS
+};
+
+enum {
+    HEART_GAUGE_EMPTY,
+    HEART_SECTION_1,
+    HEART_SECTION_2,
+    HEART_SECTION_3,
+    HEART_SECTION_4,
+    HEART_GAUGE_FULL,
+    HEART_GAUGE_LEVELS
+};
+
 struct BoxPokemon
 {
     u32 personality;
     u32 otId;
-    u8 nickname[min(10, POKEMON_NAME_LENGTH)];
+    union NicknameShadowdata nickData;
     u8 language:3;
     u8 hiddenNatureModifier:5; // 31 natures.
     u8 isBadEgg:1;
@@ -389,6 +439,14 @@ struct BattlePokemon
     /*0x5D*/ u32 otId;
     /*0x61*/ u8 metLevel;
     /*0x62*/ bool8 isShiny;
+    /*0x63*/ u8 isShadow:1;
+    /*0x63*/ u8 shadowAggro:3;
+    /*0x63*/ u8 isReverse:1;
+    /*0x63*/ u8 snagged:1;
+    /*0x63*/ u8 filler:2;
+    /*0x64*/ u8 shadowID;
+    /*0x65*/ u16 heartVal;
+    /*0x67*/ u16 heartMax;
 };
 
 struct EvolutionParam
@@ -697,6 +755,7 @@ extern const u8 gPPUpAddValues[];
 extern const u8 gStatStageRatios[MAX_STAT_STAGE + 1][2];
 extern const u16 gUnionRoomFacilityClasses[];
 extern const struct SpriteTemplate gBattlerSpriteTemplates[];
+extern const u8 gShadowAggressionTable[][6];
 extern const u32 sExpCandyExperienceTable[];
 extern const struct AbilityInfo gAbilitiesInfo[];
 extern const struct NatureInfo gNaturesInfo[];
@@ -725,7 +784,9 @@ bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battler);
 u16 GetUnionRoomTrainerPic(void);
 enum TrainerClassID GetUnionRoomTrainerClass(void);
 void CreateEnemyEventMon(void);
-void CalculateMonStats(struct Pokemon *mon);
+#define CalculateMonStats(...) CAT(CalculateMonStats, NARG_8(__VA_ARGS__))(__VA_ARGS__)
+void CalculateMonStats2(struct Pokemon *mon, u8 levelBoost);
+void CalculateMonStats1(struct Pokemon *mon);
 void BoxMonToMon(const struct BoxPokemon *src, struct Pokemon *dest);
 u8 GetLevelFromMonExp(struct Pokemon *mon);
 u8 GetLevelFromBoxMonExp(struct BoxPokemon *boxMon);
@@ -910,5 +971,10 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 bool32 IsSpeciesOfType(u32 species, enum Type type);
+u8 GetHeartGaugeSection(u16 heartVal, u16 heartMax);
+u8 GetReverseModeChance(struct BattlePokemon *mon);
+u8 ShdwCanMonGainEXP(struct Pokemon *mon);
+u16 ModifyHeartValueInBattle(u8 battlerId, u16 amount);
+u8 CheckPartyShadow(struct Pokemon *party, u8 selection);
 
 #endif // GUARD_POKEMON_H

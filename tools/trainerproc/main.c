@@ -86,6 +86,12 @@ struct Pokemon
     struct String tera_type;
     int tera_type_line;
 
+    bool shadow;
+    int shadow_line;
+
+    int heartGauge;
+    int heartGauge_line;
+
     struct String moves[MAX_MON_MOVES];
     int moves_n;
     int move1_line;
@@ -1492,6 +1498,22 @@ static bool parse_trainer(struct Parser *p, const struct Parsed *parsed, struct 
                 if (!token_human_identifiers(p, &value, pokemon->tags, &pokemon->tags_n, MAX_MON_TAGS))
                     any_error = !show_parse_error(p);
             }
+            else if (is_literal_token(&key, "Shadow"))
+            {
+                if (pokemon->shadow_line)
+                    any_error = !set_show_parse_error(p, key.location, "duplicate 'Shadow'");
+                pokemon->shadow_line = value.location.line;
+                if (!token_bool(p, &value, &pokemon->shadow))
+                    any_error = !show_parse_error(p);
+            }
+            else if (is_literal_token(&key, "Heart Gauge"))
+            {
+                if (pokemon->heartGauge_line)
+                    any_error = !set_show_parse_error(p, key.location, "duplicate 'Heart Gauge'");
+                pokemon->heartGauge_line = value.location.line;
+                if (!token_int(p, &value, &pokemon->heartGauge))
+                    any_error = !show_parse_error(p);
+            }
             else
             {
                 any_error = !set_show_parse_error(p, key.location, "expected one of 'EVs', 'IVs', 'Ability', 'Level', 'Ball', 'Happiness', 'Nature', 'Shiny', 'Dynamax Level', 'Gigantamax', or 'Tera Type'");
@@ -2078,6 +2100,20 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
                     fprint_constant(f, "MON_POOL_TAG", pokemon->tags[i]);
                 }
                 fprintf(f, ",\n");
+            }
+
+            if (pokemon->shadow_line)
+            {
+                fprintf(f, "#line %d\n", pokemon->shadow_line);
+                fprintf(f, "            .isShadow = ");
+                fprint_bool(f, pokemon->shadow);
+                fprintf(f, ",\n");
+            }
+
+            if (pokemon->heartGauge_line)
+            {
+                fprintf(f, "#line %d\n", pokemon->heartGauge_line);
+                fprintf(f, "            .heartGauge = %d,\n", pokemon->heartGauge);
             }
 
             if (pokemon->moves_n > 0)

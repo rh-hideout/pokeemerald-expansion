@@ -423,6 +423,8 @@
 #define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
 #define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
 #define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
+#define ANIM_TAG_SHADOW_PARTICLES           (ANIM_SPRITES_START + 412)
+#define ANIM_TAG_REVERSE_PARTICLES          (ANIM_SPRITES_START + 413)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -535,6 +537,7 @@
 #define BG_CHLOROBLAST 80
 #define BG_RAINBOW 81
 #define BG_SWAMP 82
+#define BG_SHADOWSTORM 83
 
 // table ids for general animations (sBattleAnims_General)
 #define B_ANIM_STATS_CHANGE             0
@@ -591,8 +594,10 @@
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
 #define B_ANIM_POWER_CONSTRUCT          53
+#define B_ANIM_SHADOW_SKY_CONTINUES     54
+#define B_ANIM_CALL_REVERSE_MODE        55
 
-#define NUM_B_ANIMS_GENERAL             54
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -603,8 +608,9 @@
 #define B_ANIM_SUBSTITUTE_TO_MON        5
 #define B_ANIM_MON_TO_SUBSTITUTE        6
 #define B_ANIM_CRITICAL_CAPTURE_THROW   7
+#define B_ANIM_SECTION_UNLOCK           8
 
-#define NUM_B_ANIMS_SPECIAL             8
+#define NUM_B_ANIMS_SPECIAL             9
 
 // status animation table (sBattleAnims_StatusConditions)
 #define B_ANIM_STATUS_PSN               0
@@ -617,8 +623,11 @@
 #define B_ANIM_STATUS_CURSED            7
 #define B_ANIM_STATUS_NIGHTMARE         8
 #define B_ANIM_STATUS_FRB               9
+#define B_ANIM_STATUS_SHADOW            10
+#define B_ANIM_ENTER_REVERSE_MODE       11
+#define B_ANIM_STATUS_REVERSE_MODE      12
 
-#define NUM_B_ANIMS_STATUS              10
+#define NUM_B_ANIMS_STATUS              13
 
 // Tasks with return values often assign them to gBattleAnimArgs[7].
 #define ARG_RET_ID 7
@@ -646,6 +655,7 @@
 #define ANIM_WEATHER_HAIL 4
 #define ANIM_WEATHER_SNOW 5
 #define ANIM_WEATHER_FOG 6
+#define ANIM_WEATHER_SHADOW_SKY 7
 
 // horseshoe/fist frames
 #define ANIM_RIGHT_FIST  0
