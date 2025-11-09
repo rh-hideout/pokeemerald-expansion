@@ -3314,7 +3314,6 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         if (B_SKIP_RECHARGE == GEN_1 && !IsBattlerAlive(gBattlerTarget))  // Skip recharge if gen 1 and foe is KO'd
             break;
 
-        gBattleMons[gEffectBattler].volatiles.recharge = TRUE;
         gDisableStructs[gEffectBattler].rechargeTimer = 2;
         gLockedMoves[gEffectBattler] = gCurrentMove;
         gBattlescriptCurrInstr++;

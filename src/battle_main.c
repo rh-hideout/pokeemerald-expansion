@@ -4213,7 +4213,7 @@ static void HandleTurnActionSelectionState(void)
                 else
                 {
                     if (gBattleMons[battler].volatiles.multipleTurns
-                        || gBattleMons[battler].volatiles.recharge)
+                        || gDisableStructs[battler].rechargeTimer > 0)
                     {
                         gChosenActionByBattler[battler] = B_ACTION_USE_MOVE;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
@@ -4368,7 +4368,7 @@ static void HandleTurnActionSelectionState(void)
                     gBattleCommunication[GetPartnerBattler(battler)] = STATE_BEFORE_ACTION_CHOSEN;
                     RecordedBattle_ClearBattlerAction(battler, 1);
                     if (gBattleMons[GetPartnerBattler(battler)].volatiles.multipleTurns
-                        || gBattleMons[GetPartnerBattler(battler)].volatiles.recharge)
+                        || gDisableStructs[GetPartnerBattler(battler)].rechargeTimer > 0)
                     {
                         BtlController_EmitEndBounceEffect(battler, B_COMM_TO_CONTROLLER);
                         MarkBattlerForControllerExec(battler);
@@ -5132,11 +5132,8 @@ static void TurnValuesCleanUp(bool8 var0)
                 gDisableStructs[i].isFirstTurn--;
 
             if (gDisableStructs[i].rechargeTimer)
-            {
                 gDisableStructs[i].rechargeTimer--;
-                if (gDisableStructs[i].rechargeTimer == 0)
-                    gBattleMons[i].volatiles.recharge = FALSE;
-            }
+
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
         }
 
