@@ -2,7 +2,11 @@ const struct ContestEffect gContestEffects[] =
 {
     [CONTEST_EFFECT_HIGHLY_APPEALING] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Quite the appealing move."),
+        #else
         .description = COMPOUND_STRING("A highly appealing move."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_APPEAL,
         .appeal = 40,
         .jam = 0,
@@ -72,21 +76,33 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_STARTLE_PREV_MON] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Startles the last Pokémon\nto act before the user."),
+        #else
         .description = COMPOUND_STRING("Startles the POKéMON that\nappealed before the user."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 20,
         .jam = 30,
     },
     [CONTEST_EFFECT_STARTLE_PREV_MONS] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Startles all of the Pokémon\nto act before the user."),
+        #else
         .description = COMPOUND_STRING("Startles all POKéMON that\nhave done their appeals."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MONS,
         .appeal = 20,
         .jam = 20,
     },
     [CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Badly startles the last\nPokémon to act before the user."),
+        #else
         .description = COMPOUND_STRING("Badly startles the\nPOKéMON in front."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 10,
         .jam = 40,
@@ -114,7 +130,11 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Makes audience expect\nlittle of other contestants."),
+        #else
         .description = COMPOUND_STRING("Shifts the JUDGE's\nattention from others."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_WORSEN,
         .appeal = 30,
         .jam = 0,
@@ -184,7 +204,11 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Makes the remaining\nPokémon nervous."),
+        #else
         .description = COMPOUND_STRING("Makes all POKéMON after\nthe user nervous."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_WORSEN,
         .appeal = 20,
         .jam = 0,
@@ -240,7 +264,11 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Effectiveness varies\ndepending on when it is used."),
+        #else
         .description = COMPOUND_STRING("The appeal's quality varies\ndepending on its timing."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_SPECIAL_APPEAL,
         .appeal = 10,
         .jam = 0,
@@ -261,7 +289,11 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_AFFECTED_BY_PREV_APPEAL] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Affected by how well the\nprevious Pokémon's move went."),
+        #else
         .description = COMPOUND_STRING("Affected by how well the\nappeal in front goes."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_SPECIAL_APPEAL,
         .appeal = 30,
         .jam = 0,
@@ -282,14 +314,22 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_NEXT_APPEAL_EARLIER] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Causes the user to move\nearlier on the next turn."),
+        #else
         .description = COMPOUND_STRING("The next appeal can be\nmade earlier next turn."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_TURN_ORDER,
         .appeal = 30,
         .jam = 0,
     },
     [CONTEST_EFFECT_NEXT_APPEAL_LATER] =
     {
+        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
+        .description = COMPOUND_STRING("Causes the user to move\nlater on the next turn."),
+        #else
         .description = COMPOUND_STRING("The next appeal can be\nmade later next turn."),
+        #endif
         .effectType = CONTEST_EFFECT_TYPE_TURN_ORDER,
         .appeal = 30,
         .jam = 0,
@@ -312,7 +352,7 @@ const struct ContestEffect gContestEffects[] =
     {
         .description = COMPOUND_STRING("An appeal that excites the\naudience in any CONTEST."),
         .effectType = CONTEST_EFFECT_TYPE_SPECIAL_APPEAL,
-        .appeal = 10,
+        .appeal = C_UPDATED_MOVE_EFFECTS >= GEN_6 ? 20 : 10,
         .jam = 0,
     },
     [CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS] =

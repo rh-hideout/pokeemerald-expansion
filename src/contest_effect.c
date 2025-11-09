@@ -133,7 +133,7 @@ static void ContestEffect_UserLessEasilyStartled(void)
     SetContestantEffectStringID(eContestAppealResults.contestant,CONTEST_STRING_STOPPED_CARING);
 }
 
-// Slightly startles the POK�MON in front.
+// Badly startles the Pokémon in front.
 static void ContestEffect_StartleFrontMon(void)
 {
     u8 idx = 0;

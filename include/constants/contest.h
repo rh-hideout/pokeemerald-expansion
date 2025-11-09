@@ -103,29 +103,29 @@
 #define CONTEST_EFFECT_REPETITION_NOT_BORING                    3
 #define CONTEST_EFFECT_AVOID_STARTLE_ONCE                       4
 #define CONTEST_EFFECT_AVOID_STARTLE                            5
-#define CONTEST_EFFECT_AVOID_STARTLE_SLIGHTLY                   6
-#define CONTEST_EFFECT_USER_LESS_EASILY_STARTLED                7
-#define CONTEST_EFFECT_STARTLE_FRONT_MON                        8
-#define CONTEST_EFFECT_SLIGHTLY_STARTLE_PREV_MONS               9
+#define CONTEST_EFFECT_AVOID_STARTLE_SLIGHTLY                   6 // Unused
+#define CONTEST_EFFECT_USER_LESS_EASILY_STARTLED                7 // Unused
+#define CONTEST_EFFECT_STARTLE_FRONT_MON                        8 // Unused
+#define CONTEST_EFFECT_SLIGHTLY_STARTLE_PREV_MONS               9 // Unused
 #define CONTEST_EFFECT_STARTLE_PREV_MON                         10
 #define CONTEST_EFFECT_STARTLE_PREV_MONS                        11
 #define CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON                  12
 #define CONTEST_EFFECT_BADLY_STARTLE_PREV_MONS                  13
-#define CONTEST_EFFECT_STARTLE_PREV_MON_2                       14
-#define CONTEST_EFFECT_STARTLE_PREV_MONS_2                      15
+#define CONTEST_EFFECT_STARTLE_PREV_MON_2                       14 // Unused
+#define CONTEST_EFFECT_STARTLE_PREV_MONS_2                      15 // Unused
 #define CONTEST_EFFECT_SHIFT_JUDGE_ATTENTION                    16
 #define CONTEST_EFFECT_STARTLE_MON_WITH_JUDGES_ATTENTION        17
 #define CONTEST_EFFECT_JAMS_OTHERS_BUT_MISS_ONE_TURN            18
 #define CONTEST_EFFECT_STARTLE_MONS_SAME_TYPE_APPEAL            19
-#define CONTEST_EFFECT_STARTLE_MONS_COOL_APPEAL                 20
-#define CONTEST_EFFECT_STARTLE_MONS_BEAUTY_APPEAL               21
-#define CONTEST_EFFECT_STARTLE_MONS_CUTE_APPEAL                 22
-#define CONTEST_EFFECT_STARTLE_MONS_SMART_APPEAL                23
-#define CONTEST_EFFECT_STARTLE_MONS_TOUGH_APPEAL                24
-#define CONTEST_EFFECT_MAKE_FOLLOWING_MON_NERVOUS               25
+#define CONTEST_EFFECT_STARTLE_MONS_COOL_APPEAL                 20 // Unused
+#define CONTEST_EFFECT_STARTLE_MONS_BEAUTY_APPEAL               21 // Unused
+#define CONTEST_EFFECT_STARTLE_MONS_CUTE_APPEAL                 22 // Unused
+#define CONTEST_EFFECT_STARTLE_MONS_SMART_APPEAL                23 // Unused
+#define CONTEST_EFFECT_STARTLE_MONS_TOUGH_APPEAL                24 // Unused
+#define CONTEST_EFFECT_MAKE_FOLLOWING_MON_NERVOUS               25 // Unused
 #define CONTEST_EFFECT_MAKE_FOLLOWING_MONS_NERVOUS              26
 #define CONTEST_EFFECT_WORSEN_CONDITION_OF_PREV_MONS            27
-#define CONTEST_EFFECT_BADLY_STARTLES_MONS_IN_GOOD_CONDITION    28
+#define CONTEST_EFFECT_BADLY_STARTLES_MONS_IN_GOOD_CONDITION    28 // Unused
 #define CONTEST_EFFECT_BETTER_IF_FIRST                          29
 #define CONTEST_EFFECT_BETTER_IF_LAST                           30
 #define CONTEST_EFFECT_APPEAL_AS_GOOD_AS_PREV_ONES              31
@@ -133,18 +133,19 @@
 #define CONTEST_EFFECT_BETTER_WHEN_LATER                        33
 #define CONTEST_EFFECT_QUALITY_DEPENDS_ON_TIMING                34
 #define CONTEST_EFFECT_BETTER_IF_SAME_TYPE                      35
-#define CONTEST_EFFECT_BETTER_IF_DIFF_TYPE                      36
+#define CONTEST_EFFECT_BETTER_IF_DIFF_TYPE                      36 // Unused
 #define CONTEST_EFFECT_AFFECTED_BY_PREV_APPEAL                  37
 #define CONTEST_EFFECT_IMPROVE_CONDITION_PREVENT_NERVOUSNESS    38
 #define CONTEST_EFFECT_BETTER_WITH_GOOD_CONDITION               39
 #define CONTEST_EFFECT_NEXT_APPEAL_EARLIER                      40
 #define CONTEST_EFFECT_NEXT_APPEAL_LATER                        41
-#define CONTEST_EFFECT_MAKE_SCRAMBLING_TURN_ORDER_EASIER        42
+#define CONTEST_EFFECT_MAKE_SCRAMBLING_TURN_ORDER_EASIER        42 // Unused
 #define CONTEST_EFFECT_SCRAMBLE_NEXT_TURN_ORDER                 43
 #define CONTEST_EFFECT_EXCITE_AUDIENCE_IN_ANY_CONTEST           44
 #define CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS     45
 #define CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED             46
 #define CONTEST_EFFECT_DONT_EXCITE_AUDIENCE                     47
+//#define CONTEST_EFFECT_QUICKLY_GROW_BORED                     48 // New in Gen 6
 
 // Each of the above effects is grouped into one of these effect type categories
 // Only a few of these get checked by the AI, the rest go unused
