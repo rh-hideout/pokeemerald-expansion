@@ -146,6 +146,8 @@
 #define CONTEST_EFFECT_BETTER_WHEN_AUDIENCE_EXCITED             46
 #define CONTEST_EFFECT_DONT_EXCITE_AUDIENCE                     47
 //#define CONTEST_EFFECT_QUICKLY_GROW_BORED                     48 // New in Gen 6
+//#define CONTEST_EFFECT_EXCITES_AUDIENCE_MORE_IF_FIRST         49 // New in Gen 6
+//#define CONTEST_EFFECT_EXCITES_AUDIENCE_MORE_IF_LAST          50 // New in Gen 6
 
 // Each of the above effects is grouped into one of these effect type categories
 // Only a few of these get checked by the AI, the rest go unused
