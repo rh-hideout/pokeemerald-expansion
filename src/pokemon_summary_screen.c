@@ -142,7 +142,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
         u8 ribbonCount; // 0x6
         u8 ailment; // 0x7
         u8 abilityNum; // 0x8
-        metloc_u8_t metLocation; // 0x9
+        u8 metLocation; // 0x9
         u8 metLevel; // 0xA
         u8 metGame; // 0xB
         u32 pid; // 0xC
@@ -735,7 +735,7 @@ static void (*const sTextPrinterFunctions[])(void) =
     [PSS_PAGE_CONTEST_MOVES] = PrintContestMoves
 };
 
-static const TaskFunc sTextPrinterTasks[] =
+static void (*const sTextPrinterTasks[])(u8 taskId) =
 {
     [PSS_PAGE_INFO] = Task_PrintInfoPage,
     [PSS_PAGE_SKILLS] = Task_PrintSkillsPage,
@@ -3800,18 +3800,18 @@ static const u8 *GetLetterGrade(u32 stat)
     static const u8 gText_GradeA[] = _("A");
     static const u8 gText_GradeS[] = _("S");
 
-    if (stat <= 0)
-        return gText_GradeF;
-    else if (stat <= 15)
+    if (stat > 0 && stat <= 15)
         return gText_GradeD;
-    else if (stat <= 25)
+    else if (stat > 15 && stat <= 25)
         return gText_GradeC;
-    else if (stat <= 29)
+    else if (stat > 26 && stat <= 29)
         return gText_GradeB;
-    else if (stat <= 30)
+    else if (stat == 30)
         return gText_GradeA;
-    else
+    else if (stat == 31)
         return gText_GradeS;
+    else
+        return gText_GradeF;
 }
 
 static void BufferLeftColumnStats(void)

@@ -16873,3 +16873,76 @@ Double Battle: No
 Kyogre
 Level: 5
 IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+
+=== TRAINER_RENE ===
+Name: RENE
+Class: Rival
+Pic: RS Brendan
+Gender: Male
+Music: Male
+Double Battle: No
+AI: Basic Trainer
+
+Mew @ Mental Herb  
+Ability: Synchronize  
+Tera Type: Psychic  
+EVs: 252 HP / 4 Atk / 252 SpD  
+Jolly Nature  
+- Stealth Rock  
+- Taunt  
+- Thunder Wave  
+- Explosion  
+
+Latios @ Life Orb  
+Ability: Levitate  
+Tera Type: Dragon  
+EVs: 252 SpA / 4 SpD / 252 Spe  
+Timid Nature  
+IVs: 29 HP  
+- Draco Meteor  
+- Psyshock  
+- Surf  
+- Hidden Power   
+
+Heatran @ Leftovers  
+Ability: Flash Fire  
+Tera Type: Fire  
+EVs: 248 HP / 8 SpD / 252 Spe  
+Serious Nature  
+IVs: 0 Atk  
+- Magma Storm  
+- Hidden Power  
+- Taunt  
+- Earth Power  
+
+Keldeo @ Choice Specs  
+Ability: Justified  
+Tera Type: Water  
+EVs: 252 SpA / 4 SpD / 252 Spe  
+Timid Nature  
+IVs: 0 Atk  
+- Scald  
+- Secret Sword  
+- Hydro Pump  
+- Hidden Power
+
+Gengar @ Gengarite  
+Ability: Levitate  
+Tera Type: Ghost  
+EVs: 4 Def / 252 SpA / 252 Spe  
+IVs: 0 Atk  
+- Focus Blast  
+- Sludge Wave  
+- Shadow Ball  
+- Destiny Bond  
+
+Excadrill @ Choice Scarf  
+Ability: Mold Breaker  
+Tera Type: Ground  
+EVs: 252 Atk / 4 SpD / 252 Spe  
+- Rock Slide  
+- Rapid Spin  
+- Earthquake  
+- Iron Head  
+
+

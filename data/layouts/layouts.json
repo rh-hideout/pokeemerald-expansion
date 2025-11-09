@@ -4410,6 +4410,26 @@
       "secondary_tileset": "gTileset_MysteryEventsHouse",
       "border_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/border.bin",
       "blockdata_filepath": "data/layouts/SootopolisCity_MysteryEventsHouse_1F_StairsUnblocked/map.bin"
+    },
+    {
+      "id": "LAYOUT_CHAMPIONS_GAUNTLET_OUTSIDE",
+      "name": "ChampionsGauntlet_Outside_Layout",
+      "width": 46,
+      "height": 67,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_BattleFrontierOutsideWest",
+      "border_filepath": "data/layouts/ChampionsGauntlet_Outside/border.bin",
+      "blockdata_filepath": "data/layouts/ChampionsGauntlet_Outside/map.bin"
+    },
+    {
+      "id": "LAYOUT_CHAMPIONS_GAUNTLET_RESPAWN_ROOM",
+      "name": "ChampionsGauntlet_RespawnRoom_Layout",
+      "width": 19,
+      "height": 12,
+      "primary_tileset": "gTileset_General",
+      "secondary_tileset": "gTileset_PokemonCenter",
+      "border_filepath": "data/layouts/ChampionsGauntlet_RespawnRoom/border.bin",
+      "blockdata_filepath": "data/layouts/ChampionsGauntlet_RespawnRoom/map.bin"
     }
   ]
 }

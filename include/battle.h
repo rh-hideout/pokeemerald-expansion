@@ -13,7 +13,6 @@
 #include "battle_util2.h"
 #include "battle_bg.h"
 #include "pokeball.h"
-#include "main.h"
 #include "battle_debug.h"
 #include "battle_dynamax.h"
 #include "battle_terastal.h"
@@ -1119,7 +1118,7 @@ extern u16 gBattleTurnCounter;
 extern u8 gBattlerAbility;
 extern struct QueuedStatBoost gQueuedStatBoosts[MAX_BATTLERS_COUNT];
 
-extern MainCallback gPreBattleCallback1;
+extern void (*gPreBattleCallback1)(void);
 extern void (*gBattleMainFunc)(void);
 extern struct BattleResults gBattleResults;
 extern u8 gLeveledUpInBattle;

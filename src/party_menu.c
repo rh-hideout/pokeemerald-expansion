@@ -1512,7 +1512,15 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
         case PARTY_ACTION_SEND_MON_TO_BOX:
         {
             u8 partyId = (u8)*slotPtr;
-            if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && partyId >= (PARTY_SIZE / 2))
+            if (partyId == 0 || ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && partyId == 1))
+            {
+                // Can't select if mon is currently on the field
+                PlaySE(SE_FAILURE);
+                DisplayPartyMenuMessage(gText_CannotSendMonToBoxActive, FALSE);
+                ScheduleBgCopyTilemapToVram(2);
+                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
+            }
+            else if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && partyId >= (PARTY_SIZE / 2))
             {
                 // Can't select if mon doesn't belong to you
                 PlaySE(SE_FAILURE);
@@ -6423,11 +6431,11 @@ static void Task_TryItemUseFusionChange(u8 taskId)
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
-                    SwapFusionMonMoves(mon, gKyuremWhiteSwapMoveTable, FUSE_MON);
+                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, FUSE_MON);
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
-                    SwapFusionMonMoves(mon, gKyuremBlackSwapMoveTable, FUSE_MON);
+                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, FUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
                 if (gTasks[taskId].moveToLearn != 0)
@@ -6438,11 +6446,11 @@ static void Task_TryItemUseFusionChange(u8 taskId)
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
-                    SwapFusionMonMoves(mon, gKyuremWhiteSwapMoveTable, UNFUSE_MON);
+                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, UNFUSE_MON);
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
-                    SwapFusionMonMoves(mon, gKyuremBlackSwapMoveTable, UNFUSE_MON);
+                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, UNFUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
                 if ( gTasks[taskId].tExtraMoveHandling == FORGET_EXTRA_MOVES)

@@ -5085,8 +5085,8 @@ BattleScript_FaintAttacker::
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
-	tryactivatereceiver BS_ATTACKER
 	tryactivatesoulheart
+	tryactivatereceiver BS_ATTACKER
 	trytrainerslidemsgfirstoff BS_ATTACKER
 	return
 
@@ -5103,8 +5103,8 @@ BattleScript_FaintTarget::
 	tryrevertweatherform
 	flushtextbox
 	waitanimation
-	tryactivatereceiver BS_TARGET
 	tryactivatesoulheart
+	tryactivatereceiver BS_TARGET
 	trytrainerslidemsgfirstoff BS_TARGET
 	return
 
@@ -7285,7 +7285,6 @@ BattleScript_ReceiverActivates::
 	printstring STRINGID_RECEIVERABILITYTAKEOVER
 	waitmessage B_WAIT_TIME_LONG
 	settracedability BS_ABILITY_BATTLER
-	switchinabilities BS_ABILITY_BATTLER
 	return
 
 BattleScript_AbilityHpHeal:

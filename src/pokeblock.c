@@ -62,7 +62,7 @@ enum {
 struct PokeblockMenuStruct
 {
     u8 tilemap[BG_SCREEN_SIZE];
-    MainCallback callbackOnUse;
+    void (*callbackOnUse)(void);
     const u8 *pokeblockActionIds;
     u8 numActions;
     u8 caseId;
@@ -80,7 +80,7 @@ struct PokeblockMenuStruct
 
 struct PokeblockSavedData
 {
-    MainCallback callback;
+    void (*callback)(void);
     u16 selectedRow;
     u16 scrollOffset;
 };

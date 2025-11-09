@@ -2428,4 +2428,8 @@ extern const u8 gText_CannotSendMonToBoxHM[];
 extern const u8 gText_CannotSendMonToBoxActive[];
 extern const u8 gText_CannotSendMonToBoxPartner[];
 
+// Champion Selection Menu
+extern const u8 gText_DisplayChampionPokemons[];
+extern const u8 gText_SelectionChampion[];
+
 #endif // GUARD_STRINGS_H

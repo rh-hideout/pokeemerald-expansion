@@ -17,7 +17,7 @@ struct PokenavMonListItem
 struct PokenavMatchCallEntry
 {
     bool8 isSpecialTrainer;
-    mapsec_u8_t mapSec;
+    u8 mapSec;
     u16 headerId;
 };
 
@@ -413,7 +413,7 @@ void FreeMatchCallSubstruct1(void);
 int IsMatchCallListInitFinished(void);
 int GetNumberRegistered(void);
 struct PokenavMatchCallEntry *GetMatchCallList(void);
-mapsec_u16_t GetMatchCallMapSec(int index);
+u16 GetMatchCallMapSec(int index);
 bool32 ShouldDrawRematchPokeballIcon(int index);
 void ClearRematchPokeballIcon(u16 windowId, u32 tileOffset);
 int GetMatchCallTrainerPic(int index);
@@ -422,7 +422,7 @@ const u8 *GetMatchCallMessageText(int index, bool8 *newRematchRequest);
 u16 GetMatchCallOptionCursorPos(void);
 u16 GetMatchCallOptionId(int optionId);
 void BufferMatchCallNameAndDesc(struct PokenavMatchCallEntry *matchCallEntry, u8 *str);
-mapsec_u8_t GetMatchTableMapSectionId(int rematchIndex);
+u8 GetMatchTableMapSectionId(int rematchIndex);
 int GetIndexDeltaOfNextCheckPageDown(int index);
 int GetIndexDeltaOfNextCheckPageUp(int index);
 bool32 IsRematchEntryRegistered(int rematchIndex);

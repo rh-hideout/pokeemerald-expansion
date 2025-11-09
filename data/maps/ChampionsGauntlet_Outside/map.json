@@ -1,0 +1,108 @@
+{
+  "id": "MAP_CHAMPIONS_GAUNTLET_OUTSIDE",
+  "name": "ChampionsGauntlet_Outside",
+  "layout": "LAYOUT_CHAMPIONS_GAUNTLET_OUTSIDE",
+  "music": "MUS_B_FRONTIER",
+  "region_map_section": "MAPSEC_CHAMPIONS_GAUNTLET",
+  "requires_flash": false,
+  "weather": "WEATHER_NONE",
+  "map_type": "MAP_TYPE_ROUTE",
+  "allow_cycling": true,
+  "allow_escaping": false,
+  "allow_running": true,
+  "show_map_name": true,
+  "battle_scene": "MAP_BATTLE_SCENE_NORMAL",
+  "connections": null,
+  "object_events": [
+    {
+      "graphics_id": "OBJ_EVENT_GFX_SS_TIDAL",
+      "x": 20,
+      "y": 66,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_RIGHT",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "0x0",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_CAMERAMAN",
+      "x": 11,
+      "y": 45,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "trainer_type": "TRAINER_TYPE_NORMAL",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ChampionsGauntlet_Outside_RivalBattle",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_STEVEN",
+      "x": 24,
+      "y": 45,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_UP_AND_DOWN",
+      "movement_range_x": 0,
+      "movement_range_y": 3,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ChampionsGauntlet_Outside_EventScript_ShowSteven",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_WALLACE",
+      "x": 28,
+      "y": 45,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_WANDER_DOWN_AND_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 3,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ChampionsGauntlet_Outside_EventScript_ShowSteven",
+      "flag": "0"
+    },
+    {
+      "graphics_id": "OBJ_EVENT_GFX_POKE_BALL",
+      "x": 24,
+      "y": 63,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "ChangePlayerToSteven",
+      "flag": "0"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 26,
+      "y": 61,
+      "elevation": 0,
+      "dest_map": "MAP_CHAMPIONS_GAUNTLET_OUTSIDE",
+      "dest_warp_id": "1"
+    },
+    {
+      "x": 26,
+      "y": 57,
+      "elevation": 0,
+      "dest_map": "MAP_CHAMPIONS_GAUNTLET_OUTSIDE",
+      "dest_warp_id": "0"
+    },
+    {
+      "x": 20,
+      "y": 64,
+      "elevation": 0,
+      "dest_map": "MAP_CHAMPIONS_GAUNTLET_OUTSIDE",
+      "dest_warp_id": "0"
+    }
+  ],
+  "coord_events": [],
+  "bg_events": []
+}

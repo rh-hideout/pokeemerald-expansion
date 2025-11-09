@@ -1,5 +1,4 @@
 #include <stdarg.h>
-#include "fake_rtc.h"
 #include "global.h"
 #include "gpu_regs.h"
 #include "load_save.h"
@@ -185,13 +184,6 @@ void TestRunner_CheckMemory(void)
     }
 }
 
-static void ClearSaveBlocks(void)
-{
-    ClearSav1();
-    ClearSav2();
-    ClearSav3();
-}
-
 void CB2_TestRunner(void)
 {
 top:
@@ -209,13 +201,17 @@ top:
         gTestRunnerState.filterMode = DetectFilterMode(gTestRunnerArgv);
 
         MoveSaveBlocks_ResetHeap();
+        ClearSav1();
+        ClearSav2();
+        ClearSav3();
 
         gIntrTable[7] = Intr_Timer2;
+
+        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
 
         // The current test restarted the ROM (e.g. by jumping to NULL).
         if (gPersistentTestRunnerState.address != 0)
         {
-            ClearSaveBlocks();
             gTestRunnerState.test = __start_tests;
             while ((uintptr_t)gTestRunnerState.test != gPersistentTestRunnerState.address)
             {
@@ -259,7 +255,6 @@ top:
         break;
 
     case STATE_ASSIGN_TEST:
-        ClearSaveBlocks();
         while (1)
         {
             if (gTestRunnerState.test == __stop_tests)

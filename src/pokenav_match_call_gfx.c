@@ -1027,7 +1027,7 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     u8 mapName[32];
     int x;
     int index = PokenavList_GetSelectedIndex() + delta;
-    mapsec_s32_t mapSec = GetMatchCallMapSec(index);
+    int mapSec = GetMatchCallMapSec(index);
     if (mapSec != MAPSEC_NONE)
         GetMapName(mapName, mapSec, 0);
     else

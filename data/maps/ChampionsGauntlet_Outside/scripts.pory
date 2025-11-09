@@ -1,0 +1,171 @@
+raw `ChampionsGauntlet_Outside_MapScripts::
+	.byte 0
+    
+    ChampionsGauntlet_Outside_SetFlags::
+
+	setflag FLAG_SYS_POKEMON_GET
+	setflag FLAG_RESCUED_BIRCH
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_ZIGZAGOON_BATTLE
+	setflag FLAG_ADVENTURE_STARTED
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BIRCHS_LAB_BIRCH
+	setflag FLAG_HIDE_ROUTE_101_BIRCH_STARTERS_BAG
+	setvar VAR_BIRCH_LAB_STATE, 2
+	setvar VAR_ROUTE101_STATE, 3
+
+	setflag FLAG_SYS_POKEDEX_GET
+	special SetUnlockedPokedexFlags
+
+	setflag FLAG_RECEIVED_POKEDEX_FROM_BIRCH
+	setvar VAR_CABLE_CLUB_TUTORIAL_STATE, 2
+
+	setflag FLAG_SYS_NATIONAL_DEX
+	special EnableNationalPokedex
+
+	setvar VAR_LITTLEROOT_TOWN_STATE, 4 @ 4: Received Running Shoes
+	setvar VAR_LITTLEROOT_INTRO_STATE, 7 @ 7: Told to go meet rival
+	setvar VAR_LITTLEROOT_HOUSES_STATE_BRENDAN, 2 @ 2: Met Rival's Mom (and is corresponding gender)
+	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 2 @ 2: Met Rival's Mom (and is corresponding gender)
+	setvar VAR_LITTLEROOT_RIVAL_STATE, 4 @ 4: Received Pokedex
+
+	setvar VAR_BRINEY_HOUSE_STATE, 1
+	setvar VAR_ROUTE116_STATE, 2
+	setflag FLAG_HIDE_ROUTE_116_MR_BRINEY
+
+	setflag FLAG_BADGE01_GET
+	setflag FLAG_BADGE02_GET
+	setflag FLAG_BADGE03_GET
+	setflag FLAG_BADGE04_GET
+	setflag FLAG_BADGE05_GET
+	setflag FLAG_BADGE06_GET
+	setflag FLAG_BADGE07_GET
+	setflag FLAG_BADGE08_GET
+
+	setflag FLAG_VISITED_LITTLEROOT_TOWN
+	setflag FLAG_VISITED_OLDALE_TOWN
+	setflag FLAG_VISITED_DEWFORD_TOWN
+	setflag FLAG_VISITED_LAVARIDGE_TOWN
+	setflag FLAG_VISITED_FALLARBOR_TOWN
+	setflag FLAG_VISITED_VERDANTURF_TOWN
+	setflag FLAG_VISITED_PACIFIDLOG_TOWN
+	setflag FLAG_VISITED_PETALBURG_CITY
+	setflag FLAG_VISITED_SLATEPORT_CITY
+	setflag FLAG_VISITED_MAUVILLE_CITY
+	setflag FLAG_VISITED_RUSTBORO_CITY
+	setflag FLAG_VISITED_FORTREE_CITY
+	setflag FLAG_VISITED_LILYCOVE_CITY
+	setflag FLAG_VISITED_MOSSDEEP_CITY
+	setflag FLAG_VISITED_SOOTOPOLIS_CITY
+	setflag FLAG_VISITED_EVER_GRANDE_CITY
+	setflag FLAG_LANDMARK_POKEMON_LEAGUE
+	setflag FLAG_LANDMARK_BATTLE_FRONTIER
+	clearflag FLAG_HIDE_BRINEYS_HOUSE_MR_BRINEY
+	clearflag FLAG_HIDE_BRINEYS_HOUSE_PEEKO
+        return
+    
+    `
+
+script ChampionsGauntlet_Outside_GiveCompleteDex
+{
+    call(ChampionsGauntlet_Outside_SetFlags)
+
+    setvar(VAR_TEMP_0, SPECIES_BULBASAUR)
+    
+CompleteDexLoop: // Standard label name (no @)
+    // Mark the current species as seen and caught using the correct variable syntax
+    setseenmon(VAR_TEMP_0)
+    setcaughtmon(VAR_TEMP_0)
+    // Increment the species counter
+    addvar(VAR_TEMP_0, 0x1)
+    // Check if we have processed all 386 Pokémon (Deoxys is 386)
+    if (var(VAR_TEMP_0) != SPECIES_MELMETAL) {
+        goto(CompleteDexLoop) // If true, jump back to the label name
+    }
+    setseenmon(VAR_TEMP_0)
+    setcaughtmon(VAR_TEMP_0)
+    
+    return
+}
+
+script ChampionsGauntlet_Outside_RivalBattle 
+{
+    lock
+    faceplayer
+    trainerbattle_single(TRAINER_RENE, "Defend Boss?", "Paldo boss.")
+    msgbox("Bagyo wala ah.", MSGBOX_AUTOCLOSE)
+    release
+    end
+}
+
+script ChampionsGauntlet_Outside_EventScript_ShowSteven 
+{
+    lockall
+    faceplayer
+    msgbox("A collector of rare stones, heir to\nthe Devon Corp.")   
+    msgbox("A character loved by all, who aids\nthe player across the land.")    
+    call(Steven_Selection)
+    waitmessage
+    releaseall
+    end
+}
+
+script Steven_Selection
+{
+    message("Steven: The Hoenn League Champion.")
+
+    multichoice(25, 8, MULTI_CHAMPION_SELECTION, 0)
+    
+    closemessage
+
+    if (var(VAR_RESULT) == 0){
+
+		givemon(SPECIES_METAGROSS, 100)
+		givemon(SPECIES_ARMALDO, 100)
+		givemon(SPECIES_AGGRON, 100)
+		givemon(SPECIES_CRADILY, 100)
+		givemon(SPECIES_SKARMORY, 100)
+		givemon(SPECIES_CLAYDOL, 100)
+
+        special(AccessPokemonChampionRoster)
+    }
+    elif (var(VAR_RESULT) == 1){
+        call(Steven_Selected_Champion)
+    }
+
+}
+
+script Steven_Selected_Champion
+{
+    hidemonpic
+    msgbox("Do you want to choose Steven?", MSGBOX_YESNO)
+    if(var(VAR_RESULT) == YES){
+        givemon (SPECIES_METAGROSS, 100)
+        givemon (SPECIES_ARMALDO, 100)
+        givemon(SPECIES_AGGRON, 100)
+        givemon(SPECIES_CRADILY, 100)
+        givemon(SPECIES_SKARMORY, 100)
+        givemon(SPECIES_CLAYDOL, 100)
+        playfanfare (MUS_OBTAIN_ITEM)
+
+        call(ChampionsGauntlet_Outside_GiveCompleteDex)
+        msgbox("You are now Steven!")
+    }
+}
+
+script ChangePlayerToSteven {
+    lockall
+    setvar(VAR_OBJ_GFX_ID_0, 134) // Use Steven's ID (verify this ID is correct in Expansion)
+
+    // Use a command to refresh the player object on the map:
+    // The specific command might vary. Try one of these:
+
+    // Option A: Update Player Object (Common in modern projects)
+
+    // Option B: A short fade out and fade in (Forces visual refresh)
+    fadescreen(FADE_TO_BLACK)
+    // This might be enough to trigger the reload when the screen fades back in
+    fadescreen(FADE_FROM_BLACK)
+
+    message("You are now Steven!")
+    releaseall
+    end
+}

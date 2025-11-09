@@ -478,7 +478,7 @@ static const struct MenuAction sMenuActions_Gender[] = {
 };
 
 static const u8 *const sMalePresetNames[] = {
-    COMPOUND_STRING("STU"),
+    COMPOUND_STRING("BRENDAN"),
     COMPOUND_STRING("MILTON"),
     COMPOUND_STRING("TOM"),
     COMPOUND_STRING("KENNY"),
@@ -1295,6 +1295,9 @@ static void Task_NewGameBirchSpeech_Init(u8 taskId)
     SetGpuReg(REG_OFFSET_BLDALPHA, 0);
     SetGpuReg(REG_OFFSET_BLDY, 0);
 
+    gSaveBlock2Ptr->playerGender = MALE;
+    NewGameBirchSpeech_SetDefaultPlayerName(0);
+
     DecompressDataWithHeaderVram(sBirchSpeechShadowGfx, (void *)VRAM);
     DecompressDataWithHeaderVram(sBirchSpeechBgMap, (void *)(BG_SCREEN_ADDR(7)));
     LoadPalette(sBirchSpeechBgPals, BG_PLTT_ID(0), 2 * PLTT_SIZE_4BPP);
@@ -1306,11 +1309,13 @@ static void Task_NewGameBirchSpeech_Init(u8 taskId)
     AddBirchSpeechObjects(taskId);
     BeginNormalPaletteFade(PALETTES_ALL, 0, 16, 0, RGB_BLACK);
     gTasks[taskId].tBG1HOFS = 0;
-    gTasks[taskId].func = Task_NewGameBirchSpeech_WaitToShowBirch;
+    gTasks[taskId].func = Task_NewGameBirchSpeech_FadePlayerToWhite;
+    // gTasks[taskId].func = Task_NewGameBirchSpeech_WaitToShowBirch;
     gTasks[taskId].tPlayerSpriteId = SPRITE_NONE;
     gTasks[taskId].data[3] = 0xFF;
-    gTasks[taskId].tTimer = 0xD8;
-    PlayBGM(MUS_ROUTE122);
+    // gTasks[taskId].tTimer = 0xD8;
+    gTasks[taskId].tTimer = 0x0;
+    // PlayBGM(MUS_ROUTE122);
     ShowBg(0);
     ShowBg(1);
 }
