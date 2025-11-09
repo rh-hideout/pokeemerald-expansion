@@ -688,32 +688,47 @@ static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
 
 #include "data/contest_text_tables.h"
 
-const u8 *const gContestMoveTypeTextPointers[] =
+const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] =
 {
-    [CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("COOL"),
-    [CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("BEAUTY"),
-    [CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("CUTE"),
-    [CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("SMART"),
-    [CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("TOUGH"),
-};
+    [CONTEST_CATEGORY_COOL] =
+    {
+        .name = COMPOUND_STRING("COOL"),
+        .condition = COMPOUND_STRING(""),
+        .generic = COMPOUND_STRING("COOL Move"),
+    },
 
-static const u8 *const sContestConditions[] =
-{
-    [CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("coolness"),
-    [CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("beauty"),
-    [CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("cuteness"),
-    [CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("smartness"),
-    [CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("toughness"),
-};
+    [CONTEST_CATEGORY_BEAUTY] =
+    {
+        .name = COMPOUND_STRING("BEAUTY"),
+        .condition = COMPOUND_STRING("beauty"),
+        .generic = COMPOUND_STRING("BEAUTY Move"),
+    },
 
-static const u8 *const sInvalidContestMoveNames[] =
-{
-    [CONTEST_CATEGORY_COOL]    = COMPOUND_STRING("COOL Move"),
-    [CONTEST_CATEGORY_BEAUTY]  = COMPOUND_STRING("BEAUTY Move"),
-    [CONTEST_CATEGORY_CUTE]    = COMPOUND_STRING("CUTE Move"),
-    [CONTEST_CATEGORY_SMART]   = COMPOUND_STRING("SMART Move"),
-    [CONTEST_CATEGORY_TOUGH]   = COMPOUND_STRING("TOUGH Move"),
-    [CONTEST_CATEGORIES_COUNT] = COMPOUND_STRING("???"),
+    [CONTEST_CATEGORY_CUTE] =
+    {
+        .name = COMPOUND_STRING("CUTE"),
+        .condition = COMPOUND_STRING("cuteness"),
+        .generic = COMPOUND_STRING("CUTE Move"),
+    },
+
+    [CONTEST_CATEGORY_SMART] =
+    {
+        .name = COMPOUND_STRING("SMART"),
+        .condition = COMPOUND_STRING("smartness"),
+        .generic = COMPOUND_STRING("SMART Move"),
+    },
+
+    [CONTEST_CATEGORY_TOUGH] =
+    {
+        .name = COMPOUND_STRING("TOUGH"),
+        .condition = COMPOUND_STRING("toughness"),
+        .generic = COMPOUND_STRING("TOUGH Move"),
+    },
+
+    [CONTEST_CATEGORIES_COUNT] =
+    {
+        .generic = COMPOUND_STRING("???"),
+    },
 };
 
 // Takes the .attentionLevel of a contestant as an index.
@@ -1862,7 +1877,7 @@ static void Task_DoAppeals(u8 taskId)
             if (eContestantStatus[contestant].currMove < MOVES_COUNT)
                 StringCopy(gStringVar2, GetMoveName(eContestantStatus[contestant].currMove));
             else
-                StringCopy(gStringVar2, sInvalidContestMoveNames[eContestantStatus[contestant].moveCategory]);
+                StringCopy(gStringVar2, gContestCategoryInfo[eContestantStatus[contestant].moveCategory].generic);
             StringExpandPlaceholders(gStringVar4, gText_MonAppealedWithMove);
             Contest_StartTextPrinter(gStringVar4, TRUE);
             gTasks[taskId].tState = APPEALSTATE_WAIT_USED_MOVE_MSG;
@@ -2258,7 +2273,7 @@ static void Task_DoAppeals(u8 taskId)
             }
             else
             {
-                StringCopy(gStringVar3, sContestConditions[GetMoveContestCategory(eContestantStatus[contestant].currMove)]);
+                StringCopy(gStringVar3, gContestCategoryInfo[GetMoveContestCategory(eContestantStatus[contestant].currMove)].condition);
             }
 
             if (r3 > 0 && eContestantStatus[contestant].repeatedMove)

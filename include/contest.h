@@ -302,6 +302,15 @@ struct ContestResources
     void *animBgTileBuffer;
 };
 
+struct ContestCategory
+{
+    const u8 *name;
+    const u8 *condition;
+    const u8 *generic;
+};
+
+extern const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1];
+
 #define eContest (*gContestResources->contest)
 #define eContestantStatus (gContestResources->status)
 #define eContestAppealResults (*gContestResources->appealResults)
