@@ -307,6 +307,7 @@ struct ContestCategory
     const u8 *name;
     const u8 *condition;
     const u8 *generic;
+    u8 palette;
 };
 
 extern const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1];

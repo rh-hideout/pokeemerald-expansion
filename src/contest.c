@@ -695,6 +695,7 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .name = COMPOUND_STRING("COOL"),
         .condition = COMPOUND_STRING(""),
         .generic = COMPOUND_STRING("COOL Move"),
+        .palette = 13,
     },
 
     [CONTEST_CATEGORY_BEAUTY] =
@@ -702,6 +703,7 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .name = COMPOUND_STRING("BEAUTY"),
         .condition = COMPOUND_STRING("beauty"),
         .generic = COMPOUND_STRING("BEAUTY Move"),
+        .palette = 14,
     },
 
     [CONTEST_CATEGORY_CUTE] =
@@ -709,6 +711,7 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .name = COMPOUND_STRING("CUTE"),
         .condition = COMPOUND_STRING("cuteness"),
         .generic = COMPOUND_STRING("CUTE Move"),
+        .palette = 14,
     },
 
     [CONTEST_CATEGORY_SMART] =
@@ -716,6 +719,7 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .name = COMPOUND_STRING("SMART"),
         .condition = COMPOUND_STRING("smartness"),
         .generic = COMPOUND_STRING("SMART Move"),
+        .palette = 15,
     },
 
     [CONTEST_CATEGORY_TOUGH] =
@@ -723,6 +727,7 @@ const struct ContestCategory gContestCategoryInfo[CONTEST_CATEGORIES_COUNT + 1] 
         .name = COMPOUND_STRING("TOUGH"),
         .condition = COMPOUND_STRING("toughness"),
         .generic = COMPOUND_STRING("TOUGH Move"),
+        .palette = 13,
     },
 
     [CONTEST_CATEGORIES_COUNT] =
