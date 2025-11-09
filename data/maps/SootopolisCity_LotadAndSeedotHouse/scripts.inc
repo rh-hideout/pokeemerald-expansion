@@ -6,7 +6,8 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_SeedotBrother::
 	lock
 	faceplayer
 	msgbox SootopolisCity_LotadAndSeedotHouse_Text_PleaseShowMeBigSeedot, MSGBOX_DEFAULT
-	special ChoosePartyMon
+	fadescreen FADE_TO_BLACK
+	special ChooseBoxMon
 	waitstate
 	copyvar VAR_RESULT, VAR_0x8004
 	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowSeedot
@@ -50,7 +51,8 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_LotadBrother::
 	lock
 	faceplayer
 	msgbox SootopolisCity_LotadAndSeedotHouse_Text_PleaseShowMeBigLotad, MSGBOX_DEFAULT
-	special ChoosePartyMon
+	fadescreen FADE_TO_BLACK
+	special ChooseBoxMon
 	waitstate
 	copyvar VAR_RESULT, VAR_0x8004
 	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, SootopolisCity_LotadAndSeedotHouse_EventScript_CancelShowLotad
