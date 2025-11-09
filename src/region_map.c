@@ -120,13 +120,14 @@ static void CB_ExitFlyMap(void);
 static const u16 sRegionMapCursorPal[] = INCBIN_U16("graphics/pokenav/region_map/cursor.gbapal");
 static const u32 sRegionMapCursorSmallGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_small.4bpp.smol");
 static const u32 sRegionMapCursorLargeGfxLZ[] = INCBIN_U32("graphics/pokenav/region_map/cursor_large.4bpp.smol");
-static const u16 sRegionMapBg_Pal_Hoenn[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
-static const u32 sRegionMapBg_Gfx_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
-static const u32 sRegionMapBg_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 static const u16 sRegionMapPlayerIcon_BrendanPal[] = INCBIN_U16("graphics/pokenav/region_map/brendan_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_BrendanGfx[] = INCBIN_U8("graphics/pokenav/region_map/brendan_icon.4bpp");
 static const u16 sRegionMapPlayerIcon_MayPal[] = INCBIN_U16("graphics/pokenav/region_map/may_icon.gbapal");
 static const u8 sRegionMapPlayerIcon_MayGfx[] = INCBIN_U8("graphics/pokenav/region_map/may_icon.4bpp");
+// Hoenn region map
+static const u16 sRegionMapBg_Pal_Hoenn[] = INCBIN_U16("graphics/pokenav/region_map/map.gbapal");
+static const u32 sRegionMapBg_Gfx_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.8bpp.smol");
+static const u32 sRegionMapBg_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokenav/region_map/map.bin.smolTM");
 
 #include "data/region_map/region_map_entries.h"
 #include "data/region_map/region_map_layout_hoenn.h"

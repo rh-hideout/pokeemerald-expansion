@@ -12,7 +12,7 @@ Then we have a couple steps to take to implement our region:
 * Add strings for our region and handle them
 * Add our region map files to the correct locations
 * Handle our region in the town map graphics
-* Handle our region in the pokedex (TODO)
+* Handle our region in the pokedex graphics
 * Handle our region in the daycare (TODO)
 
 ## Add our region to the list of available regions
@@ -52,3 +52,20 @@ Finally we need to add a case for our region to the functions that serve these r
 ![GetCurrentRegionMapBgTilemap](img/multi-region/GetCurrentRegionMapBgTilemap.png)
 
 ![GetCurrentRegionMapLayout](img/multi-region/GetCurrentRegionMapLayout.png)
+
+## Handling our region in the pokedex graphics
+Just like with the town mep we need to add cases for our region to the [src/pokedex_area_region_map.c](../../src/pokedex_area_region_map.c) file. The functions we will be adding our cases to are the `GetPokedexAreaMapPal`, `GetPokedexAreaMapGfx`, and `GetPokedexAreaMapTilemap`. Below are examples for our Tutorial region.
+
+![GetPokedexAreaMapPal](img/multi-region/GetPokedexAreaMapPal.png)
+
+![GetPokedexAreaMapGfx](img/multi-region/GetPokedexAreaMapGfx.png)
+
+![GetPokedexAreaMapTilemap](img/multi-region/GetPokedexAreaMapTilemap.png)
+
+## Handling our region in the HGSS pokedex
+One last place that we must handle our new region is [src/pokedex_plus_hgss.c](../../src/pokedex_plus_hgss.c). Inside the `PrintEvolutionTargetSpeciesAndMethod` function is a switch statement we must add our new region to. Below is an example for our Tutorial region.
+
+![pokedex_plus_hgss_c](img/multi-region/pokedex_plus_hgss_c.png)
+
+## Handling our region in the daycare
+There is no strict requirement to handle our new region in the daycare system however should you wish to implement custom regional forms then this is where it would be done.

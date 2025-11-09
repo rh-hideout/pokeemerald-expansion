@@ -4,15 +4,81 @@
 #include "bg.h"
 #include "malloc.h"
 #include "palette.h"
+#include "regions.h"
 #include "pokedex_area_region_map.h"
 
 static EWRAM_DATA u8 *sPokedexAreaMapBgNum = NULL;
 
-static const u16 ALIGNED(4) sPokedexAreaMap_Pal[] = INCBIN_U16("graphics/pokedex/region_map.gbapal");
-static const u32 sPokedexAreaMap_Gfx[] = INCBIN_U32("graphics/pokedex/region_map.8bpp.smol");
-static const u32 sPokedexAreaMap_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map.bin.smolTM");
+// Hoenn region map
+static const u16 ALIGNED(4) sPokedexAreaMap_Pal_Hoenn[] = INCBIN_U16("graphics/pokedex/region_map_hoenn.gbapal");
+static const u32 sPokedexAreaMap_Gfx_Hoenn[] = INCBIN_U32("graphics/pokedex/region_map_hoenn.8bpp.smol");
+static const u32 sPokedexAreaMap_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokedex/region_map_hoenn.bin.smolTM");
+// Affine versions (not used)
 static const u32 sPokedexAreaMapAffine_Gfx[] = INCBIN_U32("graphics/pokedex/region_map_affine.8bpp.smol");
 static const u32 sPokedexAreaMapAffine_Tilemap[] = INCBIN_U32("graphics/pokedex/region_map_affine.bin.smolTM");
+
+const u16 *GetPokedexAreaMapPal(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sPokedexAreaMap_Pal_Hoenn;
+    }
+    return sPokedexAreaMap_Pal_Hoenn;
+}
+
+const u32 *GetPokedexAreaMapGfx(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sPokedexAreaMap_Gfx_Hoenn;
+    }
+    return sPokedexAreaMap_Gfx_Hoenn;
+}
+
+const u32 *GetPokedexAreaMapTilemap(void)
+{
+    switch (GetCurrentRegion())
+    {
+    case REGION_KANTO:
+    case REGION_JOHTO:
+    case REGION_SINNOH:
+    case REGION_UNOVA:
+    case REGION_KALOS:
+    case REGION_ALOLA:
+    case REGION_GALAR:
+    case REGION_HISUI:
+    case REGION_PALDEA:
+    case REGION_HOENN:
+    case REGION_NONE:
+    case REGIONS_COUNT:
+        return sPokedexAreaMap_Tilemap_Hoenn;
+    }
+    return sPokedexAreaMap_Tilemap_Hoenn;
+}
 
 void LoadPokedexAreaMapGfx(const struct PokedexAreaMapTemplate *template)
 {
@@ -24,8 +90,8 @@ void LoadPokedexAreaMapGfx(const struct PokedexAreaMapTemplate *template)
     if (mode == 0)
     {
         SetBgAttribute(template->bg, BG_ATTR_METRIC, 0);
-        DecompressAndCopyTileDataToVram(template->bg, sPokedexAreaMap_Gfx, 0, template->offset, 0);
-        tilemap = DecompressAndCopyTileDataToVram(template->bg, sPokedexAreaMap_Tilemap, 0, 0, 1);
+        DecompressAndCopyTileDataToVram(template->bg, GetPokedexAreaMapGfx(), 0, template->offset, 0);
+        tilemap = DecompressAndCopyTileDataToVram(template->bg, GetPokedexAreaMapTilemap(), 0, 0, 1);
         AddValToTilemapBuffer(tilemap, template->offset, 32, 32, FALSE); // template->offset is always 0, so this does nothing.
     }
     else
@@ -41,7 +107,7 @@ void LoadPokedexAreaMapGfx(const struct PokedexAreaMapTemplate *template)
     ChangeBgX(template->bg, 0, BG_COORD_SET);
     ChangeBgY(template->bg, 0, BG_COORD_SET);
     SetBgAttribute(template->bg, BG_ATTR_PALETTEMODE, 1);
-    CpuCopy32(sPokedexAreaMap_Pal, &gPlttBufferUnfaded[BG_PLTT_ID(7)], sizeof(sPokedexAreaMap_Pal));
+    CpuCopy32(GetPokedexAreaMapPal(), &gPlttBufferUnfaded[BG_PLTT_ID(7)], sizeof(GetPokedexAreaMapPal()));
     *sPokedexAreaMapBgNum = template->bg;
 }
 
