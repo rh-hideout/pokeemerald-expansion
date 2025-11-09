@@ -12348,7 +12348,6 @@ static void Cmd_setfutureattack(void)
 {
     CMD_ARGS();
 
-    gSideStatuses[GetBattlerSide(gBattlerTarget)] |= SIDE_STATUS_FUTUREATTACK;
     gWishFutureKnock.futureSightMove[gBattlerTarget] = gCurrentMove;
     gWishFutureKnock.futureSightBattlerIndex[gBattlerTarget] = gBattlerAttacker;
     gWishFutureKnock.futureSightPartyIndex[gBattlerTarget] = gBattlerPartyIndexes[gBattlerAttacker];

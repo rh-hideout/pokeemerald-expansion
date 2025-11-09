@@ -1993,8 +1993,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FUTURE_SIGHT:
-            if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_FUTUREATTACK
-              || gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_FUTUREATTACK)
+            if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > gBattleTurnCounter
+             || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > gBattleTurnCounter)
                 ADJUST_SCORE(-12);
             else
                 ADJUST_SCORE(GOOD_EFFECT);

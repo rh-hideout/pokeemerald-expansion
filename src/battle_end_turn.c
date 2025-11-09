@@ -248,12 +248,6 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter)
     {
-        if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter
-         && gWishFutureKnock.futureSightCounter[BATTLE_PARTNER(battler)] <= gBattleTurnCounter)
-        {
-            gSideStatuses[GetBattlerSide(battler)] &= ~SIDE_STATUS_FUTUREATTACK;
-        }
-
         if (!IsBattlerAlive(battler))
             return effect;
 

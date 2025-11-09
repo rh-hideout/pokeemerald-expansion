@@ -6831,10 +6831,10 @@ static void TrySwapStickyWebBattlerId(u32 battlerAtk, u32 battlerPartner)
 static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
 {
     u32 i, temp;
-    u32 oppSide = GetBattlerSide(BATTLE_OPPOSITE(battlerAtk));
 
     // if used future sight on opposing side, properly track who used it
-    if (gSideStatuses[oppSide] & SIDE_STATUS_FUTUREATTACK)
+    if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > gBattleTurnCounter
+     || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > gBattleTurnCounter)
     {
         for (i = 0; i < gBattlersCount; i++)
         {

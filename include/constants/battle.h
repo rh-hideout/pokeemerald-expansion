@@ -45,6 +45,11 @@ enum BattlerId
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
 #define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)
 
+// Left and right are determined by how they're referred to in tests and everywhere else.
+// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
+#define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
+#define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
+
 enum BattleSide
 {
     B_SIDE_PLAYER = 0,
@@ -273,15 +278,14 @@ enum SemiInvulnerableExclusion
 #define SIDE_STATUS_REFLECT                 (1 << 0)
 #define SIDE_STATUS_LIGHTSCREEN             (1 << 1)
 #define SIDE_STATUS_SAFEGUARD               (1 << 2)
-#define SIDE_STATUS_FUTUREATTACK            (1 << 3)
-#define SIDE_STATUS_MIST                    (1 << 4)
-#define SIDE_STATUS_TAILWIND                (1 << 5)
-#define SIDE_STATUS_AURORA_VEIL             (1 << 6)
-#define SIDE_STATUS_LUCKY_CHANT             (1 << 7)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 8)
-#define SIDE_STATUS_RAINBOW                 (1 << 9)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 10)
-#define SIDE_STATUS_SWAMP                   (1 << 11)
+#define SIDE_STATUS_MIST                    (1 << 3)
+#define SIDE_STATUS_TAILWIND                (1 << 4)
+#define SIDE_STATUS_AURORA_VEIL             (1 << 5)
+#define SIDE_STATUS_LUCKY_CHANT             (1 << 6)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 7)
+#define SIDE_STATUS_RAINBOW                 (1 << 8)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 9)
+#define SIDE_STATUS_SWAMP                   (1 << 10)
 
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
 #define SIDE_STATUS_PLEDGE_ANY     (SIDE_STATUS_RAINBOW | SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_SWAMP)
