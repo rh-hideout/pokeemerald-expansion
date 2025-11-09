@@ -1,6 +1,9 @@
 #ifndef GUARD_CONFIG_OVERWORLD_H
 #define GUARD_CONFIG_OVERWORLD_H
 
+// Multi-Region Support
+#define OW_MULTI_REGION_SUPPORT     FALSE       // If enabled, allows maps to be assigned to different regions (Hoenn, Kanto, etc.) for use in region-based features.
+
 // Movement config
 #define OW_RUNNING_INDOORS          GEN_LATEST  // In Gen4+, players are allowed to run indoors.
 #define SLOW_MOVEMENT_ON_STAIRS     FALSE       // If enabled, the player will move slower up/down stairs like in FR

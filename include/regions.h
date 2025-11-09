@@ -13,6 +13,7 @@ static inline enum Region GetCurrentRegion(void)
 
 static inline const u8 *GetCurrentRegionName(void)
 {
+#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_HOENN:
@@ -36,9 +37,10 @@ static inline const u8 *GetCurrentRegionName(void)
     case REGION_PALDEA:
         return gText_Paldea;
     case REGION_NONE:
-    default:
         return gText_RegionDefault;
     }
+#endif //OW_MULTI_REGION_SUPPORT
+    return gText_Hoenn;
 }
 
 #endif // GUARD_REGIONS_H

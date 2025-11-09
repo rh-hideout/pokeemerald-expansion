@@ -6428,6 +6428,7 @@ static void Task_TryItemUseFusionChange(u8 taskId)
         {
             if (gTasks[taskId].fusionType == FUSE_MON)
             {
+#if P_FUSION_FORMS
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
@@ -6438,11 +6439,13 @@ static void Task_TryItemUseFusionChange(u8 taskId)
                     SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, FUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
+#endif //P_FUSION_FORMS
                 if (gTasks[taskId].moveToLearn != 0)
                     FormChangeTeachMove(taskId, gTasks[taskId].moveToLearn, gTasks[taskId].firstFusionSlot);
             }
             else //(gTasks[taskId].fusionType == UNFUSE_MON)
             {
+#if P_FUSION_FORMS
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
@@ -6453,6 +6456,7 @@ static void Task_TryItemUseFusionChange(u8 taskId)
                     SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, UNFUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
+#endif //P_FUSION_FORMS
                 if ( gTasks[taskId].tExtraMoveHandling == FORGET_EXTRA_MOVES)
                 {
                     DeleteInvalidFusionMoves(mon, gTasks[taskId].fusionResult);

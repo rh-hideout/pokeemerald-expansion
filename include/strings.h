@@ -1,5 +1,6 @@
 #ifndef GUARD_STRINGS_H
 #define GUARD_STRINGS_H
+#include "constants/region_strings.h"
 
 // Placeholders
 extern const u8 gText_ExpandedPlaceholder_Empty[];
@@ -144,17 +145,6 @@ extern const u8 gText_Cushion[];
 extern const u8 gText_Decorate[];
 extern const u8 gText_PutAway[];
 extern const u8 gText_Toss2[];
-extern const u8 gText_Hoenn[];
-extern const u8 gText_Kanto[];
-extern const u8 gText_Johto[];
-extern const u8 gText_Sinnoh[];
-extern const u8 gText_Unova[];
-extern const u8 gText_Kalos[];
-extern const u8 gText_Alola[];
-extern const u8 gText_Galar[];
-extern const u8 gText_Hisui[];
-extern const u8 gText_Paldea[];
-extern const u8 gText_RegionDefault[];
 extern const u8 gText_Ferry[];
 extern const u8 gText_SecretBase[];
 extern const u8 gText_Hideout[];

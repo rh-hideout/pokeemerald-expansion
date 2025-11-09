@@ -19,6 +19,7 @@ static const u32 sPokedexAreaMapAffine_Tilemap[] = INCBIN_U32("graphics/pokedex/
 
 const u16 *GetPokedexAreaMapPal(void)
 {
+#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -33,13 +34,17 @@ const u16 *GetPokedexAreaMapPal(void)
     case REGION_HOENN:
     case REGION_NONE:
     case REGIONS_COUNT:
+        DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Palette");
         return sPokedexAreaMap_Pal_Hoenn;
     }
+#endif //OW_MULTI_REGION_SUPPORT
+    DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Palette");
     return sPokedexAreaMap_Pal_Hoenn;
 }
 
 const u32 *GetPokedexAreaMapGfx(void)
 {
+#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -54,13 +59,17 @@ const u32 *GetPokedexAreaMapGfx(void)
     case REGION_HOENN:
     case REGION_NONE:
     case REGIONS_COUNT:
+        DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Graphics");
         return sPokedexAreaMap_Gfx_Hoenn;
     }
+#endif //OW_MULTI_REGION_SUPPORT
+    DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Graphics");
     return sPokedexAreaMap_Gfx_Hoenn;
 }
 
 const u32 *GetPokedexAreaMapTilemap(void)
 {
+#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -75,8 +84,11 @@ const u32 *GetPokedexAreaMapTilemap(void)
     case REGION_HOENN:
     case REGION_NONE:
     case REGIONS_COUNT:
+        DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Tilemap");
         return sPokedexAreaMap_Tilemap_Hoenn;
     }
+#endif //OW_MULTI_REGION_SUPPORT
+    DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Tilemap");
     return sPokedexAreaMap_Tilemap_Hoenn;
 }
 

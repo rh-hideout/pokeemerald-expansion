@@ -1,0 +1,8 @@
+{{ doNotModifyHeader }}
+#include "global.h"
+#include "constants/region_strings.h"
+
+## for region in regions
+const u8 gText_{{ region.name }}[] = _("{{ region.text }}");
+## endfor
+const u8 gText_RegionDefault[] = _("REGION");

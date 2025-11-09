@@ -1,0 +1,10 @@
+{{ doNotModifyHeader }}
+#ifndef GUARD_REGION_STRINGS_TEST_H
+#define GUARD_REGION_STRINGS_TEST_H
+
+## for region in regions
+extern const u8 gText_{{ region.name }}[];
+## endfor
+extern const u8 gText_RegionDefault[];
+
+#endif // GUARD_REGION_STRINGS_TEST_H
