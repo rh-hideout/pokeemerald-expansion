@@ -9,6 +9,7 @@ In order to enable multiple regions we need a couple of things for each region f
 Then we have a couple steps to take to implement our region:
 
 * Add our region to the list of available regions
+* Add strings for our region and handle them
 * Add our region map files to the correct locations
 * Handle our region in the town map graphics
 * Handle our region in the pokedex (TODO)
@@ -18,6 +19,17 @@ Then we have a couple steps to take to implement our region:
 The first thing we will need to do is add our region to the list of available regions. This can be done by adding our region to the `Region` enum in [include/constants/regions.h](../../include/constants/regions.h). Below is an example for our Tutorial region.
 
 ![enum-entry](img/multi-region/EnumEntry.png)
+
+## Adding strings for our region and handling them
+Next we need to add strings for our region to [include/strings.h](../../include/strings.h) and [src/strings.c](../../src/strings.c). Below are examples for our Tutorial region.
+
+![strings-h](img/multi-region/strings_h.png)
+
+![strings-c](img/multi-region/strings_c.png)
+
+Then we need to handle the case for our region in `GetCurrentRegionName` in [](../../include/regions.h).Below is an example for our Tutorial region.
+
+![GetCurrentRegionName](img/multi-region/GetCurrentRegionName.png)
 
 ## Adding our region map files to the correct locations
 This part can be skipped if you simply wish to use the Hoenn region map. However, we assume that anyone adding a new region will want to add a new region map to accompany it. Once you have your region map files, follow the `Moving and renaming our files` section of the [How to create a Region Map](how_to_region_map.md) tutorial.
@@ -31,7 +43,7 @@ Notice that the file extension is different from that of our files. This is corr
 
 ![layout-reference](img/multi-region/layout_reference.png)
 
-Finally we need to add a case for our region to the functions that serve these references to the graphics engine. We will need to add a case for our new region to: `GetCurrentRegionMapBgPal`, `GetCurrentRegionMapBgGfx`, `GetCurrentRegionMapBgTilemap`, and `GetCurrentRegionMapLayout`. Below is are examples for our Tutorial region.
+Finally we need to add a case for our region to the functions that serve these references to the graphics engine. We will need to add a case for our new region to: `GetCurrentRegionMapBgPal`, `GetCurrentRegionMapBgGfx`, `GetCurrentRegionMapBgTilemap`, and `GetCurrentRegionMapLayout`. Below are examples for our Tutorial region.
 
 ![GetCurrentRegionMapBgPal](img/multi-region/GetCurrentRegionMapBgPal.png)
 
