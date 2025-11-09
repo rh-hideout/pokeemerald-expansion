@@ -32,3 +32,21 @@ SINGLE_BATTLE_TEST("Recharge moves don't timeout when all battlers are rechargin
         TURN { MOVE(player, MOVE_METEOR_ASSAULT); MOVE(opponent, MOVE_METEOR_ASSAULT);}
     }
 }
+
+DOUBLE_BATTLE_TEST("Recharge moves don't timeout when all battlers are recharging (doubles")
+{
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { }
+        PLAYER(SPECIES_WYNAUT) { }
+        OPPONENT(SPECIES_WOBBUFFET) { }
+        OPPONENT(SPECIES_WYNAUT) { }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_METEOR_ASSAULT, target: opponentLeft);
+            MOVE(playerRight, MOVE_METEOR_ASSAULT, target: opponentRight);
+            MOVE(opponentLeft, MOVE_METEOR_ASSAULT, target: playerLeft);
+            MOVE(opponentRight, MOVE_METEOR_ASSAULT, target: playerRight);
+        }
+    }
+}
