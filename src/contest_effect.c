@@ -611,6 +611,7 @@ static void ContestEffect_BetterWhenLater(void)
 }
 
 // The appeal's quality varies depending on its timing.
+// Despite the name, it seems to be random and not based on timing
 static void ContestEffect_QualityDependsOnTiming(void)
 {
     u8 rval = Random() % 10;
