@@ -8,6 +8,7 @@ struct ContestEffect
     u8 appeal;
     u8 jam;
     const u8 *description;
+    void (*function)(void);
 };
 
 extern const struct ContestEffect gContestEffects[];

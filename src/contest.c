@@ -363,7 +363,6 @@ COMMON_DATA rng_value_t gContestRngValue = {0};
 extern const u8 gText_LinkStandby4[];
 extern const u8 gText_BDot[];
 extern const u8 gText_CDot[];
-extern void (*const gContestEffectFuncs[])(void);
 
 static const u8 sSliderHeartYPositions[CONTESTANT_COUNT] =
 {
@@ -4527,7 +4526,7 @@ static void CalculateAppealMoveImpact(u8 contestant)
         && !AreMovesContestCombo(eContestantStatus[contestant].prevMove, eContestantStatus[contestant].currMove))
         eContestantStatus[contestant].hasJudgesAttention = FALSE;
 
-    gContestEffectFuncs[effect]();
+    gContestEffects[effect].function();
 
     if (eContestantStatus[contestant].conditionMod == CONDITION_GAIN)
         eContestantStatus[contestant].appeal += eContestantStatus[contestant].condition - 10;
