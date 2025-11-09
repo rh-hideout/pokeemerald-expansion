@@ -54,7 +54,11 @@ Finally we need to add a case for our region to the functions that serve these r
 ![GetCurrentRegionMapLayout](img/multi-region/GetCurrentRegionMapLayout.png)
 
 ## Handling our region in the pokedex graphics
-Just like with the town mep we need to add cases for our region to the [src/pokedex_area_region_map.c](../../src/pokedex_area_region_map.c) file. The functions we will be adding our cases to are the `GetPokedexAreaMapPal`, `GetPokedexAreaMapGfx`, and `GetPokedexAreaMapTilemap`. Below are examples for our Tutorial region.
+Just like with the town map we need to add references and cases for our region to the [src/pokedex_area_region_map.c](../../src/pokedex_area_region_map.c) file. We will add our references to the region map files first. Below is an example for our Tutorial region.
+
+![pokedex-region-map-references](img/multi-region/pokedex_region_map_references.png)
+
+The functions we will be adding our cases to are the `GetPokedexAreaMapPal`, `GetPokedexAreaMapGfx`, and `GetPokedexAreaMapTilemap`. Below are examples for our Tutorial region.
 
 ![GetPokedexAreaMapPal](img/multi-region/GetPokedexAreaMapPal.png)
 
