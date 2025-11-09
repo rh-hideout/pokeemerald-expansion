@@ -5843,7 +5843,7 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
-    u16 allMoves[NUM_ALL_MACHINES + 1];
+    u16 allMoves[NUM_ALL_MACHINES];
     u16 totalMoveCount = 0;
 
     for (u16 i = 0; i < NUM_ALL_MACHINES; i++)
@@ -5958,10 +5958,10 @@ u8 GetNumberOfEggMoves(struct Pokemon *mon)
 
 u8 GetNumberOfTMMoves(struct Pokemon *mon)
 {
-    if (!P_ENABLE_ALL_TM_MOVES && !IsBagPocketNonEmpty(POCKET_TM_HM))
+    if (!P_TM_MOVES_RELEARNER)
         return 0;
 
-    if (!FlagGet(P_FLAG_TM_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+    if (!P_ENABLE_ALL_TM_MOVES && !IsBagPocketNonEmpty(POCKET_TM_HM))
         return 0;
 
     u16 moves[MAX_RELEARNER_MOVES] = {0};
