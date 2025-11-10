@@ -374,7 +374,7 @@ And finally we add our region to [src/pokedex_plus_hgss.c](../../src/pokedex_plu
 To implement any of the core series regions the steps for a new region will need to be followed but instead of adding new cases you simply implement handling for the core series regions.
 
 ## Adding map sections to a region
-In order for multi-region to work, and not simply default to Hoenn for everything, you will need to specify which map sections belong to which regions. This is currently done by adding an entry for the `region` field in the `map.json` file for the map section you wish to modify. As an example we have changed Littleroot to be in the Johto region.
+In order for multi-region to work, and not simply default to Hoenn for everything, you will need to specify which map sections belong to which regions. This is can be done by setting the region in the map header information through porymap or by adding an entry for the `region` field in the `map.json` file manually for the map section you wish to modify. As an example of adding the entry manually we have changed Littleroot to be in the Johto region.
 
 ```diff
 {
@@ -400,3 +400,5 @@ In order for multi-region to work, and not simply default to Hoenn for everythin
     }
   ],
 ```
+
+To use porymap to set the region for map sections you simply need to add and set a custom attribute. In the `Custom Attributes` section of the `Header` tab for your map section click `Add`. For the `Name` put `region`, leave the `Type` as `String`, and set the `Value` to the region id you wish, eg: `REGION_HOENN`.
