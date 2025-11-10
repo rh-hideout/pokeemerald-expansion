@@ -695,7 +695,7 @@ struct BattleStruct
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
-    u8 padding1:1;
+    u8 battlersSorted:1; // To avoid unnessasery computation
     u16 startingStatusTimer;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;

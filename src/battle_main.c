@@ -4658,7 +4658,6 @@ void SwapTurnOrder(u8 id1, u8 id2)
 
     SWAP(gActionsByTurnOrder[id1], gActionsByTurnOrder[id2], temp);
     SWAP(gBattlerByTurnOrder[id1], gBattlerByTurnOrder[id2], temp);
-    SWAP(gBattlersBySpeed[id1], gBattlersBySpeed[id2], temp);
 }
 
 // For AI, so it doesn't 'cheat' by knowing player's ability

@@ -1297,7 +1297,7 @@
 	.byte 0xf3
 	.endm
 
-	.macro unused_0xf4
+	.macro sortbattlers
 	.byte 0xf4
 	.endm
 

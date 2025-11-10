@@ -40,6 +40,7 @@ static bool32 HandleEndTurnOrder(u32 battler)
         ctx.abilities[i] = GetBattlerAbility(i);
         ctx.holdEffects[i] = GetBattlerHoldEffect(i);
     }
+
     for (i = 0; i < gBattlersCount - 1; i++)
     {
         for (j = i + 1; j < gBattlersCount; j++)

@@ -4843,6 +4843,7 @@ BattleScript_MagicRoomEnds::
 	printstring STRINGID_MAGICROOMENDS
 	waitmessage B_WAIT_TIME_LONG
 	setbyte gBattlerTarget, 0
+	sortbattlers
 BattleScript_MagicRoomHealingItemsLoop:
 	copyarraywithindex gBattlerAttacker, gBattlersBySpeed, gBattlerTarget, 1
 	tryactivateitem BS_ATTACKER, ACTIVATION_ON_USABLE_AGAIN
@@ -6519,6 +6520,7 @@ BattleScript_ActivateWeatherAbilities:
 	savetarget
 	tryboosterenergy ON_WEATHER
 	setbyte gBattlerAttacker, 0
+	sortbattlers
 BattleScript_ActivateWeatherAbilities_Loop:
 	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattlerAttacker, 1
 	activateweatherchangeabilities BS_TARGET
@@ -6801,6 +6803,7 @@ BattleScript_ActivateTerrainEffects:
 	tryboosterenergy ON_TERRAIN
     resetterrainabilityflags
 	setbyte gBattlerAttacker, 0
+	sortbattlers
 BattleScript_ActivateTerrainSeed:
 	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattlerAttacker, 1
 	tryterrainseed BS_TARGET, BattleScript_ActivateTerrainAbility
@@ -8185,8 +8188,9 @@ BattleScript_NeutralizingGasExits::
 	printstring STRINGID_NEUTRALIZINGGASOVER
 	waitmessage B_WAIT_TIME_LONG
 	setbyte gBattlerAttacker, 0
+	sortbattlers
 BattleScript_NeutralizingGasExitsLoop:
-	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattlerAttacker, 1
 	jumpifabilitycantbesuppressed BS_TARGET, BattleScript_NeutralizingGasExitsLoopIncrement
 	jumpifability BS_TARGET, ABILITY_IMPOSTER, BattleScript_NeutralizingGasExitsLoopIncrement @ Imposter only activates when first entering the field
 	saveattacker

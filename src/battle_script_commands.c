@@ -581,7 +581,7 @@ static void Cmd_givecaughtmon(void);
 static void Cmd_trysetcaughtmondexflags(void);
 static void Cmd_displaydexinfo(void);
 static void Cmd_trygivecaughtmonnick(void);
-static void Cmd_unused_0xf4(void);
+static void Cmd_sortbattlers(void);
 static void Cmd_removeattackerstatus1(void);
 static void Cmd_finishaction(void);
 static void Cmd_finishturn(void);
@@ -840,7 +840,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_trysetcaughtmondexflags,                 //0xF1
     Cmd_displaydexinfo,                          //0xF2
     Cmd_trygivecaughtmonnick,                    //0xF3
-    Cmd_unused_0xf4,                             //0xF4
+    Cmd_sortbattlers,                            //0xF4
     Cmd_removeattackerstatus1,                   //0xF5
     Cmd_finishaction,                            //0xF6
     Cmd_finishturn,                              //0xF7
@@ -7973,20 +7973,8 @@ static bool32 DoSwitchInEvents(void)
         for (u32 i = 0; i < gBattlersCount; i++)
             gBattlersBySpeed[i] = i;
 
-        for (u32 i = 0; i < gBattlersCount - 1; i++)
-        {
-            for (u32 j = i + 1; j < gBattlersCount; j++)
-            {
-                ctx.battlerAtk = gBattlersBySpeed[i];
-                ctx.battlerDef = gBattlersBySpeed[j];
-
-                if (GetWhichBattlerFaster(&ctx, TRUE) == -1)
-                {
-                    u32 temp;
-                    SWAP(gBattlersBySpeed[i], gBattlersBySpeed[j], temp);
-                }
-            }
-        }
+        SortBattlersBySpeed(gBattlersBySpeed, FALSE);
+        gBattleStruct->battlersSorted = TRUE;
         gBattleStruct->switchInBattlerCounter = 0;
         gBattleStruct->battlerSwitchInEvents = 0;
         gBattleStruct->switchInEvents++;
@@ -8110,6 +8098,7 @@ static bool32 DoSwitchInEvents(void)
                 gBattleStruct->battlerState[battler].switchIn = FALSE;
             }
         }
+        gBattleStruct->battlersSorted = FALSE;
         gBattleStruct->hazardsCounter = 0;
         gBattleStruct->switchInEvents++;
         break;
@@ -14325,8 +14314,17 @@ static void Cmd_trygivecaughtmonnick(void)
     }
 }
 
-static void Cmd_unused_0xf4(void)
+static void Cmd_sortbattlers(void)
 {
+    CMD_ARGS();
+    if (!gBattleStruct->battlersSorted)
+    {
+        for (u32 i = 0; i < gBattlersCount; i++)
+            gBattlersBySpeed[i] = i;
+
+        SortBattlersBySpeed(gBattlersBySpeed, FALSE);
+    }
+    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 static void Cmd_removeattackerstatus1(void)
