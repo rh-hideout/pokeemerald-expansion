@@ -3801,7 +3801,6 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     printerTemplate.y = y;
     printerTemplate.currentX = x;
     printerTemplate.currentY = y;
-    printerTemplate.unk = 0;
 
     gTextFlags.useAlternateDownArrow = FALSE;
     switch (colorIdx)
@@ -3809,6 +3808,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_DEFAULT:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_COLOR_WHITE;
         printerTemplate.fgColor = TEXT_COLOR_DARK_GRAY;
         printerTemplate.bgColor = TEXT_COLOR_WHITE;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
@@ -3816,6 +3816,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_RED:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_COLOR_WHITE;
         printerTemplate.fgColor = TEXT_COLOR_RED;
         printerTemplate.bgColor = TEXT_COLOR_WHITE;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_RED;
@@ -3823,6 +3824,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_GREEN:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_COLOR_WHITE;
         printerTemplate.fgColor = TEXT_COLOR_GREEN;
         printerTemplate.bgColor = TEXT_COLOR_WHITE;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GREEN;
@@ -3830,6 +3832,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_WHITE:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_COLOR_WHITE;
         printerTemplate.fgColor = TEXT_COLOR_WHITE;
         printerTemplate.bgColor = TEXT_COLOR_WHITE;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
@@ -3837,6 +3840,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_CANCEL:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_COLOR_DARK_GRAY;
         printerTemplate.fgColor = TEXT_COLOR_WHITE;
         printerTemplate.bgColor = TEXT_COLOR_DARK_GRAY;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
@@ -3844,6 +3848,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_TRADE_BOARD_SELF:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_DYNAMIC_COLOR_6;
         printerTemplate.fgColor = TEXT_COLOR_LIGHT_GREEN;
         printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;
@@ -3851,6 +3856,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_TRADE_BOARD_OTHER:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
+        printerTemplate.accentColor = TEXT_DYNAMIC_COLOR_6;
         printerTemplate.fgColor = TEXT_DYNAMIC_COLOR_5;
         printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
         printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;

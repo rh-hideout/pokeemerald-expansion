@@ -179,7 +179,7 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
     printer.currentY = 1;
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
-    printer.unk = 0;
+    printer.accentColor = bgColor;
     printer.fgColor = fgColor;
     printer.bgColor = bgColor;
     printer.shadowColor = shadowColor;
@@ -1265,7 +1265,7 @@ void PrintMenuActionTexts(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpac
     printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
     printer.x = left;
@@ -1330,7 +1330,7 @@ static void CreateYesNoMenuAtPos(const struct WindowTemplate *window, u8 fontId,
     printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
 
@@ -1386,7 +1386,7 @@ void PrintMenuActionGrid(u8 windowId, u8 fontId, u8 left, u8 top, u8 optionWidth
     printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(fontId, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
 
@@ -1739,7 +1739,7 @@ void PrintMenuActionTextsInUpperLeftCorner(u8 windowId, u8 itemCount, const stru
     printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
     printer.x = 8;
@@ -1773,7 +1773,7 @@ void CreateYesNoMenu(const struct WindowTemplate *window, u16 baseTileNum, u8 pa
     printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
 
@@ -1804,7 +1804,7 @@ static void UNUSED PrintMenuActionGridTextNoSpacing(u8 windowId, u8 optionWidth,
     printer.fgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_SHADOW);
-    printer.unk = GetFontAttribute(FONT_NORMAL, FONTATTR_UNKNOWN);
+    printer.accentColor = GetFontAttribute(FONT_NORMAL, FONTATTR_COLOR_ACCENT);
     printer.letterSpacing = 0;
     printer.lineSpacing = 0;
 
@@ -2060,7 +2060,7 @@ void AddTextPrinterParameterized3(u8 windowId, u8 fontId, u8 left, u8 top, const
     printer.currentY = printer.y;
     printer.letterSpacing = GetFontAttribute(fontId, FONTATTR_LETTER_SPACING);
     printer.lineSpacing = GetFontAttribute(fontId, FONTATTR_LINE_SPACING);
-    printer.unk = 0;
+    printer.accentColor = color[0];
     printer.fgColor = color[1];
     printer.bgColor = color[0];
     printer.shadowColor = color[2];
@@ -2081,7 +2081,7 @@ void AddTextPrinterParameterized4(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     printer.currentY = printer.y;
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
-    printer.unk = 0;
+    printer.accentColor = color[0];
     printer.fgColor = color[1];
     printer.bgColor = color[0];
     printer.shadowColor = color[2];
@@ -2102,13 +2102,34 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left
     printer.currentY = top;
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
-    printer.unk = 0;
-
+    
+    printer.accentColor = GetFontAttribute(fontId, FONTATTR_COLOR_ACCENT);
     printer.fgColor = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
     printer.bgColor = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
     printer.shadowColor = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
 
     AddTextPrinter(&printer, speed, callback);
+}
+
+void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const struct TextColor color, s8 speed, const u8 *str)
+{
+    struct TextPrinterTemplate printer;
+    
+    printer.currentChar = str;
+    printer.windowId = windowId;
+    printer.fontId = fontId;
+    printer.x = left;
+    printer.y = top;
+    printer.currentX = printer.x;
+    printer.currentY = printer.y;
+    printer.letterSpacing = letterSpacing;
+    printer.lineSpacing = lineSpacing;
+    printer.accentColor = color.accentColor;
+    printer.fgColor = color.fgColor;
+    printer.bgColor = color.bgColor;
+    printer.shadowColor = color.shadowColor;
+    
+    AddTextPrinter(&printer, speed, NULL);
 }
 
 void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y)

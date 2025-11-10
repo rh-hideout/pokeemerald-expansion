@@ -1942,18 +1942,11 @@ static void DrawTextEntry(void)
     PutWindowTilemap(sNamingScreen->windows[WIN_TEXT_ENTRY]);
 }
 
-struct TextColor   // Needed because of alignment
+ALIGNED(4) static const u8 sTextColorStruct[3][4] =
 {
-    u8 colors[3][4];
-};
-
-static const struct TextColor sTextColorStruct =
-{
-    {
-        {TEXT_DYNAMIC_COLOR_4, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-        {TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
-        {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY}
-    }
+    {TEXT_DYNAMIC_COLOR_4, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
+    {TEXT_DYNAMIC_COLOR_5, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY},
+    {TEXT_DYNAMIC_COLOR_6, TEXT_COLOR_WHITE, TEXT_COLOR_DARK_GRAY}
 };
 
 static const u8 sFillValues[KBPAGE_COUNT] =
@@ -1965,9 +1958,9 @@ static const u8 sFillValues[KBPAGE_COUNT] =
 
 static const u8 *const sKeyboardTextColors[KBPAGE_COUNT] =
 {
-    [KEYBOARD_LETTERS_LOWER] = sTextColorStruct.colors[1],
-    [KEYBOARD_LETTERS_UPPER] = sTextColorStruct.colors[0],
-    [KEYBOARD_SYMBOLS]       = sTextColorStruct.colors[2]
+    [KEYBOARD_LETTERS_LOWER] = sTextColorStruct[1],
+    [KEYBOARD_LETTERS_UPPER] = sTextColorStruct[0],
+    [KEYBOARD_SYMBOLS]       = sTextColorStruct[2]
 };
 
 static void PrintKeyboardKeys(u8 window, u8 page)

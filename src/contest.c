@@ -5512,9 +5512,9 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
+    printerTemplate.accentColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
+    printerTemplate.bgColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.shadowColor = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
@@ -5535,9 +5535,9 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     printerTemplate.currentY = y;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
+    printerTemplate.accentColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.fgColor = 15;
-    printerTemplate.bgColor = 0;
+    printerTemplate.bgColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.shadowColor = 8;
 
     AddTextPrinter(&printerTemplate, 0, 0);
@@ -5559,9 +5559,9 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     printerTemplate.currentY = 1;
     printerTemplate.letterSpacing = 0;
     printerTemplate.lineSpacing = 0;
-    printerTemplate.unk = 0;
+    printerTemplate.accentColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.fgColor = 1;
-    printerTemplate.bgColor = 0;
+    printerTemplate.bgColor = TEXT_COLOR_TRANSPARENT;
     printerTemplate.shadowColor = 8;
 
     if (!b)

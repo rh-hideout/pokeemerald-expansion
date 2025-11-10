@@ -3538,6 +3538,7 @@ static void RemoveWindowByIndex(u8 windowIndex)
 
 static void PrintPageSpecificText(u8 pageIndex)
 {
+    CycleCountStart();
     u16 i;
     for (i = 0; i < ARRAY_COUNT(sMonSummaryScreen->windowIds); i++)
     {
@@ -3545,6 +3546,7 @@ static void PrintPageSpecificText(u8 pageIndex)
             FillWindowPixelBuffer(sMonSummaryScreen->windowIds[i], PIXEL_FILL(0));
     }
     sTextPrinterFunctions[pageIndex]();
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "PrintPageSpecificText(%d): %d", pageIndex, CycleCountEnd());
 }
 
 static void CreateTextPrinterTask(u8 pageIndex)

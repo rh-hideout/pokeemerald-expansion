@@ -55,7 +55,7 @@ enum {
     FONTATTR_MAX_LETTER_HEIGHT,
     FONTATTR_LETTER_SPACING,
     FONTATTR_LINE_SPACING,
-    FONTATTR_UNKNOWN,   // dunno what this is yet
+    FONTATTR_COLOR_ACCENT,
     FONTATTR_COLOR_FOREGROUND,
     FONTATTR_COLOR_BACKGROUND,
     FONTATTR_COLOR_SHADOW
@@ -83,7 +83,7 @@ struct TextPrinterTemplate
     u8 currentY;
     u8 letterSpacing;
     u8 lineSpacing;
-    u8 unk:4;   // 0xC
+    u8 accentColor:4;   // 0xC
     u8 fgColor:4;
     u8 bgColor:4;
     u8 shadowColor:4;
@@ -112,7 +112,7 @@ struct FontInfo
     u8 maxLetterHeight;
     u8 letterSpacing;
     u8 lineSpacing;
-    u8 unk:4;
+    u8 accentColor:4;
     u8 fgColor:4;
     u8 bgColor:4;
     u8 shadowColor:4;
@@ -141,6 +141,13 @@ struct TextGlyph
     u8 height;
 };
 
+struct TextColor {
+    u8 bgColor:4;
+    u8 fgColor:4;
+    u8 shadowColor:4;
+    u8 accentColor:4;
+};
+
 extern TextFlags gTextFlags;
 extern u8 gDisableTextPrinters;
 extern struct TextGlyph gCurGlyph;
@@ -150,9 +157,9 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 void RunTextPrinters(void);
 bool32 IsTextPrinterActive(u8 id);
-void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor);
-void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
-void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
+void GenerateFontHalfRowLookupTable(u8 bgColor, u8 fgColor, u8 shadowColor, u8 accentColor);
+void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8* accentColor);
+void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor);
 void DecompressGlyphTile(const void *src_, void *dest_);
 void CopyGlyphToWindow(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
