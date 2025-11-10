@@ -173,14 +173,17 @@ const void *RandomElementArray(enum RandomTag tag, const void *array, size_t siz
 
 u32 RandomUniformDefault(enum RandomTag tag, u32 lo, u32 hi)
 {
+    assertf(lo <= hi);
     return lo + (((hi - lo + 1) * Random()) >> 16);
 }
 
 u32 RandomUniformExceptDefault(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
 {
+    assertf(lo <= hi);
     LOOP_RANDOM_START;
     while (TRUE)
     {
+        // TODO: assertf to abort after too many iterations.
         u32 n = lo + (((hi - lo + 1) * LOOP_RANDOM) >> 16);
         if (!reject(n))
             return n;
@@ -190,6 +193,7 @@ u32 RandomUniformExceptDefault(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reje
 
 u32 RandomWeightedArrayDefault(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
 {
+    assertf(n > 0);
     s32 i, targetSum;
     targetSum = (sum * Random()) >> 16;
     for (i = 0; i < n - 1; i++)
@@ -203,6 +207,7 @@ u32 RandomWeightedArrayDefault(enum RandomTag tag, u32 sum, u32 n, const u8 *wei
 
 const void *RandomElementArrayDefault(enum RandomTag tag, const void *array, size_t size, size_t count)
 {
+    assertf(count > 0);
     return (const u8 *)array + size * RandomUniformDefault(tag, 0, count - 1);
 }
 

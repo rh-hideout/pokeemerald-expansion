@@ -282,6 +282,9 @@ bool32 EndOrContinueWeather(void)
 static u32 CalcBeatUpPower(void)
 {
     u32 species = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
+    // FIXME: Why call CalcBeatUpPower when 'beatUpSlot' is OOB?
+    if (species == 0xFFFF)
+        return 0;
     return (GetSpeciesBaseAttack(species) / 10) + 5;
 }
 
@@ -10309,7 +10312,7 @@ bool32 MoveHasAdditionalEffectSelf(u32 move, u32 moveEffect)
 
 bool32 IsMoveEffectRemoveSpeciesType(u32 move, u32 moveEffect, u32 argument)
 {
-    return (GetMoveArgType(move) == argument) && MoveHasAdditionalEffectSelf(move, moveEffect);
+    return (MoveHasAdditionalEffectSelf(move, moveEffect) && GetMoveArgType(move) == argument);
 }
 
 bool32 MoveHasChargeTurnAdditionalEffect(u32 move)
