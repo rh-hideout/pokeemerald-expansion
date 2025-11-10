@@ -307,6 +307,7 @@ struct ContestCategory
     const u8 *name;
     const u8 *condition;
     const u8 *generic;
+    const u8 *negativeTrait;
     u8 palette;
 };
 
