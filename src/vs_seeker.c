@@ -725,6 +725,7 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
             trainerFlag |= script[1] << 8;
             break;
         case SCR_OP_CALLNATIVE:
+        {
             u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
             if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
             {
@@ -737,6 +738,7 @@ static u16 GetTrainerFlagFromScript(const u8 *script)
                 trainerFlag = TRAINER_NONE;
             }
             break;
+        }
         default:
             trainerFlag = TRAINER_NONE;
         break;
