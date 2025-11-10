@@ -7962,6 +7962,8 @@ static bool32 DoSwitchInEvents(void)
     struct BattleContext ctx = {0};
     for (battler = 0; battler < gBattlersCount; battler++)
     {
+        if (!IsBattlerAlive(battler))
+            continue;
         ctx.abilities[battler] = GetBattlerAbility(battler);
         ctx.holdEffects[battler] = GetBattlerHoldEffect(battler);
     }
