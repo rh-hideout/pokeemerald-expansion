@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_BATTLE_H
 #define GUARD_CONSTANTS_BATTLE_H
 
+#include "constants/moves.h"
+
 /*
  * A battler may be in one of four positions on the field. The first bit determines
  * what side the battler is on, either the player's side or the opponent's side.
