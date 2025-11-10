@@ -47,14 +47,14 @@ static const struct BgTemplate sBgTemplates[3] =
     },
 };
 
-static void DecompressErrorScreenTextPrint(const u8 *text, u8 x, u8 y)
+static void DecompressErrorScreenTextPrint(u32 window, const u8 *text, u8 x, u8 y)
 {
     u8 color[3];
 
     color[0] = TEXT_COLOR_TRANSPARENT;
     color[1] = TEXT_DYNAMIC_COLOR_6;
     color[2] = TEXT_COLOR_LIGHT_GRAY;
-    AddTextPrinterParameterized4(0, FONT_NORMAL, x * 8, y * 8 + 1, 0, 0, color, 0, text);
+    AddTextPrinterParameterized4(window, FONT_NORMAL, x * 8, y * 8 + 1, 0, 0, color, 0, text);
 }
 
 static void GetHexStringFromU32(u8 *str, u32 value)
@@ -121,20 +121,19 @@ static void GetHexStringFromU32(u8 *str, u32 value)
     }
 }
 
+static const struct WindowTemplate sTextWin =
+{
+    .bg = 0,
+    .tilemapLeft = 3,
+    .tilemapTop = 2,
+    .width = 24,
+    .height = 16,
+    .paletteNum = 15,
+    .baseBlock = 1,
+};
+
 void DecompressionError_CB2(void)
 {
-    static const struct WindowTemplate textWin[] =
-    {
-        {
-            .bg = 0,
-            .tilemapLeft = 3,
-            .tilemapTop = 2,
-            .width = 24,
-            .height = 16,
-            .paletteNum = 15,
-            .baseBlock = 1,
-        }
-    };
 
     if (sErrorAddress == 0)
         return;
@@ -159,20 +158,20 @@ void DecompressionError_CB2(void)
     ResetPaletteFade();
     LoadPalette(gTextWindowFrame1_Pal, 0xE0, 0x20);
     LoadPalette(gStandardMenuPalette, 0xF0, 0x20);
-    InitWindows(textWin);
-    DrawStdFrameWithCustomTileAndPalette(0, TRUE, 0x214, 0xE);
+    u32 window = AddWindow(&sTextWin);
+    DrawStdFrameWithCustomTileAndPalette(window, TRUE, 0x214, 0xE);
     static const u8 romCheckFailMessage[] =_(
         "{COLOR RED}ERROR! {COLOR DARK_GRAY}Decompression Failed!\n"
         "\n"
         "Address:\n"
         "Error:\n");
-    DecompressErrorScreenTextPrint(romCheckFailMessage, 1, 0);
+    DecompressErrorScreenTextPrint(window, romCheckFailMessage, 1, 0);
     u8 addressStr[11];
     u8 errorStr[11];
     GetHexStringFromU32(addressStr, sErrorAddress);
     GetHexStringFromU32(errorStr, sCompressionError);
-    DecompressErrorScreenTextPrint(addressStr, 7, 4);
-    DecompressErrorScreenTextPrint(errorStr, 7, 6);
+    DecompressErrorScreenTextPrint(window, addressStr, 7, 4);
+    DecompressErrorScreenTextPrint(window, errorStr, 7, 6);
     TransferPlttBuffer();
     *(u16*)PLTT = RGB(17, 18, 31);
     ShowBg(0);
