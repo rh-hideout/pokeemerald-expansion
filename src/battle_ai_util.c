@@ -2055,7 +2055,7 @@ bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
         if (!(fieldStatus & STATUS_FIELD_TRICK_ROOM))
             return FALSE;
         // DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE
-        else if (gFieldTimers.trickRoomTimer != (gBattleTurnCounter + 1))
+        else if (gFieldTimers.trickRoomTimer != 1)
             return FALSE;
     }
 
