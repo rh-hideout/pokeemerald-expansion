@@ -1113,7 +1113,6 @@ EventScript_VsSeekerChargingDone::
 	.include "data/scripts/cable_club.inc"
 	.include "data/text/cable_club.inc"
 	.include "data/scripts/contest_hall.inc"
-	.include "data/text/contest_strings.inc"
 	.include "data/text/contest_link.inc"
 	.include "data/text/contest_painting.inc"
 	.include "data/scripts/tv.inc"
