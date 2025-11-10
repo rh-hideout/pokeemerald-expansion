@@ -360,7 +360,7 @@ EWRAM_DATA u8 gCurContestWinnerSaveIdx = 0;
 // IWRAM common vars.
 COMMON_DATA rng_value_t gContestRngValue = {0};
 
-extern const u8 gText_LinkStandby4[];
+const u8 gText_LinkStandby4[] = COMPOUND_STRING("Link standby!");
 extern const u8 gText_BDot[];
 extern const u8 gText_CDot[];
 
