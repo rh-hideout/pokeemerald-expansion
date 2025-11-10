@@ -110,11 +110,7 @@ const struct ContestEffect gContestEffects[] =
     },
     [CONTEST_EFFECT_BADLY_STARTLE_FRONT_MON] =
     {
-        #if C_UPDATED_MOVE_EFFECTS >= GEN_6
-        .description = COMPOUND_STRING("Badly startles the last\nPokémon to act before the user."),
-        #else
         .description = COMPOUND_STRING("Badly startles the\nPOKéMON in front."),
-        #endif
         .effectType = CONTEST_EFFECT_TYPE_STARTLE_MON,
         .appeal = 10,
         .jam = 40,
