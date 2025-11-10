@@ -1227,31 +1227,66 @@ void CreateMonWithNature(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV,
     CreateMon(mon, species, level, fixedIV, TRUE, personality, OT_ID_PLAYER_ID, 0);
 }
 
+static bool32 GenderRatioCanBe(u32 genderRatio, u32 gender)
+{
+    switch (gender)
+    {
+    case MON_MALE:
+        return genderRatio != MON_FEMALE && genderRatio != MON_GENDERLESS;
+    case MON_FEMALE:
+        return genderRatio != MON_MALE && genderRatio != MON_GENDERLESS;
+    case MON_GENDERLESS:
+        return genderRatio == MON_GENDERLESS;
+    default:
+        assertf(FALSE, "unknown gender: %d", gender);
+        return FALSE;
+    }
+}
+
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter)
 {
     u32 personality;
+    u32 genderRatio = gSpeciesInfo[species].genderRatio;
 
     if ((u8)(unownLetter - 1) < NUM_UNOWN_FORMS)
     {
         u16 actualLetter;
 
-        do
+        while (TRUE)
         {
             personality = Random32();
             actualLetter = GET_UNOWN_LETTER(personality);
+
+            assertf(GenderRatioCanBe(genderRatio, gender), "genderRatio %d can't be gender %d", genderRatio, gender)
+            {
+                break;
+            }
+
+            if (nature == GetNatureFromPersonality(personality)
+             && gender == GetGenderFromSpeciesAndPersonality(species, personality)
+             && actualLetter == unownLetter - 1)
+            {
+                break;
+            }
         }
-        while (nature != GetNatureFromPersonality(personality)
-            || gender != GetGenderFromSpeciesAndPersonality(species, personality)
-            || actualLetter != unownLetter - 1);
     }
     else
     {
-        do
+        while (TRUE)
         {
             personality = Random32();
+
+            assertf(GenderRatioCanBe(genderRatio, gender), "genderRatio %d can't be gender %d", genderRatio, gender)
+            {
+                break;
+            }
+
+            if (nature == GetNatureFromPersonality(personality)
+             && gender == GetGenderFromSpeciesAndPersonality(species, personality))
+            {
+                break;
+            }
         }
-        while (nature != GetNatureFromPersonality(personality)
-            || gender != GetGenderFromSpeciesAndPersonality(species, personality));
     }
 
     CreateMon(mon, species, level, fixedIV, TRUE, personality, OT_ID_PLAYER_ID, 0);
@@ -1262,13 +1297,22 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
 {
     u32 personality;
     u32 otId;
+    u32 genderRatio = gSpeciesInfo[species].genderRatio;
 
-    do
+    while (TRUE)
     {
         otId = Random32();
         personality = Random32();
+
+        assertf(GenderRatioCanBe(genderRatio, MON_MALE), "genderRatio %d can't be MON_MALE", genderRatio)
+        {
+            break;
+        }
+
+        if (GetGenderFromSpeciesAndPersonality(species, personality) == MON_MALE)
+            break;
     }
-    while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
+
     CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PRESET, otId);
 }
 
@@ -7185,10 +7229,12 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 
 u16 SanitizeSpeciesId(u16 species)
 {
-    if (species > NUM_SPECIES || !IsSpeciesEnabled(species))
+    assertf(species <= NUM_SPECIES && (species == SPECIES_NONE || IsSpeciesEnabled(species)), "invalid species: %d", species)
+    {
         return SPECIES_NONE;
-    else
-        return species;
+    }
+
+    return species;
 }
 
 bool32 IsSpeciesEnabled(u16 species)

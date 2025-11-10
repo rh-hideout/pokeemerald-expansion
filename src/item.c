@@ -792,10 +792,12 @@ bool32 RemovePyramidBagItem(u16 itemId, u16 count)
 
 static u16 SanitizeItemId(u16 itemId)
 {
-    if (itemId >= ITEMS_COUNT)
+    assertf(itemId < ITEMS_COUNT, "invalid item: %d", itemId)
+    {
         return ITEM_NONE;
-    else
-        return itemId;
+    }
+
+    return itemId;
 }
 
 const u8 *GetItemName(u16 itemId)
