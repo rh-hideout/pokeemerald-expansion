@@ -1787,7 +1787,7 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
     DATA.nature = NATURE_HARDY;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
+    CreateMon(DATA.currentMon, species, 100, 0, OT_ID_PRESET(0));
     data = MOVE_NONE;
     for (i = 0; i < MAX_MON_MOVES; i++)
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
@@ -1798,6 +1798,7 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
         CalculateMonStats(DATA.currentMon);
     }
+    
 }
 
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species)
@@ -1841,7 +1842,8 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
     DATA.isShiny = FALSE;
     (*partySize)++;
 
-    CreateMon(DATA.currentMon, species, 100, 0, TRUE, 0, OT_ID_PRESET, 0);
+    CreateMon(DATA.currentMon, species, 100, 0, OT_ID_PRESET(0));
+
     // Reset move IDs, but force PP to be non-zero. This is a safeguard against test species that only learn 1 move having test moves with 0 PP
     for (i = 0; i < MAX_MON_MOVES; i++)
     {

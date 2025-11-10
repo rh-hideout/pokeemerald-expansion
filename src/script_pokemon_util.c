@@ -70,7 +70,7 @@ u8 ScriptGiveEgg(u16 species)
     isEgg = TRUE;
     SetMonData(&mon, MON_DATA_IS_EGG, &isEgg);
 
-    return GiveMonToPlayer(&mon);
+    return GiveCapturedMonToPlayer(&mon);
 }
 
 void HasEnoughMonsForDoubleBattle(void)
@@ -116,10 +116,10 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     u8 heldItem[2];
 
     ZeroEnemyPartyMons();
-    if (OW_SYNCHRONIZE_NATURE > GEN_3)
-        CreateMonWithNature(&gEnemyParty[0], species, level, USE_RANDOM_IVS, PickWildMonNature());
-    else
-        CreateMon(&gEnemyParty[0], species, level, USE_RANDOM_IVS, 0, 0, OT_ID_PLAYER_ID, 0);
+    u32 personality = GetMonPersonality(species, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    CreateMon(&gEnemyParty[0], species, level, personality, OT_ID_PLAYER_ID);
+    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item)
     {
         heldItem[0] = item;
@@ -133,11 +133,10 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     u8 heldItem2[2];
 
     ZeroEnemyPartyMons();
-
-    if (OW_SYNCHRONIZE_NATURE > GEN_3)
-        CreateMonWithNature(&gEnemyParty[0], species1, level1, 32, PickWildMonNature());
-    else
-        CreateMon(&gEnemyParty[0], species1, level1, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    u32 personality = GetMonPersonality(species1, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    CreateMon(&gEnemyParty[0], species1, level1, personality, OT_ID_PLAYER_ID);
+    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item1)
     {
         heldItem1[0] = item1;
@@ -145,10 +144,10 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
     }
 
-    if (OW_SYNCHRONIZE_NATURE > GEN_3)
-        CreateMonWithNature(&gEnemyParty[1], species2, level2, 32, PickWildMonNature());
-    else
-        CreateMon(&gEnemyParty[1], species2, level2, 32, 0, 0, OT_ID_PLAYER_ID, 0);
+    personality = GetMonPersonality(species2, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    CreateMon(&gEnemyParty[1], species2, level2, personality, OT_ID_PLAYER_ID);
+    SetMonIVs(&gEnemyParty[1], USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[1]);
     if (item2)
     {
         heldItem2[0] = item2;
@@ -334,31 +333,13 @@ void SetTeraType(struct ScriptContext *ctx)
  */
 static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u16 item, enum PokeBall ball, u8 nature, u8 abilityNum, u8 gender, u8 *evs, u8 *ivs, u16 *moves, enum ShinyMode shinyMode, bool8 gmaxFactor, enum Type teraType, u8 dmaxLevel)
 {
-    enum NationalDexOrder nationalDexNum;
-    int sentToPc;
     struct Pokemon mon;
     u32 i;
-    u8 genderRatio = gSpeciesInfo[species].genderRatio;
     u16 targetSpecies;
     bool32 isShiny;
 
-    // check whether to use a specific nature or a random one
-    if (nature >= NUM_NATURES)
-    {
-        if (OW_SYNCHRONIZE_NATURE >= GEN_6
-         && (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED || OW_SYNCHRONIZE_NATURE == GEN_7))
-            nature = PickWildMonNature();
-        else
-            nature = Random() % NUM_NATURES;
-    }
-
-    // create a Pokémon with basic data
-    if ((gender == MON_MALE && genderRatio != MON_FEMALE && genderRatio != MON_GENDERLESS)
-     || (gender == MON_FEMALE && genderRatio != MON_MALE && genderRatio != MON_GENDERLESS)
-     || (gender == MON_GENDERLESS && genderRatio == MON_GENDERLESS))
-        CreateMonWithGenderNatureLetter(&mon, species, level, 32, gender, nature, 0);
-    else
-        CreateMonWithNature(&mon, species, level, 32, nature);
+    u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
+    CreateMon(&mon, species, level, personality, OT_ID_PLAYER_ID);
 
     // shininess
     if (shinyMode == SHINY_MODE_ALWAYS || (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY)))
@@ -397,25 +378,35 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     // moves
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (moves[0] == MOVE_NONE)
+        if (moves[i] == MOVE_NONE)
             break;
-        if (moves[i] >= MOVES_COUNT)
+        if (moves[i] < MOVES_COUNT)
+        {
+            SetMonMoveSlot(&mon, moves[i], i);
+        }
+        else if (moves[i] == MOVE_DEFAULT)
+        {
+            GiveMonDefaultMove(&mon, slot);
             continue;
-        SetMonMoveSlot(&mon, moves[i], i);
+        }
+        else
+        {
+            // TODO: write error for invalid move number
+        }
     }
 
     // ability
-    if (abilityNum == NUM_ABILITY_PERSONALITY)
+    if (abilityNum != NUM_ABILITY_PERSONALITY)
     {
-        abilityNum = GetMonData(&mon, MON_DATA_PERSONALITY) & 1;
+        if (abilityNum >= NUM_ABILITY_SLOTS || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
+        {
+            // If the ability num is invalid, we loop to find a valid one
+            do {
+                abilityNum = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
+            } while (GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE);
+        }
+        SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
     }
-    else if (abilityNum > NUM_NORMAL_ABILITY_SLOTS || GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE)
-    {
-        do {
-            abilityNum = Random() % NUM_ABILITY_SLOTS; // includes hidden abilities
-        } while (GetAbilityBySpecies(species, abilityNum) == ABILITY_NONE);
-    }
-    SetMonData(&mon, MON_DATA_ABILITY_NUM, &abilityNum);
 
     // ball
     if (ball > POKEBALL_COUNT)
@@ -430,66 +421,58 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     if (targetSpecies != SPECIES_NONE)
         SetMonData(&mon, MON_DATA_SPECIES, &targetSpecies);
 
-    // assign OT name and gender
-    SetMonData(&mon, MON_DATA_OT_NAME, gSaveBlock2Ptr->playerName);
-    SetMonData(&mon, MON_DATA_OT_GENDER, &gSaveBlock2Ptr->playerGender);
+    if (side == 0)
+        return GiveScriptedMonToPlayer(&mon, slot);
 
     if (slot < PARTY_SIZE)
     {
-        if (side == 0)
-            CopyMon(&gPlayerParty[slot], &mon, sizeof(struct Pokemon));
-        else
-            CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
-        sentToPc = MON_GIVEN_TO_PARTY;
-    }
-    else
-    {
-        // find empty party slot to decide whether the Pokémon goes to the Player's party or the storage system.
-        for (i = 0; i < PARTY_SIZE; i++)
-        {
-            if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES, NULL) == SPECIES_NONE)
-                break;
-        }
-        if (i >= PARTY_SIZE)
-        {
-            sentToPc = CopyMonToPC(&mon);
-        }
-        else
-        {
-            sentToPc = MON_GIVEN_TO_PARTY;
-            CopyMon(&gPlayerParty[i], &mon, sizeof(mon));
-            gPlayerPartyCount = i + 1;
-        }
+        CopyMon(&gEnemyParty[slot], &mon, sizeof(struct Pokemon));
+        return MON_GIVEN_TO_PARTY;
     }
 
-    if (side == 0)
-    {
-        // set pokédex flags
-        nationalDexNum = SpeciesToNationalPokedexNum(species);
-        if (sentToPc != MON_CANT_GIVE)
-        {
-            GetSetPokedexFlag(nationalDexNum, FLAG_SET_SEEN);
-            GetSetPokedexFlag(nationalDexNum, FLAG_SET_CAUGHT);
-        }
-    }
-
-    return sentToPc;
+    //TODO: write error for invalid enemy party slot
+    return MON_CANT_GIVE;
 }
 
 u32 ScriptGiveMon(u16 species, u8 level, u16 item)
 {
-    u8 evs[NUM_STATS]        = {0, 0, 0, 0, 0, 0};
-    u8 ivs[NUM_STATS]        = {MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1,   // We pass "MAX_PER_STAT_IVS + 1" here to ensure that
-                                MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1, MAX_PER_STAT_IVS + 1};  // ScriptGiveMonParameterized won't touch the stats' IV.
-    u16 moves[MAX_MON_MOVES] = {MOVE_NONE, MOVE_NONE, MOVE_NONE, MOVE_NONE};
+    struct Pokemon mon;
+    u8 heldItem[2];
 
-    return ScriptGiveMonParameterized(0, PARTY_SIZE, species, level, item, ITEM_POKE_BALL, NUM_NATURES, NUM_ABILITY_PERSONALITY, MON_GENDERLESS, evs, ivs, moves, SHINY_MODE_RANDOM, FALSE, NUMBER_OF_MON_TYPES, 0);
+    u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    CreateMon(&gEnemyParty[0], species, level, personality, OT_ID_PLAYER_ID);
+    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
+    GiveMonInitialMoveset(&gEnemyParty[0]);
+    if (item)
+    {
+        heldItem[0] = item;
+        heldItem[1] = item >> 8;
+        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+    }
+
+    return GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
 }
 
 #define PARSE_FLAG(n, default_) (flags & (1 << (n))) ? VarGet(ScriptReadHalfword(ctx)) : (default_)
 
+#define ADD_MOVE_IF_NOT_DEFAULT(i, move)               \
+    if (move && move != MOVE_DEFAULT)                  \
+    {                                                  \
+        moves[i] = move;                               \
+        i++;                                           \
+    }
+
+#define ADD_MOVE_IF_DEFAULT(i, move)                   \
+    if (moves[i] == MOVE_NONE && move == MOVE_DEFAULT) \
+    {                                                  \
+        moves[i] = MOVE_DEFAULT;                       \
+        i++;                                           \
+    }
+
 /* Give or create a mon to either player or opponent
  */
+
+
 void ScrCmd_createmon(struct ScriptContext *ctx)
 {
     u8 side           = ScriptReadByte(ctx);
@@ -500,9 +483,9 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u32 flags         = ScriptReadWord(ctx);
     u16 item          = PARSE_FLAG(0, ITEM_NONE);
     u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
-    u8 nature         = PARSE_FLAG(2, NUM_NATURES);
+    u8 nature         = PARSE_FLAG(2, NATURE_RANDOM);
     u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
-    u8 gender         = PARSE_FLAG(4, MON_GENDERLESS); // TODO: Find a better way to assign a random gender.
+    u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM); // TODO: Find a better way to assign a random gender.
     u8 hpEv           = PARSE_FLAG(5, 0);
     u8 atkEv          = PARSE_FLAG(6, 0);
     u8 defEv          = PARSE_FLAG(7, 0);
@@ -553,10 +536,10 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     speedIv                  = PARSE_FLAG(14, speedIv);
     spAtkIv                  = PARSE_FLAG(15, spAtkIv);
     spDefIv                  = PARSE_FLAG(16, spDefIv);
-    u16 move1                = PARSE_FLAG(17, MOVE_NONE);
-    u16 move2                = PARSE_FLAG(18, MOVE_NONE);
-    u16 move3                = PARSE_FLAG(19, MOVE_NONE);
-    u16 move4                = PARSE_FLAG(20, MOVE_NONE);
+    u16 move1                = PARSE_FLAG(17, MOVE_DEFAULT);
+    u16 move2                = PARSE_FLAG(18, MOVE_DEFAULT);
+    u16 move3                = PARSE_FLAG(19, MOVE_DEFAULT);
+    u16 move4                = PARSE_FLAG(20, MOVE_DEFAULT);
     enum ShinyMode shinyMode = PARSE_FLAG(21, SHINY_MODE_RANDOM);
     bool8 gmaxFactor         = PARSE_FLAG(22, FALSE);
     enum Type teraType       = PARSE_FLAG(23, NUMBER_OF_MON_TYPES);
@@ -564,7 +547,21 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
 
     u8 evs[NUM_STATS]        = {hpEv, atkEv, defEv, speedEv, spAtkEv, spDefEv};
     u8 ivs[NUM_STATS]        = {hpIv, atkIv, defIv, speedIv, spAtkIv, spDefIv};
-    u16 moves[MAX_MON_MOVES] = {move1, move2, move3, move4};
+
+    u16 moves[MAX_MON_MOVES];
+    for (i = 0; i < MAX_MON_MOVES; i++)
+        moves[i] = MOVE_NONE;
+
+    i = 0;
+    //Reorder moves to put non-default moves first, default moves second and empty moves last
+    ADD_MOVE_IF_NOT_DEFAULT(i, move1)
+    ADD_MOVE_IF_NOT_DEFAULT(i, move2)
+    ADD_MOVE_IF_NOT_DEFAULT(i, move3)
+    ADD_MOVE_IF_NOT_DEFAULT(i, move4)
+    ADD_MOVE_IF_DEFAULT(i, move1)
+    ADD_MOVE_IF_DEFAULT(i, move2)
+    ADD_MOVE_IF_DEFAULT(i, move3)
+    ADD_MOVE_IF_DEFAULT(i, move4)
 
     if (side == 0)
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);

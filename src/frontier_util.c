@@ -2591,16 +2591,16 @@ void CreateFrontierBrainPokemon(void)
         if (!(selectedMonBits & 1))
             continue;
 
-        do
-        {
-            j = Random32(); //should just be one while loop, but that doesn't match
-        } while (sFrontierBrainsMons[facility][symbol][i].nature != GetNatureFromPersonality(j));
+        u32 personality = GetMonPersonality(sFrontierBrainsMons[facility][symbol][i].species,
+                                            MON_GENDER_RANDOM,
+                                            sFrontierBrainsMons[facility][symbol][i].nature,
+                                            RANDOM_UNOWN_LETTER);
         CreateMon(&gEnemyParty[monPartyId],
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
-                  sFrontierBrainsMons[facility][symbol][i].fixedIV,
-                  TRUE, j,
-                  OT_ID_PRESET, FRONTIER_BRAIN_OTID);
+                  personality,
+                  OT_ID_PRESET(FRONTIER_BRAIN_OTID));
+        SetMonIVs(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].fixedIV);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)
             SetMonData(&gEnemyParty[monPartyId], MON_DATA_HP_EV + j, &sFrontierBrainsMons[facility][symbol][i].evs[j]);

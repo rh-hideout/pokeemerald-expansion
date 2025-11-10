@@ -1011,7 +1011,7 @@
 	.2byte \level
 	.ifnb \item; .set givemon_flags, givemon_flags | (1 << 0); .endif
 	.ifnb \ball; .set givemon_flags, givemon_flags | (1 << 1); .endif
-	.ifnb \nature; .set givemon_flags, givemon_flags | (1 << 2); .endif
+	.set givemon_flags, givemon_flags | (1 << 2);
 	.ifnb \abilityNum; .set givemon_flags, givemon_flags | (1 << 3); .endif
 	.ifnb \gender; .set givemon_flags, givemon_flags | (1 << 4); .endif
 	.ifnb \hpEv; .set givemon_flags, givemon_flags | (1 << 5); .endif
@@ -1037,7 +1037,11 @@
 	.4byte givemon_flags
 	.ifnb \item; .2byte \item; .endif
 	.ifnb \ball; .2byte \ball; .endif
-	.ifnb \nature; .2byte \nature; .endif
+	.ifnb \nature;
+		.2byte \nature;
+	.else
+		.2byte NATURE_MAY_GIFT_SYNCHRONIZE
+	.endif
 	.ifnb \abilityNum; .2byte \abilityNum; .endif
 	.ifnb \gender; .2byte \gender; .endif
 	.ifnb \hpEv; .2byte \hpEv; .endif

@@ -1019,7 +1019,7 @@
 
 #define MOVES_COUNT_ALL         MOVES_COUNT_DYNAMAX
 
-// Used for checks for moves affected by Disable, Mimic, etc.
-#define MOVE_UNAVAILABLE 0xFFFF
+#define MOVE_DEFAULT     0xFFFE // Used when creating a mon to be replaced by a level-up move
+#define MOVE_UNAVAILABLE 0xFFFF // Used for checks for moves affected by Disable, Mimic, etc.
 
 #endif  // GUARD_CONSTANTS_MOVES_H
