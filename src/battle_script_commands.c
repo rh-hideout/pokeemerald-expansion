@@ -1044,7 +1044,7 @@ bool32 IsPowderMoveBlocked(u32 battlerAtk, u32 battlerDef, u32 move)
 {
     if (!IsPowderMove(move)
      || battlerAtk == battlerDef
-     || IsAffectedByPowder(battlerDef, GetBattlerAbility(battlerDef), GetBattlerHoldEffect(battlerDef, TRUE)))
+     || IsAffectedByPowderMove(battlerDef, GetBattlerAbility(battlerDef), GetBattlerHoldEffect(battlerDef, TRUE)))
         return FALSE;
 
     gBattlescriptCurrInstr = BattleScript_PowderMoveNoEffect;
