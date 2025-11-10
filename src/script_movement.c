@@ -68,6 +68,10 @@ void ScriptMovement_UnfreezeObjectEvents(void)
     taskId = GetMoveObjectsTaskId();
     if (taskId != TASK_NONE)
     {
+        u32 finishedMovements = gTasks[taskId].data[0];
+        const u8 *objEventIds = (u8 *)&gTasks[taskId].data[1];
+        for (u32 i = 0; i < OBJECT_EVENTS_COUNT; i++)
+            assertf(objEventIds[i] == 0xFF || (finishedMovements & (1 << i)), "localId %d has an unfinished movement", gObjectEvents[objEventIds[i]].localId);
         ScriptMovement_UnfreezeActiveObjects(taskId);
         DestroyTask(taskId);
     }
