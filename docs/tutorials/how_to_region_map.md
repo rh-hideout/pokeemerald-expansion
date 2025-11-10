@@ -47,8 +47,6 @@ Now that we have the files we need, we will need to fix the palette file. Open y
 
 We are going to move our palette from the middle to the top of the file. The first line in the section containing our palette should be another `255 0 255` entry, we are going to change it to `0 0 0`. Next we are going to highlight the lines for our palette and cut them then paste them under the first `255 0 255` at the top of the file.
 
-![initial-palette-location](img/region_map/InitialPaletteLocation.png)
-
 ![final-palette-location](img/region_map/FinalPaletteLocation.png)
 
 ## Creating our region map.bin file
