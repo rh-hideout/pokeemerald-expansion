@@ -18,8 +18,9 @@ TEST("Nature independent from Hidden Nature")
             PARAMETRIZE { nature = i; hiddenNature = j; }
         }
     }
+    u32 species = SPECIES_WOBBUFFET;
     u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, SPECIES_WOBBUFFET, 100, personality, OT_ID_PLAYER_ID);
+    CreateMon(&mon, species, 100, personality, OT_ID_PLAYER_ID);
     SetMonData(&mon, MON_DATA_HIDDEN_NATURE, &hiddenNature);
     EXPECT_EQ(GetNature(&mon), nature);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_HIDDEN_NATURE), hiddenNature);
@@ -153,7 +154,7 @@ TEST("Status1 round-trips through BoxPokemon")
 TEST("canhypertrain/hypertrain affect MON_DATA_HYPER_TRAINED_* and recalculate stats")
 {
     u32 atk, friendship = 0;
-    CreateRandomMonWithIVs(&mon, SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
 
     // Consider B_FRIENDSHIP_BOOST.
     SetMonData(&gPlayerParty[0], MON_DATA_FRIENDSHIP, &friendship);
@@ -177,7 +178,7 @@ TEST("canhypertrain/hypertrain affect MON_DATA_HYPER_TRAINED_* and recalculate s
 
 TEST("hasgigantamaxfactor/togglegigantamaxfactor affect MON_DATA_GIGANTAMAX_FACTOR")
 {
-    CreateRandomMonWithIVs(&mon, SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         hasgigantamaxfactor 0;
@@ -201,7 +202,7 @@ TEST("hasgigantamaxfactor/togglegigantamaxfactor affect MON_DATA_GIGANTAMAX_FACT
 
 TEST("togglegigantamaxfactor fails for Melmetal")
 {
-    CreateRandomMonWithIVs(&mon, SPECIES_MELMETAL, 100, 0);
+    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_MELMETAL, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         hasgigantamaxfactor 0;
@@ -408,7 +409,7 @@ TEST("givemon [vars]")
 
 TEST("checkteratype/setteratype work")
 {
-    CreateRandomMonWithIVs(&mon, SPECIES_WOBBUFFET, 100, 0);
+    CreateRandomMonWithIVs(&gPlayerParty[0], SPECIES_WOBBUFFET, 100, 0);
 
     RUN_OVERWORLD_SCRIPT(
         checkteratype 0;
