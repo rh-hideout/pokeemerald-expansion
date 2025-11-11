@@ -64,6 +64,7 @@ class Config:
         if m:
             self.time_fallback = m.group(1)
 
+
 class WildEncounterAssembler:
     def __init__(self, output_file, json_data, config):
         self.output_file = output_file
@@ -198,7 +199,7 @@ class WildEncounterAssembler:
         self.WriteTerminator()
         self.WriteLine("};")
 
-                
+
     def WriteEncounters(self):
         wild_encounter_groups = self.json_data["wild_encounter_groups"]
         for wild_encounter_group in wild_encounter_groups:

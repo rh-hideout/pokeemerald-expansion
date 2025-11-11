@@ -293,7 +293,7 @@ CableClub_EventScript_EnterColosseum_Frlg::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -389,7 +389,7 @@ CableClub_EventScript_EnterTradeCenter_Frlg::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -764,7 +764,7 @@ CableClub_EventScript_EnterUnionRoom_Frlg::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	closedoor 5, 1
 	waitdooranim
 	special Script_ResetUnionRoomTrade
@@ -1037,7 +1037,7 @@ CableClub_EventScript_EnterWirelessLinkRoom_Frlg::
 	waitdooranim
 	applymovement LOCALID_PLAYER, Movement_PlayerEnterLinkRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	closedoor 9, 1
 	waitdooranim
 	release
@@ -1209,7 +1209,7 @@ CableClub_EventScript_EnterMinigame_Frlg::
 	closemessage
 	applymovement LOCALID_PLAYER, Movement_PlayerEnterMinigameRoom
 	waitmovement 0
-	hideobjectat LOCALID_PLAYER, 0
+	hideplayer
 	release
 	waitstate
 	end

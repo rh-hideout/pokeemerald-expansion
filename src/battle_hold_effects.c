@@ -77,7 +77,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTi
 
 static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
 {
-    if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN))
+    if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && CompareStat(battler, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(STAT_SPEED, 1, TRUE);
@@ -97,7 +97,7 @@ static enum ItemEffect TryRoomService(u32 battler, ActivationTiming timing)
 
 enum ItemEffect TryHandleSeed(u32 battler, u32 terrainFlag, enum Stat statId, ActivationTiming timing)
 {
-    if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
+    if (gFieldStatuses & terrainFlag && CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battler)))
     {
         gEffectBattler = gBattleScripting.battler = battler;
         SET_STATCHANGER(statId, 1, FALSE);
@@ -218,10 +218,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
      && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam)
      && ability != ABILITY_STENCH)
     {
-        gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
-        BattleScriptPushCursor();
-        SetMoveEffect(battlerAtk, battlerDef, FALSE, FALSE);
-        BattleScriptPop();
+        SetMoveEffect(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
         effect = ITEM_EFFECT_OTHER;
     }
 
@@ -423,7 +420,7 @@ static enum ItemEffect TryBlunderPolicy(u32 battlerAtk)
 
     if (gBattleStruct->blunderPolicy
      && IsBattlerAlive(battlerAtk)
-     && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN))
+     && CompareStat(battlerAtk, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk)))
     {
         gBattleStruct->blunderPolicy = FALSE;
         SET_STATCHANGER(STAT_SPEED, 2, FALSE);
@@ -502,7 +499,7 @@ static enum ItemEffect TryThroatSpray(u32 battlerAtk)
      && gMultiHitCounter == 0
      && IsBattlerAlive(battlerAtk)
      && IsAnyTargetTurnDamaged(battlerAtk)
-     && CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN)
+     && CompareStat(battlerAtk, STAT_SPATK, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerAtk))
      && !NoAliveMonsForEitherParty())   // Don't activate if battle will end
     {
         SET_STATCHANGER(STAT_SPATK, 1, FALSE);
@@ -517,7 +514,7 @@ static enum ItemEffect DamagedStatBoostBerryEffect(u32 battlerDef, u32 battlerAt
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (!IsBattlerAlive(battlerDef) || !CompareStat(battlerDef, statId, MAX_STAT_STAGE, CMP_LESS_THAN))
+    if (!IsBattlerAlive(battlerDef) || !CompareStat(battlerDef, statId, MAX_STAT_STAGE, CMP_LESS_THAN, GetBattlerAbility(battlerDef)))
         return effect;
 
     if (gBattleScripting.overrideBerryRequirements
@@ -588,7 +585,7 @@ static enum ItemEffect TryStickyBarbOnTargetHit(u32 battlerDef, u32 battlerAtk, 
      && !DoesSubstituteBlockMove(battlerAtk, battlerDef, gCurrentMove)
      && IsBattlerAlive(battlerAtk)
      && CanStealItem(battlerAtk, battlerDef, item)
-     && item == ITEM_NONE)
+     && gBattleMons[battlerAtk].item == ITEM_NONE)
     {
         // No sticky hold checks.
         gEffectBattler = battlerDef;
@@ -970,7 +967,7 @@ static enum ItemEffect StatRaiseBerry(u32 battler, u32 itemId, enum Stat statId,
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Ability ability = GetBattlerAbility(battler);
 
-    if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN)
+    if (CompareStat(battler, statId, MAX_STAT_STAGE, CMP_LESS_THAN, ability)
      && HasEnoughHpToEatBerry(battler, ability, GetItemHoldEffectParam(itemId), itemId))
     {
         gEffectBattler = gBattleScripting.battler = battler;
@@ -1011,17 +1008,17 @@ static enum ItemEffect RandomStatRaiseBerry(u32 battler, u32 itemId, ActivationT
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
     enum Stat stat;
+    enum Ability ability = GetBattlerAbility(battler);
 
     for (stat = STAT_ATK; stat < NUM_STATS; stat++)
     {
-        if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN))
+        if (CompareStat(battler, stat, MAX_STAT_STAGE, CMP_LESS_THAN, ability))
             break;
     }
 
     if (stat == NUM_STATS)
         return effect;
 
-    enum Ability ability = GetBattlerAbility(battler);
     if (HasEnoughHpToEatBerry(battler, ability, GetItemHoldEffectParam(itemId), itemId))
     {
         u32 savedAttacker = gBattlerAttacker;
@@ -1067,7 +1064,12 @@ static enum ItemEffect TrySetMicleBerry(u32 battler, u32 itemId, ActivationTimin
 enum ItemEffect ItemBattleEffects(u32 itemBattler, u32 battler, enum HoldEffect holdEffect, ActivationTiming timing)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
-    u32 item = (timing == IsOnBerryActivation) ? gLastUsedItem : gBattleMons[itemBattler].item;
+    u32 item;
+
+    if (timing == IsOnBerryActivation || timing == IsOnFlingActivation)
+        item = gLastUsedItem;
+    else
+        item = gBattleMons[itemBattler].item;
 
     if (holdEffect == HOLD_EFFECT_NONE
      || !timing(holdEffect)
