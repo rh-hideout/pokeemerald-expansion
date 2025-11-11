@@ -20,7 +20,7 @@ TEST("Nature independent from Hidden Nature")
     }
     u32 species = SPECIES_WOBBUFFET;
     u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, species, 100, personality, OT_ID_PLAYER_ID);
+    CreateMon(&mon, species, 100, personality, OTID_STRUCT_PLAYER_ID);
     SetMonData(&mon, MON_DATA_HIDDEN_NATURE, &hiddenNature);
     EXPECT_EQ(GetNature(&mon), nature);
     EXPECT_EQ(GetMonData(&mon, MON_DATA_HIDDEN_NATURE), hiddenNature);
@@ -78,7 +78,7 @@ TEST("Shininess independent from PID and OTID")
     bool32 isShiny;
     struct Pokemon mon;
     PARAMETRIZE { pid = 0; otId = 0; }
-    CreateMon(&mon, SPECIES_WOBBUFFET, 100, pid, OT_ID_PRESET(otId));
+    CreateMon(&mon, SPECIES_WOBBUFFET, 100, pid, OTID_STRUCT_PRESET(otId));
     isShiny = IsMonShiny(&mon);
     data = !isShiny;
     SetMonData(&mon, MON_DATA_IS_SHINY, &data);
@@ -91,7 +91,7 @@ TEST("Hyper Training increases stats without affecting IVs")
 {
     u32 data, hp, atk, def, speed, spatk, spdef, friendship = 0;
     struct Pokemon mon;
-    CreateMon(&mon, SPECIES_WOBBUFFET, 100, 0, OT_ID_PRESET(0));
+    CreateMon(&mon, SPECIES_WOBBUFFET, 100, 0, OTID_STRUCT_PRESET(0));
     SetMonIVs(&mon, 3);
     // Consider B_FRIENDSHIP_BOOST.
     SetMonData(&mon, MON_DATA_FRIENDSHIP, &friendship);
@@ -460,7 +460,7 @@ TEST("Pokémon level up learnsets fit within MAX_LEVEL_UP_MOVES and MAX_RELEARNE
 
 TEST("Optimised GetMonData")
 {
-    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OT_ID_PRESET(0x12345678));
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
     u32 exp = 0x123456;
     SetMonData(&gPlayerParty[0], MON_DATA_EXP, &exp);
     struct Benchmark optimised,
@@ -473,7 +473,7 @@ TEST("Optimised GetMonData")
 
 TEST("Optimised SetMonData")
 {
-    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OT_ID_PRESET(0x12345678));
+    CreateMon(&gPlayerParty[0], SPECIES_WOBBUFFET, 5, Random32(), OTID_STRUCT_PRESET(0x12345678));
     u32 exp = 0x123456;
     struct Benchmark optimised,
         vanilla = (struct Benchmark) { .ticks = 205 }; // From prior testing

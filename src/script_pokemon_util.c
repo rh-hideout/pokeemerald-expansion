@@ -13,6 +13,7 @@
 #include "main.h"
 #include "menu.h"
 #include "overworld.h"
+#include "ow_synchronize.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokedex.h"
@@ -116,7 +117,10 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
     u8 heldItem[2];
 
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    u32 personality = GetMonPersonality(species,
+        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species),
+        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species),
+        RANDOM_UNOWN_LETTER);
     CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
@@ -133,7 +137,10 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     u8 heldItem2[2];
 
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species1, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    u32 personality = GetMonPersonality(species1,
+        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species1),
+        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species1),
+        RANDOM_UNOWN_LETTER);
     CreateMon(&gEnemyParty[0], species1, level1, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
@@ -144,7 +151,10 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
         SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem1);
     }
 
-    personality = GetMonPersonality(species2, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
+    personality = GetMonPersonality(species2,
+        GetSynchronizedGender(STATIC_WILDMON_ORIGIN, species2),
+        GetSynchronizedNature(STATIC_WILDMON_ORIGIN, species2),
+        RANDOM_UNOWN_LETTER);
     CreateMon(&gEnemyParty[1], species2, level2, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[1], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[1]);
@@ -439,15 +449,12 @@ u32 ScriptGiveMon(u16 species, u8 level, u16 item)
     struct Pokemon mon;
     u8 heldItem[2];
 
-    u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
-    SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
-    GiveMonInitialMoveset(&gEnemyParty[0]);
+    CreateRandomMon(&mon, species, level);
     if (item)
     {
         heldItem[0] = item;
         heldItem[1] = item >> 8;
-        SetMonData(&gEnemyParty[0], MON_DATA_HELD_ITEM, heldItem);
+        SetMonData(&mon, MON_DATA_HELD_ITEM, heldItem);
     }
 
     return GiveScriptedMonToPlayer(&mon, PARTY_SIZE);
@@ -563,10 +570,22 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     ADD_MOVE_IF_DEFAULT(i, move3)
     ADD_MOVE_IF_DEFAULT(i, move4)
 
+    enum GeneratedMonOrigin origin;
     if (side == 0)
+    {
         Script_RequestEffects(SCREFF_V1 | SCREFF_SAVE);
+        origin = GIFTMON_ORIGIN;
+    }
     else
+    {
         Script_RequestEffects(SCREFF_V1);
+        origin = STATIC_WILDMON_ORIGIN;
+    }
+
+    if (gender == MON_GENDER_MAY_CUTE_CHARM)
+        gender = GetSynchronizedGender(origin, species);
+    if (nature == NATURE_MAY_SYNCHRONIZE)
+        nature = GetSynchronizedNature(origin, species);
 
     gSpecialVar_Result = ScriptGiveMonParameterized(side, slot, species, level, item, ball, nature, abilityNum, gender, evs, ivs, moves, shinyMode, gmaxFactor, teraType, dmaxLevel);
 }

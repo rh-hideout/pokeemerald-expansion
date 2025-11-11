@@ -11,6 +11,7 @@
 #include "link.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "ow_synchronize.h"
 #include "pokeblock.h"
 #include "pokemon.h"
 #include "random.h"
@@ -443,7 +444,7 @@ enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area
         return GenConfigTimeOfDay(timeOfDay);
 }
 
-u8 PickWildMonNature(void)
+static u8 PickWildMonNature(u32 species)
 {
     u8 i;
     struct Pokeblock *safariPokeblock;
@@ -465,13 +466,13 @@ u8 PickWildMonNature(void)
         }
     }
 
-    return NATURE_MAY_WILD_SYNCHRONIZE;
+    return GetSynchronizedNature(WILDMON_ORIGIN, species);
 }
 
 void CreateWildMon(u16 species, u8 level)
 {
     ZeroEnemyPartyMons();
-    u32 personality = GetMonPersonality(species, MON_GENDER_MAY_CUTE_CHARM, PickWildMonNature(), RANDOM_UNOWN_LETTER);
+    u32 personality = GetMonPersonality(species, GetSynchronizedGender(WILDMON_ORIGIN, species), PickWildMonNature(species), RANDOM_UNOWN_LETTER);
     CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);

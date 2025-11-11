@@ -50,7 +50,6 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "util.h"
-#include "wild_encounter.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
@@ -1197,96 +1196,10 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u32 personal
         SetBoxMonData(boxMon, MON_DATA_ABILITY_NUM, &value);
 }
 
-static u8 GetModifiedGender(u16 species, u8 gender)
-{
-    switch (gSpeciesInfo[species].genderRatio)
-    {
-    case MON_MALE:
-    case MON_FEMALE:
-    case MON_GENDERLESS:
-        return MON_GENDER_RANDOM;
-    }
-
-    if (gender == MON_GENDER_MAY_CUTE_CHARM)
-    {
-        if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-            && GetMonAbility(&gPlayerParty[0]) == ABILITY_CUTE_CHARM
-            && Random() % 3 != 0)
-            {
-                u16 leadingMonSpecies = GetMonData(&gPlayerParty[0], MON_DATA_SPECIES);
-                u32 leadingMonPersonality = GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY);
-                u8 leadingMonGender = GetGenderFromSpeciesAndPersonality(leadingMonSpecies, leadingMonPersonality);
-
-                // misses mon is genderless check, although no genderless mon can have cute charm as ability
-                if (leadingMonGender == MON_FEMALE)
-                    return MON_MALE;
-                else
-                    return MON_FEMALE;
-            }
-        else
-        {
-            return MON_GENDER_RANDOM;
-        }
-    }
-    return gender;
-}
-
-static bool32 IsSynchronizePossible(u16 species, u8 nature)
-{
-    if (nature == NATURE_MAY_WILD_SYNCHRONIZE)
-    {
-        if (OW_SYNCHRONIZE_NATURE < GEN_8)
-            return Random() % 2;
-        return TRUE;
-    }
-    else if (nature == NATURE_MAY_ROAMER_SYNCHRONIZE)
-    {
-        if (OW_SYNCHRONIZE_NATURE >= GEN_8)
-            return TRUE;
-        return FALSE;
-    }
-    else if (nature == NATURE_MAY_STATIC_SYNCHRONIZE)
-    {
-        if (OW_SYNCHRONIZE_NATURE >= GEN_8)
-            return FALSE;
-        if (OW_SYNCHRONIZE_NATURE >= GEN_4)
-            return Random() % 2;
-        return FALSE;
-    }
-    else // nature == NATURE_MAY_GIFT_SYNCHRONIZE
-    {
-        if (OW_SYNCHRONIZE_NATURE == GEN_7)
-            return TRUE;
-        if (OW_SYNCHRONIZE_NATURE == GEN_6)
-            return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
-        return FALSE;
-    }
-}
-
-static u8 GetModifiedNature(u16 species, u8 nature)
-{
-    if (nature > NATURE_RANDOM)
-    {
-        if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG)
-        && GetMonAbility(&gPlayerParty[0]) == ABILITY_SYNCHRONIZE
-        && IsSynchronizePossible(species, nature))
-        {
-            return GetMonData(&gPlayerParty[0], MON_DATA_PERSONALITY) % NUM_NATURES;
-        } 
-        else
-        {
-            return NATURE_RANDOM;
-        }
-    }
-    return nature;
-}
-
 u32 GetMonPersonality(u16 species, u8 gender, u8 nature, u8 unownLetter)
 {
     u32 personality, actualLetter;
 
-    gender = GetModifiedGender(species, gender);
-    nature = GetModifiedNature(species, nature);
     do
     {
         personality = Random32();
@@ -1301,7 +1214,7 @@ u32 GetMonPersonality(u16 species, u8 gender, u8 nature, u8 unownLetter)
 // This is only used to create Wally's Ralts.
 void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
 {
-    u32 personality = GetMonPersonality(species, MON_MALE, PickWildMonNature(), RANDOM_UNOWN_LETTER);
+    u32 personality = GetMonPersonality(species, MON_MALE, NATURE_RANDOM, RANDOM_UNOWN_LETTER);
     CreateMon(mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(mon, USE_RANDOM_IVS);
     GiveMonInitialMoveset(mon);

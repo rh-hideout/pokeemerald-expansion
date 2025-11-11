@@ -50,8 +50,7 @@ asm(".set FALSE, 0\n"
     ".set VARS_START, " STR(VARS_START) "\n"
     ".set VARS_END, " STR(VARS_END) "\n"
     ".set SPECIAL_VARS_START, " STR(SPECIAL_VARS_START) "\n"
-    ".set SPECIAL_VARS_END, " STR(SPECIAL_VARS_END) "\n"
-    ".set NATURE_MAY_GIFT_SYNCHRONIZE, " STR(NATURE_MAY_GIFT_SYNCHRONIZE) "\n");
+    ".set SPECIAL_VARS_END, " STR(SPECIAL_VARS_END) "\n");
 
 // Make overworld script macros available.
 asm(".include \"constants/gba_constants.inc\"\n"

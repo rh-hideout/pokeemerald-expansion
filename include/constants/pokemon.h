@@ -76,11 +76,8 @@ enum __attribute__((packed)) Type
 #define NATURE_QUIRKY   24 // Neutral
 #define NUM_NATURES     25
 
-#define NATURE_RANDOM                 NUM_NATURES
-#define NATURE_MAY_WILD_SYNCHRONIZE   NUM_NATURES + 1
-#define NATURE_MAY_ROAMER_SYNCHRONIZE NUM_NATURES + 2
-#define NATURE_MAY_STATIC_SYNCHRONIZE NUM_NATURES + 3
-#define NATURE_MAY_GIFT_SYNCHRONIZE   NUM_NATURES + 4
+#define NATURE_RANDOM            NUM_NATURES
+#define NATURE_MAY_SYNCHRONIZE   NUM_NATURES + 1
 
 // Pokémon Stats
 enum __attribute__((packed)) Stat
