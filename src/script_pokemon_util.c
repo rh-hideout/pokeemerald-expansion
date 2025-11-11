@@ -117,7 +117,7 @@ void CreateScriptedWildMon(u16 species, u8 level, u16 item)
 
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OT_ID_PLAYER_ID);
+    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item)
@@ -134,7 +134,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
 
     ZeroEnemyPartyMons();
     u32 personality = GetMonPersonality(species1, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species1, level1, personality, OT_ID_PLAYER_ID);
+    CreateMon(&gEnemyParty[0], species1, level1, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item1)
@@ -145,7 +145,7 @@ void CreateScriptedDoubleWildMon(u16 species1, u8 level1, u16 item1, u16 species
     }
 
     personality = GetMonPersonality(species2, MON_GENDER_MAY_CUTE_CHARM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[1], species2, level2, personality, OT_ID_PLAYER_ID);
+    CreateMon(&gEnemyParty[1], species2, level2, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[1], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[1]);
     if (item2)
@@ -339,7 +339,7 @@ static u32 ScriptGiveMonParameterized(u8 side, u8 slot, u16 species, u8 level, u
     bool32 isShiny;
 
     u32 personality = GetMonPersonality(species, gender, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, species, level, personality, OT_ID_PLAYER_ID);
+    CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
 
     // shininess
     if (shinyMode == SHINY_MODE_ALWAYS || (P_FLAG_FORCE_SHINY != 0 && FlagGet(P_FLAG_FORCE_SHINY)))
@@ -440,7 +440,7 @@ u32 ScriptGiveMon(u16 species, u8 level, u16 item)
     u8 heldItem[2];
 
     u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, NATURE_MAY_STATIC_SYNCHRONIZE, RANDOM_UNOWN_LETTER);
-    CreateMon(&gEnemyParty[0], species, level, personality, OT_ID_PLAYER_ID);
+    CreateMon(&gEnemyParty[0], species, level, personality, OTID_STRUCT_PLAYER_ID);
     SetMonIVs(&gEnemyParty[0], USE_RANDOM_IVS);
     GiveMonInitialMoveset(&gEnemyParty[0]);
     if (item)

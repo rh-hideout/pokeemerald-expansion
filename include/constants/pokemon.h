@@ -155,6 +155,13 @@ enum __attribute__((packed)) Stat
 // never distributed
 #define MAX_GIFT_RIBBON 64
 
+enum OtIdMethod
+{
+    OT_ID_PLAYER_ID,
+    OT_ID_PRESET,
+    OT_ID_RANDOM_NO_SHINY
+};
+
 #define MIN_LEVEL 1
 #define MAX_LEVEL 100
 

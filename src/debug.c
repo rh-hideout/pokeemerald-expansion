@@ -2876,7 +2876,7 @@ static void DebugAction_Give_Pokemon_ComplexCreateMon(u8 taskId) //https://githu
 
     //Nature
     u32 personality = GetMonPersonality(species, MON_GENDER_RANDOM, nature, RANDOM_UNOWN_LETTER);
-    CreateMon(&mon, species, level, personality, OT_ID_PLAYER_ID);
+    CreateMon(&mon, species, level, personality, OTID_STRUCT_PLAYER_ID);
 
     //Shininess
     SetMonData(&mon, MON_DATA_IS_SHINY, &isShiny);
@@ -3101,7 +3101,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Fast(u8 taskId) //Credit: Sierraffini
     u16 species = SPECIES_BULBASAUR;
     u8 speciesName[POKEMON_NAME_LENGTH + 1];
 
-    CreateBoxMon(&boxMon, species, 100, Random32(), OT_ID_PLAYER_ID);
+    CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
     //mons are created with 0 IVs
 
     for (boxId = 0; boxId < TOTAL_BOXES_COUNT; boxId++)
@@ -3140,7 +3140,7 @@ static void DebugAction_PCBag_Fill_PCBoxes_Slow(u8 taskId)
             {
                 if (!spaceAvailable)
                     PlayBGM(MUS_RG_MYSTERY_GIFT);
-                CreateBoxMon(&boxMon, species, 100, Random32(), OT_ID_PLAYER_ID);
+                CreateBoxMon(&boxMon, species, 100, Random32(), OTID_STRUCT_PLAYER_ID);
                 SetBoxMonIVs(&boxMon, USE_RANDOM_IVS);
                 GiveBoxMonInitialMoveset(&boxMon);
                 gPokemonStoragePtr->boxes[boxId][boxPosition] = boxMon;

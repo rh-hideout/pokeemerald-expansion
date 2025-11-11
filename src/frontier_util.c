@@ -2599,7 +2599,7 @@ void CreateFrontierBrainPokemon(void)
                   sFrontierBrainsMons[facility][symbol][i].species,
                   monLevel,
                   personality,
-                  OT_ID_PRESET(FRONTIER_BRAIN_OTID));
+                  OTID_STRUCT_PRESET(FRONTIER_BRAIN_OTID));
         SetMonIVs(&gEnemyParty[monPartyId], sFrontierBrainsMons[facility][symbol][i].fixedIV);
         SetMonData(&gEnemyParty[monPartyId], MON_DATA_HELD_ITEM, &sFrontierBrainsMons[facility][symbol][i].heldItem);
         for (j = 0; j < NUM_STATS; j++)

@@ -678,22 +678,15 @@ extern const u16 gKyuremBlackSwapMoveTable[][2];
 
 #define GET_SHINY_VALUE(otId, personality) (HIHALF(otId) ^ LOHALF(otId) ^ HIHALF(personality) ^ LOHALF(personality))
 
-enum OtIdMethod
-{
-    OT_ID_METHOD_PLAYER,
-    OT_ID_METHOD_PRESET,
-    OT_ID_METHOD_RANDOM_NO_SHINY
-};
-
 struct OriginalTrainerId
 {
     enum OtIdMethod method;
     u32 value;
 };
 
-#define OT_ID_PLAYER_ID       ((struct OriginalTrainerId) {OT_ID_METHOD_PLAYER, 0})
-#define OT_ID_PRESET(value)   ((struct OriginalTrainerId) {OT_ID_METHOD_PRESET, value})
-#define OT_ID_RANDOM_NO_SHINY ((struct OriginalTrainerId) {OT_ID_METHOD_RANDOM_NO_SHINY, 0})
+#define OTID_STRUCT_PLAYER_ID       ((struct OriginalTrainerId) {OT_ID_PLAYER_ID, 0})
+#define OTID_STRUCT_PRESET(value)   ((struct OriginalTrainerId) {OT_ID_PRESET, value})
+#define OTID_STRUCT_RANDOM_NO_SHINY ((struct OriginalTrainerId) {OT_ID_RANDOM_NO_SHINY, 0})
 
 extern u8 gPlayerPartyCount;
 extern struct Pokemon gPlayerParty[PARTY_SIZE];
