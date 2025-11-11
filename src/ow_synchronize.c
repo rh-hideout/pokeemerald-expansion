@@ -4,11 +4,11 @@
 #include "random.h"
 #include "constants/pokemon.h"
 
-static bool32 HasHalfChance(u32 species);
-static bool32 HasTwoThirdsChance(u32 species);
-static bool32 IsFalse(u32 species);
-static bool32 IsTrue(u32 species);
-static bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
+static UNUSED bool32 HasHalfChance(u32 species);
+static UNUSED bool32 HasTwoThirdsChance(u32 species);
+static UNUSED bool32 IsFalse(u32 species);
+static UNUSED bool32 IsTrue(u32 species);
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species);
 
 const static bool32 (*sSynchronizeModes[]) (u32) = {
 #if OW_SYNCHRONIZE_NATURE == GEN_3
@@ -46,27 +46,27 @@ const static bool32 (*sCuteCharmModes[]) (u32) = {
     [GIFTMON_ORIGIN] = IsFalse,
 };
 
-static bool32 HasHalfChance(u32 species)
+static UNUSED bool32 HasHalfChance(u32 species)
 {
     return Random() % 2;
 }
 
-static bool32 HasTwoThirdsChance(u32 species)
+static UNUSED bool32 HasTwoThirdsChance(u32 species)
 {
     return Random() % 3;
 }
 
-static bool32 IsFalse(u32 species)
+static UNUSED bool32 IsFalse(u32 species)
 {
     return FALSE;
 }
 
-static bool32 IsTrue(u32 species)
+static UNUSED bool32 IsTrue(u32 species)
 {
     return TRUE;
 }
 
-static bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
+static UNUSED bool32 IsTrueIfUndiscoveredEggGroup(u32 species)
 {
     return (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_NO_EGGS_DISCOVERED);
 }
