@@ -3486,7 +3486,7 @@ static void DoBattleIntro(void)
                 gBattleMons[battler].types[1] = GetSpeciesType(gBattleMons[battler].species, 1);
                 gBattleMons[battler].types[2] = TYPE_MYSTERY;
                 gBattleMons[battler].ability = GetAbilityBySpecies(gBattleMons[battler].species, gBattleMons[battler].abilityNum);
-                gBattleStruct->hpOnSwitchout[GetBattlerSide(battler)] = gBattleMons[battler].hp;
+                gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
                 memset(&gBattleMons[battler].volatiles, 0, sizeof(struct Volatiles));
                 for (i = 0; i < NUM_BATTLE_STATS; i++)
                     gBattleMons[battler].statStages[i] = DEFAULT_STAT_STAGE;
@@ -3800,8 +3800,9 @@ static void TryDoEventsBeforeFirstTurn(void)
         }
         #endif // TESTING
 
+        gBattleStruct->speedTieBreaks = RandomUniform(RNG_SPEED_TIE, 0, Factorial(MAX_BATTLERS_COUNT) - 1);
         gBattleTurnCounter = 0;
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->eventState.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_OVERWORLD_WEATHER:
         gBattleStruct->eventState.beforeFristTurn++;
@@ -3832,11 +3833,11 @@ static void TryDoEventsBeforeFirstTurn(void)
         gBattleStruct->eventState.beforeFristTurn++;
         break;
     case FIRST_TURN_SWITCH_IN_EVENTS:
-        gBattleStruct->switchInEvents = 0;
-        for (i = 0; i < gBattlersCount; i++)
-            gBattleStruct->battlerState[i].switchIn = TRUE;
+        gBattleStruct->eventState.switchIn = 0;
+        for (u32 battler = 0; battler < gBattlersCount; battler++)
+            gBattleStruct->battlerState[battler].switchIn = TRUE;
         BattleScriptPushCursorAndCallback(BattleScript_FirstTurnSwitchInEvents);
-        gBattleStruct->eventsBeforeFirstTurnState++;
+        gBattleStruct->eventState.beforeFristTurn++;
         break;
     case FIRST_TURN_EVENTS_END:
         for (i = 0; i < MAX_BATTLERS_COUNT; i++)

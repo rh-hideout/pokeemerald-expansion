@@ -3,6 +3,7 @@
 
 // should they be included here or included individually by every file?
 #include "constants/battle_end_turn.h"
+#include "constants/battle_switch_in.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
@@ -588,6 +589,7 @@ struct BattlerState
     u32 switchIn:1;
     u32 padding:3;
     // End of Word
+    u16 hpOnSwitchout;
 };
 
 struct PartyState
@@ -618,7 +620,9 @@ struct EventStates
     enum BattlerId faintedActionBattler:4;
     enum MoveSuccessOrder atkCanceller:8;
     enum BattleIntroStates battleIntro:8;
-    u32 padding:24;
+    enum SwitchInEvents switchIn:8;
+    u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
+    u32 padding:8;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -644,8 +648,6 @@ struct BattleStruct
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
-    u8 switchInEvents:4;
-    u8 battlerSwitchInEvents:4;
     u8 scriptPartyIdx; // for printing the nickname
     u8 battlerPartyIndexes[MAX_BATTLERS_COUNT];
     u8 monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -669,7 +671,6 @@ struct BattleStruct
     u8 wallyWaitFrames;
     u8 wallyMoveFrames;
     u16 lastTakenMove[MAX_BATTLERS_COUNT]; // Last move that a battler was hit with.
-    u16 hpOnSwitchout[NUM_BATTLE_SIDES];
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;
