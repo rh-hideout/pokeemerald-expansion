@@ -485,7 +485,7 @@ void ScrCmd_createmon(struct ScriptContext *ctx)
     u8 ball           = PARSE_FLAG(1, ITEM_POKE_BALL);
     u8 nature         = PARSE_FLAG(2, NATURE_RANDOM);
     u8 abilityNum     = PARSE_FLAG(3, NUM_ABILITY_PERSONALITY);
-    u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM); // TODO: Find a better way to assign a random gender.
+    u8 gender         = PARSE_FLAG(4, MON_GENDER_RANDOM);
     u8 hpEv           = PARSE_FLAG(5, 0);
     u8 atkEv          = PARSE_FLAG(6, 0);
     u8 defEv          = PARSE_FLAG(7, 0);
