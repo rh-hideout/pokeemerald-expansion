@@ -1790,7 +1790,11 @@ void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species)
     CreateMon(DATA.currentMon, species, 100, 0, OT_ID_PRESET(0));
     data = MOVE_NONE;
     for (i = 0; i < MAX_MON_MOVES; i++)
+    {
         SetMonData(DATA.currentMon, MON_DATA_MOVE1 + i, &data);
+        data = 0x7F; // Max PP possible
+        SetMonData(DATA.currentMon, MON_DATA_PP1 + i, &data);
+    }
     data = 0;
     if (B_FRIENDSHIP_BOOST) // This way, we avoid the boost affecting tests unless explicitly stated.
         SetMonData(DATA.currentMon, MON_DATA_FRIENDSHIP, &data);
