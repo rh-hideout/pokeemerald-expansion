@@ -513,7 +513,6 @@ static u32 CalculateFishingBiteOdds(u32 rod, bool32 isStickyHold)
         odds *= 2;
 
     odds = min(100, odds);
-    DebugPrintf("Fishing odds: %d", odds);
     return odds;
 }
 
@@ -640,7 +639,6 @@ u32 CalculateChainFishingShinyRolls(void)
     if (!I_FISHING_CHAIN || !gIsFishingEncounter)
         return 0;
     u32 a = 2 * min(gChainFishingDexNavStreak, FISHING_CHAIN_SHINY_STREAK_MAX);
-    DebugPrintf("Total Shiny Rolls %d", a);
     return a;
 }
 
