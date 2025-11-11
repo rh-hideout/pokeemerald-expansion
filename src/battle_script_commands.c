@@ -6892,6 +6892,12 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_THIRD_MOVE_BLOCK:
+            if (gChosenMove == MOVE_UNAVAILABLE)
+            {
+                gBattleScripting.moveendState++;
+                break;
+            }
+
             // Special case for Steel Roller since it has to check the chosen move
             if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER && IsBattlerTurnDamaged(gBattlerTarget))
             {
