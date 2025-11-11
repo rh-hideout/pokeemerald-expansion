@@ -329,7 +329,7 @@ RusturfTunnel_EventScript_Grunt::
 	applymovement LOCALID_PLAYER, RusturfTunnel_Movement_PlayerWatchBrineyExit
 	applymovement LOCALID_RUSTURF_TUNNEL_BRINEY, RusturfTunnel_Movement_BrineyExit
 	applymovement LOCALID_RUSTURF_TUNNEL_PEEKO, RusturfTunnel_Movement_PeekoExit
-	waitmovement 0
+	waitmovementall
 	removeobject LOCALID_RUSTURF_TUNNEL_BRINEY
 	removeobject LOCALID_RUSTURF_TUNNEL_PEEKO
 	clearflag FLAG_DEVON_GOODS_STOLEN
