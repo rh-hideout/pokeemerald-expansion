@@ -651,11 +651,9 @@ SINGLE_BATTLE_TEST("(TERA) Protean/Libero cannot change the type of a Terastalli
         TURN { MOVE(player, MOVE_BUBBLE, gimmick: GIMMICK_TERA);
                MOVE(opponent, MOVE_EMBER); }
     } SCENE {
-        if (species == SPECIES_GRENINJA)
-            MESSAGE("Greninja used Bubble!");
-        else
-            MESSAGE("Raboot used Bubble!");
-        MESSAGE("The opposing Wobbuffet used Ember!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BUBBLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, opponent);
         MESSAGE("It's super effective!");
     }
 }
