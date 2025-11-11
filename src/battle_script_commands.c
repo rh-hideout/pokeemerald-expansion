@@ -14253,13 +14253,16 @@ static void Cmd_displaydexinfo(void)
 {
     CMD_ARGS();
 
-    struct Pokemon *mon = GetBattlerMon(GetCatchingBattler());
+    u32 caughtBattler = GetCatchingBattler();
+    struct Pokemon *mon = GetBattlerMon(caughtBattler);
     u16 species = GetMonData(mon, MON_DATA_SPECIES, NULL);
 
     switch (gBattleCommunication[0])
     {
     case 0:
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+        ClearTemporarySpeciesSpriteData(caughtBattler, FALSE, FALSE);
+        BattleLoadMonSpriteGfx(mon, caughtBattler);
         gBattleCommunication[0]++;
         break;
     case 1:
