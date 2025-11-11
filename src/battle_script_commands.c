@@ -12619,11 +12619,16 @@ static void Cmd_trysethelpinghand(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
+    if (!IsDoubleBattle())
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+        return;
+    }
+
     gBattlerTarget = GetBattlerAtPosition(BATTLE_PARTNER(GetBattlerPosition(gBattlerAttacker)));
 
-    if (IsDoubleBattle()
-        && !(gAbsentBattlerFlags & (1u << gBattlerTarget))
-        && !HasBattlerActedThisTurn(gBattlerTarget))
+    if (!(gAbsentBattlerFlags & (1u << gBattlerTarget))
+     && !HasBattlerActedThisTurn(gBattlerTarget))
     {
         gProtectStructs[gBattlerTarget].helpingHand++;
         gBattlescriptCurrInstr = cmd->nextInstr;
