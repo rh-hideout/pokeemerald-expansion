@@ -80,7 +80,6 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
-#include "config/pokerus.h"
 
 enum {
     MENU_SUMMARY,
@@ -2167,7 +2166,7 @@ u8 GetMonAilment(struct Pokemon *mon)
     ailment = GetAilmentFromStatus(GetMonData(mon, MON_DATA_STATUS));
     if (ailment != AILMENT_NONE)
         return ailment;
-    if (CheckMonPokerus(mon) && (POKERUS_VISIBLE_ON_EGG || !GetMonData(mon, MON_DATA_IS_EGG)))
+    if (ShouldPokemonShowActivePokerus(mon))
         return AILMENT_PKRS;
     return AILMENT_NONE;
 }

@@ -114,6 +114,32 @@ bool32 CheckMonHasHadPokerus(struct Pokemon *mon)
     return FALSE;
 }
 
+bool32 IsPokerusVisible(struct Pokemon *mon)
+{
+    if (!GetMonData(mon, MON_DATA_IS_EGG))
+        return TRUE;
+    if (POKERUS_VISIBLE_ON_EGG)
+        return TRUE;
+    return FALSE;
+
+}
+
+bool32 ShouldPokemonShowActivePokerus(struct Pokemon *mon)
+{
+    if (!IsPokerusVisible(mon))
+        return FALSE;
+    return CheckMonPokerus(mon);
+}
+
+bool32 ShouldPokemonShowCuredPokerus(struct Pokemon *mon)
+{
+    if (!IsPokerusVisible(mon))
+        return FALSE;
+    if (CheckMonPokerus(mon))
+        return FALSE;
+    return CheckMonHasHadPokerus(mon);
+}
+
 void UpdatePartyPokerusTime(u16 days)
 {
     if (!GetGenConfig(POKERUS_CONFIG_ENABLED))
