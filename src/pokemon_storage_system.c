@@ -7012,6 +7012,7 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
         *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
         *(txtPtr)++ = EXT_CTRL_CODE_BACKGROUND;
         *(txtPtr)++ = TEXT_COLOR_WHITE;
+        *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
         *(txtPtr)++ = EXT_CTRL_CODE_TEXT_COLORS;
         switch (gender)
         {

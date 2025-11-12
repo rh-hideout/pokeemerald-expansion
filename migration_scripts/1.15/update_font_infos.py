@@ -3,9 +3,9 @@ import re
 import tempfile
 
 font_infos_re = re.compile(
-    r"struct\s+FontInfo\s+sFontInfos\[\]\s+=[^{]*\{" # array opening bracket
+    r"struct\s+FontInfo\s+sFontInfos\[\]\s+=[^{]*\{" # declaration & opening bracket
     r"(?P<elems>([^{}]*\{[^{}]*})+)" # array elements
-    r"[^{}]*};", # array closing bracket
+    r"[^{}]*};", # closing bracket
     re.MULTILINE
 )
 
