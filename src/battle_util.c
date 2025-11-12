@@ -3615,7 +3615,6 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
 {
     bool32 effect = FALSE;
-    bool32 isTerrain = FALSE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return FALSE;
@@ -3623,134 +3622,223 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     switch (caseId)
     {
     case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
-        switch ((enum StartingStatus) gBattleStruct->startingStatus)
+        if (gBattleStruct->startingStatus & STARTING_STATUS_ELECTRIC_TERRAIN)
         {
-        case STARTING_STATUS_NONE:
-            break;
-        case STARTING_STATUS_ELECTRIC_TERRAIN:
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_ELECTRIC_TERRAIN,
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            isTerrain = TRUE;
-            break;
-        case STARTING_STATUS_MISTY_TERRAIN:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_ELECTRIC_TERRAIN;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_MISTY_TERRAIN)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MISTY_TERRAIN,
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
                         &gFieldTimers.terrainTimer);
-            isTerrain = TRUE;
-            break;
-        case STARTING_STATUS_GRASSY_TERRAIN:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_MISTY_TERRAIN;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_GRASSY_TERRAIN)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_GRASSY_TERRAIN,
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
                         &gFieldTimers.terrainTimer);
-            isTerrain = TRUE;
-            break;
-        case STARTING_STATUS_PSYCHIC_TERRAIN:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_GRASSY_TERRAIN;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_PSYCHIC_TERRAIN)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_PSYCHIC_TERRAIN,
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            isTerrain = TRUE;
-            break;
-        case STARTING_STATUS_TRICK_ROOM:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_PSYCHIC_TERRAIN;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_TRICK_ROOM)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_TRICK_ROOM,
                         B_MSG_SET_TRICK_ROOM,
                         B_ANIM_TRICK_ROOM,
                         &gFieldTimers.trickRoomTimer);
-            break;
-        case STARTING_STATUS_MAGIC_ROOM:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_TRICK_ROOM;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_MAGIC_ROOM)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MAGIC_ROOM,
                         B_MSG_SET_MAGIC_ROOM,
                         B_ANIM_MAGIC_ROOM,
                         &gFieldTimers.magicRoomTimer);
-            break;
-        case STARTING_STATUS_WONDER_ROOM:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_MAGIC_ROOM;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_WONDER_ROOM)
+        {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_WONDER_ROOM,
                         B_MSG_SET_WONDER_ROOM,
                         B_ANIM_WONDER_ROOM,
                         &gFieldTimers.wonderRoomTimer);
-            break;
-        case STARTING_STATUS_TAILWIND_PLAYER:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_WONDER_ROOM;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_PLAYER)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
                         B_SIDE_PLAYER,
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
-            break;
-        case STARTING_STATUS_TAILWIND_OPPONENT:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_PLAYER;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_OPPONENT)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
-            break;
-        case STARTING_STATUS_RAINBOW_PLAYER:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_OPPONENT;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_PLAYER)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
                         B_SIDE_PLAYER,
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
-            break;
-        case STARTING_STATUS_RAINBOW_OPPONENT:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_PLAYER;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_OPPONENT)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
-            break;
-        case STARTING_STATUS_SEA_OF_FIRE_PLAYER:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_OPPONENT;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_PLAYER)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
                         B_SIDE_PLAYER,
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
-            break;
-        case STARTING_STATUS_SEA_OF_FIRE_OPPONENT:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_PLAYER;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_OPPONENT)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
-            break;
-        case STARTING_STATUS_SWAMP_PLAYER:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_OPPONENT;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_PLAYER)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
                         B_SIDE_PLAYER,
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_PLAYER].swampTimer);
-            break;
-        case STARTING_STATUS_SWAMP_OPPONENT:
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_PLAYER;
+            if (effect)
+            {
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
+        }
+        if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_OPPONENT)
+        {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
-            break;
-        }
-        if (effect)
-        {
-            if (isTerrain)
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-            else
+            gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_OPPONENT;
+            if (effect)
+            {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+                return TRUE;
+            }
         }
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
