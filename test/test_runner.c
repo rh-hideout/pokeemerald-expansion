@@ -483,6 +483,7 @@ void Test_ExpectCrash(bool32 expectCrash)
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    TestInitConfigData();
     ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
@@ -503,6 +504,7 @@ static void FunctionTest_Run(void *data)
 static void FunctionTest_TearDown(void *data)
 {
     (void)data;
+    TestFreeConfigData();
     FREE_AND_SET_NULL(gFunctionTestRunnerState);
 }
 

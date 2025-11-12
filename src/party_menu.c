@@ -53,6 +53,7 @@
 #include "pokemon_jump.h"
 #include "pokemon_storage_system.h"
 #include "pokemon_summary_screen.h"
+#include "pokerus.h"
 #include "region_map.h"
 #include "reshow_battle_screen.h"
 #include "scanline_effect.h"
@@ -79,6 +80,7 @@
 #include "constants/party_menu.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "config/pokerus.h"
 
 enum {
     MENU_SUMMARY,
@@ -2165,7 +2167,7 @@ u8 GetMonAilment(struct Pokemon *mon)
     ailment = GetAilmentFromStatus(GetMonData(mon, MON_DATA_STATUS));
     if (ailment != AILMENT_NONE)
         return ailment;
-    if (CheckPartyPokerus(mon, 0))
+    if (CheckMonPokerus(mon) && (POKERUS_VISIBLE_ON_EGG || !GetMonData(mon, MON_DATA_IS_EGG)))
         return AILMENT_PKRS;
     return AILMENT_NONE;
 }
