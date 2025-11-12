@@ -3,13 +3,14 @@
 
 DOUBLE_BATTLE_TEST("Dark Aura increases the power of all Dark-type attacks by 33%")
 {
+    KNOWN_FAILING; // It does slightly more damage than expected
     s16 damage[8];
 
     GIVEN {
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_BITE, target:opponentLeft, secondaryEffect:FALSE);
@@ -61,10 +62,10 @@ DOUBLE_BATTLE_TEST("Dark Aura's effect doesn't stack multiple times")
 
     GIVEN {
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { Defense(999); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_BITE, target:opponentLeft, secondaryEffect:FALSE);

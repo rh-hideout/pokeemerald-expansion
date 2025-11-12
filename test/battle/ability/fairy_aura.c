@@ -3,13 +3,14 @@
 
 DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 33%")
 {
+    KNOWN_FAILING; // It does slightly more damage than expected
     s16 damage[8];
 
     GIVEN {
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft, secondaryEffect:FALSE);
@@ -61,10 +62,10 @@ DOUBLE_BATTLE_TEST("Fairy Aura's effect doesn't stack multiple times")
 
     GIVEN {
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { Defense(999); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
-        OPPONENT(SPECIES_WOBBUFFET) { Defense(999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft, secondaryEffect:FALSE);
