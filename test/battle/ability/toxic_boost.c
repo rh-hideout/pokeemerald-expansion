@@ -18,5 +18,6 @@ SINGLE_BATTLE_TEST("Toxic Boost increases Attack by 50% when the Pokémon is poi
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[2].damage);
     }
 }
