@@ -20,9 +20,7 @@ static u32 GetRandomPokerusStrain(void)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 15, 30, 30, 30, 30, 30, 30, 30, 30, 1, 1, 1, 1, 1, 1, 1);
     else if (POKERUS_STRAIN_DISTRIBUTION < GEN_4) //Gen 3 (Ruby/Sapphire only)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 30, 31, 31, 31, 31, 31, 31, 31, 1, 1, 1, 1, 1, 1, 1, 1);
-    else if (POKERUS_STRAIN_DISTRIBUTION < GEN_5) //Gen 4 (Including Emerald)
-        strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 0, 31, 31, 31, 31, 31, 31, 31, 1, 1, 1, 1, 1, 1, 1, 1);
-    else // Gen 5+ (Pokerus was disabled in gen 9 but we default it here)
+    else // Gen 4+ (Pokerus was disabled in gen 9 but we default it here)
         strain = RandomWeighted(RNG_POKERUS_STRAIN_DISTRIBUTION, 0, 31, 31, 31, 31, 31, 31, 31, 0, 1, 1, 1, 1, 1, 1, 1);
     return strain;
 }
