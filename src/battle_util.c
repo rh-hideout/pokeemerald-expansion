@@ -3615,6 +3615,7 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
 {
     bool32 effect = FALSE;
+    bool32 isTerrain = FALSE;
 
     if (gBattleTypeFlags & BATTLE_TYPE_SAFARI)
         return FALSE;
@@ -3630,13 +3631,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_ELECTRIC_TERRAIN;
+            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
                 return TRUE;
             }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_MISTY_TERRAIN)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_MISTY_TERRAIN)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MISTY_TERRAIN,
@@ -3644,13 +3646,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_MISTY_TERRAIN;
+            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
                 return TRUE;
             }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_GRASSY_TERRAIN)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_GRASSY_TERRAIN)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_GRASSY_TERRAIN,
@@ -3658,13 +3661,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_GRASSY_TERRAIN;
+            isTerrain = TRUE;
             if (effect)
             {
                 BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
                 return TRUE;
             }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_PSYCHIC_TERRAIN)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_PSYCHIC_TERRAIN)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_PSYCHIC_TERRAIN,
@@ -3672,13 +3676,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         0,
                         &gFieldTimers.terrainTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_PSYCHIC_TERRAIN;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
-                return TRUE;
-            }
+            isTerrain = TRUE;
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_TRICK_ROOM)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_TRICK_ROOM)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_TRICK_ROOM,
@@ -3686,13 +3686,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_TRICK_ROOM,
                         &gFieldTimers.trickRoomTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_TRICK_ROOM;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_MAGIC_ROOM)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_MAGIC_ROOM)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MAGIC_ROOM,
@@ -3700,13 +3695,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_MAGIC_ROOM,
                         &gFieldTimers.magicRoomTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_MAGIC_ROOM;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_WONDER_ROOM)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_WONDER_ROOM)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_WONDER_ROOM,
@@ -3714,13 +3704,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_WONDER_ROOM,
                         &gFieldTimers.wonderRoomTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_WONDER_ROOM;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_PLAYER)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_PLAYER)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3729,13 +3714,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_PLAYER;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_OPPONENT)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_OPPONENT)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3744,13 +3724,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_OPPONENT;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_PLAYER)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_PLAYER)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3759,13 +3734,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_PLAYER;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_OPPONENT)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_OPPONENT)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3774,13 +3744,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_OPPONENT;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_PLAYER)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_PLAYER)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3789,13 +3754,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_PLAYER;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_OPPONENT)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_OPPONENT)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3804,13 +3764,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_OPPONENT;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_PLAYER)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_PLAYER)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3819,13 +3774,8 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_PLAYER].swampTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_PLAYER;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
-        if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_OPPONENT)
+        else if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_OPPONENT)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3834,12 +3784,15 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
             gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_OPPONENT;
-            if (effect)
-            {
-                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
-                return TRUE;
-            }
         }
+        if (effect)
+        {
+            if (isTerrain)
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldTerrain);
+            else
+                BattleScriptPushCursorAndCallback(BattleScript_OverworldStatusStarts);
+        }
+
         break;
     case FIELD_EFFECT_OVERWORLD_TERRAIN:   // terrain starting from overworld weather
         if (B_THUNDERSTORM_TERRAIN == TRUE

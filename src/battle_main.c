@@ -3755,7 +3755,7 @@ static void DoBattleIntro(void)
                 gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
                 gBattleStruct->startingStatusTimer = 0; // infinite
             }
-            else if (B_VAR_STARTING_STATUS != 0)
+            if (B_VAR_STARTING_STATUS != 0)
             {
                 gBattleStruct->startingStatus |= VarGet(B_VAR_STARTING_STATUS);
                 gBattleStruct->startingStatusTimer = VarGet(B_VAR_STARTING_STATUS_TIMER);
