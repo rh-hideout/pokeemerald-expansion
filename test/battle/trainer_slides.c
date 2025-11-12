@@ -212,3 +212,82 @@ SINGLE_BATTLE_TEST("Trainer Slide: Enemy Dynamax")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Trainer Slide: Enemy Tera")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_ENEMY_TERA;
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+            TURN { MOVE(opponent, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        MESSAGE("This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Player Mega Evolution")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION;
+
+    GIVEN {
+        PLAYER(SPECIES_LOPUNNY) {Item(ITEM_LOPUNNITE); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        MESSAGE("This message plays before the player activates the Mega Evolution gimmick.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_MEGA_EVOLUTION, player);
+        MESSAGE("Lopunny has Mega Evolved into Mega Lopunny!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Player Z Move")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_Z_MOVE;
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
+    } SCENE {
+        MESSAGE("This message plays before the player activates the Z-Move gimmick.{PAUSE_UNTIL_PRESS}");
+        MESSAGE("Wobbuffet surrounded itself with its Z-Power!");
+        MESSAGE("Wobbuffet unleashes its full-force Z-Move!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Player Dynamax")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_DYNAMAX;
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("This message plays before the player activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Trainer Slide: Player Tera")
+{
+    gBattleTestRunnerState->data.recordedBattle.opponentA = TRAINER_SLIDE_PLAYER_TERA;
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        MESSAGE("This message plays before the player activates the Tera gimmick.{PAUSE_UNTIL_PRESS}");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+    }
+}

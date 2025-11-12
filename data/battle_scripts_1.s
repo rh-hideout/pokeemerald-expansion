@@ -48,6 +48,8 @@ BattleScript_Terastallization::
 
 BattleScript_TeraFormChange::
 	@ TODO: no string prints in S/V, but right now this helps with clarity
+	flushtextbox
+	trytrainerslideteramsg
 	printstring STRINGID_PKMNSTORINGENERGY
 	handleformchange BS_ATTACKER, 0
 	handleformchange BS_ATTACKER, 1

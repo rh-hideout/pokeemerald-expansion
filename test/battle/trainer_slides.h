@@ -54,7 +54,7 @@
     },
     [TRAINER_SLIDE_ENEMY_TERA] =
     {
-        [TRAINER_SLIDE_ENEMY_DYNAMAX] = COMPOUND_STRING("This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
+        [TRAINER_SLIDE_ENEMY_TERA] = COMPOUND_STRING("This message plays before the enemy activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
     },
     [TRAINER_SLIDE_PLAYER_MEGA_EVOLUTION] =
     {
@@ -72,5 +72,56 @@
     {
         [TRAINER_SLIDE_PLAYER_TERA] = COMPOUND_STRING("This message plays before the player activates the Tera gimmick.{PAUSE_UNTIL_PRESS}"),
     },
+    [TRAINER_SLIDE_ENEMY_LANDS_FIRST_SUPER_EFFECTIVE_HIT] =
+    {
+        [TRAINER_SLIDE_ENEMY_LANDS_FIRST_SUPER_EFFECTIVE_HIT] = COMPOUND_STRING("This message plays after the enemy lands their first super effective hit.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_LANDS_FIRST_STAB_MOVE] =
+    {
+        [TRAINER_SLIDE_ENEMY_LANDS_FIRST_STAB_MOVE] = COMPOUND_STRING("Enemy lands their first STAB move.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN] =
+    {
+        [TRAINER_SLIDE_ENEMY_LANDS_FIRST_DOWN] = COMPOUND_STRING("This message plays after the enemy KOs one player mon.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_MON_UNAFFECTED] =
+    {
+        [TRAINER_SLIDE_PLAYER_MON_UNAFFECTED] = COMPOUND_STRING("Enemy attacked player with ineffective move.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_LAST_SWITCHIN] =
+    {
+        [TRAINER_SLIDE_PLAYER_LAST_SWITCHIN] = COMPOUND_STRING("This message plays after the player switches in their last Pokemon.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_LAST_HALF_HP] =
+    {
+        [TRAINER_SLIDE_PLAYER_LAST_HALF_HP] = COMPOUND_STRING("Player last Mon has < 51% HP.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_LAST_LOW_HP] =
+    {
+        [TRAINER_SLIDE_PLAYER_LAST_LOW_HP] = COMPOUND_STRING("Player last Mon has < 26% HP.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE] =
+    {
+        [TRAINER_SLIDE_PLAYER_USES_MON_AND_MOVE] = COMPOUND_STRING("This message plays before the player uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE] =
+    {
+        [TRAINER_SLIDE_ENEMY_USES_MON_AND_MOVE] = COMPOUND_STRING("This message plays before the enemy uses a specific Pokemon and move.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON] =
+    {
+        [TRAINER_SLIDE_PLAYER_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("This message plays after the player switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON] =
+    {
+        [TRAINER_SLIDE_ENEMY_SWITCHES_CERTAIN_MON] = COMPOUND_STRING("This message plays after the enemy switches in a specific Pokemon.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE] =
+    {
+        [TRAINER_SLIDE_PLAYER_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("This message plays after a specific player Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
+    },
+    [TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE] =
+    {
+        [TRAINER_SLIDE_ENEMY_CERTAIN_MON_FORM_CHANGE] = COMPOUND_STRING("This message plays after a specific enemy Pokemon undergoes a form change.{PAUSE_UNTIL_PRESS}"),
+    },
 },
-
