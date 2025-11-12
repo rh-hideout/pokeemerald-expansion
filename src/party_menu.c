@@ -273,6 +273,7 @@ static bool8 IsMonAllowedInMinigame(u8);
 static void DisplayPartyPokemonDataToTeachMove(u8, u16);
 static u8 CanTeachMove(struct Pokemon *, u16);
 static void DisplayPartyPokemonBarDetail(u8, const u8 *, u8, const u8 *);
+static void DisplayPartyPokemonBarDetailToFit(u8 windowId, const u8 *str, u8 color, const u8 *align, u32 width);
 static void DisplayPartyPokemonLevel(u8, struct PartyMenuBox *);
 static void DisplayPartyPokemonGender(u8, u16, u8 *, struct PartyMenuBox *);
 static void DisplayPartyPokemonHP(u16 hp, u16 maxHp, struct PartyMenuBox *menuBox);
@@ -1167,7 +1168,7 @@ static void DisplayPartyPokemonDataForMultiBattle(u8 slot)
         StringCopy(gStringVar1, gMultiPartnerParty[actualSlot].nickname);
         StringGet_Nickname(gStringVar1);
         ConvertInternationalPlayerName(gStringVar1);
-        DisplayPartyPokemonBarDetail(menuBox->windowId, gStringVar1, 0, menuBox->infoRects->dimensions);
+        DisplayPartyPokemonBarDetailToFit(menuBox->windowId, gStringVar1, 0, menuBox->infoRects->dimensions, 50);
         DisplayPartyPokemonLevel(gMultiPartnerParty[actualSlot].level, menuBox);
         DisplayPartyPokemonGender(gMultiPartnerParty[actualSlot].gender, gMultiPartnerParty[actualSlot].species, gMultiPartnerParty[actualSlot].nickname, menuBox);
         DisplayPartyPokemonHP(gMultiPartnerParty[actualSlot].hp, gMultiPartnerParty[actualSlot].maxhp, menuBox);
@@ -1510,12 +1511,14 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
         }
         case PARTY_ACTION_SEND_MON_TO_BOX:
         {
-            u8 partyId = GetPartyIdFromBattleSlot((u8)*slotPtr);
-            if (partyId == 0 || ((gBattleTypeFlags & BATTLE_TYPE_DOUBLE) && partyId == 2)
-                || ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && partyId >= (PARTY_SIZE / 2)))
+            u8 partyId = (u8)*slotPtr;
+            if ((gBattleTypeFlags & BATTLE_TYPE_MULTI) && partyId >= (PARTY_SIZE / 2))
             {
-                // Can't select if mon is currently on the field, or doesn't belong to you
+                // Can't select if mon doesn't belong to you
                 PlaySE(SE_FAILURE);
+                DisplayPartyMenuMessage(gText_CannotSendMonToBoxPartner, FALSE);
+                ScheduleBgCopyTilemapToVram(2);
+                gTasks[taskId].func = Task_ReturnToChooseMonAfterText;
             }
             else if (DoesSelectedMonKnowHM((u8 *)slotPtr))
             {
@@ -1527,7 +1530,7 @@ static void HandleChooseMonSelection(u8 taskId, s8 *slotPtr)
             else
             {
                 PlaySE(SE_SELECT);
-                gSelectedMonPartyId = partyId;
+                gSelectedMonPartyId = GetPartyIdFromBattleSlot(partyId);
                 Task_ClosePartyMenu(taskId);
             }
             break;
@@ -6317,8 +6320,9 @@ static void SwapFusionMonMoves(struct Pokemon *mon, const u16 moveTable[][2], u3
         {
             if (move == moveTable[j][oldMoveIndex])
             {
+                u32 pp = GetMovePP(moveTable[j][newMoveIndex]);
                 SetMonData(mon, MON_DATA_MOVE1 + i, &moveTable[j][newMoveIndex]);
-                SetMonData(mon, MON_DATA_PP1 + i, &gMovesInfo[moveTable[j][newMoveIndex]].pp);
+                SetMonData(mon, MON_DATA_PP1 + i, &pp);
             }
         }
     }
@@ -6420,11 +6424,11 @@ static void Task_TryItemUseFusionChange(u8 taskId)
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
-                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, FUSE_MON);
+                    SwapFusionMonMoves(mon, gKyuremWhiteSwapMoveTable, FUSE_MON);
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
-                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, FUSE_MON);
+                    SwapFusionMonMoves(mon, gKyuremBlackSwapMoveTable, FUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
                 if (gTasks[taskId].moveToLearn != 0)
@@ -6435,11 +6439,11 @@ static void Task_TryItemUseFusionChange(u8 taskId)
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_WHITE)
-                    SwapFusionMonMoves(mon, gKyurenWhiteSwapMoveTable, UNFUSE_MON);
+                    SwapFusionMonMoves(mon, gKyuremWhiteSwapMoveTable, UNFUSE_MON);
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
                 if (gTasks[taskId].tExtraMoveHandling == SWAP_EXTRA_MOVES_KYUREM_BLACK)
-                    SwapFusionMonMoves(mon, gKyurenBlackSwapMoveTable, UNFUSE_MON);
+                    SwapFusionMonMoves(mon, gKyuremBlackSwapMoveTable, UNFUSE_MON);
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
                 if ( gTasks[taskId].tExtraMoveHandling == FORGET_EXTRA_MOVES)

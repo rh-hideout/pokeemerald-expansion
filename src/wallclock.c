@@ -692,13 +692,13 @@ void CB2_StartWallClock(void)
     DecompressDataWithHeaderVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
 
     taskId = CreateTask(Task_SetClock_WaitFadeIn, 0);
-    gTasks[taskId].tHours = 10;
-    gTasks[taskId].tMinutes = 0;
+    gTasks[taskId].tHours = gLocalTime.hours;
+    gTasks[taskId].tMinutes = gLocalTime.minutes;
     gTasks[taskId].tMoveDir = 0;
-    gTasks[taskId].tPeriod = 0;
+    gTasks[taskId].tPeriod = gTasks[taskId].tHours / 12;
     gTasks[taskId].tMoveSpeed = 0;
-    gTasks[taskId].tMinuteHandAngle = 0;
-    gTasks[taskId].tHourHandAngle = 300;
+    gTasks[taskId].tMinuteHandAngle = gTasks[taskId].tMinutes * 6;
+    gTasks[taskId].tHourHandAngle = (gTasks[taskId].tHours % 12) * 30 + (gTasks[taskId].tMinutes / 10) * 5;
 
     spriteId = CreateSprite(&sSpriteTemplate_MinuteHand, 120, 80, 1);
     gSprites[spriteId].sTaskId = taskId;

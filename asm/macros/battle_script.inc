@@ -187,8 +187,13 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0x21
+	.macro jumpifstatignorecontrary battler:req, comparison:req, stat:req, value:req, jumpInstr:req
 	.byte 0x21
+	.byte \battler
+	.byte \comparison
+	.byte \stat
+	.byte \value
+	.4byte \jumpInstr
 	.endm
 
 	.macro jumpbasedontype battler:req, type:req, jumpIfType:req, jumpInstr:req
@@ -1963,12 +1968,6 @@
 	callnative BS_JumpIfNoAlly
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro infatuatewithbattler battler:req, infatuateWith:req
-	callnative BS_InfatuateWithBattler
-	.byte \battler
-	.byte \infatuateWith
 	.endm
 
 	.macro setlastuseditem battler:req

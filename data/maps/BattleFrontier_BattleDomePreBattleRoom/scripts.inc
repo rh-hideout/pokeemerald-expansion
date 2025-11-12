@@ -18,6 +18,7 @@ BattleFrontier_BattleDomePreBattleRoom_OnFrame:
 
 BattleFrontier_BattleDomePreBattleRoom_EventScript_EnterRoom::
 	goto_if_eq VAR_0x8006, 1, BattleFrontier_BattleDomePreBattleRoom_EventScript_ReturnFromBattle
+	delay 1
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, TRUE
 	setvar VAR_TEMP_0, 1
 	applymovement LOCALID_PLAYER, BattleFrontier_BattleDomePreBattleRoom_Movement_PlayerEnter

@@ -654,10 +654,10 @@ extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
 #if P_FUSION_FORMS
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
-extern const u16 gKyurenWhiteSwapMoveTable[][2];
+extern const u16 gKyuremWhiteSwapMoveTable[][2];
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
-extern const u16 gKyurenBlackSwapMoveTable[][2];
+extern const u16 gKyuremBlackSwapMoveTable[][2];
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
 #endif //P_FUSION_FORMS
@@ -789,6 +789,7 @@ u32 GetSpeciesBaseDefense(u16 species);
 u32 GetSpeciesBaseSpAttack(u16 species);
 u32 GetSpeciesBaseSpDefense(u16 species);
 u32 GetSpeciesBaseSpeed(u16 species);
+u32 GetSpeciesBaseStat(u16 species, u32 statIndex);
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species);
 const u16 *GetSpeciesTeachableLearnset(u16 species);
 const u16 *GetSpeciesEggMoves(u16 species);

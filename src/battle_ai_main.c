@@ -1089,7 +1089,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     SetTypeBeforeUsingMove(move, battlerAtk);
     moveType = GetBattleMoveType(move);
 
-    if (IsPowderMove(move) && !IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
+    if (IsPowderMove(move) && !IsAffectedByPowderMove(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef]))
         RETURN_SCORE_MINUS(10);
 
     if (!BreaksThroughSemiInvulnerablity(battlerDef, move) && moveEffect != EFFECT_SEMI_INVULNERABLE && AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
@@ -4008,7 +4008,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
     bool32 isBattle1v1 = IsBattle1v1();
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
-    bool32 moveTargetsBothOpponents = hasTwoOpponents && (gMovesInfo[move].target & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
+    bool32 moveTargetsBothOpponents = hasTwoOpponents && (GetMoveTarget(move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
     u32 i;
 
     // The AI should understand that while Dynamaxed, status moves function like Protect.
@@ -4768,7 +4768,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (hasPartner
           && GetMoveTarget(move) == MOVE_TARGET_USER
           && !IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
-          && (!IsPowderMove(move) || IsAffectedByPowder(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef])))
+          && (!IsPowderMove(move) || IsAffectedByPowderMove(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef])))
           // Rage Powder doesn't affect powder immunities
         {
             u32 predictedMoveOnPartner = gLastMoves[BATTLE_PARTNER(battlerAtk)];
@@ -5069,7 +5069,7 @@ static u32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move)
         if (gBattleMons[battlerDef].speed > gBattleMons[battlerAtk].speed)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
-case EFFECT_GUARD_SPLIT:
+    case EFFECT_GUARD_SPLIT:
     {
         u32 atkDefense = gBattleMons[battlerAtk].defense;
         u32 defDefense = gBattleMons[battlerDef].defense;
@@ -5590,6 +5590,9 @@ case EFFECT_GUARD_SPLIT:
         }
         else // consider move effects that hinder the target
         {
+            if (IsAdditionalEffectBlocked(battlerAtk, aiData->abilities[battlerAtk], battlerDef, aiData->abilities[battlerDef]))
+                continue;
+
             switch (additionalEffect->moveEffect)
             {
             case MOVE_EFFECT_FLINCH:

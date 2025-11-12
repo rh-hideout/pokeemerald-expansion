@@ -223,17 +223,20 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
     }
 }
 
-SINGLE_BATTLE_TEST("Powder prevents Protean from changing its user to Fire type")
+SINGLE_BATTLE_TEST("Powder prevents Protean/Libero from changing its user to Fire type")
 {
+    u32 ability, species;
+    PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
+    PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); }
+        PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_EMBER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWDER, opponent);
         NONE_OF {
-            ABILITY_POPUP(player, ABILITY_PROTEAN);
+            ABILITY_POPUP(player, ability);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
             HP_BAR(opponent);
         }

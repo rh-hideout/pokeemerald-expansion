@@ -633,15 +633,8 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && GetMonData(mon, MON_DATA_GIGANTAMAX_FACTOR))
             gBattleSpritesDataPtr->battlerData[battler].transformSpecies = species = GetGMaxTargetSpecies(species);
 
-        if (B_TRANSFORM_SHINY >= GEN_4)
-        {
-            personalityValue = gTransformedPersonalities[battler];
-            isShiny = gTransformedShininess[battler];
-        }
-        else
-        {
-            personalityValue = GetMonData(mon, MON_DATA_PERSONALITY);
-        }
+        personalityValue = gTransformedPersonalities[battler];
+        isShiny = gTransformedShininess[battler];
     }
 
     position = GetBattlerPosition(battler);
@@ -913,7 +906,7 @@ void CopyBattleSpriteInvisibility(u8 battler)
     gBattleSpritesDataPtr->battlerData[battler].invisible = gSprites[gBattlerSpriteIds[battler]].invisible;
 }
 
-void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bool8 trackEnemyPersonality)
+void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
 {
     u32 personalityValue, position, paletteOffset, targetSpecies;
     bool32 isShiny;
@@ -947,24 +940,23 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
                 targetSpecies = GetIllusionMonSpecies(battlerDef);
             else
                 targetSpecies = GetMonData(monDef, MON_DATA_SPECIES);
-            personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
-            isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
+            gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
         }
         else
         {
             targetSpecies = gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies;
-            if (B_TRANSFORM_SHINY >= GEN_4 && trackEnemyPersonality && !megaEvo)
-            {
-                personalityValue = GetMonData(monDef, MON_DATA_PERSONALITY);
-                isShiny = GetMonData(monDef, MON_DATA_IS_SHINY);
-            }
-            else
-            {
-                personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
-                isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
-            }
         }
 
+        if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
+        {
+            personalityValue = gDisableStructs[battlerAtk].transformedMonPersonality;
+            isShiny = gDisableStructs[battlerAtk].transformedMonShininess;
+        }
+        else
+        {
+            personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
+            isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
+        }
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
                                  targetSpecies,
@@ -977,14 +969,10 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
     paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
 
-    if (!megaEvo)
+    if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
     {
         BlendPalette(paletteOffset, 16, 6, RGB_WHITE);
         CpuCopy32(&gPlttBufferFaded[paletteOffset], &gPlttBufferUnfaded[paletteOffset], PLTT_SIZEOF(16));
-        if (!IsContest())
-        {
-            gBattleSpritesDataPtr->battlerData[battlerAtk].transformSpecies = targetSpecies;
-        }
     }
 
     // dynamax tint
@@ -995,6 +983,13 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, bool32 megaEvo, bo
             BlendPalette(paletteOffset, 16, 4, RGB(12, 0, 31));
         else
             BlendPalette(paletteOffset, 16, 4, RGB(31, 0, 12));
+        CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
+    }
+
+    // Terastallization's tint
+    if (changeType != SPECIES_GFX_CHANGE_ILLUSION_OFF && GetActiveGimmick(battlerAtk) == GIMMICK_TERA)
+    {
+        BlendPalette(paletteOffset, 16, 8, GetTeraTypeRGB(GetBattlerTeraType(battlerAtk)));
         CpuCopy32(gPlttBufferFaded + paletteOffset, gPlttBufferUnfaded + paletteOffset, PLTT_SIZEOF(16));
     }
 

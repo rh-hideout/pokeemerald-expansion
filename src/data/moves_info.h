@@ -6706,12 +6706,12 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Uproar"),
         .description = COMPOUND_STRING(
-                                    #if B_UPROAR_TURNS >= GEN_5
-                                       "Causes an uproar for 2 to 5\n"
-                                    #else
-                                       "Causes an uproar for 3\n"
-                                    #endif
-                                       "turns and prevents sleep."),
+        #if B_UPROAR_TURNS >= GEN_5
+            "Causes an uproar for 3\n"
+        #else
+            "Causes an uproar for 2 to 5\n"
+        #endif
+            "turns and prevents sleep."),
         .effect = EFFECT_UPROAR,
         .power = B_UPDATED_MOVE_DATA >= GEN_5 ? 90 : 50,
         .type = TYPE_NORMAL,
@@ -17103,6 +17103,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .damagePercentage = 50 },
         .metronomeBanned = B_UPDATED_MOVE_FLAGS >= GEN_8,
         .contestEffect = CONTEST_EFFECT_BADLY_STARTLE_MONS_WITH_GOOD_APPEALS,
         .contestCategory = CONTEST_CATEGORY_CUTE,
@@ -20171,6 +20172,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
         .category = DAMAGE_CATEGORY_SPECIAL,
+        .argument = { .damagePercentage = 50 },
         .metronomeBanned = TRUE,
         .battleAnimScript = gBattleAnimMove_Ruination,
     },
