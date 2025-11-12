@@ -2961,7 +2961,7 @@ u8 DoBattlerEndTurnEffects(void)
                  && GetBattlerAbility(gBattlerAttacker) != ABILITY_MAGIC_GUARD)
                 {
                     gBattleScripting.battler = battler;
-                    gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 6;
+                    gBattleMoveDamage = GetNonDynamaxMaxHP(battler) / 16;
                     ChooseDamageNonTypesString(gSideTimers[side].damageNonTypesType);
                     BattleScriptExecute(BattleScript_DamageNonTypesContinues);
                     effect++;
@@ -9777,7 +9777,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageCalculationData *
         break;
 
     case ABILITY_KICKBOXER:
-        if (gMovesInfo[move].kickmove)
+        if (gMovesInfo[move].kickMove)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         break;
     

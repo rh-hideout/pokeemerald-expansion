@@ -208,7 +208,96 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         )
         .levelUpLearnset = sMeganiumLevelUpLearnset,
         .teachableLearnset = sMeganiumTeachableLearnset,
+        .formSpeciesIdTable = sMeganiumFormSpeciesIdTable,
+        .formChangeTable = sMeganiumFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_MEGANIUM
+    [SPECIES_MEGANIUM_MEGA] =
+    {
+        .baseHP        = 83, 
+        .baseAttack    = 82, 
+        .baseDefense   = 120, 
+        .baseSpeed     = 80,
+        .baseSpAttack  = 150, 
+        .baseSpDefense = 120,
+        .types = MON_TYPES(TYPE_GRASS, TYPE_FAIRY),
+        .catchRate = 45,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 263,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 236,
+    #else
+        .expYield = 208,
+    #endif
+        .evYield_Defense = 1,
+        .evYield_SpDefense = 2,
+        .genderRatio = PERCENT_FEMALE(12.5),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_MONSTER, EGG_GROUP_GRASS),
+        .abilities = { ABILITY_TRIAGE, ABILITY_TRIAGE, ABILITY_TRIAGE },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Meganium"),
+        .cryId = CRY_MEGANIUM,
+        .natDexNum = NATIONAL_DEX_MEGANIUM,
+        .categoryName = _("Herb"),
+        .height = 18,
+        .weight = 1005,
+        .description = COMPOUND_STRING(
+            "This Pokemon can fire a tremendously\n"
+            "powerful Solar Beam from its four flowers.\n"
+            "Another name for this is Mega Sol Cannon"),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 277,
+        .trainerOffset = 1,
+        .frontPic = gMonFrontPic_Meganium,
+        .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(64, 64) : MON_COORDS_SIZE(48, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_Meganium,
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_V_STRETCH : ANIM_GROW_VIBRATE,
+        .backPic = gMonBackPic_Meganium,
+        .backPicSize = MON_COORDS_SIZE(56, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 0 : 2,
+        .backAnimId = BACK_ANIM_V_SHAKE,
+        .palette = gMonPalette_Meganium,
+        .shinyPalette = gMonShinyPalette_Meganium,
+        .iconSprite = gMonIcon_Meganium,
+        .iconPalIndex = 1,
+#if P_GENDER_DIFFERENCES
+        .frontPicFemale = gMonFrontPic_MeganiumF,
+        .frontPicSizeFemale = MON_COORDS_SIZE(48, 64),
+        .backPicFemale = gMonBackPic_MeganiumF,
+        .backPicSizeFemale = MON_COORDS_SIZE(56, 64),
+#endif //P_GENDER_DIFFERENCES
+        SHADOW(0, 13, SHADOW_SIZE_M)
+        FOOTPRINT(Meganium)
+        OVERWORLD(
+            sPicTable_Meganium,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Meganium,
+            gShinyOverworldPalette_Meganium
+        )
+        OVERWORLD_FEMALE(
+            sPicTable_MeganiumF,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMeganiumLevelUpLearnset,
+        .teachableLearnset = sMeganiumTeachableLearnset,
+        .formSpeciesIdTable = sMeganiumFormSpeciesIdTable,
+    },
+#endif FROSTY_MEGAS >= SPECIES_MEGANIUM
+#endif P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_CHIKORITA
 
 #if P_FAMILY_CYNDAQUIL
@@ -414,10 +503,10 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
     [SPECIES_TYPHLOSION_HISUI] =
     {
         .baseHP        = 73,
-        .baseAttack    = 79,    //-5
+        .baseAttack    = 74,    //-10
         .baseDefense   = 78,
-        .baseSpeed     = 100,    //+5
-        .baseSpAttack  = 119,
+        .baseSpeed     = 100,   //+5
+        .baseSpAttack  = 124,   //+5
         .baseSpDefense = 85,
         .types = MON_TYPES(TYPE_FIRE, TYPE_GHOST),
         .catchRate = 45,
@@ -929,7 +1018,153 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         )
         .levelUpLearnset = sNoctowlLevelUpLearnset,
         .teachableLearnset = sNoctowlTeachableLearnset,
+        .formSpeciesIdTable = sNoctowlFormSpeciesIdTable,
+        .formChangeTable = sNoctowlFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_NOCTOWL
+    [SPECIES_NOCTOWL_MEGA_X] =
+    {
+        .baseHP        = 100,
+        .baseAttack    = 85,
+        .baseDefense   = 55,
+        .baseSpeed     = 65,
+        .baseSpAttack  = 102,
+        .baseSpDefense = 145,
+        .types = MON_TYPES(TYPE_GHOST, TYPE_FLYING),
+        .catchRate = 90,
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 158,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 155,
+    #else
+        .expYield = 162,
+    #endif
+        .evYield_HP = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 15,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
+        .abilities = { ABILITY_SHADOW_SHIELD, ABILITY_SHADOW_SHIELD, ABILITY_SHADOW_SHIELD },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("Noctowl"),
+        .cryId = CRY_NOCTOWL,
+        .natDexNum = NATIONAL_DEX_NOCTOWL,
+        .categoryName = _("Owl"),
+        .height = 16,
+        .weight = 408,
+        .description = COMPOUND_STRING(
+            "Mega Evolution wraps it in darkness\n"
+            "turning this night owl into a being\n"
+            "filled with malice and calculating\n"
+            "efficiency."),
+        .pokemonScale = 278,
+        .pokemonOffset = 3,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Noctowl,
+        .frontPicSize = MON_COORDS_SIZE(40, 64),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 3 : 2,
+        .frontAnimFrames = sAnims_Noctowl,
+        .frontAnimId = ANIM_V_STRETCH,
+        .backPic = gMonBackPic_Noctowl,
+        .backPicSize = MON_COORDS_SIZE(48, 64),
+        .backPicYOffset = 3,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_Noctowl,
+        .shinyPalette = gMonShinyPalette_Noctowl,
+        .iconSprite = gMonIcon_Noctowl,
+        .iconPalIndex = 2,
+        SHADOW(-2, 10, SHADOW_SIZE_S)
+        FOOTPRINT(Noctowl)
+        OVERWORLD(
+            sPicTable_Noctowl,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_NONE,
+            sAnimTable_Following,
+            gOverworldPalette_Noctowl,
+            gShinyOverworldPalette_Noctowl
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sNoctowlLevelUpLearnset,
+        .teachableLearnset = sNoctowlTeachableLearnset,
+        .formSpeciesIdTable = sNoctowlFormSpeciesIdTable,    
+    },    
+
+    [SPECIES_NOCTOWL_MEGA_Y] =
+    {
+        .baseHP        = 100,
+        .baseAttack    = 85,
+        .baseDefense   = 55,
+        .baseSpeed     = 65,
+        .baseSpAttack  = 102,
+        .baseSpDefense = 145,
+        .types = MON_TYPES(TYPE_PSYCHIC, TYPE_FLYING),
+        .catchRate = 90,
+    #if P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 158,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 155,
+    #else
+        .expYield = 162,
+    #endif
+        .evYield_HP = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 15,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FLYING),
+        .abilities = { ABILITY_SHADOW_SHIELD, ABILITY_SHADOW_SHIELD, ABILITY_SHADOW_SHIELD },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("Noctowl"),
+        .cryId = CRY_NOCTOWL,
+        .natDexNum = NATIONAL_DEX_NOCTOWL,
+        .categoryName = _("Owl"),
+        .height = 16,
+        .weight = 408,
+        .description = COMPOUND_STRING(
+            "Mega Evolution wraps it in darkness\n"
+            "turning this night owl into a being\n"
+            "filled with malice and calculating\n"
+            "efficiency."),
+        .pokemonScale = 278,
+        .pokemonOffset = 3,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Noctowl,
+        .frontPicSize = MON_COORDS_SIZE(40, 64),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 3 : 2,
+        .frontAnimFrames = sAnims_Noctowl,
+        .frontAnimId = ANIM_V_STRETCH,
+        .backPic = gMonBackPic_Noctowl,
+        .backPicSize = MON_COORDS_SIZE(48, 64),
+        .backPicYOffset = 3,
+        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .palette = gMonPalette_Noctowl,
+        .shinyPalette = gMonShinyPalette_Noctowl,
+        .iconSprite = gMonIcon_Noctowl,
+        .iconPalIndex = 2,
+        SHADOW(-2, 10, SHADOW_SIZE_S)
+        FOOTPRINT(Noctowl)
+        OVERWORLD(
+            sPicTable_Noctowl,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_NONE,
+            sAnimTable_Following,
+            gOverworldPalette_Noctowl,
+            gShinyOverworldPalette_Noctowl
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sNoctowlLevelUpLearnset,
+        .teachableLearnset = sNoctowlTeachableLearnset,
+        .formSpeciesIdTable = sNoctowlFormSpeciesIdTable,    
+    },    
+#endif FROSTY_MEGAS >= SPECIES_NOCTOWL 
+#endif P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_HOOTHOOT
 
 #if P_FAMILY_LEDYBA
@@ -1080,7 +1315,91 @@ const struct SpeciesInfo gSpeciesInfoGen2[] =
         )
         .levelUpLearnset = sLedianLevelUpLearnset,
         .teachableLearnset = sLedianTeachableLearnset,
+        .formSpeciesIdTable = sLedianFormSpeciesIdTable,
+        .formChangeTable = sLedianFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_LEDIAN
+    [SPECIES_LEDIAN] =
+    {
+        .baseHP        = 60, 
+        .baseAttack    = 135, 
+        .baseDefense   = 85,
+        .baseSpeed     = 95, 
+        .baseSpAttack  = 35, 
+        .baseSpDefense = 140,
+        .types = MON_TYPES(TYPE_BUG, TYPE_FIGHTING),
+        .catchRate = 90,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 137 : 134,
+        .evYield_SpDefense = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 15,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_BUG),
+        .abilities = { ABILITY_PRANKSTER, ABILITY_PRANKSTER, ABILITY_PRANKSTER },
+        .bodyColor = BODY_COLOR_RED,
+        .speciesName = _("Ledian"),
+        .cryId = CRY_LEDIAN,
+        .natDexNum = NATIONAL_DEX_LEDIAN,
+        .categoryName = _("Five Star"),
+        .height = 14,
+        .weight = 356,
+        .description = COMPOUND_STRING(
+            "Through Mega Evolution and starlight,\n"
+            "Mega Ledian is able to wield potential\n"
+            "that many would never believe possible\n"
+            "when observing the previous form."),
+        .pokemonScale = 256,
+        .pokemonOffset = 2,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Ledian,
+        .frontPicSize = MON_COORDS_SIZE(48, 56),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 4 : 6,
+        .frontAnimFrames = sAnims_Ledian,
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_V_SLIDE_SLOW : ANIM_V_SLIDE_WOBBLE,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 10,
+        .backPic = gMonBackPic_Ledian,
+        .backPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(56, 56) : MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 7 : 3,
+        .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
+        .palette = gMonPalette_Ledian,
+        .shinyPalette = gMonShinyPalette_Ledian,
+        .iconSprite = gMonIcon_Ledian,
+        .iconPalIndex = 0,
+#if P_GENDER_DIFFERENCES
+        .frontPicFemale = gMonFrontPic_LedianF,
+        .frontPicSizeFemale = MON_COORDS_SIZE(48, 56),
+        .backPicFemale = gMonBackPic_LedianF,
+        .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
+#endif //P_GENDER_DIFFERENCES
+        SHADOW(0, 15, SHADOW_SIZE_S)
+        FOOTPRINT(Ledian)
+        OVERWORLD(
+            sPicTable_Ledian,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Ledian,
+            gShinyOverworldPalette_Ledian
+        )
+        OVERWORLD_FEMALE(
+            sPicTable_LedianF,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sLedianLevelUpLearnset,
+        .teachableLearnset = sLedianTeachableLearnset,
+        .formSpeciesIdTable = sLedianFormSpeciesIdTable,
+    },
+#endif FROSTY_MEGAS >= SPECIES_LEDIAN
+#endif P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_LEDYBA
 
 #if P_FAMILY_SPINARAK

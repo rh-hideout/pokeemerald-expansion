@@ -2703,6 +2703,7 @@ static const struct LevelUpMove sDewgongLevelUpLearnset[] = {
     LEVEL_UP_MOVE(50, MOVE_AURORA_VEIL),
     LEVEL_UP_MOVE(54, MOVE_SAFEGUARD),
     LEVEL_UP_MOVE(57, MOVE_CHILLY_RECEPTION),
+    LEVEL_UP_MOVE(60, MOVE_HYPER_VOICE),
 };
 #endif //P_FAMILY_SEEL
 

@@ -5714,6 +5714,74 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
         .levelUpLearnset = sFalinksLevelUpLearnset,
         .teachableLearnset = sFalinksTeachableLearnset,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_FALINKS
+    [SPECIES_FALINKS] =
+    {
+        .baseHP        = 70,    
+        .baseAttack    = 140,   
+        .baseDefense   = 155,   
+        .baseSpeed     = 35,
+        .baseSpAttack  = 55,
+        .baseSpDefense = 130,
+        .types = MON_TYPES(TYPE_FIGHTING, TYPE_STEEL),
+        .catchRate = 45,
+        .expYield = 165,
+        .evYield_Attack = 2,
+        .evYield_SpDefense = 1,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 25,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_MINERAL),
+        .abilities = { ABILITY_STAMINA, ABILITY_STAMINA, ABILITY_STAMINA },
+        .bodyColor = BODY_COLOR_GRAY,
+        .speciesName = _("Falinks"),
+        .cryId = CRY_FALINKS,
+        .natDexNum = NATIONAL_DEX_FALINKS,
+        .categoryName = _("Formation"),
+        .height = 30,
+        .weight = 620,
+        .description = COMPOUND_STRING(
+            "Five of them are troopers, and one is the\n"
+            "brass. The brass's orders are absolute."),
+        .pokemonScale = 275,
+        .pokemonOffset = 7,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Falinks,
+        .frontPicSize = MON_COORDS_SIZE(56, 48),
+        .frontPicYOffset = 8,
+        .frontAnimFrames = sAnims_Falinks,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_Falinks,
+        .backPicSize = MON_COORDS_SIZE(64, 40),
+        .backPicYOffset = 15,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_Falinks,
+        .shinyPalette = gMonShinyPalette_Falinks,
+        .iconSprite = gMonIcon_Falinks,
+        .iconPalIndex = 0,
+        SHADOW(-7, 5, SHADOW_SIZE_S)
+        FOOTPRINT(Falinks)
+        OVERWORLD(
+            sPicTable_Falinks,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Falinks,
+            gShinyOverworldPalette_Falinks
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sFalinksLevelUpLearnset,
+        .teachableLearnset = sFalinksTeachableLearnset,
+        //.formSpeciesIdTable = sFalinksFormSpeciesIdTable,
+        //.formChangeTable = sFalinksFormChangeTable,
+    },
+#endif // FROSTY_MEGAS >= SPECIES_FALINKS
+#endif // P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_FALINKS
 
 #if P_FAMILY_PINCURCHIN
@@ -8240,11 +8308,11 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_REGIELEKI
     [SPECIES_REGIELEKI] =
     {
-        .baseHP        = 80,
-        .baseAttack    = 100,
+        .baseHP        = 100,   //+20
+        .baseAttack    = 80,    //-20
         .baseDefense   = 50,
         .baseSpeed     = 200,
-        .baseSpAttack  = 100,
+        .baseSpAttack  = 120,   //+20
         .baseSpDefense = 50,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 3,
@@ -8306,12 +8374,12 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
 #if P_FAMILY_REGIDRAGO
     [SPECIES_REGIDRAGO] =
     {
-        .baseHP        = 200,
-        .baseAttack    = 100,
-        .baseDefense   = 50,
-        .baseSpeed     = 80,
-        .baseSpAttack  = 100,
-        .baseSpDefense = 50,
+        .baseHP        = 160,   //-40    
+        .baseAttack    = 80,    //-20
+        .baseDefense   = 70,    //+20
+        .baseSpeed     = 100,   //+20
+        .baseSpAttack  = 120,   //+20
+        .baseSpDefense = 70,    //+20
         .types = MON_TYPES(TYPE_DRAGON),
         .catchRate = 3,
         .expYield = 290,

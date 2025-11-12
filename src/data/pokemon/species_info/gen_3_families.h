@@ -8517,6 +8517,74 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .formSpeciesIdTable = sCastformFormSpeciesIdTable,
         .formChangeTable = sCastformFormChangeTable,
     },
+
+    [SPECIES_CASTFORM_SANDY] =
+    {
+        .baseHP        = 80, 
+        .baseAttack    = 100,   //+++
+        .baseDefense   = 90,    //+
+        .baseSpeed     = 80,
+        .baseSpAttack  = 80,
+        .baseSpDefense = 80,
+        .types = MON_TYPES(TYPE_GROUND),
+        .catchRate = 45,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 147 : 145,
+        .evYield_HP = 1,
+        .itemCommon = ITEM_MYSTIC_WATER,
+        .itemRare = ITEM_MYSTIC_WATER,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 25,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY, EGG_GROUP_AMORPHOUS),
+        .abilities = { ABILITY_FORECAST, ABILITY_NONE, ABILITY_NONE },
+        .bodyColor = BODY_COLOR_BROWN,
+        .speciesName = _("Castform"),
+        .cryId = CRY_CASTFORM,
+        .natDexNum = NATIONAL_DEX_CASTFORM,
+        .categoryName = _("Weather"),
+        .height = 3,
+        .weight = 8,
+        .description = COMPOUND_STRING(
+            "This is Castform's form in a sandstorm.\n"
+            "It allows Castform to be immune to the\n"
+            "harsh environment and become strong enough\n"
+            "to navigate the weather with ease."),              
+        .pokemonScale = 435,
+        .pokemonOffset = -5,
+        .trainerScale = 256,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_CastformNormal,
+        .frontPicSize = MON_COORDS_SIZE(24, 32),
+        .frontPicYOffset = 17,
+        .frontAnimFrames = sAnims_CastformSnowy,
+        .frontAnimId = ANIM_H_SLIDE_WOBBLE,
+        .enemyMonElevation = 16,
+        .backPic = gMonBackPic_CastformNormal,
+        .backPicSize = MON_COORDS_SIZE(32, 64),
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_CONVEX_DOUBLE_ARC,
+        .palette = gMonPalette_CastformNormal,
+        .shinyPalette = gMonShinyPalette_CastformNormal,
+        .iconSprite = gMonIcon_CastformNormal,
+        .iconPalIndex = 0,
+        SHADOW(1, 10, SHADOW_SIZE_S)
+        FOOTPRINT(Castform)
+        OVERWORLD(
+            sPicTable_CastformNormal,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_NONE,
+            sAnimTable_Following,
+            gOverworldPalette_CastformNormal,
+            gShinyOverworldPalette_CastformNormal
+        )
+        .levelUpLearnset = sCastformLevelUpLearnset,
+        .teachableLearnset = sCastformTeachableLearnset,
+        .eggMoveLearnset = sCastformEggMoveLearnset,
+        .formSpeciesIdTable = sCastformFormSpeciesIdTable,
+        .formChangeTable = sCastformFormChangeTable,
+    },
 #endif //P_FAMILY_CASTFORM
 
 #if P_FAMILY_KECLEON
@@ -10798,12 +10866,12 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 #if P_FAMILY_REGIROCK
     [SPECIES_REGIROCK] =
     {
-        .baseHP        = 80,
+        .baseHP        = 100,   //+20
         .baseAttack    = 100,
         .baseDefense   = 200,
-        .baseSpeed     = 50,
-        .baseSpAttack  = 50,
-        .baseSpDefense = 100,
+        .baseSpeed     = 40,    //-10
+        .baseSpAttack  = 40,    //-10
+        .baseSpDefense = 120,   //+20
         .types = MON_TYPES(TYPE_ROCK),
         .catchRate = 3,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
@@ -10819,7 +10887,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
-        .abilities = { ABILITY_CLEAR_BODY, ABILITY_NONE, ABILITY_STURDY },
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_ROCKY_PAYLOAD, ABILITY_STAMINA },
         .bodyColor = BODY_COLOR_BROWN,
         .noFlip = TRUE,
         .speciesName = _("Regirock"),
@@ -10870,11 +10938,11 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 #if P_FAMILY_REGICE
     [SPECIES_REGICE] =
     {
-        .baseHP        = 80,
+        .baseHP        = 90,    //+10
         .baseAttack    = 50,
         .baseDefense   = 100,
-        .baseSpeed     = 50,
-        .baseSpAttack  = 100,
+        .baseSpeed     = 40,    //-10
+        .baseSpAttack  = 120,   //+20
         .baseSpDefense = 200,
         .types = MON_TYPES(TYPE_ICE),
         .catchRate = 3,
@@ -10891,7 +10959,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
-        .abilities = { ABILITY_CLEAR_BODY, ABILITY_NONE, ABILITY_ICE_BODY },
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_CYRO_SPIRIT, ABILITY_HEATPROOF },
         .bodyColor = BODY_COLOR_BLUE,
         .speciesName = _("Regice"),
         .cryId = CRY_REGICE,
@@ -10941,10 +11009,10 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
 #if P_FAMILY_REGISTEEL
     [SPECIES_REGISTEEL] =
     {
-        .baseHP        = 80,
-        .baseAttack    = 75,
+        .baseHP        = 100,   //+20
+        .baseAttack    = 90,    //+15
         .baseDefense   = 150,
-        .baseSpeed     = 50,
+        .baseSpeed     = 35,    //-15
         .baseSpAttack  = 75,
         .baseSpDefense = 150,
         .types = MON_TYPES(TYPE_STEEL),
@@ -10963,7 +11031,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .friendship = 35,
         .growthRate = GROWTH_SLOW,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_NO_EGGS_DISCOVERED),
-        .abilities = { ABILITY_CLEAR_BODY, ABILITY_NONE, ABILITY_LIGHT_METAL },
+        .abilities = { ABILITY_CLEAR_BODY, ABILITY_STEELWORKER, ABILITY_HEATPROOF },
         .bodyColor = BODY_COLOR_GRAY,
         .speciesName = _("Registeel"),
         .cryId = CRY_REGISTEEL,

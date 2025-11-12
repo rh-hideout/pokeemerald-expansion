@@ -3033,7 +3033,77 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
         )
         .levelUpLearnset = sMalamarLevelUpLearnset,
         .teachableLearnset = sMalamarTeachableLearnset,
+        .formSpeciesIdTable = sMalamarFormSpeciesIdTable,
+        .formChangeTable = sMalamarFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_MALAMAR
+    [SPECIES_MALAMAR_MEGA] =
+    {
+        .baseHP        = 96,    //+10
+        .baseAttack    = 102,
+        .baseDefense   = 88,    
+        .baseSpeed     = 90,    
+        .baseSpAttack  = 98,    
+        .baseSpDefense = 120,
+        .types = MON_TYPES(TYPE_DARK, TYPE_PSYCHIC),
+        .catchRate = 80,
+        .expYield = 169,
+        .evYield_Attack = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_WATER_2),
+        .abilities = { ABILITY_CONTRARY, ABILITY_CONTRARY, ABILITY_CONTRARY },
+        .bodyColor = BODY_COLOR_BLUE,
+        .speciesName = _("Malamar"),
+        .cryId = CRY_MALAMAR,
+        .natDexNum = NATIONAL_DEX_MALAMAR,
+        .categoryName = _("Overturning"),
+        .height = 15,
+        .weight = 470,
+        .description = COMPOUND_STRING(
+            "It lures prey close with hypnotic motions,\n"
+            "then wraps its tentacles around it before\n"
+            "finishing it off with digestive fluids. It\n"
+            "forces others to do whatever it wants."),
+        .pokemonScale = 268,
+        .pokemonOffset = 2,
+        .trainerScale = 271,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Malamar,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_Malamar,
+        .frontAnimId = ANIM_CIRCULAR_STRETCH_TWICE,
+        .backPic = gMonBackPic_Malamar,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 8,
+        .backAnimId = BACK_ANIM_V_STRETCH,
+        .palette = gMonPalette_Malamar,
+        .shinyPalette = gMonShinyPalette_Malamar,
+        .iconSprite = gMonIcon_Malamar,
+        .iconPalIndex = 2,
+        SHADOW(5, 14, SHADOW_SIZE_M)
+        FOOTPRINT(Malamar)
+        OVERWORLD(
+            sPicTable_Malamar,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Malamar,
+            gShinyOverworldPalette_Malamar
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sMalamarLevelUpLearnset,
+        .teachableLearnset = sMalamarTeachableLearnset,
+        .formSpeciesIdTable = sMalamarFormSpeciesIdTable,
+    },
+    #endif FROSTY_MEGAS >= SPECIES_MALAMAR
+#endif P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_INKAY
 
 #if P_FAMILY_BINACLE

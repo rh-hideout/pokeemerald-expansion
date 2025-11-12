@@ -7283,7 +7283,78 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .levelUpLearnset = sArcanineLevelUpLearnset,
         .teachableLearnset = sArcanineTeachableLearnset,
         .formSpeciesIdTable = sArcanineFormSpeciesIdTable,
+        .formChangeTable = sArcanineFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_ARCANINE_HISUI
+    [SPECIES_ARCANINE_HISUI_MEGA] =
+    {
+        .baseHP        = 95,
+        .baseAttack    = 145,
+        .baseDefense   = 100,
+        .baseSpeed     = 90,
+        .baseSpAttack  = 125,
+        .baseSpDefense = 100,
+        .types = MON_TYPES(TYPE_FIRE, TYPE_ROCK),
+        .catchRate = 75,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 194 : 213,
+        .evYield_Attack = 2,
+        .genderRatio = PERCENT_FEMALE(25),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FIELD),
+        .abilities = { ABILITY_ROCK_HEAD, ABILITY_ROCK_HEAD, ABILITY_ROCK_HEAD },
+        .bodyColor = BODY_COLOR_BROWN,
+        .speciesName = _("Arcanine"),
+        .cryId = CRY_ARCANINE,
+        .natDexNum = NATIONAL_DEX_ARCANINE,
+        .categoryName = _("Legendary"),
+        .height = 20,
+        .weight = 1680,
+        .description = COMPOUND_STRING(
+            "Snaps at its foes with fangs cloaked in\n"
+            "blazing flame. Despite its bulk, it deftly\n"
+            "feints every which way, leading opponents\n"
+            "on a deceptively merry chase."),
+        .pokemonScale = 256,
+        .pokemonOffset = 1,
+        .trainerScale = 312,
+        .trainerOffset = 4,
+        .frontPic = gMonFrontPic_ArcanineHisui,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_ArcanineHisui,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        //.backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_ArcanineHisui,
+        .shinyPalette = gMonShinyPalette_ArcanineHisui,
+        .iconSprite = gMonIcon_ArcanineHisui,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(-1, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Arcanine)
+        OVERWORLD(
+            sPicTable_ArcanineHisui,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_ArcanineHisui,
+            gShinyOverworldPalette_ArcanineHisui
+        )
+        .isMegaEvoluttion = TRUE,
+        .isHisuianForm = TRUE,
+        .levelUpLearnset = sArcanineHisuiLevelUpLearnset,
+        .teachableLearnset = sArcanineHisuiTeachableLearnset,
+        .formSpeciesIdTable = sArcanineFormSpeciesIdTable,
+    },
+    #endif FROSTY_MEGAS >= SPECIES_ARCANINE_HISUI
+    #endif P_MEGA_EVOLUTIONS
 
 #if P_HISUIAN_FORMS
     [SPECIES_GROWLITHE_HISUI] =
@@ -8540,6 +8611,94 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sVictreebelLevelUpLearnset,
         .teachableLearnset = sVictreebelTeachableLearnset,
+        .formSpeciesIdTable = sVictreebelFormSpeciesIdTable,
+        .formChangeTable = sVictreebelFormChangeTable,
+    },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_VICTREEBEL
+    [SPECIES_VICTREEBEL_MEGA] =
+    {
+        .baseHP        = 80,
+        .baseAttack    = 125,
+        .baseDefense   = 85,    
+        .baseSpeed     = 70,    
+        .baseSpAttack  = 135,
+        .baseSpDefense = 105     //+10
+        .types = MON_TYPES(TYPE_GRASS, TYPE_POISON),
+        .catchRate = 45,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 245,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 221,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 216,
+    #else
+        .expYield = 191,
+    #endif
+        .evYield_Attack = 3,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS),
+        .abilities = { ABILITY_ROUGH_SKIN, ABILITY_ROUGH_SKIN, ABILITY_ROUGH_SKIN },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Victreebel"),
+        .cryId = CRY_VICTREEBEL,
+        .natDexNum = NATIONAL_DEX_VICTREEBEL,
+        .categoryName = _("Flycatcher"),
+        .height = 17,
+        .weight = 155,
+        .description = COMPOUND_STRING(
+            "The long vine extending from its head is\n"
+            "waved about as if it were a living thing to\n"
+            "attract prey. When an unsuspecting victim\n"
+            "approaches, it is swallowed whole."),
+        .pokemonScale = 256,
+        .pokemonOffset = 1,
+        .trainerScale = 312,
+        .trainerOffset = 3,
+        .frontPic = gMonFrontPic_Victreebel,
+        .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(56, 56) : MON_COORDS_SIZE(64, 56),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 5 : 6,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 10),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 10),
+            ANIMCMD_FRAME(0, 10),
+            ANIMCMD_FRAME(1, 10),
+            ANIMCMD_FRAME(0, 10),
+        ),
+        .frontAnimId = ANIM_H_JUMPS_V_STRETCH,
+        .backPic = gMonBackPic_Victreebel,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 6,
+        .backAnimId = BACK_ANIM_V_STRETCH,
+        .palette = gMonPalette_Victreebel,
+        .shinyPalette = gMonShinyPalette_Victreebel,
+        .iconSprite = gMonIcon_Victreebel,
+        .iconPalIndex = 1,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(3, 8, SHADOW_SIZE_M)
+        FOOTPRINT(Victreebel)
+        OVERWORLD(
+            sPicTable_Victreebel,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_SPOT,
+            sAnimTable_Following,
+            gOverworldPalette_Victreebel,
+            gShinyOverworldPalette_Victreebel
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sVictreebelLevelUpLearnset,
+        .teachableLearnset = sVictreebelTeachableLearnset,
+        .formSpeciesIdTable = sVictreebelFormSpeciesIdTable,
+    },
+    #endif FROSTY_MEGAS >= SPECIES_VICTREEBEL
+    #endif P_MEGA_EVOLUTIONS
     },
 #endif //P_FAMILY_BELLSPROUT
 
@@ -10387,7 +10546,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_FIELD),
     #if P_UPDATED_ABILITIES >= GEN_4
-        .abilities = { ABILITY_THICK_FAT, ABILITY_HYDRATION, ABILITY_ICE_BODY },
+        .abilities = { ABILITY_THICK_FAT, ABILITY_ICE_BODY, ABILITY_SNOW_CLOAK },
     #else
         .abilities = { ABILITY_THICK_FAT, ABILITY_NONE, ABILITY_ICE_BODY },
     #endif
@@ -10453,7 +10612,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .friendship = STANDARD_FRIENDSHIP,
         .growthRate = GROWTH_MEDIUM_FAST,
         .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_FIELD),
-        .abilities = { ABILITY_THICK_FAT, ABILITY_ABSOLUTE_ZERO, ABILITY_ICE_SCALES },
+        .abilities = { ABILITY_THICK_FAT, ABILITY_ICE_BODY, ABILITY_SNOW_CLOAK },
         .bodyColor = BODY_COLOR_WHITE,
         .speciesName = _("Dewgong"),
         .cryId = CRY_DEWGONG,
@@ -10495,7 +10654,82 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sDewgongLevelUpLearnset,
         .teachableLearnset = sDewgongTeachableLearnset,
+        .formSpeciesIdTable = sDewgongFormSpeciesIdTable,
+        .formChangeTable = sDewgongFormChangeTable,
     },
+
+    #if P_MEGA_EVOLUTIONS
+    #if FROSTY_MEGAS >= SPECIES_DEWGONG
+    [SPECIES_DEWGONG_MEGA] =
+    {
+        .baseHP        = 130,   //+5
+        .baseAttack    = 90,    //+10
+        .baseDefense   = 100,
+        .baseSpeed     = 70,
+        .baseSpAttack  = 105,    //+10
+        .baseSpDefense = 105, 
+        .types = MON_TYPES(TYPE_WATER, TYPE_ICE),
+        .catchRate = 75,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 166 : 176,
+        .evYield_SpDefense = 2,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_FIELD),
+        .abilities = { ABILITY_ABSOLUTE_ZERO, ABILITY_ABSOLUTE_ZERO, ABILITY_ABSOLUTE_ZERO },
+        .bodyColor = BODY_COLOR_WHITE,
+        .speciesName = _("Dewgong"),
+        .cryId = CRY_DEWGONG,
+        .natDexNum = NATIONAL_DEX_DEWGONG,
+        .categoryName = _("Sea Lion"),
+        .height = 17,
+        .weight = 1200,
+        .description = COMPOUND_STRING(
+            "It loves to snooze on bitterly cold ice.\n"
+            "The sight of this Pokémon sleeping on\n"
+            "a glacier was mistakenly thought to be\n"
+            "a mermaid by a mariner long ago."),
+        .pokemonScale = 256,
+        .pokemonOffset = 0,
+        .trainerScale = 275,
+        .trainerOffset = 0,
+        .frontPic = gMonFrontPic_Dewgong,
+        .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(64, 56) : MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 7 : 2,
+        .frontAnimFrames = ANIM_FRAMES(
+            ANIMCMD_FRAME(0, 30),
+            ANIMCMD_FRAME(1, 30),
+            ANIMCMD_FRAME(0, 30),
+        ),
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE_SLOW,
+        .backPic = gMonBackPic_Dewgong,
+        .backPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(56, 56) : MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 5,
+        .backAnimId = BACK_ANIM_H_SLIDE,
+        .palette = gMonPalette_Dewgong,
+        .shinyPalette = gMonShinyPalette_Dewgong,
+        .iconSprite = gMonIcon_Dewgong,
+        .iconPalIndex = 2,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        SHADOW(2, 9, SHADOW_SIZE_XL_BATTLE_ONLY)
+        FOOTPRINT(Dewgong)
+        OVERWORLD(
+            sPicTable_Dewgong,
+            SIZE_32x32,
+            SHADOW_SIZE_M,
+            TRACKS_FOOT,
+            sAnimTable_Following,
+            gOverworldPalette_Dewgong,
+            gShinyOverworldPalette_Dewgong
+        )
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sDewgongLevelUpLearnset,
+        .teachableLearnset = sDewgongTeachableLearnset,
+        .formSpeciesIdTable = sDewgongFormSpeciesIdTable,
+    },
+    #endif FROSTY_MEGAS >= SPECIES_DEWGONG
+#endif P_MEGA_EVOLUTIONS
 #endif //P_FAMILY_SEEL
 
 #if P_FAMILY_GRIMER
@@ -14609,9 +14843,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_MR_RIME] =
     {
         .baseHP        = 100,    //+20
-        .baseAttack    = 65,     //-20
+        .baseAttack    = 60,     //-25
         .baseDefense   = 75,
-        .baseSpeed     = 80,     //+10
+        .baseSpeed     = 90,     //+20
         .baseSpAttack  = 110,
         .baseSpDefense = 100,
         .types = MON_TYPES(TYPE_ICE, TYPE_PSYCHIC),
@@ -14889,8 +15123,8 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseHP        = 70,
         .baseAttack    = 135,
         .baseDefense   = 95,
-        .baseSpeed     = 85,
-        .baseSpAttack  = 45,
+        .baseSpeed     = 90,    //+5
+        .baseSpAttack  = 40,    //-5
         .baseSpDefense = 70,
         .types = MON_TYPES(TYPE_BUG, TYPE_ROCK),
         .catchRate = 15,
@@ -16624,11 +16858,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_VAPOREON] =
     {
         .baseHP        = 130,
-        .baseAttack    = 65,
-        .baseDefense   = 60,
-        .baseSpeed     = 65,
+        .baseAttack    = 60,    //-5
+        .baseDefense   = 70,    //+10
+        .baseSpeed     = 60,    //-5
         .baseSpAttack  = 110,
-        .baseSpDefense = 95,
+        .baseSpDefense = 105,    //+10
         .types = MON_TYPES(TYPE_WATER),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 184 : 196,
@@ -16684,7 +16918,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
     [SPECIES_JOLTEON] =
     {
-        .baseHP        = 65,
+        .baseHP        = 75,    //+10
         .baseAttack    = 55,    //-10
         .baseDefense   = 60,
         .baseSpeed     = 130,
@@ -16746,10 +16980,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_FLAREON] =
     {
         .baseHP        = 75,    //+10
-        .baseAttack    = 130,
-        .baseDefense   = 60,
+        .baseAttack    = 140,   //+10
+        .baseDefense   = 75,    //+15
         .baseSpeed     = 60,    //-5
-        .baseSpAttack  = 90,    //-5
+        .baseSpAttack  = 75,    //-20
         .baseSpDefense = 110,
         .types = MON_TYPES(TYPE_FIRE),
         .catchRate = 45,
@@ -16807,12 +17041,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 #if P_GEN_2_CROSS_EVOS
     [SPECIES_ESPEON] =
     {
-        .baseHP        = 65,
-        .baseAttack    = 65,
+        .baseHP        = 70,    //+5
+        .baseAttack    = 60,    //-5
         .baseDefense   = 60,
         .baseSpeed     = 110,
         .baseSpAttack  = 130,
-        .baseSpDefense = 95,
+        .baseSpDefense = 105,   //+10
         .types = MON_TYPES(TYPE_PSYCHIC),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 184 : 197,
@@ -16869,10 +17103,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_UMBREON] =
     {
         .baseHP        = 95,
-        .baseAttack    = 65,
+        .baseAttack    = 75,    //+10
         .baseDefense   = 110,
-        .baseSpeed     = 65,
-        .baseSpAttack  = 60,
+        .baseSpeed     = 55,    //-10
+        .baseSpAttack  = 70,    //+10
         .baseSpDefense = 130,
         .types = MON_TYPES(TYPE_DARK),
         .catchRate = 45,
@@ -16932,11 +17166,11 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_LEAFEON] =
     {
         .baseHP        = 65,
-        .baseAttack    = 110,
+        .baseAttack    = 120,   //+10
         .baseDefense   = 130,
         .baseSpeed     = 95,
-        .baseSpAttack  = 60,
-        .baseSpDefense = 65,
+        .baseSpAttack  = 55,    //-5
+        .baseSpDefense = 70,    //+5
         .types = MON_TYPES(TYPE_GRASS),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 184 : 196,
@@ -16992,10 +17226,10 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
     [SPECIES_GLACEON] =
     {
-        .baseHP        = 65,
-        .baseAttack    = 60,
+        .baseHP        = 70,    //+5
+        .baseAttack    = 55,    //-5
         .baseDefense   = 110,
-        .baseSpeed     = 65,
+        .baseSpeed     = 75,    //+10
         .baseSpAttack  = 130,
         .baseSpDefense = 95,
         .types = MON_TYPES(TYPE_ICE),
@@ -17056,9 +17290,9 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     [SPECIES_SYLVEON] =
     {
         .baseHP        = 95,
-        .baseAttack    = 65,
-        .baseDefense   = 65,
-        .baseSpeed     = 60,
+        .baseAttack    = 60,    //-5
+        .baseDefense   = 75,    //+10
+        .baseSpeed     = 65,    //+5
         .baseSpAttack  = 110,
         .baseSpDefense = 130,
         .types = MON_TYPES(TYPE_FAIRY),

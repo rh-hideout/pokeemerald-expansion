@@ -1682,7 +1682,25 @@
 #define SPECIES_TROPIUS_MEGA                            1565
 #define SPECIES_LUGIA_PRIMAL                            1566
 #define SPECIES_HO_OH_PRIMAL                            1567
-#define SPECIES_EGG                                     (SPECIES_HO_OH_PRIMAL + 1)
+#define SPECIES_ARCANINE_HISUI_MEGA                     1568
+#define SPECIES_NOCTOWL_MEGA_X                          1567
+#define SPECIES_NOCTOWL_MEGA_Y                          1568
+#define SPECIES_LEDIAN_MEGA                             1569
+#define SPECIES_MISMAGIUS_MEGA                          1570
+#define SPECIES_CORSOLA_MEGA                            1571
+#define SPECIES_TORKOAL_MEGA                            1572
+#define SPECIES_STARAPTOR_MEGA                          1573
+#define SPECIES_LIEPARD_MEGA                            1574
+#define SPECIES_SCRAFTY_MEGA_Y                          1575
+#define SPECIES_BARBARACLE_MEGA_Y                       1576
+#define SPECIES_FALINKS_MEGA_Y                          1577
+#define SPECIES_MEGANIUM_MEGA                           1578
+#define SPECIES_EMBOAR_MEGA                             1579
+#define SPECIES_VICTREEBEL_MEGA                         1580
+#define SPECIES_MALAMAR_MEGA                            1581
+#define SPECIES_CASTFORM_SANDY                          1582
+#define SPECIES_DEWGONG_MEGA                            1583
+#define SPECIES_EGG                                     (SPECIES_DEWGONG_MEGA + 1)
 
 #define NUM_SPECIES SPECIES_EGG
 

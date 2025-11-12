@@ -4912,7 +4912,7 @@ s8 GetMovePriority(u32 battler, u16 move)
     else if (ability == ABILITY_TRIAGE && IsHealingMove(move))
         priority += 3;
 
-    else if (ability == ABILITY_SPINNER && gMovesInfo[move].spinmove)
+    else if (ability == ABILITY_SPINNER && gMovesInfo[move].spinMove)
         priority += 3;
 
     if (gProtectStructs[battler].quash)

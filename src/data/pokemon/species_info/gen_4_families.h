@@ -4019,10 +4019,10 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
 #if P_FAMILY_SPIRITOMB
     [SPECIES_SPIRITOMB] =
     {
-        .baseHP        = 55,    //+5
+        .baseHP        = 75,    //+25
         .baseAttack    = 92,
         .baseDefense   = 108,
-        .baseSpeed     = 35,
+        .baseSpeed     = 25,    //-10
         .baseSpAttack  = 92,
         .baseSpDefense = 108,
         .types = MON_TYPES(TYPE_GHOST, TYPE_DARK),

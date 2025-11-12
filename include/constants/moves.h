@@ -1080,7 +1080,7 @@
 #define MOVE_RAIN_BUFFER 1014
 #define MOVE_BATTERING_RAM 1015
 #define MOVE_PLATINUM_SHIELD 1016
-// #define MOVE_AVIAN_DIVE 1017
+// #define MOVE_AVIAN_DIVE 1017     //regenerator switch out move?
 #define MOVE_GEYSER_LAUNCH 1018
 #define MOVE_RAINBOW_FREEZE 1019
 #define MOVE_STORM_SIPHON 1020
@@ -1094,6 +1094,33 @@
 #define MOVE_GLACIAL_TEMPEST 1028   //electro shot but snow                                //TM
 #define MOVE_DESERT_STORM 1029      //sand electro shot                                     //TM
 #define MOVE_TREMOR_BARGE 1030      //sand electro shot physical                            //TM
+
+//Stage 4 NTM
+#define MOVE_SWEET_FINALE 1031      //test
+#define MOVE_DARK_DIRGE 1032        //test
+#define MOVE_WIND_FURY 1033         //test
+#define MOVE_RESONANT_CRY 1034      //test
+#define MOVE_CHI_STRIKE 1035        //test
+#define MOVE_SPECTRAL_HOLD 1036     //test
+#define MOVE_SPORE_SHOT 1037
+#define MOVE_PRESSURE_PULSE 1038
+#define MOVE_SUN_BURN 1039
+#define MOVE_VINE_LASH 1040
+#define MOVE_DAZZLING_DASH 1041
+#define MOVE_FOOD_FIGHT 1042
+#define MOVE_DARK_PALM 1043
+#define MOVE_LUNAR_RAIN 1044
+#define MOVE_BOUNDLESS_EYE 1045
+#define MOVE_CHI_STRIKE 1046 //whatever flapple move called
+#define MOVE_PLACEHOLDERA 1047 //whatever appletun move called
+#define MOVE_SUGAR_RUSH 1048    //slurpuff raise team atk
+#define MOVE_SPIRIT_SONG 1049   //chimecho raise team spa
+#define MOVE_SWIFT_GALE 1050    //masquerain boost team speed
+#define MOVE_HEARTACHE 1051     //swoobat aoe lower enemy team atk
+#define MOVE_SNEAKY_SWIPE 1052  //dark confuse aoe on theivul
+#define MOVE_OVERCHARGE 1053    //electivire aoe para add recoil 
+#define MOVE_TERROR_CLAW 1054  //trevenant hit and nightmare
+#define MOVE_ENDLESS_FURY 1055 //spiritomb aoe incinerate ghost
 
 
 //do defensive growth in sand
@@ -1111,7 +1138,7 @@
 // Titan Maw- always Crit bite move
 
 
-#define MOVES_COUNT_GEN9 1031
+#define MOVES_COUNT_GEN9 1056
 
 #define MOVES_COUNT         MOVES_COUNT_GEN9
 

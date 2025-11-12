@@ -1042,40 +1042,49 @@
 #define ITEM_TROPIUSITE 870
 #define ITEM_SILVER_ORB 871
 #define ITEM_RAINBOW_ORB 872
+#define ITEM_NOCTITE_X  873
+#define ITEM_NOCTITE_Y  874
+#define ITEM_LEDIANITE  875
+#define ITEM_MEGANIUMITE 876
+#define ITEM_EMBOARITE  877
+#define ITEM_ARCANITE_H   878
+#define ITEM_VICTREEBELITE 879
+#define ITEM_MALAMARITE     880
+#define ITEM_DEWGONGITE     881
 
 //Balls
 // #define ITEM_DIGI_BALL 873
 // #define ITEM_RESET_BALL 874
-#define ITEM_CYRO_BALL 875
+#define ITEM_CYRO_BALL 910
 
 //Berries
 // #define ITEM_GLOWBERRY 876       //makes shiny
-#define ITEM_SUB_BERRY 877        //at 25% hp make substitute
-#define ITEM_MOLT_BERRY 878      //at 25% hp burn opponent
-#define ITEM_ZAPPA_BERRY 879     //at 25% hp paralyze opponent
-#define ITEM_ARCTI_BERRY 880     //at 25% hp frostite opponent
+#define ITEM_SUB_BERRY 911        //at 25% hp make substitute
+#define ITEM_MOLT_BERRY 912      //at 25% hp burn opponent
+#define ITEM_ZAPPA_BERRY 913     //at 25% hp paralyze opponent
+#define ITEM_ARCTI_BERRY 914     //at 25% hp frostite opponent
 // HOPO BERRY //leppa berry but restores 5PP to all moves when procs
 
 //Held
 // #define ITEM_RIOT_SHIELD 881
-#define ITEM_SNIPER_GOGGLES 882
+#define ITEM_SNIPER_GOGGLES 915
 // #define ITEM_GLUE_TRAP 883       //holder cannot switch out
 // #define ITEM_RESET_BUTTON 884
-#define ITEM_SAND_BAG 885
-#define ITEM_HARD_HAT 886
-#define ITEM_LOVERS_GIFT 887
-#define ITEM_FROST_ORB 888
-#define ITEM_IRON_MASK 889
-#define ITEM_FESTIVE_COAT 890  //buff delibird
-#define ITEM_MUSIC_BOX 891      //buff chatot and sqwakabilly
-#define ITEM_MARACCAS 892      //buff marractus  NEED TO CHANGE SPELLING
+#define ITEM_SAND_BAG 916
+#define ITEM_HARD_HAT 917
+#define ITEM_LOVERS_GIFT 918
+#define ITEM_FROST_ORB 919
+#define ITEM_IRON_MASK 920
+#define ITEM_FESTIVE_COAT 921  //buff delibird
+#define ITEM_MUSIC_BOX 922      //buff chatot and sqwakabilly
+#define ITEM_MARACCAS 923     //buff marractus  NEED TO CHANGE SPELLING
 // #define ITEM_SOUL_LANTERN 893   //buff spiritomb
-#define ITEM_TOXIN_BOOSTER 894
+#define ITEM_TOXIN_BOOSTER 924
 // LEGEND PLATE //very complicated item that generally is only for arceus, could remodel into anti tera item?
 //maybe an item that inflicts torment but boosts move power?
 
 
-#define ITEMS_COUNT 895
+#define ITEMS_COUNT 926
 #define ITEM_FIELD_ARROW ITEMS_COUNT
 
 // A special item id associated with "Cancel"/"Exit" etc. in a list of items or decorations

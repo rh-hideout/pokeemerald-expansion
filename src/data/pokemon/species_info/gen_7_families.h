@@ -197,11 +197,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
     [SPECIES_DECIDUEYE_HISUI] =
     {
         .baseHP        = 88,
-        .baseAttack    = 112,
-        .baseDefense   = 95,    //+15
-        .baseSpeed     = 60,    //-25
-        .baseSpAttack  = 95,
-        .baseSpDefense = 115,   //+20
+        .baseAttack    = 122,   //+10
+        .baseDefense   = 80,
+        .baseSpeed     = 75,    //+15
+        .baseSpAttack  = 95,    //-15
+        .baseSpDefense = 95,   
         .types = MON_TYPES(TYPE_GRASS, TYPE_FIGHTING),
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 265 : 239,

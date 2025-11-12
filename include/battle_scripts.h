@@ -527,6 +527,16 @@ extern const u8 BattleScript_BoosterEnergyRet[];
 extern const u8 BattleScript_TeraShellDistortingTypeMatchups[];
 extern const u8 BattleScript_TeraFormChange[];
 extern const u8 BattleScript_SteelSurgeOnSwitchIn[];
+extern const u8 BattleScript_MoveEffectYawnSide[];
+extern const u8 BattleScript_EffectParalyzeSide[];
+extern const u8 BattleScript_EffectPoisonSide[];
+extern const u8 BattleScript_EffectEffectSporeSide[];
+extern const u8 BattleScript_EffectConfuseSide[];
+extern const u8 BattleScript_EffectInfatuateSide[];
+extern const u8 BattleScript_EffectTormentSide[];
+extern const u8 BattleScript_EffectMeanLookSide[];
+extern const u8 BattleScript_MoveEffectAromatherapy[];
+
 
 // zmoves
 extern const u8 BattleScript_ZMoveActivateDamaging[];
@@ -561,6 +571,7 @@ extern const u8 BattleScript_EffectHealOneSixthAllies[];
 extern const u8 BattleScript_EffectCureStatusAllies[];
 extern const u8 BattleScript_EffectRecycleBerriesAllies[];
 extern const u8 BattleScript_RemoveGenericType[];
+
 
 // dynamax and max raids
 extern const u8 BattleScript_DynamaxBegins[];

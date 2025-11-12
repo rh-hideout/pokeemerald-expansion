@@ -5281,6 +5281,11 @@ BattleScript_PrintAbilityMadeIneffective::
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
 
+BattleScript_MoveEffectYawnSide::
+	printstring STRINGID_PKMNWASMADEDROWSY
+	waitmessage B_WAIT_TIME_LONG
+	return
+
 BattleScript_EffectEndeavor::
 	attackcanceler
 	attackstring
@@ -8036,6 +8041,23 @@ BattleScript_TryIntimidateHoldEffects:
 BattleScript_TryIntimidateHoldEffectsRet:
 	return
 
+BattleScript_TryFrightenHoldEffects:
+	itemstatchangeeffects BS_TARGET
+	jumpifnoholdeffect BS_TARGET, HOLD_EFFECT_ADRENALINE_ORB, BattleScript_TryFrightenHoldEffectsRet
+	jumpifstat BS_TARGET, CMP_EQUAL, STAT_SPEED, 12, BattleScript_TryFrightenHoldEffectsRet
+	setstatchanger STAT_SPEED, 1, FALSE
+	statbuffchange STAT_CHANGE_NOT_PROTECT_AFFECTED | MOVE_EFFECT_CERTAIN | STAT_CHANGE_ALLOW_PTR, BattleScript_TryFrightenHoldEffectsRet
+	playanimation BS_TARGET, B_ANIM_HELD_ITEM_EFFECT
+	setgraphicalstatchangevalues
+	playanimation BS_TARGET, B_ANIM_STATS_CHANGE, sB_ANIM_ARG1
+	copybyte sBATTLER, gBattlerTarget
+	setlastuseditem BS_TARGET
+	printstring STRINGID_USINGITEMSTATOFPKMNROSE
+	waitmessage B_WAIT_TIME_LONG
+	removeitem BS_TARGET
+BattleScript_TryFrightenHoldEffectsRet:
+	return
+
 BattleScript_IntimidateActivates::
 	savetarget
 .if B_ABILITY_POP_UP == TRUE
@@ -8108,10 +8130,12 @@ BattleScript_IntimidateInReverse:
 
 
 BattleScript_FrightenActivates::
+	savetarget
+.if B_ABILITY_POP_UP == TRUE
 	showabilitypopup BS_ATTACKER
-	copybyte sSAVED_BATTLER, gBattlerTarget
 	pause B_WAIT_TIME_LONG
 	destroyabilitypopup
+.endif
 	setbyte gBattlerTarget, 0
 BattleScript_FrightenLoop:
 	jumpifbyteequal gBattlerTarget, gBattlerAttacker, BattleScript_FrightenLoopIncrement
@@ -10212,6 +10236,130 @@ BattleScript_EffectTryReducePP::
 	printstring STRINGID_PKMNREDUCEDPP
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_MoveEnd
+
+BattleScript_EffectParalyzeSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_ParalyzeSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_ParalyzeSideIncrement
+	trysetparalysis BattleScript_ParalyzeSideIncrement
+BattleScript_ParalyzeSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ParalyzeSideEnd
+	setallytonexttarget BattleScript_ParalyzeSideLoop
+BattleScript_ParalyzeSideEnd:
+	restoretarget
+	return
+
+BattleScript_EffectPoisonSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_PoisonSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_PoisonSideIncrement
+	trysetpoison BattleScript_PoisonSideIncrement
+BattleScript_PoisonSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonSideEnd
+	setallytonexttarget BattleScript_PoisonSideLoop
+BattleScript_PoisonSideEnd:
+	restoretarget
+	return
+
+BattleScript_EffectPoisonParalyzeSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_PoisonParalyzeSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_PoisonParalyzeSideIncrement
+	trysetpoisonparalysis BattleScript_PoisonParalyzeSideIncrement
+BattleScript_PoisonParalyzeSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_PoisonParalyzeSideEnd
+	setallytonexttarget BattleScript_PoisonParalyzeSideLoop
+BattleScript_PoisonParalyzeSideEnd:
+	restoretarget
+	return
+
+BattleScript_EffectEffectSporeSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_EffectSporeSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_EffectSporeSideIncrement
+	tryseteffectspore BattleScript_EffectSporeSideIncrement
+BattleScript_EffectSporeSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_EffectSporeSideEnd
+	setallytonexttarget BattleScript_EffectSporeSideLoop
+BattleScript_EffectSporeSideEnd:
+	restoretarget
+	return
+
+BattleScript_EffectConfuseSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_ConfuseSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_ConfuseSideIncrement
+	trysetconfusion BattleScript_ConfuseSideIncrement
+	volatileanimation BS_EFFECT_BATTLER, VOLATILE_CONFUSION
+BattleScript_ConfuseSidePrintMessage:
+	printstring STRINGID_PKMNWASCONFUSED
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_ConfuseSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_ConfuseSideEnd
+	setallytonexttarget BattleScript_ConfuseSideLoop
+BattleScript_ConfuseSideEnd:
+	restoretarget
+	jumpifbyte CMP_EQUAL, gBattleCommunication + 1, 1, BattleScript_PrintCoinsScattered @ Gold Rush
+	return
+
+BattleScript_EffectInfatuateSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_InfatuateSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_InfatuateSideIncrement
+	trysetinfatuation BattleScript_InfatuateSideIncrement
+	volatileanimation BS_EFFECT_BATTLER, VOLATILE_INFATUATION
+BattleScript_InfatuateSidePrintMessage:
+	printstring STRINGID_PKMNFELLINLOVE
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_InfatuateSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_InfatuateSideEnd
+	setallytonexttarget BattleScript_InfatuateSideLoop
+BattleScript_InfatuateSideEnd:
+	restoretarget
+	return
+
+BattleScript_EffectTormentSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_TormentSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_TormentSideIncrement
+	trysettorment BattleScript_TormentSideIncrement
+BattleScript_TormentSidePrintMessage:
+	printstring STRINGID_PKMNSUBJECTEDTOTORMENT
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_TormentSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_TormentSideEnd
+	setallytonexttarget BattleScript_TormentSideLoop
+BattleScript_TormentSideEnd:
+	restoretarget
+	return
+
+BattleScript_TormentEnds::
+	printstring STRINGID_TORMENTEDNOMORE
+	waitmessage B_WAIT_TIME_LONG
+	end2
+
+BattleScript_EffectMeanLookSide::
+	savetarget
+	copybyte sBATTLER, gBattlerTarget
+BattleScript_MeanLookSideLoop:
+	jumpifabsent BS_TARGET, BattleScript_MeanLookSideIncrement
+	trysetescapeprevention BattleScript_MeanLookSideIncrement
+BattleScript_MeanLookSidePrintMessage:
+	printstring STRINGID_TARGETCANTESCAPENOW
+	waitmessage B_WAIT_TIME_LONG
+BattleScript_MeanLookSideIncrement:
+	jumpifbytenotequal gBattlerTarget, sBATTLER, BattleScript_MeanLookSideEnd
+	setallytonexttarget BattleScript_MeanLookSideLoop
+BattleScript_MeanLookSideEnd:
+	restoretarget
+	return
 
 BattleScript_EffectStatus1Foes::
 	savetarget
