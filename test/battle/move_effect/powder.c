@@ -168,7 +168,7 @@ SINGLE_BATTLE_TEST("Powder fails if the target is Grass type (Gen6+)")
 SINGLE_BATTLE_TEST("Powder fails if the target has Overcoat (Gen6+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(GEN_CONFIG_POWDER_OVERCOAT, GEN_6);
         PLAYER(SPECIES_FORRETRESS) { Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
