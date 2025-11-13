@@ -67,6 +67,8 @@ static const u8 sEmotion_QuestionMarkGfx[] = INCBIN_U8("graphics/field_effects/p
 static const u8 sEmotion_HeartGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_heart.4bpp");
 static const u8 sEmotion_DoubleExclamationMarkGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_double_exclamation.4bpp");
 static const u8 sEmotion_XGfx[] = INCBIN_U8("graphics/field_effects/pics/emote_x.4bpp");
+static const u8 sEmotion_SmileyFaceGfx[] = INCBIN_U8("graphics/field_effects/pics/emotion_smiley_face.4bpp");
+
 // HGSS emote graphics ripped by Lemon on The Spriters Resource: https://www.spriters-resource.com/ds_dsi/pokemonheartgoldsoulsilver/sheet/30497/
 static const u8 sEmotion_Gfx[] = INCBIN_U8("graphics/misc/emotes.4bpp");
 
@@ -159,6 +161,14 @@ static const struct SpriteFrameImage sSpriteImageTable_HeartIcon[] =
     {
         .data = sEmotion_HeartGfx,
         .size = sizeof(sEmotion_HeartGfx)
+    }
+};
+
+static const struct SpriteFrameImage sSpriteImageTable_SmileyFaceIcon[] =
+{
+    {
+        .data = sEmotion_SmileyFaceGfx,
+        .size = sizeof(sEmotion_SmileyFaceGfx)
     }
 };
 
@@ -301,12 +311,19 @@ static const union AnimCmd sSpriteAnim_Icons4[] =
     ANIMCMD_END
 };
 
+static const union AnimCmd sSpriteAnim_Icons5[] =
+{
+    ANIMCMD_FRAME(4, 60),
+    ANIMCMD_END
+};
+
 static const union AnimCmd *const sSpriteAnimTable_Icons[] =
 {
     sSpriteAnim_Icons1,
     sSpriteAnim_Icons2,
     sSpriteAnim_Icons3,
-    sSpriteAnim_Icons4
+    sSpriteAnim_Icons4,
+    sSpriteAnim_Icons5
 };
 
 static const union AnimCmd *const sSpriteAnimTable_Emotes[] =
@@ -342,6 +359,17 @@ static const struct SpriteTemplate sSpriteTemplate_HeartIcon =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_HeartIcon,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = SpriteCB_TrainerIcons
+};
+
+static const struct SpriteTemplate sSpriteTemplate_SmileyFaceIcon =
+{
+    .tileTag = TAG_NONE,
+    .paletteTag = OBJ_EVENT_PAL_TAG_MAY,
+    .oam = &sOamData_Icons,
+    .anims = sSpriteAnimTable_Icons,
+    .images = sSpriteImageTable_SmileyFaceIcon,
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
@@ -1008,6 +1036,21 @@ u8 FldEff_XIcon(void)
 
         SetIconSpriteData(sprite, FLDEFF_X_ICON, 3);
         UpdateSpritePaletteByTemplate(&sSpriteTemplate_ExclamationQuestionMark, sprite);
+    }
+
+    return 0;
+}
+
+u8 FldEff_SmileyFaceIcon(void)
+{
+    u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_SmileyFaceIcon, 0, 0, 0x53);
+
+    if (spriteId != MAX_SPRITES)
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+
+        SetIconSpriteData(sprite, FLDEFF_SMILEY_FACE_ICON, 0);
+        UpdateSpritePaletteByTemplate(&sSpriteTemplate_SmileyFaceIcon, sprite);
     }
 
     return 0;

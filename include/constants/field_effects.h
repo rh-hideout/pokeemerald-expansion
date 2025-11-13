@@ -80,6 +80,7 @@
 #define FLDEFF_USE_ROCK_CLIMB            75
 #define FLDEFF_ROCK_CLIMB_DUST           76
 #define FLDEFF_ORAS_DOWSE                77
+#define FLDEFF_SMILEY_FACE_ICON          78
 
 #define FLDEFFOBJ_SHADOW_S              0
 #define FLDEFFOBJ_SHADOW_M              1
