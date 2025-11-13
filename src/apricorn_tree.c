@@ -59,9 +59,7 @@ u8 GetApricornTypeByApricornTreeId(u32 id)
 u8 GetApricornCountByApricornTreeId(u32 id)
 {
     if (IsApricornTreePicked(id))
-    {
         return 0;
-    }
 
     #if (APRICORN_TREE_COUNT > 0)
         return gApricornTrees[id].maximum > gApricornTrees[id].minimum
