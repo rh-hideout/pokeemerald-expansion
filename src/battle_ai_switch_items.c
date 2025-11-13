@@ -923,7 +923,7 @@ static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 perc
             for (j = 0; j < MAX_MON_MOVES; j++)
             {
                 move = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-                if (move == 0)
+                if (move == MOVE_NONE)
                     continue;
 
                 if (AI_GetMoveEffectiveness(move, battler, battlerIn1) >= UQ_4_12(2.0) && (RandomPercentage(RNG_AI_SWITCH_SE_DEFENSIVE, percentChance) || gAiLogicData->aiPredictionInProgress))

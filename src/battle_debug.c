@@ -360,7 +360,6 @@ static const struct ListMenuItem sVolatileStatusListItems[] =
     {COMPOUND_STRING("Torment"),            VOLATILE_TORMENT},
     {COMPOUND_STRING("Powder"),             VOLATILE_POWDER},
     {COMPOUND_STRING("DefenseCurl"),        VOLATILE_DEFENSE_CURL},
-    {COMPOUND_STRING("Recharge"),           VOLATILE_RECHARGE},
     {COMPOUND_STRING("Rage"),               VOLATILE_RAGE},
     {COMPOUND_STRING("DestinyBond"),        VOLATILE_DESTINY_BOND},
     {COMPOUND_STRING("EscapePrevention"),   VOLATILE_ESCAPE_PREVENTION},

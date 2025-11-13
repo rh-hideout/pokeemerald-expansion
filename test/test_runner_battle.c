@@ -554,96 +554,113 @@ static void BattleTest_Run(void *data)
     PrintTestName();
 }
 
-u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi)
+u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
 {
-    const struct BattlerTurn *turn = NULL;
-
-    if (gCurrentTurnActionNumber < gBattlersCount)
+    STATE->didRunRandomly = TRUE;
+    if (STATE->trials == 1)
     {
-        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-        turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
-        if (turn && turn->rng.tag == tag)
-            return turn->rng.value;
-    }
-
-    if (tag == STATE->rngTag)
-    {
-        STATE->didRunRandomly = TRUE;
-        u32 n = hi - lo + 1;
-        if (STATE->trials == 1)
+        u32 n = 0, i;
+        if (reject)
         {
-            STATE->trials = n;
-            PrintTestName();
-        }
-        else if (STATE->trials != n)
-        {
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, n);
-        }
-        STATE->trialRatio = Q_4_12(1) / STATE->trials;
-        return STATE->runTrial + lo;
-    }
-
-    return hi;
-}
-
-u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
-{
-    const struct BattlerTurn *turn = NULL;
-    u32 default_;
-
-    if (gCurrentTurnActionNumber < gBattlersCount)
-    {
-        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
-        turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
-        if (turn && turn->rng.tag == tag)
-        {
-            if (reject(turn->rng.value))
-                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", turn->rng.value);
-            return turn->rng.value;
-        }
-    }
-
-    if (tag == STATE->rngTag)
-    {
-        STATE->didRunRandomly = TRUE;
-        if (STATE->trials == 1)
-        {
-            u32 n = 0, i;
             for (i = lo; i <= hi; i++)
                 if (!reject(i))
                     n++;
             STATE->trials = n;
-            PrintTestName();
         }
-        STATE->trialRatio = Q_4_12(1) / STATE->trials;
-
-        while (reject(STATE->runTrial + lo + STATE->rngTrialOffset))
-        {
-            if (STATE->runTrial + lo + STATE->rngTrialOffset > hi)
-                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d and inconsistent reject", __builtin_extract_return_addr(__builtin_return_address(0)), tag);
-            STATE->rngTrialOffset++;
-        }
-
-        return STATE->runTrial + lo + STATE->rngTrialOffset;
+        else
+            STATE->trials = hi - lo + 1;
+        PrintTestName();
     }
+    STATE->trialRatio = Q_4_12(1) / STATE->trials;
 
-    default_ = hi;
-    while (reject(default_))
+    if (!reject)
     {
-        if (default_ == lo)
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d rejected all values", __builtin_extract_return_addr(__builtin_return_address(0)), tag);
-        default_--;
+        if (STATE->trials != (hi - lo + 1))
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniform called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, hi - lo + 1);
+        return STATE->runTrial + lo;
     }
-    return default_;
+
+    while (reject(STATE->runTrial + lo + STATE->rngTrialOffset))
+    {
+        if (STATE->runTrial + lo + STATE->rngTrialOffset > hi)
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d and inconsistent reject", caller, tag);
+        STATE->rngTrialOffset++;
+    }
+
+    return STATE->runTrial + lo + STATE->rngTrialOffset;
+
 }
 
-u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
 {
+    //Detect inconsistent sum
+    u32 weightSum = 0;
+    if (STATE->runTrial == 0)
+    {
+        for (u32 i = 0; i < n; i++)
+            weightSum += weights[i];
+        if (weightSum != sum)
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p has weights not matching its sum", caller);
+    }
+
+    STATE->didRunRandomly = TRUE;
+    if (STATE->trials == 1)
+    {
+        STATE->trials = n;
+        PrintTestName();
+    }
+    else if (STATE->trials != n)
+    {
+        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, n);
+    }
+
+    STATE->trialRatio = Q_4_12(weights[STATE->runTrial]) / sum;
+    return STATE->runTrial;
+}
+
+const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    STATE->didRunRandomly = TRUE;
+    if (STATE->trials == 1)
+    {
+        STATE->trials = count;
+        PrintTestName();
+    }
+    else if (STATE->trials != count)
+    {
+        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomElement called from %p with tag %d and inconsistent trials %d and %d", caller, tag, STATE->trials, count);
+    }
+    STATE->trialRatio = Q_4_12(1) / count;
+    return (const u8 *)array + size * STATE->runTrial;
+}
+
+static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    //rigged
     const struct BattlerTurn *turn = NULL;
+    if (gCurrentTurnActionNumber < gBattlersCount)
+    {
+        u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
+        turn = &DATA.battleRecordTurns[gBattleResults.battleTurnCounter][battlerId];
+        if (turn && turn->rng.tag == tag)
+        {
+            if (reject && reject(turn->rng.value))
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", turn->rng.value);
+            return turn->rng.value;
+        }
+    }
+    //trials
+    if (tag == STATE->rngTag)
+        return RandomUniformTrials(tag, lo, hi, reject, caller);
 
-    if (sum == 0)
-        Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called with zero sum");
+    //default
+    return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
+}
 
+static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+{
+    //rigged
+    const struct BattlerTurn *turn = NULL;
     if (gCurrentTurnActionNumber < gBattlersCount || tag == RNG_SHELL_SIDE_ARM)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
@@ -652,23 +669,11 @@ u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
             return turn->rng.value;
     }
 
+    //trials
     if (tag == STATE->rngTag)
-    {
-        STATE->didRunRandomly = TRUE;
-        if (STATE->trials == 1)
-        {
-            STATE->trials = n;
-            PrintTestName();
-        }
-        else if (STATE->trials != n)
-        {
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeighted called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, n);
-        }
-        // TODO: Detect inconsistent sum.
-        STATE->trialRatio = Q_4_12(weights[STATE->runTrial]) / sum;
-        return STATE->runTrial;
-    }
+        return RandomWeightedArrayTrials(tag, sum, n, weights, caller);
 
+    //default
     switch (tag)
     {
     case RNG_ACCURACY:
@@ -693,21 +698,14 @@ u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
             return TRUE;
 
     default:
-        while (weights[n-1] == 0)
-        {
-            if (n == 1)
-                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called from %p with tag %d and all zero weights", __builtin_extract_return_addr(__builtin_return_address(0)), tag);
-            n--;
-        }
-        return n-1;
+        return RandomWeightedArrayDefaultValue(tag, n, weights, caller);
     }
 }
 
-const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count)
+static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
 {
+    //rigged
     const struct BattlerTurn *turn = NULL;
-    u32 index = count-1;
-
     if (gCurrentTurnActionNumber < gBattlersCount)
     {
         u32 battlerId = gBattlerByTurnOrder[gCurrentTurnActionNumber];
@@ -715,33 +713,23 @@ const void *RandomElementArray(enum RandomTag tag, const void *array, size_t siz
         if (turn && turn->rng.tag == tag)
         {
             u32 element = 0;
-            for (index = 0; index < count; index++)
+            for (u32 index = 0; index < count; index++)
             {
                 memcpy(&element, (const u8 *)array + size * index, size);
                 if (element == turn->rng.value)
                     return (const u8 *)array + size * index;
             }
-            // TODO: Incorporate the line number.
             Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, turn->rng.value);
         }
     }
 
+
+    //trials
     if (tag == STATE->rngTag)
-    {
-        STATE->didRunRandomly = TRUE;
-        if (STATE->trials == 1)
-        {
-            STATE->trials = count;
-            PrintTestName();
-        }
-        else if (STATE->trials != count)
-        {
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomElement called from %p with tag %d and inconsistent trials %d and %d", __builtin_extract_return_addr(__builtin_return_address(0)), tag, STATE->trials, count);
-        }
-        STATE->trialRatio = Q_4_12(1) / count;
-        return (const u8 *)array + size * STATE->runTrial;
-    }
-    return (const u8 *)array + size * index;
+        return RandomElementArrayTrials(tag, array, size, count, caller);
+
+    //default
+    return RandomElementArrayDefaultValue(tag, array, size, count, caller);
 }
 
 static s32 TryAbilityPopUp(s32 i, s32 n, u32 battlerId, enum Ability ability)
@@ -1738,6 +1726,9 @@ const struct TestRunner gBattleTestRunner =
     .tearDown = BattleTest_TearDown,
     .checkProgress = BattleTest_CheckProgress,
     .handleExitWithResult = BattleTest_HandleExitWithResult,
+    .randomUniform = BattleTest_RandomUniform,
+    .randomWeightedArray = BattleTest_RandomWeightedArray,
+    .randomElementArray = BattleTest_RandomElementArray,
 };
 
 void SetFlagForTest(u32 sourceLine, u16 flagId)
