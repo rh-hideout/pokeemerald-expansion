@@ -191,57 +191,53 @@ bool32 BattlerHasAi(u32 battlerId)
     return FALSE;
 }
 
-bool32 IsAiBattlerAware(u32 battlerId)
+bool32 IsAiFlagPresent(u64 flag)
 {
     for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if ((gAiThinkingStruct->aiFlags[i] & AI_FLAG_OMNISCIENT))
+        if (gAiThinkingStruct->aiFlags[i] & flag)
             return TRUE;
     }
+
+    return FALSE;
+}
+
+bool32 IsAiBattlerAware(u32 battlerId)
+{
+    if (IsAiFlagPresent(AI_FLAG_OMNISCIENT))
+        return TRUE;
 
     return BattlerHasAi(battlerId);
 }
 
 bool32 IsAiBattlerAssumingStab(u32 battlerId)
 {
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if ((gAiThinkingStruct->aiFlags[i] & AI_FLAG_ASSUME_STAB))
-            return TRUE;
-    }
+    if (IsAiFlagPresent(AI_FLAG_ASSUME_STAB))
+        return TRUE;
 
     return FALSE;
 }
 
 bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId)
 {
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if ((gAiThinkingStruct->aiFlags[i] & AI_FLAG_ASSUME_STATUS_MOVES))
-            return TRUE;
-    }
+    if (IsAiFlagPresent(AI_FLAG_ASSUME_STATUS_MOVES))
+        return TRUE;
 
     return FALSE;
 }
 
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if ((gAiThinkingStruct->aiFlags[i] & AI_FLAG_WEIGH_ABILITY_PREDICTION))
-            return TRUE;
-    }
+    if (IsAiFlagPresent(AI_FLAG_WEIGH_ABILITY_PREDICTION))
+        return TRUE;
 
     return FALSE;
 }
 
 bool32 CanAiPredictMove(u32 battlerId)
 {
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if ((gAiThinkingStruct->aiFlags[i] & AI_FLAG_PREDICT_MOVE))
-            return TRUE;
-    }
+    if (IsAiFlagPresent(AI_FLAG_PREDICT_MOVE))
+        return TRUE;
 
     return FALSE;
 }
