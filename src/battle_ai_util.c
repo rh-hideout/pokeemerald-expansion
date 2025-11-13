@@ -540,16 +540,6 @@ bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
     return FALSE;
 }
 
-// move checks
-bool32 IsAffectedByPowder(u32 battler, enum Ability ability, enum HoldEffect holdEffect)
-{
-    if (ability == ABILITY_OVERCOAT
-        || (GetGenConfig(GEN_CONFIG_POWDER_GRASS) >= GEN_6 && IS_BATTLER_OF_TYPE(battler, TYPE_GRASS))
-        || holdEffect == HOLD_EFFECT_SAFETY_GOGGLES)
-        return FALSE;
-    return TRUE;
-}
-
 bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData)
 {
     s32 atkPriority = GetBattleMovePriority(battlerAtk, aiData->abilities[battlerAtk], move);
@@ -568,6 +558,7 @@ bool32 Ai_IsPriorityBlocked(u32 battlerAtk, u32 battlerDef, u32 move, struct AiL
 
     return FALSE;
 }
+
 // This function checks if all physical/special moves are either unusable or unreasonable to use.
 // Consider a pokemon boosting their attack against a ghost pokemon having only normal-type physical attacks.
 bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory category)
@@ -593,7 +584,7 @@ bool32 MovesWithCategoryUnusable(u32 attacker, u32 target, enum DamageCategory c
         if (GetBattleMoveCategory(moves[i]) == category)
         {
             SetTypeBeforeUsingMove(moves[i], attacker);
-            ctx.move = moves[i];
+            ctx.move = ctx.chosenMove = moves[i];
             ctx.moveType = GetBattleMoveType(moves[i]);
 
             if (CalcTypeEffectivenessMultiplier(&ctx))
@@ -728,6 +719,17 @@ bool32 IsDamageMoveUnusable(struct DamageContext *ctx)
     default:
         break;
     }
+
+    return FALSE;
+}
+
+bool32 IsAdditionalEffectBlocked(u32 battlerAtk, u32 abilityAtk, u32 battlerDef, u32 abilityDef)
+{
+    if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_COVERT_CLOAK)
+        return TRUE;
+
+    if (abilityDef == ABILITY_SHIELD_DUST && !IsMoldBreakerTypeAbility(battlerAtk, abilityAtk))
+        return TRUE;
 
     return FALSE;
 }
@@ -927,7 +929,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
-    ctx.move = move;
+    ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
     ctx.isCrit = ShouldCalcCritDamage(battlerAtk, battlerDef, move, aiData);
     ctx.randomFactor = FALSE;
@@ -1056,6 +1058,49 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
         {
             switch (additionalEffect->moveEffect)
             {
+                case MOVE_EFFECT_ATK_MINUS_1:
+                case MOVE_EFFECT_ATK_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_DEF_MINUS_1:
+                case MOVE_EFFECT_DEF_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SPD_MINUS_1:
+                case MOVE_EFFECT_SPD_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SP_ATK_MINUS_1:
+                case MOVE_EFFECT_SP_ATK_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPATK))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_SP_DEF_MINUS_1:
+                case MOVE_EFFECT_SP_DEF_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_EVS_MINUS_1:
+                case MOVE_EFFECT_EVS_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_EVASION))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_ACC_MINUS_1:
+                case MOVE_EFFECT_ACC_MINUS_2:
+                    if (abilityAtk == ABILITY_CONTRARY && BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ACC))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_ATK_DEF_DOWN:
+                    if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF)))
+                        return TRUE;
+                    break;
+                case MOVE_EFFECT_DEF_SPDEF_DOWN:
+                    if (abilityAtk == ABILITY_CONTRARY && (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_DEF) || BattlerStatCanRise(battlerAtk, abilityAtk, STAT_SPDEF)))
+                        return TRUE;
+                    break;
                 case MOVE_EFFECT_ATK_PLUS_1:
                 case MOVE_EFFECT_ATK_PLUS_2:
                     if (BattlerStatCanRise(battlerAtk, abilityAtk, STAT_ATK))
@@ -1099,6 +1144,9 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
         }
         else // consider move effects that hinder the target
         {
+            if (IsAdditionalEffectBlocked(battlerAtk, abilityAtk, battlerDef, abilityDef))
+                continue;
+
             switch (additionalEffect->moveEffect)
             {
                 case MOVE_EFFECT_POISON:
@@ -1133,7 +1181,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_1:
                 case MOVE_EFFECT_ACC_MINUS_1:
                 case MOVE_EFFECT_EVS_MINUS_1:
-                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_1)) && noOfHitsToKo > 1)
                         return TRUE;
                     break;
                 case MOVE_EFFECT_ATK_MINUS_2:
@@ -1143,7 +1191,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
                 case MOVE_EFFECT_SP_DEF_MINUS_2:
                 case MOVE_EFFECT_ACC_MINUS_2:
                 case MOVE_EFFECT_EVS_MINUS_2:
-                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo != 1)
+                    if (CanLowerStat(battlerAtk, battlerDef, gAiLogicData, STAT_ATK + (additionalEffect->moveEffect - MOVE_EFFECT_ATK_MINUS_2)) && noOfHitsToKo > 1)
                         return TRUE;
                     break;
                 default:
@@ -1200,7 +1248,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
                 case MOVE_EFFECT_ATK_DEF_DOWN:
                 case MOVE_EFFECT_DEF_SPDEF_DOWN:
                     if ((additionalEffect->self && abilityAtk != ABILITY_CONTRARY)
-                        || (noOfHitsToKo != 1 && abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move)))
+                        || (noOfHitsToKo > 1 && !additionalEffect->self && abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move)))
                         return TRUE;
                     break;
                 case MOVE_EFFECT_RECHARGE:
@@ -1221,7 +1269,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
                 case MOVE_EFFECT_ACC_PLUS_2:
                 case MOVE_EFFECT_ALL_STATS_UP:
                     if ((additionalEffect->self && abilityAtk == ABILITY_CONTRARY)
-                        || (noOfHitsToKo != 1 && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
+                        || (noOfHitsToKo > 1 && !additionalEffect->self && !(abilityDef == ABILITY_CONTRARY && !DoesBattlerIgnoreAbilityChecks(battlerAtk, abilityAtk, move))))
                         return TRUE;
                     break;
                 default:
@@ -1334,7 +1382,7 @@ uq4_12_t AI_GetMoveEffectiveness(u32 move, u32 battlerAtk, u32 battlerDef)
     struct DamageContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
-    ctx.move = move;
+    ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = gAiLogicData->abilities[battlerAtk];
@@ -1412,7 +1460,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (!AI_BattlerAtMaxHp(battlerTarget) || effect == EFFECT_MULTI_HIT)
+    if (!AI_BattlerAtMaxHp(battlerTarget) || effect == EFFECT_MULTI_HIT || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
         return FALSE;
     if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && !HasTwoOpponents(battler)))
         return FALSE;
@@ -2041,7 +2089,7 @@ bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
         if (!(fieldStatus & STATUS_FIELD_TRICK_ROOM))
             return FALSE;
         // DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE
-        else if (gFieldTimers.trickRoomTimer != (gBattleTurnCounter + 1))
+        else if (gFieldTimers.trickRoomTimer != 1)
             return FALSE;
     }
 
@@ -3057,17 +3105,16 @@ static u32 GetCurseDamage(u32 battlerId)
     return damage;
 }
 
-static u32 GetTrapDamage(u32 battlerId)
+static u32 GetTrapDamage(u32 battler)
 {
     // ai has no knowledge about turns remaining
     u32 damage = 0;
-    enum HoldEffect holdEffect = gAiLogicData->holdEffects[gBattleStruct->wrappedBy[battlerId]];
-    if (gBattleMons[battlerId].volatiles.wrapped)
+    if (gBattleMons[battler].volatiles.wrapped)
     {
-        if (holdEffect == HOLD_EFFECT_BINDING_BAND)
-            damage = GetNonDynamaxMaxHP(battlerId) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
+        if (gAiLogicData->holdEffects[gBattleMons[battler].volatiles.wrappedBy] == HOLD_EFFECT_BINDING_BAND)
+            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 6 : 8);
         else
-            damage = GetNonDynamaxMaxHP(battlerId) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
+            damage = GetNonDynamaxMaxHP(battler) / (B_BINDING_DAMAGE >= GEN_6 ? 8 : 16);
 
         if (damage == 0)
             damage = 1;
@@ -3475,7 +3522,7 @@ bool32 IsBattlerIncapacitated(u32 battler, enum Ability ability)
     if (gBattleMons[battler].status1 & STATUS1_SLEEP && !HasMoveWithEffect(battler, EFFECT_SLEEP_TALK))
         return TRUE;
 
-    if (gBattleMons[battler].volatiles.recharge || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
+    if (gDisableStructs[battler].rechargeTimer > 0 || (ability == ABILITY_TRUANT && gDisableStructs[battler].truantCounter != 0))
         return TRUE;
 
     return FALSE;
@@ -4089,7 +4136,7 @@ u32 GetAllyChosenMove(u32 battlerId)
     if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
         return MOVE_NONE;
     else if (partnerBattler > battlerId) // Battler with the lower id chooses the move first.
-        return gLastMoves[partnerBattler];
+        return gAiLogicData->lastUsedMove[partnerBattler];
     else
         return GetChosenMoveFromPosition(partnerBattler);
 }

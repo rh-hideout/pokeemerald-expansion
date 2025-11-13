@@ -125,6 +125,13 @@ enum CmdVarious
 
 #define PARTY_SCREEN_OPTIONAL (1 << 7) // Flag for first argument to openpartyscreen
 
+enum SetMoveEffectFlags
+{
+    NO_FLAGS = 0,
+    EFFECT_PRIMARY = (1 << 0),
+    EFFECT_CERTAIN = (1 << 1),
+};
+
 // cases for Cmd_moveend - Order matters!
 enum MoveEndEffects
 {
@@ -151,12 +158,12 @@ enum MoveEndEffects
     MOVEEND_MIRROR_MOVE,
     MOVEEND_DEFROST,
     MOVEEND_NEXT_TARGET, // Everything up until here is handled for each strike of a spread move
-    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond))
+    MOVEEND_HP_THRESHHOLD_ITEMS_TARGET, // Activation only during a multi hit move / ability (Parental Bond)
     MOVEEND_MULTIHIT_MOVE,
     MOVEEND_MOVE_BLOCK,
     MOVEEND_ITEM_EFFECTS_ATTACKER_2,
     MOVEEND_ABILITY_BLOCK,
-    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Eject Pack
+    MOVEEND_SHEER_FORCE, // If move is Sheer Force affected, skip to Hit Escape + One
     MOVEEND_COLOR_CHANGE, // Color Change / Berserk / Anger Shell
     MOVEEND_KEE_MARANGA_HP_THRESHOLD_ITEM_TARGET,
     MOVEEND_RED_CARD,

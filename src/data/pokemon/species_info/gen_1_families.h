@@ -200,12 +200,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Venusaur,
         .iconSprite = gMonIcon_Venusaur,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 4,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_VenusaurF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_VenusaurF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 6, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Venusaur)
@@ -1336,12 +1336,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Butterfree,
         .iconSprite = gMonIcon_Butterfree,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_ButterfreeF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_ButterfreeF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 13, SHADOW_SIZE_S)
         FOOTPRINT(Butterfree)
@@ -2100,12 +2100,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Rattata,
         .iconSprite = gMonIcon_Rattata,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_RattataF,
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 40),
         .backPicFemale = gMonBackPic_RattataF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(1, -3, SHADOW_SIZE_S)
         FOOTPRINT(Rattata)
@@ -2192,12 +2192,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Raticate,
         .iconSprite = gMonIcon_Raticate,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_RaticateF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_RaticateF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_FAST,
         SHADOW(0, 8, SHADOW_SIZE_L)
         FOOTPRINT(Raticate)
@@ -2916,7 +2916,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Pikachu,
         .iconSprite = gMonIcon_Pikachu,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_PikachuF,
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 48),
         .backPicFemale = gMonBackPic_PikachuF,
@@ -2925,7 +2925,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .iconSpriteFemale = gMonIcon_PikachuF,
         .iconPalIndexFemale = 2,
     #endif //P_CUSTOM_GENDER_DIFF_ICONS
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-3, 5, SHADOW_SIZE_M)
         OVERWORLD(
@@ -5001,7 +5001,96 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sClefableLevelUpLearnset,
         .teachableLearnset = sClefableTeachableLearnset,
+        .formSpeciesIdTable = sClefableFormSpeciesIdTable,
+        .formChangeTable = sClefableFormChangeTable,
     },
+
+#if P_GEN_9_MEGA_EVOLUTIONS
+    [SPECIES_CLEFABLE_MEGA] =
+    {
+        .baseHP        = 95,
+        .baseAttack    = 80,
+        .baseDefense   = 93,
+        .baseSpeed     = 70,
+        .baseSpAttack  = 135,
+        .baseSpDefense = 110,
+        .types = MON_TYPES(TYPE_FAIRY, TYPE_FLYING),
+        .catchRate = 25,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 242,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 217,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 213,
+    #else
+        .expYield = 129,
+    #endif
+        .evYield_HP = 3,
+        .itemRare = ITEM_MOON_STONE,
+        .genderRatio = PERCENT_FEMALE(75),
+        .eggCycles = 10,
+        .friendship = 140,
+        .growthRate = GROWTH_FAST,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_FAIRY),
+    #if P_UPDATED_ABILITIES >= GEN_4
+        .abilities = { ABILITY_CUTE_CHARM, ABILITY_MAGIC_GUARD, ABILITY_UNAWARE },
+    #else
+        .abilities = { ABILITY_CUTE_CHARM, ABILITY_NONE, ABILITY_UNAWARE },
+    #endif
+        .bodyColor = BODY_COLOR_PINK,
+        .speciesName = _("Clefable"),
+        .cryId = CRY_CLEFABLE, // CRY_CLEFABLE_MEGA,
+        .natDexNum = NATIONAL_DEX_CLEFABLE,
+        .categoryName = _("Fairy"),
+        .height = 17,
+        .weight = 423,
+        .description = COMPOUND_STRING(
+            "It flies by using the power of\n"
+            "moonlight to control gravity within\n"
+            "a radius of over 32 feet around it."),
+        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPicSize = MON_COORDS_SIZE(40, 40),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPicSize = MON_COORDS_SIZE(40, 40),
+        .backPicYOffset = 12,
+        .backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_CircledQuestionMark,
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_QuestionMark,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        FOOTPRINT(QuestionMark)
+        SHADOW(-1, 0, SHADOW_SIZE_M)
+    #if OW_BATTLE_ONLY_FORMS
+        .overworldData = {
+            .tileTag = TAG_NONE,
+            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
+            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+            .size = 512,
+            .width = 32,
+            .height = 32,
+            .paletteSlot = PALSLOT_NPC_1,
+            .shadowSize = SHADOW_SIZE_M,
+            .inanimate = FALSE,
+            .compressed = COMP,
+            .tracks = TRACKS_FOOT,
+            .oam = &gObjectEventBaseOam_32x32,
+            .subspriteTables = sOamTables_32x32,
+            .anims = sAnimTable_Following,
+            .images = sPicTable_Substitute,
+            .affineAnims = gDummySpriteAffineAnimTable,
+        },
+    #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sClefableLevelUpLearnset,
+        .teachableLearnset = sClefableTeachableLearnset,
+        .formSpeciesIdTable = sClefableFormSpeciesIdTable,
+        .formChangeTable = sClefableFormChangeTable,
+    },
+#endif //P_GEN_9_MEGA_EVOLUTIONS
 #endif //P_FAMILY_CLEFAIRY
 
 #if P_FAMILY_VULPIX
@@ -5604,12 +5693,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Zubat,
         .iconSprite = gMonIcon_Zubat,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_ZubatF,
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 48),
         .backPicFemale = gMonBackPic_ZubatF,
         .backPicSizeFemale = MON_COORDS_SIZE(56, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-4, 11, SHADOW_SIZE_S)
         FOOTPRINT(Zubat)
@@ -5703,12 +5792,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Golbat,
         .iconSprite = gMonIcon_Golbat,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_GolbatF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_GolbatF,
         .backPicSizeFemale = MON_COORDS_SIZE(56, 40),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 14, SHADOW_SIZE_M)
         FOOTPRINT(Golbat)
@@ -5954,12 +6043,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Gloom,
         .iconSprite = gMonIcon_Gloom,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_GloomF,
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 48),
         .backPicFemale = gMonBackPic_GloomF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 3, SHADOW_SIZE_M)
         FOOTPRINT(Gloom)
@@ -6047,12 +6136,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Vileplume,
         .iconSprite = gMonIcon_Vileplume,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_VileplumeF,
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 56),
         .backPicFemale = gMonBackPic_VileplumeF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 7, SHADOW_SIZE_L)
         FOOTPRINT(Vileplume)
@@ -8219,12 +8308,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Politoed,
         .iconSprite = gMonIcon_Politoed,
         .iconPalIndex = 1,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_PolitoedF,
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 56),
         .backPicFemale = gMonBackPic_PolitoedF,
         .backPicSizeFemale = MON_COORDS_SIZE(56, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 9, SHADOW_SIZE_M)
         FOOTPRINT(Politoed)
@@ -8382,12 +8471,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Kadabra,
         .iconSprite = gMonIcon_Kadabra,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_KadabraF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_KadabraF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 6, SHADOW_SIZE_L)
         FOOTPRINT(Kadabra)
@@ -8481,12 +8570,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Alakazam,
         .iconSprite = gMonIcon_Alakazam,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_AlakazamF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_AlakazamF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-1, 9, SHADOW_SIZE_L)
         FOOTPRINT(Alakazam)
@@ -9121,7 +9210,92 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sVictreebelLevelUpLearnset,
         .teachableLearnset = sVictreebelTeachableLearnset,
+        .formSpeciesIdTable = sVictreebelFormSpeciesIdTable,
+        .formChangeTable = sVictreebelFormChangeTable,
     },
+
+#if P_GEN_9_MEGA_EVOLUTIONS
+    [SPECIES_VICTREEBEL_MEGA] =
+    {
+        .baseHP        = 80,
+        .baseAttack    = 125,
+        .baseDefense   = 85,
+        .baseSpeed     = 70,
+        .baseSpAttack  = 135,
+        .baseSpDefense = 95,
+        .types = MON_TYPES(TYPE_GRASS, TYPE_POISON),
+        .catchRate = 45,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 245,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 221,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 216,
+    #else
+        .expYield = 191,
+    #endif
+        .evYield_Attack = 3,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_MEDIUM_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_GRASS),
+        .abilities = { ABILITY_CHLOROPHYLL, ABILITY_NONE, ABILITY_GLUTTONY },
+        .bodyColor = BODY_COLOR_GREEN,
+        .speciesName = _("Victreebel"),
+        .cryId = CRY_VICTREEBEL, // CRY_VICTREEBEL_MEGA,
+        .natDexNum = NATIONAL_DEX_VICTREEBEL,
+        .categoryName = _("Flycatcher"),
+        .height = 45,
+        .weight = 1255,
+        .description = COMPOUND_STRING(
+            "The volume of this Pokémon's acid\n"
+            "has increased due to Mega Evolution,\n"
+            "filling its mouth. If not careful,\n"
+            "the acid will overflow and spill out."),
+        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPicSize = MON_COORDS_SIZE(40, 40),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPicSize = MON_COORDS_SIZE(40, 40),
+        .backPicYOffset = 12,
+        .backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_CircledQuestionMark,
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_QuestionMark,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        FOOTPRINT(QuestionMark)
+        SHADOW(-1, 0, SHADOW_SIZE_M)
+    #if OW_BATTLE_ONLY_FORMS
+        .overworldData = {
+            .tileTag = TAG_NONE,
+            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
+            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+            .size = 512,
+            .width = 32,
+            .height = 32,
+            .paletteSlot = PALSLOT_NPC_1,
+            .shadowSize = SHADOW_SIZE_M,
+            .inanimate = FALSE,
+            .compressed = COMP,
+            .tracks = TRACKS_FOOT,
+            .oam = &gObjectEventBaseOam_32x32,
+            .subspriteTables = sOamTables_32x32,
+            .anims = sAnimTable_Following,
+            .images = sPicTable_Substitute,
+            .affineAnims = gDummySpriteAffineAnimTable,
+        },
+    #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sVictreebelLevelUpLearnset,
+        .teachableLearnset = sVictreebelTeachableLearnset,
+        .formSpeciesIdTable = sVictreebelFormSpeciesIdTable,
+        .formChangeTable = sVictreebelFormChangeTable,
+    },
+#endif //P_GEN_9_MEGA_EVOLUTIONS
 #endif //P_FAMILY_BELLSPROUT
 
 #if P_FAMILY_TENTACOOL
@@ -10991,12 +11165,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Doduo,
         .iconSprite = gMonIcon_Doduo,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_DoduoF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_DoduoF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(6, 5, SHADOW_SIZE_M)
         FOOTPRINT(Doduo)
@@ -11084,12 +11258,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Dodrio,
         .iconSprite = gMonIcon_Dodrio,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_DodrioF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_DodrioF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 12, SHADOW_SIZE_L)
         FOOTPRINT(Dodrio)
@@ -12187,12 +12361,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Steelix,
         .iconSprite = gMonIcon_Steelix,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_SteelixF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_SteelixF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(2, 12, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Steelix)
@@ -12429,12 +12603,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Hypno,
         .iconSprite = gMonIcon_Hypno,
         .iconPalIndex = P_GBA_STYLE_SPECIES_ICONS ? 1 : 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_HypnoF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_HypnoF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-3, 9, SHADOW_SIZE_L)
         FOOTPRINT(Hypno)
@@ -12841,7 +13015,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .height = 5,
         .weight = 130,
         .description = COMPOUND_STRING(
-            "It esembles an ancient Poké Ball design.\n"
+            "It resembles an ancient Poké Ball design.\n"
             "When excited, it discharges the electric\n"
             "current it has stored in its belly, then\n"
             "lets out a great, uproarious laugh."),
@@ -14188,12 +14362,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Rhyhorn,
         .iconSprite = gMonIcon_Rhyhorn,
         .iconPalIndex = 1,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_RhyhornF,
         .frontPicSizeFemale = MON_COORDS_SIZE(56, 40),
         .backPicFemale = gMonBackPic_RhyhornF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 0, SHADOW_SIZE_L)
         FOOTPRINT(Rhyhorn)
@@ -14269,12 +14443,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Rhydon,
         .iconSprite = gMonIcon_Rhydon,
         .iconPalIndex = 1,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_RhydonF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_RhydonF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(3, 9, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Rhydon)
@@ -15215,12 +15389,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Goldeen,
         .iconSprite = gMonIcon_Goldeen,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_GoldeenF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 40),
         .backPicFemale = gMonBackPic_GoldeenF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(-6, 0, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Goldeen)
@@ -15300,12 +15474,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Seaking,
         .iconSprite = gMonIcon_Seaking,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_SeakingF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 56),
         .backPicFemale = gMonBackPic_SeakingF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(0, 8, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Seaking)
@@ -15473,7 +15647,86 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sStarmieLevelUpLearnset,
         .teachableLearnset = sStarmieTeachableLearnset,
+        .formSpeciesIdTable = sStarmieFormSpeciesIdTable,
+        .formChangeTable = sStarmieFormChangeTable,
     },
+
+#if P_GEN_9_MEGA_EVOLUTIONS
+    [SPECIES_STARMIE_MEGA] =
+    {
+        .baseHP        = 60,
+        .baseAttack    = 140,
+        .baseDefense   = 105,
+        .baseSpeed     = 120,
+        .baseSpAttack  = 130,
+        .baseSpDefense = 105,
+        .types = MON_TYPES(TYPE_WATER, TYPE_PSYCHIC),
+        .catchRate = 60,
+        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 182 : 207,
+        .evYield_Speed = 2,
+        .itemCommon = ITEM_STARDUST,
+        .itemRare = ITEM_STAR_PIECE,
+        .genderRatio = MON_GENDERLESS,
+        .eggCycles = 20,
+        .friendship = STANDARD_FRIENDSHIP,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_3),
+        .abilities = { ABILITY_ILLUMINATE, ABILITY_NATURAL_CURE, ABILITY_ANALYTIC },
+        .bodyColor = BODY_COLOR_PURPLE,
+        .speciesName = _("Starmie"),
+        .cryId = CRY_STARMIE, // CRY_STARMIE_MEGA,
+        .natDexNum = NATIONAL_DEX_STARMIE,
+        .categoryName = _("Mysterious"),
+        .height = 23,
+        .weight = 800,
+        .description = COMPOUND_STRING(
+            "Its movements have become more\n"
+            "humanlike. Whether it's simply\n"
+            "trying to communicate or wants to\n"
+            "supplant humanity is unclear."),
+        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPicSize = MON_COORDS_SIZE(40, 40),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPicSize = MON_COORDS_SIZE(40, 40),
+        .backPicYOffset = 12,
+        .backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_CircledQuestionMark,
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_QuestionMark,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        FOOTPRINT(QuestionMark)
+        SHADOW(-1, 0, SHADOW_SIZE_M)
+    #if OW_BATTLE_ONLY_FORMS
+        .overworldData = {
+            .tileTag = TAG_NONE,
+            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
+            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+            .size = 512,
+            .width = 32,
+            .height = 32,
+            .paletteSlot = PALSLOT_NPC_1,
+            .shadowSize = SHADOW_SIZE_M,
+            .inanimate = FALSE,
+            .compressed = COMP,
+            .tracks = TRACKS_FOOT,
+            .oam = &gObjectEventBaseOam_32x32,
+            .subspriteTables = sOamTables_32x32,
+            .anims = sAnimTable_Following,
+            .images = sPicTable_Substitute,
+            .affineAnims = gDummySpriteAffineAnimTable,
+        },
+    #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sStarmieLevelUpLearnset,
+        .teachableLearnset = sStarmieTeachableLearnset,
+        .formSpeciesIdTable = sStarmieFormSpeciesIdTable,
+        .formChangeTable = sStarmieFormChangeTable,
+    },
+#endif //P_GEN_9_MEGA_EVOLUTIONS
 #endif //P_FAMILY_STARYU
 
 #if P_FAMILY_MR_MIME
@@ -17178,12 +17431,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Magikarp,
         .iconSprite = gMonIcon_Magikarp,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_MagikarpF,
         .frontPicSizeFemale = MON_COORDS_SIZE(48, 56),
         .backPicFemale = gMonBackPic_MagikarpF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 56),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(1, 7, SHADOW_SIZE_M)
         FOOTPRINT(Magikarp)
@@ -17260,12 +17513,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Gyarados,
         .iconSprite = gMonIcon_Gyarados,
         .iconPalIndex = 0,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_GyaradosF,
         .frontPicSizeFemale = MON_COORDS_SIZE(64, 64),
         .backPicFemale = gMonBackPic_GyaradosF,
         .backPicSizeFemale = MON_COORDS_SIZE(64, 64),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         SHADOW(5, 9, SHADOW_SIZE_XL_BATTLE_ONLY)
         FOOTPRINT(Gyarados)
@@ -17622,12 +17875,12 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Eevee,
         .iconSprite = gMonIcon_Eevee,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_EeveeF,
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 48),
         .backPicFemale = gMonBackPic_EeveeF,
         .backPicSizeFemale = MON_COORDS_SIZE(56, 48),
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-2, 2, SHADOW_SIZE_S)
         FOOTPRINT(Eevee)
@@ -17777,7 +18030,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .shinyPalette = gMonShinyPalette_Eevee,
         .iconSprite = gMonIcon_EeveePartner,
         .iconPalIndex = 2,
-#if P_GENDER_DIFFERENCES
+#if P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .frontPicFemale = gMonFrontPic_EeveeF,
         .frontPicSizeFemale = MON_COORDS_SIZE(40, 48),
         .backPicFemale = gMonBackPic_EeveeF,
@@ -17786,7 +18039,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .iconSpriteFemale = gMonIcon_EeveePartnerF,
         .iconPalIndexFemale = 2,
     #endif
-#endif //P_GENDER_DIFFERENCES
+#endif //P_GENDER_DIFFERENCES && !P_GBA_STYLE_SPECIES_GFX
         .pokemonJumpType = PKMN_JUMP_TYPE_NORMAL,
         SHADOW(-2, 2, SHADOW_SIZE_S)
         FOOTPRINT(Eevee)
@@ -19936,7 +20189,91 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         )
         .levelUpLearnset = sDragoniteLevelUpLearnset,
         .teachableLearnset = sDragoniteTeachableLearnset,
+        .formSpeciesIdTable = sDragoniteFormSpeciesIdTable,
+        .formChangeTable = sDragoniteFormChangeTable,
     },
+
+#if P_GEN_9_MEGA_EVOLUTIONS
+    [SPECIES_DRAGONITE_MEGA] =
+    {
+        .baseHP        = 91,
+        .baseAttack    = 124,
+        .baseDefense   = 115,
+        .baseSpeed     = 100,
+        .baseSpAttack  = 145,
+        .baseSpDefense = 125,
+        .types = MON_TYPES(TYPE_DRAGON, TYPE_FLYING),
+        .catchRate = 45,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 300,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 270,
+    #else
+        .expYield = 218,
+    #endif
+        .evYield_Attack = 3,
+        .itemRare = ITEM_DRAGON_SCALE,
+        .genderRatio = PERCENT_FEMALE(50),
+        .eggCycles = 40,
+        .friendship = 35,
+        .growthRate = GROWTH_SLOW,
+        .eggGroups = MON_EGG_GROUPS(EGG_GROUP_WATER_1, EGG_GROUP_DRAGON),
+        .abilities = { ABILITY_INNER_FOCUS, ABILITY_NONE, ABILITY_MULTISCALE },
+        .bodyColor = BODY_COLOR_BROWN,
+        .speciesName = _("Dragonite"),
+        .cryId = CRY_DRAGONITE, // CRY_DRAGONITE_MEGA,
+        .natDexNum = NATIONAL_DEX_DRAGONITE,
+        .categoryName = _("Dragon"),
+        .height = 22,
+        .weight = 2900,
+        .description = COMPOUND_STRING(
+            "Mega Evolution has excessively\n"
+            "powered up this Pokémon's feelings\n"
+            "of kindness. It finishes off its\n"
+            "opponents with mercy in its heart."),
+        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPicSize = MON_COORDS_SIZE(40, 40),
+        .frontPicYOffset = 12,
+        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
+        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPicSize = MON_COORDS_SIZE(40, 40),
+        .backPicYOffset = 12,
+        .backAnimId = BACK_ANIM_NONE,
+        .palette = gMonPalette_CircledQuestionMark,
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
+        .iconSprite = gMonIcon_QuestionMark,
+        .iconPalIndex = 0,
+        .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
+        FOOTPRINT(QuestionMark)
+        SHADOW(-1, 0, SHADOW_SIZE_M)
+    #if OW_BATTLE_ONLY_FORMS
+        .overworldData = {
+            .tileTag = TAG_NONE,
+            .paletteTag = OBJ_EVENT_PAL_TAG_SUBSTITUTE,
+            .reflectionPaletteTag = OBJ_EVENT_PAL_TAG_NONE,
+            .size = 512,
+            .width = 32,
+            .height = 32,
+            .paletteSlot = PALSLOT_NPC_1,
+            .shadowSize = SHADOW_SIZE_M,
+            .inanimate = FALSE,
+            .compressed = COMP,
+            .tracks = TRACKS_FOOT,
+            .oam = &gObjectEventBaseOam_32x32,
+            .subspriteTables = sOamTables_32x32,
+            .anims = sAnimTable_Following,
+            .images = sPicTable_Substitute,
+            .affineAnims = gDummySpriteAffineAnimTable,
+        },
+    #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sDragoniteLevelUpLearnset,
+        .teachableLearnset = sDragoniteTeachableLearnset,
+        .formSpeciesIdTable = sDragoniteFormSpeciesIdTable,
+        .formChangeTable = sDragoniteFormChangeTable,
+    },
+#endif //P_GEN_9_MEGA_EVOLUTIONS
 #endif //P_FAMILY_DRATINI
 
 #if P_FAMILY_MEWTWO

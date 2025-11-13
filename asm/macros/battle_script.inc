@@ -679,10 +679,8 @@
 	.byte 0x75
 	.endm
 
-	.macro various battler:req, id:req
+	.macro unused_0x78
 	.byte 0x76
-	.byte \battler
-	.byte \id
 	.endm
 
 	.macro setprotectlike
@@ -1938,12 +1936,6 @@
 	callnative BS_JumpIfNoAlly
 	.byte \battler
 	.4byte \jumpInstr
-	.endm
-
-	.macro infatuatewithbattler battler:req, infatuateWith:req
-	callnative BS_InfatuateWithBattler
-	.byte \battler
-	.byte \infatuateWith
 	.endm
 
 	.macro setlastuseditem battler:req

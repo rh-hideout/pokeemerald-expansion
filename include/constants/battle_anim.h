@@ -668,6 +668,14 @@
 #define ANIM_ORDER_UP_DROOPY         2
 #define ANIM_ORDER_UP_STRETCHY       3
 
+// AnimTask_TransformMon variations
+enum SpeciesGfxChange
+{
+    SPECIES_GFX_CHANGE_TRANSFORM,
+    SPECIES_GFX_CHANGE_FORM_CHANGE,
+    SPECIES_GFX_CHANGE_ILLUSION_OFF,
+};
+
 // Flags given to various functions to indicate which palettes to consider.
 // Handled by UnpackSelectedBattlePalettes
 #define F_PAL_BG                  (1 << 0)
