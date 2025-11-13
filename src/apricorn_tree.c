@@ -76,8 +76,7 @@ bool8 IsApricornTreePicked(u32 id)
         return TRUE;
 
     #if (APRICORN_TREE_COUNT > 0)
-        bool8 tree = gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
-        return tree;
+        return gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
     #else
         return TRUE;
     #endif
