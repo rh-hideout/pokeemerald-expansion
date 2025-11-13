@@ -78,7 +78,7 @@ ApricornTree_Text_PutAwayApricorn:
 ApricornTree_Text_PocketFull:
 	.string "The BAG's {STR_VAR_3} POCKET is full.\p"
 	.string "{PLAYER} gave up on the\p"
-	.string "{STR_VAR_1}...$"
+	.string "{STR_VAR_1}…$"
 
 ApricornTree_Text_ApricornLeftUnpicked:
 	.string "{PLAYER} gave up on the\p"
