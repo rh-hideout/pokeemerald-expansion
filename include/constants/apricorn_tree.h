@@ -4,7 +4,8 @@
 #include "constants/items.h"
 
 // Apricorn lookup table, added to allow adding new apricorns without being forced to rearrange the item constants.
-enum ApricornType {
+enum ApricornType
+{
     APRICORN_RED           = ITEM_RED_APRICORN,
     APRICORN_BLUE          = ITEM_BLUE_APRICORN,
     APRICORN_YELLOW        = ITEM_YELLOW_APRICORN,
