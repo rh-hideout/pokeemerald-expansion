@@ -8,11 +8,6 @@
 #include "string_util.h"
 #include "data/apricorns.h"
 
-static u16 ApricornTypeToItemId(u8 apricorn)
-{
-    return ApricornTypes[apricorn];
-}
-
 void DailyResetApricornTrees(void)
 {
     #if (APRICORN_TREE_COUNT > 0)
@@ -22,32 +17,28 @@ void DailyResetApricornTrees(void)
 
 void ObjectEventInteractionGetApricornTreeData(void)
 {
-    u32 id;
-    u32 apricorn;
-
-    id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
-    apricorn = GetApricornTypeByApricornTreeId(id);
-    gSpecialVar_0x8004 = ApricornTypeToItemId(apricorn);
+    u32 id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
+    gSpecialVar_0x8004 = GetApricornTypeByApricornTreeId(id);
     gSpecialVar_0x8005 = GetApricornCountByApricornTreeId(id);
+
     CopyItemNameHandlePlural(gSpecialVar_0x8004, gStringVar1, gSpecialVar_0x8005);
 }
 
 void ObjectEventInteractionPickApricornTree(void)
 {
     u32 id = GetObjectEventApricornTreeId(gSelectedObjectEvent);
-    u32 apricorn = GetApricornTypeByApricornTreeId(id);
-    u32 apricornItemID = ApricornTypeToItemId(apricorn);
+    enum ApricornType apricorn = GetApricornTypeByApricornTreeId(id);
+    gSpecialVar_0x8006 = CheckBagHasSpace(apricorn, GetApricornCountByApricornTreeId(id));
 
-    gSpecialVar_0x8006 = CheckBagHasSpace(apricornItemID, GetApricornCountByApricornTreeId(id));
     if (gSpecialVar_0x8006)
     {
-        AddBagItem(ApricornTypeToItemId(apricorn), GetApricornCountByApricornTreeId(id));
+        AddBagItem(apricorn, GetApricornCountByApricornTreeId(id));
         SetApricornTreePicked(id);
     }
-    gSpecialVar_Result = GetItemPocket(apricornItemID);
+    gSpecialVar_Result = GetItemPocket(apricorn);
 }
 
-u8 GetApricornTypeByApricornTreeId(u32 id)
+enum ApricornType GetApricornTypeByApricornTreeId(u32 id)
 {
     #if (APRICORN_TREE_COUNT > 0)
         return gApricornTrees[id].apricornType;
