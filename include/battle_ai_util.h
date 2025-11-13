@@ -81,6 +81,7 @@ bool32 BattlerIsPlayer(u32 battlerId);
 bool32 BattlerIsPartner(u32 battlerId);
 bool32 BattlerIsOpponent(u32 battlerId);
 bool32 BattlerIsRecorded(u32 battlerId);
+bool32 BattlerIsLink(u32 battlerId);
 void SwapBattlerAiFlags(u32 battler1, u32 battler2);
 bool32 BattlerHasAi(u32 battlerId);
 bool32 IsAiBattlerAware(u32 battlerId);

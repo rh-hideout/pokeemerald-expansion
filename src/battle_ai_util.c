@@ -159,6 +159,12 @@ bool32 BattlerIsRecorded(u32 battlerId)
         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT);
 }
 
+bool32 BattlerIsLink(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER
+        || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+}
+
 void SwapBattlerAiFlags(u32 battler1, u32 battler2)
 {
     u64 tempFlags = gAiThinkingStruct->aiFlags[battler1];
