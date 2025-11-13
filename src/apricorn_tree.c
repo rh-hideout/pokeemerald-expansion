@@ -10,9 +10,9 @@
 
 void DailyResetApricornTrees(void)
 {
-    #if (APRICORN_TREE_COUNT > 0)
-        memset(&gSaveBlock3Ptr->apricornTrees[0], 0, NUM_APRICORN_TREE_BYTES);
-    #endif
+#if (APRICORN_TREE_COUNT > 0)
+    memset(&gSaveBlock3Ptr->apricornTrees[0], 0, NUM_APRICORN_TREE_BYTES);
+#endif
 }
 
 void ObjectEventInteractionGetApricornTreeData(void)
@@ -40,11 +40,10 @@ void ObjectEventInteractionPickApricornTree(void)
 
 enum ApricornType GetApricornTypeByApricornTreeId(u32 id)
 {
-    #if (APRICORN_TREE_COUNT > 0)
+    if (APRICORN_TREE_COUNT > 0)
         return gApricornTrees[id].apricornType;
-    #else
+    else
         return 0;
-    #endif
 }
 
 u8 GetApricornCountByApricornTreeId(u32 id)
@@ -52,13 +51,14 @@ u8 GetApricornCountByApricornTreeId(u32 id)
     if (IsApricornTreePicked(id))
         return 0;
 
-    #if (APRICORN_TREE_COUNT > 0)
+    if (APRICORN_TREE_COUNT > 0)
+    {
         return gApricornTrees[id].maximum > gApricornTrees[id].minimum
                 ? gApricornTrees[id].minimum + Random() % (gApricornTrees[id].maximum - gApricornTrees[id].minimum)
                 : gApricornTrees[id].minimum;
-    #else
+    }
+    else
         return 0;
-    #endif
 }
 
 bool8 IsApricornTreePicked(u32 id)
@@ -66,19 +66,20 @@ bool8 IsApricornTreePicked(u32 id)
     if (id > APRICORN_TREE_COUNT)
         return TRUE;
 
-    #if (APRICORN_TREE_COUNT > 0)
-        return gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
-    #else
-        return TRUE;
-    #endif
+#if (APRICORN_TREE_COUNT > 0)
+    return gSaveBlock3Ptr->apricornTrees[id / 8] & (1 << (id % 8));
+#else
+    return TRUE;
+#endif
 }
 
 void SetApricornTreePicked(u32 id)
 {
     if (id > APRICORN_TREE_COUNT)
         return;
-    #if (APRICORN_TREE_COUNT > 0)
-        u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
-        *flagByte = (*flagByte) | (1 << (id % 8));
-    #endif
+
+#if (APRICORN_TREE_COUNT > 0)
+    u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
+    *flagByte = (*flagByte) | (1 << (id % 8));
+#endif
 }
