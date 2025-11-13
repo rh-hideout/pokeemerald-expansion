@@ -212,15 +212,12 @@ bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId)
     return FALSE;
 }
 
-bool32 IsAiBattlerPredictingAbility(u32 battlerId)
-{ //grintoul: not sure what the original setup was trying to achieve?
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        if (gAiThinkingStruct->aiFlags[i] & AI_FLAG_WEIGH_ABILITY_PREDICTION)
-            return TRUE;
-    }
+bool32 IsAiBattlerPredictingAbility(u32 battlerId) 
+{
+    if (gAiThinkingStruct->aiFlags[GetBattlerPosition(battlerId)] & AI_FLAG_WEIGH_ABILITY_PREDICTION)
+        return TRUE;
 
-    return BattlerHasAi(battlerId);
+    return FALSE;
 }
 
 bool32 CanAiPredictMove(u32 battlerId)
