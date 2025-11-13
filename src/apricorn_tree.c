@@ -53,9 +53,10 @@ u8 GetApricornCountByApricornTreeId(u32 id)
 
     if (APRICORN_TREE_COUNT > 0)
     {
-        return gApricornTrees[id].maximum > gApricornTrees[id].minimum
-                ? gApricornTrees[id].minimum + Random() % (gApricornTrees[id].maximum - gApricornTrees[id].minimum)
-                : gApricornTrees[id].minimum;
+        if (gApricornTrees[id].maximum > gApricornTrees[id].minimum)
+            return gApricornTrees[id].minimum + Random() % (gApricornTrees[id].maximum - gApricornTrees[id].minimum);
+        else
+            return gApricornTrees[id].minimum;
     }
     else
         return 0;
