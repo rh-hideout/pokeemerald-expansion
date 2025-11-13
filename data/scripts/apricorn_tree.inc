@@ -62,7 +62,7 @@ ApricornTree_Text_Empty:
 	.string "There are no Apricorns...$"
 
 ApricornTree_Text_WantToPick:
-	.string "...It's {STR_VAR_2} {STR_VAR_1}!\p"
+	.string "…It's {STR_VAR_2} {STR_VAR_1}!\p"
 	.string "Do you want to pick the\n"
 	.string "{STR_VAR_1}?$"
 
