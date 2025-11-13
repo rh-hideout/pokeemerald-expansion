@@ -62,24 +62,27 @@ static bool32 HandleEndTurnVarious(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_FAIRY_LOCK && gFieldTimers.fairyLockTimer == gBattleTurnCounter)
+    if (gFieldTimers.fairyLockTimer > 0 && --gFieldTimers.fairyLockTimer == 0)
         gFieldStatuses &= ~STATUS_FIELD_FAIRY_LOCK;
 
     for (i = 0; i < NUM_BATTLE_SIDES; i++)
     {
-        if (gSideStatuses[i] & SIDE_STATUS_DAMAGE_NON_TYPES && gSideTimers[i].damageNonTypesTimer == gBattleTurnCounter)
+        if (gSideTimers[i].damageNonTypesTimer > 0 && --gSideTimers[i].damageNonTypesTimer == 0)
             gSideStatuses[i] &= ~SIDE_STATUS_DAMAGE_NON_TYPES;
     }
 
     for (i = 0; i < gBattlersCount; i++)
     {
+        if (gDisableStructs[i].throatChopTimer > 0)
+            gDisableStructs[i].throatChopTimer--;
+
         if (gBattleMons[i].volatiles.lockOn > 0)
             gBattleMons[i].volatiles.lockOn--;
 
-        if (gDisableStructs[i].chargeTimer && --gDisableStructs[i].chargeTimer == 0)
+        if (gDisableStructs[i].chargeTimer > 0 && --gDisableStructs[i].chargeTimer == 0)
             gBattleMons[i].volatiles.charge = FALSE;
 
-        if (gBattleMons[i].volatiles.laserFocus && gDisableStructs[i].laserFocusTimer == gBattleTurnCounter)
+        if (gDisableStructs[i].laserFocusTimer > 0 && --gDisableStructs[i].laserFocusTimer == 0)
             gBattleMons[i].volatiles.laserFocus = FALSE;
 
         gBattleStruct->battlerState[i].wasAboveHalfHp = gBattleMons[i].hp > gBattleMons[i].maxHP / 2;
@@ -246,7 +249,7 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gWishFutureKnock.futureSightCounter[battler] == gBattleTurnCounter)
+    if (gWishFutureKnock.futureSightCounter[battler] > 0 && --gWishFutureKnock.futureSightCounter[battler] == 0)
     {
         if (!IsBattlerAlive(battler))
             return effect;
@@ -278,7 +281,7 @@ static bool32 HandleEndTurnWish(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gWishFutureKnock.wishCounter[battler] == gBattleTurnCounter && IsBattlerAlive(battler))
+    if (gWishFutureKnock.wishCounter[battler] > 0 && --gWishFutureKnock.wishCounter[battler] == 0 && IsBattlerAlive(battler))
     {
         s32 wishHeal = 0;
         gBattlerTarget = battler;
@@ -740,7 +743,7 @@ static bool32 HandleEndTurnTorment(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gDisableStructs[battler].tormentTimer == gBattleTurnCounter)
+    if (gDisableStructs[battler].tormentTimer > 0 && --gDisableStructs[battler].tormentTimer == 0)
     {
         gBattleMons[battler].volatiles.torment = FALSE;
         gBattleScripting.battler = battler;
@@ -815,7 +818,7 @@ static bool32 HandleEndTurnMagnetRise(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.magnetRise && gDisableStructs[battler].magnetRiseTimer == gBattleTurnCounter)
+    if (gDisableStructs[battler].magnetRiseTimer > 0 && --gDisableStructs[battler].magnetRiseTimer == 0)
     {
         gBattleMons[battler].volatiles.magnetRise = FALSE;
         BattleScriptExecute(BattleScript_BufferEndTurn);
@@ -832,7 +835,7 @@ static bool32 HandleEndTurnTelekinesis(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.telekinesis && gDisableStructs[battler].telekinesisTimer == gBattleTurnCounter)
+    if (gDisableStructs[battler].telekinesisTimer > 0 && --gDisableStructs[battler].telekinesisTimer == 0)
     {
         gBattleMons[battler].volatiles.telekinesis = FALSE;
         BattleScriptExecute(BattleScript_TelekinesisEndTurn);
@@ -848,7 +851,7 @@ static bool32 HandleEndTurnHealBlock(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.healBlock && gDisableStructs[battler].healBlockTimer == gBattleTurnCounter)
+    if (gDisableStructs[battler].healBlockTimer > 0 && --gDisableStructs[battler].healBlockTimer == 0)
     {
         gBattleMons[battler].volatiles.healBlock = FALSE;
         gBattleScripting.battler = battler;
@@ -866,7 +869,7 @@ static bool32 HandleEndTurnEmbargo(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleMons[battler].volatiles.embargo && gDisableStructs[battler].embargoTimer == gBattleTurnCounter)
+    if (gDisableStructs[battler].embargoTimer > 0 && --gDisableStructs[battler].embargoTimer == 0)
     {
         gBattleMons[battler].volatiles.embargo = FALSE;
         BattleScriptExecute(BattleScript_EmbargoEndTurn);
@@ -985,7 +988,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
     switch (gBattleStruct->eventState.endTurnBlock)
     {
     case SECOND_EVENT_BLOCK_REFLECT:
-        if (gSideStatuses[side] & SIDE_STATUS_REFLECT && gSideTimers[side].reflectTimer == gBattleTurnCounter)
+        if (gSideTimers[side].reflectTimer > 0 && --gSideTimers[side].reflectTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_REFLECT;
@@ -997,7 +1000,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_LIGHT_SCREEN:
-        if (gSideStatuses[side] & SIDE_STATUS_LIGHTSCREEN && gSideTimers[side].lightscreenTimer == gBattleTurnCounter)
+        if (gSideTimers[side].lightscreenTimer > 0 && --gSideTimers[side].lightscreenTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LIGHTSCREEN;
@@ -1009,7 +1012,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_SAFEGUARD:
-        if (gSideStatuses[side] & SIDE_STATUS_SAFEGUARD && gSideTimers[side].safeguardTimer == gBattleTurnCounter)
+        if (gSideTimers[side].safeguardTimer > 0 && --gSideTimers[side].safeguardTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_SAFEGUARD;
@@ -1019,7 +1022,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_MIST:
-        if (gSideTimers[side].mistTimer != 0 && gSideTimers[side].mistTimer == gBattleTurnCounter)
+        if (gSideTimers[side].mistTimer > 0 && --gSideTimers[side].mistTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_MIST;
@@ -1031,7 +1034,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_TAILWIND:
-        if (gSideStatuses[side] & SIDE_STATUS_TAILWIND && gSideTimers[side].tailwindTimer == gBattleTurnCounter)
+        if (gSideTimers[side].tailwindTimer > 0 && --gSideTimers[side].tailwindTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_TAILWIND;
@@ -1041,7 +1044,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_LUCKY_CHANT:
-        if (gSideStatuses[side] & SIDE_STATUS_LUCKY_CHANT && gSideTimers[side].luckyChantTimer == gBattleTurnCounter)
+        if (gSideTimers[side].luckyChantTimer > 0 && --gSideTimers[side].luckyChantTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_LUCKY_CHANT;
@@ -1052,7 +1055,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         break;
     case SECOND_EVENT_BLOCK_RAINBOW:
         gBattlerAttacker = GetBattlerSideForMessage(side);
-        if (gSideStatuses[side] & SIDE_STATUS_RAINBOW && gSideTimers[side].rainbowTimer == gBattleTurnCounter)
+        if (gSideTimers[side].rainbowTimer > 0 && --gSideTimers[side].rainbowTimer == 0)
         {
             gSideStatuses[side] &= ~SIDE_STATUS_RAINBOW;
             BattleScriptExecute(BattleScript_TheRainbowDisappeared);
@@ -1061,7 +1064,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
             break;
     case SECOND_EVENT_BLOCK_SEA_OF_FIRE:
-        if (gSideStatuses[side] & SIDE_STATUS_SEA_OF_FIRE && gSideTimers[side].seaOfFireTimer == gBattleTurnCounter)
+        if (gSideTimers[side].seaOfFireTimer > 0 && --gSideTimers[side].seaOfFireTimer == 0)
         {
             gSideStatuses[side] &= ~SIDE_STATUS_SEA_OF_FIRE;
             BattleScriptExecute(BattleScript_TheSeaOfFireDisappeared);
@@ -1071,7 +1074,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         break;
     case SECOND_EVENT_BLOCK_SWAMP:
         gBattlerAttacker = GetBattlerSideForMessage(side);
-        if (gSideStatuses[side] & SIDE_STATUS_SWAMP && gSideTimers[side].swampTimer == gBattleTurnCounter)
+        if (gSideTimers[side].swampTimer > 0 && --gSideTimers[side].swampTimer == 0)
         {
             gSideStatuses[side] &= ~SIDE_STATUS_SWAMP;
             BattleScriptExecute(BattleScript_TheSwampDisappeared);
@@ -1080,7 +1083,7 @@ static bool32 HandleEndTurnSecondEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case SECOND_EVENT_BLOCK_AURORA_VEIL:
-        if (gSideStatuses[side] & SIDE_STATUS_AURORA_VEIL && gSideTimers[side].auroraVeilTimer == gBattleTurnCounter)
+        if (gSideTimers[side].auroraVeilTimer > 0 && --gSideTimers[side].auroraVeilTimer == 0)
         {
             gBattlerAttacker = GetBattlerSideForMessage(side);
             gSideStatuses[side] &= ~SIDE_STATUS_AURORA_VEIL;
@@ -1103,7 +1106,7 @@ static bool32 HandleEndTurnTrickRoom(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_TRICK_ROOM && gFieldTimers.trickRoomTimer == gBattleTurnCounter)
+    if (gFieldTimers.trickRoomTimer > 0 && --gFieldTimers.trickRoomTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_TRICK_ROOM;
         BattleScriptExecute(BattleScript_TrickRoomEnds);
@@ -1119,7 +1122,7 @@ static bool32 HandleEndTurnGravity(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_GRAVITY && gFieldTimers.gravityTimer == gBattleTurnCounter)
+    if (gFieldTimers.gravityTimer > 0 && --gFieldTimers.gravityTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_GRAVITY;
         BattleScriptExecute(BattleScript_GravityEnds);
@@ -1135,7 +1138,7 @@ static bool32 HandleEndTurnWaterSport(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_WATERSPORT && gFieldTimers.waterSportTimer == gBattleTurnCounter)
+    if (gFieldTimers.waterSportTimer > 0 && --gFieldTimers.waterSportTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_WATERSPORT;
         BattleScriptExecute(BattleScript_WaterSportEnds);
@@ -1151,7 +1154,7 @@ static bool32 HandleEndTurnMudSport(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_MUDSPORT && gFieldTimers.mudSportTimer == gBattleTurnCounter)
+    if (gFieldTimers.mudSportTimer > 0 && --gFieldTimers.mudSportTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_MUDSPORT;
         BattleScriptExecute(BattleScript_MudSportEnds);
@@ -1167,7 +1170,7 @@ static bool32 HandleEndTurnWonderRoom(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_WONDER_ROOM && gFieldTimers.wonderRoomTimer == gBattleTurnCounter)
+    if (gFieldTimers.wonderRoomTimer > 0 && --gFieldTimers.wonderRoomTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_WONDER_ROOM;
         BattleScriptExecute(BattleScript_WonderRoomEnds);
@@ -1183,7 +1186,7 @@ static bool32 HandleEndTurnMagicRoom(u32 battler)
 
     gBattleStruct->eventState.endTurn++;
 
-    if (gFieldStatuses & STATUS_FIELD_MAGIC_ROOM && gFieldTimers.magicRoomTimer == gBattleTurnCounter)
+    if (gFieldTimers.magicRoomTimer > 0 && --gFieldTimers.magicRoomTimer == 0)
     {
         gFieldStatuses &= ~STATUS_FIELD_MAGIC_ROOM;
         BattleScriptExecute(BattleScript_MagicRoomEnds);
@@ -1195,7 +1198,7 @@ static bool32 HandleEndTurnMagicRoom(u32 battler)
 
 static bool32 EndTurnTerrain(u32 terrainFlag, u32 stringTableId)
 {
-    if (gFieldStatuses & terrainFlag && gFieldTimers.terrainTimer == gBattleTurnCounter)
+    if (gFieldTimers.terrainTimer > 0 && --gFieldTimers.terrainTimer == 0)
     {
         gFieldStatuses &= ~terrainFlag;
         TryToRevertMimicryAndFlags();
@@ -1367,7 +1370,7 @@ static bool32 HandleEndTurnDynamax(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] == gBattleTurnCounter)
+    if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX && gBattleStruct->dynamax.dynamaxTurns[battler] > 0 && --gBattleStruct->dynamax.dynamaxTurns[battler] == 0)
     {
         gBattleScripting.battler = battler;
         UndoDynamax(battler);

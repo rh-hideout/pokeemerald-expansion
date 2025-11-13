@@ -2128,7 +2128,7 @@ bool32 ShouldSetFieldStatus(u32 battler, u32 fieldStatus)
         if (!(fieldStatus & STATUS_FIELD_TRICK_ROOM))
             return FALSE;
         // DOUBLE_TRICK_ROOM_ON_LAST_TURN_CHANCE
-        else if (gFieldTimers.trickRoomTimer != (gBattleTurnCounter + 1))
+        else if (gFieldTimers.trickRoomTimer != 1)
             return FALSE;
     }
 
@@ -4175,7 +4175,7 @@ u32 GetAllyChosenMove(u32 battlerId)
     if (!IsBattlerAlive(partnerBattler) || !IsAiBattlerAware(partnerBattler))
         return MOVE_NONE;
     else if (partnerBattler > battlerId) // Battler with the lower id chooses the move first.
-        return gLastMoves[partnerBattler];
+        return gAiLogicData->lastUsedMove[partnerBattler];
     else
         return GetChosenMoveFromPosition(partnerBattler);
 }
