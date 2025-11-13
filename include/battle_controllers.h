@@ -66,6 +66,20 @@ enum {
     REQUEST_TOUGH_RIBBON_BATTLE,
 };
 
+enum BattleController {
+    BATTLE_CONTROLLER_PLAYER,
+    BATTLE_CONTROLLER_PLAYER_PARTNER,
+    BATTLE_CONTROLLER_OPPONENT,
+    BATTLE_CONTROLLER_LINK_PARTNER,
+    BATTLE_CONTROLLER_LINK_OPPONENT,
+    BATTLE_CONTROLLER_SAFARI,
+    BATTLE_CONTROLLER_WALLY,
+    BATTLE_CONTROLLER_RECORDED_PLAYER,
+    BATTLE_CONTROLLER_RECORDED_PARTNER,
+    BATTLE_CONTROLLER_RECORDED_OPPONENT,
+    BATTLE_CONTROLLERS_COUNT,
+};
+
 // Accessors for gBattleControllerExecFlags.
 //
 // These are provided for documentation purposes, to make the battle
@@ -271,6 +285,7 @@ extern struct UnusedControllerStruct gUnusedControllerStruct;
 extern void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern u8 gBattleControllerData[MAX_BATTLERS_COUNT];
+extern u8 gBattlerBattleController[MAX_BATTLERS_COUNT];
 
 // general functions
 void HandleLinkBattleSetup(void);
@@ -443,5 +458,36 @@ void BtlController_HandleSwitchInShowSubstitute(u32 battler);
 
 bool32 ShouldBattleRestrictionsApply(u32 battler);
 void FreeShinyStars(void);
+
+static void (*const sBattleControllerFuncs[BATTLE_CONTROLLERS_COUNT])(u32 battler) =
+{
+    [BATTLE_CONTROLLER_PLAYER]             = SetControllerToPlayer,
+    [BATTLE_CONTROLLER_PLAYER_PARTNER]     = SetControllerToPlayerPartner,
+    [BATTLE_CONTROLLER_OPPONENT]           = SetControllerToOpponent,
+    [BATTLE_CONTROLLER_LINK_PARTNER]       = SetControllerToLinkPartner,
+    [BATTLE_CONTROLLER_LINK_OPPONENT]      = SetControllerToLinkOpponent,
+    [BATTLE_CONTROLLER_SAFARI]             = SetControllerToSafari,
+    [BATTLE_CONTROLLER_WALLY]              = SetControllerToWally,
+    [BATTLE_CONTROLLER_RECORDED_PLAYER]    = SetControllerToRecordedPlayer,
+    [BATTLE_CONTROLLER_RECORDED_PARTNER]   = SetControllerToRecordedPartner,
+    [BATTLE_CONTROLLER_RECORDED_OPPONENT]  = SetControllerToRecordedOpponent
+};
+
+static inline BattleControllerFunc GetBattlerBattleControllerSetFunc(u32 battler)
+{
+    u32 controllerId = gBattlerBattleController[battler];
+    if (controllerId >= BATTLE_CONTROLLERS_COUNT)
+        return NULL;
+    return sBattleControllerFuncs[controllerId];
+}
+
+static inline void SwapBattlerBattleControllers(u32 battler1, u32 battler2)
+{
+    u32 battler1ControllerId = gBattlerBattleController[battler1];
+    u32 battler2ControllerId = gBattlerBattleController[battler2];
+
+    gBattlerControllerFuncs[battler1] = sBattleControllerFuncs[battler2ControllerId];
+    gBattlerControllerFuncs[battler2] = sBattleControllerFuncs[battler1ControllerId];    
+}
 
 #endif // GUARD_BATTLE_CONTROLLERS_H
