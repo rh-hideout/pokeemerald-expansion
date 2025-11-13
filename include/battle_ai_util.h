@@ -84,6 +84,7 @@ bool32 BattlerIsRecorded(u32 battlerId);
 bool32 BattlerIsLink(u32 battlerId);
 void SwapBattlerAiFlags(u32 battler1, u32 battler2);
 bool32 BattlerHasAi(u32 battlerId);
+bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);
 bool32 CanAiPredictMove(u32 battlerId);
 bool32 IsAiBattlerAssumingStab(u32 battlerId);
