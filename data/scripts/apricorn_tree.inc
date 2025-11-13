@@ -82,4 +82,4 @@ ApricornTree_Text_PocketFull:
 
 ApricornTree_Text_ApricornLeftUnpicked:
 	.string "{PLAYER} gave up on the\p"
-	.string "{STR_VAR_1}...$"
+	.string "{STR_VAR_1}…$"
