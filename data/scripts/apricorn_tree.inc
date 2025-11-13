@@ -59,7 +59,7 @@ ApricornTree_Text_Intro:
 	.string "It's an Apricorn Tree!$"
 
 ApricornTree_Text_Empty:
-	.string "There are no Apricorns...$"
+	.string "There are no Apricorns…$"
 
 ApricornTree_Text_WantToPick:
 	.string "…It's {STR_VAR_2} {STR_VAR_1}!\p"
