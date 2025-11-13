@@ -21,13 +21,13 @@ ApricornTree_EventScript_PickApricorn::
 	call EventScript_BufferPocketNameAndTryFanfare
 	goto_if_eq VAR_0x8006, APRICORN_NORMAL_BAG_FULL, ApricornTree_EventScript_PocketFull
 	message ApricornTree_Text_PickedTheApricorn
-	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
 	copyvar VAR_0x8006 VAR_0x8004
-	.endif
+.endif
 	delay 10
-	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
 	showberrydesc
-	.endif
+.endif
 	playfanfare MUS_OBTAIN_BERRY
 	waitmessage
 	waitfanfare
@@ -35,9 +35,9 @@ ApricornTree_EventScript_PickApricorn::
 	message ApricornTree_Text_PutAwayApricorn
 	waitmessage
 	waitbuttonpress
-	.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
+.if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
 	hideitemdesc
-	.endif
+.endif
 	release
 	end
 
