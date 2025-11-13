@@ -41,7 +41,7 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, gBattleMons[battler].ability, 0, gBattleStruct->battlerState[battler].switchIn))
+            if (AbilityBattleEffects(ABILITYEFFECT_TERA_SHIFT, battler, ctx.abilities[battler], 0, gBattleStruct->battlerState[battler].switchIn))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -51,7 +51,7 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, gBattleMons[battler].ability, 0, gBattleStruct->battlerState[battler].switchIn))
+            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ctx.abilities[battler], 0, gBattleStruct->battlerState[battler].switchIn))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -61,7 +61,7 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, gBattleMons[battler].ability, 0, gBattleStruct->battlerState[battler].switchIn))
+            if (AbilityBattleEffects(ABILITYEFFECT_UNNERVE, battler, ctx.abilities[battler], 0, gBattleStruct->battlerState[battler].switchIn))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -238,9 +238,7 @@ static bool32 FirstEventBlockEvents(struct BattleContext *ctx)
         else
         {
             enum Hazards hazard = gBattleStruct->hazardsQueue[GetBattlerSide(battler)][gBattleStruct->hazardsCounter];
-            if (hazard == HAZARDS_NONE
-             || gBattleStruct->hazardsCounter >= HAZARDS_MAX_COUNT
-             || !IsBattlerAlive(battler))
+            if (hazard == HAZARDS_NONE || gBattleStruct->hazardsCounter >= HAZARDS_MAX_COUNT)
             {
                 gBattleStruct->hazardsCounter = 0;
                 gBattleStruct->eventState.battlerSwitchIn++;
@@ -250,9 +248,6 @@ static bool32 FirstEventBlockEvents(struct BattleContext *ctx)
                 effect = TryHazardsOnSwitchIn(battler, ctx->abilities[battler], ctx->holdEffects[battler], hazard);
             }
         }
-        break;
-    case FIRST_EVENT_BLOCK_EMERGENCY_EXIT:
-        gBattleStruct->eventState.battlerSwitchIn++;
         break;
     case FIRST_EVENT_BLOCK_GENERAL_ABILITIES:
         if (TryPrimalReversion(battler)
