@@ -1,14 +1,18 @@
 ApricornTreeScript::
+	lock
+	faceplayer
 	message ApricornTree_Text_Intro
+	waitmessage
 	special ObjectEventInteractionGetApricornTreeData
 	goto_if_gt VAR_0x8005, 0, ApricornTree_EventScript_WantToPick
 	message ApricornTree_Text_Empty
+	waitmessage
+	waitbuttonpress
+	release
 	end
 
 ApricornTree_EventScript_WantToPick::
 	buffernumberstring STR_VAR_2, VAR_0x8005
-	lock
-	faceplayer
 	msgbox ApricornTree_Text_WantToPick, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, ApricornTree_EventScript_PickApricorn
 	goto_if_eq VAR_RESULT, NO, ApricornTree_EventScript_CancelPickingApricorn
