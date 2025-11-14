@@ -15048,7 +15048,7 @@ const struct Item gItemsInfo[] =
         .price = 2000,
         .description = COMPOUND_STRING(
             "A wooden toy\n"
-            "resembling a Poké-.\n"
+            "resembling a Poké-\n"
             "mon. Can be sold."),
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_SELLABLE,
