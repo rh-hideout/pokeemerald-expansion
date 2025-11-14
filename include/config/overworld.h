@@ -158,4 +158,11 @@
 // Trainer Rematches
 #define OW_REMATCH_BADGE_COUNT      5 // Number of badges necessary before the match call or vs seeker features allow rematches
 
+// Emoticons
+#define OW_EMOTICONS_RSE  0 // Emoticons graphics from Ruby/Sapphire/Emerald
+#define OW_EMOTICONS_FRLG 1 // Emoticons graphics from FireRed/LeafGreen
+
+// Determines which emoticons graphics on events should be used
+#define OW_EMOTICONS OW_EMOTICONS_RSE
+
 #endif // GUARD_CONFIG_OVERWORLD_H
