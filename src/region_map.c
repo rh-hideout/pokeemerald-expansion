@@ -134,7 +134,6 @@ static const u32 sRegionMapBg_Tilemap_Hoenn[] = INCBIN_U32("graphics/pokenav/reg
 
 const u16 *GetCurrentRegionMapBgPal(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -151,13 +150,11 @@ const u16 *GetCurrentRegionMapBgPal(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Pal_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Pal_Hoenn;
 }
 
 const u32 *GetCurrentRegionMapBgGfx(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -174,13 +171,11 @@ const u32 *GetCurrentRegionMapBgGfx(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Gfx_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Gfx_Hoenn;
 }
 
 const u32 *GetCurrentRegionMapBgTilemap(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -197,13 +192,11 @@ const u32 *GetCurrentRegionMapBgTilemap(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Tilemap_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Tilemap_Hoenn;
 }
 
 const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_KANTO:
@@ -220,7 +213,6 @@ const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
     case REGIONS_COUNT:
         return sRegionMap_MapSectionLayout_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMap_MapSectionLayout_Hoenn;
 }
 

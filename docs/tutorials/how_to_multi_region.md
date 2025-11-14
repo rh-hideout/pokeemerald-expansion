@@ -8,27 +8,11 @@ In order to enable multiple regions we need a couple of things for each region f
 
 Then we have a couple steps to take to implement our region:
 
-* Enable multi-region support
 * Add our region to the list of available regions
 * Add our region map files to the correct locations
 * Add a return for our region name
 * Handle our region in the town map
 * Handle our region in the pokedex
-
-## Enabling Multi-Region Support
-In order to enable multi-region support all we have to do is change the `OW_MULTI_REGION_SUPPORT` flag in [include/config/overworld.h](../../include/config/overworld.h) to `TRUE`.
-
-```diff
-#ifndef GUARD_CONFIG_OVERWORLD_H
-#define GUARD_CONFIG_OVERWORLD_H
-
-// Multi-Region Support
-- #define OW_MULTI_REGION_SUPPORT     FALSE       // If enabled, allows maps to be assigned to different regions (Hoenn, Kanto, etc.) for use in region-based features.
-+ #define OW_MULTI_REGION_SUPPORT     TRUE        // If enabled, allows maps to be assigned to different regions (Hoenn, Kanto, etc.) for use in region-based features.
-
-// Movement config
-#define OW_RUNNING_INDOORS          GEN_LATEST  // In Gen4+, players are allowed to run indoors.
-```
 
 ## Adding our region to the list of available regions
 Next we will need to do is add our region to the list of available regions. This can be done by adding our region to [src/data/region_map/regions.json](../../src/data/region_map/regions.json).
@@ -66,7 +50,6 @@ Next we need to add a case for our region to the `GetCurrentRegionName` function
 ```diff
 static inline const u8 *GetCurrentRegionName(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
     case REGION_HOENN:
@@ -79,7 +62,6 @@ static inline const u8 *GetCurrentRegionName(void)
     case REGION_NONE:
         return gText_RegionDefault;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return gText_Hoenn;
 }
 ```
@@ -122,7 +104,6 @@ Finally we need to add a case for our region to the functions that serve these r
 ```diff
 const u16 *GetCurrentRegionMapBgPal(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -141,7 +122,6 @@ const u16 *GetCurrentRegionMapBgPal(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Pal_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Pal_Hoenn;
 }
 ```
@@ -151,7 +131,6 @@ const u16 *GetCurrentRegionMapBgPal(void)
 ```diff
 const u32 *GetCurrentRegionMapBgGfx(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -170,7 +149,6 @@ const u32 *GetCurrentRegionMapBgGfx(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Gfx_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Gfx_Hoenn;
 }
 ```
@@ -180,7 +158,6 @@ const u32 *GetCurrentRegionMapBgGfx(void)
 ```diff
 const u32 *GetCurrentRegionMapBgTilemap(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -199,7 +176,6 @@ const u32 *GetCurrentRegionMapBgTilemap(void)
     case REGIONS_COUNT:
         return sRegionMapBg_Tilemap_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMapBg_Tilemap_Hoenn;
 }
 ```
@@ -209,7 +185,6 @@ and `GetCurrentRegionMapLayout`.
 ```diff
 const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -228,7 +203,6 @@ const mapsec_u8_t (*GetCurrentRegionMapLayout(void))[MAP_WIDTH]
     case REGIONS_COUNT:
         return sRegionMap_MapSectionLayout_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     return sRegionMap_MapSectionLayout_Hoenn;
 }
 ```
@@ -257,7 +231,6 @@ Then we can add cases for our region to
 ```diff
 const u16 *GetPokedexAreaMapPal(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -277,7 +250,6 @@ const u16 *GetPokedexAreaMapPal(void)
         DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Palette");
         return sPokedexAreaMap_Pal_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Palette");
     return sPokedexAreaMap_Pal_Hoenn;
 }
@@ -288,7 +260,6 @@ const u16 *GetPokedexAreaMapPal(void)
 ```diff
 const u32 *GetPokedexAreaMapGfx(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -308,7 +279,6 @@ const u32 *GetPokedexAreaMapGfx(void)
         DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Graphics");
         return sPokedexAreaMap_Gfx_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Graphics");
     return sPokedexAreaMap_Gfx_Hoenn;
 }
@@ -319,7 +289,6 @@ and `GetPokedexAreaMapTilemap`.
 ```diff
 const u32 *GetPokedexAreaMapTilemap(void)
 {
-#if OW_MULTI_REGION_SUPPORT
     switch (GetCurrentRegion())
     {
 +    case REGION_TUTORIAL:
@@ -339,7 +308,6 @@ const u32 *GetPokedexAreaMapTilemap(void)
         DebugPrintf("GetCurrentRegionMapBgPal[Multi-Region]: Returning Hoenn Tilemap");
         return sPokedexAreaMap_Tilemap_Hoenn;
     }
-#endif //OW_MULTI_REGION_SUPPORT
     DebugPrintf("GetCurrentRegionMapBgPal[Default]: Returning Hoenn Tilemap");
     return sPokedexAreaMap_Tilemap_Hoenn;
 }
