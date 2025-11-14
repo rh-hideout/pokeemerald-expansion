@@ -80,7 +80,7 @@ void SetApricornTreePicked(u32 id)
         return;
 
 #if (APRICORN_TREE_COUNT > 0)
-    u8* flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
+    u8 *flagByte = &gSaveBlock3Ptr->apricornTrees[id / 8];
     *flagByte = (*flagByte) | (1 << (id % 8));
 #endif
 }
