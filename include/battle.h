@@ -7,6 +7,7 @@
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
 #include "constants/hold_effects.h"
+#include "constants/moves.h"
 #include "battle_main.h"
 #include "battle_message.h"
 #include "battle_util.h"
@@ -587,7 +588,8 @@ struct BattlerState
     u32 ateBoost:1;
     u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
     u32 commanderSpecies:11;
-    u32 padding:4;
+    u32 selectionScriptFinished:1;
+    u32 padding:3;
     // End of Word
 };
 
@@ -628,7 +630,6 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
-    u16 wrappedMove[MAX_BATTLERS_COUNT];
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
@@ -641,14 +642,12 @@ struct BattleStruct
     u8 expSentInMons; // As bits for player party mons - not including exp share mons.
     u8 wildVictorySong;
     enum Type dynamicMoveType;
-    u8 wrappedBy[MAX_BATTLERS_COUNT];
     u8 battlerPreventingSwitchout;
     u8 moneyMultiplier:6;
     u8 moneyMultiplierItem:1;
     u8 moneyMultiplierMove:1;
     u8 savedTurnActionNumber;
     u8 scriptPartyIdx; // for printing the nickname
-    bool8 selectionScriptFinished[MAX_BATTLERS_COUNT];
     u8 battlerPartyIndexes[MAX_BATTLERS_COUNT];
     u8 monToSwitchIntoId[MAX_BATTLERS_COUNT];
     u8 battlerPartyOrders[MAX_BATTLERS_COUNT][PARTY_SIZE / 2];
@@ -753,7 +752,6 @@ struct BattleStruct
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
     s32 aiDelayFrames; // Number of frames it took to choose an action.
     s32 aiDelayCycles; // Number of cycles it took to choose an action.
-    u8 stickySyrupdBy[MAX_BATTLERS_COUNT];
     u8 supremeOverlordCounter[MAX_BATTLERS_COUNT];
     u8 shellSideArmCategory[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT];
     u8 speedTieBreaks; // MAX_BATTLERS_COUNT! values.

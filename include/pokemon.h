@@ -658,10 +658,10 @@ extern const struct Fusion *const gFusionTablePointers[NUM_SPECIES];
 #if P_FUSION_FORMS
 #if P_FAMILY_KYUREM
 #if P_FAMILY_RESHIRAM
-extern const u16 gKyurenWhiteSwapMoveTable[][2];
+extern const u16 gKyuremWhiteSwapMoveTable[][2];
 #endif //P_FAMILY_RESHIRAM
 #if P_FAMILY_ZEKROM
-extern const u16 gKyurenBlackSwapMoveTable[][2];
+extern const u16 gKyuremBlackSwapMoveTable[][2];
 #endif //P_FAMILY_ZEKROM
 #endif //P_FAMILY_KYUREM
 #endif //P_FUSION_FORMS
@@ -838,9 +838,15 @@ void UpdatePartyPokerusTime(u16 days);
 void PartySpreadPokerus(struct Pokemon *party);
 bool8 TryIncrementMonLevel(struct Pokemon *mon);
 u8 CanLearnTeachableMove(u16 species, u16 move);
-u8 GetMoveRelearnerMoves(struct Pokemon *mon, u16 *moves);
+u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves);
+u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves);
+u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves);
+u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves);
+u8 GetNumberOfLevelUpMoves(struct Pokemon *mon);
+u8 GetNumberOfEggMoves(struct Pokemon *mon);
+u8 GetNumberOfTMMoves(struct Pokemon *mon);
+u8 GetNumberOfTutorMoves(struct Pokemon *mon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
-u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);
 u16 GetBattleBGM(void);

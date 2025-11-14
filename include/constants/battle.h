@@ -1,6 +1,8 @@
 #ifndef GUARD_CONSTANTS_BATTLE_H
 #define GUARD_CONSTANTS_BATTLE_H
 
+#include "constants/moves.h"
+
 /*
  * A battler may be in one of four positions on the field. The first bit determines
  * what side the battler is on, either the player's side or the opponent's side.
@@ -44,6 +46,11 @@ enum BattlerId
 // These macros can be used with either battler ID or positions to get the partner or the opposite mon
 #define BATTLE_OPPOSITE(id) ((id) ^ BIT_SIDE)
 #define BATTLE_PARTNER(id) ((id) ^ BIT_FLANK)
+
+// Left and right are determined by how they're referred to in tests and everywhere else.
+// Left is battlers 0 and 1, right 2 and 3; if you assume the battler referencing them is south, left is to the northeast and right to the northwest.
+#define LEFT_FOE(battler) ((BATTLE_OPPOSITE(battler)) & BIT_SIDE)
+#define RIGHT_FOE(battler) (((BATTLE_OPPOSITE(battler)) & BIT_SIDE) | BIT_FLANK)
 
 enum BattleSide
 {
@@ -163,12 +170,13 @@ enum VolatileFlags
     F(VOLATILE_LOCK_CONFUSE,                lockConfusionTurns,            (u32, 3)) \
     F(VOLATILE_MULTIPLETURNS,               multipleTurns,                 (u32, 1)) \
     F(VOLATILE_WRAPPED,                     wrapped,                       (u32, 1)) \
+    F(VOLATILE_WRAPPED_BY,                  wrappedBy,                     (enum BattlerId, MAX_BITS(4))) \
+    F(VOLATILE_WRAPPED_MOVE,                wrappedMove,                   (u32, MOVES_COUNT_ALL - 1)) \
     F(VOLATILE_POWDER,                      powder,                        (u32, 1)) \
     F(VOLATILE_UNUSED,                      padding,                       (u32, 1)) \
     F(VOLATILE_INFATUATION,                 infatuation,                   (enum BattlerId, MAX_BITS(4))) \
     F(VOLATILE_DEFENSE_CURL,                defenseCurl,                   (u32, 1)) \
     F(VOLATILE_TRANSFORMED,                 transformed,                   (u32, 1)) \
-    F(VOLATILE_RECHARGE,                    recharge,                      (u32, 1)) \
     F(VOLATILE_RAGE,                        rage,                          (u32, 1)) \
     F(VOLATILE_SUBSTITUTE,                  substitute,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_DESTINY_BOND,                destinyBond,                   (u32, 2)) \
@@ -178,13 +186,14 @@ enum VolatileFlags
     F(VOLATILE_FORESIGHT,                   foresight,                     (u32, 1)) \
     F(VOLATILE_DRAGON_CHEER,                dragonCheer,                   (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_FOCUS_ENERGY,                focusEnergy,                   (u32, 1), V_BATON_PASSABLE) \
-    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, 5)) \
+    F(VOLATILE_SEMI_INVULNERABLE,           semiInvulnerable,              (u32, SEMI_INVULNERABLE_COUNT - 1)) \
     F(VOLATILE_ELECTRIFIED,                 electrified,                   (u32, 1)) \
     F(VOLATILE_MUD_SPORT,                   mudSport,                      (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_WATER_SPORT,                 waterSport,                    (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_INFINITE_CONFUSION,          infiniteConfusion,             (u32, 1), V_BATON_PASSABLE) \
     F(VOLATILE_SALT_CURE,                   saltCure,                      (u32, 1)) \
     F(VOLATILE_SYRUP_BOMB,                  syrupBomb,                     (u32, 1)) \
+    F(VOLATILE_STICKY_SYRUPED_BY,           stickySyrupedBy,               (enum BattlerId, MAX_BITS(4))) \
     F(VOLATILE_GLAIVE_RUSH,                 glaiveRush,                    (u32, 1)) \
     F(VOLATILE_LEECH_SEED,                  leechSeed,                     (enum BattlerId, MAX_BITS(4)), V_BATON_PASSABLE) \
     F(VOLATILE_LOCK_ON,                     lockOn,                        (u32, 2), V_BATON_PASSABLE) \
@@ -238,6 +247,7 @@ enum SemiInvulnerableState
     STATE_PHANTOM_FORCE,
     STATE_SKY_DROP,
     STATE_COMMANDER,
+    SEMI_INVULNERABLE_COUNT,
 };
 
 enum SemiInvulnerableExclusion
@@ -273,15 +283,14 @@ enum SemiInvulnerableExclusion
 #define SIDE_STATUS_REFLECT                 (1 << 0)
 #define SIDE_STATUS_LIGHTSCREEN             (1 << 1)
 #define SIDE_STATUS_SAFEGUARD               (1 << 2)
-#define SIDE_STATUS_FUTUREATTACK            (1 << 3)
-#define SIDE_STATUS_MIST                    (1 << 4)
-#define SIDE_STATUS_TAILWIND                (1 << 5)
-#define SIDE_STATUS_AURORA_VEIL             (1 << 6)
-#define SIDE_STATUS_LUCKY_CHANT             (1 << 7)
-#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 8)
-#define SIDE_STATUS_RAINBOW                 (1 << 9)
-#define SIDE_STATUS_SEA_OF_FIRE             (1 << 10)
-#define SIDE_STATUS_SWAMP                   (1 << 11)
+#define SIDE_STATUS_MIST                    (1 << 3)
+#define SIDE_STATUS_TAILWIND                (1 << 4)
+#define SIDE_STATUS_AURORA_VEIL             (1 << 5)
+#define SIDE_STATUS_LUCKY_CHANT             (1 << 6)
+#define SIDE_STATUS_DAMAGE_NON_TYPES        (1 << 7)
+#define SIDE_STATUS_RAINBOW                 (1 << 8)
+#define SIDE_STATUS_SEA_OF_FIRE             (1 << 9)
+#define SIDE_STATUS_SWAMP                   (1 << 10)
 
 #define SIDE_STATUS_SCREEN_ANY     (SIDE_STATUS_REFLECT | SIDE_STATUS_LIGHTSCREEN | SIDE_STATUS_AURORA_VEIL)
 #define SIDE_STATUS_PLEDGE_ANY     (SIDE_STATUS_RAINBOW | SIDE_STATUS_SEA_OF_FIRE | SIDE_STATUS_SWAMP)

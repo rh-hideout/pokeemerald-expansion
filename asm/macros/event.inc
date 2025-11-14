@@ -2683,3 +2683,27 @@
 	callnative SetSpeaker
 	.4byte \name
 	.endm
+
+@ VS Seeker
+	.macro vsseeker_rematchid rematchId:req
+	callnative NativeVsSeekerRematchId, requests_effects=1
+	.2byte \rematchId
+	.endm
+
+	@ Sets the move relearner state
+	.macro setmoverelearnerstate state:req
+	callnative ScrCmd_setmoverelearnerstate, requests_effects=1
+	.2byte \state
+	.endm
+
+	@ Retrieves the move relearner state and stores it in the specified var
+	.macro getmoverelearnerstate varId:req
+	callnative ScrCmd_getmoverelearnerstate, requests_effects=1
+	.4byte \varId
+	.endm
+
+	@ Execute script if bag has TMs and/or HMs
+	.macro istmrelearneractive destination:req
+	callnative ScrCmd_istmrelearneractive, requests_effects=1
+	.4byte \destination
+	.endm

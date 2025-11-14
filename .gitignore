@@ -47,6 +47,7 @@ include/constants/heal_locations.h
 include/constants/region_strings.h
 include/constants/regions.h
 src/data/region_map/region_strings.c
+include/constants/script_commands.h
 tools/trainerproc/trainerproc
 src/data/battle_partners.h
 src/data/trainers.h
