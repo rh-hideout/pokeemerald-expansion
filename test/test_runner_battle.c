@@ -1547,6 +1547,12 @@ static void TearDownBattle(void)
     ZeroEnemyPartyMons();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
+    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
+
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
@@ -2351,7 +2357,7 @@ void CloseTurn(u32 sourceLine)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (!(DATA.actionBattlers & (1 << i)))
-        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case.
+        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case; EXPECT_XXXX will set to PlayerPartner.
             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
             else
