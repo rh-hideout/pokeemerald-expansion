@@ -30,7 +30,7 @@ ApricornTree_EventScript_PickApricorn::
 .endif
 	delay 10
 .if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
-	showberrydesc
+	showberrydescription
 .endif
 	playfanfare MUS_OBTAIN_BERRY
 	waitmessage
@@ -40,7 +40,7 @@ ApricornTree_EventScript_PickApricorn::
 	waitmessage
 	waitbuttonpress
 .if OW_SHOW_ITEM_DESCRIPTIONS != OW_ITEM_DESCRIPTIONS_OFF
-	hideitemdesc
+	hideitemdescription
 .endif
 	release
 	end
