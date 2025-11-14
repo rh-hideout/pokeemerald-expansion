@@ -27,6 +27,7 @@ bool8 MetatileBehavior_IsLadder(u8 metatileBehavior);
 bool8 MetatileBehavior_IsNonAnimDoor(u8 metatileBehavior);
 bool8 MetatileBehavior_IsDeepSouthWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSurfableWaterOrUnderwater(u8 metatileBehavior);
+bool8 MetatileBehavior_IsFastWater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsEastArrowWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsWestArrowWarp(u8 metatileBehavior);
 bool8 MetatileBehavior_IsNorthArrowWarp(u8 metatileBehavior);
@@ -123,6 +124,8 @@ bool8 MetatileBehavior_IsSurfableFishableWater(u8 metatileBehavior);
 bool8 MetatileBehavior_IsMtPyreHole(u8 metatileBehavior);
 bool8 MetatileBehavior_IsCrackedFloorHole(u8 metatileBehavior);
 bool8 MetatileBehavior_IsCrackedFloor(u8 metatileBehavior);
+bool32 MetatileBehavior_IsCyclingRoadPullDownTile(u8 metatileBehavior);
+bool8 MetatileBehavior_IsCyclingRoadPullDownTileGrass(u8 metatileBehavior);
 bool8 MetatileBehavior_IsMuddySlope(u8 metatileBehavior);
 bool8 MetatileBehavior_IsBumpySlope(u8 metatileBehavior);
 bool8 MetatileBehavior_IsIsolatedVerticalRail(u8 metatileBehavior);
@@ -165,5 +168,11 @@ bool8 MetatileBehavior_IsSidewaysStairsLeftSideBottom(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSidewaysStairsRightSideAny(u8 metatileBehavior);
 bool8 MetatileBehavior_IsSidewaysStairsLeftSideAny(u8 metatileBehavior);
 bool8 MetatileBehavior_IsRockClimbable(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinRight(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinLeft(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinUp(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinDown(u8 metatileBehavior);
+bool8 MetatileBehavior_IsStopSpinning(u8 metatileBehavior);
+bool8 MetatileBehavior_IsSpinTile(u8 metatileBehavior);
 
 #endif // GUARD_METATILE_BEHAVIOR_H

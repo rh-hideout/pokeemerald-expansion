@@ -23,6 +23,7 @@
 #include "battle_terastal.h"
 #include "battle_gimmick.h"
 #include "generational_changes.h"
+#include "item.h"
 #include "move.h"
 #include "random.h" // for rng_value_t
 #include "trainer_slide.h"
@@ -1270,6 +1271,11 @@ static inline void SetHealAmount(u32 battler, s32 value)
     if (value == 0)
         value = 1;
     gBattleStruct->passiveHpUpdate[battler] = -1 * value;
+}
+
+static inline bool32 IsGhostBattleWithoutScope()
+{
+    return (gBattleTypeFlags & BATTLE_TYPE_GHOST) && !CheckBagHasItem(ITEM_SILPH_SCOPE, 1);
 }
 
 #endif // GUARD_BATTLE_H

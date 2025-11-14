@@ -693,6 +693,11 @@ bool32 TryRunFromBattle(u32 battler)
             effect++;
         }
     }
+    else if (IsGhostBattleWithoutScope())
+    {
+        if (GetBattlerSide(battler) == B_SIDE_PLAYER)
+            effect++;
+    }
     else if (gBattleTypeFlags & (BATTLE_TYPE_FRONTIER | BATTLE_TYPE_TRAINER_HILL) && gBattleTypeFlags & BATTLE_TYPE_TRAINER)
     {
         effect++;
@@ -2263,6 +2268,20 @@ static enum MoveCanceller CancellerConfused(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceller CancellerGhost(struct BattleContext *ctx) // GHOST in pokemon tower
+{
+    if (IsGhostBattleWithoutScope())
+    {
+        if (GetBattlerSide(ctx->battlerAtk) == B_SIDE_PLAYER)
+            gBattlescriptCurrInstr = BattleScript_TooScaredToMove;
+        else
+            gBattlescriptCurrInstr = BattleScript_GhostGetOutGetOut;
+        gBattleCommunication[MULTISTRING_CHOOSER] = 0;
+        return MOVE_STEP_BREAK;
+    }
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceller CancellerParalysed(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
@@ -2948,6 +2967,7 @@ static enum MoveCanceller (*const sMoveSuccessOrderCancellers[])(struct BattleCo
     [CANCELLER_TAUNTED] = CancellerTaunted,
     [CANCELLER_IMPRISONED] = CancellerImprisoned,
     [CANCELLER_CONFUSED] = CancellerConfused,
+    [CANCELLER_GHOST] = CancellerGhost,
     [CANCELLER_PARALYSED] = CancellerParalysed,
     [CANCELLER_INFATUATION] = CancellerInfatuation,
     [CANCELLER_BIDE] = CancellerBide,
