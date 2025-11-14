@@ -103,6 +103,7 @@ static void (*const sSafariBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 
 void SetControllerToSafari(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_SAFARI;
     gBattlerControllerEndFuncs[battler] = SafariBufferExecCompleted;
     gBattlerControllerFuncs[battler] = SafariBufferRunCommand;
 }

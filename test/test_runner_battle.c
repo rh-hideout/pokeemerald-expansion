@@ -1547,6 +1547,12 @@ static void TearDownBattle(void)
     ZeroEnemyPartyMons();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
+    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
+
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
@@ -2351,7 +2357,7 @@ void CloseTurn(u32 sourceLine)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (!(DATA.actionBattlers & (1 << i)))
-        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case.
+        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case; EXPECT_XXXX will set to PlayerPartner.
             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
             else
@@ -2644,7 +2650,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT)))
+         || (IsMultibattleTest() && battlerId == B_BATTLER_2)))
             SetAiActionToPass(sourceLine, battlerId);
         else
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
