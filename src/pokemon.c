@@ -2846,7 +2846,7 @@ u32 GetBoxMonData2(struct BoxPokemon *boxMon, s32 field)
 #define SET16(lhs) (lhs) = data[0] + (data[1] << 8)
 #define SET32(lhs) (lhs) = data[0] + (data[1] << 8) + (data[2] << 16) + (data[3] << 24)
 //
-// Prefer SET_BY_WIDTH for fields whose types might be extended (e.g. 
+// Prefer SET_BY_WIDTH for fields whose types might be extended (e.g.
 // anything whose typedef is in gametypes.h).
 //
 #define SET_BY_WIDTH(lhs) \
@@ -3728,7 +3728,7 @@ void CopyPartyMonToBattleData(u32 battler, u32 partyIndex)
     u32 side = GetBattlerSide(battler);
     struct Pokemon *party = GetSideParty(side);
     PokemonToBattleMon(&party[partyIndex], &gBattleMons[battler]);
-    gBattleStruct->hpOnSwitchout[side] = gBattleMons[battler].hp;
+    gBattleStruct->battlerState[battler].hpOnSwitchout = gBattleMons[battler].hp;
     UpdateSentPokesToOpponentValue(battler);
     ClearTemporarySpeciesSpriteData(battler, FALSE, FALSE);
 }

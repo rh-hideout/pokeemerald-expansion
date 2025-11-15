@@ -295,14 +295,14 @@ DOUBLE_BATTLE_TEST("Primal reversion and other switch-in effects trigger for all
         ASSUME(GetMoveEffect(MOVE_STICKY_WEB) == EFFECT_STICKY_WEB);
         ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
         ASSUME(GetMoveEffect(MOVE_TOXIC_SPIKES) == EFFECT_TOXIC_SPIKES);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_CATERPIE) { HP(1); }
-        PLAYER(SPECIES_SCRAFTY) { Ability(ABILITY_INTIMIDATE); }
-        PLAYER(SPECIES_RESHIRAM);
-        OPPONENT(SPECIES_CATERPIE) { HP(1); }
-        OPPONENT(SPECIES_CATERPIE) { HP(1); }
-        OPPONENT(SPECIES_KYOGRE) { Item(ITEM_BLUE_ORB); }
-        OPPONENT(SPECIES_GROUDON) { Item(ITEM_RED_ORB); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); }
+        PLAYER(SPECIES_CATERPIE) { Speed(8); HP(1); }
+        PLAYER(SPECIES_SCRAFTY) { Speed(100); Ability(ABILITY_INTIMIDATE); }
+        PLAYER(SPECIES_RESHIRAM) { Speed(90); }
+        OPPONENT(SPECIES_CATERPIE) { Speed(9); HP(1); }
+        OPPONENT(SPECIES_CATERPIE) { Speed(7); HP(1); }
+        OPPONENT(SPECIES_KYOGRE) { Speed(80); Item(ITEM_BLUE_ORB); }
+        OPPONENT(SPECIES_GROUDON) { Speed(70); Item(ITEM_RED_ORB); }
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_STICKY_WEB);
                MOVE(opponentLeft, MOVE_SPIKES);

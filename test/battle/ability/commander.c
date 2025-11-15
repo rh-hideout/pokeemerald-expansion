@@ -66,9 +66,9 @@ DOUBLE_BATTLE_TEST("Commander Tatsugiri will still take residual damage from a f
     } WHEN {
         TURN { }
     } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         ABILITY_POPUP(playerLeft, ABILITY_COMMANDER);
         MESSAGE("Tatsugiri was swallowed by Dondozo and became Dondozo's commander!");
-        ABILITY_POPUP(opponentLeft, ABILITY_SAND_STREAM);
         MESSAGE("Dondozo is buffeted by the sandstorm!");
         MESSAGE("Tatsugiri is buffeted by the sandstorm!");
         MESSAGE("The opposing Wobbuffet is buffeted by the sandstorm!");
