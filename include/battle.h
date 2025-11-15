@@ -693,7 +693,7 @@ struct BattleStruct
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
     u16 startingStatusTimer;
-    u8 atkCancellerTracker;
+    u8 atkCancelerTracker;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
