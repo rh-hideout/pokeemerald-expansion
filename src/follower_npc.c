@@ -954,6 +954,10 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
 
         RETURN_STATE(MOVEMENT_ACTION_WALK_NORMAL_DOWN, direction);
 
+    // Slow stairs.
+    case MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN ... MOVEMENT_ACTION_WALK_SLOW_STAIRS_RIGHT:
+        RETURN_STATE(MOVEMENT_ACTION_WALK_SLOW_STAIRS_DOWN, direction);
+
     default:
         return MOVEMENT_INVALID;
     }
