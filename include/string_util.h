@@ -13,6 +13,15 @@ enum StringConvertMode
     STR_CONV_MODE_LEADING_ZEROS
 };
 
+enum TextColorType
+{
+    TEXT_COLOR_TYPE_FOREGROUND = 0,
+    TEXT_COLOR_TYPE_SHADOW,
+    TEXT_COLOR_TYPE_HIGHLIGHT, // do not use, only kept for compatibility
+    TEXT_COLOR_TYPE_ACCENT,
+    TEXT_COLOR_TYPE_BACKGROUND,
+};
+
 u8 *StringCopy_Nickname(u8 *dest, const u8 *src);
 u8 *StringGet_Nickname(u8 *str);
 u8 *StringCopy_PlayerName(u8 *dest, const u8 *src);
@@ -36,7 +45,7 @@ u8 *StringCopyPadded(u8 *dest, const u8 *src, u8 c, u16 n);
 u8 *StringFillWithTerminator(u8 *dest, u16 n);
 u8 *StringCopyN_Multibyte(u8 *dest, u8 *src, u32 n);
 u32 StringLength_Multibyte(const u8 *str);
-u8 *WriteColorChangeControlCode(u8 *dest, u32 colorType, u8 color);
+u8 *WriteColorChangeControlCode(u8 *dest, enum TextColorType colorType, u8 color);
 bool32 IsStringJapanese(u8 *str);
 bool32 IsStringNJapanese(u8 *str, s32 n);
 u8 GetExtCtrlCodeLength(u8 code);
