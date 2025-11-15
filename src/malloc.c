@@ -81,7 +81,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
             }
         }
 
-        if (pos->next == head)
+        assertf(pos->next != head, "%s: out of memory trying to allocate %d bytes", location, size)
         {
 #if TESTING
             const struct MemBlock *head = HeapHead();
@@ -99,13 +99,7 @@ void *AllocInternal(void *heapStart, u32 size, const char *location)
                 block = block->next;
             }
             while (block != head);
-            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s:%d, %s: OOM allocating %d bytes", gTestRunnerState.test->filename, SourceLine(0), location, size);
 #endif
-            if (location)
-            {
-                DebugPrintfLevel(MGBA_LOG_ERROR, "%s: out of memory trying to allocate %d bytes", location, size);
-            }
-            AGB_ASSERT(FALSE);
             return NULL;
         }
 

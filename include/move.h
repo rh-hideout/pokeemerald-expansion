@@ -169,10 +169,12 @@ extern const struct BattleMoveEffect gBattleMoveEffects[];
 
 static inline u32 SanitizeMoveId(u32 moveId)
 {
-    if (moveId >= MOVES_COUNT_ALL)
+    assertf(moveId < MOVES_COUNT_ALL, "invalid move: %d", moveId)
+    {
         return MOVE_NONE;
-    else
-        return moveId;
+    }
+
+    return moveId;
 }
 
 static inline const u8 *GetMoveName(u32 moveId)
@@ -598,9 +600,8 @@ static inline u32 GetMoveContestComboMoves(u32 moveId, u32 comboMove)
 static inline const u8 *GetMoveAnimationScript(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    if (gMovesInfo[moveId].battleAnimScript == NULL)
+    assertf(gMovesInfo[moveId].battleAnimScript, "No animation for %S", gMovesInfo[moveId].name)
     {
-        DebugPrintfLevel(MGBA_LOG_WARN, "No animation for moveId=%u", moveId);
         return gMovesInfo[MOVE_NONE].battleAnimScript;
     }
     return gMovesInfo[moveId].battleAnimScript;
@@ -609,9 +610,8 @@ static inline const u8 *GetMoveAnimationScript(u32 moveId)
 static inline const u8 *GetMoveBattleScript(u32 moveId)
 {
     moveId = SanitizeMoveId(moveId);
-    if (gBattleMoveEffects[GetMoveEffect(moveId)].battleScript == NULL)
+    assertf(gBattleMoveEffects[GetMoveEffect(moveId)].battleScript, "No battle script for %S", gMovesInfo[moveId].name)
     {
-        DebugPrintfLevel(MGBA_LOG_WARN, "No effect for moveId=%u", moveId);
         return gBattleMoveEffects[EFFECT_PLACEHOLDER].battleScript;
     }
     return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;

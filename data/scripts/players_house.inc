@@ -13,7 +13,7 @@ PlayersHouse_1F_EventScript_EnterHouseMovingIn::
 	setvar VAR_LITTLEROOT_INTRO_STATE, 4
 	applymovement LOCALID_PLAYER, PlayersHouse_1F_Movement_PlayerWalkIn
 	applymovement VAR_0x8004, Common_Movement_WalkInPlaceFasterUp
-	waitmovement 0
+	waitmovementall
 	releaseall
 	end
 
