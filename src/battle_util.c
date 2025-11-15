@@ -395,7 +395,6 @@ void HandleAction_UseMove(void)
     gMultiHitCounter = 0;
     gBattleScripting.savedDmg = 0;
     gBattleCommunication[MISS_TYPE] = 0;
-    gBattleScripting.savedMoveEffect = 0;
     gCurrMovePos = gChosenMovePos = gBattleStruct->chosenMovePositions[gBattlerAttacker];
 
     // choose move

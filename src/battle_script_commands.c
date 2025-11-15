@@ -6433,7 +6433,6 @@ static void Cmd_moveend(void)
                     gBattleStruct->moveTarget[gBattlerAttacker] = gBattlerTarget = nextTarget; // Fix for moxie spread moves
                     gBattleScripting.moveendState = 0;
                     MoveValuesCleanUp();
-                    gBattleScripting.moveEffect = gBattleScripting.savedMoveEffect;
 
                     if (moveEffect == EFFECT_EXPLOSION || moveEffect == EFFECT_MISTY_EXPLOSION // Edge case for Explosion not changing targets
                      || moveEffect == EFFECT_SYNCHRONOISE) // So we don't go back to the Synchronoise script
@@ -11526,7 +11525,7 @@ static void Cmd_trysetencore(void)
         // Redirection such as Follow Me is already covered in HandleAction_UseMove of battle_util.c
         if (gDisableStructs[gBattlerTarget].encoredMove != GetChosenMoveFromPosition(gBattlerTarget))
             gBattleStruct->moveTarget[gBattlerTarget] = SetRandomTarget(gBattlerTarget);
-        
+
         // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
         if (HasBattlerActedThisTurn(gBattlerTarget))
             gDisableStructs[gBattlerTarget].encoreTimer = 4;
