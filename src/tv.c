@@ -188,6 +188,17 @@ static void DoTVShowSecretBaseSecrets(void);
 static void DoTVShowSafariFanClub(void);
 static void DoTVShowLilycoveContestLady(void);
 
+static const u8 gText_Good[] = _("Good");
+static const u8 gText_VeryGood[] = _("Very good");
+static const u8 gText_Excellent[] = _("Excellent");
+static const u8 gText_SoSo[] = _("So-so");
+static const u8 gText_Bad[] = _("Bad");
+static const u8 gText_TheWorst[] = _("The worst");
+
+static const u8 gText_Slots[] = _("SLOTS");
+static const u8 gText_Roulette[] = _("ROULETTE");
+static const u8 gText_Jackpot[] = _("jackpot");
+
 static const struct {
     u16 species;
     u16 moves[MAX_MON_MOVES];
