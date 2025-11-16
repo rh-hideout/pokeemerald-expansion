@@ -183,6 +183,13 @@ static const u8 sText_1MinutePlus[] = _("1 minute +");
 static const u8 sText_SpaceSeconds[] = _(" seconds");
 static const u8 sText_SpaceTimes[] = _(" time(s)");
 
+static const u8 gText_Wallace[] = _("WALLACE");
+static const u8 gText_Steven[] = _("STEVEN");
+static const u8 gText_Brawly[] = _("BRAWLY");
+static const u8 gText_Winona[] = _("WINONA");
+static const u8 gText_Phoebe[] = _("PHOEBE");
+static const u8 gText_Glacia[] = _("GLACIA");
+
 void Special_ShowDiploma(void)
 {
     SetMainCallback2(CB2_ShowDiploma);
