@@ -96,7 +96,6 @@ void ClearFollowerNPCData(void);
 void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
 void DestroyFollowerNPC(void);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
-bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
 bool32 PlayerHasFollowerNPC(void);
