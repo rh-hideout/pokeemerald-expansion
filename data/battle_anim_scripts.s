@@ -32015,7 +32015,8 @@ gBattleAnimGeneral_Rainbow::
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 6, 0, RGB_WHITE
 	waitforvisualfinish
 	delay 30
-	fadetobg BG_RAINBOW
+	goto SetRainbowBackground
+AnimGeneral_RainbowContinue:
 	panse_adjustnone SE_M_ABSORB_2, SOUND_PAN_ATTACKER, SOUND_PAN_TARGET, +1, 0
 	delay 90
 	blendoff
@@ -32023,6 +32024,14 @@ gBattleAnimGeneral_Rainbow::
 	waitbgfadein
 	clearmonbg ANIM_ATK_PARTNER
 	end
+SetRainbowBackground:
+	createvisualtask AnimTask_GetAttackerSide, 2
+	jumprettrue SetRainbowBgOppoentSide
+	fadetobg BG_RAINBOW_PLAYER
+	goto AnimGeneral_RainbowContinue
+SetRainbowBgOppoentSide:
+	fadetobg BG_RAINBOW_OPPONENT
+	goto AnimGeneral_RainbowContinue
 
 gBattleAnimGeneral_SeaOfFire::
 	loadspritegfx ANIM_TAG_SMALL_EMBER
