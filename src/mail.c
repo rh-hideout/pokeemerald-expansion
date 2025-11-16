@@ -86,6 +86,8 @@ static void CB2_WaitForPaletteExitOnKeyPress(void);
 static void CB2_ExitOnKeyPress(void);
 static void CB2_ExitMailReadFreeVars(void);
 
+static const u8 gText_FromSpace[] = _("From ");
+
 static const struct BgTemplate sBgTemplates[] = {
     {
         .bg = 0,
