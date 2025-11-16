@@ -13,6 +13,7 @@ SINGLE_BATTLE_TEST("Last Respects power is multiplied by the amount of fainted m
     PARAMETRIZE { faintCount = 1; }
     PARAMETRIZE { faintCount = 2; }
     GIVEN {
+        ASSUME(GetSpeciesBaseAttack(SPECIES_GOLEM) == 120); // Test fails with Gen 5's 110 Base Attack
         PLAYER(SPECIES_GOLEM); // Not Wobbuffet to omit type effectiveness
         PLAYER(SPECIES_GEODUDE);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LEPPA_BERRY); Moves(MOVE_RECYCLE, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
@@ -43,6 +44,7 @@ SINGLE_BATTLE_TEST("Last Respects power is multiplied by the amount of fainted m
     PARAMETRIZE { faintCount = 1; }
     PARAMETRIZE { faintCount = 2; }
     GIVEN {
+        ASSUME(GetSpeciesBaseAttack(SPECIES_GOLEM) == 120); // Test fails with Gen 5's 110 Base Attack
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LEPPA_BERRY); Moves(MOVE_RECYCLE, MOVE_NONE, MOVE_NONE, MOVE_NONE); }
         OPPONENT(SPECIES_GOLEM); // Not Wobbuffet to omit type effectiveness
         OPPONENT(SPECIES_GEODUDE);
