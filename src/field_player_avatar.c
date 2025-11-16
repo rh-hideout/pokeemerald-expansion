@@ -512,7 +512,7 @@ static bool8 DoForcedMovement(u8 direction, void (*moveFunc)(u8))
     }
     else
     {
-        if (PlayerHasFollowerNPC())
+        if (PlayerHasFollowerNPC() && GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) != FNPC_STAY)
             SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, TRUE);
 
         playerAvatar->runningState = MOVING;
