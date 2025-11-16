@@ -885,7 +885,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
         return MOVEMENT_ACTION_NONE;
 
     // Follower won't move if player is forced back onto the same tile.
-    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_STAY)
+    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
         return MOVEMENT_ACTION_NONE;
         
     GetXYCoordsPlayerMovementDest(playerMoveDirection, &playerDestX, &playerDestY);
@@ -894,7 +894,7 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     if (IsPlayerForcedOntoSameTile(newPlayerMB, playerMoveDirection)
      && !(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && playerMoveDirection == DIR_NORTH && newPlayerMB == MB_MUDDY_SLOPE && GetPlayerSpeed() >= PLAYER_SPEED_FAST))
     {
-        SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_STAY);
+        SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_STAY);
         SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
         if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
             ObjectEventSetHeldMovement(follower, GetFaceDirectionAnimNum(follower->facingDirection));
@@ -1722,7 +1722,7 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     // If follower moved during player's forced momvements.
-    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == TRUE)
+    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_FOLLOW)
     {
         // The NPC will take an extra step and be on the same tile as the player.
         if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
@@ -1740,17 +1740,17 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
             follower->facingDirectionLocked = FALSE;
             HideNPCFollower();
             SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
-            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FALSE);
+            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_NONE);
             gPlayerAvatar.preventStep = FALSE;
             DestroyTask(taskId);
         }
     }
     // If player was forced back onto the same tile.
-    else if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_STAY)
+    else if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
     {
         if (ObjectEventClearHeldMovementIfFinished(player) != 0)
         {
-            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FALSE);
+            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_NONE);
             SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
             gPlayerAvatar.preventStep = FALSE;
             DestroyTask(taskId);

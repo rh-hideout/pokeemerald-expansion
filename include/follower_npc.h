@@ -81,12 +81,17 @@ enum FollowerNPCHandleEscalatorFinishTaskStates
     MOVEMENT_FINISH
 };
 
+enum FollowerNPCForcedMovementStates
+{
+    FNPC_FORCED_NONE,
+    FNPC_FORCED_FOLLOW,
+    FNPC_FORCED_STAY
+};
+
 #define FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES    0x1
 
 #define FNPC_NONE   0
 #define FNPC_ALWAYS 2
-
-#define FNPC_STAY   2
 
 void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value);
 const u8 *GetFollowerNPCScriptPointer(void);
