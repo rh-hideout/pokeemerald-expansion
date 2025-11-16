@@ -2029,6 +2029,7 @@ static enum MoveCanceler CancelerObedience(void)
             ctx.isCrit = FALSE;
             ctx.randomFactor = FALSE;
             ctx.updateFlags = TRUE;
+            ctx.isSelfInflicted = TRUE;
             ctx.fixedBasePower = 40;
             gBattleStruct->moveDamage[gBattlerAttacker] = CalculateMoveDamage(&ctx);
             gBattlescriptCurrInstr = BattleScript_IgnoresAndHitsItself;
@@ -2181,6 +2182,7 @@ static enum MoveCanceler CancelerConfused(void)
                 ctx.isCrit = FALSE;
                 ctx.randomFactor = FALSE;
                 ctx.updateFlags = TRUE;
+                ctx.isSelfInflicted = TRUE;
                 ctx.fixedBasePower = 40;
                 gBattleStruct->moveDamage[gBattlerAttacker] = CalculateMoveDamage(&ctx);
                 gProtectStructs[gBattlerAttacker].confusionSelfDmg = TRUE;
@@ -8570,6 +8572,9 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     // apply attack stat modifiers
     modifier = UQ_4_12(1.0);
 
+    if (ctx->isSelfInflicted)
+        goto skipAttackStatModifiers;
+
     // attacker's abilities
     switch (ctx->abilityAtk)
     {
@@ -8764,6 +8769,8 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
         break;
     }
 
+skipAttackStatModifiers:
+
     // The offensive stats of a Player's Pokémon are boosted by x1.1 (+10%) if they have the corresponding flags set (eg. Badges)
     if (ShouldGetStatBadgeBoost(B_FLAG_BADGE_BOOST_ATTACK, battlerAtk) && IsBattleMovePhysical(move))
         modifier = uq4_12_multiply_half_down(modifier, GetBadgeBoostModifier());
@@ -8853,6 +8860,9 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     // apply defense stat modifiers
     modifier = UQ_4_12(1.0);
 
+    if (ctx->isSelfInflicted)
+        goto skipDefenseStatModifiers;
+
     // target's abilities
     switch (ctx->abilityDef)
     {
@@ -8934,6 +8944,8 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     default:
         break;
     }
+
+skipDefenseStatModifiers:
 
     // sandstorm sp.def boost for rock types
     if (B_SANDSTORM_SPDEF_BOOST >= GEN_4 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ROCK) && IsBattlerWeatherAffected(battlerDef, B_WEATHER_SANDSTORM) && !usesDefStat)
