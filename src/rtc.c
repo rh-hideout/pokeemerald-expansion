@@ -19,6 +19,8 @@ static u16 sSavedIme;
 COMMON_DATA struct Time gLocalTime = {0};
 
 // const rom
+static const u8 gText_AM[] = _("AM");
+static const u8 gText_PM[] = _("PM");
 
 static const struct SiiRtcInfo sRtcDummy = {0, MONTH_JAN, 1}; // 2000 Jan 1
 
