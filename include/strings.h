@@ -60,17 +60,6 @@ extern const u8 gText_Sweet2[];
 extern const u8 gText_Bitter2[];
 extern const u8 gText_Sour2[];
 
-extern const u8 gText_Excellent[];
-extern const u8 gText_VeryGood[];
-extern const u8 gText_Good[];
-extern const u8 gText_SoSo[];
-extern const u8 gText_Bad[];
-extern const u8 gText_TheWorst[];
-
-extern const u8 gText_Slots[];
-extern const u8 gText_Roulette[];
-extern const u8 gText_Jackpot[];
-
 extern const u8 gText_YouDontHaveThreeCoins[];
 extern const u8 gText_QuitTheGame[];
 extern const u8 gText_YouveGot9999Coins[];
