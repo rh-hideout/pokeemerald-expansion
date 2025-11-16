@@ -2410,9 +2410,4 @@ extern const u8 MoveRelearner_Text_EggMoveLWR[];
 extern const u8 MoveRelearner_Text_TMMoveLWR[];
 extern const u8 MoveRelearner_Text_TutorMoveLWR[];
 
-// Switch Caught Mon into Party
-extern const u8 gText_CannotSendMonToBoxHM[];
-extern const u8 gText_CannotSendMonToBoxActive[];
-extern const u8 gText_CannotSendMonToBoxPartner[];
-
 #endif // GUARD_STRINGS_H
