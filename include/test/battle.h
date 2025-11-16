@@ -670,6 +670,7 @@ struct AILogLine
     u16 line:15;
     u16 set:1; // Whether score was set, or added/subtracted
     s16 score;
+    u16 target;
 };
 
 // Data which is updated by the test runner during a battle and needs to
