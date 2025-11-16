@@ -2389,10 +2389,6 @@ extern const u8 gText_ExpShareOff[];
 
 extern const u8 gText_BasePointsResetToZero[];
 
-// Map name pop-up
-extern const u8 gText_AM[];
-extern const u8 gText_PM[];
-
 // Move Relearner
 extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
 extern const u8 MoveRelearner_Text_EggMoveLWR[];
