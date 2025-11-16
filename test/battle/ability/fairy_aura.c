@@ -3,22 +3,24 @@
 
 DOUBLE_BATTLE_TEST("Fairy Aura increases the power of all Fairy-type attacks by 33%")
 {
-    KNOWN_FAILING; // It does slightly more damage than expected
     s16 damage[8];
 
     GIVEN {
         PLAYER(SPECIES_XERNEAS) { Ability(ABILITY_FAIRY_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        PLAYER(SPECIES_LINOONE);
+        PLAYER(SPECIES_LINOONE);
+        OPPONENT(SPECIES_LINOONE);
+        OPPONENT(SPECIES_LINOONE);
     } WHEN {
+        TURN { MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
+        TURN { SWITCH(playerLeft, 2); }
         TURN {
             MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft, secondaryEffect:FALSE);
             MOVE(playerRight, MOVE_PLAY_ROUGH, target:opponentRight, secondaryEffect:FALSE);
             MOVE(opponentLeft, MOVE_PLAY_ROUGH, target:playerLeft, secondaryEffect:FALSE);
             MOVE(opponentRight, MOVE_PLAY_ROUGH, target:playerRight, secondaryEffect:FALSE);
         }
-        TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target:playerLeft); }
+        TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target:playerRight); }
         TURN {
             MOVE(playerLeft, MOVE_PLAY_ROUGH, target:opponentLeft, secondaryEffect:FALSE);
             MOVE(playerRight, MOVE_PLAY_ROUGH, target:opponentRight, secondaryEffect:FALSE);

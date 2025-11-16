@@ -3,22 +3,24 @@
 
 DOUBLE_BATTLE_TEST("Dark Aura increases the power of all Dark-type attacks by 33%")
 {
-    KNOWN_FAILING; // It does slightly more damage than expected
     s16 damage[8];
 
     GIVEN {
         PLAYER(SPECIES_YVELTAL) { Ability(ABILITY_DARK_AURA); }
-        PLAYER(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
-        OPPONENT(SPECIES_WOBBUFFET) { HP(9999); MaxHP(9999); }
+        PLAYER(SPECIES_LINOONE);
+        PLAYER(SPECIES_LINOONE);
+        OPPONENT(SPECIES_LINOONE);
+        OPPONENT(SPECIES_LINOONE);
     } WHEN {
+        TURN { MOVE(playerRight, MOVE_SKILL_SWAP, target: playerLeft); }
+        TURN { SWITCH(playerLeft, 2); }
         TURN {
             MOVE(playerLeft, MOVE_BITE, target:opponentLeft, secondaryEffect:FALSE);
             MOVE(playerRight, MOVE_BITE, target:opponentRight, secondaryEffect:FALSE);
             MOVE(opponentLeft, MOVE_BITE, target:playerLeft, secondaryEffect:FALSE);
             MOVE(opponentRight, MOVE_BITE, target:playerRight, secondaryEffect:FALSE);
         }
-        TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target:playerLeft); }
+        TURN { MOVE(opponentLeft, MOVE_GASTRO_ACID, target:playerRight); }
         TURN {
             MOVE(playerLeft, MOVE_BITE, target:opponentLeft, secondaryEffect:FALSE);
             MOVE(playerRight, MOVE_BITE, target:opponentRight, secondaryEffect:FALSE);
