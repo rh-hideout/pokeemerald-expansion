@@ -86,6 +86,8 @@ enum FollowerNPCHandleEscalatorFinishTaskStates
 #define FNPC_NONE   0
 #define FNPC_ALWAYS 2
 
+#define FNPC_STAY   2
+
 void SetFollowerNPCData(enum FollowerNPCDataTypes type, u32 value);
 const u8 *GetFollowerNPCScriptPointer(void);
 u32 GetFollowerNPCData(enum FollowerNPCDataTypes type);
@@ -94,6 +96,7 @@ void ClearFollowerNPCData(void);
 void CreateFollowerNPC(u32 gfx, u32 followerFlags, const u8 *scriptPtr);
 void DestroyFollowerNPC(void);
 u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direction);
+bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction);
 void SetFollowerNPCSprite(u32 spriteIndex);
 
 bool32 PlayerHasFollowerNPC(void);
