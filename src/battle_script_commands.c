@@ -11508,14 +11508,16 @@ static void Cmd_trysetencore(void)
     }
 
     if ((IsMoveEncoreBanned(gLastMoves[gBattlerTarget]))
+     || i == MAX_MON_MOVES
      || gLastMoves[gBattlerTarget] == MOVE_NONE
-     || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE)
+     || gLastMoves[gBattlerTarget] == MOVE_UNAVAILABLE
+     || gBattleMons[gBattlerTarget].pp[i] == 0
+     || gDisableStructs[gBattlerTarget].encoredMove != MOVE_NONE
+     || GetMoveEffect(gChosenMoveByBattler[gBattlerTarget]) == EFFECT_SHELL_TRAP)
     {
-        i = MAX_MON_MOVES;
+        gBattlescriptCurrInstr = cmd->failInstr;
     }
-
-    if (gDisableStructs[gBattlerTarget].encoredMove == MOVE_NONE
-        && i != MAX_MON_MOVES && gBattleMons[gBattlerTarget].pp[i] != 0)
+    else
     {
         gDisableStructs[gBattlerTarget].encoredMove = gBattleMons[gBattlerTarget].moves[i];
         gDisableStructs[gBattlerTarget].encoredMovePos = i;
@@ -11532,10 +11534,6 @@ static void Cmd_trysetencore(void)
         else
             gDisableStructs[gBattlerTarget].encoreTimer = 3;
         gBattlescriptCurrInstr = cmd->nextInstr;
-    }
-    else
-    {
-        gBattlescriptCurrInstr = cmd->failInstr;
     }
 }
 
