@@ -199,11 +199,13 @@ static u16 GetPrevBall(u16 ballId)
 {
     s32 i;
     s32 index;
-    for (i = 1; i <= (LAST_BALL_INDEX - FIRST_BALL_INDEX); i++)
+    for (i = 1; i < ITEMS_COUNT; i++)
     {
         index = ballId - i;
-        if (index < FIRST_BALL_INDEX)
-            index = index - FIRST_BALL_INDEX + LAST_BALL_INDEX + 1;
+        if (index < 1)
+            index = index + ITEMS_COUNT - 1;
+        if (gItemsInfo[index].pocket != POCKET_POKE_BALLS)
+            continue;
         if (CheckBagHasItem(index, 1))
             return index;
     }
@@ -214,11 +216,13 @@ static u32 GetNextBall(u32 ballId)
 {
     s32 i;
     s32 index;
-    for (i = 1; i <= (LAST_BALL_INDEX - FIRST_BALL_INDEX); i++)
+    for (i = 1; i < ITEMS_COUNT; i++)
     {
         index = ballId + i;
-        if (index > LAST_BALL_INDEX)
-            index = index - LAST_BALL_INDEX + FIRST_BALL_INDEX - 1;
+        if (index >= ITEMS_COUNT)
+            index = index - ITEMS_COUNT + 1;
+        if (gItemsInfo[index].pocket != POCKET_POKE_BALLS)
+            continue;
         if (CheckBagHasItem(index, 1))
             return index;
     }
