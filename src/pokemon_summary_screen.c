@@ -741,11 +741,11 @@ static const TaskFunc sTextPrinterTasks[] =
     [PSS_PAGE_CONTEST_MOVES] = Task_PrintContestMoves
 };
 
-static const u8 gText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
-static const u8 gText_Relearn_LevelUp[] = _("{START_BUTTON} RELEARN LEVEL");
-static const u8 gText_Relearn_Egg[] = _("{START_BUTTON} RELEARN EGG");
-static const u8 gText_Relearn_TM[] = _("{START_BUTTON} RELEARN TM");
-static const u8 gText_Relearn_Tutor[] = _("{START_BUTTON} RELEARN TUTOR");
+static const u8 sText_Relearn[] = _("{START_BUTTON} RELEARN"); // future note: don't decap this, because it mimics the summary screen BG graphics which will not get decapped
+static const u8 sText_Relearn_LevelUp[] = _("{START_BUTTON} RELEARN LEVEL");
+static const u8 sText_Relearn_Egg[] = _("{START_BUTTON} RELEARN EGG");
+static const u8 sText_Relearn_TM[] = _("{START_BUTTON} RELEARN TM");
+static const u8 sText_Relearn_Tutor[] = _("{START_BUTTON} RELEARN TUTOR");
 
 static const u8 sMemoNatureTextColor[] = _("{COLOR LIGHT_RED}{SHADOW GREEN}");
 static const u8 sMemoMiscTextColor[] = _("{COLOR WHITE}{SHADOW DARK_GRAY}"); // This is also affected by palettes, apparently
@@ -4910,19 +4910,19 @@ void ShowRelearnPrompt(void)
     switch (gMoveRelearnerState)
     {
         case MOVE_RELEARNER_LEVEL_UP_MOVES:
-            relearnText = gText_Relearn_LevelUp;
+            relearnText = sText_Relearn_LevelUp;
             break;
         case MOVE_RELEARNER_EGG_MOVES:
-            relearnText = gText_Relearn_Egg;
+            relearnText = sText_Relearn_Egg;
             break;
         case MOVE_RELEARNER_TM_MOVES:
-            relearnText = gText_Relearn_TM;
+            relearnText = sText_Relearn_TM;
             break;
         case MOVE_RELEARNER_TUTOR_MOVES:
-            relearnText = gText_Relearn_Tutor;
+            relearnText = sText_Relearn_Tutor;
             break;
         default:
-            relearnText = gText_Relearn;
+            relearnText = sText_Relearn;
             break;
     }
 
