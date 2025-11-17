@@ -66,7 +66,8 @@ enum {
     REQUEST_TOUGH_RIBBON_BATTLE,
 };
 
-enum BattleController {
+enum BattleController
+{
     BATTLE_CONTROLLER_NONE,
     BATTLE_CONTROLLER_PLAYER,
     BATTLE_CONTROLLER_PLAYER_PARTNER,
@@ -296,6 +297,13 @@ bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data);
 void UpdateFriendshipFromXItem(u32 battler);
+bool32 IsAiVsAiBattle(void);
+bool32 BattlerIsPlayer(u32 battlerId);
+bool32 BattlerIsPartner(u32 battlerId);
+bool32 BattlerIsOpponent(u32 battlerId);
+bool32 BattlerIsRecorded(u32 battlerId);
+bool32 BattlerIsLink(u32 battlerId);
+bool32 BattlerHasAi(u32 battlerId);
 
 // emitters
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);
@@ -459,36 +467,5 @@ void BtlController_HandleSwitchInShowSubstitute(u32 battler);
 
 bool32 ShouldBattleRestrictionsApply(u32 battler);
 void FreeShinyStars(void);
-
-static void (*const sBattleControllerFuncs[BATTLE_CONTROLLERS_COUNT])(u32 battler) =
-{
-    [BATTLE_CONTROLLER_PLAYER]             = SetControllerToPlayer,
-    [BATTLE_CONTROLLER_PLAYER_PARTNER]     = SetControllerToPlayerPartner,
-    [BATTLE_CONTROLLER_OPPONENT]           = SetControllerToOpponent,
-    [BATTLE_CONTROLLER_LINK_PARTNER]       = SetControllerToLinkPartner,
-    [BATTLE_CONTROLLER_LINK_OPPONENT]      = SetControllerToLinkOpponent,
-    [BATTLE_CONTROLLER_SAFARI]             = SetControllerToSafari,
-    [BATTLE_CONTROLLER_WALLY]              = SetControllerToWally,
-    [BATTLE_CONTROLLER_RECORDED_PLAYER]    = SetControllerToRecordedPlayer,
-    [BATTLE_CONTROLLER_RECORDED_PARTNER]   = SetControllerToRecordedPartner,
-    [BATTLE_CONTROLLER_RECORDED_OPPONENT]  = SetControllerToRecordedOpponent
-};
-
-static inline BattleControllerFunc GetBattlerBattleControllerSetFunc(u32 battler)
-{
-    u32 controllerId = gBattlerBattleController[battler];
-    if (controllerId >= BATTLE_CONTROLLERS_COUNT)
-        return NULL;
-    return sBattleControllerFuncs[controllerId];
-}
-
-static inline void SwapBattlerBattleControllers(u32 battler1, u32 battler2)
-{
-    u32 battler1ControllerId = gBattlerBattleController[battler1];
-    u32 battler2ControllerId = gBattlerBattleController[battler2];
-
-    gBattlerControllerFuncs[battler1] = sBattleControllerFuncs[battler2ControllerId];
-    gBattlerControllerFuncs[battler2] = sBattleControllerFuncs[battler1ControllerId];    
-}
 
 #endif // GUARD_BATTLE_CONTROLLERS_H
