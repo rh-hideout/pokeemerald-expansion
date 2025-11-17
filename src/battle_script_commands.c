@@ -1170,6 +1170,7 @@ static void Cmd_attackcanceler(void)
     bool32 bounceActive = (gProtectStructs[gBattlerTarget].bounceMove && IsBattlerAlive(gBattlerTarget));
 
     if (!bounceActive
+        && !gBattleStruct->bouncedMoveIsUsed
         && isBounceable
         && GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) == MOVE_TARGET_OPPONENTS_FIELD)
     {

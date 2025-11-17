@@ -4,8 +4,6 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_MAGIC_COAT) == EFFECT_MAGIC_COAT);
-    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
-    ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
 }
 
 SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a move")
@@ -40,6 +38,8 @@ DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's positio
     struct BattlePokemon *coatUser = NULL;
     PARAMETRIZE { coatUser = playerLeft; }
     PARAMETRIZE { coatUser = playerRight; }
+    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+    ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
