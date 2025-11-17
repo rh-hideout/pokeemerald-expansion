@@ -198,16 +198,16 @@ static void CompleteOnBattlerSpritePosX_0(u32 battler)
 static u16 GetPrevBall(u16 ballId)
 {
     s32 i;
-    s32 index;
-    for (i = 1; i < ITEMS_COUNT; i++)
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+     for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        index = ballId - i;
-        if (index < 1)
-            index = index + ITEMS_COUNT - 1;
-        if (gItemsInfo[index].pocket != POCKET_POKE_BALLS)
-            continue;
-        if (CheckBagHasItem(index, 1))
-            return index;
+        index--;
+        if (index == -1)
+            index = POKEBALL_COUNT - 1;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
     return ballId;
 }
@@ -215,16 +215,16 @@ static u16 GetPrevBall(u16 ballId)
 static u32 GetNextBall(u32 ballId)
 {
     s32 i;
-    s32 index;
-    for (i = 1; i < ITEMS_COUNT; i++)
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+    for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        index = ballId + i;
-        if (index >= ITEMS_COUNT)
-            index = index - ITEMS_COUNT + 1;
-        if (gItemsInfo[index].pocket != POCKET_POKE_BALLS)
-            continue;
-        if (CheckBagHasItem(index, 1))
-            return index;
+        index++;
+        if (index == POKEBALL_COUNT)
+            index = 0;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
     return ballId;
 }
