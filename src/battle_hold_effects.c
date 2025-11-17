@@ -61,7 +61,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTi
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, GetParadoxHighestStatId(battler));
         gBattlerAbility = gBattleScripting.battler = battler;
         gDisableStructs[battler].boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);

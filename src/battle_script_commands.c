@@ -9432,6 +9432,62 @@ enum Stat GetHighestStatId(u32 battler)
     return highestId;
 }
 
+static u32 GetStatValueWithStages(u32 battler, enum Stat stat)
+{
+    u32 statValue;
+
+    switch (stat)
+    {
+    case STAT_ATK:
+        statValue = gBattleMons[battler].attack;
+        break;
+    case STAT_DEF:
+        statValue = gBattleMons[battler].defense;
+        break;
+    case STAT_SPATK:
+        statValue = gBattleMons[battler].spAttack;
+        break;
+    case STAT_SPDEF:
+        statValue = gBattleMons[battler].spDefense;
+        break;
+    case STAT_SPEED:
+        statValue = gBattleMons[battler].speed;
+        break;
+    default:
+        return 0;
+    }
+
+    statValue *= gStatStageRatios[gBattleMons[battler].statStages[stat]][0];
+    statValue /= gStatStageRatios[gBattleMons[battler].statStages[stat]][1];
+
+    return statValue;
+}
+
+enum Stat GetParadoxHighestStatId(u32 battler)
+{
+    enum Stat highestId = STAT_ATK;
+    u32 highestStat = GetStatValueWithStages(battler, STAT_ATK);
+
+    for (enum Stat stat = STAT_DEF; stat < NUM_STATS; stat++)
+    {
+        if (stat == STAT_SPEED)
+            continue;
+
+        u32 statValue = GetStatValueWithStages(battler, stat);
+        if (statValue > highestStat)
+        {
+            highestStat = statValue;
+            highestId = stat;
+        }
+    }
+
+    u32 speed = GetStatValueWithStages(battler, STAT_SPEED);
+    if (speed > highestStat)
+        highestId = STAT_SPEED;
+
+    return highestId;
+}
+
 static bool32 IsRototillerAffected(u32 battler)
 {
     if (!IsBattlerAlive(battler))

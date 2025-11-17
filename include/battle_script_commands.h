@@ -67,6 +67,7 @@ bool32 CanCamouflage(u8 battlerId);
 void StealTargetItem(u8 battlerStealer, u8 battlerItem);
 u8 GetCatchingBattler(void);
 enum Stat GetHighestStatId(u32 battlerId);
+enum Stat GetParadoxHighestStatId(u32 battlerId);
 bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType);
 bool32 IsMoveNotAllowedInSkyBattles(u32 move);
 bool32 DoSwitchInAbilities(u32 battlerId);

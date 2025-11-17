@@ -5524,7 +5524,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetParadoxHighestStatId(battler));
                 gBattleScripting.battler = battler;
                 BattleScriptPushCursorAndCallback(BattleScript_ProtosynthesisActivates);
                 effect++;
@@ -5555,7 +5555,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].terrainAbilityDone = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetParadoxHighestStatId(battler));
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptPushCursorAndCallback(BattleScript_QuarkDriveActivates);
                 effect++;
@@ -7291,7 +7291,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_PROTOSYNTHESIS:
         {
-            enum Stat defHighestStat = GetHighestStatId(battlerDef);
+            enum Stat defHighestStat = GetParadoxHighestStatId(battlerDef);
             if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -7300,7 +7300,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_QUARK_DRIVE:
         {
-            u8 defHighestStat = GetHighestStatId(battlerDef);
+            u8 defHighestStat = GetParadoxHighestStatId(battlerDef);
             if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -7570,7 +7570,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            enum Stat atkHighestStat = GetHighestStatId(battlerAtk);
+            enum Stat atkHighestStat = GetParadoxHighestStatId(battlerAtk);
             if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
@@ -7581,7 +7581,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            enum Stat atkHighestStat = GetHighestStatId(battlerAtk);
+            enum Stat atkHighestStat = GetParadoxHighestStatId(battlerAtk);
             if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
