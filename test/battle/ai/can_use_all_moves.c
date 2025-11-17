@@ -249,7 +249,11 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
         case EFFECT_HEAL_BELL:
         case EFFECT_SUNNY_DAY:
         case EFFECT_RAIN_DANCE:
+    #if B_PREFERRED_ICE_WEATHER == B_ICE_WEATHER_SNOW
+        case EFFECT_SNOWSCAPE:
+    #else
         case EFFECT_HAIL:
+    #endif
         case EFFECT_ROLE_PLAY:
         case EFFECT_REFRESH:
 

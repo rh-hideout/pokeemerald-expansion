@@ -112,6 +112,21 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
     }
 }
 
+SINGLE_BATTLE_TEST("Beak Blast doesn't burn fire types")
+{
+    GIVEN {
+        ASSUME(gSpeciesInfo[SPECIES_ARCANINE].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_ARCANINE].types[1]);
+        PLAYER(SPECIES_ARCANINE);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_BEAK_BLAST); MOVE(player, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
+        NOT STATUS_ICON(player, burn: TRUE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAK_BLAST, opponent);
+    }
+}
+
 TO_DO_BATTLE_TEST("Beak Blast's charging message is shown regardless if it would've missed");
 TO_DO_BATTLE_TEST("Beak Blast fails if it's forced by Encore after choosing a different move");
 TO_DO_BATTLE_TEST("Bulletproof is immune to Beak Blast but not to the burn it causes");

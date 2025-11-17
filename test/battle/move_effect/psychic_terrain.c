@@ -114,6 +114,40 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves")
     }
 }
 
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets")
+{
+    u32 move = 0, shouldWork = 0;
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE;}
+    PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE;}
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_TOXIC_NEVER_MISS, GEN_6);
+        ASSUME(IsSpeciesOfType(SPECIES_SHROODLE, TYPE_POISON));
+        PLAYER(SPECIES_SHROODLE) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move);}
+        TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent);}
+    } SCENE {
+        if (shouldWork)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        }
+        else
+        {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            }
+        }
+    } THEN {
+        if (shouldWork)
+            EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+        else
+            EXPECT(!(opponent->status1 & STATUS1_TOXIC_POISON));
+    }
+}
+
 SINGLE_BATTLE_TEST("Psychic Terrain lasts for 5 turns")
 {
     GIVEN {

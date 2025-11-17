@@ -149,9 +149,10 @@ DOUBLE_BATTLE_TEST("Powder fails if target is already affected by Powder")
     }
 }
 
-SINGLE_BATTLE_TEST("Powder fails if the target is Grass type")
+SINGLE_BATTLE_TEST("Powder fails if the target is Grass type (Gen6+)")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
         ASSUME(GetSpeciesType(SPECIES_VENUSAUR, 0) == TYPE_GRASS || GetSpeciesType(SPECIES_VENUSAUR, 1) == TYPE_GRASS);
         PLAYER(SPECIES_VENUSAUR);
         OPPONENT(SPECIES_VIVILLON);
@@ -164,9 +165,10 @@ SINGLE_BATTLE_TEST("Powder fails if the target is Grass type")
     }
 }
 
-SINGLE_BATTLE_TEST("Powder fails if the target has Overcoat")
+SINGLE_BATTLE_TEST("Powder fails if the target has Overcoat (Gen6+)")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_POWDER_OVERCOAT, GEN_6);
         PLAYER(SPECIES_FORRETRESS) { Ability(ABILITY_OVERCOAT); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
@@ -221,17 +223,20 @@ DOUBLE_BATTLE_TEST("Powder still blocks the target's Fire type moves even if it 
     }
 }
 
-SINGLE_BATTLE_TEST("Powder prevents Protean from changing its user to Fire type")
+SINGLE_BATTLE_TEST("Powder prevents Protean/Libero from changing its user to Fire type")
 {
+    u32 ability, species;
+    PARAMETRIZE { ability = ABILITY_PROTEAN; species = SPECIES_GRENINJA; }
+    PARAMETRIZE { ability = ABILITY_LIBERO;  species = SPECIES_RABOOT; }
     GIVEN {
-        PLAYER(SPECIES_GRENINJA) { Ability(ABILITY_PROTEAN); }
+        PLAYER(species) { Ability(ability); }
         OPPONENT(SPECIES_VIVILLON);
     } WHEN {
         TURN { MOVE(opponent, MOVE_POWDER); MOVE(player, MOVE_EMBER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWDER, opponent);
         NONE_OF {
-            ABILITY_POPUP(player, ABILITY_PROTEAN);
+            ABILITY_POPUP(player, ability);
             ANIMATION(ANIM_TYPE_MOVE, MOVE_EMBER, player);
             HP_BAR(opponent);
         }

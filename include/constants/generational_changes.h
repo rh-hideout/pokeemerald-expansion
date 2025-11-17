@@ -19,7 +19,7 @@
     F(UNEVOLVED_EXP_MULTIPLIER,  unevolvedExpMultiplier,  (u32, GEN_9)) /* TODO */ \
     F(LEVEL_UP_NOTIFICATION,     levelUpNotification,     (u32, GEN_9)) /* TODO */ \
     /* Stat settings */ \
-    F(BADGE_BOOST,               badgeBoost,              (u32, GEN_9)) /* TODO */ \
+    F(BADGE_BOOST,               badgeBoost,              (u32, GEN_9)) \
     F(FRIENDSHIP_BOOST,          friendshipBoost,         (u32, GEN_9)) /* TODO */ \
     F(MAX_LEVEL_EV_GAINS,        maxLevelEvGains,         (u32, GEN_9)) /* TODO */ \
     F(RECALCULATE_STATS,         recalculateStats,        (u32, GEN_9)) /* TODO */ \
@@ -38,8 +38,9 @@
     F(MULTIPLE_TARGETS_DMG,      multipleTargetsDmg,      (u32, GEN_9)) /* TODO */ \
     /* Type settings */ \
     F(GHOSTS_ESCAPE,             ghostsEscape,            (u32, GEN_9)) /* TODO */ \
-    F(PARALYZE_ELECTRIC,         paralyzeElectric,        (u32, GEN_9)) /* TODO */ \
-    F(POWDER_GRASS,              powderGrass,             (u32, GEN_9)) /* TODO */ \
+    F(PARALYZE_ELECTRIC,         paralyzeElectric,        (u32, GEN_9)) \
+    F(POWDER_GRASS,              powderGrass,             (u32, GEN_9)) \
+    F(POWDER_OVERCOAT,           powderOvercoat,          (u32, GEN_9)) \
     F(UPDATED_TYPE_MATCHUPS,     updatedTypeMatchups,     (u32, GEN_9)) /* TODO */ \
     F(PRANKSTER_DARK_TYPES,      pranksterDarkTypes,      (u32, GEN_9)) \
     F(SHEER_COLD_IMMUNITY,       sheerColdImmunity,       (u32, GEN_9)) \
@@ -71,7 +72,7 @@
     /* Ability data settings */ \
     F(UPDATED_ABILITY_DATA,      updatedAbilityData,      (u32, GEN_9)) /* TODO */ \
     /* Move accuracy settings */ \
-    F(TOXIC_NEVER_MISS,          toxicNeverMiss,          (u32, GEN_9)) /* TODO */ \
+    F(TOXIC_NEVER_MISS,          toxicNeverMiss,          (u32, GEN_9)) \
     F(MINIMIZE_DMG_ACC,          minimizeDmgAcc,          (u32, GEN_9)) /* TODO */ \
     F(BLIZZARD_HAIL,             blizzardHail,            (u32, GEN_9)) /* TODO */ \
     F(SHEER_COLD_ACC,            sheerColdAcc,            (u32, GEN_9)) /* TODO */ \
@@ -130,7 +131,7 @@
     F(FLASH_FIRE_FROZEN,         flashFireFrozen,         (u32, GEN_9)) /* TODO */ \
     F(SYNCHRONIZE_TOXIC,         synchronizeToxic,        (u32, GEN_9)) /* TODO */ \
     F(UPDATED_INTIMIDATE,        updatedIntimidate,       (u32, GEN_9)) \
-    F(OBLIVIOUS_TAUNT,           obliviousTaunt,          (u32, GEN_9)) /* TODO */ \
+    F(OBLIVIOUS_TAUNT,           obliviousTaunt,          (u32, GEN_9)) \
     F(STURDY,                    sturdy,                  (u32, GEN_9)) /* TODO */ \
     F(PLUS_MINUS_INTERACTION,    plusMinusInteraction,    (u32, GEN_9)) /* TODO */ \
     F(WEATHER_FORMS,             weatherForms,            (u32, GEN_9)) /* TODO */ \
@@ -138,7 +139,7 @@
     F(ABSORBING_ABILITY_STRING,  absorbingAbilityString,  (u32, GEN_9)) /* TODO */ \
     F(REDIRECT_ABILITY_IMMUNITY, redirectAbilityImmunity, (u32, GEN_9)) /* TODO */ \
     F(REDIRECT_ABILITY_ALLIES,   redirectAbilityAllies,   (u32, GEN_9)) /* TODO */ \
-    F(LEAF_GUARD_PREVENTS_REST,  leafGuardPreventsRest,   (u32, GEN_9)) /* TODO */ \
+    F(LEAF_GUARD_PREVENTS_REST,  leafGuardPreventsRest,   (u32, GEN_9)) \
     F(TRANSISTOR_BOOST,          transistorBoost,         (u32, GEN_9)) \
     F(ILLUMINATE_EFFECT,         illuminateEffect,        (u32, GEN_9)) \
     F(WEAK_ARMOR_SPEED,          weakArmorSpeed,          (u32, GEN_9)) \
@@ -206,6 +207,7 @@
 enum GenConfigTag
 {
     CONFIG_DEFINITIONS(UNPACK_CONFIG_ENUMS)
+    GEN_CONFIG_COUNT
 };
 
 #endif // GUARD_CONSTANTS_GENERATIONAL_CHANGES_H

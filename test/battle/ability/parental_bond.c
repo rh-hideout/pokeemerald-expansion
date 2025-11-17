@@ -291,10 +291,10 @@ SINGLE_BATTLE_TEST("Parental Bond Snore strikes twice while asleep")
         HP_BAR(opponent, captureDamage: &damage[1]);
         MESSAGE("The Pokémon was hit 2 time(s)!");
     } THEN {
-        if (B_PARENTAL_BOND_DMG == GEN_6)
-            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
-        else
+        if (B_PARENTAL_BOND_DMG >= GEN_7)
             EXPECT_MUL_EQ(damage[0], Q_4_12(0.25), damage[1]);
+        else
+            EXPECT_MUL_EQ(damage[0], Q_4_12(0.5), damage[1]);
     }
 }
 
@@ -349,6 +349,22 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks")
     } SCENE {
         HP_BAR(opponent);
         NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Punch")
+{
+    GIVEN {
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAIN_PUNCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAIN_PUNCH, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
 

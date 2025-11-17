@@ -118,6 +118,7 @@ TO_DO_BATTLE_TEST("Wake-Up Slap gets increased power against Pokémon with Comat
 DOUBLE_BATTLE_TEST("Sparkling Aria cures burns from all Pokemon on the field and behind substitutes")
 {
     GIVEN {
+        ASSUME(MoveIgnoresSubstitute(MOVE_SPARKLING_ARIA));
         ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLING_ARIA, MOVE_EFFECT_REMOVE_STATUS) == TRUE);
         ASSUME(GetMoveEffectArg_Status(MOVE_SPARKLING_ARIA) == STATUS1_BURN);
         PLAYER(SPECIES_PRIMARINA);
