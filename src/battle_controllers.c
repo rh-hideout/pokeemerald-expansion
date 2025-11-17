@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "cable_club.h"
+#include "event_data.h"
 #include "event_object_movement.h"
 #include "item.h"
 #include "link.h"
@@ -40,6 +41,7 @@ static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
 COMMON_DATA void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0};
 COMMON_DATA u8 gBattleControllerData[MAX_BATTLERS_COUNT] = {0}; // Used by the battle controllers to store misc sprite/task IDs for each battler
 COMMON_DATA void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0}; // Controller's buffer complete function for each battler
+u8 gBattlerBattleController[MAX_BATTLERS_COUNT] = {0}; // Battle controller for each battler
 
 static void CreateTasksForSendRecvLinkBuffers(void);
 static void InitBtlControllersInternal(void);
@@ -52,6 +54,66 @@ static void SpriteCB_FreeOpponentSprite(struct Sprite *sprite);
 static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(u32 battler);
+
+
+bool32 IsAiVsAiBattle(void)
+{
+    return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+}
+
+bool32 BattlerIsPlayer(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
+        || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);    
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
+}
+
+bool32 BattlerIsPartner(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER);
+}
+
+bool32 BattlerIsOpponent(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_OPPONENT
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+}
+
+bool32 BattlerIsRecorded(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT);
+}
+
+bool32 BattlerIsLink(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+}
+
+bool32 BattlerHasAi(u32 battlerId)
+{
+    switch (gBattlerBattleController[battlerId])
+    {
+    case BATTLE_CONTROLLER_OPPONENT:
+    case BATTLE_CONTROLLER_PLAYER_PARTNER:
+    case BATTLE_CONTROLLER_SAFARI:
+    case BATTLE_CONTROLLER_WALLY:
+        return TRUE;
+    default:
+        break;
+    }
+    
+    if (IsAiVsAiBattle())
+        return TRUE;
+    
+    return FALSE;
+}
 
 void HandleLinkBattleSetup(void)
 {

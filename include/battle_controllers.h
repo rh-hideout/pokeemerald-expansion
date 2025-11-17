@@ -66,6 +66,22 @@ enum {
     REQUEST_TOUGH_RIBBON_BATTLE,
 };
 
+enum BattleController
+{
+    BATTLE_CONTROLLER_NONE,
+    BATTLE_CONTROLLER_PLAYER,
+    BATTLE_CONTROLLER_PLAYER_PARTNER,
+    BATTLE_CONTROLLER_OPPONENT,
+    BATTLE_CONTROLLER_LINK_PARTNER,
+    BATTLE_CONTROLLER_LINK_OPPONENT,
+    BATTLE_CONTROLLER_SAFARI,
+    BATTLE_CONTROLLER_WALLY,
+    BATTLE_CONTROLLER_RECORDED_PLAYER,
+    BATTLE_CONTROLLER_RECORDED_PARTNER,
+    BATTLE_CONTROLLER_RECORDED_OPPONENT,
+    BATTLE_CONTROLLERS_COUNT,
+};
+
 // Accessors for gBattleControllerExecFlags.
 //
 // These are provided for documentation purposes, to make the battle
@@ -271,6 +287,7 @@ extern struct UnusedControllerStruct gUnusedControllerStruct;
 extern void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern u8 gBattleControllerData[MAX_BATTLERS_COUNT];
+extern u8 gBattlerBattleController[MAX_BATTLERS_COUNT];
 
 // general functions
 void HandleLinkBattleSetup(void);
@@ -280,6 +297,13 @@ bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data);
 void UpdateFriendshipFromXItem(u32 battler);
+bool32 IsAiVsAiBattle(void);
+bool32 BattlerIsPlayer(u32 battlerId);
+bool32 BattlerIsPartner(u32 battlerId);
+bool32 BattlerIsOpponent(u32 battlerId);
+bool32 BattlerIsRecorded(u32 battlerId);
+bool32 BattlerIsLink(u32 battlerId);
+bool32 BattlerHasAi(u32 battlerId);
 
 // emitters
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);

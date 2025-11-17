@@ -108,6 +108,7 @@ static void (*const sWallyBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 
 void SetControllerToWally(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_WALLY;
     gBattlerControllerEndFuncs[battler] = WallyBufferExecCompleted;
     gBattlerControllerFuncs[battler] = WallyBufferRunCommand;
     gBattleStruct->wallyBattleState = 0;
