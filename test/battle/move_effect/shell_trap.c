@@ -218,7 +218,7 @@ SINGLE_BATTLE_TEST("Shell Trap activates if user is hit with a physical move but
 SINGLE_BATTLE_TEST("Encore fails if target has active Shell Trap waiting")
 {
     GIVEN {
-        ASSUME(GetMovePriority(MOVE_ENCORE) == EFFECT_ENCORE);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
