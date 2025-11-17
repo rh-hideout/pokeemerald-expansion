@@ -4,6 +4,8 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_MAGIC_COAT) == EFFECT_MAGIC_COAT);
+    ASSUME(GetMoveEffect(MOVE_SPIKES) == EFFECT_SPIKES);
+    ASSUME(GetMoveEffect(MOVE_STEALTH_ROCK) == EFFECT_STEALTH_ROCK);
 }
 
 SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a move")
@@ -30,5 +32,32 @@ SINGLE_BATTLE_TEST("Magic Coat prints the correct message when bouncing back a m
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_SLP, opponent);
         MESSAGE("The opposing Zigzagoon fell asleep!");
         STATUS_ICON(opponent, sleep: TRUE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Magic Coat reflects hazards regardless of the user's position")
+{
+    struct BattlePokemon *coatUser = NULL;
+    PARAMETRIZE { coatUser = playerLeft; }
+    PARAMETRIZE { coatUser = playerRight; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(coatUser, MOVE_MAGIC_COAT); MOVE(opponentRight, MOVE_STEALTH_ROCK); MOVE(opponentLeft, MOVE_SPIKES); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, coatUser);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_STEALTH_ROCK, opponentRight);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SPIKES, opponentLeft);
+        }
+    } THEN {
+        EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_STEALTH_ROCK));
+        EXPECT(!IsHazardOnSide(B_SIDE_PLAYER, HAZARDS_SPIKES));
+        EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_STEALTH_ROCK));
+        EXPECT(IsHazardOnSide(B_SIDE_OPPONENT, HAZARDS_SPIKES));
     }
 }
