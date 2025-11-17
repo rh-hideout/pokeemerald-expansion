@@ -1081,6 +1081,7 @@
 #define ITEM_USE_PBLOCK_CASE      3
 #define ITEM_USE_BAG_MENU         4 // No exit callback, stays in bag menu
 #define ITEM_USE_PARTY_MENU_MOVES 5
+#define ITEM_USE_BATTLER          6 // Auto-select in Singles but lets you choose from party menu in Doubles
 
 // Item battle script IDs (need to be non-zero)
 #define EFFECT_ITEM_RESTORE_HP              1

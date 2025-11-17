@@ -138,6 +138,7 @@ BattleScript_ItemSetMist::
 
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
+	itemincreasestat
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
 	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
 	setfocusenergy BS_ATTACKER
@@ -157,6 +158,7 @@ BattleScript_ItemRestorePP::
 
 BattleScript_ItemIncreaseAllStats::
 	call BattleScript_UseItemMessage
+	itemincreasestat
 	call BattleScript_AllStatsUp
 	end
 
