@@ -2414,6 +2414,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
                 aliveCount++;
             }
         }
+
         bestMonId = GetBestMonBatonPass(party, firstId, lastId, invalidMons, aliveCount, battler, opposingBattler);
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
@@ -2425,6 +2426,9 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         bestMonId = GetBestMonDmg(party, firstId, lastId, invalidMons, battler, opposingBattler);
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
+
+        if (aceMonId != PARTY_SIZE && aliveCount == 0)
+            return aceMonId;
 
         // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
         if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
