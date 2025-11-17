@@ -9362,25 +9362,6 @@ u32 IsAbilityStatusProtected(u32 battler, u32 ability)
         || IsFlowerVeilProtected(battler);
 }
 
-u32 GetHighestStatId(u32 battler)
-{
-    u32 i, highestId = STAT_ATK, highestStat = gBattleMons[battler].attack;
-
-    for (i = STAT_DEF; i < NUM_STATS; i++)
-    {
-        u16 *statVal = &gBattleMons[battler].attack + (i - 1);
-        if (*statVal > highestStat && i != STAT_SPEED)
-        {
-            highestStat = *statVal;
-            highestId = i;
-        }
-    }
-    if (gBattleMons[battler].speed > highestStat)
-        highestId = STAT_SPEED;
-
-    return highestId;
-}
-
 static bool32 IsRototillerAffected(u32 battler)
 {
     if (!IsBattlerAlive(battler))
