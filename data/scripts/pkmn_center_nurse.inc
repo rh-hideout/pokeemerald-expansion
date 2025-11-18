@@ -34,8 +34,10 @@ EventScript_PkmnCenterNurse_IllTakeYourPkmn2::
 
 EventScript_PkmnCenterNurse_TakeAndHealPkmn::
 	hidefollower 0
+	goto_if_eq VAR_0x800B, 0, EventScript_PkmnCenterNurse_TakeAndHealPkmn_SkipTurn
 	applymovement VAR_0x800B, Movement_PkmnCenterNurse_Turn
 	waitmovement 0
+EventScript_PkmnCenterNurse_TakeAndHealPkmn_SkipTurn:
 	dofieldeffect FLDEFF_POKECENTER_HEAL
 .if OW_UNION_DISABLE_CHECK == FALSE && OW_FLAG_MOVE_UNION_ROOM_CHECK != 0
 	setflag OW_FLAG_MOVE_UNION_ROOM_CHECK
@@ -43,8 +45,10 @@ EventScript_PkmnCenterNurse_TakeAndHealPkmn::
 	clearflag OW_FLAG_MOVE_UNION_ROOM_CHECK
 .endif
 	waitfieldeffect FLDEFF_POKECENTER_HEAL
+	goto_if_eq VAR_0x800B, 0, EventScript_PkmnCenterNurse_TakeAndHealPkmn_SkipWalk
 	applymovement VAR_0x800B, Common_Movement_WalkInPlaceFasterDown
 	waitmovement 0
+EventScript_PkmnCenterNurse_TakeAndHealPkmn_SkipWalk:
 	special HealPlayerParty
 	callnative UpdateFollowingPokemon
 	return
