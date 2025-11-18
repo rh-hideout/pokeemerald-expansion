@@ -473,9 +473,7 @@ void Ai_InitPartyStruct(void)
             gAiPartyData->mons[B_SIDE_PLAYER][i].isFainted = TRUE;
 
         if (isOmniscient || hasPartyKnowledge)
-        {
             gAiPartyData->mons[B_SIDE_PLAYER][i].species = GetMonData(mon, MON_DATA_SPECIES);
-        }
 
         if (isOmniscient)
         {
