@@ -18213,6 +18213,29 @@ void BS_TryEndNeutralizingGas(void)
     }
 }
 
+void BS_RecalcParadoxStats(void)
+{
+    NATIVE_ARGS();
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleMons[battler].volatiles.transformed || gBattleMons[battler].volatiles.gastroAcid)
+            continue;
+
+        switch (gBattleMons[battler].ability)
+        {
+        case ABILITY_PROTOSYNTHESIS:
+            if ((gBattleWeather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battler].boosterEnergyActivated)
+                UpdateParadoxBoostedStat(battler);
+            break;
+        case ABILITY_QUARK_DRIVE:
+            if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN) || gDisableStructs[battler].boosterEnergyActivated)
+                UpdateParadoxBoostedStat(battler);
+            break;
+        }
+    }
+    gBattlescriptCurrInstr = cmd->nextInstr;
+}
+
 void BS_GetRototillerTargets(void)
 {
     NATIVE_ARGS(const u8 *failInstr);
