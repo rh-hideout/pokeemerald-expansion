@@ -9306,7 +9306,6 @@ BattleScript_NeutralizingGasExitsLoopIncrement:
 	jumpifbytenotequal gBattlerAttacker, gBattlersCount, BattleScript_NeutralizingGasExitsLoop
 	restoreattacker
 	restoretarget
-	callnative BS_RecalcParadoxStats
 	return
 
 BattleScript_MagicianActivates::

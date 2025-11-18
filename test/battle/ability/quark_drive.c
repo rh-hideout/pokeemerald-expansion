@@ -78,19 +78,18 @@ SINGLE_BATTLE_TEST("Quark Drive keeps its initial boosted stat after Speed is lo
     }
 }
 
-SINGLE_BATTLE_TEST("Quark Drive recalculates the boosted stat after Neutralizing Gas leaves even if it had already activated")
+SINGLE_BATTLE_TEST("Quark Drive retains its boosted stat after Neutralizing Gas briefly suppresses it")
 {
     s16 damage[2];
 
     GIVEN {
-        PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); Attack(10); Defense(10); SpAttack(90); SpDefense(60); Speed(100); Moves(MOVE_ELECTRIC_TERRAIN, MOVE_ROUND, MOVE_CELEBRATE); Item(ITEM_TERRAIN_EXTENDER); }
+        PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_ELECTRIC_TERRAIN, MOVE_ROUND, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
-        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_ICY_WIND, MOVE_CELEBRATE); Speed(70); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_CELEBRATE); Speed(70); }
     } WHEN {
         TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
         TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 1); }
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ICY_WIND); }
         TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 0); }
         TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
     } SCENE {
@@ -100,13 +99,11 @@ SINGLE_BATTLE_TEST("Quark Drive recalculates the boosted stat after Neutralizing
         HP_BAR(opponent, captureDamage: &damage[0]);
         ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponent);
         MESSAGE("The effects of the neutralizing gas wore off!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        EXPECT_EQ(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat, STAT_SPATK);
-        EXPECT_MUL_EQ(damage[0], Q_4_12(1.3), damage[1]);
+        EXPECT_EQ(damage[0], damage[1]);
     }
 }
 

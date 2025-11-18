@@ -204,7 +204,6 @@ static const struct BattleWeatherInfo sBattleWeatherInfo[BATTLE_WEATHER_COUNT] =
     },
 };
 
-static void ResetParadoxBoostedStat(u32 battler);
 static void ResetParadoxWeatherStat(u32 battler);
 static void ResetParadoxTerrainStat(u32 battler);
 
@@ -5192,7 +5191,6 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 {
                     gDisableStructs[j].weatherAbilityDone = FALSE;
                     gDisableStructs[j].terrainAbilityDone = FALSE;
-                    ResetParadoxBoostedStat(j);
                 }
                 gBattlerAbility = i;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
@@ -5651,13 +5649,6 @@ u32 GetParadoxHighestStatId(u32 battler)
         highestId = STAT_SPEED;
 
     return highestId;
-}
-
-static void ResetParadoxBoostedStat(u32 battler)
-{
-    if (gBattleMons[battler].ability == ABILITY_PROTOSYNTHESIS
-     || gBattleMons[battler].ability == ABILITY_QUARK_DRIVE)
-        gDisableStructs[battler].paradoxBoostedStat = 0;
 }
 
 static void ResetParadoxWeatherStat(u32 battler)
