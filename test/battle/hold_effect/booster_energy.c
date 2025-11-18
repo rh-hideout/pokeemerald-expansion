@@ -65,6 +65,23 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunl
     }
 }
 
+SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weather changes")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAGING_BOLT) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUNNY_DAY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Raging Bolt used its Booster Energy to activate Protosynthesis!");
+        MESSAGE("Raging Bolt's Attack was heightened!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+    } THEN {
+        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+    }
+}
+
 SINGLE_BATTLE_TEST("Booster Energy activates Protosynthesis and increases highest stat")
 {
     u32 attack, defense, speed, spAttack, spDefense;
@@ -128,6 +145,23 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
             MESSAGE("Iron Moth's Sp. Def was heightened!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain changes")
+{
+    GIVEN {
+        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Iron Moth used its Booster Energy to activate Quark Drive!");
+        MESSAGE("Iron Moth's Attack was heightened!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
+    } THEN {
+        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
     }
 }
 
