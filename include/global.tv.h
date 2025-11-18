@@ -82,14 +82,14 @@ typedef union // size = 0x24
         /*0x00*/ u8 kind;
         /*0x01*/ bool8 active;
         /*0x02*/ u16 species;
-        /*0x04*/ u8 pokemonName[VANILLA_POKEMON_NAME_LENGTH + 1];
-        /*0x0F*/ u8 trainerName[PLAYER_NAME_LENGTH + 1];
-        /*0x17*/ u8 unused[3];
-        /*0x1A*/ u8 random;
-        /*0x1B*/ u8 random2;
-        /*0x1C*/ u16 randomSpecies;
-        /*0x1E*/ u8 language;
-        /*0x1F*/ u8 pokemonNameLanguage;
+        /*0x04*/ u8 pokemonName[POKEMON_NAME_LENGTH + 1];
+        /*0x11*/ u8 trainerName[PLAYER_NAME_LENGTH + 1];
+        /*0x19*/ u8 unused[3];
+        /*0x1C*/ u8 random;
+        /*0x1D*/ u8 random2;
+        /*0x1E*/ u16 randomSpecies;
+        /*0x20*/ u8 language;
+        /*0x21*/ u8 pokemonNameLanguage;
     } nameRaterShow;
 
     // TVSHOW_BRAVO_TRAINER_POKEMON_PROFILE (contest)
@@ -98,15 +98,15 @@ typedef union // size = 0x24
         /*0x01*/ bool8 active;
         /*0x02*/ u16 species;
         /*0x04*/ u16 words[2];
-        /*0x08*/ u8 pokemonNickname[VANILLA_POKEMON_NAME_LENGTH + 1];
-        /*0x13*/ u8 contestCategory:3;
+        /*0x08*/ u8 pokemonNickname[POKEMON_NAME_LENGTH + 1];
+        /*0x15*/ u8 contestCategory:3;
                  u8 contestRank:2;
                  u8 contestResult:2;
                  //u8 padding:1;
-        /*0x14*/ u16 move;
-        /*0x16*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
-        /*0x1E*/ u8 language;
-        /*0x1F*/ u8 pokemonNameLanguage;
+        /*0x16*/ u16 move;
+        /*0x18*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
+        /*0x20*/ u8 language;
+        /*0x21*/ u8 pokemonNameLanguage;
     } bravoTrainer;
 
     // TVSHOW_BRAVO_TRAINER_BATTLE_TOWER_PROFILE
@@ -196,10 +196,10 @@ typedef union // size = 0x24
         /*0x01*/ bool8 active;
         /*0x02*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
         /*0x0A*/ u8 contestCategory;
-        /*0x0B*/ u8 nickname[VANILLA_POKEMON_NAME_LENGTH + 1];
-        /*0x16*/ u8 pokeblockState;
-        /*0x17*/ u8 language;
-        /*0x18*/ u8 pokemonNameLanguage;
+        /*0x0B*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
+        /*0x18*/ u8 pokeblockState;
+        /*0x19*/ u8 language;
+        /*0x1A*/ u8 pokemonNameLanguage;
     } contestLady;
 
     // Record Mixing Shows
@@ -209,12 +209,12 @@ typedef union // size = 0x24
         /*0x01*/ bool8 active;
         /*0x02*/ u8 language;
         /*0x03*/ u8 language2;
-        /*0x04*/ u8 nickname[VANILLA_POKEMON_NAME_LENGTH + 1];
-        /*0x0F*/ u8 ball;
-        /*0x10*/ u16 species;
-        /*0x12*/ u8 nBallsUsed;
-        /*0x13*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
-        /*0x1B*/ //u8 padding;
+        /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
+        /*0x11*/ u8 ball;
+        /*0x12*/ u16 species;
+        /*0x14*/ u8 nBallsUsed;
+        /*0x15*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
+        /*0x1D*/ //u8 padding;
     } pokemonToday;
 
     // TVSHOW_SMART_SHOPPER
@@ -409,11 +409,11 @@ typedef union // size = 0x24
         /*0x01*/ bool8 active;
         /*0x02*/ u8 nRibbons;
         /*0x03*/ u8 selectedRibbon;
-        /*0x04*/ u8 nickname[VANILLA_POKEMON_NAME_LENGTH + 1];
-        /*0x0F*/ u8 language;
-        /*0x10*/ u8 pokemonNameLanguage;
-        /*0x11*/ u8 filler_12[2];
-        /*0x13*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
+        /*0x04*/ u8 nickname[POKEMON_NAME_LENGTH + 1];
+        /*0x11*/ u8 language;
+        /*0x12*/ u8 pokemonNameLanguage;
+        /*0x13*/ u8 filler_12[2];
+        /*0x15*/ u8 playerName[PLAYER_NAME_LENGTH + 1];
     } cuties;
 
     // TVSHOW_FRONTIER
