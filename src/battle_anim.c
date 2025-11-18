@@ -1568,7 +1568,7 @@ void LoadMoveBg(u16 bgId)
 {
     if (IsContest())
     {
-        void *decompressionBuffer = Alloc(0x800);
+        void *decompressionBuffer = Alloc(0x4000);
         const u32 *tilemap = gBattleAnimBackgroundTable[bgId].tilemap;
 
         DecompressDataWithHeaderWram(tilemap, decompressionBuffer);
