@@ -5653,14 +5653,14 @@ u32 GetParadoxHighestStatId(u32 battler)
 
 static void ResetParadoxWeatherStat(u32 battler)
 {
-    if (gBattleMons[battler].ability == ABILITY_PROTOSYNTHESIS
+    if (GetBattlerAbility(battler) == ABILITY_PROTOSYNTHESIS
      && !gDisableStructs[battler].boosterEnergyActivated)
         gDisableStructs[battler].paradoxBoostedStat = 0;
 }
 
 static void ResetParadoxTerrainStat(u32 battler)
 {
-    if (gBattleMons[battler].ability == ABILITY_QUARK_DRIVE
+    if (GetBattlerAbility(battler) == ABILITY_QUARK_DRIVE
      && !gDisableStructs[battler].boosterEnergyActivated)
         gDisableStructs[battler].paradoxBoostedStat = 0;
 }
