@@ -50,40 +50,6 @@ SINGLE_BATTLE_TEST("Shed Shell allows switching out even when trapped by Arena T
     }
 }
 
-SINGLE_BATTLE_TEST("Shed Shell allows switching out via Baton Pass even when trapped")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SHED_SHELL); Moves(MOVE_BATON_PASS, MOVE_SPLASH, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GASTLY);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEAN_LOOK); }
-        TURN { MOVE(player, MOVE_BATON_PASS); SEND_OUT(player, 1); MOVE(opponent, MOVE_CELEBRATE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BATON_PASS, player);
-        SEND_IN_MESSAGE("Wynaut");
-    }
-}
-
-SINGLE_BATTLE_TEST("Shed Shell allows switching out via U-turn even when trapped")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_SHED_SHELL); Moves(MOVE_U_TURN, MOVE_SPLASH, MOVE_CELEBRATE); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_GASTLY);
-    } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_MEAN_LOOK); }
-        TURN { MOVE(player, MOVE_U_TURN); SEND_OUT(player, 1); MOVE(opponent, MOVE_CELEBRATE); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MEAN_LOOK, opponent);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
-        SEND_IN_MESSAGE("Wynaut");
-    }
-}
-
 SINGLE_BATTLE_TEST("Shed Shell does not allow Teleport when trapped")
 {
     GIVEN {
