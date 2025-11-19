@@ -122,4 +122,57 @@ DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities")
     }
 }
 
+DOUBLE_BATTLE_TEST("Revive does not reset abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN {  MOVE(opponentRight, MOVE_WORRY_SEED, target: playerLeft); MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); MOVE(opponentRight, MOVE_SPORE, target: playerLeft);}
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_INSOMNIA);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death status condition")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_SLEEP); HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
+        TURN { USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); }
+    } THEN {
+        EXPECT_EQ(opponentRight->status1, 0);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Revive does not grant a mon its pre-death stat change")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT) { HP(1); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerRight, MOVE_SWORDS_DANCE); MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
+        TURN { USE_ITEM(playerLeft, ITEM_REVIVE, partyIndex: 1); SKIP_TURN(playerRight); }
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+    }
+}
+
+
+
 TO_DO_BATTLE_TEST("Revive won't restore a battler's HP if it hasn't fainted")
