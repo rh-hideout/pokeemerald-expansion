@@ -99,4 +99,27 @@ DOUBLE_BATTLE_TEST("Revive works for a partner in a double battle")
     }
 }
 
+DOUBLE_BATTLE_TEST("Revive can trigger switch-in abilities")
+{
+    GIVEN {
+        PLAYER(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); HP(1); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft); }
+        TURN { USE_ITEM(playerRight, ITEM_REVIVE, partyIndex: 0); SKIP_TURN(playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+        ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    } THEN {
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 2);
+    }
+}
+
 TO_DO_BATTLE_TEST("Revive won't restore a battler's HP if it hasn't fainted")
