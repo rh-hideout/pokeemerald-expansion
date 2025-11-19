@@ -2474,7 +2474,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapFrame =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PageSwap
 };
 
@@ -2485,8 +2484,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapButton =
     .oam = &sOam_32x16,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
@@ -2496,8 +2493,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_BackButton =
@@ -2507,8 +2502,6 @@ static const struct SpriteTemplate sSpriteTemplate_BackButton =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_OkButton =
@@ -2518,8 +2511,6 @@ static const struct SpriteTemplate sSpriteTemplate_OkButton =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Cursor =
@@ -2529,7 +2520,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .oam = &sOam_16x16,
     .anims = sAnims_Cursor,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor
 };
 
@@ -2540,7 +2530,6 @@ static const struct SpriteTemplate sSpriteTemplate_InputArrow =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_InputArrow
 };
 
@@ -2551,7 +2540,6 @@ static const struct SpriteTemplate sSpriteTemplate_Underscore =
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Underscore
 };
 
@@ -2562,8 +2550,6 @@ static const struct SpriteTemplate sSpriteTemplate_PCIcon =
     .oam = &sOam_8x8,
     .anims = sAnims_PCIcon,
     .images = sImageTable_PCIcon,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const u8 *const sNamingScreenKeyboardText[KBPAGE_COUNT][KBROW_COUNT] =

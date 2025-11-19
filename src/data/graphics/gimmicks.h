@@ -66,7 +66,6 @@ static const struct SpriteTemplate sSpriteTemplate_GimmickTrigger =
     .oam = &sOamData_GimmickTrigger,
     .anims = sSpriteAnimTable_GimmickTrigger,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCb_GimmickTrigger,
 };
 
@@ -153,9 +152,7 @@ static const struct SpriteTemplate sSpriteTemplate_BattlerIndicators[] =
         .tileTag = BATTLER_INDICATOR_TAG,   // updated dynamically
         .paletteTag = TAG_TERA_INDICATOR_PAL,   // updated dynamically
         .oam = &sOamData_GimmickIndicator,
-        .anims = gDummySpriteAnimTable,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCb_GimmickIndicator,
     },
     [1] =
@@ -163,9 +160,7 @@ static const struct SpriteTemplate sSpriteTemplate_BattlerIndicators[] =
         .tileTag = BATTLER_INDICATOR_TAG + 1,   // updated dynamically
         .paletteTag = TAG_TERA_INDICATOR_PAL,   // updated dynamically
         .oam = &sOamData_GimmickIndicator,
-        .anims = gDummySpriteAnimTable,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCb_GimmickIndicator,
     },
     [2] =
@@ -173,9 +168,7 @@ static const struct SpriteTemplate sSpriteTemplate_BattlerIndicators[] =
         .tileTag = BATTLER_INDICATOR_TAG + 2,   // updated dynamically
         .paletteTag = TAG_TERA_INDICATOR_PAL,   // updated dynamically
         .oam = &sOamData_GimmickIndicator,
-        .anims = gDummySpriteAnimTable,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCb_GimmickIndicator,
     },
     [3] =
@@ -183,9 +176,7 @@ static const struct SpriteTemplate sSpriteTemplate_BattlerIndicators[] =
         .tileTag = BATTLER_INDICATOR_TAG + 3,   // updated dynamically
         .paletteTag = TAG_TERA_INDICATOR_PAL,   // updated dynamically
         .oam = &sOamData_GimmickIndicator,
-        .anims = gDummySpriteAnimTable,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCb_GimmickIndicator,
     },
 };

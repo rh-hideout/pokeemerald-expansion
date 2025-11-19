@@ -306,8 +306,6 @@ static const struct SpriteTemplate sWirelessStatusIndicatorSpriteTemplate = {
     .oam = &sWirelessStatusIndicatorOamData,
     .anims = sWirelessStatusIndicatorAnims,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 void RfuRecvQueue_Reset(struct RfuRecvQueue *queue)

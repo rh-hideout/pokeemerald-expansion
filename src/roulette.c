@@ -2599,7 +2599,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .oam = &sOam_GridHeader,
         .anims = sAnim_WynautHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2608,7 +2607,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .oam = &sOam_GridHeader,
         .anims = sAnim_AzurillHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2617,7 +2615,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .oam = &sOam_GridHeader,
         .anims = sAnim_SkittyHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2626,7 +2623,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .oam = &sOam_GridHeader,
         .anims = sAnim_MakuhitaHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2639,7 +2635,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .oam = &sOam_GridHeader,
         .anims = sAnim_OrangeHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2648,7 +2643,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .oam = &sOam_GridHeader,
         .anims = sAnim_GreenHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2657,7 +2651,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .oam = &sOam_GridHeader,
         .anims = sAnim_PurpleHeader,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2670,7 +2663,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Wynaut,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2679,7 +2671,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Azurill,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2688,7 +2679,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Skitty,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2697,7 +2687,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Makuhita,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2712,7 +2701,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeWynaut,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2721,7 +2709,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenAzurill,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2730,7 +2717,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleSkitty,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2739,7 +2725,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeMakuhita,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2748,7 +2733,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenWynaut,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2757,7 +2741,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleAzurill,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2766,7 +2749,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeSkitty,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2775,7 +2757,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenMakuhita,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2784,7 +2765,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleWynaut,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2793,7 +2773,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeAzurill,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2802,7 +2781,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenSkitty,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2811,7 +2789,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleMakuhita,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_WheelIcon
     }
 };
@@ -2941,10 +2918,7 @@ static const struct SpriteTemplate sSpriteTemplate_Credit =
     .tileTag = GFXTAG_CREDIT,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Credit,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_CreditDigit =
@@ -2954,8 +2928,6 @@ static const struct SpriteTemplate sSpriteTemplate_CreditDigit =
     .oam = &sOam_CreditDigit,
     .anims = sAnims_CreditDigit,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Multiplier =
@@ -2965,7 +2937,6 @@ static const struct SpriteTemplate sSpriteTemplate_Multiplier =
     .oam = &sOam_Multiplier,
     .anims = sAnims_Multiplier,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_GridSquare
 };
 
@@ -2976,8 +2947,6 @@ static const struct SpriteTemplate sSpriteTemplate_BallCounter =
     .oam = &sOam_BallCounter,
     .anims = sAnims_BallCounter,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 // NOTE: This cursor is only used to identify the winning square on the grid
@@ -2986,10 +2955,7 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .tileTag = GFXTAG_CURSOR,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_GridHeader,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_Ball =
@@ -3097,8 +3063,6 @@ static const struct SpriteTemplate sSpriteTemplate_Ball =
     .oam = &sOam_Ball,
     .anims = sAnims_Ball,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_WheelCenter =
@@ -3123,9 +3087,7 @@ static const struct SpriteTemplate sSpriteTemplate_WheelCenter =
     .tileTag = GFXTAG_WHEEL_CENTER,
     .paletteTag = PALTAG_BALL,
     .oam = &sOam_WheelCenter,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_WheelCenter
 };
 
@@ -3227,8 +3189,6 @@ static const struct SpriteTemplate sSpriteTemplate_Shroomish =
     .oam = &sOam_Shroomish,
     .anims = sAnims_Shroomish,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Taillow =
@@ -3238,7 +3198,6 @@ static const struct SpriteTemplate sSpriteTemplate_Taillow =
     .oam = &sOam_Taillow,
     .anims = sAnims_Taillow,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Taillow
 };
 
@@ -3344,8 +3303,6 @@ static const struct SpriteTemplate sSpriteTemplate_ShroomishShadow[] =
         .oam = &sOam_ShroomishBallShadow,
         .anims = sAnims_ShroomishBallShadow,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     },
     // Shroomish's Shadow
     {
@@ -3354,7 +3311,6 @@ static const struct SpriteTemplate sSpriteTemplate_ShroomishShadow[] =
         .oam = &sOam_ShroomishShadow,
         .anims = sAnims_UnstickMonShadow,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_Shroomish
     }
 };

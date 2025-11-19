@@ -221,7 +221,6 @@ const struct SpriteTemplate sSpriteTemplate_TypeIcons1 =
     .oam = &sOamData_TypeIcons,
     .anims = sSpriteAnimTable_TypeIcons,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TypeIcon
 };
 
@@ -232,7 +231,6 @@ const struct SpriteTemplate sSpriteTemplate_TypeIcons2 =
     .oam = &sOamData_TypeIcons,
     .anims = sSpriteAnimTable_TypeIcons,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TypeIcon
 };
 

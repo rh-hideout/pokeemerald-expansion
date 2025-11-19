@@ -170,8 +170,6 @@ static const struct SpriteTemplate sSpriteTemplate_Egg =
     .oam = &sOamData_Egg,
     .anims = sSpriteAnimTable_Egg,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_EggShard =
@@ -230,7 +228,6 @@ static const struct SpriteTemplate sSpriteTemplate_EggShard =
     .oam = &sOamData_EggShard,
     .anims = sSpriteAnimTable_EggShard,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_EggShard
 };
 

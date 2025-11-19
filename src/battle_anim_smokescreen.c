@@ -88,7 +88,6 @@ static const struct SpriteTemplate sSmokescreenImpactSpriteTemplate =
     .oam = &sOamData_SmokescreenImpact,
     .anims = sAnims_SmokescreenImpact,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SmokescreenImpact
 };
 

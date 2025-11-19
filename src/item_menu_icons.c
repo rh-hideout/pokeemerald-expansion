@@ -153,7 +153,6 @@ static const struct SpriteTemplate sBagSpriteTemplate =
     .anims = sBagSpriteAnimTable,
     .images = NULL,
     .affineAnims = sBagAffineAnimCmds,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sRotatingBallOamData =
@@ -279,8 +278,6 @@ static const struct SpriteTemplate sBerryPicSpriteTemplate =
     .oam = &sBerryPicOamData,
     .anims = sBerryPicSpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const union AffineAnimCmd sSpriteAffineAnim_BerryPicRotation1[] =
@@ -319,7 +316,6 @@ static const struct SpriteTemplate sBerryPicRotatingSpriteTemplate =
     .anims = sBerryPicSpriteAnimTable,
     .images = NULL,
     .affineAnims = sBerryPicRotatingAnimCmds,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct TilesPal sBerryPicTable[] =
@@ -439,8 +435,6 @@ static const struct SpriteTemplate sBerryCheckCircleSpriteTemplate =
     .oam = &sBerryCheckCircleOamData,
     .anims = sBerryCheckCircleSpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // code

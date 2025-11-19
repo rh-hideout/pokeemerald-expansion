@@ -353,8 +353,6 @@ static const struct SpriteTemplate sSpriteTemplate_UpDown =
     .oam = &sOam_UpDown,
     .anims = sAnims_UpDown,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOam_Condition =
@@ -403,7 +401,6 @@ static const struct SpriteTemplate sSpriteTemplate_Condition =
     .oam = &sOam_Condition,
     .anims = sAnims_Condition,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Condition,
 };
 

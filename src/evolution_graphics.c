@@ -88,7 +88,6 @@ static const struct SpriteTemplate sEvoSparkleSpriteTemplate =
     .oam = &sOamData_EvoSparkle,
     .anims = sSpriteAnimTable_EvoSparkle,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Sparkle_Dummy
 };
 

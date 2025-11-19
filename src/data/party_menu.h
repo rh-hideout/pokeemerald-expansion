@@ -859,8 +859,6 @@ static const struct SpriteTemplate sSpriteTemplate_HeldItem =
     .oam = &sOamData_HeldItem,
     .anims = sSpriteAnimTable_HeldItem,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_MenuPokeball =
@@ -916,8 +914,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuPokeball =
     .oam = &sOamData_MenuPokeball,
     .anims = sSpriteAnimTable_MenuPokeball,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_MenuPokeballSmall =
@@ -997,8 +993,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuPokeballSmall =
     .oam = &sOamData_MenuPokeballSmall,
     .anims = sSpriteAnimTable_MenuPokeballSmall,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StatusCondition =
@@ -1095,8 +1089,6 @@ const struct SpriteTemplate gSpriteTemplate_StatusIcons =
     .oam = &sOamData_StatusCondition,
     .anims = sSpriteTemplate_StatusCondition,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 *const sUnused_StatStrings[] =

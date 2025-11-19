@@ -253,7 +253,6 @@ static const struct SpriteTemplate sSpriteTemplate_Sparkle =
     .oam = &sOamData_Sparkle,
     .anims = sAnims_Sparkle,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Sparkle,
 };
 static const u8 sSparkleCoords[][2] =
@@ -318,7 +317,6 @@ static const struct SpriteTemplate sSpriteTemplate_Volbeat =
     .oam = &sOamData_Volbeat,
     .anims = sAnims_Volbeat,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Volbeat,
 };
 static const struct OamData sOamData_Torchic =
@@ -378,7 +376,6 @@ static const struct SpriteTemplate sSpriteTemplate_Torchic =
     .oam = &sOamData_Torchic,
     .anims = sAnims_Torchic,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Torchic,
 };
 static const struct OamData sOamData_Manectric =
@@ -416,7 +413,6 @@ static const struct SpriteTemplate sSpriteTemplate_Manectric =
     .oam = &sOamData_Manectric,
     .anims = sAnims_Manectric,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Manectric,
 };
 static const struct CompressedSpriteSheet sSpriteSheet_Lightning[] =
@@ -476,7 +472,6 @@ static const struct SpriteTemplate sSpriteTemplate_Lightning =
     .oam = &sOamData_Lightning,
     .anims = sAnims_Lightning,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Lightning,
 };
 // x coord, anim number, speed
@@ -556,7 +551,6 @@ static const struct SpriteTemplate sSpriteTemplate_Bubbles =
     .oam = &sOamData_Bubbles,
     .anims = sAnims_Bubbles,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_KyogreBubbles,
 };
 static const struct OamData sOamData_WaterDrop =
@@ -615,7 +609,6 @@ static const struct SpriteTemplate sSpriteTemplate_WaterDrop =
     .oam = &sOamData_WaterDrop,
     .anims = sAnims_WaterDrop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_WaterDrop,
 };
 static const union AnimCmd sAnim_PlayerBicycle_Fast[] =
@@ -907,7 +900,6 @@ static const struct SpriteTemplate sSpriteTemplate_PresentsLetter =
     .oam = &sOamData_PresentsLetter,
     .anims = sAnims_PresentsLetter,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_LogoLetter,
 };
 static const struct SpriteTemplate sSpriteTemplate_GameFreakLogo =
@@ -964,7 +956,6 @@ static const struct SpriteTemplate sSpriteTemplate_FlygonSilhouette =
     .oam = &sOamData_FlygonSilhouette,
     .anims = sAnims_FlygonSilhouette,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_FlygonSilhouette,
 };
 static const struct CompressedSpriteSheet sSpriteSheet_WaterDropsAndLogo[] =
@@ -1016,7 +1007,6 @@ static const struct SpriteTemplate sSpriteTemplate_RayquazaOrb =
     .oam = &sOamData_RayquazaOrb,
     .anims = sAnims_RayquazaOrb,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_RayquazaOrb,
 };
 static const struct CompressedSpriteSheet sSpriteSheet_RayquazaOrb[] =

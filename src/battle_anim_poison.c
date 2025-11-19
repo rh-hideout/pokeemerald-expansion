@@ -37,7 +37,6 @@ const struct SpriteTemplate gToxicBubbleSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_ToxicBubble,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSpriteOnMonPos,
 };
 
@@ -272,7 +271,6 @@ const struct SpriteTemplate gSuckerPunchSpriteTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gSuckerPunchAnim,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSuckerPunch,
 };
 
@@ -283,7 +281,6 @@ const struct SpriteTemplate gGunkShoParticlesSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gGunkShotParticlesAnims,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimGunkShotParticles,
 };
 
@@ -292,7 +289,6 @@ const struct SpriteTemplate gGunkShotImpactSpriteTemplate =
     .tileTag = ANIM_TAG_WATER_IMPACT,
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gSuckerPunchImpactAffineAnim,
     .callback = AnimGunkShotImpact,
@@ -378,7 +374,6 @@ const struct SpriteTemplate gSyrupBombRedShellSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupCoat,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimAnimSyrupBomb,
 };
 
@@ -389,7 +384,6 @@ const struct SpriteTemplate gSyrupBombYellowShellSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupCoat,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimAnimSyrupBomb,
 };
 
@@ -400,7 +394,6 @@ const struct SpriteTemplate gSyrupBombRedShellBSpriteTemplate =
      .oam = &gOamData_AffineOff_ObjNormal_64x64,
      .anims = sAnims_SyrupStick,
      .images = NULL,
-     .affineAnims = gDummySpriteAffineAnimTable,
      .callback = AnimAnimSyrupBomb,
 };
 
@@ -411,7 +404,6 @@ const struct SpriteTemplate gSyrupBombYellowShellBSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupStick,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimAnimSyrupBomb,
 };
 

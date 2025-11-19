@@ -82,7 +82,6 @@ const struct SpriteTemplate gRainDropSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_RainDrop,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRainDrop,
 };
 
@@ -184,7 +183,6 @@ const struct SpriteTemplate gHydroPumpOrbSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gAnims_WaterMudOrb,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 
@@ -195,7 +193,6 @@ const struct SpriteTemplate gWaterPledgeOrbSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gAnims_WaterMudOrb,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlyUpTarget,
 };
 
@@ -206,7 +203,6 @@ const struct SpriteTemplate gMudShotOrbSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gAnims_WaterMudOrb,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 
@@ -215,9 +211,7 @@ const struct SpriteTemplate gSignalBeamRedOrbSpriteTemplate =
     .tileTag = ANIM_TAG_GLOWY_RED_ORB,
     .paletteTag = ANIM_TAG_GLOWY_RED_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 
@@ -226,9 +220,7 @@ const struct SpriteTemplate gSignalBeamGreenOrbSpriteTemplate =
     .tileTag = ANIM_TAG_GLOWY_GREEN_ORB,
     .paletteTag = ANIM_TAG_GLOWY_GREEN_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 
@@ -252,7 +244,6 @@ const struct SpriteTemplate gFlamethrowerFlameSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FlamethrowerFlame,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 
@@ -263,7 +254,6 @@ const struct SpriteTemplate gFirePledgeSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FlamethrowerFlame,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlyUpTarget,
 };
 
@@ -272,7 +262,6 @@ const struct SpriteTemplate gPsywaveRingSpriteTemplate =
     .tileTag = ANIM_TAG_BLUE_RING,
     .paletteTag = ANIM_TAG_BLUE_RING,
     .oam = &gOamData_AffineDouble_ObjNormal_16x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gGrowingRingAffineAnimTable,
     .callback = AnimToTargetInSinWave,
@@ -353,7 +342,6 @@ const struct SpriteTemplate gWaterGunProjectileSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gAnims_WaterBubble,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimThrowProjectile,
 };
 
@@ -375,7 +363,6 @@ const struct SpriteTemplate gSmallBubblePairSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_SmallBubblePair,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSmallBubblePair,
 };
 
@@ -384,9 +371,7 @@ const struct SpriteTemplate gSmallDriftingBubblesSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_BUBBLES,
     .paletteTag = ANIM_TAG_SMALL_BUBBLES,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSmallDriftingBubbles,
 };
 
@@ -396,9 +381,7 @@ const struct SpriteTemplate gSmallWaterOrbSpriteTemplate =
     .tileTag = ANIM_TAG_GLOWY_BLUE_ORB,
     .paletteTag = ANIM_TAG_GLOWY_BLUE_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimSmallWaterOrb,
 };
 
@@ -470,7 +453,6 @@ const struct SpriteTemplate gWaterPulseBubbleSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = gAnims_WaterPulseBubble,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWaterPulseBubble,
 };
 
@@ -579,7 +561,6 @@ const struct SpriteTemplate gAquaTailHitSpriteTemplate =
     .tileTag = ANIM_TAG_IMPACT,
     .paletteTag = ANIM_TAG_WATER_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = gAquaTailHitAffineAnims,
     .callback = AnimAquaTail,
@@ -603,7 +584,6 @@ const struct SpriteTemplate gSparkBeamSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnimCmdTable_AnimatedSpark2,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimToTargetInSinWave,
 };
 

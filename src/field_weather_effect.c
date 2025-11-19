@@ -89,7 +89,6 @@ static const struct SpriteTemplate sCloudSpriteTemplate =
     .oam = &sCloudSpriteOamData,
     .anims = sCloudSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateCloudSprite,
 };
 
@@ -448,7 +447,6 @@ static const struct SpriteTemplate sRainSpriteTemplate =
     .oam = &sRainSpriteOamData,
     .anims = sRainSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateRainSprite,
 };
 
@@ -893,7 +891,6 @@ static const struct SpriteTemplate sSnowflakeSpriteTemplate =
     .oam = &sSnowflakeSpriteOamData,
     .anims = sSnowflakeAnimCmds,
     .images = sSnowflakeSpriteImages,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSnowflakeSprite,
 };
 
@@ -1659,7 +1656,6 @@ static const struct SpriteTemplate sAshSpriteTemplate =
     .oam = &sAshSpriteOamData,
     .anims = sAshSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateAshSprite,
 };
 
@@ -1877,7 +1873,6 @@ static const struct SpriteTemplate sFogDiagonalSpriteTemplate =
     .oam = &sFogDiagonalSpriteOamData,
     .anims = sFogDiagonalSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateFogDiagonalSprite,
 };
 
@@ -2129,7 +2124,6 @@ static const struct SpriteTemplate sSandstormSpriteTemplate =
     .oam = &sSandstormSpriteOamData,
     .anims = sSandstormSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateSandstormSprite,
 };
 
@@ -2387,7 +2381,6 @@ static const struct SpriteTemplate sBubbleSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
     .anims = sBubbleSpriteAnimCmds,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateBubbleSprite,
 };
 

@@ -192,7 +192,6 @@ static const struct SpriteTemplate sSpriteTemplate_DizzyEgg =
     .oam = &sOamData_DizzyEgg,
     .anims = sAnimCmdTable_DizzyEgg,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_DizzyWalking,
 };
 

@@ -51,8 +51,6 @@ const struct SpriteTemplate gItemIconSpriteTemplate =
     .oam = &sOamData_ItemIcon,
     .anims = sSpriteAnimTable_ItemIcon,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // code

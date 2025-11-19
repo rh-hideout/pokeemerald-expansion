@@ -54,7 +54,6 @@ const struct SpriteTemplate gFallingRockSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FlyingRock,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFallingRock,
 };
 
@@ -65,7 +64,6 @@ const struct SpriteTemplate gRockFragmentSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FlyingRock,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRockFragment,
 };
 
@@ -74,9 +72,7 @@ const struct SpriteTemplate gSwirlingDirtSpriteTemplate =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
 
@@ -111,7 +107,6 @@ const struct SpriteTemplate gFireSpinSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
 
@@ -120,9 +115,7 @@ const struct SpriteTemplate gFlyingSandCrescentSpriteTemplate =
     .tileTag = ANIM_TAG_FLYING_DIRT,
     .paletteTag = ANIM_TAG_FLYING_DIRT,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlyingSandCrescent,
 };
 
@@ -190,7 +183,6 @@ const struct SpriteTemplate gAncientPowerRockSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_BasicRock,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRaiseSprite,
 };
 
@@ -199,9 +191,7 @@ const struct SpriteTemplate gRolloutMudSpriteTemplate =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRolloutParticle,
 };
 
@@ -210,9 +200,7 @@ const struct SpriteTemplate gRolloutRockSpriteTemplate =
     .tileTag = ANIM_TAG_ROCKS,
     .paletteTag = ANIM_TAG_ROCKS,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRolloutParticle,
 };
 
@@ -223,7 +211,6 @@ const struct SpriteTemplate gRockTombRockSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_BasicRock,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRockTomb,
 };
 
@@ -296,7 +283,6 @@ const struct SpriteTemplate gStoneEdgeSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimParticleInVortex,
 };
 
@@ -305,9 +291,7 @@ const struct SpriteTemplate gStealthRockSpriteTemplate =
     .tileTag = ANIM_TAG_STEALTH_ROCK,
     .paletteTag = ANIM_TAG_STEALTH_ROCK,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimStealthRock,
 };
 
@@ -342,9 +326,7 @@ const struct SpriteTemplate gSeedFlareGreenWavesTemplate =
     .tileTag = ANIM_TAG_FLYING_DIRT,
     .paletteTag = ANIM_TAG_LEAF,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFlyingSandCrescent
 };
 
@@ -355,7 +337,6 @@ const struct SpriteTemplate gMakingItRainTemplate =
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gCoinAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFallingRock,
 };
 
@@ -364,9 +345,7 @@ const struct SpriteTemplate gFallingSeedSpriteTemplate =
     .tileTag = ANIM_TAG_SEED,
     .paletteTag = ANIM_TAG_SEED,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimFallingRock,
 };
 
@@ -1085,6 +1064,5 @@ const struct SpriteTemplate gRockPlumeSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FlyingRock,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDirtPlumeParticle,
 };

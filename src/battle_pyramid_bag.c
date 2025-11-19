@@ -367,7 +367,6 @@ static const struct SpriteTemplate sSpriteTemplate_PyramidBag =
     .anims = sAnims_PyramidBag,
     .images = NULL,
     .affineAnims = sAffineAnims_PyramidBag,
-    .callback = SpriteCallbackDummy
 };
 
 void InitBattlePyramidBagCursorPosition(void)

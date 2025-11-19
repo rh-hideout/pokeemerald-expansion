@@ -815,8 +815,6 @@ static const struct SpriteTemplate sSpriteTemplate_CrusherBase =
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_CrusherBase,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Impact =
@@ -826,7 +824,6 @@ static const struct SpriteTemplate sSpriteTemplate_Impact =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_Impact,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Impact
 };
 
@@ -837,8 +834,6 @@ static const struct SpriteTemplate sSpriteTemplate_Sparkle =
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_Sparkle,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Timer =
@@ -848,8 +843,6 @@ static const struct SpriteTemplate sSpriteTemplate_Timer =
     .oam = &gOamData_AffineOff_ObjNormal_8x16,
     .anims = sAnims_Timer,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PlayerBerry =
@@ -860,7 +853,6 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerBerry =
     .anims = sAnims_PlayerBerry,
     .images = NULL,
     .affineAnims = sAffineAnims_PlayerBerry,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct DigitObjUtilTemplate sDigitObjTemplates[] =

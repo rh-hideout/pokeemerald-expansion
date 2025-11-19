@@ -37,7 +37,6 @@ const struct SpriteTemplate gOutrageFlameSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_OutrageOverheatFire,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimOutrageFlame,
 };
 
@@ -149,7 +148,6 @@ const struct SpriteTemplate gDragonRageFirePlumeSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_DragonRageFirePlume,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDragonRageFirePlume,
 };
 
@@ -201,9 +199,7 @@ const struct SpriteTemplate gDragonDanceOrbSpriteTemplate =
     .tileTag = ANIM_TAG_HOLLOW_ORB,
     .paletteTag = ANIM_TAG_HOLLOW_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDragonDanceOrb,
 };
 
@@ -214,7 +210,6 @@ const struct SpriteTemplate gOverheatFlameSpriteTemplate =
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_OutrageOverheatFire,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimOverheatFlame,
 };
 
@@ -224,9 +219,7 @@ const struct SpriteTemplate gDracoMeteorRocksSpriteTemplate =
     .tileTag = ANIM_TAG_ROCKS,
     .paletteTag = ANIM_TAG_FAIRY_LOCK_CHAINS,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDracoMeteorRock,
 };
 
@@ -236,7 +229,6 @@ const struct SpriteTemplate gDracoMeteorTailSpriteTemplate =
     .tileTag = ANIM_TAG_WATER_GUN,
     .paletteTag = ANIM_TAG_WATER_GUN,
     .oam = &gOamData_AffineDouble_ObjBlend_16x16,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
     .affineAnims = sSpriteAffineAnimTable_HydroCannonBall,
     .callback = AnimDracoMeteorRock,
@@ -324,9 +316,7 @@ const struct SpriteTemplate gDragonPulseSpriteTemplate =
     .tileTag = ANIM_TAG_DRAGON_PULSE,
     .paletteTag = ANIM_TAG_DRAGON_PULSE,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
 

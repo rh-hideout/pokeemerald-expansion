@@ -155,8 +155,6 @@ static const struct SpriteTemplate sSpriteTemplate_FallingFossil =
     .oam = &sOamData_FallingFossil,
     .anims = sAnims_FallingFossil,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 const struct PulseBlendSettings gMirageTowerPulseBlendSettings = {
@@ -206,7 +204,6 @@ static const struct SpriteTemplate sSpriteTemplate_CeilingCrumbleSmall =
     .oam = &sOamData_CeilingCrumbleSmall,
     .anims = sAnims_CeilingCrumbleSmall,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CeilingCrumble
 };
 
@@ -245,7 +242,6 @@ static const struct SpriteTemplate sSpriteTemplate_CeilingCrumbleLarge =
     .oam = &sOamData_CeilingCrumbleLarge,
     .anims = sAnims_CeilingCrumbleLarge,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CeilingCrumble
 };
 

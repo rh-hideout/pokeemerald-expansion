@@ -327,8 +327,6 @@ static const struct SpriteTemplate sConstestMoveHeartSprite =
     .oam = &sHeartSpriteOamData,
     .anims = sHeartSpriteAnimationCommands,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct BgTemplate sMoveRelearnerMenuBackgroundTemplates[] =

@@ -809,8 +809,6 @@ static const struct SpriteTemplate sSpriteTemplate_KeyboardCursor =
     .oam = &sOam_KeyboardCursor,
     .anims = sAnims_KeyboardCursor,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_TextEntrySprite = {
@@ -824,9 +822,7 @@ static const struct SpriteTemplate sSpriteTemplate_TextEntryCursor =
     .tileTag = GFXTAG_TEXT_ENTRY_CURSOR,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_TextEntrySprite,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TextEntryCursor
 };
 
@@ -835,9 +831,7 @@ static const struct SpriteTemplate sSpriteTemplate_TextEntryArrow =
     .tileTag = GFXTAG_TEXT_ENTRY_ARROW,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_TextEntrySprite,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TextEntryArrow
 };
 
@@ -885,10 +879,7 @@ static const struct SpriteTemplate sSpriteTemplate_RButtonIcon =
     .tileTag = GFXTAG_RBUTTON_ICON,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_RButtonIcon,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSpriteTemplate_RButtonLabels =
@@ -898,8 +889,6 @@ static const struct SpriteTemplate sSpriteTemplate_RButtonLabels =
     .oam = &sOam_RButtonLabel,
     .anims = sAnims_RButtonLabels,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 void EnterUnionRoomChat(void)

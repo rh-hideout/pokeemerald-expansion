@@ -158,7 +158,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollArrowIndicator =
     .oam = &sOamData_ScrollArrowIndicator,
     .anims = sSpriteAnimTable_ScrollArrowIndicator,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_ScrollIndicatorArrow,
 };
 
@@ -277,7 +276,6 @@ static const struct SpriteTemplate sSpriteTemplate_RedArrowCursor =
     .oam = &sOamData_RedArrowCursor,
     .anims = sSpriteAnimTable_RedArrowCursor,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallback_RedArrowCursor,
 };
 

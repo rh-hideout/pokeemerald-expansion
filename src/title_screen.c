@@ -169,7 +169,6 @@ static const struct SpriteTemplate sVersionBannerLeftSpriteTemplate =
     .oam = &sVersionBannerLeftOamData,
     .anims = sVersionBannerLeftAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_VersionBannerLeft,
 };
 
@@ -180,7 +179,6 @@ static const struct SpriteTemplate sVersionBannerRightSpriteTemplate =
     .oam = &sVersionBannerRightOamData,
     .anims = sVersionBannerRightAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_VersionBannerRight,
 };
 
@@ -288,7 +286,6 @@ static const struct SpriteTemplate sStartCopyrightBannerSpriteTemplate =
     .oam = &sOamData_CopyrightBanner,
     .anims = sStartCopyrightBannerAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PressStartCopyrightBanner,
 };
 
@@ -346,7 +343,6 @@ static const struct SpriteTemplate sPokemonLogoShineSpriteTemplate =
     .oam = &sPokemonLogoShineOamData,
     .anims = sPokemonLogoShineAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PokemonLogoShine,
 };
 

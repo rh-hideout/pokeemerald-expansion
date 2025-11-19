@@ -167,10 +167,7 @@ const struct SpriteTemplate gDummySpriteTemplate =
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const AnimFunc sAnimFuncs[] =

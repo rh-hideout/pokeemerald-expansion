@@ -3853,7 +3853,6 @@ static void CreateDodrioSprite(struct DodrioGame_MonInfo *monInfo, u8 playerId, 
         .oam = &sOamData_Dodrio,
         .anims = sAnims_Dodrio,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_Dodrio,
     };
 
@@ -4028,7 +4027,6 @@ static void CreateStatusBarSprites(void)
             .oam = &sOamData_16x16_Priority0,
             .anims = sAnims_StatusBar,
             .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
             .callback = SpriteCB_Status,
         };
 
@@ -4183,8 +4181,6 @@ static void CreateBerrySprites(void)
         .oam = &sOamData_Berry,
         .anims = sAnims_Berry,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
     struct SpriteTemplate berryIcon =
     {
@@ -4193,8 +4189,6 @@ static void CreateBerrySprites(void)
         .oam = &sOamData_16x16_Priority0,
         .anims = sAnims_Berry,
         .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     // Create berry sprites that fall during gameplay
@@ -4317,7 +4311,6 @@ static void CreateCloudSprites(void)
             .oam = &sOamData_Cloud,
             .anims = sAnims_Cloud,
             .images = NULL,
-            .affineAnims = gDummySpriteAffineAnimTable,
             .callback = SpriteCB_Cloud,
         };
 

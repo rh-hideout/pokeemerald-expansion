@@ -209,7 +209,6 @@ static const struct SpriteTemplate sCryMeterNeedleSpriteTemplate =
     .oam = &sOamData_CryMeterNeedle,
     .anims = sSpriteAnimTable_CryMeterNeedle,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CryMeterNeedle
 };
 

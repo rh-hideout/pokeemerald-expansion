@@ -321,7 +321,6 @@ static const struct SpriteTemplate sSpriteTemplate_Hand =
     .oam = &sOam_Hand,
     .anims = sAnims_Hand,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SelectionHand
 };
 
@@ -332,7 +331,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeball =
     .oam = &sOam_Pokeball,
     .anims = sAnims_Pokeball,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Pokeball
 };
 

@@ -187,7 +187,6 @@ static const struct SpriteTemplate sSpriteTemplate_MinuteHand =
     .oam = &sOam_ClockHand,
     .anims = sAnims_MinuteHand,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_MinuteHand,
 };
 
@@ -198,7 +197,6 @@ static const struct SpriteTemplate sSpriteTemplate_HourHand =
     .oam = &sOam_ClockHand,
     .anims = sAnims_HourHand,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HourHand,
 };
 
@@ -239,7 +237,6 @@ static const struct SpriteTemplate sSpriteTemplate_PM =
     .oam = &sOam_PeriodIndicator,
     .anims = sAnims_PM,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PMIndicator
 };
 
@@ -250,7 +247,6 @@ static const struct SpriteTemplate sSpriteTemplate_AM =
     .oam = &sOam_PeriodIndicator,
     .anims = sAnims_AM,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_AMIndicator
 };
 

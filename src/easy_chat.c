@@ -962,9 +962,7 @@ static const struct SpriteTemplate sSpriteTemplate_TriangleCursor =
     .tileTag = PALTAG_TRIANGLE_CURSOR,
     .paletteTag = GFXTAG_TRIANGLE_CURSOR,
     .oam = &sOamData_TriangleCursor,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1026,7 +1024,6 @@ static const struct SpriteTemplate sSpriteTemplate_RectangleCursor =
     .oam = &sOamData_RectangleCursor,
     .anims = sAnims_RectangleCursor,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Cursor,
 };
 
@@ -1097,8 +1094,6 @@ static const struct SpriteTemplate sSpriteTemplate_ModeWindow =
     .oam = &sOamData_ModeWindow,
     .anims = sAnims_ModeWindow,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_ButtonWindow = {
@@ -1122,10 +1117,7 @@ static const struct SpriteTemplate sSpriteTemplate_ButtonWindow =
     .tileTag = GFXTAG_BUTTON_WINDOW,
     .paletteTag = PALTAG_MISC_UI,
     .oam = &sOamData_ButtonWindow,
-    .anims = gDummySpriteAnimTable,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sOamData_StartSelectButton = {
@@ -1183,8 +1175,6 @@ static const struct SpriteTemplate sSpriteTemplate_StartSelectButton =
     .oam = &sOamData_StartSelectButton,
     .anims = sAnims_TwoFrame,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
@@ -1194,8 +1184,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollIndicator =
     .oam = &sOamData_ScrollIndicator,
     .anims = sAnims_TwoFrame,
     .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u8 sFooterOptionXOffsets[NUM_FOOTER_TYPES][4] = {
