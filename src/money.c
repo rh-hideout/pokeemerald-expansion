@@ -50,7 +50,6 @@ static const struct SpriteTemplate sSpriteTemplate_MoneyLabel =
     .paletteTag = MONEY_LABEL_TAG,
     .oam = &sOamData_MoneyLabel,
     .anims = sSpriteAnimTable_MoneyLabel,
-    .images = NULL,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_MoneyLabel =

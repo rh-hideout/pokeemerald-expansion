@@ -243,7 +243,6 @@ static const struct SpriteTemplate sCameraSpriteTemplate = {
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .images = NULL,
     .callback = SpriteCB_CameraObject
 };
 

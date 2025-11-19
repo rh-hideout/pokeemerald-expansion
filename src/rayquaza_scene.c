@@ -318,7 +318,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_Groudon =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_64x64,
     .anims = sAnims_DuoFightPre_Groudon,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFightPre_GroudonShoulderKyogreDorsalFin[] =
@@ -338,7 +337,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_GroudonShoulder =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_32x32,
     .anims = sAnims_DuoFightPre_GroudonShoulderKyogreDorsalFin,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFightPre_GroudonClaw[] =
@@ -358,7 +356,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_GroudonClaw =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_64x32,
     .anims = sAnims_DuoFightPre_GroudonClaw,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFightPre_Kyogre_TopLeft[] =
@@ -444,7 +441,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_Kyogre =
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_32x16,
     .anims = sAnims_DuoFightPre_Kyogre,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFightPre_KyogrePectoralFin[] =
@@ -467,7 +463,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_KyogrePectoralFin
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_16x8,
     .anims = sAnims_DuoFightPre_KyogrePectoralFin,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_KyogreDorsalFin =
@@ -476,7 +471,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFightPre_KyogreDorsalFin =
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_32x32,
     .anims = sAnims_DuoFightPre_GroudonShoulderKyogreDorsalFin,
-    .images = NULL,
 };
 
 static const struct ScanlineEffectParams sScanlineParams_DuoFight_Clouds =
@@ -557,7 +551,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_Groudon =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_64x64,
     .anims = sAnims_DuoFight_Groudon,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFight_GroudonShoulderKyogreDorsalFin[] =
@@ -582,7 +575,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_GroudonShoulder =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_32x32,
     .anims = sAnims_DuoFight_GroudonShoulderKyogreDorsalFin,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFight_GroudonClaw[] =
@@ -607,7 +599,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_GroudonClaw =
     .paletteTag = TAG_DUOFIGHT_GROUDON,
     .oam = &sOam_64x32,
     .anims = sAnims_DuoFight_GroudonClaw,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFight_Kyogre_TopLeft[] =
@@ -702,7 +693,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_Kyogre =
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_32x16,
     .anims = sAnims_DuoFight_Kyogre,
-    .images = NULL,
 };
 
 static const union AnimCmd sAnim_DuoFight_KyogrePectoralFin[] =
@@ -730,7 +720,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_KyogrePectoralFin =
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_16x8,
     .anims = sAnims_DuoFight_KyogrePectoralFin,
-    .images = NULL,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_DuoFight_KyogreDorsalFin =
@@ -744,7 +733,6 @@ static const struct SpriteTemplate sSpriteTemplate_DuoFight_KyogreDorsalFin =
     .paletteTag = TAG_DUOFIGHT_KYOGRE,
     .oam = &sOam_32x32,
     .anims = sAnims_DuoFight_GroudonShoulderKyogreDorsalFin,
-    .images = NULL,
 };
 
 static const struct BgTemplate sBgTemplates_TakesFlight[] =
@@ -818,7 +806,6 @@ static const struct SpriteTemplate sSpriteTemplate_TakesFlight_Smoke =
     .paletteTag = TAG_FLIGHT_SMOKE,
     .oam = &sOam_32x16,
     .anims = sAnims_TakesFlight_Smoke,
-    .images = NULL,
     .affineAnims = sAffineAnims_TakesFlight_Smoke,
     .callback = SpriteCB_TakesFlight_Smoke,
 };
@@ -922,7 +909,6 @@ static const struct SpriteTemplate sSpriteTemplate_Descends_Rayquaza =
     .paletteTag = TAG_DESCENDS_RAYQUAZA,
     .oam = &sOam_64x64,
     .anims = sAnims_Descends_Rayquaza,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Descends_RayquazaTail =
@@ -931,7 +917,6 @@ static const struct SpriteTemplate sSpriteTemplate_Descends_RayquazaTail =
     .paletteTag = TAG_DESCENDS_RAYQUAZA,
     .oam = &sOam_16x32,
     .anims = sAnims_Descends_RayquazaTail,
-    .images = NULL,
 };
 
 static const struct BgTemplate sBgTemplates_Charges[] =
@@ -1167,7 +1152,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_Groudon =
     .paletteTag = TAG_CHASE_GROUDON,
     .oam = &sOam_64x64,
     .anims = sAnims_ChasesAway_Groudon,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ChasesAway_GroudonTail =
@@ -1176,7 +1160,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_GroudonTail =
     .paletteTag = TAG_CHASE_GROUDON,
     .oam = &sOam_16x16,
     .anims = sAnims_ChasesAway_GroudonTail,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ChasesAway_Kyogre =
@@ -1185,7 +1168,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_Kyogre =
     .paletteTag = TAG_CHASE_KYOGRE,
     .oam = &sOam_32x32,
     .anims = sAnims_ChasesAway_Kyogre,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ChasesAway_Rayquaza =
@@ -1194,7 +1176,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_Rayquaza =
     .paletteTag = TAG_CHASE_RAYQUAZA,
     .oam = &sOam_64x64,
     .anims = sAnims_ChasesAway_Rayquaza,
-    .images = NULL,
     .callback = SpriteCB_ChasesAway_Rayquaza,
 };
 
@@ -1204,7 +1185,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_RayquazaTail =
     .paletteTag = TAG_CHASE_RAYQUAZA,
     .oam = &sOam_32x32,
     .anims = sAnims_ChasesAway_RayquazaTail,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_ChasesAway_KyogreSplash =
@@ -1213,7 +1193,6 @@ static const struct SpriteTemplate sSpriteTemplate_ChasesAway_KyogreSplash =
     .paletteTag = TAG_CHASE_SPLASH,
     .oam = &sOam_32x8,
     .anims = sAnims_ChasesAway_KyogreSplash,
-    .images = NULL,
 };
 
 static const struct BgTemplate sBgTemplates_ChasesAway[] =

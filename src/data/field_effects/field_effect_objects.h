@@ -950,7 +950,6 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_ReflectionDistortion = {
     .tileTag = 0x0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .images = NULL,
     .affineAnims = sAffineAnims_ReflectionDistortion,
 };
 

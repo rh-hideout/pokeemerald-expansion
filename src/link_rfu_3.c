@@ -305,7 +305,6 @@ static const struct SpriteTemplate sWirelessStatusIndicatorSpriteTemplate = {
     .paletteTag = TAG_PAL_STATUS_INDICATOR,
     .oam = &sWirelessStatusIndicatorOamData,
     .anims = sWirelessStatusIndicatorAnims,
-    .images = NULL,
 };
 
 void RfuRecvQueue_Reset(struct RfuRecvQueue *queue)

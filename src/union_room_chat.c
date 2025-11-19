@@ -808,7 +808,6 @@ static const struct SpriteTemplate sSpriteTemplate_KeyboardCursor =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_KeyboardCursor,
     .anims = sAnims_KeyboardCursor,
-    .images = NULL,
 };
 
 static const struct OamData sOam_TextEntrySprite = {
@@ -822,7 +821,6 @@ static const struct SpriteTemplate sSpriteTemplate_TextEntryCursor =
     .tileTag = GFXTAG_TEXT_ENTRY_CURSOR,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_TextEntrySprite,
-    .images = NULL,
     .callback = SpriteCB_TextEntryCursor
 };
 
@@ -831,7 +829,6 @@ static const struct SpriteTemplate sSpriteTemplate_TextEntryArrow =
     .tileTag = GFXTAG_TEXT_ENTRY_ARROW,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_TextEntrySprite,
-    .images = NULL,
     .callback = SpriteCB_TextEntryArrow
 };
 
@@ -879,7 +876,6 @@ static const struct SpriteTemplate sSpriteTemplate_RButtonIcon =
     .tileTag = GFXTAG_RBUTTON_ICON,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_RButtonIcon,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_RButtonLabels =
@@ -888,7 +884,6 @@ static const struct SpriteTemplate sSpriteTemplate_RButtonLabels =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_RButtonLabel,
     .anims = sAnims_RButtonLabels,
-    .images = NULL,
 };
 
 void EnterUnionRoomChat(void)

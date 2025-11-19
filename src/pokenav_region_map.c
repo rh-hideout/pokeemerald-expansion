@@ -170,7 +170,6 @@ static const struct SpriteTemplate sCityZoomTextSpriteTemplate =
     .tileTag = GFXTAG_CITY_ZOOM,
     .paletteTag = PALTAG_CITY_ZOOM,
     .oam = &sCityZoomTextSprite_OamData,
-    .images = NULL,
     .callback = SpriteCB_CityZoomText,
 };
 

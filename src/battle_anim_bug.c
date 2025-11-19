@@ -43,7 +43,6 @@ const struct SpriteTemplate gMegahornHornSpriteTemplate =
     .tileTag = ANIM_TAG_HORN_HIT_2,
     .paletteTag = ANIM_TAG_HORN_HIT_2,
     .oam = &gOamData_AffineDouble_ObjNormal_32x16,
-    .images = NULL,
     .affineAnims = sAffineAnims_MegahornHorn,
     .callback = AnimMegahornHorn,
 };
@@ -78,7 +77,6 @@ const struct SpriteTemplate gLeechLifeNeedleSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .images = NULL,
     .affineAnims = sAffineAnims_LeechLifeNeedle,
     .callback = AnimLeechLifeNeedle,
 };
@@ -88,7 +86,6 @@ const struct SpriteTemplate gWebThreadSpriteTemplate =
     .tileTag = ANIM_TAG_WEB_THREAD,
     .paletteTag = ANIM_TAG_WEB_THREAD,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .images = NULL,
     .callback = AnimTranslateWebThread,
 };
 
@@ -97,7 +94,6 @@ const struct SpriteTemplate gStringWrapSpriteTemplate =
     .tileTag = ANIM_TAG_STRING,
     .paletteTag = ANIM_TAG_STRING,
     .oam = &gOamData_AffineOff_ObjNormal_64x32,
-    .images = NULL,
     .callback = AnimStringWrap,
 };
 
@@ -118,7 +114,6 @@ const struct SpriteTemplate gSpiderWebSpriteTemplate =
     .tileTag = ANIM_TAG_SPIDER_WEB,
     .paletteTag = ANIM_TAG_SPIDER_WEB,
     .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .images = NULL,
     .affineAnims = sAffineAnims_SpiderWeb,
     .callback = AnimSpiderWeb,
 };
@@ -128,7 +123,6 @@ const struct SpriteTemplate gLinearStingerSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .images = NULL,
     .callback = AnimTranslateStinger,
 };
 
@@ -137,7 +131,6 @@ const struct SpriteTemplate gPinMissileSpriteTemplate =
     .tileTag = ANIM_TAG_NEEDLE,
     .paletteTag = ANIM_TAG_NEEDLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .images = NULL,
     .callback = AnimMissileArc,
 };
 
@@ -146,7 +139,6 @@ const struct SpriteTemplate gIcicleSpearSpriteTemplate =
     .tileTag = ANIM_TAG_ICICLE_SPEAR,
     .paletteTag = ANIM_TAG_ICICLE_SPEAR,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .images = NULL,
     .callback = AnimMissileArc,
 };
 
@@ -171,7 +163,6 @@ const struct SpriteTemplate gTailGlowOrbSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .images = NULL,
     .affineAnims = sAffineAnims_TailGlowOrb,
     .callback = AnimTailGlowOrb,
 };

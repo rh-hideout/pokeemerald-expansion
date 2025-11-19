@@ -1213,7 +1213,6 @@ static const struct SpriteTemplate sSpriteTemplate_RibbonIconBig =
     .tileTag = GFXTAG_RIBBON_ICONS_BIG,
     .paletteTag = PALTAG_RIBBON_ICONS_1,
     .oam = &sOamData_RibbonIconBig,
-    .images = NULL,
     .affineAnims = sAffineAnims_RibbonIconBig,
 };
 

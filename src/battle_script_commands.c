@@ -907,7 +907,6 @@ static const struct SpriteTemplate sSpriteTemplate_MonIconOnLvlUpBanner =
     .tileTag = TAG_LVLUP_BANNER_MON_ICON,
     .paletteTag = TAG_LVLUP_BANNER_MON_ICON,
     .oam = &sOamData_MonIconOnLvlUpBanner,
-    .images = NULL,
     .callback = SpriteCB_MonIconOnLvlUpBanner
 };
 

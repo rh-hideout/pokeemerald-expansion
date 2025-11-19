@@ -214,7 +214,6 @@ static const struct SpriteTemplate sSpriteTemplate_ResultsTextWindow =
     .tileTag = TAG_TEXT_WINDOW_BASE,
     .paletteTag = TAG_TEXT_WINDOW_BASE,
     .oam = &sOamData_ResultsTextWindow,
-    .images = NULL,
 };
 
 static const struct SpriteSheet sSpriteSheets_ResultsTextWindow[] =
@@ -257,7 +256,6 @@ static const struct SpriteTemplate sSpriteTemplate_Confetti =
     .tileTag = TAG_CONFETTI,
     .paletteTag = TAG_CONFETTI,
     .oam = &sOamData_Confetti,
-    .images = NULL,
     .callback = SpriteCB_Confetti
 };
 
@@ -380,7 +378,6 @@ static const struct SpriteTemplate sSpriteTemplate_WirelessIndicatorWindow =
     .tileTag = TAG_WIRELESS_INDICATOR_WINDOW,
     .paletteTag = 0,
     .oam = &sOamData_WirelessIndicatorWindow,
-    .images = NULL,
 };
 
 static const struct SpriteSheet sSpriteSheet_WirelessIndicatorWindow =

@@ -2473,7 +2473,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapFrame =
     .paletteTag = PALTAG_PAGE_SWAP,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
     .callback = SpriteCB_PageSwap
 };
 
@@ -2483,7 +2482,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapButton =
     .paletteTag = PALTAG_PAGE_SWAP_UPPER,
     .oam = &sOam_32x16,
     .anims = sAnims_Loop,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
@@ -2492,7 +2490,6 @@ static const struct SpriteTemplate sSpriteTemplate_PageSwapText =
     .paletteTag = PALTAG_PAGE_SWAP,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_BackButton =
@@ -2501,7 +2498,6 @@ static const struct SpriteTemplate sSpriteTemplate_BackButton =
     .paletteTag = PALTAG_BACK_BUTTON,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_OkButton =
@@ -2510,7 +2506,6 @@ static const struct SpriteTemplate sSpriteTemplate_OkButton =
     .paletteTag = PALTAG_OK_BUTTON,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Cursor =
@@ -2519,7 +2514,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOam_16x16,
     .anims = sAnims_Cursor,
-    .images = NULL,
     .callback = SpriteCB_Cursor
 };
 
@@ -2529,7 +2523,6 @@ static const struct SpriteTemplate sSpriteTemplate_InputArrow =
     .paletteTag = PALTAG_PAGE_SWAP_OTHERS,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
     .callback = SpriteCB_InputArrow
 };
 
@@ -2539,7 +2532,6 @@ static const struct SpriteTemplate sSpriteTemplate_Underscore =
     .paletteTag = PALTAG_PAGE_SWAP_OTHERS,
     .oam = &sOam_8x8,
     .anims = sAnims_Loop,
-    .images = NULL,
     .callback = SpriteCB_Underscore
 };
 

@@ -197,14 +197,12 @@ static const struct SpriteTemplate sSpriteTemplates_CableCar[] =
         .tileTag = TAG_CABLE_CAR,
         .paletteTag = TAG_CABLE_CAR,
         .oam = &sOam_CableCar,
-        .images = NULL,
         .callback = SpriteCB_CableCar,
     },
     {
         .tileTag = TAG_DOOR,
         .paletteTag = TAG_CABLE_CAR,
         .oam = &sOam_CableCarDoor,
-        .images = NULL,
         .callback = SpriteCB_CableCar,
     },
 };
@@ -214,7 +212,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cable =
     .tileTag = TAG_CABLE,
     .paletteTag = TAG_CABLE_CAR,
     .oam = &sOam_Cable,
-    .images = NULL,
     .callback = SpriteCB_Cable,
 };
 

@@ -38,7 +38,6 @@ const struct SpriteTemplate gEllipticalGustCenteredSpriteTemplate =
     .tileTag = ANIM_TAG_GUST,
     .paletteTag = ANIM_TAG_GUST,
     .oam = &gOamData_AffineOff_ObjNormal_32x64,
-    .images = NULL,
     .callback = AnimEllipticalGustCentered,
 };
 
@@ -47,7 +46,6 @@ const struct SpriteTemplate gEllipticalGustSpriteTemplate =
     .tileTag = ANIM_TAG_GUST,
     .paletteTag = ANIM_TAG_GUST,
     .oam = &gOamData_AffineOff_ObjNormal_32x64,
-    .images = NULL,
     .callback = AnimEllipticalGust,
 };
 
@@ -68,7 +66,6 @@ const struct SpriteTemplate gGustToTargetSpriteTemplate =
     .tileTag = ANIM_TAG_GUST,
     .paletteTag = ANIM_TAG_GUST,
     .oam = &gOamData_AffineNormal_ObjNormal_32x64,
-    .images = NULL,
     .affineAnims = sAffineAnims_GustToTarget,
     .callback = AnimGustToTarget,
 };
@@ -93,7 +90,6 @@ const struct SpriteTemplate gAirWaveCrescentSpriteTemplate =
     .paletteTag = ANIM_TAG_AIR_WAVE_2,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
     .anims = gAffineAnims_AirWaveCrescent,
-    .images = NULL,
     .callback = AnimAirWaveCrescent,
 };
 
@@ -134,7 +130,6 @@ const struct SpriteTemplate gFlyBallUpSpriteTemplate =
     .tileTag = ANIM_TAG_ROUND_SHADOW,
     .paletteTag = ANIM_TAG_ROUND_SHADOW,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .affineAnims = gAffineAnims_FlyBallUp,
     .callback = AnimFlyBallUp,
 };
@@ -144,7 +139,6 @@ const struct SpriteTemplate gFlyBallAttackSpriteTemplate =
     .tileTag = ANIM_TAG_ROUND_SHADOW,
     .paletteTag = ANIM_TAG_ROUND_SHADOW,
     .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-    .images = NULL,
     .affineAnims = gAffineAnims_FlyBallAttack,
     .callback = AnimFlyBallAttack,
 };
@@ -173,7 +167,6 @@ const struct SpriteTemplate gFallingFeatherSpriteTemplate =
     .paletteTag = ANIM_TAG_WHITE_FEATHER,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
     .anims = gAnims_FallingFeather,
-    .images = NULL,
     .callback = AnimFallingFeather,
 };
 
@@ -183,7 +176,6 @@ static const struct SpriteTemplate sUnusedBubbleThrowSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_BUBBLES,
     .paletteTag = ANIM_TAG_SMALL_BUBBLES,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .images = NULL,
     .callback = AnimUnusedBubbleThrow,
 };
 
@@ -208,7 +200,6 @@ const struct SpriteTemplate gWhirlwindLineSpriteTemplate =
     .paletteTag = ANIM_TAG_WHIRLWIND_LINES,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
     .anims = sAnims_WhirlwindLines,
-    .images = NULL,
     .callback = AnimWhirlwindLine,
 };
 
@@ -232,7 +223,6 @@ const struct SpriteTemplate gBounceBallShrinkSpriteTemplate =
     .tileTag = ANIM_TAG_ROUND_SHADOW,
     .paletteTag = ANIM_TAG_ROUND_SHADOW,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .affineAnims = sAffineAnims_BounceBallShrink,
     .callback = AnimBounceBallShrink,
 };
@@ -253,7 +243,6 @@ const struct SpriteTemplate gBounceBallLandSpriteTemplate =
     .tileTag = ANIM_TAG_ROUND_SHADOW,
     .paletteTag = ANIM_TAG_ROUND_SHADOW,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .affineAnims = gAffineAnims_BounceBallLand,
     .callback = AnimBounceBallLand,
 };
@@ -277,7 +266,6 @@ const struct SpriteTemplate gDiveBallSpriteTemplate =
     .tileTag = ANIM_TAG_ROUND_SHADOW,
     .paletteTag = ANIM_TAG_ROUND_SHADOW,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .affineAnims = sAffineAnims_DiveBall,
     .callback = AnimDiveBall,
 };
@@ -301,7 +289,6 @@ const struct SpriteTemplate gDiveWaterSplashSpriteTemplate =
     .tileTag = ANIM_TAG_SPLASH,
     .paletteTag = ANIM_TAG_SPLASH,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .callback = AnimDiveWaterSplash,
 };
 
@@ -310,7 +297,6 @@ const struct SpriteTemplate gSprayWaterDropletSpriteTemplate =
     .tileTag = ANIM_TAG_SWEAT_BEAD,
     .paletteTag = ANIM_TAG_SWEAT_BEAD,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .images = NULL,
     .callback = AnimSprayWaterDroplet,
 };
 
@@ -320,7 +306,6 @@ static const struct SpriteTemplate sUnusedFlashingLightSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .images = NULL,
     .callback = AnimUnusedFlashingLight,
 };
 
@@ -329,7 +314,6 @@ const struct SpriteTemplate gSkyAttackBirdSpriteTemplate =
     .tileTag = ANIM_TAG_BIRD,
     .paletteTag = ANIM_TAG_BIRD,
     .oam = &gOamData_AffineDouble_ObjNormal_64x64,
-    .images = NULL,
     .callback = AnimSkyAttackBird,
 };
 
@@ -338,7 +322,6 @@ const struct SpriteTemplate gGlaiveRushSpriteTemplate =
     .tileTag = ANIM_TAG_DRAGON_ASCENT,
     .paletteTag = ANIM_TAG_DRAGON_ASCENT,
     .oam = &gOamData_AffineNormal_ObjNormal_64x64,
-    .images = NULL,
     .callback = AnimSkyAttackBird,
 };
 

@@ -157,7 +157,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScrollArrowIndicator =
     .paletteTag = 0,
     .oam = &sOamData_ScrollArrowIndicator,
     .anims = sSpriteAnimTable_ScrollArrowIndicator,
-    .images = NULL,
     .callback = SpriteCallback_ScrollIndicatorArrow,
 };
 
@@ -275,7 +274,6 @@ static const struct SpriteTemplate sSpriteTemplate_RedArrowCursor =
     .paletteTag = 0,
     .oam = &sOamData_RedArrowCursor,
     .anims = sSpriteAnimTable_RedArrowCursor,
-    .images = NULL,
     .callback = SpriteCallback_RedArrowCursor,
 };
 

@@ -36,7 +36,6 @@ const struct SpriteTemplate gToxicBubbleSpriteTemplate =
     .paletteTag = ANIM_TAG_TOXIC_BUBBLE,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_ToxicBubble,
-    .images = NULL,
     .callback = AnimSpriteOnMonPos,
 };
 
@@ -95,7 +94,6 @@ const struct SpriteTemplate gSludgeProjectileSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimSludgeProjectile,
 };
@@ -106,7 +104,6 @@ const struct SpriteTemplate gAcidPoisonBubbleSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimAcidPoisonBubble,
 };
@@ -117,7 +114,6 @@ const struct SpriteTemplate gSludgeBombHitParticleSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = &gAnims_PoisonProjectile[2],
-    .images = NULL,
     .affineAnims = sAffineAnims_SludgeBombHit,
     .callback = AnimSludgeBombHitParticle,
 };
@@ -140,7 +136,6 @@ const struct SpriteTemplate gAcidPoisonDropletSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = &gAnims_PoisonProjectile[1],
-    .images = NULL,
     .affineAnims = gAffineAnims_Droplet,
     .callback = AnimAcidPoisonDroplet,
 };
@@ -163,7 +158,6 @@ const struct SpriteTemplate gPoisonBubbleSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_Bubble,
     .callback = AnimBubbleEffect,
 };
@@ -174,7 +168,6 @@ const struct SpriteTemplate gWaterBubbleSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_BUBBLES,
     .oam = &gOamData_AffineNormal_ObjBlend_16x16,
     .anims = gAnims_WaterBubble,
-    .images = NULL,
     .affineAnims = gAffineAnims_Bubble,
     .callback = AnimBubbleEffect,
 };
@@ -185,7 +178,6 @@ const struct SpriteTemplate gGreenPoisonDrip =
     .paletteTag = ANIM_TAG_GREEN_POISON_BUBBLE,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = &gAnims_PoisonProjectile[1],
-    .images = NULL,
     .affineAnims = gAffineAnims_Droplet,
     .callback = AnimAcidPoisonDroplet,
 };
@@ -196,7 +188,6 @@ const struct SpriteTemplate gGreenPoisonBubble =
     .paletteTag = ANIM_TAG_GREEN_POISON_BUBBLE,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimAcidPoisonBubble,
 };
@@ -270,7 +261,6 @@ const struct SpriteTemplate gSuckerPunchSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_JAB,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gSuckerPunchAnim,
-    .images = NULL,
     .callback = AnimSuckerPunch,
 };
 
@@ -280,7 +270,6 @@ const struct SpriteTemplate gGunkShoParticlesSpriteTemplate =
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
     .anims = gGunkShotParticlesAnims,
-    .images = NULL,
     .callback = AnimGunkShotParticles,
 };
 
@@ -289,7 +278,6 @@ const struct SpriteTemplate gGunkShotImpactSpriteTemplate =
     .tileTag = ANIM_TAG_WATER_IMPACT,
     .paletteTag = ANIM_TAG_POISON_BUBBLE,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .images = NULL,
     .affineAnims = gSuckerPunchImpactAffineAnim,
     .callback = AnimGunkShotImpact,
 };
@@ -329,7 +317,6 @@ const struct SpriteTemplate gSyrupRedProjectileSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_RED,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimSludgeProjectile,
 };
@@ -340,7 +327,6 @@ const struct SpriteTemplate gSyrupYellowProjectileSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_YELLOW,
     .oam = &gOamData_AffineDouble_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = gAffineAnims_PoisonProjectile,
     .callback = AnimSludgeProjectile,
 };
@@ -351,7 +337,6 @@ const struct SpriteTemplate gSyrupBombRedHitParticleSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_RED,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = sAffineAnims_SludgeBombHit,
     .callback = AnimSludgeBombHitParticle,
 };
@@ -362,7 +347,6 @@ const struct SpriteTemplate gSyrupBombYellowHitParticleSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_YELLOW,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
     .anims = gAnims_PoisonProjectile,
-    .images = NULL,
     .affineAnims = sAffineAnims_SludgeBombHit,
     .callback = AnimSludgeBombHitParticle,
 };
@@ -373,7 +357,6 @@ const struct SpriteTemplate gSyrupBombRedShellSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_RED,
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupCoat,
-    .images = NULL,
     .callback = AnimAnimSyrupBomb,
 };
 
@@ -383,7 +366,6 @@ const struct SpriteTemplate gSyrupBombYellowShellSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_YELLOW,
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupCoat,
-    .images = NULL,
     .callback = AnimAnimSyrupBomb,
 };
 
@@ -393,7 +375,6 @@ const struct SpriteTemplate gSyrupBombRedShellBSpriteTemplate =
      .paletteTag = ANIM_TAG_SYRUP_BLOB_RED,
      .oam = &gOamData_AffineOff_ObjNormal_64x64,
      .anims = sAnims_SyrupStick,
-     .images = NULL,
      .callback = AnimAnimSyrupBomb,
 };
 
@@ -403,7 +384,6 @@ const struct SpriteTemplate gSyrupBombYellowShellBSpriteTemplate =
     .paletteTag = ANIM_TAG_SYRUP_BLOB_YELLOW,
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
     .anims = sAnims_SyrupStick,
-    .images = NULL,
     .callback = AnimAnimSyrupBomb,
 };
 

@@ -2598,7 +2598,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_WynautHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2606,7 +2605,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_AzurillHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2614,7 +2612,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_SkittyHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2622,7 +2619,6 @@ static const struct SpriteTemplate sSpriteTemplates_PokeHeaders[NUM_BOARD_POKES]
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_MakuhitaHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2634,7 +2630,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_OrangeHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2642,7 +2637,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_GreenHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2650,7 +2644,6 @@ static const struct SpriteTemplate sSpriteTemplates_ColorHeaders[NUM_BOARD_COLOR
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridHeader,
         .anims = sAnim_PurpleHeader,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2662,7 +2655,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Wynaut,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2670,7 +2662,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Azurill,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2678,7 +2669,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Skitty,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     },
     {
@@ -2686,7 +2676,6 @@ static const struct SpriteTemplate sSpriteTemplates_GridIcons[NUM_BOARD_POKES] =
         .paletteTag = PALTAG_GRID_ICONS,
         .oam = &sOam_GridIcon,
         .anims = sAnim_GridIcon_Makuhita,
-        .images = NULL,
         .callback = SpriteCB_GridSquare
     }
 };
@@ -2700,7 +2689,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_WYNAUT,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeWynaut,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2708,7 +2696,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_AZURILL,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenAzurill,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2716,7 +2703,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_SKITTY,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleSkitty,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2724,7 +2710,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_MAKUHITA,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeMakuhita,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2732,7 +2717,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_WYNAUT,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenWynaut,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2740,7 +2724,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_AZURILL,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleAzurill,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2748,7 +2731,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_SKITTY,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeSkitty,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2756,7 +2738,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_MAKUHITA,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenMakuhita,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2764,7 +2745,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_WYNAUT,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleWynaut,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2772,7 +2752,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_AZURILL,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_OrangeAzurill,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2780,7 +2759,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_SKITTY,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_GreenSkitty,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     },
     {
@@ -2788,7 +2766,6 @@ static const struct SpriteTemplate sSpriteTemplates_WheelIcons[NUM_ROULETTE_SLOT
         .paletteTag = PALTAG_MAKUHITA,
         .oam = &sOam_WheelIcon,
         .anims = sAnim_WheelIcon_PurpleMakuhita,
-        .images = NULL,
         .callback = SpriteCB_WheelIcon
     }
 };
@@ -2918,7 +2895,6 @@ static const struct SpriteTemplate sSpriteTemplate_Credit =
     .tileTag = GFXTAG_CREDIT,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Credit,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_CreditDigit =
@@ -2927,7 +2903,6 @@ static const struct SpriteTemplate sSpriteTemplate_CreditDigit =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_CreditDigit,
     .anims = sAnims_CreditDigit,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Multiplier =
@@ -2936,7 +2911,6 @@ static const struct SpriteTemplate sSpriteTemplate_Multiplier =
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_Multiplier,
     .anims = sAnims_Multiplier,
-    .images = NULL,
     .callback = SpriteCB_GridSquare
 };
 
@@ -2946,7 +2920,6 @@ static const struct SpriteTemplate sSpriteTemplate_BallCounter =
     .paletteTag = PALTAG_BALL_COUNTER,
     .oam = &sOam_BallCounter,
     .anims = sAnims_BallCounter,
-    .images = NULL,
 };
 
 // NOTE: This cursor is only used to identify the winning square on the grid
@@ -2955,7 +2928,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .tileTag = GFXTAG_CURSOR,
     .paletteTag = PALTAG_INTERFACE,
     .oam = &sOam_GridHeader,
-    .images = NULL,
 };
 
 static const struct OamData sOam_Ball =
@@ -3062,7 +3034,6 @@ static const struct SpriteTemplate sSpriteTemplate_Ball =
     .paletteTag = PALTAG_BALL,
     .oam = &sOam_Ball,
     .anims = sAnims_Ball,
-    .images = NULL,
 };
 
 static const struct OamData sOam_WheelCenter =
@@ -3087,7 +3058,6 @@ static const struct SpriteTemplate sSpriteTemplate_WheelCenter =
     .tileTag = GFXTAG_WHEEL_CENTER,
     .paletteTag = PALTAG_BALL,
     .oam = &sOam_WheelCenter,
-    .images = NULL,
     .callback = SpriteCB_WheelCenter
 };
 
@@ -3188,7 +3158,6 @@ static const struct SpriteTemplate sSpriteTemplate_Shroomish =
     .paletteTag = PALTAG_SHROOMISH,
     .oam = &sOam_Shroomish,
     .anims = sAnims_Shroomish,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_Taillow =
@@ -3197,7 +3166,6 @@ static const struct SpriteTemplate sSpriteTemplate_Taillow =
     .paletteTag = PALTAG_TAILLOW,
     .oam = &sOam_Taillow,
     .anims = sAnims_Taillow,
-    .images = NULL,
     .callback = SpriteCB_Taillow
 };
 
@@ -3302,7 +3270,6 @@ static const struct SpriteTemplate sSpriteTemplate_ShroomishShadow[] =
         .paletteTag = PALTAG_SHADOW,
         .oam = &sOam_ShroomishBallShadow,
         .anims = sAnims_ShroomishBallShadow,
-        .images = NULL,
     },
     // Shroomish's Shadow
     {
@@ -3310,7 +3277,6 @@ static const struct SpriteTemplate sSpriteTemplate_ShroomishShadow[] =
         .paletteTag = PALTAG_SHADOW,
         .oam = &sOam_ShroomishShadow,
         .anims = sAnims_UnstickMonShadow,
-        .images = NULL,
         .callback = SpriteCB_Shroomish
     }
 };
@@ -3321,7 +3287,6 @@ static const struct SpriteTemplate sSpriteTemplate_TaillowShadow =
     .paletteTag = PALTAG_SHADOW,
     .oam = &sOam_TaillowShadow,
     .anims = sAnims_UnstickMonShadow,
-    .images = NULL,
     .affineAnims = sAffineAnims_TaillowShadow,
     .callback = SpriteCB_Taillow
 };

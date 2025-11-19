@@ -252,7 +252,6 @@ static const struct SpriteTemplate sOptionsCursorSpriteTemplate =
     .tileTag = GFXTAG_CURSOR,
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOptionsCursorOamData,
-    .images = NULL,
     .callback = SpriteCB_OptionsCursor,
 };
 
@@ -275,7 +274,6 @@ static const struct SpriteTemplate sTrainerPicSpriteTemplate =
     .tileTag = GFXTAG_TRAINER_PIC,
     .paletteTag = PALTAG_TRAINER_PIC,
     .oam = &sTrainerPicOamData,
-    .images = NULL,
 };
 
 bool32 OpenMatchCall(void)

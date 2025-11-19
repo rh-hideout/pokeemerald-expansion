@@ -9,7 +9,6 @@ static const struct SpriteTemplate sInvisibleSpriteTemplate =
     .tileTag = 0,
     .paletteTag = 0,
     .oam = &gDummyOamData,
-    .images = NULL,
 };
 
 static const u8 sSpriteDimensions[3][4][2] =

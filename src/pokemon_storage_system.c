@@ -1031,7 +1031,6 @@ static const struct SpriteTemplate sSpriteTemplate_DisplayMon =
     .tileTag = GFXTAG_DISPLAY_MON,
     .paletteTag = PALTAG_DISPLAY_MON,
     .oam = &sOamData_DisplayMon,
-    .images = NULL,
 };
 
 static const u8 gText_PkmnIsSelected[] = _("{DYNAMIC 0} is selected.");
@@ -1158,7 +1157,6 @@ static const struct SpriteTemplate sSpriteTemplate_Waveform =
     .paletteTag = PALTAG_MISC_2,
     .oam = &sOamData_Waveform,
     .anims = sAnims_Waveform,
-    .images = NULL,
 };
 
 static const struct OamData sOamData_MonIcon;
@@ -1167,7 +1165,6 @@ static const struct SpriteTemplate sSpriteTemplate_MonIcon =
     .tileTag = GFXTAG_MON_ICON,
     .paletteTag = PALTAG_MON_ICON_0,
     .oam = &sOamData_MonIcon,
-    .images = NULL,
 };
 
 static const struct OamData sOamData_MonIcon =
@@ -1243,7 +1240,6 @@ static const struct SpriteTemplate sSpriteTemplate_BoxTitle =
     .paletteTag = PALTAG_BOX_TITLE,
     .oam = &sOamData_BoxTitle,
     .anims = sAnims_BoxTitle,
-    .images = NULL,
 };
 
 static const struct OamData sOamData_Arrow =
@@ -1277,7 +1273,6 @@ static const struct SpriteTemplate sSpriteTemplate_Arrow =
     .paletteTag = PALTAG_MISC_2,
     .oam = &sOamData_Arrow,
     .anims = sAnims_Arrow,
-    .images = NULL,
     .callback = SpriteCB_Arrow
 };
 
@@ -7852,7 +7847,6 @@ static void CreateCursorSprites(void)
         .paletteTag = PALTAG_MISC_2,
         .oam = &sOamData_Cursor,
         .anims = sAnims_Cursor,
-        .images = NULL,
     };
 
     static const struct SpriteTemplate sSpriteTemplate_CursorShadow =
@@ -7860,7 +7854,6 @@ static void CreateCursorSprites(void)
         .tileTag = GFXTAG_CURSOR_SHADOW,
         .paletteTag = PALTAG_MISC_2,
         .oam = &sOamData_CursorShadow,
-        .images = NULL,
         .callback = SpriteCB_CursorShadow,
     };
 
@@ -8769,7 +8762,6 @@ static const struct SpriteTemplate sSpriteTemplate_ItemIcon =
     .tileTag = GFXTAG_ITEM_ICON_0,
     .paletteTag = PALTAG_ITEM_ICON_0,
     .oam = &sOamData_ItemIcon,
-    .images = NULL,
     .affineAnims = sAffineAnims_ItemIcon,
 };
 

@@ -167,7 +167,6 @@ static const struct SpriteTemplate sSpriteTemplate_StampShadow =
     .tileTag = TAG_STAMP_SHADOW,
     .paletteTag = TAG_STAMP_SHADOW,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
-    .images = NULL,
 };
 
 static const struct WonderGraphics sCardGraphics[NUM_WONDER_BGS] = {

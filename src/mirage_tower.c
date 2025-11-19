@@ -154,7 +154,6 @@ static const struct SpriteTemplate sSpriteTemplate_FallingFossil =
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
     .oam = &sOamData_FallingFossil,
     .anims = sAnims_FallingFossil,
-    .images = NULL,
 };
 
 const struct PulseBlendSettings gMirageTowerPulseBlendSettings = {
@@ -203,7 +202,6 @@ static const struct SpriteTemplate sSpriteTemplate_CeilingCrumbleSmall =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_CeilingCrumbleSmall,
     .anims = sAnims_CeilingCrumbleSmall,
-    .images = NULL,
     .callback = SpriteCB_CeilingCrumble
 };
 
@@ -241,7 +239,6 @@ static const struct SpriteTemplate sSpriteTemplate_CeilingCrumbleLarge =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_CeilingCrumbleLarge,
     .anims = sAnims_CeilingCrumbleLarge,
-    .images = NULL,
     .callback = SpriteCB_CeilingCrumble
 };
 

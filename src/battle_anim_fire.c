@@ -64,7 +64,6 @@ const struct SpriteTemplate gFireSpiralInwardSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_FireSpiralSpread,
-    .images = NULL,
     .callback = AnimFireSpiralInward,
 };
 
@@ -74,7 +73,6 @@ const struct SpriteTemplate gFireSpreadSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_FireSpiralSpread,
-    .images = NULL,
     .callback = AnimFireSpread,
 };
 
@@ -129,7 +127,6 @@ const struct SpriteTemplate gLargeFlameSpriteTemplate =
     .paletteTag = ANIM_TAG_FIRE,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
     .anims = sAnims_LargeFlame,
-    .images = NULL,
     .affineAnims = sAffineAnims_LargeFlame,
     .callback = AnimLargeFlame,
 };
@@ -140,7 +137,6 @@ const struct SpriteTemplate gLargeFlameScatterSpriteTemplate =
     .paletteTag = ANIM_TAG_FIRE,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_LargeFlame,
-    .images = NULL,
     .callback = AnimLargeFlame,
 };
 
@@ -150,7 +146,6 @@ const struct SpriteTemplate gFirePlumeSpriteTemplate =
     .paletteTag = ANIM_TAG_FIRE_PLUME,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FirePlume,
-    .images = NULL,
     .callback = AnimFirePlume,
 };
 
@@ -161,7 +156,6 @@ static const struct SpriteTemplate sUnusedEmberFirePlumeSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FirePlume,
-    .images = NULL,
     .callback = AnimFirePlume,
 };
 
@@ -185,7 +179,6 @@ static const struct SpriteTemplate sUnusedSmallEmberSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_UnusedSmallEmber,
-    .images = NULL,
     .callback = AnimUnusedSmallEmber,
 };
 
@@ -206,7 +199,6 @@ const struct SpriteTemplate gSunlightRaySpriteTemplate =
     .tileTag = ANIM_TAG_SUNLIGHT,
     .paletteTag = ANIM_TAG_SUNLIGHT,
     .oam = &gOamData_AffineNormal_ObjBlend_32x32,
-    .images = NULL,
     .affineAnims = sAffineAnims_SunlightRay,
     .callback = AnimSunlight,
 };
@@ -231,7 +223,6 @@ const struct SpriteTemplate gEmberSpriteTemplate =
     .tileTag = ANIM_TAG_SMALL_EMBER,
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
-    .images = NULL,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
 
@@ -241,7 +232,6 @@ const struct SpriteTemplate gEmberFlareSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimEmberFlare,
 };
 
@@ -264,7 +254,6 @@ const struct SpriteTemplate gIncinerateSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gIncinerateAnims,
-    .images = NULL,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
 
@@ -274,7 +263,6 @@ const struct SpriteTemplate gBurnFlameSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimBurnFlame,
 };
 
@@ -284,7 +272,6 @@ const struct SpriteTemplate gFireBlastRingSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimFireRing,
 };
 
@@ -325,7 +312,6 @@ const struct SpriteTemplate gFireBlastCrossSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FireBlastCross,
-    .images = NULL,
     .callback = AnimFireCross,
 };
 
@@ -335,7 +321,6 @@ const struct SpriteTemplate gFireSpiralOutwardSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimFireSpiralOutward,
 };
 
@@ -345,7 +330,6 @@ const struct SpriteTemplate gWeatherBallFireDownSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimWeatherBallDown,
 };
 
@@ -354,7 +338,6 @@ const struct SpriteTemplate gEruptionLaunchRockSpriteTemplate =
     .tileTag = ANIM_TAG_WARM_ROCK,
     .paletteTag = ANIM_TAG_WARM_ROCK,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .images = NULL,
     .callback = AnimEruptionLaunchRock,
 };
 
@@ -374,7 +357,6 @@ const struct SpriteTemplate gEruptionFallingRockSpriteTemplate =
     .tileTag = ANIM_TAG_WARM_ROCK,
     .paletteTag = ANIM_TAG_WARM_ROCK,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
-    .images = NULL,
     .callback = AnimEruptionFallingRock,
 };
 
@@ -419,7 +401,6 @@ const struct SpriteTemplate gWillOWispOrbSpriteTemplate =
     .paletteTag = ANIM_TAG_WISP_ORB,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = gAnims_WillOWispOrb,
-    .images = NULL,
     .callback = AnimWillOWispOrb,
 };
 
@@ -443,7 +424,6 @@ const struct SpriteTemplate gWillOWispFireSpriteTemplate =
     .paletteTag = ANIM_TAG_WISP_FIRE,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_WillOWispFire,
-    .images = NULL,
     .callback = AnimWillOWispFire,
 };
 
@@ -478,7 +458,6 @@ const struct SpriteTemplate gLavaPlumeSpriteTemplate =
     .paletteTag = ANIM_TAG_FIRE_PLUME,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_FirePlume,
-    .images = NULL,
     .affineAnims = gLavaPlumeAffineAnims,
     .callback = AnimLavaPlumeOrbitScatter,
 };
@@ -489,7 +468,6 @@ const struct SpriteTemplate gSpacialRendBladesTemplate =
     .paletteTag = ANIM_TAG_PINK_HEART_2, //ANIM_TAG_BERRY_EATEN,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimFireSpiralOutward
 };
 
@@ -499,7 +477,6 @@ const struct SpriteTemplate gSpacialRendBladesTemplate2 =
     .paletteTag = ANIM_TAG_PINK_HEART_2,    //ANIM_TAG_BERRY_EATEN,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_FireSpiralSpread,
-    .images = NULL,
     .callback = AnimFireSpread
 };
 
@@ -510,7 +487,6 @@ const struct SpriteTemplate gTwisterEmberSpriteTemplate =
     .paletteTag = ANIM_TAG_SMALL_EMBER,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = gAnims_BasicFire,
-    .images = NULL,
     .callback = AnimMoveTwisterParticle,
 };
 

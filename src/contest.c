@@ -454,7 +454,6 @@ static const struct SpriteTemplate sSpriteTemplate_SliderHeart =
     .tileTag = TAG_SLIDER_HEART,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_SliderHeart,
-    .images = NULL,
     .affineAnims = sAffineAnims_SliderHeart,
 };
 
@@ -511,25 +510,21 @@ static const struct SpriteTemplate sSpriteTemplates_NextTurn[CONTESTANT_COUNT] =
         .tileTag = TAG_NEXT_TURN_1_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .images = NULL,
     },
     {
         .tileTag = TAG_NEXT_TURN_2_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .images = NULL,
     },
     {
         .tileTag = TAG_NEXT_TURN_3_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .images = NULL,
     },
     {
         .tileTag = TAG_NEXT_TURN_4_GFX,
         .paletteTag = TAG_NEXT_TURN_PAL,
         .oam = &sOam_NextTurn,
-        .images = NULL,
     }
 };
 
@@ -592,7 +587,6 @@ static const struct SpriteTemplate sSpriteTemplate_Faces =
     .tileTag = TAG_FACES_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &sOam_Faces,
-    .images = NULL,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_ApplauseMeter =
@@ -627,7 +621,6 @@ static const struct SpriteTemplate sSpriteTemplate_ApplauseMeter =
     .tileTag = TAG_APPLAUSE_METER,
     .paletteTag = TAG_APPLAUSE_METER,
     .oam = &sOam_ApplauseMeter,
-    .images = NULL,
 };
 
 static const struct OamData sOam_Judge =
@@ -649,7 +642,6 @@ static const struct SpriteTemplate sSpriteTemplate_Judge =
     .tileTag = TAG_JUDGE,
     .paletteTag = TAG_JUDGE,
     .oam = &sOam_Judge,
-    .images = NULL,
 };
 
 static const struct CompressedSpriteSheet sSpriteSheet_Judge =
@@ -677,7 +669,6 @@ static const struct SpriteTemplate sSpriteTemplate_JudgeSpeechBubble =
     .tileTag = TAG_JUDGE_SYMBOLS_GFX,
     .paletteTag = TAG_CONTEST_SYMBOLS_PAL,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .images = NULL,
 };
 
 static const u16 sText_Pal[] = INCBIN_U16("graphics/contest/text.gbapal");
@@ -980,28 +971,24 @@ static const struct SpriteTemplate sSpriteTemplates_ContestantsTurnBlinkEffect[C
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT0,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT1,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT2,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
     },
     {
         .tileTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .paletteTag = TAG_BLINK_EFFECT_CONTESTANT3,
         .oam = &sOam_ContestantsTurnBlinkEffect,
-        .images = NULL,
         .affineAnims = sAffineAnims_ContestantsTurnBlinkEffect,
     }
 };

@@ -326,7 +326,6 @@ static const struct SpriteTemplate sMenuOptionSpriteTemplate =
     .tileTag = GFXTAG_OPTIONS,
     .paletteTag = PALTAG_OPTIONS_START,
     .oam = &sOamData_MenuOption,
-    .images = NULL,
     .affineAnims = sAffineAnims_MenuOption,
 };
 
@@ -349,7 +348,6 @@ static const struct SpriteTemplate sMatchCallBlueLightSpriteTemplate =
     .tileTag = GFXTAG_BLUE_LIGHT,
     .paletteTag = PALTAG_BLUE_LIGHT,
     .oam = &sBlueLightOamData,
-    .images = NULL,
 };
 
 static const struct ScanlineEffectParams sPokenavMainMenuScanlineEffectParams =

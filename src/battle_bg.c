@@ -93,7 +93,6 @@ static const struct SpriteTemplate sVsLetter_V_SpriteTemplate =
     .tileTag = TAG_VS_LETTERS,
     .paletteTag = TAG_VS_LETTERS,
     .oam = &sVsLetter_V_OamData,
-    .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
     .callback = SpriteCB_VsLetterDummy
 };
@@ -103,7 +102,6 @@ static const struct SpriteTemplate sVsLetter_S_SpriteTemplate =
     .tileTag = TAG_VS_LETTERS,
     .paletteTag = TAG_VS_LETTERS,
     .oam = &sVsLetter_S_OamData,
-    .images = NULL,
     .affineAnims = sVsLetterAffineAnimTable,
     .callback = SpriteCB_VsLetterDummy
 };

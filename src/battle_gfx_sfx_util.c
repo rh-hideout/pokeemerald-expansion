@@ -115,7 +115,6 @@ const struct SpriteTemplate gSpriteTemplate_EnemyShadow =
     .tileTag = TAG_SHADOW_TILE,
     .paletteTag = TAG_SHADOW_PAL,
     .oam = &sOamData_EnemyShadow,
-    .images = NULL,
 };
 
 // code

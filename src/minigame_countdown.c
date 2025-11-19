@@ -116,7 +116,6 @@ static const struct SpriteTemplate sSpriteTemplate_StaticCountdown[] =
         .paletteTag = TAG_STATIC_COUNTDOWN,
         .oam = &gOamData_AffineOff_ObjNormal_32x32,
         .anims = sAnims_StaticCountdown,
-        .images = NULL,
     },
 };
 

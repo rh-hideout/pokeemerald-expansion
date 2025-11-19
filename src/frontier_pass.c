@@ -489,7 +489,6 @@ static const struct SpriteTemplate sSpriteTemplates_Cursors[] =
         .paletteTag = TAG_CURSOR,
         .oam = &gOamData_AffineOff_ObjNormal_16x16,
         .anims = sAnims_TwoFrame,
-        .images = NULL,
     },
     // Map indicator cursor
     {
@@ -497,7 +496,6 @@ static const struct SpriteTemplate sSpriteTemplates_Cursors[] =
         .paletteTag = TAG_MAP_INDICATOR,
         .oam = &gOamData_AffineOff_ObjNormal_32x16,
         .anims = sAnims_MapIndicatorCursor,
-        .images = NULL,
     },
 };
 
@@ -507,7 +505,6 @@ static const struct SpriteTemplate sSpriteTemplate_Medal =
     .paletteTag = TAG_MEDAL_SILVER,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_Medal,
-    .images = NULL,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_PlayerHead =
@@ -516,7 +513,6 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerHead =
     .paletteTag = TAG_HEAD_MALE,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_TwoFrame,
-    .images = NULL,
     .callback = SpriteCB_PlayerHead,
 };
 

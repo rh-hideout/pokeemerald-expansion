@@ -365,7 +365,6 @@ static const struct SpriteTemplate sSpriteTemplate_PyramidBag =
     .paletteTag = TAG_PYRAMID_BAG,
     .oam = &sOamData_PyramidBag,
     .anims = sAnims_PyramidBag,
-    .images = NULL,
     .affineAnims = sAffineAnims_PyramidBag,
 };
 

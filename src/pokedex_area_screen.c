@@ -202,7 +202,6 @@ static const struct SpriteTemplate sAreaMarkerSpriteTemplate =
     .tileTag = TAG_AREA_MARKER,
     .paletteTag = TAG_AREA_MARKER,
     .oam = &sAreaMarkerOamData,
-    .images = NULL,
 };
 
 static const u16 sAreaMarkerPalette[] = INCBIN_U16("graphics/pokedex/area_marker.gbapal");
@@ -225,7 +224,6 @@ static const struct SpriteTemplate sAreaUnknownSpriteTemplate =
     .tileTag = TAG_AREA_UNKNOWN,
     .paletteTag = TAG_AREA_UNKNOWN,
     .oam = &sAreaUnknownOamData,
-    .images = NULL,
 };
 
 static const u8 sFontColor_AreaInfo[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, 5};

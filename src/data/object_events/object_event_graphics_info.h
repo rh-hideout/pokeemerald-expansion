@@ -4429,7 +4429,6 @@ const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_Follower = {
     .oam = &gObjectEventBaseOam_32x32,
     .subspriteTables = sOamTables_32x32,
     .anims = sAnimTable_Following,
-    .images = NULL,
 };
 
 const struct ObjectEventGraphicsInfo gObjectEventGraphicsInfo_BallLight = {

@@ -806,7 +806,6 @@ static const struct SpriteTemplate sSpriteTemplate_RightArrow =
     .tileTag = GFXTAG_ARROW,
     .paletteTag = PALTAG_ARROW,
     .oam = &sOamData_RightArrow,
-    .images = NULL,
     .callback = SpriteCB_RightArrow
 };
 
@@ -829,7 +828,6 @@ static const struct SpriteTemplate sSpriteTemplate_UpDownArrow =
     .tileTag = GFXTAG_ARROW,
     .paletteTag = PALTAG_ARROW,
     .oam = &sOamData_UpDownArrow,
-    .images = NULL,
 };
 
 static void LoadListArrowGfx(void)

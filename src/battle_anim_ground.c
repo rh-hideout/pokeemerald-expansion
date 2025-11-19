@@ -49,7 +49,6 @@ const struct SpriteTemplate gBonemerangSpriteTemplate =
     .tileTag = ANIM_TAG_BONE,
     .paletteTag = ANIM_TAG_BONE,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .images = NULL,
     .affineAnims = sAffineAnims_Bonemerang,
     .callback = AnimBonemerangProjectile,
 };
@@ -59,7 +58,6 @@ const struct SpriteTemplate gSpinningBoneSpriteTemplate =
     .tileTag = ANIM_TAG_BONE,
     .paletteTag = ANIM_TAG_BONE,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .images = NULL,
     .affineAnims = gAffineAnims_SpinningBone,
     .callback = AnimBoneHitProjectile,
 };
@@ -69,7 +67,6 @@ const struct SpriteTemplate gSandAttackDirtSpriteTemplate =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .images = NULL,
     .callback = AnimDirtScatter,
 };
 
@@ -90,7 +87,6 @@ const struct SpriteTemplate gMudSlapMudSpriteTemplate =
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_MudSlapMud,
-    .images = NULL,
     .callback = AnimDirtScatter,
 };
 
@@ -99,7 +95,6 @@ const struct SpriteTemplate gMudsportMudSpriteTemplate =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
-    .images = NULL,
     .callback = AnimMudSportDirt,
 };
 
@@ -108,7 +103,6 @@ const struct SpriteTemplate gDirtPlumeSpriteTemplate =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .images = NULL,
     .callback = AnimDirtPlumeParticle,
 };
 
@@ -117,7 +111,6 @@ const struct SpriteTemplate gDirtMoundSpriteTemplate =
     .tileTag = ANIM_TAG_DIRT_MOUND,
     .paletteTag = ANIM_TAG_DIRT_MOUND,
     .oam = &gOamData_AffineOff_ObjNormal_32x16,
-    .images = NULL,
     .callback = AnimDigDirtMound,
 };
 
@@ -126,7 +119,6 @@ const struct SpriteTemplate gMudBombSplash =
     .tileTag = ANIM_TAG_MUD_SAND,
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_8x8,
-    .images = NULL,
     .callback = AnimSludgeBombHitParticle,
 };
 
@@ -136,7 +128,6 @@ const struct SpriteTemplate gMudBombToss =
     .paletteTag = ANIM_TAG_MUD_SAND,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_MudSlapMud,
-    .images = NULL,
     .callback = AnimThrowProjectile,
 };
 

@@ -295,7 +295,6 @@ static const struct SpriteTemplate sSpriteTemplate_PokeblockCase =
     .paletteTag = TAG_POKEBLOCK_CASE,
     .oam = &sOamData_PokeblockCase,
     .anims = sSpriteAnimTable_PokeblockCase,
-    .images = NULL,
 };
 
 static const u8 sTextColor[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};
