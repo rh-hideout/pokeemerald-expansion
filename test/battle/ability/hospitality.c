@@ -112,7 +112,7 @@ DOUBLE_BATTLE_TEST("Hospitality is blocked by Heal Block")
     }
 }
 
-DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's health on switch-in regardless of speed")
+DOUBLE_BATTLE_TEST("Hospitality user restores 25% of ally's max HP after taking hazard damage")
 {
     u32 speedLeft, speedRight = 0;
 

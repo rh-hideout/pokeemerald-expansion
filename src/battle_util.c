@@ -5274,7 +5274,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         }
         break;
     case ABILITYEFFECT_IMMUNITY:
-        effect = TryImmunityAbilityHealStatus(battler, caseID);
+        effect = TryImmunityAbilityHealStatus(battler);
         if (effect)
             return effect;
         break;
@@ -9234,7 +9234,7 @@ bool32 SetIllusionMon(struct Pokemon *mon, u32 battler)
     return FALSE;
 }
 
-u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID)
+u32 TryImmunityAbilityHealStatus(u32 battler)
 {
     u32 effect = 0;
     switch (GetBattlerAbilityIgnoreMoldBreaker(battler))

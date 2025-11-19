@@ -133,10 +133,16 @@ DOUBLE_BATTLE_TEST("End Turn Effects: New mons will switch in after if previous 
             MOVE(playerRight, MOVE_HYPER_VOICE);
             SEND_OUT(opponentLeft, 2);
             SEND_OUT(opponentRight, 3);
-            HP_BAR(opponentLeft);
-            HP_BAR(opponentRight);
             SEND_OUT(opponentLeft, 4);
             SEND_OUT(opponentRight, 5);
         }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerRight);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
+        HP_BAR(opponentLeft);
+        HP_BAR(opponentRight);
     }
 }

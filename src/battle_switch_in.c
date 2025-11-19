@@ -162,7 +162,7 @@ bool32 DoSwitchInEvents(void)
         break;
     case SWITCH_IN_EVENTS_EJECT_PACK:
         gBattleStruct->eventState.switchIn++;
-        if (TrySwitchInEjectPack(FIRST_TURN))
+        if (TrySwitchInEjectPack(START_OF_TURN))
             return TRUE;
         break;
     case SWITCH_IN_EVENTS_COUNT:

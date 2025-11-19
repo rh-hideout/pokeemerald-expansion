@@ -25,7 +25,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
     }
 }
 
-DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle regardless of speed")
+DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages after their ability activates upon entering battle")
 {
     u32 speedLeft, speedRight = 0;
 
@@ -50,6 +50,7 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle reg
         ABILITY_POPUP(opponentLeft, ABILITY_COSTAR);
     } THEN {
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
     }
 }
 

@@ -7868,8 +7868,9 @@ BattleScript_ActivateTeraformZeroEffects:
 	tryboosterenergy ON_ANY
 	resetterrainabilityflags
 	setbyte gBattlerAttacker, 0
+	sortbattlers
 BattleScript_ActivateTeraformZeroLoop:
-	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
+	copyarraywithindex gBattlerTarget, gBattlersBySpeed, gBattlerAttacker, 1
 	activateterrainchangeabilities BS_TARGET
 	activateweatherchangeabilities BS_TARGET
 	addbyte gBattlerAttacker, 1

@@ -207,7 +207,7 @@ enum SkyDropState
 
 enum EjectPackTiming
 {
-    FIRST_TURN,
+    START_OF_TURN,
     END_TURN,
     OTHER,
 };
@@ -328,7 +328,7 @@ struct Pokemon *GetIllusionMonPtr(u32 battler);
 void ClearIllusionMon(u32 battler);
 u32 GetIllusionMonPartyId(struct Pokemon *party, struct Pokemon *mon, struct Pokemon *partnerMon, u32 battler);
 bool32 SetIllusionMon(struct Pokemon *mon, u32 battler);
-u32 TryImmunityAbilityHealStatus(u32 battler, enum AbilityEffect caseID);
+u32 TryImmunityAbilityHealStatus(u32 battler);
 bool32 ShouldGetStatBadgeBoost(u16 flagId, u32 battler);
 uq4_12_t GetBadgeBoostModifier(void);
 enum DamageCategory GetBattleMoveCategory(u32 move);
