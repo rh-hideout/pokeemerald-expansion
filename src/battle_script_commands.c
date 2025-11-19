@@ -14501,7 +14501,6 @@ void BS_ItemIncreaseStat(void)
 
     if (GetItemBattleUsage(gLastUsedItem) == EFFECT_ITEM_INCREASE_STAT)
     {
-        DebugPrintf("EFFECT_ITEM_INCREASE_STAT");
         u16 statId = GetItemEffect(gLastUsedItem)[1];
         u16 stages = GetItemHoldEffectParam(gLastUsedItem);
         SET_STATCHANGER(statId, stages, FALSE);
