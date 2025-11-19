@@ -75,6 +75,10 @@ BattleScript_ItemRestoreHP_Party::
 	return
 
 BattleScript_ItemRestoreHP_SendOutRevivedBattler:
+	switchhandleorder BS_SCRIPTING, 0
+	getswitchedmondata BS_SCRIPTING
+	switchindataupdate BS_SCRIPTING
+	trytoclearprimalweather
 	switchinanim BS_SCRIPTING, FALSE, FALSE
 	waitstate
 	switchineffects BS_SCRIPTING
