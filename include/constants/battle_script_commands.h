@@ -98,8 +98,7 @@ enum CmdVarious
 #define DMG_CHANGE_SIGN         1
 #define DMG_DOUBLED             2
 #define DMG_1_8_TARGET_HP       3
-#define DMG_FULL_ATTACKER_HP    4
-#define DMG_BIG_ROOT            5
+#define DMG_BIG_ROOT            4
 
 // Cmd_jumpifcantswitch
 #define SWITCH_IGNORE_ESCAPE_PREVENTION   (1 << 7)
@@ -190,10 +189,12 @@ enum MoveEndEffects
     MOVEEND_JUMP_TO_HIT_ESCAPE_PLUS_ONE = (MOVEEND_HIT_ESCAPE + 1),
 };
 
-// switch cases
-#define B_SWITCH_NORMAL     0
-#define B_SWITCH_HIT        1   // dragon tail, circle throw
-#define B_SWITCH_RED_CARD   2
+enum SwitchInCases
+{
+    B_SWITCH_NORMAL,
+    B_SWITCH_HIT, // dragon tail, circle throw
+    B_SWITCH_RED_CARD,
+};
 
 enum StatusTrigger
 {

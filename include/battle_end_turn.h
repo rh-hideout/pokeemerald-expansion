@@ -4,4 +4,3 @@
 u32 DoEndTurnEffects(void);
 
 #endif // GUARD_BATTLE_END_TURN
-
