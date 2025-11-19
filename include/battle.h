@@ -619,7 +619,7 @@ struct EventStates
     enum FirstTurnEventsStates beforeFristTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
-    enum MoveSuccessOrder atkCanceller:8;
+    enum MoveSuccessOrder atkCanceler:8;
     enum BattleIntroStates battleIntro:8;
     u32 padding:24;
 };
