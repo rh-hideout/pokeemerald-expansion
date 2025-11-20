@@ -2,10 +2,15 @@
 #define GUARD_MOVES_H
 
 #include "contest_effect.h"
+#include "generational_changes.h"
 #include "constants/battle.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"
+
+#if TESTING
+extern struct MoveDataOverride *gMoveDataTestOverrride;
+#endif
 
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
 struct __attribute__((packed, aligned(2))) BattleMoveEffect
@@ -204,7 +209,18 @@ static inline enum DamageCategory GetMoveCategory(u32 moveId)
 
 static inline u32 GetMovePower(u32 moveId)
 {
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverrride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverrride[i].moveId == moveId && gMoveDataTestOverrride[i].type == MOVE_DATA_POWER)
+            return gMoveDataTestOverrride[i].data;
+    }
+
+    return gMovesInfo[moveId].power;
+#else
     return gMovesInfo[SanitizeMoveId(moveId)].power;
+#endif
 }
 
 static inline u32 GetMoveAccuracy(u32 moveId)
