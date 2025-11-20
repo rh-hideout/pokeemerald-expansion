@@ -17,8 +17,6 @@
 #include "sound.h"
 #include "wild_encounter.h"
 
-
-
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
 static u8 CountActiveFollowMon();
@@ -49,16 +47,18 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.usedSlots++;
 }
 
-
 void FollowMon_OverworldCB(void)
 {
-    if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON)) {
+    if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON))
+    {
         RemoveAllFollowMonObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
-        for (u32 i = 0; i < sizeof(struct FollowMonData); i++) {
+        for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
+        {
             raw[i] = 0;
         }
+
         return;
     }
 
@@ -66,6 +66,7 @@ void FollowMon_OverworldCB(void)
     {
         s16 x, y;
         const struct WildPokemonInfo *wildMonInfo = NULL;
+
         wildMonInfo = GetActiveEncounterTable(IsSpawningWaterMons());
 
         if(wildMonInfo && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
@@ -98,9 +99,7 @@ void FollowMon_OverworldCB(void)
                 // Hide reflections for spawns in water
                 // (It just looks weird)
                 if(IsSpawningWaterMons())
-                {
-                    gObjectEvents[objectEventId].hideReflection = TRUE; 
-                }
+                    gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
                 sFollowMonData.spawnCountdown = 60 * (3 + Random() % 2);
@@ -156,6 +155,7 @@ void FollowMon_OverworldCB(void)
         }
     }
 }
+
 static u8 GetMaxFollowMonSpawns(void)
 {
     if (IsSpawningWaterMons() || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
@@ -185,9 +185,7 @@ static u8 NextSpawnMonSlot(void)
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
     if(CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT)
-    {
         return INVALID_SPAWN_SLOT;
-    }
 
     GenerateFollowMon(&sFollowMonData.list[slot], IsSpawningWaterMons());
 
@@ -230,7 +228,6 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
         if(x == 0  && y > 0)
             x = 1;
         break;
-
     case DIR_EAST:
         if(y == 0 && x > 0)
             y = -1;
@@ -247,9 +244,9 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     elevation = MapGridGetElevationAt(x, y);
 
-    if (!IsInsidePlayerMap(x, y)) {
+    if (!IsInsidePlayerMap(x, y))
         return FALSE;
-    }
+
     // 0 is change of elevation, 15 is multiple elevation e.g. bridges
     // Causes weird interaction issues so just don't let mons spawn here
     if (elevation == 0 || elevation == 15)
@@ -289,20 +286,27 @@ void CreateFollowMonEncounter(void) {
 
     if(objEventId < OBJECT_EVENTS_COUNT)
     {
-            curObject = &gObjectEvents[objEventId];
-            if(!FollowMon_IsMonObject(curObject))
-               return;
-    } else 
+        curObject = &gObjectEvents[objEventId];
+        if(!FollowMon_IsMonObject(curObject))
+           return;
+    }
+    else
+    {
         return;
+    }
 
     const struct WildPokemonInfo *wildMonInfo;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u8 index = curObject->sEncounterIndex - 1;
     u8 level = 0;
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(curObject->currentMetatileBehavior)) {
+
+    if (MetatileBehavior_IsSurfableWaterOrUnderwater(curObject->currentMetatileBehavior))
+    {
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[curObject->spawnTimeOfDay].waterMonsInfo;
         level = ChooseWildMonLevel(wildMonInfo->wildPokemon, index, WILD_AREA_WATER);
-    } else {
+    }
+    else
+    {
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[curObject->spawnTimeOfDay].landMonsInfo;
         level = ChooseWildMonLevel(wildMonInfo->wildPokemon,index, WILD_AREA_LAND);
     }
@@ -323,8 +327,6 @@ void CreateFollowMonEncounter(void) {
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
-
-
 
 bool8 FollowMon_ProcessMonInteraction(void)
 {
@@ -389,13 +391,14 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
             sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
         }
-    } else if(!FollowMon_IsMonObject(collider) && FollowMon_IsMonObject(obstacle))
+    }
+    else if(!FollowMon_IsMonObject(collider) && FollowMon_IsMonObject(obstacle))
     {
         // Other objects can walk through follow mons, whilst wandering mons is active
         return TRUE;
     }
-    return FALSE;
 
+    return FALSE;
 }
 
 bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
@@ -408,7 +411,6 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
 
     return FALSE;
 }
-
 
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
@@ -432,6 +434,7 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
     graphicsId = OBJ_EVENT_MON + species;
     if (sFollowMonData.list[slot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
+
     return graphicsId;
 }
 
@@ -439,7 +442,9 @@ void FollowMon_OnWarp(void)
 {
     sFollowMonData.spawnCountdown = 0;
     sFollowMonData.usedSlots = 0;
-    for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++) {
+
+    for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    {
         sFollowMonData.list[i].encounterIndex = 0;
     }
 }
@@ -448,11 +453,12 @@ static u16 GetFollowMonSpecies(struct FollowMon *followMon)
 {
     u16 species = 0;
     u32 headerId = GetCurrentMapWildMonHeaderId();
-    if (followMon->onWater) {
+
+    if (followMon->onWater)
        species = gWildMonHeaders[headerId].encounterTypes[followMon->timeOfDay].waterMonsInfo->wildPokemon[followMon->encounterIndex - 1].species;
-    } else {
+    else
        species = gWildMonHeaders[headerId].encounterTypes[followMon->timeOfDay].landMonsInfo->wildPokemon[followMon->encounterIndex - 1].species;
-    }
+    
     return species;
 }
 
@@ -495,8 +501,10 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-void RemoveAllFollowMonObjects(void) {
-    for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i) {
+void RemoveAllFollowMonObjects(void)
+{
+    for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    {
         if(IS_FOLLOWMON_GFXID(gObjectEvents[i].graphicsId))
             RemoveObjectEvent(&gObjectEvents[i]);
     }
@@ -505,12 +513,11 @@ void RemoveAllFollowMonObjects(void) {
 static u8 FindObjectEventForGfx(u16 gfxId)
 {
     u8 i;
+
     for(i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         if(gObjectEvents[i].active && gObjectEvents[i].graphicsId == gfxId)
-        {
             return i;
-        }
     }
 
     return OBJECT_EVENTS_COUNT;
@@ -519,12 +526,11 @@ static u8 FindObjectEventForGfx(u16 gfxId)
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
 {
     u8 i;
+
     for(i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         if(gObjectEvents[i].active && gObjectEvents[i].currentCoords.x == x && gObjectEvents[i].currentCoords.y == y)
-        {
             return TRUE;
-        }
     }
 
     return FALSE;
@@ -533,11 +539,14 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y)
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
+
     if (headerId == HEADER_NONE)
         return NULL;
+
     enum TimeOfDay timeOfDay;
 
-    if (onWater) {
+    if (onWater)
+    {
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
         return gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
     }
@@ -560,16 +569,18 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
 static bool8 IsInsidePlayerMap(s16 x, s16 y)
 {
     s32 width, height;
+
     GetMapSize(&width, &height);
-    if (x >= 0 && x <= width && y >= 0 && y <= height) {
+    if (x >= 0 && x <= width && y >= 0 && y <= height)
         return TRUE;
-    }
+
     return FALSE;
 }
 
 static void GetMapSize(s32 *width, s32 *height)
 {
     const struct MapLayout *layout;
+
     layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
     *width = layout->width;
     *height = layout->height;
