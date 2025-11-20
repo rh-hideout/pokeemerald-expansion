@@ -37,6 +37,8 @@ void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u8 value)
     gMoveDataTestOverrride[i].moveId = move;
     gMoveDataTestOverrride[i].type = type;
     gMoveDataTestOverrride[i].data = value;
+
+    Free(temp);
 }
 
 void TestFreeMoveDataOverride(void)
