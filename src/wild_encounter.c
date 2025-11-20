@@ -583,7 +583,7 @@ void GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     if (inWater) {
-        followMon->encounterIndex = ChooseWildMonIndex_WaterRock() + 1;
+        followMon->encounterIndex = ChooseWildMonIndex_Water() + 1;
         followMon->timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
         followMon->onWater = TRUE;
 
