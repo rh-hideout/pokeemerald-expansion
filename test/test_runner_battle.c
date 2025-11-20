@@ -161,6 +161,7 @@ static void BattleTest_SetUp(void *data)
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     TestInitConfigData();
+    TestInitMoveDataOverride();
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -1426,6 +1427,7 @@ static void BattleTest_TearDown(void *data)
     // aborted unexpectedly.
     ClearFlagAfterTest();
     TestFreeConfigData();
+    TestFreeMoveDataOverride();
     if (!STATE->hasTornDownBattle)
     {
         TearDownBattle();
@@ -1528,6 +1530,12 @@ void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
     SetGenConfig(configTag, value);
+}
+
+void TestSetMoveData(u32 sourceLine, u32 move, enum MoveDataType type, u32 value)
+{
+    INVALID_IF(!STATE->runGiven, "WITH_MOVE_DATA outside of GIVEN");
+    SetMoveData(move, type, value);
 }
 
 void ClearFlagAfterTest(void)
