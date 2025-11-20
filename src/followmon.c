@@ -52,7 +52,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
 
 void FollowMon_OverworldCB(void)
 {
-    if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON)) {
+    if (!OW_SPAWN_OW_WILD_ENCOUNTERS) {
         RemoveAllFollowMonObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
