@@ -2472,11 +2472,14 @@ static enum MoveCanceler CancelerMultihitMoves(void)
 
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 3, 0)
     }
-    else if (B_BEAT_UP >= GEN_5 && GetMoveEffect(gCurrentMove) == EFFECT_BEAT_UP)
+    else if (GetMoveEffect(gCurrentMove) == EFFECT_BEAT_UP)
     {
         struct Pokemon* party = GetBattlerParty(gBattlerAttacker);
         int i;
         gBattleStruct->beatUpSlot = 0;
+        gMultiHitCounter = 0;
+        memset(gBattleStruct->beatUpSpecies, 0, sizeof(gBattleStruct->beatUpSpecies));
+        memset(gBattleStruct->beatUpPartyIndexes, PARTY_SIZE, sizeof(gBattleStruct->beatUpPartyIndexes));
 
         for (i = 0; i < PARTY_SIZE; i++)
         {
@@ -2486,12 +2489,12 @@ static enum MoveCanceler CancelerMultihitMoves(void)
              && !GetMonData(&party[i], MON_DATA_IS_EGG)
              && !GetMonData(&party[i], MON_DATA_STATUS))
             {
-                gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++] = species;
+                gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
+                gBattleStruct->beatUpPartyIndexes[gMultiHitCounter] = i;
                 gMultiHitCounter++;
             }
         }
 
-        gBattleStruct->beatUpSlot = 0;
         PREPARE_BYTE_NUMBER_BUFFER(gBattleScripting.multihitString, 1, 0)
     }
     else

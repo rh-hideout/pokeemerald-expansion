@@ -4295,10 +4295,8 @@ BattleScript_EffectBeatUp::
 	attackstring
 	pause B_WAIT_TIME_SHORT
 	ppreduce
-	setbyte gBattleCommunication, 0
-BattleScript_BeatUpLoop::
 	movevaluescleanup
-	trydobeatup BattleScript_BeatUpEnd, BattleScript_ButItFailed
+	trydobeatup BattleScript_MoveEnd, BattleScript_ButItFailed
 	printstring STRINGID_PKMNATTACK
 	critcalc
 	jumpifcriticalhit BattleScript_BeatUpAttack
@@ -4317,10 +4315,7 @@ BattleScript_BeatUpAttack::
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
 	tryfaintmon BS_TARGET
-	moveendto MOVEEND_NEXT_TARGET
-	goto BattleScript_BeatUpLoop
-BattleScript_BeatUpEnd::
-	end
+	goto BattleScript_MoveEnd
 
 BattleScript_EffectDefenseCurl::
 	attackcanceler

@@ -12598,33 +12598,33 @@ static void Cmd_trydobeatup(void)
     }
     else
     {
-        u8 beforeLoop = gBattleCommunication[0];
-        for (;gBattleCommunication[0] < PARTY_SIZE; gBattleCommunication[0]++)
-        {
-            if (GetMonData(&party[gBattleCommunication[0]], MON_DATA_HP)
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-                && !GetMonData(&party[gBattleCommunication[0]], MON_DATA_STATUS))
-                break;
-        }
+        const u8 beatUpSlot = gBattleStruct->beatUpSlot;
+        u8 partyIndex = PARTY_SIZE;
 
-        if (gBattleCommunication[0] < PARTY_SIZE)
+        if (beatUpSlot < PARTY_SIZE)
+            partyIndex = gBattleStruct->beatUpPartyIndexes[beatUpSlot];
+
+        if (partyIndex < PARTY_SIZE
+            && GetMonData(&party[partyIndex], MON_DATA_HP)
+            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
+            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+            && !GetMonData(&party[partyIndex], MON_DATA_STATUS))
         {
-            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattleCommunication[0])
+            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, partyIndex)
 
             gBattlescriptCurrInstr = cmd->nextInstr;
 
-            gBattleStruct->moveDamage[gBattlerTarget] = GetSpeciesBaseAttack(GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES));
+            gBattleStruct->moveDamage[gBattlerTarget] = GetSpeciesBaseAttack(gBattleStruct->beatUpSpecies[beatUpSlot]);
             gBattleStruct->moveDamage[gBattlerTarget] *= GetMovePower(gCurrentMove);
-            gBattleStruct->moveDamage[gBattlerTarget] *= (GetMonData(&party[gBattleCommunication[0]], MON_DATA_LEVEL) * 2 / 5 + 2);
+            gBattleStruct->moveDamage[gBattlerTarget] *= (GetMonData(&party[partyIndex], MON_DATA_LEVEL) * 2 / 5 + 2);
             gBattleStruct->moveDamage[gBattlerTarget] /= GetSpeciesBaseDefense(gBattleMons[gBattlerTarget].species);
             gBattleStruct->moveDamage[gBattlerTarget] = (gBattleStruct->moveDamage[gBattlerTarget] / 50) + 2;
             if (gProtectStructs[gBattlerAttacker].helpingHand)
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * 15 / 10;
 
-            gBattleCommunication[0]++;
+            gBattleStruct->beatUpSlot++;
         }
-        else if (beforeLoop != 0)
+        else if (beatUpSlot != 0)
         {
             gBattlescriptCurrInstr = cmd->endInstr;
         }
