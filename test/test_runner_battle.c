@@ -1927,6 +1927,7 @@ u32 TestRunner_Battle_GetPartyIndexOrDefault(u32 battlerId, u32 recordIndex)
             continue;
         if (IsDoubleBattle() && gBattlerPartyIndexes[B_POSITION_PLAYER_RIGHT] == i)
             continue;
+        DATA.currentMonIndexes[battlerId] = i;
         return i;
     }
     return PARTY_SIZE;

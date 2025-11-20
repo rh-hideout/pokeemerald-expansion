@@ -175,9 +175,11 @@ void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear)
 
 u8 RecordedBattle_GetPartyIndexOrDefault(u8 battler)
 {
+#if TESTING
     u32 partyIndex = TestRunner_Battle_GetPartyIndexOrDefault(battler, sBattlerRecordSizes[battler]);
     if (partyIndex < PARTY_SIZE)
         return partyIndex;
+#endif
     return RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
 }
 

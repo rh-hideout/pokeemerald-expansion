@@ -376,11 +376,7 @@ static void RecordedPlayerHandleChooseItem(u32 battler)
 
 static void RecordedPlayerHandleChoosePokemon(u32 battler)
 {
-    #if TESTING
-        gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetPartyIndexOrDefault(battler);
-    #else
-        gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetBattlerAction(RECORDED_PARTY_INDEX, battler);
-    #endif
+    gBattleStruct->monToSwitchIntoId[battler] = RecordedBattle_GetPartyIndexOrDefault(battler);
     gSelectedMonPartyId = gBattleStruct->monToSwitchIntoId[battler]; // Revival Blessing
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, gBattleStruct->monToSwitchIntoId[battler], NULL);
     BtlController_Complete(battler);
