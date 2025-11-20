@@ -38,10 +38,7 @@ void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u8 value)
     temp[i].data = value;
 
     TRY_FREE_AND_SET_NULL(gMoveDataTestOverrride);
-    gMoveDataTestOverrride = AllocZeroed(sizeof(struct MoveDataOverride) * (i + 2));
-    memcpy(gMoveDataTestOverrride, temp, sizeof(struct MoveDataOverride) * (i + 2));
-
-    Free(temp);
+    gMoveDataTestOverrride = temp;
 }
 
 void TestFreeMoveDataOverride(void)
