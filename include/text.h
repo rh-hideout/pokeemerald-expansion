@@ -75,7 +75,13 @@ struct TextPrinterSubStruct
 struct TextPrinterTemplate
 {
     const u8 *currentChar;
-    u8 windowId;
+
+    enum: u8 { WINDOW_TEXT_PRINTER, SPRITE_TEXT_PRINTER } type;
+    union {
+        u8 windowId;
+        u8 spriteId;
+    };
+
     u8 fontId;
     u8 x;
     u8 y;

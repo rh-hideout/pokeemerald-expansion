@@ -2,6 +2,7 @@
 #include "sprite.h"
 #include "main.h"
 #include "palette.h"
+#include "text.h"
 
 #define MAX_SPRITE_COPY_REQUESTS 64
 
@@ -43,12 +44,6 @@ struct OamDimensions32
 {
     s32 width;
     s32 height;
-};
-
-struct OamDimensions
-{
-    s8 width;
-    s8 height;
 };
 
 static void SortSprites(u32 *spritePriorities, s32 n);
@@ -228,7 +223,7 @@ static const struct OamDimensions32 sOamDimensions32[3][4] =
     },
 };
 
-static const struct OamDimensions sOamDimensions[3][4] =
+const struct OamDimensions gOamDimensions[3][4] =
 {
     [ST_OAM_SQUARE] =
     {
@@ -1746,7 +1741,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
 
             if (hFlip)
             {
-                s8 width = sOamDimensions[subspriteTable->subsprites[i].shape][subspriteTable->subsprites[i].size].width;
+                s8 width = gOamDimensions[subspriteTable->subsprites[i].shape][subspriteTable->subsprites[i].size].width;
                 s16 right = x;
                 right += width;
                 x = right;
@@ -1755,7 +1750,7 @@ bool8 AddSubspritesToOamBuffer(struct Sprite *sprite, struct OamData *destOam, u
 
             if (vFlip)
             {
-                s8 height = sOamDimensions[subspriteTable->subsprites[i].shape][subspriteTable->subsprites[i].size].height;
+                s8 height = gOamDimensions[subspriteTable->subsprites[i].shape][subspriteTable->subsprites[i].size].height;
                 s16 bottom = y;
                 bottom += height;
                 y = bottom;
@@ -1801,4 +1796,30 @@ static const u8 sSpanPerImage[4][4] =
 u32 GetSpanPerImage(u32 shape, u32 size)
 {
     return sSpanPerImage[shape][size];
+}
+
+u8 Sprite_PrintText(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
+{
+    struct TextPrinterTemplate printer;
+
+    printer.currentChar = string;
+    printer.type = SPRITE_TEXT_PRINTER;
+    printer.spriteId = spriteId;
+    printer.fontId = fontId;
+    printer.x = x;
+    printer.y = y;
+    printer.currentX = x;
+    printer.currentY = y;
+    printer.letterSpacing = gFonts[fontId].letterSpacing;
+    printer.lineSpacing = gFonts[fontId].lineSpacing;
+    printer.unk = gFonts[fontId].unk;
+    printer.fgColor = 1;
+    printer.bgColor = 0;
+    printer.shadowColor = 3;
+
+    return AddTextPrinter(&printer, 0, NULL);
+}
+
+void Sprite_FillRectWithColor(u32 spriteId, s32 left, s32 top, u32 width, u32 height, u32 color)
+{
 }

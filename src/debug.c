@@ -78,6 +78,8 @@
 #include "fake_rtc.h"
 #include "save.h"
 
+#include "even_sprite.h"
+
 enum FollowerNPCCreateDebugMenu
 {
     DEBUG_FNPC_BRENDAN,
