@@ -589,7 +589,7 @@ bool8 GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
 
     headerId = GetCurrentMapWildMonHeaderId();
     if (inWater) {
-        wildMonIndex = ChooseWildMonIndex_WaterRock();
+        wildMonIndex = ChooseWildMonIndex_Water();
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
         followMon->level = ChooseWildMonLevel(wildMonInfo->wildPokemon, wildMonIndex, WILD_AREA_WATER);
