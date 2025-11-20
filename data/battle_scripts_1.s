@@ -7135,6 +7135,11 @@ BattleScript_AbilityRaisesDefenderStat::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
+BattleScript_AbilityRaisesDefenderStatAndRestoreStatChanger::
+	call BattleScript_AbilityRaisesDefenderStat
+	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
+	return
+
 BattleScript_AbilityCantRaiseDefenderStat::
 	saveattacker
 	copybyte gBattlerAttacker, gBattlerTarget
