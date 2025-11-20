@@ -19,7 +19,7 @@ struct FollowMon
     u16 timeOfDay:2;
     u16 age:4;
     u16 encounterIndex:8;
-    u16 unused:8;
+    u16 padding;
 };
 
 #define EMPTY_FOLLOWMON 0xFF;
