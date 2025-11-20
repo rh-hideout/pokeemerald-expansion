@@ -50,6 +50,8 @@
 #include "text.h"
 #include "trainer_hill.h"
 #include "util.h"
+#include "wild_encounter.h"
+#include "config/fishing.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_move_effects.h"
@@ -1054,7 +1056,7 @@ bool32 ComputePlayerShinyOdds(u32 personality)
     {
         isShiny = TRUE;
     }
-    else if (P_ONLY_OBTAINABLE_SHINIES && InBattlePyramid())
+    else if (P_ONLY_OBTAINABLE_SHINIES && InBattlePyramid_())
     {
         isShiny = FALSE;
     }
