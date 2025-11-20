@@ -4299,7 +4299,7 @@ BattleScript_EffectBeatUp::
 	trydobeatup BattleScript_MoveEnd, BattleScript_ButItFailed
 	printstring STRINGID_PKMNATTACK
 	critcalc
-	jumpifcriticalhit BattleScript_BeatUpAttack
+	jumpifnotcriticalhit BattleScript_BeatUpAttack
 	manipulatedamage DMG_DOUBLED
 BattleScript_BeatUpAttack::
 	adjustdamage

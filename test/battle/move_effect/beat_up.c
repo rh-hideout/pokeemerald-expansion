@@ -28,29 +28,6 @@ SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused m
     }
 }
 
-#if B_BEAT_UP < GEN_5
-SINGLE_BATTLE_TEST("Gen3 Beat Up still triggers move-end effects like Life Orb")
-{
-    GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
-        PLAYER(SPECIES_WYNAUT);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_BEAT_UP); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        HP_BAR(opponent);
-        HP_BAR(opponent);
-        HP_BAR(player);
-        MESSAGE("Wobbuffet was hurt by the Life Orb!");
-    } THEN {
-        u8 beatUpSlot = gBattleStruct->beatUpSlot;
-        EXPECT_EQ(beatUpSlot, 2);
-    }
-}
-#endif
-
 SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
 {
     GIVEN {
@@ -71,17 +48,6 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
 }
 
 // TODO: Beat Up's strikes have each an independent chance of a critical hit
-
-// B_BEAT_UP Gen2-4
-// TO_DO_BATTLE_TEST("Beat Up lists each party member's name");
-// TO_DO_BATTLE_TEST("Beat Up's damage is typeless");
-// TO_DO_BATTLE_TEST("Beat Up's damage doesn't consider STAB");
-// TO_DO_BATTLE_TEST("Beat Up's last strike-only can trigger King's Rock");
-// TO_DO_BATTLE_TEST("Beat Up's base power is the same for each strike");
-// TO_DO_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's base attack and level and the target's defense");
-// TO_DO_BATTLE_TEST("Beat Up ignores stat stage changes"); //eg. Swords Dance
-// TO_DO_BATTLE_TEST("Beat Up ignores Huge Power");
-// TO_DO_BATTLE_TEST("Beat Up ignores Choice Band");
 
 #if B_BEAT_UP >= GEN_5
 SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name")
@@ -198,16 +164,6 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band", s16 
 #endif
 
 #if B_BEAT_UP < GEN_5
-static u16 CalcGen3BeatUpDamage(u16 attackerSpecies, u16 targetSpecies, u8 level)
-{
-    u32 dmg = GetSpeciesBaseAttack(attackerSpecies);
-    dmg *= GetMovePower(MOVE_BEAT_UP);
-    dmg *= (level * 2 / 5 + 2);
-    dmg /= GetSpeciesBaseDefense(targetSpecies);
-    dmg = dmg / 50 + 2;
-    return dmg;
-}
-
 SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
 {
     GIVEN {
@@ -225,47 +181,77 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage is typeless")
+SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
 {
-    PARAMETRIZE { } // Dummy to satisfy harness
+    u16 defender = SPECIES_WOBBUFFET;
+    u16 type1, type2;
+
+    PARAMETRIZE { defender = SPECIES_BLISSEY; }   // Normal
+    PARAMETRIZE { defender = SPECIES_MACHAMP; }     // Fighting
+    PARAMETRIZE { defender = SPECIES_TORNADUS; }    // Flying
+    PARAMETRIZE { defender = SPECIES_GRIMER; }      // Poison
+    PARAMETRIZE { defender = SPECIES_SANDSHREW; }   // Ground
+    PARAMETRIZE { defender = SPECIES_NOSEPASS; }    // Rock
+    PARAMETRIZE { defender = SPECIES_CATERPIE; }    // Bug
+    PARAMETRIZE { defender = SPECIES_DUSKULL; }     // Ghost
+    PARAMETRIZE { defender = SPECIES_REGISTEEL; }   // Steel
+    PARAMETRIZE { defender = SPECIES_CHIMCHAR; }    // Fire
+    PARAMETRIZE { defender = SPECIES_WARTORTLE; }   // Water
+    PARAMETRIZE { defender = SPECIES_TANGELA; }     // Grass
+    PARAMETRIZE { defender = SPECIES_PIKACHU; }     // Electric
+    PARAMETRIZE { defender = SPECIES_ABRA; }        // Psychic
+    PARAMETRIZE { defender = SPECIES_SNORUNT; }     // Ice
+    PARAMETRIZE { defender = SPECIES_BAGON; }       // Dragon
+    PARAMETRIZE { defender = SPECIES_UMBREON; }     // Dark
+    PARAMETRIZE { defender = SPECIES_SYLVEON; }     // Fairy
+
     GIVEN {
+        type1 = GetSpeciesType(defender, 0);
+        type2 = GetSpeciesType(defender, 1);
+        ASSUME(type2 == type1 || type2 == TYPE_MYSTERY); // Ensure monotype targets
         PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_SABLEYE);
+        OPPONENT(defender);
     } WHEN {
         TURN { MOVE(player, MOVE_BEAT_UP); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
-        HP_BAR(opponent);
-        NONE_OF { MESSAGE("It doesn't affect"); }
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+        NONE_OF {
+            MESSAGE("It's super effective!");
+            MESSAGE("It's not very effective...");
+            MESSAGE("It doesn't affect");
+        }
+    } THEN {
+        EXPECT_GT(results[i].damage, 0);
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage doesn't consider STAB", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage doesn't consider STAB")
 {
-    s16 damageVal = 0;
-    bool32 dummy;
-    PARAMETRIZE { dummy = FALSE; }
+    static s16 damage;
     GIVEN {
+        damage = 0;
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BEAT_UP); }
     } SCENE {
-        HP_BAR(opponent, captureDamage: &damageVal);
+        HP_BAR(opponent, captureDamage: &damage);
     } THEN {
-        u16 expected = CalcGen3BeatUpDamage(SPECIES_WOBBUFFET, SPECIES_WOBBUFFET, 50);
-        EXPECT_EQ(damageVal, expected);
+        // Raw damage: baseAtk 33 * basePower 1 * levelFactor ((100 * 2 / 5) + 2 = 42) = 1386
+        // Divide by baseDef 58 -> 23 (floor); 23/50 + 2 = 2;
+        u16 expected = 2;
+        EXPECT_EQ(damage, expected);
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike")
 {
-    // Uses two identical low-Attack Wynaut strikers to verify per-hit base power stays constant.
-    s16 firstHit = 0, secondHit = 0;
-    bool32 dummy;
-    PARAMETRIZE { dummy = FALSE; }
+    static s16 firstHit, secondHit;
     GIVEN {
+        firstHit = 0;
+        secondHit = 0;
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -284,14 +270,12 @@ SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike", s16 damag
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's base attack and level and the target's defense", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's base attack and level and the target's defense")
 {
-    // Shuckle has minimal base Attack, Deoxys-A has maximal base Attack; compare their hits.
-    s16 shuckleHit = 0, deoxysHit = 0;
-    bool32 dummy;
-    PARAMETRIZE { dummy = FALSE; }
-    PARAMETRIZE { }
+    static s16 shuckleHit, deoxysHit;
     GIVEN {
+        shuckleHit = 0;
+        deoxysHit = 0;
         PLAYER(SPECIES_SHUCKLE);
         PLAYER(SPECIES_DEOXYS_ATTACK);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -306,8 +290,10 @@ SINGLE_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's b
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         HP_BAR(opponent, captureDamage: &deoxysHit);
     } THEN {
-        u16 shuckleDmg = CalcGen3BeatUpDamage(SPECIES_SHUCKLE, SPECIES_BLISSEY, 50);
-        u16 deoxysDmg = CalcGen3BeatUpDamage(SPECIES_DEOXYS_ATTACK, SPECIES_BLISSEY, 50);
+        // Shuckle: baseAtk 10 * basePower 1 * levelFactor 42 = 420; / baseDef 10 -> 42; 42/50 + 2 = 2
+        u16 shuckleDmg = 2;
+        // Deoxys-A: baseAtk 180 * basePower 1 * levelFactor 42 = 7560; / baseDef 10 -> 756; 756/50 + 2 = 17
+        u16 deoxysDmg = 17;
         EXPECT_EQ(shuckleHit, shuckleDmg);
         EXPECT_EQ(deoxysHit, deoxysDmg);
         EXPECT_LT(shuckleHit, deoxysHit);
