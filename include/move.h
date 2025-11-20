@@ -17,7 +17,7 @@
 })
 
 #if TESTING
-extern struct MoveDataOverride *gMoveDataTestOverrride;
+extern struct MoveDataOverride *gMoveDataTestOverride;
 #endif
 
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
@@ -219,10 +219,10 @@ static inline u32 GetMovePower(u32 moveId)
 {
 #if TESTING
     moveId = SanitizeMoveId(moveId);
-    for (u32 i = 0; gMoveDataTestOverrride[i].moveId != MOVE_NONE; i++)
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
     {
-        if (gMoveDataTestOverrride[i].moveId == moveId && gMoveDataTestOverrride[i].type == MOVE_DATA_POWER)
-            return gMoveDataTestOverrride[i].data;
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_POWER)
+            return gMoveDataTestOverride[i].data;
     }
 
     return GET_DEPRECATED(u32, gMovesInfo[moveId].power);
