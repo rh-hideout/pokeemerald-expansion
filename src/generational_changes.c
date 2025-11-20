@@ -33,16 +33,19 @@ void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u8 value)
     temp = AllocZeroed(sizeof(struct MoveDataOverride) * (i + 2));
     memcpy(temp, gMoveDataTestOverrride, sizeof(struct MoveDataOverride) * (i + 1));
 
-    gMoveDataTestOverrride = AllocZeroed(sizeof(struct MoveDataOverride));
-    gMoveDataTestOverrride[i].moveId = move;
-    gMoveDataTestOverrride[i].type = type;
-    gMoveDataTestOverrride[i].data = value;
+    temp[i].moveId = move;
+    temp[i].type = type;
+    temp[i].data = value;
+
+    TRY_FREE_AND_SET_NULL(gMoveDataTestOverrride);
+    gMoveDataTestOverrride = AllocZeroed(sizeof(struct MoveDataOverride) * (i + 2));
+    memcpy(gMoveDataTestOverrride, temp, sizeof(struct MoveDataOverride) * (i + 2));
 
     Free(temp);
 }
 
 void TestFreeMoveDataOverride(void)
 {
-    TRY_FREE_AND_SET_NULL(gMoveDataTestOverrride)
+    TRY_FREE_AND_SET_NULL(gMoveDataTestOverrride);
 }
 #endif
