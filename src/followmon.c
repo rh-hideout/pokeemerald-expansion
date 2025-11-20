@@ -164,19 +164,42 @@ static u8 GetMaxFollowMonSpawns(void)
         return 3;
 }
 
+static u32 GetNewOldestSlot(u32 oldSlot)
+{
+    u32 i;
+    u32 nextOldest = FOLLOWMON_MAX_SPAWN_SLOTS;
+
+    for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    {
+        if (sFollowMonData.list[i].encounterIndex != 0)
+        {
+            if (i != oldSlot && (nextOldest == FOLLOWMON_MAX_SPAWN_SLOTS || sFollowMonData.list[i].age > sFollowMonData.list[nextOldest].age))
+                nextOldest = i;
+        }
+    }
+
+    return nextOldest;
+}
+
 static u8 NextSpawnMonSlot(void)
 {
-    u8 slot;
+    u8 slot = 0;
     u8 maxSpawns = GetMaxFollowMonSpawns();
 
-    slot = sFollowMonData.usedSlots;
-
     // All mon slots are in use
-    if(slot >= maxSpawns)
+    if(CountActiveFollowMon() + 1 >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
-        sFollowMonData.oldestSlot = (sFollowMonData.oldestSlot + 1) % maxSpawns;
-        slot = sFollowMonData.oldestSlot;   
+        slot = sFollowMonData.oldestSlot;
+        sFollowMonData.oldestSlot = GetNewOldestSlot(slot);
+    }
+    else
+    {
+        for (slot = 0; slot < maxSpawns; slot++)
+        {
+            if (sFollowMonData.list[slot].encounterIndex == 0)
+                break;
+        }
     }
 
     // Remove any existing id by this slot
@@ -414,15 +437,24 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
 
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
+    u32 i;
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     sFollowMonData.usedSlots++;
     sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
+
+    // Increase the age of all followmons
+    for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    {
+        if (sFollowMonData.list[i].encounterIndex != 0)
+            sFollowMonData.list[i].age++;
+    }
 }
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
+    sFollowMonData.list[spawnSlot].age = 0;
     sFollowMonData.usedSlots--;
 }
 
@@ -442,10 +474,12 @@ void FollowMon_OnWarp(void)
 {
     sFollowMonData.spawnCountdown = 0;
     sFollowMonData.usedSlots = 0;
+    sFollowMonData.oldestSlot = 0;
 
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
         sFollowMonData.list[i].encounterIndex = 0;
+        sFollowMonData.list[i].age = 0;
     }
 }
 
