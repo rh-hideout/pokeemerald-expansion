@@ -1915,6 +1915,23 @@ static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32
     DATA.recordedBattle.battleRecord[battlerId][recordIndex] = byte;
 }
 
+u32 TestRunner_Battle_GetPartyIndexOrDefault(u32 battlerId, u32 recordIndex)
+{
+    if (DATA.battleRecordTypes[battlerId][recordIndex] == RECORDED_PARTY_INDEX)
+        return PARTY_SIZE;
+    for (u32 i = 0; i < PARTY_SIZE; i++)
+    {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_HP) == 0)
+            continue;
+        if (gBattlerPartyIndexes[B_POSITION_PLAYER_LEFT] == i)
+            continue;
+        if (IsDoubleBattle() && gBattlerPartyIndexes[B_POSITION_PLAYER_RIGHT] == i)
+            continue;
+        return i;
+    }
+    return PARTY_SIZE;
+}
+
 void TestRunner_Battle_CheckBattleRecordActionType(u32 battlerId, u32 recordIndex, u32 actionType)
 {
     // An illegal move choice will cause the battle to request a new

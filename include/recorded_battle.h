@@ -62,6 +62,7 @@ void RecordedBattle_Init(u8 mode);
 void RecordedBattle_SetTrainerInfo(void);
 void RecordedBattle_SetBattlerAction(u8 battler, u8 action);
 void RecordedBattle_ClearBattlerAction(u8 battler, u8 bytesToClear);
+u8 RecordedBattle_GetPartyIndexOrDefault(u8 battler);
 u8 RecordedBattle_GetBattlerAction(u32 actionType, u8 battler);
 u8 RecordedBattle_BufferNewBattlerData(u8 *dst);
 void RecordedBattle_RecordAllBattlerData(u8 *src);
