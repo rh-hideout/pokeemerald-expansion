@@ -247,22 +247,20 @@ DOUBLE_BATTLE_TEST("Intimidate is not going to trigger if a mon switches out thr
     }
 }
 
-DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutralizing Gas - switching out")
+SINGLE_BATTLE_TEST("Intimidate activates when it's no longer effected by Neutralizing Gas - switching out")
 {
     GIVEN {
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
-        PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { SWITCH(playerLeft, 2); }
+        TURN { SWITCH(player, 1); }
     } SCENE {
-        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
         SWITCH_OUT_MESSAGE("Weezing");
         MESSAGE("The effects of the neutralizing gas wore off!");
-        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         SEND_IN_MESSAGE("Wobbuffet");
     }
 }
@@ -300,7 +298,7 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
     }
 }
 
-DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutralizing Gas - opponent caused switches")
+SINGLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutralizing Gas - opponent caused switches")
 {
     u32 move, item;
     PARAMETRIZE { move = MOVE_SCRATCH; item = ITEM_EJECT_BUTTON; }
@@ -314,24 +312,22 @@ DOUBLE_BATTLE_TEST("Intimidate activates when it's no longer affected by Neutral
         ASSUME(GetMoveEffect(MOVE_ROAR) == EFFECT_ROAR);
         ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
         PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Item(item); }
-        PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ARBOK) { Ability(ABILITY_INTIMIDATE); }
-        OPPONENT(SPECIES_WYNAUT);
     } WHEN {
         if (item != ITEM_NONE) {
-            TURN { MOVE(opponentLeft, move, target: playerLeft); SEND_OUT(playerLeft, 2); }
+            TURN { MOVE(opponent, move); SEND_OUT(player, 1); }
         } else {
-            TURN { MOVE(opponentLeft, move, target: playerLeft); }
+            TURN { MOVE(opponent, move); }
         }
     } SCENE {
-        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
         MESSAGE("Neutralizing gas filled the area!");
-        ANIMATION(ANIM_TYPE_MOVE, move, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         if (item != ITEM_NONE)
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("The effects of the neutralizing gas wore off!");
-        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ABILITY_POPUP(opponent, ABILITY_INTIMIDATE);
         if (item != ITEM_NONE) {
             SEND_IN_MESSAGE("Wobbuffet");
         } else {

@@ -2272,7 +2272,6 @@ void BtlController_HandleSwitchInAnim(u32 battler)
 
 void BtlController_HandleReturnMonToBall(u32 battler)
 {
-    gAbsentBattlerFlags |= (1u << battler);
     if (gBattleResources->bufferA[battler][1] == 0)
     {
         gBattleSpritesDataPtr->healthBoxesData[battler].animationState = 0;

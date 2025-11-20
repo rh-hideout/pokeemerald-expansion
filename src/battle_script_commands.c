@@ -7178,7 +7178,7 @@ static void Cmd_switchindataupdate(void)
         monData[i] = gBattleResources->bufferB[battler][4 + i];
 
     // Edge case: the sent out pokemon has 0 HP. This should never happen.
-    if (gBattleMons[battler].hp == 0)
+    if (!IsBattlerAlive(battler))
     {
         // If it's a test, mark it as invalid.
         if (gTestRunnerEnabled)
