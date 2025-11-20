@@ -3576,6 +3576,19 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     return effect;
 }
 
+static u32 GetFirstBattlerOnSide(u32 side)
+{
+    u32 battler;
+
+    for (battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == side && !(gAbsentBattlerFlags & (1u << battler)))
+            return battler;
+    }
+
+    return GetBattlerAtPosition(side == B_SIDE_PLAYER ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT);
+}
+
 static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer)
 {
     if (!(gFieldStatuses & flag))
@@ -3611,6 +3624,71 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
     }
 
     return FALSE;
+}
+
+static bool32 SetStartingHazardStatus(enum Hazards hazard, u32 targetSide, u8 layers, enum StartingStatusStringID messageId)
+{
+    bool32 effect = FALSE;
+    u32 setterSide = (targetSide == B_SIDE_PLAYER) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+
+    switch (hazard)
+    {
+    case HAZARDS_SPIKES:
+        if (layers != 0)
+        {
+            if (!IsHazardOnSide(targetSide, HAZARDS_SPIKES))
+                PushHazardTypeToQueue(targetSide, HAZARDS_SPIKES);
+            gSideTimers[targetSide].spikesAmount = layers;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_TOXIC_SPIKES:
+        if (layers != 0)
+        {
+            if (!IsHazardOnSide(targetSide, HAZARDS_TOXIC_SPIKES))
+                PushHazardTypeToQueue(targetSide, HAZARDS_TOXIC_SPIKES);
+            gSideTimers[targetSide].toxicSpikesAmount = layers;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STICKY_WEB:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STICKY_WEB))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STICKY_WEB);
+            gSideTimers[targetSide].stickyWebBattlerId = 0xFF;
+            gSideTimers[targetSide].stickyWebBattlerSide = setterSide;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STEALTH_ROCK:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STEALTH_ROCK))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STEALTH_ROCK);
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STEELSURGE:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STEELSURGE))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STEELSURGE);
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_NONE:
+    case HAZARDS_MAX_COUNT:
+        break;
+    }
+
+    if (effect)
+    {
+        gBattlerAttacker = GetFirstBattlerOnSide(setterSide);
+        gBattleScripting.battler = gBattlerAttacker;
+        gBattlerTarget = GetFirstBattlerOnSide(targetSide);
+        gBattleCommunication[MULTISTRING_CHOOSER] = messageId;
+        BattleScriptPushCursorAndCallback(BattleScript_OverworldHazard);
+    }
+
+    return effect;
 }
 
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
@@ -3744,6 +3822,54 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
+            break;
+        case STARTING_STATUS_SPIKES_PLAYER_L1:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 1, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_SPIKES_PLAYER_L2:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 2, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_SPIKES_PLAYER_L3:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 3, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_SPIKES_OPPONENT_L1:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 1, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_SPIKES_OPPONENT_L2:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 2, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_SPIKES_OPPONENT_L3:
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 3, B_MSG_SET_SPIKES);
+            break;
+        case STARTING_STATUS_TOXIC_SPIKES_PLAYER_L1:
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_PLAYER, 1, B_MSG_SET_POISON_SPIKES);
+            break;
+        case STARTING_STATUS_TOXIC_SPIKES_PLAYER_L2:
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_PLAYER, 2, B_MSG_SET_POISON_SPIKES);
+            break;
+        case STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L1:
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_OPPONENT, 1, B_MSG_SET_POISON_SPIKES);
+            break;
+        case STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L2:
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_OPPONENT, 2, B_MSG_SET_POISON_SPIKES);
+            break;
+        case STARTING_STATUS_STICKY_WEB_PLAYER:
+            effect = SetStartingHazardStatus(HAZARDS_STICKY_WEB, B_SIDE_PLAYER, 1, B_MSG_SET_STICKY_WEB);
+            break;
+        case STARTING_STATUS_STICKY_WEB_OPPONENT:
+            effect = SetStartingHazardStatus(HAZARDS_STICKY_WEB, B_SIDE_OPPONENT, 1, B_MSG_SET_STICKY_WEB);
+            break;
+        case STARTING_STATUS_STEALTH_ROCK_PLAYER:
+            effect = SetStartingHazardStatus(HAZARDS_STEALTH_ROCK, B_SIDE_PLAYER, 1, B_MSG_SET_STEALTH_ROCK);
+            break;
+        case STARTING_STATUS_STEALTH_ROCK_OPPONENT:
+            effect = SetStartingHazardStatus(HAZARDS_STEALTH_ROCK, B_SIDE_OPPONENT, 1, B_MSG_SET_STEALTH_ROCK);
+            break;
+        case STARTING_STATUS_SHARP_STEEL_PLAYER:
+            effect = SetStartingHazardStatus(HAZARDS_STEELSURGE, B_SIDE_PLAYER, 1, B_MSG_SET_SHARP_STEEL);
+            break;
+        case STARTING_STATUS_SHARP_STEEL_OPPONENT:
+            effect = SetStartingHazardStatus(HAZARDS_STEELSURGE, B_SIDE_OPPONENT, 1, B_MSG_SET_SHARP_STEEL);
             break;
         }
         if (effect)
