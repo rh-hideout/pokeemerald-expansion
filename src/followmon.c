@@ -193,7 +193,7 @@ static u8 NextSpawnMonSlot(void)
     u8 maxSpawns = GetMaxFollowMonSpawns();
 
     // All mon slots are in use
-    if(CountActiveFollowMon() + 1 >= maxSpawns)
+    if(CountActiveFollowMon() >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
         slot = sFollowMonData->oldestSlot;
