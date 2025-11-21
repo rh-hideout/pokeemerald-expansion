@@ -200,12 +200,6 @@ BattleScript_EffectDoodleMoveEnd:
 	restoreattacker
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectGlaiveRush::
-	call BattleScript_EffectHit_Ret
-	jumpifmoveresultflags MOVE_RESULT_DOESNT_AFFECT_FOE, BattleScript_TryFaintMon
-	setvolatile BS_ATTACKER, VOLATILE_GLAIVE_RUSH, 2
-	goto BattleScript_TryFaintMon
-
 BattleScript_SyrupBombActivates::
 	printstring STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP
 	waitmessage B_WAIT_TIME_LONG
