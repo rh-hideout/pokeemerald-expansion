@@ -5170,19 +5170,13 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
 
     case ABILITYEFFECT_NEUTRALIZINGGAS:
         // Prints message only. separate from ABILITYEFFECT_ON_SWITCHIN bc activates before entry hazards
-        for (i = 0; i < gBattlersCount; i++)
+        if (gBattleMons[battler].ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[battler].neutralizingGas)
         {
-            if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[i].neutralizingGas)
-            {
-                gDisableStructs[i].neutralizingGas = TRUE;
-                gBattlerAbility = i;
-                gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
-                BattleScriptPushCursorAndCallback(BattleScript_SwitchInAbilityMsg);
-                effect++;
-            }
-
-            if (effect != 0)
-                break;
+            gDisableStructs[battler].neutralizingGas = TRUE;
+            gBattlerAbility = battler;
+            gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
+            BattleScriptPushCursorAndCallback(BattleScript_SwitchInAbilityMsg);
+            effect++;
         }
         break;
     case ABILITYEFFECT_ON_WEATHER: // For ability effects that activate when the battle weather changes.
