@@ -1371,8 +1371,11 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
             gBattlescriptCurrInstr = nextInstr;
         else if (IsSemiInvulnerable(gBattlerTarget, CHECK_ALL))
         {
-            gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
-            gBattleStruct->missStringId[gBattlerTarget] = gBattleCommunication[MISS_TYPE] = B_MSG_AVOIDED_ATK;
+            if (gBattlerTarget != BATTLE_PARTNER(gBattlerAttacker))
+            {
+                gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
+                gBattleStruct->missStringId[gBattlerTarget] = gBattleCommunication[MISS_TYPE] = B_MSG_AVOIDED_ATK;
+            }
             gBattlescriptCurrInstr = failInstr;
         }
         else if (IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove))
