@@ -9333,8 +9333,10 @@ BattleScript_TargetAbilityStatRaiseRet_End:
 @@@ MAX MOVES @@@
 BattleScript_EffectMaxMove::
 	attackcanceler
+	attackstring
+	ppreduce
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
-	goto BattleScript_HitFromAtkString
+	goto BattleScript_HitFromCritCalc
 
 BattleScript_EffectRaiseStatAllies::
 	savetarget
