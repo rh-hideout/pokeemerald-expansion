@@ -1671,7 +1671,7 @@ SINGLE_BATTLE_TEST("Dynamax: Destiny Bond fails if a dynamaxed battler is presen
     }
 }
 
-SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target")
+SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target prints the correct message")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) {Speed(1);};
