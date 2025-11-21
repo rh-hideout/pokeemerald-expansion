@@ -48,5 +48,6 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
 void FollowMon_OnWarp(void);
 void RemoveAllFollowMonObjects(void);
+void FreeFollowMonData(void);
 
 #endif // GUARD_FOLLOWMON_H
