@@ -72,7 +72,7 @@ bool32 DoSwitchInEvents(void)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter];
 
-            if (!IsBattlerAlive(battler))
+            if (!IsBattlerAlive(battler) && gBattleStruct->eventState.battlerSwitchIn != FIRST_EVENT_BLOCK_HAZARDS)
             {
                 gBattleStruct->switchInBattlerCounter++;
                 gBattleStruct->eventState.battlerSwitchIn = 0;

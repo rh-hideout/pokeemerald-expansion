@@ -4197,7 +4197,6 @@ static void Cmd_tryfaintmon(void)
         {
             gHitMarker |= HITMARKER_FAINTED(battler);
             gBattleStruct->eventState.faintedAction = 0;
-            gBattleStruct->hazardsCounter = 0;
             BattleScriptPush(cmd->nextInstr);
             gBattlescriptCurrInstr = faintScript;
             if (IsOnPlayerSide(battler))
