@@ -7135,11 +7135,6 @@ BattleScript_AbilityRaisesDefenderStat::
 	waitmessage B_WAIT_TIME_LONG
 	return
 
-BattleScript_AbilityRaisesDefenderStatAndRestoreStatChanger::
-	call BattleScript_AbilityRaisesDefenderStat
-	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
-	return
-
 BattleScript_AbilityCantRaiseDefenderStat::
 	saveattacker
 	copybyte gBattlerAttacker, gBattlerTarget
@@ -9344,8 +9339,10 @@ BattleScript_EffectMaxMove::
 BattleScript_EffectRaiseStatAllies::
 	savetarget
 	copybyte gBattlerTarget, gBattlerAttacker
+	copybyte sSAVED_STAT_CHANGER, sSTATCHANGER
 BattleScript_RaiseSideStatsLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseSideStatsIncrement
+	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseSideStatsIncrement
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_RaiseSideStatsIncrement
 	printfromtable gStatUpStringIds
@@ -9360,8 +9357,10 @@ BattleScript_RaiseSideStatsEnd:
 BattleScript_EffectLowerStatFoes::
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
+	copybyte sSAVED_STAT_CHANGER, sSTATCHANGER
 BattleScript_LowerSideStatsLoop:
 	jumpifabsent BS_TARGET, BattleScript_LowerSideStatsIncrement
+	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_LowerSideStatsIncrement
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_LowerSideStatsIncrement
 	printfromtable gStatDownStringIds

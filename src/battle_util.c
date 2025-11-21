@@ -1187,8 +1187,7 @@ void PrepareStringBattle(enum StringID stringId, u32 battler)
               && ShouldDefiantCompetitiveActivate(gBattlerTarget, targetAbility))
     {
         gBattlerAbility = gBattlerTarget;
-        gBattleScripting.savedStatChanger = gBattleScripting.statChanger;
-        BattleScriptCall(BattleScript_AbilityRaisesDefenderStatAndRestoreStatChanger);
+        BattleScriptCall(BattleScript_AbilityRaisesDefenderStat);
         if (targetAbility == ABILITY_DEFIANT)
             SET_STATCHANGER(STAT_ATK, 2, FALSE);
         else
