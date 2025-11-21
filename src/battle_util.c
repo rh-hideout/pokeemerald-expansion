@@ -5295,7 +5295,7 @@ bool32 IsNeutralizingGasOnField(void)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (IsBattlerAlive(i) && gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !gBattleMons[i].volatiles.gastroAcid)
+        if (gDisableStructs[i].neutralizingGas && !gBattleMons[i].volatiles.gastroAcid)
             return TRUE;
     }
 
@@ -5371,7 +5371,7 @@ u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityS
 
     if (!hasAbilityShield
      && IsNeutralizingGasOnField()
-     && gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS)
+     && !gDisableStructs[battler].neutralizingGas)
         return ABILITY_NONE;
 
     if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield, ignoreMoldBreaker))
