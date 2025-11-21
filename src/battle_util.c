@@ -68,6 +68,8 @@ static bool32 CanBeInfinitelyConfused(u32 battler);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
 static bool32 IsOpposingSideEmpty(u32 battler);
+static void ResetParadoxWeatherStat(u32 battler);
+static void ResetParadoxTerrainStat(u32 battler);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -249,7 +251,10 @@ bool32 EndOrContinueWeather(void)
     {
         gBattleWeather = B_WEATHER_NONE;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
+        {
             gDisableStructs[battler].weatherAbilityDone = FALSE;
+            ResetParadoxWeatherStat(battler);
+        }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
         BattleScriptExecute(BattleScript_WeatherFaded);
         return TRUE;
@@ -1718,6 +1723,7 @@ void TryToRevertMimicryAndFlags(void)
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         gDisableStructs[battler].terrainAbilityDone = FALSE;
+        ResetParadoxTerrainStat(battler);
         if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MIMICRY))
             RESTORE_BATTLER_TYPE(battler);
     }
@@ -2810,7 +2816,10 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
     {
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
         for (u32 i = 0; i < gBattlersCount; i++)
+        {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            ResetParadoxWeatherStat(i);
+        }
         return TRUE;
     }
     else
@@ -2824,7 +2833,10 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         else
             gWishFutureKnock.weatherDuration = 5;
         for (u32 i = 0; i < gBattlersCount; i++)
+        {
             gDisableStructs[i].weatherAbilityDone = FALSE;
+            ResetParadoxWeatherStat(i);
+        }
         return TRUE;
     }
 
@@ -2841,7 +2853,10 @@ bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag)
         gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= statusFlag;
         for (u32 i = 0; i < gBattlersCount; i++)
+        {
             gDisableStructs[i].terrainAbilityDone = FALSE;
+            ResetParadoxTerrainStat(i);
+        }
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_TERRAIN_EXTENDER)
             gFieldTimers.terrainTimer = gBattleTurnCounter + 8;
         else
@@ -5175,6 +5190,11 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             if (gBattleMons[i].ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[i].neutralizingGas)
             {
                 gDisableStructs[i].neutralizingGas = TRUE;
+                for (u32 j = 0; j < gBattlersCount; j++)
+                {
+                    gDisableStructs[j].weatherAbilityDone = FALSE;
+                    gDisableStructs[j].terrainAbilityDone = FALSE;
+                }
                 gBattlerAbility = i;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
                 BattleScriptPushCursorAndCallback(BattleScript_SwitchInAbilityMsg);
@@ -5230,7 +5250,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].weatherAbilityDone = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
                 gBattleScripting.battler = battler;
                 BattleScriptPushCursorAndCallback(BattleScript_ProtosynthesisActivates);
                 effect++;
@@ -5259,7 +5280,8 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
              && !gDisableStructs[battler].boosterEnergyActivated)
             {
                 gDisableStructs[battler].terrainAbilityDone = TRUE;
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+                gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptPushCursorAndCallback(BattleScript_QuarkDriveActivates);
                 effect++;
@@ -5550,6 +5572,108 @@ bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
             CHECK_TRIGGER))
         return TRUE;
     return FALSE;
+}
+
+u32 GetHighestStatId(u32 battler)
+{
+    u32 highestId = STAT_ATK;
+    u32 highestStat = gBattleMons[battler].attack;
+
+    for (u32 stat = STAT_DEF; stat < NUM_STATS; stat++)
+    {
+        if (stat == STAT_SPEED)
+            continue;
+
+        u16 *statVal = &gBattleMons[battler].attack + (stat - 1);
+        if (*statVal > highestStat)
+        {
+            highestStat = *statVal;
+            highestId = stat;
+        }
+    }
+
+    if (gBattleMons[battler].speed > highestStat)
+        highestId = STAT_SPEED;
+
+    return highestId;
+}
+
+static u32 GetStatValueWithStages(u32 battler, u32 stat)
+{
+    u32 statValue;
+
+    switch (stat)
+    {
+    case STAT_ATK:
+        statValue = gBattleMons[battler].attack;
+        break;
+    case STAT_DEF:
+        statValue = gBattleMons[battler].defense;
+        break;
+    case STAT_SPATK:
+        statValue = gBattleMons[battler].spAttack;
+        break;
+    case STAT_SPDEF:
+        statValue = gBattleMons[battler].spDefense;
+        break;
+    case STAT_SPEED:
+        statValue = gBattleMons[battler].speed;
+        break;
+    default:
+        return 0;
+    }
+
+    statValue *= gStatStageRatios[gBattleMons[battler].statStages[stat]][0];
+    statValue /= gStatStageRatios[gBattleMons[battler].statStages[stat]][1];
+
+    return statValue;
+}
+
+u32 GetParadoxHighestStatId(u32 battler)
+{
+    u32 highestId = STAT_ATK;
+    u32 highestStat = GetStatValueWithStages(battler, STAT_ATK);
+
+    for (u32 stat = STAT_DEF; stat < NUM_STATS; stat++)
+    {
+        if (stat == STAT_SPEED)
+            continue;
+
+        u32 statValue = GetStatValueWithStages(battler, stat);
+        if (statValue > highestStat)
+        {
+            highestStat = statValue;
+            highestId = stat;
+        }
+    }
+
+    u32 speed = GetStatValueWithStages(battler, STAT_SPEED);
+    if (speed > highestStat)
+        highestId = STAT_SPEED;
+
+    return highestId;
+}
+
+static void ResetParadoxWeatherStat(u32 battler)
+{
+    if (gBattleMons[battler].ability == ABILITY_PROTOSYNTHESIS
+     && !gDisableStructs[battler].boosterEnergyActivated)
+        gDisableStructs[battler].paradoxBoostedStat = 0;
+}
+
+static void ResetParadoxTerrainStat(u32 battler)
+{
+    if (gBattleMons[battler].ability == ABILITY_QUARK_DRIVE
+     && !gDisableStructs[battler].boosterEnergyActivated)
+        gDisableStructs[battler].paradoxBoostedStat = 0;
+}
+
+u32 GetParadoxBoostedStatId(u32 battler)
+{
+    if (gDisableStructs[battler].paradoxBoostedStat == 0)
+        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
+
+    return gDisableStructs[battler].paradoxBoostedStat;
 }
 
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, u32 abilityDef)
@@ -6201,7 +6325,8 @@ u32 TryBoosterEnergy(u32 battler, u32 ability, enum ItemCaseId caseID)
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
+        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
         gBattlerAbility = gBattleScripting.battler = battler;
         gDisableStructs[battler].boosterEnergyActivated = TRUE;
         gLastUsedItem = ITEM_BOOSTER_ENERGY;
@@ -8413,7 +8538,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_PROTOSYNTHESIS:
         {
-            u8 defHighestStat = GetHighestStatId(battlerDef);
+            u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
             if (((ctx->weather & B_WEATHER_SUN && HasWeatherEffect()) || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -8422,7 +8547,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
         break;
     case ABILITY_QUARK_DRIVE:
         {
-            u8 defHighestStat = GetHighestStatId(battlerDef);
+            u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
             if ((gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
@@ -8691,7 +8816,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            u32 atkHighestStat = GetHighestStatId(battlerAtk);
+            u32 atkHighestStat = GetParadoxBoostedStatId(battlerAtk);
             if (((ctx->weather & B_WEATHER_SUN) && HasWeatherEffect()) || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
@@ -8702,7 +8827,7 @@ static inline u32 CalcAttackStat(struct DamageContext *ctx)
     case ABILITY_QUARK_DRIVE:
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
-            u32 atkHighestStat = GetHighestStatId(battlerAtk);
+            u32 atkHighestStat = GetParadoxBoostedStatId(battlerAtk);
             if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
