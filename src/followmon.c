@@ -9,6 +9,7 @@
 #include "followmon.h"
 #include "fieldmap.h"
 #include "field_player_avatar.h"
+#include "malloc.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
 #include "random.h"
@@ -17,7 +18,7 @@
 #include "sound.h"
 #include "wild_encounter.h"
 
-static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
+static EWRAM_DATA struct FollowMonData *sFollowMonData = NULL;
 
 static u8 CountActiveFollowMon();
 static bool8 TrySelectTile(s16* outX, s16* outY);
@@ -38,31 +39,36 @@ static void GetMapSize(s32 *width, s32 *height);
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
     u8 slot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    sFollowMonData.list[slot].isShiny = objectEvent->shiny;
-    sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
-    sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
-    sFollowMonData.list[slot].onWater = MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior);
+    sFollowMonData->list[slot].isShiny = objectEvent->shiny;
+    sFollowMonData->list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
+    sFollowMonData->list[slot].encounterIndex = objectEvent->sEncounterIndex;
+    sFollowMonData->list[slot].onWater = MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior);
 
-    sFollowMonData.spawnCountdown += 60;
-    sFollowMonData.usedSlots++;
+    sFollowMonData->spawnCountdown += 60;
+    sFollowMonData->usedSlots++;
+}
+
+void FreeFollowMonData(void)
+{
+    if (sFollowMonData != NULL)
+    {
+        Free(sFollowMonData);
+        sFollowMonData = NULL;
+    }
 }
 
 void FollowMon_OverworldCB(void)
 {
-    if (!FlagGet(OW_FLAG_SPAWN_OVERWORLD_MON))
+    if (!OW_SPAWN_OW_WILD_ENCOUNTERS)
     {
         RemoveAllFollowMonObjects();
-        // Zero sFollowMonData ;
-        u8 *raw = (u8 *)&sFollowMonData;
-        for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
-        {
-            raw[i] = 0;
-        }
-
         return;
     }
 
-    if(sFollowMonData.spawnCountdown == 0)
+    if (sFollowMonData == NULL)
+        sFollowMonData = AllocZeroed(sizeof(struct FollowMonData));
+    
+    if (sFollowMonData->spawnCountdown == 0)
     {
         s16 x, y;
         const struct WildPokemonInfo *wildMonInfo = NULL;
@@ -91,7 +97,7 @@ void FollowMon_OverworldCB(void)
 
                 // Only used for save/load as well as loading encounters, 
                 // Most of the time, followmon data is tracked in sFollowMonData
-                const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
+                const struct FollowMon *followMon = &sFollowMonData->list[spawnSlot];
                 gObjectEvents[objectEventId].shiny = followMon->isShiny;
                 gObjectEvents[objectEventId].spawnTimeOfDay = followMon->timeOfDay;
                 gObjectEvents[objectEventId].sEncounterIndex = followMon->encounterIndex;
@@ -102,17 +108,17 @@ void FollowMon_OverworldCB(void)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
-                sFollowMonData.spawnCountdown = 60 * (3 + Random() % 2);
+                sFollowMonData->spawnCountdown = 60 * (3 + Random() % 2);
             }
         }
     }
     else
     {
-        --sFollowMonData.spawnCountdown;
+        --sFollowMonData->spawnCountdown;
     }
 
     // Play spawn animation when player is close enough
-    if(sFollowMonData.pendingSpawnAnim != 0)
+    if(sFollowMonData->pendingSpawnAnim != 0)
     {
         u16 spawnSlot;
         u16 gfxId;
@@ -125,21 +131,21 @@ void FollowMon_OverworldCB(void)
             spawnSlot = gfxId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
             bitFlag = (1 << spawnSlot);
 
-            if((sFollowMonData.pendingSpawnAnim & bitFlag) != 0)
+            if((sFollowMonData->pendingSpawnAnim & bitFlag) != 0)
             {
                 objectEventId = FindObjectEventForGfx(gfxId);
 
                 if(objectEventId != OBJECT_EVENTS_COUNT)
                 {
-                    if(sFollowMonData.list[spawnSlot].isShiny)
+                    if(sFollowMonData->list[spawnSlot].isShiny)
                     {
                         PlaySE(SE_SHINY);
                         spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
-                        sFollowMonData.pendingSpawnAnim &= ~bitFlag;
+                        sFollowMonData->pendingSpawnAnim &= ~bitFlag;
                     }
                     else 
                     {
-                        PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]), 25); 
+                        PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData->list[spawnSlot]), 25); 
                         if (IsSpawningWaterMons())
                             spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
                         else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
@@ -149,7 +155,7 @@ void FollowMon_OverworldCB(void)
                     }
                     // Instantly play a small animation to ground the spawning a bit
                     MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
-                    sFollowMonData.pendingSpawnAnim &= ~bitFlag;
+                    sFollowMonData->pendingSpawnAnim &= ~bitFlag;
                 }
             }
         }
@@ -171,9 +177,9 @@ static u32 GetNewOldestSlot(u32 oldSlot)
 
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        if (sFollowMonData.list[i].encounterIndex != 0)
+        if (sFollowMonData->list[i].encounterIndex != 0)
         {
-            if (i != oldSlot && (nextOldest == FOLLOWMON_MAX_SPAWN_SLOTS || sFollowMonData.list[i].age > sFollowMonData.list[nextOldest].age))
+            if (i != oldSlot && (nextOldest == FOLLOWMON_MAX_SPAWN_SLOTS || sFollowMonData->list[i].age > sFollowMonData->list[nextOldest].age))
                 nextOldest = i;
         }
     }
@@ -190,14 +196,14 @@ static u8 NextSpawnMonSlot(void)
     if(CountActiveFollowMon() + 1 >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
-        slot = sFollowMonData.oldestSlot;
-        sFollowMonData.oldestSlot = GetNewOldestSlot(slot);
+        slot = sFollowMonData->oldestSlot;
+        sFollowMonData->oldestSlot = GetNewOldestSlot(slot);
     }
     else
     {
         for (slot = 0; slot < maxSpawns; slot++)
         {
-            if (sFollowMonData.list[slot].encounterIndex == 0)
+            if (sFollowMonData->list[slot].encounterIndex == 0)
                 break;
         }
     }
@@ -210,7 +216,7 @@ static u8 NextSpawnMonSlot(void)
     if(CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT)
         return INVALID_SPAWN_SLOT;
 
-    GenerateFollowMon(&sFollowMonData.list[slot], IsSpawningWaterMons());
+    GenerateFollowMon(&sFollowMonData->list[slot], IsSpawningWaterMons());
 
     return slot;
 }
@@ -356,17 +362,17 @@ bool8 FollowMon_ProcessMonInteraction(void)
     if(VarGet(VAR_REPEL_STEP_COUNT) != 0)
     {
         // Never auto trigger battle whilst repel is active
-        sFollowMonData.pendingInteraction = FALSE;
+        sFollowMonData->pendingInteraction = FALSE;
         return FALSE;
     }
 
-    if(sFollowMonData.pendingInteraction)
+    if(sFollowMonData->pendingInteraction)
     {
         u8 i;
         struct ObjectEvent *curObject;
         struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     
-        sFollowMonData.pendingInteraction = FALSE;
+        sFollowMonData->pendingInteraction = FALSE;
         
         for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
         {
@@ -402,7 +408,7 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
         // Player can walk on top of follow mon
         if(FollowMon_IsMonObject(obstacle))
         {
-            sFollowMonData.pendingInteraction = TRUE;
+            sFollowMonData->pendingInteraction = TRUE;
             return TRUE;
         }
     }
@@ -411,7 +417,7 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
         // Follow mon can walk onto player
         if(FollowMon_IsMonObject(collider))
         {
-            sFollowMonData.pendingInteraction = TRUE;
+            sFollowMonData->pendingInteraction = TRUE;
             return TRUE;
         }
     }
@@ -439,32 +445,32 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
     u32 i;
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    sFollowMonData.usedSlots++;
-    sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
+    sFollowMonData->usedSlots++;
+    sFollowMonData->pendingSpawnAnim |= (1 << spawnSlot);
 
     // Increase the age of all followmons
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        if (sFollowMonData.list[i].encounterIndex != 0)
-            sFollowMonData.list[i].age++;
+        if (sFollowMonData->list[i].encounterIndex != 0)
+            sFollowMonData->list[i].age++;
     }
 }
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
     u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    sFollowMonData.list[spawnSlot].encounterIndex = 0;
-    sFollowMonData.list[spawnSlot].age = 0;
-    sFollowMonData.usedSlots--;
+    sFollowMonData->list[spawnSlot].encounterIndex = 0;
+    sFollowMonData->list[spawnSlot].age = 0;
+    sFollowMonData->usedSlots--;
 }
 
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 {
     u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    u16 species = GetFollowMonSpecies(&sFollowMonData.list[slot]);
+    u16 species = GetFollowMonSpecies(&sFollowMonData->list[slot]);
 
     graphicsId = OBJ_EVENT_MON + species;
-    if (sFollowMonData.list[slot].isShiny)
+    if (sFollowMonData->list[slot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
     return graphicsId;
@@ -472,14 +478,14 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
 
 void FollowMon_OnWarp(void)
 {
-    sFollowMonData.spawnCountdown = 0;
-    sFollowMonData.usedSlots = 0;
-    sFollowMonData.oldestSlot = 0;
+    sFollowMonData->spawnCountdown = 0;
+    sFollowMonData->usedSlots = 0;
+    sFollowMonData->oldestSlot = 0;
 
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        sFollowMonData.list[i].encounterIndex = 0;
-        sFollowMonData.list[i].age = 0;
+        sFollowMonData->list[i].encounterIndex = 0;
+        sFollowMonData->list[i].age = 0;
     }
 }
 
@@ -509,7 +515,7 @@ static u8 CountActiveFollowMon()
     u8 count = 0;
     for(u8 slot = 0; slot < FOLLOWMON_MAX_SPAWN_SLOTS; slot++)
     {
-        if(sFollowMonData.list[slot].encounterIndex)
+        if(sFollowMonData->list[slot].encounterIndex)
             count++;
     }
 
@@ -542,6 +548,7 @@ void RemoveAllFollowMonObjects(void)
         if(IS_FOLLOWMON_GFXID(gObjectEvents[i].graphicsId))
             RemoveObjectEvent(&gObjectEvents[i]);
     }
+    FreeFollowMonData();
 }
 
 static u8 FindObjectEventForGfx(u16 gfxId)

@@ -1,7 +1,9 @@
 #ifndef GUARD_FOLLOWMON_H
 #define GUARD_FOLLOWMON_H
 
-#define OW_FLAG_SPAWN_OVERWORLD_MON         FLAG_UNUSED_0x020
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_SPAWN_OW_WILD_ENCOUNTERS == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_SPAWN_OW_WILD_ENCOUNTERS to work."
+#endif
 
 #define FOLLOWMON_SHINY_OFFSET              10000
 #define FOLLOWMON_MAX_SPAWN_SLOTS           5
@@ -17,7 +19,7 @@ struct FollowMon
     u16 timeOfDay:2;
     u16 age:4;
     u16 encounterIndex:8;
-    u16 unused:8;
+    u16 padding;
 };
 
 #define EMPTY_FOLLOWMON 0xFF;
@@ -46,5 +48,6 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
 void FollowMon_OnWarp(void);
 void RemoveAllFollowMonObjects(void);
+void FreeFollowMonData(void);
 
 #endif // GUARD_FOLLOWMON_H
