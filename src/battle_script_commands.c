@@ -12590,19 +12590,21 @@ static void Cmd_trysetfutureattack(void)
 static void Cmd_trydobeatup(void)
 {
     CMD_ARGS(const u8 *endInstr, const u8 *failInstr);
-    struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
 
     if (!IsBattlerAlive(gBattlerTarget))
     {
+        gMultiHitCounter = 0;
         gBattlescriptCurrInstr = cmd->endInstr;
     }
     else
     {
+#if B_BEAT_UP < GEN_5
+        struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
         const u8 beatUpSlot = gBattleStruct->beatUpSlot;
-        u8 partyIndex = PARTY_SIZE;
 
+        u8 partyIndex = PARTY_SIZE;
         if (beatUpSlot < PARTY_SIZE)
-            partyIndex = gBattleStruct->beatUpPartyIndexes[beatUpSlot];
+            partyIndex = gBattleStruct->beatUpSpecies[beatUpSlot];
 
         if (partyIndex < PARTY_SIZE
             && GetMonData(&party[partyIndex], MON_DATA_HP)
@@ -12611,27 +12613,21 @@ static void Cmd_trydobeatup(void)
             && !GetMonData(&party[partyIndex], MON_DATA_STATUS))
         {
             PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, partyIndex)
-
             gBattlescriptCurrInstr = cmd->nextInstr;
-
-            gBattleStruct->moveDamage[gBattlerTarget] = GetSpeciesBaseAttack(gBattleStruct->beatUpSpecies[beatUpSlot]);
-            gBattleStruct->moveDamage[gBattlerTarget] *= GetMovePower(gCurrentMove);
-            gBattleStruct->moveDamage[gBattlerTarget] *= (GetMonData(&party[partyIndex], MON_DATA_LEVEL) * 2 / 5 + 2);
-            gBattleStruct->moveDamage[gBattlerTarget] /= GetSpeciesBaseDefense(gBattleMons[gBattlerTarget].species);
-            gBattleStruct->moveDamage[gBattlerTarget] = (gBattleStruct->moveDamage[gBattlerTarget] / 50) + 2;
-            if (gProtectStructs[gBattlerAttacker].helpingHand)
-                gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * 15 / 10;
-
-            gBattleStruct->beatUpSlot++;
         }
         else if (beatUpSlot != 0)
         {
+            gMultiHitCounter = 0;
             gBattlescriptCurrInstr = cmd->endInstr;
         }
         else
         {
+            gMultiHitCounter = 0;
             gBattlescriptCurrInstr = cmd->failInstr;
         }
+#else
+        gBattlescriptCurrInstr = cmd->failInstr;
+#endif
     }
 }
 

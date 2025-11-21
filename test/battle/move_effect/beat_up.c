@@ -21,10 +21,17 @@ SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused m
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         MESSAGE("The Pokémon was hit 4 time(s)!");
     } THEN {
+#if B_BEAT_UP >= GEN_5
         EXPECT_EQ(gBattleStruct->beatUpSpecies[0], SPECIES_WOBBUFFET);
         EXPECT_EQ(gBattleStruct->beatUpSpecies[1], SPECIES_WYNAUT);
         EXPECT_EQ(gBattleStruct->beatUpSpecies[2], SPECIES_PICHU);
         EXPECT_EQ(gBattleStruct->beatUpSpecies[3], SPECIES_RAICHU);
+#else
+        EXPECT_EQ(gBattleStruct->beatUpSpecies[0], 0);
+        EXPECT_EQ(gBattleStruct->beatUpSpecies[1], 1);
+        EXPECT_EQ(gBattleStruct->beatUpSpecies[2], 2);
+        EXPECT_EQ(gBattleStruct->beatUpSpecies[3], 4);
+#endif
     }
 }
 
