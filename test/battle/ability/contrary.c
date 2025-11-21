@@ -270,3 +270,5 @@ AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectIn
 }
 
 TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")
+
+TO_DO_BATTLE_TEST("Contrary inverts stat changes from X Attack and other stat-boosting items.")
