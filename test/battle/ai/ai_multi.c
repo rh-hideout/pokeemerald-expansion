@@ -125,3 +125,43 @@ AI_TWO_VS_ONE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (2v1)"
             TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
     }
 }
+
+AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon when running out")
+{
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft);}
+        TURN {}
+    } THEN {
+        EXPECT_EQ(gAbsentBattlerFlags, (1u << B_POSITION_PLAYER_RIGHT));
+    }
+}
+
+AI_MULTI_BATTLE_TEST("Partner will not steal your pokemon to delay using their ace")
+{
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(B_POSITION_PLAYER_RIGHT, AI_FLAG_ACE_POKEMON);
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PLAYER(SPECIES_WOBBUFFET) { }
+        MULTI_PARTNER(SPECIES_WYNAUT) { Moves(MOVE_MEMENTO); }
+        MULTI_PARTNER(SPECIES_METAGROSS) { Moves(MOVE_CELEBRATE); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); }
+    } WHEN {
+        TURN {EXPECT_MOVE(playerRight, MOVE_MEMENTO, target:opponentLeft);}
+        TURN {}
+    } THEN {
+        EXPECT_EQ(SPECIES_METAGROSS, playerRight->species);
+    }
+}
