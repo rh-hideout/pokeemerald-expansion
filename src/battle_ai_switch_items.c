@@ -26,13 +26,13 @@ static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 modu
 static bool32 ShouldUseItem(u32 battler);
 struct IncomingHealInfo
 {
-    u32 healAmount;
-    u8 wishCounter;
-    bool8 hasHealing;
-    bool8 healBeforeHazards;
-    bool8 healAfterHazards;
-    bool8 healEndOfTurn;
-    bool8 curesStatus;
+    u16 healAmount:16;
+    u16 wishCounter:8;
+    u16 hasHealing:1;
+    u16 healBeforeHazards:1;
+    u16 healAfterHazards:1;
+    u16 healEndOfTurn:1;
+    u16 curesStatus:1;
 };
 
 static bool32 AiExpectsToFaintPlayer(u32 battler);
