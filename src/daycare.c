@@ -27,7 +27,7 @@
 #include "constants/moves.h"
 #include "constants/region_map_sections.h"
 
-#define IS_DITTO(species) (gSpeciesInfo[species].eggGroups[0] == EGG_GROUP_DITTO || gSpeciesInfo[species].eggGroups[1] == EGG_GROUP_DITTO)
+#define IS_DITTO(species) (GetSpeciesEggGroup(species, 0) == EGG_GROUP_DITTO || GetSpeciesEggGroup(species, 1) == EGG_GROUP_DITTO)
 
 static void ClearDaycareMonMail(struct DaycareMail *mail);
 static void SetInitialEggData(struct Pokemon *mon, u16 species, struct DayCare *daycare);
@@ -1342,8 +1342,8 @@ u8 GetDaycareCompatibilityScore(struct DayCare *daycare)
         trainerIds[i] = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_OT_ID);
         personality = GetBoxMonData(&daycare->mons[i].mon, MON_DATA_PERSONALITY);
         genders[i] = GetGenderFromSpeciesAndPersonality(species[i], personality);
-        eggGroups[i][0] = gSpeciesInfo[species[i]].eggGroups[0];
-        eggGroups[i][1] = gSpeciesInfo[species[i]].eggGroups[1];
+        eggGroups[i][0] = GetSpeciesEggGroup(species[i], 0);
+        eggGroups[i][1] = GetSpeciesEggGroup(species[i], 1);
     }
 
     // check unbreedable egg group
