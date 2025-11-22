@@ -385,9 +385,11 @@ struct Evolution
     const struct EvolutionParam *params;
 };
 
+#define USE_FUNC(name) __attribute__((deprecated("use " name " instead")))
+
 struct SpeciesInfo /*0xC4*/
 {
-    u8 baseHP;
+    u8 baseHP USE_FUNC("GetSpeciesBaseHP");
     u8 baseAttack;
     u8 baseDefense;
     u8 baseSpeed;
@@ -515,6 +517,7 @@ struct SpeciesInfo /*0xC4*/
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 };
+#undef USE_FUNC
 
 struct EggData
 {
