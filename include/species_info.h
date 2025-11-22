@@ -42,8 +42,8 @@ struct SpeciesInfo /*0xC4*/
     u16 evYield_SpAttack:2 USE_FUNC("GetSpeciesEVYieldSpAttack");
     u16 evYield_SpDefense:2 USE_FUNC("GetSpeciesEVYieldSpDefense");
     u16 padding2:4;
-    u16 itemCommon;
-    u16 itemRare;
+    u16 itemCommon USE_FUNC("GetSpeciesCommonItem");
+    u16 itemRare USE_FUNC("GetSpeciesRareItem");
     u8 genderRatio;
     u8 eggCycles;
     u8 friendship;
@@ -301,6 +301,16 @@ static inline u32 GetSpeciesEVYield(u16 species, u32 statIndex)
         return GetSpeciesEVYieldSpDefense(species);
     }
     return 0;
+}
+
+static inline u32 GetSpeciesCommonItem(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].itemCommon);
+}
+
+static inline u32 GetSpeciesRareItem(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].itemRare);
 }
 
 #endif // GUARD_SPECIES_INFO_H
