@@ -32,7 +32,7 @@ struct SpeciesInfo /*0xC4*/
     u8 baseSpAttack USE_FUNC("GetSpeciesBaseSpAttack");
     u8 baseSpDefense USE_FUNC("GetSpeciesBaseSpDefense");
     enum Type types[2] USE_FUNC("GetSpeciesType or IsSpeciesOfType");
-    u8 catchRate;
+    u8 catchRate USE_FUNC("GetSpeciesCatchRate");
     u8 forceTeraType;
     u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
     u16 evYield_HP:2;
@@ -226,6 +226,11 @@ static inline u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
 static inline enum Type GetSpeciesType(u16 species, u8 slot)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].types[slot]);
+}
+
+static inline u32 GetSpeciesCatchRate(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].catchRate);
 }
 
 #endif // GUARD_SPECIES_INFO_H
