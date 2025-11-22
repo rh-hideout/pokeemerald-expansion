@@ -464,16 +464,15 @@ static void OpponentHandleChooseMove(u32 battler)
                     gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT);
             }
             // If opponent can and should use a gimmick (considering trainer data), do it
-            enum Gimmick gimmick = gBattleStruct->gimmick.usableGimmick[battler];
-            if (gimmick != GIMMICK_NONE && IsAIUsingGimmick(battler) && !HasTrainerUsedGimmick(battler, gimmick))
+            enum Gimmick usableGimmick = gBattleStruct->gimmick.usableGimmick[battler];
+            if (usableGimmick != GIMMICK_NONE && IsAIUsingGimmick(battler) && !HasTrainerUsedGimmick(battler, usableGimmick))
             {
                 gBattleStruct->gimmick.toActivate |= 1u << battler;
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
             }
             else
             {
-                if (IsAIUsingGimmick(battler))
-                    SetAIUsingGimmick(battler, NO_GIMMICK);
+                SetAIUsingGimmick(battler, NO_GIMMICK);
                 BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (gBattlerTarget << 8));
             }
         }

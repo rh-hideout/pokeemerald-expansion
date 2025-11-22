@@ -640,6 +640,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     u32 battlerAtk, battlersCount, weather;
 
     memset(aiData, 0, sizeof(struct AiLogicData));
+    gAiBattleData->aiUsingGimmick = 0;
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
