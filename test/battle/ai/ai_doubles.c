@@ -751,8 +751,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Guard Split to improve its stats")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GUARD_SPLIT) == EFFECT_GUARD_SPLIT);
-        ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseDefense < gSpeciesInfo[SPECIES_WOBBUFFET].baseDefense);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseDefense < gSpeciesInfo[SPECIES_SHUCKLE].baseDefense);
+        ASSUME(GetSpeciesBaseDefense(SPECIES_PHEROMOSA) < GetSpeciesBaseDefense(SPECIES_WOBBUFFET));
+        ASSUME(GetSpeciesBaseDefense(SPECIES_WOBBUFFET) < GetSpeciesBaseDefense(SPECIES_SHUCKLE));
         ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseSpDefense < gSpeciesInfo[SPECIES_WOBBUFFET].baseSpDefense);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseSpDefense < gSpeciesInfo[SPECIES_SHUCKLE].baseSpDefense);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);

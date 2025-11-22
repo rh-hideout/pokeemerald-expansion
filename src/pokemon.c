@@ -3595,7 +3595,7 @@ u32 GetSpeciesBaseAttack(u16 species)
 
 u32 GetSpeciesBaseDefense(u16 species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense;
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense);
 }
 
 u32 GetSpeciesBaseSpAttack(u16 species)

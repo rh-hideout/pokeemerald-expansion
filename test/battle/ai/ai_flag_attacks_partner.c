@@ -20,10 +20,10 @@ AI_DOUBLE_BATTLE_TEST("AI_FLAG_ATTACKS_PARTNER is willing to kill either the par
         ASSUME(GetMovePower(MOVE_BRUTAL_SWING) == 60);
         ASSUME(GetMovePower(MOVE_MIGHTY_CLEAVE) == 95);
         ASSUME(GetSpeciesBaseAttack(SPECIES_ZIGZAGOON) == GetSpeciesBaseSpAttack(SPECIES_ZIGZAGOON));
-        ASSUME(gSpeciesInfo[SPECIES_ZIGZAGOON].baseDefense == gSpeciesInfo[SPECIES_ZIGZAGOON].baseSpDefense);
+        ASSUME(GetSpeciesBaseDefense(SPECIES_ZIGZAGOON) == GetSpeciesBaseSpDefense(SPECIES_ZIGZAGOON));
         ASSUME(GetSpeciesBaseHP(SPECIES_ZIGZAGOON) == 38);
         ASSUME(GetSpeciesBaseAttack(SPECIES_ZIGZAGOON) == 30);
-        ASSUME(gSpeciesInfo[SPECIES_ZIGZAGOON].baseDefense == 41);
+        ASSUME(GetSpeciesBaseDefense(SPECIES_ZIGZAGOON) == 41);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_ATTACKS_PARTNER);
         PLAYER(SPECIES_ZIGZAGOON) { Level(50); }
         PLAYER(SPECIES_ZIGZAGOON) { Level(16); }
