@@ -753,8 +753,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Guard Split to improve its stats")
         ASSUME(GetMoveEffect(MOVE_GUARD_SPLIT) == EFFECT_GUARD_SPLIT);
         ASSUME(GetSpeciesBaseDefense(SPECIES_PHEROMOSA) < GetSpeciesBaseDefense(SPECIES_WOBBUFFET));
         ASSUME(GetSpeciesBaseDefense(SPECIES_WOBBUFFET) < GetSpeciesBaseDefense(SPECIES_SHUCKLE));
-        ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseSpDefense < gSpeciesInfo[SPECIES_WOBBUFFET].baseSpDefense);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseSpDefense < gSpeciesInfo[SPECIES_SHUCKLE].baseSpDefense);
+        ASSUME(GetSpeciesBaseSpDefense(SPECIES_PHEROMOSA) < GetSpeciesBaseSpDefense(SPECIES_WOBBUFFET));
+        ASSUME(GetSpeciesBaseSpDefense(SPECIES_WOBBUFFET) < GetSpeciesBaseSpDefense(SPECIES_SHUCKLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(player);
         PLAYER(SPECIES_WOBBUFFET);
@@ -780,8 +780,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Power Split to improve its stats")
         ASSUME(GetMoveEffect(MOVE_POWER_SPLIT) == EFFECT_POWER_SPLIT);
         ASSUME(GetSpeciesBaseAttack(SPECIES_PHEROMOSA) > GetSpeciesBaseAttack(SPECIES_WOBBUFFET));
         ASSUME(GetSpeciesBaseAttack(SPECIES_WOBBUFFET) > GetSpeciesBaseAttack(SPECIES_SHUCKLE));
-        ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseSpAttack > gSpeciesInfo[SPECIES_WOBBUFFET].baseSpAttack);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseSpAttack > gSpeciesInfo[SPECIES_SHUCKLE].baseSpAttack);
+        ASSUME(GetSpeciesBaseSpAttack(SPECIES_PHEROMOSA) > GetSpeciesBaseSpAttack(SPECIES_WOBBUFFET));
+        ASSUME(GetSpeciesBaseSpAttack(SPECIES_WOBBUFFET) > GetSpeciesBaseSpAttack(SPECIES_SHUCKLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
         PLAYER(player);
         PLAYER(SPECIES_WOBBUFFET);
