@@ -35,12 +35,12 @@ struct SpeciesInfo /*0xC4*/
     u8 catchRate USE_FUNC("GetSpeciesCatchRate");
     u8 forceTeraType USE_FUNC("GetSpeciesForcedTeraType");
     u16 expYield USE_FUNC("GetSpeciesExpYield"); // expYield was changed from u8 to u16 for the new Exp System.
-    u16 evYield_HP:2;
-    u16 evYield_Attack:2;
-    u16 evYield_Defense:2;
-    u16 evYield_Speed:2;
-    u16 evYield_SpAttack:2;
-    u16 evYield_SpDefense:2;
+    u16 evYield_HP:2 USE_FUNC("GetSpeciesEVYieldHP");
+    u16 evYield_Attack:2 USE_FUNC("GetSpeciesEVYieldAttack");
+    u16 evYield_Defense:2 USE_FUNC("GetSpeciesEVYieldDefense");
+    u16 evYield_Speed:2 USE_FUNC("GetSpeciesEVYieldSpeed");
+    u16 evYield_SpAttack:2 USE_FUNC("GetSpeciesEVYieldSpAttack");
+    u16 evYield_SpDefense:2 USE_FUNC("GetSpeciesEVYieldSpDefense");
     u16 padding2:4;
     u16 itemCommon;
     u16 itemRare;
@@ -251,6 +251,56 @@ static inline u32 GetSpeciesForcedTeraType(u16 species)
 static inline u32 GetSpeciesExpYield(u16 species)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].expYield);
+}
+
+static inline u32 GetSpeciesEVYieldHP(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_HP);
+}
+
+static inline u32 GetSpeciesEVYieldAttack(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Attack);
+}
+
+static inline u32 GetSpeciesEVYieldDefense(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Defense);
+}
+
+static inline u32 GetSpeciesEVYieldSpAttack(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpAttack);
+}
+
+static inline u32 GetSpeciesEVYieldSpDefense(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpDefense);
+}
+
+static inline u32 GetSpeciesEVYieldSpeed(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Speed);
+}
+
+static inline u32 GetSpeciesEVYield(u16 species, u32 statIndex)
+{
+    switch (statIndex)
+    {
+    case STAT_HP:
+        return GetSpeciesEVYieldHP(species);
+    case STAT_ATK:
+        return GetSpeciesEVYieldAttack(species);
+    case STAT_DEF:
+        return GetSpeciesEVYieldDefense(species);
+    case STAT_SPEED:
+        return GetSpeciesEVYieldSpeed(species);
+    case STAT_SPATK:
+        return GetSpeciesEVYieldSpAttack(species);
+    case STAT_SPDEF:
+        return GetSpeciesEVYieldSpDefense(species);
+    }
+    return 0;
 }
 
 #endif // GUARD_SPECIES_INFO_H
