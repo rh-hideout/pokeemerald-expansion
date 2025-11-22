@@ -1960,21 +1960,20 @@ static void SetGimmick(u32 sourceLine, u32 side, u32 partyIndex, enum Gimmick gi
 
 void Gender_(u32 sourceLine, u32 gender)
 {
-    const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Gender outside of PLAYER/OPPONENT");
-    info = &gSpeciesInfo[GetMonData(DATA.currentMon, MON_DATA_SPECIES)];
+    u32 genderRatio = GetSpeciesGenderRatio(GetMonData(DATA.currentMon, MON_DATA_SPECIES));
     switch (gender)
     {
     case MON_MALE:
         DATA.gender = 0xFF;
-        INVALID_IF(info->genderRatio == MON_GENDERLESS || info->genderRatio == MON_FEMALE, "Illegal male");
+        INVALID_IF(genderRatio == MON_GENDERLESS || genderRatio == MON_FEMALE, "Illegal male");
         break;
     case MON_FEMALE:
         DATA.gender = 0x00;
-        INVALID_IF(info->genderRatio == MON_GENDERLESS || info->genderRatio == MON_MALE, "Illegal female");
+        INVALID_IF(genderRatio == MON_GENDERLESS || genderRatio == MON_MALE, "Illegal female");
         break;
     case MON_GENDERLESS:
-        INVALID_IF(info->genderRatio != gender, "Illegal genderless");
+        INVALID_IF(genderRatio != gender, "Illegal genderless");
         break;
     }
 }

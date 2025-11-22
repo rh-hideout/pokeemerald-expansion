@@ -245,7 +245,7 @@ TEST("Species names fit on Battle Screen HP box")
             PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
         }
     }
-    if (gSpeciesInfo[i].genderRatio != MON_GENDERLESS)
+    if (GetSpeciesGenderRatio(i) != MON_GENDERLESS)
         EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0) - genderWidthPx, widthPx);
     else
         EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
@@ -474,7 +474,7 @@ TEST("Species names fit on Battle Screen HP box for vanilla mons with the defaul
             PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
         }
     }
-    if (gSpeciesInfo[i].genderRatio != MON_GENDERLESS)
+    if (GetSpeciesGenderRatio(i) != MON_GENDERLESS)
         EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0) - genderWidthPx, widthPx);
     else
         EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);

@@ -4,9 +4,9 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_CAPTIVATE) == EFFECT_CAPTIVATE);
-    ASSUME(gSpeciesInfo[SPECIES_NIDOKING].genderRatio == MON_MALE);
-    ASSUME(gSpeciesInfo[SPECIES_NIDOQUEEN].genderRatio == MON_FEMALE);
-    ASSUME(gSpeciesInfo[SPECIES_STARMIE].genderRatio == MON_GENDERLESS);
+    ASSUME(GetSpeciesGenderRatio(SPECIES_NIDOKING) == MON_MALE);
+    ASSUME(GetSpeciesGenderRatio(SPECIES_NIDOQUEEN) == MON_FEMALE);
+    ASSUME(GetSpeciesGenderRatio(SPECIES_STARMIE) == MON_GENDERLESS);
 }
 
 SINGLE_BATTLE_TEST("Captivate decreases the target's Sp. Attack if they're opposite gender from the user")
