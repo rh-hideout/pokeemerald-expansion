@@ -390,7 +390,7 @@ struct Evolution
 struct SpeciesInfo /*0xC4*/
 {
     u8 baseHP USE_FUNC("GetSpeciesBaseHP");
-    u8 baseAttack;
+    u8 baseAttack USE_FUNC("GetSpeciesBaseAttack");
     u8 baseDefense;
     u8 baseSpeed;
     u8 baseSpAttack;

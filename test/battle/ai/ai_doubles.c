@@ -778,8 +778,8 @@ AI_DOUBLE_BATTLE_TEST("AI uses Power Split to improve its stats")
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_POWER_SPLIT) == EFFECT_POWER_SPLIT);
-        ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseAttack > gSpeciesInfo[SPECIES_WOBBUFFET].baseAttack);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseAttack > gSpeciesInfo[SPECIES_SHUCKLE].baseAttack);
+        ASSUME(GetSpeciesBaseAttack(SPECIES_PHEROMOSA) > GetSpeciesBaseAttack(SPECIES_WOBBUFFET));
+        ASSUME(GetSpeciesBaseAttack(SPECIES_WOBBUFFET) > GetSpeciesBaseAttack(SPECIES_SHUCKLE));
         ASSUME(gSpeciesInfo[SPECIES_PHEROMOSA].baseSpAttack > gSpeciesInfo[SPECIES_WOBBUFFET].baseSpAttack);
         ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].baseSpAttack > gSpeciesInfo[SPECIES_SHUCKLE].baseSpAttack);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
