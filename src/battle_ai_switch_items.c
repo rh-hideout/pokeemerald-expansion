@@ -2677,8 +2677,8 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
     {
         if (GetMonData(&party[i], MON_DATA_HP) != 0)
             continue; // Only consider fainted mons
-        if (IsAceMon(battler, i))
-            continue;
+
+        bool32 isAceMon = IsAceMon(battler, i);
 
         InitializeSwitchinCandidate(&party[i]);
         gAiLogicData->switchinCandidate.battleMon.hp = gAiLogicData->switchinCandidate.battleMon.maxHP / 2; // Revival Blessing restores half HP
@@ -2703,6 +2703,10 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
 
         u32 typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gAiLogicData->switchinCandidate.battleMon);
         s32 score = bestDamage + gAiLogicData->switchinCandidate.battleMon.maxHP;
+
+        // Reviving the ace is usually high value. give it a small bonus but still let matchup/coverage decide
+        if (isAceMon)
+            score += gAiLogicData->switchinCandidate.battleMon.maxHP / 3;
 
         // Prefer mons that don't face a terrible defensive matchup on entry
         if (typeMatchup < UQ_4_12(1.0))
