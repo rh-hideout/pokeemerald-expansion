@@ -51,8 +51,6 @@ static void OpponentHandleChoosePokemon(u32 battler);
 static void OpponentHandleIntroTrainerBallThrow(u32 battler);
 static void OpponentHandleDrawPartyStatusSummary(u32 battler);
 static void OpponentHandleEndLinkBattle(u32 battler);
-static u8 CountAIAliveNonEggMonsExcept(u8 slotToIgnore);
-
 static void OpponentBufferRunCommand(u32 battler);
 
 static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
@@ -527,70 +525,9 @@ static void OpponentHandleChooseItem(u32 battler)
     BtlController_Complete(battler);
 }
 
-static inline bool32 IsAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u32 battler)
-{
-    return gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ACE_POKEMON
-        && (chosenMonId == CalculateEnemyPartyCountInSide(battler) - 1)
-        && CountAIAliveNonEggMonsExcept(PARTY_SIZE) != pokemonInBattle;
-}
-
-static inline bool32 IsDoubleAceSlot(u32 battler, u32 partyId)
-{
-    u32 partyCountEnd;
-
-    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON))
-        return FALSE;
-
-    partyCountEnd = CalculateEnemyPartyCountInSide(battler);
-    if (partyCountEnd == 0)
-        return FALSE;
-
-    if (partyId == partyCountEnd - 1)
-        return TRUE;
-    if (partyCountEnd > 1 && partyId == partyCountEnd - 2)
-        return TRUE;
-
-    return FALSE;
-}
-
-static inline bool32 IsDoubleAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u32 battler)
-{
-    s32 battler1, battler2, firstId, lastId;
-    s32 i;
-
-    if (!IsDoubleAceSlot(battler, chosenMonId))
-        return FALSE;
-
-    if (!IsDoubleBattle())
-    {
-        battler2 = battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-    }
-    else
-    {
-        battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
-        battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-    }
-
-    GetAIPartyIndexes(battler, &firstId, &lastId);
-    for (i = firstId; i < lastId; i++)
-    {
-        if (!IsValidForBattle(&gEnemyParty[i])
-         || i == gBattlerPartyIndexes[battler1]
-         || i == gBattlerPartyIndexes[battler2]
-         || i == chosenMonId)
-            continue;
-
-        if (!IsAcePokemon(i, pokemonInBattle, battler) && !IsDoubleAceSlot(battler, i))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
 static void OpponentHandleChoosePokemon(u32 battler)
 {
     s32 chosenMonId;
-    s32 pokemonInBattle = 1;
     enum SwitchType switchType = SWITCH_AFTER_KO;
 
     // Choosing Revival Blessing target
@@ -602,7 +539,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
     else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
     {
         if (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch)
-            switchType = SWITCH_MID_BATTLE;
+            switchType = SWITCH_MID_BATTLE_FORCED;
 
         // reset the AI data to consider the correct on-field state at time of switch
         SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_LEFT), gAiLogicData);
@@ -610,7 +547,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
             SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), gAiLogicData);
 
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
-        if (chosenMonId == PARTY_SIZE)
+        if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
             s32 battler1, battler2, firstId, lastId;
 
@@ -622,19 +559,14 @@ static void OpponentHandleChoosePokemon(u32 battler)
             {
                 battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-                pokemonInBattle = 2;
             }
 
             GetAIPartyIndexes(battler, &firstId, &lastId);
-            for (chosenMonId = (lastId-1); chosenMonId >= firstId; chosenMonId--)
+            for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
             {
-                if (!IsValidForBattle(&gEnemyParty[chosenMonId])
-                 || chosenMonId == gBattlerPartyIndexes[battler1]
-                 || chosenMonId == gBattlerPartyIndexes[battler2])
-                    continue;
-
-                if (!IsAcePokemon(chosenMonId, pokemonInBattle, battler)
-                 && !IsDoubleAcePokemon(chosenMonId, pokemonInBattle, battler))
+                if (IsValidForBattle(&gEnemyParty[chosenMonId])
+                 && chosenMonId != gBattlerPartyIndexes[battler1]
+                 && chosenMonId != gBattlerPartyIndexes[battler2])
                     break;
             }
         }
@@ -651,22 +583,6 @@ static void OpponentHandleChoosePokemon(u32 battler)
     #endif // TESTING
     BtlController_EmitChosenMonReturnValue(battler, B_COMM_TO_ENGINE, chosenMonId, NULL);
     BtlController_Complete(battler);
-}
-
-static u8 CountAIAliveNonEggMonsExcept(u8 slotToIgnore)
-{
-    u16 i, count;
-
-    for (i = 0, count = 0; i < PARTY_SIZE; i++)
-    {
-        if (i != slotToIgnore
-            && IsValidForBattle(&gEnemyParty[i]))
-        {
-            count++;
-        }
-    }
-
-    return count;
 }
 
 static void OpponentHandleIntroTrainerBallThrow(u32 battler)
