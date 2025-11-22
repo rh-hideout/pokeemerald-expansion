@@ -123,11 +123,6 @@ BattleScript_EffectTidyUpDoMoveAnimation::
 	restoretarget
 	goto BattleScript_EffectDragonDanceFromStatUp
 
-BattleScript_EffectUpperHand::
-	attackcanceler
-	tryupperhand BattleScript_ButItFailed
-	goto BattleScript_HitFromAccCheck
-
 BattleScript_EffectShedTail::
 	attackcanceler
 	waitstate

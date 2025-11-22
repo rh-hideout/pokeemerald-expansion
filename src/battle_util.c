@@ -2676,6 +2676,16 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
          || (IsBattleMoveStatus(GetChosenMoveFromPosition(ctx->battlerDef)) && !gProtectStructs[ctx->battlerDef].noValidMoves))
             battleScript = BattleScript_ButItFailed;
         break;
+    case EFFECT_UPPER_HAND:
+    {
+        u32 prio = GetChosenMovePriority(ctx->battlerDef, ctx->abilities[ctx->battlerDef]);
+        if (prio < 1 || prio > 3 // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
+         || HasBattlerActedThisTurn(ctx->battlerDef)
+         || gChosenMoveByBattler[ctx->battlerDef] == MOVE_NONE
+         || IsBattleMoveStatus(gChosenMoveByBattler[ctx->battlerDef]))
+            battleScript = BattleScript_ButItFailed;
+        break;
+    }
     case EFFECT_SNORE:
         if (!(gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP)
          && ctx->abilities[ctx->battlerAtk] != ABILITY_COMATOSE)
