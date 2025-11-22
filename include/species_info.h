@@ -45,7 +45,7 @@ struct SpeciesInfo /*0xC4*/
     u16 itemCommon USE_FUNC("GetSpeciesCommonItem");
     u16 itemRare USE_FUNC("GetSpeciesRareItem");
     u8 genderRatio USE_FUNC("GetSpeciesGenderRatio");
-    u8 eggCycles;
+    u8 eggCycles USE_FUNC("GetSpeciesEggCycles");
     u8 friendship;
     u8 growthRate;
     u8 eggGroups[2];
@@ -316,6 +316,11 @@ static inline u32 GetSpeciesRareItem(u16 species)
 static inline u32 GetSpeciesGenderRatio(u16 species)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].genderRatio);
+}
+
+static inline u32 GetSpeciesEggCycles(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].eggCycles);
 }
 
 #endif // GUARD_SPECIES_INFO_H
