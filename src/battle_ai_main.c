@@ -5836,7 +5836,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                 break;
             case MOVE_EFFECT_CLEAR_SMOG:
             {
-                bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk) && (gMovesInfo[move].target & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
+                bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk) && (GetMoveTarget(move) & (MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_ALL_BATTLERS));
 
                 score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
                 break;
