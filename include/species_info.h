@@ -47,7 +47,7 @@ struct SpeciesInfo /*0xC4*/
     u8 genderRatio USE_FUNC("GetSpeciesGenderRatio");
     u8 eggCycles USE_FUNC("GetSpeciesEggCycles");
     u8 friendship USE_FUNC("GetSpeciesBaseFriendship");
-    u8 growthRate;
+    u8 growthRate USE_FUNC("GetSpeciesGrowthRate");
     u8 eggGroups[2];
     enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
@@ -326,6 +326,11 @@ static inline u32 GetSpeciesEggCycles(u16 species)
 static inline u32 GetSpeciesBaseFriendship(u16 species)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].friendship);
+}
+
+static inline enum GrowthRate GetSpeciesGrowthRate(u16 species)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].growthRate);
 }
 
 #endif // GUARD_SPECIES_INFO_H

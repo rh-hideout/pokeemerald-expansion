@@ -2016,7 +2016,7 @@ void Level_(u32 sourceLine, u32 level)
     INVALID_IF(!DATA.currentMon, "Level outside of PLAYER/OPPONENT");
     INVALID_IF(level == 0 || level > MAX_LEVEL, "Illegal level: %d", level);
     SetMonData(DATA.currentMon, MON_DATA_LEVEL, &level);
-    SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][level]);
+    SetMonData(DATA.currentMon, MON_DATA_EXP, &gExperienceTables[GetSpeciesGrowthRate(species)][level]);
     gMain.inBattle = TRUE;
     CalculateMonStats(DATA.currentMon);
     gMain.inBattle = FALSE;

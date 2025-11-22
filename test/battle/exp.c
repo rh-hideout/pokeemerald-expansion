@@ -141,9 +141,9 @@ WILD_BATTLE_TEST("Exp Share(held) gives Experience to mons which did not partici
         NOT MESSAGE("The rest of your team gained EXP. Points thanks to the Exp. Share!");
     } THEN {
         if (item == ITEM_EXP_SHARE)
-            EXPECT_GT(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
+            EXPECT_GT(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[GetSpeciesGrowthRate(SPECIES_WYNAUT)][40]);
         else
-            EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[gSpeciesInfo[SPECIES_WYNAUT].growthRate][40]);
+            EXPECT_EQ(GetMonData(&gPlayerParty[1], MON_DATA_EXP), gExperienceTables[GetSpeciesGrowthRate(SPECIES_WYNAUT)][40]);
     }
 }
 
