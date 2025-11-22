@@ -1268,9 +1268,7 @@ static void Cmd_attackcanceler(void)
     else if (IsBattlerProtected(gBattlerAttacker, gBattlerTarget, gCurrentMove)
      && (moveEffect != EFFECT_CURSE || IS_BATTLER_OF_TYPE(gBattlerAttacker, TYPE_GHOST))
      && (!gBattleMoveEffects[moveEffect].twoTurnEffect || (gBattleMons[gBattlerAttacker].volatiles.multipleTurns))
-     && moveEffect != EFFECT_SUCKER_PUNCH
-     && moveEffect != EFFECT_COUNTER
-     && moveEffect != EFFECT_UPPER_HAND)
+     && moveEffect != EFFECT_COUNTER)
     {
         if (!CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
             gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
@@ -6070,9 +6068,7 @@ static void Cmd_moveend(void)
                     }
                     break;
                 case PROTECT_OBSTRUCT:
-                    if (moveEffect != EFFECT_SUCKER_PUNCH // Why???
-                        && moveEffect != EFFECT_UPPER_HAND // Why???
-                        && !IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker)))
+                    if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker)))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                         i = gBattlerAttacker;
@@ -15463,23 +15459,6 @@ void BS_TryDefog(void)
         else
             gBattlescriptCurrInstr = cmd->failInstr;
     }
-}
-
-void BS_TryUpperHand(void)
-{
-    NATIVE_ARGS(const u8 *failInstr);
-
-    enum Ability abilityDef = GetBattlerAbility(gBattlerTarget);
-    u32 prio = GetChosenMovePriority(gBattlerTarget, abilityDef);
-
-    if (HasBattlerActedThisTurn(gBattlerTarget)
-     || gChosenMoveByBattler[gBattlerTarget] == MOVE_NONE
-     || IsBattleMoveStatus(gChosenMoveByBattler[gBattlerTarget])
-     || prio < 1
-     || prio > 3) // Fails if priority is less than 1 or greater than 3, if target already moved, or if using a status
-        gBattlescriptCurrInstr = cmd->failInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 void BS_TryTriggerStatusForm(void)
