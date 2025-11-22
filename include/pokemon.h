@@ -392,7 +392,7 @@ struct SpeciesInfo /*0xC4*/
     u8 baseHP USE_FUNC("GetSpeciesBaseHP");
     u8 baseAttack USE_FUNC("GetSpeciesBaseAttack");
     u8 baseDefense USE_FUNC("GetSpeciesBaseDefense");
-    u8 baseSpeed;
+    u8 baseSpeed USE_FUNC("GetSpeciesBaseSpeed");
     u8 baseSpAttack;
     u8 baseSpDefense;
     enum Type types[2];

@@ -3610,7 +3610,7 @@ u32 GetSpeciesBaseSpDefense(u16 species)
 
 u32 GetSpeciesBaseSpeed(u16 species)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed;
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed);
 }
 
 u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
