@@ -48,27 +48,17 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData->usedSlots++;
 }
 
-void FreeFollowMonData(void)
-{
-    if (sFollowMonData != NULL)
-    {
-        Free(sFollowMonData);
-        sFollowMonData = NULL;
-    }
-}
-
 void FollowMon_OverworldCB(void)
 {
     if (!OW_SPAWN_OW_WILD_ENCOUNTERS)
     {
         RemoveAllFollowMonObjects();
+        // Zero sFollowMonData ;
+        sFollowMonData = AllocZeroed(sizeof(struct FollowMonData));
         return;
     }
 
-    if (sFollowMonData == NULL)
-        sFollowMonData = AllocZeroed(sizeof(struct FollowMonData));
-    
-    if (sFollowMonData->spawnCountdown == 0)
+    if(sFollowMonData->spawnCountdown == 0)
     {
         s16 x, y;
         const struct WildPokemonInfo *wildMonInfo = NULL;
@@ -548,7 +538,6 @@ void RemoveAllFollowMonObjects(void)
         if(IS_FOLLOWMON_GFXID(gObjectEvents[i].graphicsId))
             RemoveObjectEvent(&gObjectEvents[i]);
     }
-    FreeFollowMonData();
 }
 
 static u8 FindObjectEventForGfx(u16 gfxId)
