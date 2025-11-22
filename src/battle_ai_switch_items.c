@@ -2429,10 +2429,15 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
 
-        // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
-        if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount
-        && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch))
-            return aceMonId;
+        if (aceMonId != PARTY_SIZE)
+        {
+            s32 usableMons = CountUsablePartyMons(battler);
+            if (usableMons <= aceMonCount) // ace mon is the last Pokemon
+                return aceMonId;
+            else if (usableMons == (aceMonCount + 1) // ace is forced to switch in because second to last mon was forced out
+                 && (IsSwitchOutEffect(GetMoveEffect(gCurrentMove)) || gAiLogicData->ejectButtonSwitch || gAiLogicData->ejectPackSwitch))
+                return aceMonId;
+        }
 
         // Fallback
         bestMonId = GetFirstNonInvalidMon(firstId, lastId, invalidMons, battlerIn1, battlerIn2);

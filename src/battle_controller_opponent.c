@@ -590,7 +590,6 @@ static inline bool32 IsDoubleAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u3
 static void OpponentHandleChoosePokemon(u32 battler)
 {
     s32 chosenMonId;
-    s32 pokemonInBattle = 1;
     enum SwitchType switchType = SWITCH_AFTER_KO;
 
     // Choosing Revival Blessing target
@@ -610,7 +609,7 @@ static void OpponentHandleChoosePokemon(u32 battler)
             SetBattlerAiData(GetBattlerAtPosition(B_POSITION_PLAYER_RIGHT), gAiLogicData);
 
         chosenMonId = GetMostSuitableMonToSwitchInto(battler, switchType);
-        if (chosenMonId == PARTY_SIZE)
+        if (chosenMonId == PARTY_SIZE) // Advanced logic failed so we pick the next available battler
         {
             s32 battler1, battler2, firstId, lastId;
 
@@ -622,20 +621,15 @@ static void OpponentHandleChoosePokemon(u32 battler)
             {
                 battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
                 battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
-                pokemonInBattle = 2;
             }
 
             GetAIPartyIndexes(battler, &firstId, &lastId);
-            for (chosenMonId = (lastId-1); chosenMonId >= firstId; chosenMonId--)
+            for (chosenMonId = firstId; chosenMonId < lastId; chosenMonId++)
             {
                 if (!IsValidForBattle(&gEnemyParty[chosenMonId])
                  || chosenMonId == gBattlerPartyIndexes[battler1]
                  || chosenMonId == gBattlerPartyIndexes[battler2])
                     continue;
-
-                if (!IsAcePokemon(chosenMonId, pokemonInBattle, battler)
-                 && !IsDoubleAcePokemon(chosenMonId, pokemonInBattle, battler))
-                    break;
             }
         }
         gBattleStruct->monToSwitchIntoId[battler] = chosenMonId;
