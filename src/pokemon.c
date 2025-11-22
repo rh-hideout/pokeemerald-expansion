@@ -2761,9 +2761,9 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
         case MON_DATA_TERA_TYPE:
             {
                 struct PokemonSubstruct0 *substruct0 = GetSubstruct0(boxMon);
-                if (gSpeciesInfo[substruct0->species].forceTeraType)
+                if (GetSpeciesForcedTeraType(substruct0->species) != TYPE_NONE)
                 {
-                    retVal = gSpeciesInfo[substruct0->species].forceTeraType;
+                    retVal = GetSpeciesForcedTeraType(substruct0->species);
                 }
                 else if (substruct0->teraType == TYPE_NONE) // Tera Type hasn't been modified so we can just use the personality
                 {
