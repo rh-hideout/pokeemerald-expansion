@@ -960,10 +960,8 @@ static void UpdateLvlInHealthbox(u8 healthboxSpriteId, u8 lvl)
 
 static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor, u8 yOffset)
 {
-    u8 *windowTileData;
-    u32 windowId, tilesCount, x, width, leftTile;
+    u32 width;
     u8 text[2 * HP_MAX_DIGITS + 2], *txtPtr;
-    void *objVram = (void*)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
 
     // To fit 4 digit HP values we need to modify a bit the way hp is printed on Healthbox.
     // HP_RIGHT_SPRITE_CHARS chars can fit on the right healthbox, the rest goes to the left one
@@ -972,13 +970,13 @@ static void PrintHpOnHealthbox(u32 spriteId, s16 currHp, s16 maxHp, u32 bgColor,
     txtPtr = ConvertIntToDecimalStringN(txtPtr, maxHp, STR_CONV_MODE_LEFT_ALIGN, HP_MAX_DIGITS);
 
     // Print last HP_RIGHT_SPRITE_CHARS chars on the right window
-    Sprite_PrintText(gSprites[spriteId].oam.affineParam, 0, yOffset + 5, HP_FONT, txtPtr - HP_RIGHT_SPRITE_CHARS);
+    PrintTextToSprite(gSprites[spriteId].oam.affineParam, 0, yOffset + 5, HP_FONT, txtPtr - HP_RIGHT_SPRITE_CHARS);
 
     // Print the rest of the chars on the left window
     txtPtr[-HP_RIGHT_SPRITE_CHARS] = EOS;
 
     width = GetStringWidth(HP_FONT, text, -1) + GetFontAttribute(HP_FONT, FONTATTR_LETTER_SPACING);
-    Sprite_PrintText(spriteId, 64 - width, yOffset + 5, HP_FONT, text);
+    PrintTextToSprite(spriteId, 64 - width, yOffset + 5, HP_FONT, text);
 }
 
 // Note: this is only possible to trigger via debug, it was an unused GF function.

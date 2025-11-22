@@ -741,6 +741,20 @@ static u8 UNUSED GetLastTextColor(u8 colorType)
     }
 }
 
+static u32 OffsetCurrGlyph(u32 shiftWidth)
+{
+    u32 newWidth = gCurGlyph.width - shiftWidth;
+
+    for (u32 i = 0; i < 16; i++)
+    {
+        gCurGlyph.gfxBufferTop[i] = gCurGlyph.gfxBufferTop[i] >> (4 * shiftWidth);
+        gCurGlyph.gfxBufferBottom[i] = gCurGlyph.gfxBufferBottom[i] >> (4 * shiftWidth);
+    }
+
+    gCurGlyph.width = newWidth;
+    return newWidth;
+}
+
 inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
 {
     if (width <= 0)
@@ -775,7 +789,7 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, 
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-void CopyGlyphToWindow(struct TextPrinter *textPrinter)
+bool32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
 {
     u32 *glyphPixels;
     u32 currX, currY, widthOffset;
@@ -787,11 +801,14 @@ void CopyGlyphToWindow(struct TextPrinter *textPrinter)
 
     struct Sprite *sprite;
 
+    bool32 wasCutOff = FALSE;
+
     currX = textPrinter->printerTemplate.currentX;
     currY = textPrinter->printerTemplate.currentY;
     glyphPixels = gCurGlyph.gfxBufferTop;
 
-    switch (textPrinter->printerTemplate.type) {
+    switch (textPrinter->printerTemplate.type)
+    {
     case WINDOW_TEXT_PRINTER:
         window = &gWindows[textPrinter->printerTemplate.windowId];
         template = &window->window;
@@ -810,6 +827,8 @@ void CopyGlyphToWindow(struct TextPrinter *textPrinter)
 
         if ((glyphWidth = gOamDimensions[sprite->oam.shape][sprite->oam.size].width - textPrinter->printerTemplate.currentX) > gCurGlyph.width)
             glyphWidth = gCurGlyph.width;
+        else
+            wasCutOff = TRUE;
 
         if ((glyphHeight = gOamDimensions[sprite->oam.shape][sprite->oam.size].height - textPrinter->printerTemplate.currentY) > gCurGlyph.height)
             glyphHeight = gCurGlyph.height;
@@ -845,6 +864,15 @@ void CopyGlyphToWindow(struct TextPrinter *textPrinter)
             GLYPH_COPY(destTiles, widthOffset, currX + 8, currY + 8, glyphPixels + 24, glyphWidth - 8, glyphHeight - 8);
         }
     }
+
+    if (wasCutOff)
+    {
+        return glyphWidth;
+        u32 remainingWidth = gCurGlyph.width - glyphWidth;
+        textPrinter->printerTemplate.currentX = remainingWidth;
+        textPrinter->printerTemplate.spriteId = sprite->data[0];
+    }
+    return 0;
 }
 #pragma GCC diagnostic pop
 
@@ -1195,6 +1223,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     u16 currChar;
     s32 width;
     s32 widthHelper;
+    u32 cutOffAmount;
 
     switch (textPrinter->state)
     {
@@ -1226,6 +1255,16 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         case CHAR_NEWLINE:
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->printerTemplate.currentY += (gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing);
+            if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER)
+            {
+                textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].data[3];
+                if (textPrinter->printerTemplate.currentY + (gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing) > 64 /*gSprites[textPrinter->printerTemplate.spriteId].*/
+                 && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
+                {
+                    textPrinter->printerTemplate.currentY = 0;
+                    textPrinter->printerTemplate.spriteId = gSprites[gSprites[textPrinter->printerTemplate.spriteId].data[3]].data[2];
+                }
+            }
             return RENDER_REPEAT;
         case PLACEHOLDER_BEGIN:
             textPrinter->printerTemplate.currentChar++;
@@ -1431,24 +1470,45 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             break;
         }
 
-        CopyGlyphToWindow(textPrinter);
+        cutOffAmount = CopyGlyphToWindow(textPrinter);
 
-        if (textPrinter->minLetterSpacing)
+        //  Handle switching to next sprite here
+        if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
+         && cutOffAmount > 0
+         && gSprites[textPrinter->printerTemplate.spriteId].data[1] != SPRITE_NONE)
         {
-            textPrinter->printerTemplate.currentX += gCurGlyph.width;
-            width = textPrinter->minLetterSpacing - gCurGlyph.width;
-            if (width > 0)
-            {
-                ClearTextSpan(textPrinter, width);
-                textPrinter->printerTemplate.currentX += width;
-            }
+            //  Set the data to the next sprite
+            textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].data[1];
+            textPrinter->printerTemplate.currentX = 0;
+
+            //  Copy the remaining part of the glyph to the sprite
+            //  Offset the current glyph
+            u32 newWidth = OffsetCurrGlyph(cutOffAmount);
+            CopyGlyphToWindow(textPrinter);
+
+            //  Set the print offset for the next glyph
+            textPrinter->printerTemplate.currentX = newWidth;
+
         }
         else
         {
-            if (textPrinter->japanese)
-                textPrinter->printerTemplate.currentX += (gCurGlyph.width + textPrinter->printerTemplate.letterSpacing);
-            else
+            if (textPrinter->minLetterSpacing)
+            {
                 textPrinter->printerTemplate.currentX += gCurGlyph.width;
+                width = textPrinter->minLetterSpacing - gCurGlyph.width;
+                if (width > 0)
+                {
+                    ClearTextSpan(textPrinter, width);
+                    textPrinter->printerTemplate.currentX += width;
+                }
+            }
+            else
+            {
+                if (textPrinter->japanese)
+                    textPrinter->printerTemplate.currentX += (gCurGlyph.width + textPrinter->printerTemplate.letterSpacing);
+                else
+                    textPrinter->printerTemplate.currentX += gCurGlyph.width;
+            }
         }
         return RENDER_PRINT;
     case RENDER_STATE_WAIT:

@@ -1798,7 +1798,7 @@ u32 GetSpanPerImage(u32 shape, u32 size)
     return sSpanPerImage[shape][size];
 }
 
-u8 Sprite_PrintText(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
+u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
 {
     struct TextPrinterTemplate printer;
 
@@ -1820,6 +1820,37 @@ u8 Sprite_PrintText(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
     return AddTextPrinter(&printer, 0, NULL);
 }
 
-void Sprite_FillRectWithColor(u32 spriteId, s32 left, s32 top, u32 width, u32 height, u32 color)
+void SpriteFillRectWithColor(u32 spriteId, s32 left, s32 top, u32 width, u32 height, u32 color)
 {
 }
+
+#define firstSprite data[0]
+#define nextX data[1]
+#define nextY data[2]
+#define firstInRow data[3]
+
+void SetupSpritesForTextPrinting(u8 *spriteIds, u32 numSpritesX, u32 numSpritesY)
+{
+    u32 startSprite = spriteIds[0];
+    for (u32 y = 0; y < numSpritesY; y++)
+    {
+        u32 firstRowSprite = spriteIds[y * numSpritesX];
+        for (u32 x = 0; x < numSpritesX; x++)
+        {
+            gSprites[spriteIds[x + y * numSpritesX]].firstInRow = firstRowSprite;
+            if (x < numSpritesX - 1)
+                gSprites[spriteIds[x + y * numSpritesX]].nextX = spriteIds[x + y * numSpritesX + 1];
+            else
+                gSprites[spriteIds[x + y * numSpritesX]].nextX = SPRITE_NONE;
+            if (y < numSpritesY - 1)
+                gSprites[spriteIds[x + y * numSpritesX]].nextY = spriteIds[x + (y + 1) * numSpritesX];
+            else
+                gSprites[spriteIds[x + y * numSpritesX]].nextY = SPRITE_NONE;
+        }
+    }
+}
+
+#undef firstSprite
+#undef nextX
+#undef nextY
+#undef firstInRow

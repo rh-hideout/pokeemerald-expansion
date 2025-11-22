@@ -160,7 +160,7 @@ void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor);
 void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
 void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
 void DecompressGlyphTile(const void *src_, void *dest_);
-void CopyGlyphToWindow(struct TextPrinter *textPrinter);
+u32 CopyGlyphToWindow(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
 
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter);
