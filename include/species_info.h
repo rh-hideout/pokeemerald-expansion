@@ -223,6 +223,16 @@ static inline u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
     return 0;
 }
 
+static inline u32 GetSpeciesBaseStatTotal(u32 species)
+{
+    return GetSpeciesBaseHP(species)
+         + GetSpeciesBaseAttack(species)
+         + GetSpeciesBaseDefense(species)
+         + GetSpeciesBaseSpeed(species)
+         + GetSpeciesBaseSpAttack(species)
+         + GetSpeciesBaseSpDefense(species);
+}
+
 static inline enum Type GetSpeciesType(u16 species, u8 slot)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].types[slot]);

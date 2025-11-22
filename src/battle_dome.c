@@ -5938,7 +5938,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId1][monId1]].species;
-                points1 += GetTotalBaseStat(species) / 10;
+                points1 += GetSpeciesBaseStatTotal(species) / 10;
             }
             // Random part of the formula.
             points1 += (Random() & 0x1F);
@@ -5956,7 +5956,7 @@ static void DecideRoundWinners(u8 roundId)
                     }
                 }
                 species = gFacilityTrainerMons[DOME_MONS[tournamentId2][monId1]].species;
-                points2 += GetTotalBaseStat(species) / 10;
+                points2 += GetSpeciesBaseStatTotal(species) / 10;
             }
             // Random part of the formula.
             points2 += (Random() & 0x1F);

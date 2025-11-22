@@ -1390,7 +1390,6 @@ static bool32 CheckBattlePyramidEvoRequirement(u16 species, const u16 *evoItems,
     return FALSE;
 }
 
-extern u32 GetTotalBaseStat(u32 species);
 void GenerateBattlePyramidWildMon(void)
 {
     u8 name[POKEMON_NAME_LENGTH + 1];
@@ -1430,7 +1429,7 @@ void GenerateBattlePyramidWildMon(void)
             continue;
 
         // check base stat total
-        if (GetTotalBaseStat(species) > bstLim)
+        if (GetSpeciesBaseStatTotal(species) > bstLim)
             continue;
 
         // check moves

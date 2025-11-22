@@ -105,7 +105,6 @@ void SetBattlerData(u32 battlerId);
 void SetBattlerAiData(u32 battlerId, struct AiLogicData *aiData);
 void RestoreBattlerData(u32 battlerId);
 u32 GetAIChosenMove(u32 battlerId);
-u32 GetTotalBaseStat(u32 species);
 bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler);
 bool32 AI_BattlerAtMaxHp(u32 battler);
 u32 GetHealthPercentage(u32 battler);

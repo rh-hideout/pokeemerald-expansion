@@ -506,16 +506,6 @@ bool32 IsBattlerTrapped(u32 battlerAtk, u32 battlerDef)
     return FALSE;
 }
 
-u32 GetTotalBaseStat(u32 species)
-{
-    return GetSpeciesBaseHP(species)
-         + GetSpeciesBaseAttack(species)
-         + GetSpeciesBaseDefense(species)
-         + GetSpeciesBaseSpeed(species)
-         + GetSpeciesBaseSpAttack(species)
-         + GetSpeciesBaseSpDefense(species);
-}
-
 bool32 IsTruantMonVulnerable(u32 battlerAI, u32 opposingBattler)
 {
     int i;
