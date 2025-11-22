@@ -395,7 +395,7 @@ struct SpeciesInfo /*0xC4*/
     u8 baseSpeed USE_FUNC("GetSpeciesBaseSpeed");
     u8 baseSpAttack USE_FUNC("GetSpeciesBaseSpAttack");
     u8 baseSpDefense USE_FUNC("GetSpeciesBaseSpDefense");
-    enum Type types[2];
+    enum Type types[2] USE_FUNC("GetSpeciesType or IsSpeciesOfType");
     u8 catchRate;
     u8 forceTeraType;
     u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.

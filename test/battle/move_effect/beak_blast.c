@@ -115,7 +115,7 @@ SINGLE_BATTLE_TEST("Beak Blast burns only when contact moves are used")
 SINGLE_BATTLE_TEST("Beak Blast doesn't burn fire types")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_ARCANINE].types[0] == TYPE_FIRE || gSpeciesInfo[SPECIES_ARCANINE].types[1] == TYPE_FIRE);
+        ASSUME(IsSpeciesOfType(SPECIES_ARCANINE, TYPE_FIRE));
         PLAYER(SPECIES_ARCANINE);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

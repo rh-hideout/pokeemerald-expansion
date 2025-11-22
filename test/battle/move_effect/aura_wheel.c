@@ -69,7 +69,7 @@ SINGLE_BATTLE_TEST("Aura Wheel can be turned into a Normal-type move after Morpe
     PARAMETRIZE { hangryMode = TRUE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENTRAINMENT) == EFFECT_ENTRAINMENT);
-        ASSUME(gSpeciesInfo[SPECIES_DUSKULL].types[0] == TYPE_GHOST || gSpeciesInfo[SPECIES_DUSKULL].types[1] == TYPE_GHOST);
+        ASSUME(IsSpeciesOfType(SPECIES_DUSKULL, TYPE_GHOST));
         PLAYER(SPECIES_MORPEKO) { Ability(ABILITY_HUNGER_SWITCH); }
         OPPONENT(SPECIES_DELCATTY) { Ability(ABILITY_NORMALIZE); }
         OPPONENT(SPECIES_DUSKULL);

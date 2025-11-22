@@ -2767,8 +2767,7 @@ u32 GetBoxMonData3(struct BoxPokemon *boxMon, s32 field, u8 *data)
                 }
                 else if (substruct0->teraType == TYPE_NONE) // Tera Type hasn't been modified so we can just use the personality
                 {
-                    const enum Type *types = gSpeciesInfo[substruct0->species].types;
-                    retVal = (boxMon->personality & 0x1) == 0 ? types[0] : types[1];
+                    retVal = GetSpeciesType(substruct0->species, (boxMon->personality & 0x1));
                 }
                 else
                 {
@@ -3575,7 +3574,7 @@ u32 GetSpeciesWeight(u16 species)
 
 enum Type GetSpeciesType(u16 species, u8 slot)
 {
-    return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].types[slot]);
 }
 
 enum Ability GetSpeciesAbility(u16 species, u8 slot)
@@ -7524,8 +7523,7 @@ bool32 IsSpeciesForeignRegionalForm(u32 species, u32 currentRegion)
 
 enum Type GetTeraTypeFromPersonality(struct Pokemon *mon)
 {
-    const u8 *types = gSpeciesInfo[GetMonData(mon, MON_DATA_SPECIES)].types;
-    return (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1) == 0 ? types[0] : types[1];
+    return GetSpeciesType(GetMonData(mon, MON_DATA_SPECIES), (GetMonData(mon, MON_DATA_PERSONALITY) & 0x1));
 }
 
 struct Pokemon *GetSavedPlayerPartyMon(u32 index)
@@ -7545,8 +7543,8 @@ void SavePlayerPartyMon(u32 index, struct Pokemon *mon)
 
 bool32 IsSpeciesOfType(u32 species, enum Type type)
 {
-    if (gSpeciesInfo[species].types[0] == type
-     || gSpeciesInfo[species].types[1] == type)
+    if (GetSpeciesType(species, 0) == type
+     || GetSpeciesType(species, 1) == type)
         return TRUE;
     return FALSE;
 }
