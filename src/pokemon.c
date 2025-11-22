@@ -3572,64 +3572,9 @@ u32 GetSpeciesWeight(u16 species)
     return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
 }
 
-enum Type GetSpeciesType(u16 species, u8 slot)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].types[slot]);
-}
-
 enum Ability GetSpeciesAbility(u16 species, u8 slot)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
-}
-
-u32 GetSpeciesBaseHP(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseHP);
-}
-
-u32 GetSpeciesBaseAttack(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseAttack);
-}
-
-u32 GetSpeciesBaseDefense(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense);
-}
-
-u32 GetSpeciesBaseSpAttack(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpAttack);
-}
-
-u32 GetSpeciesBaseSpDefense(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpDefense);
-}
-
-u32 GetSpeciesBaseSpeed(u16 species)
-{
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed);
-}
-
-u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
-{
-    switch (statIndex)
-    {
-    case STAT_HP:
-        return GetSpeciesBaseHP(species);
-    case STAT_ATK:
-        return GetSpeciesBaseAttack(species);
-    case STAT_DEF:
-        return GetSpeciesBaseDefense(species);
-    case STAT_SPEED:
-        return GetSpeciesBaseSpeed(species);
-    case STAT_SPATK:
-        return GetSpeciesBaseSpAttack(species);
-    case STAT_SPDEF:
-        return GetSpeciesBaseSpDefense(species);
-    }
-    return 0;
 }
 
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
@@ -6040,7 +5985,7 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
         species = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
         level = GetBoxMonLevelAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     }
-    
+
     const struct LevelUpMove *learnset = GetSpeciesLevelUpLearnset(species);
     int i, j, k;
 
@@ -6054,7 +5999,7 @@ u8 GetNumberOfRelearnableMoves(struct Pokemon *mon)
         else
             learnedMoves[i] = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + i);
     }
-        
+
     for (i = 0; i < MAX_LEVEL_UP_MOVES; i++)
     {
         u16 moveLevel;
@@ -7227,22 +7172,6 @@ bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
     }
 
     return FALSE;
-}
-
-u16 SanitizeSpeciesId(u16 species)
-{
-    assertf(species <= NUM_SPECIES && (species == SPECIES_NONE || IsSpeciesEnabled(species)), "invalid species: %d", species)
-    {
-        return SPECIES_NONE;
-    }
-
-    return species;
-}
-
-bool32 IsSpeciesEnabled(u16 species)
-{
-    // This function should not use the GetSpeciesBaseHP function, as the included sanitation will result in an infinite loop
-    return GET_DEPRECATED(u32, gSpeciesInfo[species].baseHP) > 0 || species == SPECIES_EGG;
 }
 
 void TryToSetBattleFormChangeMoves(struct Pokemon *mon, enum FormChanges method)
