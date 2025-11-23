@@ -594,7 +594,7 @@ void ApplyCurrentWarp(void)
     gSaveBlock1Ptr->location = sWarpDestination;
     sFixedDiveWarp = sDummyWarpData;
     sFixedHoleWarp = sDummyWarpData;
-    FollowMon_OnWarp();
+    ClearOverworldEncounterData();
 }
 
 static void ClearDiveAndHoleWarps(void)

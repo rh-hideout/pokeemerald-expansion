@@ -52,7 +52,7 @@ void UpdateOverworldEncounters(void)
     
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
-        RemoveAllFollowMonObjects();
+        RemoveOverworldEncounterObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
         for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
@@ -487,7 +487,7 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
     return graphicsId;
 }
 
-void FollowMon_OnWarp(void)
+void ClearOverworldEncounterData(void)
 {
     sFollowMonData.spawnCountdown = 0;
     sFollowMonData.usedSlots = 0;
@@ -552,7 +552,7 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-void RemoveAllFollowMonObjects(void)
+void RemoveOverworldEncounterObjects(void)
 {
     for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {

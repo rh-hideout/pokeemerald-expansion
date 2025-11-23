@@ -46,7 +46,7 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object);
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
-void FollowMon_OnWarp(void);
-void RemoveAllFollowMonObjects(void);
+void ClearOverworldEncounterData(void);
+void RemoveOverworldEncounterObjects(void);
 
 #endif // GUARD_FOLLOWMON_H
