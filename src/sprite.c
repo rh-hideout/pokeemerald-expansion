@@ -1820,16 +1820,34 @@ u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
     return AddTextPrinter(&printer, 0, NULL);
 }
 
-void SpriteFillRectWithColor(u32 spriteId, s32 left, s32 top, u32 width, u32 height, u32 color)
-{
-}
-
 #define firstSprite data[0]
 #define nextX data[1]
 #define nextY data[2]
 #define firstInRow data[3]
 
-void SetupSpritesForTextPrinting(u8 *spriteIds, u32 numSpritesX, u32 numSpritesY)
+void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
+{
+    //  Check if area spans more than 1 sprite
+    u32 spriteWidth = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].width;
+    u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
+
+    if (left + width > spriteWidth || top + height > spriteHeight)
+    {
+        //  Need to handle crossing sprite borders, it would be nice to have recursion here
+    }
+    else
+    {
+        //  Just need to handle the current sprite
+        u32 *tiles = (void*)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
+        u32 mask = 0;
+    }
+}
+
+void SpriteFillRectWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height)
+{
+}
+
+void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX, u32 numSpritesY)
 {
     u32 startSprite = spriteIds[0];
     for (u32 y = 0; y < numSpritesY; y++)

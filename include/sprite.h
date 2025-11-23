@@ -333,7 +333,8 @@ void RequestSpriteFrameImageCopy(u16 index, u16 tileNum, const struct SpriteFram
 void SetSpriteOamFlipBits(struct Sprite *sprite, u8 hFlip, u8 vFlip);
 u8 IndexOfSpriteTileTag(u16 tag);
 u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string);
-void SpriteFillRectWithColor(u32 spriteId, s32 left, s32 top, u32 width, u32 height, u32 color);
-void SetupSpritesForTextPrinting(u8 *spriteIds, u32 numSpritesX, u32 numSpritesY);
+void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color);
+void SpriteFillRectWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height);
+void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX, u32 numSpritesY);
 
 #endif //GUARD_SPRITE_H

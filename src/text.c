@@ -745,10 +745,32 @@ static u32 OffsetCurrGlyph(u32 shiftWidth)
 {
     u32 newWidth = gCurGlyph.width - shiftWidth;
 
-    for (u32 i = 0; i < 16; i++)
+    if (gCurGlyph.width <= 8)
     {
-        gCurGlyph.gfxBufferTop[i] = gCurGlyph.gfxBufferTop[i] >> (4 * shiftWidth);
-        gCurGlyph.gfxBufferBottom[i] = gCurGlyph.gfxBufferBottom[i] >> (4 * shiftWidth);
+        for (u32 i = 0; i < 8; i++)
+        {
+            gCurGlyph.gfxBufferTop[i] = gCurGlyph.gfxBufferTop[i] >> (4 * shiftWidth);
+            gCurGlyph.gfxBufferBottom[i] = gCurGlyph.gfxBufferBottom[i] >> (4 * shiftWidth);
+        }
+    }
+    else
+    {
+        //  Do cursed u64 handling of double wide glyphs
+        for (u32 i = 0; i < 8; i++)
+        {
+            u64 tempVal = gCurGlyph.gfxBufferTop[8 + i];
+            u64 topVal = (tempVal << 32) | gCurGlyph.gfxBufferTop[i];
+            tempVal = gCurGlyph.gfxBufferBottom[8 + i];
+            u64 bottomVal = (tempVal << 32) | gCurGlyph.gfxBufferBottom[i];
+            topVal = topVal >> (4 * shiftWidth);
+            bottomVal = bottomVal >> (4 * shiftWidth);
+
+            gCurGlyph.gfxBufferTop[i] = topVal & 0xFFFFFFFF;
+            gCurGlyph.gfxBufferTop[8 + i] = topVal >> 32;
+
+            gCurGlyph.gfxBufferBottom[i] = bottomVal & 0xFFFFFFFF;
+            gCurGlyph.gfxBufferBottom[8 + i] = bottomVal >> 32;
+        }
     }
 
     gCurGlyph.width = newWidth;
@@ -865,13 +887,66 @@ bool32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
         }
     }
 
-    if (wasCutOff)
+    //  Handle Y cutoff
+    if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
+     && glyphHeight != gCurGlyph.height)
     {
-        return glyphWidth;
-        u32 remainingWidth = gCurGlyph.width - glyphWidth;
-        textPrinter->printerTemplate.currentX = remainingWidth;
-        textPrinter->printerTemplate.spriteId = sprite->data[0];
+        sprite = &gSprites[gSprites[textPrinter->printerTemplate.spriteId].data[2]];
+        destTiles = (void*)(OBJ_VRAM0) + sprite->oam.tileNum * TILE_SIZE_4BPP;
+
+        u32 newHeight = gCurGlyph.height - glyphHeight;
+
+        u32 leftHalf[16];
+        u32 rightHalf[16];
+
+        for (u32 i = 0; i < 8; i++)
+        {
+            leftHalf[i] = gCurGlyph.gfxBufferTop[i];
+            leftHalf[8 + i] = gCurGlyph.gfxBufferBottom[i];
+            rightHalf[i] = gCurGlyph.gfxBufferTop[8 + i];
+            rightHalf[8 + i] = gCurGlyph.gfxBufferBottom[8 + i];
+        }
+
+        for (u32 i = 0; i < newHeight; i++)
+        {
+            leftHalf[i] = leftHalf[glyphHeight + i];
+            rightHalf[i] = rightHalf[glyphHeight + i];
+        }
+
+        glyphHeight = newHeight;
+
+        if (glyphWidth < 9)
+        {
+            if (glyphHeight < 9)
+            {
+                GLYPH_COPY(destTiles, widthOffset, currX, 0, leftHalf, glyphWidth, glyphHeight);
+            }
+            else
+            {
+                GLYPH_COPY(destTiles, widthOffset, currX, 0, leftHalf, glyphWidth, 8);
+                GLYPH_COPY(destTiles, widthOffset, currX, 8, &leftHalf[8], glyphWidth, glyphHeight - 8);
+            }
+        }
+        else
+        {
+            if (glyphHeight < 9)
+            {
+                GLYPH_COPY(destTiles, widthOffset, currX, 0, leftHalf, 8, glyphHeight);
+                GLYPH_COPY(destTiles, widthOffset, currX + 8, 0, rightHalf, glyphWidth - 8, glyphHeight);
+            }
+            else
+            {
+                GLYPH_COPY(destTiles, widthOffset, currX, 0, leftHalf, 8, 8);
+                GLYPH_COPY(destTiles, widthOffset, currX + 8, 0, rightHalf, glyphWidth - 8, 8);
+                GLYPH_COPY(destTiles, widthOffset, currX, 8, &leftHalf[8], 8, glyphHeight - 8);
+                GLYPH_COPY(destTiles, widthOffset, currX + 8, 8, &rightHalf[8], glyphWidth - 8, glyphHeight - 8);
+            }
+        }
     }
+
+    if (wasCutOff)
+        return glyphWidth;
+
     return 0;
 }
 #pragma GCC diagnostic pop
@@ -1258,10 +1333,11 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER)
             {
                 textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].data[3];
-                if (textPrinter->printerTemplate.currentY + (gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing) > 64 /*gSprites[textPrinter->printerTemplate.spriteId].*/
+                //  Replace 64 with value read from sprite
+                if (textPrinter->printerTemplate.currentY  >= 64 /*gSprites[textPrinter->printerTemplate.spriteId].*/
                  && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
                 {
-                    textPrinter->printerTemplate.currentY = 0;
+                    textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - 64;
                     textPrinter->printerTemplate.spriteId = gSprites[gSprites[textPrinter->printerTemplate.spriteId].data[3]].data[2];
                 }
             }
@@ -1421,6 +1497,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         case CHAR_KEYPAD_ICON:
             if (textPrinter->printerTemplate.type == WINDOW_TEXT_PRINTER)
             {
+                //  Write real handling for this
                 currChar = *textPrinter->printerTemplate.currentChar++;
                 gCurGlyph.width = DrawKeypadIcon(textPrinter->printerTemplate.windowId, currChar, textPrinter->printerTemplate.currentX, textPrinter->printerTemplate.currentY);
                 textPrinter->printerTemplate.currentX += gCurGlyph.width + textPrinter->printerTemplate.letterSpacing;
