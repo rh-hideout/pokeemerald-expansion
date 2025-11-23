@@ -158,9 +158,6 @@ static const struct SpriteTemplate sSpriteTemplate_Cursor =
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOamData_Cursor,
     .anims = sAnims_Cursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSpriteTemplate_MenuText =
@@ -169,9 +166,6 @@ static const struct SpriteTemplate sSpriteTemplate_MenuText =
     .paletteTag = PALTAG_MENU_TEXT,
     .oam = &sOamData_MenuText,
     .anims = sAnims_MenuText,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const u16 sMenuText_Pal[] = INCBIN_U16("graphics/trade/text.gbapal");
@@ -746,7 +740,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeball =
     .paletteTag = PALTAG_POKEBALL,
     .oam = &sOamData_Pokeball,
     .anims = sAnims_Pokeball,
-    .images = NULL,
     .affineAnims = sAffineAnims_Pokeball,
     .callback = SpriteCB_BouncingPokeball
 };
@@ -808,7 +801,6 @@ static const struct SpriteTemplate sSpriteTemplate_LinkMonGlow =
     .paletteTag = PALTAG_LINK_MON,
     .oam = &sOamData_LinkMonGlow,
     .anims = sAnims_LinkMonGlow,
-    .images = NULL,
     .affineAnims = sAffineAnims_LinkMonGlow,
     .callback = SpriteCB_LinkMonGlow
 };
@@ -856,8 +848,6 @@ static const struct SpriteTemplate sSpriteTemplate_LinkMonShadow =
     .paletteTag = PALTAG_LINK_MON,
     .oam = &sOamData_LinkMonShadow,
     .anims = sAnims_LinkMonShadow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_LinkMonShadow
 };
 
@@ -892,8 +882,6 @@ static const struct SpriteTemplate sSpriteTemplate_CableEnd =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_CableEnd,
     .anims = sAnims_CableEnd,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CableEndSending
 };
 
@@ -953,8 +941,6 @@ static const struct SpriteTemplate sSpriteTemplate_GbaScreenFlash_Long =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_GbaScreen,
     .anims = sAnims_GbaScreen_Long,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_GbaScreen
 };
 
@@ -964,8 +950,6 @@ static const struct SpriteTemplate sSpriteTemplate_GbaScreenFlash_Short =
     .paletteTag = PALTAG_GBA,
     .oam = &sOamData_GbaScreen,
     .anims = sAnims_GbaScreen_Short,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_GbaScreen
 };
 

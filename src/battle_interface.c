@@ -231,19 +231,11 @@ static const struct SpriteTemplate sHealthboxPlayerSpriteTemplates[2] =
         .tileTag = TAG_HEALTHBOX_PLAYER1_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_HEALTHBOX_PLAYER2_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     }
 };
 
@@ -253,19 +245,11 @@ static const struct SpriteTemplate sHealthboxOpponentSpriteTemplates[2] =
         .tileTag = TAG_HEALTHBOX_OPPONENT1_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     },
     {
         .tileTag = TAG_HEALTHBOX_OPPONENT2_TILE,
         .paletteTag = TAG_HEALTHBOX_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy
     }
 };
 
@@ -274,10 +258,6 @@ static const struct SpriteTemplate sHealthboxSafariSpriteTemplate =
     .tileTag = TAG_HEALTHBOX_SAFARI_TILE,
     .paletteTag = TAG_HEALTHBOX_PAL,
     .oam = &sOamData_64x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_Healthbar =
@@ -303,36 +283,24 @@ static const struct SpriteTemplate sHealthbarSpriteTemplates[MAX_BATTLERS_COUNT]
         .tileTag = TAG_HEALTHBAR_PLAYER1_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_OPPONENT1_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_PLAYER2_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     },
     {
         .tileTag = TAG_HEALTHBAR_OPPONENT2_TILE,
         .paletteTag = TAG_HEALTHBAR_PAL,
         .oam = &sOamData_Healthbar,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_HealthBar
     }
 };
@@ -545,18 +513,12 @@ static const struct SpriteTemplate sStatusSummaryBarSpriteTemplates[2] =
         .tileTag = TAG_STATUS_SUMMARY_BAR_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BAR_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBar_Enter
     },
     { // Opponent
         .tileTag = TAG_STATUS_SUMMARY_BAR_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BAR_PAL,
         .oam = &sOamData_64x32,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBar_Enter
     }
 };
@@ -567,18 +529,12 @@ static const struct SpriteTemplate sStatusSummaryBallsSpriteTemplates[2] =
         .tileTag = TAG_STATUS_SUMMARY_BALLS_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BALLS_PAL,
         .oam = &sOamData_StatusSummaryBalls,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBalls_Enter
     },
     {
         .tileTag = TAG_STATUS_SUMMARY_BALLS_TILE,
         .paletteTag = TAG_STATUS_SUMMARY_BALLS_PAL,
         .oam = &sOamData_StatusSummaryBalls,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_StatusSummaryBalls_Enter
     }
 };
@@ -2490,9 +2446,6 @@ static const struct SpriteTemplate sSpriteTemplate_AbilityPopUp =
     .tileTag = TAG_NONE, // Changed on the fly.
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_AbilityPopUp,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCb_AbilityPopUp
 };
 
@@ -2823,9 +2776,6 @@ static const struct SpriteTemplate sSpriteTemplate_LastUsedBallWindow =
     .tileTag = TAG_LAST_BALL_WINDOW,
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_LastUsedBall,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_LastUsedBallWin
 };
 
@@ -2853,9 +2803,6 @@ static const struct SpriteTemplate sSpriteTemplate_MoveInfoWindow =
     .tileTag = MOVE_INFO_WINDOW_TAG,
     .paletteTag = TAG_ABILITY_POP_UP,
     .oam = &sOamData_MoveInfoWindow,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_MoveInfoWin
 };
 

@@ -524,7 +524,6 @@ static const struct SpriteTemplate sSpriteTemplate_Pokeblock =
     .paletteTag = TAG_POKEBLOCK,
     .oam = &sOamData_Pokeblock,
     .anims = sAnims_Pokeblock,
-    .images = NULL,
     .affineAnims = sAffineAnims_Pokeblock,
     .callback = SpriteCB_ThrownPokeblock
 };

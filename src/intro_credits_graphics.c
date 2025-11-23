@@ -81,9 +81,6 @@ static const struct SpriteTemplate sSpriteTemplate_MovingScenery =
     .tileTag = TAG_MOVING_SCENERY,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_MovingScenery
 };
 
@@ -468,8 +465,6 @@ static const struct SpriteTemplate sSpriteTemplate_Brendan =
     .paletteTag = TAG_BRENDAN,
     .oam = &sOamData_Player,
     .anims = sAnims_Player,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Player
 };
 
@@ -479,8 +474,6 @@ static const struct SpriteTemplate sSpriteTemplate_May =
     .paletteTag = TAG_MAY,
     .oam = &sOamData_Player,
     .anims = sAnims_Player,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Player
 };
 
@@ -512,8 +505,6 @@ static const struct SpriteTemplate sSpriteTemplate_BrendanBicycle =
     .paletteTag = TAG_BRENDAN,
     .oam = &sOamData_Bicycle,
     .anims = sAnims_Bicycle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Bicycle
 };
 
@@ -523,8 +514,6 @@ static const struct SpriteTemplate sSpriteTemplate_MayBicycle =
     .paletteTag = TAG_MAY,
     .oam = &sOamData_Bicycle,
     .anims = sAnims_Bicycle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Bicycle
 };
 
@@ -560,8 +549,6 @@ static const struct SpriteTemplate sSpriteTemplate_FlygonLatios =
     .paletteTag = TAG_FLYGON_LATIOS,
     .oam = &sOamData_Flygon,
     .anims = sAnims_Flygon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_FlygonLeftHalf
 };
 
@@ -571,8 +558,6 @@ static const struct SpriteTemplate sSpriteTemplate_FlygonLatias =
     .paletteTag = TAG_FLYGON_LATIAS,
     .oam = &sOamData_Flygon,
     .anims = sAnims_Flygon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_FlygonLeftHalf
 };
 
