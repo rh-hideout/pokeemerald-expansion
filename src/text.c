@@ -54,10 +54,7 @@ static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
 static EWRAM_DATA struct TextPrinter sTextPrinters[WINDOWS_MAX] = {0};
 
 static u16 EWRAM_DATA sFontHalfRowLookupTable[0x100];
-static u16 sLastTextBgColor;
-static u16 sLastTextFgColor;
-static u16 sLastTextShadowColor;
-static u16 sLastTextAccentColor;
+static union TextColor sLastTextColor;
 
 COMMON_DATA const struct FontInfo *gFonts = NULL;
 COMMON_DATA bool8 gDisableTextPrinters = 0;
@@ -373,10 +370,7 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
     printerTemplate.currentY = y;
     printerTemplate.letterSpacing = gFonts[fontId].letterSpacing;
     printerTemplate.lineSpacing = gFonts[fontId].lineSpacing;
-    printerTemplate.accentColor = gFonts[fontId].accentColor;
-    printerTemplate.fgColor = gFonts[fontId].fgColor;
-    printerTemplate.bgColor = gFonts[fontId].bgColor;
-    printerTemplate.shadowColor = gFonts[fontId].shadowColor;
+    printerTemplate.color = gFonts[fontId].color;
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
@@ -402,7 +396,7 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.minLetterSpacing = 0;
     sTempTextPrinter.japanese = 0;
 
-    GenerateFontHalfRowLookupTable(printerTemplate->bgColor, printerTemplate->fgColor, printerTemplate->shadowColor, printerTemplate->accentColor);
+    GenerateFontHalfRowLookupTable(printerTemplate->color);
     if (speed != TEXT_SKIP_DRAW && speed != 0)
     {
         --sTempTextPrinter.textSpeed;
@@ -495,22 +489,16 @@ static u32 RenderFont(struct TextPrinter *textPrinter)
     }
 }
 
-void GenerateFontHalfRowLookupTable(u8 bgColor, u8 fgColor, u8 shadowColor, u8 accentColor)
+void GenerateFontHalfRowLookupTable(union TextColor color)
 {
-    if (fgColor == sLastTextFgColor
-     && bgColor == sLastTextBgColor
-     && shadowColor == sLastTextShadowColor
-     && accentColor == sLastTextAccentColor)
+    if (color.asU32 == sLastTextColor.asU32)
     {
         return;
     }
 
-    sLastTextBgColor = bgColor;
-    sLastTextFgColor = fgColor;
-    sLastTextShadowColor = shadowColor;
-    sLastTextAccentColor = accentColor;
+    sLastTextColor = color;
     
-    u8 colors[4] = {bgColor & 0xF, fgColor & 0xF, shadowColor & 0xF, accentColor & 0xF};
+    u8 *colors = color.asArray;
     
     u8 quarterRows[16] = {
         colors[0] << 4 | colors[0],
@@ -545,15 +533,20 @@ void GenerateFontHalfRowLookupTable(u8 bgColor, u8 fgColor, u8 shadowColor, u8 a
 
 void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor, u8 *accentColor)
 {
-    *bgColor = sLastTextBgColor;
-    *fgColor = sLastTextFgColor;
-    *shadowColor = sLastTextShadowColor;
-    *accentColor = sLastTextAccentColor;
+    *bgColor = sLastTextColor.background;
+    *fgColor = sLastTextColor.foreground;
+    *shadowColor = sLastTextColor.shadow;
+    *accentColor = sLastTextColor.accent;
 }
 
 void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
 {
-    GenerateFontHalfRowLookupTable(*bgColor, *fgColor, *shadowColor, *accentColor);
+    GenerateFontHalfRowLookupTable((union TextColor) {
+        .background = *bgColor,
+        .foreground = *fgColor,
+        .shadow = *shadowColor,
+        .accent = *accentColor}
+    );
 }
 
 void DecompressGlyphTile(const void *src_, void *dest_)
@@ -592,16 +585,16 @@ static u8 UNUSED GetLastTextColor(enum TextColorType colorType)
     switch (colorType)
     {
     case TEXT_COLOR_TYPE_FOREGROUND:
-        return sLastTextFgColor;
+        return sLastTextColor.foreground;
     case TEXT_COLOR_TYPE_HIGHLIGHT:
     case TEXT_COLOR_TYPE_BACKGROUND:
-        return sLastTextBgColor;
+        return sLastTextColor.background;
     case TEXT_COLOR_TYPE_SHADOW:
-        return sLastTextShadowColor;
+        return sLastTextColor.shadow;
     case TEXT_COLOR_TYPE_ACCENT:
-        return sLastTextAccentColor;
+        return sLastTextColor.accent;
     default:
-        return 0;
+        return TEXT_COLOR_TRANSPARENT;
     }
 }
 
@@ -697,7 +690,7 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
     struct TextGlyph *glyph;
     u8 *glyphHeight;
 
-    if (sLastTextBgColor != TEXT_COLOR_TRANSPARENT)
+    if (sLastTextColor.background != TEXT_COLOR_TRANSPARENT)
     {
         window = &gWindows[textPrinter->printerTemplate.windowId];
         pixels_data.pixels = window->tileData;
@@ -713,7 +706,7 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
             textPrinter->printerTemplate.currentY,
             width,
             *glyphHeight,
-            sLastTextBgColor);
+            sLastTextColor.background);
     }
 }
 
@@ -891,7 +884,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
         {
             FillWindowPixelRect(
                 textPrinter->printerTemplate.windowId,
-                textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
+                textPrinter->printerTemplate.color.background << 4 | textPrinter->printerTemplate.color.background,
                 textPrinter->printerTemplate.currentX,
                 textPrinter->printerTemplate.currentY,
                 8,
@@ -931,7 +924,7 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
 {
     FillWindowPixelRect(
         textPrinter->printerTemplate.windowId,
-        textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
+        textPrinter->printerTemplate.color.background << 4 | textPrinter->printerTemplate.color.background,
         textPrinter->printerTemplate.currentX,
         textPrinter->printerTemplate.currentY,
         8,
@@ -1078,49 +1071,49 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             switch (currChar)
             {
             case EXT_CTRL_CODE_BACKGROUND:
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_COLOR:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_SHADOW:
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_ACCENT:
-                textPrinter->printerTemplate.accentColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_HIGHLIGHT:
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar;
-                textPrinter->printerTemplate.accentColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar;
-                textPrinter->printerTemplate.accentColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_TEXT_COLORS:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.accentColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.shadowColor, textPrinter->printerTemplate.accentColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_PALETTE:
                 textPrinter->printerTemplate.currentChar++;
@@ -1171,7 +1164,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_FILL_WINDOW:
-                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.color.background));
                 textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
                 textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y;
                 return RENDER_REPEAT;
@@ -1311,7 +1304,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_CLEAR:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
-            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.color.background));
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y;
             textPrinter->state = RENDER_STATE_HANDLE_CHAR;
@@ -1341,12 +1334,12 @@ static u16 RenderText(struct TextPrinter *textPrinter)
 
             if (textPrinter->scrollDistance < scrollSpeed)
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.color.background));
                 textPrinter->scrollDistance = 0;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.color.background));
                 textPrinter->scrollDistance -= scrollSpeed;
             }
 
@@ -1698,19 +1691,17 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     int temp;
     int temp2;
     u8 colorBackup[4];
-    u8 bgColor;
-    u8 fgColor;
-    u8 shadowColor;
-    u8 accentColor;
 
     SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
+    
+    union TextColor textColor = {
+        .background = TEXT_COLOR_TRANSPARENT,
+        .foreground = TEXT_COLOR_WHITE,
+        .shadow = TEXT_COLOR_LIGHT_GRAY,
+        .accent = TEXT_COLOR_TRANSPARENT,
+    };
 
-    fgColor = TEXT_COLOR_WHITE;
-    bgColor = TEXT_COLOR_TRANSPARENT;
-    shadowColor = TEXT_COLOR_LIGHT_GRAY;
-    accentColor = TEXT_COLOR_TRANSPARENT;
-
-    GenerateFontHalfRowLookupTable(TEXT_COLOR_TRANSPARENT, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY, TEXT_COLOR_TRANSPARENT);
+    GenerateFontHalfRowLookupTable(textColor);
     strLocal = str;
     strPos = 0;
 
@@ -1724,38 +1715,36 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
             switch (temp2)
             {
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-                fgColor = strLocal[strPos++];
-                bgColor = strLocal[strPos++];
-                accentColor = bgColor;
-                shadowColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.foreground = strLocal[strPos++];
+                textColor.background = textColor.accent = strLocal[strPos++];
+                textColor.shadow = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_TEXT_COLORS:
-                fgColor = strLocal[strPos++];
-                shadowColor = strLocal[strPos++];
-                accentColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.foreground = strLocal[strPos++];
+                textColor.shadow = strLocal[strPos++];
+                textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_BACKGROUND:
-                bgColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.background = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_COLOR:
-                fgColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.foreground = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_SHADOW:
-                shadowColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.shadow = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_ACCENT:
-                accentColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_HIGHLIGHT:
-                bgColor = strLocal[strPos++];
-                accentColor = bgColor;
-                GenerateFontHalfRowLookupTable(bgColor, fgColor, shadowColor, accentColor);
+                textColor.background = textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_FONT:
                 fontId = strLocal[strPos++];
@@ -1873,16 +1862,16 @@ u8 GetFontAttribute(u8 fontId, u8 attributeId)
             result = sFontInfos[fontId].lineSpacing;
             break;
         case FONTATTR_COLOR_ACCENT:
-            result = sFontInfos[fontId].accentColor;
+            result = sFontInfos[fontId].color.accent;
             break;
         case FONTATTR_COLOR_FOREGROUND:
-            result = sFontInfos[fontId].fgColor;
+            result = sFontInfos[fontId].color.foreground;
             break;
         case FONTATTR_COLOR_BACKGROUND:
-            result = sFontInfos[fontId].bgColor;
+            result = sFontInfos[fontId].color.background;
             break;
         case FONTATTR_COLOR_SHADOW:
-            result = sFontInfos[fontId].shadowColor;
+            result = sFontInfos[fontId].color.shadow;
             break;
     }
     return result;
