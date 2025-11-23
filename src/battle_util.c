@@ -6934,17 +6934,17 @@ u32 ItemBattleEffects(enum ItemCaseId caseID, u32 battler)
         switch (atkHoldEffect)
         {
         case HOLD_EFFECT_FLINCH:
+            if (!MoveIgnoresKingsRock(gCurrentMove)
+             && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH)
+             && IsBattlerTurnDamaged(gBattlerTarget)
+             && IsBattlerAlive(gBattlerTarget))
             {
                 u16 ability = GetBattlerAbility(gBattlerAttacker);
                 if (B_SERENE_GRACE_BOOST >= GEN_5 && ability == ABILITY_SERENE_GRACE)
                     atkHoldEffectParam *= 2;
                 if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_RAINBOW && gCurrentMove != MOVE_SECRET_POWER)
                     atkHoldEffectParam *= 2;
-                if (IsBattlerTurnDamaged(gBattlerTarget)
-                    && !MoveIgnoresKingsRock(gCurrentMove)
-                    && gBattleMons[gBattlerTarget].hp
-                    && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, atkHoldEffectParam)
-                    && ability != ABILITY_STENCH)
+                if (ability != ABILITY_STENCH && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, atkHoldEffectParam))
                 {
                     gBattleScripting.moveEffect = MOVE_EFFECT_FLINCH;
                     BattleScriptPushCursor();
