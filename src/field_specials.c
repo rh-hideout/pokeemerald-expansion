@@ -4308,8 +4308,8 @@ void GetObjectPosition(u16* xPointer, u16* yPointer, u32 localId, u32 useTemplat
 
     objectId = GetObjectEventIdByLocalId(localId);
     objEvent = &gObjectEvents[objectId];
-    *xPointer = objEvent->currentCoords.x - 7;
-    *yPointer = objEvent->currentCoords.y - 7;
+    *xPointer = objEvent->currentCoords.x - MAP_OFFSET;
+    *yPointer = objEvent->currentCoords.y - MAP_OFFSET;
 }
 
 bool32 CheckObjectAtXY(u32 x, u32 y)

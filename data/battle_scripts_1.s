@@ -309,10 +309,10 @@ BattleScript_MoveSwitch:
 	waitmessage B_WAIT_TIME_SHORT
 BattleScript_MoveSwitchOpenPartyScreen::
 	openpartyscreen BS_ATTACKER, BattleScript_MoveSwitchEnd
-	switchoutabilities BS_ATTACKER
 	waitstate
-	switchhandleorder BS_ATTACKER, 2
 	returntoball BS_ATTACKER, FALSE
+	switchoutabilities BS_ATTACKER
+	switchhandleorder BS_ATTACKER, 2
 	getswitchedmondata BS_ATTACKER
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
@@ -4099,10 +4099,10 @@ BattleScript_EffectBatonPass::
 	attackanimation
 	waitanimation
 	openpartyscreen BS_ATTACKER, BattleScript_ButItFailed
-	switchoutabilities BS_ATTACKER
 	waitstate
-	switchhandleorder BS_ATTACKER, 2
 	returntoball BS_ATTACKER, FALSE
+	switchoutabilities BS_ATTACKER
+	switchhandleorder BS_ATTACKER, 2
 	getswitchedmondata BS_ATTACKER
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
@@ -5418,11 +5418,11 @@ BattleScript_ActionSwitch::
 	end2
 
 BattleScript_DoSwitchOut::
-	switchoutabilities BS_ATTACKER
 	undodynamax BS_ATTACKER
 	waitstate
 	returnatktoball
 	waitstate
+	switchoutabilities BS_ATTACKER
 	drawpartystatussummary BS_ATTACKER
 	switchhandleorder BS_ATTACKER, 1
 	getswitchedmondata BS_ATTACKER
@@ -5724,9 +5724,9 @@ BattleScript_RoarSuccessRet:
 	attackanimation
 	waitanimation
 BattleScript_RoarSuccessRet_Ret:
-	switchoutabilities BS_TARGET
 	returntoball BS_TARGET, FALSE
 	waitstate
+	switchoutabilities BS_TARGET
 	return
 
 BattleScript_WeaknessPolicy::
@@ -7219,10 +7219,10 @@ BattleScript_EmergencyExit::
 	playanimation BS_SCRIPTING, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
 	openpartyscreen BS_SCRIPTING, BattleScript_EmergencyExitRet
-	switchoutabilities BS_SCRIPTING
 	waitstate
-	switchhandleorder BS_SCRIPTING, 2
 	returntoball BS_SCRIPTING, FALSE
+	switchoutabilities BS_SCRIPTING
+	switchhandleorder BS_SCRIPTING, 2
 	getswitchedmondata BS_SCRIPTING
 	switchindataupdate BS_SCRIPTING
 	hpthresholds BS_SCRIPTING
@@ -7252,10 +7252,10 @@ BattleScript_EmergencyExitEnd2::
 	playanimation BS_ATTACKER, B_ANIM_SLIDE_OFFSCREEN
 	waitanimation
 	openpartyscreen BS_ATTACKER, BattleScript_EmergencyExitRetEnd2
-	switchoutabilities BS_ATTACKER
 	waitstate
-	switchhandleorder BS_ATTACKER, 2
 	returntoball BS_ATTACKER, FALSE
+	switchoutabilities BS_ATTACKER
+	switchhandleorder BS_ATTACKER, 2
 	getswitchedmondata BS_ATTACKER
 	switchindataupdate BS_ATTACKER
 	hpthresholds BS_ATTACKER
@@ -9191,12 +9191,12 @@ BattleScript_EjectButtonActivates::
 	undodynamax BS_SCRIPTING
 	makeinvisible BS_SCRIPTING
 	openpartyscreen BS_SCRIPTING, BattleScript_EjectButtonEnd
+	waitstate
+	returntoball BS_SCRIPTING, FALSE
 	copybyte sSAVED_BATTLER, sBATTLER
 	switchoutabilities BS_SCRIPTING
 	copybyte sBATTLER, sSAVED_BATTLER
-	waitstate
 	switchhandleorder BS_SCRIPTING, 0x2
-	returntoball BS_SCRIPTING, FALSE
 	getswitchedmondata BS_SCRIPTING
 	switchindataupdate BS_SCRIPTING
 	hpthresholds BS_SCRIPTING
@@ -9296,8 +9296,7 @@ BattleScript_NeutralizingGasExits::
 	setbyte gBattlerAttacker, 0
 BattleScript_NeutralizingGasExitsLoop:
 	copyarraywithindex gBattlerTarget, gBattlerByTurnOrder, gBattlerAttacker, 1
-	jumpifabilitycantbesuppressed BS_TARGET, BattleScript_NeutralizingGasExitsLoopIncrement
-	jumpifability BS_TARGET, ABILITY_IMPOSTER, BattleScript_NeutralizingGasExitsLoopIncrement @ Imposter only activates when first entering the field
+	jumpifabilitycantbereactivated BS_TARGET, BattleScript_NeutralizingGasExitsLoopIncrement
 	saveattacker
 	switchinabilities BS_TARGET
 	restoreattacker
@@ -9333,14 +9332,18 @@ BattleScript_TargetAbilityStatRaiseRet_End:
 @@@ MAX MOVES @@@
 BattleScript_EffectMaxMove::
 	attackcanceler
+	attackstring
+	ppreduce
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
-	goto BattleScript_HitFromAtkString
+	goto BattleScript_HitFromCritCalc
 
 BattleScript_EffectRaiseStatAllies::
 	savetarget
 	copybyte gBattlerTarget, gBattlerAttacker
+	copybyte sSAVED_STAT_CHANGER, sSTATCHANGER
 BattleScript_RaiseSideStatsLoop:
 	jumpifabsent BS_TARGET, BattleScript_RaiseSideStatsIncrement
+	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_RaiseSideStatsIncrement
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_INCREASE, BattleScript_RaiseSideStatsIncrement
 	printfromtable gStatUpStringIds
@@ -9355,8 +9358,10 @@ BattleScript_RaiseSideStatsEnd:
 BattleScript_EffectLowerStatFoes::
 	savetarget
 	copybyte sBATTLER, gBattlerTarget
+	copybyte sSAVED_STAT_CHANGER, sSTATCHANGER
 BattleScript_LowerSideStatsLoop:
 	jumpifabsent BS_TARGET, BattleScript_LowerSideStatsIncrement
+	copybyte sSTATCHANGER, sSAVED_STAT_CHANGER
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_LowerSideStatsIncrement
 	jumpifbyte CMP_EQUAL, cMULTISTRING_CHOOSER, B_MSG_STAT_WONT_DECREASE, BattleScript_LowerSideStatsIncrement
 	printfromtable gStatDownStringIds

@@ -310,3 +310,46 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Imposte
         NOT ABILITY_POPUP(player, ABILITY_IMPOSTER);
     }
 }
+
+SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Air Lock/Cloud Nine but their effects are kept")
+{
+    u32 species, ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK; ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_LUDICOLO) { Ability(ABILITY_RAIN_DISH); }
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_RAIN_DANCE); }
+    } SCENE {
+        NOT ABILITY_POPUP(player, ABILITY_AIR_LOCK);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NOT ABILITY_POPUP(player, ABILITY_AIR_LOCK);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        NOT ABILITY_POPUP(opponent, ABILITY_RAIN_DISH);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas only displays exiting message for the last user leaving the field")
+{
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NOT MESSAGE("The effects of the neutralizing gas wore off!");
+    }
+}

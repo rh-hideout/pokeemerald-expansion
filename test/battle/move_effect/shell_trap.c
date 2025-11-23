@@ -214,3 +214,68 @@ SINGLE_BATTLE_TEST("Shell Trap activates if user is hit with a physical move but
         HP_BAR(opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Encore fails if target has active Shell Trap waiting")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_SHELL_TRAP); MOVE(opponent, MOVE_ENCORE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+        MESSAGE("Wobbuffet set a shell trap!");
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Shell Trap fails if an other -3 or lower priority Move is used")
+{
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_DRAGON_TAIL) <= -3);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_SHELL_TRAP);
+            MOVE(opponent, MOVE_DRAGON_TAIL);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet set a shell trap!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_TAIL, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, player);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Shell Trap does not trigger when hit into Substitute")
+{
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_DOUBLE_EDGE) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_SNORLAX);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SUBSTITUTE); }
+        TURN {
+            MOVE(playerLeft, MOVE_SHELL_TRAP);
+            MOVE(opponentLeft, MOVE_DOUBLE_EDGE, target: playerLeft);
+            MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, playerLeft);
+        MESSAGE("Wynaut set a shell trap!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DOUBLE_EDGE, opponentLeft);
+        MESSAGE("Wynaut's substitute faded!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHELL_TRAP, playerLeft);
+    }
+}

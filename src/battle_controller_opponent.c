@@ -512,13 +512,57 @@ static inline bool32 IsAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u32 batt
         && CountAIAliveNonEggMonsExcept(PARTY_SIZE) != pokemonInBattle;
 }
 
+static inline bool32 IsDoubleAceSlot(u32 battler, u32 partyId)
+{
+    u32 partyCountEnd;
+
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON))
+        return FALSE;
+
+    partyCountEnd = CalculateEnemyPartyCountInSide(battler);
+    if (partyCountEnd == 0)
+        return FALSE;
+
+    if (partyId == partyCountEnd - 1)
+        return TRUE;
+    if (partyCountEnd > 1 && partyId == partyCountEnd - 2)
+        return TRUE;
+
+    return FALSE;
+}
+
 static inline bool32 IsDoubleAcePokemon(u32 chosenMonId, u32 pokemonInBattle, u32 battler)
 {
-    return gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON
-        && (chosenMonId == CalculateEnemyPartyCountInSide(battler) - 1)
-        && (chosenMonId == CalculateEnemyPartyCountInSide(battler) - 2)
-        && CountAIAliveNonEggMonsExcept(PARTY_SIZE) != pokemonInBattle
-        && CountAIAliveNonEggMonsExcept(PARTY_SIZE-1) != pokemonInBattle;
+    s32 battler1, battler2, firstId, lastId;
+    s32 i;
+
+    if (!IsDoubleAceSlot(battler, chosenMonId))
+        return FALSE;
+
+    if (!IsDoubleBattle())
+    {
+        battler2 = battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    }
+    else
+    {
+        battler1 = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+        battler2 = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+    }
+
+    GetAIPartyIndexes(battler, &firstId, &lastId);
+    for (i = firstId; i < lastId; i++)
+    {
+        if (!IsValidForBattle(&gEnemyParty[i])
+         || i == gBattlerPartyIndexes[battler1]
+         || i == gBattlerPartyIndexes[battler2]
+         || i == chosenMonId)
+            continue;
+
+        if (!IsAcePokemon(i, pokemonInBattle, battler) && !IsDoubleAceSlot(battler, i))
+            return TRUE;
+    }
+
+    return FALSE;
 }
 
 static void OpponentHandleChoosePokemon(u32 battler)
