@@ -68,8 +68,6 @@ static bool32 CanBeInfinitelyConfused(u32 battler);
 static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, u32 abilityDef, u32 abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
 static bool32 IsOpposingSideEmpty(u32 battler);
-static void ResetParadoxWeatherStat(u32 battler);
-static void ResetParadoxTerrainStat(u32 battler);
 
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12(u32 percent);
 ARM_FUNC NOINLINE static uq4_12_t PercentToUQ4_12_Floored(u32 percent);
@@ -253,7 +251,8 @@ bool32 EndOrContinueWeather(void)
         for (u32 battler = 0; battler < gBattlersCount; battler++)
         {
             gDisableStructs[battler].weatherAbilityDone = FALSE;
-            ResetParadoxWeatherStat(battler);
+            if (!gDisableStructs[battler].boosterEnergyActivated)
+                gDisableStructs[battler].paradoxBoostedStat = 0;
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
         BattleScriptExecute(BattleScript_WeatherFaded);
@@ -1721,7 +1720,8 @@ void TryToRevertMimicryAndFlags(void)
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         gDisableStructs[battler].terrainAbilityDone = FALSE;
-        ResetParadoxTerrainStat(battler);
+        if (!gDisableStructs[battler].boosterEnergyActivated)
+            gDisableStructs[battler].paradoxBoostedStat = 0;
         if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MIMICRY))
             RESTORE_BATTLER_TYPE(battler);
     }
@@ -2814,7 +2814,8 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
-            ResetParadoxWeatherStat(i);
+            if (!gDisableStructs[i].boosterEnergyActivated)
+                gDisableStructs[i].paradoxBoostedStat = 0;
         }
         return TRUE;
     }
@@ -2831,7 +2832,8 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;
-            ResetParadoxWeatherStat(i);
+            if (!gDisableStructs[i].boosterEnergyActivated)
+                gDisableStructs[i].paradoxBoostedStat = 0;
         }
         return TRUE;
     }
@@ -2851,7 +2853,8 @@ bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag)
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].terrainAbilityDone = FALSE;
-            ResetParadoxTerrainStat(i);
+            if (!gDisableStructs[i].boosterEnergyActivated)
+                gDisableStructs[i].paradoxBoostedStat = 0;
         }
         if (GetBattlerHoldEffect(battler, TRUE) == HOLD_EFFECT_TERRAIN_EXTENDER)
             gFieldTimers.terrainTimer = gBattleTurnCounter + 8;
@@ -5650,20 +5653,6 @@ u32 GetParadoxHighestStatId(u32 battler)
         highestId = STAT_SPEED;
 
     return highestId;
-}
-
-static void ResetParadoxWeatherStat(u32 battler)
-{
-    if (gBattleMons[battler].ability == ABILITY_PROTOSYNTHESIS
-     && !gDisableStructs[battler].boosterEnergyActivated)
-        gDisableStructs[battler].paradoxBoostedStat = 0;
-}
-
-static void ResetParadoxTerrainStat(u32 battler)
-{
-    if (gBattleMons[battler].ability == ABILITY_QUARK_DRIVE
-     && !gDisableStructs[battler].boosterEnergyActivated)
-        gDisableStructs[battler].paradoxBoostedStat = 0;
 }
 
 u32 GetParadoxBoostedStatId(u32 battler)
