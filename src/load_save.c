@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "main.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
@@ -18,8 +19,6 @@
 #include "agb_flash.h"
 #include "event_data.h"
 #include "constants/event_objects.h"
-
-#include "followmon.h"
 
 static void ApplyNewEncryptionKeyToAllEncryptedData(u32 encryptionKey);
 
@@ -202,8 +201,6 @@ void SaveObjectEvents(void)
     int i;
     u16 graphicsId;
 
-    // Temporary fix until we reduce followmon data size 
-    // and include it in the save
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gSaveBlock1Ptr->objectEvents[i] = gObjectEvents[i];
@@ -236,9 +233,9 @@ void LoadObjectEvents(void)
             gObjectEvents[i].graphicsId &= 0xFF;
         gObjectEvents[i].spriteId = 0;
         
-        if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST) {
+        if(gObjectEvents[i].graphicsId >= OBJ_EVENT_GFX_FOLLOW_MON_FIRST && gObjectEvents[i].graphicsId <= OBJ_EVENT_GFX_FOLLOW_MON_LAST)
             LoadFollowMonData(&gObjectEvents[i]);
-        }
+        
         // Try to restore saved inactive follower
         if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER &&
             !gObjectEvents[i].active &&

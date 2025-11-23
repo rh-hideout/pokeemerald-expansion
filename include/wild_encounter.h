@@ -3,7 +3,7 @@
 
 #include "rtc.h"
 #include "constants/wild_encounter.h"
-#include "followmon.h"
+#include "overworld_encounters.h"
 
 #define HEADER_NONE 0xFFFF
 

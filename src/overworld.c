@@ -44,6 +44,7 @@
 #include "money.h"
 #include "new_game.h"
 #include "oras_dowse.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
@@ -77,8 +78,6 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
-
-#include "followmon.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 

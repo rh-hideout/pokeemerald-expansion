@@ -1,12 +1,8 @@
 #include "global.h"
-#include "constants/event_objects.h"
-#include "constants/map_types.h"
-#include "constants/songs.h"
-#include "constants/vars.h"
+#include "overworld_encounters.h"
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_object_movement.h"
-#include "followmon.h"
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
@@ -16,6 +12,10 @@
 #include "sprite.h"
 #include "sound.h"
 #include "wild_encounter.h"
+#include "constants/event_objects.h"
+#include "constants/map_types.h"
+#include "constants/songs.h"
+#include "constants/vars.h"
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 

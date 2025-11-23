@@ -25,6 +25,7 @@
 #include "mauville_old_man.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon.h"
@@ -56,8 +57,6 @@
 #include "constants/trainer_types.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
-
-#include "followmon.h"
 
 #define SPECIAL_LOCALIDS_START (min(LOCALID_CAMERA, \
                                 min(LOCALID_PLAYER, \
