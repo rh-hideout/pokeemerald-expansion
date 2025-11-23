@@ -49,7 +49,7 @@ struct SpeciesInfo /*0xC4*/
     u8 friendship USE_FUNC("GetSpeciesBaseFriendship");
     u8 growthRate USE_FUNC("GetSpeciesGrowthRate");
     u8 eggGroups[2] USE_FUNC("GetSpeciesEggGroup");
-    enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
+    enum Ability abilities[NUM_ABILITY_SLOTS] USE_FUNC("GetSpeciesAbility"); // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
 
     // Pokédex data
@@ -336,6 +336,11 @@ static inline enum GrowthRate GetSpeciesGrowthRate(u16 species)
 static inline u32 GetSpeciesEggGroup(u16 species, u8 slot)
 {
     return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].eggGroups[slot]);
+}
+
+static inline enum Ability GetSpeciesAbility(u16 species, u8 slot)
+{
+    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot]);
 }
 
 #endif // GUARD_SPECIES_INFO_H

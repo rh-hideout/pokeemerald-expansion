@@ -1989,14 +1989,12 @@ void Ability_(u32 sourceLine, enum Ability ability)
 {
     s32 i;
     u32 species;
-    const struct SpeciesInfo *info;
     INVALID_IF(!DATA.currentMon, "Ability outside of PLAYER/OPPONENT");
     INVALID_IF(ability >= ABILITIES_COUNT, "Illegal ability id: %d", ability);
     species = GetMonData(DATA.currentMon, MON_DATA_SPECIES);
-    info = &gSpeciesInfo[species];
     for (i = 0; i < NUM_ABILITY_SLOTS; i++)
     {
-        if (info->abilities[i] == ability)
+        if (GetSpeciesAbility(species, i) == ability)
         {
             SetMonData(DATA.currentMon, MON_DATA_ABILITY_NUM, &i);
             break;

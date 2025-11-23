@@ -3557,11 +3557,6 @@ u32 GetSpeciesWeight(u16 species)
     return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
 }
 
-enum Ability GetSpeciesAbility(u16 species, u8 slot)
-{
-    return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
-}
-
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
 {
     const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;

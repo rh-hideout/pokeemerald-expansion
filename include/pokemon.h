@@ -625,7 +625,6 @@ const u8 *GetSpeciesCategory(u16 species);
 const u8 *GetSpeciesPokedexDescription(u16 species);
 u32 GetSpeciesHeight(u16 species);
 u32 GetSpeciesWeight(u16 species);
-enum Ability GetSpeciesAbility(u16 species, u8 slot);
 const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species);
 const u16 *GetSpeciesTeachableLearnset(u16 species);
 const u16 *GetSpeciesEggMoves(u16 species);
