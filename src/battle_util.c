@@ -273,9 +273,9 @@ static u32 CalcBeatUpPower(void)
 
 static s32 CalcBeatUpDamage(struct DamageContext *ctx)
 {
-#if B_BEAT_UP >= GEN_5
-    return INT32_MAX;
-#else
+    if (B_BEAT_UP >= GEN_5)
+        return INT32_MAX;
+
     if (gBattleStruct->beatUpSlot >= PARTY_SIZE)
         return 0;
     u16 partyIndex = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
@@ -297,7 +297,6 @@ static s32 CalcBeatUpDamage(struct DamageContext *ctx)
         dmg *= 2;
 
     return dmg;
-#endif
 }
 
 static bool32 ShouldTeraShellDistortTypeMatchups(u32 move, u32 battlerDef, u32 abilityDef)
@@ -2517,11 +2516,10 @@ static enum MoveCanceler CancelerMultihitMoves(void)
              && !GetMonData(&party[i], MON_DATA_IS_EGG)
              && !GetMonData(&party[i], MON_DATA_STATUS))
             {
-#if B_BEAT_UP >= GEN_5
-                gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
-#else
-                gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
-#endif
+                if (B_BEAT_UP >= GEN_5)
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
+                else
+                    gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
                 gMultiHitCounter++;
             }
         }
@@ -9425,9 +9423,9 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         dmg = GetNonDynamaxHP(ctx->battlerAtk);
         break;
     case EFFECT_BEAT_UP:
-        if (B_BEAT_UP >= GEN_5)
-            return INT32_MAX;
         dmg = CalcBeatUpDamage(ctx);
+        if (dmg == INT32_MAX)
+            return INT32_MAX;
         break;
     default:
         return INT32_MAX;

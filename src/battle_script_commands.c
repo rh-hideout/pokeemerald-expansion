@@ -12598,7 +12598,6 @@ static void Cmd_trydobeatup(void)
     }
     else
     {
-#if B_BEAT_UP < GEN_5
         struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
         const u8 beatUpSlot = gBattleStruct->beatUpSlot;
 
@@ -12625,9 +12624,6 @@ static void Cmd_trydobeatup(void)
             gMultiHitCounter = 0;
             gBattlescriptCurrInstr = cmd->failInstr;
         }
-#else
-        gBattlescriptCurrInstr = cmd->failInstr;
-#endif
     }
 }
 
