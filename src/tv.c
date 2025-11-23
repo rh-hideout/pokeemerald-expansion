@@ -188,6 +188,17 @@ static void DoTVShowSecretBaseSecrets(void);
 static void DoTVShowSafariFanClub(void);
 static void DoTVShowLilycoveContestLady(void);
 
+static const u8 sText_Good[] = _("Good");
+static const u8 sText_VeryGood[] = _("Very good");
+static const u8 sText_Excellent[] = _("Excellent");
+static const u8 sText_SoSo[] = _("So-so");
+static const u8 sText_Bad[] = _("Bad");
+static const u8 sText_TheWorst[] = _("The worst");
+
+static const u8 sText_Slots[] = _("SLOTS");
+static const u8 sText_Roulette[] = _("ROULETTE");
+static const u8 sText_Jackpot[] = _("jackpot");
+
 static const struct {
     u16 species;
     u16 moves[MAX_MON_MOVES];
@@ -5335,15 +5346,15 @@ static void DoTVShow3CheersForPokeblocks(void)
         }
         if (show->threeCheers.sheen > 24)
         {
-            StringCopy(gStringVar2, gText_Excellent);
+            StringCopy(gStringVar2, sText_Excellent);
         }
         else if (show->threeCheers.sheen > 22)
         {
-            StringCopy(gStringVar2, gText_VeryGood);
+            StringCopy(gStringVar2, sText_VeryGood);
         }
         else
         {
-            StringCopy(gStringVar2, gText_Good);
+            StringCopy(gStringVar2, sText_Good);
         }
         TVShowConvertInternationalString(gStringVar3, show->threeCheers.playerName, show->threeCheers.language);
         sTVShowState = 2;
@@ -5373,11 +5384,11 @@ static void DoTVShow3CheersForPokeblocks(void)
         }
 
         if (show->threeCheers.sheen > 16)
-            StringCopy(gStringVar2, gText_SoSo);
+            StringCopy(gStringVar2, sText_SoSo);
         else if (show->threeCheers.sheen > 13)
-            StringCopy(gStringVar2, gText_Bad);
+            StringCopy(gStringVar2, sText_Bad);
         else
-            StringCopy(gStringVar2, gText_TheWorst);
+            StringCopy(gStringVar2, sText_TheWorst);
 
         TVShowConvertInternationalString(gStringVar3, show->threeCheers.playerName, show->threeCheers.language);
         sTVShowState = 4;
@@ -5736,10 +5747,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         if (show->findThatGamer.won == TRUE)
@@ -5752,10 +5763,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         ConvertIntToDecimalString(2, show->findThatGamer.nCoins);
@@ -5765,10 +5776,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         }
         ConvertIntToDecimalString(2, show->findThatGamer.nCoins);
@@ -5779,10 +5790,10 @@ static void DoTVShowFindThatGamer(void)
         switch (show->findThatGamer.whichGame)
         {
         case 0:
-            StringCopy(gStringVar2, gText_Roulette);
+            StringCopy(gStringVar2, sText_Roulette);
             break;
         case 1:
-            StringCopy(gStringVar2, gText_Slots);
+            StringCopy(gStringVar2, sText_Slots);
             break;
         }
         TVShowDone();
@@ -5976,7 +5987,7 @@ static void DoTVShowPokemonLotteryWinnerFlashReport(void)
     state = sTVShowState;
     TVShowConvertInternationalString(gStringVar1, show->lottoWinner.playerName, show->lottoWinner.language);
     if (show->lottoWinner.whichPrize == 0)
-        StringCopy(gStringVar2, gText_Jackpot);
+        StringCopy(gStringVar2, sText_Jackpot);
     else if (show->lottoWinner.whichPrize == 1)
         StringCopy(gStringVar2, gText_First);
     else if (show->lottoWinner.whichPrize == 2)
