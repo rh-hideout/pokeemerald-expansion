@@ -18,6 +18,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Facade")
     PARAMETRIZE { status1 = STATUS1_BURN; expectedMove = MOVE_FACADE; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BURN_FACADE_DMG, GEN_6);
         ASSUME(GetMoveEffect(MOVE_FACADE) == EFFECT_FACADE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(60); }
@@ -162,6 +163,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_POWER_GEM) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePower(MOVE_POWER_GEM) == 80); // Gen 5's 70 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(102); Speed(100); Moves(opponentMove, MOVE_STRENGTH); }
@@ -199,18 +201,18 @@ AI_DOUBLE_BATTLE_TEST("AI chooses moves that cure self or partner")
 {
     u32 status1_0, status1_1, partnerAbility, move;
 
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
     PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_PARALYSIS;
                   move = MOVE_HEAL_BELL;            partnerAbility = ABILITY_SOUNDPROOF; }
 
-    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_NONE;         status1_1 = STATUS1_NONE;
                   move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
-    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE; 
+    PARAMETRIZE { status1_0 = STATUS1_TOXIC_POISON; status1_1 = STATUS1_NONE;
                   move = MOVE_REFRESH;              partnerAbility = ABILITY_SCRAPPY; }
 
 

@@ -398,12 +398,15 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
     }
 }
 
-DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns")
+DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+)")
 {
-    u8 turns;
+    u32 turns, config, passes;
 
-    PASSES_RANDOMLY(2, 2);
+    PARAMETRIZE { config = GEN_5; passes = 0; }
+    PARAMETRIZE { config = GEN_6; passes = 2; }
+    PASSES_RANDOMLY(passes, 2);
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_WIDE_GUARD, config);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -431,8 +434,8 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority mo
     u16 move = MOVE_NONE;
     struct BattlePokemon *targetOpponent = NULL;
 
-    PARAMETRIZE { move = MOVE_SCRATCH; targetOpponent = opponentLeft; }
-    PARAMETRIZE { move = MOVE_SCRATCH; targetOpponent = opponentRight; }
+    PARAMETRIZE { move = MOVE_SCRATCH;      targetOpponent = opponentLeft; }
+    PARAMETRIZE { move = MOVE_SCRATCH;      targetOpponent = opponentRight; }
     PARAMETRIZE { move = MOVE_QUICK_ATTACK; targetOpponent = opponentLeft; }
     PARAMETRIZE { move = MOVE_QUICK_ATTACK; targetOpponent = opponentRight; }
 
@@ -461,12 +464,15 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard protects self and ally from priority mo
     }
 }
 
-DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns")
+DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6+)")
 {
-    u8 turns;
+    u32 turns, config, passes;
 
-    PASSES_RANDOMLY(2, 2);
+    PARAMETRIZE { config = GEN_5; passes = 0; }
+    PARAMETRIZE { config = GEN_6; passes = 2; }
+    PASSES_RANDOMLY(passes, 2);
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

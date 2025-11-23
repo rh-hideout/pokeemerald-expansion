@@ -68,6 +68,7 @@ SINGLE_BATTLE_TEST("Upper Hand succeeds if the target's move is boosted in prior
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        ASSUME(IsHealingMove(MOVE_DRAINING_KISS)); // Doesn't have the Healing Move flag in Gen 5
         PLAYER(SPECIES_MIENSHAO) { Speed(10); }
         OPPONENT(SPECIES_COMFEY) { Speed(5); Ability(ABILITY_TRIAGE); }
     } WHEN {
@@ -85,6 +86,7 @@ SINGLE_BATTLE_TEST("Upper Hand fails if the target moves first")
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_DRAINING_KISS) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMovePriority(MOVE_DRAINING_KISS) == 0);
+        ASSUME(IsHealingMove(MOVE_DRAINING_KISS)); // Doesn't have the Healing Move flag in Gen 5
         PLAYER(SPECIES_MIENSHAO) { Speed(5); }
         OPPONENT(SPECIES_COMFEY) { Speed(10); Ability(ABILITY_TRIAGE); }
     } WHEN {
