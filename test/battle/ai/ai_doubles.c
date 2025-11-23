@@ -452,7 +452,6 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
 {
-    KNOWN_FAILING; // MGriffin's PR that switched two turn charging moves in AI tests broke this test, waiting on a fix
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MAGNETON);
@@ -460,7 +459,7 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
         OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
         OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
     } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK); NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
+        TURN { NOT_EXPECT_MOVES(opponentLeft, MOVE_THUNDERSHOCK, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
     } THEN {
         EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_RIGHT] == ABILITY_VOLT_ABSORB);
     }
