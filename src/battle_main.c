@@ -3864,9 +3864,7 @@ static void TryDoEventsBeforeFirstTurn(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount) // From fastest to slowest
         {
             i = gBattlerByTurnOrder[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS_FIRST_TURN, i, gBattleMons[i].ability, 0, 0) != 0)
-                return;
-            if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES, i, 0, 0, 0) != 0)
+            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, i, 0, 0, 0) != 0)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
@@ -3882,6 +3880,8 @@ static void TryDoEventsBeforeFirstTurn(void)
             if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN, i, 0, 0, 0) != 0)
                 return;
             if (TryClearIllusion(i, ABILITYEFFECT_ON_SWITCHIN))
+                return;
+            if (AbilityBattleEffects(ABILITYEFFECT_ON_SWITCHIN_IMMUNITIES, i, 0, 0, 0) != 0)
                 return;
         }
         gBattleStruct->switchInBattlerCounter = 0;
