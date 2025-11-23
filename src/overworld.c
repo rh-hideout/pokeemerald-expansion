@@ -1541,7 +1541,6 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         else
         {
             PlayerStep(inputStruct.dpadDirection, newKeys, heldKeys);
-            FollowMon_OverworldCB();
         }
     }
     // If stop running but keep holding B -> fix follower frame.
@@ -1727,6 +1726,7 @@ static void OverworldBasic(void)
            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldEncounters();
 }
 
 // This CB2 is used when starting

@@ -45,9 +45,12 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.usedSlots++;
 }
 
-void FollowMon_OverworldCB(void)
+void UpdateOverworldEncounters(void)
 {
-    if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (ArePlayerFieldControlsLocked())
+        return;
+    
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
         RemoveAllFollowMonObjects();
         // Zero sFollowMonData ;

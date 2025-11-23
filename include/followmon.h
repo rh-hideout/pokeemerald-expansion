@@ -38,7 +38,7 @@ struct FollowMonData
 extern const u8 InteractWithDynamicWildFollowMon[];
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent);
-void FollowMon_OverworldCB(void);
+void UpdateOverworldEncounters(void);
 void CreateFollowMonEncounter(void);
 bool8 FollowMon_ProcessMonInteraction(void);
 bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
