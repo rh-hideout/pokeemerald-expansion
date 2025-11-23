@@ -30,8 +30,6 @@ static u8 FindObjectEventForGfx(u16 gfxId);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
-static bool8 IsInsidePlayerMap(s16 x, s16 y);
-static void GetMapSize(s32 *width, s32 *height);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
@@ -614,24 +612,4 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
         return FALSE;
 
     return TRUE;
-}
-
-static bool8 IsInsidePlayerMap(s16 x, s16 y)
-{
-    s32 width, height;
-
-    GetMapSize(&width, &height);
-    if (x >= 0 && x <= width && y >= 0 && y <= height)
-        return TRUE;
-
-    return FALSE;
-}
-
-static void GetMapSize(s32 *width, s32 *height)
-{
-    const struct MapLayout *layout;
-
-    layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
-    *width = layout->width;
-    *height = layout->height;
 }
