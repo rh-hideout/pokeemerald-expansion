@@ -75,10 +75,26 @@ void FollowMon_OverworldCB(void)
 
             if(spawnSlot != INVALID_SPAWN_SLOT)
             {
+                bool32 waterMons = IsSpawningWaterMons();
+                bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
+                u32 movementType;
+                if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
+                {
+                    if (waterMons)
+                        movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
+                    else if (indoors)
+                        movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
+                    else
+                        movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
+                }
+                else
+                {
+                    movementType = MOVEMENT_TYPE_WANDER_ON_MAP;
+                }
                 u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
                     OBJ_EVENT_GFX_FOLLOW_MON_FIRST + spawnSlot,
-                    MOVEMENT_TYPE_WANDER_AROUND,
+                    movementType,
                     localId,
                     x,
                     y,
@@ -98,7 +114,7 @@ void FollowMon_OverworldCB(void)
 
                 // Hide reflections for spawns in water
                 // (It just looks weird)
-                if(IsSpawningWaterMons())
+                if (waterMons)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning

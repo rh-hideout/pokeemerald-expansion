@@ -1719,3 +1719,43 @@ u8 (*const gMovementActionFuncs_WalkFastDiagonalDownRight[])(struct ObjectEvent 
     MovementAction_PauseSpriteAnim,
 };
 
+u8 (*const gMovementTypeFuncs_WanderOnMap[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_WanderAround_Step0,
+    MovementType_WanderAround_Step1,
+    MovementType_WanderAround_Step2,
+    MovementType_Wander_Step3,
+    MovementType_WanderOnMap_Step4,
+    MovementType_WanderAround_Step5,
+    MovementType_WanderAround_Step6,
+};
+
+u8 (*const gMovementTypeFuncs_WanderOnLandEncounter[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_WanderAround_Step0,
+    MovementType_WanderAround_Step1,
+    MovementType_WanderAround_Step2,
+    MovementType_Wander_Step3,
+    MovementType_WanderOnLandEncounter_Step4,
+    MovementType_WanderAround_Step5,
+    MovementType_WanderAround_Step6,
+};
+
+u8 (*const gMovementTypeFuncs_WanderOnWaterEncounter[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_WanderAround_Step0,
+    MovementType_WanderAround_Step1,
+    MovementType_WanderAround_Step2,
+    MovementType_Wander_Step3,
+    MovementType_WanderOnWaterEncounter_Step4,
+    MovementType_WanderAround_Step5,
+    MovementType_WanderAround_Step6,
+};
+
+u8 (*const gMovementTypeFuncs_WanderOnIndoorEncounter[])(struct ObjectEvent *, struct Sprite *) = {
+    MovementType_WanderAround_Step0,
+    MovementType_WanderAround_Step1,
+    MovementType_WanderAround_Step2,
+    MovementType_Wander_Step3,
+    MovementType_WanderOnIndoorEncounter_Step4,
+    MovementType_WanderAround_Step5,
+    MovementType_WanderAround_Step6,
+};
+
