@@ -55,8 +55,8 @@
                                                   // (You should not use 48x48 sprites/tables for compressed gfx)
                                                   // 16x32, 32x32, 64x64 etc are fine
 #define OW_MON_WANDER_WALK             TRUE       // If true, OW Pokémon with MOVEMENT_TYPE_WANDER will walk-in-place in between steps.
-#define OW_VANILLA_WILD_ENCOUNTERS     TRUE       // If true, Pokémon can spawn on tiles that can trigger wild encounters.
-#define OW_SPAWN_OW_WILD_ENCOUNTERS    FALSE      // If true, OW Pokémon can spawn as wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
+#define OW_WILD_ENCOUNTERS_RANDOM      TRUE       // If true, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
+#define OW_WILD_ENCOUNTERS_OVERWORLD   FALSE      // If true, OW Pokémon can spawn as overworld wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
 // Follower Pokémon
 #define OW_FOLLOWERS_ENABLED           FALSE      // Enables follower Pokémon, HGSS style. Requires OW_POKEMON_OBJECT_EVENTS. Note that additional scripting may be required for them to be fully supported!
 #define OW_FOLLOWERS_BOBBING           TRUE       // If TRUE, follower Pokémon will bob up and down during their idle & walking animations
