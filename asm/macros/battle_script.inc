@@ -1803,8 +1803,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcriticalhit failInstr:req
-	callnative BS_JumpIfCriticalHit
+	.macro jumpifnotcriticalhit failInstr:req
+	callnative BS_JumpIfNotCriticalHit
 	.4byte \failInstr
 	.endm
 

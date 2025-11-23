@@ -12617,48 +12617,44 @@ static void Cmd_trysetfutureattack(void)
 static void Cmd_trydobeatup(void)
 {
     CMD_ARGS(const u8 *endInstr, const u8 *failInstr);
-    struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
 
     if (!IsBattlerAlive(gBattlerTarget))
     {
+        gMultiHitCounter = 0;
         gBattlescriptCurrInstr = cmd->endInstr;
     }
     else
     {
-        u8 beforeLoop = gBattleCommunication[0];
-        for (;gBattleCommunication[0] < PARTY_SIZE; gBattleCommunication[0]++)
-        {
-            if (GetMonData(&party[gBattleCommunication[0]], MON_DATA_HP)
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-                && GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-                && !GetMonData(&party[gBattleCommunication[0]], MON_DATA_STATUS))
-                break;
-        }
+#if B_BEAT_UP < GEN_5
+        struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
+        const u8 beatUpSlot = gBattleStruct->beatUpSlot;
 
-        if (gBattleCommunication[0] < PARTY_SIZE)
-        {
-            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattleCommunication[0])
+        u8 partyIndex = PARTY_SIZE;
+        if (beatUpSlot < PARTY_SIZE)
+            partyIndex = gBattleStruct->beatUpSpecies[beatUpSlot];
 
+        if (partyIndex < PARTY_SIZE
+            && GetMonData(&party[partyIndex], MON_DATA_HP)
+            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
+            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
+            && !GetMonData(&party[partyIndex], MON_DATA_STATUS))
+        {
+            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, partyIndex)
             gBattlescriptCurrInstr = cmd->nextInstr;
-
-            gBattleStruct->moveDamage[gBattlerTarget] = GetSpeciesBaseAttack(GetMonData(&party[gBattleCommunication[0]], MON_DATA_SPECIES));
-            gBattleStruct->moveDamage[gBattlerTarget] *= GetMovePower(gCurrentMove);
-            gBattleStruct->moveDamage[gBattlerTarget] *= (GetMonData(&party[gBattleCommunication[0]], MON_DATA_LEVEL) * 2 / 5 + 2);
-            gBattleStruct->moveDamage[gBattlerTarget] /= GetSpeciesBaseDefense(gBattleMons[gBattlerTarget].species);
-            gBattleStruct->moveDamage[gBattlerTarget] = (gBattleStruct->moveDamage[gBattlerTarget] / 50) + 2;
-            if (gProtectStructs[gBattlerAttacker].helpingHand)
-                gBattleStruct->moveDamage[gBattlerTarget] = gBattleStruct->moveDamage[gBattlerTarget] * 15 / 10;
-
-            gBattleCommunication[0]++;
         }
-        else if (beforeLoop != 0)
+        else if (beatUpSlot != 0)
         {
+            gMultiHitCounter = 0;
             gBattlescriptCurrInstr = cmd->endInstr;
         }
         else
         {
+            gMultiHitCounter = 0;
             gBattlescriptCurrInstr = cmd->failInstr;
         }
+#else
+        gBattlescriptCurrInstr = cmd->failInstr;
+#endif
     }
 }
 
@@ -16460,11 +16456,11 @@ void BS_JumpIfMoveResultFlags(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-void BS_JumpIfCriticalHit(void)
+void BS_JumpIfNotCriticalHit(void)
 {
     NATIVE_ARGS(const u8 *jumpInstr);
 
-    if (gSpecialStatuses[gBattlerTarget].criticalHit)
+    if (!gSpecialStatuses[gBattlerTarget].criticalHit)
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
