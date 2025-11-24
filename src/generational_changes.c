@@ -24,7 +24,7 @@ void TestInitMoveDataOverride(void)
     gMoveDataTestOverride = AllocZeroed(sizeof(struct MoveDataOverride));
 }
 
-void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u8 value)
+void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u32 value)
 {
     struct MoveDataOverride *temp = NULL;
     u32 i = 0;

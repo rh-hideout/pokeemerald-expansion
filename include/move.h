@@ -194,7 +194,18 @@ static inline const u8 *GetMoveName(u32 moveId)
 
 static inline enum BattleMoveEffects GetMoveEffect(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].effect;
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_EFFECT)
+            return gMoveDataTestOverride[i].data;
+    }
+
+    return GET_DEPRECATED(u32, gMovesInfo[moveId].effect);
+#else
+    return GET_DEPRECATED(u32, gMovesInfo[SanitizeMoveId(moveId)].effect);
+#endif
 }
 
 static inline const u8 *GetMoveDescription(u32 moveId)
@@ -238,7 +249,18 @@ static inline u32 GetMoveAccuracy(u32 moveId)
 
 static inline u32 GetMoveTarget(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].target;
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_TARGET)
+            return gMoveDataTestOverride[i].data;
+    }
+
+    return GET_DEPRECATED(u32, gMovesInfo[moveId].target);
+#else
+    return GET_DEPRECATED(u32, gMovesInfo[SanitizeMoveId(moveId)].target);
+#endif
 }
 
 static inline u32 GetMovePP(u32 moveId)
@@ -323,7 +345,18 @@ static inline bool32 IsPulseMove(u32 moveId)
 
 static inline bool32 IsSoundMove(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].soundMove;
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_SOUND_MOVE)
+            return gMoveDataTestOverride[i].data;
+    }
+
+    return GET_DEPRECATED(bool32, gMovesInfo[moveId].soundMove);
+#else
+    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].soundMove);
+#endif
 }
 
 static inline bool32 IsBallisticMove(u32 moveId)
@@ -414,7 +447,18 @@ static inline bool32 MoveThawsUser(u32 moveId)
 
 static inline bool32 MoveIgnoresSubstitute(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].ignoresSubstitute;
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_IGNORES_SUBSTITUTE)
+            return gMoveDataTestOverride[i].data;
+    }
+
+    return GET_DEPRECATED(bool32, gMovesInfo[moveId].ignoresSubstitute);
+#else
+    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].ignoresSubstitute);
+#endif
 }
 
 static inline bool32 MoveForcesPressure(u32 moveId)

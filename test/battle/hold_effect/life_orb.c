@@ -34,7 +34,7 @@ SINGLE_BATTLE_TEST("Life Orb activates if it hits a Substitute")
 SINGLE_BATTLE_TEST("Life Orb does not activate if using status move on a Substitute")
 {
     GIVEN {
-        ASSUME(MoveIgnoresSubstitute(MOVE_GROWL));
+        WITH_MOVE_DATA(MOVE_GROWL, MOVE_DATA_IGNORES_SUBSTITUTE, TRUE); // Sound moves don't ignore Substitute until Gen 6
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_LIFE_ORB); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
