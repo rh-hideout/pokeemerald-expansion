@@ -4191,3 +4191,87 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
 }
+
+//const u8 sSomeText[] = _("{START_BUTTON} what");
+const u8 sSomeText[] = _("À");
+const u8 sNewString[] = _("This\nis\ntext");
+
+const u32 sTestSpriteGfx[] = INCBIN_U32("graphics/test_sprite.4bpp");
+const u16 sTestSpritePal[] = INCBIN_U16("graphics/test_sprite.gbapal");
+
+void TestThing(void)
+{
+    u32 centerX = 120;
+    u32 centerY = 100;
+    u32 *sprite = malloc_and_decompress(gSpeciesInfo[SPECIES_PICHU].frontPic, NULL);
+    struct Even_CreateSpriteStruct cs = {0};
+    cs.sprite = sprite;
+    cs.tileTag = 0xCEC1;
+    cs.palette = gSpeciesInfo[SPECIES_PICHU].palette;
+    cs.palTag = 0xCEC1;
+    cs.spriteSize = SPRITE_SIZE(64x64);
+    cs.spriteShape = SPRITE_SHAPE(64x64);
+    cs.posX = centerX - 32;
+    cs.posY = centerY - 32;
+
+    u32 spriteId1 = Even_CreateSprite(&cs);
+
+    cs.tileTag = 0xCEC2;
+    cs.posX = centerX + 32;
+    u32 spriteId2 = Even_CreateSprite(&cs);
+
+    cs.tileTag = 0xCEC3;
+    cs.posX = centerX - 32;
+    cs.posY = centerY + 32;
+    u32 spriteId3 = Even_CreateSprite(&cs);
+    cs.tileTag = 0xCEC4;
+    cs.posX = centerX + 32;
+    cs.posY = centerY + 32;
+    u32 spriteId4 = Even_CreateSprite(&cs);
+
+    u8 spriteIds[4] = {spriteId1, spriteId2, spriteId3, spriteId4};
+
+    SetupSpritesForTextPrinting(spriteIds, NULL, 2, 2);
+
+    u32 yVal = 57;
+
+    SpriteFillRectWithColor(spriteId1, 60, 60, 8, 8, 5);
+    //SpriteFillRectWithColor(spriteId3, 0, 58, 6, 6, 5);
+
+    PrintTextToSprite(spriteId1, 16, 8, FONT_NORMAL, sNewString);
+    //PrintTextToSprite(spriteId1, 6, yVal + 1, FONT_NORMAL, sSomeText);
+    //PrintTextToSprite(spriteId1, 12, yVal + 2, FONT_NORMAL, sSomeText);
+    //PrintTextToSprite(spriteId1, 18, yVal + 3, FONT_NORMAL, sSomeText);
+    //PrintTextToSprite(spriteId1, 24, yVal + 4, FONT_NORMAL, sSomeText);
+    //PrintTextToSprite(spriteId1, 30, yVal + 5, FONT_NORMAL, sSomeText);
+    //PrintTextToSprite(spriteId1, 36, yVal + 6, FONT_NORMAL, sSomeText);
+
+    Free(sprite);
+
+    /*
+    struct Even_CreateSpriteStruct cs = {0};
+    cs.sprite = sTestSpriteGfx;
+    cs.palette = sTestSpritePal;
+    cs.palTag = 0xCEC1;
+    cs.spriteSize = SPRITE_SIZE(32x32);
+    cs.spriteShape = SPRITE_SHAPE(32x32);
+
+    u8 spriteIds[16];
+
+    for (u32 y = 0; y < 3; y++)
+    {
+        for (u32 x = 0; x < 3; x++)
+        {
+            cs.tileTag = 0xCEC1 + x + 3 * y;
+            cs.posX = 32 + 32 * x;
+            cs.posY = 32 + 32 * y;
+            spriteIds[x + y * 3] = Even_CreateSprite(&cs);
+        }
+    }
+    SetupSpritesForTextPrinting(spriteIds, NULL, 3, 3);
+
+    //SpriteFillRectWithColor(spriteIds[0], 16, 16, 64, 64, 7);
+
+    PrintTextToSprite(spriteIds[0], 16, 8, FONT_SHORT, sNewString);
+    */
+}

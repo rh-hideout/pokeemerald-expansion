@@ -1334,7 +1334,6 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             {
                 struct Sprite *sprite = &gSprites[textPrinter->printerTemplate.spriteId];
                 textPrinter->printerTemplate.spriteId = sprite->data[3];
-                //  Replace 64 with value read from sprite
                 if (textPrinter->printerTemplate.currentY  >= gOamDimensions[sprite->oam.shape][sprite->oam.size].height
                  && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
                 {
