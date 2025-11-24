@@ -33,6 +33,14 @@ SINGLE_BATTLE_TEST("Antidote heals a battler from being poisoned")
 
 DOUBLE_BATTLE_TEST("Antidote heals a battler from being poisoned (doubles)")
 {
+    u32 index;
+    struct BattlePokemon *user = NULL;
+    struct BattlePokemon *target = NULL;
+    PARAMETRIZE { index = 0; user = playerRight; target = playerLeft;}
+    PARAMETRIZE { index = 1; user = playerLeft; target = playerRight;}
+    PARAMETRIZE { index = 0; user = playerLeft; target = playerLeft;}
+    PARAMETRIZE { index = 1; user = playerRight; target = playerRight; }
+
     GIVEN {
         ASSUME(gItemsInfo[ITEM_ANTIDOTE].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
@@ -40,11 +48,9 @@ DOUBLE_BATTLE_TEST("Antidote heals a battler from being poisoned (doubles)")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { USE_ITEM(playerRight, ITEM_ANTIDOTE, partyIndex: 0); }
-    } SCENE {
-        MESSAGE("Wobbuffet had its status healed!");
+        TURN { USE_ITEM(user, ITEM_ANTIDOTE, partyIndex: index); }
     } THEN {
-        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(target->status1, STATUS1_NONE);
     }
 }
 
@@ -154,14 +160,28 @@ SINGLE_BATTLE_TEST("Full Heal heals a battler from any primary status")
 
 DOUBLE_BATTLE_TEST("Full Heal heals a battler from any primary status (doubles)")
 {
-    u16 status;
-    PARAMETRIZE { status = STATUS1_SLEEP; }
-    PARAMETRIZE { status = STATUS1_POISON; }
-    PARAMETRIZE { status = STATUS1_BURN; }
-    PARAMETRIZE { status = STATUS1_FREEZE; }
-    PARAMETRIZE { status = STATUS1_PARALYSIS; }
-    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
-    PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    u32 statusParameters[7] =
+    {
+        STATUS1_SLEEP,
+        STATUS1_POISON,
+        STATUS1_BURN,
+        STATUS1_FREEZE,
+        STATUS1_PARALYSIS,
+        STATUS1_TOXIC_POISON,
+        STATUS1_FROSTBITE
+    };
+
+    u16 status = 0;
+    u32 index = 0;
+    struct BattlePokemon *user = NULL;
+    struct BattlePokemon *target = NULL;
+    for (u32 j = 0; j < 7; j++)
+    {
+        PARAMETRIZE {status = statusParameters[j]; user = playerRight; target = playerLeft; index = 0;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerLeft; target = playerRight; index = 1;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerLeft; target = playerLeft; index = 0;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerRight; target = playerRight; index = 1;}
+    }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_FULL_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -169,11 +189,9 @@ DOUBLE_BATTLE_TEST("Full Heal heals a battler from any primary status (doubles)"
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { USE_ITEM(playerRight, ITEM_FULL_HEAL, partyIndex: 0); }
-    } SCENE {
-        MESSAGE("Wobbuffet had its status healed!");
+        TURN { USE_ITEM(user, ITEM_FULL_HEAL, partyIndex: index); }
     } THEN {
-        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(target->status1, STATUS1_NONE);
     }
 }
 
@@ -202,14 +220,28 @@ SINGLE_BATTLE_TEST("Heal Powder heals a battler from any primary status")
 
 DOUBLE_BATTLE_TEST("Heal Powder heals a battler from any primary status (doubles)")
 {
-    u16 status;
-    PARAMETRIZE { status = STATUS1_SLEEP; }
-    PARAMETRIZE { status = STATUS1_POISON; }
-    PARAMETRIZE { status = STATUS1_BURN; }
-    PARAMETRIZE { status = STATUS1_FREEZE; }
-    PARAMETRIZE { status = STATUS1_PARALYSIS; }
-    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
-    PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    u32 statusParameters[7] =
+    {
+        STATUS1_SLEEP,
+        STATUS1_POISON,
+        STATUS1_BURN,
+        STATUS1_FREEZE,
+        STATUS1_PARALYSIS,
+        STATUS1_TOXIC_POISON,
+        STATUS1_FROSTBITE
+    };
+
+    u16 status = 0;
+    u32 index = 0;
+    struct BattlePokemon *user = NULL;
+    struct BattlePokemon *target = NULL;
+    for (u32 j = 0; j < 7; j++)
+    {
+        PARAMETRIZE {status = statusParameters[j]; user = playerRight; target = playerLeft; index = 0;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerLeft; target = playerRight; index = 1;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerLeft; target = playerLeft; index = 0;}
+        PARAMETRIZE {status = statusParameters[j]; user = playerRight; target = playerRight; index = 1;}
+    }
     GIVEN {
         ASSUME(gItemsInfo[ITEM_HEAL_POWDER].battleUsage == EFFECT_ITEM_CURE_STATUS);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
@@ -217,11 +249,9 @@ DOUBLE_BATTLE_TEST("Heal Powder heals a battler from any primary status (doubles
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {
-        TURN { USE_ITEM(playerRight, ITEM_HEAL_POWDER, partyIndex: 0); }
-    } SCENE {
-        MESSAGE("Wobbuffet had its status healed!");
+        TURN { USE_ITEM(user, ITEM_HEAL_POWDER, partyIndex: index); }
     } THEN {
-        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+        EXPECT_EQ(target->status1, STATUS1_NONE);
     }
 }
 
