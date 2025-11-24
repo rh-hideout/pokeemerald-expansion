@@ -403,7 +403,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
-    if (FollowMon_IsMonObject(&gObjectEvents[objectEventId]))
+    if (OW_ENCOUNTER(&gObjectEvents[objectEventId]))
         script = InteractWithDynamicWildFollowMon;
     else if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
