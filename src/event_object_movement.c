@@ -225,7 +225,6 @@ static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction);
 
-static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
 
 const u8 gReflectionEffectPaletteMap[16] = {
         [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
@@ -3762,47 +3761,6 @@ u16 GetObjectPaletteTag(u8 palSlot)
             return sSpecialObjectReflectionPaletteSets[i].data[sCurrentReflectionType];
     }
     return OBJ_EVENT_PAL_TAG_NONE;
-}
-
-bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
-{
-    s32 width, height;
-    GetMapSize(mapGroup, mapNum, &width, &height);
-    x -= MAP_OFFSET;
-    y -= MAP_OFFSET;
-
-    if (x >= 0 && x < width && y >= 0 && y < height)
-        return TRUE;
-
-    return FALSE;
-}
-
-bool32 IsInsidePlayerMap(s16 x, s16 y)
-{
-    return IsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
-}
-
-bool32 IsInsideSpawnedMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
-{
-    bool32 inside;
-
-    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
-    {
-        return IsInsidePlayerMap(x, y);
-    }
-    else
-    {
-        return !IsInsidePlayerMap(x, y);
-    }
-}
-
-static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height)
-{
-    const struct MapLayout *layout;
-
-    layout = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->mapLayout;
-    *width = layout->width;
-    *height = layout->height;
 }
 
 movement_type_empty_callback(MovementType_None)
@@ -11656,7 +11614,7 @@ bool8 MovementType_WanderOnMap_Step4(struct ObjectEvent *objectEvent, struct Spr
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsOverworldEncounterInSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11676,7 +11634,7 @@ bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, 
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsOverworldEncounterInSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
@@ -11697,7 +11655,7 @@ bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent,
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsOverworldEncounterInSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
@@ -11718,7 +11676,7 @@ bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsOverworldEncounterInSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;

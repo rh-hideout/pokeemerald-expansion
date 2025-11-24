@@ -30,6 +30,9 @@ static u8 FindObjectEventForGfx(u16 gfxId);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
+static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
+static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
+static bool32 IsInsidePlayerMap(s16 x, s16 y);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
@@ -615,4 +618,45 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
         return FALSE;
 
     return TRUE;
+}
+
+static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height)
+{
+    const struct MapLayout *layout;
+
+    layout = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->mapLayout;
+    *width = layout->width;
+    *height = layout->height;
+}
+
+static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+{
+    s32 width, height;
+    GetMapSize(mapGroup, mapNum, &width, &height);
+    x -= MAP_OFFSET;
+    y -= MAP_OFFSET;
+
+    if (x >= 0 && x < width && y >= 0 && y < height)
+        return TRUE;
+
+    return FALSE;
+}
+
+static bool32 IsInsidePlayerMap(s16 x, s16 y)
+{
+    return IsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
+}
+
+bool32 IsOverworldEncounterInSpawnedMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+{
+    bool32 inside;
+
+    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
+    {
+        return IsInsidePlayerMap(x, y);
+    }
+    else
+    {
+        return !IsInsidePlayerMap(x, y);
+    }
 }

@@ -47,5 +47,6 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
 void ClearOverworldEncounterData(void);
 void RemoveOverworldEncounterObjects(void);
+bool32 IsOverworldEncounterInSpawnedMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 
 #endif // GUARD_FOLLOWMON_H
