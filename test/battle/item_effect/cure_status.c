@@ -31,6 +31,23 @@ SINGLE_BATTLE_TEST("Antidote heals a battler from being poisoned")
     }
 }
 
+DOUBLE_BATTLE_TEST("Antidote heals a battler from being poisoned (doubles)")
+{
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_ANTIDOTE].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WYNAUT) { }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { USE_ITEM(playerRight, ITEM_ANTIDOTE, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("Wobbuffet had its status healed!");
+    } THEN {
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Antidote heals a battler from being badly poisoned")
 {
     GIVEN {
@@ -135,6 +152,31 @@ SINGLE_BATTLE_TEST("Full Heal heals a battler from any primary status")
     }
 }
 
+DOUBLE_BATTLE_TEST("Full Heal heals a battler from any primary status (doubles)")
+{
+    u16 status;
+    PARAMETRIZE { status = STATUS1_SLEEP; }
+    PARAMETRIZE { status = STATUS1_POISON; }
+    PARAMETRIZE { status = STATUS1_BURN; }
+    PARAMETRIZE { status = STATUS1_FREEZE; }
+    PARAMETRIZE { status = STATUS1_PARALYSIS; }
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_FULL_HEAL].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { USE_ITEM(playerRight, ITEM_FULL_HEAL, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("Wobbuffet had its status healed!");
+    } THEN {
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
+    }
+}
+
 SINGLE_BATTLE_TEST("Heal Powder heals a battler from any primary status")
 {
     u16 status;
@@ -155,6 +197,31 @@ SINGLE_BATTLE_TEST("Heal Powder heals a battler from any primary status")
         MESSAGE("Wobbuffet had its status healed!");
     } THEN {
         EXPECT_EQ(player->status1, STATUS1_NONE);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Heal Powder heals a battler from any primary status (doubles)")
+{
+    u16 status;
+    PARAMETRIZE { status = STATUS1_SLEEP; }
+    PARAMETRIZE { status = STATUS1_POISON; }
+    PARAMETRIZE { status = STATUS1_BURN; }
+    PARAMETRIZE { status = STATUS1_FREEZE; }
+    PARAMETRIZE { status = STATUS1_PARALYSIS; }
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON; }
+    PARAMETRIZE { status = STATUS1_FROSTBITE; }
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_HEAL_POWDER].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(status); }
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { USE_ITEM(playerRight, ITEM_HEAL_POWDER, partyIndex: 0); }
+    } SCENE {
+        MESSAGE("Wobbuffet had its status healed!");
+    } THEN {
+        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
     }
 }
 
