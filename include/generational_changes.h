@@ -97,11 +97,4 @@ void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u32 value);
 void TestFreeMoveDataOverride(void);
 #endif
 
-static inline void SetMoveData(u32 move, enum MoveDataType type, u32 value)
-{
-#if TESTING
-    TestAddMoveDataOverride(move, type, value);
-#endif
-}
-
 #endif // GUARD_GENERATIONAL_CHANGES_H

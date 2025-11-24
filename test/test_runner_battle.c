@@ -1535,7 +1535,20 @@ void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
 void TestSetMoveData(u32 sourceLine, u32 move, enum MoveDataType type, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_MOVE_DATA outside of GIVEN");
-    SetMoveData(move, type, value);
+
+    bool32 shouldSet = FALSE;
+    switch(type)
+    {
+    case MOVE_DATA_POWER:              if (GetMovePower(move) != value)          shouldSet = TRUE; break;
+    case MOVE_DATA_EFFECT:             if (GetMoveEffect(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_TARGET:             if (GetMoveTarget(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_HEAL_MOVE:          if (IsHealingMove(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_SOUND_MOVE:         if (IsSoundMove(move) != value)           shouldSet = TRUE; break;
+    case MOVE_DATA_IGNORES_SUBSTITUTE: if (MoveIgnoresSubstitute(move) != value) shouldSet = TRUE; break;
+    case MOVE_DATA_COUNT: break;
+    }
+    if (shouldSet)
+        TestAddMoveDataOverride(move, type, value);
 }
 
 void ClearFlagAfterTest(void)
