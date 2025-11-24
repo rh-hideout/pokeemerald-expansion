@@ -593,7 +593,6 @@ void ApplyCurrentWarp(void)
     gSaveBlock1Ptr->location = sWarpDestination;
     sFixedDiveWarp = sDummyWarpData;
     sFixedHoleWarp = sDummyWarpData;
-    ClearOverworldEncounterData();
 }
 
 static void ClearDiveAndHoleWarps(void)
@@ -895,6 +894,8 @@ if (I_VS_SEEKER_CHARGING != 0)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    // ClearOverworldEncounterData();
+    // RemoveOverworldEncounterObjects();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -955,6 +956,7 @@ if (I_VS_SEEKER_CHARGING != 0)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    ClearOverworldEncounterData();
 }
 
 void ResetInitialPlayerAvatarState(void)

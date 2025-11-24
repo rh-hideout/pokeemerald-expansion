@@ -531,6 +531,7 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
 bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
+bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 bool32 IsInsidePlayerMap(s16 x, s16 y);
 
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

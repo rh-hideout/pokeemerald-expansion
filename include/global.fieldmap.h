@@ -238,7 +238,7 @@ struct ObjectEvent
     /*0x1A*/ u8 fieldEffectSpriteId;
     /*0x1B*/ u8 warpArrowSpriteId;
     /*0x1C*/ u8 movementActionId;
-    /*0x1D*/ u8 trainerRange_berryTreeId; //Also stores encounterIndex for FollowMon
+    /*0x1D*/ u8 trainerRange_berryTreeId; //Also stores encounterIndex for Overworld Encounters
     /*0x1E*/ u8 currentMetatileBehavior;
     /*0x1F*/ u8 previousMetatileBehavior;
     /*0x20*/ u8 previousMovementDirection:4;
