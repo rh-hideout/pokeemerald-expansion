@@ -647,16 +647,13 @@ static bool32 IsInsidePlayerMap(s16 x, s16 y)
     return IsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
 }
 
-bool32 IsOverworldEncounterInSpawnedMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y)
 {
-    bool32 inside;
+    u8 mapGroup = objectEvent->mapGroup;
+    u8 mapNum = objectEvent->mapNum;
 
     if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
-    {
         return IsInsidePlayerMap(x, y);
-    }
     else
-    {
         return !IsInsidePlayerMap(x, y);
-    }
 }
