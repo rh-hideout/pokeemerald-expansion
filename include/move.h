@@ -8,14 +8,6 @@
 #include "constants/battle_string_ids.h"
 #include "constants/moves.h"
 
-#define GET_DEPRECATED(T, expr) ({ \
-  _Pragma("GCC diagnostic push"); \
-  _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\""); \
-  T _ = (expr); \
-  _Pragma("GCC diagnostic pop"); \
-  _; \
-})
-
 #if TESTING
 extern struct MoveDataOverride *gMoveDataTestOverride;
 #endif
@@ -80,7 +72,7 @@ struct MoveInfo
     enum BattleMoveEffects effect;
     u16 type:5;     // Up to 32
     enum DamageCategory category:2;
-    u16 power:9 __attribute__((deprecated("use GetMovePower instead")));    // up to 511
+    u16 power:9;    // up to 511
     // end of word
     u16 accuracy:7;
     u16 target:9;
@@ -202,9 +194,9 @@ static inline enum BattleMoveEffects GetMoveEffect(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(u32, gMovesInfo[moveId].effect);
+    return gMovesInfo[moveId].effect;
 #else
-    return GET_DEPRECATED(u32, gMovesInfo[SanitizeMoveId(moveId)].effect);
+    return gMovesInfo[SanitizeMoveId(moveId)].effect;
 #endif
 }
 
@@ -236,9 +228,9 @@ static inline u32 GetMovePower(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(u32, gMovesInfo[moveId].power);
+    return gMovesInfo[moveId].power;
 #else
-    return GET_DEPRECATED(u32, gMovesInfo[SanitizeMoveId(moveId)].power);
+    return gMovesInfo[SanitizeMoveId(moveId)].power;
 #endif
 }
 
@@ -257,9 +249,9 @@ static inline u32 GetMoveTarget(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(u32, gMovesInfo[moveId].target);
+    return gMovesInfo[moveId].target;
 #else
-    return GET_DEPRECATED(u32, gMovesInfo[SanitizeMoveId(moveId)].target);
+    return gMovesInfo[SanitizeMoveId(moveId)].target;
 #endif
 }
 
@@ -353,9 +345,9 @@ static inline bool32 IsSoundMove(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(bool32, gMovesInfo[moveId].soundMove);
+    return gMovesInfo[moveId].soundMove;
 #else
-    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].soundMove);
+    return gMovesInfo[SanitizeMoveId(moveId)].soundMove;
 #endif
 }
 
@@ -394,9 +386,9 @@ static inline bool32 IsHealingMove(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(bool32, gMovesInfo[moveId].healingMove);
+    return gMovesInfo[moveId].healingMove;
 #else
-    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].healingMove);
+    return gMovesInfo[SanitizeMoveId(moveId)].healingMove;
 #endif
 }
 
@@ -455,9 +447,9 @@ static inline bool32 MoveIgnoresSubstitute(u32 moveId)
             return gMoveDataTestOverride[i].data;
     }
 
-    return GET_DEPRECATED(bool32, gMovesInfo[moveId].ignoresSubstitute);
+    return gMovesInfo[moveId].ignoresSubstitute;
 #else
-    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].ignoresSubstitute);
+    return gMovesInfo[SanitizeMoveId(moveId)].ignoresSubstitute;
 #endif
 }
 
