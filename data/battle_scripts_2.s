@@ -87,11 +87,16 @@ BattleScript_ItemRestoreHP_SendOutRevivedBattler:
 BattleScript_ItemCureStatus::
 	call BattleScript_UseItemMessage
 BattleScript_ItemCureStatusAfterItemMsg:
-	itemcurestatus BattleScript_ItemCureStatusEnd
-	updatestatusicon BS_SCRIPTING
+	itemcurestatus BattleScript_ItemCureStatusEnd, BattleScript_CureStatus_Battler
 	printstring STRINGID_ITEMCUREDSPECIESSTATUS
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ItemCureStatusEnd:
+	end
+
+BattleScript_CureStatus_Battler::
+	updatestatusicon BS_SCRIPTING
+	printstring STRINGID_ITEMCUREDSPECIESSTATUS
+	waitmessage B_WAIT_TIME_LONG
 	end
 
 BattleScript_ItemHealAndCureStatus::
