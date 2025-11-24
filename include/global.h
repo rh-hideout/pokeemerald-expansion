@@ -143,15 +143,6 @@
 
 #define FEATURE_FLAG_ASSERT(flag, id) STATIC_ASSERT(flag > TEMP_FLAGS_END || flag == 0, id)
 
-/* Will make an exception to the deprecated attribute */
-#define GET_DEPRECATED(T, expr) ({ \
-  _Pragma("GCC diagnostic push"); \
-  _Pragma("GCC diagnostic ignored \"-Wdeprecated-declarations\""); \
-  T _ = (expr); \
-  _Pragma("GCC diagnostic pop"); \
-  _; \
-})
-
 // NOTE: This uses hardware timers 2 and 3; this will not work during active link connections or with the eReader
 static inline void CycleCountStart()
 {
