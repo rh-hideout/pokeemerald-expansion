@@ -4,6 +4,8 @@
 #include "palette.h"
 #include "text.h"
 
+#include "string_util.h"
+
 #define MAX_SPRITE_COPY_REQUESTS 64
 
 #define sAnchorX data[6]
@@ -1825,31 +1827,313 @@ u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
 #define nextY data[2]
 #define firstInRow data[3]
 
+inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
+{
+    if (width <= 0)
+        return;
+
+    u32 widthMask = (1 << (width * 4)) - 1;
+
+    u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
+
+    u32 *alignedWindowTilesX = (u32 *)(windowTiles + ((x0 / 8) * TILE_SIZE_4BPP));
+
+    u32 y1 = y0 + height;
+    for (u32 y = y0; y < y1; y++)
+    {
+        u32 pixels = *glyphPixels++ & widthMask;
+
+        u32 mask = pixels;
+        mask = mask | (mask >> 2);
+        mask = mask | (mask >> 1);
+        mask = mask & 0x11111111;
+        mask = mask * 0xF;
+
+        u32 pixels0 = pixels << shift0, pixels8 = pixels >> shift8;
+        u32 mask0 = mask << shift0, mask8 = mask >> shift8;
+
+        u32 *alignedWindowTiles = (u32 *)((u8 *)alignedWindowTilesX + ((y / 8) * widthOffset) + ((y % 8) * 4));
+
+        alignedWindowTiles[0] = (alignedWindowTiles[0] & ~mask0) | pixels0;
+        alignedWindowTiles[8] = (alignedWindowTiles[8] & ~mask8) | pixels8;
+    }
+}
+
+static void FillSpriteColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 *color, u32 spriteWidth)
+{
+    u32 wholeX = width / 8;
+    u32 wholeY = height / 8;
+
+    u32 *tiles = (void*)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
+
+    //  Handle whole tiles
+    for (u32 y = 0; y < wholeY; y++)
+        for (u32 x = 0; x < wholeX; x++)
+            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * x, top + 8 * y, color, 8, 8);
+
+    //  Handle fractional remnants
+    u32 fracX = width % 8;
+    u32 fracY = height % 8;
+    if (fracX != 0 && fracY != 0)
+    {
+        GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * wholeX, top + 8 * wholeY, color, fracX, fracY);
+    }
+
+    if (fracX != 0)
+        for (u32 y = 0; y < wholeY; y++)
+            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * wholeX, top + 8 * y, color, fracX, 8);
+
+    if (fracY != 0)
+        for (u32 x = 0; x < wholeY; x++)
+            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * x, top + 8 * wholeY, color, 8, fracY);
+}
+
+struct SpriteToPrint
+{
+    u8 spriteId;
+    u8 startX;
+    u8 startY;
+    u8 width;
+    u8 height;
+    u8 spriteWidth;
+    u32 *color;
+};
+
+static void FillStructWithColor(struct SpriteToPrint *input)
+{
+    DebugPrintf("==============");
+    DebugPrintf("ID: %u", input->spriteId);
+    DebugPrintf("StartX: %u", input->startX);
+    DebugPrintf("StartY: %u", input->startY);
+    DebugPrintf("Width: %u", input->width);
+    DebugPrintf("Height: %u", input->height);
+    DebugPrintf("SpriteWidth: %u", input->spriteWidth);
+    FillSpriteColor(input->spriteId, input->startX, input->startY, input->width, input->height, input->color, input->spriteWidth);
+}
+
 void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
 {
     //  Check if area spans more than 1 sprite
     u32 spriteWidth = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].width;
     u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
 
+    color = color | color << 4 | color << 8 | color << 12 | color << 16 | color << 20 | color << 24 | color << 28;
+    u32 pixels[8] = {color, color, color, color, color, color, color, color};
+
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
-        //  Need to handle crossing sprite borders, it would be nice to have recursion here
+        //  Assume that all sprites have equal dimensions
+        u32 numSpritesY = 1;
+        u32 numSpritesX = 1;
+        u32 tempHeight = height;
+        u32 tempWidth = width;
+
+        if (top + height > spriteHeight)
+        {
+            tempHeight -= spriteHeight - (top + height);
+            u32 nextSprite = gSprites[spriteId].nextY;
+            while (TRUE)
+            {
+                numSpritesY++;
+                if (tempHeight < spriteHeight || gSprites[nextSprite].nextY == SPRITE_NONE)
+                {
+                    break;
+                }
+                else
+                {
+                    tempHeight -= spriteHeight;
+                    nextSprite = gSprites[nextSprite].nextY;
+                }
+            }
+        }
+
+        if (left + width > spriteWidth)
+        {
+            tempWidth -= spriteWidth - (left + width);
+            u32 nextSprite = gSprites[spriteId].nextX;
+            while (TRUE)
+            {
+                numSpritesX++;
+                if (tempWidth < spriteWidth || gSprites[nextSprite].nextX == SPRITE_NONE)
+                {
+                    break;
+                }
+                else
+                {
+                    tempWidth -= spriteWidth;
+                    nextSprite = gSprites[nextSprite].nextX;
+                }
+            }
+        }
+
+        struct SpriteToPrint printSprites[numSpritesX * numSpritesY];
+
+        //  Fill out the sprites to print to
+
+        //  Sprite IDs, spriteWidth and color
+        u32 nextSpriteId = spriteId;
+        for (u32 y = 0; y < numSpritesY; y++)
+        {
+            u32 leftMostSpriteId = nextSpriteId;
+            for (u32 x = 0; x < numSpritesY; x++)
+            {
+                printSprites[x + y * numSpritesX].spriteId = nextSpriteId;
+                printSprites[x + y * numSpritesX].spriteWidth = spriteWidth;
+                printSprites[x + y * numSpritesX].color = pixels;
+
+                nextSpriteId = gSprites[nextSpriteId].nextX;
+            }
+            nextSpriteId = gSprites[leftMostSpriteId].nextY;
+        }
+
+        u32 rightWidth = 0;
+        if (numSpritesX > 1)
+            rightWidth = width - left - spriteWidth * (numSpritesX - 2);
+
+        //  Top edge values
+        for (u32 x = 0; x < numSpritesX; x++)
+        {
+            printSprites[x].startY = top;
+            if (top + height > spriteHeight)
+                printSprites[x].height = spriteHeight - top;
+            else
+                printSprites[x].height = height;
+
+            if (x == 0)
+            {
+                printSprites[x].startX = left;
+                printSprites[x].width = spriteWidth - left;
+            }
+            else if (x == numSpritesX - 1)
+            {
+                printSprites[x].startX = 0;
+                printSprites[x].width = rightWidth;
+            }
+            else
+            {
+                printSprites[x].startX = 0;
+                printSprites[x].width = spriteWidth;
+            }
+        }
+
+        u32 bottomHeight = 0;
+        if (numSpritesY > 1)
+            bottomHeight = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
+
+        //  Bottom edge values
+        if (numSpritesX > 1)
+        {
+            u32 offset = (numSpritesY - 1) * numSpritesX;
+            //u32 currHeight = height - (spriteHeight - top) - (numSpritesY - 2) * spriteHeight;
+            for (u32 x = 0; x < numSpritesX; x++)
+            {
+                printSprites[offset + x].startY = 0;
+                printSprites[offset + x].height = bottomHeight;
+
+                if (x == 0)
+                {
+                    printSprites[offset + x].startX = left;
+                    printSprites[offset + x].width = spriteWidth - left;
+                }
+                else if (x == numSpritesX - 1)
+                {
+                    printSprites[offset + x].startX = 0;
+                    printSprites[offset + x].width = rightWidth;
+                }
+                else
+                {
+                    printSprites[offset + x].startX = 0;
+                    printSprites[offset + x].width = spriteWidth;
+                }
+            }
+        }
+
+        //  Left edge values
+
+        for (u32 y = 0; y < numSpritesY; y++)
+        {
+            printSprites[y * numSpritesX].startX = left;
+            if (left + width > spriteWidth)
+                printSprites[y * numSpritesX].width = spriteWidth - left;
+            else
+                printSprites[y * numSpritesX].width = width;
+
+            if (y == 0)
+            {
+                printSprites[y * numSpritesX].startY = top;
+                printSprites[y * numSpritesX].height = spriteHeight - top;
+            }
+            else if (y == numSpritesY - 1)
+            {
+                printSprites[y * numSpritesX].startY = 0;
+                printSprites[y * numSpritesX].height = bottomHeight;
+            }
+            else
+            {
+                printSprites[y * numSpritesX].startY = 0;
+                printSprites[y * numSpritesX].height = spriteHeight;
+            }
+        }
+
+        //  Right edge values
+        if (numSpritesY > 1)
+        {
+            u32 currWidth = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
+            for (u32 y = 0; y < numSpritesX; y++)
+            {
+                printSprites[(numSpritesX - 1) + numSpritesX * y].startX = 0;
+                printSprites[(numSpritesX - 1) + numSpritesX * y].width = currWidth;
+
+                if (y == 0)
+                {
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = top;
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight - top;
+                }
+                else if (y == numSpritesY - 1)
+                {
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = bottomHeight;
+                }
+                else
+                {
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight;
+                }
+            }
+        }
+
+        //  Fill in center data
+        for (u32 y = 1; y < numSpritesY - 1; y++)
+        {
+            for (u32 x = 1; x < numSpritesX - 1; x++)
+            {
+                printSprites[y * numSpritesX + x].height = spriteHeight;
+                printSprites[y * numSpritesX + x].width = spriteWidth;
+                printSprites[y * numSpritesX + x].startX = 0;
+                printSprites[y * numSpritesX + x].startY = 0;
+            }
+        }
+
+        u32 totalSprites = numSpritesX * numSpritesY;
+        for (u32 i = 0; i < totalSprites; i++)
+        {
+            FillStructWithColor(&printSprites[ i]);
+        }
     }
     else
     {
         //  Just need to handle the current sprite
-        u32 *tiles = (void*)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
-        u32 mask = 0;
+        FillSpriteColor(spriteId, left, top, width, height, pixels, spriteWidth);
     }
 }
 
 void SpriteFillRectWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height)
 {
+    //  This should probably just replace the entire sprites that need to be filled
 }
 
 void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX, u32 numSpritesY)
 {
-    u32 startSprite = spriteIds[0];
     for (u32 y = 0; y < numSpritesY; y++)
     {
         u32 firstRowSprite = spriteIds[y * numSpritesX];

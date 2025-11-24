@@ -1332,9 +1332,10 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             textPrinter->printerTemplate.currentY += (gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing);
             if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER)
             {
-                textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].data[3];
+                struct Sprite *sprite = &gSprites[textPrinter->printerTemplate.spriteId];
+                textPrinter->printerTemplate.spriteId = sprite->data[3];
                 //  Replace 64 with value read from sprite
-                if (textPrinter->printerTemplate.currentY  >= 64 /*gSprites[textPrinter->printerTemplate.spriteId].*/
+                if (textPrinter->printerTemplate.currentY  >= gOamDimensions[sprite->oam.shape][sprite->oam.size].height
                  && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
                 {
                     textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - 64;
