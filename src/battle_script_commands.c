@@ -15226,8 +15226,6 @@ void BS_ItemCureStatus(void)
         statusChanged = TRUE;
         if (GetItemStatus1Mask(gLastUsedItem) & STATUS1_SLEEP)
             gBattleMons[targetBattler].volatiles.nightmare = FALSE;
-        if (ItemHasVolatileFlag(gLastUsedItem, VOLATILE_CONFUSION))
-            gBattleMons[targetBattler].volatiles.infiniteConfusion = FALSE;
     }
 
     if (!statusChanged)

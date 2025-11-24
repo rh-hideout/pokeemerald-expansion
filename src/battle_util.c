@@ -11748,9 +11748,10 @@ bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
     const u8 *effect = GetItemEffect(itemId);
     if (effect[3] & ITEM3_STATUS_ALL)
     {
-        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0);
+        statusChanged = (gBattleMons[battler].volatiles.infatuation || gBattleMons[battler].volatiles.confusionTurns > 0 || gBattleMons[battler].volatiles.infiniteConfusion);
         gBattleMons[battler].volatiles.infatuation = 0;
         gBattleMons[battler].volatiles.confusionTurns = 0;
+        gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
     }
     else if (effect[0] & ITEM0_INFATUATION)
     {
@@ -11759,8 +11760,9 @@ bool32 ItemHealMonVolatile(u32 battler, u16 itemId)
     }
     else if (effect[3] & ITEM3_CONFUSION)
     {
-        statusChanged = gBattleMons[battler].volatiles.confusionTurns > 0;
+        statusChanged = (gBattleMons[battler].volatiles.confusionTurns > 0 || gBattleMons[battler].volatiles.infiniteConfusion);
         gBattleMons[battler].volatiles.confusionTurns = 0;
+        gBattleMons[battler].volatiles.infiniteConfusion = FALSE;
     }
 
     return statusChanged;
