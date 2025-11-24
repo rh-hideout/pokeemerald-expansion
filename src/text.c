@@ -1337,7 +1337,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 if (textPrinter->printerTemplate.currentY  >= gOamDimensions[sprite->oam.shape][sprite->oam.size].height
                  && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
                 {
-                    textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - 64;
+                    textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - gOamDimensions[sprite->oam.shape][sprite->oam.size].height;
                     textPrinter->printerTemplate.spriteId = gSprites[gSprites[textPrinter->printerTemplate.spriteId].data[3]].data[2];
                 }
             }

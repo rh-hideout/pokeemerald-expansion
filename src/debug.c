@@ -4201,6 +4201,7 @@ const u16 sTestSpritePal[] = INCBIN_U16("graphics/test_sprite.gbapal");
 
 void TestThing(void)
 {
+    /*
     u32 centerX = 120;
     u32 centerY = 100;
     u32 *sprite = malloc_and_decompress(gSpeciesInfo[SPECIES_PICHU].frontPic, NULL);
@@ -4247,8 +4248,8 @@ void TestThing(void)
     //PrintTextToSprite(spriteId1, 36, yVal + 6, FONT_NORMAL, sSomeText);
 
     Free(sprite);
+    */
 
-    /*
     struct Even_CreateSpriteStruct cs = {0};
     cs.sprite = sTestSpriteGfx;
     cs.palette = sTestSpritePal;
@@ -4273,5 +4274,4 @@ void TestThing(void)
     //SpriteFillRectWithColor(spriteIds[0], 16, 16, 64, 64, 7);
 
     PrintTextToSprite(spriteIds[0], 16, 8, FONT_SHORT, sNewString);
-    */
 }
