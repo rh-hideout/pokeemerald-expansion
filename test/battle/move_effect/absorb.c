@@ -27,7 +27,7 @@ SINGLE_BATTLE_TEST("Absorb recovers 50% of the damage dealt")
 SINGLE_BATTLE_TEST("Absorb fails if Heal Block applies")
 {
     GIVEN {
-        ASSUME(B_HEAL_BLOCKING >= GEN_6);
+        WITH_MOVE_DATA(MOVE_ABSORB, MOVE_DATA_HEAL_MOVE, TRUE); // Absorb doesn't have the Heal Move flag in Gen 5.
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

@@ -353,7 +353,18 @@ static inline bool32 IsSlicingMove(u32 moveId)
 
 static inline bool32 IsHealingMove(u32 moveId)
 {
-    return gMovesInfo[SanitizeMoveId(moveId)].healingMove;
+#if TESTING
+    moveId = SanitizeMoveId(moveId);
+    for (u32 i = 0; gMoveDataTestOverride[i].moveId != MOVE_NONE; i++)
+    {
+        if (gMoveDataTestOverride[i].moveId == moveId && gMoveDataTestOverride[i].type == MOVE_DATA_HEAL_MOVE)
+            return gMoveDataTestOverride[i].data;
+    }
+
+    return GET_DEPRECATED(bool32, gMovesInfo[moveId].healingMove);
+#else
+    return GET_DEPRECATED(bool32, gMovesInfo[SanitizeMoveId(moveId)].healingMove);
+#endif
 }
 
 static inline bool32 MoveIncreasesPowerToMinimizedTargets(u32 moveId)
