@@ -3771,7 +3771,7 @@ bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
     x -= MAP_OFFSET;
     y -= MAP_OFFSET;
 
-    if (x >= 0 && x <= width && y >= 0 && y <= height)
+    if (x >= 0 && x < width && y >= 0 && y < height)
         return TRUE;
 
     return FALSE;
@@ -3780,6 +3780,20 @@ bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
 bool32 IsInsidePlayerMap(s16 x, s16 y)
 {
     return IsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
+}
+
+bool32 IsInsideSpawnedMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
+{
+    bool32 inside;
+
+    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
+    {
+        return IsInsidePlayerMap(x, y);
+    }
+    else
+    {
+        return !IsInsidePlayerMap(x, y);
+    }
 }
 
 static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height)
@@ -11642,7 +11656,7 @@ bool8 MovementType_WanderOnMap_Step4(struct ObjectEvent *objectEvent, struct Spr
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11662,7 +11676,7 @@ bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, 
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
@@ -11683,7 +11697,7 @@ bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent,
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
@@ -11704,7 +11718,7 @@ bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsInsideMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
+    if (!IsInsideSpawnedMap(objectEvent->mapGroup, objectEvent->mapNum, x, y)
         || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;

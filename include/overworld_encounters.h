@@ -5,7 +5,6 @@
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#define FOLLOWMON_SHINY_OFFSET              10000
 #define FOLLOWMON_MAX_SPAWN_SLOTS           5
 #define FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT  8
 
