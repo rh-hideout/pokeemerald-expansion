@@ -1,11 +1,10 @@
 #ifndef GUARD_FOLLOWMON_H
 #define GUARD_FOLLOWMON_H
 
-#if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_SPAWN_OW_WILD_ENCOUNTERS == TRUE
-#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_SPAWN_OW_WILD_ENCOUNTERS to work."
+#if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
+#error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#define FOLLOWMON_SHINY_OFFSET              10000
 #define FOLLOWMON_MAX_SPAWN_SLOTS           5
 #define FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT  8
 
@@ -38,7 +37,7 @@ struct FollowMonData
 extern const u8 InteractWithDynamicWildFollowMon[];
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent);
-void FollowMon_OverworldCB(void);
+void UpdateOverworldEncounters(void);
 void CreateFollowMonEncounter(void);
 bool8 FollowMon_ProcessMonInteraction(void);
 bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
@@ -46,7 +45,8 @@ bool8 FollowMon_IsMonObject(struct ObjectEvent* object);
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
-void FollowMon_OnWarp(void);
-void RemoveAllFollowMonObjects(void);
+void ClearOverworldEncounterData(void);
+void RemoveOverworldEncounterObjects(void);
+bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
 
 #endif // GUARD_FOLLOWMON_H

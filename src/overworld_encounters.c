@@ -1,12 +1,8 @@
 #include "global.h"
-#include "constants/event_objects.h"
-#include "constants/map_types.h"
-#include "constants/songs.h"
-#include "constants/vars.h"
+#include "overworld_encounters.h"
 #include "battle_setup.h"
 #include "event_data.h"
 #include "event_object_movement.h"
-#include "followmon.h"
 #include "fieldmap.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
@@ -16,6 +12,10 @@
 #include "sprite.h"
 #include "sound.h"
 #include "wild_encounter.h"
+#include "constants/event_objects.h"
+#include "constants/map_types.h"
+#include "constants/songs.h"
+#include "constants/vars.h"
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
@@ -30,8 +30,9 @@ static u8 FindObjectEventForGfx(u16 gfxId);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
-static bool8 IsInsidePlayerMap(s16 x, s16 y);
-static void GetMapSize(s32 *width, s32 *height);
+static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
+static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
+static bool32 IsInsidePlayerMap(s16 x, s16 y);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
@@ -47,11 +48,14 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.usedSlots++;
 }
 
-void FollowMon_OverworldCB(void)
+void UpdateOverworldEncounters(void)
 {
-    if (!OW_SPAWN_OW_WILD_ENCOUNTERS)
+    if (ArePlayerFieldControlsLocked())
+        return;
+    
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
-        RemoveAllFollowMonObjects();
+        RemoveOverworldEncounterObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
         for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
@@ -75,10 +79,26 @@ void FollowMon_OverworldCB(void)
 
             if(spawnSlot != INVALID_SPAWN_SLOT)
             {
+                bool32 waterMons = IsSpawningWaterMons();
+                bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
+                u32 movementType;
+                if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
+                {
+                    if (waterMons)
+                        movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
+                    else if (indoors)
+                        movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
+                    else
+                        movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
+                }
+                else
+                {
+                    movementType = MOVEMENT_TYPE_WANDER_ON_MAP;
+                }
                 u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
                     OBJ_EVENT_GFX_FOLLOW_MON_FIRST + spawnSlot,
-                    MOVEMENT_TYPE_WANDER_AROUND,
+                    movementType,
                     localId,
                     x,
                     y,
@@ -98,7 +118,7 @@ void FollowMon_OverworldCB(void)
 
                 // Hide reflections for spawns in water
                 // (It just looks weird)
-                if(IsSpawningWaterMons())
+                if (waterMons)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
@@ -470,7 +490,7 @@ u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
     return graphicsId;
 }
 
-void FollowMon_OnWarp(void)
+void ClearOverworldEncounterData(void)
 {
     sFollowMonData.spawnCountdown = 0;
     sFollowMonData.usedSlots = 0;
@@ -535,7 +555,7 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-void RemoveAllFollowMonObjects(void)
+void RemoveOverworldEncounterObjects(void)
 {
     for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
@@ -600,22 +620,40 @@ static bool8 AreElevationsCompatible(u8 a, u8 b)
     return TRUE;
 }
 
-static bool8 IsInsidePlayerMap(s16 x, s16 y)
+static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height)
+{
+    const struct MapLayout *layout;
+
+    layout = Overworld_GetMapHeaderByGroupAndId(mapGroup, mapNum)->mapLayout;
+    *width = layout->width;
+    *height = layout->height;
+}
+
+static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y)
 {
     s32 width, height;
+    GetMapSize(mapGroup, mapNum, &width, &height);
+    x -= MAP_OFFSET;
+    y -= MAP_OFFSET;
 
-    GetMapSize(&width, &height);
-    if (x >= 0 && x <= width && y >= 0 && y <= height)
+    if (x >= 0 && x < width && y >= 0 && y < height)
         return TRUE;
 
     return FALSE;
 }
 
-static void GetMapSize(s32 *width, s32 *height)
+static bool32 IsInsidePlayerMap(s16 x, s16 y)
 {
-    const struct MapLayout *layout;
+    return IsInsideMap(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum, x, y);
+}
 
-    layout = Overworld_GetMapHeaderByGroupAndId(gSaveBlock1Ptr->location.mapGroup, gSaveBlock1Ptr->location.mapNum)->mapLayout;
-    *width = layout->width;
-    *height = layout->height;
+bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y)
+{
+    u8 mapGroup = objectEvent->mapGroup;
+    u8 mapNum = objectEvent->mapNum;
+
+    if (mapGroup == gSaveBlock1Ptr->location.mapGroup && mapNum == gSaveBlock1Ptr->location.mapNum)
+        return IsInsidePlayerMap(x, y);
+    else
+        return !IsInsidePlayerMap(x, y);
 }

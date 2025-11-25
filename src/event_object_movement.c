@@ -25,6 +25,7 @@
 #include "mauville_old_man.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon.h"
@@ -56,8 +57,6 @@
 #include "constants/trainer_types.h"
 #include "constants/union_room.h"
 #include "constants/weather.h"
-
-#include "followmon.h"
 
 #define SPECIAL_LOCALIDS_START (min(LOCALID_CAMERA, \
                                 min(LOCALID_PLAYER, \
@@ -226,6 +225,7 @@ static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction);
 
+
 const u8 gReflectionEffectPaletteMap[16] = {
         [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
         [PALSLOT_PLAYER_REFLECTION]      = PALSLOT_PLAYER_REFLECTION,
@@ -350,6 +350,10 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
+    [MOVEMENT_TYPE_WANDER_ON_MAP] = MovementType_WanderOnMap,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = MovementType_WanderOnLandEncounter,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = MovementType_WanderOnWaterEncounter,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = MovementType_WanderOnIndoorEncounter,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -394,6 +398,10 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_MAP] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = TRUE,
 };
 
 const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
@@ -479,6 +487,10 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_MAP] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = DIR_SOUTH,
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -11586,5 +11598,88 @@ bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struc
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
     FieldEffectStart(FLDEFF_BUBBLES); // Commandeer this field effect for the spawn anims
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnMap, gMovementTypeFuncs_WanderOnMap)
+
+bool8 MovementType_WanderOnMap_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnLandEncounter, gMovementTypeFuncs_WanderOnLandEncounter)
+
+bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
+        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnWaterEncounter, gMovementTypeFuncs_WanderOnWaterEncounter)
+
+bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
+        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnIndoorEncounter, gMovementTypeFuncs_WanderOnIndoorEncounter)
+
+bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
+        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
     return TRUE;
 }

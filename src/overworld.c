@@ -44,6 +44,7 @@
 #include "money.h"
 #include "new_game.h"
 #include "oras_dowse.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
@@ -77,8 +78,6 @@
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
 #include "constants/weather.h"
-
-#include "followmon.h"
 
 STATIC_ASSERT((B_FLAG_FOLLOWERS_DISABLED == 0 || OW_FOLLOWERS_ENABLED), FollowersFlagAssignedWithoutEnablingThem);
 
@@ -594,7 +593,6 @@ void ApplyCurrentWarp(void)
     gSaveBlock1Ptr->location = sWarpDestination;
     sFixedDiveWarp = sDummyWarpData;
     sFixedHoleWarp = sDummyWarpData;
-    FollowMon_OnWarp();
 }
 
 static void ClearDiveAndHoleWarps(void)
@@ -896,6 +894,8 @@ if (I_VS_SEEKER_CHARGING != 0)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
+    // ClearOverworldEncounterData();
+    // RemoveOverworldEncounterObjects();
 }
 
 static void LoadMapFromWarp(bool32 a1)
@@ -956,6 +956,7 @@ if (I_VS_SEEKER_CHARGING != 0)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    ClearOverworldEncounterData();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1541,7 +1542,6 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
         else
         {
             PlayerStep(inputStruct.dpadDirection, newKeys, heldKeys);
-            FollowMon_OverworldCB();
         }
     }
     // If stop running but keep holding B -> fix follower frame.
@@ -1727,6 +1727,7 @@ static void OverworldBasic(void)
            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldEncounters();
 }
 
 // This CB2 is used when starting

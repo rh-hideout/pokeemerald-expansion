@@ -346,9 +346,10 @@
 #define LOCALID_NONE                         0
 #define LOCALID_CAMERA                     127
 #define LOCALID_BERRY_BLENDER_PLAYER_END   240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
+#define LOCALID_FOLLOWING_POKEMON          254
 #define LOCALID_PLAYER                     255
-#define OBJ_EVENT_ID_FOLLOWER              0xFE //254
-#define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD //253
+#define OBJ_EVENT_ID_FOLLOWER              0xFE
+#define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD
 
 // IDs for dynamic object event spawns
 #define OBJ_EVENT_ID_FOLLOW_MON_FIRST      230
