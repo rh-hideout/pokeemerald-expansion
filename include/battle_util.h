@@ -100,39 +100,39 @@ struct TypePower
 
 enum MoveSuccessOrder
 {
-    CANCELLER_CLEAR_FLAGS,
-    CANCELLER_STANCE_CHANGE_1,
-    CANCELLER_SKY_DROP,
-    CANCELLER_RECHARGE,
-    CANCELLER_ASLEEP_OR_FROZEN,
-    CANCELLER_POWER_POINTS,
-    CANCELLER_OBEDIENCE,
-    CANCELLER_TRUANT,
-    CANCELLER_FLINCH,
-    CANCELLER_DISABLED,
-    CANCELLER_VOLATILE_BLOCKED, // Gravity / Heal Block / Throat Chop
-    CANCELLER_TAUNTED,
-    CANCELLER_IMPRISONED,
-    CANCELLER_CONFUSED,
-    CANCELLER_PARALYSED,
-    CANCELLER_INFATUATION,
-    CANCELLER_BIDE,
-    CANCELLER_Z_MOVES,
-    CANCELLER_CHOICE_LOCK,
-    CANCELLER_CALLSUBMOVE,
-    CANCELLER_THAW,
-    CANCELLER_STANCE_CHANGE_2,
-    CANCELLER_ATTACKSTRING,
-    CANCELLER_PPDEDUCTION,
-    CANCELLER_WEATHER_PRIMAL,
-    CANCELLER_MOVE_FAILURE,
-    CANCELLER_POWDER_STATUS,
-    CANCELLER_PRIORITY_BLOCK,
-    CANCELLER_PROTEAN,
-    CANCELLER_EXPLODING_DAMP,
-    CANCELLER_MULTIHIT_MOVES,
-    CANCELLER_MULTI_TARGET_MOVES,
-    CANCELLER_END,
+    CANCELER_STANCE_CHANGE_1,
+    CANCELER_CLEAR_FLAGS,
+    CANCELER_SKY_DROP,
+    CANCELER_RECHARGE,
+    CANCELER_ASLEEP_OR_FROZEN,
+    CANCELER_POWER_POINTS,
+    CANCELER_OBEDIENCE,
+    CANCELER_TRUANT,
+    CANCELER_FLINCH,
+    CANCELER_DISABLED,
+    CANCELER_VOLATILE_BLOCKED, // Gravity / Heal Block / Throat Chop
+    CANCELER_TAUNTED,
+    CANCELER_IMPRISONED,
+    CANCELER_CONFUSED,
+    CANCELER_PARALYSED,
+    CANCELER_INFATUATION,
+    CANCELER_BIDE,
+    CANCELER_Z_MOVES,
+    CANCELER_CHOICE_LOCK,
+    CANCELER_CALLSUBMOVE,
+    CANCELER_THAW,
+    CANCELER_STANCE_CHANGE_2,
+    CANCELER_ATTACKSTRING,
+    CANCELER_PPDEDUCTION,
+    CANCELER_WEATHER_PRIMAL,
+    CANCELER_MOVE_FAILURE,
+    CANCELER_POWDER_STATUS,
+    CANCELER_PRIORITY_BLOCK,
+    CANCELER_PROTEAN,
+    CANCELER_EXPLODING_DAMP,
+    CANCELER_MULTIHIT_MOVES,
+    CANCELER_MULTI_TARGET_MOVES,
+    CANCELER_END,
 };
 
 enum Obedience
@@ -145,7 +145,7 @@ enum Obedience
     DISOBEYS_RANDOM_MOVE,
 };
 
-enum MoveCanceller
+enum MoveCanceler
 {
     MOVE_STEP_SUCCESS,
     MOVE_STEP_BREAK, // Breaks out of the function to run a script
@@ -165,10 +165,12 @@ struct DamageContext
     u32 randomFactor:1;
     u32 updateFlags:1;
     u32 isAnticipation:1;
-    u32 padding1:1;
+    u32 isSelfInflicted:1;
     u32 weather:16;
     u32 fixedBasePower:8;
     u32 padding2:8;
+    u32 chosenMove:16; // May be different to 'move', e.g. for Z moves.
+    u32 padding3:16;
     uq4_12_t typeEffectivenessModifier;
     enum Ability abilityAtk;
     enum Ability abilityDef;
@@ -195,7 +197,7 @@ enum SleepClauseBlock
 enum SkyDropState
 {
     SKY_DROP_IGNORE,
-    SKY_DROP_ATTACKCANCELLER_CHECK,
+    SKY_DROP_ATTACKCANCELER_CHECK,
     SKY_DROP_GRAVITY_ON_AIRBORNE,
     SKY_DROP_CANCEL_MULTI_TURN_MOVES,
     SKY_DROP_STATUS_YAWN,
@@ -256,7 +258,7 @@ bool32 IsAbilityAndRecord(u32 battler, enum Ability battlerAbility, enum Ability
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
-enum MoveCanceller AtkCanceller_MoveSuccessOrder(struct BattleContext *ctx);
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx);
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability);
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
@@ -429,6 +431,7 @@ u32 GetTotalAccuracy(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability atkA
 bool32 IsSemiInvulnerable(u32 battler, enum SemiInvulnerableExclusion excludeCommander);
 bool32 BreaksThroughSemiInvulnerablity(u32 battler, u32 move);
 bool32 HasPartnerTrainer(u32 battler);
+bool32 IsAffectedByPowderMove(u32 battler, u32 ability, enum HoldEffect holdEffect);
 u32 GetNaturePowerMove(u32 battler);
 u32 GetNaturePowerMove(u32 battler);
 void RemoveAbilityFlags(u32 battler);

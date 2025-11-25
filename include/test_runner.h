@@ -2,7 +2,11 @@
 #define GUARD_TEST_RUNNER_H
 
 extern const bool8 gTestRunnerEnabled;
+#if TESTING
 extern const bool8 gTestRunnerHeadless;
+#else
+#define gTestRunnerHeadless FALSE
+#endif
 extern const bool8 gTestRunnerSkipIsFail;
 
 #if TESTING

@@ -4136,7 +4136,7 @@ static void HandleTurnActionSelectionState(void)
                 else
                 {
                     if (gBattleMons[battler].volatiles.multipleTurns
-                        || gBattleMons[battler].volatiles.recharge)
+                        || gDisableStructs[battler].rechargeTimer > 0)
                     {
                         gChosenActionByBattler[battler] = B_ACTION_USE_MOVE;
                         gBattleCommunication[battler] = STATE_WAIT_ACTION_CONFIRMED_STANDBY;
@@ -4252,7 +4252,7 @@ static void HandleTurnActionSelectionState(void)
                 case B_ACTION_SWITCH:
                     gBattleStruct->battlerPartyIndexes[battler] = gBattlerPartyIndexes[battler];
                     if (gBattleTypeFlags & BATTLE_TYPE_ARENA
-                        || !CanBattlerEscape(battler))
+                        || (!CanBattlerEscape(battler) && GetBattlerHoldEffect(battler) != HOLD_EFFECT_SHED_SHELL))
                     {
                         BtlController_EmitChoosePokemon(battler, B_COMM_TO_CONTROLLER, PARTY_ACTION_CANT_SWITCH, PARTY_SIZE, ABILITY_NONE, 0, gBattleStruct->battlerPartyOrders[battler]);
                     }
@@ -4291,7 +4291,7 @@ static void HandleTurnActionSelectionState(void)
                     gBattleCommunication[GetPartnerBattler(battler)] = STATE_BEFORE_ACTION_CHOSEN;
                     RecordedBattle_ClearBattlerAction(battler, 1);
                     if (gBattleMons[GetPartnerBattler(battler)].volatiles.multipleTurns
-                        || gBattleMons[GetPartnerBattler(battler)].volatiles.recharge)
+                        || gDisableStructs[GetPartnerBattler(battler)].rechargeTimer > 0)
                     {
                         BtlController_EmitEndBounceEffect(battler, B_COMM_TO_CONTROLLER);
                         MarkBattlerForControllerExec(battler);
@@ -5051,11 +5051,8 @@ static void TurnValuesCleanUp(bool8 var0)
                 gDisableStructs[i].isFirstTurn--;
 
             if (gDisableStructs[i].rechargeTimer)
-            {
                 gDisableStructs[i].rechargeTimer--;
-                if (gDisableStructs[i].rechargeTimer == 0)
-                    gBattleMons[i].volatiles.recharge = FALSE;
-            }
+
             gBattleStruct->battlerState[i].canPickupItem = FALSE;
             gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
         }
@@ -5075,7 +5072,7 @@ static void TurnValuesCleanUp(bool8 var0)
     gSideTimers[B_SIDE_PLAYER].followmeTimer = 0;
     gSideTimers[B_SIDE_OPPONENT].followmeTimer = 0;
 
-    gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceller
+    gBattleStruct->pledgeMove = FALSE; // combined pledge move may not have been used due to a canceler
     gBattleStruct->tryDestinyBond = FALSE;
     gBattleStruct->tryGrudge = FALSE;
     ClearPursuitValues();

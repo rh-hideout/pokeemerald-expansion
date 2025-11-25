@@ -42,32 +42,7 @@ static void PrintContestPaintingCaption(u8, u8);
 static void VBlankCB_ContestPainting(void);
 static void _InitContestMonPixels(u8 *spriteGfx, u16 *palette, u16 (*destPixels)[64][64]);
 
-extern const u8 gContestHallPaintingCaption[];
-extern const u8 gContestCoolness[];
-extern const u8 gContestBeauty[];
-extern const u8 gContestCuteness[];
-extern const u8 gContestSmartness[];
-extern const u8 gContestToughness[];
-extern const u8 gContestRankNormal[];
-extern const u8 gContestRankSuper[];
-extern const u8 gContestRankHyper[];
-extern const u8 gContestRankMaster[];
-extern const u8 gContestLink[];
-extern const u8 gContestPaintingCool1[];
-extern const u8 gContestPaintingCool2[];
-extern const u8 gContestPaintingCool3[];
-extern const u8 gContestPaintingBeauty1[];
-extern const u8 gContestPaintingBeauty2[];
-extern const u8 gContestPaintingBeauty3[];
-extern const u8 gContestPaintingCute1[];
-extern const u8 gContestPaintingCute2[];
-extern const u8 gContestPaintingCute3[];
-extern const u8 gContestPaintingSmart1[];
-extern const u8 gContestPaintingSmart2[];
-extern const u8 gContestPaintingSmart3[];
-extern const u8 gContestPaintingTough1[];
-extern const u8 gContestPaintingTough2[];
-extern const u8 gContestPaintingTough3[];
+const u8 gContestHallPaintingCaption[] = COMPOUND_STRING("{STR_VAR_1}\n{STR_VAR_2}'s {STR_VAR_3}");
 
 static const u16 sPictureFramePalettes[]          = INCBIN_U16("graphics/picture_frame/bg.gbapal");
 static const u32 sPictureFrameTiles_Cool[]        = INCBIN_U32("graphics/picture_frame/cool.4bpp.smol");
@@ -85,20 +60,20 @@ static const u32 sPictureFrameTilemap_HallLobby[] = INCBIN_U32("graphics/picture
 
 static const u8 *const sContestCategoryNames_Unused[] =
 {
-    [CONTEST_CATEGORY_COOL]   = gContestCoolness,
-    [CONTEST_CATEGORY_BEAUTY] = gContestBeauty,
-    [CONTEST_CATEGORY_CUTE]   = gContestCuteness,
-    [CONTEST_CATEGORY_SMART]  = gContestSmartness,
-    [CONTEST_CATEGORY_TOUGH]  = gContestToughness,
+    [CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("COOLNESS"),
+    [CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("BEAUTY"),
+    [CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("CUTENESS"),
+    [CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("SMARTNESS"),
+    [CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("TOUGHNESS"),
 };
 
 static const u8 *const sContestRankNames[] =
 {
-    [CONTEST_RANK_NORMAL] = gContestRankNormal,
-    [CONTEST_RANK_SUPER]  = gContestRankSuper,
-    [CONTEST_RANK_HYPER]  = gContestRankHyper,
-    [CONTEST_RANK_MASTER] = gContestRankMaster,
-    [CONTEST_RANK_LINK]   = gContestLink,
+    [CONTEST_RANK_NORMAL] = COMPOUND_STRING("NORMAL RANK"),
+    [CONTEST_RANK_SUPER]  = COMPOUND_STRING("SUPER RANK"),
+    [CONTEST_RANK_HYPER]  = COMPOUND_STRING("HYPER RANK"),
+    [CONTEST_RANK_MASTER] = COMPOUND_STRING("MASTER RANK"),
+    [CONTEST_RANK_LINK]   = COMPOUND_STRING("LINK"),
 };
 
 static const struct BgTemplate sBgTemplates[] =
@@ -127,21 +102,21 @@ static const struct WindowTemplate sWindowTemplate =
 
 static const u8 *const sMuseumCaptions[NUM_PAINTING_CAPTIONS * CONTEST_CATEGORIES_COUNT] =
 {
-    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = gContestPaintingCool1,
-    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = gContestPaintingCool2,
-    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = gContestPaintingCool3,
-    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = gContestPaintingBeauty1,
-    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = gContestPaintingBeauty2,
-    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = gContestPaintingBeauty3,
-    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = gContestPaintingCute1,
-    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = gContestPaintingCute2,
-    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = gContestPaintingCute3,
-    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = gContestPaintingSmart1,
-    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = gContestPaintingSmart2,
-    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = gContestPaintingSmart3,
-    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = gContestPaintingTough1,
-    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = gContestPaintingTough2,
-    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = gContestPaintingTough3,
+    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("Nonstop supercool--\nthe inestimable {STR_VAR_1}"),
+    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("Hey, there!\nThe good-looking POKéMON {STR_VAR_1}"),
+    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_COOL]   = COMPOUND_STRING("The marvelous, wonderful, and\nvery great {STR_VAR_1}"),
+    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("This century's last Venus--\nthe beautiful {STR_VAR_1}"),
+    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("{STR_VAR_1}'s dazzling,\nglittering smile"),
+    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_BEAUTY] = COMPOUND_STRING("POKéMON CENTER's super idol--\nthe incomparable {STR_VAR_1}"),
+    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("The lovely and sweet {STR_VAR_1}"),
+    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("The pretty {STR_VAR_1}'s\nwinning portrait"),
+    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_CUTE]   = COMPOUND_STRING("Give us a wink!\nThe cutie POKéMON {STR_VAR_1}"),
+    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("The smartness maestro--\nthe wise POKéMON {STR_VAR_1}"),
+    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("{STR_VAR_1}--the one chosen\nabove all POKéMON"),
+    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_SMART]  = COMPOUND_STRING("The excellent {STR_VAR_1}'s\nmoment of elegance"),
+    [0 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("The powerfully muscular\nspeedster {STR_VAR_1}"),
+    [1 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("The strong, stronger, and\nstrongest {STR_VAR_1}"),
+    [2 + NUM_PAINTING_CAPTIONS * CONTEST_CATEGORY_TOUGH]  = COMPOUND_STRING("The mighty tough\nhyper POKéMON {STR_VAR_1}"),
 };
 
 static const struct OamData sContestPaintingMonOamData =

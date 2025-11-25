@@ -618,7 +618,7 @@ struct EventStates
     enum FirstTurnEventsStates beforeFristTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
-    enum MoveSuccessOrder atkCanceller:8;
+    enum MoveSuccessOrder atkCanceler:8;
     enum BattleIntroStates battleIntro:8;
     enum SwitchInEvents switchIn:8;
     u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
@@ -907,7 +907,7 @@ struct BattleScripting
     u8 specialTrainerBattleType;
     bool8 monCaught;
     s32 savedDmg;
-    u16 savedMoveEffect; // For moves hitting multiple targets.
+    u16 unused_0x2c;
     u16 moveEffect;
     u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.

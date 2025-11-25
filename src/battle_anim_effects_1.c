@@ -5189,7 +5189,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
     {
         if (gBattleAnimArgs[0] == 0)
         {
-            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+            if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimAttacker, TRUE, &a, &b);
             }
@@ -5201,7 +5201,7 @@ void AnimNeedleArmSpike(struct Sprite *sprite)
         }
         else
         {
-            if (gMovesInfo[gAnimMoveIndex].target == MOVE_TARGET_BOTH)
+            if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
             {
                 SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &a, &b);
             }
@@ -6833,8 +6833,8 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     u32 i, temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > gBattleTurnCounter
-     || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > gBattleTurnCounter)
+    if (gWishFutureKnock.futureSightCounter[LEFT_FOE(battlerAtk)] > 0
+     || gWishFutureKnock.futureSightCounter[RIGHT_FOE(battlerAtk)] > 0)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
@@ -6858,8 +6858,8 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > gBattleTurnCounter
-     || gWishFutureKnock.wishCounter[battlerPartner] > gBattleTurnCounter)
+    if (gWishFutureKnock.wishCounter[battlerAtk] > 0
+     || gWishFutureKnock.wishCounter[battlerPartner] > 0)
         SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
 }
 

@@ -976,14 +976,7 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCallbackDummy
 };
-static const u8 sContestCategoryToOamPaletteNum[CONTEST_CATEGORIES_COUNT] =
-{
-    [CONTEST_CATEGORY_COOL] = 13,
-    [CONTEST_CATEGORY_BEAUTY] = 14,
-    [CONTEST_CATEGORY_CUTE] = 14,
-    [CONTEST_CATEGORY_SMART] = 15,
-    [CONTEST_CATEGORY_TOUGH] = 13,
-};
+
 static const struct OamData sOamData_MoveSelector =
 {
     .y = 0,
@@ -4265,7 +4258,7 @@ static void PrintContestMoveDescription(u8 moveSlot)
     if (move != MOVE_NONE)
     {
         u8 windowId = AddWindowFromTemplateList(sPageMovesTemplate, PSS_DATA_WINDOW_MOVE_DESCRIPTION);
-        PrintTextOnWindow(windowId, gContestEffectDescriptionPointers[GetMoveContestEffect(move)], 6, 1, 0, 0);
+        PrintTextOnWindow(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
     }
 }
 
@@ -4284,7 +4277,7 @@ static void PrintMoveDetails(u16 move)
         }
         else
         {
-            PrintTextOnWindow(windowId, gContestEffectDescriptionPointers[GetMoveContestEffect(move)], 6, 1, 0, 0);
+            PrintTextOnWindow(windowId, gContestEffects[GetMoveContestEffect(move)].description, 6, 1, 0, 0);
         }
         PutWindowTilemap(windowId);
     }
@@ -4424,7 +4417,7 @@ void SetTypeSpritePosAndPal(enum Type typeId, u8 x, u8 y, u8 spriteArrayId)
     if (typeId < NUMBER_OF_MON_TYPES)
         sprite->oam.paletteNum = gTypesInfo[typeId].palette;
     else
-        sprite->oam.paletteNum = sContestCategoryToOamPaletteNum[typeId - NUMBER_OF_MON_TYPES];
+        sprite->oam.paletteNum = gContestCategoryInfo[typeId - NUMBER_OF_MON_TYPES].palette;
     sprite->x = x + 16;
     sprite->y = y + 8;
     SetSpriteInvisibility(spriteArrayId, FALSE);

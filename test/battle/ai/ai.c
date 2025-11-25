@@ -695,7 +695,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it 
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(gMovesInfo[MOVE_SCALD].thawsUser == TRUE);
+        ASSUME(MoveThawsUser(MOVE_SCALD) == TRUE);
         AI_FLAGS(aiFlags | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); Status1(status); }
         OPPONENT(SPECIES_VULPIX) { Moves(MOVE_TACKLE, aiMove); }

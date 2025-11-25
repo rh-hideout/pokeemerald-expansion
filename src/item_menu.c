@@ -2916,8 +2916,8 @@ static s32 CompareItemsAlphabetically(enum Pocket pocketId, struct ItemSlot item
 
     if (pocketId == POCKET_TM_HM)
     {
-        name1 = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(item1.itemId))].name;
-        name2 = gMovesInfo[GetTMHMMoveId(GetItemTMHMIndex(item2.itemId))].name;
+        name1 = GetMoveName(GetTMHMMoveId(GetItemTMHMIndex(item1.itemId)));
+        name2 = GetMoveName(GetTMHMMoveId(GetItemTMHMIndex(item2.itemId)));
     }
     else
     {

@@ -1271,14 +1271,15 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx;
+            struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
-            ctx.move = gCurrentMove;
+            ctx.move = ctx.chosenMove = gCurrentMove;
             ctx.moveType = GetMoveType(gCurrentMove);
             ctx.isCrit = FALSE;
             ctx.randomFactor = FALSE;
             ctx.updateFlags = FALSE;
+            ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
             gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
             dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];

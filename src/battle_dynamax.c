@@ -177,7 +177,7 @@ void ActivateDynamax(u32 battler)
     // Set appropriate use flags.
     SetActiveGimmick(battler, GIMMICK_DYNAMAX);
     SetGimmickAsActivated(battler, GIMMICK_DYNAMAX);
-    gBattleStruct->dynamax.dynamaxTurns[battler] = gBattleTurnCounter + DYNAMAX_TURNS_COUNT;
+    gBattleStruct->dynamax.dynamaxTurns[battler] = DYNAMAX_TURNS_COUNT;
 
     // Substitute is removed upon Dynamaxing.
     gBattleMons[battler].volatiles.substitute = FALSE;

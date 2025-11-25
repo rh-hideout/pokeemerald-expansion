@@ -1659,5 +1659,85 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out")
     }
 }
 
+SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target prints the correct message")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) {Speed(1);};
+        OPPONENT(SPECIES_WOBBUFFET) {Speed(2);};
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_FLY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abilities apply to partner")
+{
+    u32 move, stat, ability;
+    move = 0; stat = 0; ability = 0;
+    u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
+    for (u32 j = 0; j < 4; j++)
+    {
+        PARAMETRIZE { move = MOVE_SCRATCH; stat = STAT_SPEED; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_FURY_CUTTER; stat = STAT_SPATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_LICK; stat = STAT_DEF; ability = abilityList[j]; ;}
+        PARAMETRIZE { move = MOVE_DRAGON_CLAW; stat = STAT_ATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_CRUNCH; stat = STAT_SPDEF; ability = abilityList[j]; }
+    }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_LOWER_SP_ATK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_PHANTASM, MOVE_EFFECT_LOWER_DEFENSE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_WYRMWIND, MOVE_EFFECT_LOWER_ATTACK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_DARKNESS, MOVE_EFFECT_LOWER_SP_DEF_SIDE));
+        PLAYER(SPECIES_WOBBUFFET) { }
+        PLAYER(SPECIES_WOBBUFFET) { }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+    } WHEN {
+        TURN { MOVE(playerLeft, move, target: opponentLeft, gimmick: GIMMICK_DYNAMAX);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[stat], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilities apply to partner")
+{
+    u32 move, stat, ability;
+    move = 0; stat = 0; ability = 0;
+    u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
+    for (u32 j = 0; j < 2; j++)
+    {
+        PARAMETRIZE { move = MOVE_PECK; stat = STAT_SPEED; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_POISON_JAB; stat = STAT_SPATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_BULLET_PUNCH; stat = STAT_DEF; ability = abilityList[j]; ;}
+        PARAMETRIZE { move = MOVE_DOUBLE_KICK; stat = STAT_ATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_MUD_SLAP; stat = STAT_SPDEF; ability = abilityList[j]; }
+    }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_LOWER_SP_ATK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_PHANTASM, MOVE_EFFECT_LOWER_DEFENSE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_WYRMWIND, MOVE_EFFECT_LOWER_ATTACK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_DARKNESS, MOVE_EFFECT_LOWER_SP_DEF_SIDE));
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_WOBBUFFET) {}
+        OPPONENT(SPECIES_WOBBUFFET) {}
+    } WHEN {
+        TURN { MOVE(playerLeft, move, target: opponentLeft, gimmick: GIMMICK_DYNAMAX);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[stat], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-lowering Max Moves, without showing a message")
 TO_DO_BATTLE_TEST("Dynamax: Contrary inverts stat-increasing Max Moves, without showing a message")
