@@ -9868,9 +9868,6 @@ static void Cmd_manipulatedamage(void)
     case DMG_CHANGE_SIGN:
         gBattleStruct->moveDamage[gBattlerAttacker] *= -1;
         break;
-    case DMG_DOUBLED:
-        gBattleStruct->moveDamage[gBattlerTarget] *= 2;
-        break;
     case DMG_1_8_TARGET_HP:
         gBattleStruct->moveDamage[gBattlerTarget] = GetNonDynamaxMaxHP(gBattlerTarget) / 8;
         if (gBattleStruct->moveDamage[gBattlerTarget] == 0)
@@ -12596,34 +12593,14 @@ static void Cmd_trydobeatup(void)
         gMultiHitCounter = 0;
         gBattlescriptCurrInstr = cmd->endInstr;
     }
+    else if (gBattleStruct->beatUpSlot == 0 && gMultiHitCounter == 0)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
     else
     {
-        struct Pokemon *party = GetBattlerParty(gBattlerAttacker);
-        const u8 beatUpSlot = gBattleStruct->beatUpSlot;
-
-        u8 partyIndex = PARTY_SIZE;
-        if (beatUpSlot < PARTY_SIZE)
-            partyIndex = gBattleStruct->beatUpSpecies[beatUpSlot];
-
-        if (partyIndex < PARTY_SIZE
-            && GetMonData(&party[partyIndex], MON_DATA_HP)
-            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_NONE
-            && GetMonData(&party[partyIndex], MON_DATA_SPECIES_OR_EGG) != SPECIES_EGG
-            && !GetMonData(&party[partyIndex], MON_DATA_STATUS))
-        {
-            PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, partyIndex)
-            gBattlescriptCurrInstr = cmd->nextInstr;
-        }
-        else if (beatUpSlot != 0)
-        {
-            gMultiHitCounter = 0;
-            gBattlescriptCurrInstr = cmd->endInstr;
-        }
-        else
-        {
-            gMultiHitCounter = 0;
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
+        PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, gBattlerAttacker, gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot])
+        gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
 

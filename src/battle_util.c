@@ -265,6 +265,7 @@ bool32 EndOrContinueWeather(void)
     return FALSE;
 }
 
+// Gen5+
 static u32 CalcBeatUpPower(void)
 {
     u32 species = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
@@ -273,15 +274,8 @@ static u32 CalcBeatUpPower(void)
 
 static s32 CalcBeatUpDamage(struct DamageContext *ctx)
 {
-    if (B_BEAT_UP >= GEN_5)
-        return INT32_MAX;
-
-    if (gBattleStruct->beatUpSlot >= PARTY_SIZE)
-        return 0;
-    u16 partyIndex = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
+    u32 partyIndex = gBattleStruct->beatUpSpecies[gBattleStruct->beatUpSlot++];
     struct Pokemon *party = GetBattlerParty(ctx->battlerAtk);
-    if (partyIndex >= PARTY_SIZE)
-        return 0;
     u32 species = GetMonData(&party[partyIndex], MON_DATA_SPECIES);
     u32 levelFactor = GetMonData(&party[partyIndex], MON_DATA_LEVEL) * 2 / 5 + 2;
     s32 dmg = GetSpeciesBaseAttack(species);
@@ -2516,7 +2510,7 @@ static enum MoveCanceler CancelerMultihitMoves(void)
              && !GetMonData(&party[i], MON_DATA_IS_EGG)
              && !GetMonData(&party[i], MON_DATA_STATUS))
             {
-                if (B_BEAT_UP >= GEN_5)
+                if (GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
                     gBattleStruct->beatUpSpecies[gMultiHitCounter] = species;
                 else
                     gBattleStruct->beatUpSpecies[gMultiHitCounter] = i;
@@ -8181,7 +8175,7 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
             basePower *= 2;
         break;
     case EFFECT_BEAT_UP:
-        if (B_BEAT_UP >= GEN_5)
+        if (GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
             basePower = CalcBeatUpPower();
         break;
     case EFFECT_PSYBLADE:
@@ -9423,8 +9417,9 @@ s32 DoFixedDamageMoveCalc(struct DamageContext *ctx)
         dmg = GetNonDynamaxHP(ctx->battlerAtk);
         break;
     case EFFECT_BEAT_UP:
-        dmg = CalcBeatUpDamage(ctx);
-        if (dmg == INT32_MAX)
+        if (GetGenConfig(GEN_CONFIG_BEAT_UP) < GEN_5)
+            dmg = CalcBeatUpDamage(ctx);
+        else
             return INT32_MAX;
         break;
     default:

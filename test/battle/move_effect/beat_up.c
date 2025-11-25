@@ -1,10 +1,18 @@
 #include "global.h"
 #include "test/battle.h"
 
-// General
+// TODO: Beat Up's strikes have each an independent chance of a critical hit
+// Unconfirmed by Bulbapedia
+// - Technician interacion
+
 SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused member in the party")
 {
+    u32 gen;
+    PARAMETRIZE { gen = GEN_3; }
+    PARAMETRIZE { gen = GEN_5; }
+
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, gen);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_PICHU)
@@ -21,17 +29,18 @@ SINGLE_BATTLE_TEST("Beat Up hits the target for each non-fainted, non-statused m
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_BEAT_UP, player);
         MESSAGE("The Pokémon was hit 4 time(s)!");
     } THEN {
-#if B_BEAT_UP >= GEN_5
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[0], SPECIES_WOBBUFFET);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[1], SPECIES_WYNAUT);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[2], SPECIES_PICHU);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[3], SPECIES_RAICHU);
-#else
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[0], 0);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[1], 1);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[2], 2);
-        EXPECT_EQ(gBattleStruct->beatUpSpecies[3], 4);
-#endif
+        if (gen == GEN_5) {
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[0], SPECIES_WOBBUFFET);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[1], SPECIES_WYNAUT);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[2], SPECIES_PICHU);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[3], SPECIES_RAICHU);
+        }
+        else {
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[0], 0);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[1], 1);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[2], 2);
+            EXPECT_EQ(gBattleStruct->beatUpSpecies[3], 4);
+        }
     }
 }
 
@@ -54,12 +63,10 @@ SINGLE_BATTLE_TEST("Beat Up doesn't consider Comatose as a status")
     }
 }
 
-// TODO: Beat Up's strikes have each an independent chance of a critical hit
-
-#if B_BEAT_UP >= GEN_5
-SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name")
+SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name (Gen5+)")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -74,7 +81,7 @@ SINGLE_BATTLE_TEST("Beat Up doesn't list party member's name")
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage is Dark-typed", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage is Dark-typed (Gen5+)", s16 damage)
 {
     bool32 targetIsFairy;
     PARAMETRIZE { targetIsFairy = FALSE; }
@@ -82,6 +89,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is Dark-typed", s16 damage)
 
     ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(targetIsFairy ? SPECIES_SYLVEON : SPECIES_WOBBUFFET);
@@ -96,11 +104,12 @@ SINGLE_BATTLE_TEST("Beat Up's damage is Dark-typed", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's base power is determined by each striking Pokémon")
+SINGLE_BATTLE_TEST("Beat Up's base power is determined by each striking Pokémon (Gen5+)")
 {
     s16 firstHit, secondHit;
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_SHUCKLE);
         PLAYER(SPECIES_DEOXYS_ATTACK);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -119,13 +128,14 @@ SINGLE_BATTLE_TEST("Beat Up's base power is determined by each striking Pokémon
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage considers stat stage changes", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage considers stat stage changes (Gen5+)", s16 damage)
 {
     bool32 boosted;
     PARAMETRIZE { boosted = FALSE; }
     PARAMETRIZE { boosted = TRUE; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_UMBREON);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -143,7 +153,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers stat stage changes", s16 damage)
     }
 }
 
-SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band", s16 damage)
+SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band (Gen5+)", s16 damage)
 {
     u16 ability;
     u16 item;
@@ -153,6 +163,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band", s16 
     PARAMETRIZE { ability = ABILITY_THICK_FAT;   item = ITEM_CHOICE_BAND; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_5);
         PLAYER(SPECIES_AZUMARILL) { Ability(ability); Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -168,16 +179,16 @@ SINGLE_BATTLE_TEST("Beat Up's damage considers Huge Power and Choice Band", s16 
             EXPECT_GT(results[i].damage, results[0].damage);
     }
 }
-#endif
 
-#if B_BEAT_UP < GEN_5
 SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
         PLAYER(SPECIES_WYNAUT) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_PIKACHU);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_BEAT_UP); }
@@ -185,6 +196,7 @@ SINGLE_BATTLE_TEST("Beat Up lists each party member's name")
         MESSAGE("Wobbuffet's attack!");
         MESSAGE("Wynaut's attack!");
         NOT MESSAGE("Wynaut's attack!");
+        MESSAGE("Pikachu's attack!");
     }
 }
 
@@ -213,6 +225,7 @@ SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
     PARAMETRIZE { defender = SPECIES_SYLVEON; }     // Fairy
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         type1 = GetSpeciesType(defender, 0);
         type2 = GetSpeciesType(defender, 1);
         ASSUME(type2 == type1 || type2 == TYPE_MYSTERY); // Ensure monotype targets
@@ -235,8 +248,9 @@ SINGLE_BATTLE_TEST("Beat Up's damage is typeless", s16 damage)
 
 SINGLE_BATTLE_TEST("Beat Up's damage doesn't consider STAB")
 {
-    static s16 damage;
+    s16 damage;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         damage = 0;
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT) { HP(0); }
@@ -255,8 +269,9 @@ SINGLE_BATTLE_TEST("Beat Up's damage doesn't consider STAB")
 
 SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike")
 {
-    static s16 firstHit, secondHit;
+    s16 firstHit, secondHit;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         firstHit = 0;
         secondHit = 0;
         PLAYER(SPECIES_WYNAUT);
@@ -279,8 +294,9 @@ SINGLE_BATTLE_TEST("Beat Up's base power is the same for each strike")
 
 SINGLE_BATTLE_TEST("Beat Up's damage is determined by each striking Pokémon's base attack and level and the target's defense")
 {
-    static s16 shuckleHit, deoxysHit;
+    s16 shuckleHit, deoxysHit;
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         shuckleHit = 0;
         deoxysHit = 0;
         PLAYER(SPECIES_SHUCKLE);
@@ -314,6 +330,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores stat stage changes", s16 damage)
     PARAMETRIZE { boosted = TRUE; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -339,6 +356,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Huge Power", s16 damage)
     PARAMETRIZE { ability = ABILITY_HUGE_POWER; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_AZUMARILL) { Ability(ability); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -361,6 +379,7 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
     PARAMETRIZE { item = ITEM_CHOICE_BAND; }
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_BEAT_UP, GEN_3);
         PLAYER(SPECIES_URSARING) { Item(item); Moves(MOVE_BEAT_UP); }
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -374,7 +393,3 @@ SINGLE_BATTLE_TEST("Beat Up ignores Choice Band", s16 damage)
             EXPECT_EQ(results[i].damage, results[0].damage);
     }
 }
-#endif
-
-// Unconfirmed by Bulbapedia
-// - Technician interacion

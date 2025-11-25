@@ -51,6 +51,7 @@ static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
     [GEN_CONFIG_PARALYZE_ELECTRIC]         = B_PARALYZE_ELECTRIC,
     [GEN_CONFIG_BADGE_BOOST]               = B_BADGE_BOOST,
     [GEN_CONFIG_LEAF_GUARD_PREVENTS_REST]  = B_LEAF_GUARD_PREVENTS_REST,
+    [GEN_CONFIG_BEAT_UP]                   = B_BEAT_UP,
 };
 
 #if TESTING
