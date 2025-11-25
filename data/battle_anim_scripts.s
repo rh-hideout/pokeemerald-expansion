@@ -11932,7 +11932,6 @@ gBattleAnimMove_PrismaticLaser::
 	loadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT @charge animation
 	loadspritegfx ANIM_TAG_TEAL_ALERT @straight lines
 	loadspritegfx ANIM_TAG_GREEN_SPIKE @needle arm animation
-	loadspritegfx ANIM_TAG_NEEDLE @sting
 	monbg ANIM_ATTACKER
 	setalpha 14, 8
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 1, 0, 16, RGB_BLACK
@@ -11961,6 +11960,7 @@ gBattleAnimMove_PrismaticLaser::
 	unloadspritegfx ANIM_TAG_GREEN_SPIKE
 	unloadspritegfx ANIM_TAG_ICE_CHUNK
 	unloadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT
+	loadspritegfx ANIM_TAG_NEEDLE @sting
 	delay 30
 	createvisualtask AnimTask_HorizontalShake, 5, (MAX_BATTLERS_COUNT + 1), 10, 0x32
 	createvisualtask AnimTask_HorizontalShake, 5, MAX_BATTLERS_COUNT, 10, 0x32
@@ -15059,6 +15059,7 @@ gBattleAnimMove_Poltergeist::
 	waitbgfadein
 	clearmonbg 0x3
 	blendoff
+	unloadspritegfx ANIM_TAG_ITEM_BAG
 	end
 
 @Credits to Skeli
@@ -32845,7 +32846,6 @@ gBattleAnimMove_SavageSpinOut::
 	blendoff
 	waitforvisualfinish
 	unloadspritegfx ANIM_TAG_STRING
-	unloadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT
 	loadspritegfx ANIM_TAG_COCOON
 	loadspritegfx ANIM_TAG_IMPACT @hit
 	delay 1
@@ -33315,7 +33315,6 @@ FinishInfernoOverdrive:
 	delay 16
 	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 8, 0, 16, 1
 	playsewithpan SE_M_MEGA_KICK2, SOUND_PAN_TARGET
-	unloadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT
 	createvisualtask AnimTask_ShakeMon, 5, ANIM_TARGET, 0, 2, 79, 1
 	call InfernoOverdriveExplosion
 	delay 6
@@ -34495,7 +34494,6 @@ gBattleAnimMove_BlackHoleEclipse::
 	unloadspritegfx ANIM_TAG_VERTICAL_HEX @red
 	unloadspritegfx ANIM_TAG_SHADOW_BALL
 	unloadspritegfx ANIM_TAG_BLACK_BALL_2
-	unloadspritegfx ANIM_TAG_FOCUS_ENERGY
 	loadspritegfx ANIM_TAG_EXPLOSION_2
 	call BlackHoleEclipseExplosion
 	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 1, 0, 16, RGB_WHITE	@ bg to white pal
@@ -36727,8 +36725,6 @@ gBattleAnimMove_ClangorousSoulblaze::
 	playsewithpan SE_SHINY, SOUND_PAN_ATTACKER
 	createsprite gClangorousSoulRedRingTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, 0x0, 0x0
 	waitforvisualfinish
-	unloadspritegfx ANIM_TAG_HORSESHOE_SIDE_FIST
-	unloadspritegfx ANIM_TAG_SPARKLE_2 @stars
 	loadspritegfx ANIM_TAG_ROUND_SHADOW	@ fly
 	playsewithpan SE_M_FLY, SOUND_PAN_ATTACKER
 	createsprite gClangoorousSoulblazeWhiteFlySpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0xd, 0x150
@@ -37206,8 +37202,6 @@ SearingSunrazeSmashImpact:
 	loadspritegfx ANIM_TAG_CROSS_IMPACT @x
 	delay 0
 	unloadspritegfx ANIM_TAG_METEOR @superpower
-	unloadspritegfx ANIM_TAG_DRAGON_ASCENT @dragon ascent 1
-	unloadspritegfx ANIM_TAG_DRAGON_ASCENT_FOE @dragon ascent 2
 	createsprite gSearingSunrazeSmashCrossImpactSpriteTemplate, ANIM_TARGET, 2, 0x0, 0x0, 0x1, 0x24
 	playsewithpan SE_M_LEER, SOUND_PAN_TARGET
 	visible ANIM_ATTACKER
@@ -37769,7 +37763,6 @@ gBattleAnimMove_SoulStealing7StarStrike::
 	call SoulStealingSevenStarStrikeBlueParalysis
 	waitforvisualfinish
 	visible ANIM_ATTACKER
-	unloadspritegfx ANIM_TAG_ROUND_SHADOW
 	loadspritegfx ANIM_TAG_SPARKLE_4 @ detect
 	loadspritegfx ANIM_TAG_EXPLOSION @ explosion
 	playsewithpan SE_M_DETECT, SOUND_PAN_ATTACKER

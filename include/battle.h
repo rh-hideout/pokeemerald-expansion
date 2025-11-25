@@ -134,7 +134,7 @@ struct DisableStruct
     u8 endured:1;
     u8 octolockedBy:3;
     u8 tryEjectPack:1;
-    u8 padding:4;
+    u8 paradoxBoostedStat:4;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -197,8 +197,8 @@ struct SpecialStatus
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
-    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
+    u8 padding:1;
     // End of byte
     u8 gemParam;
     // End of byte

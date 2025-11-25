@@ -69,6 +69,8 @@ u32 GetNaturePowerMove(u32 battler);
 void StealTargetItem(u8 battlerStealer, u8 battlerItem);
 u8 GetCatchingBattler(void);
 u32 GetHighestStatId(u32 battlerId);
+u32 GetParadoxHighestStatId(u32 battlerId);
+u32 GetParadoxBoostedStatId(u32 battlerId);
 bool32 ProteanTryChangeType(u32 battler, u32 ability, u32 move, u32 moveType);
 bool32 IsMoveNotAllowedInSkyBattles(u32 move);
 bool32 DoSwitchInAbilities(u32 battlerId);
