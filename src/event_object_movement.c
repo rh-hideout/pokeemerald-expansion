@@ -1562,7 +1562,7 @@ static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
 
-    if (OW_ENCOUNTER(objectEvent))
+    if (IsGeneratedOverworldEncounter(objectEvent))
         FollowMon_OnObjectEventRemoved(objectEvent);
 
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
@@ -1786,7 +1786,7 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
-    if (OW_ENCOUNTER(&gObjectEvents[objectEventId]))
+    if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
         FollowMon_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
 
     return objectEventId;
@@ -9952,7 +9952,7 @@ void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *
 
 void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (OW_ENCOUNTER(objEvent))
+    if (IsGeneratedOverworldEncounter(objEvent))
         return;
     
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -9981,7 +9981,7 @@ void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *
 
 void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (OW_ENCOUNTER(objEvent))
+    if (IsGeneratedOverworldEncounter(objEvent))
         return;
     
     gFieldEffectArguments[0] = objEvent->currentCoords.x;

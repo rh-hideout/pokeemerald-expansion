@@ -14,6 +14,7 @@
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
 
@@ -98,7 +99,7 @@ void UpdateOverworldEncounters(void)
                 }
                 u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
-                    GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]) + OBJ_EVENT_MON + OBJ_EVENT_MON_ENCOUNTER,
+                    GetFollowMonObjectEventGraphicsId(spawnSlot),
                     movementType,
                     localId,
                     x,
@@ -109,6 +110,7 @@ void UpdateOverworldEncounters(void)
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
                 gObjectEvents[objectEventId].range.rangeX = 8;
                 gObjectEvents[objectEventId].range.rangeY = 8;
+                gObjectEvents[objectEventId].trainerType = TRAINER_TYPE_ENCOUNTER;
 
                 // Only used for save/load as well as loading encounters, 
                 // Most of the time, followmon data is tracked in sFollowMonData
@@ -330,7 +332,7 @@ void CreateFollowMonEncounter(void) {
     if (objEventId < OBJECT_EVENTS_COUNT)
     {
         curObject = &gObjectEvents[objEventId];
-        if (!OW_ENCOUNTER(curObject))
+        if (!IsGeneratedOverworldEncounter(curObject))
            return;
     }
     else
@@ -391,7 +393,7 @@ bool8 FollowMon_ProcessMonInteraction(void)
         for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
         {
             curObject = &gObjectEvents[i];
-            if (curObject->active && curObject != player && OW_ENCOUNTER(curObject))
+            if (curObject->active && curObject != player && IsGeneratedOverworldEncounter(curObject))
             {
                 if ((curObject->currentCoords.x == player->currentCoords.x && curObject->currentCoords.y == player->currentCoords.y) || (curObject->previousCoords.x == player->currentCoords.x && curObject->previousCoords.y == player->currentCoords.y))
                 {
@@ -420,7 +422,7 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
     if (collider->isPlayer)
     {
         // Player can walk on top of follow mon
-        if (OW_ENCOUNTER(obstacle))
+        if (IsGeneratedOverworldEncounter(obstacle))
         {
             sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
@@ -429,13 +431,13 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
     else if(obstacle->isPlayer)
     {
         // Follow mon can walk onto player
-        if (OW_ENCOUNTER(collider))
+        if (IsGeneratedOverworldEncounter(collider))
         {
             sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
         }
     }
-    else if (!OW_ENCOUNTER(collider) && OW_ENCOUNTER(obstacle))
+    else if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
     {
         // Other objects can walk through follow mons, whilst wandering mons is active
         return TRUE;
@@ -467,17 +469,15 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
     sFollowMonData.usedSlots--;
 }
 
-u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
+u16 GetFollowMonObjectEventGraphicsId(u16 spawnSlot)
 {
-    u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    u16 species = GetFollowMonSpecies(&sFollowMonData.list[slot]);
-
-    graphicsId = species + OBJ_EVENT_MON + OBJ_EVENT_MON_ENCOUNTER;
+    u16 species = GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]);
+    u16 graphicsId = species + OBJ_EVENT_MON;
 
     // if (sFollowMonData.list[slot].isFemale)
     //     graphicsId += OBJ_EVENT_MON_FEMALE;
 
-    if (sFollowMonData.list[slot].isShiny)
+    if (sFollowMonData.list[spawnSlot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
     return graphicsId;
@@ -553,7 +553,7 @@ void RemoveOverworldEncounterObjects(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (OW_ENCOUNTER(obj))
+        if (IsGeneratedOverworldEncounter(obj))
             RemoveObjectEvent(obj);
     }
 }
@@ -650,4 +650,9 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
         return IsInsidePlayerMap(x, y);
     else
         return !IsInsidePlayerMap(x, y);
+}
+
+bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
+{
+    return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
 }

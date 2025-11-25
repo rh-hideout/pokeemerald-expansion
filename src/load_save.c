@@ -233,7 +233,7 @@ void LoadObjectEvents(void)
             gObjectEvents[i].graphicsId &= 0xFF;
         gObjectEvents[i].spriteId = 0;
         
-        if (OW_ENCOUNTER(&gObjectEvents[i]))
+        if (IsGeneratedOverworldEncounter(&gObjectEvents[i]))
             LoadFollowMonData(&gObjectEvents[i]);
         
         // Try to restore saved inactive follower
