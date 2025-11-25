@@ -302,12 +302,16 @@ SINGLE_BATTLE_TEST("Sleep Clause: Yawn will fail when sleep clause is active")
     }
 }
 
-SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with sleep clause active")
+SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 3.3% (Gen3), 10% (Gen4) or 11% (Gen5+) of the time with sleep clause active")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -327,12 +331,16 @@ SINGLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with
     }
 }
 
-DOUBLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with sleep clause active (Doubles)")
+DOUBLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 3.3% (Gen3), 10% (Gen4) or 11% (Gen5+) of the time with sleep clause active (Doubles)")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -357,10 +365,14 @@ DOUBLE_BATTLE_TEST("Sleep Clause: Effect Spore causes sleep 11% of the time with
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep from Effect Spore will not activate sleep clause")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -385,10 +397,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep from Effect Spore will not activate slee
 
 DOUBLE_BATTLE_TEST("Sleep Clause: Sleep from Effect Spore will not activate sleep clause (Doubles)")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
@@ -1213,10 +1229,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Pre-existing sleep condition doesn't activate 
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep caused by Effect Spore does not prevent sleep clause from ever activating") // checks that sleepClauseEffectExempt works properly
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
@@ -1250,10 +1270,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep caused by Effect Spore does not prevent 
 
 SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivate sleep clause")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(MoveMakesContact(MOVE_SCRATCH));
@@ -1262,6 +1286,8 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivat
         OPPONENT(SPECIES_BRELOOM) { Ability(ABILITY_EFFECT_SPORE); }
     } WHEN {
         TURN { MOVE(player, MOVE_SCRATCH); }
+        TURN {}
+        TURN {}
         TURN {}
         TURN {}
         TURN {}
@@ -1288,10 +1314,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivat
 
 DOUBLE_BATTLE_TEST("Sleep Clause: Waking up after Effect Spore doesn't deactivate sleep clause (Doubles)")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
-        ASSUME(B_ABILITY_TRIGGER_CHANCE >= GEN_5);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
@@ -1465,9 +1495,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Mold Breaker Pokémon sleeping Vital Spirit / 
 
 SINGLE_BATTLE_TEST("Sleep Clause: Yawn'd Pokémon slept due to Effect Spore before Yawn triggers does not activate sleep clause")
 {
-    PASSES_RANDOMLY(11, 100, RNG_EFFECT_SPORE);
+    u32 config, passes, trials;
+    PARAMETRIZE { config = GEN_3; passes = 1;  trials = 30; }  // 3.3%
+    PARAMETRIZE { config = GEN_4; passes = 1;  trials = 10; }  // 10%
+    PARAMETRIZE { config = GEN_5; passes = 11; trials = 100; } // 11%
+    PASSES_RANDOMLY(passes, trials, RNG_EFFECT_SPORE);
     GIVEN {
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
