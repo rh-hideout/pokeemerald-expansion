@@ -850,11 +850,14 @@ SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mo
 
 SINGLE_BATTLE_TEST("Sleep Clause: Sleep clause is deactivated when a sleeping mon is woken up by Shed Skin")
 {
-    if (B_ABILITY_TRIGGER_CHANCE == GEN_4)
-        PASSES_RANDOMLY(30, 100, RNG_SHED_SKIN);
-    else
-        PASSES_RANDOMLY(33, 100, RNG_SHED_SKIN);
+    u32 config, passes;
+    PARAMETRIZE { config = GEN_3; passes = 33; }
+    PARAMETRIZE { config = GEN_4; passes = 30; }
+    PARAMETRIZE { config = GEN_5; passes = 33; }
+
+    PASSES_RANDOMLY(passes, 100, RNG_SHED_SKIN);
     GIVEN {
+        WITH_CONFIG(CONFIG_ABILITY_TRIGGER_CHANCE, config);
         FLAG_SET(B_FLAG_SLEEP_CLAUSE);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
