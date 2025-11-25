@@ -230,7 +230,7 @@ SINGLE_BATTLE_TEST("Solar Beam and Solar Blade can be used instantly in Sunlight
         TURN { SKIP_TURN(player); }
     } SCENE {
         if (move1 == MOVE_SUNNY_DAY) {
-            NOT MESSAGE("Wobbuffet absorbed light!");
+            MESSAGE("Wobbuffet absorbed light!");
         } else {
             if (move2 == MOVE_SOLAR_BEAM) {
                 if (B_UPDATED_MOVE_DATA >= GEN_5)
@@ -424,6 +424,8 @@ SINGLE_BATTLE_TEST("Electro Shot needs a charging Turn")
         // Attack turn
         MESSAGE("Wobbuffet used Electro Shot!");
         HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_SPATK],  DEFAULT_STAT_STAGE + 1);
     }
 }
 

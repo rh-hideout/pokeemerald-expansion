@@ -719,10 +719,7 @@ static enum MoveEndResult MoveEnd_NextTarget(void)
             enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
 
             // Edge cases for moves that shouldn't repeat their own script
-            if (IsExplosionMove(gCurrentMove)
-             || moveEffect == EFFECT_MAGNITUDE
-             || moveEffect == EFFECT_SYNCHRONOISE
-             || gBattleMoveEffects[moveEffect].battleScript == BattleScript_EffectTwoTurnsAttack)
+            if (moveEffect == EFFECT_MAGNITUDE)
                 BattleScriptPush(gBattleMoveEffects[EFFECT_HIT].battleScript);
             else
                 BattleScriptPush(GetMoveBattleScript(gCurrentMove));
@@ -801,7 +798,7 @@ static enum MoveEndResult MoveEnd_MultihitMove(void)
              && !IsAffectedByFollowMe(gBattlerAttacker, GetBattlerSide(gBattlerTarget), gCurrentMove)
              && !(gBattleStruct->moveResultFlags[BATTLE_PARTNER(gBattlerTarget)] & MOVE_RESULT_MISSED) // didn't miss the other target
              && CanTargetPartner(gBattlerAttacker, gBattlerTarget)
-             && !TargetFullyImmuneToCurrMove(gBattlerAttacker, BATTLE_PARTNER(gBattlerTarget)))
+             && !IsBattlerImmuneToMove(BATTLE_PARTNER(gBattlerTarget)))
                 gBattlerTarget = BATTLE_PARTNER(gBattlerTarget); // Target the partner in doubles for second hit.
 
             enum BattleMoveEffects chosenEffect = GetMoveEffect(gChosenMove);
@@ -964,8 +961,8 @@ static enum MoveEndResult MoveEnd_MoveBlock(void)
         break;
     case EFFECT_RECOIL_IF_MISS:
         if (IsBattlerAlive(gBattlerAttacker)
-         && (!IsBattlerTurnDamaged(gBattlerTarget) || gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT)
-         && !gBattleStruct->noTargetPresent)
+         && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT
+         && !gBattleStruct->unableToUseMove)
         {
             s32 recoil = 0;
             if (B_RECOIL_IF_MISS_DMG >= GEN_5 || (B_CRASH_IF_TARGET_IMMUNE == GEN_4 && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_DOESNT_AFFECT_FOE))
@@ -1593,7 +1590,6 @@ static enum MoveEndResult MoveEnd_ClearBits(void)
     gBattleStruct->poisonPuppeteerConfusion = FALSE;
     gBattleStruct->fickleBeamBoosted = FALSE;
     gBattleStruct->battlerState[gBattlerAttacker].usedMicleBerry = FALSE;
-    gBattleStruct->noTargetPresent = FALSE;
     gBattleStruct->toxicChainPriority = FALSE;
     if (gBattleStruct->unableToUseMove)
         gBattleStruct->pledgeMove = FALSE;
