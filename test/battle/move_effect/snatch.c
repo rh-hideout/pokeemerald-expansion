@@ -42,9 +42,10 @@ SINGLE_BATTLE_TEST("Snatch does not steal non-snatchable moves")
     }
 }
 
-DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this turn")
+DOUBLE_BATTLE_TEST("Snatch does not steal a move that was already snatched this turn (Gen 5+)")
 {
     GIVEN {
+        ASSUME(B_SNATCH >= GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
         PLAYER(SPECIES_WYNAUT) { Speed(90); }
         OPPONENT(SPECIES_ABRA) { Speed(80); }
