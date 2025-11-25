@@ -1562,10 +1562,8 @@ static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
 
-    if(FollowMon_IsMonObject(objectEvent))
-    {
+    if (IsGeneratedOverworldEncounter(objectEvent))
         FollowMon_OnObjectEventRemoved(objectEvent);
-    }
 
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;
@@ -1746,17 +1744,8 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
 
     sprite = &gSprites[spriteId];
     // Use palette from species palette table
-    if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC) {
-        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
-            u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
-             sprite->oam.paletteNum = LoadDynamicFollowerPalette(
-                tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
-                tmpGraphicsId & OBJ_EVENT_MON_SHINY,
-                tmpGraphicsId & OBJ_EVENT_MON_FEMALE);
-        } else {
-            sprite->oam.paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
-        }
-    }
+    if (spriteTemplate->paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
+        sprite->oam.paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
     if (OW_GFX_COMPRESS && sprite->usingSheet)
         sprite->sheetSpan = GetSpanPerImage(sprite->oam.shape, sprite->oam.size);
     GetMapCoordsFromSpritePos(objectEvent->currentCoords.x + cameraX, objectEvent->currentCoords.y + cameraY, &sprite->x, &sprite->y);
@@ -1797,10 +1786,8 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
-    if(FollowMon_IsMonObject(&gObjectEvents[objectEventId]))
-    {
+    if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
         FollowMon_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
-    }
 
     return objectEventId;
 }
@@ -2890,15 +2877,7 @@ static void SpawnObjectEventOnReturnToField(u8 objectEventId, s16 x, s16 y)
 
     if (spriteTemplate.paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
     {
-        u32 paletteNum;
-        if (IS_FOLLOWMON_GFXID(objectEvent->graphicsId)) {
-            u16 tmpGraphicsId = GetFollowMonObjectEventGraphicsId(objectEvent->graphicsId);
-            paletteNum = LoadDynamicFollowerPalette(
-                tmpGraphicsId & OBJ_EVENT_MON_SPECIES_MASK,
-                tmpGraphicsId & OBJ_EVENT_MON_SHINY,
-                tmpGraphicsId & OBJ_EVENT_MON_FEMALE);
-        } else 
-            paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
+        u32 paletteNum = LoadDynamicFollowerPalette(OW_SPECIES(objectEvent), OW_SHINY(objectEvent), OW_FEMALE(objectEvent));
         spriteTemplate.paletteTag = GetSpritePaletteTagByPaletteNum(paletteNum);
     }
     else if (spriteTemplate.paletteTag != TAG_NONE)
@@ -3108,9 +3087,6 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
 
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
-
-    if (IS_FOLLOWMON_GFXID(graphicsId))
-        graphicsId = GetFollowMonObjectEventGraphicsId(graphicsId);
 
     if (graphicsId & OBJ_EVENT_MON)
         return SpeciesToGraphicsInfo(graphicsId & OBJ_EVENT_MON_SPECIES_MASK, graphicsId & OBJ_EVENT_MON_SHINY, graphicsId & OBJ_EVENT_MON_FEMALE);
@@ -9976,8 +9952,9 @@ void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *
 
 void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (IS_FOLLOWMON_GFXID(objEvent->graphicsId))
+    if (IsGeneratedOverworldEncounter(objEvent))
         return;
+    
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;
@@ -10004,8 +9981,9 @@ void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *
 
 void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (IS_FOLLOWMON_GFXID(objEvent->graphicsId))
+    if (IsGeneratedOverworldEncounter(objEvent))
         return;
+    
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;

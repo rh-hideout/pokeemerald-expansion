@@ -14,6 +14,7 @@
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
 #include "constants/map_types.h"
+#include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
 
@@ -42,7 +43,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.list[slot].isShiny = objectEvent->shiny;
     sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
     sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
-    sFollowMonData.list[slot].onWater = MetatileBehavior_IsSurfableWaterOrUnderwater(objectEvent->currentMetatileBehavior);
+    sFollowMonData.list[slot].onWater = MetatileBehavior_IsWaterWildEncounter(objectEvent->currentMetatileBehavior);
 
     sFollowMonData.spawnCountdown += 60;
     sFollowMonData.usedSlots++;
@@ -77,8 +78,9 @@ void UpdateOverworldEncounters(void)
         {
             u16 spawnSlot = NextSpawnMonSlot();
 
-            if(spawnSlot != INVALID_SPAWN_SLOT)
+            if (spawnSlot != INVALID_SPAWN_SLOT)
             {
+                const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 bool32 waterMons = IsSpawningWaterMons();
                 bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
                 u32 movementType;
@@ -95,9 +97,9 @@ void UpdateOverworldEncounters(void)
                 {
                     movementType = MOVEMENT_TYPE_WANDER_ON_MAP;
                 }
-                u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
+                u8 localId = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
-                    OBJ_EVENT_GFX_FOLLOW_MON_FIRST + spawnSlot,
+                    GetFollowMonObjectEventGraphicsId(spawnSlot),
                     movementType,
                     localId,
                     x,
@@ -108,10 +110,10 @@ void UpdateOverworldEncounters(void)
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
                 gObjectEvents[objectEventId].range.rangeX = 8;
                 gObjectEvents[objectEventId].range.rangeY = 8;
+                gObjectEvents[objectEventId].trainerType = TRAINER_TYPE_ENCOUNTER;
 
                 // Only used for save/load as well as loading encounters, 
                 // Most of the time, followmon data is tracked in sFollowMonData
-                const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 gObjectEvents[objectEventId].shiny = followMon->isShiny;
                 gObjectEvents[objectEventId].spawnTimeOfDay = followMon->timeOfDay;
                 gObjectEvents[objectEventId].sEncounterIndex = followMon->encounterIndex;
@@ -140,16 +142,16 @@ void UpdateOverworldEncounters(void)
         u8 objectEventId;
         enum FollowMonSpawnAnim spawnAnimType;
 
-        for(gfxId = OBJ_EVENT_GFX_FOLLOW_MON_FIRST; gfxId < OBJ_EVENT_GFX_FOLLOW_MON_LAST; ++gfxId)
+        for (gfxId = OBJ_EVENT_GFX_FOLLOW_MON_FIRST; gfxId < OBJ_EVENT_GFX_FOLLOW_MON_LAST; ++gfxId)
         {
             spawnSlot = gfxId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
             bitFlag = (1 << spawnSlot);
 
-            if((sFollowMonData.pendingSpawnAnim & bitFlag) != 0)
+            if ((sFollowMonData.pendingSpawnAnim & bitFlag) != 0)
             {
                 objectEventId = FindObjectEventForGfx(gfxId);
 
-                if(objectEventId != OBJECT_EVENTS_COUNT)
+                if (objectEventId != OBJECT_EVENTS_COUNT)
                 {
                     if(sFollowMonData.list[spawnSlot].isShiny)
                     {
@@ -223,7 +225,7 @@ static u8 NextSpawnMonSlot(void)
     }
 
     // Remove any existing id by this slot
-    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_FOLLOW_MON_FIRST + slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
@@ -324,13 +326,12 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
 void CreateFollowMonEncounter(void) {
     struct ObjectEvent *curObject;
-    u8 lastTalkedId = VarGet(VAR_LAST_TALKED);
-    u8 objEventId = GetObjectEventIdByLocalIdAndMap(lastTalkedId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    u8 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 
-    if(objEventId < OBJECT_EVENTS_COUNT)
+    if (objEventId < OBJECT_EVENTS_COUNT)
     {
         curObject = &gObjectEvents[objEventId];
-        if(!FollowMon_IsMonObject(curObject))
+        if (!IsGeneratedOverworldEncounter(curObject))
            return;
     }
     else
@@ -343,7 +344,7 @@ void CreateFollowMonEncounter(void) {
     u8 index = curObject->sEncounterIndex - 1;
     u8 level = 0;
 
-    if (MetatileBehavior_IsSurfableWaterOrUnderwater(curObject->currentMetatileBehavior))
+    if (MetatileBehavior_IsWaterWildEncounter(curObject->currentMetatileBehavior))
     {
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[curObject->spawnTimeOfDay].waterMonsInfo;
         level = ChooseWildMonLevel(wildMonInfo->wildPokemon, index, WILD_AREA_WATER);
@@ -391,7 +392,7 @@ bool8 FollowMon_ProcessMonInteraction(void)
         for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
         {
             curObject = &gObjectEvents[i];
-            if (curObject->active && curObject != player && FollowMon_IsMonObject(curObject))
+            if (curObject->active && curObject != player && IsGeneratedOverworldEncounter(curObject))
             {
                 if ((curObject->currentCoords.x == player->currentCoords.x && curObject->currentCoords.y == player->currentCoords.y) || (curObject->previousCoords.x == player->currentCoords.x && curObject->previousCoords.y == player->currentCoords.y))
                 {
@@ -420,7 +421,7 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
     if (collider->isPlayer)
     {
         // Player can walk on top of follow mon
-        if(FollowMon_IsMonObject(obstacle))
+        if (IsGeneratedOverworldEncounter(obstacle))
         {
             sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
@@ -429,28 +430,17 @@ bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEve
     else if(obstacle->isPlayer)
     {
         // Follow mon can walk onto player
-        if(FollowMon_IsMonObject(collider))
+        if (IsGeneratedOverworldEncounter(collider))
         {
             sFollowMonData.pendingInteraction = TRUE;
             return TRUE;
         }
     }
-    else if(!FollowMon_IsMonObject(collider) && FollowMon_IsMonObject(obstacle))
+    else if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
     {
         // Other objects can walk through follow mons, whilst wandering mons is active
         return TRUE;
     }
-
-    return FALSE;
-}
-
-bool8 FollowMon_IsMonObject(struct ObjectEvent* object)
-{
-    u16 localId = object->localId;
-    u16 graphicsId = object->graphicsId;
-
-    if (IS_FOLLOWMON_GFXID(graphicsId))
-        return TRUE;
 
     return FALSE;
 }
@@ -478,13 +468,15 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
     sFollowMonData.usedSlots--;
 }
 
-u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId)
+u16 GetFollowMonObjectEventGraphicsId(u16 spawnSlot)
 {
-    u16 slot = graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-    u16 species = GetFollowMonSpecies(&sFollowMonData.list[slot]);
+    u16 species = GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]);
+    u16 graphicsId = species + OBJ_EVENT_MON;
 
-    graphicsId = OBJ_EVENT_MON + species;
-    if (sFollowMonData.list[slot].isShiny)
+    // if (sFollowMonData.list[slot].isFemale)
+    //     graphicsId += OBJ_EVENT_MON_FEMALE;
+
+    if (sFollowMonData.list[spawnSlot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
     return graphicsId;
@@ -557,10 +549,11 @@ static bool8 IsSpawningWaterMons()
 
 void RemoveOverworldEncounterObjects(void)
 {
-    for(u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
-        if(IS_FOLLOWMON_GFXID(gObjectEvents[i].graphicsId))
-            RemoveObjectEvent(&gObjectEvents[i]);
+        struct ObjectEvent *obj = &gObjectEvents[i];
+        if (IsGeneratedOverworldEncounter(obj))
+            RemoveObjectEvent(obj);
     }
 }
 
@@ -656,4 +649,9 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
         return IsInsidePlayerMap(x, y);
     else
         return !IsInsidePlayerMap(x, y);
+}
+
+bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
+{
+    return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
 }

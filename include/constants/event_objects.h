@@ -288,7 +288,6 @@
 #define OBJ_EVENT_GFX_FOLLOW_MON_FIRST           OBJ_EVENT_GFX_FOLLOW_MON_0
 #define OBJ_EVENT_GFX_FOLLOW_MON_LAST            OBJ_EVENT_GFX_FOLLOW_MON_5
 
-#define IS_FOLLOWMON_GFXID(gfxID)                (gfxID & OBJ_EVENT_GFX_FOLLOW_MON_FIRST)
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
 #define OBJ_EVENT_MON_SHINY         (1u << 13)
@@ -351,13 +350,11 @@
 #define OBJ_EVENT_ID_FOLLOWER              0xFE
 #define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD
 
-// IDs for dynamic object event spawns
-#define OBJ_EVENT_ID_FOLLOW_MON_FIRST      230
-#define OBJ_EVENT_ID_FOLLOW_MON_LAST       240
-
 // Aliases for old names. "object event id" normally refers to an index into gObjectEvents, which these are not.
 // Used for link player OWs in CreateLinkPlayerSprite
 #define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
+// Uses OBJ_EVENT_ID_DYNAMIC_BASE as the last local id for OW Encounter Objects
+#define OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER OBJ_EVENT_ID_DYNAMIC_BASE
 #define OBJ_EVENT_ID_CAMERA LOCALID_CAMERA
 #define OBJ_EVENT_ID_PLAYER LOCALID_PLAYER
 
