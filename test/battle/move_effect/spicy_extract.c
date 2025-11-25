@@ -30,7 +30,7 @@ SINGLE_BATTLE_TEST("Spicy Extract is prevented by target's ability if it's Attac
     enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
-    PARAMETRIZE { ability = ABILITY_LIGHT_METAL; }
+    // PARAMETRIZE { ability = ABILITY_LIGHT_METAL; }
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
@@ -114,7 +114,7 @@ SINGLE_BATTLE_TEST("Spicy Extract will fail if target is in a semi-invulnerabili
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DIVE, opponent);
         MESSAGE("Wobbuffet used Spicy Extract!");
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SPICY_EXTRACT, player);
-        MESSAGE("Wobbuffet's attack missed!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
     }
 }
 

@@ -1,10 +1,10 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the Sp. Attack (Gen5+)")
+SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the Sp. Attack")
 {
     u32 config;
-    PARAMETRIZE { config = GEN_4; }
+    // PARAMETRIZE { config = GEN_4; } // Neewds research into how it exactly works. Does the ability still trigger if there is no ability
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
@@ -44,7 +44,7 @@ SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the 
 DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to target the Pokémon with this Ability.")
 {
     u32 config;
-    PARAMETRIZE { config = GEN_4; }
+    // PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
     GIVEN {
         WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);

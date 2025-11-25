@@ -308,3 +308,25 @@ DOUBLE_BATTLE_TEST("Dragon Darts fails to strike the second target if first targ
         }
     }
 }
+
+DOUBLE_BATTLE_TEST("Dragon Darts...")
+{
+    // PARAMETRIZE { chosenTarget = opponentRight; finalTarget = opponentRight; abilityLeft = ABILITY_MOTOR_DRIVE;  abilityRight = ABILITY_VITAL_SPIRIT; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ELECTRIFY) == EFFECT_ELECTRIFY);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_MOTOR_DRIVE); };
+        OPPONENT(SPECIES_ELECTIVIRE) { Ability(ABILITY_VITAL_SPIRIT); };
+    } WHEN {
+        TURN {
+            MOVE(opponentRight, MOVE_ELECTRIFY, target: playerLeft);
+            MOVE(playerLeft, MOVE_DRAGON_DARTS, target: opponentLeft); }
+    } SCENE {
+        // ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        // HP_BAR(finalTarget);
+        // ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, playerLeft);
+        // HP_BAR(finalTarget);
+        // MESSAGE("The Pokémon was hit 2 time(s)!");
+    }
+}
