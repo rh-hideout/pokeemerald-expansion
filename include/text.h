@@ -13,6 +13,7 @@ STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 31
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
 #define TEXT_SKIP_DRAW 0xFF
+#define NUM_TEXT_PRINTERS 32
 
 enum {
     FONT_SMALL,
@@ -109,6 +110,7 @@ struct TextPrinter
     u8 scrollDistance;
     u8 minLetterSpacing;  // 0x20
     u8 japanese;
+    u8 isInUse;
 };
 
 struct FontInfo
