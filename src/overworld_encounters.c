@@ -97,7 +97,7 @@ void UpdateOverworldEncounters(void)
                 {
                     movementType = MOVEMENT_TYPE_WANDER_ON_MAP;
                 }
-                u8 localId = OBJ_EVENT_ID_FOLLOW_MON_FIRST + spawnSlot;
+                u8 localId = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot;
                 u8 objectEventId = SpawnSpecialObjectEventParameterized(
                     GetFollowMonObjectEventGraphicsId(spawnSlot),
                     movementType,
@@ -225,7 +225,7 @@ static u8 NextSpawnMonSlot(void)
     }
 
     // Remove any existing id by this slot
-    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_FOLLOW_MON_FIRST + slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
@@ -326,8 +326,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
 void CreateFollowMonEncounter(void) {
     struct ObjectEvent *curObject;
-    u8 lastTalkedId = VarGet(VAR_LAST_TALKED);
-    u8 objEventId = GetObjectEventIdByLocalIdAndMap(lastTalkedId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    u8 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
 
     if (objEventId < OBJECT_EVENTS_COUNT)
     {
