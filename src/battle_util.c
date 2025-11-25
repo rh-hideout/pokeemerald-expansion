@@ -1854,7 +1854,7 @@ bool32 HandleFaintedMonActions(void)
             break;
         case FAINTED_ACTIONS_SET_ABSENT_FLAGS:
             OpponentSwitchInResetSentPokesToOpponentValue(gBattlerFainted);
-            if (gBattleStruct->eventState.faintedActionBattler == gBattlersCount - 1)
+            if (++gBattleStruct->eventState.faintedActionBattler == gBattlersCount)
                 gBattleStruct->eventState.faintedAction = FAINTED_ACTIONS_WAIT_STATE;
             else
                 gBattleStruct->eventState.faintedAction = FAINTED_ACTIONS_GIVE_EXP;
