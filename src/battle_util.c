@@ -8776,12 +8776,7 @@ bool32 IsPartnerMonFromSameTrainer(u32 battler)
     }
     else
     {
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-            return FALSE;
-        else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-            return FALSE;
-        else
-            return TRUE;
+        return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
     }
 }
 
