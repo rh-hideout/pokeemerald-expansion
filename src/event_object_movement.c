@@ -6468,7 +6468,7 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
          && !FollowerNPC_IsCollisionExempt(curObject, objectEvent) // Partner
-         && !FollowMon_IsCollisionExempt(curObject, objectEvent) // Wild Pokemon
+         && !OverworldEncounter_IsCollisionExempt(curObject, objectEvent) // Wild Pokemon
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
