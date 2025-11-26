@@ -2291,7 +2291,7 @@ BattleScript_TryTailwindAbilitiesLoop_WindRider:
 
 BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	call BattleScript_AbilityPopUp
-	setcharge BS_TARGET
+	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
@@ -4022,7 +4022,7 @@ BattleScript_EffectFollowMe::
 
 BattleScript_EffectCharge::
 	attackcanceler
-	setcharge BS_ATTACKER
+	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
 	attackanimation
 	waitanimation
 .if B_CHARGE_SPDEF_RAISE >= GEN_5
@@ -5339,7 +5339,7 @@ BattleScript_AngerShellRet:
 
 BattleScript_WindPowerActivates::
 	call BattleScript_AbilityPopUp
-	setcharge BS_TARGET
+	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	return

@@ -1099,7 +1099,7 @@
 	.byte 0xca
 	.endm
 
-	.macro setcharge battler:req
+	.macro unused_0xcb battler:req
 	.byte 0xcb
 	.byte \battler
 	.endm

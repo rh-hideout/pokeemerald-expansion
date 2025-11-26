@@ -102,8 +102,7 @@ struct DisableStruct
     u8 battlerWithSureHit;
     u8 isFirstTurn;
     u8 mimickedMoves:4;
-    u8 chargeTimer:4;
-    u8 rechargeTimer;
+    u8 rechargeTimer:4;
     u8 autotomizeCount;
     u16 slowStartTimer;
     u16 embargoTimer;
