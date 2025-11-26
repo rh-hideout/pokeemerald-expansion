@@ -3086,8 +3086,8 @@ bool8 ScrCmd_getobjectxy(struct ScriptContext *ctx)
 
 bool8 ScrCmd_checkobjectat(struct ScriptContext *ctx)
 {
-    u32 x = VarGet(ScriptReadHalfword(ctx)) + 7;
-    u32 y = VarGet(ScriptReadHalfword(ctx)) + 7;
+    u32 x = VarGet(ScriptReadHalfword(ctx)) + MAP_OFFSET;
+    u32 y = VarGet(ScriptReadHalfword(ctx)) + MAP_OFFSET;
     u32 varId = ScriptReadHalfword(ctx);
 
     Script_RequestEffects(SCREFF_V1);

@@ -118,6 +118,9 @@ AI_SINGLE_BATTLE_TEST("AI won't use status moves if the player's best attacking 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FOCUS_PUNCH) == EFFECT_FOCUS_PUNCH);
         ASSUME(GetMoveCategory(MOVE_SWORDS_DANCE) == DAMAGE_CATEGORY_STATUS);
+        // If Clefable is Normal-type, it will always use Play Rough.
+        ASSUME(GetSpeciesType(SPECIES_CLEFABLE, 0) == TYPE_FAIRY);
+        ASSUME(GetSpeciesType(SPECIES_CLEFABLE, 1) == TYPE_FAIRY);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_SNORLAX) { Moves(MOVE_FOCUS_PUNCH, MOVE_POUND); }
         OPPONENT(SPECIES_CLEFABLE) {  Moves(MOVE_PLAY_ROUGH, MOVE_SWORDS_DANCE); }

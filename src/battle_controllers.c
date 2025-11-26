@@ -3132,24 +3132,7 @@ void UpdateFriendshipFromXItem(u32 battler)
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        if (GetItemHoldEffect(heldItem) == HOLD_EFFECT_FRIENDSHIP_UP)
-            friendship += 150 * X_ITEM_FRIENDSHIP_INCREASE / 100;
-        else
-            friendship += X_ITEM_FRIENDSHIP_INCREASE;
-
-        u8 pokeball;
-        gBattleResources->bufferA[battler][1] = REQUEST_POKEBALL_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &pokeball);
-
-        if (pokeball == BALL_LUXURY)
-            friendship++;
-
-        u8 metLocation;
-        gBattleResources->bufferA[battler][1] = REQUEST_MET_LOCATION_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &metLocation);
-
-        if (metLocation == GetCurrentRegionMapSectionId())
-            friendship++;
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
 
         if (friendship > MAX_FRIENDSHIP)
             friendship = MAX_FRIENDSHIP;

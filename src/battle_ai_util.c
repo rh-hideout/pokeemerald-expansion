@@ -818,7 +818,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
         median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
         break;
     case EFFECT_BEAT_UP:
-        if (B_BEAT_UP >= GEN_5)
+        if (GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
         {
             u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
             u32 i;
@@ -1924,7 +1924,7 @@ bool32 IsHazardClearingMove(u32 move)
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
-        if (B_DEFOG_EFFECT_CLEARING >= GEN_6)
+        if (GetGenConfig(GEN_CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
             return TRUE;
         break;
     }

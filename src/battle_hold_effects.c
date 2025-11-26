@@ -61,6 +61,7 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability, ActivationTi
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
+        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
         PREPARE_STAT_BUFFER(gBattleTextBuff1, GetHighestStatId(battler));
         gBattlerAbility = gBattleScripting.battler = battler;
         gDisableStructs[battler].boosterEnergyActivated = TRUE;
@@ -205,6 +206,13 @@ static enum ItemEffect TryConsumeMirrorHerb(u32 battler, ActivationTiming timing
 static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
+
+    if (MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH)
+     || !IsBattlerAlive(battlerDef)
+     || !IsBattlerTurnDamaged(battlerDef)
+     || MoveIgnoresKingsRock(gCurrentMove))
+        return effect;
+
     enum Ability ability = GetBattlerAbility(battlerAtk);
     u32 holdEffectParam = GetItemHoldEffectParam(item);
 
@@ -212,11 +220,7 @@ static enum ItemEffect TryKingsRock(u32 battlerAtk, u32 battlerDef, u32 item)
         holdEffectParam *= 2;
     if (gSideStatuses[GetBattlerSide(battlerAtk)] & SIDE_STATUS_RAINBOW && gCurrentMove != MOVE_SECRET_POWER)
         holdEffectParam *= 2;
-    if (IsBattlerTurnDamaged(battlerDef)
-     && !MoveIgnoresKingsRock(gCurrentMove)
-     && IsBattlerAlive(battlerDef)
-     && RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam)
-     && ability != ABILITY_STENCH)
+    if (RandomPercentage(RNG_HOLD_EFFECT_FLINCH, holdEffectParam) && ability != ABILITY_STENCH)
     {
         SetMoveEffect(battlerAtk, battlerDef, MOVE_EFFECT_FLINCH, gBattlescriptCurrInstr, NO_FLAGS);
         effect = ITEM_EFFECT_OTHER;
