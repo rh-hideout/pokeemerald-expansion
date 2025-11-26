@@ -7,7 +7,6 @@
 #include "fieldmap.h"
 #include "gpu_regs.h"
 #include "metatile_behavior.h"
-#include "overworld_encounters.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
@@ -451,31 +450,6 @@ u32 FldEff_TallGrass(void)
     return 0;
 }
 
-u32 FldEff_TallGrass_OverworldEncounter(void)
-{
-    u8 spriteId;
-    s16 x = gFieldEffectArguments[0];
-    s16 y = gFieldEffectArguments[1];
-    SetSpritePosToOffsetMapCoords(&x, &y, 8, 8);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_TALL_GRASS_OWE], x, y, 0);
-    if (spriteId != MAX_SPRITES)
-    {
-        struct Sprite *sprite = &gSprites[spriteId];
-        sprite->coordOffsetEnabled = TRUE;
-        sprite->oam.priority = gFieldEffectArguments[3];
-        sprite->sElevation = gFieldEffectArguments[2];
-        sprite->sX = gFieldEffectArguments[0];
-        sprite->sY = gFieldEffectArguments[1];
-        sprite->sMapNum = gFieldEffectArguments[4]; // Also sLocalId
-        sprite->sMapGroup = gFieldEffectArguments[5];
-        sprite->sCurrentMap = gFieldEffectArguments[6];
-
-        if (gFieldEffectArguments[7])
-            SeekSpriteAnim(sprite, 4); // Skip to end of anim
-    }
-    return 0;
-}
-
 void UpdateTallGrassFieldEffect(struct Sprite *sprite)
 {
     u8 metatileBehavior;
@@ -499,10 +473,7 @@ void UpdateTallGrassFieldEffect(struct Sprite *sprite)
      || !MetatileBehavior_IsTallGrass(metatileBehavior)
      || (sprite->sObjectMoved && sprite->animEnded))
     {
-        if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
-            FieldEffectStop(sprite, FLDEFF_TALL_GRASS_OWE);
-        else
-            FieldEffectStop(sprite, FLDEFF_TALL_GRASS);
+        FieldEffectStop(sprite, FLDEFF_TALL_GRASS);
     }
     else
     {
@@ -583,31 +554,6 @@ u32 FldEff_LongGrass(void)
     return 0;
 }
 
-u32 FldEff_LongGrass_OverworldEncounter(void)
-{
-    u8 spriteId;
-    s16 x = gFieldEffectArguments[0];
-    s16 y = gFieldEffectArguments[1];
-    SetSpritePosToOffsetMapCoords(&x, &y, 8, 8);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_LONG_GRASS_OWE], x, y, 0);
-    if (spriteId != MAX_SPRITES)
-    {
-        struct Sprite *sprite = &gSprites[spriteId];
-        sprite->coordOffsetEnabled = TRUE;
-        sprite->oam.priority = ElevationToPriority(gFieldEffectArguments[2]);
-        sprite->sElevation = gFieldEffectArguments[2];
-        sprite->sX = gFieldEffectArguments[0];
-        sprite->sY = gFieldEffectArguments[1];
-        sprite->sMapNum = gFieldEffectArguments[4]; // Also sLocalId
-        sprite->sMapGroup = gFieldEffectArguments[5];
-        sprite->sCurrentMap = gFieldEffectArguments[6];
-
-        if (gFieldEffectArguments[7])
-            SeekSpriteAnim(sprite, 6); // Skip to end of anim
-    }
-    return 0;
-}
-
 void UpdateLongGrassFieldEffect(struct Sprite *sprite)
 {
     u8 metatileBehavior;
@@ -630,10 +576,7 @@ void UpdateLongGrassFieldEffect(struct Sprite *sprite)
      || !MetatileBehavior_IsLongGrass(metatileBehavior)
      || (sprite->sObjectMoved && sprite->animEnded))
     {
-        if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
-            FieldEffectStop(sprite, FLDEFF_LONG_GRASS_OWE);
-        else
-            FieldEffectStop(sprite, FLDEFF_LONG_GRASS);
+        FieldEffectStop(sprite, FLDEFF_LONG_GRASS);
     }
     else
     {

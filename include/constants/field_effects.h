@@ -80,8 +80,6 @@
 #define FLDEFF_USE_ROCK_CLIMB            75
 #define FLDEFF_ROCK_CLIMB_DUST           76
 #define FLDEFF_ORAS_DOWSE                77
-#define FLDEFF_TALL_GRASS_OWE            78
-#define FLDEFF_LONG_GRASS_OWE            79
 
 #define FLDEFFOBJ_SHADOW_S              0
 #define FLDEFFOBJ_SHADOW_M              1
@@ -129,8 +127,6 @@
 #define FLDEFFOBJ_ORAS_DOWSE_BRENDAN    43
 #define FLDEFFOBJ_ORAS_DOWSE_MAY        44
 #define FLDEFFOBJ_SHINY_SPARKLE         45
-#define FLDEFFOBJ_TALL_GRASS_OWE        46
-#define FLDEFFOBJ_LONG_GRASS_OWE        47
 
 #define FLDEFF_PAL_TAG_CUT_GRASS          0x1000
 #define FLDEFF_PAL_TAG_SECRET_POWER_TREE  0x1003

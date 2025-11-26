@@ -84,8 +84,6 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_UseRockClimb              @ FLDEFF_USE_ROCK_CLIMB
 	.4byte gFieldEffectScript_RockClimbDust             @ FLDEFF_ROCK_CLIMB_DUST
 	.4byte gFieldEffectScript_ORASDowse                 @ FLDEFF_ORAS_DOWSE
-	.4byte gFieldEffectScript_TallGrass_OWE             @ FLDEFF_TALL_GRASS_OWE
-	.4byte gFieldEffectScript_LongGrass_OWE             @ FLDEFF_LONG_GRASS_OWE
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -104,11 +102,7 @@ gFieldEffectScript_Shadow::
 	field_eff_end
 
 gFieldEffectScript_TallGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
-	field_eff_end
-
-gFieldEffectScript_TallGrass_OWE::
-	field_eff_loadgfx_callnative gSpriteSheet_TallGrass, gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass_OverworldEncounter
+	field_eff_loadgfx_callnative gSpriteSheet_TallGrass, gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
 	field_eff_end
 
 gFieldEffectScript_Ripple::
@@ -160,11 +154,7 @@ gFieldEffectScript_JumpSmallSplash::
 	field_eff_end
 
 gFieldEffectScript_LongGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
-	field_eff_end
-
-gFieldEffectScript_LongGrass_OWE::
-	field_eff_loadgfx_callnative gSpriteSheet_LongGrass, gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass_OverworldEncounter
+	field_eff_loadgfx_callnative gSpriteSheet_LongGrass, gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
 	field_eff_end
 
 gFieldEffectScript_JumpLongGrass::

@@ -139,16 +139,6 @@ static const union AnimCmd *const sAnimTable_TallGrass[] =
     sAnim_TallGrass,
 };
 
-const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass = {
-    .tileTag = TAG_NONE,
-    .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
-    .oam = &gObjectEventBaseOam_16x16,
-    .anims = sAnimTable_TallGrass,
-    .images = sPicTable_TallGrass,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = UpdateTallGrassFieldEffect,
-};
-
 const struct SpriteSheet gSpriteSheet_TallGrass =
 {
     .data = gFieldEffectObjectPic_TallGrass,
@@ -156,7 +146,7 @@ const struct SpriteSheet gSpriteSheet_TallGrass =
     .tag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
 };
 
-const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass_OverworldEncounter = {
+const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass = {
     .tileTag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
@@ -748,16 +738,6 @@ static const union AnimCmd *const sAnimTable_LongGrass[] =
     sAnim_LongGrass,
 };
 
-const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
-    .tileTag = TAG_NONE,
-    .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
-    .oam = &gObjectEventBaseOam_16x16,
-    .anims = sAnimTable_LongGrass,
-    .images = sPicTable_LongGrass,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = UpdateLongGrassFieldEffect,
-};
-
 const struct SpriteSheet gSpriteSheet_LongGrass =
 {
     .data = gFieldEffectObjectPic_LongGrass,
@@ -765,7 +745,7 @@ const struct SpriteSheet gSpriteSheet_LongGrass =
     .tag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
 };
 
-const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass_OverworldEncounter = {
+const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
     .tileTag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
