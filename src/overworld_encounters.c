@@ -34,6 +34,7 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
 static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 static bool32 IsInsidePlayerMap(s16 x, s16 y);
+static bool32 OverworldEncounters_ProcessMonInteraction(void);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
@@ -66,6 +67,8 @@ void UpdateOverworldEncounters(void)
 
         return;
     }
+
+    OverworldEncounters_ProcessMonInteraction();
 
     if(sFollowMonData.spawnCountdown == 0)
     {
@@ -372,42 +375,30 @@ void CreateFollowMonEncounter(void) {
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
 
-bool8 FollowMon_ProcessMonInteraction(void)
+static bool32 OverworldEncounters_ProcessMonInteraction(void)
 {
-    if(VarGet(VAR_REPEL_STEP_COUNT) != 0)
-    {
-        // Never auto trigger battle whilst repel is active
-        sFollowMonData.pendingInteraction = FALSE;
-        return FALSE;
-    }
-
-    if(sFollowMonData.pendingInteraction)
-    {
-        u8 i;
-        struct ObjectEvent *curObject;
-        struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    u8 i;
+    struct ObjectEvent *curObject;
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     
-        sFollowMonData.pendingInteraction = FALSE;
-        
-        for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
+    {
+        curObject = &gObjectEvents[i];
+        if (curObject->active && curObject != player && IsGeneratedOverworldEncounter(curObject))
         {
-            curObject = &gObjectEvents[i];
-            if (curObject->active && curObject != player && IsGeneratedOverworldEncounter(curObject))
+            if ((curObject->currentCoords.x == player->currentCoords.x && curObject->currentCoords.y == player->currentCoords.y) || (curObject->previousCoords.x == player->currentCoords.x && curObject->previousCoords.y == player->currentCoords.y))
             {
-                if ((curObject->currentCoords.x == player->currentCoords.x && curObject->currentCoords.y == player->currentCoords.y) || (curObject->previousCoords.x == player->currentCoords.x && curObject->previousCoords.y == player->currentCoords.y))
+                if (AreElevationsCompatible(curObject->currentElevation, player->currentElevation))
                 {
-                    if (AreElevationsCompatible(curObject->currentElevation, player->currentElevation))
-                    {
-                        // There is a valid collision so exectute the attached script
-                        const u8* script = InteractWithDynamicWildFollowMon;
-                        gSpecialVar_LastTalked = curObject->localId;
-                        //VarSet(VAR_LAST_TALKED, curObject->localId);
-                        ScriptContext_SetupScript(script);
-                        
-                        //CreateFollowMonEncounter();
-                        //BattleSetup_StartScriptedWildBattle();
-                        return TRUE;
-                    }
+                    // There is a valid collision so exectute the attached script
+                    const u8* script = InteractWithDynamicWildFollowMon;
+                    gSpecialVar_LastTalked = curObject->localId;
+                    //VarSet(VAR_LAST_TALKED, curObject->localId);
+                    ScriptContext_SetupScript(script);
+                    
+                    //CreateFollowMonEncounter();
+                    //BattleSetup_StartScriptedWildBattle();
+                    return TRUE;
                 }
             }
         }
@@ -418,13 +409,17 @@ bool8 FollowMon_ProcessMonInteraction(void)
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
+    // The player can only collide with overworld encounters when not using a repel.
+    // Non-player, non-overworld encounters do not have collision with overworld encounters.
+
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    if ((collider == player && IsGeneratedOverworldEncounter(obstacle))
-    || (obstacle == player && IsGeneratedOverworldEncounter(collider)))
-        return sFollowMonData.pendingInteraction = TRUE;
+    if (collider == player && IsGeneratedOverworldEncounter(obstacle) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
+        return TRUE;
+
+    if (obstacle == player && IsGeneratedOverworldEncounter(collider) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
+        return TRUE;
     
-    // Non-player, non-overworld encounters do not have collision with overworld encounters
     if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
         return TRUE;
 

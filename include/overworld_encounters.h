@@ -25,7 +25,6 @@ struct FollowMon
 
 struct FollowMonData
 {
-    bool8 pendingInteraction;
     u8 oldestSlot:4;
     u8 usedSlots:4;
     u16 spawnCountdown;
@@ -39,7 +38,6 @@ extern const u8 InteractWithDynamicWildFollowMon[];
 void LoadFollowMonData(struct ObjectEvent *objectEvent);
 void UpdateOverworldEncounters(void);
 void CreateFollowMonEncounter(void);
-bool8 FollowMon_ProcessMonInteraction(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
