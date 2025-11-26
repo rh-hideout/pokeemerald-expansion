@@ -5339,7 +5339,7 @@ BattleScript_AngerShellRet:
 
 BattleScript_WindPowerActivates::
 	call BattleScript_AbilityPopUp
-	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 1
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	return
