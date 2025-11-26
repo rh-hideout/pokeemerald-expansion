@@ -9947,14 +9947,15 @@ void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
     gFieldEffectArguments[7] = TRUE; // skip to end of anim
-    FieldEffectStart(FLDEFF_TALL_GRASS);
+    
+    if (IsGeneratedOverworldEncounter(objEvent))
+        FieldEffectStart(FLDEFF_TALL_GRASS_OWE);
+    else
+        FieldEffectStart(FLDEFF_TALL_GRASS);
 }
 
 void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (IsGeneratedOverworldEncounter(objEvent))
-        return;
-    
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;
@@ -9963,7 +9964,11 @@ void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
     gFieldEffectArguments[7] = TRUE; // skip to end of anim
-    FieldEffectStart(FLDEFF_TALL_GRASS);
+
+    if (IsGeneratedOverworldEncounter(objEvent))
+        FieldEffectStart(FLDEFF_TALL_GRASS_OWE);
+    else
+        FieldEffectStart(FLDEFF_TALL_GRASS);
 }
 
 void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
@@ -9976,14 +9981,15 @@ void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
     gFieldEffectArguments[7] = TRUE;
-    FieldEffectStart(FLDEFF_LONG_GRASS);
+
+    if (IsGeneratedOverworldEncounter(objEvent))
+        FieldEffectStart(FLDEFF_LONG_GRASS_OWE);
+    else
+        FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 
 void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
-    if (IsGeneratedOverworldEncounter(objEvent))
-        return;
-    
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = objEvent->previousElevation;
@@ -9992,7 +9998,11 @@ void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
     gFieldEffectArguments[7] = TRUE;
-    FieldEffectStart(FLDEFF_LONG_GRASS);
+
+    if (IsGeneratedOverworldEncounter(objEvent))
+        FieldEffectStart(FLDEFF_LONG_GRASS_OWE);
+    else
+        FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 
 void GroundEffect_WaterReflection(struct ObjectEvent *objEvent, struct Sprite *sprite)
