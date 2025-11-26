@@ -6647,6 +6647,7 @@ static void Cmd_moveend(void)
                  || ItemBattleEffects(battlerDef, gBattlerAttacker, holdEffect, IsOnHpThresholdActivation))
                     return;
             }
+            gBattleStruct->eventState.moveEndBattler = 0;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_RED_CARD:
@@ -6872,7 +6873,17 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
-
+        case MOVEEND_CHANGED_ITEMS:
+            for (i = 0; i < gBattlersCount; i++)
+            {
+                if (gBattleStruct->changedItems[i] != ITEM_NONE)
+                {
+                    gBattleMons[i].item = gBattleStruct->changedItems[i];
+                    gBattleStruct->changedItems[i] = ITEM_NONE;
+                }
+            }
+            gBattleScripting.moveendState++;
+            break;
         case MOVEEND_ITEMS_EFFECTS_ALL:
             while (gBattleStruct->eventState.moveEndBattler < gBattlersCount)
             {
@@ -7008,17 +7019,6 @@ static void Cmd_moveend(void)
                 }
             default:
                 break;
-            }
-            gBattleScripting.moveendState++;
-            break;
-        case MOVEEND_CHANGED_ITEMS:
-            for (i = 0; i < gBattlersCount; i++)
-            {
-                if (gBattleStruct->changedItems[i] != ITEM_NONE)
-                {
-                    gBattleMons[i].item = gBattleStruct->changedItems[i];
-                    gBattleStruct->changedItems[i] = ITEM_NONE;
-                }
             }
             gBattleScripting.moveendState++;
             break;

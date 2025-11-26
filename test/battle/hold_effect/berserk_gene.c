@@ -288,7 +288,6 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
     PARAMETRIZE { item = ITEM_PERSIM_BERRY; }
     PARAMETRIZE { item = ITEM_LUM_BERRY; }
 
-    KNOWN_FAILING;
     GIVEN {
         ASSUME(gItemsInfo[ITEM_PERSIM_BERRY].holdEffect == HOLD_EFFECT_CURE_CONFUSION);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};

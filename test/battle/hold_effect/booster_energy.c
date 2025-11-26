@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
 SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain changes")
 {
     GIVEN {
-        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
@@ -173,7 +173,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
         MESSAGE("The grass disappeared from the battlefield.");
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_LEFT].paradoxBoostedStat == STAT_ATK);
+        EXPECT(gDisableStructs[B_BATTLER_0].paradoxBoostedStat == STAT_ATK);
     }
 }
 
