@@ -2605,6 +2605,8 @@ static void Cmd_resultmessage(void)
             }
             if (stringId == STRINGID_SUPEREFFECTIVE || stringId == STRINGID_SUPEREFFECTIVETWOFOES)
                 TryInitializeTrainerSlidePlayerLandsFirstSuperEffectiveHit(gBattlerTarget);
+            if (stringId == STRINGID_SUPEREFFECTIVETWOFOES)
+                TryInitializeTrainerSlidePlayerLandsFirstSuperEffectiveHit(BATTLE_PARTNER(gBattlerTarget));
             break;
         case MOVE_RESULT_NOT_VERY_EFFECTIVE:
             if (IsDoubleSpreadMove())
@@ -2635,6 +2637,8 @@ static void Cmd_resultmessage(void)
             {
                 if (ShouldPrintTwoFoesMessage(MOVE_RESULT_DOESNT_AFFECT_FOE))
                 {
+                    TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
+                    TryInitializeTrainerSlideEnemyMonUnaffected(BATTLE_PARTNER(gBattlerTarget));
                     stringId = STRINGID_ITDOESNTAFFECTTWOFOES;
                 }
                 else if (ShouldRelyOnTwoFoesMessage(MOVE_RESULT_DOESNT_AFFECT_FOE))
@@ -2642,10 +2646,14 @@ static void Cmd_resultmessage(void)
                     stringId = 0; // Was handled or will be handled as a double string
                 }
                 else
+                {
+                    TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
                     stringId = STRINGID_ITDOESNTAFFECT;
+                }
             }
             else
             {
+                TryInitializeTrainerSlideEnemyMonUnaffected(gBattlerTarget);
                 stringId = STRINGID_ITDOESNTAFFECT;
             }
             break;
@@ -15387,7 +15395,21 @@ void BS_TryTrainerSlideZMoveMsg(void)
     {
         gBattleScripting.battler = gBattlerAttacker;
         BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = (shouldSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+
+        switch(gBattlerAttacker)
+        {
+            case B_POSITION_OPPONENT_LEFT:
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                break;
+            case B_POSITION_PLAYER_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                break;
+            case B_POSITION_OPPONENT_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                break;
+            default:
+                break;
+        }
     }
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -15402,7 +15424,21 @@ void BS_TryTrainerSlideMegaEvolutionMsg(void)
     {
         gBattleScripting.battler = gBattlerAttacker;
         BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = (shouldSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+
+        switch(gBattlerAttacker)
+        {
+            case B_POSITION_OPPONENT_LEFT:
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                break;
+            case B_POSITION_PLAYER_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                break;
+            case B_POSITION_OPPONENT_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                break;
+            default:
+                break;
+        }
     }
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -15416,7 +15452,21 @@ void BS_TryTrainerSlideDynamaxMsg(void)
     if ((shouldSlide = ShouldDoTrainerSlide(gBattleScripting.battler, TRAINER_SLIDE_DYNAMAX)))
     {
         BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = (shouldSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+        
+        switch(gBattleScripting.battler)
+        {
+            case B_POSITION_OPPONENT_LEFT:
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                break;
+            case B_POSITION_PLAYER_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                break;
+            case B_POSITION_OPPONENT_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                break;
+            default:
+                break;
+        }
     }
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -17538,7 +17588,20 @@ void BS_TryTrainerSlideMsgFirstOff(void)
     {
         gBattleScripting.battler = battler;
         BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = (shouldDoTrainerSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+        switch(battler)
+        {
+            case B_POSITION_OPPONENT_LEFT:
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                break;
+            case B_POSITION_PLAYER_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                break;
+            case B_POSITION_OPPONENT_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                break;
+            default:
+                break;
+        }
     }
     else
     {
@@ -17555,7 +17618,20 @@ void BS_TryTrainerSlideMsgLastOn(void)
     {
         gBattleScripting.battler = battler;
         BattleScriptPush(cmd->nextInstr);
-        gBattlescriptCurrInstr = (shouldDoTrainerSlide == 1 ? BattleScript_TrainerASlideMsgRet : BattleScript_TrainerBSlideMsgRet);
+        switch(battler)
+        {
+            case B_POSITION_OPPONENT_LEFT:
+                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+                break;
+            case B_POSITION_PLAYER_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+                break;
+            case B_POSITION_OPPONENT_RIGHT:
+                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+                break;
+            default:
+                break;
+        }
     }
     else
     {
