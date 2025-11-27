@@ -272,6 +272,9 @@ const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t 
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
 
+u32 RandomBit(enum RandomTag tag, u32 bits);
+u32 RandomBitIndex(enum RandomTag tag, u32 bits);
+
 #if TESTING
 u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
 u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
@@ -280,8 +283,5 @@ u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights
 const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
 #endif
-
-u32 RandomBit(enum RandomTag tag, u32 bits);
-u32 RandomBitIndex(enum RandomTag tag, u32 bits);
 
 #endif // GUARD_RANDOM_H
