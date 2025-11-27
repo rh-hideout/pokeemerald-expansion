@@ -2291,7 +2291,7 @@ BattleScript_TryTailwindAbilitiesLoop_WindRider:
 
 BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	call BattleScript_AbilityPopUp
-	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 2
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
