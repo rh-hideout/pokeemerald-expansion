@@ -10604,7 +10604,6 @@ void ClearDamageCalcResults(void)
     for (u32 battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         gBattleStruct->moveDamage[battler] = 0;
-        gBattleStruct->critChance[battler] = 0;
         gBattleStruct->moveResultFlags[battler] = CAN_DAMAGE;
         gBattleStruct->noResultString[battler] = 0;
         gBattleStruct->missStringId[battler] = 0;
