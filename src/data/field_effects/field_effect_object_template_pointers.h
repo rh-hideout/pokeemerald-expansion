@@ -83,7 +83,6 @@ const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[] = {
     [FLDEFFOBJ_ASH_LAUNCH]            = &gFieldEffectObjectTemplate_AshLaunch,
     [FLDEFFOBJ_BUBBLES]               = &gFieldEffectObjectTemplate_Bubbles,
     [FLDEFFOBJ_SMALL_SPARKLE]         = &gFieldEffectObjectTemplate_SmallSparkle,
-    [FLDEFFOBJ_SHINY_SPARKLE]         = &gFieldEffectObjectTemplate_ShinySparkle,
     [FLDEFFOBJ_RAYQUAZA]              = &gFieldEffectObjectTemplate_Rayquaza,
     [FLDEFFOBJ_TRACKS_SLITHER]        = &gFieldEffectObjectTemplate_SlitherTracks,
     [FLDEFFOBJ_TRACKS_SPOT]           = &gFieldEffectObjectTemplate_SpotTracks,
@@ -93,4 +92,5 @@ const struct SpriteTemplate *const gFieldEffectObjectTemplatePointers[] = {
     [FLDEFFOBJ_ROCK_CLIMB_DUST]       = &gFieldEffectObjectTemplate_RockClimbDust,
     [FLDEFFOBJ_ORAS_DOWSE_BRENDAN]    = &gFieldEffectObjectTemplate_ORASDowsingBrendan,
     [FLDEFFOBJ_ORAS_DOWSE_MAY]        = &gFieldEffectObjectTemplate_ORASDowsingMay,
+    [FLDEFFOBJ_SHINY_SPARKLE]         = &gFieldEffectObjectTemplate_ShinySparkle,
 };

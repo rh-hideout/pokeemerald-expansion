@@ -416,31 +416,17 @@ bool8 FollowMon_ProcessMonInteraction(void)
     return FALSE;
 }
 
-bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
+bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
-    if (collider->isPlayer)
-    {
-        // Player can walk on top of follow mon
-        if (IsGeneratedOverworldEncounter(obstacle))
-        {
-            sFollowMonData.pendingInteraction = TRUE;
-            return TRUE;
-        }
-    }
-    else if(obstacle->isPlayer)
-    {
-        // Follow mon can walk onto player
-        if (IsGeneratedOverworldEncounter(collider))
-        {
-            sFollowMonData.pendingInteraction = TRUE;
-            return TRUE;
-        }
-    }
-    else if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
-    {
-        // Other objects can walk through follow mons, whilst wandering mons is active
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if ((collider == player && IsGeneratedOverworldEncounter(obstacle))
+    || (obstacle == player && IsGeneratedOverworldEncounter(collider)))
+        return sFollowMonData.pendingInteraction = TRUE;
+    
+    // Non-player, non-overworld encounters do not have collision with overworld encounters
+    if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
         return TRUE;
-    }
 
     return FALSE;
 }

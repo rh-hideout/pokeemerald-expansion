@@ -40,7 +40,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent);
 void UpdateOverworldEncounters(void);
 void CreateFollowMonEncounter(void);
 bool8 FollowMon_ProcessMonInteraction(void);
-bool8 FollowMon_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
+bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
