@@ -78,13 +78,39 @@ TO_DO_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)");
 TO_DO_BATTLE_TEST("Focus Punch losing focus is considered as the last move used (Gen 3-4)"); //Eg. Encore
 TO_DO_BATTLE_TEST("Focus Punch losing focus is not considered as the last move used (Gen 5+)"); //Eg. Encore
 TO_DO_BATTLE_TEST("Focus Punch's initial message is not considered as using the move for Zoom Lens");
-TO_DO_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch");
 TO_DO_BATTLE_TEST("Focus Punch will use the selected move's priority when being Encored into Focus Punch");
+
+SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selected a different move and was Encored into using Focus Punch")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_FOCUS_PUNCH); }
+        TURN { MOVE(opponent, MOVE_ENCORE); MOVE(player, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+            MESSAGE("Wobbuffet is tightening its focus!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ENCORE, opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+            MESSAGE("Wobbuffet is tightening its focus!");
+        }
+    }
+}
 
 DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when used by selecting a different move and being Encored (Gen 3-4)")
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_3);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
@@ -113,6 +139,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will NOT lose focus if damaged when used by sele
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_7);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
@@ -141,6 +168,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when encored into a d
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_5);
+        ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
