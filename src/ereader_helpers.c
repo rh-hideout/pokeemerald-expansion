@@ -382,7 +382,7 @@ static u8 GetTrainerHillUnkVal(void)
 #endif //FREE_TRAINER_HILL
 }
 
-static bool32 ValidateTrainerChecksum(struct EReaderTrainerHillTrainer * hillTrainer)
+static bool32 ValidateTrainerChecksum(struct EReaderTrainerHillTrainer *hillTrainer)
 {
     int checksum = CalcByteArraySum((u8 *)hillTrainer, offsetof(typeof(*hillTrainer), checksum));
     if (checksum != hillTrainer->checksum)
@@ -391,7 +391,7 @@ static bool32 ValidateTrainerChecksum(struct EReaderTrainerHillTrainer * hillTra
     return TRUE;
 }
 
-bool8 ValidateTrainerHillData(struct EReaderTrainerHillSet * hillSet)
+bool8 ValidateTrainerHillData(struct EReaderTrainerHillSet *hillSet)
 {
     u32 i;
     u32 checksum;
@@ -430,7 +430,7 @@ static bool32 ValidateTrainerHillChecksum(struct EReaderTrainerHillSet *hillSet)
     return TRUE;
 }
 
-static bool32 TryWriteTrainerHill_Internal(struct EReaderTrainerHillSet * hillSet, struct TrainerHillChallenge * challenge)
+static bool32 TryWriteTrainerHill_Internal(struct EReaderTrainerHillSet *hillSet, struct TrainerHillChallenge *challenge)
 {
     int i;
 
@@ -469,7 +469,7 @@ static bool32 TryWriteTrainerHill_Internal(struct EReaderTrainerHillSet * hillSe
     return TRUE;
 }
 
-bool32 TryWriteTrainerHill(struct EReaderTrainerHillSet * hillSet)
+bool32 TryWriteTrainerHill(struct EReaderTrainerHillSet *hillSet)
 {
     void *buffer = AllocZeroed(SECTOR_SIZE);
     bool32 result = TryWriteTrainerHill_Internal(hillSet, buffer);
@@ -477,7 +477,7 @@ bool32 TryWriteTrainerHill(struct EReaderTrainerHillSet * hillSet)
     return result;
 }
 
-static bool32 TryReadTrainerHill_Internal(struct EReaderTrainerHillSet * dest, u8 *buffer)
+static bool32 TryReadTrainerHill_Internal(struct EReaderTrainerHillSet *dest, u8 *buffer)
 {
     if (TryReadSpecialSaveSector(SECTOR_ID_TRAINER_HILL, buffer) != SAVE_STATUS_OK)
         return FALSE;
@@ -489,7 +489,7 @@ static bool32 TryReadTrainerHill_Internal(struct EReaderTrainerHillSet * dest, u
     return TRUE;
 }
 
-static bool32 TryReadTrainerHill(struct EReaderTrainerHillSet * hillSet)
+static bool32 TryReadTrainerHill(struct EReaderTrainerHillSet *hillSet)
 {
     u8 *buffer = AllocZeroed(SECTOR_SIZE);
     bool32 result = TryReadTrainerHill_Internal(hillSet, buffer);
@@ -505,7 +505,7 @@ bool32 ReadTrainerHillAndValidate(void)
     return result;
 }
 
-int EReader_Send(int size, const void * src)
+int EReader_Send(int size, const void *src)
 {
     int result;
     int sendStatus;
@@ -546,7 +546,7 @@ int EReader_Send(int size, const void * src)
     return result;
 }
 
-int EReader_Recv(void * dest)
+int EReader_Recv(void *dest)
 {
     int result;
     int recvStatus;
@@ -623,7 +623,7 @@ static void OpenSerial32(void)
     sCounter2 = 0;
 }
 
-int EReaderHandleTransfer(u8 mode, size_t size, const void * data, void * recvBuffer)
+int EReaderHandleTransfer(u8 mode, size_t size, const void *data, void *recvBuffer)
 {
     switch (sSendRecvMgr.state)
     {
@@ -665,16 +665,8 @@ int EReaderHandleTransfer(u8 mode, size_t size, const void * data, void * recvBu
 
             if (sSendRecvMgr.xferState != EREADER_XFER_CHK)
             {
-                if (sSendRecvMgr.isParent && sCounter1 > 2)
-                {
-                    EnableSio();
-                    sSendRecvMgr.xferState = EREADER_XFER_CHK;
-                }
-                else
-                {
-                    EnableSio();
-                    sSendRecvMgr.xferState = EREADER_XFER_CHK;
-                }
+                EnableSio();
+                sSendRecvMgr.xferState = EREADER_XFER_CHK;
             }
         }
         break;
@@ -716,7 +708,7 @@ static u16 DetermineSendRecvState(u8 mode)
     return resp;
 }
 
-static void SetUpTransferManager(size_t size, const void * data, void * recvBuffer)
+static void SetUpTransferManager(size_t size, const void *data, void *recvBuffer)
 {
     if (sSendRecvMgr.isParent)
     {

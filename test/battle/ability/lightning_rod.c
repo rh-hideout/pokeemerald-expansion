@@ -28,6 +28,8 @@ SINGLE_BATTLE_TEST("Lightning Rod absorbs Electric-type moves and increases the 
             HP_BAR(opponent);
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
+    } THEN {
+        EXPECT_EQ(gBattleHistory->abilities[1], ABILITY_LIGHTNING_ROD); // Check if the correct ability has been recorded
     }
 }
 
@@ -75,7 +77,7 @@ DOUBLE_BATTLE_TEST("Lightning Rod forces single-target Electric-type moves to ta
 DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_THUNDERBOLT].type == TYPE_ELECTRIC);
+        ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
@@ -95,5 +97,23 @@ DOUBLE_BATTLE_TEST("Lightning Rod redirects an ally's attack")
         {
             HP_BAR(playerLeft);
         }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Lightning Rod absorbs moves that targets all battlers but does not redirect")
+{
+    GIVEN {
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DISCHARGE); }
+    } SCENE {
+        NOT HP_BAR(opponentRight);
+        ABILITY_POPUP(opponentRight, ABILITY_LIGHTNING_ROD);
+        HP_BAR(opponentLeft);
+        HP_BAR(playerRight);
     }
 }

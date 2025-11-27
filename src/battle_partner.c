@@ -10,6 +10,7 @@
 #include "text.h"
 
 #include "constants/abilities.h"
+#include "constants/battle_ai.h"
 
 #include "data/partner_parties.h"
 const struct Trainer gBattlePartners[DIFFICULTY_COUNT][PARTNER_COUNT] =

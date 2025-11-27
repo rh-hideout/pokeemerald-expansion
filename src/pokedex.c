@@ -1,5 +1,6 @@
 #include "global.h"
 #include "battle_main.h"
+#include "battle_script_commands.h"
 #include "bg.h"
 #include "data.h"
 #include "decompress.h"
@@ -17,6 +18,7 @@
 #include "pokedex_area_screen.h"
 #include "pokedex_cry_screen.h"
 #include "pokedex_plus_hgss.h"
+#include "rtc.h"
 #include "scanline_effect.h"
 #include "sound.h"
 #include "sprite.h"
@@ -29,6 +31,7 @@
 #include "window.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
+#include "config/pokedex_plus_hgss.h"
 
 enum
 {
@@ -255,7 +258,8 @@ static void Task_HandleInfoScreenInput(u8);
 static void Task_SwitchScreensFromInfoScreen(u8);
 static void Task_LoadInfoScreenWaitForFade(u8);
 static void Task_ExitInfoScreen(u8);
-static void Task_LoadAreaScreen(u8);
+static void Task_LoadAreaScreen(u8 taskId);
+static void Task_ReloadAreaScreen(u8 taskId);
 static void Task_WaitForAreaScreenInput(u8 taskId);
 static void Task_SwitchScreensFromAreaScreen(u8);
 static void Task_LoadCryScreen(u8);
@@ -1422,7 +1426,7 @@ static const u8 sOrderOptions[] =
     ORDER_SMALLEST,
 };
 
-static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
+static const enum Type sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 {
     TYPE_NONE,
     TYPE_NORMAL,
@@ -3245,6 +3249,7 @@ static u8 LoadInfoScreen(struct PokedexListItem *item, u8 monSpriteId)
     u8 taskId;
 
     sPokedexListItem = item;
+    gAreaTimeOfDay = GetTimeOfDayForDex();
     taskId = CreateTask(Task_LoadInfoScreen, 0);
     gTasks[taskId].tScrolling = FALSE;
     gTasks[taskId].tMonSpriteDone = TRUE; // Already has sprite from list view
@@ -3552,9 +3557,32 @@ static void Task_LoadAreaScreen(u8 taskId)
         gMain.state++;
         break;
     case 2:
-        ShowPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState);
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_SHOW_AREA_SCREEN);
         SetVBlankCallback(gPokedexVBlankCB);
         sPokedexView->screenSwitchState = 0;
+        gMain.state = 0;
+        gTasks[taskId].func = Task_WaitForAreaScreenInput;
+        break;
+    }
+}
+
+
+static void Task_ReloadAreaScreen(u8 taskId)
+{
+    switch (gMain.state)
+    {
+    case 0:
+    default:
+        sPokedexView->currentPage = PAGE_AREA;
+        gMain.state = 1;
+        break;
+    case 1:
+        LoadPokedexBgPalette(sPokedexView->isSearchResults);
+        SetGpuReg(REG_OFFSET_BG1CNT, BGCNT_PRIORITY(0) | BGCNT_CHARBASE(0) | BGCNT_SCREENBASE(13) | BGCNT_16COLOR | BGCNT_TXT256x256);
+        gMain.state++;
+        break;
+    case 2:
+        DisplayPokedexAreaScreen(NationalPokedexNumToSpecies(sPokedexListItem->dexNum), &sPokedexView->screenSwitchState, gAreaTimeOfDay, DEX_UPDATE_AREA_SCREEN);
         gMain.state = 0;
         gTasks[taskId].func = Task_WaitForAreaScreenInput;
         break;
@@ -3580,6 +3608,9 @@ static void Task_SwitchScreensFromAreaScreen(u8 taskId)
             break;
         case 2:
             gTasks[taskId].func = Task_LoadCryScreen;
+            break;
+        case 3:
+            gTasks[taskId].func = Task_ReloadAreaScreen;
             break;
         }
     }
@@ -3991,8 +4022,8 @@ static void HighlightSubmenuScreenSelectBarItem(u8 a, u16 b)
 #define tPalTimer      data[2]
 #define tMonSpriteId   data[3]
 #define tIsShiny       data[13]
-#define tPersonalityLo data[14]
-#define tPersonalityHi data[15]
+#define tPersonalityLo 14
+#define tPersonalityHi 15
 
 u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 {
@@ -4005,16 +4036,34 @@ u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
     gTasks[taskId].tState = 0;
     gTasks[taskId].tSpecies = species;
     gTasks[taskId].tIsShiny = isShiny;
-    gTasks[taskId].tPersonalityLo = personality;
-    gTasks[taskId].tPersonalityHi = personality >> 16;
+    gTasks[taskId].data[tPersonalityLo] = personality;
+    gTasks[taskId].data[tPersonalityHi] = personality >> 16;
     return taskId;
+}
+
+static void LoadDexMonPalette(u32 taskId, bool32 isShiny)
+{
+    const u16 *paletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, GetWordTaskArg(taskId, tPersonalityLo));
+    u32 paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
+    LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+}
+
+u32 Pokedex_CreateCaughtMonSprite(u32 species, s32 x, s32 y)
+{
+    u32 spriteId;
+
+    SetMultiuseSpriteTemplateToPokemon(species, GetCatchingBattler());
+    spriteId = CreateSprite(&gMultiuseSpriteTemplate, x, y, 0);
+    gSprites[spriteId].oam.priority = 0;
+    gSprites[spriteId].callback = SpriteCallbackDummy;
+    return spriteId;
 }
 
 static void Task_DisplayCaughtMonDexPage(u8 taskId)
 {
     u8 spriteId;
     u16 species = gTasks[taskId].tSpecies;
-    u16 dexNum = SpeciesToNationalPokedexNum(species);
+    enum NationalDexOrder dexNum = SpeciesToNationalPokedexNum(species);
 
     switch (gTasks[taskId].tState)
     {
@@ -4057,11 +4106,13 @@ static void Task_DisplayCaughtMonDexPage(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 4:
-        spriteId = CreateMonPicSprite(species, FALSE, ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo, TRUE, MON_PAGE_X, MON_PAGE_Y, 0, TAG_NONE);
+        // We're using a different mon sprite creation method, because we don't have enough memory to safely use CreateMonPicSprite.
+        spriteId = Pokedex_CreateCaughtMonSprite(species, MON_PAGE_X, MON_PAGE_Y);
+        gTasks[taskId].tMonSpriteId = spriteId;
+        LoadDexMonPalette(taskId, FALSE);
         gSprites[spriteId].oam.priority = 0;
         BeginNormalPaletteFade(PALETTES_ALL, 0, 0x10, 0, RGB_BLACK);
         SetVBlankCallback(gPokedexVBlankCB);
-        gTasks[taskId].tMonSpriteId = spriteId;
         gTasks[taskId].tState++;
         break;
     case 5:
@@ -4108,9 +4159,6 @@ static void Task_ExitCaughtMonPage(u8 taskId)
     if (!gPaletteFade.active)
     {
         bool32 isShiny;
-        u32 personality;
-        u8 paletteNum;
-        const u32 *lzPaletteData;
         void *buffer;
 
         SetGpuReg(REG_OFFSET_DISPCNT, DISPCNT_OBJ_1D_MAP | DISPCNT_OBJ_ON);
@@ -4123,10 +4171,7 @@ static void Task_ExitCaughtMonPage(u8 taskId)
             Free(buffer);
 
         isShiny = (bool8)gTasks[taskId].tIsShiny;
-        personality = ((u16)gTasks[taskId].tPersonalityHi << 16) | (u16)gTasks[taskId].tPersonalityLo;
-        paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
-        lzPaletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, personality);
-        LoadCompressedPalette(lzPaletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
+        LoadDexMonPalette(taskId, isShiny);
         DestroyTask(taskId);
     }
 }
@@ -4483,7 +4528,7 @@ static u8* ConvertMeasurementToMetricString(u32 num, u32* index)
     return string;
 }
 
-s8 GetSetPokedexFlag(u16 nationalDexNo, u8 caseID)
+s8 GetSetPokedexFlag(enum NationalDexOrder nationalDexNo, u8 caseID)
 {
     u32 index, bit, mask;
     s8 retVal = 0;
@@ -4860,7 +4905,7 @@ static u32 GetPokedexMonPersonality(u16 species)
     }
 }
 
-u16 CreateMonSpriteFromNationalDexNumber(u16 nationalNum, s16 x, s16 y, u16 paletteSlot)
+u16 CreateMonSpriteFromNationalDexNumber(enum NationalDexOrder nationalNum, s16 x, s16 y, u16 paletteSlot)
 {
     nationalNum = NationalPokedexNumToSpecies(nationalNum);
     return CreateMonPicSprite(nationalNum, FALSE, GetPokedexMonPersonality(nationalNum), TRUE, x, y, paletteSlot, TAG_NONE);
@@ -4895,12 +4940,12 @@ static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
     return CreateTrainerPicSprite(species, TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
 {
     u16 species;
     u16 i;
     u16 resultsCount;
-    u8 types[2];
+    enum Type types[2];
 
     CreatePokedexList(dexMode, order);
 
@@ -4965,8 +5010,8 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
                 {
                     species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-                    types[0] = gSpeciesInfo[species].types[0];
-                    types[1] = gSpeciesInfo[species].types[1];
+                    types[0] = GetSpeciesType(species, 0);
+                    types[1] = GetSpeciesType(species, 1);
                     if (types[0] == type1 || types[1] == type1)
                     {
                         sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
@@ -4983,8 +5028,8 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, u8 bodyColor, u8 t
                 {
                     species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-                    types[0] = gSpeciesInfo[species].types[0];
-                    types[1] = gSpeciesInfo[species].types[1];
+                    types[0] = GetSpeciesType(species, 0);
+                    types[1] = GetSpeciesType(species, 1);
                     if ((types[0] == type1 && types[1] == type2) || (types[0] == type2 && types[1] == type1))
                     {
                         sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
@@ -5306,9 +5351,9 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 dexMode = GetSearchModeSelection(taskId, SEARCH_MODE);
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
-    u8 bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
-    u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
-    u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
+    enum BodyColor bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
+    enum Type type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
+    enum Type type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
     DoPokedexSearch(dexMode, order, abcGroup, bodyColor, type1, type2);
     gTasks[taskId].func = Task_WaitAndCompleteSearch;

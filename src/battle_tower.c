@@ -27,6 +27,7 @@
 #include "battle_factory.h"
 #include "constants/abilities.h"
 #include "constants/apprentice.h"
+#include "constants/battle_ai.h"
 #include "constants/battle_dome.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_frontier_mons.h"
@@ -41,6 +42,8 @@
 #include "constants/trainers.h"
 #include "constants/event_objects.h"
 #include "constants/moves.h"
+#include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 // This file's functions.
 static void InitTowerChallenge(void);
@@ -1062,7 +1065,6 @@ void FillTentTrainerParty(u8 monsCount)
     FillTentTrainerParty_(TRAINER_BATTLE_PARAM.opponentA, 0, monsCount);
 }
 
-
 static void GetOpponentIntroSpeech(void)
 {
     u16 trainerId;
@@ -1371,7 +1373,7 @@ static void LoadMultiPartnerCandidatesData(void)
 
 static void GetPotentialPartnerMoveAndSpecies(u16 trainerId, u16 monId)
 {
-    u16 move = 0;
+    u16 move = MOVE_NONE;
     u16 species = 0;
     SetFacilityPtrsGetLevel();
 
@@ -1634,8 +1636,8 @@ static void SetTowerInterviewData(void)
     StripExtCtrlCodes(text);
     StringCopy(gSaveBlock2Ptr->frontier.towerInterview.opponentName, text);
     GetBattleTowerTrainerLanguage(&gSaveBlock2Ptr->frontier.towerInterview.opponentLanguage, TRAINER_BATTLE_PARAM.opponentA);
-    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(&gEnemyParty[gBattlerPartyIndexes[1]], MON_DATA_SPECIES, NULL);
-    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(&gPlayerParty[gBattlerPartyIndexes[0]], MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.opponentSpecies = GetMonData(GetBattlerMon(1), MON_DATA_SPECIES, NULL);
+    gSaveBlock2Ptr->frontier.towerInterview.playerSpecies = GetMonData(GetBattlerMon(0), MON_DATA_SPECIES, NULL);
     for (i = 0; i < VANILLA_POKEMON_NAME_LENGTH + 1; i++)
         gSaveBlock2Ptr->frontier.towerInterview.opponentMonNickname[i] = gBattleMons[0].nickname[i];
     gSaveBlock2Ptr->frontier.towerBattleOutcome = gBattleOutcome;
@@ -1748,11 +1750,11 @@ static void AwardBattleTowerRibbons(void)
             partyIndex = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
             ribbons[i].partyIndex = partyIndex;
             ribbons[i].count = 0;
-            if (!GetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], ribbonType))
+            if (!GetMonData(GetSavedPlayerPartyMon(partyIndex), ribbonType))
             {
                 gSpecialVar_Result = TRUE;
-                SetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], ribbonType, &gSpecialVar_Result);
-                ribbons[i].count = GetRibbonCount(&gSaveBlock1Ptr->playerParty[partyIndex]);
+                SetMonData(GetSavedPlayerPartyMon(partyIndex), ribbonType, &gSpecialVar_Result);
+                ribbons[i].count = GetRibbonCount(GetSavedPlayerPartyMon(partyIndex));
             }
         }
     }
@@ -1771,7 +1773,7 @@ static void AwardBattleTowerRibbons(void)
         }
         if (ribbons[0].count > NUM_CUTIES_RIBBONS)
         {
-            TryPutSpotTheCutiesOnAir(&gSaveBlock1Ptr->playerParty[ribbons[0].partyIndex], ribbonType);
+            TryPutSpotTheCutiesOnAir(GetSavedPlayerPartyMon(ribbons[0].partyIndex), ribbonType);
         }
     }
 }
@@ -2117,18 +2119,20 @@ bool32 ValidateBattleTowerRecord(u8 recordId) // unused
 
 void TrySetLinkBattleTowerEnemyPartyLevel(void)
 {
-    if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
+    if (!IsMultibattleTest())
     {
-        s32 i;
-        u8 enemyLevel = SetFacilityPtrsGetLevel();
-
-        for (i = 0; i < PARTY_SIZE; i++)
+        if (gBattleTypeFlags & (BATTLE_TYPE_LINK | BATTLE_TYPE_RECORDED_LINK))
         {
-            u32 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
-            if (species)
+            u8 enemyLevel = SetFacilityPtrsGetLevel();
+
+            for (u32 i = 0; i < PARTY_SIZE; i++)
             {
-                SetMonData(&gEnemyParty[i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
-                CalculateMonStats(&gEnemyParty[i]);
+                u32 species = GetMonData(&gEnemyParty[i], MON_DATA_SPECIES, NULL);
+                if (species)
+                {
+                    SetMonData(&gEnemyParty[i], MON_DATA_EXP, &gExperienceTables[gSpeciesInfo[species].growthRate][enemyLevel]);
+                    CalculateMonStats(&gEnemyParty[i]);
+                }
             }
         }
     }

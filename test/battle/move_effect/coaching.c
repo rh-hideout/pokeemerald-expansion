@@ -58,7 +58,6 @@ DOUBLE_BATTLE_TEST("Coaching bypasses Crafty Shield")
 
 DOUBLE_BATTLE_TEST("Coaching fails if all allies are is semi-invulnerable")
 {
-    KNOWN_FAILING; // Coaching succeeds
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_FLY) == EFFECT_SEMI_INVULNERABLE);
         PLAYER(SPECIES_WOBBUFFET);
@@ -104,10 +103,10 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: playerRight); }
         TURN { MOVE(playerLeft, MOVE_COACHING, target: playerRight); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         MESSAGE("Wynaut fainted!");
         MESSAGE("Wobbuffet used Coaching!");
         NONE_OF {
@@ -116,5 +115,25 @@ DOUBLE_BATTLE_TEST("Coaching fails if there's no ally")
             MESSAGE("Wynaut's Defense rose!");
         }
         MESSAGE("But it failed!");
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI uses Coaching")
+{
+    u32 move;
+    PARAMETRIZE { move = MOVE_HEADBUTT; }
+    PARAMETRIZE { move = MOVE_DAZZLING_GLEAM; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_COACHING, MOVE_POUND); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move); }
+    } WHEN {
+        if (move == MOVE_HEADBUTT)
+            TURN {  EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
+        else
+            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_COACHING); }
     }
 }

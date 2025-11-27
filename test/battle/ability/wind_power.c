@@ -5,14 +5,14 @@ ASSUMPTIONS
 {
     ASSUME(!IsBattleMoveStatus(MOVE_THUNDERBOLT));
     ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
-    ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
+    ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
     ASSUME(!IsBattleMoveStatus(MOVE_AIR_CUTTER));
     ASSUME(GetMoveTarget(MOVE_AIR_CUTTER) == MOVE_TARGET_BOTH);
     ASSUME(IsWindMove(MOVE_AIR_CUTTER));
     ASSUME(!IsBattleMoveStatus(MOVE_PETAL_BLIZZARD));
     ASSUME(GetMoveTarget(MOVE_PETAL_BLIZZARD) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(IsWindMove(MOVE_PETAL_BLIZZARD));
-    ASSUME(!IsWindMove(MOVE_TACKLE));
+    ASSUME(!IsWindMove(MOVE_SCRATCH));
 }
 
 SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move")
@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
     s16 dmgBefore, dmgAfter;
     u16 move;
 
-    PARAMETRIZE {move = MOVE_TACKLE; }
+    PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
 
     GIVEN {
@@ -65,7 +65,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
     s16 dmgBefore, dmgAfter;
     u16 move;
 
-    PARAMETRIZE {move = MOVE_TACKLE; }
+    PARAMETRIZE {move = MOVE_SCRATCH; }
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
 
     GIVEN {
@@ -107,7 +107,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
 
 DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 2/3 target move")
 {
-    u16 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE {abilityLeft = ABILITY_NONE, abilityRight = ABILITY_WIND_POWER;}
     PARAMETRIZE {abilityLeft = ABILITY_WIND_POWER, abilityRight = ABILITY_NONE; }
@@ -148,7 +148,7 @@ DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ab
 
 DOUBLE_BATTLE_TEST("Wind Power activates correctly for every battler with the ability when hit by a 3 target move")
 {
-    u16 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE {abilityLeft = ABILITY_NONE, abilityRight = ABILITY_WIND_POWER; }
     PARAMETRIZE {abilityLeft = ABILITY_WIND_POWER, abilityRight = ABILITY_NONE; }

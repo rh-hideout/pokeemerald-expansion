@@ -97,13 +97,13 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
     u32 move2 = MOVE_CELEBRATE;
     bool32 airborne;
 
-    ASSUME(gSpeciesInfo[SPECIES_PIDGEY].types[1] == TYPE_FLYING);
+    ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
     PARAMETRIZE { species = SPECIES_PIDGEY; airborne = TRUE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; item = ITEM_IRON_BALL; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_GRAVITY; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_PIDGEY; move1 = MOVE_INGRAIN; airborne = FALSE; }
 
-    ASSUME(gSpeciesInfo[SPECIES_UNOWN].abilities[0] == ABILITY_LEVITATE);
+    ASSUME(GetSpeciesAbility(SPECIES_UNOWN, 0) == ABILITY_LEVITATE);
     PARAMETRIZE { species = SPECIES_UNOWN; airborne = TRUE; }
     PARAMETRIZE { species = SPECIES_UNOWN; item = ITEM_IRON_BALL; airborne = FALSE; }
     PARAMETRIZE { species = SPECIES_UNOWN; move1 = MOVE_GRAVITY; airborne = FALSE; }
@@ -139,7 +139,7 @@ SINGLE_BATTLE_TEST("Toxic Spikes do not poison airborne Pokemon")
 SINGLE_BATTLE_TEST("Toxic Spikes do not affect Steel-types")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_STEELIX].types[0] == TYPE_STEEL);
+        ASSUME(GetSpeciesType(SPECIES_STEELIX, 0) == TYPE_STEEL);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_STEELIX);
@@ -163,9 +163,9 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on
     PARAMETRIZE { species = SPECIES_ZUBAT; move = MOVE_GRAVITY; grounded = TRUE; }
     PARAMETRIZE { species = SPECIES_ZUBAT; move = MOVE_INGRAIN; grounded = TRUE; }
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_EKANS].types[0] == TYPE_POISON);
-        ASSUME(gSpeciesInfo[SPECIES_ZUBAT].types[0] == TYPE_POISON);
-        ASSUME(gSpeciesInfo[SPECIES_ZUBAT].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_EKANS, 0) == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_ZUBAT, 0) == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_ZUBAT, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(species) { Item(item); }
@@ -186,15 +186,11 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by grounded Poison-type Pokémon on
     }
 }
 
-// This would test for what I believe to be a bug in the mainline games.
-// A Pokémon that gets passed magnet rise should still remove the Toxic
-// Spikes even though it is airborne.
-// The test currently fails, because we don't incorporate this bug.
-SINGLE_BATTLE_TEST("Toxic Spikes are removed by Poison-type Pokémon affected by Magnet Rise on switch in")
+//  Tested in Gen 7 on cartridge
+SINGLE_BATTLE_TEST("Toxic Spikes are not removed by Poison-type Pokémon affected by Magnet Rise on switch in")
 {
-    KNOWN_FAILING;
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_EKANS].types[0] == TYPE_POISON);
+        ASSUME(GetSpeciesType(SPECIES_EKANS, 0) == TYPE_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_EKANS);
@@ -203,9 +199,8 @@ SINGLE_BATTLE_TEST("Toxic Spikes are removed by Poison-type Pokémon affected by
         TURN { MOVE(player, MOVE_TOXIC_SPIKES); MOVE(opponent, MOVE_BATON_PASS); SEND_OUT(opponent, 1); }
         TURN { SWITCH(opponent, 0); }
     } SCENE {
-        NOT STATUS_ICON(opponent, poison: TRUE);
-        MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
-        NOT STATUS_ICON(opponent, poison: TRUE);
+        NOT MESSAGE("The poison spikes disappeared from the ground around the opposing team!");
+        STATUS_ICON(opponent, poison: TRUE);
     }
 }
 
@@ -238,5 +233,61 @@ SINGLE_BATTLE_TEST("Toxic Spikes inflicts poison on switch in after Primal Rever
         SEND_IN_MESSAGE("Wynaut");
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, player);
         STATUS_ICON(player, poison: TRUE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Spikes print normal poison for 1 layer")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { SWITCH(opponent, 1); }
+        TURN {}
+    } SCENE {
+        MESSAGE("The opposing Wynaut was poisoned!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Spikes print bad poison for 2 layers")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(player, MOVE_TOXIC_SPIKES); }
+        TURN { SWITCH(opponent, 1); }
+        TURN {}
+    } SCENE {
+        MESSAGE("The opposing Wynaut was badly poisoned!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Toxic Spikes: Only two layers can be set up")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC_SPIKES, opponent);
+    } THEN {
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_TOXIC_SPIKES);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][4], HAZARDS_NONE);
+        EXPECT_EQ(gBattleStruct->hazardsQueue[0][5], HAZARDS_NONE);
+        u32 toxicSpikesAmount = gSideTimers[0].toxicSpikesAmount;
+        EXPECT_EQ(toxicSpikesAmount, 2);
     }
 }

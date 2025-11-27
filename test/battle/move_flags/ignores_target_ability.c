@@ -10,7 +10,8 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own ability", s16 damage)
 {
-    u32 ability, move;
+    enum Ability ability;
+    u32 move;
 
     PARAMETRIZE { move = MOVE_SUNSTEEL_STRIKE; ability = ABILITY_MAGIC_GUARD; }
     PARAMETRIZE { move = MOVE_SUNSTEEL_STRIKE; ability = ABILITY_UNAWARE; }
@@ -47,7 +48,8 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do not ignore the attacker's own 
 
 SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities", s16 damage)
 {
-    u32 ability, move;
+    enum Ability ability;
+    u32 move;
 
     PARAMETRIZE { move = MOVE_SUNSTEEL_STRIKE; ability = ABILITY_INNER_FOCUS; }
     PARAMETRIZE { move = MOVE_SUNSTEEL_STRIKE; ability = ABILITY_MULTISCALE; }
@@ -70,5 +72,25 @@ SINGLE_BATTLE_TEST("ignoresTargetAbility moves do ignore target's abilities", s1
         EXPECT_EQ(results[0].damage, results[1].damage);
         EXPECT_EQ(results[2].damage, results[3].damage);
         EXPECT_EQ(results[4].damage, results[5].damage);
+    }
+}
+
+SINGLE_BATTLE_TEST("ignoresTargetAbility allows Pokémon with Battle Armor and Shell Armor to receive critical hits")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }
+    PARAMETRIZE { species = SPECIES_ARMALDO; ability = ABILITY_BATTLE_ARMOR; }
+
+    GIVEN {
+        ASSUME(MoveIgnoresTargetAbility(MOVE_SUNSTEEL_STRIKE));
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNSTEEL_STRIKE, criticalHit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNSTEEL_STRIKE, player);
+        MESSAGE("A critical hit!");
     }
 }

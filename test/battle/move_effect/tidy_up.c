@@ -43,9 +43,9 @@ SINGLE_BATTLE_TEST("Tidy Up removes hazards and raises Stats")
         MESSAGE("Wobbuffet used Tidy Up!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TIDY_UP, player);
         MESSAGE("The spikes disappeared from the ground around your team!");
-        MESSAGE("The pointed stones disappeared from around your team!");
-        MESSAGE("The poison spikes disappeared from the ground around your team!");
         MESSAGE("The sticky web has disappeared from the ground around your team!");
+        MESSAGE("The poison spikes disappeared from the ground around your team!");
+        MESSAGE("The pointed stones disappeared from around your team!");
         MESSAGE("Tidying up complete!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
         MESSAGE("Wobbuffet's Attack rose!");
@@ -79,7 +79,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers to keep its substitute over removing hazards i
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); Status1(STATUS1_PARALYSIS); Moves(MOVE_SLEEP_POWDER, MOVE_STEALTH_ROCK, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_BITE, MOVE_TACKLE, MOVE_SUBSTITUTE, MOVE_TIDY_UP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(100); Moves(MOVE_BITE, MOVE_SCRATCH, MOVE_SUBSTITUTE, MOVE_TIDY_UP); }
     } WHEN {
         TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_TIDY_UP); }
         TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_SUBSTITUTE); }
@@ -92,7 +92,7 @@ AI_SINGLE_BATTLE_TEST("AI will try to remove hazards if slower then target even 
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); Status1(STATUS1_BURN); Moves(MOVE_SLEEP_POWDER, MOVE_STEALTH_ROCK, MOVE_CELEBRATE); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_BITE, MOVE_TACKLE, MOVE_SUBSTITUTE, MOVE_TIDY_UP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_BITE, MOVE_SCRATCH, MOVE_SUBSTITUTE, MOVE_TIDY_UP); }
     } WHEN {
         TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_TIDY_UP); }
         TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_SUBSTITUTE); }

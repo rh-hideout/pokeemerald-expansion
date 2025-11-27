@@ -133,7 +133,7 @@ static void ContestEffect_UserLessEasilyStartled(void)
     SetContestantEffectStringID(eContestAppealResults.contestant,CONTEST_STRING_STOPPED_CARING);
 }
 
-// Slightly startles the POK�MON in front.
+// Badly startles the Pokémon in front.
 static void ContestEffect_StartleFrontMon(void)
 {
     u8 idx = 0;
@@ -611,6 +611,7 @@ static void ContestEffect_BetterWhenLater(void)
 }
 
 // The appeal's quality varies depending on its timing.
+// Despite the name, it seems to be random and not based on timing
 static void ContestEffect_QualityDependsOnTiming(void)
 {
     u8 rval = Random() % 10;

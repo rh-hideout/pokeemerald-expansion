@@ -5,7 +5,7 @@
 SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own berries")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -24,11 +24,11 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
 SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural Gift")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_NATURAL_GIFT].effect == EFFECT_NATURAL_GIFT);
+        ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         PLAYER(mon) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
     } WHEN {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural
 SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
 SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -70,5 +70,32 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
     } SCENE {
         ABILITY_POPUP(opponent, ability);
         MESSAGE("Your team is too nervous to eat Berries!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
+{
+    u16 mon;
+    enum Ability ability;
+    PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
+    PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(mon) { Ability(ability); }
+        OPPONENT(mon) { Ability(ability); }
+    } WHEN {
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+        TURN { SWITCH(player, 1); }
+        TURN { SWITCH(player, 0); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ability);
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
+        NOT ABILITY_POPUP(opponent, ability);
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(opponent, ability);
+
     }
 }

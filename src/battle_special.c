@@ -178,7 +178,7 @@ u8 GetEreaderTrainerFrontSpriteId(void)
 #endif //FREE_BATTLE_TOWER_E_READER
 }
 
-u8 GetEreaderTrainerClassId(void)
+enum TrainerClassID GetEreaderTrainerClassId(void)
 {
 #if FREE_BATTLE_TOWER_E_READER == FALSE
     return gFacilityClassToTrainerClass[gSaveBlock2Ptr->frontier.ereaderTrainer.facilityClass];

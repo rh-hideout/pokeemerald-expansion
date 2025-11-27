@@ -13,7 +13,7 @@ void ScrollRankingHallRecordsWindow(void);
 void ClearRankingHallRecords(void);
 void SaveGameFrontier(void);
 u8 GetFrontierBrainTrainerPicIndex(void);
-u8 GetFrontierBrainTrainerClass(void);
+enum TrainerClassID GetFrontierBrainTrainerClass(void);
 void CopyFrontierBrainTrainerName(u8 *dst);
 bool8 IsFrontierBrainFemale(void);
 void SetFrontierBrainObjEventGfx_2(void);
@@ -31,7 +31,7 @@ u16 GetRandomScaledFrontierTrainerId(u8 challengeNum, u8 battleNum);
 void SetBattleFacilityTrainerGfxId(u16 trainerId, u8 tempVarId);
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId);
 u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
-u8 GetFrontierOpponentClass(u16 trainerId);
+enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
 u8 GetFrontierTrainerFacilityClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
 u16 GetRandomFrontierMonFromSet(u16 trainerId);
@@ -40,5 +40,6 @@ u8 SetFacilityPtrsGetLevel(void);
 u8 GetFrontierEnemyMonLevel(u8 lvlMode);
 s32 GetHighestLevelInPlayerParty(void);
 u16 FacilityClassToGraphicsId(u8 facilityClass);
+void ShowBattleFrontierCaughtBannedSpecies(void);
 
 #endif // GUARD_FRONTIER_UTIL_H

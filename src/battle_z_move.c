@@ -36,7 +36,6 @@
 #include "constants/songs.h"
 #include "constants/items.h"
 #include "constants/species.h"
-#include "constants/hold_effects.h"
 #include "constants/battle_string_ids.h"
 #include "constants/battle_move_effects.h"
 #include "constants/abilities.h"
@@ -103,6 +102,7 @@ static const u8 sText_FollowMe[] = _("Follow Me");
 static const u8 sText_RecoverHP[] = _("Recover HP");
 static const u8 sText_HealAllyHP[] = _("Heal Replacement HP");
 static const u8 sText_PowerColon[] = _("Power: ");
+static const u8 sText_NoAdditionalEffect[] = _("No Additional Effect");
 
 // Functions
 bool32 IsZMove(u32 move)
@@ -112,7 +112,7 @@ bool32 IsZMove(u32 move)
 
 bool32 CanUseZMove(u32 battler)
 {
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     // Check if Player has Z-Power Ring.
     if (!TESTING && (battler == B_POSITION_PLAYER_LEFT
@@ -143,7 +143,7 @@ bool32 CanUseZMove(u32 battler)
 u32 GetUsableZMove(u32 battler, u32 move)
 {
     u32 item = gBattleMons[battler].item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
 
     if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
     {
@@ -151,7 +151,7 @@ u32 GetUsableZMove(u32 battler, u32 move)
         if (zMove != MOVE_NONE)
             return zMove;  // Signature z move exists
 
-        if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && GetMoveType(move) == ItemId_GetSecondaryId(item))
+        if (move != MOVE_NONE && zMove != MOVE_Z_STATUS && GetMoveType(move) == GetItemSecondaryId(item))
             return GetTypeBasedZMove(move);
     }
 
@@ -160,14 +160,13 @@ u32 GetUsableZMove(u32 battler, u32 move)
 
 void ActivateZMove(u32 battler)
 {
-    gBattleStruct->zmove.baseMoves[battler] = gBattleMons[battler].moves[gBattleStruct->chosenMovePositions[battler]];
     SetActiveGimmick(battler, GIMMICK_Z_MOVE);
 }
 
 bool32 IsViableZMove(u32 battler, u32 move)
 {
     u32 item;
-    u32 holdEffect = GetBattlerHoldEffect(battler, FALSE);
+    enum HoldEffect holdEffect = GetBattlerHoldEffectIgnoreNegation(battler);
     int moveSlotIndex;
 
     item = gBattleMons[battler].item;
@@ -195,7 +194,7 @@ bool32 IsViableZMove(u32 battler, u32 move)
         if (zMove != MOVE_NONE)
             return TRUE;
 
-        if (move != MOVE_NONE && GetMoveType(move) == ItemId_GetSecondaryId(item))
+        if (move != MOVE_NONE && GetMoveType(move) == GetItemSecondaryId(item))
             return TRUE;
     }
 
@@ -352,6 +351,10 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
                 PREPARE_STAT_BUFFER(gBattleTextBuff1, zEffect - Z_EFFECT_ATK_UP_3 + 1);
                 ExpandBattleTextBuffPlaceholders(gBattleTextBuff1, gDisplayedStringBattle + 4);
                 break;
+            default:
+                if (B_SHOW_USELESS_Z_MOVE_INFO == TRUE)
+                    StringCopy(gDisplayedStringBattle, sText_NoAdditionalEffect);
+                break;
             }
 
             BattlePutTextOnWindow(gDisplayedStringBattle, B_WIN_MOVE_NAME_3);
@@ -359,7 +362,7 @@ bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler)
             gDisplayedStringBattle[1] = CHAR_HYPHEN;
             StringCopy(gDisplayedStringBattle + 2, GetMoveName(move));
         }
-        else if (zmove == MOVE_EXTREME_EVOBOOST)
+        else if (GetMoveEffect(zmove) == EFFECT_EXTREME_EVOBOOST)
         {
             // Damaging move -> status z move
             StringCopy(gDisplayedStringBattle, sText_StatsPlus2);
@@ -415,7 +418,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
 static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 {
     u8 *txtPtr, *end;
-    u32 zMoveType = GetBattleMoveType(zMove);
+    enum Type zMoveType = GetBattleMoveType(zMove);
 
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
@@ -433,7 +436,7 @@ static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 void SetZEffect(void)
 {
     u32 i;
-    u32 effect = GetMoveZEffect(gBattleStruct->zmove.baseMoves[gBattlerAttacker]);
+    u32 effect = GetMoveZEffect(gChosenMove);
 
     if (effect == Z_EFFECT_CURSE)
     {
@@ -481,9 +484,9 @@ void SetZEffect(void)
         break;
     }
     case Z_EFFECT_BOOST_CRITS:
-        if (!(gBattleMons[gBattlerAttacker].status2 & STATUS2_FOCUS_ENERGY_ANY))
+        if (!(gBattleMons[gBattlerAttacker].volatiles.dragonCheer || gBattleMons[gBattlerAttacker].volatiles.focusEnergy))
         {
-            gBattleMons[gBattlerAttacker].status2 |= STATUS2_FOCUS_ENERGY;
+            gBattleMons[gBattlerAttacker].volatiles.focusEnergy = TRUE;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_BOOST_CRITS;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
@@ -503,7 +506,7 @@ void SetZEffect(void)
     case Z_EFFECT_RECOVER_HP:
         if (gBattleMons[gBattlerAttacker].hp != gBattleMons[gBattlerAttacker].maxHP)
         {
-            gBattleStruct->moveDamage[gBattlerAttacker] = (-1) * gBattleMons[gBattlerAttacker].maxHP;
+            SetHealAmount(gBattlerAttacker, gBattleMons[gBattlerAttacker].maxHP);
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_RECOVER_HP;
             BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
             gBattlescriptCurrInstr = BattleScript_RecoverHPZMove;
@@ -544,7 +547,8 @@ u32 GetZMovePower(u32 move)
 {
     if (GetMoveCategory(move) == DAMAGE_CATEGORY_STATUS)
         return 0;
-    if (GetMoveEffect(move) == EFFECT_OHKO)
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    if (moveEffect == EFFECT_OHKO || moveEffect == EFFECT_SHEER_COLD)
         return 180;
 
     u32 power = GetMoveZPowerOverride(move);
@@ -563,4 +567,3 @@ u32 GetZMovePower(u32 move)
     else if (power >= 60)  return 120;
     else                   return 100;
 }
-

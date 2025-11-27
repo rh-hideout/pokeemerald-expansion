@@ -1,5 +1,3 @@
-.set LOCALID_ATTENDANT, 1
-
 BattleFrontier_BattlePikeLobby_MapScripts::
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, BattleFrontier_BattlePikeLobby_OnFrame
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, BattleFrontier_BattlePikeLobby_OnWarp
@@ -18,7 +16,7 @@ BattleFrontier_BattlePikeLobby_OnWarp:
 
 BattleFrontier_BattlePikeLobby_EventScript_TurnPlayerNorth::
 	setvar VAR_TEMP_1, 1
-	turnobject OBJ_EVENT_ID_PLAYER, DIR_NORTH
+	turnobject LOCALID_PLAYER, DIR_NORTH
 	end
 
 BattleFrontier_BattlePikeLobby_EventScript_GetChallengeStatus::
@@ -174,10 +172,14 @@ BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMons::
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLv50::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_NotEnoughValidMonsLvOpen::
 	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen, MSGBOX_DEFAULT
+	call BattleFrontier_ShowCaughtBannedSpecies
+	msgbox BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd, MSGBOX_DEFAULT
 	goto BattleFrontier_BattlePikeLobby_EventScript_EndCancelChallenge
 
 BattleFrontier_BattlePikeLobby_EventScript_CancelChallengeSaveFailed::
@@ -202,8 +204,8 @@ BattleFrontier_BattlePikeLobby_EventScript_ShowResults::
 	end
 
 BattleFrontier_BattlePikeLobby_EventScript_WalkToCorridor::
-	applymovement LOCALID_ATTENDANT, BattleFrontier_BattlePikeLobby_Movement_AttendantWalkToCorridor
-	applymovement OBJ_EVENT_ID_PLAYER, BattleFrontier_BattlePikeLobby_Movement_PlayerWalkToCorridor
+	applymovement LOCALID_PIKE_LOBBY_ATTENDANT, BattleFrontier_BattlePikeLobby_Movement_AttendantWalkToCorridor
+	applymovement LOCALID_PLAYER, BattleFrontier_BattlePikeLobby_Movement_PlayerWalkToCorridor
 	waitmovement 0
 	return
 
@@ -317,7 +319,9 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLv50:
 	.string "of Level 50 or less to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
+	.string "EGGS{STR_VAR_1}.$"
+
+BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsEnd:
 	.string "Please come see me when\n"
 	.string "you are ready…$"
 
@@ -329,9 +333,7 @@ BattleFrontier_BattlePikeLobby_Text_NotEnoughValidMonsLvOpen:
 	.string "POKéMON to enter.\p"
 	.string "They also must be holding different\n"
 	.string "kinds of items.\p"
-	.string "EGGS{STR_VAR_1} ineligible.\p"
-	.string "Please come see me when\n"
-	.string "you are ready…$"
+	.string "EGGS{STR_VAR_1}.$"
 
 BattleFrontier_BattlePikeLobby_Text_PleaseChooseThreeMons:
 	.string "Please choose the three POKéMON\n"

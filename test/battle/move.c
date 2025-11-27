@@ -42,14 +42,14 @@ SINGLE_BATTLE_TEST("AdditionalEffect.chance controls the proportion of secondary
 SINGLE_BATTLE_TEST("Turn order is determined by priority")
 {
     GIVEN {
-        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > GetMovePriority(MOVE_TACKLE));
+        ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) > GetMovePriority(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
     }
 }
 
@@ -87,9 +87,9 @@ DOUBLE_BATTLE_TEST("Turn order is determined randomly if priority and Speed tie 
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_ENDEAVOR) == EFFECT_ENDEAVOR);
-        ASSUME(GetMoveEffect(MOVE_LIFE_DEW) == EFFECT_JUNGLE_HEALING);
+        ASSUME(GetMoveEffect(MOVE_LIFE_DEW) == EFFECT_LIFE_DEW);
         ASSUME(GetMoveEffect(MOVE_CRUSH_GRIP) == EFFECT_POWER_BASED_ON_TARGET_HP);
-        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_SUPER_FANG);
+        ASSUME(GetMoveEffect(MOVE_SUPER_FANG) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_WOBBUFFET) { MaxHP(480); HP(360); Defense(100); Speed(1); }
         PLAYER(SPECIES_WYNAUT) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Attack(100); Speed(1); }
@@ -134,42 +134,15 @@ DOUBLE_BATTLE_TEST("Turn order is determined randomly if priority and Speed tie 
     }
 }
 
-SINGLE_BATTLE_TEST("Critical hits occur at a 1/24 rate")
-{
-    PASSES_RANDOMLY(1, 24, RNG_CRITICAL_HIT);
-    GIVEN {
-        ASSUME(B_CRIT_CHANCE >= GEN_7);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SCRATCH); }
-    } SCENE {
-        MESSAGE("A critical hit!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Slash's critical hits occur at a 1/8 rate")
-{
-    PASSES_RANDOMLY(1, 8, RNG_CRITICAL_HIT);
-    GIVEN {
-        ASSUME(B_CRIT_CHANCE >= GEN_7);
-        ASSUME(GetMoveCriticalHitStage(MOVE_SLASH) == 1);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(player, MOVE_SLASH); }
-    } SCENE {
-        MESSAGE("A critical hit!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Critical hits deal 50% more damage", s16 damage)
+SINGLE_BATTLE_TEST("Critical hits deal 100% (Gen 1-5) or 50% (Gen 6+) more damage", s16 damage)
 {
     bool32 criticalHit;
-    PARAMETRIZE { criticalHit = FALSE; }
-    PARAMETRIZE { criticalHit = TRUE; }
+    u32 genConfig;
+    PARAMETRIZE { criticalHit = FALSE; genConfig = GEN_5; }
+    PARAMETRIZE { criticalHit = TRUE;  genConfig = GEN_5; }
+    PARAMETRIZE { criticalHit = TRUE;  genConfig = GEN_6; }
     GIVEN {
-        ASSUME(B_CRIT_MULTIPLIER >= GEN_6);
+        WITH_CONFIG(GEN_CONFIG_CRIT_MULTIPLIER, genConfig);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -177,7 +150,8 @@ SINGLE_BATTLE_TEST("Critical hits deal 50% more damage", s16 damage)
     } SCENE {
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } FINALLY {
-        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(2.0), results[1].damage);
+        EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[2].damage);
     }
 }
 
@@ -231,10 +205,54 @@ DOUBLE_BATTLE_TEST("Moves fail if they target the partner but they faint before 
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); MOVE(playerLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); MOVE(playerLeft, MOVE_SCRATCH, target: playerRight); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
+    }
+}
+
+MULTI_BATTLE_TEST("Ally switch fails when used by either side in a multibattle")
+{
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET);
+        MULTI_PARTNER(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(playerRight, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_ALLY_SWITCH); MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft); ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerRight); ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentLeft); ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight); }
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("Ally switch can only be used by the opponent in a 2v1 battle")
+{
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET);
+        MULTI_PARTNER(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(playerRight, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        { ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentLeft); }
+        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft); ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerRight); }
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("Ally switch can only be used by the player in a 1v2 battle")
+{
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET);
+        MULTI_PLAYER(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); MOVE(opponentLeft, MOVE_ALLY_SWITCH); MOVE(opponentRight, MOVE_ALLY_SWITCH); }
+    } SCENE {
+        { ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, playerLeft); }
+        NONE_OF { ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentLeft); ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight); }
     }
 }
 
@@ -246,13 +264,13 @@ DOUBLE_BATTLE_TEST("Moves do not fail if an alive partner is the target")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, target: playerRight); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
     }
 }
 
-DOUBLE_BATTLE_TEST("Moves fail if they target into a pokemon that was fainted by the previous move")
+DOUBLE_BATTLE_TEST("Moves fail if they target into a Pokémon that was fainted by the previous move")
 {
     GIVEN {
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
@@ -265,13 +283,13 @@ DOUBLE_BATTLE_TEST("Moves fail if they target into a pokemon that was fainted by
     } WHEN {
         TURN {
             MOVE(playerLeft, MOVE_HYPER_VOICE);
-            MOVE(playerRight, MOVE_TACKLE, target: opponentLeft);
+            MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft);
             SEND_OUT(opponentLeft, 2);
             SEND_OUT(opponentRight, 3);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
     }
 }
 
@@ -284,9 +302,9 @@ DOUBLE_BATTLE_TEST("Moves that target the field are not going to fail if one mon
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); MOVE(playerLeft, MOVE_SURF); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); MOVE(playerLeft, MOVE_SURF); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponentLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SURF, playerLeft);
     }
 }

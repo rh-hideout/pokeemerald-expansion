@@ -37,13 +37,13 @@ SINGLE_BATTLE_TEST("Charge's effect is kept until the user uses an Electric move
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARGE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
@@ -75,7 +75,8 @@ SINGLE_BATTLE_TEST("Charge's effect is removed if the user fails using an Electr
 
 SINGLE_BATTLE_TEST("Charge's effect does not stack with Electromorphosis or Wind Power")
 {
-    u32 species, ability;
+    u32 species;
+    enum Ability ability;
     s16 damage[2];
 
     PARAMETRIZE { species = SPECIES_WATTREL; ability = ABILITY_WIND_POWER; }
@@ -106,20 +107,20 @@ SINGLE_BATTLE_TEST("Charge's effect is removed regardless if the next move is El
 {
     s16 damage[2];
     GIVEN {
-        ASSUME(GetMoveType(MOVE_TACKLE) != TYPE_ELECTRIC);
-        ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
+        ASSUME(GetMoveType(MOVE_SCRATCH) != TYPE_ELECTRIC);
+        ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
         TURN { MOVE(player, MOVE_CHARGE); }
-        TURN { MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); }
         TURN { MOVE(player, MOVE_THUNDERBOLT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         HP_BAR(opponent, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CHARGE, player);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
@@ -134,7 +135,7 @@ SINGLE_BATTLE_TEST("Charge will not expire if it flinches twice in a row")
 {
     s16 damage[2];
     GIVEN {
-         ASSUME(gMovesInfo[MOVE_IRON_HEAD].additionalEffects[0].moveEffect == MOVE_EFFECT_FLINCH); 
+         ASSUME(GetMoveAdditionalEffectById(MOVE_IRON_HEAD, 0)->moveEffect == MOVE_EFFECT_FLINCH);
          PLAYER(SPECIES_WOBBUFFET);
          OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); }
     } WHEN {

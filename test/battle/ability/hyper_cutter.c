@@ -11,8 +11,8 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents intimidate")
         PLAYER(SPECIES_EKANS) { Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_KRABBY) { Ability(ABILITY_HYPER_CUTTER); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
-        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SCRATCH); }
 
     } SCENE {
         HP_BAR(player, captureDamage: &turnOneHit);
@@ -43,7 +43,8 @@ SINGLE_BATTLE_TEST("Hyper Cutter prevents Attack stage reduction from moves")
 SINGLE_BATTLE_TEST("Hyper Cutter doesn't prevent Attack reduction from burn")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_WILL_O_WISP);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KRABBY) { Ability(ABILITY_HYPER_CUTTER); }
     } WHEN {
@@ -117,7 +118,7 @@ SINGLE_BATTLE_TEST("Hyper Cutter doesn't prevent Spectral Thief from resetting p
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
-        ASSUME(MoveHasAdditionalEffect(MOVE_SPECTRAL_THIEF, MOVE_EFFECT_SPECTRAL_THIEF));
+        ASSUME(GetMoveEffect(MOVE_SPECTRAL_THIEF) == EFFECT_SPECTRAL_THIEF);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_KRABBY) { Ability(ABILITY_HYPER_CUTTER); }
     } WHEN {
@@ -125,8 +126,8 @@ SINGLE_BATTLE_TEST("Hyper Cutter doesn't prevent Spectral Thief from resetting p
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponent);
         MESSAGE("The opposing Krabby's Attack sharply rose!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
         MESSAGE("Wobbuffet stole the target's boosted stats!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPECTRAL_THIEF, player);
     } THEN {
         EXPECT_EQ(opponent->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
     }

@@ -34,7 +34,7 @@
 #define BOX3_Y_OFFSET  0
 
 // porthole states
-enum
+enum PortholeState
 {
     INIT_PORTHOLE,
     IDLE_CHECK,
@@ -300,7 +300,7 @@ void Task_HandlePorthole(u8 taskId)
     u16 *cruiseState = GetVarPointer(VAR_SS_TIDAL_STATE);
     struct WarpData *location = &gSaveBlock1Ptr->location;
 
-    switch (data[0])
+    switch ((enum PortholeState)data[0])
     {
     case INIT_PORTHOLE: // finish fading before making porthole finish.
         if (!gPaletteFade.active)
@@ -312,7 +312,7 @@ void Task_HandlePorthole(u8 taskId)
     case IDLE_CHECK:
         if (JOY_NEW(A_BUTTON))
             data[1] = 1;
-        if (!ScriptMovement_IsObjectMovementFinished(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup))
+        if (!ScriptMovement_IsObjectMovementFinished(LOCALID_PLAYER, location->mapNum, location->mapGroup))
             return;
         if (CountSSTidalStep(1) == TRUE)
         {
@@ -334,12 +334,12 @@ void Task_HandlePorthole(u8 taskId)
 
         if (*cruiseState == SS_TIDAL_DEPART_SLATEPORT)
         {
-            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailEastMovementScript);
+            ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailEastMovementScript);
             data[0] = IDLE_CHECK;
         }
         else
         {
-            ScriptMovement_StartObjectMovementScript(OBJ_EVENT_ID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailWestMovementScript);
+            ScriptMovement_StartObjectMovementScript(LOCALID_PLAYER, location->mapNum, location->mapGroup, sSSTidalSailWestMovementScript);
             data[0] = IDLE_CHECK;
         }
         break;

@@ -61,9 +61,9 @@ enum {
 };
 
 enum {
-    MOVE_NONE,
-    MOVE_BACKWARD,
-    MOVE_FORWARD,
+    CLOCK_MOVE_NONE,
+    CLOCK_MOVE_BACKWARD,
+    CLOCK_MOVE_FORWARD,
 };
 
 enum {
@@ -71,7 +71,7 @@ enum {
     WIN_BUTTON_LABEL,
 };
 
-static const u32 sHand_Gfx[] = INCBIN_U32("graphics/wallclock/hand.4bpp.lz");
+static const u32 sHand_Gfx[] = INCBIN_U32("graphics/wallclock/hand.4bpp.smol");
 static const u16 sTextPrompt_Pal[] = INCBIN_U16("graphics/wallclock/text_prompt.gbapal"); // for "Cancel" or "Confirm"
 
 static const struct WindowTemplate sWindowTemplates[] =
@@ -644,7 +644,7 @@ static void LoadWallClockGraphics(void)
     DmaFillLarge16(3, 0, (void *)VRAM, VRAM_SIZE, 0x1000);
     DmaClear32(3, (void *)OAM, OAM_SIZE);
     DmaClear16(3, (void *)PLTT, PLTT_SIZE);
-    LZ77UnCompVram(gWallClock_Gfx, (void *)VRAM);
+    DecompressDataWithHeaderVram(gWallClock_Gfx, (void *)VRAM);
 
     if (gSpecialVar_0x8004 == MALE)
         LoadPalette(gWallClockMale_Pal, BG_PLTT_ID(0), PLTT_SIZE_4BPP);
@@ -689,16 +689,16 @@ void CB2_StartWallClock(void)
     u8 spriteId;
 
     LoadWallClockGraphics();
-    LZ77UnCompVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
+    DecompressDataWithHeaderVram(gWallClockStart_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
 
     taskId = CreateTask(Task_SetClock_WaitFadeIn, 0);
-    gTasks[taskId].tHours = 10;
-    gTasks[taskId].tMinutes = 0;
+    gTasks[taskId].tHours = gLocalTime.hours;
+    gTasks[taskId].tMinutes = gLocalTime.minutes;
     gTasks[taskId].tMoveDir = 0;
-    gTasks[taskId].tPeriod = 0;
+    gTasks[taskId].tPeriod = gTasks[taskId].tHours / 12;
     gTasks[taskId].tMoveSpeed = 0;
-    gTasks[taskId].tMinuteHandAngle = 0;
-    gTasks[taskId].tHourHandAngle = 300;
+    gTasks[taskId].tMinuteHandAngle = gTasks[taskId].tMinutes * 6;
+    gTasks[taskId].tHourHandAngle = (gTasks[taskId].tHours % 12) * 30 + (gTasks[taskId].tMinutes / 10) * 5;
 
     spriteId = CreateSprite(&sSpriteTemplate_MinuteHand, 120, 80, 1);
     gSprites[spriteId].sTaskId = taskId;
@@ -733,7 +733,7 @@ void CB2_ViewWallClock(void)
     u8 angle2;
 
     LoadWallClockGraphics();
-    LZ77UnCompVram(gWallClockView_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
+    DecompressDataWithHeaderVram(gWallClockView_Tilemap, (u16 *)BG_SCREEN_ADDR(7));
 
     taskId = CreateTask(Task_ViewClock_WaitFadeIn, 0);
     InitClockWithRtc(taskId);
@@ -806,15 +806,15 @@ static void Task_SetClock_HandleInput(u8 taskId)
         }
         else
         {
-            gTasks[taskId].tMoveDir = MOVE_NONE;
+            gTasks[taskId].tMoveDir = CLOCK_MOVE_NONE;
 
             if (JOY_HELD(DPAD_LEFT))
-                gTasks[taskId].tMoveDir = MOVE_BACKWARD;
+                gTasks[taskId].tMoveDir = CLOCK_MOVE_BACKWARD;
 
             if (JOY_HELD(DPAD_RIGHT))
-                gTasks[taskId].tMoveDir = MOVE_FORWARD;
+                gTasks[taskId].tMoveDir = CLOCK_MOVE_FORWARD;
 
-            if (gTasks[taskId].tMoveDir != MOVE_NONE)
+            if (gTasks[taskId].tMoveDir != CLOCK_MOVE_NONE)
             {
                 if (gTasks[taskId].tMoveSpeed < 0xFF)
                     gTasks[taskId].tMoveSpeed++;
@@ -916,13 +916,13 @@ static u16 CalcNewMinHandAngle(u16 angle, u8 direction, u8 speed)
     u8 delta = CalcMinHandDelta(speed);
     switch (direction)
     {
-    case MOVE_BACKWARD:
+    case CLOCK_MOVE_BACKWARD:
         if (angle)
             angle -= delta;
         else
             angle = 360 - delta;
         break;
-    case MOVE_FORWARD:
+    case CLOCK_MOVE_FORWARD:
         if (angle < 360 - delta)
             angle += delta;
         else
@@ -936,7 +936,7 @@ static bool32 AdvanceClock(u8 taskId, u8 direction)
 {
     switch (direction)
     {
-    case MOVE_BACKWARD:
+    case CLOCK_MOVE_BACKWARD:
         if (gTasks[taskId].tMinutes > 0)
         {
             gTasks[taskId].tMinutes--;
@@ -953,7 +953,7 @@ static bool32 AdvanceClock(u8 taskId, u8 direction)
             UpdateClockPeriod(taskId, direction);
         }
         break;
-    case MOVE_FORWARD:
+    case CLOCK_MOVE_FORWARD:
         if (gTasks[taskId].tMinutes < 59)
         {
             gTasks[taskId].tMinutes++;
@@ -979,7 +979,7 @@ static void UpdateClockPeriod(u8 taskId, u8 direction)
     u8 hours = gTasks[taskId].tHours;
     switch (direction)
     {
-    case MOVE_BACKWARD:
+    case CLOCK_MOVE_BACKWARD:
         switch (hours)
         {
         case 11:
@@ -990,7 +990,7 @@ static void UpdateClockPeriod(u8 taskId, u8 direction)
             break;
         }
         break;
-    case MOVE_FORWARD:
+    case CLOCK_MOVE_FORWARD:
         switch (hours)
         {
         case 0:

@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
     ASSUME(GetMoveCategory(MOVE_ROUND) == DAMAGE_CATEGORY_SPECIAL);
 }
 
@@ -28,10 +28,10 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
     u32 move;
     s16 damage[2];
 
-    PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_TACKLE; }
+    PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_SCRATCH; }
     PARAMETRIZE { species = SPECIES_ROARING_MOON; move = MOVE_ROUND; }
 
-    PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_TACKLE; }
+    PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_SCRATCH; }
     PARAMETRIZE { species = SPECIES_WALKING_WAKE; move = MOVE_ROUND; }
 
     GIVEN {
@@ -47,7 +47,7 @@ SINGLE_BATTLE_TEST("Protosynthesis boosts either Attack or Special Attack, not b
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
-        if ((move == MOVE_TACKLE && species == SPECIES_ROARING_MOON) || (move == MOVE_ROUND && species == SPECIES_WALKING_WAKE))
+        if ((move == MOVE_SCRATCH && species == SPECIES_ROARING_MOON) || (move == MOVE_ROUND && species == SPECIES_WALKING_WAKE))
             EXPECT_MUL_EQ(damage[0], Q_4_12(1.3), damage[1]);
         else
             EXPECT_EQ(damage[0], damage[1]);
@@ -59,6 +59,7 @@ SINGLE_BATTLE_TEST("Protosynthesis ability pop up activates only once during the
     u16 turns;
 
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
         OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); };
     } WHEN {
@@ -100,59 +101,36 @@ SINGLE_BATTLE_TEST("Protosynthesis activates on switch-in")
     }
 }
 
-SINGLE_BATTLE_TEST("Protosynthesis boosts Attack 1st in case of a stat tie")
+SINGLE_BATTLE_TEST("Protosynthesis prioritizes stats in the case of a tie in the following order: Atk, Def, Sp.Atk, Sp.Def, Speed")
 {
-    GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(5); Defense(5); SpAttack(5); SpDefense(5); Speed(5); }
-        OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("Great Tusk's Attack was heightened!");
-    }
-}
+    u8 stats[] = {1, 1, 1, 1, 1};
 
-SINGLE_BATTLE_TEST("Protosynthesis boosts Defense 2nd in case of a stat tie")
-{
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; stats[1] = 255; stats[0] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; stats[1] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; stats[2] = 255; }
+    PARAMETRIZE { stats[4] = 255; stats[3] = 255; }
     GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(4); Defense(5); SpAttack(5); SpDefense(5); Speed(5); }
+        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(stats[0]); Defense(stats[1]); SpAttack(stats[2]); SpDefense(stats[3]); Speed(stats[4]); }
         OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
     } WHEN {
         TURN { }
     } SCENE {
         ABILITY_POPUP(opponent, ABILITY_DROUGHT);
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("Great Tusk's Defense was heightened!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Protosynthesis boosts Special Attack 3rd in case of a stat tie")
-{
-    GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(4); Defense(4); SpAttack(5); SpDefense(5); Speed(5); }
-        OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("Great Tusk's Sp. Atk was heightened!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Protosynthesis boosts Special Defense 4th in case of a stat tie")
-{
-    GIVEN {
-        PLAYER(SPECIES_GREAT_TUSK) { Ability(ABILITY_PROTOSYNTHESIS); Attack(4); Defense(4); SpAttack(4); SpDefense(5); Speed(5); }
-        OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); Speed(5); }
-    } WHEN {
-        TURN { }
-    } SCENE {
-        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
-        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
-        MESSAGE("Great Tusk's Sp. Def was heightened!");
+        switch(i) {
+            case 0:
+                MESSAGE("Great Tusk's Attack was heightened!");
+                break;
+            case 1:
+                MESSAGE("Great Tusk's Defense was heightened!");
+                break;
+            case 2:
+                MESSAGE("Great Tusk's Sp. Atk was heightened!");
+                break;
+            case 3:
+                MESSAGE("Great Tusk's Sp. Def was heightened!");
+                break;
+        }
     }
 }
 
@@ -207,7 +185,8 @@ SINGLE_BATTLE_TEST("Protosynthesis activates even if the Pokémon is holding an 
 
 SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on the field")
 {
-    u32 species, ability;
+    u32 species;
+    enum Ability ability;
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     PARAMETRIZE { species = SPECIES_GOLDUCK; ability = ABILITY_CLOUD_NINE; }
 
@@ -220,5 +199,23 @@ SINGLE_BATTLE_TEST("Protosynthesis doesn't activate if Cloud Nine/Air Lock is on
         ABILITY_POPUP(opponent, ability);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
         NOT ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset")
+{
+    GIVEN {
+        PLAYER(SPECIES_WALKING_WAKE) { Ability(ABILITY_PROTOSYNTHESIS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { MOVE(player, MOVE_RAIN_DANCE); }
+        TURN { MOVE(player, MOVE_SUNNY_DAY); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }

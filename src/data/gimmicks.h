@@ -10,8 +10,8 @@ const struct GimmickInfo gGimmicksInfo[GIMMICKS_COUNT] =
         .triggerSheet = &sSpriteSheet_MegaTrigger,
         .triggerPal = &sSpritePalette_MegaTrigger,
         .triggerTemplate = &sSpriteTemplate_GimmickTrigger,
-        .indicatorSheet = &sSpriteSheet_MegaIndicator,
-        .indicatorPal = &sSpritePalette_MegaIndicator,
+        .indicatorData = sMegaIndicatorGfx,
+        .indicatorPalTag = TAG_MEGA_INDICATOR_PAL,
         .CanActivate = CanMegaEvolve,
         .ActivateGimmick = ActivateMegaEvolution,
     },
@@ -36,8 +36,8 @@ const struct GimmickInfo gGimmicksInfo[GIMMICKS_COUNT] =
         .triggerSheet = &sSpriteSheet_DynamaxTrigger,
         .triggerPal = &sSpritePalette_DynamaxTrigger,
         .triggerTemplate = &sSpriteTemplate_GimmickTrigger,
-        .indicatorSheet = &sSpriteSheet_DynamaxIndicator,
-        .indicatorPal = &sSpritePalette_MiscIndicator,
+        .indicatorData = sDynamaxIndicatorGfx,
+        .indicatorPalTag = TAG_MISC_INDICATOR_PAL,
         .CanActivate = CanDynamax,
         .ActivateGimmick = ActivateDynamax,
     },
@@ -46,8 +46,8 @@ const struct GimmickInfo gGimmicksInfo[GIMMICKS_COUNT] =
         .triggerSheet = &sSpriteSheet_TeraTrigger,
         .triggerPal = &sSpritePalette_TeraTrigger,
         .triggerTemplate = &sSpriteTemplate_GimmickTrigger,
-        .indicatorSheet = NULL, // handled separately
-        .indicatorPal = &sSpritePalette_TeraIndicator,
+        .indicatorData = NULL, // handled separately
+        .indicatorPalTag = TAG_TERA_INDICATOR_PAL,
         .CanActivate = CanTerastallize,
         .ActivateGimmick = ActivateTera,
     }

@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority mov
         TURN { MOVE(player, MOVE_QUICK_ATTACK); MOVE(opponent, MOVE_QUICK_ATTACK); }
     } SCENE {
         MESSAGE("Claydol used Psychic Terrain!");
-        MESSAGE("Claydol cannot use Quick Attack!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
         NOT { HP_BAR(opponent); }
         MESSAGE("The opposing Wobbuffet used Quick Attack!");
         HP_BAR(player);
@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Psychic Terrain increases power of Psychic-type moves by 30/
     }
 }
 
-SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves that target the user")
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't blocks priority moves that target the user")
 {
     GIVEN {
         PLAYER(SPECIES_SABLEYE) { Ability(ABILITY_PRANKSTER); HP(1); }
@@ -114,6 +114,40 @@ SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority field moves")
     }
 }
 
+SINGLE_BATTLE_TEST("Psychic Terrain doesn't block priority moves against semi-invulnerable targets")
+{
+    u32 move = 0, shouldWork = 0;
+    PARAMETRIZE { move = MOVE_SOLAR_BEAM; shouldWork = FALSE;}
+    PARAMETRIZE { move = MOVE_FLY; shouldWork = TRUE;}
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_TOXIC_NEVER_MISS, GEN_6);
+        ASSUME(IsSpeciesOfType(SPECIES_SHROODLE, TYPE_POISON));
+        PLAYER(SPECIES_SHROODLE) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_PSYCHIC_TERRAIN); MOVE(opponent,move);}
+        TURN { MOVE(player, MOVE_TOXIC); SKIP_TURN(opponent);}
+    } SCENE {
+        if (shouldWork)
+        {
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+        }
+        else
+        {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_TOXIC, player);
+                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_PSN, opponent);
+            }
+        }
+    } THEN {
+        if (shouldWork)
+            EXPECT(opponent->status1 & STATUS1_TOXIC_POISON);
+        else
+            EXPECT(!(opponent->status1 & STATUS1_TOXIC_POISON));
+    }
+}
+
 SINGLE_BATTLE_TEST("Psychic Terrain lasts for 5 turns")
 {
     GIVEN {
@@ -140,5 +174,39 @@ SINGLE_BATTLE_TEST("Psychic Terrain lasts for 5 turns")
         MESSAGE("The opposing Wobbuffet used Celebrate!");
 
         MESSAGE("The weirdness disappeared from the battlefield!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Left")
+{
+    GIVEN {
+        PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
+        PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); }
+        OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
+    } SCENE {
+        ABILITY_POPUP(playerRight, ABILITY_PSYCHIC_SURGE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Psychic Terrain protects grounded battlers from priority moves in doubles - Right")
+{
+    GIVEN {
+        PLAYER(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); }
+        PLAYER(SPECIES_CLAYDOL) { Ability(ABILITY_LEVITATE); }
+        OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_COTTON_SPORE); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_PSYCHIC_SURGE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COTTON_SPORE, opponentLeft);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
     }
 }

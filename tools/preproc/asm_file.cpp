@@ -517,8 +517,53 @@ bool AsmFile::ParseEnum()
 
     long fallbackPosition = m_pos;
     std::string headerFilename = "";
-    long currentHeaderLine = SkipWhitespaceAndEol();
-    std::string enumName = ReadIdentifier();
+    long currentHeaderLine = 0;
+    std::string enumName;
+    while (true)
+    {
+        currentHeaderLine += SkipWhitespaceAndEol();
+        std::string identifier = ReadIdentifier();
+        if (identifier == "__attribute__")
+        {
+            if (m_pos + 1 >= m_size
+             || m_buffer[m_pos] != '('
+             || m_buffer[m_pos + 1] != '(')
+            {
+                m_pos = fallbackPosition - 4;
+                return false;
+            }
+
+            m_pos += 2;
+            int parens = 2;
+            while (true)
+            {
+                char c = m_buffer[m_pos++];
+                if (c == '\n')
+                    currentHeaderLine++;
+
+                if (c == '(')
+                {
+                    parens++;
+                }
+                else if (c == ')')
+                {
+                    parens--;
+                    if (parens == 0)
+                        break;
+                }
+                else if (parens < 2 || m_pos == m_size)
+                {
+                    m_pos = fallbackPosition - 4;
+                    return false;
+                }
+            }
+        }
+        else
+        {
+            enumName = identifier;
+            break;
+        }
+    }
     currentHeaderLine += SkipWhitespaceAndEol();
     std::string enumBase = "0";
     long enumCounter = 0;
@@ -575,6 +620,10 @@ bool AsmFile::ParseEnum()
                 }
                 enumCounter = 0;
             }
+            // HACK(#7394): Make the definitions global so that C 'asm'
+            // statements are able to reference them (if they happen to
+            // be available in an assembled object file).
+            std::printf(".global %s; ", currentIdentName.c_str());
             std::printf(".equiv %s, (%s) + %ld\n", currentIdentName.c_str(), enumBase.c_str(), enumCounter);
             enumCounter++;
             symbolCount++;
@@ -584,7 +633,11 @@ bool AsmFile::ParseEnum()
             RaiseError("%s:%ld: empty enum is invalid", headerFilename.c_str(), currentHeaderLine);
         }
 
-        if (m_buffer[m_pos] != ',')
+        if (m_buffer[m_pos] == '#')
+        {
+            currentHeaderLine = ParseLineSkipInEnum();
+        }
+        else if (m_buffer[m_pos] != ',')
         {
             currentHeaderLine += SkipWhitespaceAndEol();
             if (m_buffer[m_pos++] == '}' && m_buffer[m_pos++] == ';')
@@ -679,13 +732,57 @@ void AsmFile::RaiseWarning(const char* format, ...)
 int AsmFile::SkipWhitespaceAndEol()
 {
     int newlines = 0;
-    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\n')
+    while (m_buffer[m_pos] == '\t' || m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\r' || m_buffer[m_pos] == '\n')
     {
         if (m_buffer[m_pos] == '\n')
             newlines++;
         m_pos++;
     }
     return newlines;
+}
+
+int AsmFile::ParseLineSkipInEnum(void)
+{
+    m_pos++;
+    while (m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\t')
+        m_pos++;
+
+     if (!IsAsciiDigit(m_buffer[m_pos]))
+        RaiseError("malformatted line indicator found inside `enum`, expected line number");
+
+    unsigned n = 0;
+    int digit = 0;
+    while ((digit = ConvertDigit(m_buffer[m_pos++], 10)) != -1)
+        n = 10 * n + digit;
+
+    while (m_buffer[m_pos] == ' ' || m_buffer[m_pos] == '\t')
+        m_pos++;
+
+    if (m_buffer[m_pos++] != '"')
+        RaiseError("malformatted line indicator found before `enum`, expected filename");
+
+    while (m_buffer[m_pos] != '"')
+    {
+        unsigned char c = m_buffer[m_pos++];
+
+        if (c == 0)
+        {
+            if (m_pos >= m_size)
+                RaiseError("unexpected EOF in line indicator");
+            else
+                RaiseError("unexpected null character in line indicator");
+        }
+
+        if (!IsAsciiPrintable(c))
+            RaiseError("unexpected character '\\x%02X' in line indicator", c);
+
+        if (c == '\\')
+        {
+            c = m_buffer[m_pos];
+            RaiseError("unexpected escape '\\%c' in line indicator", c);
+        }
+    }
+    return n - 1;
 }
 
 // returns the last line indicator and its corresponding file name without modifying the token index

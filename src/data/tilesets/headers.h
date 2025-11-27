@@ -1,3 +1,8 @@
+#include "fieldmap.h"
+
+// Whether a palette has a night version, located at ((x + 9) % 16).pal
+#define SWAP_PAL(x) ((x) < NUM_PALS_IN_PRIMARY ? 1 << (x) : 1 << ((x) - NUM_PALS_IN_PRIMARY))
+
 const struct Tileset gTileset_General =
 {
     .isCompressed = TRUE,
@@ -636,8 +641,8 @@ const struct Tileset gTileset_SecretBase =
     .callback = NULL,
 };
 
-const struct Tileset * const gTilesetPointer_SecretBase = &gTileset_SecretBase;
-const struct Tileset * const gTilesetPointer_SecretBaseRedCave = &gTileset_SecretBaseRedCave;
+const struct Tileset *const gTilesetPointer_SecretBase = &gTileset_SecretBase;
+const struct Tileset *const gTilesetPointer_SecretBaseRedCave = &gTileset_SecretBaseRedCave;
 
 const struct Tileset gTileset_EliteFour =
 {

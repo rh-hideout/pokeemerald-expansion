@@ -961,7 +961,7 @@ static void ReceiveDaycareMailData(struct RecordMixingDaycareMail *records, size
 
 static void ReceiveGiftItem(u16 *item, u8 multiplayerId)
 {
-    if (multiplayerId != 0 && *item != ITEM_NONE && GetPocketByItemId(*item) == POCKET_KEY_ITEMS)
+    if (multiplayerId != 0 && *item != ITEM_NONE && GetItemPocket(*item) == POCKET_KEY_ITEMS)
     {
         if (!CheckBagHasItem(*item, 1) && !CheckPCHasItem(*item, 1) && AddBagItem(*item, 1))
         {

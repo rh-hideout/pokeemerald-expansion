@@ -1,21 +1,22 @@
 #include "global.h"
+#include "berry.h"
+#include "clock.h"
+#include "dewford_trend.h"
 #include "event_data.h"
+#include "field_specials.h"
+#include "field_weather.h"
+#include "main.h"
+#include "lottery_corner.h"
+#include "overworld.h"
 #include "rtc.h"
 #include "time_events.h"
-#include "field_specials.h"
-#include "lottery_corner.h"
-#include "dewford_trend.h"
 #include "tv.h"
-#include "field_weather.h"
-#include "berry.h"
-#include "main.h"
-#include "overworld.h"
 #include "wallclock.h"
 #include "constants/form_change_types.h"
+#include "apricorn_tree.h"
 
 static void UpdatePerDay(struct Time *localTime);
 static void UpdatePerMinute(struct Time *localTime);
-static void FormChangeTimeUpdate();
 
 void InitTimeBasedEvents(void)
 {
@@ -55,6 +56,7 @@ static void UpdatePerDay(struct Time *localTime)
         SetShoalItemFlag(daysSince);
         SetRandomLotteryNumber(daysSince);
         UpdateDaysPassedSinceFormChange(daysSince);
+        DailyResetApricornTrees();
         *days = localTime->days;
     }
 }
@@ -72,12 +74,11 @@ static void UpdatePerMinute(struct Time *localTime)
         {
             BerryTreeTimeUpdate(minutes);
             gSaveBlock2Ptr->lastBerryTreeUpdate = *localTime;
-            FormChangeTimeUpdate();
         }
     }
 }
 
-static void FormChangeTimeUpdate()
+void FormChangeTimeUpdate()
 {
     s32 i;
     for (i = 0; i < PARTY_SIZE; i++)
