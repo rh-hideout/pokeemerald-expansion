@@ -177,7 +177,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when encored into a d
         TURN { MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft); }
         TURN { MOVE(opponentRight, MOVE_SCRATCH, target: playerLeft);
                MOVE(opponentLeft, MOVE_ENCORE, target: playerLeft);
-               MOVE(playerLeft, MOVE_FOCUS_PUNCH); }
+               MOVE(playerLeft, MOVE_FOCUS_PUNCH, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerLeft);
         HP_BAR(opponentLeft);

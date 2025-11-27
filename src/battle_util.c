@@ -2141,10 +2141,10 @@ static enum MoveCanceler CancelerFocus(struct BattleContext *ctx)
 {
     u32 focusPunchFailureConfig = GetGenConfig(GEN_CONFIG_FOCUS_PUNCH_FAILURE);
 
-    // In Gens 1-4, only check if is using Focus Punch.
+    // In Gens 3-4, only check if is using Focus Punch.
     // In Gens 5-6, only check if the chosen move is Focus Punch.
     // In Gens 7+, check if chose and is using Focus Punch.
-    if ((gProtectStructs[gBattlerAttacker].physicalDmg || gProtectStructs[gBattlerAttacker].specialDmg)
+    if ((gProtectStructs[ctx->battlerAtk].physicalDmg || gProtectStructs[ctx->battlerAtk].specialDmg)
      && (focusPunchFailureConfig < GEN_5 || GetMoveEffect(gChosenMoveByBattler[ctx->battlerAtk]) == EFFECT_FOCUS_PUNCH)
      && (focusPunchFailureConfig == GEN_5 || focusPunchFailureConfig == GEN_6 || GetMoveEffect(ctx->currentMove) == EFFECT_FOCUS_PUNCH))
     {
