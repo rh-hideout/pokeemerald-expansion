@@ -18,6 +18,7 @@
 	.endm
 
 	.macro critcalc
+	.warning "critcalc macro has been deprecated, please remove from scripts"
 	.byte 0x4
 	.endm
 
