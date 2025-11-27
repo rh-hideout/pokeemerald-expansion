@@ -2131,7 +2131,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
     u32 invalidMons = 0;
     uq4_12_t effectiveness = UQ_4_12(1.0);
-    gAiLogicData->switchinCandidateEligible = 0;
 
     // Iterate through mons
     for (i = firstId; i < lastId; i++)
@@ -2156,7 +2155,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         }
         else
         {
-            gAiLogicData->switchinCandidateEligible |= (1u << i);
             aliveCount++;
         }
 
