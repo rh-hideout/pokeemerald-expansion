@@ -2215,17 +2215,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             if (canSwitchinWin1v1)
                 generic1v1MonIds |= (1u << i);
 
-            // Track max hits to KO and set defensive mon
-            if (hitsToKOAI > maxHitsToKO && (canSwitchinWin1v1 || gAiThinkingStruct->aiFlags[battler] & AI_FLAG_STALL))
-            {
-                maxHitsToKO = hitsToKOAI;
-                if (maxHitsToKO > defensiveMonHitKOThreshold)
-                    defensiveMonIds |= (1u << i);
-            }
-
-            if (canSwitchinWin1v1)
-                generic1v1MonIds |= (1u << i);
-
             // Check for mon with resistance and super effective move for best type matchup mon with effective move
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
