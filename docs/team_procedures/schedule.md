@@ -12,8 +12,13 @@ Releases that focus primarily on bugfixes or improvements to the test system. Pa
 PRs with the Github label [`type: big feature`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aopen+label%3A%22type%3A+big+feature%22) will NOT be merged until after the next Minor Release.
 
 ### Merge Freeze (14 days to the next Minor Release)
-PRs that DO NOT have the Github labels [`bugfix`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3Abugfix) or [`type: cleanup`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+cleanup%22+) will NOT be merged until after the next Minor Release.
-
+Pull Requests that **DO NOT** have one of the following Github labels:
+- [`bugfix`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3Abugfix) 
+- [`type: cleanup`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+cleanup%22+) 
+- [`type: credits`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+credits%22+) 
+- [`type: documentation`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+label%3A%22type%3A+documentation%22+) 
+- [`category: battle-tests`](https://github.com/rh-hideout/pokeemerald-expansion/issues?q=sort%3Aupdated-desc+is%3Aopen+label%3A%22category%3A+battle-tests%22)
+will NOT be merged until after the next Minor Release.
 
 ### Sample Schedule
 | Major | Minor | Patch | Type               | Goal Date   |
@@ -48,4 +53,4 @@ This designation should be reserved for instances where an existing feature on `
 
 Blocking issues or PRs can be deferred to future releases but should be discussed with the Maintainers that assigned the designation in the first place.
 
-If a version's milestone does not have any issues or PRs assigned to it, that version should be [released](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/docs/team_procedures/expansion_versions.md) as close to the goal date as possible.
+If a version's milestone does not have any issues or PRs assigned to it, that version should be [released](expansion_versions.md) as close to the goal date as possible.

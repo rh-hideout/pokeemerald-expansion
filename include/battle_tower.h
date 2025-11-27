@@ -49,7 +49,7 @@ void SetEReaderTrainerGfxId(void);
 u16 GetBattleFacilityTrainerGfxId(u16 trainerId);
 void PutNewBattleTowerRecord(struct EmeraldBattleTowerRecord *newRecordEm);
 u8 GetFrontierTrainerFrontSpriteId(u16 trainerId);
-u8 GetFrontierOpponentClass(u16 trainerId);
+enum TrainerClassID GetFrontierOpponentClass(u16 trainerId);
 void GetFrontierTrainerName(u8 *dst, u16 trainerId);
 void FillFrontierTrainerParty(u8 monsCount);
 void FillFrontierTrainersParties(u8 monsCount);
@@ -60,7 +60,7 @@ void CalcEmeraldBattleTowerChecksum(struct EmeraldBattleTowerRecord *record);
 void CalcRubyBattleTowerChecksum(struct RSBattleTowerRecord *record);
 u16 GetCurrentBattleTowerWinStreak(u8 lvlMode, u8 battleMode);
 u8 GetEreaderTrainerFrontSpriteId(void);
-u8 GetEreaderTrainerClassId(void);
+enum TrainerClassID GetEreaderTrainerClassId(void);
 void GetEreaderTrainerName(u8 *dst);
 void ValidateEReaderTrainer(void);
 void ClearEReaderTrainer(struct BattleTowerEReaderTrainer *ereaderTrainer);
@@ -77,5 +77,6 @@ u16 FacilityClassToGraphicsId(u8 facilityClass);
 bool32 ValidateBattleTowerRecord(u8 recordId); // unused
 void TrySetLinkBattleTowerEnemyPartyLevel(void);
 void CreateFacilityMon(const struct TrainerMon *fmon, u16 level, u8 fixedIV, u32 otID, u32 flags, struct Pokemon *dst);
+void FillPartnerParty(u16 trainerId);
 
 #endif //GUARD_BATTLE_TOWER_H

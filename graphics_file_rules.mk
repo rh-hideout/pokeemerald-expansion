@@ -290,6 +290,9 @@ graphics/pokenav/region_map/map.8bpp: %.8bpp: %.png
 $(MISCGFXDIR)/japanese_hof.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 29 -Wnum_tiles
 
+$(MISCGFXDIR)/mirage_tower.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -num_tiles 73 -Wnum_tiles
+
 $(BATINTGFXDIR)/textbox.gbapal: $(BATINTGFXDIR)/textbox_0.gbapal \
                                 $(BATINTGFXDIR)/textbox_1.gbapal
 	@cat $^ >$@
@@ -336,6 +339,9 @@ $(UNUSEDGFXDIR)/color_frames.4bpp: %.4bpp: %.png
 
 $(BATINTGFXDIR)/unused_window2bar.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 5 -Wnum_tiles
+
+$(BATINTGFXDIR)/ability_pop_up.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 8 -mheight 4
 
 $(JPCONTESTGFXDIR)/composite_1.4bpp: $(JPCONTESTGFXDIR)/frame_1.4bpp \
                                      $(JPCONTESTGFXDIR)/floor.4bpp \
@@ -399,7 +405,7 @@ $(RAYQUAZAGFXDIR)/scene_2/bg.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 313 -Wnum_tiles
 
 $(RAYQUAZAGFXDIR)/scene_3/rayquaza.4bpp: %.4bpp: %.png
-	$(GFX) $< $@ -num_tiles 124 -Wnum_tiles
+	$(GFX) $< $@ -num_tiles 128 -Wnum_tiles
 
 $(RAYQUAZAGFXDIR)/scene_4/streaks.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -num_tiles 19 -Wnum_tiles

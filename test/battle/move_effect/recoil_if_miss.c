@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick's recoil happens after Spiky Shiel
 SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick recoil happens after Spiky Shield damage")
 {
     GIVEN {
-        ASSUME(!gMovesInfo[MOVE_JUMP_KICK].ignoresProtect);
+        ASSUME(!MoveIgnoresProtect(MOVE_JUMP_KICK));
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -134,7 +134,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Supercell Slam causes recoil if it is absorb
 
 SINGLE_BATTLE_TEST("Recoil if miss: Disguise doesn't prevent crash damage from Jump Kick into ghost types")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_EARLY_BIRD; }
     PARAMETRIZE { ability = ABILITY_SCRAPPY; }
 

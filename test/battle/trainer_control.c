@@ -12,7 +12,7 @@
 #include "constants/trainers.h"
 #include "constants/battle.h"
 
-#define NUM_TEST_TRAINERS 9
+#define NUM_TEST_TRAINERS 11
 
 static const struct Trainer sTestTrainers[DIFFICULTY_COUNT][NUM_TEST_TRAINERS] =
 {
@@ -169,6 +169,7 @@ static const struct Trainer sTestTrainer2 =
 
 TEST("Trainer Class Balls apply to the entire party")
 {
+    ASSUME(B_TRAINER_CLASS_POKE_BALLS >= GEN_8);
     u32 j;
     struct Pokemon *testParty = Alloc(6 * sizeof(struct Pokemon));
     CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainer2, TRUE, BATTLE_TYPE_TRAINER);
@@ -187,6 +188,7 @@ TEST("Difficulty default to Normal is the trainer doesn't have a member for the 
     CreateNPCTrainerPartyFromTrainer(testParty, &sTestTrainers[GetTrainerDifficultyLevelTest(currTrainer)][currTrainer], TRUE, BATTLE_TYPE_TRAINER);
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_MEWTWO);
     Free(testParty);
+    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 }
 
 TEST("Difficulty changes which party if used for NPCs if defined for the difficulty (EASY)")
@@ -198,6 +200,7 @@ TEST("Difficulty changes which party if used for NPCs if defined for the difficu
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_METAPOD);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 1);
     Free(testParty);
+    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 }
 
 TEST("Difficulty changes which party if used for NPCs if defined for the difficulty (HARD)")
@@ -209,6 +212,7 @@ TEST("Difficulty changes which party if used for NPCs if defined for the difficu
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_ARCEUS);
     EXPECT(GetMonData(&testParty[0], MON_DATA_LEVEL) == 99);
     Free(testParty);
+    SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 }
 
 TEST("Difficulty changes which party if used for NPCs if defined for the difficulty (NORMAL)")
@@ -281,4 +285,13 @@ TEST("Trainer Party Pool can choose which functions to use for picking mons")
     EXPECT(GetMonData(&testParty[0], MON_DATA_SPECIES) == SPECIES_WYNAUT);
     EXPECT(GetMonData(&testParty[1], MON_DATA_SPECIES) == SPECIES_WOBBUFFET);
     Free(testParty);
+}
+
+TEST("trainerproc supports both Double Battle: Yes and Battle Type: Doubles")
+{
+    u32 currTrainer;
+    PARAMETRIZE { currTrainer = 9; }
+    PARAMETRIZE { currTrainer = 10; }
+    const struct Trainer trainer = sTestTrainers[GetTrainerDifficultyLevelTest(currTrainer)][currTrainer];
+    EXPECT(trainer.battleType == TRAINER_BATTLE_TYPE_DOUBLES);
 }

@@ -335,7 +335,7 @@ const struct SpriteTemplate gDragonPulseSpriteTemplate =
 // arg 1: initial y pixel offset
 static void AnimDragonRush(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         sprite->x -= gBattleAnimArgs[0];
         sprite->y += gBattleAnimArgs[1];
@@ -363,7 +363,7 @@ static void AnimDragonRush(struct Sprite *sprite)
 static void AnimDragonRushStep(struct Sprite *sprite)
 {
     // These two cases are identical.
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         sprite->data[1] += sprite->data[0];
         sprite->data[1] &= 0xFF;
@@ -406,7 +406,7 @@ void AnimOutrageFlame(struct Sprite *sprite)
 {
     sprite->x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     sprite->y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[0];
         gBattleAnimArgs[3] = -gBattleAnimArgs[3];
@@ -432,7 +432,7 @@ static void StartDragonFireTranslation(struct Sprite *sprite)
     SetSpriteCoordsToAnimAttackerCoords(sprite);
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[4] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
     {
         sprite->x -= gBattleAnimArgs[1];
         sprite->y += gBattleAnimArgs[1];
@@ -478,7 +478,7 @@ void AnimDragonRageFirePlume(struct Sprite *sprite)
 // For Dragon Breath and Dragon Rage
 void AnimDragonFireToTarget(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimAttacker) != B_SIDE_PLAYER)
+    if (!IsOnPlayerSide(gBattleAnimAttacker))
         StartSpriteAffineAnim(sprite, 1);
 
     StartDragonFireTranslation(sprite);
@@ -656,7 +656,7 @@ static void AnimOverheatFlame_Step(struct Sprite *sprite)
 
 void AnimDracoMeteorRock(struct Sprite *sprite)
 {
-    if (GetBattlerSide(gBattleAnimTarget) == B_SIDE_PLAYER)
+    if (IsOnPlayerSide(gBattleAnimTarget))
     {
         sprite->data[0] = sprite->x - gBattleAnimArgs[0];
         sprite->data[2] = sprite->x - gBattleAnimArgs[2];

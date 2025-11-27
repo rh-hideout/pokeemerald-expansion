@@ -3,20 +3,20 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+    ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
     ASSUME(GetMoveCategory(MOVE_TRI_ATTACK) == DAMAGE_CATEGORY_SPECIAL);
 }
 
 SINGLE_BATTLE_TEST("Download raises Attack if player has lower Def than Sp. Def", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_TRACE; }
     PARAMETRIZE { ability = ABILITY_DOWNLOAD; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Defense(100); SpDefense(200); }
         OPPONENT(SPECIES_PORYGON) { Ability(ability); Attack(100); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         if (ability == ABILITY_DOWNLOAD)
         {
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Download raises Attack if player has lower Def than Sp. Def"
 
 SINGLE_BATTLE_TEST("Download raises Sp.Attack if enemy has lower Sp. Def than Def", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_TRACE; }
     PARAMETRIZE { ability = ABILITY_DOWNLOAD; }
     GIVEN {
@@ -55,7 +55,7 @@ SINGLE_BATTLE_TEST("Download raises Sp.Attack if enemy has lower Sp. Def than De
 
 SINGLE_BATTLE_TEST("Download doesn't activate if target hasn't been sent out yet", s16 damagePhysical, s16 damageSpecial)
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_TRACE; }
     PARAMETRIZE { ability = ABILITY_DOWNLOAD; }
@@ -67,7 +67,7 @@ SINGLE_BATTLE_TEST("Download doesn't activate if target hasn't been sent out yet
         OPPONENT(SPECIES_PORYGON2) { Ability(ability); Defense(100); SpDefense(200); Speed(200); }
     } WHEN {
         TURN { MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 1); }
-        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TRI_ATTACK); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_TRI_ATTACK); }
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);
@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Download doesn't activate if target hasn't been sent out yet
 
 DOUBLE_BATTLE_TEST("Download raises Sp.Attack if enemies have lower total Sp. Def than Def", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_TRACE; }
     PARAMETRIZE { ability = ABILITY_DOWNLOAD; }
     GIVEN {

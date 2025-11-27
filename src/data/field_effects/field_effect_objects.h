@@ -1386,7 +1386,7 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Rayquaza = {
 static const struct SpritePalette sSpritePalette_Unused = {gObjectEventPal_Npc3, FLDEFF_PAL_TAG_UNKNOWN};
 
 // cave dust
-static const struct SpriteFrameImage sPicTable_CaveDust[] = 
+static const struct SpriteFrameImage sPicTable_CaveDust[] =
 {
     overworld_frame(gFieldEffectObjectPic_CaveDust, 2, 2, 0),
     overworld_frame(gFieldEffectObjectPic_CaveDust, 2, 2, 1),
@@ -1404,3 +1404,47 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_CaveDust = {
 };
 
 const struct SpritePalette gSpritePalette_CaveDust = {gFieldEffectObjectPalette_CaveDust, FLDEFF_PAL_TAG_CAVE_DUST};
+static const struct SpriteFrameImage sPicTable_RockClimbBlob[] = {
+    overworld_frame(gFieldEffectObjectPic_RockClimbBlob, 4, 4, 1),
+    overworld_frame(gFieldEffectObjectPic_RockClimbBlob, 4, 4, 0),
+    overworld_frame(gFieldEffectObjectPic_RockClimbBlob, 4, 4, 2),
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbBlob = {
+    .tileTag = 0xFFFF,
+    .paletteTag = 0xFFFF,
+    .oam = &gObjectEventBaseOam_32x32,
+    .anims = sAnimTable_SurfBlob,
+    .images = sPicTable_RockClimbBlob,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = UpdateSurfBlobFieldEffect,
+};
+
+
+static const union AnimCmd sAnim_RockClimbDust[] =
+{
+    ANIMCMD_FRAME(0, 12),
+    ANIMCMD_FRAME(1, 12),
+    ANIMCMD_FRAME(2, 12),
+    ANIMCMD_END,
+};
+static const union AnimCmd *const sAnimTable_RockClimbDust[] =
+{
+    sAnim_RockClimbDust,
+};
+static const struct SpriteFrameImage sPicTable_RockClimbDust[] = {
+    overworld_frame(gFieldEffectObjectPic_RockClimbDust, 4, 4, 0),
+    overworld_frame(gFieldEffectObjectPic_RockClimbDust, 4, 4, 1),
+    overworld_frame(gFieldEffectObjectPic_RockClimbDust, 4, 4, 2),
+};
+const struct SpriteTemplate gFieldEffectObjectTemplate_RockClimbDust = {
+    .tileTag = 0xFFFF,
+    .paletteTag = FLDEFF_PAL_TAG_DUST_CLOUD,
+    .oam = &gObjectEventBaseOam_32x32,
+    .anims = sAnimTable_RockClimbDust,
+    .images = sPicTable_RockClimbDust,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = UpdateJumpImpactEffect,
+};
+
+const struct SpritePalette gSpritePalette_BigDust = {gFieldEffectPal_DustCloud, FLDEFF_PAL_TAG_DUST_CLOUD};

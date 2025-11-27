@@ -29,7 +29,7 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
-        ASSUME(GetMoveCriticalHitStage(MOVE_TACKLE) == 0);
+        ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -38,14 +38,14 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 1 on non-Dragon
         TURN {
             if (useDragonCheer)
                 MOVE(playerLeft, MOVE_DRAGON_CHEER, target: playerRight);
-            MOVE(playerRight, MOVE_TACKLE, target: opponentLeft);
+            MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft);
         }
     } SCENE {
         if (useDragonCheer) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerLeft);
             MESSAGE("Wobbuffet is getting pumped!");
         }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
     }
 }
@@ -63,8 +63,8 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
-        ASSUME(GetMoveCriticalHitStage(MOVE_TACKLE) == 0);
-        ASSUME(gSpeciesInfo[SPECIES_DRATINI].baseSpeed == 50);
+        ASSUME(GetMoveCriticalHitStage(MOVE_SCRATCH) == 0);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_DRATINI) == 50);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_DRATINI);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -73,14 +73,14 @@ DOUBLE_BATTLE_TEST("Dragon Cheer increases critical hit ratio by 2 on Dragon typ
         TURN {
             if (useDragonCheer)
                 MOVE(playerLeft, MOVE_DRAGON_CHEER, target: playerRight);
-            MOVE(playerRight, MOVE_TACKLE, target: opponentLeft);
+            MOVE(playerRight, MOVE_SCRATCH, target: opponentLeft);
         }
     } SCENE {
         if (useDragonCheer) {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerLeft);
             MESSAGE("Dratini is getting pumped!");
         }
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, playerRight);
         MESSAGE("A critical hit!");
     }
 }
@@ -103,3 +103,29 @@ DOUBLE_BATTLE_TEST("Dragon Cheer fails if critical hit stage was already increas
 }
 
 TO_DO_BATTLE_TEST("Baton Pass passes Dragon Cheer's effect");
+
+AI_DOUBLE_BATTLE_TEST("AI uses Dragon Cheer")
+{
+    u32 species;
+    PARAMETRIZE { species = SPECIES_DRATINI; }
+    PARAMETRIZE { species = SPECIES_WOBBUFFET; }
+
+    GIVEN {
+        ASSUME(GetSpeciesType(SPECIES_DRATINI, 0) == TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_DRAGON);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_DRAGON);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_POUND, MOVE_CELEBRATE); }
+        OPPONENT(species) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
+        OPPONENT(species) { Moves(MOVE_DRAGON_CHEER, MOVE_POUND); }
+    } WHEN {
+        if (species == SPECIES_DRATINI)
+            TURN {  EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
+        else
+            TURN {  NOT_EXPECT_MOVE(opponentLeft, MOVE_DRAGON_CHEER); }
+    }
+}
+
+
+

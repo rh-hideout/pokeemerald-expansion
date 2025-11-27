@@ -9,8 +9,8 @@ ASSUMPTIONS
     ASSUME(!IsBattleMoveStatus(MOVE_FEINT_ATTACK));
     ASSUME(GetMoveType(MOVE_SHADOW_PUNCH) == TYPE_GHOST);
     ASSUME(!IsBattleMoveStatus(MOVE_SHADOW_PUNCH));
-    ASSUME(GetMoveType(MOVE_TACKLE) == TYPE_NORMAL);
-    ASSUME(!IsBattleMoveStatus(MOVE_TACKLE));
+    ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
+    ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
 }
 
 SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost type move")
@@ -19,7 +19,7 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
     PARAMETRIZE { move = MOVE_FURY_CUTTER; }
     PARAMETRIZE { move = MOVE_FEINT_ATTACK; }
     PARAMETRIZE { move = MOVE_SHADOW_PUNCH; }
-    PARAMETRIZE { move = MOVE_TACKLE; }
+    PARAMETRIZE { move = MOVE_SCRATCH; }
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) {Speed(42) ;}
         OPPONENT(SPECIES_SUDOWOODO) {Speed(40); Ability(ABILITY_RATTLED);}
@@ -29,14 +29,14 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, player);
         HP_BAR(opponent);
-        if (move != MOVE_TACKLE) {
+        if (move != MOVE_SCRATCH) {
             ABILITY_POPUP(opponent, ABILITY_RATTLED);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("The opposing Sudowoodo's Speed rose!");
         }
         MESSAGE("The opposing Sudowoodo used Celebrate!");
         // Sudowoodo is now faster
-        if (move != MOVE_TACKLE){
+        if (move != MOVE_SCRATCH){
             MESSAGE("The opposing Sudowoodo used Celebrate!");
             ANIMATION(ANIM_TYPE_MOVE, move, player);
             HP_BAR(opponent);
@@ -52,10 +52,30 @@ SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when hit by Bug, Dark or Ghost typ
     }
 }
 
-SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate")
+SINGLE_BATTLE_TEST("Rattled does not boost speed by 1 when affected by Intimidate (Gen5-7)")
 {
     GIVEN {
-        ASSUME(B_UPDATED_INTIMIDATE >= GEN_8);
+        WITH_CONFIG(GEN_CONFIG_UPDATED_INTIMIDATE, GEN_7);
+        PLAYER(SPECIES_GYARADOS) {Ability(ABILITY_INTIMIDATE); }
+        OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("Gyarados's Intimidate cuts the opposing Sudowoodo's Attack!");
+        NONE_OF {
+            ABILITY_POPUP(opponent, ABILITY_RATTLED);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("The opposing Sudowoodo's Speed rose!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Rattled boosts speed by 1 when affected by Intimidate (Gen8+)")
+{
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_UPDATED_INTIMIDATE, GEN_8);
         PLAYER(SPECIES_GYARADOS) {Ability(ABILITY_INTIMIDATE); }
         OPPONENT(SPECIES_SUDOWOODO) {Ability(ABILITY_RATTLED); }
     } WHEN {

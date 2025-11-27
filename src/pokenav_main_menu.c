@@ -32,7 +32,7 @@ struct Pokenav_MainMenu
 // Needed to match LoadLeftHeaderGfxForSubMenu.
 struct CompressedSpriteSheetNoSize
 {
-    const u32 *data;  // LZ77 compressed palette data
+    const u32 *data;  // Compressed sprite data
     u32 tag;
 };
 
@@ -55,8 +55,8 @@ static void SpriteCB_SpinningPokenav(struct Sprite *);
 static u32 LoopedTask_InitPokenavMenu(s32);
 
 static const u16 sSpinningPokenav_Pal[] = INCBIN_U16("graphics/pokenav/nav_icon.gbapal");
-static const u32 sSpinningPokenav_Gfx[] = INCBIN_U32("graphics/pokenav/nav_icon.4bpp.lz");
-static const u32 sBlueLightCopy[] = INCBIN_U32("graphics/pokenav/blue_light.4bpp.lz"); // Unused copy of sMatchCallBlueLightTiles
+static const u32 sSpinningPokenav_Gfx[] = INCBIN_U32("graphics/pokenav/nav_icon.4bpp.smol");
+static const u32 sBlueLightCopy[] = INCBIN_U32("graphics/pokenav/blue_light.4bpp.smol"); // Unused copy of sMatchCallBlueLightTiles
 
 const struct BgTemplate gPokenavMainMenuBgTemplates[] =
 {
@@ -685,7 +685,7 @@ static void LoadLeftHeaderGfxForMenu(u32 menuGfxId)
     tag = sMenuLeftHeaderSpriteSheets[menuGfxId].tag;
     size = GetDecompressedDataSize(sMenuLeftHeaderSpriteSheets[menuGfxId].data);
     LoadPalette(&gPokenavLeftHeader_Pal[tag * 16], OBJ_PLTT_ID(IndexOfSpritePaletteTag(1)), PLTT_SIZE_4BPP);
-    LZDecompressWram(sMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderMenuBuffer);
+    DecompressDataWithHeaderWram(sMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderMenuBuffer);
     RequestDma3Copy(menu->leftHeaderMenuBuffer, (void *)OBJ_VRAM0 + (GetSpriteTileStartByTag(2) * 32), size, 1);
     menu->leftHeaderSprites[1]->oam.tileNum = GetSpriteTileStartByTag(2) + sMenuLeftHeaderSpriteSheets[menuGfxId].size;
 
@@ -707,7 +707,7 @@ static void LoadLeftHeaderGfxForSubMenu(u32 menuGfxId)
     tag = sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].tag;
     size = GetDecompressedDataSize(sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].data);
     LoadPalette(&gPokenavLeftHeader_Pal[tag * 16], OBJ_PLTT_ID(IndexOfSpritePaletteTag(2)), PLTT_SIZE_4BPP);
-    LZDecompressWram(sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderSubMenuBuffer);
+    DecompressDataWithHeaderWram(sPokenavSubMenuLeftHeaderSpriteSheets[menuGfxId].data, menu->leftHeaderSubMenuBuffer);
     RequestDma3Copy(menu->leftHeaderSubMenuBuffer, (void *)OBJ_VRAM0 + 0x800 + (GetSpriteTileStartByTag(2) * 32), size, 1);
 }
 

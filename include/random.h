@@ -146,11 +146,14 @@ enum RandomTag
     RNG_INFATUATION,
     RNG_LOADED_DICE,
     RNG_METRONOME,
+    RNG_MOODY_INCREASE,
+    RNG_MOODY_DECREASE,
     RNG_PARALYSIS,
     RNG_PICKUP,
     RNG_POISON_POINT,
     RNG_POISON_TOUCH,
     RNG_RAMPAGE_TURNS,
+    RNG_RANDOM_STAT_UP,
     RNG_SECONDARY_EFFECT,
     RNG_SECONDARY_EFFECT_2,
     RNG_SECONDARY_EFFECT_3,
@@ -187,13 +190,39 @@ enum RandomTag
     RNG_AI_SWITCH_TRAPPER,
     RNG_AI_SWITCH_FREE_TURN,
     RNG_AI_SWITCH_ALL_MOVES_BAD,
+    RNG_AI_CONSERVE_TERA,
+    RNG_AI_SWITCH_ALL_SCORES_BAD,
+    RNG_AI_SWITCH_ABSORBING_HIDDEN_POWER,
+    RNG_AI_PP_STALL_DISREGARD_MOVE,
+    RNG_AI_SUCKER_PUNCH,
     RNG_SHELL_SIDE_ARM,
     RNG_RANDOM_TARGET,
     RNG_AI_PREDICT_ABILITY,
     RNG_AI_PREDICT_SWITCH,
+    RNG_AI_PREDICT_MOVE,
+    RNG_AI_STATUS_FOCUS_PUNCH,
+    RNG_AI_BOOST_INTO_HAZE,
+    RNG_AI_SHOULD_RECOVER,
+    RNG_AI_PRIORITIZE_LAST_CHANCE,
     RNG_AI_RANDOM_SWITCHIN,
     RNG_HEALER,
     RNG_DEXNAV_ENCOUNTER_LEVEL,
+    RNG_AI_ASSUME_STATUS_SLEEP,
+    RNG_AI_ASSUME_STATUS_NONVOLATILE,
+    RNG_AI_ASSUME_STATUS_HIGH_ODDS,
+    RNG_AI_ASSUME_STATUS_MEDIUM_ODDS,
+    RNG_AI_ASSUME_STATUS_LOW_ODDS,
+    RNG_AI_ASSUME_ALL_STATUS,
+    RNG_AI_REFRESH_TRICK_ROOM_ON_LAST_TURN,
+    RNG_AI_APPLY_TAILWIND_ON_LAST_TURN_OF_TRICK_ROOM,
+    RNG_WRAP,
+    RNG_BALLTHROW_CRITICAL,
+    RNG_BALLTHROW_SHAKE,
+    RNG_PROTECT_FAIL,
+    RNG_PRESENT,
+    RNG_MAGNITUDE,
+    RNG_FISHING_BITE,
+    RNG_FISHING_GEN3_STICKY,
 };
 
 #define RandomWeighted(tag, ...) \
@@ -242,6 +271,15 @@ u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u8 *weights
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
+
+#if TESTING
+u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
+u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller);
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller);
+const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
+const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
+#endif
 
 u32 RandomBit(enum RandomTag tag, u32 bits);
 u32 RandomBitIndex(enum RandomTag tag, u32 bits);

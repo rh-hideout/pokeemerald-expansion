@@ -84,8 +84,8 @@ SINGLE_BATTLE_TEST("Gastro Acid, Worry Seed, and Simple Beam fail if the target 
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_GASTRO_ACID) == EFFECT_GASTRO_ACID);
-        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_WORRY_SEED);
-        ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_SIMPLE_BEAM);
+        ASSUME(GetMoveEffect(MOVE_WORRY_SEED) == EFFECT_OVERWRITE_ABILITY);
+        ASSUME(GetMoveEffect(MOVE_SIMPLE_BEAM) == EFFECT_OVERWRITE_ABILITY);
         PLAYER(SPECIES_PALAFIN_ZERO) { Ability(ABILITY_ZERO_TO_HERO); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -147,7 +147,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     } WHEN {
         TURN { MOVE(player, MOVE_FLIP_TURN); SEND_OUT(player, 1); }
         TURN { MOVE(opponent, MOVE_EXPLOSION); SEND_OUT(player, 0); SEND_OUT(opponent, 1); }
-        TURN { MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(opponent, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, opponent);
@@ -170,7 +170,7 @@ SINGLE_BATTLE_TEST("Zero to Hero's message displays correctly after all battlers
     } WHEN {
         TURN { MOVE(opponent, MOVE_FLIP_TURN); SEND_OUT(opponent, 1); }
         TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_EXPLOSION); SEND_OUT(player, 1); SEND_OUT(opponent, 0); }
-        TURN { MOVE(opponent, MOVE_TACKLE); MOVE(player, MOVE_TACKLE); }
+        TURN { MOVE(opponent, MOVE_SCRATCH); MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         HP_BAR(player, hp: 0);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_EXPLOSION, player);

@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Comatose prevents status-inducing moves")
     }
 }
 
-SINGLE_BATTLE_TEST("Comatose may be suppressed if pokemon transformed into a pokemon with Comatose ability and was under the effects of Gastro Acid")
+SINGLE_BATTLE_TEST("Comatose may be suppressed if Pokémon transformed into a Pokémon with Comatose ability and was under the effects of Gastro Acid")
 {
     u32 move;
 
@@ -55,3 +55,40 @@ SINGLE_BATTLE_TEST("Comatose may be suppressed if pokemon transformed into a pok
         else if (move == MOVE_SLEEP_POWDER) { STATUS_ICON(opponent, sleep: TRUE); }
     }
 }
+
+SINGLE_BATTLE_TEST("Comatose Pokémon doesn't get poisoned by Toxic Spikes on switch-in")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { SWITCH(player, 1); }
+    } SCENE {
+        NOT STATUS_ICON(player, STATUS1_POISON);
+        ABILITY_POPUP(player, ABILITY_COMATOSE);
+        NOT HP_BAR(player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Comatose Pokémon don't get poisoned by Toxic Spikes on switch-in if forced in by phazing with Mold Breaker")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
+        OPPONENT(SPECIES_PINSIR) { Ability(ABILITY_MOLD_BREAKER); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_TOXIC_SPIKES); }
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); }
+    } SCENE {
+        NOT STATUS_ICON(player, STATUS1_POISON);
+        ABILITY_POPUP(player, ABILITY_COMATOSE);
+        NOT HP_BAR(player);
+    }
+}
+
+TO_DO_BATTLE_TEST("Comatose makes Rest fail")
+TO_DO_BATTLE_TEST("Comatose isn't affected by Mold Breaker, Turboblaze or Teravolt")
+TO_DO_BATTLE_TEST("Comatose isn't affected by Poison Touch + Sunsteel Strike")
+TO_DO_BATTLE_TEST("Comatose boosts Dream Ball's multiplier")

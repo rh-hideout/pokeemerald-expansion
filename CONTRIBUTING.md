@@ -24,7 +24,7 @@ The best bug reports have enough information that we won't have to contact you f
 - A maintainer will [label](https://github.com/rh-hideout/pokeemerald-expansion/labels) the bug report.
 - A maintainer will try to reproduce the bug with your provided steps.
     - If there are no reproduction steps or no obvious way to reproduce the issue, somebody will ask you for those steps. Until the bug can be reproduced, the bug will retain the `bug:unconfirmed` label. Unconfirmed bugs are less likely get fixed.
-- If the team is able to reproduce the issue, it will be labeled `bug:confirmed`, and the issue will be left to be [implemented by someone](#Pull-Requests).
+- If the team is able to reproduce the bug, it will be labeled `bug:confirmed`, and the bug will be left to be [fixed by someone](#Pull-Requests).
     - If the issue is particularly game-breaking, a maintainer will add it to a future version's [milestone](), meaning that version will not be released until the problem is solved.
 
 ## Feature Requests
@@ -35,7 +35,7 @@ This section guides you through submitting a feature request for pokeemerald-exp
 
 ### What should I do before making a feature request?
 
-- Make sure your request is in [pokeemerald-expansion's scope](team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server](https://discord.gg/6CzjAG6GZk).
+- Make sure your request is in [pokeemerald-expansion's scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server](https://discord.gg/6CzjAG6GZk).
 
 ### What should I do before making a feature request?
 
@@ -49,7 +49,7 @@ To request a feature to be added to the project, open a [feature request](https:
 ### What happens after I submit a feature request?
 
 - A maintainer will [label](https://github.com/rh-hideout/pokeemerald-expansion/labels) the issue.
-- If the feature request is out of [scope](team_procedures/scope.md), it will be closed.
+- If the feature request is out of [scope](docs/team_procedures/scope.md), it will be closed.
 - if the request is in scope, any other contributor can volunteer to [fufill it via a pull request](#Pull-Requests). When the request is filled, the request will be closed.
 
 ## Pull Requests
@@ -59,7 +59,7 @@ If you have read all of this and still need help, feel free to start a thread in
 ### What should I do before starting a pull request?
 
 - If you're new to git and GitHub, [Team Aqua's Asset Repo](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/) has a [guide on forking and cloning the repository](https://github.com/Pawkkie/Team-Aquas-Asset-Repo/wiki/The-Basics-of-GitHub). Make sure you have a [local copy](INSTALL.md) of `pokeemerald-expansion`.
-- Make sure your contribution is in [scope](team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
+- Make sure your contribution is in [scope](docs/team_procedures/scope.md) - if it is not clear if something is in scope, you can start a discussion thread in the [#pr-discussions](https://discord.com/channels/419213663107416084/1102784418369785948) channel of the [the RHH Discord Server!](https://discord.gg/6CzjAG6GZk).
 - Choose a branch to contribute your PR to:
     - **`master`**: Fixes for bugs that are currently present in the `master` branch.
     - **`upcoming`**: All other pull requests.
@@ -86,7 +86,7 @@ git switch -c newFeature # the name newFeature can be anything you want. This tu
 #### 4. Copy your target branch to your new branch
 This will change your new branch to match the latest version of your chosen target branch.
 ```bash
-git reset --hard RHH/upcoming # If your PR is going to target master, replace upcoming with master.
+git reset --hard upcoming # If your PR is going to target master, replace upcoming with master.
 ```
 
 #### 5. Implement your code
@@ -94,7 +94,7 @@ All of your work should go on this new, clean branch. If you already started wor
 
 ##### Popular Features / Feature Branches
 
-If you are implementing functionality from a known community feature branch, it is **strongly** reccomended that you open a discussion thread _before_ starting. There are some situations where maintainers would ask you to use the existing feature branch as a base, and others where maintainers would want a feature to be written from scratch.
+If you are implementing functionality from a known community feature branch, it is **strongly** recommended that you open a discussion thread _before_ starting. There are some situations where maintainers would ask you to use the existing feature branch as a base, and others where maintainers would want a feature to be written from scratch.
 
 This changes on a case by case basis.
 

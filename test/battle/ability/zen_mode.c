@@ -8,8 +8,8 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);
@@ -17,10 +17,10 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
         }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_TACKLE); }
+            TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Darmanitan used Celebrate!");
-        MESSAGE("The opposing Wobbuffet used Tackle!");
+        MESSAGE("The opposing Wobbuffet used Scratch!");
         HP_BAR(player);
         ABILITY_POPUP(player, ABILITY_ZEN_MODE);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FORM_CHANGE, player);
@@ -37,8 +37,8 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is half or less 
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD; zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);
@@ -65,8 +65,8 @@ SINGLE_BATTLE_TEST("Zen Mode switches Darmanitan's form when HP is healed above 
     PARAMETRIZE { standardSpecies = SPECIES_DARMANITAN_GALAR_STANDARD;    zenSpecies = SPECIES_DARMANITAN_GALAR_ZEN; }
 
     GIVEN {
-        ASSUME(gSpeciesInfo[standardSpecies].baseHP == 105);
-        ASSUME(gSpeciesInfo[zenSpecies].baseHP == 105);
+        ASSUME(GetSpeciesBaseHP(standardSpecies) == 105);
+        ASSUME(GetSpeciesBaseHP(zenSpecies) == 105);
         PLAYER(standardSpecies)
         {
             Ability(ABILITY_ZEN_MODE);

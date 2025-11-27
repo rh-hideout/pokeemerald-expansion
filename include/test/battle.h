@@ -2,8 +2,13 @@
  *
  * To run all the tests use:
  *     make check -j
- * To run specific tests, e.g. Spikes ones, use:
+ * To run specific tests, e.g. Spikes ones, use either:
  *     make check TESTS="Spikes"
+ *     make check TESTS="*Spikes*"
+ * The first runs tests with names that start with Spikes, whereas the
+ * second runs tests with names that include Spikes anywhere in them.
+ * To run tests from a specific file, e.g. 'test/battle/move_effect/spikes.c', use:
+ *     make check TESTS="test/battle/move_effect/spikes.c"
  * To build a ROM (pokemerald-test.elf) that can be opened in mgba to
  * view specific tests, e.g. Spikes ones, use:
  *     make pokeemerald-test.elf TESTS="Spikes"
@@ -88,7 +93,7 @@
  *   {
  *       GIVEN {
  *           ASSUME(IsPowderMove(MOVE_STUN_SPORE));
- *           ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
+ *           ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
  *           PLAYER(SPECIES_ODDISH); // 1.
  *           OPPONENT(SPECIES_ODDISH); // 2.
  *       } WHEN {
@@ -114,12 +119,12 @@
  * not paralyzed without specifying the exact outputs which led to that.
  *
  * As a final example, to test that Meditate works you might:
- * 1. Put a Wobbuffet that knows Meditate and Tackle in your party.
+ * 1. Put a Wobbuffet that knows Meditate and Scratch in your party.
  * 2. Battle a wild Wobbuffet.
- * 3. Use Tackle and note the amount the HP bar reduced.
+ * 3. Use Scratch and note the amount the HP bar reduced.
  * 4. Battle a wild Wobbuffet.
  * 5. Use Meditate and that the stat change animation and message play.
- * 6. Use Tackle and check that the HP bar reduced by more than in 3.
+ * 6. Use Scratch and check that the HP bar reduced by more than in 3.
  *
  * This can be translated to an automated test as follows:
  *
@@ -129,19 +134,19 @@
  *        PARAMETRIZE { raiseAttack = FALSE; }
  *        PARAMETRIZE { raiseAttack = TRUE; }
  *        GIVEN {
- *            ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
+ *            ASSUME(GetMoveCategory(MOVE_SCRATCH) == DAMAGE_CATEGORY_PHYSICAL);
  *            PLAYER(SPECIES_WOBBUFFET);
  *            OPPONENT(SPECIES_WOBBUFFET);
  *        } WHEN {
  *            if (raiseAttack) TURN { MOVE(player, MOVE_MEDITATE); } // 5.
- *            TURN { MOVE(player, MOVE_TACKLE); } // 3 & 6.
+ *            TURN { MOVE(player, MOVE_SCRATCH); } // 3 & 6.
  *        } SCENE {
  *            if (raiseAttack) {
  *                ANIMATION(ANIM_TYPE_MOVE, MOVE_MEDITATE, player);
  *                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player); // 5.
  *                MESSAGE("Wobbuffet's attack rose!"); // 5.
  *            }
- *            ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+ *            ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
  *            HP_BAR(opponent, captureDamage: &results[i].damage); // 3 & 6.
  *        } FINALLY {
  *            EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.5), results[1].damage); // 6.
@@ -189,21 +194,22 @@
  *         ASSUME(GetMoveEffect(MOVE_POISON_STING) == EFFECT_POISON_HIT);
  *     }
  *
- * SINGLE_BATTLE_TEST(name, results...) and DOUBLE_BATTLE_TEST(name, results...)
- * Define single- and double- battles. The names should start with the
- * name of the mechanic being tested so that it is easier to run all the
- * related tests. results contains variable declarations to be placed
- * into the results array which is available in PARAMETRIZEd tests.
- * The main differences for doubles are:
+ * SINGLE_BATTLE_TEST(name, results...), DOUBLE_BATTLE_TEST(name, results...), MULTI_BATTLE_TEST(name, results...),
+ * TWO_VS_ONE_BATTLE_TEST(name, results...), and ONE_VS_TWO_BATTLE_TEST(name, results...)
+ * Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with
+ * the name of the mechanic being tested so that it is easier to run all the related tests. results contains variable
+ * declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
+ * The main differences for doubles, 2v2, 2v1, and 1v2 are:
  * - Move targets sometimes need to be explicit.
  * - Instead of player and opponent there is playerLeft, playerRight,
  *   opponentLeft, and opponentRight.
  *
- * AI_SINGLE_BATTLE_TEST(name, results...) and AI_DOUBLE_BATTLE_TEST(name, results...)
+ * AI_SINGLE_BATTLE_TEST(name, results...), AI_DOUBLE_BATTLE_TEST(name, results...),
+ * AI_MULTI_BATTLE_TEST(name, results...), AI_TWO_VS_ONE_BATTLE_TEST(name, results...), and AI_ONE_VS_TWO_BATTLE_TEST(name, results...)
  * Define battles where opponent mons are controlled by AI, the same that runs
  * when battling regular Trainers. The flags for AI should be specified by
  * the AI_FLAGS command.
- * The rules remain the same as with the SINGLE and DOUBLE battle tests
+ * The rules remain the same as with the SINGLE, DOUBLE, MULTI, TWO_VS_ONE, and ONE_VS_TWO battle tests with some differences:
  * with some differences:
  * - opponent's action is specified by the EXPECT_MOVE(s) / EXPECT_SEND_OUT / EXPECT_SWITCH commands
  * - we don't control what opponent actually does, instead we make sure the opponent does what we expect it to do
@@ -218,6 +224,17 @@
  *     SINGLE_BATTLE_TEST("Jump Kick has no recoil if no target")
  *     {
  *         KNOWN_FAILING; // #2596.
+ *
+ * KNOWN_CRASHING
+ * Marks a test as crashing due to a bug. If there is an issue number
+ * associated with the bug it should be included in a comment. If the
+ * test passes the developer will be notified to remove KNOWN_CRASHING.
+ * For example:
+ *     TEST("Crashes")
+ *     {
+ *         KNOWN_CRASHING; // #7255
+ *         void (*f)(void) = NULL;
+ *         f(); // Crashes!
  *
  * PARAMETRIZE
  * Runs a test multiple times. i will be set to which parameter is
@@ -317,10 +334,39 @@
  * Note if Moves is specified then MOVE will not automatically add moves
  * to the moveset.
  *
+ * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
+ * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
+ * the below must be used instead of PLAYER(species) and OPPONENT(species).
+ * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and
+ * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's,
+ * opponent A's, or opponent B's party, respectively.
+ * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
+ * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
+ * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
+ * MULTI_PLAYER(species) and MULTI_OPPONENT_A(species) set Pokémon starting at party index 0,
+ * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party
+ * index 3.
+ * For ONE_VS_TWO tests, MULTI_PLAYER(species) must be used for all player-side Pokémon,
+ * and for TWO_VS_ONE tests, MULTI_OPPONENT_A(species) must be used for all opponent-side
+ * Pokémon.
+ * All MULTI_PLAYER(species) Pokémon must be set before any MULTI_PARTNER(species) Pokémon,
+ * and all MULTI_OPPONENT_A(species) must be set before any MULTI_OPPONENT_B(species) Pokémon,
+ * else Pokémon will be set in the incorrect parties in the test.
+ * Note where a side in a test has two trainers, the test setup manages the assigning of correct
+ * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
+ * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
+ * Pokémon may be referenced using indexes 3, 4, and 5.
+ *
  * AI_FLAGS
- * Specifies which AI flags are run during the test. Has use only for AI tests.
+ * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
  * The most common combination is  AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
  * which is the general 'smart' AI.
+ *
+ * BATTLER_AI_FLAGS
+ * Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
+ * Must be used strictly after AI_FLAGS(flags), which overwrites all existing flags.
+ * Example: BATTLER_AI_FLAGS(3, AI_FLAG_RISKY) used after AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
+ * will set AI_FLAG_RISKY to only battler3 (Opponent B), in addition to the flags set by AI_FLAGS.
  *
  * WHEN
  * Contains the choices that battlers make during the battle.
@@ -344,7 +390,7 @@
  * battles to choose the target (when necessary), and allowed: FALSE is
  * used to reject an illegal move e.g. a Disabled one. WITH_RNG allows
  * the move to specify an explicit outcome for an RNG tag.
- *     MOVE(playerLeft, MOVE_TACKLE, target: opponentRight);
+ *     MOVE(playerLeft, MOVE_SCRATCH, target: opponentRight);
  * If the battler does not have an explicit Moves specified the moveset
  * will be populated based on the MOVEs it uses.
  *
@@ -372,7 +418,7 @@
  * ID must be specified, and party index and move slot if applicable, e.g:
  *      USE_ITEM(player, ITEM_X_ATTACK);
  *      USE_ITEM(player, ITEM_POTION, partyIndex: 0);
- *      USE_ITEM(player, ITEM_LEPPA_BERRY, partyIndex: 0, move: MOVE_TACKLE);
+ *      USE_ITEM(player, ITEM_LEPPA_BERRY, partyIndex: 0, move: MOVE_SCRATCH);
  *
  * SCENE
  * Contains an abridged description of the UI during the THEN. The order
@@ -389,7 +435,7 @@
  * ANIMATION(type, animId, [battler], [target:])
  * Causes the test to fail if the animation does not play. A common use
  * of this command is to check if a move was successful, e.g.:
- *     ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, player);
+ *     ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, player);
  * target can only be specified for ANIM_TYPE_MOVE.
  *
  * EXPERIENCE_BAR(battler, [exp: | captureGainedExp:])
@@ -423,7 +469,7 @@
  * Spaces in pattern match newlines (\n, \l, and \p) in the message.
  * Often used to check that a battler took its turn but it failed, e.g.:
  *     MESSAGE("Wobbuffet used Dream Eater!");
- *     MESSAGE("The opposing Wobbuffet wasn't affected!");
+ *     MESSAGE("It doesn't affect the opposing Wobbuffet…");
  *
  * STATUS_ICON(battler, status1 | none: | sleep: | poison: | burn: | freeze: | paralysis:, badPoison:)
  * Causes the test to fail if the battler's status is not changed to the
@@ -521,10 +567,25 @@
 #define MAX_QUEUED_EVENTS 30
 #define MAX_EXPECTED_ACTIONS 10
 
-enum { BATTLE_TEST_SINGLES, BATTLE_TEST_DOUBLES, BATTLE_TEST_WILD, BATTLE_TEST_AI_SINGLES, BATTLE_TEST_AI_DOUBLES };
+enum {
+    BATTLE_TEST_SINGLES,
+    BATTLE_TEST_DOUBLES,
+    BATTLE_TEST_WILD,
+    BATTLE_TEST_MULTI,
+    BATTLE_TEST_TWO_VS_ONE,
+    BATTLE_TEST_ONE_VS_TWO,
+    BATTLE_TEST_AI_SINGLES,
+    BATTLE_TEST_AI_DOUBLES,
+    BATTLE_TEST_AI_MULTI,
+    BATTLE_TEST_AI_TWO_VS_ONE,
+    BATTLE_TEST_AI_ONE_VS_TWO
+};
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
 typedef void (*DoubleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);
+typedef void (*MultiBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);
+typedef void (*TwoVsOneBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);
+typedef void (*OneVsTwoBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);
 
 struct BattleTest
 {
@@ -533,6 +594,9 @@ struct BattleTest
     {
         SingleBattleTestFunction singles;
         DoubleBattleTestFunction doubles;
+        MultiBattleTestFunction multi;
+        TwoVsOneBattleTestFunction two_vs_one;
+        OneVsTwoBattleTestFunction one_vs_two;
     } function;
     size_t resultsSize;
 };
@@ -550,7 +614,7 @@ enum
 struct QueuedAbilityEvent
 {
     u8 battlerId;
-    u16 ability;
+    enum Ability ability;
 };
 
 struct QueuedAnimationEvent
@@ -606,23 +670,18 @@ struct QueuedEvent
     } as;
 };
 
-struct TurnRNG
-{
-    u16 tag;
-    u16 value;
-};
-
 struct BattlerTurn
 {
     u8 hit:2;
     u8 criticalHit:2;
     u8 secondaryEffect:2;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
 };
 
 struct ExpectedAIAction
 {
-    u16 sourceLine;
+    u16 sourceLine:13; // TODO: Avoid stealing these bits.
+    enum Gimmick gimmick:3;
     u8 type:4; // which action
     u8 moveSlots:4; // Expected move(s) to be chosen or not, marked as bits.
     u8 target:4; // move target or id of mon which gets sent out
@@ -671,17 +730,19 @@ struct BattleTestData
 
     u8 playerPartySize;
     u8 opponentPartySize;
-    u8 explicitMoves[NUM_BATTLE_SIDES];
+    u8 explicitMoves[MAX_BATTLERS_COUNT];
     bool8 hasExplicitSpeeds;
-    u8 explicitSpeeds[NUM_BATTLE_SIDES];
+    u8 explicitSpeeds[MAX_BATTLERS_COUNT];
     u16 slowerThan[NUM_BATTLE_SIDES][PARTY_SIZE];
-    u8 currentSide;
+    u8 currentPosition;
     u8 currentPartyIndex;
     struct Pokemon *currentMon;
     u8 gender;
     u8 nature;
-    u16 forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
+    bool8 isShiny;
+    enum Ability forcedAbilities[NUM_BATTLE_SIDES][PARTY_SIZE];
     u8 chosenGimmick[NUM_BATTLE_SIDES][PARTY_SIZE];
+    u8 forcedEnvironment;
 
     u8 currentMonIndexes[MAX_BATTLERS_COUNT];
     u8 turnState;
@@ -734,7 +795,7 @@ struct BattleTestRunnerState
     bool8 runThen:1;
     bool8 runFinally:1;
     bool8 runningFinally:1;
-    bool8 tearDownBattle:1;
+    bool8 hasTornDownBattle:1;
     struct BattleTestData data;
     u8 *results;
     u8 checkProgressParameter;
@@ -749,6 +810,8 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 #define R_APPEND_TRUE(...) __VA_OPT__(FIRST(__VA_ARGS__), TRUE RECURSIVELY(R_FOR_EACH(APPEND_COMMA_TRUE, EXCEPT_1(__VA_ARGS__))))
 
 #define AI_TRAINER_NAME "{PKMN} TRAINER LEAF"
+#define AI_TRAINER_2_NAME "{PKMN} TRAINER RED"
+#define AI_PARTNER_NAME "{PKMN} TRAINER 1"
 
 /* Test */
 
@@ -794,6 +857,60 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
     }; \
     static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
 
+    #define BATTLE_TEST_ARGS_MULTI(_name, _type, ...) \
+    struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
+    { \
+        .name = _name, \
+        .filename = __FILE__, \
+        .runner = &gBattleTestRunner, \
+        .sourceLine = __LINE__, \
+        .data = (void *)&(const struct BattleTest) \
+        { \
+            .type = _type, \
+            .function = { .multi = (MultiBattleTestFunction)CAT(Test, __LINE__) }, \
+            .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
+        }, \
+    }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
+
+#define BATTLE_TEST_ARGS_TWO_VS_ONE(_name, _type, ...) \
+    struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
+    { \
+        .name = _name, \
+        .filename = __FILE__, \
+        .runner = &gBattleTestRunner, \
+        .sourceLine = __LINE__, \
+        .data = (void *)&(const struct BattleTest) \
+        { \
+            .type = _type, \
+            .function = { .two_vs_one = (TwoVsOneBattleTestFunction)CAT(Test, __LINE__) }, \
+            .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
+        }, \
+    }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
+
+#define BATTLE_TEST_ARGS_ONE_VS_TWO(_name, _type, ...) \
+    struct CAT(Result, __LINE__) { RECURSIVELY(R_FOR_EACH(APPEND_SEMICOLON, __VA_ARGS__)) }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *); \
+    __attribute__((section(".tests"), used)) static const struct Test CAT(sTest, __LINE__) = \
+    { \
+        .name = _name, \
+        .filename = __FILE__, \
+        .runner = &gBattleTestRunner, \
+        .sourceLine = __LINE__, \
+        .data = (void *)&(const struct BattleTest) \
+        { \
+            .type = _type, \
+            .function = { .one_vs_two = (OneVsTwoBattleTestFunction)CAT(Test, __LINE__) }, \
+            .resultsSize = sizeof(struct CAT(Result, __LINE__)), \
+        }, \
+    }; \
+    static void CAT(Test, __LINE__)(struct CAT(Result, __LINE__) *results, const u32 i, struct BattlePokemon *playerLeft, struct BattlePokemon *opponentLeft, struct BattlePokemon *playerRight, struct BattlePokemon *opponentRight)
+
 
 #define SINGLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_SINGLES, __VA_ARGS__)
 #define WILD_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_SINGLE(_name, BATTLE_TEST_WILD, __VA_ARGS__)
@@ -801,6 +918,15 @@ extern struct BattleTestRunnerState *const gBattleTestRunnerState;
 
 #define DOUBLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_DOUBLE(_name, BATTLE_TEST_DOUBLES, __VA_ARGS__)
 #define AI_DOUBLE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_DOUBLE(_name, BATTLE_TEST_AI_DOUBLES, __VA_ARGS__)
+
+#define MULTI_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_MULTI(_name, BATTLE_TEST_MULTI, __VA_ARGS__)
+#define AI_MULTI_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_MULTI(_name, BATTLE_TEST_AI_MULTI, __VA_ARGS__)
+
+#define TWO_VS_ONE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_TWO_VS_ONE(_name, BATTLE_TEST_TWO_VS_ONE, __VA_ARGS__)
+#define AI_TWO_VS_ONE_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_TWO_VS_ONE(_name, BATTLE_TEST_AI_TWO_VS_ONE, __VA_ARGS__)
+
+#define ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_ONE_VS_TWO, __VA_ARGS__)
+#define AI_ONE_VS_TWO_BATTLE_TEST(_name, ...) BATTLE_TEST_ARGS_ONE_VS_TWO(_name, BATTLE_TEST_AI_ONE_VS_TWO, __VA_ARGS__)
 
 /* Parametrize */
 
@@ -830,13 +956,18 @@ struct moveWithPP {
 
 #define RNGSeed(seed) RNGSeed_(__LINE__, seed)
 #define AI_FLAGS(flags) AIFlags_(__LINE__, flags)
+#define BATTLER_AI_FLAGS(battler, flags) BattlerAIFlags_(__LINE__, battler, flags)
 #define AI_LOG AILogScores(__LINE__)
 
 #define FLAG_SET(flagId) SetFlagForTest(__LINE__, flagId)
 #define WITH_CONFIG(configTag, value) TestSetConfig(__LINE__, configTag, value)
 
-#define PLAYER(species) for (OpenPokemon(__LINE__, B_SIDE_PLAYER, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
-#define OPPONENT(species) for (OpenPokemon(__LINE__, B_SIDE_OPPONENT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define PLAYER(species) for (OpenPokemon(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define OPPONENT(species) for (OpenPokemon(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PLAYER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_A(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_LEFT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_PARTNER(species) for (OpenPokemonMulti(__LINE__, B_POSITION_PLAYER_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
+#define MULTI_OPPONENT_B(species) for (OpenPokemonMulti(__LINE__, B_POSITION_OPPONENT_RIGHT, species); gBattleTestRunnerState->data.currentMon; ClosePokemon(__LINE__))
 
 #define Gender(gender) Gender_(__LINE__, gender)
 #define Nature(nature) Nature_(__LINE__, nature)
@@ -864,20 +995,24 @@ struct moveWithPP {
 #define DynamaxLevel(dynamaxLevel) DynamaxLevel_(__LINE__, dynamaxLevel)
 #define GigantamaxFactor(gigantamaxFactor) GigantamaxFactor_(__LINE__, gigantamaxFactor)
 #define TeraType(teraType) TeraType_(__LINE__, teraType)
-#define Shadow(isShadow) Shadow_(__LINE__, shadow)
+#define Shadow(isShadow) Shadow_(__LINE__, isShadow)
+#define Shiny(isShiny) Shiny_(__LINE__, isShiny)
+#define Environment(environment) Environment_(__LINE__, environment)
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
 void ClearFlagAfterTest(void);
-void OpenPokemon(u32 sourceLine, u32 side, u32 species);
+void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species);
+void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species);
 void ClosePokemon(u32 sourceLine);
 
 void RNGSeed_(u32 sourceLine, rng_value_t seed);
-void AIFlags_(u32 sourceLine, u32 flags);
+void AIFlags_(u32 sourceLine, u64 flags);
+void BattlerAIFlags_(u32 sourceLine, u32 battler, u64 flags);
 void AILogScores(u32 sourceLine);
 void Gender_(u32 sourceLine, u32 gender);
 void Nature_(u32 sourceLine, u32 nature);
-void Ability_(u32 sourceLine, u32 ability);
+void Ability_(u32 sourceLine, enum Ability ability);
 void Level_(u32 sourceLine, u32 level);
 void MaxHP_(u32 sourceLine, u32 maxHP);
 void HP_(u32 sourceLine, u32 hp);
@@ -900,8 +1035,26 @@ void Status1_(u32 sourceLine, u32 status1);
 void OTName_(u32 sourceLine, const u8 *otName);
 void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel);
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor);
-void TeraType_(u32 sourceLine, u32 teraType);
+void TeraType_(u32 sourceLine, enum Type teraType);
 void Shadow_(u32 sourceLine, bool32 isShadow);
+void Shiny_(u32 sourceLine, bool32 isShiny);
+void Environment_(u32 sourceLine, u32 environment);
+
+static inline bool8 IsMultibattleTest(void)
+{
+    if (TESTING)
+    {
+        if (((gBattleTypeFlags & BATTLE_MULTI_TEST) == BATTLE_MULTI_TEST)
+        || ((gBattleTypeFlags & BATTLE_TWO_VS_ONE_TEST) == BATTLE_TWO_VS_ONE_TEST))
+            return TRUE;
+        else
+            return FALSE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
 
 // Created for easy use of EXPECT_MOVES, so the user can provide 1, 2, 3 or 4 moves for AI which can pass the test.
 struct FourMoves
@@ -952,7 +1105,7 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SKIP_TURN(battler) SkipTurn(__LINE__, battler)
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
-#define WITH_RNG(tag, value) rng: ((struct TurnRNG) { tag, value })
+#define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
 
 struct MoveContext
 {
@@ -977,7 +1130,7 @@ struct MoveContext
     u16 explicitNotExpected:1;
     struct BattlePokemon *target;
     bool8 explicitTarget;
-    struct TurnRNG rng;
+    struct RiggedRNG rng;
     bool8 explicitRNG;
 };
 
@@ -989,6 +1142,8 @@ struct ItemContext
     u16 explicitPartyIndex:1;
     u16 move;
     u16 explicitMove:1;
+    struct RiggedRNG rng;
+    u16 explicitRNG:1;
 };
 
 void OpenTurn(u32 sourceLine);
@@ -1048,7 +1203,7 @@ enum QueueGroupType
 
 struct AbilityEventContext
 {
-    u16 ability;
+    enum Ability ability;
 };
 
 struct AnimationEventContext

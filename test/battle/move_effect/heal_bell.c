@@ -4,6 +4,34 @@
 ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+    ASSUME(GetMoveEffect(MOVE_AROMATHERAPY) == EFFECT_HEAL_BELL);
+    ASSUME(MoveHasAdditionalEffect(MOVE_SPARKLY_SWIRL, MOVE_EFFECT_AROMATHERAPY));
+}
+
+DOUBLE_BATTLE_TEST("Sparkly Swirl cures the entire party")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_POISON); }
+        OPPONENT(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SPARKLY_SWIRL, target: opponentLeft); }
+        TURN { SWITCH(playerLeft, 2); SWITCH(playerRight, 3); }
+    } SCENE {
+        int i;
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SPARKLY_SWIRL, playerLeft);
+        STATUS_ICON(playerLeft, none: TRUE);
+        STATUS_ICON(playerRight, none: TRUE);
+        NOT MESSAGE("Wobbuffet was hurt by its poisoning!");
+        for (i = 0; i < PARTY_SIZE; i++)
+            EXPECT_EQ(GetMonData(&gPlayerParty[i], MON_DATA_STATUS), STATUS1_NONE);
+    }
 }
 
 DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user from primary status effects")
@@ -52,13 +80,14 @@ DOUBLE_BATTLE_TEST("Heal Bell/Aromatherapy cures the entire party of the user fr
         case STATUS1_FROSTBITE:    STATUS_ICON(playerLeft, frostbite: FALSE); STATUS_ICON(playerRight, frostbite: FALSE); break;
         }
         for (j = 0; j < PARTY_SIZE; j++)
-            EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_STATUS), STATUS1_NONE);
+            EXPECT_EQ(GetMonData(&gPlayerParty[j], MON_DATA_STATUS), STATUS1_NONE);
     }
 }
 
 DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)")
 {
-    u32 ability, config;
+    enum Ability ability;
+    u32 config;
 
     PARAMETRIZE { ability = ABILITY_SCRAPPY;    config = GEN_4; }
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; config = GEN_4; }
@@ -86,7 +115,8 @@ DOUBLE_BATTLE_TEST("Heal Bell does not cure Soundproof partners (Gen 4, Gen 6+)"
 
 SINGLE_BATTLE_TEST("Heal Bell cures inactive Soundproof Pokemon (Gen5+)")
 {
-    u32 config, ability;
+    u32 config;
+    enum Ability ability;
 
     PARAMETRIZE { config = GEN_4, ability = ABILITY_SCRAPPY; }
     PARAMETRIZE { config = GEN_4, ability = ABILITY_SOUNDPROOF; }

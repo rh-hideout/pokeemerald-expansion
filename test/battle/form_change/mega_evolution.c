@@ -71,14 +71,30 @@ SINGLE_BATTLE_TEST("Rayquaza can Mega Evolve knowing Dragon Ascent")
     }
 }
 
-SINGLE_BATTLE_TEST("Mega Evolution affects turn order")
+SINGLE_BATTLE_TEST("Mega Evolution doesn't affect turn order (Gen6)")
 {
     GIVEN {
-        ASSUME(B_MEGA_EVO_TURN_ORDER >= GEN_7);
-        PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); Speed(105); }
-        OPPONENT(SPECIES_WOBBUFFET) { Speed(106); }
+        WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_6);
+        PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE); }
+        OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
-        TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Celebrate!");
+        MESSAGE("Gardevoir used Celebrate!");
+    } THEN {
+        ASSUME(player->speed == 205);
+    }
+}
+
+SINGLE_BATTLE_TEST("Mega Evolution affects turn order (Gen7+)")
+{
+    GIVEN {
+        WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        PLAYER(SPECIES_GARDEVOIR) { Item(ITEM_GARDEVOIRITE);}
+        OPPONENT(SPECIES_WOBBUFFET) {}
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CELEBRATE); MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_MEGA); }
     } SCENE {
         MESSAGE("Gardevoir used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
@@ -90,9 +106,9 @@ SINGLE_BATTLE_TEST("Mega Evolution affects turn order")
 SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn order")
 {
     GIVEN {
-        ASSUME(B_MEGA_EVO_TURN_ORDER >= GEN_7);
-        ASSUME(gSpeciesInfo[SPECIES_SABLEYE_MEGA].abilities[0] != ABILITY_STALL
-            && gSpeciesInfo[SPECIES_SABLEYE_MEGA].abilities[1] != ABILITY_STALL);
+        WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_7);
+        ASSUME(GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 0) != ABILITY_STALL
+            && GetSpeciesAbility(SPECIES_SABLEYE_MEGA, 1) != ABILITY_STALL);
         PLAYER(SPECIES_SABLEYE) { Item(ITEM_SABLENITE); Ability(ABILITY_STALL); Speed(105); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(44); }
     } WHEN {
@@ -101,7 +117,7 @@ SINGLE_BATTLE_TEST("Abilities replaced by Mega Evolution do not affect turn orde
         MESSAGE("Sableye used Celebrate!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
     } THEN {
-        ASSUME(player->speed == 45);
+        ASSUME(player->speed == 105);
     }
 }
 
@@ -158,9 +174,9 @@ SINGLE_BATTLE_TEST("Mega Evolved Pokemon do not change abilities after fainting"
 {
     GIVEN {
         ASSUME(MoveMakesContact(MOVE_CRUNCH) == TRUE);
-        ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[0] != ABILITY_ROUGH_SKIN);
-        ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[1] != ABILITY_ROUGH_SKIN);
-        ASSUME(gSpeciesInfo[SPECIES_GARCHOMP_MEGA].abilities[2] != ABILITY_ROUGH_SKIN);
+        ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 0) != ABILITY_ROUGH_SKIN);
+        ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 1) != ABILITY_ROUGH_SKIN);
+        ASSUME(GetSpeciesAbility(SPECIES_GARCHOMP_MEGA, 2) != ABILITY_ROUGH_SKIN);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_GARCHOMP) { Ability(ABILITY_ROUGH_SKIN); Item(ITEM_GARCHOMPITE); HP(1); }
     } WHEN {

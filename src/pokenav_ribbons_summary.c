@@ -152,8 +152,8 @@ static const u16 sRibbonIcons3_Pal[] = INCBIN_U16("graphics/pokenav/ribbons/icon
 static const u16 sRibbonIcons4_Pal[] = INCBIN_U16("graphics/pokenav/ribbons/icons4.gbapal");
 static const u16 sRibbonIcons5_Pal[] = INCBIN_U16("graphics/pokenav/ribbons/icons5.gbapal");
 static const u16 sMonInfo_Pal[] = INCBIN_U16("graphics/pokenav/ribbons/mon_info.gbapal"); // palette for Pokémon's name/gender/level text
-static const u32 sRibbonIconsSmall_Gfx[] = INCBIN_U32("graphics/pokenav/ribbons/icons.4bpp.lz");
-static const u32 sRibbonIconsBig_Gfx[] = INCBIN_U32("graphics/pokenav/ribbons/icons_big.4bpp.lz");
+static const u32 sRibbonIconsSmall_Gfx[] = INCBIN_U32("graphics/pokenav/ribbons/icons.4bpp.smol");
+static const u32 sRibbonIconsBig_Gfx[] = INCBIN_U32("graphics/pokenav/ribbons/icons_big.4bpp.smol");
 
 static const struct BgTemplate sBgTemplates[] =
 {
@@ -585,7 +585,11 @@ static u32 LoopedTask_OpenRibbonsSummaryMenu(s32 state)
             DecompressAndCopyTileDataToVram(1, sRibbonIconsSmall_Gfx, 0, 1, 0);
             SetBgTilemapBuffer(1, menu->tilemapBuffers[1]);
             FillBgTilemapBufferRect_Palette0(1, 0, 0, 0, 32, 20);
-            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), 5 * PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons1_Pal, BG_PLTT_ID(2), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons2_Pal, BG_PLTT_ID(3), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons3_Pal, BG_PLTT_ID(4), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons4_Pal, BG_PLTT_ID(5), PLTT_SIZE_4BPP);
+            CopyPaletteIntoBufferUnfaded(sRibbonIcons5_Pal, BG_PLTT_ID(6), PLTT_SIZE_4BPP);
             CopyPaletteIntoBufferUnfaded(sMonInfo_Pal, BG_PLTT_ID(10), sizeof(sMonInfo_Pal));
             CopyBgTilemapBufferToVram(1);
             return LT_INC_AND_PAUSE;
