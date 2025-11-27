@@ -927,7 +927,7 @@ void HandleAction_ActionFinished(void)
                   | HITMARKER_IGNORE_DISGUISE);
 
     ClearDamageCalcResults();
-    gCurrentMove = 0;
+    gCurrentMove = MOVE_NONE;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gBattleStruct->dynamicMoveType = 0;
