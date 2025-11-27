@@ -6919,6 +6919,7 @@ static void Cmd_moveend(void)
                 }
             case EFFECT_ICE_SPINNER:
                 if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
+                 && gLastPrintedMoves[gBattlerAttacker] == gCurrentMove
                  && IsBattlerAlive(gBattlerAttacker)
                  && IsBattlerTurnDamaged(gBattlerTarget))
                 {
