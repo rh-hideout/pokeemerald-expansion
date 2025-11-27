@@ -8781,7 +8781,8 @@ s32 CalculateMoveDamage(struct DamageContext *ctx)
     ctx->holdEffectDef = GetBattlerHoldEffect(ctx->battlerDef);
 
     ctx->typeEffectivenessModifier = CalcTypeEffectivenessMultiplier(ctx);
-    ctx->isCrit = IsCriticalHit(ctx);
+    if (!ctx->isSelfInflicted)
+        ctx->isCrit = IsCriticalHit(ctx);
 
     if (IsFutureSightAttackerInParty(ctx->battlerAtk, ctx->battlerDef, ctx->move))
         return DoFutureSightAttackDamageCalc(ctx);
