@@ -1118,9 +1118,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifnodamage jumpInstr:req
+	.macro unused_0xcf
 	.byte 0xcf
-	.4byte \jumpInstr
 	.endm
 
 	.macro settaunt failInstr:req

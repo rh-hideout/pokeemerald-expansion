@@ -892,7 +892,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FOCUS_PUNCH] =
     {
-        .battleScript = BattleScript_EffectFocusPunch,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 7,
     },
 

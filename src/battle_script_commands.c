@@ -544,7 +544,7 @@ static void Cmd_setcharge(void);
 static void Cmd_unused_0xCC(void);
 static void Cmd_curestatuswithmove(void);
 static void Cmd_settorment(void);
-static void Cmd_jumpifnodamage(void);
+static void Cmd_unused_0xCF(void);
 static void Cmd_settaunt(void);
 static void Cmd_trysethelpinghand(void);
 static void Cmd_tryswapitems(void);
@@ -803,7 +803,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_unused_0xCC,                             //0xCC
     Cmd_curestatuswithmove,                      //0xCD
     Cmd_settorment,                              //0xCE
-    Cmd_jumpifnodamage,                          //0xCF
+    Cmd_unused_0xCF,                             //0xCF
     Cmd_settaunt,                                //0xD0
     Cmd_trysethelpinghand,                       //0xD1
     Cmd_tryswapitems,                            //0xD2
@@ -12650,14 +12650,8 @@ static void Cmd_settorment(void)
     }
 }
 
-static void Cmd_jumpifnodamage(void)
+static void Cmd_unused_0xCF(void)
 {
-    CMD_ARGS(const u8 *jumpInstr);
-
-    if (gProtectStructs[gBattlerAttacker].physicalDmg || gProtectStructs[gBattlerAttacker].specialDmg)
-        gBattlescriptCurrInstr = cmd->nextInstr;
-    else
-        gBattlescriptCurrInstr = cmd->jumpInstr;
 }
 
 static void Cmd_settaunt(void)
