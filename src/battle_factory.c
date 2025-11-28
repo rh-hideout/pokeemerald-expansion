@@ -39,7 +39,7 @@ static void GetOpponentMostCommonMonType(void);
 static void GetOpponentBattleStyle(void);
 static void RestorePlayerPartyHeldItems(void);
 static u16 GetFactoryMonId(u8 lvlMode, u8 challengeNum, bool8 useBetterRange);
-static u8 GetMoveBattleStyle(u16 move);
+static enum FactoryStyle GetMoveBattleStyle(u32 move);
 
 // Number of moves needed on the team to be considered using a certain battle style
 static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
@@ -70,9 +70,6 @@ static const u16 sMoves_ImpossibleToPredict[] =
 
 static const u16 sMoves_WeakeningTheFoe[] =
 {
-    MOVE_SAND_ATTACK, MOVE_TAIL_WHIP, MOVE_LEER, MOVE_GROWL, MOVE_STRING_SHOT, MOVE_SCREECH, MOVE_SMOKESCREEN, MOVE_KINESIS,
-    MOVE_FLASH, MOVE_COTTON_SPORE, MOVE_SPITE, MOVE_SCARY_FACE, MOVE_CHARM, MOVE_KNOCK_OFF, MOVE_SWEET_SCENT, MOVE_FEATHER_DANCE,
-    MOVE_FAKE_TEARS, MOVE_METAL_SOUND, MOVE_TICKLE,
     MOVE_NONE
 };
 
@@ -631,10 +628,14 @@ static void GetOpponentBattleStyle(void)
         gSpecialVar_Result = FACTORY_NUM_STYLES;
 }
 
-static u8 GetMoveBattleStyle(u16 move)
+static enum FactoryStyle GetMoveBattleStyle(u32 move)
 {
     const u16 *moves;
-    u8 i, j;
+    u32 i, j;
+    enum FactoryStyle style = gBattleMoveEffects[GetMoveEffect(move)].battleFactoryStyle;
+
+    if (style != FACTORY_STYLE_NONE)
+        return style;
 
     for (i = 0; i < ARRAY_COUNT(sMoveStyles); i++)
     {

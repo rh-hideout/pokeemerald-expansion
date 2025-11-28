@@ -1,5 +1,6 @@
 #include "battle.h"
 #include "battle_scripts.h"
+#include "constants/battle_factory.h"
 #include "constants/battle_move_effects.h"
 
 const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
@@ -111,42 +112,49 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectAttackDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_DEFENSE_DOWN] =
     {
         .battleScript = BattleScript_EffectDefenseDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPEED_DOWN] =
     {
         .battleScript = BattleScript_EffectSpeedDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPECIAL_ATTACK_DOWN] =
     {
         .battleScript = BattleScript_EffectSpecialAttackDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPECIAL_DEFENSE_DOWN] =
     {
         .battleScript = BattleScript_EffectSpecialDefenseDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_ACCURACY_DOWN] =
     {
         .battleScript = BattleScript_EffectAccuracyDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_EVASION_DOWN] =
     {
         .battleScript = BattleScript_EffectEvasionDown,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_HAZE] =
@@ -326,42 +334,49 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectAttackDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_DEFENSE_DOWN_2] =
     {
         .battleScript = BattleScript_EffectDefenseDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPEED_DOWN_2] =
     {
         .battleScript = BattleScript_EffectSpeedDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPECIAL_ATTACK_DOWN_2] =
     {
         .battleScript = BattleScript_EffectSpecialAttackDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_SPECIAL_DEFENSE_DOWN_2] =
     {
         .battleScript = BattleScript_EffectSpecialDefenseDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_ACCURACY_DOWN_2] =
     {
         .battleScript = BattleScript_EffectAccuracyDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_EVASION_DOWN_2] =
     {
         .battleScript = BattleScript_EffectEvasionDown2,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_REFLECT] =
@@ -523,6 +538,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSpite,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_FALSE_SWIPE] =
@@ -1002,6 +1018,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_STEAL_ITEM] =
@@ -1085,6 +1102,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectTickle,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_COSMIC_POWER] =
@@ -2050,6 +2068,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectCorrosiveGas,
         .battleTvScore = 0, // TODO: Assign points
+        .battleFactoryStyle = FACTORY_STYLE_WEAKENING,
     },
 
     [EFFECT_POPULATION_BOMB] =
