@@ -164,3 +164,38 @@ SINGLE_BATTLE_TEST("Dragon Tail switches target out and incoming mon has Levitat
         HP_BAR(opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are damaged by phazing moves, but can't be switched out")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Dragon Tail!");
+        HP_BAR(player);
+        MESSAGE("The move was blocked by the power of Dynamax!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by phazing moves but no block message is printed if they faint")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_TAIL) == EFFECT_HIT_SWITCH_TARGET);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); };
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DRAGON_TAIL); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); SEND_OUT(player, 1); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Dragon Tail!");
+        HP_BAR(player);
+        MESSAGE("Wobbuffet fainted!");
+        NOT MESSAGE("The move was blocked by the power of Dynamax!");
+    }
+}

@@ -21,7 +21,7 @@ TO_DO_BATTLE_TEST("Copycat ignores the recharging turn of recharging moves (Gen 
 TO_DO_BATTLE_TEST("Copycat can copy Bide on all turns");
 TO_DO_BATTLE_TEST("Copycat copies moves called by other calling moves instead of the calling move (Gen 5+)");
 
-DOUBLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can have their base moves copied by Copycat")
+DOUBLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can have their base moves copied by Copycat")
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks

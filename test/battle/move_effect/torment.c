@@ -51,3 +51,17 @@ SINGLE_BATTLE_TEST("Torment allows non-consecutive move uses")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SPLASH, opponent);
     }
 }
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Torment")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_TORMENT); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Torment!");
+        MESSAGE("But it failed!");
+    }
+}

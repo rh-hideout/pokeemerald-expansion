@@ -105,3 +105,19 @@ SINGLE_BATTLE_TEST("Roar fails to switch out target with Suction Cups")
         NOT MESSAGE("The opposing Charmander was dragged out!");
     }
 }
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be switched out by phazing moves")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_WHIRLWIND) == EFFECT_ROAR);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_WHIRLWIND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Whirlwind!");
+        MESSAGE("The move was blocked by the power of Dynamax!");
+    }
+}

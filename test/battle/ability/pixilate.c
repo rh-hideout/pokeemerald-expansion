@@ -143,5 +143,5 @@ TO_DO_BATTLE_TEST("Pixilate doesn't affect Tera Starstorm's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Pixilate doesn't affect damaging Z-Move types");
-TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");
-TO_DO_BATTLE_TEST("(DYNAMAX) Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale");
+TO_DO_BATTLE_TEST("Dynamax: Pixilate turns Max Strike into Max Starfall when not used by Gigantamax Alcremie");
+TO_DO_BATTLE_TEST("Dynamax: Pixilate doesn't turn Max Strike into Max Starfall when used by Gigantamax Alcremie, instead becoming G-Max Finale");

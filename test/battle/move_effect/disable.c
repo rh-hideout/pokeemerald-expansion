@@ -18,3 +18,18 @@ TO_DO_BATTLE_TEST("Disable lasts 4 turns (Gen 5+)");
 TO_DO_BATTLE_TEST("Disable's timer only counts down when trying to use a move (Gen 1-2)");
 TO_DO_BATTLE_TEST("Disable's timer counts down regardless of the action (Gen 3+)");
 TO_DO_BATTLE_TEST("Baton Pass doesn't pass Disable's effect");
+
+// Max Moves don't make contact, so Cursed Body doesn't need to be tested, but it is coded for.
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon's Max Moves cannot be disabled")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_DISABLE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet used Disable!");
+        MESSAGE("But it failed!");
+    }
+}

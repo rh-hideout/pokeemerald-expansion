@@ -99,3 +99,22 @@ SINGLE_BATTLE_TEST("Floral Healing heals the target by 2/3rd of it's maxHP if Gr
         HP_BAR(player, damage: -maxHP * 2 / 3);
     }
 }
+
+SINGLE_BATTLE_TEST("Dynamax: Heal Pulse heals based on a Pokemon's non-Dynamax HP", s16 damage)
+{
+    u32 dynamax;
+    PARAMETRIZE { dynamax = GIMMICK_NONE; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HEAL_PULSE) == EFFECT_HEAL_PULSE);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); Speed(50); }
+        OPPONENT(SPECIES_WOBBUFFET) { MaxHP(100); Speed(100); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_HEAL_PULSE); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Heal Pulse!");
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}

@@ -178,4 +178,4 @@ TO_DO_BATTLE_TEST("Aerilate doesn't affect Tera Starstorm's type");
 TO_DO_BATTLE_TEST("Aerilate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("Aerilate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Aerilate doesn't affect damaging Z-Move types");
-TO_DO_BATTLE_TEST("(DYNAMAX) Aerilate turns Max Strike into Max Airstream"); // All other -ate abilities do this, so interpolating this as no Aerilate mon is available in a Dynamax game
+TO_DO_BATTLE_TEST("Dynamax: Aerilate turns Max Strike into Max Airstream"); // All other -ate abilities do this, so interpolating this as no Aerilate mon is available in a Dynamax game

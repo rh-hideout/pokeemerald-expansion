@@ -86,3 +86,19 @@ SINGLE_BATTLE_TEST("OHKO moves fail if target protects")
 TO_DO_BATTLE_TEST("OHKO moves faints the target, skipping regular damage calculations")
 TO_DO_BATTLE_TEST("OHKO moves's accuracy increases by 1% for every level the user has over the target")
 TO_DO_BATTLE_TEST("OHKO moves's ignores non-stage accuracy modifiers") // Gravity, Wide Lens, Compound Eyes
+
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon cannot be hit by OHKO moves")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MACHAMP) { Ability(ABILITY_NO_GUARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_FISSURE); }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Machamp used Fissure!");
+        MESSAGE("Wobbuffet is unaffected!");
+        NONE_OF { HP_BAR(player); }
+    }
+}

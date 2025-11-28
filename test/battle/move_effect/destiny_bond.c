@@ -97,7 +97,7 @@ SINGLE_BATTLE_TEST("Destiny Bond does not fail if used after failing (Gen7+)")
 }
 
 // can't be used at all in Raid, see "Documenting Dynamax"
-SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are not affected by Destiny Bond")
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are not affected by Destiny Bond")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); };
@@ -126,3 +126,16 @@ TO_DO_BATTLE_TEST("Destiny Bond's effect can trigger on the next turn if the use
 TO_DO_BATTLE_TEST("Destiny Bond can be used multiple times in a row (Gen 2-6)");
 TO_DO_BATTLE_TEST("Destiny Bond always fails if it was successfully used the previous turn (Gen 7+)");
 TO_DO_BATTLE_TEST("Destiny Bond cannot be used in Raids");
+
+SINGLE_BATTLE_TEST("Dynamax: Destiny Bond fails if a Dynamaxed battler is present on field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+    } SCENE {
+        MESSAGE("The move was blocked by the power of Dynamax!");
+    }
+}

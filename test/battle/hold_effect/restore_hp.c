@@ -80,3 +80,23 @@ SINGLE_BATTLE_TEST("Restore HP Berry triggers only during the end turn")
     }
 }
 #endif
+
+SINGLE_BATTLE_TEST("Dynamax: Sitrus Berries heal based on a Pokemon's non-Dynamax HP", s16 damage)
+{
+    u32 dynamax;
+    PARAMETRIZE { dynamax = GIMMICK_NONE; }
+    PARAMETRIZE { dynamax = GIMMICK_DYNAMAX; }
+    GIVEN {
+        ASSUME(I_SITRUS_BERRY_HEAL >= GEN_4);
+        ASSUME(gItemsInfo[ITEM_SITRUS_BERRY].holdEffect == HOLD_EFFECT_RESTORE_PCT_HP);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_SITRUS_BERRY); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_FLING); MOVE(player, MOVE_SCRATCH, gimmick: dynamax); }
+    } SCENE {
+        MESSAGE("Wobbuffet restored its health using its Sitrus Berry!");
+        HP_BAR(player, captureDamage: &results[i].damage);
+    } FINALLY {
+        EXPECT_EQ(results[0].damage, results[1].damage);
+    }
+}
