@@ -54,6 +54,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_ATTACK_UP] =
@@ -353,6 +354,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectTransform,
         .battleTvScore = 0, // TODO: Assign points
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_ATTACK_DOWN_2] =
@@ -423,6 +425,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSubstitute,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_RAGE] =
@@ -435,12 +438,14 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectMimic,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_METRONOME] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_LEECH_SEED] =
@@ -545,6 +550,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSketch,
         .battleTvScore = 3,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_SLEEP_TALK] =
@@ -621,6 +627,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectCurse,
         .battleTvScore = 2,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
     },
 
@@ -715,6 +722,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectPresent,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_FRUSTRATION] =
@@ -1015,6 +1023,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectTrick,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
     },
 
@@ -1022,6 +1031,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectRolePlay,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
     },
 
@@ -1036,6 +1046,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
     },
 
     [EFFECT_INGRAIN] =
@@ -1108,6 +1119,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSkillSwap,
         .battleTvScore = 6,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
     },
 
@@ -1219,6 +1231,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectCamouflage,
         .battleTvScore = 3,
+        .battleFactoryStyle = FACTORY_STYLE_UNPREDICTABLE,
         .encourageEncore = TRUE,
     },
 
