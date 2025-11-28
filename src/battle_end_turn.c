@@ -63,8 +63,8 @@ static bool32 HandleEndTurnVarious(u32 battler)
         if (gBattleMons[i].volatiles.lockOn > 0)
             gBattleMons[i].volatiles.lockOn--;
 
-        if (gDisableStructs[i].chargeTimer > 0 && --gDisableStructs[i].chargeTimer == 0)
-            gBattleMons[i].volatiles.charge = FALSE;
+        if (B_CHARGE < GEN_9 && gBattleMons[i].volatiles.chargeTimer > 0)
+            gBattleMons[i].volatiles.chargeTimer--;
 
         if (gDisableStructs[i].laserFocusTimer > 0 && --gDisableStructs[i].laserFocusTimer == 0)
             gBattleMons[i].volatiles.laserFocus = FALSE;

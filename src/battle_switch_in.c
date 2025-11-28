@@ -51,7 +51,7 @@ bool32 DoSwitchInEvents(void)
         while (gBattleStruct->switchInBattlerCounter < gBattlersCount)
         {
             battler = gBattlersBySpeed[gBattleStruct->switchInBattlerCounter++];
-            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, gBattleMons[battler].ability, 0, gBattleStruct->battlerState[battler].switchIn))
+            if (AbilityBattleEffects(ABILITYEFFECT_NEUTRALIZINGGAS, battler, ctx.abilities[battler], 0, gBattleStruct->battlerState[battler].switchIn))
                 return TRUE;
         }
         gBattleStruct->switchInBattlerCounter = 0;
