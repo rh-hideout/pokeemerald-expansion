@@ -44,7 +44,6 @@ static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struct BattlePokemon battleMon);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo);
-static u32 ChooseBestHealingSwitch(u32 battler, struct Pokemon *party, int firstId, int lastId, u32 battlerIn1, u32 battlerIn2, u32 opposingBattler, const struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(u32 battler);
 
 static void InitializeSwitchinCandidate(struct Pokemon *mon)
@@ -191,98 +190,6 @@ static bool32 IsAceMon(u32 battler, u32 monPartyId)
             && (monPartyId == CalculateEnemyPartyCount()-1 || monPartyId == CalculateEnemyPartyCount()-2))
         return TRUE;
     return FALSE;
-}
-
-static u32 ChooseBestHealingSwitch(u32 battler, struct Pokemon *party, int firstId, int lastId, u32 battlerIn1, u32 battlerIn2, u32 opposingBattler, const struct IncomingHealInfo *healInfo)
-{
-    s32 bestScore = -1;
-    u32 bestMonId = PARTY_SIZE;
-
-    if (!healInfo->hasHealing)
-        return bestMonId;
-
-    for (u32 i = firstId; i < lastId; i++)
-    {
-        if (!IsValidForBattle(&party[i]))
-            continue;
-        if (gBattlerPartyIndexes[battlerIn1] == i || gBattlerPartyIndexes[battlerIn2] == i)
-            continue;
-        if (i == gBattleStruct->monToSwitchIntoId[battlerIn1] || i == gBattleStruct->monToSwitchIntoId[battlerIn2])
-            continue;
-        if (IsAceMon(battler, i))
-            continue;
-
-        InitializeSwitchinCandidate(&party[i]);
-        struct BattlePokemon *candidate = &gAiLogicData->switchinCandidate.battleMon;
-        u32 originalHp = candidate->hp;
-        u32 originalStatus = candidate->status1;
-
-        if (healInfo->healBeforeHazards)
-        {
-            candidate->hp = candidate->maxHP;
-            if (healInfo->curesStatus)
-                candidate->status1 = 0;
-        }
-
-        u32 hazardDamage = GetSwitchinHazardsDamage(battler, candidate);
-        u32 hazardCheckHp = healInfo->healBeforeHazards ? candidate->maxHP : originalHp;
-
-        if (healInfo->healAfterHazards)
-        {
-            // Replacement heals occur after hazards. Mon must survive entry damage with its pre-heal HP.
-            if (hazardDamage >= originalHp)
-                continue;
-        }
-        else
-        {
-            if (hazardDamage >= hazardCheckHp)
-                continue;
-        }
-
-        u32 healedHp;
-
-        if (healInfo->healAfterHazards)
-        {
-            healedHp = candidate->maxHP;
-        }
-        else if (healInfo->healBeforeHazards)
-        {
-            healedHp = candidate->maxHP - hazardDamage;
-        }
-        else
-        {
-            healedHp = hazardCheckHp - hazardDamage;
-        }
-
-        if (healInfo->healEndOfTurn)
-        {
-            u32 wishHealed = healedHp + healInfo->healAmount;
-            if (wishHealed > candidate->maxHP)
-                wishHealed = candidate->maxHP;
-            healedHp = wishHealed;
-        }
-
-        s32 healGain = (s32)healedHp - (s32)originalHp;
-
-        if (healGain <= 0)
-            continue;
-
-        if (healInfo->curesStatus && originalStatus != 0)
-            healGain += candidate->maxHP / 4;
-
-        // Avoid throwing a healed mon into an awful matchup
-        u32 typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], *candidate);
-        if (typeMatchup > UQ_4_12(2.0))
-            healGain -= candidate->maxHP / 8;
-
-        if (healGain > bestScore)
-        {
-            bestScore = healGain;
-            bestMonId = i;
-        }
-    }
-
-    return bestMonId;
 }
 
 static bool32 AreStatsRaised(u32 battler)
@@ -2313,10 +2220,10 @@ static inline bool32 CanSwitchinWin1v1(u32 hitsToKOAI, u32 hitsToKOPlayer, bool3
 static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, u32 battler, u32 opposingBattler, u32 battlerIn1, u32 battlerIn2, enum SwitchType switchType, const struct IncomingHealInfo *healInfo)
 {
     int revengeKillerId = PARTY_SIZE, slowRevengeKillerId = PARTY_SIZE, fastThreatenId = PARTY_SIZE, slowThreatenId = PARTY_SIZE, damageMonId = PARTY_SIZE, generic1v1MonId = PARTY_SIZE;
-    int batonPassId = PARTY_SIZE, typeMatchupId = PARTY_SIZE, typeMatchupEffectiveId = PARTY_SIZE, defensiveMonId = PARTY_SIZE, aceMonId = PARTY_SIZE, trapperId = PARTY_SIZE;
+    int batonPassId = PARTY_SIZE, typeMatchupId = PARTY_SIZE, typeMatchupEffectiveId = PARTY_SIZE, defensiveMonId = PARTY_SIZE, aceMonId = PARTY_SIZE, trapperId = PARTY_SIZE, healingCandidateId = PARTY_SIZE;
     int i, j, aliveCount = 0, bits = 0, aceMonCount = 0;
     s32 defensiveMonHitKOThreshold = 3; // 3HKO threshold that candidate defensive mons must exceed
-    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0;
+    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0;
     u32 aiMove, hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE, maxHitsToKO = 0;
     u32 bestResist = UQ_4_12(2.0), bestResistEffective = UQ_4_12(2.0), typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattleMonTypeMatchup
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
@@ -2366,6 +2273,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, &bestPlayerMove), battler, healInfo, originalHp);
         hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, &bestPlayerPriorityMove), battler, healInfo, originalHp);
         typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gAiLogicData->switchinCandidate.battleMon);
+        canSwitchinWin1v1 = FALSE;
+        bool32 anyMoveCanWin1v1 = FALSE;
 
         // Check through current mon's moves
         for (j = 0; j < MAX_MON_MOVES; j++)
@@ -2382,6 +2291,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             isSwitchinFirst = AI_IsPartyMonFaster(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
             isSwitchinFirstPriority = AI_IsPartyMonFaster(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, aiMove, bestPlayerPriorityMove, CONSIDER_PRIORITY);
             canSwitchinWin1v1 = CanSwitchinWin1v1(hitsToKOAI, hitsToKOPlayer, isSwitchinFirst, isFreeSwitch) && CanSwitchinWin1v1(hitsToKOAIPriority, hitsToKOPlayer, isSwitchinFirstPriority, isFreeSwitch); // AI must successfully 1v1 with and without priority to be considered a good option
+            anyMoveCanWin1v1 |= canSwitchinWin1v1;
 
             // Check for Baton Pass; hitsToKO requirements mean mon can boost and BP without dying whether it's slower or not
             if (GetMoveEffect(aiMove) == EFFECT_BATON_PASS)
@@ -2475,6 +2385,28 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     trapperId = i;
             }
         }
+
+        // Check for healing candidate - mon that benefits significantly from incoming heal
+        if (healInfo->hasHealing)
+        {
+            u32 maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
+            s32 healGain = (s32)maxHP - (s32)originalHp;
+
+            // For Wish, heal gain is the wish amount (capped at what can actually be gained)
+            if (healInfo->healEndOfTurn && !healInfo->healBeforeHazards && !healInfo->healAfterHazards)
+            {
+                healGain = healInfo->healAmount;
+                if (healGain > (s32)(maxHP - originalHp))
+                    healGain = (s32)(maxHP - originalHp);
+            }
+
+            // Require significant heal gain (at least 25% of max HP), must win 1v1 with at least one move, and pick the best
+            if (anyMoveCanWin1v1 && healGain > (s32)(maxHP / 4) && healGain > bestHealGain)
+            {
+                bestHealGain = healGain;
+                healingCandidateId = i;
+            }
+        }
     }
 
     batonPassId = GetRandomSwitchinWithBatonPass(aliveCount, bits, firstId, lastId, i);
@@ -2482,7 +2414,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
     if (isFreeSwitch)
     {
-        // Return Trapper > Revenge Killer > Type Matchup > Baton Pass > Best Damage
+        // Return Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
         if (trapperId != PARTY_SIZE)                    return trapperId;
         else if (revengeKillerId != PARTY_SIZE)         return revengeKillerId;
         else if (slowRevengeKillerId != PARTY_SIZE)     return slowRevengeKillerId;
@@ -2490,17 +2422,19 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         else if (slowThreatenId != PARTY_SIZE)          return slowThreatenId;
         else if (typeMatchupEffectiveId != PARTY_SIZE)  return typeMatchupEffectiveId;
         else if (typeMatchupId != PARTY_SIZE)           return typeMatchupId;
+        else if (healingCandidateId != PARTY_SIZE)      return healingCandidateId;
         else if (batonPassId != PARTY_SIZE)             return batonPassId;
         else if (generic1v1MonId != PARTY_SIZE)         return generic1v1MonId;
         else if (damageMonId != PARTY_SIZE)             return damageMonId;
     }
     else
     {
-        // Return Trapper > Type Matchup > Best Defensive > Baton Pass
+        // Return Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
         if (trapperId != PARTY_SIZE)                    return trapperId;
         else if (typeMatchupEffectiveId != PARTY_SIZE)  return typeMatchupEffectiveId;
         else if (typeMatchupId != PARTY_SIZE)           return typeMatchupId;
         else if (defensiveMonId != PARTY_SIZE)          return defensiveMonId;
+        else if (healingCandidateId != PARTY_SIZE)      return healingCandidateId;
         else if (batonPassId != PARTY_SIZE)             return batonPassId;
         else if (generic1v1MonId != PARTY_SIZE)         return generic1v1MonId;
     }
@@ -2579,13 +2513,6 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
     {
         bestMonId = GetNextMonInParty(party, firstId, lastId, battlerIn1, battlerIn2);
         return bestMonId;
-    }
-
-    if (healInfo.hasHealing)
-    {
-        bestMonId = ChooseBestHealingSwitch(battler, party, firstId, lastId, battlerIn1, battlerIn2, opposingBattler, &healInfo);
-        if (bestMonId != PARTY_SIZE)
-            return bestMonId;
     }
 
     // Only use better mon selection if AI_FLAG_SMART_MON_CHOICES is set for the trainer.
