@@ -2240,7 +2240,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
                 // Check if current mon can revenge kill in some capacity
                 // If AI mon can one shot
-                if (damageDealt > playerMonHP)
+                if (damageDealt >= playerMonHP)
                 {
                     if (canSwitchinWin1v1)
                     {
@@ -2252,7 +2252,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If AI mon can two shot
-                if (damageDealt > playerMonHP / 2)
+                if (damageDealt >= (playerMonHP / 2 + playerMonHP % 2)) // Modulo to handle odd numbers in non-decimal division
                 {
                     if (canSwitchinWin1v1)
                     {

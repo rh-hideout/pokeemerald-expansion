@@ -1459,3 +1459,23 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked
         TURN { MOVE(player, MOVE_MIGHTY_CLEAVE); EXPECT_MOVE(opponent, MOVE_TACKLE); item == ITEM_NONE ? EXPECT_SEND_OUT(opponent, 1) : EXPECT_SEND_OUT(opponent, 2); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI considers both meeting and exceeding KO thresholds correctly")
+{
+    u32 hp;
+    PARAMETRIZE { hp = 40; }
+    PARAMETRIZE { hp = 80; }
+    PARAMETRIZE { hp = 79; }
+    PARAMETRIZE { hp = 81; }
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(5); HP(hp); Moves(MOVE_PROTECT, MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(6); Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(6); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_BELDUM) { Speed(4); Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); hp > 80 ? EXPECT_SEND_OUT(opponent, 2) : EXPECT_SEND_OUT(opponent, 1); }
+    }
+}
