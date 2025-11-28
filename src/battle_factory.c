@@ -52,53 +52,6 @@ static const u8 sRequiredMoveCounts[FACTORY_NUM_STYLES - 1] = {
     [FACTORY_STYLE_WEATHER - 1]       = 2
 };
 
-static const u16 sMoves_TotalPreparation[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_ImpossibleToPredict[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_WeakeningTheFoe[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_HighRiskHighReturn[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_Endurance[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_SlowAndSteady[] =
-{
-    MOVE_NONE
-};
-
-static const u16 sMoves_DependsOnTheBattlesFlow[] =
-{
-    MOVE_NONE
-};
-
-// Excludes FACTORY_STYLE_NONE
-static const u16 *const sMoveStyles[FACTORY_NUM_STYLES - 1] =
-{
-    [FACTORY_STYLE_PREPARATION - 1]   = sMoves_TotalPreparation,
-    [FACTORY_STYLE_SLOW_STEADY - 1]   = sMoves_SlowAndSteady,
-    [FACTORY_STYLE_ENDURANCE - 1]     = sMoves_Endurance,
-    [FACTORY_STYLE_HIGH_RISK - 1]     = sMoves_HighRiskHighReturn,
-    [FACTORY_STYLE_WEAKENING - 1]     = sMoves_WeakeningTheFoe,
-    [FACTORY_STYLE_UNPREDICTABLE - 1] = sMoves_ImpossibleToPredict,
-    [FACTORY_STYLE_WEATHER - 1]       = sMoves_DependsOnTheBattlesFlow,
-};
-
 static void (*const sBattleFactoryFunctions[])(void) =
 {
     [BATTLE_FACTORY_FUNC_INIT]                   = InitFactoryChallenge,
@@ -611,13 +564,12 @@ static void GetOpponentBattleStyle(void)
 
 static enum FactoryStyle GetMoveBattleStyle(u32 move)
 {
-    const u16 *moves;
-    u32 i, j;
     enum FactoryStyle style = gBattleMoveEffects[GetMoveEffect(move)].battleFactoryStyle;
 
     if (style != FACTORY_STYLE_NONE)
         return style;
 
+    // Conditional effects
     switch (GetMoveEffect(move))
     {
     case EFFECT_TWO_TURNS_ATTACK:
@@ -633,21 +585,15 @@ static enum FactoryStyle GetMoveBattleStyle(u32 move)
     default:
         break;
     }
+    // Bad secondary effects for the user
     if (MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
      || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_SP_ATK_MINUS_2))
         return FACTORY_STYLE_HIGH_RISK;
 
+    // Non-volatile effects
     if (GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE)
         return FACTORY_STYLE_SLOW_STEADY;
 
-    for (i = 0; i < ARRAY_COUNT(sMoveStyles); i++)
-    {
-        for (j = 0, moves = sMoveStyles[i]; moves[j] != MOVE_NONE; j++)
-        {
-            if (moves[j] == move)
-                return i + 1;
-        }
-    }
     return FACTORY_STYLE_NONE;
 }
 
