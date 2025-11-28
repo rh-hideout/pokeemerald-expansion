@@ -9407,7 +9407,7 @@ u32 IsAbilityStatusProtected(u32 battler, u32 ability)
         || IsFlowerVeilProtected(battler);
 }
 
-static bool32 IsRototillerAffected(u32 battler)
+static bool32 IsRototillerAffected(u32 battler, u32 move)
 {
     if (!IsBattlerAlive(battler))
         return FALSE;
@@ -9417,7 +9417,7 @@ static bool32 IsRototillerAffected(u32 battler)
         return FALSE;   // Only grass types affected
     if (IsSemiInvulnerable(battler, CHECK_ALL))
         return FALSE;   // Rototiller doesn't affected semi-invulnerable battlers
-    if (BlocksPrankster(MOVE_ROTOTILLER, gBattlerAttacker, battler, FALSE))
+    if (BlocksPrankster(move, gBattlerAttacker, battler, FALSE))
         return FALSE;
     return TRUE;
 }
@@ -18235,7 +18235,7 @@ void BS_GetRototillerTargets(void)
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         gSpecialStatuses[battler].rototillerAffected = FALSE;
-        if (IsRototillerAffected(battler))
+        if (IsRototillerAffected(battler, gCurrentMove))
         {
             gSpecialStatuses[battler].rototillerAffected = TRUE;
             count++;

@@ -392,7 +392,7 @@ bool32 HandleMoveTargetRedirection(void)
             battlerAbility = GetBattlerAbility(battler);
 
             RecordAbilityBattle(battler, gBattleMons[battler].ability);
-            if (battlerAbility == ABILITY_LIGHTNING_ROD && gCurrentMove != MOVE_TEATIME)
+            if (battlerAbility == ABILITY_LIGHTNING_ROD && moveEffect != EFFECT_TEATIME)
                 gSpecialStatuses[battler].lightningRodRedirected = TRUE;
             else if (battlerAbility == ABILITY_STORM_DRAIN)
                 gSpecialStatuses[battler].stormDrainRedirected = TRUE;
@@ -1888,9 +1888,10 @@ void TryClearRageAndFuryCutter(void)
     s32 i;
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gBattleMons[i].volatiles.rage && gChosenMoveByBattler[i] != MOVE_RAGE)
+        u32 effect = GetMoveEffect(gChosenMoveByBattler[i]);
+        if (gBattleMons[i].volatiles.rage && effect != EFFECT_RAGE)
             gBattleMons[i].volatiles.rage = FALSE;
-        if (gDisableStructs[i].furyCutterCounter != 0 && gChosenMoveByBattler[i] != MOVE_FURY_CUTTER)
+        if (gDisableStructs[i].furyCutterCounter != 0 && effect != EFFECT_FURY_CUTTER)
             gDisableStructs[i].furyCutterCounter = 0;
     }
 }
@@ -8450,7 +8451,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct DamageContext *ctx)
             modifier = uq4_12_multiply(modifier, UQ_4_12(0.75));
         break;
     case ABILITY_ANALYTIC:
-        if (GetBattlerTurnOrderNum(battlerAtk) == gBattlersCount - 1 && move != MOVE_FUTURE_SIGHT && move != MOVE_DOOM_DESIRE)
+        if (GetBattlerTurnOrderNum(battlerAtk) == gBattlersCount - 1 && GetMoveEffect(move) != EFFECT_FUTURE_SIGHT)
            modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
         break;
     case ABILITY_TOUGH_CLAWS:
@@ -11507,9 +11508,8 @@ u32 GetBattleMoveType(u32 move)
     if (gMain.inBattle && gBattleStruct->dynamicMoveType)
         return gBattleStruct->dynamicMoveType & DYNAMIC_TYPE_MASK;
     else if (B_UPDATED_MOVE_TYPES < GEN_5
-         && (move == MOVE_BEAT_UP
-          || move == MOVE_FUTURE_SIGHT
-          || move == MOVE_DOOM_DESIRE))
+         && (GetMoveEffect(move) == EFFECT_BEAT_UP
+          || GetMoveEffect(move) == EFFECT_FUTURE_SIGHT))
           return TYPE_MYSTERY;
     return GetMoveType(move);
 }
