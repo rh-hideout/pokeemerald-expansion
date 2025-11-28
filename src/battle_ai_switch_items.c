@@ -1982,7 +1982,7 @@ static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, 
     return PARTY_SIZE;
 }
 
-static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, u32 lastId)
+static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, u32 lastId, enum SwitchType switchType)
 {
     u32 i;
 
@@ -1992,7 +1992,11 @@ static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, 
     // Randomize between valid mons
     if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) && RANDOMIZE_SWITCHIN_ANY_VALID)
     {
-        return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
+        // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
+        if (switchType == SWITCH_AFTER_KO)
+            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
+        else
+            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE, validMonIds); // Can't pass this anything with no set bits
     }
 
     // Pick last valid mon in party order
@@ -2334,7 +2338,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
     // Fallback
     if (validMonIds != 0)
-        return GetValidSwitchinCandidate(validMonIds, battler, firstId, lastId);
+        return GetValidSwitchinCandidate(validMonIds, battler, firstId, lastId, switchType);
 
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount)
