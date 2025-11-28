@@ -18672,8 +18672,8 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     {
         .name = COMPOUND_STRING("Lash Out"),
         .description = COMPOUND_STRING(
-            "If stats lowered during this\n"
-            "turn, power is doubled."),
+            "If user's stats were lowered\n"
+            "this turn, power is doubled."),
         .effect = EFFECT_LASH_OUT,
         .power = 75,
         .type = TYPE_DARK,
