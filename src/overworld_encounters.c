@@ -34,7 +34,7 @@ static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
 static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 static bool32 IsInsidePlayerMap(s16 x, s16 y);
-static bool32 OverworldEncounters_ProcessMonInteraction(void);
+static void OverworldEncounters_ProcessMonInteraction(void);
 
 #define sEncounterIndex trainerRange_berryTreeId
 
@@ -375,36 +375,24 @@ void CreateFollowMonEncounter(void) {
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
 
-static bool32 OverworldEncounters_ProcessMonInteraction(void)
+static void OverworldEncounters_ProcessMonInteraction(void)
 {
     u8 i;
-    struct ObjectEvent *curObject;
+    struct ObjectEvent *object;
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
-        curObject = &gObjectEvents[i];
-        if (curObject->active && curObject != player && IsGeneratedOverworldEncounter(curObject))
+        object = &gObjectEvents[i];
+        if (IsGeneratedOverworldEncounter(object) && object->active && object != player
+            && ((object->currentCoords.x == player->currentCoords.x && object->currentCoords.y == player->currentCoords.y)
+            || (object->previousCoords.x == player->currentCoords.x && object->previousCoords.y == player->currentCoords.y))
+            && AreElevationsCompatible(object->currentElevation, player->currentElevation))
         {
-            if ((curObject->currentCoords.x == player->currentCoords.x && curObject->currentCoords.y == player->currentCoords.y) || (curObject->previousCoords.x == player->currentCoords.x && curObject->previousCoords.y == player->currentCoords.y))
-            {
-                if (AreElevationsCompatible(curObject->currentElevation, player->currentElevation))
-                {
-                    // There is a valid collision so exectute the attached script
-                    const u8* script = InteractWithDynamicWildFollowMon;
-                    gSpecialVar_LastTalked = curObject->localId;
-                    //VarSet(VAR_LAST_TALKED, curObject->localId);
-                    ScriptContext_SetupScript(script);
-                    
-                    //CreateFollowMonEncounter();
-                    //BattleSetup_StartScriptedWildBattle();
-                    return TRUE;
-                }
-            }
+            gSpecialVar_LastTalked = object->localId;
+            ScriptContext_SetupScript(InteractWithDynamicWildFollowMon);
         }
     }
-
-    return FALSE;
 }
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
