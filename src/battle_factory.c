@@ -71,10 +71,6 @@ static const u16 sMoves_WeakeningTheFoe[] =
 
 static const u16 sMoves_HighRiskHighReturn[] =
 {
-    MOVE_GUILLOTINE, MOVE_HORN_DRILL, MOVE_DOUBLE_EDGE, MOVE_HYPER_BEAM, MOVE_COUNTER, MOVE_FISSURE,
-    MOVE_BIDE, MOVE_SELF_DESTRUCT, MOVE_SKY_ATTACK, MOVE_EXPLOSION, MOVE_FLAIL, MOVE_REVERSAL, MOVE_DESTINY_BOND,
-    MOVE_PERISH_SONG, MOVE_PAIN_SPLIT, MOVE_MIRROR_COAT, MOVE_MEMENTO, MOVE_GRUDGE, MOVE_FACADE, MOVE_FOCUS_PUNCH,
-    MOVE_BLAST_BURN, MOVE_HYDRO_CANNON, MOVE_OVERHEAT, MOVE_FRENZY_PLANT, MOVE_PSYCHO_BOOST, MOVE_VOLT_TACKLE,
     MOVE_NONE
 };
 
@@ -632,6 +628,25 @@ static enum FactoryStyle GetMoveBattleStyle(u32 move)
 
     if (style != FACTORY_STYLE_NONE)
         return style;
+
+    switch (GetMoveEffect(move))
+    {
+    case EFFECT_TWO_TURNS_ATTACK:
+        // Potential to miss a two-turn move
+        if (GetMoveAccuracy(move) < 100 && GetMoveAccuracy(move) != 0)
+            return FACTORY_STYLE_HIGH_RISK;
+        break;
+    case EFFECT_RECOIL:
+        // Only higher recoil moves are considered risky
+        if (GetMoveRecoil(move) >= 33)
+            return FACTORY_STYLE_HIGH_RISK;
+        break;
+    default:
+        break;
+    }
+    if (MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_RECHARGE)
+     || MoveHasAdditionalEffectSelf(move, MOVE_EFFECT_SP_ATK_MINUS_2))
+        return FACTORY_STYLE_HIGH_RISK;
 
     for (i = 0; i < ARRAY_COUNT(sMoveStyles); i++)
     {
