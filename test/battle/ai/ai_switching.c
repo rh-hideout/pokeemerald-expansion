@@ -359,7 +359,7 @@ AI_SINGLE_BATTLE_TEST("When AI switches out due to having no move that affects t
         OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
         OPPONENT(SPECIES_ABRA) { Moves(MOVE_TACKLE); }
     } WHEN {
-        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 0);}
+        TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_SWITCH(opponent, 2); EXPECT_SEND_OUT(opponent, 4);}
         TURN { MOVE(player, MOVE_SHADOW_BALL); EXPECT_MOVE(opponent, MOVE_TACKLE); }
     }
 }
@@ -1687,10 +1687,9 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI will consider choice-locked
 AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose between eligible switchin candidates of the same category")
 {
     u32 trials; // Two trial counts to ensure randomization is scalable
-    KNOWN_FAILING;
     PARAMETRIZE { trials = 30; }
     PARAMETRIZE { trials = 50; }
-    PASSES_RANDOMLY(10, trials, RNG_AI_RANDOM_SWITCHIN);
+    PASSES_RANDOMLY(10, trials, RNG_AI_RANDOM_SWITCHIN_POST_KO);
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_RANDOMIZE_SWITCHIN);
         PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_TACKLE); }
@@ -1702,6 +1701,29 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose betwe
         {
             OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_CLOSE_COMBAT); }
             OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_CLOSE_COMBAT); }
+        }
+    } WHEN {
+        TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI_FLAG_RANDOMIZE_SWITCHIN: AI will randomly choose between all valid switchin candidates if no good options are available")
+{
+    u32 trials; // Two trial counts to ensure randomization is scalable
+    PARAMETRIZE { trials = 30; }
+    PARAMETRIZE { trials = 50; }
+    PASSES_RANDOMLY(10, trials, RNG_AI_RANDOM_SWITCHIN_POST_KO);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_RANDOMIZE_SWITCHIN);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_PROTECT, MOVE_BITE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        OPPONENT(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+        if (trials == 50)
+        {
+            OPPONENT(SPECIES_GASTLY) { Moves(MOVE_LICK); }
+            OPPONENT(SPECIES_GASTLY) { Moves(MOVE_LICK); }
         }
     } WHEN {
         TURN { MOVE(player, MOVE_PROTECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); EXPECT_SEND_OUT(opponent, 2); }

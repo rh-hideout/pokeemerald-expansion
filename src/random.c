@@ -254,7 +254,7 @@ u32 RandomBitIndex(enum RandomTag tag, u32 bits)
   }
 
   if (n == 0)
-    return 0; // What should we return here? UINT_MAX?
+    return 0; // This is a little awkward, there are no set bits!
   else
     return setIndexes[RandomUniform(tag, 0, n-1)];
 }

@@ -93,6 +93,9 @@
 // AI_FLAG_SMART_SWITCHING settings
 #define SMART_SWITCHING_OMNISCIENT                              FALSE // AI will use omniscience for switching calcs, regardless of omniscience setting otherwise
 
+// AI_FLAG_RANDOMIZE_SWITCHIN settings
+#define RANDOMIZE_SWITCHIN_ANY_VALID                            TRUE // If AI has no good candidate mons, it will still choose randomly from all valid options rather than defaulting to the last one in party order
+
 // Configurations specifically for AI_FLAG_DOUBLE_BATTLE.
 #define FRIENDLY_FIRE_RISKY_THRESHOLD             2 // AI_FLAG_RISKY acceptable number of hits to KO the partner via friendly fire
 #define FRIENDLY_FIRE_NORMAL_THRESHOLD            3 // typical acceptable number of hits to KO the partner via friendly fire

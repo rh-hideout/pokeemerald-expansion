@@ -11051,15 +11051,37 @@ Pic: Lass
 Gender: Female
 Music: Female
 Double Battle: No
-AI: Check Bad Move
+AI: Smart Switching / Smart Mon Choices / Randomize Switchin / Check Bad Move / Check Viability / Try To Faint
 
-Zigzagoon
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+1 (Zigzagoon)
+Level: 100
+Ability: Pickup
+- Explosion
 
-Shroomish
-Level: 4
-IVs: 0 HP / 0 Atk / 0 Def / 0 SpA / 0 SpD / 0 Spe
+2 (Gastly)
+Level: 100
+Ability: Pickup
+- Lick
+
+3 (Gastly)
+Level: 100
+Ability: Pickup
+- Lick
+
+4 (Gastly)
+Level: 100
+Ability: Pickup
+- Lick
+
+5 (Gastly)
+Level: 100
+Ability: Pickup
+- Lick
+
+6 (Gastly)
+Level: 100
+Ability: Pickup
+- Lick
 
 === TRAINER_HALEY_1 ===
 Name: HALEY
