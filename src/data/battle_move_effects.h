@@ -672,6 +672,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSandstorm,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
     },
 
@@ -798,6 +799,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectRainDance,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
     },
 
@@ -805,6 +807,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSunnyDay,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
     },
 
@@ -940,6 +943,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHail,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
         .encourageEncore = TRUE,
     },
 
@@ -1178,6 +1182,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 1,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },
 
     [EFFECT_TICKLE] =
@@ -2142,6 +2147,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectSnow,
         .battleTvScore = 4,
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },
 
     [EFFECT_TAKE_HEART] =
@@ -2173,6 +2179,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectChillyReception,
         .battleTvScore = 0, // TODO: Assign points
+        .battleFactoryStyle = FACTORY_STYLE_WEATHER,
     },
 
     [EFFECT_MAX_MOVE] =

@@ -84,7 +84,6 @@ static const u16 sMoves_SlowAndSteady[] =
 
 static const u16 sMoves_DependsOnTheBattlesFlow[] =
 {
-    MOVE_SANDSTORM, MOVE_RAIN_DANCE, MOVE_SUNNY_DAY, MOVE_HAIL, MOVE_WEATHER_BALL,
     MOVE_NONE
 };
 
