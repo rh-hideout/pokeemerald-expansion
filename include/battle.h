@@ -336,10 +336,11 @@ struct AiLogicData
     u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
     u8 aiCalcInProgress:1;
     u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
-    u8 padding1:1;
+    u8 checkBerryModifier:1; // Flags that KOing through a berry should be checked
     u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
+    u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
 };
 
 struct AiThinkingStruct
