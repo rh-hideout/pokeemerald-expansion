@@ -86,6 +86,7 @@ void UpdateOverworldEncounters(void)
                 const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 bool32 waterMons = IsSpawningWaterMons();
                 bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
+                u32 localId = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot;
                 u32 movementType;
                 if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
                 {
@@ -100,20 +101,22 @@ void UpdateOverworldEncounters(void)
                 {
                     movementType = MOVEMENT_TYPE_WANDER_ON_MAP;
                 }
-                u8 localId = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot;
-                u8 objectEventId = SpawnSpecialObjectEventParameterized(
-                    GetFollowMonObjectEventGraphicsId(spawnSlot),
-                    movementType,
-                    localId,
-                    x,
-                    y,
-                    MapGridGetElevationAt(x, y)
-                );
+                
+                struct ObjectEventTemplate objectEventTemplate = {
+                    .localId = localId,
+                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot),
+                    .x = x - MAP_OFFSET,
+                    .y = y - MAP_OFFSET,
+                    .elevation = MapGridGetElevationAt(x, y),
+                    .movementType = movementType,
+                    .trainerType = TRAINER_TYPE_ENCOUNTER,
+                };
+
+                u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
                 gObjectEvents[objectEventId].range.rangeX = 8;
                 gObjectEvents[objectEventId].range.rangeY = 8;
-                gObjectEvents[objectEventId].trainerType = TRAINER_TYPE_ENCOUNTER;
 
                 // Only used for save/load as well as loading encounters, 
                 // Most of the time, followmon data is tracked in sFollowMonData
