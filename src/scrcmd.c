@@ -171,8 +171,9 @@ bool8 ScrCmd_callnative(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1);
     Script_CheckEffectInstrumentedCallNative(func);
 
+    ctx->waitAfterCallNative = FALSE;
     func(ctx);
-    return FALSE;
+    return ctx->waitAfterCallNative;
 }
 
 bool8 ScrCmd_waitstate(struct ScriptContext *ctx)
@@ -1301,7 +1302,8 @@ bool8 ScrCmd_applymovement(struct ScriptContext *ctx)
     }
 
     gObjectEvents[GetObjectEventIdByLocalId(localId)].directionOverwrite = DIR_NONE;
-    ScriptMovement_StartObjectMovementScript(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, movementScript);
+    bool32 failed = ScriptMovement_StartObjectMovementScript(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, movementScript);
+    assertf(!failed, "could not apply movement %p to localId %d", movementScript, localId);
     sMovingNpcId = localId;
     if (localId != OBJ_EVENT_ID_FOLLOWER
      && !FlagGet(FLAG_SAFE_FOLLOWER_MOVEMENT)
@@ -1322,7 +1324,8 @@ bool8 ScrCmd_applymovementat(struct ScriptContext *ctx)
     Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
 
     gObjectEvents[GetObjectEventIdByLocalId(localId)].directionOverwrite = DIR_NONE;
-    ScriptMovement_StartObjectMovementScript(localId, mapNum, mapGroup, movementScript);
+    bool32 failed = ScriptMovement_StartObjectMovementScript(localId, mapNum, mapGroup, movementScript);
+    assertf(!failed, "could not apply movement %p to localId %d on map %d.%d", movementScript, localId, mapGroup, mapNum);
     sMovingNpcId = localId;
     return FALSE;
 }
@@ -1371,6 +1374,18 @@ bool8 ScrCmd_waitmovementat(struct ScriptContext *ctx)
     sMovingNpcMapNum = mapNum;
     SetupNativeScript(ctx, WaitForMovementFinish);
     return TRUE;
+}
+
+static bool8 WaitForAllMovementFinish(void)
+{
+    return ScriptMovement_IsAllObjectMovementFinished();
+}
+
+void Script_waitmovementall(struct ScriptContext *ctx)
+{
+    Script_RequestEffects(SCREFF_V1 | SCREFF_HARDWARE);
+    SetupNativeScript(ctx, WaitForAllMovementFinish);
+    ctx->waitAfterCallNative = TRUE;
 }
 
 bool8 ScrCmd_removeobject(struct ScriptContext *ctx)
