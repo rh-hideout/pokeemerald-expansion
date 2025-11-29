@@ -358,8 +358,8 @@ static void OverworldEncounters_ProcessMonInteraction(void)
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
-    // The player can only collide with overworld encounters when not using a repel.
-    // Non-player, non-overworld encounters do not have collision with overworld encounters.
+    // The player is only exempt from collisions with overworld encounters when not using a repel.
+    // Non-player, non-overworld encounters are not collision exempt with overworld encounters.
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
