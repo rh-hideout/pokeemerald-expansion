@@ -2045,7 +2045,7 @@ static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, u32 opposi
     if (AI_CanBattlerEscape(opposingBattler))
         return FALSE;
     if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && CountUsablePartyMons(opposingBattler) == 0)
-        return TRUE;
+        return FALSE;
     else if (ability == ABILITY_SHADOW_TAG)
     {
         if (B_SHADOW_TAG_ESCAPE >= GEN_4 && gAiLogicData->abilities[opposingBattler] == ABILITY_SHADOW_TAG) // Check if ability exists in species
