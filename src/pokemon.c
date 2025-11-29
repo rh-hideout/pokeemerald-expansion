@@ -1281,14 +1281,25 @@ void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV,
 {
     u32 personality;
 
-    if (isFemale)
-        do
-            personality = Random32();
-        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
-    else
-        do
-            personality = Random32();
-        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
+    switch (gSpeciesInfo[species].genderRatio)
+    {
+    case MON_MALE:
+    case MON_FEMALE:
+    case MON_GENDERLESS:
+        personality = Random32();
+        break;
+    
+    default:
+        if (isFemale)
+            do
+                personality = Random32();
+            while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
+        else
+            do
+                personality = Random32();
+            while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
+        break;
+    }
 
     CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
 }
