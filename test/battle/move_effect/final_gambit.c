@@ -44,7 +44,8 @@ SINGLE_BATTLE_TEST("Final Gambit does not faint user if target protects")
 SINGLE_BATTLE_TEST("Final Gambit does not faint user if attacker fails to attack")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_NON_VOLATILE_STATUS);
+        ASSUME(GetMoveNonVolatileStatus(MOVE_CONFUSE_RAY) == MOVE_EFFECT_CONFUSION);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

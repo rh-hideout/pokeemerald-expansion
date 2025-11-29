@@ -6162,6 +6162,24 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
             battleScript = BattleScript_NotAffected;
         }
         break;
+    case MOVE_EFFECT_CONFUSION:
+        if (abilityDef == ABILITY_OWN_TEMPO)
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_OwnTempoPrevents;
+        }
+        else if (GetBattlerVolatile(battlerDef, VOLATILE_CONFUSION))
+        {
+            battleScript = BattleScript_AlreadyConfused;
+        }
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
+        {
+            battleScript = BattleScript_MistyTerrainPrevents;
+        }
+        else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+        {
+            battleScript = BattleScript_SafeguardProtected;
+        }
     default:
         break;
     }
@@ -6170,44 +6188,47 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
         return FALSE;
 
     // Checks that apply to all non volatile statuses
-    if (abilityDef == ABILITY_COMATOSE
-     || abilityDef == ABILITY_PURIFYING_SALT)
+    if (effect < MOVE_EFFECT_CONFUSION)
     {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
-    {
-        battleScript = BattleScript_MistyTerrainPrevents;
-    }
-    else if (IsLeafGuardProtected(battlerDef, abilityDef))
-    {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if (IsShieldsDownProtected(battlerDef, abilityDef))
-    {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
-    {
-        abilityAffected = TRUE;
-        battlerDef = sideBattler - 1;
-        abilityDef = ABILITY_FLOWER_VEIL;
-        battleScript = BattleScript_FlowerVeilProtects;
-    }
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
-    {
-        battleScript = BattleScript_SafeguardProtected;
-    }
-    else if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
-    {
-        battleScript = BattleScript_ButItFailed;
-    }
+        if (abilityDef == ABILITY_COMATOSE
+        || abilityDef == ABILITY_PURIFYING_SALT)
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
+        {
+            battleScript = BattleScript_MistyTerrainPrevents;
+        }
+        else if (IsLeafGuardProtected(battlerDef, abilityDef))
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if (IsShieldsDownProtected(battlerDef, abilityDef))
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
+        {
+            abilityAffected = TRUE;
+            battlerDef = sideBattler - 1;
+            abilityDef = ABILITY_FLOWER_VEIL;
+            battleScript = BattleScript_FlowerVeilProtects;
+        }
+        else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+        {
+            battleScript = BattleScript_SafeguardProtected;
+        }
+        else if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
 
-    if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
-        return FALSE;
+        if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
+            return FALSE;
+    }
 
     return TRUE;
 }
