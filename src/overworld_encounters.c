@@ -469,10 +469,11 @@ void ClearOverworldEncounterData(void)
 static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
 {
     const struct WildPokemonInfo *wildMonInfo;
-    u32 species = 0;
+    u32 species = SPECIES_NONE;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
     u32 timeOfDay, encounterIndex, level;
+    u32 personality = Random32();
 
     if (MetatileBehavior_IsWaterWildEncounter(tileBehavior))
     {
@@ -492,17 +493,12 @@ static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
     }
 
     if (species == SPECIES_UNOWN)
-    {
-        u32 rand = Random32() % NUM_UNOWN_FORMS;
-
-        if (rand != 0)
-            species = SPECIES_UNOWN_B + rand - 1;
-    }
+        species = GetUnownSpeciesId(personality);
 
     sFollowMonData.list[spawnSlot].species = species;
     sFollowMonData.list[spawnSlot].level = level;
-    sFollowMonData.list[spawnSlot].isShiny = ComputePlayerShinyOdds(Random32());
-    if (GetGenderFromSpeciesAndPersonality(species, Random32()) == MON_FEMALE)
+    sFollowMonData.list[spawnSlot].isShiny = ComputePlayerShinyOdds(personality);
+    if (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE)
         sFollowMonData.list[spawnSlot].isFemale = TRUE;
     else
         sFollowMonData.list[spawnSlot].isFemale = FALSE;
