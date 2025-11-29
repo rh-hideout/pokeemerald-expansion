@@ -4059,8 +4059,10 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         gBattlescriptCurrInstr = BattleScript_EffectMeanLookSide;
         break;
     case MOVE_EFFECT_CRIT_PLUS_SIDE:
-        gBattleMons[gBattlerAttacker].volatiles.bonusCritStages++;
-        gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages++;
+        if (gBattleMons[gBattlerAttacker].volatiles.bonusCritStages < 3)
+            gBattleMons[gBattlerAttacker].volatiles.bonusCritStages++;
+        if (gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages < 3)
+            gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages++;
         BattleScriptPush(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = BattleScript_EffectRaiseCritAlliesAnim;
         break;
