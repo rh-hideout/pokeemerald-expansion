@@ -39,7 +39,7 @@ static void OverworldEncounters_ProcessMonInteraction(void);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
-    u32 slot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+    u32 slot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
     sFollowMonData.list[slot].isShiny = objectEvent->shiny;
 
     sFollowMonData.spawnCountdown += 60;
@@ -81,7 +81,7 @@ void UpdateOverworldEncounters(void)
                 const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 bool32 waterMons = IsSpawningWaterMons();
                 bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
-                u32 localId = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot;
+                u32 localId = LOCALID_OW_ENCOUNTER_END - spawnSlot;
                 u32 movementType;
                 if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
                 {
@@ -136,7 +136,7 @@ void UpdateOverworldEncounters(void)
     if(sFollowMonData.pendingSpawnAnim != 0)
     {
         u32 spawnSlot = sFollowMonData.pendingSpawnAnim - 1;
-        u32 objEventId = GetObjectEventIdByLocalId(OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot);
+        u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot);
         enum FollowMonSpawnAnim spawnAnimType;
 
         if (sFollowMonData.list[spawnSlot].species != SPECIES_NONE)
@@ -210,7 +210,7 @@ static u8 NextSpawnMonSlot(void)
     }
 
     // Remove any existing id by this slot
-    RemoveObjectEventByLocalIdAndMap(OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    RemoveObjectEventByLocalIdAndMap(LOCALID_OW_ENCOUNTER_END - slot, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
@@ -346,7 +346,7 @@ void CreateFollowMonEncounter(void) {
         return;
     }
 
-    u32 slot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - gObjectEvents[objEventId].localId;
+    u32 slot = LOCALID_OW_ENCOUNTER_END - gObjectEvents[objEventId].localId;
     bool32 shiny = curObject->shiny;
 
     ZeroEnemyPartyMons();
@@ -404,7 +404,7 @@ bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
     u32 i;
-    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+    u32 spawnSlot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
 
     sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
 
@@ -418,7 +418,7 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+    u32 spawnSlot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
 
     sFollowMonData.list[spawnSlot].species = SPECIES_NONE;
     sFollowMonData.list[spawnSlot].age = 0;
