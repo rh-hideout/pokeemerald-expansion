@@ -1037,3 +1037,21 @@ AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's previous priority moves 
         TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_DETECT); EXPECT_MOVE(opponentLeft, MOVE_POWER_GEM, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); }
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep due to Yawn")
+{
+    u32 aiMove;
+    PARAMETRIZE { aiMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_YAWN, MOVE_TACKLE); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(aiMove, MOVE_TACKLE); }
+    } WHEN {
+        if (aiMove == MOVE_CELEBRATE)
+            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        else
+            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+    }
+}
