@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Rollout's base power resets if the chain has been broken")
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(player, MOVE_ROLLOUT); }
-        TURN { MOVE(opponent, MOVE_PROTECT); FORCED_MOVE(player); }
+        TURN { MOVE(opponent, MOVE_PROTECT); SKIP_TURN(player); }
         TURN { MOVE(player, MOVE_ROLLOUT); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ROLLOUT, player);
