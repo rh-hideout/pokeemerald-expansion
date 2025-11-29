@@ -1277,19 +1277,26 @@ void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level,
     CreateMon(mon, species, level, fixedIV, TRUE, personality, OT_ID_PLAYER_ID, 0);
 }
 
+void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 otIdType, u32 fixedOtId, bool32 isFemale)
+{
+    u32 personality;
+
+    if (isFemale)
+        do
+            personality = Random32();
+        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
+    else
+        do
+            personality = Random32();
+        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
+
+    CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
+}
+
 // This is only used to create Wally's Ralts.
 void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
 {
-    u32 personality;
-    u32 otId;
-
-    do
-    {
-        otId = Random32();
-        personality = Random32();
-    }
-    while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
-    CreateMon(mon, species, level, USE_RANDOM_IVS, TRUE, personality, OT_ID_PRESET, otId);
+    CreateMonWithGender(mon, species, level, USE_RANDOM_IVS, OT_ID_PRESET, Random32(), MALE);
 }
 
 void CreateMonWithIVsPersonality(struct Pokemon *mon, u16 species, u8 level, u32 ivs, u32 personality)
@@ -1568,22 +1575,6 @@ static void CreateEventMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedI
 
     CreateMon(mon, species, level, fixedIV, hasFixedPersonality, fixedPersonality, otIdType, fixedOtId);
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
-}
-
-void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 otIdType, u32 fixedOtId, bool32 isFemale)
-{
-    u32 personality;
-
-    if (isFemale)
-        do
-            personality = Random32();
-        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
-    else
-        do
-            personality = Random32();
-        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
-
-    CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
 }
 
 // If FALSE, should load this game's Deoxys form. If TRUE, should load normal Deoxys form
