@@ -4148,6 +4148,10 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 for (i = 0; i < NUM_BATTLE_STATS; i++)
                     gBattleMons[battler].statStages[i] = gBattleMons[BATTLE_PARTNER(battler)].statStages[i];
+                // Copy crit boosts (Focus Energy, Dragon Cheer, G-Max Chi Strike)
+                gBattleMons[battler].volatiles.focusEnergy = gBattleMons[BATTLE_PARTNER(battler)].volatiles.focusEnergy;
+                gBattleMons[battler].volatiles.dragonCheer = gBattleMons[BATTLE_PARTNER(battler)].volatiles.dragonCheer;
+                gBattleStruct->bonusCritStages[battler] = gBattleStruct->bonusCritStages[BATTLE_PARTNER(battler)];
                 gEffectBattler = BATTLE_PARTNER(battler);
                 BattleScriptPushCursorAndCallback(BattleScript_CostarActivates);
                 effect++;
