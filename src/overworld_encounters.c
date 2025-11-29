@@ -40,7 +40,7 @@ static bool32 OverworldEncounters_ProcessMonInteraction(void);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
-    u8 slot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
+    u32 slot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
     sFollowMonData.list[slot].isShiny = objectEvent->shiny;
     sFollowMonData.list[slot].timeOfDay = objectEvent->spawnTimeOfDay;
     sFollowMonData.list[slot].encounterIndex = objectEvent->sEncounterIndex;
@@ -142,44 +142,30 @@ void UpdateOverworldEncounters(void)
     // Play spawn animation when player is close enough
     if(sFollowMonData.pendingSpawnAnim != 0)
     {
-        u16 spawnSlot;
-        u16 gfxId;
-        u16 bitFlag;
-        u8 objectEventId;
+        u32 spawnSlot = sFollowMonData.pendingSpawnAnim - 1;
+        u32 objEventId = GetObjectEventIdByLocalId(OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - spawnSlot);
         enum FollowMonSpawnAnim spawnAnimType;
 
-        for (gfxId = OBJ_EVENT_GFX_FOLLOW_MON_FIRST; gfxId < OBJ_EVENT_GFX_FOLLOW_MON_LAST; ++gfxId)
+        if (sFollowMonData.list[spawnSlot].encounterIndex != 0)
         {
-            spawnSlot = gfxId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
-            bitFlag = (1 << spawnSlot);
-
-            if ((sFollowMonData.pendingSpawnAnim & bitFlag) != 0)
+            if(sFollowMonData.list[spawnSlot].isShiny)
             {
-                objectEventId = FindObjectEventForGfx(gfxId);
-
-                if (objectEventId != OBJECT_EVENTS_COUNT)
-                {
-                    if(sFollowMonData.list[spawnSlot].isShiny)
-                    {
-                        PlaySE(SE_SHINY);
-                        spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
-                        sFollowMonData.pendingSpawnAnim &= ~bitFlag;
-                    }
-                    else 
-                    {
-                        PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]), 25); 
-                        if (IsSpawningWaterMons())
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
-                        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
-                        else
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
-                    }
-                    // Instantly play a small animation to ground the spawning a bit
-                    MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
-                    sFollowMonData.pendingSpawnAnim &= ~bitFlag;
-                }
+                PlaySE(SE_SHINY);
+                spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
             }
+            else 
+            {
+                PlayCry_Normal(GetFollowMonSpecies(&sFollowMonData.list[spawnSlot]), 25); 
+                if (IsSpawningWaterMons())
+                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
+                else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
+                else
+                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
+            }
+            // Instantly play a small animation to ground the spawning a bit
+            MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objEventId]);
+            sFollowMonData.pendingSpawnAnim = 0;
         }
     }
 }
@@ -432,9 +418,10 @@ bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
     u32 i;
-    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
+    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+
     sFollowMonData.usedSlots++;
-    sFollowMonData.pendingSpawnAnim |= (1 << spawnSlot);
+    sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
 
     // Increase the age of all followmons
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
@@ -446,7 +433,8 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    u16 spawnSlot = objectEvent->graphicsId - OBJ_EVENT_GFX_FOLLOW_MON_FIRST;
+    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
     sFollowMonData.list[spawnSlot].age = 0;
     sFollowMonData.usedSlots--;
