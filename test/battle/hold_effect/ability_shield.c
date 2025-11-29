@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Ability Shield protects against Mycelium Might (no message)"
     PARAMETRIZE { item = ITEM_NONE; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         PLAYER(SPECIES_VIGOROTH) { Ability(ABILITY_VITAL_SPIRIT); Item(item); }
         OPPONENT(SPECIES_TOEDSCOOL) { Ability(ABILITY_MYCELIUM_MIGHT); }
     } WHEN {

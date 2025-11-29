@@ -1573,7 +1573,7 @@ BattleScript_EffectToxicThread::
 	setstatchanger STAT_SPEED, 1, TRUE
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_ButItFailed
-	checknonvolatiletrigger MOVE_EFFECT_POISON, BattleScript_EffectStatDownFromAccCheck
+	checkmaineffecttrigger MOVE_EFFECT_POISON, BattleScript_EffectStatDownFromAccCheck
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	attackanimation
 	waitanimation
@@ -3908,16 +3908,16 @@ BattleScript_FlatterTryConfuse::
 
 BattleScript_EffectDarkVoid::
 .if B_DARK_VOID_FAIL >= GEN_7
-	jumpifspecies SPECIES_DARKRAI, BattleScript_EffectNonVolatileStatus
+	jumpifspecies SPECIES_DARKRAI, BattleScript_EffectMainMoveEffect
 	goto BattleScript_PokemonCantUseTheMove
 .endif
-BattleScript_EffectNonVolatileStatus::
+BattleScript_EffectMainMoveEffect::
 	attackcanceler
-	trynonvolatilestatus
+	trymainmoveeffect
 	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
 	attackanimation
 	waitanimation
-	setnonvolatilestatus TRIGGER_ON_MOVE
+	setmainmoveeffect TRIGGER_ON_MOVE
 	clearmoveresultflags MOVE_RESULT_NOT_VERY_EFFECTIVE | MOVE_RESULT_SUPER_EFFECTIVE
 	resultmessage
 	waitmessage B_WAIT_TIME_LONG
@@ -4117,7 +4117,7 @@ BattleScript_BrickBreakDoHit::
 
 BattleScript_EffectYawn::
 	attackcanceler
-	trynonvolatilestatus
+	trymainmoveeffect
 	accuracycheck BattleScript_ButItFailed, NO_ACC_CALC_CHECK_LOCK_ON
 	setyawn BattleScript_ButItFailed
 	attackanimation
@@ -7392,7 +7392,7 @@ BattleScript_KingsShieldEffect::
 
 BattleScript_BanefulBunkerEffect::
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
-	setnonvolatilestatus TRIGGER_ON_PROTECT
+	setmainmoveeffect TRIGGER_ON_PROTECT
 	setmoveresultflags MOVE_RESULT_MISSED
 	return
 
@@ -7417,7 +7417,7 @@ BattleScript_GooeyActivatesRet:
 BattleScript_AbilityStatusEffect::
 	waitstate
 	call BattleScript_AbilityPopUp
-	setnonvolatilestatus TRIGGER_ON_ABILITY
+	setmainmoveeffect TRIGGER_ON_ABILITY
 	return
 
 BattleScript_BattleBondActivatesOnMoveEndAttacker::
@@ -7463,7 +7463,7 @@ BattleScript_DancerActivates::
 BattleScript_SynchronizeActivates::
 	waitstate
 	call BattleScript_AbilityPopUp
-	setnonvolatilestatus TRIGGER_ON_ABILITY
+	setmainmoveeffect TRIGGER_ON_ABILITY
 	return
 
 BattleScript_NoItemSteal::

@@ -4018,7 +4018,7 @@ static bool32 IsDomeStatusMoveEffect(u32 move)
         break;
     }
 
-    if (IsNonVolatileStatusMove(move) || GetMoveNonVolatileStatus(move) == MOVE_EFFECT_CONFUSION)
+    if (IsNonVolatileStatusMove(move) || GetMoveMainMoveEffect(move) == MOVE_EFFECT_CONFUSION)
         return TRUE;
     if (MoveHasAdditionalEffect(move, MOVE_EFFECT_WRAP))
         return TRUE;
@@ -4129,7 +4129,7 @@ static bool32 IsDomeComboMove(u32 move)
         return TRUE;
 
     // Inflicting sleep & related effects
-    switch(GetMoveNonVolatileStatus(move))
+    switch(GetMoveMainMoveEffect(move))
     {
     case MOVE_EFFECT_SLEEP:
         return TRUE;

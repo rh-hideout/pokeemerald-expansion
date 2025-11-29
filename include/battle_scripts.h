@@ -681,7 +681,7 @@ extern const u8 BattleScript_EffectOverwriteAbility[];
 extern const u8 BattleScript_EffectHail[];
 extern const u8 BattleScript_EffectTorment[];
 extern const u8 BattleScript_EffectFlatter[];
-extern const u8 BattleScript_EffectNonVolatileStatus[];
+extern const u8 BattleScript_EffectMainMoveEffect[];
 extern const u8 BattleScript_EffectMemento[];
 extern const u8 BattleScript_EffectFocusPunch[];
 extern const u8 BattleScript_EffectFollowMe[];

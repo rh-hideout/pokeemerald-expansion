@@ -71,8 +71,8 @@ SINGLE_BATTLE_TEST("Tangling Hair Speed stat drop triggers defiant and keeps ori
 SINGLE_BATTLE_TEST("Tangling Hair does not activate on confusion damage")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_CONFUSE_RAY) == MOVE_EFFECT_CONFUSION);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_CONFUSE_RAY) == MOVE_EFFECT_CONFUSION);
         PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
         OPPONENT(SPECIES_WYNAUT);
     } WHEN {

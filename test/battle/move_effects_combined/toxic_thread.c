@@ -87,8 +87,8 @@ SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target can't be Poiso
 SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target is already Poisoned")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -108,8 +108,8 @@ SINGLE_BATTLE_TEST("Toxic Thread still lowers speed if the target is already Poi
 SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and status can't be inflicted")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -130,8 +130,8 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and status can'
 SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Body and status can't be inflicted")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_REGICE) { Ability(ABILITY_CLEAR_BODY); }
     } WHEN {
@@ -146,8 +146,8 @@ SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered due to Clear Bo
 SINGLE_BATTLE_TEST("Toxic Thread fails if speed can't be lowered and target is a poison type")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
+        ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_POISON_POWDER) == MOVE_EFFECT_POISON);
         ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_POISON || gSpeciesInfo[SPECIES_ODDISH].types[1] == TYPE_POISON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_ODDISH);

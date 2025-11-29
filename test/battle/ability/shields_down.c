@@ -57,8 +57,8 @@ SINGLE_BATTLE_TEST("Shields Down protects Minior Meteor from status conditions")
     PARAMETRIZE { species = SPECIES_MINIOR_CORE; hp = 100; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
+        ASSUME(GetMoveEffect(MOVE_WILL_O_WISP) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_WILL_O_WISP) == MOVE_EFFECT_BURN);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(species) { Ability(ABILITY_SHIELDS_DOWN); HP(hp); MaxHP(300); }
     } WHEN {

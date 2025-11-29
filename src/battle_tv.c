@@ -818,7 +818,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
         default:
             break;
         }
-        switch(GetMoveNonVolatileStatus(arg2))
+        switch(GetMoveMainMoveEffect(arg2))
         {
         case MOVE_EFFECT_SLEEP:
             baseFromEffect++;

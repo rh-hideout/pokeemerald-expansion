@@ -16,9 +16,9 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleTvScore = 1,
     },
 
-    [EFFECT_NON_VOLATILE_STATUS] =
+    [EFFECT_MAIN_MOVE_EFFECT] =
     {
-        .battleScript = BattleScript_EffectNonVolatileStatus,
+        .battleScript = BattleScript_EffectMainMoveEffect,
         .battleTvScore = 0, // Handled within the battle TV functions
     },
 

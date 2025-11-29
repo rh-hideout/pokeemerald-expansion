@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_NON_VOLATILE_STATUS);
-    ASSUME(GetMoveNonVolatileStatus(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
+    ASSUME(GetMoveEffect(MOVE_TOXIC) == EFFECT_MAIN_MOVE_EFFECT);
+    ASSUME(GetMoveMainMoveEffect(MOVE_TOXIC) == MOVE_EFFECT_TOXIC);
 }
 
 SINGLE_BATTLE_TEST("Pastel Veil prevents Poison Sting poison")

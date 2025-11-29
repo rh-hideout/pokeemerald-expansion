@@ -92,7 +92,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 1-100")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -168,7 +168,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 101-200")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -256,7 +256,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 201-300")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_SANDSTORM:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
@@ -333,7 +333,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 301-400")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -400,7 +400,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 401-500")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -475,7 +475,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 501-600")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -544,10 +544,10 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 601-700")
         case EFFECT_AURORA_VEIL:
         case EFFECT_GEAR_UP:
         case EFFECT_MAGNETIC_FLUX:
- 
+
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -616,7 +616,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 701-800")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:
@@ -678,7 +678,7 @@ AI_DOUBLE_BATTLE_TEST("AI can use all moves, 801-900")
 
         // Skipped on purpose.
         case EFFECT_PROTECT:
-        case EFFECT_NON_VOLATILE_STATUS:
+        case EFFECT_MAIN_MOVE_EFFECT:
         case EFFECT_DO_NOTHING:
         case EFFECT_HOLD_HANDS:
         case EFFECT_CELEBRATE:

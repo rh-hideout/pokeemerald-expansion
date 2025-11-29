@@ -480,14 +480,14 @@ static void Cmd_statbuffchange(void);
 static void Cmd_normalisebuffs(void);
 static void Cmd_setbide(void);
 static void Cmd_twoturnmoveschargestringandanimation(void);
-static void Cmd_trynonvolatilestatus(void);
+static void Cmd_trymainmoveeffect(void);
 static void Cmd_initmultihitstring(void);
 static void Cmd_forcerandomswitch(void);
 static void Cmd_tryconversiontypechange(void);
 static void Cmd_givepaydaymoney(void);
 static void Cmd_setlightscreen(void);
 static void Cmd_tryKO(void);
-static void Cmd_checknonvolatiletrigger(void);
+static void Cmd_checkmaineffecttrigger(void);
 static void Cmd_copybidedmg(void);
 static void Cmd_animatewildpokemonafterfailedpokeball(void);
 static void Cmd_tryinfatuating(void);
@@ -592,7 +592,7 @@ static void Cmd_settelekinesis(void);
 static void Cmd_swapstatstages(void);
 static void Cmd_averagestats(void);
 static void Cmd_jumpifcaptivateaffected(void);
-static void Cmd_setnonvolatilestatus(void);
+static void Cmd_setmainmoveeffect(void);
 static void Cmd_tryoverwriteability(void);
 static void Cmd_callnative(void);
 
@@ -739,14 +739,14 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_normalisebuffs,                          //0x8A
     Cmd_setbide,                                 //0x8B
     Cmd_twoturnmoveschargestringandanimation,    //0x8C
-    Cmd_trynonvolatilestatus,                    //0x8D
+    Cmd_trymainmoveeffect,                    //0x8D
     Cmd_initmultihitstring,                      //0x8E
     Cmd_forcerandomswitch,                       //0x8F
     Cmd_tryconversiontypechange,                 //0x90
     Cmd_givepaydaymoney,                         //0x91
     Cmd_setlightscreen,                          //0x92
     Cmd_tryKO,                                   //0x93
-    Cmd_checknonvolatiletrigger,                 //0x94
+    Cmd_checkmaineffecttrigger,                 //0x94
     Cmd_copybidedmg,                             //0x95
     Cmd_animatewildpokemonafterfailedpokeball,   //0x96
     Cmd_tryinfatuating,                          //0x97
@@ -851,7 +851,7 @@ void (*const gBattleScriptingCommandsTable[])(void) =
     Cmd_swapstatstages,                          //0xFA
     Cmd_averagestats,                            //0xFB
     Cmd_jumpifcaptivateaffected,                 //0xFC
-    Cmd_setnonvolatilestatus,                    //0xFD
+    Cmd_setmainmoveeffect,                    //0xFD
     Cmd_tryoverwriteability,                     //0xFE
     Cmd_callnative,                              //0xFF
 };
@@ -1167,7 +1167,7 @@ static void Cmd_attackcanceler(void)
             RUN_SCRIPT))
         return;
 
-    if (GetMoveNonVolatileStatus(ctx.currentMove) == MOVE_EFFECT_PARALYSIS)
+    if (GetMoveMainMoveEffect(ctx.currentMove) == MOVE_EFFECT_PARALYSIS)
     {
         if (CanAbilityAbsorbMove(
                 ctx.battlerAtk,
@@ -3060,7 +3060,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     case MOVE_EFFECT_FROSTBITE:
         if (gSideStatuses[GetBattlerSide(gEffectBattler)] & SIDE_STATUS_SAFEGUARD && !primary)
             gBattlescriptCurrInstr = battleScript;
-        else if (CanSetNonVolatileStatus(
+        else if (CanSetMainMoveEffect(
                     gBattlerAttacker,
                     gEffectBattler,
                     GetBattlerAbility(gBattlerAttacker),
@@ -10555,17 +10555,17 @@ static void Cmd_twoturnmoveschargestringandanimation(void)
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static void Cmd_trynonvolatilestatus(void)
+static void Cmd_trymainmoveeffect(void)
 {
     CMD_ARGS();
     bool32 canInflictStatus = TRUE;
 
-    if (!CanSetNonVolatileStatus(
+    if (!CanSetMainMoveEffect(
             gBattlerAttacker,
             gBattlerTarget,
             GetBattlerAbility(gBattlerAttacker),
             GetBattlerAbility(gBattlerTarget),
-            GetMoveNonVolatileStatus(gCurrentMove),
+            GetMoveMainMoveEffect(gCurrentMove),
             RUN_SCRIPT))
         canInflictStatus = FALSE;
 
@@ -11027,16 +11027,16 @@ static void Cmd_tryKO(void)
 #undef FOCUS_BANDED
 #undef AFFECTION_ENDURED
 
-static void Cmd_checknonvolatiletrigger(void)
+static void Cmd_checkmaineffecttrigger(void)
 {
-    CMD_ARGS(u16 nonVolatile, const u8 *failInstr);
+    CMD_ARGS(u16 effect, const u8 *failInstr);
 
-    if (!CanSetNonVolatileStatus(
+    if (!CanSetMainMoveEffect(
             gBattlerAttacker,
             gBattlerTarget,
             GetBattlerAbility(gBattlerAttacker),
             GetBattlerAbility(gBattlerTarget),
-            cmd->nonVolatile,
+            cmd->effect,
             CHECK_TRIGGER))
         gBattlescriptCurrInstr = cmd->failInstr;
     else if (DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove))
@@ -14369,7 +14369,7 @@ static void Cmd_jumpifcaptivateaffected(void)
     }
 }
 
-static void Cmd_setnonvolatilestatus(void)
+static void Cmd_setmainmoveeffect(void)
 {
     CMD_ARGS(u8 trigger);
 
@@ -14382,10 +14382,10 @@ static void Cmd_setnonvolatilestatus(void)
             SetNonVolatileStatus(gEffectBattler, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_ABILITY);
         break;
     case TRIGGER_ON_MOVE:
-        if (GetMoveNonVolatileStatus(gCurrentMove) >= MOVE_EFFECT_CONFUSION)
-            SetMoveEffect(gBattlerAttacker, gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), cmd->nextInstr, EFFECT_PRIMARY);
+        if (GetMoveMainMoveEffect(gCurrentMove) >= MOVE_EFFECT_CONFUSION)
+            SetMoveEffect(gBattlerAttacker, gBattlerTarget, GetMoveMainMoveEffect(gCurrentMove), cmd->nextInstr, EFFECT_PRIMARY);
         else
-            SetNonVolatileStatus(gBattlerTarget, GetMoveNonVolatileStatus(gCurrentMove), cmd->nextInstr, TRIGGER_ON_MOVE);
+            SetNonVolatileStatus(gBattlerTarget, GetMoveMainMoveEffect(gCurrentMove), cmd->nextInstr, TRIGGER_ON_MOVE);
         break;
     case TRIGGER_ON_PROTECT:
         SetNonVolatileStatus(gBattlerAttacker, gBattleScripting.moveEffect, cmd->nextInstr, TRIGGER_ON_PROTECT);

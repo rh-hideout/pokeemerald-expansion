@@ -47,8 +47,8 @@ SINGLE_BATTLE_TEST("Disguised Mimikyu will lose 1/8 of its max HP upon changing 
 SINGLE_BATTLE_TEST("Disguised Mimikyu takes no damage from a confusion hit and changes to its busted form")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_CONFUSE_RAY) == MOVE_EFFECT_CONFUSION);
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_CONFUSE_RAY) == MOVE_EFFECT_CONFUSION);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

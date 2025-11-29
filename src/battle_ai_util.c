@@ -307,8 +307,8 @@ bool32 ShouldRecordStatusMove(u32 move)
         switch (GetMoveEffect(move))
         {
         // variable odds by additional effect
-        case EFFECT_NON_VOLATILE_STATUS:
-            if (GetMoveNonVolatileStatus(move) == MOVE_EFFECT_SLEEP && RandomPercentage(RNG_AI_ASSUME_STATUS_SLEEP, ASSUME_STATUS_HIGH_ODDS))
+        case EFFECT_MAIN_MOVE_EFFECT:
+            if (GetMoveMainMoveEffect(move) == MOVE_EFFECT_SLEEP && RandomPercentage(RNG_AI_ASSUME_STATUS_SLEEP, ASSUME_STATUS_HIGH_ODDS))
                 return TRUE;
             else if (RandomPercentage(RNG_AI_ASSUME_STATUS_NONVOLATILE, ASSUME_STATUS_MEDIUM_ODDS))
                 return TRUE;
@@ -1867,7 +1867,7 @@ bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect)
 
 bool32 IsNonVolatileStatusMove(u32 move)
 {
-    switch (GetMoveNonVolatileStatus(move))
+    switch (GetMoveMainMoveEffect(move))
     {
     case MOVE_EFFECT_SLEEP:
     case MOVE_EFFECT_POISON:
@@ -2517,14 +2517,14 @@ bool32 HasBattlerSideUsedMoveWithEffect(u32 battler, u32 effect)
     return FALSE;
 }
 
-bool32 HasNonVolatileMoveEffect(u32 battlerId, u32 effect)
+bool32 HasMainMoveEffect(u32 battlerId, u32 effect)
 {
     s32 i;
     u16 *moves = GetMovesArray(battlerId);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        if (GetMoveNonVolatileStatus(moves[i]) == effect)
+        if (GetMoveMainMoveEffect(moves[i]) == effect)
             return TRUE;
     }
 
@@ -2709,7 +2709,7 @@ bool32 HasSleepMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef)
         if (IsMoveUnusable(i, moves[i], moveLimitations))
             continue;
 
-        if (GetMoveNonVolatileStatus(moves[i]) == MOVE_EFFECT_SLEEP
+        if (GetMoveMainMoveEffect(moves[i]) == MOVE_EFFECT_SLEEP
         && gAiLogicData->moveAccuracy[battlerAtk][battlerDef][i] < 85)
             return TRUE;
     }
@@ -2989,7 +2989,7 @@ static inline bool32 IsMoveSleepClauseTrigger(u32 move)
     default:
         break;
     }
-    switch(GetMoveNonVolatileStatus(move))
+    switch(GetMoveMainMoveEffect(move))
     {
     case MOVE_EFFECT_SLEEP:
         return TRUE;
@@ -4330,14 +4330,14 @@ bool32 PartnerMoveEffectIsStatusSameTarget(u32 battlerAtkPartner, u32 battlerDef
         return FALSE;
 
     enum BattleMoveEffects partnerEffect = GetMoveEffect(partnerMove);
-    u32 nonVolatileStatus = GetMoveNonVolatileStatus(partnerMove);
+    u32 mainMoveEffect = GetMoveMainMoveEffect(partnerMove);
     if (partnerMove != MOVE_NONE
      && gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef
-     && (nonVolatileStatus == MOVE_EFFECT_POISON
-       || nonVolatileStatus == MOVE_EFFECT_TOXIC
-       || nonVolatileStatus == MOVE_EFFECT_SLEEP
-       || nonVolatileStatus == MOVE_EFFECT_PARALYSIS
-       || nonVolatileStatus == MOVE_EFFECT_BURN
+     && (mainMoveEffect == MOVE_EFFECT_POISON
+       || mainMoveEffect == MOVE_EFFECT_TOXIC
+       || mainMoveEffect == MOVE_EFFECT_SLEEP
+       || mainMoveEffect == MOVE_EFFECT_PARALYSIS
+       || mainMoveEffect == MOVE_EFFECT_BURN
        || partnerEffect == EFFECT_YAWN))
         return TRUE;
     return FALSE;
@@ -5683,11 +5683,11 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
     if (IsBattlerPredictedToSwitch(battlerDef))
         scoreIncrease += DECENT_EFFECT;
 
-    if (HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_SLEEP)
-     || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_TOXIC)
-     || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_PARALYSIS)
-     || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_BURN)
-     || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_CONFUSION)
+    if (HasMainMoveEffect(battlerDef, MOVE_EFFECT_SLEEP)
+     || HasMainMoveEffect(battlerDef, MOVE_EFFECT_TOXIC)
+     || HasMainMoveEffect(battlerDef, MOVE_EFFECT_PARALYSIS)
+     || HasMainMoveEffect(battlerDef, MOVE_EFFECT_BURN)
+     || HasMainMoveEffect(battlerDef, MOVE_EFFECT_CONFUSION)
      || HasMoveWithEffect(battlerDef, EFFECT_LEECH_SEED))
         scoreIncrease += GOOD_EFFECT;
 
