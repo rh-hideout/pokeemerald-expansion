@@ -244,22 +244,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "It has fortified armor and a\n"
             "will to defend at all costs.\n"
             "Both are absurdly strong."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        .frontPic = gMonFrontPic_ChesnaughtMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_ChesnaughtMega,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 10,
+        .backAnimId = BACK_ANIM_V_SHAKE_LOW,
+        .palette = gMonPalette_ChesnaughtMega,
+        .shinyPalette = gMonShinyPalette_ChesnaughtMega,
+        .iconSprite = gMonIcon_ChesnaughtMega,
+        .iconPalIndex = 1,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(2, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -535,22 +535,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "dazzle its opponents before\n"
             "incinerating them with a\n"
             "huge fireball."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_DelphoxMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 8,
+        .backPic = gMonBackPic_DelphoxMega,
         .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .backPicYOffset = 0,
+        .backAnimId = BACK_ANIM_GROW_STUTTER,
+        .palette = gMonPalette_DelphoxMega,
+        .shinyPalette = gMonShinyPalette_DelphoxMega,
+        .iconSprite = gMonIcon_DelphoxMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-5, 20, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -947,22 +948,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "shuriken at high speed to make it\n"
             "float, then clings to it upside\n"
             "down to catch opponents unawares."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_GreninjaMega, 
         .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 5,
+        .backPic = gMonBackPic_GreninjaMega,
         .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .backPicYOffset = 11,
+        .backAnimId = BACK_ANIM_JOLT_RIGHT,
+        .palette = gMonPalette_GreninjaMega,
+        .shinyPalette = gMonShinyPalette_GreninjaMega,
+        .iconSprite = gMonIcon_GreninjaMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(-6, 14, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -1937,22 +1939,22 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "than 18,000 degrees Fahrenheit.\n"
             "It swings around its grand, blazing\n"
             "mane as it protects its allies."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .frontPic = gMonFrontPic_PyroarMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .backPic = gMonBackPic_PyroarMega,
+        .backPicSize = MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = 3,
+        .backAnimId = BACK_ANIM_H_STRETCH,
+        .palette = gMonPalette_PyroarMega,
+        .shinyPalette = gMonShinyPalette_PyroarMega,
+        .iconSprite = gMonIcon_PyroarMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(0, 11, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -2357,18 +2359,18 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "all the energy from Mega\n"
             "Evolution. The flower now attacks\n"
             "enemies on its own."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_CircledQuestionMark, //gMonFrontPic_FloetteMega
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPic = gMonBackPic_CircledQuestionMark, //gMonBackPic_FloetteMega
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .palette = gMonPalette_CircledQuestionMark, //gMonPalette_FloetteMega
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark, //gMonShinyPalette_FloetteMega
+        .iconSprite = gMonIcon_QuestionMark, //gMonIcon_FloetteMega
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
@@ -3712,22 +3714,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "overwrite the personality and\n"
             "memories of others-and to\n"
             "control them."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
+        .frontPic = gMonFrontPic_MalamarMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 64),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 4,
+        .backPic = gMonBackPic_MalamarMega,
+        .backPicSize = MON_COORDS_SIZE(64, 56),
+        .backPicYOffset = 1,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
-        .iconPalIndex = 0,
+        .palette = gMonPalette_MalamarMega,
+        .shinyPalette = gMonShinyPalette_MalamarMega,
+        .iconSprite = gMonIcon_MalamarMega,
+        .iconPalIndex = 2,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(1, 15, SHADOW_SIZE_XL_BATTLE_ONLY)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -4151,18 +4154,18 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "regenerative power of cells to run\n"
             "wild. The liquid is deadly poison\n"
             "to everything other than itself."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_CircledQuestionMark, //gMonFrontPic_DragalgeMega
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPic = gMonBackPic_CircledQuestionMark, //gMonBackPic_DragalgeMega
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .palette = gMonPalette_CircledQuestionMark, //gMonPalette_DragalgeMega
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark, //gMonShinyPalette_DragalgeMega
+        .iconSprite = gMonIcon_QuestionMark, //gMonIcon_DragalgeMega
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
@@ -4871,22 +4874,23 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "Mega Evolution has pumped up all\n"
             "its muscles. Hawlucha flexes to\n"
             "show off its strength."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
-        .frontPicSize = MON_COORDS_SIZE(40, 40),
-        .frontPicYOffset = 12,
-        .frontAnimFrames = sAnims_TwoFramePlaceHolder,
-        .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
-        .backPicSize = MON_COORDS_SIZE(40, 40),
-        .backPicYOffset = 12,
-        .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .frontPic = gMonFrontPic_HawluchaMega,
+        .frontPicSize = MON_COORDS_SIZE(64, 56),
+        .frontPicYOffset = 0,
+        .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        //.frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
+        .enemyMonElevation = 4,
+        .backPic = gMonBackPic_HawluchaMega,
+        .backPicSize = MON_COORDS_SIZE(64, 48),
+        .backPicYOffset = 10,
+        .backAnimId = BACK_ANIM_GROW_STUTTER,
+        .palette = gMonPalette_HawluchaMega,
+        .shinyPalette = gMonShinyPalette_HawluchaMega,
+        .iconSprite = gMonIcon_HawluchaMega,
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
-        SHADOW(-1, 0, SHADOW_SIZE_M)
+        SHADOW(2, 14, SHADOW_SIZE_L)
     #if OW_BATTLE_ONLY_FORMS
         .overworldData = {
             .tileTag = TAG_NONE,
@@ -7095,18 +7099,18 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             "during an unprecedented crisis,\n"
             "Zygarde Mega Evolves and calms the\n"
             "situation with its unmatched power."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_CircledQuestionMark, //gMonFrontPic_ZygardeMega
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPic = gMonBackPic_CircledQuestionMark, //gMonBackPic_ZygardeMega
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .palette = gMonPalette_CircledQuestionMark, //gMonPalette_ZygardeMega
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark, //gMonShinyPalette_ZygardeMega
+        .iconSprite = gMonIcon_QuestionMark, //gMonIcon_ZygardeMega
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
