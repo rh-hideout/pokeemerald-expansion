@@ -2166,6 +2166,25 @@ static enum MoveCanceler CancelerTruant(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
+static enum MoveCanceler CancelerFocus(struct BattleContext *ctx)
+{
+    u32 focusPunchFailureConfig = GetGenConfig(GEN_CONFIG_FOCUS_PUNCH_FAILURE);
+
+    // In Gens 3-4, only check if is using Focus Punch.
+    // In Gens 5-6, only check if the chosen move is Focus Punch.
+    // In Gens 7+, check if chose and is using Focus Punch.
+    if ((gProtectStructs[ctx->battlerAtk].physicalDmg || gProtectStructs[ctx->battlerAtk].specialDmg)
+     && (focusPunchFailureConfig < GEN_5 || GetMoveEffect(gChosenMoveByBattler[ctx->battlerAtk]) == EFFECT_FOCUS_PUNCH)
+     && (focusPunchFailureConfig == GEN_5 || focusPunchFailureConfig == GEN_6 || GetMoveEffect(ctx->currentMove) == EFFECT_FOCUS_PUNCH))
+    {
+        CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
+        gBattlescriptCurrInstr = BattleScript_FocusPunchLostFocus;
+        gHitMarker |= HITMARKER_UNABLE_TO_USE_MOVE;
+        return MOVE_STEP_FAILURE;
+    }
+    return MOVE_STEP_SUCCESS;
+}
+
 static enum MoveCanceler CancelerFlinch(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].volatiles.flinched)
@@ -2599,7 +2618,7 @@ static enum MoveCanceler CancelerWeatherPrimal(struct BattleContext *ctx)
     if (HasWeatherEffect() && GetMovePower(ctx->currentMove) > 0)
     {
         enum Type moveType = GetBattleMoveType(ctx->currentMove);
-        if (moveType == TYPE_FIRE && (gBattleWeather & B_WEATHER_RAIN_PRIMAL) && (GetGenConfig(GEN_CONFIG_POWDER_RAIN) >= GEN_7 || !TryActivatePowderStatus(ctx->currentMove)))
+        if (moveType == TYPE_FIRE && (gBattleWeather & B_WEATHER_RAIN_PRIMAL) && (GetGenConfig(GEN_CONFIG_POWDER_STATUS_HEAVY_RAIN) >= GEN_7 || !TryActivatePowderStatus(ctx->currentMove)))
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_PRIMAL_WEATHER_FIZZLED_BY_RAIN;
             effect = MOVE_STEP_FAILURE;
@@ -2990,6 +3009,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_OBEDIENCE] = CancelerObedience,
     [CANCELER_POWER_POINTS] = CancelerPowerPoints,
     [CANCELER_TRUANT] = CancelerTruant,
+    [CANCELER_FOCUS] = CancelerFocus,
     [CANCELER_FLINCH] = CancelerFlinch,
     [CANCELER_DISABLED] = CancelerDisabled,
     [CANCELER_VOLATILE_BLOCKED] = CancelerVolatileBlocked,
