@@ -4,7 +4,7 @@
 #include "event_data.h"
 #include "easy_chat.h"
 #include "script.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "wonder_news.h"
 #include "string_util.h"
 #include "new_game.h"

@@ -12,6 +12,7 @@
 #include "battle_tower.h"
 #include "battle_z_move.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "daycare.h"
 #include "dexnav.h"
 #include "event_data.h"
