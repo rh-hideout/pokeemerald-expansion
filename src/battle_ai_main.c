@@ -4563,6 +4563,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         {
         case MOVE_EFFECT_POISON:
         case MOVE_EFFECT_PARALYSIS:
+        case MOVE_EFFECT_CONFUSION:
             encourage = TRUE;
             break;
         }
