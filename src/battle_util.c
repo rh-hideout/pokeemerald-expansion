@@ -2867,10 +2867,10 @@ static enum MoveCanceler CancelerMultihitMoves(struct BattleContext *ctx)
         {
             gMultiHitCounter = 5;
         }
-        else if (GetMoveEffect(ctx->currentMove) == EFFECT_CHANGE_POWER_ON_SPECIES
-              && gBattleMons[ctx->battlerAtk].species == gMovesInfo[ctx->currentMove].argument.powerBySpecies.species)
+        else if (GetMoveEffect(ctx->currentMove) == EFFECT_SPECIES_POWER_OVERRIDE
+              && gBattleMons[ctx->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(ctx->currentMove))
         {
-            gMultiHitCounter = 3;
+            gMultiHitCounter = GetMoveSpeciesPowerOverride_NumOfHits(ctx->currentMove);
         }
         else
         {
@@ -7210,9 +7210,9 @@ static inline u32 CalcMoveBasePower(struct DamageContext *ctx)
     case EFFECT_LAST_RESPECTS:
         basePower += (basePower * min(100, GetBattlerSideFaintCounter(battlerAtk)));
         break;
-    case EFFECT_CHANGE_POWER_ON_SPECIES:
-        if (gBattleMons[battlerAtk].species == gMovesInfo[ctx->move].argument.powerBySpecies.species)
-            basePower = gMovesInfo[ctx->move].argument.powerBySpecies.power;
+    case EFFECT_SPECIES_POWER_OVERRIDE:
+        if (gBattleMons[battlerAtk].species == GetMoveSpeciesPowerOverride_Species(ctx->move))
+            basePower = GetMoveSpeciesPowerOverride_Power(ctx->move);
     default:
         break;
     }

@@ -142,8 +142,9 @@ struct MoveInfo
         } twoTurnAttack;
         struct {
             u16 species;
-            u16 power;
-        } powerBySpecies;
+            u8 power;
+            u8 numOfHits;
+        } speciesPowerOverride;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
@@ -506,6 +507,21 @@ static inline u32 GetMoveTwoTurnAttackStatus(u32 moveId)
 static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_Species(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.species;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_Power(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.power;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_NumOfHits(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.numOfHits;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)

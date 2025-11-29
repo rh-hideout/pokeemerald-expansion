@@ -15205,7 +15205,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Throws 2 to 5 stars that\n"
             "are sure to strike first."),
-        .effect = EFFECT_CHANGE_POWER_ON_SPECIES,
+        .effect = EFFECT_SPECIES_POWER_OVERRIDE,
         .power = 15,
         .type = TYPE_WATER,
         .accuracy = 100,
@@ -15213,7 +15213,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_SELECTED,
         .priority = 1,
         .category = B_UPDATED_MOVE_DATA >= GEN_7 ? DAMAGE_CATEGORY_SPECIAL : DAMAGE_CATEGORY_PHYSICAL,
-        .argument = { .powerBySpecies.species = SPECIES_GRENINJA_BATTLE_BOND, .powerBySpecies.power = 20, },
+        .argument = { .speciesPowerOverride.species = SPECIES_GRENINJA_ASH, .speciesPowerOverride.power = 20, .speciesPowerOverride.numOfHits = 3 },
         .multiHit = TRUE,
         .contestEffect = CONTEST_EFFECT_NEXT_APPEAL_EARLIER,
         .contestCategory = CONTEST_CATEGORY_COOL,
