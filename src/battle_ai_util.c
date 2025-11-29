@@ -6160,3 +6160,45 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
     }
     return FALSE;
 }
+
+s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
+{
+    if (ctx->aiCheckBerryModifier) // Only set if AI running calcs
+    {
+        ctx->aiCheckBerryModifier = FALSE;
+        // Store resist berry affected move
+        u8 moveIndex = 0;
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        {
+            if (ctx->move == gBattleMons[ctx->battlerAtk].moves[moveIndex])
+                break;
+        }
+
+        // Only indicate move is ignoring berry resist if it doesn't already OHKO even if resisted
+        if (dmg < gBattleMons[ctx->battlerDef].hp)
+            gAiLogicData->resistBerryAffected[ctx->battlerAtk][ctx->battlerDef][moveIndex] = TRUE;
+
+        // Ignore resist berry if appropriate
+        u32 berryModifier = gAiLogicData->abilities[ctx->battlerDef] == ABILITY_RIPEN ? 4 : 2;
+        u32 unmitigatedDamage = dmg * berryModifier;
+        u32 totalDamage = dmg;
+
+        // Add unmitigated hits up to the set KO threshold, - 1 because the first hit is dmg
+        for (int i = 0; i < AI_IGNORE_BERRY_KO_THRESHOLD - 1; i++)
+            totalDamage += unmitigatedDamage;
+
+        // If the total damage from reduced hit and non-reduced hit(s) are a KO, we can see our target KO threshold through berry damage
+        if (totalDamage >= gBattleMons[ctx->battlerDef].hp)
+            return unmitigatedDamage; // Pretend the berry isn't there so the AI can see the KO threshold
+        else
+            return dmg;
+    }
+    return dmg;
+}
+
+s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
+{
+    dmg = ApplyModifiersAfterDmgRoll(ctx, dmg);
+    dmg = HandleKOThroughBerryReduction(ctx, dmg);
+    return dmg;
+}

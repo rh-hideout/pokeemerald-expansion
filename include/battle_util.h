@@ -167,7 +167,7 @@ struct DamageContext
     u32 weather:16;
     u32 fixedBasePower:8;
     u32 aiCalc:1;
-    u32 checkBerryModifier:1; // Flags that KOing through a berry should be checked
+    u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
     u32 padding2:6;
     u32 chosenMove:16; // May be different to 'move', e.g. for Z moves.
     u32 padding3:16;
@@ -304,7 +304,6 @@ s32 CalculateMoveDamage(struct DamageContext *ctx);
 s32 CalculateMoveDamageVars(struct DamageContext *ctx);
 s32 DoFixedDamageMoveCalc(struct DamageContext *ctx);
 s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
-s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
 uq4_12_t CalcTypeEffectivenessMultiplier(struct DamageContext *ctx);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
