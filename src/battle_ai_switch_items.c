@@ -111,12 +111,12 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
 static bool32 IsAceMon(u32 battler, u32 monPartyId)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ACE_POKEMON
-            && !gBattleStruct->battlerState[battler].forcedSwitch
-            && monPartyId == CalculateEnemyPartyCountInSide(battler)-1)
+     && !gProtectStructs[battler].forcedSwitch
+     && monPartyId == CalculateEnemyPartyCountInSide(battler)-1)
         return TRUE;
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_DOUBLE_ACE_POKEMON
-            && !gBattleStruct->battlerState[battler].forcedSwitch
-            && (monPartyId == CalculateEnemyPartyCount()-1 || monPartyId == CalculateEnemyPartyCount()-2))
+     && !gProtectStructs[battler].forcedSwitch
+     && (monPartyId == CalculateEnemyPartyCount()-1 || monPartyId == CalculateEnemyPartyCount()-2))
         return TRUE;
     return FALSE;
 }

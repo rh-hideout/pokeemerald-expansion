@@ -517,7 +517,7 @@ void SetZEffect(void)
         }
         break;
     case Z_EFFECT_RESTORE_REPLACEMENT_HP:
-        gBattleStruct->zmove.healReplacement = TRUE;
+        gBattleStruct->zmove.healReplacement |= 1u << gBattlerAttacker;
         BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;
