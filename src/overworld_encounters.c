@@ -307,6 +307,30 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
+static void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 otIdType, u32 fixedOtId, bool32 isFemale)
+{
+    u32 personality;
+
+    if (isFemale)
+    {
+        do
+        {
+            personality = Random32();
+        }
+        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
+    }
+    else
+    {
+        do
+        {
+            personality = Random32();
+        }
+        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
+    }
+
+    CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
+}
+
 void CreateFollowMonEncounter(void) {
     struct ObjectEvent *curObject;
     u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
@@ -326,15 +350,14 @@ void CreateFollowMonEncounter(void) {
     bool32 shiny = curObject->shiny;
 
     ZeroEnemyPartyMons();
-    CreateMon(
+    CreateMonWithGender(
         &gEnemyParty[0],
         sFollowMonData.list[slot].species,
         sFollowMonData.list[slot].level,
-        USE_RANDOM_IVS, 
-        FALSE, 
-        0, 
+        USE_RANDOM_IVS,
         OT_ID_PLAYER_ID,
-        0
+        0,
+        sFollowMonData.list[slot].isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
@@ -357,11 +380,7 @@ static bool32 OverworldEncounters_ProcessMonInteraction(void)
                     // There is a valid collision so exectute the attached script
                     const u8* script = InteractWithDynamicWildFollowMon;
                     gSpecialVar_LastTalked = curObject->localId;
-                    //VarSet(VAR_LAST_TALKED, curObject->localId);
                     ScriptContext_SetupScript(script);
-                    
-                    //CreateFollowMonEncounter();
-                    //BattleSetup_StartScriptedWildBattle();
                     return TRUE;
                 }
             }
@@ -418,8 +437,8 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y)
     u16 species = GetFollowMonSpecies(spawnSlot, x, y);
     u16 graphicsId = species + OBJ_EVENT_MON;
 
-    // if (sFollowMonData.list[slot].isFemale)
-    //     graphicsId += OBJ_EVENT_MON_FEMALE;
+    if (sFollowMonData.list[spawnSlot].isFemale)
+        graphicsId += OBJ_EVENT_MON_FEMALE;
 
     if (sFollowMonData.list[spawnSlot].isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
@@ -467,6 +486,10 @@ static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
     sFollowMonData.list[spawnSlot].species = species;
     sFollowMonData.list[spawnSlot].level = level;
     sFollowMonData.list[spawnSlot].isShiny = ComputePlayerShinyOdds(Random32());
+    if (GetGenderFromSpeciesAndPersonality(species, Random32()) == MON_FEMALE)
+        sFollowMonData.list[spawnSlot].isFemale = TRUE;
+    else
+        sFollowMonData.list[spawnSlot].isFemale = FALSE;
     
     return species;
 }
