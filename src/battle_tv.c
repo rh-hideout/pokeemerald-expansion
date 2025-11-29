@@ -1259,6 +1259,8 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
+            u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
+            
             struct DamageContext ctx;
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
@@ -1269,10 +1271,11 @@ static void TrySetBattleSeminarShow(void)
             ctx.updateFlags = FALSE;
             ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
-            dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
+            dmgByMove[i] = CalculateMoveDamage(&ctx);
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;
+            
+            gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
         }
     }
 
@@ -1301,7 +1304,6 @@ static void TrySetBattleSeminarShow(void)
         }
     }
 
-    gBattleStruct->moveDamage[gBattlerTarget] = dmgByMove[gMoveSelectionCursor[gBattlerAttacker]];
     gCurrentMove = currMoveSaved;
 }
 
