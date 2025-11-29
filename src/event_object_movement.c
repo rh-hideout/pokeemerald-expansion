@@ -215,7 +215,6 @@ static void DestroyLevitateMovementTask(u8);
 static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
 static bool8 NpcTakeStep(struct Sprite *);
-static bool8 AreElevationsCompatible(u8, u8);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 
 static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female);
@@ -9926,7 +9925,7 @@ static void ObjectEventUpdateSubpriority(struct ObjectEvent *objEvent, struct Sp
     SetObjectSubpriorityByElevation(objEvent->previousElevation, sprite, 1);
 }
 
-static bool8 AreElevationsCompatible(u8 a, u8 b)
+bool32 AreElevationsCompatible(u32 a, u32 b)
 {
     if (a == 0 || b == 0)
         return TRUE;
@@ -11607,7 +11606,7 @@ bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, 
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11628,7 +11627,7 @@ bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent,
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11649,7 +11648,7 @@ bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
