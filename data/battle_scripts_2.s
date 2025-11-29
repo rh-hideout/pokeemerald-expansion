@@ -74,6 +74,10 @@ BattleScript_ItemRestoreHP_Party::
 	return
 
 BattleScript_ItemRestoreHP_SendOutRevivedBattler:
+	switchhandleorder BS_SCRIPTING, 0
+	getswitchedmondata BS_SCRIPTING
+	switchindataupdate BS_SCRIPTING
+	trytoclearprimalweather
 	switchinanim BS_SCRIPTING, FALSE, FALSE
 	waitstate
 	switchineffects BS_SCRIPTING
@@ -82,11 +86,16 @@ BattleScript_ItemRestoreHP_SendOutRevivedBattler:
 BattleScript_ItemCureStatus::
 	call BattleScript_UseItemMessage
 BattleScript_ItemCureStatusAfterItemMsg:
-	itemcurestatus BattleScript_ItemCureStatusEnd
-	updatestatusicon BS_SCRIPTING
+	itemcurestatus BattleScript_ItemCureStatusEnd, BattleScript_CureStatus_Battler
 	printstring STRINGID_ITEMCUREDSPECIESSTATUS
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_ItemCureStatusEnd:
+	end
+
+BattleScript_CureStatus_Battler::
+	updatestatusicon BS_SCRIPTING
+	printstring STRINGID_ITEMCUREDSPECIESSTATUS
+	waitmessage B_WAIT_TIME_LONG
 	end
 
 BattleScript_ItemHealAndCureStatus::

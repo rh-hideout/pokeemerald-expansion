@@ -2291,7 +2291,7 @@ BattleScript_TryTailwindAbilitiesLoop_WindRider:
 
 BattleScript_TryTailwindAbilitiesLoop_WindPower:
 	call BattleScript_AbilityPopUp
-	setcharge BS_TARGET
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 2
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	goto BattleScript_TryTailwindAbilitiesLoop_Increment
@@ -3738,35 +3738,16 @@ BattleScript_DoEffectTeleport::
 	goto BattleScript_MoveEnd
 
 BattleScript_EffectBeatUp::
+	jumpifgenconfiglowerthan GEN_CONFIG_BEAT_UP, GEN_5, BattleScript_EffectBeatUpGen3
+	goto BattleScript_EffectHit
+
+BattleScript_EffectBeatUpGen3:
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	pause B_WAIT_TIME_SHORT
-	setbyte gBattleCommunication, 0
-BattleScript_BeatUpLoop::
-	movevaluescleanup
-	trydobeatup BattleScript_BeatUpEnd, BattleScript_ButItFailed
+	trydobeatup BattleScript_MoveEnd, BattleScript_ButItFailed
 	printstring STRINGID_PKMNATTACK
-	critcalc
-	jumpifcriticalhit BattleScript_BeatUpAttack
-	manipulatedamage DMG_DOUBLED
-BattleScript_BeatUpAttack::
-	adjustdamage
-	attackanimation
-	waitanimation
-	effectivenesssound
-	hitanimation BS_TARGET
-	waitstate
-	healthbarupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	datahpupdate BS_TARGET, MOVE_DAMAGE_HP_UPDATE
-	critmessage
-	waitmessage B_WAIT_TIME_LONG
-	resultmessage
-	waitmessage B_WAIT_TIME_LONG
-	tryfaintmon BS_TARGET
-	moveendto MOVEEND_NEXT_TARGET
-	goto BattleScript_BeatUpLoop
-BattleScript_BeatUpEnd::
-	end
+	goto BattleScript_HitFromCritCalc
 
 BattleScript_EffectDefenseCurl::
 	attackcanceler
@@ -4020,7 +4001,7 @@ BattleScript_EffectFollowMe::
 
 BattleScript_EffectCharge::
 	attackcanceler
-	setcharge BS_ATTACKER
+	setvolatile BS_ATTACKER, VOLATILE_CHARGE_TIMER, 2
 	attackanimation
 	waitanimation
 .if B_CHARGE_SPDEF_RAISE >= GEN_5
@@ -5337,7 +5318,7 @@ BattleScript_AngerShellRet:
 
 BattleScript_WindPowerActivates::
 	call BattleScript_AbilityPopUp
-	setcharge BS_TARGET
+	setvolatile BS_TARGET, VOLATILE_CHARGE_TIMER, 1
 	printstring STRINGID_BEINGHITCHARGEDPKMNWITHPOWER
 	waitmessage B_WAIT_TIME_LONG
 	return
