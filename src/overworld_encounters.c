@@ -483,6 +483,14 @@ static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
         level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
     }
 
+    if (species == SPECIES_UNOWN)
+    {
+        u32 rand = Random32() % NUM_UNOWN_FORMS;
+
+        if (rand != 0)
+            species = SPECIES_UNOWN_B + rand - 1;
+    }
+
     sFollowMonData.list[spawnSlot].species = species;
     sFollowMonData.list[spawnSlot].level = level;
     sFollowMonData.list[spawnSlot].isShiny = ComputePlayerShinyOdds(Random32());
