@@ -12054,7 +12054,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u16 gMonPalette_Spinda[] = INCBIN_U16("graphics/pokemon/spinda/normal.gbapal");
     const u32 gMonBackPic_Spinda[] = INCBIN_U32("graphics/pokemon/spinda/back.4bpp.smol");
     const u16 gMonShinyPalette_Spinda[] = INCBIN_U16("graphics/pokemon/spinda/shiny.gbapal");
+#if !P_GBA_STYLE_SPECIES_ICONS
     const u8 gMonIcon_Spinda[] = INCBIN_U8("graphics/pokemon/spinda/icon.4bpp");
+#else
+    const u8 gMonIcon_Spinda[] = INCBIN_U8("graphics/pokemon/spinda/icon_gba.4bpp");
+#endif //P_GBA_STYLE_SPECIES_ICONS
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Spinda[] = INCBIN_U8("graphics/pokemon/spinda/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -12749,7 +12753,11 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u16 gMonPalette_CastformNormal[] = INCBIN_U16("graphics/pokemon/castform/normal.gbapal");
     const u32 gMonBackPic_CastformNormal[] = INCBIN_U32("graphics/pokemon/castform/back.4bpp.smol");
     const u16 gMonShinyPalette_CastformNormal[] = INCBIN_U16("graphics/pokemon/castform/shiny.gbapal");
+#if !P_GBA_STYLE_SPECIES_ICONS
     const u8 gMonIcon_CastformNormal[] = INCBIN_U8("graphics/pokemon/castform/icon.4bpp");
+#else
+    const u8 gMonIcon_CastformNormal[] = INCBIN_U8("graphics/pokemon/castform/icon_gba.4bpp");
+#endif //P_GBA_STYLE_SPECIES_ICONS
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Castform[] = INCBIN_U8("graphics/pokemon/castform/footprint.1bpp");
 #endif //P_FOOTPRINTS
@@ -13938,17 +13946,10 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
 #endif //P_FAMILY_JIRACHI
 
 #if P_FAMILY_DEOXYS
-#if !P_GBA_STYLE_SPECIES_GFX
     const u32 gMonFrontPic_DeoxysNormal[] = INCBIN_U32("graphics/pokemon/deoxys/anim_front.4bpp.smol");
     const u16 gMonPalette_DeoxysNormal[] = INCBIN_U16("graphics/pokemon/deoxys/normal.gbapal");
     const u32 gMonBackPic_DeoxysNormal[] = INCBIN_U32("graphics/pokemon/deoxys/back.4bpp.smol");
     const u16 gMonShinyPalette_DeoxysNormal[] = INCBIN_U16("graphics/pokemon/deoxys/shiny.gbapal");
-#else
-    const u32 gMonFrontPic_DeoxysNormal[] = INCBIN_U32("graphics/pokemon/deoxys/anim_front_gba.4bpp.smol");
-    const u16 gMonPalette_DeoxysNormal[] = INCBIN_U16("graphics/pokemon/deoxys/normal_gba.gbapal");
-    const u32 gMonBackPic_DeoxysNormal[] = INCBIN_U32("graphics/pokemon/deoxys/back_gba.4bpp.smol");
-    const u16 gMonShinyPalette_DeoxysNormal[] = INCBIN_U16("graphics/pokemon/deoxys/shiny_gba.gbapal");
-#endif //P_GBA_STYLE_SPECIES_GFX
 #if !P_GBA_STYLE_SPECIES_ICONS
     const u8 gMonIcon_DeoxysNormal[] = INCBIN_U8("graphics/pokemon/deoxys/icon.4bpp");
 #else
