@@ -5,6 +5,8 @@ ASSUMPTIONS
 {
     ASSUME(GetMoveEffect(MOVE_SNATCH) == EFFECT_SNATCH);
     ASSUME(MoveCanBeSnatched(MOVE_SWORDS_DANCE) == TRUE);
+    ASSUME(GetMoveEffect(MOVE_SWORDS_DANCE) == EFFECT_ATTACK_UP_2);
+    ASSUME(MoveCanBeSnatched(MOVE_CELEBRATE) == FALSE);
 }
 
 SINGLE_BATTLE_TEST("Snatch steals stat-boosting moves from the opponent")
