@@ -334,7 +334,11 @@ DOUBLE_BATTLE_TEST("Defog removes Aurora Veil from target's side", s16 damagePhy
 
 DOUBLE_BATTLE_TEST("Defog removes everything it can")
 {
+    u32 config;
+    PARAMETRIZE { config = GEN_5; }
+    PARAMETRIZE { config = GEN_6; }
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_DEFOG_EFFECT_CLEARING, config);
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
@@ -363,7 +367,7 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
         MESSAGE("Your team's Aurora Veil wore off!");
         MESSAGE("Your team's Safeguard wore off!");
 
-        if (B_DEFOG_EFFECT_CLEARING >= GEN_6) {
+        if (config == GEN_6) {
             MESSAGE("The spikes disappeared from the ground around your team!");
             MESSAGE("The sticky web has disappeared from the ground around your team!");
             MESSAGE("The poison spikes disappeared from the ground around your team!");
@@ -376,17 +380,31 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
             MESSAGE("The pointed stones disappeared from around the opposing team!");
         }
     } THEN {
-        EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_NONE);
+        if (config == GEN_6) {
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_NONE);
+        } else {
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][0], HAZARDS_STICKY_WEB);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][1], HAZARDS_SPIKES);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][2], HAZARDS_STEALTH_ROCK);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[0][3], HAZARDS_TOXIC_SPIKES);
+        }
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][4], HAZARDS_NONE);
         EXPECT_EQ(gBattleStruct->hazardsQueue[0][5], HAZARDS_NONE);
 
-        EXPECT_EQ(gBattleStruct->hazardsQueue[1][0], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[1][1], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[1][2], HAZARDS_NONE);
-        EXPECT_EQ(gBattleStruct->hazardsQueue[1][3], HAZARDS_NONE);
+        if (config == GEN_6) {
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][0], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][1], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][2], HAZARDS_NONE);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][3], HAZARDS_NONE);
+        } else {
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][0], HAZARDS_STICKY_WEB);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][1], HAZARDS_SPIKES);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][2], HAZARDS_TOXIC_SPIKES);
+            EXPECT_EQ(gBattleStruct->hazardsQueue[1][3], HAZARDS_STEALTH_ROCK);
+        }
         EXPECT_EQ(gBattleStruct->hazardsQueue[1][4], HAZARDS_NONE);
         EXPECT_EQ(gBattleStruct->hazardsQueue[1][5], HAZARDS_NONE);
     }

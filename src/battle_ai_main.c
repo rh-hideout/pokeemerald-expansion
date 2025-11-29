@@ -359,13 +359,13 @@ void ComputeBattlerDecisions(u32 battler)
     if (isAiBattler || CanAiPredictMove())
     {
         // Risky AI switches aggressively even mid battle
-        enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE;
+        enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL;
 
         gAiLogicData->aiCalcInProgress = TRUE;
 
         // Setup battler and prediction data
         BattleAI_SetupAIData(0xF, battler);
-        SetupAIPredictionData(battler, switchType);
+        SetupAIPredictionData(battler, SWITCH_MID_BATTLE_OPTIONAL);
 
         // AI's own switching data
         if (isAiBattler)
@@ -1447,7 +1447,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_CHARGE:
-            if (gBattleMons[battlerAtk].volatiles.charge)
+            if (gBattleMons[battlerAtk].volatiles.chargeTimer > 0)
                 ADJUST_SCORE(-20);
             else if (!HasMoveWithType(battlerAtk, TYPE_ELECTRIC))
                 ADJUST_SCORE(-10);
