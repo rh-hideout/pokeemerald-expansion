@@ -1024,6 +1024,9 @@ static void SetSameMoveTurnValues(u32 moveEffect)
 {
     bool32 isAnyTargetAffected = IsAnyTargetAffected();
 
+    if (gLastMoves[gBattlerAttacker] != gCurrentMove) // User switched/fainted. values already reset
+        return;
+
     switch (moveEffect)
     {
     case EFFECT_FURY_CUTTER:
@@ -1033,12 +1036,7 @@ static void SetSameMoveTurnValues(u32 moveEffect)
             gDisableStructs[gBattlerAttacker].furyCutterCounter++;
         break;
     case EFFECT_ROLLOUT:
-        if (!isAnyTargetAffected)
-        {
-            gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
-            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
-        }
-        else if (++gDisableStructs[gBattlerAttacker].rolloutTimer == 5)
+        if (!isAnyTargetAffected || ++gDisableStructs[gBattlerAttacker].rolloutTimer == 5)
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
             gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
@@ -7093,10 +7091,6 @@ static void Cmd_moveend(void)
             }
             gBattleScripting.moveendState++;
             break;
-        case MOVEEND_SAME_MOVE_TURNS:
-            SetSameMoveTurnValues(moveEffect);
-            gBattleScripting.moveendState++;
-            break;
         case MOVEEND_CLEAR_BITS: // Clear/Set bits for things like using a move for all targets and all hits.
             if (gSpecialStatuses[gBattlerAttacker].instructedChosenTarget)
                 gBattleStruct->moveTarget[gBattlerAttacker] = gSpecialStatuses[gBattlerAttacker].instructedChosenTarget & 0x3;
@@ -7113,6 +7107,7 @@ static void Cmd_moveend(void)
               && gBattleMons[gBattlerAttacker].volatiles.lockConfusionTurns != 1)  // And won't end this turn
                 CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_IGNORE); // Cancel it
 
+            SetSameMoveTurnValues(moveEffect);
             TryClearChargeVolatile(moveType);
             ValidateSavedBattlerCounts();
             gProtectStructs[gBattlerAttacker].shellTrap = FALSE;

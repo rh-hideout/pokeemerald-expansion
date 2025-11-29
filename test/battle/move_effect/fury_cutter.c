@@ -109,3 +109,23 @@ SINGLE_BATTLE_TEST("Fury Cutter counter is the same for both hits of Parental Bo
         EXPECT_NE(damage[0], damage[2]);
     }
 }
+
+SINGLE_BATTLE_TEST("Fury Cutter's base power resets if original user is forced to switch out")
+{
+    s16 damage[2];
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FURY_CUTTER); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_FURY_CUTTER); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+        TURN { MOVE(player, MOVE_FURY_CUTTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_CUTTER, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
