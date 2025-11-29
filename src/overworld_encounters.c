@@ -307,30 +307,6 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
-static void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 otIdType, u32 fixedOtId, bool32 isFemale)
-{
-    u32 personality;
-
-    if (isFemale)
-    {
-        do
-        {
-            personality = Random32();
-        }
-        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
-    }
-    else
-    {
-        do
-        {
-            personality = Random32();
-        }
-        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
-    }
-
-    CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
-}
-
 void CreateFollowMonEncounter(void) {
     struct ObjectEvent *curObject;
     u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);

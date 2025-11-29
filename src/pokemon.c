@@ -1570,6 +1570,22 @@ static void CreateEventMon(struct Pokemon *mon, u16 species, u8 level, u8 fixedI
     SetMonData(mon, MON_DATA_MODERN_FATEFUL_ENCOUNTER, &isModernFatefulEncounter);
 }
 
+void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 otIdType, u32 fixedOtId, bool32 isFemale)
+{
+    u32 personality;
+
+    if (isFemale)
+        do
+            personality = Random32();
+        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_FEMALE);
+    else
+        do
+            personality = Random32();
+        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
+
+    CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
+}
+
 // If FALSE, should load this game's Deoxys form. If TRUE, should load normal Deoxys form
 bool8 ShouldIgnoreDeoxysForm(u8 caseId, u8 battler)
 {
