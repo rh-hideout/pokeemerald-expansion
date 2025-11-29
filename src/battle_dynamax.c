@@ -368,6 +368,18 @@ static u32 GetMaxPowerTier(u32 move)
         }
     }
 
+    if (IsMultiHitMove(move))
+    {
+        switch(GetMovePower(move))
+        {
+            case 0 ... 15:    return MAX_POWER_TIER_1;
+            case 16 ... 18:   return MAX_POWER_TIER_2;
+            case 19 ... 20:   return MAX_POWER_TIER_4;
+            default:
+            case 21 ... 25:   return MAX_POWER_TIER_5;
+        }
+    }
+
     switch (GetMoveEffect(move))
     {
         case EFFECT_BIDE:
@@ -404,15 +416,6 @@ static u32 GetMaxPowerTier(u32 move)
         case EFFECT_FLAIL:
         case EFFECT_LOW_KICK:
             return MAX_POWER_TIER_7;
-        case EFFECT_MULTI_HIT:
-            switch(GetMovePower(move))
-            {
-                case 0 ... 15:    return MAX_POWER_TIER_1;
-                case 16 ... 18:   return MAX_POWER_TIER_2;
-                case 19 ... 20:   return MAX_POWER_TIER_4;
-                default:
-                case 21 ... 25:   return MAX_POWER_TIER_5;
-            }
         default:
             break;
     }
