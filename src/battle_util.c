@@ -8333,8 +8333,8 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
         {
             if (ctx->updateFlags)
                 gSpecialStatuses[ctx->battlerDef].berryReduced = TRUE;
-            if (gAiLogicData->aiCalcInProgress && AI_DAMAGES_THROUGH_BERRIES)
-                gAiLogicData->checkBerryModifier = TRUE;
+            if (ctx->aiCalc && AI_DAMAGES_THROUGH_BERRIES)
+                ctx->checkBerryModifier = TRUE;
             return (ctx->abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
         break;
@@ -8436,9 +8436,9 @@ static inline s32 DoMoveDamageCalcVars(struct DamageContext *ctx)
 
 s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
 {
-    if (gAiLogicData->checkBerryModifier == TRUE) // Only set if AI running calcs
+    if (ctx->checkBerryModifier) // Only set if AI running calcs
     {
-        gAiLogicData->checkBerryModifier = FALSE;
+        ctx->checkBerryModifier = FALSE;
         // Store resist berry affected move
         u8 moveIndex = 0;
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
@@ -8480,8 +8480,13 @@ s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
     DAMAGE_APPLY_MODIFIER(GetZMaxMoveAgainstProtectionModifier(ctx));
     DAMAGE_APPLY_MODIFIER(GetOtherModifiers(ctx));
 
-    dmg = HandleKOThroughBerryReduction(ctx, dmg);
+    return dmg;
+}
 
+s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg)
+{
+    dmg = ApplyModifiersAfterDmgRoll(ctx, dmg);
+    dmg = HandleKOThroughBerryReduction(ctx, dmg);
     return dmg;
 }
 

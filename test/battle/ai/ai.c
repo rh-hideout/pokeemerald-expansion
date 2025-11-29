@@ -1049,7 +1049,6 @@ AI_SINGLE_BATTLE_TEST("AI will see 2HKOs through resist berries")
     }
 }
 
-// TODO
 AI_SINGLE_BATTLE_TEST("AI will prioritize a regular OHKO over a berry-ignoring OHKO")
 {
     GIVEN {
