@@ -683,7 +683,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     {
         //Yawn
         if (gBattleMons[battler].volatiles.yawn
-            && CanBeSlept(battler, battler, monAbility, BLOCKED_BY_SLEEP_CLAUSE) // TODO: ask for help from pawwkie
+            && CanBeSlept(battler, battler, monAbility, BLOCKED_BY_SLEEP_CLAUSE)
             && gBattleMons[battler].hp > gBattleMons[battler].maxHP / 3
             && RandomPercentage(RNG_AI_SWITCH_YAWN, GetSwitchChance(SHOULD_SWITCH_YAWN)))
         {

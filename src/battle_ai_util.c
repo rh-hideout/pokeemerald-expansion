@@ -2045,6 +2045,10 @@ bool32 ShouldRaiseAnyStat(u32 battlerAtk, u32 battlerDef)
     if (AI_IsAbilityOnSide(battlerDef, ABILITY_UNAWARE))
         return FALSE;
 
+    // Don't increase stats if you're Yawn'd
+    if (gBattleMons[battlerAtk].volatiles.yawn && CanBeSlept(battlerDef, battlerDef, gAiLogicData->abilities[battlerDef], BLOCKED_BY_SLEEP_CLAUSE))
+        return FALSE;
+
     // Don't set up if AI is dead to residual damage from weather
     if (GetBattlerSecondaryDamage(battlerAtk) >= gBattleMons[battlerAtk].hp)
         return FALSE;
