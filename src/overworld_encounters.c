@@ -34,8 +34,6 @@ static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 static bool32 IsInsidePlayerMap(s16 x, s16 y);
 static void OverworldEncounters_ProcessMonInteraction(void);
 
-#define sEncounterIndex trainerRange_berryTreeId
-
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
     u32 slot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
