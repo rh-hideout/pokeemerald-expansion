@@ -4140,19 +4140,20 @@ u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 
             }
             break;
         case ABILITY_COSTAR:
+            partner = BATTLE_PARTNER(battler);
             if (!gSpecialStatuses[battler].switchInAbilityDone
              && IsDoubleBattle()
-             && IsBattlerAlive(BATTLE_PARTNER(battler))
-             && CountBattlerStatIncreases(BATTLE_PARTNER(battler), FALSE))
+             && IsBattlerAlive(partner)
+             && BattlerHasCopyableChanges(partner))
             {
                 gSpecialStatuses[battler].switchInAbilityDone = TRUE;
                 for (i = 0; i < NUM_BATTLE_STATS; i++)
-                    gBattleMons[battler].statStages[i] = gBattleMons[BATTLE_PARTNER(battler)].statStages[i];
+                    gBattleMons[battler].statStages[i] = gBattleMons[partner].statStages[i];
                 // Copy crit boosts (Focus Energy, Dragon Cheer, G-Max Chi Strike)
-                gBattleMons[battler].volatiles.focusEnergy = gBattleMons[BATTLE_PARTNER(battler)].volatiles.focusEnergy;
-                gBattleMons[battler].volatiles.dragonCheer = gBattleMons[BATTLE_PARTNER(battler)].volatiles.dragonCheer;
-                gBattleStruct->bonusCritStages[battler] = gBattleStruct->bonusCritStages[BATTLE_PARTNER(battler)];
-                gEffectBattler = BATTLE_PARTNER(battler);
+                gBattleMons[battler].volatiles.focusEnergy = gBattleMons[partner].volatiles.focusEnergy;
+                gBattleMons[battler].volatiles.dragonCheer = gBattleMons[partner].volatiles.dragonCheer;
+                gBattleMons[battler].volatiles.bonusCritStages = gBattleMons[partner].volatiles.bonusCritStages;
+                gEffectBattler = partner;
                 BattleScriptPushCursorAndCallback(BattleScript_CostarActivates);
                 effect++;
             }
@@ -7885,6 +7886,24 @@ u32 CountBattlerStatIncreases(u32 battler, bool32 countEvasionAcc)
     }
 
     return count;
+}
+
+bool32 BattlerHasCopyableChanges(u32 battler)
+{
+    u32 i;
+
+    for (i = 0; i < NUM_BATTLE_STATS; i++)
+    {
+        if (gBattleMons[battler].statStages[i] != DEFAULT_STAT_STAGE)
+            return TRUE;
+    }
+
+    if (gBattleMons[battler].volatiles.focusEnergy
+     || gBattleMons[battler].volatiles.dragonCheer
+     || gBattleMons[battler].volatiles.bonusCritStages != 0)
+        return TRUE;
+
+    return FALSE;
 }
 
 u32 GetMoveTargetCount(struct DamageContext *ctx)

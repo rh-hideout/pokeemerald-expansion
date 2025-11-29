@@ -1663,7 +1663,7 @@ s32 CalcCritChanceStage(u32 battlerAtk, u32 battlerDef, u32 move, bool32 recordA
                     + GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk)
                     + ((B_AFFECTION_MECHANICS == TRUE && GetBattlerAffectionHearts(battlerAtk) == AFFECTION_FIVE_HEARTS) ? 2 : 0)
                     + (abilityAtk == ABILITY_SUPER_LUCK ? 1 : 0)
-                    + gBattleStruct->bonusCritStages[gBattlerAttacker];
+                    + gBattleMons[battlerAtk].volatiles.bonusCritStages;
 
         if (critChance >= ARRAY_COUNT(sCriticalHitOdds))
             critChance = ARRAY_COUNT(sCriticalHitOdds) - 1;
@@ -1694,7 +1694,7 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
 {
     s32 critChance = 0;
     s32 moveCritStage = GetMoveCriticalHitStage(gCurrentMove);
-    s32 bonusCritStage = gBattleStruct->bonusCritStages[battlerAtk]; // G-Max Chi Strike
+    s32 bonusCritStage = gBattleMons[battlerAtk].volatiles.bonusCritStages; // G-Max Chi Strike
     u32 holdEffectCritStage = GetHoldEffectCritChanceIncrease(battlerAtk, holdEffectAtk);
     u16 baseSpeed = GetSpeciesBaseSpeed(gBattleMons[battlerAtk].species);
 
@@ -4059,8 +4059,8 @@ void SetMoveEffect(u32 battler, u32 effectBattler, bool32 primary, bool32 certai
         gBattlescriptCurrInstr = BattleScript_EffectMeanLookSide;
         break;
     case MOVE_EFFECT_CRIT_PLUS_SIDE:
-        gBattleStruct->bonusCritStages[gBattlerAttacker]++;
-        gBattleStruct->bonusCritStages[BATTLE_PARTNER(gBattlerAttacker)]++;
+        gBattleMons[gBattlerAttacker].volatiles.bonusCritStages++;
+        gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages++;
         BattleScriptPush(gBattlescriptCurrInstr + 1);
         gBattlescriptCurrInstr = BattleScript_EffectRaiseCritAlliesAnim;
         break;
