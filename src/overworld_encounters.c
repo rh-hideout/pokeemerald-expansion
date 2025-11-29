@@ -171,21 +171,21 @@ static u8 GetMaxFollowMonSpawns(void)
         return 3;
 }
 
-static u32 GetNewOldestSlot(u32 oldSlot)
+static u32 GetOldestSlot(void)
 {
     u32 i;
-    u32 nextOldest = FOLLOWMON_MAX_SPAWN_SLOTS;
+    u32 oldest = 0;
 
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
         if (sFollowMonData.list[i].species != SPECIES_NONE)
         {
-            if (i != oldSlot && (nextOldest == FOLLOWMON_MAX_SPAWN_SLOTS || sFollowMonData.list[i].age > sFollowMonData.list[nextOldest].age))
-                nextOldest = i;
+            if (sFollowMonData.list[i].age > sFollowMonData.list[oldest].age)
+                oldest = i;
         }
     }
 
-    return nextOldest;
+    return oldest;
 }
 
 static u8 NextSpawnMonSlot(void)
@@ -197,8 +197,7 @@ static u8 NextSpawnMonSlot(void)
     if(CountActiveFollowMon() >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
-        slot = sFollowMonData.oldestSlot;
-        sFollowMonData.oldestSlot = GetNewOldestSlot(slot);
+        slot = GetOldestSlot();
     }
     else
     {
@@ -409,19 +408,62 @@ bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct
     return FALSE;
 }
 
-void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+struct AgeSort
 {
-    u32 i;
-    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+    u8 slot:4;
+    u8 age:4;
+};
 
-    sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
+static void SortOWEMonAges(void)
+{
+    struct AgeSort array[FOLLOWMON_MAX_SPAWN_SLOTS];
+    struct AgeSort current;
+    u32 numActive = CountActiveFollowMon();
+    u32 count = 0;
+    s32 i, j;
 
-    // Increase the age of all followmons
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
         if (sFollowMonData.list[i].species != SPECIES_NONE)
-            sFollowMonData.list[i].age++;
+        {
+            array[count].slot = i;
+            array[count].age = sFollowMonData.list[i].age;
+            count++;
+        }
+        if (count == numActive)
+            break;
     }
+
+    for (i = 1; i < numActive; i++)
+    {
+        current = array[i];
+        j = i - 1;
+
+        while (j >= 0 && array[j].age < current.age)
+        {
+            array[j + 1] = array[j];
+            j--;
+        }
+
+        array[j + 1] = current;
+    }
+
+    array[0].age = numActive;
+    sFollowMonData.list[array[0].slot].age = numActive;
+
+    for (i = 1; i < numActive; i++)
+    {
+        array[i].age = array[i - 1].age - 1;
+        sFollowMonData.list[array[i].slot].age = array[i].age;
+    }
+}
+
+void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+{
+    u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
+
+    sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
+    SortOWEMonAges();
 }
 
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
@@ -449,7 +491,6 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y)
 void ClearOverworldEncounterData(void)
 {
     sFollowMonData.spawnCountdown = 0;
-    sFollowMonData.oldestSlot = 0;
 
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
