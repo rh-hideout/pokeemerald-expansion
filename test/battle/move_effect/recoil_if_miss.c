@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick has 50% recoil on protect")
 SINGLE_BATTLE_TEST("Recoil if miss: Jump Kick has no recoil if no target")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_7);
+        WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WYNAUT);

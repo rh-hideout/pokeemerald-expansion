@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_HEALING_WISH) == EFFECT_HEALING_WISH);
 }
 
-SINGLE_BATTLE_TEST("Healing Wish faints the user and heals the replacement's HP and status (singles)")
+SINGLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacement's HP and status (singles)")
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_7);
@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Healing Wish faints the user and heals the replacement's HP 
     }
 }
 
-DOUBLE_BATTLE_TEST("Healing Wish faints the user and heals the replacement's HP and status (doubles)")
+DOUBLE_BATTLE_TEST("Healing Wish causes the user to faint and heals the replacement's HP and status (doubles)")
 {
     GIVEN {
         WITH_CONFIG(GEN_CONFIG_HEALING_WISH_SWITCH, GEN_7);
