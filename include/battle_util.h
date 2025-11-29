@@ -166,7 +166,9 @@ struct DamageContext
     u32 isSelfInflicted:1;
     u32 weather:16;
     u32 fixedBasePower:8;
-    u32 padding2:8;
+    u32 aiCalc:1;
+    u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
+    u32 padding2:6;
     u32 chosenMove:16; // May be different to 'move', e.g. for Z moves.
     u32 padding3:16;
     uq4_12_t typeEffectivenessModifier;

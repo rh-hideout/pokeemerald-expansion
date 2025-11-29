@@ -340,6 +340,7 @@ struct AiLogicData
     u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
+    u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
 };
 
 struct AiThinkingStruct

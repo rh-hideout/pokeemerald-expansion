@@ -27,10 +27,11 @@ enum DamageCalcContext
 enum AiCompareMovesPriority
 {
     PRIORITY_EFFECT,
-    PRIORITY_GUARANTEE,
     PRIORITY_ACCURACY,
+    PRIORITY_GUARANTEE,
     PRIORITY_NOT_CHARGING,
     PRIORITY_SPEED,
+    PRIORITY_RESIST_BERRY,
 };
 
 enum AIPivot
@@ -303,6 +304,7 @@ bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
+s32 AI_ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
 
 // These are for the purpose of not doubling up on moves during double battles.
 // Used in GetAIEffectGroup for move effects and GetAIEffectGroupFromMove for additional effects

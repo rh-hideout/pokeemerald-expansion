@@ -8333,6 +8333,8 @@ static inline uq4_12_t GetDefenderItemsModifier(struct DamageContext *ctx)
         {
             if (ctx->updateFlags)
                 gSpecialStatuses[ctx->battlerDef].berryReduced = TRUE;
+            if (ctx->aiCalc && AI_DAMAGES_THROUGH_BERRIES)
+                ctx->aiCheckBerryModifier = TRUE;
             return (ctx->abilityDef == ABILITY_RIPEN) ? UQ_4_12(0.25) : UQ_4_12(0.5);
         }
         break;
