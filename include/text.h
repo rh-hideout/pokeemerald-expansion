@@ -13,6 +13,7 @@ STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 31
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
 #define TEXT_SKIP_DRAW 0xFF
+#define NUM_TEXT_PRINTERS 32
 
 enum {
     FONT_SMALL,
@@ -75,7 +76,13 @@ struct TextPrinterSubStruct
 struct TextPrinterTemplate
 {
     const u8 *currentChar;
-    u8 windowId;
+
+    enum: u8 { WINDOW_TEXT_PRINTER, SPRITE_TEXT_PRINTER } type;
+    union {
+        u8 windowId;
+        u8 spriteId;
+    };
+
     u8 fontId;
     u8 x;
     u8 y;
@@ -103,6 +110,7 @@ struct TextPrinter
     u8 scrollDistance;
     u8 minLetterSpacing;  // 0x20
     u8 japanese;
+    u8 isInUse;
 };
 
 struct FontInfo
@@ -154,7 +162,7 @@ void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor);
 void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
 void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
 void DecompressGlyphTile(const void *src_, void *dest_);
-void CopyGlyphToWindow(struct TextPrinter *textPrinter);
+u32 CopyGlyphToWindow(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
 
 void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter);

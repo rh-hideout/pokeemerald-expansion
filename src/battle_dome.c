@@ -4215,6 +4215,7 @@ static void DisplayTrainerInfoOnCard(u8 flags, u8 trainerTourneyId)
     }
 
     // Initialize the text printer
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.fontId = FONT_SHORT;
     textPrinter.x = 0;
     textPrinter.y = 0;
@@ -4805,6 +4806,7 @@ static void DisplayMatchInfoOnCard(u8 flags, u8 matchNo)
     }
 
     // Print the win string (or 'Let the battle begin!').
+    textPrinter.type = WINDOW_TEXT_PRINTER;
     textPrinter.x = 0;
     textPrinter.y = 2;
     textPrinter.currentX = textPrinter.x;
@@ -5299,6 +5301,7 @@ static void Task_ShowTourneyTree(u8 taskId)
         gTasks[taskId].tState++;
         break;
     case 4:
+        textPrinter.type = WINDOW_TEXT_PRINTER;
         textPrinter.fontId = FONT_SHORT;
         textPrinter.currentChar = gText_BattleTourney;
         textPrinter.windowId = TOURNEYWIN_TITLE;
@@ -5484,6 +5487,7 @@ static void Task_HandleStaticTourneyTreeInput(u8 taskId)
         {
             gTasks[taskId].tState = STATE_DELAY;
             gTasks[taskId].data[3] = 64;
+            textPrinter.type = WINDOW_TEXT_PRINTER;
             textPrinter.fontId = FONT_SHORT;
             textPrinter.x = 0;
             textPrinter.y = 0;
