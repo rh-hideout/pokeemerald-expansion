@@ -1248,7 +1248,7 @@ static void Cmd_attackcanceler(void)
     }
 
     u32 i;
-    for (i = 0; i < gBattlersCount; i++)
+    for (i = 0; i < gCurrentTurnActionNumber; i++)
     {
         if ((gProtectStructs[gBattlerByTurnOrder[i]].stealMove)
             && MoveCanBeSnatched(gCurrentMove)
