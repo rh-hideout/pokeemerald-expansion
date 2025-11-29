@@ -37,12 +37,10 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Focus Energy critical hit boost")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerLeft, MOVE_SWORDS_DANCE); MOVE(playerRight, MOVE_CELEBRATE); }
         TURN { MOVE(playerLeft, MOVE_FOCUS_ENERGY); MOVE(playerRight, MOVE_CELEBRATE); }
         TURN { SWITCH(playerRight, 2); }
         TURN { MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_ENERGY, playerLeft);
         ABILITY_POPUP(playerRight, ABILITY_COSTAR);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
@@ -62,15 +60,35 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's Dragon Cheer critical hit boost")
         OPPONENT(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
-        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); MOVE(playerLeft, MOVE_SWORDS_DANCE); }
-        TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
+        TURN { MOVE(playerRight, MOVE_DRAGON_CHEER, target: playerLeft); MOVE(playerLeft, MOVE_CELEBRATE); }
+        TURN { SWITCH(playerRight, 2); }
         TURN { MOVE(playerRight, MOVE_TACKLE, target: opponentLeft); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_CHEER, playerRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
         ABILITY_POPUP(playerRight, ABILITY_COSTAR);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, playerRight);
         MESSAGE("A critical hit!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Costar copies an ally's lowered stat stages")
+{
+    GIVEN {
+        ASSUME(gMovesInfo[MOVE_GROWL].effect == EFFECT_ATTACK_DOWN);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        PLAYER(SPECIES_FLAMIGO) { Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_GROWL); MOVE(opponentRight, MOVE_CELEBRATE); }
+        TURN { SWITCH(playerRight, 2); MOVE(playerLeft, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GROWL, opponentLeft);
+        ABILITY_POPUP(playerRight, ABILITY_COSTAR);
+    } THEN {
+        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(playerRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE - 1);
     }
 }
 
