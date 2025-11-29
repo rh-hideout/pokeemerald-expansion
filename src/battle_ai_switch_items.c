@@ -2048,7 +2048,7 @@ static bool32 AI_CanSwitchinAbilityTrapOpponent(enum Ability ability, u32 opposi
         return FALSE;
     else if (ability == ABILITY_SHADOW_TAG)
     {
-        if (B_SHADOW_TAG_ESCAPE >= GEN_4 && gAiLogicData->abilities[opposingBattler] == ABILITY_SHADOW_TAG) // Check if ability exists in species
+        if (B_SHADOW_TAG_ESCAPE >= GEN_4 && gAiLogicData->abilities[opposingBattler] == ABILITY_SHADOW_TAG)
             return FALSE;
         else
             return TRUE;
