@@ -47,7 +47,6 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
     sFollowMonData.list[slot].onWater = MetatileBehavior_IsWaterWildEncounter(objectEvent->currentMetatileBehavior);
 
     sFollowMonData.spawnCountdown += 60;
-    sFollowMonData.usedSlots++;
 }
 
 void UpdateOverworldEncounters(void)
@@ -420,7 +419,6 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
     u32 i;
     u32 spawnSlot = OBJ_EVENT_ID_LAST_OVERWORLD_ENCOUNTER - objectEvent->localId;
 
-    sFollowMonData.usedSlots++;
     sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
 
     // Increase the age of all followmons
@@ -437,7 +435,6 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 
     sFollowMonData.list[spawnSlot].encounterIndex = 0;
     sFollowMonData.list[spawnSlot].age = 0;
-    sFollowMonData.usedSlots--;
 }
 
 u16 GetFollowMonObjectEventGraphicsId(u16 spawnSlot)
@@ -457,7 +454,6 @@ u16 GetFollowMonObjectEventGraphicsId(u16 spawnSlot)
 void ClearOverworldEncounterData(void)
 {
     sFollowMonData.spawnCountdown = 0;
-    sFollowMonData.usedSlots = 0;
     sFollowMonData.oldestSlot = 0;
 
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
