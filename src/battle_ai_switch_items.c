@@ -639,7 +639,7 @@ static bool32 ShouldSwitchIfTrapperInParty(u32 battler)
         return FALSE;
 
     // Check if opposing battler is already trapped
-    if (IsBattlerTrapped(opposingBattler))
+    if (IsBattlerTrapped(battler, opposingBattler))
         return FALSE;
 
     // Check party for mon with ability that traps opponent
