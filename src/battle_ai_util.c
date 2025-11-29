@@ -220,7 +220,7 @@ u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicDa
     if (aiData->predictingMove && CanAiPredictMove())
     {
         // Ignore moves that don't do damage or only have priority one time
-        if (aiData->predictedMove[opposingBattler].power != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
+        if (GetMovePower(aiData->predictedMove[opposingBattler]) != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
             return aiData->predictedMove[opposingBattler];
     }
         
