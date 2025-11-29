@@ -622,7 +622,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ROLLOUT] =
     {
-        .battleScript = BattleScript_EffectRollout,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
     },
 
@@ -635,7 +635,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FURY_CUTTER] =
     {
-        .battleScript = BattleScript_EffectFuryCutter,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
     },
 
