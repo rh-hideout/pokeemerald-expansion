@@ -579,23 +579,6 @@ static bool8 TryGenerateWildMon(const struct WildPokemonInfo *wildMonInfo, enum 
     return TRUE;
 }
 
-void GenerateFollowMon(struct FollowMon *followMon, bool8 inWater)
-{
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    if (inWater) {
-        followMon->encounterIndex = ChooseWildMonIndex_Water() + 1;
-        followMon->timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        followMon->onWater = TRUE;
-
-    } else {
-        followMon->encounterIndex = ChooseWildMonIndex_Land() + 1;
-        followMon->timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        followMon->onWater = FALSE;
-    }
-
-    followMon->isShiny = ComputePlayerShinyOdds(Random32());
-}
-
 static u16 GenerateFishingWildMon(const struct WildPokemonInfo *wildMonInfo, u8 rod)
 {
     u8 wildMonIndex = ChooseWildMonIndex_Fishing(rod);

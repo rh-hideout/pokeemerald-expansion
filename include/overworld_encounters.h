@@ -10,18 +10,15 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
-// Could be reduced to an u8 but I prefer to leave some potential for more advanced features
 struct FollowMon
 {
+    u16 species;
+    u16 level:7;
     u16 isShiny:1;
-    u16 onWater:1;
-    u16 timeOfDay:2;
+    u16 isFemale:1;
+    u16 form:3;
     u16 age:4;
-    u16 encounterIndex:8;
-    u16 padding;
 };
-
-#define EMPTY_FOLLOWMON 0xFF;
 
 struct FollowMonData
 {
@@ -40,7 +37,7 @@ void CreateFollowMonEncounter(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u16 GetFollowMonObjectEventGraphicsId(u16 graphicsId);
+u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y);
 void ClearOverworldEncounterData(void);
 void RemoveOverworldEncounterObjects(void);
 bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);

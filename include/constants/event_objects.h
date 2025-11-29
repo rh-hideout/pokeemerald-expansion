@@ -278,16 +278,6 @@
 #define OBJ_EVENT_GFX_VAR_FIRST   OBJ_EVENT_GFX_VAR_0
 #define OBJ_EVENT_GFX_VAR_LAST    OBJ_EVENT_GFX_VAR_F
 
-#define OBJ_EVENT_GFX_FOLLOW_MON_0               512 //we want it to be a power of 2 to check followmon with bit masking
-#define OBJ_EVENT_GFX_FOLLOW_MON_1               (OBJ_EVENT_GFX_FOLLOW_MON_0 + 1)
-#define OBJ_EVENT_GFX_FOLLOW_MON_2               (OBJ_EVENT_GFX_FOLLOW_MON_0 + 2)
-#define OBJ_EVENT_GFX_FOLLOW_MON_3               (OBJ_EVENT_GFX_FOLLOW_MON_0 + 3)
-#define OBJ_EVENT_GFX_FOLLOW_MON_4               (OBJ_EVENT_GFX_FOLLOW_MON_0 + 4)
-#define OBJ_EVENT_GFX_FOLLOW_MON_5               (OBJ_EVENT_GFX_FOLLOW_MON_0 + 5)
-
-#define OBJ_EVENT_GFX_FOLLOW_MON_FIRST           OBJ_EVENT_GFX_FOLLOW_MON_0
-#define OBJ_EVENT_GFX_FOLLOW_MON_LAST            OBJ_EVENT_GFX_FOLLOW_MON_5
-
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
 #define OBJ_EVENT_MON_SHINY         (1u << 13)

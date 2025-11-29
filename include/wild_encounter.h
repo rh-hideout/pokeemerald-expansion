@@ -50,7 +50,6 @@ extern bool8 gIsFishingEncounter;
 extern bool8 gIsSurfingEncounter;
 extern u8 gChainFishingDexNavStreak;
 
-void GenerateFollowMon(struct FollowMon *followMon, bool8 inWater);
 u8 ChooseWildMonLevel(const struct WildPokemon *wildPokemon, u8 wildMonIndex, enum WildPokemonArea area);
 void DisableWildEncounters(bool8 disabled);
 u8 PickWildMonNature(void);
