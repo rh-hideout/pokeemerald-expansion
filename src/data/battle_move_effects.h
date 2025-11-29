@@ -261,13 +261,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .encourageEncore = TRUE,
     },
 
-    [EFFECT_CONFUSE] =
-    {
-        .battleScript = BattleScript_EffectConfuse,
-        .battleTvScore = 4,
-        .encourageEncore = TRUE,
-    },
-
     [EFFECT_ATTACK_UP_2] =
     {
         .battleScript = BattleScript_EffectAttackUp2,

@@ -815,10 +815,6 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             if (MoveHasAdditionalEffectWithChance(move, MOVE_EFFECT_FLINCH, 100))
                 baseFromEffect += 3;
             break;
-        case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
-                baseFromEffect += 2;
-            break;
         default:
             break;
         }
@@ -836,6 +832,11 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
             break;
         case MOVE_EFFECT_TOXIC:
             baseFromEffect += 5;
+            break;
+        case MOVE_EFFECT_CONFUSION:
+            baseFromEffect += 4;
+            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+                baseFromEffect += 2;
             break;
         }
 

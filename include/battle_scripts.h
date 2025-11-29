@@ -600,7 +600,6 @@ extern const u8 BattleScript_EffectHealBlock[];
 extern const u8 BattleScript_RecoilIfMiss[];
 extern const u8 BattleScript_EffectMist[];
 extern const u8 BattleScript_EffectFocusEnergy[];
-extern const u8 BattleScript_EffectConfuse[];
 extern const u8 BattleScript_EffectAttackUp2[];
 extern const u8 BattleScript_EffectDefenseUp2[];
 extern const u8 BattleScript_EffectSpeedUp2[];

@@ -1280,7 +1280,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
         if (IsBattlerTerrainAffected(battlerDef, abilityDef, aiData->holdEffects[battlerDef], STATUS_FIELD_MISTY_TERRAIN))
         {
-            if (IsNonVolatileStatusMove(move) || IsConfusionMoveEffect(moveEffect))
+            if (IsNonVolatileStatusMove(move) || GetMoveNonVolatileStatus(move) == MOVE_EFFECT_CONFUSION || IsConfusionMoveEffect(moveEffect))
                 RETURN_SCORE_MINUS(20);
         }
 
@@ -1750,7 +1750,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_CONFUSE:
         case EFFECT_SWAGGER:
         case EFFECT_FLATTER:
             if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
@@ -2980,6 +2979,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         if (!ShouldBurn(battlerAtk, battlerDef, aiData->abilities[battlerDef]))
             ADJUST_SCORE(-5);
         break;
+    case MOVE_EFFECT_CONFUSION:
+        if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
+        || !AI_CanConfuse(battlerAtk, battlerDef, aiData->abilities[battlerDef], BATTLE_PARTNER(battlerAtk), move, aiData->partnerMove))
+            ADJUST_SCORE(-10);
+        break;
     }
 
     // Choice items
@@ -4123,6 +4127,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case MOVE_EFFECT_BURN:
         IncreaseBurnScore(battlerAtk, battlerDef, move, &score);
         break;
+    case MOVE_EFFECT_CONFUSION:
+        IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
+        break;
     }
     // move effect checks
     switch (moveEffect)
@@ -4460,9 +4467,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
          || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_SCOPE_LENS
          || HasMoveWithFlag(battlerAtk, GetMoveCriticalHitStage))
             ADJUST_SCORE(GOOD_EFFECT);
-        break;
-    case EFFECT_CONFUSE:
-        IncreaseConfusionScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_SUBSTITUTE:
     case EFFECT_SHED_TAIL:
@@ -6021,6 +6025,14 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
         RETURN_SCORE_MINUS(20);    // No point in setting up if you will faint. Should just switch if possible..
     }
 
+    // Non-volatile statuses
+    switch(GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_CONFUSION:
+        ADJUST_SCORE(DECENT_EFFECT);
+        break;
+    }
+
     // check effects to prioritize first turn
     switch (GetMoveEffect(move))
     {
@@ -6042,7 +6054,6 @@ static s32 AI_ForceSetupFirstTurn(u32 battlerAtk, u32 battlerDef, u32 move, s32 
     case EFFECT_CONVERSION:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_FOCUS_ENERGY:
-    case EFFECT_CONFUSE:
     case EFFECT_ATTACK_UP_2:
     case EFFECT_DEFENSE_UP_2:
     case EFFECT_DEFENSE_UP_3:

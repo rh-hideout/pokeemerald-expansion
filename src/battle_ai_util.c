@@ -1867,14 +1867,25 @@ bool32 IsAromaVeilProtectedEffect(enum BattleMoveEffects moveEffect)
 
 bool32 IsNonVolatileStatusMove(u32 move)
 {
-    return GetMoveNonVolatileStatus(move) != MOVE_EFFECT_NONE;
+    switch (GetMoveNonVolatileStatus(move))
+    {
+    case MOVE_EFFECT_SLEEP:
+    case MOVE_EFFECT_POISON:
+    case MOVE_EFFECT_BURN:
+    case MOVE_EFFECT_FREEZE:
+    case MOVE_EFFECT_PARALYSIS:
+    case MOVE_EFFECT_TOXIC:
+    case MOVE_EFFECT_FROSTBITE:
+        return TRUE;
+    default:
+        return FALSE;
+    }
 }
 
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect)
 {
     switch (moveEffect)
     {
-    case EFFECT_CONFUSE:
     case EFFECT_SWAGGER:
     case EFFECT_FLATTER:
         return TRUE;
@@ -5676,7 +5687,7 @@ u32 IncreaseSubstituteMoveScore(u32 battlerAtk, u32 battlerDef, u32 move)
      || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_TOXIC)
      || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_PARALYSIS)
      || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_BURN)
-     || HasMoveWithEffect(battlerDef, EFFECT_CONFUSE)
+     || HasNonVolatileMoveEffect(battlerDef, MOVE_EFFECT_CONFUSION)
      || HasMoveWithEffect(battlerDef, EFFECT_LEECH_SEED))
         scoreIncrease += GOOD_EFFECT;
 
