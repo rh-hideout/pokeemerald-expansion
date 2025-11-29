@@ -495,7 +495,6 @@ SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
     GIVEN {
         ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
         ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
-        ASSUME(gItemsInfo[ITEM_VENUSAURITE].flingPower == 80);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
         OPPONENT(SPECIES_HIPPOWDON);
     } WHEN {
