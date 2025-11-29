@@ -1288,7 +1288,7 @@ void CreateMonWithGender(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV,
     else
         do
             personality = Random32();
-        while (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE);
+        while (GetGenderFromSpeciesAndPersonality(species, personality) != MON_MALE);
 
     CreateMon(mon, species, level, fixedIV, TRUE, personality, otIdType, fixedOtId);
 }
