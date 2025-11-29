@@ -1253,14 +1253,13 @@ static void TrySetBattleSeminarShow(void)
 
     dmgByMove[gMoveSelectionCursor[gBattlerAttacker]] = gBattleStruct->moveDamage[gBattlerTarget]; // TODO: Not sure
     currMoveSaved = gCurrentMove;
+    u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         gCurrentMove = gBattleMons[gBattlerAttacker].moves[i];
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
-            
             struct DamageContext ctx;
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
@@ -1274,8 +1273,6 @@ static void TrySetBattleSeminarShow(void)
             dmgByMove[i] = CalculateMoveDamage(&ctx);
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;
-            
-            gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
         }
     }
 
@@ -1305,6 +1302,7 @@ static void TrySetBattleSeminarShow(void)
     }
 
     gCurrentMove = currMoveSaved;
+    gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
 static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)
