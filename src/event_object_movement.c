@@ -11606,7 +11606,7 @@ bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, 
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11627,7 +11627,7 @@ bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent,
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11648,7 +11648,7 @@ bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
     if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsPokeGrass(MapGridGetMetatileBehaviorAt(x, y))
+        || !MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
