@@ -28,7 +28,6 @@ static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y);
 static u8 CountActiveObjectEvents();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
-static bool8 AreElevationsCompatible(u8 a, u8 b);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
 static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
 static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
@@ -589,18 +588,6 @@ static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater)
     }
     timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
     return gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-    
-}
-
-static bool8 AreElevationsCompatible(u8 a, u8 b)
-{
-    if (a == 0 || b == 0)
-        return TRUE;
-
-    if (a != b)
-        return FALSE;
-
-    return TRUE;
 }
 
 static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height)
