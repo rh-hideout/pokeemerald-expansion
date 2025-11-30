@@ -24,7 +24,7 @@ static u8 CountActiveFollowMon();
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
-static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y);
+static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y, bool32 *isShiny, bool32 *isFemale);
 static u8 CountActiveObjectEvents();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
@@ -37,7 +37,6 @@ static void OverworldEncounters_ProcessMonInteraction(void);
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
     u32 slot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
-    sFollowMonData.list[slot].isShiny = objectEvent->shiny;
 
     sFollowMonData.spawnCountdown += 60;
 }
@@ -59,6 +58,9 @@ void UpdateOverworldEncounters(void)
 
         return;
     }
+
+    bool32 isShiny = FALSE;
+    bool32 isFemale = FALSE;
 
     OverworldEncounters_ProcessMonInteraction();
 
@@ -96,7 +98,7 @@ void UpdateOverworldEncounters(void)
                 
                 struct ObjectEventTemplate objectEventTemplate = {
                     .localId = localId,
-                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y),
+                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &isShiny, &isFemale),
                     .x = x - MAP_OFFSET,
                     .y = y - MAP_OFFSET,
                     .elevation = MapGridGetElevationAt(x, y),
@@ -109,10 +111,6 @@ void UpdateOverworldEncounters(void)
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
                 gObjectEvents[objectEventId].range.rangeX = 8;
                 gObjectEvents[objectEventId].range.rangeY = 8;
-
-                // Only used for save/load as well as loading encounters, 
-                // Most of the time, followmon data is tracked in sFollowMonData
-                gObjectEvents[objectEventId].shiny = followMon->isShiny;
 
                 // Hide reflections for spawns in water
                 // (It just looks weird)
@@ -138,7 +136,7 @@ void UpdateOverworldEncounters(void)
 
         if (sFollowMonData.list[spawnSlot].species != SPECIES_NONE)
         {
-            if(sFollowMonData.list[spawnSlot].isShiny)
+            if (isShiny)
             {
                 PlaySE(SE_SHINY);
                 spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
@@ -303,23 +301,20 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
-void CreateFollowMonEncounter(void) {
-    struct ObjectEvent *curObject;
+void CreateFollowMonEncounter(void)
+{
     u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    struct ObjectEvent *object = &gObjectEvents[objEventId];
 
-    if (objEventId < OBJECT_EVENTS_COUNT)
-    {
-        curObject = &gObjectEvents[objEventId];
-        if (!IsGeneratedOverworldEncounter(curObject))
-           return;
-    }
-    else
-    {
+    if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
-    }
 
-    u32 slot = LOCALID_OW_ENCOUNTER_END - gObjectEvents[objEventId].localId;
-    bool32 shiny = curObject->shiny;
+    if (!IsGeneratedOverworldEncounter(object))
+        return;
+
+    u32 slot = LOCALID_OW_ENCOUNTER_END - object->localId;
+    bool32 shiny = OW_SHINY(object);
+    bool32 isFemale = OW_FEMALE(object);
 
     ZeroEnemyPartyMons();
     CreateMonWithGender(
@@ -329,7 +324,7 @@ void CreateFollowMonEncounter(void) {
         USE_RANDOM_IVS,
         OT_ID_PLAYER_ID,
         0,
-        sFollowMonData.list[slot].isFemale
+        isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
 }
@@ -439,15 +434,15 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
     sFollowMonData.list[spawnSlot].age = 0;
 }
 
-u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y)
+u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, bool32 *isShiny, bool32 *isFemale)
 {
-    u16 species = GetFollowMonSpecies(spawnSlot, x, y);
+    u16 species = GetFollowMonSpecies(spawnSlot, x, y, isShiny, isFemale);
     u16 graphicsId = species + OBJ_EVENT_MON;
 
-    if (sFollowMonData.list[spawnSlot].isFemale)
+    if (*isFemale)
         graphicsId += OBJ_EVENT_MON_FEMALE;
 
-    if (sFollowMonData.list[spawnSlot].isShiny)
+    if (*isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
     return graphicsId;
@@ -464,7 +459,7 @@ void ClearOverworldEncounterData(void)
     }
 }
 
-static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
+static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y, bool32 *isShiny, bool32 *isFemale)
 {
     const struct WildPokemonInfo *wildMonInfo;
     u32 species = SPECIES_NONE;
@@ -495,11 +490,11 @@ static u32 GetFollowMonSpecies(u32 spawnSlot, s32 x, s32 y)
 
     sFollowMonData.list[spawnSlot].species = species;
     sFollowMonData.list[spawnSlot].level = level;
-    sFollowMonData.list[spawnSlot].isShiny = ComputePlayerShinyOdds(personality);
+    *isShiny = ComputePlayerShinyOdds(personality);
     if (GetGenderFromSpeciesAndPersonality(species, personality) == MON_FEMALE)
-        sFollowMonData.list[spawnSlot].isFemale = TRUE;
+        *isFemale = TRUE;
     else
-        sFollowMonData.list[spawnSlot].isFemale = FALSE;
+        *isFemale = FALSE;
     
     return species;
 }
