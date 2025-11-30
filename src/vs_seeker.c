@@ -15,6 +15,7 @@
 #include "battle_setup.h"
 #include "random.h"
 #include "field_player_avatar.h"
+#include "fieldmap.h"
 #include "vs_seeker.h"
 #include "menu.h"
 #include "string_util.h"
@@ -390,8 +391,8 @@ static void GatherNearbyTrainerInfo(void)
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].localId = templates[objectEventIdx].localId;
         TryGetObjectEventIdByLocalIdAndMap(templates[objectEventIdx].localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, &objectEventId);
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].objectEventId = objectEventId;
-        sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - 7;
-        sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - 7;
+        sVsSeeker->trainerInfo[vsSeekerObjectIdx].xCoord = gObjectEvents[objectEventId].currentCoords.x - MAP_OFFSET;
+        sVsSeeker->trainerInfo[vsSeekerObjectIdx].yCoord = gObjectEvents[objectEventId].currentCoords.y - MAP_OFFSET;
         sVsSeeker->trainerInfo[vsSeekerObjectIdx].graphicsId = templates[objectEventIdx].graphicsId;
         vsSeekerObjectIdx++;
     }
@@ -766,8 +767,8 @@ static bool8 IsTrainerVisibleOnScreen(struct VsSeekerTrainerInfo * trainerInfo)
     s16 y;
 
     PlayerGetDestCoords(&x, &y);
-    x -= 7;
-    y -= 7;
+    x -= MAP_OFFSET;
+    y -= MAP_OFFSET;
 
     if (   x - 7 <= trainerInfo->xCoord
         && x + 7 >= trainerInfo->xCoord
