@@ -3,8 +3,8 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_HYPNOSIS) == EFFECT_NON_VOLATILE_STATUS);
-    ASSUME(GetMoveNonVolatileStatus(MOVE_HYPNOSIS) == MOVE_EFFECT_SLEEP);
+    ASSUME(GetMoveEffect(MOVE_HYPNOSIS) == EFFECT_MAIN_MOVE_EFFECT);
+    ASSUME(GetMoveMainMoveEffect(MOVE_HYPNOSIS) == MOVE_EFFECT_SLEEP);
 }
 
 DOUBLE_BATTLE_TEST("Sweet Veil prevents Sleep on partner - right target")

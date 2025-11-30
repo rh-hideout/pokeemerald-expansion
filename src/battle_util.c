@@ -64,7 +64,7 @@ static bool32 TryRemoveScreens(u32 battler);
 static bool32 IsUnnerveAbilityOnOpposingSide(u32 battler);
 static u32 GetFlingPowerFromItemId(u32 itemId);
 static void SetRandomMultiHitCounter();
-static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, enum Ability abilityDef, enum Ability abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
+static bool32 IsMainMoveEffectBlocked(u32 battlerDef, enum Ability abilityDef, enum Ability abilityAffected, const u8 *battleScript, enum FunctionCallOption option);
 static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum FunctionCallOption option);
 static bool32 IsOpposingSideEmpty(u32 battler);
 static void ResetParadoxWeatherStat(u32 battler);
@@ -5397,7 +5397,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_POISON_PUPPETEER:
             if (gBattleMons[gBattlerAttacker].species == SPECIES_PECHARUNT
              && gBattleStruct->poisonPuppeteerConfusion == TRUE
-             && CanBeConfused(gBattlerTarget))
+             && CanBeConfused(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
             {
                 gBattleStruct->poisonPuppeteerConfusion = FALSE;
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
@@ -5477,7 +5477,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                 gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
-            if (CanSetNonVolatileStatus(
+            if (CanSetMainMoveEffect(
                     gBattlerTarget,
                     gBattlerAttacker,
                     gLastUsedAbility,
@@ -5507,7 +5507,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             if (B_SYNCHRONIZE_TOXIC < GEN_5 && gBattleStruct->synchronizeMoveEffect == MOVE_EFFECT_TOXIC)
                 gBattleStruct->synchronizeMoveEffect = MOVE_EFFECT_POISON;
 
-            if (CanSetNonVolatileStatus(
+            if (CanSetMainMoveEffect(
                     gBattlerAttacker,
                     gBattlerTarget,
                     gLastUsedAbility,
@@ -5964,7 +5964,7 @@ bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, enum 
         gBattleStruct->sleepClauseNotBlocked = TRUE;
 
     bool32 effect = FALSE;
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             ABILITY_NONE, // attacker ability does not matter
@@ -5979,7 +5979,7 @@ bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, enum 
 
 bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef)
 {
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             abilityAtk,
@@ -5993,7 +5993,7 @@ bool32 CanBePoisoned(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, en
 // TODO: check order of battlerAtk and battlerDef
 bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             ABILITY_NONE, // attacker ability does not matter
@@ -6006,7 +6006,7 @@ bool32 CanBeBurned(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 
 bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             ABILITY_NONE, // attacker ability does not matter
@@ -6019,7 +6019,7 @@ bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             ABILITY_NONE, // attacker ability does not matter
@@ -6032,7 +6032,7 @@ bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 // Unused, technically also redundant because it is just a copy of CanBeFrozen
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    if (CanSetNonVolatileStatus(
+    if (CanSetMainMoveEffect(
             battlerAtk,
             battlerDef,
             ABILITY_NONE, // attacker ability does not matter
@@ -6043,7 +6043,7 @@ bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
     return FALSE;
 }
 
-bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum FunctionCallOption option)
+bool32 CanSetMainMoveEffect(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect effect, enum FunctionCallOption option)
 {
     const u8 *battleScript = NULL;
     u32 sideBattler = ABILITY_NONE;
@@ -6162,65 +6162,83 @@ bool32 CanSetNonVolatileStatus(u32 battlerAtk, u32 battlerDef, enum Ability abil
             battleScript = BattleScript_NotAffected;
         }
         break;
+    case MOVE_EFFECT_CONFUSION:
+        if (abilityDef == ABILITY_OWN_TEMPO)
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_OwnTempoPrevents;
+        }
+        else if (GetBattlerVolatile(battlerDef, VOLATILE_CONFUSION))
+        {
+            battleScript = BattleScript_AlreadyConfused;
+        }
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
+        {
+            battleScript = BattleScript_MistyTerrainPrevents;
+        }
+        else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+        {
+            battleScript = BattleScript_SafeguardProtected;
+        }
     default:
         break;
     }
 
-    if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
+    if (IsMainMoveEffectBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
         return FALSE;
 
     // Checks that apply to all non volatile statuses
-    if (abilityDef == ABILITY_COMATOSE
-     || abilityDef == ABILITY_PURIFYING_SALT)
+    if (effect < MOVE_EFFECT_CONFUSION)
     {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
-    {
-        battleScript = BattleScript_MistyTerrainPrevents;
-    }
-    else if (IsLeafGuardProtected(battlerDef, abilityDef))
-    {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if (IsShieldsDownProtected(battlerDef, abilityDef))
-    {
-        abilityAffected = TRUE;
-        battleScript = BattleScript_AbilityProtectsDoesntAffect;
-    }
-    else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
-    {
-        abilityAffected = TRUE;
-        battlerDef = sideBattler - 1;
-        abilityDef = ABILITY_FLOWER_VEIL;
-        battleScript = BattleScript_FlowerVeilProtects;
-    }
-    else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
-    {
-        battleScript = BattleScript_SafeguardProtected;
-    }
-    else if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
-    {
-        battleScript = BattleScript_ButItFailed;
-    }
+        if (abilityDef == ABILITY_COMATOSE
+        || abilityDef == ABILITY_PURIFYING_SALT)
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if (IsBattlerTerrainAffected(battlerDef, abilityDef, GetBattlerHoldEffect(battlerDef), STATUS_FIELD_MISTY_TERRAIN))
+        {
+            battleScript = BattleScript_MistyTerrainPrevents;
+        }
+        else if (IsLeafGuardProtected(battlerDef, abilityDef))
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if (IsShieldsDownProtected(battlerDef, abilityDef))
+        {
+            abilityAffected = TRUE;
+            battleScript = BattleScript_AbilityProtectsDoesntAffect;
+        }
+        else if ((sideBattler = IsFlowerVeilProtected(battlerDef)))
+        {
+            abilityAffected = TRUE;
+            battlerDef = sideBattler - 1;
+            abilityDef = ABILITY_FLOWER_VEIL;
+            battleScript = BattleScript_FlowerVeilProtects;
+        }
+        else if (gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD)
+        {
+            battleScript = BattleScript_SafeguardProtected;
+        }
+        else if (gBattleMons[battlerDef].status1 & STATUS1_ANY)
+        {
+            battleScript = BattleScript_ButItFailed;
+        }
 
-    if (IsNonVolatileStatusBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
-        return FALSE;
+        if (IsMainMoveEffectBlocked(battlerDef, abilityDef, abilityAffected, battleScript, option))
+            return FALSE;
+    }
 
     return TRUE;
 }
 
-static bool32 IsNonVolatileStatusBlocked(u32 battlerDef, enum Ability abilityDef, enum Ability abilityAffected, const u8 *battleScript, enum FunctionCallOption option)
+static bool32 IsMainMoveEffectBlocked(u32 battlerDef, enum Ability abilityDef, enum Ability abilityAffected, const u8 *battleScript, enum FunctionCallOption option)
 {
     if (battleScript != NULL)
     {
         if (option == RUN_SCRIPT)
         {
-            if (battleScript != BattleScript_NotAffected)
-                gBattleStruct->moveResultFlags[battlerDef] |= MOVE_RESULT_FAILED;
-
             if (abilityAffected)
             {
                 gLastUsedAbility = abilityDef;
@@ -6256,14 +6274,17 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum Func
     return FALSE;
 }
 
-bool32 CanBeConfused(u32 battler)
+bool32 CanBeConfused(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    enum Ability ability = GetBattlerAbility(battler);
-    if (gBattleMons[battler].volatiles.confusionTurns > 0
-     || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), STATUS_FIELD_MISTY_TERRAIN)
-     || IsAbilityAndRecord(battler, ability, ABILITY_OWN_TEMPO))
-        return FALSE;
-    return TRUE;
+    if (CanSetMainMoveEffect(
+            battlerAtk,
+            battlerDef,
+            ABILITY_NONE, // attacker ability does not matter
+            abilityDef,
+            MOVE_EFFECT_CONFUSION,
+            CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
 // second argument is 1/X of current hp compared to max hp
@@ -10708,10 +10729,10 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     bool32 effect = FALSE;
     enum Ability ability = ABILITY_NONE;
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
-    u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
+    u32 mainMoveEffect = GetMoveMainMoveEffect(move);
 
     if ((gBattleMons[battlerDef].volatiles.lockOn && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
-     || (GetGenConfig(GEN_CONFIG_TOXIC_NEVER_MISS) >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
+     || (GetGenConfig(GEN_CONFIG_TOXIC_NEVER_MISS) >= GEN_6 && mainMoveEffect == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
         effect = TRUE;

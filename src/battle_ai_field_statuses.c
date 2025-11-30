@@ -383,7 +383,7 @@ static enum FieldEffectOutcome BenefitsFromMistyTerrain(u32 battler)
         return FIELD_EFFECT_POSITIVE;
 
     if ((grounded || allyGrounded)
-     && (HasNonVolatileMoveEffect(LEFT_FOE(battler), MOVE_EFFECT_SLEEP) || HasNonVolatileMoveEffect(RIGHT_FOE(battler), MOVE_EFFECT_SLEEP)))
+     && (HasMainMoveEffect(LEFT_FOE(battler), MOVE_EFFECT_SLEEP) || HasMainMoveEffect(RIGHT_FOE(battler), MOVE_EFFECT_SLEEP)))
         return FIELD_EFFECT_POSITIVE;
 
     if (grounded && (gBattleMons[battler].status1 & STATUS1_SLEEP || gBattleMons[battler].volatiles.yawn))
@@ -493,5 +493,3 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
 
     return FIELD_EFFECT_POSITIVE;
 }
-
-

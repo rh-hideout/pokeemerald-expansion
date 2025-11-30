@@ -35,7 +35,7 @@ SINGLE_BATTLE_TEST("Refresh does not cure the user of Freeze")
         TURN { MOVE(player, MOVE_REFRESH); }
     } SCENE {
         MESSAGE("Wobbuffet used Refresh!");
-        NONE_OF { 
+        NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_REFRESH, player);
             STATUS_ICON(player, none: TRUE); }
         MESSAGE("But it failed!");
@@ -45,8 +45,8 @@ SINGLE_BATTLE_TEST("Refresh does not cure the user of Freeze")
 SINGLE_BATTLE_TEST("Refresh does not cure sleep when used by Sleep Talk")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
+        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_SLEEP_TALK) == EFFECT_SLEEP_TALK);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SLEEP_TALK, MOVE_REFRESH); }
@@ -61,7 +61,7 @@ SINGLE_BATTLE_TEST("Refresh does not cure sleep when used by Sleep Talk")
         MESSAGE("The opposing Wobbuffet used Sleep Talk!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, opponent);
         MESSAGE("The opposing Wobbuffet used Refresh!");
-        NONE_OF { 
+        NONE_OF {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_REFRESH, player);
             STATUS_ICON(player, none: TRUE); }
         MESSAGE("But it failed!");

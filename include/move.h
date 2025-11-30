@@ -148,7 +148,7 @@ struct MoveInfo
         u32 damagePercentage;
         u32 absorbPercentage;
         u32 recoilPercentage;
-        u32 nonVolatileStatus;
+        u32 mainMoveEffect;
         u32 overwriteAbility;
     } argument;
 
@@ -546,15 +546,15 @@ static inline u32 GetMoveRecoil(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.recoilPercentage;
 }
 
-static inline u32 GetMoveNonVolatileStatus(u32 move)
+static inline u32 GetMoveMainMoveEffect(u32 move)
 {
     move = SanitizeMoveId(move);
     switch(GetMoveEffect(move))
     {
-    case EFFECT_NON_VOLATILE_STATUS:
+    case EFFECT_MAIN_MOVE_EFFECT:
     case EFFECT_YAWN:
     case EFFECT_DARK_VOID:
-        return gMovesInfo[move].argument.nonVolatileStatus;
+        return gMovesInfo[move].argument.mainMoveEffect;
     default:
         return MOVE_EFFECT_NONE;
     }

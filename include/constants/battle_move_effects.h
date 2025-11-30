@@ -5,7 +5,7 @@ enum __attribute__((packed)) BattleMoveEffects
 {
     EFFECT_PLACEHOLDER,
     EFFECT_HIT,
-    EFFECT_NON_VOLATILE_STATUS,
+    EFFECT_MAIN_MOVE_EFFECT,
     EFFECT_ABSORB,
     EFFECT_EXPLOSION,
     EFFECT_MISTY_EXPLOSION, // Same as EFFECT_EXPLOSION but it's boosted on Misty Terrain
@@ -43,7 +43,6 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_RECOIL_IF_MISS,
     EFFECT_MIST,
     EFFECT_FOCUS_ENERGY,
-    EFFECT_CONFUSE,
     EFFECT_ATTACK_UP_2,
     EFFECT_DEFENSE_UP_2,
     EFFECT_SPEED_UP_2,

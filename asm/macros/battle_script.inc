@@ -800,7 +800,7 @@
 	2:
 	.endm
 
-	.macro trynonvolatilestatus
+	.macro trymainmoveeffect
 	.byte 0x8d
 	.endm
 
@@ -831,9 +831,9 @@
 	.4byte \failInstr
 	.endm
 
-	.macro checknonvolatiletrigger nonVolatile:req, failInstr:req
+	.macro checkmaineffecttrigger effect:req, failInstr:req
 	.byte 0x94
-	.2byte \nonVolatile
+	.2byte \effect
 	.4byte \failInstr
 	.endm
 
@@ -1338,7 +1338,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro setnonvolatilestatus trigger:req
+	.macro setmainmoveeffect trigger:req
 	.byte 0xfd
 	.byte \trigger
 	.endm

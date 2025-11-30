@@ -22,8 +22,8 @@ SINGLE_BATTLE_TEST("Limber prevents paralysis")
 SINGLE_BATTLE_TEST("Limber prevents paralysis from Thunder Wave")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_NON_VOLATILE_STATUS);
-        ASSUME(GetMoveNonVolatileStatus(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
+        ASSUME(GetMoveEffect(MOVE_THUNDER_WAVE) == EFFECT_MAIN_MOVE_EFFECT);
+        ASSUME(GetMoveMainMoveEffect(MOVE_THUNDER_WAVE) == MOVE_EFFECT_PARALYSIS);
         PLAYER(SPECIES_PERSIAN) { Ability(ABILITY_LIMBER); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
