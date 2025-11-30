@@ -6773,6 +6773,7 @@ BattleScript_DeltaStreamActivates::
 	printstring STRINGID_MYSTERIOUSAIRCURRENT
 	waitstate
 	playanimation BS_ATTACKER, B_ANIM_STRONG_WINDS
+	call BattleScript_ActivateWeatherAbilities
 	end3
 
 BattleScript_ProtosynthesisActivates::
