@@ -89,7 +89,7 @@ SINGLE_BATTLE_TEST("Encore overrides the chosen move if it occurs first")
     }
 }
 
-SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Encore")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon are immune to Encore")
     }
 }
 
-SINGLE_BATTLE_TEST("(DYNAMAX) Dynamaxed Pokemon can be encored immediately after reverting")
+SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon can be encored immediately after reverting")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(50); }; // yes, this speed is necessary

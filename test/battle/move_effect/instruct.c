@@ -306,3 +306,21 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected by Rage Powder after inst
         HP_BAR(opponentLeft);
     }
 }
+
+DOUBLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are immune to Instruct")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX, target: opponentLeft);
+               MOVE(playerRight, MOVE_INSTRUCT, target: playerLeft);
+        }
+    } SCENE {
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("Wynaut used Instruct!");
+        MESSAGE("But it failed!");
+    }
+}

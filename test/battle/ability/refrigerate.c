@@ -142,5 +142,5 @@ TO_DO_BATTLE_TEST("Refrigerate doesn't affect Tera Starstorm's type");
 TO_DO_BATTLE_TEST("Refrigerate doesn't affect Max Strike's type");
 TO_DO_BATTLE_TEST("Refrigerate doesn't affect Terrain Pulse's type");
 TO_DO_BATTLE_TEST("Refrigerate doesn't affect damaging Z-Move types");
-TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate turns Max Strike into Max Hailstorm when not used by Gigantamax Lapras");
-//TO_DO_BATTLE_TEST("(DYNAMAX) Refrigerate doesn't turn Max Strike into Max Hailstorm when used by Gigantamax Lapras, instead becoming G-Max Resonance"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
+TO_DO_BATTLE_TEST("Dynamax: Refrigerate turns Max Strike into Max Hailstorm when not used by Gigantamax Lapras");
+//TO_DO_BATTLE_TEST("Dynamax: Refrigerate doesn't turn Max Strike into Max Hailstorm when used by Gigantamax Lapras, instead becoming G-Max Resonance"); // Marked in Bulbapedia as "needs research", so this assumes that it behaves like Pixilate.
