@@ -309,7 +309,7 @@ static u8 GetFloorId(void)
     return gMapHeader.mapLayoutId - LAYOUT_TRAINER_HILL_1F;
 }
 
-u8 GetTrainerHillOpponentClass(u16 trainerId)
+enum TrainerClassID GetTrainerHillOpponentClass(u16 trainerId)
 {
     u8 id = trainerId - 1;
 
@@ -707,17 +707,17 @@ bool32 LoadTrainerHillFloorObjectEventScripts(void)
     return TRUE;
 }
 
-static u16 GetMetatileForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floorWidth is always 16
+static u16 GetMapDataForFloor(u8 floorId, u32 x, u32 y, u32 floorWidth) // floorWidth is always 16
 {
     bool8 impassable;
-    u16 metatile;
+    u16 metatileId;
     u16 elevation;
 
     impassable = (sHillData->floors[floorId].map.collisionData[y] >> (15 - x) & 1);
-    metatile = sHillData->floors[floorId].map.metatileData[floorWidth * y + x] + NUM_METATILES_IN_PRIMARY;
-    elevation = 3 << MAPGRID_ELEVATION_SHIFT;
+    metatileId = sHillData->floors[floorId].map.metatileData[floorWidth * y + x] + NUM_METATILES_IN_PRIMARY;
+    elevation = PACK_ELEVATION(3);
 
-    return ((impassable << MAPGRID_COLLISION_SHIFT) & MAPGRID_COLLISION_MASK) | elevation | (metatile & MAPGRID_METATILE_ID_MASK);
+    return PACK_COLLISION(impassable) | elevation | PACK_METATILE(metatileId);
 }
 
 void GenerateTrainerHillFloorLayout(u16 *mapArg)
@@ -762,7 +762,7 @@ void GenerateTrainerHillFloorLayout(u16 *mapArg)
     for (y = 0; y < HILL_FLOOR_HEIGHT_MAIN; y++)
     {
         for (x = 0; x < HILL_FLOOR_WIDTH; x++)
-            dst[x] = GetMetatileForFloor(mapId, x, y, HILL_FLOOR_WIDTH);
+            dst[x] = GetMapDataForFloor(mapId, x, y, HILL_FLOOR_WIDTH);
         dst += 31;
     }
 

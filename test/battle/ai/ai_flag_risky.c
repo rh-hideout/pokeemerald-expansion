@@ -10,8 +10,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: AI will blindly Mirror Coat against specia
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
-        ASSUME(gSpeciesInfo[SPECIES_GROVYLE].baseSpAttack == 85);
-        ASSUME(gSpeciesInfo[SPECIES_GROVYLE].baseAttack == 65);
+        ASSUME(GetSpeciesBaseSpAttack(SPECIES_GROVYLE) == 85);
+        ASSUME(GetSpeciesBaseAttack(SPECIES_GROVYLE) == 65);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiRiskyFlag);
         PLAYER(SPECIES_GROVYLE) { Level(20); Moves(MOVE_ENERGY_BALL); }
         OPPONENT(SPECIES_CASTFORM) { Level(20); Moves(MOVE_SCRATCH, MOVE_MIRROR_COAT); }
@@ -29,8 +29,8 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: AI will blindly Counter against physical a
 
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_COUNTER) == EFFECT_COUNTER);
-        ASSUME(gSpeciesInfo[SPECIES_MARSHTOMP].baseAttack == 85);
-        ASSUME(gSpeciesInfo[SPECIES_MARSHTOMP].baseSpAttack == 60);
+        ASSUME(GetSpeciesBaseAttack(SPECIES_MARSHTOMP) == 85);
+        ASSUME(GetSpeciesBaseSpAttack(SPECIES_MARSHTOMP) == 60);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiRiskyFlag);
         PLAYER(SPECIES_MARSHTOMP) { Level(20); Moves(MOVE_WATERFALL); }
         OPPONENT(SPECIES_CASTFORM) { Level(20); Moves(MOVE_SCRATCH, MOVE_COUNTER); }
@@ -64,13 +64,14 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_RISKY: Mid-battle switches prioritize offensive o
     PARAMETRIZE { aiRiskyFlag = AI_FLAG_RISKY; }
 
     GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | aiRiskyFlag);
+        ASSUME(P_UPDATED_STATS >= GEN_7); // Swellow's 50 Sp.Atk in Gen 6 instead of the current 75 causes the AI to switch to Electrode
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT | aiRiskyFlag);
         PLAYER(SPECIES_SWELLOW) { Level(30); Moves(MOVE_WING_ATTACK, MOVE_BOOMBURST); Speed(5); }
         OPPONENT(SPECIES_PONYTA) { Level(1); Moves(MOVE_NONE); Speed(4); } // Forces switchout
         OPPONENT(SPECIES_ARON) { Level(30); Moves(MOVE_HEADBUTT); Speed(4); SpDefense(41); } // Mid battle, AI sends out Aron
         OPPONENT(SPECIES_ELECTRODE) { Level(30); Moves(MOVE_CHARGE_BEAM); Speed(6); Ability(ABILITY_STATIC); }
     } WHEN {
-            TURN { MOVE(player, MOVE_WING_ATTACK); EXPECT_SWITCH(opponent, aiRiskyFlag? 2 : 1); }
+        TURN { MOVE(player, MOVE_WING_ATTACK); EXPECT_SWITCH(opponent, aiRiskyFlag? 2 : 1); }
     }
 }
 

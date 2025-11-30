@@ -11,6 +11,7 @@
 #include "sprite.h"
 #include "task.h"
 #include "trig.h"
+#include "test_runner.h"
 #include "util.h"
 #include "data.h"
 #include "item.h"
@@ -544,6 +545,38 @@ const struct SpriteTemplate gBallSpriteTemplates[POKEBALL_COUNT] =
 #define tBattler         data[3]
 #define tOpponentBattler data[4]
 
+const u16 gBallItemIds[POKEBALL_COUNT] =
+{
+    [BALL_STRANGE] = ITEM_STRANGE_BALL,
+    [BALL_POKE]    = ITEM_POKE_BALL,
+    [BALL_GREAT]   = ITEM_GREAT_BALL,
+    [BALL_ULTRA]   = ITEM_ULTRA_BALL,
+    [BALL_MASTER]  = ITEM_MASTER_BALL,
+    [BALL_PREMIER] = ITEM_PREMIER_BALL,
+    [BALL_HEAL]    = ITEM_HEAL_BALL,
+    [BALL_NET]     = ITEM_NET_BALL,
+    [BALL_NEST]    = ITEM_NEST_BALL,
+    [BALL_DIVE]    = ITEM_DIVE_BALL,
+    [BALL_DUSK]    = ITEM_DUSK_BALL,
+    [BALL_TIMER]   = ITEM_TIMER_BALL,
+    [BALL_QUICK]   = ITEM_QUICK_BALL,
+    [BALL_REPEAT]  = ITEM_REPEAT_BALL,
+    [BALL_LUXURY]  = ITEM_LUXURY_BALL,
+    [BALL_LEVEL]   = ITEM_LEVEL_BALL,
+    [BALL_LURE]    = ITEM_LURE_BALL,
+    [BALL_MOON]    = ITEM_MOON_BALL,
+    [BALL_FRIEND]  = ITEM_FRIEND_BALL,
+    [BALL_LOVE]    = ITEM_LOVE_BALL,
+    [BALL_FAST]    = ITEM_FAST_BALL,
+    [BALL_HEAVY]   = ITEM_HEAVY_BALL,
+    [BALL_DREAM]   = ITEM_DREAM_BALL,
+    [BALL_SAFARI]  = ITEM_SAFARI_BALL,
+    [BALL_SPORT]   = ITEM_SPORT_BALL,
+    [BALL_PARK]    = ITEM_PARK_BALL,
+    [BALL_BEAST]   = ITEM_BEAST_BALL,
+    [BALL_CHERISH] = ITEM_CHERISH_BALL,
+};
+
 u8 DoPokeballSendOutAnimation(u32 battler, s16 pan, u8 kindOfThrow)
 {
     u8 taskId;
@@ -565,8 +598,8 @@ static void Task_DoPokeballSendOutAnim(u8 taskId)
 {
     u32 throwCaseId, ballId, battler, ballSpriteId;
     bool32 notSendOut = FALSE;
-    u32 throwXoffset = (B_ENEMY_THROW_BALLS >= GEN_6) ? 24 : 0;
-    s32 throwYoffset = (B_ENEMY_THROW_BALLS >= GEN_6) ? -16 : 24;
+    u32 throwXoffset = (B_ENEMY_THROW_BALLS >= GEN_6 && !gTestRunnerHeadless) ? 24 : 0;
+    s32 throwYoffset = (B_ENEMY_THROW_BALLS >= GEN_6 && !gTestRunnerHeadless) ? -16 : 24;
 
     if (gTasks[taskId].tFrames == 0)
     {
@@ -643,7 +676,7 @@ static inline void DoPokeballSendOutSoundEffect(u32 battler)
 
 static inline void *GetOpponentMonSendOutCallback(void)
 {
-    return (B_ENEMY_THROW_BALLS >= GEN_6) ? SpriteCB_MonSendOut_1 : SpriteCB_OpponentMonSendOut;
+    return (B_ENEMY_THROW_BALLS >= GEN_6 && !gTestRunnerHeadless) ? SpriteCB_MonSendOut_1 : SpriteCB_OpponentMonSendOut;
 }
 
 // This sequence of functions is very similar to those that get run when
@@ -1080,8 +1113,11 @@ static void HandleBallAnimEnd(struct Sprite *sprite)
         AnimateSprite(&gSprites[gBattlerSpriteIds[battler]]);
         gSprites[gBattlerSpriteIds[battler]].data[1] = 0x1000;
     }
+    else
+    {
+        gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
+    }
 
-    gSprites[gBattlerSpriteIds[battler]].invisible = FALSE;
     if (sprite->animEnded)
         sprite->invisible = TRUE;
     if (gSprites[gBattlerSpriteIds[battler]].affineAnimEnded)
@@ -1170,7 +1206,7 @@ static void SpriteCB_MonSendOut_2(struct Sprite *sprite)
     u32 r7;
     bool32 rightPosition = (IsBattlerPlayer(sprite->sBattler)) ? B_POSITION_PLAYER_RIGHT : B_POSITION_OPPONENT_RIGHT;
 
-    if (HIBYTE(sprite->data[7]) >= 35 && HIBYTE(sprite->data[7]) < 80)
+    if (HIBYTE(sprite->data[7]) >= 35 && HIBYTE(sprite->data[7]) < 80 && !gTestRunnerHeadless)
     {
         s16 r4;
 
@@ -1211,7 +1247,8 @@ static void SpriteCB_MonSendOut_2(struct Sprite *sprite)
             sprite->data[0] = 0;
 
             if (IsDoubleBattle() && gBattleSpritesDataPtr->animationData->introAnimActive
-             && sprite->sBattler == GetBattlerAtPosition(rightPosition))
+             && sprite->sBattler == GetBattlerAtPosition(rightPosition)
+             && !gTestRunnerHeadless)
                 sprite->callback = SpriteCB_ReleaseMon2FromBall;
             else
                 sprite->callback = SpriteCB_ReleaseMonFromBall;
@@ -1234,12 +1271,15 @@ static void SpriteCB_ReleaseMon2FromBall(struct Sprite *sprite)
 
 static void SpriteCB_OpponentMonSendOut(struct Sprite *sprite)
 {
+    if (gTestRunnerHeadless)
+        sprite->data[0] = 15;
     sprite->data[0]++;
     if (sprite->data[0] > 15)
     {
         sprite->data[0] = 0;
         if (IsDoubleBattle() && gBattleSpritesDataPtr->animationData->introAnimActive
-         && sprite->sBattler == GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT))
+         && sprite->sBattler == GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT)
+         && !gTestRunnerHeadless)
             sprite->callback = SpriteCB_ReleaseMon2FromBall;
         else
             sprite->callback = SpriteCB_ReleaseMonFromBall;
@@ -1499,7 +1539,7 @@ void StartHealthboxSlideIn(u8 battler)
         healthboxSprite->y2 = -healthboxSprite->y2;
     }
     gSprites[healthboxSprite->data[5]].callback(&gSprites[healthboxSprite->data[5]]);
-    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
+    if (GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT && !gTestRunnerHeadless)
         healthboxSprite->callback = SpriteCB_HealthboxSlideInDelayed;
 }
 
@@ -1567,7 +1607,7 @@ void LoadBallGfx(u8 ballId)
     case BALL_REPEAT:
     case BALL_SAFARI:
         var = GetSpriteTileStartByTag(gBallSpriteSheets[ballId].tag);
-        LZDecompressVram(gOpenPokeballGfx, (void *)(OBJ_VRAM0 + 0x100 + var * 32));
+        DecompressDataWithHeaderVram(gOpenPokeballGfx, (void *)(OBJ_VRAM0 + 0x100 + var * 32));
         break;
     }
 }

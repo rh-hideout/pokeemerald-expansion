@@ -44,7 +44,8 @@ SINGLE_BATTLE_TEST("Galvanize can not turn certain moves into Electric type move
 
 SINGLE_BATTLE_TEST("Galvanize boosts power of affected moves by 20% (Gen7+) or 30% (Gen1-6)", s16 damage)
 {
-    u32 ability, genConfig;
+    enum Ability ability;
+    u32 genConfig;
     PARAMETRIZE { ability = ABILITY_STURDY;     genConfig = GEN_7; }
     PARAMETRIZE { ability = ABILITY_STURDY;     genConfig = GEN_6; }
     PARAMETRIZE { ability = ABILITY_GALVANIZE;  genConfig = GEN_7; }
@@ -68,7 +69,8 @@ SINGLE_BATTLE_TEST("Galvanize boosts power of affected moves by 20% (Gen7+) or 3
 
 SINGLE_BATTLE_TEST("Galvanize doesn't affect Weather Ball's type", s16 damage)
 {
-    u16 move, ability;
+    u16 move;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_STURDY; }
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_GALVANIZE; }
@@ -76,7 +78,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Weather Ball's type", s16 damage)
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_WEATHER_BALL) == EFFECT_WEATHER_BALL);
         ASSUME(GetMoveType(MOVE_WEATHER_BALL) == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_PINSIR].types[0] == TYPE_BUG);
+        ASSUME(GetSpeciesType(SPECIES_PINSIR, 0) == TYPE_BUG);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); }
         OPPONENT(SPECIES_PINSIR);
     } WHEN {
@@ -96,13 +98,13 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Galvanize doesn't affect Natural Gift's type")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_GALVANIZE; }
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_NATURAL_GIFT) == EFFECT_NATURAL_GIFT);
         ASSUME(gNaturalGiftTable[ITEM_TO_BERRY(ITEM_ORAN_BERRY)].type == TYPE_POISON);
-        ASSUME(gSpeciesInfo[SPECIES_BELDUM].types[0] == TYPE_STEEL);
+        ASSUME(GetSpeciesType(SPECIES_BELDUM, 0) == TYPE_STEEL);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ability); Item(ITEM_ORAN_BERRY); }
         OPPONENT(SPECIES_BELDUM);
     } WHEN {
@@ -129,7 +131,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Judgment / Techno Blast / Multi-Att
         ASSUME(gItemsInfo[ITEM_DOUSE_DRIVE].secondaryId == TYPE_WATER);
         ASSUME(gItemsInfo[ITEM_WATER_MEMORY].holdEffect == HOLD_EFFECT_MEMORY);
         ASSUME(gItemsInfo[ITEM_WATER_MEMORY].secondaryId == TYPE_WATER);
-        ASSUME(gSpeciesInfo[SPECIES_VAPOREON].types[0] == TYPE_WATER);
+        ASSUME(GetSpeciesType(SPECIES_VAPOREON, 0) == TYPE_WATER);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); Item(item); }
         OPPONENT(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
     } WHEN {
@@ -150,7 +152,7 @@ SINGLE_BATTLE_TEST("Galvanize doesn't affect Hidden Power's type")
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HIDDEN_POWER) == EFFECT_HIDDEN_POWER);
         ASSUME(gTypesInfo[TYPE_ELECTRIC].isHiddenPowerType == TRUE);
-        ASSUME(gSpeciesInfo[SPECIES_DIGLETT].types[0] == TYPE_GROUND);
+        ASSUME(GetSpeciesType(SPECIES_DIGLETT, 0) == TYPE_GROUND);
         PLAYER(SPECIES_GEODUDE_ALOLA) { Ability(ABILITY_GALVANIZE); HPIV(31); AttackIV(31); DefenseIV(31); SpAttackIV(30); SpDefenseIV(31); SpeedIV(30); } // HP Water
         OPPONENT(SPECIES_VAPOREON) { Ability(ABILITY_WATER_ABSORB); }
     } WHEN {

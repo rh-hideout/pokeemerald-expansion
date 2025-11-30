@@ -96,7 +96,10 @@ SINGLE_BATTLE_TEST("Ice Spinner doesn't fail if there is no terrain on the field
         TURN { MOVE(player, MOVE_ICE_SPINNER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ICE_SPINNER, player);
-        NOT MESSAGE("But it failed!");
+        NONE_OF {
+            MESSAGE("But it failed!");
+            MESSAGE("Mist swirled around the battlefield!");
+        }
     }
 }
 

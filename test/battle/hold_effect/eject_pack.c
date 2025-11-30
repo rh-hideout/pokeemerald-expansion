@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Eject Pack does not cause the new Pokémon to lose HP due to
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         MESSAGE("Wobbuffet is switched out with the Eject Pack!");
         SEND_IN_MESSAGE("Wynaut");
-        NOT MESSAGE("Wynaut was hurt by its Life Orb!");
+        NOT HP_BAR(player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
     }
 }
@@ -237,5 +237,127 @@ DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after 
             NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
         }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after intimidate (switch in after fainting)")
+{
+    u32 speed;
+
+    PARAMETRIZE { speed = 1; }
+    PARAMETRIZE { speed = 11; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(3); }
+        OPPONENT(SPECIES_WYNAUT)  { HP(1); Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
+        OPPONENT(SPECIES_EKANS) { Speed(6); Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_POUND, target: opponentLeft);
+            SEND_OUT(opponentLeft, 2);
+            if (speed == 11)
+                SEND_OUT(playerRight, 2);
+            else
+                SEND_OUT(playerLeft, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POUND, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        if (speed == 11) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        }
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Pack: Only the fastest Eject Pack will activate after intimidate (switch in after 2 mons fainted)")
+{
+    u32 speed;
+
+    PARAMETRIZE { speed = 1; }
+    PARAMETRIZE { speed = 11; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT) { Speed(speed); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        OPPONENT(SPECIES_WYNAUT)  { HP(1); Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET)  { Speed(5); }
+        OPPONENT(SPECIES_WYNAUT)  { Speed(4); }
+        OPPONENT(SPECIES_EKANS) { Speed(6); Ability(ABILITY_INTIMIDATE); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_HYPER_VOICE);
+            SEND_OUT(opponentLeft, 3);
+            SEND_OUT(opponentRight, 2);
+            if (speed == 11)
+                SEND_OUT(playerRight, 2);
+            else
+                SEND_OUT(playerLeft, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_HYPER_VOICE, playerLeft);
+        ABILITY_POPUP(opponentLeft, ABILITY_INTIMIDATE);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+        if (speed == 11) {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        } else {
+            NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("Eject Pack does not activate if mon is switched in due to Eject Button")
+{
+    GIVEN {
+        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_ARENA_TRAP); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_BUTTON); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_EJECT_PACK); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_BULLDOZE);
+            SEND_OUT(opponent, 1);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_BULLDOZE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+        MESSAGE("The opposing Wobbuffet is switched out with the Eject Button!");
+        MESSAGE("2 sent out Wobbuffet!");
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Eject Pack will trigger on the fastest mon at the end of the turn")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_SYRUP_BOMB, MOVE_EFFECT_SYRUP_BOMB) == TRUE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WYNAUT) { Speed(10); Item(ITEM_EJECT_PACK); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
+        OPPONENT(SPECIES_WYNAUT) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(3); }
+    } WHEN {
+        TURN {
+            MOVE(opponentLeft, MOVE_SYRUP_BOMB, target: playerLeft);
+            MOVE(opponentRight, MOVE_SYRUP_BOMB, target: playerRight);
+            SEND_OUT(playerRight, 2);
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, playerRight);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SYRUP_BOMB_SPEED_DROP, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerRight);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, playerLeft);
     }
 }

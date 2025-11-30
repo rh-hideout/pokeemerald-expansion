@@ -83,7 +83,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores all battlers' ability effects")
 
 SINGLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from attacker's ability", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NEUTRALIZING_GAS; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
@@ -102,7 +102,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from attacker's ability
 
 SINGLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from target's ability", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NEUTRALIZING_GAS; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from target's ability",
 
 DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from target's ally's ability", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NEUTRALIZING_GAS; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
@@ -142,7 +142,7 @@ DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from target's ally's ab
 
 DOUBLE_BATTLE_TEST("Neutralizing Gas ignores multipliers from ally's ability", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_NEUTRALIZING_GAS; }
     PARAMETRIZE { ability = ABILITY_LEVITATE; }
     GIVEN {
@@ -308,5 +308,90 @@ SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Imposte
         NOT ABILITY_POPUP(player, ABILITY_IMPOSTER);
         MESSAGE("The effects of the neutralizing gas wore off!");
         NOT ABILITY_POPUP(player, ABILITY_IMPOSTER);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas exiting the field does not activate Air Lock/Cloud Nine but their effects are kept")
+{
+    u32 species, ability;
+
+    PARAMETRIZE { species = SPECIES_GOLDUCK; ability = ABILITY_CLOUD_NINE; }
+    PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_RAIN_DANCE) == EFFECT_RAIN_DANCE);
+        PLAYER(SPECIES_WOBBUFFET);
+        PLAYER(species) { Ability(ability); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_LUDICOLO) { Ability(ABILITY_RAIN_DISH); }
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_RAIN_DANCE); }
+    } SCENE {
+        NOT ABILITY_POPUP(player, ABILITY_AIR_LOCK);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NOT ABILITY_POPUP(player, ABILITY_AIR_LOCK);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_RAIN_DANCE, player);
+        NOT ABILITY_POPUP(opponent, ABILITY_RAIN_DISH);
+    }
+}
+
+SINGLE_BATTLE_TEST("Neutralizing Gas only displays exiting message for the last user leaving the field")
+{
+    GIVEN {
+        PLAYER(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { SWITCH(player, 1); SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_NEUTRALIZING_GAS);
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        SEND_IN_MESSAGE("Wobbuffet");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        NOT MESSAGE("The effects of the neutralizing gas wore off!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas is active for the duration of a Spread Move even if Neutralizing Gas is no longer on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_ORIGIN_PULSE) == MOVE_TARGET_BOTH);
+        PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_GOLEM) { Ability(ABILITY_STURDY); }
+        OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_ORIGIN_PULSE); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ORIGIN_PULSE, opponentLeft);
+        HP_BAR(playerLeft);
+        HP_BAR(playerRight);
+        MESSAGE("Weezing fainted!");
+        MESSAGE("Golem fainted!");
+        NOT ABILITY_POPUP(playerRight, ABILITY_STURDY);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit even if Neutralizing Gas is no longer on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
+        PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_GOLEM) { HP(2); MaxHP(2); Ability(ABILITY_STURDY); }
+        OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_DRAGON_DARTS, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, opponentLeft);
+        HP_BAR(playerLeft);
+        MESSAGE("Weezing fainted!");
+        HP_BAR(playerRight);
+        NOT MESSAGE("Golem fainted!");
+        ABILITY_POPUP(playerRight, ABILITY_STURDY);
     }
 }

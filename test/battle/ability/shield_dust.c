@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Shield Dust blocks secondary effects")
             MESSAGE("The opposing Vivillon was prevented from healing!");
         }
     } THEN { // Can't find good way to test trapping
-        EXPECT(!(opponent->status2 & STATUS2_ESCAPE_PREVENTION));
+        EXPECT(!opponent->volatiles.escapePrevention);
     }
 }
 
@@ -78,8 +78,8 @@ SINGLE_BATTLE_TEST("Shield Dust does not block primary effects")
         }
     } THEN { // Can't find good way to test trapping
         if (move == MOVE_JAW_LOCK) {
-            EXPECT(opponent->status2 & STATUS2_ESCAPE_PREVENTION);
-            EXPECT(player->status2 & STATUS2_ESCAPE_PREVENTION);
+            EXPECT(opponent->volatiles.escapePrevention);
+            EXPECT(player->volatiles.escapePrevention);
         }
     }
 }
@@ -88,12 +88,12 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
 {
     u16 move;
     PARAMETRIZE { move = MOVE_POWER_UP_PUNCH; }
-    PARAMETRIZE { move = MOVE_RAPID_SPIN; }
+    PARAMETRIZE { move = MOVE_FLAME_CHARGE; }
     PARAMETRIZE { move = MOVE_LEAF_STORM; }
     PARAMETRIZE { move = MOVE_METEOR_ASSAULT; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_RAPID_SPIN) == EFFECT_RAPID_SPIN);
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_FLAME_CHARGE, MOVE_EFFECT_SPD_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_POWER_UP_PUNCH, MOVE_EFFECT_ATK_PLUS_1) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_LEAF_STORM, MOVE_EFFECT_SP_ATK_MINUS_2) == TRUE);
         ASSUME(MoveHasAdditionalEffectSelf(MOVE_METEOR_ASSAULT, MOVE_EFFECT_RECHARGE) == TRUE);
@@ -110,7 +110,7 @@ SINGLE_BATTLE_TEST("Shield Dust does not block self-targeting effects, primary o
         switch (move)
         {
             case MOVE_POWER_UP_PUNCH:
-            case MOVE_RAPID_SPIN:
+            case MOVE_FLAME_CHARGE:
             case MOVE_LEAF_STORM:
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
                 break;
@@ -186,5 +186,33 @@ SINGLE_BATTLE_TEST("Shield Dust does not prevent ability stat changes")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Vivillon's Speed fell!");
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly")
+{
+    AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+    GIVEN {
+        PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
+        OPPONENT(SPECIES_SUNFLORA){ Ability(ABILITY_EARLY_BIRD); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_GUST);
+            EXPECT_MOVE(opponent, MOVE_FIERY_DANCE);
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will score secondary effects against shield dust correctly when it has Mold Breaker")
+{
+    AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+    GIVEN {
+        PLAYER(SPECIES_DUSTOX){ Ability(ABILITY_SHIELD_DUST); Moves(MOVE_GUST); }
+        OPPONENT(SPECIES_SUNFLORA){ Ability(ABILITY_MOLD_BREAKER); Moves(MOVE_MYSTICAL_FIRE, MOVE_FIERY_DANCE); }
+    } WHEN {
+        TURN {
+            MOVE(player, MOVE_GUST);
+            EXPECT_MOVE(opponent, MOVE_MYSTICAL_FIRE);
+        }
     }
 }

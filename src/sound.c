@@ -34,6 +34,7 @@ static void Task_Fanfare(u8 taskId);
 static void CreateFanfareTask(void);
 static void RestoreBGMVolumeAfterPokemonCry(void);
 
+// The 1st argument in the table is the length of the fanfare, measured in frames. This is calculated by taking the duration of the midi file, multiplying by 59.72750056960583, and rounding up to the next nearest integer.
 static const struct Fanfare sFanfares[] = {
     [FANFARE_LEVEL_UP]            = { MUS_LEVEL_UP,             80 },
     [FANFARE_OBTAIN_ITEM]         = { MUS_OBTAIN_ITEM,         160 },
@@ -456,6 +457,12 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     case CRY_MODE_WEAK:
         pitch = 15000;
         break;
+    case CRY_MODE_DYNAMAX:
+        length = 255;
+        release = 255;
+        pitch = 12150;
+        chorus = 200;
+        break;
     }
 
     SetPokemonCryVolume(volume);
@@ -467,11 +474,11 @@ void PlayCryInternal(u16 species, s8 pan, s8 volume, u8 priority, u8 mode)
     SetPokemonCryChorus(chorus);
     SetPokemonCryPriority(priority);
 
-    species = GetCryIdBySpecies(species);
-    if (species != CRY_NONE)
+    enum PokemonCry cryId = GetCryIdBySpecies(species);
+    if (cryId != CRY_NONE)
     {
-        species--;
-        gMPlay_PokemonCry = SetPokemonCryTone(reverse ? &gCryTable_Reverse[species] : &gCryTable[species]);
+        cryId--;
+        gMPlay_PokemonCry = SetPokemonCryTone(reverse ? &gCryTable_Reverse[cryId] : &gCryTable[cryId]);
     }
 }
 

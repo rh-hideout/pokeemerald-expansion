@@ -28,6 +28,8 @@
 
 #if T_SHOULD_RUN_MOVE_ANIM
 EWRAM_DATA bool32 gLoadFail = FALSE;
+EWRAM_DATA bool32 gCountAllocs = FALSE;
+EWRAM_DATA s32 gSpriteAllocs = 0;
 #endif // T_SHOULD_RUN_MOVE_ANIM
 
 struct SpriteCopyRequest
@@ -85,7 +87,6 @@ static void ApplyAffineAnimFrameRelativeAndUpdateMatrix(u8 matrixNum, struct Aff
 static s16 ConvertScaleParam(s16 scale);
 static void GetAffineAnimFrame(u8 matrixNum, struct Sprite *sprite, struct AffineAnimFrameCmd *frameCmd);
 static void ApplyAffineAnimFrame(u8 matrixNum, struct AffineAnimFrameCmd *frameCmd);
-static u8 IndexOfSpriteTileTag(u16 tag);
 static void AllocSpriteTileRange(u16 tag, u16 start, u16 count);
 static void DoLoadSpritePalette(const u16 *src, u16 paletteOffset);
 static void UpdateSpriteMatrixAnchorPos(struct Sprite *, s32, s32);
@@ -878,8 +879,11 @@ void BeginAnim(struct Sprite *sprite)
 
         if (sprite->usingSheet)
         {
+            //  Inject OW decompression here
             if (OW_GFX_COMPRESS && sprite->sheetSpan)
+            {
                 imageValue = (imageValue + 1) << sprite->sheetSpan;
+            }
             sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
         }
         else
@@ -937,7 +941,10 @@ void AnimCmd_frame(struct Sprite *sprite)
     if (sprite->usingSheet)
     {
         if (OW_GFX_COMPRESS && sprite->sheetSpan)
+        {
+            //  Inject OW frame switcher here
             imageValue = (imageValue + 1) << sprite->sheetSpan;
+        }
         sprite->oam.tileNum = sprite->sheetTileStart + imageValue;
     }
     else
@@ -1496,6 +1503,10 @@ void LoadSpriteSheets(const struct SpriteSheet *sheets)
 
 void FreeSpriteTilesByTag(u16 tag)
 {
+#if T_SHOULD_RUN_MOVE_ANIM
+    if (gCountAllocs)
+        gSpriteAllocs--;
+#endif
     u8 index = IndexOfSpriteTileTag(tag);
     if (index != 0xFF)
     {
@@ -1561,6 +1572,10 @@ u16 GetSpriteTileTagByTileStart(u16 start)
 
 void AllocSpriteTileRange(u16 tag, u16 start, u16 count)
 {
+#if T_SHOULD_RUN_MOVE_ANIM
+    if (gCountAllocs)
+        gSpriteAllocs++;
+#endif
     u8 freeIndex = IndexOfSpriteTileTag(TAG_NONE);
     sSpriteTileRangeTags[freeIndex] = tag;
     SET_SPRITE_TILE_RANGE(freeIndex, start, count);

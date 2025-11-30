@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_MAIN_H
 #define GUARD_BATTLE_MAIN_H
 
+#include "battle_util.h"
 #include "pokemon.h"
 #include "data.h"
 #include "constants/hold_effects.h"
@@ -57,9 +58,11 @@ enum FirstTurnEventsStates
     FIRST_TURN_EVENTS_TOTEM_BOOST,
     FIRST_TURN_EVENTS_NEUTRALIZING_GAS,
     FIRST_TURN_EVENTS_SWITCH_IN_ABILITIES,
-    FIRST_TURN_EVENTS_OPPORTUNIST_1,
     FIRST_TURN_EVENTS_ITEM_EFFECTS,
-    FIRST_TURN_EVENTS_OPPORTUNIST_2,
+    FIRST_TURN_EVENTS_WHITE_HERB,
+    FIRST_TURN_EVENTS_OPPORTUNIST,
+    FIRST_TURN_EVENTS_MIRROR_HERB,
+    FIRST_TURN_EVENTS_EJECT_PACK,
     FIRST_TURN_EVENTS_END,
 };
 
@@ -88,25 +91,22 @@ void SpriteCB_TrainerThrowObject(struct Sprite *sprite);
 void AnimSetCenterToCornerVecX(struct Sprite *sprite);
 void BeginBattleIntroDummy(void);
 void BeginBattleIntro(void);
-void SwitchInClearSetData(u32 battler);
+void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy);
 const u8* FaintClearSetData(u32 battler);
 void BattleTurnPassed(void);
 u8 IsRunningFromBattleImpossible(u32 battler);
 void SwitchTwoBattlersInParty(u32 battler, u32 battler2);
 void SwitchPartyOrder(u32 battler);
 void SwapTurnOrder(u8 id1, u8 id2);
-u32 GetBattlerTotalSpeedStatArgs(u32 battler, u32 ability, enum ItemHoldEffect holdEffect);
-u32 GetBattlerTotalSpeedStat(u32 battler);
-s32 GetChosenMovePriority(u32 battler, u32 ability);
-s32 GetBattleMovePriority(u32 battler, u32 ability, u32 move);
-s32 GetWhichBattlerFasterArgs(u32 battler1, u32 battler2, bool32 ignoreChosenMoves, u32 ability1, u32 ability2,
-    enum ItemHoldEffect holdEffectBattler1, enum ItemHoldEffect holdEffectBattler2, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
-s32 GetWhichBattlerFasterOrTies(u32 battler1, u32 battler2, bool32 ignoreChosenMoves);
-s32 GetWhichBattlerFaster(u32 battler1, u32 battler2, bool32 ignoreChosenMoves);
+u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
+s32 GetChosenMovePriority(u32 battler, enum Ability ability);
+s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move);
+s32 GetWhichBattlerFasterArgs(struct BattleContext *ctx, bool32 ignoreChosenMoves, u32 speedBattler1, u32 speedBattler2, s32 priority1, s32 priority2);
+s32 GetWhichBattlerFasterOrTies(struct BattleContext *ctx, bool32 ignoreChosenMoves);
+s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-void SpecialStatusesClear(void);
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
+enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
@@ -115,6 +115,7 @@ u32 GeneratePersonalityForGender(u32 gender, u32 species);
 void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon *partyEntry);
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
+void BattleDebug_WonBattle(void);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
 

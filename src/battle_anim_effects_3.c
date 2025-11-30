@@ -1325,6 +1325,41 @@ const struct SpriteTemplate gTeraCrystalSpreadSpriteTemplate =
     .callback = AnimTask_TeraCrystalShatter,
 };
 
+// See AnimSpriteOnMonPos in battle_anim_mons.c for more specifics
+// Reuses the Mega Symbol affine animation seen in Mega Evolution
+// gBattleAnimArgs 0-3 used
+// 0, 1 used for position
+// 2, 3 as some control variables
+const struct SpriteTemplate gTeraSymbolSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_TERA_SYMBOL,
+    .paletteTag = ANIM_TAG_TERA_SYMBOL,
+    .oam = &gOamData_AffineDouble_ObjBlend_32x32,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gSpriteAffineAnimTable_MegaSymbol,
+    .callback = AnimSpriteOnMonPos,
+};
+
+// Swirls particle in vortex. Used for moves like Fire Spin or Sand Tomb
+// args[0] - initial x offset
+// args[1] - initial y offset
+// args[2] - y increment
+// args[3] - duration
+// args[4] - increments some sin parameter
+// args[5] - fixed sin parameter
+// args[6] - attacker or target
+const struct SpriteTemplate gTeraSmokeSpriteTemplate =
+{
+    .tileTag = ANIM_TAG_SPARKLE_6,
+    .paletteTag = ANIM_TAG_SPARKLE_6,
+    .oam = &gOamData_AffineNormal_ObjNormal_16x16,
+    .anims = gDummySpriteAnimTable,
+    .images = NULL,
+    .affineAnims = gDummySpriteAffineAnimTable,
+    .callback = AnimParticleInVortex,
+};
+
 const struct SpriteTemplate gPinkPetalVortexTemplate =
 {
     .tileTag = ANIM_TAG_PINK_PETAL,
@@ -2449,11 +2484,10 @@ void AnimTask_HideSwapSprite(u8 taskId)
     case 0:
         gTasks[taskId].data[11] = gSprites[spriteId].x; // Save battler position
         gSprites[spriteId].x = -64; // hide it from screen to avoid the blip/glitch effect when swapping the sprite.
-        gTasks[taskId].data[10] = gBattleAnimArgs[0];
         gTasks[taskId].data[0]++;
         break;
     case 1:
-        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[10], gBattleAnimArgs[1]);
+        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, SPECIES_GFX_CHANGE_FORM_CHANGE);
         GetBgDataForTransform(&animBg, gBattleAnimAttacker);
 
         if (IsContest())
@@ -2501,18 +2535,36 @@ void AnimTask_HideSwapSprite(u8 taskId)
         break;
     case 2:
         gSprites[spriteId].x = gTasks[taskId].data[11]; // restores battler position
-        if (!IsContest())
-        {
-            if (!IsOnPlayerSide(gBattleAnimAttacker))
-            {
-                if (gTasks[taskId].data[10] == 0)
-                    SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
-            }
-        }
 
         DestroyAnimVisualTask(taskId);
         break;
     }
+}
+
+void AnimTask_HideOpponentShadows(u8 taskId)
+{
+    u32 battlerLeft = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
+    gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerLeft].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
+    if (IsDoubleBattle())
+    {
+        u32 battlerRight = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerRight].shadowSpriteIdPrimary].callback = SpriteCB_SetInvisible;
+        gSprites[gBattleSpritesDataPtr->healthBoxesData[battlerRight].shadowSpriteIdSecondary].callback = SpriteCB_SetInvisible;
+    }
+    DestroyAnimVisualTask(taskId);
+}
+
+void AnimTask_SetOpponentShadowCallbacks(u8 taskId)
+{
+    u32 battlerLeft = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
+    SetBattlerShadowSpriteCallback(battlerLeft, gBattleMons[battlerLeft].species);
+    if (IsDoubleBattle())
+    {
+        u32 battlerRight = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
+        SetBattlerShadowSpriteCallback(battlerRight, gBattleMons[battlerRight].species);
+    }
+    DestroyAnimVisualTask(taskId);
 }
 
 void AnimTask_TransformMon(u8 taskId)
@@ -2535,7 +2587,6 @@ void AnimTask_TransformMon(u8 taskId)
             SetAnimBgAttribute(2, BG_ANIM_MOSAIC, 1);
 
         gTasks[taskId].data[10] = gBattleAnimArgs[0];
-        gTasks[taskId].data[11] = gBattleAnimArgs[1];
         gTasks[taskId].data[0]++;
         break;
     case 1:
@@ -2550,7 +2601,7 @@ void AnimTask_TransformMon(u8 taskId)
         }
         break;
     case 2:
-        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[10], gTasks[taskId].data[11]);
+        HandleSpeciesGfxDataChange(gBattleAnimAttacker, gBattleAnimTarget, gTasks[taskId].data[10]);
         GetBgDataForTransform(&animBg, gBattleAnimAttacker);
 
         if (IsContest())
@@ -2619,7 +2670,7 @@ void AnimTask_TransformMon(u8 taskId)
         {
             if (!IsOnPlayerSide(gBattleAnimAttacker))
             {
-                if (gTasks[taskId].data[10] == 0)
+                if (gTasks[taskId].data[10] == SPECIES_GFX_CHANGE_TRANSFORM)
                     SetBattlerShadowSpriteCallback(gBattleAnimAttacker, gBattleSpritesDataPtr->battlerData[gBattleAnimAttacker].transformSpecies);
             }
         }
@@ -5724,7 +5775,7 @@ static void AnimRecycle_Step(struct Sprite *sprite)
 
 void AnimTask_GetWeather(u8 taskId)
 {
-    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA;
+    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA;
 
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
     if (gWeatherMoveAnim & B_WEATHER_SUN && !utilityUmbrellaAffected)

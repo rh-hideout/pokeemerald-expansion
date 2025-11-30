@@ -12,6 +12,9 @@ If you intend to use vanilla maps and have not already edited them, revert commi
 
 If you _have_ edited vanilla maps, the merge conflicts from reverting that commit will cause problems. If you are using vanilla maps, manually copy some of the tileset changes, `.pal`, and `.pla` files in your branch, and begin rebuilding your metatiles to have windows use the palettes that have a `.pla` for light blending the correct color slots. [Triple-layer metatiles](https://github.com/pret/pokeemerald/wiki/Triple-layer-metatiles) are highly recommended.
 
+WARNING: [As per issue #7034](https://github.com/rh-hideout/pokeemerald-expansion/issues/7034) if you follow this tutorial reverting the previously mentioned commit to use the updated palettes in the Hoenn maps and *after* that you try to follow the [Triple-layer metatiles tutorial](https://github.com/pret/pokeemerald/wiki/Triple-layer-metatiles), you'll encounter an issue when running the script to update old tilesets to support triple-layer metatiles. 
+Follow the band-aid fix proposed in that issue after this tutorial but before following the triple-layer metatiles tutorial if you want everythign to work properly with light-blended palettes and triple-layer metatiles together.
+
 You will also want to add the lighting object events from that commit.
 
 If you are not using Hoenn maps, the primary concern is that you do not use the exact same palette indices for colors you want to be darkened during night time and colors you want to light up. Err towards not light blending a color if you aren't sure how to avoid conflicts.
@@ -20,8 +23,8 @@ When writing map scripts, `fadescreenswapbuffers` should be preferred over `fade
 
 ### Q: How do I make lightbulbs glow?
 
-![Rustboro before adding lamp object events](/docs/tutorials/img/dns/without_lamp.png)
-![Rustboro after adding lamp object events](/docs/tutorials/img/dns/with_lamp.png)
+![Rustboro before adding lamp object events](img/dns/without_lamp.png)
+![Rustboro after adding lamp object events](img/dns/with_lamp.png)
 
 A: Making lamps glow is not part of the tileset itself.  Instead, place certain object events on top of where you desire a glowing effect.
 
@@ -45,7 +48,7 @@ on separate lines to mark those colors as being light-blended, i.e:
 
 During the day time, these color indices appear as normal, but will be blended with either yellow or the 0 index at night. These indices should only be used for things you expect to light up. If you are using [porytiles](https://github.com/grunt-lucas/porytiles/wiki), palette overrides and using slight alterations to a color will aid you in avoiding color conflicts where the wrong index is assigned.
 
-![Rustboro gym after light-blending the windows](/docs/tutorials/img/dns/window_lights.png)
+![Rustboro gym after light-blending the windows](img/dns/window_lights.png)
 
 The windows appear as normal during the day time (blue) and light up in the night. These use the default color.
 

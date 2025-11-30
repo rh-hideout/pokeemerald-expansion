@@ -15,7 +15,7 @@ static void Task_DisplayHPRestoredMessage(u8 taskId);
 static void Task_FinishSoftboiled(u8 taskId);
 static void CantUseSoftboiledOnMon(u8 taskId);
 
-bool8 SetUpFieldMove_SoftBoiled(void)
+bool32 SetUpFieldMove_SoftBoiled(void)
 {
     u16 maxHp;
     u16 hp;

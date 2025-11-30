@@ -369,7 +369,7 @@ static const u8 sSwapArrowTextColors[] = {TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRA
 void NewGameInitPCItems(void)
 {
     u8 i = 0;
-    ClearItemSlots(gSaveBlock1Ptr->pcItems, PC_ITEMS_COUNT);
+    CpuFastFill(0, gSaveBlock1Ptr->pcItems, sizeof(gSaveBlock1Ptr->pcItems));
 
     while (TRUE)
     {
@@ -1334,7 +1334,7 @@ static void ItemStorage_FinishItemSwap(u8 taskId, bool8 canceled)
 
     if (!canceled && sItemStorageMenu->toSwapPos != newPos && sItemStorageMenu->toSwapPos != newPos - 1)
     {
-        MoveItemSlotInList(gSaveBlock1Ptr->pcItems, sItemStorageMenu->toSwapPos, newPos);
+        MoveItemSlotInPC(gSaveBlock1Ptr->pcItems, sItemStorageMenu->toSwapPos, newPos);
         ItemStorage_RefreshListMenu();
     }
     if (sItemStorageMenu->toSwapPos < newPos)

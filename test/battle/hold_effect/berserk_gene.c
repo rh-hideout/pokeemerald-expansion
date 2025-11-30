@@ -213,11 +213,11 @@ SINGLE_BATTLE_TEST("Berserk Gene causes infinite confusion") // check if bit is 
         TURN {}
     } SCENE {
     } THEN {
-        EXPECT(gStatuses4[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)] & STATUS4_INFINITE_CONFUSION);
+        EXPECT(gBattleMons[GetBattlerAtPosition(B_POSITION_PLAYER_LEFT)].volatiles.infiniteConfusion);
     }
 }
 
-SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 status2)
+SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 confusionTurns)
 {
     u32 turns;
     PARAMETRIZE { turns = 1; }
@@ -231,9 +231,9 @@ SINGLE_BATTLE_TEST("Berserk Gene causes confusion timer to not tick down", u32 s
             TURN {}
         }
     } THEN {
-        results[i].status2 = player->status2;
+        results[i].confusionTurns = player->volatiles.confusionTurns;
     } FINALLY {
-        EXPECT_EQ(results[0].status2, results[1].status2);
+        EXPECT_EQ(results[0].confusionTurns, results[1].confusionTurns);
     }
 }
 
@@ -250,5 +250,56 @@ SINGLE_BATTLE_TEST("Berserk Gene does not cause an infinite loop")
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("Using Berserk Gene, the Attack of the opposing Wobbuffet sharply rose!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with bag items")
+{
+    u16 item;
+    PARAMETRIZE { item = ITEM_FULL_HEAL; }
+    PARAMETRIZE { item = ITEM_HEAL_POWDER; }
+    PARAMETRIZE { item = ITEM_PEWTER_CRUNCHIES; }
+    PARAMETRIZE { item = ITEM_LAVA_COOKIE; }
+    PARAMETRIZE { item = ITEM_RAGE_CANDY_BAR; }
+    PARAMETRIZE { item = ITEM_OLD_GATEAU; }
+    PARAMETRIZE { item = ITEM_CASTELIACONE; }
+    PARAMETRIZE { item = ITEM_LUMIOSE_GALETTE; }
+    PARAMETRIZE { item = ITEM_SHALOUR_SABLE; }
+    PARAMETRIZE { item = ITEM_BIG_MALASADA; }
+    PARAMETRIZE { item = ITEM_JUBILIFE_MUFFIN; }
+    GIVEN {
+        ASSUME(gItemsInfo[item].battleUsage == EFFECT_ITEM_CURE_STATUS);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
+        OPPONENT(SPECIES_GENGAR);
+    } WHEN {
+        TURN { USE_ITEM(player, item, partyIndex: 0); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        MESSAGE("Wobbuffet had its status healed!");
+    } THEN {
+        EXPECT(player->volatiles.infiniteConfusion == 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items")
+{
+    u16 item;
+    PARAMETRIZE { item = ITEM_PERSIM_BERRY; }
+    PARAMETRIZE { item = ITEM_LUM_BERRY; }
+
+    GIVEN {
+        ASSUME(gItemsInfo[ITEM_PERSIM_BERRY].holdEffect == HOLD_EFFECT_CURE_CONFUSION);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_BERSERK_GENE);};
+        OPPONENT(SPECIES_WOBBUFFET) { Item(item);};
+    } WHEN {
+        TURN { MOVE(player, MOVE_COVET, WITH_RNG(RNG_CONFUSION, FALSE)); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+    } THEN {
+        EXPECT(player->volatiles.infiniteConfusion == 0);
     }
 }
