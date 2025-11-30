@@ -51,7 +51,7 @@ STATIC_ASSERT(sizeof(struct BattleTestRunnerState) <= sizeof(sBackupMapData), sB
 static void CB2_BattleTest_NextParameter(void);
 static void CB2_BattleTest_NextTrial(void);
 static void PushBattlerAction(u32 sourceLine, s32 battlerId, u32 actionType, u32 byte);
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore);
+static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore, u32 target);
 static void ClearAiLog(u32 battlerId);
 static const char *BattlerIdentifier(s32 battlerId);
 
@@ -773,7 +773,7 @@ static u32 CountAiExpectMoves(struct ExpectedAIAction *expectedAction, u32 battl
         if ((1u << i) & expectedAction->moveSlots)
         {
             if (printLog)
-                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i]);
+                PrintAiMoveLog(battlerId, i, gBattleMons[battlerId].moves[i], gAiBattleData->finalScore[battlerId][expectedAction->target][i], expectedAction->target);
             countExpected++;
         }
     }
@@ -832,7 +832,7 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target)
         if (!expectedAction->notMove && !movePasses)
         {
             u32 moveSlot = GetMoveSlot(gBattleMons[battlerId].moves, moveId);
-            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot]);
+            PrintAiMoveLog(battlerId, moveSlot, moveId, gAiBattleData->finalScore[battlerId][expectedAction->target][moveSlot], expectedAction->target);
             if (countExpected > 1)
                 Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Unmatched EXPECT_MOVES %S, got %S", filename, expectedAction->sourceLine, GetMoveName(expectedMoveId), GetMoveName(moveId));
             else
@@ -940,18 +940,19 @@ static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct Exp
     }
 }
 
-static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore)
+static void PrintAiMoveLog(u32 battlerId, u32 moveSlot, u32 moveId, s32 totalScore, u32 target)
 {
-    s32 i, scoreFromLogs = 0;
+    s32 i;
+    s32 scoreFromLogs = AI_SCORE_DEFAULT;
 
     if (!DATA.logAI) return;
-    if (DATA.aiLogPrintedForMove[battlerId] & (1u << moveSlot)) return;
 
-    DATA.aiLogPrintedForMove[battlerId] |= 1u << moveSlot;
     Test_MgbaPrintf("Score Log for move %S:\n", GetMoveName(moveId));
     for (i = 0; i < MAX_AI_LOG_LINES; i++)
     {
         struct AILogLine *log = &DATA.aiLogLines[battlerId][moveSlot][i];
+        if (target != log->target)
+            continue;
         if (log->file)
         {
             if (log->set)
@@ -1012,7 +1013,7 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
 
             if (scoreCtx->toValue)
             {
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1], target);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scoreCtx->value, scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Unmatched SCORE_%s_VAL %S %d, got %d",
@@ -1022,8 +1023,8 @@ void TestRunner_Battle_CheckAiMoveScores(u32 battlerId)
             else
             {
                 u32 moveId2 = gBattleMons[battlerId].moves[scoreCtx->moveSlot2];
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1]);
-                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, scores[scoreCtx->moveSlot2]);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot1, moveId1, scores[scoreCtx->moveSlot1], target);
+                PrintAiMoveLog(battlerId, scoreCtx->moveSlot2, moveId2, scores[scoreCtx->moveSlot2], target);
                 if (!CheckComparision(scores[scoreCtx->moveSlot1], scores[scoreCtx->moveSlot2], scoreCtx->cmp))
                 {
                     Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Unmatched SCORE_%s, got %S: %d, %S: %d",
@@ -2819,25 +2820,26 @@ struct AILogLine *GetLogLine(u32 battlerId, u32 moveIndex)
     return NULL;
 }
 
-void TestRunner_Battle_AILogScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score, bool32 setScore)
+void TestRunner_Battle_AILogScore(const char *file, u32 line, u32 battlerAtk, u32 battlerDef, u32 moveIndex, s32 score, bool32 setScore)
 {
     struct AILogLine *log;
 
     if (!DATA.logAI) return;
 
-    log = GetLogLine(battlerId, moveIndex);
+    log = GetLogLine(battlerAtk, moveIndex);
     log->file = file;
     log->line = line;
     log->score = score;
     log->set = setScore;
+    log->target = battlerDef;
 }
 
 void TestRunner_Battle_AISetScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score)
 {
-    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, TRUE);
+    TestRunner_Battle_AILogScore(file, line, battlerId, 0xFF, moveIndex, score, TRUE);
 }
 
-void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, u32 battlerId, u32 moveIndex, s32 score)
+void TestRunner_Battle_AIAdjustScore(const char *file, u32 line, u32 battlerAtk, u32 battlerDef, u32 moveIndex, s32 score)
 {
-    TestRunner_Battle_AILogScore(file, line, battlerId, moveIndex, score, FALSE);
+    TestRunner_Battle_AILogScore(file, line, battlerAtk, battlerDef, moveIndex, score, FALSE);
 }
