@@ -95,8 +95,7 @@ bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
     {
         u32 partner = BATTLE_PARTNER(battler);
         if (gBattleStruct->gimmick.activated[partner][gimmick]
-            || ((gBattleStruct->gimmick.toActivate & (1u << partner))
-                && gBattleStruct->gimmick.usableGimmick[partner] == gimmick))
+         || ((gBattleStruct->gimmick.toActivate & (1u << partner)) && gBattleStruct->gimmick.usableGimmick[partner] == gimmick))
             return TRUE;
     }
 
