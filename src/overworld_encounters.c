@@ -315,8 +315,8 @@ void CreateFollowMonEncounter(void)
 
     u32 slot = LOCALID_OW_ENCOUNTER_END - object->localId;
     u16 speciesId = OW_SPECIES(object);
-    bool32 shiny = OW_SHINY(object);
-    bool32 isFemale = OW_FEMALE(object);
+    bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
+    bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
 
     ZeroEnemyPartyMons();
     CreateMonWithGender(
