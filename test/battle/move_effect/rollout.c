@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Rollout's base power resets if the chain has been broken")
 SINGLE_BATTLE_TEST("Rollout resets if original user is forced to switch out")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ROLLOUT); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ROLLOUT, MOVE_CELEBRATE); }
         PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_ROLLOUT, MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RED_CARD); }
     } WHEN {

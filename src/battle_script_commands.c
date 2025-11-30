@@ -1024,7 +1024,7 @@ static void SetSameMoveTurnValues(u32 moveEffect)
 {
     bool32 isAnyTargetAffected = IsAnyTargetAffected();
 
-    if (gLastMoves[gBattlerAttacker] != gCurrentMove) // User switched/fainted. values already reset
+    if (gLastResultingMoves[gBattlerAttacker] != gCurrentMove) // User switched/fainted. values already reset
         return;
 
     switch (moveEffect)
