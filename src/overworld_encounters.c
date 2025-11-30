@@ -618,7 +618,7 @@ bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
     return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
 }
 
-u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
+static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
     struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
