@@ -27,6 +27,10 @@
 #include "constants/items.h"
 #include "constants/trainers.h"
 
+#if TESTING
+#include "test/battle.h"
+#endif
+
 #define AI_ACTION_DONE          (1 << 0)
 #define AI_ACTION_FLEE          (1 << 1)
 #define AI_ACTION_WATCH         (1 << 2)
@@ -793,7 +797,12 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
             }
         }
     }
-    return consideredMoveArray[Random() % numOfBestMoves];
+
+#if TESTING
+    gBattleTestRunnerState->data.trial.scoreTieCount = numOfBestMoves;
+#endif
+    
+    return consideredMoveArray[RandomUniform(RNG_AI_SCORE_TIE_SINGLES, 0, numOfBestMoves - 1)];
 }
 
 static u32 ChooseMoveOrAction_Doubles(u32 battler)
@@ -869,7 +878,12 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
                     }
                 }
             }
-            actionOrMoveIndex[i] = mostViableMovesIndices[Random() % mostViableMovesNo];
+
+#if TESTING
+            gBattleTestRunnerState->data.trial.scoreTieCount = mostViableMovesNo;
+#endif
+
+            actionOrMoveIndex[i] = mostViableMovesIndices[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_MOVE, 0, mostViableMovesNo - 1)];
             bestMovePointsForTarget[i] = mostViableMovesScores[0];
 
             // Don't use a move against ally if it has less than 100 points.
@@ -904,8 +918,13 @@ static u32 ChooseMoveOrAction_Doubles(u32 battler)
         }
     }
 
-    gBattlerTarget = mostViableTargetsArray[Random() % mostViableTargetsNo];
+#if TESTING
+    gBattleTestRunnerState->data.trial.targetTieCount = mostViableTargetsNo;
+#endif
+
+    gBattlerTarget = mostViableTargetsArray[RandomUniform(RNG_AI_SCORE_TIE_DOUBLES_TARGET, 0, mostViableTargetsNo - 1)];
     gAiBattleData->chosenTarget[battler] = gBattlerTarget;
+
     return actionOrMoveIndex[gBattlerTarget];
 }
 

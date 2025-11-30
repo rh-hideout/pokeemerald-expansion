@@ -650,8 +650,51 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
         }
     }
     //trials
-    if (tag == STATE->rngTag)
-        return RandomUniformTrials(tag, lo, hi, reject, caller);
+    switch (tag)
+    {
+        case RNG_AI_SCORE_TIE_SINGLES:
+        case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+            switch (DATA.scoreTieResolution)
+            {
+                case SCORE_TIE_HI:
+                    return (DATA.trial.scoreTieCount - 1);
+                case SCORE_TIE_RANDOM:
+                    if (DATA.trial.scoreTieCount == 0)
+                        return 0; // Failsafe
+                    if (tag == STATE->rngTag)
+                    {
+                        u32 result = RandomUniformTrials(tag, lo, hi, reject, caller);
+                        return result;
+                    }
+                    return RandomUniformDefault(tag, 0, DATA.trial.scoreTieCount - 1);
+                case SCORE_TIE_CHOSEN:
+                    return DATA.scoreTieOverride;
+                default:
+                    return 0;
+            }
+        case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+            switch (DATA.targetTieResolution)
+            {
+                case TARGET_TIE_HI:
+                    return (DATA.trial.targetTieCount - 1);
+                case TARGET_TIE_RANDOM:
+                    if (DATA.trial.targetTieCount == 0)
+                        return 0; // Failsafe
+                    if (tag == STATE->rngTag)
+                    {
+                        u32 result = RandomUniformTrials(tag, lo, hi, reject, caller);
+                        return result;
+                    }
+                    return RandomUniformDefault(tag, 0, DATA.trial.targetTieCount - 1);
+                case TARGET_TIE_CHOSEN:
+                    return DATA.targetTieOverride;
+                default:
+                    return 0;
+            }
+        default:
+        if (tag == STATE->rngTag)
+            return RandomUniformTrials(tag, lo, hi, reject, caller);
+    }
 
     //default
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
@@ -1000,6 +1043,9 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, en
         if (expectedAction->explicitTarget && expectedAction->target != target)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected target %s, got %s", filename, expectedAction->sourceLine, BattlerIdentifier(expectedAction->target), BattlerIdentifier(target));
 
+        if ((DATA.targetTieOverride >= DATA.trial.targetTieCount) && (DATA.targetTieResolution == TARGET_TIE_CHOSEN))
+            Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s:%d: TIE_BREAK_TARGET override %d, greater than count %d of targets with tied best score", filename, expectedAction->sourceLine, DATA.targetTieOverride, DATA.trial.targetTieCount);
+
         if (expectedAction->gimmick != GIMMICKS_COUNT && expectedAction->gimmick != gimmick)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected gimmick %s, got %s", filename, expectedAction->sourceLine, sGimmickIdentifiers[expectedAction->gimmick], sGimmickIdentifiers[gimmick]);
 
@@ -1124,18 +1170,20 @@ static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct Exp
         if (scores[i] == scores[bestScoreId]
             && !aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
         // We DO NOT expect move 'i', but it has the same best score as another move.
         if (scores[i] == scores[bestScoreId]
             && aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
     }
@@ -1604,13 +1652,15 @@ static void CB2_BattleTest_NextTrial(void)
         PrintTestName();
         gTestRunnerState.result = TEST_RESULT_PASS;
         DATA.recordedBattle.rngSeed = MakeRngValue(STATE->runTrial);
-        memset(&DATA.trial, 0, sizeof(DATA.trial));
+        memset(&DATA.trial, 0, sizeof(DATA.trial));       
         SetVariablesForRecordedBattle(&DATA.recordedBattle);
         SetMainCallback2(CB2_InitBattle);
     }
     else
     {
-        if (STATE->rngTag && !STATE->didRunRandomly && STATE->expectedRatio != Q_4_12(0.0) && STATE->expectedRatio != Q_4_12(1.0))
+        if (STATE->rngTag && !STATE->didRunRandomly && STATE->expectedRatio != Q_4_12(0.0) && STATE->expectedRatio != Q_4_12(1.0)
+        && (STATE->rngTag != RNG_AI_SCORE_TIE_DOUBLES_MOVE && STATE->rngTag != RNG_AI_SCORE_TIE_DOUBLES_TARGET 
+        && STATE->rngTag != RNG_AI_SCORE_TIE_SINGLES))
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s:%d: PASSES_RANDOMLY specified but no Random* call with that tag executed", gTestRunnerState.test->filename, SourceLine(0));
 
         // This is a tolerance of +/- ~2%.
@@ -1742,6 +1792,22 @@ void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
     SetGenConfig(configTag, value);
+}
+
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value)
+{
+    INVALID_IF((rngTag != RNG_AI_SCORE_TIE_DOUBLES_MOVE && rngTag != RNG_AI_SCORE_TIE_SINGLES), "TIE_BREAK_SCORE requires RNG_AI_SCORE_TIE_SINGLES or RNG_AI_SCORE_TIE_DOUBLES_MOVE");
+    DATA.scoreTieResolution = scoreTieRes;
+    DATA.scoreTieTag = rngTag;
+    if (scoreTieRes == SCORE_TIE_CHOSEN)
+        DATA.scoreTieOverride = value;
+}
+
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value)
+{
+    DATA.targetTieResolution = targetTieRes;
+    if (targetTieRes == TARGET_TIE_CHOSEN)
+        DATA.targetTieOverride = value;
 }
 
 void ClearFlagAfterTest(void)
