@@ -37,8 +37,6 @@ static u16 GetOverworldSpeciesFromSpawnSlot(u32 spawnSlot);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
-    u32 slot = LOCALID_OW_ENCOUNTER_END - objectEvent->localId;
-
     sFollowMonData.spawnCountdown += 60;
 }
 
@@ -79,7 +77,6 @@ void UpdateOverworldEncounters(void)
 
             if (spawnSlot != INVALID_SPAWN_SLOT)
             {
-                const struct FollowMon *followMon = &sFollowMonData.list[spawnSlot];
                 bool32 waterMons = IsSpawningWaterMons();
                 bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
                 u32 localId = LOCALID_OW_ENCOUNTER_END - spawnSlot;
@@ -186,7 +183,7 @@ static u32 GetOldestSlot(void)
 
 static u8 NextSpawnMonSlot(void)
 {
-    u32 spawnSlot = 0;
+    u32 spawnSlot;
     u32 maxSpawns = GetMaxFollowMonSpawns();
 
     // All mon slots are in use
@@ -197,7 +194,7 @@ static u8 NextSpawnMonSlot(void)
     }
     else
     {
-        for (spawnSlot; spawnSlot < maxSpawns; spawnSlot++)
+        for (spawnSlot = 0; spawnSlot < maxSpawns; spawnSlot++)
         {
             if (GetOverworldSpeciesFromSpawnSlot(spawnSlot) == SPECIES_NONE)
                 break;
