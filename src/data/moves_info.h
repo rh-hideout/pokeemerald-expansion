@@ -580,7 +580,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         #endif
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
-        .priority = -6,
+        #if B_UPDATED_MOVE_DATA >= GEN_3
+            .priority = -6,
+        #elif B_UPDATED_MOVE_DATA == GEN_2
+            .priority = -1,
+        #else
+            .priority = 0,
+        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .windMove = TRUE,
@@ -1303,7 +1309,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .accuracy = B_UPDATED_MOVE_DATA >= GEN_6 ? 0 : 100,
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
-        .priority = -6,
+        #if B_UPDATED_MOVE_DATA >= GEN_3
+            .priority = -6,
+        #elif B_UPDATED_MOVE_DATA == GEN_2
+            .priority = -1,
+        #else
+            .priority = 0,
+        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_DEF_UP_1 },
         .ignoresProtect = B_UPDATED_MOVE_FLAGS >= GEN_6,
@@ -2716,7 +2728,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .accuracy = 0,
         .pp = 20,
         .target = MOVE_TARGET_USER,
-        .priority = -6,
+        .priority = B_UPDATED_MOVE_DATA >= GEN_8 ? -6 : 0,
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RECOVER_HP },
         .ignoresProtect = TRUE,
@@ -4912,7 +4924,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .accuracy = 0,
         .pp = 10,
         .target = MOVE_TARGET_USER,
-        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 4 : 3,
+        #if B_UPDATED_MOVE_DATA >= GEN_5
+            .priority = 4,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .priority = 3,
+        #else
+            .priority = 2,
+        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .protectMethod = PROTECT_NORMAL },
         .zMove = { .effect = Z_EFFECT_RESET_STATS },
@@ -5301,7 +5319,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .accuracy = 0,
         .pp = 5,
         .target = MOVE_TARGET_USER,
-        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 4 : 3,
+        #if B_UPDATED_MOVE_DATA >= GEN_5
+            .priority = 4,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .priority = 3,
+        #else
+            .priority = 2,
+        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .argument = { .protectMethod = PROTECT_NORMAL },
         .zMove = { .effect = Z_EFFECT_EVSN_UP_1 },
@@ -5453,7 +5477,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .accuracy = 0,
         .pp = 10,
         .target = MOVE_TARGET_USER,
-        .priority = B_UPDATED_MOVE_DATA >= GEN_5 ? 4 : 3,
+        #if B_UPDATED_MOVE_DATA >= GEN_5
+            .priority = 4,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .priority = 3,
+        #else
+            .priority = 2,
+        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_RESET_STATS },
         .ignoresProtect = TRUE,
