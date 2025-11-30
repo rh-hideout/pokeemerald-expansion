@@ -96,8 +96,8 @@ SINGLE_BATTLE_TEST("Glaive Rush doesn't affect the user if the effect is blocked
 {
     u32 species;
 
-    PARAMETRIZE { species = SPECIES_CLEFAIRY; }
-    PARAMETRIZE { species = SPECIES_SHELLOS; } // Closest mon in both Defense and Sp. Defense
+    PARAMETRIZE { species = SPECIES_FIDOUGH; }
+    PARAMETRIZE { species = SPECIES_MAGNEMITE; } // Closest mon in both Defense and Sp. Defense
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -105,7 +105,7 @@ SINGLE_BATTLE_TEST("Glaive Rush doesn't affect the user if the effect is blocked
     } WHEN {
         TURN { MOVE(player, MOVE_GLAIVE_RUSH); MOVE(opponent, MOVE_SCRATCH); }
     } SCENE {
-        if (species == SPECIES_CLEFAIRY)
+        if (species == SPECIES_FIDOUGH)
             NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);
         else
             ANIMATION(ANIM_TYPE_MOVE, MOVE_GLAIVE_RUSH, player);

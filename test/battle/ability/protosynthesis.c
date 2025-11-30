@@ -218,3 +218,95 @@ SINGLE_BATTLE_TEST("Protosynthesis activates after weather was reset")
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
     }
 }
+
+SINGLE_BATTLE_TEST("Protosynthesis accounts for Sticky Web when determining the boosted stat")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
+        PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(50); Defense(50); SpAttack(150); SpDefense(140); Speed(180); }
+        OPPONENT(SPECIES_GALVANTULA) { Speed(60); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_STICKY_WEB); MOVE(player, MOVE_SUNNY_DAY); }
+        TURN { SWITCH(player, 1); MOVE(opponent, MOVE_SPLASH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STICKY_WEB, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated Flutter Mane's Protosynthesis!");
+        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis keeps its initial boosted stat after Speed is lowered")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_ROUND); }
+        OPPONENT(SPECIES_NINETALES) { Ability(ABILITY_DROUGHT); Moves(MOVE_ICY_WIND, MOVE_CELEBRATE); Speed(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_ICY_WIND); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_DROUGHT);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis recalculates the boosted stat after Neutralizing Gas leaves the field")
+{
+    GIVEN {
+        PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_ICY_WIND); Speed(70); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_ICY_WIND); }
+        TURN { SWITCH(opponent, 1); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        NOT ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponent);
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        MESSAGE("The harsh sunlight activated Flutter Mane's Protosynthesis!");
+        MESSAGE("Flutter Mane's Sp. Atk was heightened!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Protosynthesis retains its boosted stat after Neutralizing Gas briefly suppresses it")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_FLUTTER_MANE) { Ability(ABILITY_PROTOSYNTHESIS); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_SUNNY_DAY, MOVE_ROUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_CELEBRATE); Speed(70); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUNNY_DAY); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 0); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, player);
+        ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}

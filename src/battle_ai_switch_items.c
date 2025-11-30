@@ -2414,6 +2414,9 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         if (bestMonId != PARTY_SIZE)
             return bestMonId;
 
+        if (aceMonId != PARTY_SIZE && aliveCount == 0)
+            return aceMonId;
+
         bestMonId = GetBestMonTypeMatchup(party, firstId, lastId, invalidMons, battler, opposingBattler);
         if (bestMonId != PARTY_SIZE)
             return bestMonId;

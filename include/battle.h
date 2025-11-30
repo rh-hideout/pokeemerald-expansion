@@ -134,7 +134,7 @@ struct DisableStruct
     u8 endured:1;
     u8 octolockedBy:3;
     u8 tryEjectPack:1;
-    u8 padding:4;
+    u8 paradoxBoostedStat:4;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -158,19 +158,18 @@ struct ProtectStruct
     u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
-    u32 beakBlastCharge:1;
     u32 quash:1;
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
+    u16 lashOutAffected:1;
     // End of 32-bit bitfield
     u32 helpingHand:3;
-    u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
     u16 laggingTail:1;
-    u16 padding:9;
+    u16 padding:10;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -197,8 +196,8 @@ struct SpecialStatus
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
-    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
+    u8 padding:1;
     // End of byte
     u8 gemParam;
     // End of byte
@@ -739,7 +738,7 @@ struct BattleStruct
     u8 appearedInBattle; // Bitfield to track which Pokemon appeared in battle. Used for Burmy's form change
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
-    u16 beatUpSpecies[PARTY_SIZE];
+    u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
     u8 pledgeMove:1;

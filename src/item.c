@@ -411,6 +411,13 @@ bool32 RemoveBagItem(u16 itemId, u16 count)
     return BagPocket_RemoveItem(&gBagPockets[GetItemPocket(itemId)], itemId, count);
 }
 
+// Unsafe function: Only use with functions that already check the slot and count are valid
+void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count)
+{
+    struct ItemSlot itemSlot = BagPocket_GetSlotData(pocket, slotId);
+    BagPocket_SetSlotItemIdAndCount(pocket, slotId, itemSlot.itemId, itemSlot.quantity - count);
+}
+
 static u8 NONNULL BagPocket_CountUsedItemSlots(struct BagPocket *pocket)
 {
     u8 usedSlots = 0;

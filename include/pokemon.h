@@ -6,6 +6,7 @@
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
 #include "constants/regions.h"
@@ -825,6 +826,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, u8 statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum ItemHoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);

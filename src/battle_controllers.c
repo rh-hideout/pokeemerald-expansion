@@ -2578,7 +2578,7 @@ void BtlController_HandleStatusAnimation(u32 battler)
 
 void BtlController_HandleHitAnimation(u32 battler)
 {
-    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE)
+    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE || gTestRunnerHeadless)
     {
         BtlController_Complete(battler);
     }
@@ -2593,6 +2593,11 @@ void BtlController_HandleHitAnimation(u32 battler)
 
 void BtlController_HandlePlaySE(u32 battler)
 {
+    if (gTestRunnerHeadless)
+    {
+        BtlController_Complete(battler);
+        return;
+    }
     s32 pan = IsOnPlayerSide(battler) ? SOUND_PAN_ATTACKER : SOUND_PAN_TARGET;
 
     PlaySE12WithPanning(gBattleResources->bufferA[battler][1] | (gBattleResources->bufferA[battler][2] << 8), pan);
@@ -2601,6 +2606,11 @@ void BtlController_HandlePlaySE(u32 battler)
 
 void BtlController_HandlePlayFanfareOrBGM(u32 battler)
 {
+    if (gTestRunnerHeadless)
+    {
+        BtlController_Complete(battler);
+        return;
+    }
     if (gBattleResources->bufferA[battler][3])
     {
         BattleStopLowHpSound();
@@ -2867,7 +2877,7 @@ void AnimateMonAfterPokeBallFail(u32 battler)
 {
     if (B_ANIMATE_MON_AFTER_FAILED_POKEBALL == FALSE)
         return;
-    
+
     LaunchKOAnimation(battler, ReturnAnimIdForBattler(TRUE, battler), TRUE);
     TryShinyAnimation(gBattlerTarget, GetBattlerMon(gBattlerTarget));
 }
@@ -3096,24 +3106,7 @@ void UpdateFriendshipFromXItem(u32 battler)
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        if (GetItemHoldEffect(heldItem) == HOLD_EFFECT_FRIENDSHIP_UP)
-            friendship += 150 * X_ITEM_FRIENDSHIP_INCREASE / 100;
-        else
-            friendship += X_ITEM_FRIENDSHIP_INCREASE;
-
-        u8 pokeball;
-        gBattleResources->bufferA[battler][1] = REQUEST_POKEBALL_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &pokeball);
-
-        if (pokeball == BALL_LUXURY)
-            friendship++;
-
-        u8 metLocation;
-        gBattleResources->bufferA[battler][1] = REQUEST_MET_LOCATION_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &metLocation);
-
-        if (metLocation == GetCurrentRegionMapSectionId())
-            friendship++;
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
 
         if (friendship > MAX_FRIENDSHIP)
             friendship = MAX_FRIENDSHIP;
