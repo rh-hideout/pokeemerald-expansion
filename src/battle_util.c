@@ -10419,6 +10419,7 @@ void ClearDamageCalcResults(void)
     gBattleStruct->calculatedSpreadMoveAccuracy = FALSE;
     gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
+    gBattleStruct->savedDmg = 0;
 }
 
 bool32 DoesDestinyBondFail(u32 battler)

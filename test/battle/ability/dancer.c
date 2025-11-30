@@ -146,6 +146,27 @@ SINGLE_BATTLE_TEST("Dancer-called attacks have their type updated")
     }
 }
 
+SINGLE_BATTLE_TEST("Dancer-called attacks do not trigger Life Orb if target is immune")
+{
+    GIVEN {
+        ASSUME(IsDanceMove(MOVE_REVELATION_DANCE));
+        ASSUME(GetMoveEffect(MOVE_REVELATION_DANCE) == EFFECT_REVELATION_DANCE);
+        ASSUME(GetMoveEffect(MOVE_ROOST) == EFFECT_ROOST);
+        ASSUME(GetItemHoldEffect(ITEM_LIFE_ORB) == HOLD_EFFECT_LIFE_ORB);
+        ASSUME(GetSpeciesType(SPECIES_ORICORIO_POM_POM, 0) == TYPE_ELECTRIC || GetSpeciesType(SPECIES_ORICORIO_POM_POM, 1) == TYPE_ELECTRIC);
+        PLAYER(SPECIES_RAICHU) { Ability(ABILITY_LIGHTNING_ROD); }
+        OPPONENT(SPECIES_ORICORIO_POM_POM) { Ability(ABILITY_DANCER); Item(ITEM_LIFE_ORB); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_ROOST); MOVE(player, MOVE_REVELATION_DANCE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, player);
+        ABILITY_POPUP(opponent, ABILITY_DANCER);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_REVELATION_DANCE, opponent);
+        ABILITY_POPUP(player, ABILITY_LIGHTNING_ROD);
+        NOT HP_BAR(opponent);
+    }
+}
+
 DOUBLE_BATTLE_TEST("Dancer doesn't trigger on a snatched move")
 {
     GIVEN {
