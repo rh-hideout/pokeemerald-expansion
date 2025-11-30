@@ -5397,7 +5397,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_POISON_PUPPETEER:
             if (gBattleMons[gBattlerAttacker].species == SPECIES_PECHARUNT
              && gBattleStruct->poisonPuppeteerConfusion == TRUE
-             && CanBeConfused(gBattlerTarget))
+             && CanBeConfused(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerTarget)))
             {
                 gBattleStruct->poisonPuppeteerConfusion = FALSE;
                 gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
@@ -6274,14 +6274,17 @@ static bool32 CanSleepDueToSleepClause(u32 battlerAtk, u32 battlerDef, enum Func
     return FALSE;
 }
 
-bool32 CanBeConfused(u32 battler)
+bool32 CanBeConfused(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef)
 {
-    enum Ability ability = GetBattlerAbility(battler);
-    if (gBattleMons[battler].volatiles.confusionTurns > 0
-     || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), STATUS_FIELD_MISTY_TERRAIN)
-     || IsAbilityAndRecord(battler, ability, ABILITY_OWN_TEMPO))
-        return FALSE;
-    return TRUE;
+    if (CanSetMainMoveEffect(
+            battlerAtk,
+            battlerDef,
+            ABILITY_NONE, // attacker ability does not matter
+            abilityDef,
+            MOVE_EFFECT_CONFUSION,
+            CHECK_TRIGGER))
+        return TRUE;
+    return FALSE;
 }
 
 // second argument is 1/X of current hp compared to max hp

@@ -381,7 +381,7 @@ bool32 CanBeParalyzed(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 bool32 CanBeFrozen(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 bool32 CanGetFrostbite(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 bool32 CanSetMainMoveEffect(u32 battlerAtk, u32 battlerDef, enum Ability abilityAtk, enum Ability abilityDef, enum MoveEffect secondaryMoveEffect, enum FunctionCallOption option);
-bool32 CanBeConfused(u32 battler);
+bool32 CanBeConfused(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef);
 u32 GetBattlerAffectionHearts(u32 battler);
 void TryToRevertMimicryAndFlags(void);
 bool32 BattleArenaTurnEnd(void);
