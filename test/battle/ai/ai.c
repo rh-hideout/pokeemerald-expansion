@@ -10,7 +10,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
     PARAMETRIZE { speedPlayer = 10; speedAi = 200; }
 
     GIVEN {
-        ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
+        WITH_MOVE_DATA(MOVE_BUBBLE, MOVE_DATA_POWER, 40); // We need Bubble's Gen 6 power which equals Water Gun's
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
@@ -35,7 +35,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
     PARAMETRIZE { abilityAI = ABILITY_MOXIE; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; } // Mold Breaker ignores Contrary.
     GIVEN {
-        ASSUME(GetMovePower(MOVE_BUBBLE) == GetMovePower(MOVE_WATER_GUN));
+        WITH_MOVE_DATA(MOVE_BUBBLE, MOVE_DATA_POWER, 40); // We need Bubble's Gen 6 power which equals Water Gun's
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_PINSIR) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Ability(abilityAI); }
@@ -208,8 +208,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effec
         ASSUME(GetMoveCategory(MOVE_FLAMETHROWER) == DAMAGE_CATEGORY_SPECIAL); // Added because Typhlosion has to KO Wobbuffet
         ASSUME(GetMoveCategory(MOVE_OVERHEAT) == DAMAGE_CATEGORY_SPECIAL);     // Added because Typhlosion has to KO Wobbuffet
         // With Gen 5 data, it chooses Overheat instead
-        ASSUME(GetMovePower(MOVE_FLAMETHROWER) == 90); // In Gen 5, it's 95
-        ASSUME(GetMovePower(MOVE_OVERHEAT) == 130); // In Gen 5, it's 140.
+        WITH_MOVE_DATA(MOVE_FLAMETHROWER, MOVE_DATA_POWER, 90); // In Gen 5, it's 95
+        WITH_MOVE_DATA(MOVE_OVERHEAT, MOVE_DATA_POWER, 130); // In Gen 5, it's 140
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(hp); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -338,7 +338,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SOLAR_BEAM) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_GRASS_PLEDGE) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMovePower(MOVE_GRASS_PLEDGE) == 80); // Gen 5's 50 power causes the test to fail
+        WITH_MOVE_DATA(MOVE_GRASS_PLEDGE, MOVE_DATA_POWER, 80); // Gen 5's 50 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(211); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -574,7 +574,6 @@ AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical i
 
     GIVEN {
         ASSUME(MoveAlwaysCrits(MOVE_STORM_THROW));
-        ASSUME(GetMovePower(MOVE_STORM_THROW) == 60);
         ASSUME(GetMovePower(MOVE_BRICK_BREAK) == 75);
         ASSUME(GetMoveType(MOVE_STORM_THROW) == GetMoveType(MOVE_BRICK_BREAK));
         ASSUME(GetMoveCategory(MOVE_STORM_THROW) == GetMoveCategory(MOVE_BRICK_BREAK));

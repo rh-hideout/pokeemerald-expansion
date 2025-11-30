@@ -16,4 +16,33 @@ void TestFreeConfigData(void)
 {
     TRY_FREE_AND_SET_NULL(gGenerationalChangesTestOverride)
 }
+
+EWRAM_DATA struct MoveDataOverride *gMoveDataTestOverride = NULL;
+
+void TestInitMoveDataOverride(void)
+{
+    gMoveDataTestOverride = AllocZeroed(sizeof(struct MoveDataOverride));
+}
+
+void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u32 value)
+{
+    struct MoveDataOverride *temp = NULL;
+    u32 i = 0;
+    for (; gMoveDataTestOverride[i].moveId != 0; i++); // Count how big the array is.
+
+    temp = AllocZeroed(sizeof(struct MoveDataOverride) * (i + 2));
+    memcpy(temp, gMoveDataTestOverride, sizeof(struct MoveDataOverride) * (i + 1));
+
+    temp[i].moveId = move;
+    temp[i].type = type;
+    temp[i].data = value;
+
+    TRY_FREE_AND_SET_NULL(gMoveDataTestOverride);
+    gMoveDataTestOverride = temp;
+}
+
+void TestFreeMoveDataOverride(void)
+{
+    TRY_FREE_AND_SET_NULL(gMoveDataTestOverride);
+}
 #endif

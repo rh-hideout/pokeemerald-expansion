@@ -4,6 +4,13 @@
 #include "constants/generational_changes.h"
 #include "config/battle.h"
 
+struct MoveDataOverride
+{
+    u32 moveId:10;
+    enum MoveDataType type:7;
+    u32 data:15;
+};
+
 static const u8 sGenerationalChanges[GEN_CONFIG_COUNT] =
 {
     [GEN_CONFIG_CRIT_CHANCE]               = B_CRIT_CHANCE,
@@ -86,6 +93,9 @@ static inline void SetGenConfig(enum GenConfigTag configTag, u32 value)
 #if TESTING
 void TestInitConfigData(void);
 void TestFreeConfigData(void);
+void TestInitMoveDataOverride(void);
+void TestAddMoveDataOverride(u32 move, enum MoveDataType type, u32 value);
+void TestFreeMoveDataOverride(void);
 #endif
 
 #endif // GUARD_GENERATIONAL_CHANGES_H
