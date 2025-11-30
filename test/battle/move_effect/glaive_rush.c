@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_GLAIVE_RUSH) == EFFECT_GLAIVE_RUSH);
+    ASSUME(MoveHasAdditionalEffectSelf(MOVE_GLAIVE_RUSH, MOVE_EFFECT_GLAIVE_RUSH));
 }
 
 SINGLE_BATTLE_TEST("If Glaive Rush is successful moves targeted at the user do not check accuracy")
