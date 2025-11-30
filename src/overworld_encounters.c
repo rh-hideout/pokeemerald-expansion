@@ -189,9 +189,10 @@ static u8 NextSpawnMonSlot(void)
 {
     u8 slot = 0;
     u8 maxSpawns = GetMaxFollowMonSpawns();
+    bool32 maxAllowedObjects = CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT;
 
     // All mon slots are in use
-    if(CountActiveFollowMon() >= maxSpawns)
+    if(CountActiveFollowMon() >= maxSpawns || maxAllowedObjects)
     {
         // Cycle through so we remove the oldest mon first
         slot = GetOldestSlot();
@@ -210,9 +211,12 @@ static u8 NextSpawnMonSlot(void)
     
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
-    if(CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT)
-    // TODO: Clear slot data.
+    if(maxAllowedObjects)
+    {
+        // Reset the countdown so multiple mons don't get destroyed at once.
+        sFollowMonData.spawnCountdown = 60;
         return INVALID_SPAWN_SLOT;
+    }
 
     return slot;
 }
