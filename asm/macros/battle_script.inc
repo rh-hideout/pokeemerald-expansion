@@ -425,8 +425,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0x48
+	.macro trainerslidein position:req
 	.byte 0x48
+	.byte \position
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -516,9 +517,8 @@
 	.byte \battler
 	.endm
 
-	.macro trainerslidein position:req
+	.macro switchinevents
 	.byte 0x53
-	.byte \position
 	.endm
 
 	.macro playse song:req
@@ -1118,9 +1118,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifnodamage jumpInstr:req
+	.macro unused_0xcf
 	.byte 0xcf
-	.4byte \jumpInstr
 	.endm
 
 	.macro settaunt failInstr:req
@@ -1297,7 +1296,7 @@
 	.byte 0xf3
 	.endm
 
-	.macro unused_0xf4
+	.macro sortbattlers
 	.byte 0xf4
 	.endm
 
@@ -1733,10 +1732,6 @@
 	callnative BS_WaitFanfare
 	.endm
 
-	.macro setbeakblast
-	callnative BS_SetBeakBlast
-	.endm
-
 	.macro cantarshotwork failInstr:req
 	callnative BS_CanTarShotWork
 	.4byte \failInstr
@@ -1875,10 +1870,6 @@
 
 	.macro dmg_1_8_targethp
 	manipulatedamage DMG_1_8_TARGET_HP
-	.endm
-
-	.macro dmgtomaxattackerhp
-	manipulatedamage DMG_FULL_ATTACKER_HP
 	.endm
 
 	.macro jumpifflowerveil jumpInstr:req
@@ -2123,8 +2114,9 @@
 	callnative BS_InstantHpDrop
 	.endm
 
-	.macro clearstatus
+	.macro clearstatus battler:req
 	callnative BS_ClearStatus
+	.byte \battler
 	.endm
 
 	.macro restoremovepp

@@ -147,6 +147,9 @@ Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviou
 ## `AI_FLAG_OMNISCIENT`
 AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.
 
+## `AI_FLAG_KNOW_OPPONENT_PARTY`
+AI has full knowledge of the species in the player's party, as well as their fainted status; no other omniscient knowledge is included. Functions similarly to a team preview.
+
 ## `AI_FLAG_ASSUME_STAB`
 A significantly more restricted version of `AI_FLAG_OMNISCIENT`, the AI only knows the player's STAB moves, as their existence would be reasonable to assume in almost any case.
 

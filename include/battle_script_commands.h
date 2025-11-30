@@ -68,13 +68,11 @@ void StealTargetItem(u8 battlerStealer, u8 battlerItem);
 u8 GetCatchingBattler(void);
 bool32 ProteanTryChangeType(u32 battler, enum Ability ability, u32 move, enum Type moveType);
 bool32 IsMoveNotAllowedInSkyBattles(u32 move);
-bool32 DoSwitchInAbilities(u32 battlerId);
 u8 GetFirstFaintedPartyIndex(u8 battlerId);
 bool32 IsMoveAffectedByParentalBond(u32 move, u32 battler);
 void SaveBattlerTarget(u32 battler);
 void SaveBattlerAttacker(u32 battler);
 bool32 CanBurnHitThaw(u16 move);
-bool32 EmergencyExitCanBeTriggered(u32 battler);
 
 extern void (*const gBattleScriptingCommandsTable[])(void);
 extern const struct StatFractions gAccuracyStageRatios[];
