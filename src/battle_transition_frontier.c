@@ -111,9 +111,6 @@ static const struct SpriteTemplate sSpriteTemplate_LogoCircles =
     .paletteTag = PALTAG_LOGO_CIRCLES,
     .oam = &sOamData_LogoCircles,
     .anims = sAnimTable_LogoCircles,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const TransitionStateFunc sFrontierCirclesMeet_Funcs[] =

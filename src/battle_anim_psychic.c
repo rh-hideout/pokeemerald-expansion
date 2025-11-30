@@ -48,8 +48,6 @@ const struct SpriteTemplate gPsychUpSpiralSpriteTemplate =
     .tileTag = ANIM_TAG_SPIRAL,
     .paletteTag = ANIM_TAG_SPIRAL,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_PsychUpSpiral,
     .callback = AnimSpriteOnMonPos,
 };
@@ -59,9 +57,6 @@ const struct SpriteTemplate gLightScreenWallSpriteTemplate =
     .tileTag = ANIM_TAG_GREEN_LIGHT_WALL,
     .paletteTag = ANIM_TAG_GREEN_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDefensiveWall,
 };
 
@@ -70,9 +65,6 @@ const struct SpriteTemplate gReflectWallSpriteTemplate =
     .tileTag = ANIM_TAG_BLUE_LIGHT_WALL,
     .paletteTag = ANIM_TAG_BLUE_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDefensiveWall,
 };
 
@@ -81,9 +73,6 @@ const struct SpriteTemplate gMirrorCoatWallSpriteTemplate =
     .tileTag = ANIM_TAG_RED_LIGHT_WALL,
     .paletteTag = ANIM_TAG_RED_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDefensiveWall,
 };
 
@@ -92,9 +81,6 @@ const struct SpriteTemplate gBarrierWallSpriteTemplate =
     .tileTag = ANIM_TAG_GRAY_LIGHT_WALL,
     .paletteTag = ANIM_TAG_GRAY_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDefensiveWall,
 };
 
@@ -103,9 +89,6 @@ const struct SpriteTemplate gMagicCoatWallSpriteTemplate =
     .tileTag = ANIM_TAG_ORANGE_LIGHT_WALL,
     .paletteTag = ANIM_TAG_ORANGE_LIGHT_WALL,
     .oam = &gOamData_AffineOff_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimDefensiveWall,
 };
 
@@ -130,8 +113,6 @@ const struct SpriteTemplate gReflectSparkleSpriteTemplate =
     .paletteTag = ANIM_TAG_SPARKLE_4,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_ReflectSparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWallSparkle,
 };
 
@@ -155,8 +136,6 @@ const struct SpriteTemplate gSpecialScreenSparkleSpriteTemplate =
     .paletteTag = ANIM_TAG_SPARKLE_3,
     .oam = &gOamData_AffineOff_ObjNormal_16x16,
     .anims = sAnims_SpecialScreenSparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimWallSparkle,
 };
 
@@ -165,9 +144,6 @@ const struct SpriteTemplate gGoldRingSpriteTemplate =
     .tileTag = ANIM_TAG_GOLD_RING,
     .paletteTag = ANIM_TAG_GOLD_RING,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = TranslateAnimSpriteToTargetMonLocation,
 };
 
@@ -223,8 +199,6 @@ const struct SpriteTemplate gBentSpoonSpriteTemplate =
     .paletteTag = ANIM_TAG_BENT_SPOON,
     .oam = &gOamData_AffineOff_ObjNormal_16x32,
     .anims = sAnims_BentSpoon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimBentSpoon,
 };
 
@@ -265,8 +239,6 @@ const struct SpriteTemplate gQuestionMarkSpriteTemplate =
     .paletteTag = ANIM_TAG_AMNESIA,
     .oam = &gOamData_AffineOff_ObjNormal_32x32,
     .anims = sAnims_QuestionMark,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimQuestionMark,
 };
 
@@ -290,10 +262,6 @@ const struct SpriteTemplate gImprisonOrbSpriteTemplate =
     .tileTag = ANIM_TAG_HOLLOW_ORB,
     .paletteTag = ANIM_TAG_HOLLOW_ORB,
     .oam = &gOamData_AffineOff_ObjBlend_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 const struct SpriteTemplate gRedXSpriteTemplate =
@@ -301,9 +269,6 @@ const struct SpriteTemplate gRedXSpriteTemplate =
     .tileTag = ANIM_TAG_X_SIGN,
     .paletteTag = ANIM_TAG_X_SIGN,
     .oam = &gOamData_AffineOff_ObjNormal_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimRedX,
 };
 
@@ -354,8 +319,6 @@ const struct SpriteTemplate gSkillSwapOrbSpriteTemplate =
     .tileTag = ANIM_TAG_BLUEGREEN_ORB,
     .paletteTag = ANIM_TAG_BLUEGREEN_ORB,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_SkillSwapOrb,
     .callback = AnimSkillSwapOrb,
 };
@@ -366,8 +329,6 @@ const struct SpriteTemplate gHeartSwapOrbSpriteTemplate =
     .tileTag = ANIM_TAG_PINKVIO_ORB,
     .paletteTag = ANIM_TAG_PINKVIO_ORB,
     .oam = &gOamData_AffineNormal_ObjNormal_16x16,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_SkillSwapOrb,
     .callback = AnimSkillSwapOrb,
 };
@@ -389,8 +350,6 @@ const struct SpriteTemplate gLusterPurgeCircleSpriteTemplate =
     .tileTag = ANIM_TAG_WHITE_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_WHITE_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_LusterPurgeCircle,
     .callback = AnimSpriteOnMonPos,
 };
@@ -427,8 +386,6 @@ const struct SpriteTemplate gPsychoBoostOrbSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .oam = &gOamData_AffineDouble_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gAffineAnims_PsychoBoostOrb,
     .callback = AnimPsychoBoost,
 };
@@ -454,8 +411,6 @@ const struct SpriteTemplate gZenHeadbuttSpriteTemplate =
     .tileTag = ANIM_TAG_CIRCLE_OF_LIGHT,
     .paletteTag = ANIM_TAG_WATER_IMPACT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = gZenHeadbuttAffineAnims,
     .callback = AnimateZenHeadbutt,
 };
@@ -465,8 +420,6 @@ const struct SpriteTemplate gPsychoCutSpiralSpriteTemplate =
     .tileTag = ANIM_TAG_SPIRAL,
     .paletteTag = ANIM_TAG_PSYCHO_CUT,
     .oam = &gOamData_AffineNormal_ObjBlend_64x64,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_PsychUpSpiral,
     .callback = AnimSpriteOnMonPos,
 };
@@ -476,9 +429,6 @@ const struct SpriteTemplate gPsychoCutSpriteTemplate =
     .tileTag = ANIM_TAG_PSYCHO_CUT,
     .paletteTag = ANIM_TAG_PSYCHO_CUT,
     .oam = &gOamData_AffineNormal_ObjNormal_32x32,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimPsychoCut,
 };
 
@@ -1386,7 +1336,5 @@ const struct SpriteTemplate gTachyonCutterSpriteTemplate =
     .paletteTag = ANIM_TAG_BUBBLE,
     .oam = &gOamData_AffineOff_ObjBlend_32x32,
     .anims = gCuttingSliceAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = AnimCuttingSlice,
 };

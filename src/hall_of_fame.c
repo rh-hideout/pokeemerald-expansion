@@ -310,8 +310,6 @@ static const struct SpriteTemplate sSpriteTemplate_HofConfetti =
     .paletteTag = TAG_CONFETTI,
     .oam = &sOamData_Confetti,
     .anims = sAnims_Confetti,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HofConfetti
 };
 
