@@ -1092,6 +1092,15 @@ bool32 IsPowderMoveBlocked(struct BattleContext *ctx)
     return TRUE;
 }
 
+static inline bool32 IsBattlerUsingBeakBlast(u32 battler)
+{
+    if (gChosenActionByBattler[battler] != B_ACTION_USE_MOVE)
+        return FALSE;
+    if (GetMoveEffect(gChosenMoveByBattler[battler]) != EFFECT_BEAK_BLAST)
+        return FALSE;
+    return !HasBattlerActedThisTurn(battler);
+}
+
 static void Cmd_attackcanceler(void)
 {
     CMD_ARGS();
@@ -1301,7 +1310,8 @@ static void Cmd_attackcanceler(void)
         gBattleCommunication[MISS_TYPE] = B_MSG_PROTECTED;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
-    else if (gProtectStructs[gBattlerTarget].beakBlastCharge && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
+    else if (IsBattlerUsingBeakBlast(gBattlerTarget)
+          && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), gCurrentMove))
     {
         gProtectStructs[gBattlerAttacker].touchedProtectLike = TRUE;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -6059,9 +6069,7 @@ static void Cmd_moveend(void)
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker)))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                        i = gBattlerAttacker;
-                        gBattlerAttacker = gBattlerTarget;
-                        gBattlerTarget = i; // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
+                        SWAP(gBattlerAttacker, gBattlerTarget, i); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
                         if (B_KINGS_SHIELD_LOWER_ATK >= GEN_8)
                             gBattleScripting.moveEffect = MOVE_EFFECT_ATK_MINUS_1;
                         else
@@ -6076,7 +6084,6 @@ static void Cmd_moveend(void)
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                         gBattleScripting.moveEffect = MOVE_EFFECT_POISON;
-                        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BANEFUL_BUNKER);
                         BattleScriptCall(BattleScript_BanefulBunkerEffect);
                         effect = 1;
                     }
@@ -6085,10 +6092,8 @@ static void Cmd_moveend(void)
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker))
                      && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)))
                     {
-                        gEffectBattler =
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
                         gBattleScripting.moveEffect = MOVE_EFFECT_BURN;
-                        PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_BURNING_BULWARK);
                         BattleScriptCall(BattleScript_BanefulBunkerEffect);
                         effect = 1;
                     }
@@ -6097,9 +6102,7 @@ static void Cmd_moveend(void)
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker)))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                        i = gBattlerAttacker;
-                        gBattlerAttacker = gBattlerTarget;
-                        gBattlerTarget = i; // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
+                        SWAP(gBattlerAttacker, gBattlerTarget, i); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
                         gBattleScripting.moveEffect = MOVE_EFFECT_DEF_MINUS_2;
                         BattleScriptCall(BattleScript_KingsShieldEffect);
                         effect = 1;
@@ -6109,9 +6112,7 @@ static void Cmd_moveend(void)
                     if (!IsProtectivePadsProtected(gBattlerAttacker, GetBattlerHoldEffect(gBattlerAttacker)))
                     {
                         gProtectStructs[gBattlerAttacker].touchedProtectLike = FALSE;
-                        i = gBattlerAttacker;
-                        gBattlerAttacker = gBattlerTarget;
-                        gBattlerTarget = i; // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
+                        SWAP(gBattlerAttacker, gBattlerTarget, i); // gBattlerTarget and gBattlerAttacker are swapped in order to activate Defiant, if applicable
                         gBattleScripting.moveEffect = MOVE_EFFECT_SPD_MINUS_1;
                         BattleScriptCall(BattleScript_KingsShieldEffect);
                         effect = 1;
@@ -6122,7 +6123,7 @@ static void Cmd_moveend(void)
                 }
 
                 // Not strictly a protect effect, but works the same way
-                if (gProtectStructs[gBattlerTarget].beakBlastCharge
+                if (IsBattlerUsingBeakBlast(gBattlerTarget)
                  && CanBeBurned(gBattlerAttacker, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
                  && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 {
@@ -6411,8 +6412,9 @@ static void Cmd_moveend(void)
                 gBattleStruct->lastMoveTarget[gBattlerAttacker] = gBattlerTarget;
             }
             enum BattleMoveEffects originalEffect = GetMoveEffect(originallyUsedMove);
-            if (!(gAbsentBattlerFlags & (1u << gBattlerAttacker))
-                && originalEffect != EFFECT_BATON_PASS && originalEffect != EFFECT_HEALING_WISH)
+            if (IsBattlerAlive(gBattlerAttacker)
+             && originalEffect != EFFECT_BATON_PASS
+             && originalEffect != EFFECT_HEALING_WISH)
             {
                 if (gHitMarker & HITMARKER_OBEYS)
                 {
@@ -6981,25 +6983,17 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_THIRD_MOVE_BLOCK:
-            if (gChosenMove == MOVE_UNAVAILABLE)
-            {
-                gBattleScripting.moveendState++;
-                break;
-            }
-
-            // Special case for Steel Roller since it has to check the chosen move
-            if (GetMoveEffect(gChosenMove) == EFFECT_STEEL_ROLLER && IsBattlerTurnDamaged(gBattlerTarget))
-            {
-                BattleScriptCall(BattleScript_RemoveTerrain);
-                effect = TRUE;
-                gBattleScripting.moveendState++;
-                break;
-            }
-
             switch (moveEffect)
             {
+            case EFFECT_STEEL_ROLLER:
+                if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY && IsBattlerTurnDamaged(gBattlerTarget))
+                {
+                    BattleScriptCall(BattleScript_RemoveTerrain);
+                    effect = TRUE;
+                }
             case EFFECT_ICE_SPINNER:
                 if (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY
+                 && gLastPrintedMoves[gBattlerAttacker] == gCurrentMove
                  && IsBattlerAlive(gBattlerAttacker)
                  && IsBattlerTurnDamaged(gBattlerTarget))
                 {
@@ -7072,6 +7066,7 @@ static void Cmd_moveend(void)
             gProtectStructs[gBattlerAttacker].shellTrap = FALSE;
             gBattleStruct->battlerState[gBattlerAttacker].ateBoost = FALSE;
             gBattleScripting.moveEffect = MOVE_EFFECT_NONE;
+            gBattleStruct->moldBreakerActive = FALSE;
             gBattleStruct->swapDamageCategory = FALSE;
             gBattleStruct->categoryOverride = FALSE;
             gBattleStruct->additionalEffectsCounter = 0;
@@ -7115,11 +7110,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_DANCER:
-            if (gCurrentMove == MOVE_NONE)
-                originallyUsedMove = gChosenMove; // Fallback to chosen move in case attacker is switched out in the middle of an attack resolution (eg red card)
-            else
-                originallyUsedMove = gCurrentMove;
-            if (IsDanceMove(originallyUsedMove) && !gBattleStruct->snatchedMoveIsUsed)
+            if (IsDanceMove(gCurrentMove) && !gBattleStruct->snatchedMoveIsUsed)
             {
                 u32 battler, nextDancer = 0;
                 bool32 hasDancerTriggered = FALSE;
@@ -7153,7 +7144,7 @@ static void Cmd_moveend(void)
                                 nextDancer = battler | 0x4;
                         }
                     }
-                    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, originallyUsedMove, TRUE))
+                    if (nextDancer && AbilityBattleEffects(ABILITYEFFECT_MOVE_END_OTHER, nextDancer & 0x3, 0, gCurrentMove, TRUE))
                         effect = TRUE;
                 }
             }
@@ -15719,13 +15710,6 @@ void BS_WaitFanfare(void)
     if (!IsFanfareTaskInactive())
         return;
 
-    gBattlescriptCurrInstr = cmd->nextInstr;
-}
-
-void BS_SetBeakBlast(void)
-{
-    NATIVE_ARGS();
-    gProtectStructs[gBattlerAttacker].beakBlastCharge = TRUE;
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 

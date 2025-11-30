@@ -1733,10 +1733,6 @@
 	callnative BS_WaitFanfare
 	.endm
 
-	.macro setbeakblast
-	callnative BS_SetBeakBlast
-	.endm
-
 	.macro cantarshotwork failInstr:req
 	callnative BS_CanTarShotWork
 	.4byte \failInstr

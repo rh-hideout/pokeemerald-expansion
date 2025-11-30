@@ -20,6 +20,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
         .battleTvScore = 0, // Handled within the battle TV functions
+        .encourageEncore = TRUE,
     },
 
     [EFFECT_ABSORB] =

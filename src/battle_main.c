@@ -3260,7 +3260,6 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     }
 
     gBattleStruct->choicedMove[battler] = MOVE_NONE;
-    gCurrentMove = MOVE_NONE;
     gBattleStruct->eventState.arenaTurn = 0xFF;
 
     // Reset damage to prevent things like red card activating if the switched-in mon is holding it

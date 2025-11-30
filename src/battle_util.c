@@ -533,6 +533,9 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
 
+    if (IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove))
+        gBattleStruct->moldBreakerActive = TRUE;
+
     moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
     if (!HandleMoveTargetRedirection())
@@ -958,12 +961,13 @@ void HandleAction_ActionFinished(void)
     gHitMarker &= ~(HITMARKER_OBEYS);
 
     ClearDamageCalcResults();
-    gCurrentMove = 0;
+    gCurrentMove = MOVE_NONE;
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->bouncedMoveIsUsed = FALSE;
     gBattleStruct->snatchedMoveIsUsed = FALSE;
+    gBattleStruct->moldBreakerActive = FALSE;
     gBattleScripting.moveendState = 0;
     gBattleCommunication[3] = 0;
     gBattleCommunication[4] = 0;
@@ -2298,7 +2302,7 @@ static enum MoveCanceler CancelerConfused(struct BattleContext *ctx)
     return MOVE_STEP_SUCCESS;
 }
 
-static enum MoveCanceler CancelerParalysed(struct BattleContext *ctx)
+static enum MoveCanceler CancelerParalyzed(struct BattleContext *ctx)
 {
     if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_PARALYSIS
         && !(B_MAGIC_GUARD == GEN_4 && IsAbilityAndRecord(ctx->battlerAtk, ctx->abilities[ctx->battlerAtk], ABILITY_MAGIC_GUARD))
@@ -2997,7 +3001,7 @@ static enum MoveCanceler (*const sMoveSuccessOrderCancelers[])(struct BattleCont
     [CANCELER_TAUNTED] = CancelerTaunted,
     [CANCELER_IMPRISONED] = CancelerImprisoned,
     [CANCELER_CONFUSED] = CancelerConfused,
-    [CANCELER_PARALYSED] = CancelerParalysed,
+    [CANCELER_PARALYZED] = CancelerParalyzed,
     [CANCELER_INFATUATION] = CancelerInfatuation,
     [CANCELER_BIDE] = CancelerBide,
     [CANCELER_Z_MOVES] = CancelerZMoves,
@@ -5636,17 +5640,11 @@ bool32 IsMoldBreakerTypeAbility(u32 battler, enum Ability ability)
     return FALSE;
 }
 
-static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability, u32 hasAbilityShield, u32 ignoreMoldBreaker)
+static inline bool32 CanBreakThroughAbility(u32 battlerAtk, u32 battlerDef, u32 hasAbilityShield, u32 ignoreMoldBreaker)
 {
-    if (hasAbilityShield || ignoreMoldBreaker)
+    if (hasAbilityShield || ignoreMoldBreaker || battlerDef == battlerAtk)
         return FALSE;
-
-    return ((IsMoldBreakerTypeAbility(battlerAtk, ability) || MoveIgnoresTargetAbility(gCurrentMove))
-         && battlerDef != battlerAtk
-         && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable
-         && gBattlerByTurnOrder[gCurrentTurnActionNumber] == battlerAtk
-         && gActionsByTurnOrder[gCurrentTurnActionNumber] == B_ACTION_USE_MOVE
-         && gCurrentTurnActionNumber < gBattlersCount);
+    return gBattleStruct->moldBreakerActive && gAbilitiesInfo[gBattleMons[battlerDef].ability].breakable;
 }
 
 u32 GetBattlerAbilityNoAbilityShield(u32 battler)
@@ -5677,7 +5675,7 @@ u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityS
             && gBattleMons[battler].ability == ABILITY_COMATOSE)
                 return ABILITY_NONE;
 
-        if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield, ignoreMoldBreaker))
+        if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
             return ABILITY_NONE;
 
         return gBattleMons[battler].ability;
@@ -5691,7 +5689,7 @@ u32 GetBattlerAbilityInternal(u32 battler, u32 ignoreMoldBreaker, u32 noAbilityS
      && (gBattleMons[battler].ability != ABILITY_NEUTRALIZING_GAS || gBattleMons[battler].volatiles.gastroAcid))
         return ABILITY_NONE;
 
-    if (CanBreakThroughAbility(gBattlerAttacker, battler, gBattleMons[gBattlerAttacker].ability, hasAbilityShield, ignoreMoldBreaker))
+    if (CanBreakThroughAbility(gBattlerAttacker, battler, hasAbilityShield, ignoreMoldBreaker))
         return ABILITY_NONE;
 
     return gBattleMons[battler].ability;
@@ -8894,14 +8892,10 @@ s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, u32 battler)
 
 bool32 IsPartnerMonFromSameTrainer(u32 battler)
 {
-    if (!IsOnPlayerSide(battler) && gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
-        return FALSE;
-    else if (IsOnPlayerSide(battler) && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
-        return FALSE;
-    else if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
-        return FALSE;
+    if (!IsOnPlayerSide(battler))
+        return !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS);
     else
-        return TRUE;
+        return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
 }
 
 bool32 DoesSpeciesUseHoldItemToChangeForm(u16 species, u16 heldItemId)

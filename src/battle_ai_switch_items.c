@@ -1351,6 +1351,7 @@ void AI_TrySwitchOrUseItem(u32 battler)
         if (gAiLogicData->shouldSwitch & (1u << battler) && IsSwitchinValid(battler))
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
+            SetAIUsingGimmick(battler, NO_GIMMICK);
             if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
             {
                 s32 monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
@@ -1397,6 +1398,7 @@ void AI_TrySwitchOrUseItem(u32 battler)
         }
         else if (ShouldUseItem(battler))
         {
+            SetAIUsingGimmick(battler, NO_GIMMICK);
             return;
         }
     }
@@ -2245,7 +2247,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
                 // Check if current mon can revenge kill in some capacity
                 // If AI mon can one shot
-                if (damageDealt > playerMonHP)
+                if (damageDealt >= playerMonHP)
                 {
                     if (canSwitchinWin1v1)
                     {
@@ -2257,7 +2259,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If AI mon can two shot
-                if (damageDealt > playerMonHP / 2)
+                if (damageDealt >= (playerMonHP / 2 + playerMonHP % 2)) // Modulo to handle odd numbers in non-decimal division
                 {
                     if (canSwitchinWin1v1)
                     {

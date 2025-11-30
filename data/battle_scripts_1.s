@@ -139,7 +139,12 @@ BattleScript_EffectShedTail::
 	waitmessage B_WAIT_TIME_LONG
 	moveendto MOVEEND_ATTACKER_VISIBLE
 	moveendfrom MOVEEND_TARGET_VISIBLE
-	goto BattleScript_MoveSwitchOpenPartyScreen
+	call BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim
+	switchinanim BS_ATTACKER, FALSE, TRUE
+	waitstate
+	switchineffects BS_ATTACKER
+	switchinevents
+	end
 
 BattleScript_EffectPsychicNoise::
 	printstring STRINGID_PKMNPREVENTEDFROMHEALING
@@ -282,6 +287,15 @@ BattleScript_MoveSwitch:
 	printstring STRINGID_PKMNWENTBACK
 	waitmessage B_WAIT_TIME_SHORT
 BattleScript_MoveSwitchOpenPartyScreen::
+	call BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim
+	switchinanim BS_ATTACKER, FALSE, FALSE
+	waitstate
+	switchineffects BS_ATTACKER
+	switchinevents
+BattleScript_MoveSwitchEnd:
+	end
+
+BattleScript_MoveSwitchOpenPartyScreenReturnWithNoAnim:
 	openpartyscreen BS_ATTACKER, BattleScript_MoveSwitchEnd
 	waitstate
 	returntoball BS_ATTACKER, FALSE
@@ -294,12 +308,7 @@ BattleScript_MoveSwitchOpenPartyScreen::
 	printstring STRINGID_EMPTYSTRING3
 	waitmessage 1
 	printstring STRINGID_SWITCHINMON
-	switchinanim BS_ATTACKER, FALSE, TRUE
-	waitstate
-	switchineffects BS_ATTACKER
-	switchinevents
-BattleScript_MoveSwitchEnd:
-	end
+	return
 
 BattleScript_EffectPledge::
 	attackcanceler
@@ -614,7 +623,6 @@ BattleScript_EffectCourtChange::
 	goto BattleScript_MoveEnd
 
 BattleScript_BeakBlastSetUp::
-	setbeakblast
 	flushtextbox
 	playanimation BS_ATTACKER, B_ANIM_BEAK_BLAST_SETUP, NULL
 	printstring STRINGID_HEATUPBEAK
