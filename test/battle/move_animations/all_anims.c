@@ -61,9 +61,8 @@ static void ParametrizeMovesAndSpecies(u32 j, u32 *pMove, u32 *pSpecies, u32 var
 
 static u32 ParametrizeFriendship(u32 move, u32 variation)
 {
-    if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
-        || gMovesInfo[move].effect == EFFECT_RETURN
-        )
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_FRUSTRATION || effect == EFFECT_RETURN)
     {
         if (variation == 0)
            return 1;
@@ -79,7 +78,7 @@ static u32 ParametrizeFriendship(u32 move, u32 variation)
 
 static u32 GetParametrizedHP(u32 move, u32 variation)
 {
-    if (gMovesInfo[move].effect == EFFECT_POWER_BASED_ON_USER_HP && variation > 0)
+    if (GetMoveEffect(move) == EFFECT_POWER_BASED_ON_USER_HP && variation > 0)
     {
         if (variation == 1)
             return 6000;
@@ -109,7 +108,7 @@ static u32 GetParametrizedItem(u32 move, u32 variation)
 
 static u32 GetParametrizedLevel(u32 move, u32 variation)
 {
-    if (gMovesInfo[move].effect == EFFECT_LEVEL_DAMAGE && variation > 0)
+    if (GetMoveEffect(move) == EFFECT_LEVEL_DAMAGE && variation > 0)
     {
         if (variation == 1)
             return 50;
@@ -121,9 +120,8 @@ static u32 GetParametrizedLevel(u32 move, u32 variation)
 
 static bool32 GetParametrizedShinyness(u32 move, u32 variation)
 {
-    if ((gMovesInfo[move].effect == EFFECT_DRAGON_DARTS && variation == 2)
-        || (move == MOVE_SYRUP_BOMB && variation == 1)
-        )
+    if ((GetMoveEffect(move) == EFFECT_DRAGON_DARTS && variation == 2)
+        || (move == MOVE_SYRUP_BOMB && variation == 1))
         return TRUE;
     return FALSE;
 }
@@ -180,27 +178,28 @@ static bool32 UserHasToGoFirst(u32 move) // Player needs to go first
 static u32 GetVariationsNumber(u32 move, bool8 isDouble)
 {
     u32 variationsNumber;
+    enum BattleMoveEffects effect = GetMoveEffect(move);
 
-    if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL
-     || gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE
+    if (effect == EFFECT_WEATHER_BALL
+     || effect == EFFECT_TERRAIN_PULSE
      || move == MOVE_TECHNO_BLAST)
         variationsNumber = 5;
-    else if (gMovesInfo[move].effect == EFFECT_FRUSTRATION
-          || gMovesInfo[move].effect == EFFECT_RETURN
-          || gMovesInfo[move].effect == EFFECT_IVY_CUDGEL
+    else if (effect == EFFECT_FRUSTRATION
+          || effect == EFFECT_RETURN
+          || effect == EFFECT_IVY_CUDGEL
           || move == MOVE_WATER_SPOUT) //we don't use the effect because other moves with the water spout effect don't have animation variations
         variationsNumber = 4;
-    else if (gMovesInfo[move].effect == EFFECT_SPIT_UP
-          || gMovesInfo[move].effect == EFFECT_SWALLOW
-          || gMovesInfo[move].effect == EFFECT_DRAGON_DARTS
+    else if (effect == EFFECT_SPIT_UP
+          || effect == EFFECT_SWALLOW
+          || effect == EFFECT_DRAGON_DARTS
           || move == MOVE_SEISMIC_TOSS)
         variationsNumber = 3;
-    else if (gMovesInfo[move].effect == EFFECT_CURSE
-          || gMovesInfo[move].effect == EFFECT_PRESENT
-          || gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM
-          || gMovesInfo[move].effect == EFFECT_FICKLE_BEAM
-          || gMovesInfo[move].effect == EFFECT_MAGNITUDE
-          || (isDouble && gMovesInfo[move].effect == EFFECT_TERA_STARSTORM)
+    else if (effect == EFFECT_CURSE
+          || effect == EFFECT_PRESENT
+          || effect == EFFECT_SHELL_SIDE_ARM
+          || effect == EFFECT_FICKLE_BEAM
+          || effect == EFFECT_MAGNITUDE
+          || (isDouble && effect == EFFECT_TERA_STARSTORM)
           || move == MOVE_SYRUP_BOMB)
         variationsNumber = 2;
     else
@@ -264,7 +263,7 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    else if (effect == EFFECT_WEATHER_BALL && variation > 0)
     {
         if (variation == 1)
             TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
@@ -275,7 +274,7 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         else
             TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    else if (effect == EFFECT_TERRAIN_PULSE && variation > 0)
     {
         if (variation == 1)
             TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
@@ -286,7 +285,7 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         else if (variation == 4)
             TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
-    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    else if (gBattleMoveEffects[effect].twoTurnEffect)
     {
         TURN { MOVE(attacker, move); }
     }
@@ -331,33 +330,33 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
         {
             MOVE(attacker, move, target: attacker);
         }
-        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        else if (gBattleMoveEffects[effect].twoTurnEffect)
         {
             MOVE(defender, MOVE_HELPING_HAND);
             SKIP_TURN(attacker);
         }
-        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        else if (effect == EFFECT_PRESENT)
         {
             if (variation == 0)
                 MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 1));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_PRESENT, 254));
         }
-        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        else if (effect == EFFECT_MAGNITUDE)
         {
             if (variation == 0)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
         }
-        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        else if (effect == EFFECT_FICKLE_BEAM)
         {
             if (variation == 0)
                 MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
         }
-        else if (gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM)
+        else if (effect == EFFECT_SHELL_SIDE_ARM)
         {
             if (variation == 0)
                 MOVE(attacker, move, WITH_RNG(RNG_SHELL_SIDE_ARM, FALSE));
@@ -370,16 +369,16 @@ static void WhenSingles(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move);
         }
     }
-    if (gMovesInfo[move].effect == EFFECT_WISH)
+    if (effect == EFFECT_WISH)
     {
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    else if (effect == EFFECT_FUTURE_SIGHT)
     {
         TURN {};
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    else if (effect == EFFECT_ROLLOUT)
     {
         TURN {MOVE(attacker, move);};
         TURN {MOVE(attacker, move);};
@@ -474,7 +473,7 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
     { // Needs a terrain
         TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_WEATHER_BALL && variation > 0)
+    else if (effect == EFFECT_WEATHER_BALL && variation > 0)
     {
         if (variation == 1)
             TURN { MOVE(attacker, MOVE_SUNNY_DAY); }
@@ -485,7 +484,7 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
         else
             TURN { MOVE(attacker, MOVE_HAIL); }
     }
-    else if (gMovesInfo[move].effect == EFFECT_TERRAIN_PULSE && variation > 0)
+    else if (effect == EFFECT_TERRAIN_PULSE && variation > 0)
     {
         if (variation == 1)
             TURN { MOVE(attacker, MOVE_ELECTRIC_TERRAIN); }
@@ -496,7 +495,7 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
         else if (variation == 4)
             TURN { MOVE(attacker, MOVE_MISTY_TERRAIN); }
     }
-    else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+    else if (gBattleMoveEffects[effect].twoTurnEffect)
     {
         TURN { MOVE(attacker, move, target: target); }
     }
@@ -544,33 +543,33 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(attacker, move, target: target);
             MOVE(target, MOVE_QUICK_ATTACK, target: attacker);
         }
-        else if (gBattleMoveEffects[gMovesInfo[move].effect].twoTurnEffect)
+        else if (gBattleMoveEffects[effect].twoTurnEffect)
         {
             MOVE(target, MOVE_LAST_RESORT, target: attacker);
             SKIP_TURN(attacker);
         }
-        else if (gMovesInfo[move].effect == EFFECT_PRESENT)
+        else if (effect == EFFECT_PRESENT)
         {
             if (variation == 0)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 1));
             else if (variation == 1)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_PRESENT, 254));
         }
-        else if (gMovesInfo[move].effect == EFFECT_MAGNITUDE)
+        else if (effect == EFFECT_MAGNITUDE)
         {
             if (variation == 0)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 50));
             else if (variation == 1)
                 MOVE(attacker, move, WITH_RNG(RNG_MAGNITUDE, 99));
         }
-        else if (gMovesInfo[move].effect == EFFECT_FICKLE_BEAM)
+        else if (effect == EFFECT_FICKLE_BEAM)
         {
             if (variation == 0)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, FALSE));
             else if (variation == 1)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_FICKLE_BEAM, TRUE));
         }
-        else if (gMovesInfo[move].effect == EFFECT_SHELL_SIDE_ARM)
+        else if (effect == EFFECT_SHELL_SIDE_ARM)
         {
             if (variation == 0)
                 MOVE(attacker, move, target: target, WITH_RNG(RNG_SHELL_SIDE_ARM, FALSE));
@@ -589,16 +588,16 @@ static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattleP
             MOVE(ignore2, MOVE_CELEBRATE);
         }
     }
-    if (gMovesInfo[move].effect == EFFECT_WISH)
+    if (effect == EFFECT_WISH)
     {
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_FUTURE_SIGHT)
+    else if (effect == EFFECT_FUTURE_SIGHT)
     {
         TURN {};
         TURN {};
     }
-    else if (gMovesInfo[move].effect == EFFECT_ROLLOUT)
+    else if (effect == EFFECT_ROLLOUT)
     {
         TURN {MOVE(attacker, move, target: target);};
         TURN {MOVE(attacker, move, target: target);};
