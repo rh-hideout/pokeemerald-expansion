@@ -33,6 +33,7 @@ static void GetMapSize(u8 mapGroup, u8 mapNum, s32 *width, s32 *height);
 static bool32 IsInsideMap(u8 mapGroup, u8 mapNum, s16 x, s16 y);
 static bool32 IsInsidePlayerMap(s16 x, s16 y);
 static void OverworldEncounters_ProcessMonInteraction(void);
+static u16 GetOverworldSpeciesFromSpawnSlot(u32 spawnSlot);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
@@ -173,9 +174,7 @@ static u32 GetOldestSlot(void)
 
     for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
-        u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot);
-        struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
-        if (OW_SPECIES(objectEvent) != SPECIES_NONE)
+        if (GetOverworldSpeciesFromSpawnSlot(spawnSlot) != SPECIES_NONE)
         {
             if (sFollowMonData.list[spawnSlot].age > sFollowMonData.list[oldest].age)
                 oldest = spawnSlot;
@@ -200,9 +199,7 @@ static u8 NextSpawnMonSlot(void)
     {
         for (spawnSlot; spawnSlot < maxSpawns; spawnSlot++)
         {
-            u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot);
-            struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
-            if (OW_SPECIES(objectEvent) == SPECIES_NONE)
+            if (GetOverworldSpeciesFromSpawnSlot(spawnSlot) == SPECIES_NONE)
                 break;
         }
     }
@@ -389,9 +386,7 @@ static void SortOWEMonAges(void)
 
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - i);
-        struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
-        if (OW_SPECIES(objectEvent) != SPECIES_NONE)
+        if (GetOverworldSpeciesFromSpawnSlot(i) != SPECIES_NONE)
         {
             array[count].slot = i;
             array[count].age = sFollowMonData.list[i].age;
@@ -513,9 +508,7 @@ static u8 CountActiveFollowMon()
     u32 count = 0;
     for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
-        u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot);
-        struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
-        if (OW_SPECIES(objectEvent) != SPECIES_NONE)
+        if (GetOverworldSpeciesFromSpawnSlot(spawnSlot) != SPECIES_NONE)
             count++;
     }
 
@@ -623,4 +616,11 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
 bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
 {
     return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
+}
+
+u16 GetOverworldSpeciesFromSpawnSlot(u32 spawnSlot)
+{
+    u32 objEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot);
+    struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
+    return OW_SPECIES(objectEvent);
 }
