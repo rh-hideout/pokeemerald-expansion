@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STALWART; }
     PARAMETRIZE { ability = ABILITY_PROPELLER_TAIL; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; }

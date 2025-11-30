@@ -43,6 +43,7 @@
 #include "mirage_tower.h"
 #include "money.h"
 #include "new_game.h"
+#include "oras_dowse.h"
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
@@ -429,10 +430,13 @@ void Overworld_ResetBattleFlagsAndVars(void)
         VarSet(B_VAR_WILD_AI_FLAGS,0);
     #endif
 
+    #if B_VAR_NO_BAG_USE != 0
+        VarSet(B_VAR_NO_BAG_USE, 0);
+    #endif
+
     FlagClear(B_FLAG_INVERSE_BATTLE);
     FlagClear(B_FLAG_FORCE_DOUBLE_WILD);
     FlagClear(B_SMART_WILD_AI_FLAG);
-    FlagClear(B_FLAG_NO_BAG_USE);
     FlagClear(B_FLAG_NO_CATCHING);
     FlagClear(B_FLAG_NO_RUNNING);
     FlagClear(B_FLAG_DYNAMAX_BATTLE);
@@ -1621,7 +1625,7 @@ void UpdateTimeOfDay(void)
 #undef DEFAULT_WEIGHT
 
 // Whether a map type is naturally lit/outside
-bool32 MapHasNaturalLight(u8 mapType)
+bool32 MapHasNaturalLight(enum MapType mapType)
 {
     return (OW_ENABLE_DNS
          && (mapType == MAP_TYPE_TOWN
@@ -2237,6 +2241,7 @@ static bool32 ReturnToFieldLocal(u8 *state)
         InitViewGraphics();
         TryLoadTrainerHillEReaderPalette();
         FollowerNPC_BindToSurfBlobOnReloadScreen();
+        ResumeORASDowseFieldEffect();
         (*state)++;
         break;
     case 2:

@@ -294,6 +294,7 @@ SINGLE_BATTLE_TEST("Berserker Gene confusion can be healed with used held items"
         OPPONENT(SPECIES_WOBBUFFET) { Item(item);};
     } WHEN {
         TURN { MOVE(player, MOVE_COVET, WITH_RNG(RNG_CONFUSION, FALSE)); }
+        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
         ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_CONFUSION, player);

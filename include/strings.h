@@ -246,31 +246,6 @@ extern const u8 gText_SavingTime[];
 extern const u8 gText_BattlePyramidConfirmRest[];
 extern const u8 gText_BattlePyramidConfirmRetire[];
 
-// option menu texts
-extern const u8 gText_TextSpeedSlow[];
-extern const u8 gText_TextSpeedMid[];
-extern const u8 gText_TextSpeedFast[];
-extern const u8 gText_BattleSceneOn[];
-extern const u8 gText_BattleSceneOff[];
-extern const u8 gText_BattleStyleShift[];
-extern const u8 gText_BattleStyleSet[];
-extern const u8 gText_SoundMono[];
-extern const u8 gText_SoundStereo[];
-extern const u8 gText_FrameTypeNumber[];
-extern const u8 gText_FrameType[];
-extern const u8 gText_ButtonTypeNormal[];
-extern const u8 gText_ButtonTypeLR[];
-extern const u8 gText_ButtonTypeLEqualsA[];
-extern const u8 gText_Option[];
-extern const u8 gText_OptionMenu[];
-extern const u8 gText_TextSpeed[];
-extern const u8 gText_BattleScene[];
-extern const u8 gText_BattleStyle[];
-extern const u8 gText_Sound[];
-extern const u8 gText_Frame[];
-extern const u8 gText_OptionMenuCancel[];
-extern const u8 gText_ButtonMode[];
-
 extern const u8 gText_MaleSymbol[];
 extern const u8 gText_FemaleSymbol[];
 
@@ -942,6 +917,9 @@ extern const u8 gText_FrontierFacilityClearStreak[];
 extern const u8 gText_FrontierFacilityRoomsCleared[];
 extern const u8 gText_FrontierFacilityKOsStreak[];
 extern const u8 gText_FrontierFacilityFloorsCleared[];
+extern const u8 gText_FrontierFacilityTotalCaughtSpeciesBanned[];
+extern const u8 gText_FrontierFacilityIncluding[];
+extern const u8 gText_FrontierFacilityAreInelegible[];
 
 // Battle Tower.
 extern const u8 BattleFrontier_BattleTowerMultiPartnerRoom_Text_Apprentice1Intro[];
@@ -2421,7 +2399,16 @@ extern const u8 gText_PlayerRegroupCenter[];
 extern const u8 gText_PlayerRegroupHome[];
 
 extern const u8 gText_Relearn[]; // move relearner from summary screen
+extern const u8 gText_Relearn_LevelUp[];
+extern const u8 gText_Relearn_Egg[];
+extern const u8 gText_Relearn_TM[];
+extern const u8 gText_Relearn_Tutor[];
 extern const u8 gText_Rename[]; // change nickname from summary screen
+
+extern const u8 MoveRelearner_Text_LevelUpMoveLWR[];
+extern const u8 MoveRelearner_Text_EggMoveLWR[];
+extern const u8 MoveRelearner_Text_TMMoveLWR[];
+extern const u8 MoveRelearner_Text_TutorMoveLWR[];
 
 // Switch Caught Mon into Party
 extern const u8 gText_CannotSendMonToBoxHM[];

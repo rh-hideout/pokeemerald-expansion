@@ -197,7 +197,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by Dark-t
 
 SINGLE_BATTLE_TEST("Prankster-affected moves which are reflected by Magic Coat can affect Dark-type Pokémon, unless the Pokémon that bounced the move also has Prankster")
 {
-    u16 sableyeAbility;
+    enum Ability sableyeAbility;
 
     PARAMETRIZE { sableyeAbility = ABILITY_PRANKSTER; }
     PARAMETRIZE { sableyeAbility = ABILITY_KEEN_EYE; }

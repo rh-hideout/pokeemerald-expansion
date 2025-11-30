@@ -239,8 +239,8 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are affected by Grudge")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Grudge!");
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("Wobbuffet's Scratch lost all its PP due to the grudge!");
         MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("Wobbuffet's Scratch lost all its PP due to the grudge!");
     }
 }
 
@@ -913,7 +913,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Mindstorm sets up Psychic Terrain")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Extreme Speed!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
-        MESSAGE("The opposing Wobbuffet cannot use Extreme Speed!");
+        MESSAGE("Wobbuffet is protected by the Psychic Terrain!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
     }
 }
@@ -1609,7 +1609,8 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
 
 SINGLE_BATTLE_TEST("Dynamax: Max Moves don't bypass absorbing abilities")
 {
-    u32 move, ability, species;
+    u32 move, species;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_SPARK; ability = ABILITY_VOLT_ABSORB; species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_WATER_ABSORB; species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_EMBER; ability = ABILITY_FLASH_FIRE; species = SPECIES_HEATRAN; }
@@ -1656,19 +1657,6 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out")
         TURN { MOVE(player, MOVE_SCRATCH); }
     } SCENE {
         MESSAGE("Wobbuffet used Scratch!");
-    }
-}
-
-SINGLE_BATTLE_TEST("Dynamax: Destiny Bond fails if a dynamaxed battler is present on field")
-{
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
-    } WHEN {
-        TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
-    } SCENE {
-        MESSAGE("The move was blocked by the power of Dynamax!");
     }
 }
 

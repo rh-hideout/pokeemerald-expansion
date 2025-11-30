@@ -119,7 +119,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Marshadow vs Mawile)")
     }
 }
 
-DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move")
+DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (double battle)")
 {
     s16 damage[6];
     GIVEN {
@@ -127,6 +127,108 @@ DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if th
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WOBBUFFET) { HP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+MULTI_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (multibattle)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PARTNER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (2v1)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PARTNER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (1v2)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }

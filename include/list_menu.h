@@ -76,8 +76,9 @@ struct ListMenuTemplate
     u8 lettersSpacing:3;
     u8 itemVerticalPadding:3;
     u8 scrollMultiple:2; // x40, x80 = xC0
-    u8 fontId:6; // x1, x2, x4, x8, x10, x20 = x3F
-    u8 cursorKind:2; // x40, x80
+    u8 fontId:5; // x1, x2, x4, x8, x10 = x1F
+    u8 cursorKind:2; // x20, x40
+    u8 isDynamic:1; //Dynamic list doesn't store all items in memory but load them from ROM when necessary
 };
 
 struct ListMenu

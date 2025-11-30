@@ -826,7 +826,7 @@ SINGLE_BATTLE_TEST("(TERA) Pokemon with Tera forms change upon Terastallizing")
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }
@@ -858,7 +858,7 @@ SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly")
 
 SINGLE_BATTLE_TEST("(TERA) All type indicators function correctly - Opponent")
 {
-    u32 type;
+    enum Type type;
     PARAMETRIZE { type = TYPE_NONE; }
     PARAMETRIZE { type = TYPE_NORMAL; }
     PARAMETRIZE { type = TYPE_FIGHTING; }

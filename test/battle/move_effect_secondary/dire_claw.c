@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokém
 {
     KNOWN_FAILING;
     u8 statusAnim;
-    u16 species, ability;
+    u16 species;
+    enum Ability ability;
     u32 rng;
     if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
         PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; ability = ABILITY_LIGHTNING_ROD; }

@@ -157,7 +157,7 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
 SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain changes")
 {
     GIVEN {
-        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); }
+        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); Moves(MOVE_CELEBRATE); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
@@ -180,7 +180,7 @@ SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain
 SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the highest stat", s16 damage)
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
     u32 item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
@@ -206,7 +206,7 @@ SINGLE_BATTLE_TEST("Booster Energy increases special attack by 30% if it is the 
 SINGLE_BATTLE_TEST("Booster Energy increases special defense by 30% if it is the highest stat", s16 damage)
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
     u32 item;
 
     PARAMETRIZE { species = SPECIES_RAGING_BOLT; ability = ABILITY_PROTOSYNTHESIS; item = ITEM_NONE; }
