@@ -8771,9 +8771,7 @@ s32 GetStealthHazardDamage(enum TypeSideHazard hazardType, u32 battler)
 bool32 IsPartnerMonFromSameTrainer(u32 battler)
 {
     if (!IsOnPlayerSide(battler))
-    {
         return !(gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS);
-    }
     else
     {
         return !(gBattleTypeFlags & BATTLE_TYPE_MULTI);
