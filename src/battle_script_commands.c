@@ -10454,7 +10454,6 @@ static u32 ChangeStatBuffs(u32 battler, s8 statValue, enum Stat statId, union St
     {
         if (!flags.allowPtr)
             return STAT_CHANGE_DIDNT_WORK;
-        gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_MISSED;
         return STAT_CHANGE_WORKED;
     }
 
