@@ -541,7 +541,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Strikes the foe with wings\n"
             "spread wide."),
         .effect = EFFECT_HIT,
-        .power = 60,
+        .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 60 : 35,
         .type = TYPE_FLYING,
         .accuracy = 100,
         .pp = 35,
@@ -777,7 +777,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "miss and hurt the kicker."),
         #if B_UPDATED_MOVE_DATA >= GEN_5
             .power = 100,
-        #elif B_UPDATED_MOVE_DATA >= GEN_4
+        #elif B_UPDATED_MOVE_DATA == GEN_4
             .power = 85,
         #else
             .power = 70,
@@ -1088,7 +1088,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "A life-risking tackle that\n"
             "also hurts the user."),
         .effect = EFFECT_RECOIL,
-        .power = 120,
+        .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 120 : 100,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 15,
@@ -1838,7 +1838,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "A kick that inflicts more\n"
             "damage on heavier foes."),
         .effect = EFFECT_LOW_KICK,
-        .power = 1,
+        .power = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 50,
         .type = TYPE_FIGHTING,
         .accuracy = 100,
         .pp = 20,
@@ -2449,7 +2449,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Digs underground the first\n"
             "turn and strikes next turn."),
         .effect = EFFECT_SEMI_INVULNERABLE,
-        .power = B_UPDATED_MOVE_DATA >= GEN_4 ? 80 : 60,
+        #if B_UPDATED_MOVE_DATA >= GEN_4
+            .power = 80,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .power = 60,
+        #else
+            .power = 100,
+        #endif
         .type = TYPE_GROUND,
         .accuracy = 100,
         .pp = 10,
@@ -3216,7 +3222,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Inflicts severe damage but\n"
             "makes the user faint."),
         .effect = EFFECT_EXPLOSION,
-        .power = 200,
+        .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 200 : 130,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 5,
@@ -4079,7 +4085,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Inflicts severe damage but\n"
             "makes the user faint."),
         .effect = EFFECT_EXPLOSION,
-        .power = 250,
+        .power = B_UPDATED_MOVE_DATA >= GEN_2 ? 250 : 170,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 5,
@@ -5571,7 +5577,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "on each successive hit."),
         #if B_UPDATED_MOVE_DATA >= GEN_6
             .power = 40,
-        #elif B_UPDATED_MOVE_DATA >= GEN_5
+        #elif B_UPDATED_MOVE_DATA == GEN_5
             .power = 20,
         #else
             .power = 10,
@@ -6579,7 +6585,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "strike 2 turns later."),
         #if B_UPDATED_MOVE_DATA >= GEN_6
             .power = 120,
-        #elif B_UPDATED_MOVE_DATA >= GEN_5
+        #elif B_UPDATED_MOVE_DATA == GEN_5
             .power = 100,
         #else
             .power = 80,
@@ -6771,7 +6777,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "Releases stockpiled power\n"
             "(the more the better)."),
         .effect = EFFECT_SPIT_UP,
-        .power = B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 100,
+        .power = 1,
         .type = TYPE_NORMAL,
         .accuracy = 100,
         .pp = 10,
