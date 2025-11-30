@@ -445,7 +445,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_TWO_TURNS_ATTACK,
         .power = 80,
         .type = TYPE_NORMAL,
-        .accuracy = 100,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 100 : 75,
         .criticalHitStage = 1,
         .pp = 10,
         .target = MOVE_TARGET_BOTH,
@@ -565,7 +565,13 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_ROAR,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_6 ? 0 : 100,
+        #if B_UPDATED_MOVE_DATA >= GEN_6
+            .accuracy = 0,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .accuracy = 100,
+        #else
+            .accuracy = 85,
+        #endif
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = -6,
@@ -1642,7 +1648,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_HIT,
         .power = B_UPDATED_MOVE_DATA >= GEN_6 ? 110 : 120,
         .type = TYPE_ICE,
-        .accuracy = 70,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_2 ? 70 : 90,
         .pp = 5,
         .target = MOVE_TARGET_BOTH,
         .priority = 0,
@@ -1840,7 +1846,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_LOW_KICK,
         .power = B_UPDATED_MOVE_DATA >= GEN_3 ? 1 : 50,
         .type = TYPE_FIGHTING,
-        .accuracy = 100,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 100 : 90,
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -2381,7 +2387,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_HIT,
         .power = 50,
         .type = TYPE_ROCK,
-        .accuracy = 90,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_2 ? 90 : 65,
         .pp = 15,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -2735,7 +2741,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_MIMIC,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = 0,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 0 : 100,
         .pp = 10,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
@@ -3138,10 +3144,18 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_BIDE,
         .power = 1,
         .type = TYPE_NORMAL,
-        .accuracy = B_UPDATED_MOVE_DATA >= GEN_4 ? 0 : 100,
+        #if B_UPDATED_MOVE_DATA >= GEN_4
+            .accuracy = 0,
+            .priority = 1,
+        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .accuracy = 100,
+            .priority = 0,
+        #else
+            .accuracy = 0,
+            .priority = 0,
+        #endif
         .pp = 10,
         .target = MOVE_TARGET_USER,
-        .priority = B_UPDATED_MOVE_DATA >= GEN_4 ? 1 : 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
         .sleepTalkBanned = TRUE,
@@ -3721,7 +3735,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
             "gas that may poison."),
         #if B_UPDATED_MOVE_DATA >= GEN_6
             .accuracy = 90,
-        #elif B_UPDATED_MOVE_DATA >= GEN_5
+        #elif B_UPDATED_MOVE_DATA == GEN_5
             .accuracy = 80,
         #else
             .accuracy = 55,
@@ -5841,7 +5855,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .effect = EFFECT_PAIN_SPLIT,
         .power = 0,
         .type = TYPE_NORMAL,
-        .accuracy = 0,
+        .accuracy = B_UPDATED_MOVE_DATA >= GEN_3 ? 0 : 100,
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
         .priority = 0,
