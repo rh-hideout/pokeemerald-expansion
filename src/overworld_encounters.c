@@ -716,6 +716,8 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 u16 GetGraphicsIdForOverworldEncounterGfx(void)
 {
+    // encounterType is hardcoded to land encounters for now
+    // can level be set or does it have to be hardcorded too?
     enum WildPokemonArea encounterType = WILD_AREA_LAND;
     u32 graphicsId;
     u32 headerId = GetCurrentMapWildMonHeaderId();
