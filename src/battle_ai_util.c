@@ -891,13 +891,12 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
     return FALSE;
 }
 
-s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
+static s32 HandleKOThroughBerryReduction(struct DamageContext *ctx, s32 dmg)
 {
     if (ctx->aiCheckBerryModifier) // Only set if AI running calcs
     {
-        ctx->aiCheckBerryModifier = FALSE;
         // Store resist berry affected move
-        u8 moveIndex = 0;
+        u32 moveIndex = 0;
         for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
             if (ctx->move == gBattleMons[ctx->battlerAtk].moves[moveIndex])
@@ -970,6 +969,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
 
     struct DamageContext ctx = {0};
     ctx.aiCalc = TRUE;
+    ctx.aiCheckBerryModifier = FALSE;
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = ctx.chosenMove = move;
