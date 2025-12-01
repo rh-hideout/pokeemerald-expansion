@@ -1022,30 +1022,33 @@ bool32 IsMoveNotAllowedInSkyBattles(u32 move)
 
 static void SetSameMoveTurnValues(u32 moveEffect)
 {
-    bool32 isAnyTargetAffected = IsAnyTargetAffected();
-
-    if (gLastResultingMoves[gBattlerAttacker] != gCurrentMove) // User switched/fainted. values already reset
-        return;
+    bool32 increment = IsAnyTargetAffected()
+                    && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+                    && gLastResultingMoves[gBattlerAttacker] == gCurrentMove;
 
     switch (moveEffect)
     {
     case EFFECT_FURY_CUTTER:
-        if (!isAnyTargetAffected)
-            gDisableStructs[gBattlerAttacker].furyCutterCounter = 0;
-        else if (gDisableStructs[gBattlerAttacker].furyCutterCounter < 5)
+        if (increment && gDisableStructs[gBattlerAttacker].furyCutterCounter < 5)
             gDisableStructs[gBattlerAttacker].furyCutterCounter++;
+        else
+            gDisableStructs[gBattlerAttacker].furyCutterCounter = 0;
         break;
     case EFFECT_ROLLOUT:
-        if (!isAnyTargetAffected || ++gDisableStructs[gBattlerAttacker].rolloutTimer == 5)
-        {
-            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
-            gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
-        }
-        else
+        if (increment && ++gDisableStructs[gBattlerAttacker].rolloutTimer < 5)
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
             gLockedMoves[gBattlerAttacker] = gCurrentMove;
         }
+        else
+        {
+            gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
+            gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
+        }
+        break;
+    case EFFECT_ECHOED_VOICE:
+        if (!(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)) // Increment even if targets unaffected
+            gBattleStruct->incrementEchoedVoice = TRUE;
         break;
     default: // not consecutive
         gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
@@ -1053,7 +1056,7 @@ static void SetSameMoveTurnValues(u32 moveEffect)
         break;
     }
 
-    if (isAnyTargetAffected && gCurrentMove == gLastResultingMoves[gBattlerAttacker])
+    if (increment)
         gDisableStructs[gBattlerAttacker].metronomeItemCounter++;
     else
         gDisableStructs[gBattlerAttacker].metronomeItemCounter = 0;
@@ -1072,9 +1075,6 @@ static void TryClearChargeVolatile(u32 moveType)
 
 static bool32 IsAnyTargetAffected(void)
 {
-    if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-        return FALSE;
-
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler == gBattlerAttacker)
@@ -7129,8 +7129,6 @@ static void Cmd_moveend(void)
                 SetActiveGimmick(gBattlerAttacker, GIMMICK_NONE);
             if (gBattleMons[gBattlerAttacker].volatiles.destinyBond > 0)
                 gBattleMons[gBattlerAttacker].volatiles.destinyBond--;
-            if (moveEffect == EFFECT_ECHOED_VOICE && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE))
-                gBattleStruct->incrementEchoedVoice = TRUE;
             // check if Stellar type boost should be used up
             if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA
              && GetBattlerTeraType(gBattlerAttacker) == TYPE_STELLAR
