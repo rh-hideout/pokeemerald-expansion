@@ -1549,6 +1549,7 @@ void RemoveObjectEvent(struct ObjectEvent *objectEvent)
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
+    OverworldEncounter_OnObjectEventRemoved(objectEvent);
 }
 
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
@@ -1564,9 +1565,6 @@ void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
-
-    if (IsGeneratedOverworldEncounter(objectEvent))
-        FollowMon_OnObjectEventRemoved(objectEvent);
 
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;

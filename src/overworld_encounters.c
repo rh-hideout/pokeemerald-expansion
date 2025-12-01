@@ -432,10 +432,12 @@ void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
     SortOWEMonAges();
 }
 
-void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
+void OverworldEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
+    if (!IsGeneratedOverworldEncounter(objectEvent))
+        return;
+    
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-
     sFollowMonData.list[spawnSlot].age = 0;
 }
 
