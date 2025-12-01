@@ -48,7 +48,7 @@ void LoadFollowMonData(struct ObjectEvent *objectEvent)
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked())
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
@@ -356,18 +356,15 @@ static void OverworldEncounters_ProcessMonInteraction(void)
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
-    // The player is only exempt from collisions with overworld encounters when not using a repel.
-    // Non-player, non-overworld encounters are not collision exempt with overworld encounters.
+    // The player only is exempt from collisions with OW Encounters when not using a repel or the DexNav is inactive.
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    bool32 forcePlayerCollision = (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING));
 
-    if (collider == player && IsGeneratedOverworldEncounter(obstacle) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
+    if (collider == player && IsGeneratedOverworldEncounter(obstacle) && !forcePlayerCollision)
         return TRUE;
 
-    if (obstacle == player && IsGeneratedOverworldEncounter(collider) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
-        return TRUE;
-    
-    if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
+    if (obstacle == player && IsGeneratedOverworldEncounter(collider) && !forcePlayerCollision)
         return TRUE;
 
     return FALSE;
