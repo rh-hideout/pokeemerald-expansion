@@ -573,20 +573,19 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .type = TYPE_NORMAL,
         #if B_UPDATED_MOVE_DATA >= GEN_6
             .accuracy = 0,
-        #elif B_UPDATED_MOVE_DATA >= GEN_2
+            .priority = -6,
+        #elif B_UPDATED_MOVE_DATA >= GEN_3
             .accuracy = 100,
+            .priority = -6,
+        #elif B_UPDATED_MOVE_DATA == GEN_2
+            .accuracy = 100,
+            .priority = -1,
         #else
             .accuracy = 85,
+            .priority = 0,
         #endif
         .pp = 20,
         .target = MOVE_TARGET_SELECTED,
-        #if B_UPDATED_MOVE_DATA >= GEN_3
-            .priority = -6,
-        #elif B_UPDATED_MOVE_DATA == GEN_2
-            .priority = -1,
-        #else
-            .priority = 0,
-        #endif
         .category = DAMAGE_CATEGORY_STATUS,
         .zMove = { .effect = Z_EFFECT_SPDEF_UP_1 },
         .windMove = TRUE,
@@ -4926,7 +4925,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_USER,
         #if B_UPDATED_MOVE_DATA >= GEN_5
             .priority = 4,
-        #elif B_UPDATED_MOVE_DATA >= GEN_2
+        #elif B_UPDATED_MOVE_DATA >= GEN_3
             .priority = 3,
         #else
             .priority = 2,
@@ -5321,7 +5320,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_USER,
         #if B_UPDATED_MOVE_DATA >= GEN_5
             .priority = 4,
-        #elif B_UPDATED_MOVE_DATA >= GEN_2
+        #elif B_UPDATED_MOVE_DATA >= GEN_3
             .priority = 3,
         #else
             .priority = 2,
@@ -5479,7 +5478,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .target = MOVE_TARGET_USER,
         #if B_UPDATED_MOVE_DATA >= GEN_5
             .priority = 4,
-        #elif B_UPDATED_MOVE_DATA >= GEN_2
+        #elif B_UPDATED_MOVE_DATA >= GEN_3
             .priority = 3,
         #else
             .priority = 2,
