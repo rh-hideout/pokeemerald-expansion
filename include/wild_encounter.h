@@ -5,6 +5,14 @@
 #include "constants/wild_encounter.h"
 #include "overworld_encounters.h"
 
+enum WildPokemonArea {
+    WILD_AREA_LAND,
+    WILD_AREA_WATER,
+    WILD_AREA_ROCKS,
+    WILD_AREA_FISHING,
+    WILD_AREA_HIDDEN
+};
+
 #define HEADER_NONE 0xFFFF
 
 struct WildPokemon
