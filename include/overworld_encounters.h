@@ -51,6 +51,6 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 void RemoveOldestOverworldEncounter(u8 *objectEventId);
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
-void SetAllObjectAsWildEncounter(void);
+u16 GetGraphicsIdForOverworldEncounterGfx(void);
 
 #endif // GUARD_FOLLOWMON_H

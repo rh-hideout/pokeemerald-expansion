@@ -3108,6 +3108,9 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
+    if (graphicsId >= OBJ_EVENT_GFX_OWES && graphicsId <= OBJ_EVENT_GFX_OWES_END)
+        graphicsId = GetGraphicsIdForOverworldEncounterGfx();
+
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
 
@@ -3124,6 +3127,9 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
+
+    if (objectEvent->graphicsId >= OBJ_EVENT_GFX_OWES && objectEvent->graphicsId <= OBJ_EVENT_GFX_OWES_END)
+        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx();
 }
 
 void SetObjectInvisibility(u8 localId, u8 mapNum, u8 mapGroup, bool8 invisible)
