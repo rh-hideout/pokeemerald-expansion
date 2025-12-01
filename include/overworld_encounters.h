@@ -8,6 +8,10 @@
 #define FOLLOWMON_MAX_SPAWN_SLOTS           5
 #define FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT  8
 
+#define OWE_MAX_LAND_SPAWNS     3
+#define OWE_MAX_WATER_SPAWNS    5
+#define OWE_MAX_CAVE_SPAWNS     4
+
 #define INVALID_SPAWN_SLOT 0xFF
 
 struct FollowMon

@@ -161,10 +161,12 @@ void UpdateOverworldEncounters(void)
 
 static u8 GetMaxFollowMonSpawns(void)
 {
-    if (IsSpawningWaterMons() || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-        return 5;
+    if (IsSpawningWaterMons())
+        return OWE_MAX_WATER_SPAWNS;
+    else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+        return OWE_MAX_CAVE_SPAWNS;
     else
-        return 3;
+        return OWE_MAX_LAND_SPAWNS;
 }
 
 static u32 GetOldestSlot(void)
