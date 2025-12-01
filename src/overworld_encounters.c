@@ -38,7 +38,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static bool32 CanRemoveOverworldEncounter(u32 localId);
-static void RemoveOldestOverworldEncounter(void);
+static void RemoveOldestOverworldEncounter(u8 *objectEventId);
 static void SortOWEMonAges(void);
 static void RemoveOverworldEncounterObject(struct ObjectEvent *objectEvent);
 
@@ -666,23 +666,24 @@ static bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-static void RemoveOldestOverworldEncounter(void)
+static void RemoveOldestOverworldEncounter(u8 *objectEventId)
 {
-    u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
+    *objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveOverworldEncounterObject(&gObjectEvents[objectEventId]);
+    RemoveOverworldEncounterObject(&gObjectEvents[*objectEventId]);
 }
 
-bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
+bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
+    // How does this work for objects if they are on a different map?
     if (CanRemoveOverworldEncounter(localId))
     {
-        RemoveOldestOverworldEncounter();
+        RemoveOldestOverworldEncounter(objectEventId);
         return FALSE;
     }
     
