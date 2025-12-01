@@ -2040,3 +2040,12 @@ void DrawMatchCallTextBoxBorder(u32 windowId, u32 tileOffset, u32 paletteId)
 {
     DrawMatchCallTextBoxBorder_Internal(windowId, tileOffset, paletteId);
 }
+
+void StartDebugMatchCall(u32 trainerId)
+{
+    sMatchCallState.trainerId = trainerId;
+    sMatchCallState.triggeredFromScript = FALSE;
+    PlaySE(SE_POKENAV_CALL);
+    CreateTask(ExecuteMatchCall, 1);
+
+}
