@@ -650,6 +650,8 @@ u32 GetNewestOWEncounterLocalId(void)
 
 bool32 CanRemoveOverworldEncounter(u32 localId)
 {
+    // Can the last of these checks be replaced by IsGeneratedOverworldEncounter?
+    // Include a check for the encounter not being shiny or a roamer.
     return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
@@ -657,7 +659,9 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 
 void RemoveOldestOverworldEncounter(void)
 {
-    u32 objectEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - GetOldestSlot());
+    // Can we have a dedicated remove object function as it can be used for the other case of
+    // RemoveObjectEvent in this function too?
+    u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
     s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
