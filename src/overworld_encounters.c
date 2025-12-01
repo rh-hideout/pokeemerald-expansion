@@ -337,6 +337,8 @@ void CreateFollowMonEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
+    RemoveObjectEvent(object);
+    BattleSetup_StartWildBattle();
 }
 
 static void OverworldEncounters_ProcessMonInteraction(void)
