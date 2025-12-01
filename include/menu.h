@@ -61,8 +61,6 @@ void PrintPlayerNameOnWindow(u8 windowId, const u8 *src, u16 x, u16 y);
 void ClearDialogWindowAndFrame(u8 windowId, bool8 copyToVram);
 void SetStandardWindowBorderStyle(u8 windowId, bool8 copyToVram);
 void DisplayYesNoMenuDefaultYes(void);
-u32 GetPlayerTextSpeed(void);
-u8 GetPlayerTextSpeedDelay(void);
 void Menu_LoadStdPalAt(u16 offset);
 void AddTextPrinterWithCallbackForMessage(bool8 canSpeedUp, void (*callback)(struct TextPrinterTemplate *, u16));
 void BgDmaFill(u32 bg, u8 value, int offset, int size);
@@ -106,7 +104,6 @@ void DrawStdWindowFrame(u8 windowId, bool8 copyToVram);
 u8 AddStartMenuWindow(u8 numActions);
 u8 InitMenuNormal(u8 windowId, u8 fontId, u8 left, u8 top, u8 cursorHeight, u8 numChoices, u8 initialCursorPos);
 void LoadMessageBoxAndFrameGfx(u8 windowId, bool8 copyToVram);
-void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress);
 void RemoveStartMenuWindow(void);
 void DisplayYesNoMenuWithDefault(u8 initialCursorPos);
 void BufferSaveMenuText(u8 textId, u8 *dest, u8 color);
@@ -135,5 +132,6 @@ u8 AddSecondaryPopUpWindow(void);
 u8 GetSecondaryPopUpWindowId(void);
 void RemoveSecondaryPopUpWindow(void);
 void HBlankCB_DoublePopupWindow(void);
+void RedrawDialogueFrame(void);
 
 #endif // GUARD_MENU_H

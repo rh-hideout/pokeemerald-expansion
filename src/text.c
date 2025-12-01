@@ -1,17 +1,20 @@
 #include "global.h"
 #include "battle.h"
-#include "main.h"
+#include "blit.h"
+#include "dynamic_placeholder_text_util.h"
+#include "event_data.h"
+#include "field_name_box.h"
+#include "fonts.h"
 #include "m4a.h"
+#include "main.h"
+#include "menu.h"
 #include "palette.h"
 #include "sound.h"
-#include "constants/songs.h"
 #include "string_util.h"
-#include "window.h"
 #include "text.h"
-#include "blit.h"
-#include "menu.h"
-#include "dynamic_placeholder_text_util.h"
-#include "fonts.h"
+#include "window.h"
+#include "constants/songs.h"
+#include "constants/speaker_names.h"
 
 static u16 RenderText(struct TextPrinter *);
 static u32 RenderFont(struct TextPrinter *);
@@ -85,11 +88,6 @@ static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt
 static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_blanked_down_arrow.4bpp");
 static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
-static const u8 sWindowVerticalScrollSpeeds[] = {
-    [OPTIONS_TEXT_SPEED_SLOW] = 1,
-    [OPTIONS_TEXT_SPEED_MID] = 2,
-    [OPTIONS_TEXT_SPEED_FAST] = 4,
-};
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
 {
@@ -294,11 +292,70 @@ static const u8 sMenuCursorDimensions[][2] =
     [FONT_SHORT_NARROWER] = { 8,  14 },
 };
 
+// these three arrays are most for readability, ie instead of returning a magic number 8
+static const u8 sTextSpeedFrameDelays[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = 8,
+    [OPTIONS_TEXT_SPEED_MID]     = 4,
+    [OPTIONS_TEXT_SPEED_FAST]    = 1,
+    [OPTIONS_TEXT_SPEED_INSTANT] = 1,
+};
+
+static const u8 sTextSpeedModifiers[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = TEXT_SPEED_SLOW_MODIFIER,
+    [OPTIONS_TEXT_SPEED_MID]     = TEXT_SPEED_MEDIUM_MODIFIER,
+    [OPTIONS_TEXT_SPEED_FAST]    = TEXT_SPEED_FAST_MODIFIER,
+    [OPTIONS_TEXT_SPEED_INSTANT] = TEXT_SPEED_INSTANT_MODIFIER,
+};
+
+static const u8 sTextScrollSpeeds[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = 1,
+    [OPTIONS_TEXT_SPEED_MID]     = 2,
+    [OPTIONS_TEXT_SPEED_FAST]    = 4,
+    [OPTIONS_TEXT_SPEED_INSTANT] = 6,
+};
+
 static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
 {
     gFonts = fonts;
+}
+
+u32 GetPlayerTextSpeed(void)
+{
+    if (gTextFlags.forceMidTextSpeed)
+        return OPTIONS_TEXT_SPEED_MID;
+
+    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_INSTANT)
+        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+
+    if (FlagGet(FLAG_TEXT_SPEED_INSTANT) || TEXT_SPEED_INSTANT)
+        return OPTIONS_TEXT_SPEED_INSTANT;
+
+    return gSaveBlock2Ptr->optionsTextSpeed;
+}
+
+u32 GetPlayerTextSpeedDelay(void)
+{
+    return sTextSpeedFrameDelays[GetPlayerTextSpeed()];
+}
+
+u32 GetPlayerTextSpeedModifier(void)
+{
+    return sTextSpeedModifiers[GetPlayerTextSpeed()];
+}
+
+u32 GetPlayerTextScrollSpeed(void)
+{
+    return sTextScrollSpeeds[GetPlayerTextSpeed()];
+}
+
+bool32 IsPlayerTextSpeedInstant(void)
+{
+    return GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT;
 }
 
 void DeactivateAllTextPrinters(void)
@@ -378,30 +435,53 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
 void RunTextPrinters(void)
 {
-    int i;
+    bool32 isInstantText = IsPlayerTextSpeedInstant();
+    u32 textRepeats = GetPlayerTextSpeedModifier();
 
-    if (!gDisableTextPrinters)
+    if (gDisableTextPrinters)
+        return;
+
+    do
     {
-        for (i = 0; i < WINDOWS_MAX; ++i)
+        u32 numEmpty = 0;
+        for (u32 windowId = 0; windowId < WINDOWS_MAX; windowId++)
         {
-            if (sTextPrinters[i].active)
+            if (sTextPrinters[windowId].active)
             {
-                u16 renderCmd = RenderFont(&sTextPrinters[i]);
-                switch (renderCmd)
+                for (u32 repeat = 0; repeat < textRepeats; repeat++)
                 {
-                case RENDER_PRINT:
-                    CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
-                case RENDER_UPDATE:
-                    if (sTextPrinters[i].callback != NULL)
-                        sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderCmd);
-                    break;
-                case RENDER_FINISH:
-                    sTextPrinters[i].active = FALSE;
-                    break;
+                    u32 renderState = RenderFont(&sTextPrinters[windowId]);
+                    switch (renderState)
+                    {
+                    case RENDER_PRINT:
+                        CopyWindowToVram(sTextPrinters[windowId].printerTemplate.windowId, COPYWIN_GFX);
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
+                        break;
+                    case RENDER_UPDATE:
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
+                        isInstantText = FALSE;
+                        break;
+                    case RENDER_FINISH:
+                        sTextPrinters[windowId].active = FALSE;
+                        isInstantText = FALSE;
+                        break;
+                    }
+
+                    if (!sTextPrinters[windowId].active)
+                        break;
                 }
             }
+            else
+            {
+                numEmpty++;
+            }
         }
-    }
+
+        if (numEmpty == WINDOWS_MAX)
+            return;
+    } while (isInstantText);
 }
 
 bool32 IsTextPrinterActive(u8 id)
@@ -426,6 +506,13 @@ void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor)
     u32 temp;
 
     u16 *current = sFontHalfRowLookupTable;
+
+    if (fgColor == sLastTextFgColor
+     && bgColor == sLastTextBgColor
+     && shadowColor == sLastTextShadowColor)
+    {
+        return;
+    }
 
     sLastTextBgColor = bgColor;
     sLastTextFgColor = fgColor;
@@ -629,27 +716,35 @@ static u8 UNUSED GetLastTextColor(u8 colorType)
     }
 }
 
-inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 j, u32 i, u32 *glyphPixels, s32 width, s32 height)
+inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
 {
-    u32 xAdd, yAdd, pixelData, bits, toOrr, dummyX;
-    u8 *dst;
+    if (width <= 0)
+        return;
 
-    xAdd = j + width;
-    yAdd = i + height;
-    dummyX = j;
-    for (; i < yAdd; i++)
+    u32 widthMask = (1 << (width * 4)) - 1;
+
+    u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
+
+    u32 *alignedWindowTilesX = (u32 *)(windowTiles + ((x0 / 8) * TILE_SIZE_4BPP));
+
+    u32 y1 = y0 + height;
+    for (u32 y = y0; y < y1; y++)
     {
-        pixelData = *glyphPixels++;
-        for (j = dummyX; j < xAdd; j++)
-        {
-            if ((toOrr = pixelData & 0xF))
-            {
-                dst = windowTiles + ((j / 8) * 32) + ((j % 8) / 2) + ((i / 8) * widthOffset) + ((i % 8) * 4);
-                bits = ((j & 1) * 4);
-                *dst = (toOrr << bits) | (*dst & (0xF0 >> bits));
-            }
-            pixelData >>= 4;
-        }
+        u32 pixels = *glyphPixels++ & widthMask;
+
+        u32 mask = pixels;
+        mask = mask | (mask >> 2);
+        mask = mask | (mask >> 1);
+        mask = mask & 0x11111111;
+        mask = mask * 0xF;
+
+        u32 pixels0 = pixels << shift0, pixels8 = pixels >> shift8;
+        u32 mask0 = mask << shift0, mask8 = mask >> shift8;
+
+        u32 *alignedWindowTiles = (u32 *)((u8 *)alignedWindowTilesX + ((y / 8) * widthOffset) + ((y % 8) * 4));
+
+        alignedWindowTiles[0] = (alignedWindowTiles[0] & ~mask0) | pixels0;
+        alignedWindowTiles[8] = (alignedWindowTiles[8] & ~mask8) | pixels8;
     }
 }
 
@@ -888,7 +983,7 @@ void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter)
     else
     {
         subStruct->downArrowYPosIdx = 0;
-        subStruct->downArrowDelay = 0;
+        subStruct->utilityCounter = 0;
     }
 }
 
@@ -899,9 +994,9 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
 
     if (gTextFlags.autoScroll == 0)
     {
-        if (subStruct->downArrowDelay != 0)
+        if (subStruct->utilityCounter != 0)
         {
-            subStruct->downArrowDelay--;
+            subStruct->utilityCounter--;
         }
         else
         {
@@ -937,7 +1032,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 
-            subStruct->downArrowDelay = 8;
+            subStruct->utilityCounter = 8 * GetPlayerTextSpeedModifier();
             subStruct->downArrowYPosIdx++;
         }
     }
@@ -1041,7 +1136,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
 
             BlitBitmapRectToWindow(windowId, arrowTiles, 0, sDownArrowYCoords[*yCoordIndex & 3], 8, 16, x, y - 2, 8, 16);
             CopyWindowToVram(windowId, COPYWIN_GFX);
-            *counter = 8;
+            *counter = 8 * GetPlayerTextSpeedModifier();
             ++*yCoordIndex;
         }
     }
@@ -1057,7 +1152,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     switch (textPrinter->state)
     {
     case RENDER_STATE_HANDLE_CHAR:
-        if (JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp)
+        if ((JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp) || IsPlayerTextSpeedInstant())
             textPrinter->delayCounter = 0;
 
         if (textPrinter->delayCounter && textPrinter->textSpeed)
@@ -1213,6 +1308,13 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             case EXT_CTRL_CODE_ENG:
                 textPrinter->japanese = FALSE;
                 return RENDER_REPEAT;
+            case EXT_CTRL_CODE_SPEAKER:
+                {
+                    enum SpeakerNames name = *textPrinter->printerTemplate.currentChar++;
+                    TrySpawnAndShowNamebox(gSpeakerNamesTable[name], NAME_BOX_BASE_TILE_NUM);
+
+                    return RENDER_REPEAT;
+                }
             }
             break;
         case CHAR_PROMPT_CLEAR:
@@ -1308,6 +1410,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL_START:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
+            subStruct->utilityCounter = 0;
             TextPrinterClearDownArrow(textPrinter);
             textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing;
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
@@ -1317,18 +1420,31 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            int scrollSpeed = GetPlayerTextSpeed();
-            int speed = sWindowVerticalScrollSpeeds[scrollSpeed];
-            if (textPrinter->scrollDistance < speed)
+            u32 scrollSpeed = GetPlayerTextScrollSpeed();
+            u32 speedModifier = GetPlayerTextSpeedModifier();
+
+            if (subStruct->utilityCounter != 0)
+            {
+                subStruct->utilityCounter--;
+                return RENDER_UPDATE;
+            }
+
+            if (textPrinter->scrollDistance < scrollSpeed)
             {
                 ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
                 textPrinter->scrollDistance = 0;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, speed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                textPrinter->scrollDistance -= speed;
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                textPrinter->scrollDistance -= scrollSpeed;
             }
+
+            if (speedModifier > 1)
+                subStruct->utilityCounter = speedModifier;
+            else
+                subStruct->utilityCounter = 0;
+
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }
         else
@@ -1403,6 +1519,7 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -1551,6 +1668,7 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
             case EXT_CTRL_CODE_ESCAPE:
             case EXT_CTRL_CODE_SHIFT_RIGHT:
             case EXT_CTRL_CODE_SHIFT_DOWN:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++str;
                 break;
             case EXT_CTRL_CODE_FONT:
@@ -1720,6 +1838,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:

@@ -105,7 +105,9 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
 
 SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod/Storm Drain mons")
 {
-    u16 move, species, ability, type;
+    u16 move, species;
+    enum Type type;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_RAICHU; type = TYPE_ELECTRIC; }
     PARAMETRIZE { move = MOVE_SURF; ability = ABILITY_STORM_DRAIN; species = SPECIES_LILEEP; type = TYPE_WATER; }
     GIVEN {
@@ -349,6 +351,22 @@ SINGLE_BATTLE_TEST("Parental Bond does not trigger on two turn attacks")
     } SCENE {
         HP_BAR(opponent);
         NOT HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Parental Bond does not trigger Scale Shot effect on Drain Punch")
+{
+    GIVEN {
+        PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAIN_PUNCH, gimmick: GIMMICK_MEGA); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAIN_PUNCH, player);
+        NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
+        EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE);
     }
 }
 

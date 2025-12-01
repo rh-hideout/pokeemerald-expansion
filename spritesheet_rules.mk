@@ -612,6 +612,8 @@ $(OBJEVENTGFXDIR)/berry_trees/rowap.4bpp: %.4bpp: %.png
 $(OBJEVENTGFXDIR)/berry_trees/micle.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 4
 
+$(OBJEVENTGFXDIR)/misc/apricorn_tree.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 2
 
 $(OBJEVENTGFXDIR)/misc/breakable_rock.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 2
@@ -693,6 +695,12 @@ $(FLDEFFGFXDIR)/surf_blob.4bpp: %.4bpp: %.png
 
 $(FLDEFFGFXDIR)/rock_climb_blob.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 4 -mheight 4
+
+$(FLDEFFGFXDIR)/oras_dowsing_brendan.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 4
+
+$(FLDEFFGFXDIR)/oras_dowsing_may.4bpp: %.4bpp: %.png
+	$(GFX) $< $@ -mwidth 2 -mheight 4
 
 $(FLDEFFGFXDIR)/tall_grass.4bpp: %.4bpp: %.png
 	$(GFX) $< $@ -mwidth 2 -mheight 2

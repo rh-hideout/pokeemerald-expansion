@@ -169,7 +169,10 @@
 	.endm
 
 	@ Copies the value of source into destination.
-	.macro copyvar destination:req, source:req
+	.macro copyvar destination:req, source:req, warn=TRUE
+	.if \warn && !((\source >= VARS_START && \source <= VARS_END) || (\source >= SPECIAL_VARS_START && \source <= SPECIAL_VARS_END))
+	.warning "copyvar with a value that is not a VAR_ constant; did you mean setvar instead?"
+	.endif
 	.byte SCR_OP_COPYVAR
 	.2byte \destination
 	.2byte \source
@@ -2329,6 +2332,11 @@
 	callnative ScriptSetDoubleBattleFlag, requests_effects=1
 	.endm
 
+	@ Stop using the ORAS dowsing machine.
+	.macro stoporasdowsing
+	callnative EndORASDowsing
+	.endm
+
 	@ ============================ @
 	@ FAKE RTC MACROS
 	@ Will only function if OW_USE_FAKE_RTC is true. If it has any additional requirements, it will be listed accordingly.
@@ -2671,8 +2679,34 @@
 	.2byte \battlePartner
 	.endm
 
+	@ Manually buffer a string as the speaker's name for namebox.
+	@ The next shown message/msgbox will include a namebox, if the provided string is not NULL.
+	@ An SP_NAME_* constant can also be used, it'll take the name from gSpeakerNamesTable instead.
+	.macro setspeaker name:req
+	callnative SetSpeaker
+	.4byte \name
+	.endm
+
 @ VS Seeker
 	.macro vsseeker_rematchid rematchId:req
 	callnative NativeVsSeekerRematchId, requests_effects=1
 	.2byte \rematchId
+	.endm
+
+	@ Sets the move relearner state
+	.macro setmoverelearnerstate state:req
+	callnative ScrCmd_setmoverelearnerstate, requests_effects=1
+	.2byte \state
+	.endm
+
+	@ Retrieves the move relearner state and stores it in the specified var
+	.macro getmoverelearnerstate varId:req
+	callnative ScrCmd_getmoverelearnerstate, requests_effects=1
+	.4byte \varId
+	.endm
+
+	@ Execute script if bag has TMs and/or HMs
+	.macro istmrelearneractive destination:req
+	callnative ScrCmd_istmrelearneractive, requests_effects=1
+	.4byte \destination
 	.endm

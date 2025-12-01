@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not redirect the target of Snipe Shot")
 
 DOUBLE_BATTLE_TEST("Ally Switch does not redirect moves done by Pokémon with Stalwart and Propeller Tail")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STALWART; }
     PARAMETRIZE { ability = ABILITY_PROPELLER_TAIL; }
     PARAMETRIZE { ability = ABILITY_TELEPATHY; }
@@ -170,7 +170,7 @@ DOUBLE_BATTLE_TEST("Ally Switch - move fails if the target was ally which change
 DOUBLE_BATTLE_TEST("Ally Switch doesn't make self-targeting status moves fail")
 {
     GIVEN {
-        ASSUME(gMovesInfo[MOVE_HARDEN].target == MOVE_TARGET_USER);
+        ASSUME(GetMoveTarget(MOVE_HARDEN) == MOVE_TARGET_USER);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -366,7 +366,7 @@ DOUBLE_BATTLE_TEST("Ally Switch does not update leech seed battler")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, playerLeft);
         HP_BAR(playerLeft);
         HP_BAR(opponentLeft);
-        
+
         MESSAGE("The opposing Ralts used Ally Switch!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_ALLY_SWITCH, opponentRight);
         MESSAGE("The opposing Ralts and the opposing Bulbasaur switched places!");

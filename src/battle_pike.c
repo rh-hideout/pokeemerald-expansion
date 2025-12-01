@@ -811,7 +811,7 @@ static void HealMon(struct Pokemon *mon)
 
 static bool8 DoesAbilityPreventStatus(struct Pokemon *mon, u32 status)
 {
-    u16 ability = GetMonAbility(mon);
+    enum Ability ability = GetMonAbility(mon);
     bool8 ret = FALSE;
 
     if (ability == ABILITY_COMATOSE)
@@ -1623,7 +1623,7 @@ static bool8 CanEncounterWildMon(u8 enemyMonLevel)
 {
     if (!GetMonData(&gPlayerParty[0], MON_DATA_SANITY_IS_EGG))
     {
-        u16 monAbility = GetMonAbility(&gPlayerParty[0]);
+        enum Ability monAbility = GetMonAbility(&gPlayerParty[0]);
         if (monAbility == ABILITY_KEEN_EYE || monAbility == ABILITY_INTIMIDATE)
         {
             u8 playerMonLevel = GetMonData(&gPlayerParty[0], MON_DATA_LEVEL);

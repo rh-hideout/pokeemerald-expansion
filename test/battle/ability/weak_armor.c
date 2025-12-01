@@ -29,14 +29,10 @@ SINGLE_BATTLE_TEST("Weak Armor lowers Defense by 1 and boosts Speed by 1 (Gen5-6
         if (move == MOVE_SCRATCH) {
             ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Slugma's Weak Armor lowered its Defense!");
-            MESSAGE("Slugma's Weak Armor raised its Speed!");
         } else {
             NONE_OF {
                 ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
                 ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-                MESSAGE("Slugma's Weak Armor lowered its Defense!");
-                MESSAGE("Slugma's Weak Armor raised its Speed!");
             }
         }
     } THEN {
@@ -73,7 +69,7 @@ SINGLE_BATTLE_TEST("Weak Armor does not trigger when brought in by Dragon Tail a
             ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
             MESSAGE("Slugma's Weak Armor lowered its Defense!");
-            MESSAGE("Slugma's Weak Armor raised its Speed!");
+            MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
         }
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE);
@@ -106,7 +102,11 @@ SINGLE_BATTLE_TEST("Weak Armor still boosts Speed if Defense can't go any lower"
         }
         MESSAGE("Slugma's Defense won't go any lower!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-        MESSAGE("Slugma's Weak Armor raised its Speed!");
+        if (gen == GEN_6)
+            MESSAGE("Slugma's Weak Armor raised its Speed!");
+        else
+            MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
+
     } THEN {
         EXPECT_EQ(player->statStages[STAT_DEF], MIN_STAT_STAGE);
         EXPECT_EQ(player->statStages[STAT_SPEED], DEFAULT_STAT_STAGE + (gen == GEN_7 ? 2 : 1));
@@ -131,7 +131,7 @@ SINGLE_BATTLE_TEST("Weak Armor still lowers Defense if Speed can't go any higher
         MESSAGE("Slugma's Weak Armor lowered its Defense!");
         NONE_OF {
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, player);
-            MESSAGE("Slugma's Weak Armor raised its Speed!");
+            MESSAGE("Slugma's Weak Armor sharply raised its Speed!");
         }
         MESSAGE("Slugma's Speed won't go any higher!");
     } THEN {
@@ -157,12 +157,12 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Defense can'
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
             ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
             MESSAGE("Magcargo's Weak Armor lowered its Defense!");
-            MESSAGE("Magcargo's Weak Armor raised its Speed!");
+            MESSAGE("Magcargo's Weak Armor sharply raised its Speed!");
         }
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         MESSAGE("Magcargo's Defense won't go any lower!");
-        MESSAGE("Magcargo's Weak Armor raised its Speed!");
+        MESSAGE("Magcargo's Weak Armor sharply raised its Speed!");
         for (j = 0; j < 2; j++)
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
@@ -194,7 +194,7 @@ SINGLE_BATTLE_TEST("Weak Armor doesn't interrupt multi hit moves if Speed can't 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
         ABILITY_POPUP(player, ABILITY_WEAK_ARMOR);
         MESSAGE("Magcargo's Weak Armor lowered its Defense!");
-        MESSAGE("Magcargo's Weak Armor raised its Speed!");
+        MESSAGE("Magcargo's Weak Armor sharply raised its Speed!");
         for (j = 0; j < 4; j++)
         {
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FURY_SWIPES, opponent);
