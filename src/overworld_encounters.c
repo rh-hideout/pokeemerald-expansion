@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
+#include "field_effect.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -13,6 +14,7 @@
 #include "sound.h"
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
+#include "constants/field_effects.h"
 #include "constants/map_types.h"
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
@@ -644,4 +646,23 @@ u32 GetNewestOWEncounterLocalId(void)
     }
 
     return newestSlot;
+}
+
+bool32 CanRemoveOverworldEncounter(u32 localId)
+{
+    return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0
+        && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1)
+        || localId > LOCALID_OW_ENCOUNTER_END));
+}
+
+void RemoveOldestOverworldEncounter(void)
+{
+    u32 objectEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - GetOldestSlot());
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
+
+    // Stop the associated field effect if it is active.
+    if (*fldEffSpriteId != 0)
+        FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
+
+    RemoveObjectEvent(&gObjectEvents[objectEventId]);
 }

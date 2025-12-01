@@ -46,5 +46,7 @@ void RemoveOverworldEncounterObjects(void);
 bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
 bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);
+bool32 CanRemoveOverworldEncounter(u32 localId);
+void RemoveOldestOverworldEncounter(void);
 
 #endif // GUARD_FOLLOWMON_H

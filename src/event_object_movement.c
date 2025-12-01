@@ -1522,7 +1522,6 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 // loaded, returns TRUE.
 {
     u8 i = 0;
-    bool32 canRemoveOWEncounter = (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0 && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1) || localId > LOCALID_OW_ENCOUNTER_END));
 
     for (i = 0; i < OBJECT_EVENTS_COUNT && gObjectEvents[i].active; i++)
     {
@@ -1530,7 +1529,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
             return TRUE;
     }
 
-    if (i >= OBJECT_EVENTS_COUNT && !canRemoveOWEncounter)
+    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
         return TRUE;
             
     *objectEventId = i;
@@ -1541,19 +1540,8 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
     }
 
     // Destroy the oldest OW Encounter mon to make room for the new object.
-    if (*objectEventId >= OBJECT_EVENTS_COUNT && canRemoveOWEncounter)
-    {
-        *objectEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - GetOldestSlot());
-        s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
-
-        // Stop the associated field effect if it is active.
-        if (*fldEffSpriteId != 0)
-        {
-            FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
-        }
-
-        RemoveObjectEvent(&gObjectEvents[*objectEventId]);
-    }
+    if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
+        RemoveOldestOverworldEncounter();
 
     return FALSE;
 }
