@@ -91,20 +91,15 @@ bool32 ShouldTrainerBattlerUseGimmick(u32 battler, enum Gimmick gimmick)
 // Returns whether a trainer has used a gimmick during a battle.
 bool32 HasTrainerUsedGimmick(u32 battler, enum Gimmick gimmick)
 {
-    // Check whether partner battler has used gimmick or plans to during turn.
-    if (IsDoubleBattle()
-        && IsPartnerMonFromSameTrainer(battler)
-        && (gBattleStruct->gimmick.activated[BATTLE_PARTNER(battler)][gimmick]
-        || ((gBattleStruct->gimmick.toActivate & (1u << BATTLE_PARTNER(battler))
-        && gBattleStruct->gimmick.usableGimmick[BATTLE_PARTNER(battler)] == gimmick))))
+    if (IsDoubleBattle() && IsPartnerMonFromSameTrainer(battler))
     {
-        return TRUE;
+        u32 partner = BATTLE_PARTNER(battler);
+        if (gBattleStruct->gimmick.activated[partner][gimmick]
+         || ((gBattleStruct->gimmick.toActivate & (1u << partner)) && gBattleStruct->gimmick.usableGimmick[partner] == gimmick))
+            return TRUE;
     }
-    // Otherwise, return whether current battler has used gimmick.
-    else
-    {
-        return gBattleStruct->gimmick.activated[battler][gimmick];
-    }
+
+    return gBattleStruct->gimmick.activated[battler][gimmick];
 }
 
 // Sets a gimmick as used by a trainer with checks for Multi Battles.

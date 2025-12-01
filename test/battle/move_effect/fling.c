@@ -80,8 +80,35 @@ SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability")
     }
 }
 
-TO_DO_BATTLE_TEST("Fling fails if the item changes the Pokémon's form")
-TO_DO_BATTLE_TEST("Fling works if the item changes a Pokémon's form but not the one holding it") //Eg. non-matching Mega Stones
+SINGLE_BATTLE_TEST("Fling fails if the item changes the Pokémon's form")
+{
+    GIVEN {
+        PLAYER(SPECIES_GIRATINA_ORIGIN) { Item(ITEM_GRISEOUS_CORE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_GRISEOUS_CORE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling works if the item changes a Pokémon's form but not the one holding it")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_BLASTOISINITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
+    }
+}
 
 SINGLE_BATTLE_TEST("Fling's thrown item can be regained with Recycle")
 {
@@ -478,25 +505,46 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
     }
 }
 
-SINGLE_BATTLE_TEST("Flinging a Mental Herb does not trigger the item if the target doesn't have anything that's cured by Mental Herb")
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
 {
+    s16 damage[2];
+
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_MENTAL_HERB); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
+        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        OPPONENT(SPECIES_HIPPOWDON);
     } WHEN {
         TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_EGG_BOMB); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
-            MESSAGE("The opposing Wobbuffet got over its infatuation!");
-            MESSAGE("The opposing Wobbuffet's Taunt wore off!");
-            MESSAGE("The opposing Wobbuffet ended its encore!");
-            MESSAGE("The opposing Wobbuffet is no longer tormented!");
-            MESSAGE("The opposing Wobbuffet's move is no longer disabled!");
-            MESSAGE("The opposing Wobbuffet is cured of its heal block!");
-        }
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
     }
 }
 
-TO_DO_BATTLE_TEST("Fling deals damage based on a TM's move power")
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
+        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        OPPONENT(SPECIES_HIPPOWDON);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_EGG_BOMB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}

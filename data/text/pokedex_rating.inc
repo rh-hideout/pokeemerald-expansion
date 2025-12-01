@@ -236,5 +236,3 @@ PokedexRating_Text_LoveSeeingYourPokedex::
 	.string "Actually, I know how it is, but I\n"
 	.string "love seeing it anyway!\p"
 	.string "Let's see…$"
-
-

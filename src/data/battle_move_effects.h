@@ -20,6 +20,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
         .battleTvScore = 0, // Handled within the battle TV functions
+        .encourageEncore = TRUE,
     },
 
     [EFFECT_ABSORB] =
@@ -791,7 +792,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BEAT_UP] =
     {
-        .battleScript = (B_BEAT_UP >= GEN_5) ? BattleScript_EffectHit : BattleScript_EffectBeatUp,
+        .battleScript = BattleScript_EffectBeatUp,
         .battleTvScore = 2,
     },
 
@@ -892,7 +893,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FOCUS_PUNCH] =
     {
-        .battleScript = BattleScript_EffectFocusPunch,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 7,
     },
 
@@ -1395,7 +1396,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
         .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
     },
-    
+
     [EFFECT_ENTRAINMENT] =
     {
         .battleScript = BattleScript_EffectEntrainment,
@@ -2121,7 +2122,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_UPPER_HAND] =
     {
-        .battleScript = BattleScript_EffectUpperHand,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 0, // TODO: Assign points
         .encourageEncore = TRUE,
     },
