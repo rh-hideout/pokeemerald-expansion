@@ -635,6 +635,13 @@ bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent)
         && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
 }
 
+bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return IsOverworldWildEncounter(objectEvent)
+        && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
+        || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
+}
+
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
@@ -695,6 +702,12 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
     }
     
     return TRUE;
+}
+
+bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
+{
+    return IsGeneratedOverworldWildEncounter(&gObjectEvents[objectEventId])
+        || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
 }
 
 #undef sOverworldEncounterLevel
