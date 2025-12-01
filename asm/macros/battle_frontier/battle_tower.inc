@@ -99,13 +99,13 @@
 	.endm
 
 	.macro multi_do type:req, partnerId:req
+	setvar VAR_0x8006, \partnerId
 	special ReducePlayerPartyToSelectedMons
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SET_DATA
 	setvar VAR_0x8005, FRONTIER_DATA_SELECTED_MON_ORDER
 	special CallFrontierUtilFunc @ saves the mon order, so the non-selected mons get restored afterwards
 	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	setvar VAR_0x8005, \type | MULTI_BATTLE_CHOOSE_MONS
-	setvar VAR_0x8006, \partnerId
 	special DoSpecialTrainerBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
@@ -132,9 +132,9 @@
 	.endm
 
 	.macro multi_do_fixed type:req, partnerId:req
+	setvar VAR_0x8006, \partnerId
 	setvar VAR_0x8004, SPECIAL_BATTLE_MULTI
 	setvar VAR_0x8005, \type
-	setvar VAR_0x8006, \partnerId
 	special DoSpecialTrainerBattle
 	waitstate
 	setvar VAR_0x8004, FRONTIER_UTIL_FUNC_SAVE_PARTY
