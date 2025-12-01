@@ -441,7 +441,7 @@ void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *ob
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
     if (IsManualOverworldWildEncounter(objectEvent))
-        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(GetObjectEventIdByLocalId(objectEvent->localId), objectEvent->mapNum, objectEvent->mapGroup));
+        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup));
 
     if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
