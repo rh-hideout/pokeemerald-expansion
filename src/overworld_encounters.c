@@ -321,12 +321,18 @@ void CreateFollowMonEncounter(void)
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
+    u32 level = object->sOverworldEncounterLevel;
+
+    if (level > MAX_LEVEL)
+        level = MAX_LEVEL;
+    else if ( level < MIN_LEVEL)
+        level = MIN_LEVEL;
 
     ZeroEnemyPartyMons();
     CreateMonWithGender(
         &gEnemyParty[0],
         speciesId,
-        object->sOverworldEncounterLevel,
+        level,
         USE_RANDOM_IVS,
         OT_ID_PLAYER_ID,
         0,
