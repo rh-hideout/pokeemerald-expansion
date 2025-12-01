@@ -1542,7 +1542,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 
     // Destroy the oldest OW Encounter mon to make room for the new object.
     if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
-        RemoveOldestOverworldEncounter();
+        RemoveOldestOverworldEncounter(objectEventId);
 
     /* Can we integrate this with this line above:
     if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))

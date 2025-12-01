@@ -679,23 +679,23 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-void RemoveOldestOverworldEncounter(void)
+void RemoveOldestOverworldEncounter(u8 *objectEventId)
 {
-    u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
+    *objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveObjectEvent(&gObjectEvents[objectEventId]);
+    RemoveObjectEvent(&gObjectEvents[*objectEventId]);
 }
 
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
-        // RemoveOldestOverworldEncounter(objectEventId);
+        RemoveOldestOverworldEncounter(objectEventId);
         return FALSE;
     }
     
