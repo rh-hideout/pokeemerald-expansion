@@ -37,6 +37,9 @@ static void OverworldEncounters_ProcessMonInteraction(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
+static bool32 CanRemoveOverworldEncounter(u32 localId);
+static void RemoveOldestOverworldEncounter(void);
+static void SortOWEMonAges(void);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
@@ -648,7 +651,7 @@ u32 GetNewestOWEncounterLocalId(void)
     return newestSlot;
 }
 
-bool32 CanRemoveOverworldEncounter(u32 localId)
+static bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Can the last of these checks be replaced by IsGeneratedOverworldEncounter?
     // Include a check for the encounter not being shiny or a roamer.
@@ -657,7 +660,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-void RemoveOldestOverworldEncounter(void)
+static void RemoveOldestOverworldEncounter(void)
 {
     // Can we have a dedicated remove object function as it can be used for the other case of
     // RemoveObjectEvent in this function too?
@@ -669,4 +672,15 @@ void RemoveOldestOverworldEncounter(void)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
     RemoveObjectEvent(&gObjectEvents[objectEventId]);
+}
+
+bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
+{
+    if (CanRemoveOverworldEncounter(localId))
+    {
+        RemoveOldestOverworldEncounter();
+        return FALSE;
+    }
+    
+    return TRUE;
 }
