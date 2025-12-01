@@ -364,6 +364,9 @@ static void OverworldEncounters_ProcessMonInteraction(void)
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD)
+        return FALSE;
+    
     // The player only is exempt from collisions with OW Encounters when not using a repel or the DexNav is inactive.
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
