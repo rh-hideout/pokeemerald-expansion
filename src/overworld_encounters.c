@@ -19,6 +19,7 @@
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
+#include "constants/wild_encounter.h"
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 
@@ -305,7 +306,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     return FALSE;
 }
 
-void CreateFollowMonEncounter(void)
+void CreateOverworldWildEncounter(void)
 {
     u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     struct ObjectEvent *object = &gObjectEvents[objEventId];
@@ -437,8 +438,11 @@ void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *ob
     SortOWEMonAges();
 }
 
-void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
+void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
+    if (IsManualOverworldWildEncounter(objectEvent))
+        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(GetObjectEventIdByLocalId(objectEvent->localId), objectEvent->mapNum, objectEvent->mapGroup));
+
     if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
     
@@ -708,6 +712,87 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
     return IsGeneratedOverworldWildEncounter(&gObjectEvents[objectEventId])
         || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
+}
+
+void SetObjectAsWildEncounter(struct ObjectEvent *objectEvent)
+{
+    // u32 localId = VarGet(ScriptReadHalfword(ctx));
+    // enum WildPokemonArea encounterType = ScriptReadByte(ctx);
+
+    // u32 objectEventId = GetObjectEventIdByLocalId(localId);
+    // struct ObjectEvent *objectEvent = &gObjectEvents[objectEventId];
+    enum WildPokemonArea encounterType = WILD_AREA_LAND;
+    u32 graphicsId = objectEvent->graphicsId;
+    // DebugPrintf("%d, %d, %d", localId, objectEventId, graphicsId);
+    u32 variableOffset = (graphicsId >= OBJ_EVENT_GFX_VAR_FIRST) ? graphicsId - OBJ_EVENT_GFX_VAR_FIRST : 0;
+    u32 objectEventVariable = VAR_OBJ_GFX_ID_0 + variableOffset;
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+
+    if (graphicsId < OBJ_EVENT_GFX_VAR_FIRST || graphicsId > OBJ_EVENT_GFX_VAR_LAST || headerId == HEADER_NONE)
+        return;
+
+    Script_RequestEffects(SCREFF_V1);
+    Script_RequestWriteVar(objectEventVariable);
+
+    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, encounterType);
+    const struct WildEncounterTypes wildEncounterType = gWildMonHeaders[headerId].encounterTypes[timeOfDay];
+    const struct WildPokemonInfo *wildMonInfo;
+    u32 encounterIndex;
+    u16 speciesId;
+    u32 level;
+    u32 personality = Random32();
+    bool32 isFemale = FALSE;
+    bool32 isShiny = FALSE;
+
+    switch (encounterType)
+    {
+    default:
+    case WILD_AREA_LAND:
+        encounterIndex = ChooseWildMonIndex_Land();
+        wildMonInfo = wildEncounterType.landMonsInfo;
+        speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
+        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
+        break;
+    
+    case WILD_AREA_WATER:
+        encounterIndex = ChooseWildMonIndex_Water();
+        wildMonInfo = wildEncounterType.waterMonsInfo;
+        speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
+        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
+        break;
+    }
+
+    if (speciesId == SPECIES_UNOWN)
+        speciesId = GetUnownSpeciesId(personality);
+
+    isShiny = ComputePlayerShinyOdds(personality);
+    if (GetGenderFromSpeciesAndPersonality(speciesId, personality) == MON_FEMALE)
+        isFemale = TRUE;
+    else
+        isFemale = FALSE;
+
+    graphicsId = speciesId + OBJ_EVENT_MON;
+    if (isFemale)
+        graphicsId += OBJ_EVENT_MON_FEMALE;
+    if (isShiny)
+        graphicsId += OBJ_EVENT_MON_SHINY;
+
+    VarSet(objectEventVariable, graphicsId);
+    objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
+    objectEvent->sOverworldEncounterLevel = level;
+}
+
+void SetAllObjectAsWildEncounter(void)
+{
+    for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
+    {
+        struct ObjectEvent *objectEvent = &gObjectEvents[i];
+        if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F
+        && IsManualOverworldWildEncounter(objectEvent))
+        {
+            SetObjectAsWildEncounter(objectEvent);
+        }
+    }
 }
 
 #undef sOverworldEncounterLevel

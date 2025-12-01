@@ -1569,7 +1569,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
     objectEvent->active = FALSE;
-    GeneratedOverworldWildEncounter_OnObjectEventRemoved(objectEvent);
+    OverworldWildEncounter_OnObjectEventRemoved(objectEvent);
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;

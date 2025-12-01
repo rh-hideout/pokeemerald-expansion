@@ -1,6 +1,6 @@
 InteractWithDynamicWildFollowMon::
     lockall
-    special CreateFollowMonEncounter
+    special CreateOverworldWildEncounter
     waitstate
     end
 

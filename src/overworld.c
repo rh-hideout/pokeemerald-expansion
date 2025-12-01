@@ -869,6 +869,7 @@ if (I_VS_SEEKER_CHARGING != 0)
     ChooseAmbientCrySpecies();
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
+    SetAllObjectAsWildEncounter();
     RunOnTransitionMapScript();
     InitMap();
     CopySecondaryTilesetToVramUsingHeap(gMapHeader.mapLayout);
@@ -938,6 +939,7 @@ if (I_VS_SEEKER_CHARGING != 0)
         FlagClear(FLAG_SYS_USE_FLASH);
     SetDefaultFlashLevel();
     Overworld_ClearSavedMusic();
+    SetAllObjectAsWildEncounter();
     RunOnTransitionMapScript();
     UpdateLocationHistoryForRoamer();
     MoveAllRoamersToOtherLocationSets();
