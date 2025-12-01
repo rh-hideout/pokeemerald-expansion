@@ -7126,7 +7126,7 @@ static void Cmd_moveend(void)
                     }
                 }
 
-                if (!(IsAnyTargetAffected()
+                if (!(!IsAnyTargetAffected()
                  || (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE && !hasDancerTriggered)
                  || (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && gBattleStruct->bouncedMoveIsUsed)))
                 {   // Dance move succeeds
