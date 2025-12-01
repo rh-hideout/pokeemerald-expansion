@@ -1,4 +1,4 @@
-RocketHideout_B3F_MapScripts::
+RocketHideout_B3F_Frlg_MapScripts::
 	.byte 0
 
 RocketHideout_B3F_EventScript_Grunt1::

@@ -1,4 +1,4 @@
-IndigoPlateau_Exterior_MapScripts::
+IndigoPlateau_Exterior_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, IndigoPlateau_Exterior_OnTransition
 	map_script MAP_SCRIPT_ON_FRAME_TABLE, IndigoPlateau_Exterior_OnFrame
 	.byte 0

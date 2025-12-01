@@ -34,6 +34,8 @@ const u8 *GetInteractedLinkPlayerScript(struct MapPosition *position, u8 metatil
 const u8 *GetCoordEventScriptAtMapPosition(struct MapPosition *position);
 void ClearPoisonStepCounter(void);
 void CancelSignPostMessageBox(struct FieldInput *input);
+void HandleBoulderFallThroughHole(struct ObjectEvent *);
+void HandleBoulderActivateVictoryRoadSwitch(u16 x, u16 y);
 
 #define NOT_SIGNPOST 0
 #define WALK_AWAY_SIGNPOST_FRAMES 6

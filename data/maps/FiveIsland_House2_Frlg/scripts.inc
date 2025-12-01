@@ -1,4 +1,4 @@
-FiveIsland_House2_MapScripts::
+FiveIsland_House2_Frlg_MapScripts::
 	.byte 0
 
 FiveIsland_House2_EventScript_OldMan::

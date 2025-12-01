@@ -1,4 +1,4 @@
-DiglettsCave_NorthEntrance_MapScripts::
+DiglettsCave_NorthEntrance_Frlg_MapScripts::
 	.byte 0
 
 DiglettsCave_NorthEntrance_EventScript_Hiker::

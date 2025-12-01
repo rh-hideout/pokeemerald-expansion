@@ -1,4 +1,4 @@
-SSAnne_Deck_MapScripts::
+SSAnne_Deck_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_Deck_EventScript_Youngster::

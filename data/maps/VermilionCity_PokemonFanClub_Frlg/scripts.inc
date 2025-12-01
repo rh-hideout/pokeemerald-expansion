@@ -1,7 +1,7 @@
 .set SPOKE_TO_WOMAN_LAST,   FLAG_TEMP_2
 .set SPOKE_TO_FAT_MAN_LAST, FLAG_TEMP_3
 
-VermilionCity_PokemonFanClub_MapScripts::
+VermilionCity_PokemonFanClub_Frlg_MapScripts::
 	.byte 0
 
 VermilionCity_PokemonFanClub_EventScript_Chairman::

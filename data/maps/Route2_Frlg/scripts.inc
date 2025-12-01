@@ -1,4 +1,4 @@
-Route2_MapScripts::
+Route2_Frlg_MapScripts::
 	.byte 0
 
 Route2_EventScript_RouteSign::

@@ -1,4 +1,4 @@
-PokemonTower_3F_MapScripts::
+PokemonTower_3F_Frlg_MapScripts::
 	.byte 0
 
 PokemonTower_3F_EventScript_Patricia::

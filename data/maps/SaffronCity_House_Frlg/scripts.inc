@@ -1,4 +1,4 @@
-SaffronCity_House_MapScripts::
+SaffronCity_House_Frlg_MapScripts::
 	.byte 0
 
 SaffronCity_House_EventScript_Lass::

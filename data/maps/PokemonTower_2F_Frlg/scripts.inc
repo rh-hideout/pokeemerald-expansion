@@ -1,4 +1,4 @@
-PokemonTower_2F_MapScripts::
+PokemonTower_2F_Frlg_MapScripts::
 	.byte 0
 
 PokemonTower_2F_EventScript_Channeler::

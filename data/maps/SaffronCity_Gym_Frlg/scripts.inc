@@ -1,4 +1,4 @@
-SaffronCity_Gym_MapScripts::
+SaffronCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 SaffronCity_Gym_EventScript_Sabrina::

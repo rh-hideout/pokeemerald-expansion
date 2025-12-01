@@ -1,4 +1,4 @@
-FiveIsland_Meadow_MapScripts::
+FiveIsland_Meadow_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, FiveIsland_Meadow_OnLoad
 	.byte 0
 

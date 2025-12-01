@@ -1,4 +1,4 @@
-SSAnne_2F_Room6_MapScripts::
+SSAnne_2F_Room6_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_2F_Room6_EventScript_Woman1::

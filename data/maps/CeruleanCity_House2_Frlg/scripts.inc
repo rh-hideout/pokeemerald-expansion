@@ -1,4 +1,4 @@
-CeruleanCity_House2_MapScripts::
+CeruleanCity_House2_Frlg_MapScripts::
 	.byte 0
 
 CeruleanCity_House2_EventScript_Hiker::

@@ -1,4 +1,4 @@
-ViridianCity_School_MapScripts::
+ViridianCity_School_Frlg_MapScripts::
 	.byte 0
 
 ViridianCity_School_EventScript_Lass::

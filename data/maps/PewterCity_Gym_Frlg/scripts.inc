@@ -1,4 +1,4 @@
-PewterCity_Gym_MapScripts::
+PewterCity_Gym_Frlg_MapScripts::
 	.byte 0
 
 PewterCity_Gym_EventScript_Brock::

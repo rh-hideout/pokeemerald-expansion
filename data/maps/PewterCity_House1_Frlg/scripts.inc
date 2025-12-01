@@ -1,4 +1,4 @@
-PewterCity_House1_MapScripts::
+PewterCity_House1_Frlg_MapScripts::
 	.byte 0
 
 PewterCity_House1_EventScript_BaldingMan::

@@ -1,4 +1,4 @@
-CeladonCity_Condominiums_2F_MapScripts::
+CeladonCity_Condominiums_2F_Frlg_MapScripts::
 	.byte 0
 
 CeladonCity_Condominiums_2F_EventScript_MeetingRoomSign::

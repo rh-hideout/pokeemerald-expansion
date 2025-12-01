@@ -1,4 +1,4 @@
-PokemonLeague_BrunosRoom_MapScripts::
+PokemonLeague_BrunosRoom_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_RESUME, PokemonLeague_BrunosRoom_OnResume
 	map_script MAP_SCRIPT_ON_LOAD, PokemonLeague_BrunosRoom_OnLoad
 	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, PokemonLeague_BrunosRoom_OnWarp

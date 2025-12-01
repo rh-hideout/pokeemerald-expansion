@@ -1,4 +1,4 @@
-SSAnne_B1F_Room4_MapScripts::
+SSAnne_B1F_Room4_Frlg_MapScripts::
 	.byte 0
 
 SSAnne_B1F_Room4_EventScript_Leonard::

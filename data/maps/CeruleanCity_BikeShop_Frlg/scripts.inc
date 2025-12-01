@@ -1,4 +1,4 @@
-CeruleanCity_BikeShop_MapScripts::
+CeruleanCity_BikeShop_Frlg_MapScripts::
 	.byte 0
 
 CeruleanCity_BikeShop_EventScript_Clerk::

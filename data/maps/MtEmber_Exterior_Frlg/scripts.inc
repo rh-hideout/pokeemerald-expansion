@@ -1,4 +1,4 @@
-MtEmber_Exterior_MapScripts::
+MtEmber_Exterior_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_TRANSITION, MtEmber_Exterior_OnTransition
 	map_script MAP_SCRIPT_ON_LOAD, MtEmber_Exterior_OnLoad
 	.byte 0

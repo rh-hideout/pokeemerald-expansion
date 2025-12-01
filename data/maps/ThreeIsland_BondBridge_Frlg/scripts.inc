@@ -1,4 +1,4 @@
-ThreeIsland_BondBridge_MapScripts::
+ThreeIsland_BondBridge_Frlg_MapScripts::
 	.byte 0
 
 ThreeIsland_BondBridge_EventScript_BerryForestSign::

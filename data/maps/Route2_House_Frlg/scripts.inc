@@ -1,4 +1,4 @@
-Route2_House_MapScripts::
+Route2_House_Frlg_MapScripts::
 	.byte 0
 
 Route2_House_EventScript_Scientist::

@@ -14,5 +14,6 @@
 #define TRAINER_BATTLE_SET_TRAINERS_FOR_MULTI_BATTLE    10
 #define TRAINER_BATTLE_HILL                             12
 #define TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO            13
+#define TRAINER_BATTLE_EARLY_RIVAL                      14
 
 #endif // GUARD_CONSTANTS_BATTLE_SETUP_H

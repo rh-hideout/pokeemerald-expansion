@@ -1,4 +1,4 @@
-FourIsland_House1_MapScripts::
+FourIsland_House1_Frlg_MapScripts::
 	.byte 0
 
 FourIsland_House1_EventScript_FatMan::

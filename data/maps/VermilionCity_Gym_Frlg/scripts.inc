@@ -3,7 +3,7 @@
 .equ SWITCH2_ID,         VAR_0x8005
 .equ TRASH_CAN_ID,       VAR_0x8008
 
-VermilionCity_Gym_MapScripts::
+VermilionCity_Gym_Frlg_MapScripts::
 	map_script MAP_SCRIPT_ON_LOAD, VermilionCity_Gym_OnLoad
 	map_script MAP_SCRIPT_ON_TRANSITION, VermilionCity_Gym_OnTransition
 	.byte 0
