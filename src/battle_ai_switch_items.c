@@ -2255,7 +2255,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 batonPassIds = 0, typeMatchupIds = 0, typeMatchupEffectiveIds = 0, defensiveMonIds = 0, trapperIds = 0, healingCandidateIds = 0;
     int i, j, aceMonId = PARTY_SIZE, aliveCount = 0, aceMonCount = 0;
     s32 defensiveMonHitKOThreshold = 3; // 3HKO threshold that candidate defensive mons must exceed
-    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0, monMaxDamage = 0;
+    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0;
     u32 aiMove, hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE, maxHitsToKO = 0;
     u32 bestResist = UQ_4_12(2.0), bestResistEffective = UQ_4_12(2.0), typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattleMonTypeMatchup
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
