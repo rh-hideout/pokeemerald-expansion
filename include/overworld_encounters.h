@@ -42,7 +42,7 @@ void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale);
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
-void RemoveOverworldEncounterObjects(void);
+void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
 bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);

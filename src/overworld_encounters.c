@@ -40,6 +40,7 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static bool32 CanRemoveOverworldEncounter(u32 localId);
 static void RemoveOldestOverworldEncounter(void);
 static void SortOWEMonAges(void);
+static void RemoveOverworldEncounterObject(struct ObjectEvent *objectEvent);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
@@ -53,7 +54,7 @@ void UpdateOverworldEncounters(void)
     
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
-        RemoveOverworldEncounterObjects();
+        RemoveAllOverworldEncounterObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
         for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
@@ -537,13 +538,18 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-void RemoveOverworldEncounterObjects(void)
+static void RemoveOverworldEncounterObject(struct ObjectEvent *objectEvent)
+{
+    RemoveObjectEvent(objectEvent);
+}
+
+void RemoveAllOverworldEncounterObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsGeneratedOverworldEncounter(obj))
-            RemoveObjectEvent(obj);
+            RemoveOverworldEncounterObject(obj);
     }
 }
 
@@ -662,8 +668,6 @@ static bool32 CanRemoveOverworldEncounter(u32 localId)
 
 static void RemoveOldestOverworldEncounter(void)
 {
-    // Can we have a dedicated remove object function as it can be used for the other case of
-    // RemoveObjectEvent in this function too?
     u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
     s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
 
@@ -671,7 +675,7 @@ static void RemoveOldestOverworldEncounter(void)
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveObjectEvent(&gObjectEvents[objectEventId]);
+    RemoveOverworldEncounterObject(&gObjectEvents[objectEventId]);
 }
 
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
