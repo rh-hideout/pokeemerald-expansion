@@ -15,10 +15,9 @@
 
 struct FollowMon
 {
-    u16 level:7;
     u16 form:3;
     u16 age:4;
-    u16 padding:12;
+    u16 padding:9;
     u16 padding2;
 };
 
@@ -39,7 +38,7 @@ void CreateFollowMonEncounter(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale);
+u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
 void RemoveAllOverworldEncounterObjects(void);
