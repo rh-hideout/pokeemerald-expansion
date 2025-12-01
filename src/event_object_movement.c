@@ -3108,7 +3108,7 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
-    if (graphicsId >= OBJ_EVENT_GFX_OWES && graphicsId <= OBJ_EVENT_GFX_OWES_END)
+    if (graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
         graphicsId = GetGraphicsIdForOverworldEncounterGfx();
 
     if (graphicsId == OBJ_EVENT_GFX_BARD)
@@ -3128,7 +3128,7 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
 
-    if (objectEvent->graphicsId >= OBJ_EVENT_GFX_OWES && objectEvent->graphicsId <= OBJ_EVENT_GFX_OWES_END)
+    if (objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
         objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx();
 }
 
