@@ -116,8 +116,8 @@ void UpdateOverworldEncounters(void)
                 u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-                gObjectEvents[objectEventId].range.rangeX = 8;
-                gObjectEvents[objectEventId].range.rangeY = 8;
+                gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
+                gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
                 gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
 
                 // Hide reflections for spawns in water
