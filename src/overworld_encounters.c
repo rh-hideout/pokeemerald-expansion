@@ -676,7 +676,6 @@ static void RemoveOldestOverworldEncounter(u8 *objectEventId)
 
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
-    // How does this work for objects if they are on a different map?
     if (CanRemoveOverworldEncounter(localId))
     {
         RemoveOldestOverworldEncounter(objectEventId);
