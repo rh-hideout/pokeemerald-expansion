@@ -439,9 +439,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_RAZOR_WIND] =
     {
         .name = COMPOUND_STRING("Razor Wind"),
-        .description = COMPOUND_STRING(
-            "A 2-turn move with a high\n"
-            "critical-hit ratio."),
+        #if B_UPDATED_MOVE_DATA == GEN_3
+            .description = COMPOUND_STRING(
+                "A 2-turn move that strikes\n"
+                "the foe on the 2nd turn.");
+        #else
+            .description = COMPOUND_STRING(
+                "A 2-turn move with a high\n"
+                "critical-hit ratio."),
+        #endif
         .effect = EFFECT_TWO_TURNS_ATTACK,
         .power = 80,
         .type = TYPE_NORMAL,
@@ -1858,12 +1864,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_LOW_KICK] =
     {
         .name = COMPOUND_STRING("Low Kick"),
-        .description = COMPOUND_STRING(
-            "A kick that inflicts more\n"
-            "damage on heavier foes."),
         #if B_UPDATED_MOVE_DATA >= GEN_3
+            .description = COMPOUND_STRING(
+                "A kick that inflicts more\n"
+                "damage on heavier foes."),
             .effect = EFFECT_LOW_KICK,
         #else
+            .description = COMPOUND_STRING(
+                "A low, tripping kick that\n"
+                "may cause flinching."),
             .effect = EFFECT_HIT,
             .additionalEffects = ADDITIONAL_EFFECTS({
                 .moveEffect = MOVE_EFFECT_FLINCH,
@@ -3951,9 +3960,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_DIZZY_PUNCH] =
     {
         .name = COMPOUND_STRING("Dizzy Punch"),
-        .description = COMPOUND_STRING(
-            "A rhythmic punch that may\n"
-            "confuse the foe."),
+        #if B_UPDATED_MOVE_DATA >= GEN_2
+            .description = COMPOUND_STRING(
+                "A rhythmic punch that may\n"
+                "confuse the target."),
+        #else
+            .description = COMPOUND_STRING(
+                "The target is hit with\n"
+                "rhythmic punches."),
+        #endif
         .effect = EFFECT_HIT,
         .power = 70,
         .type = TYPE_NORMAL,
@@ -4224,9 +4239,15 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_ROCK_SLIDE] =
     {
         .name = COMPOUND_STRING("Rock Slide"),
-        .description = COMPOUND_STRING(
-            "Large boulders are hurled.\n"
-            "May cause flinching."),
+        #if B_UPDATED_MOVE_DATA >= GEN_2
+            .description = COMPOUND_STRING(
+                "Large boulders are hurled.\n"
+                "May cause flinching."),
+        #else
+            .description = COMPOUND_STRING(
+                "Hits the foe with an\n"
+                "avalanche of rocks."),
+        #endif
         .effect = EFFECT_HIT,
         .power = 75,
         .type = TYPE_ROCK,
@@ -4336,12 +4357,18 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
     [MOVE_TRI_ATTACK] =
     {
         .name = COMPOUND_STRING("Tri Attack"),
-        .description = COMPOUND_STRING(
-            "Fires three types of beams.\n"
-        #if B_USE_FROSTBITE == TRUE
-            "May burn/para/frostbite."),
+        #if B_UPDATED_MOVE_DATA >= GEN_2
+            .description = COMPOUND_STRING(
+                "Fires three types of beams.\n"
+                #if B_USE_FROSTBITE == TRUE
+                    "May burn/para/frostbite."),
+                #else
+                    "May burn/paralyze/freeze."),
+                #endif
         #else
-            "May burn/paralyze/freeze."),
+            .description = COMPOUND_STRING(
+                "A triangular field of energy\n"
+                "is created and launched.");
         #endif
         .effect = EFFECT_HIT,
         .power = 80,
