@@ -112,3 +112,14 @@ AI_SINGLE_BATTLE_TEST("AI will select Throat Chop if the sound move is the best 
         TURN { EXPECT_MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_HYPER_VOICE);}
     }
 }
+
+AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RHYDON) { Level(100); Nature(NATURE_ADAMANT); Item(ITEM_EVIOLITE); Speed(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_HAMMER_ARM); }
+        OPPONENT(SPECIES_GRIMMSNARL) { Level(100); Nature(NATURE_JOLLY); Ability(ABILITY_INFILTRATOR); Speed(2); HP(331); Moves(MOVE_NASTY_PLOT, MOVE_AURA_SPHERE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAMMER_ARM); EXPECT_MOVE(opponent, MOVE_NASTY_PLOT); }
+    }
+}

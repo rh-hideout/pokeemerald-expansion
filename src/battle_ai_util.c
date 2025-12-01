@@ -4750,7 +4750,7 @@ static bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, 
                 case MOVE_EFFECT_SPD_MINUS_1:
                 case MOVE_EFFECT_SPD_MINUS_2:
                 {
-                    if(aiIsFaster)
+                    if (aiIsFaster && !additionalEffect->self)
                         return TRUE;
                 }
                 default:
