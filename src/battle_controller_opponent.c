@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
+#include "battle_ai_switch_items.h"
 #include "battle_ai_util.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
@@ -536,7 +537,10 @@ static void OpponentHandleChoosePokemon(u32 battler)
     // Choosing Revival Blessing target
     if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
     {
-        chosenMonId = gSelectedMonPartyId = GetFirstFaintedPartyIndex(battler);
+        chosenMonId = AI_SelectRevivalBlessingMon(battler);
+        if (chosenMonId == PARTY_SIZE)
+            chosenMonId = GetFirstFaintedPartyIndex(battler);
+        gSelectedMonPartyId = chosenMonId;
     }
     // Switching out
     else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
