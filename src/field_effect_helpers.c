@@ -7,6 +7,7 @@
 #include "fieldmap.h"
 #include "gpu_regs.h"
 #include "metatile_behavior.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
@@ -1516,6 +1517,9 @@ u32 FldEff_Bubbles(void)
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->coordOffsetEnabled = TRUE;
         sprite->oam.priority = 1;
+
+        // Save the spriteId in the sprite data of the corresponding OW Encounter object.
+        gSprites[gFieldEffectArguments[4]].data[6] = spriteId + 1;
     }
     return 0;
 }
@@ -1530,7 +1534,10 @@ void UpdateBubblesFieldEffect(struct Sprite *sprite)
     sprite->y -= sprite->sY >> 8;
     UpdateObjectEventSpriteInvisibility(sprite, FALSE);
     if (sprite->invisible || sprite->animEnded)
+    {
         FieldEffectStop(sprite, FLDEFF_BUBBLES);
+        gSprites[gObjectEvents[GetNewestOWEncounterLocalId()].spriteId].data[6] = 0;
+    }
 }
 
 #undef sY

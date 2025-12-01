@@ -20,7 +20,6 @@
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
-static u8 CountActiveFollowMon();
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
@@ -169,7 +168,7 @@ static u8 GetMaxFollowMonSpawns(void)
         return OWE_MAX_LAND_SPAWNS;
 }
 
-static u32 GetOldestSlot(void)
+u32 GetOldestSlot(void)
 {
     u32 oldest = 0;
 
@@ -189,10 +188,9 @@ static u8 NextSpawnMonSlot(void)
 {
     u32 spawnSlot;
     u32 maxSpawns = GetMaxFollowMonSpawns();
-    bool32 maxAllowedObjects = CountActiveObjectEvents() >= FOLLOWMON_IDEAL_OBJECT_EVENT_COUNT;
 
     // All mon slots are in use
-    if (CountActiveFollowMon() >= maxSpawns || maxAllowedObjects)
+    if (CountActiveFollowMon() >= maxSpawns)
     {
         // Cycle through so we remove the oldest mon first
         spawnSlot = GetOldestSlot();
@@ -210,15 +208,6 @@ static u8 NextSpawnMonSlot(void)
     {
         // Remove any existing id by this slot
         RemoveObjectEventByLocalIdAndMap(GetLocalIdByOverworldSpawnSlot(spawnSlot), gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-    }
-
-    // Check that we don't have too many sprites on screen before spawning
-    // (lag reduction)
-    if(maxAllowedObjects)
-    {
-        // Reset the countdown so multiple mons don't get destroyed at once.
-        sFollowMonData.spawnCountdown = 60;
-        return INVALID_SPAWN_SLOT;
     }
 
     return spawnSlot;
@@ -512,7 +501,7 @@ static bool8 IsSafeToSpawnObjectEvents(void)
     return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
 }
 
-static u8 CountActiveFollowMon()
+u8 CountActiveFollowMon()
 {
     u32 count = 0;
     for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
@@ -642,4 +631,17 @@ static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot)
 static u32 GetSpawnSlotByLocalId(u32 localId)
 {
     return LOCALID_OW_ENCOUNTER_END - localId;
+}
+
+u32 GetNewestOWEncounterLocalId(void)
+{
+    u32 i;
+    u32 newestSlot = 0;
+    for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    {
+        if (sFollowMonData.list[newestSlot].age > sFollowMonData.list[i].age)
+            newestSlot = i;
+    }
+
+    return newestSlot;
 }
