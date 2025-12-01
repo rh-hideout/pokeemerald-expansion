@@ -1660,9 +1660,7 @@ static void CB2_BattleTest_NextTrial(void)
     }
     else
     {
-        if (STATE->rngTag && !STATE->didRunRandomly && STATE->expectedRatio != Q_4_12(0.0) && STATE->expectedRatio != Q_4_12(1.0)
-        && (STATE->rngTag != RNG_AI_SCORE_TIE_DOUBLES_MOVE && STATE->rngTag != RNG_AI_SCORE_TIE_DOUBLES_TARGET 
-        && STATE->rngTag != RNG_AI_SCORE_TIE_SINGLES))
+        if (STATE->rngTag && !STATE->didRunRandomly && STATE->expectedRatio != Q_4_12(0.0) && STATE->expectedRatio != Q_4_12(1.0))
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s:%d: PASSES_RANDOMLY specified but no Random* call with that tag executed", gTestRunnerState.test->filename, SourceLine(0));
 
         // This is a tolerance of +/- ~2%.
