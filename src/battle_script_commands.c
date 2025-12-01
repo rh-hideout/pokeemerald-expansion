@@ -1032,9 +1032,6 @@ static void TryClearChargeVolatile(u32 moveType)
 
 static bool32 IsAnyTargetAffected(void)
 {
-    if (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
-        return FALSE;
-
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (battler == gBattlerAttacker)
@@ -7043,7 +7040,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_SAME_MOVE_TURNS:
-            if (gCurrentMove != gLastResultingMoves[gBattlerAttacker] || !IsAnyTargetAffected())
+            if (gCurrentMove != gLastResultingMoves[gBattlerAttacker] || (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE) || !IsAnyTargetAffected())
                 gBattleStruct->metronomeItemCounter[gBattlerAttacker] = 0;
             else if (gCurrentMove == gLastResultingMoves[gBattlerAttacker] && gSpecialStatuses[gBattlerAttacker].parentalBondState != PARENTAL_BOND_1ST_HIT)
                 gBattleStruct->metronomeItemCounter[gBattlerAttacker]++;
@@ -7129,7 +7126,7 @@ static void Cmd_moveend(void)
                     }
                 }
 
-                if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT
+                if (!(IsAnyTargetAffected()
                  || (gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE && !hasDancerTriggered)
                  || (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && gBattleStruct->bouncedMoveIsUsed)))
                 {   // Dance move succeeds
