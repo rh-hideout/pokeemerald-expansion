@@ -40,7 +40,6 @@ static u32 GetSpawnSlotByLocalId(u32 localId);
 static bool32 CanRemoveOverworldEncounter(u32 localId);
 static void RemoveOldestOverworldEncounter(u8 *objectEventId);
 static void SortOWEMonAges(void);
-static void RemoveOverworldEncounterObject(struct ObjectEvent *objectEvent);
 
 void LoadFollowMonData(struct ObjectEvent *objectEvent)
 {
@@ -540,18 +539,13 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-static void RemoveOverworldEncounterObject(struct ObjectEvent *objectEvent)
-{
-    RemoveObjectEvent(objectEvent);
-}
-
 void RemoveAllOverworldEncounterObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsGeneratedOverworldEncounter(obj))
-            RemoveOverworldEncounterObject(obj);
+            RemoveObjectEvent(obj);
     }
 }
 
@@ -677,7 +671,7 @@ static void RemoveOldestOverworldEncounter(u8 *objectEventId)
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveOverworldEncounterObject(&gObjectEvents[*objectEventId]);
+    RemoveObjectEvent(&gObjectEvents[*objectEventId]);
 }
 
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
