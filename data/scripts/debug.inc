@@ -348,9 +348,8 @@ Debug_EventScript_InflictStatus1_Single:
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Burn, 3
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Freeze, 4
 	dynmultipush Debug_EventScript_InflictStatus1_Text_Frostbite, 5
-	dynmultipush Debug_EventScript_InflictStatus1_Text_KO, 6
-	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 7
-	dynmultistack 0, 0, FALSE, 8, FALSE, 0, NULL
+	dynmultipush Debug_EventScript_InflictStatus1_Text_Close, 6
+	dynmultistack 0, 0, FALSE, 7, FALSE, 0, NULL
 	switch VAR_RESULT
 	case 0, Debug_EventScript_InflictStatus1_Single_Poison
 	case 1, Debug_EventScript_InflictStatus1_Single_Paralysis
@@ -358,9 +357,18 @@ Debug_EventScript_InflictStatus1_Single:
 	case 3, Debug_EventScript_InflictStatus1_Single_Burn
 	case 4, Debug_EventScript_InflictStatus1_Single_Freeze
 	case 5, Debug_EventScript_InflictStatus1_Single_Frostbite
-	case 6, Debug_EventScript_InflictStatus1_Single_KO
-	case 7, Debug_EventScript_InflictStatus1_Close
+	case 6, Debug_EventScript_InflictStatus1_Close
 	case MULTI_B_PRESSED, Debug_EventScript_InflictStatus1_Close
+	releaseall
+	end
+
+Debug_EventScript_KoPokemon::
+	special ChoosePartyMon
+	waitstate
+	goto_if_ge VAR_0x8004, PARTY_SIZE, Debug_EventScript_InflictStatus1_Close
+	specialvar VAR_RESULT, ScriptGetPartyMonSpecies
+	goto_if_eq VAR_RESULT, SPECIES_EGG, Debug_EventScript_InflictStatus1_Close
+	setko VAR_0x8004
 	releaseall
 	end
 
@@ -451,11 +459,6 @@ Debug_EventScript_InflictStatus1_Single_Freeze:
 
 Debug_EventScript_InflictStatus1_Single_Frostbite:
 	setstatus1 STATUS1_FROSTBITE, VAR_0x8004
-	releaseall
-	end
-
-Debug_EventScript_InflictStatus1_Single_KO:
-	setko VAR_0x8004
 	releaseall
 	end
 
