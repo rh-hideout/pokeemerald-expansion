@@ -1522,7 +1522,6 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 // loaded, returns TRUE.
 {
     u8 i = 0;
-    bool32 canRemoveOWEncounter = (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0 && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1) || localId > LOCALID_OW_ENCOUNTER_END));
 
     for (i = 0; i < OBJECT_EVENTS_COUNT && gObjectEvents[i].active; i++)
     {
@@ -1530,7 +1529,8 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
             return TRUE;
     }
 
-    if (i >= OBJECT_EVENTS_COUNT && !canRemoveOWEncounter)
+    // Only if a generated Overworld Encounter cannot be removed.
+    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
         return TRUE;
             
     *objectEventId = i;
@@ -1541,19 +1541,27 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
     }
 
     // Destroy the oldest OW Encounter mon to make room for the new object.
-    if (*objectEventId >= OBJECT_EVENTS_COUNT && canRemoveOWEncounter)
+    if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
+        RemoveOldestOverworldEncounter(objectEventId);
+
+    /* Can we integrate this with this line above:
+    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
+
+    Something like:
+    if (i >= OBJECT_EVENTS_COUNT)
+        return TryAndRemoveOldestOverworldEncounter(localId);
+
+    Where:
+    bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
     {
-        *objectEventId = GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - GetOldestSlot());
-        s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
-
-        // Stop the associated field effect if it is active.
-        if (*fldEffSpriteId != 0)
+        if (CanRemoveOverworldEncounter(localId))
         {
-            FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
+            RemoveOldestOverworldEncounter();
+            return FALSE;
         }
-
-        RemoveObjectEvent(&gObjectEvents[*objectEventId]);
+        return TRUE;
     }
+    */
 
     return FALSE;
 }
@@ -1564,6 +1572,7 @@ void RemoveObjectEvent(struct ObjectEvent *objectEvent)
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
+    GeneratedOverworldWildEncounter_OnObjectEventRemoved(objectEvent);
 }
 
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
@@ -1579,9 +1588,6 @@ void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
-
-    if (IsGeneratedOverworldEncounter(objectEvent))
-        FollowMon_OnObjectEventRemoved(objectEvent);
 
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;
@@ -1804,8 +1810,7 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
-    if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
-        FollowMon_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
+    GeneratedOverworldWildEncounter_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
 
     return objectEventId;
 }

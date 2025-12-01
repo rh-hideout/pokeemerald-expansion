@@ -15,10 +15,9 @@
 
 struct FollowMon
 {
-    u16 level:7;
     u16 form:3;
     u16 age:4;
-    u16 padding:12;
+    u16 padding:9;
     u16 padding2;
 };
 
@@ -32,19 +31,25 @@ struct FollowMonData
 //data/scripts/followmon.inc
 extern const u8 InteractWithDynamicWildFollowMon[];
 
-void LoadFollowMonData(struct ObjectEvent *objectEvent);
+void LoadFollowMonData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateFollowMonEncounter(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
-void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
-void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale);
+void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
+void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
+u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
-void RemoveOverworldEncounterObjects(void);
+void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
-bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent);
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
+bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
+bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);
+bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
+bool32 CanRemoveOverworldEncounter(u32 localId);
+void RemoveOldestOverworldEncounter(u8 *objectEventId);
+bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 
 #endif // GUARD_FOLLOWMON_H

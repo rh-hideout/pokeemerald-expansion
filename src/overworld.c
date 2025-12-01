@@ -894,8 +894,6 @@ if (I_VS_SEEKER_CHARGING != 0)
          || gMapHeader.regionMapSectionId != sLastMapSectionId)
             ShowMapNamePopup();
     }
-    // ClearOverworldEncounterData();
-    // RemoveOverworldEncounterObjects();
 }
 
 static void LoadMapFromWarp(bool32 a1)

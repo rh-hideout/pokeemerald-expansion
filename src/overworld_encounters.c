@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "fieldmap.h"
+#include "field_effect.h"
 #include "field_player_avatar.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
@@ -13,17 +14,20 @@
 #include "sound.h"
 #include "wild_encounter.h"
 #include "constants/event_objects.h"
+#include "constants/field_effects.h"
 #include "constants/map_types.h"
 #include "constants/trainer_types.h"
 #include "constants/songs.h"
 #include "constants/vars.h"
+
+#define sOverworldEncounterLevel trainerRange_berryTreeId
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
-static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale);
+static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 static u8 CountActiveObjectEvents();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
@@ -35,20 +39,21 @@ static void OverworldEncounters_ProcessMonInteraction(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
+static void SortOWEMonAges(void);
 
-void LoadFollowMonData(struct ObjectEvent *objectEvent)
+void LoadFollowMonData(void)
 {
     sFollowMonData.spawnCountdown += 60;
 }
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked())
+    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
-        RemoveOverworldEncounterObjects();
+        RemoveAllOverworldEncounterObjects();
         // Zero sFollowMonData ;
         u8 *raw = (u8 *)&sFollowMonData;
         for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
@@ -81,7 +86,7 @@ void UpdateOverworldEncounters(void)
                 bool32 waterMons = IsSpawningWaterMons();
                 bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
                 u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-                u32 movementType;
+                u32 movementType, level;
                 if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
                 {
                     if (waterMons)
@@ -98,7 +103,7 @@ void UpdateOverworldEncounters(void)
                 
                 struct ObjectEventTemplate objectEventTemplate = {
                     .localId = localId,
-                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &speciesId, &isShiny, &isFemale),
+                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &speciesId, &isShiny, &isFemale, &level),
                     .x = x - MAP_OFFSET,
                     .y = y - MAP_OFFSET,
                     .elevation = MapGridGetElevationAt(x, y),
@@ -109,8 +114,9 @@ void UpdateOverworldEncounters(void)
                 u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
                 gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-                gObjectEvents[objectEventId].range.rangeX = 8;
-                gObjectEvents[objectEventId].range.rangeY = 8;
+                gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
+                gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
+                gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
 
                 // Hide reflections for spawns in water
                 // (It just looks weird)
@@ -301,26 +307,30 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
 void CreateFollowMonEncounter(void)
 {
-    u32 localId = gSpecialVar_LastTalked;
-    u32 objEventId = GetObjectEventIdByLocalIdAndMap(localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     struct ObjectEvent *object = &gObjectEvents[objEventId];
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
 
-    if (!IsGeneratedOverworldEncounter(object))
+    if (!IsOverworldWildEncounter(object))
         return;
 
-    u32 slot = GetSpawnSlotByLocalId(localId);
     u16 speciesId = OW_SPECIES(object);
     bool32 shiny = OW_SHINY(object) ? TRUE : FALSE;
     bool32 isFemale = OW_FEMALE(object) ? TRUE : FALSE;
+    u32 level = object->sOverworldEncounterLevel;
+
+    if (level > MAX_LEVEL)
+        level = MAX_LEVEL;
+    else if ( level < MIN_LEVEL)
+        level = MIN_LEVEL;
 
     ZeroEnemyPartyMons();
     CreateMonWithGender(
         &gEnemyParty[0],
         speciesId,
-        sFollowMonData.list[slot].level,
+        level,
         USE_RANDOM_IVS,
         OT_ID_PLAYER_ID,
         0,
@@ -338,7 +348,7 @@ static void OverworldEncounters_ProcessMonInteraction(void)
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         object = &gObjectEvents[i];
-        if (IsGeneratedOverworldEncounter(object) && object->active && object != player
+        if (IsOverworldWildEncounter(object) && object->active && object != player
             && ((object->currentCoords.x == player->currentCoords.x && object->currentCoords.y == player->currentCoords.y)
             || (object->previousCoords.x == player->currentCoords.x && object->previousCoords.y == player->currentCoords.y))
             && AreElevationsCompatible(object->currentElevation, player->currentElevation))
@@ -351,18 +361,15 @@ static void OverworldEncounters_ProcessMonInteraction(void)
 
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
 {
-    // The player is only exempt from collisions with overworld encounters when not using a repel.
-    // Non-player, non-overworld encounters are not collision exempt with overworld encounters.
+    // The player only is exempt from collisions with OW Encounters when not using a repel or the DexNav is inactive.
 
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    bool32 forcePlayerCollision = (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING));
 
-    if (collider == player && IsGeneratedOverworldEncounter(obstacle) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
+    if (collider == player && IsOverworldWildEncounter(obstacle) && !forcePlayerCollision)
         return TRUE;
 
-    if (obstacle == player && IsGeneratedOverworldEncounter(collider) /* && VarGet(VAR_REPEL_STEP_COUNT) == 0 */)
-        return TRUE;
-    
-    if (!IsGeneratedOverworldEncounter(collider) && IsGeneratedOverworldEncounter(obstacle))
+    if (obstacle == player && IsOverworldWildEncounter(collider) && !forcePlayerCollision)
         return TRUE;
 
     return FALSE;
@@ -418,24 +425,28 @@ static void SortOWEMonAges(void)
     }
 }
 
-void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
+    if (!IsGeneratedOverworldWildEncounter(objectEvent))
+        return;
+    
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-
     sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
     SortOWEMonAges();
 }
 
-void FollowMon_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
+void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
+    if (!IsGeneratedOverworldWildEncounter(objectEvent))
+        return;
+    
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-
     sFollowMonData.list[spawnSlot].age = 0;
 }
 
-u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale)
+u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
-    SetOverworldEncounterSpeciesInfo(spawnSlot, x, y, speciesId, isShiny, isFemale);
+    SetOverworldEncounterSpeciesInfo(spawnSlot, x, y, speciesId, isShiny, isFemale, level);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
 
     if (*isFemale)
@@ -457,12 +468,12 @@ void ClearOverworldEncounterData(void)
     }
 }
 
-static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale)
+static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     const struct WildPokemonInfo *wildMonInfo;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    u32 timeOfDay, encounterIndex, level;
+    u32 timeOfDay, encounterIndex;
     u32 personality = Random32();
 
     if (MetatileBehavior_IsWaterWildEncounter(tileBehavior))
@@ -471,7 +482,7 @@ static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *s
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
         *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
     }
     else
     {
@@ -479,13 +490,12 @@ static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *s
         timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
         *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
     }
 
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
 
-    sFollowMonData.list[spawnSlot].level = level;
     *isShiny = ComputePlayerShinyOdds(personality);
     if (GetGenderFromSpeciesAndPersonality(*speciesId, personality) == MON_FEMALE)
         *isFemale = TRUE;
@@ -532,12 +542,12 @@ static bool8 IsSpawningWaterMons()
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
 }
 
-void RemoveOverworldEncounterObjects(void)
+void RemoveAllOverworldEncounterObjects(void)
 {
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsGeneratedOverworldEncounter(obj))
+        if (IsGeneratedOverworldWildEncounter(obj))
             RemoveObjectEvent(obj);
     }
 }
@@ -611,9 +621,23 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
         return !IsInsidePlayerMap(x, y);
 }
 
-bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent)
 {
     return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
+}
+
+bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return IsOverworldWildEncounter(objectEvent)
+        && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
+        && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
+}
+
+bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return IsOverworldWildEncounter(objectEvent)
+        && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
+        || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -645,3 +669,43 @@ u32 GetNewestOWEncounterLocalId(void)
 
     return newestSlot;
 }
+
+bool32 CanRemoveOverworldEncounter(u32 localId)
+{
+    // Can the last of these checks be replaced by IsOverworldWildEncounter?
+    // Include a check for the encounter not being shiny or a roamer.
+    return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0
+        && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1)
+        || localId > LOCALID_OW_ENCOUNTER_END));
+}
+
+void RemoveOldestOverworldEncounter(u8 *objectEventId)
+{
+    *objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
+
+    // Stop the associated field effect if it is active.
+    if (*fldEffSpriteId != 0)
+        FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
+
+    RemoveObjectEvent(&gObjectEvents[*objectEventId]);
+}
+
+bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
+{
+    if (CanRemoveOverworldEncounter(localId))
+    {
+        RemoveOldestOverworldEncounter(objectEventId);
+        return FALSE;
+    }
+    
+    return TRUE;
+}
+
+bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
+{
+    return IsGeneratedOverworldWildEncounter(&gObjectEvents[objectEventId])
+        || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
+}
+
+#undef sOverworldEncounterLevel
