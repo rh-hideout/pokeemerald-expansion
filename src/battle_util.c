@@ -461,11 +461,6 @@ void HandleAction_UseMove(void)
         return;
     }
 
-    gBattleStruct->eventState.atkCanceler = 0;
-    ClearDamageCalcResults();
-    gMultiHitCounter = 0;
-    gBattleScripting.savedDmg = 0;
-    gBattleCommunication[MISS_TYPE] = 0;
     gCurrMovePos = gChosenMovePos = gBattleStruct->chosenMovePositions[gBattlerAttacker];
 
     // choose move
@@ -533,8 +528,10 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = GetMaxMove(gBattlerAttacker, gCurrentMove);
     }
 
-    if (IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove))
-        gBattleStruct->moldBreakerActive = TRUE;
+    gBattleStruct->eventState.atkCanceler = 0;
+    ClearDamageCalcResults();
+    gMultiHitCounter = 0;
+    gBattleCommunication[MISS_TYPE] = 0;
 
     moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
@@ -960,14 +957,13 @@ void HandleAction_ActionFinished(void)
     memset(&gSpecialStatuses, 0, sizeof(gSpecialStatuses));
     gHitMarker &= ~(HITMARKER_OBEYS);
 
-    ClearDamageCalcResults();
     gCurrentMove = MOVE_NONE;
+    ClearDamageCalcResults();
     gBattleScripting.animTurn = 0;
     gBattleScripting.animTargetsHit = 0;
     gBattleStruct->dynamicMoveType = 0;
     gBattleStruct->bouncedMoveIsUsed = FALSE;
     gBattleStruct->snatchedMoveIsUsed = FALSE;
-    gBattleStruct->moldBreakerActive = FALSE;
     gBattleScripting.moveendState = 0;
     gBattleCommunication[3] = 0;
     gBattleCommunication[4] = 0;
@@ -2589,6 +2585,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
             // Possibly better to just move type setting and redirection to attackcanceler as a new case at this point
             SetTypeBeforeUsingMove(ctx->currentMove, ctx->battlerAtk);
             HandleMoveTargetRedirection();
+            ClearDamageCalcResults();
             gBattlescriptCurrInstr = GetMoveBattleScript(ctx->currentMove);
             return MOVE_STEP_BREAK;
         }
@@ -5277,7 +5274,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 if (!IsAbilityAndRecord(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker), ABILITY_MAGIC_GUARD))
                     SetPassiveDamageAmount(gBattlerAttacker, GetNonDynamaxMaxHP(gBattlerAttacker) / 4);
 
-                switch(gBattleMons[gBattlerTarget].species)
+                switch (gBattleMons[gBattlerTarget].species)
                 {
                     case SPECIES_CRAMORANT_GORGING:
                         TryBattleFormChange(battler, FORM_CHANGE_HIT_BY_MOVE);
@@ -10408,8 +10405,8 @@ void ClearDamageCalcResults(void)
     {
         gBattleStruct->moveDamage[battler] = 0;
         gBattleStruct->critChance[battler] = 0;
-        gBattleStruct->moveResultFlags[battler] = CAN_DAMAGE;
-        gBattleStruct->noResultString[battler] = 0;
+        gBattleStruct->moveResultFlags[battler] = 0;
+        gBattleStruct->noResultString[battler] = CAN_DAMAGE;
         gBattleStruct->missStringId[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;
     }
@@ -10419,6 +10416,11 @@ void ClearDamageCalcResults(void)
     gBattleStruct->calculatedSpreadMoveAccuracy = FALSE;
     gBattleStruct->printedStrongWindsWeakenedAttack = FALSE;
     gBattleStruct->numSpreadTargets = 0;
+    gBattleScripting.savedDmg = 0;
+    if (gCurrentMove != MOVE_NONE)
+        gBattleStruct->moldBreakerActive = IsMoldBreakerTypeAbility(gBattlerAttacker, GetBattlerAbility(gBattlerAttacker)) || MoveIgnoresTargetAbility(gCurrentMove);
+    else
+        gBattleStruct->moldBreakerActive = FALSE;
 }
 
 bool32 DoesDestinyBondFail(u32 battler)
