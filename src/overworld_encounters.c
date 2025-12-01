@@ -39,8 +39,6 @@ static void OverworldEncounters_ProcessMonInteraction(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
-static bool32 CanRemoveOverworldEncounter(u32 localId);
-static void RemoveOldestOverworldEncounter(u8 *objectEventId);
 static void SortOWEMonAges(void);
 
 void LoadFollowMonData(void)
@@ -672,7 +670,7 @@ u32 GetNewestOWEncounterLocalId(void)
     return newestSlot;
 }
 
-static bool32 CanRemoveOverworldEncounter(u32 localId)
+bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Can the last of these checks be replaced by IsOverworldWildEncounter?
     // Include a check for the encounter not being shiny or a roamer.
@@ -681,23 +679,23 @@ static bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-static void RemoveOldestOverworldEncounter(u8 *objectEventId)
+void RemoveOldestOverworldEncounter(void)
 {
-    *objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
+    u32 objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveObjectEvent(&gObjectEvents[*objectEventId]);
+    RemoveObjectEvent(&gObjectEvents[objectEventId]);
 }
 
-bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
+bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
-        RemoveOldestOverworldEncounter(objectEventId);
+        // RemoveOldestOverworldEncounter(objectEventId);
         return FALSE;
     }
     
