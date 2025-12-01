@@ -2311,8 +2311,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         canSwitchinWin1v1 = FALSE;
         bool32 anyMoveCanWin1v1 = FALSE;
 
-        monMaxDamage = 0;
-
         // Check through current mon's moves
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
