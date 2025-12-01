@@ -148,11 +148,9 @@ struct ProtectStruct
     u32 noValidMoves:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 nonVolatileStatusImmobility:1;
-    u32 confusionSelfDmg:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
+    u32 unableToUseMove:1;
     u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
@@ -167,12 +165,12 @@ struct ProtectStruct
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
     u16 lashOutAffected:1;
+    u16 assuranceDoubled:1;
+    u16 forcedSwitch:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
-    u16 assuranceDoubled:1;
     u16 myceliumMight:1;
-    u16 forcedSwitch:1;
-    u16 padding:10;
+    u16 padding:12;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -1240,7 +1238,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+        && !gProtectStructs[gBattlerAttacker].unableToUseMove
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 

@@ -384,7 +384,7 @@ void BattleArena_AddSkillPoints(u8 battler)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (gHitMarker & HITMARKER_OBEYS)
+    if (!gProtectStructs[gBattlerAttacker].unableToUseMove)
     {
         if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {
