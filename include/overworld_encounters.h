@@ -32,19 +32,20 @@ struct FollowMonData
 //data/scripts/followmon.inc
 extern const u8 InteractWithDynamicWildFollowMon[];
 
-void LoadFollowMonData(struct ObjectEvent *objectEvent);
+void LoadFollowMonData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateFollowMonEncounter(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
-void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
-void OverworldEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
+void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
+void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale);
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
 void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
-bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent);
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
+bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 

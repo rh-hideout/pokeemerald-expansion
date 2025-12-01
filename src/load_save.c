@@ -221,6 +221,7 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
+    LoadFollowMonData();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gObjectEvents[i] = gSaveBlock1Ptr->objectEvents[i];
@@ -232,9 +233,6 @@ void LoadObjectEvents(void)
         if (gObjectEvents[i].spriteId != 127)
             gObjectEvents[i].graphicsId &= 0xFF;
         gObjectEvents[i].spriteId = 0;
-        
-        if (IsGeneratedOverworldEncounter(&gObjectEvents[i]))
-            LoadFollowMonData(&gObjectEvents[i]);
         
         // Try to restore saved inactive follower
         if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER &&

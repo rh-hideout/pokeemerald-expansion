@@ -1549,7 +1549,7 @@ void RemoveObjectEvent(struct ObjectEvent *objectEvent)
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
-    OverworldEncounter_OnObjectEventRemoved(objectEvent);
+    GeneratedOverworldWildEncounter_OnObjectEventRemoved(objectEvent);
 }
 
 void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
@@ -1787,8 +1787,7 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
 
-    if (IsGeneratedOverworldEncounter(&gObjectEvents[objectEventId]))
-        FollowMon_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
+    GeneratedOverworldWildEncounter_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
 
     return objectEventId;
 }

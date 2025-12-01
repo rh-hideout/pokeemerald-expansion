@@ -41,7 +41,7 @@ static bool32 CanRemoveOverworldEncounter(u32 localId);
 static void RemoveOldestOverworldEncounter(u8 *objectEventId);
 static void SortOWEMonAges(void);
 
-void LoadFollowMonData(struct ObjectEvent *objectEvent)
+void LoadFollowMonData(void)
 {
     sFollowMonData.spawnCountdown += 60;
 }
@@ -313,7 +313,7 @@ void CreateFollowMonEncounter(void)
     if (objEventId >= OBJECT_EVENTS_COUNT)
         return;
 
-    if (!IsGeneratedOverworldEncounter(object))
+    if (!IsOverworldWildEncounter(object))
         return;
 
     u32 slot = GetSpawnSlotByLocalId(localId);
@@ -343,7 +343,7 @@ static void OverworldEncounters_ProcessMonInteraction(void)
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         object = &gObjectEvents[i];
-        if (IsGeneratedOverworldEncounter(object) && object->active && object != player
+        if (IsOverworldWildEncounter(object) && object->active && object != player
             && ((object->currentCoords.x == player->currentCoords.x && object->currentCoords.y == player->currentCoords.y)
             || (object->previousCoords.x == player->currentCoords.x && object->previousCoords.y == player->currentCoords.y))
             && AreElevationsCompatible(object->currentElevation, player->currentElevation))
@@ -361,10 +361,10 @@ bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
     bool32 forcePlayerCollision = (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING));
 
-    if (collider == player && IsGeneratedOverworldEncounter(obstacle) && !forcePlayerCollision)
+    if (collider == player && IsOverworldWildEncounter(obstacle) && !forcePlayerCollision)
         return TRUE;
 
-    if (obstacle == player && IsGeneratedOverworldEncounter(collider) && !forcePlayerCollision)
+    if (obstacle == player && IsOverworldWildEncounter(collider) && !forcePlayerCollision)
         return TRUE;
 
     return FALSE;
@@ -420,17 +420,19 @@ static void SortOWEMonAges(void)
     }
 }
 
-void FollowMon_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
+    if (!IsGeneratedOverworldWildEncounter(objectEvent))
+        return;
+    
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-
     sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
     SortOWEMonAges();
 }
 
-void OverworldEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
+void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldEncounter(objectEvent))
+    if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
     
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
@@ -541,7 +543,7 @@ void RemoveAllOverworldEncounterObjects(void)
     for (u32 i = 0; i < OBJECT_EVENTS_COUNT; ++i)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
-        if (IsGeneratedOverworldEncounter(obj))
+        if (IsGeneratedOverworldWildEncounter(obj))
             RemoveObjectEvent(obj);
     }
 }
@@ -615,9 +617,16 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
         return !IsInsidePlayerMap(x, y);
 }
 
-bool32 IsGeneratedOverworldEncounter(struct ObjectEvent *objectEvent)
+bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent)
 {
     return (objectEvent->graphicsId & OBJ_EVENT_MON) && (objectEvent->trainerType == TRAINER_TYPE_ENCOUNTER);
+}
+
+bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return IsOverworldWildEncounter(objectEvent)
+        && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
+        && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -652,7 +661,7 @@ u32 GetNewestOWEncounterLocalId(void)
 
 static bool32 CanRemoveOverworldEncounter(u32 localId)
 {
-    // Can the last of these checks be replaced by IsGeneratedOverworldEncounter?
+    // Can the last of these checks be replaced by IsOverworldWildEncounter?
     // Include a check for the encounter not being shiny or a roamer.
     return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1)
