@@ -660,13 +660,14 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
                     return (DATA.trial.scoreTieCount - 1);
                 case SCORE_TIE_RANDOM:
                     if (DATA.trial.scoreTieCount == 0)
+                    {
                         return 0; // Failsafe
-                    if (tag == STATE->rngTag)
+                    }
+                    else
                     {
                         u32 result = RandomUniformTrials(tag, lo, hi, reject, caller);
                         return result;
                     }
-                    return RandomUniformDefault(tag, 0, DATA.trial.scoreTieCount - 1);
                 case SCORE_TIE_CHOSEN:
                     return DATA.scoreTieOverride;
                 default:
@@ -679,13 +680,14 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
                     return (DATA.trial.targetTieCount - 1);
                 case TARGET_TIE_RANDOM:
                     if (DATA.trial.targetTieCount == 0)
+                    {
                         return 0; // Failsafe
-                    if (tag == STATE->rngTag)
+                    }
+                    else
                     {
                         u32 result = RandomUniformTrials(tag, lo, hi, reject, caller);
                         return result;
                     }
-                    return RandomUniformDefault(tag, 0, DATA.trial.targetTieCount - 1);
                 case TARGET_TIE_CHOSEN:
                     return DATA.targetTieOverride;
                 default:
