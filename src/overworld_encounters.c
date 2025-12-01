@@ -204,9 +204,12 @@ static u8 NextSpawnMonSlot(void)
         }
     }
 
-    // Remove any existing id by this slot
-    RemoveObjectEventByLocalIdAndMap(GetLocalIdByOverworldSpawnSlot(spawnSlot), gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
-    
+    if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
+    {
+        // Remove any existing id by this slot
+        RemoveObjectEventByLocalIdAndMap(GetLocalIdByOverworldSpawnSlot(spawnSlot), gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    }
+
     // Check that we don't have too many sprites on screen before spawning
     // (lag reduction)
     if(maxAllowedObjects)

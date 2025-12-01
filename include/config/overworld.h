@@ -75,6 +75,7 @@
 #define OW_WILD_ENCOUNTERS_RANDOM               TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
 #define OW_WILD_ENCOUNTERS_OVERWORLD            FALSE   // If TRUE, OW Pokémon can spawn as overworld wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
 #define OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT  TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will only use restricted movement types (MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER/MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER/MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER).
+#define OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT    FALSE   // If TRUE, the oldest OW wild encounter objects will despawn after a short time and be replaced with a new spawn if possible.
 
 // Out-of-battle Ability effects
 #define OW_SYNCHRONIZE_NATURE       GEN_LATEST // In Gen8+, if a Pokémon with Synchronize leads the party, wild Pokémon will always have their same Nature as opposed to the 50% chance in previous games. Gift Pokémon excluded.
