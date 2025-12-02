@@ -66,7 +66,7 @@ extern u8 *gConfigChangesTestOverride;
 static inline u32 GetConfig(enum ConfigTag configTag)
 {
     if (configTag >= CONFIG_COUNT)
-        return GEN_LATEST;
+        return 0;
 #if TESTING
     if (gConfigChangesTestOverride == NULL)
         return sConfigChanges[configTag];
