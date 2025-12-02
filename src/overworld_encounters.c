@@ -28,7 +28,6 @@ static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool8 IsSpawningWaterMons();
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
-static u8 CountActiveObjectEvents();
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
@@ -519,18 +518,6 @@ u8 CountActiveFollowMon()
 
 static u8 CountActiveObjectEvents()
 {
-    u8 i;
-    u8 count = 0;
-
-    for(i = 0; i < OBJECT_EVENTS_COUNT; ++i)
-    {
-        if(gObjectEvents[i].active)
-            ++count;
-    }
-
-    return count;
-}
-
 static bool8 IsSpawningWaterMons()
 {
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
