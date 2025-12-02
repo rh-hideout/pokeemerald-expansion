@@ -123,7 +123,7 @@ void UpdateOverworldEncounters(void)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
-                sFollowMonData.spawnCountdown = 60 * (3 + Random() % 2);
+                sFollowMonData.spawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
                 
                 enum FollowMonSpawnAnim spawnAnimType;
 
