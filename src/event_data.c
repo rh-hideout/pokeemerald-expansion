@@ -221,7 +221,6 @@ bool8 VarSet(u16 id, u16 value)
 
 u16 VarGetObjectEventGraphicsId(u8 id)
 {
-    DebugPrintf("TWat");
     return VarGet(VAR_OBJ_GFX_ID_0 + id);
 }
 
