@@ -496,25 +496,31 @@ void ClearOverworldEncounterData(void)
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
-static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounterIndex, u32 headerId, enum TimeOfDay *timeOfDay, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 personality)
+static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounterIndex, u32 headerId, enum TimeOfDay *timeOfDay, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 personality, u32 forceEncounterType)
 {
     const struct WildPokemonInfo *wildMonInfo;
+    bool32 isLandEncounter = MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y));
 
-    if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)))
-    {
-        *encounterIndex = ChooseWildMonIndex_Water();
-        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].waterMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_WATER);
-    }
-    else
+    if (forceEncounterType == OWE_SPAWN_LAND)
+        isLandEncounter = TRUE;
+    else if (forceEncounterType == OWE_SPAWN_WATER)
+        isLandEncounter = FALSE;
+
+    if (isLandEncounter)
     {
         *encounterIndex = ChooseWildMonIndex_Land();
         *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
         wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].landMonsInfo;
         *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
         *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_LAND);
+    }
+    else
+    {
+        *encounterIndex = ChooseWildMonIndex_Water();
+        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].waterMonsInfo;
+        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_WATER);
     }
 
     if (*speciesId == SPECIES_UNOWN)
@@ -544,7 +550,8 @@ static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *s
         isShiny,
         isFemale,
         level,
-        personality
+        personality,
+        OWE_SPAWN_METATILE
     );
 }
 
@@ -745,12 +752,8 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
         || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
 }
 
-u16 GetGraphicsIdForOverworldEncounterGfx(void)
+u16 GetGraphicsIdForOverworldEncounterGfx(u32 id)
 {
-    // x and y coords are hardcoded to set encounter type for now
-    // can level be set or does it have to be hardcorded too?
-    u32 x = 3, y = 5;
-
     u32 graphicsId;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 encounterIndex;
@@ -762,8 +765,8 @@ u16 GetGraphicsIdForOverworldEncounterGfx(void)
     enum TimeOfDay timeOfDay;
 
     SetOverworldEncounterSpeciesInfo_Helper(
-        x,
-        y,
+        0,
+        0,
         &encounterIndex,
         headerId,
         &timeOfDay,
@@ -771,7 +774,8 @@ u16 GetGraphicsIdForOverworldEncounterGfx(void)
         &isShiny,
         &isFemale,
         &level,
-        personality
+        personality,
+        id + 1
     );
 
     graphicsId = speciesId + OBJ_EVENT_MON;
@@ -782,6 +786,7 @@ u16 GetGraphicsIdForOverworldEncounterGfx(void)
 
     // objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
     // objectEvent->sOverworldEncounterLevel = level;
+    DebugPrintf("%d, %d", id, graphicsId);
     return graphicsId;
 }
 

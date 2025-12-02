@@ -15,6 +15,10 @@
 #define OWE_SPAWN_TIME_VARIABILITY  60  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
 #define OWE_SPAWN_TIME_MINIMUM      60  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 
+#define OWE_SPAWN_METATILE          0
+#define OWE_SPAWN_LAND              1
+#define OWE_SPAWN_WATER             2
+
 #define INVALID_SPAWN_SLOT 0xFF
 
 struct FollowMonData
@@ -45,6 +49,6 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 void RemoveOldestOverworldEncounter(u8 *objectEventId);
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
-u16 GetGraphicsIdForOverworldEncounterGfx(void);
+u16 GetGraphicsIdForOverworldEncounterGfx(u32 id);
 
 #endif // GUARD_FOLLOWMON_H
