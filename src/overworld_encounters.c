@@ -51,10 +51,19 @@ void UpdateOverworldEncounters(void)
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
     {
-        RemoveAllOverworldEncounterObjects();
-        ClearOverworldEncounterData();
+        if (sFollowMonData.spawnCountdown != 255)
+        {
+            RemoveAllOverworldEncounterObjects();
+            sFollowMonData.spawnCountdown = 255;
+        }
+
+        return;
+    }
+    else if (sFollowMonData.spawnCountdown == 255)
+    {
+        sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
     }
 
     u16 speciesId = SPECIES_NONE;
