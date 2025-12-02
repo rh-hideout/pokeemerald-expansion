@@ -24,7 +24,7 @@
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
 
-static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
+static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
@@ -44,18 +44,27 @@ static void SortOWEMonAges(void);
 
 void LoadFollowMonData(void)
 {
-    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD || ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
-    if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
     {
-        RemoveAllOverworldEncounterObjects();
-        ClearOverworldEncounterData();
+        if (sOWESpawnCountdown != 255)
+        {
+            RemoveAllOverworldEncounterObjects();
+            sOWESpawnCountdown = 255;
+        }
+
+        return;
+    }
+    else if (sOWESpawnCountdown == 255)
+    {
+        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
     }
 
     u16 speciesId = SPECIES_NONE;
@@ -64,7 +73,7 @@ void UpdateOverworldEncounters(void)
 
     OverworldEncounters_ProcessMonInteraction();
 
-    if(sFollowMonData.spawnCountdown == 0)
+    if(sOWESpawnCountdown == 0)
     {
         s16 x, y;
         const struct WildPokemonInfo *wildMonInfo = NULL;
@@ -118,7 +127,7 @@ void UpdateOverworldEncounters(void)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
-                sFollowMonData.spawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+                sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
                 
                 enum FollowMonSpawnAnim spawnAnimType;
 
@@ -146,13 +155,13 @@ void UpdateOverworldEncounters(void)
             }
             else
             {
-                sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+                sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             }
         }
     }
     else
     {
-        --sFollowMonData.spawnCountdown;
+        --sOWESpawnCountdown;
     }
 }
 
@@ -170,11 +179,25 @@ u32 GetOldestSlot(void)
 {
     struct ObjectEvent *slotMon;
     struct ObjectEvent *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
+    u32 spawnSlot;
 
-    for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE)
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
+        {
+            oldest = slotMon;
+            break;
+        }
+    }
+
+    if (spawnSlot >= FOLLOWMON_MAX_SPAWN_SLOTS)
+        return INVALID_SPAWN_SLOT;
+
+    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    {
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -193,10 +216,16 @@ static u8 NextSpawnMonSlot(void)
     if (CountActiveFollowMon() >= maxSpawns)
     {
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
+        {
             // Cycle through so we remove the oldest mon first
             spawnSlot = GetOldestSlot();
+            if (spawnSlot == INVALID_SPAWN_SLOT)
+                return INVALID_SPAWN_SLOT;
+        }
         else
+        {
             return INVALID_SPAWN_SLOT;
+        }
     }
     else
     {
@@ -464,7 +493,7 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesI
 
 void ClearOverworldEncounterData(void)
 {
-    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
