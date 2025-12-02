@@ -43,7 +43,7 @@ static void SortOWEMonAges(void);
 
 void LoadFollowMonData(void)
 {
-    sFollowMonData.spawnCountdown += 60;
+    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 void UpdateOverworldEncounters(void)
@@ -152,7 +152,7 @@ void UpdateOverworldEncounters(void)
             }
             else
             {
-                sFollowMonData.spawnCountdown += 60;
+                sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             }
         }
     }
@@ -464,7 +464,7 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesI
 
 void ClearOverworldEncounterData(void)
 {
-    sFollowMonData.spawnCountdown = 0;
+    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)

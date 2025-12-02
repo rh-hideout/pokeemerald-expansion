@@ -11,8 +11,9 @@
 #define OWE_MAX_WATER_SPAWNS        5
 #define OWE_MAX_CAVE_SPAWNS         4
 
-#define OWE_TIME_BETWEEN_SPAWNS     180     // Minimum wait time (in frames) between spawns.
-#define OWE_SPAWN_TIME_VARIABILITY  60      // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
+#define OWE_TIME_BETWEEN_SPAWNS     180 // Minimum wait time (in frames) between spawns.
+#define OWE_SPAWN_TIME_VARIABILITY  60  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
+#define OWE_SPAWN_TIME_MINIMUM      60  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 
 #define INVALID_SPAWN_SLOT 0xFF
 
