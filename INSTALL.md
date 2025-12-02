@@ -32,6 +32,7 @@ Distributions with instructions:
 - [Debian](docs/install/linux/DEBIAN.md)
 - [Arch Linux](docs/install/linux/ARCH_LINUX.md)
 - [NixOS](docs/install/linux/NIXOS.md)
+- [Fedora](docs/install/linux/FEDORA.md)
 
 Other distributions have to infer what to do from [general instructions](docs/install/linux/OTHERS.md).
 

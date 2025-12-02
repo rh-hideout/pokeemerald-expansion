@@ -20,6 +20,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     {
         .battleScript = BattleScript_EffectNonVolatileStatus,
         .battleTvScore = 0, // Handled within the battle TV functions
+        .encourageEncore = TRUE,
     },
 
     [EFFECT_ABSORB] =
@@ -622,7 +623,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ROLLOUT] =
     {
-        .battleScript = BattleScript_EffectRollout,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
     },
 
@@ -635,7 +636,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FURY_CUTTER] =
     {
-        .battleScript = BattleScript_EffectFuryCutter,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
     },
 
@@ -791,7 +792,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_BEAT_UP] =
     {
-        .battleScript = (B_BEAT_UP >= GEN_5) ? BattleScript_EffectHit : BattleScript_EffectBeatUp,
+        .battleScript = BattleScript_EffectBeatUp,
         .battleTvScore = 2,
     },
 
@@ -892,7 +893,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FOCUS_PUNCH] =
     {
-        .battleScript = BattleScript_EffectFocusPunch,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 7,
     },
 
@@ -2067,12 +2068,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_MAX_MOVE] =
     {
         .battleScript = BattleScript_EffectMaxMove,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_GLAIVE_RUSH] =
-    {
-        .battleScript = BattleScript_EffectGlaiveRush,
         .battleTvScore = 0, // TODO: Assign points
     },
 

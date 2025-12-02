@@ -353,3 +353,45 @@ SINGLE_BATTLE_TEST("Neutralizing Gas only displays exiting message for the last 
         NOT MESSAGE("The effects of the neutralizing gas wore off!");
     }
 }
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas is active for the duration of a Spread Move even if Neutralizing Gas is no longer on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveTarget(MOVE_ORIGIN_PULSE) == MOVE_TARGET_BOTH);
+        PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_GOLEM) { Ability(ABILITY_STURDY); }
+        OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_ORIGIN_PULSE); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ORIGIN_PULSE, opponentLeft);
+        HP_BAR(playerLeft);
+        HP_BAR(playerRight);
+        MESSAGE("Weezing fainted!");
+        MESSAGE("Golem fainted!");
+        NOT ABILITY_POPUP(playerRight, ABILITY_STURDY);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Neutralizing Gas is active until the last Dragon Darts hit even if Neutralizing Gas is no longer on the field")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_DRAGON_DARTS) == EFFECT_DRAGON_DARTS);
+        PLAYER(SPECIES_WEEZING) { HP(1); Ability(ABILITY_NEUTRALIZING_GAS); }
+        PLAYER(SPECIES_GOLEM) { HP(2); MaxHP(2); Ability(ABILITY_STURDY); }
+        OPPONENT(SPECIES_BASCULEGION) { Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponentLeft, MOVE_DRAGON_DARTS, target: playerLeft); }
+    } SCENE {
+        ABILITY_POPUP(playerLeft, ABILITY_NEUTRALIZING_GAS);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DRAGON_DARTS, opponentLeft);
+        HP_BAR(playerLeft);
+        MESSAGE("Weezing fainted!");
+        HP_BAR(playerRight);
+        NOT MESSAGE("Golem fainted!");
+        ABILITY_POPUP(playerRight, ABILITY_STURDY);
+    }
+}
