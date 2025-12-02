@@ -191,8 +191,11 @@ static u8 NextSpawnMonSlot(void)
     // All mon slots are in use
     if (CountActiveFollowMon() >= maxSpawns)
     {
-        // Cycle through so we remove the oldest mon first
-        spawnSlot = GetOldestSlot();
+        if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
+            // Cycle through so we remove the oldest mon first
+            spawnSlot = GetOldestSlot();
+        else
+            return INVALID_SPAWN_SLOT;
     }
     else
     {
