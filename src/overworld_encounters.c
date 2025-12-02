@@ -178,11 +178,25 @@ u32 GetOldestSlot(void)
 {
     struct ObjectEvent *slotMon;
     struct ObjectEvent *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
+    u32 spawnSlot;
 
-    for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
-        if (OW_SPECIES(slotMon) != SPECIES_NONE)
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
+        {
+            oldest = slotMon;
+            break;
+        }
+    }
+
+    if (spawnSlot >= FOLLOWMON_MAX_SPAWN_SLOTS)
+        return INVALID_SPAWN_SLOT;
+
+    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    {
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
+        if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
         {
             if (slotMon->sAge > oldest->sAge)
                 oldest = slotMon;
@@ -201,10 +215,16 @@ static u8 NextSpawnMonSlot(void)
     if (CountActiveFollowMon() >= maxSpawns)
     {
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
+        {
             // Cycle through so we remove the oldest mon first
             spawnSlot = GetOldestSlot();
+            if (spawnSlot == INVALID_SPAWN_SLOT)
+                return INVALID_SPAWN_SLOT;
+        }
         else
+        {
             return INVALID_SPAWN_SLOT;
+        }
     }
     else
     {
