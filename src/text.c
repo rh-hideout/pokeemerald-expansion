@@ -56,10 +56,10 @@ static EWRAM_DATA struct TextPrinter sTextPrinters[WINDOWS_MAX] = {0};
 static u16 EWRAM_DATA sFontHalfRowLookupTable[0x100];
 static union TextColor sLastTextColor;
 
-COMMON_DATA const struct FontInfo *gFonts = NULL;
-COMMON_DATA bool8 gDisableTextPrinters = 0;
-COMMON_DATA struct TextGlyph gCurGlyph = {0};
-COMMON_DATA TextFlags gTextFlags = {0};
+EWRAM_DATA const struct FontInfo *gFonts = NULL;
+EWRAM_DATA bool8 gDisableTextPrinters = 0;
+EWRAM_DATA TextFlags gTextFlags = {0};
+struct TextGlyph gCurGlyph = {0};
 
 static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
 static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
