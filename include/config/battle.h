@@ -133,6 +133,7 @@
 #define B_TIME_OF_DAY_HEALING_MOVES GEN_LATEST // In Gen2, Morning Sun, Moonlight, and Synthesis heal twice as much HP based off the time of day. Also changes how much they heal. Evening affects Moonlight.
                                                // If OW_TIMES_OF_DAY is set to Gen 3, then Morning Sun is boosted during the day.
 #define B_DREAM_EATER_LIQUID_OOZE   GEN_LATEST // In Gen5+, Dream Eater is affected by Liquid Ooze.
+#define B_DREAM_EATER_SUBSTITUTE    GEN_LATEST // In Gen5+, Dream Eater can successfully hit and drain from a Substitute.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.

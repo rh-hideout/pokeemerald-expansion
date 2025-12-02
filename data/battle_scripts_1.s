@@ -2571,7 +2571,9 @@ BattleScript_MaxHp50Recoil::
 
 BattleScript_EffectDreamEater::
 	attackcanceler
+.if B_DREAM_EATER_SUBSTITUTE < GEN_5
 	jumpifsubstituteblocks BattleScript_DoesntAffectTargetAtkString
+.endif
 	jumpifstatus BS_TARGET, STATUS1_SLEEP, BattleScript_HitFromAccCheck
 	jumpifability BS_TARGET, ABILITY_COMATOSE, BattleScript_HitFromAccCheck
 	goto BattleScript_DoesntAffectTargetAtkString
