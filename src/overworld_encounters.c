@@ -23,7 +23,7 @@
 #define sOverworldEncounterLevel trainerRange_berryTreeId
 #define sAge                     playerCopyableMovement
 
-static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
+static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
@@ -43,7 +43,7 @@ static void SortOWEMonAges(void);
 
 void LoadFollowMonData(void)
 {
-    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 void UpdateOverworldEncounters(void)
@@ -53,17 +53,17 @@ void UpdateOverworldEncounters(void)
     
     if (FlagGet(OW_FLAG_NO_ENCOUNTER))
     {
-        if (sFollowMonData.spawnCountdown != 255)
+        if (sOWESpawnCountdown != 255)
         {
             RemoveAllOverworldEncounterObjects();
-            sFollowMonData.spawnCountdown = 255;
+            sOWESpawnCountdown = 255;
         }
 
         return;
     }
-    else if (sFollowMonData.spawnCountdown == 255)
+    else if (sOWESpawnCountdown == 255)
     {
-        sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+        sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
     }
 
     u16 speciesId = SPECIES_NONE;
@@ -72,7 +72,7 @@ void UpdateOverworldEncounters(void)
 
     OverworldEncounters_ProcessMonInteraction();
 
-    if(sFollowMonData.spawnCountdown == 0)
+    if(sOWESpawnCountdown == 0)
     {
         s16 x, y;
         const struct WildPokemonInfo *wildMonInfo = NULL;
@@ -126,7 +126,7 @@ void UpdateOverworldEncounters(void)
                     gObjectEvents[objectEventId].hideReflection = TRUE;
 
                 // Slower replacement spawning
-                sFollowMonData.spawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+                sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
                 
                 enum FollowMonSpawnAnim spawnAnimType;
 
@@ -154,13 +154,13 @@ void UpdateOverworldEncounters(void)
             }
             else
             {
-                sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+                sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             }
         }
     }
     else
     {
-        --sFollowMonData.spawnCountdown;
+        --sOWESpawnCountdown;
     }
 }
 
@@ -466,7 +466,7 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesI
 
 void ClearOverworldEncounterData(void)
 {
-    sFollowMonData.spawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+    sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
