@@ -1962,26 +1962,6 @@ static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struc
     return typeEffectiveness1 + typeEffectiveness2;
 }
 
-static int GetRandomSwitchinWithBatonPass(int aliveCount, int bits, int firstId, int lastId, int currentMonId)
-{
-    // Breakout early if there aren't any Baton Pass mons to save computation time
-    if (bits == 0)
-        return PARTY_SIZE;
-
-    // GetBestMonBatonPass randomly chooses between all mons that met Baton Pass check
-    if ((aliveCount == 2 || (aliveCount > 2 && Random() % 3 == 0)) && bits)
-    {
-        do
-        {
-            return (Random() % (lastId - firstId)) + firstId;
-        } while (!(bits & (1 << (currentMonId))));
-    }
-
-    // Catch any other cases (such as only one mon alive and it has Baton Pass)
-    else
-        return PARTY_SIZE;
-}
-
 static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, int lastId, enum SwitchType switchType)
 {
     u32 i;
