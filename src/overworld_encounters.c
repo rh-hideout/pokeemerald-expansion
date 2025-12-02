@@ -516,8 +516,6 @@ u8 CountActiveFollowMon()
     return count;
 }
 
-static u8 CountActiveObjectEvents()
-{
 static bool8 IsSpawningWaterMons()
 {
     return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
