@@ -25,7 +25,6 @@ struct FollowMonData
 {
     struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];
     u16 spawnCountdown;
-    u8 pendingSpawnAnim;
 };
 
 //data/scripts/followmon.inc

@@ -125,42 +125,36 @@ void UpdateOverworldEncounters(void)
 
                 // Slower replacement spawning
                 sFollowMonData.spawnCountdown = 60 * (3 + Random() % 2);
+                
+                enum FollowMonSpawnAnim spawnAnimType;
+
+                // Play spawn animation.
+                if (speciesId != SPECIES_NONE)
+                {
+                    if (isShiny)
+                    {
+                        PlaySE(SE_SHINY);
+                        spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
+                    }
+                    else 
+                    {
+                        PlayCry_Normal(speciesId, 25); 
+                        if (IsSpawningWaterMons())
+                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
+                        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
+                        else
+                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
+                    }
+                    // Instantly play a small animation to ground the spawning a bit
+                    MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
+                }
             }
         }
     }
     else
     {
         --sFollowMonData.spawnCountdown;
-    }
-
-    // Play spawn animation when player is close enough
-    if(sFollowMonData.pendingSpawnAnim != 0)
-    {
-        u32 spawnSlot = sFollowMonData.pendingSpawnAnim - 1;
-        u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
-        enum FollowMonSpawnAnim spawnAnimType;
-
-        if (speciesId != SPECIES_NONE)
-        {
-            if (isShiny)
-            {
-                PlaySE(SE_SHINY);
-                spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
-            }
-            else 
-            {
-                PlayCry_Normal(speciesId, 25); 
-                if (IsSpawningWaterMons())
-                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
-                else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
-                else
-                    spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
-            }
-            // Instantly play a small animation to ground the spawning a bit
-            MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objEventId]);
-            sFollowMonData.pendingSpawnAnim = 0;
-        }
     }
 }
 
@@ -432,8 +426,6 @@ void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *ob
     if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
     
-    u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-    sFollowMonData.pendingSpawnAnim = spawnSlot + 1;
     SortOWEMonAges();
 }
 
