@@ -402,7 +402,7 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
         *(str_++) = CHAR_FEMALE;
         break;
     }
-    
+
     *(str_++) = EXT_CTRL_CODE_BEGIN;
     *(str_++) = EXT_CTRL_CODE_TEXT_COLORS;
     *(str_++) = TEXT_COLOR_BLUE;
@@ -428,12 +428,13 @@ static u8 *CopyConditionMonNameGender(u8 *str, u16 listId, bool8 skipPadding)
 
 static void CopyMonNameGenderLocation(s16 listId, u8 loadId)
 {
-    u16 boxId, i = 0;
+    u16 boxId;
     struct Pokenav_ConditionMenu *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU);
     struct PokenavMonList *monListPtr = GetSubstructPtr(POKENAV_SUBSTRUCT_MON_LIST);
 
     if (listId != (IsConditionMenuSearchMode() ? monListPtr->listCount : monListPtr->listCount - 1))
     {
+        u16 i = 0;
         CopyConditionMonNameGender(menu->nameText[loadId], listId, FALSE);
         boxId = monListPtr->monData[listId].boxId;
         menu->locationText[loadId][i++] = EXT_CTRL_CODE_BEGIN;
@@ -451,13 +452,13 @@ static void CopyMonNameGenderLocation(s16 listId, u8 loadId)
     }
     else
     {
-        for (i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
+        for (u16 i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
             menu->nameText[loadId][i] = CHAR_SPACE;
-        menu->nameText[loadId][i] = EOS;
+        menu->nameText[loadId][POKEMON_NAME_LENGTH + 2] = EOS;
 
-        for (i = 0; i < BOX_NAME_LENGTH; i++)
+        for (u16 i = 0; i < BOX_NAME_LENGTH; i++)
             menu->locationText[loadId][i] = CHAR_SPACE;
-        menu->locationText[loadId][i] = EOS;
+        menu->locationText[loadId][BOX_NAME_LENGTH] = EOS;
     }
 }
 

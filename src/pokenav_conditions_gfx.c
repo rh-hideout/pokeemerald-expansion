@@ -562,7 +562,6 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
 {
     u8 text[32];
     const u8 *str;
-    u32 i = 0;
     struct Pokenav_ConditionMenuGfx *menu = GetSubstructPtr(POKENAV_SUBSTRUCT_CONDITION_GRAPH_MENU_GFX);
 
     switch (mode)
@@ -582,6 +581,7 @@ static bool32 UpdateConditionGraphMenuWindows(u8 mode, u16 bufferIndex, bool8 wi
     case 2:
         if (IsConditionMenuSearchMode() == TRUE)
         {
+            u32 i = 0;
             str = GetConditionMonLocationText(bufferIndex);
             AddTextPrinterParameterized(menu->nameGenderWindowId, FONT_NORMAL, str, 0, 17, 0, NULL);
             text[i++] = EXT_CTRL_CODE_BEGIN;

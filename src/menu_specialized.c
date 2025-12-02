@@ -1001,7 +1001,6 @@ static u8 *BufferConditionMenuSpacedStringN(u8 *dst, const u8 *src, s16 n)
 
 void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId, u16 monId, u16 partyId, u16 numMons, bool8 excludesCancel)
 {
-    u16 i = 0;
     u16 box = boxId;
     u16 mon = monId;
 
@@ -1013,6 +1012,7 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
 
     if (partyId != numMons)
     {
+        u16 i = 0;
         GetConditionMenuMonString(nameDst, box, mon);
         locationDst[i++] = EXT_CTRL_CODE_BEGIN;
         locationDst[i++] = EXT_CTRL_CODE_BACKGROUND;
@@ -1029,12 +1029,12 @@ void GetConditionMenuMonNameAndLocString(u8 *locationDst, u8 *nameDst, u16 boxId
     }
     else
     {
-        for (i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
+        for (u16 i = 0; i < POKEMON_NAME_LENGTH + 2; i++)
             nameDst[i] = CHAR_SPACE;
-        nameDst[i] = EOS;
-        for (i = 0; i < BOX_NAME_LENGTH; i++)
+        nameDst[POKEMON_NAME_LENGTH + 2] = EOS;
+        for (u16 i = 0; i < BOX_NAME_LENGTH; i++)
             locationDst[i] = CHAR_SPACE;
-        locationDst[i] = EOS;
+        locationDst[BOX_NAME_LENGTH] = EOS;
     }
 }
 

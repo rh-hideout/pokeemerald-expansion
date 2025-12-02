@@ -533,8 +533,10 @@ void GenerateFontHalfRowLookupTable(u8 bgColor, u8 fgColor, u8 shadowColor, u8 a
 
     u8 *current = (u8 *)sFontHalfRowLookupTable;
     
-    for (u32 i = 0; i < 16; i++) {
-        for (u32 j = 0; j < 16; j++) {
+    for (u32 i = 0; i < 16; i++)
+    {
+        for (u32 j = 0; j < 16; j++)
+        {
             *(current++) = quarterRows[i];
             *(current++) = quarterRows[j];
         }
