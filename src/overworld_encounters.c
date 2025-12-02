@@ -149,6 +149,10 @@ void UpdateOverworldEncounters(void)
                     MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
                 }
             }
+            else
+            {
+                sFollowMonData.spawnCountdown += 60;
+            }
         }
     }
     else
