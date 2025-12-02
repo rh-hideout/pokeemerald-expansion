@@ -142,8 +142,8 @@ struct MoveInfo
         } twoTurnAttack;
         struct {
             u16 species;
-            u8 power;
-            u8 numOfHits;
+            u16 power:9;
+            u16 numOfHits:7;
         } speciesPowerOverride;
         u32 protectMethod;
         u32 status;
