@@ -204,3 +204,6 @@ AI will predict what move the player is going to use based on what move it would
 
 ## `AI_FLAG_PP_STALL_PREVENTION`
 This flag aims to prevent the player from PP stalling the AI by switching between immunities. The AI mon's move scores will slowly decay for absorbed moves over time, eventually making its moves unpredictable. More detailed control for this behaviour can be customized in the `ai.h` config file.
+
+## `AI_FLAG_RANDOMIZE_SWITCHIN`
+AI will randomly choose between eligible switchin candidates rather than always picking the last one in the party. For example, if the AI has two mons that can revenge kill the player's mon after a KO, by default the AI will only track the most recent eligible candidate, and will always send in the last one in party order as a result. With this flag, it will instead track all of the eligible mons, and randomly choose between them when deciding which to send out.

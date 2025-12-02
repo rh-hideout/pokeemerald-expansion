@@ -169,7 +169,9 @@ struct DamageContext
     u32 isSelfInflicted:1;
     u32 weather:16;
     u32 fixedBasePower:8;
-    u32 padding2:8;
+    u32 aiCalc:1;
+    u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
+    u32 padding2:6;
     u32 chosenMove:16; // May be different to 'move', e.g. for Z moves.
     u32 padding3:16;
     uq4_12_t typeEffectivenessModifier;
@@ -299,8 +301,6 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
 bool32 IsBattlerGrounded(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
-u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower, u32 rolloutTimer);
-u32 CalcFuryCutterBasePower(u32 basePower, u32 furyCutterCounter);
 s32 CalcCritChanceStage(struct DamageContext *ctx);
 s32 CalcCritChanceStageGen1(struct DamageContext *ctx);
 s32 CalculateMoveDamage(struct DamageContext *ctx);

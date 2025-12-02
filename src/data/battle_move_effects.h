@@ -623,7 +623,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_ROLLOUT] =
     {
-        .battleScript = BattleScript_EffectRollout,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 3,
     },
 
@@ -636,7 +636,7 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
 
     [EFFECT_FURY_CUTTER] =
     {
-        .battleScript = BattleScript_EffectFuryCutter,
+        .battleScript = BattleScript_EffectHit,
         .battleTvScore = 2,
     },
 
@@ -2068,12 +2068,6 @@ const struct BattleMoveEffect gBattleMoveEffects[NUM_BATTLE_MOVE_EFFECTS] =
     [EFFECT_MAX_MOVE] =
     {
         .battleScript = BattleScript_EffectMaxMove,
-        .battleTvScore = 0, // TODO: Assign points
-    },
-
-    [EFFECT_GLAIVE_RUSH] =
-    {
-        .battleScript = BattleScript_EffectGlaiveRush,
         .battleTvScore = 0, // TODO: Assign points
     },
 

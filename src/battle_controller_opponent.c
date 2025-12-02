@@ -10,7 +10,7 @@
 #include "battle_message.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "bg.h"

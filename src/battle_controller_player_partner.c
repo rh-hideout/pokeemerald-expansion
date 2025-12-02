@@ -12,6 +12,7 @@
 #include "battle_z_move.h"
 #include "bg.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "item_use.h"
 #include "link.h"
 #include "main.h"

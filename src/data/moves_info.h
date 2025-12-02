@@ -19912,7 +19912,7 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .description = COMPOUND_STRING(
             "Foe attacks next turn can't\n"
             "miss and do double damage."),
-        .effect = EFFECT_GLAIVE_RUSH,
+        .effect = EFFECT_HIT,
         .power = 120,
         .type = TYPE_DRAGON,
         .accuracy = 100,
@@ -19921,6 +19921,10 @@ const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
         .priority = 0,
         .category = DAMAGE_CATEGORY_PHYSICAL,
         .makesContact = TRUE,
+        .additionalEffects = ADDITIONAL_EFFECTS({
+            .moveEffect = MOVE_EFFECT_GLAIVE_RUSH,
+            .self = TRUE,
+        }),
         .battleAnimScript = gBattleAnimMove_GlaiveRush,
     },
 

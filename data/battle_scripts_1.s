@@ -205,12 +205,6 @@ BattleScript_EffectDoodleMoveEnd:
 	restoreattacker
 	goto BattleScript_MoveEnd
 
-BattleScript_EffectGlaiveRush::
-	call BattleScript_EffectHit_Ret
-	jumpifmoveresultflags MOVE_RESULT_DOESNT_AFFECT_FOE, BattleScript_TryFaintMon
-	setvolatile BS_ATTACKER, VOLATILE_GLAIVE_RUSH, 2
-	goto BattleScript_TryFaintMon
-
 BattleScript_SyrupBombActivates::
 	printstring STRINGID_TARGETCOVEREDINSTICKYCANDYSYRUP
 	waitmessage B_WAIT_TIME_LONG
@@ -3465,16 +3459,6 @@ BattleScript_EffectSandstorm::
 	setfieldweather BATTLE_WEATHER_SANDSTORM
 	goto BattleScript_MoveWeatherChange
 
-BattleScript_EffectRollout::
-	attackcanceler
-	jumpifvolatile BS_ATTACKER, VOLATILE_MULTIPLETURNS, BattleScript_RolloutCheckAccuracy
-BattleScript_RolloutCheckAccuracy::
-	accuracycheck BattleScript_RolloutHit, ACC_CURR_MOVE
-BattleScript_RolloutHit::
-	typecalc
-	handlerollout
-	goto BattleScript_HitFromDamageCalc
-
 BattleScript_EffectSwagger::
 	attackcanceler
 	jumpifsubstituteblocks BattleScript_MakeMoveMissed
@@ -3492,16 +3476,6 @@ BattleScript_SwaggerTryConfuse:
 	jumpifsafeguard BattleScript_SafeguardProtected
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
 	goto BattleScript_MoveEnd
-
-BattleScript_EffectFuryCutter::
-	attackcanceler
-	accuracycheck BattleScript_FuryCutterHit, ACC_CURR_MOVE
-BattleScript_FuryCutterHit:
-	handlefurycutter
-	damagecalc
-	jumpifmovehadnoeffect BattleScript_FuryCutterHit
-	adjustdamage
-	goto BattleScript_HitFromAtkAnimation
 
 BattleScript_TryDestinyKnotTarget:
 	jumpifnoholdeffect BS_ATTACKER, HOLD_EFFECT_DESTINY_KNOT, BattleScript_TryDestinyKnotTargetRet
