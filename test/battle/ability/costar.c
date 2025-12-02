@@ -25,6 +25,35 @@ DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages upon entering battle")
     }
 }
 
+DOUBLE_BATTLE_TEST("Costar copies an ally's stat stages after their ability activates upon entering battle")
+{
+    u32 speedLeft, speedRight = 0;
+
+    PARAMETRIZE { speedLeft = 200; speedRight = 150; }
+    PARAMETRIZE { speedLeft = 150; speedRight = 200; }
+
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET) { Speed(100); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(110); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(10); HP(1); };
+        OPPONENT(SPECIES_WYNAUT) { Speed(10); HP(1); };
+        OPPONENT(SPECIES_FLAMIGO) { Speed(speedLeft); Ability(ABILITY_COSTAR); }
+        OPPONENT(SPECIES_ZACIAN) { Speed(speedRight); Ability(ABILITY_INTREPID_SWORD); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_HYPER_VOICE);
+            SEND_OUT(opponentLeft, 2);
+            SEND_OUT(opponentRight, 3);
+        }
+    } SCENE {
+        ABILITY_POPUP(opponentRight, ABILITY_INTREPID_SWORD);
+        ABILITY_POPUP(opponentLeft, ABILITY_COSTAR);
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+        EXPECT_EQ(opponentLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 1);
+    }
+}
+
 // Copy from Ruin ability tests
 TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Player");
 TO_DO_BATTLE_TEST("Costar's message displays correctly after all battlers fainted - Opponent");
