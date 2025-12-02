@@ -745,12 +745,9 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
         || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
 }
 
-u16 GetGraphicsIdForOverworldEncounterGfx(void)
+u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
 {
-    // x and y coords are hardcoded to set encounter type for now
-    // can level be set or does it have to be hardcorded too?
-    u32 x = 3, y = 5;
-
+    struct ObjectEventTemplate template = *GetObjectEventTemplateByLocalIdAndMap(objectEvent->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     u32 graphicsId;
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 encounterIndex;
@@ -762,8 +759,8 @@ u16 GetGraphicsIdForOverworldEncounterGfx(void)
     enum TimeOfDay timeOfDay;
 
     SetOverworldEncounterSpeciesInfo_Helper(
-        x,
-        y,
+        template.x,
+        template.y,
         &encounterIndex,
         headerId,
         &timeOfDay,
@@ -780,8 +777,8 @@ u16 GetGraphicsIdForOverworldEncounterGfx(void)
     if (isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
-    // objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
-    // objectEvent->sOverworldEncounterLevel = level;
+    objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
+    objectEvent->sOverworldEncounterLevel = level;
     return graphicsId;
 }
 

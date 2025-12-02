@@ -1474,9 +1474,11 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    objectEvent->trainerType = template->trainerType;
+    if (IsManualOverworldWildEncounter(objectEvent) && objectEvent->trainerType == TRAINER_TYPE_NONE)
+        objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
+    if (IsManualOverworldWildEncounter(objectEvent) && objectEvent->trainerRange_berryTreeId == 0)
+        objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
@@ -3109,7 +3111,7 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
     if (graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
-        graphicsId = GetGraphicsIdForOverworldEncounterGfx();
+        graphicsId = OBJ_EVENT_GFX_OW_MON;
 
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
@@ -3129,7 +3131,7 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
 
     if (objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
-        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx();
+        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx(objectEvent);
 }
 
 void SetObjectInvisibility(u8 localId, u8 mapNum, u8 mapGroup, bool8 invisible)
