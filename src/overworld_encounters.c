@@ -48,10 +48,10 @@ void LoadFollowMonData(void)
 
 void UpdateOverworldEncounters(void)
 {
-    if (ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
+    if (!OW_WILD_ENCOUNTERS_OVERWORLD || ArePlayerFieldControlsLocked() || FlagGet(DN_FLAG_SEARCHING))
         return;
     
-    if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
         RemoveAllOverworldEncounterObjects();
         ClearOverworldEncounterData();
