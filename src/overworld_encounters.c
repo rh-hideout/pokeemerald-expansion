@@ -54,14 +54,7 @@ void UpdateOverworldEncounters(void)
     if (!OW_WILD_ENCOUNTERS_OVERWORLD || FlagGet(OW_FLAG_NO_ENCOUNTER)) // Need check for if header has encounters?
     {
         RemoveAllOverworldEncounterObjects();
-        // Zero sFollowMonData ;
-        u8 *raw = (u8 *)&sFollowMonData;
-        for (u32 i = 0; i < sizeof(struct FollowMonData); i++)
-        {
-            raw[i] = 0;
-        }
-
-        return;
+        ClearOverworldEncounterData();
     }
 
     u16 speciesId = SPECIES_NONE;
