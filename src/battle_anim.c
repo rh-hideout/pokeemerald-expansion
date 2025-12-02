@@ -196,6 +196,7 @@ static const u8* const sBattleAnims_StatusConditions[NUM_B_ANIMS_STATUS] =
     [B_ANIM_STATUS_FRZ]         = gBattleAnimStatus_Freeze,
     [B_ANIM_STATUS_CURSED]      = gBattleAnimStatus_Curse,
     [B_ANIM_STATUS_NIGHTMARE]   = gBattleAnimStatus_Nightmare,
+    [B_ANIM_STATUS_FRB]         = gBattleAnimStatus_Frostbite,
 };
 
 static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
@@ -2221,7 +2222,7 @@ static void Cmd_stopsound(void)
 
 static void Cmd_jumpifmovetypeequal(void)
 {
-    const u8 *type = sBattleAnimScriptPtr + 1;
+    const enum Type *type = sBattleAnimScriptPtr + 1;
     sBattleAnimScriptPtr += 2;
     if (*type != GetBattleMoveType(gCurrentMove))
         sBattleAnimScriptPtr += 4;

@@ -2313,7 +2313,7 @@ void AnimTask_SwapMonSpriteToFromSubstitute(u8 taskId)
 {
     u8 spriteId;
     u32 x;
-    u32 done = FALSE;
+    bool32 done = FALSE;
 
     spriteId = gBattlerSpriteIds[gBattleAnimAttacker];
     switch (gTasks[taskId].data[10])

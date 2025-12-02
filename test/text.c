@@ -499,7 +499,7 @@ TEST("Ability names fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 144;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -511,7 +511,7 @@ TEST("Ability names fit on Ability Pop-Up")
 {
     u32 i;
     const u32 fontId = FONT_SMALL_NARROWER, widthPx = 76;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].name) { ability = i; }
@@ -523,7 +523,7 @@ TEST("Ability descriptions fit on Pokemon Summary Screen")
 {
     u32 i;
     const u32 fontId = FONT_NORMAL, widthPx = 146;
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
     for (i = 1; i < ABILITIES_COUNT; i++)
     {
         PARAMETRIZE_LABEL("%S", gAbilitiesInfo[i].description) { ability = i; }
@@ -535,7 +535,7 @@ TEST("Type names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 39;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -547,7 +547,7 @@ TEST("Type names fit on Pokedex Search Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 38;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -570,9 +570,9 @@ TEST("Battle strings fit on the battle message window")
     s32 sixDigitNines = 999999;                                 // 36 pixels.
     u8 nickname[POKEMON_NAME_LENGTH + 1] = _("MMMMMMMMMMMM");   // 72 pixels.
     u32 longMoveID = MOVE_NATURES_MADNESS;                      // 89 pixels.
-    u32 longAbilityID = ABILITY_SUPERSWEET_SYRUP;               // 91 pixels.
+    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;      // 91 pixels.
     u32 longStatName = STAT_EVASION;                            // 40 pixels.
-    u32 longTypeName = TYPE_ELECTRIC;                           // 43 pixels.
+    enum Type longTypeName = TYPE_ELECTRIC;                     // 43 pixels.
     u32 longSpeciesName = SPECIES_SANDY_SHOCKS;                 // 47 pixels.
     u32 longItemName = ITEM_UNREMARKABLE_TEACUP;                // 73 pixels.
     u8 boxName[9] = _("MMMMMMMM");                              // 54 pixels.
@@ -663,8 +663,6 @@ TEST("Battle strings fit on the battle message window")
         break;
     // Buffer Move name to B_BUFF1
     case STRINGID_PKMNLEARNEDMOVE2:
-    case STRINGID_TEAMSTOPPEDWORKING: // Unused
-    case STRINGID_FOESTOPPEDWORKING: // Unused
     case STRINGID_PKMNHURTBY:
     case STRINGID_PKMNFREEDFROM:
     case STRINGID_PKMNMOVEWASDISABLED:
@@ -715,8 +713,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_ATTACKERABILITYSTATRAISE:
     case STRINGID_TARGETABILITYSTATLOWER:
     case STRINGID_SCRIPTINGABILITYSTATRAISE:
-    case STRINGID_BATTLERABILITYRAISEDSTAT:
-    case STRINGID_ABILITYRAISEDSTATDRASTICALLY:
     case STRINGID_STATWASHEIGHTENED:
         StringCopy(gBattleTextBuff1, gStatNamesTable[longStatName]);
         break;
@@ -758,7 +754,6 @@ TEST("Battle strings fit on the battle message window")
     case STRINGID_PKMNCURIOUSABOUTX:
     case STRINGID_PKMNENTHRALLEDBYX:
     case STRINGID_PKMNIGNOREDX:
-    case STRINGID_PREVENTEDFROMWORKING:
     case STRINGID_PKMNOBTAINEDX:
     case STRINGID_ABOUTTOUSEPOLTERGEIST:
         PREPARE_ITEM_BUFFER(gBattleTextBuff1, longItemName);

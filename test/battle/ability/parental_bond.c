@@ -105,7 +105,9 @@ DOUBLE_BATTLE_TEST("Parental Bond does not convert multi-target moves into a two
 
 SINGLE_BATTLE_TEST("Parental Bond-converted moves only hit once on Lightning Rod/Storm Drain mons")
 {
-    u16 move, species, ability, type;
+    u16 move, species;
+    enum Type type;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_THUNDERBOLT; ability = ABILITY_LIGHTNING_ROD; species = SPECIES_RAICHU; type = TYPE_ELECTRIC; }
     PARAMETRIZE { move = MOVE_SURF; ability = ABILITY_STORM_DRAIN; species = SPECIES_LILEEP; type = TYPE_WATER; }
     GIVEN {
@@ -139,7 +141,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
@@ -168,7 +170,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
@@ -198,7 +200,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
@@ -229,7 +231,7 @@ SINGLE_BATTLE_TEST("Parental Bond has no affect on multi hit moves and they stil
     PASSES_RANDOMLY(passes, trials, RNG_HITS);
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MULTI_HIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_MULTI_HIT_CHANCE, genConfig);
         ASSUME(GetMoveCategory(MOVE_COMET_PUNCH) != DAMAGE_CATEGORY_STATUS);
         ASSUME(GetMoveEffect(MOVE_COMET_PUNCH) == EFFECT_MULTI_HIT);
         PLAYER(SPECIES_KANGASKHAN) { Item(ITEM_KANGASKHANITE); }
