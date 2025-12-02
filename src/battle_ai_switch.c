@@ -1499,17 +1499,14 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
 
 static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons)
 {
-    u32 chosenMonId = PARTY_SIZE;
     for (u32 i = (lastId-1); i > firstId; i--)
     {
         if (!((1 << i) & invalidMons))
         {
-            // first non invalid mon found
-            chosenMonId = i;
-            break;
+            return i;
         }
     }
-    return chosenMonId;
+    return PARTY_SIZE;
 }
 
 bool32 IsSwitchinGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2)
@@ -1985,6 +1982,60 @@ static int GetRandomSwitchinWithBatonPass(int aliveCount, int bits, int firstId,
         return PARTY_SIZE;
 }
 
+static u32 GetSwitchinCandidate(u32 switchinCategory, u32 battler, int firstId, int lastId, enum SwitchType switchType)
+{
+    u32 i;
+
+    if (switchinCategory == 0)
+        return PARTY_SIZE;
+
+    // Randomize between eligible mons
+    if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN)
+    {
+        // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
+        if (switchType == SWITCH_AFTER_KO)
+            return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_POST_KO, switchinCategory); // Can't pass this anything with no set bits
+        else
+            return RandomBitIndex(RNG_AI_RANDOM_SWITCHIN_MID_BATTLE, switchinCategory); // Can't pass this anything with no set bits
+    }
+
+    // Pick last eligible mon in party order
+    for (i = lastId; i >= firstId; i--)
+    {
+        if (switchinCategory & (1 << i))
+            return i;
+    }
+    
+    return PARTY_SIZE;
+}
+
+static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, u32 lastId, enum SwitchType switchType)
+{
+    u32 i;
+
+    if (validMonIds == 0)
+        return PARTY_SIZE;
+
+    // Randomize between valid mons
+    if ((gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RANDOMIZE_SWITCHIN) && RANDOMIZE_SWITCHIN_ANY_VALID)
+    {
+        // This split is necessary because the test system can't handle multiple calls with the same random tag in the same turn
+        if (switchType == SWITCH_AFTER_KO)
+            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO, validMonIds); // Can't pass this anything with no set bits
+        else
+            return RandomBitIndex(RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE, validMonIds); // Can't pass this anything with no set bits
+    }
+
+    // Pick last valid mon in party order
+    for (i = (lastId-1); i > firstId; i--)
+    {
+        if (validMonIds & (1 << i))
+            return i;
+    }
+
+    return PARTY_SIZE;
+}
+
 static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattler, struct BattlePokemon battleMon, u32 *bestPlayerMove)
 {
     int i = 0;
@@ -2127,15 +2178,15 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 {
     struct IncomingHealInfo healInfoData;
     const struct IncomingHealInfo *healInfo = &healInfoData;
-    int revengeKillerId = PARTY_SIZE, slowRevengeKillerId = PARTY_SIZE, fastThreatenId = PARTY_SIZE, slowThreatenId = PARTY_SIZE, damageMonId = PARTY_SIZE, generic1v1MonId = PARTY_SIZE;
-    int batonPassId = PARTY_SIZE, typeMatchupId = PARTY_SIZE, typeMatchupEffectiveId = PARTY_SIZE, defensiveMonId = PARTY_SIZE, aceMonId = PARTY_SIZE, trapperId = PARTY_SIZE, healingCandidateId = PARTY_SIZE;
-    int i, j, aliveCount = 0, bits = 0, aceMonCount = 0;
+    u32 revengeKillerIds = 0, slowRevengeKillerIds = 0, fastThreatenIds = 0, slowThreatenIds = 0, damageMonIds = 0, generic1v1MonIds = 0;
+    u32 batonPassIds = 0, typeMatchupIds = 0, typeMatchupEffectiveIds = 0, defensiveMonIds = 0, trapperIds = 0, healingCandidateIds = 0;
+    int i, j, aceMonId = PARTY_SIZE, aliveCount = 0, aceMonCount = 0;
     s32 defensiveMonHitKOThreshold = 3; // 3HKO threshold that candidate defensive mons must exceed
-    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0, monMaxDamage = 0;
+    s32 playerMonHP = gBattleMons[opposingBattler].hp, maxDamageDealt = 0, damageDealt = 0, bestHealGain = 0;
     u32 aiMove, hitsToKOAI, hitsToKOPlayer, hitsToKOAIPriority, bestPlayerMove = MOVE_NONE, bestPlayerPriorityMove = MOVE_NONE, maxHitsToKO = 0;
     u32 bestResist = UQ_4_12(2.0), bestResistEffective = UQ_4_12(2.0), typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattleMonTypeMatchup
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
-    u32 invalidMons = 0;
+    u32 validMonIds = 0;
     uq4_12_t effectiveness = UQ_4_12(1.0);
 
     GetIncomingHealInfo(battler, &healInfoData);
@@ -2150,7 +2201,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             || i == gBattleStruct->monToSwitchIntoId[battlerIn1]
             || i == gBattleStruct->monToSwitchIntoId[battlerIn2])
         {
-            invalidMons |= 1u << i;
             continue;
         }
         // Save Ace Pokemon for last
@@ -2158,11 +2208,13 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         {
             aceMonId = i;
             aceMonCount++;
-            invalidMons |= 1u << i;
             continue;
         }
         else
+        {
             aliveCount++;
+            validMonIds |= (1u << i);
+        }
 
         InitializeSwitchinCandidate(&party[i]);
 
@@ -2186,8 +2238,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         canSwitchinWin1v1 = FALSE;
         bool32 anyMoveCanWin1v1 = FALSE;
 
-        monMaxDamage = 0;
-
         // Check through current mon's moves
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
@@ -2209,7 +2259,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             if (GetMoveEffect(aiMove) == EFFECT_BATON_PASS)
             {
                 if ((isSwitchinFirst && hitsToKOAI > 1) || hitsToKOAI > 2) // Need to take an extra hit if slower
-                    bits |= 1u << i;
+                    batonPassIds |= (1u << i);
             }
 
             // Check that good type matchups get at least two turns and set best type matchup mon
@@ -2218,7 +2268,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 if (canSwitchinWin1v1)
                 {
                     bestResist = typeMatchup;
-                    typeMatchupId = i;
+                    typeMatchupIds |= (1u << i);
                 }
             }
 
@@ -2227,11 +2277,11 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             {
                 maxHitsToKO = hitsToKOAI;
                 if (maxHitsToKO > defensiveMonHitKOThreshold)
-                    defensiveMonId = i;
+                    defensiveMonIds |= (1u << i);
             }
 
             if (canSwitchinWin1v1)
-                generic1v1MonId = i;
+                generic1v1MonIds |= (1u << i);
 
             // Check for mon with resistance and super effective move for best type matchup mon with effective move
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
@@ -2243,7 +2293,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                         if (canSwitchinWin1v1)
                         {
                             bestResistEffective = typeMatchup;
-                            typeMatchupEffectiveId = i;
+                            typeMatchupEffectiveIds |= (1u << i);
                         }
                     }
                 }
@@ -2254,15 +2304,13 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     && damageDealt < playerMonHP)
                     continue;
 
-                if (damageDealt > monMaxDamage)
-                    monMaxDamage = damageDealt;
                 // Check that mon isn't one shot and set best damage mon
                 if (damageDealt > maxDamageDealt)
                 {
                     if ((isFreeSwitch && hitsToKOAI > 1) || hitsToKOAI > 2) // This is a "default", we have uniquely low standards
                     {
                         maxDamageDealt = damageDealt;
-                        damageMonId = i;
+                        damageMonIds |= (1u << i);
                     }
                 }
 
@@ -2273,9 +2321,9 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     if (canSwitchinWin1v1)
                     {
                         if (isSwitchinFirst)
-                            revengeKillerId = i;
+                            revengeKillerIds |= (1u << i);
                         else
-                            slowRevengeKillerId = i;
+                            slowRevengeKillerIds |= (1u << i);
                     }
                 }
 
@@ -2285,9 +2333,9 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     if (canSwitchinWin1v1)
                     {
                         if (isSwitchinFirst)
-                            fastThreatenId = i;
+                            fastThreatenIds |= (1u << i);
                         else
-                            slowThreatenId = i;
+                            slowThreatenIds |= (1u << i);
                     }
                 }
 
@@ -2296,7 +2344,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                     || (CanAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gAiLogicData->switchinCandidate.battleMon.ability == ABILITY_TRACE))
                     && CountUsablePartyMons(opposingBattler) > 0
                     && canSwitchinWin1v1)
-                    trapperId = i;
+                    trapperIds |= (1u << i);
             }
         }
 
@@ -2318,51 +2366,46 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             if (anyMoveCanWin1v1 && healGain > (s32)(maxHP / 4) && healGain > bestHealGain)
             {
                 bestHealGain = healGain;
-                healingCandidateId = i;
+                healingCandidateIds |= (1u << i);
             }
         }
-      
-        if (monMaxDamage == 0)
-            invalidMons |= 1u << i;
     }
-
-    batonPassId = GetRandomSwitchinWithBatonPass(aliveCount, bits, firstId, lastId, i);
 
     // Different switching priorities depending on switching mid battle vs switching after a KO or slow switch
     if (isFreeSwitch)
     {
         // Return Trapper > Revenge Killer > Type Matchup > Healing Candidate > Baton Pass > Best Damage
-        if (trapperId != PARTY_SIZE)                    return trapperId;
-        else if (revengeKillerId != PARTY_SIZE)         return revengeKillerId;
-        else if (slowRevengeKillerId != PARTY_SIZE)     return slowRevengeKillerId;
-        else if (fastThreatenId != PARTY_SIZE)          return fastThreatenId;
-        else if (slowThreatenId != PARTY_SIZE)          return slowThreatenId;
-        else if (typeMatchupEffectiveId != PARTY_SIZE)  return typeMatchupEffectiveId;
-        else if (typeMatchupId != PARTY_SIZE)           return typeMatchupId;
-        else if (healingCandidateId != PARTY_SIZE)      return healingCandidateId;
-        else if (batonPassId != PARTY_SIZE)             return batonPassId;
-        else if (generic1v1MonId != PARTY_SIZE)         return generic1v1MonId;
-        else if (damageMonId != PARTY_SIZE)             return damageMonId;
+        if (trapperIds != 0)                    return GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType);
+        else if (revengeKillerIds != 0)         return GetSwitchinCandidate(revengeKillerIds, battler, firstId, lastId, switchType);
+        else if (slowRevengeKillerIds != 0)     return GetSwitchinCandidate(slowRevengeKillerIds, battler, firstId, lastId, switchType);
+        else if (fastThreatenIds != 0)          return GetSwitchinCandidate(fastThreatenIds, battler, firstId, lastId, switchType);
+        else if (slowThreatenIds != 0)          return GetSwitchinCandidate(slowThreatenIds, battler, firstId, lastId, switchType);
+        else if (typeMatchupEffectiveIds != 0)  return GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType);
+        else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType);
+        else if (healingCandidateIds != 0)      return GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType);
+        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType);
+        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType);
+        else if (damageMonIds != 0)             return GetSwitchinCandidate(damageMonIds, battler, firstId, lastId, switchType);
     }
     else
     {
         // Return Trapper > Type Matchup > Best Defensive > Healing Candidate > Baton Pass
-        if (trapperId != PARTY_SIZE)                    return trapperId;
-        else if (typeMatchupEffectiveId != PARTY_SIZE)  return typeMatchupEffectiveId;
-        else if (typeMatchupId != PARTY_SIZE)           return typeMatchupId;
-        else if (defensiveMonId != PARTY_SIZE)          return defensiveMonId;
-        else if (healingCandidateId != PARTY_SIZE)      return healingCandidateId;
-        else if (batonPassId != PARTY_SIZE)             return batonPassId;
-        else if (generic1v1MonId != PARTY_SIZE)         return generic1v1MonId;
+        if (trapperIds != 0)                    return GetSwitchinCandidate(trapperIds, battler, firstId, lastId, switchType);
+        else if (typeMatchupEffectiveIds != 0)  return GetSwitchinCandidate(typeMatchupEffectiveIds, battler, firstId, lastId, switchType);
+        else if (typeMatchupIds != 0)           return GetSwitchinCandidate(typeMatchupIds, battler, firstId, lastId, switchType);
+        else if (defensiveMonIds != 0)          return GetSwitchinCandidate(defensiveMonIds, battler, firstId, lastId, switchType);
+        else if (healingCandidateIds != 0)      return GetSwitchinCandidate(healingCandidateIds, battler, firstId, lastId, switchType);
+        else if (batonPassIds != 0)             return GetSwitchinCandidate(batonPassIds, battler, firstId, lastId, switchType);
+        else if (generic1v1MonIds != 0)         return GetSwitchinCandidate(generic1v1MonIds, battler, firstId, lastId, switchType);
     }
 
+    // Not required to switch here and no good candidates, bail
     if (switchType == SWITCH_MID_BATTLE_OPTIONAL)
         return PARTY_SIZE;
 
     // Fallback
-    u32 bestMonId = GetFirstNonInvalidMon(firstId, lastId, invalidMons);
-    if (bestMonId != PARTY_SIZE)
-        return bestMonId;
+    if (validMonIds != 0)
+        return GetValidSwitchinCandidate(validMonIds, battler, firstId, lastId, switchType);
 
     // If ace mon is the last available Pokemon and U-Turn/Volt Switch or Eject Pack/Button was used - switch to the mon.
     if (aceMonId != PARTY_SIZE && CountUsablePartyMons(battler) <= aceMonCount)
