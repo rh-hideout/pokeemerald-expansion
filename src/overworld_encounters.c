@@ -21,6 +21,7 @@
 #include "constants/vars.h"
 
 #define sOverworldEncounterLevel trainerRange_berryTreeId
+#define sAge                     playerCopyableMovement
 
 static EWRAM_DATA struct FollowMonData sFollowMonData = { 0 };
 
@@ -173,18 +174,20 @@ static u8 GetMaxFollowMonSpawns(void)
 
 u32 GetOldestSlot(void)
 {
-    u32 oldest = 0;
+    struct ObjectEvent *slotMon;
+    struct ObjectEvent *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
 
     for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
-        if (GetOverworldSpeciesBySpawnSlot(spawnSlot) != SPECIES_NONE)
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
+        if (OW_SPECIES(slotMon) != SPECIES_NONE)
         {
-            if (sFollowMonData.age[spawnSlot] > sFollowMonData.age[oldest])
-                oldest = spawnSlot;
+            if (slotMon->sAge > oldest->sAge)
+                oldest = slotMon;
         }
     }
 
-    return oldest;
+    return GetSpawnSlotByLocalId(oldest->localId);
 }
 
 static u8 NextSpawnMonSlot(void)
@@ -385,6 +388,7 @@ struct AgeSort
 
 static void SortOWEMonAges(void)
 {
+    struct ObjectEvent *slotMon;
     struct AgeSort array[FOLLOWMON_MAX_SPAWN_SLOTS];
     struct AgeSort current;
     u32 numActive = CountActiveFollowMon();
@@ -393,10 +397,11 @@ static void SortOWEMonAges(void)
 
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        if (GetOverworldSpeciesBySpawnSlot(i) != SPECIES_NONE)
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - i)];
+        if (OW_SPECIES(slotMon) != SPECIES_NONE)
         {
             array[count].slot = i;
-            array[count].age = sFollowMonData.age[i];
+            array[count].age = slotMon->sAge;
             count++;
         }
         if (count == numActive)
@@ -418,12 +423,14 @@ static void SortOWEMonAges(void)
     }
 
     array[0].age = numActive;
-    sFollowMonData.age[array[0].slot] = numActive;
+    slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - array[0].slot)];
+    slotMon->sAge = numActive;
 
     for (i = 1; i < numActive; i++)
     {
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - array[i].slot)];
         array[i].age = array[i - 1].age - 1;
-        sFollowMonData.age[array[i].slot] = array[i].age;
+        slotMon->sAge = array[i].age;
     }
 }
 
@@ -439,9 +446,6 @@ void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *ob
 {
     if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
-    
-    u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-    sFollowMonData.age[spawnSlot] = 0;
 }
 
 u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
@@ -461,11 +465,6 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesI
 void ClearOverworldEncounterData(void)
 {
     sFollowMonData.spawnCountdown = 0;
-
-    for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
-    {
-        sFollowMonData.age[i] = 0;
-    }
 }
 
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
@@ -645,15 +644,21 @@ static u32 GetSpawnSlotByLocalId(u32 localId)
 
 u32 GetNewestOWEncounterLocalId(void)
 {
+    struct ObjectEvent *slotMon;
+    struct ObjectEvent *newest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 i;
-    u32 newestSlot = 0;
+    
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        if (sFollowMonData.age[newestSlot] > sFollowMonData.age[i])
-            newestSlot = i;
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - i)];
+        if (OW_SPECIES(slotMon) != SPECIES_NONE)
+        {
+            if (newest->sAge > slotMon->sAge)
+                newest = slotMon;
+        }
     }
 
-    return newestSlot;
+    return GetSpawnSlotByLocalId(newest->localId);
 }
 
 bool32 CanRemoveOverworldEncounter(u32 localId)
@@ -695,3 +700,4 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 }
 
 #undef sOverworldEncounterLevel
+#undef sAge

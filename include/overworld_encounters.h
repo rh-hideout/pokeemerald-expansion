@@ -19,7 +19,6 @@
 struct FollowMonData
 {
     u16 spawnCountdown;
-    u8 age[FOLLOWMON_MAX_SPAWN_SLOTS];
 };
 
 //data/scripts/followmon.inc
