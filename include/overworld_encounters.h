@@ -13,18 +13,10 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
-struct FollowMon
-{
-    u16 form:3;
-    u16 age:4;
-    u16 padding:9;
-    u16 padding2;
-};
-
 struct FollowMonData
 {
-    struct FollowMon list[FOLLOWMON_MAX_SPAWN_SLOTS];
     u16 spawnCountdown;
+    u8 age[FOLLOWMON_MAX_SPAWN_SLOTS];
 };
 
 //data/scripts/followmon.inc

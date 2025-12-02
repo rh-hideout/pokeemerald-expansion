@@ -179,7 +179,7 @@ u32 GetOldestSlot(void)
     {
         if (GetOverworldSpeciesBySpawnSlot(spawnSlot) != SPECIES_NONE)
         {
-            if (sFollowMonData.list[spawnSlot].age > sFollowMonData.list[oldest].age)
+            if (sFollowMonData.age[spawnSlot] > sFollowMonData.age[oldest])
                 oldest = spawnSlot;
         }
     }
@@ -396,7 +396,7 @@ static void SortOWEMonAges(void)
         if (GetOverworldSpeciesBySpawnSlot(i) != SPECIES_NONE)
         {
             array[count].slot = i;
-            array[count].age = sFollowMonData.list[i].age;
+            array[count].age = sFollowMonData.age[i];
             count++;
         }
         if (count == numActive)
@@ -418,12 +418,12 @@ static void SortOWEMonAges(void)
     }
 
     array[0].age = numActive;
-    sFollowMonData.list[array[0].slot].age = numActive;
+    sFollowMonData.age[array[0].slot] = numActive;
 
     for (i = 1; i < numActive; i++)
     {
         array[i].age = array[i - 1].age - 1;
-        sFollowMonData.list[array[i].slot].age = array[i].age;
+        sFollowMonData.age[array[i].slot] = array[i].age;
     }
 }
 
@@ -441,7 +441,7 @@ void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *ob
         return;
     
     u32 spawnSlot = GetSpawnSlotByLocalId(objectEvent->localId);
-    sFollowMonData.list[spawnSlot].age = 0;
+    sFollowMonData.age[spawnSlot] = 0;
 }
 
 u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
@@ -464,7 +464,7 @@ void ClearOverworldEncounterData(void)
 
     for (u32 i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        sFollowMonData.list[i].age = 0;
+        sFollowMonData.age[i] = 0;
     }
 }
 
@@ -649,7 +649,7 @@ u32 GetNewestOWEncounterLocalId(void)
     u32 newestSlot = 0;
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        if (sFollowMonData.list[newestSlot].age > sFollowMonData.list[i].age)
+        if (sFollowMonData.age[newestSlot] > sFollowMonData.age[i])
             newestSlot = i;
     }
 
