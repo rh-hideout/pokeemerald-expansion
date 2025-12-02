@@ -496,29 +496,25 @@ void ClearOverworldEncounterData(void)
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
 
-static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounterIndex, u32 headerId, enum TimeOfDay *timeOfDay, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level, u32 personality)
 {
     const struct WildPokemonInfo *wildMonInfo;
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    u32 tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    u32 timeOfDay, encounterIndex;
-    u32 personality = Random32();
 
-    if (MetatileBehavior_IsWaterWildEncounter(tileBehavior))
+    if (MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y)))
     {
-        encounterIndex = ChooseWildMonIndex_Water();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].waterMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
+        *encounterIndex = ChooseWildMonIndex_Water();
+        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_WATER);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].waterMonsInfo;
+        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_WATER);
     }
     else
     {
-        encounterIndex = ChooseWildMonIndex_Land();
-        timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
-        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[timeOfDay].landMonsInfo;
-        *speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
+        *encounterIndex = ChooseWildMonIndex_Land();
+        *timeOfDay = GetTimeOfDayForEncounters(headerId, WILD_AREA_LAND);
+        wildMonInfo = gWildMonHeaders[headerId].encounterTypes[*timeOfDay].landMonsInfo;
+        *speciesId = wildMonInfo->wildPokemon[*encounterIndex].species;
+        *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, *encounterIndex, WILD_AREA_LAND);
     }
 
     if (*speciesId == SPECIES_UNOWN)
@@ -529,6 +525,27 @@ static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *s
         *isFemale = TRUE;
     else
         *isFemale = FALSE;
+}
+
+static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+{
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    enum TimeOfDay timeOfDay;
+    u32 encounterIndex;
+    u32 personality = Random32();
+
+    SetOverworldEncounterSpeciesInfo_Helper(
+        x,
+        y,
+        &encounterIndex,
+        headerId,
+        &timeOfDay,
+        speciesId,
+        isShiny,
+        isFemale,
+        level,
+        personality
+    );
 }
 
 static bool8 IsSafeToSpawnObjectEvents(void)
@@ -730,48 +747,32 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 u16 GetGraphicsIdForOverworldEncounterGfx(void)
 {
-    // encounterType is hardcoded to land encounters for now
+    // x and y coords are hardcoded to set encounter type for now
     // can level be set or does it have to be hardcorded too?
-    enum WildPokemonArea encounterType = WILD_AREA_LAND;
+    u32 x = 3, y = 5;
+
     u32 graphicsId;
     u32 headerId = GetCurrentMapWildMonHeaderId();
-
-    enum TimeOfDay timeOfDay = GetTimeOfDayForEncounters(headerId, encounterType);
-    const struct WildEncounterTypes wildEncounterType = gWildMonHeaders[headerId].encounterTypes[timeOfDay];
-    const struct WildPokemonInfo *wildMonInfo;
     u32 encounterIndex;
     u16 speciesId;
+    bool32 isShiny = FALSE;
+    bool32 isFemale = FALSE;
     u32 level;
     u32 personality = Random32();
-    bool32 isFemale = FALSE;
-    bool32 isShiny = FALSE;
+    enum TimeOfDay timeOfDay;
 
-    switch (encounterType)
-    {
-    default:
-    case WILD_AREA_LAND:
-        encounterIndex = ChooseWildMonIndex_Land();
-        wildMonInfo = wildEncounterType.landMonsInfo;
-        speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
-        break;
-    
-    case WILD_AREA_WATER:
-        encounterIndex = ChooseWildMonIndex_Water();
-        wildMonInfo = wildEncounterType.waterMonsInfo;
-        speciesId = wildMonInfo->wildPokemon[encounterIndex].species;
-        level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_WATER);
-        break;
-    }
-
-    if (speciesId == SPECIES_UNOWN)
-        speciesId = GetUnownSpeciesId(personality);
-
-    isShiny = ComputePlayerShinyOdds(personality);
-    if (GetGenderFromSpeciesAndPersonality(speciesId, personality) == MON_FEMALE)
-        isFemale = TRUE;
-    else
-        isFemale = FALSE;
+    SetOverworldEncounterSpeciesInfo_Helper(
+        x,
+        y,
+        &encounterIndex,
+        headerId,
+        &timeOfDay,
+        &speciesId,
+        &isShiny,
+        &isFemale,
+        &level,
+        personality
+    );
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
