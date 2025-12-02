@@ -52,7 +52,7 @@ if __name__ == "__main__":
                 f.write(tmp.read())
         else:
             print("Couldn't find sFontInfos!")
-            
+
     with tempfile.TemporaryFile(mode="w+") as tmp:
         with open("src/battle_message.c", 'r') as f:
             text_c = f.read()

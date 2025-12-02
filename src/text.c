@@ -53,13 +53,13 @@ static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
 static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
 static EWRAM_DATA struct TextPrinter sTextPrinters[WINDOWS_MAX] = {0};
 
-static u16 EWRAM_DATA sFontHalfRowLookupTable[0x100];
-static union TextColor sLastTextColor;
+static EWRAM_DATA u16 sFontHalfRowLookupTable[0x100];
+static EWRAM_DATA union TextColor sLastTextColor;
 
 EWRAM_DATA const struct FontInfo *gFonts = NULL;
 EWRAM_DATA bool8 gDisableTextPrinters = 0;
 EWRAM_DATA TextFlags gTextFlags = {0};
-struct TextGlyph gCurGlyph = {0};
+IWRAM_DATA struct TextGlyph gCurGlyph = {0};
 
 static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
 static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
@@ -497,9 +497,9 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
     }
 
     sLastTextColor = color;
-    
+
     u8 *colors = color.asArray;
-    
+
     u8 quarterRows[16] = {
         colors[0] << 4 | colors[0],
         colors[1] << 4 | colors[0],
@@ -520,7 +520,7 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
     };
 
     u8 *current = (u8 *)sFontHalfRowLookupTable;
-    
+
     for (u32 i = 0; i < 16; i++)
     {
         for (u32 j = 0; j < 16; j++)
@@ -1693,7 +1693,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     u8 colorBackup[4];
 
     SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
-    
+
     union TextColor textColor = {
         .background = TEXT_COLOR_TRANSPARENT,
         .foreground = TEXT_COLOR_WHITE,

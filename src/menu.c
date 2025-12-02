@@ -2102,7 +2102,7 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left
     printer.currentY = top;
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
-    
+
     printer.color.background = GetFontAttribute(fontId, FONTATTR_COLOR_BACKGROUND);
     printer.color.foreground = GetFontAttribute(fontId, FONTATTR_COLOR_FOREGROUND);
     printer.color.shadow = GetFontAttribute(fontId, FONTATTR_COLOR_SHADOW);
@@ -2114,7 +2114,7 @@ void AddTextPrinterParameterized5(u8 windowId, u8 fontId, const u8 *str, u8 left
 void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 letterSpacing, u8 lineSpacing, const union TextColor color, s8 speed, const u8 *str)
 {
     struct TextPrinterTemplate printer;
-    
+
     printer.currentChar = str;
     printer.windowId = windowId;
     printer.fontId = fontId;
@@ -2125,7 +2125,7 @@ void AddTextPrinterParameterized6(u8 windowId, u8 fontId, u8 left, u8 top, u8 le
     printer.letterSpacing = letterSpacing;
     printer.lineSpacing = lineSpacing;
     printer.color = color;
-    
+
     AddTextPrinter(&printer, speed, NULL);
 }
 

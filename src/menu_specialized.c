@@ -1,4 +1,3 @@
-#include "constants/characters.h"
 #include "global.h"
 #include "malloc.h"
 #include "battle_main.h"
@@ -26,8 +25,9 @@
 #include "text_window.h"
 #include "trig.h"
 #include "window.h"
-#include "constants/songs.h"
 #include "constants/battle_move_effects.h"
+#include "constants/characters.h"
+#include "constants/songs.h"
 #include "gba/io_reg.h"
 
 EWRAM_DATA static u8 sMailboxWindowIds[MAILBOXWIN_COUNT] = {0};
@@ -968,7 +968,7 @@ static u8 *GetConditionMenuMonString(u8 *dst, u16 boxId, u16 monId)
         *(str++) = CHAR_FEMALE;
         break;
     }
-    
+
     *(str++) = EXT_CTRL_CODE_BEGIN;
     *(str++) = EXT_CTRL_CODE_TEXT_COLORS;
     *(str++) = TEXT_COLOR_BLUE;
