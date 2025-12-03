@@ -21149,6 +21149,176 @@ MatchaGotchaDoubleProjectile:
 	delay 3
 	return
 
+
+gBattleAnimMove_NihilLight::
+	loadspritegfx ANIM_TAG_ELECTRIC_ORBS
+	loadspritegfx ANIM_TAG_CIRCLE_OF_LIGHT
+	loadspritegfx ANIM_TAG_ORBS @hyper beam
+	loadspritegfx ANIM_TAG_WATER_GUN @water gun colour
+	loadspritegfx ANIM_TAG_ASSURANCE_HAND @purple colour
+	loadspritegfx ANIM_TAG_HYDRO_PUMP
+	loadspritegfx ANIM_TAG_SPARK_2 @spark
+	loadspritegfx ANIM_TAG_LEAF @green
+	setalpha 8, 8
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 2, 0, 15, 0
+	waitforvisualfinish
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_ELECTRIC_ORBS, 0, 15, 15, RGB(30, 2, 11)
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 15, 15, RGB_MAGENTA
+	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_HYDRO_PUMP, 0, 12, 12, RGB_MAGENTA
+	loopsewithpan SE_M_CHARGE, SOUND_PAN_ATTACKER, 14, 10
+	createvisualtask AnimTask_ElectricChargingParticles, 2, ANIM_ATTACKER, 60, 2, 12
+	createsprite gGrowingChargeOrb3SpriteTemplate, ANIM_ATTACKER, 2, 0 @;Charge circle
+	delay 120
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, F_PAL_BG, 2, 15, 0, 0
+	fadetobg BG_CHLOROBLAST
+	waitbgfadein
+	createvisualtask AnimTask_BlendColorCycle, 2, F_PAL_TARGET, 4, 4, 0, 12, RGB_MAGENTA
+	panse SE_M_SOLAR_BEAM, SOUND_PAN_ATTACKER SOUND_PAN_TARGET 2 0
+	createsprite gShakeMonOrPlatformSpriteTemplate, ANIM_ATTACKER, 2, 4, 1, 260, 1
+	createvisualtask AnimTask_ShakeMon, 2, ANIM_ATTACKER, 0, 4, 157, 1
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	createvisualtask AnimTask_ShakeMon2, 2, ANIM_TARGET, 0, 4, 151, 1
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	call DynamaxCannonLaunch
+	@waitforvisualfinish
+	@restorebg
+	@waitbgfadein
+	@blendoff
+	@end
+	stopsound
+	loadspritegfx ANIM_TAG_EXPLOSION
+	createvisualtask AnimTask_IsTargetPlayerSide, 0x2
+	jumpargeq 0x7 ANIM_TARGET NihilLightOnOpponent
+NihilLightOnPlayer:
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x10, 0xfff0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x10, 0x10, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 13)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x20, 0xffe0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x20, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 26)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x30, 0xffe0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x30, 0xfff0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 38)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x35, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x40, 0x10, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 51)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x40, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x45, 0xfff0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 64)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x50, 0x10, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x50, 0xffe0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 77)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x60, 0xfff0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x60, 0xffe0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 4, 0, 16, RGB_GREEN
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 90)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x65, 0xfff0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x65, 0xffe0, ANIM_ATTACKER, 0x1
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x0, 0x0, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 102)
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x18, 0xffe8, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0xfff0, 0x10, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0xffe8, 0xfff4, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_ATTACKER, 3, 0x10, 0x10, ANIM_TARGET, 0x1
+	goto FINISH_NIHILLIGHT
+NihilLightOnOpponent:
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_ATTACKER
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x10, 0x15, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x10, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 13)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x20, 0x25, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x20, 0x5, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 26)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x30, 0x25, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x30, 0x15, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 38)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x35, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x40, 0xa, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 51)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x40, 0x0, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x45, 0x10, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 64)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x50, 0x30, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x50, 0x25, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 77)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x60, 0x40, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x60, 0x45, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createvisualtask AnimTask_BlendBattleAnimPal, 10, (F_PAL_BG | F_PAL_BATTLERS_2), 4, 0, 16, RGB_GREEN
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 90)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x65, 0x35, ANIM_ATTACKER, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x65, 0x40, ANIM_ATTACKER, 0x1
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x0, 0x0, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, (SOUND_PAN_ATTACKER + 102)
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x18, 0xffe8, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0xfff0, 0x10, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	playsewithpan SE_M_EXPLOSION, SOUND_PAN_TARGET
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0xffe8, 0xfff4, ANIM_TARGET, 0x1
+	call DynamaxCannonLaunch
+	createsprite gExplosionSpriteTemplate, ANIM_TARGET, 3, 0x10, 0x10, ANIM_TARGET, 0x1
+FINISH_NIHILLIGHT:
+	waitforvisualfinish
+	clearmonbg ANIM_TARGET
+	delay 5
+	call ResetFromWhiteScreen
+	blendoff
+	createsprite gSlideMonToOriginalPosSpriteTemplate, ANIM_ATTACKER, 2, ANIM_TARGET, 0x0, 0x10
+	createsprite gSlideMonToOriginalPosPartnerSpriteTemplate, ANIM_ATTACKER, 2, ANIM_DEF_PARTNER, 0x0, 0x10
+	waitforvisualfinish
+	end
+
 @@@@@@@@@@@@@@@@@@@@@@@ GEN 1-3 @@@@@@@@@@@@@@@@@@@@@@@
 gBattleAnimMove_None::
 gBattleAnimMove_MirrorMove::
