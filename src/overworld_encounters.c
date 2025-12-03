@@ -240,6 +240,7 @@ static u8 NextSpawnMonSlot(void)
     return spawnSlot;
 }
 
+// Magic Numbers
 static bool8 TrySelectTile(s16* outX, s16* outY)
 {
     u8 elevation;
