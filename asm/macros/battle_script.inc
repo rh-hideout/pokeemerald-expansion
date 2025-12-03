@@ -1252,6 +1252,12 @@
 	.4byte \jumpInstr
 	.endm
 
+	.macro jumpifnosubstitute battler:req jumpInstr:req
+	callnative BS_JumpIfNoSubstitute
+	.byte \battler
+	.4byte \jumpInstr
+	.endm
+
 	.macro tryrecycleitem failInstr:req
 	.byte 0xea
 	.4byte \failInstr
