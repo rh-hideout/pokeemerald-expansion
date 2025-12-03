@@ -29,7 +29,7 @@ static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
 static bool32 OWE_ShouldSpawnWaterMons(void);
-static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
+static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
@@ -107,7 +107,7 @@ void UpdateOverworldEncounters(void)
         
         struct ObjectEventTemplate objectEventTemplate = {
             .localId = localId,
-            .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &speciesId, &isShiny, &isFemale, &level),
+            .graphicsId = GetFollowMonObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level),
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
@@ -474,9 +474,9 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
         return;
 }
 
-u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+u32 GetFollowMonObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
-    SetOverworldEncounterSpeciesInfo(spawnSlot, x, y, speciesId, isShiny, isFemale, level);
+    SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
 
     if (*isFemale)
@@ -524,7 +524,7 @@ static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounter
         *isFemale = FALSE;
 }
 
-static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
     u32 encounterIndex;
