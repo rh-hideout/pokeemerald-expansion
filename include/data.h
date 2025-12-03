@@ -93,11 +93,11 @@ struct Trainer
     u64 aiFlags;
     const struct TrainerMon *party;
     u16 items[MAX_TRAINER_ITEMS];
+    u32 startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 trainerClass;
     u8 encounterMusic_gender; // last bit is gender
     u8 trainerPic;
     u8 trainerName[TRAINER_NAME_LENGTH + 1];
-    u32 startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
     u8 battleType:2;
     u8 mugshotColor:6;
     u8 partySize;
