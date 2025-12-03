@@ -174,13 +174,12 @@ static u8 GetMaxFollowMonSpawns(void)
 
 u32 GetOldestSlot(void)
 {
-    struct ObjectEvent *slotMon;
-    struct ObjectEvent *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
+    struct ObjectEvent *slotMon, *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 spawnSlot;
 
     for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
         {
             oldest = slotMon;
@@ -193,7 +192,7 @@ u32 GetOldestSlot(void)
 
     for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
     {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - spawnSlot)];
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
         {
             if (slotMon->sAge > oldest->sAge)
@@ -426,7 +425,7 @@ static void SortOWEMonAges(void)
 
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - i)];
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
         {
             array[count].slot = i;
@@ -452,12 +451,12 @@ static void SortOWEMonAges(void)
     }
 
     array[0].age = numActive;
-    slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - array[0].slot)];
+    slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(array[0].slot))];
     slotMon->sAge = numActive;
 
     for (i = 1; i < numActive; i++)
     {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - array[i].slot)];
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(array[i].slot))];
         array[i].age = array[i - 1].age - 1;
         slotMon->sAge = array[i].age;
     }
@@ -663,7 +662,7 @@ u32 GetNewestOWEncounterLocalId(void)
     
     for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
     {
-        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END - i)];
+        slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
         {
             if (newest->sAge > slotMon->sAge)
