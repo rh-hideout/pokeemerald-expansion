@@ -70,95 +70,92 @@ void UpdateOverworldEncounters(void)
 
     OverworldEncounters_ProcessMonInteraction();
 
-    if(sOWESpawnCountdown == 0)
+    if (sOWESpawnCountdown != 0)
     {
-        s16 x, y;
-        const struct WildPokemonInfo *wildMonInfo = NULL;
-
-        wildMonInfo = GetActiveEncounterTable(IsSpawningWaterMons());
-
-        if(wildMonInfo && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
-        {
-            u16 spawnSlot = NextSpawnMonSlot();
-
-            if (spawnSlot != INVALID_SPAWN_SLOT)
-            {
-                bool32 waterMons = IsSpawningWaterMons();
-                bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
-                u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-                u32 movementType, level;
-                if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
-                {
-                    if (waterMons)
-                        movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
-                    else if (indoors)
-                        movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
-                    else
-                        movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
-                }
-                else
-                {
-                    movementType = MOVEMENT_TYPE_WANDER_AROUND;
-                }
-                
-                struct ObjectEventTemplate objectEventTemplate = {
-                    .localId = localId,
-                    .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &speciesId, &isShiny, &isFemale, &level),
-                    .x = x - MAP_OFFSET,
-                    .y = y - MAP_OFFSET,
-                    .elevation = MapGridGetElevationAt(x, y),
-                    .movementType = movementType,
-                    .trainerType = TRAINER_TYPE_ENCOUNTER,
-                };
-
-                u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
-
-                gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
-                gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
-                gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
-                gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
-
-                // Hide reflections for spawns in water
-                // (It just looks weird)
-                if (waterMons)
-                    gObjectEvents[objectEventId].hideReflection = TRUE;
-
-                // Slower replacement spawning
-                sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
-                
-                enum FollowMonSpawnAnim spawnAnimType;
-
-                // Play spawn animation.
-                if (speciesId != SPECIES_NONE)
-                {
-                    if (isShiny)
-                    {
-                        PlaySE(SE_SHINY);
-                        spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
-                    }
-                    else 
-                    {
-                        PlayCry_Normal(speciesId, 25); 
-                        if (IsSpawningWaterMons())
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
-                        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
-                        else
-                            spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
-                    }
-                    // Instantly play a small animation to ground the spawning a bit
-                    MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
-                }
-            }
-            else
-            {
-                sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            }
-        }
+        sOWESpawnCountdown--;
+        return;
     }
-    else
+
+    s16 x, y;
+    if (GetActiveEncounterTable(IsSpawningWaterMons()) && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
     {
-        --sOWESpawnCountdown;
+        u16 spawnSlot = NextSpawnMonSlot();
+
+        if (spawnSlot == INVALID_SPAWN_SLOT)
+        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            return;
+        }
+        
+        bool32 waterMons = IsSpawningWaterMons();
+        bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
+        u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
+        u32 movementType, level;
+        if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
+        {
+            if (waterMons)
+                movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
+            else if (indoors)
+                movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
+            else
+                movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
+        }
+        else
+        {
+            movementType = MOVEMENT_TYPE_WANDER_AROUND;
+        }
+        
+        struct ObjectEventTemplate objectEventTemplate = {
+            .localId = localId,
+            .graphicsId = GetFollowMonObjectEventGraphicsId(spawnSlot, x, y, &speciesId, &isShiny, &isFemale, &level),
+            .x = x - MAP_OFFSET,
+            .y = y - MAP_OFFSET,
+            .elevation = MapGridGetElevationAt(x, y),
+            .movementType = movementType,
+            .trainerType = TRAINER_TYPE_ENCOUNTER,
+        };
+
+        u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
+
+        gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
+        gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
+        gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
+        gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
+
+        // Hide reflections for spawns in water
+        // (It just looks weird)
+        if (waterMons)
+            gObjectEvents[objectEventId].hideReflection = TRUE;
+
+        // Slower replacement spawning
+        sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
+        
+        enum FollowMonSpawnAnim spawnAnimType;
+
+        // Play spawn animation.
+        if (speciesId == SPECIES_NONE)
+        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            return;
+        }
+
+        if (isShiny)
+        {
+            PlaySE(SE_SHINY);
+            spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
+        }
+        else 
+        {
+            PlayCry_Normal(speciesId, 25); 
+            if (IsSpawningWaterMons())
+                spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
+            else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+                spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
+            else
+                spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
+        }
+        // Instantly play a small animation to ground the spawning a bit
+        MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
     }
 }
 
