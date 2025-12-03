@@ -603,7 +603,7 @@ void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruc
     tvPtr->side[atkSide].usedMoveSlot = moveSlot;
     AddMovePoints(PTS_MOVE_EFFECT, moveSlot, move, 0);
     AddPointsBasedOnWeather(weatherFlags, move, moveSlot);
-    if (gBattleMons[gBattlerAttacker].volatiles.charge)
+    if (gBattleMons[gBattlerAttacker].volatiles.chargeTimer > 0)
         AddMovePoints(PTS_ELECTRIC, move, moveSlot, 0);
 
     if (move == MOVE_WISH)
@@ -1265,23 +1265,24 @@ static void TrySetBattleSeminarShow(void)
 
     dmgByMove[gMoveSelectionCursor[gBattlerAttacker]] = gBattleStruct->moveDamage[gBattlerTarget]; // TODO: Not sure
     currMoveSaved = gCurrentMove;
+    u16 storedMoveResultFlags = gBattleStruct->moveResultFlags[gBattlerTarget];
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         gCurrentMove = gBattleMons[gBattlerAttacker].moves[i];
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx;
+            struct DamageContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
-            ctx.move = gCurrentMove;
+            ctx.move = ctx.chosenMove = gCurrentMove;
             ctx.moveType = GetMoveType(gCurrentMove);
             ctx.isCrit = FALSE;
             ctx.randomFactor = FALSE;
             ctx.updateFlags = FALSE;
+            ctx.isSelfInflicted = FALSE;
             ctx.fixedBasePower = powerOverride;
-            gBattleStruct->moveDamage[gBattlerTarget] = CalculateMoveDamage(&ctx);
-            dmgByMove[i] = gBattleStruct->moveDamage[gBattlerTarget];
+            dmgByMove[i] = CalculateMoveDamage(&ctx);
             if (dmgByMove[i] == 0 && !(gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT))
                 dmgByMove[i] = 1;
         }
@@ -1312,8 +1313,8 @@ static void TrySetBattleSeminarShow(void)
         }
     }
 
-    gBattleStruct->moveDamage[gBattlerTarget] = dmgByMove[gMoveSelectionCursor[gBattlerAttacker]];
     gCurrentMove = currMoveSaved;
+    gBattleStruct->moveResultFlags[gBattlerTarget] = storedMoveResultFlags;
 }
 
 static bool8 ShouldCalculateDamage(u16 move, s32 *dmg, u16 *powerOverride)

@@ -42,7 +42,6 @@ typedef union PACKED TrainerBattleParameter
     u8 data[sizeof(struct _TrainerBattleParameter)];
 } TrainerBattleParameter;
 
-
 extern const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES];
 
 extern TrainerBattleParameter gTrainerBattleParameter;
@@ -70,10 +69,12 @@ void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data);
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr);
 void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void SetUpTwoTrainersBattle(void);
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data);
+bool32 GetRematchFromScriptPointer(const u8 *data);
 void SetTrainerFacingDirection(void);
 u8 GetTrainerBattleMode(void);
 bool8 GetTrainerFlag(void);
@@ -91,12 +92,14 @@ const u8 *GetTrainerALoseText(void);
 const u8 *GetTrainerBLoseText(void);
 const u8 *GetTrainerWonSpeech(void);
 void UpdateRematchIfDefeated(s32 rematchTableId);
+void ClearCurrentTrainerWantRematchVsSeeker(void);
 void IncrementRematchStepCounter(void);
 void TryUpdateRandomTrainerRematches(u16 mapGroup, u16 mapNum);
 bool32 DoesSomeoneWantRematchIn(u16 mapGroup, u16 mapNum);
 bool32 IsRematchTrainerIn(u16 mapGroup, u16 mapNum);
 u16 GetLastBeatenRematchTrainerId(u16 trainerId);
 bool8 ShouldTryRematchBattle(void);
+bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId);
 bool8 IsTrainerReadyForRematch(void);
 void ShouldTryGetTrainerScript(void);
 u16 CountBattledRematchTeams(u16 trainerId);
@@ -104,6 +107,7 @@ void TrainerBattleLoadArgs(const u8 *data);
 void TrainerBattleLoadArgsTrainerA(const u8 *data);
 void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
+void InitTrainerBattleParameter(void);
 
 void DoStandardWildBattle_Debug(void);
 void BattleSetup_StartTrainerBattle_Debug(void);

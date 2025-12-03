@@ -565,3 +565,5 @@ gSpecials::
 	def_special GetCodeFeedback
 	def_special SetHiddenNature
 	def_special SetAbility
+	def_special ObjectEventInteractionGetApricornTreeData
+	def_special ObjectEventInteractionPickApricornTree
