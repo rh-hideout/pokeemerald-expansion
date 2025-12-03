@@ -5232,7 +5232,6 @@ static void TryChangingTurnOrderEffects(struct BattleContext *ctx, u32 *quickCla
 static void CheckChangingTurnOrderEffects(void)
 {
     u32 i, battler;
-    enum TrainerSlideType slideId;
 
     if (!(gHitMarker & HITMARKER_RUN))
     {
@@ -5281,7 +5280,7 @@ static void CheckChangingTurnOrderEffects(void)
     // Prevents trainer slides triggering a turn late if another slide took priority on the previous turn
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        for (slideId = 0; slideId < TRAINER_SLIDE_COUNT; slideId++)
+        for (enum TrainerSlideType slideId = 0; slideId < TRAINER_SLIDE_COUNT; slideId++)
         {
             MarkInitializedTrainerSlidesAsPlayed(i, slideId);
         }
