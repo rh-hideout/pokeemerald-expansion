@@ -1442,6 +1442,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     u8 objectEventId;
     s16 x;
     s16 y;
+    bool32 semiManuelOverworldWildEncounter;
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
@@ -1452,6 +1453,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->active = TRUE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
     objectEvent->graphicsId = template->graphicsId;
+    semiManuelOverworldWildEncounter = IsSemiManualOverworldWildEncounter(objectEvent);
     SetObjectEventDynamicGraphicsId(objectEvent);
     if (IS_OW_MON_OBJ(objectEvent))
     {
@@ -1474,10 +1476,10 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    if (IsManualOverworldWildEncounter(objectEvent) && objectEvent->trainerType == TRAINER_TYPE_NONE)
+    if (!semiManuelOverworldWildEncounter)
         objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    if (IsManualOverworldWildEncounter(objectEvent) && objectEvent->trainerRange_berryTreeId == 0)
+    if (!semiManuelOverworldWildEncounter)
         objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);

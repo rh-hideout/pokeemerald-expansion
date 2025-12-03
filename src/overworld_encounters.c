@@ -670,6 +670,11 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
         || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
 }
 
+bool32 IsSemiManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
+{
+    return objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER;
+}
+
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
 {
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
