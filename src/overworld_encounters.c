@@ -715,6 +715,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
 {
+    // Does this work?
     struct ObjectEventTemplate template = *GetObjectEventTemplateByLocalIdAndMap(objectEvent->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     u32 graphicsId;
     u32 headerId = GetCurrentMapWildMonHeaderId();
