@@ -529,9 +529,9 @@ static void SetOverworldEncounterSpeciesInfo_Helper(u32 x, u32 y, u32 *encounter
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     u32 headerId = GetCurrentMapWildMonHeaderId();
-    enum TimeOfDay timeOfDay;
     u32 encounterIndex;
     u32 personality = Random32();
+    enum TimeOfDay timeOfDay;
 
     SetOverworldEncounterSpeciesInfo_Helper(
         x,
@@ -718,12 +718,12 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     // Does this work?
     struct ObjectEventTemplate template = *GetObjectEventTemplateByLocalIdAndMap(objectEvent->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     u32 graphicsId;
-    u32 headerId = GetCurrentMapWildMonHeaderId();
-    u32 encounterIndex;
     u16 speciesId;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
     u32 level;
+    u32 headerId = GetCurrentMapWildMonHeaderId();
+    u32 encounterIndex;
     u32 personality = Random32();
     enum TimeOfDay timeOfDay;
 
