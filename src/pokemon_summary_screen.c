@@ -969,9 +969,6 @@ const struct SpriteTemplate gSpriteTemplate_MoveTypes =
     .paletteTag = TAG_MOVE_TYPES,
     .oam = &sOamData_MoveTypes,
     .anims = sSpriteAnimTable_MoveTypes,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_MoveSelector =
