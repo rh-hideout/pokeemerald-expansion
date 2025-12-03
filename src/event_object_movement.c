@@ -1442,6 +1442,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     u8 objectEventId;
     s16 x;
     s16 y;
+    bool32 semiManuelOverworldWildEncounter;
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
@@ -1452,6 +1453,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->active = TRUE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
     objectEvent->graphicsId = template->graphicsId;
+    semiManuelOverworldWildEncounter = IsSemiManualOverworldWildEncounter(objectEvent);
     SetObjectEventDynamicGraphicsId(objectEvent);
     if (IS_OW_MON_OBJ(objectEvent))
     {
@@ -1474,9 +1476,11 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    objectEvent->trainerType = template->trainerType;
+    if (!semiManuelOverworldWildEncounter)
+        objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
+    if (!semiManuelOverworldWildEncounter)
+        objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
@@ -1569,7 +1573,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
     objectEvent->active = FALSE;
-    GeneratedOverworldWildEncounter_OnObjectEventRemoved(objectEvent);
+    OverworldWildEncounter_OnObjectEventRemoved(objectEvent);
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
@@ -3108,6 +3112,9 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
+    if (graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
+        graphicsId = OBJ_EVENT_GFX_OW_MON;
+
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
 
@@ -3124,6 +3131,9 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
+
+    if (objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
+        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx(objectEvent);
 }
 
 void SetObjectInvisibility(u8 localId, u8 mapNum, u8 mapGroup, bool8 invisible)

@@ -28,10 +28,10 @@ extern const u8 InteractWithDynamicWildFollowMon[];
 void LoadFollowMonData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
-void CreateFollowMonEncounter(void);
+void CreateOverworldWildEncounter(void);
 bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
-void GeneratedOverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
+void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
@@ -40,10 +40,12 @@ bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEve
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
+bool32 IsSemiManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
 void RemoveOldestOverworldEncounter(u8 *objectEventId);
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
+u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent);
 
 #endif // GUARD_FOLLOWMON_H
