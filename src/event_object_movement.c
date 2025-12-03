@@ -1479,7 +1479,7 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     if (!semiManuelOverworldWildEncounter)
         objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    if (!semiManuelOverworldWildEncounter)
+    if (!semiManuelOverworldWildEncounter || template->trainerRange_berryTreeId != 0)
         objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
