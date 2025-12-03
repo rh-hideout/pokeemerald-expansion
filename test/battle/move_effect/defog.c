@@ -34,9 +34,26 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
     }
 }
 
-SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute")
+SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4-)")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Substitute!");
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute (Gen5+)")
+{
+    GIVEN {
+        ASSUME(CONFIG_DEFOG_EFFECT_CLEARING >= GEN_5);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
