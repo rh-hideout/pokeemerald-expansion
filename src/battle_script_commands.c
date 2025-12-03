@@ -18014,14 +18014,3 @@ void BS_JumpIfGenConfigLowerThan(void)
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
 }
-
-void BS_JumpIfNoSubstitute(void)
-{
-    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
-
-    u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if (!gBattleMons[battler].volatiles.substitute)
-        gBattlescriptCurrInstr = cmd->jumpInstr;
-    else
-        gBattlescriptCurrInstr = cmd->nextInstr;
-}

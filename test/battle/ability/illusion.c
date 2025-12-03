@@ -123,7 +123,6 @@ SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
         OPPONENT(SPECIES_WYNAUT) {Speed(2);};
     } WHEN {
         TURN {  MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_SHED_TAIL); SEND_OUT(opponent, 1);}
-        TURN {}
     } SCENE {
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SWAP_FROM_SUBSTITUTE, opponent);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponent);

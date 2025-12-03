@@ -8861,14 +8861,18 @@ BattleScript_NaturePowerAttackstring::
 	return
 
 BattleScript_SwapFromSubstitute::
-	jumpifnosubstitute BS_SCRIPTING, BattleScript_SwapFromSubstituteEnd
+	jumpifvolatile BS_SCRIPTING, VOLATILE_SUBSTITUTE, BattleScript_SwapFromSubstituteContinue
+	goto BattleScript_SwapFromSubstituteEnd
+BattleScript_SwapFromSubstituteContinue:
 	playanimation BS_SCRIPTING, B_ANIM_SWAP_FROM_SUBSTITUTE
 	waitanimation
 BattleScript_SwapFromSubstituteEnd:
 	return
 
 BattleScript_SwapToSubstitute::
-	jumpifnosubstitute BS_SCRIPTING, BattleScript_SwapToSubstituteEnd
+	jumpifvolatile BS_SCRIPTING, VOLATILE_SUBSTITUTE, BattleScript_SwapToSubstituteContinue
+	goto BattleScript_SwapToSubstituteEnd
+BattleScript_SwapToSubstituteContinue:
 	playanimation BS_SCRIPTING, B_ANIM_SWAP_TO_SUBSTITUTE
 	waitanimation
 BattleScript_SwapToSubstituteEnd:
