@@ -238,8 +238,10 @@ static u8 NextSpawnMonSlot(void)
 
     if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
     {
-        // Remove any existing id by this slot
-        RemoveObjectEventByLocalIdAndMap(GetLocalIdByOverworldSpawnSlot(spawnSlot), gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+        u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
+        u32 objectEventId = GetObjectEventIdByLocalId(localId);
+        struct ObjectEvent *object = &gObjectEvents[objectEventId];
+        RemoveObjectEventByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup);
     }
 
     return spawnSlot;
@@ -333,7 +335,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
 void CreateOverworldWildEncounter(void)
 {
-    u32 objEventId = GetObjectEventIdByLocalIdAndMap(gSpecialVar_LastTalked, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
+    u32 objEventId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
     struct ObjectEvent *object = &gObjectEvents[objEventId];
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
@@ -363,7 +365,7 @@ void CreateOverworldWildEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
-    RemoveObjectEvent(object);
+    RemoveObjectEventByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup);
     BattleSetup_StartWildBattle();
 }
 
@@ -470,9 +472,6 @@ void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *ob
 
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    if (IsManualOverworldWildEncounter(objectEvent))
-        FlagSet(GetObjectEventFlagIdByLocalIdAndMap(objectEvent->localId, objectEvent->mapNum, objectEvent->mapGroup));
-
     if (!IsGeneratedOverworldWildEncounter(objectEvent))
         return;
 }
@@ -579,7 +578,7 @@ void RemoveAllOverworldEncounterObjects(void)
     {
         struct ObjectEvent *obj = &gObjectEvents[i];
         if (IsGeneratedOverworldWildEncounter(obj))
-            RemoveObjectEvent(obj);
+            RemoveObjectEventByLocalIdAndMap(obj->localId, obj->mapNum, obj->mapGroup);
     }
 }
 
