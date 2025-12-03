@@ -156,29 +156,33 @@ enum MoveCanceler
 
 extern const struct TypePower gNaturalGiftTable[];
 
-struct DamageContext
+struct BattleMoveContext
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
-    u32 move:16;
-    enum Type moveType:5;
-    u32 isCrit:1;
-    u32 randomFactor:1;
-    u32 updateFlags:1;
-    u32 isAnticipation:1;
-    u32 isSelfInflicted:1;
-    u32 weather:16;
     u32 fixedBasePower:8;
-    u32 aiCalc:1;
-    u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
-    u32 padding2:6;
-    u32 chosenMove:16; // May be different to 'move', e.g. for Z moves.
-    u32 padding3:16;
+    u32 weather:16;
+    u32 unused:2;
+
+    u32 move:13;
+    u32 chosenMove:13; // May be different to 'move', e.g. for Z moves.
+    enum Type moveType:6;
+
     uq4_12_t typeEffectivenessModifier;
     enum Ability abilityAtk;
     enum Ability abilityDef;
     enum HoldEffect holdEffectAtk;
     enum HoldEffect holdEffectDef;
+
+    // Flags
+    u32 isCrit:1;
+    u32 randomFactor:1;
+    u32 updateFlags:1;
+    u32 isAnticipation:1;
+    u32 isSelfInflicted:1;
+    u32 aiCalc:1;
+    u32 aiCheckBerryModifier:1; // Flags that KOing through a berry should be checked
+    u32 padding:25;
 };
 
 struct BattleContext
@@ -261,7 +265,7 @@ bool32 IsAbilityAndRecord(u32 battler, enum Ability battlerAbility, enum Ability
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
-enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx);
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleMoveContext *ctx);
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability);
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
@@ -301,13 +305,13 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
 bool32 IsBattlerGrounded(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
-s32 CalcCritChanceStage(struct DamageContext *ctx);
-s32 CalcCritChanceStageGen1(struct DamageContext *ctx);
-s32 CalculateMoveDamage(struct DamageContext *ctx);
-s32 CalculateMoveDamageVars(struct DamageContext *ctx);
-s32 DoFixedDamageMoveCalc(struct DamageContext *ctx);
-s32 ApplyModifiersAfterDmgRoll(struct DamageContext *ctx, s32 dmg);
-uq4_12_t CalcTypeEffectivenessMultiplier(struct DamageContext *ctx);
+s32 CalcCritChanceStage(struct BattleMoveContext *ctx);
+s32 CalcCritChanceStageGen1(struct BattleMoveContext *ctx);
+s32 CalculateMoveDamage(struct BattleMoveContext *ctx);
+s32 CalculateMoveDamageVars(struct BattleMoveContext *ctx);
+s32 DoFixedDamageMoveCalc(struct BattleMoveContext *ctx);
+s32 ApplyModifiersAfterDmgRoll(struct BattleMoveContext *ctx, s32 dmg);
+uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleMoveContext *ctx);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType);
