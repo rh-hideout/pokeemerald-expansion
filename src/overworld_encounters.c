@@ -241,7 +241,7 @@ static u8 NextSpawnMonSlot(void)
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 objectEventId = GetObjectEventIdByLocalId(localId);
         struct ObjectEvent *object = &gObjectEvents[objectEventId];
-        RemoveObjectEventByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup);
+        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     }
 
     return spawnSlot;
@@ -335,7 +335,8 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
 void CreateOverworldWildEncounter(void)
 {
-    u32 objEventId = GetObjectEventIdByLocalId(gSpecialVar_LastTalked);
+    u32 localId = gSpecialVar_LastTalked;
+    u32 objEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objEventId];
 
     if (objEventId >= OBJECT_EVENTS_COUNT)
@@ -365,7 +366,7 @@ void CreateOverworldWildEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
-    RemoveObjectEventByLocalIdAndMap(object->localId, object->mapNum, object->mapGroup);
+    RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     BattleSetup_StartWildBattle();
 }
 
@@ -722,14 +723,16 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 
 void RemoveOldestOverworldEncounter(u8 *objectEventId)
 {
-    *objectEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(GetOldestSlot()));
+    u32 localId = GetLocalIdByOverworldSpawnSlot(GetOldestSlot());
+    *objectEventId = GetObjectEventIdByLocalId(localId);
+    struct ObjectEvent *object = &gObjectEvents[*objectEventId];
     s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
-    RemoveObjectEvent(&gObjectEvents[*objectEventId]);
+    RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
 }
 
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
