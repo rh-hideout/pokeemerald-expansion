@@ -113,7 +113,7 @@ WILD_BATTLE_TEST("Thief and Covet steal target's held item and it's added to Bag
     PARAMETRIZE { move = MOVE_THIEF; }
     PARAMETRIZE { move = MOVE_COVET; }
     GIVEN {
-        WITH_CONFIG(GEN_STEAL_WILD_ITEMS, GEN_9);
+        WITH_CONFIG(CONFIG_STEAL_WILD_ITEMS, GEN_9);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_HYPER_POTION); }
     } WHEN {

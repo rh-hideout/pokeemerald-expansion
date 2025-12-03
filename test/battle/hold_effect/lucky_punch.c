@@ -11,7 +11,7 @@ SINGLE_BATTLE_TEST("Lucky Punch increases critical hit ratio by 2 stages for Cha
         PARAMETRIZE { genConfig = j; passes = 1;  trials = 2; }  //  50%
     PASSES_RANDOMLY(passes, trials, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(gItemsInfo[ITEM_LUCKY_PUNCH].holdEffect == HOLD_EFFECT_LUCKY_PUNCH);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_CHANSEY) == 50);
         PLAYER(SPECIES_WOBBUFFET);
