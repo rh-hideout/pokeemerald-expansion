@@ -113,7 +113,7 @@ AI_SINGLE_BATTLE_TEST("AI will select Throat Chop if the sound move is the best 
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI will incentivise multiple best damage moves in cases of damage ties")
+AI_SINGLE_BATTLE_TEST("AI will incentivise multiple best damage moves in cases of damage ties and KOs")
 {
     u32 hp;
 
