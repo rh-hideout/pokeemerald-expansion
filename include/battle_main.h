@@ -56,16 +56,10 @@ enum FirstTurnEventsStates
     FIRST_TURN_EVENTS_TERRAIN,
     FIRST_TURN_EVENTS_STARTING_STATUS,
     FIRST_TURN_EVENTS_TOTEM_BOOST,
-    FIRST_TURN_EVENTS_NEUTRALIZING_GAS,
-    FIRST_TURN_EVENTS_SWITCH_IN_ABILITIES,
-    FIRST_TURN_EVENTS_ITEM_EFFECTS,
-    FIRST_TURN_EVENTS_WHITE_HERB,
-    FIRST_TURN_EVENTS_OPPORTUNIST,
-    FIRST_TURN_EVENTS_MIRROR_HERB,
-    FIRST_TURN_EVENTS_EJECT_PACK,
     FIRST_TURN_EVENTS_TRAINER_SLIDE_A,
     FIRST_TURN_EVENTS_TRAINER_SLIDE_B,
     FIRST_TURN_EVENTS_TRAINER_SLIDE_PARTNER,
+    FIRST_TURN_SWITCH_IN_EVENTS,
     FIRST_TURN_EVENTS_END,
 };
 
@@ -119,6 +113,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
+s32 Factorial(s32 n);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
 

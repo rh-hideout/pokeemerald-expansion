@@ -180,6 +180,8 @@ static inline u16 GetTMHMMoveId(enum TMHMIndex index)
     return gTMHMItemMoveIds[index].moveId;
 }
 
+enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move);
+
 void BagPocket_SetSlotData(struct BagPocket *pocket, u32 pocketPos, struct ItemSlot newSlot);
 struct ItemSlot BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos);
 
@@ -215,6 +217,7 @@ bool32 CheckBagHasSpace(u16 itemId, u16 count);
 u32 GetFreeSpaceForItemInBag(u16 itemId);
 bool32 AddBagItem(u16 itemId, u16 count);
 bool32 RemoveBagItem(u16 itemId, u16 count);
+void RemoveBagItemFromSlot(struct BagPocket *pocket, u16 slotId, u16 count);
 u8 CountUsedPCItemSlots(void);
 bool32 CheckPCHasItem(u16 itemId, u16 count);
 bool32 AddPCItem(u16 itemId, u16 count);
