@@ -27,6 +27,7 @@
 #include "task.h"
 #include "wild_encounter.h"
 #include "window.h"
+#include "field_name_box.h"
 #include "constants/abilities.h"
 #include "constants/battle_frontier.h"
 #include "constants/event_objects.h"
@@ -1321,9 +1322,11 @@ static bool32 MatchCall_PrintIntro(u8 taskId)
     {
         FillWindowPixelBuffer(tWindowId, PIXEL_FILL(8));
 
-        // Ready the message
+        // Ready the message (and the speaker's name if possible)
         if (!sMatchCallState.triggeredFromScript)
             SelectMatchCallMessage(sMatchCallState.trainerId, gStringVar4);
+
+        TrySpawnAndShowNamebox(gSpeakerName, NAME_BOX_BASE_TILE_NUM);
         InitMatchCallTextPrinter(tWindowId, gStringVar4);
         return TRUE;
     }
@@ -1348,9 +1351,9 @@ static bool32 MatchCall_PrintMessage(u8 taskId)
 static bool32 MatchCall_SlideWindowOut(u8 taskId)
 {
     s16 *data = gTasks[taskId].data;
-    if (ChangeBgY(0, 0x600, BG_COORD_SUB) <= -0x2000)
+    if (ChangeBgY(0, 0x600, BG_COORD_SUB) <= -0x4000)
     {
-        FillBgTilemapBufferRect_Palette0(0, 0, 0, 14, 30, 6);
+        FillBgTilemapBufferRect_Palette0(0, 0, 0, 12, 30, 8);
         DestroyTask(tIconTaskId);
         RemoveWindow(tWindowId);
         CopyBgTilemapBufferToVram(0);
@@ -1402,6 +1405,31 @@ static void DrawMatchCallTextBoxBorder_Internal(u32 windowId, u32 tileOffset, u3
     FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 5), x - 1, y + height, 1, 1);
     FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 6), x, y + height, width, 1);
     FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 7), x + width, y + height, 1, 1);
+}
+
+static u8 GetMatchCallWindowId(void)
+{
+    if (!IsMatchCallTaskActive())
+        return WINDOW_NONE;
+
+    u32 taskId = FindTaskIdByFunc(ExecuteMatchCall);
+    return gTasks[taskId].tWindowId;
+}
+
+// redraw only the top-half
+void RedrawMatchCallTextBoxBorder(void)
+{
+    u32 windowId = GetMatchCallWindowId();
+    u32 bg = GetWindowAttribute(windowId, WINDOW_BG);
+    u32 x = GetWindowAttribute(windowId, WINDOW_TILEMAP_LEFT);
+    u32 y = GetWindowAttribute(windowId, WINDOW_TILEMAP_TOP);
+    u32 width = GetWindowAttribute(windowId, WINDOW_WIDTH);
+    u32 tileNum = TILE_MC_WINDOW + GetBgAttribute(bg, BG_ATTR_BASETILE);
+    u32 paletteId = 14;
+
+    FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 0), x - 1,     y - 1, 1,     1);
+    FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 1), x,         y - 1, width, 1);
+    FillBgTilemapBufferRect_Palette0(bg, ((paletteId << 12) & 0xF000) | (tileNum + 2), x + width, y - 1, 1,     1);
 }
 
 static void InitMatchCallTextPrinter(int windowId, const u8 *str)

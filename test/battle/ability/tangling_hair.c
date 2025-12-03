@@ -97,3 +97,17 @@ SINGLE_BATTLE_TEST("Tangling Hair does not trigger on Clear Body")
         NOT ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
     }
 }
+
+SINGLE_BATTLE_TEST("Tangling Hair will trigger if move is boosted by Sheer Force")
+{
+    ASSUME(MoveIsAffectedBySheerForce(MOVE_POISON_JAB));
+    GIVEN {
+        PLAYER(SPECIES_DUGTRIO) { Ability(ABILITY_TANGLING_HAIR); }
+        OPPONENT(SPECIES_NIDOKING) { Ability(ABILITY_SHEER_FORCE); };
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_POISON_JAB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_POISON_JAB, opponent);
+        ABILITY_POPUP(player, ABILITY_TANGLING_HAIR);
+    }
+}

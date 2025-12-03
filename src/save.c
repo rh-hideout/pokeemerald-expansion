@@ -855,7 +855,7 @@ bool8 WriteSaveBlock2(void)
 // It returns TRUE when finished.
 bool8 WriteSaveBlock1Sector(void)
 {
-    u8 finished = FALSE;
+    bool32 finished = FALSE;
     u16 sectorId = ++gIncrementalSectorId; // Because WriteSaveBlock2 will have been called prior, this will be SECTOR_ID_SAVEBLOCK1_START
     if (sectorId <= SECTOR_ID_SAVEBLOCK1_END)
     {

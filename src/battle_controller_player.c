@@ -35,7 +35,6 @@
 #include "constants/battle_anim.h"
 #include "constants/battle_move_effects.h"
 #include "constants/battle_partner.h"
-#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/moves.h"
 #include "constants/party_menu.h"
@@ -47,6 +46,8 @@
 #include "pokemon_summary_screen.h"
 #include "type_icons.h"
 #include "pokedex.h"
+#include "test/battle.h"
+#include "test/test_runner_battle.h"
 
 static void PlayerHandleLoadMonSprite(u32 battler);
 static void PlayerHandleDrawTrainerPic(u32 battler);
@@ -197,46 +198,36 @@ static void CompleteOnBattlerSpritePosX_0(u32 battler)
 
 static u16 GetPrevBall(u16 ballId)
 {
-    u16 ballPrev;
-    s32 i, j;
-    CompactItemsInBagPocket(POCKET_POKE_BALLS);
-    for (i = 0; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
+    s32 i;
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+     for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i))
-        {
-            if (i <= 0)
-            {
-                for (j = gBagPockets[POCKET_POKE_BALLS].capacity - 1; j >= 0; j--)
-                {
-                    ballPrev = GetBagItemId(POCKET_POKE_BALLS, j);
-                    if (ballPrev != ITEM_NONE)
-                        return ballPrev;
-                }
-            }
-            i--;
-            break;
-        }
+        index--;
+        if (index == -1)
+            index = POKEBALL_COUNT - 1;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
-    return GetBagItemId(POCKET_POKE_BALLS, i);
+    return ballId;
 }
 
 static u32 GetNextBall(u32 ballId)
 {
-    u32 ballNext = ITEM_NONE;
     s32 i;
-    CompactItemsInBagPocket(POCKET_POKE_BALLS);
-    for (i = 1; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+    for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i-1))
-        {
-            ballNext = GetBagItemId(POCKET_POKE_BALLS, i);
-            break;
-        }
+        index++;
+        if (index == POKEBALL_COUNT)
+            index = 0;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
-    if (ballNext == ITEM_NONE)
-        return GetBagItemId(POCKET_POKE_BALLS, 0); // Zeroth slot
-    else
-        return ballNext;
+    return ballId;
 }
 
 static void HandleInputChooseAction(u32 battler)
@@ -1254,8 +1245,7 @@ static void Intro_WaitForShinyAnimAndHealthbox(u32 battler)
         gBattleSpritesDataPtr->healthBoxesData[battler].finishedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].triedShinyMonAnim = FALSE;
         gBattleSpritesDataPtr->healthBoxesData[BATTLE_PARTNER(battler)].finishedShinyMonAnim = FALSE;
-        FreeSpriteTilesByTag(ANIM_TAG_GOLD_STARS);
-        FreeSpritePaletteByTag(ANIM_TAG_GOLD_STARS);
+        FreeShinyStars();
 
         HandleLowHpMusicChange(GetBattlerMon(battler), battler);
 
@@ -1680,7 +1670,7 @@ static void MoveSelectionDisplayMoveType(u32 battler)
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     u32 move = moveInfo->moves[gMoveSelectionCursor[battler]];
-    u32 type = GetMoveType(move);
+    enum Type type = GetMoveType(move);
     enum BattleMoveEffects effect = GetMoveEffect(move);
 
     if (effect == EFFECT_TERA_BLAST)
@@ -1882,30 +1872,40 @@ static void PlayerHandleDrawTrainerPic(u32 battler)
     bool32 isFrontPic;
     s16 xPos, yPos;
     u32 trainerPicId;
-
-    trainerPicId = PlayerGetTrainerBackPicId();
-    if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+    if (IsMultibattleTest())
     {
-        if ((GetBattlerPosition(battler) & BIT_FLANK) != B_FLANK_LEFT) // Second mon, on the right.
-            xPos = 90;
-        else // First mon, on the left.
+        trainerPicId = TRAINER_BACK_PIC_BRENDAN;
+        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER)
             xPos = 32;
-
-        if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
-        {
-            xPos = 90;
-            yPos = 80;
-        }
         else
-        {
-            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
-        }
-
+            xPos = 80;
+        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
     }
     else
     {
-        xPos = 80;
-        yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        trainerPicId = PlayerGetTrainerBackPicId();
+        if (gBattleTypeFlags & BATTLE_TYPE_MULTI)
+        {
+            if ((GetBattlerPosition(battler) & BIT_FLANK) != B_FLANK_LEFT) // Second mon, on the right.
+                xPos = 90;
+            else // First mon, on the left.
+                xPos = 32;
+
+            if (gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && gPartnerTrainerId < TRAINER_PARTNER(PARTNER_NONE))
+            {
+                xPos = 90;
+                yPos = 80;
+            }
+            else
+            {
+                yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+            }
+        }
+        else
+        {
+            xPos = 80;
+            yPos = (8 - gTrainerBacksprites[trainerPicId].coordinates.size) * 4 + 80;
+        }
     }
 
     // Use front pic table for any tag battles unless your partner is Steven or a custom partner.
@@ -2005,7 +2005,7 @@ static void PlayerHandleChooseAction(u32 battler)
     if (B_SHOW_PARTNER_TARGET && gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && IsBattlerAlive(B_POSITION_PLAYER_RIGHT))
     {
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
-        u32 move = gBattleMons[B_POSITION_PLAYER_RIGHT].moves[gBattleStruct->chosenMovePositions[B_POSITION_PLAYER_RIGHT]];
+        u32 move = GetChosenMoveFromPosition(B_POSITION_PLAYER_RIGHT);
         StringAppend(gStringVar1, GetMoveName(move));
         u32 moveTarget = GetBattlerMoveTargetType(B_POSITION_PLAYER_RIGHT, move);
         if (moveTarget == MOVE_TARGET_SELECTED)
@@ -2373,8 +2373,8 @@ static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef)
     ctx.updateFlags = FALSE;
     ctx.abilityAtk = GetBattlerAbility(battlerAtk);
     ctx.abilityDef = GetBattlerAbility(battlerDef);
-    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk, TRUE);
-    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef, TRUE);
+    ctx.holdEffectAtk = GetBattlerHoldEffect(battlerAtk);
+    ctx.holdEffectDef = GetBattlerHoldEffect(battlerDef);
 
     uq4_12_t modifier = CalcTypeEffectivenessMultiplier(&ctx);
 

@@ -118,7 +118,7 @@ SINGLE_BATTLE_TEST("Lash Out damage is boosted on turn 1 by switch in abilities"
 DOUBLE_BATTLE_TEST("Lash Out damage is boosted by Cotton Down activation in doubles")
 {
     s16 damage[2] = {0};
-    u32 ability = ABILITY_NONE;
+    enum Ability ability = ABILITY_NONE;
 
     PARAMETRIZE { ability = ABILITY_REGENERATOR; }
     PARAMETRIZE { ability = ABILITY_COTTON_DOWN; }

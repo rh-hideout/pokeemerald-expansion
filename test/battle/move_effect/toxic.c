@@ -52,7 +52,7 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
     PARAMETRIZE { species = SPECIES_WOBBUFFET; hit = FALSE; gen = GEN_6; }
     PARAMETRIZE { species = SPECIES_NIDORAN_M; hit = TRUE;  gen = GEN_6; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_TOXIC_NEVER_MISS, gen);
+        WITH_CONFIG(CONFIG_TOXIC_NEVER_MISS, gen);
         ASSUME(GetSpeciesType(SPECIES_NIDORAN_M, 0) == TYPE_POISON);
         PLAYER(species);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -75,7 +75,8 @@ SINGLE_BATTLE_TEST("Toxic cannot miss if used by a Poison-type (Gen6+)")
 
 AI_SINGLE_BATTLE_TEST("AI avoids toxic when it can not poison target")
 {
-    u32 species, ability;
+    u32 species;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_SNORLAX; ability = ABILITY_IMMUNITY; }
     PARAMETRIZE { species = SPECIES_KOMALA; ability = ABILITY_COMATOSE; }

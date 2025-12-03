@@ -530,7 +530,7 @@ static void AnimTask_FrozenIceCube_Step4(u8 taskId)
 void AnimTask_StatsChange(u8 taskId)
 {
     bool16 goesDown = FALSE;
-    s16 animStatId = 0;
+    enum StatAnimPal animStatId = 0;
     bool16 sharply = FALSE;
 
     switch (gBattleSpritesDataPtr->animationData->animArg)

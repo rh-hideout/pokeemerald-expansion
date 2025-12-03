@@ -10,6 +10,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
     PARAMETRIZE { speedPlayer = 10; speedAi = 200; }
 
     GIVEN {
+        ASSUME(GetMovePower(MOVE_WATER_GUN) == GetMovePower(MOVE_BUBBLE));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SCIZOR) { Speed(speedPlayer); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Speed(speedAi); }
@@ -29,11 +30,12 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 
 AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has Contrary")
 {
-    u32 abilityAI;
+    enum Ability abilityAI;
 
     PARAMETRIZE { abilityAI = ABILITY_MOXIE; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; } // Mold Breaker ignores Contrary.
     GIVEN {
+        ASSUME(GetMovePower(MOVE_BUBBLE) == GetMovePower(MOVE_WATER_GUN));
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_SHUCKLE) { Ability(ABILITY_CONTRARY); }
         OPPONENT(SPECIES_PINSIR) { Moves(MOVE_WATER_GUN, MOVE_BUBBLE); Ability(abilityAI); }
@@ -52,7 +54,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
 AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they both require the same number of hits to ko")
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns, abilityAtk, expectedMove2;
+    u16 hp, expectedMove, turns, expectedMove2;
+    enum Ability abilityAtk;
 
     abilityAtk = ABILITY_NONE;
     expectedMove2 = MOVE_NONE;
@@ -136,7 +139,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
 {
     u8 turns = 0;
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, abilityAtk, abilityDef;
+    u16 expectedMove;
+    enum Ability abilityAtk, abilityDef;
 
     abilityAtk = ABILITY_NONE;
 
@@ -150,6 +154,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
         ASSUME(GetMoveCategory(MOVE_SCALD) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_POISON_JAB) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetSpeciesBaseAttack(SPECIES_NIDOQUEEN) == 92); // Gen 5's 82 Base Attack causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_TYPHLOSION) { Ability(abilityDef); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -204,6 +209,9 @@ AI_SINGLE_BATTLE_TEST("AI prefers a weaker move over a one with a downside effec
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_FLAMETHROWER) == DAMAGE_CATEGORY_SPECIAL); // Added because Typhlosion has to KO Wobbuffet
         ASSUME(GetMoveCategory(MOVE_OVERHEAT) == DAMAGE_CATEGORY_SPECIAL);     // Added because Typhlosion has to KO Wobbuffet
+        // With Gen 5 data, it chooses Overheat instead
+        ASSUME(GetMovePower(MOVE_FLAMETHROWER) == 90); // In Gen 5, it's 95
+        ASSUME(GetMovePower(MOVE_OVERHEAT) == 130); // In Gen 5, it's 140.
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(hp); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -258,7 +266,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -295,7 +304,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
 
     // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
@@ -322,7 +332,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
-    u16 abilityAtk = ABILITY_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
     u16 holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
@@ -332,6 +342,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user
     GIVEN {
         ASSUME(GetMoveCategory(MOVE_SOLAR_BEAM) == DAMAGE_CATEGORY_SPECIAL);
         ASSUME(GetMoveCategory(MOVE_GRASS_PLEDGE) == DAMAGE_CATEGORY_SPECIAL);
+        ASSUME(GetMovePower(MOVE_GRASS_PLEDGE) == 80); // Gen 5's 50 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { HP(211); }
         PLAYER(SPECIES_WOBBUFFET);
@@ -442,7 +453,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain abilities")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
     PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
@@ -509,7 +520,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
 
 AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -535,7 +546,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
 
 AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -561,7 +572,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 
 AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical immunity")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { ability = ABILITY_SHELL_ARMOR; }
 
@@ -638,7 +649,8 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
 
 AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player's ability disabling them")
 {
-    u32 playerMon, ability, aiMove;
+    u32 playerMon, aiMove;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_DAZZLING;          playerMon = SPECIES_BRUXISH;       aiMove = MOVE_QUICK_ATTACK; }
     PARAMETRIZE { ability = ABILITY_QUEENLY_MAJESTY;   playerMon = SPECIES_TSAREENA;      aiMove = MOVE_QUICK_ATTACK; }
     PARAMETRIZE { ability = ABILITY_ARMOR_TAIL;        playerMon = SPECIES_FARIGIRAF;     aiMove = MOVE_QUICK_ATTACK; }
@@ -687,6 +699,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it 
     PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_EMBER;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
 
     GIVEN {
+        WITH_CONFIG(CONFIG_BURN_HIT_THAW, GEN_6); // In Gen 5, non-Fire burning moves didn't cause thawing
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
@@ -847,7 +860,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
 
 AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { ability = ABILITY_DAMP; }
@@ -928,6 +941,7 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
 AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
         OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }

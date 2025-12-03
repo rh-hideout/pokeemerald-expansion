@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+")
     }
 }
 
-SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Muscle Band, crit)")
+SINGLE_BATTLE_TEST("Damage calculation matches Gen6+ (Muscle Band, crit)")
 {
     s16 dmg;
     s16 expectedDamage;
@@ -62,6 +62,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Muscle Band, crit)")
     PARAMETRIZE { expectedDamage = 276; }
     PARAMETRIZE { expectedDamage = 268; }
     GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_MULTIPLIER, GEN_6);
         ASSUME(GetMoveCategory(MOVE_ICE_FANG) == DAMAGE_CATEGORY_PHYSICAL);
         PLAYER(SPECIES_GLACEON) { Level(75); Attack(123); Item(ITEM_MUSCLE_BAND); }
         OPPONENT(SPECIES_GARCHOMP) { Defense(163); }
@@ -118,7 +119,7 @@ SINGLE_BATTLE_TEST("Damage calculation matches Gen5+ (Marshadow vs Mawile)")
     }
 }
 
-DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move")
+DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (double battle)")
 {
     s16 damage[6];
     GIVEN {
@@ -126,6 +127,108 @@ DOUBLE_BATTLE_TEST("A spread move will do correct damage to the second mon if th
         PLAYER(SPECIES_REGIROCK);
         OPPONENT(SPECIES_WOBBUFFET) { HP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+MULTI_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (multibattle)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PARTNER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+TWO_VS_ONE_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (2v1)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PARTNER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
+        TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[0]);
+        HP_BAR(opponentRight, captureDamage: &damage[1]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentLeft, captureDamage: &damage[2]);
+        HP_BAR(opponentRight, captureDamage: &damage[3]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerRight);
+        HP_BAR(opponentRight, captureDamage: &damage[4]);
+
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROCK_SLIDE, playerLeft);
+        HP_BAR(opponentRight, captureDamage: &damage[5]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+        EXPECT_EQ(damage[1], damage[3]);
+        EXPECT_MUL_EQ(damage[5], UQ_4_12(0.75), damage[3]);
+        EXPECT_EQ(damage[4], damage[5]);
+    }
+}
+
+ONE_VS_TWO_BATTLE_TEST("A spread move will do correct damage to the second mon if the first target faints from first hit of the spread move (1v2)")
+{
+    s16 damage[6];
+    GIVEN {
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_PLAYER(SPECIES_REGIROCK);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET) { HP(200); }
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); }
         TURN { MOVE(playerLeft, MOVE_ROCK_SLIDE); MOVE(playerRight, MOVE_ROCK_SLIDE); }
@@ -281,7 +384,7 @@ DOUBLE_BATTLE_TEST("Transistor Damage calculation", s16 damage)
                     }
     }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_TRANSISTOR_BOOST, gen);
+        WITH_CONFIG(CONFIG_TRANSISTOR_BOOST, gen);
         ASSUME(GetMoveType(MOVE_WILD_CHARGE) == TYPE_ELECTRIC);
         ASSUME(GetMoveType(MOVE_THUNDER_SHOCK) == TYPE_ELECTRIC);
         ASSUME(GetMoveCategory(MOVE_WILD_CHARGE) == DAMAGE_CATEGORY_PHYSICAL);

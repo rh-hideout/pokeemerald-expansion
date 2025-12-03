@@ -16,8 +16,8 @@ struct GenChanges
     // ...
 };
 
-u32 GetGenConfig(enum GenConfigTag configTag);
-void SetGenConfig(enum GenConfigTag configTag, u32 value);
+u32 GetConfig(enum ConfigTag configTag);
+void SetConfig(enum ConfigTag configTag, u32 value);
 
 #if TESTING
 void TestInitConfigData(void);
