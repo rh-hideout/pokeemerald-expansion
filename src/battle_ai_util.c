@@ -1572,23 +1572,34 @@ void GetBestDmgMoveFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcCo
     u32 moveLimitations = aiData->moveLimitations[battlerAtk];
     u32 countBestMoves = 0;
 
-    for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+    if (CanAIFaintTarget(battlerAtk, battlerDef, 1))
     {
-        if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations)
-        || (GetMovePower(moves[moveIndex]) == 0)
-        || (AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData) == 0))
-            continue;
-
-        if (bestDmg < AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            countBestMoves = 0;
-            bestDmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData);
-            *bestMoves = 0;
-            bestMoves[countBestMoves++] = moves[moveIndex];
+            if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, moveIndex, AI_ATTACKING))
+                bestMoves[countBestMoves++] = moves[moveIndex];
         }
-        else if (bestDmg == AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
+    }
+    else
+    {
+        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            bestMoves[countBestMoves++] = moves[moveIndex];
+            if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations)
+            || (GetMovePower(moves[moveIndex]) == 0)
+            || (AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData) == 0))
+                continue;
+
+            if (bestDmg < AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
+            {
+                countBestMoves = 0;
+                bestDmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData);
+                *bestMoves = 0;
+                bestMoves[countBestMoves++] = moves[moveIndex];
+            }
+            else if (bestDmg == AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
+            {
+                bestMoves[countBestMoves++] = moves[moveIndex];
+            }
         }
     }
 }
