@@ -28,7 +28,7 @@ static EWRAM_DATA u8 sOWESpawnCountdown = 0;
 
 static bool8 TrySelectTile(s16* outX, s16* outY);
 static u8 NextSpawnMonSlot();
-static bool8 IsSpawningWaterMons();
+static bool32 OWE_ShouldSpawnWaterMons(void);
 static void SetOverworldEncounterSpeciesInfo(u32 spawnSlot, s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
@@ -77,7 +77,7 @@ void UpdateOverworldEncounters(void)
     }
 
     s16 x, y;
-    if (GetActiveEncounterTable(IsSpawningWaterMons()) && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
+    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()) && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
     {
         u16 spawnSlot = NextSpawnMonSlot();
 
@@ -87,7 +87,7 @@ void UpdateOverworldEncounters(void)
             return;
         }
         
-        bool32 waterMons = IsSpawningWaterMons();
+        bool32 waterMons = OWE_ShouldSpawnWaterMons();
         bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 movementType, level;
@@ -147,7 +147,7 @@ void UpdateOverworldEncounters(void)
         else 
         {
             PlayCry_Normal(speciesId, 25); 
-            if (IsSpawningWaterMons())
+            if (OWE_ShouldSpawnWaterMons())
                 spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
             else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
                 spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
@@ -161,7 +161,7 @@ void UpdateOverworldEncounters(void)
 
 static u8 GetMaxFollowMonSpawns(void)
 {
-    if (IsSpawningWaterMons())
+    if (OWE_ShouldSpawnWaterMons())
         return OWE_MAX_WATER_SPAWNS;
     else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
         return OWE_MAX_CAVE_SPAWNS;
@@ -250,7 +250,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
     const struct MapLayout *layout;
 
     // Spawn further away when surfing
-    if(IsSpawningWaterMons())
+    if (OWE_ShouldSpawnWaterMons())
         closeDistance = 3;
     else
         closeDistance = 1;
@@ -303,7 +303,7 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
         return FALSE;
 
     tileBehavior = MapGridGetMetatileBehaviorAt(x, y);
-    if(IsSpawningWaterMons())
+    if (OWE_ShouldSpawnWaterMons())
     {
         if(MetatileBehavior_IsWaterWildEncounter(tileBehavior) && !MapGridGetCollisionAt(x, y))
         {
@@ -564,9 +564,9 @@ u8 CountActiveFollowMon()
     return count;
 }
 
-static bool8 IsSpawningWaterMons()
+static bool32 OWE_ShouldSpawnWaterMons(void)
 {
-    return (gPlayerAvatar.flags & (PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER));
+    return TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING | PLAYER_AVATAR_FLAG_UNDERWATER);
 }
 
 void RemoveAllOverworldEncounterObjects(void)
