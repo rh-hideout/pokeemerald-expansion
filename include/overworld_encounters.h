@@ -36,7 +36,6 @@ u32 GetFollowMonObjectEventGraphicsId(u32 spawnSlot, s32 x, s32 y, u16 *speciesI
 void ClearOverworldEncounterData(void);
 u8 CountActiveFollowMon();
 void RemoveAllOverworldEncounterObjects(void);
-bool32 IsOverworldEncounterObjectEventInSpawnedMap(struct ObjectEvent *objectEvent, s16 x, s16 y);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
