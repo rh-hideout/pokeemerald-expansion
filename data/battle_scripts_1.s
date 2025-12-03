@@ -4761,6 +4761,11 @@ BattleScript_OverworldTerrain::
 	call BattleScript_ActivateTerrainEffects
 	end3
 
+BattleScript_OverworldHazard::
+	printfromtable gStartingStatusStringIds
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_SideStatusWoreOff::
 	printstring STRINGID_PKMNSXWOREOFF
 	waitmessage B_WAIT_TIME_LONG
