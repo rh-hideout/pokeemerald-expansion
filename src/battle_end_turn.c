@@ -1395,7 +1395,6 @@ static bool32 HandleEndTurnTrainerBSlides(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-
     if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_LAST_LOW_HP))
         slide = TRUE;
     else if (ShouldDoTrainerSlide(GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT), TRAINER_SLIDE_LAST_HALF_HP))
