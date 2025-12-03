@@ -14869,17 +14869,17 @@ void BS_TryTrainerSlideZMoveMsg(void)
 
         switch(gBattlerAttacker)
         {
-            case B_POSITION_OPPONENT_LEFT:
-                gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
-                break;
-            case B_POSITION_PLAYER_RIGHT:
-                gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
-                break;
-            case B_POSITION_OPPONENT_RIGHT:
-                gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
-                break;
-            default:
-                break;
+        case B_POSITION_OPPONENT_LEFT:
+            gBattlescriptCurrInstr = BattleScript_TrainerASlideMsgRet;
+            break;
+        case B_POSITION_PLAYER_RIGHT:
+            gBattlescriptCurrInstr = BattleScript_TrainerPartnerSlideMsgRet;
+            break;
+        case B_POSITION_OPPONENT_RIGHT:
+            gBattlescriptCurrInstr = BattleScript_TrainerBSlideMsgRet;
+            break;
+        default:
+            break;
         }
     }
     else
