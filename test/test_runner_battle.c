@@ -1547,12 +1547,6 @@ static void TearDownBattle(void)
     ZeroEnemyPartyMons();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
-    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
-    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
-    {
-        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
-    }
-
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
