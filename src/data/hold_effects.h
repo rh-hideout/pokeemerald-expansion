@@ -221,19 +221,11 @@ const struct HoldEffectInfo gHoldEffectsInfo[HOLD_EFFECT_COUNT] =
         .leftovers = TRUE,
     },
 
-    [HOLD_EFFECT_DRAGON_SCALE] =
-    {
-    },
-
     [HOLD_EFFECT_LIGHT_BALL] =
     {
     },
 
     [HOLD_EFFECT_TYPE_POWER] =
-    {
-    },
-
-    [HOLD_EFFECT_UPGRADE] =
     {
     },
 

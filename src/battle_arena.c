@@ -105,8 +105,6 @@ static const struct SpriteTemplate sSpriteTemplate_JudgmentIcon =
     .paletteTag = TAG_NONE,
     .oam = &sOam_JudgmentIcon,
     .anims = sAnims_JudgmentIcon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_JudgmentIcon,
 };
 

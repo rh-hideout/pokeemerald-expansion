@@ -764,14 +764,38 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
     u16 minimum = *minimumDamage;
     u16 maximum = *maximumDamage;
 
-    switch (effect)
+    u32 strikeCount = GetMoveStrikeCount(ctx->move);
+    if (effect == EFFECT_ENDEAVOR)
     {
-    case EFFECT_MULTI_HIT:
-        if (ctx->move == MOVE_WATER_SHURIKEN && gBattleMons[ctx->battlerAtk].species == SPECIES_GRENINJA_ASH)
+        // If target has less HP than user, Endeavor does no damage
+        median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
+    }
+    else if (effect == EFFECT_BEAT_UP && GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
+    {
+        u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
+        u32 i;
+        gBattleStruct->beatUpSlot = 0;
+        ctx->isCrit = FALSE;
+        ctx->fixedBasePower = 0;
+        median = 0;
+        for (i = 0; i < partyCount; i++)
+            median += CalculateMoveDamage(ctx);
+        maximum = minimum = median;
+        gBattleStruct->beatUpSlot = 0;
+    }
+    else if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
+    {
+        median *= strikeCount;
+        minimum *= strikeCount;
+        maximum *= strikeCount;
+    }
+    else if (IsMultiHitMove(ctx->move))
+    {
+        if (GetMoveEffect(ctx->move) == EFFECT_SPECIES_POWER_OVERRIDE && gBattleMons[ctx->battlerAtk].species == GetMoveSpeciesPowerOverride_Species(ctx->move))
         {
-            median *= 3;
-            minimum *= 3;
-            maximum *= 3;
+            median *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
+            minimum *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
+            maximum *= GetMoveSpeciesPowerOverride_NumOfHits(ctx->move);
         }
         else if (ctx->abilityAtk == ABILITY_SKILL_LINK)
         {
@@ -792,44 +816,10 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
             minimum *= 2;
             maximum *= 5;
         }
-        break;
-    case EFFECT_ENDEAVOR:
-        // If target has less HP than user, Endeavor does no damage
-        median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
-        break;
-    case EFFECT_BEAT_UP:
-        if (GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
-        {
-            u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
-            u32 i;
-            gBattleStruct->beatUpSlot = 0;
-            ctx->isCrit = FALSE;
-            ctx->fixedBasePower = 0;
-            median = 0;
-            for (i = 0; i < partyCount; i++)
-                median += CalculateMoveDamage(ctx);
-            maximum = minimum = median;
-            gBattleStruct->beatUpSlot = 0;
-        }
-        break;
-    default:
-        break;
     }
-
-    // Handle other multi-strike moves
-    u32 strikeCount = GetMoveStrikeCount(ctx->move);
-    if (strikeCount > 1 && effect != EFFECT_TRIPLE_KICK)
-    {
-        median *= strikeCount;
-        minimum *= strikeCount;
-        maximum *= strikeCount;
-    }
-
-    if (ctx->abilityAtk == ABILITY_PARENTAL_BOND
-        && !strikeCount
-        && effect != EFFECT_TRIPLE_KICK
-        && effect != EFFECT_MULTI_HIT
-        && !AI_IsDoubleSpreadMove(ctx->battlerAtk, ctx->move))
+    else if (ctx->abilityAtk == ABILITY_PARENTAL_BOND
+          && strikeCount == 0
+          && !AI_IsDoubleSpreadMove(ctx->battlerAtk, ctx->move))
     {
         median  += median  / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
         minimum += minimum / (B_PARENTAL_BOND_DMG >= GEN_7 ? 4 : 2);
@@ -1230,6 +1220,14 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
     u8 i;
 
+    if (GetMoveStrikeCount(move) > 1 || IsMultiHitMove(move))
+    {
+        if (AI_MoveMakesContact(abilityAtk, gAiLogicData->holdEffects[battlerAtk], move)
+         && abilityAtk != ABILITY_MAGIC_GUARD
+         && (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET || abilityDef == ABILITY_IRON_BARBS))
+            return TRUE;
+    }
+
     switch (GetMoveEffect(move))
     {
     case EFFECT_MAX_HP_50_RECOIL:
@@ -1481,7 +1479,7 @@ s32 AI_WhoStrikesFirst(u32 battlerAI, u32 battler, u32 aiMoveConsidered, u32 pla
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
-    if (!AI_BattlerAtMaxHp(battlerTarget) || effect == EFFECT_MULTI_HIT || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
+    if (!AI_BattlerAtMaxHp(battlerTarget) || IsMultiHitMove(move) || gAiLogicData->abilities[battler]  == ABILITY_PARENTAL_BOND)
         return FALSE;
     if (GetMoveStrikeCount(move) > 1 && !(effect == EFFECT_DRAGON_DARTS && !HasTwoOpponents(battler)))
         return FALSE;
@@ -2958,6 +2956,36 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     case EFFECT_BATON_PASS:
     case EFFECT_CHILLY_RECEPTION:
     case EFFECT_SHED_TAIL:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 IsExplosionEffect(enum BattleMoveEffects effect)
+{
+    // Damaging self destruction effects like Explosion, Misty Explosion, Self Destruct, etc.
+    switch (effect)
+    {
+    case EFFECT_EXPLOSION:
+    case EFFECT_MISTY_EXPLOSION:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
+{
+    // All self sacrificing effects like Explosion, Final Gambit, Memento, etc.
+    if (IsExplosionEffect(effect))
+        return TRUE;
+    switch (effect)
+    {
+    case EFFECT_FINAL_GAMBIT:
+    case EFFECT_MEMENTO:
+    case EFFECT_HEALING_WISH:
+    case EFFECT_REVIVAL_BLESSING:
         return TRUE;
     default:
         return FALSE;
@@ -6182,6 +6210,47 @@ bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget)
     default:
         return FALSE;
     }
+    return FALSE;
+}
+
+u32 GetAIExplosionChanceFromHP(u32 hpPercent)
+{
+    if (hpPercent >= EXPLOSION_HIGHER_HP_THRESHOLD)
+        return EXPLOSION_MINIMUM_CHANCE;
+    if (hpPercent <= EXPLOSION_LOWER_HP_THRESHOLD)
+        return EXPLOSION_MAXIMUM_CHANCE;
+    return (EXPLOSION_HIGHER_HP_THRESHOLD - hpPercent);
+}
+
+bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
+{
+    if (!gAiLogicData->shouldConsiderFinalGambit)
+        return FALSE;
+    // Note to use GetScaledHPFraction
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT)
+    {
+        if (gBattleMons[battlerAtk].hp >= gBattleMons[battlerDef].hp && aiIsFaster)
+        {
+            return TRUE;
+        }
+    }
+    else if (gAiLogicData->hpPercents[battlerAtk] >= gAiLogicData->hpPercents[battlerDef] // Consider using GetScaledHPFraction and moving B_HEALTHBAR_PIXELS define
+        && GetSpeciesBaseHP(gBattleMons[battlerAtk].species) >= GetSpeciesBaseHP(gBattleMons[battlerDef].species)
+        && aiIsFaster)
+    {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster)
+{
+    if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
+        return TRUE;
+    if (!IsDoubleBattle() && IsExplosionEffect(effect) && gAiLogicData->shouldConsiderExplosion)
+        return TRUE;
+    if (effect == EFFECT_FINAL_GAMBIT)
+        return ShouldFinalGambit(battlerAtk, battlerDef, aiIsFaster);
     return FALSE;
 }
 

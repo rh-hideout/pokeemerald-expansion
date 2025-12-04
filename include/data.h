@@ -90,23 +90,23 @@ enum TrainerBattleType
 
 struct Trainer
 {
-    /*0x00*/ u64 aiFlags;
-    /*0x04*/ const struct TrainerMon *party;
-    /*0x08*/ u16 items[MAX_TRAINER_ITEMS];
-    /*0x10*/ u8 trainerClass;
-    /*0x11*/ u8 encounterMusic_gender; // last bit is gender
-    /*0x12*/ u8 trainerPic;
-    /*0x13*/ u8 trainerName[TRAINER_NAME_LENGTH + 1];
-    /*0x1E*/ u8 battleType:2;
-             u8 startingStatus:6;    // this trainer starts a battle with a given status. see include/constants/battle.h for values
-    /*0x1F*/ u8 mugshotColor;
-    /*0x20*/ u8 partySize;
-    /*0x21*/ u8 poolSize;
-    /*0x22*/ u8 poolRuleIndex;
-    /*0x23*/ u8 poolPickIndex;
-    /*0x24*/ u8 poolPruneIndex;
-    /*0x25*/ u16 overrideTrainer;
-    /*0x26*/ u8 trainerBackPic;
+    u64 aiFlags;
+    const struct TrainerMon *party;
+    u16 items[MAX_TRAINER_ITEMS];
+    u32 startingStatus; // this trainer starts a battle with a given status. see include/constants/battle.h for values
+    u8 trainerClass;
+    u8 encounterMusic_gender; // last bit is gender
+    u8 trainerPic;
+    u8 trainerName[TRAINER_NAME_LENGTH + 1];
+    u8 battleType:2;
+    u8 mugshotColor:6;
+    u8 partySize;
+    u8 poolSize;
+    u8 poolRuleIndex;
+    u8 poolPickIndex;
+    u8 poolPruneIndex;
+    u16 overrideTrainer;
+    u8 trainerBackPic;
 };
 
 struct TrainerClass
@@ -271,7 +271,7 @@ static inline const u8 GetTrainerBackPicFromId(u16 trainerId)
     return GetTrainerStructFromId(trainerId)->trainerBackPic;
 }
 
-static inline const u8 GetTrainerStartingStatusFromId(u16 trainerId)
+static inline const u32 GetTrainerStartingStatusFromId(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->startingStatus;
 }

@@ -1406,6 +1406,6 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
         AddMovePoints(PTS_SUN, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
-    else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
 }
