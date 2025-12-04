@@ -6232,11 +6232,13 @@ bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster)
     // Note to use GetScaledHPFraction
     if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT)
     {
-        if (gBattleMons[battlerAtk].hp > gBattleMons[battlerDef].hp && aiIsFaster)
+        if (gBattleMons[battlerAtk].hp >= gBattleMons[battlerDef].hp && aiIsFaster)
+        {
             return TRUE;
+        }
     }
-    else if (gAiLogicData->hpPercents[battlerAtk] > gAiLogicData->hpPercents[battlerDef]
-        && GetSpeciesBaseHP(gBattleMons[battlerAtk].species) > GetSpeciesBaseHP(gBattleMons[battlerDef].species)
+    else if (gAiLogicData->hpPercents[battlerAtk] >= gAiLogicData->hpPercents[battlerDef] // Consider using GetScaledHPFraction and moving B_HEALTHBAR_PIXELS define
+        && GetSpeciesBaseHP(gBattleMons[battlerAtk].species) >= GetSpeciesBaseHP(gBattleMons[battlerDef].species)
         && aiIsFaster)
     {
         return TRUE;

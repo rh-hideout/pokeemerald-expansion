@@ -769,29 +769,8 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
-    u16 *moves = GetMovesArray(battler);
-    if (gAiLogicData->shouldConsiderExplosion)
-    {
-        DebugPrintf("Before comparison");
-        for (int i = 0; i < MAX_MON_MOVES; i++)
-        {
-            DebugPrintf("Move: %S", gMovesInfo[moves[i]].name);
-            DebugPrintf("Score: %d", gAiThinkingStruct->score[i]);
-        }
-    }
-    
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
         AI_CompareDamagingMoves(battler, opposingBattler);
-
-    if (gAiLogicData->shouldConsiderExplosion)
-    {
-        DebugPrintf("After comparison");
-        for (int i = 0; i < MAX_MON_MOVES; i++)
-        {
-            DebugPrintf("Move: %S", gMovesInfo[moves[i]].name);
-            DebugPrintf("Score: %d", gAiThinkingStruct->score[i]);
-        }
-    }
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -1389,7 +1368,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             }
             break;
         case EFFECT_FINAL_GAMBIT:
-            if (!aiData->shouldConsiderExplosion)
+            if (!aiData->shouldConsiderFinalGambit)
             {
                 ADJUST_SCORE(-5);
             }
@@ -3960,8 +3939,6 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
     bool32 moveIsFaster[MAX_MON_MOVES];
 
-    if (gAiLogicData->shouldConsiderExplosion)
-        DebugPrintf("COMPARING");
     for (currId = 0; currId < MAX_MON_MOVES; currId++)
     {
         moveComparisonScores[currId] = 0;
@@ -3989,11 +3966,6 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                 {
                     noOfHits[i] = gBattleMons[battlerDef].maxHP;
                     tempMoveScores[i] = 0;
-                }
-                if (gAiLogicData->shouldConsiderExplosion)
-                {
-                    DebugPrintf("Move: %S", gMovesInfo[moves[i]]);
-                    DebugPrintf("Hits to KO: %d", noOfHits[i]);
                 }
             }
             else
