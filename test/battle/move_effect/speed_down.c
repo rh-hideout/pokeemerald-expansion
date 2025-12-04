@@ -3,7 +3,7 @@
 
 DOUBLE_BATTLE_TEST("Speed Down: Cotton Spore does not fail if it is blocked by one target")
 {
-    u32 abilityOne, abilityTwo;
+    enum Ability abilityOne, abilityTwo;
 
     PARAMETRIZE { abilityOne = ABILITY_OVERCOAT; abilityTwo = ABILITY_SKILL_LINK; }
     PARAMETRIZE { abilityOne = ABILITY_SKILL_LINK; abilityTwo = ABILITY_OVERCOAT; }
@@ -11,7 +11,7 @@ DOUBLE_BATTLE_TEST("Speed Down: Cotton Spore does not fail if it is blocked by o
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_COTTON_SPORE) == EFFECT_SPEED_DOWN_2);
         WITH_MOVE_DATA(MOVE_COTTON_SPORE, MOVE_DATA_TARGET, MOVE_TARGET_BOTH);
-        WITH_CONFIG(GEN_CONFIG_POWDER_OVERCOAT, GEN_6);
+        WITH_CONFIG(CONFIG_POWDER_OVERCOAT, GEN_6);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SHELLDER) { Ability(abilityOne); }

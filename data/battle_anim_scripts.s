@@ -3361,6 +3361,7 @@ gBattleAnimMove_AquaJet::
 	visible ANIM_ATTACKER
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
+	setarg 7, 0x1000
 	end
 
 gBattleAnimMove_AttackOrder::
@@ -31083,6 +31084,17 @@ gBattleAnimStatus_Nightmare::
 	clearmonbg ANIM_DEF_PARTNER
 	end
 
+gBattleAnimStatus_Frostbite::
+	playsewithpan SE_M_ICY_WIND, 0
+	loadspritegfx ANIM_TAG_ICE_CRYSTALS
+	monbg ANIM_DEF_PARTNER
+	splitbgprio ANIM_TARGET
+	call IceCrystalEffectShort
+	createsprite gSimplePaletteBlendSpriteTemplate, ANIM_ATTACKER, 2, F_PAL_TARGET, 5, 7, 0, RGB(0, 20, 31)
+	waitforvisualfinish
+	clearmonbg ANIM_DEF_PARTNER
+	end
+
 gBattleAnimGeneral_StatsChange::
 	createvisualtask AnimTask_StatsChange, 5
 	waitforvisualfinish
@@ -32120,6 +32132,16 @@ gBattleAnimGeneral_Swamp::
 	waitforvisualfinish
 	clearmonbg ANIM_DEF_PARTNER
 	blendoff
+	end
+
+gBattleAnimGeneral_SwapToSubstitute::
+	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, FALSE
+	waitforvisualfinish
+	end
+
+gBattleAnimGeneral_SwapFromSubstitute::
+	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, TRUE
+	waitforvisualfinish
 	end
 
 SnatchMoveTrySwapFromSubstitute:

@@ -41,7 +41,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = MOVE_EFFECT_POISON; species = SPECIES_ARBOK; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PARALYZE_ELECTRIC, GEN_6);
+        WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {
@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokém
 {
     KNOWN_FAILING;
     u8 statusAnim;
-    u16 species, ability;
+    u16 species;
+    enum Ability ability;
     u32 rng;
     if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
         PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; ability = ABILITY_LIGHTNING_ROD; }
@@ -76,7 +77,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze/cause to fall asleep Pokém
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_SLP; rng = MOVE_EFFECT_SLEEP; species = SPECIES_HYPNO; ability = ABILITY_INSOMNIA; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PARALYZE_ELECTRIC, GEN_5); // To prevent Electric paralysis immunity from affecting the test
+        WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_5); // To prevent Electric paralysis immunity from affecting the test
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species) { Ability(ability); }
     } WHEN {

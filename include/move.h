@@ -70,7 +70,7 @@ struct MoveInfo
     const u8 *name;
     const u8 *description;
     enum BattleMoveEffects effect;
-    u16 type:5;     // Up to 32
+    enum Type type:5;     // Up to 32
     enum DamageCategory category:2;
     u16 power:9;    // up to 511
     // end of word
@@ -86,7 +86,7 @@ struct MoveInfo
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;
-    u32 numAdditionalEffects:2; // limited to 3 - don't want to get too crazy
+    u32 numAdditionalEffects:3; // limited to 7
     // Flags
     bool32 makesContact:1;
     bool32 ignoresProtect:1;
@@ -106,8 +106,8 @@ struct MoveInfo
     bool32 minimizeDoubleDamage:1;
     bool32 ignoresTargetAbility:1;
     bool32 ignoresTargetDefenseEvasionStages:1;
-    bool32 damagesUnderground:1;
     // end of word
+    bool32 damagesUnderground:1;
     bool32 damagesUnderwater:1;
     bool32 damagesAirborne:1;
     bool32 damagesAirborneDoubleDamage:1;
@@ -136,7 +136,7 @@ struct MoveInfo
     bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:6;
+    u32 padding:5;
     // end of word
 
     union {
@@ -154,6 +154,7 @@ struct MoveInfo
         u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
+        u32 overwriteAbility;
     } argument;
 
     // primary/secondary effects
@@ -210,7 +211,7 @@ static inline const u8 *GetMoveDescription(u32 moveId)
     return gMovesInfo[moveId].description;
 }
 
-static inline u32 GetMoveType(u32 moveId)
+static inline enum Type GetMoveType(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }
@@ -600,6 +601,11 @@ static inline u32 GetMoveNonVolatileStatus(u32 move)
 static inline u32 GetMoveDamagePercentage(u32 move)
 {
     return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
+}
+
+static inline u32 GetMoveOverwriteAbility(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.overwriteAbility;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

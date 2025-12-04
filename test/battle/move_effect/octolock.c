@@ -21,7 +21,7 @@ SINGLE_BATTLE_TEST("Octolock decreases Defense and Sp. Def by at the end of the 
 SINGLE_BATTLE_TEST("Octolock reduction is prevented by Clear Body, White Smoke and Full Metal Body")
 {
     u32 species;
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BELDUM; ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { species = SPECIES_TORKOAL; ability = ABILITY_WHITE_SMOKE; }

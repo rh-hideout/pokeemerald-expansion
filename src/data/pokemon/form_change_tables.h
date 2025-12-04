@@ -73,6 +73,15 @@ static const struct FormChange sPikachuFormChangeTable[] =
 };
 #endif //P_FAMILY_PIKACHU
 
+#if P_FAMILY_CLEFAIRY
+static const struct FormChange sClefableFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_CLEFABLE_MEGA, ITEM_CLEFABLITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_CLEFAIRY
+
 #if P_FAMILY_MEOWTH
 static const struct FormChange sMeowthFormChangeTable[] =
 {
@@ -101,6 +110,15 @@ static const struct FormChange sMachampFormChangeTable[] =
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_MACHOP
+
+#if P_FAMILY_BELLSPROUT
+static const struct FormChange sVictreebelFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_VICTREEBEL_MEGA, ITEM_VICTREEBELITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_BELLSPROUT
 
 #if P_FAMILY_SLOWPOKE
 static const struct FormChange sSlowbroFormChangeTable[] = {
@@ -152,6 +170,15 @@ static const struct FormChange sKangaskhanFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_KANGASKHAN
+
+#if P_FAMILY_STARYU
+static const struct FormChange sStarmieFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_STARMIE_MEGA, ITEM_STARMINITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_STARYU
 
 #if P_FAMILY_SCYTHER
 #if P_GEN_2_CROSS_EVOS
@@ -218,6 +245,15 @@ static const struct FormChange sSnorlaxFormChangeTable[] = {
 };
 #endif //P_FAMILY_SNORLAX
 
+#if P_FAMILY_DRATINI
+static const struct FormChange sDragoniteFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_DRAGONITE_MEGA, ITEM_DRAGONINITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_DRATINI
+
 #if P_FAMILY_MEWTWO
 static const struct FormChange sMewtwoFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
@@ -227,6 +263,24 @@ static const struct FormChange sMewtwoFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_MEWTWO
+
+#if P_FAMILY_CHIKORITA
+static const struct FormChange sMeganiumFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_MEGANIUM_MEGA, ITEM_MEGANIUMITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_CHIKORITA
+
+#if P_FAMILY_TOTODILE
+static const struct FormChange sFeraligatrFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_FERALIGATR_MEGA, ITEM_FERALIGITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_TOTODILE
 
 #if P_FAMILY_MAREEP
 static const struct FormChange sAmpharosFormChangeTable[] = {
@@ -245,6 +299,15 @@ static const struct FormChange sHeracrossFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_HERACROSS
+
+#if P_FAMILY_SKARMORY
+static const struct FormChange sSkarmoryFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SKARMORY_MEGA, ITEM_SKARMORITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_SKARMORY
 
 #if P_FAMILY_HOUNDOUR
 static const struct FormChange sHoundoomFormChangeTable[] = {
@@ -403,6 +466,13 @@ static const struct FormChange sAbsolFormChangeTable[] = {
 static const struct FormChange sGlalieFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
     {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_GLALIE_MEGA, ITEM_GLALITITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+
+static const struct FormChange sFroslassFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_FROSLASS_MEGA, ITEM_FROSLASSITE},
 #endif
     {FORM_CHANGE_TERMINATOR},
 };
@@ -690,6 +760,24 @@ static const struct FormChange sArceusFormChangeTable[] = {
 };
 #endif //P_FAMILY_ARCEUS
 
+#if P_FAMILY_TEPIG
+static const struct FormChange sEmboarFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_EMBOAR_MEGA, ITEM_EMBOARITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_TEPIG
+
+#if P_FAMILY_DRILBUR
+static const struct FormChange sExcadrillFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_EXCADRILL_MEGA, ITEM_EXCADRITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_DRILBUR
+
 #if P_FAMILY_AUDINO
 static const struct FormChange sAudinoFormChangeTable[] = {
 #if P_MEGA_EVOLUTIONS
@@ -698,6 +786,15 @@ static const struct FormChange sAudinoFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_AUDINO
+
+#if P_FAMILY_VENIPEDE
+static const struct FormChange sScolipedeFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SCOLIPEDE_MEGA, ITEM_SCOLIPITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_VENIPEDE
 
 #if P_FAMILY_DARUMAKA
 static const struct FormChange sDarmanitanFormChangeTable[] = {
@@ -719,6 +816,15 @@ static const struct FormChange sDarmanitanGalarFormChangeTable[] = {
 #endif //P_GALARIAN_FORMS
 #endif //P_FAMILY_DARUMAKA
 
+#if P_FAMILY_SCRAGGY
+static const struct FormChange sScraftyFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_SCRAFTY_MEGA, ITEM_SCRAFTINITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_SCRAGGY
+
 #if P_FAMILY_TRUBBISH
 static const struct FormChange sGarbodorFormChangeTable[] =
 {
@@ -728,6 +834,24 @@ static const struct FormChange sGarbodorFormChangeTable[] =
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_TRUBBISH
+
+#if P_FAMILY_TYNAMO
+static const struct FormChange sEelektrossFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_EELEKTROSS_MEGA, ITEM_EELEKTROSSITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_TYNAMO
+
+#if P_FAMILY_LITWICK
+static const struct FormChange sChandelureFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_CHANDELURE_MEGA, ITEM_CHANDELURITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_LITWICK
 
 #if P_FAMILY_TORNADUS
 static const struct FormChange sTornadusFormChangeTable[] = {
@@ -790,13 +914,56 @@ static const struct FormChange sGenesectFormChangeTable[] = {
 };
 #endif //P_FAMILY_GENESECT
 
+#if P_FAMILY_CHESPIN
+static const struct FormChange sChesnaughtFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_CHESNAUGHT_MEGA, ITEM_CHESNAUGHTITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_CHESPIN
+
+#if P_FAMILY_FENNEKIN
+static const struct FormChange sDelphoxFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_DELPHOX_MEGA, ITEM_DELPHOXITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_FENNEKIN
+
 #if P_FAMILY_FROAKIE
+static const struct FormChange sGreninjaFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_GRENINJA_MEGA, ITEM_GRENINJITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+
 static const struct FormChange sGreninjaBattleBondFormChangeTable[] = {
     {FORM_CHANGE_FAINT,         SPECIES_GRENINJA_BATTLE_BOND},
     {FORM_CHANGE_END_BATTLE,    SPECIES_GRENINJA_BATTLE_BOND},
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_FROAKIE
+
+#if P_FAMILY_LITLEO
+static const struct FormChange sPyroarFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_PYROAR_MEGA, ITEM_PYROARITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_LITLEO
+
+#if P_FAMILY_FLABEBE
+static const struct FormChange sFloetteEternalFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_FLOETTE_MEGA, ITEM_FLOETTITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_FLABEBE
 
 #if P_FAMILY_FURFROU
 static const struct FormChange sFurfrouFormChangeTable[] = {
@@ -817,6 +984,42 @@ static const struct FormChange sAegislashFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_HONEDGE
+
+#if P_FAMILY_INKAY
+static const struct FormChange sMalamarFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_MALAMAR_MEGA, ITEM_MALAMARITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_INKAY
+
+#if P_FAMILY_BINACLE
+static const struct FormChange sBarbaracleFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_BARBARACLE_MEGA, ITEM_BARBARACITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_BINACLE
+
+#if P_FAMILY_SKRELP
+static const struct FormChange sDragalgeFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_DRAGALGE_MEGA, ITEM_DRAGALGITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_SKRELP
+
+#if P_FAMILY_HAWLUCHA
+static const struct FormChange sHawluchaFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_HAWLUCHA_MEGA, ITEM_HAWLUCHANITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_HAWLUCHA
 
 #if P_FAMILY_XERNEAS
 static const struct FormChange sXerneasFormChangeTable[] = {
@@ -856,6 +1059,9 @@ static const struct FormChange sZygarde10PowerConstructFormChangeTable[] = {
 static const struct FormChange sZygardeCompleteFormChangeTable[] = {
     {FORM_CHANGE_FAINT},
     {FORM_CHANGE_END_BATTLE},
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_ZYGARDE_MEGA, ITEM_ZYGARDITE},
+#endif
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_ZYGARDE
@@ -1002,6 +1208,15 @@ static const struct FormChange sMimikyuTotemFormChangeTable[] = {
     {FORM_CHANGE_TERMINATOR},
 };
 #endif //P_FAMILY_MIMIKYU
+
+#if P_FAMILY_DRAMPA
+static const struct FormChange sDrampaFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_DRAMPA_MEGA, ITEM_DRAMPANITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_DRAMPA
 
 #if P_FAMILY_NECROZMA
 static const struct Fusion sNecrozmaFusionTable[] = {
@@ -1202,8 +1417,18 @@ static const struct FormChange sAlcremieFormChangeTable[] =
 };
 #endif //P_FAMILY_MILCERY
 
+#if P_FAMILY_FALINKS
+static const struct FormChange sFalinksFormChangeTable[] = {
+#if P_GEN_9_MEGA_EVOLUTIONS
+    {FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM,    SPECIES_FALINKS_MEGA, ITEM_FALINKSITE},
+#endif
+    {FORM_CHANGE_TERMINATOR},
+};
+#endif //P_FAMILY_FALINKS
+
 #if P_FAMILY_EISCUE
 static const struct FormChange sEiscueFormChangeTable[] = {
+    {FORM_CHANGE_BATTLE_WEATHER,    SPECIES_EISCUE_ICE, B_WEATHER_HAIL | B_WEATHER_SNOW, ABILITY_ICE_FACE},
     {FORM_CHANGE_FAINT,             SPECIES_EISCUE_ICE},
     {FORM_CHANGE_END_BATTLE,        SPECIES_EISCUE_ICE},
     {FORM_CHANGE_TERMINATOR},
