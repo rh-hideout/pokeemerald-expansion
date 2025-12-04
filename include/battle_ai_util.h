@@ -145,7 +145,6 @@ void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
-u32 GetExplosionChanceFromHP(u32 hpPercent);
 bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster);
 bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster);
 
