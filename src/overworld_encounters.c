@@ -362,7 +362,6 @@ void CreateOverworldWildEncounter(void)
         isFemale
     );
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
-    RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     BattleSetup_StartWildBattle();
 }
 
