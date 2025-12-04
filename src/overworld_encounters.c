@@ -136,6 +136,9 @@ void UpdateOverworldEncounters(void)
             return;
         }
 
+        u32 pan = (Random() % 88) + 212;
+        u32 volume = (Random() % 30) + 50;
+        PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
         if (isShiny)
         {
             PlaySE(SE_SHINY);
@@ -143,7 +146,6 @@ void UpdateOverworldEncounters(void)
         }
         else 
         {
-            PlayCry_Normal(speciesId, 25); 
             if (OWE_ShouldSpawnWaterMons())
                 spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
             else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
@@ -666,8 +668,16 @@ bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventI
 
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 {
-    return IsGeneratedOverworldWildEncounter(&gObjectEvents[objectEventId])
-        || (IsManualOverworldWildEncounter(&gObjectEvents[objectEventId]) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+
+    if (IsGeneratedOverworldWildEncounter(object)
+        || (IsManualOverworldWildEncounter(object) && GetObjectEventScriptPointerByObjectEventId(objectEventId) == NULL))
+    {
+        gSpecialVar_0x8004 = OW_SPECIES(object);
+        return TRUE;
+    }
+
+    return FALSE;
 }
 
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
