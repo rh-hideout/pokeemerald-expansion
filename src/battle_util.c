@@ -2521,7 +2521,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
     }
 
     // For item Metronome, echoed voice
-    if (ctx->currentMove != gLastResultingMoves[ctx->battlerAtk] || gProtectStructs[ctx->battlerAtk].unableToUseMove)
+    if (ctx->currentMove != gLastResultingMoves[ctx->battlerAtk] || gBattleStruct->unableToUseMove)
         gDisableStructs[ctx->battlerAtk].metronomeItemCounter = 0;
 
     if (gBattleMons[ctx->battlerAtk].pp[movePosition] > ppToDeduct)
@@ -2999,7 +2999,7 @@ enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)
     {
         effect = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](ctx);
         if (effect == MOVE_STEP_FAILURE)
-            gProtectStructs[ctx->battlerAtk].unableToUseMove = TRUE;
+            gBattleStruct->unableToUseMove = TRUE;
         gBattleStruct->eventState.atkCanceler++;
     }
 
@@ -4866,7 +4866,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_TANGLING_HAIR:
             if (IsBattlerAlive(gBattlerAttacker)
              && (CompareStat(gBattlerAttacker, STAT_SPEED, MIN_STAT_STAGE, CMP_GREATER_THAN, gLastUsedAbility) || GetBattlerAbility(gBattlerAttacker) == ABILITY_MIRROR_ARMOR)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move))
             {
@@ -4879,7 +4879,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_ROUGH_SKIN:
         case ABILITY_IRON_BARBS:
             if (IsBattlerAlive(gBattlerAttacker)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move))
             {
@@ -4952,7 +4952,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 // Sleep
                 if (i < sleep
                  && IsBattlerAlive(gBattlerAttacker)
-                 && !gProtectStructs[gBattlerAttacker].unableToUseMove
+                 && !gBattleStruct->unableToUseMove
                  && IsBattlerTurnDamaged(gBattlerTarget)
                  && CanBeSlept(gBattlerTarget, gBattlerAttacker, abilityAtk, NOT_BLOCKED_BY_SLEEP_CLAUSE)
                  && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, holdEffectAtk, move))
@@ -4976,7 +4976,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             {
                 enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
                 if (IsBattlerAlive(gBattlerAttacker)
-                && !gProtectStructs[gBattlerAttacker].unableToUseMove
+                && !gBattleStruct->unableToUseMove
                 && IsBattlerTurnDamaged(gBattlerTarget)
                 && CanBePoisoned(gBattlerTarget, gBattlerAttacker, gLastUsedAbility, abilityAtk)
                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
@@ -4998,7 +4998,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             {
                 enum Ability abilityAtk = GetBattlerAbility(gBattlerAttacker);
                 if (IsBattlerAlive(gBattlerAttacker)
-                && !gProtectStructs[gBattlerAttacker].unableToUseMove
+                && !gBattleStruct->unableToUseMove
                 && IsBattlerTurnDamaged(gBattlerTarget)
                 && CanBeParalyzed(gBattlerTarget, gBattlerAttacker, abilityAtk)
                 && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, abilityAtk, GetBattlerHoldEffect(gBattlerAttacker), move))
@@ -5015,7 +5015,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_FLAME_BODY:
             if (IsBattlerAlive(gBattlerAttacker)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
              && IsBattlerTurnDamaged(gBattlerTarget)
              && CanBeBurned(gBattlerTarget, gBattlerAttacker, GetBattlerAbility(gBattlerAttacker))
@@ -5031,7 +5031,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_CUTE_CHARM:
             if (IsBattlerAlive(gBattlerAttacker)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerTarget)
              && (B_ABILITY_TRIGGER_CHANCE >= GEN_4 ? RandomPercentage(RNG_CUTE_CHARM, 30) : RandomChance(RNG_CUTE_CHARM, 1, 3))
@@ -5056,7 +5056,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_COTTON_DOWN:
             if (IsBattlerAlive(gBattlerAttacker)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget))
             {
                 gEffectBattler = gBattlerTarget;
@@ -5077,7 +5077,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_SAND_SPIT:
-            if (!gProtectStructs[gBattlerAttacker].unableToUseMove
+            if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !(gBattleWeather & B_WEATHER_SANDSTORM && HasWeatherEffect()))
             {
@@ -5095,7 +5095,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_PERISH_BODY:
-            if (!gProtectStructs[gBattlerAttacker].unableToUseMove
+            if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(battler)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
@@ -5113,7 +5113,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_GULP_MISSILE:
-            if (!gProtectStructs[gBattlerAttacker].unableToUseMove
+            if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerAttacker)
              && gBattleMons[gBattlerTarget].species != SPECIES_CRAMORANT)
@@ -5137,7 +5137,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_SEED_SOWER:
-            if (!gProtectStructs[gBattlerAttacker].unableToUseMove
+            if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerTarget)
              && TryChangeBattleTerrain(gBattlerTarget, STATUS_FIELD_GRASSY_TERRAIN))
@@ -5163,7 +5163,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 break;
             // fall through
         case ABILITY_ELECTROMORPHOSIS:
-            if (!gProtectStructs[gBattlerAttacker].unableToUseMove
+            if (!gBattleStruct->unableToUseMove
              && IsBattlerTurnDamaged(gBattlerTarget)
              && IsBattlerAlive(gBattlerTarget))
             {
@@ -5173,7 +5173,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_TOXIC_DEBRIS:
             if (!gBattleStruct->isSkyBattle
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && IsBattleMovePhysical(gCurrentMove)
              && IsBattlerTurnDamaged(gBattlerTarget)
              && (gSideTimers[GetBattlerSide(gBattlerAttacker)].toxicSpikesAmount != 2))
@@ -5195,7 +5195,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         {
         case ABILITY_POISON_TOUCH:
             if (IsBattlerAlive(gBattlerTarget)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && CanBePoisoned(gBattlerAttacker, gBattlerTarget, gLastUsedAbility, GetBattlerAbility(gBattlerTarget))
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
              && IsBattlerTurnDamaged(gBattlerTarget) // Need to actually hit the target
@@ -5223,7 +5223,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_STENCH:
             if (IsBattlerAlive(gBattlerTarget)
-             && !gProtectStructs[gBattlerAttacker].unableToUseMove
+             && !gBattleStruct->unableToUseMove
              && RandomChance(RNG_STENCH, 1, 10)
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !MoveHasAdditionalEffect(gCurrentMove, MOVE_EFFECT_FLINCH))

@@ -138,7 +138,8 @@ struct DisableStruct
     u8 tryEjectPack:1;
     u8 octolockedBy:3;
     u8 paradoxBoostedStat:4;
-    u8 padding2:2;
+    u8 unableToUseMove:1;
+    u8 padding:1;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -150,7 +151,6 @@ struct ProtectStruct
     u32 stealMove:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 unableToUseMove:1;
     u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
@@ -167,10 +167,10 @@ struct ProtectStruct
     u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 forcedSwitch:1;
+    u16 myceliumMight:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
-    u16 myceliumMight:1;
-    u16 padding:12;
+    u16 padding:13;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -677,7 +677,8 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 unused:5;
+    u8 unableToUseMove:1;
+    u8 unused:4;
     u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
@@ -1238,7 +1239,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !gProtectStructs[gBattlerAttacker].unableToUseMove
+        && !gBattleStruct->unableToUseMove
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
