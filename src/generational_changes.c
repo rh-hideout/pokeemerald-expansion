@@ -80,6 +80,7 @@ u32 GetClampedValue(enum ConfigTag _genConfig, u32 newValue)
 void SetConfig(enum ConfigTag _genConfig, u32 _value)
 {
 #if TESTING
+    // Clamping is done here instead of the switch due to an internal compiler error!
     u32 clampedValue = GetClampedValue(_genConfig, _value);
     switch (_genConfig)
     {
@@ -87,8 +88,8 @@ void SetConfig(enum ConfigTag _genConfig, u32 _value)
     /* Expands to:
     #if TESTING
         case CONFIG_CRIT_CHANCE:
-            gConfigChangesTestOverride->critChance = min(MAX_BITS(GEN_9), newValue);
-            return;
+            gConfigChangesTestOverride->critChance = clampedValue;
+            break;
     #else
         case CONFIG_CRIT_CHANCE:
             return;
