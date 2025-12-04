@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Solid Rock reduces damage to Super Effective moves by 0.75", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_STURDY; }
     PARAMETRIZE { ability = ABILITY_SOLID_ROCK; }
     GIVEN {

@@ -13,7 +13,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves don't affect Dark-type Pokémon (Ge
     PARAMETRIZE { gen = GEN_6; }
     PARAMETRIZE { gen = GEN_7; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, gen);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, gen);
         PLAYER(SPECIES_UMBREON);
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
     } WHEN {
@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves don't affect Dark-type Pokémon (Ge
 SINGLE_BATTLE_TEST("Prankster-affected moves don't affect Dark-type Pokémon after they switch-in")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_UMBREON);
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Prankster-affected moves called via Assist don't affect Dark
     PARAMETRIZE { gen = GEN_6; }
     PARAMETRIZE { gen = GEN_7; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, gen);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, gen);
         PLAYER(SPECIES_UMBREON);
         OPPONENT(SPECIES_VOLBEAT) { Ability(ABILITY_PRANKSTER); }
         OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CONFUSE_RAY); };
@@ -87,7 +87,7 @@ DOUBLE_BATTLE_TEST("Prankster-affected moves called via Instruct do not affect D
     PARAMETRIZE { gen = GEN_6; }
     PARAMETRIZE { gen = GEN_7; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, gen);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, gen);
         PLAYER(SPECIES_VOLBEAT) { Speed(20); Ability(ABILITY_PRANKSTER); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(10);}
         OPPONENT(SPECIES_UMBREON) { Speed(15); }
@@ -197,13 +197,13 @@ SINGLE_BATTLE_TEST("Prankster-affected moves can still be bounced back by Dark-t
 
 SINGLE_BATTLE_TEST("Prankster-affected moves which are reflected by Magic Coat can affect Dark-type Pokémon, unless the Pokémon that bounced the move also has Prankster")
 {
-    u16 sableyeAbility;
+    enum Ability sableyeAbility;
 
     PARAMETRIZE { sableyeAbility = ABILITY_PRANKSTER; }
     PARAMETRIZE { sableyeAbility = ABILITY_KEEN_EYE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
         PLAYER(SPECIES_SABLEYE) { Ability(sableyeAbility); }
         OPPONENT(SPECIES_MURKROW) { Ability(ABILITY_PRANKSTER); }
     } WHEN {
