@@ -3,9 +3,10 @@
 
 ASSUMPTIONS
 {
-    ASSUME(!IsBattleMoveStatus(MOVE_THUNDERBOLT));
-    ASSUME(GetMoveType(MOVE_THUNDERBOLT) == TYPE_ELECTRIC);
+    ASSUME(!IsBattleMoveStatus(MOVE_NUZZLE));
+    ASSUME(GetMoveType(MOVE_NUZZLE) == TYPE_ELECTRIC);
     ASSUME(!IsBattleMoveStatus(MOVE_SCRATCH));
+    ASSUME(!IsWindMove(MOVE_SCRATCH));
     ASSUME(!IsBattleMoveStatus(MOVE_AIR_CUTTER));
     ASSUME(GetMoveTarget(MOVE_AIR_CUTTER) == MOVE_TARGET_BOTH);
     ASSUME(IsWindMove(MOVE_AIR_CUTTER));
@@ -27,10 +28,10 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
         PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
         OPPONENT(SPECIES_PERSIAN) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
     } WHEN {
-        TURN { MOVE(player, MOVE_THUNDERBOLT), MOVE(opponent, move); }
-        TURN { MOVE(player, MOVE_THUNDERBOLT), MOVE(opponent, move); }
+        TURN { MOVE(player, MOVE_NUZZLE), MOVE(opponent, move); }
+        TURN { MOVE(player, MOVE_NUZZLE), MOVE(opponent, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
         HP_BAR(opponent, captureDamage: &dmgBefore);
 
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
@@ -40,7 +41,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for player when hit by a wind move
             MESSAGE("Being hit by Air Cutter charged Wattrel with power!");
         }
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
         HP_BAR(opponent, captureDamage: &dmgAfter);
 
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
@@ -72,10 +73,10 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
         PLAYER(SPECIES_PERSIAN) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
         OPPONENT(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
     } WHEN {
-        TURN { MOVE(opponent, MOVE_THUNDERBOLT), MOVE(player, move); }
-        TURN { MOVE(opponent, MOVE_THUNDERBOLT), MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_NUZZLE), MOVE(player, move); }
+        TURN { MOVE(opponent, MOVE_NUZZLE), MOVE(player, move); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, opponent);
         HP_BAR(player, captureDamage: &dmgBefore);
 
         ANIMATION(ANIM_TYPE_MOVE, move, player);
@@ -85,7 +86,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
             MESSAGE("Being hit by Air Cutter charged the opposing Wattrel with power!");
         }
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, opponent);
         HP_BAR(player, captureDamage: &dmgAfter);
 
         ANIMATION(ANIM_TYPE_MOVE, move, player);
@@ -117,8 +118,8 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for one attack when hit by a wind 
         PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
         OPPONENT(SPECIES_PERSIAN) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
     } WHEN {
-        TURN { MOVE(player, MOVE_THUNDERBOLT); MOVE(opponent, move); }
-        TURN { MOVE(player, MOVE_THUNDERBOLT); }
+        TURN { MOVE(player, MOVE_NUZZLE); MOVE(opponent, move); }
+        TURN { MOVE(player, MOVE_NUZZLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
         HP_BAR(player);
@@ -127,10 +128,10 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for one attack when hit by a wind 
             MESSAGE("Being hit by Air Cutter charged Wattrel with power!");
         }
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
         HP_BAR(opponent, captureDamage: &dmgCharged);
 
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_THUNDERBOLT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_NUZZLE, player);
         HP_BAR(opponent, captureDamage: &dmgAfter);
     }
     THEN {
