@@ -349,7 +349,6 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
-    [MOVEMENT_TYPE_WANDER_ON_MAP] = MovementType_WanderOnMap,
     [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = MovementType_WanderOnLandEncounter,
     [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = MovementType_WanderOnWaterEncounter,
     [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = MovementType_WanderOnIndoorEncounter,
@@ -397,7 +396,6 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
-    [MOVEMENT_TYPE_WANDER_ON_MAP] = TRUE,
     [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = TRUE,
     [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = TRUE,
     [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = TRUE,
@@ -486,7 +484,6 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_ON_MAP] = DIR_SOUTH,
     [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = DIR_SOUTH,
     [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = DIR_SOUTH,
     [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = DIR_SOUTH,
@@ -1438,22 +1435,20 @@ u8 GetObjectEventIdByLocalId(u8 localId)
 
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEvent *objectEvent;
+    struct ObjectEvent *objectEvent, *objectEventTemp;
     u8 objectEventId;
     s16 x;
     s16 y;
-    bool32 semiManuelOverworldWildEncounter;
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
-    objectEvent = &gObjectEvents[objectEventId];
+    objectEvent = objectEventTemp = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);
     x = template->x + MAP_OFFSET;
     y = template->y + MAP_OFFSET;
     objectEvent->active = TRUE;
     objectEvent->triggerGroundEffectsOnMove = TRUE;
     objectEvent->graphicsId = template->graphicsId;
-    semiManuelOverworldWildEncounter = IsSemiManualOverworldWildEncounter(objectEvent);
     SetObjectEventDynamicGraphicsId(objectEvent);
     if (IS_OW_MON_OBJ(objectEvent))
     {
@@ -1476,10 +1471,10 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    if (!semiManuelOverworldWildEncounter)
+    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
         objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    if (!semiManuelOverworldWildEncounter || template->trainerRange_berryTreeId != 0)
+    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
         objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
@@ -3112,9 +3107,6 @@ const struct ObjectEventGraphicsInfo *GetObjectEventGraphicsInfo(u16 graphicsId)
     if (graphicsId >= OBJ_EVENT_GFX_VARS && graphicsId <= OBJ_EVENT_GFX_VAR_F)
         graphicsId = VarGetObjectEventGraphicsId(graphicsId - OBJ_EVENT_GFX_VARS);
 
-    if (graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
-        graphicsId = OBJ_EVENT_GFX_OW_MON;
-
     if (graphicsId == OBJ_EVENT_GFX_BARD)
         return gMauvilleOldManGraphicsInfoPointers[GetCurrentMauvilleOldMan()];
 
@@ -3132,7 +3124,7 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
 
-    if (objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER)
+    if (IsSemiManualOverworldWildEncounter(objectEvent))
         objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx(objectEvent);
 }
 
@@ -6501,14 +6493,18 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
          && !FollowerNPC_IsCollisionExempt(curObject, objectEvent) // Partner
-         && !OverworldEncounter_IsCollisionExempt(curObject, objectEvent) // Overworld Wild Encounters
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
+                {
+                    // check if objects can actually collide with this or if it returns no too early
+                    // should be fine
+                    OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
+                }
             }
         }
     }
@@ -11607,26 +11603,6 @@ bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struc
     return TRUE;
 }
 
-movement_type_def(MovementType_WanderOnMap, gMovementTypeFuncs_WanderOnMap)
-
-bool8 MovementType_WanderOnMap_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
-{
-    u8 directions[4];
-    u8 chosenDirection;
-    s16 x, y;
-    memcpy(directions, gStandardDirections, sizeof directions);
-    chosenDirection = directions[Random() & 3];
-    SetObjectEventDirection(objectEvent, chosenDirection);
-    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
-    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
-    sprite->sTypeFuncId = 5;
-    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || GetCollisionInDirection(objectEvent, chosenDirection))
-        sprite->sTypeFuncId = 1;
-
-    return TRUE;
-}
-
 movement_type_def(MovementType_WanderOnLandEncounter, gMovementTypeFuncs_WanderOnLandEncounter)
 
 bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
@@ -11640,8 +11616,7 @@ bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, 
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
+    if (!MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11661,8 +11636,7 @@ bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent,
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
+    if (!MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
@@ -11682,8 +11656,7 @@ bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent
     x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
     y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!IsOverworldEncounterObjectEventInSpawnedMap(objectEvent, x, y)
-        || !MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
+    if (!MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
