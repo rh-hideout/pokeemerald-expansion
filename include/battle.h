@@ -138,7 +138,7 @@ struct DisableStruct
     u8 tryEjectPack:1;
     u8 octolockedBy:3;
     u8 paradoxBoostedStat:4;
-    u8 unableToUseMove:1;
+    u8 unableToUseMove:1; // for end of turn checks only, for individual actions use the BattleStruct member
     u8 padding:1;
 };
 
@@ -677,7 +677,7 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 unableToUseMove:1;
+    u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
     u8 unused:4;
     u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);

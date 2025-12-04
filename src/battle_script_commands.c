@@ -6931,7 +6931,6 @@ static void Cmd_moveend(void)
 
             // Need to check a specific battle during the end turn and dancer
             gDisableStructs[gBattlerAttacker].unableToUseMove = gBattleStruct->unableToUseMove;
-            gBattleStruct->unableToUseMove = FALSE;
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_DANCER:
@@ -6951,7 +6950,7 @@ static void Cmd_moveend(void)
                 }
 
                 if (!(gBattleStruct->moveResultFlags[gBattlerTarget] & (MOVE_RESULT_FAILED | MOVE_RESULT_DOESNT_AFFECT_FOE)
-                 || (gDisableStructs[gBattlerAttacker].unableToUseMove && !hasDancerTriggered)
+                 || (gBattleStruct->unableToUseMove && !hasDancerTriggered)
                  || (!gSpecialStatuses[gBattlerAttacker].dancerUsedMove && gBattleStruct->bouncedMoveIsUsed)))
                 {   // Dance move succeeds
                     // Set target for other Dancer mons; set bit so that mon cannot activate Dancer off of its own move
