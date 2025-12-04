@@ -106,7 +106,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for opponent when hit by a wind mo
     }
 }
 
-SINGLE_BATTLE_TEST("Wind Power sets up Charge for one attack when hit by a wind move")
+SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a wind move")
 {
     s16 dmgCharged, dmgAfter;
     u16 move;
@@ -115,10 +115,10 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for one attack when hit by a wind 
     PARAMETRIZE {move = MOVE_AIR_CUTTER; }
 
     GIVEN {
-        PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(10); }
-        OPPONENT(SPECIES_PERSIAN) {Ability(ABILITY_LIMBER); Speed(5) ;} // Limber, so it doesn't get paralyzed.
+        PLAYER(SPECIES_WATTREL) { Ability(ABILITY_WIND_POWER); Speed(5); }
+        OPPONENT(SPECIES_PERSIAN) {Ability(ABILITY_LIMBER); Speed(10) ;} // Limber, so it doesn't get paralyzed.
     } WHEN {
-        TURN { MOVE(player, MOVE_NUZZLE); MOVE(opponent, move); }
+        TURN { MOVE(opponent, move); MOVE(player, MOVE_NUZZLE); }
         TURN { MOVE(player, MOVE_NUZZLE); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, move, opponent);
