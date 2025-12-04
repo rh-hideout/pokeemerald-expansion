@@ -36,7 +36,6 @@ def proc_items(items):
             s = s.replace('](README.md)', '](./)')
             s = s.replace('](/INSTALL.md', '](INSTALL.md')
             s = s.replace('](docs/', '](')
-            s = s.replace('](/docs/', '](/')
             s = URL_RE.sub(handle_url, s)
             item['Chapter']['content'] = ANCHOR_RE.sub(handle_anchor, s)
             proc_items(item['Chapter']['sub_items'])
@@ -47,6 +46,6 @@ if __name__ == '__main__':
             sys.exit(0)
 
     context, book = json.load(sys.stdin)
-    proc_items(book['sections'])
+    proc_items(book['items'])
 
     print(json.dumps(book))

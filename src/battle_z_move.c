@@ -418,7 +418,7 @@ static void ZMoveSelectionDisplayPpNumber(u32 battler)
 static void ZMoveSelectionDisplayMoveType(u16 zMove, u32 battler)
 {
     u8 *txtPtr, *end;
-    u32 zMoveType = GetBattleMoveType(zMove);
+    enum Type zMoveType = GetBattleMoveType(zMove);
 
     txtPtr = StringCopy(gDisplayedStringBattle, gText_MoveInterfaceType);
     *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
@@ -517,7 +517,7 @@ void SetZEffect(void)
         }
         break;
     case Z_EFFECT_RESTORE_REPLACEMENT_HP:
-        gBattleStruct->zmove.healReplacement = TRUE;
+        gBattleStruct->zmove.healReplacement |= 1u << gBattlerAttacker;
         BattleScriptPush(gBattlescriptCurrInstr + Z_EFFECT_BS_LENGTH);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_Z_HP_TRAP;
         gBattlescriptCurrInstr = BattleScript_ZEffectPrintString;

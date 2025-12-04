@@ -700,8 +700,6 @@ static const struct SpriteTemplate sScrollBarSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_ScrollBar,
     .anims = sSpriteAnimTable_ScrollBar,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Scrollbar,
 };
 
@@ -711,8 +709,6 @@ static const struct SpriteTemplate sScrollArrowSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_ScrollArrow,
     .anims = sSpriteAnimTable_ScrollArrow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ScrollArrow,
 };
 
@@ -722,8 +718,6 @@ static const struct SpriteTemplate sInterfaceTextSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_InterfaceText,
     .anims = sSpriteAnimTable_InterfaceText,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_DexListInterfaceText,
 };
 
@@ -733,8 +727,6 @@ static const struct SpriteTemplate sRotatingPokeBallSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_RotatingPokeBall,
     .anims = sSpriteAnimTable_RotatingPokeBall,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_RotatingPokeBall,
 };
 
@@ -744,8 +736,6 @@ static const struct SpriteTemplate sSeenOwnTextSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_SeenOwnText,
     .anims = sSpriteAnimTable_SeenOwnText,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SeenOwnInfo,
 };
 
@@ -755,8 +745,6 @@ static const struct SpriteTemplate sHoennNationalTextSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_InterfaceText,
     .anims = sSpriteAnimTable_HoennNationalText,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SeenOwnInfo,
 };
 
@@ -766,8 +754,6 @@ static const struct SpriteTemplate sHoennDexSeenOwnNumberSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_Dex8x16,
     .anims = sSpriteAnimTable_HoennSeenOwnNumber,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SeenOwnInfo,
 };
 
@@ -777,8 +763,6 @@ static const struct SpriteTemplate sNationalDexSeenOwnNumberSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_Dex8x16,
     .anims = sSpriteAnimTable_NationalSeenOwnNumber,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SeenOwnInfo,
 };
 
@@ -788,8 +772,6 @@ static const struct SpriteTemplate sDexListStartMenuCursorSpriteTemplate =
     .paletteTag = TAG_DEX_INTERFACE,
     .oam = &sOamData_Dex8x16,
     .anims = sSpriteAnimTable_DexListStartMenuCursor,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_DexListStartMenuCursor,
 };
 
@@ -1426,7 +1408,7 @@ static const u8 sOrderOptions[] =
     ORDER_SMALLEST,
 };
 
-static const u8 sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
+static const enum Type sDexSearchTypeIds[NUMBER_OF_MON_TYPES] =
 {
     TYPE_NONE,
     TYPE_NORMAL,
@@ -4940,12 +4922,12 @@ static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
     return CreateTrainerPicSprite(species, TRUE, x, y, paletteSlot, TAG_NONE);
 }
 
-static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, u8 type1, u8 type2)
+static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bodyColor, enum Type type1, enum Type type2)
 {
     u16 species;
     u16 i;
     u16 resultsCount;
-    u8 types[2];
+    enum Type types[2];
 
     CreatePokedexList(dexMode, order);
 
@@ -5352,8 +5334,8 @@ static void Task_StartPokedexSearch(u8 taskId)
     u8 order = GetSearchModeSelection(taskId, SEARCH_ORDER);
     u8 abcGroup = GetSearchModeSelection(taskId, SEARCH_NAME);
     enum BodyColor bodyColor = GetSearchModeSelection(taskId, SEARCH_COLOR);
-    u8 type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
-    u8 type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
+    enum Type type1 = GetSearchModeSelection(taskId, SEARCH_TYPE_LEFT);
+    enum Type type2 = GetSearchModeSelection(taskId, SEARCH_TYPE_RIGHT);
 
     DoPokedexSearch(dexMode, order, abcGroup, bodyColor, type1, type2);
     gTasks[taskId].func = Task_WaitAndCompleteSearch;

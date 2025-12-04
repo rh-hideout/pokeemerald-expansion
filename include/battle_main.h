@@ -56,13 +56,7 @@ enum FirstTurnEventsStates
     FIRST_TURN_EVENTS_TERRAIN,
     FIRST_TURN_EVENTS_STARTING_STATUS,
     FIRST_TURN_EVENTS_TOTEM_BOOST,
-    FIRST_TURN_EVENTS_NEUTRALIZING_GAS,
-    FIRST_TURN_EVENTS_SWITCH_IN_ABILITIES,
-    FIRST_TURN_EVENTS_ITEM_EFFECTS,
-    FIRST_TURN_EVENTS_WHITE_HERB,
-    FIRST_TURN_EVENTS_OPPORTUNIST,
-    FIRST_TURN_EVENTS_MIRROR_HERB,
-    FIRST_TURN_EVENTS_EJECT_PACK,
+    FIRST_TURN_SWITCH_IN_EVENTS,
     FIRST_TURN_EVENTS_END,
 };
 
@@ -106,7 +100,7 @@ s32 GetWhichBattlerFasterOrTies(struct BattleContext *ctx, bool32 ignoreChosenMo
 s32 GetWhichBattlerFaster(struct BattleContext *ctx, bool32 ignoreChosenMoves);
 void RunBattleScriptCommands_PopCallbacksStack(void);
 void RunBattleScriptCommands(void);
-u32 GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
+enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum MonState monInBattle);
 void SetTypeBeforeUsingMove(u32 move, u32 battlerAtk);
 bool32 IsWildMonSmart(void);
 u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer *trainer, bool32 firstTrainer, u32 battleTypeFlags);
@@ -116,6 +110,7 @@ void CustomTrainerPartyAssignMoves(struct Pokemon *mon, const struct TrainerMon 
 bool32 CanPlayerForfeitNormalTrainerBattle(void);
 bool32 DidPlayerForfeitNormalTrainerBattle(void);
 void BattleDebug_WonBattle(void);
+s32 Factorial(s32 n);
 
 extern struct MultiPartnerMenuPokemon gMultiPartnerParty[MULTI_PARTY_SIZE];
 

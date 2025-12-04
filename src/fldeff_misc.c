@@ -198,7 +198,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerCave =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerCave,
     .images = sPicTable_SecretPowerCave,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CaveEntranceInit,
 };
 
@@ -209,7 +208,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerTree =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerTree,
     .images = sPicTable_SecretPowerTree,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TreeEntranceInit,
 };
 
@@ -220,7 +218,6 @@ static const struct SpriteTemplate sSpriteTemplate_SecretPowerShrub =
     .oam = &sOam_SecretPower,
     .anims = sAnimTable_SecretPowerShrub,
     .images = sPicTable_SecretPowerShrub,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ShrubEntranceInit,
 };
 
@@ -266,7 +263,6 @@ static const struct SpriteTemplate sSpriteTemplate_SandPillar =
     .oam = &sOam_SandPillar,
     .anims = sAnimTable_SandPillar,
     .images = sPicTable_SandPillar,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SandPillar_BreakTop,
 };
 
@@ -304,8 +300,6 @@ static const struct SpriteTemplate sSpriteTemplate_RecordMixLights =
     .oam = &gObjectEventBaseOam_32x8,
     .anims = sAnimTable_RecordMixLights,
     .images = sPicTable_RecordMixLights,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // For accessing Pokémon storage PC or the Hall of Fame PC
@@ -339,9 +333,9 @@ bool8 IsComputerScreenCloseEffectActive(void)
 #define tBlendCnt      data[7]
 #define tBlendY        data[8]
 
-static void CreateComputerScreenEffectTask(void (*taskfunc) (u8), u16 increment, u16 unused, u8 priority)
+static void CreateComputerScreenEffectTask(TaskFunc func, u16 increment, u16 unused, u8 priority)
 {
-    u8 taskId = CreateTask(taskfunc, priority);
+    u8 taskId = CreateTask(func, priority);
 
     gTasks[taskId].tState = 0;
     gTasks[taskId].tHorzIncrement = increment == 0 ? 16 : increment;

@@ -32,6 +32,7 @@
 #include "field_weather.h"
 #include "battle_tower.h"
 #include "gym_leader_rematch.h"
+#include "battle_frontier.h"
 #include "battle_pike.h"
 #include "battle_pyramid.h"
 #include "fldeff.h"
@@ -42,6 +43,7 @@
 #include "data.h"
 #include "vs_seeker.h"
 #include "item.h"
+#include "script.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -54,7 +56,8 @@
 #include "constants/weather.h"
 #include "fishing.h"
 
-enum {
+enum TransitionType
+{
     TRANSITION_TYPE_NORMAL,
     TRANSITION_TYPE_CAVE,
     TRANSITION_TYPE_FLASH,
@@ -260,7 +263,7 @@ static void Task_BattleStart(u8 taskId)
     }
 }
 
-static void CreateBattleStartTask(u8 transition, u16 song)
+static void CreateBattleStartTask(enum BattleTransition transition, u16 song)
 {
     u8 taskId = CreateTask(Task_BattleStart, 1);
 
@@ -533,7 +536,7 @@ void StartGroudonKyogreBattle(void)
 
 void StartRegiBattle(void)
 {
-    u8 transitionId;
+    enum BattleTransition transitionId;
     u16 species;
 
     LockPlayerFieldControls();
@@ -686,7 +689,7 @@ enum BattleEnvironments BattleSetup_GetEnvironmentId(void)
     return BATTLE_ENVIRONMENT_PLAIN;
 }
 
-static u8 GetBattleTransitionTypeByMap(void)
+static enum TransitionType GetBattleTransitionTypeByMap(void)
 {
     u16 tileBehavior;
     s16 x, y;
@@ -749,7 +752,7 @@ static u8 GetSumOfEnemyPartyLevel(u16 opponentId, u8 numMons)
     return sum;
 }
 
-u8 GetWildBattleTransition(void)
+enum BattleTransition GetWildBattleTransition(void)
 {
     u8 transitionType = GetBattleTransitionTypeByMap();
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
@@ -771,7 +774,7 @@ u8 GetWildBattleTransition(void)
     }
 }
 
-u8 GetTrainerBattleTransition(void)
+enum BattleTransition GetTrainerBattleTransition(void)
 {
     u8 minPartyCount = 1;
     u8 transitionType;
@@ -814,7 +817,7 @@ u8 GetTrainerBattleTransition(void)
 }
 
 #define RANDOM_TRANSITION(table) (table[Random() % ARRAY_COUNT(table)])
-u8 GetSpecialBattleTransition(s32 id)
+enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id)
 {
     u16 var;
     u8 enemyLevel = GetMonData(&gEnemyParty[0], MON_DATA_LEVEL);
@@ -832,6 +835,8 @@ u8 GetSpecialBattleTransition(s32 id)
             return RANDOM_TRANSITION(sBattleTransitionTable_BattlePyramid);
         case B_TRANSITION_GROUP_B_DOME:
             return RANDOM_TRANSITION(sBattleTransitionTable_BattleDome);
+        default:
+            break;
         }
 
         if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_LINK_MULTIS)
@@ -849,6 +854,8 @@ u8 GetSpecialBattleTransition(s32 id)
             return RANDOM_TRANSITION(sBattleTransitionTable_BattlePyramid);
         case B_TRANSITION_GROUP_B_DOME:
             return RANDOM_TRANSITION(sBattleTransitionTable_BattleDome);
+        default:
+            break;
         }
 
         if (VarGet(VAR_FRONTIER_BATTLE_MODE) != FRONTIER_MODE_LINK_MULTIS)
@@ -953,7 +960,7 @@ void ResetTrainerOpponentIds(void)
     TRAINER_BATTLE_PARAM.opponentB = 0;
 }
 
-static void InitTrainerBattleVariables(void)
+void InitTrainerBattleParameter(void)
 {
     memset(gTrainerBattleParameter.data, 0, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = NULL;
@@ -961,7 +968,7 @@ static void InitTrainerBattleVariables(void)
 
 void TrainerBattleLoadArgs(const u8 *data)
 {
-    InitTrainerBattleVariables();
+    InitTrainerBattleParameter();
     memcpy(gTrainerBattleParameter.data, data, sizeof(TrainerBattleParameter));
     sTrainerBattleEndScript = (u8*)data + sizeof(TrainerBattleParameter);
 }
@@ -1054,30 +1061,6 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
         TRAINER_BATTLE_PARAM.opponentA = GetRematchTrainerId(TRAINER_BATTLE_PARAM.opponentA);
         return EventScript_TryDoRematchBattle;
 #endif //FREE_MATCH_CALL
-    case TRAINER_BATTLE_PYRAMID:
-        if (gApproachingTrainerId == 0)
-        {
-            SetMapVarsToTrainerA();
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
-        }
-        else
-        {
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
-        }
-        return EventScript_TryDoNormalTrainerBattle;
-    case TRAINER_BATTLE_SET_TRAINERS_FOR_MULTI_BATTLE:
-        return sTrainerBattleEndScript;
-    case TRAINER_BATTLE_HILL:
-        if (gApproachingTrainerId == 0)
-        {
-            SetMapVarsToTrainerA();
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
-        }
-        else
-        {
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
-        }
-        return EventScript_TryDoNormalTrainerBattle;
     case TRAINER_BATTLE_TWO_TRAINERS_NO_INTRO:
         gNoOfApproachingTrainers = 2; // set TWO_OPPONENTS gBattleTypeFlags
         gApproachingTrainerId = 1; // prevent trainer approach
@@ -1088,6 +1071,39 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data)
             SetMapVarsToTrainerA();
         }
         return EventScript_TryDoNormalTrainerBattle;
+    }
+}
+
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
+{
+    sTrainerBattleEndScript = (u8*)scriptEndPtr;
+
+    switch (facility)
+    {
+    case FACILITY_BATTLE_PYRAMID:
+        if (gApproachingTrainerId == 0)
+        {
+            SetMapVarsToTrainerA();
+            TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
+        }
+        else
+        {
+            TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
+        }
+        return EventScript_TryDoNormalTrainerBattle;
+    case FACILITY_BATTLE_TRAINER_HILL:
+        if (gApproachingTrainerId == 0)
+        {
+            SetMapVarsToTrainerA();
+            TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
+        }
+        else
+        {
+            TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
+        }
+        return EventScript_TryDoNormalTrainerBattle;
+    default:
+        return sTrainerBattleEndScript;
     }
 }
 
@@ -1126,6 +1142,17 @@ bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
     TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
     return FlagGet(TRAINER_FLAGS_START + temp->params.opponentA);
 }
+
+bool32 GetRematchFromScriptPointer(const u8 *data)
+{
+#if FREE_MATCH_CALL
+    return FALSE;
+#else
+    TrainerBattleParameter *temp = (TrainerBattleParameter*)(data + OPCODE_OFFSET);
+    return ShouldTryRematchBattleForTrainerId(temp->params.opponentA);
+#endif
+}
+
 #undef OPCODE_OFFSET
 
 // Set trainer's movement type so they stop and remain facing that direction
@@ -1289,6 +1316,7 @@ static void CB2_EndTrainerBattle(void)
 {
     HandleBattleVariantEndParty();
 
+    gIsDebugBattle = FALSE;
     if (FollowerNPCIsBattlePartner())
     {
         RestorePartyAfterFollowerNPCBattle();
@@ -1752,6 +1780,20 @@ static void ClearTrainerWantRematchState(const struct RematchTrainer *table, u16
 #endif //FREE_MATCH_CALL
 }
 
+void ClearCurrentTrainerWantRematchVsSeeker(void)
+{
+#if FREE_MATCH_CALL == FALSE
+    if ((gBattleTypeFlags & BATTLE_TYPE_TRAINER) && FlagGet(I_VS_SEEKER_CHARGING) && (I_VS_SEEKER_CHARGING != 0))
+    {
+        for (u32 i = 0; i < REMATCH_TABLE_ENTRIES; i++)
+        {
+            if (gSaveBlock1Ptr->trainerRematches[i] == TRAINER_BATTLE_PARAM.opponentA)
+                gSaveBlock1Ptr->trainerRematches[i] = 0;
+        }
+    }
+#endif //FREE_MATCH_CALL
+}
+
 static u32 GetTrainerMatchCallFlag(u32 trainerId)
 {
     s32 i;
@@ -1783,12 +1825,18 @@ static bool8 WasSecondRematchWon(const struct RematchTrainer *table, u16 firstBa
         return FALSE;
     if (!HasTrainerBeenFought(table[tableId].trainerIds[1]))
         return FALSE;
-
+#if FREE_MATCH_CALL == FALSE
+    if (I_VS_SEEKER_CHARGING)
+    {
+        if (gSaveBlock1Ptr->trainerRematches[tableId] == 0)
+            return FALSE;
+    }
+#endif
     return TRUE;
 }
 
 #if FREE_MATCH_CALL == FALSE
-static bool32 HasAtLeastFiveBadges(void)
+static bool32 HasEnoughBadgesForRematch(void)
 {
     s32 i, count;
 
@@ -1796,7 +1844,7 @@ static bool32 HasAtLeastFiveBadges(void)
     {
         if (FlagGet(gBadgeFlags[i]) == TRUE)
         {
-            if (++count >= 5)
+            if (++count >= OW_REMATCH_BADGE_COUNT)
                 return TRUE;
         }
     }
@@ -1810,7 +1858,7 @@ static bool32 HasAtLeastFiveBadges(void)
 void IncrementRematchStepCounter(void)
 {
 #if FREE_MATCH_CALL == FALSE
-    if (!HasAtLeastFiveBadges())
+    if (!HasEnoughBadgesForRematch())
         return;
 
     if (IsVsSeekerEnabled())
@@ -1826,7 +1874,7 @@ void IncrementRematchStepCounter(void)
 #if FREE_MATCH_CALL == FALSE
 static bool32 IsRematchStepCounterMaxed(void)
 {
-    if (HasAtLeastFiveBadges() && gSaveBlock1Ptr->trainerRematchStepCounter >= STEP_COUNTER_MAX)
+    if (HasEnoughBadgesForRematch() && gSaveBlock1Ptr->trainerRematchStepCounter >= STEP_COUNTER_MAX)
         return TRUE;
     else
         return FALSE;
@@ -1866,10 +1914,15 @@ u16 GetLastBeatenRematchTrainerId(u16 trainerId)
 
 bool8 ShouldTryRematchBattle(void)
 {
-    if (IsFirstTrainerIdReadyForRematch(gRematchTable, TRAINER_BATTLE_PARAM.opponentA))
+    return ShouldTryRematchBattleForTrainerId(TRAINER_BATTLE_PARAM.opponentA);
+}
+
+bool8 ShouldTryRematchBattleForTrainerId(u16 trainerId)
+{
+    if (IsFirstTrainerIdReadyForRematch(gRematchTable, trainerId))
         return TRUE;
 
-    return WasSecondRematchWon(gRematchTable, TRAINER_BATTLE_PARAM.opponentA);
+    return WasSecondRematchWon(gRematchTable, trainerId);
 }
 
 bool8 IsTrainerReadyForRematch(void)
@@ -1918,3 +1971,15 @@ u16 CountBattledRematchTeams(u16 trainerId)
 
     return i;
 }
+
+void SetMultiTrainerBattle(struct ScriptContext *ctx)
+{
+    InitTrainerBattleParameter();
+
+    TRAINER_BATTLE_PARAM.opponentA = ScriptReadHalfword(ctx);
+    TRAINER_BATTLE_PARAM.defeatTextA = (u8*)ScriptReadWord(ctx);
+    TRAINER_BATTLE_PARAM.opponentB = ScriptReadHalfword(ctx);
+    TRAINER_BATTLE_PARAM.defeatTextB = (u8*)ScriptReadWord(ctx);
+    gPartnerTrainerId = TRAINER_PARTNER(ScriptReadHalfword(ctx));
+};
+

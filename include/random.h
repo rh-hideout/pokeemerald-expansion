@@ -204,6 +204,10 @@ enum RandomTag
     RNG_AI_BOOST_INTO_HAZE,
     RNG_AI_SHOULD_RECOVER,
     RNG_AI_PRIORITIZE_LAST_CHANCE,
+    RNG_AI_RANDOM_SWITCHIN_POST_KO,
+    RNG_AI_RANDOM_SWITCHIN_MID_BATTLE,
+    RNG_AI_RANDOM_VALID_SWITCHIN_POST_KO,
+    RNG_AI_RANDOM_VALID_SWITCHIN_MID_BATTLE,
     RNG_HEALER,
     RNG_DEXNAV_ENCOUNTER_LEVEL,
     RNG_AI_ASSUME_STATUS_SLEEP,
@@ -217,6 +221,7 @@ enum RandomTag
     RNG_WRAP,
     RNG_BALLTHROW_CRITICAL,
     RNG_BALLTHROW_SHAKE,
+    RNG_PROTECT_FAIL,
     RNG_PRESENT,
     RNG_MAGNITUDE,
     RNG_FISHING_BITE,
@@ -269,5 +274,17 @@ u32 RandomWeightedArrayDefault(enum RandomTag, u32 sum, u32 n, const u8 *weights
 const void *RandomElementArrayDefault(enum RandomTag, const void *array, size_t size, size_t count);
 
 u8 RandomWeightedIndex(u8 *weights, u8 length);
+
+u32 RandomBit(enum RandomTag tag, u32 bits);
+u32 RandomBitIndex(enum RandomTag tag, u32 bits);
+
+#if TESTING
+u32 RandomUniformTrials(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
+u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller);
+u32 RandomWeightedArrayTrials(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller);
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller);
+const void *RandomElementArrayTrials(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
+const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller);
+#endif
 
 #endif // GUARD_RANDOM_H

@@ -6,9 +6,9 @@
       "x": 4,
       "y": 2,
       "respawn_map": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F",
+      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM",
       "respawn_x": 2,
-      "respawn_y": 7,
-      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM"
+      "respawn_y": 7
     },
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE_2F",
@@ -16,9 +16,9 @@
       "x": 4,
       "y": 2,
       "respawn_map": "MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F",
+      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM",
       "respawn_x": 8,
-      "respawn_y": 7,
-      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM"
+      "respawn_y": 7
     },
     {
       "id": "HEAL_LOCATION_PETALBURG_CITY",
@@ -98,9 +98,9 @@
       "x": 5,
       "y": 9,
       "respawn_map": "MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_1F",
+      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM",
       "respawn_x": 2,
-      "respawn_y": 7,
-      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM"
+      "respawn_y": 7
     },
     {
       "id": "HEAL_LOCATION_LITTLEROOT_TOWN_MAYS_HOUSE",
@@ -108,9 +108,9 @@
       "x": 14,
       "y": 9,
       "respawn_map": "MAP_LITTLEROOT_TOWN_MAYS_HOUSE_1F",
+      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM",
       "respawn_x": 8,
-      "respawn_y": 7,
-      "respawn_npc": "LOCALID_PLAYERS_HOUSE_1F_MOM"
+      "respawn_y": 7
     },
     {
       "id": "HEAL_LOCATION_OLDALE_TOWN",
@@ -166,9 +166,9 @@
       "x": 18,
       "y": 6,
       "respawn_map": "MAP_EVER_GRANDE_CITY_POKEMON_LEAGUE_1F",
+      "respawn_npc": "LOCALID_LEAGUE_NURSE",
       "respawn_x": 3,
-      "respawn_y": 4,
-      "respawn_npc": "LOCALID_LEAGUE_NURSE"
+      "respawn_y": 4
     },
     {
       "id": "HEAL_LOCATION_SOUTHERN_ISLAND_EXTERIOR",

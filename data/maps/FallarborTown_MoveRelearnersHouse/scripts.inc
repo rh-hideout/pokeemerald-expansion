@@ -22,6 +22,7 @@ FallarborTown_MoveRelearnersHouse_EventScript_AskTeachMove::
 
 FallarborTown_MoveRelearnersHouse_EventScript_ChooseMon::
 	msgbox FallarborTown_MoveRelearnersHouse_Text_TutorWhichMon, MSGBOX_DEFAULT
+	setmoverelearnerstate MOVE_RELEARNER_LEVEL_UP_MOVES @ Specifically supposed to teach level up moves
 	fadescreen FADE_TO_BLACK
 	special ChooseBoxMon
 	waitstate

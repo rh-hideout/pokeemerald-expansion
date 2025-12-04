@@ -535,7 +535,7 @@ TEST("Type names fit on Battle Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 39;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -547,7 +547,7 @@ TEST("Type names fit on Pokedex Search Screen")
 {
     u32 i;
     const u32 fontId = FONT_NARROWER, widthPx = 38;
-    u32 type = TYPE_NORMAL;
+    enum Type type = TYPE_NORMAL;
     for (i = 0; i < NUMBER_OF_MON_TYPES; i++)
     {
         PARAMETRIZE_LABEL("%S", gTypesInfo[i].name) { type = i; }
@@ -570,9 +570,9 @@ TEST("Battle strings fit on the battle message window")
     s32 sixDigitNines = 999999;                                 // 36 pixels.
     u8 nickname[POKEMON_NAME_LENGTH + 1] = _("MMMMMMMMMMMM");   // 72 pixels.
     u32 longMoveID = MOVE_NATURES_MADNESS;                      // 89 pixels.
-    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;    // 91 pixels.
+    enum Ability longAbilityID = ABILITY_SUPERSWEET_SYRUP;      // 91 pixels.
     u32 longStatName = STAT_EVASION;                            // 40 pixels.
-    u32 longTypeName = TYPE_ELECTRIC;                           // 43 pixels.
+    enum Type longTypeName = TYPE_ELECTRIC;                     // 43 pixels.
     u32 longSpeciesName = SPECIES_SANDY_SHOCKS;                 // 47 pixels.
     u32 longItemName = ITEM_UNREMARKABLE_TEACUP;                // 73 pixels.
     u8 boxName[9] = _("MMMMMMMM");                              // 54 pixels.

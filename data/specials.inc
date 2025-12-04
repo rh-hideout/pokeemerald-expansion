@@ -567,3 +567,5 @@ gSpecials::
 	def_special SetAbility
 	def_special ChooseBoxMon
 	def_special CanTeachMoveBoxMon
+	def_special ObjectEventInteractionGetApricornTreeData
+	def_special ObjectEventInteractionPickApricornTree

@@ -9,7 +9,6 @@
 #include "overworld.h"
 #include "hall_of_fame.h"
 #include "pokemon_storage_system.h"
-#include "main.h"
 #include "trainer_hill.h"
 #include "link.h"
 #include "constants/game_stat.h"
@@ -92,7 +91,7 @@ COMMON_DATA struct SaveSector *gReadWriteSector = NULL; // Pointer to a buffer f
 COMMON_DATA u16 gIncrementalSectorId = 0;
 COMMON_DATA u16 gSaveUnusedVar = 0;
 COMMON_DATA u16 gSaveFileStatus = 0;
-COMMON_DATA void (*gGameContinueCallback)(void) = NULL;
+COMMON_DATA MainCallback gGameContinueCallback = NULL;
 COMMON_DATA struct SaveSectorLocation gRamSaveSectorLocations[NUM_SECTORS_PER_SLOT] = {0};
 COMMON_DATA u16 gSaveUnusedVar2 = 0;
 COMMON_DATA u16 gSaveAttemptStatus = 0;
@@ -856,7 +855,7 @@ bool8 WriteSaveBlock2(void)
 // It returns TRUE when finished.
 bool8 WriteSaveBlock1Sector(void)
 {
-    u8 finished = FALSE;
+    bool32 finished = FALSE;
     u16 sectorId = ++gIncrementalSectorId; // Because WriteSaveBlock2 will have been called prior, this will be SECTOR_ID_SAVEBLOCK1_START
     if (sectorId <= SECTOR_ID_SAVEBLOCK1_END)
     {
@@ -897,7 +896,7 @@ u8 LoadGameSave(u8 saveType)
         status = TryLoadSaveSlot(FULL_SAVE_SLOT, gRamSaveSectorLocations);
         CopyPartyAndObjectsFromSave();
         gSaveFileStatus = status;
-        gGameContinueCallback = 0;
+        gGameContinueCallback = NULL;
         break;
     case SAVE_HALL_OF_FAME:
         if (gHoFSaveBuffer != NULL)

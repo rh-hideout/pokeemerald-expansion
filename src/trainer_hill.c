@@ -6,6 +6,7 @@
 #include "ereader_helpers.h"
 #include "event_data.h"
 #include "event_scripts.h"
+#include "frontier_util.h"
 #include "fieldmap.h"
 #include "field_message_box.h"
 #include "international_string_util.h"

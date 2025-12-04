@@ -1,9 +1,11 @@
 #include "global.h"
 #include "malloc.h"
 #include "battle_main.h"
+#include "contest.h"
 #include "contest_effect.h"
 #include "data.h"
 #include "decompress.h"
+#include "event_data.h"
 #include "gpu_regs.h"
 #include "graphics.h"
 #include "menu.h"
@@ -836,10 +838,10 @@ static void MoveRelearnerMenuLoadContestMoveDescription(u32 chosenMove)
         return;
     }
 
-    str = gContestMoveTypeTextPointers[GetMoveContestCategory(chosenMove)];
+    str = gContestCategoryInfo[GetMoveContestCategory(chosenMove)].name;
     AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NORMAL, str, 4, 25, TEXT_SKIP_DRAW, NULL);
 
-    str = gContestEffectDescriptionPointers[GetMoveContestEffect(chosenMove)];
+    str = gContestEffects[GetMoveContestEffect(chosenMove)].description;
     AddTextPrinterParameterized(RELEARNERWIN_DESC_CONTEST, FONT_NARROW, str, 0, 65, TEXT_SKIP_DRAW, NULL);
 
     CopyWindowToVram(RELEARNERWIN_DESC_CONTEST, COPYWIN_GFX);
@@ -1179,10 +1181,6 @@ void LoadConditionMonPicTemplate(struct SpriteSheet *sheet, struct SpriteTemplat
         .tileTag = TAG_CONDITION_MON,
         .paletteTag = TAG_CONDITION_MON,
         .oam = &sOam_ConditionMonPic,
-        .anims = gDummySpriteAnimTable,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     struct SpritePalette dataPal = {NULL, TAG_CONDITION_MON};
@@ -1218,9 +1216,6 @@ void LoadConditionSelectionIcons(struct SpriteSheet *sheets, struct SpriteTempla
         .paletteTag = TAG_CONDITION_BALL,
         .oam = &sOam_ConditionSelectionIcon,
         .anims = sAnims_ConditionSelectionIcon,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
-        .callback = SpriteCallbackDummy,
     };
 
     for (i = 0; i < ARRAY_COUNT(dataSheets); i++)
@@ -1307,8 +1302,6 @@ static const struct SpriteTemplate sSpriteTemplate_ConditionSparkle =
     .paletteTag = TAG_CONDITION_SPARKLE,
     .oam = &sOam_ConditionSparkle,
     .anims = sAnims_ConditionSparkle,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ConditionSparkle,
 };
 

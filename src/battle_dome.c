@@ -636,9 +636,6 @@ static const struct SpriteTemplate sTourneyTreePokeballSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreePokeball,
     .anims = sSpriteAnimTable_TourneyTreePokeball,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_TourneyTreeCancelButtonNormal[] =
@@ -665,9 +662,6 @@ static const struct SpriteTemplate sCancelButtonSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreeCloseButton,
     .anims = sSpriteAnimTable_TourneyTreeCancelButton,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_TourneyTreeExitButtonNormal[] =
@@ -694,9 +688,6 @@ static const struct SpriteTemplate sExitButtonSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_TourneyTreeCloseButton,
     .anims = sSpriteAnimTable_TourneyTreeExitButton,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const union AnimCmd sSpriteAnim_UpArrow[] =
@@ -741,8 +732,6 @@ static const struct SpriteTemplate sHorizontalScrollArrowSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_HorizontalScrollArrow,
     .anims = sSpriteAnimTable_HorizontalScrollArrow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HorizontalScrollArrow
 };
 
@@ -752,8 +741,6 @@ static const struct SpriteTemplate sVerticalScrollArrowSpriteTemplate =
     .paletteTag = TAG_NONE,
     .oam = &sOamData_VerticalScrollArrow,
     .anims = sSpriteAnimTable_VerticalScrollArrow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_VerticalScrollArrow
 };
 
@@ -2136,9 +2123,8 @@ static void InitDomeTrainers(void)
 static void CalcDomeMonStats(const struct TrainerMon *fmon, int level, u8 ivs, int *stats)
 {
     int evs[NUM_STATS];
-    int i;
 
-    for (i = 0; i < NUM_STATS; i++)
+    for (enum Stat i = 0; i < NUM_STATS; i++)
     {
         if (fmon->ev != NULL)
             evs[i] = fmon->ev[i];
@@ -2393,7 +2379,7 @@ static int SelectOpponentMonsFromParty(int *partyMovePoints, bool8 allowRandom)
 
 static int GetTypeEffectivenessPoints(int move, int targetSpecies, int mode)
 {
-    int defType1, defType2, moveType;
+    enum Type defType1, defType2, moveType;
     int typePower = TYPE_x1;
     enum Ability defAbility;
 
