@@ -237,8 +237,6 @@ static const struct SpriteTemplate sSpinningPokenavSpriteTemplate =
     .paletteTag = 0,
     .oam = &sSpinningPokenavSpriteOam,
     .anims = sSpinningPokenavAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_SpinningPokenav
 };
 
@@ -276,10 +274,6 @@ static const struct SpriteTemplate sLeftHeaderSpriteTemplate =
     .tileTag = 2,
     .paletteTag = 1,
     .oam = &sOamData_LeftHeader,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct SpriteTemplate sSubmenuLeftHeaderSpriteTemplate =
@@ -287,10 +281,6 @@ static const struct SpriteTemplate sSubmenuLeftHeaderSpriteTemplate =
     .tileTag = 2,
     .paletteTag = 2,
     .oam = &sOamData_SubmenuLeftHeader,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 bool32 InitPokenavMainMenu(void)

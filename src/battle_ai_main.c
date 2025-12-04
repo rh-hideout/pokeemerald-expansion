@@ -404,11 +404,18 @@ static u32 ChooseMoveOrAction(u32 battler)
     return ChooseMoveOrAction_Singles(battler);
 }
 
+static void SetupRandomRollsForAIMoveSelection(u32 battler)
+{
+    gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(gAiLogicData->hpPercents[battler]));
+    gAiLogicData->shouldConsiderFinalGambit = RandomPercentage(RNG_AI_FINAL_GAMBIT, FINAL_GAMBIT_CHANCE);
+}
+
 u32 BattleAI_ChooseMoveIndex(u32 battler)
 {
     u32 chosenMoveIndex;
 
     SetAIUsingGimmick(battler, USE_GIMMICK);
+    SetupRandomRollsForAIMoveSelection(battler);
 
     if (gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_TERA && (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_TERA))
         DecideTerastal(battler);
@@ -640,6 +647,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     u32 battlerAtk, battlersCount, weather;
 
     memset(aiData, 0, sizeof(struct AiLogicData));
+    gAiBattleData->aiUsingGimmick = 0;
     if (!(gBattleTypeFlags & BATTLE_TYPE_HAS_AI) && !IsWildMonSmart())
         return;
 
@@ -761,7 +769,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
         flags >>= (u64)1;
         gAiThinkingStruct->aiLogicId++;
     }
-
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_CHECK_VIABILITY)
         AI_CompareDamagingMoves(battler, opposingBattler);
 
@@ -1342,9 +1349,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;  // check move damage
         case EFFECT_EXPLOSION:
         case EFFECT_MISTY_EXPLOSION:
-            if (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE))
-                ADJUST_SCORE(-2);
-
+            if (!aiData->shouldConsiderExplosion)
+                ADJUST_SCORE(-5);
             if (effectiveness == UQ_4_12(0.0))
             {
                 ADJUST_SCORE(-10);
@@ -1353,7 +1359,24 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             {
                 ADJUST_SCORE(-10);
             }
-            else if (CountUsablePartyMons(battlerAtk) == 0)
+            else if (CountUsablePartyMons(battlerAtk) == 0 && LAST_MON_PREFERS_NOT_SACRIFICE)
+            {
+                if (CountUsablePartyMons(battlerDef) != 0)
+                    ADJUST_SCORE(-10);
+                else
+                    ADJUST_SCORE(-1);
+            }
+            break;
+        case EFFECT_FINAL_GAMBIT:
+            if (!aiData->shouldConsiderFinalGambit)
+            {
+                ADJUST_SCORE(-5);
+            }
+            if (DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
+            {
+                ADJUST_SCORE(-10);
+            }
+            else if (CountUsablePartyMons(battlerAtk) == 0 && LAST_MON_PREFERS_NOT_SACRIFICE)
             {
                 if (CountUsablePartyMons(battlerDef) != 0)
                     ADJUST_SCORE(-10);
@@ -2433,10 +2456,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             else if (IsPartyFullyHealedExceptBattler(battlerAtk))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_FINAL_GAMBIT:
-            if (CountUsablePartyMons(battlerAtk) == 0 || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
-                ADJUST_SCORE(-10);
-            break;
         case EFFECT_NATURE_POWER:
             predictedMove = GetNaturePowerMove(battlerAtk);
             if (GetMoveEffect(predictedMove) != GetMoveEffect(move))
@@ -3021,6 +3040,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 {
     u32 movesetIndex = gAiThinkingStruct->movesetIndex;
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
 
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
@@ -3030,9 +3050,9 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING)
-        && effect != EFFECT_EXPLOSION && effect != EFFECT_MISTY_EXPLOSION)
+        && (!IsSelfSacrificeEffect(effect) || ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, effect, aiIsFaster)))
     {
-        if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+        if (aiIsFaster)
             ADJUST_SCORE(FAST_KILL);
         else
             ADJUST_SCORE(SLOW_KILL);
@@ -3823,15 +3843,11 @@ static enum MoveComparisonResult CompareMoveAccuracies(u32 battlerAtk, u32 battl
     return MOVE_NEUTRAL_COMPARISON;
 }
 
-static enum MoveComparisonResult CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
+static enum MoveComparisonResult CompareMoveSpeeds(u32 battlerAtk, u32 battlerDef, bool32 move1Faster, bool32 move2Faster)
 {
-    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-    u32 speed1 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move1, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
-    u32 speed2 = AI_WhoStrikesFirst(battlerAtk, battlerDef, move2, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
-
-    if (speed1 == AI_IS_FASTER && speed2 == AI_IS_SLOWER)
+    if (move1Faster && !move2Faster)
         return MOVE_WON_COMPARISON;
-    if (speed2 == AI_IS_FASTER && speed1 == AI_IS_SLOWER)
+    if (move2Faster && !move1Faster)
         return MOVE_LOST_COMPARISON;
     return MOVE_NEUTRAL_COMPARISON;
 }
@@ -3854,6 +3870,33 @@ static enum MoveComparisonResult CompareGuaranteeFaintTarget(u32 battlerAtk, u32
         return MOVE_WON_COMPARISON;
     if (guarantee2 && !guarantee1)
         return MOVE_LOST_COMPARISON;
+    return MOVE_NEUTRAL_COMPARISON;
+}
+
+static enum MoveComparisonResult CompareResistBerryEffects(u32 battlerAtk, u32 battlerDef, u32 move1, u32 moveSlot1, u32 move2, u32 moveSlot2)
+{
+    // Check for resist berries in OHKOs
+    if (gAiLogicData->holdEffects[battlerDef] == HOLD_EFFECT_RESIST_BERRY)
+    {
+        if (gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveSlot2] && !gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveSlot1])
+            return MOVE_WON_COMPARISON;
+        
+        if (gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveSlot1] && !gAiLogicData->resistBerryAffected[battlerAtk][battlerDef][moveSlot2])
+            return MOVE_LOST_COMPARISON;        
+    }
+
+    return MOVE_NEUTRAL_COMPARISON;
+}
+
+static enum MoveComparisonResult CompareMoveSelfSacrifice(u32 battlerAtk, u32 battlerDef, u16 move1, u16 move2)
+{
+    bool32 selfSacrifice1 = IsSelfSacrificeEffect(GetMoveEffect(move1));
+    bool32 selfSacrifice2 = IsSelfSacrificeEffect(GetMoveEffect(move2));
+
+    if (selfSacrifice1 && !selfSacrifice2)
+        return MOVE_LOST_COMPARISON;
+    if (selfSacrifice2 && !selfSacrifice1)
+        return MOVE_WON_COMPARISON;
     return MOVE_NEUTRAL_COMPARISON;
 }
 
@@ -3893,6 +3936,8 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
     s32 leastHits = 1000;
     u16 *moves = GetMovesArray(battlerAtk);
     bool8 isTwoTurnNotSemiInvulnerableMove[MAX_MON_MOVES];
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    bool32 moveIsFaster[MAX_MON_MOVES];
 
     for (currId = 0; currId < MAX_MON_MOVES; currId++)
     {
@@ -3904,18 +3949,24 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
             if (moves[i] != MOVE_NONE && GetMovePower(moves[i]) != 0)
             {
                 noOfHits[i] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, i, AI_ATTACKING);
+                moveIsFaster[i] = AI_IsFaster(battlerAtk, battlerDef, moves[i], predictedMoveSpeedCheck, CONSIDER_PRIORITY);
+                isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
+                tempMoveScores[i] = AI_SCORE_DEFAULT;
                 if (ShouldUseSpreadDamageMove(battlerAtk,moves[i], i, noOfHits[i]))
                 {
                     noOfHits[i] = -1;
-                    tempMoveScores[i] = 0;
-                    isTwoTurnNotSemiInvulnerableMove[i] = FALSE;
                 }
                 else if (noOfHits[i] < leastHits && noOfHits[i] != 0)
                 {
                     leastHits = noOfHits[i];
                 }
-                tempMoveScores[i] = AI_SCORE_DEFAULT;
-                isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
+                // Decided against using self sacrifice effect this turn
+                enum BattleMoveEffects effect = GetMoveEffect(moves[i]);
+                if (IsSelfSacrificeEffect(effect) && !ShouldConsiderSelfSacrificeDamageEffect(battlerAtk, battlerDef, effect, moveIsFaster[i]))
+                {
+                    noOfHits[i] = gBattleMons[battlerDef].maxHP;
+                    tempMoveScores[i] = 0;
+                }
             }
             else
             {
@@ -3927,11 +3978,13 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
 
         // Priority list:
         // 1. Less no of hits to ko
-        // 2. Priority if outsped and a OHKO
-        // 3. Not charging
-        // 4. More accuracy
-        // 5. Guaranteed KO
-        // 6. Better effect
+            // 2. Move not affected by resist berry (if two moves OHKO)
+            // 3. Priority if outsped and a OHKO (if two moves OHKO)
+        // 4. Not self sacrificing
+        // 5. Not charging
+            // 6. Guaranteed KO (if two moves OHKO)
+        // 7. More accuracy
+        // 8. Better effect
 
         // Current move requires the least hits to KO. Compare with other moves.
         if (leastHits == noOfHits[currId])
@@ -3952,8 +4005,20 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     // Comparing KOs
                     if (noOfHits[currId] == 1)
                     {
+                        // If one move is berry-resisted, use the other one
+                        switch (CompareResistBerryEffects(battlerAtk, battlerDef, moves[currId], currId, moves[i], i))
+                        {
+                        case MOVE_WON_COMPARISON:
+                            tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_RESIST_BERRY);
+                            break;
+                        case MOVE_LOST_COMPARISON:
+                            tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_RESIST_BERRY);
+                            break;
+                        case MOVE_NEUTRAL_COMPARISON:
+                            break;
+                        }
                         // Use priority to get fast KO if outsped
-                        switch (CompareMoveSpeeds(battlerAtk, battlerDef, moves[currId], moves[i]))
+                        switch (CompareMoveSpeeds(battlerAtk, battlerDef, moveIsFaster[currId], moveIsFaster[i]))
                         {
                         case MOVE_WON_COMPARISON:
                             tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_SPEED);
@@ -3986,7 +4051,18 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_ACCURACY);
                         break;
                     case MOVE_NEUTRAL_COMPARISON:
-                            break;
+                        break;
+                    }
+                    switch (CompareMoveSelfSacrifice(battlerAtk, battlerDef, moves[currId], moves[i]))
+                    {
+                    case MOVE_WON_COMPARISON:
+                        tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_AVOID_SELF_SACRIFICE);
+                        break;
+                    case MOVE_LOST_COMPARISON:
+                        tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_AVOID_SELF_SACRIFICE);
+                        break;
+                    case MOVE_NEUTRAL_COMPARISON:
+                        break;
                     }
                     switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                     {
@@ -3997,7 +4073,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                         tempMoveScores[i] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
                         break;
                     case MOVE_NEUTRAL_COMPARISON:
-                            break;
+                        break;
                     }
                 }
             }
@@ -4158,10 +4234,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_MISTY_EXPLOSION:
     case EFFECT_MEMENTO:
         if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE && gBattleMons[battlerDef].statStages[STAT_EVASION] < 7)
-        {
-            if (aiData->hpPercents[battlerAtk] < 50 && AI_RandLessThan(128))
-                ADJUST_SCORE(DECENT_EFFECT);
-        }
+            ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_FINAL_GAMBIT:
         if (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_WILL_SUICIDE)
@@ -4354,14 +4427,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         else if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
         score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
-        break;
-    case EFFECT_MULTI_HIT:
-    case EFFECT_TRIPLE_KICK:
-    case EFFECT_POPULATION_BOMB:
-        if (AI_MoveMakesContact(aiData->abilities[battlerAtk], aiData->holdEffects[battlerAtk], move)
-          && aiData->abilities[battlerAtk] != ABILITY_MAGIC_GUARD
-          && aiData->holdEffects[battlerDef] == HOLD_EFFECT_ROCKY_HELMET)
-            ADJUST_SCORE(-2);
         break;
     case EFFECT_CONVERSION:
         if (!IS_BATTLER_OF_TYPE(battlerAtk, GetMoveType(gBattleMons[battlerAtk].moves[0])))
@@ -4809,9 +4874,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         {
             enum BattleMoveEffects predictedEffect = GetMoveEffect(predictedMove);
             if ((AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
-             && (predictedEffect == EFFECT_EXPLOSION
-              || predictedEffect == EFFECT_MISTY_EXPLOSION
-              || predictedEffect == EFFECT_PROTECT))
+             && (IsExplosionEffect(predictedEffect) || predictedEffect == EFFECT_PROTECT))
                 ADJUST_SCORE(GOOD_EFFECT);
             else if (predictedEffect == EFFECT_SEMI_INVULNERABLE && !IsSemiInvulnerable(battlerDef, CHECK_ALL))
                 ADJUST_SCORE(GOOD_EFFECT);
