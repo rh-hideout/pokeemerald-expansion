@@ -72,3 +72,5 @@ SINGLE_BATTLE_TEST("Damp prevents damage from Aftermath")
         NONE_OF { HP_BAR(player); }
     }
 }
+
+//TO_DO_BATTLE_TEST("Damp affects non-adjacent Pokémon (triples)")
