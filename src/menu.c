@@ -1,14 +1,16 @@
 #include "global.h"
-#include "malloc.h"
 #include "bg.h"
 #include "blit.h"
 #include "decompress.h"
 #include "dma3.h"
 #include "event_data.h"
+#include "field_name_box.h"
 #include "field_weather.h"
 #include "graphics.h"
 #include "main.h"
+#include "malloc.h"
 #include "map_name_popup.h"
+#include "match_call.h"
 #include "menu.h"
 #include "menu_helpers.h"
 #include "palette.h"
@@ -22,7 +24,6 @@
 #include "task.h"
 #include "text_window.h"
 #include "window.h"
-#include "config/overworld.h"
 #include "constants/songs.h"
 
 struct MenuInfoIcon
@@ -74,13 +75,6 @@ static EWRAM_DATA u16 sTempTileDataBufferIdx = 0;
 static EWRAM_DATA void *sTempTileDataBuffer[0x20] = {NULL};
 
 const u16 gStandardMenuPalette[] = INCBIN_U16("graphics/interface/std_menu.gbapal");
-
-static const u8 sTextSpeedFrameDelays[] =
-{
-    [OPTIONS_TEXT_SPEED_SLOW] = 8,
-    [OPTIONS_TEXT_SPEED_MID]  = 4,
-    [OPTIONS_TEXT_SPEED_FAST] = 1
-};
 
 static const struct WindowTemplate sStandardTextBox_WindowTemplates[] =
 {
@@ -145,6 +139,7 @@ static const struct MenuInfoIcon sMenuInfoIcons[] =
 
 void InitStandardTextBoxWindows(void)
 {
+    ResetNameboxData();
     InitWindows(sStandardTextBox_WindowTemplates);
     sStartMenuWindowId = WINDOW_NONE;
     sMapNamePopupWindowId = WINDOW_NONE;
@@ -194,13 +189,6 @@ u16 AddTextPrinterParameterized2(u8 windowId, u8 fontId, const u8 *str, u8 speed
 }
 
 void AddTextPrinterForMessage(bool8 allowSkippingDelayWithButtonPress)
-{
-    void (*callback)(struct TextPrinterTemplate *, u16) = NULL;
-    gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
-    AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), callback, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
-}
-
-void AddTextPrinterForMessage_2(bool8 allowSkippingDelayWithButtonPress)
 {
     gTextFlags.canABSpeedUpPrint = allowSkippingDelayWithButtonPress;
     AddTextPrinterParameterized2(0, FONT_NORMAL, gStringVar4, GetPlayerTextSpeedDelay(), NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
@@ -341,6 +329,53 @@ void DrawDialogueFrame(u8 windowId, bool8 copyToVram)
         CopyWindowToVram(windowId, COPYWIN_FULL);
 }
 
+static void WindowFunc_RedrawDialogueFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
+{
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 1,
+                            tilemapLeft - 2,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 3,
+                            tilemapLeft - 1,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 4,
+                            tilemapLeft,
+                            tilemapTop - 1,
+                            width - 1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 5,
+                            tilemapLeft + width - 1,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            DLG_WINDOW_BASE_TILE_NUM + 6,
+                            tilemapLeft + width,
+                            tilemapTop - 1,
+                            1,
+                            1,
+                            DLG_WINDOW_PALETTE_NUM);
+}
+
+void RedrawDialogueFrame(void)
+{
+    if (IsMatchCallTaskActive())
+        RedrawMatchCallTextBoxBorder();
+    else
+        CallWindowFunction(0, WindowFunc_RedrawDialogueFrame);
+}
+
 void DrawStdWindowFrame(u8 windowId, bool8 copyToVram)
 {
     CallWindowFunction(windowId, WindowFunc_DrawStandardFrame);
@@ -370,8 +405,6 @@ void ClearStdWindowAndFrame(u8 windowId, bool8 copyToVram)
 
 static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u8 width, u8 height, u8 paletteNum)
 {
-    int i;
-
     FillBgTilemapBufferRect(bg,
                             STD_WINDOW_BASE_TILE_NUM + 0,
                             tilemapLeft - 1,
@@ -393,25 +426,20 @@ static void WindowFunc_DrawStandardFrame(u8 bg, u8 tilemapLeft, u8 tilemapTop, u
                             1,
                             1,
                             STD_WINDOW_PALETTE_NUM);
-
-    for (i = tilemapTop; i < tilemapTop + height; i++)
-    {
-        FillBgTilemapBufferRect(bg,
-                                STD_WINDOW_BASE_TILE_NUM + 3,
-                                tilemapLeft - 1,
-                                i,
-                                1,
-                                1,
-                                STD_WINDOW_PALETTE_NUM);
-        FillBgTilemapBufferRect(bg,
-                                STD_WINDOW_BASE_TILE_NUM + 5,
-                                tilemapLeft + width,
-                                i,
-                                1,
-                                1,
-                                STD_WINDOW_PALETTE_NUM);
-    }
-
+    FillBgTilemapBufferRect(bg,
+                            STD_WINDOW_BASE_TILE_NUM + 3,
+                            tilemapLeft - 1,
+                            tilemapTop,
+                            1,
+                            height,
+                            STD_WINDOW_PALETTE_NUM);
+    FillBgTilemapBufferRect(bg,
+                            STD_WINDOW_BASE_TILE_NUM + 5,
+                            tilemapLeft + width,
+                            tilemapTop,
+                            1,
+                            height,
+                            STD_WINDOW_PALETTE_NUM);
     FillBgTilemapBufferRect(bg,
                             STD_WINDOW_BASE_TILE_NUM + 6,
                             tilemapLeft - 1,
@@ -588,22 +616,6 @@ void DisplayYesNoMenuDefaultYes(void)
 void DisplayYesNoMenuWithDefault(u8 initialCursorPos)
 {
     CreateYesNoMenu(&sYesNo_WindowTemplates, STD_WINDOW_BASE_TILE_NUM, STD_WINDOW_PALETTE_NUM, initialCursorPos);
-}
-
-u32 GetPlayerTextSpeed(void)
-{
-    if (gTextFlags.forceMidTextSpeed)
-        return OPTIONS_TEXT_SPEED_MID;
-    return gSaveBlock2Ptr->optionsTextSpeed;
-}
-
-u8 GetPlayerTextSpeedDelay(void)
-{
-    u32 speed;
-    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_FAST)
-        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_MID;
-    speed = GetPlayerTextSpeed();
-    return sTextSpeedFrameDelays[speed];
 }
 
 u8 AddStartMenuWindow(u8 numActions)

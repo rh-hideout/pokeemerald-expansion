@@ -5775,7 +5775,7 @@ static void AnimRecycle_Step(struct Sprite *sprite)
 
 void AnimTask_GetWeather(u8 taskId)
 {
-    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker, TRUE) == HOLD_EFFECT_UTILITY_UMBRELLA;
+    bool32 utilityUmbrellaAffected = GetBattlerHoldEffect(gBattleAnimAttacker) == HOLD_EFFECT_UTILITY_UMBRELLA;
 
     gBattleAnimArgs[ARG_RET_ID] = ANIM_WEATHER_NONE;
     if (gWeatherMoveAnim & B_WEATHER_SUN && !utilityUmbrellaAffected)

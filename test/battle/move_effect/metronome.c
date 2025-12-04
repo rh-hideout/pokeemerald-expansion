@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Metronome picks a random move")
 SINGLE_BATTLE_TEST("Metronome's called powder move fails against Grass Types")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         ASSUME(IsPowderMove(MOVE_POISON_POWDER));
         ASSUME(GetSpeciesType(SPECIES_TANGELA, 0) == TYPE_GRASS);
         ASSUME(GetMoveEffect(MOVE_POISON_POWDER) == EFFECT_NON_VOLATILE_STATUS);

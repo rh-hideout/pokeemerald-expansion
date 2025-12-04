@@ -334,7 +334,8 @@ enum TimeOfDay GetTimeOfDay(void)
 
 enum TimeOfDay GetTimeOfDayForDex(void)
 {
-    return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_OF_DAY_DEFAULT;
+    enum TimeOfDay timeOfDay = OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_OF_DAY_DEFAULT;
+    return GenConfigTimeOfDay(timeOfDay);
 }
 
 void RtcInitLocalTimeOffset(s32 hour, s32 minute)
@@ -456,12 +457,24 @@ enum Weekday GetDayOfWeek(void)
     return dateTime.dayOfWeek;
 }
 
+enum TimeOfDay GenConfigTimeOfDay(enum TimeOfDay timeOfDay)
+{
+    if ((((timeOfDay == TIME_MORNING || timeOfDay == TIME_EVENING) && OW_TIMES_OF_DAY == GEN_3)
+        || (timeOfDay == TIME_EVENING && OW_TIMES_OF_DAY == GEN_4))
+        && timeOfDay < TIME_LAST)
+        timeOfDay++;
+
+    return timeOfDay;
+}
+
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    return timeOfDay == TIME_NIGHT ? TIME_MORNING : timeOfDay + 1;
+    timeOfDay = timeOfDay == TIME_LAST ? TIME_FIRST : timeOfDay + 1;
+    return GenConfigTimeOfDay(timeOfDay);
 }
 
 enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    return timeOfDay == TIME_MORNING ? TIME_NIGHT : timeOfDay - 1;
+    timeOfDay = timeOfDay == TIME_FIRST ? TIME_LAST : timeOfDay - 1;
+    return GenConfigTimeOfDay(timeOfDay);
 }

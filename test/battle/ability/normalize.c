@@ -11,7 +11,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -36,7 +36,7 @@ SINGLE_BATTLE_TEST("Normalize turns a move into a Normal-type move")
 
 SINGLE_BATTLE_TEST("Normalize affects status moves")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -62,7 +62,7 @@ SINGLE_BATTLE_TEST("Normalize affects status moves")
 
 SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage to Water-type Pokémon", s16 damage)
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {
@@ -82,12 +82,12 @@ SINGLE_BATTLE_TEST("Normalize still makes Freeze-Dry do super effective damage t
 
 SINGLE_BATTLE_TEST("Normalize doesn't boost power of unaffected moves by 20% (< Gen7)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, GEN_6);
+        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
         PLAYER(SPECIES_DELCATTY) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -101,12 +101,12 @@ SINGLE_BATTLE_TEST("Normalize doesn't boost power of unaffected moves by 20% (< 
 
 SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, GEN_7);
+        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
         PLAYER(SPECIES_DELCATTY) { Ability(ability); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -120,12 +120,12 @@ SINGLE_BATTLE_TEST("Normalize boosts power of unaffected moves by 20% (Gen7+)", 
 
 SINGLE_BATTLE_TEST("Normalize doesn't boost power of affected moves by 20% (< Gen7)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, GEN_6);
+        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_6);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -139,12 +139,12 @@ SINGLE_BATTLE_TEST("Normalize doesn't boost power of affected moves by 20% (< Ge
 
 SINGLE_BATTLE_TEST("Normalize boosts power of affected moves by 20% (Gen7+)", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ATE_MULTIPLIER, GEN_7);
+        WITH_CONFIG(CONFIG_ATE_MULTIPLIER, GEN_7);
         PLAYER(SPECIES_SKITTY) { Ability(ability); Moves(MOVE_WATER_GUN); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -184,7 +184,8 @@ SINGLE_BATTLE_TEST("Normalize-affected moves become Electric-type under Ion Delu
 
 SINGLE_BATTLE_TEST("Normalize doesn't affect Weather Ball's type", s16 damage)
 {
-    u16 move, ability;
+    u16 move;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { move = MOVE_SUNNY_DAY; ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { move = MOVE_CELEBRATE; ability = ABILITY_NORMALIZE; }
@@ -212,7 +213,7 @@ SINGLE_BATTLE_TEST("Normalize doesn't affect Weather Ball's type", s16 damage)
 
 SINGLE_BATTLE_TEST("Normalize doesn't affect Natural Gift's type")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CUTE_CHARM; }
     PARAMETRIZE { ability = ABILITY_NORMALIZE; }
     GIVEN {

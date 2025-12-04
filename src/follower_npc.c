@@ -4,6 +4,7 @@
 #include "battle.h"
 #include "battle_setup.h"
 #include "battle_tower.h"
+#include "bike.h"
 #include "event_data.h"
 #include "event_object_movement.h"
 #include "event_scripts.h"
@@ -52,6 +53,8 @@ static void TurnNPCIntoFollower(u32 localId, u32 followerFlags, u32 setScript, c
 static u32 GetFollowerNPCSprite(void);
 static bool32 FollowerNPCHasRunningFrames(void);
 static bool32 IsStateMovement(u32 state);
+static u32 GetNewPlayerMovementDirection(u32 state);
+static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction);
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower);
 static u32 ReturnFollowerNPCDelayedState(u32 direction);
 static void TryUpdateFollowerNPCSpriteUnderwater(void);
@@ -349,6 +352,115 @@ static bool32 IsStateMovement(u32 state)
     }
 
     return TRUE;
+}
+
+// Because we want the NPC follower's movements to happen simultaneously with the player's,
+// we need to set the follower's movement before the player object's movementDirection parameter gets set.
+// This function allows us to determine the player's new movement direction before it gets set.
+static u32 GetNewPlayerMovementDirection(u32 state)
+{
+    switch (state)
+    {
+    case MOVEMENT_ACTION_WALK_SLOW_DOWN:
+    case MOVEMENT_ACTION_WALK_NORMAL_DOWN:
+    case MOVEMENT_ACTION_WALK_FAST_DOWN:
+    case MOVEMENT_ACTION_WALK_FASTER_DOWN:
+    case MOVEMENT_ACTION_PLAYER_RUN_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_DOWN:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_DOWN:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_DOWN:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_DOWN:
+    case MOVEMENT_ACTION_RIDE_WATER_CURRENT_DOWN:
+    case MOVEMENT_ACTION_JUMP_DOWN:
+        return DIR_SOUTH;
+    case MOVEMENT_ACTION_WALK_SLOW_UP:
+    case MOVEMENT_ACTION_WALK_NORMAL_UP:
+    case MOVEMENT_ACTION_WALK_FAST_UP:
+    case MOVEMENT_ACTION_WALK_FASTER_UP:
+    case MOVEMENT_ACTION_PLAYER_RUN_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_UP:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_UP:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_UP:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_UP:
+    case MOVEMENT_ACTION_RIDE_WATER_CURRENT_UP:
+    case MOVEMENT_ACTION_JUMP_UP:
+        return DIR_NORTH;
+    case MOVEMENT_ACTION_WALK_SLOW_LEFT:
+    case MOVEMENT_ACTION_WALK_NORMAL_LEFT:
+    case MOVEMENT_ACTION_WALK_FAST_LEFT:
+    case MOVEMENT_ACTION_WALK_FASTER_LEFT:
+    case MOVEMENT_ACTION_PLAYER_RUN_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_LEFT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_LEFT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_LEFT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_LEFT:
+    case MOVEMENT_ACTION_RIDE_WATER_CURRENT_LEFT:
+    case MOVEMENT_ACTION_JUMP_LEFT:
+        return DIR_WEST;
+    case MOVEMENT_ACTION_WALK_SLOW_RIGHT:
+    case MOVEMENT_ACTION_WALK_NORMAL_RIGHT:
+    case MOVEMENT_ACTION_WALK_FAST_RIGHT:
+    case MOVEMENT_ACTION_WALK_FASTER_RIGHT:
+    case MOVEMENT_ACTION_PLAYER_RUN_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_HOP_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_JUMP_RIGHT:
+    case MOVEMENT_ACTION_ACRO_POP_WHEELIE_MOVE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_WHEELIE_MOVE_RIGHT:
+    case MOVEMENT_ACTION_ACRO_END_WHEELIE_MOVE_RIGHT:
+    case MOVEMENT_ACTION_RIDE_WATER_CURRENT_RIGHT:
+    case MOVEMENT_ACTION_JUMP_RIGHT:
+        return DIR_EAST;
+    default:
+        return DIR_NONE;
+    }
+}
+
+static bool32 IsPlayerForcedOntoSameTile(u8 metatileBehavior, u8 direction)
+{
+    u8 oppositeDirection = DIR_NONE;
+
+    switch (metatileBehavior)
+    {
+    case MB_WALK_EAST:
+    case MB_SLIDE_EAST:
+    case MB_EASTWARD_CURRENT:
+        oppositeDirection = DIR_WEST;
+        break;
+    case MB_WALK_WEST:
+    case MB_SLIDE_WEST:
+    case MB_WESTWARD_CURRENT:
+        oppositeDirection = DIR_EAST;
+        break;
+    case MB_WALK_NORTH:
+    case MB_SLIDE_NORTH:
+    case MB_NORTHWARD_CURRENT:
+        oppositeDirection = DIR_SOUTH;
+        break;
+    case MB_WALK_SOUTH:
+    case MB_SLIDE_SOUTH:
+    case MB_SOUTHWARD_CURRENT:
+    case MB_MUDDY_SLOPE:
+    case MB_WATERFALL:
+        oppositeDirection = DIR_NORTH;
+        break;
+    default:
+        return FALSE;
+    }
+
+    if (oppositeDirection == direction)
+        return TRUE;
+
+    return FALSE;
+}
+
+void GetXYCoordsPlayerMovementDest(u32 direction, s16 *x, s16 *y)
+{
+    *x = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.x;
+    *y = gObjectEvents[gPlayerAvatar.objectEventId].currentCoords.y;
+    MoveCoords(direction, x, y);
 }
 
 static u32 GetPlayerFaceToDoorDirection(struct ObjectEvent *player, struct ObjectEvent *follower)
@@ -760,6 +872,9 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     u32 nextBehavior;
     u32 noSpecialAnimFrames = (GetFollowerNPCSprite() == GetFollowerNPCData(FNPC_DATA_GFX_ID));
     u32 delayedState = GetFollowerNPCData(FNPC_DATA_DELAYED_STATE);
+    s16 playerDestX, playerDestY;
+    u32 playerMoveDirection = GetNewPlayerMovementDirection(state);
+    u32 newPlayerMB;
 
     MoveCoords(direction, &followerX, &followerY);
     nextBehavior = MapGridGetMetatileBehaviorAt(followerX, followerY);
@@ -768,6 +883,24 @@ u32 DetermineFollowerNPCState(struct ObjectEvent *follower, u32 state, u32 direc
     // Follower won't do delayed movement until player does a movement.
     if (!IsStateMovement(state) && delayedState)
         return MOVEMENT_ACTION_NONE;
+
+    // Follower won't move if player is forced back onto the same tile.
+    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
+        return MOVEMENT_ACTION_NONE;
+        
+    GetXYCoordsPlayerMovementDest(playerMoveDirection, &playerDestX, &playerDestY);
+    newPlayerMB = MapGridGetMetatileBehaviorAt(playerDestX, playerDestY);
+
+    if (IsPlayerForcedOntoSameTile(newPlayerMB, playerMoveDirection)
+     && !(gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_MACH_BIKE && playerMoveDirection == DIR_NORTH && newPlayerMB == MB_MUDDY_SLOPE && GetPlayerSpeed() >= PLAYER_SPEED_FAST))
+    {
+        SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_STAY);
+        SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
+        if (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT)
+            ObjectEventSetHeldMovement(follower, GetFaceDirectionAnimNum(follower->facingDirection));
+
+        return MOVEMENT_INVALID;
+    }
 
     if (IsStateMovement(state) && delayedState)
     {
@@ -1592,25 +1725,40 @@ void Task_MoveNPCFollowerAfterForcedMovement(u8 taskId)
     struct ObjectEvent *follower = &gObjectEvents[GetFollowerNPCObjectId()];
     struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
-    // The NPC will take an extra step and be on the same tile as the player.
-    if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+    // If follower moved during player's forced momvements.
+    if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_FOLLOW)
     {
-        if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
-            follower->facingDirectionLocked = TRUE;
+        // The NPC will take an extra step and be on the same tile as the player.
+        if (gTasks[taskId].tState == NPC_INTO_PLAYER && ObjectEventClearHeldMovementIfFinished(player) != 0 && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+        {
+            if (follower->currentMetatileBehavior == MB_MUDDY_SLOPE)
+                follower->facingDirectionLocked = TRUE;
 
-        ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
-        gTasks[taskId].tState = ENABLE_PLAYER_STEP;
-        return;
+            ObjectEventSetHeldMovement(follower, GetWalkFastMovementAction(DetermineFollowerNPCDirection(player, follower)));
+            gTasks[taskId].tState = ENABLE_PLAYER_STEP;
+            return;
+        }
+        // Hide the NPC until the player takes a step. Reallow player input.
+        else if (gTasks[taskId].tState == ENABLE_PLAYER_STEP && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+        {
+            follower->facingDirectionLocked = FALSE;
+            HideNPCFollower();
+            SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
+            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_NONE);
+            gPlayerAvatar.preventStep = FALSE;
+            DestroyTask(taskId);
+        }
     }
-    // Hide the NPC until the player takes a step. Reallow player input.
-    else if (gTasks[taskId].tState == ENABLE_PLAYER_STEP && ObjectEventClearHeldMovementIfFinished(follower) != 0)
+    // If player was forced back onto the same tile.
+    else if (GetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT) == FNPC_FORCED_STAY)
     {
-        follower->facingDirectionLocked = FALSE;
-        HideNPCFollower();
-        SetFollowerNPCData(FNPC_DATA_WARP_END, FNPC_WARP_REAPPEAR);
-        SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FALSE);
-        gPlayerAvatar.preventStep = FALSE;
-        DestroyTask(taskId);
+        if (ObjectEventClearHeldMovementIfFinished(player) != 0)
+        {
+            SetFollowerNPCData(FNPC_DATA_FORCED_MOVEMENT, FNPC_FORCED_NONE);
+            SetFollowerNPCData(FNPC_DATA_DELAYED_STATE, 0);
+            gPlayerAvatar.preventStep = FALSE;
+            DestroyTask(taskId);
+        }
     }
 }
 
