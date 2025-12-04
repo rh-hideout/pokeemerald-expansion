@@ -136,7 +136,7 @@ SINGLE_BATTLE_TEST("Wind Power sets up Charge for only one attack when hit by a 
     }
     THEN {
         if (move == MOVE_AIR_CUTTER) {
-            EXPECT_MUL_EQ(dmgCharged, Q_4_12(2.0), dmgAfter);
+            EXPECT_MUL_EQ(dmgAfter, Q_4_12(2.0), dmgCharged);
         }
         else {
             EXPECT_EQ(dmgAfter, dmgCharged);
