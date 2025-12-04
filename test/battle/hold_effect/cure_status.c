@@ -305,6 +305,7 @@ SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatil
     PARAMETRIZE { status = STATUS1_SLEEP;}
 
     GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
         PLAYER(SPECIES_WOBBUFFET) { Status1(status); Speed(1);};
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Speed(2);};
     } WHEN {
