@@ -1255,26 +1255,36 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
-    u32 i;
+    u32 i, battlerTarget;
     u16 hp = GetMonData(mon, MON_DATA_HP);
 
+    if (gPartyMenu.slotId == 0)
+        battlerTarget = B_POSITION_PLAYER_LEFT;
+    else if (gPartyMenu.slotId == 1)
+        battlerTarget = B_POSITION_PLAYER_RIGHT;
+    else
+        battlerTarget = MAX_POSITION_COUNT;
+
     // Embargo Check
-    if ((gPartyMenu.slotId == 0 && gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.embargo)
-        || (gPartyMenu.slotId == 1 && gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.embargo))
+    if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        return TRUE;
+        if (gBattleMons[battlerTarget].volatiles.embargo)
+            return TRUE;
     }
 
     // battleUsage checks
     switch (battleUsage)
     {
     case EFFECT_ITEM_INCREASE_STAT:
-        u32 ability = GetBattlerAbility(gBattlerInMenuId);
-        if (CompareStat(gBattlerInMenuId, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, ability))
+        if (hp == 0 || gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (gBattleMons[gBattlerInMenuId].volatiles.dragonCheer || gBattleMons[gBattlerInMenuId].volatiles.focusEnergy)
+        if (hp == 0 ||gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:
@@ -1308,11 +1318,15 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
     {
-        u32 ability = GetBattlerAbility(gBattlerInMenuId);
-        cannotUse = TRUE;
+        if (hp == 0 || gPartyMenu.slotId > 1)
+        {
+            cannotUse = TRUE;
+            break;
+        }
+        u32 ability = GetBattlerAbility(battlerTarget);
         for (i = STAT_ATK; i < NUM_STATS; i++)
         {
-            if (!CompareStat(gBattlerInMenuId, i, MAX_STAT_STAGE, CMP_EQUAL, ability))
+            if (CompareStat(battlerTarget, i, MAX_STAT_STAGE, CMP_EQUAL, ability))
             {
                 cannotUse = FALSE;
                 break;
@@ -1367,6 +1381,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
 
 void ItemUseInBattle_BagMenu(u8 taskId)
 {
+    gPartyMenu.slotId = gBattleStruct->itemPartyIndex[gBattlerInMenuId] = gBattlerPartyIndexes[gBattlerInMenuId];
     if (CannotUseItemsInBattle(gSpecialVar_ItemId, NULL))
     {
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)

@@ -1186,6 +1186,8 @@ struct MapPosition
 
 #if T_SHOULD_RUN_MOVE_ANIM
 extern bool32 gLoadFail;
+extern bool32 gCountAllocs;
+extern s32 gSpriteAllocs;
 #endif // T_SHOULD_RUN_MOVE_ANIM
 
 #endif // GUARD_GLOBAL_H

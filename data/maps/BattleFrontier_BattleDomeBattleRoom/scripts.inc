@@ -445,10 +445,8 @@ BattleFrontier_BattleDomeBattleRoom_EventScript_TuckerDraw::
 BattleFrontier_BattleDomeBattleRoom_EventScript_DoDomeBattle::
 	frontier_set FRONTIER_DATA_RECORD_DISABLED, FALSE
 	special HealPlayerParty
-	setvar VAR_0x8004, SPECIAL_BATTLE_DOME
-	setvar VAR_0x8005, 0
 	setvar VAR_TEMP_9, 1
-	special DoSpecialTrainerBattle
+	dofacilitytrainerbattle FACILITY_BATTLE_DOME
 	waitstate
 	setvar VAR_TEMP_9, 0
 	dome_restorehelditems

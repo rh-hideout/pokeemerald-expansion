@@ -27,10 +27,12 @@ enum DamageCalcContext
 enum AiCompareMovesPriority
 {
     PRIORITY_EFFECT,
-    PRIORITY_GUARANTEE,
     PRIORITY_ACCURACY,
+    PRIORITY_GUARANTEE,
     PRIORITY_NOT_CHARGING,
+    PRIORITY_AVOID_SELF_SACRIFICE,
     PRIORITY_SPEED,
+    PRIORITY_RESIST_BERRY,
 };
 
 enum AIPivot
@@ -143,6 +145,8 @@ void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
+bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster);
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
@@ -218,6 +222,9 @@ bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
 bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
+bool32 IsExplosionEffect(enum BattleMoveEffects effect);
+bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
+u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks
 bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability ability);
