@@ -401,7 +401,7 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_Facing = direction;
 
     if (ShouldRunOverworldEncounterScript(objectEventId))
-        script = InteractWithDynamicWildFollowMon;
+        script = InteractWithDynamicWildOverworldEncounter;
     else if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())

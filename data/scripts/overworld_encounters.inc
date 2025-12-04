@@ -1,4 +1,4 @@
-InteractWithDynamicWildFollowMon::
+InteractWithDynamicWildOverworldEncounter::
     lockall
     applymovement VAR_LAST_TALKED, Common_Movement_ExclamationMark
     callnative ScriptFaceLastTalked

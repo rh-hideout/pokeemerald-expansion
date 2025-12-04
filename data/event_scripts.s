@@ -1162,4 +1162,4 @@ EventScript_VsSeekerChargingDone::
 	.include "data/scripts/dexnav.inc"
 	.include "data/scripts/battle_frontier.inc"
 	.include "data/scripts/apricorn_tree.inc"
-	.include "data/scripts/followmon.inc"
+	.include "data/scripts/overworld_encounters.inc"

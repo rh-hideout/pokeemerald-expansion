@@ -60,12 +60,12 @@ enum FollowerTransformTypes
     TRANSFORM_TYPE_WEATHER,
 };
 
-enum FollowMonSpawnAnim
+enum OverworldEncounterSpawnAnim
 {
-    FOLLOWMON_SPAWN_ANIM_GRASS,
-    FOLLOWMON_SPAWN_ANIM_WATER,
-    FOLLOWMON_SPAWN_ANIM_CAVE,
-    FOLLOWMON_SPAWN_ANIM_SHINY,
+    OWE_SPAWN_ANIM_GRASS,
+    OWE_SPAWN_ANIM_WATER,
+    OWE_SPAWN_ANIM_CAVE,
+    OWE_SPAWN_ANIM_SHINY,
 };
 
 #define FIGURE_8_LENGTH 72
@@ -529,6 +529,6 @@ bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
 
-bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
 
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

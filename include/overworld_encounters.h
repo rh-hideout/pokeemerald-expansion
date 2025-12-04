@@ -1,11 +1,11 @@
-#ifndef GUARD_FOLLOWMON_H
-#define GUARD_FOLLOWMON_H
+#ifndef GUARD_OVERWORLD_ENCOUNTERS_H
+#define GUARD_OVERWORLD_ENCOUNTERS_H
 
 #if OW_POKEMON_OBJECT_EVENTS == FALSE && OW_WILD_ENCOUNTERS_OVERWORLD == TRUE
 #error "OW_POKEMON_OBJECT_EVENTS needs to be TRUE in order for OW_WILD_ENCOUNTERS_OVERWORLD to work."
 #endif
 
-#define FOLLOWMON_MAX_SPAWN_SLOTS   5
+#define OWE_MAX_SPAWN_SLOTS   5
 
 #define OWE_MAX_LAND_SPAWNS         3
 #define OWE_MAX_WATER_SPAWNS        5
@@ -17,23 +17,17 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
-struct FollowMonData
-{
-    u16 spawnCountdown;
-};
+extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
-//data/scripts/followmon.inc
-extern const u8 InteractWithDynamicWildFollowMon[];
-
-void LoadFollowMonData(void);
+void LoadOverworldEncounterData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateOverworldWildEncounter(void);
 void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
-u32 GetFollowMonObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
+u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
 void ClearOverworldEncounterData(void);
-u8 CountActiveFollowMon();
+u8 CountActiveOverworldEncounters(void);
 void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
@@ -47,4 +41,4 @@ bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventI
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 
-#endif // GUARD_FOLLOWMON_H
+#endif // GUARD_OVERWORLD_ENCOUNTERS_H

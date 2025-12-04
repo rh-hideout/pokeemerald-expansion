@@ -11593,7 +11593,7 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-bool8 MovementAction_FollowMonSpawn(enum FollowMonSpawnAnim spawnAnimType, struct ObjectEvent *objEvent) {
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent) {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;

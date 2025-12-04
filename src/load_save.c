@@ -221,7 +221,7 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
-    LoadFollowMonData();
+    LoadOverworldEncounterData();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gObjectEvents[i] = gSaveBlock1Ptr->objectEvents[i];

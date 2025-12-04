@@ -38,7 +38,7 @@ static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
 
-void LoadFollowMonData(void)
+void LoadOverworldEncounterData(void)
 {
     sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
 }
@@ -104,7 +104,7 @@ void UpdateOverworldEncounters(void)
         
         struct ObjectEventTemplate objectEventTemplate = {
             .localId = localId,
-            .graphicsId = GetFollowMonObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level),
+            .graphicsId = GetOverworldEncounterObjectEventGraphicsId(x, y, &speciesId, &isShiny, &isFemale, &level),
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
@@ -127,7 +127,7 @@ void UpdateOverworldEncounters(void)
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
         
-        enum FollowMonSpawnAnim spawnAnimType;
+        enum OverworldEncounterSpawnAnim spawnAnimType;
 
         // Play spawn animation.
         if (speciesId == SPECIES_NONE)
@@ -142,23 +142,23 @@ void UpdateOverworldEncounters(void)
         if (isShiny)
         {
             PlaySE(SE_SHINY);
-            spawnAnimType = FOLLOWMON_SPAWN_ANIM_SHINY;
+            spawnAnimType = OWE_SPAWN_ANIM_SHINY;
         }
         else 
         {
             if (OWE_ShouldSpawnWaterMons())
-                spawnAnimType = FOLLOWMON_SPAWN_ANIM_WATER;
+                spawnAnimType = OWE_SPAWN_ANIM_WATER;
             else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                spawnAnimType = FOLLOWMON_SPAWN_ANIM_CAVE;
+                spawnAnimType = OWE_SPAWN_ANIM_CAVE;
             else
-                spawnAnimType = FOLLOWMON_SPAWN_ANIM_GRASS;
+                spawnAnimType = OWE_SPAWN_ANIM_GRASS;
         }
         // Instantly play a small animation to ground the spawning a bit
-        MovementAction_FollowMonSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
+        MovementAction_OverworldEncounterSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
     }
 }
 
-static u8 GetMaxFollowMonSpawns(void)
+static u8 GetMaxOverworldEncounterSpawns(void)
 {
     if (OWE_ShouldSpawnWaterMons())
         return OWE_MAX_WATER_SPAWNS;
@@ -173,7 +173,7 @@ u32 GetOldestSlot(void)
     struct ObjectEvent *slotMon, *oldest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 spawnSlot;
 
-    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
@@ -183,10 +183,10 @@ u32 GetOldestSlot(void)
         }
     }
 
-    if (spawnSlot >= FOLLOWMON_MAX_SPAWN_SLOTS)
+    if (spawnSlot >= OWE_MAX_SPAWN_SLOTS)
         return INVALID_SPAWN_SLOT;
 
-    for (spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE && !OW_SHINY(slotMon))
@@ -202,10 +202,10 @@ u32 GetOldestSlot(void)
 static u8 NextSpawnMonSlot(void)
 {
     u32 spawnSlot;
-    u32 maxSpawns = GetMaxFollowMonSpawns();
+    u32 maxSpawns = GetMaxOverworldEncounterSpawns();
 
     // All mon slots are in use
-    if (CountActiveFollowMon() >= maxSpawns)
+    if (CountActiveOverworldEncounters() >= maxSpawns)
     {
         if (OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT)
         {
@@ -375,13 +375,13 @@ struct AgeSort
 static void SortOWEMonAges(void)
 {
     struct ObjectEvent *slotMon;
-    struct AgeSort array[FOLLOWMON_MAX_SPAWN_SLOTS];
+    struct AgeSort array[OWE_MAX_SPAWN_SLOTS];
     struct AgeSort current;
-    u32 numActive = CountActiveFollowMon();
+    u32 numActive = CountActiveOverworldEncounters();
     u32 count = 0;
     s32 i, j;
 
-    for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    for (i = 0; i < OWE_MAX_SPAWN_SLOTS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -434,7 +434,7 @@ void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent
         return;
 }
 
-u32 GetFollowMonObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
+u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
 {
     SetOverworldEncounterSpeciesInfo(x, y, speciesId, isShiny, isFemale, level);
     u16 graphicsId = *speciesId + OBJ_EVENT_MON;
@@ -513,10 +513,10 @@ static bool8 IsSafeToSpawnObjectEvents(void)
     return (player->currentCoords.x == player->previousCoords.x && player->currentCoords.y == player->previousCoords.y);
 }
 
-u8 CountActiveFollowMon()
+u8 CountActiveOverworldEncounters(void)
 {
     u32 count = 0;
-    for (u32 spawnSlot = 0; spawnSlot < FOLLOWMON_MAX_SPAWN_SLOTS; spawnSlot++)
+    for (u32 spawnSlot = 0; spawnSlot < OWE_MAX_SPAWN_SLOTS; spawnSlot++)
     {
         if (GetOverworldSpeciesBySpawnSlot(spawnSlot) != SPECIES_NONE)
             count++;
@@ -580,14 +580,14 @@ bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent)
 {
     return IsOverworldWildEncounter(objectEvent)
         && (objectEvent->localId <= LOCALID_OW_ENCOUNTER_END
-        && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
+        && objectEvent->localId > (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 }
 
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
 {
     return IsOverworldWildEncounter(objectEvent)
         && (objectEvent->localId > LOCALID_OW_ENCOUNTER_END
-        || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS));
+        || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 }
 
 bool32 IsSemiManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
@@ -618,7 +618,7 @@ u32 GetNewestOWEncounterLocalId(void)
     struct ObjectEvent *newest = &gObjectEvents[GetObjectEventIdByLocalId(LOCALID_OW_ENCOUNTER_END)];
     u32 i;
     
-    for (i = 0; i < FOLLOWMON_MAX_SPAWN_SLOTS; i++)
+    for (i = 0; i < OWE_MAX_SPAWN_SLOTS; i++)
     {
         slotMon = &gObjectEvents[GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(i))];
         if (OW_SPECIES(slotMon) != SPECIES_NONE)
@@ -635,8 +635,8 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 {
     // Can the last of these checks be replaced by IsOverworldWildEncounter?
     // Include a check for the encounter not being shiny or a roamer.
-    return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveFollowMon() != 0
-        && (localId <= (LOCALID_OW_ENCOUNTER_END - FOLLOWMON_MAX_SPAWN_SLOTS + 1)
+    return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveOverworldEncounters() != 0
+        && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS + 1)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
@@ -787,7 +787,7 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 
         gSpecialVar_LastTalked = wildMon->localId;
         gSpecialVar_0x8004 = OW_SPECIES(wildMon);
-        ScriptContext_SetupScript(InteractWithDynamicWildFollowMon);
+        ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
     }
 }
 
