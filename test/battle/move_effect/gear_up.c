@@ -1,7 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-TO_DO_BATTLE_TEST("TODO: Write Gear Up (Move Effect) test titles")
+TO_DO_BATTLE_TEST("Gear Up increases the Attack and Sp. Attack of the user and allies if they have Plus or Minus")
 
 AI_DOUBLE_BATTLE_TEST("AI uses Gear Up")
 {

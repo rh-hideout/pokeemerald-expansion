@@ -1,9 +1,7 @@
 #include "global.h"
 #include "test/battle.h"
 
-TO_DO_BATTLE_TEST("TODO: Write Grudge (Move Effect) test titles")
-
-SINGLE_BATTLE_TEST("Grudge depletes all pp of the move that fainted the target")
+SINGLE_BATTLE_TEST("Grudge depletes all PP of the move that fainted the target")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
@@ -27,7 +25,7 @@ SINGLE_BATTLE_TEST("Grudge depletes all pp of the move that fainted the target")
     }
 }
 
-SINGLE_BATTLE_TEST("Grudge does not depletes pp of a z-move")
+SINGLE_BATTLE_TEST("Grudge does not deplete PP of a Z-Move")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
@@ -51,3 +49,13 @@ SINGLE_BATTLE_TEST("Grudge does not depletes pp of a z-move")
         EXPECT_GT(opponent->pp[3], 0);
     }
 }
+
+TO_DO_BATTLE_TEST("Grudge depletes all PP from a Max Move's base move")
+TO_DO_BATTLE_TEST("Grudge does not activate for Struggle")
+TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Move");
+TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Sleep");
+TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Paralysis");
+TO_DO_BATTLE_TEST("Grudge's effect disappears if the user takes a new turn - Flinching");
+TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Sandstorm");
+TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Leech Seed");
+TO_DO_BATTLE_TEST("Grudge's effect doesn't trigger on indirect damage - Future Sight");
