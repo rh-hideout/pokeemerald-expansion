@@ -478,6 +478,15 @@
         "doc",
         "data"
       ]
+    },
+    {
+      "login": "shachar700",
+      "name": "shachar700",
+      "avatar_url": "https://avatars.githubusercontent.com/u/48739719?v=4",
+      "profile": "https://github.com/shachar700",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,

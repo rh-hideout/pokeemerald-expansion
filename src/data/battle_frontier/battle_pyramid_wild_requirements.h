@@ -5,9 +5,9 @@
 
 struct BattlePyramidRequirement {
     const u16 *moves; /* use moves instead of effects so we don't need to find moves with said effect in our loop */
-    u16 abilities[10];
+    enum Ability abilities[10];
     u8 nAbilities;
-    u8 type;
+    enum Type type;
     u8 nMoves;
     const u16 *evoItems;
     u8 nEvoItems;

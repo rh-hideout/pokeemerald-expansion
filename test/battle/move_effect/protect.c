@@ -406,7 +406,7 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_WIDE_GUARD, config);
+        WITH_CONFIG(CONFIG_WIDE_GUARD, config);
         ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -472,7 +472,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_QUICK_GUARD, config);
+        WITH_CONFIG(CONFIG_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

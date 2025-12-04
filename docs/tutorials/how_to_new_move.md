@@ -93,14 +93,21 @@ Contains more fundamental functions that control the flow of the battle. Functio
 ### data/battle_scripts_1.s
 Each move's effect is governed by a script defined here. For a simple example, let's look at the script for Fake Out/First Impression:
 
+TODO: New Script
 ```
-BattleScript_EffectFirstTurnOnly::
+BattleScript_EffectTaunt::
 	attackcanceler
-	jumpifnotfirstturn BattleScript_FailedFromAtkString
-	goto BattleScript_EffectHit
+	jumpifability BS_TARGET_SIDE, ABILITY_AROMA_VEIL, BattleScript_AromaVeilProtects
+	accuracycheck BattleScript_ButItFailed, ACC_CURR_MOVE
+	settaunt BattleScript_ButItFailed
+	attackanimation
+	waitanimation
+	printstring STRINGID_PKMNFELLFORTAUNT
+	waitmessage B_WAIT_TIME_LONG
+	goto BattleScript_MoveEnd
 ```
 
-`attackcanceler` is a command that covers all the cases that could cause a move to fail before it's even attempted (e.g. paralysis). And as we can tell from the commands, if it's not the first turn, we go to `BattleScript_FailedFromAtkString` which evidently causes us to print the `attackstring` ("POKEMON used MOVE") then fail ("But it failed!"). Otherwise, we go to the generic "hit" effect which is the same script for moves that just deal damage and nothing else.
+`attackcanceler` is a command that covers all cases that could cause a move to fail before it's even attempted (e.g. paralysis). The next command is a jump command. A jump command can check anything and usually comes with a jump instruction. Usually it jumps to a place from where the move should pick up because of certain conditions. The next one is an accuracy check. Accuracy checks happen after all prior move failure checks happened. The next set of commands are unique to a certain move, they are mostly the same for damaging moves but can widely differ for status moves. Lastly there is `BattleScript_MoveEnd` which the move after a succesful hit. An ability activation or specific move effect like Burn, Freeze, Absorb etc.
 
 This is the most advanced part of the ROM. There are dozens upon dozens of commands and hundreds of scripts so this guide would go on forever if I were to go into more detail. To learn how these scripts work, it's best to look at a few examples of moves you know.
 

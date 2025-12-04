@@ -81,6 +81,13 @@ enum FollowerNPCHandleEscalatorFinishTaskStates
     MOVEMENT_FINISH
 };
 
+enum FollowerNPCForcedMovementStates
+{
+    FNPC_FORCED_NONE,
+    FNPC_FORCED_FOLLOW,
+    FNPC_FORCED_STAY
+};
+
 #define FOLLOWER_NPC_FLAG_HAS_RUNNING_FRAMES    0x1
 
 #define FNPC_NONE   0

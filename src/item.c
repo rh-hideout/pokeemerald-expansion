@@ -88,6 +88,19 @@ static inline void NONNULL BagPocket_SetSlotDataPC(struct BagPocket *pocket, u32
     pocket->itemSlots[pocketPos].quantity = newSlot.quantity;
 }
 
+enum TMHMItemId GetTMHMItemIdFromMoveId(u16 move)
+{
+    if (move == MOVE_NONE)
+        return 0;
+
+    for (u16 i = 0; i < NUM_ALL_MACHINES; i++)
+    {
+        if (GetTMHMMoveId(i + 1) == move)
+            return GetTMHMItemId(i + 1);
+    }
+    return 0;
+}
+
 struct ItemSlot NONNULL BagPocket_GetSlotData(struct BagPocket *pocket, u32 pocketPos)
 {
     switch (pocket->id)
@@ -819,7 +832,7 @@ const u8 *GetItemEffect(u32 itemId)
         return gItemsInfo[SanitizeItemId(itemId)].effect;
 }
 
-u32 GetItemHoldEffect(u32 itemId)
+enum HoldEffect GetItemHoldEffect(u32 itemId)
 {
     return gItemsInfo[SanitizeItemId(itemId)].holdEffect;
 }
@@ -942,7 +955,7 @@ u32 GetItemSellPrice(u32 itemId)
     return GetItemPrice(itemId) / ITEM_SELL_FACTOR;
 }
 
-bool32 IsHoldEffectChoice(enum ItemHoldEffect holdEffect)
+bool32 IsHoldEffectChoice(enum HoldEffect holdEffect)
 {
     return holdEffect == HOLD_EFFECT_CHOICE_BAND
         || holdEffect == HOLD_EFFECT_CHOICE_SCARF

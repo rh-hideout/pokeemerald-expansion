@@ -34,20 +34,92 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness by 1 stage")
     }
 }
 
-SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute")
+SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change")
 {
     GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) {Ability(ABILITY_SIMPLE);};
+    } WHEN {
+        TURN { MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
+        MESSAGE("But it failed!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4-)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
         PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Substitute!");
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind Substitute (Gen4-)")
+{
+    GIVEN {
+        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_4);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); Ability(ABILITY_SIMPLE);}
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+        TURN { MOVE(player, MOVE_DEFOG); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Substitute!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+        MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
         MESSAGE("But it failed!");
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
-            MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Defog does not lower evasiveness if target behind Substitute (Gen5+)")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_LIGHT_SCREEN; }
+    PARAMETRIZE { move = MOVE_CELEBRATE; }
+
+    GIVEN {
+        ASSUME(CONFIG_DEFOG_EFFECT_CLEARING >= GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(4); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(5); }
+    } WHEN {
+        TURN { MOVE(opponent, move); }
+        TURN { MOVE(opponent, MOVE_SUBSTITUTE); MOVE(player, MOVE_DEFOG); }
+    } SCENE {
+        MESSAGE("The opposing Wobbuffet used Substitute!");
+        if (move == MOVE_CELEBRATE)
+        {
+            MESSAGE("But it failed!");
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+                MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+            }
+        }
+        else
+        {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+                MESSAGE("The opposing Wobbuffet's evasiveness fell!");
+            }
         }
     }
 }
@@ -338,7 +410,7 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
     PARAMETRIZE { config = GEN_5; }
     PARAMETRIZE { config = GEN_6; }
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_DEFOG_EFFECT_CLEARING, config);
+        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, config);
         ASSUME(GetMoveEffect(MOVE_HAIL) == EFFECT_HAIL);
         ASSUME(GetSpeciesType(SPECIES_GLALIE, 0) == TYPE_ICE);
         PLAYER(SPECIES_GLALIE) { Speed(4); }
@@ -423,7 +495,6 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, opponent);
         MESSAGE("Wobbuffet used Defog!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        MESSAGE("The opposing Wobbuffet's evasiveness fell!");
         MESSAGE("The opposing team's Light Screen wore off!");
     }
 }
