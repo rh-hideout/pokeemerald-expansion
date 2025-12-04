@@ -682,6 +682,7 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 
 void RemoveOldestOverworldEncounter(u8 *objectEventId)
 {
+    // include a check for oldest slot not being INVALID_SPAWN_SLOT
     u32 localId = GetLocalIdByOverworldSpawnSlot(GetOldestSlot());
     *objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[*objectEventId];
