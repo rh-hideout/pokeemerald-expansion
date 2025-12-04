@@ -10204,10 +10204,7 @@ static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 st
 
     if (!gBattleScripting.statAnimPlayed)
     {
-        if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) < GEN_5)
-            BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE_IGNORE_SUBSTITUTE, &gDisableStructs[battler], statAnimId);
-        else
-            BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE, &gDisableStructs[battler], statAnimId);
+        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE, &gDisableStructs[battler], statAnimId);
         MarkBattlerForControllerExec(battler);
         if (changeableStatsCount > 1)
             gBattleScripting.statAnimPlayed = TRUE;

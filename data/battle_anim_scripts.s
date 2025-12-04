@@ -31100,27 +31100,6 @@ gBattleAnimGeneral_StatsChange::
 	waitforvisualfinish
 	end
 
-gBattleAnimGeneral_StatsChangeBypassSubstitute::
-	createvisualtask AnimTask_IsAttackerBehindSubstitute, 2
-	jumprettrue StatChangeSubstituteForMon
-StatsChangeBypassSubstitute_Continue:
-	createvisualtask AnimTask_StatsChange, 5
-	waitforvisualfinish
-	createvisualtask AnimTask_IsAttackerBehindSubstitute, 2
-	jumprettrue StatChangeSubstituteToMon
-	end
-
-StatChangeSubstituteForMon:
-	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, TRUE
-	waitforvisualfinish
-	goto StatsChangeBypassSubstitute_Continue
-
-StatChangeSubstituteToMon:
-	createvisualtask AnimTask_SwapMonSpriteToFromSubstitute, 2, FALSE
-	waitforvisualfinish
-	end
-
-
 gBattleAnimGeneral_SubstituteFade::
 	monbg ANIM_ATTACKER
 	createvisualtask AnimTask_SubstituteFadeToInvisible, 5

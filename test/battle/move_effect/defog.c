@@ -64,7 +64,7 @@ SINGLE_BATTLE_TEST("Defog lowers evasiveness of target behind Substitute (Gen4-)
         MESSAGE("The opposing Wobbuffet used Substitute!");
         NOT MESSAGE("But it failed!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE_IGNORE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's evasiveness fell!");
     }
 }
@@ -83,7 +83,7 @@ SINGLE_BATTLE_TEST("Defog fails if target has minimum evasion stat change behind
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Substitute!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_DEFOG, player);
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE_IGNORE_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
         MESSAGE("The opposing Wobbuffet's evasiveness harshly fell!");
         MESSAGE("But it failed!");
     }

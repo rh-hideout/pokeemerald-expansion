@@ -1513,7 +1513,9 @@ BattleScript_DefogWorksAfterSubstituteCheck:
 BattleScript_DefogDoAnim::
 	attackanimation
 	waitanimation
+	call BattleScript_SwapFromSubstitute
 	statbuffchange BS_TARGET, STAT_CHANGE_ALLOW_PTR, BattleScript_DefogTryHazards
+	call BattleScript_SwapToSubstitute
 BattleScript_DefogPrintString::
 	printfromtable gStatDownStringIds
 	waitmessage B_WAIT_TIME_LONG
