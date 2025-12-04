@@ -5956,8 +5956,10 @@ BattleScript_IllusionOffEnd3::
 
 BattleScript_IllusionOff::
 	setspriteignore0hp TRUE
+	call BattleScript_SwapFromSubstitute
 	playanimation BS_SCRIPTING, B_ANIM_ILLUSION_OFF
 	waitanimation
+	call BattleScript_SwapToSubstitute
 	updatenick
 	waitstate
 	setspriteignore0hp FALSE
@@ -8861,4 +8863,22 @@ BattleScript_NaturePowerAttackstring::
 	setcalledmove
 	printstring STRINGID_NATUREPOWERTURNEDINTO
 	waitmessage B_WAIT_TIME_LONG
+	return
+
+BattleScript_SwapFromSubstitute::
+	jumpifvolatile BS_SCRIPTING, VOLATILE_SUBSTITUTE, BattleScript_SwapFromSubstituteContinue
+	goto BattleScript_SwapFromSubstituteReturn
+BattleScript_SwapFromSubstituteContinue:
+	playanimation BS_SCRIPTING, B_ANIM_SWAP_FROM_SUBSTITUTE
+	waitanimation
+BattleScript_SwapFromSubstituteReturn:
+	return
+
+BattleScript_SwapToSubstitute::
+	jumpifvolatile BS_SCRIPTING, VOLATILE_SUBSTITUTE, BattleScript_SwapToSubstituteContinue
+	goto BattleScript_SwapToSubstituteReturn
+BattleScript_SwapToSubstituteContinue:
+	playanimation BS_SCRIPTING, B_ANIM_SWAP_TO_SUBSTITUTE
+	waitanimation
+BattleScript_SwapToSubstituteReturn:
 	return
