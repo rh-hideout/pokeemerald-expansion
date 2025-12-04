@@ -468,6 +468,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "leo60228",
+      "name": "leo60228",
+      "avatar_url": "https://avatars.githubusercontent.com/u/8355305?v=4",
+      "profile": "https://vriska.dev",
+      "contributions": [
+        "doc",
+        "data"
+      ]
     }
   ],
   "contributorsPerLine": 7,

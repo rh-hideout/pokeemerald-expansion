@@ -194,9 +194,9 @@
  *         ASSUME(GetMoveEffect(MOVE_POISON_STING) == EFFECT_POISON_HIT);
  *     }
  *
- * SINGLE_BATTLE_TEST(name, results...), DOUBLE_BATTLE_TEST(name, results...), MULTI_BATTLE_TEST(name, results...), 
+ * SINGLE_BATTLE_TEST(name, results...), DOUBLE_BATTLE_TEST(name, results...), MULTI_BATTLE_TEST(name, results...),
  * TWO_VS_ONE_BATTLE_TEST(name, results...), and ONE_VS_TWO_BATTLE_TEST(name, results...)
- * Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with 
+ * Define single-, double-, 2v2-multi-, 2v1-multi-, and 1v2- battles. The names should start with
  * the name of the mechanic being tested so that it is easier to run all the related tests. results contains variable
  * declarations to be placed into the `results` array which is available in tests using `PARAMETRIZE` commands.
  * The main differences for doubles, 2v2, 2v1, and 1v2 are:
@@ -204,7 +204,7 @@
  * - Instead of player and opponent there is playerLeft, playerRight,
  *   opponentLeft, and opponentRight.
  *
- * AI_SINGLE_BATTLE_TEST(name, results...), AI_DOUBLE_BATTLE_TEST(name, results...), 
+ * AI_SINGLE_BATTLE_TEST(name, results...), AI_DOUBLE_BATTLE_TEST(name, results...),
  * AI_MULTI_BATTLE_TEST(name, results...), AI_TWO_VS_ONE_BATTLE_TEST(name, results...), and AI_ONE_VS_TWO_BATTLE_TEST(name, results...)
  * Define battles where opponent mons are controlled by AI, the same that runs
  * when battling regular Trainers. The flags for AI should be specified by
@@ -334,34 +334,34 @@
  * Note if Moves is specified then MOVE will not automatically add moves
  * to the moveset.
  *
- * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST, 
- * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST, 
+ * For tests using MULTI_BATTLE_TEST, AI_MULTI_BATTLE_TEST, TWO_VS_ONE_BATTLE_TEST,
+ * AI_TWO_VS_ONE_BATTLE_TEST, ONE_VS_TWO_BATTLE_TEST, and AI_ONE_VS_TWO_BATTLE_TEST,
  * the below must be used instead of PLAYER(species) and OPPONENT(species).
- * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and 
- * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's, 
+ * MULTI_PLAYER(species), MULTI_PARTNER(species), MULTI_OPPONENT_A(species), and
+ * MULTI_OPPONENT_B(species) Adds the species to the player's, player partner's,
  * opponent A's, or opponent B's party, respectively.
  * Pokemon can be customised as per the guidance for PLAYER(species) and OPPONENT(species).
- * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT, 
+ * The functions assign the Pokémon to the party of the trainer at B_POSITION_PLAYER_LEFT,
  * B_POSITION_PLAYER_RIGHT, B_POSITION_OPPONENT_LEFT, and B_POSITION_OPPONENT_RIGHT, respectively.
  * MULTI_PLAYER(species) and MULTI_OPPONENT_A(species) set Pokémon starting at party index 0,
- * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party 
+ * while MULTI_PARTNER(species) and MULTI_OPPONENT_B(species) set Pokémon starting at party
  * index 3.
  * For ONE_VS_TWO tests, MULTI_PLAYER(species) must be used for all player-side Pokémon,
  * and for TWO_VS_ONE tests, MULTI_OPPONENT_A(species) must be used for all opponent-side
- * Pokémon. 
+ * Pokémon.
  * All MULTI_PLAYER(species) Pokémon must be set before any MULTI_PARTNER(species) Pokémon,
  * and all MULTI_OPPONENT_A(species) must be set before any MULTI_OPPONENT_B(species) Pokémon,
  * else Pokémon will be set in the incorrect parties in the test.
  * Note where a side in a test has two trainers, the test setup manages the assigning of correct
- * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A 
- * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B 
+ * multi-party orders, therefore when using functions such as SEND_OUT, Player and Opponent A
+ * Pokémon may be referenced using indexes 0, 1, and 2, and Player's Partner and Opponent B
  * Pokémon may be referenced using indexes 3, 4, and 5.
  *
  * AI_FLAGS
  * Specifies which AI flags are run for all battlers during the test. Has use only for AI tests.
  * The most common combination is  AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT)
  * which is the general 'smart' AI.
- * 
+ *
  * BATTLER_AI_FLAGS
  * Specifies additional AI flags to be applied to specific battlers (battler 0/1/2/3). Has use only for AI tests.
  * Must be used strictly after AI_FLAGS(flags), which overwrites all existing flags.
@@ -567,7 +567,19 @@
 #define MAX_QUEUED_EVENTS 30
 #define MAX_EXPECTED_ACTIONS 10
 
-enum { BATTLE_TEST_SINGLES, BATTLE_TEST_DOUBLES, BATTLE_TEST_WILD, BATTLE_TEST_AI_SINGLES, BATTLE_TEST_AI_DOUBLES, BATTLE_TEST_MULTI, BATTLE_TEST_AI_MULTI, BATTLE_TEST_TWO_VS_ONE, BATTLE_TEST_AI_TWO_VS_ONE, BATTLE_TEST_ONE_VS_TWO, BATTLE_TEST_AI_ONE_VS_TWO };
+enum {
+    BATTLE_TEST_SINGLES,
+    BATTLE_TEST_DOUBLES,
+    BATTLE_TEST_WILD,
+    BATTLE_TEST_MULTI,
+    BATTLE_TEST_TWO_VS_ONE,
+    BATTLE_TEST_ONE_VS_TWO,
+    BATTLE_TEST_AI_SINGLES,
+    BATTLE_TEST_AI_DOUBLES,
+    BATTLE_TEST_AI_MULTI,
+    BATTLE_TEST_AI_TWO_VS_ONE,
+    BATTLE_TEST_AI_ONE_VS_TWO
+};
 
 typedef void (*SingleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *);
 typedef void (*DoubleBattleTestFunction)(void *, const u32, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *, struct BattlePokemon *);

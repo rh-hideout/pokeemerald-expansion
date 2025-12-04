@@ -3,6 +3,7 @@
 
 // should they be included here or included individually by every file?
 #include "constants/battle_end_turn.h"
+#include "constants/battle_switch_in.h"
 #include "constants/abilities.h"
 #include "constants/battle.h"
 #include "constants/form_change_types.h"
@@ -94,16 +95,15 @@ struct DisableStruct
     u16 disableTimer;
     u16 encoreTimer;
     u16 perishSongTimer;
-    u16 rolloutTimer;
-    u16 rolloutTimerStartValue;
+    u8 rolloutTimer;
     u16 tauntTimer;
     u8 furyCutterCounter;
+    u8 metronomeItemCounter;
     u8 battlerPreventingEscape;
     u8 battlerWithSureHit;
     u8 isFirstTurn;
     u8 mimickedMoves:4;
-    u8 chargeTimer:4;
-    u8 rechargeTimer;
+    u8 rechargeTimer:4;
     u8 autotomizeCount;
     u16 slowStartTimer;
     u16 embargoTimer;
@@ -134,11 +134,11 @@ struct DisableStruct
     u8 neutralizingGas:1;
     u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
     u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
-    u8 hazardsDone:1;
     u8 endured:1;
     u8 tryEjectPack:1;
     u8 octolockedBy:3;
-    u8 padding:5;
+    u8 paradoxBoostedStat:4;
+    u8 padding2:2;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -161,17 +161,17 @@ struct ProtectStruct
     u32 disableEjectPack:1;
     u32 pranksterElevated:1;
     u32 quickDraw:1;
-    u32 beakBlastCharge:1;
     u32 quash:1;
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
     u16 usedAllySwitch:1;
+    u16 lashOutAffected:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
-    u16 lashOutAffected:1;
     u16 assuranceDoubled:1;
     u16 myceliumMight:1;
+    u16 forcedSwitch:1;
     u16 padding:10;
     // End of 16-bit bitfield
     u16 physicalDmg;
@@ -193,27 +193,23 @@ struct SpecialStatus
     u8 afterYou:1;
     u8 enduredDamage:1;
     u8 dancerUsedMove:1;
-    u8 padding:1;
+    u8 rototillerAffected:1;  // to be affected by rototiller
     // End of byte
-    u8 switchInAbilityDone:1;
+    u8 criticalHit:1;
     u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
-    u8 announceNeutralizingGas:1;   // See Cmd_switchineffects
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
+    u8 padding2:1;
     // End of byte
-    u8 gemParam;
-    // End of byte
+    u8 gemParam:7;
     u8 gemBoost:1;
-    u8 rototillerAffected:1;  // to be affected by rototiller
+    // End of byte
     u8 parentalBondState:2;
     u8 multiHitOn:1;
     u8 distortedTypeMatchups:1;
     u8 teraShellAbilityDone:1;
-    u8 criticalHit:1;
-    // End of byte
     u8 dancerOriginalTarget:3;
-    u8 unused:5;
     // End of byte
 };
 
@@ -329,17 +325,21 @@ struct AiLogicData
     u8 monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     struct SwitchinCandidate switchinCandidate; // Struct used for deciding which mon to switch to in battle_ai_switch_items.c
-    u8 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
-    u8 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
-    u8 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
-    u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
-    u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
-    u8 aiCalcInProgress:1;
-    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
-    u8 padding1:1;
-    u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
-    u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
+    u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
+    
+    // Flags
+    u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
+    u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
+    u32 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
+    u32 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
+    u32 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
+    u32 aiCalcInProgress:1;
+    u32 predictingMove:1; // Determines whether AI will use move predictions this turn or not
+    u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
+    u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
+    u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
+    u32 padding2:19;
 };
 
 struct AiThinkingStruct
@@ -589,8 +589,11 @@ struct BattlerState
     u32 wasAboveHalfHp:1; // For Berserk, Emergency Exit, Wimp Out and Anger Shell.
     u32 commanderSpecies:11;
     u32 selectionScriptFinished:1;
-    u32 padding:3;
+    u32 lastMoveTarget:3; // The last target on which each mon used a move, for the sake of Instruct
     // End of Word
+    u16 hpOnSwitchout;
+    u16 switchIn:1;
+    u16 padding:15;
 };
 
 struct PartyState
@@ -619,9 +622,11 @@ struct EventStates
     enum FirstTurnEventsStates beforeFristTurn:8;
     enum FaintedActions faintedAction:8;
     enum BattlerId faintedActionBattler:4;
-    enum MoveSuccessOrder atkCanceller:8;
+    enum MoveSuccessOrder atkCanceler:8;
     enum BattleIntroStates battleIntro:8;
-    u32 padding:24;
+    enum SwitchInEvents switchIn:8;
+    u32 battlerSwitchIn:8; // SwitchInFirstEventBlock, SwitchInSecondEventBlock
+    u32 padding:8;
 };
 
 // Cleared at the beginning of the battle. Fields need to be cleared when needed manually otherwise.
@@ -670,17 +675,15 @@ struct BattleStruct
     u8 wallyWaitFrames;
     u8 wallyMoveFrames;
     u16 lastTakenMove[MAX_BATTLERS_COUNT]; // Last move that a battler was hit with.
-    u16 hpOnSwitchout[NUM_BATTLE_SIDES];
     u32 savedBattleTypeFlags;
     u16 abilityPreventingSwitchout;
     u8 hpScale;
     u16 synchronizeMoveEffect;
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
-    u8 multipleSwitchInState:2;
-    u8 multipleSwitchInCursor:3;
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 multipleSwitchInSortedBattlers[MAX_BATTLERS_COUNT];
+    u8 unused:5;
+    u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
     u16 choicedMove[MAX_BATTLERS_COUNT];
@@ -691,20 +694,20 @@ struct BattleStruct
         struct LinkBattlerHeader linkBattlerHeader;
         struct BattleVideo battleVideo;
     } multiBuffer;
-    u8 startingStatus; // status to apply at battle start. defined in constants/battle.h
+    u32 startingStatus; // statuses to apply at battle start. defined in constants/battle.h
     u8 battlerKOAnimsRunning:3;
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
-    u8 padding1:1;
+    u8 battlersSorted:1; // To avoid unnessasery computation
     u16 startingStatusTimer;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
-    s8 arenaMindPoints[2];
-    s8 arenaSkillPoints[2];
-    u16 arenaStartHp[2];
+    s8 arenaMindPoints[NUM_BATTLE_SIDES];
+    s8 arenaSkillPoints[NUM_BATTLE_SIDES];
+    u16 arenaStartHp[NUM_BATTLE_SIDES];
     u8 arenaLostPlayerMons; // Bits for party member, lost as in referee's decision, not by fainting.
     u8 arenaLostOpponentMons;
     u8 debugBattler;
@@ -720,12 +723,10 @@ struct BattleStruct
     struct BattleGimmickData gimmick;
     const u8 *trainerSlideMsg;
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
-    u8 lastMoveTarget[MAX_BATTLERS_COUNT]; // The last target on which each mon used a move, for the sake of Instruct
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
-    u8 metronomeItemCounter[MAX_BATTLERS_COUNT]; // For Metronome, number of times the same moves has been SUCCESFULLY used.
     u8 quickClawBattlerId;
     struct LostItem itemLost[NUM_BATTLE_SIDES][PARTY_SIZE];  // Pokemon that had items consumed or stolen (two bytes per party member per side)
     u8 blunderPolicy:1; // should blunder policy activate
@@ -740,7 +741,7 @@ struct BattleStruct
     u8 moveInfoSpriteId; // move info, window gfx
     u8 skyDropTargets[MAX_BATTLERS_COUNT]; // For Sky Drop, to account for if multiple Pokemon use Sky Drop in a double battle.
     // When using a move which hits multiple opponents which is then bounced by a target, we need to make sure, the move hits both opponents, the one with bounce, and the one without.
-    u16 beatUpSpecies[PARTY_SIZE];
+    u16 beatUpSpecies[PARTY_SIZE]; // Species for Gen5+ Beat Up, otherwise party indexes
     u8 attackerBeforeBounce:2;
     u8 beatUpSlot:3;
     u8 pledgeMove:1;
@@ -766,7 +767,6 @@ struct BattleStruct
     u16 prevTurnSpecies[MAX_BATTLERS_COUNT]; // Stores species the AI has in play at start of turn
     s16 passiveHpUpdate[MAX_BATTLERS_COUNT]; // non-move damage and healing
     s16 moveDamage[MAX_BATTLERS_COUNT];
-    s16 critChance[MAX_BATTLERS_COUNT];
     u16 moveResultFlags[MAX_BATTLERS_COUNT];
     u8 missStringId[MAX_BATTLERS_COUNT];
     enum CalcDamageState noResultString[MAX_BATTLERS_COUNT];
@@ -776,7 +776,7 @@ struct BattleStruct
     u8 printedStrongWindsWeakenedAttack:1;
     u8 numSpreadTargets:2;
     u8 noTargetPresent:1;
-    u8 padding2:1;
+    u8 moldBreakerActive:1;
     struct MessageStatus slideMessageStatus;
     u8 trainerSlideSpriteIds[MAX_BATTLERS_COUNT];
     u8 hazardsQueue[NUM_BATTLE_SIDES][HAZARDS_MAX_COUNT];
@@ -788,7 +788,7 @@ struct BattleStruct
     u16 flingItem;
     u8 incrementEchoedVoice:1;
     u8 echoedVoiceCounter:3;
-    u8 padding3:4;
+    u8 padding4:4;
 };
 
 struct AiBattleData
@@ -908,7 +908,7 @@ struct BattleScripting
     u8 specialTrainerBattleType;
     bool8 monCaught;
     s32 savedDmg;
-    u16 savedMoveEffect; // For moves hitting multiple targets.
+    u16 unused_0x2c;
     u16 moveEffect;
     u16 unused_0x30;
     u8 illusionNickHack; // To properly display nick in STRINGID_ENEMYABOUTTOSWITCHPKMN.
@@ -1046,6 +1046,7 @@ extern u16 gBattlerPartyIndexes[MAX_BATTLERS_COUNT];
 extern u8 gBattlerPositions[MAX_BATTLERS_COUNT];
 extern u8 gActionsByTurnOrder[MAX_BATTLERS_COUNT];
 extern u8 gBattlerByTurnOrder[MAX_BATTLERS_COUNT];
+extern u8 gBattlersBySpeed[MAX_BATTLERS_COUNT];
 extern u8 gCurrentTurnActionNumber;
 extern u8 gCurrentActionFuncId;
 extern struct BattlePokemon gBattleMons[MAX_BATTLERS_COUNT];

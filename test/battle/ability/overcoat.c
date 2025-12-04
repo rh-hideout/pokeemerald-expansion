@@ -71,17 +71,29 @@ DOUBLE_BATTLE_TEST("Overcoat blocks damage from hail")
     }
 }
 
-SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect")
+SINGLE_BATTLE_TEST("Overcoat blocks Effect Spore's effect (Gen6+)")
 {
+    u32 config;
+    PARAMETRIZE { config = GEN_5; }
+    PARAMETRIZE { config = GEN_6; }
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_POWDER_OVERCOAT, config);
         PLAYER(SPECIES_PINECO) {Ability(ABILITY_OVERCOAT);}
         OPPONENT(SPECIES_SHROOMISH) {Ability(ABILITY_EFFECT_SPORE);}
     } WHEN {
         TURN { MOVE(player, MOVE_TACKLE, WITH_RNG(RNG_EFFECT_SPORE, 1)); }
     } SCENE {
         MESSAGE("Pineco used Tackle!");
-        NOT ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
+        if (config == GEN_6) {
+            NOT ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
+        }
+        else {
+            ABILITY_POPUP(opponent, ABILITY_EFFECT_SPORE);
+        }
     } THEN {
-        EXPECT_EQ(player->status1, 0);
+        if (config == GEN_6)
+            EXPECT_EQ(player->status1, 0);
+        else
+            EXPECT_NE(player->status1, 0);
     }
 }
