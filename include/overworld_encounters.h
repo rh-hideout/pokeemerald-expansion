@@ -29,7 +29,6 @@ void LoadFollowMonData(void);
 void UpdateOverworldEncounters(void);
 u32 GetOldestSlot(void);
 void CreateOverworldWildEncounter(void);
-bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider);
 void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent);
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent);
 u32 GetFollowMonObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level);
@@ -46,5 +45,6 @@ bool32 CanRemoveOverworldEncounter(u32 localId);
 void RemoveOldestOverworldEncounter(u8 *objectEventId);
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent);
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 
 #endif // GUARD_FOLLOWMON_H

@@ -33,7 +33,6 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 static bool8 IsSafeToSpawnObjectEvents(void);
 static const struct WildPokemonInfo *GetActiveEncounterTable(bool8 onWater);
 static bool8 CheckForObjectEventAtLocation(s16 x, s16 y);
-static void OverworldEncounters_ProcessMonInteraction(void);
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
@@ -67,8 +66,6 @@ void UpdateOverworldEncounters(void)
     u16 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
-
-    OverworldEncounters_ProcessMonInteraction();
 
     if (sOWESpawnCountdown != 0)
     {
@@ -365,45 +362,6 @@ void CreateOverworldWildEncounter(void)
     SetMonData(&gEnemyParty[0], MON_DATA_IS_SHINY, &shiny);
     RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     BattleSetup_StartWildBattle();
-}
-
-static void OverworldEncounters_ProcessMonInteraction(void)
-{
-    u8 i;
-    struct ObjectEvent *object;
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    
-    for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        object = &gObjectEvents[i];
-        if (IsOverworldWildEncounter(object) && object->active && object != player
-            && ((object->currentCoords.x == player->currentCoords.x && object->currentCoords.y == player->currentCoords.y)
-            || (object->previousCoords.x == player->currentCoords.x && object->previousCoords.y == player->currentCoords.y))
-            && AreElevationsCompatible(object->currentElevation, player->currentElevation))
-        {
-            gSpecialVar_LastTalked = object->localId;
-            ScriptContext_SetupScript(InteractWithDynamicWildFollowMon);
-        }
-    }
-}
-
-bool32 OverworldEncounter_IsCollisionExempt(struct ObjectEvent* obstacle, struct ObjectEvent* collider)
-{
-    if (!OW_WILD_ENCOUNTERS_OVERWORLD)
-        return FALSE;
-    
-    // The player only is exempt from collisions with OW Encounters when not using a repel or the DexNav is inactive.
-
-    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    bool32 forcePlayerCollision = (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING));
-
-    if (collider == player && IsOverworldWildEncounter(obstacle) && !forcePlayerCollision)
-        return TRUE;
-
-    if (obstacle == player && IsOverworldWildEncounter(collider) && !forcePlayerCollision)
-        return TRUE;
-
-    return FALSE;
 }
 
 struct AgeSort
@@ -748,6 +706,80 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
     objectEvent->sOverworldEncounterLevel = level;
     return graphicsId;
+}
+
+static u32 DetermineNPCDirection(struct ObjectEvent *player, struct ObjectEvent *npc)
+{
+    // Can be moved out of here and consolidated with FollowerNPC version of function.
+    s32 delta_x = npc->currentCoords.x - player->currentCoords.x;
+    s32 delta_y = npc->currentCoords.y - player->currentCoords.y;
+
+    if (delta_x < 0)
+        return DIR_EAST;
+    else if (delta_x > 0)
+        return DIR_WEST;
+
+    if (delta_y < 0)
+        return DIR_SOUTH;
+    else if (delta_y > 0)
+        return DIR_NORTH;
+
+    return DIR_NONE;
+}
+
+void ScriptFaceLastTalked(struct ScriptContext *ctx)
+{
+    // Can be moved out of here and consolidated with FollowerNPC version of function.
+    u32 playerDirection, npcDirection;
+    struct ObjectEvent *player, *npc;
+    npc = &gObjectEvents[gPlayerAvatar.objectEventId];
+    npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+
+    if (npc->invisible == FALSE)
+    {
+        playerDirection = DetermineNPCDirection(player, npc);
+        npcDirection = playerDirection;
+
+        //Flip direction.
+        switch (playerDirection) 
+        {
+        case DIR_NORTH:
+            playerDirection = DIR_SOUTH;
+            break;
+        case DIR_SOUTH:
+            playerDirection = DIR_NORTH;
+            break;
+        case DIR_WEST:
+            playerDirection = DIR_EAST;
+            break;
+        case DIR_EAST:
+            playerDirection = DIR_WEST;
+            break;
+        }
+
+        ObjectEventTurn(player, playerDirection);
+        ObjectEventTurn(npc, npcDirection);
+    }
+}
+
+void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
+{
+    // The only automatically interacts with an OW Encounter when;
+    // Not using a repel or the DexNav is inactive.
+    if (/* VarGet(VAR_REPEL_STEP_COUNT) > 0 || */ FlagGet(DN_FLAG_SEARCHING))
+        return;
+
+    bool32 playerIsCollider = (collider->isPlayer && IsOverworldWildEncounter(obstacle));
+    bool32 playerIsObstacle = (obstacle->isPlayer && IsOverworldWildEncounter(collider));
+
+    if (playerIsCollider || playerIsObstacle)
+    {
+        struct ObjectEvent *wildMon = playerIsCollider ? obstacle : collider;
+
+        gSpecialVar_LastTalked = wildMon->localId;
+        gSpecialVar_0x8004 = OW_SPECIES(wildMon);
+        ScriptContext_SetupScript(InteractWithDynamicWildFollowMon);
+    }
 }
 
 #undef sOverworldEncounterLevel
