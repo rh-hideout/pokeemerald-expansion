@@ -710,7 +710,6 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
 
 static u32 DetermineNPCDirection(struct ObjectEvent *player, struct ObjectEvent *npc)
 {
-    // Can be moved out of here and consolidated with FollowerNPC version of function.
     s32 delta_x = npc->currentCoords.x - player->currentCoords.x;
     s32 delta_y = npc->currentCoords.y - player->currentCoords.y;
 
@@ -732,7 +731,7 @@ void ScriptFaceLastTalked(struct ScriptContext *ctx)
     // Can be moved out of here and consolidated with FollowerNPC version of function.
     u32 playerDirection, npcDirection;
     struct ObjectEvent *player, *npc;
-    npc = &gObjectEvents[gPlayerAvatar.objectEventId];
+    player = &gObjectEvents[gPlayerAvatar.objectEventId];
     npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
 
     if (npc->invisible == FALSE)
