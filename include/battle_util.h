@@ -156,7 +156,7 @@ enum MoveCanceler
 
 extern const struct TypePower gNaturalGiftTable[];
 
-struct BattleMoveContext
+struct BattleContext
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
@@ -185,11 +185,12 @@ struct BattleMoveContext
     u32 padding:25;
 };
 
-struct BattleContext
+// Helper struct to keep the arg list small and prevent constant recalculations of abilities/hold effects.
+struct BattleCalcValues
 {
     u32 battlerAtk:3;
     u32 battlerDef:3;
-    u32 currentMove:16;
+    u32 move:16;
     u32 padding:10;
     enum Ability abilities[MAX_BATTLERS_COUNT];
     enum HoldEffect holdEffects[MAX_BATTLERS_COUNT];
@@ -265,7 +266,7 @@ bool32 IsAbilityAndRecord(u32 battler, enum Ability battlerAbility, enum Ability
 u32 DoEndTurnEffects(void);
 bool32 HandleFaintedMonActions(void);
 void TryClearRageAndFuryCutter(void);
-enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleMoveContext *ctx);
+enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx);
 bool32 HasNoMonsToSwitch(u32 battler, u8 partyIdBattlerOn1, u8 partyIdBattlerOn2);
 bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability);
 bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag);
@@ -305,13 +306,13 @@ bool32 IsMoveMakingContact(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
 bool32 IsBattlerGrounded(u32 battler, enum Ability ability, enum HoldEffect holdEffect);
 u32 GetMoveSlot(u16 *moves, u32 move);
 u32 GetBattlerWeight(u32 battler);
-s32 CalcCritChanceStage(struct BattleMoveContext *ctx);
-s32 CalcCritChanceStageGen1(struct BattleMoveContext *ctx);
-s32 CalculateMoveDamage(struct BattleMoveContext *ctx);
-s32 CalculateMoveDamageVars(struct BattleMoveContext *ctx);
-s32 DoFixedDamageMoveCalc(struct BattleMoveContext *ctx);
-s32 ApplyModifiersAfterDmgRoll(struct BattleMoveContext *ctx, s32 dmg);
-uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleMoveContext *ctx);
+s32 CalcCritChanceStage(struct BattleContext *ctx);
+s32 CalcCritChanceStageGen1(struct BattleContext *ctx);
+s32 CalculateMoveDamage(struct BattleContext *ctx);
+s32 CalculateMoveDamageVars(struct BattleContext *ctx);
+s32 DoFixedDamageMoveCalc(struct BattleContext *ctx);
+s32 ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg);
+uq4_12_t CalcTypeEffectivenessMultiplier(struct BattleContext *ctx);
 uq4_12_t CalcPartyMonTypeEffectivenessMultiplier(u16 move, u16 speciesDef, enum Ability abilityDef);
 uq4_12_t GetTypeModifier(enum Type atkType, enum Type defType);
 uq4_12_t GetOverworldTypeEffectiveness(struct Pokemon *mon, enum Type moveType);

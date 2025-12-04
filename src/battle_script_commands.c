@@ -1118,7 +1118,7 @@ u32 NumFaintedBattlersByAttacker(u32 battlerAtk)
     return numMonsFainted;
 }
 
-bool32 IsPowderMoveBlocked(struct BattleMoveContext *ctx)
+bool32 IsPowderMoveBlocked(struct BattleContext *ctx)
 {
     if (!IsPowderMove(ctx->move)
      || ctx->battlerAtk == ctx->battlerDef
@@ -1155,7 +1155,7 @@ static void Cmd_attackcanceler(void)
         return;
     }
 
-    struct BattleMoveContext ctx = {0};
+    struct BattleContext ctx = {0};
     ctx.battlerAtk = gBattlerAttacker;
     ctx.battlerDef = gBattlerTarget;
     ctx.move = gCurrentMove;
@@ -1527,7 +1527,7 @@ static void AccuracyCheck(bool32 recalcDragonDarts, const u8 *nextInstr, const u
 
                 if (GetMovePower(move) != 0)
                 {
-                    struct BattleMoveContext ctx = {0};
+                    struct BattleContext ctx = {0};
                     ctx.battlerAtk = gBattlerAttacker;
                     ctx.battlerDef = battlerDef;
                     ctx.move = move;
@@ -1591,7 +1591,7 @@ static void Cmd_critcalc(void)
     gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
-static inline void CalculateAndSetMoveDamage(struct BattleMoveContext *ctx)
+static inline void CalculateAndSetMoveDamage(struct BattleContext *ctx)
 {
     SetDynamicMoveCategory(gBattlerAttacker, ctx->battlerDef, gCurrentMove);
     ctx->isCrit = gSpecialStatuses[ctx->battlerDef].criticalHit;
@@ -1618,7 +1618,7 @@ static void Cmd_damagecalc(void)
 
     u32 moveTarget = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
 
-    struct BattleMoveContext ctx = {0};
+    struct BattleContext ctx = {0};
     ctx.battlerAtk = gBattlerAttacker;
     ctx.move = gCurrentMove;
     ctx.chosenMove = gChosenMove;
@@ -1655,7 +1655,7 @@ static void Cmd_typecalc(void)
 
     if (!IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove))) // Handled in CANCELER_MULTI_TARGET_MOVES for Spread Moves
     {
-        struct BattleMoveContext ctx = {0};
+        struct BattleContext ctx = {0};
         ctx.battlerAtk = gBattlerAttacker;
         ctx.battlerDef = gBattlerTarget;
         ctx.move = gCurrentMove;
@@ -15123,22 +15123,22 @@ void BS_TryQuash(void)
     // If the above condition is not true, it means we are faster than the foe, so we can set the quash bit
     gProtectStructs[gBattlerTarget].quash = TRUE;
 
-    struct BattleContext ctx = {0};
+    struct BattleCalcValues calcValues = {0};
     for (i = 0; i < gBattlersCount; i++)
     {
-        ctx.abilities[i] = GetBattlerAbility(i);
-        ctx.holdEffects[i] = GetBattlerHoldEffect(i);
+        calcValues.abilities[i] = GetBattlerAbility(i);
+        calcValues.holdEffects[i] = GetBattlerHoldEffect(i);
     }
     // this implementation assumes turn order is correct when using Quash
     i = GetBattlerTurnOrderNum(gBattlerTarget);
     for (j = i + 1; j < gBattlersCount; j++)
     {
-        ctx.battlerAtk = gBattlerByTurnOrder[i];
-        ctx.battlerDef = gBattlerByTurnOrder[j];
+        calcValues.battlerAtk = gBattlerByTurnOrder[i];
+        calcValues.battlerDef = gBattlerByTurnOrder[j];
 
         // Gen 7- config makes target go last so that the order of quash targets is kept for the correct turn order
         // Gen 8+ config alters Turn Order of the target according to speed, dynamic speed should handle the rest
-        if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(&ctx, FALSE) == -1)
+        if (B_QUASH_TURN_ORDER < GEN_8 || GetWhichBattlerFaster(&calcValues, FALSE) == -1)
             SwapTurnOrder(i, j);
         else
             break;

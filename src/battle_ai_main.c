@@ -3007,15 +3007,15 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
 static s32 AI_GetWhichBattlerFasterOrTies(u32 battlerAtk, u32 battlerDef, bool32 ignoreChosenMoves)
 {
-    struct BattleContext ctx = {0};
-    ctx.battlerAtk = battlerAtk;
-    ctx.battlerDef = battlerDef;
-    ctx.abilities[battlerAtk]  = gAiLogicData->abilities[battlerAtk];
-    ctx.abilities[battlerDef]  = gAiLogicData->abilities[battlerDef];
-    ctx.holdEffects[battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
-    ctx.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
+    struct BattleCalcValues calcValues = {0};
+    calcValues.battlerAtk = battlerAtk;
+    calcValues.battlerDef = battlerDef;
+    calcValues.abilities[battlerAtk]  = gAiLogicData->abilities[battlerAtk];
+    calcValues.abilities[battlerDef]  = gAiLogicData->abilities[battlerDef];
+    calcValues.holdEffects[battlerAtk] = gAiLogicData->holdEffects[battlerAtk];
+    calcValues.holdEffects[battlerDef] = gAiLogicData->holdEffects[battlerDef];
 
-    return GetWhichBattlerFasterOrTies(&ctx, ignoreChosenMoves);
+    return GetWhichBattlerFasterOrTies(&calcValues, ignoreChosenMoves);
 }
 
 static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
