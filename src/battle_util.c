@@ -2998,8 +2998,7 @@ enum MoveCanceler AtkCanceler_MoveSuccessOrder(struct BattleContext *ctx)
     while (gBattleStruct->eventState.atkCanceler < CANCELER_END && effect == MOVE_STEP_SUCCESS)
     {
         effect = sMoveSuccessOrderCancelers[gBattleStruct->eventState.atkCanceler](ctx);
-        if (effect == MOVE_STEP_FAILURE)
-            gBattleStruct->unableToUseMove = TRUE;
+        gBattleStruct->unableToUseMove = effect == MOVE_STEP_FAILURE;
         gBattleStruct->eventState.atkCanceler++;
     }
 
