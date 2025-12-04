@@ -7929,7 +7929,7 @@ static inline u32 CalcDefenseStat(struct DamageContext *ctx)
     }
 
     // Self-destruct / Explosion cut defense in half
-    if (B_EXPLOSION_DEFENSE < GEN_5 && IsExplosionEffect(moveEffect))
+    if (GetGenConfig(CONFIG_EXPLOSION_DEFENSE) < GEN_5 && IsExplosionEffect(moveEffect))
         defStat /= 2;
 
     // critical hits ignore positive stat changes
