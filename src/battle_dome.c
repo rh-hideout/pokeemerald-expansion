@@ -5133,8 +5133,7 @@ static u16 GetWinningMove(int winnerTournamentId, int loserTournamentId, u8 roun
                 movePower = 40;
             else if (movePower == 1)
                 movePower = 60;
-            else if (B_EXPLOSION_DEFENSE < GEN_5
-                && (effect == EFFECT_EXPLOSION || EFFECT_MISTY_EXPLOSION))
+            else if (B_EXPLOSION_DEFENSE < GEN_5 && (IsExplosionEffect(effect)))
                 movePower /= 2;
 
             for (k = 0; k < FRONTIER_PARTY_SIZE; k++)
