@@ -3741,19 +3741,15 @@ static void DoBattleIntro(void)
 
             // Try to set a status to start the battle with
             gBattleStruct->startingStatus = 0;
-            if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS && GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB))
+            if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
-                gBattleStruct->startingStatus = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
+                gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
+                gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
                 gBattleStruct->startingStatusTimer = 0; // infinite
             }
-            else if (gBattleTypeFlags & BATTLE_TYPE_TRAINER && GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA))
+            if (B_VAR_STARTING_STATUS != 0)
             {
-                gBattleStruct->startingStatus = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                gBattleStruct->startingStatusTimer = 0; // infinite
-            }
-            else if (B_VAR_STARTING_STATUS != 0)
-            {
-                gBattleStruct->startingStatus = VarGet(B_VAR_STARTING_STATUS);
+                gBattleStruct->startingStatus |= VarGet(B_VAR_STARTING_STATUS);
                 gBattleStruct->startingStatusTimer = VarGet(B_VAR_STARTING_STATUS_TIMER);
             }
             gBattleMainFunc = TryDoEventsBeforeFirstTurn;
@@ -3813,9 +3809,12 @@ static void TryDoEventsBeforeFirstTurn(void)
             return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
+        while (gBattleStruct->startingStatus)
+        {
+            if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
+                return;
+        }
         gBattleStruct->eventState.beforeFristTurn++;
-        if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
-            return;
         break;
     case FIRST_TURN_EVENTS_TOTEM_BOOST:
         for (i = 0; i < gBattlersCount; i++)
@@ -4684,7 +4683,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
             speed *= 2;
         else if (ability == ABILITY_SAND_RUSH   && gBattleWeather & B_WEATHER_SANDSTORM)
             speed *= 2;
-        else if (ability == ABILITY_SLUSH_RUSH  && (gBattleWeather & (B_WEATHER_HAIL | B_WEATHER_SNOW)))
+        else if (ability == ABILITY_SLUSH_RUSH  && (gBattleWeather & B_WEATHER_ICY_ANY))
             speed *= 2;
     }
 
@@ -5820,7 +5819,7 @@ enum Type GetDynamicMoveType(struct Pokemon *mon, u32 move, u32 battler, enum Mo
                     return TYPE_ROCK;
                 else if (gBattleWeather & B_WEATHER_SUN && holdEffect != HOLD_EFFECT_UTILITY_UMBRELLA)
                     return TYPE_FIRE;
-                else if (gBattleWeather & (B_WEATHER_SNOW | B_WEATHER_HAIL))
+                else if (gBattleWeather & B_WEATHER_ICY_ANY)
                     return TYPE_ICE;
                 else
                     return moveType;
