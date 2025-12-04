@@ -18,6 +18,7 @@
 	.endm
 
 	.macro critcalc
+	.warning "critcalc macro has been deprecated, please remove from scripts"
 	.byte 0x4
 	.endm
 
@@ -425,8 +426,9 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro unused_0x48
+	.macro trainerslidein position:req
 	.byte 0x48
+	.byte \position
 	.endm
 
 	.macro moveend endMode:req, endState:req
@@ -516,9 +518,8 @@
 	.byte \battler
 	.endm
 
-	.macro trainerslidein position:req
+	.macro switchinevents
 	.byte 0x53
-	.byte \position
 	.endm
 
 	.macro playse song:req
@@ -979,7 +980,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro handlerollout
+	.macro unused_0xb3
 	.byte 0xb3
 	.endm
 
@@ -989,7 +990,7 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro handlefurycutter
+	.macro unused_0xb5
 	.byte 0xb5
 	.endm
 
@@ -1099,7 +1100,7 @@
 	.byte 0xca
 	.endm
 
-	.macro setcharge battler:req
+	.macro unused_0xcb battler:req
 	.byte 0xcb
 	.byte \battler
 	.endm
@@ -1118,9 +1119,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifnodamage jumpInstr:req
+	.macro unused_0xcf
 	.byte 0xcf
-	.4byte \jumpInstr
 	.endm
 
 	.macro settaunt failInstr:req
@@ -1297,7 +1297,7 @@
 	.byte 0xf3
 	.endm
 
-	.macro unused_0xf4
+	.macro sortbattlers
 	.byte 0xf4
 	.endm
 
@@ -1405,9 +1405,10 @@
 	.4byte \restoreBattlerInstr
 	.endm
 
-	.macro itemcurestatus jumpInstr:req
+	.macro itemcurestatus jumpInstr:req, restoreBattlerInstr:req
 	callnative BS_ItemCureStatus
 	.4byte \jumpInstr
+	.4byte \restoreBattlerInstr
 	.endm
 
 	.macro itemincreasestat
@@ -1732,10 +1733,6 @@
 	callnative BS_WaitFanfare
 	.endm
 
-	.macro setbeakblast
-	callnative BS_SetBeakBlast
-	.endm
-
 	.macro cantarshotwork failInstr:req
 	callnative BS_CanTarShotWork
 	.4byte \failInstr
@@ -1774,8 +1771,8 @@
 	.4byte \failInstr
 	.endm
 
-	.macro jumpifcriticalhit failInstr:req
-	callnative BS_JumpIfCriticalHit
+	.macro jumpifnotcriticalhit failInstr:req
+	callnative BS_JumpIfNotCriticalHit
 	.4byte \failInstr
 	.endm
 
@@ -1809,7 +1806,6 @@
 
 	.macro setmoveeffect effect:req
 	sethword sMOVE_EFFECT, \effect
-	sethword sSAVED_MOVE_EFFECT, \effect
 	.endm
 
 	.macro sethword dst:req, value:req
@@ -1877,10 +1873,6 @@
 	manipulatedamage DMG_1_8_TARGET_HP
 	.endm
 
-	.macro dmgtomaxattackerhp
-	manipulatedamage DMG_FULL_ATTACKER_HP
-	.endm
-
 	.macro jumpifflowerveil jumpInstr:req
 	jumpifnottype BS_TARGET, TYPE_GRASS, 1f
 	jumpifability BS_TARGET_SIDE, ABILITY_FLOWER_VEIL, \jumpInstr
@@ -1893,8 +1885,8 @@
 	1:
 	.endm
 
-	.macro jumpifabilitycantbesuppressed battler:req, jumpInstr:req
-	callnative BS_JumpIfAbilityCantBeSuppressed
+	.macro jumpifabilitycantbereactivated battler:req, jumpInstr:req
+	callnative BS_JumpIfAbilityCantBeReactivated
 	.byte \battler
 	.4byte \jumpInstr
 	.endm
@@ -2123,8 +2115,9 @@
 	callnative BS_InstantHpDrop
 	.endm
 
-	.macro clearstatus
+	.macro clearstatus battler:req
 	callnative BS_ClearStatus
+	.byte \battler
 	.endm
 
 	.macro restoremovepp

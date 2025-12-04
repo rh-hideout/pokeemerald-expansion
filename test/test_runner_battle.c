@@ -2821,7 +2821,9 @@ void UseItem(u32 sourceLine, struct BattlePokemon *battler, struct ItemContext c
 {
     s32 i;
     s32 battlerId = battler - gBattleMons;
-    bool32 requirePartyIndex = GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU || GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES;
+    bool32 requirePartyIndex = GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU
+                            || GetItemType(ctx.itemId) == ITEM_USE_PARTY_MENU_MOVES
+                            || (GetItemType(ctx.itemId) == ITEM_USE_BATTLER && GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES && STATE->battlersCount > 2);
     // Check general bad use.
     INVALID_IF(DATA.turnState == TURN_CLOSED, "USE_ITEM outside TURN");
     INVALID_IF(DATA.actionBattlers & (1 << battlerId), "Multiple battler actions");

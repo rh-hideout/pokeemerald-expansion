@@ -15,6 +15,7 @@
 #include "trainer_hill.h"
 #include "util.h"
 #include "battle_pyramid.h"
+#include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
@@ -331,7 +332,6 @@ static const struct SpriteTemplate sSpriteTemplate_ExclamationQuestionMark =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_ExclamationQuestionMark,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -342,7 +342,6 @@ static const struct SpriteTemplate sSpriteTemplate_HeartIcon =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Icons,
     .images = sSpriteImageTable_HeartIcon,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -353,7 +352,6 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
     .oam = &sOamData_Icons,
     .anims = sSpriteAnimTable_Emotes,
     .images = sSpriteImageTable_Emotes,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_TrainerIcons
 };
 
@@ -418,6 +416,33 @@ bool8 CheckForTrainersWantingBattle(void)
             break;
         if (GetMonsStateToDoubles_2() != PLAYER_HAS_TWO_USABLE_MONS) // one trainer found and cant have a double battle
             break;
+    }
+
+
+    if (InBattlePyramid_() || InTrainerHillChallenge())
+    {
+        u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
+        
+        if (gNoOfApproachingTrainers > 0) 
+        {
+            ResetTrainerOpponentIds();
+            InitTrainerBattleParameter();
+
+            gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
+            gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
+            BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
+            if (gNoOfApproachingTrainers > 1) 
+            {
+                gApproachingTrainerId++;
+                gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
+                gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
+                BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
+                gApproachingTrainerId = 0;
+            }
+            ScriptContext_SetupScript(EventScript_StartTrainerApproach);
+            LockPlayerFieldControls();
+            return TRUE;
+        }
     }
 
     if (gNoOfApproachingTrainers == 1)
@@ -493,7 +518,7 @@ static u8 CheckTrainer(u8 objectEventId)
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
         {
             //If there is a rematch, we want to trigger the approach sequence
-            if (GetRematchFromScriptPointer(trainerBattlePtr))
+            if (I_VS_SEEKER_CHARGING && GetRematchFromScriptPointer(trainerBattlePtr))
             {
                 trainerBattlePtr = NULL;
                 numTrainers = 0xFF;
@@ -541,6 +566,9 @@ static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
     PlayerGetDestCoords(&x, &y);
     if (trainerObj->trainerType == TRAINER_TYPE_NORMAL)  // can only see in one direction
     {
+        // Disable trainer approach while moving diagonally (usually moving on sideway stairs)
+        if (trainerObj->facingDirection > DIR_EAST)
+            return 0;
         approachDistance = sDirectionalApproachDistanceFuncs[trainerObj->facingDirection - 1](trainerObj, trainerObj->trainerRange_berryTreeId, x, y);
         return CheckPathBetweenTrainerAndPlayer(trainerObj, approachDistance, trainerObj->facingDirection);
     }

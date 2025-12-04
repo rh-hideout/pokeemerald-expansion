@@ -35,7 +35,21 @@ SINGLE_BATTLE_TEST("Bad Dreams causes the sleeping enemy Pokemon to lose 1/8 of 
     }
 }
 
-TO_DO_BATTLE_TEST("Bad Dreams affects Pokémon with Comatose")
+SINGLE_BATTLE_TEST("Bad Dreams causes Pokémon with Comatose to lose 1/8 of HP")
+{
+    GIVEN {
+        PLAYER(SPECIES_DARKRAI);
+        OPPONENT(SPECIES_KOMALA) { Ability(ABILITY_COMATOSE); }
+    } WHEN {
+        TURN {;}
+    } SCENE {
+        ABILITY_POPUP(player, ABILITY_BAD_DREAMS);
+        MESSAGE("The opposing Komala is tormented!");
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT_EQ(opponent->hp, opponent->maxHP - opponent->maxHP / 8);
+    }
+}
 
 DOUBLE_BATTLE_TEST("Bad Dreams does not activate if only the partner Pokemon is sleeping")
 {
