@@ -29,7 +29,6 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_HAZE,
     EFFECT_BIDE,
     EFFECT_ROAR,
-    EFFECT_MULTI_HIT,
     EFFECT_CONVERSION,
     EFFECT_RESTORE_HP,
     EFFECT_LIGHT_SCREEN,
@@ -351,6 +350,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_STEEL_ROLLER, // Will fail if there is no terrain up but removes it regardless if attacker is removed from field or not
     EFFECT_STONE_AXE, // Not to be confused with MOVE_EFFECT_STEALTH_ROCK. They have two different activation timings.
     EFFECT_CEASELESS_EDGE, // Same applies to spikes
+    EFFECT_SPECIES_POWER_OVERRIDE, // Uses argument field to for the species, power and (number of hits, used only for multi hit moves)
     NUM_BATTLE_MOVE_EFFECTS,
 };
 

@@ -49,7 +49,7 @@ SINGLE_BATTLE_TEST("Water Absorb is only triggered once on multi strike moves")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_SHURIKEN) == TYPE_WATER);
-        ASSUME(GetMoveEffect(MOVE_WATER_SHURIKEN) == EFFECT_MULTI_HIT);
+        ASSUME(IsMultiHitMove(MOVE_WATER_SHURIKEN));
         PLAYER(SPECIES_POLIWAG) { Ability(ABILITY_WATER_ABSORB); HP(1); MaxHP(100); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

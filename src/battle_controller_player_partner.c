@@ -106,6 +106,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
 
 void SetControllerToPlayerPartner(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_PLAYER_PARTNER;
     gBattlerControllerEndFuncs[battler] = PlayerPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
 }

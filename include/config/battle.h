@@ -133,6 +133,7 @@
 #define B_TIME_OF_DAY_HEALING_MOVES GEN_LATEST // In Gen2, Morning Sun, Moonlight, and Synthesis heal twice as much HP based off the time of day. Also changes how much they heal. Evening affects Moonlight.
                                                // If OW_TIMES_OF_DAY is set to Gen 3, then Morning Sun is boosted during the day.
 #define B_DREAM_EATER_LIQUID_OOZE   GEN_LATEST // In Gen5+, Dream Eater is affected by Liquid Ooze.
+#define B_SNATCH                    GEN_LATEST // In Gen5+, Snatch no longer steals moves that were already stolen by another Pokémon's Snatch on the same turn.
 #define B_FOCUS_PUNCH_FAILURE       GEN_LATEST // To determine if Focus is lost, in Gen4-, check if the current move is Focus Punch.
                                                // In Gens 5-6, check if the selected move is Focus Punch.
                                                // In Gen7+, check if the current move and the selected move are Focus Punch.
@@ -261,6 +262,7 @@
 
 #define B_ABILITY_WEATHER               GEN_LATEST // In Gen6+, ability-induced weather lasts 5 turns. Before, it lasted until the battle ended or until it was changed by a move or a different weather-affecting ability.
 #define B_SANDSTORM_SPDEF_BOOST         GEN_LATEST // In Gen4+, Sandstorm weather multiplies the Sp. Defense of Rock-type Pokémon by x1.5.
+#define B_SANDSTORM_SOLAR_BEAM          GEN_LATEST // In Gen3+, Sandstorm decreases the power of Solar Beam, when it didn't before.
 #define B_OVERWORLD_FOG                 GEN_LATEST // In Gen8+, overworld Fog summons Misty Terrain in battle. In Gen4 only, overworld Fog summons the unique fog weather condition in battle.
 #define B_OVERWORLD_SNOW                GEN_LATEST // In Gen9+, overworld Snow will summon snow instead of hail in battle.
 #define B_SNOW_WARNING                  GEN_LATEST // In Gen9+, Snow Warning will summon snow instead of hail.
