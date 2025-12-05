@@ -845,7 +845,7 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
         && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
         return TRUE;
-        
+
     return FALSE;
 }
 
@@ -1330,7 +1330,10 @@ u32 GetNoOfHitsToKO(u32 dmg, s32 hp)
 {
     if (dmg == 0)
         return 0;
-    return hp / (dmg + 1) + 1;
+    if (hp % dmg == 0)
+        return hp / (dmg + 1) + 1; /// A
+    else
+        return (hp / dmg) + 1; // B
 }
 
 u32 GetNoOfHitsToKOBattlerDmg(u32 dmg, u32 battlerDef)
