@@ -2950,11 +2950,6 @@ void TryToHideMoveInfoWindow(void)
     gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
 }
 
-void TryToHideMoveTypeIconSprite(void)
-{
-    gSprites[gBattleStruct->moveTypeIconSpriteId].invisible = TRUE;
-}
-
 static void DestroyMoveInfoWinGfx(struct Sprite *sprite)
 {
     FreeSpriteTilesByTag(MOVE_INFO_WINDOW_TAG);

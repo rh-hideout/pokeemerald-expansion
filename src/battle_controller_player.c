@@ -777,7 +777,6 @@ void HandleInputChooseMove(u32 battler)
             BtlController_Complete(battler);
             TryToHideMoveInfoWindow();
             TryToHideMoveTypeIconSprite();
-            //DestroyMoveTypeIconSprite();
         }
     }
     else if (JOY_NEW(DPAD_LEFT) && !gBattleStruct->zmove.viewing)

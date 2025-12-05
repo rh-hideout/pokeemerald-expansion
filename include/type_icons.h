@@ -19,6 +19,7 @@ void TryToHideMoveTypeIconSprite(void);
 
 #define TYPE_ICON_1_FRAME(monType) ((monType - 1) * 2)
 #define TYPE_ICON_2_FRAME(monType) ((monType - 11) * 2)
+#define MOVE_TYPE_ICON_FRAME(monType) (monType * 8)
 
 #define MOVE_INFO_TYPE_ICON 0
 
