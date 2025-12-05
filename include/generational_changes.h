@@ -4,88 +4,20 @@
 #include "constants/generational_changes.h"
 #include "config/battle.h"
 
-static const u8 sConfigChanges[CONFIG_COUNT] =
+#define UNPACK_CONFIG_STRUCT(_name, _field, _typeMaxValue, ...) INVOKE_WITH_(UNPACK_CONFIG_STRUCT_, _field, UNPACK_B(_typeMaxValue));
+#define UNPACK_CONFIG_STRUCT_(_field, _type, ...) _type FIRST(__VA_OPT__(_field:BIT_SIZE(FIRST(__VA_ARGS__)),) _field)
+
+struct GenChanges
 {
-    [CONFIG_CRIT_CHANCE]               = B_CRIT_CHANCE,
-    [CONFIG_CRIT_MULTIPLIER]           = B_CRIT_MULTIPLIER,
-    [CONFIG_FOCUS_ENERGY_CRIT_RATIO]   = B_FOCUS_ENERGY_CRIT_RATIO,
-    [CONFIG_PARALYSIS_SPEED]           = B_PARALYSIS_SPEED,
-    [CONFIG_CONFUSION_SELF_DMG_CHANCE] = B_CONFUSION_SELF_DMG_CHANCE,
-    [CONFIG_MULTI_HIT_CHANCE]          = B_MULTI_HIT_CHANCE,
-    [CONFIG_GALE_WINGS]                = B_GALE_WINGS,
-    [CONFIG_HEAL_BELL_SOUNDPROOF]      = B_HEAL_BELL_SOUNDPROOF,
-    [CONFIG_TELEPORT_BEHAVIOR]         = B_TELEPORT_BEHAVIOR,
-    [CONFIG_ABILITY_WEATHER]           = B_ABILITY_WEATHER,
-    [CONFIG_MOODY_STATS]               = B_MOODY_ACC_EVASION,
-    [CONFIG_BATTLE_BOND]               = B_BATTLE_BOND,
-    [CONFIG_ATE_MULTIPLIER]            = B_ATE_MULTIPLIER,
-    [CONFIG_FELL_STINGER_STAT_RAISE]   = B_FELL_STINGER_STAT_RAISE,
-    [CONFIG_DEFIANT_STICKY_WEB]        = B_DEFIANT_STICKY_WEB,
-    [CONFIG_ENCORE_TARGET]             = B_ENCORE_TARGET,
-    [CONFIG_TIME_OF_DAY_HEALING_MOVES] = B_TIME_OF_DAY_HEALING_MOVES,
-    [CONFIG_PICKUP_WILD]               = B_PICKUP_WILD,
-    [CONFIG_PROTEAN_LIBERO]            = B_PROTEAN_LIBERO,
-    [CONFIG_INTREPID_SWORD]            = B_INTREPID_SWORD,
-    [CONFIG_DAUNTLESS_SHIELD]          = B_DAUNTLESS_SHIELD,
-    [CONFIG_ILLUMINATE_EFFECT]         = B_ILLUMINATE_EFFECT,
-    [CONFIG_STEAL_WILD_ITEMS]          = B_STEAL_WILD_ITEMS,
-    [CONFIG_SNOW_WARNING]              = B_SNOW_WARNING,
-    [CONFIG_ALLY_SWITCH_FAIL_CHANCE]   = B_ALLY_SWITCH_FAIL_CHANCE,
-    [CONFIG_DREAM_EATER_LIQUID_OOZE]   = B_DREAM_EATER_LIQUID_OOZE,
-    [CONFIG_TRANSISTOR_BOOST]          = B_TRANSISTOR_BOOST,
-    [CONFIG_RECALC_TURN_AFTER_ACTIONS] = B_RECALC_TURN_AFTER_ACTIONS,
-    [CONFIG_UPDATED_INTIMIDATE]        = B_UPDATED_INTIMIDATE,
-    [CONFIG_DISGUISE_HP_LOSS]          = B_DISGUISE_HP_LOSS,
-    [CONFIG_AFTER_YOU_TURN_ORDER]      = B_AFTER_YOU_TURN_ORDER,
-    [CONFIG_HEALING_WISH_SWITCH]       = B_HEALING_WISH_SWITCH,
-    [CONFIG_MEGA_EVO_TURN_ORDER]       = B_MEGA_EVO_TURN_ORDER,
-    [CONFIG_SHEER_COLD_IMMUNITY]       = B_SHEER_COLD_IMMUNITY,
-    [CONFIG_WEAK_ARMOR_SPEED]          = B_WEAK_ARMOR_SPEED,
-    [CONFIG_PRANKSTER_DARK_TYPES]      = B_PRANKSTER_DARK_TYPES,
-    [CONFIG_DESTINY_BOND_FAIL]         = B_DESTINY_BOND_FAIL,
-    [CONFIG_POWDER_RAIN]               = B_POWDER_RAIN,
-    [CONFIG_POWDER_GRASS]              = B_POWDER_GRASS,
-    [CONFIG_POWDER_OVERCOAT]           = B_POWDER_OVERCOAT,
-    [CONFIG_OBLIVIOUS_TAUNT]           = B_OBLIVIOUS_TAUNT,
-    [CONFIG_TOXIC_NEVER_MISS]          = B_TOXIC_NEVER_MISS,
-    [CONFIG_PARALYZE_ELECTRIC]         = B_PARALYZE_ELECTRIC,
-    [CONFIG_BADGE_BOOST]               = B_BADGE_BOOST,
-    [CONFIG_LEAF_GUARD_PREVENTS_REST]  = B_LEAF_GUARD_PREVENTS_REST,
-    [CONFIG_BEAT_UP]                   = B_BEAT_UP,
-    [CONFIG_WIDE_GUARD]                = B_WIDE_GUARD,
-    [CONFIG_QUICK_GUARD]               = B_QUICK_GUARD,
-    [CONFIG_DEFOG_EFFECT_CLEARING]     = B_DEFOG_EFFECT_CLEARING,
-    [CONFIG_BURN_HIT_THAW]             = B_BURN_HIT_THAW,
-    [CONFIG_BURN_FACADE_DMG]           = B_BURN_FACADE_DMG,
+    CONFIG_DEFINITIONS(UNPACK_CONFIG_STRUCT)
+    // Expands to:
+    // u32 critChance:4;
+    // u32 critMultiplier:4;
+    // ...
 };
 
-#if TESTING
-extern u8 *gConfigChangesTestOverride;
-#endif
-
-static inline u32 GetConfig(enum ConfigTag configTag)
-{
-    if (configTag >= CONFIG_COUNT)
-        return 0;
-#if TESTING
-    if (gConfigChangesTestOverride == NULL)
-        return sConfigChanges[configTag];
-    return gConfigChangesTestOverride[configTag];
-#else
-    return sConfigChanges[configTag];
-#endif
-}
-
-static inline void SetConfig(enum ConfigTag configTag, u32 value)
-{
-#if TESTING
-    if (configTag >= CONFIG_COUNT)
-        return;
-    if (gConfigChangesTestOverride == NULL)
-        return;
-    gConfigChangesTestOverride[configTag] = value;
-#endif
-}
+u32 GetConfig(enum ConfigTag configTag);
+void SetConfig(enum ConfigTag configTag, u32 value);
 
 #if TESTING
 void TestInitConfigData(void);

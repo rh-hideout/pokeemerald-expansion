@@ -1024,10 +1024,14 @@ static void TryClearChargeVolatile(u32 moveType)
     if (B_CHARGE < GEN_9) // Prior to gen9, charge is cleared during the end turn
         return;
 
-    if (gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 2) // Has been set this turn by move
-        gBattleMons[gBattlerAttacker].volatiles.chargeTimer--;
-    else if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
+    if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
         gBattleMons[gBattlerAttacker].volatiles.chargeTimer = 0;
+    
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move
+            gBattleMons[battler].volatiles.chargeTimer--;
+    }
 }
 
 static bool32 IsAnyTargetAffected(void)
@@ -4046,7 +4050,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             gBattleMons[gBattlerAttacker].volatiles.bonusCritStages++;
         if (gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages < 3)
             gBattleMons[BATTLE_PARTNER(gBattlerAttacker)].volatiles.bonusCritStages++;
-        BattleScriptPush(gBattlescriptCurrInstr + 1);
+        BattleScriptPush(battleScript);
         gBattlescriptCurrInstr = BattleScript_EffectRaiseCritAlliesAnim;
         break;
     case MOVE_EFFECT_HEAL_TEAM:
@@ -9392,14 +9396,20 @@ static bool32 TryDefogClear(u32 battlerAtk, bool32 clear)
         }
         if (gBattleWeather & B_WEATHER_FOG)
         {
-            gBattleWeather &= ~B_WEATHER_FOG;
-            BattleScriptCall(BattleScript_FogEnded_Ret);
+            if (clear)
+            {
+                gBattleWeather &= ~B_WEATHER_FOG;
+                BattleScriptCall(BattleScript_FogEnded_Ret);
+            }
             return TRUE;
         }
         if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_8 && (gFieldStatuses & STATUS_FIELD_TERRAIN_ANY))
         {
-            RemoveAllTerrains();
-            BattleScriptCall(BattleScript_TerrainEnds_Ret);
+            if (clear)
+            {
+                RemoveAllTerrains();
+                BattleScriptCall(BattleScript_TerrainEnds_Ret);
+            }
             return TRUE;
         }
     }
@@ -12205,6 +12215,8 @@ static void Cmd_tryactivateitem(void)
     CMD_ARGS(u8 battler, u8 flag);
     u32 battler = GetBattlerForBattleScript(cmd->battler);
 
+    gBattlescriptCurrInstr = cmd->nextInstr;
+
     switch ((enum ItemActivationState)cmd->flag)
     {
     case ACTIVATION_ON_USABLE_AGAIN:
@@ -12222,8 +12234,6 @@ static void Cmd_tryactivateitem(void)
             return;
         break;
     }
-
-    gBattlescriptCurrInstr = cmd->nextInstr;
 }
 
 // Belly Drum, Fillet Away
