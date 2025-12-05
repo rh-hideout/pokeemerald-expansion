@@ -11,6 +11,7 @@
 #include "battle_setup.h"
 #include "battle_tv.h"
 #include "cable_club.h"
+#include "event_data.h"
 #include "event_object_movement.h"
 #include "item.h"
 #include "link.h"
@@ -40,6 +41,7 @@ static EWRAM_DATA u8 sLinkReceiveTaskId = 0;
 COMMON_DATA void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0};
 COMMON_DATA u8 gBattleControllerData[MAX_BATTLERS_COUNT] = {0}; // Used by the battle controllers to store misc sprite/task IDs for each battler
 COMMON_DATA void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler) = {0}; // Controller's buffer complete function for each battler
+u8 gBattlerBattleController[MAX_BATTLERS_COUNT] = {0}; // Battle controller for each battler
 
 static void CreateTasksForSendRecvLinkBuffers(void);
 static void InitBtlControllersInternal(void);
@@ -52,6 +54,66 @@ static void SpriteCB_FreeOpponentSprite(struct Sprite *sprite);
 static u32 ReturnAnimIdForBattler(bool32 isPlayerSide, u32 specificBattler);
 static void LaunchKOAnimation(u32 battlerId, u16 animId, bool32 isFront);
 static void AnimateMonAfterKnockout(u32 battler);
+
+
+bool32 IsAiVsAiBattle(void)
+{
+    return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
+}
+
+bool32 BattlerIsPlayer(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
+        || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);    
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
+}
+
+bool32 BattlerIsPartner(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER);
+}
+
+bool32 BattlerIsOpponent(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_OPPONENT
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+}
+
+bool32 BattlerIsRecorded(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_OPPONENT);
+}
+
+bool32 BattlerIsLink(u32 battlerId)
+{
+    return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_PARTNER
+         || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_LINK_OPPONENT);
+}
+
+bool32 BattlerHasAi(u32 battlerId)
+{
+    switch (gBattlerBattleController[battlerId])
+    {
+    case BATTLE_CONTROLLER_OPPONENT:
+    case BATTLE_CONTROLLER_PLAYER_PARTNER:
+    case BATTLE_CONTROLLER_SAFARI:
+    case BATTLE_CONTROLLER_WALLY:
+        return TRUE;
+    default:
+        break;
+    }
+    
+    if (IsAiVsAiBattle())
+        return TRUE;
+    
+    return FALSE;
+}
 
 void HandleLinkBattleSetup(void)
 {
@@ -2367,7 +2429,8 @@ void BtlController_HandleDrawTrainerPic(u32 battler, u32 trainerPicId, bool32 is
             if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
                 gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
 
-            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = battler;
+            // Aiming for palette slots 8 and 9 for Player and PlayerPartner to prevent Trainer Slides causing mons to change colour
+            gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
         }
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = DISPLAY_WIDTH;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = -2;
@@ -2392,7 +2455,8 @@ void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId)
                                                          30);
         if ((gBattleTypeFlags & BATTLE_TYPE_SAFARI) && GetBattlerPosition(battler) == B_POSITION_PLAYER_LEFT)
             gBattlerSpriteIds[battler] = gBattleStruct->trainerSlideSpriteIds[battler];
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = battler;
+        // Aiming for palette slots 8 and 9 for Player and PlayerPartner to prevent Trainer Slides causing mons to change colour
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].x2 = -96;
         gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].sSpeedX = 2;
     }
@@ -2740,7 +2804,7 @@ void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, c
 
         paletteNum = AllocSpritePalette(tagTrainerPal);
         LoadPalette(trainerPal, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
-        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = paletteNum;
+        gSprites[gBattleStruct->trainerSlideSpriteIds[battler]].oam.paletteNum = (8 + battler/2);
     }
     else
     {
@@ -3132,24 +3196,7 @@ void UpdateFriendshipFromXItem(u32 battler)
 
     if (friendship < X_ITEM_MAX_FRIENDSHIP)
     {
-        if (GetItemHoldEffect(heldItem) == HOLD_EFFECT_FRIENDSHIP_UP)
-            friendship += 150 * X_ITEM_FRIENDSHIP_INCREASE / 100;
-        else
-            friendship += X_ITEM_FRIENDSHIP_INCREASE;
-
-        u8 pokeball;
-        gBattleResources->bufferA[battler][1] = REQUEST_POKEBALL_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &pokeball);
-
-        if (pokeball == BALL_LUXURY)
-            friendship++;
-
-        u8 metLocation;
-        gBattleResources->bufferA[battler][1] = REQUEST_MET_LOCATION_BATTLE;
-        GetBattlerMonData(battler, party, gBattlerPartyIndexes[battler], &metLocation);
-
-        if (metLocation == GetCurrentRegionMapSectionId())
-            friendship++;
+        friendship += CalculateFriendshipBonuses(GetBattlerMon(battler), X_ITEM_FRIENDSHIP_INCREASE, GetItemHoldEffect(heldItem));
 
         if (friendship > MAX_FRIENDSHIP)
             friendship = MAX_FRIENDSHIP;

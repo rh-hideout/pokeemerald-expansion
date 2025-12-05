@@ -1213,10 +1213,7 @@ static const struct SpriteTemplate sSpriteTemplate_RibbonIconBig =
     .tileTag = GFXTAG_RIBBON_ICONS_BIG,
     .paletteTag = PALTAG_RIBBON_ICONS_1,
     .oam = &sOamData_RibbonIconBig,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
     .affineAnims = sAffineAnims_RibbonIconBig,
-    .callback = SpriteCallbackDummy,
 };
 
 // Create dummy sprite to be used for the zoomed in version of the selected ribbon
