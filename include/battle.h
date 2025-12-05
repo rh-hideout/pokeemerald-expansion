@@ -325,18 +325,21 @@ struct AiLogicData
     u8 monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     struct SwitchinCandidate switchinCandidate; // Struct used for deciding which mon to switch to in battle_ai_switch_items.c
-    u8 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
-    u8 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
-    u8 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
-    u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
-    u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
-    u8 aiCalcInProgress:1;
-    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
-    u8 padding1:1;
-    u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
-    u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
+    
+    // Flags
+    u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
+    u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
+    u32 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
+    u32 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
+    u32 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
+    u32 aiCalcInProgress:1;
+    u32 predictingMove:1; // Determines whether AI will use move predictions this turn or not
+    u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
+    u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
+    u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
+    u32 padding2:19;
 };
 
 struct AiThinkingStruct

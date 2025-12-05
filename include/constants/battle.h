@@ -218,7 +218,7 @@ enum VolatileFlags
     F(VOLATILE_VESSEL_OF_RUIN,              vesselOfRuin,                  (u32, 1)) \
     F(VOLATILE_SWORD_OF_RUIN,               swordOfRuin,                   (u32, 1)) \
     F(VOLATILE_TABLETS_OF_RUIN,             tabletsOfRuin,                 (u32, 1)) \
-    F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1)) 
+    F(VOLATILE_BEADS_OF_RUIN,               beadsOfRuin,                   (u32, 1))
 
 
 /* Use within a macro to get the maximum allowed value for a volatile. Requires _typeMaxValue as input. */
@@ -376,11 +376,11 @@ enum BattleWeather
 #define B_WEATHER_FOG           (1 << BATTLE_WEATHER_FOG)
 #define B_WEATHER_STRONG_WINDS  (1 << BATTLE_WEATHER_STRONG_WINDS)
 
-#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_HAIL | B_WEATHER_STRONG_WINDS | B_WEATHER_SNOW | B_WEATHER_FOG)
 #define B_WEATHER_DAMAGING_ANY  (B_WEATHER_HAIL | B_WEATHER_SANDSTORM)
 #define B_WEATHER_ICY_ANY       (B_WEATHER_HAIL | B_WEATHER_SNOW)
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
+#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_ICY_ANY | B_WEATHER_STRONG_WINDS | B_WEATHER_FOG)
 
 // Explicit numbers until frostbite because those shouldn't be shifted
 enum __attribute__((packed)) MoveEffect

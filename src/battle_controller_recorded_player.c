@@ -104,6 +104,7 @@ static void (*const sRecordedPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 ba
 
 void SetControllerToRecordedPlayer(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_PLAYER;
     gBattlerControllerEndFuncs[battler] = RecordedPlayerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedPlayerBufferRunCommand;
 }

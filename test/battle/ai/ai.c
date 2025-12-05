@@ -1080,13 +1080,85 @@ AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep 
     PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
-        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_YAWN, MOVE_TACKLE); }
-        OPPONENT(SPECIES_ZIGZAGOON) { Moves(aiMove, MOVE_TACKLE); }
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_YAWN, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(aiMove, MOVE_SCRATCH); }
     } WHEN {
         if (aiMove == MOVE_CELEBRATE)
-            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
         else
             TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_SWORDS_DANCE); }
-        TURN { MOVE(player, MOVE_TACKLE); EXPECT_MOVE(opponent, MOVE_TACKLE); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional to its missing HP")
+{
+    u32 monHP; u32 passesChance;
+    PARAMETRIZE { monHP = 20; passesChance = EXPLOSION_MINIMUM_CHANCE; }
+    PARAMETRIZE { monHP = 1; passesChance = EXPLOSION_MAXIMUM_CHANCE; }
+    PASSES_RANDOMLY(passesChance, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
+        ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); HP(monHP); MaxHP(20); Moves(MOVE_SCRATCH, MOVE_EXPLOSION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they have the same hits to KO")
+{
+    u32 selfSacrificeMove;
+    PARAMETRIZE { selfSacrificeMove = MOVE_EXPLOSION; }
+    PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
+    PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
+        ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); HP(1); Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); HP(1); MaxHP(20); Speed(2); Moves(MOVE_SCRATCH, selfSacrificeMove); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will consider using Final Gambit if it expects to KO and outspeeds")
+{
+    u32 aiOmniscientFlag;
+    PARAMETRIZE { aiOmniscientFlag = AI_FLAG_OMNISCIENT; }
+    PARAMETRIZE { aiOmniscientFlag = 0 ;}
+    PASSES_RANDOMLY(FINAL_GAMBIT_CHANCE, 100, RNG_AI_FINAL_GAMBIT);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiOmniscientFlag);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); MaxHP(20); Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); MaxHP(20); Speed(2); Moves(MOVE_SCRATCH, MOVE_FINAL_GAMBIT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_FINAL_GAMBIT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI's Explosion scoring handles multiple move effects and the Explosion defense config")
+{
+    u32 genConfig; u32 passesChance;
+    PARAMETRIZE { genConfig = GEN_5; passesChance = 0; }
+    PARAMETRIZE { genConfig = GEN_4; passesChance = EXPLOSION_MAXIMUM_CHANCE; }
+    PASSES_RANDOMLY(passesChance, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        WITH_CONFIG(CONFIG_EXPLOSION_DEFENSE, genConfig);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_CLOYSTER) { Level(44); HP(68); Moves(MOVE_DETECT, MOVE_RAZOR_SHELL, MOVE_ICICLE_SPEAR, MOVE_ICE_SHARD); }
+        OPPONENT(SPECIES_GLALIE_MEGA) { Level(44); HP(1); Ability(ABILITY_REFRIGERATE); Friendship(MAX_FRIENDSHIP); Moves(MOVE_RETURN, MOVE_EARTHQUAKE, MOVE_EXPLOSION, MOVE_CRUNCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DETECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
     }
 }
