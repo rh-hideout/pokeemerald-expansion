@@ -1,39 +1,40 @@
 #include "global.h"
-#include "malloc.h"
 #include "battle.h"
-#include "pokemon.h"
-#include "battle_controllers.h"
-#include "battle_interface.h"
-#include "battle_z_move.h"
-#include "graphics.h"
-#include "sprite.h"
-#include "window.h"
-#include "string_util.h"
-#include "text.h"
-#include "sound.h"
-#include "decompress.h"
-#include "task.h"
-#include "util.h"
-#include "gpu_regs.h"
-#include "battle_message.h"
-#include "pokedex.h"
-#include "palette.h"
-#include "international_string_util.h"
-#include "safari_zone.h"
 #include "battle_anim.h"
-#include "data.h"
-#include "pokemon_summary_screen.h"
-#include "strings.h"
+#include "battle_controllers.h"
 #include "battle_debug.h"
+#include "battle_interface.h"
+#include "battle_message.h"
+#include "battle_z_move.h"
+#include "caps.h"
+#include "data.h"
+#include "decompress.h"
+#include "graphics.h"
+#include "gpu_regs.h"
+#include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
 #include "item_use.h"
+#include "malloc.h"
+#include "palette.h"
+#include "pokedex.h"
+#include "pokemon.h"
+#include "pokemon_summary_screen.h"
+#include "safari_zone.h"
+#include "sound.h"
+#include "sprite.h"
+#include "strings.h"
+#include "string_util.h"
+#include "task.h"
 #include "test_runner.h"
+#include "text.h"
+#include "type_icons.h"
+#include "util.h"
+#include "window.h"
 #include "constants/battle_anim.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 #include "constants/items.h"
-#include "caps.h"
 
 enum
 {   // Corresponds to gHealthboxElementsGfxTable (and the tables after it) in graphics.c
@@ -2948,6 +2949,12 @@ void TryToAddMoveInfoWindow(void)
 void TryToHideMoveInfoWindow(void)
 {
     gSprites[gBattleStruct->moveInfoSpriteId].sHide = TRUE;
+}
+
+void TryToHideMoveTypeIconSpriteWithDelay(u32 delay)
+{
+    gSprites[gBattleStruct->moveTypeIconSpriteId].animDelayCounter = delay;
+    TryToHideMoveTypeIconSprite();
 }
 
 static void DestroyMoveInfoWinGfx(struct Sprite *sprite)

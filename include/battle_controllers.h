@@ -190,6 +190,10 @@ enum {
 
 #define PARTY_SUMM_SKIP_DRAW_DELAY (1 << 7)
 
+// so the type icon isn't remove out of sync with the rest of the ui
+#define TYPE_ICON_DO_MOVE_DELAY 10
+#define TYPE_ICON_BACK_MENU_DELAY 3
+
 // Special return values in gBattleBufferB from Battle Controller functions.
 #define RET_VALUE_LEVELED_UP   11
 #define RET_GIMMICK            (1 << 7)

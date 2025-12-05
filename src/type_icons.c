@@ -530,7 +530,10 @@ static bool32 ShouldHideUnseenType(u32 species)
 
 void TryToHideMoveTypeIconSprite(void)
 {
-    gSprites[gBattleStruct->moveTypeIconSpriteId].invisible = TRUE;
+    struct Sprite *sprite = &gSprites[gBattleStruct->moveTypeIconSpriteId];
+
+    if (!sprite->tHide)
+        sprite->tHide = TRUE;
 }
 
 static enum Type GetMonDefensiveTeraType(struct Pokemon *mon, struct Pokemon *monIllusion, u32 battlerId, u32 typeNum, u32 illusionSpecies, u32 monSpecies)
@@ -631,7 +634,7 @@ static void CreateMoveTypeIconSpriteAndSetAttributes(enum Type type, u32 x, u32 
 
     sprite = &gSprites[spriteId];
     sprite->oam.paletteNum = gTypesInfo[type].palette;
-    sprite->invisible = FALSE;
+    sprite->tHide = FALSE;
 
     StartSpriteAnim(sprite, type);
 }
@@ -677,7 +680,7 @@ static void SpriteCB_MoveTypeIcon(struct Sprite *sprite)
         FreeSpritePaletteByTag(TAG_MOVE_TYPES);
         DestroySpriteAndFreeResources(sprite);
     }
-    else if (sprite->invisible)
+    else if (sprite->tHide && sprite->animDelayCounter == 0)
     {
         DestroyMoveTypeIconSprite();
     }
