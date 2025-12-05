@@ -340,7 +340,44 @@ struct AiLogicData
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
     u32 padding2:19;
+    u64 bestDamageMoves:48; // Determines whether move indexes are best dmg moves: 4 moves, 3 valid targets per battler (excluding self)
+    u64 padding3:16;
 };
+
+STATIC_ASSERT((size_t)MAX_BATTLERS_COUNT * ((size_t)MAX_BATTLERS_COUNT - 1) * (size_t)MAX_MON_MOVES <= 48, AiBestDamageBitsTooSmall)
+
+/* Helpers for indexing and accessing the bits */
+/* Skips self-targeting cases (battlerAtk == battlerDef) to save space */
+#define AI_BEST_DAMAGE_INDEX(battlerAtk, battlerDef, moveIndex)                           \
+    ((size_t)(battlerAtk) * ((size_t)MAX_BATTLERS_COUNT - 1) * (size_t)MAX_MON_MOVES      \
+     + ((size_t)(battlerDef) - ((size_t)(battlerDef) > (size_t)(battlerAtk) ? 1 : 0))     \
+       * (size_t)MAX_MON_MOVES                                                            \
+     + (size_t)(moveIndex))                                                               \
+
+static inline void SetBestDamageMove(struct AiLogicData *gAiLogicData, u16 battlerAtk, u16 battlerDef, u16 moveIndex)
+{
+    size_t bit = AI_BEST_DAMAGE_INDEX(battlerAtk, battlerDef, moveIndex);
+    gAiLogicData->bestDamageMoves |= (u64)1ULL << bit;
+}
+
+static inline void ClearBestDamageMove(struct AiLogicData *gAiLogicData, u16 battlerAtk, u16 battlerDef, u16 moveIndex)
+{
+    size_t bit = AI_BEST_DAMAGE_INDEX(battlerAtk, battlerDef, moveIndex);
+    gAiLogicData->bestDamageMoves &= ~((u64)1ULL << bit);
+}
+
+static inline void ClearBestDamageMovesForBattlers(struct AiLogicData *gAiLogicData, u16 battlerAtk, u16 battlerDef)
+{
+    size_t startBit = AI_BEST_DAMAGE_INDEX(battlerAtk, battlerDef, 0);
+    gAiLogicData->bestDamageMoves &= ~((((u64)1ULL << (size_t)MAX_MON_MOVES) - 1ULL) << startBit);
+}
+
+
+static inline bool32 IsBestDamageMove(const struct AiLogicData *gAiLogicData, u16 battlerAtk, u16 battlerDef, u16 moveIndex)
+{
+    size_t bit = AI_BEST_DAMAGE_INDEX(battlerAtk, battlerDef, moveIndex);
+    return !!(gAiLogicData->bestDamageMoves & ((u64)1ULL << bit));
+}
 
 struct AiThinkingStruct
 {

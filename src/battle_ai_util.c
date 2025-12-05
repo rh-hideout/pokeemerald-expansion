@@ -1549,91 +1549,21 @@ u32 NoOfHitsForTargetToFaintBattlerWithMod(u32 battlerDef, u32 battlerAtk, s32 h
     return leastNumberOfHits;
 }
 
-void GetBestDmgMoveFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, u32 *bestMoves)
+bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect)
 {
-    struct AiLogicData *aiData = gAiLogicData;
-    u32 moveIndex;
-    u32 bestDmg = 0;
-    u16 *moves = GetMovesArray(battlerAtk);
-    u32 moveLimitations = aiData->moveLimitations[battlerAtk];
-    u32 countBestMoves = 0;
-
-    if (CanAIFaintTarget(battlerAtk, battlerDef, 1))
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
+        if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
         {
-            if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, moveIndex, AI_ATTACKING))
-                bestMoves[countBestMoves++] = moves[moveIndex];
-        }
-    }
-    else
-    {
-        for (moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
-        {
-            if (IsMoveUnusable(moveIndex, moves[moveIndex], moveLimitations)
-            || (GetMovePower(moves[moveIndex]) == 0)
-            || (AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData) == 0))
-                continue;
-
-            if (bestDmg < AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
-            {
-                countBestMoves = 0;
-                bestDmg = AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData);
-                *bestMoves = 0;
-                bestMoves[countBestMoves++] = moves[moveIndex];
-            }
-            else if (bestDmg == AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, aiData))
-            {
-                bestMoves[countBestMoves++] = moves[moveIndex];
-            }
-        }
-    }
-}
-
-u16 GetMoveIndex(u32 battler, u32 move)
-{
-    u16 *moves = GetMovesArray(battler);
-
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (moves[i] == move)
-            return i;
-    }
-
-    return MAX_MON_MOVES;
-}
-
-bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, u32 move)
-{
-    u32 bestMoves[MAX_MON_MOVES] = {0};
-    u16 index = GetMoveIndex(battlerAtk, move);
-
-    if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, index, AI_ATTACKING))
-        return TRUE;
-
-    GetBestDmgMoveFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
-
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (bestMoves[i] == move)
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
-bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, enum BattleMoveEffects moveEffect)
-{
-    u32 bestMoves[MAX_MON_MOVES] = {0};
-
-    GetBestDmgMoveFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
-
-    for (u32 i = 0; i < MAX_MON_MOVES; i++)
-    {
-        if (bestMoves[i] == MOVE_NONE)
             break;
+        }
+        else if (!IsBestDamageMove(gAiLogicData, battlerAtk, battlerDef, i)
+        || (GetMovePower(gBattleMons[battlerAtk].moves[i]) == 0))
+        {
+            continue;
+        }
 
-        if (GetMoveEffect(bestMoves[i]) == moveEffect)
+        if (GetMoveEffect(gBattleMons[battlerAtk].moves[i]) == moveEffect)
             return TRUE;
     }
 
@@ -4257,7 +4187,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 p
     u32 battlerDef = gBattleStruct->moveTarget[battlerAtk];
 
     // We don't care the effect is basically the same; we would use this move anyway.
-    if (IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
+    if (IsBestDamageMove(gAiLogicData, battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex))
         return FALSE;
 
     u32 atkEffect = GetAIEffectGroupFromMove(battlerAtk, move);
@@ -5099,17 +5029,20 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
             || (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT) // Not Omniscient but expects physical attacker
                 && GetSpeciesBaseAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) + 10))
         {
-            u32 defBestMoves[MAX_MON_MOVES] = {0};
             bool8 hasPhysical = FALSE;
-
-            GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
-
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (defBestMoves[i] == MOVE_NONE)
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                {
                     break;
+                }
+                else if (!IsBestDamageMove(gAiLogicData, battlerDef, battlerAtk, i)
+                || (GetMovePower(gBattleMons[battlerDef].moves[i]) == 0))
+                {
+                    continue;
+                }
 
-                if (GetMoveCategory(defBestMoves[i]) == DAMAGE_CATEGORY_PHYSICAL)
+                if (GetMoveCategory(gBattleMons[battlerDef].moves[i]) == DAMAGE_CATEGORY_PHYSICAL)
                 {
                     hasPhysical = TRUE;
                     break;
@@ -5157,13 +5090,9 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 
     if (((gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_TRY_TO_FAINT) && CanAIFaintTarget(battlerAtk, battlerDef, 0)))
     {
-        u32 bestMoves[MAX_MON_MOVES] = {0};
-
-        GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING, bestMoves);
-
         for (u32 i; i < MAX_MON_MOVES; i++)
         {
-            if (GetMoveEffect(bestMoves[i]) == EFFECT_FOCUS_PUNCH)
+            if (IsBestDamageMove(gAiLogicData, battlerAtk, battlerDef, i) && GetMoveEffect(gBattleMons[battlerAtk].moves[i]) != EFFECT_FOCUS_PUNCH)
                 return;
         }
     }
@@ -5212,17 +5141,20 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
             || (!(gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_OMNISCIENT) // Not Omniscient but expects special attacker
                 && GetSpeciesBaseSpAttack(gBattleMons[battlerDef].species) >= GetSpeciesBaseAttack(gBattleMons[battlerDef].species) + 10))
         {
-            u32 defBestMoves[MAX_MON_MOVES] = {0};
             bool8 hasSpecial = FALSE;
-
-            GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
-
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
-                if (defBestMoves[i] == MOVE_NONE)
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                {
                     break;
+                }
+                else if (!IsBestDamageMove(gAiLogicData, battlerDef, battlerAtk, i)
+                || (GetMovePower(gBattleMons[battlerDef].moves[i]) == 0))
+                {
+                    continue;
+                }
 
-                if (GetMoveCategory(defBestMoves[i]) == DAMAGE_CATEGORY_SPECIAL)
+                if (GetMoveCategory(gBattleMons[battlerDef].moves[i]) == DAMAGE_CATEGORY_SPECIAL)
                 {
                     hasSpecial = TRUE;
                     break;
