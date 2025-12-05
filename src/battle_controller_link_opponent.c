@@ -101,6 +101,7 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
 
 void SetControllerToLinkOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_LINK_OPPONENT;
     gBattlerControllerEndFuncs[battler] = LinkOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
 }

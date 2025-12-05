@@ -356,7 +356,7 @@ void SetupAIPredictionData(u32 battler, enum SwitchType switchType)
 void ComputeBattlerDecisions(u32 battler)
 {
     bool32 isAiBattler = (gBattleTypeFlags & BATTLE_TYPE_HAS_AI || IsWildMonSmart()) && (BattlerHasAi(battler) && !(gBattleTypeFlags & BATTLE_TYPE_PALACE));
-    if (isAiBattler || CanAiPredictMove())
+    if (isAiBattler || CanAiPredictMove(battler))
     {
         // Risky AI switches aggressively even mid battle
         enum SwitchType switchType = (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_RISKY) ? SWITCH_AFTER_KO : SWITCH_MID_BATTLE_OPTIONAL;
@@ -473,8 +473,11 @@ void Ai_InitPartyStruct(void)
     }
 
     // Find fainted mons
-    for (i = 0; i < gAiPartyData->count[B_SIDE_PLAYER]; i++)
+    for (i = 0; i < PARTY_SIZE; i++)
     {
+        if (GetMonData(&gPlayerParty[i], MON_DATA_SPECIES) == SPECIES_NONE)
+            continue;
+
         mon = &gPlayerParty[i];
         if (GetMonData(&gPlayerParty[i], MON_DATA_HP) == 0)
             gAiPartyData->mons[B_SIDE_PLAYER][i].isFainted = TRUE;
@@ -569,10 +572,10 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
     aiData->moveLimitations[battler] = CheckMoveLimitations(battler, 0, MOVE_LIMITATIONS_ALL);
     aiData->speedStats[battler] = GetBattlerTotalSpeedStat(battler, ability, holdEffect);
 
-    if (IsAiBattlerAssumingStab())
+    if (IsAiBattlerAssumingStab(battler))
         RecordMovesBasedOnStab(battler);
 
-    if (IsAiBattlerAssumingStatusMoves())
+    if (IsAiBattlerAssumingStatusMoves(battler))
         RecordStatusMoves(battler);
 }
 
@@ -682,7 +685,7 @@ void SetAiLogicDataForTurn(struct AiLogicData *aiData)
     for (battlerAtk = 0; battlerAtk < battlersCount; battlerAtk++)
     {
         // Prediction limited to player side but can be expanded to read partners move in the future
-        if (!IsOnPlayerSide(battlerAtk) || !CanAiPredictMove())
+        if (!IsOnPlayerSide(battlerAtk) || !CanAiPredictMove(battlerAtk))
             continue;
 
         // This can potentially be cleaned up more

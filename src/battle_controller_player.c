@@ -157,6 +157,7 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 
 void SetControllerToPlayer(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_PLAYER;
     gBattlerControllerEndFuncs[battler] = PlayerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = PlayerBufferRunCommand;
     gDoingBattleAnim = FALSE;

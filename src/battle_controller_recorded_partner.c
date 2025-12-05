@@ -105,6 +105,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
 
 void SetControllerToRecordedPartner(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_PARTNER;
     gBattlerControllerEndFuncs[battler] = RecordedPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedPartnerBufferRunCommand;
 }

@@ -7,6 +7,7 @@
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
 #include "battle_ai_switch_items.h"
+#include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
 #include "event_data.h"
@@ -126,54 +127,36 @@ bool32 AI_RandLessThan(u32 val)
     return FALSE;
 }
 
-bool32 IsAiVsAiBattle(void)
+bool32 IsAiFlagPresent(u64 flag)
 {
-    return (B_FLAG_AI_VS_AI_BATTLE && FlagGet(B_FLAG_AI_VS_AI_BATTLE));
-}
-
-bool32 BattlerHasAi(u32 battlerId)
-{
-    switch (GetBattlerPosition(battlerId))
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-    case B_POSITION_PLAYER_LEFT:
-        if (IsAiVsAiBattle())
+        if (gAiThinkingStruct->aiFlags[i] & flag)
             return TRUE;
-    default:
-        return FALSE;
-    case B_POSITION_OPPONENT_LEFT:
-        return TRUE;
-    case B_POSITION_PLAYER_RIGHT:
-        if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER) || IsAiVsAiBattle())
-            return TRUE;
-        else
-            return FALSE;
-    case B_POSITION_OPPONENT_RIGHT:
-        return TRUE;
     }
+
+    return FALSE;
 }
 
 bool32 IsAiBattlerAware(u32 battlerId)
 {
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_OMNISCIENT
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_OMNISCIENT)
+    if (IsAiFlagPresent(AI_FLAG_OMNISCIENT))
         return TRUE;
 
     return BattlerHasAi(battlerId);
 }
 
-bool32 IsAiBattlerAssumingStab()
+bool32 IsAiBattlerAssumingStab(u32 battlerId)
 {
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STAB
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STAB)
+    if (IsAiFlagPresent(AI_FLAG_ASSUME_STAB))
         return TRUE;
 
     return FALSE;
 }
 
-bool32 IsAiBattlerAssumingStatusMoves()
+bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId)
 {
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_ASSUME_STATUS_MOVES
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_ASSUME_STATUS_MOVES)
+    if (IsAiFlagPresent(AI_FLAG_ASSUME_STATUS_MOVES))
         return TRUE;
 
     return FALSE;
@@ -181,27 +164,30 @@ bool32 IsAiBattlerAssumingStatusMoves()
 
 bool32 IsAiBattlerPredictingAbility(u32 battlerId)
 {
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_WEIGH_ABILITY_PREDICTION
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_WEIGH_ABILITY_PREDICTION)
+    if (IsAiFlagPresent(AI_FLAG_WEIGH_ABILITY_PREDICTION))
         return TRUE;
 
-    return BattlerHasAi(battlerId);
+    return FALSE;
 }
 
-bool32 CanAiPredictMove(void)
+bool32 CanAiPredictMove(u32 battlerId)
 {
-    return gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_PREDICT_MOVE
-        || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_PREDICT_MOVE;
+    if (IsAiFlagPresent(AI_FLAG_PREDICT_MOVE))
+        return TRUE;
+
+    return FALSE;
 }
 
 bool32 IsBattlerPredictedToSwitch(u32 battler)
 {
     // Check for prediction flag on AI, whether they're using those predictions this turn, and whether the AI thinks the player should switch
-    if (gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_LEFT] & AI_FLAG_PREDICT_SWITCH
-     || gAiThinkingStruct->aiFlags[B_POSITION_OPPONENT_RIGHT] & AI_FLAG_PREDICT_SWITCH)
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
-            return TRUE;
+        if (gAiThinkingStruct->aiFlags[i] & AI_FLAG_PREDICT_SWITCH)
+        {
+            if (gAiLogicData->predictingSwitch && gAiLogicData->shouldSwitch & (1u << battler))
+                return TRUE;
+        }
     }
     return FALSE;
 }
@@ -209,7 +195,7 @@ bool32 IsBattlerPredictedToSwitch(u32 battler)
 // Either a predicted move or the last used move from an opposing battler
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
 {
-    if (aiData->predictingMove && CanAiPredictMove())
+    if (aiData->predictingMove && CanAiPredictMove(battler))
         return aiData->predictedMove[opposingBattler];
     return aiData->lastUsedMove[opposingBattler];
 }
@@ -217,7 +203,7 @@ u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData
 // When not predicting, don't want to reference player's previous move; leads to weird behaviour for cases like Fake Out or Protect, especially in doubles
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
 {
-    if (aiData->predictingMove && CanAiPredictMove())
+    if (aiData->predictingMove && CanAiPredictMove(battler))
         return aiData->predictedMove[opposingBattler];
     return MOVE_NONE;
 }
@@ -1732,7 +1718,7 @@ enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId)
         return gDisableStructs[battlerId].overwrittenAbility;
 
     // The AI knows its own ability, and omniscience handling
-    if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab() && ASSUME_STAB_SEES_ABILITY))
+    if (IsAiBattlerAware(battlerId) || (IsAiBattlerAssumingStab(battlerId) && ASSUME_STAB_SEES_ABILITY))
         return knownAbility;
 
     // Check neutralizing gas, gastro acid

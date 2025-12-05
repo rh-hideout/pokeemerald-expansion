@@ -5565,6 +5565,13 @@ static void HandleEndTurn_FinishBattle(void)
         {
             gBattleMons[i].species = SPECIES_NONE;
         }
+
+        // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+        for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+        {
+            gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+        }
+
         gBattleMainFunc = FreeResetData_ReturnToOvOrDoEvolutions;
         gCB2_AfterEvolution = BattleMainCB2;
     }
