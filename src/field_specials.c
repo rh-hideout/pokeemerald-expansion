@@ -86,7 +86,7 @@
 #define ELEVATOR_WINDOW_HEIGHT 3
 #define ELEVATOR_LIGHT_STAGES  3
 
-enum 
+enum
 {
     CAN_LEARN_MOVE,
     CANNOT_LEARN_MOVE,
@@ -2865,7 +2865,7 @@ void ShowNatureGirlMessage(void)
         nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
     else
         nature = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PERSONALITY) % NUM_NATURES;
-    
+
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 
@@ -4460,7 +4460,7 @@ void CanTeachMoveBoxMon(void)
                 CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
             }
         }
-        
+
     }
 }
 
@@ -4565,7 +4565,7 @@ static void Task_BoxMonReplaceMove(u8 taskId)
         if(gSpecialVar_MonBoxId == 0xFF)
         {
             RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
-            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace()); 
+            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace());
         }
         else
         {
@@ -4575,10 +4575,11 @@ static void Task_BoxMonReplaceMove(u8 taskId)
             ppBonuses &= gPPUpClearMask[GetMoveSlotToReplace()];
             SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
 
+            u8 newPP = GetMovePP(move);
             SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
-            SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
+            SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &newPP);
         }
-     
+
         Task_LearnedMoveBoxMon(taskId);
     }
 }
