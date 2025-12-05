@@ -12,7 +12,6 @@
 
 static void LoadTypeSpritesAndPalettes(void);
 static void LoadTypeIconsPerBattler(u32, u32);
-void LoadMoveTypeIconPalette(enum Type type);
 
 static bool32 UseDoubleBattleCoords(u32);
 
@@ -639,9 +638,6 @@ static void CreateMoveTypeIconSpriteAndSetAttributes(enum Type type, u32 x, u32 
 
 static bool32 ShouldFlipTypeIcon(bool32 useDoubleBattleCoords, u32 position, enum Type typeId)
 {
-    if (position == MOVE_TYPE_ICON)
-        return FALSE;
-
     enum BattleSide side = (useDoubleBattleCoords) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
 
     if (GetBattlerSide(GetBattlerAtPosition(position)) != side)
