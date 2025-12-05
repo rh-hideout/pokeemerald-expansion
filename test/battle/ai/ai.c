@@ -1162,3 +1162,9 @@ AI_SINGLE_BATTLE_TEST("AI's Explosion scoring handles multiple move effects and 
         TURN { MOVE(player, MOVE_DETECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
     }
 }
+
+TEST("AI hits to KO damage rounding works correctly")
+{
+    EXPECT_EQ(GetNoOfHitsToKO(4, 12), 3);
+    EXPECT_EQ(GetNoOfHitsToKO(16, 50), 4);
+}
