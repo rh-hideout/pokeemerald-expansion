@@ -3,7 +3,6 @@
 
 void LoadTypeIcons(u32 battler);
 void LoadTypeIconForMoveInfo(enum Type type);
-void LoadTypeSpritesAndPalettes(void);
 void LoadMoveTypeIconSpritesAndPalettes(void);
 void DestroyMoveTypeIconSprite(void);
 void TryToHideMoveTypeIconSprite(void);

@@ -10,8 +10,7 @@
 #include "sprite.h"
 #include "type_icons.h"
 
-#define sHide  data[0]
-
+static void LoadTypeSpritesAndPalettes(void);
 static void LoadTypeIconsPerBattler(u32, u32);
 void LoadMoveTypeIconPalette(enum Type type);
 
@@ -28,6 +27,7 @@ static bool32 ShouldSkipSecondType(enum Type[], u32);
 static void SetTypeIconXY(s32*, s32*, u32, bool32, u32);
 
 static void CreateSpriteAndSetTypeSpriteAttributes(enum Type, u32 x, u32 y, u32, u32, bool32);
+static void CreateMoveTypeIconSpriteAndSetAttributes(enum Type type, u32 x, u32 y);
 static bool32 ShouldFlipTypeIcon(bool32, u32, enum Type);
 
 static void SpriteCB_TypeIcon(struct Sprite*);
@@ -433,7 +433,7 @@ void LoadTypeIcons(u32 battler)
         LoadTypeIconsPerBattler(battler, position);
 }
 
-void LoadTypeSpritesAndPalettes(void)
+static void LoadTypeSpritesAndPalettes(void)
 {
     if (IndexOfSpritePaletteTag(TYPE_ICON_TAG) != UCHAR_MAX)
         return;
@@ -479,7 +479,7 @@ void LoadTypeIconForMoveInfo(enum Type type)
     enum Type types[1];
 
     types[typeNum] = type;
-    CreateSpriteFromType(MOVE_TYPE_ICON, FALSE, types, typeNum, B_POSITION_PLAYER_RIGHT);
+    CreateSpriteFromType(MOVE_TYPE_ICON, FALSE, types, typeNum, B_POSITION_PLAYER_LEFT);
 }
 
 static bool32 UseDoubleBattleCoords(u32 position)
@@ -576,7 +576,10 @@ static void CreateSpriteFromType(u32 position, bool32 useDoubleBattleCoords, enu
 
     SetTypeIconXY(&x, &y, position, useDoubleBattleCoords, typeNum);
 
-    CreateSpriteAndSetTypeSpriteAttributes(types[typeNum], x, y, position, battler, useDoubleBattleCoords);
+    if (position == MOVE_TYPE_ICON)
+        CreateMoveTypeIconSpriteAndSetAttributes(types[typeNum], x, y);
+    else
+        CreateSpriteAndSetTypeSpriteAttributes(types[typeNum], x, y, position, battler, useDoubleBattleCoords);
 }
 
 static bool32 ShouldSkipSecondType(enum Type types[], u32 typeNum)
@@ -604,22 +607,9 @@ void DestroyMoveTypeIconSprite(void)
 static void CreateSpriteAndSetTypeSpriteAttributes(enum Type type, u32 x, u32 y, u32 position, u32 battler, bool32 useDoubleBattleCoords)
 {
     struct Sprite* sprite;
-    const struct SpriteTemplate* spriteTemplate;
+    const struct SpriteTemplate* spriteTemplate = gTypesInfo[type].useSecondTypeIconPalette ? &sSpriteTemplate_TypeIcons2 : &sSpriteTemplate_TypeIcons1;
 
-    if (position == MOVE_TYPE_ICON)
-        spriteTemplate = &sSpriteTemplate_MoveTypeIcon;
-    else
-        spriteTemplate = gTypesInfo[type].useSecondTypeIconPalette ? &sSpriteTemplate_TypeIcons2 : &sSpriteTemplate_TypeIcons1;
-
-    if (position == MOVE_TYPE_ICON && gBattleStruct->moveTypeIconSpriteId != 0)
-        DestroyMoveTypeIconSprite();
-
-    u32 spriteId = gBattleStruct->moveTypeIconSpriteId = CreateSpriteAtEnd(spriteTemplate, x, y, UCHAR_MAX);
-
-    DebugPrintf("spriteId: %u", spriteId);
-    DebugPrintf("type: %S", gTypesInfo[type].name);
-    DebugPrintf("x, y: %u, %u", x, y);
-
+    u32 spriteId = CreateSpriteAtEnd(spriteTemplate, x, y, UCHAR_MAX);
     if (spriteId == MAX_SPRITES)
         return;
 
@@ -628,13 +618,27 @@ static void CreateSpriteAndSetTypeSpriteAttributes(enum Type type, u32 x, u32 y,
     sprite->tBattlerId = battler;
     sprite->tVerticalPosition = y;
 
-    if (position == MOVE_TYPE_ICON)
-    {
-        sprite->oam.paletteNum = gTypesInfo[type].palette;
-        sprite->invisible = FALSE;
-    }
-
     sprite->hFlip = ShouldFlipTypeIcon(useDoubleBattleCoords, position, type);
+
+    StartSpriteAnim(sprite, type);
+}
+
+static void CreateMoveTypeIconSpriteAndSetAttributes(enum Type type, u32 x, u32 y)
+{
+    struct Sprite* sprite;
+
+    if (gBattleStruct->moveTypeIconSpriteId != 0)
+        DestroyMoveTypeIconSprite();
+
+    u32 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_MoveTypeIcon, x, y, UCHAR_MAX);
+    if (spriteId == MAX_SPRITES)
+        return;
+
+    gBattleStruct->moveTypeIconSpriteId = spriteId;
+
+    sprite = &gSprites[spriteId];
+    sprite->oam.paletteNum = gTypesInfo[type].palette;
+    sprite->invisible = FALSE;
 
     StartSpriteAnim(sprite, type);
 }
