@@ -114,6 +114,12 @@ void UpdateOverworldEncounters(void)
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
+        if (objectEventId == OBJECT_EVENTS_COUNT)
+        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            return;
+        }
+
         gObjectEvents[objectEventId].disableCoveringGroundEffects = TRUE;
         gObjectEvents[objectEventId].range.rangeX = OW_ENCOUNTER_MOVEMENT_RANGE_X;
         gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
