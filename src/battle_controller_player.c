@@ -242,7 +242,8 @@ static void HandleInputChooseAction(u32 battler)
     else
         gPlayerDpadHoldFrames = 0;
 
-    if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE)
+    if (B_LAST_USED_BALL == TRUE && B_LAST_USED_BALL_CYCLE == TRUE
+    && !(B_LAST_USED_BALL_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         if (!gLastUsedBallMenuPresent)
         {
@@ -880,7 +881,8 @@ void HandleInputChooseMove(u32 battler)
             MoveSelectionDisplayMoveType(battler);
         }
     }
-    else if (JOY_NEW(B_MOVE_DESCRIPTION_BUTTON))
+    else if (JOY_NEW(B_MOVE_DESCRIPTION_BUTTON) &&
+        !(B_MOVE_DESCRIPTION_BUTTON == L_BUTTON && gSaveBlock2Ptr->optionsButtonMode == OPTIONS_BUTTON_MODE_L_EQUALS_A))
     {
         gBattleStruct->descriptionSubmenu = TRUE;
         TryMoveSelectionDisplayMoveDescription(battler);
