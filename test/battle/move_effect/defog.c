@@ -724,7 +724,6 @@ DOUBLE_BATTLE_TEST("Defog removes everything it can")
 
 SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind a Substitute with Screen up")
 {
-    KNOWN_FAILING;
     u32 config;
     PARAMETRIZE { config = GEN_4; }
     PARAMETRIZE { config = GEN_5; }
@@ -743,8 +742,8 @@ SINGLE_BATTLE_TEST("Defog is used on the correct side if opposing mon is behind 
         MESSAGE("The opposing team's Light Screen wore off!");
     } THEN {
         if (config >= GEN_5)
-            EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
-        else
             EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE);
+        else
+            EXPECT_EQ(opponent->statStages[STAT_EVASION], DEFAULT_STAT_STAGE - 1);
     }
 }
