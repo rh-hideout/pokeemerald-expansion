@@ -1,0 +1,54 @@
+{
+    "regions": [
+        {
+            "id": "REGION_KANTO",
+            "name": "Kanto",
+            "text": "KANTO"
+        },
+        {
+            "id": "REGION_JOHTO",
+            "name": "Johto",
+            "text": "JOHTO"
+        },
+        {
+            "id": "REGION_HOENN",
+            "name": "Hoenn",
+            "text": "HOENN"
+        },
+        {
+            "id": "REGION_SINNOH",
+            "name": "Sinnoh",
+            "text": "SINNOH"
+        },
+        {
+            "id": "REGION_UNOVA",
+            "name": "Unova",
+            "text": "UNOVA"
+        },
+        {
+            "id": "REGION_KALOS",
+            "name": "Kalos",
+            "text": "KALOS"
+        },
+        {
+            "id": "REGION_ALOLA",
+            "name": "Alola",
+            "text": "ALOLA"
+        },
+        {
+            "id": "REGION_GALAR",
+            "name": "Galar",
+            "text": "GALAR"
+        },
+        {
+            "id": "REGION_HISUI",
+            "name": "Hisui",
+            "text": "HISUI"
+        },
+        {
+            "id": "REGION_PALDEA",
+            "name": "Paldea",
+            "text": "PALDEA"
+        }
+    ]
+}
