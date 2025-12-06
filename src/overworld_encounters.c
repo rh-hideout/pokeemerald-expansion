@@ -66,6 +66,7 @@ void UpdateOverworldEncounters(void)
     u16 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
+    s16 x, y;
 
     if (sOWESpawnCountdown != 0)
     {
@@ -73,8 +74,10 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    s16 x, y;
-    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()) && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
+    if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
+        return;
+    
+    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()))
     {
         u16 spawnSlot = NextSpawnMonSlot();
 
@@ -512,6 +515,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 
 static bool8 IsSafeToSpawnObjectEvents(void)
 {
+    // Can this just be a check for player not moving?
     struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     // Only spawn when player is at a valid tile position
