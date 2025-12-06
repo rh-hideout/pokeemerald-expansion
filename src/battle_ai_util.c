@@ -845,7 +845,7 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
         && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
         return TRUE;
-        
+
     return FALSE;
 }
 
