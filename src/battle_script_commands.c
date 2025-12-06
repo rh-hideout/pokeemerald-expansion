@@ -1026,7 +1026,7 @@ static void TryClearChargeVolatile(u32 moveType)
 
     if (moveType == TYPE_ELECTRIC && gBattleMons[gBattlerAttacker].volatiles.chargeTimer == 1)
         gBattleMons[gBattlerAttacker].volatiles.chargeTimer = 0;
-    
+
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
         if (gBattleMons[battler].volatiles.chargeTimer == 2) // Has been set this turn by move
@@ -2332,6 +2332,8 @@ static void PassiveDataHpUpdate(u32 battler, const u8 *nextInstr)
             gBattleMons[battler].hp -= gBattleStruct->passiveHpUpdate[battler];
         else
             gBattleMons[battler].hp = 0;
+        // Since this is reset for the next turn, it should be fine to set it here.
+        gProtectStructs[battler].assuranceDoubled = TRUE;
     }
 
     // Send updated HP
@@ -2431,7 +2433,6 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
                     gProtectStructs[battler].physicalBattlerId = gBattlerAttacker;
                 else
                     gProtectStructs[battler].physicalBattlerId = gBattlerTarget;
-                gProtectStructs[battler].assuranceDoubled = TRUE;
             }
             else // Physical move
             {
@@ -2441,8 +2442,10 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
                     gProtectStructs[battler].specialBattlerId = gBattlerAttacker;
                 else
                     gProtectStructs[battler].specialBattlerId = gBattlerTarget;
-                gProtectStructs[battler].assuranceDoubled = TRUE;
             }
+            gProtectStructs[battler].assuranceDoubled = TRUE;
+            gProtectStructs[battler].revengeDoubled |= 1u << gBattlerAttacker;
+
         }
         // Send updated HP
         BtlController_EmitSetMonData(battler, B_COMM_TO_CONTROLLER, REQUEST_HP_BATTLE, 0, sizeof(gBattleMons[battler].hp), &gBattleMons[battler].hp);
