@@ -65,9 +65,9 @@ struct MoveInfo
     const u8 *name;
     const u8 *description;
     enum BattleMoveEffects effect;
-    enum Type type:5;     // Up to 32
+    enum Type type:5; // Up to 32
     enum DamageCategory category:2;
-    u16 power:9;    // up to 511
+    u16 power:9; // up to 511
     // end of word
     u16 accuracy:7;
     u16 target:9;
@@ -642,5 +642,11 @@ static inline const u8 *GetMoveBattleScript(u32 moveId)
     }
     return gBattleMoveEffects[GetMoveEffect(moveId)].battleScript;
 }
+
+#ifndef ROM_HEADER_INCLUDE
+#define gMovesInfo \
+_Pragma("GCC error \"Use getters instead of accessing gMovesInfo directly.\"") \
+gMovesInfo
+#endif
 
 #endif // GUARD_MOVES_H
