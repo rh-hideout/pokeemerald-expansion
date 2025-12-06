@@ -253,12 +253,7 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
-            if (gSpecialVar_LastTalked > LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS && gSpecialVar_LastTalked <= LOCALID_OW_ENCOUNTER_END)
-            {
-                RemoveObjectEvent(&gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)]);
-                gSpecialVar_LastTalked = LOCALID_NONE;
-            }
-
+            TryRemoveOverworldWildEncounter(gSpecialVar_LastTalked);
             PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);

@@ -800,5 +800,16 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
     }
 }
 
+void TryRemoveOverworldWildEncounter(u32 localId)
+{
+    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+    
+    if (IsOverworldWildEncounter(object))
+    {
+        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+        gSpecialVar_LastTalked = LOCALID_NONE;
+    }
+}
+
 #undef sOverworldEncounterLevel
 #undef sAge
