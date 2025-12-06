@@ -39,7 +39,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Smelling Salt")
     PARAMETRIZE { status1 = STATUS1_PARALYSIS; expectedMove = MOVE_SMELLING_SALTS; }
 
     GIVEN {
-        ASSUME(B_UPDATED_MOVE_DATA >= GEN_6);
+        WITH_MOVE_DATA(MOVE_SMELLING_SALTS, MOVE_DATA_POWER, 70); // Gen 5's 60 power makes the test fail
         ASSUME(GetMoveEffect(MOVE_SMELLING_SALTS) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
         ASSUME(GetMoveEffectArg_Status(MOVE_SMELLING_SALTS) == STATUS1_PARALYSIS);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -61,7 +61,7 @@ AI_SINGLE_BATTLE_TEST("AI sees increased base power of Wake Up Slap")
     PARAMETRIZE { status1 = STATUS1_SLEEP; expectedMove = MOVE_WAKE_UP_SLAP; }
 
     GIVEN {
-        ASSUME(B_UPDATED_MOVE_DATA >= GEN_6);
+        WITH_MOVE_DATA(MOVE_WAKE_UP_SLAP, MOVE_DATA_POWER, 70); // Gen 5's 60 power makes the test fail
         ASSUME(GetMoveEffect(MOVE_WAKE_UP_SLAP) == EFFECT_DOUBLE_POWER_ON_ARG_STATUS);
         ASSUME(GetMoveEffectArg_Status(MOVE_WAKE_UP_SLAP) == STATUS1_SLEEP);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
@@ -163,7 +163,7 @@ AI_SINGLE_BATTLE_TEST("AI can choose Counter or Mirror Coat if the predicted mov
         ASSUME(GetMoveEffect(MOVE_MIRROR_COAT) == EFFECT_MIRROR_COAT);
         ASSUME(GetMoveCategory(MOVE_STRENGTH) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_POWER_GEM) == DAMAGE_CATEGORY_SPECIAL);
-        ASSUME(GetMovePower(MOVE_POWER_GEM) == 80); // Gen 5's 70 power causes the test to fail
+        WITH_MOVE_DATA(MOVE_POWER_GEM, MOVE_DATA_POWER, 80); // Gen 5's 70 power causes the test to fail
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(102); Speed(100); Moves(opponentMove, MOVE_STRENGTH); }
