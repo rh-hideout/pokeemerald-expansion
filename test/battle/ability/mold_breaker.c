@@ -123,4 +123,3 @@ SINGLE_BATTLE_TEST("Mold Breaker cancels damage reduction from Ice Scales", s16 
 }
 
 TO_DO_BATTLE_TEST("TODO: Write more Mold Breaker (Ability) test titles")
-
