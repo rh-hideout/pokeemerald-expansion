@@ -1961,8 +1961,7 @@ u8 CreateNPCTrainerPartyFromTrainer(struct Pokemon *party, const struct Trainer 
                     if (speciesInfo->abilities[abilityNum] == partyData[monIndex].ability)
                         break;
                 }
-                if (abilityNum >= maxAbilityNum)
-                    abilityNum = 0;
+                assertf(abilityNum < maxAbilityNum, "illegal ability %S for %S", gAbilitiesInfo[partyData[monIndex].ability], speciesInfo->speciesName);
             }
             else if (B_TRAINER_MON_RANDOM_ABILITY)
             {
@@ -3743,7 +3742,8 @@ static void DoBattleIntro(void)
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
                 gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
+                if (TRAINER_BATTLE_PARAM.opponentB != 0xFFFF)
+                  gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
                 gBattleStruct->startingStatusTimer = 0; // infinite
             }
             if (B_VAR_STARTING_STATUS != 0)
