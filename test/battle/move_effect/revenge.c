@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(GetMoveEffect(MOVE_ASSURANCE) == EFFECT_ASSURANCE);
+    ASSUME(GetMoveEffect(MOVE_REVENGE) == EFFECT_REVENGE);
 }
 
 SINGLE_BATTLE_TEST("Revenge doubles in power if False Swipe connected but didn't do any damage")
