@@ -196,11 +196,10 @@ struct SpecialStatus
     u8 rototillerAffected:1;  // to be affected by rototiller
     // End of byte
     u8 criticalHit:1;
-    u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 padding2:1;
+    u8 padding2:2;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;

@@ -229,7 +229,6 @@ static bool32 FirstEventBlockEvents(struct BattleContext *ctx)
         else if (EmergencyExitCanBeTriggered(battler))
         {
             gBattleScripting.battler = gBattlerAbility = battler;
-            gSpecialStatuses[battler].switchInItemDone = FALSE;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
             BattleScriptCall(BattleScript_EmergencyExit);

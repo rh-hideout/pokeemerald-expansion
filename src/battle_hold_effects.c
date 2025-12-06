@@ -222,9 +222,8 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
             effect = ITEM_EFFECT_OTHER;
         }
     }
-    else if (!gSpecialStatuses[battler].switchInItemDone)
+    else if (gBattleStruct->battlerState[battler].switchIn)
     {
-        gSpecialStatuses[battler].switchInItemDone = TRUE;
         BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
         effect = ITEM_EFFECT_OTHER;
