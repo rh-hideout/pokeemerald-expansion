@@ -78,12 +78,12 @@ bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon s
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(u32 battler);
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
-bool32 IsAiVsAiBattle(void);
-bool32 BattlerHasAi(u32 battlerId);
+bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);
-bool32 CanAiPredictMove(void);
-bool32 IsAiBattlerAssumingStab(void);
-bool32 IsAiBattlerAssumingStatusMoves(void);
+bool32 CanAiPredictMove(u32 battlerId);
+bool32 IsAiBattlerAssumingStab(u32 battlerId);
+bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId);
+bool32 IsAiBattlerPredictingAbility(u32 battlerId);
 bool32 ShouldRecordStatusMove(u32 move);
 void ClearBattlerMoveHistory(u32 battlerId);
 void RecordLastUsedMoveBy(u32 battlerId, u32 move);

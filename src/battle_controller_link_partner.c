@@ -100,6 +100,7 @@ static void (*const sLinkPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battl
 
 void SetControllerToLinkPartner(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_LINK_PARTNER;
     gBattlerControllerEndFuncs[battler] = LinkPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = LinkPartnerBufferRunCommand;
 }
