@@ -1177,3 +1177,9 @@ AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's one-shot-priority moves 
         TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_INCINERATE, target:opponentLeft); EXPECT_MOVE(opponentRight, MOVE_AQUA_JET, target:playerLeft); }
     }
 }
+
+TEST("AI hits to KO damage rounding works correctly")
+{
+    EXPECT_EQ(GetNoOfHitsToKO(4, 12), 3);
+    EXPECT_EQ(GetNoOfHitsToKO(16, 50), 4);
+}
