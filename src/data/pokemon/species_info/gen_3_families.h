@@ -10723,18 +10723,18 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             "air imbued with ghost energy to\n"
             "freeze even insubstantial things,\n"
             "such as flames or the wind."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_CircledQuestionMark, //gMonFrontPic_FroslassMega
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPic = gMonBackPic_CircledQuestionMark, //gMonBackPic_FroslassMega
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .palette = gMonPalette_CircledQuestionMark, //gMonPalette_FroslassMega
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark, //gMonShinyPalette_FroslassMega
+        .iconSprite = gMonIcon_QuestionMark, //gMonIcon_Froslass
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)

@@ -5277,18 +5277,18 @@ const struct SpeciesInfo gSpeciesInfoGen8[] =
             "ultimate battle formation, which\n"
             "can be achieved only if the troopers\n"
             "and brass have the strongest of bonds."),
-        .frontPic = gMonFrontPic_CircledQuestionMark,
+        .frontPic = gMonFrontPic_CircledQuestionMark, //gMonFrontPic_FalinksMega
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
         .frontAnimFrames = sAnims_TwoFramePlaceHolder,
         .frontAnimId = ANIM_V_SQUISH_AND_BOUNCE,
-        .backPic = gMonBackPic_CircledQuestionMark,
+        .backPic = gMonBackPic_CircledQuestionMark, //gMonBackPic_FalinksMega
         .backPicSize = MON_COORDS_SIZE(40, 40),
         .backPicYOffset = 12,
         .backAnimId = BACK_ANIM_NONE,
-        .palette = gMonPalette_CircledQuestionMark,
-        .shinyPalette = gMonShinyPalette_CircledQuestionMark,
-        .iconSprite = gMonIcon_QuestionMark,
+        .palette = gMonPalette_CircledQuestionMark, //gMonPalette_FalinksMega
+        .shinyPalette = gMonShinyPalette_CircledQuestionMark, //gMonShinyPalette_FalinksMega
+        .iconSprite = gMonIcon_QuestionMark, //gMonIcon_FalinksMega
         .iconPalIndex = 0,
         .pokemonJumpType = PKMN_JUMP_TYPE_NONE,
         FOOTPRINT(QuestionMark)
