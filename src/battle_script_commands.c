@@ -5906,8 +5906,12 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
                 recoil = GetNonDynamaxMaxHP(gBattlerAttacker) / 2;
             else if (B_RECOIL_IF_MISS_DMG == GEN_4 && (GetNonDynamaxMaxHP(gBattlerTarget) / 2) < gBattleStruct->moveDamage[gBattlerTarget])
                 recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
-            else // Fallback if B_RECOIL_IF_MISS_DMG is set to gen3 or lower.
+            else if (B_RECOIL_IF_MISS_DMG == GEN_3)
                 recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 2;
+            else if (B_RECOIL_IF_MISS_DMG == GEN_2)
+                recoil = GetNonDynamaxMaxHP(gBattlerTarget) / 8;
+            else
+                recoil = 1;
             SetPassiveDamageAmount(gBattlerAttacker, recoil);
             BattleScriptCall(BattleScript_RecoilIfMiss);
             effect = TRUE;

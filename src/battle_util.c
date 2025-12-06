@@ -8065,8 +8065,13 @@ static inline s32 CalculateBaseDamage(u32 power, u32 userFinalAttack, u32 level,
 
 static inline uq4_12_t GetTargetDamageModifier(struct DamageContext *ctx)
 {
-    if (IsDoubleBattle() && GetMoveTargetCount(ctx) >= 2)
-        return B_MULTIPLE_TARGETS_DMG >= GEN_4 ? UQ_4_12(0.75) : UQ_4_12(0.5);
+    if (IsDoubleBattle())
+	{
+        if (GetMoveTargetCount(ctx) == 2)
+            return B_MULTIPLE_TARGETS_DMG >= GEN_4 ? UQ_4_12(0.75) : UQ_4_12(0.5);
+        else if (GetMoveTargetCount(ctx) >= 3)
+            return B_MULTIPLE_TARGETS_DMG >= GEN_4 ? UQ_4_12(0.75) : UQ_4_12(1.0);
+	}
     return UQ_4_12(1.0);
 }
 
