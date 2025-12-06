@@ -4271,7 +4271,9 @@ void TestThing(void)
     }
     SetupSpritesForTextPrinting(spriteIds, NULL, 3, 3);
 
-    //SpriteFillRectWithColor(spriteIds[0], 16, 16, 64, 64, 7);
+    SpriteFillRectWithColor(spriteIds[0], 3, 3, 3, 3, 7);
+    //SpriteFillRectWithColor(spriteIds[0], 3, 3, 88, 4, 7);
+    //SpriteFillRectWithColor(spriteIds[0], 3, 3, 88, 88, 7);
 
     PrintTextToSprite(spriteIds[0], 16, 8, FONT_SHORT, sNewString);
 }

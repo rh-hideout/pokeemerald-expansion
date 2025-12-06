@@ -1859,34 +1859,12 @@ inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, 
     }
 }
 
-static void FillSpriteColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 *color, u32 spriteWidth)
+enum FillMode
 {
-    u32 wholeX = width / 8;
-    u32 wholeY = height / 8;
-
-    u32 *tiles = (void*)(OBJ_VRAM0) + gSprites[spriteId].oam.tileNum * TILE_SIZE_4BPP;
-
-    //  Handle whole tiles
-    for (u32 y = 0; y < wholeY; y++)
-        for (u32 x = 0; x < wholeX; x++)
-            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * x, top + 8 * y, color, 8, 8);
-
-    //  Handle fractional remnants
-    u32 fracX = width % 8;
-    u32 fracY = height % 8;
-    if (fracX != 0 && fracY != 0)
-    {
-        GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * wholeX, top + 8 * wholeY, color, fracX, fracY);
-    }
-
-    if (fracX != 0)
-        for (u32 y = 0; y < wholeY; y++)
-            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * wholeX, top + 8 * y, color, fracX, 8);
-
-    if (fracY != 0)
-        for (u32 x = 0; x < wholeY; x++)
-            GLYPH_COPY((u8 *)tiles, spriteWidth * 4, left + 8 * x, top + 8 * wholeY, color, 8, fracY);
-}
+    FILL_MODE_CUSTOM,
+    FILL_MODE_FULL_LINES,
+    FILL_MODE_FULL_SPRITE,
+};
 
 struct SpriteToPrint
 {
@@ -1896,19 +1874,86 @@ struct SpriteToPrint
     u8 width;
     u8 height;
     u8 spriteWidth;
-    u32 *color;
+    enum FillMode mode:8;
+    u32 color;
 };
 
 static void FillStructWithColor(struct SpriteToPrint *input)
 {
-    DebugPrintf("==============");
-    DebugPrintf("ID: %u", input->spriteId);
-    DebugPrintf("StartX: %u", input->startX);
-    DebugPrintf("StartY: %u", input->startY);
-    DebugPrintf("Width: %u", input->width);
-    DebugPrintf("Height: %u", input->height);
-    DebugPrintf("SpriteWidth: %u", input->spriteWidth);
-    FillSpriteColor(input->spriteId, input->startX, input->startY, input->width, input->height, input->color, input->spriteWidth);
+    u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
+    switch (input->mode)
+    {
+    case FILL_MODE_FULL_SPRITE:
+        for (u32 i = 0; i < input->height * (input->width >> 3); i++)
+            tiles[i] = input->color;
+        break;
+    case FILL_MODE_FULL_LINES:
+    {
+        u32 rowOffset = 8 * (input->spriteWidth >> 3);
+        for (u32 y = input->startY; y < input->startY + input->height; y++)
+            for (u32 tile = 0; tile < (input->width >> 3); tile++)
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = input->color;
+        break;
+    }
+    case FILL_MODE_CUSTOM:
+    {
+        u32 rowOffset = 8 * (input->spriteWidth >> 3);
+        u32 startTile = input->startX % 8 ? (input->startX >> 3) + 1 : (input->startX >> 3);
+        //  Handle full tile widths
+        for (u32 y = input->startY; y < input->startY + input->height; y++)
+        {
+            for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = input->color;
+        }
+
+        //  Handle tiles with arbitrary widths
+        //  Also need to check that span is more than 1 tile
+        if (input->startX / 8 != (input->startX + input->width) / 8)
+        {
+            if (input->startX % 8 != 0)
+            {
+                //  Left edge is not tile aligned
+                u32 colorMask = 0xFFFFFFFF << (4 * (input->startX % 8));
+                u32 currColor = input->color & colorMask;
+                u32 tile = input->startX / 8;
+                u32 pixelMask = ~colorMask;
+                for (u32 y = input->startY; y < input->startY + input->height; y++)
+                {
+                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+                }
+            }
+
+            if ((input->startX + input->width) % 8 != 0)
+            {
+                //  Right edge is not tile aligned
+                u32 colorMask = 0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8)));
+                u32 currColor = input->color & colorMask;
+                u32 tile = (input->startX + input->width) / 8;
+                u32 pixelMask = ~colorMask;
+                for (u32 y = input->startY; y < input->startY + input->height; y++)
+                {
+                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+                }
+            }
+        }
+        else if (input->width < 8)
+        {
+            u32 colorMask = 0xFFFFFFFF << (4 * (input->startX % 8));
+            colorMask = colorMask & (0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8))));
+            u32 currColor = input->color & colorMask;
+            u32 tile = input->startX / 8;
+            u32 pixelMask = ~colorMask;
+            for (u32 y = input->startY; y < input->startY + input->height; y++)
+            {
+                u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currColor;
+            }
+        }
+        break;
+    }
+    }
 }
 
 void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
@@ -1918,7 +1963,6 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
     u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
 
     color = color | color << 4 | color << 8 | color << 12 | color << 16 | color << 20 | color << 24 | color << 28;
-    u32 pixels[8] = {color, color, color, color, color, color, color, color};
 
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
@@ -1975,155 +2019,234 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
         for (u32 y = 0; y < numSpritesY; y++)
         {
             u32 leftMostSpriteId = nextSpriteId;
-            for (u32 x = 0; x < numSpritesY; x++)
+            for (u32 x = 0; x < numSpritesX; x++)
             {
                 printSprites[x + y * numSpritesX].spriteId = nextSpriteId;
                 printSprites[x + y * numSpritesX].spriteWidth = spriteWidth;
-                printSprites[x + y * numSpritesX].color = pixels;
+                printSprites[x + y * numSpritesX].color = color;
 
                 nextSpriteId = gSprites[nextSpriteId].nextX;
             }
             nextSpriteId = gSprites[leftMostSpriteId].nextY;
         }
 
-        u32 rightWidth = 0;
-        if (numSpritesX > 1)
-            rightWidth = width - left - spriteWidth * (numSpritesX - 2);
-
-        //  Top edge values
-        for (u32 x = 0; x < numSpritesX; x++)
+        if (numSpritesX > 1 && numSpritesY > 1)
         {
-            printSprites[x].startY = top;
-            if (top + height > spriteHeight)
-                printSprites[x].height = spriteHeight - top;
-            else
-                printSprites[x].height = height;
+            u32 rightWidth = 0;
+            if (numSpritesX > 1)
+                rightWidth = width - left - spriteWidth * (numSpritesX - 2);
 
-            if (x == 0)
+            //  Top edge values
+            if (numSpritesX > 1)
             {
-                printSprites[x].startX = left;
-                printSprites[x].width = spriteWidth - left;
-            }
-            else if (x == numSpritesX - 1)
-            {
-                printSprites[x].startX = 0;
-                printSprites[x].width = rightWidth;
-            }
-            else
-            {
-                printSprites[x].startX = 0;
-                printSprites[x].width = spriteWidth;
-            }
-        }
-
-        u32 bottomHeight = 0;
-        if (numSpritesY > 1)
-            bottomHeight = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
-
-        //  Bottom edge values
-        if (numSpritesX > 1)
-        {
-            u32 offset = (numSpritesY - 1) * numSpritesX;
-            //u32 currHeight = height - (spriteHeight - top) - (numSpritesY - 2) * spriteHeight;
-            for (u32 x = 0; x < numSpritesX; x++)
-            {
-                printSprites[offset + x].startY = 0;
-                printSprites[offset + x].height = bottomHeight;
-
-                if (x == 0)
+                for (u32 x = 0; x < numSpritesX; x++)
                 {
-                    printSprites[offset + x].startX = left;
-                    printSprites[offset + x].width = spriteWidth - left;
+                    printSprites[x].startY = top;
+                    if (top + height > spriteHeight)
+                        printSprites[x].height = spriteHeight - top;
+                    else
+                        printSprites[x].height = height;
+
+                    if (x == 0)
+                    {
+                        printSprites[x].startX = left;
+                        printSprites[x].width = spriteWidth - left;
+                        printSprites[x].mode = FILL_MODE_CUSTOM;
+                    }
+                    else if (x == numSpritesX - 1)
+                    {
+                        printSprites[x].startX = 0;
+                        printSprites[x].width = rightWidth;
+                        printSprites[x].mode = FILL_MODE_CUSTOM;
+                    }
+                    else
+                    {
+                        printSprites[x].startX = 0;
+                        printSprites[x].width = spriteWidth;
+                        printSprites[x].mode = FILL_MODE_FULL_LINES;
+                    }
                 }
-                else if (x == numSpritesX - 1)
+            }
+            else
+            {
+                printSprites[0].startY = top;
+                printSprites[0].startX = left;
+                printSprites[0].width = width;
+                printSprites[0].mode = FILL_MODE_CUSTOM;
+            }
+
+            u32 bottomHeight = 0;
+            if (numSpritesY > 1)
+                bottomHeight = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
+
+            //  Bottom edge values
+            if (numSpritesX > 1)
+            {
+                u32 offset = (numSpritesY - 1) * numSpritesX;
+                for (u32 x = 0; x < numSpritesX; x++)
                 {
-                    printSprites[offset + x].startX = 0;
-                    printSprites[offset + x].width = rightWidth;
+                    printSprites[offset + x].startY = 0;
+                    printSprites[offset + x].height = bottomHeight;
+
+                    if (x == 0)
+                    {
+                        printSprites[offset + x].startX = left;
+                        printSprites[offset + x].width = spriteWidth - left;
+                        printSprites[offset + x].mode = FILL_MODE_CUSTOM;
+                    }
+                    else if (x == numSpritesX - 1)
+                    {
+                        printSprites[offset + x].startX = 0;
+                        printSprites[offset + x].width = rightWidth;
+                        printSprites[offset + x].mode = FILL_MODE_CUSTOM;
+                    }
+                    else
+                    {
+                        printSprites[offset + x].startX = 0;
+                        printSprites[offset + x].width = spriteWidth;
+                        printSprites[offset + x].mode = FILL_MODE_FULL_LINES;
+                    }
                 }
+            }
+
+            //  Left edge values
+
+            for (u32 y = 0; y < numSpritesY; y++)
+            {
+                printSprites[y * numSpritesX].startX = left;
+                if (left + width > spriteWidth)
+                    printSprites[y * numSpritesX].width = spriteWidth - left;
                 else
-                {
-                    printSprites[offset + x].startX = 0;
-                    printSprites[offset + x].width = spriteWidth;
-                }
-            }
-        }
-
-        //  Left edge values
-
-        for (u32 y = 0; y < numSpritesY; y++)
-        {
-            printSprites[y * numSpritesX].startX = left;
-            if (left + width > spriteWidth)
-                printSprites[y * numSpritesX].width = spriteWidth - left;
-            else
-                printSprites[y * numSpritesX].width = width;
-
-            if (y == 0)
-            {
-                printSprites[y * numSpritesX].startY = top;
-                printSprites[y * numSpritesX].height = spriteHeight - top;
-            }
-            else if (y == numSpritesY - 1)
-            {
-                printSprites[y * numSpritesX].startY = 0;
-                printSprites[y * numSpritesX].height = bottomHeight;
-            }
-            else
-            {
-                printSprites[y * numSpritesX].startY = 0;
-                printSprites[y * numSpritesX].height = spriteHeight;
-            }
-        }
-
-        //  Right edge values
-        if (numSpritesY > 1)
-        {
-            u32 currWidth = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
-            for (u32 y = 0; y < numSpritesX; y++)
-            {
-                printSprites[(numSpritesX - 1) + numSpritesX * y].startX = 0;
-                printSprites[(numSpritesX - 1) + numSpritesX * y].width = currWidth;
+                    printSprites[y * numSpritesX].width = width;
 
                 if (y == 0)
                 {
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = top;
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight - top;
+                    printSprites[y * numSpritesX].startY = top;
+                    printSprites[y * numSpritesX].height = spriteHeight - top;
+                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
                 }
                 else if (y == numSpritesY - 1)
                 {
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = bottomHeight;
+                    printSprites[y * numSpritesX].startY = 0;
+                    printSprites[y * numSpritesX].height = bottomHeight;
+                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
                 }
                 else
                 {
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
-                    printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight;
+                    printSprites[y * numSpritesX].startY = 0;
+                    printSprites[y * numSpritesX].height = spriteHeight;
+                    printSprites[y * numSpritesX].mode = FILL_MODE_CUSTOM;
+                }
+            }
+
+            //  Right edge values
+            if (numSpritesY > 1)
+            {
+                u32 currWidth = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
+                for (u32 y = 0; y < numSpritesX; y++)
+                {
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].startX = 0;
+                    printSprites[(numSpritesX - 1) + numSpritesX * y].width = currWidth;
+
+                    if (y == 0)
+                    {
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = top;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight - top;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
+                    }
+                    else if (y == numSpritesY - 1)
+                    {
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = bottomHeight;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
+                    }
+                    else
+                    {
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].startY = 0;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].height = spriteHeight;
+                        printSprites[(numSpritesX - 1) + numSpritesX * y].mode = FILL_MODE_CUSTOM;
+                    }
+                }
+            }
+
+            //  Fill in center data
+            for (u32 y = 1; y < numSpritesY - 1; y++)
+            {
+                for (u32 x = 1; x < numSpritesX - 1; x++)
+                {
+                    printSprites[y * numSpritesX + x].height = spriteHeight;
+                    printSprites[y * numSpritesX + x].width = spriteWidth;
+                    printSprites[y * numSpritesX + x].startX = 0;
+                    printSprites[y * numSpritesX + x].startY = 0;
+                    printSprites[y * numSpritesX + x].mode = FILL_MODE_FULL_SPRITE;
                 }
             }
         }
-
-        //  Fill in center data
-        for (u32 y = 1; y < numSpritesY - 1; y++)
+        else if (numSpritesX == 1)
         {
-            for (u32 x = 1; x < numSpritesX - 1; x++)
+            for (u32 y = 0; y < numSpritesY; y++)
             {
-                printSprites[y * numSpritesX + x].height = spriteHeight;
-                printSprites[y * numSpritesX + x].width = spriteWidth;
-                printSprites[y * numSpritesX + x].startX = 0;
-                printSprites[y * numSpritesX + x].startY = 0;
+                printSprites[y].startX = left;
+                printSprites[y].width = width;
+                printSprites[y].mode = FILL_MODE_CUSTOM;
+                if (y == 0)
+                {
+                    printSprites[y].startY = top;
+                    printSprites[y].height = spriteHeight - top;
+                }
+                else if (y == numSpritesY - 1)
+                {
+                    printSprites[y].startY = 0;
+                    printSprites[y].height = height - (spriteHeight - top) - spriteHeight * (numSpritesY - 2);
+                }
+                else
+                {
+                    printSprites[y].startY = 0;
+                    printSprites[y].height = spriteHeight;
+                }
+            }
+        }
+        else if (numSpritesY == 1)
+        {
+            for (u32 x = 0; x < numSpritesX; x++)
+            {
+                printSprites[x].startY = top;
+                printSprites[x].height = height;
+                printSprites[x].mode = FILL_MODE_CUSTOM;
+                if (x == 0)
+                {
+                    printSprites[x].startX = left;
+                    printSprites[x].width = spriteWidth - left;
+                }
+                else if (x == numSpritesX - 1)
+                {
+                    printSprites[x].startX = 0;
+                    printSprites[x].width = width - (spriteWidth - left) - (numSpritesX - 2) * spriteWidth;
+                }
+                else
+                {
+                    printSprites[x].startX = 0;
+                    printSprites[x].width = spriteWidth;
+                }
             }
         }
 
         u32 totalSprites = numSpritesX * numSpritesY;
         for (u32 i = 0; i < totalSprites; i++)
-        {
-            FillStructWithColor(&printSprites[ i]);
-        }
+            FillStructWithColor(&printSprites[i]);
     }
     else
     {
-        //  Just need to handle the current sprite
-        FillSpriteColor(spriteId, left, top, width, height, pixels, spriteWidth);
+        struct SpriteToPrint printSprite;
+        printSprite.color = color;
+        printSprite.startX = left;
+        printSprite.startY = top;
+        printSprite.width = width;
+        printSprite.height = height;
+        printSprite.mode = FILL_MODE_CUSTOM;
+        printSprite.spriteId = spriteId;
+        printSprite.spriteWidth = spriteWidth;
+        FillStructWithColor(&printSprite);
     }
 }
 
