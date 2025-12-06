@@ -3795,6 +3795,7 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     struct TextPrinterTemplate printerTemplate;
 
     printerTemplate.currentChar = str;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = fontId;
     printerTemplate.x = x;

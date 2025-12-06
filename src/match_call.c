@@ -1436,6 +1436,7 @@ static void InitMatchCallTextPrinter(int windowId, const u8 *str)
 {
     struct TextPrinterTemplate printerTemplate;
     printerTemplate.currentChar = str;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = FONT_NORMAL;
     printerTemplate.x = 32;

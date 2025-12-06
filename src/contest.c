@@ -5443,6 +5443,7 @@ static void Contest_PrintTextToBg0WindowStd(u32 windowId, const u8 *b)
     struct TextPrinterTemplate printerTemplate;
 
     printerTemplate.currentChar = b;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = FONT_NORMAL;
     printerTemplate.x = 0;
@@ -5466,6 +5467,7 @@ void Contest_PrintTextToBg0WindowAt(u32 windowId, u8 *currChar, s32 x, s32 y, s3
     struct TextPrinterTemplate printerTemplate;
 
     printerTemplate.currentChar = currChar;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = windowId;
     printerTemplate.fontId = fontId;
     printerTemplate.x = x;
@@ -5490,6 +5492,7 @@ static void Contest_StartTextPrinter(const u8 *currChar, bool32 b)
     u8 speed;
 
     printerTemplate.currentChar = currChar;
+    printerTemplate.type = WINDOW_TEXT_PRINTER;
     printerTemplate.windowId = WIN_GENERAL_TEXT;
     printerTemplate.fontId = FONT_NORMAL;
     printerTemplate.x = 0;
