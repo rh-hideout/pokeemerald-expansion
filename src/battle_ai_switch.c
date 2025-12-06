@@ -2,6 +2,7 @@
 #include "battle.h"
 #include "constants/battle_ai.h"
 #include "battle_ai_main.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "battle_util.h"
 #include "battle_anim.h"
@@ -21,9 +22,6 @@
 #include "constants/moves.h"
 
 // this file's functions
-static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler);
-static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 moduloPercent);
-static bool32 ShouldUseItem(u32 battler);
 struct IncomingHealInfo
 {
     u16 healAmount:16;
@@ -34,13 +32,10 @@ struct IncomingHealInfo
     u16 healEndOfTurn:1;
     u16 curesStatus:1;
 };
-
-static bool32 AiExpectsToFaintPlayer(u32 battler);
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount);
-static bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
+static bool32 CanUseSuperEffectiveMoveAgainstOpponents(u32 battler);
+static bool32 FindMonWithFlagsAndSuperEffective(u32 battler, u16 flags, u32 moduloPercent);
 static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon);
 static bool32 CanAbilityTrapOpponent(enum Ability ability, u32 opponent);
-static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon);
 static u32 GetBattleMonTypeMatchup(struct BattlePokemon opposingBattleMon, struct BattlePokemon battleMon);
 static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct IncomingHealInfo *healInfo, u32 originalHp);
 static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo);
@@ -179,7 +174,7 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
     }
 }
 
-static bool32 IsAceMon(u32 battler, u32 monPartyId)
+bool32 IsAceMon(u32 battler, u32 monPartyId)
 {
     if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_ACE_POKEMON
      && !gProtectStructs[battler].forcedSwitch
@@ -204,25 +199,6 @@ static bool32 AreStatsRaised(u32 battler)
     }
 
     return (buffedStatsValue > STAY_IN_STATS_RAISED);
-}
-
-void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
-{
-    if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
-    {
-        *firstId = 0, *lastId = PARTY_SIZE;
-    }
-    else if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TOWER_LINK_MULTI))
-    {
-        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
-            *firstId = 0, *lastId = PARTY_SIZE / 2;
-        else
-            *firstId = PARTY_SIZE / 2, *lastId = PARTY_SIZE;
-    }
-    else
-    {
-        *firstId = 0, *lastId = PARTY_SIZE;
-    }
 }
 
 static inline bool32 SetSwitchinAndSwitch(u32 battler, u32 switchinId)
@@ -1408,75 +1384,6 @@ bool32 IsSwitchinValid(u32 battler)
     return TRUE;
 }
 
-void AI_TrySwitchOrUseItem(u32 battler)
-{
-    struct Pokemon *party;
-    u8 battlerIn1, battlerIn2;
-    s32 firstId;
-    s32 lastId; // + 1
-    u8 battlerPosition = GetBattlerPosition(battler);
-    party = GetBattlerParty(battler);
-
-    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
-    {
-        if (gAiLogicData->shouldSwitch & (1u << battler) && IsSwitchinValid(battler))
-        {
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
-            SetAIUsingGimmick(battler, NO_GIMMICK);
-            if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
-            {
-                s32 monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
-                if (monToSwitchId == PARTY_SIZE)
-                {
-                    if (!IsDoubleBattle())
-                    {
-                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
-                        battlerIn2 = battlerIn1;
-                    }
-                    else
-                    {
-                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
-                        battlerIn2 = GetBattlerAtPosition(BATTLE_PARTNER(battlerPosition));
-                    }
-
-                    GetAIPartyIndexes(battler, &firstId, &lastId);
-
-                    for (monToSwitchId = (lastId-1); monToSwitchId >= firstId; monToSwitchId--)
-                    {
-                        if (!IsValidForBattle(&party[monToSwitchId]))
-                            continue;
-                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn1])
-                            continue;
-                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn2])
-                            continue;
-                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn1])
-                            continue;
-                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn2])
-                            continue;
-                        if (IsAceMon(battler, monToSwitchId))
-                            continue;
-
-                        break;
-                    }
-                }
-
-                gBattleStruct->AI_monToSwitchIntoId[battler] = monToSwitchId;
-            }
-
-            gBattleStruct->monToSwitchIntoId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
-            gAiLogicData->monToSwitchInId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
-            return;
-        }
-        else if (ShouldUseItem(battler))
-        {
-            SetAIUsingGimmick(battler, NO_GIMMICK);
-            return;
-        }
-    }
-
-    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
-}
-
 // If there are two(or more) mons to choose from, always choose one that has baton pass
 // as most often it can't do much on its own.
 static u32 GetBestMonBatonPass(struct Pokemon *party, int firstId, int lastId, u8 invalidMons, int aliveCount, u32 battler, u32 opposingBattler)
@@ -1602,7 +1509,7 @@ static u32 GetFirstNonInvalidMon(u32 firstId, u32 lastId, u32 invalidMons)
     return PARTY_SIZE;
 }
 
-bool32 IsMonGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2)
+bool32 IsSwitchinGrounded(enum HoldEffect heldItemEffect, enum Ability ability, enum Type type1, enum Type type2)
 {
     // List that makes mon not grounded
     if (type1 == TYPE_FLYING || type2 == TYPE_FLYING || ability == ABILITY_LEVITATE
@@ -1640,7 +1547,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
         if (IsHazardOnSide(side, HAZARDS_STEELSURGE) && heldItemEffect != HOLD_EFFECT_HEAVY_DUTY_BOOTS)
             hazardDamage += GetStealthHazardDamageByTypesAndHP(TYPE_SIDE_HAZARD_SHARP_STEEL, defType1, defType2, battleMon->maxHP);
         // Spikes
-        if (IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES) && IsMonGrounded(heldItemEffect, ability, defType1, defType2))
+        if (IsHazardOnSide(side, HAZARDS_TOXIC_SPIKES) && IsSwitchinGrounded(heldItemEffect, ability, defType1, defType2))
         {
             spikesDamage = maxHP / ((5 - gSideTimers[GetBattlerSide(battler)].spikesAmount) * 2);
             if (spikesDamage == 0)
@@ -1657,7 +1564,7 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
             && !IsBattlerTerrainAffected(battler, ability, gAiLogicData->holdEffects[battler], STATUS_FIELD_MISTY_TERRAIN)
             && !IsAbilityStatusProtected(battler, ability)
             && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-            && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+            && IsSwitchinGrounded(heldItemEffect, ability, defType1, defType2)))
         {
             tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
             if (tSpikesLayers == 1)
@@ -1868,7 +1775,7 @@ static u32 GetSwitchinStatusDamage(u32 battler)
         && !(heldItemEffect == HOLD_EFFECT_HEAVY_DUTY_BOOTS
             && (((gFieldStatuses & STATUS_FIELD_MAGIC_ROOM) || ability == ABILITY_KLUTZ)))
         && heldItemEffect != HOLD_EFFECT_CURE_PSN && heldItemEffect != HOLD_EFFECT_CURE_STATUS
-        && IsMonGrounded(heldItemEffect, ability, defType1, defType2)))
+        && IsSwitchinGrounded(heldItemEffect, ability, defType1, defType2)))
     {
         if (tSpikesLayers == 1)
         {
@@ -2685,276 +2592,4 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
         bestMonId = GetFirstFaintedPartyIndex(battler);
 
     return bestMonId;
-}
-
-static bool32 AiExpectsToFaintPlayer(u32 battler)
-{
-    u8 target = gAiBattleData->chosenTarget[battler];
-
-    if (gAiBattleData->actionFlee || gAiBattleData->choiceWatch)
-        return FALSE; // AI not planning to use move
-
-    if (!IsBattlerAlly(target, battler)
-      && CanIndexMoveFaintTarget(battler, target, gAiBattleData->chosenMoveIndex[battler], AI_ATTACKING)
-      && AI_IsFaster(battler, target, GetAIChosenMove(battler), GetIncomingMove(battler, target, gAiLogicData), CONSIDER_PRIORITY))
-    {
-        // We expect to faint the target and move first -> dont use an item
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-static bool32 ShouldUseItem(u32 battler)
-{
-    struct Pokemon *party;
-    s32 i;
-    u8 validMons = 0;
-    bool32 shouldUse = FALSE;
-    u32 healAmount = 0;
-
-    if (IsAiVsAiBattle())
-        return FALSE;
-
-    // If teaming up with player and Pokemon is on the right, or Pokemon is currently held by Sky Drop
-    if ((gBattleTypeFlags & BATTLE_TYPE_INGAME_PARTNER && GetBattlerPosition(battler) == B_POSITION_PLAYER_RIGHT)
-       || gBattleMons[battler].volatiles.semiInvulnerable == STATE_SKY_DROP)
-        return FALSE;
-
-    if (gBattleMons[battler].volatiles.embargo)
-        return FALSE;
-
-    if (AiExpectsToFaintPlayer(battler))
-        return FALSE;
-
-    party = GetBattlerParty(battler);
-
-    for (i = 0; i < PARTY_SIZE; i++)
-    {
-        if (IsValidForBattle(&party[i]))
-        {
-            validMons++;
-        }
-    }
-
-    for (i = 0; i < MAX_TRAINER_ITEMS; i++)
-    {
-        u16 item;
-        const u8 *itemEffects;
-        u8 battlerSide;
-
-        item = gBattleHistory->trainerItems[i];
-        if (item == ITEM_NONE)
-            continue;
-        itemEffects = GetItemEffect(item);
-        if (itemEffects == NULL)
-            continue;
-
-        switch (GetItemBattleUsage(item))
-        {
-        case EFFECT_ITEM_HEAL_AND_CURE_STATUS:
-            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
-            shouldUse = AI_ShouldHeal(battler, healAmount);
-            break;
-        case EFFECT_ITEM_RESTORE_HP:
-            healAmount = GetHPHealAmount(itemEffects[GetItemEffectParamOffset(battler, item, 4, ITEM4_HEAL_HP)], GetBattlerMon(battler));
-            shouldUse = AI_ShouldHeal(battler, healAmount);
-            break;
-        case EFFECT_ITEM_CURE_STATUS:
-            if ((itemEffects[3] & ITEM3_SLEEP && gBattleMons[battler].status1 & STATUS1_SLEEP)
-             || (itemEffects[3] & ITEM3_POISON && gBattleMons[battler].status1 & STATUS1_PSN_ANY)
-             || (itemEffects[3] & ITEM3_BURN && gBattleMons[battler].status1 & STATUS1_BURN)
-             || (itemEffects[3] & ITEM3_FREEZE && gBattleMons[battler].status1 & STATUS1_ICY_ANY)
-             || (itemEffects[3] & ITEM3_PARALYSIS && gBattleMons[battler].status1 & STATUS1_PARALYSIS)
-             || (itemEffects[3] & ITEM3_CONFUSION && gBattleMons[battler].volatiles.confusionTurns > 0))
-                shouldUse = ShouldCureStatusWithItem(battler, battler, gAiLogicData);
-            break;
-        case EFFECT_ITEM_INCREASE_STAT:
-            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
-            {
-                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
-                {
-                    shouldUse = TRUE;
-                    break;
-                }
-
-                enum StatChange statChange = STAT_CHANGE_ATK;
-
-                if (B_X_ITEMS_BUFF >= GEN_7)
-                    statChange = STAT_CHANGE_ATK_2;
-
-                statChange = statChange + itemEffects[1] - STAT_ATK;
-
-                if (IsBattlerAlive(LEFT_FOE(battler)) && IncreaseStatUpScore(battler, LEFT_FOE(battler), statChange) > NO_INCREASE)
-                    shouldUse = TRUE;
-
-                if (IsBattlerAlive(RIGHT_FOE(battler)) && IncreaseStatUpScore(battler, RIGHT_FOE(battler), statChange) > NO_INCREASE)
-                    shouldUse = TRUE;
-
-                break;
-            }
-            break;
-        case EFFECT_ITEM_INCREASE_ALL_STATS:
-            if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
-                break;
-            if (gDisableStructs[battler].isFirstTurn || !AI_OpponentCanFaintAiWithMod(battler, 0))
-            {
-                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
-                {
-                    shouldUse = TRUE;
-                    break;
-                }
-
-                if (IsBattlerAlive(LEFT_FOE(battler)))
-                {
-                    if (ShouldRaiseAnyStat(battler, LEFT_FOE(battler)))
-                        shouldUse = TRUE;
-                    else
-                        break;
-                }
-
-                if (IsBattlerAlive(RIGHT_FOE(battler)))
-                {
-                    if (ShouldRaiseAnyStat(battler, RIGHT_FOE(battler)))
-                        shouldUse = TRUE;
-                    else
-                        break;
-                }
-            }
-            break;
-        case EFFECT_ITEM_SET_FOCUS_ENERGY:
-            if (!gDisableStructs[battler].isFirstTurn
-                || gBattleMons[battler].volatiles.dragonCheer
-                || gBattleMons[battler].volatiles.focusEnergy
-                || AI_OpponentCanFaintAiWithMod(battler, 0))
-            {
-                break;
-            }
-            else
-            {
-                if (gAiThinkingStruct->aiFlags[battler] & AI_FLAG_FORCE_SETUP_FIRST_TURN)
-                {
-                    shouldUse = TRUE;
-                    break;
-                }
-
-                if (gAiLogicData->abilities[battler] == ABILITY_SUPER_LUCK
-                 || gAiLogicData->abilities[battler] == ABILITY_SNIPER
-                 || gAiLogicData->holdEffects[battler] == HOLD_EFFECT_SCOPE_LENS
-                 || HasMoveWithFlag(battler, GetMoveCriticalHitStage))
-                    shouldUse = TRUE;
-            }
-            break;
-        case EFFECT_ITEM_SET_MIST:
-            battlerSide = GetBattlerSide(battler);
-            if (gDisableStructs[battler].isFirstTurn && !(gSideStatuses[battlerSide] & SIDE_STATUS_MIST))
-                shouldUse = TRUE;
-            break;
-        case EFFECT_ITEM_REVIVE:
-            gBattleStruct->itemPartyIndex[battler] = GetFirstFaintedPartyIndex(battler);
-            if (gBattleStruct->itemPartyIndex[battler] != PARTY_SIZE) // Revive if possible.
-                shouldUse = TRUE;
-            break;
-        case EFFECT_ITEM_USE_POKE_FLUTE:
-            if (gBattleMons[battler].status1 & STATUS1_SLEEP)
-                shouldUse = TRUE;
-            break;
-        default:
-            return FALSE;
-        }
-        if (shouldUse)
-        {
-            // Set selected party ID to current battler if none chosen.
-            if (gBattleStruct->itemPartyIndex[battler] == PARTY_SIZE)
-                gBattleStruct->itemPartyIndex[battler] = gBattlerPartyIndexes[battler];
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_ITEM, 0);
-            gBattleStruct->chosenItem[battler] = item;
-            gBattleHistory->trainerItems[i] = 0;
-            return shouldUse;
-        }
-    }
-
-    return FALSE;
-}
-
-static bool32 AI_ShouldHeal(u32 battler, u32 healAmount)
-{
-    bool32 shouldHeal = FALSE;
-    u8 opponent;
-    u32 maxDamage = 0;
-    u32 dmg = 0;
-
-    if (gBattleMons[battler].hp < gBattleMons[battler].maxHP / 4
-     || gBattleMons[battler].hp == 0
-     || (healAmount != 0 && gBattleMons[battler].maxHP - gBattleMons[battler].hp > healAmount))
-    {
-        // We have low enough HP to consider healing
-        shouldHeal = !AI_OpponentCanFaintAiWithMod(battler, healAmount); // if target can kill us even after we heal, why bother
-    }
-
-    //calculate max expected damage from the opponent
-    for (opponent = 0; opponent < gBattlersCount; opponent++)
-    {
-        if (IsOnPlayerSide(opponent))
-        {
-            dmg = GetBestDmgFromBattler(opponent, battler, AI_DEFENDING);
-
-            if (dmg > maxDamage)
-                maxDamage = dmg;
-        }
-    }
-
-    // also heal if a 2HKO is outhealed
-    if (AI_OpponentCanFaintAiWithMod(battler, 0)
-      && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
-      && healAmount > 2*maxDamage)
-        return TRUE;
-
-    // also heal, if the expected damage is outhealed and it's the last remaining mon
-    if (AI_OpponentCanFaintAiWithMod(battler, 0)
-      && !AI_OpponentCanFaintAiWithMod(battler, healAmount)
-      && CountUsablePartyMons(battler) == 0)
-        return TRUE;
-
-    return shouldHeal;
-}
-
-static bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
-{
-    u32 i;
-    // Check special cases to NOT heal
-    for (i = 0; i < gBattlersCount; i++)
-    {
-        if (IsOnPlayerSide(i) && CanTargetFaintAiWithMod(i, battler, healAmount, 0))
-        {
-            // Target is expected to faint us
-            return TRUE;
-        }
-    }
-    return FALSE;
-}
-
-static u32 GetHPHealAmount(u8 itemEffectParam, struct Pokemon *mon)
-{
-    switch (itemEffectParam)
-    {
-    case ITEM6_HEAL_HP_FULL:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) - GetMonData(mon, MON_DATA_HP, NULL);
-        break;
-    case ITEM6_HEAL_HP_HALF:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 2;
-        if (itemEffectParam == 0)
-            itemEffectParam = 1;
-        break;
-    case ITEM6_HEAL_HP_LVL_UP:
-        itemEffectParam = gBattleScripting.levelUpHP;
-        break;
-    case ITEM6_HEAL_HP_QUARTER:
-        itemEffectParam = GetMonData(mon, MON_DATA_MAX_HP, NULL) / 4;
-        if (itemEffectParam == 0)
-            itemEffectParam = 1;
-        break;
-    }
-
-    return itemEffectParam;
 }

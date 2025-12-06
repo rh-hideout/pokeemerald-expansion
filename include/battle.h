@@ -13,7 +13,6 @@
 #include "battle_message.h"
 #include "battle_util.h"
 #include "battle_script_commands.h"
-#include "battle_ai_switch_items.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_util2.h"
 #include "battle_bg.h"

@@ -6,7 +6,6 @@
 #include "battle_ai_field_statuses.h"
 #include "battle_ai_util.h"
 #include "battle_ai_main.h"
-#include "battle_ai_switch_items.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
 #include "battle_setup.h"
@@ -6239,4 +6238,56 @@ bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, e
     if (effect == EFFECT_FINAL_GAMBIT)
         return ShouldFinalGambit(battlerAtk, battlerDef, aiIsFaster);
     return FALSE;
+}
+
+bool32 AiExpectsToFaintPlayer(u32 battler)
+{
+    u8 target = gAiBattleData->chosenTarget[battler];
+
+    if (gAiBattleData->actionFlee || gAiBattleData->choiceWatch)
+        return FALSE; // AI not planning to use move
+
+    if (!IsBattlerAlly(target, battler)
+      && CanIndexMoveFaintTarget(battler, target, gAiBattleData->chosenMoveIndex[battler], AI_ATTACKING)
+      && AI_IsFaster(battler, target, GetAIChosenMove(battler), GetIncomingMove(battler, target, gAiLogicData), CONSIDER_PRIORITY))
+    {
+        // We expect to faint the target and move first -> dont use an item or switch
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount)
+{
+    u32 i;
+    // Check special cases to NOT heal
+    for (i = 0; i < gBattlersCount; i++)
+    {
+        if (IsOnPlayerSide(i) && CanTargetFaintAiWithMod(i, battler, healAmount, 0))
+        {
+            // Target is expected to faint us
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
+{
+    if (BATTLE_TWO_VS_ONE_OPPONENT && (battler & BIT_SIDE) == B_SIDE_OPPONENT)
+    {
+        *firstId = 0, *lastId = PARTY_SIZE;
+    }
+    else if (gBattleTypeFlags & (BATTLE_TYPE_TWO_OPPONENTS | BATTLE_TYPE_INGAME_PARTNER | BATTLE_TYPE_TOWER_LINK_MULTI))
+    {
+        if ((battler & BIT_FLANK) == B_FLANK_LEFT)
+            *firstId = 0, *lastId = PARTY_SIZE / 2;
+        else
+            *firstId = PARTY_SIZE / 2, *lastId = PARTY_SIZE;
+    }
+    else
+    {
+        *firstId = 0, *lastId = PARTY_SIZE;
+    }
 }

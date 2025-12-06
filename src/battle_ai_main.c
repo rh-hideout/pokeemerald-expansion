@@ -4,6 +4,8 @@
 #include "battle.h"
 #include "battle_anim.h"
 #include "battle_ai_util.h"
+#include "battle_ai_items.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_main.h"
 #include "battle_controllers.h"
 #include "battle_factory.h"
@@ -408,6 +410,75 @@ static void SetupRandomRollsForAIMoveSelection(u32 battler)
 {
     gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(gAiLogicData->hpPercents[battler]));
     gAiLogicData->shouldConsiderFinalGambit = RandomPercentage(RNG_AI_FINAL_GAMBIT, FINAL_GAMBIT_CHANCE);
+}
+
+void AI_TrySwitchOrUseItem(u32 battler)
+{
+    struct Pokemon *party;
+    u8 battlerIn1, battlerIn2;
+    s32 firstId;
+    s32 lastId; // + 1
+    u8 battlerPosition = GetBattlerPosition(battler);
+    party = GetBattlerParty(battler);
+
+    if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
+    {
+        if (gAiLogicData->shouldSwitch & (1u << battler) && IsSwitchinValid(battler))
+        {
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_SWITCH, 0);
+            SetAIUsingGimmick(battler, NO_GIMMICK);
+            if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
+            {
+                s32 monToSwitchId = gAiLogicData->mostSuitableMonId[battler];
+                if (monToSwitchId == PARTY_SIZE)
+                {
+                    if (!IsDoubleBattle())
+                    {
+                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
+                        battlerIn2 = battlerIn1;
+                    }
+                    else
+                    {
+                        battlerIn1 = GetBattlerAtPosition(battlerPosition);
+                        battlerIn2 = GetBattlerAtPosition(BATTLE_PARTNER(battlerPosition));
+                    }
+
+                    GetAIPartyIndexes(battler, &firstId, &lastId);
+
+                    for (monToSwitchId = (lastId-1); monToSwitchId >= firstId; monToSwitchId--)
+                    {
+                        if (!IsValidForBattle(&party[monToSwitchId]))
+                            continue;
+                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn1])
+                            continue;
+                        if (monToSwitchId == gBattlerPartyIndexes[battlerIn2])
+                            continue;
+                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn1])
+                            continue;
+                        if (monToSwitchId == gBattleStruct->monToSwitchIntoId[battlerIn2])
+                            continue;
+                        if (IsAceMon(battler, monToSwitchId))
+                            continue;
+
+                        break;
+                    }
+                }
+
+                gBattleStruct->AI_monToSwitchIntoId[battler] = monToSwitchId;
+            }
+
+            gBattleStruct->monToSwitchIntoId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
+            gAiLogicData->monToSwitchInId[battler] = gBattleStruct->AI_monToSwitchIntoId[battler];
+            return;
+        }
+        else if (ShouldUseItem(battler))
+        {
+            SetAIUsingGimmick(battler, NO_GIMMICK);
+            return;
+        }
+    }
+
+    BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_USE_MOVE, BATTLE_OPPOSITE(battler) << 8);
 }
 
 u32 BattleAI_ChooseMoveIndex(u32 battler)
