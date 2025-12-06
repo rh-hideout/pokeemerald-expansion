@@ -114,7 +114,7 @@ void UpdateOverworldEncounters(void)
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
-        if (objectEventId == OBJECT_EVENTS_COUNT)
+        if (objectEventId >= OBJECT_EVENTS_COUNT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             return;
@@ -605,7 +605,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
     struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
 
-    if (objEventId == OBJECT_EVENTS_COUNT)
+    if (objEventId >= OBJECT_EVENTS_COUNT)
         return SPECIES_NONE;
 
     return OW_SPECIES(objectEvent);
