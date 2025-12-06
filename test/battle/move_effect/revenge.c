@@ -31,7 +31,7 @@ SINGLE_BATTLE_TEST("Revenge doubles in power if False Swipe connected but didn't
     }
 }
 
-DOUBLE_BATTLE_TEST("Revenge does doubles in power if user was not hit by target in doubles")
+DOUBLE_BATTLE_TEST("Revenge doesn't double in power if user was not hit by target in doubles")
 {
     s16 hits[3];
 
