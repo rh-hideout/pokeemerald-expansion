@@ -25,6 +25,7 @@
 #include "mauville_old_man.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "party_menu.h"
 #include "pokemon.h"
@@ -214,7 +215,6 @@ static void DestroyLevitateMovementTask(u8);
 static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
 static bool8 NpcTakeStep(struct Sprite *);
-static bool8 AreElevationsCompatible(u8, u8);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
 
 static u16 GetGraphicsIdForMon(u32 species, bool32 shiny, bool32 female);
@@ -223,6 +223,7 @@ static u16 GetUnownSpecies(struct Pokemon *mon);
 static const struct SpriteFrameImage sPicTable_PechaBerryTree[];
 
 static void StartSlowRunningAnim(struct ObjectEvent *objectEvent, struct Sprite *sprite, u8 direction);
+
 
 const u8 gReflectionEffectPaletteMap[16] = {
         [PALSLOT_PLAYER]                 = PALSLOT_PLAYER_REFLECTION,
@@ -345,6 +346,9 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = MovementType_WanderOnLandEncounter,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = MovementType_WanderOnWaterEncounter,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = MovementType_WanderOnIndoorEncounter,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -389,6 +393,9 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = TRUE,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = TRUE,
 };
 
 const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
@@ -474,6 +481,9 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = DIR_SOUTH,
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -1422,14 +1432,14 @@ u8 GetObjectEventIdByLocalId(u8 localId)
 
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEvent *objectEvent;
+    struct ObjectEvent *objectEvent, *objectEventTemp;
     u8 objectEventId;
     s16 x;
     s16 y;
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
-    objectEvent = &gObjectEvents[objectEventId];
+    objectEvent = objectEventTemp = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);
     x = template->x + MAP_OFFSET;
     y = template->y + MAP_OFFSET;
@@ -1458,9 +1468,11 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    objectEvent->trainerType = template->trainerType;
+    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
+        objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
+    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
+        objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
@@ -1512,20 +1524,48 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
         if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
             return TRUE;
     }
-    if (i >= OBJECT_EVENTS_COUNT)
+
+    // Only if a generated Overworld Encounter cannot be removed.
+    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
         return TRUE;
+            
     *objectEventId = i;
     for (; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (gObjectEvents[i].active && gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
             return TRUE;
     }
+
+    // Destroy the oldest OW Encounter mon to make room for the new object.
+    if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
+        RemoveOldestOverworldEncounter(objectEventId);
+
+    /* Can we integrate this with this line above:
+    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
+
+    Something like:
+    if (i >= OBJECT_EVENTS_COUNT)
+        return TryAndRemoveOldestOverworldEncounter(localId);
+
+    Where:
+    bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
+    {
+        if (CanRemoveOverworldEncounter(localId))
+        {
+            RemoveOldestOverworldEncounter();
+            return FALSE;
+        }
+        return TRUE;
+    }
+    */
+
     return FALSE;
 }
 
 void RemoveObjectEvent(struct ObjectEvent *objectEvent)
 {
     objectEvent->active = FALSE;
+    OverworldWildEncounter_OnObjectEventRemoved(objectEvent);
     RemoveObjectEventInternal(objectEvent);
     // zero potential species info
     objectEvent->graphicsId = objectEvent->shiny = 0;
@@ -1544,6 +1584,7 @@ void RemoveObjectEventByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup)
 static void RemoveObjectEventInternal(struct ObjectEvent *objectEvent)
 {
     struct SpriteFrameImage image;
+
     image.size = GetObjectEventGraphicsInfo(objectEvent->graphicsId)->size;
     gSprites[objectEvent->spriteId].images = &image;
     // It's possible that this function is called while the sprite pointed to `== sDummySprite`, i.e during map resume;
@@ -1764,6 +1805,8 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     gSprites[gObjectEvents[objectEventId].spriteId].images = graphicsInfo->images;
     if (subspriteTables)
         SetSubspriteTables(&gSprites[gObjectEvents[objectEventId].spriteId], subspriteTables);
+
+    GeneratedOverworldWildEncounter_OnObjectEventSpawned(&gObjectEvents[objectEventId]);
 
     return objectEventId;
 }
@@ -3077,6 +3120,9 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
+
+    if (IsSemiManualOverworldWildEncounter(objectEvent))
+        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx(objectEvent);
 }
 
 void SetObjectInvisibility(u8 localId, u8 mapNum, u8 mapGroup, bool8 invisible)
@@ -6443,14 +6489,19 @@ u32 GetObjectObjectCollidesWith(struct ObjectEvent *objectEvent, s16 x, s16 y, b
     {
         curObject = &gObjectEvents[i];
         if (curObject->active && (curObject->movementType != MOVEMENT_TYPE_FOLLOW_PLAYER || objectEvent != &gObjectEvents[gPlayerAvatar.objectEventId]) && curObject != objectEvent
-         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent)
+         && !FollowerNPC_IsCollisionExempt(curObject, objectEvent) // Partner
          )
         {
             // check for collision if curObject is active, not the object in question, and not exempt from collisions
             if ((curObject->currentCoords.x == x && curObject->currentCoords.y == y) || (curObject->previousCoords.x == x && curObject->previousCoords.y == y))
             {
                 if (AreElevationsCompatible(objectEvent->currentElevation, curObject->currentElevation))
+                {
+                    // check if objects can actually collide with this or if it returns no too early
+                    // should be fine
+                    OWE_TryTriggerEncounter(objectEvent, curObject);
                     return i;
+                }
             }
         }
     }
@@ -9901,7 +9952,7 @@ static void ObjectEventUpdateSubpriority(struct ObjectEvent *objEvent, struct Sp
     SetObjectSubpriorityByElevation(objEvent->previousElevation, sprite, 1);
 }
 
-static bool8 AreElevationsCompatible(u8 a, u8 b)
+bool32 AreElevationsCompatible(u32 a, u32 b)
 {
     if (a == 0 || b == 0)
         return TRUE;
@@ -9934,7 +9985,7 @@ void GroundEffect_StepOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = FALSE; // don't skip to end of anim
+    gFieldEffectArguments[7] = TRUE; // skip to end of anim
     FieldEffectStart(FLDEFF_TALL_GRASS);
 }
 
@@ -9947,7 +9998,7 @@ void GroundEffect_SpawnOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *
     gFieldEffectArguments[4] = objEvent->localId << 8 | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = 1;
+    gFieldEffectArguments[7] = TRUE;
     FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 
@@ -9960,7 +10011,7 @@ void GroundEffect_StepOnLongGrass(struct ObjectEvent *objEvent, struct Sprite *s
     gFieldEffectArguments[4] = (objEvent->localId << 8) | objEvent->mapNum;
     gFieldEffectArguments[5] = objEvent->mapGroup;
     gFieldEffectArguments[6] = (u8)gSaveBlock1Ptr->location.mapNum << 8 | (u8)gSaveBlock1Ptr->location.mapGroup;
-    gFieldEffectArguments[7] = 0;
+    gFieldEffectArguments[7] = TRUE;
     FieldEffectStart(FLDEFF_LONG_GRASS);
 }
 
@@ -11537,4 +11588,74 @@ bool8 MovementAction_SurfStillRight_Step1(struct ObjectEvent *objectEvent, struc
 u8 GetObjectEventApricornTreeId(u8 objectEventId)
 {
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
+}
+
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent) {
+    gFieldEffectArguments[0] = objEvent->currentCoords.x;
+    gFieldEffectArguments[1] = objEvent->currentCoords.y;
+    gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
+    gFieldEffectArguments[3] = spawnAnimType;
+    gFieldEffectArguments[4] = objEvent->spriteId;
+    FieldEffectStart(FLDEFF_BUBBLES); // Commandeer this field effect for the spawn anims
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnLandEncounter, gMovementTypeFuncs_WanderOnLandEncounter)
+
+bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnWaterEncounter, gMovementTypeFuncs_WanderOnWaterEncounter)
+
+bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
+}
+
+movement_type_def(MovementType_WanderOnIndoorEncounter, gMovementTypeFuncs_WanderOnIndoorEncounter)
+
+bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+{
+    u8 directions[4];
+    u8 chosenDirection;
+    s16 x, y;
+    memcpy(directions, gStandardDirections, sizeof directions);
+    chosenDirection = directions[Random() & 3];
+    SetObjectEventDirection(objectEvent, chosenDirection);
+    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
+    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    sprite->sTypeFuncId = 5;
+    if (!MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
+        || GetCollisionInDirection(objectEvent, chosenDirection))
+        sprite->sTypeFuncId = 1;
+
+    return TRUE;
 }

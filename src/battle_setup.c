@@ -29,6 +29,7 @@
 #include "secret_base.h"
 #include "string_util.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "field_weather.h"
 #include "battle_tower.h"
 #include "gym_leader_rematch.h"
@@ -252,6 +253,12 @@ static void Task_BattleStart(u8 taskId)
     case 1:
         if (IsBattleTransitionDone() == TRUE)
         {
+            if (gSpecialVar_LastTalked > LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS && gSpecialVar_LastTalked <= LOCALID_OW_ENCOUNTER_END)
+            {
+                RemoveObjectEvent(&gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)]);
+                gSpecialVar_LastTalked = LOCALID_NONE;
+            }
+
             PrepareForFollowerNPCBattle();
             CleanupOverworldWindowsAndTilemaps();
             SetMainCallback2(CB2_InitBattle);

@@ -102,7 +102,7 @@ gFieldEffectScript_Shadow::
 	field_eff_end
 
 gFieldEffectScript_TallGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
+	field_eff_loadgfx_callnative gSpriteSheet_TallGrass, gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
 	field_eff_end
 
 gFieldEffectScript_Ripple::
@@ -154,7 +154,7 @@ gFieldEffectScript_JumpSmallSplash::
 	field_eff_end
 
 gFieldEffectScript_LongGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
+	field_eff_loadgfx_callnative gSpriteSheet_LongGrass, gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
 	field_eff_end
 
 gFieldEffectScript_JumpLongGrass::

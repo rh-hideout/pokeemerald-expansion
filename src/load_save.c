@@ -7,6 +7,7 @@
 #include "load_save.h"
 #include "main.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
 #include "random.h"
@@ -220,6 +221,7 @@ void LoadObjectEvents(void)
     int i;
     u16 graphicsId;
 
+    LoadOverworldEncounterData();
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
     {
         gObjectEvents[i] = gSaveBlock1Ptr->objectEvents[i];
@@ -231,6 +233,7 @@ void LoadObjectEvents(void)
         if (gObjectEvents[i].spriteId != 127)
             gObjectEvents[i].graphicsId &= 0xFF;
         gObjectEvents[i].spriteId = 0;
+        
         // Try to restore saved inactive follower
         if (gObjectEvents[i].localId == OBJ_EVENT_ID_FOLLOWER &&
             !gObjectEvents[i].active &&

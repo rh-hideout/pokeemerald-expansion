@@ -7,6 +7,7 @@
 #include "fieldmap.h"
 #include "gpu_regs.h"
 #include "metatile_behavior.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "sound.h"
 #include "sprite.h"
@@ -1471,14 +1472,54 @@ void UpdateSandPileFieldEffect(struct Sprite *sprite)
 u32 FldEff_Bubbles(void)
 {
     u8 spriteId;
+    u8 visual;
+    //struct Sprite *sprite;
+    //struct SpriteTemplate template;
+    s16 xOffset, yOffset;
+    //u8 spriteData;
+    //u16 paletteNum = 255;
+
+    switch (gFieldEffectArguments[3])
+    {
+    case 0: // Grass spawn
+        visual = FLDEFFOBJ_JUMP_TALL_GRASS;
+        xOffset = 0;
+        yOffset = 8;
+        break;
+
+    case 1: // Water spawn
+        visual = FLDEFFOBJ_JUMP_BIG_SPLASH; //FldEff_SecretPowerShrub
+        xOffset = 0;
+        yOffset = 0;
+        //spriteData = FLDEFF_WATER_SURFACING;
+        break;
+
+    case 2: // Cave spawn
+        visual = FLDEFFOBJ_GROUND_IMPACT_DUST;
+        xOffset = 0;
+        yOffset = 8;
+        break;
+    
+    default: // Shiny spawn
+        visual = FLDEFFOBJ_SHINY_SPARKLE;
+        xOffset = 0;
+        yOffset = 0;
+        break;
+    }
+
+    // RogueNote: This is hacky, calling through FldEff_Bubbles will expect this to go through FLDEFF_PAL_TAG_GENERAL_0, so override this here
+    //memcpy(&template, gFieldEffectObjectTemplatePointers[visual], sizeof(template));
 
     SetSpritePosToOffsetMapCoords((s16 *)&gFieldEffectArguments[0], (s16 *)&gFieldEffectArguments[1], 8, 0);
-    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[FLDEFFOBJ_BUBBLES], gFieldEffectArguments[0], gFieldEffectArguments[1], 82);
+    spriteId = CreateSpriteAtEnd(gFieldEffectObjectTemplatePointers[visual], gFieldEffectArguments[0] + xOffset, gFieldEffectArguments[1] + yOffset, 82);
     if (spriteId != MAX_SPRITES)
     {
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->coordOffsetEnabled = TRUE;
         sprite->oam.priority = 1;
+
+        // Save the spriteId in the sprite data of the corresponding OW Encounter object.
+        gSprites[gFieldEffectArguments[4]].data[6] = spriteId + 1;
     }
     return 0;
 }
@@ -1493,7 +1534,10 @@ void UpdateBubblesFieldEffect(struct Sprite *sprite)
     sprite->y -= sprite->sY >> 8;
     UpdateObjectEventSpriteInvisibility(sprite, FALSE);
     if (sprite->invisible || sprite->animEnded)
+    {
         FieldEffectStop(sprite, FLDEFF_BUBBLES);
+        gSprites[gObjectEvents[GetNewestOWEncounterLocalId()].spriteId].data[6] = 0;
+    }
 }
 
 #undef sY
