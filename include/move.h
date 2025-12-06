@@ -12,11 +12,12 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 {
     const u8 *battleScript;
     u16 battleTvScore:3;
+    u16 battleFactoryStyle:3;
     u16 encourageEncore:1;
     u16 twoTurnEffect:1;
     u16 semiInvulnerableEffect:1;
     u16 usesProtectCounter:1;
-    u16 padding:9;
+    u16 padding:6;
 };
 
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
