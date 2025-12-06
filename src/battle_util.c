@@ -1054,8 +1054,10 @@ u8 GetBattlerForBattleScript(u8 caseId)
     case BS_FAINTED_MULTIPLE_1:
         ret = gBattlerFainted;
         break;
-    case BS_ATTACKER_WITH_PARTNER:
     case BS_FAINTED_MULTIPLE_2:
+        ret = BATTLE_PARTNER(gBattlerFainted);
+        break;
+    case BS_ATTACKER_WITH_PARTNER:
     case BS_ATTACKER_SIDE:
     case BS_TARGET_SIDE:
     case BS_PLAYER1:
