@@ -12782,17 +12782,17 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_CastformNormal[] = INCBIN_U32("graphics/pokemon/castform/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_CastformNormal[] = INCBIN_U16("graphics/pokemon/castform/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_CastformSunny[] = INCBIN_U32("graphics/pokemon/castform/sunny/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_CastformSunny[] = INCBIN_U32("graphics/pokemon/castform/sunny/front_gba.4bpp.smol");
     const u16 gMonPalette_CastformSunny[] = INCBIN_U16("graphics/pokemon/castform/sunny/normal_gba.gbapal");
     const u32 gMonBackPic_CastformSunny[] = INCBIN_U32("graphics/pokemon/castform/sunny/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_CastformSunny[] = INCBIN_U16("graphics/pokemon/castform/sunny/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_CastformRainy[] = INCBIN_U32("graphics/pokemon/castform/rainy/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_CastformRainy[] = INCBIN_U32("graphics/pokemon/castform/rainy/front_gba.4bpp.smol");
     const u16 gMonPalette_CastformRainy[] = INCBIN_U16("graphics/pokemon/castform/rainy/normal_gba.gbapal");
     const u32 gMonBackPic_CastformRainy[] = INCBIN_U32("graphics/pokemon/castform/rainy/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_CastformRainy[] = INCBIN_U16("graphics/pokemon/castform/rainy/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_CastformSnowy[] = INCBIN_U32("graphics/pokemon/castform/snowy/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_CastformSnowy[] = INCBIN_U32("graphics/pokemon/castform/snowy/front_gba.4bpp.smol");
     const u16 gMonPalette_CastformSnowy[] = INCBIN_U16("graphics/pokemon/castform/snowy/normal_gba.gbapal");
     const u32 gMonBackPic_CastformSnowy[] = INCBIN_U32("graphics/pokemon/castform/snowy/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_CastformSnowy[] = INCBIN_U16("graphics/pokemon/castform/snowy/shiny_gba.gbapal");
@@ -14002,17 +14002,17 @@ const u32 gObjectEventPic_Substitute[] = INCBIN_COMP("graphics/pokemon/question_
     const u32 gMonBackPic_DeoxysNormal[] = INCBIN_U32("graphics/pokemon/deoxys/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_DeoxysNormal[] = INCBIN_U16("graphics/pokemon/deoxys/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_DeoxysAttack[] = INCBIN_U32("graphics/pokemon/deoxys/attack/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_DeoxysAttack[] = INCBIN_U32("graphics/pokemon/deoxys/attack/front_gba.4bpp.smol");
     const u16 gMonPalette_DeoxysAttack[] = INCBIN_U16("graphics/pokemon/deoxys/attack/normal_gba.gbapal");
     const u32 gMonBackPic_DeoxysAttack[] = INCBIN_U32("graphics/pokemon/deoxys/attack/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_DeoxysAttack[] = INCBIN_U16("graphics/pokemon/deoxys/attack/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_DeoxysDefense[] = INCBIN_U32("graphics/pokemon/deoxys/defense/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_DeoxysDefense[] = INCBIN_U32("graphics/pokemon/deoxys/defense/front_gba.4bpp.smol");
     const u16 gMonPalette_DeoxysDefense[] = INCBIN_U16("graphics/pokemon/deoxys/defense/normal_gba.gbapal");
     const u32 gMonBackPic_DeoxysDefense[] = INCBIN_U32("graphics/pokemon/deoxys/defense/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_DeoxysDefense[] = INCBIN_U16("graphics/pokemon/deoxys/defense/shiny_gba.gbapal");
 
-    const u32 gMonFrontPic_DeoxysSpeed[] = INCBIN_U32("graphics/pokemon/deoxys/speed/anim_front_gba.4bpp.smol");
+    const u32 gMonFrontPic_DeoxysSpeed[] = INCBIN_U32("graphics/pokemon/deoxys/speed/front_gba.4bpp.smol");
     const u16 gMonPalette_DeoxysSpeed[] = INCBIN_U16("graphics/pokemon/deoxys/speed/normal_gba.gbapal");
     const u32 gMonBackPic_DeoxysSpeed[] = INCBIN_U32("graphics/pokemon/deoxys/speed/back_gba.4bpp.smol");
     const u16 gMonShinyPalette_DeoxysSpeed[] = INCBIN_U16("graphics/pokemon/deoxys/speed/shiny_gba.gbapal");
