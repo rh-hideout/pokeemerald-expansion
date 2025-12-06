@@ -677,7 +677,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .catchRate = 255,
         .expYield = 53,
         .evYield_Attack = 1,
-        .itemRare = ITEM_ORAN_BERRY,
+        .itemCommon = ITEM_ORAN_BERRY,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 15,
         .friendship = STANDARD_FRIENDSHIP,
@@ -817,7 +817,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 243 : 218,
         .evYield_Attack = 3,
-        .itemRare = ITEM_RAWST_BERRY,
+        .itemCommon = ITEM_SITRUS_BERRY,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 15,
         .friendship = STANDARD_FRIENDSHIP,
@@ -1751,7 +1751,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .catchRate = 190,
         .expYield = 61,
         .evYield_Speed = 1,
-        .itemRare = ITEM_HONEY,
+        .itemCommon = ITEM_HONEY,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
@@ -1852,7 +1852,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .catchRate = 75,
         .expYield = 162,
         .evYield_Speed = 2,
-        .itemRare = ITEM_HONEY,
+        .itemCommon = ITEM_HONEY,
         .genderRatio = PERCENT_FEMALE(50),
         .eggCycles = 20,
         .friendship = STANDARD_FRIENDSHIP,
@@ -4456,7 +4456,6 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .expYield = 154,                                                    \
         .evYield_Defense = 1,                                               \
         .evYield_SpDefense = 1,                                             \
-        .itemRare = ITEM_STAR_PIECE,                                        \
         .genderRatio = MON_GENDERLESS,                                      \
         .eggCycles = 25,                                                    \
         .friendship = STANDARD_FRIENDSHIP,                                  \
@@ -4479,7 +4478,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .teachableLearnset = sMiniorTeachableLearnset,                      \
         .formSpeciesIdTable = sMiniorFormSpeciesIdTable
 
-#define MINIOR_METEOR_SPECIES_INFO(Form)                    \
+#define MINIOR_METEOR_SPECIES_INFO(Form, itemRare)          \
     {                                                       \
         .baseHP        = 60,                                \
         .baseAttack    = 60,                                \
@@ -4518,7 +4517,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         MINIOR_MISC_INFO(BODY_COLOR_BROWN),                 \
     }
 
-#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal)          \
+#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal, itemRare)\
     {                                                           \
         .baseHP        = 60,                                    \
         .baseAttack    = 100,                                   \
@@ -4548,20 +4547,20 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         MINIOR_MISC_INFO(color),                                \
     }
 
-    [SPECIES_MINIOR_METEOR_RED]    = MINIOR_METEOR_SPECIES_INFO(Red),
-    [SPECIES_MINIOR_METEOR_ORANGE] = MINIOR_METEOR_SPECIES_INFO(Orange),
-    [SPECIES_MINIOR_METEOR_YELLOW] = MINIOR_METEOR_SPECIES_INFO(Yellow),
-    [SPECIES_MINIOR_METEOR_GREEN]  = MINIOR_METEOR_SPECIES_INFO(Green),
-    [SPECIES_MINIOR_METEOR_BLUE]   = MINIOR_METEOR_SPECIES_INFO(Blue),
-    [SPECIES_MINIOR_METEOR_INDIGO] = MINIOR_METEOR_SPECIES_INFO(Indigo),
-    [SPECIES_MINIOR_METEOR_VIOLET] = MINIOR_METEOR_SPECIES_INFO(Violet),
-    [SPECIES_MINIOR_CORE_RED]      = MINIOR_CORE_SPECIES_INFO(Red,    BODY_COLOR_RED,    0),
-    [SPECIES_MINIOR_CORE_ORANGE]   = MINIOR_CORE_SPECIES_INFO(Orange, BODY_COLOR_RED,    0),
-    [SPECIES_MINIOR_CORE_YELLOW]   = MINIOR_CORE_SPECIES_INFO(Yellow, BODY_COLOR_YELLOW, 0),
-    [SPECIES_MINIOR_CORE_GREEN]    = MINIOR_CORE_SPECIES_INFO(Green,  BODY_COLOR_GREEN,  1),
-    [SPECIES_MINIOR_CORE_BLUE]     = MINIOR_CORE_SPECIES_INFO(Blue,   BODY_COLOR_BLUE,   0),
-    [SPECIES_MINIOR_CORE_INDIGO]   = MINIOR_CORE_SPECIES_INFO(Indigo, BODY_COLOR_BLUE,   0),
-    [SPECIES_MINIOR_CORE_VIOLET]   = MINIOR_CORE_SPECIES_INFO(Violet, BODY_COLOR_PURPLE, 2),
+    [SPECIES_MINIOR_METEOR_RED]    = MINIOR_METEOR_SPECIES_INFO(Red,    ITEM_HARD_STONE),
+    [SPECIES_MINIOR_METEOR_ORANGE] = MINIOR_METEOR_SPECIES_INFO(Orange, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_METEOR_YELLOW] = MINIOR_METEOR_SPECIES_INFO(Yellow, ITEM_FLOAT_STONE),
+    [SPECIES_MINIOR_METEOR_GREEN]  = MINIOR_METEOR_SPECIES_INFO(Green,  ITEM_FLOAT_STONE),
+    [SPECIES_MINIOR_METEOR_BLUE]   = MINIOR_METEOR_SPECIES_INFO(Blue,   ITEM_HARD_STONE),
+    [SPECIES_MINIOR_METEOR_INDIGO] = MINIOR_METEOR_SPECIES_INFO(Indigo, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_METEOR_VIOLET] = MINIOR_METEOR_SPECIES_INFO(Violet, ITEM_FLOAT_STONE),
+    [SPECIES_MINIOR_CORE_RED]      = MINIOR_CORE_SPECIES_INFO(Red,    BODY_COLOR_RED,    0, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_CORE_ORANGE]   = MINIOR_CORE_SPECIES_INFO(Orange, BODY_COLOR_RED,    0, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_CORE_YELLOW]   = MINIOR_CORE_SPECIES_INFO(Yellow, BODY_COLOR_YELLOW, 0, ITEM_FLOAT_STONE),
+    [SPECIES_MINIOR_CORE_GREEN]    = MINIOR_CORE_SPECIES_INFO(Green,  BODY_COLOR_GREEN,  1, ITEM_FLOAT_STONE),
+    [SPECIES_MINIOR_CORE_BLUE]     = MINIOR_CORE_SPECIES_INFO(Blue,   BODY_COLOR_BLUE,   0, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_CORE_INDIGO]   = MINIOR_CORE_SPECIES_INFO(Indigo, BODY_COLOR_BLUE,   0, ITEM_HARD_STONE),
+    [SPECIES_MINIOR_CORE_VIOLET]   = MINIOR_CORE_SPECIES_INFO(Violet, BODY_COLOR_PURPLE, 2, ITEM_FLOAT_STONE),
 #endif //P_FAMILY_MINIOR
 
 #if P_FAMILY_KOMALA
