@@ -25,6 +25,7 @@ SINGLE_BATTLE_TEST("Synchronize will mirror back non volatile status back at opp
 SINGLE_BATTLE_TEST("Synchronize will still show up the ability pop up even if it fails")
 {
     GIVEN {
+        WITH_CONFIG(GEN_CONFIG_PARALYZE_ELECTRIC, GEN_6);
         ASSUME(MoveMakesContact(MOVE_TACKLE));
         PLAYER(SPECIES_PIKACHU) { Ability(ABILITY_STATIC); }
         OPPONENT(SPECIES_ABRA) { Ability(ABILITY_SYNCHRONIZE); }

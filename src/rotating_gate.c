@@ -469,7 +469,6 @@ static const struct SpriteTemplate sSpriteTemplate_RotatingGateLarge =
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
     .oam = &sOamData_RotatingGateLarge,
     .anims = sSpriteAnimTable_RotatingGateLarge,
-    .images = NULL,
     .affineAnims = sSpriteAffineAnimTable_RotatingGate,
     .callback = SpriteCallback_RotatingGate,
 };
@@ -480,7 +479,6 @@ static const struct SpriteTemplate sSpriteTemplate_RotatingGateRegular =
     .paletteTag = OBJ_EVENT_PAL_TAG_NPC_1,
     .oam = &sOamData_RotatingGateRegular,
     .anims = sSpriteAnimTable_RotatingGateRegular,
-    .images = NULL,
     .affineAnims = sSpriteAffineAnimTable_RotatingGate,
     .callback = SpriteCallback_RotatingGate,
 };
