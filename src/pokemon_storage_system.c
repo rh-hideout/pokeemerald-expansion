@@ -7023,39 +7023,42 @@ static void SetDisplayMonData(void *pokemon, u8 mode)
         StringCopyPadded(sStorage->displayMonNameText, sStorage->displayMonName, CHAR_SPACE, 5);
 
         txtPtr = sStorage->displayMonSpeciesName;
-        *(txtPtr)++ = CHAR_SLASH;
+        *(txtPtr++) = CHAR_SLASH;
         StringCopyPadded(txtPtr, GetSpeciesName(sStorage->displayMonSpecies), CHAR_SPACE, 5);
 
         txtPtr = sStorage->displayMonGenderLvlText;
-        *(txtPtr)++ = EXT_CTRL_CODE_BEGIN;
-        *(txtPtr)++ = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
+        *(txtPtr++) = EXT_CTRL_CODE_BEGIN;
+        *(txtPtr++) = EXT_CTRL_CODE_BACKGROUND;
+        *(txtPtr++) = TEXT_COLOR_WHITE;
+        *(txtPtr++) = EXT_CTRL_CODE_BEGIN;
+        *(txtPtr++) = EXT_CTRL_CODE_TEXT_COLORS;
         switch (gender)
         {
         case MON_MALE:
-            *(txtPtr)++ = TEXT_COLOR_RED;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_RED;
-            *(txtPtr)++ = CHAR_MALE;
+            *(txtPtr++) = TEXT_COLOR_RED;
+            *(txtPtr++) = TEXT_COLOR_LIGHT_RED;
+            *(txtPtr++) = TEXT_COLOR_WHITE;
+            *(txtPtr++) = CHAR_MALE;
             break;
         case MON_FEMALE:
-            *(txtPtr)++ = TEXT_COLOR_GREEN;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_GREEN;
-            *(txtPtr)++ = CHAR_FEMALE;
+            *(txtPtr++) = TEXT_COLOR_GREEN;
+            *(txtPtr++) = TEXT_COLOR_LIGHT_GREEN;
+            *(txtPtr++) = TEXT_COLOR_WHITE;
+            *(txtPtr++) = CHAR_FEMALE;
             break;
         default:
-            *(txtPtr)++ = TEXT_COLOR_DARK_GRAY;
-            *(txtPtr)++ = TEXT_COLOR_WHITE;
-            *(txtPtr)++ = TEXT_COLOR_LIGHT_GRAY;
-            *(txtPtr)++ = CHAR_SPACER; // Genderless
+            *(txtPtr++) = TEXT_COLOR_DARK_GRAY;
+            *(txtPtr++) = TEXT_COLOR_LIGHT_GRAY;
+            *(txtPtr++) = TEXT_COLOR_WHITE;
+            *(txtPtr++) = CHAR_SPACER; // Genderless
             break;
         }
 
         *(txtPtr++) = EXT_CTRL_CODE_BEGIN;
-        *(txtPtr++) = EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW;
+        *(txtPtr++) = EXT_CTRL_CODE_TEXT_COLORS;
         *(txtPtr++) = TEXT_COLOR_DARK_GRAY;
-        *(txtPtr++) = TEXT_COLOR_WHITE;
         *(txtPtr++) = TEXT_COLOR_LIGHT_GRAY;
+        *(txtPtr++) = TEXT_COLOR_WHITE;
         *(txtPtr++) = CHAR_SPACE;
         *(txtPtr++) = CHAR_EXTRA_SYMBOL;
         *(txtPtr++) = CHAR_LV_2;
