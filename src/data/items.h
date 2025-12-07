@@ -4106,7 +4106,7 @@ const struct Item gItemsInfo[] =
     [ITEM_MOON_STONE] =
     {
         .name = ITEM_NAME("Moon Stone"),
-        .price = (I_PRICE <= GEN_2) ? 1 : ((I_PRICE == GEN_3) ? 0 : ((I_PRICE >= GEN_7) ? 3000 : 2100),
+        .price = (I_PRICE <= GEN_2) ? 1 : ((I_PRICE == GEN_3) ? 0 : ((I_PRICE >= GEN_7) ? 3000 : 2100)),
         .description = sEvolutionStoneDesc,
         .pocket = POCKET_ITEMS,
         .sortType = ITEM_TYPE_EVOLUTION_STONE,
