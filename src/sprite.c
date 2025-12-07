@@ -1962,7 +1962,7 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
     u32 spriteWidth = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].width;
     u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
 
-    color = color | color << 4 | color << 8 | color << 12 | color << 16 | color << 20 | color << 24 | color << 28;
+    color = color * 0x11111111;
 
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
