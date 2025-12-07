@@ -112,6 +112,10 @@ void UpdateOverworldEncounters(void)
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
+        // If all palette slots are in use and the mon's palette isn't already loaded, don't spawn.
+        if (IndexOfSpritePaletteTag(TAG_NONE) == 0xFF && LoadDynamicFollowerPalette(speciesId, isShiny, isFemale) == 0xFF)
+                return;
+
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
         if (objectEventId == OBJECT_EVENTS_COUNT)
