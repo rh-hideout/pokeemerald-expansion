@@ -5634,6 +5634,8 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
 #endif //P_FAMILY_SNOVER
 
 #if P_FAMILY_ROTOM
+#define ROTOM_FAMILY_TYPES { TYPE_ELECTRIC, TYPE_GHOST }
+
     [SPECIES_ROTOM] =
     {
         .baseHP        = 50,
@@ -5642,7 +5644,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 91,
         .baseSpAttack  = 95,
         .baseSpDefense = 77,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_GHOST),
+        .types = ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 154 : 132,
         .evYield_Speed = 1,
@@ -5723,7 +5725,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 86,
         .baseSpAttack  = 105,
         .baseSpDefense = 107,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_FIRE),
+        .types = P_UPDATED_TYPES >= GEN_5 ? MON_TYPES(TYPE_ELECTRIC, TYPE_FIRE) : ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = ROTOM_APPLIANCE_EXP_YIELD,
         .evYield_Speed = 1,
@@ -5794,7 +5796,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 86,
         .baseSpAttack  = 105,
         .baseSpDefense = 107,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_WATER),
+        .types = P_UPDATED_TYPES >= GEN_5 ? MON_TYPES(TYPE_ELECTRIC, TYPE_WATER) : ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = ROTOM_APPLIANCE_EXP_YIELD,
         .evYield_Speed = 1,
@@ -5866,7 +5868,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 86,
         .baseSpAttack  = 105,
         .baseSpDefense = 107,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_ICE),
+        .types = P_UPDATED_TYPES >= GEN_5 ? MON_TYPES(TYPE_ELECTRIC, TYPE_ICE) : ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = ROTOM_APPLIANCE_EXP_YIELD,
         .evYield_Speed = 1,
@@ -5936,7 +5938,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 86,
         .baseSpAttack  = 105,
         .baseSpDefense = 107,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_FLYING),
+        .types = P_UPDATED_TYPES >= GEN_5 ? MON_TYPES(TYPE_ELECTRIC, TYPE_FLYING) : ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = ROTOM_APPLIANCE_EXP_YIELD,
         .evYield_Speed = 1,
@@ -6031,7 +6033,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .baseSpeed     = 86,
         .baseSpAttack  = 105,
         .baseSpDefense = 107,
-        .types = MON_TYPES(TYPE_ELECTRIC, TYPE_GRASS),
+        .types = P_UPDATED_TYPES >= GEN_5 ? MON_TYPES(TYPE_ELECTRIC, TYPE_GRASS) : ROTOM_FAMILY_TYPES,
         .catchRate = 45,
         .expYield = ROTOM_APPLIANCE_EXP_YIELD,
         .evYield_Speed = 1,
