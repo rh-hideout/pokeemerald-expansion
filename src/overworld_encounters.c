@@ -87,6 +87,7 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
+        u32 numOpenPalSlots = GetNumUnusedPalSlots();
         u32 movementType, level;
         if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
         {
@@ -112,9 +113,22 @@ void UpdateOverworldEncounters(void)
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
-        // If all palette slots are in use and the mon's palette isn't already loaded, don't spawn.
-        if (IndexOfSpritePaletteTag(TAG_NONE) == 0xFF && LoadDynamicFollowerPalette(speciesId, isShiny, isFemale) == 0xFF)
+        // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
+        if (numOpenPalSlots == 1)
+        {
+            u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
+
+            if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
+                palTag += OBJ_EVENT_MON_FEMALE;
+                
+            // If the mon's palette isn't already loaded, don't spawn.
+            if (IndexOfSpritePaletteTag(palTag) == 0xFF)
                 return;
+        }
+        else if (numOpenPalSlots == 0)
+        {
+            return;
+        }
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
