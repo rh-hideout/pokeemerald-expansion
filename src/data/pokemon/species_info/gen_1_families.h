@@ -1266,7 +1266,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #if P_UPDATED_EXP_YIELDS >= GEN_8
     #define BUTTERFREE_EXP_YIELD 198
-#elif P_UPDATED_EXP_YIELDS >= GEN_7
+#elif P_UPDATED_EXP_YIELDS >= GEN_6
     #define BUTTERFREE_EXP_YIELD 178
 #elif P_UPDATED_EXP_YIELDS >= GEN_5
     #define BUTTERFREE_EXP_YIELD 173
@@ -1599,7 +1599,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 198,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 178,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 173,
@@ -1909,7 +1909,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 240,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 216,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 211,
@@ -3795,7 +3795,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 60,
         .types = MON_TYPES(TYPE_ELECTRIC),
         .catchRate = 190,
-        .expYield = PIKACHU_EXP_YIELD,
+        .expYield = 151,
         .evYield_Speed = 2,
         .itemRare = ITEM_LIGHT_BALL,
         .genderRatio = PERCENT_FEMALE(50),
@@ -3868,7 +3868,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #if P_UPDATED_EXP_YIELDS >= GEN_8
     #define RAICHU_EXP_YIELD 243
-#elif P_UPDATED_EXP_YIELDS >= GEN_7
+#elif P_UPDATED_EXP_YIELDS >= GEN_6
     #define RAICHU_EXP_YIELD 218
 #elif P_UPDATED_EXP_YIELDS >= GEN_5
     #define RAICHU_EXP_YIELD 214
@@ -4472,7 +4472,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 253,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 227,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 223,
@@ -4695,7 +4695,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 253,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 227,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 223,
@@ -4936,7 +4936,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 25,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 242,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 217,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 213,
@@ -5020,7 +5020,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 25,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 242,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 217,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 213,
@@ -5560,7 +5560,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 50,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 218,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 196,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 191,
@@ -6092,7 +6092,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 245,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 221,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 216,
@@ -6181,7 +6181,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 245,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 221,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 216,
@@ -8185,7 +8185,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 255,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 230,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 225,
@@ -8527,7 +8527,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 50,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 250,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 225,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 221,
@@ -8617,7 +8617,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 105,
         .types = MON_TYPES(TYPE_PSYCHIC),
         .catchRate = 50,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_8) ? 300 : 270,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 300,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+        .expYield = 270,
+    #else
+        .expYield = 266,
+    #endif
         .evYield_SpAttack = 3,
         .itemRare = ITEM_TWISTED_SPOON,
         .genderRatio = PERCENT_FEMALE(25),
@@ -9151,7 +9157,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 245,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 221,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 216,
@@ -9234,7 +9240,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .catchRate = 45,
     #if P_UPDATED_EXP_YIELDS >= GEN_8
         .expYield = 245,
-    #elif P_UPDATED_EXP_YIELDS >= GEN_7
+    #elif P_UPDATED_EXP_YIELDS >= GEN_6
         .expYield = 221,
     #elif P_UPDATED_EXP_YIELDS >= GEN_5
         .expYield = 216,
@@ -9464,7 +9470,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
 
 #if P_UPDATED_EXP_YIELDS >= GEN_8
     #define GOLEM_EXP_YIELD 248
-#elif P_UPDATED_EXP_YIELDS >= GEN_7
+#elif P_UPDATED_EXP_YIELDS >= GEN_6
     #define GOLEM_EXP_YIELD 223
 #elif P_UPDATED_EXP_YIELDS >= GEN_5
     #define GOLEM_EXP_YIELD 218
@@ -14742,7 +14748,13 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 135,
         .types = MON_TYPES(TYPE_NORMAL),
         .catchRate = 30,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 608 : 255,
+    #if P_UPDATED_EXP_YIELDS >= GEN_8
+        .expYield = 635,
+    #elif P_UPDATED_EXP_YIELDS >= GEN_5
+        .expYield = 608,
+    #else
+        .expYield = 255,
+    #endif
         .evYield_HP = (P_UPDATED_EVS >= GEN_4) ? 3 : 2,
         .itemCommon = ITEM_OVAL_STONE,
         .genderRatio = MON_FEMALE,
@@ -18012,7 +18024,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
         .baseSpDefense = 85,
         .types = MON_TYPES(TYPE_NORMAL),
         .catchRate = 45,
-        .expYield = (P_UPDATED_EXP_YIELDS >= GEN_5) ? 65 : 92,
+        .expYield = 87,
         .evYield_SpDefense = 1,
         .genderRatio = PERCENT_FEMALE(12.5),
         .eggCycles = 35,
