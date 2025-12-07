@@ -129,7 +129,7 @@ bool32 BattlerWillFaintFromWeather(u32 battler, enum Ability ability);
 bool32 BattlerWillFaintFromSecondaryDamage(u32 battler, enum Ability ability);
 bool32 ShouldTryOHKO(u32 battlerAtk, u32 battlerDef, enum Ability atkAbility, enum Ability defAbility, u32 move);
 bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex);
-bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage);
+bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent);
 bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect);
 bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData);

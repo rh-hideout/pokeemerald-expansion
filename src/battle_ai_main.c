@@ -2225,10 +2225,6 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
-        case EFFECT_ABSORB:
-            if (aiData->abilities[battlerDef] == ABILITY_LIQUID_OOZE)
-                ADJUST_SCORE(-6);
-            break;
         case EFFECT_STRENGTH_SAP:
             if (aiData->abilities[battlerDef] == ABILITY_CONTRARY)
                 ADJUST_SCORE(-10);
@@ -4300,10 +4296,10 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         IncreaseSleepScore(battlerAtk, battlerDef, move, &score);
         break;
     case EFFECT_ABSORB:
-        if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_BIG_ROOT && effectiveness >= UQ_4_12(1.0))
+    case EFFECT_DREAM_EATER:
+        if (ShouldAbsorb(battlerAtk, battlerDef, move))
             ADJUST_SCORE(DECENT_EFFECT);
         break;
-    case EFFECT_DREAM_EATER:
     case EFFECT_AQUA_RING:
         if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_BIG_ROOT)
             ADJUST_SCORE(DECENT_EFFECT);

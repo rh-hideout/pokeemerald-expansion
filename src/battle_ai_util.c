@@ -1227,6 +1227,14 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
         if (AI_IsDamagedByRecoil(battlerAtk))
             return TRUE;
         break;
+    case EFFECT_ABSORB:
+        if (abilityDef == ABILITY_LIQUID_OOZE)
+            return TRUE;
+        break;
+    case EFFECT_DREAM_EATER:
+        if (abilityDef == ABILITY_LIQUID_OOZE && GetGenConfig(GEN_DREAM_EATER_LIQUID_OOZE) >= GEN_5)
+            return TRUE;
+        break;
     default:
     {
         u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
@@ -4003,42 +4011,8 @@ bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 mo
     return TRUE;
 }
 
-bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move, s32 damage)
+static inline bool32 RecoveryEnablesWinning1v1(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMoveSpeedCheck, u32 healAmount)
 {
-    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-    if (move == 0xFFFF || AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
-    {
-        // using item or user goes first
-        s32 healDmg = (GetMoveAbsorbPercentage(move) * damage) / 100;
-
-        if (gBattleMons[battlerAtk].volatiles.healBlock)
-            healDmg = 0;
-
-        if (CanTargetFaintAi(battlerDef, battlerAtk)
-          && !CanTargetFaintAiWithMod(battlerDef, battlerAtk, healDmg, 0))
-            return TRUE;    // target can faint attacker unless they heal
-        else if (!CanTargetFaintAi(battlerDef, battlerAtk) && gAiLogicData->hpPercents[battlerAtk] < 60 && (Random() % 3))
-            return TRUE;    // target can't faint attacker at all, attacker health is about half, 2/3rds rate of encouraging healing
-    }
-    else
-    {
-        // opponent goes first
-        if (!CanTargetFaintAi(battlerDef, battlerAtk))
-            return TRUE;
-    }
-
-    return FALSE;
-}
-
-bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
-{
-    u32 maxHP = gBattleMons[battlerAtk].maxHP;
-    u32 healAmount = (healPercent * maxHP) / 100;
-    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
-    if (healAmount > maxHP)
-        healAmount = maxHP;
-    if (gBattleMons[battlerAtk].volatiles.healBlock)
-        healAmount = 0;
     if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
     {
         if (CanTargetFaintAi(battlerDef, battlerAtk)
@@ -4056,6 +4030,63 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
         else if (!CanTargetFaintAi(battlerDef, battlerAtk) && gAiLogicData->hpPercents[battlerAtk] < ENABLE_RECOVERY_THRESHOLD && RandomPercentage(RNG_AI_SHOULD_RECOVER, SHOULD_RECOVER_CHANCE))
             return TRUE;    // target can't faint attacker at all, generally safe
     }
+    return FALSE;
+}
+
+static inline bool32 ShouldDrainHPToWithstandHit(u32 battlerAtk, u32 battlerDef, u32 currHP, u32 healAmount)
+{
+    s32 bestDamageFromPlayer = GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING);
+
+    if (bestDamageFromPlayer >= GetNonDynamaxMaxHP(battlerAtk) + healAmount)
+        return FALSE;
+
+    if (bestDamageFromPlayer >= currHP && currHP + healAmount > bestDamageFromPlayer)
+        return TRUE;
+
+    return FALSE;
+}
+
+bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move)
+{
+    u32 maxHP = gBattleMons[battlerAtk].maxHP;
+    u32 currHP = gBattleMons[battlerAtk].hp;
+    u32 healAmount = (AI_GetDamage(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, gAiLogicData) * GetMoveAbsorbPercentage(move) / 100);
+    healAmount = GetDrainedBigRootHp(gBattlerAttacker, healAmount);
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    if (healAmount == 0)
+        healAmount = 1;
+    if (healAmount + currHP > maxHP)
+        healAmount = maxHP - currHP;
+    if (gBattleMons[battlerAtk].volatiles.healBlock)
+        healAmount = 0;
+
+    if (gAiLogicData->abilities[battlerDef] == ABILITY_LIQUID_OOZE)
+        return FALSE;
+    if (IsBattlerAtMaxHp(battlerAtk))
+        return FALSE;
+    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, healAmount))
+        return TRUE;
+    if (ShouldDrainHPToWithstandHit(battlerAtk, battlerDef, currHP, healAmount))
+        return TRUE;
+    
+    return FALSE;
+}
+
+bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
+{
+    u32 maxHP = gBattleMons[battlerAtk].maxHP;
+    u32 currHP = gBattleMons[battlerAtk].hp;
+    u32 healAmount = (healPercent * maxHP) / 100;
+    u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    if (healAmount + currHP > maxHP)
+        healAmount = maxHP - currHP;
+    if (gBattleMons[battlerAtk].volatiles.healBlock)
+        healAmount = 0;
+
+    if (IsBattlerAtMaxHp(battlerAtk))
+        return FALSE;
+    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, healAmount))
+        return TRUE;
     return FALSE;
 }
 
