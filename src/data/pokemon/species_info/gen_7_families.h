@@ -4478,7 +4478,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         .teachableLearnset = sMiniorTeachableLearnset,                      \
         .formSpeciesIdTable = sMiniorFormSpeciesIdTable
 
-#define MINIOR_METEOR_SPECIES_INFO(Form, itemRare)          \
+#define MINIOR_METEOR_SPECIES_INFO(Form, itemCommon)        \
     {                                                       \
         .baseHP        = 60,                                \
         .baseAttack    = 60,                                \
@@ -4517,7 +4517,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
         MINIOR_MISC_INFO(BODY_COLOR_BROWN),                 \
     }
 
-#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal, itemRare)\
+#define MINIOR_CORE_SPECIES_INFO(Form, color, iconPal, itemCommon) \
     {                                                           \
         .baseHP        = 60,                                    \
         .baseAttack    = 100,                                   \
