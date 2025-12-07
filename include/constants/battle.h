@@ -268,13 +268,13 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_UNUSED_16             (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
-#define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
+#define HITMARKER_UNUSED_19             (1 << 19)
 #define HITMARKER_UNUSED_20             (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_UNUSED_23             (1 << 23)
 #define HITMARKER_UNUSED_24             (1 << 24)
-#define HITMARKER_OBEYS                 (1 << 25)
+#define HITMARKER_UNUSED_25             (1 << 25)
 #define HITMARKER_UNUSED_26             (1 << 26)
 #define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28)) // Also uses bits 29, 30 and 31
@@ -376,11 +376,11 @@ enum BattleWeather
 #define B_WEATHER_FOG           (1 << BATTLE_WEATHER_FOG)
 #define B_WEATHER_STRONG_WINDS  (1 << BATTLE_WEATHER_STRONG_WINDS)
 
-#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_HAIL | B_WEATHER_STRONG_WINDS | B_WEATHER_SNOW | B_WEATHER_FOG)
 #define B_WEATHER_DAMAGING_ANY  (B_WEATHER_HAIL | B_WEATHER_SANDSTORM)
 #define B_WEATHER_ICY_ANY       (B_WEATHER_HAIL | B_WEATHER_SNOW)
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
+#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_ICY_ANY | B_WEATHER_STRONG_WINDS | B_WEATHER_FOG)
 
 // Explicit numbers until frostbite because those shouldn't be shifted
 enum __attribute__((packed)) MoveEffect
@@ -418,6 +418,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_RAGE,
     MOVE_EFFECT_PREVENT_ESCAPE,
     MOVE_EFFECT_NIGHTMARE,
+    MOVE_EFFECT_GLAIVE_RUSH,
     MOVE_EFFECT_ALL_STATS_UP,
     MOVE_EFFECT_REMOVE_STATUS,
     MOVE_EFFECT_ATK_DEF_DOWN,
@@ -672,22 +673,21 @@ enum FaintedActions
 // Timer value controlled by B_VAR_STARTING_STATUS_TIMER
 enum StartingStatus
 {
-    STARTING_STATUS_NONE,
-    STARTING_STATUS_ELECTRIC_TERRAIN,
-    STARTING_STATUS_MISTY_TERRAIN,
-    STARTING_STATUS_GRASSY_TERRAIN,
-    STARTING_STATUS_PSYCHIC_TERRAIN,
-    STARTING_STATUS_TRICK_ROOM,
-    STARTING_STATUS_MAGIC_ROOM,
-    STARTING_STATUS_WONDER_ROOM,
-    STARTING_STATUS_TAILWIND_PLAYER,
-    STARTING_STATUS_TAILWIND_OPPONENT,
-    STARTING_STATUS_RAINBOW_PLAYER,
-    STARTING_STATUS_RAINBOW_OPPONENT,
-    STARTING_STATUS_SEA_OF_FIRE_PLAYER,
-    STARTING_STATUS_SEA_OF_FIRE_OPPONENT,
-    STARTING_STATUS_SWAMP_PLAYER,
-    STARTING_STATUS_SWAMP_OPPONENT,
+    STARTING_STATUS_ELECTRIC_TERRAIN     = (1 << 0),  // Electric Terrain
+    STARTING_STATUS_MISTY_TERRAIN        = (1 << 1),  // Misty Terrain
+    STARTING_STATUS_GRASSY_TERRAIN       = (1 << 2),  // Grassy Terrain
+    STARTING_STATUS_PSYCHIC_TERRAIN      = (1 << 3),  // Psychic Terrain
+    STARTING_STATUS_TRICK_ROOM           = (1 << 4),  // Trick Room
+    STARTING_STATUS_MAGIC_ROOM           = (1 << 5),  // Magic Room
+    STARTING_STATUS_WONDER_ROOM          = (1 << 6),  // Wonder Room
+    STARTING_STATUS_TAILWIND_PLAYER      = (1 << 7),  // Tailwind Player
+    STARTING_STATUS_TAILWIND_OPPONENT    = (1 << 8),  // Tailwind Opponent
+    STARTING_STATUS_RAINBOW_PLAYER       = (1 << 9),  // Rainbow Player
+    STARTING_STATUS_RAINBOW_OPPONENT     = (1 << 10), // Rainbow Opponent
+    STARTING_STATUS_SEA_OF_FIRE_PLAYER   = (1 << 11), // Sea Of Fire Player
+    STARTING_STATUS_SEA_OF_FIRE_OPPONENT = (1 << 12), // Sea Of Fire Opponent
+    STARTING_STATUS_SWAMP_PLAYER         = (1 << 13), // Swamp Player
+    STARTING_STATUS_SWAMP_OPPONENT       = (1 << 14), // Swamp Opponent
 };
 
 enum SlideMsgStates

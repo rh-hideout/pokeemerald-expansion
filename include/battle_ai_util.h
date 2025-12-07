@@ -27,10 +27,12 @@ enum DamageCalcContext
 enum AiCompareMovesPriority
 {
     PRIORITY_EFFECT,
-    PRIORITY_GUARANTEE,
     PRIORITY_ACCURACY,
+    PRIORITY_GUARANTEE,
     PRIORITY_NOT_CHARGING,
+    PRIORITY_AVOID_SELF_SACRIFICE,
     PRIORITY_SPEED,
+    PRIORITY_RESIST_BERRY,
 };
 
 enum AIPivot
@@ -76,12 +78,12 @@ bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon s
 bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(u32 battler);
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
-bool32 IsAiVsAiBattle(void);
-bool32 BattlerHasAi(u32 battlerId);
+bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);
-bool32 CanAiPredictMove(void);
-bool32 IsAiBattlerAssumingStab(void);
-bool32 IsAiBattlerAssumingStatusMoves(void);
+bool32 CanAiPredictMove(u32 battlerId);
+bool32 IsAiBattlerAssumingStab(u32 battlerId);
+bool32 IsAiBattlerAssumingStatusMoves(u32 battlerId);
+bool32 IsAiBattlerPredictingAbility(u32 battlerId);
 bool32 ShouldRecordStatusMove(u32 move);
 void ClearBattlerMoveHistory(u32 battlerId);
 void RecordLastUsedMoveBy(u32 battlerId, u32 move);
@@ -143,6 +145,8 @@ void SetAIUsingGimmick(u32 battler, enum AIConsiderGimmick use);
 bool32 IsAIUsingGimmick(u32 battler);
 void DecideTerastal(u32 battler);
 bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move);
+bool32 ShouldFinalGambit(u32 battlerAtk, u32 battlerDef, bool32 aiIsFaster);
+bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects effect, bool32 aiIsFaster);
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
@@ -218,6 +222,9 @@ bool32 IsUngroundingEffect(enum BattleMoveEffects effect);
 bool32 HasMoveWithFlag(u32 battler, MoveFlag getFlag);
 bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
+bool32 IsExplosionEffect(enum BattleMoveEffects effect);
+bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
+u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks
 bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability ability);
@@ -278,6 +285,7 @@ s32 CountUsablePartyMons(u32 battlerId);
 bool32 IsPartyFullyHealedExceptBattler(u32 battler);
 bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category);
 bool32 SideHasMoveCategory(u32 battlerId, enum DamageCategory category);
+void GetAIPartyIndexes(u32 battlerId, s32 *firstId, s32 *lastId);
 
 // score increases
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statId);
@@ -303,6 +311,11 @@ bool32 IsBattlerPredictedToSwitch(u32 battler);
 u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
+bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
+
+// Switching and item helpers
+bool32 AiExpectsToFaintPlayer(u32 battler);
+
 
 // These are for the purpose of not doubling up on moves during double battles.
 // Used in GetAIEffectGroup for move effects and GetAIEffectGroupFromMove for additional effects
