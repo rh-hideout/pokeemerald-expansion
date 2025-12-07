@@ -3531,8 +3531,7 @@ BattleScript_TryDestinyKnotTarget:
 	goto BattleScript_TryDestinyKnotTargetRet
 BattleScript_TryDestinyKnotTargetFailed:
 	pause B_WAIT_TIME_SHORT
-	setmoveresultflags MOVE_RESULT_FAILED
-	resultmessage
+	printstring STRINGID_BUTITFAILED
 	waitmessage B_WAIT_TIME_LONG
 BattleScript_TryDestinyKnotTargetRet:
 	return
