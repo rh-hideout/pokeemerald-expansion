@@ -5731,7 +5731,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     u32 defBestMoves[MAX_MON_MOVES] = {0};
 
     // Set battlerDef best dmg moves
-    GetBestDmgMoveFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
+    GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
 
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)

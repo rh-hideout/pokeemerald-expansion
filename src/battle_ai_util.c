@@ -1549,7 +1549,7 @@ u32 NoOfHitsForTargetToFaintBattlerWithMod(u32 battlerDef, u32 battlerAtk, s32 h
     return leastNumberOfHits;
 }
 
-void GetBestDmgMoveFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, u32 *bestMoves)
+void GetBestDmgMovesFromBattler(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext, u32 *bestMoves)
 {
     struct AiLogicData *aiData = gAiLogicData;
     u32 moveIndex;
@@ -1611,7 +1611,7 @@ bool32 IsBestDmgMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calc
     if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, index, AI_ATTACKING))
         return TRUE;
 
-    GetBestDmgMoveFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
+    GetBestDmgMovesFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -1626,7 +1626,7 @@ bool32 BestDmgMoveHasEffect(u32 battlerAtk, u32 battlerDef, enum DamageCalcConte
 {
     u32 bestMoves[MAX_MON_MOVES] = {0};
 
-    GetBestDmgMoveFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
+    GetBestDmgMovesFromBattler(battlerAtk, battlerDef, calcContext, bestMoves);
 
     for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -5102,7 +5102,7 @@ void IncreaseBurnScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
             u32 defBestMoves[MAX_MON_MOVES] = {0};
             bool8 hasPhysical = FALSE;
 
-            GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
+            GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
 
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
@@ -5159,7 +5159,7 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
     {
         u32 bestMoves[MAX_MON_MOVES] = {0};
 
-        GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_ATTACKING, bestMoves);
+        GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, bestMoves);
 
         for (u32 i; i < MAX_MON_MOVES; i++)
         {
@@ -5215,7 +5215,7 @@ void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
             u32 defBestMoves[MAX_MON_MOVES] = {0};
             bool8 hasSpecial = FALSE;
 
-            GetBestDmgMoveFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
+            GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_DEFENDING, defBestMoves);
 
             for (u32 i = 0; i < MAX_MON_MOVES; i++)
             {
