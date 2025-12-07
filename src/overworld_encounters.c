@@ -653,26 +653,27 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-void RemoveOldestOverworldEncounter(u8 *objectEventId)
+u32 RemoveOldestOverworldEncounter(void)
 {
     // include a check for oldest slot not being INVALID_SPAWN_SLOT
     u32 localId = GetLocalIdByOverworldSpawnSlot(GetOldestSlot());
-    *objectEventId = GetObjectEventIdByLocalId(localId);
-    struct ObjectEvent *object = &gObjectEvents[*objectEventId];
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
+    u32 objectEventId = GetObjectEventIdByLocalId(localId);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
 
     // Stop the associated field effect if it is active.
     if (*fldEffSpriteId != 0)
         FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
 
     RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+    return objectEventId;
 }
 
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
-        RemoveOldestOverworldEncounter(objectEventId);
+        *objectEventId = RemoveOldestOverworldEncounter();
         return FALSE;
     }
     

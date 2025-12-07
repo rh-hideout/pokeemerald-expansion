@@ -36,7 +36,7 @@ bool32 IsSemiManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
-void RemoveOldestOverworldEncounter(u8 *objectEventId);
+u32 RemoveOldestOverworldEncounter(void);
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
