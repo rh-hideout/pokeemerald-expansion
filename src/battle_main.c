@@ -3736,9 +3736,8 @@ static void DoBattleIntro(void)
             for (battler = 0; battler < gBattlersCount; battler++)
                 GetBattlerPartyState(battler)->sentOut = TRUE;
 
-#define UNPACK_STARTING_STATUS_TO_BATTLE(_enum, _fieldName, ...) gBattleStruct->startingStatus._fieldName = (statusesOpponentA._fieldName || statusesOpponentB._fieldName || gStartingStatuses._fieldName);
+#define UNPACK_STARTING_STATUS_TO_BATTLE(_enum, _fieldName, ...) gStartingStatuses._fieldName = (statusesOpponentA._fieldName || statusesOpponentB._fieldName || gStartingStatuses._fieldName);
 
-            memset(&gBattleStruct->startingStatus, 0, sizeof(struct StartingStatuses));
             struct StartingStatuses statusesOpponentA = {0};
             struct StartingStatuses statusesOpponentB = {0};
 
@@ -3747,9 +3746,8 @@ static void DoBattleIntro(void)
             {
                 statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
                 statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
-                gBattleStruct->startingStatusTimer = 0; // infinite
+                gStartingStatuses.timer = 0; // infinite
             }
-            gBattleStruct->startingStatusTimer = gStartingStatuses.timer;
             STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
             gBattleMainFunc = TryDoEventsBeforeFirstTurn;
         }
@@ -3808,7 +3806,7 @@ static void TryDoEventsBeforeFirstTurn(void)
             return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
-        while (AnyStartingStatusActive(&gBattleStruct->startingStatus))
+        while (AnyStartingStatusActive())
         {
             if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
                 return;

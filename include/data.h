@@ -302,14 +302,6 @@ static inline const struct StartingStatuses GetTrainerStartingStatusFromId(u16 t
     return GetTrainerStructFromId(trainerId)->startingStatus;
 }
 
-#define UNPACK_STARTING_STATUS_GET_ANY(_enum, _fieldName, ...) if (statuses->_fieldName) return TRUE;
-
-static inline bool32 AnyStartingStatusActive(struct StartingStatuses *statuses)
-{
-    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_GET_ANY);
-    return FALSE;
-}
-
 static inline const enum TrainerBattleType GetTrainerBattleType(u16 trainerId)
 {
     return GetTrainerStructFromId(trainerId)->battleType;

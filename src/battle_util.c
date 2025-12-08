@@ -3617,8 +3617,8 @@ static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16
             gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= flag;
         gBattleScripting.animArg1 = anim;
-        if (gBattleStruct->startingStatusTimer)
-            *timer = gBattleStruct->startingStatusTimer;
+        if (gStartingStatuses.timer)
+            *timer = gStartingStatuses.timer;
         else
             *timer = 0; // Infinite
 
@@ -3636,8 +3636,8 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
         gBattleCommunication[MULTISTRING_CHOOSER] = message;
         gSideStatuses[side] |= flag;
         gBattleScripting.animArg1 = anim;
-        if (gBattleStruct->startingStatusTimer)
-            *timer = gBattleStruct->startingStatusTimer;
+        if (gStartingStatuses.timer)
+            *timer = gStartingStatuses.timer;
         else
             *timer = 0; // Infinite
 
@@ -3658,14 +3658,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     switch (caseId)
     {
     case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
-        if (gBattleStruct->startingStatus.electricTerrain)
+        if (gStartingStatuses.electricTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_ELECTRIC_TERRAIN,
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus.electricTerrain = FALSE;
+            gStartingStatuses.electricTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3673,14 +3673,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus.mistyTerrain)
+        else if (gStartingStatuses.mistyTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MISTY_TERRAIN,
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus.mistyTerrain = FALSE;
+            gStartingStatuses.mistyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3688,14 +3688,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus.grassyTerrain)
+        else if (gStartingStatuses.grassyTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_GRASSY_TERRAIN,
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus.grassyTerrain = FALSE;
+            gStartingStatuses.grassyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3703,44 +3703,44 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus.psychicTerrain)
+        else if (gStartingStatuses.psychicTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_PSYCHIC_TERRAIN,
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus.psychicTerrain = FALSE;
+            gStartingStatuses.psychicTerrain = FALSE;
             isTerrain = TRUE;
         }
-        else if (gBattleStruct->startingStatus.trickRoom)
+        else if (gStartingStatuses.trickRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_TRICK_ROOM,
                         B_MSG_SET_TRICK_ROOM,
                         B_ANIM_TRICK_ROOM,
                         &gFieldTimers.trickRoomTimer);
-            gBattleStruct->startingStatus.trickRoom = FALSE;
+            gStartingStatuses.trickRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus.magicRoom)
+        else if (gStartingStatuses.magicRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MAGIC_ROOM,
                         B_MSG_SET_MAGIC_ROOM,
                         B_ANIM_MAGIC_ROOM,
                         &gFieldTimers.magicRoomTimer);
-            gBattleStruct->startingStatus.magicRoom = FALSE;
+            gStartingStatuses.magicRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus.wonderRoom)
+        else if (gStartingStatuses.wonderRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_WONDER_ROOM,
                         B_MSG_SET_WONDER_ROOM,
                         B_ANIM_WONDER_ROOM,
                         &gFieldTimers.wonderRoomTimer);
-            gBattleStruct->startingStatus.wonderRoom = FALSE;
+            gStartingStatuses.wonderRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus.tailwindPlayer)
+        else if (gStartingStatuses.tailwindPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3748,9 +3748,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
-            gBattleStruct->startingStatus.tailwindPlayer = FALSE;
+            gStartingStatuses.tailwindPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus.tailwindOpponent)
+        else if (gStartingStatuses.tailwindOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3758,9 +3758,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
-            gBattleStruct->startingStatus.tailwindOpponent = FALSE;
+            gStartingStatuses.tailwindOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus.rainbowPlayer)
+        else if (gStartingStatuses.rainbowPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3768,9 +3768,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
-            gBattleStruct->startingStatus.rainbowPlayer = FALSE;
+            gStartingStatuses.rainbowPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus.rainbowOpponent)
+        else if (gStartingStatuses.rainbowOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3778,9 +3778,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
-            gBattleStruct->startingStatus.rainbowOpponent = FALSE;
+            gStartingStatuses.rainbowOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus.seaOfFirePlayer)
+        else if (gStartingStatuses.seaOfFirePlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3788,9 +3788,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
-            gBattleStruct->startingStatus.seaOfFirePlayer = FALSE;
+            gStartingStatuses.seaOfFirePlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus.seaOfFireOpponent)
+        else if (gStartingStatuses.seaOfFireOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3798,9 +3798,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
-            gBattleStruct->startingStatus.seaOfFireOpponent = FALSE;
+            gStartingStatuses.seaOfFireOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus.swampPlayer)
+        else if (gStartingStatuses.swampPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3808,9 +3808,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_PLAYER].swampTimer);
-            gBattleStruct->startingStatus.swampPlayer = FALSE;
+            gStartingStatuses.swampPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus.swampOpponent)
+        else if (gStartingStatuses.swampOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3818,7 +3818,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
-            gBattleStruct->startingStatus.swampOpponent = FALSE;
+            gStartingStatuses.swampOpponent = FALSE;
         }
         if (effect)
         {
@@ -11365,6 +11365,14 @@ bool32 IsMimikyuDisguised(u32 battler)
 {
     return gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED
         || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
+}
+
+#define UNPACK_STARTING_STATUS_GET_ANY(_enum, _fieldName, ...) if (gStartingStatuses._fieldName) return TRUE;
+
+bool32 AnyStartingStatusActive(void)
+{
+    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_GET_ANY);
+    return FALSE;
 }
 
 #define UNPACK_STARTING_STATUS_TO_EWRAM(_enum, _fieldName, ...) case _enum: gStartingStatuses._fieldName = TRUE; break;
