@@ -4157,7 +4157,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     case MOVE_NEUTRAL_COMPARISON:
                         break;
                     }
-                    switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
+                    switch (CompareMoveEffects(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                     {
                     case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
