@@ -4662,27 +4662,16 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_CHILLY_RECEPTION:
-        if (!hasPartner)
+        switch (ShouldPivot(battlerAtk, battlerDef, move))
         {
-            switch (ShouldPivot(battlerAtk, battlerDef, aiData->abilities[battlerDef], move, movesetIndex))
-            {
-            case DONT_PIVOT:
-                ADJUST_SCORE(-10);    // technically should go in CheckBadMove, but this is easier/less computationally demanding
-                break;
-            case CAN_TRY_PIVOT:
-                break;
-            case SHOULD_PIVOT:
-                ADJUST_SCORE(BEST_EFFECT);
-                break;
-            }
-        }
-        else //Double Battle
-        {
-            if (CountUsablePartyMons(battlerAtk) == 0)
-                break; // Can't switch
-
-            //if (switchAbility == ABILITY_INTIMIDATE && PartyHasMoveCategory(battlerDef, DAMAGE_CATEGORY_PHYSICAL))
-                //ADJUST_SCORE(7);
+        case DONT_PIVOT:
+            ADJUST_SCORE(-5);    // technically should go in CheckBadMove, but this is easier/less computationally demanding
+            break;
+        case CAN_TRY_PIVOT:
+            break;
+        case SHOULD_PIVOT:
+            ADJUST_SCORE(BEST_EFFECT);
+            break;
         }
         break;
     case EFFECT_BATON_PASS:
@@ -6811,7 +6800,9 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         }
         break;
 
-    // Free setup (U-Turn etc. handled in Check Viability by ShouldPivot)
+    case EFFECT_HIT_ESCAPE:
+    case EFFECT_PARTING_SHOT:
+    case EFFECT_CHILLY_RECEPTION:
     case EFFECT_BOLT_BEAK:
     case EFFECT_LIGHT_SCREEN:
     case EFFECT_REFLECT:

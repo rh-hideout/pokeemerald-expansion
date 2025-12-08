@@ -134,7 +134,7 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent);
 bool32 ShouldSetScreen(u32 battlerAtk, u32 battlerDef, enum BattleMoveEffects moveEffect);
 bool32 ShouldCureStatus(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData);
 bool32 ShouldCureStatusWithItem(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData);
-enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 move, u32 moveIndex);
+enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsRecycleEncouragedItem(u32 item);
 bool32 ShouldRestoreHpBerry(u32 battlerAtk, u32 item);
 bool32 IsStatBoostingBerry(u32 item);
@@ -153,6 +153,7 @@ bool32 ShouldConsiderSelfSacrificeDamageEffect(u32 battlerAtk, u32 battlerDef, e
 
 // stat stage checks
 bool32 AnyStatIsRaised(u32 battlerId);
+bool32 AnyUsefulStatIsRaised(u32 battlerId);
 bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, enum Stat stat);
 bool32 BattlerStatCanRise(u32 battler, enum Ability battlerAbility, enum Stat stat);
 bool32 AreBattlersStatsMaxed(u32 battler);

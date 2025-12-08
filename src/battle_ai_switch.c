@@ -717,7 +717,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
     enum HoldEffect holdEffect = gAiLogicData->holdEffects[battler];
     u8 opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
     u8 opposingBattler = GetBattlerAtPosition(opposingPosition);
-    bool32 hasStatRaised = AnyStatIsRaised(battler);
+    bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
 
     //Perish Song
     if (gBattleMons[battler].volatiles.perishSong
@@ -812,7 +812,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
 
 static bool32 ShouldSwitchIfAbilityBenefit(u32 battler)
 {
-    bool32 hasStatRaised = AnyStatIsRaised(battler);
+    bool32 hasStatRaised = AnyUsefulStatIsRaised(battler);
 
     //Check if ability is blocked
     if (gBattleMons[battler].volatiles.gastroAcid
