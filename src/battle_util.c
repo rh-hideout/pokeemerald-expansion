@@ -3658,14 +3658,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     switch (caseId)
     {
     case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
-        if (gBattleStruct->startingStatus & STARTING_STATUS_ELECTRIC_TERRAIN)
+        if (gBattleStruct->startingStatus.electricTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_ELECTRIC_TERRAIN,
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_ELECTRIC_TERRAIN;
+            gBattleStruct->startingStatus.electricTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3673,14 +3673,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_MISTY_TERRAIN)
+        else if (gBattleStruct->startingStatus.mistyTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MISTY_TERRAIN,
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_MISTY_TERRAIN;
+            gBattleStruct->startingStatus.mistyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3688,14 +3688,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_GRASSY_TERRAIN)
+        else if (gBattleStruct->startingStatus.grassyTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_GRASSY_TERRAIN,
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_GRASSY_TERRAIN;
+            gBattleStruct->startingStatus.grassyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3703,44 +3703,44 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_PSYCHIC_TERRAIN)
+        else if (gBattleStruct->startingStatus.psychicTerrain)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_PSYCHIC_TERRAIN,
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
                         &gFieldTimers.terrainTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_PSYCHIC_TERRAIN;
+            gBattleStruct->startingStatus.psychicTerrain = FALSE;
             isTerrain = TRUE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_TRICK_ROOM)
+        else if (gBattleStruct->startingStatus.trickRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_TRICK_ROOM,
                         B_MSG_SET_TRICK_ROOM,
                         B_ANIM_TRICK_ROOM,
                         &gFieldTimers.trickRoomTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_TRICK_ROOM;
+            gBattleStruct->startingStatus.trickRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_MAGIC_ROOM)
+        else if (gBattleStruct->startingStatus.magicRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MAGIC_ROOM,
                         B_MSG_SET_MAGIC_ROOM,
                         B_ANIM_MAGIC_ROOM,
                         &gFieldTimers.magicRoomTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_MAGIC_ROOM;
+            gBattleStruct->startingStatus.magicRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_WONDER_ROOM)
+        else if (gBattleStruct->startingStatus.wonderRoom)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_WONDER_ROOM,
                         B_MSG_SET_WONDER_ROOM,
                         B_ANIM_WONDER_ROOM,
                         &gFieldTimers.wonderRoomTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_WONDER_ROOM;
+            gBattleStruct->startingStatus.wonderRoom = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_PLAYER)
+        else if (gBattleStruct->startingStatus.tailwindPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3748,9 +3748,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_PLAYER;
+            gBattleStruct->startingStatus.tailwindPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_TAILWIND_OPPONENT)
+        else if (gBattleStruct->startingStatus.tailwindOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
@@ -3758,9 +3758,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_TAILWIND_OPPONENT;
+            gBattleStruct->startingStatus.tailwindOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_PLAYER)
+        else if (gBattleStruct->startingStatus.rainbowPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3768,9 +3768,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_PLAYER;
+            gBattleStruct->startingStatus.rainbowPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_RAINBOW_OPPONENT)
+        else if (gBattleStruct->startingStatus.rainbowOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
@@ -3778,9 +3778,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
                         &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_RAINBOW_OPPONENT;
+            gBattleStruct->startingStatus.rainbowOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_PLAYER)
+        else if (gBattleStruct->startingStatus.seaOfFirePlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3788,9 +3788,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_PLAYER;
+            gBattleStruct->startingStatus.seaOfFirePlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_SEA_OF_FIRE_OPPONENT)
+        else if (gBattleStruct->startingStatus.seaOfFireOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
@@ -3798,9 +3798,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
                         &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_SEA_OF_FIRE_OPPONENT;
+            gBattleStruct->startingStatus.seaOfFireOpponent = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_PLAYER)
+        else if (gBattleStruct->startingStatus.swampPlayer)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3808,9 +3808,9 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_PLAYER].swampTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_PLAYER;
+            gBattleStruct->startingStatus.swampPlayer = FALSE;
         }
-        else if (gBattleStruct->startingStatus & STARTING_STATUS_SWAMP_OPPONENT)
+        else if (gBattleStruct->startingStatus.swampOpponent)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
@@ -3818,7 +3818,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer);
-            gBattleStruct->startingStatus &= ~STARTING_STATUS_SWAMP_OPPONENT;
+            gBattleStruct->startingStatus.swampOpponent = FALSE;
         }
         if (effect)
         {

@@ -1858,14 +1858,14 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         if (trainer->starting_status_n > 0)
         {
             fprintf(f, "#line %d\n", trainer->starting_status_line);
-            fprintf(f, "        .startingStatus = ");
+            fprintf(f, "        .startingStatus = { ");
             for (int i = 0; i < trainer->starting_status_n; i++)
             {
-                if (i > 0)
-                    fprintf(f, " | ");
-                fprint_constant(f, "STARTING_STATUS", trainer->starting_status[i]);
+                fprintf(f, ".");
+                fprint_string(f, trainer->starting_status[i]);
+                fprintf(f, " = TRUE, ");
             }
-            fprintf(f, ",\n");
+            fprintf(f, "},\n");
         }
 
         if (!is_empty_string(trainer->pool_rules))
