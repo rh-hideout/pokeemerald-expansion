@@ -686,6 +686,14 @@ enum FaintedActions
     F(STARTING_STATUS_SWAMP_PLAYER,         swampPlayer,       (u32, 1)) \
     F(STARTING_STATUS_SWAMP_OPPONENT,       swampOpponent,     (u32, 1)) \
 
+#define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
+
+// Constants for SetStartingStatus
+enum StartingStatus
+{
+    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_ENUMS)
+};
+
 enum SlideMsgStates
 {
     PRINT_SLIDE_MESSAGE,

@@ -2,9 +2,7 @@
 #include "event_data.h"
 #include "test/battle.h"
 
-#if B_VAR_STARTING_STATUS != 0
-
-SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginning of battle and lasts infinitely long")
+SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning of battle and lasts infinitely long")
 {
     u16 terrain;
 
@@ -13,8 +11,7 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
     PARAMETRIZE { terrain = STARTING_STATUS_MISTY_TERRAIN; }
     PARAMETRIZE { terrain = STARTING_STATUS_ELECTRIC_TERRAIN; }
 
-    VarSet(B_VAR_STARTING_STATUS, terrain);
-    VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
+    SetStartingStatus(terrain, 0);
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -53,7 +50,7 @@ SINGLE_BATTLE_TEST("B_VAR_STARTING_STATUS starts a chosen terrain at the beginni
             MESSAGE("The grass disappeared from the battlefield.");
         }
     } THEN {
-        VarSet(B_VAR_STARTING_STATUS, 0);
+        ResetStartingStatuses();
     }
 }
 
@@ -64,8 +61,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
     PARAMETRIZE { viaMove = TRUE; }
     PARAMETRIZE { viaMove = FALSE; }
 
-    VarSet(B_VAR_STARTING_STATUS, STARTING_STATUS_ELECTRIC_TERRAIN);
-    VarSet(B_VAR_STARTING_STATUS_TIMER, 0);
+    SetStartingStatus(STARTING_STATUS_ELECTRIC_TERRAIN, 0);
 
     GIVEN {
         PLAYER(SPECIES_TAPU_BULU) { Ability(viaMove == TRUE ? ABILITY_TELEPATHY : ABILITY_GRASSY_SURGE); }
@@ -107,8 +103,6 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
         MESSAGE("The grass disappeared from the battlefield.");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
     } THEN {
-        VarSet(B_VAR_STARTING_STATUS, 0);
+        ResetStartingStatuses();
     }
 }
-
-#endif // B_VAR_STARTING_STATUS

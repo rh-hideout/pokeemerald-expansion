@@ -94,6 +94,7 @@ enum TrainerBattleType
 
 struct StartingStatuses
 {
+    u32 timer:16;
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUSES_STRUCT)
     // Expands to:
     // u32 electricTerrain:1;

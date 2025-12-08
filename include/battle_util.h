@@ -448,5 +448,7 @@ bool32 IsDazzlingAbility(enum Ability ability);
 bool32 IsAllowedToUseBag(void);
 bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
+void SetStartingStatus(enum StartingStatus status, u32 timer);
+void ResetStartingStatuses(void);
 
 #endif // GUARD_BATTLE_UTIL_H
