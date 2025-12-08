@@ -139,6 +139,48 @@ AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("Heal Bell skips curing a partner that benefits from burn")
+{
+    ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HEAL_BELL, MOVE_SCRATCH); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); Status1(STATUS1_BURN); MaxHP(200); HP(200); Speed(10); }
+    } WHEN {
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, MOVE_HEAL_BELL);
+            EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_TACKLE, target: playerLeft);
+            MOVE(playerLeft, MOVE_MEMENTO);
+            MOVE(playerRight, MOVE_MEMENTO);
+        }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("Jungle Healing skips curing a partner that benefits from burn")
+{
+    ASSUME(GetMoveEffect(MOVE_JUNGLE_HEALING) == EFFECT_JUNGLE_HEALING);
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_JUNGLE_HEALING, MOVE_SCRATCH); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); Status1(STATUS1_BURN); MaxHP(200); HP(200); Speed(10); }
+    } WHEN {
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, MOVE_JUNGLE_HEALING);
+            EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_TACKLE, target: playerLeft);
+            MOVE(playerLeft, MOVE_MEMENTO);
+            MOVE(playerRight, MOVE_MEMENTO);
+        }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner without a positive effect")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
