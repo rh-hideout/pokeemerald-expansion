@@ -330,6 +330,14 @@ bool32 IsValidForBattle(struct Pokemon *mon)
          && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
 }
 
+bool32 IsValidForBattleButDead(struct Pokemon *mon)
+{
+    u32 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG);
+    return (species != SPECIES_NONE
+         && species != SPECIES_EGG
+         && GetMonData(mon, MON_DATA_IS_EGG) == FALSE);
+}
+
 static inline bool32 IsControllerPlayer(u32 battler)
 {
     return (gBattlerControllerEndFuncs[battler] == PlayerBufferExecCompleted);
@@ -415,21 +423,41 @@ static void SetBattlePartyIds(void)
                 {
                     if (IsOnPlayerSide(i))
                     {
-                        if (IsValidForBattle(&gPlayerParty[j]) && gBattlerPartyIndexes[i - 2] != j)
+                        if (gBattlerPartyIndexes[i - 2] == j)
+                        {
+                            // Exclude already assigned pokemon;
+                        }
+                        else if (IsValidForBattle(&gPlayerParty[j]))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
+                        }
+                        else if (IsValidForBattleButDead(&gPlayerParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
+                        {
+                            // Put an "option" on a dead mon that can be revived;
+                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
                         }
                     }
                     else
                     {
-                        if (IsValidForBattle(&gEnemyParty[j]) && gBattlerPartyIndexes[i - 2] != j)
+                        if (gBattlerPartyIndexes[i - 2] == j)
+                        {
+                            // Exclude already assigned pokemon;
+                        }
+                        else if (IsValidForBattle(&gEnemyParty[j]))
                         {
                             gBattlerPartyIndexes[i] = j;
                             break;
                         }
+                        else if (IsValidForBattleButDead(&gEnemyParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
+                        {
+                            // Put an "option" on a dead mon that can be revived;
+                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
+                        }
                     }
 
+                    if (gBattlerPartyIndexes[i] >= PARTY_SIZE)
+                        continue;
                     // No valid mons were found. Add the empty slot.
                     if (gBattlerPartyIndexes[i - 2] == 0)
                         gBattlerPartyIndexes[i] = 1;
@@ -437,6 +465,8 @@ static void SetBattlePartyIds(void)
                         gBattlerPartyIndexes[i] = 0;
                 }
             }
+            if (gBattlerPartyIndexes[i] >= PARTY_SIZE)
+                gBattlerPartyIndexes[i] -= PARTY_SIZE;
         }
 
         if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
