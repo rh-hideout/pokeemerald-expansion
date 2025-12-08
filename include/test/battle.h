@@ -715,6 +715,24 @@ struct AILogLine
     s16 score;
 };
 
+enum ScoreTieResolution
+{
+    SCORE_TIE_NONE,
+    SCORE_TIE_LO,
+    SCORE_TIE_HI,
+    SCORE_TIE_RANDOM,
+    SCORE_TIE_CHOSEN
+};
+
+enum TargetTieResolution
+{
+    TARGET_TIE_NONE,
+    TARGET_TIE_LO,
+    TARGET_TIE_HI,
+    TARGET_TIE_RANDOM,
+    TARGET_TIE_CHOSEN
+};
+
 // Data which is updated by the test runner during a battle and needs to
 // be reset between trials.
 struct BattleTrialData
@@ -722,7 +740,11 @@ struct BattleTrialData
     u8 lastActionTurn;
     u8 queuedEvent;
     u8 aiActionsPlayed[MAX_BATTLERS_COUNT];
+    u8 scoreTieCount;
+    u8 targetTieCount;
 };
+
+extern struct BattleTrialData gBattleTrialData;
 
 struct BattleTestData
 {
@@ -771,6 +793,11 @@ struct BattleTestData
     u16 flagId;
 
     struct BattleTrialData trial;
+    enum ScoreTieResolution scoreTieResolution;
+    u8 scoreTieOverride;
+    enum RandomTag scoreTieTag;
+    enum TargetTieResolution targetTieResolution;
+    u8 targetTieOverride;
 };
 
 struct BattleTestRunnerState
@@ -1001,6 +1028,8 @@ struct moveWithPP {
 
 void SetFlagForTest(u32 sourceLine, u16 flagId);
 void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value);
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value);
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value);
 void ClearFlagAfterTest(void);
 void OpenPokemon(u32 sourceLine, enum BattlerPosition position, u32 species);
 void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species);
@@ -1106,6 +1135,8 @@ enum { TURN_CLOSED, TURN_OPEN, TURN_CLOSING };
 #define SEND_OUT(battler, partyIndex) SendOut(__LINE__, battler, partyIndex)
 #define USE_ITEM(battler, ...) UseItem(__LINE__, battler, (struct ItemContext) { R_APPEND_TRUE(__VA_ARGS__) })
 #define WITH_RNG(tag, value) rng: ((struct RiggedRNG) { tag, value })
+#define TIE_BREAK_SCORE(rngTag, scoreTieRes, value) TieBreakScore(__LINE__, rngTag, scoreTieRes, value)
+#define TIE_BREAK_TARGET(targetTieRes, value) TieBreakTarget(__LINE__, targetTieRes, value)
 
 struct MoveContext
 {

@@ -11,6 +11,7 @@
 #include "battle_z_move.h"
 #include "bg.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "item_use.h"
 #include "link.h"
 #include "main.h"
@@ -104,6 +105,7 @@ static void (*const sRecordedPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 b
 
 void SetControllerToRecordedPartner(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_PARTNER;
     gBattlerControllerEndFuncs[battler] = RecordedPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedPartnerBufferRunCommand;
 }

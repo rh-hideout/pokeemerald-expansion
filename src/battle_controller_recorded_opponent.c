@@ -10,6 +10,7 @@
 #include "battle_tv.h"
 #include "bg.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "item_menu.h"
 #include "item_use.h"
 #include "link.h"
@@ -108,6 +109,7 @@ static void (*const sRecordedOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 
 
 void SetControllerToRecordedOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_RECORDED_OPPONENT;
     gBattlerControllerEndFuncs[battler] = RecordedOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = RecordedOpponentBufferRunCommand;
 }

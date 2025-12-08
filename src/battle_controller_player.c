@@ -157,6 +157,7 @@ static void (*const sPlayerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler) =
 
 void SetControllerToPlayer(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_PLAYER;
     gBattlerControllerEndFuncs[battler] = PlayerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = PlayerBufferRunCommand;
     gDoingBattleAnim = FALSE;
@@ -198,46 +199,36 @@ static void CompleteOnBattlerSpritePosX_0(u32 battler)
 
 static u16 GetPrevBall(u16 ballId)
 {
-    u16 ballPrev;
-    s32 i, j;
-    CompactItemsInBagPocket(POCKET_POKE_BALLS);
-    for (i = 0; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
+    s32 i;
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+     for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i))
-        {
-            if (i <= 0)
-            {
-                for (j = gBagPockets[POCKET_POKE_BALLS].capacity - 1; j >= 0; j--)
-                {
-                    ballPrev = GetBagItemId(POCKET_POKE_BALLS, j);
-                    if (ballPrev != ITEM_NONE)
-                        return ballPrev;
-                }
-            }
-            i--;
-            break;
-        }
+        index--;
+        if (index == -1)
+            index = POKEBALL_COUNT - 1;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
-    return GetBagItemId(POCKET_POKE_BALLS, i);
+    return ballId;
 }
 
 static u32 GetNextBall(u32 ballId)
 {
-    u32 ballNext = ITEM_NONE;
     s32 i;
-    CompactItemsInBagPocket(POCKET_POKE_BALLS);
-    for (i = 1; i < gBagPockets[POCKET_POKE_BALLS].capacity; i++)
+    s32 index = ItemIdToBallId(ballId);
+    u32 newBall = 0;
+    for (i = 0; i < POKEBALL_COUNT; i++)
     {
-        if (ballId == GetBagItemId(POCKET_POKE_BALLS, i-1))
-        {
-            ballNext = GetBagItemId(POCKET_POKE_BALLS, i);
-            break;
-        }
+        index++;
+        if (index == POKEBALL_COUNT)
+            index = 0;
+        newBall = gBallItemIds[index];
+        if (CheckBagHasItem(newBall, 1))
+            return newBall;
     }
-    if (ballNext == ITEM_NONE)
-        return GetBagItemId(POCKET_POKE_BALLS, 0); // Zeroth slot
-    else
-        return ballNext;
+    return ballId;
 }
 
 static void HandleInputChooseAction(u32 battler)
@@ -2375,7 +2366,7 @@ static bool32 ShouldShowTypeEffectiveness(u32 targetId)
 static u32 CheckTypeEffectiveness(u32 battlerAtk, u32 battlerDef)
 {
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battlerAtk][4]);
-    struct DamageContext ctx = {0};
+    struct BattleContext ctx = {0};
     ctx.battlerAtk = battlerAtk;
     ctx.battlerDef = battlerDef;
     ctx.move = moveInfo->moves[gMoveSelectionCursor[battlerAtk]];

@@ -166,10 +166,6 @@ const struct SpriteTemplate gDummySpriteTemplate =
     .tileTag = 0,
     .paletteTag = TAG_NONE,
     .oam = &gDummyOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const AnimFunc sAnimFuncs[] =
@@ -483,10 +479,10 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
 
     sprite->subpriority = subpriority;
     sprite->oam = *template->oam;
-    sprite->anims = template->anims;
-    sprite->affineAnims = template->affineAnims;
+    sprite->anims = template->anims ? template->anims : gDummySpriteAnimTable;
+    sprite->affineAnims = template->affineAnims ? template->affineAnims : gDummySpriteAffineAnimTable;
     sprite->template = template;
-    sprite->callback = template->callback;
+    sprite->callback = template->callback ? template->callback : SpriteCallbackDummy;
     sprite->x = x;
     sprite->y = y;
 
