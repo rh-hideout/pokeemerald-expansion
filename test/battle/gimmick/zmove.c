@@ -6,9 +6,10 @@
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
-        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
     } WHEN {
         TURN { MOVE(opponent, MOVE_SCRATCH);
                MOVE(player, MOVE_QUICK_ATTACK, gimmick: GIMMICK_Z_MOVE); }
@@ -23,7 +24,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves are not affected by -ate abilities")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_SCRATCH) == TYPE_NORMAL);
-        ASSUME(gSpeciesInfo[SPECIES_SWELLOW].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_SWELLOW, 1) == TYPE_FLYING);
         PLAYER(SPECIES_AURORUS) { Ability(ABILITY_REFRIGERATE); Item(ITEM_NORMALIUM_Z); }
         OPPONENT(SPECIES_SWELLOW);
     } WHEN {
@@ -114,10 +115,16 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_ALL_STATS_UP raises all of a battler's sta
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio by 2 stages")
 {
-    PASSES_RANDOMLY(1, 2, RNG_CRITICAL_HIT);
+    u32 genConfig = 0, chance;
+    for (u32 j = GEN_1; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; chance = 4; } // 25%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; chance = 2; } // 50%
+    PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveType(MOVE_FORESIGHT) == TYPE_NORMAL);
         ASSUME(GetMoveZEffect(MOVE_FORESIGHT) == Z_EFFECT_BOOST_CRITS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -182,9 +189,9 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_CURSE activates Z_EFFECT_RECOVER_HP or Z_E
     PARAMETRIZE { species = SPECIES_DUSCLOPS; }
     GIVEN {
         ASSUME(GetMoveType(MOVE_CURSE) == TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[0] != TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_WOBBUFFET].types[1] != TYPE_GHOST);
-        ASSUME(gSpeciesInfo[SPECIES_DUSCLOPS].types[0] == TYPE_GHOST);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 0) != TYPE_GHOST);
+        ASSUME(GetSpeciesType(SPECIES_WOBBUFFET, 1) != TYPE_GHOST);
+        ASSUME(GetSpeciesType(SPECIES_DUSCLOPS, 0) == TYPE_GHOST);
         ASSUME(GetMoveZEffect(MOVE_CURSE) == Z_EFFECT_CURSE);
         PLAYER(species) { Item(ITEM_GHOSTIUM_Z); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -526,9 +533,9 @@ SINGLE_BATTLE_TEST("(Z-MOVE) 10,000,000 Volt Thunderbolt has an increased critic
         PARAMETRIZE { genConfig = j; chance = 2; }
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_10_000_000_VOLT_THUNDERBOLT) == 2);
-        ASSUME(gSpeciesInfo[SPECIES_PIKACHU_PARTNER].baseSpeed == 90);
+        ASSUME(GetSpeciesBaseSpeed(SPECIES_PIKACHU_PARTNER) == 90);
         PLAYER(SPECIES_PIKACHU_PARTNER) { Item(ITEM_PIKASHUNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -578,7 +585,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_REMOVE_TERRAIN);
+        ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
         PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -588,14 +595,14 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
-        MESSAGE("Mew cannot use Quick Attack!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
     }
 }
 
 SINGLE_BATTLE_TEST("(Z-MOVE) Splintered Stormshards removes terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_HIT_SET_REMOVE_TERRAIN);
+        ASSUME(GetMoveEffect(MOVE_SPLINTERED_STORMSHARDS) == EFFECT_ICE_SPINNER);
         PLAYER(SPECIES_LYCANROC_DUSK) { Item(ITEM_LYCANIUM_Z); }
         OPPONENT(SPECIES_TAPU_LELE) { Ability(ABILITY_PSYCHIC_SURGE); HP(1000); MaxHP(1000); }
     } WHEN {
@@ -630,10 +637,10 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Clangorous Soulblaze boosts all the user's stats by
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75\% of the target's current HP")
+SINGLE_BATTLE_TEST("(Z-MOVE) Guardian of Alola deals 75% of the target's current HP")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_GUARDIAN_OF_ALOLA);
+        ASSUME(GetMoveEffect(MOVE_GUARDIAN_OF_ALOLA) == EFFECT_FIXED_PERCENT_DAMAGE);
         PLAYER(SPECIES_TAPU_FINI) { Item(ITEM_TAPUNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -679,3 +686,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z-Revelation Dance always transforms into Breakneck
         ANIMATION(ANIM_TYPE_MOVE, MOVE_BREAKNECK_BLITZ, player);
     }
 }
+
+TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from status Z-Moves are not inverted by Contrary")
+TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Extreme Evoboost are inverted by Contrary")
+TO_DO_BATTLE_TEST("(Z-MOVE) Stat changes from Clangorous Soulblaze are inverted by Contrary")

@@ -96,12 +96,12 @@ static const union AnimCmd sSpriteAnim_Bag_Berries[] =
 
 static const union AnimCmd *const sBagSpriteAnimTable[] =
 {
-    [POCKET_NONE]       = sSpriteAnim_Bag_Closed,
     [POCKET_ITEMS]      = sSpriteAnim_Bag_Items,
     [POCKET_POKE_BALLS] = sSpriteAnim_Bag_Pokeballs,
     [POCKET_TM_HM]      = sSpriteAnim_Bag_TMsHMs,
     [POCKET_BERRIES]    = sSpriteAnim_Bag_Berries,
     [POCKET_KEY_ITEMS]  = sSpriteAnim_Bag_KeyItems,
+    [POCKET_DUMMY]       = sSpriteAnim_Bag_Closed,
 };
 
 static const union AffineAnimCmd sSpriteAffineAnim_BagNormal[] =
@@ -151,9 +151,7 @@ static const struct SpriteTemplate sBagSpriteTemplate =
     .paletteTag = TAG_BAG_GFX,
     .oam = &sBagOamData,
     .anims = sBagSpriteAnimTable,
-    .images = NULL,
     .affineAnims = sBagAffineAnimCmds,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct OamData sRotatingBallOamData =
@@ -222,7 +220,6 @@ static const struct SpriteTemplate sRotatingBallSpriteTemplate =
     .paletteTag = TAG_ROTATING_BALL_GFX,
     .oam = &sRotatingBallOamData,
     .anims = sRotatingBallSpriteAnimTable,
-    .images = NULL,
     .affineAnims = sRotatingBallAnimCmds,
     .callback = SpriteCB_SwitchPocketRotatingBallInit,
 };
@@ -278,9 +275,6 @@ static const struct SpriteTemplate sBerryPicSpriteTemplate =
     .paletteTag = TAG_BERRY_PIC_PAL,
     .oam = &sBerryPicOamData,
     .anims = sBerryPicSpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const union AffineAnimCmd sSpriteAffineAnim_BerryPicRotation1[] =
@@ -317,9 +311,7 @@ static const struct SpriteTemplate sBerryPicRotatingSpriteTemplate =
     .paletteTag = TAG_BERRY_PIC_PAL,
     .oam = &sBerryPicRotatingOamData,
     .anims = sBerryPicSpriteAnimTable,
-    .images = NULL,
     .affineAnims = sBerryPicRotatingAnimCmds,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct TilesPal sBerryPicTable[] =
@@ -438,9 +430,6 @@ static const struct SpriteTemplate sBerryCheckCircleSpriteTemplate =
     .paletteTag = TAG_BERRY_CHECK_CIRCLE_GFX,
     .oam = &sBerryCheckCircleOamData,
     .anims = sBerryCheckCircleSpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // code
@@ -473,12 +462,12 @@ void SetBagVisualPocketId(u8 bagPocketId, bool8 isSwitchingPockets)
     {
         sprite->y2 = -5;
         sprite->callback = SpriteCB_BagVisualSwitchingPockets;
-        sprite->sPocketId = bagPocketId + 1;
-        StartSpriteAnim(sprite, POCKET_NONE);
+        sprite->sPocketId = bagPocketId;
+        StartSpriteAnim(sprite, POCKET_DUMMY);
     }
     else
     {
-        StartSpriteAnim(sprite, bagPocketId + 1);
+        StartSpriteAnim(sprite, bagPocketId);
     }
 }
 

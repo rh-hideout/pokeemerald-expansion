@@ -11,7 +11,8 @@ AI_SINGLE_BATTLE_TEST("AI will not further increase Attack / Sp. Atk stat if it 
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_SKY_UPPERCUT) == 85);
-        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
+        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP
+            || GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveEffect(MOVE_CALM_MIND) == EFFECT_CALM_MIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_COMBUSKEN) { Speed(15); Moves(MOVE_SKY_UPPERCUT, MOVE_CELEBRATE); };
@@ -31,7 +32,8 @@ AI_SINGLE_BATTLE_TEST("AI will not further increase Attack / Sp. Atk stat if it 
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_SKY_UPPERCUT) == 85);
-        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
+        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP
+            || GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveEffect(MOVE_CALM_MIND) == EFFECT_CALM_MIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_COMBUSKEN) { Speed(20); Moves(MOVE_DOUBLE_KICK, MOVE_CELEBRATE); };
@@ -63,7 +65,8 @@ AI_SINGLE_BATTLE_TEST("AI will not waste a turn setting up if it knows target ca
 
     GIVEN {
         ASSUME(GetMovePower(MOVE_SKY_UPPERCUT) == 85);
-        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
+        ASSUME(GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP
+            || GetMoveEffect(MOVE_HOWL) == EFFECT_ATTACK_UP_USER_ALLY);
         ASSUME(GetMoveEffect(MOVE_CALM_MIND) == EFFECT_CALM_MIND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
         PLAYER(SPECIES_COMBUSKEN) { Speed(15); Moves(MOVE_SKY_UPPERCUT, MOVE_DOUBLE_KICK, MOVE_FLAME_WHEEL, MOVE_CELEBRATE); };
@@ -107,5 +110,59 @@ AI_SINGLE_BATTLE_TEST("AI will select Throat Chop if the sound move is the best 
         TURN { EXPECT_MOVE(opponent, MOVE_PSYCHIC_FANGS); MOVE(player, MOVE_FLAME_BURST); }
         TURN { EXPECT_MOVE(opponent, MOVE_PSYCHIC_FANGS); MOVE(player, MOVE_HYPER_VOICE); }
         TURN { EXPECT_MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_HYPER_VOICE);}
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will incentivise multiple best damage moves in cases of damage ties and KOs")
+{
+    u32 hp;
+
+    PARAMETRIZE { hp = 120; }
+    PARAMETRIZE { hp = 20; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); HP(hp); }
+        OPPONENT(SPECIES_KANGASKHAN) { Speed(20); Level(40); Moves(MOVE_SONICBOOM, MOVE_DRAGON_RAGE, MOVE_NIGHT_SHADE, MOVE_SEISMIC_TOSS); }
+    } WHEN {
+        if (hp == 120)
+        {
+            TURN { 
+                SCORE_EQ_VAL(opponent, MOVE_SONICBOOM,      AI_SCORE_DEFAULT); 
+                SCORE_EQ_VAL(opponent, MOVE_DRAGON_RAGE,    (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE));
+                SCORE_EQ_VAL(opponent, MOVE_NIGHT_SHADE,    (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE)); 
+                SCORE_EQ_VAL(opponent, MOVE_SEISMIC_TOSS,   (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE));
+            }
+        }
+        else
+        {
+            TURN { 
+                SCORE_EQ_VAL(opponent, MOVE_SONICBOOM,      (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL)); 
+                SCORE_EQ_VAL(opponent, MOVE_DRAGON_RAGE,    (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL)); 
+                SCORE_EQ_VAL(opponent, MOVE_NIGHT_SHADE,    (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL)); 
+                SCORE_EQ_VAL(opponent, MOVE_SEISMIC_TOSS,   (AI_SCORE_DEFAULT + BEST_DAMAGE_MOVE + FAST_KILL)); 
+            }
+        }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases")
+{
+    u16 move;
+    PARAMETRIZE { move = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { move = MOVE_BULLDOZE; }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_HAMMER_ARM, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_NASTY_PLOT) == EFFECT_SPECIAL_ATTACK_UP_2);
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == 100);
+        ASSUME(GetMovePower(MOVE_HAMMER_ARM) == 100);
+        ASSUME(GetMovePower(MOVE_BULLDOZE) == 60);
+        ASSUME(GetMovePower(MOVE_AURA_SPHERE) == 80);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RHYDON) { Level(100); Nature(NATURE_ADAMANT); Item(ITEM_EVIOLITE); Speed(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_HAMMER_ARM, move); }
+        OPPONENT(SPECIES_GRIMMSNARL) { Level(100); Nature(NATURE_JOLLY); Ability(ABILITY_INFILTRATOR); Speed(2); HP(300); Moves(MOVE_NASTY_PLOT, MOVE_AURA_SPHERE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAMMER_ARM); EXPECT_MOVE(opponent, move == MOVE_EARTHQUAKE ? MOVE_NASTY_PLOT : MOVE_AURA_SPHERE); }
     }
 }

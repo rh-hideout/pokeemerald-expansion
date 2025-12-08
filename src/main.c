@@ -116,7 +116,7 @@ void AgbMain(void)
     gSoftResetDisabled = FALSE;
 
     if (gFlashMemoryPresent != TRUE)
-        SetMainCallback2((SAVE_TYPE_ERROR_SCREEN) ? CB2_FlashNotDetectedScreen : NULL);
+        SetMainCallback2(CB2_FlashNotDetectedScreen);
 
     gLinkTransferringData = FALSE;
 

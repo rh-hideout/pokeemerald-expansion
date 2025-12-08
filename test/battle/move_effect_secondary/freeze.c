@@ -20,7 +20,7 @@ SINGLE_BATTLE_TEST("Powder Snow inflicts freeze")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_POWDER_SNOW, player);
         HP_BAR(opponent);
-        ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_FRZ, opponent);
+        ANIMATION(ANIM_TYPE_STATUS, (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ), opponent);
         FREEZE_OR_FROSTBURN_STATUS(opponent, TRUE);
     }
 }
@@ -32,7 +32,7 @@ SINGLE_BATTLE_TEST("Powder Snow cannot freeze an Ice-type Pokémon")
 #endif
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_SNORUNT].types[0] == TYPE_ICE);
+        ASSUME(GetSpeciesType(SPECIES_SNORUNT, 0) == TYPE_ICE);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_SNORUNT);
     } WHEN {
@@ -74,7 +74,7 @@ SINGLE_BATTLE_TEST("Freezing Glare shouldn't freeze Psychic-types")
 #endif
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_ARTICUNO_GALAR].types[0] == TYPE_PSYCHIC);
+        ASSUME(GetSpeciesType(SPECIES_ARTICUNO_GALAR, 0) == TYPE_PSYCHIC);
         ASSUME(MoveHasAdditionalEffect(MOVE_FREEZING_GLARE, MOVE_EFFECT_FREEZE_OR_FROSTBITE) == TRUE);
         ASSUME(GetMoveType(MOVE_FREEZING_GLARE) == TYPE_PSYCHIC);
         PLAYER(SPECIES_ARTICUNO_GALAR);
@@ -85,11 +85,11 @@ SINGLE_BATTLE_TEST("Freezing Glare shouldn't freeze Psychic-types")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FREEZING_GLARE, player);
         HP_BAR(opponent);
         #if B_STATUS_TYPE_IMMUNITY > GEN_1
-            ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_FRZ, opponent);
+            ANIMATION(ANIM_TYPE_STATUS, (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ), opponent);
             FREEZE_OR_FROSTBURN_STATUS(opponent, TRUE);
         #else
             NONE_OF {
-                ANIMATION(ANIM_TYPE_STATUS, B_ANIM_STATUS_FRZ, opponent);
+                ANIMATION(ANIM_TYPE_STATUS, (B_USE_FROSTBITE ? B_ANIM_STATUS_FRB : B_ANIM_STATUS_FRZ), opponent);
                 FREEZE_OR_FROSTBURN_STATUS(opponent, TRUE);
             }
         #endif

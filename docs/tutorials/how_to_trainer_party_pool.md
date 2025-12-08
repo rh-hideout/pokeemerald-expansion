@@ -52,6 +52,11 @@ By default, only `Default<position>PickFunction` and `PickLowest` are implemente
 - `Pool Prune` (`.poolPruneIndex`) controls if members in the pool should be removed before party members are picked from the pool.
 By default, only `POOL_PRUNE_NONE`, which doesn't remove anything from the pool, and `POOL_PRUNE_TEST`, which removes Wobbuffet from the pool, are implemented. Must be an  `enum` value in `enum PoolPruneOptions`.
 
+## Pool copy
+The `Copy Pool` option can be used to have the trainer use the party or pool from a different trainer.
+If you for example want some other trainer to have the same team/pool as Tiana, you'd use `Copy Pool: TRAINER_TIANA`.
+If `Party Size` isn't defined for the current trainer, it will inherit from the copied trainer.
+
 ## Example pool
 ```
 === TRAINER_TIANA ===

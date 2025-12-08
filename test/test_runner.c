@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include "fake_rtc.h"
 #include "global.h"
 #include "gpu_regs.h"
 #include "load_save.h"
@@ -9,6 +10,7 @@
 #include "constants/characters.h"
 #include "test_runner.h"
 #include "test/test.h"
+#include "test/battle.h"
 
 #define TIMEOUT_SECONDS 60
 
@@ -22,10 +24,7 @@ enum {
     CURRENT_TEST_STATE_RUN,
 };
 
-__attribute__((section(".persistent"))) static struct {
-    u32 address:28;
-    u32 state:1;
-} sCurrentTest = {0};
+__attribute__((section(".persistent"))) struct PersistentTestRunnerState gPersistentTestRunnerState = {0};
 
 void TestRunner_Battle(const struct Test *);
 
@@ -36,6 +35,25 @@ static void Intr_Timer2(void);
 
 extern const struct Test __start_tests[];
 extern const struct Test __stop_tests[];
+
+static enum TestFilterMode DetectFilterMode(const char *pattern)
+{
+    size_t n = strlen(pattern);
+    if (n > 2 && pattern[n-2] == '.' && pattern[n-1] == 'c')
+        return TEST_FILTER_MODE_FILENAME_EXACT;
+    else if (pattern[0] == '*') // TODO: Support '*pattern*'.
+        return TEST_FILTER_MODE_TEST_NAME_INFIX;
+    else
+        return TEST_FILTER_MODE_TEST_NAME_PREFIX;
+}
+
+static bool32 ExactMatch(const char *pattern, const char *string)
+{
+    if (string == NULL)
+        return TRUE;
+
+    return strcmp(pattern, string) == 0;
+}
 
 static bool32 PrefixMatch(const char *pattern, const char *string)
 {
@@ -51,6 +69,14 @@ static bool32 PrefixMatch(const char *pattern, const char *string)
         pattern++;
         string++;
     }
+}
+
+static bool32 InfixMatch(const char *pattern, const char *string)
+{
+    if (string == NULL)
+        return TRUE;
+
+    return strstr(string, &pattern[1]) != NULL;
 }
 
 enum
@@ -160,6 +186,13 @@ void TestRunner_CheckMemory(void)
     }
 }
 
+static void ClearSaveBlocks(void)
+{
+    ClearSav1();
+    ClearSav2();
+    ClearSav3();
+}
+
 void CB2_TestRunner(void)
 {
 top:
@@ -174,25 +207,24 @@ top:
             return;
         }
 
+        gTestRunnerState.filterMode = DetectFilterMode(gTestRunnerArgv);
+
         MoveSaveBlocks_ResetHeap();
-        ClearSav1();
-        ClearSav2();
-        ClearSav3();
 
         gIntrTable[7] = Intr_Timer2;
 
-        gSaveBlock2Ptr->optionsBattleStyle = OPTIONS_BATTLE_STYLE_SET;
-
         // The current test restarted the ROM (e.g. by jumping to NULL).
-        if (sCurrentTest.address != 0)
+        if (gPersistentTestRunnerState.address != 0)
         {
+            ClearSaveBlocks();
             gTestRunnerState.test = __start_tests;
-            while ((uintptr_t)gTestRunnerState.test != sCurrentTest.address)
+            while ((uintptr_t)gTestRunnerState.test != gPersistentTestRunnerState.address)
             {
                 AssignCostToRunner();
                 gTestRunnerState.test++;
             }
-            if (sCurrentTest.state == CURRENT_TEST_STATE_ESTIMATE)
+
+            if (gPersistentTestRunnerState.state == CURRENT_TEST_STATE_ESTIMATE)
             {
                 u32 runner = MinCostProcess();
                 gTestRunnerState.processCosts[runner] += 1;
@@ -208,9 +240,14 @@ top:
             }
             else
             {
+                // Cost must be assigned to the test that crashed, otherwise tests will be desynched
+                AssignCostToRunner();
                 gTestRunnerState.state = STATE_REPORT_RESULT;
                 gTestRunnerState.result = TEST_RESULT_CRASH;
             }
+
+            if (gPersistentTestRunnerState.expectCrash)
+                gTestRunnerState.expectedResult = TEST_RESULT_CRASH;
         }
         else
         {
@@ -223,6 +260,7 @@ top:
         break;
 
     case STATE_ASSIGN_TEST:
+        ClearSaveBlocks();
         while (1)
         {
             if (gTestRunnerState.test == __stop_tests)
@@ -230,11 +268,17 @@ top:
                 gTestRunnerState.state = STATE_EXIT;
                 return;
             }
-            if (gTestRunnerState.test->runner != &gAssumptionsRunner
-              && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
-                ++gTestRunnerState.test;
-            else
-                break;
+            if (gTestRunnerState.test->runner != &gAssumptionsRunner)
+            {
+                if ((gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_PREFIX && !PrefixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_TEST_NAME_INFIX && !InfixMatch(gTestRunnerArgv, gTestRunnerState.test->name))
+                 || (gTestRunnerState.filterMode == TEST_FILTER_MODE_FILENAME_EXACT && !ExactMatch(gTestRunnerArgv, gTestRunnerState.test->filename)))
+                {
+                    ++gTestRunnerState.test;
+                    continue;
+                }
+            }
+            break;
         }
 
         Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
@@ -252,8 +296,8 @@ top:
         REG_TM2CNT_L = UINT16_MAX - (274 * 60); // Approx. 1 second.
         REG_TM2CNT_H = TIMER_ENABLE | TIMER_INTR_ENABLE | TIMER_1024CLK;
 
-        sCurrentTest.address = (uintptr_t)gTestRunnerState.test;
-        sCurrentTest.state = CURRENT_TEST_STATE_ESTIMATE;
+        gPersistentTestRunnerState.address = (uintptr_t)gTestRunnerState.test;
+        gPersistentTestRunnerState.state = CURRENT_TEST_STATE_ESTIMATE;
 
         // If AssignCostToRunner fails, we want to report the failure.
         gTestRunnerState.state = STATE_REPORT_RESULT;
@@ -266,7 +310,8 @@ top:
 
     case STATE_RUN_TEST:
         gTestRunnerState.state = STATE_REPORT_RESULT;
-        sCurrentTest.state = CURRENT_TEST_STATE_RUN;
+        gPersistentTestRunnerState.state = CURRENT_TEST_STATE_RUN;
+        gPersistentTestRunnerState.expectCrash = FALSE;
         SeedRng(0);
         SeedRng2(0);
         if (gTestRunnerState.test->runner->setUp)
@@ -312,7 +357,9 @@ top:
             const char *color;
             const char *result;
 
-            if (gTestRunnerState.result == gTestRunnerState.expectedResult)
+            if (gTestRunnerState.result == gTestRunnerState.expectedResult
+             || (gTestRunnerState.result == TEST_RESULT_FAIL
+              && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
             {
                 color = "\e[32m";
                 Test_MgbaPrintf(":N%s", gTestRunnerState.test->name);
@@ -330,7 +377,7 @@ top:
             switch (gTestRunnerState.result)
             {
             case TEST_RESULT_FAIL:
-                if (gTestRunnerState.expectedResult == TEST_RESULT_FAIL)
+                if (gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL)
                 {
                     result = "KNOWN_FAILING";
                     color = "\e[33m";
@@ -387,7 +434,9 @@ top:
                 Test_MgbaPrintf(":A%s%s\e[0m", color, result);
             else if (gTestRunnerState.result == TEST_RESULT_TODO)
                 Test_MgbaPrintf(":T%s%s\e[0m", color, result);
-            else if (gTestRunnerState.expectedResult == gTestRunnerState.result)
+            else if (gTestRunnerState.expectedResult == gTestRunnerState.result
+                 || (gTestRunnerState.result == TEST_RESULT_FAIL
+                  && gTestRunnerState.expectedResult == TEST_RESULT_KNOWN_FAIL))
                 Test_MgbaPrintf(":K%s%s\e[0m", color, result);
             else
                 Test_MgbaPrintf(":F%s%s\e[0m", color, result);
@@ -403,6 +452,11 @@ top:
     case STATE_EXIT:
         MgbaExit_(gTestRunnerState.exitCode);
         break;
+    default:
+        MgbaOpen_();
+        Test_MgbaPrintf("\e[31mInvalid TestRunner state, exiting\e[0m");
+        gTestRunnerState.exitCode = 1;
+        gTestRunnerState.state = STATE_EXIT;
     }
 
     if (gMain.callback2 == CB2_TestRunner)
@@ -419,9 +473,17 @@ void Test_ExpectLeaks(bool32 expectLeaks)
     gTestRunnerState.expectLeaks = expectLeaks;
 }
 
+void Test_ExpectCrash(bool32 expectCrash)
+{
+    gPersistentTestRunnerState.expectCrash = expectCrash;
+    if (expectCrash)
+        Test_ExpectedResult(TEST_RESULT_CRASH);
+}
+
 static void FunctionTest_SetUp(void *data)
 {
     (void)data;
+    ClearRiggedRng();
     gFunctionTestRunnerState = AllocZeroed(sizeof(*gFunctionTestRunnerState));
     SeedRng(0);
 }
@@ -453,12 +515,84 @@ static bool32 FunctionTest_CheckProgress(void *data)
     return madeProgress;
 }
 
+static u32 FunctionTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            if (reject && reject(gFunctionTestRunnerState->rngList[i].value))
+                Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LWITH_RNG specified a rejected value (%d)", gFunctionTestRunnerState->rngList[i].value);
+            return gFunctionTestRunnerState->rngList[i].value;
+        }
+    }
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomUniformTrials(tag, lo, hi, reject);
+    */
+
+    //default
+    return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
+}
+
+static u32 FunctionTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+            return gFunctionTestRunnerState->rngList[i].value;
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomWeightedArrayTrials(tag, sum, n, weights);
+    */
+
+    //default
+    return RandomWeightedArrayDefaultValue(tag, n, weights, caller);
+}
+
+static const void* FunctionTest_RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    //rigged
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == tag)
+        {
+            u32 element = 0;
+            for (u32 index = 0; index < count; index++)
+            {
+                memcpy(&element, (const u8 *)array + size * index, size);
+                if (element == gFunctionTestRunnerState->rngList[i].value)
+                    return (const u8 *)array + size * index;
+            }
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":L%s: RandomElement illegal value requested: %d", gTestRunnerState.test->filename, gFunctionTestRunnerState->rngList[i].value);
+        }
+    }
+
+    //trials
+    /*
+    if (tag == STATE->rngTag)
+        return RandomElementTrials(tag, array, size, count);
+    */
+
+    //default
+    return RandomElementArrayDefaultValue(tag, array, size, count, caller);
+}
+
 const struct TestRunner gFunctionTestRunner =
 {
     .setUp = FunctionTest_SetUp,
     .run = FunctionTest_Run,
     .tearDown = FunctionTest_TearDown,
     .checkProgress = FunctionTest_CheckProgress,
+    .randomUniform = FunctionTest_RandomUniform,
+    .randomWeightedArray = FunctionTest_RandomWeightedArray,
+    .randomElementArray = FunctionTest_RandomElementArray,
 };
 
 static void Assumptions_Run(void *data)
@@ -765,4 +899,103 @@ u32 SourceLineOffset(u32 sourceLine)
         return 0;
     else
         return sourceLine - test->sourceLine;
+}
+
+u32 RandomUniform(enum RandomTag tag, u32 lo, u32 hi)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, NULL, caller);
+    else
+        return RandomUniformDefault(tag, lo, hi);
+}
+
+u32 RandomUniformExcept(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32))
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomUniform)
+        return gTestRunnerState.test->runner->randomUniform(tag, lo, hi, reject, caller);
+    else
+        return RandomUniformExceptDefault(tag, lo, hi, reject);
+}
+
+u32 RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, const u8 *weights)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomWeightedArray)
+        return gTestRunnerState.test->runner->randomWeightedArray(tag, sum, n, weights, caller);
+    else
+        return RandomWeightedArrayDefault(tag, sum, n, weights);
+}
+
+const void *RandomElementArray(enum RandomTag tag, const void *array, size_t size, size_t count)
+{
+    void *caller = __builtin_extract_return_addr(__builtin_return_address(0));
+    if (gTestRunnerState.test->runner->randomElementArray)
+        return gTestRunnerState.test->runner->randomElementArray(tag, array, size, count, caller);
+    else
+        return RandomElementArrayDefault(tag, array, size, count);
+}
+
+u32 RandomUniformDefaultValue(enum RandomTag tag, u32 lo, u32 hi, bool32 (*reject)(u32), void *caller)
+{
+    u32 default_ = hi;
+    if (reject)
+    {
+        while (reject(default_))
+        {
+            if (default_ == lo)
+                Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomUniformExcept called from %p with tag %d rejected all values", caller, tag);
+            default_--;
+        }
+    }
+    return default_;
+}
+
+u32 RandomWeightedArrayDefaultValue(enum RandomTag tag, u32 n, const u8 *weights, void *caller)
+{
+    while (weights[n-1] == 0)
+    {
+        if (n == 1)
+            Test_ExitWithResult(TEST_RESULT_ERROR, SourceLine(0), ":LRandomWeightedArray called from %p with tag %d and all zero weights", caller, tag);
+        n--;
+    }
+    return n-1;
+}
+
+const void *RandomElementArrayDefaultValue(enum RandomTag tag, const void *array, size_t size, size_t count, void *caller)
+{
+    return (const u8 *)array + size * (count - 1);
+}
+
+void ClearRiggedRng(void)
+{
+    struct RiggedRNG zeroRng = {.tag = RNG_NONE, .value = 0};
+    for (u32 i = 0; i < RIGGED_RNG_COUNT; i++)
+        memcpy(&gFunctionTestRunnerState->rngList[i], &zeroRng, sizeof(zeroRng));
+}
+
+void SetupRiggedRng(u32 sourceLine, enum RandomTag randomTag, u32 value)
+{
+    struct RiggedRNG rng = {.tag = randomTag, .value = value};
+    u32 i;
+    for (i = 0; i < RIGGED_RNG_COUNT; i++)
+    {
+        if (gFunctionTestRunnerState->rngList[i].tag == randomTag)
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+        else if (gFunctionTestRunnerState->rngList[i].tag > RNG_NONE)
+        {
+            continue;
+        }
+        else
+        {
+            memcpy(&gFunctionTestRunnerState->rngList[i], &rng, sizeof(rng));
+            break;
+        }
+    }
+    if (i == RIGGED_RNG_COUNT)
+        Test_ExitWithResult(TEST_RESULT_FAIL, __LINE__, ":L%s:%d: Too many rigged RNGs to set up", gTestRunnerState.test->filename, sourceLine);
 }

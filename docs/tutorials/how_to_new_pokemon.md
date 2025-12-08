@@ -42,7 +42,7 @@ The main things that the Expansion changes are listed here.
 # Useful resources
 You can open a sprite debug menu by pressing `Select` in a Pokémon's summary screen outside of battle.
 
-![visualizer1](/docs/tutorials/img/add_pokemon/visualizer1.gif)
+![visualizer1](img/add_pokemon/visualizer1.gif)
 
 # The Data - Part 1
 
@@ -73,7 +73,7 @@ We add this at the end so that no existing species change Id and so that we don'
 
 Now, let's see how it looks in-game!
 
-![visualizer2](/docs/tutorials/img/add_pokemon/visualizer2.png)
+![visualizer2](img/add_pokemon/visualizer2.png)
 
 Hmmm, something's not right...
 
@@ -314,7 +314,8 @@ Cry_Pecharunt::
 Then we add the cry ID to [include/constants/cries.h](https://github.com/rh-hideout/pokeemerald-expansion/blob/master/include/constants/cries.h):
 
 ```diff
-enum {
+enum PokemonCry
+{
     CRY_NONE,
     ...
 #if P_FAMILY_TERAPAGOS
@@ -371,7 +372,8 @@ Edit [include/constants/pokedex.h](https://github.com/rh-hideout/pokeemerald-exp
 
 ```diff
 // National Pokedex order
-enum {
+enum NationalDexOrder
+{
     NATIONAL_DEX_NONE,
     // Kanto
     NATIONAL_DEX_BULBASAUR,
@@ -394,7 +396,8 @@ Do keep in mind that if you intend to add your new species to the Hoenn Dex, you
 
 ```diff
 // Hoenn Pokedex order
-enum {
+enum HoennDexOrder
+{
     HOENN_DEX_NONE,
     HOENN_DEX_TREECKO,
 ...
@@ -443,7 +446,7 @@ Now we can add the number and entry to our Mewthree:
     },
  };
 ```
-![image](/docs/tutorials/img/add_pokemon/dex1.png)
+![image](img/add_pokemon/dex1.png)
 
 The values `pokemonScale`, `pokemonOffset`, `trainerScale` and `trainerOffset` are used for the height comparison figure in the Pokédex.
 
@@ -494,7 +497,7 @@ Edit [src/data/pokemon/pokedex_orders.h](https://github.com/rh-hideout/pokeemera
      ...
  };
 ```
-![mGBA_lUBfmFEKUx](/docs/tutorials/img/add_pokemon/dex2.gif)
+![mGBA_lUBfmFEKUx](img/add_pokemon/dex2.gif)
 
 
 # The Graphics
@@ -524,9 +527,9 @@ Edit [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-exp
 ```diff
 #if P_FAMILY_PECHARUNT
     const u32 gMonFrontPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/front.4bpp.lz");
-    const u32 gMonPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/normal.gbapal.lz");
+    const u16 gMonPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/normal.gbapal");
     const u32 gMonBackPic_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/back.4bpp.lz");
-    const u32 gMonShinyPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/shiny.gbapal.lz");
+    const u16 gMonShinyPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/shiny.gbapal");
     const u8 gMonIcon_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/icon.4bpp");
 #if P_FOOTPRINTS
     const u8 gMonFootprint_Pecharunt[] = INCBIN_U8("graphics/pokemon/pecharunt/footprint.1bpp");
@@ -534,20 +537,20 @@ Edit [src/data/graphics/pokemon.h](https://github.com/rh-hideout/pokeemerald-exp
 #if OW_POKEMON_OBJECT_EVENTS
     const u32 gObjectEventPic_Pecharunt[] = INCBIN_COMP("graphics/pokemon/pecharunt/overworld.4bpp");
 #if OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    const u32 gOverworldPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/overworld_normal.gbapal.lz");
-    const u32 gShinyOverworldPalette_Pecharunt[] = INCBIN_U32("graphics/pokemon/pecharunt/overworld_shiny.gbapal.lz");
+    const u16 gOverworldPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/overworld_normal.gbapal");
+    const u16 gShinyOverworldPalette_Pecharunt[] = INCBIN_U16("graphics/pokemon/pecharunt/overworld_shiny.gbapal");
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 #endif //P_FAMILY_PECHARUNT
 
     const u32 gMonFrontPic_Egg[] = INCBIN_U32("graphics/pokemon/egg/anim_front.4bpp.lz");
-    const u32 gMonPalette_Egg[] = INCBIN_U32("graphics/pokemon/egg/normal.gbapal.lz");
+    const u16 gMonPalette_Egg[] = INCBIN_U16("graphics/pokemon/egg/normal.gbapal");
     const u8 gMonIcon_Egg[] = INCBIN_U8("graphics/pokemon/egg/icon.4bpp");
 
 +   const u32 gMonFrontPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/anim_front.4bpp.lz");
 +   const u32 gMonBackPic_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/back.4bpp.lz");
-+   const u32 gMonPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/normal.gbapal.lz");
-+   const u32 gMonShinyPalette_Mewthree[] = INCBIN_U32("graphics/pokemon/mewthree/shiny.gbapal.lz");
++   const u16 gMonPalette_Mewthree[] = INCBIN_U16("graphics/pokemon/mewthree/normal.gbapal");
++   const u16 gMonShinyPalette_Mewthree[] = INCBIN_U16("graphics/pokemon/mewthree/shiny.gbapal");
 +   const u8 gMonIcon_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/icon.4bpp");
 +   const u8 gMonFootprint_Mewthree[] = INCBIN_U8("graphics/pokemon/mewthree/footprint.1bpp");
 ```
@@ -1055,7 +1058,7 @@ What this allows us to do is to be able to get all forms of a Pokémon in our co
 
 For example, in the HGSS dex, it lets us browse between the entries of every form available.:
 
-![hgssdex1](/docs/tutorials/img/add_pokemon/hgssdex1.png) ![image](/docs/tutorials/img/add_pokemon/hgssdex2.png)
+![hgssdex1](img/add_pokemon/hgssdex1.png) ![image](img/add_pokemon/hgssdex2.png)
 
 In addition, we have the `GET_BASE_SPECIES_ID` macro, which returns the first entry of the table (or return the species itself if it doesn't have a table registered). With this, you can check if a Pokémon is any form of a species. For example, making it so that the Light Ball affects all Pikachu forms:
 ```c
@@ -1086,7 +1089,7 @@ The second value is the target form, to which the Pokémon will change into.
 Values after that are referred as arguments, and needs to be put there depends on the type of form change, detailed in `include/constants/form_change_types.h`.
 
 ## 3. Gender differences
-![gender_diffs](/docs/tutorials/img/add_pokemon/gender_diffs.gif)
+![gender_diffs](img/add_pokemon/gender_diffs.gif)
 
 You may have seen that there's a couple of duplicate fields with a "Female" suffix.
 ```diff
@@ -1259,8 +1262,8 @@ Either way, you may also create custom animation tables and use them here approp
 
 ### How to add the Pokémon Object Events to map
 In Porymap, select the object you want to set the sprite to. Then, change the field "Sprite" to use `OBJ_EVENT_GFX_SPECIES(SPECIES)`, replacing SPECIES with the name of the species you want to use. If you get a compiler error, it's because it used the species define as part of the macro, so it needs to match how you defined it all the way back in [Declare a species constant](#1-Declare-a-species-constant).
-![charizard](/docs/tutorials/img/add_pokemon/charizard.png)
-![overworld_data](/docs/tutorials/img/add_pokemon/overworld_data.gif)
+![charizard](img/add_pokemon/charizard.png)
+![overworld_data](img/add_pokemon/overworld_data.gif)
 
 If you want to use their shiny and/or female versions, use one of the following macros:
 - `OBJ_EVENT_GFX_SPECIES_SHINY(name)`

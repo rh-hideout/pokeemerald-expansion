@@ -205,7 +205,7 @@ static EWRAM_DATA union
 } sWirelessLinkMain = {};
 EWRAM_DATA struct RfuGameCompatibilityData gRfuPartnerCompatibilityData = {};
 EWRAM_DATA u16 gUnionRoomOfferedSpecies = 0;
-EWRAM_DATA u8 gUnionRoomRequestedMonType = 0;
+EWRAM_DATA enum Type gUnionRoomRequestedMonType = 0;
 static EWRAM_DATA struct UnionRoomTrade sUnionRoomTrade = {};
 
 static struct WirelessLink_Leader *sLeader;
@@ -270,7 +270,7 @@ static void GetURoomActivityRejectMsg(u8 *, s32, u32);
 static u32 ConvPartnerUnameAndGetWhetherMetAlready(struct RfuPlayer *);
 static void GetURoomActivityStartMsg(u8 *, u8);
 static void UR_ClearBg0(void);
-static s32 IsRequestedTradeInPlayerParty(u32, u32);
+static s32 IsRequestedTradeInPlayerParty(enum Type, u32);
 static bool32 UR_PrintFieldMessage(const u8 *);
 static s32 GetChatLeaderActionRequestMessage(u8 *, u32, u16 *, struct WirelessLink_URoom *);
 static void Task_InitUnionRoom(u8 taskId);
@@ -3612,7 +3612,7 @@ static bool8 PrintOnTextbox(u8 *textState, const u8 *str)
         LoadMessageBoxAndBorderGfx();
         DrawDialogueFrame(0, TRUE);
         StringExpandPlaceholders(gStringVar4, str);
-        AddTextPrinterForMessage_2(TRUE);
+        AddTextPrinterForMessage(TRUE);
         (*textState)++;
         break;
     case 1:
@@ -3801,7 +3801,6 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     printerTemplate.y = y;
     printerTemplate.currentX = x;
     printerTemplate.currentY = y;
-    printerTemplate.unk = 0;
 
     gTextFlags.useAlternateDownArrow = FALSE;
     switch (colorIdx)
@@ -3809,51 +3808,58 @@ static void PrintUnionRoomText(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 y
     case UR_COLOR_DEFAULT:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_DARK_GRAY;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.color.accent = TEXT_COLOR_WHITE;
+        printerTemplate.color.foreground = TEXT_COLOR_DARK_GRAY;
+        printerTemplate.color.background = TEXT_COLOR_WHITE;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_GRAY;
         break;
     case UR_COLOR_RED:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_RED;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_RED;
+        printerTemplate.color.accent = TEXT_COLOR_WHITE;
+        printerTemplate.color.foreground = TEXT_COLOR_RED;
+        printerTemplate.color.background = TEXT_COLOR_WHITE;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_RED;
         break;
     case UR_COLOR_GREEN:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_GREEN;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GREEN;
+        printerTemplate.color.accent = TEXT_COLOR_WHITE;
+        printerTemplate.color.foreground = TEXT_COLOR_GREEN;
+        printerTemplate.color.background = TEXT_COLOR_WHITE;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_GREEN;
         break;
     case UR_COLOR_WHITE:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_WHITE;
-        printerTemplate.bgColor = TEXT_COLOR_WHITE;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.color.accent = TEXT_COLOR_WHITE;
+        printerTemplate.color.foreground = TEXT_COLOR_WHITE;
+        printerTemplate.color.background = TEXT_COLOR_WHITE;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_GRAY;
         break;
     case UR_COLOR_CANCEL:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_WHITE;
-        printerTemplate.bgColor = TEXT_COLOR_DARK_GRAY;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_GRAY;
+        printerTemplate.color.accent = TEXT_COLOR_DARK_GRAY;
+        printerTemplate.color.foreground = TEXT_COLOR_WHITE;
+        printerTemplate.color.background = TEXT_COLOR_DARK_GRAY;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_GRAY;
         break;
     case UR_COLOR_TRADE_BOARD_SELF:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_COLOR_LIGHT_GREEN;
-        printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;
+        printerTemplate.color.accent = TEXT_DYNAMIC_COLOR_6;
+        printerTemplate.color.foreground = TEXT_COLOR_LIGHT_GREEN;
+        printerTemplate.color.background = TEXT_DYNAMIC_COLOR_6;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_BLUE;
         break;
     case UR_COLOR_TRADE_BOARD_OTHER:
         printerTemplate.letterSpacing = 0;
         printerTemplate.lineSpacing = 0;
-        printerTemplate.fgColor = TEXT_DYNAMIC_COLOR_5;
-        printerTemplate.bgColor = TEXT_DYNAMIC_COLOR_6;
-        printerTemplate.shadowColor = TEXT_COLOR_LIGHT_BLUE;
+        printerTemplate.color.accent = TEXT_DYNAMIC_COLOR_6;
+        printerTemplate.color.foreground = TEXT_DYNAMIC_COLOR_5;
+        printerTemplate.color.background = TEXT_DYNAMIC_COLOR_6;
+        printerTemplate.color.shadow = TEXT_COLOR_LIGHT_BLUE;
         break;
     }
 
@@ -4104,7 +4110,7 @@ static void TradeBoardPrintItemInfo(u8 windowId, u8 y, struct RfuGameData *data,
 {
     u8 levelStr[4];
     u16 species = data->tradeSpecies;
-    u8 type = data->tradeType;
+    enum Type type = data->tradeType;
     u8 level = data->tradeLevel;
 
     PrintUnionRoomText(windowId, FONT_NORMAL, playerName, 8, y, colorIdx);
@@ -4174,7 +4180,7 @@ static s32 GetUnionRoomPlayerGender(s32 playerIdx, struct RfuPlayerList *list)
     return list->players[playerIdx].rfu.data.playerGender;
 }
 
-static s32 IsRequestedTradeInPlayerParty(u32 type, u32 species)
+static s32 IsRequestedTradeInPlayerParty(enum Type type, u32 species)
 {
     s32 i;
 
@@ -4193,7 +4199,7 @@ static s32 IsRequestedTradeInPlayerParty(u32 type, u32 species)
         for (i = 0; i < gPlayerPartyCount; i++)
         {
             species = GetMonData(&gPlayerParty[i], MON_DATA_SPECIES_OR_EGG);
-            if (gSpeciesInfo[species].types[0] == type || gSpeciesInfo[species].types[1] == type)
+            if (GetSpeciesType(species, 0) == type || GetSpeciesType(species, 1) == type)
                 return UR_TRADE_MATCH;
         }
         return UR_TRADE_NOTYPE;

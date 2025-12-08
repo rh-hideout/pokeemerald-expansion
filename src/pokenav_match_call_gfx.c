@@ -252,9 +252,6 @@ static const struct SpriteTemplate sOptionsCursorSpriteTemplate =
     .tileTag = GFXTAG_CURSOR,
     .paletteTag = PALTAG_CURSOR,
     .oam = &sOptionsCursorOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_OptionsCursor,
 };
 
@@ -277,10 +274,6 @@ static const struct SpriteTemplate sTrainerPicSpriteTemplate =
     .tileTag = GFXTAG_TRAINER_PIC,
     .paletteTag = PALTAG_TRAINER_PIC,
     .oam = &sTrainerPicOamData,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 bool32 OpenMatchCall(void)
@@ -1027,7 +1020,7 @@ static void PrintMatchCallLocation(struct Pokenav_MatchCallGfx *gfx, int delta)
     u8 mapName[32];
     int x;
     int index = PokenavList_GetSelectedIndex() + delta;
-    int mapSec = GetMatchCallMapSec(index);
+    mapsec_s32_t mapSec = GetMatchCallMapSec(index);
     if (mapSec != MAPSEC_NONE)
         GetMapName(mapName, mapSec, 0);
     else

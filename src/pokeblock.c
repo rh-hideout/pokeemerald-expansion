@@ -62,7 +62,7 @@ enum {
 struct PokeblockMenuStruct
 {
     u8 tilemap[BG_SCREEN_SIZE];
-    void (*callbackOnUse)(void);
+    MainCallback callbackOnUse;
     const u8 *pokeblockActionIds;
     u8 numActions;
     u8 caseId;
@@ -80,7 +80,7 @@ struct PokeblockMenuStruct
 
 struct PokeblockSavedData
 {
-    void (*callback)(void);
+    MainCallback callback;
     u16 selectedRow;
     u16 scrollOffset;
 };
@@ -295,9 +295,6 @@ static const struct SpriteTemplate sSpriteTemplate_PokeblockCase =
     .paletteTag = TAG_POKEBLOCK_CASE,
     .oam = &sOamData_PokeblockCase,
     .anims = sSpriteAnimTable_PokeblockCase,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const u8 sTextColor[3] = {TEXT_COLOR_TRANSPARENT, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_LIGHT_GRAY};

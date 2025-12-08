@@ -65,7 +65,8 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal when its abili
 
 SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back to normal under Cloud Nine/Air Lock")
 {
-    u32 species = 0, ability = 0;
+    u32 species = 0;
+    enum Ability ability = 0;
     PARAMETRIZE { species = SPECIES_PSYDUCK;  ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { species = SPECIES_RAYQUAZA; ability = ABILITY_AIR_LOCK; }
     GIVEN {
@@ -196,6 +197,25 @@ SINGLE_BATTLE_TEST("Flower Gift transforms Cherrim back when it uses a move that
         ANIMATION(ANIM_TYPE_MOVE, MOVE_U_TURN, player);
     } THEN {
         EXPECT_EQ(GetMonData(&gPlayerParty[0], MON_DATA_SPECIES), SPECIES_CHERRIM);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Flower Gift reverts Cherrim back after Teraform Zero clears weather")
+{
+    GIVEN {
+        PLAYER(SPECIES_TERAPAGOS_TERASTAL);
+        PLAYER(SPECIES_CHERRIM) { Ability(ABILITY_FLOWER_GIFT); }
+        OPPONENT(SPECIES_GROUDON) { Ability(ABILITY_DROUGHT); }
+        OPPONENT(SPECIES_WYNAUT);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_CELEBRATE, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ABILITY_POPUP(opponentLeft, ABILITY_DROUGHT);
+        ABILITY_POPUP(playerRight, ABILITY_FLOWER_GIFT);
+        ABILITY_POPUP(playerLeft, ABILITY_TERAFORM_ZERO);
+        ABILITY_POPUP(playerRight, ABILITY_FLOWER_GIFT);
+    } THEN {
+        EXPECT_EQ(playerRight->species, SPECIES_CHERRIM);
     }
 }
 

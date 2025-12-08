@@ -54,6 +54,59 @@ SINGLE_BATTLE_TEST("Quark Drive boosts either Attack or Special Attack, not both
     }
 }
 
+SINGLE_BATTLE_TEST("Quark Drive keeps its initial boosted stat after Speed is lowered")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_ROUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); Moves(MOVE_CELEBRATE, MOVE_ICY_WIND); Speed(100); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); MOVE(opponent, MOVE_ICY_WIND); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_ELECTRIC_SURGE);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ICY_WIND, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Quark Drive retains its boosted stat after Neutralizing Gas briefly suppresses it")
+{
+    s16 damage[2];
+
+    GIVEN {
+        PLAYER(SPECIES_IRON_MOTH) { Ability(ABILITY_QUARK_DRIVE); Attack(10); Defense(10); SpAttack(150); SpDefense(120); Speed(180); Moves(MOVE_ELECTRIC_TERRAIN, MOVE_ROUND, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
+        OPPONENT(SPECIES_WEEZING) { Ability(ABILITY_NEUTRALIZING_GAS); Moves(MOVE_CELEBRATE); Speed(70); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_ELECTRIC_TERRAIN); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+        TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 1); }
+        TURN { MOVE(player, MOVE_CELEBRATE); SWITCH(opponent, 0); }
+        TURN { MOVE(player, MOVE_ROUND); MOVE(opponent, MOVE_CELEBRATE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ELECTRIC_TERRAIN, player);
+        ABILITY_POPUP(player, ABILITY_QUARK_DRIVE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ABILITY_POPUP(opponent, ABILITY_NEUTRALIZING_GAS);
+        MESSAGE("Neutralizing gas filled the area!");
+        MESSAGE("The effects of the neutralizing gas wore off!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_ROUND, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
 SINGLE_BATTLE_TEST("Quark Drive ability pop up activates only once during the duration of electric terrain")
 {
     u16 turns;
@@ -104,7 +157,7 @@ SINGLE_BATTLE_TEST("Quark Drive activates on switch-in")
 SINGLE_BATTLE_TEST("Quark Drive activates on Electric Terrain even if not grounded")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_IRON_JUGULIS].types[0] == TYPE_FLYING || gSpeciesInfo[SPECIES_IRON_JUGULIS].types[1] == TYPE_FLYING);
+        ASSUME(GetSpeciesType(SPECIES_IRON_JUGULIS, 0) == TYPE_FLYING || GetSpeciesType(SPECIES_IRON_JUGULIS, 1) == TYPE_FLYING);
         PLAYER(SPECIES_IRON_JUGULIS) { Ability(ABILITY_QUARK_DRIVE); }
         OPPONENT(SPECIES_TAPU_KOKO) { Ability(ABILITY_ELECTRIC_SURGE); };
     } WHEN {

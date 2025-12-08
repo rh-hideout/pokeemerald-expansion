@@ -4,6 +4,7 @@
 #include "contest_effect.h"
 #include "constants/battle.h"
 #include "constants/battle_move_effects.h"
+#include "constants/battle_string_ids.h"
 #include "constants/moves.h"
 
 // For defining EFFECT_HIT etc. with battle TV scores and flags etc.
@@ -21,21 +22,17 @@ struct __attribute__((packed, aligned(2))) BattleMoveEffect
 #define EFFECTS_ARR(...) (const struct AdditionalEffect[]) {__VA_ARGS__}
 #define ADDITIONAL_EFFECTS(...) EFFECTS_ARR( __VA_ARGS__ ), .numAdditionalEffects = ARRAY_COUNT(EFFECTS_ARR( __VA_ARGS__ ))
 
-enum SheerForceBoost
-{
-    SHEER_FORCE_AUTO_BOOST, // This is the default state when a move has a move effect with a chance
-    SHEER_FORCE_BOOST,      // If a move effect doesn't have an effect with a chance this can force a boost
-    SHEER_FORCE_NO_BOOST,   // Prevents a Sheer Force boost
-};
-
 struct AdditionalEffect
 {
-    u16 moveEffect;
+    enum MoveEffect moveEffect;
     u8 self:1;
     u8 onlyIfTargetRaisedStats:1;
     u8 onChargeTurnOnly:1;
-    u8 sheerForceBoost:2; // Handles edge cases for Sheer Force
-    u8 padding:3;
+    u8 sheerForceOverride:1; // Handles edge cases for Sheer Force - if TRUE, boosts when it shouldn't, or doesn't boost when it should
+    u8 padding:4;
+    union PACKED {
+        enum WrappedStringID wrapped;
+    } multistring;
     u8 chance; // 0% = effect certain, primary effect
 };
 
@@ -67,9 +64,9 @@ struct MoveInfo
 {
     const u8 *name;
     const u8 *description;
-    u16 effect;
-    u16 type:5;     // Up to 32
-    u16 category:2;
+    enum BattleMoveEffects effect;
+    enum Type type:5;     // Up to 32
+    enum DamageCategory category:2;
     u16 power:9;    // up to 511
     // end of word
     u16 accuracy:7;
@@ -82,9 +79,10 @@ struct MoveInfo
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
+    u32 multiHit:1; // Takes presendance over strikeCount
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;
-    u32 numAdditionalEffects:2; // limited to 3 - don't want to get too crazy
+    u32 numAdditionalEffects:3; // limited to 7
     // Flags
     bool32 makesContact:1;
     bool32 ignoresProtect:1;
@@ -103,9 +101,9 @@ struct MoveInfo
     bool32 healingMove:1;
     bool32 minimizeDoubleDamage:1;
     bool32 ignoresTargetAbility:1;
+    // end of word
     bool32 ignoresTargetDefenseEvasionStages:1;
     bool32 damagesUnderground:1;
-    // end of word
     bool32 damagesUnderwater:1;
     bool32 damagesAirborne:1;
     bool32 damagesAirborneDoubleDamage:1;
@@ -131,9 +129,10 @@ struct MoveInfo
     bool32 parentalBondBanned:1;
     bool32 skyBattleBanned:1;
     bool32 sketchBanned:1;
+    bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:7;
+    u32 padding:4;
     // end of word
 
     union {
@@ -141,15 +140,22 @@ struct MoveInfo
             u16 stringId;
             u16 status;
         } twoTurnAttack;
+        struct {
+            u16 species;
+            u16 power:9;
+            u16 numOfHits:7;
+        } speciesPowerOverride;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
         u32 holdEffect;
         u32 type;
         u32 fixedDamage;
+        u32 damagePercentage;
         u32 absorbPercentage;
         u32 recoilPercentage;
         u32 nonVolatileStatus;
+        u32 overwriteAbility;
     } argument;
 
     // primary/secondary effects
@@ -193,12 +199,12 @@ static inline const u8 *GetMoveDescription(u32 moveId)
     return gMovesInfo[moveId].description;
 }
 
-static inline u32 GetMoveType(u32 moveId)
+static inline enum Type GetMoveType(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].type;
 }
 
-static inline u32 GetMoveCategory(u32 moveId)
+static inline enum DamageCategory GetMoveCategory(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].category;
 }
@@ -241,6 +247,11 @@ static inline s32 GetMovePriority(u32 moveId)
 static inline u32 GetMoveStrikeCount(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].strikeCount;
+}
+
+static inline u32 IsMultiHitMove(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].multiHit;
 }
 
 static inline u32 GetMoveCriticalHitStage(u32 moveId)
@@ -473,6 +484,11 @@ static inline bool32 IsMoveSketchBanned(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].sketchBanned;
 }
 
+static inline bool32 IsMoveDampBanned(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].dampBanned;
+}
+
 static inline bool32 IsValidApprenticeMove(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].validApprenticeMove;
@@ -485,7 +501,7 @@ static inline u32 GetMoveTwoTurnAttackStringId(u32 moveId)
 
 static inline u32 GetMoveTwoTurnAttackStatus(u32 moveId)
 {
-    return UNCOMPRESS_BITS(gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status);
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
 static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
@@ -493,9 +509,29 @@ static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
 }
 
-static inline u32 GetMoveProtectMethod(u32 moveId)
+static inline u32 GetMoveSpeciesPowerOverride_Species(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.species;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_Power(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.power;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_NumOfHits(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.numOfHits;
+}
+
+static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.protectMethod;
+}
+
+static inline u32 GetMoveTerrainFlag(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.moveProperty;
 }
 
 static inline u32 GetMoveEffectArg_Status(u32 moveId)
@@ -518,7 +554,7 @@ static inline u32 GetMoveArgType(u32 moveId)
     return gMovesInfo[SanitizeMoveId(moveId)].argument.type;
 }
 
-static inline u32 GetMoveFixedDamage(u32 moveId)
+static inline u32 GetMoveFixedHPDamage(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.fixedDamage;
 }
@@ -548,6 +584,16 @@ static inline u32 GetMoveNonVolatileStatus(u32 move)
     default:
         return MOVE_EFFECT_NONE;
     }
+}
+
+static inline u32 GetMoveDamagePercentage(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.damagePercentage;
+}
+
+static inline u32 GetMoveOverwriteAbility(u32 move)
+{
+    return gMovesInfo[SanitizeMoveId(move)].argument.overwriteAbility;
 }
 
 static inline const struct AdditionalEffect *GetMoveAdditionalEffectById(u32 moveId, u32 effect)

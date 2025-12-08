@@ -520,29 +520,29 @@ static void UpdateSecondaryPopUpWindow(u8 secondaryPopUpWindowId)
 
 static void ShowMapNamePopUpWindow(void)
 {
-    u8 mapDisplayHeader[24];
+    u8 mapDisplayHeader[27];
     u8 *withoutPrefixPtr;
     u8 x;
     const u8 *mapDisplayHeaderSource;
     u8 mapNamePopUpWindowId, secondaryPopUpWindowId;
 
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
         {
-            withoutPrefixPtr = &(mapDisplayHeader[3]);
+            withoutPrefixPtr = &(mapDisplayHeader[6]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[FRONTIER_STAGES_PER_CHALLENGE];
         }
         else
         {
-            withoutPrefixPtr = &(mapDisplayHeader[3]);
+            withoutPrefixPtr = &(mapDisplayHeader[6]);
             mapDisplayHeaderSource = sBattlePyramid_MapHeaderStrings[gSaveBlock2Ptr->frontier.curChallengeBattleNum];
         }
         StringCopy(withoutPrefixPtr, mapDisplayHeaderSource);
     }
     else
     {
-        withoutPrefixPtr = &(mapDisplayHeader[3]);
+        withoutPrefixPtr = &(mapDisplayHeader[6]);
         GetMapName(withoutPrefixPtr, gMapHeader.regionMapSectionId, 0);
     }
 
@@ -562,8 +562,11 @@ static void ShowMapNamePopUpWindow(void)
     LoadMapNamePopUpWindowBg();
 
     mapDisplayHeader[0] = EXT_CTRL_CODE_BEGIN;
-    mapDisplayHeader[1] = EXT_CTRL_CODE_HIGHLIGHT;
+    mapDisplayHeader[1] = EXT_CTRL_CODE_BACKGROUND;
     mapDisplayHeader[2] = TEXT_COLOR_TRANSPARENT;
+    mapDisplayHeader[3] = EXT_CTRL_CODE_BEGIN;
+    mapDisplayHeader[4] = EXT_CTRL_CODE_ACCENT;
+    mapDisplayHeader[5] = TEXT_COLOR_TRANSPARENT;
 
     if (OW_POPUP_GENERATION == GEN_5)
     {
@@ -615,7 +618,7 @@ static void LoadMapNamePopUpWindowBg(void)
 {
     u8 popUpThemeId;
     u8 popupWindowId = GetMapNamePopUpWindowId();
-    u16 regionMapSectionId = gMapHeader.regionMapSectionId;
+    mapsec_u16_t regionMapSectionId = gMapHeader.regionMapSectionId;
     u8 secondaryPopUpWindowId;
 
     if (OW_POPUP_GENERATION == GEN_5)

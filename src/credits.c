@@ -318,8 +318,6 @@ static const struct SpriteTemplate sSpriteTemplate_CreditsMonBg =
     .paletteTag = TAG_MON_BG,
     .oam = &sOamData_MonBg,
     .anims = sAnims_MonBg,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CreditsMonBg,
 };
 
@@ -1542,7 +1540,7 @@ static void SpriteCB_CreditsMonBg(struct Sprite *sprite)
 
 static void DeterminePokemonToShow(void)
 {
-    u16 starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
+    enum NationalDexOrder starter = SpeciesToNationalPokedexNum(GetStarterPokemon(VarGet(VAR_STARTER_MON)));
     u16 page;
     u16 dexNum;
     u16 j;

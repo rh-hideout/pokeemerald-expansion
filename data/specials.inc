@@ -563,4 +563,10 @@ gSpecials::
 	def_special UseBlankMessageToCancelPokemonPic
 	def_special EnterCode
 	def_special GetCodeFeedback
-        def_special StartMining
+	def_special SetHiddenNature
+	def_special SetAbility
+	def_special ChooseBoxMon
+	def_special CanTeachMoveBoxMon
+	def_special ObjectEventInteractionGetApricornTreeData
+	def_special ObjectEventInteractionPickApricornTree
+    def_special StartMining

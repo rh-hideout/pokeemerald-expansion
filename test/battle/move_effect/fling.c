@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_FLING) == EFFECT_FLING);
 }
 
-SINGLE_BATTLE_TEST("Fling fails if pokemon holds no item")
+SINGLE_BATTLE_TEST("Fling fails if Pokémon holds no item")
 {
     u16 item;
 
@@ -29,7 +29,7 @@ SINGLE_BATTLE_TEST("Fling fails if pokemon holds no item")
     }
 }
 
-SINGLE_BATTLE_TEST("Fling fails if pokemon is under the effects of Embargo or Magic Room")
+SINGLE_BATTLE_TEST("Fling fails if Pokémon is under the effects of Embargo or Magic Room")
 {
     u16 move;
 
@@ -56,9 +56,9 @@ SINGLE_BATTLE_TEST("Fling fails if pokemon is under the effects of Embargo or Ma
     }
 }
 
-SINGLE_BATTLE_TEST("Fling fails for pokemon with Klutz ability")
+SINGLE_BATTLE_TEST("Fling fails for Pokémon with Klutz ability")
 {
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE {ability = ABILITY_KLUTZ; }
     PARAMETRIZE {ability = ABILITY_RUN_AWAY; }
@@ -77,6 +77,36 @@ SINGLE_BATTLE_TEST("Fling fails for pokemon with Klutz ability")
         } else {
             MESSAGE("But it failed!");
         }
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling fails if the item changes the Pokémon's form")
+{
+    GIVEN {
+        PLAYER(SPECIES_GIRATINA_ORIGIN) { Item(ITEM_GRISEOUS_CORE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        MESSAGE("But it failed!");
+    } THEN {
+        EXPECT(player->item == ITEM_GRISEOUS_CORE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling works if the item changes a Pokémon's form but not the one holding it")
+{
+    GIVEN {
+        PLAYER(SPECIES_VENUSAUR) { Item(ITEM_BLASTOISINITE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+    } SCENE {
+        NOT MESSAGE("But it failed!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+    } THEN {
+        EXPECT(player->item == ITEM_NONE);
     }
 }
 
@@ -150,7 +180,24 @@ SINGLE_BATTLE_TEST("Fling - Item is lost when target protects itself")
     }
 }
 
-SINGLE_BATTLE_TEST("Fling doesn't consume the item if pokemon is asleep/frozen/paralyzed")
+SINGLE_BATTLE_TEST("Fling - Item does not get blocked by Unnerve if it isn't a berry")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_TAUNT) == EFFECT_TAUNT);
+        PLAYER(SPECIES_CALYREX) { Item(ITEM_MENTAL_HERB); Ability(ABILITY_UNNERVE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_ORAN_BERRY); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_TAUNT); MOVE(opponent, MOVE_SCRATCH); }
+        TURN { MOVE(player, MOVE_FLING); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TAUNT, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent);
+        MESSAGE("The opposing Wobbuffet's Taunt wore off!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling doesn't consume the item if Pokémon is asleep/frozen/paralyzed")
 {
     u32 status;
     u16 item;
@@ -446,12 +493,56 @@ SINGLE_BATTLE_TEST("Fling deals damage based on items fling power")
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_VENUSAURITE); }
         OPPONENT(SPECIES_REGIROCK);
     } WHEN {
-        TURN { MOVE(player, MOVE_CRUNCH); }
         TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_CRUNCH); }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
-        HP_BAR(opponent, captureDamage: &damage[0]);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CRUNCH, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
+        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        OPPONENT(SPECIES_HIPPOWDON);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_EGG_BOMB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
+        HP_BAR(opponent, captureDamage: &damage[1]);
+    } THEN {
+        EXPECT_EQ(damage[0], damage[1]);
+    }
+}
+
+SINGLE_BATTLE_TEST("Fling deals damage based on a TM's move power")
+{
+    s16 damage[2];
+
+    GIVEN {
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == GetMovePower(MOVE_EGG_BOMB));
+        ASSUME(!IsSpeciesOfType(SPECIES_WOBBUFFET, TYPE_DARK));
+        PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_TM_EARTHQUAKE); }
+        OPPONENT(SPECIES_HIPPOWDON);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FLING); }
+        TURN { MOVE(player, MOVE_EGG_BOMB); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FLING, player);
+        HP_BAR(opponent, captureDamage: &damage[0]);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_EGG_BOMB, player);
         HP_BAR(opponent, captureDamage: &damage[1]);
     } THEN {
         EXPECT_EQ(damage[0], damage[1]);

@@ -81,7 +81,7 @@ static void HidePyramidItem(void);
 static void SetPyramidFacilityTrainers(void);
 static void ShowPostBattleHintText(void);
 static void UpdatePyramidWinStreak(void);
-static void GetInBattlePyramid(void);
+static void GetCurrentBattlePyramidLocation(void);
 static void UpdatePyramidLightRadius(void);
 static void ClearPyramidPartyHeldItems(void);
 static void SetPyramidFloorPalette(void);
@@ -805,7 +805,7 @@ static void (*const sBattlePyramidFunctions[])(void) =
     [BATTLE_PYRAMID_FUNC_SET_TRAINERS]      = SetPyramidFacilityTrainers,
     [BATTLE_PYRAMID_FUNC_SHOW_HINT_TEXT]    = ShowPostBattleHintText,
     [BATTLE_PYRAMID_FUNC_UPDATE_STREAK]     = UpdatePyramidWinStreak,
-    [BATTLE_PYRAMID_FUNC_IS_IN]             = GetInBattlePyramid,
+    [BATTLE_PYRAMID_FUNC_CURRENT_LOCATION]  = GetCurrentBattlePyramidLocation,
     [BATTLE_PYRAMID_FUNC_UPDATE_LIGHT]      = UpdatePyramidLightRadius,
     [BATTLE_PYRAMID_FUNC_CLEAR_HELD_ITEMS]  = ClearPyramidPartyHeldItems,
     [BATTLE_PYRAMID_FUNC_SET_FLOOR_PALETTE] = SetPyramidFloorPalette,
@@ -1127,9 +1127,9 @@ static void UpdatePyramidWinStreak(void)
         gSaveBlock2Ptr->frontier.pyramidRecordStreaks[lvlMode] = gSaveBlock2Ptr->frontier.pyramidWinStreaks[lvlMode];
 }
 
-static void GetInBattlePyramid(void)
+static void GetCurrentBattlePyramidLocation(void)
 {
-    gSpecialVar_Result = InBattlePyramid();
+    gSpecialVar_Result = CurrentBattlePyramidLocation();
 }
 
 static void UpdatePyramidLightRadius(void)
@@ -1221,19 +1221,19 @@ static void RestorePyramidPlayerParty(void)
         int partyIndex = gSaveBlock2Ptr->frontier.selectedPartyMons[i] - 1;
         for (j = 0; j < FRONTIER_PARTY_SIZE; j++)
         {
-            if (GetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
+            if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_SPECIES, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_SPECIES, NULL))
             {
                 for (k = 0; k < MAX_MON_MOVES; k++)
                 {
                     for (l = 0; l < MAX_MON_MOVES; l++)
                     {
-                        if (GetMonData(&gSaveBlock1Ptr->playerParty[partyIndex], MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
+                        if (GetMonData(GetSavedPlayerPartyMon(partyIndex), MON_DATA_MOVE1 + l, NULL) == GetMonData(&gPlayerParty[j], MON_DATA_MOVE1 + k, NULL))
                             break;
                     }
                     if (l == MAX_MON_MOVES)
                         SetMonMoveSlot(&gPlayerParty[j], MOVE_SKETCH, k);
                 }
-                gSaveBlock1Ptr->playerParty[partyIndex] = gPlayerParty[j];
+                SavePlayerPartyMon(partyIndex, &gPlayerParty[j]);
                 gSelectedOrderFromParty[j] = partyIndex + 1;
                 break;
             }
@@ -1426,7 +1426,7 @@ void GenerateBattlePyramidWildMon(void)
             continue;
 
         // check type
-        if (reqs->type != TYPE_MYSTERY && gSpeciesInfo[species].types[0] != reqs->type && gSpeciesInfo[species].types[1] != reqs->type)
+        if (reqs->type != TYPE_MYSTERY && GetSpeciesType(species, 0) != reqs->type && GetSpeciesType(species, 1) != reqs->type)
             continue;
 
         // check base stat total
@@ -1459,7 +1459,7 @@ void GenerateBattlePyramidWildMon(void)
             {
                 for (j = 0; j < NUM_ABILITY_SLOTS; j++)
                 {
-                    if (gSpeciesInfo[species].abilities[j] == reqs->abilities[i])
+                    if (GetSpeciesAbility(species, j) == reqs->abilities[i])
                     {
                         abilities[abilityCount] = reqs->abilities[i];
                         abilityCount++;
@@ -1520,7 +1520,7 @@ void GenerateBattlePyramidWildMon(void)
     }
 
     // Initialize a random ability num
-    if (gSpeciesInfo[species].abilities[1])
+    if (GetSpeciesAbility(species, 1))
     {
         i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
         SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
@@ -1540,7 +1540,7 @@ void GenerateBattlePyramidWildMon(void)
             id = abilities[Random() % abilityCount];
             for (j = 0; j < NUM_ABILITY_SLOTS; j++)
             {
-                if (id == gSpeciesInfo[species].abilities[j])
+                if (id == GetSpeciesAbility(species, j))
                 {
                     // Set this ability num
                     SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &id);
@@ -1606,7 +1606,7 @@ void GenerateBattlePyramidWildMon(void)
         break;
     case ABILITY_RANDOM:
     default:
-        if (gSpeciesInfo[wildMons[id].species].abilities[1])
+        if (GetSpeciesAbility(wildMons[id].species, 1))
         {
             i = GetMonData(&gEnemyParty[0], MON_DATA_PERSONALITY, NULL) % 2;
             SetMonData(&gEnemyParty[0], MON_DATA_ABILITY_NUM, &i);
@@ -1643,14 +1643,14 @@ u8 GetPyramidRunMultiplier(void)
     return sPyramidFloorTemplates[id].runMultiplier;
 }
 
-u8 InBattlePyramid(void)
+u8 CurrentBattlePyramidLocation(void)
 {
     if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
-        return 1;
+        return PYRAMID_LOCATION_FLOOR;
     else if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_TOP)
-        return 2;
+        return PYRAMID_LOCATION_TOP;
     else
-        return FALSE;
+        return PYRAMID_LOCATION_NONE;
 }
 
 bool8 InBattlePyramid_(void)
@@ -1661,7 +1661,7 @@ bool8 InBattlePyramid_(void)
 
 void PausePyramidChallenge(void)
 {
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
     {
         RestorePyramidPlayerParty();
         gSaveBlock2Ptr->frontier.challengeStatus = CHALLENGE_STATUS_PAUSED;
@@ -1672,7 +1672,7 @@ void PausePyramidChallenge(void)
 
 void SoftResetInBattlePyramid(void)
 {
-    if (InBattlePyramid())
+    if (CurrentBattlePyramidLocation() != PYRAMID_LOCATION_NONE)
         DoSoftReset();
 }
 
@@ -1781,6 +1781,7 @@ void GenerateBattlePyramidFloorLayout(u16 *backupMapData, bool8 setPlayerPositio
                         gSaveBlock1Ptr->pos.x = (mapLayout->width * (i % PYRAMID_FLOOR_SQUARES_WIDE)) + x;
                         gSaveBlock1Ptr->pos.y = (mapLayout->height * (i / PYRAMID_FLOOR_SQUARES_WIDE)) + y;
                     }
+                    // Copy the elevation and collision, but overwrite the metatile ID
                     map[x] = (layoutMap[x] & (MAPGRID_ELEVATION_MASK | MAPGRID_COLLISION_MASK)) | METATILE_BattlePyramid_Floor;
                 }
                 else

@@ -13,6 +13,7 @@
 #include "field_control_avatar.h"
 #include "field_message_box.h"
 #include "field_move.h"
+#include "field_effect.h"
 #include "field_player_avatar.h"
 #include "field_poison.h"
 #include "field_screen_effect.h"
@@ -37,7 +38,6 @@
 #include "constants/event_bg.h"
 #include "constants/event_objects.h"
 #include "constants/field_poison.h"
-#include "constants/map_types.h"
 #include "constants/metatile_behaviors.h"
 #include "constants/songs.h"
 #include "constants/trainer_hill.h"
@@ -522,6 +522,8 @@ static const u8 *GetInteractedMetatileScript(struct MapPosition *position, u8 me
         SetMsgSignPostAndVarFacing(direction);
         return Common_EventScript_ShowPokemonCenterSign;
     }
+    if (MetatileBehavior_IsRockClimbable(metatileBehavior) == TRUE && !IsRockClimbActive())
+        return EventScript_UseRockClimb;
 
     elevation = position->elevation;
     if (elevation == MapGridGetElevationAt(position->x, position->y))

@@ -327,7 +327,7 @@ void DecompressDataWithHeaderWram(const u32 *src, void *dest)
   REP##ONES(X)
 
 //  Unpack packed tANS encoded data symbol frequences into their individual parts
-static inline void UnpackFrequenciesLoop(const u32 *packedFreqs, u16 *freqs, u32 i)
+static __attribute__((always_inline)) inline void UnpackFrequenciesLoop(const u32 *packedFreqs, u16 *freqs, u32 i)
 {
     // Loop unpack
     freqs[i*5 + 0] = (packedFreqs[i] >> (6*0)) & PACKED_FREQ_MASK;
@@ -339,7 +339,7 @@ static inline void UnpackFrequenciesLoop(const u32 *packedFreqs, u16 *freqs, u32
     freqs[15] += (packedFreqs[i] & PARTIAL_FREQ_MASK) >> (30 - 2*i);
 }
 
-static inline void UnpackFrequencies(const u32 *packedFreqs, u16 *freqs)
+static __attribute__((always_inline)) inline void UnpackFrequencies(const u32 *packedFreqs, u16 *freqs)
 {
     freqs[15] = 0;
 
@@ -397,6 +397,9 @@ static IWRAM_DATA u8 sBitIndex = 0;
 static IWRAM_DATA const u32 *sDataPtr = 0;
 static IWRAM_DATA u32 sCurrState = 0;
 
+// 33 because of FastUnsafeCopy32, we divide by 4 because the buffer is an array of u32
+#define FUNC_BUFFER_SIZE(funcStart, funcEnd)(((u32)(funcEnd) - (u32)(funcStart) + 33) / 4)
+
 extern void FastUnsafeCopy32(void *, const void *, u32 size);
 
 //  Dark Egg magic
@@ -432,7 +435,7 @@ static inline void CopyFuncToIwram(void *funcBuffer, const void *funcStartAddres
 //  Inner loop of tANS decoding for Lengths and Offset data for decompression instructions, uses u8 data sizes
 //  Basic process for decoding a tANS encoded value is to read the current symbol from the decoding table, then calculate the next state
 //  from the y and k values for the current state and add the value read from the next k bits in the bitstream
-ARM_FUNC __attribute__((noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DecodeLOtANSLoop(const u32 *data, u32 *ykTable, u8 *resultVec, u8 *resultVecEnd)
+ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DecodeLOtANSLoop(const u32 *data, u32 *ykTable, u8 *resultVec, u8 *resultVecEnd)
 {
     u32 currBits = *data++;
     u32 bitIndex = sBitIndex;
@@ -520,7 +523,7 @@ static void DecodeLOtANS(const u32 *data, const u32 *pFreqs, u8 *resultVec, u32 
     // We want to store in packs of 2, so count needs to be divisible by 2
     u32 remainingCount = count % 2;
 
-    u32 funcBuffer[400];
+    u32 funcBuffer[FUNC_BUFFER_SIZE(DecodeLOtANSLoop, SwitchToArmCallLOtANS)];
 
     CopyFuncToIwram(funcBuffer, DecodeLOtANSLoop, SwitchToArmCallLOtANS);
     SwitchToArmCallLOtANS(data, sWorkingYkTable, resultVec, &resultVec[count - remainingCount], (void *) funcBuffer);
@@ -554,7 +557,7 @@ static void DecodeLOtANS(const u32 *data, const u32 *pFreqs, u8 *resultVec, u32 
 // The reason this function is UNUSED, because it's currently exactly the same as `DecodeLOtANSLoop`(as it was optimized out for halfwords and not bytes as it's technically designed).
 // If ever DecodeLOtANSLoop or DecodeSymtANSLoop were to change make sure to uncomment the 'CopyFuncToIwram' call.
 
-ARM_FUNC __attribute__((noinline, no_reorder)) __attribute__((optimize("-O3"))) UNUSED static void DecodeSymtANSLoop(const u32 *data, u32 *ykTable, u16 *resultVec, u16 *resultVecEnd)
+ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize("-O3"))) UNUSED static void DecodeSymtANSLoop(const u32 *data, u32 *ykTable, u16 *resultVec, u16 *resultVecEnd)
 {
     u32 currBits = *data++;
     u32 bitIndex = sBitIndex;
@@ -596,7 +599,7 @@ static void DecodeSymtANS(const u32 *data, const u32 *pFreqs, u16 *resultVec, u3
 {
     BuildDecompressionTable(pFreqs, sWorkingYkTable);
 
-    u32 funcBuffer[300];
+    u32 funcBuffer[FUNC_BUFFER_SIZE(DecodeLOtANSLoop, SwitchToArmCallLOtANS)];
     // CopyFuncToIwram(funcBuffer, DecodeSymtANSLoop, SwitchToArmCallDecodeSymtANS);
     CopyFuncToIwram(funcBuffer, DecodeLOtANSLoop, SwitchToArmCallLOtANS);
     SwitchToArmCallDecodeSymtANS(data, sWorkingYkTable, resultVec, &resultVec[count], (void *) funcBuffer);
@@ -616,7 +619,7 @@ static void DecodeSymtANS(const u32 *data, const u32 *pFreqs, u16 *resultVec, u3
 //  Inner loop of tANS decoding for delta encoded symbol data, uses u16 data size
 //  Basic process for decoding a tANS encoded value is to read the current symbol from the decoding table, then calculate the next state
 //  from the y and k values for the current state and add the value read from the next k bits in the bitstream
-ARM_FUNC __attribute__((noinline, no_reorder)) __attribute__((optimize("-O3"))) u32 DecodeSymDeltatANSLoop(const u32 *data, u32 *ykTable, u16 *resultVec, u16 *resultVecEnd)
+ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize("-O3"))) u32 DecodeSymDeltatANSLoop(const u32 *data, u32 *ykTable, u16 *resultVec, u16 *resultVecEnd)
 {
     u32 currBits = *data++;
     u32 currSymbol = 0;
@@ -775,7 +778,7 @@ static void DecodeSymDeltatANS(const u32 *data, const u32 *pFreqs, u16 *resultVe
     // We want to store in packs of 2, so count needs to be divisible by 2
     u32 remainingCount = count % 2;
 
-    u32 funcBuffer[450];
+    u32 funcBuffer[FUNC_BUFFER_SIZE(DecodeSymDeltatANSLoop, SwitchToArmCallSymDeltaANS)];
     CopyFuncToIwram(funcBuffer, DecodeSymDeltatANSLoop, SwitchToArmCallSymDeltaANS);
     u32 currSymbol = SwitchToArmCallSymDeltaANS(data, sWorkingYkTable, resultVec, &resultVec[count - remainingCount], (void *) funcBuffer);
 
@@ -829,7 +832,7 @@ static void DecodeSymDeltatANS(const u32 *data, const u32 *pFreqs, u16 *resultVe
     }
 }
 
-static inline void Fill16(u16 value, void *_dst, u32 size)
+static __attribute__((always_inline)) inline void Fill16(u16 value, void *_dst, u32 size)
 {
     u16 *dst = _dst;
     for (u32 i = 0; i < size; i++) {
@@ -837,7 +840,7 @@ static inline void Fill16(u16 value, void *_dst, u32 size)
     }
 }
 
-static inline void Copy16(const void *_src, void *_dst, u32 size)
+static __attribute__((always_inline)) inline void Copy16(const void *_src, void *_dst, u32 size)
 {
     const u16 *src = _src;
     u16 *dst = _dst;
@@ -857,7 +860,7 @@ static inline void Copy16(const void *_src, void *_dst, u32 size)
 //      Insert the current value from the Symbol vector into current result position <length> times, then advance symbol vector by 1
 //  If length is 0:
 //      Insert <offset> number of symbols from the symbol vector into the result vector and advance the symbol vector position by <offset>
-ARM_FUNC __attribute__((noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DecodeInstructions(u32 headerLoSize, const u8 *loVec, const u16 *symVec, u16 *dest)
+ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DecodeInstructions(u32 headerLoSize, const u8 *loVec, const u16 *symVec, u16 *dest)
 {
     const u8 *loVecEnd = loVec + headerLoSize;
     do
@@ -931,7 +934,7 @@ ARM_FUNC __attribute__((no_reorder)) static void SwitchToArmCallDecodeInstructio
 //  Dark Egg magic
 static void DecodeInstructionsIwram(u32 headerLoSize, const u8 *loVec, const u16 *symVec, void *dest)
 {
-    u32 funcBuffer[350];
+    u32 funcBuffer[FUNC_BUFFER_SIZE(DecodeInstructions, SwitchToArmCallDecodeInstructions)];
 
     CopyFuncToIwram(funcBuffer, DecodeInstructions, SwitchToArmCallDecodeInstructions);
     SwitchToArmCallDecodeInstructions(headerLoSize, loVec, symVec, dest, (void *) funcBuffer);
@@ -1032,7 +1035,7 @@ static void SmolDecompressData(const struct SmolHeader *header, const u32 *data,
     Free(memoryAlloced);
 }
 
-ARM_FUNC __attribute__((noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DeltaDecodeTileNumbers(u16 *tileNumbers, u32 arraySize)
+ARM_FUNC __attribute__((flatten, noinline, no_reorder)) __attribute__((optimize("-O3"))) static void DeltaDecodeTileNumbers(u16 *tileNumbers, u32 arraySize)
 {
     u32 prevVal = 0;
     u32 reminder = arraySize % 8;
@@ -1087,7 +1090,7 @@ static void SmolDecompressTilemap(const struct SmolTilemapHeader *header, const 
     DecodeInstructionsIwram(header->tileNumberSize, loVec, symVec, dest);
     u32 arraySize = header->tilemapSize/2;
 
-    u32 funcBuffer[100];
+    u32 funcBuffer[FUNC_BUFFER_SIZE(DeltaDecodeTileNumbers, SwitchToArmCallDecodeTileNumbers)];
 
     CopyFuncToIwram(funcBuffer, DeltaDecodeTileNumbers, SwitchToArmCallDecodeTileNumbers);
     SwitchToArmCallDecodeTileNumbers(deltaDest, arraySize, (void *) funcBuffer);

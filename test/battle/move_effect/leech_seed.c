@@ -10,7 +10,7 @@ SINGLE_BATTLE_TEST("Leech Seed doesn't affect Grass-type Pokémon")
 {
     PASSES_RANDOMLY(90, 100, RNG_ACCURACY);
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_ODDISH].types[0] == TYPE_GRASS);
+        ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_ODDISH);
     } WHEN {
@@ -66,11 +66,11 @@ DOUBLE_BATTLE_TEST("Leech Seed will drain HP based on speed of the drained mon")
         OPPONENT(SPECIES_WYNAUT) { Speed(3); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(4); }
     } WHEN {
-        TURN { 
-            MOVE(playerLeft, MOVE_LEECH_SEED, target: opponentLeft); 
-            MOVE(playerRight, MOVE_LEECH_SEED, target: opponentRight); 
-            MOVE(opponentLeft, MOVE_LEECH_SEED, target: playerLeft); 
-            MOVE(opponentRight, MOVE_LEECH_SEED, target: playerRight); 
+        TURN {
+            MOVE(playerLeft, MOVE_LEECH_SEED, target: opponentLeft);
+            MOVE(playerRight, MOVE_LEECH_SEED, target: opponentRight);
+            MOVE(opponentLeft, MOVE_LEECH_SEED, target: playerLeft);
+            MOVE(opponentRight, MOVE_LEECH_SEED, target: playerRight);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, opponentRight);
@@ -85,6 +85,24 @@ DOUBLE_BATTLE_TEST("Leech Seed will drain HP based on speed of the drained mon")
         HP_BAR(playerRight);
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_LEECH_SEED_DRAIN, playerLeft);
         HP_BAR(playerLeft);
+    }
+}
+
+SINGLE_BATTLE_TEST("Leech Seeded recovers health through Substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_WYNAUT);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_LEECH_SEED); }
+        TURN {}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUBSTITUTE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_LEECH_SEED, player);
+        HP_BAR(player);
+        HP_BAR(opponent);
+        HP_BAR(player);
     }
 }
 

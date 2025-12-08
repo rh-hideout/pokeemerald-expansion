@@ -2394,8 +2394,8 @@ void TryPutFrontierTVShowOnAir(u16 winStreak, u8 facilityAndMode)
             show->frontier.species2 = GetMonData(&gPlayerParty[1], MON_DATA_SPECIES, NULL);
             break;
         case FRONTIER_SHOW_TOWER_LINK_MULTIS:
-            show->frontier.species1 = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[0] - 1], MON_DATA_SPECIES, NULL);
-            show->frontier.species2 = GetMonData(&gSaveBlock1Ptr->playerParty[gSaveBlock2Ptr->frontier.selectedPartyMons[1] - 1], MON_DATA_SPECIES, NULL);
+            show->frontier.species1 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[0] - 1), MON_DATA_SPECIES, NULL);
+            show->frontier.species2 = GetMonData(GetSavedPlayerPartyMon(gSaveBlock2Ptr->frontier.selectedPartyMons[1] - 1), MON_DATA_SPECIES, NULL);
             break;
         }
         StorePlayerIdInRecordMixShow(show);
@@ -3292,16 +3292,28 @@ static void ChangeBoxPokemonNickname_CB(void)
 
 void BufferMonNickname(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    else
+        GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
     StringGet_Nickname(gStringVar1);
 }
 
 void IsMonOTIDNotPlayers(void)
 {
-    if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
-        gSpecialVar_Result = FALSE;
-    else
-        gSpecialVar_Result = TRUE;
+    if(gSpecialVar_MonBoxId == 0xFF){
+        if (GetPlayerIDAsU32() == GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_ID, NULL))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+    else{
+        if (GetPlayerIDAsU32() == GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_OT_ID))
+            gSpecialVar_Result = FALSE;
+        else
+            gSpecialVar_Result = TRUE;
+    }
+
 }
 
 static u8 GetTVGroupByShowId(u8 kind)

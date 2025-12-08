@@ -1,17 +1,20 @@
 #include "global.h"
 #include "battle.h"
-#include "main.h"
+#include "blit.h"
+#include "dynamic_placeholder_text_util.h"
+#include "event_data.h"
+#include "field_name_box.h"
+#include "fonts.h"
 #include "m4a.h"
+#include "main.h"
+#include "menu.h"
 #include "palette.h"
 #include "sound.h"
-#include "constants/songs.h"
 #include "string_util.h"
-#include "window.h"
 #include "text.h"
-#include "blit.h"
-#include "menu.h"
-#include "dynamic_placeholder_text_util.h"
-#include "fonts.h"
+#include "window.h"
+#include "constants/songs.h"
+#include "constants/speaker_names.h"
 
 static u16 RenderText(struct TextPrinter *);
 static u32 RenderFont(struct TextPrinter *);
@@ -50,46 +53,19 @@ static u32 GetGlyphWidth_ShortNarrower(u16, bool32);
 static EWRAM_DATA struct TextPrinter sTempTextPrinter = {0};
 static EWRAM_DATA struct TextPrinter sTextPrinters[WINDOWS_MAX] = {0};
 
-static u16 sFontHalfRowLookupTable[0x51];
-static u16 sLastTextBgColor;
-static u16 sLastTextFgColor;
-static u16 sLastTextShadowColor;
+static EWRAM_DATA u16 sFontHalfRowLookupTable[0x100];
+static EWRAM_DATA union TextColor sLastTextColor;
 
-COMMON_DATA const struct FontInfo *gFonts = NULL;
-COMMON_DATA bool8 gDisableTextPrinters = 0;
-COMMON_DATA struct TextGlyph gCurGlyph = {0};
-COMMON_DATA TextFlags gTextFlags = {0};
-
-static const u8 sFontHalfRowOffsets[] =
-{
-    0x00, 0x01, 0x02, 0x00, 0x03, 0x04, 0x05, 0x03, 0x06, 0x07, 0x08, 0x06, 0x00, 0x01, 0x02, 0x00,
-    0x09, 0x0A, 0x0B, 0x09, 0x0C, 0x0D, 0x0E, 0x0C, 0x0F, 0x10, 0x11, 0x0F, 0x09, 0x0A, 0x0B, 0x09,
-    0x12, 0x13, 0x14, 0x12, 0x15, 0x16, 0x17, 0x15, 0x18, 0x19, 0x1A, 0x18, 0x12, 0x13, 0x14, 0x12,
-    0x00, 0x01, 0x02, 0x00, 0x03, 0x04, 0x05, 0x03, 0x06, 0x07, 0x08, 0x06, 0x00, 0x01, 0x02, 0x00,
-    0x1B, 0x1C, 0x1D, 0x1B, 0x1E, 0x1F, 0x20, 0x1E, 0x21, 0x22, 0x23, 0x21, 0x1B, 0x1C, 0x1D, 0x1B,
-    0x24, 0x25, 0x26, 0x24, 0x27, 0x28, 0x29, 0x27, 0x2A, 0x2B, 0x2C, 0x2A, 0x24, 0x25, 0x26, 0x24,
-    0x2D, 0x2E, 0x2F, 0x2D, 0x30, 0x31, 0x32, 0x30, 0x33, 0x34, 0x35, 0x33, 0x2D, 0x2E, 0x2F, 0x2D,
-    0x1B, 0x1C, 0x1D, 0x1B, 0x1E, 0x1F, 0x20, 0x1E, 0x21, 0x22, 0x23, 0x21, 0x1B, 0x1C, 0x1D, 0x1B,
-    0x36, 0x37, 0x38, 0x36, 0x39, 0x3A, 0x3B, 0x39, 0x3C, 0x3D, 0x3E, 0x3C, 0x36, 0x37, 0x38, 0x36,
-    0x3F, 0x40, 0x41, 0x3F, 0x42, 0x43, 0x44, 0x42, 0x45, 0x46, 0x47, 0x45, 0x3F, 0x40, 0x41, 0x3F,
-    0x48, 0x49, 0x4A, 0x48, 0x4B, 0x4C, 0x4D, 0x4B, 0x4E, 0x4F, 0x50, 0x4E, 0x48, 0x49, 0x4A, 0x48,
-    0x36, 0x37, 0x38, 0x36, 0x39, 0x3A, 0x3B, 0x39, 0x3C, 0x3D, 0x3E, 0x3C, 0x36, 0x37, 0x38, 0x36,
-    0x00, 0x01, 0x02, 0x00, 0x03, 0x04, 0x05, 0x03, 0x06, 0x07, 0x08, 0x06, 0x00, 0x01, 0x02, 0x00,
-    0x09, 0x0A, 0x0B, 0x09, 0x0C, 0x0D, 0x0E, 0x0C, 0x0F, 0x10, 0x11, 0x0F, 0x09, 0x0A, 0x0B, 0x09,
-    0x12, 0x13, 0x14, 0x12, 0x15, 0x16, 0x17, 0x15, 0x18, 0x19, 0x1A, 0x18, 0x12, 0x13, 0x14, 0x12,
-    0x00, 0x01, 0x02, 0x00, 0x03, 0x04, 0x05, 0x03, 0x06, 0x07, 0x08, 0x06, 0x00, 0x01, 0x02, 0x00
-};
+EWRAM_DATA const struct FontInfo *gFonts = NULL;
+EWRAM_DATA bool8 gDisableTextPrinters = 0;
+EWRAM_DATA TextFlags gTextFlags = {0};
+IWRAM_DATA struct TextGlyph gCurGlyph = {0};
 
 static const u8 sDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow.4bpp");
 static const u8 sDarkDownArrowTiles[] = INCBIN_U8("graphics/fonts/down_arrow_alt.4bpp");
 static const u8 sUnusedFRLGBlankedDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_blanked_down_arrow.4bpp");
 static const u8 sUnusedFRLGDownArrow[] = INCBIN_U8("graphics/fonts/unused_frlg_down_arrow.4bpp");
 static const u8 sDownArrowYCoords[] = { 0, 1, 2, 1 };
-static const u8 sWindowVerticalScrollSpeeds[] = {
-    [OPTIONS_TEXT_SPEED_SLOW] = 1,
-    [OPTIONS_TEXT_SPEED_MID] = 2,
-    [OPTIONS_TEXT_SPEED_FAST] = 4,
-};
 
 static const struct GlyphWidthFunc sGlyphWidthFuncs[] =
 {
@@ -140,9 +116,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 12,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_NORMAL] = {
         .fontFunction = FontFunc_Normal,
@@ -150,9 +127,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT] = {
         .fontFunction = FontFunc_Short,
@@ -160,9 +138,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT_COPY_1] = {
         .fontFunction = FontFunc_ShortCopy1,
@@ -170,9 +149,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight =  14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT_COPY_2] = {
         .fontFunction = FontFunc_ShortCopy2,
@@ -180,9 +160,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight =  14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT_COPY_3] = {
         .fontFunction = FontFunc_ShortCopy3,
@@ -190,9 +171,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight =  14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_BRAILLE] = {
         .fontFunction = FontFunc_Braille,
@@ -200,9 +182,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 8,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_NARROW] = {
         .fontFunction = FontFunc_Narrow,
@@ -210,9 +193,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SMALL_NARROW] = {
         .fontFunction = FontFunc_SmallNarrow,
@@ -220,9 +204,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 8,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_BOLD] = {
         .fontFunction = NULL,
@@ -230,9 +215,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 8,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 1,
-        .bgColor = 2,
-        .shadowColor = 15,
+        .color.foreground = 1,
+        .color.background = 2,
+        .color.accent = 2,
+        .color.shadow = 15,
     },
     [FONT_NARROWER] = {
         .fontFunction = FontFunc_Narrower,
@@ -240,9 +226,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 16,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SMALL_NARROWER] = {
         .fontFunction = FontFunc_SmallNarrower,
@@ -250,9 +237,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 8,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT_NARROW] = {
         .fontFunction = FontFunc_ShortNarrow,
@@ -260,9 +248,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
     [FONT_SHORT_NARROWER] = {
         .fontFunction = FontFunc_ShortNarrower,
@@ -270,9 +259,10 @@ static const struct FontInfo sFontInfos[] =
         .maxLetterHeight = 14,
         .letterSpacing = 0,
         .lineSpacing = 0,
-        .fgColor = 2,
-        .bgColor = 1,
-        .shadowColor = 3,
+        .color.foreground = 2,
+        .color.background = 1,
+        .color.accent = 1,
+        .color.shadow = 3,
     },
 };
 
@@ -294,11 +284,70 @@ static const u8 sMenuCursorDimensions[][2] =
     [FONT_SHORT_NARROWER] = { 8,  14 },
 };
 
+// these three arrays are most for readability, ie instead of returning a magic number 8
+static const u8 sTextSpeedFrameDelays[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = 8,
+    [OPTIONS_TEXT_SPEED_MID]     = 4,
+    [OPTIONS_TEXT_SPEED_FAST]    = 1,
+    [OPTIONS_TEXT_SPEED_INSTANT] = 1,
+};
+
+static const u8 sTextSpeedModifiers[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = TEXT_SPEED_SLOW_MODIFIER,
+    [OPTIONS_TEXT_SPEED_MID]     = TEXT_SPEED_MEDIUM_MODIFIER,
+    [OPTIONS_TEXT_SPEED_FAST]    = TEXT_SPEED_FAST_MODIFIER,
+    [OPTIONS_TEXT_SPEED_INSTANT] = TEXT_SPEED_INSTANT_MODIFIER,
+};
+
+static const u8 sTextScrollSpeeds[] =
+{
+    [OPTIONS_TEXT_SPEED_SLOW]    = 1,
+    [OPTIONS_TEXT_SPEED_MID]     = 2,
+    [OPTIONS_TEXT_SPEED_FAST]    = 4,
+    [OPTIONS_TEXT_SPEED_INSTANT] = 6,
+};
+
 static const u16 sFontBoldJapaneseGlyphs[] = INCBIN_U16("graphics/fonts/bold.hwjpnfont");
 
 static void SetFontsPointer(const struct FontInfo *fonts)
 {
     gFonts = fonts;
+}
+
+u32 GetPlayerTextSpeed(void)
+{
+    if (gTextFlags.forceMidTextSpeed)
+        return OPTIONS_TEXT_SPEED_MID;
+
+    if (gSaveBlock2Ptr->optionsTextSpeed > OPTIONS_TEXT_SPEED_INSTANT)
+        gSaveBlock2Ptr->optionsTextSpeed = OPTIONS_TEXT_SPEED_FAST;
+
+    if (FlagGet(FLAG_TEXT_SPEED_INSTANT) || TEXT_SPEED_INSTANT)
+        return OPTIONS_TEXT_SPEED_INSTANT;
+
+    return gSaveBlock2Ptr->optionsTextSpeed;
+}
+
+u32 GetPlayerTextSpeedDelay(void)
+{
+    return sTextSpeedFrameDelays[GetPlayerTextSpeed()];
+}
+
+u32 GetPlayerTextSpeedModifier(void)
+{
+    return sTextSpeedModifiers[GetPlayerTextSpeed()];
+}
+
+u32 GetPlayerTextScrollSpeed(void)
+{
+    return sTextScrollSpeeds[GetPlayerTextSpeed()];
+}
+
+bool32 IsPlayerTextSpeedInstant(void)
+{
+    return GetPlayerTextSpeed() == OPTIONS_TEXT_SPEED_INSTANT;
 }
 
 void DeactivateAllTextPrinters(void)
@@ -321,10 +370,7 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
     printerTemplate.currentY = y;
     printerTemplate.letterSpacing = gFonts[fontId].letterSpacing;
     printerTemplate.lineSpacing = gFonts[fontId].lineSpacing;
-    printerTemplate.unk = gFonts[fontId].unk;
-    printerTemplate.fgColor = gFonts[fontId].fgColor;
-    printerTemplate.bgColor = gFonts[fontId].bgColor;
-    printerTemplate.shadowColor = gFonts[fontId].shadowColor;
+    printerTemplate.color = gFonts[fontId].color;
     return AddTextPrinter(&printerTemplate, speed, callback);
 }
 
@@ -350,7 +396,7 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
     sTempTextPrinter.minLetterSpacing = 0;
     sTempTextPrinter.japanese = 0;
 
-    GenerateFontHalfRowLookupTable(printerTemplate->fgColor, printerTemplate->bgColor, printerTemplate->shadowColor);
+    GenerateFontHalfRowLookupTable(printerTemplate->color);
     if (speed != TEXT_SKIP_DRAW && speed != 0)
     {
         --sTempTextPrinter.textSpeed;
@@ -378,30 +424,53 @@ bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, voi
 
 void RunTextPrinters(void)
 {
-    int i;
+    bool32 isInstantText = IsPlayerTextSpeedInstant();
+    u32 textRepeats = GetPlayerTextSpeedModifier();
 
-    if (!gDisableTextPrinters)
+    if (gDisableTextPrinters)
+        return;
+
+    do
     {
-        for (i = 0; i < WINDOWS_MAX; ++i)
+        u32 numEmpty = 0;
+        for (u32 windowId = 0; windowId < WINDOWS_MAX; windowId++)
         {
-            if (sTextPrinters[i].active)
+            if (sTextPrinters[windowId].active)
             {
-                u16 renderCmd = RenderFont(&sTextPrinters[i]);
-                switch (renderCmd)
+                for (u32 repeat = 0; repeat < textRepeats; repeat++)
                 {
-                case RENDER_PRINT:
-                    CopyWindowToVram(sTextPrinters[i].printerTemplate.windowId, COPYWIN_GFX);
-                case RENDER_UPDATE:
-                    if (sTextPrinters[i].callback != NULL)
-                        sTextPrinters[i].callback(&sTextPrinters[i].printerTemplate, renderCmd);
-                    break;
-                case RENDER_FINISH:
-                    sTextPrinters[i].active = FALSE;
-                    break;
+                    u32 renderState = RenderFont(&sTextPrinters[windowId]);
+                    switch (renderState)
+                    {
+                    case RENDER_PRINT:
+                        CopyWindowToVram(sTextPrinters[windowId].printerTemplate.windowId, COPYWIN_GFX);
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
+                        break;
+                    case RENDER_UPDATE:
+                        if (sTextPrinters[windowId].callback != NULL)
+                            sTextPrinters[windowId].callback(&sTextPrinters[windowId].printerTemplate, renderState);
+                        isInstantText = FALSE;
+                        break;
+                    case RENDER_FINISH:
+                        sTextPrinters[windowId].active = FALSE;
+                        isInstantText = FALSE;
+                        break;
+                    }
+
+                    if (!sTextPrinters[windowId].active)
+                        break;
                 }
             }
+            else
+            {
+                numEmpty++;
+            }
         }
-    }
+
+        if (numEmpty == WINDOWS_MAX)
+            return;
+    } while (isInstantText);
 }
 
 bool32 IsTextPrinterActive(u8 id)
@@ -420,167 +489,64 @@ static u32 RenderFont(struct TextPrinter *textPrinter)
     }
 }
 
-void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor)
+void GenerateFontHalfRowLookupTable(union TextColor color)
 {
-    u32 fg12, bg12, shadow12;
-    u32 temp;
+    if (color.asU32 == sLastTextColor.asU32)
+    {
+        return;
+    }
 
-    u16 *current = sFontHalfRowLookupTable;
+    sLastTextColor = color;
 
-    sLastTextBgColor = bgColor;
-    sLastTextFgColor = fgColor;
-    sLastTextShadowColor = shadowColor;
+    u8 *colors = color.asArray;
 
-    bg12 = bgColor << 12;
-    fg12 = fgColor << 12;
-    shadow12 = shadowColor << 12;
+    u8 quarterRows[16] = {
+        colors[0] << 4 | colors[0],
+        colors[1] << 4 | colors[0],
+        colors[2] << 4 | colors[0],
+        colors[3] << 4 | colors[0],
+        colors[0] << 4 | colors[1],
+        colors[1] << 4 | colors[1],
+        colors[2] << 4 | colors[1],
+        colors[3] << 4 | colors[1],
+        colors[0] << 4 | colors[2],
+        colors[1] << 4 | colors[2],
+        colors[2] << 4 | colors[2],
+        colors[3] << 4 | colors[2],
+        colors[0] << 4 | colors[3],
+        colors[1] << 4 | colors[3],
+        colors[2] << 4 | colors[3],
+        colors[3] << 4 | colors[3],
+    };
 
-    temp = (bgColor << 8) | (bgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
+    u8 *current = (u8 *)sFontHalfRowLookupTable;
 
-    temp = (fgColor << 8) | (bgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (bgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (fgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (fgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (fgColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (shadowColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (shadowColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (shadowColor << 4) | bgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (bgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (bgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (bgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (fgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (fgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (fgColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (shadowColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (shadowColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (shadowColor << 4) | fgColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (bgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (bgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (bgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (fgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (fgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (fgColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (bgColor << 8) | (shadowColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (fgColor << 8) | (shadowColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
-
-    temp = (shadowColor << 8) | (shadowColor << 4) | shadowColor;
-    *(current++) = (bg12) | temp;
-    *(current++) = (fg12) | temp;
-    *(current++) = (shadow12) | temp;
+    for (u32 i = 0; i < 16; i++)
+    {
+        for (u32 j = 0; j < 16; j++)
+        {
+            *(current++) = quarterRows[i];
+            *(current++) = quarterRows[j];
+        }
+    }
 }
 
-void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor)
+void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor, u8 *accentColor)
 {
-    *bgColor = sLastTextBgColor;
-    *fgColor = sLastTextFgColor;
-    *shadowColor = sLastTextShadowColor;
+    *bgColor = sLastTextColor.background;
+    *fgColor = sLastTextColor.foreground;
+    *shadowColor = sLastTextColor.shadow;
+    *accentColor = sLastTextColor.accent;
 }
 
-void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor)
+void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
 {
-    GenerateFontHalfRowLookupTable(*fgColor, *bgColor, *shadowColor);
+    GenerateFontHalfRowLookupTable((union TextColor) {
+        .background = *bgColor,
+        .foreground = *fgColor,
+        .shadow = *shadowColor,
+        .accent = *accentColor}
+    );
 }
 
 void DecompressGlyphTile(const void *src_, void *dest_)
@@ -590,66 +556,77 @@ void DecompressGlyphTile(const void *src_, void *dest_)
     u32 *dest = dest_;
 
     temp = *(src++);
-    *(dest)++ = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 
     temp = *(src++);
-    *(dest++) = ((sFontHalfRowLookupTable[sFontHalfRowOffsets[temp & 0xFF]]) << 16) | (sFontHalfRowLookupTable[sFontHalfRowOffsets[temp >> 8]]);
+    *(dest++) = (sFontHalfRowLookupTable[temp & 0xFF] << 16) | (sFontHalfRowLookupTable[temp >> 8]);
 }
 
-static u8 UNUSED GetLastTextColor(u8 colorType)
+static u8 UNUSED GetLastTextColor(enum TextColorType colorType)
 {
     switch (colorType)
     {
-    case 0:
-        return sLastTextFgColor;
-    case 2:
-        return sLastTextBgColor;
-    case 1:
-        return sLastTextShadowColor;
+    case TEXT_COLOR_TYPE_FOREGROUND:
+        return sLastTextColor.foreground;
+    case TEXT_COLOR_TYPE_HIGHLIGHT:
+    case TEXT_COLOR_TYPE_BACKGROUND:
+        return sLastTextColor.background;
+    case TEXT_COLOR_TYPE_SHADOW:
+        return sLastTextColor.shadow;
+    case TEXT_COLOR_TYPE_ACCENT:
+        return sLastTextColor.accent;
     default:
-        return 0;
+        return TEXT_COLOR_TRANSPARENT;
     }
 }
 
-inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 j, u32 i, u32 *glyphPixels, s32 width, s32 height)
+inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
 {
-    u32 xAdd, yAdd, pixelData, bits, toOrr, dummyX;
-    u8 *dst;
+    if (width <= 0)
+        return;
 
-    xAdd = j + width;
-    yAdd = i + height;
-    dummyX = j;
-    for (; i < yAdd; i++)
+    u32 widthMask = (1 << (width * 4)) - 1;
+
+    u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
+
+    u32 *alignedWindowTilesX = (u32 *)(windowTiles + ((x0 / 8) * TILE_SIZE_4BPP));
+
+    u32 y1 = y0 + height;
+    for (u32 y = y0; y < y1; y++)
     {
-        pixelData = *glyphPixels++;
-        for (j = dummyX; j < xAdd; j++)
-        {
-            if ((toOrr = pixelData & 0xF))
-            {
-                dst = windowTiles + ((j / 8) * 32) + ((j % 8) / 2) + ((i / 8) * widthOffset) + ((i % 8) * 4);
-                bits = ((j & 1) * 4);
-                *dst = (toOrr << bits) | (*dst & (0xF0 >> bits));
-            }
-            pixelData >>= 4;
-        }
+        u32 pixels = *glyphPixels++ & widthMask;
+
+        u32 mask = pixels;
+        mask = mask | (mask >> 2);
+        mask = mask | (mask >> 1);
+        mask = mask & 0x11111111;
+        mask = mask * 0xF;
+
+        u32 pixels0 = pixels << shift0, pixels8 = pixels >> shift8;
+        u32 mask0 = mask << shift0, mask8 = mask >> shift8;
+
+        u32 *alignedWindowTiles = (u32 *)((u8 *)alignedWindowTilesX + ((y / 8) * widthOffset) + ((y % 8) * 4));
+
+        alignedWindowTiles[0] = (alignedWindowTiles[0] & ~mask0) | pixels0;
+        alignedWindowTiles[8] = (alignedWindowTiles[8] & ~mask8) | pixels8;
     }
 }
 
@@ -713,7 +690,7 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
     struct TextGlyph *glyph;
     u8 *glyphHeight;
 
-    if (sLastTextBgColor != TEXT_COLOR_TRANSPARENT)
+    if (sLastTextColor.background != TEXT_COLOR_TRANSPARENT)
     {
         window = &gWindows[textPrinter->printerTemplate.windowId];
         pixels_data.pixels = window->tileData;
@@ -729,7 +706,7 @@ void ClearTextSpan(struct TextPrinter *textPrinter, u32 width)
             textPrinter->printerTemplate.currentY,
             width,
             *glyphHeight,
-            sLastTextBgColor);
+            sLastTextColor.background);
     }
 }
 
@@ -888,7 +865,7 @@ void TextPrinterInitDownArrowCounters(struct TextPrinter *textPrinter)
     else
     {
         subStruct->downArrowYPosIdx = 0;
-        subStruct->downArrowDelay = 0;
+        subStruct->utilityCounter = 0;
     }
 }
 
@@ -899,15 +876,15 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
 
     if (gTextFlags.autoScroll == 0)
     {
-        if (subStruct->downArrowDelay != 0)
+        if (subStruct->utilityCounter != 0)
         {
-            subStruct->downArrowDelay--;
+            subStruct->utilityCounter--;
         }
         else
         {
             FillWindowPixelRect(
                 textPrinter->printerTemplate.windowId,
-                textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
+                textPrinter->printerTemplate.color.background << 4 | textPrinter->printerTemplate.color.background,
                 textPrinter->printerTemplate.currentX,
                 textPrinter->printerTemplate.currentY,
                 8,
@@ -937,7 +914,7 @@ void TextPrinterDrawDownArrow(struct TextPrinter *textPrinter)
                 16);
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
 
-            subStruct->downArrowDelay = 8;
+            subStruct->utilityCounter = 8 * GetPlayerTextSpeedModifier();
             subStruct->downArrowYPosIdx++;
         }
     }
@@ -947,7 +924,7 @@ void TextPrinterClearDownArrow(struct TextPrinter *textPrinter)
 {
     FillWindowPixelRect(
         textPrinter->printerTemplate.windowId,
-        textPrinter->printerTemplate.bgColor << 4 | textPrinter->printerTemplate.bgColor,
+        textPrinter->printerTemplate.color.background << 4 | textPrinter->printerTemplate.color.background,
         textPrinter->printerTemplate.currentX,
         textPrinter->printerTemplate.currentY,
         8,
@@ -1041,7 +1018,7 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
 
             BlitBitmapRectToWindow(windowId, arrowTiles, 0, sDownArrowYCoords[*yCoordIndex & 3], 8, 16, x, y - 2, 8, 16);
             CopyWindowToVram(windowId, COPYWIN_GFX);
-            *counter = 8;
+            *counter = 8 * GetPlayerTextSpeedModifier();
             ++*yCoordIndex;
         }
     }
@@ -1057,7 +1034,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     switch (textPrinter->state)
     {
     case RENDER_STATE_HANDLE_CHAR:
-        if (JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp)
+        if ((JOY_HELD(A_BUTTON | B_BUTTON) && subStruct->hasPrintBeenSpedUp) || IsPlayerTextSpeedInstant())
             textPrinter->delayCounter = 0;
 
         if (textPrinter->delayCounter && textPrinter->textSpeed)
@@ -1093,29 +1070,50 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             textPrinter->printerTemplate.currentChar++;
             switch (currChar)
             {
-            case EXT_CTRL_CODE_COLOR:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
+            case EXT_CTRL_CODE_BACKGROUND:
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
-            case EXT_CTRL_CODE_HIGHLIGHT:
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar;
+            case EXT_CTRL_CODE_COLOR:
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_SHADOW:
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
+                return RENDER_REPEAT;
+            case EXT_CTRL_CODE_ACCENT:
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
+                return RENDER_REPEAT;
+            case EXT_CTRL_CODE_HIGHLIGHT:
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-                textPrinter->printerTemplate.fgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.bgColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.background = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                textPrinter->printerTemplate.shadowColor = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
                 textPrinter->printerTemplate.currentChar++;
-                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.fgColor, textPrinter->printerTemplate.bgColor, textPrinter->printerTemplate.shadowColor);
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
+                return RENDER_REPEAT;
+            case EXT_CTRL_CODE_TEXT_COLORS:
+                textPrinter->printerTemplate.color.foreground = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.currentChar++;
+                textPrinter->printerTemplate.color.shadow = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.currentChar++;
+                textPrinter->printerTemplate.color.accent = *textPrinter->printerTemplate.currentChar;
+                textPrinter->printerTemplate.currentChar++;
+                GenerateFontHalfRowLookupTable(textPrinter->printerTemplate.color);
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_PALETTE:
                 textPrinter->printerTemplate.currentChar++;
@@ -1166,7 +1164,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
                 textPrinter->printerTemplate.currentChar++;
                 return RENDER_REPEAT;
             case EXT_CTRL_CODE_FILL_WINDOW:
-                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.color.background));
                 textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
                 textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y;
                 return RENDER_REPEAT;
@@ -1213,6 +1211,13 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             case EXT_CTRL_CODE_ENG:
                 textPrinter->japanese = FALSE;
                 return RENDER_REPEAT;
+            case EXT_CTRL_CODE_SPEAKER:
+                {
+                    enum SpeakerNames name = *textPrinter->printerTemplate.currentChar++;
+                    TrySpawnAndShowNamebox(gSpeakerNamesTable[name], NAME_BOX_BASE_TILE_NUM);
+
+                    return RENDER_REPEAT;
+                }
             }
             break;
         case CHAR_PROMPT_CLEAR:
@@ -1299,7 +1304,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_CLEAR:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
-            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+            FillWindowPixelBuffer(textPrinter->printerTemplate.windowId, PIXEL_FILL(textPrinter->printerTemplate.color.background));
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
             textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.y;
             textPrinter->state = RENDER_STATE_HANDLE_CHAR;
@@ -1308,6 +1313,7 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL_START:
         if (TextPrinterWaitWithDownArrow(textPrinter))
         {
+            subStruct->utilityCounter = 0;
             TextPrinterClearDownArrow(textPrinter);
             textPrinter->scrollDistance = gFonts[textPrinter->printerTemplate.fontId].maxLetterHeight + textPrinter->printerTemplate.lineSpacing;
             textPrinter->printerTemplate.currentX = textPrinter->printerTemplate.x;
@@ -1317,18 +1323,31 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     case RENDER_STATE_SCROLL:
         if (textPrinter->scrollDistance)
         {
-            int scrollSpeed = GetPlayerTextSpeed();
-            int speed = sWindowVerticalScrollSpeeds[scrollSpeed];
-            if (textPrinter->scrollDistance < speed)
+            u32 scrollSpeed = GetPlayerTextScrollSpeed();
+            u32 speedModifier = GetPlayerTextSpeedModifier();
+
+            if (subStruct->utilityCounter != 0)
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
+                subStruct->utilityCounter--;
+                return RENDER_UPDATE;
+            }
+
+            if (textPrinter->scrollDistance < scrollSpeed)
+            {
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, textPrinter->scrollDistance, PIXEL_FILL(textPrinter->printerTemplate.color.background));
                 textPrinter->scrollDistance = 0;
             }
             else
             {
-                ScrollWindow(textPrinter->printerTemplate.windowId, 0, speed, PIXEL_FILL(textPrinter->printerTemplate.bgColor));
-                textPrinter->scrollDistance -= speed;
+                ScrollWindow(textPrinter->printerTemplate.windowId, 0, scrollSpeed, PIXEL_FILL(textPrinter->printerTemplate.color.background));
+                textPrinter->scrollDistance -= scrollSpeed;
             }
+
+            if (speedModifier > 1)
+                subStruct->utilityCounter = speedModifier;
+            else
+                subStruct->utilityCounter = 0;
+
             CopyWindowToVram(textPrinter->printerTemplate.windowId, COPYWIN_GFX);
         }
         else
@@ -1386,13 +1405,16 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
             switch (temp2)
             {
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
+            case EXT_CTRL_CODE_TEXT_COLORS:
                 ++strPos;
             case EXT_CTRL_CODE_PLAY_BGM:
             case EXT_CTRL_CODE_PLAY_SE:
                 ++strPos;
+            case EXT_CTRL_CODE_BACKGROUND:
             case EXT_CTRL_CODE_COLOR:
-            case EXT_CTRL_CODE_HIGHLIGHT:
             case EXT_CTRL_CODE_SHADOW:
+            case EXT_CTRL_CODE_ACCENT:
+            case EXT_CTRL_CODE_HIGHLIGHT:
             case EXT_CTRL_CODE_PALETTE:
             case EXT_CTRL_CODE_FONT:
             case EXT_CTRL_CODE_PAUSE:
@@ -1403,6 +1425,7 @@ static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 lett
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -1539,18 +1562,22 @@ s32 GetStringWidth(u8 fontId, const u8 *str, s16 letterSpacing)
             switch (*++str)
             {
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
+            case EXT_CTRL_CODE_TEXT_COLORS:
                 ++str;
             case EXT_CTRL_CODE_PLAY_BGM:
             case EXT_CTRL_CODE_PLAY_SE:
                 ++str;
+            case EXT_CTRL_CODE_BACKGROUND:
             case EXT_CTRL_CODE_COLOR:
-            case EXT_CTRL_CODE_HIGHLIGHT:
             case EXT_CTRL_CODE_SHADOW:
+            case EXT_CTRL_CODE_ACCENT:
+            case EXT_CTRL_CODE_HIGHLIGHT:
             case EXT_CTRL_CODE_PALETTE:
             case EXT_CTRL_CODE_PAUSE:
             case EXT_CTRL_CODE_ESCAPE:
             case EXT_CTRL_CODE_SHIFT_RIGHT:
             case EXT_CTRL_CODE_SHIFT_DOWN:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++str;
                 break;
             case EXT_CTRL_CODE_FONT:
@@ -1659,22 +1686,22 @@ s32 GetStringLineWidth(u8 fontId, const u8 *str, s16 letterSpacing, u32 lineNum,
 
 u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
 {
-    u8 shadowColor;
     u8 *strLocal;
     int strPos;
     int temp;
     int temp2;
-    u8 colorBackup[3];
-    u8 fgColor;
-    u8 bgColor;
+    u8 colorBackup[4];
 
-    SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2]);
+    SaveTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
 
-    fgColor = TEXT_COLOR_WHITE;
-    bgColor = TEXT_COLOR_TRANSPARENT;
-    shadowColor = TEXT_COLOR_LIGHT_GRAY;
+    union TextColor textColor = {
+        .background = TEXT_COLOR_TRANSPARENT,
+        .foreground = TEXT_COLOR_WHITE,
+        .shadow = TEXT_COLOR_LIGHT_GRAY,
+        .accent = TEXT_COLOR_TRANSPARENT,
+    };
 
-    GenerateFontHalfRowLookupTable(TEXT_COLOR_WHITE, TEXT_COLOR_TRANSPARENT, TEXT_COLOR_LIGHT_GRAY);
+    GenerateFontHalfRowLookupTable(textColor);
     strLocal = str;
     strPos = 0;
 
@@ -1688,22 +1715,36 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
             switch (temp2)
             {
             case EXT_CTRL_CODE_COLOR_HIGHLIGHT_SHADOW:
-                fgColor = strLocal[strPos++];
-                bgColor = strLocal[strPos++];
-                shadowColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(fgColor, bgColor, shadowColor);
+                textColor.foreground = strLocal[strPos++];
+                textColor.background = textColor.accent = strLocal[strPos++];
+                textColor.shadow = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
+                continue;
+            case EXT_CTRL_CODE_TEXT_COLORS:
+                textColor.foreground = strLocal[strPos++];
+                textColor.shadow = strLocal[strPos++];
+                textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
+                continue;
+            case EXT_CTRL_CODE_BACKGROUND:
+                textColor.background = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_COLOR:
-                fgColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(fgColor, bgColor, shadowColor);
-                continue;
-            case EXT_CTRL_CODE_HIGHLIGHT:
-                bgColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(fgColor, bgColor, shadowColor);
+                textColor.foreground = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_SHADOW:
-                shadowColor = strLocal[strPos++];
-                GenerateFontHalfRowLookupTable(fgColor, bgColor, shadowColor);
+                textColor.shadow = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
+                continue;
+            case EXT_CTRL_CODE_ACCENT:
+                textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
+                continue;
+            case EXT_CTRL_CODE_HIGHLIGHT:
+                textColor.background = textColor.accent = strLocal[strPos++];
+                GenerateFontHalfRowLookupTable(textColor);
                 continue;
             case EXT_CTRL_CODE_FONT:
                 fontId = strLocal[strPos++];
@@ -1720,6 +1761,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
             case EXT_CTRL_CODE_SKIP:
             case EXT_CTRL_CODE_CLEAR_TO:
             case EXT_CTRL_CODE_MIN_LETTER_SPACING:
+            case EXT_CTRL_CODE_SPEAKER:
                 ++strPos;
                 break;
             case EXT_CTRL_CODE_RESET_FONT:
@@ -1762,7 +1804,7 @@ u8 RenderTextHandleBold(u8 *pixels, u8 fontId, u8 *str)
     }
     while (temp != EOS);
 
-    RestoreTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2]);
+    RestoreTextColors(&colorBackup[0], &colorBackup[1], &colorBackup[2], &colorBackup[3]);
     return 1;
 }
 
@@ -1819,17 +1861,17 @@ u8 GetFontAttribute(u8 fontId, u8 attributeId)
         case FONTATTR_LINE_SPACING:
             result = sFontInfos[fontId].lineSpacing;
             break;
-        case FONTATTR_UNKNOWN:
-            result = sFontInfos[fontId].unk;
+        case FONTATTR_COLOR_ACCENT:
+            result = sFontInfos[fontId].color.accent;
             break;
         case FONTATTR_COLOR_FOREGROUND:
-            result = sFontInfos[fontId].fgColor;
+            result = sFontInfos[fontId].color.foreground;
             break;
         case FONTATTR_COLOR_BACKGROUND:
-            result = sFontInfos[fontId].bgColor;
+            result = sFontInfos[fontId].color.background;
             break;
         case FONTATTR_COLOR_SHADOW:
-            result = sFontInfos[fontId].shadowColor;
+            result = sFontInfos[fontId].color.shadow;
             break;
     }
     return result;
