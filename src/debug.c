@@ -4254,7 +4254,7 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 
 //const u8 sSomeText[] = _("{START_BUTTON} what");
 const u8 sSomeText[] = _("À");
-const u8 sNewString[] = _("This\nis\ntext");
+const u8 sNewString[] = _("This\n{START_BUTTON}\ntext");
 
 const u32 sTestSpriteGfx[] = INCBIN_U32("graphics/test_sprite.4bpp");
 const u16 sTestSpritePal[] = INCBIN_U16("graphics/test_sprite.gbapal");
@@ -4337,5 +4337,5 @@ void TestThing(void)
     //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 88, TRUE, 7);
     FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
 
-    PrintTextToSprite(spriteIds[0], 24, 23, FONT_SHORT, sNewString);
+    PrintTextToSprite(spriteIds[0], 24, 10, FONT_SHORT, sNewString);
 }
