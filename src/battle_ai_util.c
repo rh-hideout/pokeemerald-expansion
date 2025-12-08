@@ -4877,6 +4877,7 @@ static enum Stat GetStatBeingChanged(enum StatChange statChange)
         case STAT_CHANGE_ATK:
         case STAT_CHANGE_ATK_2:
         case STAT_CHANGE_ATK_3:
+        case STAT_CHANGE_ATK_MAX:
             return STAT_ATK;
         case STAT_CHANGE_DEF:
         case STAT_CHANGE_DEF_2:
@@ -4926,6 +4927,8 @@ static u32 GetStagesOfStatChange(enum StatChange statChange)
         case STAT_CHANGE_SPATK_3:
         case STAT_CHANGE_SPDEF_3:
             return 3;
+        case STAT_CHANGE_ATK_MAX:
+            return 6;
     }
     return 0; // STAT_HP, should never be getting changed
 }
@@ -4940,6 +4943,7 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
     u32 i;
     enum Stat statId = GetStatBeingChanged(statChange);
     u32 stages = GetStagesOfStatChange(statChange);
+    DebugPrintf("hits to KO = %d", noOfHitsToFaint);
 
     if (considerContrary && gAiLogicData->abilities[battlerAtk] == ABILITY_CONTRARY)
         return NO_INCREASE;
@@ -4988,6 +4992,8 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         {
             if (stages == 1)
                 tempScore += DECENT_EFFECT;
+            else if (stages == 6)
+                tempScore += BEST_EFFECT;
             else
                 tempScore += GOOD_EFFECT;
         }

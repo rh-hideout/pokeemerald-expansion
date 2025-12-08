@@ -834,6 +834,10 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
     gAiLogicData->partnerMove = 0;   // no ally
+    DebugPrintf("   ");
+    DebugPrintf("   ");
+    DebugPrintf("   ");
+    DebugPrintf("choose move or action");
 
     while (flags != 0)
     {
@@ -852,6 +856,7 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
+        DebugPrintf("move %d score %d", i, gAiThinkingStruct->score[i]);
         gAiBattleData->finalScore[battler][opposingBattler][i] = gAiThinkingStruct->score[i];
     }
 
@@ -4966,7 +4971,8 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             }
             else
             {
-                if (GetBattleMoveCategory(defBestMoves[i]) == DAMAGE_CATEGORY_SPECIAL){
+                if (GetBattleMoveCategory(defBestMoves[i]) == DAMAGE_CATEGORY_SPECIAL)
+                {
                     bestMoveIsPhysical = FALSE;
                     break;
                 }
@@ -4978,10 +4984,9 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 && aiData->abilities[battlerAtk] == ABILITY_ICE_FACE 
                 && gBattleMons[battlerAtk].species != SPECIES_EISCUE_NOICE) // ice face will absorb the hit, safe to belly drum
         )
-        && gBattleMons[battlerAtk].statStages[STAT_ATK] < MAX_STAT_STAGE - 2
         && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
-            ADJUST_SCORE(BEST_EFFECT);
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_MAX));
         break;
     case EFFECT_PSYCH_UP:
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
@@ -5733,7 +5738,13 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_CLANGOROUS_SOUL:
         if ((GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((67 * gBattleMons[battlerAtk].maxHP) / 100))
              && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
-            ADJUST_SCORE(BEST_EFFECT);
+            {
+                u32 scoreIncrease = IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPDEF) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
+                if (scoreIncrease > BEST_EFFECT)
+                    scoreIncrease = BEST_EFFECT;
+
+                ADJUST_SCORE(scoreIncrease);
+            }
         break;
     //case EFFECT_NO_RETREAT:       // TODO
         //break;
