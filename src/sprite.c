@@ -1822,38 +1822,6 @@ u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
 #define nextX data[1]
 #define nextY data[2]
 
-inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
-{
-    if (width <= 0)
-        return;
-
-    u32 widthMask = (1 << (width * 4)) - 1;
-
-    u32 shift0 = (x0 % 8) * 4, shift8 = 32 - shift0;
-
-    u32 *alignedWindowTilesX = (u32 *)(windowTiles + ((x0 / 8) * TILE_SIZE_4BPP));
-
-    u32 y1 = y0 + height;
-    for (u32 y = y0; y < y1; y++)
-    {
-        u32 pixels = *glyphPixels++ & widthMask;
-
-        u32 mask = pixels;
-        mask = mask | (mask >> 2);
-        mask = mask | (mask >> 1);
-        mask = mask & 0x11111111;
-        mask = mask * 0xF;
-
-        u32 pixels0 = pixels << shift0, pixels8 = pixels >> shift8;
-        u32 mask0 = mask << shift0, mask8 = mask >> shift8;
-
-        u32 *alignedWindowTiles = (u32 *)((u8 *)alignedWindowTilesX + ((y / 8) * widthOffset) + ((y % 8) * 4));
-
-        alignedWindowTiles[0] = (alignedWindowTiles[0] & ~mask0) | pixels0;
-        alignedWindowTiles[8] = (alignedWindowTiles[8] & ~mask8) | pixels8;
-    }
-}
-
 enum FillMode
 {
     FILL_MODE_CUSTOM,
