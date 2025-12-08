@@ -1116,8 +1116,8 @@ struct MiningStone
 {
     u32 top;        // starts with 0
     u32 left;       // starts with 0
-    u32 height;
-    u32 width;
+    //u32 height;
+    //u32 width;
 };
 
 static const struct MiningItem MiningItemList[] =
@@ -1427,71 +1427,71 @@ static const struct MiningStone MiningStoneList[] =
     {
         .top = 3,
         .left = 0,
-        .width = 1,
-        .height = 4,
+        //.width = 1,
+        //.height = 4,
     },
     [MININGID_STONE_4x1] =
     {
         .top = 0,
         .left = 3,
-        .width = 4,
-        .height = 1,
+        //.width = 4,
+        //.height = 1,
     },
     [MININGID_STONE_2x4] =
     {
         .top = 3,
         .left = 1,
-        .width = 2,
-        .height = 4,
+        //.width = 2,
+        //.height = 4,
     },
     [MININGID_STONE_4x2] =
     {
         .top = 1,
         .left = 3,
-        .width = 4,
-        .height = 2,
+        //.width = 4,
+        //.height = 2,
     },
     [MININGID_STONE_2x2] =
     {
         .top = 1,
         .left = 1,
-        .width = 2,
-        .height = 2,
+        //.width = 2,
+        //.height = 2,
     },
     [MININGID_STONE_3x3] =
     {
         .top = 2,
         .left = 2,
-        .width = 3,
-        .height = 3,
+        //.width = 3,
+        //.height = 3,
     },
     [MININGID_STONE_SNAKE1] =
     {
         .top = 1,
         .left = 2,
-        .width = 3,
-        .height = 2,
+        //.width = 3,
+        //.height = 2,
     },
     [MININGID_STONE_SNAKE2] =
     {
         .top = 1,
         .left = 2,
-        .width = 3,
-        .height = 2,
+        //.width = 3,
+        //.height = 2,
     },
     [MININGID_STONE_MUSHROOM1] =
     {
         .top = 1,
         .left = 2,
-        .width = 3,
-        .height = 2,
+        //.width = 3,
+        //.height = 2,
     },
     [MININGID_STONE_MUSHROOM2] =
     {
         .top = 1,
         .left = 2,
-        .width = 3,
-        .height = 2,
+        //.width = 3,
+        //.height = 2,
     },
 };
 
@@ -1501,9 +1501,60 @@ static const u8 sText_WasObtained[] = _("{STR_VAR_1}\nwas obtained!");
 static const u8 sText_TooBad[] = _("Too bad!\nYour Bag is full!");
 static const u8 sText_TheWall[] = _("The wall collapsed!");
 
-static u32 MiningUtil_GetTotalTileAmount(u8 itemId)
+// This is the bad guy. Why does it make the game behave weirdly when only 2 items are active?
+static u32 MiningUtil_GetTotalTileAmount(u32 itemId)
 {
+    /*u32 i;
+    u32 result = 0;
+
+    for (i = 0; i < 16; i++)
+    {
+       if (sSpriteTileTable[itemId][i] == 1)
+           result++;
+    }
+    DebugPrintf("ItemID: %d, Tiles: %d", itemId, result);
+    return result;*/
     return MiningItemList[itemId].totalTiles + 1;
+}
+
+static u32 MiningUtil_GetLeftValue(u32 itemId)
+{
+    u32 x, y;
+    u32 left = 0;
+
+    for (x = 0; x < 4; x++)
+    {
+        for (y = 0; y < 4; y++)
+        {
+            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            {
+                left++;
+                break;
+            }
+        }
+    }
+    DebugPrintf("ItemID: %d, Left: %d", itemId, left-1);
+    return left - 1;
+}
+
+static u32 MiningUtil_GetTopValue(u32 itemId)
+{
+    u32 x, y;
+    u32 top = 0;
+
+    for (y = 0; y < 4; y++)
+    {
+        for (x = 0; x < 4; x++)
+        {
+            if (sSpriteTileTable[itemId][x+y*4] == 1)
+            {
+                top++;
+                break;
+            }
+        }
+    }
+    DebugPrintf("ItemID: %d, Top: %d", itemId, top-1);
+    return top - 1;
 }
 
 // Creates a random number between 0 and amount-1
@@ -2541,8 +2592,8 @@ static void OverwriteItemMapData(u8 posX, u8 posY, u8 itemStateId, u8 itemId)
 }
 
 // Defines && Macros
-#define BORDERCHECK_COND(itemId) posX + MiningItemList[(itemId)].left > xBorder || \
-    posY + MiningItemList[(itemId)].top > yBorder
+#define BORDERCHECK_COND(itemId) posX + MiningUtil_GetLeftValue(itemId) > xBorder || \
+    posY + MiningUtil_GetTopValue(itemId) > yBorder
 #define IGNORE_COORDS 255
 
 static u8 CheckIfItemCanBePlaced(u8 itemId, u8 posX, u8 posY, u8 xBorder, u8 yBorder)
@@ -2611,7 +2662,7 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
 
             Debug_DetermineLocation(&x,&y,itemStateId); // Debug
 
-            if (MiningItemList[(itemId)].top == 3)
+            if (MiningUtil_GetTopValue(itemId) == 3)
                 y = yMin;
 
             if (!CheckIfItemCanBePlaced(itemId, x, y, xMax, yMax))
@@ -2631,8 +2682,8 @@ static void DoDrawRandomItem(u8 itemStateId, u8 itemId)
 static bool32 CanStoneBePlacedAtXY(u32 x, u32 y, u32 itemId) // PSF magic
 {
     u32 dx, dy;
-    u32 height = MiningStoneList[itemId].height;
-    u32 width = MiningStoneList[itemId].width;
+    u32 height = MiningStoneList[itemId].top+1;
+    u32 width = MiningStoneList[itemId].left+1;
 
     if ((x + width) > MINING_ZONE_WIDTH)
         return FALSE;
