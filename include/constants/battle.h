@@ -670,21 +670,21 @@ enum FaintedActions
 };
 
 #define STARTING_STATUS_DEFINITIONS(F) \
-    F(STARTING_STATUS_ELECTRIC_TERRAIN,     electricTerrain,   (u32, 1)) \
-    F(STARTING_STATUS_MISTY_TERRAIN,        mistyTerrain,      (u32, 1)) \
-    F(STARTING_STATUS_GRASSY_TERRAIN,       grassyTerrain,     (u32, 1)) \
-    F(STARTING_STATUS_PSYCHIC_TERRAIN,      psychicTerrain,    (u32, 1)) \
-    F(STARTING_STATUS_TRICK_ROOM,           trickRoom,         (u32, 1)) \
-    F(STARTING_STATUS_MAGIC_ROOM,           magicRoom,         (u32, 1)) \
-    F(STARTING_STATUS_WONDER_ROOM,          wonderRoom,        (u32, 1)) \
-    F(STARTING_STATUS_TAILWIND_PLAYER,      tailwindPlayer,    (u32, 1)) \
-    F(STARTING_STATUS_TAILWIND_OPPONENT,    tailwindOpponent,  (u32, 1)) \
-    F(STARTING_STATUS_RAINBOW_PLAYER,       rainbowPlayer,     (u32, 1)) \
-    F(STARTING_STATUS_RAINBOW_OPPONENT,     rainbowOpponent,   (u32, 1)) \
-    F(STARTING_STATUS_SEA_OF_FIRE_PLAYER,   seaOfFirePlayer,   (u32, 1)) \
-    F(STARTING_STATUS_SEA_OF_FIRE_OPPONENT, seaOfFireOpponent, (u32, 1)) \
-    F(STARTING_STATUS_SWAMP_PLAYER,         swampPlayer,       (u32, 1)) \
-    F(STARTING_STATUS_SWAMP_OPPONENT,       swampOpponent,     (u32, 1)) \
+    F(STARTING_STATUS_ELECTRIC_TERRAIN,     electricTerrain,   (u32, 1)) /* Electric Terrain */     \
+    F(STARTING_STATUS_MISTY_TERRAIN,        mistyTerrain,      (u32, 1)) /* Misty Terrain */        \
+    F(STARTING_STATUS_GRASSY_TERRAIN,       grassyTerrain,     (u32, 1)) /* Grassy Terrain */       \
+    F(STARTING_STATUS_PSYCHIC_TERRAIN,      psychicTerrain,    (u32, 1)) /* Psychic Terrain */      \
+    F(STARTING_STATUS_TRICK_ROOM,           trickRoom,         (u32, 1)) /* Trick Room */           \
+    F(STARTING_STATUS_MAGIC_ROOM,           magicRoom,         (u32, 1)) /* Magic Room */           \
+    F(STARTING_STATUS_WONDER_ROOM,          wonderRoom,        (u32, 1)) /* Wonder Room */          \
+    F(STARTING_STATUS_TAILWIND_PLAYER,      tailwindPlayer,    (u32, 1)) /* Tailwind Player */      \
+    F(STARTING_STATUS_TAILWIND_OPPONENT,    tailwindOpponent,  (u32, 1)) /* Tailwind Opponent */    \
+    F(STARTING_STATUS_RAINBOW_PLAYER,       rainbowPlayer,     (u32, 1)) /* Rainbow Player */       \
+    F(STARTING_STATUS_RAINBOW_OPPONENT,     rainbowOpponent,   (u32, 1)) /* Rainbow Opponent */     \
+    F(STARTING_STATUS_SEA_OF_FIRE_PLAYER,   seaOfFirePlayer,   (u32, 1)) /* Sea Of Fire Player */   \
+    F(STARTING_STATUS_SEA_OF_FIRE_OPPONENT, seaOfFireOpponent, (u32, 1)) /* Sea Of Fire Opponent */ \
+    F(STARTING_STATUS_SWAMP_PLAYER,         swampPlayer,       (u32, 1)) /* Swamp Player */         \
+    F(STARTING_STATUS_SWAMP_OPPONENT,       swampOpponent,     (u32, 1)) /* Swamp Opponent */       \
 
 #define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
 
