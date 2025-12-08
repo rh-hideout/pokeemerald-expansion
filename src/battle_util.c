@@ -10536,6 +10536,8 @@ bool32 IsSleepClauseEnabled()
 {
     if (B_SLEEP_CLAUSE)
         return TRUE;
+    if (B_FLAG_SLEEP_CLAUSE == 0)
+        return FALSE;
     if (FlagGet(B_FLAG_SLEEP_CLAUSE))
         return TRUE;
     return FALSE;
@@ -10546,8 +10548,8 @@ void ClearDamageCalcResults(void)
     for (u32 battler = 0; battler < MAX_BATTLERS_COUNT; battler++)
     {
         gBattleStruct->moveDamage[battler] = 0;
-        gBattleStruct->moveResultFlags[battler] = CAN_DAMAGE;
-        gBattleStruct->noResultString[battler] = 0;
+        gBattleStruct->moveResultFlags[battler] = 0;
+        gBattleStruct->noResultString[battler] = CAN_DAMAGE;
         gBattleStruct->missStringId[battler] = 0;
         gSpecialStatuses[battler].criticalHit = FALSE;
     }
