@@ -3746,7 +3746,7 @@ static void DoBattleIntro(void)
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
                 statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
+                statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
                 gBattleStruct->startingStatusTimer = 0; // infinite
             }
             gBattleStruct->startingStatusTimer = gStartingStatuses.timer;
