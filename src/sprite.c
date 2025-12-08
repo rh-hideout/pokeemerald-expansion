@@ -1829,7 +1829,7 @@ enum FillMode
     FILL_MODE_FULL_SPRITE,
 };
 
-struct SpriteToPrint
+struct SpriteToFill
 {
     u8 spriteId;
     u8 startX;
@@ -1841,7 +1841,7 @@ struct SpriteToPrint
     u32 color;
 };
 
-static void FillStructWithColor(struct SpriteToPrint *input)
+static void FillStructWithColor(struct SpriteToFill *input)
 {
     u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
     switch (input->mode)
@@ -1919,13 +1919,93 @@ static void FillStructWithColor(struct SpriteToPrint *input)
     }
 }
 
-void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
+static void FillStructWithSprite(struct SpriteToFill *input)
+{
+    u32 *tiles = (u32 *)((OBJ_VRAM0) + gSprites[input->spriteId].oam.tileNum * TILE_SIZE_4BPP);
+    u32 *src = GetSrcPtrFromSprite(&gSprites[input->spriteId]);
+    switch (input->mode)
+    {
+    case FILL_MODE_FULL_SPRITE:
+        for (u32 i = 0; i < input->height * (input->width >> 3); i++)
+            tiles[i] = src[i];
+        break;
+    case FILL_MODE_FULL_LINES:
+    {
+        u32 rowOffset = 8 * (input->spriteWidth >> 3);
+        for (u32 y = input->startY; y < input->startY + input->height; y++)
+            for (u32 tile = 0; tile < (input->width >> 3); tile++)
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = src[(y / 8) * rowOffset + tile * 8 + y % 8];
+        break;
+    }
+    case FILL_MODE_CUSTOM:
+    {
+        u32 rowOffset = 8 * (input->spriteWidth >> 3);
+        u32 startTile = input->startX % 8 ? (input->startX >> 3) + 1 : (input->startX >> 3);
+        //  Handle full tile widths
+        for (u32 y = input->startY; y < input->startY + input->height; y++)
+        {
+            for (u32 tile = startTile; tile < (input->startX + input->width) / 8; tile++)
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = src[(y / 8) * rowOffset + tile * 8 + y % 8];
+        }
+
+        //  Handle tiles with arbitrary widths
+        //  Also need to check that span is more than 1 tile
+        if (input->startX / 8 != (input->startX + input->width) / 8)
+        {
+            if (input->startX % 8 != 0)
+            {
+                //  Left edge is not tile aligned
+                u32 srcMask = 0xFFFFFFFF << (4 * (input->startX % 8));
+                u32 tile = input->startX / 8;
+                u32 pixelMask = ~srcMask;
+                for (u32 y = input->startY; y < input->startY + input->height; y++)
+                {
+                    u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
+                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+                }
+            }
+
+            if ((input->startX + input->width) % 8 != 0)
+            {
+                //  Right edge is not tile aligned
+                u32 srcMask = 0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8)));
+                u32 tile = (input->startX + input->width) / 8;
+                u32 pixelMask = ~srcMask;
+                for (u32 y = input->startY; y < input->startY + input->height; y++)
+                {
+                    u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
+                    u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                    tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+                }
+            }
+        }
+        else if (input->width < 8)
+        {
+            u32 srcMask = 0xFFFFFFFF << (4 * (input->startX % 8));
+            srcMask = srcMask & (0xFFFFFFFF >> (4 * (8 - ((input->startX + input->width) % 8))));
+            u32 tile = input->startX / 8;
+            u32 pixelMask = ~srcMask;
+            for (u32 y = input->startY; y < input->startY + input->height; y++)
+            {
+                u32 currSrc = src[(y / 8) * rowOffset + tile * 8 + y % 8] & srcMask;
+                u32 currPixels = tiles[(y / 8) * rowOffset + tile * 8 + y % 8] & pixelMask;
+                tiles[(y / 8) * rowOffset + tile * 8 + y % 8] = currPixels | currSrc;
+            }
+        }
+        break;
+    }
+    }
+}
+
+static void FillSpriteRect(u32 spriteId, u32 left, u32 top, u32 width, u32 height, bool32 isColor, u32 color)
 {
     //  Check if area spans more than 1 sprite
     u32 spriteWidth = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].width;
     u32 spriteHeight = gOamDimensions[gSprites[spriteId].oam.shape][gSprites[spriteId].oam.size].height;
 
-    color = color * 0x11111111;
+    if (isColor)
+        color = color * 0x11111111;
 
     if (left + width > spriteWidth || top + height > spriteHeight)
     {
@@ -1973,7 +2053,7 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
             }
         }
 
-        struct SpriteToPrint printSprites[numSpritesX * numSpritesY];
+        struct SpriteToFill printSprites[numSpritesX * numSpritesY];
 
         //  Fill out the sprites to print to
 
@@ -2195,12 +2275,20 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
         }
 
         u32 totalSprites = numSpritesX * numSpritesY;
-        for (u32 i = 0; i < totalSprites; i++)
-            FillStructWithColor(&printSprites[i]);
+        if (isColor)
+        {
+            for (u32 i = 0; i < totalSprites; i++)
+                FillStructWithColor(&printSprites[i]);
+        }
+        else
+        {
+            for (u32 i = 0; i < totalSprites; i++)
+                FillStructWithSprite(&printSprites[i]);
+        }
     }
     else
     {
-        struct SpriteToPrint printSprite;
+        struct SpriteToFill printSprite;
         printSprite.color = color;
         printSprite.startX = left;
         printSprite.startY = top;
@@ -2209,21 +2297,48 @@ void SpriteFillRectWithColor(u32 spriteId, u32 left, u32 top, u32 width, u32 hei
         printSprite.mode = FILL_MODE_CUSTOM;
         printSprite.spriteId = spriteId;
         printSprite.spriteWidth = spriteWidth;
-        FillStructWithColor(&printSprite);
+        if (isColor)
+            FillStructWithColor(&printSprite);
+        else
+            FillStructWithSprite(&printSprite);
     }
 }
 
-void SpriteFillRectWithSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height)
+void FillSpriteRectColor(u32 spriteId, u32 left, u32 top, u32 width, u32 height, u32 color)
 {
-    //  This should probably just replace the entire sprites that need to be filled
+    FillSpriteRect(spriteId, left, top, width, height, TRUE, color);
 }
 
-void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX, u32 numSpritesY)
+void FillSpriteRectSprite(u32 spriteId, u32 left, u32 top, u32 width, u32 height)
+{
+    FillSpriteRect(spriteId, left, top, width, height, FALSE, 0);
+}
+
+static void StorePointerInSpriteData(struct Sprite *sprite, const u32 *ptr)
+{
+    u16 low = ((u32)ptr) & 0xFFFF;
+    u16 hi = ((u32)ptr) >> 16;
+
+    sprite->data[3] = (s16)low;
+    sprite->data[4] = (s16)hi;
+}
+
+u32 *GetSrcPtrFromSprite(struct Sprite *sprite)
+{
+    u16 low = (u16)sprite->data[3];
+    u16 hi = (u16)sprite->data[4];
+    u32 *ptr = (u32 *)(low | (hi << 16));
+    return ptr;
+}
+
+void SetupSpritesForTextPrinting(u8 *spriteIds, const u32 **spriteSrc, u32 numSpritesX, u32 numSpritesY)
 {
     for (u32 y = 0; y < numSpritesY; y++)
     {
         for (u32 x = 0; x < numSpritesX; x++)
         {
+            if (spriteSrc != NULL)
+                StorePointerInSpriteData(&gSprites[spriteIds[x + y * numSpritesX]], spriteSrc[x + y * numSpritesX]);
             if (x < numSpritesX - 1)
                 gSprites[spriteIds[x + y * numSpritesX]].nextX = spriteIds[x + y * numSpritesX + 1];
             else

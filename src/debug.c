@@ -4329,11 +4329,13 @@ void TestThing(void)
             spriteIds[x + y * 3] = Even_CreateSprite(&cs);
         }
     }
-    SetupSpritesForTextPrinting(spriteIds, NULL, 3, 3);
+    const u32 *srcs[9] = {sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx, sTestSpriteGfx};
+    SetupSpritesForTextPrinting(spriteIds, srcs, 3, 3);
 
-    //SpriteFillRectWithColor(spriteIds[0], 3, 3, 3, 3, 7);
-    //SpriteFillRectWithColor(spriteIds[0], 3, 3, 88, 4, 7);
-    //SpriteFillRectWithColor(spriteIds[0], 3, 3, 88, 88, 7);
+    //FillSpriteRectColor(spriteIds[0], 3, 3, 3, 3, TRUE, 7);
+    //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 4, TRUE, 7);
+    //FillSpriteRectColor(spriteIds[0], 3, 3, 88, 88, TRUE, 7);
+    FillSpriteRectSprite(spriteIds[0], 3, 3, 88, 88);
 
     PrintTextToSprite(spriteIds[0], 24, 23, FONT_SHORT, sNewString);
 }
