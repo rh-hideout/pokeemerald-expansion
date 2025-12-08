@@ -204,6 +204,8 @@ u32 GetSwitchChance(enum ShouldSwitchScenario shouldSwitchScenario)
         return SHOULD_SWITCH_ALL_SCORES_BAD_PERCENTAGE;
     case SHOULD_SWITCH_DYN_FUNC:
         return SHOULD_SWITCH_DYN_FUNC_PERCENTAGE;
+    case SHOULD_SWITCH_WISH_PASSING:
+        return SHOULD_SWITCH_WISH_PASSING_PERCENTAGE;
     default:
         return 100;
     }
@@ -1125,6 +1127,105 @@ static bool32 ShouldSwitchIfAbilityBenefit(enum BattlerId battler)
     return SetSwitchinAndSwitch(battler, PARTY_SIZE);
 }
 
+// Consider switching to pass Wish to a teammate that benefits AND has better matchup
+static bool32 ShouldSwitchIfWishPassing(enum BattlerId battler)
+{
+    enum BattlerId battlerIn1, battlerIn2;
+    s32 lastId = GetAILastPartyIndex(battler); // + 1
+    struct Pokemon *party;
+
+    // Only use with smart switching flag
+    if (!(gAiThinkingStruct->aiFlags[battler] & AI_FLAG_SMART_SWITCHING))
+        return FALSE;
+
+    // Only singles for now (consistent with ShouldSwitchIfHasBadOdds)
+    if (IsDoubleBattle())
+        return FALSE;
+
+    // Check if Wish is active for this battler's position
+    if (gBattleStruct->wish[battler].counter == 0)
+        return FALSE;
+
+    enum BattlerPosition opposingPosition = BATTLE_OPPOSITE(GetBattlerPosition(battler));
+    enum BattlerId opposingBattler = GetBattlerAtPosition(opposingPosition);
+
+    // Get current mon's type matchup (lower is better - means we resist opponent)
+    u32 typeMatchupCurrent = GetBattlerTypeMatchup(opposingBattler, battler);
+
+    // Current mon has good or neutral matchup - no need to switch for Wish
+    if (typeMatchupCurrent <= UQ_4_12(2.0))
+        return FALSE;
+
+    // Current mon has bad matchup; check if a teammate can benefit from Wish AND has better matchup
+    GetActiveBattlerIds(battler, &battlerIn1, &battlerIn2);
+    party = GetBattlerParty(battler);
+
+    u32 wishHealAmount = GetWishHealAmountForBattler(battler);
+    u32 bestCandidateId = PARTY_SIZE;
+    u32 bestTypeMatchup = typeMatchupCurrent; // Must be better than current mon
+
+    for (u32 monIndex = 0; monIndex < lastId; monIndex++)
+    {
+        if (!IsValidForBattle(&party[monIndex]))
+            continue;
+        if (IsPartyMonOnFieldOrChosenToSwitch(battler, monIndex, battlerIn1, battlerIn2))
+            continue;
+        if (IsPartyMonPlannedToBeSwitchedInByPartner(monIndex, battler))
+            continue;
+        if (IsAceMon(battler, monIndex))
+            continue;
+
+        InitializeSwitchinCandidate(battler, monIndex, &party[monIndex]);
+
+        // Check if mon would survive entry hazards (Wish heals at end of turn, after hazard damage)
+        u32 hazardDamage = GetSwitchinHazardsDamage(battler);
+        u32 currentHp = gBattleMons[battler].hp;
+        if (hazardDamage >= currentHp)
+            continue; // Would faint to hazards before receiving Wish
+
+        // Check if this mon benefits significantly from Wish (>25% HP gain)
+        u32 maxHp = gBattleMons[battler].maxHP;
+        s32 possibleHeal = wishHealAmount;
+        if (possibleHeal > (s32)(maxHp - currentHp))
+            possibleHeal = (s32)(maxHp - currentHp);
+
+        // Must gain more than 25% of max HP from Wish
+        if (possibleHeal <= (s32)(maxHp / 4))
+            continue;
+
+        // Check type matchup, must be better than current mon
+        u32 typeMatchupCandidate = GetBattlerTypeMatchup(opposingBattler, battler);
+        if (typeMatchupCandidate >= bestTypeMatchup)
+            continue;
+
+        // Check that candidate has at least one move that can deal damage
+        bool32 canDealDamage = FALSE;
+        for (u32 j = 0; j < MAX_MON_MOVES; j++)
+        {
+            u32 move = gBattleMons[battler].moves[j];
+            if (move != MOVE_NONE && !IsBattleMoveStatus(move) && gBattleMons[battler].pp[j] > 0)
+            {
+                canDealDamage = TRUE;
+                break;
+            }
+        }
+        if (!canDealDamage)
+            continue;
+
+        bestTypeMatchup = typeMatchupCandidate;
+        bestCandidateId = monIndex;
+    }
+
+    // Found a suitable candidate
+    if (bestCandidateId != PARTY_SIZE)
+    {
+        if (RandomPercentage(RNG_AI_SWITCH_WISH_PASSING, GetSwitchChance(SHOULD_SWITCH_WISH_PASSING)))
+            return SetSwitchinAndSwitch(battler, bestCandidateId);
+    }
+
+    return FALSE;
+}
+
 static bool32 CanUseSuperEffectiveMoveAgainstOpponent(enum BattlerId battler, enum BattlerId opposingBattler)
 {
     enum Move move;
@@ -1476,6 +1577,8 @@ bool32 ShouldSwitch(enum BattlerId battler)
     if (ShouldSwitchIfBadlyStatused(battler))
         return TRUE;
     if (ShouldSwitchIfAbilityBenefit(battler))
+        return TRUE;
+    if (ShouldSwitchIfWishPassing(battler))
         return TRUE;
     if (ShouldSwitchIfHasBadOdds(battler))
         return TRUE;
