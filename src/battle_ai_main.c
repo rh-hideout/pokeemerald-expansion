@@ -414,7 +414,6 @@ static void SetupRandomRollsForAIMoveSelection(u32 battler)
 {
     gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(gAiLogicData->hpPercents[battler]));
     gAiLogicData->shouldConsiderFinalGambit = RandomPercentage(RNG_AI_FINAL_GAMBIT, FINAL_GAMBIT_CHANCE);
-    gAiLogicData->shouldPivotBreakSash = RandomPercentage(RNG_AI_SHOULD_PIVOT_BREAK_SASH, SHOULD_PIVOT_BREAK_SASH_CHANCE);
 }
 
 void AI_TrySwitchOrUseItem(u32 battler)

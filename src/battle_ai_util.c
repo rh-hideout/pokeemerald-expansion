@@ -3402,7 +3402,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move)
             return SHOULD_PIVOT;
     }
     // Break Focus Sash / Multiscale effects if a good switchin exists
-    if (!IsBattleMoveStatus(move) && BattlerHasMaxHPProtection(battlerDef) && gAiLogicData->shouldPivotBreakSash && hasGoodSwitchin)
+    if (!IsBattleMoveStatus(move) && BattlerHasMaxHPProtection(battlerDef) && hasGoodSwitchin && RandomPercentage(RNG_AI_SHOULD_PIVOT_BREAK_SASH, SHOULD_PIVOT_BREAK_SASH_CHANCE))
         return SHOULD_PIVOT;
     // Would benefit from Regenerator and have a good switchin
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_REGENERATOR && ShouldRecover(battlerAtk, battlerDef, move, 33) && hasGoodSwitchin)
