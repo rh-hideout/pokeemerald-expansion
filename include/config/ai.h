@@ -68,6 +68,7 @@
 #define EXPLOSION_MINIMUM_CHANCE                                0 // Lowest possible percent chance of the AI using explosion based on its current HP
 #define EXPLOSION_MAXIMUM_CHANCE                                90 // Highest possible percent chance of the AI using explosion based on its current HP
 #define FINAL_GAMBIT_CHANCE                                     50 // Chance for AI to consider using Final Gambit if it outspeeds the player and thinks it has more HP
+#define SHOULD_PIVOT_BREAK_SASH_CHANCE                          50 // Chance for ShouldPivot to return true when trying to break Multiscale and Focus Sash type effects while having a good switchin
 
 // AI damage calc considerations
 #define RISKY_AI_CRIT_STAGE_THRESHOLD                           2   // Stat stages at which Risky will assume it gets a crit

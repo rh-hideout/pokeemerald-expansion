@@ -414,6 +414,7 @@ static void SetupRandomRollsForAIMoveSelection(u32 battler)
 {
     gAiLogicData->shouldConsiderExplosion = RandomPercentage(RNG_AI_CONSIDER_EXPLOSION, GetAIExplosionChanceFromHP(gAiLogicData->hpPercents[battler]));
     gAiLogicData->shouldConsiderFinalGambit = RandomPercentage(RNG_AI_FINAL_GAMBIT, FINAL_GAMBIT_CHANCE);
+    gAiLogicData->shouldPivotBreakSash = RandomPercentage(RNG_AI_SHOULD_PIVOT_BREAK_SASH, SHOULD_PIVOT_BREAK_SASH_CHANCE);
 }
 
 void AI_TrySwitchOrUseItem(u32 battler)
@@ -4655,10 +4656,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         if (IsConsideringZMove(battlerAtk, battlerDef, move))
             ADJUST_SCORE(BEST_EFFECT);
         break;
-    case EFFECT_TELEPORT: // Either remove or add better logic
-        if (!(gBattleTypeFlags & BATTLE_TYPE_TRAINER) || !IsOnPlayerSide(battlerAtk))
-            break;
-        //fallthrough
+    case EFFECT_TELEPORT:
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
     case EFFECT_CHILLY_RECEPTION:

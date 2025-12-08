@@ -3398,11 +3398,11 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move)
     }
     else
     {
-        if (gAiLogicData->shouldSwitch & (1u << battlerAtk) && !CanTargetFaintAi(battlerDef, battlerDef))
+        if (gAiLogicData->shouldSwitch & (1u << battlerAtk) && !CanTargetFaintAi(battlerDef, battlerAtk))
             return SHOULD_PIVOT;
     }
     // Break Focus Sash / Multiscale effects if a good switchin exists
-    if (!IsBattleMoveStatus(move) && BattlerHasMaxHPProtection(battlerDef) && hasGoodSwitchin)
+    if (!IsBattleMoveStatus(move) && BattlerHasMaxHPProtection(battlerDef) && gAiLogicData->shouldPivotBreakSash && hasGoodSwitchin)
         return SHOULD_PIVOT;
     // Would benefit from Regenerator and have a good switchin
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_REGENERATOR && ShouldRecover(battlerAtk, battlerDef, move, 33) && hasGoodSwitchin)

@@ -337,7 +337,8 @@ struct AiLogicData
     u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
     u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
     u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
-    u32 padding2:19;
+    u32 shouldPivotBreakSash:1; // Determines whether the AI will be encouraged to break Sash effects with pivot moves
+    u32 padding2:18;
 };
 
 struct AiThinkingStruct
