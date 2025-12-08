@@ -1810,18 +1810,17 @@ u8 PrintTextToSprite(u8 spriteId, s32 x, s32 y, u8 fontId, const u8 *string)
     printer.currentY = y;
     printer.letterSpacing = gFonts[fontId].letterSpacing;
     printer.lineSpacing = gFonts[fontId].lineSpacing;
-    printer.unk = gFonts[fontId].unk;
-    printer.fgColor = 1;
-    printer.bgColor = 0;
-    printer.shadowColor = 3;
+    printer.color.accent = 0;
+    printer.color.foreground = 1;
+    printer.color.background = 0;
+    printer.color.shadow = 3;
+    printer.firstSpriteInRow = spriteId;
 
     return AddTextPrinter(&printer, 0, NULL);
 }
 
-#define firstSprite data[0]
 #define nextX data[1]
 #define nextY data[2]
-#define firstInRow data[3]
 
 inline static void GLYPH_COPY(u8 *windowTiles, u32 widthOffset, u32 x0, u32 y0, u32 *glyphPixels, s32 width, s32 height)
 {
@@ -2255,10 +2254,8 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX,
 {
     for (u32 y = 0; y < numSpritesY; y++)
     {
-        u32 firstRowSprite = spriteIds[y * numSpritesX];
         for (u32 x = 0; x < numSpritesX; x++)
         {
-            gSprites[spriteIds[x + y * numSpritesX]].firstInRow = firstRowSprite;
             if (x < numSpritesX - 1)
                 gSprites[spriteIds[x + y * numSpritesX]].nextX = spriteIds[x + y * numSpritesX + 1];
             else
@@ -2271,7 +2268,5 @@ void SetupSpritesForTextPrinting(u8 *spriteIds, u32 *spriteSrc, u32 numSpritesX,
     }
 }
 
-#undef firstSprite
 #undef nextX
 #undef nextY
-#undef firstInRow

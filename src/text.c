@@ -1176,6 +1176,9 @@ void DrawDownArrow(u8 windowId, u16 x, u16 y, u8 bgColor, bool32 drawArrow, u8 *
     }
 }
 
+#define nextX data[1]
+#define nextY data[2]
+
 static u16 RenderText(struct TextPrinter *textPrinter)
 {
     struct TextPrinterSubStruct *subStruct = (struct TextPrinterSubStruct *)(&textPrinter->subStructFields);
@@ -1217,12 +1220,13 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER)
             {
                 struct Sprite *sprite = &gSprites[textPrinter->printerTemplate.spriteId];
-                textPrinter->printerTemplate.spriteId = sprite->data[3];
+                textPrinter->printerTemplate.spriteId = textPrinter->printerTemplate.firstSpriteInRow;
                 if (textPrinter->printerTemplate.currentY  >= gOamDimensions[sprite->oam.shape][sprite->oam.size].height
-                 && gSprites[textPrinter->printerTemplate.spriteId].data[2] != SPRITE_NONE)
+                 && gSprites[textPrinter->printerTemplate.spriteId].nextY != SPRITE_NONE)
                 {
                     textPrinter->printerTemplate.currentY = textPrinter->printerTemplate.currentY - gOamDimensions[sprite->oam.shape][sprite->oam.size].height;
-                    textPrinter->printerTemplate.spriteId = gSprites[gSprites[textPrinter->printerTemplate.spriteId].data[3]].data[2];
+                    textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.firstSpriteInRow].nextY;
+                    textPrinter->printerTemplate.firstSpriteInRow = textPrinter->printerTemplate.spriteId;
                 }
             }
             return RENDER_REPEAT;
@@ -1458,10 +1462,10 @@ static u16 RenderText(struct TextPrinter *textPrinter)
         //  Handle switching to next sprite here
         if (textPrinter->printerTemplate.type == SPRITE_TEXT_PRINTER
          && cutOffAmount > 0
-         && gSprites[textPrinter->printerTemplate.spriteId].data[1] != SPRITE_NONE)
+         && gSprites[textPrinter->printerTemplate.spriteId].nextX != SPRITE_NONE)
         {
             //  Set the data to the next sprite
-            textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].data[1];
+            textPrinter->printerTemplate.spriteId = gSprites[textPrinter->printerTemplate.spriteId].nextX;
             textPrinter->printerTemplate.currentX = 0;
 
             //  Copy the remaining part of the glyph to the sprite
@@ -1567,6 +1571,9 @@ static u16 RenderText(struct TextPrinter *textPrinter)
     textPrinter->isInUse = FALSE;
     return RENDER_FINISH;
 }
+
+#undef nextX
+#undef nextY
 
 static u32 UNUSED GetStringWidthFixedWidthFont(const u8 *str, u8 fontId, u8 letterSpacing)
 {
