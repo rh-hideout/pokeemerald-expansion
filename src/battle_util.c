@@ -3608,7 +3608,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     return effect;
 }
 
-static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer)
+static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer, u16 time)
 {
     if (!(gFieldStatuses & flag))
     {
@@ -3617,10 +3617,7 @@ static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16
             gFieldStatuses &= ~STATUS_FIELD_TERRAIN_ANY;
         gFieldStatuses |= flag;
         gBattleScripting.animArg1 = anim;
-        if (gStartingStatuses.timer)
-            *timer = gStartingStatuses.timer;
-        else
-            *timer = 0; // Infinite
+        *timer = time;
 
         return TRUE;
     }
@@ -3628,7 +3625,7 @@ static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16
     return FALSE;
 }
 
-static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer)
+static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 anim, u16 *timer, u16 time)
 {
     if (!(gSideStatuses[side] & flag))
     {
@@ -3636,10 +3633,7 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
         gBattleCommunication[MULTISTRING_CHOOSER] = message;
         gSideStatuses[side] |= flag;
         gBattleScripting.animArg1 = anim;
-        if (gStartingStatuses.timer)
-            *timer = gStartingStatuses.timer;
-        else
-            *timer = 0; // Infinite
+        *timer = time;
 
         return TRUE;
     }
@@ -3658,14 +3652,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
     switch (caseId)
     {
     case FIELD_EFFECT_TRAINER_STATUSES:  // starting field/side/etc statuses with a variable
-        if (gStartingStatuses.electricTerrain)
+        if (gStartingStatuses.electricTerrain || gStartingStatuses.electricTerrainTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_ELECTRIC_TERRAIN,
                         B_MSG_TERRAIN_SET_ELECTRIC,
                         0,
-                        &gFieldTimers.terrainTimer);
-            gStartingStatuses.electricTerrain = FALSE;
+                        &gFieldTimers.terrainTimer, gStartingStatuses.electricTerrain ? 0 : 5);
+            gStartingStatuses.electricTerrainTemporary = gStartingStatuses.electricTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3673,14 +3667,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gStartingStatuses.mistyTerrain)
+        else if (gStartingStatuses.mistyTerrain || gStartingStatuses.mistyTerrainTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MISTY_TERRAIN,
                         B_MSG_TERRAIN_SET_MISTY,
                         0,
-                        &gFieldTimers.terrainTimer);
-            gStartingStatuses.mistyTerrain = FALSE;
+                        &gFieldTimers.terrainTimer, gStartingStatuses.mistyTerrain ? 0 : 5);
+            gStartingStatuses.mistyTerrainTemporary = gStartingStatuses.mistyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3688,14 +3682,14 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gStartingStatuses.grassyTerrain)
+        else if (gStartingStatuses.grassyTerrain || gStartingStatuses.grassyTerrainTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_GRASSY_TERRAIN,
                         B_MSG_TERRAIN_SET_GRASSY,
                         0,
-                        &gFieldTimers.terrainTimer);
-            gStartingStatuses.grassyTerrain = FALSE;
+                        &gFieldTimers.terrainTimer, gStartingStatuses.grassyTerrain ? 0 : 5);
+            gStartingStatuses.grassyTerrainTemporary = gStartingStatuses.grassyTerrain = FALSE;
             isTerrain = TRUE;
             if (effect)
             {
@@ -3703,122 +3697,122 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                 return TRUE;
             }
         }
-        else if (gStartingStatuses.psychicTerrain)
+        else if (gStartingStatuses.psychicTerrain || gStartingStatuses.psychicTerrainTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_PSYCHIC_TERRAIN,
                         B_MSG_TERRAIN_SET_PSYCHIC,
                         0,
-                        &gFieldTimers.terrainTimer);
-            gStartingStatuses.psychicTerrain = FALSE;
+                        &gFieldTimers.terrainTimer, gStartingStatuses.psychicTerrain ? 0 : 5);
+            gStartingStatuses.psychicTerrainTemporary = gStartingStatuses.psychicTerrain = FALSE;
             isTerrain = TRUE;
         }
-        else if (gStartingStatuses.trickRoom)
+        else if (gStartingStatuses.trickRoom || gStartingStatuses.trickRoomTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_TRICK_ROOM,
                         B_MSG_SET_TRICK_ROOM,
                         B_ANIM_TRICK_ROOM,
-                        &gFieldTimers.trickRoomTimer);
-            gStartingStatuses.trickRoom = FALSE;
+                        &gFieldTimers.trickRoomTimer, gStartingStatuses.trickRoom ? 0 : 5);
+            gStartingStatuses.trickRoomTemporary = gStartingStatuses.trickRoom = FALSE;
         }
-        else if (gStartingStatuses.magicRoom)
+        else if (gStartingStatuses.magicRoom || gStartingStatuses.magicRoomTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_MAGIC_ROOM,
                         B_MSG_SET_MAGIC_ROOM,
                         B_ANIM_MAGIC_ROOM,
-                        &gFieldTimers.magicRoomTimer);
-            gStartingStatuses.magicRoom = FALSE;
+                        &gFieldTimers.magicRoomTimer, gStartingStatuses.magicRoom ? 0 : 5);
+            gStartingStatuses.magicRoomTemporary = gStartingStatuses.magicRoom = FALSE;
         }
-        else if (gStartingStatuses.wonderRoom)
+        else if (gStartingStatuses.wonderRoom || gStartingStatuses.wonderRoomTemporary)
         {
             effect = SetStartingFieldStatus(
                         STATUS_FIELD_WONDER_ROOM,
                         B_MSG_SET_WONDER_ROOM,
                         B_ANIM_WONDER_ROOM,
-                        &gFieldTimers.wonderRoomTimer);
-            gStartingStatuses.wonderRoom = FALSE;
+                        &gFieldTimers.wonderRoomTimer,  gStartingStatuses.wonderRoom ? 0 : 5);
+            gStartingStatuses.wonderRoomTemporary = gStartingStatuses.wonderRoom = FALSE;
         }
-        else if (gStartingStatuses.tailwindPlayer)
+        else if (gStartingStatuses.tailwindPlayer || gStartingStatuses.tailwindPlayerTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
                         B_SIDE_PLAYER,
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
-                        &gSideTimers[B_SIDE_PLAYER].tailwindTimer);
-            gStartingStatuses.tailwindPlayer = FALSE;
+                        &gSideTimers[B_SIDE_PLAYER].tailwindTimer, gStartingStatuses.tailwindPlayer ? 0 : (B_TAILWIND_TURNS >= GEN_5 ? 4 : 3));
+            gStartingStatuses.tailwindPlayerTemporary = gStartingStatuses.tailwindPlayer = FALSE;
         }
-        else if (gStartingStatuses.tailwindOpponent)
+        else if (gStartingStatuses.tailwindOpponent || gStartingStatuses.tailwindOpponentTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_TAILWIND,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
-                        &gSideTimers[B_SIDE_OPPONENT].tailwindTimer);
+                        &gSideTimers[B_SIDE_OPPONENT].tailwindTimer, gStartingStatuses.tailwindOpponent ? 0 : (B_TAILWIND_TURNS >= GEN_5 ? 4 : 3));
             gStartingStatuses.tailwindOpponent = FALSE;
         }
-        else if (gStartingStatuses.rainbowPlayer)
+        else if (gStartingStatuses.rainbowPlayer || gStartingStatuses.rainbowPlayerTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
                         B_SIDE_PLAYER,
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
-                        &gSideTimers[B_SIDE_PLAYER].rainbowTimer);
-            gStartingStatuses.rainbowPlayer = FALSE;
+                        &gSideTimers[B_SIDE_PLAYER].rainbowTimer, gStartingStatuses.rainbowPlayer ? 0 : 4);
+            gStartingStatuses.rainbowPlayerTemporary = gStartingStatuses.rainbowPlayer = FALSE;
         }
-        else if (gStartingStatuses.rainbowOpponent)
+        else if (gStartingStatuses.rainbowOpponent || gStartingStatuses.rainbowOpponentTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_RAINBOW,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_RAINBOW,
                         B_ANIM_RAINBOW,
-                        &gSideTimers[B_SIDE_OPPONENT].rainbowTimer);
-            gStartingStatuses.rainbowOpponent = FALSE;
+                        &gSideTimers[B_SIDE_OPPONENT].rainbowTimer, gStartingStatuses.rainbowOpponent ? 0 : 4);
+            gStartingStatuses.rainbowOpponentTemporary = gStartingStatuses.rainbowOpponent = FALSE;
         }
-        else if (gStartingStatuses.seaOfFirePlayer)
+        else if (gStartingStatuses.seaOfFirePlayer || gStartingStatuses.seaOfFirePlayerTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
                         B_SIDE_PLAYER,
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
-                        &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer);
-            gStartingStatuses.seaOfFirePlayer = FALSE;
+                        &gSideTimers[B_SIDE_PLAYER].seaOfFireTimer, gStartingStatuses.seaOfFirePlayer ? 0 : 4);
+            gStartingStatuses.seaOfFirePlayerTemporary = gStartingStatuses.seaOfFirePlayer = FALSE;
         }
-        else if (gStartingStatuses.seaOfFireOpponent)
+        else if (gStartingStatuses.seaOfFireOpponent || gStartingStatuses.seaOfFireOpponentTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SEA_OF_FIRE,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_SEA_OF_FIRE,
                         B_ANIM_SEA_OF_FIRE,
-                        &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer);
-            gStartingStatuses.seaOfFireOpponent = FALSE;
+                        &gSideTimers[B_SIDE_OPPONENT].seaOfFireTimer, gStartingStatuses.seaOfFireOpponent ? 0 : 4);
+            gStartingStatuses.seaOfFireOpponentTemporary = gStartingStatuses.seaOfFireOpponent = FALSE;
         }
-        else if (gStartingStatuses.swampPlayer)
+        else if (gStartingStatuses.swampPlayer || gStartingStatuses.swampPlayerTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
                         B_SIDE_PLAYER,
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
-                        &gSideTimers[B_SIDE_PLAYER].swampTimer);
-            gStartingStatuses.swampPlayer = FALSE;
+                        &gSideTimers[B_SIDE_PLAYER].swampTimer, gStartingStatuses.swampPlayer ? 0 : 4);
+            gStartingStatuses.swampPlayerTemporary = gStartingStatuses.swampPlayer = FALSE;
         }
-        else if (gStartingStatuses.swampOpponent)
+        else if (gStartingStatuses.swampOpponent || gStartingStatuses.swampOpponentTemporary)
         {
             effect = SetStartingSideStatus(
                         SIDE_STATUS_SWAMP,
                         B_SIDE_OPPONENT,
                         B_MSG_SET_SWAMP,
                         B_ANIM_SWAMP,
-                        &gSideTimers[B_SIDE_OPPONENT].swampTimer);
-            gStartingStatuses.swampOpponent = FALSE;
+                        &gSideTimers[B_SIDE_OPPONENT].swampTimer, gStartingStatuses.swampOpponent ? 0 : 4);
+            gStartingStatuses.swampOpponentTemporary = gStartingStatuses.swampOpponent = FALSE;
         }
         if (effect)
         {
@@ -11377,13 +11371,12 @@ bool32 AnyStartingStatusActive(void)
 
 #define UNPACK_STARTING_STATUS_TO_EWRAM(_enum, _fieldName, ...) case _enum: gStartingStatuses._fieldName = TRUE; break;
 
-void SetStartingStatus(enum StartingStatus status, u32 timer)
+void SetStartingStatus(enum StartingStatus status)
 {
     switch (status)
     {
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_EWRAM);
     }
-    gStartingStatuses.timer = timer;
 }
 
 #define UNPACK_STARTING_STATUS_RESET(_enum, _fieldName, ...) gStartingStatuses._fieldName = FALSE;
@@ -11391,5 +11384,4 @@ void SetStartingStatus(enum StartingStatus status, u32 timer)
 void ResetStartingStatuses(void)
 {
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_RESET);
-    gStartingStatuses.timer = 0;
 }

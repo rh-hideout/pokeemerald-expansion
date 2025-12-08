@@ -3296,9 +3296,8 @@ bool8 ScrCmd_istmrelearneractive(struct ScriptContext *ctx)
 bool8 ScrCmd_setstartingstatus(struct ScriptContext *ctx)
 {
     enum StartingStatus status = ScriptReadByte(ctx);
-    u8 timer = ScriptReadByte(ctx);
 
-    SetStartingStatus(status, timer);
+    SetStartingStatus(status);
 
     return FALSE;
 }

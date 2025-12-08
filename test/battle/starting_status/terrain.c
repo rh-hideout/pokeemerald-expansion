@@ -2,7 +2,7 @@
 #include "event_data.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning of battle and lasts infinitely long")
+SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning of battle and lasts infinitely long if it's defined as such")
 {
     u16 terrain;
 
@@ -10,8 +10,9 @@ SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning o
     PARAMETRIZE { terrain = STARTING_STATUS_PSYCHIC_TERRAIN; }
     PARAMETRIZE { terrain = STARTING_STATUS_MISTY_TERRAIN; }
     PARAMETRIZE { terrain = STARTING_STATUS_ELECTRIC_TERRAIN; }
+    PARAMETRIZE { terrain = STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY; }
 
-    SetStartingStatus(terrain, 0);
+    SetStartingStatus(terrain);
 
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
@@ -42,12 +43,17 @@ SINGLE_BATTLE_TEST("SetStartingStatus starts a chosen terrain at the beginning o
             break;
         }
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
-        NONE_OF {
-            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
-            MESSAGE("The weirdness disappeared from the battlefield!");
+        if (terrain != STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY) {
+            NONE_OF {
+                ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
+                MESSAGE("The weirdness disappeared from the battlefield!");
+                MESSAGE("The electricity disappeared from the battlefield.");
+                MESSAGE("The mist disappeared from the battlefield.");
+                MESSAGE("The grass disappeared from the battlefield.");
+            }
+        } else {
             MESSAGE("The electricity disappeared from the battlefield.");
-            MESSAGE("The mist disappeared from the battlefield.");
-            MESSAGE("The grass disappeared from the battlefield.");
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_RESTORE_BG);
         }
     } THEN {
         ResetStartingStatuses();
@@ -61,7 +67,7 @@ SINGLE_BATTLE_TEST("Terrain started after the one which started the battle lasts
     PARAMETRIZE { viaMove = TRUE; }
     PARAMETRIZE { viaMove = FALSE; }
 
-    SetStartingStatus(STARTING_STATUS_ELECTRIC_TERRAIN, 0);
+    SetStartingStatus(STARTING_STATUS_ELECTRIC_TERRAIN);
 
     GIVEN {
         PLAYER(SPECIES_TAPU_BULU) { Ability(viaMove == TRUE ? ABILITY_TELEPATHY : ABILITY_GRASSY_SURGE); }

@@ -2739,8 +2739,7 @@
 	.endm
 
 	@ Sets a starting status for the next battle. Can be stacked.
-	.macro setstartingstatus status:req, timer=0
+	.macro setstartingstatus status:req
 	callnative ScrCmd_setstartingstatus
 	.byte \status
-	.byte \timer
 	.endm
