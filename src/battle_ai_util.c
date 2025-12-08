@@ -5160,9 +5160,9 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 
         GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, bestMoves);
 
-        for (u32 i; i < MAX_MON_MOVES; i++)
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (GetMoveEffect(bestMoves[i]) == EFFECT_FOCUS_PUNCH)
+            if ((GetMoveEffect(bestMoves[i]) != EFFECT_FOCUS_PUNCH) && (bestMoves[i] != MOVE_NONE))
                 return;
         }
     }
