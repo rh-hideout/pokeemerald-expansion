@@ -783,18 +783,32 @@ u32 CopyGlyphToWindow(struct TextPrinter *textPrinter)
         u32 leftHalf[16];
         u32 rightHalf[16];
 
-        for (u32 i = 0; i < 8; i++)
+        if (gCurGlyph.width > 8)
         {
-            leftHalf[i] = gCurGlyph.gfxBufferTop[i];
-            leftHalf[8 + i] = gCurGlyph.gfxBufferBottom[i];
-            rightHalf[i] = gCurGlyph.gfxBufferTop[8 + i];
-            rightHalf[8 + i] = gCurGlyph.gfxBufferBottom[8 + i];
-        }
+            for (u32 i = 0; i < 8; i++)
+            {
+                leftHalf[i] = gCurGlyph.gfxBufferTop[i];
+                leftHalf[8 + i] = gCurGlyph.gfxBufferBottom[i];
+                rightHalf[i] = gCurGlyph.gfxBufferTop[8 + i];
+                rightHalf[8 + i] = gCurGlyph.gfxBufferBottom[8 + i];
+            }
 
-        for (u32 i = 0; i < newHeight; i++)
+            for (u32 i = 0; i < newHeight; i++)
+            {
+                leftHalf[i] = leftHalf[glyphHeight + i];
+                rightHalf[i] = rightHalf[glyphHeight + i];
+            }
+        }
+        else
         {
-            leftHalf[i] = leftHalf[glyphHeight + i];
-            rightHalf[i] = rightHalf[glyphHeight + i];
+            for (u32 i = 0; i < 8; i++)
+            {
+                leftHalf[i] = gCurGlyph.gfxBufferTop[i];
+                leftHalf[8 + i] = gCurGlyph.gfxBufferBottom[i];
+            }
+
+            for (u32 i = 0; i < newHeight; i++)
+                leftHalf[i] = leftHalf[glyphHeight + i];
         }
 
         glyphHeight = newHeight;
@@ -1456,16 +1470,18 @@ static u16 RenderText(struct TextPrinter *textPrinter)
             }
             else
             {
-                //  Loop over how many glyphs the icon needs
+                //  Loop over how many 8 px wide glyphs the icon needs
                 u32 keypadIconId = *textPrinter->printerTemplate.currentChar++;
                 u32 numTiles = sKeypadIcons[keypadIconId].width / 8;
                 for (u32 i = 0; i < numTiles; i++)
                 {
                     //  Fill the current glyph part
-                    memcpy(gCurGlyph.gfxBufferTop, sKeypadIconTiles + (( i + sKeypadIcons[keypadIconId].tileOffset) * 0x20), 32);
-                    memcpy(gCurGlyph.gfxBufferBottom, sKeypadIconTiles + ((sKeypadIcons[keypadIconId].tileOffset + 16 + i) * 0x20), 32);
+                    for (u32 j = 0; j < 8; j++)
+                    {
+                        gCurGlyph.gfxBufferTop[j] = ((u32 *)(sKeypadIconTiles + ((i + sKeypadIcons[keypadIconId].tileOffset) * 0x20)))[j];
+                        gCurGlyph.gfxBufferBottom[j] = ((u32 *)(sKeypadIconTiles + ((i + 16 + sKeypadIcons[keypadIconId].tileOffset) * 0x20)))[j];
+                    }
                     gCurGlyph.width = 8;
-                    //  Print the current glyph part
                     PrintGlyph(textPrinter);
                 }
                 return RENDER_PRINT;
