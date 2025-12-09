@@ -95,7 +95,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO
             ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
             HP_BAR(opponent);
         } else {
-            MESSAGE("Wobbuffet lost its focus and couldn't move!");
+            MESSAGE("Wobbuffet fainted!");
             NONE_OF {
                 MESSAGE("Wobbuffet used Focus Punch!");
                 ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
