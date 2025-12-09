@@ -147,6 +147,27 @@ DOUBLE_BATTLE_TEST("Sleep Talk calls move and that move may be redirected by Sto
     }
 }
 
+SINGLE_BATTLE_TEST("Sleep Talk calls move and that move correctly ignores ability if it should")
+{
+    u32 species;
+    enum Ability ability;
+
+    PARAMETRIZE { species = SPECIES_KINGLER; ability = ABILITY_SHELL_ARMOR; }
+    PARAMETRIZE { species = SPECIES_ARMALDO; ability = ABILITY_BATTLE_ARMOR; }
+
+    GIVEN {
+        ASSUME(MoveIgnoresTargetAbility(MOVE_SUNSTEEL_STRIKE));
+        PLAYER(SPECIES_WOBBUFFET) { Status1(STATUS1_SLEEP); Moves(MOVE_SLEEP_TALK, MOVE_SUNSTEEL_STRIKE); }
+        OPPONENT(species) { Ability(ability); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SLEEP_TALK, criticalHit: TRUE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SLEEP_TALK, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNSTEEL_STRIKE, player);
+        MESSAGE("A critical hit!");
+    }
+}
+
 SINGLE_BATTLE_TEST("Sleep Talk deducts power points from itself, not the called move")
 {
     ASSUME(GetMovePP(MOVE_SLEEP_TALK) == 10);
