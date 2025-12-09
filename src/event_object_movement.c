@@ -11595,7 +11595,7 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
     gFieldEffectArguments[4] = objEvent->spriteId;
-    FieldEffectStart(FLDEFF_BUBBLES); // Commandeer this field effect for the spawn anims
+    objEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_BUBBLES) + 1; // Commandeer this field effect for the spawn anims
     return TRUE;
 }
 

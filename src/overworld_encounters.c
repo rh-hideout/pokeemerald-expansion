@@ -673,11 +673,14 @@ u32 RemoveOldestOverworldEncounter(void)
     u32 localId = GetLocalIdByOverworldSpawnSlot(GetOldestSlot());
     u32 objectEventId = GetObjectEventIdByLocalId(localId);
     struct ObjectEvent *object = &gObjectEvents[objectEventId];
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[objectEventId].spriteId].data[6];
+    u32 fldEffSpriteId = object->fieldEffectSpriteId;
 
     // Stop the associated field effect if it is active.
-    if (*fldEffSpriteId != 0)
-        FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
+    if (fldEffSpriteId != 0)
+    {
+        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_BUBBLES);
+        object->fieldEffectSpriteId = 0;
+    }
 
     RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
     return objectEventId;
