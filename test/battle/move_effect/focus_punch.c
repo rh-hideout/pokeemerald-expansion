@@ -178,7 +178,6 @@ SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash or 
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
         MESSAGE("Wobbuffet is tightening its focus!");
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SEISMIC_TOSS, opponent);
-
         MESSAGE("Wobbuffet lost its focus and couldn't move!");
         NONE_OF {
             MESSAGE("Wobbuffet used Focus Punch!");
@@ -190,10 +189,114 @@ SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash or 
     }
 }
 
-TO_DO_BATTLE_TEST("Focus Punch activates when the user's Substitute is hit");
+SINGLE_BATTLE_TEST("Focus Punch activates when the user's Substitute is hit")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_SUBSTITUTE); }
+        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_SCRATCH); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SCRATCH, opponent);
+        MESSAGE("Wobbuffet used Focus Punch!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+        HP_BAR(opponent);
+    }
+}
+
+SINGLE_BATTLE_TEST("Focus Punch uses PP when losing focus (Gen 3-4)")
+{
+    u32 move;
+    bool32 activate;
+    PARAMETRIZE { move = MOVE_SCRATCH; activate = FALSE; }
+    PARAMETRIZE { move = MOVE_LEER; activate = TRUE; }
+    GIVEN {
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_3);
+        PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        if (activate)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+        else
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+    } THEN {
+        EXPECT_EQ(player->pp[0], 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)")
+{
+    u32 move;
+    bool32 activate;
+    PARAMETRIZE { move = MOVE_SCRATCH; activate = FALSE; }
+    PARAMETRIZE { move = MOVE_LEER; activate = TRUE; }
+    GIVEN {
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
+        if (activate)
+            ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+        else
+            NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+    } THEN {
+        if (activate)
+            EXPECT_EQ(player->pp[0], 0);
+        else
+            EXPECT_EQ(player->pp[0], 1);
+    }
+}
+
+SINGLE_BATTLE_TEST("Focus Punch failing occurs after flinching (Gen 3-4)")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH) == TRUE);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_3);
+        PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_FAKE_OUT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
+        MESSAGE("Wobbuffet flinched and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+    }
+}
+
+SINGLE_BATTLE_TEST("Focus Punch failing occurs before flinching (Gen 5+)")
+{
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH) == TRUE);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_5);
+        PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, MOVE_FAKE_OUT); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
+        MESSAGE("Wobbuffet is tightening its focus!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_FAKE_OUT, opponent);
+        MESSAGE("Wobbuffet lost its focus and couldn't move!");
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
+    }
+}
+
 TO_DO_BATTLE_TEST("Focus Punch activates when the user is hit by a status move");
-TO_DO_BATTLE_TEST("Focus Punch uses PP when losing focus (Gen 3-4)");
-TO_DO_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)");
 TO_DO_BATTLE_TEST("Focus Punch losing focus is considered as the last move used (Gen 3-4)"); //Eg. Encore
 TO_DO_BATTLE_TEST("Focus Punch losing focus is not considered as the last move used (Gen 5+)"); //Eg. Encore
 TO_DO_BATTLE_TEST("Focus Punch's initial message is not considered as using the move for Zoom Lens");
