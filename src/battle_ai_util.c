@@ -4016,9 +4016,9 @@ bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 mo
     return TRUE;
 }
 
-static inline bool32 RecoveryEnablesWinning1v1(u32 battlerAtk, u32 battlerDef, u32 move, u32 predictedMoveSpeedCheck, u32 healAmount)
+static inline bool32 RecoveryEnablesWinning1v1(u32 battlerAtk, u32 battlerDef, u32 move, u32 aiIsFaster, u32 healAmount)
 {
-    if (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY))
+    if (aiIsFaster)
     {
         if (CanTargetFaintAi(battlerDef, battlerAtk)
           && !CanTargetFaintAiWithMod(battlerDef, battlerAtk, healAmount, 0))
@@ -4058,6 +4058,7 @@ bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move)
     u32 healAmount = (AI_GetDamage(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, gAiLogicData) * GetMoveAbsorbPercentage(move) / 100);
     healAmount = GetDrainedBigRootHp(battlerAtk, healAmount);
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
     if (healAmount == 0)
         healAmount = 1;
     if (healAmount + currHP > maxHP)
@@ -4067,9 +4068,9 @@ bool32 ShouldAbsorb(u32 battlerAtk, u32 battlerDef, u32 move)
 
     if (gAiLogicData->abilities[battlerDef] == ABILITY_LIQUID_OOZE)
         return FALSE;
-    if (IsBattlerAtMaxHp(battlerAtk))
+    if (IsBattlerAtMaxHp(battlerAtk) || (!aiIsFaster && GetMoveCategory(GetIncomingMove(battlerAtk, battlerDef, gAiLogicData)) != DAMAGE_CATEGORY_STATUS))
         return FALSE;
-    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, healAmount))
+    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, aiIsFaster, healAmount))
         return TRUE;
     if (ShouldDrainHPToWithstandHit(battlerAtk, battlerDef, currHP, healAmount))
         return TRUE;
@@ -4083,6 +4084,7 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
     u32 currHP = gBattleMons[battlerAtk].hp;
     u32 healAmount = (healPercent * maxHP) / 100;
     u32 predictedMoveSpeedCheck = GetIncomingMoveSpeedCheck(battlerAtk, battlerDef, gAiLogicData);
+    bool32 aiIsFaster = AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY);
     if (healAmount + currHP > maxHP)
         healAmount = maxHP - currHP;
     if (gBattleMons[battlerAtk].volatiles.healBlock)
@@ -4090,7 +4092,7 @@ bool32 ShouldRecover(u32 battlerAtk, u32 battlerDef, u32 move, u32 healPercent)
 
     if (IsBattlerAtMaxHp(battlerAtk))
         return FALSE;
-    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, healAmount))
+    if (RecoveryEnablesWinning1v1(battlerAtk, battlerDef, move, aiIsFaster, healAmount))
         return TRUE;
     return FALSE;
 }
