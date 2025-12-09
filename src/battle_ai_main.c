@@ -4987,9 +4987,11 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         if ((GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((50 * gBattleMons[battlerAtk].maxHP) / 100)) 
          && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
         {
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK));
-            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
+            u32 scoreIncrease = IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
+            if (scoreIncrease > BEST_EFFECT)
+                scoreIncrease = BEST_EFFECT;
+
+            ADJUST_SCORE(scoreIncrease);
         }
         break;
     case EFFECT_PSYCH_UP:
