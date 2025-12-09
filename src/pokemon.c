@@ -98,6 +98,7 @@ EWRAM_DATA static u8 sTriedEvolving = 0;
 EWRAM_DATA u16 gFollowerSteps = 0;
 
 #include "data/abilities.h"
+#include "data/tutor_moves.h"
 
 // Used in an unreferenced function in RS.
 // Unreferenced here and in FRLG.
@@ -5808,7 +5809,6 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 {
-#if P_TUTOR_MOVES_ARRAY
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES, 0);
@@ -5847,9 +5847,6 @@ u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
         SortMovesAlphabetically(moves, numMoves);
 
     return numMoves;
-#else
-    return 0;
-#endif // P_TUTOR_MOVES_ARRAY
 }
 
 u8 GetNumberOfLevelUpMoves(struct Pokemon *mon)

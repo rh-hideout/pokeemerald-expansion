@@ -1,6 +1,7 @@
 BattleFrontier_Lounge7_MapScripts::
 	.byte 0
 
+@special ChooseMonForMoveTutor
 BattleFrontier_Lounge7_EventScript_LeftMoveTutor::
 	lock
 	faceplayer
