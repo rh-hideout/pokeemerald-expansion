@@ -1,0 +1,6 @@
+const u32 customWonderTradeItems[WT_NUM_CUSTOM_ITEMS] = {
+    ITEM_SITRUS_BERRY,
+    ITEM_ORAN_BERRY,
+    ITEM_BERRY_JUICE,
+    ITEM_LUM_BERRY
+};

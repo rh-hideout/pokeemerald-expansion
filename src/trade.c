@@ -43,6 +43,7 @@
 #include "union_room.h"
 #include "util.h"
 #include "window.h"
+#include "wonder_trade.h" // surpriseTrade
 #include "constants/contest.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -317,6 +318,7 @@ static void Task_AnimateWirelessSignal(u8);
 static void Task_OpenCenterWhiteColumn(u8);
 static void Task_CloseCenterWhiteColumn(u8);
 static void CB2_SaveAndEndWirelessTrade(void);
+static void Task_SurpriseTrade(u8 taskId); // surpriseTrade
 
 #include "data/trade.h"
 
@@ -3304,7 +3306,7 @@ static void BufferTradeSceneStrings(void)
 {
     u8 mpId;
     u8 name[POKEMON_NAME_BUFFER_SIZE];
-    const struct InGameTrade *ingameTrade;
+    //const struct InGameTrade *ingameTrade; //surpriseTrade
 
     if (sTradeAnim->isLinkTrade)
     {
@@ -3317,11 +3319,19 @@ static void BufferTradeSceneStrings(void)
     }
     else
     {
-        ingameTrade = &sIngameTrades[gSpecialVar_0x8004];
-        StringCopy(gStringVar1, ingameTrade->otName);
-        StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
+        //Start surpriseTrade
+        /*
+           ingameTrade = &sIngameTrades[gSpecialVar_0x8004];
+           StringCopy(gStringVar1, ingameTrade->otName);
+           StringCopy_Nickname(gStringVar3, ingameTrade->nickname);
+        */
+        GetMonData(&gEnemyParty[0], MON_DATA_OT_NAME, gStringVar1);
+        GetMonData(&gEnemyParty[0], MON_DATA_NICKNAME, name);
+        StringCopy_Nickname(gStringVar3, name);
+        //End surpriseTrade
         GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_NICKNAME, name);
         StringCopy_Nickname(gStringVar2, name);
+
     }
 }
 
@@ -4832,6 +4842,14 @@ void DoInGameTradeScene(void)
     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
 }
 
+void DoSurpriseTrade(void)
+{
+    LockPlayerFieldControls();
+    CreateTask(Task_SurpriseTrade, 10);
+    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+}
+
+
 static void Task_InGameTrade(u8 taskId)
 {
     if (!gPaletteFade.active)
@@ -4841,6 +4859,18 @@ static void Task_InGameTrade(u8 taskId)
         DestroyTask(taskId);
     }
 }
+
+// Start surprise_trade
+static void Task_SurpriseTrade(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        SetMainCallback2(CB2_InitInGameTrade);
+        gFieldCallback = ShowTradedMonReturnToStartMenu;
+        DestroyTask(taskId);
+    }
+}
+
 
 static void CheckPartnersMonForRibbons(void)
 {

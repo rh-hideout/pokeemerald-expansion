@@ -21,6 +21,7 @@ bool32 IsViableZMove(u32 battler, u32 move);
 bool32 TryChangeZTrigger(u32 battler, u32 moveIndex);
 u32 GetTypeBasedZMove(u32 move);
 u32 GetSignatureZMove(u32 move, u32 species, u32 item);
+u32 GetSpeciesZItem(u32 species);
 bool32 MoveSelectionDisplayZMove(u16 zmove, u32 battler);
 void SetZEffect(void);
 void AssignUsableZMoves(u32 battler, u16 *moves);

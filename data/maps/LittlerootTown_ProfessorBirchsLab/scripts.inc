@@ -282,7 +282,13 @@ LittlerootTown_ProfessorBirchsLab_EventScript_AideAlreadyMet::
 	end
 
 LittlerootTown_ProfessorBirchsLab_EventScript_AideReceivedStarter::
-	msgbox LittlerootTown_ProfessorBirchsLab_Text_BirchEnjoysRivalsHelpToo, MSGBOX_DEFAULT
+	special ChoosePartyMon
+	waitstate
+	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, LittlerootTown_ProfessorBirchsLab_EventScript_AideAlreadyMet
+	copyvar VAR_0x8005, VAR_0x8004
+	callnative CreateWonderTradePokemon
+	callnative DoSurpriseTrade
+	waitstate
 	release
 	end
 

@@ -567,3 +567,16 @@ u32 GetZMovePower(u32 move)
     else if (power >= 60)  return 120;
     else                   return 100;
 }
+
+u32 GetSpeciesZItem(u32 species) {
+
+    for (u32 i = 0; i < ARRAY_COUNT(sSignatureZMoves); ++i)
+    {
+        if (sSignatureZMoves[i].species == species) {
+            return sSignatureZMoves[i].item;
+        }
+    }
+
+    return ITEM_NONE;
+    
+}
