@@ -64,7 +64,7 @@ bool32 IsAiVsAiBattle(void)
 bool32 BattlerIsPlayer(u32 battlerId)
 {
     return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
-        || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);    
+        || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
     return (gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_PLAYER
          || gBattlerBattleController[battlerId] == BATTLE_CONTROLLER_RECORDED_PLAYER);
 }
@@ -108,10 +108,10 @@ bool32 BattlerHasAi(u32 battlerId)
     default:
         break;
     }
-    
+
     if (IsAiVsAiBattle())
         return TRUE;
-    
+
     return FALSE;
 }
 
@@ -464,58 +464,27 @@ static void SetBattlePartyIds(void)
             {
                 if (i < 2)
                 {
-                    if (IsOnPlayerSide(i))
+                    if (IsValidForBattle(&GetBattlerParty(i)[j]))
                     {
-                        if (IsValidForBattle(&gPlayerParty[j]))
-                        {
-                            gBattlerPartyIndexes[i] = j;
-                            break;
-                        }
-                    }
-                    else
-                    {
-                        if (IsValidForBattle(&gEnemyParty[j]))
-                        {
-                            gBattlerPartyIndexes[i] = j;
-                            break;
-                        }
+                        gBattlerPartyIndexes[i] = j;
+                        break;
                     }
                 }
                 else
                 {
-                    if (IsOnPlayerSide(i))
+                    if (gBattlerPartyIndexes[i - 2] == j)
                     {
-                        if (gBattlerPartyIndexes[i - 2] == j)
-                        {
-                            // Exclude already assigned pokemon;
-                        }
-                        else if (IsValidForBattle(&gPlayerParty[j]))
-                        {
-                            gBattlerPartyIndexes[i] = j;
-                            break;
-                        }
-                        else if (IsValidForBattleButDead(&gPlayerParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
-                        {
-                            // Put an "option" on a dead mon that can be revived;
-                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
-                        }
+                        // Exclude already assigned pokemon;
                     }
-                    else
+                    else if (IsValidForBattle(&GetBattlerParty(i)[j]))
                     {
-                        if (gBattlerPartyIndexes[i - 2] == j)
-                        {
-                            // Exclude already assigned pokemon;
-                        }
-                        else if (IsValidForBattle(&gEnemyParty[j]))
-                        {
-                            gBattlerPartyIndexes[i] = j;
-                            break;
-                        }
-                        else if (IsValidForBattleButDead(&gEnemyParty[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
-                        {
-                            // Put an "option" on a dead mon that can be revived;
-                            gBattlerPartyIndexes[i] = j + PARTY_SIZE;
-                        }
+                        gBattlerPartyIndexes[i] = j;
+                        break;
+                    }
+                    else if (IsValidForBattleButDead(&GetBattlerParty(i)[j]) && gBattlerPartyIndexes[i] < PARTY_SIZE)
+                    {
+                        // Put an "option" on a dead mon that can be revived;
+                        gBattlerPartyIndexes[i] = j + PARTY_SIZE;
                     }
 
                     if (gBattlerPartyIndexes[i] >= PARTY_SIZE)
@@ -2749,19 +2718,13 @@ void BtlController_HandlePlayFanfareOrBGM(u32 battler)
 
 void BtlController_HandleFaintingCry(u32 battler)
 {
-    struct Pokemon *party;
+    struct Pokemon *party = GetBattlerParty(battler);
     s8 pan;
 
     if (IsOnPlayerSide(battler))
-    {
-        party = gPlayerParty;
         pan = -25;
-    }
     else
-    {
-        party = gEnemyParty;
         pan = 25;
-    }
 
     PlayCry_ByMode(GetMonData(&party[gBattlerPartyIndexes[battler]], MON_DATA_SPECIES), pan, CRY_MODE_FAINT);
     BtlController_Complete(battler);
