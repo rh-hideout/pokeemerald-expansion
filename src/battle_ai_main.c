@@ -834,10 +834,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
     gAiThinkingStruct->aiLogicId = 0;
     gAiThinkingStruct->movesetIndex = 0;
     gAiLogicData->partnerMove = 0;   // no ally
-    DebugPrintf("   ");
-    DebugPrintf("   ");
-    DebugPrintf("   ");
-    DebugPrintf("choose move or action");
 
     while (flags != 0)
     {
@@ -856,7 +852,6 @@ static u32 ChooseMoveOrAction_Singles(u32 battler)
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
-        DebugPrintf("move %d score %d", i, gAiThinkingStruct->score[i]);
         gAiBattleData->finalScore[battler][opposingBattler][i] = gAiThinkingStruct->score[i];
     }
 
@@ -5746,6 +5741,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 ADJUST_SCORE(scoreIncrease);
             }
         break;
+    // TODO - also add fillet away and no retreat while i'm at it here?
     //case EFFECT_NO_RETREAT:       // TODO
         //break;
     //case EFFECT_SKY_DROP
