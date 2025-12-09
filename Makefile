@@ -273,7 +273,7 @@ MAKEFLAGS += --no-print-directory
 # Delete files that weren't built properly
 .DELETE_ON_ERROR:
 
-RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated
+RULES_NO_SCAN += libagbsyscall clean clean-assets tidy tidymodern tidycheck tidyrelease generated clean-generated clean-teachables clean-teachables_intermediates
 .PHONY: all rom agbcc modern compare check debug release
 .PHONY: $(RULES_NO_SCAN)
 
@@ -445,11 +445,19 @@ generated: $(AUTO_GEN_TARGETS)
 %.smol:     %      ; $(SMOL) -w $< $@
 %.rl:       %      ; $(GFX) $< $@
 
-clean-generated:
-	@rm -f $(AUTO_GEN_TARGETS)
-	@echo "rm -f <AUTO_GEN_TARGETS>"
+clean-teachables_intermediates:
+	rm -f $(DATA_SRC_SUBDIR)/tutor_moves.h
+	rm -f $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h
 	@rm -Rf $(LEARNSET_HELPERS_BUILD_DIR)
 	@echo "rm -Rf <LEARNSET_HELPERS_BUILD_DIR>"
+
+clean-generated: clean-teachables_intermediates
+	@rm -f $(AUTO_GEN_TARGETS)
+	@echo "rm -f <AUTO_GEN_TARGETS>"
+
+clean-teachables: clean-teachables_intermediates
+	rm -f $(ALL_LEARNABLES_JSON)
+	@touch $(C_SUBDIR)/pokemon.c
 
 $(C_BUILDDIR)/librfu_intr.o: CFLAGS := -mthumb-interwork -O2 -mabi=apcs-gnu -mtune=arm7tdmi -march=armv4t -fno-toplevel-reorder -Wno-pointer-to-int-cast
 $(C_BUILDDIR)/berry_crush.o: override CFLAGS += -Wno-address-of-packed-member
