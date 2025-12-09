@@ -1242,7 +1242,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
             return TRUE;
         break;
     case EFFECT_DREAM_EATER:
-        if (abilityDef == ABILITY_LIQUID_OOZE && GetGenConfig(GEN_DREAM_EATER_LIQUID_OOZE) >= GEN_5)
+        if (abilityDef == ABILITY_LIQUID_OOZE && GetConfig(DREAM_EATER_LIQUID_OOZE) >= GEN_5)
             return TRUE;
         break;
     default:
