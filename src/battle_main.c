@@ -3805,10 +3805,11 @@ static void TryDoEventsBeforeFirstTurn(void)
             return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
-        while (AnyStartingStatusActive())
+        while (TRUE)
         {
             if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
                 return;
+            break;
         }
         gBattleStruct->eventState.beforeFristTurn++;
         break;

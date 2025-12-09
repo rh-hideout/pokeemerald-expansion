@@ -11361,14 +11361,6 @@ bool32 IsMimikyuDisguised(u32 battler)
         || gBattleMons[battler].species == SPECIES_MIMIKYU_TOTEM_DISGUISED;
 }
 
-#define UNPACK_STARTING_STATUS_GET_ANY(_enum, _fieldName, ...) if (gStartingStatuses._fieldName) return TRUE;
-
-bool32 AnyStartingStatusActive(void)
-{
-    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_GET_ANY);
-    return FALSE;
-}
-
 #define UNPACK_STARTING_STATUS_TO_EWRAM(_enum, _fieldName, ...) case _enum: gStartingStatuses._fieldName = TRUE; break;
 
 void SetStartingStatus(enum StartingStatus status)
