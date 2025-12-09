@@ -109,7 +109,7 @@ SINGLE_BATTLE_TEST("Focus Punch's initial message is not shown if the user selec
 DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when used by selecting a different move and being Encored (Gen 3-4)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_3);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_3);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
@@ -138,7 +138,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when used by selectin
 DOUBLE_BATTLE_TEST("Focus Punch will NOT lose focus if damaged when used by selecting a different move and being Encored (Gen 5+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_7);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_7);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }
@@ -167,7 +167,7 @@ DOUBLE_BATTLE_TEST("Focus Punch will NOT lose focus if damaged when used by sele
 DOUBLE_BATTLE_TEST("Focus Punch will lose focus if damaged when encored into a different move and selected Focus Punch (Gen 5-6)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_FOCUS_PUNCH_FAILURE, GEN_5);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         PLAYER(SPECIES_WOBBUFFET) { Speed(1); }
         PLAYER(SPECIES_WOBBUFFET) { Speed(2); }

@@ -173,7 +173,7 @@ bool32 DoSwitchInEvents(void)
 
 static bool32 CanBattlerBeHealed(u32 battler)
 {
-    if (GetGenConfig(GEN_CONFIG_HEALING_WISH_SWITCH) < GEN_8)
+    if (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8)
         return TRUE;
 
     if (gBattleMons[battler].hp != gBattleMons[battler].maxHP || gBattleMons[battler].status1)

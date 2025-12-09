@@ -16,7 +16,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_ATTACK boost Attack", s16 dmg)
             FlagSet(B_FLAG_BADGE_BOOST_ATTACK);
         else
             FlagClear(B_FLAG_BADGE_BOOST_ATTACK);
-        WITH_CONFIG(GEN_CONFIG_BADGE_BOOST, genConfig);
+        WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
         PLAYER(SPECIES_WOBBUFFET) {}
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -48,7 +48,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPATK boost Special Attack", s
             FlagSet(B_FLAG_BADGE_BOOST_SPATK);
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPATK);
-        WITH_CONFIG(GEN_CONFIG_BADGE_BOOST, genConfig);
+        WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
         PLAYER(SPECIES_WOBBUFFET) {}
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -81,7 +81,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_DEFENSE boost Defense", s16 dm
             FlagSet(B_FLAG_BADGE_BOOST_DEFENSE);
         else
             FlagClear(B_FLAG_BADGE_BOOST_DEFENSE);
-        WITH_CONFIG(GEN_CONFIG_BADGE_BOOST, genConfig);
+        WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
         PLAYER(SPECIES_WOBBUFFET) {}
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -114,7 +114,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPDEF boost Special Defense", 
             FlagSet(B_FLAG_BADGE_BOOST_SPDEF);
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPDEF);
-        WITH_CONFIG(GEN_CONFIG_BADGE_BOOST, genConfig);
+        WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
         PLAYER(SPECIES_WOBBUFFET) {}
         OPPONENT(SPECIES_WOBBUFFET) {}
     } WHEN {
@@ -146,7 +146,7 @@ WILD_BATTLE_TEST("Badge boost: B_FLAG_BADGE_BOOST_SPEED boost Speed", s16 dmg)
             FlagSet(B_FLAG_BADGE_BOOST_SPEED);
         else
             FlagClear(B_FLAG_BADGE_BOOST_SPEED);
-        WITH_CONFIG(GEN_CONFIG_BADGE_BOOST, genConfig);
+        WITH_CONFIG(CONFIG_BADGE_BOOST, genConfig);
         PLAYER(SPECIES_WOBBUFFET) { Speed(100); HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(101); HP(1); }
     } WHEN {

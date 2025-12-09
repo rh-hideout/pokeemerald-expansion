@@ -1663,6 +1663,38 @@ static void fprint_constant(FILE *f, const char *prefix, struct String s)
     }
 }
 
+static void fprint_symbol(FILE *f, struct String s)
+{
+    if (s.string_n > 0)
+    {
+        bool upper = false;
+        for (int i = 0; i < s.string_n; i++)
+        {
+            unsigned char c = s.string[i];
+            if ('A' <= c && c <= 'Z')
+            {
+                if (upper)
+                {
+                    fputc(c, f);
+                    upper = false;
+                    continue;
+                }
+                fputc(c + 'a' - 'A', f);
+            }
+            else if ('a' <= c && c <= 'z')
+                fputc(c, f);
+            else if (c == '\'')
+                ;
+            else
+                upper = true;
+        }
+    }
+    else
+    {
+        fprintf(f, "NONE");
+    }
+}
+
 // This is a really stupid helper for 'fprint_species'.
 static bool is_utf8_character(struct String s, int *i, const unsigned char *utf8)
 {
@@ -1858,14 +1890,14 @@ static void fprint_trainers(const char *output_path, FILE *f, struct Parsed *par
         if (trainer->starting_status_n > 0)
         {
             fprintf(f, "#line %d\n", trainer->starting_status_line);
-            fprintf(f, "        .startingStatus = ");
+            fprintf(f, "        .startingStatus = { ");
             for (int i = 0; i < trainer->starting_status_n; i++)
             {
-                if (i > 0)
-                    fprintf(f, " | ");
-                fprint_constant(f, "STARTING_STATUS", trainer->starting_status[i]);
+                fprintf(f, ".");
+                fprint_symbol(f, trainer->starting_status[i]);
+                fprintf(f, " = TRUE, ");
             }
-            fprintf(f, ",\n");
+            fprintf(f, "},\n");
         }
 
         if (!is_empty_string(trainer->pool_rules))
