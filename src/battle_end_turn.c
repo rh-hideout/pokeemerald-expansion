@@ -879,12 +879,12 @@ static bool32 HandleEndTurnYawn(u32 battler)
         {
             gEffectBattler = gBattlerTarget = battler;
             enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-            if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (IsElectricTerrainAffected(battler, ability, holdEffect, gFieldStatuses))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_MISTY_TERRAIN))
+            else if (IsMistyTerrainAffected(battler, ability, holdEffect, gFieldStatuses))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);

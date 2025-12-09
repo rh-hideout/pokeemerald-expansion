@@ -41,7 +41,7 @@ static u32 AI_GetMoldBreakerSanitizedAbility(u32 battlerAtk, enum Ability abilit
 static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
 {
     u32 numOfTargets = 0;
-    u32 moveTargetType = GetBattlerMoveTargetType(battlerAtk, move);
+    u32 moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
     if (!IsSpreadMove(moveTargetType))
         return FALSE;
@@ -67,6 +67,19 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
 bool32 AI_IsBattlerGrounded(u32 battler)
 {
     return IsBattlerGrounded(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler]);
+}
+
+u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move)
+{
+    enum BattleMoveEffects effect = GetMoveEffect(move);
+    if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
+        return MOVE_TARGET_USER;
+    if (effect == EFFECT_EXPANDING_FORCE && IsPsychicTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses))
+        return MOVE_TARGET_BOTH;
+    if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
+        return MOVE_TARGET_BOTH;
+
+    return GetMoveTarget(move);
 }
 
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData)
@@ -208,7 +221,7 @@ u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicDa
         if (GetMovePower(aiData->predictedMove[opposingBattler]) != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
             return aiData->predictedMove[opposingBattler];
     }
-        
+
     return MOVE_NONE;
 }
 
@@ -594,7 +607,7 @@ struct SimulatedDamage AI_CalcDamageSaveBattlers(u32 move, u32 battlerAtk, u32 b
     SaveBattlerData(battlerDef);
     SetBattlerData(battlerAtk);
     SetBattlerData(battlerDef);
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather());
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, typeEffectiveness, considerGimmickAtk, considerGimmickDef, AI_GetWeather(), gFieldStatuses);
     RestoreBattlerData(battlerAtk);
     RestoreBattlerData(battlerDef);
     return dmg;
@@ -894,7 +907,7 @@ static s32 AI_ApplyModifiersAfterDmgRoll(struct BattleContext *ctx, s32 dmg)
     return dmg;
 }
 
-struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather)
+struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, uq4_12_t *typeEffectiveness, enum AIConsiderGimmick considerGimmickAtk, enum AIConsiderGimmick considerGimmickDef, u32 weather, u32 fieldStatuses)
 {
     struct SimulatedDamage simDamage = {0};
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
@@ -935,6 +948,7 @@ struct SimulatedDamage AI_CalcDamage(u32 move, u32 battlerAtk, u32 battlerDef, u
     ctx.battlerDef = battlerDef;
     ctx.move = ctx.chosenMove = move;
     ctx.moveType = GetBattleMoveType(move);
+    ctx.fieldStatuses = fieldStatuses;
     ctx.randomFactor = FALSE;
     ctx.updateFlags = FALSE;
     ctx.weather = weather;
@@ -2759,7 +2773,7 @@ bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool
         if (ignoreStatus && IsBattleMoveStatus(moves[i]))
             continue;
         else if ((!IsBattleMoveStatus(moves[i]) && GetMoveAccuracy(moves[i]) == 0)
-              || GetBattlerMoveTargetType(battlerAtk, moves[i]) & (MOVE_TARGET_USER | MOVE_TARGET_OPPONENTS_FIELD))
+              || AI_GetBattlerMoveTargetType(battlerAtk, moves[i]) & (MOVE_TARGET_USER | MOVE_TARGET_OPPONENTS_FIELD))
             continue;
 
         if (gAiLogicData->moveAccuracy[battlerAtk][battlerDef][i] <= accCheck)
@@ -3775,7 +3789,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability a
 {
     if (gBattleMons[battlerDef].volatiles.confusionTurns > 0
      || (abilityDef == ABILITY_OWN_TEMPO && !DoesBattlerIgnoreAbilityChecks(battlerAtk, gAiLogicData->abilities[battlerAtk], move))
-     || IsBattlerTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], STATUS_FIELD_MISTY_TERRAIN)
+     || IsMistyTerrainAffected(battlerDef, abilityDef, gAiLogicData->holdEffects[battlerDef], gFieldStatuses)
      || gSideStatuses[GetBattlerSide(battlerDef)] & SIDE_STATUS_SAFEGUARD
      || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
         return FALSE;
@@ -3784,7 +3798,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability a
 
 bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (GetBattlerMoveTargetType(battlerAtk, move) == MOVE_TARGET_FOES_AND_ALLY
+    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == MOVE_TARGET_FOES_AND_ALLY
      && AI_CanBeConfused(battlerAtk, battlerDef, move, defAbility)
      && !AI_CanBeConfused(battlerAtk, BATTLE_PARTNER(battlerDef), move, gAiLogicData->abilities[BATTLE_PARTNER(battlerDef)]))
         return FALSE;
@@ -4619,7 +4633,7 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
 
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate));
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate), gFieldStatuses);
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
@@ -5268,7 +5282,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
 
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
-    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
+    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(AI_GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
         return FALSE;   // can't use z move twice
@@ -5472,14 +5486,14 @@ void DecideTerastal(u32 battler)
     for (int i = 0; i < MAX_MON_MOVES; i++)
     {
         if (!IsMoveUnusable(i, aiMoves[i], gAiLogicData->moveLimitations[battler]) && !IsBattleMoveStatus(aiMoves[i]))
-            altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather());
+            altCalcs.dealtWithoutTera[i] = AI_CalcDamage(aiMoves[i], battler, opposingBattler, &effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetWeather(), gFieldStatuses);
         else
             altCalcs.dealtWithoutTera[i] = noDmg;
 
 
         if (!IsMoveUnusable(i, oppMoves[i], gAiLogicData->moveLimitations[opposingBattler]) && !IsBattleMoveStatus(oppMoves[i]))
         {
-            altCalcs.takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather());
+            altCalcs.takenWithTera[i] = AI_CalcDamage(oppMoves[i], opposingBattler, battler, &effectiveness, USE_GIMMICK, USE_GIMMICK, AI_GetWeather(), gFieldStatuses);
             effectivenessTakenWithTera[i] = effectiveness;
         }
         else
