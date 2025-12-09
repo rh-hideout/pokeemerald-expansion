@@ -1342,7 +1342,7 @@ u32 GetNoOfHitsToKOBattler(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum D
     u32 hitsToKO = GetNoOfHitsToKOBattlerDmg(AI_GetDamage(battlerAtk, battlerDef, moveIndex, calcContext, gAiLogicData), battlerDef);
     u16 *moves = GetMovesArray(battlerAtk);
 
-    if (CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]) && hitsToKO != 0)
+    if (CanEndureHit(battlerAtk, battlerDef, moves[moveIndex]) && hitsToKO == 1)
         hitsToKO += 1;
 
     return hitsToKO;
