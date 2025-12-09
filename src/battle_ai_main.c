@@ -4978,10 +4978,19 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             || (bestMoveIsPhysical
                 && aiData->abilities[battlerAtk] == ABILITY_ICE_FACE 
                 && gBattleMons[battlerAtk].species != SPECIES_EISCUE_NOICE) // ice face will absorb the hit, safe to belly drum
-        )
-        && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
-        && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+         )
+         && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
+         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
             ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_MAX));
+        break;
+    case EFFECT_FILLET_AWAY:
+        if ((GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((50 * gBattleMons[battlerAtk].maxHP) / 100)) 
+         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+        {
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK));
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK));
+            ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED));
+        }
         break;
     case EFFECT_PSYCH_UP:
         score += AI_ShouldCopyStatChanges(battlerAtk, battlerDef);
