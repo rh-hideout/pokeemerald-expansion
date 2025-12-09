@@ -39,6 +39,7 @@
 #include "window.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
+#include "constants/party_menu.h"
 #include "constants/moves.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
@@ -2682,17 +2683,14 @@ static void Task_OnSelectedMon(u8 taskId)
             PlaySE(SE_SELECT);
             if (sInPartyMenu)
             {
-                gSpecialVar_Result = GetBoxMonData(&gPlayerParty[sCursorPosition].box, MON_DATA_SPECIES);
-                gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[sCursorPosition]);
+                gSpecialVar_0x8004 = sCursorPosition;
             }
             else
             {
-                gSpecialVar_Result = GetBoxMonDataAt(StorageGetCurrentBox(), sCursorPosition, MON_DATA_SPECIES);
+                gSpecialVar_0x8004 = PC_MON_CHOSEN;
+                gSpecialVar_MonBoxPos = sCursorPosition;
                 gSpecialVar_MonBoxId = StorageGetCurrentBox();
-                gSpecialVar_0x8005 = GetNumberOfRelearnableMoves(&gPlayerParty[0]);
             }
-            gSpecialVar_MonBoxPos = sCursorPosition;
-            gSpecialVar_0x8004 = sCursorPosition;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
             break;
@@ -3652,7 +3650,7 @@ static void Task_OnCloseBoxPressed(u8 taskId)
             UpdateBoxToSendMons();
             gPlayerPartyCount = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
-                gSpecialVar_0x8004 = 0xFF;
+                gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
         }
@@ -3727,7 +3725,7 @@ static void Task_OnBPressed(u8 taskId)
             UpdateBoxToSendMons();
             gPlayerPartyCount = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
-                gSpecialVar_0x8004  = 0xFF;
+                gSpecialVar_0x8004  = PARTY_NOTHING_CHOSEN;
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
         }
@@ -10111,9 +10109,27 @@ void UpdateSpeciesSpritePSS(struct BoxPokemon *boxMon)
     sJustOpenedBag = FALSE;
 }
 
+static void Task_ChooseBoxMon(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        CleanupOverworldWindowsAndTilemaps();
+        EnterPokeStorage(OPTION_SELECT_MON);
+        DestroyTask(taskId);
+    }
+}
+
 // Used as a script special for showing a box mon to various npcs (e.g. in-game trades, move deleter)
 void ChooseBoxMon(void)
 {
-    gSpecialVar_MonBoxId = 0xFF;
-    EnterPokeStorage(OPTION_SELECT_MON);
+    LockPlayerFieldControls();
+    FadeScreen(FADE_TO_BLACK, 0);
+    CreateTask(Task_ChooseBoxMon, 10);
+}
+
+void RemoveSelectedPcMon(struct Pokemon *mon)
+{
+    struct BoxPokemon *boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    BoxMonToMon(boxmon, mon);
+    ZeroBoxMonData(boxmon);
 }

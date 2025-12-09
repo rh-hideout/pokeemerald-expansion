@@ -2620,6 +2620,22 @@
 	.byte \facility
 	.endm
 	
+	.macro ingame_trade tradeId:req wantTradeMsg:req, declineTradeMsg:req, wrongMonMsg:req, tradeCompleteMsg:req
+	setvar VAR_0x8005, \tradeId
+	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
+	msgbox \wantTradeMsg, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, NO, \declineTradeMsg
+	special ChooseBoxMon
+	waitstate
+	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, \declineTradeMsg
+	specialvar VAR_0x800B, GetTradeSpecies
+	goto_if_ne VAR_0x800B, VAR_0x8009, \wrongMonMsg
+	special CreateInGameTradePokemon
+	special DoInGameTradeScene
+	waitstate
+	msgbox \tradeCompleteMsg, MSGBOX_DEFAULT
+	.endm
+
 @ Follower NPCs
 
 	@ Sets an existing NPC up to follow the player.

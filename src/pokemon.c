@@ -64,6 +64,7 @@
 #include "constants/items.h"
 #include "constants/layouts.h"
 #include "constants/moves.h"
+#include "constants/party_menu.h"
 #include "constants/regions.h"
 #include "constants/songs.h"
 #include "constants/trainers.h"
@@ -7500,4 +7501,14 @@ bool32 IsSpeciesOfType(u32 species, enum Type type)
      || gSpeciesInfo[species].types[1] == type)
         return TRUE;
     return FALSE;
+}
+
+struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void)
+{
+    struct BoxPokemon *boxmon;
+    if (gSpecialVar_0x8004 == PC_MON_CHOSEN)
+        boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    else
+        boxmon = &(gPlayerParty[gSpecialVar_0x8004].box);
+    return boxmon;
 }

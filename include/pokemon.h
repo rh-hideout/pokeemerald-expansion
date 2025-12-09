@@ -919,5 +919,6 @@ struct Pokemon *GetSavedPlayerPartyMon(u32 index);
 u8 *GetSavedPlayerPartyCount(void);
 void SavePlayerPartyMon(u32 index, struct Pokemon *mon);
 bool32 IsSpeciesOfType(u32 species, enum Type type);
+struct BoxPokemon *GetSelectedBoxMonFromPcOrParty(void);
 
 #endif // GUARD_POKEMON_H
