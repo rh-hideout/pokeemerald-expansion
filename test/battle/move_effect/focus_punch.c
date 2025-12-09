@@ -161,7 +161,7 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+
     }
 }
 
-SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash or Sturdy blocks prevents getting one-shot")
+SINGLE_BATTLE_TEST("Focus Punch does not activate when Focus Band/Focus Sash/Sturdy prevent getting one-shot by an attack")
 {
     u32 item, ability;
     PARAMETRIZE { item = ITEM_NONE; ability = ABILITY_STURDY; }
