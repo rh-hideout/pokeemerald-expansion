@@ -5752,7 +5752,6 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
                 ADJUST_SCORE(scoreIncrease);
             }
         break;
-    // TODO - also add fillet away and no retreat while i'm at it here?
     //case EFFECT_NO_RETREAT:       // TODO
         //break;
     //case EFFECT_SKY_DROP
