@@ -636,6 +636,8 @@ static void AnimTask_BlendColorCycleExcludeLoop(u8 taskId)
 // See AnimTask_BlendColorCycle. Same, but selects palette by ANIM_TAG_*
 void AnimTask_BlendColorCycleByTag(u8 taskId)
 {
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+        return;
     gTasks[taskId].tPalTag = gBattleAnimArgs[0];
     gTasks[taskId].tDelay = gBattleAnimArgs[1];
     gTasks[taskId].tNumBlends = gBattleAnimArgs[2];
@@ -708,6 +710,10 @@ static void AnimTask_BlendColorCycleByTagLoop(u8 taskId)
 // Flashes the specified anim tag with given color. Used e.g. to flash the particles red in Hyper Beam
 void AnimTask_FlashAnimTagWithColor(u8 taskId)
 {
+    //  This function probably doesn't need to load a the target palette, but it doesn't hurt to check
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+        return;
+
     u8 paletteIndex;
 
     gTasks[taskId].data[0] = gBattleAnimArgs[1];

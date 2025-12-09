@@ -1609,6 +1609,12 @@ void AnimTask_WaterSport(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    if (!TryLoadGfx(gSmallWaterOrbSpriteTemplate.tileTag))
+        return;
+
+    if (!TryLoadPal(gSmallWaterOrbSpriteTemplate.paletteTag))
+        return;
+
     task->data[3] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     task->data[4] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
     task->data[7] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;

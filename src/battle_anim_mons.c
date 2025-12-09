@@ -1732,6 +1732,9 @@ static void AnimTask_BlendMonInAndOut_Step(u8 taskId)
 // arg 4: number of times to blend in and out
 void AnimTask_BlendPalInAndOutByTag(u8 task)
 {
+    //  This function probably doesn't need to load a the target palette, but it doesn't hurt to check
+    if (!TryLoadPal(gBattleAnimArgs[0]))
+        return;
     u8 palette = IndexOfSpritePaletteTag(gBattleAnimArgs[0]);
 
     if (palette == 0xff)

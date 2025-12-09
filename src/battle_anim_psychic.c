@@ -502,6 +502,11 @@ static void AnimateZenHeadbutt(struct Sprite *sprite)
 // For the rectangular wall sprite used by Reflect, Mirror Coat, etc
 static void AnimDefensiveWall(struct Sprite *sprite)
 {
+
+    //  It's possible for this anim tag to be different from the already loaded tag
+    if (!TryLoadPal(gBattleAnimArgs[2]))
+        return;
+
     u8 isContest = IsContest();
 
     if (IsOnPlayerSide(gBattleAnimAttacker) || isContest)
