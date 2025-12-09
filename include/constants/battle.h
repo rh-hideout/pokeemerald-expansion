@@ -269,13 +269,13 @@ enum SemiInvulnerableExclusion
 #define HITMARKER_UNUSED_16             (1 << 16)
 #define HITMARKER_DISABLE_ANIMATION     (1 << 17)   // disable animations during battle scripts, e.g. for Bug Bite
 #define HITMARKER_UNUSED_18             (1 << 18)
-#define HITMARKER_UNABLE_TO_USE_MOVE    (1 << 19)
+#define HITMARKER_UNUSED_19             (1 << 19)
 #define HITMARKER_UNUSED_20             (1 << 20)
 #define HITMARKER_UNUSED_21             (1 << 21)
 #define HITMARKER_PLAYER_FAINTED        (1 << 22)
 #define HITMARKER_UNUSED_23             (1 << 23)
 #define HITMARKER_UNUSED_24             (1 << 24)
-#define HITMARKER_OBEYS                 (1 << 25)
+#define HITMARKER_UNUSED_25             (1 << 25)
 #define HITMARKER_UNUSED_26             (1 << 26)
 #define HITMARKER_UNUSED_27             (1 << 27)
 #define HITMARKER_FAINTED(battler)      (1u << (battler + 28)) // Also uses bits 29, 30 and 31
@@ -377,11 +377,11 @@ enum BattleWeather
 #define B_WEATHER_FOG           (1 << BATTLE_WEATHER_FOG)
 #define B_WEATHER_STRONG_WINDS  (1 << BATTLE_WEATHER_STRONG_WINDS)
 
-#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_HAIL | B_WEATHER_STRONG_WINDS | B_WEATHER_SNOW | B_WEATHER_FOG)
 #define B_WEATHER_DAMAGING_ANY  (B_WEATHER_HAIL | B_WEATHER_SANDSTORM)
 #define B_WEATHER_ICY_ANY       (B_WEATHER_HAIL | B_WEATHER_SNOW)
 #define B_WEATHER_LOW_LIGHT     (B_WEATHER_FOG | B_WEATHER_ICY_ANY | B_WEATHER_RAIN | B_WEATHER_SANDSTORM)
 #define B_WEATHER_PRIMAL_ANY    (B_WEATHER_RAIN_PRIMAL | B_WEATHER_SUN_PRIMAL | B_WEATHER_STRONG_WINDS)
+#define B_WEATHER_ANY           (B_WEATHER_RAIN | B_WEATHER_SANDSTORM | B_WEATHER_SUN | B_WEATHER_ICY_ANY | B_WEATHER_STRONG_WINDS | B_WEATHER_FOG)
 
 // Explicit numbers until frostbite because those shouldn't be shifted
 enum __attribute__((packed)) MoveEffect
@@ -419,6 +419,7 @@ enum __attribute__((packed)) MoveEffect
     MOVE_EFFECT_RAGE,
     MOVE_EFFECT_PREVENT_ESCAPE,
     MOVE_EFFECT_NIGHTMARE,
+    MOVE_EFFECT_GLAIVE_RUSH,
     MOVE_EFFECT_ALL_STATS_UP,
     MOVE_EFFECT_REMOVE_STATUS,
     MOVE_EFFECT_ATK_DEF_DOWN,
@@ -669,26 +670,45 @@ enum FaintedActions
     FAINTED_ACTIONS_MAX_CASE,
 };
 
-// Constants for B_VAR_STARTING_STATUS
-// Timer value controlled by B_VAR_STARTING_STATUS_TIMER
+//  Enum,                                         fieldName,           Type, max value
+#define STARTING_STATUS_DEFINITIONS(F) \
+    F(STARTING_STATUS_ELECTRIC_TERRAIN,               electricTerrain,            (u32, 1)) /* Electric Terrain (Permanent) */             \
+    F(STARTING_STATUS_ELECTRIC_TERRAIN_TEMPORARY,     electricTerrainTemporary,   (u32, 1)) /* Electric Terrain Temporary (5 turns) */     \
+    F(STARTING_STATUS_MISTY_TERRAIN,                  mistyTerrain,               (u32, 1)) /* Misty Terrain (Permanent) */                \
+    F(STARTING_STATUS_MISTY_TERRAIN_TEMPORARY,        mistyTerrainTemporary,      (u32, 1)) /* Misty Terrain Temporary (5 turns) */        \
+    F(STARTING_STATUS_GRASSY_TERRAIN,                 grassyTerrain,              (u32, 1)) /* Grassy Terrain (Permanent) */               \
+    F(STARTING_STATUS_GRASSY_TERRAIN_TEMPORARY,       grassyTerrainTemporary,     (u32, 1)) /* Grassy Terrain Temporary (5 turns) */       \
+    F(STARTING_STATUS_PSYCHIC_TERRAIN,                psychicTerrain,             (u32, 1)) /* Psychic Terrain (Permanent) */              \
+    F(STARTING_STATUS_PSYCHIC_TERRAIN_TEMPORARY,      psychicTerrainTemporary,    (u32, 1)) /* Psychic Terrain Temporary (5 turns) */      \
+    F(STARTING_STATUS_TRICK_ROOM,                     trickRoom,                  (u32, 1)) /* Trick Room (Permanent) */                   \
+    F(STARTING_STATUS_TRICK_ROOM_TEMPORARY,           trickRoomTemporary,         (u32, 1)) /* Trick Room Temporary (5 turns) */           \
+    F(STARTING_STATUS_MAGIC_ROOM,                     magicRoom,                  (u32, 1)) /* Magic Room (Permanent) */                   \
+    F(STARTING_STATUS_MAGIC_ROOM_TEMPORARY,           magicRoomTemporary,         (u32, 1)) /* Magic Room Temporary (5 turns) */           \
+    F(STARTING_STATUS_WONDER_ROOM,                    wonderRoom,                 (u32, 1)) /* Wonder Room (Permanent) */                  \
+    F(STARTING_STATUS_WONDER_ROOM_TEMPORARY,          wonderRoomTemporary,        (u32, 1)) /* Wonder Room Temporary (5 turns) */          \
+    F(STARTING_STATUS_TAILWIND_PLAYER,                tailwindPlayer,             (u32, 1)) /* Tailwind Player (Permanent) */              \
+    F(STARTING_STATUS_TAILWIND_PLAYER_TEMPORARY,      tailwindPlayerTemporary,    (u32, 1)) /* Tailwind Player Temporary (4/3 turns) */    \
+    F(STARTING_STATUS_TAILWIND_OPPONENT,              tailwindOpponent,           (u32, 1)) /* Tailwind Opponent (Permanent) */            \
+    F(STARTING_STATUS_TAILWIND_OPPONENT_TEMPORARY,    tailwindOpponentTemporary,  (u32, 1)) /* Tailwind Opponent Temporary (4/3 turns) */  \
+    F(STARTING_STATUS_RAINBOW_PLAYER,                 rainbowPlayer,              (u32, 1)) /* Rainbow Player (Permanent) */               \
+    F(STARTING_STATUS_RAINBOW_PLAYER_TEMPORARY,       rainbowPlayerTemporary,     (u32, 1)) /* Rainbow Player Temporary (4 turns) */       \
+    F(STARTING_STATUS_RAINBOW_OPPONENT,               rainbowOpponent,            (u32, 1)) /* Rainbow Opponent (Permanent) */             \
+    F(STARTING_STATUS_RAINBOW_OPPONENT_TEMPORARY,     rainbowOpponentTemporary,   (u32, 1)) /* Rainbow Opponent Temporary (4 turns) */     \
+    F(STARTING_STATUS_SEA_OF_FIRE_PLAYER,             seaOfFirePlayer,            (u32, 1)) /* Sea Of Fire Player (Permanent) */           \
+    F(STARTING_STATUS_SEA_OF_FIRE_PLAYER_TEMPORARY,   seaOfFirePlayerTemporary,   (u32, 1)) /* Sea Of Fire Player Temporary (4 turns) */   \
+    F(STARTING_STATUS_SEA_OF_FIRE_OPPONENT,           seaOfFireOpponent,          (u32, 1)) /* Sea Of Fire Opponent (Permanent) */         \
+    F(STARTING_STATUS_SEA_OF_FIRE_OPPONENT_TEMPORARY, seaOfFireOpponentTemporary, (u32, 1)) /* Sea Of Fire Opponent Temporary (4 turns) */ \
+    F(STARTING_STATUS_SWAMP_PLAYER,                   swampPlayer,                (u32, 1)) /* Swamp Player (Permanent) */                 \
+    F(STARTING_STATUS_SWAMP_PLAYER_TEMPORARY,         swampPlayerTemporary,       (u32, 1)) /* Swamp Player Temporary (4 turns) */         \
+    F(STARTING_STATUS_SWAMP_OPPONENT,                 swampOpponent,              (u32, 1)) /* Swamp Opponent (Permanent) */               \
+    F(STARTING_STATUS_SWAMP_OPPONENT_TEMPORARY,       swampOpponentTemporary,     (u32, 1)) /* Swamp Opponent Temporary (4 turns) */       \
+
+#define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
+
+// Constants for SetStartingStatus
 enum StartingStatus
 {
-    STARTING_STATUS_NONE,
-    STARTING_STATUS_ELECTRIC_TERRAIN,
-    STARTING_STATUS_MISTY_TERRAIN,
-    STARTING_STATUS_GRASSY_TERRAIN,
-    STARTING_STATUS_PSYCHIC_TERRAIN,
-    STARTING_STATUS_TRICK_ROOM,
-    STARTING_STATUS_MAGIC_ROOM,
-    STARTING_STATUS_WONDER_ROOM,
-    STARTING_STATUS_TAILWIND_PLAYER,
-    STARTING_STATUS_TAILWIND_OPPONENT,
-    STARTING_STATUS_RAINBOW_PLAYER,
-    STARTING_STATUS_RAINBOW_OPPONENT,
-    STARTING_STATUS_SEA_OF_FIRE_PLAYER,
-    STARTING_STATUS_SEA_OF_FIRE_OPPONENT,
-    STARTING_STATUS_SWAMP_PLAYER,
-    STARTING_STATUS_SWAMP_OPPONENT,
+    STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_ENUMS)
 };
 
 enum SlideMsgStates

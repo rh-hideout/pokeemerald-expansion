@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_anim.h"
+#include "battle_controllers.h"
 #include "battle_message.h"
 #include "main.h"
 #include "menu.h"
@@ -1453,12 +1454,12 @@ static void PrintSecondaryEntries(struct BattleDebugMenu *data)
 
     printer.windowId = data->secondaryListWindowId;
     printer.fontId = 1;
-    printer.unk = 0;
     printer.letterSpacing = 0;
     printer.lineSpacing = 1;
-    printer.fgColor = 2;
-    printer.bgColor = 1;
-    printer.shadowColor = 3;
+    printer.color.accent = 1;
+    printer.color.foreground = 2;
+    printer.color.background = 1;
+    printer.color.shadow = 3;
     printer.x = sSecondaryListTemplate.item_X;
     printer.currentX = sSecondaryListTemplate.item_X;
     printer.currentChar = text;
@@ -2199,10 +2200,8 @@ static const u8 *const sHoldEffectNames[HOLD_EFFECT_COUNT] =
     [HOLD_EFFECT_LUCKY_EGG]        = COMPOUND_STRING("Lucky Egg"),
     [HOLD_EFFECT_SCOPE_LENS]       = COMPOUND_STRING("Scope Lens"),
     [HOLD_EFFECT_LEFTOVERS]        = COMPOUND_STRING("Leftovers"),
-    [HOLD_EFFECT_DRAGON_SCALE]     = COMPOUND_STRING("Dragon Scale"),
     [HOLD_EFFECT_LIGHT_BALL]       = COMPOUND_STRING("Light Ball"),
     [HOLD_EFFECT_TYPE_POWER]       = COMPOUND_STRING("Type Power"),
-    [HOLD_EFFECT_UPGRADE]          = COMPOUND_STRING("Upgrade"),
     [HOLD_EFFECT_SHELL_BELL]       = COMPOUND_STRING("Shell Bell"),
     [HOLD_EFFECT_LUCKY_PUNCH]      = COMPOUND_STRING("Lucky Punch"),
     [HOLD_EFFECT_METAL_POWDER]     = COMPOUND_STRING("Metal Powder"),

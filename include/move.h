@@ -79,6 +79,7 @@ struct MoveInfo
     // end of word
     s32 priority:4;
     u32 strikeCount:4; // Max 15 hits. Defaults to 1 if not set. May apply its effect on each hit.
+    u32 multiHit:1; // Takes presendance over strikeCount
     u32 criticalHitStage:2;
     bool32 alwaysCriticalHit:1;
     u32 numAdditionalEffects:3; // limited to 7
@@ -100,8 +101,8 @@ struct MoveInfo
     bool32 healingMove:1;
     bool32 minimizeDoubleDamage:1;
     bool32 ignoresTargetAbility:1;
-    bool32 ignoresTargetDefenseEvasionStages:1;
     // end of word
+    bool32 ignoresTargetDefenseEvasionStages:1;
     bool32 damagesUnderground:1;
     bool32 damagesUnderwater:1;
     bool32 damagesAirborne:1;
@@ -131,7 +132,7 @@ struct MoveInfo
     bool32 dampBanned:1;
     //Other
     bool32 validApprenticeMove:1;
-    u32 padding:5;
+    u32 padding:4;
     // end of word
 
     union {
@@ -139,6 +140,11 @@ struct MoveInfo
             u16 stringId;
             u16 status;
         } twoTurnAttack;
+        struct {
+            u16 species;
+            u16 power:9;
+            u16 numOfHits:7;
+        } speciesPowerOverride;
         u32 protectMethod;
         u32 status;
         u32 moveProperty;
@@ -241,6 +247,11 @@ static inline s32 GetMovePriority(u32 moveId)
 static inline u32 GetMoveStrikeCount(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].strikeCount;
+}
+
+static inline u32 IsMultiHitMove(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].multiHit;
 }
 
 static inline u32 GetMoveCriticalHitStage(u32 moveId)
@@ -496,6 +507,21 @@ static inline u32 GetMoveTwoTurnAttackStatus(u32 moveId)
 static inline u32 GetMoveTwoTurnAttackWeather(u32 moveId)
 {
     return gMovesInfo[SanitizeMoveId(moveId)].argument.twoTurnAttack.status;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_Species(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.species;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_Power(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.power;
+}
+
+static inline u32 GetMoveSpeciesPowerOverride_NumOfHits(u32 moveId)
+{
+    return gMovesInfo[SanitizeMoveId(moveId)].argument.speciesPowerOverride.numOfHits;
 }
 
 static inline enum ProtectMethod GetMoveProtectMethod(u32 moveId)

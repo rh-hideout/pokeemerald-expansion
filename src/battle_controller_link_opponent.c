@@ -10,6 +10,7 @@
 #include "battle_tv.h"
 #include "bg.h"
 #include "data.h"
+#include "frontier_util.h"
 #include "link.h"
 #include "main.h"
 #include "m4a.h"
@@ -100,6 +101,7 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
 
 void SetControllerToLinkOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_LINK_OPPONENT;
     gBattlerControllerEndFuncs[battler] = LinkOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
 }

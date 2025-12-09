@@ -255,6 +255,8 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_TERA_ACTIVATE]          = gBattleAnimGeneral_TeraActivate,
     [B_ANIM_SIMPLE_HEAL]            = gBattleAnimGeneral_SimpleHeal,
     [B_ANIM_POWER_CONSTRUCT]        = gBattleAnimGeneral_PowerConstruct,
+    [B_ANIM_SWAP_TO_SUBSTITUTE]     = gBattleAnimGeneral_SwapToSubstitute,
+    [B_ANIM_SWAP_FROM_SUBSTITUTE]   = gBattleAnimGeneral_SwapFromSubstitute,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =

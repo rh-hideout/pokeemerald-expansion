@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
@@ -9,7 +10,7 @@
 #include "battle_message.h"
 #include "battle_interface.h"
 #include "battle_setup.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "battle_tv.h"
 #include "battle_z_move.h"
 #include "bg.h"
@@ -113,6 +114,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
 
 void SetControllerToOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_OPPONENT;
     gBattlerControllerEndFuncs[battler] = OpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
 }
@@ -536,7 +538,10 @@ static void OpponentHandleChoosePokemon(u32 battler)
     // Choosing Revival Blessing target
     if (gBattleResources->bufferA[battler][1] == PARTY_ACTION_CHOOSE_FAINTED_MON)
     {
-        chosenMonId = gSelectedMonPartyId = GetFirstFaintedPartyIndex(battler);
+        chosenMonId = AI_SelectRevivalBlessingMon(battler);
+        if (chosenMonId == PARTY_SIZE)
+            chosenMonId = GetFirstFaintedPartyIndex(battler);
+        gSelectedMonPartyId = chosenMonId;
     }
     // Switching out
     else if (gBattleStruct->AI_monToSwitchIntoId[battler] == PARTY_SIZE)
