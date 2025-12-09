@@ -1484,7 +1484,7 @@ bool32 CanEndureHit(u32 battler, u32 battlerTarget, u32 move)
             return TRUE;
         if (IsMimikyuDisguised(battlerTarget))
             return TRUE;
-        if (gBattleMons[battlerTarget].ability == ABILITY_ICE_FACE
+        if (gAiLogicData->abilities[battlerTarget] == ABILITY_ICE_FACE
             && gBattleMons[battlerTarget].species == SPECIES_EISCUE_ICE && GetMoveCategory(move) == DAMAGE_CATEGORY_PHYSICAL)
             return TRUE;
     }
