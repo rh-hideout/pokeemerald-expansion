@@ -99,7 +99,6 @@ void CreateWonderTradePokemon(void)
 
     CalculateMonStats(&gEnemyParty[0]);
 
-    MgbaPrintf(MGBA_LOG_WARN, "Calc'd stats moves...");
     Free(name);
     MgbaPrintf(MGBA_LOG_WARN, "Done...");
 }
@@ -551,7 +550,6 @@ const u32 blockedHoldEffects[] =
     HOLD_EFFECT_SOUL_DEW,
     HOLD_EFFECT_DEEP_SEA_TOOTH,
     HOLD_EFFECT_DEEP_SEA_SCALE,
-    HOLD_EFFECT_DRAGON_SCALE,
     HOLD_EFFECT_LIGHT_BALL,
     HOLD_EFFECT_THICK_CLUB,
     HOLD_EFFECT_LEEK,
