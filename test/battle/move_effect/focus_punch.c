@@ -214,7 +214,7 @@ SINGLE_BATTLE_TEST("Focus Punch uses PP when losing focus (Gen 3-4)")
     PARAMETRIZE { move = MOVE_SCRATCH; activate = FALSE; }
     PARAMETRIZE { move = MOVE_LEER; activate = TRUE; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_3);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -239,7 +239,7 @@ SINGLE_BATTLE_TEST("Focus Punch doesn't use PP when losing focus (Gen 5+)")
     PARAMETRIZE { move = MOVE_SCRATCH; activate = FALSE; }
     PARAMETRIZE { move = MOVE_LEER; activate = TRUE; }
     GIVEN {
-        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_5);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -264,7 +264,7 @@ SINGLE_BATTLE_TEST("Focus Punch failing occurs after flinching (Gen 3-4)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH) == TRUE);
-        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_3);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_3);
         PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -282,7 +282,7 @@ SINGLE_BATTLE_TEST("Focus Punch failing occurs before flinching (Gen 5+)")
 {
     GIVEN {
         ASSUME(MoveHasAdditionalEffect(MOVE_FAKE_OUT, MOVE_EFFECT_FLINCH) == TRUE);
-        WITH_CONFIG(CONFIG_FOCUS_PUNCH_PP_USAGE, GEN_5);
+        WITH_CONFIG(CONFIG_FOCUS_PUNCH_FAILURE, GEN_5);
         PLAYER(SPECIES_WOBBUFFET) {MovesWithPP({MOVE_FOCUS_PUNCH, 1});};
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
