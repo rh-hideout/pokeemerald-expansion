@@ -1366,7 +1366,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         } // def partner ability checks
 
         // gen7+ dark type mons immune to priority->elevated moves from prankster
-        if (GetGenConfig(GEN_CONFIG_PRANKSTER_DARK_TYPES) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK)
+        if (GetConfig(CONFIG_PRANKSTER_DARK_TYPES) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK)
           && aiData->abilities[battlerAtk] == ABILITY_PRANKSTER && IsBattleMoveStatus(move)
           && !(moveTarget & (MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_USER)))
             RETURN_SCORE_MINUS(10);
@@ -1844,7 +1844,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SHEER_COLD:
-            if (GetGenConfig(GEN_CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
+            if (GetConfig(CONFIG_SHEER_COLD_IMMUNITY) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_ICE))
                 RETURN_SCORE_MINUS(20);
             // fallthrough
         case EFFECT_OHKO:
@@ -3154,7 +3154,7 @@ static s32 AI_TryToFaint(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             && AI_GetWhichBattlerFasterOrTies(battlerAtk, battlerDef, TRUE) != AI_IS_FASTER
             && GetBattleMovePriority(battlerAtk, gAiLogicData->abilities[battlerAtk], move) > 0)
     {
-        if (RandomPercentage(RNG_AI_PRIORITIZE_LAST_CHANCE, PRIORITIZE_LAST_CHANCE_CHANCE))
+        if (RandomPercentage(RNG_AI_PRIORITIZE_LAST_CHANCE, PRIORITIZE_LAST_CHANCE_CHANCE) && !IsDoubleBattle()) // Last Chance behaviour is too easily abused in doubles
             ADJUST_SCORE(SLOW_KILL + 2); // Don't outscore Fast Kill (which gets a bonus point in AI_CompareDamagingMoves), but do outscore Slow Kill getting the same
         else
             ADJUST_SCORE(LAST_CHANCE);
@@ -4157,7 +4157,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
                     case MOVE_NEUTRAL_COMPARISON:
                         break;
                     }
-                    switch (AI_WhichMoveBetter(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
+                    switch (CompareMoveEffects(moves[currId], moves[i], battlerAtk, battlerDef, noOfHits[currId]))
                     {
                     case MOVE_WON_COMPARISON:
                         tempMoveScores[currId] += MathUtil_Exponent(MAX_MON_MOVES, PRIORITY_EFFECT);
@@ -6014,7 +6014,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                     ADJUST_SCORE(DECENT_EFFECT);
                 break;
             case MOVE_EFFECT_STEALTH_ROCK:
-                if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData));
+                if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData))
                 {
                     if (gDisableStructs[battlerAtk].isFirstTurn)
                         ADJUST_SCORE(BEST_EFFECT);

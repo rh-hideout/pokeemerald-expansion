@@ -209,6 +209,7 @@ EWRAM_DATA u8 gSentPokesToOpponent[2] = {0};
 EWRAM_DATA struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT] = {0};
 EWRAM_DATA struct BattleScripting gBattleScripting = {0};
 EWRAM_DATA struct BattleStruct *gBattleStruct = NULL;
+EWRAM_DATA struct StartingStatuses gStartingStatuses = {0};
 EWRAM_DATA struct AiThinkingStruct *gAiThinkingStruct = NULL;
 EWRAM_DATA struct AiLogicData *gAiLogicData = NULL;
 EWRAM_DATA struct AiPartyData *gAiPartyData = NULL;
@@ -3270,9 +3271,6 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     gAiLogicData->ejectButtonSwitch = FALSE;
     gAiLogicData->ejectPackSwitch = FALSE;
 
-    // Reset G-Max Chi Strike boosts.
-    gBattleStruct->bonusCritStages[battler] = 0;
-
     // Clear selected party ID so Revival Blessing doesn't get confused.
     gSelectedMonPartyId = PARTY_SIZE;
 
@@ -3735,19 +3733,18 @@ static void DoBattleIntro(void)
             for (battler = 0; battler < gBattlersCount; battler++)
                 GetBattlerPartyState(battler)->sentOut = TRUE;
 
+#define UNPACK_STARTING_STATUS_TO_BATTLE(_enum, _fieldName, ...) gStartingStatuses._fieldName = (statusesOpponentA._fieldName || statusesOpponentB._fieldName || gStartingStatuses._fieldName);
+
+            struct StartingStatuses statusesOpponentA = {0};
+            struct StartingStatuses statusesOpponentB = {0};
+
             // Try to set a status to start the battle with
-            gBattleStruct->startingStatus = 0;
             if (gBattleTypeFlags & BATTLE_TYPE_TRAINER)
             {
-                gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
-                gBattleStruct->startingStatus |= GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
-                gBattleStruct->startingStatusTimer = 0; // infinite
+                statusesOpponentA = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentA);
+                statusesOpponentB = GetTrainerStartingStatusFromId(TRAINER_BATTLE_PARAM.opponentB);
             }
-            if (B_VAR_STARTING_STATUS != 0)
-            {
-                gBattleStruct->startingStatus |= VarGet(B_VAR_STARTING_STATUS);
-                gBattleStruct->startingStatusTimer = VarGet(B_VAR_STARTING_STATUS_TIMER);
-            }
+            STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_TO_BATTLE);
             gBattleMainFunc = TryDoEventsBeforeFirstTurn;
         }
         break;
@@ -3805,10 +3802,11 @@ static void TryDoEventsBeforeFirstTurn(void)
             return;
         break;
     case FIRST_TURN_EVENTS_STARTING_STATUS:
-        while (gBattleStruct->startingStatus)
+        while (TRUE)
         {
             if (TryFieldEffects(FIELD_EFFECT_TRAINER_STATUSES))
                 return;
+            break;
         }
         gBattleStruct->eventState.beforeFristTurn++;
         break;
@@ -4178,7 +4176,7 @@ static void HandleTurnActionSelectionState(void)
                         gBattleStruct->moveTarget[battler] = gBattleResources->bufferB[battler][3];
                         return;
                     }
-                    else if (GetGenConfig(GEN_CONFIG_ENCORE_TARGET) < GEN_5 && gDisableStructs[battler].encoredMove != MOVE_NONE)
+                    else if (GetConfig(CONFIG_ENCORE_TARGET) < GEN_5 && gDisableStructs[battler].encoredMove != MOVE_NONE)
                     {
                         gChosenMoveByBattler[battler] = gDisableStructs[battler].encoredMove;
                         gBattleStruct->chosenMovePositions[battler] = gDisableStructs[battler].encoredMovePos;
@@ -4720,7 +4718,7 @@ u32 GetBattlerTotalSpeedStat(u32 battler, enum Ability ability, enum HoldEffect 
 
     // paralysis drop
     if (gBattleMons[battler].status1 & STATUS1_PARALYSIS && ability != ABILITY_QUICK_FEET)
-        speed /= GetGenConfig(GEN_CONFIG_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
+        speed /= GetConfig(CONFIG_PARALYSIS_SPEED) >= GEN_7 ? 2 : 4;
 
     if (gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SWAMP)
         speed /= 4;
@@ -4759,7 +4757,7 @@ s32 GetBattleMovePriority(u32 battler, enum Ability ability, u32 move)
         priority = -8;
     }
     else if (ability == ABILITY_GALE_WINGS
-          && (GetGenConfig(GEN_CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
+          && (GetConfig(CONFIG_GALE_WINGS) < GEN_7 || IsBattlerAtMaxHp(battler))
           && GetMoveType(move) == TYPE_FLYING)
     {
         priority++;
@@ -5117,7 +5115,7 @@ static bool32 TryDoGimmicksBeforeMoves(void)
         }
     }
 
-    if (GetGenConfig(GEN_CONFIG_MEGA_EVO_TURN_ORDER) >= GEN_7)
+    if (GetConfig(CONFIG_MEGA_EVO_TURN_ORDER) >= GEN_7)
         TryChangeTurnOrder(); // This will just do nothing if no mon has mega evolved.
     return FALSE;
 }

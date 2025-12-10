@@ -353,6 +353,7 @@ struct Volatiles
     // u32 foresight:1;
     // u32 dragonCheer:1;
     // u32 focusEnergy:1;
+    // u32 bonusCritStages:3;
 };
 
 struct BattlePokemon
