@@ -149,6 +149,24 @@ DOUBLE_BATTLE_TEST("Counter fails if mon that damaged counter user is no longer 
     }
 }
 
+SINGLE_BATTLE_TEST("Counter deals 1 damage when the attack received is blocked by Disguise")
+{
+    s16 counterDmg;
+    GIVEN {
+        ASSUME(GetMoveCategory(MOVE_SHADOW_SNEAK) == DAMAGE_CATEGORY_PHYSICAL);
+        PLAYER(SPECIES_MIMIKYU) { Ability(ABILITY_DISGUISE); }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SHADOW_SNEAK); MOVE(player, MOVE_COUNTER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SHADOW_SNEAK, opponent);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
+        HP_BAR(opponent, captureDamage: &counterDmg);
+    } THEN {
+        EXPECT_EQ(counterDmg, 1);
+    }
+}
+
 // Gen 1
 TO_DO_BATTLE_TEST("Counter can only counter Normal and Fighting-type moves (Gen 1)");
 TO_DO_BATTLE_TEST("Counter can hit ghost-type Pokémon (Gen 1)");
