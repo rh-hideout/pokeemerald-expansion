@@ -3195,7 +3195,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
-    u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
+    u32 noOfHitsToKOPartner = GetNoOfHitsToKOBattler(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT);
     bool32 wouldPartnerFaint = hasPartner && CanIndexMoveFaintTarget(battlerAtk, battlerAtkPartner, gAiThinkingStruct->movesetIndex, AI_ATTACKING)
         && !partnerProtecting;
     bool32 isFriendlyFireOK = !wouldPartnerFaint && (noOfHitsToKOPartner == 0 || noOfHitsToKOPartner > friendlyFireThreshold);
@@ -4004,7 +4004,7 @@ static enum MoveComparisonResult CompareMoveSelfSacrifice(u32 battlerAtk, u32 ba
 static inline bool32 ShouldUseSpreadDamageMove(u32 battlerAtk, u32 move, u32 moveIndex, u32 hitsToFaintOpposingBattler)
 {
     u32 partnerBattler = BATTLE_PARTNER(battlerAtk);
-    u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING);
+    u32 noOfHitsToFaintPartner = GetNoOfHitsToKOBattler(battlerAtk, partnerBattler, moveIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT);
     u32 friendlyFireThreshold = GetFriendlyFireKOThreshold(battlerAtk);
     return (HasPartnerIgnoreFlags(battlerAtk)
          && noOfHitsToFaintPartner != 0 // Immunity check
@@ -4019,7 +4019,7 @@ static bool32 ShouldCompareMove(u32 battlerAtk, u32 battlerDef, u32 moveIndex, u
         return FALSE;
     if (GetMovePower(move) == 0)
         return FALSE;
-    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, moveIndex, AI_ATTACKING) == 0)
+    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, DONT_CONSIDER_ENDURE_EFFECT) == 0)
         return FALSE;
     if (gAiThinkingStruct->aiFlags[battlerAtk] & (AI_FLAG_RISKY | AI_FLAG_PREFER_HIGHEST_DAMAGE_MOVE) && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
         return FALSE;
@@ -4049,7 +4049,7 @@ static void AI_CompareDamagingMoves(u32 battlerAtk, u32 battlerDef)
         {
             if (moves[i] != MOVE_NONE && GetMovePower(moves[i]) != 0)
             {
-                noOfHits[i] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, i, AI_ATTACKING);
+                noOfHits[i] = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, i, AI_ATTACKING, CONSIDER_ENDURE_EFFECT);
                 moveIsFaster[i] = AI_IsFaster(battlerAtk, battlerDef, moves[i], predictedMoveSpeedCheck, CONSIDER_PRIORITY);
                 isTwoTurnNotSemiInvulnerableMove[i] = IsTwoTurnNotSemiInvulnerableMove(battlerAtk, moves[i]);
                 tempMoveScores[i] = AI_SCORE_DEFAULT;
@@ -5690,13 +5690,13 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_COUNTER:
         if ((!IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]) && predictedMove != MOVE_NONE)
-         && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING) >= 2)
+         && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING, CONSIDER_ENDURE_EFFECT) >= 2)
          && (GetBattleMoveCategory(predictedMove) == DAMAGE_CATEGORY_PHYSICAL))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_MIRROR_COAT:
         if ((!IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef]) && predictedMove != MOVE_NONE)
-         && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING) >= 2)
+         && (GetNoOfHitsToKOBattler(battlerDef, battlerAtk, predictedMoveSlot, AI_DEFENDING, CONSIDER_ENDURE_EFFECT) >= 2)
          && (GetBattleMoveCategory(predictedMove) == DAMAGE_CATEGORY_SPECIAL))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
@@ -6192,7 +6192,7 @@ static s32 AI_CheckViability(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 
     if (GetMovePower(move) != 0)
     {
-        if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) == 0)
+        if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT) == 0)
             ADJUST_AND_RETURN_SCORE(NO_DAMAGE_OR_FAILS); // No point in checking the move further so return early
         else
         {
@@ -6404,9 +6404,9 @@ static s32 AI_TryTo2HKO(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     if (IsTargetingPartner(battlerAtk, battlerDef))
         return score;
 
-    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) == 1)
+    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT) == 1)
         ADJUST_SCORE(BEST_EFFECT);
-    else if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) == 2)
+    else if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT) == 2)
         ADJUST_SCORE(DECENT_EFFECT);
 
     return score;
@@ -6425,10 +6425,10 @@ static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
         if (CanIndexMoveFaintTarget(battlerAtk, battlerDef, movesetIndex, AI_ATTACKING))
             ADJUST_SCORE(BEST_EFFECT);
 
-        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
+        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT);
 
         if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY && hitsToKO > 0 &&
-           (GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING) > 0 || GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerDef), gAiThinkingStruct->movesetIndex, AI_ATTACKING) > 0))
+           (GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT) > 0 || GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerDef), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT) > 0))
             ADJUST_SCORE(BEST_EFFECT);
 
         if (hitsToKO > 0)
@@ -6816,7 +6816,7 @@ static s32 AI_PredictSwitch(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     {
     case EFFECT_PURSUIT:
     {
-        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING);
+        u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE_EFFECT);
         if (hitsToKO == 2)
             ADJUST_SCORE(GOOD_EFFECT);
         else if (hitsToKO == 1)
