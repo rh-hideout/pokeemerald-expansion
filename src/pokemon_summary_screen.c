@@ -181,7 +181,7 @@ static EWRAM_DATA struct PokemonSummaryScreenData
     u8 secondMoveIndex;
     bool8 lockMovesFlag; // This is used to prevent the player from changing position of moves in a battle or when trading.
     u8 bgDisplayOrder; // Determines the order page backgrounds are loaded while scrolling between them
-    u8 hasRelearnableMoves;
+    bool8 hasRelearnableMoves;
     u8 windowIds[8];
     u8 spriteIds[SPRITE_ARR_ID_COUNT];
     bool8 handleDeoxys;
@@ -1955,7 +1955,7 @@ bool32 CheckRelearnerStateFlag(enum MoveRelearnerStates state)
 
 void TryUpdateRelearnType(enum IncrDecrUpdateValues delta)
 {
-    u32 hasRelearnableMoves = 0;
+    bool32 hasRelearnableMoves = FALSE;
     u32 zeroCounter = 0;
     enum MoveRelearnerStates state = gMoveRelearnerState;
 
@@ -2269,7 +2269,7 @@ static void ChangePage(u8 taskId, s8 delta)
     }
 
     // to prevent nothing showing 
-    if (currPageIndex >= PSS_PAGE_BATTLE_MOVES && sMonSummaryScreen->hasRelearnableMoves == 0)
+    if (currPageIndex >= PSS_PAGE_BATTLE_MOVES && !sMonSummaryScreen->hasRelearnableMoves)
         TryUpdateRelearnType(TRY_SET_UPDATE);
     else
         ClearWindowTilemap(PSS_LABEL_WINDOW_PROMPT_RELEARN);
@@ -4804,7 +4804,7 @@ static inline bool32 ShouldShowMoveRelearner(void)
          && !sMonSummaryScreen->isBoxMon
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX
          && sMonSummaryScreen->mode != SUMMARY_MODE_BOX_CURSOR
-         && sMonSummaryScreen->hasRelearnableMoves > 0
+         && sMonSummaryScreen->hasRelearnableMoves
          && !InBattleFactory()
          && !InSlateportBattleTent()
          && !NoMovesAvailableToRelearn());
