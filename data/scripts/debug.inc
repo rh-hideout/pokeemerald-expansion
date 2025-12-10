@@ -303,7 +303,11 @@ Debug_EventScript_Steven_Multi::
 	end
 
 Debug_EventScript_WallyTutorial::
+	special SavePlayerParty
+	special LoadWallyZigzagoon
 	special StartWallyTutorialBattle
+	waitstate
+	special LoadPlayerParty
 	release
 	end
 
