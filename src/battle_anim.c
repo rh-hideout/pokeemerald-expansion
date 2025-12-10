@@ -1034,7 +1034,7 @@ static void Cmd_end(void)
         if (sAnimSpriteGfxTags[i] != 0xFFFF)
         {
             u32 index = sAnimSpriteGfxTags[i];
-            FreeSpriteTilesByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
+            FreeSpriteTilesByTag(index);
             sAnimSpriteGfxTags[i] = 0xFFFF;
         }
     }
@@ -1043,8 +1043,8 @@ static void Cmd_end(void)
     {
         if (sAnimSpritePalTags[i] != 0xFFFF)
         {
-            u32 index = sAnimSpriteGfxTags[i];
-            FreeSpritePaletteByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
+            u32 index = sAnimSpritePalTags[i];
+            FreeSpritePaletteByTag(index);
             sAnimSpritePalTags[i] = 0xFFFF;
         }
     }
