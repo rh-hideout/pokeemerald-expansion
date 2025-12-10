@@ -4955,37 +4955,11 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_BELLY_DRUM:
-        u32 defBestMoves[MAX_MON_MOVES] = {0};
-        GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
-        bool32 bestMoveIsPhysical = TRUE;
-        for (i = 0; i < MAX_MON_MOVES; i++)
-        {
-            if (defBestMoves[i] == MOVE_NONE)
-            {
-                break;
-            }
-            else
-            {
-                if (GetBattleMoveCategory(defBestMoves[i]) == DAMAGE_CATEGORY_SPECIAL)
-                {
-                    bestMoveIsPhysical = FALSE;
-                    break;
-                }
-            }
-        }
-        if ((
-            (GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((50 * gBattleMons[battlerAtk].maxHP) / 100))
-            || (bestMoveIsPhysical
-                && aiData->abilities[battlerAtk] == ABILITY_ICE_FACE 
-                && gBattleMons[battlerAtk].species != SPECIES_EISCUE_NOICE) // ice face will absorb the hit, safe to belly drum
-         )
-         && HasMoveWithCategory(battlerAtk, DAMAGE_CATEGORY_PHYSICAL)
-         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+        if (HasHPForDamagingSetup(battlerAtk, battlerDef, 50))
             ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK_MAX));
         break;
     case EFFECT_FILLET_AWAY:
-        if ((GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((50 * gBattleMons[battlerAtk].maxHP) / 100)) 
-         && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+        if (HasHPForDamagingSetup(battlerAtk, battlerDef, 50))
         {
             u32 scoreIncrease = IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
             if (scoreIncrease > BEST_EFFECT)
@@ -5742,8 +5716,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     //case EFFECT_EXTREME_EVOBOOST: // TODO
         //break;
     case EFFECT_CLANGOROUS_SOUL:
-        if ((GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((67 * gBattleMons[battlerAtk].maxHP) / 100))
-             && aiData->abilities[battlerAtk] != ABILITY_CONTRARY)
+        if (HasHPForDamagingSetup(battlerAtk, battlerDef, 67))
             {
                 u32 scoreIncrease = IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_ATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPATK) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPDEF) + IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_SPEED);
                 if (scoreIncrease > BEST_EFFECT)

@@ -2467,6 +2467,30 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
     return MAX_MON_MOVES;
 }
 
+bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
+{
+    u32 atkBestMoves[MAX_MON_MOVES] = {0};
+    u32 i;
+    GetBestDmgMovesFromBattler(battlerAtk, battlerDef, calcContext, atkBestMoves);
+    bool32 bestMoveIsPhysical = TRUE;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (atkBestMoves[i] == MOVE_NONE)
+        {
+            break;
+        }
+        else
+        {
+        if (GetBattleMoveCategory(atkBestMoves[i]) == DAMAGE_CATEGORY_SPECIAL)
+            {
+                bestMoveIsPhysical = FALSE;
+                break;
+            }
+        }
+    }
+    return bestMoveIsPhysical;
+}
+
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive)
 {
     u32 i;
@@ -5065,6 +5089,27 @@ static enum AIScore IncreaseStatUpScoreInternal(u32 battlerAtk, u32 battlerDef, 
         tempScore += WEAK_EFFECT;
 
     return tempScore;
+}
+
+bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold)
+{
+    bool32 bestMoveIsPhysical = HasPhysicalBestMove(battlerDef, battlerAtk, AI_DEFENDING);
+
+    if (GetBestDmgFromBattler(battlerDef, battlerAtk, AI_DEFENDING) < ((hpThreshold * gBattleMons[battlerAtk].maxHP) / 100))
+        return TRUE;
+
+    if (bestMoveIsPhysical
+     && gAiLogicData->abilities[battlerAtk] == ABILITY_ICE_FACE 
+     && gBattleMons[battlerAtk].species == SPECIES_EISCUE_ICE
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // ice face will absorb the hit, safe to use setup
+        return TRUE;
+    
+    if (gAiLogicData->abilities[battlerAtk] == ABILITY_DISGUISE
+     && IsMimikyuDisguised(battlerAtk)
+     && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // disguise will absorb the hit, safe to use setup
+        return TRUE;
+    
+    return FALSE;
 }
 
 u32 IncreaseStatUpScore(u32 battlerAtk, u32 battlerDef, enum StatChange statChange)
