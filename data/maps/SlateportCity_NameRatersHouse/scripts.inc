@@ -11,7 +11,6 @@ SlateportCity_NameRatersHouse_EventScript_NameRater::
 
 SlateportCity_NameRatersHouse_EventScript_ChooseMonToRate::
 	msgbox SlateportCity_NameRatersHouse_Text_CritiqueWhichMonNickname, MSGBOX_DEFAULT
-	fadescreen FADE_TO_BLACK
 	special ChooseBoxMon
 	waitstate
 	goto_if_ne VAR_0x8004, PARTY_NOTHING_CHOSEN, SlateportCity_NameRatersHouse_EventScript_RateMonNickname

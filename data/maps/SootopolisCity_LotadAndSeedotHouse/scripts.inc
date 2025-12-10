@@ -6,7 +6,6 @@ SootopolisCity_LotadAndSeedotHouse_EventScript_SeedotBrother::
 	lock
 	faceplayer
 	msgbox SootopolisCity_LotadAndSeedotHouse_Text_PleaseShowMeBigSeedot, MSGBOX_DEFAULT
-	fadescreen FADE_TO_BLACK
 	special ChooseBoxMon
 	waitstate
 	copyvar VAR_RESULT, VAR_0x8004
