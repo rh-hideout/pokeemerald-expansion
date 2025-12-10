@@ -851,9 +851,17 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
+                {
+                    TryLoadGfx(gDarkVoidBlackHoleTemplate.tileTag);
+                    TryLoadPal(gDarkVoidBlackHoleTemplate.paletteTag);
                     spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+                }
                 else
+                {
+                    TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
+                    TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
                     spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+                }
 
                 if (spriteId != MAX_SPRITES)
                 {
@@ -877,9 +885,17 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
     else
     {
         if (gAnimMoveIndex == MOVE_DARK_VOID)
+        {
+            TryLoadGfx(gDarkVoidBlackHoleTemplate.tileTag);
+            TryLoadPal(gDarkVoidBlackHoleTemplate.paletteTag);
             spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
+        }
         else
+        {
+            TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
+            TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
             spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
+        }
 
         if (spriteId != MAX_SPRITES)
         {

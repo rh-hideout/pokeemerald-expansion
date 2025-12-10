@@ -9,7 +9,7 @@ SINGLE_BATTLE_TEST("blergh")
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_RING_TARGET); }
     } WHEN {
-        TURN { MOVE(player, MOVE_POLTERGEIST); }
+        TURN { MOVE(player, MOVE_DESTINY_BOND); }
     } THEN {
         FORCE_MOVE_ANIM(FALSE);
     }
