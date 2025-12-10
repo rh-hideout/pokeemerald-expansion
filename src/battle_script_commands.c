@@ -2444,19 +2444,13 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
     {
         gProtectStructs[battler].physicalDmg = gBattleStruct->moveDamage[battler] + 1;
         gSpecialStatuses[battler].physicalDmg = gBattleStruct->moveDamage[battler] + 1;
-        if (scriptBattler == BS_TARGET) // What's the point of this??? It will be always target
-            gProtectStructs[battler].physicalBattlerId = gBattlerAttacker;
-        else
-            gProtectStructs[battler].physicalBattlerId = gBattlerTarget;
+        gProtectStructs[battler].physicalBattlerId = gBattlerAttacker;
     }
     else // Special move
     {
         gProtectStructs[battler].specialDmg = gBattleStruct->moveDamage[battler] + 1;
         gSpecialStatuses[battler].specialDmg = gBattleStruct->moveDamage[battler] + 1;
-        if (scriptBattler == BS_TARGET) // What's the point of this??? It will be always target
-            gProtectStructs[battler].specialBattlerId = gBattlerAttacker;
-        else
-            gProtectStructs[battler].specialBattlerId = gBattlerTarget;
+        gProtectStructs[battler].specialBattlerId = gBattlerAttacker;
     }
 
     if (IsBattlerTurnDamaged(gBattlerTarget) && GetMoveCategory(gCurrentMove) != DAMAGE_CATEGORY_STATUS)
@@ -11352,7 +11346,7 @@ static void Cmd_unused_0xA0(void)
 {
 }
 
-static void CalcCounterMirrorCoatMetalBurstDamage(u32 baseDamage, u32 percentMult)
+static void CalcReflectBackDamage(u32 baseDamage, u32 percentMult)
 {
     s32 damage = (baseDamage - 1) * percentMult / 100;
     damage = max(damage, 1);
@@ -11375,7 +11369,7 @@ static void Cmd_counterdamagecalculator(void)
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].physicalBattlerId;
 
-        CalcCounterMirrorCoatMetalBurstDamage(gProtectStructs[gBattlerAttacker].physicalDmg, 200);
+        CalcReflectBackDamage(gProtectStructs[gBattlerAttacker].physicalDmg, 200);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -11402,7 +11396,7 @@ static void Cmd_mirrorcoatdamagecalculator(void)
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].specialBattlerId;
 
-        CalcCounterMirrorCoatMetalBurstDamage(gProtectStructs[gBattlerAttacker].specialDmg, 200);
+        CalcReflectBackDamage(gProtectStructs[gBattlerAttacker].specialDmg, 200);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
@@ -14535,7 +14529,7 @@ void BS_CalcMetalBurstDmg(void)
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].physicalBattlerId;
 
-        CalcCounterMirrorCoatMetalBurstDamage(gProtectStructs[gBattlerAttacker].physicalDmg, 150);
+        CalcReflectBackDamage(gProtectStructs[gBattlerAttacker].physicalDmg, 150);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else if (gProtectStructs[gBattlerAttacker].specialDmg
@@ -14548,7 +14542,7 @@ void BS_CalcMetalBurstDmg(void)
         else
             gBattlerTarget = gProtectStructs[gBattlerAttacker].specialBattlerId;
 
-        CalcCounterMirrorCoatMetalBurstDamage(gProtectStructs[gBattlerAttacker].specialDmg, 150);
+        CalcReflectBackDamage(gProtectStructs[gBattlerAttacker].specialDmg, 150);
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
     else
