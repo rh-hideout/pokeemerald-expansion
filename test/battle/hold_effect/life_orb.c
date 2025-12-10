@@ -1,6 +1,11 @@
 #include "global.h"
 #include "test/battle.h"
 
+ASSUMPTIONS
+{
+    ASSUME(gItemsInfo[ITEM_LIFE_ORB].holdEffect == HOLD_EFFECT_LIFE_ORB);
+}
+
 SINGLE_BATTLE_TEST("Life Orb activates when users attack is succesful")
 {
     GIVEN {

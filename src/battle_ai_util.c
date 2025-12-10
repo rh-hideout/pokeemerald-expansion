@@ -203,7 +203,12 @@ u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData)
 {
     if (aiData->predictingMove && CanAiPredictMove(battler))
-        return aiData->predictedMove[opposingBattler];
+    {
+        // Ignore moves that don't do damage or only have priority one time
+        if (GetMovePower(aiData->predictedMove[opposingBattler]) != 0 && GetMoveEffect(aiData->predictedMove[opposingBattler]) != EFFECT_FIRST_TURN_ONLY)
+            return aiData->predictedMove[opposingBattler];
+    }
+        
     return MOVE_NONE;
 }
 
@@ -756,7 +761,7 @@ static inline void CalcDynamicMoveDamage(struct BattleContext *ctx, u16 *medianD
         // If target has less HP than user, Endeavor does no damage
         median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
     }
-    else if (effect == EFFECT_BEAT_UP && GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
+    else if (effect == EFFECT_BEAT_UP && GetConfig(CONFIG_BEAT_UP) >= GEN_5)
     {
         u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
         u32 i;
@@ -829,7 +834,7 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
     s32 critChanceIndex = 0;
 
     // Get crit chance
-    if (GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
+    if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
         critChanceIndex = CalcCritChanceStageGen1(ctx);
     else
         critChanceIndex = CalcCritChanceStage(ctx);
@@ -838,11 +843,11 @@ static inline bool32 ShouldCalcCritDamage(struct BattleContext *ctx)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
-        && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) != GEN_1)
+        && GetConfig(CONFIG_CRIT_CHANCE) != GEN_1)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_THRESHOLD_GEN_1 // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[ctx->battlerAtk] & AI_FLAG_RISKY)
-        && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
+        && GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
         return TRUE;
 
     return FALSE;
@@ -1288,7 +1293,7 @@ static bool32 AI_IsMoveEffectInMinus(u32 battlerAtk, u32 battlerDef, u32 move, s
 }
 
 // Checks if one of the moves has side effects or perks, assuming equal dmg or equal no of hits to KO
-enum MoveComparisonResult AI_WhichMoveBetter(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo)
+enum MoveComparisonResult CompareMoveEffects(u32 move1, u32 move2, u32 battlerAtk, u32 battlerDef, s32 noOfHitsToKo)
 {
     bool32 effect1, effect2;
     enum Ability defAbility = gAiLogicData->abilities[battlerDef];
@@ -1997,7 +2002,7 @@ bool32 IsHazardClearingMove(u32 move)
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
-        if (GetGenConfig(GEN_CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
+        if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
             return TRUE;
         break;
     }
@@ -2263,7 +2268,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
             if (stat == STAT_DEF)
                 return FALSE;
         case ABILITY_ILLUMINATE:
-            if (GetGenConfig(GEN_ILLUMINATE_EFFECT) < GEN_9)
+            if (GetConfig(CONFIG_ILLUMINATE_EFFECT) < GEN_9)
                 break;
         case ABILITY_KEEN_EYE:
         case ABILITY_MINDS_EYE:
@@ -3003,7 +3008,7 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     switch (effect)
     {
     case EFFECT_TELEPORT:
-        if (GetGenConfig(GEN_CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
+        if (GetConfig(CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
             return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
@@ -3954,7 +3959,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
         // Check partner's status
-        if ((GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
             || gAiLogicData->abilities[BATTLE_PARTNER(battlerId)] != ABILITY_SOUNDPROOF
             || !checkSoundproof)
          && GetMonData(&party[battlerOnField2], MON_DATA_STATUS) != STATUS1_NONE)
@@ -3967,8 +3972,8 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     }
 
     // Check attacker's status
-    if ((GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
-      || GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
+    if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+      || GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
       || gAiLogicData->abilities[battlerId] != ABILITY_SOUNDPROOF || !checkSoundproof)
      && GetMonData(&party[battlerOnField1], MON_DATA_STATUS) != STATUS1_NONE)
         return TRUE;
@@ -3978,7 +3983,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     {
         if (i == battlerOnField1 || i == battlerOnField2)
             continue;
-        if (GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
+        if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
          && checkSoundproof
          && GetMonAbility(&party[i]) == ABILITY_SOUNDPROOF)
             continue;
@@ -4857,7 +4862,7 @@ static bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, 
                 case MOVE_EFFECT_SPD_MINUS_1:
                 case MOVE_EFFECT_SPD_MINUS_2:
                 {
-                    if(aiIsFaster)
+                    if (aiIsFaster && !additionalEffect->self)
                         return TRUE;
                 }
                 default:
@@ -5160,9 +5165,9 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
 
         GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, bestMoves);
 
-        for (u32 i; i < MAX_MON_MOVES; i++)
+        for (u32 i = 0; i < MAX_MON_MOVES; i++)
         {
-            if (GetMoveEffect(bestMoves[i]) == EFFECT_FOCUS_PUNCH)
+            if ((GetMoveEffect(bestMoves[i]) != EFFECT_FOCUS_PUNCH) && (bestMoves[i] != MOVE_NONE))
                 return;
         }
     }

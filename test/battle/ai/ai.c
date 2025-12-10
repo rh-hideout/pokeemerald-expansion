@@ -699,7 +699,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it 
     PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_EMBER;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BURN_HIT_THAW, GEN_6); // In Gen 5, non-Fire burning moves didn't cause thawing
+        WITH_CONFIG(CONFIG_BURN_HIT_THAW, GEN_6); // In Gen 5, non-Fire burning moves didn't cause thawing
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
@@ -941,7 +941,7 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
 AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
         OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
@@ -1160,6 +1160,21 @@ AI_SINGLE_BATTLE_TEST("AI's Explosion scoring handles multiple move effects and 
         OPPONENT(SPECIES_GLALIE_MEGA) { Level(44); HP(1); Ability(ABILITY_REFRIGERATE); Friendship(MAX_FRIENDSHIP); Moves(MOVE_RETURN, MOVE_EARTHQUAKE, MOVE_EXPLOSION, MOVE_CRUNCH); }
     } WHEN {
         TURN { MOVE(player, MOVE_DETECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's one-shot-priority moves (ie. Fake Out, Detect) when comparing speed")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_DETECT) > GetMovePriority(MOVE_AQUA_JET));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_COMBUSKEN) { Level(20); HP(1); Ability(ABILITY_SPEED_BOOST); Item(ITEM_BRIGHT_POWDER); Moves(MOVE_DETECT, MOVE_DOUBLE_KICK); }
+        PLAYER(SPECIES_QUILAVA) { Level(20); Ability(ABILITY_ADAPTABILITY); Item(ITEM_ORAN_BERRY); Moves(MOVE_MUD_SHOT, MOVE_INCINERATE); }
+        OPPONENT(SPECIES_PARAS) { Level(16); Ability(ABILITY_DRY_SKIN); Item(ITEM_QUICK_CLAW); Moves(MOVE_SLEEP_POWDER, MOVE_BUG_BITE, MOVE_AERIAL_ACE, MOVE_POISON_FANG); }
+        OPPONENT(SPECIES_BUIZEL) { Level(16); Ability(ABILITY_SWIFT_SWIM); Item(ITEM_DAMP_ROCK); Moves(MOVE_RAIN_DANCE, MOVE_HELPING_HAND, MOVE_ICE_FANG, MOVE_AQUA_JET); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_INCINERATE, target:opponentLeft); EXPECT_MOVE(opponentRight, MOVE_AQUA_JET, target:playerLeft); }
     }
 }
 

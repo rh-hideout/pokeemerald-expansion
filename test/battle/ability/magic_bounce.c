@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Magic Bounce bounces back powder moves")
 SINGLE_BATTLE_TEST("Magic Bounce cannot bounce back powder moves against Grass Types")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         ASSUME(IsPowderMove(MOVE_STUN_SPORE));
         ASSUME(GetSpeciesType(SPECIES_ODDISH, 0) == TYPE_GRASS);
         PLAYER(SPECIES_ODDISH);

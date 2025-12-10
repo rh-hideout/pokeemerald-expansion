@@ -1,12 +1,14 @@
 # Summary
 
 - [README](./README.md)
+- [FEATURES](./FEATURES.md)
 - [Installation](./INSTALL.md)
     - [Setting up WSL1 (Legacy Portion)](./legacy_WSL1_INSTALL.md)
     - [ChromeOS](./install/chromeos/CHROME_OS.md)
     - [Linux]()
         - [ARCH_LINUX](./install/linux/ARCH_LINUX.md)
         - [DEBIAN](./install/linux/DEBIAN.md)
+        - [FEDORA](./install/linux/FEDORA.md)
         - [NIXOS](./install/linux/NIXOS.md)
         - [OTHERS](./install/linux/OTHERS.md)
         - [UBUNTU](./install/linux/UBUNTU.md)
@@ -37,6 +39,8 @@
   - [How to use Follower NPCs](tutorials/how_to_follower_npc.md)
   - [Time-Based Encounters](tutorials/how_to_time_of_day_encounters.md)
   - [How to use Trainer Party Pools](tutorials/how_to_trainer_party_pool.md)
+  - [How to Apricorn Tree](tutorials/how_to_apricorn_tree.md)
+  - [How to Namebox](tutorials/how_to_namebox.md)
   - [Vs. Seeker](tutorials/vs_seeker.md)
 - [Changelog](./CHANGELOG.md)
     - [1.14.x]()
