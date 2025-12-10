@@ -178,6 +178,7 @@ u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
 u32 GetIndexInMoveArray(u32 battler, u32 move);
+u32 GetBattlerMoveWithEffect(u32 battler, enum BattleMoveEffects effect);
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
@@ -216,6 +217,7 @@ bool32 HasTrappingMoveEffect(u32 battler);
 bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HasChoiceEffect(u32 battler);
 bool32 HasThawingMove(u32 battler);
+bool32 HasUsableWhileAsleepMove(u32 battler);
 bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);
 bool32 IsSelfStatLoweringEffect(enum MoveEffect effect);
@@ -229,6 +231,7 @@ bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 bool32 IsExplosionEffect(enum BattleMoveEffects effect);
 bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks

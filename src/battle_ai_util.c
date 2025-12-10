@@ -2486,6 +2486,18 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
     return MAX_MON_MOVES;
 }
 
+u32 GetBattlerMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
+{
+    u16 *moves = GetMovesArray(battler);
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (GetMoveEffect(moves[i]) == effect)
+            return i;
+    }
+    return MAX_MON_MOVES;
+}
+
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
 {
     u32 atkBestMoves[MAX_MON_MOVES] = {0};
@@ -2888,6 +2900,18 @@ bool32 HasThawingMove(u32 battler)
     return FALSE;
 }
 
+bool32 HasUsableWhileAsleepMove(u32 battler)
+{
+    s32 i;
+    u16 *moves = GetMovesArray(battler);
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsUsableWhileAsleepEffect(GetMoveEffect(moves[i])))
+            return TRUE;
+    }
+    return FALSE;
+}
+
 bool32 IsUngroundingEffect(enum BattleMoveEffects effect)
 {
     switch (effect)
@@ -3092,6 +3116,19 @@ bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
     case EFFECT_MEMENTO:
     case EFFECT_HEALING_WISH:
     case EFFECT_REVIVAL_BLESSING:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect)
+{
+    // All moves usable while asleep like Snore, Sleep Talk, etc.
+    switch (effect)
+    {
+    case EFFECT_SNORE:
+    case EFFECT_SLEEP_TALK:
         return TRUE;
     default:
         return FALSE;
@@ -4159,7 +4196,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
     {
         if (targetingAlly || targetingSelf)
         {
-            if (HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK) || HasMoveWithEffect(battlerDef, EFFECT_SNORE))
+            if (HasUsableWhileAsleepMove(battlerDef))
                 return FALSE;
             else
                 return usingItem || targetingAlly;
@@ -5254,7 +5291,7 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
         return;
 
     if ((HasMoveWithEffect(battlerAtk, EFFECT_DREAM_EATER) || HasMoveWithEffect(battlerAtk, EFFECT_NIGHTMARE))
-      && !(HasMoveWithEffect(battlerDef, EFFECT_SNORE) || HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK)))
+      && !HasUsableWhileAsleepMove(battlerDef))
         ADJUST_SCORE_PTR(WEAK_EFFECT);
 
     if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_SLEEP)
