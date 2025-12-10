@@ -129,7 +129,7 @@ DOUBLE_BATTLE_TEST("Counter respects Follow me")
     }
 }
 
-DOUBLE_BATTLE_TEST("Counter fails if mon that damaged counter user is no longer on the field")
+DOUBLE_BATTLE_TEST("Counter fails if mon that damaged Counter user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);

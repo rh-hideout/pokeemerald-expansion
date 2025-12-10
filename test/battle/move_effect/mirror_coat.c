@@ -92,7 +92,7 @@ DOUBLE_BATTLE_TEST("Mirror Coat respects Follow Me")
     }
 }
 
-DOUBLE_BATTLE_TEST("Mirror Coat fails if mon that damaged mirrorCoat user is no longer on the field")
+DOUBLE_BATTLE_TEST("Mirror Coat fails if mon that damaged Mirror Coat user is no longer on the field (Gen 1-4)")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
