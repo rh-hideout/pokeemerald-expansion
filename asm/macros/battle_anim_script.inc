@@ -10,6 +10,11 @@
 	.2byte \tag
 	.endm
 
+	.macro unloadspritepal tag:req
+	.byte 0x1
+	.2byte \tag
+	.endm
+
 .macro createsprite template:req, anim_battler:req, subpriority_offset:req, argv:vararg
 	.byte 0x02
 	.4byte \template

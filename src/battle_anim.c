@@ -34,6 +34,7 @@
 
 static void Cmd_loadspritegfx(void);
 static void Cmd_unloadspritegfx(void);
+static void Cmd_unloadspritepal(void);
 static void Cmd_createsprite(void);
 static void Cmd_createvisualtask(void);
 static void Cmd_delay(void);
@@ -183,6 +184,7 @@ static void (*const sScriptCmdTable[])(void) =
     Cmd_createspriteontargets_onpos, // 0x32
     Cmd_jumpifmovetypeequal,         // 0x33
     Cmd_createdragondartsprite,      // 0x34
+    Cmd_unloadspritepal,             // 0x35
 };
 
 static const u16 sMovesWithQuietBGM[] =
