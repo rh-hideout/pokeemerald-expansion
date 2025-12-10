@@ -178,7 +178,7 @@ u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
 u32 GetIndexInMoveArray(u32 battler, u32 move);
-u32 GetBattlerMoveWithEffect(u32 battler, enum BattleMoveEffects effect);
+u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect);
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);

@@ -2486,7 +2486,7 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
     return MAX_MON_MOVES;
 }
 
-u32 GetBattlerMoveWithEffect(u32 battler, enum BattleMoveEffects effect)
+u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
 {
     u16 *moves = GetMovesArray(battler);
     u32 i;
