@@ -2639,7 +2639,7 @@ void BtlController_HandleStatusAnimation(u32 battler)
 
 void BtlController_HandleHitAnimation(u32 battler)
 {
-    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE || gTestRunnerHeadless)
+    if (gSprites[gBattlerSpriteIds[battler]].invisible == TRUE || (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim))
     {
         BtlController_Complete(battler);
     }
@@ -2654,7 +2654,7 @@ void BtlController_HandleHitAnimation(u32 battler)
 
 void BtlController_HandlePlaySE(u32 battler)
 {
-    if (gTestRunnerHeadless)
+    if (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim)
     {
         BtlController_Complete(battler);
         return;
@@ -2667,7 +2667,7 @@ void BtlController_HandlePlaySE(u32 battler)
 
 void BtlController_HandlePlayFanfareOrBGM(u32 battler)
 {
-    if (gTestRunnerHeadless)
+    if (gTestRunnerHeadless && !gBattleTestRunnerState->forceMoveAnim)
     {
         BtlController_Complete(battler);
         return;
