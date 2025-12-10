@@ -668,10 +668,10 @@ static void Cmd_unloadspritegfx(void)
     sBattleAnimScriptPtr++;
     u16 index = T1_READ_16(sBattleAnimScriptPtr);
     sBattleAnimScriptPtr += 2;
-    if (IsGfxLoadedFast(GET_TRUE_SPRITE_INDEX(index)))
+    if (IsGfxLoadedFast(index))
     {
-        FreeSpriteTilesByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
-        ClearSpriteGfxIndex(GET_TRUE_SPRITE_INDEX(index));
+        FreeSpriteTilesByTag(index);
+        ClearSpriteGfxIndex(index);
     }
 }
 
@@ -680,10 +680,10 @@ static void Cmd_unloadspritepal(void)
     sBattleAnimScriptPtr++;
     u16 index = T1_READ_16(sBattleAnimScriptPtr);
     sBattleAnimScriptPtr += 2;
-    if (IsPalLoadedFast(GET_TRUE_SPRITE_INDEX(index)))
+    if (IsPalLoadedFast(index))
     {
-        FreeSpritePaletteByTag(gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)].tag);
-        ClearSpritePalIndex(GET_TRUE_SPRITE_INDEX(index));
+        FreeSpritePaletteByTag(index);
+        ClearSpritePalIndex(index);
     }
 }
 
@@ -2464,3 +2464,14 @@ static void Cmd_createdragondartsprite(void)
         subpriority) != MAX_SPRITES) // Don't increment the task count if the sprite couldn't be created(i.e. there are too many created sprites atm).
          gAnimVisualTaskCount++;
 }
+
+//focus energy    -
+//circle of light -
+//shadow ball     -
+//thin ring       -
+//ice chunk       -
+//black ball 2    -
+//hands and feet  -
+//wisp orb        -
+//vertical hex    -
+//sparkle 4       -
