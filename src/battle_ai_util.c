@@ -1930,6 +1930,42 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
     }
 }
 
+u32 SwitchinChangeBattleTerrain(u32 newTerrain, u32 fieldStatus)
+{
+    if (gBattleStruct->isSkyBattle)
+        return fieldStatus;
+
+    if (!(fieldStatus & newTerrain))
+    {
+        fieldStatus &= ~STATUS_FIELD_TERRAIN_ANY;
+        fieldStatus |= newTerrain;
+        return fieldStatus;
+    }
+
+    return fieldStatus;
+}
+
+u32 AI_GetSwitchinFieldStatus(struct BattlePokemon battleMon)
+{
+    enum Ability ability = battleMon.ability;
+    u32 startingFieldStatus = gFieldStatuses;
+    // Switchin will introduce new terrain
+    switch(ability)
+    {
+    case ABILITY_ELECTRIC_SURGE:
+    case ABILITY_HADRON_ENGINE:
+        return SwitchinChangeBattleTerrain(STATUS_FIELD_ELECTRIC_TERRAIN, startingFieldStatus);
+    case ABILITY_GRASSY_SURGE:
+        return SwitchinChangeBattleTerrain(STATUS_FIELD_GRASSY_TERRAIN, startingFieldStatus);
+    case ABILITY_MISTY_SURGE:
+        return SwitchinChangeBattleTerrain(STATUS_FIELD_MISTY_TERRAIN, startingFieldStatus);
+    case ABILITY_PSYCHIC_SURGE:
+        return SwitchinChangeBattleTerrain(STATUS_FIELD_PSYCHIC_TERRAIN, startingFieldStatus);
+    default:
+        return startingFieldStatus;
+    }
+}
+
 enum WeatherState IsWeatherActive(u32 flags)
 {
     enum WeatherState state = WEATHER_INACTIVE;
@@ -4668,8 +4704,9 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         SetBattlerFieldStatusForSwitchin(battlerDef);
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
-
-    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate), gFieldStatuses);
+        
+    dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate), AI_GetSwitchinFieldStatus(switchinCandidate));
+    
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
