@@ -5796,6 +5796,9 @@ u8 GetRelearnerLevelUpMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
 {
+    if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+        return 0;
+
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
@@ -5840,6 +5843,9 @@ u8 GetRelearnerEggMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 {
+    if (!P_TM_MOVES_RELEARNER)
+        return 0;
+
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
     u16 species = GetMonData(mon, MON_DATA_SPECIES);
@@ -5887,6 +5893,9 @@ u8 GetRelearnerTMMoves(struct Pokemon *mon, u16 *moves)
 
 u8 GetRelearnerTutorMoves(struct Pokemon *mon, u16 *moves)
 {
+    if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+        return 0;
+
 #if P_TUTOR_MOVES_ARRAY
     u16 learnedMoves[MAX_MON_MOVES] = {0};
     u8 numMoves = 0;
@@ -5977,6 +5986,9 @@ bool8 HasRelearnerLevelUpMoves(struct Pokemon *mon)
 
 bool8 HasRelearnerEggMoves(struct Pokemon *mon)
 {
+    if (!FlagGet(P_FLAG_EGG_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+        return 0;
+
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
 
     if (species == SPECIES_EGG)
@@ -6005,6 +6017,9 @@ bool8 HasRelearnerEggMoves(struct Pokemon *mon)
 
 bool8 HasRelearnerTMMoves(struct Pokemon *mon)
 {
+    if (!P_TM_MOVES_RELEARNER)
+        return FALSE;
+
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
 
     if (species == SPECIES_EGG)
@@ -6038,6 +6053,9 @@ bool8 HasRelearnerTMMoves(struct Pokemon *mon)
 
 bool8 HasRelearnerTutorMoves(struct Pokemon *mon)
 {
+    if (!FlagGet(P_FLAG_TUTOR_MOVES) && !P_ENABLE_MOVE_RELEARNERS)
+        return FALSE;
+
 #if P_TUTOR_MOVES_ARRAY
     u16 species = GetMonData(mon, MON_DATA_SPECIES_OR_EGG, 0);
 
