@@ -4901,7 +4901,7 @@ static void Task_SurpriseTrade(u8 taskId)
     if (!gPaletteFade.active)
     {
         SetMainCallback2(CB2_InitInGameTrade);
-        gFieldCallback = ShowTradedMonReturnToStartMenu;
+        gFieldCallback = FieldCB_ContinueScriptHandleMusic;
         DestroyTask(taskId);
     }
 }

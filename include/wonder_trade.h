@@ -2,8 +2,6 @@
 #define GUARD_WONDER_TRADE_H
 
 void CreateWonderTradePokemon(void);
-void ShowTradedMonReturnToStartMenu(void);
-void ShowTradedMonReturnToField(void);
 
 struct WonderTradeTrainer
 {

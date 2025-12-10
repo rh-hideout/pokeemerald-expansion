@@ -129,7 +129,7 @@ static u32 GenerateSurpriseTradeSpecies(void)
             newSpecies = HoennToNationalOrder(newSpecies);
         newSpecies = NationalPokedexNumToSpecies(newSpecies);
 
-        if ((gSpeciesInfo[newSpecies].isLegendary && !WT_USE_RESTRICTEDS)
+        if ((gSpeciesInfo[newSpecies].isRestricted && !WT_USE_RESTRICTEDS)
         ||  (gSpeciesInfo[newSpecies].isSubLegendary && !WT_USE_SUBLEGENDARIES)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
@@ -774,10 +774,3 @@ static u32 GetTotalBST(u32 species)
          + GetSpeciesBaseSpAttack(species)
          + GetSpeciesBaseSpDefense(species);
 }
-
-
-void ShowTradedMonReturnToStartMenu(void)
-{
-    ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, &gPlayerParty[gSpecialVar_0x8005], 0, 0, CB2_ReturnToField);
-}
-

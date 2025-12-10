@@ -43,6 +43,7 @@
 // Auto-Evolve Config
 
 #define WT_AUTO_EVOLVE                  TRUE // Toggles whether the received pokemon should arrive evolved. If you want to customize evos, edit the evolution function.
+
 #define WT_AUTO_EVOLVE_TRADE_LEVEL      37    // Level at which a pokemon should auto-evolve by trade
 #define WT_AUTO_EVOLVE_ITEM_LEVEL       37    // Level at which a pokemon should auto-evolve by item
 #define WT_AUTO_EVOLVE_OTHER_LEVEL      60    // Level at which a pokemon should auto-evolve by other methods
@@ -50,8 +51,9 @@
 // Item Config
 
 #define WT_ITEMS                        FALSE // Toggles whether the received pokemon should arrive holding a random item using the options below.
+
 #define WT_CUSTOM_ITEMS                 FALSE // Toggles whether you want to distribute random items from a list in src/data/wonder_trade_custom_items.h
-#define WT_SPECIES_SPECIFIC_ITEMS       FALSE // Toggles whether the received pokemon arrives carrying species-specific items, if any. Overrides WT_ITEMS, and defaults to it if none exist.
+#define WT_SPECIES_SPECIFIC_ITEMS       FALSE // Toggles whether the received pokemon arrives carrying species-specific items, if any.
 #define WT_SPECIES_SPECIFIC_Z_CRYSTALS  FALSE // If WT_SPECIES_SPECIFIC_ITEMS is TRUE, toggles whether species-specific z-crystals are a possible hold.
 #define WT_SPECIES_SPECIFIC_MEGA_STONES FALSE // If WT_SPECIES_SPECIFIC_ITEMS is TRUE, toggles whether species-specific mega stones are a possible hold.
 
