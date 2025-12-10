@@ -2188,7 +2188,8 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         break;
     case STRINGID_INTROSENDOUT: // poke first send-out
-        if (BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler)))
+        if (BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))
+         || BattlerIsWally(battler) || BattlerIsWally(BATTLE_PARTNER(battler)))
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
@@ -2251,7 +2252,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
     case STRINGID_RETURNMON: // sending poke to ball msg
         if ((GetBattlerPosition(battler) & BIT_FLANK) == B_FLANK_LEFT) // battler 0 and 1
         {
-            if (BattlerIsPlayer(battler)) // Player
+            if (BattlerIsPlayer(battler) || BattlerIsWally(battler)) // Player
             {
                 if (*(&gBattleStruct->hpScale) == 0)
                     stringPtr = sText_PkmnThatsEnough;
@@ -2273,7 +2274,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerWithdrewPkmn1;
                 }
             }
-            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent 1 and test opponent
             {
                 stringPtr = sText_LinkTrainer1WithdrewPkmn;
@@ -2307,7 +2308,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerWithdrewPkmn2;
                 }
             }
-            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -2350,7 +2351,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerSentOutPkmn1;
                 }
             }
-            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent 1 and test opponent
             {
                 stringPtr = sText_LinkTrainerSentOutPkmn;
@@ -2384,7 +2385,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerSentOutPkmn2;
                 }
             }
-            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)

@@ -303,6 +303,7 @@ bool32 BattlerIsPartner(u32 battlerId);
 bool32 BattlerIsOpponent(u32 battlerId);
 bool32 BattlerIsRecorded(u32 battlerId);
 bool32 BattlerIsLink(u32 battlerId);
+bool32 BattlerIsWally(u32 battlerId);
 bool32 BattlerHasAi(u32 battlerId);
 
 // emitters
