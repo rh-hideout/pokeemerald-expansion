@@ -871,6 +871,7 @@ gBattleAnimMove_Punishment::
 	blendoff
 	waitforvisualfinish
 	loadspritegfx ANIM_TAG_IMPACT
+	delay 1
 	monbg ANIM_TARGET
 	setalpha 12, 8
 	playsewithpan SE_M_DOUBLE_SLAP, SOUND_PAN_TARGET
