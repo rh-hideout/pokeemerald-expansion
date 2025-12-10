@@ -24,8 +24,8 @@ enum DamageCalcContext
 
 enum AiConsiderEndure
 {
-    CONSIDER_ENDURE_EFFECT,
-    DONT_CONSIDER_ENDURE_EFFECT,
+    CONSIDER_ENDURE,
+    DONT_CONSIDER_ENDURE,
 };
 
 // Higher priority at the bottom; note that these are used in the formula MAX_MON_MOVES ^ AiCompareMovesPriority, which must fit within a u32.
