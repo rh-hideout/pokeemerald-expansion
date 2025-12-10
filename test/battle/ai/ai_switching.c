@@ -1841,7 +1841,7 @@ AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting abi
     }
 }
 
-AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting ability's affect on failed moves when considering switchin candidates")
+AI_SINGLE_BATTLE_TEST("AI_SMART_MON_CHOICES: AI sees its own terrain setting ability's effect on failed moves when considering switchin candidates")
 {
     KNOWN_FAILING; // Fails because the AI can't currently see the arbitrary terrain passed to AI_CalcDamage in CanAbilityBlockMove
     GIVEN {
