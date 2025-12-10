@@ -2438,9 +2438,8 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         gBattlescriptCurrInstr = nextInstr;
     }
 
-    // Note: While physicalDmg/specialDmg below are only distinguished between for Counter/Mirror Coat, they are
-    //       used in combination as general damage trackers for other purposes. specialDmg is additionally used
-    //       to help determine if a fire move should defrost the target.
+    // Note: While physicalDmg/specialDmg below are only distinguished between for Counter/Mirror Coat,
+    //       they are used in combination as general damage trackers for other purposes.
     if (IsBattleMovePhysical(gCurrentMove))
     {
         gProtectStructs[battler].physicalDmg = gBattleStruct->moveDamage[battler] + 1;
