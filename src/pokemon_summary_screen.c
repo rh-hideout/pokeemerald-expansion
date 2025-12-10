@@ -1902,7 +1902,7 @@ void ExtractMonSkillEvData(struct Pokemon *mon, struct PokeSummary *sum)
     sum->speed = GetMonData(mon, MON_DATA_SPEED_EV);
 }
 
-u32 HasAnyRelearnableMoves(enum MoveRelearnerStates state)
+bool32 HasAnyRelearnableMoves(enum MoveRelearnerStates state)
 {
     struct Pokemon *mon = &sMonSummaryScreen->currentMon;
 
@@ -1917,7 +1917,7 @@ u32 HasAnyRelearnableMoves(enum MoveRelearnerStates state)
         case MOVE_RELEARNER_LEVEL_UP_MOVES:
             return HasRelearnerLevelUpMoves(mon);
         default:
-            return 0;
+            return FALSE;
     }
 }
 
