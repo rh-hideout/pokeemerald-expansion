@@ -13,12 +13,18 @@ def remove_loadspritegfx(fileInput):
         return False
     allLines = list()
     with open(fileInput, 'r', encoding='UTF-8') as file:
-        lineNumber = 1
         while line:=file.readline():
             if line.startswith("\tloadspritegfx"):
                 line = ""
-            lineNumber += 1
-            allLines.append(line)
+                allLines.append(line)
+            elif line.startswith("\tunloadspritegfx"):
+                allLines.append(line)
+                tag = line.lstrip().replace("unloadspritegfx", "")
+                line = "\tunloadspritepal" + tag
+                allLines.append(line)
+            else:
+                allLines.append(line)
+
     with open(fileInput, 'w', encoding='UTF-8') as file:
         for line in allLines:
             file.write(line)
