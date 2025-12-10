@@ -54,17 +54,11 @@ STATIC_ASSERT(WT_NUM_PERFECT_IVS <=6 && WT_NUM_PERFECT_IVS >= 0, wonderTradePerf
 void CreateWonderTradePokemon(void)
 {
     u32 playerMonLevel = GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_LEVEL);
-    MgbaPrintf(MGBA_LOG_WARN, "Mon Level: %d", playerMonLevel);
     u32 wonderTradeSpecies = GenerateSurpriseTradeSpecies();
-    MgbaPrintf(MGBA_LOG_WARN, "Chosen Species: %d", wonderTradeSpecies);
     u32 experience = CalculateSurpriseTradeExperience(playerMonLevel, wonderTradeSpecies);
-    MgbaPrintf(MGBA_LOG_WARN, "Chosen Mon Experience: %d", experience);
     u32 newHeldItem = GenerateSurpriseTradeItem(wonderTradeSpecies);
-    MgbaPrintf(MGBA_LOG_WARN, "Chosen Mon Item: %d", newHeldItem);
     u32 abilityNum = GenerateSurpriseTradeAbility(wonderTradeSpecies);
-    MgbaPrintf(MGBA_LOG_WARN, "Chosen Mon Ability: %d", abilityNum);
     enum PokeBall ball = GenerateSurpriseTradeBall();
-    MgbaPrintf(MGBA_LOG_WARN, "Mon Ball: %d", ball);
 
     u32 trainer = Random() % ARRAY_COUNT(wonderTradeTrainer);
     u8* name = Alloc(TRAINER_NAME_LENGTH+1);
@@ -92,15 +86,12 @@ void CreateWonderTradePokemon(void)
 
     if (WT_RANDOM_EVS)
         AddSurpriseTradeEffortValues(&gEnemyParty[0]);
-    MgbaPrintf(MGBA_LOG_WARN, "Adding moves...");
     AddSurpriseTradeMoves(&gEnemyParty[0]);
 
-    MgbaPrintf(MGBA_LOG_WARN, "Added moves...");
 
     CalculateMonStats(&gEnemyParty[0]);
 
     Free(name);
-    MgbaPrintf(MGBA_LOG_WARN, "Done...");
 }
 
 static u32 GenerateSurpriseTradeSpecies(void)
@@ -121,7 +112,7 @@ static u32 GenerateSurpriseTradeSpecies(void)
     }
 
     u32 dexCount = (WT_DEX_NATIONAL) ? NATIONAL_DEX_COUNT : HOENN_DEX_COUNT;
-    u32 dexList[dexCount];
+    u32 *dexList = Alloc(dexCount * 4);
 
     for (u32 speciesIndex = 0; speciesIndex < dexCount; speciesIndex++)
         dexList[speciesIndex] = speciesIndex;
@@ -188,6 +179,8 @@ static u32 GenerateSurpriseTradeSpecies(void)
         species = newSpecies;
         break;
     }
+
+    Free(dexList);
     
     return species;
 }
@@ -266,7 +259,6 @@ static void TryAutoEvolve(u32 *species) {
         return;
 
     *species = chooseableEvos[RandomUniform(RNG_NONE, 1, numEvos) - 1];
-    MgbaPrintf(MGBA_LOG_WARN, "Evolved into: %d", *species);
 
     //Evolve again?
     if (GetSpeciesEvolutions(*species) != NULL)
