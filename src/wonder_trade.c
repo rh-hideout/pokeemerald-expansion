@@ -175,7 +175,8 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         numForms++;
                     }
                 }
-                newSpecies = chooseableForms[RandomUniform(RNG_NONE, 1, numForms) - 1];
+                if (numForms != 0) // Again, shouldn't happen, but doesn't hurt
+                    newSpecies = chooseableForms[RandomUniform(RNG_NONE, 1, numForms) - 1];
             }
         }
 
