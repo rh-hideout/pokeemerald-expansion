@@ -86,9 +86,8 @@ void CreateWonderTradePokemon(void)
 
     if (WT_RANDOM_EVS)
         AddSurpriseTradeEffortValues(&gEnemyParty[0]);
+
     AddSurpriseTradeMoves(&gEnemyParty[0]);
-
-
     CalculateMonStats(&gEnemyParty[0]);
 
     Free(name);
@@ -96,69 +95,83 @@ void CreateWonderTradePokemon(void)
 
 static u32 GenerateSurpriseTradeSpecies(void)
 {
+    u32 newSpecies = SPECIES_NONE; // In theory, this should NEVER remain SPECIES_NONE. Use cases for pokemon being traded away with BST > 600 are handled.
+    u32 prevSpecies = SPECIES_NONE; // to track the last invalid species generated
+    u32 playerSpecies = GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_SPECIES);
+    bool32 validSpecies = FALSE;
 
-    u32 species = SPECIES_NONE; // In theory, this should NEVER remain SPECIES_NONE. Use cases for pokemon being traded away with BST > 600 are handled.
-    
     // Use custom mon list if WT_TYPE_CUSTOM
-    
-    if (WT_TYPE == WT_TYPE_CUSTOM) {
 
-        species = customWonderTradeSpecies[RandomUniform(RNG_NONE, 1, WT_NUM_CUSTOM_SPECIES) - 1];
+    if (WT_TYPE == WT_TYPE_CUSTOM)
+    {
+        newSpecies = customWonderTradeSpecies[RandomUniform(RNG_NONE, 1, WT_NUM_CUSTOM_SPECIES) - 1];
 
         if (WT_AUTO_EVOLVE)
-            TryAutoEvolve(&species);
+            TryAutoEvolve(&newSpecies);
 
-        return species;
+        return newSpecies;
     }
 
     u32 dexCount = (WT_DEX_NATIONAL) ? NATIONAL_DEX_COUNT : HOENN_DEX_COUNT;
-    u32 *dexList = Alloc(dexCount * 4);
 
-    for (u32 speciesIndex = 0; speciesIndex < dexCount; speciesIndex++)
-        dexList[speciesIndex] = speciesIndex;
-
-    Shuffle(dexList, dexCount, sizeof(dexList[0]));
-
-    // For non-custom mons, we don't wanna just randomly pick mons potentially twice, we'd rather iterate through a random list of mons
-
-    for (u32 speciesIndex = 0; speciesIndex < NUM_SPECIES; speciesIndex++)
+    do
     {
+        newSpecies = RandomUniform(RNG_WONDER_TRADE, (SPECIES_NONE + 1), (dexCount - 1));
 
-        u32 newSpecies = dexList[speciesIndex];
         if (!WT_DEX_NATIONAL)
             newSpecies = HoennToNationalOrder(newSpecies);
         newSpecies = NationalPokedexNumToSpecies(newSpecies);
+
+        if (newSpecies == playerSpecies)
+        {
+            prevSpecies = newSpecies;
+            continue;
+        }
+
+        if (newSpecies == prevSpecies)
+            continue;
 
         if ((gSpeciesInfo[newSpecies].isRestrictedLegendary && !WT_USE_RESTRICTEDS)
         ||  (gSpeciesInfo[newSpecies].isSubLegendary && !WT_USE_SUBLEGENDARIES)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
         ||  (gSpeciesInfo[newSpecies].isParadox && !WT_USE_PARADOXES))
+        {
+            prevSpecies = newSpecies;
             continue;
+        }
 
-        if (WT_TYPE == WT_TYPE_WEIGHTED) {
+
+        if (WT_TYPE == WT_TYPE_WEIGHTED)
+        {
             s32 playerMonBST = GetTotalBST(GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_SPECIES));
             s32 newSpeciesBST = GetTotalBST(newSpecies);
             s32 difference = playerMonBST - newSpeciesBST;
             if (difference < 0)
                 difference *= -1;
-            if (difference > WT_WEIGHT 
+            if (difference > WT_WEIGHT
                 || (playerMonBST > 700 && difference > 120) //Arceus Edge Case
                 || (playerMonBST > 600 && difference > WT_WEIGHT_LENIENT)) //Edge case for trading away a legendary pokemon when you have a bunch of levers turned off
-                continue;
+                {
+                    prevSpecies = newSpecies;
+                    continue;
+                }
+
         }
 
-        if (WT_FORMS 
+        if (WT_FORMS
             && newSpecies != SPECIES_ARCEUS
             && newSpecies != SPECIES_GENESECT  // Edge cases for pokemon that change form with held items but have shared species info
             && newSpecies != SPECIES_SILVALLY
-            && newSpecies != SPECIES_OGERPON) 
-        { 
+            && newSpecies != SPECIES_OGERPON)
+        {
             const u16 *formTable = GetSpeciesFormTable(newSpecies);
-            if (formTable != NULL) {
+            if (formTable != NULL)
+            {
                 u16 chooseableForms[64]; //Alcremie has a lot of forms bro
                 u16 numForms = 0;
-                for (u8 formId = 0; formTable[formId] != FORM_SPECIES_END; formId++) {
+                for (u8 formId = 0; formTable[formId] != FORM_SPECIES_END; formId++)
+                {
                     if (   gSpeciesInfo[formTable[formId]].isMegaEvolution
                         || gSpeciesInfo[formTable[formId]].isGigantamax
                         || gSpeciesInfo[formTable[formId]].isTotem
@@ -166,11 +179,13 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         || gSpeciesInfo[formTable[formId]].cannotBeTraded
                         || gSpeciesInfo[formTable[formId]].isTeraForm
                         || gSpeciesInfo[formTable[formId]].isPrimalReversion
-                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned) {
+                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned)
+                    {
                         //We don't want these
                         continue;
                     }
-                    else {
+                    else
+                    {
                         chooseableForms[numForms] = formTable[formId];
                         numForms++;
                     }
@@ -183,17 +198,14 @@ static u32 GenerateSurpriseTradeSpecies(void)
         if (WT_AUTO_EVOLVE)
             TryAutoEvolve(&newSpecies);
 
-        species = newSpecies;
-        break;
-    }
+        validSpecies = TRUE;
+    } while (!validSpecies);
 
-    Free(dexList);
-    
-    return species;
+    return newSpecies;
 }
 
-static void TryAutoEvolve(u32 *species) {
-
+static void TryAutoEvolve(u32 *species)
+{
     const struct Evolution *evolutions = GetSpeciesEvolutions(*species);
 
     if (evolutions == NULL)
@@ -209,53 +221,54 @@ static void TryAutoEvolve(u32 *species) {
 
         switch(evolutions[i].method)
         {
-            case EVO_LEVEL:
-                if (monLevel >= evolutions[i].param) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_TRADE:
-                if (monLevel >= WT_AUTO_EVOLVE_TRADE_LEVEL) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_ITEM:
-                if (monLevel >= WT_AUTO_EVOLVE_ITEM_LEVEL) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_SPLIT_FROM_EVO: /*Shedinja special case*/
-                if (monLevel >= 20) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_SCRIPT_TRIGGER:
-                if (monLevel >= WT_AUTO_EVOLVE_OTHER_LEVEL) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_LEVEL_BATTLE_ONLY:
-                if (monLevel >= evolutions[i].param) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_BATTLE_END:
-                if (monLevel >= WT_AUTO_EVOLVE_OTHER_LEVEL) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            case EVO_SPIN:
-                if (monLevel >= WT_AUTO_EVOLVE_ITEM_LEVEL) 
-                    testSpecies = evolutions[i].targetSpecies;
-                break;
-            default:
-                break;
+        case EVO_LEVEL:
+            if (monLevel >= evolutions[i].param)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_TRADE:
+            if (monLevel >= WT_AUTO_EVOLVE_TRADE_LEVEL)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_ITEM:
+            if (monLevel >= WT_AUTO_EVOLVE_ITEM_LEVEL)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_SPLIT_FROM_EVO: /*Shedinja special case*/
+            if (monLevel >= 20)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_SCRIPT_TRIGGER:
+            if (monLevel >= WT_AUTO_EVOLVE_OTHER_LEVEL)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_LEVEL_BATTLE_ONLY:
+            if (monLevel >= evolutions[i].param)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_BATTLE_END:
+            if (monLevel >= WT_AUTO_EVOLVE_OTHER_LEVEL)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        case EVO_SPIN:
+            if (monLevel >= WT_AUTO_EVOLVE_ITEM_LEVEL)
+                testSpecies = evolutions[i].targetSpecies;
+            break;
+        default:
+            break;
         }
 
-        if (testSpecies != SPECIES_NONE && !gSpeciesInfo[testSpecies].isWonderTradeBanned) {
+        if (testSpecies != SPECIES_NONE && !gSpeciesInfo[testSpecies].isWonderTradeBanned)
+        {
+            bool32 isAlreadyIn = FALSE;
 
-            bool32 isAlreadyIn = FALSE; 
-
-            for (int j = 0; j <= numEvos; j++) {
-                if (chooseableEvos[j] == testSpecies) {
+            for (int j = 0; j <= numEvos; j++)
+            {
+                if (chooseableEvos[j] == testSpecies)
                     isAlreadyIn = TRUE;
-                }
             }
 
-            if (!isAlreadyIn) {
+            if (!isAlreadyIn)
+            {
                 chooseableEvos[numEvos] = testSpecies;
                 numEvos++;
             }
@@ -298,52 +311,54 @@ void AddSurpriseTradeMoves(struct Pokemon *mon)
     u32 finalMoveCount = 0;
 
     AddLevelUpMoves(mon, species, finalMoves, &finalMoveCount);
-    
-    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_TM != 0) {
+
+    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_TM != 0)
         AddTmMoves(mon, species, finalMoves, &finalMoveCount);
-    }
-    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_EGG != 0) {
+    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_EGG != 0)
         AddEggMoves(mon, species, finalMoves, &finalMoveCount);
-    }
-    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_TUTOR != 0) {
+    if (WT_RANDOM_MOVESETS && WT_RANDOM_MOVESET_TUTOR != 0)
         AddTutorMoves(mon, species, finalMoves, &finalMoveCount);
-    } 
 
     ApplyFinalMoves(mon, finalMoves);
     CompactMoveSlots(mon);
 }
 
-static void AddTmMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount) {
+static void AddTmMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount)
+{
 
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 numMoves = GetRelearnerTMMoves(mon, moves);
 
-    if (numMoves == 0) {
+    if (numMoves == 0)
         return;
-    }
 
     u16 pickedIndices[4] = {0};
     u16 chosenCount = 0;
 
     Shuffle(moves, numMoves, sizeof(moves[0]));
 
-    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_TM; i++) {
-
+    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_TM; i++)
+    {
         bool32 alreadyChosen = FALSE;
 
-        for (u32 j = 0; j < chosenCount; j++) {
-            if (moves[i] == pickedIndices[j]) {
+        for (u32 j = 0; j < chosenCount; j++)
+        {
+            if (moves[i] == pickedIndices[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        for (u32 j = 0; j < *finalMoveCount; j++) {
-            if (moves[i] == finalMoves[j]) {
+        for (u32 j = 0; j < *finalMoveCount; j++)
+        {
+            if (moves[i] == finalMoves[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        if (!alreadyChosen) {
+        if (!alreadyChosen)
+        {
             pickedIndices[chosenCount] = i;
             chosenCount++;
             finalMoves[*finalMoveCount] = moves[i];
@@ -354,37 +369,43 @@ static void AddTmMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *f
     return;
 }
 
-static void AddEggMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount) {
-    
+static void AddEggMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount)
+{
+
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 numMoves = GetRelearnerEggMoves(mon, moves);
 
-    if (numMoves == 0) {
+    if (numMoves == 0)
         return;
-    }
 
     u16 pickedIndices[4] = {0};
     u16 chosenCount = 0;
 
     Shuffle(moves, numMoves, sizeof(moves[0]));
 
-    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_EGG; i++) {
+    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_EGG; i++)
+    {
 
         bool32 alreadyChosen = FALSE;
 
-        for (u32 j = 0; j < chosenCount; j++) {
-            if (moves[i] == pickedIndices[j]) {
+        for (u32 j = 0; j < chosenCount; j++)
+        {
+            if (moves[i] == pickedIndices[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        for (u32 j = 0; j < *finalMoveCount; j++) {
-            if (moves[i] == finalMoves[j]) {
+        for (u32 j = 0; j < *finalMoveCount; j++)
+        {
+            if (moves[i] == finalMoves[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        if (!alreadyChosen) {
+        if (!alreadyChosen)
+        {
             pickedIndices[chosenCount] = i;
             chosenCount++;
             finalMoves[*finalMoveCount] = moves[i];
@@ -394,37 +415,43 @@ static void AddEggMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *
 
     return;
 }
-static void AddTutorMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount) {
+static void AddTutorMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u32 *finalMoveCount)
+    {
 
     u16 moves[MAX_RELEARNER_MOVES] = {0};
     u16 numMoves = GetRelearnerTutorMoves(mon, moves);
 
-    if (numMoves == 0) {
+    if (numMoves == 0)
         return;
-    }
 
     u16 pickedIndices[4] = {0};
     u16 chosenCount = 0;
 
     Shuffle(moves, numMoves, sizeof(moves[0]));
 
-    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_TUTOR; i++) {
+    for (u32 i = 0; i < numMoves && chosenCount < WT_RANDOM_MOVESET_TUTOR; i++)
+    {
 
         bool32 alreadyChosen = FALSE;
 
-        for (u32 j = 0; j < chosenCount; j++) {
-            if (moves[i] == pickedIndices[j]) {
+        for (u32 j = 0; j < chosenCount; j++)
+        {
+            if (moves[i] == pickedIndices[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        for (u32 j = 0; j < *finalMoveCount; j++) {
-            if (moves[i] == finalMoves[j]) {
+        for (u32 j = 0; j < *finalMoveCount; j++)
+        {
+            if (moves[i] == finalMoves[j])
+            {
                 alreadyChosen = TRUE;
                 break;
             }
         }
-        if (!alreadyChosen) {
+        if (!alreadyChosen)
+        {
             pickedIndices[chosenCount] = i;
             chosenCount++;
             finalMoves[*finalMoveCount] = moves[i];
@@ -463,11 +490,15 @@ static void AddLevelUpMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u
 
     u32 start = (learnedCount >= MAX_MON_MOVES) ? learnedCount - MAX_MON_MOVES : 0;
     u32 finalCount = 0;
-    if (!WT_RANDOM_MOVESETS) {
+    if (!WT_RANDOM_MOVESETS)
+    {
         for (u32 moveIndex = start; moveIndex < learnedCount && finalCount < MAX_MON_MOVES; moveIndex++)
             finalMoves[finalCount++] = learnedMoves[moveIndex];
-    } else {
-        for (u32 moveIndex = start; moveIndex < learnedCount && *finalMoveCount < WT_RANDOM_MOVESET_LEVELUP; moveIndex++) {
+    }
+    else
+    {
+        for (u32 moveIndex = start; moveIndex < learnedCount && *finalMoveCount < WT_RANDOM_MOVESET_LEVELUP; moveIndex++)
+        {
             finalMoves[*finalMoveCount] = learnedMoves[moveIndex];
             (*finalMoveCount)++;
         }
@@ -529,11 +560,13 @@ static void AddSurpriseTradeEffortValues(struct Pokemon* mon)
 
 static u32 GenerateSurpriseTradeAbility(u32 species)
 {
-    u8 increment = 0;
+    u32 increment = 0;
     u32 possibleAbilities[3];
 
-    for (u8 i = 0; i < 3; i++) {
-        if (gSpeciesInfo[species].abilities[i] != ABILITY_NONE) {
+    for (u32 i = 0; i < 3; i++)
+    {
+        if (gSpeciesInfo[species].abilities[i] != ABILITY_NONE)
+        {
             possibleAbilities[increment] = i;
             increment++;
         }
@@ -575,8 +608,11 @@ static bool32 IsItemBlocked(u32 item)
         return TRUE;
 
     for (u32 holdIndex = 0; holdIndex < ARRAY_COUNT(blockedHoldEffects); holdIndex++)
+    {
         if (itemHoldEffect == blockedHoldEffects[holdIndex])
             return TRUE;
+    }
+
 
     return FALSE;
 }
@@ -588,122 +624,132 @@ static u32 GenerateSurpriseTradeItem(u32 species)
 
     u32 item = ITEM_NONE;
 
-    if (WT_SPECIES_SPECIFIC_ITEMS) {
+    if (WT_SPECIES_SPECIFIC_ITEMS)
+    {
 
         u32 possibleSpeciesItems[18];
         u32 itemCount = 0;
         u32 baseSpecies = GET_BASE_SPECIES_ID(species);
 
-        switch (baseSpecies) {
-            case SPECIES_PICHU:
-            case SPECIES_PIKACHU:
-            case SPECIES_RAICHU:
-                possibleSpeciesItems[itemCount] = ITEM_LIGHT_BALL;
+        switch (baseSpecies)
+        {
+        case SPECIES_PICHU:
+        case SPECIES_PIKACHU:
+        case SPECIES_RAICHU:
+            possibleSpeciesItems[itemCount] = ITEM_LIGHT_BALL;
+            itemCount++;
+            break;
+        case SPECIES_CUBONE:
+        case SPECIES_MAROWAK:
+            possibleSpeciesItems[itemCount] = ITEM_THICK_CLUB;
+            itemCount++;
+            break;
+        case SPECIES_FARFETCHD:
+        case SPECIES_SIRFETCHD:
+            possibleSpeciesItems[itemCount] = ITEM_LEEK;
+            itemCount++;
+            break;
+        case SPECIES_CLAMPERL:
+            possibleSpeciesItems[itemCount] = ITEM_DEEP_SEA_SCALE;
+            itemCount++;
+            possibleSpeciesItems[itemCount] = ITEM_DEEP_SEA_TOOTH;
+            itemCount++;
+            break;
+        case SPECIES_DIALGA:
+            possibleSpeciesItems[itemCount] = ITEM_ADAMANT_ORB;
+            itemCount++;
+            possibleSpeciesItems[itemCount] = ITEM_ADAMANT_CRYSTAL;
+            itemCount++;
+            break;
+        case SPECIES_PALKIA:
+            possibleSpeciesItems[itemCount] = ITEM_LUSTROUS_ORB;
+            itemCount++;
+            possibleSpeciesItems[itemCount] = ITEM_LUSTROUS_GLOBE;
+            itemCount++;
+            break;
+        case SPECIES_GIRATINA:
+            possibleSpeciesItems[itemCount] = ITEM_GRISEOUS_ORB;
+            itemCount++;
+            possibleSpeciesItems[itemCount] = ITEM_GRISEOUS_CORE;
+            itemCount++;
+            break;
+        case SPECIES_HAPPINY:
+        case SPECIES_CHANSEY:
+        case SPECIES_BLISSEY:
+            possibleSpeciesItems[itemCount] = ITEM_LUCKY_PUNCH;
+            itemCount++;
+            break;
+        case SPECIES_DITTO:
+            possibleSpeciesItems[itemCount] = ITEM_METAL_POWDER;
+            itemCount++;
+            possibleSpeciesItems[itemCount] = ITEM_QUICK_POWDER;
+            itemCount++;
+            break;
+        case SPECIES_LATIOS:
+        case SPECIES_LATIAS:
+            possibleSpeciesItems[itemCount] = ITEM_SOUL_DEW;
+            itemCount++;
+            break;
+        case SPECIES_KYOGRE:
+            possibleSpeciesItems[itemCount] = ITEM_BLUE_ORB;
+            itemCount++;
+            break;
+        case SPECIES_GROUDON:
+            possibleSpeciesItems[itemCount] = ITEM_RED_ORB;
+            itemCount++;
+            break;
+        case SPECIES_ZACIAN:
+            possibleSpeciesItems[itemCount] = ITEM_RUSTED_SWORD;
+            itemCount++;
+            break;
+        case SPECIES_ZAMAZENTA:
+            possibleSpeciesItems[itemCount] = ITEM_RUSTED_SHIELD;
+            itemCount++;
+            break;
+        case SPECIES_GENESECT:
+            for (u32 i = ITEM_DOUSE_DRIVE; i <= ITEM_CHILL_DRIVE; i++)
+            {
+                possibleSpeciesItems[itemCount] = i;
                 itemCount++;
-                break;
-            case SPECIES_CUBONE:
-            case SPECIES_MAROWAK:
-                possibleSpeciesItems[itemCount] = ITEM_THICK_CLUB;
+            }
+            break;
+        case SPECIES_TYPE_NULL:
+        case SPECIES_SILVALLY:
+            for (u32 i = ITEM_FIRE_MEMORY; i <= ITEM_FAIRY_MEMORY; i++)
+            {
+                possibleSpeciesItems[itemCount] = i;
                 itemCount++;
-                break;
-            case SPECIES_FARFETCHD:
-            case SPECIES_SIRFETCHD:
-                possibleSpeciesItems[itemCount] = ITEM_LEEK;
+            }
+            break;
+        case SPECIES_ARCEUS:
+            for (u32 i = ITEM_FLAME_PLATE; i <= ITEM_PIXIE_PLATE; i++)
+            {
+                possibleSpeciesItems[itemCount] = i;
                 itemCount++;
-                break;
-            case SPECIES_CLAMPERL:
-                possibleSpeciesItems[itemCount] = ITEM_DEEP_SEA_SCALE;
-                itemCount++;
-                possibleSpeciesItems[itemCount] = ITEM_DEEP_SEA_TOOTH;
-                itemCount++;
-                break;
-            case SPECIES_DIALGA:
-                possibleSpeciesItems[itemCount] = ITEM_ADAMANT_ORB;
-                itemCount++;
-                possibleSpeciesItems[itemCount] = ITEM_ADAMANT_CRYSTAL;
-                itemCount++;
-                break;
-            case SPECIES_PALKIA:
-                possibleSpeciesItems[itemCount] = ITEM_LUSTROUS_ORB;
-                itemCount++;
-                possibleSpeciesItems[itemCount] = ITEM_LUSTROUS_GLOBE;
-                itemCount++;
-                break;
-            case SPECIES_GIRATINA:
-                possibleSpeciesItems[itemCount] = ITEM_GRISEOUS_ORB;
-                itemCount++;
-                possibleSpeciesItems[itemCount] = ITEM_GRISEOUS_CORE;
-                itemCount++;
-                break;
-            case SPECIES_HAPPINY:
-            case SPECIES_CHANSEY:
-            case SPECIES_BLISSEY:
-                possibleSpeciesItems[itemCount] = ITEM_LUCKY_PUNCH;
-                itemCount++;
-                break;
-            case SPECIES_DITTO:
-                possibleSpeciesItems[itemCount] = ITEM_METAL_POWDER;
-                itemCount++;
-                possibleSpeciesItems[itemCount] = ITEM_QUICK_POWDER;
-                itemCount++;
-                break;
-            case SPECIES_LATIOS:
-            case SPECIES_LATIAS:
-                possibleSpeciesItems[itemCount] = ITEM_SOUL_DEW;
-                itemCount++;
-                break;
-            case SPECIES_KYOGRE:
-                possibleSpeciesItems[itemCount] = ITEM_BLUE_ORB;
-                itemCount++;
-                break;
-            case SPECIES_GROUDON:
-                possibleSpeciesItems[itemCount] = ITEM_RED_ORB;
-                itemCount++;
-                break;
-            case SPECIES_ZACIAN:
-                possibleSpeciesItems[itemCount] = ITEM_RUSTED_SWORD;
-                itemCount++;
-                break;
-            case SPECIES_ZAMAZENTA:
-                possibleSpeciesItems[itemCount] = ITEM_RUSTED_SHIELD;
-                itemCount++;
-                break;
-            case SPECIES_GENESECT:
-                for (u32 i = ITEM_DOUSE_DRIVE; i <= ITEM_CHILL_DRIVE; i++) {
-                    possibleSpeciesItems[itemCount] = i;
-                    itemCount++;
-                }
-                break;
-            case SPECIES_TYPE_NULL:
-            case SPECIES_SILVALLY:
-                for (u32 i = ITEM_FIRE_MEMORY; i <= ITEM_FAIRY_MEMORY; i++) {
-                    possibleSpeciesItems[itemCount] = i;
-                    itemCount++;
-                }
-                break;
-            case SPECIES_ARCEUS:
-                for (u32 i = ITEM_FLAME_PLATE; i <= ITEM_PIXIE_PLATE; i++) {
-                    possibleSpeciesItems[itemCount] = i;
-                    itemCount++;
-                }
-                break;
-            default:
-                break;
+            }
+            break;
+        default:
+            break;
         }
 
-        if (WT_SPECIES_SPECIFIC_MEGA_STONES) {
+        if (WT_SPECIES_SPECIFIC_MEGA_STONES)
+        {
             const struct FormChange *formChanges = GetSpeciesFormChanges(species);
-            for (u32 i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++) {
-                if (formChanges[i].method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM) {
+            for (u32 i = 0; formChanges != NULL && formChanges[i].method != FORM_CHANGE_TERMINATOR; i++)
+            {
+                if (formChanges[i].method == FORM_CHANGE_BATTLE_MEGA_EVOLUTION_ITEM)
+                {
                     possibleSpeciesItems[itemCount] = formChanges[i].param1;
                     itemCount++;
                 }
             }
         }
-        
-        if (WT_SPECIES_SPECIFIC_Z_CRYSTALS) {
+
+        if (WT_SPECIES_SPECIFIC_Z_CRYSTALS)
+        {
             u32 speciesCrystal = GetSpeciesZItem(species);
-            if (!speciesCrystal == ITEM_NONE) {
+            if (!speciesCrystal == ITEM_NONE)
+            {
                 possibleSpeciesItems[itemCount] = speciesCrystal;
                 itemCount++;
             }
@@ -712,14 +758,39 @@ static u32 GenerateSurpriseTradeItem(u32 species)
         item = possibleSpeciesItems[RandomUniform(RNG_NONE, 1, itemCount) - 1];
     }
 
-    if (!WT_CUSTOM_ITEMS && item == ITEM_NONE) {
+    if (!WT_CUSTOM_ITEMS && item == ITEM_NONE)
+    {
         while (IsItemBlocked(item))
             item = Random() % ITEMS_COUNT;
-    } else if (item == ITEM_NONE) {
+    }
+    else if (item == ITEM_NONE)
+    {
         item = customWonderTradeItems[RandomUniform(RNG_NONE, 1, WT_NUM_CUSTOM_ITEMS) - 1];
     }
 
     return item;
+}
+
+bool32 IsValidPokeball(enum PokeBall ball)
+{
+    enum PokeBall invalidBalls[] =
+    {
+        BALL_STRANGE,
+        BALL_MASTER,
+        BALL_DREAM,
+        BALL_SAFARI,
+        BALL_SPORT,
+        BALL_PARK,
+        BALL_BEAST,
+        BALL_CHERISH,
+    };
+
+    for (u32 invalidBallIndex = 0; invalidBallIndex < ARRAY_COUNT(invalidBalls); invalidBallIndex++)
+    {
+        if (invalidBalls[invalidBallIndex] == ball)
+            return FALSE;
+    }
+    return TRUE;
 }
 
 static u32 GenerateSurpriseTradeBall(void)
@@ -729,8 +800,9 @@ static u32 GenerateSurpriseTradeBall(void)
     if (!WT_BALLS)
         return ball;
 
-    while (ball == BALL_POKE)
+    do
         ball = Random() % POKEBALL_COUNT;
+    while (!IsValidPokeball(ball));
 
     return ball;
 }
