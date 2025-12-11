@@ -2489,8 +2489,7 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
 u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
 {
     u16 *moves = GetMovesArray(battler);
-    u32 i;
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         if (GetMoveEffect(moves[i]) == effect)
             return i;
