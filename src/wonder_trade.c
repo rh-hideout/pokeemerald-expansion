@@ -124,7 +124,7 @@ static u32 GenerateSurpriseTradeSpecies(void)
         if (newSpecies == playerSpecies)
             continue;
 
-        if ((gSpeciesInfo[newSpecies].isRestricted && !WT_USE_RESTRICTEDS)
+        if ((gSpeciesInfo[newSpecies].isRestrictedLegendary && !WT_USE_RESTRICTEDS)
         ||  (gSpeciesInfo[newSpecies].isSubLegendary && !WT_USE_SUBLEGENDARIES)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
@@ -144,7 +144,11 @@ static u32 GenerateSurpriseTradeSpecies(void)
                 continue;
         }
 
-        if (WT_FORMS)
+        if (WT_FORMS
+            && newSpecies != SPECIES_ARCEUS
+            && newSpecies != SPECIES_GENESECT  // Edge cases for pokemon that change form with held items but have shared species info
+            && newSpecies != SPECIES_SILVALLY
+            && newSpecies != SPECIES_OGERPON)
         {
             const u16 *formTable = GetSpeciesFormTable(newSpecies);
             if (formTable != NULL)
@@ -159,8 +163,8 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         || gSpeciesInfo[formTable[formId]].isUltraBurst
                         || gSpeciesInfo[formTable[formId]].cannotBeTraded
                         || gSpeciesInfo[formTable[formId]].isTeraForm
-                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned)
-                    {
+                        || gSpeciesInfo[formTable[formId]].isPrimalReversion
+                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned) {
                         //We don't want these
                         continue;
                     }
@@ -171,7 +175,8 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         numForms++;
                     }
                 }
-                newSpecies = chooseableForms[RandomUniform(RNG_NONE, 1, numForms) - 1];
+                if (numForms != 0) // Again, shouldn't happen, but doesn't hurt
+                    newSpecies = chooseableForms[RandomUniform(RNG_NONE, 1, numForms) - 1];
             }
         }
 

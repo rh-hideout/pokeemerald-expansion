@@ -4221,6 +4221,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_PalafinHero,
             gShinyOverworldPalette_PalafinHero
         )
+        .isWonderTradeBanned = TRUE,
         .levelUpLearnset = sPalafinLevelUpLearnset,
         .teachableLearnset = sPalafinTeachableLearnset,
         .formSpeciesIdTable = sPalafinFormSpeciesIdTable,
@@ -8078,6 +8079,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             gOverworldPalette_TerapagosTerastal,
             gShinyOverworldPalette_TerapagosTerastal
         )
+        .isWonderTradeBanned = TRUE,
         .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

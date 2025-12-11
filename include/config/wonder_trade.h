@@ -25,7 +25,7 @@
 
 // Additional Selection Parameters (applicable to WT_TYPE_WEIGHTED and WT_TYPE_UNWEIGHTED only)
 
-#define WT_USE_RESTRICTEDS              FALSE // Toggles whether restricted legendaries will appear (defined with .isLegendary = TRUE in species config)
+#define WT_USE_RESTRICTEDS              FALSE // Toggles whether restricted legendaries will appear (defined with .isRestrictedLegendary = TRUE in species config)
 #define WT_USE_SUBLEGENDARIES           FALSE // Toggles whether non-restricted legendaries will appear (defined with .isSubLegendary = TRUE in species config)
 #define WT_USE_MYTHICALS                FALSE // Toggles whether mythicals will appear (defined with .isMythical = TRUE in species config)
 #define WT_USE_PARADOXES                FALSE // Toggles whether paradoxes will appear (defined with .isParadox = TRUE in species config)
