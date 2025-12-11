@@ -170,12 +170,10 @@ MoveTutor_EventScript_OpenPartyMenu::
 MoveTutor_EventScript_OpenBox::
 	chooseboxmon SELECT_PC_MON_MOVE_TUTOR
 	waitstate
-	special IsSelectedMonEgg
-	goto_if_eq VAR_RESULT, TRUE, MoveTutor_EggCantForgetMoves
-	special CanTeachMoveBoxMon
 	goto_if_eq VAR_RESULT, 1, MoveTutor_CantLearnMove
 	goto_if_eq VAR_RESULT, 2, MoveTutor_AlreadyKnowsMove
 	goto_if_eq VAR_RESULT, 3, MoveTutor_EggCantForgetMoves
+	special CanTeachMoveBoxMon
 	waitstate
 	return
 

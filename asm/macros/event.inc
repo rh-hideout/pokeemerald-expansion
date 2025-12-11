@@ -2648,13 +2648,12 @@
 	.endif
 	msgbox \monSelectMsg, MSGBOX_DEFAULT
 	setvar VAR_0x8005, \moveId
-	buffermovename STR_VAR_1, \moveId
 	call MoveTutor_EventScript_OpenBox
-	goto_if_eq VAR_RESULT, 4, \declinedJmp
-	goto \taughtJmp
+	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, \declinedJmp
 	.if \flagId
 		setflag \flagId
 	.endif
+	goto \taughtJmp
 	.endm
 
 	.macro chooseboxmon selectionType=SELECT_PC_MON_NORMAL

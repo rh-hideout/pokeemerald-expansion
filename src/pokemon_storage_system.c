@@ -45,6 +45,7 @@
 #include "constants/songs.h"
 #include "constants/pokemon_icon.h"
 #include "chooseboxmon.h"
+#include "party_menu.h"
 
 /*
     NOTE: This file is large. Some general groups of functions have
@@ -2682,16 +2683,20 @@ static void Task_OnSelectedMon(u8 taskId)
             break;
         case MENU_SELECT:
             PlaySE(SE_SELECT);
+            struct BoxPokemon *boxmon;
             if (sInPartyMenu)
             {
                 gSpecialVar_0x8004 = sCursorPosition;
+                boxmon = &(gPlayerParty[sCursorPosition].box);
             }
             else
             {
                 gSpecialVar_0x8004 = PC_MON_CHOSEN;
                 gSpecialVar_MonBoxPos = sCursorPosition;
                 gSpecialVar_MonBoxId = StorageGetCurrentBox();
+                boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
             }
+            gSpecialVar_Result = IsBoxMonExcluded(boxmon);
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
             break;
@@ -3651,7 +3656,10 @@ static void Task_OnCloseBoxPressed(u8 taskId)
             UpdateBoxToSendMons();
             gPlayerPartyCount = CalculatePlayerPartyCount();
             if (sStorage->boxOption == OPTION_SELECT_MON)
+            {
                 gSpecialVar_0x8004 = PARTY_NOTHING_CHOSEN;
+                gSpecialVar_Result = PARTY_NOTHING_CHOSEN;
+            }
             sStorage->screenChangeType = SCREEN_CHANGE_EXIT_BOX;
             SetPokeStorageTask(Task_ChangeScreen);
         }
