@@ -96,6 +96,7 @@ void CreateWonderTradePokemon(void)
 static u32 GenerateSurpriseTradeSpecies(void)
 {
     u32 newSpecies = SPECIES_NONE; // In theory, this should NEVER remain SPECIES_NONE. Use cases for pokemon being traded away with BST > 600 are handled.
+    u32 prevSpecies = SPECIES_NONE; // to track the last invalid species generated
     u32 playerSpecies = GetMonData(&gPlayerParty[gSpecialVar_0x8005], MON_DATA_SPECIES);
     bool32 validSpecies = FALSE;
 
@@ -115,13 +116,19 @@ static u32 GenerateSurpriseTradeSpecies(void)
 
     do
     {
-        newSpecies = RandomUniform(RNG_WONDER_TRADE, SPECIES_BULBASAUR, dexCount - 1);
+        newSpecies = RandomUniform(RNG_WONDER_TRADE, (SPECIES_NONE + 1), (dexCount - 1));
 
         if (!WT_DEX_NATIONAL)
             newSpecies = HoennToNationalOrder(newSpecies);
         newSpecies = NationalPokedexNumToSpecies(newSpecies);
 
         if (newSpecies == playerSpecies)
+        {
+            prevSpecies = newSpecies;
+            continue;
+        }
+
+        if (newSpecies == prevSpecies)
             continue;
 
         if ((gSpeciesInfo[newSpecies].isRestrictedLegendary && !WT_USE_RESTRICTEDS)
@@ -129,7 +136,11 @@ static u32 GenerateSurpriseTradeSpecies(void)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
         ||  (gSpeciesInfo[newSpecies].isParadox && !WT_USE_PARADOXES))
+        {
+            prevSpecies = newSpecies;
             continue;
+        }
+
 
         if (WT_TYPE == WT_TYPE_WEIGHTED)
         {
@@ -141,7 +152,11 @@ static u32 GenerateSurpriseTradeSpecies(void)
             if (difference > WT_WEIGHT
                 || (playerMonBST > 700 && difference > 120) //Arceus Edge Case
                 || (playerMonBST > 600 && difference > WT_WEIGHT_LENIENT)) //Edge case for trading away a legendary pokemon when you have a bunch of levers turned off
-                continue;
+                {
+                    prevSpecies = newSpecies;
+                    continue;
+                }
+
         }
 
         if (WT_FORMS
@@ -164,11 +179,11 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         || gSpeciesInfo[formTable[formId]].cannotBeTraded
                         || gSpeciesInfo[formTable[formId]].isTeraForm
                         || gSpeciesInfo[formTable[formId]].isPrimalReversion
-                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned) {
+                        || gSpeciesInfo[formTable[formId]].isWonderTradeBanned)
+                    {
                         //We don't want these
                         continue;
                     }
-
                     else
                     {
                         chooseableForms[numForms] = formTable[formId];
