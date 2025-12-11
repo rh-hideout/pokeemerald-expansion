@@ -748,7 +748,7 @@ static u32 GenerateSurpriseTradeItem(u32 species)
         if (WT_SPECIES_SPECIFIC_Z_CRYSTALS)
         {
             u32 speciesCrystal = GetSpeciesZItem(species);
-            if (!speciesCrystal == ITEM_NONE)
+            if (speciesCrystal != ITEM_NONE)
             {
                 possibleSpeciesItems[itemCount] = speciesCrystal;
                 itemCount++;
