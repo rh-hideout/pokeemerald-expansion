@@ -785,8 +785,9 @@ static u32 GenerateSurpriseTradeBall(void)
     if (!WT_BALLS)
         return ball;
 
-    while (IsValidPokeball(ball))
+    do
         ball = Random() % POKEBALL_COUNT;
+    while (!IsValidPokeball(ball));
 
     return ball;
 }
