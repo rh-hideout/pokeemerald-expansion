@@ -485,7 +485,7 @@ static void AddLevelUpMoves(struct Pokemon *mon, u32 species, u32 *finalMoves, u
         for (u32 moveIndex = start; moveIndex < learnedCount && *finalMoveCount < WT_RANDOM_MOVESET_LEVELUP; moveIndex++)
         {
             finalMoves[*finalMoveCount] = learnedMoves[moveIndex];
-            (*finalMoveCount++);
+            (*finalMoveCount)++;
         }
     }
 }
