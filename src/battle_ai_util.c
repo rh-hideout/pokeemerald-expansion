@@ -3120,19 +3120,6 @@ bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect)
     }
 }
 
-bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect)
-{
-    // All moves usable while asleep like Snore, Sleep Talk, etc.
-    switch (effect)
-    {
-    case EFFECT_SNORE:
-    case EFFECT_SLEEP_TALK:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-}
-
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect)
 {
     // Substitute effects like Substitute, Shed Tail, etc.

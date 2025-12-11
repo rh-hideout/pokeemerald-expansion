@@ -231,7 +231,6 @@ bool32 IsHazardClearingMove(u32 move);
 bool32 IsSubstituteEffect(enum BattleMoveEffects effect);
 bool32 IsExplosionEffect(enum BattleMoveEffects effect);
 bool32 IsSelfSacrificeEffect(enum BattleMoveEffects effect);
-bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 u32 GetAIExplosionChanceFromHP(u32 hpPercent);
 
 // status checks

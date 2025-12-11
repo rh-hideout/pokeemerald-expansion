@@ -11419,3 +11419,16 @@ void ResetStartingStatuses(void)
 {
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_RESET);
 }
+
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect)
+{
+    // All moves usable while asleep like Snore, Sleep Talk, etc.
+    switch (effect)
+    {
+    case EFFECT_SNORE:
+    case EFFECT_SLEEP_TALK:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
