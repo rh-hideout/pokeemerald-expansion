@@ -755,7 +755,7 @@ Each species flag provides properties to the species:
     - This species will be unable to learn the universal TM or Tutor moves.
 - `isFrontierBanned` ***(1.9 onwards)***:
     - This species will be unable to enter Battle Frontier facilities. Replaces `gFrontierBannedSpecies`.
-- `isSubLegendary`:
+- `isWonderTradeBanned`:
     - ***1.14.3 onwards:*** Bans this pokemon form from being selected for Wonder Trading.
 
 ## 2. Delimit the moveset
