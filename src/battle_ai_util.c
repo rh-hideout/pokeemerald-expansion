@@ -3496,7 +3496,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move)
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_REGENERATOR && ShouldRecover(battlerAtk, battlerDef, move, 33) && hasGoodSwitchin)
         return SHOULD_PIVOT;
     // If no good switchin candidate and can't KO to change the situation, not good to pivot
-    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING) && !hasGoodSwitchin)
+    if (GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) && !hasGoodSwitchin)
         return DONT_PIVOT;
     // Otherwise, neutral effect
     return CAN_TRY_PIVOT;
