@@ -2901,9 +2901,8 @@ bool32 HasThawingMove(u32 battler)
 
 bool32 HasUsableWhileAsleepMove(u32 battler)
 {
-    s32 i;
     u16 *moves = GetMovesArray(battler);
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsUsableWhileAsleepEffect(GetMoveEffect(moves[i])))
             return TRUE;
