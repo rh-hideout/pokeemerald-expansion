@@ -129,7 +129,7 @@ static u32 GenerateSurpriseTradeSpecies(void)
             newSpecies = HoennToNationalOrder(newSpecies);
         newSpecies = NationalPokedexNumToSpecies(newSpecies);
 
-        if ((gSpeciesInfo[newSpecies].isRestricted && !WT_USE_RESTRICTEDS)
+        if ((gSpeciesInfo[newSpecies].isRestrictedLegendary && !WT_USE_RESTRICTEDS)
         ||  (gSpeciesInfo[newSpecies].isSubLegendary && !WT_USE_SUBLEGENDARIES)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
