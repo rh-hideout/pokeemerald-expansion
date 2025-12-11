@@ -148,7 +148,12 @@ static u32 GenerateSurpriseTradeSpecies(void)
                 continue;
         }
 
-        if (WT_FORMS) {
+        if (WT_FORMS 
+            && newSpecies != SPECIES_ARCEUS
+            && newSpecies != SPECIES_GENESECT  // Edge cases for pokemon that change form with held items but have shared species info
+            && newSpecies != SPECIES_SILVALLY
+            && newSpecies != SPECIES_OGERPON) 
+        { 
             const u16 *formTable = GetSpeciesFormTable(newSpecies);
             if (formTable != NULL) {
                 u16 chooseableForms[64]; //Alcremie has a lot of forms bro
@@ -160,6 +165,7 @@ static u32 GenerateSurpriseTradeSpecies(void)
                         || gSpeciesInfo[formTable[formId]].isUltraBurst
                         || gSpeciesInfo[formTable[formId]].cannotBeTraded
                         || gSpeciesInfo[formTable[formId]].isTeraForm
+                        || gSpeciesInfo[formTable[formId]].isPrimalReversion
                         || gSpeciesInfo[formTable[formId]].isWonderTradeBanned) {
                         //We don't want these
                         continue;
@@ -722,28 +728,7 @@ static u32 GenerateSurpriseTradeBall(void)
     if (!WT_BALLS)
         return ball;
 
-    while (ball == BALL_POKE
-            || ball == BALL_GREAT
-            || ball == BALL_ULTRA
-            || ball == BALL_SAFARI
-            || ball == BALL_PREMIER
-            || ball == BALL_HEAL
-            || ball == BALL_NET
-            || ball == BALL_NEST
-            || ball == BALL_DIVE
-            || ball == BALL_DUSK
-            || ball == BALL_TIMER
-            || ball == BALL_QUICK
-            || ball == BALL_REPEAT
-            || ball == BALL_LUXURY
-            || ball == BALL_LEVEL
-            || ball == BALL_LURE
-            || ball == BALL_MOON
-            || ball == BALL_FRIEND
-            || ball == BALL_LOVE
-            || ball == BALL_FAST
-            || ball == BALL_HEAVY
-          )
+    while (ball == BALL_POKE)
         ball = Random() % POKEBALL_COUNT;
 
     return ball;
