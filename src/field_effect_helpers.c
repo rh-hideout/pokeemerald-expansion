@@ -1517,11 +1517,8 @@ u32 FldEff_Bubbles(void)
         struct Sprite *sprite = &gSprites[spriteId];
         sprite->coordOffsetEnabled = TRUE;
         sprite->oam.priority = 1;
-
-        // Save the spriteId in the sprite data of the corresponding OW Encounter object.
-        gSprites[gFieldEffectArguments[4]].data[6] = spriteId + 1;
     }
-    return 0;
+    return spriteId;
 }
 
 #define sY data[0]
@@ -1536,7 +1533,7 @@ void UpdateBubblesFieldEffect(struct Sprite *sprite)
     if (sprite->invisible || sprite->animEnded)
     {
         FieldEffectStop(sprite, FLDEFF_BUBBLES);
-        gSprites[gObjectEvents[GetNewestOWEncounterLocalId()].spriteId].data[6] = 0;
+        gObjectEvents[GetNewestOWEncounterLocalId()].fieldEffectSpriteId = 0;
     }
 }
 

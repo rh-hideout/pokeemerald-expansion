@@ -90,6 +90,7 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
+        u32 numOpenPalSlots = GetNumUnusedPalSlots();
         u32 movementType, level;
         if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
         {
@@ -114,6 +115,23 @@ void UpdateOverworldEncounters(void)
             .movementType = movementType,
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
+
+        // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
+        if (numOpenPalSlots == 1)
+        {
+            u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
+
+            if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
+                palTag += OBJ_EVENT_MON_FEMALE;
+                
+            // If the mon's palette isn't already loaded, don't spawn.
+            if (IndexOfSpritePaletteTag(palTag) == 0xFF)
+                return;
+        }
+        else if (numOpenPalSlots == 0)
+        {
+            return;
+        }
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
@@ -653,26 +671,30 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
         || localId > LOCALID_OW_ENCOUNTER_END));
 }
 
-void RemoveOldestOverworldEncounter(u8 *objectEventId)
+u32 RemoveOldestOverworldEncounter(void)
 {
     // include a check for oldest slot not being INVALID_SPAWN_SLOT
     u32 localId = GetLocalIdByOverworldSpawnSlot(GetOldestSlot());
-    *objectEventId = GetObjectEventIdByLocalId(localId);
-    struct ObjectEvent *object = &gObjectEvents[*objectEventId];
-    s16 *fldEffSpriteId = &gSprites[gObjectEvents[*objectEventId].spriteId].data[6];
+    u32 objectEventId = GetObjectEventIdByLocalId(localId);
+    struct ObjectEvent *object = &gObjectEvents[objectEventId];
+    u32 fldEffSpriteId = object->fieldEffectSpriteId;
 
     // Stop the associated field effect if it is active.
-    if (*fldEffSpriteId != 0)
-        FieldEffectStop(&gSprites[*fldEffSpriteId - 1], FLDEFF_BUBBLES);
+    if (fldEffSpriteId != 0)
+    {
+        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_BUBBLES);
+        object->fieldEffectSpriteId = 0;
+    }
 
     RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+    return objectEventId;
 }
 
 bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
-        RemoveOldestOverworldEncounter(objectEventId);
+        *objectEventId = RemoveOldestOverworldEncounter();
         return FALSE;
     }
     

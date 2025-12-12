@@ -212,7 +212,6 @@ static u8 DoJumpSpriteMovement(struct Sprite *);
 static u8 DoJumpSpecialSpriteMovement(struct Sprite *);
 static void CreateLevitateMovementTask(struct ObjectEvent *);
 static void DestroyLevitateMovementTask(u8);
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
 static bool8 NpcTakeStep(struct Sprite *);
 static void CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(u16 graphicsId, u16 movementType, struct SpriteTemplate *spriteTemplate, const struct SubspriteTable **subspriteTables);
@@ -1538,7 +1537,7 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
 
     // Destroy the oldest OW Encounter mon to make room for the new object.
     if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
-        RemoveOldestOverworldEncounter(objectEventId);
+        *objectEventId = RemoveOldestOverworldEncounter();
 
     /* Can we integrate this with this line above:
     if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
@@ -2070,7 +2069,7 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
 }
 
 // Find, or load, the palette for the specified pokemon info
-static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
+u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
 {
     u32 paletteNum;
     // Use standalone palette, unless entry is OOB or NULL (fallback to front-sprite-based)
@@ -11596,7 +11595,7 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
     gFieldEffectArguments[4] = objEvent->spriteId;
-    FieldEffectStart(FLDEFF_BUBBLES); // Commandeer this field effect for the spawn anims
+    objEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_BUBBLES) + 1; // Commandeer this field effect for the spawn anims
     return TRUE;
 }
 
