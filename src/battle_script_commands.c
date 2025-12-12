@@ -9242,12 +9242,19 @@ static void Cmd_unused_0x78(void)
 static void TryResetProtectUseCounter(u32 battler)
 {
     u32 lastMove = gLastResultingMoves[battler];
-    enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
-    if (lastMove == MOVE_UNAVAILABLE
-        || (!gBattleMoveEffects[lastEffect].usesProtectCounter
-          && ((GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9 && lastEffect != EFFECT_ALLY_SWITCH)
-            || GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9)))
+    if (lastMove == MOVE_UNAVAILABLE)
+    {
         gDisableStructs[battler].protectUses = 0;
+    }
+    else
+    {
+        enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
+        if (gBattleMoveEffects[lastEffect].usesProtectCounter == 0
+         && (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH))
+        {
+            gDisableStructs[battler].protectUses = 0;
+        }
+    }
 }
 
 static void Cmd_setprotectlike(void)
