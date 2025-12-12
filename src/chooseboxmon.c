@@ -127,28 +127,57 @@ void ChooseBoxMon(struct ScriptContext *ctx)
     }
 }
 
-enum
+#define ACTION_2ARGS(x, y) (UIAction)x, (UIAction)y
+#define ACTION_ARG(x) ((UIAction)x)
+
+const UIAction sLearnedMoveActions[] =
 {
-    TRY_LEARN_MOVE,
-    BACK_FROM_SUMMARY_SCREEN,
-    WANT_REPLACE,
-    REFUSE_REPLACE,
-    FORGOT_MOVE,
-    REPLACE_MOVE,
-    DID_NOT_LEARN
+    PRINT_MESSAGE, ACTION_ARG(gText_PkmnLearnedMove4),
+    PLAY_FANFARE, ACTION_ARG(MUS_LEVEL_UP),
+    END_TASK
 };
 
-const u32 sLearnedMoveActions[] = {PRINT_MESSAGE, (u32)gText_PkmnLearnedMove4, PLAY_FANFARE, MUS_LEVEL_UP, END_TASK};
-const u32 sAskReplacementActions[] = {PRINT_MESSAGE, (u32)gText_PkmnNeedsToReplaceMove, ASK_CONFIRMATION, WAIT_CONFIRMATION, WANT_REPLACE, REFUSE_REPLACE};
-const u32 sWantReplacementActions[] = {PRINT_MESSAGE, (u32)gText_WhichMoveToForget, SHOW_MOVE_LIST};
-const u32 sRefuseNewMoveActions[] = {PRINT_MESSAGE, (u32)gText_StopLearningMove2, ASK_CONFIRMATION, WAIT_CONFIRMATION, DID_NOT_LEARN, WANT_REPLACE};
-const u32 sForgotMoveActions[] = {PRINT_MESSAGE, (u32)gText_12PoofForgotMove, CALL_MANAGER, REPLACE_MOVE};
-const u32 sDidNotLearnActions[] = {PRINT_MESSAGE, (u32)gText_MoveNotLearned, END_TASK};
-const u32 sReplaceMoveActions[] = {PRINT_MESSAGE, (u32)gText_PkmnLearnedMove4, END_TASK};
-
-const u32 *GetReplacementActions(u32 state, struct BoxPokemon *boxmon, u32 move)
+const UIAction sAskReplacementActions[] =
 {
-    switch(state)
+    PRINT_MESSAGE, ACTION_ARG(gText_PkmnNeedsToReplaceMove),
+    ASK_CONFIRMATION,
+    WAIT_CONFIRMATION, ACTION_2ARGS(WANT_REPLACE, REFUSE_REPLACE)
+};
+
+const UIAction sWantReplacementActions[] =
+{
+    PRINT_MESSAGE, ACTION_ARG(gText_WhichMoveToForget),
+    SHOW_MOVE_LIST
+};
+
+const UIAction sRefuseNewMoveActions[] =
+{
+    PRINT_MESSAGE, ACTION_ARG(gText_StopLearningMove2),
+    ASK_CONFIRMATION,
+    WAIT_CONFIRMATION, ACTION_2ARGS(DID_NOT_LEARN, WANT_REPLACE)
+};
+
+const UIAction sForgotMoveActions[] =
+{
+    PRINT_MESSAGE, ACTION_ARG(gText_12PoofForgotMove),
+    CHANGE_STEP, ACTION_ARG(REPLACE_MOVE)
+};
+
+const UIAction sDidNotLearnActions[] =
+{
+    PRINT_MESSAGE, ACTION_ARG(gText_MoveNotLearned),
+    END_TASK
+};
+
+const UIAction sReplaceMoveActions[] =
+{
+    PRINT_MESSAGE, ACTION_ARG(gText_PkmnLearnedMove4),
+    END_TASK
+};
+
+const UIAction *GetReplacementActions(enum LearnMoveFlowchartStep step, struct BoxPokemon *boxmon, u32 move)
+{
+    switch(step)
     {
     case TRY_LEARN_MOVE:
         GetBoxMonNickname(boxmon, gStringVar1);
@@ -159,9 +188,12 @@ const u32 *GetReplacementActions(u32 state, struct BoxPokemon *boxmon, u32 move)
     case WANT_REPLACE:
         return sWantReplacementActions;
     case BACK_FROM_SUMMARY_SCREEN:
-        if (GetMoveSlotToReplace() == MAX_MON_MOVES)
-            return sRefuseNewMoveActions;
         GetBoxMonNickname(boxmon, gStringVar1);
+        if (GetMoveSlotToReplace() == MAX_MON_MOVES)
+        {
+            StringCopy(gStringVar2, GetMoveName(move));
+            return sRefuseNewMoveActions;
+        }
         StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
         return sForgotMoveActions;
     case REFUSE_REPLACE:

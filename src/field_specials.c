@@ -4373,9 +4373,9 @@ void UseBlankMessageToCancelPokemonPic(void)
 #define tMonIndex    data[2]
 #define tMove        data[3]
 
-static void ExecuteActionFromManager(u8 taskId, const u32 *actions)
+static void ExecuteActionFromManager(u8 taskId, const UIAction *actions)
 {
-    u32 currentAction = actions[gTasks[taskId].tActionIndex];
+    UIAction currentAction = actions[gTasks[taskId].tActionIndex];
     if (IsTextPrinterActive(0))
         return;
     switch (currentAction)
@@ -4394,7 +4394,7 @@ static void ExecuteActionFromManager(u8 taskId, const u32 *actions)
             gTasks[taskId].tStep = actions[gTasks[taskId].tActionIndex + 2];
         gTasks[taskId].tActionIndex = 0;
         break;
-    case CALL_MANAGER:
+    case CHANGE_STEP:
         gTasks[taskId].tStep = actions[gTasks[taskId].tActionIndex + 1];
         gTasks[taskId].tActionIndex = 0;
         break;
@@ -4426,7 +4426,7 @@ static void Task_AskTeachMonManager(u8 taskId)
         boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
     else
         boxmon = &(gPlayerParty[gTasks[taskId].tMonIndex].box);
-    const u32 *actions = GetReplacementActions(gTasks[taskId].tStep, boxmon, gTasks[taskId].tMove);
+    const UIAction *actions = GetReplacementActions(gTasks[taskId].tStep, boxmon, gTasks[taskId].tMove);
     ExecuteActionFromManager(taskId, actions);
 }
 
@@ -4440,7 +4440,7 @@ void CanTeachMoveBoxMon(void)
     }
 
     u32 taskId = CreateTask(Task_AskTeachMonManager, 1);
-    gTasks[taskId].tStep = 0;
+    gTasks[taskId].tStep = TRY_LEARN_MOVE;
     gTasks[taskId].tActionIndex = 0;
     gTasks[taskId].tMonIndex = gSpecialVar_0x8004;
     gTasks[taskId].tMove = gSpecialVar_0x8005;
@@ -4458,7 +4458,7 @@ static void CB2_ReturnToFieldWhileLearningMove(void)
 static void Task_ReturnToFieldWhileLearningMove(void)
 {
     u32 taskId = CreateTask(Task_AskTeachMonManager, 1);
-    gTasks[taskId].tStep = 1;
+    gTasks[taskId].tStep = BACK_FROM_SUMMARY_SCREEN;
     gTasks[taskId].tActionIndex = 0;
     gTasks[taskId].tMonIndex = gSpecialVar_0x8008;
     gTasks[taskId].tMove = gSpecialVar_0x8009;
