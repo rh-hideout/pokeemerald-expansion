@@ -90,7 +90,7 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 numOpenPalSlots = GetNumUnusedPalSlots();
+        u32 numFreePalSlots = CountFreePaletteSlots();
         u32 movementType, level;
         if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
         {
@@ -117,7 +117,8 @@ void UpdateOverworldEncounters(void)
         };
 
         // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
-        if (numOpenPalSlots == 1)
+        // Add this and tiles to seperate graphics check function
+        if (numFreePalSlots == 1)
         {
             u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
@@ -127,8 +128,10 @@ void UpdateOverworldEncounters(void)
             // If the mon's palette isn't already loaded, don't spawn.
             if (IndexOfSpritePaletteTag(palTag) == 0xFF)
                 return;
+
+            // Add check if field effect pallete is already loaded
         }
-        else if (numOpenPalSlots == 0)
+        else if (numFreePalSlots == 0)
         {
             return;
         }
@@ -834,6 +837,25 @@ void TryRemoveOverworldWildEncounter(u32 localId)
     {
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
         gSpecialVar_LastTalked = LOCALID_NONE;
+    }
+}
+
+void DespawnOldestOWE_Pal(void)
+{
+    // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
+    if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
+    {
+        u32 count = CountActiveOverworldEncounters();
+
+        if (count > 0)
+        {
+            for (; count > 0; count--)
+            {
+                RemoveOldestOverworldEncounter();
+                if (CountFreePaletteSlots() >= 2)
+                    break;
+            }
+        }
     }
 }
 
