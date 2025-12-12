@@ -191,9 +191,11 @@ else
 }
 ```
 
-The exception is `assertf` which should always use braces, even for one line of code.
+The exception is `assertf` which should always use braces if it has a recovery path, even for one line of code.
 
 ```c
+assertf(true); // correct
+
 assertf(true) // correct
 {
     return NULL;
