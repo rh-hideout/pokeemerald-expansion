@@ -490,7 +490,8 @@ struct SpeciesInfo /*0xC4*/
     u8 pokemonJumpType:2; // According to the clerk, the Pokémon allowed in Pokémon Jump are all <= 28 inches/71 cm, and do not only swim, burrow, or fly.
     u8 enemyMonElevation; // This determines how much higher above the usual position the enemy Pokémon is during battle. Species that float or fly have nonzero values.
     // Flags
-    u32 isLegendary:1;
+    u32 isRestrictedLegendary:1;
+    u32 isSubLegendary:1;
     u32 isMythical:1;
     u32 isUltraBeast:1;
     u32 isParadox:1;
@@ -509,7 +510,7 @@ struct SpeciesInfo /*0xC4*/
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
     u32 tmIlliterate:1;     // This species will be unable to learn the universal moves.
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
-    u32 padding4:11;
+    u32 padding4:10;
     // Shadow settings
     s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
     s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
