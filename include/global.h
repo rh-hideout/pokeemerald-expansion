@@ -9,6 +9,7 @@
 #include "siirtc.h"
 #include "fpmath.h"
 #include "metaprogram.h"
+#include "stack.h"
 #include "constants/global.h"
 #include "constants/flags.h"
 #include "constants/vars.h"

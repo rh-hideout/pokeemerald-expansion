@@ -135,3 +135,67 @@ Std_MsgboxAutoclose::
 	waitbuttonpress
 	release
 	return
+
+@ Event Snippets for dynamic trainer battle scripting
+EventSnippet_Lock::
+	lock
+	faceplayer
+	setflag FLAG_SAFE_FOLLOWER_MOVEMENT
+	return
+
+EventSnippet_StartTrainerApproach::
+	selectapproachingtrainer
+	lockfortrainer
+	return
+
+EventSnippet_TrainerApproach::
+	special DoTrainerApproach
+	waitstate
+	return
+
+EventSnippet_RevealTrainer::
+	applymovement VAR_LAST_TALKED, Movement_RevealTrainer
+	waitmovement 0
+	clearflag FLAG_SAFE_FOLLOWER_MOVEMENT
+	return
+
+EventScript_IsTrainerFlagSet::
+	specialvar VAR_RESULT, GetTrainerFlag
+	goto_if_ne VAR_RESULT, FALSE, EventScript_NoNormalTrainerBattle
+	return
+
+EventSnippet_PlayTrainerEncounterMusic::
+	special PlayTrainerEncounterMusic
+	return
+
+EventSnippet_SetTrainerFacingDirection::
+	special SetTrainerFacingDirection
+	return
+
+EventSnippet_ShowTrainerIntroMsg::
+	special ShowTrainerIntroSpeech
+	waitmessage
+	waitbuttonpress
+	return 
+
+EventSnippet_PrepareSecondTrainerApproach::
+	special PrepareSecondApproachingTrainer
+	return
+
+EventSnippet_GotoPostBattleScript::
+	gotopostbattlescript
+	return
+
+EventSnippet_DoTrainerBattle::
+	dotrainerbattle
+	return
+
+EventSnippet_DoRematchTrainerBattle::
+	special BattleSetup_StartRematchBattle
+	waitstate
+	return
+
+EventSnippet_EndTrainerBattle::
+	gotobeatenscript
+	releaseall
+	end

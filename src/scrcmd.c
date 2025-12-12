@@ -2435,9 +2435,23 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_TRAINERBATTLE);
-
+    
+    PtrStack trainerBattleScriptStack;
+    PtrStackInit(&trainerBattleScriptStack);
+    
     TrainerBattleLoadArgs(ctx->scriptPtr);
-    ctx->scriptPtr = BattleSetup_ConfigureTrainerBattle(ctx->scriptPtr);
+    BattleSetup_ConfigureTrainerBattle(ctx->scriptPtr, &trainerBattleScriptStack, FALSE);
+
+    const u8 *ptr;
+    while ((ptr = PtrStackPopU8(&trainerBattleScriptStack)) != NULL)
+    {
+        ScriptPush(ctx, ptr);
+    }
+
+    DebugPrintScriptStack;
+
+    ctx->scriptPtr = ScriptPop(ctx);
+    
     return FALSE;
 }
 

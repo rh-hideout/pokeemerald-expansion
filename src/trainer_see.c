@@ -931,22 +931,26 @@ static void Task_EndTrainerApproach(u8 taskId)
     ScriptContext_Enable();
 }
 
+void PrepareSecondApproachingTrainer(void)
+{
+    if (gApproachingTrainerId == 0)
+    {
+        gApproachingTrainerId++;
+        UnfreezeObjectEvents();
+        FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
+    }
+    else
+    {
+        gApproachingTrainerId = 0;
+        gSpecialVar_Result = FALSE;
+    }
+}
+
 void TryPrepareSecondApproachingTrainer(void)
 {
     if (gNoOfApproachingTrainers == 2)
     {
-        if (gApproachingTrainerId == 0)
-        {
-            gApproachingTrainerId++;
-            gSpecialVar_Result = TRUE;
-            UnfreezeObjectEvents();
-            FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
-        }
-        else
-        {
-            gApproachingTrainerId = 0;
-            gSpecialVar_Result = FALSE;
-        }
+        PrepareSecondApproachingTrainer();
     }
     else
     {

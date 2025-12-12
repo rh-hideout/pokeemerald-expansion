@@ -538,6 +538,7 @@ gSpecials::
 	def_special IsLastMonThatKnowsSurf
 	def_special CountPartyAliveNonEggMons
 	def_special TryPrepareSecondApproachingTrainer
+	def_special PrepareSecondApproachingTrainer
 	def_special RemoveRecordsWindow
 	def_special CloseDeptStoreElevatorWindow
 	def_special TrySetBattleTowerLinkType

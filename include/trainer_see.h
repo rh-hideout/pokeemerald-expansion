@@ -20,6 +20,8 @@ bool8 CheckForTrainersWantingBattle(void);
 void SetBuriedTrainerMovement(struct ObjectEvent *objEvent);
 void DoTrainerApproach(void);
 void TryPrepareSecondApproachingTrainer(void);
+void PrepareSecondApproachingTrainer(void);
+
 u8 FldEff_ExclamationMarkIcon(void);
 u8 FldEff_QuestionMarkIcon(void);
 u8 FldEff_HeartIcon(void);
