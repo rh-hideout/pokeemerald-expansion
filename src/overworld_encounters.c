@@ -686,7 +686,7 @@ u32 RemoveOldestOverworldEncounter(void)
     // Stop the associated field effect if it is active.
     if (fldEffSpriteId != 0)
     {
-        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
+        FieldEffectStop(&gSprites[fldEffSpriteId], FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
         object->fieldEffectSpriteId = 0;
     }
 
