@@ -130,6 +130,7 @@ void UpdateOverworldEncounters(void)
                 return;
 
             // Add check if field effect pallete is already loaded
+            // Bubbles field effect occurs on every movement
         }
         else if (numFreePalSlots == 0)
         {
@@ -685,7 +686,7 @@ u32 RemoveOldestOverworldEncounter(void)
     // Stop the associated field effect if it is active.
     if (fldEffSpriteId != 0)
     {
-        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_BUBBLES);
+        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
         object->fieldEffectSpriteId = 0;
     }
 
