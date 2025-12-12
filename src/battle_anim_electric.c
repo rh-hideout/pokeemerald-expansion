@@ -816,6 +816,8 @@ void AnimElectricity(struct Sprite *sprite)
 // The vertical falling thunder bolt used in Thunder Wave/Shock/Bolt
 void AnimTask_ElectricBolt(u8 taskId)
 {
+    TryLoadGfx(gElectricBoltSegmentSpriteTemplate.tileTag);
+    TryLoadPal(gElectricBoltSegmentSpriteTemplate.paletteTag);
     gTasks[taskId].data[0] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X) + gBattleAnimArgs[0];
     gTasks[taskId].data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + gBattleAnimArgs[1];
     gTasks[taskId].data[2] = gBattleAnimArgs[2];
@@ -941,6 +943,17 @@ static void AnimThunderWave_Step(struct Sprite *sprite)
 void AnimTask_ElectricChargingParticles(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    if (gAnimMoveIndex == MOVE_FLASH_CANNON || gAnimMoveIndex == MOVE_STEEL_BEAM)
+    {
+        TryLoadGfx(gLightOfRuinGrayChargeTemplate.tileTag);
+        TryLoadPal(gLightOfRuinGrayChargeTemplate.paletteTag);
+    }
+    else
+    {
+        TryLoadGfx(gElectricChargingParticlesSpriteTemplate.tileTag);
+        TryLoadPal(gElectricChargingParticlesSpriteTemplate.paletteTag);
+    }
 
     if (gBattleAnimArgs[0] == ANIM_ATTACKER)
     {
@@ -1167,6 +1180,21 @@ void AnimTask_VoltTackleBolt(u8 taskId)
     case 0:
         task->data[1] = IsOnPlayerSide(gBattleAnimAttacker) ? 1 : -1;
 
+        switch(gAnimMoveIndex)
+        {
+        case MOVE_FAIRY_LOCK:
+            TryLoadGfx(gFairyLockChainsSpriteTemplate.tileTag);
+            TryLoadPal(gFairyLockChainsSpriteTemplate.paletteTag);
+            break;
+        case MOVE_COLLISION_COURSE:
+            TryLoadGfx(gCollisionCourseSpriteTemplate.tileTag);
+            TryLoadPal(gCollisionCourseSpriteTemplate.paletteTag);
+            break;
+        default:
+            TryLoadGfx(gVoltTackleBoltSpriteTemplate.tileTag);
+            TryLoadPal(gVoltTackleBoltSpriteTemplate.paletteTag);
+        }
+
         switch (gBattleAnimArgs[0])
         {
         case 0:
@@ -1314,6 +1342,9 @@ void AnimTask_ShockWaveProgressingBolt(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        TryLoadGfx(gVoltTackleBoltSpriteTemplate.tileTag);
+        TryLoadPal(gVoltTackleBoltSpriteTemplate.paletteTag);
+
         task->data[6] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
         task->data[7] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);
         task->data[8] = 4;
@@ -1440,6 +1471,9 @@ void AnimTask_ShockWaveLightning(u8 taskId)
     switch (task->data[0])
     {
     case 0:
+        TryLoadGfx(gLightningSpriteTemplate.tileTag);
+        TryLoadPal(gLightningSpriteTemplate.paletteTag);
+
         task->data[15] = GetBattlerSpriteCoord(target, BATTLER_COORD_Y) + 32;
         task->data[14] = task->data[15];
         while (task->data[14] > 16)
@@ -1498,7 +1532,8 @@ static void AnimShockWaveLightning(struct Sprite *sprite)
 // arg 2: duration
 void AnimTask_CreateIons(u8 taskId)
 {
-    u8 x, y;
+    TryLoadGfx(gIonSpriteTemplate.tileTag);
+    TryLoadPal(gIonSpriteTemplate.paletteTag);
 
     if (gTasks[taskId].data[0] == 0)
     {
@@ -1509,8 +1544,8 @@ void AnimTask_CreateIons(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gIonSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].data[0] == gTasks[taskId].data[3])

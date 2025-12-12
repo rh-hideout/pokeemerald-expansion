@@ -1,12 +1,7 @@
 @ commands
 
-	.macro loadspritegfx tag:req
-	.byte 0x0
-	.2byte \tag
-	.endm
-
 	.macro unloadspritegfx tag:req
-	.byte 0x1
+	.byte 0x0
 	.2byte \tag
 	.endm
 

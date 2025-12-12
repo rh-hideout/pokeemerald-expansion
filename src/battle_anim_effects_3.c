@@ -1967,6 +1967,9 @@ void AnimTask_TormentAttacker(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gThoughtBubbleSpriteTemplate.tileTag);
+    TryLoadPal(gThoughtBubbleSpriteTemplate.paletteTag);
+
     task->data[0] = 0;
     task->data[1] = 0;
     task->data[2] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
@@ -3948,6 +3951,9 @@ static void CreateSweatDroplets(u8 taskId, bool8 lowerDroplets)
     s16 xCoords[4];
     s16 yCoords[2];
 
+    TryLoadGfx(gFacadeSweatDropSpriteTemplate.tileTag);
+    TryLoadPal(gFacadeSweatDropSpriteTemplate.paletteTag);
+
     task = &gTasks[taskId];
     if (!lowerDroplets)
     {
@@ -4129,6 +4135,9 @@ void AnimTask_GlareEyeDots(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gGlareEyeDotSpriteTemplate.tileTag);
+    TryLoadPal(gGlareEyeDotSpriteTemplate.paletteTag);
+
     if (IsContest())
     {
         task->tPairMax = 8;
@@ -4297,6 +4306,9 @@ void AnimAssistPawprint(struct Sprite *sprite)
 void AnimTask_BarrageBall(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    TryLoadGfx(gBarrageBallSpriteTemplate.tileTag);
+    TryLoadPal(gBarrageBallSpriteTemplate.paletteTag);
 
     task->data[11] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
     task->data[12] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET);

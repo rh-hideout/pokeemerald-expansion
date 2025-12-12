@@ -1143,6 +1143,6 @@
 #define T_COMPRESSION_SHOULD_PRINT FALSE
 
 //  Move animation testing
-#define T_SHOULD_RUN_MOVE_ANIM  FALSE       //  If TRUE, enables the move animation tests, these are very computationally heavy and takes a long time to run.
+#define T_SHOULD_RUN_MOVE_ANIM  TRUE       //  If TRUE, enables the move animation tests, these are very computationally heavy and takes a long time to run.
 
 #endif // GUARD_CONFIG_TEST_H

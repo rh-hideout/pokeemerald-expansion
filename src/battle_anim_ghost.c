@@ -1230,6 +1230,9 @@ void AnimTask_GrudgeFlames(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gGrudgeFlameSpriteTemplate.tileTag);
+    TryLoadPal(gGrudgeFlameSpriteTemplate.paletteTag);
+
     task->data[0] = 0;
     task->data[1] = 16;
     task->data[9] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
@@ -1398,9 +1401,13 @@ void AnimTask_PoltergeistItem(u8 taskId)
     u8 x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     u8 y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
 
-    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
     StoreGfxTag(ANIM_TAG_ITEM_BAG);
     StorePalTag(ANIM_TAG_ITEM_BAG);
+
+    StoreGfxTag(gPoltergeistEffectTemplate.tileTag);
+    StorePalTag(gPoltergeistEffectTemplate.paletteTag);
+
+    task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
     gSprites[task->data[0]].x = x + 4;
     gSprites[task->data[0]].y = y + 4;
     gSprites[task->data[0]].data[0] = x + 4;
@@ -1434,6 +1441,9 @@ void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
     u8 spriteId;
     s16 baseX, baseY;
     s16 x, y;
+
+    TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
+    TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
 
     task = &gTasks[taskId];
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));

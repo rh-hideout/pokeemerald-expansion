@@ -847,6 +847,9 @@ void AnimTask_EruptionLaunchRocks(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gEruptionLaunchRockSpriteTemplate.tileTag);
+    TryLoadPal(gEruptionLaunchRockSpriteTemplate.paletteTag);
+
     task->tAttackerSpriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
 
     task->tState = 0;

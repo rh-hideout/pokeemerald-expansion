@@ -1436,6 +1436,8 @@ static void AnimTask_Hail2(u8 taskId)
             task->tHailAffineAnimNum = 0;
             task->tState++;
         }
+        TryLoadGfx(gHailParticleSpriteTemplate.tileTag);
+        TryLoadPal(gHailParticleSpriteTemplate.paletteTag);
         break;
     case 1:
         if (task->tHailSpawnTimer == 0)
@@ -1550,6 +1552,9 @@ static void AnimHailBegin(struct Sprite *sprite)
 
     if (sprite->x < sprite->sTargetX && sprite->y < sprite->sTargetY)
         return;
+
+    TryLoadGfx(gIceCrystalHitLargeSpriteTemplate.tileTag);
+    TryLoadPal(gIceCrystalHitLargeSpriteTemplate.paletteTag);
 
     if (sprite->sSpawnImpactEffect == 1 && sprite->sAffineAnimNum == 0)
     {
@@ -1711,6 +1716,9 @@ const struct SpriteTemplate gSnowFlakesSpriteTemplate =
 void AnimTask_CreateSnowflakes(u8 taskId)
 {
     u8 x, y;
+
+    TryLoadGfx(gSnowFlakesSpriteTemplate.tileTag);
+    TryLoadPal(gSnowFlakesSpriteTemplate.paletteTag);
 
     if (gTasks[taskId].data[0] == 0)
     {

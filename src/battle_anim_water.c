@@ -621,7 +621,8 @@ static void AnimKnockOffAquaTailStep(struct Sprite *sprite)
 
 void AnimTask_CreateRaindrops(u8 taskId)
 {
-    u8 x, y;
+    TryLoadGfx(gRainDropSpriteTemplate.tileTag);
+    TryLoadPal(gRainDropSpriteTemplate.paletteTag);
 
     if (gTasks[taskId].tRaindropSpawnTimer == 0)
     {
@@ -632,8 +633,8 @@ void AnimTask_CreateRaindrops(u8 taskId)
     gTasks[taskId].tRaindropSpawnTimer++;
     if (gTasks[taskId].tRaindropSpawnTimer % gTasks[taskId].tRaindropSpawnInterval == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gRainDropSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].tRaindropSpawnTimer == gTasks[taskId].tRaindropSpawnDuration)
@@ -1232,6 +1233,9 @@ void AnimTask_WaterSpoutLaunch(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gSmallWaterOrbSpriteTemplate.tileTag);
+    TryLoadPal(gSmallWaterOrbSpriteTemplate.paletteTag);
+
     task->data[15] = GetAnimBattlerSpriteId(ANIM_ATTACKER);
     task->data[5] = gSprites[task->data[15]].y;
     task->data[1] = GetWaterSpoutPowerForAnim();
@@ -1418,6 +1422,12 @@ void AnimTask_BrineRain(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gSmallWaterOrbSpriteTemplate.tileTag);
+    TryLoadPal(gSmallWaterOrbSpriteTemplate.paletteTag);
+
+    TryLoadGfx(gWaterHitSplatSpriteTemplate.tileTag);
+    TryLoadPal(gWaterHitSplatSpriteTemplate.paletteTag);
+
     if (IsOnPlayerSide(gBattleAnimAttacker))
     {
         task->tDropEndYPos = 40;
@@ -1474,6 +1484,11 @@ static void AnimTask_BrineRain_Step(u8 taskId)
 void AnimTask_WaterSpoutRain(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    TryLoadGfx(gSmallWaterOrbSpriteTemplate.tileTag);
+    TryLoadPal(gSmallWaterOrbSpriteTemplate.paletteTag);
+    TryLoadGfx(gWaterHitSplatSpriteTemplate.tileTag);
+    TryLoadPal(gWaterHitSplatSpriteTemplate.paletteTag);
 
     task->tWaterSpoutPower = GetWaterSpoutPowerForAnim();
     if (IsOnPlayerSide(gBattleAnimAttacker))
@@ -1787,6 +1802,9 @@ static void AnimWaterPulseRingBubble(struct Sprite *sprite)
 
 void AnimWaterPulseRing(struct Sprite *sprite)
 {
+    TryLoadGfx(gWaterPulseRingBubbleSpriteTemplate.tileTag);
+    TryLoadPal(gWaterPulseRingBubbleSpriteTemplate.paletteTag);
+
     InitSpritePosToAnimAttacker(sprite, TRUE);
     sprite->data[1] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2);
     sprite->data[2] = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET);

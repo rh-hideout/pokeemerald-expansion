@@ -14041,8 +14041,6 @@ gBattleAnimMove_Poltergeist::
 	waitbgfadein
 	clearmonbg 0x3
 	blendoff
-	unloadspritegfx ANIM_TAG_ITEM_BAG
-	unloadspritepal ANIM_TAG_ITEM_BAG
 	end
 
 @Credits to Skeli
@@ -32899,6 +32897,8 @@ gBattleAnimMove_10000000VoltThunderbolt::
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x2a, 0x2c, 0x80, 0x28, 0x0, 0x3
 @	createsprite gSparkElectricityFlashingSpriteTemplate, ANIM_ATTACKER, 2, 0x0, 0x0, 0x2a, 0x2c, SOUND_PAN_ATTACKER, 0x28, 0x2, 0x3
 	waitforvisualfinish
+	unloadspritegfx ANIM_TAG_LIGHTNING
+	unloadspritepal ANIM_TAG_LIGHTNING
 	call UnsetPsychicBg
 	visible ANIM_TARGET
 	loopsewithpan SE_M_THUNDERBOLT2, SOUND_PAN_ATTACKER, 0x5, 0xA
@@ -33225,10 +33225,11 @@ gBattleAnimMove_ExtremeEvoboost::
 	createsprite gLeerSpriteTemplate, ANIM_ATTACKER, 2, 0xf, 0xfff4
 	createsprite gLeerSpriteTemplate, ANIM_ATTACKER, 2, 0xffdf, 0xfff4
 	waitforvisualfinish
-	fadetobg BG_ZMOVE_ACTIVATE
-	waitbgfadeout
 	unloadspritegfx ANIM_TAG_LEER
 	unloadspritepal ANIM_TAG_LEER
+	delay 1
+	fadetobg BG_ZMOVE_ACTIVATE
+	waitbgfadeout
 	createvisualtask AnimTask_BlendParticle, 5, ANIM_TAG_CIRCLE_OF_LIGHT, 0, 16, 16, RGB(31, 31, 22)
 	waitforvisualfinish
 	playsewithpan SE_M_REVERSAL, SOUND_PAN_ATTACKER

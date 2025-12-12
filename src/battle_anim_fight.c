@@ -520,6 +520,9 @@ static void AnimFistOrFootRandomPos(struct Sprite *sprite)
     sprite->x += x;
     sprite->y += y;
 
+    TryLoadGfx(gBasicHitSplatSpriteTemplate.tileTag);
+    TryLoadPal(gBasicHitSplatSpriteTemplate.paletteTag);
+
     sprite->data[0] = gBattleAnimArgs[1];
     sprite->data[7] = CreateSprite(&gBasicHitSplatSpriteTemplate, sprite->x, sprite->y, sprite->subpriority + 1);
     if (sprite->data[7] != MAX_SPRITES)

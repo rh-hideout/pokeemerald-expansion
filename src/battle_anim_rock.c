@@ -851,6 +851,9 @@ static void CreateRolloutDirtSprite(struct Task *task)
         return;
     }
 
+    TryLoadGfx(spriteTemplate->tileTag);
+    TryLoadPal(spriteTemplate->paletteTag);
+
     x = task->data[2] >> 3;
     y = task->data[3] >> 3;
     x += (task->data[12] * 4);

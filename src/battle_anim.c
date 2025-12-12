@@ -32,7 +32,6 @@
 
 #define ANIM_SPRITE_INDEX_COUNT 8
 
-static void Cmd_loadspritegfx(void);
 static void Cmd_unloadspritegfx(void);
 static void Cmd_unloadspritepal(void);
 static void Cmd_createsprite(void);
@@ -131,8 +130,8 @@ EWRAM_DATA static bool8 sAnimHideHpBoxes = FALSE;
 
 static void (*const sScriptCmdTable[])(void) =
 {
-    Cmd_loadspritegfx,        // 0x00
-    Cmd_unloadspritegfx,      // 0x01
+    Cmd_unloadspritegfx,      // 0x00
+    Cmd_unloadspritepal,      // 0x01
     Cmd_createsprite,         // 0x02
     Cmd_createvisualtask,     // 0x03
     Cmd_delay,                // 0x04
@@ -184,7 +183,6 @@ static void (*const sScriptCmdTable[])(void) =
     Cmd_createspriteontargets_onpos, // 0x32
     Cmd_jumpifmovetypeequal,         // 0x33
     Cmd_createdragondartsprite,      // 0x34
-    Cmd_unloadspritepal,             // 0x35
 };
 
 static const u16 sMovesWithQuietBGM[] =
@@ -591,6 +589,7 @@ bool32 TryLoadPal(u32 tag)
         else
         {
             //  Error
+            DebugPrintf("Failed to store: %u", tag);
             return FALSE;
         }
     }
@@ -619,24 +618,6 @@ static void RunAnimScriptCommand(void)
     {
         sScriptCmdTable[sBattleAnimScriptPtr[0]]();
     } while (sAnimFramesToWait == 0 && gAnimScriptActive);
-}
-
-static void Cmd_loadspritegfx(void)
-{
-    //  This function is deprecated
-    /*
-    u16 index;
-
-    sBattleAnimScriptPtr++;
-    index = T1_READ_16(sBattleAnimScriptPtr);
-    LoadCompressedSpriteSheetUsingHeap(&gBattleAnimPicTable[GET_TRUE_SPRITE_INDEX(index)]);
-    LoadSpritePalette(&gBattleAnimPaletteTable[GET_TRUE_SPRITE_INDEX(index)]);
-    sBattleAnimScriptPtr += 2;
-    AddSpriteIndex(GET_TRUE_SPRITE_INDEX(index));
-    sAnimFramesToWait = 1;
-    gAnimScriptCallback = WaitAnimFrameCount;
-    */
-    sBattleAnimScriptPtr += 3;
 }
 
 static void ClearSpriteGfxIndex(u32 tag)
@@ -855,6 +836,9 @@ static void Cmd_createspriteontargets_onpos(void)
     template = (const struct SpriteTemplate *)(T2_READ_32(sBattleAnimScriptPtr));
     sBattleAnimScriptPtr += 4;
 
+    TryLoadGfx(template->tileTag);
+    TryLoadPal(template->paletteTag);
+
     argVar = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
 
@@ -878,6 +862,9 @@ static void Cmd_createspriteontargets(void)
     sBattleAnimScriptPtr++;
     template = (const struct SpriteTemplate *)(T2_READ_32(sBattleAnimScriptPtr));
     sBattleAnimScriptPtr += 4;
+
+    TryLoadGfx(template->tileTag);
+    TryLoadPal(template->paletteTag);
 
     argVar = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;

@@ -1586,6 +1586,9 @@ void AnimTask_AirCutterProjectile(u8 taskId)
     s16 targetY = 0;
     s16 xDiff, yDiff;
 
+    TryLoadGfx(gAirWaveProjectileSpriteTemplate.tileTag);
+    TryLoadPal(gAirWaveProjectileSpriteTemplate.paletteTag);
+
     if (IsContest())
     {
         gTasks[taskId].data[4] = 2;
@@ -2878,6 +2881,9 @@ void AnimTask_SpeedDust(u8 taskId)
     task->data[14] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X);
     task->data[15] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y);
     task->func = AnimTask_SpeedDust_Step;
+
+    TryLoadGfx(gSpeedDustSpriteTemplate.tileTag);
+    TryLoadPal(gSpeedDustSpriteTemplate.paletteTag);
 }
 
 static void AnimTask_SpeedDust_Step(u8 taskId)

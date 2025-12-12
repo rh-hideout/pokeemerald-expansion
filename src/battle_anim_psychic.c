@@ -836,6 +836,9 @@ void AnimTask_ImprisonOrbs(u8 taskId)
 
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gImprisonOrbSpriteTemplate.tileTag);
+    TryLoadPal(gImprisonOrbSpriteTemplate.paletteTag);
+
     task->data[3] = 16;
     task->data[4] = 0;
     task->data[13] = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2);
@@ -948,6 +951,9 @@ void AnimTask_SkillSwap(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
 
+    TryLoadGfx(gSkillSwapOrbSpriteTemplate.tileTag);
+    TryLoadPal(gSkillSwapOrbSpriteTemplate.paletteTag);
+
     if (IsContest())
     {
         if (gBattleAnimArgs[0] == ANIM_TARGET)
@@ -996,6 +1002,9 @@ void AnimTask_SkillSwap(u8 taskId)
 void AnimTask_HeartSwap(u8 taskId)
 {
     struct Task *task = &gTasks[taskId];
+
+    TryLoadGfx(gHeartSwapOrbSpriteTemplate.tileTag);
+    TryLoadPal(gHeartSwapOrbSpriteTemplate.paletteTag);
 
     if (IsContest())
     {

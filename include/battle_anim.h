@@ -88,6 +88,7 @@ bool32 TryLoadGfx(u32 tag);
 bool32 TryLoadPal(u32 tag);
 bool32 StorePalTag(u32 tag);
 bool32 StoreGfxTag(u32 tag);
+
 void StoreTagAtIndex(u32 tag, u32 index);
 
 // battle_intro.c
@@ -452,6 +453,7 @@ extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
 extern const struct SpritePalette gBattleAnimPaletteTable[];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
+extern const struct SpriteTemplate gGrudgeFlameSpriteTemplate;
 
 extern const union AnimCmd *const gAnims_WaterMudOrb[];
 extern const union AnimCmd *const gAnims_BasicFire[];
