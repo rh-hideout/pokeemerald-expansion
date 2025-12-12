@@ -138,7 +138,11 @@ static bool32 TargetHasToMove(u32 move) // Opponent needs to hit the player firs
      || effect == EFFECT_METAL_BURST
      || effect == EFFECT_COPYCAT
      || effect == EFFECT_SUCKER_PUNCH
-     || effect == EFFECT_INSTRUCT)
+     || effect == EFFECT_INSTRUCT
+     || effect == EFFECT_DISABLE
+     || effect == EFFECT_MIMIC
+     || effect == EFFECT_SPITE
+     || effect == EFFECT_ENCORE)
         return TRUE;
     return FALSE;
 }
