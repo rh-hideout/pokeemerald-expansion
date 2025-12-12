@@ -1016,7 +1016,6 @@ static void RemoveScrollArrows(void)
 static void CreateLearnableMovesList(void)
 {
     s32 i;
-    u8 nickname[POKEMON_NAME_LENGTH + 1];
 
     struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
     switch (gMoveRelearnerState)
@@ -1034,7 +1033,7 @@ static void CreateLearnableMovesList(void)
     default:
         sMoveRelearnerStruct->numMenuChoices = GetRelearnerLevelUpMoves(boxmon, sMoveRelearnerStruct->movesToLearn);
         break;
-	}
+    }
 
     for (i = 0; i < sMoveRelearnerStruct->numMenuChoices; i++)
     {
