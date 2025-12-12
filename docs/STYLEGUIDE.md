@@ -191,6 +191,18 @@ else
 }
 ```
 
+The exception is `assertf` which should always use braces, even for one line of code.
+
+```c
+assertf(true) // correct
+{
+    return NULL;
+}
+
+assertf(true) // incorrect
+    return NULL;
+```
+
 ### Control Structures
 
 When comparing whether or not a value equals `0`, don't be explicit unless the
