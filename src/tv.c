@@ -3249,7 +3249,7 @@ bool8 IsTVShowAlreadyInQueue(void)
 
 bool8 TryPutNameRaterShowOnTheAir(void)
 {
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar1);
+    GetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar1);
 
     // Nickname wasnt changed
     if (!StringCompare(gStringVar3, gStringVar1))
@@ -3259,35 +3259,18 @@ bool8 TryPutNameRaterShowOnTheAir(void)
     return TRUE;
 }
 
-void ChangePokemonNickname(void)
+static void ChangeBoxPokemonNickname_CB(void)
 {
-    void ChangePokemonNickname_CB(void);
-
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar3);
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
-    DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES, NULL), GetMonGender(&gPlayerParty[gSpecialVar_0x8004]), GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_PERSONALITY, NULL), ChangePokemonNickname_CB);
-}
-
-void ChangePokemonNickname_CB(void)
-{
-    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_NICKNAME, gStringVar2);
+    SetBoxMonData(GetSelectedBoxMonFromPcOrParty(), MON_DATA_NICKNAME, gStringVar2);
     CB2_ReturnToFieldContinueScriptPlayMapMusic();
 }
 
-void ChangeBoxPokemonNickname(void)
+void ChangePokemonNickname(void)
 {
-    struct BoxPokemon *boxMon;
-
-    boxMon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    struct BoxPokemon *boxMon = GetSelectedBoxMonFromPcOrParty();
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar3);
     GetBoxMonData(boxMon, MON_DATA_NICKNAME, gStringVar2);
     DoNamingScreen(NAMING_SCREEN_NICKNAME, gStringVar2, GetBoxMonData(boxMon, MON_DATA_SPECIES, NULL), GetBoxMonGender(boxMon), GetBoxMonData(boxMon, MON_DATA_PERSONALITY, NULL), ChangeBoxPokemonNickname_CB);
-}
-
-static void ChangeBoxPokemonNickname_CB(void)
-{
-    SetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar2);
-    CB2_ReturnToFieldContinueScriptPlayMapMusic();
 }
 
 void BufferMonNickname(void)

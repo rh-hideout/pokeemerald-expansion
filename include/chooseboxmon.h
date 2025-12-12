@@ -13,6 +13,7 @@ enum
 };
 
 u32 IsBoxMonExcluded(struct BoxPokemon *boxmon);
+bool32 CanBoxMonBeSelected(struct BoxPokemon *boxmon);
 const u32 *GetReplacementActions(u32 state, struct BoxPokemon *boxmon, u32 move);
 
 #endif // GUARD_CHOOSEBOXMON_H

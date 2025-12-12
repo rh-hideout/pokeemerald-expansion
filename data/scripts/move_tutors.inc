@@ -170,61 +170,16 @@ MoveTutor_EventScript_OpenPartyMenu::
 MoveTutor_EventScript_OpenBox::
 	chooseboxmon SELECT_PC_MON_MOVE_TUTOR
 	waitstate
-	goto_if_eq VAR_RESULT, 1, MoveTutor_CantLearnMove
-	goto_if_eq VAR_RESULT, 2, MoveTutor_AlreadyKnowsMove
-	goto_if_eq VAR_RESULT, 3, MoveTutor_EggCantForgetMoves
-	special CanTeachMoveBoxMon
-	waitstate
-	return
-
-MoveTutor_ForgetMove::
-	special MoveDeleterChooseMoveToForget
-	fadescreen FADE_FROM_BLACK
-	msgbox LilycoveCity_MoveDeletersHouse_Text_MonsMoveShouldBeForgotten, MSGBOX_YESNO
-	switch VAR_RESULT
-	case YES, LilycoveCity_MoveDeletersHouse_EventScript_TryForgetMove
-	case NO, LilycoveCity_MoveDeletersHouse_EventScript_ComeAgain
-	
-	goto_if_eq VAR_0x8005, MAX_MON_MOVES, LilycoveCity_MoveDeletersHouse_EventScript_ChooseMonAndMoveToForget
-	special BufferMoveDeleterNicknameAndMove
-	msgbox LilycoveCity_MoveDeletersHouse_Text_MonsMoveShouldBeForgotten, MSGBOX_YESNO
-	switch VAR_RESULT
-	case YES, LilycoveCity_MoveDeletersHouse_EventScript_TryForgetMove
-	case NO, LilycoveCity_MoveDeletersHouse_EventScript_ComeAgain
-
-MoveTutor_MoveDeletersHouse_EventScript_TryForgetMove::	
-	special MoveDeleterForgetMove
-	playfanfare MUS_MOVE_DELETED
-	waitfanfare
-	msgbox LilycoveCity_MoveDeletersHouse_Text_MonHasForgottenMove, MSGBOX_DEFAULT
-	waitstate
 	lock
 	faceplayer
 	return
 
-MoveTutor_EggCantForgetMoves::
-	msgbox LilycoveCity_MoveDeletersHouse_Text_EggCantForgetMoves, MSGBOX_DEFAULT
-	releaseall
-	end
-
-MoveTutor_CantLearnMove::
-	msgbox MoveTutor_Text_CantLearnMove, MSGBOX_DEFAULT
-	releaseall
-	end
-
-MoveTutor_AlreadyKnowsMove::
-	msgbox MoveTutor_Text_AlreadyKnowsMove, MSGBOX_DEFAULT
-	releaseall
-	end
-
-MoveTutor_Text_CantLearnMove:
-	.string "But that Pokemon can't learn\n"
-	.string "{STR_VAR_1}.$"
-
-MoveTutor_Text_AlreadyKnowsMove:
-	.string "But that Pokemon already knows\n"
-	.string "{STR_VAR_1}.$"
-
 MoveTutor_EventScript_CanOnlyBeLearnedOnce::
 	msgbox MoveTutor_Text_ThisMoveCanOnlyBeLearnedOnce, MSGBOX_YESNO
+	return
+
+MoveTutor_AfterChooseBoxMon::
+	waitstate
+	special CanTeachMoveBoxMon
+	waitstate
 	return

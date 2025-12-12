@@ -4,13 +4,6 @@
 #include "main.h"
 #include "task.h"
 
-enum {
-    CAN_LEARN_MOVE,
-    CANNOT_LEARN_MOVE,
-    ALREADY_KNOWS_MOVE,
-    CANNOT_LEARN_MOVE_IS_EGG
-};
-
 // seems like the last two fields may have been left as all-purpose vars
 // and the second of the two just happens to only be used in one case
 struct PartyMenu

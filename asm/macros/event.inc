@@ -2625,7 +2625,7 @@
 	specialvar VAR_0x8009, GetInGameTradeSpeciesInfo
 	msgbox \wantTradeMsg, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, NO, \declineTradeJump
-	special ChooseBoxMon
+	chooseboxmon SELECT_PC_MON_TRADE
 	waitstate
 	goto_if_eq VAR_0x8004, PARTY_NOTHING_CHOSEN, \declineTradeJump
 	specialvar VAR_0x800B, GetTradeSpecies
@@ -2657,8 +2657,8 @@
 	.endm
 
 	.macro chooseboxmon selectionType=SELECT_PC_MON_NORMAL
-	setvar VAR_0x8006 \selectionType
-	special ChooseBoxMon
+	callnative ChooseBoxMon
+	.byte \selectionType
 	.endm
 
 @ Follower NPCs

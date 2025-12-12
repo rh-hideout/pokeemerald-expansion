@@ -284,12 +284,7 @@ BattleFrontier_Lounge7_EventScript_TeachTutorMove::
 	special CloseBattleFrontierTutorWindow
 	chooseboxmon SELECT_PC_MON_MOVE_TUTOR
 	waitstate
-	goto_if_eq VAR_RESULT, 1, MoveTutor_CantLearnMove
-	goto_if_eq VAR_RESULT, 2, MoveTutor_AlreadyKnowsMove
-	goto_if_eq VAR_RESULT, 3, MoveTutor_EggCantForgetMoves
-	special CanTeachMoveBoxMon
-	goto_if_eq VAR_RESULT, PARTY_NOTHING_CHOSEN, BattleFrontier_Lounge7_EventScript_CancelChooseMon
-	waitstate
+	goto_if_eq VAR_RESULT, FALSE, BattleFrontier_Lounge7_EventScript_CancelChooseMon
 	msgbox BattleFrontier_Lounge7_Text_IllTakeBattlePoints, MSGBOX_DEFAULT
 	copyvar VAR_0x8004, VAR_0x8008
 	special TakeFrontierBattlePoints

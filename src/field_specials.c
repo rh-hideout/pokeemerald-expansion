@@ -1620,10 +1620,11 @@ u16 SetPacifidlogTMReceivedDay(void)
 
 bool8 MonOTNameNotPlayer(void)
 {
-    if (GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_LANGUAGE) != GAME_LANGUAGE)
+    struct BoxPokemon *boxmon = GetSelectedBoxMonFromPcOrParty();
+    if (GetBoxMonData(boxmon, MON_DATA_LANGUAGE) != GAME_LANGUAGE)
         return TRUE;
 
-    GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_OT_NAME, gStringVar1);
+    GetBoxMonData(boxmon, MON_DATA_OT_NAME, gStringVar1);
 
     if (!StringCompare(gSaveBlock2Ptr->playerName, gStringVar1))
         return FALSE;
@@ -4432,7 +4433,7 @@ static void Task_AskTeachMonManager(u8 taskId)
 void CanTeachMoveBoxMon(void)
 {
     ScriptContext_Stop();
-    if (gSpecialVar_Result == PARTY_NOTHING_CHOSEN)
+    if (gSpecialVar_Result == FALSE)
     {
         ScriptContext_Enable();
         return;
