@@ -263,9 +263,11 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
     gBattlerTarget = gAiBattleData->chosenTarget[battler];
     u32 moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
-    if (moveTarget & MOVE_TARGET_USER)
+    if (moveTarget == TARGET_USER)
+    {
         gBattlerTarget = battler;
-    else if (moveTarget & MOVE_TARGET_BOTH)
+    }
+    else if (moveTarget == TARGET_BOTH)
     {
         gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
         if (gAbsentBattlerFlags & (1u << gBattlerTarget))

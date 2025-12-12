@@ -51,7 +51,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
         if (battlerAtk == battlerDef)
             continue;
 
-        if (moveTargetType == MOVE_TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
+        if (moveTargetType == TARGET_BOTH && battlerAtk == BATTLE_PARTNER(battlerDef))
             continue;
 
         if (IsBattlerAlive(battlerDef) && !IsSemiInvulnerable(battlerDef, move))
@@ -73,11 +73,11 @@ u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move)
 {
     enum BattleMoveEffects effect = GetMoveEffect(move);
     if (effect == EFFECT_CURSE && !IS_BATTLER_OF_TYPE(battler, TYPE_GHOST))
-        return MOVE_TARGET_USER;
+        return TARGET_USER;
     if (effect == EFFECT_EXPANDING_FORCE && IsPsychicTerrainAffected(battler, gAiLogicData->abilities[battler], gAiLogicData->holdEffects[battler], gFieldStatuses))
-        return MOVE_TARGET_BOTH;
+        return TARGET_BOTH;
     if (effect == EFFECT_TERA_STARSTORM && gBattleMons[battler].species == SPECIES_TERAPAGOS_STELLAR)
-        return MOVE_TARGET_BOTH;
+        return TARGET_BOTH;
 
     return GetMoveTarget(move);
 }
@@ -2841,8 +2841,12 @@ bool32 HasMoveWithLowAccuracy(u32 battlerAtk, u32 battlerDef, u32 accCheck, bool
 
         if (ignoreStatus && IsBattleMoveStatus(moves[i]))
             continue;
-        else if ((!IsBattleMoveStatus(moves[i]) && GetMoveAccuracy(moves[i]) == 0)
-              || AI_GetBattlerMoveTargetType(battlerAtk, moves[i]) & (MOVE_TARGET_USER | MOVE_TARGET_OPPONENTS_FIELD))
+
+        if (!IsBattleMoveStatus(moves[i]) && GetMoveAccuracy(moves[i]) == 0)
+            continue;
+
+        enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, moves[i]);
+        if (target == TARGET_USER || target == TARGET_OPPONENTS_FIELD)
             continue;
 
         if (gAiLogicData->moveAccuracy[battlerAtk][battlerDef][i] <= accCheck)
@@ -3867,7 +3871,7 @@ bool32 AI_CanBeConfused(u32 battlerAtk, u32 battlerDef, u32 move, enum Ability a
 
 bool32 AI_CanConfuse(u32 battlerAtk, u32 battlerDef, enum Ability defAbility, u32 battlerAtkPartner, u32 move, u32 partnerMove)
 {
-    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == MOVE_TARGET_FOES_AND_ALLY
+    if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY
      && AI_CanBeConfused(battlerAtk, battlerDef, move, defAbility)
      && !AI_CanBeConfused(battlerAtk, BATTLE_PARTNER(battlerDef), move, gAiLogicData->abilities[BATTLE_PARTNER(battlerDef)]))
         return FALSE;
@@ -4356,7 +4360,7 @@ bool32 AreMovesEquivalent(u32 battlerAtk, u32 battlerAtkPartner, u32 move, u32 p
     // shared bits indicate they're meaningfully the same in some way
     if (atkEffect & partnerEffect)
     {
-        if (GetMoveTarget(move) == MOVE_TARGET_SELECTED && GetMoveTarget(partnerMove) == MOVE_TARGET_SELECTED)
+        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
             if (battlerDef == gBattleStruct->moveTarget[battlerAtkPartner])
                 return TRUE;
@@ -4501,7 +4505,7 @@ bool32 DoesPartnerHaveSameMoveEffect(u32 battlerAtkPartner, u32 battlerDef, u32 
     if (GetMoveEffect(move) == GetMoveEffect(partnerMove)
       && partnerMove != MOVE_NONE)
     {
-        if (GetMoveTarget(move) == MOVE_TARGET_SELECTED && GetMoveTarget(partnerMove) == MOVE_TARGET_SELECTED)
+        if (GetMoveTarget(move) == TARGET_SELECTED && GetMoveTarget(partnerMove) == TARGET_SELECTED)
         {
             return gBattleStruct->moveTarget[battlerAtkPartner] == battlerDef;
         }
@@ -4704,9 +4708,9 @@ s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct Battl
         SetBattlerFieldStatusForSwitchin(battlerDef);
         gAiThinkingStruct->saved[battlerAtk].saved = FALSE;
     }
-        
+
     dmg = AI_CalcDamage(move, battlerAtk, battlerDef, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinCandidate), AI_GetSwitchinFieldStatus(switchinCandidate));
-    
+
     // restores original gBattleMon struct
     FreeRestoreBattleMons(savedBattleMons);
 
@@ -5158,16 +5162,16 @@ bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold)
         return TRUE;
 
     if (bestMoveIsPhysical
-     && gAiLogicData->abilities[battlerAtk] == ABILITY_ICE_FACE 
+     && gAiLogicData->abilities[battlerAtk] == ABILITY_ICE_FACE
      && gBattleMons[battlerAtk].species == SPECIES_EISCUE_ICE
      && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // ice face will absorb the hit, safe to use setup
         return TRUE;
-    
+
     if (gAiLogicData->abilities[battlerAtk] == ABILITY_DISGUISE
      && IsMimikyuDisguised(battlerAtk)
      && !IsMoldBreakerTypeAbility(battlerDef, gAiLogicData->abilities[battlerDef])) // disguise will absorb the hit, safe to use setup
         return TRUE;
-    
+
     return FALSE;
 }
 
@@ -5381,7 +5385,7 @@ bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
 
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
-    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && !(AI_GetBattlerMoveTargetType(battlerAtk, chosenMove) & MOVE_TARGET_ALLY))
+    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && AI_GetBattlerMoveTargetType(battlerAtk, chosenMove) != TARGET_ALLY)
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
         return FALSE;   // can't use z move twice

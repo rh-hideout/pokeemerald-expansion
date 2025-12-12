@@ -372,7 +372,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
     u32 trainerPicId;
-    
+
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
@@ -393,7 +393,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     else
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
-    
+
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
@@ -455,9 +455,9 @@ static void OpponentHandleChooseMove(u32 battler)
             gBattlerTarget = gAiBattleData->chosenTarget[battler];
 
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_USER)
+            if (GetBattlerMoveTargetType(battler, chosenMove) == TARGET_USER)
                 gBattlerTarget = battler;
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_BOTH)
+            if (GetBattlerMoveTargetType(battler, chosenMove) == TARGET_BOTH)
             {
                 gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
                 if (gAbsentBattlerFlags & (1u << gBattlerTarget))
@@ -488,7 +488,7 @@ static void OpponentHandleChooseMove(u32 battler)
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        if (GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_USER)
+        if (GetBattlerMoveTargetType(battler, move) == TARGET_USER)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
@@ -499,7 +499,7 @@ static void OpponentHandleChooseMove(u32 battler)
             } while (!CanTargetBattler(battler, target, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && !(GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_BOTH))
+            if (B_WILD_NATURAL_ENEMIES == TRUE && !(GetBattlerMoveTargetType(battler, move) == TARGET_BOTH))
             {
                 u32 speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;

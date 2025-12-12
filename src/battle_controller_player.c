@@ -462,7 +462,7 @@ void HandleInputChooseTarget(u32 battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
 
-        if (moveTarget == (MOVE_TARGET_USER | MOVE_TARGET_ALLY))
+        if (moveTarget == TARGET_USER_OR_ALLY)
         {
             gMultiUsePlayerCursor ^= BIT_FLANK;
         }
@@ -502,7 +502,7 @@ void HandleInputChooseTarget(u32 battler)
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
-                 || (moveTarget & MOVE_TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
+                 || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
                     i = 0;
             } while (i == 0);
         }
@@ -513,7 +513,7 @@ void HandleInputChooseTarget(u32 battler)
         PlaySE(SE_SELECT);
         gSprites[gBattlerSpriteIds[gMultiUsePlayerCursor]].callback = SpriteCB_HideAsMoveTarget;
 
-        if (moveTarget == (MOVE_TARGET_USER | MOVE_TARGET_ALLY))
+        if (moveTarget == TARGET_USER_OR_ALLY)
         {
             gMultiUsePlayerCursor ^= BIT_FLANK;
         }
@@ -553,7 +553,7 @@ void HandleInputChooseTarget(u32 battler)
 
                 if (gAbsentBattlerFlags & (1u << gMultiUsePlayerCursor)
                  || !CanTargetBattler(battler, gMultiUsePlayerCursor, move)
-                 || (moveTarget & MOVE_TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
+                 || (moveTarget == TARGET_OPPONENT && IsOnPlayerSide(gMultiUsePlayerCursor)))
                     i = 0;
             } while (i == 0);
         }
@@ -654,9 +654,28 @@ static void TryShowAsTarget(u32 battler)
     }
 }
 
+static bool32 IsSelectBattlerTargetType(enum MoveTarget target)
+{
+    switch (target)
+    {
+    case TARGET_RANDOM:
+    case TARGET_BOTH:
+    case TARGET_DEPENDS:
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_OPPONENTS_FIELD:
+    case TARGET_USER:
+    case TARGET_ALLY:
+    case TARGET_USER_OR_ALLY:
+        return TRUE;
+    default:
+        break;
+    }
+
+    return FALSE;
+}
+
 void HandleInputChooseMove(u32 battler)
 {
-    u16 moveTarget;
     u32 canSelectTarget = 0;
     struct ChooseMoveStruct *moveInfo = (struct ChooseMoveStruct *)(&gBattleResources->bufferA[battler][4]);
 
@@ -670,36 +689,36 @@ void HandleInputChooseMove(u32 battler)
         TryToHideMoveInfoWindow();
         PlaySE(SE_SELECT);
 
-        moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[gMoveSelectionCursor[battler]]);
 
         if (gBattleStruct->zmove.viewing)
         {
             gBattleStruct->zmove.viewing = FALSE;
             if (GetMoveCategory(moveInfo->moves[gMoveSelectionCursor[battler]]) != DAMAGE_CATEGORY_STATUS)
-                moveTarget = MOVE_TARGET_SELECTED;  //damaging z moves always have selected target
+                moveTarget = TARGET_SELECTED;  //damaging z moves always have selected target
         }
 
         // Status moves turn into Max Guard when Dynamaxed, targets user.
         if (GetActiveGimmick(battler) == GIMMICK_DYNAMAX || IsGimmickSelected(battler, GIMMICK_DYNAMAX))
             moveTarget = GetMoveTarget(GetMaxMove(battler, moveInfo->moves[gMoveSelectionCursor[battler]]));
 
-        if (moveTarget & MOVE_TARGET_USER)
+        if (moveTarget == TARGET_USER)
             gMultiUsePlayerCursor = battler;
         else
             gMultiUsePlayerCursor = GetOpposingSideBattler(battler);
 
         if (gBattleResources->bufferA[battler][1]) // a double battle
         {
-            if (!(moveTarget & (MOVE_TARGET_RANDOM | MOVE_TARGET_BOTH | MOVE_TARGET_DEPENDS | MOVE_TARGET_FOES_AND_ALLY | MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_USER | MOVE_TARGET_ALLY)))
+            if (!IsSelectBattlerTargetType(moveTarget))
                 canSelectTarget = 1; // either selected or user
-            if (moveTarget == (MOVE_TARGET_USER | MOVE_TARGET_ALLY) && IsBattlerAlive(BATTLE_PARTNER(battler)))
+            if (moveTarget == TARGET_USER_OR_ALLY && IsBattlerAlive(BATTLE_PARTNER(battler)))
                 canSelectTarget = 1;
 
             if (moveInfo->currentPp[gMoveSelectionCursor[battler]] == 0)
             {
                 canSelectTarget = 0;
             }
-            else if (!(moveTarget & MOVE_TARGET_USER) && CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battler) <= 1)
+            else if (moveTarget != TARGET_USER && CountAliveMonsInBattle(BATTLE_ALIVE_EXCEPT_BATTLER, battler) <= 1)
             {
                 gMultiUsePlayerCursor = GetDefaultMoveTarget(battler);
                 canSelectTarget = 0;
@@ -708,7 +727,7 @@ void HandleInputChooseMove(u32 battler)
             if (B_SHOW_TARGETS == TRUE)
             {
                 // Show all available targets for multi-target moves
-                if ((moveTarget & MOVE_TARGET_ALL_BATTLERS) == MOVE_TARGET_ALL_BATTLERS)
+                if (moveTarget == TARGET_ALL_BATTLERS)
                 {
                     u32 i = 0;
                     for (i = 0; i < gBattlersCount; i++)
@@ -716,11 +735,11 @@ void HandleInputChooseMove(u32 battler)
 
                     canSelectTarget = 3;
                 }
-                else if (moveTarget & (MOVE_TARGET_OPPONENTS_FIELD | MOVE_TARGET_BOTH | MOVE_TARGET_FOES_AND_ALLY))
+                else if (IsSpreadDamageTargetType(moveTarget) || moveTarget == TARGET_OPPONENTS_FIELD)
                 {
                     TryShowAsTarget(gMultiUsePlayerCursor);
                     TryShowAsTarget(BATTLE_PARTNER(gMultiUsePlayerCursor));
-                    if (moveTarget & MOVE_TARGET_FOES_AND_ALLY)
+                    if (moveTarget == TARGET_FOES_AND_ALLY)
                         TryShowAsTarget(BATTLE_PARTNER(battler));
                     canSelectTarget = 2;
                 }
@@ -742,7 +761,7 @@ void HandleInputChooseMove(u32 battler)
         case 1:
             gBattlerControllerFuncs[battler] = HandleInputChooseTarget;
 
-            if (moveTarget & MOVE_TARGET_USER)
+            if (moveTarget == TARGET_USER)
                 gMultiUsePlayerCursor = battler;
             else if (gAbsentBattlerFlags & (1u << GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT)))
                 gMultiUsePlayerCursor = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
@@ -2008,8 +2027,8 @@ static void PlayerHandleChooseAction(u32 battler)
         StringCopy(gStringVar1, COMPOUND_STRING("Partner will use:\n"));
         u32 move = GetChosenMoveFromPosition(B_POSITION_PLAYER_RIGHT);
         StringAppend(gStringVar1, GetMoveName(move));
-        u32 moveTarget = GetBattlerMoveTargetType(B_POSITION_PLAYER_RIGHT, move);
-        if (moveTarget == MOVE_TARGET_SELECTED)
+        enum MoveTarget moveTarget = GetBattlerMoveTargetType(B_POSITION_PLAYER_RIGHT, move);
+        if (moveTarget == TARGET_SELECTED)
         {
             if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_OPPONENT_LEFT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" -{UP_ARROW}"));
@@ -2020,15 +2039,15 @@ static void PlayerHandleChooseAction(u32 battler)
             else if (gAiBattleData->chosenTarget[B_POSITION_PLAYER_RIGHT] == B_POSITION_PLAYER_RIGHT)
                 StringAppend(gStringVar1, COMPOUND_STRING(" -{DOWN_ARROW}"));
         }
-        else if (moveTarget == MOVE_TARGET_BOTH)
+        else if (moveTarget == TARGET_BOTH)
         {
             StringAppend(gStringVar1, COMPOUND_STRING(" {UP_ARROW}{UP_ARROW}"));
         }
-        else if (moveTarget == MOVE_TARGET_FOES_AND_ALLY)
+        else if (moveTarget == TARGET_FOES_AND_ALLY)
         {
             StringAppend(gStringVar1, COMPOUND_STRING(" {V_D_ARROW}{UP_ARROW}"));
         }
-        else if (moveTarget == MOVE_TARGET_ALL_BATTLERS)
+        else if (moveTarget == TARGET_ALL_BATTLERS)
         {
             StringAppend(gStringVar1, COMPOUND_STRING(" {V_D_ARROW}{V_D_ARROW}"));
         }

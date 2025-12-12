@@ -8120,7 +8120,7 @@ static void SpriteCB_MaxFlutterby(struct Sprite* sprite)
 {
     s16 target_x;
     s16 target_y;
-    if (GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
+    if (GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH)
     {
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &target_x, &target_y);
     }
