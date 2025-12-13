@@ -6423,7 +6423,8 @@ static void Cmd_moveend(void)
             enum BattleMoveEffects originalEffect = GetMoveEffect(originallyUsedMove);
             if (IsBattlerAlive(gBattlerAttacker)
              && originalEffect != EFFECT_BATON_PASS
-             && originalEffect != EFFECT_HEALING_WISH)
+             && originalEffect != EFFECT_HEALING_WISH
+             && originalEffect != EFFECT_LUNAR_DANCE)
             {
                 if (gHitMarker & HITMARKER_OBEYS)
                 {
@@ -7940,22 +7941,30 @@ static bool32 DoSwitchInEffectsForBattler(u32 battler)
     {
         return TRUE;
     }
-    // Healing Wish activates before hazards.
-    // Starting from Gen8 - it heals only pokemon which can be healed. In gens 5,6,7 the effect activates anyways.
-    else if ((gBattleStruct->battlerState[battler].storedHealingWish || gBattleStruct->battlerState[battler].storedLunarDance)
-        && (gBattleMons[battler].hp != gBattleMons[battler].maxHP || gBattleMons[battler].status1 != 0 || GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8))
+    // Healing Wish and Lunar Dance activate before hazards.
+    // Starting from Gen8 - it heals only pokemon which can be healed.
+    // In Gen5-7 the effect activates anyways.
+    else if ((gBattleStruct->battlerState[battler].storedHealingWish)
+        && (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8
+            || gBattleMons[battler].hp != gBattleMons[battler].maxHP
+            || gBattleMons[battler].status1 != 0))
     {
         gBattlerAttacker = battler;
-        if (gBattleStruct->battlerState[battler].storedHealingWish)
-        {
-            BattleScriptCall(BattleScript_HealingWishActivates);
-            gBattleStruct->battlerState[battler].storedHealingWish = FALSE;
-        }
-        else // Lunar Dance
-        {
-            BattleScriptCall(BattleScript_LunarDanceActivates);
-            gBattleStruct->battlerState[battler].storedLunarDance = FALSE;
-        }
+        BattleScriptCall(BattleScript_HealingWishActivates);
+        gBattleStruct->battlerState[battler].storedHealingWish = FALSE;
+    }
+    else if ((gBattleStruct->battlerState[battler].storedLunarDance)
+        && (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8
+            || gBattleMons[battler].hp != gBattleMons[battler].maxHP
+            || gBattleMons[battler].status1 != 0
+            || gBattleMons[battler].pp[0] < CalculatePPWithBonus(gBattleMons[battler].moves[0], gBattleMons[battler].ppBonuses, 0)
+            || gBattleMons[battler].pp[1] < CalculatePPWithBonus(gBattleMons[battler].moves[1], gBattleMons[battler].ppBonuses, 1)
+            || gBattleMons[battler].pp[2] < CalculatePPWithBonus(gBattleMons[battler].moves[2], gBattleMons[battler].ppBonuses, 2)
+            || gBattleMons[battler].pp[3] < CalculatePPWithBonus(gBattleMons[battler].moves[3], gBattleMons[battler].ppBonuses, 3)))
+    {
+        gBattlerAttacker = battler;
+        BattleScriptCall(BattleScript_LunarDanceActivates);
+        gBattleStruct->battlerState[battler].storedLunarDance = FALSE;
     }
     else if (EmergencyExitCanBeTriggered(battler))
     {
@@ -15872,7 +15881,7 @@ void BS_StoreHealingWish(void)
     NATIVE_ARGS(u8 battler);
 
     u32 battler = GetBattlerForBattleScript(cmd->battler);
-    if (gCurrentMove == MOVE_LUNAR_DANCE)
+    if (GetMoveEffect(gCurrentMove) == EFFECT_LUNAR_DANCE)
         gBattleStruct->battlerState[battler].storedLunarDance = TRUE;
     else
         gBattleStruct->battlerState[battler].storedHealingWish = TRUE;
