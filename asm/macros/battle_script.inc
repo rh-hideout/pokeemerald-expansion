@@ -746,9 +746,8 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro stockpile id:req
+	.macro stockpile
 	.byte 0x85
-	.byte \id
 	.endm
 
 	.macro stockpiletobasedamage

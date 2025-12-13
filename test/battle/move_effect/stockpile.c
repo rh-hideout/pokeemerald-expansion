@@ -34,6 +34,26 @@ SINGLE_BATTLE_TEST("Stockpile's count can go up only to 3")
     }
 }
 
+SINGLE_BATTLE_TEST("Stockpile's def and spDef stat increases aren't incremented by other stat stage changes")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(player, MOVE_STOCKPILE); }
+        TURN { MOVE(player, MOVE_COSMIC_POWER); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_STOCKPILE, player);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COSMIC_POWER, player);
+    } THEN {
+        EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
+        EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
+
+        EXPECT_EQ(gDisableStructs[0].stockpileDef, 1);
+        EXPECT_EQ(gDisableStructs[0].stockpileSpDef, 1);
+    }
+}
+
 SINGLE_BATTLE_TEST("Spit Up and Swallow don't work if used without Stockpile")
 {
     u32 move;
