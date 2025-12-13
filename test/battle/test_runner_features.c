@@ -80,3 +80,17 @@ SINGLE_BATTLE_TEST("Changing forms doesn't overwrite set stats (HP)")
         EXPECT_EQ(player->maxHP, 10);
     }
 }
+
+MULTI_BATTLE_TEST("Multi Battle Tests register partner's status1")
+{
+    GIVEN {
+        MULTI_PLAYER(SPECIES_WOBBUFFET);
+        MULTI_PARTNER(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_A(SPECIES_WOBBUFFET);
+        MULTI_OPPONENT_B(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_WILL_O_WISP, target: playerRight); }
+    } SCENE {
+        STATUS_ICON(playerRight, STATUS1_BURN);
+    }
+}
