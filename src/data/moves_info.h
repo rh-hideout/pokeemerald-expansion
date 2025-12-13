@@ -119,6 +119,8 @@ static const u8 sGMaxOneBlowDescription[] = _(
     "G-max Urshifu attack.\n"
     "Ignores Max Guard.");
 
+#undef gMovesInfo // Allow direct access here
+
 const struct MoveInfo gMovesInfo[MOVES_COUNT_ALL] =
 {
     [MOVE_NONE] =
