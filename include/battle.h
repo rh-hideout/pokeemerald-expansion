@@ -254,7 +254,6 @@ struct WishFutureKnock
     u16 futureSightMove[MAX_BATTLERS_COUNT];
     u16 wishCounter[MAX_BATTLERS_COUNT];
     u8 wishPartyId[MAX_BATTLERS_COUNT];
-    u8 weatherDuration;
 };
 
 struct AI_SavedBattleMon
@@ -634,6 +633,7 @@ struct BattleStruct
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
+    u8 weatherDuration;
     u8 expGettersOrder[PARTY_SIZE]; // First battlers which were sent out, then via exp-share
     u8 expGetterMonId;
     u8 expOrderId:3;

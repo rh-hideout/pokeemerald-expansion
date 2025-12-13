@@ -1268,7 +1268,7 @@ bool32 ShouldSwitchIfAllScoresBad(u32 battler)
         if (score > AI_BAD_SCORE_THRESHOLD)
             return FALSE;
     }
-    if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD)) 
+    if (RandomPercentage(RNG_AI_SWITCH_ALL_SCORES_BAD, GetSwitchChance(SHOULD_SWITCH_ALL_SCORES_BAD))
         && (gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE || !ALL_SCORES_BAD_NEEDS_GOOD_SWITCHIN))
         return TRUE;
     return FALSE;
@@ -1821,7 +1821,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
     u16 maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP, item = gAiLogicData->switchinCandidate.battleMon.item, heldItemEffect = GetItemHoldEffect(item);
-    u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
+    u8 weatherDuration = gBattleStruct->weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
     u32 opposingBattler = GetOppositeBattler(battler);
     enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->switchinCandidate.battleMon.ability;
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);

@@ -255,7 +255,7 @@ bool32 EndOrContinueWeather(void)
     if (currBattleWeather == 0xFF)
         return FALSE;
 
-    if (gWishFutureKnock.weatherDuration > 0 && --gWishFutureKnock.weatherDuration == 0)
+    if (gBattleStruct->weatherDuration > 0 && --gBattleStruct->weatherDuration == 0)
     {
         gBattleWeather = B_WEATHER_NONE;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
@@ -3199,11 +3199,11 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         u32 rock = sBattleWeatherInfo[battleWeatherId].rock;
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
         if (gBattleWeather & B_WEATHER_PRIMAL_ANY)
-            gWishFutureKnock.weatherDuration = 0;
+            gBattleStruct->weatherDuration = 0;
         else if (rock != 0 && GetBattlerHoldEffect(battler) == rock)
-            gWishFutureKnock.weatherDuration = 8;
+            gBattleStruct->weatherDuration = 8;
         else
-            gWishFutureKnock.weatherDuration = 5;
+            gBattleStruct->weatherDuration = 5;
         for (u32 i = 0; i < gBattlersCount; i++)
         {
             gDisableStructs[i].weatherAbilityDone = FALSE;

@@ -8840,7 +8840,7 @@ bool32 CanUseLastResort(u8 battler)
 
 static void RemoveAllWeather(void)
 {
-    gWishFutureKnock.weatherDuration = 0;
+    gBattleStruct->weatherDuration = 0;
 
     if (gBattleWeather & B_WEATHER_RAIN)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WEATHER_END_RAIN;
