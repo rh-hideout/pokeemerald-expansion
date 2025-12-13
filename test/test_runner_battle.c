@@ -1112,12 +1112,6 @@ void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
     DATA.trial.aiActionsPlayed[battlerId]++;
 }
 
-void TestRunner_Battle_InvalidNoHPMon(u32 battlerId, u32 partyIndex)
-{
-    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s: INVALID: %s trying to send out a mon(id: %d) with 0 HP.",
-                        gTestRunnerState.test->filename, BattlerIdentifier(battlerId), gBattlerPartyIndexes[battlerId]);
-}
-
 static bool32 CheckComparision(s32 val1, s32 val2, u32 cmp)
 {
     switch (cmp)
