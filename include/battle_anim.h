@@ -81,15 +81,10 @@ void LoadMoveBg(u16 bgId);
 
 bool32 IsGfxLoaded(u32 tag);
 bool32 IsPalLoaded(u32 tag);
-bool32 IsGfxLoadedFast(u32 tag);
-bool32 IsGfxLoadedNoBranch(u32 tag);
-bool32 IsPalLoadedFast(u32 tag);
 bool32 TryLoadGfx(u32 tag);
 bool32 TryLoadPal(u32 tag);
 bool32 StorePalTag(u32 tag);
 bool32 StoreGfxTag(u32 tag);
-
-void StoreTagAtIndex(u32 tag, u32 index);
 
 // battle_intro.c
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);

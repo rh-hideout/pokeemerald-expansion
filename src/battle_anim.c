@@ -30,8 +30,6 @@
     battle_anim_script.inc and used in battle_anim_scripts.s
 */
 
-#define ANIM_SPRITE_INDEX_COUNT 8
-
 static void Cmd_unloadspritegfx(void);
 static void Cmd_unloadspritepal(void);
 static void Cmd_createsprite(void);
@@ -95,10 +93,6 @@ static void Task_PanFromInitialToTarget(u8 taskId);
 static void Task_LoopAndPlaySE(u8 taskId);
 static void Task_WaitAndPlaySE(u8 taskId);
 static void LoadDefaultBg(void);
-
-//  These values must be even
-#define ANIM_SPRITE_GFX_COUNT 8
-#define ANIM_SPRITE_PAL_COUNT 8
 
 EWRAM_DATA static const u8 *sBattleAnimScriptPtr = NULL;
 EWRAM_DATA static const u8 *sBattleAnimScriptRetAddr = NULL;
@@ -490,22 +484,7 @@ bool32 StorePalTag(u32 tag)
     return FALSE;
 }
 
-void StoreTagAtIndex(u32 tag, u32 index)
-{
-    sAnimSpriteGfxTags[index] = tag;
-}
-
-//  This can probably be made faster
-bool32 IsGfxLoaded(u32 tag)
-{
-    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
-        if (tag == sAnimSpriteGfxTags[i])
-            return TRUE;
-    return FALSE;
-}
-
-//  Written by MGriffin
-__attribute__((optimize("-O3"))) bool32 IsGfxLoadedFast(u32 tag)
+__attribute__((optimize("-O3"))) bool32 IsGfxLoaded(u32 tag)
 {
     u32 tag2 = (tag << 16) | tag;
     u32 *tag2s = (uint32_t *)sAnimSpriteGfxTags;
@@ -521,7 +500,7 @@ __attribute__((optimize("-O3"))) bool32 IsGfxLoadedFast(u32 tag)
     return 0;
 }
 
-__attribute__((optimize("-O3"))) bool32 IsPalLoadedFast(u32 tag)
+__attribute__((optimize("-O3"))) bool32 IsPalLoaded(u32 tag)
 {
     u32 tag2 = (tag << 16) | tag;
     u32 *tag2s = (uint32_t *)sAnimSpritePalTags;
@@ -537,28 +516,9 @@ __attribute__((optimize("-O3"))) bool32 IsPalLoadedFast(u32 tag)
     return 0;
 }
 
-//  Doesn't work
-__attribute__((optimize("-O3")))
-bool32 IsGfxLoadedNoBranch(u32 tag)
-{
-    u32 sum = 0xFFFF * 8;
-    for (u32 i = 0; i < 8; i++)
-        sum += sAnimSpriteGfxTags[i] ^ tag;
-    return (sum & 0x10000) >> 16;
-}
-
-//  This can probably be made faster
-bool32 IsPalLoaded(u32 tag)
-{
-    for (u32 i = 0; i < ANIM_SPRITE_GFX_COUNT; i++)
-        if (tag == sAnimSpritePalTags[i])
-            return TRUE;
-    return FALSE;
-}
-
 bool32 TryLoadGfx(u32 tag)
 {
-    if (!IsGfxLoadedFast(tag))
+    if (!IsGfxLoaded(tag))
     {
         if (StoreGfxTag(tag))
         {
@@ -579,7 +539,7 @@ bool32 TryLoadGfx(u32 tag)
 
 bool32 TryLoadPal(u32 tag)
 {
-    if (!IsPalLoadedFast(tag))
+    if (!IsPalLoaded(tag))
     {
         if (StorePalTag(tag))
         {
@@ -648,7 +608,7 @@ static void Cmd_unloadspritegfx(void)
     sBattleAnimScriptPtr++;
     u16 index = T1_READ_16(sBattleAnimScriptPtr);
     sBattleAnimScriptPtr += 2;
-    if (IsGfxLoadedFast(index))
+    if (IsGfxLoaded(index))
     {
         FreeSpriteTilesByTag(index);
         ClearSpriteGfxIndex(index);
@@ -660,7 +620,7 @@ static void Cmd_unloadspritepal(void)
     sBattleAnimScriptPtr++;
     u16 index = T1_READ_16(sBattleAnimScriptPtr);
     sBattleAnimScriptPtr += 2;
-    if (IsPalLoadedFast(index))
+    if (IsPalLoaded(index))
     {
         FreeSpritePaletteByTag(index);
         ClearSpritePalIndex(index);
@@ -761,11 +721,6 @@ static void Cmd_createsprite(void)
     template = (const struct SpriteTemplate *)(T2_READ_32(sBattleAnimScriptPtr));
     sBattleAnimScriptPtr += 4;
 
-    if (template->tileTag != 0)
-        TryLoadGfx(template->tileTag);
-    if (template->paletteTag != 0)
-        TryLoadPal(template->paletteTag);
-
     argVar = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
 
@@ -776,6 +731,13 @@ static void Cmd_createsprite(void)
         gBattleAnimArgs[i] = T1_READ_16(sBattleAnimScriptPtr);
         sBattleAnimScriptPtr += 2;
     }
+
+    if (template->tileTag != 0)
+        if (!TryLoadGfx(template->tileTag))
+            return;
+    if (template->paletteTag != 0)
+        if (!TryLoadPal(template->paletteTag))
+            return;
 
     subpriority = GetSubpriorityForMoveAnim(argVar);
 
@@ -835,9 +797,6 @@ static void Cmd_createspriteontargets_onpos(void)
     template = (const struct SpriteTemplate *)(T2_READ_32(sBattleAnimScriptPtr));
     sBattleAnimScriptPtr += 4;
 
-    TryLoadGfx(template->tileTag);
-    TryLoadPal(template->paletteTag);
-
     argVar = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
 
@@ -846,6 +805,13 @@ static void Cmd_createspriteontargets_onpos(void)
 
     argsCount = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
+
+    if (!(TryLoadGfx(template->tileTag)
+       && TryLoadPal(template->paletteTag)))
+    {
+        sBattleAnimScriptPtr += 2 * argsCount;
+        return;
+    }
 
     CreateSpriteOnTargets(template, argVar, battlerArgIndex, argsCount, FALSE);
 }
@@ -862,9 +828,6 @@ static void Cmd_createspriteontargets(void)
     template = (const struct SpriteTemplate *)(T2_READ_32(sBattleAnimScriptPtr));
     sBattleAnimScriptPtr += 4;
 
-    TryLoadGfx(template->tileTag);
-    TryLoadPal(template->paletteTag);
-
     argVar = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
 
@@ -873,6 +836,13 @@ static void Cmd_createspriteontargets(void)
 
     argsCount = sBattleAnimScriptPtr[0];
     sBattleAnimScriptPtr++;
+
+    if (!(TryLoadGfx(template->tileTag)
+       && TryLoadPal(template->paletteTag)))
+    {
+        sBattleAnimScriptPtr += 2 * argsCount;
+        return;
+    }
 
     CreateSpriteOnTargets(template, argVar, battlerArgIndex, argsCount, TRUE);
 }
@@ -2441,8 +2411,9 @@ static void Cmd_createdragondartsprite(void)
     template.affineAnims = gDummySpriteAffineAnimTable;
     template.callback = AnimShadowBall;
 
-    TryLoadGfx(template.tileTag);
-    TryLoadPal(template.paletteTag);
+    if (!(TryLoadGfx(template.tileTag)
+       && TryLoadPal(template.paletteTag)))
+        return;
 
     if (CreateSpriteAndAnimate(&template,
         GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2),
@@ -2450,14 +2421,3 @@ static void Cmd_createdragondartsprite(void)
         subpriority) != MAX_SPRITES) // Don't increment the task count if the sprite couldn't be created(i.e. there are too many created sprites atm).
          gAnimVisualTaskCount++;
 }
-
-//focus energy    -
-//circle of light -
-//shadow ball     -
-//thin ring       -
-//ice chunk       -
-//black ball 2    -
-//hands and feet  -
-//wisp orb        -
-//vertical hex    -
-//sparkle 4       -

@@ -356,12 +356,16 @@ static void AnimFlashingCircleImpact_Step(struct Sprite *sprite)
 
 void AnimTask_FrozenIceCubeAttacker(u8 taskId)
 {
+    if (!(TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag)
+       && TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     s16 x = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_X_2) - 32;
     s16 y = GetBattlerSpriteCoord(gBattleAnimAttacker, BATTLER_COORD_Y_PIC_OFFSET) - 36;
     u8 spriteId;
-
-    TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag);
-    TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag);
 
     if (IsContest())
         x -= 6;
@@ -377,14 +381,18 @@ void AnimTask_FrozenIceCubeAttacker(u8 taskId)
 
 void AnimTask_CentredFrozenIceCube(u8 taskId)
 {
+    if (!(TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag)
+       && TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     // same as AnimTask_FrozenIceCube but center position on target(s)
     s16 x, y;
     u8 spriteId;
     u8 battler1 = gBattleAnimTarget;
     u8 battler2 = BATTLE_PARTNER(battler1);
-
-    TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag);
-    TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag);
 
     if (!IsDoubleBattle() || IsBattlerAlly(gBattleAnimAttacker, gBattleAnimTarget))
     {
@@ -411,8 +419,13 @@ void AnimTask_CentredFrozenIceCube(u8 taskId)
 
 void AnimTask_FrozenIceCube(u8 taskId)
 {
-    TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag);
-    TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag);
+    if (!(TryLoadGfx(sFrozenIceCubeSpriteTemplate.tileTag)
+       && TryLoadPal(sFrozenIceCubeSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     s16 x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X_2) - 32;
     s16 y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y_PIC_OFFSET) - 36;
     u8 spriteId;

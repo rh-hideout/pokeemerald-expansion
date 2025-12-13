@@ -473,14 +473,14 @@ u32 CreateInvisibleSprite(void (*callback)(struct Sprite *))
 
 u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 y, u32 subpriority)
 {
-    if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_SPRITES_END && !IsGfxLoadedFast(template->tileTag))
+    if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_SPRITES_END && !IsGfxLoaded(template->tileTag))
     {
         DebugPrintf("Trying to load unloaded gfx: %u", template->tileTag);
         DebugPrintf("Move: %S", gMovesInfo[gCurrentMove]);
         Test_ExitWithResult(TEST_RESULT_FAIL, 0, "GFX failure");
         //assertf(FALSE, "createsprite with unloaded gfx: %u", template->tileTag);
     }
-    if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_SPRITES_END && !IsPalLoadedFast(template->paletteTag))
+    if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_SPRITES_END && !IsPalLoaded(template->paletteTag))
     {
         DebugPrintf("Trying to load unloaded pal: %u", template->paletteTag);
         DebugPrintf("Move: %S", gMovesInfo[gCurrentMove]);
@@ -1518,7 +1518,7 @@ void FreeSpriteTilesByTag(u16 tag)
     u8 index = IndexOfSpriteTileTag(tag);
     if (index != 0xFF)
     {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
         if (gCountAllocs)
             gSpriteAllocs--;
 #endif
@@ -1584,7 +1584,7 @@ u16 GetSpriteTileTagByTileStart(u16 start)
 
 void AllocSpriteTileRange(u16 tag, u16 start, u16 count)
 {
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
     if (gCountAllocs)
         gSpriteAllocs++;
 #endif

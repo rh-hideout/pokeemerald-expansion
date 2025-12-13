@@ -1418,6 +1418,13 @@ static void MovePoisonGasCloud(struct Sprite *sprite)
 
 void AnimTask_Hail(u8 taskId)
 {
+    if (!(TryLoadGfx(gHailParticleSpriteTemplate.tileTag)
+       && TryLoadPal(gHailParticleSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
 
     task->func = AnimTask_Hail2;
@@ -1436,8 +1443,6 @@ static void AnimTask_Hail2(u8 taskId)
             task->tHailAffineAnimNum = 0;
             task->tState++;
         }
-        TryLoadGfx(gHailParticleSpriteTemplate.tileTag);
-        TryLoadPal(gHailParticleSpriteTemplate.paletteTag);
         break;
     case 1:
         if (task->tHailSpawnTimer == 0)
@@ -1545,6 +1550,13 @@ static bool8 GenerateHailParticle(u8 hailStructId, u8 affineAnimNum, u8 taskId, 
 
 static void AnimHailBegin(struct Sprite *sprite)
 {
+    if (!(TryLoadGfx(gIceCrystalHitLargeSpriteTemplate.tileTag)
+       && TryLoadPal(gIceCrystalHitLargeSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimSprite(sprite);
+        return;
+    }
+
     u8 spriteId;
 
     sprite->x += 4;
@@ -1552,9 +1564,6 @@ static void AnimHailBegin(struct Sprite *sprite)
 
     if (sprite->x < sprite->sTargetX && sprite->y < sprite->sTargetY)
         return;
-
-    TryLoadGfx(gIceCrystalHitLargeSpriteTemplate.tileTag);
-    TryLoadPal(gIceCrystalHitLargeSpriteTemplate.paletteTag);
 
     if (sprite->sSpawnImpactEffect == 1 && sprite->sAffineAnimNum == 0)
     {
@@ -1715,10 +1724,12 @@ const struct SpriteTemplate gSnowFlakesSpriteTemplate =
 
 void AnimTask_CreateSnowflakes(u8 taskId)
 {
-    u8 x, y;
-
-    TryLoadGfx(gSnowFlakesSpriteTemplate.tileTag);
-    TryLoadPal(gSnowFlakesSpriteTemplate.paletteTag);
+    if (!(TryLoadGfx(gSnowFlakesSpriteTemplate.tileTag)
+       && TryLoadPal(gSnowFlakesSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
     if (gTasks[taskId].data[0] == 0)
     {
@@ -1729,8 +1740,8 @@ void AnimTask_CreateSnowflakes(u8 taskId)
     gTasks[taskId].data[0]++;
     if (gTasks[taskId].data[0] % gTasks[taskId].data[2] == 1)
     {
-        x = Random2() % DISPLAY_WIDTH;
-        y = Random2() % (DISPLAY_HEIGHT / 2);
+        u32 x = Random2() % DISPLAY_WIDTH;
+        u32 y = Random2() % (DISPLAY_HEIGHT / 2);
         CreateSprite(&gSnowFlakesSpriteTemplate, x, y, 4);
     }
     if (gTasks[taskId].data[0] == gTasks[taskId].data[3])

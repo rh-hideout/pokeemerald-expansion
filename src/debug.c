@@ -78,8 +78,6 @@
 #include "fake_rtc.h"
 #include "save.h"
 
-#include "battle_anim.h"
-
 enum FollowerNPCCreateDebugMenu
 {
     DEBUG_FNPC_BRENDAN,
@@ -4250,65 +4248,4 @@ void CheckEWRAMCounters(struct ScriptContext *ctx)
 {
     ConvertIntToDecimalStringN(gStringVar1, gFollowerSteps, STR_CONV_MODE_LEFT_ALIGN, 5);
     ConvertIntToDecimalStringN(gStringVar2, gChainFishingDexNavStreak, STR_CONV_MODE_LEFT_ALIGN, 5);
-}
-
-void TestThing(void)
-{
-    for (u32 i = 0; i < 8; i++)
-    {
-        StoreTagAtIndex(0xFFFF, i);
-    }
-
-    DebugPrintf("Normal, Fast, NoBranch");
-    u32 times[3][8] = {0};
-
-    for (u32 i = 0; i < 8; i++)
-    {
-        StoreTagAtIndex(0x1234, i);
-        u32 time = 0;
-        CycleCountStart();
-        if (IsGfxLoaded(0x1234))
-            time = CycleCountEnd();
-        else
-            CycleCountEnd();
-
-        times[0][i] = time;
-
-        StoreTagAtIndex(0xFFFF, i);
-    }
-
-    for (u32 i = 0; i < 8; i++)
-    {
-        StoreTagAtIndex(0x1234, i);
-        u32 time = 0;
-        CycleCountStart();
-        if (IsGfxLoadedFast(0x1234))
-            time = CycleCountEnd();
-        else
-            CycleCountEnd();
-
-        times[1][i] = time;
-
-        StoreTagAtIndex(0xFFFF, i);
-    }
-
-    for (u32 i = 0; i < 8; i++)
-    {
-        StoreTagAtIndex(0x1234, i);
-        u32 time = 0;
-        CycleCountStart();
-        if (IsGfxLoadedNoBranch(0x1234))
-            time = CycleCountEnd();
-        else
-            CycleCountEnd();
-
-        times[2][i] = time;
-
-        StoreTagAtIndex(0xFFFF, i);
-    }
-
-    for (u32 i = 0; i < 8; i++)
-    {
-        DebugPrintf("%3u %3u %3u", times[0][i], times[1][i], times[2][i]);
-    }
 }

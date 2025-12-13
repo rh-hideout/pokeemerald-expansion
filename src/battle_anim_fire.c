@@ -845,10 +845,14 @@ static void AnimFireSpiralOutward_Step2(struct Sprite *sprite)
 // Animates first stage of Eruption where the attacker squishes and launches rocks away from themself
 void AnimTask_EruptionLaunchRocks(u8 taskId)
 {
-    struct Task *task = &gTasks[taskId];
+    if (!(TryLoadGfx(gEruptionLaunchRockSpriteTemplate.tileTag)
+       && TryLoadPal(gEruptionLaunchRockSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
-    TryLoadGfx(gEruptionLaunchRockSpriteTemplate.tileTag);
-    TryLoadPal(gEruptionLaunchRockSpriteTemplate.paletteTag);
+    struct Task *task = &gTasks[taskId];
 
     task->tAttackerSpriteId = GetAnimBattlerSpriteId(ANIM_ATTACKER);
 

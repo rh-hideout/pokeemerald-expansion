@@ -487,6 +487,13 @@ void AnimBasicFistOrFoot(struct Sprite *sprite)
 
 static void AnimFistOrFootRandomPos(struct Sprite *sprite)
 {
+    if (!(TryLoadGfx(gBasicHitSplatSpriteTemplate.tileTag)
+       && TryLoadPal(gBasicHitSplatSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimSprite(sprite);
+        return;
+    }
+
     u8 battler;
     s16 xMod, yMod;
     s16 x, y;
@@ -519,9 +526,6 @@ static void AnimFistOrFootRandomPos(struct Sprite *sprite)
 
     sprite->x += x;
     sprite->y += y;
-
-    TryLoadGfx(gBasicHitSplatSpriteTemplate.tileTag);
-    TryLoadPal(gBasicHitSplatSpriteTemplate.paletteTag);
 
     sprite->data[0] = gBattleAnimArgs[1];
     sprite->data[7] = CreateSprite(&gBasicHitSplatSpriteTemplate, sprite->x, sprite->y, sprite->subpriority + 1);

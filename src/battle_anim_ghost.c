@@ -823,6 +823,26 @@ static void AnimDestinyBondWhiteShadow_Step(struct Sprite *sprite)
 
 void AnimTask_DestinyBondWhiteShadow(u8 taskId)
 {
+    if (gAnimMoveIndex == MOVE_DARK_VOID
+     || gAnimMoveIndex == MOVE_POLTERGEIST)
+    {
+        if (!(TryLoadGfx(gDarkVoidBlackHoleTemplate.tileTag)
+           && TryLoadPal(gDarkVoidBlackHoleTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+    }
+    else
+    {
+        if (!(TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag)
+           && TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag)))
+        {
+            DestroyAnimVisualTask(taskId);
+            return;
+        }
+    }
+
     struct Task *task;
     s16 battler;
     u8 spriteId;
@@ -851,17 +871,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
             {
                 if (gAnimMoveIndex == MOVE_DARK_VOID
                  || gAnimMoveIndex == MOVE_POLTERGEIST)
-                {
-                    TryLoadGfx(gDarkVoidBlackHoleTemplate.tileTag);
-                    TryLoadPal(gDarkVoidBlackHoleTemplate.paletteTag);
                     spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
-                }
                 else
-                {
-                    TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
-                    TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
                     spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
-                }
 
                 if (spriteId != MAX_SPRITES)
                 {
@@ -885,17 +897,9 @@ void AnimTask_DestinyBondWhiteShadow(u8 taskId)
     else
     {
         if (gAnimMoveIndex == MOVE_DARK_VOID)
-        {
-            TryLoadGfx(gDarkVoidBlackHoleTemplate.tileTag);
-            TryLoadPal(gDarkVoidBlackHoleTemplate.paletteTag);
             spriteId = CreateSprite(&gDarkVoidBlackHoleTemplate, baseX, baseY, 55);   //dark void
-        }
         else
-        {
-            TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
-            TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
             spriteId = CreateSprite(&gDestinyBondWhiteShadowSpriteTemplate, baseX, baseY, 55);   //destiny bond
-        }
 
         if (spriteId != MAX_SPRITES)
         {
@@ -1228,10 +1232,14 @@ static void AnimGhostStatusSprite_Step(struct Sprite *sprite)
 
 void AnimTask_GrudgeFlames(u8 taskId)
 {
-    struct Task *task = &gTasks[taskId];
+    if (!(TryLoadGfx(gGrudgeFlameSpriteTemplate.tileTag)
+       && TryLoadPal(gGrudgeFlameSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
 
-    TryLoadGfx(gGrudgeFlameSpriteTemplate.tileTag);
-    TryLoadPal(gGrudgeFlameSpriteTemplate.paletteTag);
+    struct Task *task = &gTasks[taskId];
 
     task->data[0] = 0;
     task->data[1] = 16;
@@ -1397,15 +1405,20 @@ static void AnimMonMoveCircular_Step(struct Sprite *sprite)
 
 void AnimTask_PoltergeistItem(u8 taskId)
 {
+    if (!(TryLoadGfx(gPoltergeistEffectTemplate.tileTag)
+       && TryLoadPal(gPoltergeistEffectTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task = &gTasks[taskId];
     u8 x = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_X);
     u8 y = GetBattlerSpriteCoord(gBattleAnimTarget, BATTLER_COORD_Y) + (GetBattlerSpriteCoordAttr(gBattleAnimTarget, BATTLER_COORD_ATTR_HEIGHT) / 2);
 
+    //  Only need to store the tags, the assets are loaded by AddIconSprite
     StoreGfxTag(ANIM_TAG_ITEM_BAG);
     StorePalTag(ANIM_TAG_ITEM_BAG);
-
-    StoreGfxTag(gPoltergeistEffectTemplate.tileTag);
-    StorePalTag(gPoltergeistEffectTemplate.paletteTag);
 
     task->data[0] = AddItemIconSprite(ANIM_TAG_ITEM_BAG, ANIM_TAG_ITEM_BAG, gLastUsedItem);
     gSprites[task->data[0]].x = x + 4;
@@ -1437,13 +1450,17 @@ static void AnimPoltergeistItem(struct Sprite *sprite)
 //pulverizing pancake - destiny bond shadow from attacker to target
 void AnimTask_PulverizingPancakeWhiteShadow(u8 taskId)
 {
+    if (!(TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag)
+       && TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag)))
+    {
+        DestroyAnimVisualTask(taskId);
+        return;
+    }
+
     struct Task *task;
     u8 spriteId;
     s16 baseX, baseY;
     s16 x, y;
-
-    TryLoadGfx(gDestinyBondWhiteShadowSpriteTemplate.tileTag);
-    TryLoadPal(gDestinyBondWhiteShadowSpriteTemplate.paletteTag);
 
     task = &gTasks[taskId];
     SetGpuReg(REG_OFFSET_BLDCNT, (BLDCNT_EFFECT_BLEND | BLDCNT_TGT2_ALL));
