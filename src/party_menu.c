@@ -1099,16 +1099,16 @@ static void DisplayPartyPokemonDataForRelearner(u8 slot)
     switch (gMoveRelearnerState)
     {
     case MOVE_RELEARNER_EGG_MOVES:
-        hasMoves = (GetNumberOfEggMoves(mon) > 0);
+        hasMoves = HasRelearnerEggMoves(mon);
         break;
     case MOVE_RELEARNER_TM_MOVES:
-        hasMoves = (GetNumberOfTMMoves(mon) > 0);
+        hasMoves = HasRelearnerTMMoves(mon);
         break;
     case MOVE_RELEARNER_TUTOR_MOVES:
-        hasMoves = (GetNumberOfTutorMoves(mon) > 0);
+        hasMoves = HasRelearnerTutorMoves(mon);
         break;
     default:
-        hasMoves = (GetNumberOfLevelUpMoves(mon) > 0);
+        hasMoves = HasRelearnerLevelUpMoves(mon);
         break;
     }
 
@@ -2876,8 +2876,8 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 
     if (P_PARTY_MOVE_RELEARNER
      && (GetMonData(&mons[slotId], MON_DATA_SPECIES)
-     && (GetNumberOfLevelUpMoves(&mons[slotId]) || GetNumberOfEggMoves(&mons[slotId])
-     || GetNumberOfTMMoves(&mons[slotId]) || GetNumberOfTutorMoves(&mons[slotId]))))
+     && (HasRelearnerLevelUpMoves(&mons[slotId]) || HasRelearnerEggMoves(&mons[slotId])
+     || HasRelearnerTMMoves(&mons[slotId]) || HasRelearnerTutorMoves(&mons[slotId]))))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_SUB_MOVES);
 
     // Add field moves to action list
@@ -2907,24 +2907,24 @@ static void SetPartyMonFieldSelectionActions(struct Pokemon *mons, u8 slotId)
 
 static void SetPartyMonLearnMoveSelectionActions(struct Pokemon *mons, u8 slotId)
 {
-    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfLevelUpMoves(&mons[slotId]) > 0)
+    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && HasRelearnerLevelUpMoves(&mons[slotId]))
         AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_LEVEL_UP_MOVES);
 
     if (P_ENABLE_MOVE_RELEARNERS || (P_FLAG_EGG_MOVES != 0 && FlagGet(P_FLAG_EGG_MOVES)))
     {
-	    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfEggMoves(&mons[slotId]) > 0)
+	    if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && HasRelearnerEggMoves(&mons[slotId]))
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_EGG_MOVES);
     }
 
     if (P_ENABLE_MOVE_RELEARNERS || P_TM_MOVES_RELEARNER)
     {
-        if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfTMMoves(&mons[slotId]) > 0)
+        if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && HasRelearnerTMMoves(&mons[slotId]))
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_TM_MOVES);
     }
 
     if (P_ENABLE_MOVE_RELEARNERS || (P_FLAG_TUTOR_MOVES != 0 && FlagGet(P_FLAG_TUTOR_MOVES)))
     {
-        if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && GetNumberOfTutorMoves(&mons[slotId]) > 0)
+        if (GetMonData(&mons[slotId], MON_DATA_SPECIES) != SPECIES_NONE && HasRelearnerTutorMoves(&mons[slotId]))
             AppendToList(sPartyMenuInternal->actions, &sPartyMenuInternal->numActions, MENU_TUTOR_MOVES);
     }
 
@@ -7968,16 +7968,16 @@ static void CB2_ChooseMonForMoveRelearner(void)
         switch(gMoveRelearnerState)
         {
         case MOVE_RELEARNER_EGG_MOVES:
-            gSpecialVar_0x8005 = GetNumberOfEggMoves(&gPlayerParty[gSpecialVar_0x8004]);
+            gSpecialVar_0x8005 = HasRelearnerEggMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
         case MOVE_RELEARNER_TM_MOVES:
-            gSpecialVar_0x8005 = GetNumberOfTMMoves(&gPlayerParty[gSpecialVar_0x8004]);
+            gSpecialVar_0x8005 = HasRelearnerTMMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
         case MOVE_RELEARNER_TUTOR_MOVES:
-            gSpecialVar_0x8005 = GetNumberOfTutorMoves(&gPlayerParty[gSpecialVar_0x8004]);
+            gSpecialVar_0x8005 = HasRelearnerTutorMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
         default:
-            gSpecialVar_0x8005 = GetNumberOfLevelUpMoves(&gPlayerParty[gSpecialVar_0x8004]);
+            gSpecialVar_0x8005 = HasRelearnerLevelUpMoves(&gPlayerParty[gSpecialVar_0x8004]);
             break;
         }
     }
