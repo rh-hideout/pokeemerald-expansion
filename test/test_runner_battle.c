@@ -251,6 +251,7 @@ static void BattleTest_SetUp(void *data)
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     TestInitConfigData();
+    TestInitMoveDataOverride();
     InvokeTestFunction(test);
     STATE->parameters = STATE->parametersCount;
     if (STATE->parametersCount == 0 && test->resultsSize > 0)
@@ -1627,6 +1628,7 @@ static void BattleTest_TearDown(void *data)
     // aborted unexpectedly.
     ClearFlagAfterTest();
     TestFreeConfigData();
+    TestFreeMoveDataOverride();
     if (!STATE->hasTornDownBattle)
     {
         TearDownBattle();
@@ -1742,6 +1744,25 @@ void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
     SetConfig(configTag, value);
+}
+
+void TestSetMoveData(u32 sourceLine, u32 move, enum MoveDataType type, u32 value)
+{
+    INVALID_IF(!STATE->runGiven, "WITH_MOVE_DATA outside of GIVEN");
+
+    bool32 shouldSet = FALSE;
+    switch(type)
+    {
+    case MOVE_DATA_POWER:              if (GetMovePower(move) != value)          shouldSet = TRUE; break;
+    case MOVE_DATA_EFFECT:             if (GetMoveEffect(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_TARGET:             if (GetMoveTarget(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_HEAL_MOVE:          if (IsHealingMove(move) != value)         shouldSet = TRUE; break;
+    case MOVE_DATA_SOUND_MOVE:         if (IsSoundMove(move) != value)           shouldSet = TRUE; break;
+    case MOVE_DATA_IGNORES_SUBSTITUTE: if (MoveIgnoresSubstitute(move) != value) shouldSet = TRUE; break;
+    case MOVE_DATA_COUNT: break;
+    }
+    if (shouldSet)
+        TestAddMoveDataOverride(move, type, value);
 }
 
 void ClearFlagAfterTest(void)

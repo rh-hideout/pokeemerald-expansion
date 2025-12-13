@@ -40,7 +40,7 @@ SINGLE_BATTLE_TEST("Dream Eater fails on awake targets")
 SINGLE_BATTLE_TEST("Dream Eater fails if Heal Block applies")
 {
     GIVEN {
-        ASSUME(B_HEAL_BLOCKING >= GEN_6);
+        WITH_MOVE_DATA(MOVE_DREAM_EATER, MOVE_DATA_HEAL_MOVE, TRUE); // Dream Eater doesn't have the Heal Move flag in Gen 5.
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
