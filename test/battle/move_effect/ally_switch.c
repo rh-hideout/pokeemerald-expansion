@@ -42,7 +42,7 @@ DOUBLE_BATTLE_TEST("Ally Switch changes the position of battlers")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SCREECH) == EFFECT_DEFENSE_DOWN_2);
-        ASSUME(GetMoveTarget(MOVE_SCREECH) == MOVE_TARGET_SELECTED);
+        ASSUME(GetMoveTarget(MOVE_SCREECH) == TARGET_SELECTED);
         PLAYER(SPECIES_WOBBUFFET) { Speed(5); } // Wobb is playerLeft, but it'll be Wynaut after Ally Switch
         PLAYER(SPECIES_WYNAUT) { Speed(4); }
         OPPONENT(SPECIES_KADABRA) { Speed(3); }
@@ -170,7 +170,7 @@ DOUBLE_BATTLE_TEST("Ally Switch - move fails if the target was ally which change
 DOUBLE_BATTLE_TEST("Ally Switch doesn't make self-targeting status moves fail")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_HARDEN) == MOVE_TARGET_USER);
+        ASSUME(GetMoveTarget(MOVE_HARDEN) == TARGET_USER);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

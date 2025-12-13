@@ -816,7 +816,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 baseFromEffect += 3;
             break;
         case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+            if (GetBattlerMoveTargetType(gBattlerAttacker, move) == TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
             break;
         default:

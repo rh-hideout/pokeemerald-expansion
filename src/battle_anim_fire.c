@@ -1250,7 +1250,7 @@ static void AnimWillOWispFire(struct Sprite *sprite)
     if (IsDoubleBattle()
      && !IsContest()
      && IsBattlerAlive(BATTLE_PARTNER(gBattleAnimTarget))
-     && GetMoveTarget(gAnimMoveIndex) == MOVE_TARGET_BOTH)
+     && GetMoveTarget(gAnimMoveIndex) == TARGET_BOTH)
         SetAverageBattlerPositions(gBattleAnimTarget, TRUE, &sprite->x, &sprite->y);
 
     sprite->x2 = Sin(sprite->data[1], sprite->data[3] >> 8);

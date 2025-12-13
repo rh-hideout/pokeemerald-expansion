@@ -1105,7 +1105,7 @@
 	.byte \battler
 	.endm
 
-	.macro callenvironmentattack
+	.macro unused_0xCC
 	.byte 0xcc
 	.endm
 

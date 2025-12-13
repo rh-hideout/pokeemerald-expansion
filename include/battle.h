@@ -1232,9 +1232,19 @@ static inline bool32 IsDoubleBattle(void)
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
-static inline bool32 IsSpreadMove(u32 moveTarget)
+static inline bool32 IsUserOrAllyTargetType(enum MoveTarget target)
 {
-    return IsDoubleBattle() && (moveTarget == MOVE_TARGET_BOTH || moveTarget == MOVE_TARGET_FOES_AND_ALLY);
+    return target == TARGET_USER || target == TARGET_USER_OR_ALLY;
+}
+
+static inline bool32 IsSpreadDamageTargetType(enum MoveTarget moveTarget)
+{
+    return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
+}
+
+static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
+{
+    return IsDoubleBattle() && IsSpreadDamageTargetType(moveTarget);
 }
 
 static inline bool32 IsDoubleSpreadMove(void)
@@ -1244,11 +1254,11 @@ static inline bool32 IsDoubleSpreadMove(void)
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 
-static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, u32 moveTarget)
+static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, enum MoveTarget moveTarget)
 {
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
-        || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == MOVE_TARGET_BOTH));
+        || (battlerDef == BATTLE_PARTNER(battlerAtk) && moveTarget == TARGET_BOTH);
 }
 
 static inline u32 GetChosenMoveFromPosition(u32 battler)

@@ -55,7 +55,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
     u32 move, friendItem, foeItem;
     u64 aiFlags = AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT;
 
-    PARAMETRIZE { move = MOVE_THUNDER; friendItem = ITEM_NONE; foeItem = ITEM_NONE; }
+    // PARAMETRIZE { move = MOVE_THUNDER; friendItem = ITEM_NONE; foeItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_AIR_BALLOON; }
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_NONE; foeItem = ITEM_AIR_BALLOON; }

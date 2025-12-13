@@ -273,7 +273,7 @@ DOUBLE_BATTLE_TEST("Moves do not fail if an alive partner is the target")
 DOUBLE_BATTLE_TEST("Moves fail if they target into a Pokémon that was fainted by the previous move")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET) { HP(1); }
@@ -296,7 +296,7 @@ DOUBLE_BATTLE_TEST("Moves fail if they target into a Pokémon that was fainted b
 DOUBLE_BATTLE_TEST("Moves that target the field are not going to fail if one mon fainted by the previous move")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET) { HP(1); }
         OPPONENT(SPECIES_WOBBUFFET);
