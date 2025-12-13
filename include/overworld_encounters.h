@@ -11,6 +11,14 @@
 #define OWE_MAX_WATER_SPAWNS        5
 #define OWE_MAX_CAVE_SPAWNS         4
 
+#define OWE_SPAWN_DISTANCE_LAND     1   // A spawn cannot happen within this many tiles of the player position.
+#define OWE_SPAWN_DISTANCE_WATER    3   // A spawn cannot happen within this many tiles of the player position (while surfing).
+
+#define OWE_TOTAL_SPAWN_WIDTH       15  // Width of the on-screen spawn area in tiles.
+#define OWE_TOTAL_SPAWN_HEIGHT      9   // Height of the on-screen spawn area in tiles.
+#define OWE_SPAWN_RADUIS_WIDTH      (OWE_TOTAL_SPAWN_WIDTH - 1) / 2     // Distance from center to left/right edge (not including center).
+#define OWE_SPAWN_RADUIS_HEIGHT     (OWE_TOTAL_SPAWN_HEIGHT - 1) / 2    // Distance from center to top/bottom edge (not including center).
+
 #define OWE_TIME_BETWEEN_SPAWNS     180 // Minimum wait time (in frames) between spawns.
 #define OWE_SPAWN_TIME_VARIABILITY  60  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
 #define OWE_SPAWN_TIME_MINIMUM      60  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.

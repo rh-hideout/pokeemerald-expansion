@@ -263,7 +263,6 @@ static u8 NextSpawnMonSlot(void)
     return spawnSlot;
 }
 
-// Magic Numbers
 static bool8 TrySelectTile(s16* outX, s16* outY)
 {
     u8 elevation;
@@ -275,20 +274,20 @@ static bool8 TrySelectTile(s16* outX, s16* outY)
 
     // Spawn further away when surfing
     if (OWE_ShouldSpawnWaterMons())
-        closeDistance = 3;
+        closeDistance = OWE_SPAWN_DISTANCE_WATER;
     else
-        closeDistance = 1;
+        closeDistance = OWE_SPAWN_DISTANCE_LAND;
 
     // Select a random tile in [-7, -4] [7, 4] range
     // Make sure is not directly next to player
     do
     {
-        x = (s16)(Random() % 15) - 7;
-        y = (s16)(Random() % 9) - 4;
+        x = (s16)(Random() % OWE_TOTAL_SPAWN_WIDTH) - OWE_SPAWN_RADUIS_WIDTH;
+        y = (s16)(Random() % OWE_TOTAL_SPAWN_HEIGHT) - OWE_SPAWN_RADUIS_HEIGHT;
     }
     while (abs(x) <= closeDistance && abs(y) <= closeDistance);
 
-    // We won't spawn mons in in the immediate facing direction
+    // We won't spawn mons in the immediate facing direction
     // (stops mons spawning in as I'm running in a straight line)
     switch (GetPlayerFacingDirection())
     {
