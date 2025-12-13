@@ -56,6 +56,88 @@ AI_DOUBLE_BATTLE_TEST("AI will not use Helping Hand if partner does not have any
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow when items are missing or target already holds one")
+{
+    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+
+    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_NONE;        targetItem = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_LEFTOVERS; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Item(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow with unexchangeable items")
+{
+    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+
+    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
+    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY;  targetItem = ITEM_ORANGE_MAIL; }
+    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORANGE_MAIL; targetItem = ITEM_NONE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Item(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow around Sticky Hold")
+{
+    u16 move = MOVE_NONE, atkItem = ITEM_ORAN_BERRY, targetItem = ITEM_NONE;
+    enum Ability atkAbility = ABILITY_PRESSURE, targetAbility = ABILITY_PRESSURE;
+
+    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE; targetItem = ITEM_LEFTOVERS; }
+    PARAMETRIZE { move = MOVE_TRICK;  atkAbility = ABILITY_PRESSURE;  targetAbility = ABILITY_STICKY_HOLD; targetItem = ITEM_LEFTOVERS; }
+    PARAMETRIZE { move = MOVE_BESTOW; atkAbility = ABILITY_STICKY_HOLD; targetAbility = ABILITY_PRESSURE;  targetItem = ITEM_NONE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Ability(targetAbility); Item(targetItem); }
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(atkAbility); Item(atkItem); Moves(move, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE); }
+    } WHEN {
+        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI skips Trick/Bestow if the target has a Substitute")
+{
+    ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);
+
+    u16 move = MOVE_NONE, atkItem = ITEM_NONE, targetItem = ITEM_NONE;
+
+    PARAMETRIZE { move = MOVE_TRICK;  atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_LEFTOVERS; }
+    PARAMETRIZE { move = MOVE_BESTOW; atkItem = ITEM_ORAN_BERRY; targetItem = ITEM_NONE; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_SUBSTITUTE, MOVE_CELEBRATE); Item(targetItem); Speed(20); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Item(atkItem); Speed(1); Attack(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE); Speed(1); }
+    } WHEN {
+        TURN {
+            MOVE(playerLeft, MOVE_SUBSTITUTE);
+            MOVE(playerRight, MOVE_CELEBRATE);
+        }
+        TURN { NOT_EXPECT_MOVE(opponentLeft, move); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose Helping Hand")
 {
     s32 j;

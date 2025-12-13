@@ -2057,6 +2057,15 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-20);
             break;
         case EFFECT_TRICK:
+            if ((gBattleMons[battlerAtk].item == ITEM_NONE && aiData->items[battlerDef] == ITEM_NONE)
+              || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].item)
+              || !CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
+              || !CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
+              || !CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerAtk].item)
+              || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
+              || aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD
+              || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
+                ADJUST_SCORE(-10);
         case EFFECT_KNOCK_OFF:
         case EFFECT_CORROSIVE_GAS:
             if (aiData->abilities[battlerDef] == ABILITY_STICKY_HOLD)
@@ -2450,8 +2459,12 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_BESTOW:
-            if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_NONE
-              || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].item))    // AI knows its own item
+            if (gBattleMons[battlerAtk].item == ITEM_NONE
+              || aiData->items[battlerDef] != ITEM_NONE
+              || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].item)    // AI knows its own item
+              || !CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerAtk].item)
+              || aiData->abilities[battlerAtk] == ABILITY_STICKY_HOLD
+              || DoesSubstituteBlockMove(battlerAtk, battlerDef, move))
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_WISH:
