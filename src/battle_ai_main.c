@@ -1400,7 +1400,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         if (GetConfig(CONFIG_PRANKSTER_DARK_TYPES) >= GEN_7 && IS_BATTLER_OF_TYPE(battlerDef, TYPE_DARK)
           && aiData->abilities[battlerAtk] == ABILITY_PRANKSTER && IsBattleMoveStatus(move)
           && moveTarget != TARGET_OPPONENTS_FIELD
-          && moveTarget != TARGET_USER);
+          && moveTarget != TARGET_USER)
             RETURN_SCORE_MINUS(10);
 
         // terrain & effect checks
@@ -4271,7 +4271,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     enum MoveTarget moveTarget = AI_GetBattlerMoveTargetType(battlerAtk, move);
-    bool32 moveTargetsBothOpponents = hasTwoOpponents && (IsSpreadDamageTargetType(moveTarget) || moveTarget == TARGET_ALL_BATTLERS);
+    bool32 moveTargetsBothOpponents = hasTwoOpponents && (IsSpreadDamageTargetType(moveTarget) || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD);
     u32 i;
 
     // The AI should understand that while Dynamaxed, status moves function like Protect.
@@ -6054,7 +6054,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
             {
                 enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, move);
                 bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk)
-                                               && (target == TARGET_ALL_BATTLERS || IsSpreadDamageTargetType(target));
+                                               && (target == TARGET_FIELD || target == TARGET_ALL_BATTLERS || IsSpreadDamageTargetType(target));
 
                 score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
                 break;

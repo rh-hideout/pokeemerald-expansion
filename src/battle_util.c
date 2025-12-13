@@ -3411,7 +3411,7 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
         if (IsBattleMoveStatus(move))
         {
             enum MoveTarget target = GetBattlerMoveTargetType(battlerAtk, move);
-            if (target != TARGET_OPPONENTS_FIELD && target != TARGET_ALL_BATTLERS)
+            if (target != TARGET_OPPONENTS_FIELD && target != TARGET_ALL_BATTLERS && target != TARGET_FIELD)
                 battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
         }
         break;
@@ -3478,6 +3478,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     const u8 *battleScript = NULL;
     enum Stat statId = 0;
     u32 statAmount = 1;
+    enum MoveTarget target = GetBattlerMoveTargetType(battlerAtk, move);
 
     switch (abilityDef)
     {
@@ -3485,7 +3486,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
         effect = MOVE_ABSORBED_BY_NO_ABILITY;
         break;
     case ABILITY_VOLT_ABSORB:
-        if (moveType == TYPE_ELECTRIC && GetBattlerMoveTargetType(battlerAtk, move) != TARGET_ALL_BATTLERS)
+        if (moveType == TYPE_ELECTRIC && target != TARGET_ALL_BATTLERS && target != TARGET_FIELD)
             effect = MOVE_ABSORBED_BY_DRAIN_HP_ABILITY;
         break;
     case ABILITY_WATER_ABSORB:
@@ -3498,7 +3499,7 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
             effect = MOVE_ABSORBED_BY_DRAIN_HP_ABILITY;
         break;
     case ABILITY_MOTOR_DRIVE:
-        if (moveType == TYPE_ELECTRIC && GetBattlerMoveTargetType(battlerAtk, move) != TARGET_ALL_BATTLERS)
+        if (moveType == TYPE_ELECTRIC && target != TARGET_ALL_BATTLERS && target != TARGET_FIELD)
         {
             effect = MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY;
             statId = STAT_SPEED;

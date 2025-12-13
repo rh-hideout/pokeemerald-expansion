@@ -728,7 +728,7 @@ void HandleInputChooseMove(u32 battler)
             if (B_SHOW_TARGETS == TRUE)
             {
                 // Show all available targets for multi-target moves
-                if (moveTarget == TARGET_ALL_BATTLERS)
+                if (moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
                 {
                     u32 i = 0;
                     for (i = 0; i < gBattlersCount; i++)
@@ -2048,7 +2048,7 @@ static void PlayerHandleChooseAction(u32 battler)
         {
             StringAppend(gStringVar1, COMPOUND_STRING(" {V_D_ARROW}{UP_ARROW}"));
         }
-        else if (moveTarget == TARGET_ALL_BATTLERS)
+        else if (moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
         {
             StringAppend(gStringVar1, COMPOUND_STRING(" {V_D_ARROW}{V_D_ARROW}"));
         }
