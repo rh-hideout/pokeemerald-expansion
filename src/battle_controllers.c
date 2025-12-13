@@ -445,6 +445,11 @@ static inline bool32 IsControllerLinkPartner(u32 battler)
     return (gBattlerControllerEndFuncs[battler] == LinkPartnerBufferExecCompleted);
 }
 
+static inline bool32 IsControllerSafari(u32 battler)
+{
+    return (gBattlerControllerEndFuncs[battler] == SafariBufferExecCompleted);
+}
+
 bool32 ShouldUpdateTvData(u32 battler)
 {
     return (IsControllerPlayer(battler)
