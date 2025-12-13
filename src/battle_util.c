@@ -2636,7 +2636,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FLING:
-        if (!CanFling(ctx->battlerAtk))
+        if (!CanFling(ctx->battlerAtk, ctx->battlerDef))
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FOLLOW_ME:
@@ -7270,7 +7270,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
     case EFFECT_KNOCK_OFF:
         if (B_KNOCK_OFF_DMG >= GEN_6
             && gBattleMons[battlerDef].item != ITEM_NONE
-            && CanBattlerGetOrLoseItem(battlerDef, gBattleMons[battlerDef].item))
+            && CanBattlerGetOrLoseItem(battlerDef, battlerAtk, gBattleMons[battlerDef].item))
             modifier = uq4_12_multiply(modifier, UQ_4_12(1.5));
         break;
     default:
@@ -9508,10 +9508,10 @@ bool32 DoBattlersShareType(u32 battler1, u32 battler2)
     return FALSE;
 }
 
-bool32 CanBattlerGetOrLoseItem(u32 battler, u16 itemId)
+bool32 CanBattlerGetOrLoseItem(u32 fromBattler, u32 battler, u16 itemId)
 {
-    u16 species = gBattleMons[battler].species;
-    enum HoldEffect holdEffect = GetItemHoldEffect(itemId);
+    u16 species = gBattleMons[fromBattler].species;
+    enum HoldEffect holdEffect = GetItemHoldEffect(itemId); // Raw hold effect
 
     if (ItemIsMail(itemId))
         return FALSE;
@@ -9522,7 +9522,7 @@ bool32 CanBattlerGetOrLoseItem(u32 battler, u16 itemId)
     else if (holdEffect == HOLD_EFFECT_Z_CRYSTAL)
         return FALSE;
     else if (holdEffect == HOLD_EFFECT_BOOSTER_ENERGY
-         && (gSpeciesInfo[gBattleMons[battler].species].isParadox || gSpeciesInfo[gBattleMons[gBattlerTarget].species].isParadox))
+         && (gSpeciesInfo[gBattleMons[fromBattler].species].isParadox || gSpeciesInfo[gBattleMons[battler].species].isParadox))
         return FALSE;
     else
         return TRUE;
@@ -9863,16 +9863,16 @@ static u32 GetFlingPowerFromItemId(u32 itemId)
         return GetItemFlingPower(itemId);
 }
 
-bool32 CanFling(u32 battler)
+bool32 CanFling(u32 battlerAtk, u32 battlerDef)
 {
-    u16 item = gBattleMons[battler].item;
+    u16 item = gBattleMons[battlerAtk].item;
 
     if (item == ITEM_NONE
-      || (B_KLUTZ_FLING_INTERACTION >= GEN_5 && GetBattlerAbility(battler) == ABILITY_KLUTZ)
+      || (B_KLUTZ_FLING_INTERACTION >= GEN_5 && GetBattlerAbility(battlerAtk) == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
-      || gBattleMons[battler].volatiles.embargo
+      || gBattleMons[battlerAtk].volatiles.embargo
       || GetFlingPowerFromItemId(item) == 0
-      || !CanBattlerGetOrLoseItem(battler, item))
+      || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, item))
         return FALSE;
 
     return TRUE;
@@ -9979,8 +9979,8 @@ bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item)
     if (GetItemHoldEffect(item) == HOLD_EFFECT_AIR_BALLOON)
         return FALSE;
 
-    if (!CanBattlerGetOrLoseItem(battlerItem, item)      // Battler with item cannot have it stolen
-     || !CanBattlerGetOrLoseItem(battlerStealing, item)) // Stealer cannot take the item
+    if (!CanBattlerGetOrLoseItem(battlerItem, battlerStealing, item)      // Battler with item cannot have it stolen
+     || !CanBattlerGetOrLoseItem(battlerStealing, battlerItem, item)) // Stealer cannot take the item
         return FALSE;
 
     return TRUE;

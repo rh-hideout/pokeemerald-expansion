@@ -2558,7 +2558,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_BESTOW:
             if (aiData->holdEffects[battlerAtk] == HOLD_EFFECT_NONE
-              || !CanBattlerGetOrLoseItem(battlerAtk, gBattleMons[battlerAtk].item))    // AI knows its own item
+              || !CanBattlerGetOrLoseItem(battlerAtk, battlerDef, gBattleMons[battlerAtk].item))    // AI knows its own item
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_WISH:
@@ -2768,7 +2768,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FLING:
-            if (!CanFling(battlerAtk))
+            if (!CanFling(battlerAtk, battlerDef))
             {
                 ADJUST_SCORE(-10);
             }
@@ -5187,7 +5187,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         }
         break;
     case EFFECT_CORROSIVE_GAS:
-        if (CanKnockOffItem(battlerDef, aiData->items[battlerDef]))
+        if (CanKnockOffItem(battlerDef, battlerAtk, aiData->items[battlerDef]))
         {
             switch (aiData->holdEffects[battlerDef])
             {
@@ -5746,7 +5746,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             ADJUST_SCORE(DECENT_EFFECT);
         break;
     case EFFECT_KNOCK_OFF:
-        if (CanKnockOffItem(battlerDef, aiData->items[battlerDef]))
+        if (CanKnockOffItem(battlerDef, battlerAtk, aiData->items[battlerDef]))
         {
             switch (aiData->holdEffects[battlerDef])
             {
@@ -5775,8 +5775,8 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
 
             if (canSteal && aiData->items[battlerAtk] == ITEM_NONE
              && aiData->items[battlerDef] != ITEM_NONE
-             && CanBattlerGetOrLoseItem(battlerDef, aiData->items[battlerDef])
-             && CanBattlerGetOrLoseItem(battlerAtk, aiData->items[battlerDef])
+             && CanBattlerGetOrLoseItem(battlerDef, battlerAtk, aiData->items[battlerDef])
+             && CanBattlerGetOrLoseItem(battlerAtk, battlerDef, aiData->items[battlerDef])
              && !HasMoveWithEffect(battlerAtk, EFFECT_ACROBATICS)
              && aiData->abilities[battlerDef] != ABILITY_STICKY_HOLD)
             {
