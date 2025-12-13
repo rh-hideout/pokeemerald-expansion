@@ -12734,6 +12734,10 @@ static void Cmd_tryswapitems(void)
             gBattlescriptCurrInstr = cmd->failInstr;
         }
         // check if ability prevents swapping
+        else if (GetBattlerAbility(gBattlerAttacker) == ABILITY_STICKY_HOLD)
+        {
+            gBattlescriptCurrInstr = cmd->failInstr;
+        }
         else if (GetBattlerAbility(gBattlerTarget) == ABILITY_STICKY_HOLD)
         {
             gBattlescriptCurrInstr = BattleScript_StickyHoldActivates;
