@@ -3,8 +3,6 @@
 
 // These tests are very heavy computationally. Only use them to review animation PRs.
 
-#if T_SHOULD_RUN_MOVE_ANIM
-
 #define ANIM_TEST_START_MOVE 1              //  First move to test
 #define ANIM_TEST_END_MOVE   MOVES_COUNT-1  //  Last move to test
 
@@ -420,6 +418,8 @@ static void SceneSingles(u32 move, struct BattlePokemon *mon)
         ANIMATION(ANIM_TYPE_MOVE, move, mon);
     }
 }
+
+#if T_SHOULD_RUN_MOVE_ANIM
 
 static void DoublesWhen(u32 move, struct BattlePokemon *attacker, struct BattlePokemon *target, struct BattlePokemon *ignore1, struct BattlePokemon *ignore2, u32 variation)
 {
@@ -1606,6 +1606,8 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
     }
 }
 
+#endif // T_SHOULD_RUN_MOVE_ANIM
+
 //  Z-Moves
 #define Z_MOVE_PARAMETERS PARAMETRIZE { zmove = MOVE_BREAKNECK_BLITZ; species = SPECIES_WOBBUFFET; move = MOVE_TACKLE; item = ITEM_NORMALIUM_Z; } \
     PARAMETRIZE { zmove = MOVE_INFERNO_OVERDRIVE; species = SPECIES_WOBBUFFET; move = MOVE_EMBER; item = ITEM_FIRIUM_Z; } \
@@ -1644,6 +1646,8 @@ SINGLE_BATTLE_TEST("Move Animations occur before their stat change animations - 
     PARAMETRIZE { zmove = MOVE_STOKED_SPARKSURFER; species = SPECIES_RAICHU_ALOLA; move = MOVE_THUNDERBOLT; item = ITEM_ALORAICHIUM_Z; } \
     PARAMETRIZE { zmove = MOVE_10_000_000_VOLT_THUNDERBOLT; species = SPECIES_PIKACHU_ALOLA; move = MOVE_THUNDERBOLT; item = ITEM_PIKASHUNIUM_Z; } \
     PARAMETRIZE { zmove = MOVE_LIGHT_THAT_BURNS_THE_SKY; species = SPECIES_NECROZMA_DAWN_WINGS; move = MOVE_PHOTON_GEYSER; item = ITEM_ULTRANECROZIUM_Z; }
+
+#if T_SHOULD_RUN_MOVE_ANIM
 
 SINGLE_BATTLE_TEST("Z-Moves don't leak when used - Singles (player to opponent)")
 {
@@ -1961,6 +1965,8 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
     }
 }
 
+#endif // T_SHOULD_RUN_MOVE_ANIM
+
 //  Max Moves
 
 // Tera Blast and all type variants
@@ -1983,6 +1989,8 @@ DOUBLE_BATTLE_TEST("Z-Moves don't leak when used - Doubles (opponentRight to pla
     PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_DARK; } \
     PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_FAIRY; } \
     PARAMETRIZE { species = SPECIES_WOBBUFFET; move = MOVE_TERA_BLAST; type = TYPE_STELLAR; }
+
+#if T_SHOULD_RUN_MOVE_ANIM
 
 SINGLE_BATTLE_TEST("Tera Blast doesn't leak when used - Singles (player to opponent)")
 {
@@ -2230,4 +2238,251 @@ DOUBLE_BATTLE_TEST("Tera Blast doesn't leak when used - Doubles (opponentRight t
     }
 }
 
-#endif
+#else // T_SHOULD_RUN_MOVE_ANIM
+
+SINGLE_BATTLE_TEST("Move Animations work 1")
+{
+    u32 j = ANIM_TEST_START_MOVE + 0, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 2")
+{
+    u32 j = ANIM_TEST_START_MOVE + 1, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 3")
+{
+    u32 j = ANIM_TEST_START_MOVE + 2, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Move Animations work 4")
+{
+    u32 j = ANIM_TEST_START_MOVE + 3, move = 0, species = 0;
+    u32 k = 0, variation = 0, variationsNumber;
+    u32 friendship = 0, tempFriendship;
+    u32 tempMove, tempSpecies;
+    FORCE_MOVE_ANIM(TRUE);
+    for (; j <= ANIM_TEST_END_MOVE; j += 4) {
+        variationsNumber = GetVariationsNumber(j, FALSE);
+        for (k = 0; k < variationsNumber; k++) {
+            ParametrizeMovesAndSpecies(j, &tempMove, &tempSpecies, k);
+            tempFriendship = ParametrizeFriendship(j, k);
+            PARAMETRIZE { move = tempMove; species = tempSpecies; variation = k; friendship = tempFriendship;}
+        }
+    }
+    GIVEN {
+        PLAYER(species) {
+            Level(GetParametrizedLevel(move, variation));
+            HP(GetParametrizedHP(move, variation)); MaxHP(9999); Item(GetParametrizedItem(move, variation));
+            if (species == SPECIES_WOBBUFFET) Gender(MON_FEMALE);
+            if (GetMoveEffect(move) == EFFECT_LAST_RESORT) Moves(move, MOVE_POUND);
+            if (species == SPECIES_KLINKLANG) Ability(ABILITY_PLUS);
+            if (friendship) Friendship(friendship);
+            if (GetParametrizedShinyness(move, variation)) Shiny(TRUE);
+        }
+        PLAYER(SPECIES_WOBBUFFET)   {
+            Gender(MON_MALE); MaxHP(9999); Moves(MOVE_POUND);
+            HP(GetMoveEffect(move) == EFFECT_REVIVAL_BLESSING ? 0 : 9998);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) {
+            Gender(MON_MALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); Ability(ABILITY_TELEPATHY);
+            if (GetMoveEffect(move) != EFFECT_BESTOW)
+                Item(ITEM_ORAN_BERRY);
+        }
+        OPPONENT(SPECIES_WOBBUFFET) { Gender(MON_FEMALE); HP(9998); MaxHP(9999); SpDefense(9999); Defense(9999); }
+    } WHEN {
+        WhenSingles(move, player, opponent, variation);
+    } SCENE {
+        SceneSingles(move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Z-Moves animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, item, zmove;
+    Z_MOVE_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { Item(item); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        if (species == SPECIES_NECROZMA_DAWN_WINGS)
+        {
+            TURN { MOVE(player, MOVE_CELEBRATE, gimmick: GIMMICK_ULTRA_BURST); }
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+        else
+        {
+            TURN { MOVE(player, move, gimmick: GIMMICK_Z_MOVE); }
+        }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, zmove, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+SINGLE_BATTLE_TEST("Tera Blast animations work")
+{
+    FORCE_MOVE_ANIM(TRUE);
+    u32 species, move, type;
+    TERA_BLAST_PARAMETERS;
+    GIVEN {
+        PLAYER(species) { TeraType(type); }
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_FOCUS_SASH); }
+    } WHEN {
+        TURN { MOVE(player, move, gimmick: GIMMICK_TERA); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_CHARGE, player);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_TERA_ACTIVATE, player);
+        ANIMATION(ANIM_TYPE_MOVE, move, player);
+    } THEN {
+        FORCE_MOVE_ANIM(FALSE);
+        if (gLoadFail || gSpriteAllocs != 0)
+            DebugPrintf("Move failed: %S (%u)", GetMoveName(move), move);
+        EXPECT_EQ(gLoadFail, FALSE);
+        EXPECT_EQ(gSpriteAllocs, 0);
+    }
+}
+
+#endif // !T_SHOULD_RUN_MOVE_ANIM

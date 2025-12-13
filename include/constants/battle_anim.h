@@ -423,6 +423,7 @@
 #define ANIM_TAG_TATSUGIRI_CURLY            (ANIM_SPRITES_START + 409)
 #define ANIM_TAG_TATSUGIRI_DROOPY           (ANIM_SPRITES_START + 410)
 #define ANIM_TAG_TATSUGIRI_STRETCHY         (ANIM_SPRITES_START + 411)
+#define ANIM_SPRITES_END                    (ANIM_SPRITES_START + 412)
 
 // battlers
 #define ANIM_ATTACKER         0
@@ -696,5 +697,10 @@ enum SpeciesGfxChange
 // The below are only used by AnimTask_BlendBattleAnimPal to get battler sprite palettes by position rather than by role.
 // It's redundant with F_PAL_BATTLERS, because they're only ever used together to refer to all the battlers at once.
 #define F_PAL_BATTLERS_2  (1 << 7 | 1 << 8 | 1 << 9 | 1 << 10)
+
+//  Max number of tile and palette allocations for battle animations
+//  These values must be even
+#define ANIM_SPRITE_GFX_COUNT 8
+#define ANIM_SPRITE_PAL_COUNT 8
 
 #endif // GUARD_CONSTANTS_BATTLE_ANIM_H

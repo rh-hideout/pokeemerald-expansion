@@ -1184,10 +1184,10 @@ struct MapPosition
     s8 elevation;
 };
 
-#if T_SHOULD_RUN_MOVE_ANIM
+#if TESTING
 extern bool32 gLoadFail;
 extern bool32 gCountAllocs;
 extern s32 gSpriteAllocs;
-#endif // T_SHOULD_RUN_MOVE_ANIM
+#endif // TESTING
 
 #endif // GUARD_GLOBAL_H

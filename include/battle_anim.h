@@ -79,6 +79,13 @@ void RelocateBattleBgPal(u16 paletteNum, u16 *dest, u32 offset, bool8 largeScree
 void ResetBattleAnimBg(bool8 toBG2);
 void LoadMoveBg(u16 bgId);
 
+bool32 IsGfxLoaded(u32 tag);
+bool32 IsPalLoaded(u32 tag);
+bool32 TryLoadGfx(u32 tag);
+bool32 TryLoadPal(u32 tag);
+bool32 StorePalTag(u32 tag);
+bool32 StoreGfxTag(u32 tag);
+
 // battle_intro.c
 void SetAnimBgAttribute(u8 bgId, u8 attributeId, u8 value);
 void DrawBattlerOnBg(int bgId, u8 x, u8 y, u8 battlerPosition, u8 paletteId, u8 *tiles, u16 *tilemap, u16 tilesOffset);
@@ -441,6 +448,7 @@ extern const struct CompressedSpriteSheet gBattleAnimPicTable[];
 extern const struct SpritePalette gBattleAnimPaletteTable[];
 
 extern const struct SpriteTemplate gWaterHitSplatSpriteTemplate;
+extern const struct SpriteTemplate gGrudgeFlameSpriteTemplate;
 
 extern const union AnimCmd *const gAnims_WaterMudOrb[];
 extern const union AnimCmd *const gAnims_BasicFire[];
