@@ -537,6 +537,13 @@ $(OBJ_DIR)/sym_common.ld: sym_common.txt $(C_OBJS) $(wildcard common_syms/*.txt)
 $(OBJ_DIR)/sym_ewram.ld: sym_ewram.txt
 	$(RAMSCRGEN) ewram_data $< ENGLISH > $@
 
+MINING_PNGS := $(shell find graphics/mining_minigame/items/ -type f -name '*.png') \
+               $(shell find graphics/mining_minigame/stones/ -type f -name '*.png')
+
+MINING_4BPPS := $(MINING_PNGS:%.png=%.4bpp)
+
+MINING_DEPS := $(MINING_4BPPS) tools/mining_minigame/table.json
+
 TEACHABLE_DEPS := $(ALL_LEARNABLES_JSON) $(shell find data/ -type f -name '*.inc') $(INCLUDE_DIRS)/constants/tms_hms.h $(INCLUDE_DIRS)/config/pokemon.h $(C_SUBDIR)/pokemon.c
 
 $(LEARNSET_HELPERS_BUILD_DIR):
@@ -548,11 +555,13 @@ $(ALL_LEARNABLES_JSON): $(wildcard $(LEARNSET_HELPERS_DATA_DIR)/*.json) | $(LEAR
 $(DATA_SRC_SUBDIR)/pokemon/teachable_learnsets.h: $(TEACHABLE_DEPS)
 	python3 $(LEARNSET_HELPERS_DIR)/make_teachables.py $<
 
+$(DATA_SRC_SUBDIR)/mining_minigame.h: $(MINING_DEPS)
+	python3 $(TOOLS_DIR)/mining_minigame/analyze_sprites.py
+
 # Linker script
 LD_SCRIPT := ld_script_modern.ld
 
 # Final rules
-
 libagbsyscall:
 	@$(MAKE) -C libagbsyscall TOOLCHAIN=$(TOOLCHAIN) MODERN=1
 
