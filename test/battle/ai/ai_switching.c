@@ -76,6 +76,51 @@ AI_SINGLE_BATTLE_TEST("AI revives the best fainted ally with Revival Blessing") 
     }
 }
 
+AI_SINGLE_BATTLE_TEST("AI switches to pass Wish when matchup is bad and ally benefits")
+{
+    // Scenario: AI Blissey used Wish and has bad matchup vs Fighting-type player
+    // AI Pidgeot is at 50% HP (benefits from Wish) and has less bad matchup (Normal/Flying vs Fighting is 2.5x, better than Normal vs Fighting 4.0x)
+    // AI should switch to Pidgeot to pass the Wish
+    PASSES_RANDOMLY(SHOULD_SWITCH_WISH_PASSING_PERCENTAGE, 100, RNG_AI_SWITCH_WISH_PASSING);
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_CROSS_CHOP, MOVE_CELEBRATE); } // Fighting-type threatens Blissey (Normal)
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_SOFT_BOILED); } // Normal-type, bad matchup vs Fighting
+        OPPONENT(SPECIES_PIDGEOT) { HP(100); MaxHP(200); Moves(MOVE_AERIAL_ACE); } // Normal/Flying, better matchup, at 50% HP benefits from Wish
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_SWITCH(opponent, 1); } // Should switch to Pidgeot to receive Wish
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if current mon has good matchup")
+{
+    // Scenario: AI has Wish active but current mon has neutral matchup - should stay and use a move
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_COUNTER, MOVE_CELEBRATE); } // Wobbuffet's Psychic type vs Blissey's Normal = neutral matchup
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); } // Normal-type, neutral matchup
+        OPPONENT(SPECIES_PIDGEOT) { HP(100); MaxHP(200); Moves(MOVE_AERIAL_ACE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); } // Should NOT switch - uses attack move instead
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI does not switch for Wish if ally would faint to hazards")
+{
+    // Scenario: AI has Wish active but the ally that would benefit would faint to Stealth Rock
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Moves(MOVE_CROSS_CHOP, MOVE_STEALTH_ROCK, MOVE_CELEBRATE); } // Fighting-type threatens Blissey
+        OPPONENT(SPECIES_BLISSEY) { HP(400); MaxHP(400); Moves(MOVE_WISH, MOVE_TACKLE); } // Bad matchup vs Fighting
+        OPPONENT(SPECIES_CHARIZARD) { HP(1); MaxHP(200); Moves(MOVE_FLAMETHROWER); } // Fire/Flying = 4x weak to Rock, would faint to SR
+    } WHEN {
+        TURN { MOVE(player, MOVE_STEALTH_ROCK); EXPECT_MOVE(opponent, MOVE_WISH); }
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_TACKLE); } // Should NOT switch - Charizard would faint to SR
+    }
+}
+
 // General switching behaviour
 AI_SINGLE_BATTLE_TEST("AI switches if Perish Song is about to kill")
 {
