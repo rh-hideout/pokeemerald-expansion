@@ -237,7 +237,6 @@ enum
     CONTROLLER_TRAINERSLIDEBACK,
     CONTROLLER_FAINTANIMATION,
     CONTROLLER_PALETTEFADE,
-    CONTROLLER_SUCCESSBALLTHROWANIM,
     CONTROLLER_BALLTHROWANIM,
     CONTROLLER_PAUSE,
     CONTROLLER_MOVEANIMATION,
@@ -370,7 +369,6 @@ void BtlController_HandleDrawTrainerPic(u32 battlerId, u32 trainerPicId, bool32 
 void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId);
 void BtlController_HandleTrainerSlideBack(u32 battlerId, s16 data0, bool32 startAnim);
 void BtlController_HandleFaintAnimation(u32 battler);
-void BtlController_HandleSuccessBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture);
 void BtlController_HandleBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture);
 void BtlController_HandleMoveAnimation(u32 battler);
 void BtlController_HandlePrintString(u32 battler);

@@ -927,15 +927,6 @@ static void UNUSED BtlController_EmitPaletteFade(u32 battler, u32 bufferId)
     PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
 }
 
-static void UNUSED BtlController_EmitSuccessBallThrowAnim(u32 battler, u32 bufferId)
-{
-    gBattleResources->transferBuffer[0] = CONTROLLER_SUCCESSBALLTHROWANIM;
-    gBattleResources->transferBuffer[1] = CONTROLLER_SUCCESSBALLTHROWANIM;
-    gBattleResources->transferBuffer[2] = CONTROLLER_SUCCESSBALLTHROWANIM;
-    gBattleResources->transferBuffer[3] = CONTROLLER_SUCCESSBALLTHROWANIM;
-    PrepareBufferDataTransfer(battler, bufferId, gBattleResources->transferBuffer, 4);
-}
-
 void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId)
 {
     gBattleResources->transferBuffer[0] = CONTROLLER_BALLTHROWANIM;
@@ -2540,12 +2531,6 @@ static void HandleBallThrow(u32 battler, u32 target, u32 animId, bool32 allowCri
     InitAndLaunchSpecialAnimation(battler, battler, target, animId);
 
     gBattlerControllerFuncs[battler] = Controller_WaitForBallThrow;
-}
-
-void BtlController_HandleSuccessBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture)
-{
-    gBattleSpritesDataPtr->animationData->ballThrowCaseId = BALL_3_SHAKES_SUCCESS;
-    HandleBallThrow(battler, target, animId, allowCriticalCapture);
 }
 
 void BtlController_HandleBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture)
