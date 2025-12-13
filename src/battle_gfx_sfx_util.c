@@ -298,7 +298,7 @@ u16 ChooseMoveAndTargetInBattlePalace(u32 battler)
 
     enum MoveTarget moveTarget = GetBattlerMoveTargetType(battler, moveInfo->moves[chosenMoveIndex]);
 
-    if (moveTarget == TARGET_USER)
+    if (moveTarget == TARGET_USER || moveTarget == TARGET_USER_OR_ALLY)
         chosenMoveIndex |= (battler << 8);
     else if (moveTarget == TARGET_SELECTED)
         chosenMoveIndex |= GetBattlePalaceTarget(battler);
@@ -336,6 +336,7 @@ static u8 GetBattlePalaceMoveGroup(u8 battler, u16 move)
     case TARGET_DEPENDS:
     case TARGET_OPPONENTS_FIELD:
     case TARGET_ALLY:
+    case TARGET_USER_OR_ALLY:
         return PALACE_MOVE_GROUP_SUPPORT;
     case TARGET_USER:
         return PALACE_MOVE_GROUP_DEFENSE;

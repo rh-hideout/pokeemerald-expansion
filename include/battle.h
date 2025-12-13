@@ -1232,6 +1232,11 @@ static inline bool32 IsDoubleBattle(void)
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
+static inline bool32 IsUserOrAllyTargetType(enum MoveTarget target)
+{
+    return target == TARGET_USER || target == TARGET_USER_OR_ALLY;
+}
+
 static inline bool32 IsSpreadDamageTargetType(enum MoveTarget moveTarget)
 {
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
@@ -1253,7 +1258,7 @@ static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDe
 {
     return battlerDef == battlerAtk
         || !IsBattlerAlive(battlerDef)
-        || (battlerDef == BATTLE_PARTNER(battlerAtk) && (moveTarget == TARGET_BOTH));
+        || (battlerDef == BATTLE_PARTNER(battlerAtk) && moveTarget == TARGET_BOTH);
 }
 
 static inline u32 GetChosenMoveFromPosition(u32 battler)

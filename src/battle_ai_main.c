@@ -1273,7 +1273,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         ADJUST_SCORE(-5);
 
     // check non-user target
-    if (!(moveTarget & TARGET_USER))
+    if (moveTarget != TARGET_USER)
     {
         if (Ai_IsPriorityBlocked(battlerAtk, battlerDef, move, aiData))
             RETURN_SCORE_MINUS(20);
@@ -4270,7 +4270,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     bool32 isBattle1v1 = IsBattle1v1();
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
-    enum MoveTarget moveTarget = GetBattlerMoveTargetType(battlerAtk, move);
+    enum MoveTarget moveTarget = AI_GetBattlerMoveTargetType(battlerAtk, move);
     bool32 moveTargetsBothOpponents = hasTwoOpponents && (IsSpreadDamageTargetType(moveTarget) || moveTarget == TARGET_ALL_BATTLERS);
     u32 i;
 
@@ -5113,7 +5113,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         break;
     case EFFECT_FOLLOW_ME:
         if (hasPartner
-          && GetBattlerMoveTargetType(battlerAtk, move) == TARGET_USER
+          && AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_USER
           && !IsBattlerIncapacitated(battlerDef, aiData->abilities[battlerDef])
           && (!IsPowderMove(move) || IsAffectedByPowderMove(battlerDef, aiData->abilities[battlerDef], aiData->holdEffects[battlerDef])))
           // Rage Powder doesn't affect powder immunities
@@ -6052,10 +6052,9 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
                 break;
             case MOVE_EFFECT_CLEAR_SMOG:
             {
-                enum MoveTarget target = GetBattlerMoveTargetType(battlerAtk, move);
+                enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, move);
                 bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk)
-                                               && target == TARGET_ALL_BATTLERS
-                                               && IsSpreadDamageTargetType(target);
+                                               && (target == TARGET_ALL_BATTLERS || IsSpreadDamageTargetType(target));
 
                 score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
                 break;
@@ -6457,7 +6456,7 @@ static s32 AI_AttacksPartner(u32 battlerAtk, u32 battlerDef, u32 move, s32 score
 
         u32 hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE);
 
-        if (GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY && hitsToKO > 0 &&
+        if (AI_GetBattlerMoveTargetType(battlerAtk, move) == TARGET_FOES_AND_ALLY && hitsToKO > 0 &&
            (GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerAtk), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0 || GetNoOfHitsToKOBattler(battlerAtk, LEFT_FOE(battlerDef), gAiThinkingStruct->movesetIndex, AI_ATTACKING, CONSIDER_ENDURE) > 0))
             ADJUST_SCORE(BEST_EFFECT);
 
