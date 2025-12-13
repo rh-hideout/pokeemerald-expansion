@@ -246,16 +246,6 @@ struct FieldTimer
     u16 fairyLockTimer;
 };
 
-struct WishFutureKnock
-{
-    u16 futureSightCounter[MAX_BATTLERS_COUNT];
-    u8 futureSightBattlerIndex[MAX_BATTLERS_COUNT];
-    u8 futureSightPartyIndex[MAX_BATTLERS_COUNT];
-    u16 futureSightMove[MAX_BATTLERS_COUNT];
-    u16 wishCounter[MAX_BATTLERS_COUNT];
-    u8 wishPartyId[MAX_BATTLERS_COUNT];
-};
-
 struct AI_SavedBattleMon
 {
     enum Ability ability;
@@ -588,6 +578,20 @@ struct BattlerState
     u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 padding:15;
+
+    // Future Sight values
+    u16 futureSightMove;
+    u16 futureSightCounter:10;
+    u16 futureSightBattlerIndex:3;
+    u16 futureSightPartyIndex:3;
+
+};
+
+struct WishFutureKnock
+{
+
+    u16 wishCounter[MAX_BATTLERS_COUNT];
+    u8 wishPartyId[MAX_BATTLERS_COUNT];
 };
 
 struct PartyState

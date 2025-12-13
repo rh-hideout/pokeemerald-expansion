@@ -11946,10 +11946,10 @@ static void Cmd_setfutureattack(void)
 {
     CMD_ARGS();
 
-    gWishFutureKnock.futureSightMove[gBattlerTarget] = gCurrentMove;
-    gWishFutureKnock.futureSightBattlerIndex[gBattlerTarget] = gBattlerAttacker;
-    gWishFutureKnock.futureSightPartyIndex[gBattlerTarget] = gBattlerPartyIndexes[gBattlerAttacker];
-    gWishFutureKnock.futureSightCounter[gBattlerTarget] = 3;
+    gBattleStruct->battlerState[gBattlerTarget].futureSightMove = gCurrentMove;
+    gBattleStruct->battlerState[gBattlerTarget].futureSightBattlerIndex = gBattlerAttacker;
+    gBattleStruct->battlerState[gBattlerTarget].futureSightPartyIndex = gBattlerPartyIndexes[gBattlerAttacker];
+    gBattleStruct->battlerState[gBattlerTarget].futureSightCounter = 3;
 
     if (gCurrentMove == MOVE_DOOM_DESIRE)
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
