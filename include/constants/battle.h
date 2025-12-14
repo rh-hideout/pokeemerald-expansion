@@ -702,6 +702,23 @@ enum FaintedActions
     F(STARTING_STATUS_SWAMP_PLAYER_TEMPORARY,         swampPlayerTemporary,       (u32, 1)) /* Swamp Player Temporary (4 turns) */         \
     F(STARTING_STATUS_SWAMP_OPPONENT,                 swampOpponent,              (u32, 1)) /* Swamp Opponent (Permanent) */               \
     F(STARTING_STATUS_SWAMP_OPPONENT_TEMPORARY,       swampOpponentTemporary,     (u32, 1)) /* Swamp Opponent Temporary (4 turns) */       \
+    /* Hazards */                                                                                                                          \
+    F(STARTING_STATUS_SPIKES_PLAYER_L1,               spikesPlayerL1,             (u32, 1)) /* Spikes Player Layer 1 */                    \
+    F(STARTING_STATUS_SPIKES_PLAYER_L2,               spikesPlayerL2,             (u32, 1)) /* Spikes Player Layer 2 */                    \
+    F(STARTING_STATUS_SPIKES_PLAYER_L3,               spikesPlayerL3,             (u32, 1)) /* Spikes Player Layer 3 */                    \
+    F(STARTING_STATUS_SPIKES_OPPONENT_L1,             spikesOpponentL1,           (u32, 1)) /* Spikes Opponent Layer 1 */                  \
+    F(STARTING_STATUS_SPIKES_OPPONENT_L2,             spikesOpponentL2,           (u32, 1)) /* Spikes Opponent Layer 2 */                  \
+    F(STARTING_STATUS_SPIKES_OPPONENT_L3,             spikesOpponentL3,           (u32, 1)) /* Spikes Opponent Layer 3 */                  \
+    F(STARTING_STATUS_TOXIC_SPIKES_PLAYER_L1,         toxicSpikesPlayerL1,        (u32, 1)) /* Toxic Spikes Player Layer 1 */              \
+    F(STARTING_STATUS_TOXIC_SPIKES_PLAYER_L2,         toxicSpikesPlayerL2,        (u32, 1)) /* Toxic Spikes Player Layer 2 */              \
+    F(STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L1,       toxicSpikesOpponentL1,      (u32, 1)) /* Toxic Spikes Opponent Layer 1 */            \
+    F(STARTING_STATUS_TOXIC_SPIKES_OPPONENT_L2,       toxicSpikesOpponentL2,      (u32, 1)) /* Toxic Spikes Opponent Layer 2 */            \
+    F(STARTING_STATUS_STICKY_WEB_PLAYER,              stickyWebPlayer,            (u32, 1)) /* Sticky Web Player */                        \
+    F(STARTING_STATUS_STICKY_WEB_OPPONENT,            stickyWebOpponent,          (u32, 1)) /* Sticky Web Opponent */                      \
+    F(STARTING_STATUS_STEALTH_ROCK_PLAYER,            stealthRockPlayer,          (u32, 1)) /* Stealth Rock Player */                      \
+    F(STARTING_STATUS_STEALTH_ROCK_OPPONENT,          stealthRockOpponent,        (u32, 1)) /* Stealth Rock Opponent */                    \
+    F(STARTING_STATUS_SHARP_STEEL_PLAYER,             sharpSteelPlayer,           (u32, 1)) /* Sharp Steel Player */                       \
+    F(STARTING_STATUS_SHARP_STEEL_OPPONENT,           sharpSteelOpponent,         (u32, 1)) /* Sharp Steel Opponent */                     \
 
 #define UNPACK_STARTING_STATUS_ENUMS(_enum, ...) _enum,
 

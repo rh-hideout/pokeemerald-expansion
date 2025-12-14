@@ -5393,8 +5393,8 @@ static inline bool32 TryTriggerSymbiosis(u32 battler, u32 ally)
     return GetBattlerAbility(ally) == ABILITY_SYMBIOSIS
         && gBattleMons[battler].item == ITEM_NONE
         && gBattleMons[ally].item != ITEM_NONE
-        && CanBattlerGetOrLoseItem(battler, gBattleMons[ally].item)
-        && CanBattlerGetOrLoseItem(ally, gBattleMons[ally].item)
+        && CanBattlerGetOrLoseItem(battler, ally, gBattleMons[ally].item)
+        && CanBattlerGetOrLoseItem(ally, battler, gBattleMons[ally].item)
         && IsBattlerAlive(battler)
         && IsBattlerAlive(ally);
 }
@@ -5616,7 +5616,7 @@ static bool32 HandleMoveEndMoveBlock(u32 moveEffect)
          && !(B_KNOCK_OFF_REMOVAL >= GEN_5 && side == B_SIDE_PLAYER && !(gBattleTypeFlags & BATTLE_TYPE_TRAINER))
          && IsBattlerTurnDamaged(gBattlerTarget)
          && !DoesSubstituteBlockMove(gBattlerAttacker, gBattlerTarget, gCurrentMove)
-         && CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerTarget].item)
+         && CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
          && !NoAliveMonsForEitherParty())
         {
             u32 side = GetBattlerSide(gBattlerTarget);
@@ -12227,10 +12227,10 @@ static void Cmd_tryswapitems(void)
         // can't swap if two Pokémon don't have an item
         // or if either of them is an enigma berry or a mail
         else if ((gBattleMons[gBattlerAttacker].item == ITEM_NONE && gBattleMons[gBattlerTarget].item == ITEM_NONE)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerTarget].item)
-                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].item))
+                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerAttacker].item)
+                 || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerTarget].item)
+                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerTarget].item)
+                 || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerAttacker].item))
         {
             gBattlescriptCurrInstr = cmd->failInstr;
         }
@@ -14228,11 +14228,10 @@ void BS_CheckParentalBondCounter(void)
 
 void BS_JumpIfCantLoseItem(void)
 {
-    NATIVE_ARGS(u8 battler, const u8 *jumpInstr);
-    u8 battler = GetBattlerForBattleScript(cmd->battler);
-    u16 item = gBattleMons[battler].item;
+    NATIVE_ARGS(const u8 *jumpInstr);
+    u32 item = gBattleMons[gBattlerTarget].item;
 
-    if (item == ITEM_NONE || !CanBattlerGetOrLoseItem(battler, item))
+    if (item == ITEM_NONE || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, item))
         gBattlescriptCurrInstr = cmd->jumpInstr;
     else
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -16984,8 +16983,8 @@ void BS_TryBestow(void)
     NATIVE_ARGS(const u8 *failInstr);
     if (gBattleMons[gBattlerAttacker].item == ITEM_NONE
         || gBattleMons[gBattlerTarget].item != ITEM_NONE
-        || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
-        || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattleMons[gBattlerAttacker].item)
+        || !CanBattlerGetOrLoseItem(gBattlerAttacker, gBattlerTarget, gBattleMons[gBattlerAttacker].item)
+        || !CanBattlerGetOrLoseItem(gBattlerTarget, gBattlerAttacker, gBattleMons[gBattlerAttacker].item)
         || gWishFutureKnock.knockedOffMons[GetBattlerSide(gBattlerTarget)] & (1u << gBattlerPartyIndexes[gBattlerTarget]))
     {
         gBattlescriptCurrInstr = cmd->failInstr;
