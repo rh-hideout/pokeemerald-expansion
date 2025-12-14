@@ -21,14 +21,13 @@ struct RHHRomHeader
     /*0x0A*/ u16 movesCount;
     /*0x0C*/ u16 numSpecies;
     /*0x0E*/ u16 abilitiesCount;
-    /*0x10*/ const struct Ability *abilities;
+    /*0x10*/ const struct AbilityInfo *abilities;
     /*0x14*/ u16 itemsCount;
     /*0x16*/ u8 itemNameLength;
     /*0x17*/ u8 padding;
 };
 
-__attribute__((section(".text.consts")))
-USED static const struct RHHRomHeader sRHHRomHeader =
+__attribute__((section(".text.header_rhh"))) USED static const struct RHHRomHeader sRHHRomHeader =
 {
     .rhh_magic = { 'R', 'H', 'H', 'E', 'X', 'P' },
     .expansionVersionMajor = EXPANSION_VERSION_MAJOR,

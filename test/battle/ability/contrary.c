@@ -8,7 +8,7 @@ ASSUMPTIONS
 
 SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -19,20 +19,23 @@ SINGLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a single battle",
     } SCENE {
         ABILITY_POPUP(player, ABILITY_INTIMIDATE);
         if (ability == ABILITY_CONTRARY) {
-            ABILITY_POPUP(opponent, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
             MESSAGE("The opposing Spinda's Attack rose!");
+        } else {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponent);
+            MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
         }
         HP_BAR(player, captureDamage: &results[i].damage);
-    }
-    FINALLY {
+    } THEN {
+        EXPECT_EQ(opponent->statStages[STAT_ATK], (ability == ABILITY_CONTRARY) ? DEFAULT_STAT_STAGE + 1 : DEFAULT_STAT_STAGE - 1);
+    } FINALLY {
         EXPECT_MUL_EQ(results[1].damage, Q_4_12(2.25), results[0].damage);
     }
 }
 
 DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle", s16 damageLeft, s16 damageRight)
 {
-    u32 abilityLeft, abilityRight;
+    enum Ability abilityLeft, abilityRight;
 
     PARAMETRIZE { abilityLeft = ABILITY_CONTRARY; abilityRight = ABILITY_CONTRARY; }
     PARAMETRIZE { abilityLeft = ABILITY_TANGLED_FEET; abilityRight = ABILITY_TANGLED_FEET; }
@@ -49,7 +52,6 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
     } SCENE {
         ABILITY_POPUP(playerLeft, ABILITY_INTIMIDATE);
         if (abilityLeft == ABILITY_CONTRARY) {
-            ABILITY_POPUP(opponentLeft, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
@@ -57,7 +59,6 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
             MESSAGE("Mightyena's Intimidate cuts the opposing Spinda's Attack!");
         }
         if (abilityRight == ABILITY_CONTRARY) {
-            ABILITY_POPUP(opponentRight, ABILITY_CONTRARY);
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
             MESSAGE("The opposing Spinda's Attack rose!");
         } else {
@@ -69,8 +70,7 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
     } THEN {
         EXPECT_EQ(opponentLeft->statStages[STAT_ATK],  (abilityLeft == ABILITY_CONTRARY)  ? DEFAULT_STAT_STAGE+1 : DEFAULT_STAT_STAGE-1);
         EXPECT_EQ(opponentRight->statStages[STAT_ATK], (abilityRight == ABILITY_CONTRARY) ? DEFAULT_STAT_STAGE+1 : DEFAULT_STAT_STAGE-1);
-    }
-    FINALLY {
+    } FINALLY {
         EXPECT_MUL_EQ(results[1].damageLeft, Q_4_12(2.25), results[0].damageLeft);
         EXPECT_MUL_EQ(results[1].damageRight, Q_4_12(2.25), results[0].damageRight);
     }
@@ -78,7 +78,7 @@ DOUBLE_BATTLE_TEST("Contrary raises Attack when Intimidated in a double battle",
 
 SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normally lower them: Overheat", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -122,7 +122,7 @@ SINGLE_BATTLE_TEST("Contrary raises stats after using a move which would normall
 
 SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normally raise it: Swords Dance", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -159,7 +159,7 @@ SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normal
 
 SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normally lower it: Growl", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -190,7 +190,7 @@ SINGLE_BATTLE_TEST("Contrary raises a stat after using a move which would normal
 
 SINGLE_BATTLE_TEST("Contrary lowers a stat after using a move which would normally raise it: Belly Drum", s16 damageBefore, s16 damageAfter)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CONTRARY; }
     PARAMETRIZE { ability = ABILITY_TANGLED_FEET; }
     GIVEN {
@@ -241,3 +241,32 @@ SINGLE_BATTLE_TEST("Sticky Web raises Speed by 1 for Contrary mon on switch-in")
         MESSAGE("The opposing Snivy's Speed rose!");
     }
 }
+
+AI_SINGLE_BATTLE_TEST("AI sees Contrary-effected moves correctly in MoveEffectInPlus instead of as a neutral effect")
+{
+    GIVEN{
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_HERACROSS){
+            Level(44);
+            HP(1);
+            Speed(5);
+            Nature(NATURE_ADAMANT);
+            Item(ITEM_LOADED_DICE);
+            Moves(MOVE_PIN_MISSILE);
+        }
+        OPPONENT(SPECIES_SERPERIOR){
+            Level(44);
+            Speed(10);
+            Nature(NATURE_TIMID);
+            Ability(ABILITY_CONTRARY);
+            Moves(MOVE_DRAGON_PULSE, MOVE_SPIN_OUT, MOVE_HIDDEN_POWER, MOVE_GLARE);
+        }
+    } WHEN {
+        TURN{
+            MOVE(player, MOVE_PIN_MISSILE);
+            EXPECT_MOVE(opponent, MOVE_SPIN_OUT); // previously all 107, now sees speed can rise w/ Contrary
+        }
+    }
+}
+
+TO_DO_BATTLE_TEST("Contrary does not invert stat changes that have been Baton-passed")

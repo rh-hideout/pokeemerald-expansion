@@ -1,16 +1,16 @@
 #include "global.h"
 #include "test/battle.h"
 
-SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking pokemon")
+SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking Pokémon")
 {
     u16 move, statId;
 
-    PARAMETRIZE { move = MOVE_LEER; statId = STAT_DEF; }
-    PARAMETRIZE { move = MOVE_GROWL; statId = STAT_ATK; }
+    PARAMETRIZE { move = MOVE_LEER;        statId = STAT_DEF; }
+    PARAMETRIZE { move = MOVE_GROWL;       statId = STAT_ATK; }
     PARAMETRIZE { move = MOVE_SWEET_SCENT; statId = STAT_EVASION; }
     PARAMETRIZE { move = MOVE_SAND_ATTACK; statId = STAT_ACC; }
-    PARAMETRIZE { move = MOVE_CONFIDE; statId = STAT_SPATK; }
-    PARAMETRIZE { move = MOVE_FAKE_TEARS; statId = STAT_SPDEF; }
+    PARAMETRIZE { move = MOVE_CONFIDE;     statId = STAT_SPATK; }
+    PARAMETRIZE { move = MOVE_FAKE_TEARS;  statId = STAT_SPDEF; }
 
     GIVEN {
         PLAYER(SPECIES_CORVIKNIGHT) {Ability(ABILITY_MIRROR_ARMOR);}
@@ -29,7 +29,11 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking pokemon")
             MESSAGE("The opposing Wynaut's Attack fell!");
             break;
         case STAT_EVASION:
-            MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
+            if (GetMoveEffect(move) == EFFECT_EVASION_DOWN_2) {
+                MESSAGE("The opposing Wynaut's evasiveness harshly fell!");
+            } else {
+                MESSAGE("The opposing Wynaut's evasiveness fell!");
+            }
             break;
         case STAT_ACC:
             MESSAGE("The opposing Wynaut's accuracy fell!");
@@ -43,7 +47,7 @@ SINGLE_BATTLE_TEST("Mirror Armor lowers a stat of the attacking pokemon")
         }
     } THEN {
         EXPECT_EQ(player->statStages[statId], DEFAULT_STAT_STAGE);
-        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || statId == STAT_EVASION) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
+        EXPECT_EQ(opponent->statStages[statId], (statId == STAT_SPDEF || (statId == STAT_EVASION && GetMoveEffect(move) == EFFECT_EVASION_DOWN_2)) ? DEFAULT_STAT_STAGE - 2 : DEFAULT_STAT_STAGE - 1);
     }
 }
 

@@ -95,17 +95,10 @@ void AdjustFriendshipOnBattleFaint(u8 battler)
         opposingBattlerId = GetBattlerAtPosition(B_POSITION_OPPONENT_LEFT);
     }
 
-    if (gBattleMons[opposingBattlerId].level > gBattleMons[battler].level)
-    {
-        if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
-        else
-            AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
+    if (gBattleMons[opposingBattlerId].level - gBattleMons[battler].level > 29)
+        AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_LARGE);
     else
-    {
         AdjustFriendship(GetBattlerMon(battler), FRIENDSHIP_EVENT_FAINT_SMALL);
-    }
 }
 
 void SwitchPartyOrderInGameMulti(u8 battler, u8 arg1)
@@ -139,11 +132,11 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 if (UproarWakeUpCheck(battler))
                 {
                     // Wake up from Uproar
+                    gEffectBattler = battler;
                     gBattleMons[battler].status1 &= ~(STATUS1_SLEEP);
-                    gBattleMons[battler].status2 &= ~(STATUS2_NIGHTMARE);
-                    BattleScriptPushCursor();
+                    gBattleMons[battler].volatiles.nightmare = FALSE;
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP_UPROAR;
-                    gBattlescriptCurrInstr = BattleScript_MoveUsedWokeUp;
+                    BattleScriptCall(BattleScript_MoveUsedWokeUp);
                     effect = 2;
                 }
                 else
@@ -170,10 +163,9 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                     else
                     {
                         // Wake up
-                        gBattleMons[battler].status2 &= ~(STATUS2_NIGHTMARE);
-                        BattleScriptPushCursor();
+                        gBattleMons[battler].volatiles.nightmare = FALSE;
                         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_WOKE_UP;
-                        gBattlescriptCurrInstr = BattleScript_MoveUsedWokeUp;
+                        BattleScriptCall(BattleScript_MoveUsedWokeUp);
                         effect = 2;
                     }
                 }
@@ -192,8 +184,7 @@ u32 BattlePalace_TryEscapeStatus(u8 battler)
                 {
                     // Unfreeze
                     gBattleMons[battler].status1 &= ~(STATUS1_FREEZE);
-                    BattleScriptPushCursor();
-                    gBattlescriptCurrInstr = BattleScript_MoveUsedUnfroze;
+                    BattleScriptCall(BattleScript_MoveUsedUnfroze);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DEFROSTED;
                 }
                 effect = 2;

@@ -33,7 +33,7 @@ Expansion has a few "composite" AI flags. This means that these flags have no un
 
 `AI_FLAG_BASIC_TRAINER` is expansion's version of generic, normal AI behaviour. It includes `AI_FLAG_CHECK_BAD_MOVE` (don't use bad moves), `AI_FLAG_TRY_TO_FAINT` (faint the player where possible), and `AI_FLAG_CHECK_VIABILITY` (choose the most effective move to use in the current context). Trainers with this flag will still be smarter than they are in vanilla as there have been dramatic improvements made to move selection, but not incredibly so. Trainers with this flag should feel like normal trainers. In general we recommend these three flags be used in all cases, unless you specifically want a trainer who makes obvious mistakes in battle.
 
-`AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), and `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
+`AI_FLAG_SMART_TRAINER` is expansion's version of a "smart AI". It includes everything in `AI_FLAG_BASIC_TRAINER` along with `AI_FLAG_SMART_SWITCHING` (make smart decisions about when to switch), `AI_FLAG_SMART_MON_CHOICES` (make smart decisions about what mon to send in after a switch / KO), `AI_FLAG_OMNISCIENT` (awareness of what moves, items, and abilities the player's mons have to better inform decisions), and `AI_FLAG_SMART_TERA` (make smart decisions about when to terastalize). Expansion will keep this updated to represent the most objectively intelligent behaviour our flags are capable of producing.
 
 `AI_FLAG_PREDICTION` will enable all of the prediction flags at once, so the AI can perform as well as possible. It is best paired with the flags in `AI_FLAG_SMART_TRAINER` for optimal behaviour. This currently includes `AI_FLAG_PREDICT_SWITCH` and `AI_FLAG_PREDICT_INCOMING_MON`, but will likely be expanded in the future. 
 
@@ -53,6 +53,9 @@ This flag is divided into two components to calculate the best available move fo
 - **`AI_CalcMoveEffectScore`**: This function checks every move effect (status or damaging move effect) and increases the score accordingly.
 
 This is different to `AI_FLAG_CHECK_BAD_MOVE` as it calculates how poor a move is and not whether it will fail or not.
+
+## `AI_FLAG_ATTACKS_PARTNER`
+This flag is meant for double battles where both of the opponents hate each other.  They prioritize damage to their 'partner' over the player.
 
 ## `AI_FLAG_FORCE_SETUP_FIRST_TURN`
 AI will prioritize using setup moves on the first turn at the expense of all else. These include stat buffs, field effects, status moves, etc. AI_FLAG_CHECK_VIABILITY will instead do this when the AI determines it makes sense.
@@ -144,6 +147,16 @@ Marks the last two Pokémon in the party as Ace Pokémon, with the same behaviou
 ## `AI_FLAG_OMNISCIENT`
 AI has full knowledge of player moves, abilities, and hold items, and can use this knowledge when making decisions.
 
+## `AI_FLAG_ASSUME_STAB`
+A significantly more restricted version of `AI_FLAG_OMNISCIENT`, the AI only knows the player's STAB moves, as their existence would be reasonable to assume in almost any case.
+
+## `AI_FLAG_ASSUME_STATUS_MOVES`
+A more restricted version of `AI_FLAG_OMNISCIENT`. The AI has a _chance_ to know what status moves the player has, plus additionally Fake Out and fixed percentage moves like Super Fang. The intention is so that if the AI has a counterplay implemented, it will seem to have guessed if the player's pokemon has a move, without giving the AI perfect information. For example, with Omniscient set, the AI will not usually put a pokemon to sleep if it has Sleep Talk; with neither Assume Powerful Status nor Omniscient set, the AI will always assume the pokemon does not have Sleep Talk.
+
+By default, there are three groups of higher likelihood status moves defined in `include/config/ai.h` under `ASSUME_STATUS_HIGH_ODDS`, `ASSUME_STATUS_MEDIUM_ODDS`, and `ASSUME_STATUS_LOW_ODDS`.  Moves are sorted in `src/battle_ai_util.c` within `ShouldRecordStatusMove()`.
+
+Any move that is not special cased is then potentially caught by `ASSUME_ALL_STATUS_ODDS`.
+
 ## `AI_FLAG_SMART_MON_CHOICES`
 Affects what the AI chooses to send out after a switch. AI will make smarter decisions when choosing which mon to send out mid-battle and after a KO, which are handled separately. Automatically included when `AI_FLAG_SMART_SWITCHING` is enabled.
 
@@ -179,6 +192,9 @@ AI will determine whether it would switch out in the player's situation or not, 
 
 ## `AI_FLAG_PREDICT_INCOMING_MON`
 This flag requires `AI_FLAG_PREDICT_SWITCH` to function. If the AI predicts that the player will switch, this flag allows the AI to run its move scoring calculation against the Pokémon it expects the player to switch into, instead of the Pokémon that it expects to switch out.
+
+## `AI_FLAG_SMART_TERA`
+AI will make smarter decisions about when to terastalize (over the default behaviour to always tera when available). This considers factors such as whether tera allows the AI to KO the opponent, whether it can save itself from a KO or a big hit, and how many remaining pokemon could terastalize. This behavior is not currently supported in double battles.
 
 ## `AI_FLAG_PREDICT_MOVE`
 AI will predict what move the player is going to use based on what move it would use in the same situation. Generally works best if also using `AI_FLAG_OMNISCIENT`.
