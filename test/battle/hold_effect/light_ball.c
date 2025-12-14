@@ -65,9 +65,9 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
     u32 species = 0, item = 0, config = 0;
 
     for (u32 j = 0; j < ARRAY_COUNT(speciesToCheck); j++) {
-        PARAMETRIZE { item = ITEM_NONE;       species = speciesToCheck[j]; config = GEN_3; }
-        PARAMETRIZE { item = ITEM_LIGHT_BALL; species = speciesToCheck[j]; config = GEN_3; }
-        PARAMETRIZE { item = ITEM_LIGHT_BALL; species = speciesToCheck[j]; config = GEN_4; }
+        PARAMETRIZE { item = ITEM_NONE;       config = GEN_3; species = speciesToCheck[j]; }
+        PARAMETRIZE { item = ITEM_LIGHT_BALL; config = GEN_3; species = speciesToCheck[j]; }
+        PARAMETRIZE { item = ITEM_LIGHT_BALL; config = GEN_4; species = speciesToCheck[j]; }
     }
 
     GIVEN {
