@@ -2515,14 +2515,18 @@ static void Cmd_effectivenesssound(void)
         switch (moveResultFlags & ~MOVE_RESULT_MISSED)
         {
         case MOVE_RESULT_SUPER_EFFECTIVE:
+            #if TESTING
             if (gTestRunnerEnabled)
                 TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_SUPER_EFFECTIVE);
+            #endif
             BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_SUPER_EFFECTIVE);
             MarkBattlerForControllerExec(gBattlerTarget);
             break;
         case MOVE_RESULT_NOT_VERY_EFFECTIVE:
+            #if TESTING
             if (gTestRunnerEnabled)
                 TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_NOT_EFFECTIVE);
+            #endif
             BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_NOT_EFFECTIVE);
             MarkBattlerForControllerExec(gBattlerTarget);
             break;
@@ -2537,22 +2541,28 @@ static void Cmd_effectivenesssound(void)
         default:
             if (moveResultFlags & MOVE_RESULT_SUPER_EFFECTIVE)
             {
+                #if TESTING
                 if (gTestRunnerEnabled)
                     TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_SUPER_EFFECTIVE);
+                #endif
                 BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_SUPER_EFFECTIVE);
                 MarkBattlerForControllerExec(gBattlerTarget);
             }
             else if (moveResultFlags & MOVE_RESULT_NOT_VERY_EFFECTIVE)
             {
+                #if TESTING
                 if (gTestRunnerEnabled)
                     TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_NOT_EFFECTIVE);
+                #endif
                 BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_NOT_EFFECTIVE);
                 MarkBattlerForControllerExec(gBattlerTarget);
             }
             else if (!(moveResultFlags & (MOVE_RESULT_DOESNT_AFFECT_FOE | MOVE_RESULT_FAILED)))
             {
+                #if TESTING
                 if (gTestRunnerEnabled)
                     TestRunner_Battle_RecordEffectivenessSound(gBattlerTarget, SE_EFFECTIVE);
+                #endif
                 BtlController_EmitPlaySE(gBattlerTarget, B_COMM_TO_CONTROLLER, SE_EFFECTIVE);
                 MarkBattlerForControllerExec(gBattlerTarget);
             }
