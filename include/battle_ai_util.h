@@ -68,6 +68,21 @@ enum ConsiderPriority
     CONSIDER_PRIORITY,
 };
 
+enum ChangeStatContext
+{
+    CHANGE_STAT_DMG_DEALT,
+    CHANGE_STAT_DMG_RECEIVED,
+    CHANGE_STAT_SPEEDS,
+    CHANGE_STAT_ACC_EVADE,
+};
+
+enum ShouldChangeStats
+{
+    STAT_CHANGE_BAD,
+    STAT_CHANGE_NEUTRAL,
+    STAT_CHANGE_GOOD,
+};
+
 static inline bool32 IsMoveUnusable(u32 moveIndex, u32 move, u32 moveLimitations)
 {
     return move == MOVE_NONE
@@ -85,6 +100,8 @@ bool32 AI_RandLessThan(u32 val);
 bool32 AI_IsBattlerGrounded(u32 battler);
 u32 AI_GetBattlerMoveTargetType(u32 battler, u32 move);
 u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcContext calcContext, struct AiLogicData *aiData);
+u32 AI_GetDamageWithStatChanges(u32 battlerAtk, u32 battlerDef, u32 moveIndex, s16 atkStatChanges[NUM_BATTLE_STATS], s16 defStatChanges[NUM_BATTLE_STATS]);
+enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, u32 statMove, u32 dmgMoveIndex, enum ChangeStatContext context, s16 atkStatChanges[NUM_BATTLE_STATS], s16 defStatChanges[NUM_BATTLE_STATS]);
 bool32 IsAiFlagPresent(u64 flag);
 bool32 IsAiBattlerAware(u32 battlerId);
 bool32 CanAiPredictMove(u32 battlerId);
@@ -185,6 +202,7 @@ u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
 u32 GetIndexInMoveArray(u32 battler, u32 move);
+u32 GetEffectIndexInMoveArray(u32 battler, enum BattleMoveEffects moveEffect);
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
