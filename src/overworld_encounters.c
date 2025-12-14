@@ -690,12 +690,16 @@ u32 RemoveOldestOverworldEncounter(void)
     return objectEventId;
 }
 
-bool32 UNUSED TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
+bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId)
 {
     if (CanRemoveOverworldEncounter(localId))
     {
         *objectEventId = RemoveOldestOverworldEncounter();
-        return FALSE;
+
+        if (*objectEventId == OBJECT_EVENTS_COUNT)
+            return TRUE;
+        else
+            return FALSE;
     }
     
     return TRUE;
