@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetItemHoldEffect(ITEM_LIGHT_BALL) == HOLD_EFFECT_LIGHT_BALL);
 }
 
-static const u16 speciesToCheck[] = {
+static const u32 speciesToCheck[] = {
     SPECIES_PICHU,
     SPECIES_PIKACHU,
     SPECIES_PIKACHU_COSPLAY,
