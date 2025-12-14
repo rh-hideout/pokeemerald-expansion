@@ -89,11 +89,11 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
         HP_BAR(opponent, captureDamage: &results[i].damage);
     } THEN {
         if (i == 2) { // First check to avoid boosting other species
-            EXPECT_EQ(results[i - 2].damage, results[i].damage);
-            EXPECT_EQ(results[i - 1].damage, results[i].damage);
+            EXPECT_EQ(results[i - 2].damage, results[i].damage); // No item vs Light Ball
+            EXPECT_EQ(results[i - 1].damage, results[i].damage); // Gen 3 vs Gen 4
         } else if (i % 3 == 2) { // Every 3rd test afterwards
-            EXPECT_MUL_EQ(results[i - 2].damage, Q_4_12(2.0), results[i].damage);
-            EXPECT_MUL_EQ(results[i - 1].damage, Q_4_12(2.0), results[i].damage);
+            EXPECT_MUL_EQ(results[i - 2].damage, Q_4_12(2.0), results[i].damage); // No item vs Light Ball
+            EXPECT_MUL_EQ(results[i - 1].damage, Q_4_12(2.0), results[i].damage); // Gen 3 vs Gen 4
         }
     }
 }
