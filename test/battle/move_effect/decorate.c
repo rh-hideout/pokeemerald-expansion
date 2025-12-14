@@ -6,7 +6,7 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_DECORATE) == EFFECT_DECORATE);
 }
 
-SINGLE_BATTLE_TEST("Decorate raises the target's Attack and Sp. Attack by 2 stage each")
+SINGLE_BATTLE_TEST("Decorate raises the target's Attack and Sp. Attack by 2 stages each")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET);
