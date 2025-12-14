@@ -60,6 +60,14 @@ enum FollowerTransformTypes
     TRANSFORM_TYPE_WEATHER,
 };
 
+enum OverworldEncounterSpawnAnim
+{
+    OWE_SPAWN_ANIM_GRASS,
+    OWE_SPAWN_ANIM_WATER,
+    OWE_SPAWN_ANIM_CAVE,
+    OWE_SPAWN_ANIM_SHINY,
+};
+
 #define FIGURE_8_LENGTH 72
 
 #define GROUND_EFFECT_FLAG_TALL_GRASS_ON_SPAWN   (1 << 0)
@@ -258,7 +266,9 @@ const struct ObjectEventTemplate *GetObjectEventTemplateByLocalIdAndMap(u8 local
 u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY);
 bool8 GetFollowerInfo(u32 *species, bool32 *shiny, bool32 *female);
 const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 shiny, bool32 female);
+u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
+bool32 AreElevationsCompatible(u32, u32);
 
 void MovementType_None(struct Sprite *sprite);
 void MovementType_LookAround(struct Sprite *sprite);
@@ -316,6 +326,9 @@ void MovementType_RunInPlace(struct Sprite *sprite);
 void MovementType_Invisible(struct Sprite *sprite);
 void MovementType_WalkSlowlyInPlace(struct Sprite *sprite);
 void MovementType_FollowPlayer(struct Sprite *sprite);
+void MovementType_WanderOnLandEncounter(struct Sprite *sprite);
+void MovementType_WanderOnWaterEncounter(struct Sprite *sprite);
+void MovementType_WanderOnIndoorEncounter(struct Sprite *sprite);
 u8 GetSlideMovementAction(u32);
 u8 GetJump2MovementAction(u32);
 u8 CopySprite(struct Sprite *sprite, s16 x, s16 y, u8 subpriority);
@@ -490,6 +503,9 @@ u8 MovementType_RunInPlace_Step0(struct ObjectEvent *objectEvent, struct Sprite 
 u8 MovementType_Invisible_Step0(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step1(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 u8 MovementType_Invisible_Step2(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
+u8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite);
 
 u8 CreateVirtualObject(u16 graphicsId, u8 virtualObjId, s16 x, s16 y, u8 elevation, u8 direction);
 void TurnVirtualObject(u8 virtualObjId, u8 direction);
@@ -513,5 +529,7 @@ bool8 MovementAction_EmoteDoubleExclamationMark_Step0(struct ObjectEvent *, stru
 bool8 PlayerIsUnderWaterfall(struct ObjectEvent *objectEvent);
 
 u8 GetObjectEventApricornTreeId(u8 objectEventId);
+
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent);
 
 #endif //GUARD_EVENT_OBJECT_MOVEMENT_H

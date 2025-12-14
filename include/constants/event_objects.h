@@ -247,11 +247,12 @@
 #define OBJ_EVENT_GFX_OW_MON                     240
 #define OBJ_EVENT_GFX_LIGHT_SPRITE               241
 #define OBJ_EVENT_GFX_APRICORN_TREE              242
+#define OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER        243
 
 // NOTE: The maximum amount of object events has been expanded from 255 to 65535.
 // Since dynamic graphics ids still require at least 16 free values, the actual limit
 // is 65519, but even considering follower Pokémon, this should be more than enough :)
-#define NUM_OBJ_EVENT_GFX                        243
+#define NUM_OBJ_EVENT_GFX                        244
 
 
 // These are dynamic object gfx ids.
@@ -274,6 +275,7 @@
 #define OBJ_EVENT_GFX_VAR_D  (OBJ_EVENT_GFX_VARS + 0xD)
 #define OBJ_EVENT_GFX_VAR_E  (OBJ_EVENT_GFX_VARS + 0xE)
 #define OBJ_EVENT_GFX_VAR_F  (OBJ_EVENT_GFX_VARS + 0xF)
+
 
 // Don't use (1u << 15) to avoid conflict with BLEND_IMMUNE_FLAG.
 #define OBJ_EVENT_MON               (1u << 14)
@@ -320,28 +322,26 @@
 #define OBJ_KIND_NORMAL 0
 #define OBJ_KIND_CLONE  255 // Exclusive to FRLG
 
-// Special object event local ids
-// Used for link player OWs in CreateLinkPlayerSprite
-#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 
 // Each object event template gets an ID that can be used to refer to it in scripts and elsewhere.
 // This is referred to as the "local id" (and it's really just 1 + its index in the templates array).
 // There are a few special IDs reserved for objects that don't have templates in the map data -- one for the player
 // in regular offline play, five for linked players while playing Berry Blender, and one for an invisible object that
 // can be spawned for the camera to track instead of the player. Additionally, the value 0 is reserved as an "empty" indicator.
-#define LOCALID_NONE                         0
-#define LOCALID_CAMERA                     127
-#define LOCALID_BERRY_BLENDER_PLAYER_END   240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
-#define LOCALID_FOLLOWING_POKEMON          254
-#define LOCALID_PLAYER                     255
-#define OBJ_EVENT_ID_FOLLOWER              0xFE
-#define OBJ_EVENT_ID_NPC_FOLLOWER          0xFD
+#define LOCALID_NONE                              0
+#define LOCALID_CAMERA                          127
+#define LOCALID_BERRY_BLENDER_PLAYER_END        240 // This will use 5 (MAX_RFU_PLAYERS) IDs ending at 240, i.e. 236-240
+#define LOCALID_OW_ENCOUNTER_END                252 // This will use 5 (OWE_MAX_SPAWN_SLOTS) IDs ending at 252, i.e. 248-252
+#define LOCALID_FOLLOWING_POKEMON               254
+#define LOCALID_PLAYER                          255
+#define OBJ_EVENT_ID_FOLLOWER                   0xFE
+#define OBJ_EVENT_ID_NPC_FOLLOWER               0xFD
 
 // Aliases for old names. "object event id" normally refers to an index into gObjectEvents, which these are not.
 // Used for link player OWs in CreateLinkPlayerSprite
-#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 #define OBJ_EVENT_ID_CAMERA LOCALID_CAMERA
 #define OBJ_EVENT_ID_PLAYER LOCALID_PLAYER
+#define OBJ_EVENT_ID_DYNAMIC_BASE 0xF0
 
 // Moved from src/event_object_movement.c so that they're accesible from other files.
 #define OBJ_EVENT_PAL_TAG_BRENDAN                 0x1100

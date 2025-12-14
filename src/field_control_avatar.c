@@ -25,6 +25,7 @@
 #include "match_call.h"
 #include "metatile_behavior.h"
 #include "overworld.h"
+#include "overworld_encounters.h"
 #include "pokemon.h"
 #include "safari_zone.h"
 #include "script.h"
@@ -399,7 +400,9 @@ static const u8 *GetInteractedObjectEventScript(struct MapPosition *position, u8
     gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
     gSpecialVar_Facing = direction;
 
-    if (InTrainerHill() == TRUE)
+    if (ShouldRunOverworldEncounterScript(objectEventId))
+        script = InteractWithDynamicWildOverworldEncounter;
+    else if (InTrainerHill() == TRUE)
         script = GetTrainerHillTrainerScript();
     else if (PlayerHasFollowerNPC() && objectEventId == GetFollowerNPCObjectId())
         script = GetFollowerNPCScriptPointer();
@@ -814,7 +817,7 @@ void RestartWildEncounterImmunitySteps(void)
 
 static bool8 CheckStandardWildEncounter(u16 metatileBehavior)
 {
-    if (FlagGet(OW_FLAG_NO_ENCOUNTER))
+    if (FlagGet(OW_FLAG_NO_ENCOUNTER) || OW_WILD_ENCOUNTERS_RANDOM == FALSE)
         return FALSE;
 
     if (sWildEncounterImmunitySteps < 4)

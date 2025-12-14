@@ -132,8 +132,15 @@ static const union AnimCmd *const sAnimTable_TallGrass[] =
     sAnim_TallGrass,
 };
 
+const struct SpriteSheet gSpriteSheet_TallGrass =
+{
+    .data = gFieldEffectObjectPic_TallGrass,
+    .size = sizeof(gFieldEffectObjectPic_TallGrass),
+    .tag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
+};
+
 const struct SpriteTemplate gFieldEffectObjectTemplate_TallGrass = {
-    .tileTag = TAG_NONE,
+    .tileTag = FLDEFF_TILE_TAG_TALL_GRASS_OWE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_TallGrass,
@@ -707,8 +714,15 @@ static const union AnimCmd *const sAnimTable_LongGrass[] =
     sAnim_LongGrass,
 };
 
+const struct SpriteSheet gSpriteSheet_LongGrass =
+{
+    .data = gFieldEffectObjectPic_LongGrass,
+    .size = sizeof(gFieldEffectObjectPic_LongGrass),
+    .tag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
+};
+
 const struct SpriteTemplate gFieldEffectObjectTemplate_LongGrass = {
-    .tileTag = TAG_NONE,
+    .tileTag = FLDEFF_TILE_TAG_LONG_GRASS_OWE,
     .paletteTag = FLDEFF_PAL_TAG_GENERAL_1,
     .oam = &gObjectEventBaseOam_16x16,
     .anims = sAnimTable_LongGrass,
@@ -1282,6 +1296,44 @@ const struct SpriteTemplate gFieldEffectObjectTemplate_Bubbles = {
     .oam = &gObjectEventBaseOam_16x32,
     .anims = sAnimTable_Bubbles,
     .images = sPicTable_Bubbles,
+    .callback = UpdateBubblesFieldEffect,
+};
+static const struct SpriteFrameImage sPicTable_ShinySparkle[] = {
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 0),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 1),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 2),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 3),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 4),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 5),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 6),
+    overworld_frame(gFieldEffectObjectPic_ShinySparkle, 2, 4, 7),
+};
+
+static const union AnimCmd sAnim_ShinySparkle[] =
+{
+    ANIMCMD_FRAME(0, 4),
+    ANIMCMD_FRAME(1, 4),
+    ANIMCMD_FRAME(2, 4),
+    ANIMCMD_FRAME(3, 6),
+    ANIMCMD_FRAME(4, 6),
+    ANIMCMD_FRAME(5, 4),
+    ANIMCMD_FRAME(6, 4),
+    ANIMCMD_FRAME(7, 4),
+    ANIMCMD_END,
+};
+
+static const union AnimCmd *const sAnimTable_ShinySparkle[] =
+{
+    sAnim_ShinySparkle,
+};
+
+const struct SpriteTemplate gFieldEffectObjectTemplate_ShinySparkle = {
+    .tileTag = TAG_NONE,
+    .paletteTag = FLDEFF_PAL_TAG_GENERAL_0,
+    .oam = &gObjectEventBaseOam_16x32,
+    .anims = sAnimTable_ShinySparkle,
+    .images = sPicTable_ShinySparkle,
+    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = UpdateBubblesFieldEffect,
 };
 
