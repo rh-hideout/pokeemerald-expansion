@@ -112,7 +112,7 @@ struct DisableStruct
     u8 wrapTurns;
     u16 syrupBombTimer;
     u16 tormentTimer; // used for G-Max Meltdown
-    u8 usedMoves:4;
+    u8 usedMoves:4; // For Last Resort
     u8 truantCounter:1;
     u8 truantSwitchInHack:1;
     u8 tarShot:1;
@@ -501,7 +501,8 @@ struct LinkBattlerHeader
     struct BattleEnigmaBerry battleEnigmaBerry;
 };
 
-enum IllusionState {
+enum IllusionState
+{
     ILLUSION_NOT_SET,
     ILLUSION_OFF,
     ILLUSION_ON
@@ -551,6 +552,12 @@ struct BattleVideo {
     rng_value_t rngSeed;
 };
 
+struct Wish
+{
+    u16 counter[MAX_BATTLERS_COUNT];
+    u8 partyId[MAX_BATTLERS_COUNT];
+};
+
 struct BattlerState
 {
     u8 targetsDone[MAX_BATTLERS_COUNT];
@@ -585,13 +592,6 @@ struct BattlerState
     u16 futureSightBattlerIndex:3;
     u16 futureSightPartyIndex:3;
 
-};
-
-struct WishFutureKnock
-{
-
-    u16 wishCounter[MAX_BATTLERS_COUNT];
-    u8 wishPartyId[MAX_BATTLERS_COUNT];
 };
 
 struct PartyState
@@ -724,6 +724,7 @@ struct BattleStruct
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
+    struct Wish wish;
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 quickClawBattlerId;
@@ -1090,7 +1091,6 @@ extern u8 gBattleOutcome;
 extern struct ProtectStruct gProtectStructs[MAX_BATTLERS_COUNT];
 extern struct SpecialStatus gSpecialStatuses[MAX_BATTLERS_COUNT];
 extern u16 gBattleWeather;
-extern struct WishFutureKnock gWishFutureKnock;
 extern u16 gIntroSlideFlags;
 extern u8 gSentPokesToOpponent[2];
 extern struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT];

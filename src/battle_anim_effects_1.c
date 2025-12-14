@@ -6626,9 +6626,9 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     }
 
     // swap wish party indices
-    if (gWishFutureKnock.wishCounter[battlerAtk] > 0
-     || gWishFutureKnock.wishCounter[battlerPartner] > 0)
-        SWAP(gWishFutureKnock.wishPartyId[battlerAtk], gWishFutureKnock.wishPartyId[battlerPartner], temp);
+    if (gBattleStruct->wish.counter[battlerAtk] > 0
+     || gBattleStruct->wish.counter[battlerPartner] > 0)
+        SWAP(gBattleStruct->wish.partyId[battlerAtk], gBattleStruct->wish.partyId[battlerPartner], temp);
 }
 
 static void TrySwapAttractBattlerIds(u32 battlerAtk, u32 battlerPartner)
