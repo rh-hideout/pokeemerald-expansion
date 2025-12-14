@@ -229,22 +229,22 @@ static bool32 HandleEndTurnFutureSight(u32 battler)
 
     gBattleStruct->eventState.endTurnBattler++;
 
-    if (gBattleStruct->battlerState[battler].futureSightCounter > 0
-     && --gBattleStruct->battlerState[battler].futureSightCounter == 0)
+    if (gBattleStruct->futureSight[battler].counter > 0
+     && --gBattleStruct->futureSight[battler].counter == 0)
     {
         if (!IsBattlerAlive(battler))
             return effect;
 
-        if (gBattleStruct->battlerState[battler].futureSightMove == MOVE_FUTURE_SIGHT)
+        if (gBattleStruct->futureSight[battler].move == MOVE_FUTURE_SIGHT)
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FUTURE_SIGHT;
         else
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_DOOM_DESIRE;
 
-        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->battlerState[battler].futureSightMove);
+        PREPARE_MOVE_BUFFER(gBattleTextBuff1, gBattleStruct->futureSight[battler].move);
 
         gBattlerTarget = battler;
-        gBattlerAttacker = gBattleStruct->battlerState[battler].futureSightBattlerIndex;
-        gCurrentMove = gBattleStruct->battlerState[battler].futureSightMove;
+        gBattlerAttacker = gBattleStruct->futureSight[battler].battlerIndex;
+        gCurrentMove = gBattleStruct->futureSight[battler].move;
 
         if (!IsFutureSightAttackerInParty(gBattlerAttacker, gBattlerTarget, gCurrentMove))
             SetTypeBeforeUsingMove(gCurrentMove, gBattlerAttacker);

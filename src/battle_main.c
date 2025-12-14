@@ -3023,7 +3023,6 @@ static void BattleStartClearSetData(void)
     memset(&gFieldTimers, 0, sizeof(gFieldTimers));
     memset(&gSideStatuses, 0, sizeof(gSideStatuses));
     memset(&gSideTimers, 0, sizeof(gSideTimers));
-    memset(&gBattleStruct->wish, 0, sizeof(gBattleStruct->wish));
     memset(&gBattleResults, 0, sizeof(gBattleResults));
     ClearSetBScriptingStruct();
 

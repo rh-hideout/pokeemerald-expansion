@@ -558,6 +558,14 @@ struct Wish
     u8 partyId[MAX_BATTLERS_COUNT];
 };
 
+struct FutureSight
+{
+    u16 move;
+    u16 counter:10;
+    u16 battlerIndex:3;
+    u16 partyIndex:3;
+};
+
 struct BattlerState
 {
     u8 targetsDone[MAX_BATTLERS_COUNT];
@@ -585,13 +593,6 @@ struct BattlerState
     u16 hpOnSwitchout;
     u16 switchIn:1;
     u16 padding:15;
-
-    // Future Sight values
-    u16 futureSightMove;
-    u16 futureSightCounter:10;
-    u16 futureSightBattlerIndex:3;
-    u16 futureSightPartyIndex:3;
-
 };
 
 struct PartyState
@@ -634,6 +635,8 @@ struct BattleStruct
     struct BattlerState battlerState[MAX_BATTLERS_COUNT];
     struct PartyState partyState[NUM_BATTLE_SIDES][PARTY_SIZE];
     struct EventStates eventState;
+    struct FutureSight futureSight[MAX_BATTLERS_COUNT];
+    struct Wish wish;
     u16 moveTarget[MAX_BATTLERS_COUNT];
     u32 expShareExpValue;
     u32 expValue;
@@ -724,7 +727,6 @@ struct BattleStruct
     u8 stolenStats[NUM_BATTLE_STATS]; // hp byte is used for which stats to raise, other inform about by how many stages
     enum Ability tracedAbility[MAX_BATTLERS_COUNT];
     struct Illusion illusion[MAX_BATTLERS_COUNT];
-    struct Wish wish;
     u8 soulheartBattlerId;
     u8 friskedBattler; // Frisk needs to identify 2 battlers in double battles.
     u8 quickClawBattlerId;

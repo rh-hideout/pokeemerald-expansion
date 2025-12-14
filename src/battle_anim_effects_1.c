@@ -6601,25 +6601,25 @@ static void TrySwapWishBattlerIds(u32 battlerAtk, u32 battlerPartner)
     u32 i, temp;
 
     // if used future sight on opposing side, properly track who used it
-    if (gBattleStruct->battlerState[LEFT_FOE(battlerAtk)].futureSightCounter > 0
-     || gBattleStruct->battlerState[RIGHT_FOE(battlerAtk)].futureSightCounter > 0)
+    if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
+     || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
     {
         for (i = 0; i < gBattlersCount; i++)
         {
             if (IsBattlerAlly(i, battlerAtk))
                 continue;   // only on opposing side
 
-            if (gBattleStruct->battlerState[i].futureSightBattlerIndex == battlerAtk)
+            if (gBattleStruct->futureSight[i].battlerIndex == battlerAtk)
             {
                 // if target was attacked with future sight from us, now they'll be the partner slot
-                gBattleStruct->battlerState[i].futureSightBattlerIndex = battlerPartner;
-                gBattleStruct->battlerState[i].futureSightPartyIndex = gBattlerPartyIndexes[battlerPartner];
+                gBattleStruct->futureSight[i].battlerIndex = battlerPartner;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerPartner];
                 break;
             }
-            else if (gBattleStruct->battlerState[i].futureSightBattlerIndex == battlerPartner)
+            else if (gBattleStruct->futureSight[i].battlerIndex == battlerPartner)
             {
-                gBattleStruct->battlerState[i].futureSightBattlerIndex = battlerAtk;
-                gBattleStruct->battlerState[i].futureSightPartyIndex = gBattlerPartyIndexes[battlerAtk];
+                gBattleStruct->futureSight[i].battlerIndex = battlerAtk;
+                gBattleStruct->futureSight[i].partyIndex = gBattlerPartyIndexes[battlerAtk];
                 break;
             }
         }

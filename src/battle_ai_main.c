@@ -2113,8 +2113,8 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FUTURE_SIGHT:
-            if (gBattleStruct->battlerState[LEFT_FOE(battlerAtk)].futureSightCounter > 0
-             || gBattleStruct->battlerState[RIGHT_FOE(battlerAtk)].futureSightCounter > 0)
+            if (gBattleStruct->futureSight[LEFT_FOE(battlerAtk)].counter > 0
+             || gBattleStruct->futureSight[RIGHT_FOE(battlerAtk)].counter > 0)
                 ADJUST_SCORE(-12);
             else
                 ADJUST_SCORE(GOOD_EFFECT);

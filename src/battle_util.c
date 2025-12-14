@@ -2644,7 +2644,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FUTURE_SIGHT:
-        if (gBattleStruct->battlerState[ctx->battlerDef].futureSightCounter > 0)
+        if (gBattleStruct->futureSight[ctx->battlerDef].counter > 0)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_LAST_RESORT:
@@ -8512,7 +8512,7 @@ static inline s32 DoFutureSightAttackDamageCalcVars(struct BattleContext *ctx)
     enum Type moveType = ctx->moveType;
 
     struct Pokemon *party = GetBattlerParty(battlerAtk);
-    struct Pokemon *partyMon = &party[gBattleStruct->battlerState[battlerDef].futureSightPartyIndex];
+    struct Pokemon *partyMon = &party[gBattleStruct->futureSight[battlerDef].partyIndex];
     u32 partyMonLevel = GetMonData(partyMon, MON_DATA_LEVEL, NULL);
     u32 partyMonSpecies = GetMonData(partyMon, MON_DATA_SPECIES, NULL);
     gBattleMovePower = GetMovePower(move);
@@ -8562,11 +8562,11 @@ bool32 IsFutureSightAttackerInParty(u32 battlerAtk, u32 battlerDef, u32 move)
     struct Pokemon *party = GetBattlerParty(battlerAtk);
     if (IsDoubleBattle())
     {
-        return &party[gBattleStruct->battlerState[battlerDef].futureSightPartyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
-            && &party[gBattleStruct->battlerState[battlerDef].futureSightPartyIndex] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
+        return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]]
+            && &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[BATTLE_PARTNER(battlerAtk)]];
     }
 
-    return &party[gBattleStruct->battlerState[battlerDef].futureSightPartyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
+    return &party[gBattleStruct->futureSight[battlerDef].partyIndex] != &party[gBattlerPartyIndexes[battlerAtk]];
 }
 
 
@@ -8633,7 +8633,7 @@ s32 CalcCritChanceStage(struct BattleContext *ctx)
     {
         critChance = CRITICAL_HIT_BLOCKED;
     }
-    if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
+    else if (gBattleMons[ctx->battlerAtk].volatiles.laserFocus
           || MoveAlwaysCrits(ctx->move)
           || (ctx->abilityAtk == ABILITY_MERCILESS && gBattleMons[ctx->battlerDef].status1 & STATUS1_PSN_ANY))
     {
