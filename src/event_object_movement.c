@@ -1523,41 +1523,14 @@ static bool8 GetAvailableObjectEventId(u16 localId, u8 mapNum, u8 mapGroup, u8 *
         if (gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
             return TRUE;
     }
-
-    // Only if a generated Overworld Encounter cannot be removed.
-    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
-        return TRUE;
-            
+    if (i >= OBJECT_EVENTS_COUNT)
+        return TryAndRemoveOldestOverworldEncounter(localId, objectEventId);
     *objectEventId = i;
     for (; i < OBJECT_EVENTS_COUNT; i++)
     {
         if (gObjectEvents[i].active && gObjectEvents[i].localId == localId && gObjectEvents[i].mapNum == mapNum && gObjectEvents[i].mapGroup == mapGroup)
             return TRUE;
     }
-
-    // Destroy the oldest OW Encounter mon to make room for the new object.
-    if (*objectEventId >= OBJECT_EVENTS_COUNT && CanRemoveOverworldEncounter(localId))
-        *objectEventId = RemoveOldestOverworldEncounter();
-
-    /* Can we integrate this with this line above:
-    if (i >= OBJECT_EVENTS_COUNT && !CanRemoveOverworldEncounter(localId))
-
-    Something like:
-    if (i >= OBJECT_EVENTS_COUNT)
-        return TryAndRemoveOldestOverworldEncounter(localId);
-
-    Where:
-    bool32 TryAndRemoveOldestOverworldEncounter(u32 localId)
-    {
-        if (CanRemoveOverworldEncounter(localId))
-        {
-            RemoveOldestOverworldEncounter();
-            return FALSE;
-        }
-        return TRUE;
-    }
-    */
-
     return FALSE;
 }
 
