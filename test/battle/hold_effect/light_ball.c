@@ -59,3 +59,41 @@ SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Special Attack", s16 damage)
         }
     }
 }
+
+SINGLE_BATTLE_TEST("Light Ball doubles Pikachu's Attack (Gen4+)", s16 damage)
+{
+    u32 species = 0, item = 0, config = 0;
+
+    for (u32 j = 0; j < ARRAY_COUNT(speciesToCheck); j++) {
+        PARAMETRIZE { item = ITEM_NONE;       species = speciesToCheck[j]; config = GEN_3; }
+        PARAMETRIZE { item = ITEM_LIGHT_BALL; species = speciesToCheck[j]; config = GEN_3; }
+        PARAMETRIZE { item = ITEM_LIGHT_BALL; species = speciesToCheck[j]; config = GEN_4; }
+    }
+
+    GIVEN {
+        WITH_CONFIG(CONFIG_LIGHT_BALL_ATTACK_BOOST, config);
+        ASSUME(GetMoveCategory(MOVE_SPARK) == DAMAGE_CATEGORY_PHYSICAL);
+        if (species == SPECIES_PIKACHU_GMAX) {
+            PLAYER(SPECIES_PIKACHU) { Item(item); GigantamaxFactor(TRUE); }
+        } else {
+            PLAYER(species) { Item(item); }
+        }
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        if (species == SPECIES_PIKACHU_GMAX) {
+            TURN { MOVE(player, MOVE_SPARK, gimmick: GIMMICK_DYNAMAX); }
+        } else {
+            TURN { MOVE(player, MOVE_SPARK); }
+        }
+    } SCENE {
+        HP_BAR(opponent, captureDamage: &results[i].damage);
+    } THEN {
+        if (i == 2) { // First check to avoid boosting other species
+            EXPECT_EQ(results[i - 2].damage, results[i].damage);
+            EXPECT_EQ(results[i - 1].damage, results[i].damage);
+        } else if (i % 3 == 2) { // Every 3rd test afterwards
+            EXPECT_MUL_EQ(results[i - 2].damage, Q_4_12(2.0), results[i].damage);
+            EXPECT_MUL_EQ(results[i - 1].damage, Q_4_12(2.0), results[i].damage);
+        }
+    }
+}
