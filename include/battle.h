@@ -13,7 +13,6 @@
 #include "battle_message.h"
 #include "battle_util.h"
 #include "battle_script_commands.h"
-#include "battle_ai_switch_items.h"
 #include "battle_gfx_sfx_util.h"
 #include "battle_util2.h"
 #include "battle_bg.h"
@@ -138,7 +137,8 @@ struct DisableStruct
     u8 tryEjectPack:1;
     u8 octolockedBy:3;
     u8 paradoxBoostedStat:4;
-    u8 padding2:2;
+    u8 unableToUseMove:1; // for end of turn checks only, for individual actions use the BattleStruct member
+    u8 padding:1;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
@@ -148,11 +148,8 @@ struct ProtectStruct
     u32 noValidMoves:1;
     u32 bounceMove:1;
     u32 stealMove:1;
-    u32 nonVolatileStatusImmobility:1;
-    u32 confusionSelfDmg:1;
     u32 chargingTurn:1;
     u32 fleeType:2; // 0: Normal, 1: FLEE_ITEM, 2: FLEE_ABILITY
-    u32 unableToUseMove:1; // Not to be confused with HITMARKER_UNABLE_TO_USE_MOVE (It is questionable though if there is a difference. Needs further research)
     u32 laggingTail:1;
     u32 palaceUnableToUseMove:1;
     u32 statRaised:1;
@@ -165,14 +162,16 @@ struct ProtectStruct
     u32 shellTrap:1;
     u32 eatMirrorHerb:1;
     u32 activateOpportunist:2; // 2 - to copy stats. 1 - stats copied (do not repeat). 0 - no stats to copy
-    u16 usedAllySwitch:1;
-    u16 lashOutAffected:1;
+    u32 usedAllySwitch:1;
+    u32 lashOutAffected:1;
+    u32 assuranceDoubled:1;
+    u32 forcedSwitch:1;
+    u32 myceliumMight:1;
+    u32 padding1:1;
     // End of 32-bit bitfield
     u16 helpingHand:3;
-    u16 assuranceDoubled:1;
-    u16 myceliumMight:1;
-    u16 forcedSwitch:1;
-    u16 padding:10;
+    u16 revengeDoubled:4;
+    u16 padding2:9;
     // End of 16-bit bitfield
     u16 physicalDmg;
     u16 specialDmg;
@@ -196,11 +195,10 @@ struct SpecialStatus
     u8 rototillerAffected:1;  // to be affected by rototiller
     // End of byte
     u8 criticalHit:1;
-    u8 switchInItemDone:1;
     u8 instructedChosenTarget:3;
     u8 berryReduced:1;
     u8 neutralizingGasRemoved:1;    // See VARIOUS_TRY_END_NEUTRALIZING_GAS
-    u8 padding2:1;
+    u8 padding2:2;
     // End of byte
     u8 gemParam:7;
     u8 gemBoost:1;
@@ -325,18 +323,21 @@ struct AiLogicData
     u8 monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
     struct SwitchinCandidate switchinCandidate; // Struct used for deciding which mon to switch to in battle_ai_switch_items.c
-    u8 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
-    u8 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
-    u8 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
-    u8 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
-    u8 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
-    u8 aiCalcInProgress:1;
-    u8 predictingMove:1; // Determines whether AI will use move predictions this turn or not
-    u8 padding1:1;
-    u8 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
-    u8 padding2:4;
     u16 predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
+
+    // Flags
+    u32 weatherHasEffect:1; // The same as HasWeatherEffect(). Stored here, so it's called only once.
+    u32 ejectButtonSwitch:1; // Tracks whether current switch out was from Eject Button
+    u32 ejectPackSwitch:1; // Tracks whether current switch out was from Eject Pack
+    u32 predictingSwitch:1; // Determines whether AI will use switch predictions this turn or not
+    u32 aiPredictionInProgress:1; // Tracks whether the AI is in the middle of running prediction calculations
+    u32 aiCalcInProgress:1;
+    u32 predictingMove:1; // Determines whether AI will use move predictions this turn or not
+    u32 shouldConsiderExplosion:1; // Determines whether AI should consider explosion moves this turn
+    u32 shouldSwitch:4; // Stores result of ShouldSwitch, which decides whether a mon should be switched out
+    u32 shouldConsiderFinalGambit:1; // Determines whether AI should consider Final Gambit this turn
+    u32 padding2:19;
 };
 
 struct AiThinkingStruct
@@ -679,7 +680,8 @@ struct BattleStruct
     u8 anyMonHasTransformed:1; // Only used in battle_tv.c
     u8 sleepClauseNotBlocked:1;
     u8 isSkyBattle:1;
-    u8 unused:5;
+    u8 unableToUseMove:1; // for the current action only, to check if the battler failed to act at end turn use the DisableStruct member
+    u8 unused:4;
     u8 sortedBattlers[MAX_BATTLERS_COUNT];
     void (*savedCallback)(void);
     u16 chosenItem[MAX_BATTLERS_COUNT];
@@ -691,14 +693,12 @@ struct BattleStruct
         struct LinkBattlerHeader linkBattlerHeader;
         struct BattleVideo battleVideo;
     } multiBuffer;
-    u32 startingStatus; // statuses to apply at battle start. defined in constants/battle.h
     u8 battlerKOAnimsRunning:3;
     u8 friskedAbility:1; // If identifies two mons, show the ability pop-up only once.
     u8 fickleBeamBoosted:1;
     u8 poisonPuppeteerConfusion:1;
     u8 toxicChainPriority:1; // If Toxic Chain will trigger on target, all other non volatiles will be blocked
     u8 battlersSorted:1; // To avoid unnessasery computation
-    u16 startingStatusTimer;
     struct BattleTvMovePoints tvMovePoints;
     struct BattleTv tv;
     u8 AI_monToSwitchIntoId[MAX_BATTLERS_COUNT];
@@ -744,7 +744,6 @@ struct BattleStruct
     u8 pledgeMove:1;
     u8 effectsBeforeUsingMoveDone:1; // Mega Evo and Focus Punch/Shell Trap effects.
     u8 spriteIgnore0Hp:1;
-    u8 bonusCritStages[MAX_BATTLERS_COUNT]; // G-Max Chi Strike boosts crit stages of allies.
     u8 itemPartyIndex[MAX_BATTLERS_COUNT];
     u8 itemMoveIndex[MAX_BATTLERS_COUNT];
     s32 aiDelayTimer; // Counts number of frames AI takes to choose an action.
@@ -1095,6 +1094,7 @@ extern u8 gSentPokesToOpponent[2];
 extern struct BattleEnigmaBerry gEnigmaBerries[MAX_BATTLERS_COUNT];
 extern struct BattleScripting gBattleScripting;
 extern struct BattleStruct *gBattleStruct;
+extern struct StartingStatuses gStartingStatuses;
 extern struct AiBattleData *gAiBattleData;
 extern struct AiThinkingStruct *gAiThinkingStruct;
 extern struct AiLogicData *gAiLogicData;
@@ -1240,7 +1240,7 @@ static inline bool32 IsSpreadMove(u32 moveTarget)
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
-        && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+        && !gBattleStruct->unableToUseMove
         && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
 }
 

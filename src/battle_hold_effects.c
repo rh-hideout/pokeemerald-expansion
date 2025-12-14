@@ -128,7 +128,7 @@ static bool32 CanBeInfinitelyConfused(u32 battler)
 {
     enum Ability ability = GetBattlerAbility(battler);
     if  (ability == ABILITY_OWN_TEMPO
-      || IsBattlerTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), STATUS_FIELD_MISTY_TERRAIN)
+      || IsMistyTerrainAffected(battler, ability, GetBattlerHoldEffect(battler), gFieldStatuses)
       || gSideStatuses[GetBattlerSide(battler)] & SIDE_STATUS_SAFEGUARD)
         return FALSE;
     return TRUE;
@@ -222,9 +222,8 @@ static enum ItemEffect TryAirBalloon(u32 battler, ActivationTiming timing)
             effect = ITEM_EFFECT_OTHER;
         }
     }
-    else if (!gSpecialStatuses[battler].switchInItemDone)
+    else if (gBattleStruct->battlerState[battler].switchIn)
     {
-        gSpecialStatuses[battler].switchInItemDone = TRUE;
         BattleScriptCall(BattleScript_AirBalloonMsgInRet);
         RecordItemEffectBattle(battler, HOLD_EFFECT_AIR_BALLOON);
         effect = ITEM_EFFECT_OTHER;
@@ -523,7 +522,7 @@ static enum ItemEffect TryShellBell(u32 battlerAtk)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (gBattleScripting.savedDmg > 0
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+     && !gBattleStruct->unableToUseMove
      && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
      && !IsBattlerAtMaxHp(battlerAtk)
      && IsBattlerAlive(battlerAtk)
@@ -544,7 +543,7 @@ static enum ItemEffect TryLifeOrb(u32 battlerAtk)
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
     if (IsBattlerAlive(battlerAtk)
-     && !(gHitMarker & HITMARKER_UNABLE_TO_USE_MOVE)
+     && !gBattleStruct->unableToUseMove
      && (IsAnyTargetTurnDamaged(battlerAtk) || gBattleScripting.savedDmg > 0)
      && !IsAbilityAndRecord(battlerAtk, GetBattlerAbility(battlerAtk), ABILITY_MAGIC_GUARD)
      && GetMoveEffect(gCurrentMove) != EFFECT_PAIN_SPLIT

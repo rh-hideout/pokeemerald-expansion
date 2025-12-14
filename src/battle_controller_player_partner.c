@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "battle_anim.h"
 #include "battle_controllers.h"
@@ -61,7 +62,6 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
     [CONTROLLER_TRAINERSLIDEBACK]         = PlayerPartnerHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -107,6 +107,7 @@ static void (*const sPlayerPartnerBufferCommands[CONTROLLER_CMDS_COUNT])(u32 bat
 
 void SetControllerToPlayerPartner(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_PLAYER_PARTNER;
     gBattlerControllerEndFuncs[battler] = PlayerPartnerBufferExecCompleted;
     gBattlerControllerFuncs[battler] = PlayerPartnerBufferRunCommand;
 }

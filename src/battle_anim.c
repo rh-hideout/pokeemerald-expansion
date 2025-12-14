@@ -255,6 +255,8 @@ static const u8* const sBattleAnims_General[NUM_B_ANIMS_GENERAL] =
     [B_ANIM_TERA_ACTIVATE]          = gBattleAnimGeneral_TeraActivate,
     [B_ANIM_SIMPLE_HEAL]            = gBattleAnimGeneral_SimpleHeal,
     [B_ANIM_POWER_CONSTRUCT]        = gBattleAnimGeneral_PowerConstruct,
+    [B_ANIM_SWAP_TO_SUBSTITUTE]     = gBattleAnimGeneral_SwapToSubstitute,
+    [B_ANIM_SWAP_FROM_SUBSTITUTE]   = gBattleAnimGeneral_SwapFromSubstitute,
 };
 
 static const u8* const sBattleAnims_Special[NUM_B_ANIMS_SPECIAL] =
@@ -1573,9 +1575,9 @@ void LoadMoveBg(u16 bgId)
         void *decompressionBuffer = malloc_and_decompress(gBattleAnimBackgroundTable[bgId].tilemap, NULL);
         RelocateBattleBgPal(GetBattleBgPaletteNum(), decompressionBuffer, 0x100, FALSE);
         DmaCopy32(3, decompressionBuffer, (void *)BG_SCREEN_ADDR(26), 0x800);
+        Free(decompressionBuffer);
         DecompressDataWithHeaderVram(gBattleAnimBackgroundTable[bgId].image, (void *)BG_SCREEN_ADDR(4));
         LoadPalette(gBattleAnimBackgroundTable[bgId].palette, BG_PLTT_ID(GetBattleBgPaletteNum()), PLTT_SIZE_4BPP);
-        Free(decompressionBuffer);
     }
     else
     {

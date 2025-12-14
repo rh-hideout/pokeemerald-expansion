@@ -268,16 +268,9 @@ static bool32 HandleEndTurnWish(u32 battler)
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
         if (B_WISH_HP_SOURCE >= GEN_5)
-        {
-            if (IsOnPlayerSide(battler))
-                wishHeal = GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
-            else
-                wishHeal = GetMonData(&gEnemyParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
-        }
+            wishHeal = GetMonData(&GetBattlerParty(battler)[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;
         else
-        {
             wishHeal = GetNonDynamaxMaxHP(battler) / 2;
-        }
 
         SetHealAmount(battler, wishHeal);
         if (gBattleMons[battler].volatiles.healBlock)
@@ -338,7 +331,7 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         if (gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
         {
             gBattleMons[battler].volatiles.lockConfusionTurns--;
-            if (WasUnableToUseMove(battler))
+            if (gDisableStructs[battler].unableToUseMove)
             {
                 CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
             }
@@ -880,12 +873,12 @@ static bool32 HandleEndTurnYawn(u32 battler)
         {
             gEffectBattler = gBattlerTarget = battler;
             enum HoldEffect holdEffect = GetBattlerHoldEffect(battler);
-            if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_ELECTRIC_TERRAIN))
+            if (IsElectricTerrainAffected(battler, ability, holdEffect, gFieldStatuses))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_ELECTRIC;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
             }
-            else if (IsBattlerTerrainAffected(battler, ability, holdEffect, STATUS_FIELD_MISTY_TERRAIN))
+            else if (IsMistyTerrainAffected(battler, ability, holdEffect, gFieldStatuses))
             {
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_TERRAINPREVENTS_MISTY;
                 BattleScriptExecute(BattleScript_TerrainPreventsEnd2);
@@ -1243,7 +1236,7 @@ static bool32 HandleEndTurnThirdEventBlock(u32 battler)
             {
                 gBattlerAttacker = battler;
                 gBattleMons[battler].volatiles.uproarTurns--;  // uproar timer goes down
-                if (WasUnableToUseMove(battler))
+                if (gDisableStructs[battler].unableToUseMove)
                 {
                     CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
                     gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_UPROAR_ENDS;

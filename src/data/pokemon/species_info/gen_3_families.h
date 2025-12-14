@@ -7232,13 +7232,17 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_Spinda,
         .frontPicSize = MON_COORDS_SIZE(48, 64),
         .frontPicYOffset = 8,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 17),
-            ANIMCMD_FRAME(1, 23),
-            ANIMCMD_FRAME(0, 17),
-            ANIMCMD_FRAME(1, 23),
-            ANIMCMD_FRAME(0, 13),
-        ),
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 17),
+                ANIMCMD_FRAME(1, 23),
+                ANIMCMD_FRAME(0, 17),
+                ANIMCMD_FRAME(1, 23),
+                ANIMCMD_FRAME(0, 13),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
         .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_JUMPS : ANIM_CIRCLE_INTO_BG,
         .backPic = gMonBackPic_Spinda,
         .backPicSize = MON_COORDS_SIZE(56, 56),
@@ -9182,13 +9186,17 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_CastformNormal,
         .frontPicSize = MON_COORDS_SIZE(24, 32),
         .frontPicYOffset = 17,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 12),
-            ANIMCMD_FRAME(1, 24),
-            ANIMCMD_FRAME(0, 24),
-            ANIMCMD_FRAME(1, 24),
-            ANIMCMD_FRAME(0, 24),
-        ),
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 12),
+                ANIMCMD_FRAME(1, 24),
+                ANIMCMD_FRAME(0, 24),
+                ANIMCMD_FRAME(1, 24),
+                ANIMCMD_FRAME(0, 24),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
         .frontAnimId = ANIM_H_SLIDE_WOBBLE,
         .enemyMonElevation = 16,
         .backPic = gMonBackPic_CastformNormal,
@@ -9257,21 +9265,25 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_CastformSunny,
         .frontPicSize = MON_COORDS_SIZE(40, 48),
         .frontPicYOffset = 9,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 12),
-            ANIMCMD_FRAME(1, 12),
-            ANIMCMD_FRAME(0, 12),
-            ANIMCMD_FRAME(1, 12),
-            ANIMCMD_FRAME(0, 12),
-            ANIMCMD_FRAME(1, 12),
-            ANIMCMD_FRAME(0, 12),
-        ),
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 12),
+                ANIMCMD_FRAME(1, 12),
+                ANIMCMD_FRAME(0, 12),
+                ANIMCMD_FRAME(1, 12),
+                ANIMCMD_FRAME(0, 12),
+                ANIMCMD_FRAME(1, 12),
+                ANIMCMD_FRAME(0, 12),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_SLIDE_WOBBLE : ANIM_GROW_VIBRATE,
         .enemyMonElevation = 5,
         .backPic = gMonBackPic_CastformSunny,
         .backPicSize = MON_COORDS_SIZE(56, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_SHAKE_GLOW_RED,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_CONVEX_DOUBLE_ARC : BACK_ANIM_SHAKE_GLOW_RED,
         .palette = gMonPalette_CastformSunny,
         .shinyPalette = gMonShinyPalette_CastformSunny,
         .iconSprite = gMonIcon_CastformSunny,
@@ -9334,19 +9346,23 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_CastformRainy,
         .frontPicSize = MON_COORDS_SIZE(32, 48),
         .frontPicYOffset = 9,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 22),
-            ANIMCMD_FRAME(1, 22),
-            ANIMCMD_FRAME(0, 22),
-            ANIMCMD_FRAME(1, 22),
-            ANIMCMD_FRAME(0, 11),
-        ),
-        .frontAnimId = ANIM_SWING_CONVEX_FAST,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 22),
+                ANIMCMD_FRAME(1, 22),
+                ANIMCMD_FRAME(0, 22),
+                ANIMCMD_FRAME(1, 22),
+                ANIMCMD_FRAME(0, 11),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_SLIDE_WOBBLE : ANIM_SWING_CONVEX_FAST,
         .enemyMonElevation = 5,
         .backPic = gMonBackPic_CastformRainy,
         .backPicSize = MON_COORDS_SIZE(40, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_SHRINK_GROW_VIBRATE,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_CONVEX_DOUBLE_ARC : BACK_ANIM_SHRINK_GROW_VIBRATE,
         .palette = gMonPalette_CastformRainy,
         .shinyPalette = gMonShinyPalette_CastformRainy,
         .iconSprite = gMonIcon_CastformRainy,
@@ -9409,19 +9425,23 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_CastformSnowy,
         .frontPicSize = MON_COORDS_SIZE(40, 56),
         .frontPicYOffset = 8,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 5),
-            ANIMCMD_FRAME(1, 12),
-            ANIMCMD_FRAME(0, 12),
-            ANIMCMD_FRAME(1, 29),
-            ANIMCMD_FRAME(0, 12),
-        ),
-        .frontAnimId = ANIM_V_STRETCH,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 5),
+                ANIMCMD_FRAME(1, 12),
+                ANIMCMD_FRAME(0, 12),
+                ANIMCMD_FRAME(1, 29),
+                ANIMCMD_FRAME(0, 12),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_SLIDE_WOBBLE : ANIM_V_STRETCH,
         .enemyMonElevation = 5,
         .backPic = gMonBackPic_CastformSnowy,
         .backPicSize = MON_COORDS_SIZE(56, 64),
         .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_CONVEX_DOUBLE_ARC : BACK_ANIM_TRIANGLE_DOWN,
         .palette = gMonPalette_CastformSnowy,
         .shinyPalette = gMonShinyPalette_CastformSnowy,
         .iconSprite = gMonIcon_CastformSnowy,
@@ -12044,7 +12064,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Regirock,
             gShinyOverworldPalette_Regirock
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sRegirockLevelUpLearnset,
         .teachableLearnset = sRegirockTeachableLearnset,
@@ -12123,7 +12143,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Regice,
             gShinyOverworldPalette_Regice
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sRegiceLevelUpLearnset,
         .teachableLearnset = sRegiceTeachableLearnset,
@@ -12203,7 +12223,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Registeel,
             gShinyOverworldPalette_Registeel
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sRegisteelLevelUpLearnset,
         .teachableLearnset = sRegisteelTeachableLearnset,
@@ -12283,7 +12303,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Latias,
             gShinyOverworldPalette_Latias
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLatiasLevelUpLearnset,
         .teachableLearnset = sLatiasTeachableLearnset,
@@ -12354,7 +12374,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gShinyOverworldPalette_LatiasMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLatiasLevelUpLearnset,
@@ -12438,7 +12458,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Latios,
             gShinyOverworldPalette_Latios
         )
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLatiosLevelUpLearnset,
         .teachableLearnset = sLatiosTeachableLearnset,
@@ -12509,7 +12529,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gShinyOverworldPalette_LatiosMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isLegendary = TRUE,
+        .isSubLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sLatiosLevelUpLearnset,
@@ -12593,7 +12613,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Kyogre,
             gShinyOverworldPalette_Kyogre
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sKyogreLevelUpLearnset,
@@ -12663,7 +12683,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gShinyOverworldPalette_KyogrePrimal
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isPrimalReversion = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -12747,7 +12767,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Groudon,
             gShinyOverworldPalette_Groudon
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sGroudonLevelUpLearnset,
@@ -12818,7 +12838,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gShinyOverworldPalette_GroudonPrimal
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isPrimalReversion = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -12905,7 +12925,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gOverworldPalette_Rayquaza,
             gShinyOverworldPalette_Rayquaza
         )
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sRayquazaLevelUpLearnset,
@@ -12978,7 +12998,7 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
             gShinyOverworldPalette_RayquazaMega
         )
     #endif //OW_BATTLE_ONLY_FORMS
-        .isLegendary = TRUE,
+        .isRestrictedLegendary = TRUE,
         .isMegaEvolution = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -13121,15 +13141,20 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .trainerOffset = 2,
         .frontPic = gMonFrontPic_DeoxysNormal,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 0,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 16),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 26),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 16),
-        ),
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 1 : 0,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 16),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 26),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 16),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_PIVOT : ANIM_GROW_VIBRATE,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 0,
         .backPic = gMonBackPic_DeoxysNormal,
         .backPicSize = MON_COORDS_SIZE(64, 56),
         .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 2 : 6,
@@ -13192,19 +13217,24 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .trainerOffset = 2,
         .frontPic = gMonFrontPic_DeoxysAttack,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
-        .frontPicYOffset = 0,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 16),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 26),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 16),
-        ),
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 1 : 0,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 16),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 26),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 16),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_PIVOT : ANIM_GROW_VIBRATE,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 0,
         .backPic = gMonBackPic_DeoxysAttack,
-        .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 1,
-        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .backPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(64, 56) : MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 7 : 1,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_SHRINK_GROW_VIBRATE : BACK_ANIM_TRIANGLE_DOWN,
         .palette = gMonPalette_DeoxysAttack,
         .shinyPalette = gMonShinyPalette_DeoxysAttack,
         .iconSprite = gMonIcon_DeoxysAttack,
@@ -13261,20 +13291,25 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .trainerScale = 290,
         .trainerOffset = 2,
         .frontPic = gMonFrontPic_DeoxysDefense,
-        .frontPicSize = MON_COORDS_SIZE(56, 64),
-        .frontPicYOffset = 0,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 16),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 26),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 16),
-        ),
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        .frontPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(64, 64) : MON_COORDS_SIZE(56, 64),
+        .frontPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 1 : 0,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 16),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 26),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 16),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_PIVOT : ANIM_GROW_VIBRATE,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 0,
         .backPic = gMonBackPic_DeoxysDefense,
         .backPicSize = MON_COORDS_SIZE(64, 56),
-        .backPicYOffset = 8,
-        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 7 : 8,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_SHRINK_GROW_VIBRATE : BACK_ANIM_TRIANGLE_DOWN,
         .palette = gMonPalette_DeoxysDefense,
         .shinyPalette = gMonShinyPalette_DeoxysDefense,
         .iconSprite = gMonIcon_DeoxysDefense,
@@ -13334,18 +13369,23 @@ const struct SpeciesInfo gSpeciesInfoGen3[] =
         .frontPic = gMonFrontPic_DeoxysSpeed,
         .frontPicSize = MON_COORDS_SIZE(64, 64),
         .frontPicYOffset = 1,
-        .frontAnimFrames = ANIM_FRAMES(
-            ANIMCMD_FRAME(0, 16),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 26),
-            ANIMCMD_FRAME(1, 16),
-            ANIMCMD_FRAME(0, 16),
-        ),
-        .frontAnimId = ANIM_GROW_VIBRATE,
+        #if !P_GBA_STYLE_SPECIES_GFX
+            .frontAnimFrames = ANIM_FRAMES(
+                ANIMCMD_FRAME(0, 16),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 26),
+                ANIMCMD_FRAME(1, 16),
+                ANIMCMD_FRAME(0, 16),
+            ),
+        #else
+            .frontAnimFrames = sAnims_SingleFramePlaceHolder,
+        #endif
+        .frontAnimId = P_GBA_STYLE_SPECIES_GFX ? ANIM_H_PIVOT : ANIM_GROW_VIBRATE,
+        .enemyMonElevation = P_GBA_STYLE_SPECIES_GFX ? 8 : 0,
         .backPic = gMonBackPic_DeoxysSpeed,
-        .backPicSize = MON_COORDS_SIZE(64, 64),
-        .backPicYOffset = 0,
-        .backAnimId = BACK_ANIM_TRIANGLE_DOWN,
+        .backPicSize = P_GBA_STYLE_SPECIES_GFX ? MON_COORDS_SIZE(64, 48) : MON_COORDS_SIZE(64, 64),
+        .backPicYOffset = P_GBA_STYLE_SPECIES_GFX ? 9 : 0,
+        .backAnimId = P_GBA_STYLE_SPECIES_GFX ? BACK_ANIM_SHRINK_GROW_VIBRATE : BACK_ANIM_TRIANGLE_DOWN,
         .palette = gMonPalette_DeoxysSpeed,
         .shinyPalette = gMonShinyPalette_DeoxysSpeed,
         .iconSprite = gMonIcon_DeoxysSpeed,

@@ -55,7 +55,6 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
     [CONTROLLER_TRAINERSLIDEBACK]         = LinkOpponentHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -101,6 +100,7 @@ static void (*const sLinkOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 batt
 
 void SetControllerToLinkOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_LINK_OPPONENT;
     gBattlerControllerEndFuncs[battler] = LinkOpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = LinkOpponentBufferRunCommand;
 }

@@ -302,6 +302,15 @@ Debug_EventScript_Steven_Multi::
 	release
 	end
 
+Debug_EventScript_WallyTutorial::
+	special SavePlayerParty
+	special LoadWallyZigzagoon
+	special StartWallyTutorialBattle
+	waitstate
+	special LoadPlayerParty
+	release
+	end
+
 Debug_BerryPestsDisabled::
 	msgbox DebugText_BerryPestsDisabled, MSGBOX_DEFAULT
 	release

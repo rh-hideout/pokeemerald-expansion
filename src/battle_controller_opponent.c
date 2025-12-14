@@ -1,7 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
-#include "battle_ai_switch_items.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
@@ -68,7 +68,6 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
     [CONTROLLER_TRAINERSLIDEBACK]         = OpponentHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -114,6 +113,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
 
 void SetControllerToOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_OPPONENT;
     gBattlerControllerEndFuncs[battler] = OpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
 }
@@ -371,7 +371,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
     u32 trainerPicId;
-    
+
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
@@ -392,7 +392,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     else
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
-    
+
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
