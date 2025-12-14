@@ -399,7 +399,7 @@ static bool32 ShouldSwitchIfTruant(u32 battler)
     // Switch if mon with truant is bodied by Protect or invulnerability spam
     if (gAiLogicData->abilities[battler] == ABILITY_TRUANT
         && IsTruantMonVulnerable(battler, gBattlerTarget)
-        && gDisableStructs[battler].truantCounter
+        && gBattleMons[battler].volatiles.truantCounter
         && gBattleMons[battler].hp >= gBattleMons[battler].maxHP / 2
         && gAiLogicData->mostSuitableMonId[battler] != PARTY_SIZE)
     {
@@ -722,7 +722,7 @@ static bool32 ShouldSwitchIfBadlyStatused(u32 battler)
 
     //Perish Song
     if (gBattleMons[battler].volatiles.perishSong
-        && gDisableStructs[battler].perishSongTimer == 0
+        && gBattleMons[battler].volatiles.perishSongTimer == 0
         && monAbility != ABILITY_SOUNDPROOF
         && RandomPercentage(RNG_AI_SWITCH_PERISH_SONG, GetSwitchChance(SHOULD_SWITCH_PERISH_SONG)))
         return SetSwitchinAndSwitch(battler, PARTY_SIZE);
@@ -1046,7 +1046,7 @@ static bool32 CanMonSurviveHazardSwitchin(u32 battler)
 
 static bool32 ShouldSwitchIfEncored(u32 battler)
 {
-    u32 encoredMove = gDisableStructs[battler].encoredMove;
+    u32 encoredMove = gBattleMons[battler].volatiles.encoredMove;
     u32 opposingBattler = GetOppositeBattler(battler);
 
     // Only use this if AI_FLAG_SMART_SWITCHING is set for the trainer

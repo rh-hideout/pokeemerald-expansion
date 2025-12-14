@@ -50,7 +50,7 @@
 // Used to exclude moves learned temporarily by Transform or Mimic
 #define MOVE_IS_PERMANENT(battler, moveSlot)                        \
    (!(gBattleMons[battler].volatiles.transformed)           \
- && !(gDisableStructs[battler].mimickedMoves & (1u << moveSlot)))
+ && !(gBattleMons[battler].volatiles.mimickedMoves & (1u << moveSlot)))
 
 // Battle Actions
 // These determine what each battler will do in a turn
@@ -77,68 +77,16 @@
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
 // Cleared each time a mon leaves the field, either by switching out or fainting
+// Also used for showing correct move animation changes in link battles
 struct DisableStruct
 {
-    u32 transformedMonPersonality;
-    bool8 transformedMonShininess;
-    u16 disabledMove;
-    u16 encoredMove;
-    u8 protectUses:4;
-    u8 stockpileCounter:4;
-    s8 stockpileDef;
-    s8 stockpileSpDef;
-    s8 stockpileBeforeDef;
-    s8 stockpileBeforeSpDef;
-    u8 substituteHP;
-    u8 encoredMovePos;
-    u16 disableTimer;
-    u16 encoreTimer;
-    u16 perishSongTimer;
+    u32 transformedMonPID;
     u8 rolloutTimer;
-    u16 tauntTimer;
     u8 furyCutterCounter;
-    u8 metronomeItemCounter;
-    u8 battlerPreventingEscape;
-    u8 battlerWithSureHit;
-    u8 isFirstTurn;
-    u8 mimickedMoves:4;
-    u8 rechargeTimer:4;
-    u8 autotomizeCount;
-    u16 slowStartTimer;
-    u16 embargoTimer;
-    u16 magnetRiseTimer;
-    u16 telekinesisTimer;
-    u16 healBlockTimer;
-    u16 laserFocusTimer;
-    u16 throatChopTimer;
-    u8 wrapTurns;
-    u16 syrupBombTimer;
-    u16 tormentTimer; // used for G-Max Meltdown
-    u8 usedMoves:4;
-    u8 truantCounter:1;
-    u8 truantSwitchInHack:1;
-    u8 tarShot:1;
-    u8 octolock:1;
-    u8 cudChew:1;
-    u8 weatherAbilityDone:1;
-    u8 terrainAbilityDone:1;
     u8 syrupBombIsShiny:1;
-    u8 usedProteanLibero:1;
-    u8 flashFireBoosted:1;
-    u8 boosterEnergyActivated:1;
-    u8 padding1:1;
-    u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
-    u8 roostActive:1;
-    u8 unburdenActive:1;
-    u8 neutralizingGas:1;
-    u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
-    u8 endured:1;
-    u8 tryEjectPack:1;
-    u8 octolockedBy:3;
-    u8 paradoxBoostedStat:4;
-    u8 unableToUseMove:1; // for end of turn checks only, for individual actions use the BattleStruct member
-    u8 padding:1;
+    u8 isTransformedMonShiny:1;
+    u8 isFirstTurn:2;
+    u8 padding:4;
 };
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects

@@ -260,7 +260,7 @@ bool32 EndOrContinueWeather(void)
         gBattleWeather = B_WEATHER_NONE;
         for (u32 battler = 0; battler < gBattlersCount; battler++)
         {
-            gDisableStructs[battler].weatherAbilityDone = FALSE;
+            gBattleMons[battler].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(battler);
         }
         gBattleCommunication[MULTISTRING_CHOOSER] = sBattleWeatherInfo[currBattleWeather].endMessage;
@@ -470,28 +470,28 @@ void HandleAction_UseMove(void)
         gCurrentMove = gChosenMove = MOVE_STRUGGLE;
         gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(MOVE_STRUGGLE, NO_TARGET_OVERRIDE);
     }
-    else if (gBattleMons[gBattlerAttacker].volatiles.multipleTurns || gDisableStructs[gBattlerAttacker].rechargeTimer > 0)
+    else if (gBattleMons[gBattlerAttacker].volatiles.multipleTurns || gBattleMons[gBattlerAttacker].volatiles.rechargeTimer > 0)
     {
         gCurrentMove = gChosenMove = gLockedMoves[gBattlerAttacker];
     }
     // encore forces you to use the same move
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
-             && gDisableStructs[gBattlerAttacker].encoredMove == gBattleMons[gBattlerAttacker].moves[gDisableStructs[gBattlerAttacker].encoredMovePos])
+    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
+             && gBattleMons[gBattlerAttacker].volatiles.encoredMove == gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.encoredMovePos])
     {
-        gCurrentMove = gChosenMove = gDisableStructs[gBattlerAttacker].encoredMove;
-        gCurrMovePos = gChosenMovePos = gDisableStructs[gBattlerAttacker].encoredMovePos;
+        gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].volatiles.encoredMove;
+        gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
         if (GetConfig(CONFIG_ENCORE_TARGET) < GEN_5)
             gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(gCurrentMove, NO_TARGET_OVERRIDE);
     }
     // check if the encored move wasn't overwritten
-    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gDisableStructs[gBattlerAttacker].encoredMove != MOVE_NONE
-          && gDisableStructs[gBattlerAttacker].encoredMove != gBattleMons[gBattlerAttacker].moves[gDisableStructs[gBattlerAttacker].encoredMovePos])
+    else if (GetActiveGimmick(gBattlerAttacker) != GIMMICK_Z_MOVE && gBattleMons[gBattlerAttacker].volatiles.encoredMove != MOVE_NONE
+          && gBattleMons[gBattlerAttacker].volatiles.encoredMove != gBattleMons[gBattlerAttacker].moves[gBattleMons[gBattlerAttacker].volatiles.encoredMovePos])
     {
-        gCurrMovePos = gChosenMovePos = gDisableStructs[gBattlerAttacker].encoredMovePos;
+        gCurrMovePos = gChosenMovePos = gBattleMons[gBattlerAttacker].volatiles.encoredMovePos;
         gCurrentMove = gChosenMove = gBattleMons[gBattlerAttacker].moves[gCurrMovePos];
-        gDisableStructs[gBattlerAttacker].encoredMove = MOVE_NONE;
-        gDisableStructs[gBattlerAttacker].encoredMovePos = 0;
-        gDisableStructs[gBattlerAttacker].encoreTimer = 0;
+        gBattleMons[gBattlerAttacker].volatiles.encoredMove = MOVE_NONE;
+        gBattleMons[gBattlerAttacker].volatiles.encoredMovePos = 0;
+        gBattleMons[gBattlerAttacker].volatiles.encoreTimer = 0;
         gBattleStruct->moveTarget[gBattlerAttacker] = GetBattleMoveTarget(gCurrentMove, NO_TARGET_OVERRIDE);
     }
     else if (gBattleMons[gBattlerAttacker].moves[gCurrMovePos] != gChosenMoveByBattler[gBattlerAttacker])
@@ -1395,10 +1395,10 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
 
     if (GetConfig(CONFIG_ENCORE_TARGET) >= GEN_5
-     && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].encoredMove != move && gDisableStructs[battler].encoredMove != MOVE_NONE)
+     && DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.encoredMove != move && gBattleMons[battler].volatiles.encoredMove != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
-        gCurrentMove = gDisableStructs[battler].encoredMove;
+        gCurrentMove = gBattleMons[battler].volatiles.encoredMove;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
         {
             gPalaceSelectionBattleScripts[battler] = BattleScript_EncoredMoveInPalace;
@@ -1412,7 +1412,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
         return limitations;
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].disabledMove == move && move != MOVE_NONE)
+    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.disabledMove == move && move != MOVE_NONE)
     {
         gBattleScripting.battler = battler;
         gCurrentMove = move;
@@ -1443,7 +1443,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
         }
     }
 
-    if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].tauntTimer != 0 && IsBattleMoveStatus(move))
+    if (GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.tauntTimer != 0 && IsBattleMoveStatus(move))
     {
         if ((GetActiveGimmick(battler) == GIMMICK_DYNAMAX))
             gCurrentMove = MOVE_MAX_GUARD;
@@ -1461,7 +1461,7 @@ u32 TrySetCantSelectMoveBattleScript(u32 battler)
         }
     }
 
-    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gDisableStructs[battler].throatChopTimer > 0 && IsSoundMove(move))
+    if (DYNAMAX_BYPASS_CHECK && GetActiveGimmick(battler) != GIMMICK_Z_MOVE && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
     {
         gCurrentMove = move;
         if (gBattleTypeFlags & BATTLE_TYPE_PALACE)
@@ -1672,19 +1672,19 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_PLACEHOLDER && moveEffect == EFFECT_PLACEHOLDER)
             unusableMoves |= 1u << i;
         // Disable
-        else if (check & MOVE_LIMITATION_DISABLED && move == gDisableStructs[battler].disabledMove)
+        else if (check & MOVE_LIMITATION_DISABLED && move == gBattleMons[battler].volatiles.disabledMove)
             unusableMoves |= 1u << i;
         // Torment
         else if (check & MOVE_LIMITATION_TORMENTED && move == gLastMoves[battler] && gBattleMons[battler].volatiles.torment == TRUE)
             unusableMoves |= 1u << i;
         // Taunt
-        else if (check & MOVE_LIMITATION_TAUNT && gDisableStructs[battler].tauntTimer && IsBattleMoveStatus(move))
+        else if (check & MOVE_LIMITATION_TAUNT && gBattleMons[battler].volatiles.tauntTimer && IsBattleMoveStatus(move))
             unusableMoves |= 1u << i;
         // Imprison
         else if (check & MOVE_LIMITATION_IMPRISON && GetImprisonedMovesCount(battler, move))
             unusableMoves |= 1u << i;
         // Encore
-        else if (check & MOVE_LIMITATION_ENCORE && gDisableStructs[battler].encoreTimer && gDisableStructs[battler].encoredMove != move)
+        else if (check & MOVE_LIMITATION_ENCORE && gBattleMons[battler].volatiles.encoreTimer && gBattleMons[battler].volatiles.encoredMove != move)
             unusableMoves |= 1u << i;
         // Choice Items
         else if (check & MOVE_LIMITATION_CHOICE_ITEM && IsHoldEffectChoice(holdEffect) && *choicedMove != MOVE_NONE && *choicedMove != MOVE_UNAVAILABLE && *choicedMove != move)
@@ -1702,7 +1702,7 @@ u32 CheckMoveLimitations(u32 battler, u8 unusableMoves, u16 check)
         else if (check & MOVE_LIMITATION_BELCH && IsBelchPreventingMove(battler, move))
             unusableMoves |= 1u << i;
         // Throat Chop
-        else if (check & MOVE_LIMITATION_THROAT_CHOP && gDisableStructs[battler].throatChopTimer > 0 && IsSoundMove(move))
+        else if (check & MOVE_LIMITATION_THROAT_CHOP && gBattleMons[battler].volatiles.throatChopTimer > 0 && IsSoundMove(move))
             unusableMoves |= 1u << i;
         // Stuff Cheeks
         else if (check & MOVE_LIMITATION_STUFF_CHEEKS && moveEffect == EFFECT_STUFF_CHEEKS && GetItemPocket(gBattleMons[battler].item) != POCKET_BERRIES)
@@ -1793,7 +1793,7 @@ void TryToRevertMimicryAndFlags(void)
 {
     for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        gDisableStructs[battler].terrainAbilityDone = FALSE;
+        gBattleMons[battler].volatiles.terrainAbilityDone = FALSE;
         ResetParadoxTerrainStat(battler);
         if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_MIMICRY))
             RESTORE_BATTLER_TYPE(battler);
@@ -1991,7 +1991,7 @@ static enum MoveCanceler CancelerSkyDrop(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerRecharge(struct BattleContext *ctx)
 {
-    if (gDisableStructs[ctx->battlerAtk].rechargeTimer > 0)
+    if (gBattleMons[ctx->battlerAtk].volatiles.rechargeTimer > 0)
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedMustRecharge;
@@ -2131,7 +2131,7 @@ static enum MoveCanceler CancelerPowerPoints(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerTruant(struct BattleContext *ctx)
 {
-    if (GetBattlerAbility(ctx->battlerAtk) == ABILITY_TRUANT && gDisableStructs[ctx->battlerAtk].truantCounter)
+    if (GetBattlerAbility(ctx->battlerAtk) == ABILITY_TRUANT && gBattleMons[ctx->battlerAtk].volatiles.truantCounter)
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_LOAFING;
@@ -2175,8 +2175,8 @@ static enum MoveCanceler CancelerFlinch(struct BattleContext *ctx)
 static enum MoveCanceler CancelerDisabled(struct BattleContext *ctx)
 {
     if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE
-     && gDisableStructs[ctx->battlerAtk].disabledMove == ctx->move
-     && gDisableStructs[ctx->battlerAtk].disabledMove != MOVE_NONE)
+     && gBattleMons[ctx->battlerAtk].volatiles.disabledMove == ctx->move
+     && gBattleMons[ctx->battlerAtk].volatiles.disabledMove != MOVE_NONE)
     {
         gBattleScripting.battler = ctx->battlerAtk;
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
@@ -2204,7 +2204,7 @@ static enum MoveCanceler CancelerVolatileBlocked(struct BattleContext *ctx)
         gBattlescriptCurrInstr = BattleScript_MoveUsedGravityPrevents;
         return MOVE_STEP_FAILURE;
     }
-    else if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gDisableStructs[ctx->battlerAtk].throatChopTimer > 0 && IsSoundMove(ctx->move))
+    else if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gBattleMons[ctx->battlerAtk].volatiles.throatChopTimer > 0 && IsSoundMove(ctx->move))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsThroatChopPrevented;
@@ -2215,7 +2215,7 @@ static enum MoveCanceler CancelerVolatileBlocked(struct BattleContext *ctx)
 
 static enum MoveCanceler CancelerTaunted(struct BattleContext *ctx)
 {
-    if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gDisableStructs[ctx->battlerAtk].tauntTimer && IsBattleMoveStatus(ctx->move))
+    if (GetActiveGimmick(ctx->battlerAtk) != GIMMICK_Z_MOVE && gBattleMons[ctx->battlerAtk].volatiles.tauntTimer && IsBattleMoveStatus(ctx->move))
     {
         CancelMultiTurnMoves(ctx->battlerAtk, SKY_DROP_ATTACKCANCELER_CHECK);
         gBattlescriptCurrInstr = BattleScript_MoveUsedIsTaunted;
@@ -2518,7 +2518,7 @@ static enum MoveCanceler CancelerPPDeduction(struct BattleContext *ctx)
 
     // For item Metronome, echoed voice
     if (ctx->move != gLastResultingMoves[ctx->battlerAtk] || gBattleStruct->unableToUseMove)
-        gDisableStructs[ctx->battlerAtk].metronomeItemCounter = 0;
+        gBattleMons[ctx->battlerAtk].volatiles.metronomeItemCounter = 0;
 
     if (gBattleMons[ctx->battlerAtk].pp[movePosition] > ppToDeduct)
         gBattleMons[ctx->battlerAtk].pp[movePosition] -= ppToDeduct;
@@ -2700,7 +2700,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_STOCKPILE:
-        if (gDisableStructs[ctx->battlerAtk].stockpileCounter >= 3)
+        if (gBattleMons[ctx->battlerAtk].volatiles.stockpileCounter >= 3)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_STUFF_CHEEKS:
@@ -2709,7 +2709,7 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
         break;
     case EFFECT_SWALLOW:
     case EFFECT_SPIT_UP:
-        if (gDisableStructs[ctx->battlerAtk].stockpileCounter == 0 && !gBattleStruct->snatchedMoveIsUsed)
+        if (gBattleMons[ctx->battlerAtk].volatiles.stockpileCounter == 0 && !gBattleStruct->snatchedMoveIsUsed)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_TELEPORT:
@@ -2805,7 +2805,7 @@ static enum MoveCanceler CancelerProtean(struct BattleContext *ctx)
     if (ProteanTryChangeType(ctx->battlerAtk, ctx->abilityAtk, ctx->move, moveType))
     {
         if (GetConfig(CONFIG_PROTEAN_LIBERO) >= GEN_9)
-            gDisableStructs[ctx->battlerAtk].usedProteanLibero = TRUE;
+            gBattleMons[ctx->battlerAtk].volatiles.usedProteanLibero = TRUE;
         PREPARE_TYPE_BUFFER(gBattleTextBuff1, moveType);
         gBattlerAbility = ctx->battlerAtk;
         PrepareStringBattle(STRINGID_EMPTYSTRING3, ctx->battlerAtk);
@@ -3189,7 +3189,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
         gBattleWeather = sBattleWeatherInfo[battleWeatherId].flag;
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            gDisableStructs[i].weatherAbilityDone = FALSE;
+            gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
@@ -3206,7 +3206,7 @@ bool32 TryChangeBattleWeather(u32 battler, u32 battleWeatherId, u32 ability)
             gWishFutureKnock.weatherDuration = 5;
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            gDisableStructs[i].weatherAbilityDone = FALSE;
+            gBattleMons[i].volatiles.weatherAbilityDone = FALSE;
             ResetParadoxWeatherStat(i);
         }
         return TRUE;
@@ -3226,7 +3226,7 @@ bool32 TryChangeBattleTerrain(u32 battler, u32 statusFlag)
         gFieldStatuses |= statusFlag;
         for (u32 i = 0; i < gBattlersCount; i++)
         {
-            gDisableStructs[i].terrainAbilityDone = FALSE;
+            gBattleMons[i].volatiles.terrainAbilityDone = FALSE;
             ResetParadoxTerrainStat(i);
         }
         if (GetBattlerHoldEffect(battler) == HOLD_EFFECT_TERRAIN_EXTENDER)
@@ -3579,11 +3579,11 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
         break;
     case MOVE_ABSORBED_BY_BOOST_FLASH_FIRE:
         gBattleStruct->pledgeMove = FALSE;
-        if (!gDisableStructs[battlerDef].flashFireBoosted)
+        if (!gBattleMons[battlerDef].volatiles.flashFireBoosted)
         {
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_FLASH_FIRE_BOOST;
             battleScript = BattleScript_FlashFireBoost;
-            gDisableStructs[battlerDef].flashFireBoosted = TRUE;
+            gBattleMons[battlerDef].volatiles.flashFireBoosted = TRUE;
         }
         else
         {
@@ -3988,7 +3988,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                     diagonalBattler = BATTLE_PARTNER(diagonalBattler);
 
                 // Imposter only activates when the battler first switches in
-                if (!gDisableStructs[battler].overwrittenAbility
+                if (!gBattleMons[battler].volatiles.overwrittenAbility
                     && IsBattlerAlive(diagonalBattler)
                     && !gBattleMons[diagonalBattler].volatiles.substitute
                     && !gBattleMons[diagonalBattler].volatiles.transformed
@@ -4032,7 +4032,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_SLOW_START:
             if (shouldAbilityTrigger)
             {
-                gDisableStructs[battler].slowStartTimer = 5;
+                gBattleMons[battler].volatiles.slowStartTimer = 5;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_SLOWSTART;
                 BattleScriptCall(BattleScript_SwitchInAbilityMsg);
                 effect++;
@@ -4610,10 +4610,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 }
                 break;
             case ABILITY_TRUANT:
-                gDisableStructs[gBattlerAttacker].truantCounter ^= 1;
+                gBattleMons[gBattlerAttacker].volatiles.truantCounter ^= 1;
                 break;
             case ABILITY_SLOW_START:
-                if (gDisableStructs[battler].slowStartTimer > 0 && --gDisableStructs[battler].slowStartTimer == 0)
+                if (gBattleMons[battler].volatiles.slowStartTimer > 0 && --gBattleMons[battler].volatiles.slowStartTimer == 0)
                 {
                     BattleScriptExecute(BattleScript_SlowStartEnds);
                     effect++;
@@ -4689,18 +4689,18 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 }
                 break;
             case ABILITY_CUD_CHEW:
-                if (gDisableStructs[battler].cudChew == TRUE)
+                if (gBattleMons[battler].volatiles.cudChew == TRUE)
                 {
                     gBattleScripting.battler = battler;
-                    gDisableStructs[battler].cudChew = FALSE;
+                    gBattleMons[battler].volatiles.cudChew = FALSE;
                     gLastUsedItem = GetBattlerPartyState(battler)->usedHeldItem;
                     GetBattlerPartyState(battler)->usedHeldItem = ITEM_NONE;
                     BattleScriptExecute(BattleScript_CudChewActivates);
                     effect++;
                 }
-                else if (!gDisableStructs[battler].cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
+                else if (!gBattleMons[battler].volatiles.cudChew && GetItemPocket(GetBattlerPartyState(battler)->usedHeldItem) == POCKET_BERRIES)
                 {
-                    gDisableStructs[battler].cudChew = TRUE;
+                    gBattleMons[battler].volatiles.cudChew = TRUE;
                 }
                 break;
             default:
@@ -4819,14 +4819,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             break;
         case ABILITY_CURSED_BODY:
             if (IsBattlerTurnDamaged(gBattlerTarget)
-             && gDisableStructs[gBattlerAttacker].disabledMove == MOVE_NONE
+             && gBattleMons[gBattlerAttacker].volatiles.disabledMove == MOVE_NONE
              && IsBattlerAlive(gBattlerAttacker)
              && !IsAbilityOnSide(gBattlerAttacker, ABILITY_AROMA_VEIL)
              && gChosenMove != MOVE_STRUGGLE
              && RandomPercentage(RNG_CURSED_BODY, 30))
             {
-                gDisableStructs[gBattlerAttacker].disabledMove = gChosenMove;
-                gDisableStructs[gBattlerAttacker].disableTimer = 4;
+                gBattleMons[gBattlerAttacker].volatiles.disabledMove = gChosenMove;
+                gBattleMons[gBattlerAttacker].volatiles.disableTimer = 4;
                 PREPARE_MOVE_BUFFER(gBattleTextBuff1, gChosenMove);
                 BattleScriptCall(BattleScript_CursedBodyActivates);
                 effect++;
@@ -4837,7 +4837,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             if (IsBattlerAlive(gBattlerAttacker)
              && IsBattlerTurnDamaged(gBattlerTarget)
              && !CanBattlerAvoidContactEffects(gBattlerAttacker, gBattlerTarget, GetBattlerAbility(gBattlerAttacker), GetBattlerHoldEffect(gBattlerAttacker), move)
-             && gDisableStructs[gBattlerAttacker].overwrittenAbility != GetBattlerAbility(gBattlerTarget)
+             && gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility != GetBattlerAbility(gBattlerTarget)
              && gBattleMons[gBattlerAttacker].ability != ABILITY_MUMMY
              && gBattleMons[gBattlerAttacker].ability != ABILITY_LINGERING_AROMA
              && !gAbilitiesInfo[gBattleMons[gBattlerAttacker].ability].cantBeSuppressed)
@@ -4850,7 +4850,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
                 RemoveAbilityFlags(gBattlerAttacker);
                 gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
-                gBattleMons[gBattlerAttacker].ability = gDisableStructs[gBattlerAttacker].overwrittenAbility = gBattleMons[gBattlerTarget].ability;
+                gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = gBattleMons[gBattlerTarget].ability;
                 BattleScriptCall(BattleScript_MummyActivates);
                 effect++;
                 break;
@@ -4876,8 +4876,8 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
 
                 RemoveAbilityFlags(gBattlerAttacker);
                 gLastUsedAbility = gBattleMons[gBattlerAttacker].ability;
-                gBattleMons[gBattlerAttacker].ability = gDisableStructs[gBattlerAttacker].overwrittenAbility = gBattleMons[gBattlerTarget].ability;
-                gBattleMons[gBattlerTarget].ability = gDisableStructs[gBattlerTarget].overwrittenAbility = gLastUsedAbility;
+                gBattleMons[gBattlerAttacker].ability = gBattleMons[gBattlerAttacker].volatiles.overwrittenAbility = gBattleMons[gBattlerTarget].ability;
+                gBattleMons[gBattlerTarget].ability = gBattleMons[gBattlerTarget].volatiles.overwrittenAbility = gLastUsedAbility;
                 BattleScriptCall(BattleScript_WanderingSpiritActivates);
                 effect++;
                 break;
@@ -5136,10 +5136,10 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 if (!gBattleMons[battler].volatiles.perishSong)
                 {
                     gBattleMons[battler].volatiles.perishSong = TRUE;
-                    gDisableStructs[battler].perishSongTimer = 3;
+                    gBattleMons[battler].volatiles.perishSongTimer = 3;
                 }
                 gBattleMons[gBattlerAttacker].volatiles.perishSong = TRUE;
-                gDisableStructs[gBattlerAttacker].perishSongTimer = 3;
+                gBattleMons[gBattlerAttacker].volatiles.perishSongTimer = 3;
                 BattleScriptCall(BattleScript_PerishBodyActivates);
                 effect++;
             }
@@ -5416,9 +5416,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         }
         break;
     case ABILITYEFFECT_NEUTRALIZINGGAS:
-        if (ability == ABILITY_NEUTRALIZING_GAS && !gDisableStructs[battler].neutralizingGas)
+        if (ability == ABILITY_NEUTRALIZING_GAS && !gBattleMons[battler].volatiles.neutralizingGas)
         {
-            gDisableStructs[battler].neutralizingGas = TRUE;
+            gBattleMons[battler].volatiles.neutralizingGas = TRUE;
             gBattlerAbility = battler;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_NEUTRALIZING_GAS;
             BattleScriptCall(BattleScript_SwitchInAbilityMsg);
@@ -5429,24 +5429,24 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         switch (ability)
         {
         case ABILITY_UNNERVE:
-            if (shouldAbilityTrigger && !gDisableStructs[battler].unnerveActivated)
+            if (shouldAbilityTrigger && !gBattleMons[battler].volatiles.unnerveActivated)
             {
                 gBattleScripting.battler = battler;
                 gEffectBattler = GetOppositeBattler(battler);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_UNNERVE;
-                gDisableStructs[battler].unnerveActivated = TRUE;
+                gBattleMons[battler].volatiles.unnerveActivated = TRUE;
                 BattleScriptCall(BattleScript_SwitchInAbilityMsg);
                 effect++;
             }
             break;
         case ABILITY_AS_ONE_ICE_RIDER:
         case ABILITY_AS_ONE_SHADOW_RIDER:
-            if (shouldAbilityTrigger && !gDisableStructs[battler].unnerveActivated)
+            if (shouldAbilityTrigger && !gBattleMons[battler].volatiles.unnerveActivated)
             {
                 gBattleScripting.battler = battler;
                 gEffectBattler = GetOppositeBattler(battler);
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_ASONE;
-                gDisableStructs[battler].unnerveActivated = TRUE;
+                gBattleMons[battler].volatiles.unnerveActivated = TRUE;
                 BattleScriptCall(BattleScript_ActivateAsOne);
                 effect++;
             }
@@ -5528,30 +5528,30 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             if (battlerWeatherAffected && !CanBattlerFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 // If Hail/Snow activates when in Eiscue is in base, prevent reversion when Eiscue Noice gets broken
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gBattleMons[battler].volatiles.weatherAbilityDone = TRUE;
             }
 
-            if (((!gDisableStructs[battler].weatherAbilityDone && battlerWeatherAffected)
+            if (((!gBattleMons[battler].volatiles.weatherAbilityDone && battlerWeatherAffected)
              || gBattleWeather == B_WEATHER_NONE
              || !HasWeatherEffect()) // Air Lock active
              && TryBattleFormChange(battler, FORM_CHANGE_BATTLE_WEATHER))
             {
                 gBattleScripting.battler = battler;
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
+                gBattleMons[battler].volatiles.weatherAbilityDone = TRUE;
                 BattleScriptCall(BattleScript_BattlerFormChangeWithString);
                 effect++;
             }
             break;
         }
         case ABILITY_PROTOSYNTHESIS:
-            if (!gDisableStructs[battler].weatherAbilityDone
+            if (!gBattleMons[battler].volatiles.weatherAbilityDone
              && (gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()
              && !gBattleMons[battler].volatiles.transformed
-             && !gDisableStructs[battler].boosterEnergyActivated)
+             && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {
-                gDisableStructs[battler].weatherAbilityDone = TRUE;
-                gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
+                gBattleMons[battler].volatiles.weatherAbilityDone = TRUE;
+                gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
                 gBattleScripting.battler = battler;
                 BattleScriptCall(BattleScript_ProtosynthesisActivates);
                 effect++;
@@ -5568,9 +5568,9 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         switch (gLastUsedAbility)
         {
         case ABILITY_MIMICRY:
-            if (!gDisableStructs[battler].terrainAbilityDone && ChangeTypeBasedOnTerrain(battler))
+            if (!gBattleMons[battler].volatiles.terrainAbilityDone && ChangeTypeBasedOnTerrain(battler))
             {
-                gDisableStructs[battler].terrainAbilityDone = TRUE;
+                gBattleMons[battler].volatiles.terrainAbilityDone = TRUE;
                 ChangeTypeBasedOnTerrain(battler);
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptCall(BattleScript_MimicryActivates);
@@ -5578,14 +5578,14 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
             }
             break;
         case ABILITY_QUARK_DRIVE:
-            if (!gDisableStructs[battler].terrainAbilityDone
+            if (!gBattleMons[battler].volatiles.terrainAbilityDone
              && gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN
              && !gBattleMons[battler].volatiles.transformed
-             && !gDisableStructs[battler].boosterEnergyActivated)
+             && !gBattleMons[battler].volatiles.boosterEnergyActivated)
             {
-                gDisableStructs[battler].terrainAbilityDone = TRUE;
-                gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
-                PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
+                gBattleMons[battler].volatiles.terrainAbilityDone = TRUE;
+                gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
+                PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
                 gBattlerAbility = gBattleScripting.battler = battler;
                 BattleScriptCall(BattleScript_QuarkDriveActivates);
                 effect++;
@@ -5624,7 +5624,7 @@ bool32 IsNeutralizingGasOnField(void)
 
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gDisableStructs[i].neutralizingGas && !gBattleMons[i].volatiles.gastroAcid)
+        if (gBattleMons[i].volatiles.neutralizingGas && !gBattleMons[i].volatiles.gastroAcid)
             return TRUE;
     }
 
@@ -5923,23 +5923,23 @@ u32 GetParadoxHighestStatId(u32 battler)
 static void ResetParadoxWeatherStat(u32 battler)
 {
     if (gBattleMons[battler].ability == ABILITY_PROTOSYNTHESIS
-     && !gDisableStructs[battler].boosterEnergyActivated)
-        gDisableStructs[battler].paradoxBoostedStat = 0;
+     && !gBattleMons[battler].volatiles.boosterEnergyActivated)
+        gBattleMons[battler].volatiles.paradoxBoostedStat = 0;
 }
 
 static void ResetParadoxTerrainStat(u32 battler)
 {
     if (gBattleMons[battler].ability == ABILITY_QUARK_DRIVE
-     && !gDisableStructs[battler].boosterEnergyActivated)
-        gDisableStructs[battler].paradoxBoostedStat = 0;
+     && !gBattleMons[battler].volatiles.boosterEnergyActivated)
+        gBattleMons[battler].volatiles.paradoxBoostedStat = 0;
 }
 
 u32 GetParadoxBoostedStatId(u32 battler)
 {
-    if (gDisableStructs[battler].paradoxBoostedStat == 0)
-        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
+    if (gBattleMons[battler].volatiles.paradoxBoostedStat == 0)
+        gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
 
-    return gDisableStructs[battler].paradoxBoostedStat;
+    return gBattleMons[battler].volatiles.paradoxBoostedStat;
 }
 
 bool32 CanBeSlept(u32 battlerAtk, u32 battlerDef, enum Ability abilityDef, enum SleepClauseBlock isBlockedBySleepClause)
@@ -6730,7 +6730,7 @@ u32 GetBattlerWeight(u32 battler)
     if (holdEffect == HOLD_EFFECT_FLOAT_STONE)
         weight /= 2;
 
-    for (i = 0; i < gDisableStructs[battler].autotomizeCount; i++)
+    for (i = 0; i < gBattleMons[battler].volatiles.autotomizeCount; i++)
     {
         if (weight > 1000)
         {
@@ -6911,7 +6911,7 @@ const struct TypePower gNaturalGiftTable[] =
 static inline u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower)
 {
     u32 i;
-    for (i = 0; i < gDisableStructs[battlerAtk].rolloutTimer; i++)
+    for (i = 0; i < gBattleMons[battlerAtk].volatiles.rolloutTimer; i++)
         basePower *= 2;
     if (gBattleMons[battlerAtk].volatiles.defenseCurl)
         basePower *= 2;
@@ -7019,7 +7019,7 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         basePower *= 1 + GetMoveStrikeCount(move) - gMultiHitCounter;
         break;
     case EFFECT_SPIT_UP:
-        basePower = 100 * gDisableStructs[battlerAtk].stockpileCounter;
+        basePower = 100 * gBattleMons[battlerAtk].volatiles.stockpileCounter;
         break;
     case EFFECT_REVENGE:
         if (gProtectStructs[battlerAtk].revengeDoubled & 1u << battlerDef)
@@ -7451,7 +7451,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
     case ABILITY_PROTOSYNTHESIS:
         {
             enum Stat defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if ((ctx->weather & B_WEATHER_SUN || gDisableStructs[battlerDef].boosterEnergyActivated)
+            if ((ctx->weather & B_WEATHER_SUN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
@@ -7460,7 +7460,7 @@ static inline u32 CalcMoveBasePowerAfterModifiers(struct BattleContext *ctx)
     case ABILITY_QUARK_DRIVE:
         {
             u32 defHighestStat = GetParadoxBoostedStatId(battlerDef);
-            if ((ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerDef].boosterEnergyActivated)
+            if ((ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerDef].volatiles.boosterEnergyActivated)
              && ((IsBattleMovePhysical(move) && defHighestStat == STAT_DEF) || (IsBattleMoveSpecial(move) && defHighestStat == STAT_SPDEF))
              && !(gBattleMons[battlerDef].volatiles.transformed))
                 modifier = uq4_12_multiply(modifier, UQ_4_12(0.7));
@@ -7661,7 +7661,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case ABILITY_SLOW_START:
-        if (gDisableStructs[battlerAtk].slowStartTimer > 0)
+        if (gBattleMons[battlerAtk].volatiles.slowStartTimer > 0)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
         break;
     case ABILITY_SOLAR_POWER:
@@ -7673,7 +7673,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(0.5));
         break;
     case ABILITY_FLASH_FIRE:
-        if (moveType == TYPE_FIRE && gDisableStructs[battlerAtk].flashFireBoosted)
+        if (moveType == TYPE_FIRE && gBattleMons[battlerAtk].volatiles.flashFireBoosted)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_SWARM:
@@ -7751,7 +7751,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
             enum Stat atkHighestStat = GetParadoxBoostedStatId(battlerAtk);
-            if (ctx->weather & B_WEATHER_SUN || gDisableStructs[battlerAtk].boosterEnergyActivated)
+            if (ctx->weather & B_WEATHER_SUN || gBattleMons[battlerAtk].volatiles.boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
                     modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -7762,7 +7762,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
         if (!(gBattleMons[battlerAtk].volatiles.transformed))
         {
             enum Stat atkHighestStat = GetParadoxBoostedStatId(battlerAtk);
-            if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gDisableStructs[battlerAtk].boosterEnergyActivated)
+            if (ctx->fieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN || gBattleMons[battlerAtk].volatiles.boosterEnergyActivated)
             {
                 if ((IsBattleMovePhysical(move) && atkHighestStat == STAT_ATK) || (IsBattleMoveSpecial(move) && atkHighestStat == STAT_SPATK))
                     modifier = uq4_12_multiply(modifier, UQ_4_12(1.3));
@@ -8304,7 +8304,7 @@ static inline uq4_12_t GetAttackerItemsModifier(u32 battlerAtk, uq4_12_t typeEff
     {
     case HOLD_EFFECT_METRONOME:
         metronomeBoostBase = PercentToUQ4_12(GetBattlerHoldEffectParam(battlerAtk));
-        metronomeTurns = min(gDisableStructs[battlerAtk].metronomeItemCounter, 5);
+        metronomeTurns = min(gBattleMons[battlerAtk].volatiles.metronomeItemCounter, 5);
         // according to bulbapedia this is the "correct" way to calculate the metronome boost
         // due to the limited domain of damage numbers it will never really matter whether this is off by one
         return uq4_12_add(UQ_4_12(1.0), metronomeBoostBase * metronomeTurns);
@@ -8900,7 +8900,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct BattleCont
         MulByTypeEffectiveness(ctx, &modifier, types[1]);
     if (types[2] != TYPE_MYSTERY && types[2] != types[1] && types[2] != types[0])
         MulByTypeEffectiveness(ctx, &modifier, types[2]);
-    if (ctx->moveType == TYPE_FIRE && gDisableStructs[ctx->battlerDef].tarShot)
+    if (ctx->moveType == TYPE_FIRE && gBattleMons[ctx->battlerDef].volatiles.tarShot)
         modifier = uq4_12_multiply(modifier, UQ_4_12(2.0));
 
     if (ctx->updateFlags && (illusionSpecies = GetIllusionMonSpecies(ctx->battlerDef)))
@@ -9694,7 +9694,7 @@ u32 TryImmunityAbilityHealStatus(u32 battler)
     case ABILITY_OBLIVIOUS:
         if (gBattleMons[battler].volatiles.infatuation)
             effect = 3;
-        else if (GetConfig(CONFIG_OBLIVIOUS_TAUNT) >= GEN_6 && gDisableStructs[battler].tauntTimer != 0)
+        else if (GetConfig(CONFIG_OBLIVIOUS_TAUNT) >= GEN_6 && gBattleMons[battler].volatiles.tauntTimer != 0)
             effect = 4;
         break;
     }
@@ -9716,7 +9716,7 @@ u32 TryImmunityAbilityHealStatus(u32 battler)
             BattleScriptCall(BattleScript_AbilityCuredStatus);
             break;
         case 4: // get rid of taunt
-            gDisableStructs[battler].tauntTimer = 0;
+            gBattleMons[battler].volatiles.tauntTimer = 0;
             BattleScriptCall(BattleScript_AbilityCuredStatus);
             break;
         }
@@ -10407,7 +10407,7 @@ void GetBattlerTypes(u32 battler, bool32 ignoreTera, enum Type types[static 3])
     types[2] = gBattleMons[battler].types[2];
 
     // Roost.
-    if (!isTera && gDisableStructs[battler].roostActive)
+    if (!isTera && gBattleMons[battler].volatiles.roostActive)
     {
         if (types[0] == TYPE_FLYING && types[1] == TYPE_FLYING)
             types[0] = types[1] = B_ROOST_PURE_FLYING >= GEN_5 ? TYPE_NORMAL : TYPE_MYSTERY;
@@ -10695,7 +10695,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
-        if (gDisableStructs[i].tryEjectPack
+        if (gBattleMons[i].volatiles.tryEjectPack
          && GetBattlerHoldEffect(i) == HOLD_EFFECT_EJECT_PACK
          && IsBattlerAlive(i)
          && CountUsablePartyMons(i) > 0)
@@ -10713,7 +10713,7 @@ bool32 TrySwitchInEjectPack(enum EjectPackTiming timing)
         SortBattlersBySpeed(battlers, FALSE);
 
     for (u32 i = 0; i < gBattlersCount; i++)
-        gDisableStructs[i].tryEjectPack = FALSE;
+        gBattleMons[i].volatiles.tryEjectPack = FALSE;
 
     for (u32 i = 0; i < gBattlersCount; i++)
     {
@@ -10898,7 +10898,7 @@ bool32 CanMoveSkipAccuracyCalc(u32 battlerAtk, u32 battlerDef, enum Ability abil
     enum BattleMoveEffects moveEffect = GetMoveEffect(move);
     u32 nonVolatileStatus = GetMoveNonVolatileStatus(move);
 
-    if ((gBattleMons[battlerDef].volatiles.lockOn && gDisableStructs[battlerDef].battlerWithSureHit == battlerAtk)
+    if ((gBattleMons[battlerDef].volatiles.lockOn && gBattleMons[battlerDef].volatiles.battlerWithSureHit == battlerAtk)
      || (GetConfig(CONFIG_TOXIC_NEVER_MISS) >= GEN_6 && nonVolatileStatus == MOVE_EFFECT_TOXIC && IS_BATTLER_OF_TYPE(battlerAtk, TYPE_POISON))
      || gBattleMons[battlerDef].volatiles.glaiveRush)
     {
@@ -11311,7 +11311,7 @@ static u32 GetSleepTalkMove(void)
         return move;
 
     // Set Sleep Talk as used move, so it works with Last Resort.
-    gDisableStructs[gBattlerAttacker].usedMoves |= 1u << gCurrMovePos;
+    gBattleMons[gBattlerAttacker].volatiles.usedMoves |= 1u << gCurrMovePos;
     do
     {
         movePosition = MOD(Random(), MAX_MON_MOVES);
@@ -11351,7 +11351,7 @@ void RemoveAbilityFlags(u32 battler)
     switch (GetBattlerAbility(battler))
     {
     case ABILITY_FLASH_FIRE:
-        gDisableStructs[battler].flashFireBoosted = FALSE;
+        gBattleMons[battler].volatiles.flashFireBoosted = FALSE;
         break;
     case ABILITY_VESSEL_OF_RUIN:
         gBattleMons[battler].volatiles.vesselOfRuin = FALSE;

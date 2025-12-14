@@ -1393,7 +1393,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 // the following checks apply to any target (including user)
 
     // throat chop check
-    if (gDisableStructs[battlerAtk].throatChopTimer > 0 && IsSoundMove(move))
+    if (gBattleMons[battlerAtk].volatiles.throatChopTimer > 0 && IsSoundMove(move))
         return 0; // Can't even select move at all
     // heal block check
     if (gBattleMons[battlerAtk].volatiles.healBlock && IsHealBlockPreventingMove(battlerAtk, move))
@@ -1902,7 +1902,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_DISABLE:
             if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
                 ADJUST_SCORE(-10);
-            else if (gDisableStructs[battlerDef].disableTimer == 0
+            else if (gBattleMons[battlerDef].volatiles.disableTimer == 0
                 && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
                 && !DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {
@@ -1924,7 +1924,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         case EFFECT_ENCORE:
             if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
                 ADJUST_SCORE(-10);
-            else if (gDisableStructs[battlerDef].encoreTimer == 0
+            else if (gBattleMons[battlerDef].volatiles.encoreTimer == 0
                 && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
                 && !DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
             {
@@ -2129,11 +2129,11 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-5);
             break;
         case EFFECT_STOCKPILE:
-            if (gDisableStructs[battlerAtk].stockpileCounter >= 3)
+            if (gBattleMons[battlerAtk].volatiles.stockpileCounter >= 3)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_SWALLOW:
-            if (gDisableStructs[battlerAtk].stockpileCounter == 0)
+            if (gBattleMons[battlerAtk].volatiles.stockpileCounter == 0)
             {
                 ADJUST_SCORE(-10);
             }
@@ -2434,14 +2434,14 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     {
                         ADJUST_SCORE(-10); //Don't protect if you're going to faint after protecting
                     }
-                    else if (gDisableStructs[battlerAtk].protectUses == 1 && Random() % 100 < 50)
+                    else if (gBattleMons[battlerAtk].volatiles.protectUses == 1 && Random() % 100 < 50)
                     {
                         if (isBattle1v1)
                             ADJUST_SCORE(-6);
                         else
                             ADJUST_SCORE(-10); //Don't try double protecting in doubles
                     }
-                    else if (gDisableStructs[battlerAtk].protectUses >= 2)
+                    else if (gBattleMons[battlerAtk].volatiles.protectUses >= 2)
                     {
                         ADJUST_SCORE(-10);
                     }
@@ -2552,7 +2552,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 return AI_CheckBadMove(battlerAtk, battlerDef, GetNaturePowerMove(battlerAtk), score);
             break;
         case EFFECT_TAUNT:
-            if (gDisableStructs[battlerDef].tauntTimer > 0
+            if (gBattleMons[battlerDef].volatiles.tauntTimer > 0
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove))
                 ADJUST_SCORE(-10);
             break;
@@ -2952,7 +2952,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             break;
         case EFFECT_MAGNET_RISE:
             if (gFieldStatuses & STATUS_FIELD_GRAVITY
-              || gDisableStructs[battlerAtk].magnetRiseTimer > 0
+              || gBattleMons[battlerAtk].volatiles.magnetRiseTimer > 0
               || aiData->holdEffects[battlerAtk] == HOLD_EFFECT_IRON_BALL
               || gBattleMons[battlerAtk].volatiles.smackDown
               || gBattleMons[battlerAtk].volatiles.root
@@ -4536,14 +4536,14 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         }
         break;
     case EFFECT_SWALLOW:
-        if (gDisableStructs[battlerAtk].stockpileCounter == 0)
+        if (gBattleMons[battlerAtk].volatiles.stockpileCounter == 0)
         {
             break;
         }
         else
         {
             u32 healPercent = 0;
-            switch (gDisableStructs[battlerAtk].stockpileCounter)
+            switch (gBattleMons[battlerAtk].volatiles.stockpileCounter)
             {
             case 1:
                 healPercent = 25;
@@ -4690,7 +4690,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_DISABLE:
         if (GetActiveGimmick(battlerDef) == GIMMICK_DYNAMAX)
             break;
-        else if (gDisableStructs[battlerDef].disableTimer == 0
+        else if (gBattleMons[battlerDef].volatiles.disableTimer == 0
         && (aiData->lastUsedMove[battlerDef] != MOVE_NONE)
         && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
         && (AI_IsFaster(battlerAtk, battlerDef, move, predictedMoveSpeedCheck, CONSIDER_PRIORITY)))
@@ -4713,7 +4713,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             encourage = TRUE;
             break;
         }
-        if (gDisableStructs[battlerDef].encoreTimer == 0
+        if (gBattleMons[battlerDef].volatiles.encoreTimer == 0
         && (B_MENTAL_HERB < GEN_5 || aiData->holdEffects[battlerDef] != HOLD_EFFECT_MENTAL_HERB)
         && (encourage))
             ADJUST_SCORE(BEST_EFFECT);

@@ -2573,8 +2573,8 @@ void BtlController_HandleMoveAnimation(u32 battler)
         gAnimFriendship = gBattleResources->bufferA[battler][10];
         gWeatherMoveAnim = gBattleResources->bufferA[battler][12] | (gBattleResources->bufferA[battler][13] << 8);
         gAnimDisableStructPtr = (struct DisableStruct *)&gBattleResources->bufferA[battler][16];
-        gTransformedPersonalities[battler] = gAnimDisableStructPtr->transformedMonPersonality;
-        gTransformedShininess[battler] = gAnimDisableStructPtr->transformedMonShininess;
+        gTransformedPersonalities[battler] = gAnimDisableStructPtr->transformedMonPID;
+        gTransformedShininess[battler] = gAnimDisableStructPtr->isTransformedMonShiny;
         gBattleSpritesDataPtr->healthBoxesData[battler].animationState = 0;
         gBattlerControllerFuncs[battler] = Controller_DoMoveAnimation;
         if (ShouldUpdateTvData(battler))
