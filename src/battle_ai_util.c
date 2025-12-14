@@ -505,6 +505,15 @@ void AI_GetMoveStatChanges(u32 battlerAtk, u32 battlerDef, u32 move, enum Damage
         }
     }
 
+    // Contrary
+    if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
+    {
+        for (i = 0; i < NUM_BATTLE_STATS; i++)
+        {
+            statChanges[i] *= -1;
+        }
+    }
+
     // Check stat stage boundaries and battlerDef protection
     for (i = 0; i < NUM_BATTLE_STATS; i++)
     {
