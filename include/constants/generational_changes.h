@@ -12,7 +12,7 @@
     F(WHITEOUT_MONEY,            whiteoutMoney,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(LIGHT_BALL_ATTACK_BOOST,   lightBallAttackBoost,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Experience settings */ \
-    F(EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(EXP_CATCH,                 expCatch,                (u32, GEN_COUNT - 1)) \
     F(TRAINER_EXP_MULTIPLIER,    trainerExpMultiplier,    (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SPLIT_EXP,                 splitExp,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SCALED_EXP,                scaledExp,               (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
