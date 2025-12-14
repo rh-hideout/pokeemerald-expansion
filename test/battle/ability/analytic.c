@@ -20,32 +20,25 @@ SINGLE_BATTLE_TEST("Analytic increases the power of moves by 30% if it's the las
     }
 }
 
-// Test that Analytic works correctly when a slot is empty after fainting
-// This tests the fix for incorrect "last to move" check with absent battlers
 DOUBLE_BATTLE_TEST("Analytic activates correctly with empty slot after fainting", s16 damage)
 {
     u32 speed;
 
-    PARAMETRIZE { speed = 50; } // Faster than opponentRight, doesn't get boost
-    PARAMETRIZE { speed = 5; }  // Slower than opponentRight, gets boost
+    PARAMETRIZE { speed = 50; }
+    PARAMETRIZE { speed = 5; }
 
     GIVEN {
         PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); } // Will faint first turn
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        // Turn 1: KO playerRight
-        TURN {
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
-        }
-        // Turn 2: Check Analytic with empty slot
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
         }
     } SCENE {
-        // Turn 2: Capture damage
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
         EXPECT_MUL_EQ(results[0].damage, Q_4_12(1.3), results[1].damage);
@@ -56,31 +49,24 @@ DOUBLE_BATTLE_TEST("Analytic does not activate when not moving last with empty s
 {
     u32 speed;
 
-    PARAMETRIZE { speed = 50; } // Faster than both opponents, no boost
-    PARAMETRIZE { speed = 15; } // Faster than opponentRight (10), no boost since opponentRight acts after
+    PARAMETRIZE { speed = 50; }
+    PARAMETRIZE { speed = 15; }
 
     GIVEN {
         PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); } // Will faint first turn
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        // Turn 1: KO playerRight
-        TURN {
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
-        }
-        // Turn 2: playerLeft (speed 15 or 50) should NOT get Analytic boost
-        // because opponentRight (speed 10) will act after playerLeft in both cases
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
             MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
         }
     } SCENE {
-        // Turn 2: Capture damage - neither speed should get boost
         HP_BAR(opponentLeft, captureDamage: &results[i].damage);
     } FINALLY {
-        // Both should do the same damage (no boost in either case)
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }

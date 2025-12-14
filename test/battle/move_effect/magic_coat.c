@@ -43,39 +43,30 @@ SINGLE_BATTLE_TEST("Magic Coat fails if user moves last")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, player);
-    } THEN {
-        // Magic Coat failed, no state change
     }
 }
 
-// Test that Magic Coat works in doubles when a slot becomes empty
-// This tests the fix for incorrect "last to move" check with absent battlers
 DOUBLE_BATTLE_TEST("Magic Coat works when partner slot is empty after fainting")
 {
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); } 
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); } // Will faint first turn
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        // Turn 1: KO playerRight
-        TURN {
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
-        }
-        // Turn 2: playerLeft is "last" among 3 battlers, but opponentRight still acts after
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_MAGIC_COAT);
             MOVE(opponentRight, MOVE_SPORE, target: playerLeft);
         }
     } SCENE {
-        // Turn 2: Magic Coat should work because opponentRight will act
         ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
         STATUS_ICON(opponentRight, sleep: TRUE);
     } THEN {
         EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
-        EXPECT(opponentRight->status1 & STATUS1_SLEEP); // Sleep stores turn count (1-7)
+        EXPECT(opponentRight->status1 & STATUS1_SLEEP);
     }
 }
 

@@ -366,37 +366,26 @@ SINGLE_BATTLE_TEST("Protect fails if user moves last")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, player);
-    } THEN {
-        // Protect failed, no state change
     }
 }
 
-// Test that Protect works in doubles when a slot becomes empty
-// This tests the fix for incorrect "last to move" check with absent battlers
 DOUBLE_BATTLE_TEST("Protect works when partner slot is empty after fainting")
 {
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); } // Will faint first turn
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        // Turn 1: KO playerRight
-        TURN {
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
-        }
-        // Turn 2: playerLeft would be "last" among 3 battlers by old logic,
-        // but opponentRight still acts after and should be blocked
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_PROTECT);
             MOVE(opponentRight, MOVE_TACKLE, target: playerLeft);
         }
     } SCENE {
-        // Turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wynaut fainted!");
-        // Turn 2: Protect should work because opponentRight will act after
         ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerLeft);
         MESSAGE("Wobbuffet protected itself!");
         NOT HP_BAR(playerLeft);

@@ -2848,25 +2848,20 @@ u32 GetBattlerTurnOrderNum(u32 battler)
     return i;
 }
 
-// Returns TRUE if battler is the last mon to move this turn
-// (i.e., no other battlers after it in turn order will use a move)
+// Returns TRUE if no other battler after this one in turn order will use a move
 bool32 IsLastMonToMove(u32 battler)
 {
     u32 i;
     u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
 
-    // if battler not in turn order, treat as last
     if (battlerTurnOrderNum >= gBattlersCount)
         return TRUE;
 
-    // Check all battlers after this one in turn order
     for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
     {
         u32 otherBattler = gBattlerByTurnOrder[i];
-        // Skip absent battlers
-        if (gAbsentBattlerFlags & (1u << otherBattler))
+        if (!IsBattlerAlive(otherBattler))
             continue;
-        // If this battler will use a move, we're not last
         if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE)
             return FALSE;
     }

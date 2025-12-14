@@ -34,35 +34,25 @@ SINGLE_BATTLE_TEST("Snatch fails if user moves last")
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponent);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, player);
-    } THEN {
-        // Snatch failed, no state change
     }
 }
 
-// Test that Snatch works in doubles when a slot becomes empty
-// This tests the fix for incorrect "last to move" check with absent battlers
 DOUBLE_BATTLE_TEST("Snatch works when partner slot is empty after fainting")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }  // Medium speed
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); } // Will faint first turn
+        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        // Turn 1: KO playerRight
-        TURN {
-            MOVE(opponentLeft, MOVE_TACKLE, target: playerRight);
-        }
-        // Turn 2: playerLeft is "last" among 3 battlers, but opponentRight still acts after
+        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(playerLeft, MOVE_SNATCH);
             MOVE(opponentRight, MOVE_SWORDS_DANCE);
         }
     } SCENE {
-        // Turn 1
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wynaut fainted!");
-        // Turn 2: Snatch should work because opponentRight will act
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
         NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponentRight);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
