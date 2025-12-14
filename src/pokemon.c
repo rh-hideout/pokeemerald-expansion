@@ -6042,7 +6042,7 @@ bool32 HasRelearnerTMMoves(struct Pokemon *mon)
         if (move == MOVE_NONE)
             continue;
 
-        if (!P_ENABLE_ALL_TM_MOVES || !CheckBagHasItem(item, 1))
+        if (!P_ENABLE_ALL_TM_MOVES && !CheckBagHasItem(item, 1))
             continue;
 
         if (!CanLearnTeachableMove(species, move))
