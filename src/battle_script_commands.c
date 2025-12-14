@@ -2848,6 +2848,27 @@ u32 GetBattlerTurnOrderNum(u32 battler)
     return i;
 }
 
+// Returns TRUE if battler is the last mon to move this turn
+// (i.e., no other battlers after it in turn order will use a move)
+bool32 IsLastMonToMove(u32 battler)
+{
+    u32 i;
+    u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
+
+    // Check all battlers after this one in turn order
+    for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
+    {
+        u32 otherBattler = gBattlerByTurnOrder[i];
+        // Skip absent battlers
+        if (gAbsentBattlerFlags & (1u << otherBattler))
+            continue;
+        // If this battler will use a move, we're not last
+        if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE)
+            return FALSE;
+    }
+    return TRUE;
+}
+
 static void CheckSetUnburden(u8 battler)
 {
     if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_UNBURDEN))
@@ -13136,7 +13157,7 @@ static void Cmd_trysetmagiccoat(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gCurrentTurnActionNumber == gBattlersCount - 1) // moves last turn
+    if (IsLastMonToMove(gBattlerAttacker)) // fails if moving last
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }
@@ -13152,7 +13173,7 @@ static void Cmd_trysetsnatch(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    if (gCurrentTurnActionNumber == gBattlersCount - 1) // moves last turn
+    if (IsLastMonToMove(gBattlerAttacker)) // fails if moving last
     {
         gBattlescriptCurrInstr = cmd->failInstr;
     }

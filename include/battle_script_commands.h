@@ -45,6 +45,7 @@ s32 CalcCritChanceStageGen1(u32 battlerAtk, u32 battlerDef, u32 move, bool32 rec
 s32 GetCritHitOdds(s32 critChanceIndex);
 bool32 HasBattlerActedThisTurn(u32 battler);
 u32 GetBattlerTurnOrderNum(u32 battler);
+bool32 IsLastMonToMove(u32 battler);
 bool32 NoAliveMonsForBattlerSide(u32 battler);
 bool32 NoAliveMonsForPlayer(void);
 bool32 NoAliveMonsForEitherParty(void);
