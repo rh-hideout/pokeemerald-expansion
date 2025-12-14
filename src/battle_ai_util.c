@@ -109,13 +109,13 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
 
 u32 AI_GetDamageWithStatChanges(u32 battlerAtk, u32 battlerDef, u32 moveIndex, s16 atkStatChanges[NUM_BATTLE_STATS], s16 defStatChanges[NUM_BATTLE_STATS])
 {
-    u32 i;
+    u32 i, j;
     s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
-    Alloc(sizeof(savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS]));
     
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(savedStatStages[i], gBattleMons[i].statStages, sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
     }
     
     for (i = 0; i < NUM_BATTLE_STATS; i++)
@@ -144,10 +144,9 @@ u32 AI_GetDamageWithStatChanges(u32 battlerAtk, u32 battlerDef, u32 moveIndex, s
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(gBattleMons[i].statStages, savedStatStages[i], sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
     }
-
-    Free(savedStatStages);
     
     return damage;
 }
@@ -784,13 +783,13 @@ bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, en
 
 bool32 AI_WouldBeFaster(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange)
 {
-    u32 i;
+    u32 i, j;
     s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
-    Alloc(sizeof(savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS]));
-    
+
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(savedStatStages[i], gBattleMons[i].statStages, sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
     }
 
     if (atkSpeedChange != 0)
@@ -816,23 +815,22 @@ bool32 AI_WouldBeFaster(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(gBattleMons[i].statStages, savedStatStages[i], sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
     }
-
-    Free(savedStatStages);
 
     return result;
 }
 
 bool32 AI_WouldBeSlower(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange)
 {
-    u32 i;
+    u32 i, j;
     s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
-    Alloc(sizeof(savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS]));
-    
+
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(savedStatStages[i], gBattleMons[i].statStages, sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
     }
 
     if (atkSpeedChange != 0)
@@ -858,10 +856,9 @@ bool32 AI_WouldBeSlower(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove
 
     for (i = 0; i < MAX_BATTLERS_COUNT; i++)
     {
-        memcpy(gBattleMons[i].statStages, savedStatStages[i], sizeof(gBattleMons[i].statStages));
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
     }
-
-    Free(savedStatStages);
 
     return result;
 }
@@ -880,7 +877,7 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 {
     u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
     u32 atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
-    u32 i;
+    u32 i, j;
     u32 atkBestMoves[MAX_MON_MOVES];
     u32 defBestMoves[MAX_MON_MOVES];
 
@@ -992,11 +989,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
                 
             expectedMovesToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
 
-            Alloc(sizeof(savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS]));
-            
             for (i = 0; i < MAX_BATTLERS_COUNT; i++)
             {
-                memcpy(savedStatStages[i], gBattleMons[i].statStages, sizeof(gBattleMons[i].statStages));
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    savedStatStages[i][j] = gBattleMons[i].statStages[j];
             }
 
             if (atkStatChanges[STAT_ACC] != 0)
@@ -1022,10 +1018,9 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
 
             for (i = 0; i < MAX_BATTLERS_COUNT; i++)
             {
-                memcpy(gBattleMons[i].statStages, savedStatStages[i], sizeof(gBattleMons[i].statStages));
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    gBattleMons[i].statStages[j] = savedStatStages[i][j];
             }
-
-            Free(savedStatStages);
 
             expectedMovesToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
 
@@ -1072,11 +1067,10 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
             }
 
             // Apply stat changes
-            Alloc(sizeof(savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS]));
-            
             for (i = 0; i < MAX_BATTLERS_COUNT; i++)
             {
-                memcpy(savedStatStages[i], gBattleMons[i].statStages, sizeof(gBattleMons[i].statStages));
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    savedStatStages[i][j] = gBattleMons[i].statStages[j];
             }
 
             if (atkStatChanges[STAT_ACC] != 0)
@@ -1145,10 +1139,9 @@ enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, 
             // Restore stats
             for (i = 0; i < MAX_BATTLERS_COUNT; i++)
             {
-                memcpy(gBattleMons[i].statStages, savedStatStages[i], sizeof(gBattleMons[i].statStages));
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    gBattleMons[i].statStages[j] = savedStatStages[i][j];
             }
-
-            Free(savedStatStages);
 
             // Good if makes battlerAtk statistically more likely to KO battlerDef first
             if ((bestMovesToKONoChangeAtk >= bestMovesToKONoChangeDef) && (bestMovesToKOWithChangeAtk < (bestMovesToKOWithChangeDef - 1)))
