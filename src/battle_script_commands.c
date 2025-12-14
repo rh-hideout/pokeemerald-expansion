@@ -2855,6 +2855,10 @@ bool32 IsLastMonToMove(u32 battler)
     u32 i;
     u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
 
+    // if battler not in turn order, treat as last
+    if (battlerTurnOrderNum >= gBattlersCount)
+        return TRUE;
+
     // Check all battlers after this one in turn order
     for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
     {
@@ -9732,7 +9736,7 @@ static void Cmd_setprotectlike(void)
 
     TryResetProtectUseCounter(gBattlerAttacker);
 
-    if (gCurrentTurnActionNumber == (gBattlersCount - 1))
+    if (IsLastMonToMove(gBattlerAttacker))
         notLastTurn = FALSE;
 
     if ((sProtectSuccessRates[gDisableStructs[gBattlerAttacker].protectUses] >= RandomUniform(RNG_PROTECT_FAIL, 0, USHRT_MAX) && notLastTurn)
