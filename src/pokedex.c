@@ -4025,7 +4025,7 @@ u8 DisplayCaughtMonDexPage(u16 species, bool32 isShiny, u32 personality)
 
 static void LoadDexMonPalette(u32 taskId, bool32 isShiny)
 {
-    const u16 *paletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, GetWordTaskArg(taskId, tPersonalityLo));
+    const u16 *paletteData = GetMonSpritePalFromSpeciesAndPersonality(gTasks[taskId].tSpecies, isShiny, GetWordTaskArg(taskId, tPersonalityLo), FALSE);
     u32 paletteNum = gSprites[gTasks[taskId].tMonSpriteId].oam.paletteNum;
     LoadPalette(paletteData, OBJ_PLTT_ID(paletteNum), PLTT_SIZE_4BPP);
 }

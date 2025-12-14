@@ -76,9 +76,9 @@ bool8 LoadCompressedSpriteSheetUsingHeap(const struct CompressedSpriteSheet *src
 
 void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffer);
 
-void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality);
+void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg);
 
-void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic);
+void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg);
 
 u32 GetDecompressedDataSize(const u32 *ptr);
 bool32 IsCompressedData(const u32 *ptr);

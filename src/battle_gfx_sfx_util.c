@@ -642,14 +642,14 @@ void BattleLoadMonSpriteGfx(struct Pokemon *mon, u32 battler)
     position = GetBattlerPosition(battler);
     HandleLoadSpecialPokePic(!IsOnPlayerSide(battler),
                              gMonSpritesGfxPtr->spritesGfx[position],
-                             species, personalityValue);
+                             species, personalityValue, FALSE);
 
     paletteOffset = OBJ_PLTT_ID(battler);
 
     if (gBattleSpritesDataPtr->battlerData[battler].transformSpecies == SPECIES_NONE)
         paletteData = GetMonFrontSpritePal(mon);
     else
-        paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personalityValue);
+        paletteData = GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personalityValue, FALSE);
 
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
     LoadPalette(paletteData, BG_PLTT_ID(8) + BG_PLTT_ID(battler), PLTT_SIZE_4BPP);
@@ -927,7 +927,8 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
         HandleLoadSpecialPokePic(FALSE,
                                  gMonSpritesGfxPtr->spritesGfx[position],
                                  targetSpecies,
-                                 gContestResources->moveAnim->targetPersonality);
+                                 gContestResources->moveAnim->targetPersonality,
+                                 FALSE);
     }
     else
     {
@@ -961,13 +962,14 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
                                  targetSpecies,
-                                 personalityValue);
+                                 personalityValue,
+                                 FALSE);
     }
     src = gMonSpritesGfxPtr->spritesGfx[position];
     dst = (void *)(OBJ_VRAM0 + gSprites[gBattlerSpriteIds[battlerAtk]].oam.tileNum * 32);
     DmaCopy32(3, src, dst, MON_PIC_SIZE);
     paletteOffset = OBJ_PLTT_ID(battlerAtk);
-    paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue);
+    paletteData = GetMonSpritePalFromSpeciesAndPersonality(targetSpecies, isShiny, personalityValue, FALSE);
     LoadPalette(paletteData, paletteOffset, PLTT_SIZE_4BPP);
 
     if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
