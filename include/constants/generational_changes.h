@@ -179,7 +179,7 @@
     F(IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Weather settings */ \
     F(ABILITY_WEATHER,           abilityWeather,          (u32, GEN_COUNT - 1)) \
-    F(SANDSTORM_SPDEF_BOOST,     sandstormSpDefBoost,     (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(SANDSTORM_SPDEF_BOOST,     sandstormSpDefBoost,     (u32, GEN_COUNT - 1)) \
     F(OVERWORLD_FOG,             overworldFog,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(OVERWORLD_SNOW,            overworldSnow,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SNOW_WARNING,              snowWarning,             (u32, GEN_COUNT - 1)) \
