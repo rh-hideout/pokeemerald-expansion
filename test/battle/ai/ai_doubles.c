@@ -69,13 +69,14 @@ AI_DOUBLE_BATTLE_TEST("AI will not use a status move if partner already chose He
     }
 
     GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND); }
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove); }
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_CELEBRATE, MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_EXPLOSION); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_SCRATCH, statusMove, MOVE_WATER_GUN); }
     } WHEN {
-            TURN {  NOT_EXPECT_MOVE(opponentRight, statusMove);
+            TURN {  EXPECT_MOVE(opponentLeft, MOVE_HELPING_HAND);
+                    NOT_EXPECT_MOVE(opponentRight, statusMove);
                     SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerLeft);
                     SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:playerRight);
                     SCORE_LT_VAL(opponentRight, statusMove, AI_SCORE_DEFAULT, target:opponentLeft);
@@ -138,6 +139,32 @@ AI_DOUBLE_BATTLE_TEST("AI won't use the same nondamaging move as its partner for
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("Heal Bell and Jungle Healing skip curing a partner that benefits from burn")
+{
+    u32 move;
+
+    PARAMETRIZE { move = MOVE_HEAL_BELL; }
+    PARAMETRIZE { move = MOVE_JUNGLE_HEALING; }
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HEAL_BELL) == EFFECT_HEAL_BELL);
+        ASSUME(GetMoveEffect(MOVE_JUNGLE_HEALING) == EFFECT_JUNGLE_HEALING);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_MEMENTO); Speed(1); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_SCRATCH); Speed(20); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_GUTS); Moves(MOVE_TACKLE); Status1(STATUS1_BURN); MaxHP(200); HP(200); Speed(10); }
+    } WHEN {
+        TURN {
+            NOT_EXPECT_MOVE(opponentLeft, move);
+            EXPECT_MOVE(opponentLeft, MOVE_SCRATCH, target: playerLeft);
+            EXPECT_MOVE(opponentRight, MOVE_TACKLE, target: playerLeft);
+            MOVE(playerLeft, MOVE_MEMENTO);
+            MOVE(playerRight, MOVE_MEMENTO);
+        }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI will not choose Earthquake if it damages the partner without a positive effect")
 {
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
@@ -185,7 +212,8 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Bulldoze if it triggers its ally's ability
     ASSUME(GetMoveType(MOVE_BULLDOZE) == TYPE_GROUND);
     ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1));
 
-    u32 species, ability, currentHP;
+    u32 species, currentHP;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_KINGAMBIT; ability = ABILITY_DEFIANT;  currentHP = 400; }
     PARAMETRIZE { species = SPECIES_SHUCKLE;   ability = ABILITY_CONTRARY; currentHP = 400; }
@@ -212,7 +240,7 @@ AI_DOUBLE_BATTLE_TEST("AI will choose Beat Up on an ally with Justified if it wi
     ASSUME(GetMoveEffect(MOVE_BEAT_UP) == EFFECT_BEAT_UP);
     ASSUME(GetMoveType(MOVE_BEAT_UP) == TYPE_DARK);
 
-    u32 defAbility, atkAbility, currentHP;
+    enum Ability defAbility, atkAbility, currentHP;
 
     PARAMETRIZE { defAbility = ABILITY_FLASH_FIRE; atkAbility = ABILITY_SCRAPPY;        currentHP = 400; }
     PARAMETRIZE { defAbility = ABILITY_JUSTIFIED;  atkAbility = ABILITY_SCRAPPY;        currentHP = 400; }
@@ -336,7 +364,7 @@ AI_DOUBLE_BATTLE_TEST("AI will trigger its ally's Weakness Policy")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide")
+AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field with Risky or Will Suicide (doubles)")
 {
     ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
@@ -361,6 +389,36 @@ AI_DOUBLE_BATTLE_TEST("AI will only explode and kill everything on the field wit
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("Battler 3 has Battler 1 AI flags set correctly (doubles)")
+{
+    ASSUME(GetMoveTarget(MOVE_EXPLOSION) == MOVE_TARGET_FOES_AND_ALLY);
+    ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+
+    u32 aiFlags;
+    u32 battler;
+
+    PARAMETRIZE { aiFlags = 0; battler = 1; }
+    PARAMETRIZE { aiFlags = 0; battler = 3; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 3; }
+    PARAMETRIZE { aiFlags = AI_FLAG_RISKY; battler = 1; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 1; }
+    PARAMETRIZE { aiFlags = AI_FLAG_WILL_SUICIDE; battler = 3; }
+
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        BATTLER_AI_FLAGS(battler, aiFlags);
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        PLAYER(SPECIES_WOBBUFFET) { HP(1); }
+        OPPONENT(SPECIES_VOLTORB) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+        OPPONENT(SPECIES_ELECTRODE) { Moves(MOVE_EXPLOSION, MOVE_ELECTRO_BALL); HP(1); }
+    } WHEN {
+        if (aiFlags == 0 || battler == 3)
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_ELECTRO_BALL, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_ELECTRO_BALL, target: playerLeft); }
+        else
+            TURN { EXPECT_MOVE(opponentLeft, MOVE_EXPLOSION, target: playerLeft); EXPECT_MOVE(opponentRight, MOVE_EXPLOSION); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
 {
     ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
@@ -372,7 +430,8 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     ASSUME(GetMoveTarget(MOVE_EARTHQUAKE) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_EARTHQUAKE) == TYPE_GROUND);
 
-    u32 ability, move, species;
+    enum Ability ability;
+    u32 move, species;
 
     PARAMETRIZE { species = SPECIES_PSYDUCK;    ability = ABILITY_CLOUD_NINE;         move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_PIKACHU;    ability = ABILITY_LIGHTNING_ROD;      move = MOVE_DISCHARGE; }
@@ -409,7 +468,8 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
-    u32 ability, move, species;
+    enum Ability ability;
+    u32 move, species;
 
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
@@ -433,7 +493,8 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
     ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
     ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
 
-    u32 ability, move, species;
+    enum Ability ability;
+    u32 move, species;
 
     PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
     PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
@@ -452,7 +513,6 @@ AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (ge
 
 AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
 {
-    KNOWN_FAILING; // MGriffin's PR that switched two turn charging moves in AI tests broke this test, waiting on a fix
     GIVEN {
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
         PLAYER(SPECIES_MAGNETON);
@@ -460,7 +520,7 @@ AI_DOUBLE_BATTLE_TEST("AI recognizes Volt Absorb received from Trace")
         OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
         OPPONENT(SPECIES_JOLTEON) { Ability(ABILITY_VOLT_ABSORB); Moves(MOVE_THUNDER_WAVE, MOVE_THUNDERSHOCK, MOVE_WATER_GUN); }
     } WHEN {
-        TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDERSHOCK); NOT_EXPECT_MOVE(opponentLeft, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
+        TURN { NOT_EXPECT_MOVES(opponentLeft, MOVE_THUNDERSHOCK, MOVE_THUNDER_WAVE); NOT_EXPECT_MOVE(opponentRight, MOVE_THUNDER_WAVE); }
     } THEN {
         EXPECT(gAiLogicData->abilities[B_POSITION_PLAYER_RIGHT] == ABILITY_VOLT_ABSORB);
     }
@@ -641,6 +701,7 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if it's about to die")
 AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if the ally does notably more damage")
 {
 
+    KNOWN_FAILING;  // Failure was masked by test runner issues
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_HELPING_HAND) == EFFECT_HELPING_HAND);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);

@@ -30,7 +30,7 @@ AI_SINGLE_BATTLE_TEST("AI prefers Bubble over Water Gun if it's slower")
 
 AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has Contrary")
 {
-    u32 abilityAI;
+    enum Ability abilityAI;
 
     PARAMETRIZE { abilityAI = ABILITY_MOXIE; }
     PARAMETRIZE { abilityAI = ABILITY_MOLD_BREAKER; } // Mold Breaker ignores Contrary.
@@ -54,7 +54,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers Water Gun over Bubble if it knows that foe has
 AI_SINGLE_BATTLE_TEST("AI prefers moves with better accuracy, but only if they both require the same number of hits to ko")
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 hp, expectedMove, turns, abilityAtk, expectedMove2;
+    u16 hp, expectedMove, turns, expectedMove2;
+    enum Ability abilityAtk;
 
     abilityAtk = ABILITY_NONE;
     expectedMove2 = MOVE_NONE;
@@ -138,7 +139,8 @@ AI_SINGLE_BATTLE_TEST("AI prefers moves which deal more damage instead of moves 
 {
     u8 turns = 0;
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
-    u16 expectedMove, abilityAtk, abilityDef;
+    u16 expectedMove;
+    enum Ability abilityAtk, abilityDef;
 
     abilityAtk = ABILITY_NONE;
 
@@ -264,7 +266,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
 
     // Psychic is not very effective, but always hits. Solarbeam requires a charging turn, Double Edge has recoil and Focus Blast can miss;
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SOLAR_BEAM; move3 = MOVE_PSYCHIC; move4 = MOVE_DOUBLE_EDGE; expectedMove = MOVE_PSYCHIC; }
@@ -301,7 +304,8 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 {
     u16 move1 = MOVE_NONE, move2 = MOVE_NONE, move3 = MOVE_NONE, move4 = MOVE_NONE;
     u16 expectedMove, expectedMove2 = MOVE_NONE;
-    u16 abilityAtk = ABILITY_NONE, holdItemAtk = ITEM_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
+    u32 holdItemAtk = ITEM_NONE;
 
     // Fiery Dance and Skull Bash are chosen because user is holding Power Herb
     PARAMETRIZE { abilityAtk = ABILITY_STURDY; holdItemAtk = ITEM_POWER_HERB; move1 = MOVE_FOCUS_BLAST; move2 = MOVE_SKULL_BASH; move3 = MOVE_FIERY_DANCE; move4 = MOVE_DOUBLE_EDGE;
@@ -328,7 +332,7 @@ AI_SINGLE_BATTLE_TEST("AI chooses the safest option to faint the target, taking 
 
 AI_SINGLE_BATTLE_TEST("AI won't use Solar Beam if there is no Sun up or the user is not holding Power Herb")
 {
-    u16 abilityAtk = ABILITY_NONE;
+    enum Ability abilityAtk = ABILITY_NONE;
     u16 holdItemAtk = ITEM_NONE;
 
     PARAMETRIZE { abilityAtk = ABILITY_DROUGHT; }
@@ -449,7 +453,7 @@ AI_SINGLE_BATTLE_TEST("First Impression is preferred on the first turn of the sp
 AI_SINGLE_BATTLE_TEST("First Impression is not chosen if it's blocked by certain abilities")
 {
     u16 species;
-    u16 ability;
+    enum Ability ability;
 
     PARAMETRIZE { species = SPECIES_BRUXISH; ability = ABILITY_DAZZLING; }
     PARAMETRIZE { species = SPECIES_FARIGIRAF; ability = ABILITY_ARMOR_TAIL; }
@@ -516,7 +520,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Thunderbolt then Surf 2/3 times if the opp
 
 AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -542,7 +546,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Scratch over Power-up Punch with Contrary"
 
 AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE {ability = ABILITY_SUCTION_CUPS; }
     PARAMETRIZE {ability = ABILITY_CONTRARY; }
@@ -568,7 +572,7 @@ AI_SINGLE_BATTLE_TEST("AI will choose Superpower over Outrage with Contrary")
 
 AI_SINGLE_BATTLE_TEST("AI calculates guaranteed criticals and detects critical immunity")
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SWIFT_SWIM; }
     PARAMETRIZE { ability = ABILITY_SHELL_ARMOR; }
 
@@ -645,7 +649,8 @@ AI_SINGLE_BATTLE_TEST("AI uses a guaranteed KO move instead of the move with the
 
 AI_SINGLE_BATTLE_TEST("AI stays choice locked into moves in spite of the player's ability disabling them")
 {
-    u32 playerMon, ability, aiMove;
+    u32 playerMon, aiMove;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_DAZZLING;          playerMon = SPECIES_BRUXISH;       aiMove = MOVE_QUICK_ATTACK; }
     PARAMETRIZE { ability = ABILITY_QUEENLY_MAJESTY;   playerMon = SPECIES_TSAREENA;      aiMove = MOVE_QUICK_ATTACK; }
     PARAMETRIZE { ability = ABILITY_ARMOR_TAIL;        playerMon = SPECIES_FARIGIRAF;     aiMove = MOVE_QUICK_ATTACK; }
@@ -694,7 +699,7 @@ AI_SINGLE_BATTLE_TEST("AI won't use thawing moves if target is frozen unless it 
     PARAMETRIZE { status = STATUS1_FROSTBITE;   aiMove = MOVE_EMBER;    aiFlags = AI_FLAG_CHECK_BAD_MOVE; }
 
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BURN_HIT_THAW, GEN_6); // In Gen 5, non-Fire burning moves didn't cause thawing
+        WITH_CONFIG(CONFIG_BURN_HIT_THAW, GEN_6); // In Gen 5, non-Fire burning moves didn't cause thawing
         ASSUME(GetMoveType(MOVE_EMBER) == TYPE_FIRE);
         ASSUME(GetMoveCategory(MOVE_TACKLE) == DAMAGE_CATEGORY_PHYSICAL);
         ASSUME(GetMoveCategory(MOVE_WATER_GUN) == DAMAGE_CATEGORY_SPECIAL);
@@ -855,7 +860,7 @@ AI_DOUBLE_BATTLE_TEST("AI sees opposing drain ability")
 
 AI_SINGLE_BATTLE_TEST("AI will not set up Weather if it wont have any affect")
 {
-    u32 ability;
+    enum Ability ability;
 
     PARAMETRIZE { ability = ABILITY_CLOUD_NINE; }
     PARAMETRIZE { ability = ABILITY_DAMP; }
@@ -936,7 +941,7 @@ AI_SINGLE_BATTLE_TEST("AI will see Magnitude damage")
 AI_SINGLE_BATTLE_TEST("AI will prefer resisted move over failing move")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_POWDER_GRASS, GEN_6);
+        WITH_CONFIG(CONFIG_POWDER_GRASS, GEN_6);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY);
         PLAYER(SPECIES_ROSELIA) { Moves(MOVE_ABSORB); };
         OPPONENT(SPECIES_GLOOM) { Moves(MOVE_MEGA_DRAIN, MOVE_STUN_SPORE, MOVE_LEECH_SEED, MOVE_SYNTHESIS); }
@@ -1030,5 +1035,248 @@ AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's previous priority moves 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_DETECT); EXPECT_MOVE(opponentLeft, MOVE_POWER_GEM, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); }
         TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_DETECT); EXPECT_MOVE(opponentLeft, MOVE_POWER_GEM, target:playerLeft); EXPECT_MOVE(opponentRight, MOVE_CELEBRATE); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will see 2HKOs through resist berries")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(117); Moves(MOVE_CELEBRATE); Item(ITEM_CHOPLE_BERRY); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_JUMP_KICK, MOVE_HEADBUTT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVE(opponent, MOVE_JUMP_KICK); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prioritize a regular OHKO over a berry-ignoring OHKO")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(75); Moves(MOVE_CELEBRATE); Item(ITEM_CHOPLE_BERRY); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_BOOMBURST, MOVE_VITAL_THROW); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVES(opponent, MOVE_BOOMBURST, MOVE_VITAL_THROW); }
+        SCORE_GT(opponent, MOVE_BOOMBURST, MOVE_VITAL_THROW);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will not prioritize a regular OHKO over a berry-reduced OHKO")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { HP(1); Moves(MOVE_CELEBRATE); Item(ITEM_CHOPLE_BERRY); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_SCRATCH, MOVE_KARATE_CHOP); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_CELEBRATE); EXPECT_MOVES(opponent, MOVE_SCRATCH, MOVE_KARATE_CHOP); }
+        SCORE_EQ(opponent, MOVE_SCRATCH, MOVE_KARATE_CHOP);
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI won't increase its stats if it's about to fall asleep due to Yawn")
+{
+    u32 aiMove;
+    PARAMETRIZE { aiMove = MOVE_CELEBRATE; }
+    PARAMETRIZE { aiMove = MOVE_SWORDS_DANCE; }
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Moves(MOVE_YAWN, MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(aiMove, MOVE_SCRATCH); }
+    } WHEN {
+        if (aiMove == MOVE_CELEBRATE)
+            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+        else
+            TURN { MOVE(player, MOVE_YAWN); EXPECT_MOVE(opponent, MOVE_SWORDS_DANCE); }
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will consider using Explosion inversely proportional to its missing HP")
+{
+    u32 monHP; u32 passesChance;
+    PARAMETRIZE { monHP = 20; passesChance = EXPLOSION_MINIMUM_CHANCE; }
+    PARAMETRIZE { monHP = 1; passesChance = EXPLOSION_MAXIMUM_CHANCE; }
+    PASSES_RANDOMLY(passesChance, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
+        ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); HP(monHP); MaxHP(20); Moves(MOVE_SCRATCH, MOVE_EXPLOSION); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will prioritize non-self-sacrificing moves if they have the same hits to KO")
+{
+    u32 selfSacrificeMove;
+    PARAMETRIZE { selfSacrificeMove = MOVE_EXPLOSION; }
+    PARAMETRIZE { selfSacrificeMove = MOVE_FINAL_GAMBIT; }
+    PASSES_RANDOMLY(100, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_EXPLOSION) == EFFECT_EXPLOSION);
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        ASSUME(EXPLOSION_LOWER_HP_THRESHOLD == 10);
+        ASSUME(EXPLOSION_HIGHER_HP_THRESHOLD == 90);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); HP(1); Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); HP(1); MaxHP(20); Speed(2); Moves(MOVE_SCRATCH, selfSacrificeMove); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_SCRATCH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will consider using Final Gambit if it expects to KO and outspeeds")
+{
+    u32 aiOmniscientFlag;
+    PARAMETRIZE { aiOmniscientFlag = AI_FLAG_OMNISCIENT; }
+    PARAMETRIZE { aiOmniscientFlag = 0 ;}
+    PASSES_RANDOMLY(FINAL_GAMBIT_CHANCE, 100, RNG_AI_FINAL_GAMBIT);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_FINAL_GAMBIT) == EFFECT_FINAL_GAMBIT);
+        ASSUME(LAST_MON_PREFERS_NOT_SACRIFICE == FALSE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | aiOmniscientFlag);
+        PLAYER(SPECIES_ZIGZAGOON) { Level(5); MaxHP(20); Speed(1); Moves(MOVE_SCRATCH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Level(5); MaxHP(20); Speed(2); Moves(MOVE_SCRATCH, MOVE_FINAL_GAMBIT); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SCRATCH); EXPECT_MOVE(opponent, MOVE_FINAL_GAMBIT); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI's Explosion scoring handles multiple move effects and the Explosion defense config")
+{
+    u32 genConfig; u32 passesChance;
+    PARAMETRIZE { genConfig = GEN_5; passesChance = 0; }
+    PARAMETRIZE { genConfig = GEN_4; passesChance = EXPLOSION_MAXIMUM_CHANCE; }
+    PASSES_RANDOMLY(passesChance, 100, RNG_AI_CONSIDER_EXPLOSION);
+    GIVEN {
+        WITH_CONFIG(CONFIG_EXPLOSION_DEFENSE, genConfig);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_CLOYSTER) { Level(44); HP(68); Moves(MOVE_DETECT, MOVE_RAZOR_SHELL, MOVE_ICICLE_SPEAR, MOVE_ICE_SHARD); }
+        OPPONENT(SPECIES_GLALIE_MEGA) { Level(44); HP(1); Ability(ABILITY_REFRIGERATE); Friendship(MAX_FRIENDSHIP); Moves(MOVE_RETURN, MOVE_EARTHQUAKE, MOVE_EXPLOSION, MOVE_CRUNCH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DETECT); EXPECT_MOVE(opponent, MOVE_EXPLOSION); }
+    }
+}
+
+AI_DOUBLE_BATTLE_TEST("AI won't be confused by player's one-shot-priority moves (ie. Fake Out, Detect) when comparing speed")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMovePriority(MOVE_DETECT) > GetMovePriority(MOVE_AQUA_JET));
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_COMBUSKEN) { Level(20); HP(1); Ability(ABILITY_SPEED_BOOST); Item(ITEM_BRIGHT_POWDER); Moves(MOVE_DETECT, MOVE_DOUBLE_KICK); }
+        PLAYER(SPECIES_QUILAVA) { Level(20); Ability(ABILITY_ADAPTABILITY); Item(ITEM_ORAN_BERRY); Moves(MOVE_MUD_SHOT, MOVE_INCINERATE); }
+        OPPONENT(SPECIES_PARAS) { Level(16); Ability(ABILITY_DRY_SKIN); Item(ITEM_QUICK_CLAW); Moves(MOVE_SLEEP_POWDER, MOVE_BUG_BITE, MOVE_AERIAL_ACE, MOVE_POISON_FANG); }
+        OPPONENT(SPECIES_BUIZEL) { Level(16); Ability(ABILITY_SWIFT_SWIM); Item(ITEM_DAMP_ROCK); Moves(MOVE_RAIN_DANCE, MOVE_HELPING_HAND, MOVE_ICE_FANG, MOVE_AQUA_JET); }
+    } WHEN {
+        TURN { MOVE(playerLeft, MOVE_DETECT); MOVE(playerRight, MOVE_INCINERATE, target:opponentLeft); EXPECT_MOVE(opponentRight, MOVE_AQUA_JET, target:playerLeft); }
+    }
+}
+
+TEST("AI hits to KO damage rounding works correctly")
+{
+    EXPECT_EQ(GetNoOfHitsToKO(4, 12), 3);
+    EXPECT_EQ(GetNoOfHitsToKO(16, 50), 4);
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it outspeeds and should switch")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); HP(3); MaxHP(5); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it is outsped, survives a hit, and should switch")
+{
+    PASSES_RANDOMLY(SHOULD_SWITCH_HASBADODDS_PERCENTAGE, 100, RNG_AI_SWITCH_HASBADODDS);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_MACHAMP) { Speed(2); Moves(MOVE_DRAGON_RAGE, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); MaxHP(41); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if the target has a Sash or Multiscale effect and the AI has a good switchin")
+{
+    PASSES_RANDOMLY(SHOULD_PIVOT_BREAK_SASH_CHANCE, 100, RNG_AI_SHOULD_PIVOT_BREAK_SASH);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetItemHoldEffect(ITEM_FOCUS_SASH) == HOLD_EFFECT_FOCUS_SASH);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Item(ITEM_FOCUS_SASH); Moves(MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_METAGROSS) { Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is encouraged to use pivot moves if it benefits from Regenerator and has a good switchin")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        ASSUME(GetMoveEffect(MOVE_DRAGON_RAGE) == EFFECT_FIXED_HP_DAMAGE);
+        ASSUME(GetMoveFixedHPDamage(MOVE_DRAGON_RAGE) == 40);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_DRAGON_RAGE, MOVE_GROWL); }
+        OPPONENT(SPECIES_TANGELA) { Speed(2); HP(30); MaxHP(100); Ability(ABILITY_REGENERATOR); Moves(MOVE_U_TURN, MOVE_MAGICAL_LEAF); }
+        OPPONENT(SPECIES_METAGROSS) { Speed(2); Moves(MOVE_METEOR_MASH); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_U_TURN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI is discouraged from using pivot moves if it has no good switchin and does not KO")
+{
+    PASSES_RANDOMLY(100, 100);
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_U_TURN) == EFFECT_HIT_ESCAPE);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_ZIGZAGOON) { Speed(1); Moves(MOVE_SCRATCH, MOVE_GROWL); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(2); HP(3); MaxHP(5); Moves(MOVE_U_TURN, MOVE_STRENGTH); }
+        OPPONENT(SPECIES_ZIGZAGOON) { Speed(1); Level(1); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_GROWL); EXPECT_MOVE(opponent, MOVE_STRENGTH); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will try to withstand hit with absorbing move")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); HP(39); Moves(MOVE_ENERGY_BALL, MOVE_GIGA_DRAIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_MOVE(opponent, MOVE_GIGA_DRAIN); }
+    }
+}
+
+AI_SINGLE_BATTLE_TEST("AI will not try to withstand hit with absorbing move if it will still be KO'd")
+{
+    GIVEN {
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_WOBBUFFET) { Speed(1); Moves(MOVE_DRAGON_RAGE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(2); MaxHP(40); HP(39); Moves(MOVE_ENERGY_BALL, MOVE_GIGA_DRAIN); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_DRAGON_RAGE); EXPECT_MOVE(opponent, MOVE_ENERGY_BALL); }
     }
 }

@@ -66,6 +66,22 @@ enum {
     REQUEST_TOUGH_RIBBON_BATTLE,
 };
 
+enum BattleController
+{
+    BATTLE_CONTROLLER_NONE,
+    BATTLE_CONTROLLER_PLAYER,
+    BATTLE_CONTROLLER_PLAYER_PARTNER,
+    BATTLE_CONTROLLER_OPPONENT,
+    BATTLE_CONTROLLER_LINK_PARTNER,
+    BATTLE_CONTROLLER_LINK_OPPONENT,
+    BATTLE_CONTROLLER_SAFARI,
+    BATTLE_CONTROLLER_WALLY,
+    BATTLE_CONTROLLER_RECORDED_PLAYER,
+    BATTLE_CONTROLLER_RECORDED_PARTNER,
+    BATTLE_CONTROLLER_RECORDED_OPPONENT,
+    BATTLE_CONTROLLERS_COUNT,
+};
+
 // Accessors for gBattleControllerExecFlags.
 //
 // These are provided for documentation purposes, to make the battle
@@ -203,7 +219,7 @@ struct ChooseMoveStruct
     u8 currentPp[MAX_MON_MOVES];
     u8 maxPp[MAX_MON_MOVES];
     u16 species;
-    u8 monTypes[3];
+    enum Type monTypes[3];
     struct ZMoveData zmove;
 };
 
@@ -221,7 +237,6 @@ enum
     CONTROLLER_TRAINERSLIDEBACK,
     CONTROLLER_FAINTANIMATION,
     CONTROLLER_PALETTEFADE,
-    CONTROLLER_SUCCESSBALLTHROWANIM,
     CONTROLLER_BALLTHROWANIM,
     CONTROLLER_PAUSE,
     CONTROLLER_MOVEANIMATION,
@@ -271,6 +286,7 @@ extern struct UnusedControllerStruct gUnusedControllerStruct;
 extern void (*gBattlerControllerFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern void (*gBattlerControllerEndFuncs[MAX_BATTLERS_COUNT])(u32 battler);
 extern u8 gBattleControllerData[MAX_BATTLERS_COUNT];
+extern u8 gBattlerBattleController[MAX_BATTLERS_COUNT];
 
 // general functions
 void HandleLinkBattleSetup(void);
@@ -280,6 +296,14 @@ bool32 IsValidForBattle(struct Pokemon *mon);
 void TryReceiveLinkBattleData(void);
 void PrepareBufferDataTransferLink(u32 battler, u32 bufferId, u16 size, u8 *data);
 void UpdateFriendshipFromXItem(u32 battler);
+bool32 IsAiVsAiBattle(void);
+bool32 BattlerIsPlayer(u32 battlerId);
+bool32 BattlerIsPartner(u32 battlerId);
+bool32 BattlerIsOpponent(u32 battlerId);
+bool32 BattlerIsRecorded(u32 battlerId);
+bool32 BattlerIsLink(u32 battlerId);
+bool32 BattlerIsWally(u32 battlerId);
+bool32 BattlerHasAi(u32 battlerId);
 
 // emitters
 void BtlController_EmitGetMonData(u32 battler, u32 bufferId, u8 requestId, u8 monToCheck);
@@ -346,8 +370,7 @@ void BtlController_HandleDrawTrainerPic(u32 battlerId, u32 trainerPicId, bool32 
 void BtlController_HandleTrainerSlide(u32 battler, u32 trainerPicId);
 void BtlController_HandleTrainerSlideBack(u32 battlerId, s16 data0, bool32 startAnim);
 void BtlController_HandleFaintAnimation(u32 battler);
-void BtlController_HandleSuccessBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture);
-void BtlController_HandleBallThrowAnim(u32 battler, u32 target, u32 animId, bool32 allowCriticalCapture);
+void BtlController_HandleBallThrowAnim(u32 battler);
 void BtlController_HandleMoveAnimation(u32 battler);
 void BtlController_HandlePrintString(u32 battler);
 void BtlController_HandlePrintStringPlayerOnly(u32 battler);
@@ -364,7 +387,7 @@ void BtlController_HandleSpriteInvisibility(u32 battler);
 bool32 TwoPlayerIntroMons(u32 battlerId); // Double battle with both player pokemon active.
 bool32 TwoOpponentIntroMons(u32 battlerId); // Double battle with both opponent pokemon active.
 void BtlController_HandleIntroTrainerBallThrow(u32 battler, u16 tagTrainerPal, const u16 *trainerPal, s16 framesToWait, void (*controllerCallback)(u32 battler));
-void BtlController_HandleDrawPartyStatusSummary(u32 battler, u32 side, bool32 considerDelay);
+void BtlController_HandleDrawPartyStatusSummary(u32 battler, enum BattleSide side, bool32 considerDelay);
 void BtlController_HandleHidePartyStatusSummary(u32 battler);
 void BtlController_HandleBattleAnimation(u32 battler);
 
@@ -372,7 +395,6 @@ void BtlController_HandleBattleAnimation(u32 battler);
 void SetControllerToPlayer(u32 battler);
 void PlayerBufferExecCompleted(u32 battler);
 void SetBattleEndCallbacks(u32 battler);
-void PlayerHandleBallThrowAnim(u32 battler);
 void PlayerHandleExpUpdate(u32 battler);
 u32 LinkPlayerGetTrainerPicId(u32 multiplayerId);
 void CB2_SetUpReshowBattleScreenAfterMenu(void);
@@ -394,6 +416,10 @@ void HandleChooseMoveAfterDma3(u32 battler);
 // recorded player controller
 void SetControllerToRecordedPlayer(u32 battler);
 void RecordedPlayerBufferExecCompleted(u32 battler);
+
+// recorded partner controller
+void SetControllerToRecordedPartner(u32 battler);
+void RecordedPartnerBufferExecCompleted(u32 battler);
 
 // opponent controller
 void SetControllerToOpponent(u32 battler);
@@ -436,5 +462,8 @@ void BtlController_HandleSwitchInShowHealthbox(u32 battler);
 void BtlController_HandleSwitchInTryShinyAnim(u32 battler);
 void BtlController_HandleSwitchInSoundAndEnd(u32 battler);
 void BtlController_HandleSwitchInShowSubstitute(u32 battler);
+
+bool32 ShouldBattleRestrictionsApply(u32 battler);
+void FreeShinyStars(void);
 
 #endif // GUARD_BATTLE_CONTROLLERS_H

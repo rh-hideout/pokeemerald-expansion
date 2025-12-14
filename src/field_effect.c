@@ -19,6 +19,7 @@
 #include "mirage_tower.h"
 #include "menu.h"
 #include "metatile_behavior.h"
+#include "oras_dowse.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -377,8 +378,6 @@ static const struct SpriteTemplate sSpriteTemplate_NewGameBirch =
     .oam = &sOam_64x64,
     .anims = sAnimTable_NewGameBirch,
     .images = sPicTable_NewGameBirch,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 const struct SpritePalette gSpritePalette_PokeballGlow =
@@ -552,7 +551,6 @@ static const struct SpriteTemplate sSpriteTemplate_PokeballGlow =
     .oam = &sOam_8x8,
     .anims = sAnims_Flicker,
     .images = sPicTable_PokeballGlow,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PokeballGlow
 };
 
@@ -563,7 +561,6 @@ static const struct SpriteTemplate sSpriteTemplate_PokecenterMonitor =
     .oam = &sOam_16x16,
     .anims = sAnims_Flicker,
     .images = sPicTable_PokecenterMonitor,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PokecenterMonitor
 };
 
@@ -574,7 +571,6 @@ static const struct SpriteTemplate sSpriteTemplate_HofMonitorBig =
     .oam = &sOam_16x16,
     .anims = sAnims_HofMonitor,
     .images = sPicTable_HofMonitorBig,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HallOfFameMonitor
 };
 
@@ -585,7 +581,6 @@ static const struct SpriteTemplate sSpriteTemplate_HofMonitorSmall =
     .oam = &sOam_32x16,
     .anims = sAnims_HofMonitor,
     .images = sPicTable_HofMonitorSmall,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_HallOfFameMonitor
 };
 
@@ -1679,6 +1674,7 @@ void StartEscalatorWarp(u8 metatileBehavior, u8 priority)
     {
         gTasks[taskId].tGoingUp = TRUE;
     }
+    EndORASDowsing();
 }
 
 static void Task_EscalatorWarpOut(u8 taskId)
@@ -2065,6 +2061,7 @@ static bool8 DiveFieldEffect_TryWarp(struct Task *task)
 
 void StartLavaridgeGymB1FWarp(u8 priority)
 {
+    EndORASDowsing();
     CreateTask(Task_LavaridgeGymB1FWarp, priority);
 }
 
@@ -2273,6 +2270,7 @@ void SpriteCB_AshLaunch(struct Sprite *sprite)
 
 void StartLavaridgeGym1FWarp(u8 priority)
 {
+    EndORASDowsing();
     CreateTask(Task_LavaridgeGym1FWarp, priority);
 }
 
@@ -2395,6 +2393,7 @@ void StartEscapeRopeFieldEffect(void)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     HideFollowerForFieldEffect(); // hide follower before warping
+    EndORASDowsing();
     CreateTask(Task_EscapeRopeWarpOut, 80);
 }
 
@@ -2589,6 +2588,7 @@ static void TeleportWarpOutFieldEffect_Init(struct Task *task)
     LockPlayerFieldControls();
     FreezeObjectEvents();
     CameraObjectFreeze();
+    EndORASDowsing();
     task->data[15] = GetPlayerFacingDirection();
     task->tState++;
 }
@@ -4033,7 +4033,6 @@ static const struct SpriteTemplate sSpriteTemplate_DeoxysRockFragment =
     .oam = &sOam_8x8,
     .anims = sAnims_DeoxysRockFragment,
     .images = sImages_DeoxysRockFragment,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_DeoxysRockFragment
 };
 

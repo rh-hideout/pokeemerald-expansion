@@ -3,7 +3,7 @@
 
 SINGLE_BATTLE_TEST("Filter reduces damage to Super Effective moves by 0.75", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_SOUNDPROOF; }
     PARAMETRIZE { ability = ABILITY_FILTER; }
     GIVEN {

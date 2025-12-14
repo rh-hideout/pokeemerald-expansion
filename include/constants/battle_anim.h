@@ -592,8 +592,9 @@
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
 #define B_ANIM_POWER_CONSTRUCT          53
-
-#define NUM_B_ANIMS_GENERAL             54
+#define B_ANIM_SWAP_TO_SUBSTITUTE       54
+#define B_ANIM_SWAP_FROM_SUBSTITUTE     55
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0
@@ -617,8 +618,9 @@
 #define B_ANIM_STATUS_FRZ               6
 #define B_ANIM_STATUS_CURSED            7
 #define B_ANIM_STATUS_NIGHTMARE         8
+#define B_ANIM_STATUS_FRB               9
 
-#define NUM_B_ANIMS_STATUS              9
+#define NUM_B_ANIMS_STATUS              10
 
 // Tasks with return values often assign them to gBattleAnimArgs[7].
 #define ARG_RET_ID 7

@@ -35,7 +35,7 @@ TO_DO_BATTLE_TEST("Dry Skin doesn't heal in Rain if Cloud Nine/Air Lock is on th
 
 SINGLE_BATTLE_TEST("Dry Skin increases damage taken from Fire-type moves by 25%", s16 damage)
 {
-    u32 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_EFFECT_SPORE; }
     PARAMETRIZE { ability = ABILITY_DRY_SKIN; }
     GIVEN {
@@ -93,7 +93,7 @@ SINGLE_BATTLE_TEST("Dry Skin is only triggered once on multi strike moves")
 {
     GIVEN {
         ASSUME(GetMoveType(MOVE_WATER_SHURIKEN) == TYPE_WATER);
-        ASSUME(GetMoveEffect(MOVE_WATER_SHURIKEN) == EFFECT_MULTI_HIT);
+        ASSUME(IsMultiHitMove(MOVE_WATER_SHURIKEN));
         PLAYER(SPECIES_PARASECT) { Ability(ABILITY_DRY_SKIN); HP(100); MaxHP(200); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {

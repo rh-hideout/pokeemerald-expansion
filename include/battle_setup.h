@@ -1,6 +1,7 @@
 #ifndef GUARD_BATTLE_SETUP_H
 #define GUARD_BATTLE_SETUP_H
 
+#include "battle_transition.h"
 #include "gym_leader_rematch.h"
 
 #define REMATCHES_COUNT 5
@@ -41,7 +42,6 @@ typedef union PACKED TrainerBattleParameter
     u8 data[sizeof(struct _TrainerBattleParameter)];
 } TrainerBattleParameter;
 
-
 extern const struct RematchTrainer gRematchTable[REMATCH_TABLE_ENTRIES];
 
 extern TrainerBattleParameter gTrainerBattleParameter;
@@ -61,14 +61,15 @@ void BattleSetup_StartLegendaryBattle(void);
 void StartGroudonKyogreBattle(void);
 void StartRegiBattle(void);
 enum BattleEnvironments BattleSetup_GetEnvironmentId(void);
-u8 GetWildBattleTransition(void);
-u8 GetTrainerBattleTransition(void);
-u8 GetSpecialBattleTransition(s32 id);
+enum BattleTransition GetWildBattleTransition(void);
+enum BattleTransition GetTrainerBattleTransition(void);
+enum BattleTransition GetSpecialBattleTransition(enum BattleTransitionGroup id);
 void ChooseStarter(void);
 void ResetTrainerOpponentIds(void);
 void SetMapVarsToTrainerA(void);
 void SetMapVarsToTrainerB(void);
 const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data);
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr);
 void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript);
 void SetUpTwoTrainersBattle(void);
@@ -106,6 +107,7 @@ void TrainerBattleLoadArgs(const u8 *data);
 void TrainerBattleLoadArgsTrainerA(const u8 *data);
 void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
+void InitTrainerBattleParameter(void);
 
 void DoStandardWildBattle_Debug(void);
 void BattleSetup_StartTrainerBattle_Debug(void);

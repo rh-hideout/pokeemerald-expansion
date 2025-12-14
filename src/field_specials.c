@@ -2,9 +2,10 @@
 #include "debug.h"
 #include "malloc.h"
 #include "battle.h"
-#include "battle_tower.h"
+#include "battle_special.h"
 #include "cable_club.h"
 #include "data.h"
+#include "daycare.h"
 #include "decoration.h"
 #include "diploma.h"
 #include "event_data.h"
@@ -21,6 +22,7 @@
 #include "international_string_util.h"
 #include "item.h"
 #include "item_icon.h"
+#include "item_menu.h"
 #include "link.h"
 #include "list_menu.h"
 #include "load_save.h"
@@ -35,6 +37,7 @@
 #include "pokedex.h"
 #include "pokemon.h"
 #include "pokemon_storage_system.h"
+#include "pokemon_summary_screen.h"
 #include "random.h"
 #include "rayquaza_scene.h"
 #include "region_map.h"
@@ -83,6 +86,14 @@
 #define ELEVATOR_WINDOW_HEIGHT 3
 #define ELEVATOR_LIGHT_STAGES  3
 
+enum 
+{
+    CAN_LEARN_MOVE,
+    CANNOT_LEARN_MOVE,
+    ALREADY_KNOWS_MOVE,
+    CANNOT_LEARN_MOVE_IS_EGG
+};
+
 EWRAM_DATA bool8 gBikeCyclingChallenge = FALSE;
 EWRAM_DATA u8 gBikeCollisions = 0;
 static EWRAM_DATA u32 sBikeCyclingTimer = 0;
@@ -123,14 +134,14 @@ static void Task_MoveElevator(u8);
 static void MoveElevatorWindowLights(u16, bool8);
 static void Task_MoveElevatorWindowLights(u8);
 static void Task_ShowScrollableMultichoice(u8);
-static void FillFrontierExchangeCornerWindowAndItemIcon(u16, u16);
-static void ShowBattleFrontierTutorWindow(u8, u16);
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti, u16);
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti, u16);
 static void InitScrollableMultichoice(void);
 static void ScrollableMultichoice_ProcessInput(u8);
 static void ScrollableMultichoice_UpdateScrollArrows(u8);
 static void ScrollableMultichoice_MoveCursor(s32, bool8, struct ListMenu *);
-static void HideFrontierExchangeCornerItemIcon(u16, u16);
-static void ShowBattleFrontierTutorMoveDescription(u8, u16);
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti, u16);
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti, u16);
 static void CloseScrollableMultichoice(u8);
 static void ScrollableMultichoice_RemoveScrollArrows(u8);
 static void Task_ScrollableMultichoice_WaitReturnToList(u8);
@@ -145,6 +156,18 @@ static void Task_CloseBattlePikeCurtain(u8);
 static u8 DidPlayerGetFirstFans(void);
 static void SetInitialFansOfPlayer(void);
 static u16 PlayerGainRandomTrainerFan(void);
+static void Task_LearnedMoveBoxMon(u8);
+static void Task_ReplaceBoxMonMoveYesNo(u8);
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8);
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8);
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8);
+static void StopLearningBoxMonMovePrompt(u8);
+static void CB2_ReturnToFieldWhileLearningMove(void);
+static void Task_ReturnToFieldWhileLearningMove(void);
+static void Task_BoxMonReplaceMove(u8);
+static void Task_StopLearningBoxMonMoveYesNo(u8);
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8);
+static void Task_DidntLearnMove(u8);
 #if FREE_LINK_BATTLE_RECORDS == FALSE
 static void BufferFanClubTrainerName_(struct LinkBattleRecords *, u8, u8);
 #else
@@ -315,10 +338,11 @@ bool32 CountSSTidalStep(u16 delta)
     return TRUE;
 }
 
-u8 GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
+enum SSTidalLocation GetSSTidalLocation(s8 *mapGroup, s8 *mapNum, s16 *x, s16 *y)
 {
     u16 *varCruiseStepCount = GetVarPointer(VAR_CRUISE_STEP_COUNT);
-    switch (*GetVarPointer(VAR_SS_TIDAL_STATE))
+
+    switch ((enum SSTidalState)(*GetVarPointer(VAR_SS_TIDAL_STATE)))
     {
     case SS_TIDAL_BOARD_SLATEPORT:
     case SS_TIDAL_LAND_SLATEPORT:
@@ -1579,7 +1603,10 @@ u8 GetLeadMonIndex(void)
 
 u16 ScriptGetPartyMonSpecies(void)
 {
-    return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG, NULL);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        return GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPECIES_OR_EGG);
+    else
+        return GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG);
 }
 
 // Removed for Emerald
@@ -1782,7 +1809,7 @@ static const u16 sElevatorWindowTiles_Descending[ELEVATOR_WINDOW_HEIGHT][ELEVATO
 
 void SetDeptStoreFloor(void)
 {
-    u8 deptStoreFloor;
+    enum DeptStoreFloorNumber deptStoreFloor;
     switch (gSaveBlock1Ptr->dynamicWarp.mapNum)
     {
     case MAP_NUM(MAP_LILYCOVE_CITY_DEPARTMENT_STORE_1F):
@@ -2007,12 +2034,24 @@ void BufferVarsForIVRater(void)
     u8 i;
     u32 ivStorage[NUM_STATS];
 
-    ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
-    ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
-    ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
-    ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
-    ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
-    ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
+        ivStorage[STAT_HP] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_SPDEF_IV);
+    }
+    else
+    {
+        ivStorage[STAT_HP] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_HP_IV);
+        ivStorage[STAT_ATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_ATK_IV);
+        ivStorage[STAT_DEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_DEF_IV);
+        ivStorage[STAT_SPEED] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPEED_IV);
+        ivStorage[STAT_SPATK] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPATK_IV);
+        ivStorage[STAT_SPDEF] = GetBoxMonDataAt(gSpecialVar_MonBoxId,gSpecialVar_MonBoxPos, MON_DATA_SPDEF_IV);
+    }
 
     gSpecialVar_0x8005 = 0;
 
@@ -2295,7 +2334,7 @@ void ShowScrollableMultichoice(void)
     struct Task *task = &gTasks[taskId];
     task->tScrollMultiId = gSpecialVar_0x8004;
 
-    switch (gSpecialVar_0x8004)
+    switch ((enum ScrollMulti)gSpecialVar_0x8004)
     {
     case SCROLL_MULTI_NONE:
         task->tMaxItemsOnScreen = 1;
@@ -2822,7 +2861,11 @@ void ShowNatureGirlMessage(void)
     if (gSpecialVar_0x8004 >= PARTY_SIZE)
         gSpecialVar_0x8004 = 0;
 
-    nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    if(gSpecialVar_MonBoxId == 0xFF)
+        nature = GetNature(&gPlayerParty[gSpecialVar_0x8004]);
+    else
+        nature = GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_PERSONALITY) % NUM_NATURES;
+    
     ShowFieldMessage(gNaturesInfo[nature].natureGirlMessage);
 }
 
@@ -2990,7 +3033,7 @@ void CloseFrontierExchangeCornerItemIconWindow(void)
     RemoveWindow(sFrontierExchangeCorner_ItemIconWindowId);
 }
 
-static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
+static void FillFrontierExchangeCornerWindowAndItemIcon(enum ScrollMulti menu, u16 selection)
 {
     #include "data/battle_frontier/battle_frontier_exchange_corner.h"
 
@@ -3033,6 +3076,8 @@ static void FillFrontierExchangeCornerWindowAndItemIcon(u16 menu, u16 selection)
             AddTextPrinterParameterized2(0, FONT_NORMAL, sFrontierExchangeCorner_HoldItemsDescriptions[selection], 0, NULL, TEXT_COLOR_DARK_GRAY, TEXT_COLOR_WHITE, TEXT_COLOR_LIGHT_GRAY);
             ShowFrontierExchangeCornerItemIcon(sFrontierExchangeCorner_HoldItems[selection]);
             break;
+        default:
+            break;
         }
     }
 }
@@ -3051,7 +3096,7 @@ static void ShowFrontierExchangeCornerItemIcon(u16 item)
     }
 }
 
-static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
+static void HideFrontierExchangeCornerItemIcon(enum ScrollMulti menu, u16 unused)
 {
     if (sScrollableMultichoice_ItemSpriteId != MAX_SPRITES)
     {
@@ -3064,6 +3109,8 @@ static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
             // This makes sure deleting the icon will not clear palettes in use by object events
             FieldEffectFreeGraphicsResources(&gSprites[sScrollableMultichoice_ItemSpriteId]);
             break;
+        default:
+            break;
         }
         sScrollableMultichoice_ItemSpriteId = MAX_SPRITES;
     }
@@ -3071,10 +3118,10 @@ static void HideFrontierExchangeCornerItemIcon(u16 menu, u16 unused)
 
 void BufferBattleFrontierTutorMoveName(void)
 {
-    StringCopy(gStringVar1, GetMoveName(gSpecialVar_0x8005));
+    StringCopy(gStringVar1, GetMoveName(gSpecialVar_ItemId));
 }
 
-static void ShowBattleFrontierTutorWindow(u8 menu, u16 selection)
+static void ShowBattleFrontierTutorWindow(enum ScrollMulti menu, u16 selection)
 {
     static const struct WindowTemplate sBattleFrontierTutor_WindowTemplate =
     {
@@ -3098,7 +3145,7 @@ static void ShowBattleFrontierTutorWindow(u8 menu, u16 selection)
     }
 }
 
-static void ShowBattleFrontierTutorMoveDescription(u8 menu, u16 selection)
+static void ShowBattleFrontierTutorMoveDescription(enum ScrollMulti menu, u16 selection)
 {
     static const u8 *const sBattleFrontier_TutorMoveDescriptions1[] =
     {
@@ -4349,8 +4396,248 @@ void UseBlankMessageToCancelPokemonPic(void)
     ScriptMenu_HidePokemonPic();
 }
 
+void CanTeachMoveBoxMon(void)
+{
+    ScriptContext_Stop();
+    if(gSpecialVar_MonBoxId == 0xFF)
+    {
+        if (GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (MonKnowsMove(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToMon(&gPlayerParty[gSpecialVar_MonBoxPos], gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+            {
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            }
+            else
+            {
+                GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+    }
+    else
+    {
+        if (GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_IS_EGG))
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE_IS_EGG;
+            ScriptContext_Enable();
+        }
+        else if (BoxMonKnowsMove(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) == TRUE)
+        {
+            gSpecialVar_Result = ALREADY_KNOWS_MOVE;
+            ScriptContext_Enable();
+        }
+        else if (CanLearnTeachableMove(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_SPECIES_OR_EGG), gSpecialVar_ItemId) == FALSE)
+        {
+            gSpecialVar_Result = CANNOT_LEARN_MOVE;
+            ScriptContext_Enable();
+        }
+        else
+        {
+            if (GiveMoveToBoxMon(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gSpecialVar_ItemId) != MON_HAS_MAX_MOVES)
+                CreateTask(Task_LearnedMoveBoxMon, 1);
+            else
+            {
+                GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+                StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+                ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+                CreateTask(Task_ReplaceBoxMonMoveYesNo, 1);
+            }
+        }
+        
+    }
+}
+
+static void Task_LearnedMoveBoxMon(u8 taskId)
+{
+    s16 move = gSpecialVar_ItemId;
+
+    if(gSpecialVar_MonBoxId == 0xFF)
+        GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+    else
+        GetBoxMonNickname(GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos), gStringVar1);
+    StringCopy(gStringVar2, GetMoveName(move));
+    ShowFieldMessage(gText_PkmnLearnedMove4);
+    gTasks[taskId].func = Task_DoLearnedBoxMonMoveFanfareAfterText;
+}
+
+static void Task_DoLearnedBoxMonMoveFanfareAfterText(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        PlayFanfare(MUS_LEVEL_UP);
+        gSpecialVar_Result = CAN_LEARN_MOVE;
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
+static void Task_ReplaceBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleReplaceBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleReplaceBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        ShowFieldMessage(gText_WhichMoveToForget);
+        gTasks[taskId].func = Task_ShowSummaryScreenToForgetBoxMonMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        StopLearningBoxMonMovePrompt(taskId);
+        break;
+    }
+}
+
+static void Task_ShowSummaryScreenToForgetBoxMonMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        if(gSpecialVar_MonBoxId == 0xFF)
+            ShowSelectMovePokemonSummaryScreen(gPlayerParty, gSpecialVar_MonBoxPos, gPlayerPartyCount - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+        else
+            ShowSelectMoveBoxPokemonSummaryScreen(GetBoxedMonPtr(StorageGetCurrentBox(), 0), gSpecialVar_MonBoxPos, IN_BOX_COUNT - 1, CB2_ReturnToFieldWhileLearningMove, gSpecialVar_ItemId);
+    }
+}
+
+static void CB2_ReturnToFieldWhileLearningMove(void)
+{
+    if (!gPaletteFade.active)
+    {
+        gFieldCallback = Task_ReturnToFieldWhileLearningMove;
+        SetMainCallback2(CB2_ReturnToField);
+    }
+}
+
+static void Task_ReturnToFieldWhileLearningMove(void)
+{
+    if (GetMoveSlotToReplace() < MAX_MON_MOVES)
+    {
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetMonData(&gPlayerParty[gSpecialVar_MonBoxPos], MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        else
+        {
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+            StringCopy(gStringVar2, GetMoveName(GetBoxMonDataAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        }
+        ShowFieldMessage(gText_12PoofForgotMove);
+        CreateTask(Task_BoxMonReplaceMove,1);
+    }
+    else
+        CreateTask(StopLearningBoxMonMovePrompt,1);
+}
+
+static void Task_BoxMonReplaceMove(u8 taskId)
+{
+
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        u16 move = gSpecialVar_ItemId;
+        if(gSpecialVar_MonBoxId == 0xFF)
+        {
+            RemoveMonPPBonus(&gPlayerParty[gSpecialVar_MonBoxPos], GetMoveSlotToReplace());
+            SetMonMoveSlot(&gPlayerParty[gSpecialVar_MonBoxPos], move, GetMoveSlotToReplace()); 
+        }
+        else
+        {
+            struct BoxPokemon *mon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+
+            u8 ppBonuses = GetBoxMonData(mon, MON_DATA_PP_BONUSES);
+            ppBonuses &= gPPUpClearMask[GetMoveSlotToReplace()];
+            SetBoxMonData(mon, MON_DATA_PP_BONUSES, &ppBonuses);
+
+            SetBoxMonData(mon, MON_DATA_MOVE1 + GetMoveSlotToReplace(), &move);
+            SetBoxMonData(mon, MON_DATA_PP1 + GetMoveSlotToReplace(), &gMovesInfo[move].pp);
+        }
+     
+        Task_LearnedMoveBoxMon(taskId);
+    }
+}
+
+static void StopLearningBoxMonMovePrompt(u8 taskId)
+{
+    StringCopy(gStringVar2, GetMoveName(gSpecialVar_ItemId));
+    ShowFieldMessage(gText_StopLearningMove2);
+    gTasks[taskId].func = Task_StopLearningBoxMonMoveYesNo;
+}
+
+static void Task_StopLearningBoxMonMoveYesNo(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DisplayYesNoMenuDefaultYes();
+        gTasks[taskId].func = Task_HandleStopLearningBoxMonMoveYesNoInput;
+    }
+}
+
+static void Task_HandleStopLearningBoxMonMoveYesNoInput(u8 taskId)
+{
+    switch (Menu_ProcessInputNoWrapClearOnChoose())
+    {
+    case 0:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_MoveNotLearned);
+        gSpecialVar_Result = 4;
+        gTasks[taskId].func = Task_DidntLearnMove;
+        break;
+    case MENU_B_PRESSED:
+        PlaySE(SE_SELECT);
+        // fallthrough
+    case 1:
+        if(gSpecialVar_MonBoxId == 0xFF)
+            GetMonNickname(&gPlayerParty[gSpecialVar_MonBoxPos], gStringVar1);
+        else
+            GetBoxMonNickAt(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos, gStringVar1);
+        ShowFieldMessage(gText_PkmnNeedsToReplaceMove);
+        gTasks[taskId].func = Task_ReplaceBoxMonMoveYesNo;
+        break;
+    }
+}
+
+static void Task_DidntLearnMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0) != TRUE)
+    {
+        DestroyTask(taskId);
+        ScriptContext_Enable();
+    }
+}
+
 void EnterCode(void)
 {
+    StringCopy(gStringVar2, COMPOUND_STRING(""));
     DoNamingScreen(NAMING_SCREEN_CODE, gStringVar2, 0, 0, 0, CB2_ReturnToFieldContinueScript);
 }
 
@@ -4368,4 +4655,10 @@ void SetHiddenNature(void)
     u32 hiddenNature = gSpecialVar_Result;
     SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_HIDDEN_NATURE, &hiddenNature);
     CalculateMonStats(&gPlayerParty[gSpecialVar_0x8004]);
+}
+
+void SetAbility(void)
+{
+    u32 ability = gSpecialVar_Result;
+    SetMonData(&gPlayerParty[gSpecialVar_0x8004], MON_DATA_ABILITY_NUM, &ability);
 }

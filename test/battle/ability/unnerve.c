@@ -5,7 +5,7 @@
 SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own berries")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -24,7 +24,7 @@ SINGLE_BATTLE_TEST("Unnerve prevents opposing Pokémon from eating their own ber
 SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural Gift")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -42,7 +42,7 @@ SINGLE_BATTLE_TEST("Unnerve doesn't prevent opposing Pokémon from using Natural
 SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -59,7 +59,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (player)")
 SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -76,7 +76,7 @@ SINGLE_BATTLE_TEST("Unnerve prints the correct string (opponent)")
 SINGLE_BATTLE_TEST("Unnerve activates only once per switch-in")
 {
     u16 mon;
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { mon = SPECIES_JOLTIK, ability = ABILITY_UNNERVE; }
     PARAMETRIZE { mon = SPECIES_CALYREX_ICE, ability = ABILITY_AS_ONE_ICE_RIDER; }
     GIVEN {
@@ -123,4 +123,22 @@ DOUBLE_BATTLE_TEST("Unnerve stops applying on death but applies on revive")
         NOT ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponentRight);
     }
 
+}
+
+SINGLE_BATTLE_TEST("Unnerve activates before other switch in abilities regardless of Speed")
+{
+    u32 speed = 0;
+
+    PARAMETRIZE { speed = 50; }
+    PARAMETRIZE { speed = 150; }
+
+    GIVEN {
+        PLAYER(SPECIES_PINSIR) { Speed(100); Ability(ABILITY_MOLD_BREAKER); }
+        OPPONENT(SPECIES_JOLTIK) { Speed(speed); Ability(ABILITY_UNNERVE); }
+    } WHEN {
+        TURN {}
+    } SCENE {
+        ABILITY_POPUP(opponent, ABILITY_UNNERVE);
+        ABILITY_POPUP(player, ABILITY_MOLD_BREAKER);
+    }
 }

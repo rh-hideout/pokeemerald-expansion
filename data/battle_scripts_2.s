@@ -49,9 +49,8 @@ BattleScript_UseItemMessage:
 
 BattleScript_ItemRestoreHPRet:
 	clearmoveresultflags MOVE_RESULT_NO_EFFECT
-	orword gHitMarker, HITMARKER_IGNORE_SUBSTITUTE
-	healthbarupdate BS_SCRIPTING
-	datahpupdate BS_SCRIPTING
+	healthbarupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
+	datahpupdate BS_SCRIPTING, PASSIVE_HP_UPDATE
 	printstring STRINGID_ITEMRESTOREDSPECIESHEALTH
 	waitmessage B_WAIT_TIME_LONG
 	return
@@ -82,6 +81,7 @@ BattleScript_ItemRestoreHP_SendOutRevivedBattler:
 	switchinanim BS_SCRIPTING, FALSE, FALSE
 	waitstate
 	switchineffects BS_SCRIPTING
+	switchinevents
 	end
 
 BattleScript_ItemCureStatus::
@@ -148,6 +148,7 @@ BattleScript_ItemSetMist::
 
 BattleScript_ItemSetFocusEnergy::
 	call BattleScript_UseItemMessage
+	itemincreasestat
 	jumpifvolatile BS_ATTACKER, VOLATILE_DRAGON_CHEER, BattleScript_ButItFailed
 	jumpifvolatile BS_ATTACKER, VOLATILE_FOCUS_ENERGY, BattleScript_ButItFailed
 	setfocusenergy BS_ATTACKER
@@ -167,6 +168,7 @@ BattleScript_ItemRestorePP::
 
 BattleScript_ItemIncreaseAllStats::
 	call BattleScript_UseItemMessage
+	itemincreasestat
 	call BattleScript_AllStatsUp
 	end
 

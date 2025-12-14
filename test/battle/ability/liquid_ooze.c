@@ -113,7 +113,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Strength Sap users to lose HP instead of 
  */
 SINGLE_BATTLE_TEST("Liquid Ooze causes leech seed victim to faint before seeder")
 {
-    u16 ability;
+    enum Ability ability;
     PARAMETRIZE { ability = ABILITY_CLEAR_BODY; }
     PARAMETRIZE { ability = ABILITY_LIQUID_OOZE; }
     GIVEN {
@@ -142,7 +142,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze causes Dream Eater users to lose HP instead of h
 {
     s16 damage;
     GIVEN {
-        WITH_CONFIG(GEN_DREAM_EATER_LIQUID_OOZE, GEN_5);
+        WITH_CONFIG(CONFIG_DREAM_EATER_LIQUID_OOZE, GEN_5);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_DREAM_EATER) == EFFECT_DREAM_EATER);
@@ -167,7 +167,7 @@ SINGLE_BATTLE_TEST("Liquid Ooze does not cause Dream Eater users to lose HP inst
 {
     s16 damage;
     GIVEN {
-        WITH_CONFIG(GEN_DREAM_EATER_LIQUID_OOZE, GEN_3);
+        WITH_CONFIG(CONFIG_DREAM_EATER_LIQUID_OOZE, GEN_3);
         ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
         ASSUME(GetMoveNonVolatileStatus(MOVE_SPORE) == MOVE_EFFECT_SLEEP);
         ASSUME(GetMoveEffect(MOVE_DREAM_EATER) == EFFECT_DREAM_EATER);

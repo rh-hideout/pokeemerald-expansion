@@ -1,7 +1,14 @@
 #ifndef GUARD_TEXT_H
 #define GUARD_TEXT_H
 
+#include "config/text.h"
 #include "constants/characters.h"
+
+// This is to prevent the user from having a higher text speed modifier than the printing system can handle.
+STATIC_ASSERT(   TEXT_SPEED_SLOW_MODIFIER    <= 31
+              && TEXT_SPEED_MEDIUM_MODIFIER  <= 31
+              && TEXT_SPEED_FAST_MODIFIER    <= 31
+              && TEXT_SPEED_INSTANT_MODIFIER <= 31, TextSpeedModifiersCantGoPast31)
 
 // Given as a text speed when all the text should be
 // loaded at once but not copied to vram yet.
@@ -48,10 +55,21 @@ enum {
     FONTATTR_MAX_LETTER_HEIGHT,
     FONTATTR_LETTER_SPACING,
     FONTATTR_LINE_SPACING,
-    FONTATTR_UNKNOWN,   // dunno what this is yet
+    FONTATTR_COLOR_ACCENT,
     FONTATTR_COLOR_FOREGROUND,
     FONTATTR_COLOR_BACKGROUND,
-    FONTATTR_COLOR_SHADOW
+    FONTATTR_COLOR_SHADOW,
+};
+
+union TextColor {
+    struct {
+        u8 background;
+        u8 foreground;
+        u8 shadow;
+        u8 accent;
+    };
+    u32 asU32;
+    u8 asArray[4];
 };
 
 struct TextPrinterSubStruct
@@ -59,9 +77,9 @@ struct TextPrinterSubStruct
     u8 fontId:4;  // 0x14
     bool8 hasPrintBeenSpedUp:1;
     u8 unk:3;
-    u8 downArrowDelay:5;
-    u8 downArrowYPosIdx:2;
-    bool8 hasFontIdBeenSet:1;
+    u16 utilityCounter:13;
+    u16 downArrowYPosIdx:2;
+    bool16 hasFontIdBeenSet:1;
     u8 autoScrollDelay;
 };
 
@@ -76,10 +94,15 @@ struct TextPrinterTemplate
     u8 currentY;
     u8 letterSpacing;
     u8 lineSpacing;
-    u8 unk:4;   // 0xC
-    u8 fgColor:4;
-    u8 bgColor:4;
-    u8 shadowColor:4;
+    union {
+        struct {
+            DEPRECATED("Use color.background instead") u8 bgColor;
+            DEPRECATED("Use color.foreground instead") u8 fgColor;
+            DEPRECATED("Use color.shadow instead") u8 shadowColor;
+            DEPRECATED("Use color.accent instead") u8 accentColor;
+        };
+        union TextColor color;
+    };
 };
 
 struct TextPrinter
@@ -105,10 +128,15 @@ struct FontInfo
     u8 maxLetterHeight;
     u8 letterSpacing;
     u8 lineSpacing;
-    u8 unk:4;
-    u8 fgColor:4;
-    u8 bgColor:4;
-    u8 shadowColor:4;
+    union {
+        struct {
+            DEPRECATED("Use color.background instead") u8 bgColor;
+            DEPRECATED("Use color.foreground instead") u8 fgColor;
+            DEPRECATED("Use color.shadow instead") u8 shadowColor;
+            DEPRECATED("Use color.accent instead") u8 accentColor;
+        };
+        union TextColor color;
+    };
 };
 
 extern const struct FontInfo *gFonts;
@@ -135,7 +163,6 @@ struct TextGlyph
 };
 
 extern TextFlags gTextFlags;
-
 extern u8 gDisableTextPrinters;
 extern struct TextGlyph gCurGlyph;
 
@@ -144,9 +171,9 @@ u16 AddTextPrinterParameterized(u8 windowId, u8 fontId, const u8 *str, u8 x, u8 
 bool32 AddTextPrinter(struct TextPrinterTemplate *printerTemplate, u8 speed, void (*callback)(struct TextPrinterTemplate *, u16));
 void RunTextPrinters(void);
 bool32 IsTextPrinterActive(u8 id);
-void GenerateFontHalfRowLookupTable(u8 fgColor, u8 bgColor, u8 shadowColor);
-void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
-void RestoreTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor);
+void GenerateFontHalfRowLookupTable(union TextColor color);
+void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8* accentColor);
+void RestoreTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor);
 void DecompressGlyphTile(const void *src_, void *dest_);
 void CopyGlyphToWindow(struct TextPrinter *textPrinter);
 void ClearTextSpan(struct TextPrinter *textPrinter, u32 width);
@@ -177,5 +204,12 @@ u32 GetGlyphWidth_Braille(u16 glyphId, bool32 isJapanese);
 u32 GetFontIdToFit(const u8 *string, u32 widestFontId, u32 letterSpacing, u32 widthPx);
 u8 *PrependFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
 u8 *WrapFontIdToFit(u8 *start, u8 *end, u32 fontId, u32 width);
+
+// player text speed
+u32 GetPlayerTextSpeed(void);
+u32 GetPlayerTextSpeedDelay(void);
+u32 GetPlayerTextSpeedModifier(void);
+u32 GetPlayerTextScrollSpeed(void);
+bool32 IsPlayerTextSpeedInstant(void);
 
 #endif // GUARD_TEXT_H

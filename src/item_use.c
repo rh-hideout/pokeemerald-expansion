@@ -18,6 +18,7 @@
 #include "field_player_avatar.h"
 #include "field_screen_effect.h"
 #include "field_weather.h"
+#include "fishing.h"
 #include "fldeff.h"
 #include "follower_npc.h"
 #include "item.h"
@@ -28,6 +29,7 @@
 #include "menu.h"
 #include "menu_helpers.h"
 #include "metatile_behavior.h"
+#include "oras_dowse.h"
 #include "overworld.h"
 #include "palette.h"
 #include "party_menu.h"
@@ -54,8 +56,6 @@ static void Task_UseItemfinder(u8);
 static void Task_CloseItemfinderMessage(u8);
 static void Task_HiddenItemNearby(u8);
 static void Task_StandingOnHiddenItem(u8);
-static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *, u8);
-static u8 GetDirectionToHiddenItem(s16, s16);
 static void PlayerFaceHiddenItem(u8);
 static void CheckForHiddenItemsInMapConnection(u8);
 static void Task_OpenRegisteredPokeblockCase(u8);
@@ -367,10 +367,20 @@ void ItemUseOutOfBattle_Itemfinder(u8 var)
 
 static void ItemUseOnFieldCB_Itemfinder(u8 taskId)
 {
-    if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
-        gTasks[taskId].func = Task_UseItemfinder;
+    if (I_ORAS_DOWSING_FLAG != 0)
+    {
+        if (!TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_SURFING) && !TestPlayerAvatarFlags(PLAYER_AVATAR_FLAG_UNDERWATER))
+            gTasks[taskId].func = Task_UseORASDowsingMachine;
+        else
+            DisplayItemMessageOnField(taskId, gText_DadsAdvice, Task_CloseItemfinderMessage);
+    }
     else
-        DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+    {
+        if (ItemfinderCheckForHiddenItems(gMapHeader.events, taskId) == TRUE)
+            gTasks[taskId].func = Task_UseItemfinder;
+        else
+            DisplayItemMessageOnField(taskId, sText_ItemFinderNothing, Task_CloseItemfinderMessage);
+    }
 }
 
 // Define itemfinder task data
@@ -426,12 +436,15 @@ static void Task_CloseItemfinderMessage(u8 taskId)
     DestroyTask(taskId);
 }
 
-static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
+bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 taskId)
 {
     int itemX, itemY;
     s16 playerX, playerY, i, distanceX, distanceY;
     PlayerGetDestCoords(&playerX, &playerY);
-    gTasks[taskId].tItemFound = FALSE;
+    if (I_ORAS_DOWSING_FLAG != 0)
+        gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].tItemFound = FALSE;
+    else
+        gTasks[taskId].tItemFound = FALSE;
 
     for (i = 0; i < events->bgEventCount; i++)
     {
@@ -451,7 +464,7 @@ static bool8 ItemfinderCheckForHiddenItems(const struct MapEvents *events, u8 ta
     }
 
     CheckForHiddenItemsInMapConnection(taskId);
-    if (gTasks[taskId].tItemFound == TRUE)
+    if (gTasks[taskId].tItemFound == TRUE || gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].tItemFound)
         return TRUE;
     else
         return FALSE;
@@ -550,6 +563,8 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
 {
     s16 *data = gTasks[taskId].data;
     s16 oldItemAbsX, oldItemAbsY, newItemAbsX, newItemAbsY;
+    if (I_ORAS_DOWSING_FLAG != 0)
+        data = gSprites[gObjectEvents[gPlayerAvatar.objectEventId].fieldEffectSpriteId].data;
 
     if (tItemFound == FALSE)
     {
@@ -606,7 +621,7 @@ static void SetDistanceOfClosestHiddenItem(u8 taskId, s16 itemDistanceX, s16 ite
     }
 }
 
-static u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
+u8 GetDirectionToHiddenItem(s16 itemDistanceX, s16 itemDistanceY)
 {
     s16 absX, absY;
 
@@ -1133,7 +1148,7 @@ static u32 GetBallThrowableState(void)
         return BALL_THROW_UNABLE_NO_ROOM;
     else if (B_SEMI_INVULNERABLE_CATCH >= GEN_4 &&  IsSemiInvulnerable(GetCatchingBattler(), CHECK_ALL))
         return BALL_THROW_UNABLE_SEMI_INVULNERABLE;
-    else if (FlagGet(B_FLAG_NO_CATCHING))
+    else if (FlagGet(B_FLAG_NO_CATCHING) || !IsAllowedToUseBag())
         return BALL_THROW_UNABLE_DISABLED_FLAG;
 
     return BALL_THROW_ABLE;
@@ -1240,25 +1255,36 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
     u16 battleUsage = GetItemBattleUsage(itemId);
     bool8 cannotUse = FALSE;
     const u8* failStr = NULL;
-    u32 i;
+    u32 i, battlerTarget;
     u16 hp = GetMonData(mon, MON_DATA_HP);
 
+    if (gPartyMenu.slotId == 0)
+        battlerTarget = B_POSITION_PLAYER_LEFT;
+    else if (gPartyMenu.slotId == 1)
+        battlerTarget = B_POSITION_PLAYER_RIGHT;
+    else
+        battlerTarget = MAX_POSITION_COUNT;
+
     // Embargo Check
-    if ((gPartyMenu.slotId == 0 && gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.embargo)
-        || (gPartyMenu.slotId == 1 && gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.embargo))
+    if (battlerTarget < MAX_POSITION_COUNT && GetItemType(itemId) != ITEM_USE_BAG_MENU)
     {
-        return TRUE;
+        if (gBattleMons[battlerTarget].volatiles.embargo)
+            return TRUE;
     }
 
     // battleUsage checks
     switch (battleUsage)
     {
     case EFFECT_ITEM_INCREASE_STAT:
-        if (CompareStat(gBattlerInMenuId, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(gBattlerInMenuId)))
+        if (hp == 0 || gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (CompareStat(battlerTarget, GetItemEffect(itemId)[1], MAX_STAT_STAGE, CMP_EQUAL, GetBattlerAbility(battlerTarget)))
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_FOCUS_ENERGY:
-        if (gBattleMons[gBattlerInMenuId].volatiles.dragonCheer || gBattleMons[gBattlerInMenuId].volatiles.focusEnergy)
+        if (hp == 0 ||gPartyMenu.slotId > 1)
+            cannotUse = TRUE;
+        else if (gBattleMons[battlerTarget].volatiles.dragonCheer || gBattleMons[battlerTarget].volatiles.focusEnergy)
             cannotUse = TRUE;
         break;
     case EFFECT_ITEM_SET_MIST:
@@ -1292,11 +1318,15 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
         break;
     case EFFECT_ITEM_INCREASE_ALL_STATS:
     {
-        u32 ability = GetBattlerAbility(gBattlerInMenuId);
-        cannotUse = TRUE;
+        if (hp == 0 || gPartyMenu.slotId > 1)
+        {
+            cannotUse = TRUE;
+            break;
+        }
+        u32 ability = GetBattlerAbility(battlerTarget);
         for (i = STAT_ATK; i < NUM_STATS; i++)
         {
-            if (!CompareStat(gBattlerInMenuId, i, MAX_STAT_STAGE, CMP_EQUAL, ability))
+            if (CompareStat(battlerTarget, i, MAX_STAT_STAGE, CMP_EQUAL, ability))
             {
                 cannotUse = FALSE;
                 break;
@@ -1351,6 +1381,7 @@ bool32 CannotUseItemsInBattle(u16 itemId, struct Pokemon *mon)
 
 void ItemUseInBattle_BagMenu(u8 taskId)
 {
+    gPartyMenu.slotId = gBattleStruct->itemPartyIndex[gBattlerInMenuId] = gBattlerPartyIndexes[gBattlerInMenuId];
     if (CannotUseItemsInBattle(gSpecialVar_ItemId, NULL))
     {
         if (CurrentBattlePyramidLocation() == PYRAMID_LOCATION_NONE)

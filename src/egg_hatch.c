@@ -169,9 +169,6 @@ static const struct SpriteTemplate sSpriteTemplate_Egg =
     .paletteTag = PALTAG_EGG,
     .oam = &sOamData_Egg,
     .anims = sSpriteAnimTable_Egg,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOamData_EggShard =
@@ -229,8 +226,6 @@ static const struct SpriteTemplate sSpriteTemplate_EggShard =
     .paletteTag = PALTAG_EGG,
     .oam = &sOamData_EggShard,
     .anims = sSpriteAnimTable_EggShard,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_EggShard
 };
 
@@ -931,7 +926,7 @@ u8 GetEggCyclesToSubtract(void)
     {
         if (!GetMonData(&gPlayerParty[i], MON_DATA_SANITY_IS_EGG))
         {
-            u16 ability = GetMonAbility(&gPlayerParty[i]);
+            enum Ability ability = GetMonAbility(&gPlayerParty[i]);
             if (ability == ABILITY_MAGMA_ARMOR
              || ability == ABILITY_FLAME_BODY
              || ability == ABILITY_STEAM_ENGINE)
