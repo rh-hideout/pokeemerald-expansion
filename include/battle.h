@@ -83,6 +83,7 @@ struct DisableStruct
     u32 transformedMonPID;
     u8 rolloutTimer;
     u8 furyCutterCounter;
+    u8 substituteHP;
     u8 syrupBombIsShiny:1;
     u8 isTransformedMonShiny:1;
     u8 isFirstTurn:2;

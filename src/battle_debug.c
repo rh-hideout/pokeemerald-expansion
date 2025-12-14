@@ -1979,15 +1979,15 @@ static void SetUpModifyArrows(struct BattleDebugMenu *data)
             data->modifyArrows.typeOfVal = VAR_SHOW_HP;
             data->modifyArrows.currValue = gBattleSpritesDataPtr->battlerData[data->battlerId].hpNumbersNoBars;
         }
-        // else if (data->currentSecondaryListItemId == VARIOUS_SUBSTITUTE_HP)
-        // {
-        //     data->modifyArrows.minValue = 0;
-        //     data->modifyArrows.maxValue = 255;
-        //     data->modifyArrows.maxDigits = 3;
-        //     data->modifyArrows.modifiedValPtr = &gBattleMons[data->battlerId].volatiles.substituteHP;
-        //     data->modifyArrows.typeOfVal = VAR_SUBSTITUTE;
-        //     data->modifyArrows.currValue = gBattleMons[data->battlerId].volatiles.substituteHP;
-        // }
+        else if (data->currentSecondaryListItemId == VARIOUS_SUBSTITUTE_HP)
+        {
+            data->modifyArrows.minValue = 0;
+            data->modifyArrows.maxValue = 255;
+            data->modifyArrows.maxDigits = 3;
+            data->modifyArrows.modifiedValPtr = &gDisableStructs[data->battlerId].substituteHP;
+            data->modifyArrows.typeOfVal = VAR_SUBSTITUTE;
+            data->modifyArrows.currValue = gDisableStructs[data->battlerId].substituteHP;
+        }
         else if (data->currentSecondaryListItemId == VARIOUS_IN_LOVE)
         {
             data->modifyArrows.minValue = 0;

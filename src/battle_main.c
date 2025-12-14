@@ -3198,13 +3198,14 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
 
     gActionSelectionCursor[battler] = 0;
     gMoveSelectionCursor[battler] = 0;
-
+    memset(&gDisableStructs[battler], 0, sizeof(struct DisableStruct));
+    
     if (GetProtectType(gProtectStructs[battler].protected) == PROTECT_TYPE_SINGLE) // Side type protects expire at the end of the turn
         gProtectStructs[battler].protected = PROTECT_NONE;
 
     if (effect == EFFECT_BATON_PASS)
     {
-        gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
+        gDisableStructs[battler].substituteHP = volatilesCopy->substituteHP;
         gBattleMons[battler].volatiles.battlerWithSureHit = volatilesCopy->battlerWithSureHit;
         gBattleMons[battler].volatiles.perishSongTimer = volatilesCopy->perishSongTimer;
         gBattleMons[battler].volatiles.battlerPreventingEscape = volatilesCopy->battlerPreventingEscape;
@@ -3214,7 +3215,7 @@ void SwitchInClearSetData(u32 battler, struct Volatiles *volatilesCopy)
     else if (effect == EFFECT_SHED_TAIL)
     {
         gBattleMons[battler].volatiles.substitute = TRUE;
-        gBattleMons[battler].volatiles.substituteHP = volatilesCopy->substituteHP;
+        gDisableStructs[battler].substituteHP = volatilesCopy->substituteHP;
     }
 
     gBattleStruct->moveResultFlags[battler] = 0;
@@ -5053,7 +5054,7 @@ static void TurnValuesCleanUp(bool8 var0)
             gBattleStruct->battlerState[i].wasAboveHalfHp = FALSE;
         }
 
-        if (gBattleMons[i].volatiles.substituteHP == 0)
+        if (gDisableStructs[i].substituteHP == 0)
             gBattleMons[i].volatiles.substitute = FALSE;
 
         if (gBattleMons[i].volatiles.semiInvulnerable != STATE_COMMANDER)
