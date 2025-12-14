@@ -182,15 +182,13 @@ SINGLE_BATTLE_TEST("Counter work when surviving OHKO move")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
         HP_BAR(opponent, captureDamage: &counterDmg);
     } THEN {
-        DebugPrintf("%d", opponent->hp);
-        //EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), counterDmg);
+        EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), counterDmg);
     }
 }
 
 SINGLE_BATTLE_TEST("Counter work when surviving OHKO move with Disguise")
 {
-    s16 normalDmg;
-    //s16 counterDmg;
+    s16 counterDmg;
     GIVEN {
         WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_8);
         PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); MaxHP(64); HP(64);};
@@ -199,12 +197,10 @@ SINGLE_BATTLE_TEST("Counter work when surviving OHKO move with Disguise")
         TURN { MOVE(opponent, MOVE_FISSURE); MOVE(player, MOVE_COUNTER); }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_FISSURE, opponent);
-        HP_BAR(player, captureDamage: &normalDmg);
-        //ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
-        //HP_BAR(opponent, captureDamage: &counterDmg);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_COUNTER, player);
+        HP_BAR(opponent, captureDamage: &counterDmg);
     } THEN {
-        DebugPrintf("%d", opponent->hp);
-        //EXPECT_MUL_EQ(normalDmg, Q_4_12(2.0), counterDmg);
+        EXPECT_EQ(counterDmg, 1);
     }
 }
 

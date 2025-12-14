@@ -167,7 +167,7 @@ struct ProtectStruct
     u32 assuranceDoubled:1;
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
-    u32 padding1:1;
+    u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;

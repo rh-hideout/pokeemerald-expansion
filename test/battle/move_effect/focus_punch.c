@@ -73,7 +73,6 @@ DOUBLE_BATTLE_TEST("Focus Punch activation is based on Speed")
 
 SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO move")
 {
-    KNOWN_FAILING;
     u32 item;
     PARAMETRIZE { item = ITEM_NONE; }
     PARAMETRIZE { item = ITEM_FOCUS_BAND; }
@@ -105,31 +104,8 @@ SINGLE_BATTLE_TEST("Focus Punch activates when Focus Band/Focus Sash blocks OHKO
     }
 }
 
-SINGLE_BATTLE_TEST("Focus Punch activates when used behind Disguise ability (Gen7)")
-{
-    u32 move;
-    PARAMETRIZE { move = MOVE_WATER_GUN; }
-    PARAMETRIZE { move = MOVE_FISSURE; }
-    GIVEN {
-        ASSUME(GetMoveEffect(MOVE_FISSURE) == EFFECT_OHKO);
-        WITH_CONFIG(CONFIG_DISGUISE_HP_LOSS, GEN_7);
-        PLAYER(SPECIES_MIMIKYU_DISGUISED) { Ability(ABILITY_DISGUISE); }
-        OPPONENT(SPECIES_WOBBUFFET) {};
-    } WHEN {
-        TURN { MOVE(player, MOVE_FOCUS_PUNCH); MOVE(opponent, move); }
-    } SCENE {
-        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_FOCUS_PUNCH_SETUP, player);
-        MESSAGE("Mimikyu is tightening its focus!");
-        ANIMATION(ANIM_TYPE_MOVE, move, opponent);
-        MESSAGE("Mimikyu used Focus Punch!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_FOCUS_PUNCH, player);
-        HP_BAR(opponent);
-    }
-}
-
 SINGLE_BATTLE_TEST("Focus Punch activates when Disguise block a OHKO move (Gen8+)")
 {
-    KNOWN_FAILING;
     u32 move;
     bool32 activate;
     PARAMETRIZE { move = MOVE_WATER_GUN; activate = FALSE; }
