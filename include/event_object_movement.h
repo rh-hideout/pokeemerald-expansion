@@ -269,6 +269,8 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
 u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female);
 u16 GetObjectEventFlagIdByLocalIdAndMap(u8 localId, u8 mapNum, u8 mapGroup);
 bool32 AreElevationsCompatible(u32, u32);
+u32 DetermineObjectEventDirectionFromObject(struct ObjectEvent *player, struct ObjectEvent *npc);
+void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo);
 
 void MovementType_None(struct Sprite *sprite);
 void MovementType_LookAround(struct Sprite *sprite);

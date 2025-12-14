@@ -765,59 +765,6 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     return graphicsId;
 }
 
-static u32 DetermineNPCDirection(struct ObjectEvent *player, struct ObjectEvent *npc)
-{
-    s32 delta_x = npc->currentCoords.x - player->currentCoords.x;
-    s32 delta_y = npc->currentCoords.y - player->currentCoords.y;
-
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
-
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
-
-    return DIR_NONE;
-}
-
-void ScriptFaceLastTalked(struct ScriptContext *ctx)
-{
-    // Can be moved out of here and consolidated with FollowerNPC version of function.
-    u32 playerDirection, npcDirection;
-    struct ObjectEvent *player, *npc;
-    player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
-
-    if (npc->invisible == FALSE)
-    {
-        playerDirection = DetermineNPCDirection(player, npc);
-        npcDirection = playerDirection;
-
-        //Flip direction.
-        switch (playerDirection) 
-        {
-        case DIR_NORTH:
-            playerDirection = DIR_SOUTH;
-            break;
-        case DIR_SOUTH:
-            playerDirection = DIR_NORTH;
-            break;
-        case DIR_WEST:
-            playerDirection = DIR_EAST;
-            break;
-        case DIR_EAST:
-            playerDirection = DIR_WEST;
-            break;
-        }
-
-        ObjectEventTurn(player, playerDirection);
-        ObjectEventTurn(npc, npcDirection);
-    }
-}
-
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
     // The only automatically interacts with an OW Encounter when;
