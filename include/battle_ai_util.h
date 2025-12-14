@@ -94,6 +94,8 @@ typedef bool32 (*MoveFlag)(u32 move);
 
 bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
+bool32 AI_WouldBeFaster(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange);
+bool32 AI_WouldBeSlower(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange);
 bool32 AI_IsPartyMonFaster(u32 battlerAi, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority);
 bool32 AI_RandLessThan(u32 val);
