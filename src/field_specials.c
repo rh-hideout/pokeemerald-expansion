@@ -4368,66 +4368,62 @@ void UseBlankMessageToCancelPokemonPic(void)
     ScriptMenu_HidePokemonPic();
 }
 
-#define tStep        data[0]
-#define tActionIndex data[1]
-#define tMonIndex    data[2]
-#define tMove        data[3]
-
-static void ExecuteActionFromManager(u8 taskId, const UIAction *actions)
+static void UIAskConfirmation(void)
 {
-    UIAction currentAction = actions[gTasks[taskId].tActionIndex];
-    if (IsTextPrinterActive(0))
-        return;
-    switch (currentAction)
-    {
-    case ASK_CONFIRMATION:
-        DisplayYesNoMenuDefaultYes();
-        gTasks[taskId].tActionIndex += 1;
-        break;
-    case WAIT_CONFIRMATION:
-        u32 input = Menu_ProcessInputNoWrapClearOnChoose();
-        if (input == MENU_NOTHING_CHOSEN)
-            return;
-        else if (input == 0)
-            gTasks[taskId].tStep = actions[gTasks[taskId].tActionIndex + 1];
-        else
-            gTasks[taskId].tStep = actions[gTasks[taskId].tActionIndex + 2];
-        gTasks[taskId].tActionIndex = 0;
-        break;
-    case CHANGE_STEP:
-        gTasks[taskId].tStep = actions[gTasks[taskId].tActionIndex + 1];
-        gTasks[taskId].tActionIndex = 0;
-        break;
-    case PRINT_MESSAGE:
-        ShowFieldMessage((const u8 *)actions[gTasks[taskId].tActionIndex + 1]);
-        gTasks[taskId].tActionIndex += 2;
-        break;
-    case PLAY_FANFARE:
-        PlayFanfare(actions[gTasks[taskId].tActionIndex + 1]);
-        gTasks[taskId].tActionIndex += 2;
-        break;
-    case SHOW_MOVE_LIST:
-        gSpecialVar_0x8008 = gTasks[taskId].tMonIndex;
-        gSpecialVar_0x8009 = gTasks[taskId].tMove;
-        DestroyTask(taskId);
-        ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tMonIndex, CB2_ReturnToFieldWhileLearningMove, gTasks[taskId].tMove);
-        break;
-    case END_TASK:
-        DestroyTask(taskId);
-        ScriptContext_Enable();
-        break;
-    }
+    DisplayYesNoMenuDefaultYes();
 }
 
-static void Task_AskTeachMonManager(u8 taskId)
+static s32 UIWaitConfirmation(void)
 {
-    struct BoxPokemon *boxmon;
-    if (gTasks[taskId].tMonIndex == PC_MON_CHOSEN)
-        boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
-    else
-        boxmon = &(gPlayerParty[gTasks[taskId].tMonIndex].box);
-    const UIAction *actions = GetReplacementActions(gTasks[taskId].tStep, boxmon, gTasks[taskId].tMove);
-    ExecuteActionFromManager(taskId, actions);
+    s32 input = Menu_ProcessInputNoWrapClearOnChoose();
+    if (input == MENU_B_PRESSED)
+        return 1; // NO
+    return input;
+}
+
+static void UIPrintMessage(const u8 *message)
+{
+    ShowFieldMessage(message);
+}
+
+static void UIPlayFanfare(u32 songId)
+{
+    PlayFanfare(songId);
+}
+
+static void UIEndTask(u8 taskId)
+{
+    DestroyTask(taskId);
+    ScriptContext_Enable();
+}
+
+#define tState         data[0]
+#define tPartyIndex    data[1]
+#define tMove          data[2]
+
+static void UIShowMoveList(u8 taskId)
+{
+    gSpecialVar_0x8008 = gTasks[taskId].tPartyIndex;
+    gSpecialVar_0x8009 = gTasks[taskId].tMove;
+    DestroyTask(taskId);
+    ShowSelectMovePokemonSummaryScreen(gPlayerParty, gTasks[taskId].tPartyIndex, CB2_ReturnToFieldWhileLearningMove, gTasks[taskId].tMove);
+}
+
+static const struct MoveLearnUI sMoveLearnUI =
+{
+    .askConfirmation = UIAskConfirmation,
+    .waitConfirmation = UIWaitConfirmation,
+    .printMessage = UIPrintMessage,
+    .playFanfare = UIPlayFanfare,
+    .showMoveList = UIShowMoveList,
+    .endTask = UIEndTask
+};
+
+static void Task_LearnMove(u8 taskId)
+{
+    if (IsTextPrinterActive(0))
+        return;
+    gTasks[taskId].tState = LearnMove(&sMoveLearnUI, taskId);
 }
 
 void CanTeachMoveBoxMon(void)
@@ -4439,34 +4435,28 @@ void CanTeachMoveBoxMon(void)
         return;
     }
 
-    u32 taskId = CreateTask(Task_AskTeachMonManager, 1);
-    gTasks[taskId].tStep = TRY_LEARN_MOVE;
-    gTasks[taskId].tActionIndex = 0;
-    gTasks[taskId].tMonIndex = gSpecialVar_0x8004;
+    u32 taskId = CreateTask(Task_LearnMove, 1);
+    gTasks[taskId].tState = LEARN_MOVE;
+    gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
     gTasks[taskId].tMove = gSpecialVar_0x8005;
 }
 
 static void CB2_ReturnToFieldWhileLearningMove(void)
 {
-    if (!gPaletteFade.active)
-    {
-        gFieldCallback = Task_ReturnToFieldWhileLearningMove;
-        SetMainCallback2(CB2_ReturnToField);
-    }
+    gFieldCallback = Task_ReturnToFieldWhileLearningMove;
+    CB2_ReturnToField();
 }
 
 static void Task_ReturnToFieldWhileLearningMove(void)
 {
-    u32 taskId = CreateTask(Task_AskTeachMonManager, 1);
-    gTasks[taskId].tStep = BACK_FROM_SUMMARY_SCREEN;
-    gTasks[taskId].tActionIndex = 0;
-    gTasks[taskId].tMonIndex = gSpecialVar_0x8008;
+    u32 taskId = CreateTask(Task_LearnMove, 1);
+    gTasks[taskId].tState = WANT_REPLACE_3;
+    gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
     gTasks[taskId].tMove = gSpecialVar_0x8009;
 }
 
-#undef tStep
-#undef tActionIndex
-#undef tMonIndex
+#undef tState
+#undef tPartyIndex
 #undef tMove
 
 void EnterCode(void)

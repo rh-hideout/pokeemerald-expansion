@@ -127,84 +127,114 @@ void ChooseBoxMon(struct ScriptContext *ctx)
     }
 }
 
-#define ACTION_2ARGS(x, y) (UIAction)x, (UIAction)y
-#define ACTION_ARG(x) ((UIAction)x)
-
-const UIAction sLearnedMoveActions[] =
+static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
 {
-    PRINT_MESSAGE, ACTION_ARG(gText_PkmnLearnedMove4),
-    PLAY_FANFARE, ACTION_ARG(MUS_LEVEL_UP),
-    END_TASK
-};
-
-const UIAction sAskReplacementActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_PkmnNeedsToReplaceMove),
-    ASK_CONFIRMATION,
-    WAIT_CONFIRMATION, ACTION_2ARGS(WANT_REPLACE, REFUSE_REPLACE)
-};
-
-const UIAction sWantReplacementActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_WhichMoveToForget),
-    SHOW_MOVE_LIST
-};
-
-const UIAction sRefuseNewMoveActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_StopLearningMove2),
-    ASK_CONFIRMATION,
-    WAIT_CONFIRMATION, ACTION_2ARGS(DID_NOT_LEARN, WANT_REPLACE)
-};
-
-const UIAction sForgotMoveActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_12PoofForgotMove),
-    CHANGE_STEP, ACTION_ARG(REPLACE_MOVE)
-};
-
-const UIAction sDidNotLearnActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_MoveNotLearned),
-    END_TASK
-};
-
-const UIAction sReplaceMoveActions[] =
-{
-    PRINT_MESSAGE, ACTION_ARG(gText_PkmnLearnedMove4),
-    END_TASK
-};
-
-const UIAction *GetReplacementActions(enum LearnMoveFlowchartStep step, struct BoxPokemon *boxmon, u32 move)
-{
-    switch(step)
-    {
-    case TRY_LEARN_MOVE:
-        GetBoxMonNickname(boxmon, gStringVar1);
-        StringCopy(gStringVar2, GetMoveName(move));
-        if (GiveMoveToBoxMon(boxmon, move) != MON_HAS_MAX_MOVES)
-            return sLearnedMoveActions;
-        return sAskReplacementActions;
-    case WANT_REPLACE:
-        return sWantReplacementActions;
-    case BACK_FROM_SUMMARY_SCREEN:
-        GetBoxMonNickname(boxmon, gStringVar1);
-        if (GetMoveSlotToReplace() == MAX_MON_MOVES)
-        {
-            StringCopy(gStringVar2, GetMoveName(move));
-            return sRefuseNewMoveActions;
-        }
-        StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
-        return sForgotMoveActions;
-    case REFUSE_REPLACE:
-        return sRefuseNewMoveActions;
-    case REPLACE_MOVE:
-        RemoveBoxMonPPBonus(boxmon, GetMoveSlotToReplace());
-        SetBoxMonMoveSlot(boxmon, move, GetMoveSlotToReplace());
-        StringCopy(gStringVar2, GetMoveName(move));
-        return sReplaceMoveActions;
-    case DID_NOT_LEARN:
-        return sDidNotLearnActions;
-    }
-    return NULL;
+    struct BoxPokemon *boxmon;
+    if (partyIndex == PC_MON_CHOSEN)
+        boxmon = GetBoxedMonPtr(gSpecialVar_MonBoxId, gSpecialVar_MonBoxPos);
+    else
+        boxmon = &(gPlayerParty[partyIndex].box);
+    return boxmon;
 }
+
+#define state         gTasks[taskId].data[0]
+#define partyIndex    gTasks[taskId].data[1]
+#define move          gTasks[taskId].data[2]
+s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
+{
+    struct BoxPokemon *boxmon = LearnMove_GetBoxMonFromTaskData(partyIndex);
+    switch (state)
+    {
+    case LEARN_MOVE:
+        if (GiveMoveToBoxMon(boxmon, move) != MON_HAS_MAX_MOVES)
+            return LEARNED_MOVE_1;
+        else
+            return ASK_REPLACEMENT_1;
+
+    case ASK_REPLACEMENT_1:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(move));
+        ui->printMessage(gText_PkmnNeedsToReplaceMove);
+        return ASK_REPLACEMENT_2;
+    case ASK_REPLACEMENT_2:
+        ui->askConfirmation();
+        return ASK_REPLACEMENT_3;
+    case ASK_REPLACEMENT_3:
+        switch (ui->waitConfirmation())
+        {
+        case 0: // Yes
+            return WANT_REPLACE_1;
+        case 1: // No
+            return REFUSE_REPLACE_1;
+        }
+        return state;
+
+    case REFUSE_REPLACE_1:
+        StringCopy(gStringVar2, GetMoveName(move));
+        ui->printMessage(gText_StopLearningMove2);
+        return REFUSE_REPLACE_2;
+    case REFUSE_REPLACE_2:
+        ui->askConfirmation();
+        return REFUSE_REPLACE_3;
+    case REFUSE_REPLACE_3:
+        switch (ui->waitConfirmation())
+        {
+        case 0: // Yes
+            return DID_NOT_LEARN_1;
+        case 1: // No
+            return WANT_REPLACE_1;
+        }
+        return state;
+
+    case WANT_REPLACE_1:
+        ui->printMessage(gText_WhichMoveToForget);
+        return WANT_REPLACE_2;
+    case WANT_REPLACE_2:
+        ui->showMoveList(taskId);
+        return WANT_REPLACE_3;
+    case WANT_REPLACE_3:
+        if (GetMoveSlotToReplace() == MAX_MON_MOVES)
+            return REFUSE_REPLACE_1;
+        else
+            return FORGOT_MOVE_1;
+
+    case LEARNED_MOVE_1:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(move));
+        ui->printMessage(gText_PkmnLearnedMove4);
+        return LEARNED_MOVE_2;
+    case LEARNED_MOVE_2:
+        gSpecialVar_Result = TRUE;
+        ui->playFanfare(MUS_LEVEL_UP);
+        return LEARN_MOVE_END;
+
+    case FORGOT_MOVE_1:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(GetBoxMonData(boxmon, MON_DATA_MOVE1 + GetMoveSlotToReplace())));
+        ui->printMessage(gText_12PoofForgotMove);
+        return REPLACE_MOVE_1;
+
+    case REPLACE_MOVE_1:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(move));
+        gSpecialVar_Result = TRUE;
+        ui->printMessage(gText_PkmnLearnedMove4);
+        return LEARN_MOVE_END;
+
+    case DID_NOT_LEARN_1:
+        GetBoxMonNickname(boxmon, gStringVar1);
+        StringCopy(gStringVar2, GetMoveName(move));
+        gSpecialVar_Result = FALSE;
+        ui->printMessage(gText_MoveNotLearned);
+        return LEARN_MOVE_END;
+
+    default:
+        // TODO: assertf then fallthrough.
+    case LEARN_MOVE_END:
+        ui->endTask(taskId);
+        return LEARN_MOVE_END;
+    }
+}
+#undef state
+#undef partyIndex
+#undef move
