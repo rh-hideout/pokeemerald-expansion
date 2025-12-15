@@ -4436,7 +4436,7 @@ void CanTeachMoveBoxMon(void)
     }
 
     u32 taskId = CreateTask(Task_LearnMove, 1);
-    gTasks[taskId].tState = LEARN_MOVE;
+    gTasks[taskId].tState = GetLearnMoveStartState();
     gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
     gTasks[taskId].tMove = gSpecialVar_0x8005;
 }
@@ -4450,7 +4450,7 @@ static void CB2_ReturnToFieldWhileLearningMove(void)
 static void Task_ReturnToFieldWhileLearningMove(void)
 {
     u32 taskId = CreateTask(Task_LearnMove, 1);
-    gTasks[taskId].tState = WANT_REPLACE_3;
+    gTasks[taskId].tState = GetLearnMoveResumeAfterSummaryScreenState();
     gTasks[taskId].tPartyIndex = gSpecialVar_0x8008;
     gTasks[taskId].tMove = gSpecialVar_0x8009;
 }

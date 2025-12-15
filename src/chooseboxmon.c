@@ -127,6 +127,34 @@ void ChooseBoxMon(struct ScriptContext *ctx)
     }
 }
 
+enum LearnMoveState
+{
+    LEARN_MOVE_END,
+
+    LEARN_MOVE, //Start
+
+    ASK_REPLACEMENT_1,
+    ASK_REPLACEMENT_2,
+    ASK_REPLACEMENT_3,
+
+    REFUSE_REPLACE_1,
+    REFUSE_REPLACE_2,
+    REFUSE_REPLACE_3,
+
+    WANT_REPLACE_1,
+    WANT_REPLACE_2,
+    WANT_REPLACE_3, //Return from Summary screen
+
+    LEARNED_MOVE_1,
+    LEARNED_MOVE_2,
+
+    FORGOT_MOVE_1,
+
+    REPLACE_MOVE_1,
+
+    DID_NOT_LEARN_1,
+};
+
 static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
 {
     struct BoxPokemon *boxmon;
@@ -140,6 +168,8 @@ static struct BoxPokemon *LearnMove_GetBoxMonFromTaskData(u8 partyIndex)
 #define state         gTasks[taskId].data[0]
 #define partyIndex    gTasks[taskId].data[1]
 #define move          gTasks[taskId].data[2]
+// MoveLearnUI does not contain a waitMessage function and LearnMove assumes the calling task will wait when a printer is active
+// Remember to update Task_LearnMove is you wish to change to an explicit waitMessage system
 s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
 {
     struct BoxPokemon *boxmon = LearnMove_GetBoxMonFromTaskData(partyIndex);
@@ -234,6 +264,18 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         ui->endTask(taskId);
         return LEARN_MOVE_END;
     }
+}
+
+s32 GetLearnMoveStartState(void)
+{
+    return LEARN_MOVE;
+}
+
+//At the time of writing code for this, there was no prescribed way to make a task persist between scenes
+//and I didn't want to implement one just for this, feel free to rewrite this if this has changed
+s32 GetLearnMoveResumeAfterSummaryScreenState(void)
+{
+    return WANT_REPLACE_3;
 }
 #undef state
 #undef partyIndex
