@@ -135,7 +135,8 @@ static u32 GenerateSurpriseTradeSpecies(void)
         ||  (gSpeciesInfo[newSpecies].isSubLegendary && !WT_USE_SUBLEGENDARIES)
         ||  (gSpeciesInfo[newSpecies].isMythical && !WT_USE_MYTHICALS)
         ||  (gSpeciesInfo[newSpecies].isUltraBeast && !WT_USE_ULTRA_BEASTS)
-        ||  (gSpeciesInfo[newSpecies].isParadox && !WT_USE_PARADOXES))
+        ||  (gSpeciesInfo[newSpecies].isParadox && !WT_USE_PARADOXES)
+        ||   gSpeciesInfo[newSpecies].isWonderTradeBanned)
         {
             prevSpecies = newSpecies;
             continue;
