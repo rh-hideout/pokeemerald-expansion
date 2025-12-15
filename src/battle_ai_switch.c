@@ -43,10 +43,8 @@ static u32 GetWishHealAmountForBattler(u32 battler);
 
 static void InitializeSwitchinCandidate(u32 battler, struct Pokemon *mon)
 {
-    PokemonToBattleMon(mon, &gAiLogicData->switchinCandidate.battleMon);
-    gAiLogicData->switchinCandidate.hypotheticalStatus = FALSE;
+    PokemonToBattleMon(mon, &gBattleMons[battler]);
     // Setup switchin battler data
-    gBattleMons[battler] = gAiLogicData->switchinCandidate.battleMon;
     gAiThinkingStruct->saved[battler].saved = TRUE;
     SetBattlerAiData(battler, gAiLogicData);
     SetBattlerFieldStatusForSwitchin(battler);
@@ -1439,7 +1437,7 @@ static u32 GetBestMonTypeMatchup(struct Pokemon *party, int firstId, int lastId,
             {
                 InitializeSwitchinCandidate(battler, &party[i]);
 
-                u32 typeEffectiveness = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gAiLogicData->switchinCandidate.battleMon);
+                u32 typeEffectiveness = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gBattleMons[battler]);
                 if (typeEffectiveness < bestResist)
                 {
                     bestResist = typeEffectiveness;
@@ -1488,7 +1486,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
         InitializeSwitchinCandidate(battler, &party[i]);
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
-            aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
+            aiMove = gBattleMons[battler].moves[j];
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j);
@@ -1594,11 +1592,11 @@ static u32 GetSwitchinHazardsDamage(u32 battler, struct BattlePokemon *battleMon
 }
 
 // Gets damage / healing from weather
-static s32 GetSwitchinWeatherImpact(void)
+static s32 GetSwitchinWeatherImpact(u32 battler)
 {
-    s32 weatherImpact = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
-    enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    s32 weatherImpact = 0, maxHP = gBattleMons[battler].maxHP;
+    enum Ability ability = gBattleMons[battler].ability;
+    enum HoldEffect holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
 
     if (HasWeatherEffect())
     {
@@ -1606,7 +1604,7 @@ static s32 GetSwitchinWeatherImpact(void)
         if (holdEffect != HOLD_EFFECT_SAFETY_GOGGLES && ability != ABILITY_MAGIC_GUARD && ability != ABILITY_OVERCOAT)
         {
             if ((gBattleWeather & B_WEATHER_HAIL)
-             && (gAiLogicData->switchinCandidate.battleMon.types[0] != TYPE_ICE || gAiLogicData->switchinCandidate.battleMon.types[1] != TYPE_ICE)
+             && (gBattleMons[battler].types[0] != TYPE_ICE || gBattleMons[battler].types[1] != TYPE_ICE)
              && ability != ABILITY_SNOW_CLOAK && ability != ABILITY_ICE_BODY)
             {
                 weatherImpact = maxHP / 16;
@@ -1614,9 +1612,9 @@ static s32 GetSwitchinWeatherImpact(void)
                     weatherImpact = 1;
             }
             else if ((gBattleWeather & B_WEATHER_SANDSTORM)
-                && (gAiLogicData->switchinCandidate.battleMon.types[0] != TYPE_GROUND && gAiLogicData->switchinCandidate.battleMon.types[1] != TYPE_GROUND
-                && gAiLogicData->switchinCandidate.battleMon.types[0] != TYPE_ROCK && gAiLogicData->switchinCandidate.battleMon.types[1] != TYPE_ROCK
-                && gAiLogicData->switchinCandidate.battleMon.types[0] != TYPE_STEEL && gAiLogicData->switchinCandidate.battleMon.types[1] != TYPE_STEEL
+                && (gBattleMons[battler].types[0] != TYPE_GROUND && gBattleMons[battler].types[1] != TYPE_GROUND
+                && gBattleMons[battler].types[0] != TYPE_ROCK && gBattleMons[battler].types[1] != TYPE_ROCK
+                && gBattleMons[battler].types[0] != TYPE_STEEL && gBattleMons[battler].types[1] != TYPE_STEEL
                 && ability != ABILITY_SAND_VEIL && ability != ABILITY_SAND_RUSH && ability != ABILITY_SAND_FORCE))
             {
                 weatherImpact = maxHP / 16;
@@ -1659,16 +1657,16 @@ static s32 GetSwitchinWeatherImpact(void)
 }
 
 // Gets one turn of recurring healing
-static u32 GetSwitchinRecurringHealing(void)
+static u32 GetSwitchinRecurringHealing(u32 battler)
 {
-    u32 recurringHealing = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
-    enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    u32 recurringHealing = 0, maxHP = gBattleMons[battler].maxHP;
+    enum Ability ability = gBattleMons[battler].ability;
+    enum HoldEffect holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
 
     // Items
     if (ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && (gAiLogicData->switchinCandidate.battleMon.types[0] == TYPE_POISON || gAiLogicData->switchinCandidate.battleMon.types[1] == TYPE_POISON))
+        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && (gBattleMons[battler].types[0] == TYPE_POISON || gBattleMons[battler].types[1] == TYPE_POISON))
         {
             recurringHealing = maxHP / 16;
             if (recurringHealing == 0)
@@ -1683,7 +1681,7 @@ static u32 GetSwitchinRecurringHealing(void)
     } // Intentionally omitting Shell Bell for its inconsistency
 
     // Abilities
-    if (ability == ABILITY_POISON_HEAL && (gAiLogicData->switchinCandidate.battleMon.status1 & STATUS1_POISON))
+    if (ability == ABILITY_POISON_HEAL && (gBattleMons[battler].status1 & STATUS1_POISON))
     {
         u32 healing = maxHP / 8;
         if (healing == 0)
@@ -1694,16 +1692,16 @@ static u32 GetSwitchinRecurringHealing(void)
 }
 
 // Gets one turn of recurring damage
-static u32 GetSwitchinRecurringDamage(void)
+static u32 GetSwitchinRecurringDamage(u32 battler)
 {
-    u32 passiveDamage = 0, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
-    enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability;
-    enum HoldEffect holdEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
+    u32 passiveDamage = 0, maxHP = gBattleMons[battler].maxHP;
+    enum Ability ability = gBattleMons[battler].ability;
+    enum HoldEffect holdEffect = GetItemHoldEffect(gBattleMons[battler].item);
 
     // Items
     if (ability != ABILITY_MAGIC_GUARD && ability != ABILITY_KLUTZ)
     {
-        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && gAiLogicData->switchinCandidate.battleMon.types[0] != TYPE_POISON && gAiLogicData->switchinCandidate.battleMon.types[1] != TYPE_POISON)
+        if (holdEffect == HOLD_EFFECT_BLACK_SLUDGE && gBattleMons[battler].types[0] != TYPE_POISON && gBattleMons[battler].types[1] != TYPE_POISON)
         {
             passiveDamage = maxHP / 8;
             if (passiveDamage == 0)
@@ -1728,15 +1726,15 @@ static u32 GetSwitchinRecurringDamage(void)
 // Gets one turn of status damage
 static u32 GetSwitchinStatusDamage(u32 battler)
 {
-    enum Type defType1 = gAiLogicData->switchinCandidate.battleMon.types[0], defType2 = gAiLogicData->switchinCandidate.battleMon.types[1];
+    enum Type defType1 = gBattleMons[battler].types[0], defType2 = gBattleMons[battler].types[1];
     u8 tSpikesLayers = gSideTimers[GetBattlerSide(battler)].toxicSpikesAmount;
-    u16 heldItemEffect = GetItemHoldEffect(gAiLogicData->switchinCandidate.battleMon.item);
-    u32 status = gAiLogicData->switchinCandidate.battleMon.status1;
-    enum Ability ability = gAiLogicData->switchinCandidate.battleMon.ability, maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
+    u16 heldItemEffect = GetItemHoldEffect(gBattleMons[battler].item);
+    u32 status = gBattleMons[battler].status1;
+    enum Ability ability = gBattleMons[battler].ability, maxHP = gBattleMons[battler].maxHP;
     u32 statusDamage = 0;
 
     // Status condition damage
-    if ((status != 0) && gAiLogicData->switchinCandidate.battleMon.ability != ABILITY_MAGIC_GUARD)
+    if ((status != 0) && gBattleMons[battler].ability != ABILITY_MAGIC_GUARD)
     {
         if (status & STATUS1_BURN)
         {
@@ -1767,11 +1765,11 @@ static u32 GetSwitchinStatusDamage(u32 battler)
         else if ((status & STATUS1_TOXIC_POISON) && ability != ABILITY_POISON_HEAL)
         {
             if ((status & STATUS1_TOXIC_COUNTER) != STATUS1_TOXIC_TURN(15)) // not 16 turns
-                gAiLogicData->switchinCandidate.battleMon.status1 += STATUS1_TOXIC_TURN(1);
+                gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
             statusDamage = maxHP / 16;
             if (statusDamage == 0)
                 statusDamage = 1;
-            statusDamage *= gAiLogicData->switchinCandidate.battleMon.status1 & STATUS1_TOXIC_COUNTER >> 8;
+            statusDamage *= gBattleMons[battler].status1 & STATUS1_TOXIC_COUNTER >> 8;
         }
     }
 
@@ -1787,14 +1785,12 @@ static u32 GetSwitchinStatusDamage(u32 battler)
     {
         if (tSpikesLayers == 1)
         {
-            gAiLogicData->switchinCandidate.battleMon.status1 = STATUS1_POISON; // Assign "hypothetical" status to the switchin candidate so we can get the damage it would take from TSpikes
-            gAiLogicData->switchinCandidate.hypotheticalStatus = TRUE;
+            gBattleMons[battler].status1 = STATUS1_POISON; // Assign "hypothetical" status to the switchin candidate so we can get the damage it would take from TSpikes
         }
         if (tSpikesLayers == 2)
         {
-            gAiLogicData->switchinCandidate.battleMon.status1 = STATUS1_TOXIC_POISON; // Assign "hypothetical" status to the switchin candidate so we can get the damage it would take from TSpikes
-            gAiLogicData->switchinCandidate.battleMon.status1 += STATUS1_TOXIC_TURN(1);
-            gAiLogicData->switchinCandidate.hypotheticalStatus = TRUE;
+            gBattleMons[battler].status1 = STATUS1_TOXIC_POISON; // Assign "hypothetical" status to the switchin candidate so we can get the damage it would take from TSpikes
+            gBattleMons[battler].status1 += STATUS1_TOXIC_TURN(1);
         }
     }
     return statusDamage;
@@ -1803,8 +1799,8 @@ static u32 GetSwitchinStatusDamage(u32 battler)
 // Gets number of hits to KO factoring in hazards, healing held items, status, weather, and incoming heals
 static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct IncomingHealInfo *healInfo, u32 originalHp)
 {
-    u32 hazardDamage = GetSwitchinHazardsDamage(battler, &gAiLogicData->switchinCandidate.battleMon);
-    u32 hazardCheckHp = healInfo->healBeforeHazards ? gAiLogicData->switchinCandidate.battleMon.maxHP : gAiLogicData->switchinCandidate.battleMon.hp;
+    u32 hazardDamage = GetSwitchinHazardsDamage(battler, &gBattleMons[battler]);
+    u32 hazardCheckHp = healInfo->healBeforeHazards ? gBattleMons[battler].maxHP : gBattleMons[battler].hp;
     u32 startingHP;
 
     if (healInfo->healAfterHazards)
@@ -1812,7 +1808,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
         // Heal happens after entry damage
         if (hazardDamage >= originalHp)
             return 1;
-        startingHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
+        startingHP = gBattleMons[battler].maxHP;
     }
     else
     {
@@ -1821,15 +1817,15 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
         startingHP = hazardCheckHp - hazardDamage;
     }
 
-    s32 weatherImpact = GetSwitchinWeatherImpact(); // Signed to handle both damage and healing in the same value
-    u32 recurringDamage = GetSwitchinRecurringDamage();
-    u32 recurringHealing = GetSwitchinRecurringHealing();
+    s32 weatherImpact = GetSwitchinWeatherImpact(battler); // Signed to handle both damage and healing in the same value
+    u32 recurringDamage = GetSwitchinRecurringDamage(battler);
+    u32 recurringHealing = GetSwitchinRecurringHealing(battler);
     u32 statusDamage = GetSwitchinStatusDamage(battler);
     u32 hitsToKO = 0;
-    u16 maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP, item = gAiLogicData->switchinCandidate.battleMon.item, heldItemEffect = GetItemHoldEffect(item);
+    u16 maxHP = gBattleMons[battler].maxHP, item = gBattleMons[battler].item, heldItemEffect = GetItemHoldEffect(item);
     u8 weatherDuration = gWishFutureKnock.weatherDuration, holdEffectParam = GetItemHoldEffectParam(item);
     u32 opposingBattler = GetOppositeBattler(battler);
-    enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gAiLogicData->switchinCandidate.battleMon.ability;
+    enum Ability opposingAbility = gAiLogicData->abilities[opposingBattler], ability = gBattleMons[battler].ability;
     bool32 usedSingleUseHealingItem = FALSE, opponentCanBreakMold = IsMoldBreakerTypeAbility(opposingBattler, opposingAbility);
     s32 currentHP = startingHP, singleUseItemHeal = 0;
     bool32 applyWishNow = healInfo->healEndOfTurn && healInfo->wishCounter == 1;
@@ -1861,7 +1857,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
             currentHP = currentHP - weatherImpact;
 
         // Check if we're at a single use healing item threshold
-        if (currentHP > 0 && gAiLogicData->switchinCandidate.battleMon.ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
+        if (currentHP > 0 && gBattleMons[battler].ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
          && !(opposingAbility == ABILITY_UNNERVE && GetItemPocket(item) == POCKET_BERRIES))
         {
             switch (heldItemEffect)
@@ -1917,7 +1913,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
         }
 
         // Recalculate toxic damage if needed
-        if (gAiLogicData->switchinCandidate.battleMon.status1 & STATUS1_TOXIC_POISON)
+        if (gBattleMons[battler].status1 & STATUS1_TOXIC_POISON)
             statusDamage = GetSwitchinStatusDamage(battler);
 
         // Reduce weather duration
@@ -1928,15 +1924,9 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
     }
 
     // Disguise will always add an extra hit to KO
-    if (!opponentCanBreakMold && gAiLogicData->switchinCandidate.battleMon.species == SPECIES_MIMIKYU_DISGUISED)
+    if (!opponentCanBreakMold && gBattleMons[battler].species == SPECIES_MIMIKYU_DISGUISED)
         hitsToKO++;
 
-    // If mon had a hypothetical status from TSpikes, clear it
-    if (gAiLogicData->switchinCandidate.hypotheticalStatus == TRUE)
-    {
-        gAiLogicData->switchinCandidate.battleMon.status1 = 0;
-        gAiLogicData->switchinCandidate.hypotheticalStatus = FALSE;
-    }
     return hitsToKO;
 }
 
@@ -2211,23 +2201,23 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
         InitializeSwitchinCandidate(battler, &party[i]);
 
-        u32 originalHp = gAiLogicData->switchinCandidate.battleMon.hp;
+        u32 originalHp = gBattleMons[battler].hp;
 
         if (healInfo->healBeforeHazards)
         {
-            gAiLogicData->switchinCandidate.battleMon.hp = gAiLogicData->switchinCandidate.battleMon.maxHP;
+            gBattleMons[battler].hp = gBattleMons[battler].maxHP;
             if (healInfo->curesStatus)
-                gAiLogicData->switchinCandidate.battleMon.status1 = 0;
+                gBattleMons[battler].status1 = 0;
         }
 
         // While not really invalid per se, not really wise to switch into this mon
-        if (gAiLogicData->switchinCandidate.battleMon.ability == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
+        if (gBattleMons[battler].ability == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
             continue;
 
         // Get max number of hits for player to KO AI mon and type matchup for defensive switching
-        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, &bestPlayerMove), battler, healInfo, originalHp);
-        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gAiLogicData->switchinCandidate.battleMon, &bestPlayerPriorityMove), battler, healInfo, originalHp);
-        typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gAiLogicData->switchinCandidate.battleMon);
+        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gBattleMons[battler], &bestPlayerMove), battler, healInfo, originalHp);
+        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gBattleMons[battler], &bestPlayerPriorityMove), battler, healInfo, originalHp);
+        typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gBattleMons[battler]);
         canSwitchinWin1v1 = FALSE;
         bool32 anyMoveCanWin1v1 = FALSE;
 
@@ -2235,10 +2225,10 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         for (j = 0; j < MAX_MON_MOVES; j++)
         {
             // Check that move has PP remaining before running calcs
-            if (gAiLogicData->switchinCandidate.battleMon.pp[j] < 1)
+            if (gBattleMons[battler].pp[j] < 1)
                 continue;
 
-            aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
+            aiMove = gBattleMons[battler].moves[j];
             damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, &effectiveness, AI_ATTACKING);
             hitsToKOPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
 
@@ -2331,8 +2321,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If mon can trap
-                if ((AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->switchinCandidate.battleMon.ability, opposingBattler)
-                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gAiLogicData->switchinCandidate.battleMon.ability == ABILITY_TRACE))
+                if ((AI_CanSwitchinAbilityTrapOpponent(gBattleMons[battler].ability, opposingBattler)
+                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gBattleMons[battler].ability == ABILITY_TRACE))
                     && canSwitchinWin1v1)
                     trapperIds |= (1u << i);
             }
@@ -2341,7 +2331,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         // Check for healing candidate - mon that benefits significantly from incoming heal
         if (healInfo->hasHealing)
         {
-            u32 maxHP = gAiLogicData->switchinCandidate.battleMon.maxHP;
+            u32 maxHP = gBattleMons[battler].maxHP;
             s32 healGain = (s32)maxHP - (s32)originalHp;
 
             // For Wish, heal gain is the wish amount (capped at what can actually be gained)
@@ -2576,19 +2566,19 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
         bool32 isAceMon = IsAceMon(battler, i);
 
         InitializeSwitchinCandidate(battler, &party[i]);
-        gAiLogicData->switchinCandidate.battleMon.hp = gAiLogicData->switchinCandidate.battleMon.maxHP / 2; // Revival Blessing restores half HP
-        gAiLogicData->switchinCandidate.battleMon.status1 = 0;
+        gBattleMons[battler].hp = gBattleMons[battler].maxHP / 2; // Revival Blessing restores half HP
+        gBattleMons[battler].status1 = 0;
 
         // Avoid reviving something that will immediately faint to hazards
-        if (GetSwitchinHazardsDamage(battler, &gAiLogicData->switchinCandidate.battleMon) >= gAiLogicData->switchinCandidate.battleMon.hp)
+        if (GetSwitchinHazardsDamage(battler, &gBattleMons[battler]) >= gBattleMons[battler].hp)
             continue;
 
         s32 bestDamage = 0;
         for (u32 j = 0; j < MAX_MON_MOVES; j++)
         {
             uq4_12_t effectiveness = UQ_4_12(0);
-            u16 aiMove = gAiLogicData->switchinCandidate.battleMon.moves[j];
-            if (aiMove == MOVE_NONE || gAiLogicData->switchinCandidate.battleMon.pp[j] == 0)
+            u16 aiMove = gBattleMons[battler].moves[j];
+            if (aiMove == MOVE_NONE || gBattleMons[battler].pp[j] == 0)
                 continue;
 
             s32 damage = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, &effectiveness, AI_ATTACKING);
@@ -2596,18 +2586,18 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
                 bestDamage = damage;
         }
 
-        u32 typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gAiLogicData->switchinCandidate.battleMon);
-        s32 score = bestDamage + gAiLogicData->switchinCandidate.battleMon.maxHP;
+        u32 typeMatchup = GetBattleMonTypeMatchup(gBattleMons[opposingBattler], gBattleMons[battler]);
+        s32 score = bestDamage + gBattleMons[battler].maxHP;
 
         // Reviving the ace is usually high value. give it a small bonus but still let matchup/coverage decide
         if (isAceMon)
-            score += gAiLogicData->switchinCandidate.battleMon.maxHP / 3;
+            score += gBattleMons[battler].maxHP / 3;
 
         // Prefer mons that don't face a terrible defensive matchup on entry
         if (typeMatchup < UQ_4_12(1.0))
-            score += gAiLogicData->switchinCandidate.battleMon.maxHP / 4;
+            score += gBattleMons[battler].maxHP / 4;
         else if (typeMatchup > UQ_4_12(4.0))
-            score -= gAiLogicData->switchinCandidate.battleMon.maxHP / 4;
+            score -= gBattleMons[battler].maxHP / 4;
 
         if (score > bestScore)
         {
