@@ -37,13 +37,18 @@ extern ScrCmdFunc gScriptCmdTable[];
 extern ScrCmdFunc gScriptCmdTableEnd[];
 extern void *const gNullScriptPtr;
 
+void InitScriptStack(struct ScriptStack *stk)
+{
+    stk->stackDepth = 0;
+    memset(stk->stack, 0, (int)ARRAY_COUNT(stk->stack) * sizeof(u8*));
+}
+
 void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTableEnd)
 {
     s32 i;
 
     ctx->mode = SCRIPT_MODE_STOPPED;
     ctx->scriptPtr = NULL;
-    ctx->stackDepth = 0;
     ctx->nativePtr = NULL;
     ctx->cmdTable = cmdTable;
     ctx->cmdTableEnd = cmdTableEnd;
@@ -51,8 +56,7 @@ void InitScriptContext(struct ScriptContext *ctx, void *cmdTable, void *cmdTable
     for (i = 0; i < (int)ARRAY_COUNT(ctx->data); i++)
         ctx->data[i] = 0;
 
-    for (i = 0; i < (int)ARRAY_COUNT(ctx->stack); i++)
-        ctx->stack[i] = NULL;
+    InitScriptStack(&ctx->scrStack);
 
     ctx->breakOnTrainerBattle = FALSE;
 }
@@ -132,27 +136,39 @@ bool8 RunScriptCommand(struct ScriptContext *ctx)
     return TRUE;
 }
 
-bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
+bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr)
 {
-    if (ctx->stackDepth + 1 >= (int)ARRAY_COUNT(ctx->stack))
+    if (stk->stackDepth + 1 >= (int)ARRAY_COUNT(stk->stack))
     {
         return TRUE;
     }
     else
     {
-        ctx->stack[ctx->stackDepth] = ptr;
-        ctx->stackDepth++;
+        stk->stack[stk->stackDepth] = ptr;
+        stk->stackDepth++;
         return FALSE;
     }
 }
 
-const u8 *ScriptPop(struct ScriptContext *ctx)
+bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
 {
-    if (ctx->stackDepth == 0)
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "script push\n");
+    return ScriptStackPush(&ctx->scrStack, ptr);
+}
+
+const u8 *ScriptStackPop(struct ScriptStack *stk)
+{
+    if (stk->stackDepth == 0)
         return NULL;
 
-    ctx->stackDepth--;
-    return ctx->stack[ctx->stackDepth];
+    stk->stackDepth--;
+    return stk->stack[stk->stackDepth];
+}
+
+const u8 *ScriptPop(struct ScriptContext *ctx)
+{
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "script pop\n");
+    return ScriptStackPop(&ctx->scrStack);
 }
 
 void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)

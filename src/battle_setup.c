@@ -43,7 +43,6 @@
 #include "data.h"
 #include "vs_seeker.h"
 #include "item.h"
-#include "script.h"
 #include "field_name_box.h"
 #include "constants/battle_frontier.h"
 #include "constants/battle_setup.h"
@@ -1028,9 +1027,9 @@ void SetMapVarsToTrainerB(void)
     }
 }
 
-#define PUSH(script) PtrStackPushU8(scrStack, script)
+#define PUSH(script) ScriptStackPush(scrStack, script)
 
-const u8* BattleSetup_ConfigureTrainerBattleApproachingTrainer(const u8 *data, PtrStack *scrStack)
+static const u8* BattleSetup_ConfigureTrainerBattleApproachingTrainer(const u8 *data, struct ScriptStack *scrStack)
 {
     if (TRAINER_BATTLE_PARAM.playMusicA)
     {
@@ -1068,7 +1067,7 @@ const u8* BattleSetup_ConfigureTrainerBattleApproachingTrainer(const u8 *data, P
 }
 
 // expects parameters have been loaded correctly with TrainerBattleLoadArgs
-const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data, PtrStack *scrStack, bool32 isApproaching)
+const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data, struct ScriptStack *scrStack, bool32 isApproaching)
 {
     DebugPrintTrainerParams((&gTrainerBattleParameter));
 
@@ -1121,10 +1120,7 @@ const u8 *BattleSetup_ConfigureTrainerBattle(const u8 *data, PtrStack *scrStack,
 
     PUSH(EventSnippet_EndTrainerBattle);
 
-
-    DebugPrintStack(scrStack);
     return NULL;
-
 }
 
 const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
