@@ -1431,14 +1431,14 @@ u8 GetObjectEventIdByLocalId(u8 localId)
 
 static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *template, u8 mapNum, u8 mapGroup)
 {
-    struct ObjectEvent *objectEvent, *objectEventTemp;
+    struct ObjectEvent *objectEvent;
     u8 objectEventId;
     s16 x;
     s16 y;
 
     if (GetAvailableObjectEventId(template->localId, mapNum, mapGroup, &objectEventId))
         return OBJECT_EVENTS_COUNT;
-    objectEvent = objectEventTemp = &gObjectEvents[objectEventId];
+    objectEvent = &gObjectEvents[objectEventId];
     ClearObjectEvent(objectEvent);
     x = template->x + MAP_OFFSET;
     y = template->y + MAP_OFFSET;
@@ -1467,11 +1467,9 @@ static u8 InitObjectEventStateFromTemplate(const struct ObjectEventTemplate *tem
     objectEvent->previousElevation = template->elevation;
     objectEvent->range.rangeX = template->movementRangeX;
     objectEvent->range.rangeY = template->movementRangeY;
-    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
-        objectEvent->trainerType = template->trainerType;
+    objectEvent->trainerType = template->trainerType;
     objectEvent->mapNum = mapNum;
-    if (!IsSemiManualOverworldWildEncounter(objectEventTemp))
-        objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
+    objectEvent->trainerRange_berryTreeId = template->trainerRange_berryTreeId;
     objectEvent->previousMovementDirection = gInitialMovementTypeFacingDirections[template->movementType];
     SetObjectEventDirection(objectEvent, objectEvent->previousMovementDirection);
     if (sMovementTypeHasRange[objectEvent->movementType])
@@ -1760,17 +1758,19 @@ static u8 TrySetupObjectEventSprite(const struct ObjectEventTemplate *objectEven
 u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY)
 {
     u8 objectEventId;
-    u16 graphicsId = objectEventTemplate->graphicsId;
     struct SpriteTemplate spriteTemplate;
     struct SpriteFrameImage spriteFrameImage;
     const struct ObjectEventGraphicsInfo *graphicsInfo;
     const struct SubspriteTable *subspriteTables = NULL;
+    // May be a good idea to move the if check contained by this function to outside it for clarity.
+    struct ObjectEventTemplate objectEventTemplateTemp = TryGetObjectEventTemplateForOverworldEncounter(objectEventTemplate);
+    u16 graphicsId = objectEventTemplateTemp.graphicsId;
 
     graphicsInfo = GetObjectEventGraphicsInfo(graphicsId);
-    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplate->movementType, &spriteTemplate, &subspriteTables);
+    CopyObjectGraphicsInfoToSpriteTemplate_WithMovementType(graphicsId, objectEventTemplateTemp.movementType, &spriteTemplate, &subspriteTables);
     spriteFrameImage.size = graphicsInfo->size;
     spriteTemplate.images = &spriteFrameImage;
-    objectEventId = TrySetupObjectEventSprite(objectEventTemplate, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
+    objectEventId = TrySetupObjectEventSprite(&objectEventTemplateTemp, &spriteTemplate, mapNum, mapGroup, cameraX, cameraY);
     if (objectEventId == OBJECT_EVENTS_COUNT)
         return OBJECT_EVENTS_COUNT;
 
@@ -3092,9 +3092,6 @@ static void SetObjectEventDynamicGraphicsId(struct ObjectEvent *objectEvent)
 {
     if (objectEvent->graphicsId >= OBJ_EVENT_GFX_VARS && objectEvent->graphicsId <= OBJ_EVENT_GFX_VAR_F)
         objectEvent->graphicsId = VarGetObjectEventGraphicsId(objectEvent->graphicsId - OBJ_EVENT_GFX_VARS);
-
-    if (IsSemiManualOverworldWildEncounter(objectEvent))
-        objectEvent->graphicsId = GetGraphicsIdForOverworldEncounterGfx(objectEvent);
 }
 
 void SetObjectInvisibility(u8 localId, u8 mapNum, u8 mapGroup, bool8 invisible)
