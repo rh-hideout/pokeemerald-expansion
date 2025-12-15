@@ -1593,21 +1593,7 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
     if (index != 0xFF)
         return index;
 
-    if (OW_WILD_ENCOUNTERS_OVERWORLD && GetNumUnusedPalSlots() < 2)
-    {
-        u32 count = CountActiveOverworldEncounters();
-
-        if (count > 0)
-        {
-            for (; count > 0; count--)
-            {
-                RemoveOldestOverworldEncounter();
-                if (GetNumUnusedPalSlots() >= 2)
-                    break;
-            }
-        }
-    }
-
+    DespawnOldestOWE_Pal();
     index = IndexOfSpritePaletteTag(TAG_NONE);
 
     if (index == 0xFF)
@@ -1815,10 +1801,9 @@ u32 GetSpanPerImage(u32 shape, u32 size)
     return sSpanPerImage[shape][size];
 }
 
-u32 GetNumUnusedPalSlots(void)
+u32 CountFreePaletteSlots(void)
 {
-    u32 count = 0;
-    u32 i;
+    u32 i, count = 0;
 
     for (i = gReservedSpritePaletteCount; i < 16; i++)
         if (sSpritePaletteTags[i] == TAG_NONE)

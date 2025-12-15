@@ -9935,6 +9935,63 @@ bool32 AreElevationsCompatible(u32 a, u32 b)
     return TRUE;
 }
 
+void ScriptFaceLastTalked(struct ScriptContext *ctx)
+{
+    struct ObjectEvent *player, *npc;
+    player = &gObjectEvents[gPlayerAvatar.objectEventId];
+    npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+    ObjectEventTurnToObject(player, npc);
+}
+
+u32 DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+{
+    s32 delta_x = objectTwo->currentCoords.x - objectOne->currentCoords.x;
+    s32 delta_y = objectTwo->currentCoords.y - objectOne->currentCoords.y;
+
+    if (delta_x < 0)
+        return DIR_EAST;
+    else if (delta_x > 0)
+        return DIR_WEST;
+
+    if (delta_y < 0)
+        return DIR_SOUTH;
+    else if (delta_y > 0)
+        return DIR_NORTH;
+
+    return DIR_NONE;
+}
+
+void ObjectEventTurnToObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
+{
+    u32 objectDirOne, objectDirTwo;
+
+    if (objectTwo->invisible == FALSE)
+    {
+        objectDirOne = DetermineObjectEventDirectionFromObject(objectOne, objectTwo);
+        objectDirTwo = objectDirOne;
+
+        //Flip direction.
+        switch (objectDirOne) 
+        {
+        case DIR_NORTH:
+            objectDirOne = DIR_SOUTH;
+            break;
+        case DIR_SOUTH:
+            objectDirOne = DIR_NORTH;
+            break;
+        case DIR_WEST:
+            objectDirOne = DIR_EAST;
+            break;
+        case DIR_EAST:
+            objectDirOne = DIR_WEST;
+            break;
+        }
+
+        ObjectEventTurn(objectOne, objectDirOne);
+        ObjectEventTurn(objectTwo, objectDirTwo);
+    }
+}
+
 void GroundEffect_SpawnOnTallGrass(struct ObjectEvent *objEvent, struct Sprite *sprite)
 {
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
@@ -11562,13 +11619,14 @@ u8 GetObjectEventApricornTreeId(u8 objectEventId)
     return gObjectEvents[objectEventId].trainerRange_berryTreeId;
 }
 
-bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent) {
+bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim spawnAnimType, struct ObjectEvent *objEvent)
+{
     gFieldEffectArguments[0] = objEvent->currentCoords.x;
     gFieldEffectArguments[1] = objEvent->currentCoords.y;
     gFieldEffectArguments[2] = gSprites[objEvent->spriteId].oam.priority + 1;
     gFieldEffectArguments[3] = spawnAnimType;
     gFieldEffectArguments[4] = objEvent->spriteId;
-    objEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_BUBBLES) + 1; // Commandeer this field effect for the spawn anims
+    objEvent->fieldEffectSpriteId = FieldEffectStart(FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
     return TRUE;
 }
 

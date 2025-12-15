@@ -48,5 +48,7 @@ u32 RemoveOldestOverworldEncounter(void);
 bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
+void TryRemoveOverworldWildEncounter(u32 localId);
+void DespawnOldestOWE_Pal(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H

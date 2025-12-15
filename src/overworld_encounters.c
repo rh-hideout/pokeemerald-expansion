@@ -66,6 +66,7 @@ void UpdateOverworldEncounters(void)
     u16 speciesId = SPECIES_NONE;
     bool32 isShiny = FALSE;
     bool32 isFemale = FALSE;
+    s16 x, y;
 
     if (sOWESpawnCountdown != 0)
     {
@@ -73,8 +74,10 @@ void UpdateOverworldEncounters(void)
         return;
     }
 
-    s16 x, y;
-    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()) && IsSafeToSpawnObjectEvents() && TrySelectTile(&x, &y))
+    if (!IsSafeToSpawnObjectEvents() || !TrySelectTile(&x, &y))
+        return;
+    
+    if (GetActiveEncounterTable(OWE_ShouldSpawnWaterMons()))
     {
         u16 spawnSlot = NextSpawnMonSlot();
 
@@ -87,7 +90,7 @@ void UpdateOverworldEncounters(void)
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 numOpenPalSlots = GetNumUnusedPalSlots();
+        u32 numFreePalSlots = CountFreePaletteSlots();
         u32 movementType, level;
         if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
         {
@@ -114,7 +117,8 @@ void UpdateOverworldEncounters(void)
         };
 
         // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
-        if (numOpenPalSlots == 1)
+        // Add this and tiles to seperate graphics check function
+        if (numFreePalSlots == 1)
         {
             u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
 
@@ -124,15 +128,18 @@ void UpdateOverworldEncounters(void)
             // If the mon's palette isn't already loaded, don't spawn.
             if (IndexOfSpritePaletteTag(palTag) == 0xFF)
                 return;
+
+            // Add check if field effect pallete is already loaded
+            // Bubbles field effect occurs on every movement
         }
-        else if (numOpenPalSlots == 0)
+        else if (numFreePalSlots == 0)
         {
             return;
         }
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
-        if (objectEventId == OBJECT_EVENTS_COUNT)
+        if (objectEventId >= OBJECT_EVENTS_COUNT)
         {
             sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
             return;
@@ -529,6 +536,7 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
 
 static bool8 IsSafeToSpawnObjectEvents(void)
 {
+    // Can this just be a check for player not moving?
     struct ObjectEvent* player = &gObjectEvents[gPlayerAvatar.objectEventId];
 
     // Only spawn when player is at a valid tile position
@@ -622,7 +630,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
     u32 objEventId = GetObjectEventIdByLocalId(GetLocalIdByOverworldSpawnSlot(spawnSlot));
     struct ObjectEvent *objectEvent = &gObjectEvents[objEventId];
 
-    if (objEventId == OBJECT_EVENTS_COUNT)
+    if (objEventId >= OBJECT_EVENTS_COUNT)
         return SPECIES_NONE;
 
     return OW_SPECIES(objectEvent);
@@ -682,7 +690,7 @@ u32 RemoveOldestOverworldEncounter(void)
     // Stop the associated field effect if it is active.
     if (fldEffSpriteId != 0)
     {
-        FieldEffectStop(&gSprites[fldEffSpriteId - 1], FLDEFF_BUBBLES);
+        FieldEffectStop(&gSprites[fldEffSpriteId], FLDEFF_OW_ENCOUNTER_SPAWN_ANIM);
         object->fieldEffectSpriteId = 0;
     }
 
@@ -757,59 +765,6 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     return graphicsId;
 }
 
-static u32 DetermineNPCDirection(struct ObjectEvent *player, struct ObjectEvent *npc)
-{
-    s32 delta_x = npc->currentCoords.x - player->currentCoords.x;
-    s32 delta_y = npc->currentCoords.y - player->currentCoords.y;
-
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
-
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
-
-    return DIR_NONE;
-}
-
-void ScriptFaceLastTalked(struct ScriptContext *ctx)
-{
-    // Can be moved out of here and consolidated with FollowerNPC version of function.
-    u32 playerDirection, npcDirection;
-    struct ObjectEvent *player, *npc;
-    player = &gObjectEvents[gPlayerAvatar.objectEventId];
-    npc = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
-
-    if (npc->invisible == FALSE)
-    {
-        playerDirection = DetermineNPCDirection(player, npc);
-        npcDirection = playerDirection;
-
-        //Flip direction.
-        switch (playerDirection) 
-        {
-        case DIR_NORTH:
-            playerDirection = DIR_SOUTH;
-            break;
-        case DIR_SOUTH:
-            playerDirection = DIR_NORTH;
-            break;
-        case DIR_WEST:
-            playerDirection = DIR_EAST;
-            break;
-        case DIR_EAST:
-            playerDirection = DIR_WEST;
-            break;
-        }
-
-        ObjectEventTurn(player, playerDirection);
-        ObjectEventTurn(npc, npcDirection);
-    }
-}
-
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
 {
     // The only automatically interacts with an OW Encounter when;
@@ -827,6 +782,36 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
         gSpecialVar_LastTalked = wildMon->localId;
         gSpecialVar_0x8004 = OW_SPECIES(wildMon);
         ScriptContext_SetupScript(InteractWithDynamicWildOverworldEncounter);
+    }
+}
+
+void TryRemoveOverworldWildEncounter(u32 localId)
+{
+    struct ObjectEvent *object = &gObjectEvents[GetObjectEventIdByLocalId(gSpecialVar_LastTalked)];
+    
+    if (IsOverworldWildEncounter(object))
+    {
+        RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
+        gSpecialVar_LastTalked = LOCALID_NONE;
+    }
+}
+
+void DespawnOldestOWE_Pal(void)
+{
+    // Should have similar naming convention for these despawn functions based on Num Object Events, Pals & Tiles
+    if (OW_WILD_ENCOUNTERS_OVERWORLD && CountFreePaletteSlots() < 2)
+    {
+        u32 count = CountActiveOverworldEncounters();
+
+        if (count > 0)
+        {
+            for (; count > 0; count--)
+            {
+                RemoveOldestOverworldEncounter();
+                if (CountFreePaletteSlots() >= 2)
+                    break;
+            }
+        }
     }
 }
 
