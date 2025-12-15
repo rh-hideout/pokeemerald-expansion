@@ -33,7 +33,7 @@ DOUBLE_BATTLE_TEST("Analytic activates correctly with empty slot after fainting"
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {
             MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_SCRATCH, target: opponentLeft);
@@ -58,7 +58,7 @@ DOUBLE_BATTLE_TEST("Analytic does not activate when not moving last with empty s
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
-        TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
+        TURN { MOVE(opponentLeft, MOVE_SCRATCH, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
             MOVE(opponentRight, MOVE_CELEBRATE);
