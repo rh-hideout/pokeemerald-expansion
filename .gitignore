@@ -44,6 +44,7 @@ prefabs.json
 /pokeemerald-*.png
 src/data/map_group_count.h
 include/constants/heal_locations.h
+include/constants/script_commands.h
 tools/trainerproc/trainerproc
 src/data/battle_partners.h
 src/data/trainers.h

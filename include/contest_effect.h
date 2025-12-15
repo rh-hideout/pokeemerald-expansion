@@ -1,17 +1,17 @@
 #ifndef GUARD_CONTEST_EFFECT_H
 #define GUARD_CONTEST_EFFECT_H
-#define MAX_COMBO_MOVES 5
+#define MAX_COMBO_MOVES 17
 
 struct ContestEffect
 {
     u8 effectType;
     u8 appeal;
     u8 jam;
+    const u8 *description;
+    void (*function)(void);
 };
 
 extern const struct ContestEffect gContestEffects[];
-extern const u8 *const gContestEffectDescriptionPointers[];
-extern const u8 *const gContestMoveTypeTextPointers[];
 
 bool8 AreMovesContestCombo(u16 lastMove, u16 nextMove);
 

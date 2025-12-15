@@ -19,6 +19,7 @@
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
+#include "constants/script_commands.h"
 #include "constants/trainer_types.h"
 
 // this file's functions
@@ -360,6 +361,8 @@ static const struct SpriteTemplate sSpriteTemplate_Emote =
 bool8 CheckForTrainersWantingBattle(void)
 {
     u8 i;
+    u8 trainerObjects[OBJECT_EVENTS_COUNT] = {0};
+    u8 trainerObjectsCount = 0;
 
     if (FlagGet(OW_FLAG_NO_TRAINER_SEE))
         return FALSE;
@@ -367,17 +370,34 @@ bool8 CheckForTrainersWantingBattle(void)
     gNoOfApproachingTrainers = 0;
     gApproachingTrainerId = 0;
 
+    // Adds trainers wanting to battle to array
     for (i = 0; i < OBJECT_EVENTS_COUNT; i++)
-    {
-        u8 numTrainers;
-
+    {     
         if (!gObjectEvents[i].active)
             continue;
         if (gObjectEvents[i].trainerType != TRAINER_TYPE_NORMAL && gObjectEvents[i].trainerType != TRAINER_TYPE_SEE_ALL_DIRECTIONS && gObjectEvents[i].trainerType != TRAINER_TYPE_BURIED)
             continue;
+        trainerObjects[trainerObjectsCount++] = i;
+    }
 
-        numTrainers = CheckTrainer(i);
-        if (numTrainers == 0xFF) // non-trainerbatle script
+    // Sorts array by localId
+    for (i = 1; i <= trainerObjectsCount; i++)
+    {
+        u8 x = trainerObjects[i];
+        u8 j = i;
+        while (j > 0 && gObjectEvents[trainerObjects[j-1]].localId > gObjectEvents[x].localId)
+        {
+            trainerObjects[j] = trainerObjects[j-1];
+            j--;
+        }
+        trainerObjects[j] = x;
+    }
+
+    for (i = 0; i <= trainerObjectsCount; i++)
+    {
+        u8 numTrainers;
+        numTrainers = CheckTrainer(trainerObjects[i]);
+        if (numTrainers == 0xFF) // non-trainerbattle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
             gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
@@ -447,7 +467,7 @@ static u8 CheckTrainer(u8 objectEventId)
         struct ScriptContext ctx;
         if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, trainerBattlePtr, &ctx))
         {
-            if (*ctx.scriptPtr == 0x5c) // trainerbattle
+            if (*ctx.scriptPtr == SCR_OP_TRAINERBATTLE)
                 trainerBattlePtr = ctx.scriptPtr;
             else
                 trainerBattlePtr = NULL;
@@ -471,7 +491,18 @@ static u8 CheckTrainer(u8 objectEventId)
     else if (trainerBattlePtr)
     {
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
-            return 0;
+        {
+            //If there is a rematch, we want to trigger the approach sequence
+            if (I_VS_SEEKER_CHARGING && GetRematchFromScriptPointer(trainerBattlePtr))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else
+            {
+                 return 0;
+            }
+        }
     }
     else
     {
@@ -510,6 +541,9 @@ static u8 GetTrainerApproachDistance(struct ObjectEvent *trainerObj)
     PlayerGetDestCoords(&x, &y);
     if (trainerObj->trainerType == TRAINER_TYPE_NORMAL)  // can only see in one direction
     {
+        // Disable trainer approach while moving diagonally (usually moving on sideway stairs)
+        if (trainerObj->facingDirection > DIR_EAST)
+            return 0;
         approachDistance = sDirectionalApproachDistanceFuncs[trainerObj->facingDirection - 1](trainerObj, trainerObj->trainerRange_berryTreeId, x, y);
         return CheckPathBetweenTrainerAndPlayer(trainerObj, approachDistance, trainerObj->facingDirection);
     }

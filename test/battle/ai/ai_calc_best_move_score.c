@@ -112,3 +112,24 @@ AI_SINGLE_BATTLE_TEST("AI will select Throat Chop if the sound move is the best 
         TURN { EXPECT_MOVE(opponent, MOVE_THROAT_CHOP); MOVE(player, MOVE_HYPER_VOICE);}
     }
 }
+
+AI_SINGLE_BATTLE_TEST("HasMoveThatChangesKOThreshold - AI should not see self-targeted speed drops as preventing setup moves in 2hko cases")
+{
+    u16 move;
+    PARAMETRIZE { move = MOVE_EARTHQUAKE; }
+    PARAMETRIZE { move = MOVE_BULLDOZE; }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffectSelf(MOVE_HAMMER_ARM, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(MoveHasAdditionalEffect(MOVE_BULLDOZE, MOVE_EFFECT_SPD_MINUS_1) == TRUE);
+        ASSUME(GetMoveEffect(MOVE_NASTY_PLOT) == EFFECT_SPECIAL_ATTACK_UP_2);
+        ASSUME(GetMovePower(MOVE_EARTHQUAKE) == 100);
+        ASSUME(GetMovePower(MOVE_HAMMER_ARM) == 100);
+        ASSUME(GetMovePower(MOVE_BULLDOZE) == 60);
+        ASSUME(GetMovePower(MOVE_AURA_SPHERE) == 80);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_OMNISCIENT);
+        PLAYER(SPECIES_RHYDON) { Level(100); Nature(NATURE_ADAMANT); Item(ITEM_EVIOLITE); Speed(1); Ability(ABILITY_LIGHTNING_ROD); Moves(MOVE_HAMMER_ARM, move); }
+        OPPONENT(SPECIES_GRIMMSNARL) { Level(100); Nature(NATURE_JOLLY); Ability(ABILITY_INFILTRATOR); Speed(2); HP(300); Moves(MOVE_NASTY_PLOT, MOVE_AURA_SPHERE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_HAMMER_ARM); EXPECT_MOVE(opponent, move == MOVE_EARTHQUAKE ? MOVE_NASTY_PLOT : MOVE_AURA_SPHERE); }
+    }
+}

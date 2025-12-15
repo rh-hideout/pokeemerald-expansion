@@ -81,6 +81,23 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     }
 }
 
+SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Burn")
+{
+    // Might fail if users set healing higher than burn damage
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AQUA_RING) == EFFECT_AQUA_RING);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(130); Status1(STATUS1_BURN); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AQUA_RING); SEND_OUT(opponent, 1); }
+    } SCENE {
+        HP_BAR(opponent);
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
 SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and falling under 50% max-hp - Weather")
 {
     GIVEN {
@@ -90,6 +107,24 @@ SINGLE_BATTLE_TEST("Emergency Exit activates when taking residual damage and fal
     } WHEN {
         TURN { MOVE(player, MOVE_SANDSTORM); SEND_OUT(opponent, 1); }
     } SCENE {
+        HP_BAR(opponent);
+        ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
+    }
+}
+
+SINGLE_BATTLE_TEST("Emergency Exit activates when healing from under 50% max-hp and taking residual damage to under 50% max-hp - Sticky Barb")
+{
+    // Might fail if users set healing higher than sticky barb damage
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_AQUA_RING) == EFFECT_AQUA_RING);
+        ASSUME(GetItemHoldEffect(ITEM_STICKY_BARB) == HOLD_EFFECT_STICKY_BARB);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_GOLISOPOD) { Ability(ABILITY_EMERGENCY_EXIT); MaxHP(263); HP(130); Item(ITEM_STICKY_BARB); };
+        OPPONENT(SPECIES_WOBBUFFET);
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_AQUA_RING); SEND_OUT(opponent, 1); }
+    } SCENE {
+        HP_BAR(opponent);
         HP_BAR(opponent);
         ABILITY_POPUP(opponent, ABILITY_EMERGENCY_EXIT);
     }

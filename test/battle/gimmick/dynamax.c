@@ -239,8 +239,8 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon are affected by Grudge")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Grudge!");
         MESSAGE("Wobbuffet used Max Strike!");
-        MESSAGE("Wobbuffet's Scratch lost all its PP due to the grudge!");
         MESSAGE("The opposing Wobbuffet fainted!");
+        MESSAGE("Wobbuffet's Scratch lost all its PP due to the grudge!");
     }
 }
 
@@ -423,7 +423,7 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamaxed Pokemon that changes forms does not gain 
 {
     u16 capturedHP, finalHP;
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_BATTLE_BOND, GEN_8);
+        WITH_CONFIG(CONFIG_BATTLE_BOND, GEN_8);
         PLAYER(SPECIES_GRENINJA_BATTLE_BOND) { Ability(ABILITY_BATTLE_BOND); HP(100); Speed(100); }
         OPPONENT(SPECIES_CATERPIE) { HP(1); Speed(1000); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(10); }
@@ -860,7 +860,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Hailstorm sets up hail")
         MESSAGE("It started to hail!");
         MESSAGE("The opposing Wobbuffet used Celebrate!");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HAIL_CONTINUES);
-#endif        
+#endif
     }
 }
 
@@ -913,7 +913,7 @@ SINGLE_BATTLE_TEST("Dynamax: Max Mindstorm sets up Psychic Terrain")
     } SCENE {
         MESSAGE("The opposing Wobbuffet used Extreme Speed!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
-        MESSAGE("The opposing Wobbuffet cannot use Extreme Speed!");
+        MESSAGE("Wobbuffet is protected by the Psychic Terrain!");
         MESSAGE("Wobbuffet used Max Mindstorm!");
     }
 }
@@ -971,6 +971,7 @@ SINGLE_BATTLE_TEST("Dynamax: G-Max Stonesurge sets up Stealth Rocks")
 SINGLE_BATTLE_TEST("Dynamax: G-Max Steelsurge sets up sharp steel")
 {
     GIVEN {
+        WITH_CONFIG(CONFIG_DEFOG_EFFECT_CLEARING, GEN_6);
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_STEELSURGE, MOVE_EFFECT_STEELSURGE));
         PLAYER(SPECIES_COPPERAJAH) { GigantamaxFactor(TRUE); }
         OPPONENT(SPECIES_WOBBUFFET);
@@ -1464,7 +1465,7 @@ DOUBLE_BATTLE_TEST("Dynamax: G-Max Chi Strike boosts allies' crit chance by 1 st
 {
     u32 j;
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, GEN_6);
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, GEN_6);
         ASSUME(MoveHasAdditionalEffect(MOVE_G_MAX_CHI_STRIKE, MOVE_EFFECT_CRIT_PLUS_SIDE));
         PLAYER(SPECIES_MACHAMP) { GigantamaxFactor(TRUE); }
         PLAYER(SPECIES_MACHOP);
@@ -1608,7 +1609,8 @@ SINGLE_BATTLE_TEST("Dynamax: Max Attacks prints a message when hitting into Max 
 
 SINGLE_BATTLE_TEST("Dynamax: Max Moves don't bypass absorbing abilities")
 {
-    u32 move, ability, species;
+    u32 move, species;
+    enum Ability ability;
     PARAMETRIZE { move = MOVE_SPARK; ability = ABILITY_VOLT_ABSORB; species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_WATER_GUN; ability = ABILITY_WATER_ABSORB; species = SPECIES_LANTURN; }
     PARAMETRIZE { move = MOVE_EMBER; ability = ABILITY_FLASH_FIRE; species = SPECIES_HEATRAN; }
@@ -1658,16 +1660,83 @@ SINGLE_BATTLE_TEST("Dynamax: Dynamax is reverted before switch out")
     }
 }
 
-SINGLE_BATTLE_TEST("Dynamax: Destiny Bond fails if a dynamaxed battler is present on field")
+SINGLE_BATTLE_TEST("Dynamax: max move against semi-invulnerable target prints the correct message")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_DESTINY_BOND) == EFFECT_DESTINY_BOND);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET);
+        PLAYER(SPECIES_WOBBUFFET) {Speed(1);};
+        OPPONENT(SPECIES_WOBBUFFET) {Speed(2);};
     } WHEN {
-        TURN { MOVE(opponent, MOVE_DESTINY_BOND); MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); }
+        TURN { MOVE(player, MOVE_SCRATCH, gimmick: GIMMICK_DYNAMAX); MOVE(opponent, MOVE_FLY); }
     } SCENE {
-        MESSAGE("The move was blocked by the power of Dynamax!");
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, player);
+        MESSAGE("Wobbuffet used Max Strike!");
+        MESSAGE("The opposing Wobbuffet avoided the attack!");
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax stat lowering moves don't make stat-changing abilities apply to partner")
+{
+    u32 move, stat, ability;
+    move = 0; stat = 0; ability = 0;
+    u32 abilityList[] = {ABILITY_COMPETITIVE, ABILITY_DEFIANT, ABILITY_CONTRARY, ABILITY_SIMPLE};
+    for (u32 j = 0; j < 4; j++)
+    {
+        PARAMETRIZE { move = MOVE_SCRATCH; stat = STAT_SPEED; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_FURY_CUTTER; stat = STAT_SPATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_LICK; stat = STAT_DEF; ability = abilityList[j]; ;}
+        PARAMETRIZE { move = MOVE_DRAGON_CLAW; stat = STAT_ATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_CRUNCH; stat = STAT_SPDEF; ability = abilityList[j]; }
+    }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_LOWER_SP_ATK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_PHANTASM, MOVE_EFFECT_LOWER_DEFENSE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_WYRMWIND, MOVE_EFFECT_LOWER_ATTACK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_DARKNESS, MOVE_EFFECT_LOWER_SP_DEF_SIDE));
+        PLAYER(SPECIES_WOBBUFFET) { }
+        PLAYER(SPECIES_WOBBUFFET) { }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ability); }
+        OPPONENT(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+    } WHEN {
+        TURN { MOVE(playerLeft, move, target: opponentLeft, gimmick: GIMMICK_DYNAMAX);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, opponentRight);
+    } THEN {
+        EXPECT_EQ(opponentRight->statStages[stat], DEFAULT_STAT_STAGE - 1);
+    }
+}
+
+DOUBLE_BATTLE_TEST("Dynamax stat raising moves don't make stat-changing abilities apply to partner")
+{
+    u32 move, stat, ability;
+    move = 0; stat = 0; ability = 0;
+    u32 abilityList[] = {ABILITY_CONTRARY, ABILITY_SIMPLE};
+    for (u32 j = 0; j < 2; j++)
+    {
+        PARAMETRIZE { move = MOVE_PECK; stat = STAT_SPEED; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_POISON_JAB; stat = STAT_SPATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_BULLET_PUNCH; stat = STAT_DEF; ability = abilityList[j]; ;}
+        PARAMETRIZE { move = MOVE_DOUBLE_KICK; stat = STAT_ATK; ability = abilityList[j]; }
+        PARAMETRIZE { move = MOVE_MUD_SLAP; stat = STAT_SPDEF; ability = abilityList[j]; }
+    }
+    GIVEN {
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_STRIKE, MOVE_EFFECT_LOWER_SPEED_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_FLUTTERBY, MOVE_EFFECT_LOWER_SP_ATK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_PHANTASM, MOVE_EFFECT_LOWER_DEFENSE_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_WYRMWIND, MOVE_EFFECT_LOWER_ATTACK_SIDE));
+        ASSUME(MoveHasAdditionalEffect(MOVE_MAX_DARKNESS, MOVE_EFFECT_LOWER_SP_DEF_SIDE));
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ability); }
+        PLAYER(SPECIES_WOBBUFFET) { Ability(ABILITY_SHADOW_TAG); }
+        OPPONENT(SPECIES_WOBBUFFET) {}
+        OPPONENT(SPECIES_WOBBUFFET) {}
+    } WHEN {
+        TURN { MOVE(playerLeft, move, target: opponentLeft, gimmick: GIMMICK_DYNAMAX);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerLeft);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_STATS_CHANGE, playerRight);
+    } THEN {
+        EXPECT_EQ(playerRight->statStages[stat], DEFAULT_STAT_STAGE + 1);
     }
 }
 

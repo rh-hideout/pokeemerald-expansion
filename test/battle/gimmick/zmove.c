@@ -6,7 +6,7 @@
 SINGLE_BATTLE_TEST("(Z-MOVE) Z-Moves do not retain priority")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
+        WITH_CONFIG(CONFIG_MEGA_EVO_TURN_ORDER, GEN_7); // TODO: Decouple this config from other gimmicks
         ASSUME(GetMoveType(MOVE_QUICK_ATTACK) == TYPE_NORMAL);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(2); }
@@ -115,10 +115,16 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_ALL_STATS_UP raises all of a battler's sta
     }
 }
 
-SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio")
+SINGLE_BATTLE_TEST("(Z-MOVE) Z_EFFECT_BOOST_CRITS raises a battler's critical hit ratio by 2 stages")
 {
-    PASSES_RANDOMLY(1, 2, RNG_CRITICAL_HIT);
+    u32 genConfig = 0, chance;
+    for (u32 j = GEN_1; j <= GEN_5; j++)
+        PARAMETRIZE { genConfig = j; chance = 4; } // 25%
+    for (u32 j = GEN_6; j <= GEN_9; j++)
+        PARAMETRIZE { genConfig = j; chance = 2; } // 50%
+    PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveType(MOVE_FORESIGHT) == TYPE_NORMAL);
         ASSUME(GetMoveZEffect(MOVE_FORESIGHT) == Z_EFFECT_BOOST_CRITS);
         PLAYER(SPECIES_WOBBUFFET) { Item(ITEM_NORMALIUM_Z); }
@@ -527,7 +533,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) 10,000,000 Volt Thunderbolt has an increased critic
         PARAMETRIZE { genConfig = j; chance = 2; }
     PASSES_RANDOMLY(1, chance, RNG_CRITICAL_HIT);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_CRIT_CHANCE, genConfig);
+        WITH_CONFIG(CONFIG_CRIT_CHANCE, genConfig);
         ASSUME(GetMoveCriticalHitStage(MOVE_10_000_000_VOLT_THUNDERBOLT) == 2);
         ASSUME(GetSpeciesBaseSpeed(SPECIES_PIKACHU_PARTNER) == 90);
         PLAYER(SPECIES_PIKACHU_PARTNER) { Item(ITEM_PIKASHUNIUM_Z); }
@@ -579,7 +585,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Extreme Evoboost boosts all the user's stats by two
 SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_GENESIS_SUPERNOVA) == EFFECT_HIT_SET_TERRAIN);
+        ASSUME(MoveHasAdditionalEffect(MOVE_GENESIS_SUPERNOVA, MOVE_EFFECT_PSYCHIC_TERRAIN));
         PLAYER(SPECIES_MEW) { Item(ITEM_MEWNIUM_Z); }
         OPPONENT(SPECIES_WOBBUFFET);
     } WHEN {
@@ -589,7 +595,7 @@ SINGLE_BATTLE_TEST("(Z-MOVE) Genesis Supernova sets up psychic terrain")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ZMOVE_ACTIVATE, player);
         ANIMATION(ANIM_TYPE_MOVE, MOVE_GENESIS_SUPERNOVA, player);
         NOT { ANIMATION(ANIM_TYPE_MOVE, MOVE_QUICK_ATTACK, player); }
-        MESSAGE("Mew cannot use Quick Attack!");
+        MESSAGE("The opposing Wobbuffet is protected by the Psychic Terrain!");
     }
 }
 
