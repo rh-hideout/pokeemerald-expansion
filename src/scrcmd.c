@@ -2441,7 +2441,7 @@ bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
     InitScriptStack(&trainerBattleScriptStack);
     
     TrainerBattleLoadArgs(ctx->scriptPtr);
-    BattleSetup_ConfigureTrainerBattle(ctx->scriptPtr, &trainerBattleScriptStack, FALSE);
+    BattleSetup_ConfigureTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack, FALSE);
 
     const u8 *ptr;
     while ((ptr = ScriptStackPop(&trainerBattleScriptStack)) != NULL)
