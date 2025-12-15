@@ -27,6 +27,7 @@
 #include "constants/abilities.h"
 #include "constants/battle_dome.h"
 #include "constants/battle_string_ids.h"
+#include "constants/flags.h"
 #include "constants/frontier_util.h"
 #include "constants/items.h"
 #include "constants/moves.h"
@@ -34,6 +35,7 @@
 #include "constants/species.h"
 #include "constants/trainers.h"
 #include "constants/trainer_hill.h"
+#include "constants/vars.h"
 #include "constants/weather.h"
 #include "trainer_slide.h"
 #include "battle_message.h"
@@ -68,7 +70,7 @@ static const u8* const sFrontierTrainerSlides[DIFFICULTY_COUNT][FRONTIER_TRAINER
     },
 };
 
-static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][TRAINERS_COUNT][TRAINER_SLIDE_COUNT] =
+static const u8* const sTestTrainerSlides[DIFFICULTY_COUNT][TRAINER_PARTNER(PARTNER_COUNT)][TRAINER_SLIDE_COUNT] =
 {
 #include "../test/battle/trainer_slides.h"
 };
@@ -127,13 +129,15 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
 }
 
 static const u8* const *GetTrainerSlideArray(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId)
-{
+{ 
+#if TESTING
+    return (FlagGet(TESTING_FLAG_TRAINER_SLIDES) ? sTestTrainerSlides[difficulty][trainerId] : NULL);
+#else
     if (gBattleTypeFlags & BATTLE_TYPE_FRONTIER)
         return sFrontierTrainerSlides[difficulty][trainerId];
-    else if (TESTING)
-        return sTestTrainerSlides[difficulty][trainerId];
     else
         return sTrainerSlides[difficulty][trainerId];
+#endif // TESTING
 }
 
 static bool32 DoesTrainerHaveSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId)
@@ -141,10 +145,24 @@ static bool32 DoesTrainerHaveSlideMessage(enum DifficultyLevel difficulty, u32 t
     const u8* const *trainerSlides = GetTrainerSlideArray(difficulty, trainerId, slideId);
     const u8* const *trainerSlidesNormal = GetTrainerSlideArray(DIFFICULTY_NORMAL, trainerId, slideId);
 
+#if TESTING
+    if (VarGet(TESTING_VAR_TRAINER_SLIDES) == slideId)
+    {
+        if (trainerSlides[slideId] == NULL)
+            return (trainerSlidesNormal[slideId] != NULL);
+        else
+            return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+#else
     if (trainerSlides[slideId] == NULL)
         return (trainerSlidesNormal[slideId] != NULL);
     else
         return TRUE;
+#endif // TESTING
 }
 
 void SetTrainerSlideMessage(enum DifficultyLevel difficulty, u32 trainerId, u32 slideId)
@@ -358,8 +376,8 @@ void TryInitializeFirstSTABMoveTrainerSlide(u32 battlerDef, u32 battlerAtk, enum
     if (IsSlideInitalizedOrPlayed(battlerDef, slideId))
         return;
 
-    if ((IsOnPlayerSide(battlerDef)))
-        return;
+    //if ((IsOnPlayerSide(battlerDef)))
+    //    return;
 
     if (IS_BATTLER_OF_TYPE(battlerAtk, moveType) == FALSE)
         return;

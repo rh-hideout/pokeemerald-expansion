@@ -1607,6 +1607,7 @@ static void CB2_BattleTest_NextParameter(void)
     {
         SetMainCallback2(CB2_TestRunner);
         ClearFlagAfterTest();
+        ClearVarAfterTest();
     }
     else
     {
@@ -1673,6 +1674,7 @@ static void BattleTest_TearDown(void *data)
     // Free resources that aren't cleaned up when the battle was
     // aborted unexpectedly.
     ClearFlagAfterTest();
+    ClearVarAfterTest();
     TestFreeConfigData();
     if (!STATE->hasTornDownBattle)
     {
@@ -1785,6 +1787,13 @@ void SetFlagForTest(u32 sourceLine, u16 flagId)
     FlagSet(flagId);
 }
 
+void SetVarForTest(u32 sourceLine, u16 varId, u16 value)
+{
+    INVALID_IF(DATA.varId != 0, "VAR can only be set once per test");
+    DATA.varId = varId;
+    VarSet(varId, value);
+}
+
 void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
@@ -1813,6 +1822,15 @@ void ClearFlagAfterTest(void)
     {
         FlagClear(DATA.flagId);
         DATA.flagId = 0;
+    }
+}
+
+void ClearVarAfterTest(void)
+{
+    if (DATA.varId != 0)
+    {
+        VarSet(DATA.varId, 0);
+        DATA.varId = 0;
     }
 }
 
@@ -1953,15 +1971,15 @@ void ClosePokemon(u32 sourceLine)
     DATA.currentMon = NULL;
 }
 
-static void SetGimmick(u32 sourceLine, u32 side, u32 partyIndex, enum Gimmick gimmick)
+static void SetGimmick(u32 sourceLine, u32 battler, u32 partyIndex, enum Gimmick gimmick)
 {
-    enum Gimmick currentGimmick = DATA.chosenGimmick[side][partyIndex];
+    enum Gimmick currentGimmick = DATA.chosenGimmick[battler][partyIndex];
     if (!((currentGimmick == GIMMICK_ULTRA_BURST && gimmick == GIMMICK_Z_MOVE)
        || (currentGimmick == GIMMICK_Z_MOVE && gimmick == GIMMICK_ULTRA_BURST)))
     {
         INVALID_IF(currentGimmick != GIMMICK_NONE && currentGimmick != gimmick, "Cannot set %s because %s already set", sGimmickIdentifiers[gimmick], sGimmickIdentifiers[currentGimmick]);
     }
-    DATA.chosenGimmick[side][partyIndex] = gimmick;
+    DATA.chosenGimmick[battler][partyIndex] = gimmick;
 }
 
 void Gender_(u32 sourceLine, u32 gender)
@@ -3173,9 +3191,9 @@ u32 TestRunner_Battle_GetForcedEnvironment(void)
     return DATA.forcedEnvironment;
 }
 
-u32 TestRunner_Battle_GetChosenGimmick(u32 side, u32 partyIndex)
+u32 TestRunner_Battle_GetChosenGimmick(u32 battler, u32 partyIndex)
 {
-    return DATA.chosenGimmick[side][partyIndex];
+    return DATA.chosenGimmick[battler][partyIndex];
 }
 
 // TODO: Consider storing the last successful i and searching from i+1
