@@ -2533,6 +2533,17 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
     return MAX_MON_MOVES;
 }
 
+u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect)
+{
+    u16 *moves = GetMovesArray(battler);
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (GetMoveEffect(moves[i]) == effect)
+            return i;
+    }
+    return MAX_MON_MOVES;
+}
+
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext)
 {
     u32 atkBestMoves[MAX_MON_MOVES] = {0};
@@ -2930,6 +2941,17 @@ bool32 HasThawingMove(u32 battler)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && MoveThawsUser(moves[i]))
+            return TRUE;
+    }
+    return FALSE;
+}
+
+bool32 HasUsableWhileAsleepMove(u32 battler)
+{
+    u16 *moves = GetMovesArray(battler);
+    for (u32 i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsUsableWhileAsleepEffect(GetMoveEffect(moves[i])))
             return TRUE;
     }
     return FALSE;
@@ -4050,7 +4072,7 @@ static bool32 ShouldCureStatusInternal(u32 battlerAtk, u32 battlerDef, bool32 us
     {
         if (targetingAlly || targetingSelf)
         {
-            if (HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK) || HasMoveWithEffect(battlerDef, EFFECT_SNORE))
+            if (HasUsableWhileAsleepMove(battlerDef))
                 return FALSE;
             else
                 return usingItem || targetingAlly;
@@ -5146,7 +5168,7 @@ void IncreaseSleepScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score)
         return;
 
     if ((HasMoveWithEffect(battlerAtk, EFFECT_DREAM_EATER) || HasMoveWithEffect(battlerAtk, EFFECT_NIGHTMARE))
-      && !(HasMoveWithEffect(battlerDef, EFFECT_SNORE) || HasMoveWithEffect(battlerDef, EFFECT_SLEEP_TALK)))
+      && !HasUsableWhileAsleepMove(battlerDef))
         ADJUST_SCORE_PTR(WEAK_EFFECT);
 
     if (IsPowerBasedOnStatus(battlerAtk, EFFECT_DOUBLE_POWER_ON_ARG_STATUS, STATUS1_SLEEP)

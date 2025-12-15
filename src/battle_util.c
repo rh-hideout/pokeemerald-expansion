@@ -433,7 +433,7 @@ bool32 HandleMoveTargetRedirection(void)
                 redirectorOrderNum = GetBattlerTurnOrderNum(battler);
             }
         }
-        if (redirectorOrderNum != MAX_BATTLERS_COUNT && gCurrentMove != MOVE_TEATIME)
+        if (redirectorOrderNum != MAX_BATTLERS_COUNT && moveEffect != EFFECT_TEATIME)
         {
             enum Ability battlerAbility;
             battler = gBattlerByTurnOrder[redirectorOrderNum];
@@ -1930,7 +1930,8 @@ void TryClearRageAndFuryCutter(void)
     s32 i;
     for (i = 0; i < gBattlersCount; i++)
     {
-        if (gBattleMons[i].volatiles.rage && gChosenMoveByBattler[i] != MOVE_RAGE)
+        u32 effect = GetMoveEffect(gChosenMoveByBattler[i]);
+        if (gBattleMons[i].volatiles.rage && effect != EFFECT_RAGE)
             gBattleMons[i].volatiles.rage = FALSE;
     }
 }
@@ -2027,7 +2028,7 @@ static enum MoveCanceler CancelerAsleepOrFrozen(struct BattleContext *ctx)
             enum BattleMoveEffects moveEffect = GetMoveEffect(ctx->move);
             if (gBattleMons[ctx->battlerAtk].status1 & STATUS1_SLEEP)
             {
-                if (moveEffect != EFFECT_SNORE && moveEffect != EFFECT_SLEEP_TALK)
+                if (!IsUsableWhileAsleepEffect(moveEffect))
                 {
                     gBattlescriptCurrInstr = BattleScript_MoveUsedIsAsleep;
                     return MOVE_STEP_FAILURE;
@@ -3603,6 +3604,17 @@ bool32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, enum Ability ability
     return effect;
 }
 
+static u32 GetFirstBattlerOnSide(u32 side)
+{
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    {
+        if (GetBattlerSide(battler) == side && !IsBattlerAlive(battler))
+            return battler;
+    }
+
+    return GetBattlerAtPosition(side == B_SIDE_PLAYER ? B_POSITION_PLAYER_LEFT : B_POSITION_OPPONENT_LEFT);
+}
+
 static inline bool32 SetStartingFieldStatus(u32 flag, u32 message, u32 anim, u16 *timer, u16 time)
 {
     if (!(gFieldStatuses & flag))
@@ -3634,6 +3646,71 @@ static inline bool32 SetStartingSideStatus(u32 flag, u32 side, u32 message, u32 
     }
 
     return FALSE;
+}
+
+static bool32 SetStartingHazardStatus(enum Hazards hazard, u32 targetSide, u8 layers, enum StartingStatusStringID messageId)
+{
+    bool32 effect = FALSE;
+    u32 setterSide = (targetSide == B_SIDE_PLAYER) ? B_SIDE_OPPONENT : B_SIDE_PLAYER;
+
+    switch (hazard)
+    {
+    case HAZARDS_SPIKES:
+        if (layers != 0)
+        {
+            if (!IsHazardOnSide(targetSide, HAZARDS_SPIKES))
+                PushHazardTypeToQueue(targetSide, HAZARDS_SPIKES);
+            gSideTimers[targetSide].spikesAmount = layers;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_TOXIC_SPIKES:
+        if (layers != 0)
+        {
+            if (!IsHazardOnSide(targetSide, HAZARDS_TOXIC_SPIKES))
+                PushHazardTypeToQueue(targetSide, HAZARDS_TOXIC_SPIKES);
+            gSideTimers[targetSide].toxicSpikesAmount = layers;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STICKY_WEB:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STICKY_WEB))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STICKY_WEB);
+            gSideTimers[targetSide].stickyWebBattlerId = 0xFF;
+            gSideTimers[targetSide].stickyWebBattlerSide = setterSide;
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STEALTH_ROCK:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STEALTH_ROCK))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STEALTH_ROCK);
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_STEELSURGE:
+        if (!IsHazardOnSide(targetSide, HAZARDS_STEELSURGE))
+        {
+            PushHazardTypeToQueue(targetSide, HAZARDS_STEELSURGE);
+            effect = TRUE;
+        }
+        break;
+    case HAZARDS_NONE:
+    case HAZARDS_MAX_COUNT:
+        break;
+    }
+
+    if (effect)
+    {
+        gBattlerAttacker = GetFirstBattlerOnSide(setterSide);
+        gBattleScripting.battler = gBattlerAttacker;
+        gBattlerTarget = GetFirstBattlerOnSide(targetSide);
+        gBattleCommunication[MULTISTRING_CHOOSER] = messageId;
+        BattleScriptPushCursorAndCallback(BattleScript_OverworldHazard);
+    }
+
+    return effect;
 }
 
 bool32 TryFieldEffects(enum FieldEffectCases caseId)
@@ -3747,7 +3824,7 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_MSG_SET_TAILWIND,
                         B_ANIM_TAILWIND,
                         &gSideTimers[B_SIDE_OPPONENT].tailwindTimer, gStartingStatuses.tailwindOpponent ? 0 : (B_TAILWIND_TURNS >= GEN_5 ? 4 : 3));
-            gStartingStatuses.tailwindOpponent = FALSE;
+            gStartingStatuses.tailwindOpponentTemporary = gStartingStatuses.tailwindOpponent = FALSE;
         }
         else if (gStartingStatuses.rainbowPlayer || gStartingStatuses.rainbowPlayerTemporary)
         {
@@ -3808,6 +3885,123 @@ bool32 TryFieldEffects(enum FieldEffectCases caseId)
                         B_ANIM_SWAMP,
                         &gSideTimers[B_SIDE_OPPONENT].swampTimer, gStartingStatuses.swampOpponent ? 0 : 4);
             gStartingStatuses.swampOpponentTemporary = gStartingStatuses.swampOpponent = FALSE;
+        }
+        // Hazards - Spikes
+        else if (gStartingStatuses.spikesPlayerL1)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 1, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesPlayerL1 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.spikesPlayerL2)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 2, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesPlayerL2 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.spikesPlayerL3)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_PLAYER, 3, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesPlayerL3 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.spikesOpponentL1)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 1, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesOpponentL1 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.spikesOpponentL2)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 2, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesOpponentL2 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.spikesOpponentL3)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_SPIKES, B_SIDE_OPPONENT, 3, B_MSG_SET_SPIKES);
+            gStartingStatuses.spikesOpponentL3 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        // Hazards - Toxic Spikes
+        else if (gStartingStatuses.toxicSpikesPlayerL1)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_PLAYER, 1, B_MSG_SET_POISON_SPIKES);
+            gStartingStatuses.toxicSpikesPlayerL1 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.toxicSpikesPlayerL2)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_PLAYER, 2, B_MSG_SET_POISON_SPIKES);
+            gStartingStatuses.toxicSpikesPlayerL2 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.toxicSpikesOpponentL1)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_OPPONENT, 1, B_MSG_SET_POISON_SPIKES);
+            gStartingStatuses.toxicSpikesOpponentL1 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.toxicSpikesOpponentL2)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_TOXIC_SPIKES, B_SIDE_OPPONENT, 2, B_MSG_SET_POISON_SPIKES);
+            gStartingStatuses.toxicSpikesOpponentL2 = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        // Hazards - Sticky Web
+        else if (gStartingStatuses.stickyWebPlayer)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STICKY_WEB, B_SIDE_PLAYER, 1, B_MSG_SET_STICKY_WEB);
+            gStartingStatuses.stickyWebPlayer = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.stickyWebOpponent)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STICKY_WEB, B_SIDE_OPPONENT, 1, B_MSG_SET_STICKY_WEB);
+            gStartingStatuses.stickyWebOpponent = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        // Hazards - Stealth Rock
+        else if (gStartingStatuses.stealthRockPlayer)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STEALTH_ROCK, B_SIDE_PLAYER, 1, B_MSG_SET_STEALTH_ROCK);
+            gStartingStatuses.stealthRockPlayer = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.stealthRockOpponent)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STEALTH_ROCK, B_SIDE_OPPONENT, 1, B_MSG_SET_STEALTH_ROCK);
+            gStartingStatuses.stealthRockOpponent = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        // Hazards - Steelsurge
+        else if (gStartingStatuses.sharpSteelPlayer)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STEELSURGE, B_SIDE_PLAYER, 1, B_MSG_SET_SHARP_STEEL);
+            gStartingStatuses.sharpSteelPlayer = FALSE;
+            if (effect)
+                return TRUE;
+        }
+        else if (gStartingStatuses.sharpSteelOpponent)
+        {
+            effect = SetStartingHazardStatus(HAZARDS_STEELSURGE, B_SIDE_OPPONENT, 1, B_MSG_SET_SHARP_STEEL);
+            gStartingStatuses.sharpSteelOpponent = FALSE;
+            if (effect)
+                return TRUE;
         }
         if (effect)
         {
@@ -6462,7 +6656,7 @@ u8 GetAttackerObedienceForAction()
     enum BattleMoveEffects moveEffect = GetMoveEffect(gCurrentMove);
     if (moveEffect == EFFECT_RAGE)
         gBattleMons[gBattlerAttacker].volatiles.rage = FALSE;
-    if (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP && (moveEffect == EFFECT_SNORE || moveEffect == EFFECT_SLEEP_TALK))
+    if (gBattleMons[gBattlerAttacker].status1 & STATUS1_SLEEP && IsUsableWhileAsleepEffect(moveEffect))
         return DISOBEYS_WHILE_ASLEEP;
 
     calc = (levelReferenced + obedienceLevel) * ((rnd >> 8) & 255) >> 8;
@@ -11419,6 +11613,19 @@ void ResetStartingStatuses(void)
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_RESET);
 }
 
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect)
+{
+    // All moves usable while asleep like Snore, Sleep Talk, etc.
+    switch (effect)
+    {
+    case EFFECT_SNORE:
+    case EFFECT_SLEEP_TALK:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
 void SetWrapTurns(u32 battler, enum HoldEffect holdEffect)
 {
     u32 normalWrapTurns = B_WRAP_TURNS - 2; // 5 turns
@@ -11427,4 +11634,3 @@ void SetWrapTurns(u32 battler, enum HoldEffect holdEffect)
     else
         gBattleMons[battler].volatiles.wrapTurns = B_BINDING_TURNS >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
 }
-

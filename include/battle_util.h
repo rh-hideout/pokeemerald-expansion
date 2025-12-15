@@ -457,6 +457,7 @@ bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
 void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_UTIL_H
