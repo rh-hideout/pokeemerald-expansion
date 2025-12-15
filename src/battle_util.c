@@ -1199,8 +1199,8 @@ const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
     if (gBattleStruct->skyDropTargets[battler] != SKY_DROP_NO_TARGET && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
         result = CheckSkyDropState(battler, skyDropState);
 
-    gDisableStructs[battler].rolloutTimer = 0;
-    gDisableStructs[battler].furyCutterCounter = 0;
+    gBattleMons[battler].volatiles.rolloutTimer = 0;
+    gBattleMons[battler].volatiles.furyCutterCounter = 0;
 
     return result;
 }
@@ -2628,11 +2628,11 @@ static enum MoveCanceler CancelerMoveFailure(struct BattleContext *ctx)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (!gDisableStructs[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
+        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_MAT_BLOCK:
-        if (!gDisableStructs[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
+        if (!gBattleStruct->battlerState[ctx->battlerAtk].isFirstTurn || gSpecialStatuses[ctx->battlerAtk].instructedChosenTarget)
             battleScript = BattleScript_ButItFailed;
         break;
     case EFFECT_FLING:
@@ -4569,7 +4569,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 }
                 break;
             case ABILITY_SPEED_BOOST:
-                if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility) && gDisableStructs[battler].isFirstTurn != 2)
+                if (CompareStat(battler, STAT_SPEED, MAX_STAT_STAGE, CMP_LESS_THAN, gLastUsedAbility) && gBattleStruct->battlerState[battler].isFirstTurn != 2)
                 {
                     SaveBattlerAttacker(gBattlerAttacker);
                     SET_STATCHANGER(STAT_SPEED, 1, FALSE);
@@ -4579,7 +4579,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
                 }
                 break;
             case ABILITY_MOODY:
-                if (gDisableStructs[battler].isFirstTurn != 2)
+                if (gBattleStruct->battlerState[battler].isFirstTurn != 2)
                 {
                     u32 validToRaise = 0, validToLower = 0;
                     u32 statsNum = GetConfig(CONFIG_MOODY_ACC_EVASION) >= GEN_8 ? NUM_STATS : NUM_BATTLE_STATS;
@@ -6273,7 +6273,7 @@ bool32 HasEnoughHpToEatBerry(u32 battler, enum Ability ability, u32 hpFraction, 
 
 void ClearVariousBattlerFlags(u32 battler)
 {
-    gDisableStructs[battler].furyCutterCounter = 0;
+    gBattleMons[battler].volatiles.furyCutterCounter = 0;
     gBattleMons[battler].volatiles.destinyBond = 0;
     gBattleMons[battler].volatiles.glaiveRush = FALSE;
     gBattleMons[battler].volatiles.grudge = FALSE;
@@ -6920,7 +6920,7 @@ static inline u32 CalcRolloutBasePower(u32 battlerAtk, u32 basePower)
 
 static inline u32 CalcFuryCutterBasePower(u32 battlerAtk, u32 basePower)
 {
-    for (u32 i = 0; i < gDisableStructs[battlerAtk].furyCutterCounter; i++)
+    for (u32 i = 0; i < gBattleMons[battlerAtk].volatiles.furyCutterCounter; i++)
         basePower *= 2;
     return min(basePower, 160); // The duration to reach 160 depends on a gen
 }
@@ -7124,12 +7124,12 @@ static inline u32 CalcMoveBasePower(struct BattleContext *ctx)
         break;
     case EFFECT_PAYBACK:
         if (HasBattlerActedThisTurn(battlerDef)
-            && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gDisableStructs[battlerDef].isFirstTurn != 2))
+            && (B_PAYBACK_SWITCH_BOOST < GEN_5 || gBattleStruct->battlerState[battlerDef].isFirstTurn != 2))
             basePower *= 2;
         break;
     case EFFECT_BOLT_BEAK:
         if (!HasBattlerActedThisTurn(battlerDef)
-            || gDisableStructs[battlerDef].isFirstTurn == 2)
+            || gBattleStruct->battlerState[battlerDef].isFirstTurn == 2)
             basePower *= 2;
         break;
     case EFFECT_FUSION_COMBO:
@@ -7719,7 +7719,7 @@ static inline u32 CalcAttackStat(struct BattleContext *ctx)
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(1.5));
         break;
     case ABILITY_STAKEOUT:
-        if (gDisableStructs[battlerDef].isFirstTurn == 2) // just switched in
+        if (gBattleStruct->battlerState[battlerDef].isFirstTurn == 2) // just switched in
             modifier = uq4_12_multiply_half_down(modifier, UQ_4_12(2.0));
         break;
     case ABILITY_GUTS:

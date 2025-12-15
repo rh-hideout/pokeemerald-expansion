@@ -2123,7 +2123,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             ADJUST_SCORE(-10);
             break;
         case EFFECT_FIRST_TURN_ONLY:
-            if (!gDisableStructs[battlerAtk].isFirstTurn)
+            if (!gBattleStruct->battlerState[battlerAtk].isFirstTurn)
                 ADJUST_SCORE(-10);
             if (HasChoiceEffect(battlerAtk))
                 ADJUST_SCORE(-5);
@@ -2407,7 +2407,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     }
                     break;
                 case PROTECT_MAT_BLOCK:
-                    if (!gDisableStructs[battlerAtk].isFirstTurn)
+                    if (!gBattleStruct->battlerState[battlerAtk].isFirstTurn)
                     {
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
@@ -4796,7 +4796,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             break;
 
         case PROTECT_MAT_BLOCK:
-            if (gDisableStructs[battlerAtk].isFirstTurn && predictedMove != MOVE_NONE
+            if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && predictedMove != MOVE_NONE
               && !IsBattleMoveStatus(predictedMove) && !(AI_GetBattlerMoveTargetType(battlerDef, predictedMove) & MOVE_TARGET_USER))
                 ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             break;
@@ -4833,7 +4833,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_TOXIC_SPIKES:
         if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData))
         {
-            if (gDisableStructs[battlerAtk].isFirstTurn)
+            if (gBattleStruct->battlerState[battlerAtk].isFirstTurn)
                 ADJUST_SCORE(BEST_EFFECT);
             else
                 ADJUST_SCORE(DECENT_EFFECT);
@@ -4979,7 +4979,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         ADJUST_SCORE(IncreaseStatUpScore(battlerAtk, battlerDef, STAT_CHANGE_DEF));
         break;
     case EFFECT_FIRST_TURN_ONLY:
-        if (gDisableStructs[battlerAtk].isFirstTurn && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
+        if (gBattleStruct->battlerState[battlerAtk].isFirstTurn && IsBestDmgMove(battlerAtk, battlerDef, AI_ATTACKING, move))
             ADJUST_SCORE(BEST_EFFECT);
         break;
     case EFFECT_STOCKPILE:
@@ -5251,7 +5251,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_IMPRISON:
         if (predictedMove != MOVE_NONE && HasMove(battlerAtk, predictedMove))
             ADJUST_SCORE(DECENT_EFFECT);
-        else if (gDisableStructs[battlerAtk].isFirstTurn == 0)
+        else if (gBattleStruct->battlerState[battlerAtk].isFirstTurn == 0)
             ADJUST_SCORE(WEAK_EFFECT);
         break;
     case EFFECT_REFRESH:
@@ -6030,7 +6030,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
             case MOVE_EFFECT_STEALTH_ROCK:
                 if (AI_ShouldSetUpHazards(battlerAtk, battlerDef, move, aiData))
                 {
-                    if (gDisableStructs[battlerAtk].isFirstTurn)
+                    if (gBattleStruct->battlerState[battlerAtk].isFirstTurn)
                         ADJUST_SCORE(BEST_EFFECT);
                     else
                         ADJUST_SCORE(DECENT_EFFECT);

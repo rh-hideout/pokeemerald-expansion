@@ -76,20 +76,6 @@
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
 
-// Cleared each time a mon leaves the field, either by switching out or fainting
-// Also used for showing correct move animation changes in link battles
-struct DisableStruct
-{
-    u32 transformedMonPID;
-    u8 rolloutTimer;
-    u8 furyCutterCounter;
-    u8 substituteHP;
-    u8 syrupBombIsShiny:1;
-    u8 isTransformedMonShiny:1;
-    u8 isFirstTurn:2;
-    u8 padding:4;
-};
-
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
 {
@@ -540,7 +526,8 @@ struct BattlerState
     // End of Word
     u16 hpOnSwitchout;
     u16 switchIn:1;
-    u16 padding:15;
+    u16 isFirstTurn:2;
+    u16 padding:13;
 };
 
 struct PartyState
@@ -1029,7 +1016,6 @@ extern u32 gHitMarker;
 extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
 extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
-extern struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT];
 extern u16 gPauseCounterBattle;
 extern u16 gPaydayMoney;
 extern u8 gBattleCommunication[BATTLE_COMMUNICATION_ENTRIES_COUNT];

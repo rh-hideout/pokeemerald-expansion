@@ -316,7 +316,7 @@ void BtlController_EmitTrainerSlide(u32 battler, u32 bufferId);
 void BtlController_EmitTrainerSlideBack(u32 battler, u32 bufferId);
 void BtlController_EmitFaintAnimation(u32 battler, u32 bufferId);
 void BtlController_EmitBallThrowAnim(u32 battler, u32 bufferId, u8 caseId);
-void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, struct DisableStruct *disableStructPtr, u8 multihit);
+void BtlController_EmitMoveAnimation(u32 battler, u32 bufferId, u16 move, u8 turnOfMove, u16 movePower, s32 dmg, u8 friendship, u8 multihit);
 void BtlController_EmitPrintString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitPrintSelectionString(u32 battler, u32 bufferId, enum StringID stringId);
 void BtlController_EmitChooseAction(u32 battler, u32 bufferId, u8 action, u16 itemId);
@@ -344,7 +344,7 @@ void BtlController_EmitDrawPartyStatusSummary(u32 battler, u32 bufferId, struct 
 void BtlController_EmitHidePartyStatusSummary(u32 battler, u32 bufferId);
 void BtlController_EmitEndBounceEffect(u32 battler, u32 bufferId);
 void BtlController_EmitSpriteInvisibility(u32 battler, u32 bufferId, bool8 isInvisible);
-void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, struct DisableStruct *disableStructPtr, u16 argument);
+void BtlController_EmitBattleAnimation(u32 battler, u32 bufferId, u8 animationId, u16 argument);
 void BtlController_EmitLinkStandbyMsg(u32 battler, u32 bufferId, u8 mode, bool32 record);
 void BtlController_EmitResetActionMoveSelection(u32 battler, u32 bufferId, u8 caseId);
 void BtlController_EmitEndLinkBattle(u32 battler, u32 bufferId, u8 battleOutcome);

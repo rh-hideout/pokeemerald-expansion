@@ -1029,13 +1029,13 @@ static void SetSameMoveTurnValues(u32 moveEffect)
     switch (moveEffect)
     {
     case EFFECT_FURY_CUTTER:
-        if (increment && gDisableStructs[gBattlerAttacker].furyCutterCounter < 5)
-            gDisableStructs[gBattlerAttacker].furyCutterCounter++;
+        if (increment && gBattleMons[gBattlerAttacker].volatiles.furyCutterCounter < 5)
+            gBattleMons[gBattlerAttacker].volatiles.furyCutterCounter++;
         else
-            gDisableStructs[gBattlerAttacker].furyCutterCounter = 0;
+            gBattleMons[gBattlerAttacker].volatiles.furyCutterCounter = 0;
         break;
     case EFFECT_ROLLOUT:
-        if (increment && ++gDisableStructs[gBattlerAttacker].rolloutTimer < 5)
+        if (increment && ++gBattleMons[gBattlerAttacker].volatiles.rolloutTimer < 5)
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = TRUE;
             gLockedMoves[gBattlerAttacker] = gCurrentMove;
@@ -1043,7 +1043,7 @@ static void SetSameMoveTurnValues(u32 moveEffect)
         else
         {
             gBattleMons[gBattlerAttacker].volatiles.multipleTurns = FALSE;
-            gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
+            gBattleMons[gBattlerAttacker].volatiles.rolloutTimer = 0;
         }
         break;
     case EFFECT_ECHOED_VOICE:
@@ -1051,8 +1051,8 @@ static void SetSameMoveTurnValues(u32 moveEffect)
             gBattleStruct->incrementEchoedVoice = TRUE;
         break;
     default: // not consecutive
-        gDisableStructs[gBattlerAttacker].rolloutTimer = 0;
-        gDisableStructs[gBattlerAttacker].furyCutterCounter = 0;
+        gBattleMons[gBattlerAttacker].volatiles.rolloutTimer = 0;
+        gBattleMons[gBattlerAttacker].volatiles.furyCutterCounter = 0;
         break;
     }
 
@@ -2051,7 +2051,6 @@ static void Cmd_attackanimation(void)
                                             gBattleMovePower,
                                             gBattleStruct->moveDamage[gBattlerTarget],
                                             gBattleMons[gBattlerAttacker].friendship,
-                                            &gDisableStructs[gBattlerAttacker],
                                             multihit);
 #if T_SHOULD_RUN_MOVE_ANIM
             gCountAllocs = TRUE;
@@ -2186,19 +2185,19 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
         gBattlescriptCurrInstr = nextInstr;
         return;
     }
-    else if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gDisableStructs[battler].substituteHP)
+    else if (DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove) && gBattleMons[battler].volatiles.substituteHP)
     {
-        if (gDisableStructs[battler].substituteHP >= gBattleStruct->moveDamage[battler])
+        if (gBattleMons[battler].volatiles.substituteHP >= gBattleStruct->moveDamage[battler])
         {
-            gDisableStructs[battler].substituteHP -= gBattleStruct->moveDamage[battler];
+            gBattleMons[battler].volatiles.substituteHP -= gBattleStruct->moveDamage[battler];
         }
         else
         {
-            gBattleStruct->moveDamage[battler] = gDisableStructs[battler].substituteHP;
-            gDisableStructs[battler].substituteHP = 0;
+            gBattleStruct->moveDamage[battler] = gBattleMons[battler].volatiles.substituteHP;
+            gBattleMons[battler].volatiles.substituteHP = 0;
         }
         // check substitute fading
-        if (gDisableStructs[battler].substituteHP == 0)
+        if (gBattleMons[battler].volatiles.substituteHP == 0)
         {
             gBattlescriptCurrInstr = nextInstr;
             BattleScriptCall(BattleScript_SubstituteFade);
@@ -3397,7 +3396,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             gBattleMons[gEffectBattler].volatiles.syrupBomb = TRUE;
             gBattleMons[gEffectBattler].volatiles.stickySyrupedBy = gBattlerAttacker;
             gBattleMons[gEffectBattler].volatiles.syrupBombTimer = 3;
-            gDisableStructs[gEffectBattler].syrupBombIsShiny = IsMonShiny(mon);
+            gBattleMons[gEffectBattler].volatiles.syrupBombIsShiny = IsMonShiny(mon);
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_SyrupBombActivates;
         }
@@ -5317,7 +5316,7 @@ static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *n
      || animId == B_ANIM_TERA_CHARGE
      || animId == B_ANIM_TERA_ACTIVATE)
     {
-        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, &gDisableStructs[battler], *argPtr);
+        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, *argPtr);
         MarkBattlerForControllerExec(battler);
         gBattlescriptCurrInstr = nextInstr;
     }
@@ -5333,7 +5332,7 @@ static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *n
           || animId == B_ANIM_SNOW_CONTINUES
           || animId == B_ANIM_FOG_CONTINUES)
     {
-        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, &gDisableStructs[battler], *argPtr);
+        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, *argPtr);
         MarkBattlerForControllerExec(battler);
         gBattlescriptCurrInstr = nextInstr;
     }
@@ -5343,7 +5342,7 @@ static void PlayAnimation(u32 battler, u8 animId, const u16 *argPtr, const u8 *n
     }
     else
     {
-        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, &gDisableStructs[battler], *argPtr);
+        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, animId, *argPtr);
         MarkBattlerForControllerExec(battler);
         gBattlescriptCurrInstr = nextInstr;
     }
@@ -6182,7 +6181,7 @@ static void Cmd_moveend(void)
         case MOVEEND_SUBSTITUTE:
             for (i = 0; i < gBattlersCount; i++)
             {
-                if (gDisableStructs[i].substituteHP == 0)
+                if (gBattleMons[i].volatiles.substituteHP == 0)
                     gBattleMons[i].volatiles.substitute = FALSE;
             }
             gBattleScripting.moveendState++;
@@ -7994,7 +7993,7 @@ static void Cmd_hitanimation(void)
         {
             if (gBattleStruct->passiveHpUpdate[battler] > 0
              || !(DoesSubstituteBlockMove(gBattlerAttacker, battler, gCurrentMove))
-             || gDisableStructs[battler].substituteHP == 0)
+             || gBattleMons[battler].volatiles.substituteHP == 0)
             {
                 BtlController_EmitHitAnimation(battler, B_COMM_TO_CONTROLLER);
                 MarkBattlerForControllerExec(battler);
@@ -8011,7 +8010,7 @@ static void Cmd_hitanimation(void)
                 continue;
 
             if (!(DoesSubstituteBlockMove(gBattlerAttacker, battlerDef, gCurrentMove))
-             || gDisableStructs[battlerDef].substituteHP == 0)
+             || gBattleMons[battlerDef].volatiles.substituteHP == 0)
             {
                 BtlController_EmitHitAnimation(battlerDef, B_COMM_TO_CONTROLLER);
                 MarkBattlerForControllerExec(battlerDef);
@@ -8228,7 +8227,7 @@ static void Cmd_statusanimation(void)
         u32 battler = GetBattlerForBattleScript(cmd->battler),
             statusFlag = (cmd->isVolatile || cmd->status) ? cmd->status : gBattleMons[battler].status1;
         if (!IsSemiInvulnerable(battler, CHECK_ALL)
-            && gDisableStructs[battler].substituteHP == 0
+            && gBattleMons[battler].volatiles.substituteHP == 0
             && !(gHitMarker & (HITMARKER_NO_ANIMATIONS | HITMARKER_DISABLE_ANIMATION)))
         {
             BtlController_EmitStatusAnimation(battler, B_COMM_TO_CONTROLLER, cmd->isVolatile, statusFlag);
@@ -9003,7 +9002,7 @@ static bool32 TryTidyUpClear(u32 battlerAtk, bool32 clear)
             if (clear)
             {
                 gBattlerTarget = i;
-                gDisableStructs[i].substituteHP = 0;
+                gBattleMons[i].volatiles.substituteHP = 0;
                 gBattleMons[i].volatiles.substitute = FALSE;
                 BattleScriptCall(BattleScript_SubstituteFade);
             }
@@ -9770,7 +9769,7 @@ static void TryPlayStatChangeAnimation(u32 battler, enum Ability ability, u32 st
 
     if (!gBattleScripting.statAnimPlayed)
     {
-        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE, &gDisableStructs[battler], statAnimId);
+        BtlController_EmitBattleAnimation(battler, B_COMM_TO_CONTROLLER, B_ANIM_STATS_CHANGE, statAnimId);
         MarkBattlerForControllerExec(battler);
         if (changeableStatsCount > 1)
             gBattleScripting.statAnimPlayed = TRUE;
@@ -10767,7 +10766,7 @@ static void Cmd_transformdataexecution(void)
         gBattleMons[gBattlerAttacker].volatiles.transformed = TRUE;
         gBattleMons[gBattlerAttacker].volatiles.disabledMove = MOVE_NONE;
         gBattleMons[gBattlerAttacker].volatiles.disableTimer = 0;
-        gDisableStructs[gBattlerAttacker].transformedMonPID = gBattleMons[gBattlerTarget].personality;
+        gBattleMons[gBattlerAttacker].volatiles.transformedMonPID = gBattleMons[gBattlerTarget].personality;
 
         if (B_TRANSFORM_SHINY >= GEN_4)
             gBattleMons[gBattlerAttacker].volatiles.isTransformedMonShiny = gBattleMons[gBattlerTarget].isShiny;
@@ -10831,11 +10830,11 @@ static void Cmd_setsubstitute(void)
     {
         gBattleMons[gBattlerAttacker].volatiles.substitute = TRUE;
         gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
-        // gDisableStructs[gBattlerAttacker].substituteHP = (factor == 2) ? (hp / 2) : hp;
+        // gBattleMons[gBattlerAttacker].volatiles.substituteHP = (factor == 2) ? (hp / 2) : hp;
         if (factor == 2)
-            gDisableStructs[gBattlerAttacker].substituteHP = hp / 2;
+            gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp / 2;
         else
-            gDisableStructs[gBattlerAttacker].substituteHP = hp;
+            gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp;
         gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SET_SUBSTITUTE;
     }
 
@@ -16686,7 +16685,6 @@ void BS_PlayMoveAnimation(void)
         0,
         0,
         gBattleMons[gBattlerAttacker].friendship,
-        &gDisableStructs[gBattlerAttacker],
         gMultiHitCounter);
     MarkBattlerForControllerExec(gBattlerAttacker);
     gBattlescriptCurrInstr = cmd->nextInstr;
@@ -17249,8 +17247,8 @@ void BS_SetSkyDrop(void)
     gBattleMons[gBattlerTarget].volatiles.multipleTurns = 0;
     gBattleMons[gBattlerTarget].volatiles.uproarTurns = 0;
     gBattleMons[gBattlerTarget].volatiles.bideTurns = 0;
-    gDisableStructs[gBattlerTarget].rolloutTimer = 0;
-    gDisableStructs[gBattlerTarget].furyCutterCounter = 0;
+    gBattleMons[gBattlerTarget].volatiles.rolloutTimer = 0;
+    gBattleMons[gBattlerTarget].volatiles.furyCutterCounter = 0;
 
     // End any Follow Me/Rage Powder effects caused by the target
     if (gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTimer != 0 && gSideTimers[GetBattlerSide(gBattlerTarget)].followmeTarget == gBattlerTarget)
