@@ -46,27 +46,26 @@ SINGLE_BATTLE_TEST("Magic Coat fails if user moves last")
     }
 }
 
-DOUBLE_BATTLE_TEST("Magic Coat works when partner slot is empty after fainting")
+DOUBLE_BATTLE_TEST("Magic Coat fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_SPORE) == EFFECT_NON_VOLATILE_STATUS);
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_MAGIC_COAT);
-            MOVE(opponentRight, MOVE_SPORE, target: playerLeft);
         }
     } SCENE {
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
-        STATUS_ICON(opponentRight, sleep: TRUE);
-    } THEN {
-        EXPECT_EQ(playerLeft->status1, STATUS1_NONE);
-        EXPECT(opponentRight->status1 & STATUS1_SLEEP);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
+        MESSAGE("Wynaut fainted!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_MAGIC_COAT, playerLeft);
     }
 }
 

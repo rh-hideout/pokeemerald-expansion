@@ -2854,7 +2854,7 @@ bool32 IsLastMonToMove(u32 battler)
     u32 i;
     u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
 
-    if (battlerTurnOrderNum >= gBattlersCount)
+    if (battlerTurnOrderNum >= gBattlersCount - 1)
         return TRUE;
 
     for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)

@@ -29,7 +29,7 @@ DOUBLE_BATTLE_TEST("Analytic activates correctly with empty slot after fainting"
 
     GIVEN {
         PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
@@ -54,7 +54,7 @@ DOUBLE_BATTLE_TEST("Analytic does not activate when not moving last with empty s
 
     GIVEN {
         PLAYER(SPECIES_MAGNEMITE) { Ability(ABILITY_ANALYTIC); Speed(speed); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {

@@ -369,26 +369,26 @@ SINGLE_BATTLE_TEST("Protect fails if user moves last")
     }
 }
 
-DOUBLE_BATTLE_TEST("Protect works when partner slot is empty after fainting")
+DOUBLE_BATTLE_TEST("Protect fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
             MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_PROTECT);
-            MOVE(opponentRight, MOVE_TACKLE, target: playerLeft);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wynaut fainted!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerLeft);
-        MESSAGE("Wobbuffet protected itself!");
-        NOT HP_BAR(playerLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_PROTECT, playerLeft);
     }
 }
 

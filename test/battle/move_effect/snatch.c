@@ -37,28 +37,26 @@ SINGLE_BATTLE_TEST("Snatch fails if user moves last")
     }
 }
 
-DOUBLE_BATTLE_TEST("Snatch works when partner slot is empty after fainting")
+DOUBLE_BATTLE_TEST("Snatch fails when the only slower battler is a fainted ally")
 {
     GIVEN {
-        PLAYER(SPECIES_WOBBUFFET) { Speed(15); }
-        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(25); }
+        PLAYER(SPECIES_WOBBUFFET) { Speed(5); }
+        PLAYER(SPECIES_WYNAUT) { HP(1); Speed(1); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(20); }
         OPPONENT(SPECIES_WYNAUT) { Speed(10); }
     } WHEN {
         TURN { MOVE(opponentLeft, MOVE_TACKLE, target: playerRight); }
         TURN {
+            MOVE(opponentLeft, MOVE_CELEBRATE);
+            MOVE(opponentRight, MOVE_CELEBRATE);
             MOVE(playerLeft, MOVE_SNATCH);
-            MOVE(opponentRight, MOVE_SWORDS_DANCE);
         }
     } SCENE {
         ANIMATION(ANIM_TYPE_MOVE, MOVE_TACKLE, opponentLeft);
         MESSAGE("Wynaut fainted!");
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
-        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, opponentRight);
-        ANIMATION(ANIM_TYPE_MOVE, MOVE_SWORDS_DANCE, playerLeft);
-    } THEN {
-        EXPECT_EQ(playerLeft->statStages[STAT_ATK], DEFAULT_STAT_STAGE + 2);
-        EXPECT_EQ(opponentRight->statStages[STAT_ATK], DEFAULT_STAT_STAGE);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
+        NOT ANIMATION(ANIM_TYPE_MOVE, MOVE_SNATCH, playerLeft);
     }
 }
 
