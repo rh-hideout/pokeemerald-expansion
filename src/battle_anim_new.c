@@ -7747,7 +7747,7 @@ void AnimTask_ShellSideArm(u8 taskId)
 
 void AnimTask_TerrainPulse(u8 taskId)
 {
-    if (IsBattlerTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), GetBattlerHoldEffect(gBattleAnimAttacker), STATUS_FIELD_TERRAIN_ANY))
+    if (IsAnyTerrainAffected(gBattleAnimAttacker, GetBattlerAbility(gBattleAnimAttacker), GetBattlerHoldEffect(gBattleAnimAttacker), gFieldStatuses))
     {
         if (gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)
             gBattleAnimArgs[0] = TYPE_ELECTRIC;
