@@ -238,6 +238,7 @@ void MarkBattlerForControllerExec(u32 battler);
 void MarkBattlerReceivedLinkData(u32 battler);
 const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState);
 bool32 WasUnableToUseMove(u32 battler);
+bool32 IsLastMonToMove(u32 battler);
 bool32 ShouldDefiantCompetitiveActivate(u32 battler, enum Ability ability);
 void PrepareStringBattle(enum StringID stringId, u32 battler);
 void ResetSentPokesToOpponentValue(void);

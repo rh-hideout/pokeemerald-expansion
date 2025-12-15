@@ -2848,26 +2848,6 @@ u32 GetBattlerTurnOrderNum(u32 battler)
     return i;
 }
 
-// Returns TRUE if no other battler after this one in turn order will use a move
-bool32 IsLastMonToMove(u32 battler)
-{
-    u32 i;
-    u32 battlerTurnOrderNum = GetBattlerTurnOrderNum(battler);
-
-    if (battlerTurnOrderNum >= gBattlersCount - 1)
-        return TRUE;
-
-    for (i = battlerTurnOrderNum + 1; i < gBattlersCount; i++)
-    {
-        u32 otherBattler = gBattlerByTurnOrder[i];
-        if (!IsBattlerAlive(otherBattler))
-            continue;
-        if (gActionsByTurnOrder[i] == B_ACTION_USE_MOVE)
-            return FALSE;
-    }
-    return TRUE;
-}
-
 static void CheckSetUnburden(u8 battler)
 {
     if (IsAbilityAndRecord(battler, GetBattlerAbility(battler), ABILITY_UNBURDEN))
