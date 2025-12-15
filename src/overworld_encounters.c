@@ -620,9 +620,9 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
         || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 }
 
-bool32 IsSemiManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
+bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId)
 {
-    return objectEvent->graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER;
+    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER;
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -727,10 +727,14 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
     return FALSE;
 }
 
-u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
+struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
+    if (!IsSemiManualOverworldWildEncounter(template->graphicsId))
+        return *template;
+
+    struct ObjectEventTemplate templateOWE = *template;
+    
     // Does this work?
-    struct ObjectEventTemplate template = *GetObjectEventTemplateByLocalIdAndMap(objectEvent->localId, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup);
     u32 graphicsId;
     u16 speciesId;
     bool32 isShiny = FALSE;
@@ -742,8 +746,8 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     enum TimeOfDay timeOfDay;
 
     SetOverworldEncounterSpeciesInfo_Helper(
-        template.x,
-        template.y,
+        template->x - MAP_OFFSET,
+        template->y - MAP_OFFSET,
         &encounterIndex,
         headerId,
         &timeOfDay,
@@ -753,6 +757,7 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
         &level,
         personality
     );
+    // Have a fallback incase of no header mons
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
@@ -760,9 +765,10 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
     if (isShiny)
         graphicsId += OBJ_EVENT_MON_SHINY;
 
-    objectEvent->trainerType = TRAINER_TYPE_ENCOUNTER;
-    objectEvent->sOverworldEncounterLevel = level;
-    return graphicsId;
+    templateOWE.graphicsId = graphicsId;
+    templateOWE.sOverworldEncounterLevel = level;
+    templateOWE.trainerType = TRAINER_TYPE_ENCOUNTER;
+    return templateOWE;
 }
 
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider)
