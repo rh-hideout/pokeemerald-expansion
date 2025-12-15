@@ -753,6 +753,7 @@ u16 GetGraphicsIdForOverworldEncounterGfx(struct ObjectEvent *objectEvent)
         &level,
         personality
     );
+    // Have a fallback incase of no header mons
 
     graphicsId = speciesId + OBJ_EVENT_MON;
     if (isFemale)
