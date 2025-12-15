@@ -327,14 +327,14 @@ static bool32 HandleEndTurnFirstEventBlock(u32 battler)
         gBattleStruct->eventState.endTurnBlock++;
         break;
     case FIRST_EVENT_BLOCK_THRASH:
-        if (gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
+        if (gBattleMons[battler].volatiles.rampageTurns && gBattleMons[battler].volatiles.semiInvulnerable != STATE_SKY_DROP)
         {
-            gBattleMons[battler].volatiles.lockConfusionTurns--;
+            gBattleMons[battler].volatiles.rampageTurns--;
             if (gBattleMons[battler].volatiles.unableToUseMove)
             {
                 CancelMultiTurnMoves(battler, SKY_DROP_IGNORE);
             }
-            else if (!gBattleMons[battler].volatiles.lockConfusionTurns && gBattleMons[battler].volatiles.multipleTurns)
+            else if (!gBattleMons[battler].volatiles.rampageTurns && gBattleMons[battler].volatiles.multipleTurns)
             {
                 gBattleMons[battler].volatiles.multipleTurns = FALSE;
                 if (!gBattleMons[battler].volatiles.confusionTurns)

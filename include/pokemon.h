@@ -328,27 +328,7 @@ struct Volatiles
     // u32 confusionTurns:3;
     // u32 flinched:1;
     // u32 uproarTurns:3;
-    // u32 torment:1;
-    // u32 bideTurns:2;
-    // u32 lockConfusionTurns:2;
-    // u32 multipleTurns:1;
-    // u32 wrapped:1;
-    // u32 powder:1;
-    // u32 padding:1;
-    // u32 infatuation:4; // one bit for each battler
-    // u32 defenseCurl:1;
-    // u32 transformed:1;
-    // u32 recharge:1;
-    // u32 rage:1;
-    // u32 substitute:1;
-    // u32 destinyBond:1;
-    // u32 escapePrevention:1;
-    // u32 nightmare:1;
-    // u32 cursed:1;
-    // u32 foresight:1;
-    // u32 dragonCheer:1;
-    // u32 focusEnergy:1;
-    // u32 bonusCritStages:3;
+    // etc.
 };
 
 struct BattlePokemon

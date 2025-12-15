@@ -433,7 +433,7 @@ void UpdateStallMons(void);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 TryEmergencyExit(void);
 bool32 EmergencyExitCanBeTriggered(u32 battler);
-u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
+ARM_FUNC u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
 bool32 ItemHealMonVolatile(u32 battler, u16 itemId);
 void PushHazardTypeToQueue(u32 side, enum Hazards hazardType);
@@ -457,5 +457,6 @@ bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
+void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_UTIL_H

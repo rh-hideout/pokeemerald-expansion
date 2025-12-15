@@ -1127,9 +1127,9 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     // If target was sky dropped in the middle of Outrage/Thrash/Petal Dance,
     // confuse them upon release and display "confused by fatigue" message & animation.
     // Don't do this if this CancelMultiTurnMoves is caused by falling asleep via Yawn.
-    if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns && skyDropState != SKY_DROP_STATUS_YAWN)
+    if (gBattleMons[otherSkyDropper].volatiles.rampageTurns && skyDropState != SKY_DROP_STATUS_YAWN)
     {
-        gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns = 0;
+        gBattleMons[otherSkyDropper].volatiles.rampageTurns = 0;
 
         // If the target can be confused, confuse them.
         // Don't use CanBeConfused, can cause issues in edge cases.
@@ -1138,9 +1138,7 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
             || IsAbilityAndRecord(otherSkyDropper, ability, ABILITY_OWN_TEMPO)
             || IsMistyTerrainAffected(otherSkyDropper, ability, GetBattlerHoldEffect(otherSkyDropper), gFieldStatuses)))
         {
-            // Set confused status
-            gBattleMons[otherSkyDropper].volatiles.confusionTurns = ((Random()) % 4) + 2;
-
+            gBattleMons[otherSkyDropper].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
             if (skyDropState == SKY_DROP_ATTACKCANCELER_CHECK)
             {
                 gBattleStruct->skyDropTargets[battler] = SKY_DROP_RELEASED_TARGET;
@@ -1166,7 +1164,7 @@ const u8 *CheckSkyDropState(u32 battler, enum SkyDropState skyDropState)
     }
 
     // Clear skyDropTargets data, unless this CancelMultiTurnMoves is caused by Yawn, attackcanceler, or VARIOUS_GRAVITY_ON_AIRBORNE_MONS
-    if (!(gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns) && gBattleStruct->skyDropTargets[battler] < 4)
+    if (!(gBattleMons[otherSkyDropper].volatiles.rampageTurns) && gBattleStruct->skyDropTargets[battler] < 4)
     {
         gBattleStruct->skyDropTargets[battler] = SKY_DROP_NO_TARGET;
         gBattleStruct->skyDropTargets[otherSkyDropper] = SKY_DROP_NO_TARGET;
@@ -1184,10 +1182,10 @@ const u8 *CancelMultiTurnMoves(u32 battler, enum SkyDropState skyDropState)
     if (B_RAMPAGE_CANCELLING < GEN_5)
     {
         gBattleMons[battler].volatiles.multipleTurns = 0;
-        gBattleMons[battler].volatiles.lockConfusionTurns = 0;
+        gBattleMons[battler].volatiles.rampageTurns = 0;
     }
-    else if (!gBattleMons[battler].volatiles.lockConfusionTurns
-     || gBattleMons[battler].volatiles.lockConfusionTurns > 1)
+    else if (!gBattleMons[battler].volatiles.rampageTurns
+     || gBattleMons[battler].volatiles.rampageTurns > 1)
     {
         gBattleMons[battler].volatiles.multipleTurns = 0;
     }
@@ -4032,7 +4030,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
         case ABILITY_SLOW_START:
             if (shouldAbilityTrigger)
             {
-                gBattleMons[battler].volatiles.slowStartTimer = 5;
+                gBattleMons[battler].volatiles.slowStartTimer = B_SLOW_START_TIMER;
                 gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_SWITCHIN_SLOWSTART;
                 BattleScriptCall(BattleScript_SwitchInAbilityMsg);
                 effect++;
@@ -4826,7 +4824,7 @@ u32 AbilityBattleEffects(enum AbilityEffect caseID, u32 battler, enum Ability ab
              && RandomPercentage(RNG_CURSED_BODY, 30))
             {
                 gBattleMons[gBattlerAttacker].volatiles.disabledMove = gChosenMove;
-                gBattleMons[gBattlerAttacker].volatiles.disableTimer = 4;
+                gBattleMons[gBattlerAttacker].volatiles.disableTimer = B_DISABLE_TIMER;
                 PREPARE_MOVE_BUFFER(gBattleTextBuff1, gChosenMove);
                 BattleScriptCall(BattleScript_CursedBodyActivates);
                 effect++;
@@ -10756,7 +10754,8 @@ bool32 EmergencyExitCanBeTriggered(u32 battler)
 
 // Gets the value of a volatile status flag for a certain battler
 // Primarily used for the debug menu and scripts. Outside of it explicit references are preferred
-u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile)
+// Uses Arm because there is a compiler bug when it tries to compile in thumb
+ARM_FUNC u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile)
 {
     switch (_volatile)
     {
@@ -11419,3 +11418,13 @@ void ResetStartingStatuses(void)
 {
     STARTING_STATUS_DEFINITIONS(UNPACK_STARTING_STATUS_RESET);
 }
+
+void SetWrapTurns(u32 battler, enum HoldEffect holdEffect)
+{
+    u32 normalWrapTurns = B_WRAP_TURNS - 2; // 5 turns
+    if (holdEffect == HOLD_EFFECT_GRIP_CLAW)
+        gBattleMons[battler].volatiles.wrapTurns = B_BINDING_TURNS >= GEN_5 ? B_WRAP_TURNS : normalWrapTurns;
+    else
+        gBattleMons[battler].volatiles.wrapTurns = B_BINDING_TURNS >= GEN_5 ? RandomUniform(RNG_WRAP, 4, normalWrapTurns) : RandomUniform(RNG_WRAP, 2, normalWrapTurns);
+}
+

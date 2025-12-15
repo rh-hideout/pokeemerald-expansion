@@ -3398,9 +3398,9 @@ const u8* FaintClearSetData(u32 battler)
 
             // If the target was sky dropped in the middle of using Outrage/Petal Dance/Thrash,
             // confuse them upon release and print "confused via fatigue" message and animation.
-            if (gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns)
+            if (gBattleMons[otherSkyDropper].volatiles.rampageTurns)
             {
-                gBattleMons[otherSkyDropper].volatiles.lockConfusionTurns = 0;
+                gBattleMons[otherSkyDropper].volatiles.rampageTurns = 0;
 
                 // If the released mon can be confused, do so.
                 // Don't use CanBeConfused here, since it can cause issues in edge cases.

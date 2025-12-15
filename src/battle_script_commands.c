@@ -2914,13 +2914,13 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         else
         {
-            gBattleMons[gEffectBattler].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, 5); // 2-5 turns
+            gBattleMons[gEffectBattler].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
 
             // If the confusion is activating due to being released from Sky Drop, go to "confused due to fatigue" script.
             // Otherwise, do normal confusion script.
             if (GetMoveEffect(gCurrentMove) == EFFECT_SKY_DROP)
             {
-                gBattleMons[gEffectBattler].volatiles.lockConfusionTurns = 0;
+                gBattleMons[gEffectBattler].volatiles.rampageTurns = 0;
                 gBattlerAttacker = gEffectBattler;
                 gBattlescriptCurrInstr = BattleScript_ThrashConfuses;
             }
@@ -2969,7 +2969,9 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         {
             gBattleMons[gEffectBattler].volatiles.multipleTurns = TRUE;
             gLockedMoves[gEffectBattler] = gCurrentMove;
-            gBattleMons[gEffectBattler].volatiles.uproarTurns = B_UPROAR_TURNS >= GEN_5 ? 3 : (Random() & 3) + 2;
+            gBattleMons[gEffectBattler].volatiles.uproarTurns = B_UPROAR_TURNS >= GEN_5
+                                                                ? B_UPROAR_TURN_COUNT - 2
+                                                                : RandomUniform(RNG_CONFUSION_TURNS, 2, B_UPROAR_TURN_COUNT);
 
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_MoveEffectUproar;
@@ -3035,10 +3037,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         else
         {
-            if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_GRIP_CLAW)
-                gBattleMons[gEffectBattler].volatiles.wrapTurns = B_BINDING_TURNS >= GEN_5 ? 7 : 5;
-            else
-                gBattleMons[gEffectBattler].volatiles.wrapTurns = B_BINDING_TURNS >= GEN_5 ? RandomUniform(RNG_WRAP, 4, 5) : RandomUniform(RNG_WRAP, 2, 5);
+            SetWrapTurns(gEffectBattler, GetBattlerHoldEffect(gBattlerAttacker));
             gBattleMons[gEffectBattler].volatiles.wrapped = TRUE;
             gBattleMons[gEffectBattler].volatiles.wrappedMove = gCurrentMove;
             gBattleMons[gEffectBattler].volatiles.wrappedBy = gBattlerAttacker;
@@ -3222,7 +3221,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     }
     case MOVE_EFFECT_THRASH:
         // Petal Dance doesn't lock mons that copy the move with Dancer
-        if (gSpecialStatuses[gEffectBattler].dancerUsedMove || gBattleMons[gEffectBattler].volatiles.lockConfusionTurns)
+        if (gSpecialStatuses[gEffectBattler].dancerUsedMove || gBattleMons[gEffectBattler].volatiles.rampageTurns)
         {
             gBattlescriptCurrInstr = battleScript;
         }
@@ -3230,7 +3229,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         {
             gBattleMons[gEffectBattler].volatiles.multipleTurns = TRUE;
             gLockedMoves[gEffectBattler] = gCurrentMove;
-            gBattleMons[gEffectBattler].volatiles.lockConfusionTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, 3);
+            gBattleMons[gEffectBattler].volatiles.rampageTurns = RandomUniform(RNG_RAMPAGE_TURNS, 2, B_RAMPAGE_TURNS);
         }
         break;
     case MOVE_EFFECT_CLEAR_SMOG:
@@ -3297,7 +3296,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
         }
         break;
     case MOVE_EFFECT_THROAT_CHOP:
-        gBattleMons[gEffectBattler].volatiles.throatChopTimer = 2;
+        gBattleMons[gEffectBattler].volatiles.throatChopTimer = B_THROAT_CHOP_TIMER;
         gBattlescriptCurrInstr = battleScript;
         break;
     case MOVE_EFFECT_INCINERATE:
@@ -3395,7 +3394,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
 
             gBattleMons[gEffectBattler].volatiles.syrupBomb = TRUE;
             gBattleMons[gEffectBattler].volatiles.stickySyrupedBy = gBattlerAttacker;
-            gBattleMons[gEffectBattler].volatiles.syrupBombTimer = 3;
+            gBattleMons[gEffectBattler].volatiles.syrupBombTimer = B_SYRUP_BOMB_TIMER;
             gBattleMons[gEffectBattler].volatiles.syrupBombIsShiny = IsMonShiny(mon);
             BattleScriptPush(battleScript);
             gBattlescriptCurrInstr = BattleScript_SyrupBombActivates;
@@ -3795,10 +3794,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
             if (!gBattleMons[battler].volatiles.wrapped)
             {
                 gBattleMons[battler].volatiles.wrapped = TRUE;
-                if (GetBattlerHoldEffect(gBattlerAttacker) == HOLD_EFFECT_GRIP_CLAW)
-                    gBattleMons[battler].volatiles.wrapTurns = (B_BINDING_TURNS >= GEN_5) ? 7 : 5;
-                else
-                    gBattleMons[battler].volatiles.wrapTurns = (Random() % 2) + 4;
+                SetWrapTurns(battler, GetBattlerHoldEffect(gBattlerAttacker));
                 // The Wrap effect does not expire when the user switches, so here's some cheese.
                 gBattleMons[battler].volatiles.wrappedBy = gBattlerTarget;
                 if (moveEffect == MOVE_EFFECT_SANDBLAST_SIDE)
@@ -6888,7 +6884,7 @@ static void Cmd_moveend(void)
             if (B_RAMPAGE_CANCELLING >= GEN_5
               && MoveHasAdditionalEffectSelf(gCurrentMove, MOVE_EFFECT_THRASH)           // If we're rampaging
               && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_NO_EFFECT  // And it is unusable
-              && gBattleMons[gBattlerAttacker].volatiles.lockConfusionTurns != 1)  // And won't end this turn
+              && gBattleMons[gBattlerAttacker].volatiles.rampageTurns != 1)  // And won't end this turn
                 CancelMultiTurnMoves(gBattlerAttacker, SKY_DROP_IGNORE); // Cancel it
 
             SetSameMoveTurnValues(moveEffect);
@@ -7030,7 +7026,7 @@ static void Cmd_sethealblock(void)
     else
     {
         gBattleMons[gBattlerTarget].volatiles.healBlock = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.healBlockTimer = 5;
+        gBattleMons[gBattlerTarget].volatiles.healBlockTimer = B_HEAL_BLOCK_TIMER;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -9242,11 +9238,15 @@ static void TryResetProtectUseCounter(u32 battler)
 {
     u32 lastMove = gLastResultingMoves[battler];
     enum BattleMoveEffects lastEffect = GetMoveEffect(lastMove);
-    if (lastMove == MOVE_UNAVAILABLE
-        || (!gBattleMoveEffects[lastEffect].usesProtectCounter
-          && ((GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) >= GEN_9 && lastEffect != EFFECT_ALLY_SWITCH)
-            || GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9)))
+    if (lastMove == MOVE_UNAVAILABLE)
+    {
         gBattleMons[battler].volatiles.protectUses = 0;
+    }
+    else if (!gBattleMoveEffects[lastEffect].usesProtectCounter)
+    {
+        if (GetConfig(CONFIG_ALLY_SWITCH_FAIL_CHANCE) < GEN_9 || lastEffect != EFFECT_ALLY_SWITCH)
+            gBattleMons[battler].volatiles.protectUses = 0;
+    }
 }
 
 static void Cmd_setprotectlike(void)
@@ -10830,7 +10830,6 @@ static void Cmd_setsubstitute(void)
     {
         gBattleMons[gBattlerAttacker].volatiles.substitute = TRUE;
         gBattleMons[gBattlerAttacker].volatiles.wrapped = FALSE;
-        // gBattleMons[gBattlerAttacker].volatiles.substituteHP = (factor == 2) ? (hp / 2) : hp;
         if (factor == 2)
             gBattleMons[gBattlerAttacker].volatiles.substituteHP = hp / 2;
         else
@@ -10977,9 +10976,9 @@ static void Cmd_disablelastusedattack(void)
 
         gBattleMons[gBattlerTarget].volatiles.disabledMove = gBattleMons[gBattlerTarget].moves[i];
         if (B_DISABLE_TURNS >= GEN_5)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = 4;
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = B_DISABLE_TIMER;
         else if (B_DISABLE_TURNS >= GEN_4)
-            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + 4; // 4-7 turns
+            gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + B_DISABLE_TIMER; // 4-7 turns
         else
             gBattleMons[gBattlerTarget].volatiles.disableTimer = (Random() & 3) + 2; // 2-5 turns
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -11036,9 +11035,9 @@ static void Cmd_trysetencore(void)
 
         // Encore always lasts 3 turns, but we need to account for a scenario where Encore changes the move during the same turn.
         if (HasBattlerActedThisTurn(gBattlerTarget))
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = 4;
+            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER;
         else
-            gBattleMons[gBattlerTarget].volatiles.encoreTimer = 3;
+            gBattleMons[gBattlerTarget].volatiles.encoreTimer = B_ENCORE_TIMER - 1;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -11560,7 +11559,7 @@ static void Cmd_setembargo(void)
     else
     {
         gBattleMons[gBattlerTarget].volatiles.embargo = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.embargoTimer = 5;
+        gBattleMons[gBattlerTarget].volatiles.embargoTimer = B_EMBARGO_TIMER;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -12144,13 +12143,13 @@ static void Cmd_settaunt(void)
         u8 turns;
         if (B_TAUNT_TURNS >= GEN_5)
         {
-            turns = 4;
+            turns = B_TAUNT_TIMER - 1; // 4 turns
             if (!HasBattlerActedThisTurn(gBattlerTarget))
                 turns--; // If the target hasn't yet moved this turn, Taunt lasts for only three turns (source: Bulbapedia)
         }
         else if (B_TAUNT_TURNS >= GEN_4)
         {
-            turns = (Random() & 2) + 3;
+            turns = RandomUniform(RNG_TAUNT, 2, B_TAUNT_TIMER);
         }
         else
         {
@@ -12604,10 +12603,10 @@ static void Cmd_trysetvolatile(void)
         switch (cmd->_volatile)
         {
         case VOLATILE_MAGNET_RISE:
-            gBattleMons[battler].volatiles.magnetRiseTimer = 5;
+            gBattleMons[battler].volatiles.magnetRiseTimer = B_MAGNET_RISE_TIMER;
             break;
         case VOLATILE_LASER_FOCUS:
-            gBattleMons[battler].volatiles.laserFocusTimer = 2;
+            gBattleMons[battler].volatiles.laserFocusTimer = B_LASER_FOCUS_TIMER;
             break;
         default:
             break;
@@ -13834,7 +13833,7 @@ static void Cmd_settelekinesis(void)
     else
     {
         gBattleMons[gBattlerTarget].volatiles.telekinesis = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.telekinesisTimer = 3;
+        gBattleMons[gBattlerTarget].volatiles.telekinesisTimer = B_TELEKINESIS_TIMER;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
 }
@@ -15742,7 +15741,7 @@ void BS_TrySetConfusion(void)
 
     if (CanBeConfused(gBattlerTarget))
     {
-        gBattleMons[gBattlerTarget].volatiles.confusionTurns = ((Random()) % 4) + 2;
+        gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
         gBattleCommunication[MULTIUSE_STATE] = 1;
         gEffectBattler = gBattlerTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;
@@ -15798,7 +15797,7 @@ void BS_TrySetTorment(void)
      && !IsAbilityOnSide(gBattlerTarget, ABILITY_AROMA_VEIL))
     {
         gBattleMons[gBattlerTarget].volatiles.torment = TRUE;
-        gBattleMons[gBattlerTarget].volatiles.tormentTimer = 3;
+        gBattleMons[gBattlerTarget].volatiles.tormentTimer = B_TORMENT_TIMER;
         gEffectBattler = gBattlerTarget;
         gBattlescriptCurrInstr = cmd->nextInstr;
     }
@@ -17243,7 +17242,7 @@ void BS_SetSkyDrop(void)
     gBattleStruct->skyDropTargets[gBattlerAttacker] = gBattlerTarget;
     gBattleStruct->skyDropTargets[gBattlerTarget] = gBattlerAttacker;
 
-    // End any multiturn effects caused by the target except VOLATILE_LOCK_CONFUSE
+    // End any multiturn effects caused by the target except VOLATILE_RAMPAGE_TURNS
     gBattleMons[gBattlerTarget].volatiles.multipleTurns = 0;
     gBattleMons[gBattlerTarget].volatiles.uproarTurns = 0;
     gBattleMons[gBattlerTarget].volatiles.bideTurns = 0;
@@ -17275,7 +17274,7 @@ void BS_ClearSkyDrop(void)
     }
 
     // Confuse target if they were in the middle of Petal Dance/Outrage/Thrash when targeted.
-    if (gBattleMons[gBattlerTarget].volatiles.lockConfusionTurns)
+    if (gBattleMons[gBattlerTarget].volatiles.rampageTurns)
         gBattleScripting.moveEffect = MOVE_EFFECT_CONFUSION;
 }
 
@@ -17292,11 +17291,11 @@ void BS_SkyDropYawn(void)
         gBattleStruct->skyDropTargets[gEffectBattler] = SKY_DROP_NO_TARGET;
 
         // If the target was in the middle of Outrage/Thrash/etc. when targeted by Sky Drop, confuse them on release and do proper animation
-        if (gBattleMons[gEffectBattler].volatiles.lockConfusionTurns && CanBeConfused(gEffectBattler))
+        if (gBattleMons[gEffectBattler].volatiles.rampageTurns && CanBeConfused(gEffectBattler))
         {
-            gBattleMons[gEffectBattler].volatiles.lockConfusionTurns = 0;
+            gBattleMons[gEffectBattler].volatiles.rampageTurns = 0;
             gBattlerAttacker = gEffectBattler;
-            gBattleMons[gBattlerTarget].volatiles.confusionTurns = ((Random()) % 4) + 2;
+            gBattleMons[gBattlerTarget].volatiles.confusionTurns = RandomUniform(RNG_CONFUSION_TURNS, 2, B_CONFUSION_TURNS); // 2-5 turns
             gBattlescriptCurrInstr = BattleScript_ThrashConfuses;
         }
         else
