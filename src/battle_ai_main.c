@@ -3320,9 +3320,18 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
         break;
     case EFFECT_COACHING:
         if (!hasPartner
-         || !HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL))
+         || (!HasMoveWithCategory(battlerAtkPartner, DAMAGE_CATEGORY_PHYSICAL) 
+         && !HasMoveWithEffect(battlerAtkPartner, EFFECT_STORED_POWER)))
         {
             ADJUST_SCORE(WORST_EFFECT);
+        }
+        else if (HasMoveWithEffect(battlerAtkPartner, EFFECT_STORED_POWER))
+        {
+            s16 partnerStatChanges[NUM_BATTLE_STATS] = {0};
+            s16 defStatChanges[NUM_BATTLE_STATS] = {0};
+            if (BattlerShouldChangeStats(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtk), move, GetEffectIndexInMoveArray(battlerAtkPartner, EFFECT_STORED_POWER), CHANGE_STAT_DMG_DEALT, partnerStatChanges, defStatChanges)
+             || BattlerShouldChangeStats(battlerAtkPartner, BATTLE_OPPOSITE(battlerAtkPartner), move, GetEffectIndexInMoveArray(battlerAtkPartner, EFFECT_STORED_POWER), CHANGE_STAT_DMG_DEALT, partnerStatChanges, defStatChanges))
+                ADJUST_SCORE(GOOD_EFFECT);
         }
         else
         {

@@ -107,6 +107,670 @@ u32 AI_GetDamage(u32 battlerAtk, u32 battlerDef, u32 moveIndex, enum DamageCalcC
     }
 }
 
+u32 AI_GetDamageWithStatChanges(u32 battlerAtk, u32 battlerDef, u32 moveIndex, s16 atkStatChanges[NUM_BATTLE_STATS], s16 defStatChanges[NUM_BATTLE_STATS])
+{
+    u32 i, j;
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+    
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
+    }
+    
+    for (i = 0; i < NUM_BATTLE_STATS; i++)
+    {
+        if (atkStatChanges[i] != 0)
+        {
+            gBattleMons[battlerAtk].statStages[i] += atkStatChanges[i];
+            
+            if (gBattleMons[battlerAtk].statStages[i] > MAX_STAT_STAGE)
+                gBattleMons[battlerAtk].statStages[i] = MAX_STAT_STAGE;
+            if (gBattleMons[battlerAtk].statStages[i] < MIN_STAT_STAGE)
+                gBattleMons[battlerAtk].statStages[i] = MIN_STAT_STAGE;
+        }
+        if (defStatChanges[i] != 0)
+        {
+            gBattleMons[battlerDef].statStages[i] += defStatChanges[i];
+            
+            if (gBattleMons[battlerDef].statStages[i] > MAX_STAT_STAGE)
+                gBattleMons[battlerDef].statStages[i] = MAX_STAT_STAGE;
+            if (gBattleMons[battlerDef].statStages[i] < MIN_STAT_STAGE)
+                gBattleMons[battlerDef].statStages[i] = MIN_STAT_STAGE;
+        }
+    }
+    
+    u32 damage = AI_GetDamage(battlerAtk, battlerDef, moveIndex, AI_ATTACKING, gAiLogicData);
+
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
+    }
+    
+    return damage;
+}
+
+void AI_GetMoveStatChanges(u32 battlerAtk, u32 battlerDef, u32 move, enum DamageCalcContext context, s16 statChanges[NUM_BATTLE_STATS])
+{
+    u32 atkHoldEffect = gAiLogicData->holdEffects[battlerAtk];
+    u32 defHoldEffect = gAiLogicData->holdEffects[battlerDef];
+    enum Ability atkAbility = gAiLogicData->abilities[battlerAtk];
+    enum Ability defAbility = gAiLogicData->abilities[battlerDef];
+    enum BattleMoveEffects moveEffect = GetMoveEffect(move);
+    const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, 0);
+    u32 additionalEffectChance = CalcSecondaryEffectChance(battlerAtk, atkAbility, additionalEffect);
+    u32 i;
+    u32 battler = (context == AI_ATTACKING ? battlerAtk : battlerDef);
+    s16 stages, berryStages;
+    bool32 considerSimple;
+
+    if (context == AI_ATTACKING)
+    {
+        considerSimple = (atkAbility == ABILITY_SIMPLE 
+         && moveEffect != EFFECT_ROLE_PLAY
+         && moveEffect != EFFECT_STUFF_CHEEKS
+         && moveEffect != EFFECT_HAZE
+         && additionalEffect->moveEffect != MOVE_EFFECT_HAZE
+         && additionalEffect->moveEffect != MOVE_EFFECT_BUG_BITE);
+        switch (moveEffect)
+        {
+        case EFFECT_ATTACK_UP:
+        case EFFECT_ATTACK_UP_USER_ALLY:
+            statChanges[STAT_ATK] += 1;
+            break;
+        case EFFECT_DEFENSE_UP:
+        case EFFECT_DEFENSE_CURL:
+        case EFFECT_FLOWER_SHIELD:
+            statChanges[STAT_DEF] += 1;
+            break;
+        case EFFECT_SPEED_UP:
+            statChanges[STAT_SPEED] += 1;
+            break;
+        case EFFECT_SPECIAL_ATTACK_UP:
+            statChanges[STAT_SPATK] += 1;
+            break;
+        case EFFECT_SPECIAL_DEFENSE_UP:
+        case EFFECT_CHARGE:
+            statChanges[STAT_SPDEF] += 1;
+            break;
+        case EFFECT_ACCURACY_UP:
+            statChanges[STAT_ACC] += 1;
+            break;
+        case EFFECT_EVASION_UP:
+            statChanges[STAT_EVASION] += 1;
+            break;
+        case EFFECT_SPECIAL_ATTACK_UP_3:
+            statChanges[STAT_SPATK] += 3;
+            break;
+        case EFFECT_HAZE:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] += (DEFAULT_STAT_STAGE - gBattleMons[battlerAtk].statStages[i]);
+            }
+            break;
+        case EFFECT_ATTACK_UP_2:
+            statChanges[STAT_ATK] += 2;
+            break;
+        case EFFECT_DEFENSE_UP_2:
+            statChanges[STAT_DEF] += 2;
+            break;
+        case EFFECT_SPEED_UP_2:
+        case EFFECT_AUTOTOMIZE:
+            statChanges[STAT_SPEED] += 2;
+            break;
+        case EFFECT_SPECIAL_ATTACK_UP_2:
+            statChanges[STAT_SPATK] += 2;
+            break;
+        case EFFECT_SPECIAL_DEFENSE_UP_2:
+            statChanges[STAT_SPDEF] += 2;
+            break;
+        case EFFECT_ACCURACY_UP_2:
+            statChanges[STAT_ACC] += 2;
+            break;
+        case EFFECT_EVASION_UP_2:
+            statChanges[STAT_EVASION] += 2;
+            break;
+        case EFFECT_BATON_PASS:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] += (gBattleMons[battlerAtk].statStages[i] - DEFAULT_STAT_STAGE);
+            }
+            break;
+        case EFFECT_FELL_STINGER:
+            statChanges[STAT_ATK] += 3;
+            break;
+        case EFFECT_BELLY_DRUM:
+            statChanges[STAT_ATK] += (MAX_STAT_STAGE - gBattleMons[battlerAtk].statStages[STAT_ATK]);
+            break;
+        case EFFECT_PSYCH_UP:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] += (gBattleMons[battlerDef].statStages[i] - gBattleMons[battlerAtk].statStages[i]);
+            }
+            break;
+        case EFFECT_STOCKPILE:
+        case EFFECT_COSMIC_POWER:
+        case EFFECT_MAGNETIC_FLUX:
+            statChanges[STAT_DEF] += 1;
+            statChanges[STAT_SPDEF] += 1;
+            break;
+        case EFFECT_BULK_UP:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_DEF] += 1;
+            break;
+        case EFFECT_DRAGON_DANCE:
+        case EFFECT_TIDY_UP:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_SPEED] += 1;
+            break;
+        case EFFECT_ATTACK_ACCURACY_UP:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_ACC] += 1;
+            break;
+        case EFFECT_ATTACK_SPATK_UP:
+        case EFFECT_ROTOTILLER:
+        case EFFECT_GEAR_UP:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_SPATK] += 1;
+            break;
+        case EFFECT_STUFF_CHEEKS:
+            berryStages = ((atkAbility == ABILITY_SIMPLE || atkAbility == ABILITY_RIPEN) ? 2 : 1);
+            switch (atkHoldEffect)
+            {
+            case HOLD_EFFECT_ATTACK_UP:
+                statChanges[STAT_ATK] += berryStages;
+                break;
+            case HOLD_EFFECT_DEFENSE_UP:
+                statChanges[STAT_DEF] += berryStages;
+                break;
+            case HOLD_EFFECT_SPEED_UP:
+                statChanges[STAT_SPEED] += berryStages;
+                break;
+            case HOLD_EFFECT_SP_ATTACK_UP:
+                statChanges[STAT_SPATK] += berryStages;
+                break;
+            case HOLD_EFFECT_SP_DEFENSE_UP:
+                statChanges[STAT_SPDEF] += berryStages;
+                break;
+            case HOLD_EFFECT_EVASION_UP:
+                statChanges[STAT_EVASION] += berryStages;
+                break;
+            case HOLD_EFFECT_MICLE_BERRY:
+                statChanges[STAT_ACC] += berryStages;
+                break;
+            default:
+                break;
+            }
+            statChanges[STAT_DEF] += (atkAbility == ABILITY_SIMPLE ? 4 : 2);
+            break;
+        case EFFECT_QUIVER_DANCE:
+            statChanges[STAT_SPATK] += 1;
+            statChanges[STAT_SPDEF] += 1;
+            statChanges[STAT_SPEED] += 1;
+            break;
+        case EFFECT_COIL:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_DEF] += 1;
+            statChanges[STAT_ACC] += 1;
+            break;
+        case EFFECT_GROWTH:
+            u32 weather = AI_GetWeather();
+            stages = (weather & B_WEATHER_SUN ? 2 : 1);
+            statChanges[STAT_ATK] += stages;
+            statChanges[STAT_SPATK] += stages;
+            break;
+        case EFFECT_SHELL_SMASH:
+            statChanges[STAT_ATK] += 2;
+            statChanges[STAT_SPATK] += 2;
+            statChanges[STAT_SPEED] += 2;
+            break;
+        case EFFECT_SHIFT_GEAR:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_SPEED] += 2;
+            break;
+        case EFFECT_DEFENSE_UP_3:
+            statChanges[STAT_DEF] += 3;
+            break;
+        case EFFECT_GEOMANCY:
+            statChanges[STAT_SPATK] += 2;
+            statChanges[STAT_SPDEF] += 2;
+            statChanges[STAT_SPEED] += 2;
+            break;
+        case EFFECT_NO_RETREAT:
+        case EFFECT_CLANGOROUS_SOUL:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_DEF] += 1;
+            statChanges[STAT_SPATK] += 1;
+            statChanges[STAT_SPDEF] += 1;
+            statChanges[STAT_SPEED] += 1;
+            break;
+        case EFFECT_VICTORY_DANCE:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_DEF] += 1;
+            statChanges[STAT_SPEED] += 1;
+            break;
+        case EFFECT_FILLET_AWAY:
+            statChanges[STAT_ATK] += 2;
+            statChanges[STAT_SPATK] += 2;
+            statChanges[STAT_SPEED] += 2;
+            break;
+        case EFFECT_ORDER_UP:
+            switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
+            {
+            case SPECIES_TATSUGIRI_CURLY:
+                statChanges[STAT_ATK] += 1;
+                break;
+            case SPECIES_TATSUGIRI_DROOPY:
+                statChanges[STAT_DEF] += 1;
+                break;
+            case SPECIES_TATSUGIRI_STRETCHY:
+                statChanges[STAT_SPEED] += 1;
+                break;
+            default:
+                break;
+            }
+            break;
+        case EFFECT_RAPID_SPIN:
+            statChanges[STAT_SPEED] += 1;
+            break;
+        default:
+            break;
+        }
+    }
+    else
+    {
+        considerSimple = (defAbility == ABILITY_SIMPLE
+         && moveEffect != EFFECT_HAZE
+         && additionalEffect->moveEffect != MOVE_EFFECT_HAZE);
+        switch (moveEffect)
+        {
+        case EFFECT_ATTACK_DOWN:
+            statChanges[STAT_ATK] -= 1;
+            break;
+        case EFFECT_DEFENSE_DOWN:
+            statChanges[STAT_DEF] -= 1;
+            break;
+        case EFFECT_SPEED_DOWN:
+        case EFFECT_TOXIC_THREAD:
+            statChanges[STAT_SPEED] -= 1;
+            break;
+        case EFFECT_SPECIAL_ATTACK_DOWN:
+            statChanges[STAT_SPATK] -= 1;
+            break;
+        case EFFECT_SPECIAL_DEFENSE_DOWN:
+            statChanges[STAT_SPDEF] -= 1;
+            break;
+        case EFFECT_ACCURACY_DOWN:
+            statChanges[STAT_ACC] -= 1;
+            break;
+        case EFFECT_EVASION_DOWN:
+            statChanges[STAT_EVASION] -= 1;
+            break;
+        case EFFECT_HAZE:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] += (DEFAULT_STAT_STAGE - gBattleMons[battlerDef].statStages[i]);
+            }
+            break;
+        case EFFECT_ATTACK_DOWN_2:
+            statChanges[STAT_ATK] -= 2;
+            break;
+        case EFFECT_DEFENSE_DOWN_2:
+            statChanges[STAT_DEF] -= 2;
+            break;
+        case EFFECT_SPEED_DOWN_2:
+            statChanges[STAT_SPEED] -= 2;
+            break;
+        case EFFECT_SPECIAL_ATTACK_DOWN_2:
+            statChanges[STAT_SPATK] -= 2;
+            break;
+        case EFFECT_SPECIAL_DEFENSE_DOWN_2:
+            statChanges[STAT_SPDEF] -= 2;
+            break;
+        case EFFECT_ACCURACY_DOWN_2:
+            statChanges[STAT_ACC] -= 2;
+            break;
+        case EFFECT_EVASION_DOWN_2:
+            statChanges[STAT_EVASION] -= 2;
+            break;
+        case EFFECT_SWAGGER:
+            statChanges[STAT_ATK] += 2;
+            break;
+        case EFFECT_FLATTER:
+            statChanges[STAT_SPATK] += 1;
+            break;
+        case EFFECT_MEMENTO:
+            statChanges[STAT_ATK] -= 2;
+            statChanges[STAT_SPATK] -= 2;
+            break;
+        case EFFECT_TICKLE:
+            statChanges[STAT_ATK] -= 1;
+            statChanges[STAT_DEF] -= 1;
+            break;
+        case EFFECT_NOBLE_ROAR:
+            statChanges[STAT_ATK] -= 1;
+            statChanges[STAT_SPATK] -= 1;
+            break;
+        case EFFECT_VENOM_DRENCH:
+            statChanges[STAT_ATK] -= 1;
+            statChanges[STAT_SPATK] -= 1;
+            statChanges[STAT_SPEED] -= 1;
+            break;
+        case EFFECT_ROTOTILLER:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_SPATK] += 1;
+            break;
+        case EFFECT_FLOWER_SHIELD:
+            statChanges[STAT_DEF] += 1;
+            break;
+        case EFFECT_PARTING_SHOT:
+            statChanges[STAT_ATK] -= 1;
+            statChanges[STAT_SPATK] -= 1;
+            break;
+        case EFFECT_STRENGTH_SAP:
+            statChanges[STAT_ATK] -= 1;
+            break;
+        case EFFECT_COACHING:
+            statChanges[STAT_ATK] += 1;
+            statChanges[STAT_DEF] += 1;
+            break;
+        case EFFECT_DECORATE:
+            statChanges[STAT_ATK] += 2;
+            statChanges[STAT_SPATK] += 2;
+            break;
+        case EFFECT_GRAV_APPLE:
+            statChanges[STAT_SPEED] -= 1;
+            break;
+        case EFFECT_OCTOLOCK:
+            statChanges[STAT_DEF] -= 1;
+            statChanges[STAT_SPDEF] -= 1;
+            break;
+        case EFFECT_SPICY_EXTRACT:
+            statChanges[STAT_ATK] += 2;
+            statChanges[STAT_DEF] -= 1;
+            break;
+        default:
+            break;
+        }
+    }
+
+    // Double stat changes
+    if (considerSimple)
+    {
+        for (i = 0; i < NUM_BATTLE_STATS; i++)
+        {
+            statChanges[i] *= 2;
+        }
+    }
+
+    // Contrary
+    if (gAiLogicData->abilities[battler] == ABILITY_CONTRARY)
+    {
+        for (i = 0; i < NUM_BATTLE_STATS; i++)
+        {
+            statChanges[i] *= -1;
+        }
+    }
+
+    // Check stat stage boundaries and battlerDef protection
+    for (i = 0; i < NUM_BATTLE_STATS; i++)
+    {
+        if ((gBattleMons[battler].statStages[i] + statChanges[i]) > MAX_STAT_STAGE)
+            statChanges[i] = (MAX_STAT_STAGE - gBattleMons[battler].statStages[i]);
+        if ((gBattleMons[battler].statStages[i] + statChanges[i]) < MIN_STAT_STAGE)
+            statChanges[i] = (gBattleMons[battler].statStages[i]);
+        if (context == AI_DEFENDING
+         && ((defAbility == ABILITY_CLEAR_BODY && !(IsMoldBreakerTypeAbility(battlerAtk, atkAbility) && defHoldEffect != HOLD_EFFECT_ABILITY_SHIELD))
+         || (defHoldEffect == HOLD_EFFECT_CLEAR_AMULET)))
+            statChanges[i] = (statChanges[i] < 0 ? 0 : statChanges[i]);
+    }
+
+    // Only consider if guaranteed
+    if (additionalEffectChance >= 100
+     && ((context == AI_ATTACKING && additionalEffect->self == TRUE)
+     || (context == AI_DEFENDING && additionalEffect->self != TRUE
+     && defAbility != ABILITY_SHIELD_DUST && defHoldEffect != HOLD_EFFECT_COVERT_CLOAK))
+     && !(atkAbility == ABILITY_SHEER_FORCE && additionalEffect->sheerForceOverride != TRUE))
+    {
+        s16 multiplier = (considerSimple ? 2 : 1);
+        if (context == AI_ATTACKING)
+            multiplier *= (atkAbility == ABILITY_CONTRARY ? -1 : 1);
+        else
+            multiplier *= (defAbility == ABILITY_CONTRARY ? -1 : 1);
+        switch (additionalEffect->moveEffect)
+        {
+        case MOVE_EFFECT_ATK_PLUS_1:
+            statChanges[STAT_ATK] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_DEF_PLUS_1:
+            statChanges[STAT_DEF] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SPD_PLUS_1:
+            statChanges[STAT_SPEED] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_ATK_PLUS_1:
+            statChanges[STAT_SPATK] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_DEF_PLUS_1:
+            statChanges[STAT_SPDEF] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ACC_PLUS_1:
+            statChanges[STAT_ACC] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_EVS_PLUS_1:
+            statChanges[STAT_EVASION] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ATK_MINUS_1:
+            statChanges[STAT_ATK] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_DEF_MINUS_1:
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SPD_MINUS_1:
+            statChanges[STAT_SPEED] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_ATK_MINUS_1:
+            statChanges[STAT_SPATK] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_DEF_MINUS_1:
+            statChanges[STAT_SPDEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ACC_MINUS_1:
+            statChanges[STAT_ACC] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_EVS_MINUS_1:
+            statChanges[STAT_EVASION] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ALL_STATS_UP:
+            statChanges[STAT_ATK] += (1 * multiplier);
+            statChanges[STAT_DEF] += (1 * multiplier);
+            statChanges[STAT_SPEED] += (1 * multiplier);
+            statChanges[STAT_SPATK] += (1 * multiplier);
+            statChanges[STAT_SPDEF] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ATK_DEF_DOWN:
+            statChanges[STAT_ATK] -= (1 * multiplier);
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ATK_PLUS_2:
+            statChanges[STAT_ATK] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_DEF_PLUS_2:
+            statChanges[STAT_DEF] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SPD_PLUS_2:
+            statChanges[STAT_SPEED] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_ATK_PLUS_2:
+            statChanges[STAT_SPATK] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_DEF_PLUS_2:
+            statChanges[STAT_SPDEF] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_ACC_PLUS_2:
+            statChanges[STAT_ACC] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_EVS_PLUS_2:
+            statChanges[STAT_EVASION] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_ATK_MINUS_2:
+            statChanges[STAT_ATK] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_DEF_MINUS_2:
+            statChanges[STAT_DEF] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SPD_MINUS_2:
+            statChanges[STAT_SPEED] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_ATK_MINUS_2:
+            statChanges[STAT_SPATK] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SP_DEF_MINUS_2:
+            statChanges[STAT_SPDEF] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_ACC_MINUS_2:
+            statChanges[STAT_ACC] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_EVS_MINUS_2:
+            statChanges[STAT_EVASION] -= (2 * multiplier);
+            break;
+        case MOVE_EFFECT_SCALE_SHOT:
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            statChanges[STAT_SPEED] += (2 * multiplier);
+            break;
+        case MOVE_EFFECT_DEF_SPDEF_DOWN:
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            statChanges[STAT_SPDEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_CLEAR_SMOG:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] = (DEFAULT_STAT_STAGE - gBattleMons[battlerDef].statStages[i]);
+            }
+            break;
+        case MOVE_EFFECT_V_CREATE:
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            statChanges[STAT_SPEED] -= (1 * multiplier);
+            statChanges[STAT_SPDEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_BUG_BITE:
+            berryStages = ((atkAbility == ABILITY_SIMPLE || atkAbility == ABILITY_RIPEN) ? 2 : 1);
+            switch (defHoldEffect)
+            {
+            case HOLD_EFFECT_ATTACK_UP:
+                statChanges[STAT_ATK] += berryStages;
+                break;
+            case HOLD_EFFECT_DEFENSE_UP:
+                statChanges[STAT_DEF] += berryStages;
+                break;
+            case HOLD_EFFECT_SPEED_UP:
+                statChanges[STAT_SPEED] += berryStages;
+                break;
+            case HOLD_EFFECT_SP_ATTACK_UP:
+                statChanges[STAT_SPATK] += berryStages;
+                break;
+            case HOLD_EFFECT_SP_DEFENSE_UP:
+                statChanges[STAT_SPDEF] += berryStages;
+                break;
+            case HOLD_EFFECT_EVASION_UP:
+                statChanges[STAT_EVASION] += berryStages;
+                break;
+            case HOLD_EFFECT_MICLE_BERRY:
+                statChanges[STAT_ACC] += berryStages;
+                break;
+            default:
+                break;
+            }
+            break;
+        case MOVE_EFFECT_SYRUP_BOMB:
+            statChanges[STAT_SPEED] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_SECRET_POWER:
+            if (gFieldStatuses & STATUS_FIELD_MISTY_TERRAIN)
+                statChanges[STAT_SPATK] -= (1 * multiplier);
+            else if (gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN)
+                statChanges[STAT_SPEED] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_ORDER_UP:
+            if (moveEffect != EFFECT_ORDER_UP) // Prevent double counting
+            {
+                switch (gBattleStruct->battlerState[gEffectBattler].commanderSpecies)
+                {
+                case SPECIES_TATSUGIRI_CURLY:
+                    statChanges[STAT_ATK] += (1 * multiplier);
+                    break;
+                case SPECIES_TATSUGIRI_DROOPY:
+                    statChanges[STAT_DEF] += (1 * multiplier);
+                    break;
+                case SPECIES_TATSUGIRI_STRETCHY:
+                    statChanges[STAT_SPEED] += (1 * multiplier);
+                    break;
+                default:
+                    break;
+                }
+            }
+            break;
+        case MOVE_EFFECT_HAZE:
+            for (i = 0; i < NUM_BATTLE_STATS; i++)
+            {
+                statChanges[i] += (DEFAULT_STAT_STAGE - gBattleMons[battler].statStages[i]);
+            }
+            break;
+        case MOVE_EFFECT_RAISE_TEAM_ATTACK:
+            statChanges[STAT_ATK] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_RAISE_TEAM_DEFENSE:
+            statChanges[STAT_DEF] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_RAISE_TEAM_SPEED:
+            statChanges[STAT_SPEED] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_RAISE_TEAM_SP_ATK:
+            statChanges[STAT_SPATK] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_RAISE_TEAM_SP_DEF:
+            statChanges[STAT_SPDEF] += (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_ATTACK_SIDE:
+            statChanges[STAT_ATK] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_DEFENSE_SIDE:
+            statChanges[STAT_DEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_SPEED_SIDE:
+            statChanges[STAT_SPEED] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_SP_ATK_SIDE:
+            statChanges[STAT_SPATK] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_SP_DEF_SIDE:
+            statChanges[STAT_SPDEF] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_EVASIVENESS_SIDE:
+            statChanges[STAT_EVASION] -= (1 * multiplier);
+            break;
+        case MOVE_EFFECT_LOWER_SPEED_2_SIDE:
+            statChanges[STAT_SPEED] -= (2 * multiplier);
+            break;
+        default:
+            break;
+        }
+        // Check stat stage boundaries and battlerDef protection again if necessary
+        for (i = 0; i < NUM_BATTLE_STATS; i++)
+        {
+            if ((gBattleMons[battler].statStages[i] + statChanges[i]) > MAX_STAT_STAGE)
+                statChanges[i] = (MAX_STAT_STAGE - gBattleMons[battler].statStages[i]);
+            if ((gBattleMons[battler].statStages[i] + statChanges[i]) < MIN_STAT_STAGE)
+                statChanges[i] = (gBattleMons[battler].statStages[i]);
+            if (context == AI_DEFENDING
+            && ((defAbility == ABILITY_CLEAR_BODY && !(IsMoldBreakerTypeAbility(battlerAtk, atkAbility) && defHoldEffect != HOLD_EFFECT_ABILITY_SHIELD))
+            || (defHoldEffect == HOLD_EFFECT_CLEAR_AMULET)))
+                statChanges[i] = (statChanges[i] < 0 ? 0 : statChanges[i]);
+        }
+    }
+}
+
 bool32 AI_IsFaster(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_FASTER);
@@ -117,6 +781,88 @@ bool32 AI_IsSlower(u32 battlerAi, u32 battlerDef, u32 aiMove, u32 playerMove, en
     return (AI_WhoStrikesFirst(battlerAi, battlerDef, aiMove, playerMove, considerPriority) == AI_IS_SLOWER);
 }
 
+bool32 AI_WouldBeFaster(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange)
+{
+    u32 i, j;
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
+    }
+
+    if (atkSpeedChange != 0)
+    {
+        gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
+        
+        if (gBattleMons[battlerAtk].statStages[STAT_SPEED] > MAX_STAT_STAGE)
+            gBattleMons[battlerAtk].statStages[STAT_SPEED] = MAX_STAT_STAGE;
+        if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
+            gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
+    }
+    if (defSpeedChange != 0)
+    {
+        gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
+        
+        if (gBattleMons[battlerDef].statStages[STAT_SPEED] > MAX_STAT_STAGE)
+            gBattleMons[battlerDef].statStages[STAT_SPEED] = MAX_STAT_STAGE;
+        if (gBattleMons[battlerDef].statStages[STAT_SPEED] < MIN_STAT_STAGE)
+            gBattleMons[battlerDef].statStages[STAT_SPEED] = MIN_STAT_STAGE;
+    }
+
+    bool32 result = (AI_WhoStrikesFirst(battlerAtk, battlerDef, atkMove, defMove, considerPriority) == AI_IS_FASTER);
+
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
+    }
+
+    return result;
+}
+
+bool32 AI_WouldBeSlower(u32 battlerAtk, u32 battlerDef, u32 atkMove, u32 defMove, enum ConsiderPriority considerPriority, s16 atkSpeedChange, s16 defSpeedChange)
+{
+    u32 i, j;
+    s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            savedStatStages[i][j] = gBattleMons[i].statStages[j];
+    }
+
+    if (atkSpeedChange != 0)
+    {
+        gBattleMons[battlerAtk].statStages[STAT_SPEED] += atkSpeedChange;
+        
+        if (gBattleMons[battlerAtk].statStages[STAT_SPEED] > MAX_STAT_STAGE)
+            gBattleMons[battlerAtk].statStages[STAT_SPEED] = MAX_STAT_STAGE;
+        if (gBattleMons[battlerAtk].statStages[STAT_SPEED] < MIN_STAT_STAGE)
+            gBattleMons[battlerAtk].statStages[STAT_SPEED] = MIN_STAT_STAGE;
+    }
+    if (defSpeedChange != 0)
+    {
+        gBattleMons[battlerDef].statStages[STAT_SPEED] += defSpeedChange;
+        
+        if (gBattleMons[battlerDef].statStages[STAT_SPEED] > MAX_STAT_STAGE)
+            gBattleMons[battlerDef].statStages[STAT_SPEED] = MAX_STAT_STAGE;
+        if (gBattleMons[battlerDef].statStages[STAT_SPEED] < MIN_STAT_STAGE)
+            gBattleMons[battlerDef].statStages[STAT_SPEED] = MIN_STAT_STAGE;
+    }
+
+    bool32 result = (AI_WhoStrikesFirst(battlerAtk, battlerDef, atkMove, defMove, considerPriority) == AI_IS_SLOWER);
+
+    for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        for (j = 0; j < NUM_BATTLE_STATS; j++)
+            gBattleMons[i].statStages[j] = savedStatStages[i][j];
+    }
+
+    return result;
+}
+
 bool32 AI_IsPartyMonFaster(u32 battlerAi, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirstPartyMon(battlerAi, battlerDef, switchinCandidate, aiMove, playerMove, considerPriority) == AI_IS_FASTER);
@@ -125,6 +871,296 @@ bool32 AI_IsPartyMonFaster(u32 battlerAi, u32 battlerDef, struct BattlePokemon s
 bool32 AI_IsPartyMonSlower(u32 battlerAi, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 aiMove, u32 playerMove, enum ConsiderPriority considerPriority)
 {
     return (AI_WhoStrikesFirstPartyMon(battlerAi, battlerDef, switchinCandidate, aiMove, playerMove, considerPriority) == AI_IS_SLOWER);
+}
+
+enum ShouldChangeStats BattlerShouldChangeStats(u32 battlerAtk, u32 battlerDef, u32 statMove, u32 dmgMoveIndex, enum ChangeStatContext context, s16 atkStatChanges[NUM_BATTLE_STATS], s16 defStatChanges[NUM_BATTLE_STATS])
+{
+    u32 predictedMove = GetIncomingMove(battlerAtk, battlerDef, gAiLogicData);
+    u32 atkMove = (dmgMoveIndex == MAX_MON_MOVES ? MOVE_TACKLE : gBattleMons[battlerAtk].moves[dmgMoveIndex]); // Generic move if no move index specified
+    u32 i, j;
+    u32 atkBestMoves[MAX_MON_MOVES];
+    u32 defBestMoves[MAX_MON_MOVES];
+
+    // Only care about chosen move if passed
+    if (dmgMoveIndex != MAX_MON_MOVES)
+    {
+        atkBestMoves[0] = gBattleMons[battlerAtk].moves[dmgMoveIndex];
+    }
+    else
+    {
+        GetBestDmgMovesFromBattler(battlerAtk, battlerDef, AI_ATTACKING, atkBestMoves);
+        GetBestDmgMovesFromBattler(battlerDef, battlerAtk, AI_DEFENDING, defBestMoves);
+    }
+
+    // Get stat changes to be considered
+    AI_GetMoveStatChanges(battlerAtk, battlerDef, statMove, AI_ATTACKING, atkStatChanges);
+    AI_GetMoveStatChanges(battlerAtk, battlerDef, statMove, AI_DEFENDING, defStatChanges);
+
+    switch (context)
+    {
+    case CHANGE_STAT_DMG_DEALT:
+        if (dmgMoveIndex != MAX_MON_MOVES) // No move index specified; check all
+        {
+            if ((AI_GetDamageWithStatChanges(battlerAtk, battlerDef, dmgMoveIndex, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+             && !(AI_GetDamage(battlerAtk, battlerDef, dmgMoveIndex, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                return STAT_CHANGE_GOOD;
+            else if (!(AI_GetDamageWithStatChanges(battlerAtk, battlerDef, dmgMoveIndex, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+             && !(AI_GetDamage(battlerAtk, battlerDef, dmgMoveIndex, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                return STAT_CHANGE_NEUTRAL;
+            else
+                return STAT_CHANGE_BAD;
+        }
+        else // Move index specified
+        {
+            // No point if can already KO
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp)
+                    return STAT_CHANGE_BAD;
+            }
+            // Good if makes a move KO where it previously would not
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if ((AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+                 && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_ATTACKING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                    return STAT_CHANGE_GOOD;
+            }
+            return STAT_CHANGE_NEUTRAL;
+        }
+        break;
+    case CHANGE_STAT_DMG_RECEIVED:
+        // Bad if KO's with stat changes
+        for (i = 0; i < MAX_MON_MOVES; i++)
+        {
+            // Bad if KO's with stat changes
+            if (AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i, defStatChanges, atkStatChanges) >= gBattleMons[battlerAtk].hp)
+                return STAT_CHANGE_BAD;
+        }
+        // Good if saves from being KO'd
+        for (i = 0; i < MAX_MON_MOVES; i++)
+        {
+            if (!(AI_GetDamageWithStatChanges(battlerDef, battlerAtk, i, defStatChanges, atkStatChanges) >= gBattleMons[battlerAtk].hp)
+             && (AI_GetDamage(battlerAtk, battlerDef, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerAtk].hp))
+                return STAT_CHANGE_GOOD;
+        }
+        // Neutral if not KO'd either way
+        for (i = 0; i < MAX_MON_MOVES; i++)
+        {
+            if (!(AI_GetDamageWithStatChanges(battlerAtk, battlerDef, i, atkStatChanges, defStatChanges) >= gBattleMons[battlerDef].hp)
+            && !(AI_GetDamage(battlerAtk, battlerDef, i, AI_DEFENDING, gAiLogicData) >= gBattleMons[battlerDef].hp))
+                return STAT_CHANGE_NEUTRAL;
+        }
+        // Default to not doing it
+        return STAT_CHANGE_BAD;
+        break;
+    case CHANGE_STAT_SPEEDS: // Changes that make user move first = good; changes that make user move second = bad; else neutral.
+        if (AI_IsSlower(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeFaster(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY, atkStatChanges[STAT_SPEED], defStatChanges[STAT_SPEED])
+         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+            return STAT_CHANGE_GOOD;
+        else if (AI_IsFaster(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeSlower(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY, atkStatChanges[STAT_SPEED], defStatChanges[STAT_SPEED])
+         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+            return STAT_CHANGE_GOOD;
+        else if (AI_IsFaster(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeSlower(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY, atkStatChanges[STAT_SPEED], defStatChanges[STAT_SPEED])
+         && (GetMoveEffect(gAiLogicData->partnerMove) != EFFECT_TRICK_ROOM) && (GetMoveEffect(predictedMove) != EFFECT_TRICK_ROOM))
+            return STAT_CHANGE_BAD;
+        else if (AI_IsSlower(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY)
+         && AI_WouldBeFaster(battlerAtk, battlerDef, atkMove, predictedMove, CONSIDER_PRIORITY, atkStatChanges[STAT_SPEED], defStatChanges[STAT_SPEED])
+         && ((GetMoveEffect(gAiLogicData->partnerMove) == EFFECT_TRICK_ROOM) || (GetMoveEffect(predictedMove) == EFFECT_TRICK_ROOM)))
+            return STAT_CHANGE_BAD;
+        else
+            return STAT_CHANGE_NEUTRAL;
+        break;
+    case CHANGE_STAT_ACC_EVADE:
+        s8 savedStatStages[MAX_BATTLERS_COUNT][NUM_BATTLE_STATS] = {0};
+        u32 hitsToKO, expectedMovesToKONoChangeAtk, expectedMovesToKOWithChangeAtk, expectedMovesToKONoChangeDef,
+         expectedMovesToKOWithChangeDef, bestMovesToKONoChangeAtk = UINT32_MAX, bestMovesToKOWithChangeAtk = UINT32_MAX,
+         bestMovesToKONoChangeDef = UINT32_MAX, bestMovesToKOWithChangeDef = UINT32_MAX, totalAccuracyNoChange = 100, totalAccuracyWithChange;
+        if (dmgMoveIndex != MAX_MON_MOVES)
+        {
+            hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, atkMove, AI_ATTACKING, DONT_CONSIDER_ENDURE);
+            totalAccuracyNoChange = GetTotalAccuracy(battlerAtk, battlerDef, atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+            
+            // Move already hits, no point
+            if (totalAccuracyNoChange >= 100)
+                return STAT_CHANGE_BAD;
+                
+            expectedMovesToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
+
+            for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            {
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    savedStatStages[i][j] = gBattleMons[i].statStages[j];
+            }
+
+            if (atkStatChanges[STAT_ACC] != 0)
+            {
+                gBattleMons[battlerAtk].statStages[STAT_ACC] += atkStatChanges[STAT_ACC];
+                
+                if (gBattleMons[battlerAtk].statStages[STAT_ACC] > MAX_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_ACC] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerAtk].statStages[STAT_ACC] < MIN_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
+            }
+            if (defStatChanges[STAT_EVASION] != 0)
+            {
+                gBattleMons[battlerDef].statStages[STAT_EVASION] += defStatChanges[i];
+                
+                if (gBattleMons[battlerDef].statStages[STAT_EVASION] > MAX_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_EVASION] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerDef].statStages[STAT_EVASION] < MIN_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_EVASION] = MIN_STAT_STAGE;
+            }
+
+            totalAccuracyWithChange = GetTotalAccuracy(battlerAtk, battlerDef, atkMove, gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+
+            for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            {
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    gBattleMons[i].statStages[j] = savedStatStages[i][j];
+            }
+
+            expectedMovesToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
+
+            // Stat changes mean more moves to KO
+            if (expectedMovesToKOWithChangeAtk > expectedMovesToKONoChangeAtk)
+                return STAT_CHANGE_BAD;
+            // Stat changes mean same number of moves to KO (with grace of 1 for this move being used) but reduces likelihood of missing
+            else if ((expectedMovesToKOWithChangeAtk == expectedMovesToKONoChangeAtk
+             || (expectedMovesToKOWithChangeAtk == (expectedMovesToKONoChangeAtk - 1))) && (totalAccuracyNoChange < 100))
+                return STAT_CHANGE_NEUTRAL;
+            // Stat changes reduce expected number of moves to KO
+            else if (expectedMovesToKOWithChangeAtk <= (expectedMovesToKONoChangeAtk - 2))
+                return STAT_CHANGE_GOOD;
+            // Default to not do it
+            return STAT_CHANGE_BAD;
+        }
+        else
+        {
+            // expectedMovesToKONoChangeAtk, expectedMovesToKOWithChangeAtk, expectedMovesToKONoChangeDef, expectedMovesToKOWithChangeDef
+            // Get fewest expected moves for battlers to KO each other without stat changes
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                totalAccuracyNoChange = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                expectedMovesToKONoChangeAtk = (hitsToKO * 100)/totalAccuracyNoChange;
+                
+                if (bestMovesToKONoChangeAtk > expectedMovesToKONoChangeAtk)
+                    bestMovesToKONoChangeAtk = expectedMovesToKONoChangeAtk;
+            }
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                totalAccuracyNoChange = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                expectedMovesToKONoChangeDef = (hitsToKO * 100)/totalAccuracyNoChange;
+                
+                if (bestMovesToKONoChangeDef > expectedMovesToKONoChangeDef)
+                    bestMovesToKONoChangeDef = expectedMovesToKONoChangeDef;
+            }
+
+            // Apply stat changes
+            for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            {
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    savedStatStages[i][j] = gBattleMons[i].statStages[j];
+            }
+
+            if (atkStatChanges[STAT_ACC] != 0)
+            {
+                gBattleMons[battlerAtk].statStages[STAT_ACC] += atkStatChanges[STAT_ACC];
+                
+                if (gBattleMons[battlerAtk].statStages[STAT_ACC] > MAX_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_ACC] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerAtk].statStages[STAT_ACC] < MIN_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_ACC] = MIN_STAT_STAGE;
+            }
+            if (atkStatChanges[STAT_EVASION] != 0)
+            {
+                gBattleMons[battlerAtk].statStages[STAT_EVASION] += atkStatChanges[STAT_EVASION];
+                
+                if (gBattleMons[battlerAtk].statStages[STAT_EVASION] > MAX_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_EVASION] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerAtk].statStages[STAT_EVASION] < MIN_STAT_STAGE)
+                    gBattleMons[battlerAtk].statStages[STAT_EVASION] = MIN_STAT_STAGE;
+            }
+            if (defStatChanges[STAT_ACC] != 0)
+            {
+                gBattleMons[battlerDef].statStages[STAT_ACC] += defStatChanges[i];
+                
+                if (gBattleMons[battlerDef].statStages[STAT_ACC] > MAX_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_ACC] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerDef].statStages[STAT_ACC] < MIN_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_ACC] = MIN_STAT_STAGE;
+            }
+            if (defStatChanges[STAT_EVASION] != 0)
+            {
+                gBattleMons[battlerDef].statStages[STAT_EVASION] += defStatChanges[i];
+                
+                if (gBattleMons[battlerDef].statStages[STAT_EVASION] > MAX_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_EVASION] = MAX_STAT_STAGE;
+                if (gBattleMons[battlerDef].statStages[STAT_EVASION] < MIN_STAT_STAGE)
+                    gBattleMons[battlerDef].statStages[STAT_EVASION] = MIN_STAT_STAGE;
+            }
+
+            // Get fewest expected moves for battlers to KO each other with stat changes
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerAtk].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], AI_ATTACKING, DONT_CONSIDER_ENDURE);
+                totalAccuracyWithChange = GetTotalAccuracy(battlerAtk, battlerDef, gBattleMons[battlerAtk].moves[i], gAiLogicData->abilities[battlerAtk], gAiLogicData->abilities[battlerDef], gAiLogicData->holdEffects[battlerAtk], gAiLogicData->holdEffects[battlerDef]);
+                expectedMovesToKOWithChangeAtk = (hitsToKO * 100)/totalAccuracyWithChange;
+                
+                if (bestMovesToKOWithChangeAtk > expectedMovesToKOWithChangeAtk)
+                    bestMovesToKOWithChangeAtk = expectedMovesToKOWithChangeAtk;
+            }
+            for (i = 0; i < MAX_MON_MOVES; i++)
+            {
+                if (gBattleMons[battlerDef].moves[i] == MOVE_NONE)
+                    break;
+
+                hitsToKO = GetNoOfHitsToKOBattler(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], AI_DEFENDING, DONT_CONSIDER_ENDURE);
+                totalAccuracyWithChange = GetTotalAccuracy(battlerDef, battlerAtk, gBattleMons[battlerDef].moves[i], gAiLogicData->abilities[battlerDef], gAiLogicData->abilities[battlerAtk], gAiLogicData->holdEffects[battlerDef], gAiLogicData->holdEffects[battlerAtk]);
+                expectedMovesToKOWithChangeDef = (hitsToKO * 100)/totalAccuracyWithChange;
+                
+                if (bestMovesToKOWithChangeDef > expectedMovesToKOWithChangeDef)
+                    bestMovesToKOWithChangeDef = expectedMovesToKOWithChangeDef;
+            }
+
+            // Restore stats
+            for (i = 0; i < MAX_BATTLERS_COUNT; i++)
+            {
+                for (j = 0; j < NUM_BATTLE_STATS; j++)
+                    gBattleMons[i].statStages[j] = savedStatStages[i][j];
+            }
+
+            // Good if makes battlerAtk statistically more likely to KO battlerDef first
+            if ((bestMovesToKONoChangeAtk >= bestMovesToKONoChangeDef) && (bestMovesToKOWithChangeAtk < (bestMovesToKOWithChangeDef - 1)))
+                return STAT_CHANGE_GOOD;
+            // Good if increases expected number of moves battlerDef needs to KO by 2 or more
+            else if (bestMovesToKOWithChangeDef >= (bestMovesToKONoChangeDef + 2))
+                return STAT_CHANGE_GOOD;
+            // Neutral if there's a minor inprovement to odds
+            else if ((bestMovesToKONoChangeAtk == bestMovesToKONoChangeDef)
+             && (bestMovesToKOWithChangeAtk == bestMovesToKOWithChangeDef || bestMovesToKOWithChangeAtk == (bestMovesToKOWithChangeDef - 1))
+             && (totalAccuracyNoChange < 100))
+                return STAT_CHANGE_NEUTRAL;
+            // Default to not do it
+            return STAT_CHANGE_BAD;
+        }
+    default:
+        return STAT_CHANGE_NEUTRAL;
+        break;
+    }
 }
 
 u32 GetAIChosenMove(u32 battlerId)
@@ -2528,6 +3564,18 @@ u32 GetIndexInMoveArray(u32 battler, u32 move)
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
         if (moves[i] == move)
+            return i;
+    }
+    return MAX_MON_MOVES;
+}
+
+u32 GetEffectIndexInMoveArray(u32 battler, enum BattleMoveEffects moveEffect)
+{
+    u16 *moves = GetMovesArray(battler);
+    u32 i;
+    for (i = 0; i < MAX_MON_MOVES; i++)
+    {
+        if (GetMoveEffect(moves[i]) == moveEffect)
             return i;
     }
     return MAX_MON_MOVES;
