@@ -7180,8 +7180,8 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .eggIconPalIndex = 2,
         .eggSprite = gMonEggGfx_Manaphy,
         .eggPalette = gMonEggPal_Manaphy,
-        .hatchSprite = gMonHatchGfx_Manaphy,
-        .hatchPalette = gMonHatchPal_Manaphy
+        .eggHatchGfx = gMonHatchGfx_Manaphy,
+        .eggHatchPal = gMonHatchPal_Manaphy,
     },
 #endif //P_FAMILY_MANAPHY
 

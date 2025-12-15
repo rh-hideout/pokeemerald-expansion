@@ -532,11 +532,44 @@ static void CB2_LoadEggHatch(void)
         gMain.state++;
         break;
     case 3:
-        LoadSpriteSheet(&sEggHatch_Sheet);
-        LoadSpriteSheet(&sEggShards_Sheet);
-        LoadSpritePalette(&sEgg_SpritePalette);
+    {
+        u32 species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
+        DebugPrintf("%u", species);
+        if (gSpeciesInfo[species].eggHatchGfx != NULL)
+        {
+            u32 *tempSprite = malloc_and_decompress(gSpeciesInfo[species].eggHatchGfx, NULL);
+            struct SpriteSheet tempSheet;
+            tempSheet.data = tempSprite;
+            tempSheet.size = 2048;
+            tempSheet.tag = GFXTAG_EGG;
+            LoadSpriteSheet(&tempSheet);
+            Free(tempSprite);
+
+            struct SpritePalette tempPal;
+            tempPal.data = gSpeciesInfo[species].eggHatchPal;
+            tempPal.tag = PALTAG_EGG;
+            LoadSpritePalette(&tempPal);
+            if (gSpeciesInfo[species].eggShardsGfx != NULL)
+            {
+                tempSheet.data = gSpeciesInfo[species].eggShardsGfx;
+                tempSheet.size = 128;
+                tempSheet.tag = GFXTAG_EGG_SHARD;
+                LoadSpriteSheet(&tempSheet);
+            }
+            else
+            {
+                LoadSpriteSheet(&sEggShards_Sheet);
+            }
+        }
+        else
+        {
+            LoadSpriteSheet(&sEggHatch_Sheet);
+            LoadSpriteSheet(&sEggShards_Sheet);
+            LoadSpritePalette(&sEgg_SpritePalette);
+        }
         gMain.state++;
         break;
+    }
     case 4:
         CopyBgTilemapBufferToVram(0);
         AddHatchedMonToParty(sEggHatchData->eggPartyId);

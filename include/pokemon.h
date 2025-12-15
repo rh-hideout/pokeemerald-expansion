@@ -541,8 +541,9 @@ struct SpeciesInfo /*0xC4*/
     const u8 *eggIcon;
     const u32 *eggSprite;
     const u16 *eggPalette;
-    const u32 *hatchSprite;
-    const u16 *hatchPalette;
+    const u32 *eggHatchGfx;
+    const u16 *eggHatchPal;
+    const u32 *eggShardsGfx;
 };
 
 struct AbilityInfo
