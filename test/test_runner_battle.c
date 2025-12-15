@@ -2225,7 +2225,8 @@ void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
-    SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
+    if (dynamaxLevel > 0)
+        SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 
 void GigantamaxFactor_(u32 sourceLine, bool32 gigantamaxFactor)

@@ -807,7 +807,7 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Z Move")
 
 AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
 {
-    KNOWN_FAILING; // Trainer A Dynamaxing in test 2
+    //KNOWN_FAILING; // Trainer A Dynamaxing in test 2
 
     u32 dynamaxLevelA = 0, dynamaxLevelB = 0;
 
@@ -841,20 +841,12 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
             MESSAGE("Trainer A: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponentLeft);
         }
-        else
-        {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentLeft);
-        }
         MESSAGE("Trainer Partner: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, playerRight);
         if (dynamaxLevelB == 10)
         {
             MESSAGE("Trainer B: This message plays before the enemy activates the Dynamax gimmick.{PAUSE_UNTIL_PRESS}");
             ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_DYNAMAX_GROWTH, opponentRight);
-        }
-        else
-        {
-            ANIMATION(ANIM_TYPE_MOVE, MOVE_CELEBRATE, opponentRight);
         }
     }
 }
