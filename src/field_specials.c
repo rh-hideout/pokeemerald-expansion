@@ -4375,10 +4375,7 @@ static void UIAskConfirmation(void)
 
 static s32 UIWaitConfirmation(void)
 {
-    s32 input = Menu_ProcessInputNoWrapClearOnChoose();
-    if (input == MENU_B_PRESSED)
-        return 1; // NO
-    return input;
+    return Menu_ProcessInputNoWrapClearOnChoose();
 }
 
 static void UIPrintMessage(const u8 *message)

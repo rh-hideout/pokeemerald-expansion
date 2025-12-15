@@ -195,6 +195,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         case 0: // Yes
             return WANT_REPLACE_1;
         case 1: // No
+        case MENU_B_PRESSED:
             return REFUSE_REPLACE_1;
         }
         return state;
@@ -212,6 +213,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         case 0: // Yes
             return DID_NOT_LEARN_1;
         case 1: // No
+        case MENU_B_PRESSED:
             return WANT_REPLACE_1;
         }
         return state;
