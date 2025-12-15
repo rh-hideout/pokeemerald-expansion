@@ -4,6 +4,7 @@
 #include "event_data.h"
 #include "event_scripts.h"
 #include "field_weather.h"
+#include "menu.h"
 #include "move.h"
 #include "overworld.h"
 #include "palette.h"

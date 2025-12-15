@@ -4425,13 +4425,12 @@ static void Task_LearnMove(u8 taskId)
 
 void CanTeachMoveBoxMon(void)
 {
-    ScriptContext_Stop();
     if (gSpecialVar_Result == FALSE)
     {
-        ScriptContext_Enable();
+        // We want to wait one frame before using ScriptContext_Enable() or the game freezes
+        CreateTask(UIEndTask, 1);
         return;
     }
-
     u32 taskId = CreateTask(Task_LearnMove, 1);
     gTasks[taskId].tState = GetLearnMoveStartState();
     gTasks[taskId].tPartyIndex = gSpecialVar_0x8004;
