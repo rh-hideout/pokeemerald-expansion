@@ -138,6 +138,7 @@
 #define B_FOCUS_PUNCH_FAILURE       GEN_LATEST // To determine if Focus is lost, in Gen4-, check if the current move is Focus Punch.
                                                // In Gens 5-6, check if the selected move is Focus Punch.
                                                // In Gen7+, check if the current move and the selected move are Focus Punch.
+#define B_RAGE_BUILDS               GEN_LATEST // In Gen4+, Rage's effect only sets in when it successfully hits. In Gen3, Rage's effect sets in regardless of whether it hits, misses or fails.
 
 // Ability settings
 #define B_GALE_WINGS                GEN_LATEST // In Gen7+ requires full HP to trigger.
