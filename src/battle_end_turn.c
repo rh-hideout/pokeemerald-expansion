@@ -270,7 +270,7 @@ static bool32 HandleEndTurnWish(u32 battler)
         s32 wishHeal = 0;
         gBattlerTarget = battler;
         PREPARE_MON_NICK_WITH_PREFIX_BUFFER(gBattleTextBuff1, battler, gWishFutureKnock.wishPartyId[battler])
-        if (B_WISH_HP_SOURCE >= GEN_5)
+        if (GetConfig(CONFIG_WISH_HP_SOURCE) >= GEN_5)
         {
             if (IsOnPlayerSide(battler))
                 wishHeal = GetMonData(&gPlayerParty[gWishFutureKnock.wishPartyId[battler]], MON_DATA_MAX_HP) / 2;

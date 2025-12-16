@@ -2365,10 +2365,12 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
     {
         if (gDisableStructs[battler].substituteHP >= gBattleStruct->moveDamage[battler])
         {
+            TestRunner_Battle_RecordSubHit(battler, gBattleStruct->moveDamage[battler], FALSE);
             gDisableStructs[battler].substituteHP -= gBattleStruct->moveDamage[battler];
         }
         else
         {
+            TestRunner_Battle_RecordSubHit(battler, gDisableStructs[battler].substituteHP, TRUE);
             gBattleStruct->moveDamage[battler] = gDisableStructs[battler].substituteHP;
             gDisableStructs[battler].substituteHP = 0;
         }
