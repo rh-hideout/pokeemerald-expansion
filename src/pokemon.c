@@ -6220,7 +6220,7 @@ const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFema
         if (gSpeciesInfo[species].eggPalette != NULL)
             return gSpeciesInfo[species].eggPalette;
         else
-            return gSpeciesInfo[SPECIES_EGG].eggPalette;
+            return gSpeciesInfo[SPECIES_EGG].palette;
     }
     else if (isShiny)
     {
