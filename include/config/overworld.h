@@ -83,8 +83,8 @@
 #define OW_FLASH_FIRE               GEN_LATEST // In Gen8+, if a Pokémon with Flash Fire is leading the party, there is a 50% chance to encounter a Fire-type Pokémon.
 
 // These defines only make a distinction for OW_ALTERED_TIME_RATIO
-#define GEN_8_PLA                       GEN_LATEST + 2
-#define TIME_DEBUG                      GEN_LATEST + 3
+#define GEN_8_PLA                       GEN_COUNT + 2
+#define TIME_DEBUG                      GEN_COUNT + 3
 
 // Time
 #define OW_TIMES_OF_DAY                 GEN_LATEST   // Different generations have the times of day change at different times.
