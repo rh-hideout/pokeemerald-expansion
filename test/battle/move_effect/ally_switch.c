@@ -196,7 +196,7 @@ DOUBLE_BATTLE_TEST("Ally Switch doesn't increase the Protect-like moves counter 
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_RIGHT].protectUses == 0);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.protectUses == 0);
     }
 }
 
@@ -211,7 +211,7 @@ DOUBLE_BATTLE_TEST("Ally Switch increases the Protect-like moves counter (Gen9+)
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_ALLY_SWITCH); }
     } THEN {
-        EXPECT(gDisableStructs[B_POSITION_PLAYER_RIGHT].protectUses == 1);
+        EXPECT(gBattleMons[B_POSITION_PLAYER_RIGHT].volatiles.protectUses == 1);
     }
 }
 
