@@ -99,7 +99,8 @@
     "LittlerootTown_BrendansHouse_2F",
     "LittlerootTown_MaysHouse_1F",
     "LittlerootTown_MaysHouse_2F",
-    "LittlerootTown_ProfessorBirchsLab"
+    "LittlerootTown_ProfessorBirchsLab",
+    "MathieuHouse"
   ],
   "gMapGroup_IndoorOldale": [
     "OldaleTown_House1",
@@ -162,7 +163,8 @@
     "PetalburgCity_House2",
     "PetalburgCity_PokemonCenter_1F",
     "PetalburgCity_PokemonCenter_2F",
-    "PetalburgCity_Mart"
+    "PetalburgCity_Mart",
+    "MathieuHouse_2"
   ],
   "gMapGroup_IndoorSlateport": [
     "SlateportCity_SternsShipyard_1F",
