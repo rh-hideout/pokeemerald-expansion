@@ -216,7 +216,7 @@ static bool32 AI_DoesChoiceEffectBlockMove(u32 battler, u32 move)
     // Choice locked into something else
     if (gAiLogicData->lastUsedMove[battler] != MOVE_NONE && gAiLogicData->lastUsedMove[battler] != move
     && (IsHoldEffectChoice(GetBattlerHoldEffect(battler) && IsBattlerItemEnabled(battler))
-        || gBattleMons[battler].ability == ABILITY_GORILLA_TACTICS))
+        || gAiLogicData->abilities[battler] == ABILITY_GORILLA_TACTICS))
         return TRUE;
     return FALSE;
 }
@@ -472,7 +472,7 @@ static bool32 ShouldSwitchIfAllMovesBad(u32 battler)
             aiMove = gBattleMons[battler].moves[moveIndex];
             if (gAiLogicData->effectiveness[battler][opposingBattler][moveIndex] > UQ_4_12(0.0) && aiMove != MOVE_NONE
                 && !CanAbilityAbsorbMove(battler, opposingBattler, gAiLogicData->abilities[opposingBattler], aiMove, GetBattleMoveType(aiMove), AI_CHECK)
-                && !CanAbilityBlockMove(battler, opposingBattler, gBattleMons[battler].ability, gAiLogicData->abilities[opposingBattler], aiMove, AI_CHECK)
+                && !CanAbilityBlockMove(battler, opposingBattler, gAiLogicData->abilities[battler], gAiLogicData->abilities[opposingBattler], aiMove, AI_CHECK)
                 && (!ALL_MOVES_BAD_STATUS_MOVES_BAD || GetMovePower(aiMove) != 0)) // If using ALL_MOVES_BAD_STATUS_MOVES_BAD, then need power to be non-zero
                 return FALSE;
         }
@@ -625,7 +625,7 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     // Check current mon for all absorbing abilities
     for (i = 0; i < numAbsorbingAbilities; i++)
     {
-        if (gBattleMons[battler].ability == absorbingTypeAbilities[i])
+        if (gAiLogicData->abilities[battler] == absorbingTypeAbilities[i])
             return FALSE;
     }
 
@@ -1836,7 +1836,7 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
             currentHP = currentHP - weatherImpact;
 
         // Check if we're at a single use healing item threshold
-        if (currentHP > 0 && gBattleMons[battler].ability != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
+        if (currentHP > 0 && gAiLogicData->abilities[battler] != ABILITY_KLUTZ && usedSingleUseHealingItem == FALSE
          && !(opposingAbility == ABILITY_UNNERVE && GetItemPocket(item) == POCKET_BERRIES))
         {
             switch (heldItemEffect)
