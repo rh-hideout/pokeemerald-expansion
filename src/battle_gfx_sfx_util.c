@@ -956,13 +956,13 @@ void HandleSpeciesGfxDataChange(u8 battlerAtk, u8 battlerDef, u8 changeType)
 
         if (changeType == SPECIES_GFX_CHANGE_TRANSFORM)
         {
-            personalityValue = gDisableStructs[battlerAtk].transformedMonPersonality;
-            isShiny = gDisableStructs[battlerAtk].transformedMonShininess;
+            personalityValue = gTransformedPersonalities[battlerAtk];;
+            isShiny = gTransformedShininess[battlerAtk];
         }
         else
         {
-            personalityValue = GetMonData(monAtk, MON_DATA_PERSONALITY);
-            isShiny = GetMonData(monAtk, MON_DATA_IS_SHINY);
+            personalityValue = gTransformedPersonalities[battlerAtk];
+            isShiny = gTransformedShininess[battlerAtk];
         }
         HandleLoadSpecialPokePic(!IsOnPlayerSide(battlerAtk),
                                  gMonSpritesGfxPtr->spritesGfx[position],
