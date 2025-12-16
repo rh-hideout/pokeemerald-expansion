@@ -809,10 +809,10 @@ AI_MULTI_BATTLE_TEST("Trainer Slide: Multi: Dynamax")
 {
     //KNOWN_FAILING; // Trainer A Dynamaxing in test 2
 
-    u32 dynamaxLevelA = 0, dynamaxLevelB = 0;
+    s32 dynamaxLevelA = 0, dynamaxLevelB = 0;
 
-    PARAMETRIZE { dynamaxLevelA = 10;  dynamaxLevelB = 0;  }
-    PARAMETRIZE { dynamaxLevelA = 0;   dynamaxLevelB = 10; }
+    PARAMETRIZE { dynamaxLevelA = 10;  dynamaxLevelB = -1;  }
+    PARAMETRIZE { dynamaxLevelA = -1;   dynamaxLevelB = 10; }
 
     GIVEN {
         FLAG_SET(TESTING_FLAG_TRAINER_SLIDES);

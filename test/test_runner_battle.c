@@ -2221,11 +2221,11 @@ void OTName_(u32 sourceLine, const u8 *otName)
     SetMonData(DATA.currentMon, MON_DATA_OT_NAME, &otName);
 }
 
-void DynamaxLevel_(u32 sourceLine, u32 dynamaxLevel)
+void DynamaxLevel_(u32 sourceLine, s16 dynamaxLevel)
 {
     INVALID_IF(!DATA.currentMon, "DynamaxLevel outside of PLAYER/OPPONENT");
     SetMonData(DATA.currentMon, MON_DATA_DYNAMAX_LEVEL, &dynamaxLevel);
-    if (dynamaxLevel > 0)
+    if (dynamaxLevel >= 0)
         SetGimmick(sourceLine, DATA.currentPosition, DATA.currentPartyIndex, GIMMICK_DYNAMAX);
 }
 

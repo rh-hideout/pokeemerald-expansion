@@ -99,12 +99,12 @@ static const s8 sMultiBattleOrder[] = {0, 2, 3, 1, 4, 5};
 
 static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
 {
-    u32 i, count = 0;
+    u32 count = 0;
     struct Pokemon* party = (side == B_SIDE_OPPONENT ? gEnemyParty : gPlayerParty);
 
     if (IsMultiBattle() && side == B_SIDE_PLAYER)
     {
-        for (i = firstId; i < lastId; i++)
+        for (u32 i = firstId; i < lastId; i++)
         {
             u32 species = GetMonData(&party[sMultiBattleOrder[i]], MON_DATA_SPECIES_OR_EGG, NULL);
             if (species != SPECIES_NONE
@@ -115,7 +115,7 @@ static u32 GetPartyMonCount(u32 firstId, u32 lastId, u32 side, bool32 onlyAlive)
     }
     else
     {
-        for (i = firstId; i < lastId; i++)
+        for (u32 i = firstId; i < lastId; i++)
         {
             u32 species = GetMonData(&party[i], MON_DATA_SPECIES_OR_EGG, NULL);
             if (species != SPECIES_NONE
@@ -349,8 +349,8 @@ enum TrainerSlideTargets ShouldDoTrainerSlide(u32 battler, enum TrainerSlideType
 
     // Prevents slides triggering twice in single-trainer doubles (B == A / B == TRAINER_NONE) and 2v1 multibattles (B == 0xFFFF)
     if (((TRAINER_BATTLE_PARAM.opponentB == TRAINER_BATTLE_PARAM.opponentA)
-    || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
-    || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
+     || (TRAINER_BATTLE_PARAM.opponentB == TRAINER_NONE)
+     || (TRAINER_BATTLE_PARAM.opponentB == 0xFFFF)))
         MarkTrainerSlideAsPlayed(BATTLE_PARTNER(battler), slideId);
     
     MarkTrainerSlideAsPlayed(battler, slideId);
@@ -376,8 +376,8 @@ void TryInitializeFirstSTABMoveTrainerSlide(u32 battlerDef, u32 battlerAtk, enum
     if (IsSlideInitalizedOrPlayed(battlerDef, slideId))
         return;
 
-    //if ((IsOnPlayerSide(battlerDef)))
-    //    return;
+    if ((IsOnPlayerSide(battlerDef)))
+        return;
 
     if (IS_BATTLER_OF_TYPE(battlerAtk, moveType) == FALSE)
         return;
@@ -467,9 +467,7 @@ void MarkInitializedTrainerSlidesAsPlayed(u32 battler, enum TrainerSlideType sli
     u32 bitPosition = slideId % TRAINER_SLIDES_PER_ARRAY;
 
     if (IsTrainerSlideInitialized(battler, slideId) && !IsTrainerSlidePlayed(battler, slideId))
-    {
         gBattleStruct->slideMessageStatus.messagePlayed[battler][arrayIndex] |= (1 << bitPosition);
-    }
 }
 
 void MarkTrainerSlideAsPlayed(u32 battler, enum TrainerSlideType slideId)
