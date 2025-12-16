@@ -65,6 +65,7 @@ struct TestRunnerState
     bool8 inBenchmark:1;
     bool8 tearDown:1;
     u32 timeoutSeconds;
+    u32 expectedFailLine;
 };
 
 struct PersistentTestRunnerState
@@ -72,7 +73,8 @@ struct PersistentTestRunnerState
     u32 address:28;
     u32 state:1;
     u32 expectCrash:1;
-    u32 unused_30:2;
+    u32 expectFail:1;
+    u32 unused_30:1;
 };
 
 extern const u8 gTestRunnerN;
@@ -106,6 +108,7 @@ void CB2_TestRunner(void);
 void Test_ExpectedResult(enum TestResult);
 void Test_ExpectLeaks(bool32);
 void Test_ExpectCrash(bool32);
+void Test_ExpectFail(bool32, u32 failLine);
 void Test_ExitWithResult(enum TestResult, u32 stopLine, const char *fmt, ...);
 u32 SourceLine(u32 sourceLineOffset);
 u32 SourceLineOffset(u32 sourceLine);
@@ -254,6 +257,9 @@ static inline struct Benchmark BenchmarkStop(void)
 
 #define KNOWN_CRASHING \
     Test_ExpectCrash(TRUE)
+
+#define EXPECT_FAIL \
+    Test_ExpectFail(TRUE, __LINE__ + 1)
 
 #define PARAMETRIZE if (gFunctionTestRunnerState->parameters++ == gFunctionTestRunnerState->runParameter)
 

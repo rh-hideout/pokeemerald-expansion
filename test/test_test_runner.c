@@ -7,3 +7,9 @@ TEST("Tests resume after CRASH")
     void (*f)(void) = NULL;
     f();
 }
+
+TEST("EXPECT_FAIL allows expected failing tests to pass")
+{
+    EXPECT_FAIL;
+    EXPECT_EQ(1, 2);
+}
