@@ -577,7 +577,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr)
+void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
