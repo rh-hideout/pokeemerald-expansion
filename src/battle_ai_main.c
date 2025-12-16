@@ -654,23 +654,6 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
         RecordStatusMoves(battler);
 }
 
-static bool32 IsInstructTargetType(enum MoveTarget moveTarget)
-{
-    switch (moveTarget)
-    {
-    case TARGET_SELECTED:
-    case TARGET_DEPENDS:
-    case TARGET_RANDOM:
-    case TARGET_BOTH:
-    case TARGET_FOES_AND_ALLY:
-    case TARGET_OPPONENTS_FIELD:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-    return FALSE;
-}
-
 static bool32 IsMagicCoatTargetType(enum MoveTarget moveTarget)
 {
     switch (moveTarget)
@@ -1376,7 +1359,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_MAGIC_BOUNCE:
-                if (MoveCanBeBouncedBack(move) && IsMagicCoatTargetType(moveTarget))
+                if (CanMoveBeBouncedBack(battlerAtk, move))
                     RETURN_SCORE_MINUS(20);
                 break;
             case ABILITY_SWEET_VEIL:
@@ -2429,7 +2412,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     }
                     break;
                 case PROTECT_WIDE_GUARD:
-                    if (!IsSpreadDamageTargetType(AI_GetBattlerMoveTargetType(battlerAtk, predictedMove)))
+                    if (!IsSpreadMove(AI_GetBattlerMoveTargetType(battlerAtk, predictedMove), IGNORE_BATTLE_TYPE))
                     {
                         ADJUST_SCORE(-10);
                         decreased = TRUE;
@@ -2945,8 +2928,7 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                     if (!IsTargetingPartner(battlerAtk, battlerDef))
                         ADJUST_SCORE(-10);
                 }
-                else if (IsInstructTargetType(AI_GetBattlerMoveTargetType(battlerDef, instructedMove))
-                      && GetMoveEffect(instructedMove) != EFFECT_MAX_HP_50_RECOIL)
+                else if (ShouldInstructPartner(battlerDef, instructedMove))
                 {
                     ADJUST_SCORE(-10); //Don't force the enemy to attack you again unless it can kill itself with Mind Blown
                 }
@@ -3270,7 +3252,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             if (IsAttackBoostMoveEffect(effect))
                 ADJUST_SCORE(-3);
             // encourage moves hitting multiple opponents
-            if (!IsBattleMoveStatus(move) && IsSpreadDamageTargetType(moveTarget))
+            if (!IsBattleMoveStatus(move) && IsSpreadMove(moveTarget, IGNORE_BATTLE_TYPE))
                 ADJUST_SCORE(GOOD_EFFECT);
         }
     }
@@ -3831,7 +3813,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
 
                     if (instructedMove != MOVE_NONE
                      && !IsBattleMoveStatus(instructedMove)
-                     && IsSpreadDamageTargetType(AI_GetBattlerMoveTargetType(battlerAtkPartner, instructedMove)))
+                     && IsSpreadMove(AI_GetBattlerMoveTargetType(battlerAtkPartner, instructedMove), IGNORE_BATTLE_TYPE))
                     {
                         RETURN_SCORE_PLUS(WEAK_EFFECT);
                     }
@@ -4271,7 +4253,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     bool32 hasTwoOpponents = HasTwoOpponents(battlerAtk);
     bool32 hasPartner = HasPartner(battlerAtk);
     enum MoveTarget moveTarget = AI_GetBattlerMoveTargetType(battlerAtk, move);
-    bool32 moveTargetsBothOpponents = hasTwoOpponents && (IsSpreadDamageTargetType(moveTarget) || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD);
+    bool32 moveTargetsBothOpponents = hasTwoOpponents && (IsSpreadMove(moveTarget, IGNORE_BATTLE_TYPE) || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD);
     u32 i;
 
     // The AI should understand that while Dynamaxed, status moves function like Protect.
@@ -4822,7 +4804,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             }
             break;
         case PROTECT_WIDE_GUARD:
-            if (predictedMove != MOVE_NONE && IsSpreadDamageTargetType(AI_GetBattlerMoveTargetType(battlerDef, predictedMove)))
+            if (predictedMove != MOVE_NONE && IsSpreadMove(AI_GetBattlerMoveTargetType(battlerDef, predictedMove), IGNORE_BATTLE_TYPE))
             {
                 ADJUST_SCORE(ProtectChecks(battlerAtk, battlerDef, move, predictedMove));
             }
@@ -5252,7 +5234,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_MAGIC_COAT:
-        if (IsBattleMoveStatus(predictedMove) && IsMagicCoatTargetType(AI_GetBattlerMoveTargetType(battlerDef, predictedMove)))
+        if (CanMoveBeBouncedBack(battlerDef, predictedMove))
             ADJUST_SCORE(GOOD_EFFECT);
         break;
     case EFFECT_RECYCLE:
@@ -6054,7 +6036,7 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
             {
                 enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, move);
                 bool32 moveTargetsBothOpponents = HasTwoOpponents(battlerAtk)
-                                               && (target == TARGET_FIELD || target == TARGET_ALL_BATTLERS || IsSpreadDamageTargetType(target));
+                                               && (target == TARGET_FIELD || target == TARGET_ALL_BATTLERS || IsSpreadMove(target, IGNORE_BATTLE_TYPE));
 
                 score += AI_TryToClearStats(battlerAtk, battlerDef, moveTargetsBothOpponents);
                 break;

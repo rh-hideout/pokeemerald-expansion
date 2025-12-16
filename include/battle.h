@@ -1232,26 +1232,24 @@ static inline bool32 IsDoubleBattle(void)
     return (gBattleTypeFlags & BATTLE_TYPE_MORE_THAN_TWO_BATTLERS);
 }
 
-static inline bool32 IsUserOrAllyTargetType(enum MoveTarget target)
+enum BattleTypeChecks
 {
-    return target == TARGET_USER || target == TARGET_USER_OR_ALLY;
-}
+    CHECK_BATTLE_TYPE,
+    IGNORE_BATTLE_TYPE,
+};
 
-static inline bool32 IsSpreadDamageTargetType(enum MoveTarget moveTarget)
+static inline bool32 IsSpreadMove(enum MoveTarget moveTarget, enum BattleTypeChecks checkBattleType)
 {
+    if (checkBattleType == CHECK_BATTLE_TYPE && !IsDoubleBattle())
+        return FALSE;
     return moveTarget == TARGET_BOTH || moveTarget == TARGET_FOES_AND_ALLY;
-}
-
-static inline bool32 IsSpreadMove(enum MoveTarget moveTarget)
-{
-    return IsDoubleBattle() && IsSpreadDamageTargetType(moveTarget);
 }
 
 static inline bool32 IsDoubleSpreadMove(void)
 {
     return gBattleStruct->numSpreadTargets > 1
         && !gBattleStruct->unableToUseMove
-        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove));
+        && IsSpreadMove(GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove), CHECK_BATTLE_TYPE);
 }
 
 static inline bool32 IsBattlerInvalidForSpreadMove(u32 battlerAtk, u32 battlerDef, enum MoveTarget moveTarget)

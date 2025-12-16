@@ -43,7 +43,7 @@ static bool32 AI_IsDoubleSpreadMove(u32 battlerAtk, u32 move)
     u32 numOfTargets = 0;
     u32 moveTargetType = AI_GetBattlerMoveTargetType(battlerAtk, move);
 
-    if (!IsSpreadMove(moveTargetType))
+    if (!IsSpreadMove(moveTargetType, CHECK_BATTLE_TYPE))
         return FALSE;
 
     for (u32 battlerDef = 0; battlerDef < MAX_BATTLERS_COUNT; battlerDef++)
@@ -6526,4 +6526,45 @@ void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
     {
         *firstId = 0, *lastId = PARTY_SIZE;
     }
+}
+
+bool32 ShouldInstructPartner(u32 battlerDef, u32 move)
+{
+    if (GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL)
+        return FALSE;
+
+    enum MoveTarget type = AI_GetBattlerMoveTargetType(battlerDef, move);
+    switch (type)
+    {
+    case TARGET_SELECTED:
+    case TARGET_DEPENDS:
+    case TARGET_RANDOM:
+    case TARGET_BOTH:
+    case TARGET_FOES_AND_ALLY:
+    case TARGET_OPPONENTS_FIELD:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+
+    return FALSE;
+}
+
+bool32 CanMoveBeBouncedBack(u32 battler, u32 move)
+{
+    if (!MoveCanBeBouncedBack(move) || !IsBattleMoveStatus(move))
+        return FALSE;
+
+    enum MoveTarget type = AI_GetBattlerMoveTargetType(battler, move);
+    switch (type)
+    {
+    case TARGET_SELECTED:
+    case TARGET_OPPONENTS_FIELD:
+    case TARGET_BOTH:
+        return TRUE;
+    default:
+        return FALSE;
+    }
+
+    return FALSE;
 }
