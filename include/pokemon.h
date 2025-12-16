@@ -110,11 +110,6 @@ enum MonData {
     MON_DATA_KNOWN_MOVES,
     MON_DATA_RIBBON_COUNT,
     MON_DATA_RIBBONS,
-    MON_DATA_ATK2,
-    MON_DATA_DEF2,
-    MON_DATA_SPEED2,
-    MON_DATA_SPATK2,
-    MON_DATA_SPDEF2,
     MON_DATA_HYPER_TRAINED_HP,
     MON_DATA_HYPER_TRAINED_ATK,
     MON_DATA_HYPER_TRAINED_DEF,
@@ -333,27 +328,7 @@ struct Volatiles
     // u32 confusionTurns:3;
     // u32 flinched:1;
     // u32 uproarTurns:3;
-    // u32 torment:1;
-    // u32 bideTurns:2;
-    // u32 lockConfusionTurns:2;
-    // u32 multipleTurns:1;
-    // u32 wrapped:1;
-    // u32 powder:1;
-    // u32 padding:1;
-    // u32 infatuation:4; // one bit for each battler
-    // u32 defenseCurl:1;
-    // u32 transformed:1;
-    // u32 recharge:1;
-    // u32 rage:1;
-    // u32 substitute:1;
-    // u32 destinyBond:1;
-    // u32 escapePrevention:1;
-    // u32 nightmare:1;
-    // u32 cursed:1;
-    // u32 foresight:1;
-    // u32 dragonCheer:1;
-    // u32 focusEnergy:1;
-    // u32 bonusCritStages:3;
+    // etc.
 };
 
 struct BattlePokemon
@@ -490,7 +465,8 @@ struct SpeciesInfo /*0xC4*/
     u8 pokemonJumpType:2; // According to the clerk, the Pokémon allowed in Pokémon Jump are all <= 28 inches/71 cm, and do not only swim, burrow, or fly.
     u8 enemyMonElevation; // This determines how much higher above the usual position the enemy Pokémon is during battle. Species that float or fly have nonzero values.
     // Flags
-    u32 isLegendary:1;
+    u32 isRestrictedLegendary:1;
+    u32 isSubLegendary:1;
     u32 isMythical:1;
     u32 isUltraBeast:1;
     u32 isParadox:1;
@@ -509,7 +485,7 @@ struct SpeciesInfo /*0xC4*/
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
     u32 teachingType:1; // Not used in the ROM but used in compilation (check constants/teaching_types.h for explanations)
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
-    u32 padding4:11;
+    u32 padding4:10;
     // Shadow settings
     s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
     s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
