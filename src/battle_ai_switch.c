@@ -1993,7 +1993,7 @@ static u32 GetValidSwitchinCandidate(u32 validMonIds, u32 battler, u32 firstId, 
     return PARTY_SIZE;
 }
 
-static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattler, struct BattlePokemon battleMon, u32 *bestPlayerMove)
+static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattler, u32 *bestPlayerMove)
 {
     int i = 0;
     u32 playerMove;
@@ -2022,7 +2022,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
     return maxDamageTaken;
 }
 
-static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattler, struct BattlePokemon battleMon, u32 *bestPlayerPriorityMove)
+static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattler, u32 *bestPlayerPriorityMove)
 {
     int i = 0;
     u32 playerMove;
@@ -2190,12 +2190,12 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
         }
 
         // While not really invalid per se, not really wise to switch into this mon
-        if (gBattleMons[battler].ability == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
+        if (gAiLogicData->abilities[battler] == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))
             continue;
 
         // Get max number of hits for player to KO AI mon and type matchup for defensive switching
-        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gBattleMons[battler], &bestPlayerMove), battler, healInfo, originalHp);
-        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, gBattleMons[battler], &bestPlayerPriorityMove), battler, healInfo, originalHp);
+        hitsToKOAI = GetSwitchinHitsToKO(GetMaxDamagePlayerCouldDealToSwitchin(battler, opposingBattler, &bestPlayerMove), battler, healInfo, originalHp);
+        hitsToKOAIPriority = GetSwitchinHitsToKO(GetMaxPriorityDamagePlayerCouldDealToSwitchin(battler, opposingBattler, &bestPlayerPriorityMove), battler, healInfo, originalHp);
         typeMatchup = GetBattlerTypeMatchup(opposingBattler, battler);
         canSwitchinWin1v1 = FALSE;
         bool32 anyMoveCanWin1v1 = FALSE;
@@ -2300,8 +2300,8 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 }
 
                 // If mon can trap
-                if ((AI_CanSwitchinAbilityTrapOpponent(gBattleMons[battler].ability, opposingBattler)
-                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gBattleMons[battler].ability == ABILITY_TRACE))
+                if ((AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[battler], opposingBattler)
+                    || (AI_CanSwitchinAbilityTrapOpponent(gAiLogicData->abilities[opposingBattler], opposingBattler) && gAiLogicData->abilities[battler] == ABILITY_TRACE))
                     && canSwitchinWin1v1)
                     trapperIds |= (1u << i);
             }
@@ -2462,7 +2462,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
                 || gBattlerPartyIndexes[battlerIn2] == i
                 || i == gBattleStruct->monToSwitchIntoId[battlerIn1]
                 || i == gBattleStruct->monToSwitchIntoId[battlerIn2]
-                || (GetMonAbility(&party[i]) == ABILITY_TRUANT && IsTruantMonVulnerable(battler, opposingBattler))) // While not really invalid per se, not really wise to switch into this mon.
+                || (GetMonAbility(&party[i]) == ABILITY_TRUANT)) // While not really invalid per se, not really wise to switch into this mon.
             {
                 invalidMons |= 1u << i;
             }
