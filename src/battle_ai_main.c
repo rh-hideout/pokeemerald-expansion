@@ -654,20 +654,6 @@ void SetBattlerAiData(u32 battler, struct AiLogicData *aiData)
         RecordStatusMoves(battler);
 }
 
-static bool32 IsMagicCoatTargetType(enum MoveTarget moveTarget)
-{
-    switch (moveTarget)
-    {
-    case TARGET_SELECTED:
-    case TARGET_OPPONENTS_FIELD:
-    case TARGET_BOTH:
-        return TRUE;
-    default:
-        return FALSE;
-    }
-    return FALSE;
-}
-
 #define BYPASSES_ACCURACY_CALC 101 // 101 indicates for ai that the move will always hit
 static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 move)
 {
