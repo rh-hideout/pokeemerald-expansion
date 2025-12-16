@@ -1536,6 +1536,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sCrabominableLevelUpLearnset,
         .teachableLearnset = sCrabominableTeachableLearnset,
         .formSpeciesIdTable = sCrabominableFormSpeciesIdTable,
@@ -4239,10 +4240,11 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
-        .levelUpLearnset = sCrabominableLevelUpLearnset,
-        .teachableLearnset = sCrabominableTeachableLearnset,
-        .formSpeciesIdTable = sCrabominableFormSpeciesIdTable,
-        .formChangeTable = sCrabominableFormChangeTable,
+        .isMegaEvolution = TRUE,
+        .levelUpLearnset = sGolisopodLevelUpLearnset,
+        .teachableLearnset = sGolisopodTeachableLearnset,
+        .formSpeciesIdTable = sGolisopodFormSpeciesIdTable,
+        .formChangeTable = sGolisopodFormChangeTable,
     },
 #endif //P_GEN_9_MEGA_EVOLUTIONS
 #endif //P_FAMILY_WIMPOD
@@ -7311,6 +7313,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -7385,6 +7388,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
@@ -7872,6 +7876,7 @@ const struct SpeciesInfo gSpeciesInfoGen7[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

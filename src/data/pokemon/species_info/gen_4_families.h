@@ -919,6 +919,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             TRACKS_FOOT,
             sAnimTable_Following
         )
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sStaraptorLevelUpLearnset,
         .teachableLearnset = sStaraptorTeachableLearnset,
         .formSpeciesIdTable = sStaraptorFormSpeciesIdTable,
@@ -7577,6 +7578,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
             gOverworldPalette_Darkrai,
             gShinyOverworldPalette_Darkrai
         )
+        .isMegaEvolution = TRUE,
         .isMythical = TRUE,
         .isFrontierBanned = TRUE,
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,

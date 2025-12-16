@@ -3028,6 +3028,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sMeowsticMLevelUpLearnset,
         .teachableLearnset = sMeowsticMTeachableLearnset,
         .formSpeciesIdTable = sMeowsticFormSpeciesIdTable,
@@ -3100,6 +3101,7 @@ const struct SpeciesInfo gSpeciesInfoGen6[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sMeowsticFLevelUpLearnset,
         .teachableLearnset = sMeowsticFTeachableLearnset,
         .formSpeciesIdTable = sMeowsticFormSpeciesIdTable,

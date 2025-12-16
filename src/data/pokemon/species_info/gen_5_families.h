@@ -11502,6 +11502,7 @@ const struct SpeciesInfo gSpeciesInfoGen5[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sGolurkLevelUpLearnset,
         .teachableLearnset = sGolurkTeachableLearnset,
         .formSpeciesIdTable = sGolurkFormSpeciesIdTable,

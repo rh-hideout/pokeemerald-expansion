@@ -3451,6 +3451,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sScovillainLevelUpLearnset,
         .teachableLearnset = sScovillainTeachableLearnset,
         .formSpeciesIdTable = sScovillainFormSpeciesIdTable,
@@ -4765,6 +4766,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sGlimmoraLevelUpLearnset,
         .teachableLearnset = sGlimmoraTeachableLearnset,
         .formSpeciesIdTable = sGlimmoraFormSpeciesIdTable,
@@ -5458,8 +5460,9 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
         .weight = 240,
         .description = COMPOUND_STRING(
             "Tatsugiri's brain has been invigorated\n"
-            "by Mega Evolution, making it even wilier.\n"
-            "It can create and command copies of itself."),
+            "by Mega Evolution, making it even\n"
+            "wilier. It can create and command\n"
+            "copies of itself."),
         .frontPic = gMonBackPic_CircledQuestionMark,
         .frontPicSize = MON_COORDS_SIZE(40, 40),
         .frontPicYOffset = 12,
@@ -5496,6 +5499,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
         .eggMoveLearnset = sTatsugiriEggMoveLearnset,
@@ -5569,6 +5573,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
         .eggMoveLearnset = sTatsugiriEggMoveLearnset,
@@ -5642,6 +5647,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sTatsugiriLevelUpLearnset,
         .teachableLearnset = sTatsugiriTeachableLearnset,
         .eggMoveLearnset = sTatsugiriEggMoveLearnset,
@@ -6721,6 +6727,7 @@ const struct SpeciesInfo gSpeciesInfoGen9[] =
             .affineAnims = gDummySpriteAffineAnimTable,
         },
     #endif //OW_BATTLE_ONLY_FORMS
+        .isMegaEvolution = TRUE,
         .levelUpLearnset = sBaxcaliburLevelUpLearnset,
         .teachableLearnset = sBaxcaliburTeachableLearnset,
         .formSpeciesIdTable = sBaxcaliburFormSpeciesIdTable,
