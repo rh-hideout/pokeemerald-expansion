@@ -447,6 +447,18 @@ bool32 HandleMoveTargetRedirection(void)
     return FALSE;
 }
 
+
+static bool32 WasOriginalTargetAlly(enum MoveTarget target)
+{
+    if (!gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
+        return FALSE;
+
+    if ((target == TARGET_ALLY || target == TARGET_USER_OR_ALLY) && gBattlerAttacker == gBattlerTarget)
+        return TRUE;
+
+    return FALSE;
+}
+
 // Functions
 void HandleAction_UseMove(void)
 {
@@ -604,9 +616,7 @@ void HandleAction_UseMove(void)
     {
         gBattlescriptCurrInstr = BattleScript_FailedFromAtkCanceler;
     }
-    // If originally targetting an ally but now targetting user due to Ally Switch
-    else if (moveTarget == TARGET_ALLY && gBattlerAttacker == gBattlerTarget
-          && gProtectStructs[BATTLE_PARTNER(gBattlerAttacker)].usedAllySwitch)
+    else if (WasOriginalTargetAlly(moveTarget))
     {
         gBattlescriptCurrInstr = BattleScript_FailedFromAtkCanceler;
     }
@@ -3400,8 +3410,12 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
     switch (abilityDef)
     {
     case ABILITY_SOUNDPROOF:
-        if (IsSoundMove(move) && GetBattlerMoveTargetType(battlerAtk, move) != TARGET_USER)
-            battleScriptBlocksMove = BattleScript_SoundproofProtected;
+        if (IsSoundMove(move))
+        {
+            enum MoveTarget target = GetBattlerMoveTargetType(battlerAtk, move);
+            if (target != TARGET_USER && target != TARGET_ALL_BATTLERS)
+                battleScriptBlocksMove = BattleScript_SoundproofProtected;
+        }
         break;
     case ABILITY_BULLETPROOF:
         if (IsBallisticMove(move))
@@ -3411,7 +3425,10 @@ bool32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, enum Ability abilityA
         if (IsBattleMoveStatus(move))
         {
             enum MoveTarget target = GetBattlerMoveTargetType(battlerAtk, move);
-            if (target != TARGET_OPPONENTS_FIELD && target != TARGET_ALL_BATTLERS && target != TARGET_FIELD)
+            if (target != TARGET_OPPONENTS_FIELD
+             && target != TARGET_ALL_BATTLERS
+             && target != TARGET_FIELD
+             && target != TARGET_USER)
                 battleScriptBlocksMove = BattleScript_GoodAsGoldActivates;
         }
         break;

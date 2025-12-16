@@ -9334,8 +9334,13 @@ static void Cmd_jumpifnexttargetvalid(void)
 
     for (gBattlerTarget++; gBattlerTarget < gBattlersCount; gBattlerTarget++)
     {
-        if (gBattlerTarget == gBattlerAttacker && GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove) != TARGET_USER)
-            continue;
+        if (gBattlerTarget == gBattlerAttacker)
+        {
+            enum MoveTarget target = GetBattlerMoveTargetType(gBattlerAttacker, gCurrentMove);
+            if (target != TARGET_USER && target != TARGET_ALL_BATTLERS)
+                continue;
+        }
+
         if (IsBattlerAlive(gBattlerTarget))
             break;
     }
@@ -11499,7 +11504,7 @@ static void Cmd_trysetperishsong(void)
 {
     CMD_ARGS(const u8 *failInstr);
 
-    s32 i;
+    s32 i = 0;
     s32 notAffectedCount = 0;
 
     for (i = 0; i < gBattlersCount; i++)
