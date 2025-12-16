@@ -667,7 +667,6 @@ u32 GetNewestOWEncounterLocalId(void)
 
 bool32 CanRemoveOverworldEncounter(u32 localId)
 {
-    // Can the last of these checks be replaced by IsOverworldWildEncounter?
     // Include a check for the encounter not being shiny or a roamer.
     return (OW_WILD_ENCOUNTERS_OVERWORLD && CountActiveOverworldEncounters() != 0
         && (localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS + 1)
@@ -676,7 +675,6 @@ bool32 CanRemoveOverworldEncounter(u32 localId)
 
 u32 RemoveOldestOverworldEncounter(void)
 {
-    // include a check for oldest slot not being INVALID_SPAWN_SLOT
     u32 oldestSlot = GetOldestSlot();
 
     if (oldestSlot == INVALID_SPAWN_SLOT)
