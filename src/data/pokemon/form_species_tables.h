@@ -129,8 +129,8 @@ static const u16 sRaichuFormSpeciesIdTable[] = {
     SPECIES_RAICHU_ALOLA,
 #endif
 #if P_GEN_9_MEGA_EVOLUTIONS
-    SPECIES_RAICHU_MEGA_X
-    SPECIES_RAICHU_MEGA_Y
+    SPECIES_RAICHU_MEGA_X,
+    SPECIES_RAICHU_MEGA_Y,
 #endif
     FORM_SPECIES_END,
 };
@@ -1213,6 +1213,16 @@ static const u16 sPalkiaFormSpeciesIdTable[] = {
 };
 #endif //P_FAMILY_PALKIA
 
+#if P_FAMILY_HEATRAN
+static const u16 sHeatranFormSpeciesIdTable[] = {
+    SPECIES_HEATRAN,
+#if P_GEN_9_MEGA_EVOLUTIONS
+    SPECIES_HEATRAN_MEGA,
+#endif
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_HEATRAN
+
 #if P_FAMILY_GIRATINA
 static const u16 sGiratinaFormSpeciesIdTable[] = {
     SPECIES_GIRATINA_ALTERED,
@@ -1220,6 +1230,16 @@ static const u16 sGiratinaFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_GIRATINA
+
+#if P_FAMILY_DARKRAI
+static const u16 sDarkraiFormSpeciesIdTable[] = {
+    SPECIES_DARKRAI,
+#if P_GEN_9_MEGA_EVOLUTIONS
+    SPECIES_DARKRAI_MEGA,
+#endif
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_DARKRAI
 
 #if P_FAMILY_SHAYMIN
 static const u16 sShayminFormSpeciesIdTable[] = {
@@ -2049,6 +2069,16 @@ static const u16 sMagearnaFormSpeciesIdTable[] = {
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_MAGEARNA
+
+#if P_FAMILY_ZERAORA
+static const u16 sZeraoraFormSpeciesIdTable[] = {
+    SPECIES_ZERAORA,
+#if P_GEN_9_MEGA_EVOLUTIONS
+    SPECIES_ZERAORA_MEGA,
+#endif
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_ZERAORA
 
 #if P_FAMILY_MELTAN
 static const u16 sMelmetalFormSpeciesIdTable[] = {

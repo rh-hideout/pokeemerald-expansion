@@ -6974,7 +6974,7 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_Staraptite,
     },
     
-    [ITEM_GARCHOMPITE Z] =
+    [ITEM_GARCHOMPITE_Z] =
     {
         .name = ITEM_NAME("Garchompite Z"),
         .price = 0,
@@ -6989,7 +6989,7 @@ const struct Item gItemsInfo[] =
         .iconPalette = gItemIconPalette_QuestionMark, // gItemIconPalette_GarchompiteZ,
     },
 
-    [ITEM_LUCARIONITE Z] =
+    [ITEM_LUCARIONITE_Z] =
     {
         .name = ITEM_NAME("Lucarionite Z"),
         .price = 0,
