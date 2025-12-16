@@ -2248,6 +2248,10 @@ static void MoveDamageDataHpUpdate(u32 battler, u32 scriptBattler, const u8 *nex
             // Deal damage to the battler
             if (gBattleMons[battler].hp > gBattleStruct->moveDamage[battler])
             {
+                if (GetMoveEffect(gCurrentMove) == EFFECT_OHKO && gBattleStruct->moveResultFlags[gBattlerTarget] & MOVE_RESULT_FOE_HUNG_ON)
+                {
+                    gProtectStructs[battler].survivedOHKO = TRUE;
+                }
                 gBattleMons[battler].hp -= gBattleStruct->moveDamage[battler];
             }
             else
@@ -10561,7 +10565,6 @@ static void Cmd_tryKO(void)
             {
                 gBattleStruct->moveDamage[gBattlerTarget] = gBattleMons[gBattlerTarget].hp - 1;
                 gBattleStruct->moveResultFlags[gBattlerTarget] |= MOVE_RESULT_FOE_HUNG_ON;
-                gProtectStructs[gBattlerTarget].survivedOHKO = TRUE;
                 gLastUsedItem = gBattleMons[gBattlerTarget].item;
             }
             else if (endured == AFFECTION_ENDURED)
