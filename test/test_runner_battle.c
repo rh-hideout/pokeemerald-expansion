@@ -958,11 +958,20 @@ static s32 TrySubHit(s32 i, s32 n, u32 battlerId, u32 damage, bool32 broke)
 
         event = &DATA.queuedEvents[i].as.subHit;
 
-        if (event->breakSub && !broke)
-            return -1;
-
         if (event->battlerId == battlerId)
         {
+            if (event->checkBreak)
+            {
+                if (event->breakSub && !broke)
+                {
+                    return -1;
+                }
+                else if (!event->breakSub && broke)
+                {
+                    return -1;
+                }
+            }
+
             if (event->address <= 0xFFFF)
             {
                 event->address = damage;
@@ -3075,6 +3084,7 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
 {
     s32 battlerId = battler - gBattleMons;
     bool32 breakSub = FALSE;
+    bool32 checkBreak = FALSE;
     uintptr_t address;
 
     INVALID_IF(!STATE->runScene, "SUB_HIT outside of SCENE");
@@ -3088,9 +3098,12 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
         *ctx.captureDamage = 0;
         address = (uintptr_t)ctx.captureDamage;
     }
-    else if (ctx.explicitSubBreak)
+
+    if (ctx.explicitSubBreak)
     {
-        breakSub = TRUE;
+        checkBreak = TRUE;
+        if (ctx.subBreak)
+            breakSub = TRUE;
     }
 
     DATA.queuedEvents[DATA.queuedEventsCount++] = (struct QueuedEvent) {
@@ -3100,6 +3113,7 @@ void QueueSubHit(u32 sourceLine, struct BattlePokemon *battler, struct SubHitEve
         .groupSize = 1,
         .as = { .subHit = {
             .battlerId = battlerId,
+            .checkBreak = checkBreak,
             .breakSub = breakSub,
             .address = address,
         }},

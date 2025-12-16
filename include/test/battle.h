@@ -639,8 +639,9 @@ struct QueuedHPEvent
 struct QueuedSubHitEvent
 {
     u32 battlerId:3;
+    u32 checkBreak:1;
     u32 breakSub:1;
-    u32 address:28;
+    u32 address:27;
 };
 
 struct QueuedExpEvent

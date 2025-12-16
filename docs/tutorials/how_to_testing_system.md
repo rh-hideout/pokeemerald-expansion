@@ -473,7 +473,7 @@ u16 damage;
 ...
 SUB_HIT(player, captureDamage: &damage);
 ```
-If `subBreak` is set to `TRUE`, the test will fail unless the substitute breaks.
+If `subBreak` is set to `TRUE`, the test will fail unless the substitute breaks. And if set to `FALSE`, the test will fail unless the substitute survives.
 ```
 SUB_HIT(player, subBreak: TRUE);
 ```
