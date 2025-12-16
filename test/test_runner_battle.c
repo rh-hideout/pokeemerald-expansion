@@ -963,13 +963,9 @@ static s32 TrySubHit(s32 i, s32 n, u32 battlerId, u32 damage, bool32 broke)
             if (event->checkBreak)
             {
                 if (event->breakSub && !broke)
-                {
                     return -1;
-                }
                 else if (!event->breakSub && broke)
-                {
                     return -1;
-                }
             }
 
             if (event->address <= 0xFFFF)
