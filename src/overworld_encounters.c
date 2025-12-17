@@ -180,6 +180,7 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
         pan = 0;
     }
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
+    // Also move this to a dedicated ambient cries function that plays spawned mon cries.
 
     if (isShiny)
     {
