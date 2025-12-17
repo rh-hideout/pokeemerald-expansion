@@ -150,6 +150,9 @@ void UpdateOverworldEncounters(void)
         gObjectEvents[objectEventId].range.rangeY = OW_ENCOUNTER_MOVEMENT_RANGE_Y;
         gObjectEvents[objectEventId].sOverworldEncounterLevel = level;
 
+        u8 directions[4] = {DIR_SOUTH, DIR_NORTH, DIR_WEST, DIR_EAST};
+        ObjectEventTurn(&gObjectEvents[objectEventId], directions[Random() & 3]);
+
         // Hide reflections for spawns in water
         // (It just looks weird)
         if (waterMons)
