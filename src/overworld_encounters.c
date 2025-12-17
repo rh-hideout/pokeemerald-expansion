@@ -146,8 +146,6 @@ void UpdateOverworldEncounters(void)
 
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
-        
-        enum OverworldEncounterSpawnAnim spawnAnimType;
 
         // Play spawn animation.
         if (speciesId == SPECIES_NONE)
@@ -156,26 +154,37 @@ void UpdateOverworldEncounters(void)
             return;
         }
 
-        u32 pan = (Random() % 88) + 212;
-        u32 volume = (Random() % 30) + 50;
-        PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
-        if (isShiny)
-        {
-            PlaySE(SE_SHINY);
-            spawnAnimType = OWE_SPAWN_ANIM_SHINY;
-        }
-        else 
-        {
-            if (OWE_ShouldSpawnWaterMons())
-                spawnAnimType = OWE_SPAWN_ANIM_WATER;
-            else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
-                spawnAnimType = OWE_SPAWN_ANIM_CAVE;
-            else
-                spawnAnimType = OWE_SPAWN_ANIM_GRASS;
-        }
-        // Instantly play a small animation to ground the spawning a bit
-        MovementAction_OverworldEncounterSpawn(spawnAnimType, &gObjectEvents[objectEventId]);
+        OWE_DoSpawnAnim(&gObjectEvents[objectEventId]);
     }
+}
+
+void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
+{
+    // Need to edit anims:
+    // If object is on water then use water anim.
+    // If object is indoor, need an indoor anim?
+    enum OverworldEncounterSpawnAnim spawnAnimType;
+    u32 speciesId = OW_SPECIES(objectEvent);
+    bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
+    u32 pan = (Random() % 88) + 212;
+    u32 volume = (Random() % 30) + 50;
+    PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
+    if (isShiny)
+    {
+        PlaySE(SE_SHINY);
+        spawnAnimType = OWE_SPAWN_ANIM_SHINY;
+    }
+    else 
+    {
+        if (OWE_ShouldSpawnWaterMons())
+            spawnAnimType = OWE_SPAWN_ANIM_WATER;
+        else if (gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
+            spawnAnimType = OWE_SPAWN_ANIM_CAVE;
+        else
+            spawnAnimType = OWE_SPAWN_ANIM_GRASS;
+    }
+    // Instantly play a small animation to ground the spawning a bit
+    MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
 static u8 GetMaxOverworldEncounterSpawns(void)
