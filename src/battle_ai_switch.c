@@ -1993,7 +1993,6 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
     u32 playerMove;
     u16 *playerMoves = GetMovesArray(opposingBattler);
     s32 damageTaken = 0, maxDamageTaken = 0;
-    uq4_12_t effectiveness;
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -2022,7 +2021,6 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
     u32 playerMove;
     u16 *playerMoves = GetMovesArray(opposingBattler);
     s32 damageTaken = 0, maxDamageTaken = 0;
-    uq4_12_t effectiveness = UQ_4_12(1.0);
 
     for (i = 0; i < MAX_MON_MOVES; i++)
     {
@@ -2203,7 +2201,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
 
             aiMove = gBattleMons[battler].moves[j];
             damageDealt = AI_GetDamage(battler, opposingBattler, j, AI_ATTACKING, gAiLogicData);
-            hitsToKOPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
+            hitsToKOPlayer = GetNoOfHitsToKOBattler(battler, opposingBattler, j, AI_ATTACKING, CONSIDER_ENDURE);
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
             isSwitchinFirst = AI_IsFaster(battler, opposingBattler, aiMove, bestPlayerMove, CONSIDER_PRIORITY);
@@ -2554,7 +2552,6 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
         s32 bestDamage = 0;
         for (u32 j = 0; j < MAX_MON_MOVES; j++)
         {
-            uq4_12_t effectiveness = UQ_4_12(0);
             u16 aiMove = gBattleMons[battler].moves[j];
             if (aiMove == MOVE_NONE || gBattleMons[battler].pp[j] == 0)
                 continue;
