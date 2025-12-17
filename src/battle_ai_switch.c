@@ -41,23 +41,23 @@ static u32 GetSwitchinHitsToKO(s32 damageTaken, u32 battler, const struct Incomi
 static void GetIncomingHealInfo(u32 battler, struct IncomingHealInfo *healInfo);
 static u32 GetWishHealAmountForBattler(u32 battler);
 
-static void InitializeSwitchinCandidate(u32 battler, struct Pokemon *mon)
+static void InitializeSwitchinCandidate(u32 switchinBattler, struct Pokemon *mon)
 {
-    PokemonToBattleMon(mon, &gBattleMons[battler]);
+    PokemonToBattleMon(mon, &gBattleMons[switchinBattler]);
     // Setup switchin battler data
-    gAiThinkingStruct->saved[battler].saved = TRUE;
-    SetBattlerAiData(battler, gAiLogicData);
-    SetBattlerFieldStatusForSwitchin(battler);
-    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
+    SetBattlerAiData(switchinBattler, gAiLogicData);
+    SetBattlerFieldStatusForSwitchin(switchinBattler);
+    for (u32 battler = 0; battler < gBattlersCount; battler++)
     {
-        if (battler == battlerIndex || !IsBattlerAlive(battlerIndex))
+        if (switchinBattler == battler || !IsBattlerAlive(battler))
             continue;
 
-        CalcBattlerAiMovesData(gAiLogicData, battler, battlerIndex, AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
-        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, battler, AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
+        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
+        CalcBattlerAiMovesData(gAiLogicData, battler, switchinBattler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
     }
     
-    gAiThinkingStruct->saved[battler].saved = FALSE;
+    gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
 }
 
 static u32 GetWishHealAmountForBattler(u32 battler)
