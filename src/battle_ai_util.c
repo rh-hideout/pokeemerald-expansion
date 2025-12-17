@@ -5214,9 +5214,9 @@ bool32 IsConsideringZMove(u32 battlerAtk, u32 battlerDef, u32 move)
 //TODO - this could use some more sophisticated logic
 bool32 ShouldUseZMove(u32 battlerAtk, u32 battlerDef, u32 chosenMove)
 {
-
     // simple logic. just upgrades chosen move to z move if possible, unless regular move would kill opponent
-    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && AI_GetBattlerMoveTargetType(battlerAtk, chosenMove) != TARGET_ALLY)
+    enum MoveTarget target = AI_GetBattlerMoveTargetType(battlerAtk, chosenMove);
+    if ((IsDoubleBattle()) && battlerDef == BATTLE_PARTNER(battlerAtk) && target != TARGET_ALLY && target != TARGET_USER_OR_ALLY)
         return FALSE;   // don't use z move on partner
     if (HasTrainerUsedGimmick(battlerAtk, GIMMICK_Z_MOVE))
         return FALSE;   // can't use z move twice
@@ -6359,12 +6359,12 @@ void GetAIPartyIndexes(u32 battler, s32 *firstId, s32 *lastId)
     }
 }
 
-bool32 ShouldInstructPartner(u32 battlerDef, u32 move)
+bool32 ShouldInstructPartner(u32 partner, u32 move)
 {
-    if (GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL)
+    if (GetMoveEffect(move) == EFFECT_MAX_HP_50_RECOIL && gAiLogicData->abilities[partner] != ABILITY_MAGIC_GUARD)
         return FALSE;
 
-    enum MoveTarget type = AI_GetBattlerMoveTargetType(battlerDef, move);
+    enum MoveTarget type = AI_GetBattlerMoveTargetType(partner, move);
     switch (type)
     {
     case TARGET_SELECTED:
