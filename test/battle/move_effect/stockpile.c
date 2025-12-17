@@ -49,8 +49,10 @@ SINGLE_BATTLE_TEST("Stockpile's def and spDef stat increases aren't incremented 
         EXPECT_EQ(player->statStages[STAT_DEF], DEFAULT_STAT_STAGE + 2);
         EXPECT_EQ(player->statStages[STAT_SPDEF], DEFAULT_STAT_STAGE + 2);
 
-        EXPECT_EQ(gDisableStructs[0].stockpileDef, 1);
-        EXPECT_EQ(gDisableStructs[0].stockpileSpDef, 1);
+        u32 stockpileDef = gBattleMons[0].volatiles.stockpileDef;
+        u32 stockpileSpDef = gBattleMons[0].volatiles.stockpileSpDef;
+        EXPECT_EQ(stockpileDef, 1);
+        EXPECT_EQ(stockpileSpDef, 1);
     }
 }
 

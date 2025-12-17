@@ -108,7 +108,7 @@ enum MoveSuccessOrder
     CANCELER_POWER_POINTS,
     CANCELER_OBEDIENCE,
     CANCELER_TRUANT,
-    CANCELER_FOCUS,
+    CANCELER_FOCUS_GEN5,
     CANCELER_FLINCH,
     CANCELER_DISABLED,
     CANCELER_VOLATILE_BLOCKED, // Gravity / Heal Block / Throat Chop
@@ -126,6 +126,7 @@ enum MoveSuccessOrder
     CANCELER_ATTACKSTRING,
     CANCELER_PPDEDUCTION,
     CANCELER_WEATHER_PRIMAL,
+    CANCELER_FOCUS_PRE_GEN5,
     CANCELER_MOVE_FAILURE,
     CANCELER_POWDER_STATUS,
     CANCELER_PRIORITY_BLOCK,
@@ -433,7 +434,7 @@ void UpdateStallMons(void);
 bool32 TrySwitchInEjectPack(enum EjectPackTiming timing);
 bool32 TryEmergencyExit(void);
 bool32 EmergencyExitCanBeTriggered(u32 battler);
-u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
+ARM_FUNC u32 GetBattlerVolatile(u32 battler, enum Volatile _volatile);
 void SetMonVolatile(u32 battler, enum Volatile _volatile, u32 newValue);
 bool32 ItemHealMonVolatile(u32 battler, u16 itemId);
 void PushHazardTypeToQueue(u32 side, enum Hazards hazardType);
@@ -457,5 +458,7 @@ bool32 IsAnyTargetTurnDamaged(u32 battlerAtk);
 bool32 IsMimikyuDisguised(u32 battler);
 void SetStartingStatus(enum StartingStatus status);
 void ResetStartingStatuses(void);
+bool32 IsUsableWhileAsleepEffect(enum BattleMoveEffects effect);
+void SetWrapTurns(u32 battler, enum HoldEffect holdEffect);
 
 #endif // GUARD_BATTLE_UTIL_H

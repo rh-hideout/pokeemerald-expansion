@@ -50,7 +50,7 @@
 // Used to exclude moves learned temporarily by Transform or Mimic
 #define MOVE_IS_PERMANENT(battler, moveSlot)                        \
    (!(gBattleMons[battler].volatiles.transformed)           \
- && !(gDisableStructs[battler].mimickedMoves & (1u << moveSlot)))
+ && !(gBattleMons[battler].volatiles.mimickedMoves & (1u << moveSlot)))
 
 // Battle Actions
 // These determine what each battler will do in a turn
@@ -75,69 +75,6 @@
 #define B_ACTION_NONE                   0xFF
 
 #define BATTLE_BUFFER_LINK_SIZE 0x1000
-
-// Cleared each time a mon leaves the field, either by switching out or fainting
-struct DisableStruct
-{
-    u32 transformedMonPersonality;
-    bool8 transformedMonShininess;
-    u16 disabledMove;
-    u16 encoredMove;
-    u8 protectUses:4;
-    u8 stockpileCounter:4;
-    s8 stockpileDef;
-    s8 stockpileSpDef;
-    u8 substituteHP;
-    u8 encoredMovePos;
-    u16 disableTimer;
-    u16 encoreTimer;
-    u16 perishSongTimer;
-    u8 rolloutTimer;
-    u16 tauntTimer;
-    u8 furyCutterCounter;
-    u8 metronomeItemCounter;
-    u8 battlerPreventingEscape;
-    u8 battlerWithSureHit;
-    u8 isFirstTurn;
-    u8 mimickedMoves:4;
-    u8 rechargeTimer:4;
-    u8 autotomizeCount;
-    u16 slowStartTimer;
-    u16 embargoTimer;
-    u16 magnetRiseTimer;
-    u16 telekinesisTimer;
-    u16 healBlockTimer;
-    u16 laserFocusTimer;
-    u16 throatChopTimer;
-    u8 wrapTurns;
-    u16 syrupBombTimer;
-    u16 tormentTimer; // used for G-Max Meltdown
-    u8 usedMoves:4; // For Last Resort
-    u8 truantCounter:1;
-    u8 truantSwitchInHack:1;
-    u8 tarShot:1;
-    u8 octolock:1;
-    u8 cudChew:1;
-    u8 weatherAbilityDone:1;
-    u8 terrainAbilityDone:1;
-    u8 syrupBombIsShiny:1;
-    u8 usedProteanLibero:1;
-    u8 flashFireBoosted:1;
-    u8 boosterEnergyActivated:1;
-    u8 padding1:1;
-    u16 overwrittenAbility;   // abilities overwritten during battle (keep separate from battle history in case of switching)
-    u8 roostActive:1;
-    u8 unburdenActive:1;
-    u8 neutralizingGas:1;
-    u8 iceFaceActivationPrevention:1; // fixes hit escape move edge case
-    u8 unnerveActivated:1; // Unnerve and As One (Unnerve part) activate only once per switch in
-    u8 endured:1;
-    u8 tryEjectPack:1;
-    u8 octolockedBy:3;
-    u8 paradoxBoostedStat:4;
-    u8 unableToUseMove:1; // for end of turn checks only, for individual actions use the BattleStruct member
-    u8 padding:1;
-};
 
 // Fully Cleared each turn after end turn effects are done. A few things are cleared before end turn effects
 struct ProtectStruct
@@ -165,7 +102,7 @@ struct ProtectStruct
     u32 assuranceDoubled:1;
     u32 forcedSwitch:1;
     u32 myceliumMight:1;
-    u32 padding1:1;
+    u32 survivedOHKO:1; // Used to keep track of effects that allow focus punch when surviving moves like Fissure
     // End of 32-bit bitfield
     u16 helpingHand:3;
     u16 revengeDoubled:4;
@@ -278,12 +215,6 @@ struct AiPartyData // Opposing battlers - party mons.
     u8 count[NUM_BATTLE_SIDES];
 };
 
-struct SwitchinCandidate
-{
-    struct BattlePokemon battleMon;
-    bool8 hypotheticalStatus;
-};
-
 struct SimulatedDamage
 {
     u16 minimum;
@@ -308,7 +239,6 @@ struct AiLogicData
     u8 moveLimitations[MAX_BATTLERS_COUNT];
     u8 monToSwitchInId[MAX_BATTLERS_COUNT]; // ID of the mon to switch in.
     u8 mostSuitableMonId[MAX_BATTLERS_COUNT]; // Stores result of GetMostSuitableMonToSwitchInto, which decides which generic mon the AI would switch into if they decide to switch. This can be overruled by specific mons found in ShouldSwitch; the final resulting mon is stored in AI_monToSwitchIntoId.
-    struct SwitchinCandidate switchinCandidate; // Struct used for deciding which mon to switch to in battle_ai_switch_items.c
     u16 predictedMove[MAX_BATTLERS_COUNT];
     u8 resistBerryAffected[MAX_BATTLERS_COUNT][MAX_BATTLERS_COUNT][MAX_MON_MOVES]; // Tracks whether currently calc'd move is affected by a resist berry into given target
 
@@ -592,7 +522,8 @@ struct BattlerState
     // End of Word
     u16 hpOnSwitchout;
     u16 switchIn:1;
-    u16 padding:15;
+    u16 isFirstTurn:2;
+    u16 padding:13;
 };
 
 struct PartyState
@@ -1085,7 +1016,6 @@ extern u32 gHitMarker;
 extern u8 gBideTarget[MAX_BATTLERS_COUNT];
 extern u32 gSideStatuses[NUM_BATTLE_SIDES];
 extern struct SideTimer gSideTimers[NUM_BATTLE_SIDES];
-extern struct DisableStruct gDisableStructs[MAX_BATTLERS_COUNT];
 extern u16 gPauseCounterBattle;
 extern u16 gPaydayMoney;
 extern u8 gBattleCommunication[BATTLE_COMMUNICATION_ENTRIES_COUNT];
