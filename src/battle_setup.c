@@ -1963,14 +1963,11 @@ void ShouldTryGetTrainerScript(void)
 
 u16 CountMaxPossibleRematch(u16 trainerId)
 {
-    s32 i;
-
-    for (i = 1; i < REMATCHES_COUNT; i++)
+    for (u32 i = 1; i < REMATCHES_COUNT; i++)
     {
         if (gRematchTable[trainerId].trainerIds[i] == 0)
-            break;
+            return i;
     }
-    return i;
 }
 
 u16 CountBattledRematchTeams(u16 trainerId)
