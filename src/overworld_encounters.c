@@ -102,6 +102,12 @@ void UpdateOverworldEncounters(void)
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
+        if (speciesId == SPECIES_NONE)
+        {
+            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
+            return;
+        }
+
         // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
         // Add this and tiles to seperate graphics check function
         if (numFreePalSlots == 1)
@@ -146,13 +152,6 @@ void UpdateOverworldEncounters(void)
 
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
-
-        // Play spawn animation.
-        if (speciesId == SPECIES_NONE)
-        {
-            sOWESpawnCountdown = OWE_SPAWN_TIME_MINIMUM;
-            return;
-        }
 
         OWE_DoSpawnAnim(&gObjectEvents[objectEventId]);
     }
