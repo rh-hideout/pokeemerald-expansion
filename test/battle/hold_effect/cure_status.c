@@ -293,3 +293,29 @@ DOUBLE_BATTLE_TEST("Lum Berry correctly cures all battlers if multiple fainted t
         EXPECT_EQ(opponentLeft->status1, STATUS1_NONE);
     }
 }
+
+SINGLE_BATTLE_TEST("Lum Berry properly cures a battler affected by a non-volatiles status and confusion")
+{
+    u32 status;
+    PARAMETRIZE { status = STATUS1_BURN;}
+    PARAMETRIZE { status = STATUS1_FREEZE;}
+    PARAMETRIZE { status = STATUS1_PARALYSIS;}
+    PARAMETRIZE { status = STATUS1_POISON;}
+    PARAMETRIZE { status = STATUS1_TOXIC_POISON;}
+    PARAMETRIZE { status = STATUS1_SLEEP;}
+
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_CONFUSE_RAY) == EFFECT_CONFUSE);
+        PLAYER(SPECIES_WOBBUFFET) { Status1(status); Speed(1);};
+        OPPONENT(SPECIES_WOBBUFFET) { Item(ITEM_LUM_BERRY); Speed(2);};
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_CONFUSE_RAY); MOVE(player, MOVE_CELEBRATE, WITH_RNG(RNG_FROZEN, 0));}
+        TURN { MOVE(opponent, MOVE_SWITCHEROO);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Wobbuffet's Lum Berry normalized its status!");
+    } THEN {
+        EXPECT_EQ(player->status1, STATUS1_NONE);
+        EXPECT(player->volatiles.confusionTurns == 0);
+    }
+}

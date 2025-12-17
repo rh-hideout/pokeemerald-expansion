@@ -6,7 +6,11 @@ ASSUMPTIONS
     ASSUME(GetMoveEffect(MOVE_GRAVITY) == EFFECT_GRAVITY);
 }
 
-DOUBLE_BATTLE_TEST("Gravity cancels fly and sky drop if they are in the air")
+TO_DO_BATTLE_TEST("Gravity causes certain moves to fail") // Fly, Jump Kick, High Jump Kick, Splash, Bounce, Magnet Rise, Telekinesis, Sky Drop, Flying Press, Floaty Fall
+TO_DO_BATTLE_TEST("Gravity increases accuracy of all moves by 5/3 (~1.67)")
+TO_DO_BATTLE_TEST("Gravity causes all battlers to become grounded")
+
+DOUBLE_BATTLE_TEST("Gravity cancels Fly and Sky Drop if they are in the air")
 {
     u8 visibility;
     GIVEN {
@@ -55,13 +59,13 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_NONE; }
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_AIR_BALLOON; }
     PARAMETRIZE { move = MOVE_HEADBUTT; friendItem = ITEM_NONE; foeItem = ITEM_AIR_BALLOON; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; 
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
                   move = MOVE_THUNDER; friendItem = ITEM_NONE; foeItem = ITEM_NONE; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; 
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
                   move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_NONE; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; 
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
                   move = MOVE_HEADBUTT; friendItem = ITEM_AIR_BALLOON; foeItem = ITEM_AIR_BALLOON; }
-    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION; 
+    PARAMETRIZE { aiFlags |= AI_FLAG_OMNISCIENT | AI_FLAG_SMART_SWITCHING | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_PP_STALL_PREVENTION;
                   move = MOVE_HEADBUTT; friendItem = ITEM_NONE; foeItem = ITEM_AIR_BALLOON; }
 
     GIVEN {
@@ -77,4 +81,3 @@ AI_DOUBLE_BATTLE_TEST("AI uses Gravity")
         TURN { NOT_EXPECT_MOVE(opponentLeft, MOVE_GRAVITY); }
     }
 }
-

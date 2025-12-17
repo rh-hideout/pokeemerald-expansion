@@ -39,7 +39,7 @@ SINGLE_BATTLE_TEST("Tailwind applies for 4 turns")
 DOUBLE_BATTLE_TEST("Tailwind doesn't affect the partner on the same turn it's used (Gen4-7)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_7);
+        WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_7);
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WYNAUT) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }
@@ -57,7 +57,7 @@ DOUBLE_BATTLE_TEST("Tailwind doesn't affect the partner on the same turn it's us
 DOUBLE_BATTLE_TEST("Tailwind affects the partner on the same turn it's used (Gen8+)")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
+        WITH_CONFIG(CONFIG_RECALC_TURN_AFTER_ACTIONS, GEN_8);
         PLAYER(SPECIES_WOBBUFFET) { Speed(20); }
         PLAYER(SPECIES_WYNAUT) { Speed(10); }
         OPPONENT(SPECIES_WOBBUFFET) { Speed(15); }

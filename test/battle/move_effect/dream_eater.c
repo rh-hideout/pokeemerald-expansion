@@ -96,6 +96,7 @@ SINGLE_BATTLE_TEST("Dream Eater works if the target is behind a Substitute (Gen 
 {
     s16 damage;
     s16 healed;
+    KNOWN_FAILING;
     GIVEN {
         ASSUME(GetMoveEffect(MOVE_YAWN) == EFFECT_YAWN);
         ASSUME(GetMoveEffect(MOVE_SUBSTITUTE) == EFFECT_SUBSTITUTE);

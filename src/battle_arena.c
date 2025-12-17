@@ -105,8 +105,6 @@ static const struct SpriteTemplate sSpriteTemplate_JudgmentIcon =
     .paletteTag = TAG_NONE,
     .oam = &sOam_JudgmentIcon,
     .anims = sAnims_JudgmentIcon,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_JudgmentIcon,
 };
 
@@ -384,7 +382,7 @@ void BattleArena_AddSkillPoints(u8 battler)
 {
     s8 *skillPoints = gBattleStruct->arenaSkillPoints;
 
-    if (gHitMarker & HITMARKER_OBEYS)
+    if (!gBattleStruct->unableToUseMove)
     {
         if (gBattleStruct->battlerState[battler].alreadyStatusedMoveAttempt)
         {

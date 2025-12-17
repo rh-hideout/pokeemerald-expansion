@@ -38,7 +38,7 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Quark Drive after Electric Terr
 SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunlight ends")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ABILITY_WEATHER, GEN_6);
+        WITH_CONFIG(CONFIG_ABILITY_WEATHER, GEN_6);
         PLAYER(SPECIES_RAGING_BOLT) { Attack(100); Defense(100); Speed(100); SpAttack(110); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
         OPPONENT(SPECIES_TORKOAL) { Speed(100); Ability(ABILITY_DROUGHT); };
     } WHEN {
@@ -62,6 +62,29 @@ SINGLE_BATTLE_TEST("Booster Energy will activate Protosynthesis after harsh sunl
         ABILITY_POPUP(player, ABILITY_PROTOSYNTHESIS);
         MESSAGE("Raging Bolt used its Booster Energy to activate Protosynthesis!");
         MESSAGE("Raging Bolt's Sp. Atk was heightened!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Booster Energy's Protosynthesis boost is preserved when weather changes")
+{
+    GIVEN {
+        PLAYER(SPECIES_RAGING_BOLT) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_PROTOSYNTHESIS); Item(ITEM_BOOSTER_ENERGY); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_SUNNY_DAY, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_SUNNY_DAY); }
+        TURN { }
+        TURN { }
+        TURN { }
+        TURN { }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Raging Bolt used its Booster Energy to activate Protosynthesis!");
+        MESSAGE("Raging Bolt's Attack was heightened!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SUNNY_DAY, opponent);
+        MESSAGE("The sunlight faded.");
+    } THEN {
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 
@@ -128,6 +151,29 @@ SINGLE_BATTLE_TEST("Booster Energy activates Quark Drive and increases highest s
             MESSAGE("Iron Moth's Sp. Def was heightened!");
     } THEN {
         EXPECT(player->item == ITEM_NONE);
+    }
+}
+
+SINGLE_BATTLE_TEST("Booster Energy's Quark Drive boost is preserved when terrain changes")
+{
+    GIVEN {
+        PLAYER(SPECIES_IRON_MOTH) { Attack(110); Defense(100); Speed(100); SpAttack(100); SpDefense(100); Ability(ABILITY_QUARK_DRIVE); Item(ITEM_BOOSTER_ENERGY); Moves(MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Speed(50); Moves(MOVE_GRASSY_TERRAIN, MOVE_CELEBRATE); }
+    } WHEN {
+        TURN { MOVE(opponent, MOVE_GRASSY_TERRAIN); }
+        TURN { }
+        TURN { }
+        TURN { }
+        TURN { }
+        TURN { }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, player);
+        MESSAGE("Iron Moth used its Booster Energy to activate Quark Drive!");
+        MESSAGE("Iron Moth's Attack was heightened!");
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_GRASSY_TERRAIN, opponent);
+        MESSAGE("The grass disappeared from the battlefield.");
+    } THEN {
+        EXPECT(gBattleMons[B_POSITION_PLAYER_LEFT].volatiles.paradoxBoostedStat == STAT_ATK);
     }
 }
 
