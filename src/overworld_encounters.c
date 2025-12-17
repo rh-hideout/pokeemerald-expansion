@@ -446,18 +446,20 @@ static void SortOWEMonAges(void)
     }
 }
 
-void GeneratedOverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
+void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(objectEvent))
-        return;
-    
-    SortOWEMonAges();
+    if (IsGeneratedOverworldWildEncounter(objectEvent))
+        SortOWEMonAges();
+
+    if (IsSemiManualOverworldWildEncounter(objectEvent->graphicsId, objectEvent->trainerType)
+        || IsManualOverworldWildEncounter(objectEvent))
+        OWE_DoSpawnAnim(objectEvent);
 }
 
 void OverworldWildEncounter_OnObjectEventRemoved(struct ObjectEvent *objectEvent)
 {
-    if (!IsGeneratedOverworldWildEncounter(objectEvent))
-        return;
+    // Currently Unused
+    if (IsGeneratedOverworldWildEncounter(objectEvent)) {}
 }
 
 u32 GetOverworldEncounterObjectEventGraphicsId(s32 x, s32 y, u16 *speciesId, bool32 *isShiny, bool32 *isFemale, u32 *level)
