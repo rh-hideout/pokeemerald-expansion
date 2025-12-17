@@ -336,10 +336,6 @@ static const struct SpriteTemplate sNoDataIconTemplate =
     .tileTag = ICON_GFX_TAG,
     .paletteTag = ICON_PAL_TAG,
     .oam = &sNoDataIconOam,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sCaptureAllMonsSpriteTemplate =
@@ -347,10 +343,6 @@ static const struct SpriteTemplate sCaptureAllMonsSpriteTemplate =
     .tileTag = CAPTURED_ALL_TAG,
     .paletteTag = 0xFFFF,
     .oam = &sCapturedAllOam,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSelectionCursorSpriteTemplate =
@@ -359,9 +351,6 @@ static const struct SpriteTemplate sSelectionCursorSpriteTemplate =
     .paletteTag = 0xFFFF,
     .oam = &sSelectionCursorOam,
     .anims =  gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // search window sprite templates
@@ -370,10 +359,6 @@ static const struct SpriteTemplate sHeldItemTemplate =
     .tileTag = HELD_ITEM_TAG,
     .paletteTag = 0xFFFF,
     .oam = &sHeldItemOam,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sPotentialStarTemplate =
@@ -381,10 +366,6 @@ static const struct SpriteTemplate sPotentialStarTemplate =
     .tileTag = LIT_STAR_TILE_TAG,
     .paletteTag = 0xFFFF,   //held item pal
     .oam = &sHeldItemOam,
-    .anims = gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sSearchIconSpriteTemplate =
@@ -393,9 +374,6 @@ static const struct SpriteTemplate sSearchIconSpriteTemplate =
     .paletteTag = 0xFFFF,   //held item pal
     .oam = &sSearchIconOam,
     .anims =  gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sOwnedIconTemplate =
@@ -404,9 +382,6 @@ static const struct SpriteTemplate sOwnedIconTemplate =
     .paletteTag = 0xFFFF,   //held item pal
     .oam = &sHeldItemOam,
     .anims =  gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 static const struct SpriteTemplate sHiddenMonIconTemplate =
@@ -415,9 +390,6 @@ static const struct SpriteTemplate sHiddenMonIconTemplate =
     .paletteTag = 0xFFFF,   //held item pal
     .oam = &sHeldItemOam,
     .anims =  gDummySpriteAnimTable,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy,
 };
 
 // gui sprite sheets
@@ -932,8 +904,8 @@ static void DexNavUpdateDirectionArrow(void)
 {
     u16 tileX = sDexNavSearchDataPtr->tileX;
     u16 tileY = sDexNavSearchDataPtr->tileY;
-    u16 playerX = gSaveBlock1Ptr->pos.x + 7;
-    u16 playerY = gSaveBlock1Ptr->pos.y + 7;
+    u16 playerX = gSaveBlock1Ptr->pos.x + MAP_OFFSET;
+    u16 playerY = gSaveBlock1Ptr->pos.y + MAP_OFFSET;
     u16 deltaX = abs(tileX - playerX);
     u16 deltaY = abs(tileY - playerY);
     const u8 *str;

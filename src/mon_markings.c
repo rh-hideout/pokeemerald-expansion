@@ -466,8 +466,6 @@ static void CreateMonMarkingsMenuSprites(s16 x, s16 y, u16 baseTileTag, u16 base
         .paletteTag = basePaletteTag,
         .oam = &sOamData_MenuWindow,
         .anims = sAnims_MenuWindow,
-        .images = NULL,
-        .affineAnims = gDummySpriteAffineAnimTable,
         .callback = SpriteCB_Dummy,
     };
 

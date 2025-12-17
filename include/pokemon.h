@@ -5,7 +5,9 @@
 #include "sprite.h"
 #include "constants/battle.h"
 #include "constants/cries.h"
+#include "constants/egg_ids.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
 #include "constants/regions.h"
@@ -109,11 +111,6 @@ enum MonData {
     MON_DATA_KNOWN_MOVES,
     MON_DATA_RIBBON_COUNT,
     MON_DATA_RIBBONS,
-    MON_DATA_ATK2,
-    MON_DATA_DEF2,
-    MON_DATA_SPEED2,
-    MON_DATA_SPATK2,
-    MON_DATA_SPDEF2,
     MON_DATA_HYPER_TRAINED_HP,
     MON_DATA_HYPER_TRAINED_ATK,
     MON_DATA_HYPER_TRAINED_DEF,
@@ -332,26 +329,7 @@ struct Volatiles
     // u32 confusionTurns:3;
     // u32 flinched:1;
     // u32 uproarTurns:3;
-    // u32 torment:1;
-    // u32 bideTurns:2;
-    // u32 lockConfusionTurns:2;
-    // u32 multipleTurns:1;
-    // u32 wrapped:1;
-    // u32 powder:1;
-    // u32 padding:1;
-    // u32 infatuation:4; // one bit for each battler
-    // u32 defenseCurl:1;
-    // u32 transformed:1;
-    // u32 recharge:1;
-    // u32 rage:1;
-    // u32 substitute:1;
-    // u32 destinyBond:1;
-    // u32 escapePrevention:1;
-    // u32 nightmare:1;
-    // u32 cursed:1;
-    // u32 foresight:1;
-    // u32 dragonCheer:1;
-    // u32 focusEnergy:1;
+    // etc.
 };
 
 struct BattlePokemon
@@ -488,7 +466,8 @@ struct SpeciesInfo /*0xC4*/
     u8 pokemonJumpType:2; // According to the clerk, the Pokémon allowed in Pokémon Jump are all <= 28 inches/71 cm, and do not only swim, burrow, or fly.
     u8 enemyMonElevation; // This determines how much higher above the usual position the enemy Pokémon is during battle. Species that float or fly have nonzero values.
     // Flags
-    u32 isLegendary:1;
+    u32 isRestrictedLegendary:1;
+    u32 isSubLegendary:1;
     u32 isMythical:1;
     u32 isUltraBeast:1;
     u32 isParadox:1;
@@ -507,13 +486,13 @@ struct SpeciesInfo /*0xC4*/
     u32 dexForceRequired:1; // This species will be taken into account for Pokédex ratings even if they have the "isMythical" flag set.
     u32 tmIlliterate:1;     // This species will be unable to learn the universal moves.
     u32 isFrontierBanned:1; // This species is not allowed to participate in Battle Frontier facilities.
-    u32 padding4:11;
+    u32 padding4:10;
     // Shadow settings
     s8 enemyShadowXOffset; // This determines the X-offset for an enemy Pokémon's shadow during battle; negative values point left, positive values point right.
     s8 enemyShadowYOffset; // This determines the Y-offset for an enemy Pokémon's shadow during battle; negative values point up, positive values point down.
     u16 enemyShadowSize:3; // This determines the size of the shadow sprite used for an enemy Pokémon's front sprite during battle.
     u16 suppressEnemyShadow:1; // If set to true, then a shadow will not be drawn beneath an enemy Pokémon's front sprite during battle.
-    u16 padding5:12;
+    enum EggIds eggId:12;
     // Move Data
     const struct LevelUpMove *levelUpLearnset;
     const u16 *teachableLearnset;
@@ -535,6 +514,17 @@ struct SpeciesInfo /*0xC4*/
 #endif //P_GENDER_DIFFERENCES
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
+};
+
+struct EggData
+{
+    const u8 *eggIcon;
+    const u32 *eggSprite;
+    const u16 *eggPalette;
+    const u32 *eggHatchGfx;
+    const u16 *eggHatchPal;
+    const u32 *eggShardsGfx;
+    const u8 eggIconPalIndex;
 };
 
 struct AbilityInfo
@@ -829,6 +819,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);
@@ -847,6 +838,7 @@ u8 GetNumberOfEggMoves(struct Pokemon *mon);
 u8 GetNumberOfTMMoves(struct Pokemon *mon);
 u8 GetNumberOfTutorMoves(struct Pokemon *mon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
+u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);
 u16 GetBattleBGM(void);
@@ -855,7 +847,9 @@ void PlayMapChosenOrBattleBGM(u16 songId);
 void CreateTask_PlayMapChosenOrBattleBGM(u16 songId);
 const u16 *GetMonFrontSpritePal(struct Pokemon *mon);
 const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality);
+const u16 *GetMonSpritePalFromSpeciesAndPersonalityIsEgg(u16 species, bool32 isShiny, u32 personality, bool32 isEgg);
 const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale);
+const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 isFemale, bool32 isEgg);
 bool32 IsMoveHM(u16 move);
 bool32 CannotForgetMove(u16 move);
 bool8 IsMonSpriteNotFlipped(u16 species);

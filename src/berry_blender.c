@@ -576,8 +576,6 @@ static const struct SpriteTemplate sSpriteTemplate_PlayerArrow =
     .paletteTag = PALTAG_PLAYER_ARROW,
     .oam = &sOam_PlayerArrow,
     .anims = sAnims_PlayerArrow,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_PlayerArrow
 };
 
@@ -645,8 +643,6 @@ static const struct SpriteTemplate sSpriteTemplate_ScoreSymbols =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_ScoreSymbols,
     .anims = sAnims_ScoreSymbols,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_ScoreSymbol
 };
 
@@ -732,9 +728,6 @@ static const struct SpriteTemplate sSpriteTemplate_Particles =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_Particles,
     .anims = sAnims_Particles,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
-    .callback = SpriteCallbackDummy
 };
 
 static const struct OamData sOam_CountdownNumbers =
@@ -790,8 +783,6 @@ static const struct SpriteTemplate sSpriteTemplate_CountdownNumbers =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_CountdownNumbers,
     .anims = sAnims_CountdownNumbers,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_CountdownNumber
 };
 
@@ -834,8 +825,6 @@ static const struct SpriteTemplate sSpriteTemplate_Start =
     .paletteTag = PALTAG_MISC,
     .oam = &sOam_Start,
     .anims = sAnims_Start,
-    .images = NULL,
-    .affineAnims = gDummySpriteAffineAnimTable,
     .callback = SpriteCB_Start
 };
 
