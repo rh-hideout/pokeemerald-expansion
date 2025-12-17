@@ -152,8 +152,6 @@ void UpdateOverworldEncounters(void)
 
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
-
-        OWE_DoSpawnAnim(&gObjectEvents[objectEventId]);
     }
 }
 
@@ -451,8 +449,7 @@ void OverworldWildEncounter_OnObjectEventSpawned(struct ObjectEvent *objectEvent
     if (IsGeneratedOverworldWildEncounter(objectEvent))
         SortOWEMonAges();
 
-    if (IsSemiManualOverworldWildEncounter(objectEvent->graphicsId, objectEvent->trainerType)
-        || IsManualOverworldWildEncounter(objectEvent))
+    if (IsOverworldWildEncounter(objectEvent))
         OWE_DoSpawnAnim(objectEvent);
 }
 
