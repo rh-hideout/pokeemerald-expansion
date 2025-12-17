@@ -164,6 +164,8 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
     u32 speciesId = OW_SPECIES(objectEvent);
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
     u32 pan = (Random() % 88) + 212;
+    // Calculate location of mon to set pan value?
+    // Or at least calculate if object is left or right and randomise that range?
     u32 volume = (Random() % 30) + 50;
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
     if (isShiny)
