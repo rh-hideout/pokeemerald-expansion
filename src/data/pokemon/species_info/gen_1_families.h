@@ -3798,7 +3798,7 @@ const struct SpeciesInfo gSpeciesInfoGen1[] =
     {
         .baseHP        = 45,
         .baseAttack    = 80,
-        .baseDefense   = PIKACHU_SP_DEF + 10,
+        .baseDefense   = PIKACHU_DEFENSE + 10,
         .baseSpeed     = 120,
         .baseSpAttack  = 75,
         .baseSpDefense = PIKACHU_SP_DEF + 10,
