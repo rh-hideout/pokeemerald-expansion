@@ -1985,8 +1985,6 @@ u16 CountMaxPossibleRematch(u16 trainerId)
 
 u16 CountBattledRematchTeams(u16 trainerId)
 {
-    s32 i;
-
     if (HasTrainerBeenFought(gRematchTable[trainerId].trainerIds[0]) != TRUE)
         return 0;
 

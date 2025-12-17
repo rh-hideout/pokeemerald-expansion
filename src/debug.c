@@ -80,7 +80,7 @@
 #include "save.h"
 #include "vs_seeker.h"
 #include "load_save.h"
-#include "battle_tower.h"
+#include "battle_partner.h"
 
 enum FollowerNPCCreateDebugMenu
 {
@@ -1816,61 +1816,34 @@ static void Debug_Trainers_ResetTrainersData(void)
     sDebugMenuListData->data[5] = FALSE;
 }
 
-static void ParseObjectEventScript_TrainerBattle(const u8 *script)
-{
-    u32 scrOffset = 0;
-    u16 trainerFlag;
-
-    scrOffset += 3;
-    trainerFlag = script[scrOffset];
-    trainerFlag |= script[scrOffset + 1] << 8;
-    sDebugMenuListData->data[0] = trainerFlag;
-    scrOffset += 15;
-    trainerFlag = script[scrOffset];
-    trainerFlag |= script[scrOffset + 1] << 8;
-    sDebugMenuListData->data[2] = trainerFlag;
-}
+void SetMultiTrainerBattle(struct ScriptContext *ctx);
 
 static void ParseObjectEventScript(const u8 *script)
 {
-    u16 trainerFlag;
-
-    switch (script[0])
+    struct ScriptContext *ctx = AllocZeroed(sizeof(struct ScriptContext));
+    if (script[0] == SCR_OP_TRAINERBATTLE)
     {
-        case SCR_OP_TRAINERBATTLE:
-            ParseObjectEventScript_TrainerBattle(script);
-            break;
-        case SCR_OP_CALLNATIVE:
-        {
-            u32 callnativeFunc = (((((script[4] << 8) + script[3]) << 8) + script[2]) << 8) + script[1];
-            if (callnativeFunc == ((u32)NativeVsSeekerRematchId | 0xA000000)) // | 0xA000000 corresponds to the request_effects=1 version of the function
-            {
-                script += 5;
-                trainerFlag = script[0];
-                trainerFlag |= script[1] << 8;
-                sDebugMenuListData->data[0] = trainerFlag;
-            }
-            break;
-        }
-        case SCR_OP_SPECIAL:
-        {
-            typedef u16 (*SpecialFunc)(void);
-            extern const SpecialFunc gSpecials[];
-            SpecialFunc specialFunc = gSpecials[(script[2] << 8) + script[1]];
-            if ((u32)specialFunc == ((u32)SavePlayerParty) && script[3] == SCR_OP_TRAINERBATTLE)
-                ParseObjectEventScript_TrainerBattle(script + 3);
-
-            u32 scrOffset = sizeof(struct _TrainerBattleParameter) + 4;
-            if (script[scrOffset] == SCR_OP_SETVAR)
-            {
-                scrOffset += 3;
-                trainerFlag = script[scrOffset];
-                trainerFlag |= script[scrOffset + 1] << 8;
-                sDebugMenuListData->data[4] = trainerFlag;
-            }
-        }
-        break;
+        TrainerBattleLoadArgs(script + 1);
     }
+    else if (Script_MatchesCallNative(script, NativeVsSeekerRematchId, TRUE))
+    {
+        ctx->scriptPtr = script + 5;
+        sDebugMenuListData->data[0] = ScriptPeekHalfword(ctx);
+    }
+    else if (Script_MatchesSpecial(script, SavePlayerParty) && Script_MatchesCallNative(script + 3, SetMultiTrainerBattle, FALSE))
+    {
+        ctx->scriptPtr = script + 8;
+        SetMultiTrainerBattle(ctx);
+    }
+    Free(ctx);
+    if (!TRAINER_BATTLE_PARAM.opponentA && !TRAINER_BATTLE_PARAM.opponentB)
+        return;
+    sDebugMenuListData->data[0] = TRAINER_BATTLE_PARAM.opponentA;
+    sDebugMenuListData->data[2] = TRAINER_BATTLE_PARAM.opponentB;
+    if (gPartnerTrainerId)
+        sDebugMenuListData->data[4] = gPartnerTrainerId - MAX_TRAINERS_COUNT;
+    InitTrainerBattleParameter();
+    gPartnerTrainerId = 0;
 }
 
 static void Debug_Display_LocalTrainer(u32 localId, u32 digit, u8 windowId)
