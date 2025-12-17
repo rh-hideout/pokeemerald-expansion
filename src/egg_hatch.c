@@ -534,9 +534,9 @@ static void CB2_LoadEggHatch(void)
     case 3:
     {
         u32 species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
-        if (gSpeciesInfo[species].eggHatchGfx != NULL)
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
         {
-            u32 *tempSprite = malloc_and_decompress(gSpeciesInfo[species].eggHatchGfx, NULL);
+            u32 *tempSprite = malloc_and_decompress(gEggDatas[gSpeciesInfo[species].eggId].eggHatchGfx, NULL);
             struct SpriteSheet tempSheet;
             tempSheet.data = tempSprite;
             tempSheet.size = 2048;
@@ -545,12 +545,12 @@ static void CB2_LoadEggHatch(void)
             Free(tempSprite);
 
             struct SpritePalette tempPal;
-            tempPal.data = gSpeciesInfo[species].eggHatchPal;
+            tempPal.data = gEggDatas[gSpeciesInfo[species].eggId].eggHatchPal;
             tempPal.tag = PALTAG_EGG;
             LoadSpritePalette(&tempPal);
-            if (gSpeciesInfo[species].eggShardsGfx != NULL)
+            if (gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx != NULL)
             {
-                tempSheet.data = gSpeciesInfo[species].eggShardsGfx;
+                tempSheet.data = gEggDatas[gSpeciesInfo[species].eggId].eggShardsGfx;
                 tempSheet.size = 128;
                 tempSheet.tag = GFXTAG_EGG_SHARD;
                 LoadSpriteSheet(&tempSheet);

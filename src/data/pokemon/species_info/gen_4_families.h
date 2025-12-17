@@ -7176,12 +7176,7 @@ const struct SpeciesInfo gSpeciesInfoGen4[] =
         .perfectIVCount = LEGENDARY_PERFECT_IV_COUNT,
         .levelUpLearnset = sManaphyLevelUpLearnset,
         .teachableLearnset = sManaphyTeachableLearnset,
-        .eggIcon = gMonEggIcon_Manaphy,
-        .eggIconPalIndex = 2,
-        .eggSprite = gMonEggGfx_Manaphy,
-        .eggPalette = gMonEggPal_Manaphy,
-        .eggHatchGfx = gMonHatchGfx_Manaphy,
-        .eggHatchPal = gMonHatchPal_Manaphy,
+        .eggId = EGG_ID_MANAPHY,
     },
 #endif //P_FAMILY_MANAPHY
 

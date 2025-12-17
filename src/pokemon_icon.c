@@ -155,10 +155,10 @@ u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16
 
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggIcon != NULL)
-            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[species].eggIconPalIndex;
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gEggDatas[gSpeciesInfo[species].eggId].eggIconPalIndex;
         else
-            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[SPECIES_EGG].eggIconPalIndex;
+            iconTemplate.paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[SPECIES_EGG].iconPalIndex;
     }
     else if (species > NUM_SPECIES)
     {
@@ -322,8 +322,8 @@ const u8 *GetMonIconTilesIsEgg(u16 species, u32 personality, bool32 isEgg)
 
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggIcon != NULL)
-            iconSprite = gSpeciesInfo[species].eggIcon;
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+            iconSprite = gEggDatas[gSpeciesInfo[species].eggId].eggIcon;
         else
             iconSprite = gSpeciesInfo[SPECIES_EGG].iconSprite;
     }

@@ -5182,8 +5182,8 @@ static struct Sprite *CreateMonIconSprite(u16 species, u32 personality, s16 x, s
     species = GetIconSpecies(species, personality);
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggIcon != NULL)
-            template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[species].eggIconPalIndex;
+        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
+            template.paletteTag = PALTAG_MON_ICON_0 + gEggDatas[gSpeciesInfo[species].eggId].eggIconPalIndex;
         else
             template.paletteTag = PALTAG_MON_ICON_0 + gSpeciesInfo[SPECIES_EGG].iconPalIndex;
     }
