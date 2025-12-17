@@ -55,7 +55,7 @@
                                                   // Compressed gfx are incompatible with non-power-of-two sprite sizes:
                                                   // (You should not use 48x48 sprites/tables for compressed gfx)
                                                   // 16x32, 32x32, 64x64 etc are fine
-#define OW_MON_WANDER_WALK             TRUE       // If true, OW pokemon with MOVEMENT_TYPE_WANDER will walk-in-place in between steps.
+#define OW_MON_WANDER_WALK             TRUE       // If true, OW Pokémon with MOVEMENT_TYPE_WANDER will walk-in-place in between steps.
 // Follower Pokémon
 #define OW_FOLLOWERS_ENABLED           FALSE      // Enables follower Pokémon, HGSS style. Requires OW_POKEMON_OBJECT_EVENTS. Note that additional scripting may be required for them to be fully supported!
 #define OW_FOLLOWERS_BOBBING           TRUE       // If TRUE, follower Pokémon will bob up and down during their idle & walking animations
@@ -71,6 +71,14 @@
 #define OW_FOLLOWERS_ALLOWED_SPECIES (0)
 #define OW_FOLLOWERS_ALLOWED_MET_LVL (0)
 #define OW_FOLLOWERS_ALLOWED_MET_LOC (0)
+
+// Overworld Encounters
+#define OW_WILD_ENCOUNTERS_RANDOM               TRUE    // If TRUE, Pokémon can randomly spawn on tiles that can trigger wild encounters, as in vanilla.
+#define OW_WILD_ENCOUNTERS_OVERWORLD            FALSE   // If TRUE, OW Pokémon can spawn as overworld wild encounters on the current map. Requires OW_POKEMON_OBJECT_EVENTS.
+#define OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT  TRUE    // If TRUE, OW Pokémon spawned as overworld wild encounters will only use restricted movement types (MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER/MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER/MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER).
+#define OW_WILD_ENCOUNTERS_SPAWN_REPLACEMENT    FALSE   // If TRUE, the oldest OW wild encounter objects will despawn after a short time and be replaced with a new spawn if possible.
+#define OW_ENCOUNTER_MOVEMENT_RANGE_X           8       // The horizontal movement range for OW encounter Pokémon.
+#define OW_ENCOUNTER_MOVEMENT_RANGE_Y           8       // The vertical movement range for OW encounter Pokémon.
 
 // Out-of-battle Ability effects
 #define OW_SYNCHRONIZE_NATURE       GEN_LATEST // In Gen8+, if a Pokémon with Synchronize leads the party, wild Pokémon will always have their same Nature as opposed to the 50% chance in previous games. Gift Pokémon excluded.

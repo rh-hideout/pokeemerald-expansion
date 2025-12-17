@@ -45,6 +45,7 @@
 #include "money.h"
 #include "new_game.h"
 #include "oras_dowse.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 #include "play_time.h"
 #include "random.h"
@@ -948,6 +949,7 @@ static void LoadMapFromWarp(bool32 a1)
         UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
         InitSecretBaseAppearance(TRUE);
     }
+    ClearOverworldEncounterData();
 }
 
 void ResetInitialPlayerAvatarState(void)
@@ -1718,6 +1720,7 @@ static void OverworldBasic(void)
            ApplyWeatherColorMapIfIdle(gWeatherPtr->colorMapIndex);
         }
     }
+    UpdateOverworldEncounters();
 }
 
 // This CB2 is used when starting

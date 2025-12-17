@@ -1,6 +1,7 @@
 #include "global.h"
 #include "sprite.h"
 #include "main.h"
+#include "overworld_encounters.h"
 #include "palette.h"
 
 #define MAX_SPRITE_COPY_REQUESTS 64
@@ -1592,6 +1593,7 @@ u32 LoadSpritePalette(const struct SpritePalette *palette)
     if (index != 0xFF)
         return index;
 
+    DespawnOldestOWE_Pal();
     index = IndexOfSpritePaletteTag(TAG_NONE);
 
     if (index == 0xFF)
@@ -1797,4 +1799,15 @@ static const u8 sSpanPerImage[4][4] =
 u32 GetSpanPerImage(u32 shape, u32 size)
 {
     return sSpanPerImage[shape][size];
+}
+
+u32 CountFreePaletteSlots(void)
+{
+    u32 i, count = 0;
+
+    for (i = gReservedSpritePaletteCount; i < 16; i++)
+        if (sSpritePaletteTags[i] == TAG_NONE)
+            count++;
+
+    return count;
 }

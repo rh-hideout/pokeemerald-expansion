@@ -84,6 +84,7 @@ gFieldEffectScriptPointers::
 	.4byte gFieldEffectScript_UseRockClimb              @ FLDEFF_USE_ROCK_CLIMB
 	.4byte gFieldEffectScript_RockClimbDust             @ FLDEFF_ROCK_CLIMB_DUST
 	.4byte gFieldEffectScript_ORASDowse                 @ FLDEFF_ORAS_DOWSE
+	.4byte gFieldEffectScript_OWE_SpawnAnim				@ FLDEFF_OW_ENCOUNTER_SPAWN_ANIM_ANIM
 
 gFieldEffectScript_ExclamationMarkIcon1::
 	field_eff_callnative FldEff_ExclamationMarkIcon
@@ -102,7 +103,7 @@ gFieldEffectScript_Shadow::
 	field_eff_end
 
 gFieldEffectScript_TallGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
+	field_eff_loadgfx_callnative gSpriteSheet_TallGrass, gSpritePalette_GeneralFieldEffect1, FldEff_TallGrass
 	field_eff_end
 
 gFieldEffectScript_Ripple::
@@ -154,7 +155,7 @@ gFieldEffectScript_JumpSmallSplash::
 	field_eff_end
 
 gFieldEffectScript_LongGrass::
-	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
+	field_eff_loadgfx_callnative gSpriteSheet_LongGrass, gSpritePalette_GeneralFieldEffect1, FldEff_LongGrass
 	field_eff_end
 
 gFieldEffectScript_JumpLongGrass::
@@ -301,6 +302,10 @@ gFieldEffectScript_SandPillar::
 
 gFieldEffectScript_Bubbles::
 	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_Bubbles
+	field_eff_end
+
+gFieldEffectScript_OWE_SpawnAnim::
+	field_eff_loadfadedpal_callnative gSpritePalette_GeneralFieldEffect0, FldEff_OWE_SpawnAnim
 	field_eff_end
 
 gFieldEffectScript_Sparkle::
