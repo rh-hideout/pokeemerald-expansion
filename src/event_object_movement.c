@@ -346,9 +346,7 @@ static void (*const sMovementTypeCallbacks[])(struct Sprite *) =
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = MovementType_WalkSlowlyInPlace,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = MovementType_FollowPlayer,
-    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = MovementType_WanderOnLandEncounter,
-    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = MovementType_WanderOnWaterEncounter,
-    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = MovementType_WanderOnIndoorEncounter,
+    [MOVEMENT_TYPE_WANDER_AROUND_OWE] = MovementType_WanderAround_OverworldWildEncounter,
 };
 
 static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
@@ -393,9 +391,7 @@ static const bool8 sMovementTypeHasRange[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_COPY_PLAYER_OPPOSITE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_COUNTERCLOCKWISE_IN_GRASS] = TRUE,
     [MOVEMENT_TYPE_COPY_PLAYER_CLOCKWISE_IN_GRASS] = TRUE,
-    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = TRUE,
-    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = TRUE,
-    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = TRUE,
+    [MOVEMENT_TYPE_WANDER_AROUND_OWE] = TRUE,
 };
 
 const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
@@ -481,9 +477,7 @@ const u8 gInitialMovementTypeFacingDirections[NUM_MOVEMENT_TYPES] = {
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_LEFT] = DIR_WEST,
     [MOVEMENT_TYPE_WALK_SLOWLY_IN_PLACE_RIGHT] = DIR_EAST,
     [MOVEMENT_TYPE_FOLLOW_PLAYER] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER] = DIR_SOUTH,
-    [MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER] = DIR_SOUTH,
+    [MOVEMENT_TYPE_WANDER_AROUND_OWE] = DIR_SOUTH,
 };
 
 #include "data/object_events/object_event_graphics_info_pointers.h"
@@ -11628,60 +11622,22 @@ bool8 MovementAction_OverworldEncounterSpawn(enum OverworldEncounterSpawnAnim sp
     return TRUE;
 }
 
-movement_type_def(MovementType_WanderOnLandEncounter, gMovementTypeFuncs_WanderOnLandEncounter)
+movement_type_def(MovementType_WanderAround_OverworldWildEncounter, gMovementTypeFuncs_WanderAround_OverworldWildEncounter)
 
-bool8 MovementType_WanderOnLandEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
+bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
 {
     u8 directions[4];
     u8 chosenDirection;
-    s16 x, y;
+    s16 xCurrent, yCurrent, xNew, yNew;
     memcpy(directions, gStandardDirections, sizeof directions);
     chosenDirection = directions[Random() & 3];
     SetObjectEventDirection(objectEvent, chosenDirection);
-    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
-    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
+    xCurrent = objectEvent->currentCoords.x;
+    yCurrent = objectEvent->currentCoords.y;
+    xNew = xCurrent + gDirectionToVectors[chosenDirection].x;
+    yNew = yCurrent + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    if (!MetatileBehavior_IsLandWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
-        || GetCollisionInDirection(objectEvent, chosenDirection))
-        sprite->sTypeFuncId = 1;
-
-    return TRUE;
-}
-
-movement_type_def(MovementType_WanderOnWaterEncounter, gMovementTypeFuncs_WanderOnWaterEncounter)
-
-bool8 MovementType_WanderOnWaterEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
-{
-    u8 directions[4];
-    u8 chosenDirection;
-    s16 x, y;
-    memcpy(directions, gStandardDirections, sizeof directions);
-    chosenDirection = directions[Random() & 3];
-    SetObjectEventDirection(objectEvent, chosenDirection);
-    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
-    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
-    sprite->sTypeFuncId = 5;
-    if (!MetatileBehavior_IsWaterWildEncounter(MapGridGetMetatileBehaviorAt(x, y))
-        || GetCollisionInDirection(objectEvent, chosenDirection))
-        sprite->sTypeFuncId = 1;
-
-    return TRUE;
-}
-
-movement_type_def(MovementType_WanderOnIndoorEncounter, gMovementTypeFuncs_WanderOnIndoorEncounter)
-
-bool8 MovementType_WanderOnIndoorEncounter_Step4(struct ObjectEvent *objectEvent, struct Sprite *sprite)
-{
-    u8 directions[4];
-    u8 chosenDirection;
-    s16 x, y;
-    memcpy(directions, gStandardDirections, sizeof directions);
-    chosenDirection = directions[Random() & 3];
-    SetObjectEventDirection(objectEvent, chosenDirection);
-    x = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
-    y = objectEvent->currentCoords.y + gDirectionToVectors[chosenDirection].y;
-    sprite->sTypeFuncId = 5;
-    if (!MetatileBehavior_IsIndoorEncounter(MapGridGetMetatileBehaviorAt(x, y))
+    if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(xCurrent, yCurrent, xNew, yNew))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 

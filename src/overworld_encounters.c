@@ -88,23 +88,9 @@ void UpdateOverworldEncounters(void)
         }
         
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
-        bool32 indoors = gMapHeader.mapType == MAP_TYPE_INDOOR;
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
         u32 numFreePalSlots = CountFreePaletteSlots();
-        u32 movementType, level;
-        if (OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT) // These checks need to be improved
-        {
-            if (waterMons)
-                movementType = MOVEMENT_TYPE_WANDER_ON_WATER_ENCOUNTER;
-            else if (indoors)
-                movementType = MOVEMENT_TYPE_WANDER_ON_INDOOR_ENCOUNTER;
-            else
-                movementType = MOVEMENT_TYPE_WANDER_ON_LAND_ENCOUNTER;
-        }
-        else
-        {
-            movementType = MOVEMENT_TYPE_WANDER_AROUND;
-        }
+        u32 level;
         
         struct ObjectEventTemplate objectEventTemplate = {
             .localId = localId,
@@ -112,7 +98,7 @@ void UpdateOverworldEncounters(void)
             .x = x - MAP_OFFSET,
             .y = y - MAP_OFFSET,
             .elevation = MapGridGetElevationAt(x, y),
-            .movementType = movementType,
+            .movementType = MOVEMENT_TYPE_WANDER_AROUND_OWE,
             .trainerType = TRAINER_TYPE_ENCOUNTER,
         };
 
@@ -801,6 +787,26 @@ void TryRemoveOverworldWildEncounter(u32 localId)
         RemoveObjectEventByLocalIdAndMap(localId, object->mapNum, object->mapGroup);
         gSpecialVar_LastTalked = LOCALID_NONE;
     }
+}
+
+bool32 OWE_CheckRestrictedMovement(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew)
+{
+    u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
+    u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
+
+    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsLandWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsWaterWildEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourCurrent)
+        && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
+        return FALSE;
+
+    return TRUE;
 }
 
 void DespawnOldestOWE_Pal(void)
