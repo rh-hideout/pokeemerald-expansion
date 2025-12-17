@@ -618,9 +618,9 @@ bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent)
         || objectEvent->localId <= (LOCALID_OW_ENCOUNTER_END - OWE_MAX_SPAWN_SLOTS));
 }
 
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId)
+bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType)
 {
-    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER;
+    return graphicsId == OBJ_EVENT_GFX_OVERWORLD_ENCOUNTER && trainerType == TRAINER_TYPE_ENCOUNTER;
 }
 
 static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot)
@@ -725,7 +725,7 @@ bool32 ShouldRunOverworldEncounterScript(u32 objectEventId)
 
 struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template)
 {
-    if (!IsSemiManualOverworldWildEncounter(template->graphicsId))
+    if (!IsSemiManualOverworldWildEncounter(template->graphicsId, template->trainerType))
         return *template;
 
     struct ObjectEventTemplate templateOWE = *template;

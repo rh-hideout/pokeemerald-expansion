@@ -40,7 +40,7 @@ void RemoveAllOverworldEncounterObjects(void);
 bool32 IsOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsGeneratedOverworldWildEncounter(struct ObjectEvent *objectEvent);
 bool32 IsManualOverworldWildEncounter(struct ObjectEvent *objectEvent);
-bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId);
+bool32 IsSemiManualOverworldWildEncounter(u32 graphicsId, u32 trainerType);
 u32 GetNewestOWEncounterLocalId(void);
 bool32 ShouldRunOverworldEncounterScript(u32 objectEventId);
 bool32 CanRemoveOverworldEncounter(u32 localId);
