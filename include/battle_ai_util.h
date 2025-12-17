@@ -126,6 +126,7 @@ enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, enum Ability atkAbility, u32 move);
 u32 AI_GetWeather(void);
 u32 AI_GetSwitchinWeather(u32 battler);
+u32 AI_GetSwitchinFieldStatus(u32 battler);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
@@ -295,6 +296,8 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove);
 // party logic
 struct BattlePokemon *AllocSaveBattleMons(void);
 void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons);
+struct AiLogicData *AllocSaveAiLogicData(void);
+void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData);
 s32 CountUsablePartyMons(u32 battlerId);
 bool32 IsPartyFullyHealedExceptBattler(u32 battler);
 bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category);

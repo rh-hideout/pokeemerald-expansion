@@ -4527,6 +4527,21 @@ void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons)
     Free(savedBattleMons);
 }
 
+#define SIZE_G_AI_LOGIC_DATA (sizeof(struct AiLogicData))
+
+struct AiLogicData *AllocSaveAiLogicData(void)
+{
+    struct AiLogicData *savedAiLogicData = Alloc(SIZE_G_AI_LOGIC_DATA);
+    memcpy(savedAiLogicData, gAiLogicData, SIZE_G_AI_LOGIC_DATA);
+    return savedAiLogicData;
+}
+
+void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData)
+{
+    memcpy(gAiLogicData, savedAiLogicData, SIZE_G_AI_LOGIC_DATA);
+    Free(savedAiLogicData);
+}
+
 // Set potential field effect from ability for switch in
 void SetBattlerFieldStatusForSwitchin(u32 battler)
 {

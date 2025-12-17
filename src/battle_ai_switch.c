@@ -48,6 +48,7 @@ static void InitializeSwitchinCandidate(u32 battler, struct Pokemon *mon)
     gAiThinkingStruct->saved[battler].saved = TRUE;
     SetBattlerAiData(battler, gAiLogicData);
     SetBattlerFieldStatusForSwitchin(battler);
+    CalcBattlerAiMovesData(gAiLogicData, battler, BATTLE_OPPOSITE(battler), AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
     gAiThinkingStruct->saved[battler].saved = FALSE;
 }
 
@@ -2137,6 +2138,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     GetIncomingHealInfo(battler, &healInfoData);
 
     // Save existing battler data
+    struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
     // Iterate through mons
@@ -2317,6 +2319,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     }
 
     // Restore battler data
+    FreeRestoreAiLogicData(savedAiLogicData);
     FreeRestoreBattleMons(savedBattleMons);
     SetBattlerAiData(battler, gAiLogicData);
 
@@ -2437,7 +2440,9 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
     {
         s32 i, aliveCount = 0, aceMonCount = 0;
         u32 invalidMons = 0, aceMonId = PARTY_SIZE, batonPassId = PARTY_SIZE, bestTypeMatchupId = PARTY_SIZE, bestDmgId = PARTY_SIZE, validMonId = PARTY_SIZE;
+
         // Save existing battler data
+        struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
         struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
         // Get invalid slots ids.
@@ -2470,6 +2475,7 @@ u32 GetMostSuitableMonToSwitchInto(u32 battler, enum SwitchType switchType)
         validMonId = GetFirstNonInvalidMon(firstId, lastId, invalidMons);
 
         // Restore battler data
+        FreeRestoreAiLogicData(savedAiLogicData);
         FreeRestoreBattleMons(savedBattleMons);
         SetBattlerAiData(battler, gAiLogicData);
 
@@ -2519,6 +2525,7 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
     }
 
     // Save existing battler data
+    struct AiLogicData *savedAiLogicData = AllocSaveAiLogicData();
     struct BattlePokemon *savedBattleMons = AllocSaveBattleMons();
 
     GetAIPartyIndexes(battler, &firstId, &lastId);
@@ -2572,6 +2579,7 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
     }
 
     // Restore battler data
+    FreeRestoreAiLogicData(savedAiLogicData);
     FreeRestoreBattleMons(savedBattleMons);
     SetBattlerAiData(battler, gAiLogicData);
 

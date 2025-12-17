@@ -676,7 +676,7 @@ static u32 Ai_SetMoveAccuracy(struct AiLogicData *aiData, u32 battlerAtk, u32 ba
 }
 #undef BYPASSES_ACCURACY_CALC
 
-static void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather)
+void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u32 battlerDef, u32 weather, u32 fieldStatus)
 {
     u32 moveIndex, move;
     u16 *moves = GetMovesArray(battlerAtk);
@@ -692,7 +692,7 @@ static void CalcBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u
             continue;
 
         // Also get effectiveness of status moves
-        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, gFieldStatuses);
+        dmg = AI_CalcDamage(move, battlerAtk, battlerDef, &effectiveness, USE_GIMMICK, NO_GIMMICK, weather, fieldStatus);
         aiData->moveAccuracy[battlerAtk][battlerDef][moveIndex] = Ai_SetMoveAccuracy(aiData, battlerAtk, battlerDef, move);
 
         aiData->simulatedDmg[battlerAtk][battlerDef][moveIndex] = dmg;
@@ -714,7 +714,7 @@ static void SetBattlerAiMovesData(struct AiLogicData *aiData, u32 battlerAtk, u3
 
         SaveBattlerData(battlerDef);
         SetBattlerData(battlerDef);
-        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather);
+        CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, weather, gFieldStatuses);
         RestoreBattlerData(battlerDef);
     }
     RestoreBattlerData(battlerAtk);
@@ -1083,7 +1083,7 @@ void BattleAI_DoAIProcessing_PredictedSwitchin(struct AiThinkingStruct *aiThink,
     gBattleMons[battlerDef] = switchinCandidate;
     gAiThinkingStruct->saved[battlerDef].saved = TRUE;
     SetBattlerAiData(battlerDef, aiData);
-    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather());
+    CalcBattlerAiMovesData(aiData, battlerAtk, battlerDef, AI_GetWeather(), gFieldStatuses);
     gAiThinkingStruct->saved[battlerDef].saved = FALSE;
 
     // Regular processing with new battler
