@@ -534,7 +534,6 @@ static void CB2_LoadEggHatch(void)
     case 3:
     {
         u32 species = GetMonData(&gPlayerParty[sEggHatchData->eggPartyId], MON_DATA_SPECIES);
-        DebugPrintf("%u", species);
         if (gSpeciesInfo[species].eggHatchGfx != NULL)
         {
             u32 *tempSprite = malloc_and_decompress(gSpeciesInfo[species].eggHatchGfx, NULL);
