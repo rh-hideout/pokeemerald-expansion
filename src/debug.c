@@ -1373,13 +1373,10 @@ static void DebugAction_ExecuteScript(u8 taskId, const u8 *script)
 static void DebugAction_ToggleFlag(u8 taskId)
 {
     if (sDebugMenuListData->listId == 2)
-    {
         Debug_GenerateListTrainerMenu();
-    }
     else
-    {
         Debug_GenerateListMenuNames();
-    }
+
     RedrawListMenu(gTasks[taskId].tMenuTaskId);
 }
 
@@ -1849,9 +1846,8 @@ static void ParseObjectEventScript(const u8 *script)
             extern const SpecialFunc gSpecials[];
             SpecialFunc specialFunc = gSpecials[(script[2] << 8) + script[1]];
             if ((u32)specialFunc == ((u32)SavePlayerParty) && script[3] == SCR_OP_TRAINERBATTLE)
-            {
                 ParseObjectEventScript_TrainerBattle(script + 3);
-            }
+
             u32 scrOffset = sizeof(struct _TrainerBattleParameter) + 4;
             if (script[scrOffset] == SCR_OP_SETVAR)
             {
@@ -1972,9 +1968,12 @@ static void DebugAction_Trainers_ChooseFromMap(u8 taskId)
     gTasks[taskId].tSpriteId = spriteId;
 }
 
+#undef TRAINER_TAG
 #undef tSpriteId
+
 #define tSelection  data[5]
 #define tInitial    data[6]
+
 static void Debug_Display_TrainerID(u32 trainerID, u32 selection, u32 digit, u8 windowId)
 {
     if (selection == TRAINERS_DEBUG_SELECTION_PARTNER)
@@ -2096,7 +2095,6 @@ static void DebugAction_Trainers_SwitchDoublesFlag(u8 taskId)
 static void DebugAction_Trainers_SetRematch(u8 taskId)
 {
     s32 rematchId = sDebugMenuListData->data[1];
-    u32 i;
 
     if (rematchId == -1)
     {
@@ -2104,10 +2102,11 @@ static void DebugAction_Trainers_SetRematch(u8 taskId)
         return;
     }
 
-    for (i = 0; i < REMATCHES_COUNT; i++)
+    for (u32 i = 0; i < REMATCHES_COUNT; i++)
     {
         if (gRematchTable[rematchId].trainerIds[i] == 0)
             break;
+
         if (!HasTrainerBeenFought(gRematchTable[rematchId].trainerIds[i]))
         {
             FlagToggle(TRAINER_FLAGS_START + gRematchTable[rematchId].trainerIds[i]);
@@ -2115,10 +2114,11 @@ static void DebugAction_Trainers_SetRematch(u8 taskId)
         }
     }
 
-    for (i = 0; i < REMATCHES_COUNT; i++)
+    for (u32 i = 0; i < REMATCHES_COUNT; i++)
     {
         if (gRematchTable[rematchId].trainerIds[i] == 0)
             break;
+
         FlagToggle(TRAINER_FLAGS_START + gRematchTable[rematchId].trainerIds[i]);
     }
 }
