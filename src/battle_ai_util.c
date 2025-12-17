@@ -4565,35 +4565,6 @@ void SetBattlerFieldStatusForSwitchin(u32 battler)
 }
 
 // party logic
-s32 AI_CalcPartyMonDamage(u32 move, u32 switchinBattler, u32 opposingBattler, uq4_12_t *effectiveness, enum DamageCalcContext calcContext)
-{
-    struct SimulatedDamage dmg;
-
-    if (calcContext == AI_ATTACKING)
-    {
-        dmg = AI_CalcDamage(move, switchinBattler, opposingBattler, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
-        if (gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_RISKY && !(gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_CONSERVATIVE))
-            return dmg.maximum;
-        else if (gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_CONSERVATIVE && !(gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_RISKY))
-            return dmg.minimum;
-        else
-            return dmg.median;
-    }
-
-    else if (calcContext == AI_DEFENDING)
-    {
-        dmg = AI_CalcDamage(move, opposingBattler, switchinBattler, effectiveness, NO_GIMMICK, NO_GIMMICK, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
-        if (gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_RISKY && !(gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_CONSERVATIVE))
-            return dmg.minimum;
-        else if (gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_CONSERVATIVE && !(gAiThinkingStruct->aiFlags[switchinBattler] & AI_FLAG_RISKY))
-            return dmg.maximum;
-        else
-            return dmg.median;
-    }
-
-    return 0;
-}
-
 s32 CountUsablePartyMons(u32 battlerId)
 {
     s32 battlerOnField1, battlerOnField2, i, ret;

@@ -53,10 +53,8 @@ static void InitializeSwitchinCandidate(u32 battler, struct Pokemon *mon)
         if (battler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
 
-        SaveBattlerData(battlerIndex);
-        SetBattlerData(battlerIndex);
         CalcBattlerAiMovesData(gAiLogicData, battler, battlerIndex, AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
-        RestoreBattlerData(battlerIndex);
+        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, battler, AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
     }
     
     gAiThinkingStruct->saved[battler].saved = FALSE;
@@ -1473,7 +1471,6 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
     int dmg, bestDmg = 0;
     int bestMonId = PARTY_SIZE;
     u32 aiMove;
-    uq4_12_t effectiveness;
 
     // If we couldn't find the best mon in terms of typing, find the one that deals most damage.
     for (i = firstId; i < lastId; i++)
@@ -1487,7 +1484,7 @@ static u32 GetBestMonDmg(struct Pokemon *party, int firstId, int lastId, u8 inva
             if (aiMove != MOVE_NONE && !IsBattleMoveStatus(aiMove))
             {
                 aiMove = GetMonData(&party[i], MON_DATA_MOVE1 + j);
-                dmg = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, &effectiveness, AI_ATTACKING);
+                dmg = AI_GetDamage(battler, opposingBattler, j, AI_ATTACKING, gAiLogicData);
                 if (bestDmg < dmg)
                 {
                     bestDmg = dmg;
@@ -2003,7 +2000,7 @@ static s32 GetMaxDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposingBattle
         playerMove = SMART_SWITCHING_OMNISCIENT ? gBattleMons[opposingBattler].moves[i] : playerMoves[i];
         if (playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[i] > 0)
         {
-            damageTaken = AI_CalcPartyMonDamage(playerMove, battler, opposingBattler, &effectiveness, AI_DEFENDING);
+            damageTaken = AI_GetDamage(opposingBattler, battler, i, AI_DEFENDING, gAiLogicData);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerMove = playerMove;
@@ -2036,7 +2033,7 @@ static s32 GetMaxPriorityDamagePlayerCouldDealToSwitchin(u32 battler, u32 opposi
         if (GetBattleMovePriority(opposingBattler, gAiLogicData->abilities[opposingBattler], playerMove) > 0
             && playerMove != MOVE_NONE && !IsBattleMoveStatus(playerMove) && GetMoveEffect(playerMove) != EFFECT_FOCUS_PUNCH && gBattleMons[opposingBattler].pp[i] > 0)
         {
-            damageTaken = AI_CalcPartyMonDamage(playerMove, battler, opposingBattler, &effectiveness, AI_DEFENDING);
+            damageTaken = AI_GetDamage(opposingBattler, battler, i, AI_DEFENDING, gAiLogicData);
             if (playerMove == gBattleStruct->choicedMove[opposingBattler]) // If player is choiced, only care about the choice locked move
             {
                 *bestPlayerPriorityMove = playerMove;
@@ -2143,7 +2140,6 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
     u32 bestResist = UQ_4_12(2.0), bestResistEffective = UQ_4_12(2.0), typeMatchup; // 2.0 is the default "Neutral" matchup from GetBattlerTypeMatchup
     bool32 isFreeSwitch = IsFreeSwitch(switchType, battlerIn1, opposingBattler), isSwitchinFirst, isSwitchinFirstPriority, canSwitchinWin1v1;
     u32 validMonIds = 0;
-    uq4_12_t effectiveness = UQ_4_12(1.0);
 
     GetIncomingHealInfo(battler, &healInfoData);
 
@@ -2206,7 +2202,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
                 continue;
 
             aiMove = gBattleMons[battler].moves[j];
-            damageDealt = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, &effectiveness, AI_ATTACKING);
+            damageDealt = AI_GetDamage(battler, opposingBattler, j, AI_ATTACKING, gAiLogicData);
             hitsToKOPlayer = GetNoOfHitsToKOBattlerDmg(damageDealt, opposingBattler);
 
             // Offensive switchin decisions are based on which whether switchin moves first and whether it can win a 1v1
@@ -2563,7 +2559,7 @@ u32 AI_SelectRevivalBlessingMon(u32 battler)
             if (aiMove == MOVE_NONE || gBattleMons[battler].pp[j] == 0)
                 continue;
 
-            s32 damage = AI_CalcPartyMonDamage(aiMove, battler, opposingBattler, &effectiveness, AI_ATTACKING);
+            s32 damage = AI_GetDamage(battler, opposingBattler, j, AI_ATTACKING, gAiLogicData);
             if (damage > bestDamage)
                 bestDamage = damage;
         }
