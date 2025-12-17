@@ -25,6 +25,27 @@
 
 #define INVALID_SPAWN_SLOT 0xFF
 
+/*
+Compile Errors when moving here
+enum OverworldEncounterSpawnAnim
+{
+    OWE_SPAWN_ANIM_GRASS,
+    OWE_SPAWN_ANIM_WATER,
+    OWE_SPAWN_ANIM_CAVE,
+    OWE_SPAWN_ANIM_SHINY,
+};
+
+Combine OWE Type Checks into one function using these.
+Need to figure a clean way to adjust SemiManual check as takes template.
+enum OverworldObjectEncounterType
+{
+    OWE_NONE,
+    OWE_GENERATED,
+    OWE_SEMI_MANUAL,
+    OWE_MANUAL,
+};
+*/
+
 extern const u8 InteractWithDynamicWildOverworldEncounter[];
 
 void LoadOverworldEncounterData(void);
