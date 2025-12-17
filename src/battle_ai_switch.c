@@ -48,7 +48,17 @@ static void InitializeSwitchinCandidate(u32 battler, struct Pokemon *mon)
     gAiThinkingStruct->saved[battler].saved = TRUE;
     SetBattlerAiData(battler, gAiLogicData);
     SetBattlerFieldStatusForSwitchin(battler);
-    CalcBattlerAiMovesData(gAiLogicData, battler, BATTLE_OPPOSITE(battler), AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
+    {
+        if (battler == battlerIndex || !IsBattlerAlive(battlerIndex))
+            continue;
+
+        SaveBattlerData(battlerIndex);
+        SetBattlerData(battlerIndex);
+        CalcBattlerAiMovesData(gAiLogicData, battler, battlerIndex, AI_GetSwitchinWeather(battler), AI_GetSwitchinFieldStatus(battler));
+        RestoreBattlerData(battlerIndex);
+    }
+    
     gAiThinkingStruct->saved[battler].saved = FALSE;
 }
 
@@ -2238,7 +2248,7 @@ static u32 GetBestMonIntegrated(struct Pokemon *party, int firstId, int lastId, 
             {
                 if (typeMatchup < bestResistEffective)
                 {
-                    if (effectiveness >= UQ_4_12(2.0))
+                    if (gAiLogicData->effectiveness[battler][opposingBattler][j] >= UQ_4_12(2.0))
                     {
                         if (canSwitchinWin1v1)
                         {
