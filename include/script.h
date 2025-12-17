@@ -74,6 +74,8 @@ void ScriptContext_SetupScript(const u8 *ptr);
 void ScriptContext_ContinueScript(struct ScriptContext *ctx);
 void ScriptContext_Stop(void);
 void ScriptContext_Enable(void);
+bool8 ScriptContext_PushFromStack(struct ScriptStack *scrStack);
+void ScriptContext_RunFromTop(void);
 void RunScriptImmediately(const u8 *ptr);
 const u8 *MapHeaderGetScriptTable(u8 tag);
 void MapHeaderRunScriptType(u8 tag);

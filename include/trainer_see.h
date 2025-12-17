@@ -9,6 +9,8 @@ struct ApproachingTrainer
     u8 taskId;
 };
 
+#define NUM_APPROACHING_TRAINER 2
+
 extern u16 gWhichTrainerToFaceAfterBattle;
 extern u8 gPostBattleMovementScript[4];
 extern struct ApproachingTrainer gApproachingTrainers[2];

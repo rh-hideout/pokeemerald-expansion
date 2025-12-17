@@ -2435,7 +2435,6 @@ bool8 ScrCmd_updatecoinsbox(struct ScriptContext *ctx)
 bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
 {
     Script_RequestEffects(SCREFF_V1 | SCREFF_TRAINERBATTLE);
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "trainerbattle\n");
     
     struct ScriptStack trainerBattleScriptStack;
     InitScriptStack(&trainerBattleScriptStack);
@@ -2448,8 +2447,6 @@ bool8 ScrCmd_trainerbattle(struct ScriptContext *ctx)
     {
         ScriptPush(ctx, ptr);
     }
-
-    DebugPrintScriptStack;
 
     ctx->scriptPtr = ScriptPop(ctx);
     

@@ -55,7 +55,7 @@ static void SpriteCB_TrainerIcons(struct Sprite *sprite);
 // IWRAM common
 COMMON_DATA u16 gWhichTrainerToFaceAfterBattle = 0;
 COMMON_DATA u8 gPostBattleMovementScript[4] = {0};
-COMMON_DATA struct ApproachingTrainer gApproachingTrainers[2] = {0};
+COMMON_DATA struct ApproachingTrainer gApproachingTrainers[NUM_APPROACHING_TRAINER] = {0};
 COMMON_DATA u8 gNoOfApproachingTrainers = 0;
 COMMON_DATA bool8 gTrainerApproachedPlayer = 0;
 
@@ -424,49 +424,42 @@ bool8 CheckForTrainersWantingBattle(void)
 
     if (InBattlePyramid_() || InTrainerHillChallenge())
     {
-        u8 facility = InBattlePyramid_() ? FACILITY_BATTLE_PYRAMID : FACILITY_BATTLE_TRAINER_HILL;
-        
+        u8 facility;
+        const u8 *scriptEndPtr;
+
         if (gNoOfApproachingTrainers > 0) 
         {
             ResetTrainerOpponentIds();
             InitTrainerBattleParameter();
 
+            facility = *(gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
+            scriptEndPtr = gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
+            
             gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
             gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
-            BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
+            BattleSetup_ConfigureFacilityTrainerBattle(facility, scriptEndPtr);
             if (gNoOfApproachingTrainers > 1) 
             {
+                facility = *(gApproachingTrainers[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
+                scriptEndPtr = gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1;
+                
                 gApproachingTrainerId++;
                 gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
                 gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
-                BattleSetup_ConfigureFacilityTrainerBattle(facility, gApproachingTrainers[0].trainerScriptPtr + 2);
-                gApproachingTrainerId = 0;
+                BattleSetup_ConfigureFacilityTrainerBattle(facility, scriptEndPtr);
             }
-            ScriptContext_SetupScript(EventScript_StartTrainerApproach);
-            LockPlayerFieldControls();
+            gApproachingTrainerId = 0;
+
+            ConfigureApproachingFacilityTrainerBattle(gApproachingTrainers);
             return TRUE;
         }
     }
 
-    if (gNoOfApproachingTrainers == 1)
+    if (gNoOfApproachingTrainers > 0)
     {
-        ResetTrainerOpponentIds();
-        ConfigureAndSetUpOneTrainerBattle(gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId,
-                                          gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr);
+        ConfigureApproachingTrainerBattle(gApproachingTrainers);
         gTrainerApproachedPlayer = TRUE;
-        return TRUE;
-    }
-    else if (gNoOfApproachingTrainers == 2)
-    {
-        ResetTrainerOpponentIds();
-        for (i = 0; i < gNoOfApproachingTrainers; i++, gApproachingTrainerId++)
-        {
-            ConfigureTwoTrainersBattle(gApproachingTrainers[i].objectEventId,
-                                       gApproachingTrainers[i].trainerScriptPtr);
-        }
-        SetUpTwoTrainersBattle();
         gApproachingTrainerId = 0;
-        gTrainerApproachedPlayer = TRUE;
         return TRUE;
     }
     else
@@ -933,9 +926,11 @@ static void Task_EndTrainerApproach(u8 taskId)
 
 void PrepareSecondApproachingTrainer(void)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "g appr id: %d", gApproachingTrainerId);
     if (gApproachingTrainerId == 0)
     {
         gApproachingTrainerId++;
+        gSpecialVar_Result = TRUE;
         UnfreezeObjectEvents();
         FreezeObjectEventsExceptOne(gApproachingTrainers[1].objectEventId);
     }
@@ -948,6 +943,7 @@ void PrepareSecondApproachingTrainer(void)
 
 void TryPrepareSecondApproachingTrainer(void)
 {
+    DebugPrintfLevel(MGBA_LOG_DEBUG, "no app: %d", gNoOfApproachingTrainers);
     if (gNoOfApproachingTrainers == 2)
     {
         PrepareSecondApproachingTrainer();

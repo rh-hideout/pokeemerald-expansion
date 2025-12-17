@@ -152,7 +152,6 @@ bool8 ScriptStackPush(struct ScriptStack *stk, const u8 *ptr)
 
 bool8 ScriptPush(struct ScriptContext *ctx, const u8 *ptr)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "script push\n");
     return ScriptStackPush(&ctx->scrStack, ptr);
 }
 
@@ -167,7 +166,6 @@ const u8 *ScriptStackPop(struct ScriptStack *stk)
 
 const u8 *ScriptPop(struct ScriptContext *ctx)
 {
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "script pop\n");
     return ScriptStackPop(&ctx->scrStack);
 }
 
@@ -300,6 +298,29 @@ void ScriptContext_Enable(void)
 {
     sGlobalScriptContextStatus = CONTEXT_RUNNING;
     LockPlayerFieldControls();
+}
+
+bool8 ScriptContext_PushFromStack(struct ScriptStack *scrStack)
+{
+    const u8 *ptr;
+    while ((ptr = ScriptStackPop(scrStack)) != NULL)
+    {
+        if (ScriptPush(&sGlobalScriptContext, ptr))
+            return FALSE;
+    }
+
+    return TRUE;
+}
+
+// Pops the top script from the stack and enables the context
+void ScriptContext_RunFromTop(void)
+{
+    sGlobalScriptContext.scriptPtr = ScriptPop(&sGlobalScriptContext);
+    sGlobalScriptContext.mode = SCRIPT_MODE_BYTECODE;
+    LockPlayerFieldControls();
+    if (OW_FOLLOWERS_SCRIPT_MOVEMENT)
+        FlagSet(FLAG_SAFE_FOLLOWER_MOVEMENT);
+    sGlobalScriptContextStatus = CONTEXT_RUNNING;
 }
 
 // Sets up and runs a script in its own context immediately. The script will be

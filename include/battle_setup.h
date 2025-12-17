@@ -4,8 +4,12 @@
 #include "battle_transition.h"
 #include "gym_leader_rematch.h"
 #include "script.h"
+#include "trainer_see.h"
 
 #define REMATCHES_COUNT 5
+
+#define TRAINERBATTLE_OPCODE_OFFSET 1  // 1 byte trainerbattle opcode
+#define FACILITYBATTLE_OPCODE_OFFSET 5 // 1 byte callnative opcode, 4 bytes func ptr
 
 struct RematchTrainer
 {
@@ -128,6 +132,8 @@ void TrainerBattleLoadArgsTrainerA(const u8 *data);
 void TrainerBattleLoadArgsTrainerB(const u8 *data);
 void TrainerBattleLoadArgsSecondTrainer(const u8 *data);
 void InitTrainerBattleParameter(void);
+void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTrainer);
+void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *ApproachingTrainer);
 
 void DoStandardWildBattle_Debug(void);
 void BattleSetup_StartTrainerBattle_Debug(void);
