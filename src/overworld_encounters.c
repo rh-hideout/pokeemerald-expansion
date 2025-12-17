@@ -503,6 +503,8 @@ static void SetOverworldEncounterSpeciesInfo(s32 x, s32 y, u16 *speciesId, bool3
         *level = ChooseWildMonLevel(wildMonInfo->wildPokemon, encounterIndex, WILD_AREA_LAND);
     }
 
+    // Fallback for species here? Should it be earlier in code?
+
     if (*speciesId == SPECIES_UNOWN)
         *speciesId = GetUnownSpeciesId(personality);
 
