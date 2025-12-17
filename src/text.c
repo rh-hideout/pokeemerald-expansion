@@ -531,7 +531,7 @@ void GenerateFontHalfRowLookupTable(union TextColor color)
     }
 }
 
-void SaveTextColors(u8 *fgColor, u8 *bgColor, u8 *shadowColor, u8 *accentColor)
+void SaveTextColors(u8 *bgColor, u8 *fgColor, u8 *shadowColor, u8 *accentColor)
 {
     *bgColor = sLastTextColor.background;
     *fgColor = sLastTextColor.foreground;

@@ -927,6 +927,11 @@ const u16 gStartingStatusStringIds[B_MSG_STARTING_STATUS_COUNT] =
     [B_MSG_SET_RAINBOW]          = STRINGID_ARAINBOWAPPEAREDONSIDE,
     [B_MSG_SET_SEA_OF_FIRE]      = STRINGID_SEAOFFIREENVELOPEDSIDE,
     [B_MSG_SET_SWAMP]            = STRINGID_SWAMPENVELOPEDSIDE,
+    [B_MSG_SET_SPIKES]           = STRINGID_SPIKESSCATTERED,
+    [B_MSG_SET_POISON_SPIKES]    = STRINGID_POISONSPIKESSCATTERED,
+    [B_MSG_SET_STICKY_WEB]       = STRINGID_STICKYWEBUSED,
+    [B_MSG_SET_STEALTH_ROCK]     = STRINGID_POINTEDSTONESFLOAT,
+    [B_MSG_SET_SHARP_STEEL]      = STRINGID_SHARPSTEELFLOATS,
 };
 
 const u16 gTerrainStringIds[B_MSG_TERRAIN_COUNT] =
@@ -1494,49 +1499,6 @@ static const u8 sText_Your1[] = _("Your");
 static const u8 sText_Opposing1[] = _("The opposing");
 static const u8 sText_Your2[] = _("your");
 static const u8 sText_Opposing2[] = _("the opposing");
-
-// This is four lists of moves which use a different attack string in Japanese
-// to the default. See the documentation for ChooseTypeOfMoveUsedString for more detail.
-static const u16 sGrammarMoveUsedTable[] =
-{
-    MOVE_SWORDS_DANCE, MOVE_STRENGTH, MOVE_GROWTH,
-    MOVE_HARDEN, MOVE_MINIMIZE, MOVE_SMOKESCREEN,
-    MOVE_WITHDRAW, MOVE_DEFENSE_CURL, MOVE_EGG_BOMB,
-    MOVE_SMOG, MOVE_BONE_CLUB, MOVE_FLASH, MOVE_SPLASH,
-    MOVE_ACID_ARMOR, MOVE_BONEMERANG, MOVE_REST, MOVE_SHARPEN,
-    MOVE_SUBSTITUTE, MOVE_MIND_READER, MOVE_SNORE,
-    MOVE_PROTECT, MOVE_SPIKES, MOVE_ENDURE, MOVE_ROLLOUT,
-    MOVE_SWAGGER, MOVE_SLEEP_TALK, MOVE_HIDDEN_POWER,
-    MOVE_PSYCH_UP, MOVE_EXTREME_SPEED, MOVE_FOLLOW_ME,
-    MOVE_TRICK, MOVE_ASSIST, MOVE_INGRAIN, MOVE_KNOCK_OFF,
-    MOVE_CAMOUFLAGE, MOVE_ASTONISH, MOVE_ODOR_SLEUTH,
-    MOVE_GRASS_WHISTLE, MOVE_SHEER_COLD, MOVE_MUDDY_WATER,
-    MOVE_IRON_DEFENSE, MOVE_BOUNCE, 0,
-
-    MOVE_TELEPORT, MOVE_RECOVER, MOVE_BIDE, MOVE_AMNESIA,
-    MOVE_FLAIL, MOVE_TAUNT, MOVE_BULK_UP, 0,
-
-    MOVE_MEDITATE, MOVE_AGILITY, MOVE_MIMIC, MOVE_DOUBLE_TEAM,
-    MOVE_BARRAGE, MOVE_TRANSFORM, MOVE_STRUGGLE, MOVE_SCARY_FACE,
-    MOVE_CHARGE, MOVE_WISH, MOVE_BRICK_BREAK, MOVE_YAWN,
-    MOVE_FEATHER_DANCE, MOVE_TEETER_DANCE, MOVE_MUD_SPORT,
-    MOVE_FAKE_TEARS, MOVE_WATER_SPORT, MOVE_CALM_MIND, 0,
-
-    MOVE_POUND, MOVE_SCRATCH, MOVE_VISE_GRIP,
-    MOVE_WING_ATTACK, MOVE_FLY, MOVE_BIND, MOVE_SLAM,
-    MOVE_HORN_ATTACK, MOVE_WRAP, MOVE_THRASH, MOVE_TAIL_WHIP,
-    MOVE_LEER, MOVE_BITE, MOVE_GROWL, MOVE_ROAR,
-    MOVE_SING, MOVE_PECK, MOVE_ABSORB, MOVE_STRING_SHOT,
-    MOVE_EARTHQUAKE, MOVE_FISSURE, MOVE_DIG, MOVE_TOXIC,
-    MOVE_SCREECH, MOVE_METRONOME, MOVE_LICK, MOVE_CLAMP,
-    MOVE_CONSTRICT, MOVE_POISON_GAS, MOVE_BUBBLE,
-    MOVE_SLASH, MOVE_SPIDER_WEB, MOVE_NIGHTMARE, MOVE_CURSE,
-    MOVE_FORESIGHT, MOVE_CHARM, MOVE_ATTRACT, MOVE_ROCK_SMASH,
-    MOVE_UPROAR, MOVE_SPIT_UP, MOVE_SWALLOW, MOVE_TORMENT,
-    MOVE_FLATTER, MOVE_ROLE_PLAY, MOVE_ENDEAVOR, MOVE_TICKLE,
-    MOVE_COVET, 0
-};
-
 static const u8 sText_EmptyStatus[] = _("$$$$$$$");
 
 static const struct BattleWindowText sTextOnWindowsInfo_Normal[] =
@@ -2188,7 +2150,8 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
         }
         break;
     case STRINGID_INTROSENDOUT: // poke first send-out
-        if (BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler)))
+        if (BattlerIsPlayer(battler) || BattlerIsPlayer(BATTLE_PARTNER(battler))
+         || BattlerIsWally(battler) || BattlerIsWally(BATTLE_PARTNER(battler)))
         {
             if (IsDoubleBattle() && IsValidForBattle(GetBattlerMon(BATTLE_PARTNER(battler))))
             {
@@ -2251,7 +2214,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
     case STRINGID_RETURNMON: // sending poke to ball msg
         if ((GetBattlerPosition(battler) & BIT_FLANK) == B_FLANK_LEFT) // battler 0 and 1
         {
-            if (BattlerIsPlayer(battler)) // Player
+            if (BattlerIsPlayer(battler) || BattlerIsWally(battler)) // Player
             {
                 if (*(&gBattleStruct->hpScale) == 0)
                     stringPtr = sText_PkmnThatsEnough;
@@ -2273,7 +2236,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerWithdrewPkmn1;
                 }
             }
-            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent 1 and test opponent
             {
                 stringPtr = sText_LinkTrainer1WithdrewPkmn;
@@ -2307,7 +2270,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerWithdrewPkmn2;
                 }
             }
-            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -2350,7 +2313,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerSentOutPkmn1;
                 }
             }
-            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent 1 and test opponent
             {
                 stringPtr = sText_LinkTrainerSentOutPkmn;
@@ -2384,7 +2347,7 @@ void BufferStringBattle(enum StringID stringID, u32 battler)
                     stringPtr = sText_InGamePartnerSentOutPkmn2;
                 }
             }
-            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT 
+            else if (BattlerIsLink(gBattleScripting.battler) || TRAINER_BATTLE_PARAM.opponentA == TRAINER_LINK_OPPONENT
             || TRAINER_BATTLE_PARAM.opponentB == TRAINER_LINK_OPPONENT || gBattleTypeFlags & BATTLE_TYPE_RECORDED_LINK) // Link Opponent B and test opponent
             {
                 if (gBattleTypeFlags & BATTLE_TYPE_TWO_OPPONENTS)
@@ -3109,12 +3072,8 @@ u32 BattleStringExpandPlaceholders(const u8 *src, u8 *dst, u32 dstSize)
                         dstID++;
                         toCpy++;
                     }
-                    GetMonData(&gEnemyParty[gBattleStruct->scriptPartyIdx], MON_DATA_NICKNAME, text);
                 }
-                else
-                {
-                    GetMonData(&gPlayerParty[gBattleStruct->scriptPartyIdx], MON_DATA_NICKNAME, text);
-                }
+                GetMonData(&GetBattlerParty(gBattleScripting.battler)[gBattleStruct->scriptPartyIdx], MON_DATA_NICKNAME, text);
                 StringGet_Nickname(text);
                 toCpy = text;
                 break;
@@ -3462,11 +3421,7 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             break;
         case B_BUFF_MON_NICK_WITH_PREFIX: // poke nick with prefix
         case B_BUFF_MON_NICK_WITH_PREFIX_LOWER: // poke nick with lowercase prefix
-            if (IsOnPlayerSide(src[srcID + 1]))
-            {
-                GetMonData(&gPlayerParty[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
-            }
-            else
+            if (!IsOnPlayerSide(src[srcID + 1]))
             {
                 if (src[srcID] == B_BUFF_MON_NICK_WITH_PREFIX_LOWER)
                 {
@@ -3482,9 +3437,8 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
                     else
                         StringAppend(dst, sText_WildPkmnPrefix);
                 }
-
-                GetMonData(&gEnemyParty[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
             }
+            GetMonData(&GetBattlerParty(src[srcID + 1])[src[srcID + 2]], MON_DATA_NICKNAME, nickname);
             StringGet_Nickname(nickname);
             StringAppend(dst, nickname);
             srcID += 3;
@@ -3554,86 +3508,6 @@ void ExpandBattleTextBuffPlaceholders(const u8 *src, u8 *dst)
             srcID += 3;
             break;
         }
-    }
-}
-
-// Loads one of two text strings into the provided buffer. This is functionally
-// unused, since the value loaded into the buffer is not read; it loaded one of
-// two particles (either "?" or "?") which works in tandem with ChooseTypeOfMoveUsedString
-// below to effect changes in the meaning of the line.
-static void UNUSED ChooseMoveUsedParticle(u8 *textBuff)
-{
-    s32 counter = 0;
-    u32 i = 0;
-
-    while (counter != MAX_MON_MOVES)
-    {
-        if (sGrammarMoveUsedTable[i] == 0)
-            counter++;
-        if (sGrammarMoveUsedTable[i++] == gBattleMsgDataPtr->currentMove)
-            break;
-    }
-
-    if (counter >= 0)
-    {
-        if (counter <= 2)
-            StringCopy(textBuff, sText_SpaceIs); // is
-        else if (counter <= MAX_MON_MOVES)
-            StringCopy(textBuff, sText_ApostropheS); // 's
-    }
-}
-
-// Appends "!" to the text buffer `dst`. In the original Japanese this looked
-// into the table of moves at sGrammarMoveUsedTable and varied the line accordingly.
-//
-// sText_ExclamationMark was a plain "!", used for any attack not on the list.
-// It resulted in the translation "<NAME>'s <ATTACK>!".
-//
-// sText_ExclamationMark2 was "? ????!". This resulted in the translation
-// "<NAME> used <ATTACK>!", which was used for all attacks in English.
-//
-// sText_ExclamationMark3 was "??!". This was used for those moves whose
-// names were verbs, such as Recover, and resulted in translations like "<NAME>
-// recovered itself!".
-//
-// sText_ExclamationMark4 was "? ??!" This resulted in a translation of
-// "<NAME> did an <ATTACK>!".
-//
-// sText_ExclamationMark5 was " ????!" This resulted in a translation of
-// "<NAME>'s <ATTACK> attack!".
-static void UNUSED ChooseTypeOfMoveUsedString(u8 *dst)
-{
-    s32 counter = 0;
-    s32 i = 0;
-
-    while (*dst != EOS)
-        dst++;
-
-    while (counter != MAX_MON_MOVES)
-    {
-        if (sGrammarMoveUsedTable[i] == MOVE_NONE)
-            counter++;
-        if (sGrammarMoveUsedTable[i++] == gBattleMsgDataPtr->currentMove)
-            break;
-    }
-
-    switch (counter)
-    {
-    case 0:
-        StringCopy(dst, sText_ExclamationMark);
-        break;
-    case 1:
-        StringCopy(dst, sText_ExclamationMark2);
-        break;
-    case 2:
-        StringCopy(dst, sText_ExclamationMark3);
-        break;
-    case 3:
-        StringCopy(dst, sText_ExclamationMark4);
-        break;
-    case 4:
-        StringCopy(dst, sText_ExclamationMark5);
-        break;
     }
 }
 
