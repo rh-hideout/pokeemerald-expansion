@@ -37,6 +37,7 @@ static u16 GetOverworldSpeciesBySpawnSlot(u32 spawnSlot);
 static u32 GetLocalIdByOverworldSpawnSlot(u32 spawnSlot);
 static u32 GetSpawnSlotByLocalId(u32 localId);
 static void SortOWEMonAges(void);
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny);
 
 void LoadOverworldEncounterData(void)
 {
@@ -89,7 +90,6 @@ void UpdateOverworldEncounters(void)
         
         bool32 waterMons = OWE_ShouldSpawnWaterMons();
         u32 localId = GetLocalIdByOverworldSpawnSlot(spawnSlot);
-        u32 numFreePalSlots = CountFreePaletteSlots();
         u32 level;
         
         struct ObjectEventTemplate objectEventTemplate = {
@@ -108,26 +108,8 @@ void UpdateOverworldEncounters(void)
             return;
         }
 
-        // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
-        // Add this and tiles to seperate graphics check function
-        if (numFreePalSlots == 1)
-        {
-            u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
-
-            if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
-                palTag += OBJ_EVENT_MON_FEMALE;
-                
-            // If the mon's palette isn't already loaded, don't spawn.
-            if (IndexOfSpritePaletteTag(palTag) == 0xFF)
-                return;
-
-            // Add check if field effect pallete is already loaded
-            // Bubbles field effect occurs on every movement
-        }
-        else if (numFreePalSlots == 0)
-        {
+        if (!OWE_CanEncounterBeLoaded(speciesId, isFemale, isShiny))
             return;
-        }
 
         u8 objectEventId = SpawnSpecialObjectEvent(&objectEventTemplate);
 
@@ -153,6 +135,34 @@ void UpdateOverworldEncounters(void)
         // Slower replacement spawning
         sOWESpawnCountdown = OWE_TIME_BETWEEN_SPAWNS + (Random() % OWE_SPAWN_TIME_VARIABILITY);
     }
+}
+
+static bool32 OWE_CanEncounterBeLoaded(u32 speciesId, bool32 isFemale, bool32 isShiny)
+{
+    u32 numFreePalSlots = CountFreePaletteSlots();
+
+    // We need at least 2 pal slots open. One for the object and one for the spawn field effect.
+    // Add this and tiles to seperate graphics check function
+    if (numFreePalSlots == 1)
+    {
+        u32 palTag = speciesId + OBJ_EVENT_MON + (isShiny ? OBJ_EVENT_MON_SHINY : 0);
+
+        if (isFemale && gSpeciesInfo[speciesId].overworldShinyPaletteFemale != NULL)
+            palTag += OBJ_EVENT_MON_FEMALE;
+            
+        // If the mon's palette isn't already loaded, don't spawn.
+        if (IndexOfSpritePaletteTag(palTag) == 0xFF)
+            return FALSE;
+
+        // Add check if field effect pallete is already loaded
+        // Bubbles field effect occurs on every movement
+    }
+    else if (numFreePalSlots == 0)
+    {
+        return FALSE;
+    }
+
+    return TRUE;
 }
 
 void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
