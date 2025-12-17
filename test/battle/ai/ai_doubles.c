@@ -796,6 +796,20 @@ AI_DOUBLE_BATTLE_TEST("AI uses Helping Hand if the ally does notably more damage
     }
 }
 
+AI_DOUBLE_BATTLE_TEST("AI does not use Helping Hand on Good as Gold ally")
+{
+    GIVEN {
+        ASSUME(GetMoveEffect(MOVE_HELPING_HAND) == EFFECT_HELPING_HAND);
+        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_DOUBLE_BATTLE);
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
+        PLAYER(SPECIES_WOBBUFFET) { Moves(MOVE_TACKLE, MOVE_CELEBRATE); }
+        OPPONENT(SPECIES_WOBBUFFET) { Moves(MOVE_HELPING_HAND, MOVE_MUD_SLAP); }
+        OPPONENT(SPECIES_GHOLDENGO) { Ability(ABILITY_GOOD_AS_GOLD); Moves(MOVE_MUDDY_WATER); }
+    } WHEN {
+        TURN { EXPECT_MOVE(opponentLeft, MOVE_MUD_SLAP); }
+    }
+}
+
 AI_DOUBLE_BATTLE_TEST("AI uses Tailwind")
 {
     u32 speed1, speed2, speed3, speed4;

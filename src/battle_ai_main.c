@@ -2049,9 +2049,16 @@ static s32 AI_CheckBadMove(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
                 ADJUST_SCORE(-10);
             break;
         case EFFECT_FOLLOW_ME:
+            if (!hasPartner
+              || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
+              || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
+              || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE)
+                ADJUST_SCORE(-20);
+            break;
         case EFFECT_HELPING_HAND:
             if (!hasPartner
               || DoesPartnerHaveSameMoveEffect(BATTLE_PARTNER(battlerAtk), battlerDef, move, aiData->partnerMove)
+              || aiData->abilities[BATTLE_PARTNER(battlerAtk)] == ABILITY_GOOD_AS_GOLD
               || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove))
               || gBattleStruct->monToSwitchIntoId[BATTLE_PARTNER(battlerAtk)] != PARTY_SIZE) //Partner is switching out.
                 ADJUST_SCORE(-20);
@@ -3152,6 +3159,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
     case EFFECT_HELPING_HAND:
         if (!hasPartner
          || !HasDamagingMove(battlerAtkPartner)
+         || aiData->abilities[battlerAtkPartner] == ABILITY_GOOD_AS_GOLD
          || (aiData->partnerMove != MOVE_NONE && IsBattleMoveStatus(aiData->partnerMove)))
         {
             ADJUST_SCORE(WORST_EFFECT);
