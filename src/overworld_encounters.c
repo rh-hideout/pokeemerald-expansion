@@ -163,11 +163,24 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
     enum OverworldEncounterSpawnAnim spawnAnimType;
     u32 speciesId = OW_SPECIES(objectEvent);
     bool32 isShiny = OW_SHINY(objectEvent) ? TRUE : FALSE;
-    u32 pan = (Random() % 88) + 212;
-    // Calculate location of mon to set pan value?
-    // Or at least calculate if object is left or right and randomise that range?
     u32 volume = (Random() % 30) + 50;
+    s32 pan;
+
+    switch (DetermineObjectEventDirectionFromObject(&gObjectEvents[gPlayerAvatar.objectEventId], objectEvent))
+    {
+    case DIR_WEST:
+        pan = (Random() % 44);
+        break;
+    
+    case DIR_EAST:
+        pan = -(Random() % 44);
+        break;
+
+    default:
+        pan = 0;
+    }
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
+
     if (isShiny)
     {
         PlaySE(SE_SHINY);
@@ -182,7 +195,6 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
         else
             spawnAnimType = OWE_SPAWN_ANIM_GRASS;
     }
-    // Instantly play a small animation to ground the spawning a bit
     MovementAction_OverworldEncounterSpawn(spawnAnimType, objectEvent);
 }
 
