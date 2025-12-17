@@ -1086,7 +1086,7 @@ static void LoadContestMonIcon(u16 species, u8 monIndex, u8 srcOffset, u8 useDma
     const u8 *iconPtr;
     u16 var0, var1;
 
-    iconPtr = GetMonIconPtr(species, personality, FALSE);
+    iconPtr = GetMonIconPtr(species, personality);
     iconPtr += srcOffset * 0x200 + 0x80;
     if (useDmaNow)
     {

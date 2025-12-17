@@ -4323,7 +4323,7 @@ static void CreatePartyMonIconSpriteParameterized(u16 species, u32 pid, bool32 i
 {
     if (species != SPECIES_NONE)
     {
-        menuBox->monSpriteId = CreateMonIcon(species, SpriteCB_MonIcon, menuBox->spriteCoords[0], menuBox->spriteCoords[1], 4, pid, isEgg);
+        menuBox->monSpriteId = CreateMonIconIsEgg(species, SpriteCB_MonIcon, menuBox->spriteCoords[0], menuBox->spriteCoords[1], 4, pid, isEgg);
         gSprites[menuBox->monSpriteId].oam.priority = priority;
     }
 }

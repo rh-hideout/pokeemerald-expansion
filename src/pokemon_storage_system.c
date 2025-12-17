@@ -5143,7 +5143,7 @@ static u16 TryLoadMonIconTiles(u16 species, u32 personality, bool32 isEgg)
     sStorage->numIconsPerSpecies[i]++;
     offset = 16 * i;
     species &= GENDER_MASK;
-    CpuCopy32(GetMonIconTiles(species, personality, isEgg), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
+    CpuCopy32(GetMonIconTilesIsEgg(species, personality, isEgg), (void *)(OBJ_VRAM0) + offset * TILE_SIZE_4BPP, 0x200);
 
     return offset;
 }
@@ -8546,7 +8546,7 @@ static void MultiMove_SetIconToBg(u8 x, u8 y)
 
     if (species != SPECIES_NONE)
     {
-        const u8 *iconGfx = GetMonIconPtr(species, personality, isEgg);
+        const u8 *iconGfx = GetMonIconPtrIsEgg(species, personality, isEgg);
         u8 index = GetValidMonIconPalIndex(species) + 8;
 
         BlitBitmapRectToWindow4BitTo8Bit(sStorage->multiMoveWindowId,

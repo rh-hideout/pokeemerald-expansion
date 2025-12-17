@@ -828,7 +828,7 @@ static void Task_ShowAiPoints(u8 taskId)
             {
                 data->spriteIds.aiIconSpriteIds[i] = CreateMonIcon(gBattleMons[i].species,
                                                          SpriteCallbackDummy,
-                                                         106 + (count * 54), 17, 0, 0, FALSE);
+                                                         106 + (count * 54), 17, 0, 0);
                 gSprites[data->spriteIds.aiIconSpriteIds[i]].data[0] = i; // battler id
                 count++;
             }
@@ -1008,7 +1008,7 @@ static void Task_ShowAiKnowledge(u8 taskId)
             {
                 data->spriteIds.aiIconSpriteIds[i] = CreateMonIcon(gBattleMons[i].species,
                                                          SpriteCallbackDummy,
-                                                         95 + (count * 80), 17, 0, 0, FALSE);
+                                                         95 + (count * 80), 17, 0, 0);
                 gSprites[data->spriteIds.aiIconSpriteIds[i]].data[0] = i; // battler id
                 count++;
             }
@@ -1072,7 +1072,7 @@ static void Task_ShowAiParty(u8 taskId)
             u16 species = SPECIES_NONE; // Question mark
             if (aiMons[i].wasSentInBattle && aiMons[i].species)
                 species = aiMons[i].species;
-            data->spriteIds.aiPartyIcons[i] = CreateMonIcon(species, SpriteCallbackDummy, (i * 41) + 15, 7, 1, 0, FALSE);
+            data->spriteIds.aiPartyIcons[i] = CreateMonIcon(species, SpriteCallbackDummy, (i * 41) + 15, 7, 1, 0);
             gSprites[data->spriteIds.aiPartyIcons[i]].oam.priority = 0;
 
             gSprites[data->spriteIds.aiPartyIcons[i]].sConditionSpriteId = CreateSprite(&gSpriteTemplate_StatusIcons, (i * 41) + 15, 7, 0);

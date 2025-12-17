@@ -134,13 +134,18 @@ static const u16 sSpriteImageSizes[3][4] =
     },
 };
 
-u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality, bool32 isEgg)
+u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality)
+{
+    return CreateMonIconIsEgg(species, callback, x, y, subpriority, personality, FALSE);
+}
+
+u8 CreateMonIconIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, u32 personality, bool32 isEgg)
 {
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
     {
         .oam = &sMonIconOamData,
-        .image = GetMonIconPtr(species, personality, isEgg),
+        .image = GetMonIconPtrIsEgg(species, personality, isEgg),
         .anims = sMonIconAnims,
         .affineAnims = sMonIconAffineAnims,
         .callback = callback,
@@ -174,7 +179,11 @@ u8 CreateMonIcon(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u
 }
 
 
-u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, bool32 isEgg)
+u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority)
+{
+    return CreateMonIconNoPersonalityIsEgg(species, callback, x, y, subpriority, FALSE);
+}
+u8 CreateMonIconNoPersonalityIsEgg(u16 species, void (*callback)(struct Sprite *), s16 x, s16 y, u8 subpriority, bool32 isEgg)
 {
     u8 spriteId;
     struct MonIconSpriteTemplate iconTemplate =
@@ -187,7 +196,7 @@ u8 CreateMonIconNoPersonality(u16 species, void (*callback)(struct Sprite *), s1
         .paletteTag = POKE_ICON_BASE_PAL_TAG + gSpeciesInfo[species].iconPalIndex,
     };
 
-    iconTemplate.image = GetMonIconTiles(species, 0, isEgg);
+    iconTemplate.image = GetMonIconTilesIsEgg(species, 0, isEgg);
     spriteId = CreateMonIconSprite(&iconTemplate, x, y, subpriority);
 
     UpdateMonIconFrame(&gSprites[spriteId]);
@@ -220,9 +229,14 @@ u16 GetIconSpeciesNoPersonality(u16 species)
     return GetIconSpecies(species, 0);
 }
 
-const u8 *GetMonIconPtr(u16 species, u32 personality, bool32 isEgg)
+const u8 *GetMonIconPtr(u16 species, u32 personality)
 {
-    return GetMonIconTiles(GetIconSpecies(species, personality), personality, isEgg);
+    return GetMonIconPtrIsEgg(species, personality, FALSE);
+}
+
+const u8 *GetMonIconPtrIsEgg(u16 species, u32 personality, bool32 isEgg)
+{
+    return GetMonIconTilesIsEgg(GetIconSpecies(species, personality), personality, isEgg);
 }
 
 void FreeAndDestroyMonIconSprite(struct Sprite *sprite)
@@ -294,7 +308,12 @@ void SpriteCB_MonIcon(struct Sprite *sprite)
     UpdateMonIconFrame(sprite);
 }
 
-const u8 *GetMonIconTiles(u16 species, u32 personality, bool32 isEgg)
+const u8 *GetMonIconTiles(u16 species, u32 personality)
+{
+    return GetMonIconTilesIsEgg(species, personality, FALSE);
+}
+
+const u8 *GetMonIconTilesIsEgg(u16 species, u32 personality, bool32 isEgg)
 {
     const u8 *iconSprite;
 

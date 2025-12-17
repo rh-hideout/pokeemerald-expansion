@@ -1311,7 +1311,7 @@ void CB2_Pokemon_Sprite_Visualizer(void)
             gSprites[data->backspriteId].oam.priority = 0;
 
             //Icon Sprite
-            data->iconspriteId = CreateMonIcon(species, SpriteCB_MonIcon, VISUALIZER_ICON_X, VISUALIZER_ICON_Y, 4, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY), FALSE);
+            data->iconspriteId = CreateMonIcon(species, SpriteCB_MonIcon, VISUALIZER_ICON_X, VISUALIZER_ICON_Y, 4, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
             gSprites[data->iconspriteId].oam.priority = 0;
 
             //Follower Sprite
@@ -2002,7 +2002,7 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
     gSprites[data->backspriteId].oam.priority = 0;
 
     //Icon Sprite
-    data->iconspriteId = CreateMonIcon(species, SpriteCB_MonIcon, VISUALIZER_ICON_X, VISUALIZER_ICON_Y, 4, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY), FALSE);
+    data->iconspriteId = CreateMonIcon(species, SpriteCB_MonIcon, VISUALIZER_ICON_X, VISUALIZER_ICON_Y, 4, (data->isFemale ? FEMALE_PERSONALITY : MALE_PERSONALITY));
     gSprites[data->iconspriteId].oam.priority = 0;
 
     //Follower Sprite
