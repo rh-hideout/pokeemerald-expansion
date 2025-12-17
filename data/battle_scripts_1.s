@@ -390,7 +390,7 @@ BattleScript_EffectCorrosiveGas::
 	attackcanceler
 	accuracycheck BattleScript_MoveMissedPause, ACC_CURR_MOVE
 	jumpifsubstituteblocks BattleScript_CorrosiveGasFail
-	jumpifcantloseitem BS_TARGET, BattleScript_CorrosiveGasFail
+	jumpifcantloseitem BattleScript_CorrosiveGasFail
 	attackanimation
 	waitanimation
 	jumpifability BS_TARGET, ABILITY_STICKY_HOLD, BattleScript_StickyHoldActivates
@@ -656,7 +656,7 @@ BattleScript_SkyDropFlyingType:
 	waitmessage B_WAIT_TIME_LONG
 	makevisible BS_ATTACKER
 	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_SkyDropFlyingAlreadyConfused
-	jumpifvolatile BS_TARGET, VOLATILE_LOCK_CONFUSE, BattleScript_SkyDropFlyingConfuseLock
+	jumpifvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS, BattleScript_SkyDropFlyingConfuseLock
 	goto BattleScript_MoveEnd
 BattleScript_SkyDropChangedTarget:
 	pause B_WAIT_TIME_SHORT
@@ -669,7 +669,7 @@ BattleScript_SkyDropChangedTarget:
 BattleScript_SkyDropFlyingConfuseLock:
 	seteffectprimary BS_ATTACKER, BS_TARGET, MOVE_EFFECT_CONFUSION
 BattleScript_SkyDropFlyingAlreadyConfused:
-	clearvolatile BS_TARGET, VOLATILE_LOCK_CONFUSE
+	clearvolatile BS_TARGET, VOLATILE_RAMPAGE_TURNS
 	jumpifvolatile BS_TARGET, VOLATILE_CONFUSION, BattleScript_MoveEnd
 	setbyte BS_ATTACKER, BS_TARGET
 	goto BattleScript_ThrashConfuses
@@ -4780,6 +4780,11 @@ BattleScript_OverworldTerrain::
 	call BattleScript_ActivateTerrainEffects
 	end3
 
+BattleScript_OverworldHazard::
+	printfromtable gStartingStatusStringIds
+	waitmessage B_WAIT_TIME_LONG
+	end3
+
 BattleScript_SideStatusWoreOff::
 	printstring STRINGID_PKMNSXWOREOFF
 	waitmessage B_WAIT_TIME_LONG
@@ -5674,7 +5679,9 @@ BattleScript_MoveEffectClearSmog::
 
 BattleScript_FocusPunchSetUp::
 	flushtextbox
+	call BattleScript_SwapFromSubstitute
 	playanimation BS_ATTACKER, B_ANIM_FOCUS_PUNCH_SETUP
+	call BattleScript_SwapToSubstitute
 	printstring STRINGID_PKMNTIGHTENINGFOCUS
 	waitmessage B_WAIT_TIME_LONG
 	end3

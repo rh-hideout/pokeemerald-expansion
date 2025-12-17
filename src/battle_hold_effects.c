@@ -53,16 +53,16 @@ enum ItemEffect TryBoosterEnergy(u32 battler, enum Ability ability)
 {
     enum ItemEffect effect = ITEM_NO_EFFECT;
 
-    if (gDisableStructs[battler].boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
+    if (gBattleMons[battler].volatiles.boosterEnergyActivated || gBattleMons[battler].volatiles.transformed)
         return ITEM_NO_EFFECT;
 
     if (((ability == ABILITY_PROTOSYNTHESIS) && !((gBattleWeather & B_WEATHER_SUN) && HasWeatherEffect()))
      || ((ability == ABILITY_QUARK_DRIVE) && !(gFieldStatuses & STATUS_FIELD_ELECTRIC_TERRAIN)))
     {
-        gDisableStructs[battler].paradoxBoostedStat = GetParadoxHighestStatId(battler);
-        PREPARE_STAT_BUFFER(gBattleTextBuff1, gDisableStructs[battler].paradoxBoostedStat);
+        gBattleMons[battler].volatiles.paradoxBoostedStat = GetParadoxHighestStatId(battler);
+        PREPARE_STAT_BUFFER(gBattleTextBuff1, gBattleMons[battler].volatiles.paradoxBoostedStat);
         gBattlerAbility = gBattleScripting.battler = battler;
-        gDisableStructs[battler].boosterEnergyActivated = TRUE;
+        gBattleMons[battler].volatiles.boosterEnergyActivated = TRUE;
         RecordAbilityBattle(battler, ability);
         BattleScriptCall(BattleScript_BoosterEnergyRet);
         effect = ITEM_EFFECT_OTHER;
@@ -427,18 +427,18 @@ static enum ItemEffect TryMentalHerb(u32 battler)
     if (B_MENTAL_HERB >= GEN_5)
     {
         // Check taunt
-        if (gDisableStructs[battler].tauntTimer != 0)
+        if (gBattleMons[battler].volatiles.tauntTimer != 0)
         {
-            gDisableStructs[battler].tauntTimer = 0;
+            gBattleMons[battler].volatiles.tauntTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_TAUNT;
             PREPARE_MOVE_BUFFER(gBattleTextBuff1, MOVE_TAUNT);
             effect = ITEM_EFFECT_OTHER;
         }
         // Check encore
-        if (gDisableStructs[battler].encoreTimer != 0)
+        if (gBattleMons[battler].volatiles.encoreTimer != 0)
         {
-            gDisableStructs[battler].encoredMove = 0;
-            gDisableStructs[battler].encoreTimer = 0;
+            gBattleMons[battler].volatiles.encoredMove = 0;
+            gBattleMons[battler].volatiles.encoreTimer = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_ENCORE;
             effect = ITEM_EFFECT_OTHER;
         }
@@ -457,10 +457,10 @@ static enum ItemEffect TryMentalHerb(u32 battler)
             effect = ITEM_EFFECT_OTHER;
         }
         // Check disable
-        if (gDisableStructs[battler].disableTimer != 0)
+        if (gBattleMons[battler].volatiles.disableTimer != 0)
         {
-            gDisableStructs[battler].disableTimer = 0;
-            gDisableStructs[battler].disabledMove = 0;
+            gBattleMons[battler].volatiles.disableTimer = 0;
+            gBattleMons[battler].volatiles.disabledMove = 0;
             gBattleCommunication[MULTISTRING_CHOOSER] = B_MSG_MENTALHERBCURE_DISABLE;
             effect = ITEM_EFFECT_OTHER;
         }

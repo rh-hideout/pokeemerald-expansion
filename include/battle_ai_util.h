@@ -125,7 +125,8 @@ enum Ability AI_DecideKnownAbilityForTurn(u32 battlerId);
 enum HoldEffect AI_DecideHoldEffectForTurn(u32 battlerId);
 bool32 DoesBattlerIgnoreAbilityChecks(u32 battlerAtk, enum Ability atkAbility, u32 move);
 u32 AI_GetWeather(void);
-u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon);
+u32 AI_GetSwitchinWeather(u32 battler);
+u32 AI_GetSwitchinFieldStatus(u32 battler);
 enum WeatherState IsWeatherActive(u32 flags);
 bool32 CanAIFaintTarget(u32 battlerAtk, u32 battlerDef, u32 numHits);
 bool32 CanIndexMoveFaintTarget(u32 battlerAtk, u32 battlerDef, u32 index, enum DamageCalcContext calcContext);
@@ -145,7 +146,7 @@ enum AIPivot ShouldPivot(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 IsRecycleEncouragedItem(u32 item);
 bool32 ShouldRestoreHpBerry(u32 battlerAtk, u32 item);
 bool32 IsStatBoostingBerry(u32 item);
-bool32 CanKnockOffItem(u32 battler, u32 item);
+bool32 CanKnockOffItem(u32 fromBattler, u32 battler, u32 item);
 bool32 IsAbilityOfRating(enum Ability ability, s8 rating);
 bool32 AI_IsAbilityOnSide(u32 battlerId, enum Ability ability);
 bool32 AI_MoveMakesContact(enum Ability ability, enum HoldEffect holdEffect, u32 move);
@@ -185,6 +186,7 @@ u16 *GetMovesArray(u32 battler);
 bool32 IsConfusionMoveEffect(enum BattleMoveEffects moveEffect);
 bool32 HasMove(u32 battlerId, u32 move);
 u32 GetIndexInMoveArray(u32 battler, u32 move);
+u32 GetBattlerMoveIndexWithEffect(u32 battler, enum BattleMoveEffects effect);
 bool32 HasPhysicalBestMove(u32 battlerAtk, u32 battlerDef, enum DamageCalcContext calcContext);
 bool32 HasOnlyMovesWithCategory(u32 battlerId, enum DamageCategory category, bool32 onlyOffensive);
 bool32 HasMoveWithCategory(u32 battler, enum DamageCategory category);
@@ -223,6 +225,7 @@ bool32 HasTrappingMoveEffect(u32 battler);
 bool32 IsFlinchGuaranteed(u32 battlerAtk, u32 battlerDef, u32 move);
 bool32 HasChoiceEffect(u32 battler);
 bool32 HasThawingMove(u32 battler);
+bool32 HasUsableWhileAsleepMove(u32 battler);
 bool32 IsStatRaisingEffect(enum BattleMoveEffects effect);
 bool32 IsStatLoweringEffect(enum BattleMoveEffects effect);
 bool32 IsSelfStatLoweringEffect(enum MoveEffect effect);
@@ -293,6 +296,8 @@ bool32 IsAllyProtectingFromMove(u32 battlerAtk, u32 attackerMove, u32 allyMove);
 // party logic
 struct BattlePokemon *AllocSaveBattleMons(void);
 void FreeRestoreBattleMons(struct BattlePokemon *savedBattleMons);
+struct AiLogicData *AllocSaveAiLogicData(void);
+void FreeRestoreAiLogicData(struct AiLogicData *savedAiLogicData);
 s32 CountUsablePartyMons(u32 battlerId);
 bool32 IsPartyFullyHealedExceptBattler(u32 battler);
 bool32 PartyHasMoveCategory(u32 battlerId, enum DamageCategory category);
@@ -311,8 +316,6 @@ void IncreaseConfusionScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score
 void IncreaseFrostbiteScore(u32 battlerAtk, u32 battlerDef, u32 move, s32 *score);
 bool32 HasHPForDamagingSetup(u32 battlerAtk, u32 battlerDef, u32 hpThreshold);
 
-s32 AI_CalcPartyMonDamage(u32 move, u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, uq4_12_t *effectiveness, enum DamageCalcContext calcContext);
-u32 AI_WhoStrikesFirstPartyMon(u32 battlerAtk, u32 battlerDef, struct BattlePokemon switchinCandidate, u32 aiMoveConsidered, u32 playerMoveConsidered, enum ConsiderPriority ConsiderPriority);
 s32 AI_TryToClearStats(u32 battlerAtk, u32 battlerDef, bool32 isDoubleBattle);
 bool32 AI_ShouldCopyStatChanges(u32 battlerAtk, u32 battlerDef);
 bool32 AI_ShouldSetUpHazards(u32 battlerAtk, u32 battlerDef, u32 move, struct AiLogicData *aiData);
@@ -325,6 +328,7 @@ u32 GetIncomingMove(u32 battler, u32 opposingBattler, struct AiLogicData *aiData
 u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicData *aiData);
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
+void SetBattlerFieldStatusForSwitchin(u32 battler);
 
 // Switching and item helpers
 bool32 AiExpectsToFaintPlayer(u32 battler);

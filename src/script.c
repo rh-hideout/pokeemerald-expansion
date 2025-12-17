@@ -162,7 +162,11 @@ void ScriptJump(struct ScriptContext *ctx, const u8 *ptr)
 
 void ScriptCall(struct ScriptContext *ctx, const u8 *ptr)
 {
-    ScriptPush(ctx, ctx->scriptPtr);
+    bool32 failed = ScriptPush(ctx, ctx->scriptPtr);
+    assertf(!failed, "could not push %p", ptr)
+    {
+        return;
+    }
     ctx->scriptPtr = ptr;
 }
 
