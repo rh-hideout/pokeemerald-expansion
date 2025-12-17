@@ -1968,6 +1968,7 @@ u16 CountMaxPossibleRematch(u16 trainerId)
         if (gRematchTable[trainerId].trainerIds[i] == 0)
             return i;
     }
+    return REMATCHES_COUNT - 1;
 }
 
 u16 CountBattledRematchTeams(u16 trainerId)
@@ -1977,13 +1978,13 @@ u16 CountBattledRematchTeams(u16 trainerId)
     if (HasTrainerBeenFought(gRematchTable[trainerId].trainerIds[0]) != TRUE)
         return 0;
 
-    for (i = 1; i < REMATCHES_COUNT; i++)
+    for (u32 i = 1; i < REMATCHES_COUNT; i++)
     {
         if (gRematchTable[trainerId].trainerIds[i] == 0)
-            break;
+            return i;
         if (!HasTrainerBeenFought(gRematchTable[trainerId].trainerIds[i]))
-            break;
+            return i;
     }
 
-    return i;
+    return REMATCHES_COUNT - 1;
 }
