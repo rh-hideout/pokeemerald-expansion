@@ -798,20 +798,20 @@ void TryRemoveOverworldWildEncounter(u32 localId)
     }
 }
 
-bool32 OWE_CheckRestrictedMovement(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew)
+bool32 OWE_CheckRestrictedMovement(s32 xInitial, s32 yInitial, s32 xNew, s32 yNew)
 {
-    u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
+    u32 metatileBehaviourInitial = MapGridGetMetatileBehaviorAt(xInitial, yInitial);
     u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
 
-    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourCurrent)
+    if (MetatileBehavior_IsLandWildEncounter(metatileBehaviourInitial)
         && MetatileBehavior_IsLandWildEncounter(metatileBehaviourNew))
         return FALSE;
 
-    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourCurrent)
+    if (MetatileBehavior_IsWaterWildEncounter(metatileBehaviourInitial)
         && MetatileBehavior_IsWaterWildEncounter(metatileBehaviourNew))
         return FALSE;
 
-    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourCurrent)
+    if (MetatileBehavior_IsIndoorEncounter(metatileBehaviourInitial)
         && MetatileBehavior_IsIndoorEncounter(metatileBehaviourNew))
         return FALSE;
 
