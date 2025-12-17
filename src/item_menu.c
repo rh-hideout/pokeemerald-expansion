@@ -937,7 +937,7 @@ static void GetItemNameFromPocket(u8 *dest, u16 itemId)
     {
     case POCKET_TM_HM:
         end = StringCopy(gStringVar2, GetMoveName(ItemIdToBattleMoveId(itemId)));
-        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, 61);
+        PrependFontIdToFit(gStringVar2, end, FONT_NARROW, NUM_TECHNICAL_MACHINES >= 100 ? 60 : 65);
         if (GetItemTMHMIndex(itemId) > NUM_TECHNICAL_MACHINES)
         {
             // Get HM number
