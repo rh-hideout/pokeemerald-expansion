@@ -2069,7 +2069,7 @@ static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
     {
         // Note that the shiny palette tag is `species + SPECIES_SHINY_TAG`, which must be increased with more pokemon
         // so that palette tags do not overlap
-        const u16 *palette = GetMonSpritePalFromSpecies(species, shiny, female, FALSE); //ETODO
+        const u16 *palette = GetMonSpritePalFromSpecies(species, shiny, female); //ETODO
         // palette already loaded
         if ((paletteNum = IndexOfSpritePaletteTag(species)) < 16)
             return paletteNum;

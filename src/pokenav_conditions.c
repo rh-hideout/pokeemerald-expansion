@@ -540,8 +540,8 @@ static void ConditionGraphDrawMonPic(s16 listId, u8 loadId)
     bool32 isShiny = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_SHINY, NULL);
     u32 personality = GetBoxOrPartyMonData(boxId, monId, MON_DATA_PERSONALITY, NULL);
     bool32 isEgg = GetBoxOrPartyMonData(boxId, monId, MON_DATA_IS_EGG, NULL);
-    LoadSpecialPokePic(menu->monPicGfx[loadId], species, personality, TRUE, isEgg);
-    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality, isEgg), 32);
+    LoadSpecialPokePicIsEgg(menu->monPicGfx[loadId], species, personality, TRUE, isEgg);
+    memcpy(&menu->monPal[loadId], GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg), 32);
 }
 
 u16 GetMonListCount(void)

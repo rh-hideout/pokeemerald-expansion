@@ -249,9 +249,14 @@ void DecompressPicFromTable(const struct CompressedSpriteSheet *src, void *buffe
     DecompressDataWithHeaderWram(src->data, buffer);
 }
 
-void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg)
+void HandleLoadSpecialPokePic(bool32 isFrontPic, void *dest, s32 species, u32 personality)
 {
-    LoadSpecialPokePic(dest, species, personality, isFrontPic, isEgg);
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
+}
+
+void HandleLoadSpecialPokePicIsEgg(bool32 isFrontPic, void *dest, s32 species, u32 personality, bool32 isEgg)
+{
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, isEgg);
 }
 
 //  Wrapper function for all decompression calls using formats with headers
@@ -1124,7 +1129,12 @@ static bool32 isModeSymDelta(enum CompressionMode mode)
     return FALSE;
 }
 
-void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg)
+void LoadSpecialPokePic(void *dest, s32 species, u32 personality, bool8 isFrontPic)
+{
+    LoadSpecialPokePicIsEgg(dest, species, personality, isFrontPic, FALSE);
+}
+
+void LoadSpecialPokePicIsEgg(void *dest, s32 species, u32 personality, bool8 isFrontPic, bool32 isEgg)
 {
     species = SanitizeSpeciesId(species);
     if (species == SPECIES_UNOWN)

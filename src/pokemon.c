@@ -6188,15 +6188,25 @@ const u16 *GetMonFrontSpritePal(struct Pokemon *mon)
     bool32 isShiny = GetMonData(mon, MON_DATA_IS_SHINY, NULL);
     u32 personality = GetMonData(mon, MON_DATA_PERSONALITY, NULL);
     bool32 isEgg = GetMonData(mon, MON_DATA_IS_EGG, NULL);
-    return GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality, isEgg);
+    return GetMonSpritePalFromSpeciesAndPersonalityIsEgg(species, isShiny, personality, isEgg);
 }
 
-const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality, bool32 isEgg)
+const u16 *GetMonSpritePalFromSpeciesAndPersonality(u16 species, bool32 isShiny, u32 personality)
 {
-    return GetMonSpritePalFromSpecies(species, isShiny, IsPersonalityFemale(species, personality), isEgg);
+    return GetMonSpritePalFromSpeciesIsEgg(species, isShiny, IsPersonalityFemale(species, personality), FALSE);
 }
 
-const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale, bool32 isEgg)
+const u16 *GetMonSpritePalFromSpeciesAndPersonalityIsEgg(u16 species, bool32 isShiny, u32 personality, bool32 isEgg)
+{
+    return GetMonSpritePalFromSpeciesIsEgg(species, isShiny, IsPersonalityFemale(species, personality), isEgg);
+}
+
+const u16 *GetMonSpritePalFromSpecies(u16 species, bool32 isShiny, bool32 isFemale)
+{
+    return GetMonSpritePalFromSpeciesIsEgg(species, isShiny, isFemale, FALSE);
+}
+
+const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 isFemale, bool32 isEgg)
 {
     species = SanitizeSpeciesId(species);
 

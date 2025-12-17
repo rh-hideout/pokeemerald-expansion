@@ -61,7 +61,7 @@ static bool16 DecompressPic(u16 species, u32 personality, bool8 isFrontPic, u8 *
 {
     if (!isTrainer)
     {
-        LoadSpecialPokePic(dest, species, personality, isFrontPic, FALSE);
+        LoadSpecialPokePic(dest, species, personality, isFrontPic);
     }
     else
     {
@@ -80,12 +80,12 @@ static void LoadPicPaletteByTagOrSlot(u16 species, bool8 isShiny, u32 personalit
         if (paletteTag == TAG_NONE)
         {
             sCreatingSpriteTemplate.paletteTag = TAG_NONE;
-            LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality, FALSE), OBJ_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+            LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), OBJ_PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
         }
         else
         {
             sCreatingSpriteTemplate.paletteTag = paletteTag;
-            LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality, FALSE), species);
+            LoadSpritePaletteWithTag(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), species);
         }
     }
     else
@@ -106,7 +106,7 @@ static void LoadPicPaletteByTagOrSlot(u16 species, bool8 isShiny, u32 personalit
 static void LoadPicPaletteBySlot(u16 species, bool8 isShiny, u32 personality, u8 paletteSlot, bool8 isTrainer)
 {
     if (!isTrainer)
-        LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality, FALSE), PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
+        LoadPalette(GetMonSpritePalFromSpeciesAndPersonality(species, isShiny, personality), PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
     else
         LoadPalette(gTrainerSprites[species].palette.data, PLTT_ID(paletteSlot), PLTT_SIZE_4BPP);
 }
