@@ -24,7 +24,7 @@
     F(MAX_LEVEL_EV_GAINS,        maxLevelEvGains,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(RECALCULATE_STATS,         recalculateStats,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Damage settings */ \
-    F(BURN_DAMAGE,               burnDamage,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(BURN_DAMAGE,               burnDamage,              (u32, GEN_COUNT - 1)) \
     F(BURN_FACADE_DMG,           burnFacadeDmg,           (u32, GEN_COUNT - 1)) \
     F(BINDING_DAMAGE,            bindingDamage,           (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(PSYWAVE_DMG,               psywaveDmg,              (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
