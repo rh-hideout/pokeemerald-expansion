@@ -418,43 +418,13 @@ bool8 CheckForTrainersWantingBattle(void)
             break;
     }
 
-
-    if (InBattlePyramid_() || InTrainerHillChallenge())
-    {
-        u8 facility;
-        const u8 *scriptEndPtr;
-
-        if (gNoOfApproachingTrainers > 0) 
-        {
-            ResetTrainerOpponentIds();
-            InitTrainerBattleParameter();
-
-            facility = *(gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
-            scriptEndPtr = gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
-            
-            gSelectedObjectEvent = gApproachingTrainers[0].objectEventId;
-            gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[0].objectEventId].localId;
-            BattleSetup_ConfigureFacilityTrainerBattle(facility, scriptEndPtr);
-            if (gNoOfApproachingTrainers > 1) 
-            {
-                facility = *(gApproachingTrainers[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
-                scriptEndPtr = gApproachingTrainers[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1;
-                
-                gApproachingTrainerId++;
-                gSelectedObjectEvent = gApproachingTrainers[1].objectEventId;
-                gSpecialVar_LastTalked = gObjectEvents[gApproachingTrainers[1].objectEventId].localId;
-                BattleSetup_ConfigureFacilityTrainerBattle(facility, scriptEndPtr);
-            }
-            gApproachingTrainerId = 0;
-
-            ConfigureApproachingFacilityTrainerBattle(gApproachingTrainers);
-            return TRUE;
-        }
-    }
-
     if (gNoOfApproachingTrainers > 0)
     {
-        ConfigureApproachingTrainerBattle(gApproachingTrainers);
+        if (InBattlePyramid() || InTrainerHillChallenge())
+            ConfigureApproachingFacilityTrainerBattle(gApproachingTrainers);
+        else
+            ConfigureApproachingTrainerBattle(gApproachingTrainers);
+            
         gTrainerApproachedPlayer = TRUE;
         gApproachingTrainerId = 0;
         return TRUE;

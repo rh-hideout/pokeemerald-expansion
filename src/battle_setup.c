@@ -1045,7 +1045,7 @@ else                \
     PUSH(alt)       \
 }                   \
 
-static const u8* BattleSetup_ConfigureFacilityTrainerBattleApproachingTrainer(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+static const u8* BattleSetup_ConfigureApproachingFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
     SetMapVarsToTrainerA();
 
@@ -1069,7 +1069,28 @@ static const u8* BattleSetup_ConfigureFacilityTrainerBattleApproachingTrainer(Tr
     return NULL;
 }
 
-static const u8* BattleSetup_ConfigureTrainerBattleApproachingTrainer(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+const u8* BattleSetup_ConfigureFacilityTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
+{
+    SetMapVarsToTrainerA();
+
+    PUSH(EventSnippet_Lock)
+    PUSH(EventSnippet_RevealTrainer)
+
+    if (GetTrainerFlag()) {
+        PUSH(EventSnippet_GotoPostBattleScript)
+        return NULL;
+    }
+
+    PUSH(EventSnippet_PlayTrainerEncounterMusic)
+    PUSH(EventSnippet_SetTrainerFacingDirection)
+    PUSH(EventSnippet_ShowTrainerIntroMsg)
+    PUSH(EventSnippet_DoTrainerBattle)
+    PUSH(EventSnippet_EndTrainerBattle)
+
+    return NULL;
+}
+
+static const u8* BattleSetup_ConfigureApproachingTrainerBattle(TrainerBattleParameter *battleParams, struct ScriptStack *scrStack)
 {
     SetMapVarsToTrainerA();
 
@@ -1097,7 +1118,7 @@ const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParam
 {
     if (isApproaching) 
     {
-        return BattleSetup_ConfigureTrainerBattleApproachingTrainer(battleParams, scrStack);
+        return BattleSetup_ConfigureApproachingTrainerBattle(battleParams, scrStack);
     }
 
     SetMapVarsToTrainerA();
@@ -1105,7 +1126,6 @@ const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParam
     PUSH(EventSnippet_Lock)
     PUSH(EventSnippet_RevealTrainer)
     
-    DebugPrintfLevel(MGBA_LOG_DEBUG, "wello");
     if ((GetTrainerFlag() && !battleParams->params.isRematch) 
     || (!IsTrainerReadyForRematch() && battleParams->params.isRematch)) {
         PUSH(EventSnippet_GotoPostBattleScript)
@@ -1132,38 +1152,6 @@ const u8 *BattleSetup_ConfigureTrainerBattle(TrainerBattleParameter *battleParam
     return NULL;
 }
 
-const u8* BattleSetup_ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
-{
-    sTrainerBattleEndScript = (u8*)scriptEndPtr;
-
-    switch (facility)
-    {
-    case FACILITY_BATTLE_PYRAMID:
-        if (gApproachingTrainerId == 0)
-        {
-            SetMapVarsToTrainerA();
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
-        }
-        else
-        {
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(gSpecialVar_LastTalked);
-        }
-        return EventScript_TryDoNormalTrainerBattle;
-    case FACILITY_BATTLE_TRAINER_HILL:
-        if (gApproachingTrainerId == 0)
-        {
-            SetMapVarsToTrainerA();
-            TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
-        }
-        else
-        {
-            TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(gSpecialVar_LastTalked);
-        }
-        return EventScript_TryDoNormalTrainerBattle;
-    default:
-        return sTrainerBattleEndScript;
-    }
-}
 
 
 void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTrainer)
@@ -1188,48 +1176,77 @@ void ConfigureApproachingTrainerBattle(struct ApproachingTrainer *approachingTra
 
 }
 
-void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *ApproachingTrainer)
+static bool8 SetFacilityOpponent(u8 facility, u8 localId, bool8 isTrainerA)
 {
+    switch (facility)
+    {
+    case FACILITY_BATTLE_PYRAMID:
+        if (isTrainerA)
+            TRAINER_BATTLE_PARAM.opponentA = LocalIdToPyramidTrainerId(localId);
+        else
+            TRAINER_BATTLE_PARAM.opponentB = LocalIdToPyramidTrainerId(localId);
+
+        return TRUE;
+    case FACILITY_BATTLE_TRAINER_HILL:
+        if (isTrainerA)
+            TRAINER_BATTLE_PARAM.opponentA = LocalIdToHillTrainerId(localId);
+        else
+            TRAINER_BATTLE_PARAM.opponentB = LocalIdToHillTrainerId(localId);
+
+        return TRUE;
+    default:
+        return FALSE;
+    }
+}
+
+void ConfigureFacilityTrainerBattle(u8 facility, const u8* scriptEndPtr)
+{
+    InitTrainerBattleParameter();
+
     struct ScriptStack trainerBattleScriptStack;
     InitScriptStack(&trainerBattleScriptStack);
 
-    BattleSetup_ConfigureFacilityTrainerBattleApproachingTrainer(&gTrainerBattleParameter, &trainerBattleScriptStack);
+    SetFacilityOpponent(facility, gSpecialVar_LastTalked, TRUE);
+
+    sTrainerBattleEndScript = (u8*)scriptEndPtr;
+
+    BattleSetup_ConfigureFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
     ScriptContext_PushFromStack(&trainerBattleScriptStack);
     ScriptContext_RunFromTop();
 }
 
-void ConfigureAndSetUpOneTrainerBattle(u8 trainerObjEventId, const u8 *trainerScript)
+void ConfigureApproachingFacilityTrainerBattle(struct ApproachingTrainer *approachingTrainer)
 {
-    TrainerBattleParameter *battleParams = (TrainerBattleParameter*)(trainerScript + TRAINERBATTLE_OPCODE_OFFSET);
+    u8 facility, localId;
+    const u8 *scriptEndPtr;
 
-    gSelectedObjectEvent = trainerObjEventId;
-    gSpecialVar_LastTalked = gObjectEvents[trainerObjEventId].localId;
+    InitTrainerBattleParameter();
 
-    TrainerBattleLoadArgs(battleParams->data);
-    BattleSetup_ConfigureTrainerBattle(battleParams, NULL, TRUE);
-    ScriptContext_SetupScript(EventScript_StartTrainerApproach);
-    LockPlayerFieldControls();
-}
+    struct ScriptStack trainerBattleScriptStack;
+    InitScriptStack(&trainerBattleScriptStack);
 
-void ConfigureTwoTrainersBattle(u8 trainerObjEventId, const u8 *trainerScript)
-{
-    TrainerBattleParameter *battleParams = (TrainerBattleParameter*)(trainerScript + TRAINERBATTLE_OPCODE_OFFSET);
+    facility = *(approachingTrainer[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
+    localId = gObjectEvents[approachingTrainer[0].objectEventId].localId;
+    scriptEndPtr = approachingTrainer[0].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
 
-    gSelectedObjectEvent = trainerObjEventId;
-    gSpecialVar_LastTalked = gObjectEvents[trainerObjEventId].localId;
+    SetFacilityOpponent(facility, localId, TRUE);
+    
+    if (gNoOfApproachingTrainers > 1)
+    {
+        gApproachingTrainerId++; // TODO might not be needed here. 
+        facility = *(approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET);
+        localId = gObjectEvents[approachingTrainer[1].objectEventId].localId;
+        scriptEndPtr = approachingTrainer[1].trainerScriptPtr + FACILITYBATTLE_OPCODE_OFFSET + 1; 
 
-    if (gApproachingTrainerId == 0)
-        TrainerBattleLoadArgs(battleParams->data);
-    else
-        TrainerBattleLoadArgsSecondTrainer(battleParams->data);
+        SetFacilityOpponent(facility, localId, FALSE);
+    }
 
-    BattleSetup_ConfigureTrainerBattle(battleParams, NULL, TRUE);
-}
+    sTrainerBattleEndScript = (u8*)scriptEndPtr;
+    gApproachingTrainerId = 0;
 
-void SetUpTwoTrainersBattle(void)
-{
-    ScriptContext_SetupScript(EventScript_StartTrainerApproach);
-    LockPlayerFieldControls();
+    BattleSetup_ConfigureApproachingFacilityTrainerBattle(&gTrainerBattleParameter, &trainerBattleScriptStack);
+    ScriptContext_PushFromStack(&trainerBattleScriptStack);
+    ScriptContext_RunFromTop();
 }
 
 bool32 GetTrainerFlagFromScriptPointer(const u8 *data)
