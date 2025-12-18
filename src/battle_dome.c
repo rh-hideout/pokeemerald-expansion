@@ -3938,7 +3938,7 @@ static bool32 IsDomeRiskyMoveEffect(enum BattleMoveEffects effect)
 
 static bool32 IsDomeLuckyMove(u32 move)
 {
-    if (GetMoveAccuracy(move) <= 50)
+    if (GetMoveAccuracy(move) <= 50 && GetMoveAccuracy(move) != 0)
         return TRUE;
     switch(GetMoveEffect(move))
     {

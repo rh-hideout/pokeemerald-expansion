@@ -101,7 +101,7 @@ EWRAM_DATA static s8 sAnimFramesToWait = 0;
 EWRAM_DATA bool8 gAnimScriptActive = FALSE;
 EWRAM_DATA u8 gAnimVisualTaskCount = 0;
 EWRAM_DATA u8 gAnimSoundTaskCount = 0;
-EWRAM_DATA struct DisableStruct *gAnimDisableStructPtr = NULL;
+EWRAM_DATA struct LinkBattleAnim *gAnimDisableStructPtr = NULL;
 EWRAM_DATA s32 gAnimMoveDmg = 0;
 EWRAM_DATA u16 gAnimMovePower = 0;
 ALIGNED(4) EWRAM_DATA static u16 sAnimSpriteGfxTags[ANIM_SPRITE_GFX_COUNT] = {0};
@@ -1007,9 +1007,7 @@ static void Cmd_end(void)
 
     if (!continuousAnim) // May have been used for debug?
     {
-        // Debugging - ensure no hanging mon bg tasks
-        if (FuncIsActiveTask(Task_UpdateMonBg))
-            DebugPrintf("Move %d animation still has Task_UpdateMonBg active at the end!", gAnimMoveIndex);
+        assertf(!FuncIsActiveTask(Task_UpdateMonBg), "move %d still has Task_UpdateMonBg active at the end", gAnimMoveIndex);
 
         m4aMPlayVolumeControl(&gMPlayInfo_BGM, TRACKS_ALL, 256);
         if (!IsContest())

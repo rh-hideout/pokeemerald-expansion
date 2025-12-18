@@ -124,3 +124,22 @@ SINGLE_BATTLE_TEST("Weakness berries do not decrease the power of Struggle", s16
         EXPECT_EQ(results[0].damage, results[1].damage);
     }
 }
+
+SINGLE_BATTLE_TEST("Weakness berries do not activate if Disguise blocks the damage")
+{
+    GIVEN {
+        ASSUME(GetItemHoldEffect(ITEM_BABIRI_BERRY) == HOLD_EFFECT_RESIST_BERRY);
+        ASSUME(GetItemHoldEffectParam(ITEM_BABIRI_BERRY) == TYPE_STEEL);
+        ASSUME(GetMoveType(MOVE_METAL_CLAW) == TYPE_STEEL);
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_MIMIKYU) { Item(ITEM_BABIRI_BERRY); Ability(ABILITY_DISGUISE); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_METAL_CLAW); }
+    } SCENE {
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_HELD_ITEM_EFFECT, opponent);
+            MESSAGE("The Babiri Berry weakened the damage to the opposing Mimikyu!");
+        }
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_METAL_CLAW, player);
+    }
+}
