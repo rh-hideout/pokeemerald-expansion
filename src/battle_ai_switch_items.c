@@ -534,14 +534,14 @@ static bool32 FindMonThatAbsorbsOpponentsMove(u32 battler)
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_WATER_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_DRY_SKIN;
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_STORM_DRAIN;
     }
     else if (incomingType == TYPE_ELECTRIC || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_ELECTRIC))
     {
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_VOLT_ABSORB;
         absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_MOTOR_DRIVE;
-        if (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+        if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
             absorbingTypeAbilities[numAbsorbingAbilities++] = ABILITY_LIGHTNING_ROD;
     }
     else if (incomingType == TYPE_GRASS || (isOpposingBattlerChargingOrInvulnerable && incomingType == TYPE_GRASS))

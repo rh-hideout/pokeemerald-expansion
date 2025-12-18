@@ -3398,7 +3398,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_VOLT_ABSORB:
                 if (moveType == TYPE_ELECTRIC)
                 {
-                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
+                    if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && atkPartnerAbility == ABILITY_LIGHTNING_ROD)
                     {
                         RETURN_SCORE_MINUS(10);
                     }
@@ -3444,7 +3444,7 @@ static s32 AI_DoubleBattle(u32 battlerAtk, u32 battlerDef, u32 move, s32 score)
             case ABILITY_STORM_DRAIN:
             if (moveType == TYPE_WATER)
                 {
-                    if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5 && atkPartnerAbility == ABILITY_STORM_DRAIN)
+                    if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5 && atkPartnerAbility == ABILITY_STORM_DRAIN)
                     {
                         RETURN_SCORE_MINUS(10);
                     }
@@ -5397,7 +5397,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
     case EFFECT_ION_DELUGE:
         if ((aiData->abilities[battlerAtk] == ABILITY_VOLT_ABSORB
           || aiData->abilities[battlerAtk] == ABILITY_MOTOR_DRIVE
-          || (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && aiData->abilities[battlerAtk] == ABILITY_LIGHTNING_ROD))
+          || (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && aiData->abilities[battlerAtk] == ABILITY_LIGHTNING_ROD))
           && predictedType == TYPE_NORMAL)
             ADJUST_SCORE(DECENT_EFFECT);
         break;
@@ -5457,7 +5457,7 @@ static s32 AI_CalcMoveEffectScore(u32 battlerAtk, u32 battlerDef, u32 move, stru
         if (predictedMove != MOVE_NONE
          && (aiData->abilities[battlerAtk] == ABILITY_VOLT_ABSORB
           || aiData->abilities[battlerAtk] == ABILITY_MOTOR_DRIVE
-          || (B_REDIRECT_ABILITY_IMMUNITY >= GEN_5 && aiData->abilities[battlerAtk] == ABILITY_LIGHTNING_ROD)))
+          || (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5 && aiData->abilities[battlerAtk] == ABILITY_LIGHTNING_ROD)))
         {
             ADJUST_SCORE(DECENT_EFFECT);
         }

@@ -137,7 +137,7 @@
     F(WEATHER_FORMS,             weatherForms,            (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SYMBIOSIS_GEMS,            symbiosisGems,           (u32, GEN_COUNT - 1)) \
     F(ABSORBING_ABILITY_STRING,  absorbingAbilityString,  (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(REDIRECT_ABILITY_IMMUNITY, redirectAbilityImmunity, (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(REDIRECT_ABILITY_IMMUNITY, redirectAbilityImmunity, (u32, GEN_COUNT - 1)) \
     F(REDIRECT_ABILITY_ALLIES,   redirectAbilityAllies,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(LEAF_GUARD_PREVENTS_REST,  leafGuardPreventsRest,   (u32, GEN_COUNT - 1)) \
     F(TRANSISTOR_BOOST,          transistorBoost,         (u32, GEN_COUNT - 1)) \

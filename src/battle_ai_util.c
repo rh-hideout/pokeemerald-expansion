@@ -5766,7 +5766,7 @@ bool32 ShouldTriggerAbility(u32 battlerAtk, u32 battlerDef, enum Ability ability
         {
         case ABILITY_LIGHTNING_ROD:
         case ABILITY_STORM_DRAIN:
-            if (B_REDIRECT_ABILITY_IMMUNITY < GEN_5)
+            if (GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) < GEN_5)
                 return FALSE;
             else
                 return (BattlerStatCanRise(battlerDef, ability, STAT_SPATK) && HasMoveWithCategory(battlerDef, DAMAGE_CATEGORY_SPECIAL));

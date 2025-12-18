@@ -9525,7 +9525,7 @@ static bool32 IsElectricAbilityAffected(u32 battler, enum Ability ability)
         moveType = GetMoveType(gCurrentMove);
 
     if (moveType == TYPE_ELECTRIC
-     && (ability != ABILITY_LIGHTNING_ROD || B_REDIRECT_ABILITY_IMMUNITY >= GEN_5)
+     && (ability != ABILITY_LIGHTNING_ROD || GetConfig(CONFIG_REDIRECT_ABILITY_IMMUNITY) >= GEN_5)
      && GetBattlerAbility(battler) == ability)
         return TRUE;
     else

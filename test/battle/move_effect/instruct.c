@@ -239,6 +239,7 @@ DOUBLE_BATTLE_TEST("Instructed move will be redirected and absorbed by Lightning
     PARAMETRIZE { moveTarget = opponentLeft; }
     PARAMETRIZE { moveTarget = opponentRight; }
     GIVEN {
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, GEN_5);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_PIKACHU) { Ability(ABILITY_LIGHTNING_ROD); }

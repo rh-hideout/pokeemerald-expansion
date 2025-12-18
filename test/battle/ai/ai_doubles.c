@@ -542,54 +542,28 @@ AI_DOUBLE_BATTLE_TEST("AI sees corresponding absorbing abilities on partners")
     }
 }
 
-AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 4)")
+AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately")
 {
-    KNOWN_FAILING;
-    ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
-    ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
+    u32 ability, move, species, config, expectedMove;
 
-    enum Ability ability;
-    u32 move, species;
-
-    PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
-    PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
+    PARAMETRIZE { species = SPECIES_SEAKING; ability = ABILITY_LIGHTNING_ROD; move = MOVE_DISCHARGE; config = GEN_4; expectedMove = MOVE_HEADBUTT; }
+    PARAMETRIZE { species = SPECIES_SHELLOS; ability = ABILITY_STORM_DRAIN;   move = MOVE_SURF;      config = GEN_4; expectedMove = MOVE_HEADBUTT; }
+    PARAMETRIZE { species = SPECIES_SEAKING; ability = ABILITY_LIGHTNING_ROD; move = MOVE_DISCHARGE; config = GEN_5; expectedMove = MOVE_DISCHARGE; }
+    PARAMETRIZE { species = SPECIES_SHELLOS; ability = ABILITY_STORM_DRAIN;   move = MOVE_SURF;      config = GEN_5; expectedMove = MOVE_SURF; }
 
     GIVEN {
+        ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
+        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
-        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_4);
+        WITH_CONFIG(CONFIG_REDIRECT_ABILITY_IMMUNITY, config);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_HEADBUTT); }
         OPPONENT(species) { HP(1); Ability(ability); Moves(MOVE_ROUND); }
     } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, MOVE_HEADBUTT); }
-    }
-}
-
-AI_DOUBLE_BATTLE_TEST("AI treats an ally's redirection ability appropriately (gen 5+)")
-{
-    ASSUME(GetMoveTarget(MOVE_DISCHARGE) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveType(MOVE_DISCHARGE) == TYPE_ELECTRIC);
-    ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
-    ASSUME(GetMoveType(MOVE_SURF) == TYPE_WATER);
-
-    enum Ability ability;
-    u32 move, species;
-
-    PARAMETRIZE { species = SPECIES_SEAKING;    ability = ABILITY_LIGHTNING_ROD;    move = MOVE_DISCHARGE; }
-    PARAMETRIZE { species = SPECIES_SHELLOS;    ability = ABILITY_STORM_DRAIN;      move = MOVE_SURF; }
-
-    GIVEN {
-        AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_HP_AWARE);
-        WITH_CONFIG(B_REDIRECT_ABILITY_IMMUNITY, GEN_5);
-        PLAYER(SPECIES_WOBBUFFET);
-        PLAYER(SPECIES_WOBBUFFET);
-        OPPONENT(SPECIES_WOBBUFFET) { Moves(move, MOVE_HEADBUTT); }
-        OPPONENT(species) { HP(1); Ability(ability); Moves(MOVE_ROUND); }
-    } WHEN {
-        TURN { EXPECT_MOVE(opponentLeft, move); }
+        TURN { EXPECT_MOVE(opponentLeft, expectedMove); }
     }
 }
 
