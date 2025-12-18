@@ -190,7 +190,8 @@ void OWE_DoSpawnAnim(struct ObjectEvent *objectEvent)
         pan = 0;
     }
     PlayCry_NormalNoDucking(speciesId, pan, volume, CRY_PRIORITY_AMBIENT);
-    // Also move this to a dedicated ambient cries function that plays spawned mon cries.
+    // Also move this to a dedicated ambient cries function that plays spawned mon cries, when spawn timer gets to 0 but no new mons are spawned.
+    // Do a calculation of coordinate distance from player, north south edits volume, east west edits pan.
 
     if (isShiny)
     {
