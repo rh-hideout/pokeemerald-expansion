@@ -9939,19 +9939,47 @@ void ScriptFaceLastTalked(struct ScriptContext *ctx)
 
 u32 DetermineObjectEventDirectionFromObject(struct ObjectEvent *objectOne, struct ObjectEvent *objectTwo)
 {
-    s32 delta_x = objectTwo->currentCoords.x - objectOne->currentCoords.x;
-    s32 delta_y = objectTwo->currentCoords.y - objectOne->currentCoords.y;
+    s16 absX, absY;
+    s16 distanceX = objectOne->currentCoords.x - objectTwo->currentCoords.x;
+    s16 distanceY = objectOne->currentCoords.y - objectTwo->currentCoords.y;
 
-    if (delta_x < 0)
-        return DIR_EAST;
-    else if (delta_x > 0)
-        return DIR_WEST;
+    // Get absolute X distance.
+    if (distanceX < 0)
+        absX = distanceX * -1;
+    else
+        absX = distanceX;
 
-    if (delta_y < 0)
-        return DIR_SOUTH;
-    else if (delta_y > 0)
-        return DIR_NORTH;
+    // Get absolute Y distance.
+    if (distanceY < 0)
+        absY = distanceY * -1;
+    else
+        absY = distanceY;
 
+    if (absX > absY)
+    {
+        if (distanceX < 0)
+            return DIR_WEST;
+        else
+            return DIR_EAST;
+    }
+    else
+    {
+        if (absX < absY)
+        {
+            if (distanceY < 0)
+                return DIR_NORTH;
+            else
+                return DIR_SOUTH;
+        }
+        if (absX == absY)
+        {
+            if (distanceY < 0)
+                return DIR_NORTH;
+            else
+                return DIR_SOUTH;
+        }
+    }
+    
     return DIR_NONE;
 }
 
