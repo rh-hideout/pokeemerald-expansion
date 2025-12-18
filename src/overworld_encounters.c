@@ -799,8 +799,12 @@ void TryRemoveOverworldWildEncounter(u32 localId)
     }
 }
 
-bool32 OWE_CheckRestrictedMovement(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew)
+bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction)
 {
+    s16 xCurrent = objectEvent->currentCoords.x;
+    s16 yCurrent = objectEvent->currentCoords.y;
+    s16 xNew = xCurrent + gDirectionToVectors[direction].x;
+    s16 yNew = yCurrent + gDirectionToVectors[direction].y;
     u32 metatileBehaviourCurrent = MapGridGetMetatileBehaviorAt(xCurrent, yCurrent);
     u32 metatileBehaviourNew = MapGridGetMetatileBehaviorAt(xNew, yNew);
 

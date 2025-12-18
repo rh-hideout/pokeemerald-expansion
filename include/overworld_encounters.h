@@ -71,7 +71,7 @@ bool32 TryAndRemoveOldestOverworldEncounter(u32 localId, u8 *objectEventId);
 struct ObjectEventTemplate TryGetObjectEventTemplateForOverworldEncounter(const struct ObjectEventTemplate *template);
 void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *collider);
 void TryRemoveOverworldWildEncounter(u32 localId);
-bool32 OWE_CheckRestrictedMovement(s32 xCurrent, s32 yCurrent, s32 xNew, s32 yNew);
+bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
