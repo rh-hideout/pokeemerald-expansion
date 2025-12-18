@@ -1,7 +1,7 @@
 #include "global.h"
 #include "battle.h"
 #include "battle_ai_main.h"
-#include "battle_ai_switch_items.h"
+#include "battle_ai_switch.h"
 #include "battle_ai_util.h"
 #include "constants/battle_ai.h"
 #include "battle_anim.h"
@@ -68,7 +68,6 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
     [CONTROLLER_TRAINERSLIDEBACK]         = OpponentHandleTrainerSlideBack,
     [CONTROLLER_FAINTANIMATION]           = BtlController_HandleFaintAnimation,
     [CONTROLLER_PALETTEFADE]              = BtlController_Empty,
-    [CONTROLLER_SUCCESSBALLTHROWANIM]     = BtlController_Empty,
     [CONTROLLER_BALLTHROWANIM]            = BtlController_Empty,
     [CONTROLLER_PAUSE]                    = BtlController_Empty,
     [CONTROLLER_MOVEANIMATION]            = BtlController_HandleMoveAnimation,
@@ -114,6 +113,7 @@ static void (*const sOpponentBufferCommands[CONTROLLER_CMDS_COUNT])(u32 battler)
 
 void SetControllerToOpponent(u32 battler)
 {
+    gBattlerBattleController[battler] = BATTLE_CONTROLLER_OPPONENT;
     gBattlerControllerEndFuncs[battler] = OpponentBufferExecCompleted;
     gBattlerControllerFuncs[battler] = OpponentBufferRunCommand;
 }
@@ -371,7 +371,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
 {
     s16 xPos;
     u32 trainerPicId;
-    
+
     // Sets Multibattle test opponent sprites to not be Hiker
     if (IsMultibattleTest())
     {
@@ -392,7 +392,7 @@ static void OpponentHandleDrawTrainerPic(u32 battler)
     else
     {
         trainerPicId = OpponentGetTrainerPicId(battler);
-    
+
         if (gBattleTypeFlags & (BATTLE_TYPE_MULTI | BATTLE_TYPE_TWO_OPPONENTS) && !BATTLE_TWO_VS_ONE_OPPONENT)
         {
             if ((GetBattlerPosition(battler) & BIT_FLANK) != 0) // second mon
@@ -454,9 +454,12 @@ static void OpponentHandleChooseMove(u32 battler)
             gBattlerTarget = gAiBattleData->chosenTarget[battler];
 
             u32 chosenMove = moveInfo->moves[chosenMoveIndex];
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_USER)
+            enum MoveTarget target = GetBattlerMoveTargetType(battler, chosenMove);
+
+            if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
                 gBattlerTarget = battler;
-            if (GetBattlerMoveTargetType(battler, chosenMove) & MOVE_TARGET_BOTH)
+
+            if (target == TARGET_BOTH)
             {
                 gBattlerTarget = GetBattlerAtPosition(B_POSITION_PLAYER_LEFT);
                 if (gAbsentBattlerFlags & (1u << gBattlerTarget))
@@ -480,14 +483,14 @@ static void OpponentHandleChooseMove(u32 battler)
     else // Wild pokemon - use random move
     {
         u32 move;
-        u32 target;
         do
         {
             chosenMoveIndex = Random() & (MAX_MON_MOVES - 1);
             move = moveInfo->moves[chosenMoveIndex];
         } while (move == MOVE_NONE);
 
-        if (GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_USER)
+        enum MoveTarget target = GetBattlerMoveTargetType(battler, move);
+        if (target == TARGET_USER || target == TARGET_USER_OR_ALLY)
         {
             BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (battler << 8));
         }
@@ -498,7 +501,7 @@ static void OpponentHandleChooseMove(u32 battler)
             } while (!CanTargetBattler(battler, target, move));
 
             // Don't bother to check if they're enemies if the move can't attack ally
-            if (B_WILD_NATURAL_ENEMIES == TRUE && !(GetBattlerMoveTargetType(battler, move) & MOVE_TARGET_BOTH))
+            if (B_WILD_NATURAL_ENEMIES == TRUE && GetBattlerMoveTargetType(battler, move) != TARGET_BOTH)
             {
                 u32 speciesAttacker, speciesTarget;
                 speciesAttacker = gBattleMons[battler].species;

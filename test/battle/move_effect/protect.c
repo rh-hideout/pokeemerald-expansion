@@ -322,7 +322,7 @@ SINGLE_BATTLE_TEST("Protect: Multi-hit moves don't hit a protected target and fa
     PARAMETRIZE { move = MOVE_SPIKY_SHIELD; }
 
     GIVEN {
-        ASSUME(GetMoveEffect(MOVE_ARM_THRUST) == EFFECT_MULTI_HIT);
+        ASSUME(IsMultiHitMove(MOVE_ARM_THRUST));
         PLAYER(SPECIES_RAPIDASH);
         OPPONENT(SPECIES_BEAUTIFLY);
     } WHEN {
@@ -365,9 +365,9 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard protects self and ally from multi-target
     PARAMETRIZE { move = MOVE_HYPER_VOICE; } // 2 foes
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_SCRATCH) == MOVE_TARGET_SELECTED);
-        ASSUME(GetMoveTarget(MOVE_SURF) == MOVE_TARGET_FOES_AND_ALLY);
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_SCRATCH) == TARGET_SELECTED);
+        ASSUME(GetMoveTarget(MOVE_SURF) == TARGET_FOES_AND_ALLY);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -406,8 +406,8 @@ DOUBLE_BATTLE_TEST("Protect: Wide Guard can not fail on consecutive turns (Gen6+
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_WIDE_GUARD, config);
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        WITH_CONFIG(CONFIG_WIDE_GUARD, config);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET);
@@ -472,7 +472,7 @@ DOUBLE_BATTLE_TEST("Protect: Quick Guard can not fail on consecutive turns (Gen6
     PARAMETRIZE { config = GEN_6; passes = 2; }
     PASSES_RANDOMLY(passes, 2);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_QUICK_GUARD, config);
+        WITH_CONFIG(CONFIG_QUICK_GUARD, config);
         ASSUME(GetMovePriority(MOVE_QUICK_ATTACK) == 1);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);
@@ -503,8 +503,8 @@ DOUBLE_BATTLE_TEST("Protect: Crafty Shield protects self and ally from status mo
     PARAMETRIZE { move = MOVE_SCRATCH; targetOpponent = opponentRight; }
 
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_LEER) == MOVE_TARGET_BOTH);
-        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == MOVE_TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_LEER) == TARGET_BOTH);
+        ASSUME(GetMoveTarget(MOVE_HYPER_VOICE) == TARGET_BOTH);
         ASSUME(GetMoveCategory(MOVE_HYPER_VOICE) == DAMAGE_CATEGORY_SPECIAL);
         PLAYER(SPECIES_WOBBUFFET);
         PLAYER(SPECIES_WOBBUFFET);

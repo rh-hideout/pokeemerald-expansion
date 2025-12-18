@@ -131,7 +131,7 @@ bool32 IsTypeStellarBoosted(u32 battler, enum Type type)
 
 // Returns the STAB power multiplier to use when Terastallized.
 // Power multipliers from Smogon Research thread.
-uq4_12_t GetTeraMultiplier(struct DamageContext *ctx)
+uq4_12_t GetTeraMultiplier(struct BattleContext *ctx)
 {
     enum Type teraType = GetBattlerTeraType(ctx->battlerAtk);
 

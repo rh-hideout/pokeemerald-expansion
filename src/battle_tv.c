@@ -577,7 +577,7 @@ static bool8 IsNotSpecialBattleString(enum StringID stringId)
         return FALSE;
 }
 
-void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags, struct DisableStruct *disableStructPtr)
+void BattleTv_SetDataBasedOnMove(u16 move, u16 weatherFlags)
 {
     struct BattleTv *tvPtr;
     u32 atkSide, defSide;
@@ -816,7 +816,7 @@ static void AddMovePoints(u8 caseId, u16 arg1, u8 arg2, u8 arg3)
                 baseFromEffect += 3;
             break;
         case EFFECT_CONFUSE:
-            if (GetMoveTarget(move) == MOVE_TARGET_FOES_AND_ALLY)
+            if (GetBattlerMoveTargetType(gBattlerAttacker, move) == TARGET_FOES_AND_ALLY)
                 baseFromEffect += 2;
             break;
         default:
@@ -1272,7 +1272,7 @@ static void TrySetBattleSeminarShow(void)
         powerOverride = 0;
         if (ShouldCalculateDamage(gCurrentMove, &dmgByMove[i], &powerOverride))
         {
-            struct DamageContext ctx = {0};
+            struct BattleContext ctx = {0};
             ctx.battlerAtk = gBattlerAttacker;
             ctx.battlerDef = gBattlerTarget;
             ctx.move = ctx.chosenMove = gCurrentMove;
@@ -1406,6 +1406,6 @@ static void AddPointsBasedOnWeather(u16 weatherFlags, u16 move, u8 moveSlot)
         AddMovePoints(PTS_SUN, move, moveSlot, 0);
     else if (weatherFlags & B_WEATHER_SANDSTORM)
         AddMovePoints(PTS_SANDSTORM, move, moveSlot, 0);
-    else if (weatherFlags & (B_WEATHER_HAIL | B_WEATHER_SNOW))
+    else if (weatherFlags & B_WEATHER_ICY_ANY)
         AddMovePoints(PTS_HAIL_SNOW, move, moveSlot, 0);
 }

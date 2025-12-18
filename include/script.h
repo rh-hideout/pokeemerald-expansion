@@ -17,7 +17,8 @@ struct ScriptContext
 {
     u8 mode;
     u8 comparisonResult;
-    bool8 breakOnTrainerBattle;
+    bool8 breakOnTrainerBattle:1;
+    bool8 waitAfterCallNative:1;
     u8 (*nativePtr)(void);
     const u8 *scriptPtr;
     struct ScriptStack scrStack;

@@ -235,6 +235,7 @@ static u32 BattleTest_EstimateCost(void *data)
     const struct BattleTest *test = data;
     memset(STATE, 0, sizeof(*STATE));
     STATE->runRandomly = TRUE;
+    ResetStartingStatuses();
     InvokeTestFunction(test);
     cost = 1;
     if (STATE->parametersCount != 0)
@@ -528,7 +529,7 @@ static void BattleTest_Run(void *data)
 
         if (((DATA.explicitSpeeds[B_POSITION_PLAYER_LEFT] + DATA.explicitSpeeds[B_POSITION_PLAYER_RIGHT]) != (revisedPlayerExplicitSpeeds + revisedPartnerExplicitSpeeds)
          || (DATA.explicitSpeeds[B_POSITION_OPPONENT_LEFT] + DATA.explicitSpeeds[B_POSITION_OPPONENT_RIGHT]) != (revisedOpponentAExplicitSpeeds + revisedOpponentBExplicitSpeeds)))
-         
+
         {
             Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":LSpeed required for all PLAYERs and OPPONENTs");
         }
@@ -650,8 +651,43 @@ static u32 BattleTest_RandomUniform(enum RandomTag tag, u32 lo, u32 hi, bool32 (
         }
     }
     //trials
-    if (tag == STATE->rngTag)
+    switch (tag)
+    {
+    case RNG_AI_SCORE_TIE_SINGLES:
+    case RNG_AI_SCORE_TIE_DOUBLES_MOVE:
+        switch (DATA.scoreTieResolution)
+        {
+        case SCORE_TIE_HI:
+            return (DATA.trial.scoreTieCount - 1);
+        case SCORE_TIE_RANDOM:
+            if (DATA.trial.scoreTieCount == 0)
+                return 0; // Failsafe
+            else
+                return RandomUniformTrials(tag, lo, hi, reject, caller);
+        case SCORE_TIE_CHOSEN:
+            return DATA.scoreTieOverride;
+        default:
+            return 0;
+        }
+    case RNG_AI_SCORE_TIE_DOUBLES_TARGET:
+        switch (DATA.targetTieResolution)
+        {
+        case TARGET_TIE_HI:
+            return (DATA.trial.targetTieCount - 1);
+        case TARGET_TIE_RANDOM:
+            if (DATA.trial.targetTieCount == 0)
+                return 0; // Failsafe
+            else
+                return RandomUniformTrials(tag, lo, hi, reject, caller);
+        case TARGET_TIE_CHOSEN:
+            return DATA.targetTieOverride;
+        default:
+            return 0;
+        }
+    default:
+    if (tag && tag == STATE->rngTag)
         return RandomUniformTrials(tag, lo, hi, reject, caller);
+    }
 
     //default
     return RandomUniformDefaultValue(tag, lo, hi, reject, caller);
@@ -670,7 +706,7 @@ static u32 BattleTest_RandomWeightedArray(enum RandomTag tag, u32 sum, u32 n, co
     }
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomWeightedArrayTrials(tag, sum, n, weights, caller);
 
     //default
@@ -725,7 +761,7 @@ static const void *BattleTest_RandomElementArray(enum RandomTag tag, const void 
 
 
     //trials
-    if (tag == STATE->rngTag)
+    if (tag && tag == STATE->rngTag)
         return RandomElementArrayTrials(tag, array, size, count, caller);
 
     //default
@@ -1000,6 +1036,9 @@ void TestRunner_Battle_CheckChosenMove(u32 battlerId, u32 moveId, u32 target, en
         if (expectedAction->explicitTarget && expectedAction->target != target)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected target %s, got %s", filename, expectedAction->sourceLine, BattlerIdentifier(expectedAction->target), BattlerIdentifier(target));
 
+        if ((DATA.targetTieOverride >= DATA.trial.targetTieCount) && (DATA.targetTieResolution == TARGET_TIE_CHOSEN))
+            Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s:%d: TIE_BREAK_TARGET override %d, greater than count %d of targets with tied best score", filename, expectedAction->sourceLine, DATA.targetTieOverride, DATA.trial.targetTieCount);
+
         if (expectedAction->gimmick != GIMMICKS_COUNT && expectedAction->gimmick != gimmick)
             Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: Expected gimmick %s, got %s", filename, expectedAction->sourceLine, sGimmickIdentifiers[expectedAction->gimmick], sGimmickIdentifiers[gimmick]);
 
@@ -1074,12 +1113,6 @@ void TestRunner_Battle_CheckSwitch(u32 battlerId, u32 partyIndex)
     DATA.trial.aiActionsPlayed[battlerId]++;
 }
 
-void TestRunner_Battle_InvalidNoHPMon(u32 battlerId, u32 partyIndex)
-{
-    Test_ExitWithResult(TEST_RESULT_INVALID, SourceLine(0), ":L%s: INVALID: %s trying to send out a mon(id: %d) with 0 HP.",
-                        gTestRunnerState.test->filename, BattlerIdentifier(battlerId), gBattlerPartyIndexes[battlerId]);
-}
-
 static bool32 CheckComparision(s32 val1, s32 val2, u32 cmp)
 {
     switch (cmp)
@@ -1124,18 +1157,20 @@ static void CheckIfMaxScoreEqualExpectMove(u32 battlerId, s32 target, struct Exp
         if (scores[i] == scores[bestScoreId]
             && !aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: EXPECT_MOVE %S has the same best score(%d) as not expected MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
         // We DO NOT expect move 'i', but it has the same best score as another move.
         if (scores[i] == scores[bestScoreId]
             && aiAction->notMove
             && (aiAction->moveSlots & (1u << i))
-            && !(aiAction->moveSlots & (1u << bestScoreId)))
+            && !(aiAction->moveSlots & (1u << bestScoreId))
+            && (DATA.scoreTieResolution == SCORE_TIE_NONE))
         {
-            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S", filename,
+            Test_ExitWithResult(TEST_RESULT_FAIL, SourceLine(0), ":L%s:%d: NOT_EXPECT_MOVE %S has the same best score(%d) as MOVE %S. Consider using TIE_BREAK_SCORE.", filename,
                                 aiAction->sourceLine, GetMoveName(moves[i]), scores[i], GetMoveName(moves[bestScoreId]));
         }
     }
@@ -1547,6 +1582,12 @@ static void TearDownBattle(void)
     ZeroEnemyPartyMons();
     SetCurrentDifficultyLevel(DIFFICULTY_NORMAL);
 
+    // Set Battle Controllers to BATTLE_CONTROLLER_NONE
+    for (u32 i = 0; i < MAX_BATTLERS_COUNT; i++)
+    {
+        gBattlerBattleController[i] = BATTLE_CONTROLLER_NONE;
+    }
+
     FreeMonSpritesGfx();
     FreeBattleSpritesData();
     FreeBattleResources();
@@ -1738,10 +1779,26 @@ void SetFlagForTest(u32 sourceLine, u16 flagId)
     FlagSet(flagId);
 }
 
-void TestSetConfig(u32 sourceLine, enum GenConfigTag configTag, u32 value)
+void TestSetConfig(u32 sourceLine, enum ConfigTag configTag, u32 value)
 {
     INVALID_IF(!STATE->runGiven, "WITH_CONFIG outside of GIVEN");
-    SetGenConfig(configTag, value);
+    SetConfig(configTag, value);
+}
+
+void TieBreakScore(u32 sourceLine, enum RandomTag rngTag, enum ScoreTieResolution scoreTieRes, u32 value)
+{
+    INVALID_IF((rngTag != RNG_AI_SCORE_TIE_DOUBLES_MOVE && rngTag != RNG_AI_SCORE_TIE_SINGLES), "TIE_BREAK_SCORE requires RNG_AI_SCORE_TIE_SINGLES or RNG_AI_SCORE_TIE_DOUBLES_MOVE");
+    DATA.scoreTieResolution = scoreTieRes;
+    DATA.scoreTieTag = rngTag;
+    if (scoreTieRes == SCORE_TIE_CHOSEN)
+        DATA.scoreTieOverride = value;
+}
+
+void TieBreakTarget(u32 sourceLine, enum TargetTieResolution targetTieRes, u32 value)
+{
+    DATA.targetTieResolution = targetTieRes;
+    if (targetTieRes == TARGET_TIE_CHOSEN)
+        DATA.targetTieOverride = value;
 }
 
 void ClearFlagAfterTest(void)
@@ -1810,19 +1867,19 @@ void OpenPokemonMulti(u32 sourceLine, enum BattlerPosition position, u32 species
         if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.playerParty;
-    } 
+    }
     else if (position == B_POSITION_OPPONENT_LEFT) // MULTI_OPPONENT_A
     {
         partySize = &DATA.opponentPartySize;
         party = DATA.recordedBattle.opponentParty;
-    } 
+    }
     else // MULTI_OPPONENT_B
     {
         partySize = &DATA.opponentPartySize;
         if ((*partySize == 0) || (*partySize == 1) || (*partySize == 2))
             *partySize = 3;
         party = DATA.recordedBattle.opponentParty;
-    } 
+    }
     INVALID_IF(*partySize >= PARTY_SIZE, "Too many Pokemon in party");
     DATA.currentPosition = position;
     DATA.currentPartyIndex = *partySize;
@@ -2211,7 +2268,7 @@ static const char *BattlerIdentifier(s32 battlerId)
     case BATTLE_TEST_AI_TWO_VS_ONE:
     case BATTLE_TEST_ONE_VS_TWO:
     case BATTLE_TEST_AI_ONE_VS_TWO:
-        return sBattlerIdentifiersDoubles[battlerId]; 
+        return sBattlerIdentifiersDoubles[battlerId];
     }
     return "<unknown>";
 }
@@ -2351,7 +2408,7 @@ void CloseTurn(u32 sourceLine)
     for (i = 0; i < STATE->battlersCount; i++)
     {
         if (!(DATA.actionBattlers & (1 << i)))
-        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case.
+        { // Multi test partner trainers want setting to RecordedPartner controller if no move set in this case; EXPECT_XXXX will set to PlayerPartner.
             if (IsAITest() && (i & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
                 SetAiActionToPass(sourceLine, i);
             else
@@ -2381,16 +2438,16 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
     }
     else
     {
-        u32 moveTarget = GetMoveTarget(moveId);
-        if (moveTarget == MOVE_TARGET_RANDOM
-         || moveTarget == MOVE_TARGET_BOTH
-         || moveTarget == MOVE_TARGET_DEPENDS
-         || moveTarget == MOVE_TARGET_FOES_AND_ALLY
-         || moveTarget == MOVE_TARGET_OPPONENTS_FIELD)
+        enum MoveTarget moveTarget = GetMoveTarget(moveId);
+        if (moveTarget == TARGET_RANDOM
+         || moveTarget == TARGET_BOTH
+         || moveTarget == TARGET_DEPENDS
+         || moveTarget == TARGET_FOES_AND_ALLY
+         || moveTarget == TARGET_OPPONENTS_FIELD)
         {
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_SELECTED || moveTarget == MOVE_TARGET_OPPONENT)
+        else if (moveTarget == TARGET_SELECTED || moveTarget == TARGET_OPPONENT)
         {
             // In AI Doubles not specified target allows any target for EXPECT_MOVE.
             if (GetBattleTest()->type != BATTLE_TEST_AI_DOUBLES)
@@ -2400,11 +2457,11 @@ s32 MoveGetTarget(s32 battlerId, u32 moveId, struct MoveContext *ctx, u32 source
 
             target = BATTLE_OPPOSITE(battlerId);
         }
-        else if (moveTarget == MOVE_TARGET_USER || moveTarget == MOVE_TARGET_ALL_BATTLERS)
+        else if (moveTarget == TARGET_USER || moveTarget == TARGET_ALL_BATTLERS || moveTarget == TARGET_FIELD)
         {
             target = battlerId;
         }
-        else if (moveTarget == MOVE_TARGET_ALLY)
+        else if (moveTarget == TARGET_ALLY)
         {
             target = BATTLE_PARTNER(battlerId);
         }
@@ -2644,7 +2701,7 @@ void ExpectSendOut(u32 sourceLine, struct BattlePokemon *battler, u32 partyIndex
     if (!(DATA.actionBattlers & (1 << battlerId)))
     { // Multi test partner trainers want setting to PlayerPartner controller even if no move set in this case.
         if (IsAITest() && (((battlerId & BIT_SIDE) == B_SIDE_OPPONENT) // If Move was not specified, allow any move used.
-         || (IsMultibattleTest() && battlerId == B_POSITION_PLAYER_RIGHT)))
+         || (IsMultibattleTest() && battlerId == B_BATTLER_2)))
             SetAiActionToPass(sourceLine, battlerId);
         else
             Move(sourceLine, battler, (struct MoveContext) { move: MOVE_CELEBRATE, explicitMove: TRUE });
