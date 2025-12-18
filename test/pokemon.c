@@ -231,12 +231,12 @@ TEST("givemon respects perfectIVCount")
     ZeroPlayerPartyMons();
     u32 perfectIVs[6] = {0};
 
-    ASSUME(gSpeciesInfo[SPECIES_MEW].perfectIVCount == 3);
-    ASSUME(gSpeciesInfo[SPECIES_CELEBI].perfectIVCount == 3);
-    ASSUME(gSpeciesInfo[SPECIES_JIRACHI].perfectIVCount == 3);
-    ASSUME(gSpeciesInfo[SPECIES_MANAPHY].perfectIVCount == 3);
-    ASSUME(gSpeciesInfo[SPECIES_VICTINI].perfectIVCount == 3);
-    ASSUME(gSpeciesInfo[SPECIES_DIANCIE].perfectIVCount == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_MEW) == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_CELEBI) == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_JIRACHI) == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_MANAPHY) == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_VICTINI) == 3);
+    ASSUME(GetSpeciesPerfectIVCount(SPECIES_DIANCIE) == 3);
 
     RUN_OVERWORLD_SCRIPT(
         givemon SPECIES_MEW, 100;

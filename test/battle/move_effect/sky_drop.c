@@ -9,7 +9,7 @@ ASSUMPTIONS
 SINGLE_BATTLE_TEST("Sky Drop does no damage to Flying type Pokémon")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_PIDGEY].weight < 2000);
+        ASSUME(GetSpeciesWeight(SPECIES_PIDGEY) < 2000);
         ASSUME(GetSpeciesType(SPECIES_PIDGEY, 1) == TYPE_FLYING);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIDGEY);
@@ -71,7 +71,7 @@ DOUBLE_BATTLE_TEST("Sky Drop is cancelled if Gravity activated")
 SINGLE_BATTLE_TEST("Sky Drop fails on heavy targets")
 {
     GIVEN {
-        ASSUME(gSpeciesInfo[SPECIES_METAGROSS].weight >= 2000);
+        ASSUME(GetSpeciesWeight(SPECIES_METAGROSS) >= 2000);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_METAGROSS);
     } WHEN {

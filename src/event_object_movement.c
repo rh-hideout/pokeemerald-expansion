@@ -1999,19 +1999,13 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
     switch (species)
     {
     case SPECIES_UNOWN: // Deal with Unown forms later
-        graphicsInfo = &gSpeciesInfo[species].overworldData;
+        graphicsInfo = GetSpeciesOverworldData(species);
         break;
     default:
-    #if P_GENDER_DIFFERENCES
-        if (female && gSpeciesInfo[species].overworldDataFemale.paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
-        {
-            graphicsInfo = &gSpeciesInfo[species].overworldDataFemale;
-        }
+        if (female)
+            graphicsInfo = GetSpeciesOverworldDataFemale(species);
         else
-    #endif
-        {
-            graphicsInfo = &gSpeciesInfo[species].overworldData;
-        }
+            graphicsInfo = GetSpeciesOverworldData(species);
         break;
     }
 
@@ -2019,7 +2013,7 @@ const struct ObjectEventGraphicsInfo *SpeciesToGraphicsInfo(u32 species, bool32 
     if ((graphicsInfo->tileTag == 0 && species < NUM_SPECIES) || (graphicsInfo->tileTag != TAG_NONE && species >= NUM_SPECIES))
     {
         if (OW_SUBSTITUTE_PLACEHOLDER)
-            return &gSpeciesInfo[SPECIES_NONE].overworldData;
+            return GetSpeciesOverworldData(SPECIES_NONE);
         return NULL;
     }
 #endif // OW_POKEMON_OBJECT_EVENTS
@@ -2032,34 +2026,30 @@ static u32 LoadDynamicFollowerPalette(u32 species, bool32 shiny, bool32 female)
     u32 paletteNum;
     // Use standalone palette, unless entry is OOB or NULL (fallback to front-sprite-based)
 #if OW_POKEMON_OBJECT_EVENTS == TRUE && OW_PKMN_OBJECTS_SHARE_PALETTES == FALSE
-    if ((shiny && gSpeciesInfo[species].overworldPalette)
-    || (!shiny && gSpeciesInfo[species].overworldShinyPalette))
+    if ((shiny && GetSpeciesOverworldPalette(species))
+    || (!shiny && GetSpeciesOverworldShinyPalette(species)))
     {
         struct SpritePalette spritePalette;
         u16 palTag = species + OBJ_EVENT_MON + (shiny ? OBJ_EVENT_MON_SHINY : 0);
-    #if P_GENDER_DIFFERENCES
-        if (female && gSpeciesInfo[species].overworldShinyPaletteFemale != NULL)
+        if (female)
             palTag += OBJ_EVENT_MON_FEMALE;
-    #endif
         // palette already loaded
         if ((paletteNum = IndexOfSpritePaletteTag(palTag)) < 16)
             return paletteNum;
         spritePalette.tag = palTag;
-    #if P_GENDER_DIFFERENCES
-        if (female && gSpeciesInfo[species].overworldPaletteFemale != NULL)
+        if (female)
         {
             if (shiny)
-                spritePalette.data = gSpeciesInfo[species].overworldShinyPaletteFemale;
+                spritePalette.data = GetSpeciesOverworldShinyPaletteFemale(species);
             else
-                spritePalette.data = gSpeciesInfo[species].overworldPaletteFemale;
+                spritePalette.data = GetSpeciesOverworldPaletteFemale(species);
         }
         else
-    #endif
         {
             if (shiny)
-                spritePalette.data = gSpeciesInfo[species].overworldShinyPalette;
+                spritePalette.data = GetSpeciesOverworldShinyPalette(species);
             else
-                spritePalette.data = gSpeciesInfo[species].overworldPalette;
+                spritePalette.data = GetSpeciesOverworldPalette(species);
         }
 
         paletteNum = LoadSpritePalette(&spritePalette);

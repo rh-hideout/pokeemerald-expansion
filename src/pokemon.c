@@ -1161,7 +1161,8 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
         iv = (value & (MAX_IV_MASK << 10)) >> 10;
         SetBoxMonData(boxMon, MON_DATA_SPDEF_IV, &iv);
 
-        if (gSpeciesInfo[species].perfectIVCount != 0)
+        u32 perfectIVCount = GetSpeciesPerfectIVCount(species);
+        if (perfectIVCount != 0)
         {
             iv = MAX_PER_STAT_IVS;
             // Initialize a list of IV indices.
@@ -1171,13 +1172,13 @@ void CreateBoxMon(struct BoxPokemon *boxMon, u16 species, u8 level, u8 fixedIV, 
             }
 
             // Select the IVs that will be perfected.
-            for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+            for (i = 0; i < NUM_STATS && i < perfectIVCount; i++)
             {
                 u8 index = Random() % (NUM_STATS - i);
                 selectedIvs[i] = availableIVs[index];
                 RemoveIVIndexFromList(availableIVs, index);
             }
-            for (i = 0; i < NUM_STATS && i < gSpeciesInfo[species].perfectIVCount; i++)
+            for (i = 0; i < NUM_STATS && i < perfectIVCount; i++)
             {
                 switch (selectedIvs[i])
                 {
@@ -2201,10 +2202,7 @@ void SetMultiuseSpriteTemplateToPokemon(u16 speciesTag, u8 battlerPosition)
             speciesTag = speciesTag - SPECIES_SHINY_TAG;
 
         speciesTag = SanitizeSpeciesId(speciesTag);
-        if (gSpeciesInfo[speciesTag].frontAnimFrames != NULL)
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[speciesTag].frontAnimFrames;
-        else
-            gMultiuseSpriteTemplate.anims = gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
+        gMultiuseSpriteTemplate.anims = GetSpeciesFrontAnimFrames(speciesTag);
     }
 }
 
@@ -3521,88 +3519,6 @@ bool8 IsPokemonStorageFull(void)
                 return FALSE;
 
     return TRUE;
-}
-
-const u8 *GetSpeciesName(u16 species)
-{
-    species = SanitizeSpeciesId(species);
-    if (gSpeciesInfo[species].speciesName[0] == 0)
-        return gSpeciesInfo[SPECIES_NONE].speciesName;
-    return gSpeciesInfo[species].speciesName;
-}
-
-const u8 *GetSpeciesCategory(u16 species)
-{
-    species = SanitizeSpeciesId(species);
-    if (gSpeciesInfo[species].categoryName[0] == 0)
-        return gSpeciesInfo[SPECIES_NONE].categoryName;
-    return gSpeciesInfo[species].categoryName;
-}
-
-const u8 *GetSpeciesPokedexDescription(u16 species)
-{
-    species = SanitizeSpeciesId(species);
-    if (gSpeciesInfo[species].description == NULL)
-        return gSpeciesInfo[SPECIES_NONE].description;
-    return gSpeciesInfo[species].description;
-}
-
-u32 GetSpeciesHeight(u16 species)
-{
-    return gSpeciesInfo[SanitizeSpeciesId(species)].height;
-}
-
-u32 GetSpeciesWeight(u16 species)
-{
-    return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
-}
-
-const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
-{
-    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
-    return learnset;
-}
-
-const u16 *GetSpeciesTeachableLearnset(u16 species)
-{
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].teachableLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].teachableLearnset;
-    return learnset;
-}
-
-const u16 *GetSpeciesEggMoves(u16 species)
-{
-    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
-    if (learnset == NULL)
-        return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
-    return learnset;
-}
-
-const struct Evolution *GetSpeciesEvolutions(u16 species)
-{
-    const struct Evolution *evolutions = gSpeciesInfo[SanitizeSpeciesId(species)].evolutions;
-    if (evolutions == NULL)
-        return gSpeciesInfo[SPECIES_NONE].evolutions;
-    return evolutions;
-}
-
-const u16 *GetSpeciesFormTable(u16 species)
-{
-    const u16 *formTable = gSpeciesInfo[SanitizeSpeciesId(species)].formSpeciesIdTable;
-    if (formTable == NULL)
-        return gSpeciesInfo[SPECIES_NONE].formSpeciesIdTable;
-    return formTable;
-}
-
-const struct FormChange *GetSpeciesFormChanges(u16 species)
-{
-    const struct FormChange *formChanges = gSpeciesInfo[SanitizeSpeciesId(species)].formChangeTable;
-    if (formChanges == NULL)
-        return gSpeciesInfo[SPECIES_NONE].formChangeTable;
-    return formChanges;
 }
 
 u8 CalculatePPWithBonus(u16 move, u8 ppBonuses, u8 moveIndex)
@@ -4968,7 +4884,7 @@ u16 NationalPokedexNumToSpecies(enum NationalDexOrder nationalNum)
 
     species = 1;
 
-    while (species < (NUM_SPECIES) && gSpeciesInfo[species].natDexNum != nationalNum)
+    while (species < (NUM_SPECIES) && SpeciesToNationalPokedexNum(species) != nationalNum)
         species++;
 
     if (species == NUM_SPECIES)
@@ -4995,20 +4911,11 @@ enum HoennDexOrder NationalToHoennOrder(enum NationalDexOrder nationalNum)
     return hoennNum + 1;
 }
 
-enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species)
-{
-    species = SanitizeSpeciesId(species);
-    if (!species)
-        return NATIONAL_DEX_NONE;
-
-    return gSpeciesInfo[species].natDexNum;
-}
-
 enum HoennDexOrder SpeciesToHoennPokedexNum(u16 species)
 {
     if (!species)
         return 0;
-    return NationalToHoennOrder(gSpeciesInfo[species].natDexNum);
+    return NationalToHoennOrder(SpeciesToNationalPokedexNum(species));
 }
 
 enum NationalDexOrder HoennToNationalOrder(enum HoennDexOrder hoennNum)
@@ -5590,7 +5497,7 @@ u8 CanLearnTeachableMove(u16 species, u16 move)
         {
             if (sUniversalMoves[i] == move)
             {
-                if (!gSpeciesInfo[species].tmIlliterate)
+                if (!IsSpeciesTMIlliterate(species))
                 {
                     if (move == MOVE_TERA_BLAST && GET_BASE_SPECIES_ID(species) == SPECIES_TERAPAGOS)
                         return FALSE;
@@ -6143,34 +6050,24 @@ const u16 *GetMonSpritePalFromSpeciesIsEgg(u16 species, bool32 isShiny, bool32 i
 
     if (isEgg)
     {
-        if (gSpeciesInfo[species].eggId != EGG_ID_NONE)
-            return gEggDatas[gSpeciesInfo[species].eggId].eggPalette;
+        if (GetSpeciesEggId(species) != EGG_ID_NONE)
+            return gEggDatas[GetSpeciesEggId(species)].eggPalette;
         else
-            return gSpeciesInfo[SPECIES_EGG].palette;
+            return GetSpeciesPalette(SPECIES_EGG);
     }
     else if (isShiny)
     {
-    #if P_GENDER_DIFFERENCES
-        if (gSpeciesInfo[species].shinyPaletteFemale != NULL && isFemale)
-            return gSpeciesInfo[species].shinyPaletteFemale;
+        if (isFemale)
+            return GetSpeciesShinyPaletteFemale(species);
         else
-    #endif
-        if (gSpeciesInfo[species].shinyPalette != NULL)
-            return gSpeciesInfo[species].shinyPalette;
-        else
-            return gSpeciesInfo[SPECIES_NONE].shinyPalette;
+            return GetSpeciesShinyPalette(species);
     }
     else
     {
-    #if P_GENDER_DIFFERENCES
-        if (gSpeciesInfo[species].paletteFemale != NULL && isFemale)
-            return gSpeciesInfo[species].paletteFemale;
+        if (isFemale)
+            return GetSpeciesPaletteFemale(species);
         else
-    #endif
-        if (gSpeciesInfo[species].palette != NULL)
-            return gSpeciesInfo[species].palette;
-        else
-            return gSpeciesInfo[SPECIES_NONE].palette;
+            return GetSpeciesPalette(species);
     }
 }
 
@@ -6189,11 +6086,6 @@ bool32 CannotForgetMove(u16 move)
         return FALSE;
 
     return IsMoveHM(move);
-}
-
-bool8 IsMonSpriteNotFlipped(u16 species)
-{
-    return gSpeciesInfo[species].noFlip;
 }
 
 s8 GetMonFlavorRelation(struct Pokemon *mon, u8 flavor)
@@ -6440,18 +6332,18 @@ void DoMonFrontSpriteAnimation(struct Sprite *sprite, u16 species, bool8 noCry, 
             if (HasTwoFramesAnimation(species))
                 StartSpriteAnim(sprite, 1);
         }
-        if (gSpeciesInfo[species].frontAnimDelay != 0)
+        if (GetSpeciesFrontAnimDelay(species) != 0)
         {
             // Animation has delay, start delay task
             u8 taskId = CreateTask(Task_AnimateAfterDelay, 0);
             STORE_PTR_IN_TASK(sprite, taskId, 0);
-            gTasks[taskId].sAnimId = gSpeciesInfo[species].frontAnimId;
-            gTasks[taskId].sAnimDelay = gSpeciesInfo[species].frontAnimDelay;
+            gTasks[taskId].sAnimId = GetSpeciesFrontAnimId(species);
+            gTasks[taskId].sAnimDelay = GetSpeciesFrontAnimDelay(species);
         }
         else
         {
             // No delay, start animation
-            LaunchAnimationTaskForFrontSprite(sprite, gSpeciesInfo[species].frontAnimId);
+            LaunchAnimationTaskForFrontSprite(sprite, GetSpeciesFrontAnimId(species));
         }
         sprite->callback = SpriteCallbackDummy_2;
     }
@@ -6461,20 +6353,20 @@ void PokemonSummaryDoMonAnimation(struct Sprite *sprite, u16 species, bool8 oneF
 {
     if (!oneFrame && HasTwoFramesAnimation(species))
         StartSpriteAnim(sprite, 1);
-    if (gSpeciesInfo[species].frontAnimDelay != 0)
+    if (GetSpeciesFrontAnimDelay(species) != 0)
     {
         // Animation has delay, start delay task
         u8 taskId = CreateTask(Task_PokemonSummaryAnimateAfterDelay, 0);
         STORE_PTR_IN_TASK(sprite, taskId, 0);
-        gTasks[taskId].sAnimId = gSpeciesInfo[species].frontAnimId;
-        gTasks[taskId].sAnimDelay = gSpeciesInfo[species].frontAnimDelay;
+        gTasks[taskId].sAnimId = GetSpeciesFrontAnimId(species);
+        gTasks[taskId].sAnimDelay = GetSpeciesFrontAnimDelay(species);
         SummaryScreen_SetAnimDelayTaskId(taskId);
         SetSpriteCB_MonAnimDummy(sprite);
     }
     else
     {
         // No delay, start animation
-        StartMonSummaryAnimation(sprite, gSpeciesInfo[species].frontAnimId);
+        StartMonSummaryAnimation(sprite, GetSpeciesFrontAnimId(species));
     }
 }
 
@@ -6584,7 +6476,7 @@ void HandleSetPokedexFlagFromMon(struct Pokemon *mon, u32 caseId)
 bool8 HasTwoFramesAnimation(u16 species)
 {
     return P_TWO_FRAME_FRONT_SPRITES
-        && gSpeciesInfo[species].frontAnimFrames != sAnims_SingleFramePlaceHolder
+        && GetSpeciesFrontAnimFrames(species) != sAnims_SingleFramePlaceHolder
         && species != SPECIES_UNOWN
         && !gTestRunnerHeadless;
 }
@@ -7069,20 +6961,6 @@ void TrySpecialOverworldEvo(void)
     SetMainCallback2(CB2_ReturnToField);
 }
 
-bool32 SpeciesHasGenderDifferences(u16 species)
-{
-#if P_GENDER_DIFFERENCES
-    if (gSpeciesInfo[species].frontPicFemale != NULL
-     || gSpeciesInfo[species].backPicFemale != NULL
-     || gSpeciesInfo[species].paletteFemale != NULL
-     || gSpeciesInfo[species].shinyPaletteFemale != NULL
-     || gSpeciesInfo[species].iconSpriteFemale != NULL)
-        return TRUE;
-#endif
-
-    return FALSE;
-}
-
 bool32 TryFormChange(u32 monId, enum BattleSide side, enum FormChanges method)
 {
     struct Pokemon *party = (side == B_SIDE_PLAYER) ? gPlayerParty : gEnemyParty;
@@ -7239,14 +7117,6 @@ void HealBoxPokemon(struct BoxPokemon *boxMon)
     BoxMonRestorePP(boxMon);
 }
 
-enum PokemonCry GetCryIdBySpecies(u16 species)
-{
-    species = SanitizeSpeciesId(species);
-    if (P_CRIES_ENABLED == FALSE || gSpeciesInfo[species].cryId >= CRY_COUNT || gTestRunnerHeadless)
-        return CRY_NONE;
-    return gSpeciesInfo[species].cryId;
-}
-
 u16 GetSpeciesPreEvolution(u16 species)
 {
     int i, j;
@@ -7317,22 +7187,14 @@ uq4_12_t GetDynamaxLevelHPMultiplier(u32 dynamaxLevel, bool32 inverseMultiplier)
     return UQ_4_12(1.5 + 0.05 * dynamaxLevel);
 }
 
-bool32 IsSpeciesRegionalForm(u32 species)
-{
-    return gSpeciesInfo[species].isAlolanForm
-        || gSpeciesInfo[species].isGalarianForm
-        || gSpeciesInfo[species].isHisuianForm
-        || gSpeciesInfo[species].isPaldeanForm;
-}
-
 bool32 IsSpeciesRegionalFormFromRegion(u32 species, u32 region)
 {
     switch (region)
     {
-    case REGION_ALOLA:  return gSpeciesInfo[species].isAlolanForm;
-    case REGION_GALAR:  return gSpeciesInfo[species].isGalarianForm;
-    case REGION_HISUI:  return gSpeciesInfo[species].isHisuianForm;
-    case REGION_PALDEA: return gSpeciesInfo[species].isPaldeanForm;
+    case REGION_ALOLA:  return IsSpeciesAlolanForm(species);
+    case REGION_GALAR:  return IsSpeciesGalarianForm(species);
+    case REGION_HISUI:  return IsSpeciesHisuianForm(species);
+    case REGION_PALDEA: return IsSpeciesPaldeanForm(species);
     default:            return FALSE;
     }
 }

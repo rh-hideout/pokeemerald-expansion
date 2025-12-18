@@ -4514,26 +4514,22 @@ static u16 CreateMonSpriteFromNationalDexNumberHGSS(u16 nationalNum, s16 x, s16 
 
 static u16 GetPokemonScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonScale;
+    return GetSpeciesPokedexScale(NationalPokedexNumToSpeciesHGSS(nationalNum));
 }
 
 static u16 GetPokemonOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
-    return gSpeciesInfo[nationalNum].pokemonOffset;
+    return GetSpeciesPokedexOffset(NationalPokedexNumToSpeciesHGSS(nationalNum));
 }
 
 static u16 GetTrainerScaleFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerScale;
+    return GetSpeciesPokedexTrainerScale(NationalPokedexNumToSpeciesHGSS(nationalNum));
 }
 
 static u16 GetTrainerOffsetFromNationalDexNumber(u16 nationalNum)
 {
-    nationalNum = NationalPokedexNumToSpeciesHGSS(nationalNum);
-    return gSpeciesInfo[nationalNum].trainerOffset;
+    return GetSpeciesPokedexTrainerOffset(NationalPokedexNumToSpeciesHGSS(nationalNum));
 }
 
 static u16 CreateSizeScreenTrainerPic(u16 species, s16 x, s16 y, s8 paletteSlot)
@@ -5103,7 +5099,7 @@ static bool8 CalculateMoves(void)
     u8 i;
 
     // Mega and Gmax Pokémon don't have distinct learnsets from their base form; so use base species for calculation
-    if (gSpeciesInfo[species].isMegaEvolution || gSpeciesInfo[species].isGigantamax)
+    if (IsSpeciesMegaEvolution(species) || IsSpeciesGigantamax(species))
         species = GetFormSpeciesId(species, 0);
 
     // Egg moves
@@ -7838,7 +7834,7 @@ static int DoPokedexSearch(u8 dexMode, u8 order, u8 abcGroup, enum BodyColor bod
         {
             species = NationalPokedexNumToSpecies(sPokedexView->pokedexList[i].dexNum);
 
-            if (bodyColor == gSpeciesInfo[species].bodyColor)
+            if (bodyColor == GetSpeciesBodyColor(species))
             {
                 sPokedexView->pokedexList[resultsCount] = sPokedexView->pokedexList[i];
                 resultsCount++;

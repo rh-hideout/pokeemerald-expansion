@@ -242,13 +242,13 @@ TEST("Species names fit on Battle Screen HP box")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
     if (GetSpeciesGenderRatio(i) != MON_GENDERLESS)
-        EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0) - genderWidthPx, widthPx);
+        EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0) - genderWidthPx, widthPx);
     else
-        EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+        EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Party Screen")
@@ -260,10 +260,10 @@ TEST("Species names fit on Party Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Pokemon Summary Screen")
@@ -275,10 +275,10 @@ TEST("Species names fit on Pokemon Summary Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Pokedex Screen")
@@ -290,10 +290,10 @@ TEST("Species names fit on Pokedex Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Pokedex Screen - Cries")
@@ -305,10 +305,10 @@ TEST("Species names fit on Pokedex Screen - Cries")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Pokemon Storage System")
@@ -319,11 +319,11 @@ TEST("Species names fit on Pokemon Storage System")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(FONT_NARROWER, gSpeciesInfo[species].speciesName, 0), 66);
-    EXPECT_LE(GetStringWidth(FONT_SHORT_NARROWER, gSpeciesInfo[species].speciesName, 0), 60);
+    EXPECT_LE(GetStringWidth(FONT_NARROWER, GetSpeciesName(species), 0), 66);
+    EXPECT_LE(GetStringWidth(FONT_SHORT_NARROWER, GetSpeciesName(species), 0), 60);
 }
 
 TEST("Species names fit on Contest Screen")
@@ -335,10 +335,10 @@ TEST("Species names fit on Contest Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Contest Screen - Rankings")
@@ -350,10 +350,10 @@ TEST("Species names fit on Contest Screen - Rankings")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Battle Dome Screen")
@@ -365,10 +365,10 @@ TEST("Species names fit on Battle Dome Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Hall of Fame")
@@ -380,10 +380,10 @@ TEST("Species names fit on Hall of Fame")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Naming Screen")
@@ -395,10 +395,10 @@ TEST("Species names fit on Naming Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on PokeNav Condition Screen")
@@ -410,10 +410,10 @@ TEST("Species names fit on PokeNav Condition Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on PokeNav Condition Search Screen")
@@ -425,10 +425,10 @@ TEST("Species names fit on PokeNav Condition Search Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on PokeNav Ribbon Screen")
@@ -440,10 +440,10 @@ TEST("Species names fit on PokeNav Ribbon Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on PokeNav Ribbon List Screen")
@@ -455,10 +455,10 @@ TEST("Species names fit on PokeNav Ribbon List Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species names fit on Battle Screen HP box for vanilla mons with the default font")
@@ -471,13 +471,13 @@ TEST("Species names fit on Battle Screen HP box for vanilla mons with the defaul
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].speciesName) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesName(i)) { species = i; }
         }
     }
     if (GetSpeciesGenderRatio(i) != MON_GENDERLESS)
-        EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0) - genderWidthPx, widthPx);
+        EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0) - genderWidthPx, widthPx);
     else
-        EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].speciesName, 0), widthPx);
+        EXPECT_LE(GetStringWidth(fontId, GetSpeciesName(species), 0), widthPx);
 }
 
 TEST("Species dex entries fit on Pokedex Screen")
@@ -489,10 +489,10 @@ TEST("Species dex entries fit on Pokedex Screen")
     {
         if (IsSpeciesEnabled(i))
         {
-            PARAMETRIZE_LABEL("%S", gSpeciesInfo[i].description) { species = i; }
+            PARAMETRIZE_LABEL("%S", GetSpeciesPokedexDescription(i)) { species = i; }
         }
     }
-    EXPECT_LE(GetStringWidth(fontId, gSpeciesInfo[species].description, 0), widthPx);
+    EXPECT_LE(GetStringWidth(fontId, GetSpeciesPokedexDescription(species), 0), widthPx);
 }
 
 TEST("Ability names fit on Pokemon Summary Screen")

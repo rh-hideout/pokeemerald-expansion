@@ -549,7 +549,7 @@ static void RemoveDexNavWindowAndGfx(void)
     FreeSpriteTilesByTag(HIDDEN_MON_ICON_TAG);
     FreeSpriteTilesByTag(LIT_STAR_TILE_TAG);
     FreeSpritePaletteByTag(HELD_ITEM_TAG);
-    SafeFreeMonIconPalette(sDexNavSearchDataPtr->species);
+    FreeMonIconPalette(sDexNavSearchDataPtr->species);
 
     // remove window
     ClearStdWindowAndFrameToTransparent(sDexNavSearchDataPtr->windowId, FALSE);

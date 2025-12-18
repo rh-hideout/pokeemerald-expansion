@@ -56,7 +56,7 @@ const u8 *GetPokedexRatingText(u32 count)
     for(i = 0; i < HOENN_DEX_COUNT; i++)
     {
         j = NationalPokedexNumToSpecies(HoennToNationalOrder(i + 1));
-        if (gSpeciesInfo[j].isMythical && !gSpeciesInfo[j].dexForceRequired)
+        if (IsSpeciesMythical(j) && !IsSpeciesDexForced(j))
         {
             if (GetSetPokedexFlag(j, FLAG_GET_CAUGHT))
                 count--;

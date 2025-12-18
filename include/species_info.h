@@ -4,6 +4,8 @@
 #include "constants/abilities.h"
 #include "constants/cries.h"
 #include "constants/egg_ids.h"
+#include "constants/event_objects.h"
+#include "constants/pokemon_animation.h"
 
 struct EvolutionParam
 {
@@ -339,5 +341,529 @@ static inline enum Ability GetSpeciesAbility(u16 species, u8 slot)
 {
     return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
 }
+
+static inline const u8 *GetSpeciesCategory(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].categoryName[0] == 0)
+        return gSpeciesInfo[SPECIES_NONE].categoryName;
+    return gSpeciesInfo[species].categoryName;
+}
+
+static inline const u8 *GetSpeciesName(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].speciesName[0] == 0)
+        return gSpeciesInfo[SPECIES_NONE].speciesName;
+    return gSpeciesInfo[species].speciesName;
+}
+
+static inline enum PokemonCry GetSpeciesCryId(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (P_CRIES_ENABLED == FALSE || gSpeciesInfo[species].cryId >= CRY_COUNT)
+        return CRY_NONE;
+    return gSpeciesInfo[species].cryId;
+}
+
+static inline enum NationalDexOrder SpeciesToNationalPokedexNum(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].natDexNum;
+}
+
+static inline u32 GetSpeciesHeight(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].height;
+}
+
+static inline u32 GetSpeciesWeight(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].weight;
+}
+
+static inline u32 GetSpeciesPokedexScale(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonScale;
+}
+
+static inline u32 GetSpeciesPokedexOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonOffset;
+}
+
+static inline u32 GetSpeciesPokedexTrainerScale(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].trainerScale;
+}
+
+static inline u32 GetSpeciesPokedexTrainerOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].trainerOffset;
+}
+
+static inline const u8 *GetSpeciesPokedexDescription(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].description == NULL)
+        return gSpeciesInfo[SPECIES_NONE].description;
+    return gSpeciesInfo[species].description;
+}
+
+static inline enum BodyColor GetSpeciesBodyColor(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].bodyColor;
+}
+
+static inline const u32 *GetSpeciesFrontPic(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].frontPic == NULL)
+        return gSpeciesInfo[SPECIES_NONE].frontPic;
+    return gSpeciesInfo[species].frontPic;
+}
+
+static inline const u32 *GetSpeciesFrontPicFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].frontPicFemale != NULL)
+        return gSpeciesInfo[species].frontPicFemale;
+#endif
+    return GetSpeciesFrontPic(species);
+}
+
+static inline u32 GetSpeciesFrontPicSize(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].frontPicSize;
+}
+
+static inline u32 GetSpeciesFrontPicSizeFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].frontPicFemale != NULL)
+        return gSpeciesInfo[species].frontPicSizeFemale;
+#endif
+    return GetSpeciesFrontPicSize(species);
+}
+
+static inline u32 GetSpeciesFrontPicYOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].frontPicYOffset;
+}
+
+static inline u32 GetSpeciesFrontAnimId(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].frontAnimId;
+}
+
+static inline u32 GetSpeciesFrontAnimDelay(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].frontAnimDelay;
+}
+
+static inline const union AnimCmd *const *GetSpeciesFrontAnimFrames(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].frontAnimFrames != NULL)
+        return gSpeciesInfo[species].frontAnimFrames;
+    return gSpeciesInfo[SPECIES_NONE].frontAnimFrames;
+}
+
+static inline u32 GetSpeciesEnemyElevation(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].enemyMonElevation;
+}
+
+static inline u32 GetSpeciesEnemyShadowXOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].enemyShadowXOffset;
+}
+
+static inline u32 GetSpeciesEnemyShadowYOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].enemyShadowYOffset;
+}
+
+static inline u32 GetSpeciesEnemyShadowSize(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].enemyShadowSize;
+}
+
+static inline u32 IsSpeciesEnemyShadowSuppressed(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].suppressEnemyShadow;
+}
+
+static inline bool32 IsMonSpriteNotFlipped(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].noFlip;
+}
+
+static inline const u32 *GetSpeciesBackPic(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].backPic == NULL)
+        return gSpeciesInfo[SPECIES_NONE].backPic;
+    return gSpeciesInfo[species].backPic;
+}
+
+static inline const u32 *GetSpeciesBackPicFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].backPicFemale != NULL)
+        return gSpeciesInfo[species].backPicFemale;
+#endif
+    return GetSpeciesBackPic(species);
+}
+
+static inline u32 GetSpeciesBackPicSize(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].backPicSize;
+}
+
+static inline u32 GetSpeciesBackPicSizeFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].backPicFemale != NULL)
+        return gSpeciesInfo[species].backPicSizeFemale;
+#endif
+    return GetSpeciesBackPicSize(species);
+}
+
+static inline u32 GetSpeciesBackPicYOffset(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].backPicYOffset;
+}
+
+static inline enum BackAnim GetSpeciesBackAnimSet(u16 species)
+{
+    if (gSpeciesInfo[species].backAnimId != BACK_ANIM_NONE)
+        return gSpeciesInfo[species].backAnimId - 1;
+    else
+        return BACK_ANIM_NONE;
+}
+
+static inline const u16 *GetSpeciesPalette(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].palette == NULL)
+        return gSpeciesInfo[SPECIES_NONE].palette;
+    return gSpeciesInfo[species].palette;
+}
+
+static inline const u16 *GetSpeciesPaletteFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].paletteFemale != NULL)
+        return gSpeciesInfo[species].paletteFemale;
+#endif
+    return GetSpeciesPalette(species);
+}
+
+static inline const u16 *GetSpeciesShinyPalette(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].shinyPalette == NULL)
+        return gSpeciesInfo[SPECIES_NONE].shinyPalette;
+    return gSpeciesInfo[species].shinyPalette;
+}
+
+static inline const u16 *GetSpeciesShinyPaletteFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].shinyPaletteFemale != NULL)
+        return gSpeciesInfo[species].shinyPaletteFemale;
+#endif
+    return GetSpeciesShinyPalette(species);
+}
+
+static inline const u8 *GetSpeciesIconSprite(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].iconSprite == NULL)
+        return gSpeciesInfo[SPECIES_NONE].iconSprite;
+    return gSpeciesInfo[species].iconSprite;
+}
+
+static inline const u8 *GetSpeciesIconSpriteFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL)
+        return gSpeciesInfo[species].iconSpriteFemale;
+#endif
+    return GetSpeciesIconSprite(species);
+}
+
+static inline u32 GetSpeciesIconPalIndex(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].iconPalIndex;
+}
+
+static inline u32 GetSpeciesIconPalIndexFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].iconSpriteFemale != NULL)
+        return gSpeciesInfo[species].iconPalIndexFemale;
+#endif
+    return GetSpeciesIconPalIndex(species);
+}
+
+static inline bool32 IsSpeciesRestrictedLegendary(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isRestrictedLegendary;
+}
+
+static inline bool32 IsSpeciesSubLegendary(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isSubLegendary;
+}
+
+static inline bool32 IsSpeciesMythical(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isMythical;
+}
+
+static inline bool32 IsSpeciesUltraBeast(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isUltraBeast;
+}
+
+static inline bool32 IsSpeciesParadox(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isParadox;
+}
+
+static inline bool32 IsSpeciesTotem(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isTotem;
+}
+
+static inline bool32 IsSpeciesMegaEvolution(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isMegaEvolution;
+}
+
+static inline bool32 IsSpeciesPrimalReversion(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isPrimalReversion;
+}
+
+static inline bool32 IsSpeciesUltraBurst(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isUltraBurst;
+}
+
+static inline bool32 IsSpeciesGigantamax(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isGigantamax;
+}
+
+static inline bool32 IsSpeciesTeraForm(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isTeraForm;
+}
+
+static inline bool32 IsSpeciesAlolanForm(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isAlolanForm;
+}
+
+static inline bool32 IsSpeciesGalarianForm(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isGalarianForm;
+}
+
+static inline bool32 IsSpeciesHisuianForm(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isHisuianForm;
+}
+
+static inline bool32 IsSpeciesPaldeanForm(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isPaldeanForm;
+}
+
+static inline bool32 IsSpeciesRegionalForm(u32 species)
+{
+    species = SanitizeSpeciesId(species);
+    return gSpeciesInfo[species].isAlolanForm
+        || gSpeciesInfo[species].isGalarianForm
+        || gSpeciesInfo[species].isHisuianForm
+        || gSpeciesInfo[species].isPaldeanForm;
+}
+
+static inline bool32 IsSpeciesTradeBanned(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].cannotBeTraded;
+}
+
+static inline u32 GetSpeciesPerfectIVCount(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].perfectIVCount;
+}
+
+static inline bool32 IsSpeciesDexForced(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].dexForceRequired;
+}
+
+static inline bool32 IsSpeciesTMIlliterate(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].tmIlliterate;
+}
+
+static inline bool32 IsSpeciesFrontierBanned(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].isFrontierBanned;
+}
+
+static inline enum EggIds GetSpeciesEggId(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].eggId;
+}
+
+static inline u32 GetSpeciesPokemonJumpType(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].pokemonJumpType;
+}
+
+static inline bool32 IsSpeciesAllowedInPokemonJump(u16 species)
+{
+    return GetSpeciesPokemonJumpType(species) != PKMN_JUMP_TYPE_NONE;
+}
+
+static inline const struct LevelUpMove *GetSpeciesLevelUpLearnset(u16 species)
+{
+    const struct LevelUpMove *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].levelUpLearnset;
+    if (learnset == NULL)
+        return gSpeciesInfo[SPECIES_NONE].levelUpLearnset;
+    return learnset;
+}
+
+static inline const u16 *GetSpeciesTeachableLearnset(u16 species)
+{
+    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].teachableLearnset;
+    if (learnset == NULL)
+        return gSpeciesInfo[SPECIES_NONE].teachableLearnset;
+    return learnset;
+}
+
+static inline const u16 *GetSpeciesEggMoves(u16 species)
+{
+    const u16 *learnset = gSpeciesInfo[SanitizeSpeciesId(species)].eggMoveLearnset;
+    if (learnset == NULL)
+        return gSpeciesInfo[SPECIES_NONE].eggMoveLearnset;
+    return learnset;
+}
+
+static inline const struct Evolution *GetSpeciesEvolutions(u16 species)
+{
+    const struct Evolution *evolutions = gSpeciesInfo[SanitizeSpeciesId(species)].evolutions;
+    if (evolutions == NULL)
+        return gSpeciesInfo[SPECIES_NONE].evolutions;
+    return evolutions;
+}
+
+static inline const u16 *GetSpeciesFormTable(u16 species)
+{
+    const u16 *formTable = gSpeciesInfo[SanitizeSpeciesId(species)].formSpeciesIdTable;
+    if (formTable == NULL)
+        return gSpeciesInfo[SPECIES_NONE].formSpeciesIdTable;
+    return formTable;
+}
+
+static inline const struct FormChange *GetSpeciesFormChanges(u16 species)
+{
+    const struct FormChange *formChanges = gSpeciesInfo[SanitizeSpeciesId(species)].formChangeTable;
+    if (formChanges == NULL)
+        return gSpeciesInfo[SPECIES_NONE].formChangeTable;
+    return formChanges;
+}
+
+static inline bool32 SpeciesHasGenderDifferences(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    if (gSpeciesInfo[species].frontPicFemale != NULL
+     || gSpeciesInfo[species].backPicFemale != NULL
+     || gSpeciesInfo[species].paletteFemale != NULL
+     || gSpeciesInfo[species].shinyPaletteFemale != NULL
+     || gSpeciesInfo[species].iconSpriteFemale != NULL)
+        return TRUE;
+#endif
+
+    return FALSE;
+}
+
+#if P_FOOTPRINTS
+static inline const u8 *GetSpeciesFootprint(u16 species)
+{
+    return gSpeciesInfo[SanitizeSpeciesId(species)].footprint;
+}
+#endif // P_FOOTPRINTS
+
+#if OW_POKEMON_OBJECT_EVENTS
+static inline const struct ObjectEventGraphicsInfo *GetSpeciesOverworldData(u16 species)
+{
+    return &gSpeciesInfo[SanitizeSpeciesId(species)].overworldData;
+}
+
+static inline const struct ObjectEventGraphicsInfo *GetSpeciesOverworldDataFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].overworldDataFemale.paletteTag == OBJ_EVENT_PAL_TAG_DYNAMIC)
+        return &gSpeciesInfo[species].overworldDataFemale;
+#endif
+    return GetSpeciesOverworldData(species);
+}
+
+static inline const void *GetSpeciesOverworldPalette(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].overworldPalette == NULL)
+        return gSpeciesInfo[SPECIES_NONE].overworldPalette;
+    return gSpeciesInfo[species].overworldPalette;
+}
+
+static inline const u16 *GetSpeciesOverworldPaletteFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].overworldPaletteFemale != NULL)
+        return gSpeciesInfo[species].overworldPaletteFemale;
+#endif
+    return GetSpeciesOverworldPalette(species);
+}
+
+static inline const u16 *GetSpeciesOverworldShinyPalette(u16 species)
+{
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].overworldShinyPalette == NULL)
+        return gSpeciesInfo[SPECIES_NONE].overworldShinyPalette;
+    return gSpeciesInfo[species].overworldShinyPalette;
+}
+
+static inline const u16 *GetSpeciesOverworldShinyPaletteFemale(u16 species)
+{
+#if P_GENDER_DIFFERENCES
+    species = SanitizeSpeciesId(species);
+    if (gSpeciesInfo[species].overworldShinyPaletteFemale != NULL)
+        return gSpeciesInfo[species].overworldShinyPaletteFemale;
+#endif
+    return GetSpeciesOverworldShinyPalette(species);
+}
+
+#endif // OW_POKEMON_OBJECT_EVENTS
+
+#define gSpeciesInfo \
+_Pragma("GCC error \"Use getters instead of accessing gSpeciesInfo directly.\"") \
+gSpeciesInfo
 
 #endif // GUARD_SPECIES_INFO_H
