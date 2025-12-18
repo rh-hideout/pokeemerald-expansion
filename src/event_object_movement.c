@@ -11628,17 +11628,16 @@ bool8 MovementType_WanderAround_OverworldWildEncounter_Step4(struct ObjectEvent 
 {
     u8 directions[4];
     u8 chosenDirection;
-    s16 xInitial, yInitial, xNew, yNew;
+    s16 xCurrent, yCurrent, xNew, yNew;
     memcpy(directions, gStandardDirections, sizeof directions);
     chosenDirection = directions[Random() & 3];
     SetObjectEventDirection(objectEvent, chosenDirection);
-    xInitial = objectEvent->initialCoords.x;
-    yInitial = objectEvent->initialCoords.y;
-    xNew = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].x;
-    yNew = objectEvent->currentCoords.x + gDirectionToVectors[chosenDirection].y;
+    xCurrent = objectEvent->currentCoords.x;
+    yCurrent = objectEvent->currentCoords.y;
+    xNew = xCurrent + gDirectionToVectors[chosenDirection].x;
+    yNew = yCurrent + gDirectionToVectors[chosenDirection].y;
     sprite->sTypeFuncId = 5;
-    // Could add a flag for this check
-    if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(xInitial, yInitial, xNew, yNew))
+    if ((OW_WILD_ENCOUNTERS_RESTRICTED_MOVEMENT && OWE_CheckRestrictedMovement(xCurrent, yCurrent, xNew, yNew))
         || GetCollisionInDirection(objectEvent, chosenDirection))
         sprite->sTypeFuncId = 1;
 
