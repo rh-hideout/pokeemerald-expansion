@@ -1220,7 +1220,7 @@ u32 GetMonPersonality(u16 species, u8 gender, u8 nature, u8 unownLetter)
         nature = NATURE_RANDOM;
     }
 
-    assertf(unownLetter > NUM_UNOWN_FORMS, "invalid letter: %d", unownLetter)
+    assertf(unownLetter <= NUM_UNOWN_FORMS, "invalid letter: %d", unownLetter)
     {
         unownLetter = RANDOM_UNOWN_LETTER;
     }
