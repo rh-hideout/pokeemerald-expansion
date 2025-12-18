@@ -167,7 +167,7 @@ static u32 PickMonFromPool(const struct Trainer *trainer, u8 *poolIndexArray, u3
     //  If no mon has been found yet continue looking
     if (monIndex == POOL_SLOT_DISABLED)
         monIndex = pickFunctions.OtherFunction(trainer, poolIndexArray, partyIndex, monsCount, battleTypeFlags, rules);
-    //  If no mon still hasn't been found, return error and default to regular part generation
+    //  If a mon still hasn't been found, return POOL_SLOT_DISABLED which makes party generation default to regular party generation
     if (monIndex == POOL_SLOT_DISABLED)
         return monIndex;
 
