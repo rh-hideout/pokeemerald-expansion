@@ -11526,120 +11526,75 @@ static void Cmd_settypetorandomresistance(void)
 
     // Before Gen 5 Conversion 2 only worked on a move the attacker was actually hit by.
     // This changed later to the last move used by the selected target.
-    if (B_UPDATED_CONVERSION_2 < GEN_5)
+    u32 moveToCheck;
+    u32 typeToCheck;
+
+    if (GetConfig(CONFIG_UPDATED_CONVERSION_2) < GEN_5)
     {
-        if (gLastLandedMoves[gBattlerAttacker] == MOVE_NONE
-         || gLastLandedMoves[gBattlerAttacker] == MOVE_UNAVAILABLE)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (gBattleMoveEffects[GetMoveEffect(gLastLandedMoves[gBattlerAttacker])].twoTurnEffect
-              && gBattleMons[gLastHitBy[gBattlerAttacker]].volatiles.multipleTurns)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (gLastHitByType[gBattlerAttacker] == TYPE_STELLAR || gLastHitByType[gBattlerAttacker] == TYPE_MYSTERY)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
+        moveToCheck = gLastLandedMoves[gBattlerAttacker];
+        if (GetMoveEffect(moveToCheck) == EFFECT_STRUGGLE)
+            typeToCheck = TYPE_NORMAL;
         else
-        {
-            u32 i, resistTypes = 0;
-            u32 hitByType = gLastHitByType[gBattlerAttacker];
-
-            for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
-            {
-                switch (GetTypeModifier(hitByType, i))
-                {
-                case UQ_4_12(0):
-                case UQ_4_12(0.5):
-                    resistTypes |= 1u << i;
-                    break;
-                }
-            }
-
-            while (resistTypes != 0)
-            {
-                i = Random() % NUMBER_OF_MON_TYPES;
-                if (resistTypes & 1u << i)
-                {
-                    if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
-                    {
-                        resistTypes &= ~(1u << i); // Type resists, but the user is already of this type.
-                    }
-                    else
-                    {
-                        SET_BATTLER_TYPE(gBattlerAttacker, i);
-                        PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
-                        gBattlescriptCurrInstr = cmd->nextInstr;
-                        return;
-                    }
-                }
-            }
-
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
+            typeToCheck = gLastHitByType[gBattlerAttacker];
     }
     else
     {
-        if (gLastResultingMoves[gBattlerTarget] == MOVE_NONE
-         || gLastResultingMoves[gBattlerTarget] == MOVE_UNAVAILABLE
-         || gLastResultingMoves[gBattlerTarget] == MOVE_STRUGGLE)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (!BreaksThroughSemiInvulnerablity(gBattlerTarget, gCurrentMove))
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (gLastUsedMoveType[gBattlerTarget] == TYPE_NONE || gLastUsedMoveType[gBattlerTarget] == TYPE_STELLAR || gLastUsedMoveType[gBattlerTarget] == TYPE_MYSTERY)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
-        {
-            gBattlescriptCurrInstr = cmd->failInstr;
-        }
-        else
-        {
-            u32 i, resistTypes = 0;
+        moveToCheck = gLastResultingMoves[gBattlerTarget];
+        typeToCheck = gLastUsedMoveType[gBattlerTarget];
+    }
 
-            for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
+    if (moveToCheck == MOVE_NONE
+        || moveToCheck == MOVE_UNAVAILABLE)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (!BreaksThroughSemiInvulnerablity(gBattlerTarget, moveToCheck))
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (GetActiveGimmick(gBattlerAttacker) == GIMMICK_TERA)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else if (typeToCheck == TYPE_NONE || typeToCheck == TYPE_STELLAR || typeToCheck == TYPE_MYSTERY)
+    {
+        gBattlescriptCurrInstr = cmd->failInstr;
+    }
+    else
+    {
+        u32 i, resistTypes = 0;
+
+        for (i = 0; i < NUMBER_OF_MON_TYPES; i++) // Find all types that resist.
+        {
+            switch (GetTypeModifier(typeToCheck, i))
             {
-                switch (GetTypeModifier(gLastUsedMoveType[gBattlerTarget], i))
+            case UQ_4_12(0):
+            case UQ_4_12(0.5):
+                resistTypes |= 1u << i;
+                break;
+            }
+        }
+
+        while (resistTypes != 0)
+        {
+            i = Random() % NUMBER_OF_MON_TYPES;
+            if (resistTypes & 1u << i)
+            {
+                if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
                 {
-                case UQ_4_12(0):
-                case UQ_4_12(0.5):
-                    resistTypes |= 1u << i;
-                    break;
+                    resistTypes &= ~(1u << i); // Type resists, but the user is already of this type.
+                }
+                else
+                {
+                    SET_BATTLER_TYPE(gBattlerAttacker, i);
+                    PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
+                    gBattlescriptCurrInstr = cmd->nextInstr;
+                    return;
                 }
             }
-
-            while (resistTypes != 0)
-            {
-                i = Random() % NUMBER_OF_MON_TYPES;
-                if (resistTypes & 1u << i)
-                {
-                    if (IS_BATTLER_OF_TYPE(gBattlerAttacker, i))
-                    {
-                        resistTypes &= ~(1u << i); // Type resists, but the user is already of this type.
-                    }
-                    else
-                    {
-                        SET_BATTLER_TYPE(gBattlerAttacker, i);
-                        PREPARE_TYPE_BUFFER(gBattleTextBuff1, i);
-                        gBattlescriptCurrInstr = cmd->nextInstr;
-                        return;
-                    }
-                }
-            }
-
-            gBattlescriptCurrInstr = cmd->failInstr;
         }
+
+        gBattlescriptCurrInstr = cmd->failInstr;
     }
 }
 

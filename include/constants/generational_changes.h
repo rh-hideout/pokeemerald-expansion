@@ -66,7 +66,7 @@
     F(RECOIL_IF_MISS_DMG,        recoilIfMissDmg,         (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(KLUTZ_FLING_INTERACTION,   klutzFlingInteraction,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(UPDATED_CONVERSION,        updatedConversion,       (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(UPDATED_CONVERSION_2,      updatedConversion2,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(UPDATED_CONVERSION_2,      updatedConversion2,      (u32, GEN_COUNT - 1)) \
     F(PP_REDUCED_BY_SPITE,       ppReducedBySpite,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(EXTRAPOLATED_MOVE_FLAGS,   extrapolatedMoveFlags,   (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     /* Ability data settings */ \
