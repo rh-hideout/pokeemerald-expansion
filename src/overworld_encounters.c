@@ -842,5 +842,70 @@ void DespawnOldestOWE_Pal(void)
     }
 }
 
+bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    switch (mon->facingDirection)
+    {
+    case DIR_NORTH:
+        if (player->currentCoords.y < mon->currentCoords.y && (mon->currentCoords.y - player->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
+         && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            return TRUE;
+        break;
+    case DIR_SOUTH:
+        if (player->currentCoords.y > mon->currentCoords.y && (player->currentCoords.y - mon->currentCoords.y) <= OWE_MON_SIGHT_LENGTH
+         && player->currentCoords.x >= (mon->currentCoords.x - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.x <= (mon->currentCoords.x + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            return TRUE;
+        break;
+    case DIR_EAST:
+        if (player->currentCoords.x > mon->currentCoords.x && (player->currentCoords.x - mon->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
+         && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            return TRUE;
+        break;
+    case DIR_WEST:
+        if (player->currentCoords.x < mon->currentCoords.x && (mon->currentCoords.x - player->currentCoords.x) <= OWE_MON_SIGHT_LENGTH
+         && player->currentCoords.y >= (mon->currentCoords.y - ((OWE_MON_SIGHT_WIDTH - 1) / 2)) && player->currentCoords.y <= (mon->currentCoords.y + ((OWE_MON_SIGHT_WIDTH - 1) / 2)))
+            return TRUE;
+        break;
+    }
+
+    return FALSE;
+}
+
+bool32 OWE_IsPlayerInsideChaseRange(struct ObjectEvent *mon)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    if (player->currentCoords.y <= mon->currentCoords.y + OWE_CHASE_RANGE && player->currentCoords.y >= mon->currentCoords.y - OWE_CHASE_RANGE
+     && player->currentCoords.x <= mon->currentCoords.x + OWE_CHASE_RANGE && player->currentCoords.x >= mon->currentCoords.x - OWE_CHASE_RANGE)
+        return TRUE;
+
+    return FALSE;
+}
+
+u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon)
+{
+    struct ObjectEvent *player = &gObjectEvents[gPlayerAvatar.objectEventId];
+
+    switch (mon->movementDirection)
+    {
+    case DIR_NORTH:
+    case DIR_SOUTH:
+        if (player->currentCoords.x < mon->currentCoords.x)
+            return DIR_WEST;
+        else
+            return DIR_EAST;
+    case DIR_EAST:
+    case DIR_WEST:
+        if (player->currentCoords.y < mon->currentCoords.y)
+            return DIR_NORTH;
+        else
+            return DIR_SOUTH;
+    }
+
+    return mon->movementDirection;
+}
+
 #undef sOverworldEncounterLevel
 #undef sAge

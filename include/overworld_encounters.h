@@ -23,6 +23,11 @@
 #define OWE_SPAWN_TIME_VARIABILITY  60  // A random number of frames between 0 and this value will be added to OWE_TIME_BETWEEN_SPAWNS every reset for variability.
 #define OWE_SPAWN_TIME_MINIMUM      60  // The minimum value the spawn wait time can be reset to. Prevents spawn attempts every frame.
 
+#define OWE_MON_SIGHT_WIDTH         3
+#define OWE_MON_SIGHT_LENGTH        4
+
+#define OWE_CHASE_RANGE             5
+
 #define INVALID_SPAWN_SLOT 0xFF
 
 /*
@@ -73,5 +78,8 @@ void OWE_TryTriggerEncounter(struct ObjectEvent *obstacle, struct ObjectEvent *c
 void TryRemoveOverworldWildEncounter(u32 localId);
 bool32 OWE_CheckRestrictedMovement(struct ObjectEvent *objectEvent, u32 direction);
 void DespawnOldestOWE_Pal(void);
+bool32 OWE_CanMonSeePlayer(struct ObjectEvent *mon);
+bool32 OWE_IsPlayerInsideChaseRange(struct ObjectEvent *mon);
+u32 OWE_DirectionToPlayerFromCollision(struct ObjectEvent *mon);
 
 #endif // GUARD_OVERWORLD_ENCOUNTERS_H
