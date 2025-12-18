@@ -262,7 +262,7 @@ s32 LearnMove(const struct MoveLearnUI *ui, u8 taskId)
         return LEARN_MOVE_END;
 
     default:
-        assertf(TRUE, "Unknown LearnMove state %d\nEnding move learning ...", state);
+        assertf(FALSE, "Unknown LearnMove state %d\nEnding move learning ...", state);
     case LEARN_MOVE_END:
         ui->endTask(taskId);
         return LEARN_MOVE_END;
