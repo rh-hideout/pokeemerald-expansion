@@ -9892,7 +9892,7 @@ bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes)
     return ret;
 }
 
-bool32 IsSheerForceAffected(u16 move, u32 ability)
+bool32 IsSheerForceAffected(u16 move, enum Ability ability)
 {
     return ability == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
 }
