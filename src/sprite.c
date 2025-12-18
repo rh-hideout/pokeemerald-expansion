@@ -475,17 +475,11 @@ u32 CreateSpriteAt(u32 index, const struct SpriteTemplate *template, s16 x, s16 
 {
     if (TESTING && template->tileTag > ANIM_SPRITES_START && template->tileTag < ANIM_SPRITES_END && !IsGfxLoaded(template->tileTag))
     {
-        DebugPrintf("Trying to load unloaded gfx: %u", template->tileTag);
-        DebugPrintf("Move: %S", gMovesInfo[gCurrentMove]);
-        Test_ExitWithResult(TEST_RESULT_FAIL, 0, "GFX failure");
-        //assertf(FALSE, "createsprite with unloaded gfx: %u", template->tileTag);
+        assertf(FALSE, "createsprite with unloaded gfx: %u", template->tileTag);
     }
     if (TESTING && template->paletteTag > ANIM_SPRITES_START && template->paletteTag < ANIM_SPRITES_END && !IsPalLoaded(template->paletteTag))
     {
-        DebugPrintf("Trying to load unloaded pal: %u", template->paletteTag);
-        DebugPrintf("Move: %S", gMovesInfo[gCurrentMove]);
-        Test_ExitWithResult(TEST_RESULT_FAIL, 0, "PAL failure");
-        //assertf(FALSE, "createsprite with unloaded pal: %u", template->palettTag);
+        assertf(FALSE, "createsprite with unloaded pal: %u", template->paletteTag);
     }
     struct Sprite *sprite = &gSprites[index];
 

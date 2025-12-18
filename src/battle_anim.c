@@ -527,7 +527,7 @@ bool32 TryLoadGfx(u32 tag)
         }
         else
         {
-            //assertf(FALSE, "failed to store gfx: %u", tag);
+            assertf(FALSE, "failed to store gfx: %u", tag);
             return FALSE;
         }
     }
@@ -548,7 +548,7 @@ bool32 TryLoadPal(u32 tag)
         }
         else
         {
-            //assertf(FALSE, "failed to store pal: %u", tag);
+            assertf(FALSE, "failed to store pal: %u", tag);
             return FALSE;
         }
     }
