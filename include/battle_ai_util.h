@@ -329,6 +329,8 @@ u32 GetIncomingMoveSpeedCheck(u32 battler, u32 opposingBattler, struct AiLogicDa
 bool32 IsNaturalEnemy(u32 speciesAttacker, u32 speciesTarget);
 bool32 AI_OpponentCanFaintAiWithMod(u32 battler, u32 healAmount);
 void SetBattlerFieldStatusForSwitchin(u32 battler);
+bool32 ShouldInstructPartner(u32 battlerDef, u32 move);
+bool32 CanMoveBeBouncedBack(u32 battler, u32 move);
 
 // Switching and item helpers
 bool32 AiExpectsToFaintPlayer(u32 battler);
