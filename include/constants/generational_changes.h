@@ -176,7 +176,7 @@
     F(SAFARI_BALL_MODIFIER,      safariBallModifier,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(FRIEND_BALL_MODIFIER,      friendBallModifier,      (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
     F(SERENE_GRACE_BOOST,        sereneGraceBoost,        (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
-    F(IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) /* TODO: use in tests */ \
+    F(IRON_BALL,                 ironBall,                (u32, GEN_COUNT - 1)) \
     /* Weather settings */ \
     F(ABILITY_WEATHER,           abilityWeather,          (u32, GEN_COUNT - 1)) \
     F(SANDSTORM_SPDEF_BOOST,     sandstormSpDefBoost,     (u32, GEN_COUNT - 1)) \

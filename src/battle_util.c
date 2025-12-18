@@ -8798,7 +8798,7 @@ static inline uq4_12_t CalcTypeEffectivenessMultiplierInternal(struct DamageCont
     }
 
     // Iron Ball ignores type modifiers for flying-type mons if it is the only source of grounding
-    if (B_IRON_BALL >= GEN_5
+    if (GetConfig(CONFIG_IRON_BALL) >= GEN_5
         && ctx->moveType == TYPE_GROUND
         && ctx->holdEffectDef == HOLD_EFFECT_IRON_BALL
         && IS_BATTLER_OF_TYPE(ctx->battlerDef, TYPE_FLYING)
