@@ -5697,16 +5697,13 @@ static s32 AI_CalcAdditionalEffectScore(u32 battlerAtk, u32 battlerDef, u32 move
     u32 i;
     u32 additionalEffectCount = GetMoveAdditionalEffectCount(move);
 
+    if (IsSheerForceAffected(move, aiData->abilities[battlerAtk]))
+        return score;
+
     // check move additional effects that are likely to happen
     for (i = 0; i < additionalEffectCount; i++)
     {
         const struct AdditionalEffect *additionalEffect = GetMoveAdditionalEffectById(move, i);
-
-        if (aiData->abilities[battlerAtk] == ABILITY_SHEER_FORCE)
-        {
-            if ((additionalEffect->chance > 0) != additionalEffect->sheerForceOverride)
-                continue;
-        }
 
         // Only consider effects with a guaranteed chance to happen
         if (!MoveEffectIsGuaranteed(battlerAtk, aiData->abilities[battlerAtk], additionalEffect))

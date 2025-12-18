@@ -343,7 +343,7 @@ bool32 IsPartnerMonFromSameTrainer(u32 battler);
 enum DamageCategory GetCategoryBasedOnStats(u32 battler);
 void SetShellSideArmCategory(void);
 bool32 MoveIsAffectedBySheerForce(u32 move);
-bool32 TestIfSheerForceAffected(u32 battler, u16 move);
+bool32 IsSheerForceAffected(u16 move, u32 ability);
 void TryRestoreHeldItems(void);
 bool32 CanStealItem(u32 battlerStealing, u32 battlerItem, u16 item);
 void TrySaveExchangedItem(u32 battler, u16 stolenItem);

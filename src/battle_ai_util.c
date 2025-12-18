@@ -1030,7 +1030,7 @@ static bool32 AI_IsMoveEffectInPlus(u32 battlerAtk, u32 battlerDef, u32 move, s3
     enum Ability abilityDef = gAiLogicData->abilities[battlerDef];
     enum Ability abilityAtk = gAiLogicData->abilities[battlerAtk];
 
-    if (TestIfSheerForceAffected(battlerAtk, move))
+    if (IsSheerForceAffected(move, abilityAtk))
         return FALSE;
 
     switch (GetMoveEffect(move))

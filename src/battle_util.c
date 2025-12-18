@@ -9892,9 +9892,9 @@ bool32 IsBattlerAffectedByHazards(u32 battler, bool32 toxicSpikes)
     return ret;
 }
 
-bool32 TestIfSheerForceAffected(u32 battler, u16 move)
+bool32 IsSheerForceAffected(u16 move, u32 ability)
 {
-    return GetBattlerAbility(battler) == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
+    return ability == ABILITY_SHEER_FORCE && MoveIsAffectedBySheerForce(move);
 }
 
 // This function is the body of "jumpifstat", but can be used dynamically in a function

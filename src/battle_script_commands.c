@@ -3049,7 +3049,7 @@ void SetMoveEffect(u32 battler, u32 effectBattler, enum MoveEffect moveEffect, c
     if (!primary && !affectsUser && IsMoveEffectBlockedByTarget(battlerAbility))
         moveEffect = MOVE_EFFECT_NONE;
     else if (!primary
-          && TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove)
+          && IsSheerForceAffected(gCurrentMove, battlerAbility)
           && !(GetMoveEffect(gCurrentMove) == EFFECT_ORDER_UP && gBattleStruct->battlerState[gBattlerAttacker].commanderSpecies != SPECIES_NONE))
         moveEffect = MOVE_EFFECT_NONE;
     else if (!IsBattlerAlive(gEffectBattler) && !activateAfterFaint)
@@ -6400,7 +6400,7 @@ static void Cmd_moveend(void)
                 && gBattlerTarget != gBattlerAttacker
                 && !IsBattlerAlly(gBattlerTarget, gBattlerAttacker)
                 && gProtectStructs[gBattlerTarget].physicalBattlerId == gBattlerAttacker
-                && !TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
+                && !IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
             {
                 gProtectStructs[gBattlerTarget].shellTrap = TRUE;
                 // Change move order in double battles, so the hit mon with shell trap moves immediately after being hit.
@@ -6660,7 +6660,7 @@ static void Cmd_moveend(void)
             gBattleScripting.moveendState++;
             break;
         case MOVEEND_SHEER_FORCE:
-            if (TestIfSheerForceAffected(gBattlerAttacker, gCurrentMove))
+            if (IsSheerForceAffected(gCurrentMove, GetBattlerAbility(gBattlerAttacker)))
                 gBattleScripting.moveendState = MOVEEND_EJECT_PACK;
             else
                 gBattleScripting.moveendState++;
