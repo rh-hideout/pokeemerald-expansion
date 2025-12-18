@@ -1247,7 +1247,7 @@ static bool32 GenderRatioCanBe(u32 genderRatio, u32 gender)
 void CreateMonWithGenderNatureLetter(struct Pokemon *mon, u16 species, u8 level, u8 fixedIV, u8 gender, u8 nature, u8 unownLetter)
 {
     u32 personality;
-    u32 genderRatio = gSpeciesInfo[species].genderRatio;
+    u32 genderRatio = GetSpeciesGenderRatio(species);
 
     if ((u8)(unownLetter - 1) < NUM_UNOWN_FORMS)
     {
@@ -1298,7 +1298,7 @@ void CreateMaleMon(struct Pokemon *mon, u16 species, u8 level)
 {
     u32 personality;
     u32 otId;
-    u32 genderRatio = gSpeciesInfo[species].genderRatio;
+    u32 genderRatio = GetSpeciesGenderRatio(species);
 
     while (TRUE)
     {
