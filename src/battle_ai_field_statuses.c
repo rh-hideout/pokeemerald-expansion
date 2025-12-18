@@ -53,13 +53,12 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
 
-    u32 i;
     u32 battlersOnSide = 1;
 
     if (HasPartner(battler))
         battlersOnSide = 2;
 
-    for (i = 0; i < battlersOnSide; i++)
+    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
     {
         if (weather & B_WEATHER_RAIN)
             result = BenefitsFromRain(battler);
@@ -74,7 +73,7 @@ bool32 WeatherChecker(u32 battler, u32 weather, enum FieldEffectOutcome desiredR
 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
-            if (weather & B_WEATHER_DAMAGING_ANY && i == 0 && battlersOnSide == 2)
+            if (weather & B_WEATHER_DAMAGING_ANY && battlerIndex == 0 && battlersOnSide == 2)
                 firstResult = result;
         }
     }
@@ -87,14 +86,13 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
 {
     enum FieldEffectOutcome result = FIELD_EFFECT_NEUTRAL;
     enum FieldEffectOutcome firstResult = FIELD_EFFECT_NEUTRAL;
-    u32 i;
 
     u32 battlersOnSide = 1;
 
     if (HasPartner(battler))
         battlersOnSide = 2;
 
-    for (i = 0; i < battlersOnSide; i++)
+    for (u32 battlerIndex = 0; battlerIndex < battlersOnSide; battlerIndex++)
     {
         // terrains
         if (fieldStatus & STATUS_FIELD_ELECTRIC_TERRAIN)
@@ -117,7 +115,7 @@ bool32 FieldStatusChecker(u32 battler, u32 fieldStatus, enum FieldEffectOutcome 
         if (result != FIELD_EFFECT_NEUTRAL)
         {
             // Trick room wants both pokemon to agree, not just one
-            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && i == 0 && battlersOnSide == 2)
+            if (fieldStatus & STATUS_FIELD_TRICK_ROOM && battlerIndex == 0 && battlersOnSide == 2)
                 firstResult = result;
         }
     }
@@ -202,12 +200,11 @@ static bool32 IsLightSensitiveMove(u32 move)
 
 static bool32 HasLightSensitiveMove(u32 battler)
 {
-    s32 i;
     u16 *moves = GetMovesArray(battler);
 
-    for (i = 0; i < MAX_MON_MOVES; i++)
+    for (u32 battlerIndex = 0; battlerIndex < MAX_MON_MOVES; battlerIndex++)
     {
-        if (moves[i] != MOVE_NONE && moves[i] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[i]))
+        if (moves[battlerIndex] != MOVE_NONE && moves[battlerIndex] != MOVE_UNAVAILABLE && IsLightSensitiveMove(moves[battlerIndex]))
             return TRUE;
     }
 
@@ -476,9 +473,9 @@ static enum FieldEffectOutcome BenefitsFromTrickRoom(u32 battler)
     if (!(gFieldStatuses & STATUS_FIELD_PSYCHIC_TERRAIN))
     {
         u16* aiMoves = GetMovesArray(battler);
-        for (int i = 0; i < MAX_MON_MOVES; i++)
+        for (u32 moveIndex = 0; moveIndex < MAX_MON_MOVES; moveIndex++)
         {
-            u16 move = aiMoves[i];
+            u16 move = aiMoves[moveIndex];
             if (GetBattleMovePriority(battler, gAiLogicData->abilities[battler], move) > 0 && !(GetMovePriority(move) > 0 && IsBattleMoveStatus(move)))
             {
                 return FIELD_EFFECT_POSITIVE;
