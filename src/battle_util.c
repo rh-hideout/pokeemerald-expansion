@@ -9743,7 +9743,7 @@ bool32 CanFling(u32 battler)
     u16 item = gBattleMons[battler].item;
 
     if (item == ITEM_NONE
-      || (B_KLUTZ_FLING_INTERACTION >= GEN_5 && GetBattlerAbility(battler) == ABILITY_KLUTZ)
+      || (GetConfig(CONFIG_KLUTZ_FLING_INTERACTION) >= GEN_5 && GetBattlerAbility(battler) == ABILITY_KLUTZ)
       || gFieldStatuses & STATUS_FIELD_MAGIC_ROOM
       || gBattleMons[battler].volatiles.embargo
       || GetFlingPowerFromItemId(item) == 0
