@@ -48,13 +48,13 @@ static void InitializeSwitchinCandidate(u32 switchinBattler, struct Pokemon *mon
     gAiThinkingStruct->saved[switchinBattler].saved = TRUE;
     SetBattlerAiData(switchinBattler, gAiLogicData);
     SetBattlerFieldStatusForSwitchin(switchinBattler);
-    for (u32 battler = 0; battler < gBattlersCount; battler++)
+    for (u32 battlerIndex = 0; battlerIndex < gBattlersCount; battlerIndex++)
     {
-        if (switchinBattler == battler || !IsBattlerAlive(battler))
+        if (switchinBattler == battlerIndex || !IsBattlerAlive(battlerIndex))
             continue;
 
-        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
-        CalcBattlerAiMovesData(gAiLogicData, battler, switchinBattler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
+        CalcBattlerAiMovesData(gAiLogicData, switchinBattler, battlerIndex, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
+        CalcBattlerAiMovesData(gAiLogicData, battlerIndex, switchinBattler, AI_GetSwitchinWeather(switchinBattler), AI_GetSwitchinFieldStatus(switchinBattler));
     }
     
     gAiThinkingStruct->saved[switchinBattler].saved = FALSE;
