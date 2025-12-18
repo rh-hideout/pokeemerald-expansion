@@ -970,7 +970,7 @@ void getUIntVecFromData(CompressedImage *pImage, std::vector<unsigned int> *pOut
             }
         }
     }
-    if (currOffset != 0)
+    if (currOffset % 4 != 0)
         pOutput->push_back(currInt);
 }
 

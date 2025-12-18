@@ -110,7 +110,7 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch mid-turn into a player Pokémon
         MULTI_PARTNER(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_B(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { EXPECT_SWITCH(playerRight, 5); };
     } SCENE {
@@ -142,7 +142,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch mid-turn into a player Pok
         MULTI_PARTNER(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_A(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { EXPECT_SWITCH(playerRight, 5); };
     } SCENE {
@@ -174,7 +174,7 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon after fa
         MULTI_PARTNER(SPECIES_HAUNTER);
         MULTI_OPPONENT_A(SPECIES_TRAPINCH) { Ability(ABILITY_ARENA_TRAP); Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_B(SPECIES_VIBRAVA) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); };
     } SCENE {
@@ -204,7 +204,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon aft
         MULTI_PARTNER(SPECIES_HAUNTER);
         MULTI_OPPONENT_A(SPECIES_TRAPINCH) { Ability(ABILITY_ARENA_TRAP); Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_A(SPECIES_VIBRAVA) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { EXPECT_MOVE(playerRight, MOVE_CELEBRATE); EXPECT_SEND_OUT(playerRight, 5); };
     } SCENE {
@@ -233,7 +233,7 @@ AI_MULTI_BATTLE_TEST("AI partner will not switch into a player Pokémon (multi)"
         MULTI_PARTNER(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); HP(1); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_B(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); };
         TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); };
@@ -263,7 +263,7 @@ AI_TWO_VS_ONE_BATTLE_TEST("AI partner will not switch into a player Pokémon (2v
         MULTI_PARTNER(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); HP(1); }
         MULTI_OPPONENT_A(SPECIES_RATTATA) { Moves(MOVE_CELEBRATE); }
         MULTI_OPPONENT_A(SPECIES_KANGASKHAN) { Moves(MOVE_CELEBRATE); }
-        
+
     } WHEN {
         TURN { MOVE(playerLeft, MOVE_AURA_SPHERE, target:playerRight); EXPECT_SWITCH(playerRight, 4); EXPECT_SEND_OUT(playerRight, 3); };
         TURN { EXPECT_MOVE(playerRight, MOVE_SHADOW_BALL, target:opponentLeft); };
@@ -322,7 +322,7 @@ AI_ONE_VS_TWO_BATTLE_TEST("AI will not switch into a partner Pokémon in a 1v2 b
         MULTI_OPPONENT_B(SPECIES_GENGAR) { Moves(MOVE_SHADOW_BALL); }
         MULTI_OPPONENT_B(SPECIES_GASTLY) { Moves(MOVE_LICK); }
         MULTI_OPPONENT_B(SPECIES_RATICATE) { Moves(MOVE_HEADBUTT); }
-        
+
     } WHEN {
         TURN { EXPECT_SWITCH(opponentRight, 5); };
     } SCENE {
@@ -405,7 +405,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: Switch effect moves will send 
         ASSUME(GetMoveEffect(MOVE_BATON_PASS) == EFFECT_BATON_PASS);
         ASSUME(GetMoveEffect(MOVE_CHILLY_RECEPTION) == EFFECT_CHILLY_RECEPTION);
         ASSUME(GetMoveEffect(MOVE_SHED_TAIL) == EFFECT_SHED_TAIL);
-        WITH_CONFIG(GEN_CONFIG_TELEPORT_BEHAVIOR, GEN_8);
+        WITH_CONFIG(CONFIG_TELEPORT_BEHAVIOR, GEN_8);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_MON_CHOICES | AI_FLAG_ACE_POKEMON);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_WOBBUFFET) { Moves(aiMove); }
@@ -1201,7 +1201,7 @@ AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_SWITCHING: AI will switch out if Encore'd i
 {
     PASSES_RANDOMLY(SHOULD_SWITCH_ENCORE_DAMAGE_PERCENTAGE, 100, RNG_AI_SWITCH_ENCORE);
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_ENCORE_TARGET, GEN_3);
+        WITH_CONFIG(CONFIG_ENCORE_TARGET, GEN_3);
         ASSUME(GetMoveEffect(MOVE_ENCORE) == EFFECT_ENCORE);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_CHECK_VIABILITY | AI_FLAG_TRY_TO_FAINT | AI_FLAG_SMART_SWITCHING);
         PLAYER(SPECIES_AZURILL) { Moves(MOVE_SCRATCH, MOVE_ENCORE); }
@@ -1319,7 +1319,7 @@ AI_SINGLE_BATTLE_TEST("Switch AI: AI will switch into mon with good type matchup
 AI_SINGLE_BATTLE_TEST("AI_FLAG_SMART_MON_CHOICES: AI correctly handles abilities when scoring moves")
 {
     GIVEN {
-        WITH_CONFIG(GEN_CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
+        WITH_CONFIG(CONFIG_PRANKSTER_DARK_TYPES, GEN_7);
         ASSUME(GetSpeciesType(SPECIES_GRENINJA, 1) == TYPE_DARK);
         AI_FLAGS(AI_FLAG_CHECK_BAD_MOVE | AI_FLAG_TRY_TO_FAINT | AI_FLAG_CHECK_VIABILITY | AI_FLAG_OMNISCIENT | AI_FLAG_SMART_MON_CHOICES);
         PLAYER(SPECIES_GRENINJA) { Moves(MOVE_WATER_GUN); }

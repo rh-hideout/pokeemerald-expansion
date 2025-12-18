@@ -113,3 +113,20 @@ SINGLE_BATTLE_TEST("Illusion breaks if user loses Illusion due to Worry Seed")
         ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, player);
     }
 }
+
+SINGLE_BATTLE_TEST("Illusion breaks when attacked behind a substitute")
+{
+    GIVEN {
+        PLAYER(SPECIES_DRAGAPULT) {Ability(ABILITY_INFILTRATOR); Speed(1);};
+        OPPONENT(SPECIES_WOBBUFFET) {Speed(2);};
+        OPPONENT(SPECIES_ZOROARK) {Speed(2);};
+        OPPONENT(SPECIES_WYNAUT) {Speed(2);};
+    } WHEN {
+        TURN {  MOVE(player, MOVE_TACKLE); MOVE(opponent, MOVE_SHED_TAIL); SEND_OUT(opponent, 1);}
+    } SCENE {
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SWAP_FROM_SUBSTITUTE, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_ILLUSION_OFF, opponent);
+        ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SWAP_TO_SUBSTITUTE, opponent);
+        MESSAGE("The opposing Zoroark's illusion wore off!");
+    }
+}

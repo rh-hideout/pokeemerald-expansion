@@ -74,6 +74,7 @@
 	.set ALLOCATE_SCRIPT_CMD_TABLE, 1
 	.include "data/script_cmd_table.inc"
 
+.align 2
 gSpecialVars::
 	.4byte gSpecialVar_0x8000
 	.4byte gSpecialVar_0x8001

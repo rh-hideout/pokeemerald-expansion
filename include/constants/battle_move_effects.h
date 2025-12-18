@@ -92,6 +92,7 @@ enum __attribute__((packed)) BattleMoveEffects
     EFFECT_MINIMIZE,
     EFFECT_CURSE,
     EFFECT_HEALING_WISH,
+    EFFECT_LUNAR_DANCE, // Same as EFFECT_HEALING_WISH, but also heals PP.
     EFFECT_PROTECT,
     EFFECT_SPIKES,
     EFFECT_FORESIGHT,

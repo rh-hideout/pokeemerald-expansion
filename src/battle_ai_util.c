@@ -818,7 +818,7 @@ static inline void CalcDynamicMoveDamage(struct DamageContext *ctx, u16 *medianD
         median = maximum = minimum = max(0, gBattleMons[ctx->battlerDef].hp - gBattleMons[ctx->battlerAtk].hp);
         break;
     case EFFECT_BEAT_UP:
-        if (GetGenConfig(GEN_CONFIG_BEAT_UP) >= GEN_5)
+        if (GetConfig(CONFIG_BEAT_UP) >= GEN_5)
         {
             u32 partyCount = CalculatePartyCount(GetBattlerParty(ctx->battlerAtk));
             u32 i;
@@ -873,7 +873,7 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
     s32 critChanceIndex = 0;
 
     // Get crit chance
-    if (GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
+    if (GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
         critChanceIndex = CalcCritChanceStageGen1(battlerAtk, battlerDef, move, FALSE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk]);
     else
         critChanceIndex = CalcCritChanceStage(battlerAtk, battlerDef, move, FALSE, aiData->abilities[battlerAtk], aiData->abilities[battlerDef], aiData->holdEffects[battlerAtk]);
@@ -882,11 +882,11 @@ static inline bool32 ShouldCalcCritDamage(u32 battlerAtk, u32 battlerDef, u32 mo
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_STAGE_THRESHOLD // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
-        && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) != GEN_1)
+        && GetConfig(CONFIG_CRIT_CHANCE) != GEN_1)
         return TRUE;
     if (critChanceIndex >= RISKY_AI_CRIT_THRESHOLD_GEN_1 // Not guaranteed but above Risky threshold
         && (gAiThinkingStruct->aiFlags[battlerAtk] & AI_FLAG_RISKY)
-        && GetGenConfig(GEN_CONFIG_CRIT_CHANCE) == GEN_1)
+        && GetConfig(CONFIG_CRIT_CHANCE) == GEN_1)
         return TRUE;
     return FALSE;
 }
@@ -1823,7 +1823,7 @@ u32 AI_GetSwitchinWeather(struct BattlePokemon battleMon)
     case ABILITY_SAND_STREAM:
         return B_WEATHER_SANDSTORM;
     case ABILITY_SNOW_WARNING:
-        return B_SNOW_WARNING >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
+        return GetConfig(CONFIG_SNOW_WARNING) >= GEN_9 ? B_WEATHER_SNOW : B_WEATHER_HAIL;
     default:
         return gBattleWeather;
     }
@@ -1924,7 +1924,7 @@ bool32 IsHazardClearingMove(u32 move)
     case EFFECT_TIDY_UP:
         return TRUE;
     case EFFECT_DEFOG:
-        if (GetGenConfig(GEN_CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
+        if (GetConfig(CONFIG_DEFOG_EFFECT_CLEARING) >= GEN_6)
             return TRUE;
         break;
     }
@@ -2186,7 +2186,7 @@ bool32 CanLowerStat(u32 battlerAtk, u32 battlerDef, struct AiLogicData *aiData, 
             if (stat == STAT_DEF)
                 return FALSE;
         case ABILITY_ILLUMINATE:
-            if (GetGenConfig(GEN_ILLUMINATE_EFFECT) < GEN_9)
+            if (GetConfig(CONFIG_ILLUMINATE_EFFECT) < GEN_9)
                 break;
         case ABILITY_KEEN_EYE:
         case ABILITY_MINDS_EYE:
@@ -2926,7 +2926,7 @@ bool32 IsSwitchOutEffect(enum BattleMoveEffects effect)
     switch (effect)
     {
     case EFFECT_TELEPORT:
-        if (GetGenConfig(GEN_CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
+        if (GetConfig(CONFIG_TELEPORT_BEHAVIOR) >= GEN_8)
             return TRUE;
     case EFFECT_HIT_ESCAPE:
     case EFFECT_PARTING_SHOT:
@@ -3839,6 +3839,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
 {
     struct Pokemon *party;
     u32 i, battlerOnField1, battlerOnField2;
+    bool32 hasStatusToCure = FALSE;
 
     party = GetBattlerParty(battlerId);
 
@@ -3847,11 +3848,12 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
         battlerOnField1 = gBattlerPartyIndexes[battlerId];
         battlerOnField2 = gBattlerPartyIndexes[GetPartnerBattler(battlerId)];
         // Check partner's status
-        if ((GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+        if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
             || gAiLogicData->abilities[BATTLE_PARTNER(battlerId)] != ABILITY_SOUNDPROOF
             || !checkSoundproof)
-         && GetMonData(&party[battlerOnField2], MON_DATA_STATUS) != STATUS1_NONE)
-            return TRUE;
+         && GetMonData(&party[battlerOnField2], MON_DATA_STATUS) != STATUS1_NONE
+         && ShouldCureStatus(battlerId, BATTLE_PARTNER(battlerId), gAiLogicData))
+            hasStatusToCure = TRUE;
     }
     else // In singles there's only one battlerId by side.
     {
@@ -3860,18 +3862,19 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
     }
 
     // Check attacker's status
-    if ((GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
-      || GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
+    if ((GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) == GEN_5
+      || GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) >= GEN_8
       || gAiLogicData->abilities[battlerId] != ABILITY_SOUNDPROOF || !checkSoundproof)
-     && GetMonData(&party[battlerOnField1], MON_DATA_STATUS) != STATUS1_NONE)
-        return TRUE;
+     && GetMonData(&party[battlerOnField1], MON_DATA_STATUS) != STATUS1_NONE
+     && ShouldCureStatus(battlerId, battlerId, gAiLogicData))
+        hasStatusToCure = TRUE;
 
     // Check inactive party mons' status
     for (i = 0; i < PARTY_SIZE; i++)
     {
         if (i == battlerOnField1 || i == battlerOnField2)
             continue;
-        if (GetGenConfig(GEN_CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
+        if (GetConfig(CONFIG_HEAL_BELL_SOUNDPROOF) < GEN_5
          && checkSoundproof
          && GetMonAbility(&party[i]) == ABILITY_SOUNDPROOF)
             continue;
@@ -3879,7 +3882,7 @@ bool32 AnyPartyMemberStatused(u32 battlerId, bool32 checkSoundproof)
             return TRUE;
     }
 
-    return FALSE;
+    return hasStatusToCure;
 }
 
 bool32 ShouldUseRecoilMove(u32 battlerAtk, u32 battlerDef, u32 recoilDmg, u32 moveIndex)
@@ -4750,7 +4753,7 @@ static bool32 HasMoveThatChangesKOThreshold(u32 battlerId, u32 noOfHitsToFaint, 
                 case MOVE_EFFECT_SPD_MINUS_1:
                 case MOVE_EFFECT_SPD_MINUS_2:
                 {
-                    if(aiIsFaster)
+                    if (aiIsFaster && !additionalEffect->self)
                         return TRUE;
                 }
                 default:
