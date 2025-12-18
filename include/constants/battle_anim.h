@@ -592,8 +592,9 @@
 #define B_ANIM_TERA_ACTIVATE            51
 #define B_ANIM_SIMPLE_HEAL              52
 #define B_ANIM_POWER_CONSTRUCT          53
-
-#define NUM_B_ANIMS_GENERAL             54
+#define B_ANIM_SWAP_TO_SUBSTITUTE       54
+#define B_ANIM_SWAP_FROM_SUBSTITUTE     55
+#define NUM_B_ANIMS_GENERAL             56
 
 // special animations table (sBattleAnims_Special)
 #define B_ANIM_LVL_UP                   0

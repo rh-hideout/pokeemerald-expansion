@@ -25,7 +25,7 @@ SINGLE_BATTLE_TEST("Tera Starstorm changes from Normal-type to Stellar-type if u
 DOUBLE_BATTLE_TEST("Tera Starstorm targets both opponents in a double battle if used by Terapagos-Stellar")
 {
     GIVEN {
-        ASSUME(GetMoveTarget(MOVE_TERA_STARSTORM) == MOVE_TARGET_SELECTED);
+        ASSUME(GetMoveTarget(MOVE_TERA_STARSTORM) == TARGET_SELECTED);
         PLAYER(SPECIES_TERAPAGOS_STELLAR);
         PLAYER(SPECIES_WYNAUT);
         OPPONENT(SPECIES_WOBBUFFET);

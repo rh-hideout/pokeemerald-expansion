@@ -173,7 +173,7 @@ bool32 DoSwitchInEvents(void)
 
 static bool32 CanBattlerBeHealed(u32 battler)
 {
-    if (GetGenConfig(GEN_CONFIG_HEALING_WISH_SWITCH) < GEN_8)
+    if (GetConfig(CONFIG_HEALING_WISH_SWITCH) < GEN_8)
         return TRUE;
 
     if (gBattleMons[battler].hp != gBattleMons[battler].maxHP || gBattleMons[battler].status1)
@@ -229,7 +229,6 @@ static bool32 FirstEventBlockEvents(struct BattleCalcValues *calcValues)
         else if (EmergencyExitCanBeTriggered(battler))
         {
             gBattleScripting.battler = gBattlerAbility = battler;
-            gSpecialStatuses[battler].switchInItemDone = FALSE;
             gBattleStruct->battlerState[battler].forcedSwitch = FALSE;
             gBattleStruct->eventState.switchIn = 0;
             BattleScriptCall(BattleScript_EmergencyExit);
