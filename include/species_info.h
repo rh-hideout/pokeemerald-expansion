@@ -21,35 +21,33 @@ struct Evolution
     const struct EvolutionParam *params;
 };
 
-#define USE_FUNC(name) __attribute__((deprecated("use " name " instead")))
-
 struct SpeciesInfo /*0xC4*/
 {
-    u8 baseHP USE_FUNC("GetSpeciesBaseHP");
-    u8 baseAttack USE_FUNC("GetSpeciesBaseAttack");
-    u8 baseDefense USE_FUNC("GetSpeciesBaseDefense");
-    u8 baseSpeed USE_FUNC("GetSpeciesBaseSpeed");
-    u8 baseSpAttack USE_FUNC("GetSpeciesBaseSpAttack");
-    u8 baseSpDefense USE_FUNC("GetSpeciesBaseSpDefense");
-    enum Type types[2] USE_FUNC("GetSpeciesType or IsSpeciesOfType");
-    u8 catchRate USE_FUNC("GetSpeciesCatchRate");
-    u8 forceTeraType USE_FUNC("GetSpeciesForcedTeraType");
-    u16 expYield USE_FUNC("GetSpeciesExpYield"); // expYield was changed from u8 to u16 for the new Exp System.
-    u16 evYield_HP:2 USE_FUNC("GetSpeciesEVYieldHP");
-    u16 evYield_Attack:2 USE_FUNC("GetSpeciesEVYieldAttack");
-    u16 evYield_Defense:2 USE_FUNC("GetSpeciesEVYieldDefense");
-    u16 evYield_Speed:2 USE_FUNC("GetSpeciesEVYieldSpeed");
-    u16 evYield_SpAttack:2 USE_FUNC("GetSpeciesEVYieldSpAttack");
-    u16 evYield_SpDefense:2 USE_FUNC("GetSpeciesEVYieldSpDefense");
+    u8 baseHP;
+    u8 baseAttack;
+    u8 baseDefense;
+    u8 baseSpeed;
+    u8 baseSpAttack;
+    u8 baseSpDefense;
+    enum Type types[2];
+    u8 catchRate;
+    u8 forceTeraType;
+    u16 expYield; // expYield was changed from u8 to u16 for the new Exp System.
+    u16 evYield_HP:2;
+    u16 evYield_Attack:2;
+    u16 evYield_Defense:2;
+    u16 evYield_Speed:2;
+    u16 evYield_SpAttack:2;
+    u16 evYield_SpDefense:2;
     u16 padding2:4;
-    u16 itemCommon USE_FUNC("GetSpeciesCommonItem");
-    u16 itemRare USE_FUNC("GetSpeciesRareItem");
-    u8 genderRatio USE_FUNC("GetSpeciesGenderRatio");
-    u8 eggCycles USE_FUNC("GetSpeciesEggCycles");
-    u8 friendship USE_FUNC("GetSpeciesBaseFriendship");
-    u8 growthRate USE_FUNC("GetSpeciesGrowthRate");
-    u8 eggGroups[2] USE_FUNC("GetSpeciesEggGroup");
-    enum Ability abilities[NUM_ABILITY_SLOTS] USE_FUNC("GetSpeciesAbility"); // 3 abilities, no longer u8 because we have over 255 abilities now.
+    u16 itemCommon;
+    u16 itemRare;
+    u8 genderRatio;
+    u8 eggCycles;
+    u8 friendship;
+    u8 growthRate;
+    u8 eggGroups[2];
+    enum Ability abilities[NUM_ABILITY_SLOTS]; // 3 abilities, no longer u8 because we have over 255 abilities now.
     u8 safariZoneFleeRate;
 
     // Pokédex data
@@ -153,14 +151,13 @@ struct SpeciesInfo /*0xC4*/
 #endif //OW_PKMN_OBJECTS_SHARE_PALETTES
 #endif //OW_POKEMON_OBJECT_EVENTS
 };
-#undef USE_FUNC
 
 extern const struct SpeciesInfo gSpeciesInfo[];
 
 static inline bool32 IsSpeciesEnabled(u16 species)
 {
     // This function should not use the GetSpeciesBaseHP function, as the included sanitation will result in an infinite loop
-    return GET_DEPRECATED(u32, gSpeciesInfo[species].baseHP) > 0 || species == SPECIES_EGG;
+    return gSpeciesInfo[species].baseHP > 0 || species == SPECIES_EGG;
 }
 
 static inline u16 SanitizeSpeciesId(u16 species)
@@ -175,32 +172,32 @@ static inline u16 SanitizeSpeciesId(u16 species)
 
 static inline u32 GetSpeciesBaseHP(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseHP);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseHP;
 }
 
 static inline u32 GetSpeciesBaseAttack(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseAttack);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseAttack;
 }
 
 static inline u32 GetSpeciesBaseDefense(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseDefense;
 }
 
 static inline u32 GetSpeciesBaseSpAttack(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpAttack);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpAttack;
 }
 
 static inline u32 GetSpeciesBaseSpDefense(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpDefense);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpDefense;
 }
 
 static inline u32 GetSpeciesBaseSpeed(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].baseSpeed;
 }
 
 static inline u32 GetSpeciesBaseStat(u16 species, u32 statIndex)
@@ -235,52 +232,52 @@ static inline u32 GetSpeciesBaseStatTotal(u32 species)
 
 static inline enum Type GetSpeciesType(u16 species, u8 slot)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].types[slot]);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].types[slot];
 }
 
 static inline u32 GetSpeciesCatchRate(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].catchRate);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].catchRate;
 }
 
 static inline u32 GetSpeciesForcedTeraType(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].forceTeraType);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].forceTeraType;
 }
 
 static inline u32 GetSpeciesExpYield(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].expYield);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].expYield;
 }
 
 static inline u32 GetSpeciesEVYieldHP(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_HP);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_HP;
 }
 
 static inline u32 GetSpeciesEVYieldAttack(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Attack);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Attack;
 }
 
 static inline u32 GetSpeciesEVYieldDefense(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Defense);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Defense;
 }
 
 static inline u32 GetSpeciesEVYieldSpAttack(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpAttack);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpAttack;
 }
 
 static inline u32 GetSpeciesEVYieldSpDefense(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpDefense);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_SpDefense;
 }
 
 static inline u32 GetSpeciesEVYieldSpeed(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Speed);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].evYield_Speed;
 }
 
 static inline u32 GetSpeciesEVYield(u16 species, u32 statIndex)
@@ -305,42 +302,42 @@ static inline u32 GetSpeciesEVYield(u16 species, u32 statIndex)
 
 static inline u32 GetSpeciesCommonItem(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].itemCommon);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].itemCommon;
 }
 
 static inline u32 GetSpeciesRareItem(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].itemRare);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].itemRare;
 }
 
 static inline u32 GetSpeciesGenderRatio(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].genderRatio);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].genderRatio;
 }
 
 static inline u32 GetSpeciesEggCycles(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].eggCycles);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].eggCycles;
 }
 
 static inline u32 GetSpeciesBaseFriendship(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].friendship);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].friendship;
 }
 
 static inline enum GrowthRate GetSpeciesGrowthRate(u16 species)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].growthRate);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].growthRate;
 }
 
 static inline u32 GetSpeciesEggGroup(u16 species, u8 slot)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].eggGroups[slot]);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].eggGroups[slot];
 }
 
 static inline enum Ability GetSpeciesAbility(u16 species, u8 slot)
 {
-    return GET_DEPRECATED(u32, gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot]);
+    return gSpeciesInfo[SanitizeSpeciesId(species)].abilities[slot];
 }
 
 #endif // GUARD_SPECIES_INFO_H
